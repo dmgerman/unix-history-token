@@ -667,7 +667,33 @@ argument_list|,
 name|Target
 argument_list|)
 expr_stmt|;
-comment|/*          * Check for possible conversion to a "Compound Assignment".          *          * Determine if either operand is the same as the target          * and display compound assignment operator and other operand.          */
+comment|/* Check operands for conversion to a "Compound Assignment" */
+switch|switch
+condition|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+condition|)
+block|{
+comment|/* Commutative operators */
+case|case
+name|AML_ADD_OP
+case|:
+case|case
+name|AML_MULTIPLY_OP
+case|:
+case|case
+name|AML_BIT_AND_OP
+case|:
+case|case
+name|AML_BIT_OR_OP
+case|:
+case|case
+name|AML_BIT_XOR_OP
+case|:
+comment|/*              * For the commutative operators, we can convert to a              * compound statement only if at least one (either) operand              * is the same as the target.              *              *      Add (A, B, A) --> A += B              *      Add (B, A, A) --> A += B              *      Add (B, C, A) --> A = (B + C)              */
 if|if
 condition|(
 operator|(
@@ -730,6 +756,80 @@ operator|(
 name|TRUE
 operator|)
 return|;
+block|}
+break|break;
+comment|/* Non-commutative operators */
+case|case
+name|AML_SUBTRACT_OP
+case|:
+case|case
+name|AML_DIVIDE_OP
+case|:
+case|case
+name|AML_MOD_OP
+case|:
+case|case
+name|AML_SHIFT_LEFT_OP
+case|:
+case|case
+name|AML_SHIFT_RIGHT_OP
+case|:
+comment|/*              * For the non-commutative operators, we can convert to a              * compound statement only if the target is the same as the              * first operand.              *              *      Subtract (A, B, A) --> A -= B              *      Subtract (B, A, A) --> A = (B - A)              */
+if|if
+condition|(
+operator|(
+name|AcpiDmIsTargetAnOperand
+argument_list|(
+name|Target
+argument_list|,
+name|Child1
+argument_list|,
+name|TRUE
+argument_list|)
+operator|)
+condition|)
+block|{
+name|Target
+operator|->
+name|Common
+operator|.
+name|OperatorSymbol
+operator|=
+name|AcpiDmGetCompoundSymbol
+argument_list|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+argument_list|)
+expr_stmt|;
+comment|/* Convert operator to compound assignment */
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmFlags
+operator||=
+name|ACPI_PARSEOP_COMPOUND
+expr_stmt|;
+name|Child1
+operator|->
+name|Common
+operator|.
+name|OperatorSymbol
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+break|break;
+default|default:
+break|break;
 block|}
 comment|/*          * If we are within a C-style expression, emit an extra open          * paren. Implemented by examining the parent op.          */
 switch|switch
@@ -902,6 +1002,18 @@ name|Common
 operator|.
 name|Next
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Target
+condition|)
+block|{
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
 name|AcpiDmPromoteTarget
 argument_list|(
 name|Op
@@ -1368,7 +1480,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIsValidTarget  *  * PARAMETERS:  Target              - Target Op from the parse tree  *  * RETURN:      TRUE if the Target is real. FALSE if it is just a placeholder  *              Op that was inserted by the parser.  *  * DESCRIPTION: Determine if a Target Op is a placeholder Op or a real Target.  *              In other words, determine if the optional target is used or  *              not.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIsValidTarget  *  * PARAMETERS:  Target              - Target Op from the parse tree  *  * RETURN:      TRUE if the Target is real. FALSE if it is just a placeholder  *              Op that was inserted by the parser.  *  * DESCRIPTION: Determine if a Target Op is a placeholder Op or a real Target.  *              In other words, determine if the optional target is used or  *              not. Note: If Target is NULL, something is seriously wrong,  *              probably with the parse tree.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1381,6 +1493,18 @@ modifier|*
 name|Target
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|Target
+condition|)
+block|{
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|(

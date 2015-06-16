@@ -128,7 +128,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwLowSetGpe  *  * PARAMETERS:  GpeEventInfo        - Info block for the GPE to be disabled  *              Action              - Enable or disable  *  * RETURN:      Status  *  * DESCRIPTION: Enable or disable a single GPE in the parent enable register.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwLowSetGpe  *  * PARAMETERS:  GpeEventInfo        - Info block for the GPE to be disabled  *              Action              - Enable or disable  *  * RETURN:      Status  *  * DESCRIPTION: Enable or disable a single GPE in the parent enable register.  *              The EnableMask field of the involved GPE register must be  *              updated by the caller if necessary.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -217,9 +217,6 @@ expr_stmt|;
 switch|switch
 condition|(
 name|Action
-operator|&
-operator|~
-name|ACPI_GPE_SAVE_MASK
 condition|)
 block|{
 case|case
@@ -298,30 +295,6 @@ operator|->
 name|EnableAddress
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
-name|Status
-argument_list|)
-operator|&&
-operator|(
-name|Action
-operator|&
-name|ACPI_GPE_SAVE_MASK
-operator|)
-condition|)
-block|{
-name|GpeRegisterInfo
-operator|->
-name|EnableMask
-operator|=
-operator|(
-name|UINT8
-operator|)
-name|EnableMask
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|Status
@@ -632,6 +605,12 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|GpeRegisterInfo
+operator|->
+name|EnableMask
+operator|=
+name|EnableMask
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiHwWrite
@@ -644,21 +623,6 @@ operator|->
 name|EnableAddress
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|GpeRegisterInfo
-operator|->
-name|EnableMask
-operator|=
-name|EnableMask
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|Status

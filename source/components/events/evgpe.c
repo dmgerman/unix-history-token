@@ -169,6 +169,14 @@ name|RegisterBit
 argument_list|)
 expr_stmt|;
 block|}
+name|GpeRegisterInfo
+operator|->
+name|EnableMask
+operator|=
+name|GpeRegisterInfo
+operator|->
+name|EnableForRun
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -227,7 +235,7 @@ name|AcpiHwLowSetGpe
 argument_list|(
 name|GpeEventInfo
 argument_list|,
-name|ACPI_GPE_ENABLE_SAVE
+name|ACPI_GPE_ENABLE
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -409,7 +417,7 @@ name|AcpiHwLowSetGpe
 argument_list|(
 name|GpeEventInfo
 argument_list|,
-name|ACPI_GPE_DISABLE_SAVE
+name|ACPI_GPE_DISABLE
 argument_list|)
 expr_stmt|;
 block|}

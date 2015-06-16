@@ -402,7 +402,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ACPI_IS_DIGIT
+name|isdigit
 argument_list|(
 operator|*
 name|ThisChar
@@ -431,7 +431,7 @@ operator|=
 operator|(
 name|UINT32
 operator|)
-name|ACPI_TOUPPER
+name|toupper
 argument_list|(
 operator|*
 name|ThisChar
@@ -440,7 +440,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ACPI_IS_XDIGIT
+name|isxdigit
 argument_list|(
 operator|(
 name|char
@@ -1040,7 +1040,7 @@ condition|)
 block|{
 name|ByteLength
 operator|=
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Value
 argument_list|)
@@ -1208,7 +1208,7 @@ comment|/* TBD: error if Value is NULL? (as below?) */
 name|ByteLength
 operator|=
 operator|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Value
 argument_list|)

@@ -262,7 +262,7 @@ case|case
 name|ACPI_RSC_INITGET
 case|:
 comment|/*              * Get the resource type and the initial (minimum) length              */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|Resource
 argument_list|,
@@ -1051,7 +1051,7 @@ break|break;
 case|case
 name|ACPI_RSC_SET8
 case|:
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|Destination
 argument_list|,
@@ -1081,7 +1081,7 @@ operator|->
 name|Value
 argument_list|)
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Destination
 argument_list|,
@@ -1552,7 +1552,7 @@ block|{
 case|case
 name|ACPI_RSC_INITSET
 case|:
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|Aml
 argument_list|,

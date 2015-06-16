@@ -19,6 +19,12 @@ directive|include
 file|"acapps.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"dtcompiler.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -104,10 +110,6 @@ name|Gbl_LogicalLineNumber
 argument_list|)
 expr_stmt|;
 name|Gbl_CurrentLineNumber
-operator|=
-name|LineNumber
-expr_stmt|;
-name|Gbl_LogicalLineNumber
 operator|=
 name|LineNumber
 expr_stmt|;
@@ -619,6 +621,9 @@ name|char
 modifier|*
 name|Pathname
 decl_stmt|;
+name|UINT32
+name|OriginalLineNumber
+decl_stmt|;
 comment|/* Build the full pathname to the file */
 name|Pathname
 operator|=
@@ -674,20 +679,22 @@ name|NULL
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|_MUST_HANDLE_COMMENTS
-comment|/*      * Check entire include file for any # preprocessor directives.      * This is because there may be some confusion between the #include      * preprocessor directive and the ASL Include statement.      */
+comment|/*      * Check the entire include file for any # preprocessor directives.      * This is because there may be some confusion between the #include      * preprocessor directive and the ASL Include statement. A file included      * by the ASL include cannot contain preprocessor directives because      * the preprocessor has already run by the time the ASL include is      * recognized (by the compiler, not the preprocessor.)      *      * Note: DtGetNextLine strips/ignores comments.      * Save current line number since DtGetNextLine modifies it.      */
+name|Gbl_CurrentLineNumber
+operator|--
+expr_stmt|;
+name|OriginalLineNumber
+operator|=
+name|Gbl_CurrentLineNumber
+expr_stmt|;
 while|while
 condition|(
-name|fgets
+name|DtGetNextLine
 argument_list|(
-name|Gbl_CurrentLineBuffer
-argument_list|,
-name|Gbl_LineBufferSize
-argument_list|,
 name|IncludeFile
 argument_list|)
+operator|!=
+name|ASL_EOF
 condition|)
 block|{
 if|if
@@ -713,8 +720,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
+name|Gbl_CurrentLineNumber
+operator|=
+name|OriginalLineNumber
+expr_stmt|;
 comment|/* Must seek back to the start of the file */
 name|fseek
 argument_list|(
@@ -1280,7 +1289,6 @@ operator|)
 return|;
 block|}
 comment|/* Open the debug file as STDERR, text mode */
-comment|/* TBD: hide this behind a FlReopenFile function */
 name|Gbl_Files
 index|[
 name|ASL_FILE_DEBUG_OUTPUT
@@ -1317,32 +1325,23 @@ operator|.
 name|Handle
 condition|)
 block|{
-comment|/*              * A problem with freopen is that on error,              * we no longer have stderr.              */
-name|Gbl_DebugFlag
-operator|=
-name|FALSE
-expr_stmt|;
-name|memcpy
+comment|/*              * A problem with freopen is that on error, we no longer              * have stderr and cannot emit normal error messages.              * Emit error to stdout, close files, and exit.              */
+name|fprintf
 argument_list|(
-name|stderr
-argument_list|,
 name|stdout
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|FILE
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|FlFileError
-argument_list|(
-name|ASL_FILE_DEBUG_OUTPUT
+literal|"\nCould not open debug output file: %s\n\n"
 argument_list|,
-name|ASL_MSG_DEBUG_FILENAME
+name|Filename
 argument_list|)
 expr_stmt|;
-name|AslAbort
+name|CmCleanupAndExit
 argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 name|AslCompilerSignon
@@ -1423,7 +1422,7 @@ name|ASL_FILE_LISTING_OUTPUT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Create the preprocessor output file if preprocessor enabled */
+comment|/* Create the preprocessor output temp file if preprocessor enabled */
 if|if
 condition|(
 name|Gbl_PreprocessFlag
@@ -1472,6 +1471,62 @@ block|}
 name|FlOpenFile
 argument_list|(
 name|ASL_FILE_PREPROCESSOR
+argument_list|,
+name|Filename
+argument_list|,
+literal|"w+t"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Create the "user" preprocessor output file if -li flag set.      * Note, this file contains no embedded #line directives.      */
+if|if
+condition|(
+name|Gbl_PreprocessorOutputFlag
+condition|)
+block|{
+name|Filename
+operator|=
+name|FlGenerateFilename
+argument_list|(
+name|FilenamePrefix
+argument_list|,
+name|FILE_SUFFIX_PREPROC_USER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Filename
+condition|)
+block|{
+name|AslCommonError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_PREPROCESSOR_FILENAME
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_ERROR
+operator|)
+return|;
+block|}
+name|FlOpenFile
+argument_list|(
+name|ASL_FILE_PREPROCESSOR_USER
 argument_list|,
 name|Filename
 argument_list|,

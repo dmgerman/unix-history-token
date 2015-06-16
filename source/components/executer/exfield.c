@@ -1180,7 +1180,7 @@ name|Buffer
 operator|.
 name|Pointer
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Buffer
 argument_list|,

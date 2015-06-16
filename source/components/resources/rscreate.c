@@ -911,7 +911,7 @@ operator|+=
 operator|(
 name|UINT32
 operator|)
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|UserPrt
 operator|->
@@ -924,7 +924,7 @@ break|break;
 case|case
 name|ACPI_TYPE_STRING
 case|:
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|UserPrt
 operator|->

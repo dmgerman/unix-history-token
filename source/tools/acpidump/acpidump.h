@@ -153,7 +153,7 @@ name|INIT_GLOBAL
 parameter_list|(
 name|Gbl_DumpCustomizedTables
 parameter_list|,
-name|FALSE
+name|TRUE
 parameter_list|)
 function_decl|;
 end_function_decl

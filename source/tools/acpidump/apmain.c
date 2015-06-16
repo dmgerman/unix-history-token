@@ -106,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|AP_SUPPORTED_OPTIONS
-value|"?a:bcf:hn:o:r:svxz"
+value|"?a:bc:f:hn:o:r:svxz"
 end_define
 
 begin_comment
@@ -131,13 +131,6 @@ argument_list|(
 literal|"-b"
 argument_list|,
 literal|"Dump tables to binary files"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-c"
-argument_list|,
-literal|"Dump customized tables"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -192,6 +185,13 @@ argument_list|(
 literal|"-a<Address>"
 argument_list|,
 literal|"Get table via a physical address"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-c<on|off>"
+argument_list|,
+literal|"Turning on/off customized table dumping"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -361,10 +361,55 @@ case|case
 literal|'c'
 case|:
 comment|/* Dump customized tables */
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|AcpiGbl_Optarg
+argument_list|,
+literal|"on"
+argument_list|)
+condition|)
+block|{
 name|Gbl_DumpCustomizedTables
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|AcpiGbl_Optarg
+argument_list|,
+literal|"off"
+argument_list|)
+condition|)
+block|{
+name|Gbl_DumpCustomizedTables
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiLogError
+argument_list|(
+literal|"%s: Cannot handle this switch, please use on|off\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 continue|continue;
 case|case
 literal|'h'

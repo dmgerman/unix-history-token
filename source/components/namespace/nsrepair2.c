@@ -1522,7 +1522,7 @@ operator|=
 operator|(
 name|char
 operator|)
-name|ACPI_TOUPPER
+name|toupper
 argument_list|(
 operator|*
 name|Source

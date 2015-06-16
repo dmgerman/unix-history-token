@@ -734,7 +734,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|Name
 argument_list|,

@@ -390,7 +390,7 @@ condition|(
 literal|1
 condition|)
 block|{
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|KeyBuffer
 argument_list|,

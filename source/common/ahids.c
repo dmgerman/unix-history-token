@@ -996,7 +996,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|HardwareId
 argument_list|,

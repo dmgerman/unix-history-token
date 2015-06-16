@@ -174,6 +174,38 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|EFI_GUID
+name|AcpiGbl_LoadedImageProtocol
+init|=
+name|LOADED_IMAGE_PROTOCOL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EFI_GUID
+name|AcpiGbl_TextInProtocol
+init|=
+name|SIMPLE_TEXT_INPUT_PROTOCOL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EFI_GUID
+name|AcpiGbl_TextOutProtocol
+init|=
+name|SIMPLE_TEXT_OUTPUT_PROTOCOL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EFI_GUID
+name|AcpiGbl_FileSystemProtocol
+init|=
+name|SIMPLE_FILE_SYSTEM_PROTOCOL
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiEfiGetRsdpViaGuid  *  * PARAMETERS:  Guid1               - GUID to compare  *              Guid2               - GUID to compare  *  * RETURN:      TRUE if Guid1 == Guid2  *  * DESCRIPTION: Compares two GUIDs  *  *****************************************************************************/
 end_comment
@@ -625,7 +657,7 @@ condition|(
 name|Mem
 condition|)
 block|{
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|Mem
 argument_list|,
@@ -761,7 +793,7 @@ block|}
 comment|/* Allocate path buffer */
 name|Count
 operator|=
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Path
 argument_list|)
@@ -1698,7 +1730,7 @@ condition|)
 block|{
 while|while
 condition|(
-name|ACPI_IS_SPACE
+name|isspace
 argument_list|(
 operator|*
 name|String
@@ -1726,7 +1758,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ACPI_IS_SPACE
+name|isspace
 argument_list|(
 operator|*
 name|String
@@ -2291,13 +2323,16 @@ name|Volume
 init|=
 name|NULL
 decl_stmt|;
-comment|/* Initialize EFI library */
-name|InitializeLib
-argument_list|(
-name|Image
-argument_list|,
+comment|/* Initialize global variables */
+name|ST
+operator|=
 name|SystemTab
-argument_list|)
+expr_stmt|;
+name|BS
+operator|=
+name|SystemTab
+operator|->
+name|BootServices
 expr_stmt|;
 comment|/* Retrieve image information */
 name|EfiStatus
@@ -2313,7 +2348,7 @@ argument_list|,
 name|Image
 argument_list|,
 operator|&
-name|LoadedImageProtocol
+name|AcpiGbl_LoadedImageProtocol
 argument_list|,
 name|ACPI_CAST_PTR
 argument_list|(
@@ -2358,7 +2393,7 @@ operator|->
 name|DeviceHandle
 argument_list|,
 operator|&
-name|FileSystemProtocol
+name|AcpiGbl_FileSystemProtocol
 argument_list|,
 operator|(
 name|void

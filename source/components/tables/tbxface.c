@@ -140,7 +140,7 @@ block|}
 else|else
 block|{
 comment|/* Root Table Array has been statically allocated by the host */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|InitialTableArray
 argument_list|,
@@ -452,7 +452,7 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|OutTableHeader
 argument_list|,
@@ -486,7 +486,7 @@ block|}
 block|}
 else|else
 block|{
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|OutTableHeader
 argument_list|,

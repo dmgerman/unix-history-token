@@ -611,9 +611,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    %.32s\n"
+literal|"    %.32s (line %u)\n"
 argument_list|,
 name|StringStart
+argument_list|,
+name|TotalLines
 argument_list|)
 expr_stmt|;
 break|break;

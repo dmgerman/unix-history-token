@@ -55,7 +55,7 @@ operator|=
 operator|(
 name|char
 operator|)
-name|ACPI_TOLOWER
+name|tolower
 argument_list|(
 operator|*
 name|String

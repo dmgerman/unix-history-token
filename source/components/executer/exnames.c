@@ -451,7 +451,7 @@ condition|(
 name|NameString
 condition|)
 block|{
-name|ACPI_STRCAT
+name|strcat
 argument_list|(
 name|NameString
 argument_list|,

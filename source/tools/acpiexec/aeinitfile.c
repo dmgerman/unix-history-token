@@ -71,6 +71,16 @@ end_define
 begin_decl_stmt
 specifier|static
 name|char
+name|LineBuffer
+index|[
+name|AE_FILE_BUFFER_SIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
 name|NameBuffer
 index|[
 name|AE_FILE_BUFFER_SIZE
@@ -212,35 +222,42 @@ expr_stmt|;
 comment|/* Read the entire file line-by-line */
 while|while
 condition|(
-name|fscanf
+name|fgets
 argument_list|(
+name|LineBuffer
+argument_list|,
+name|AE_FILE_BUFFER_SIZE
+argument_list|,
 name|InitFile
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|sscanf
+argument_list|(
+name|LineBuffer
 argument_list|,
 literal|"%s %s\n"
-argument_list|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
 argument_list|,
 operator|&
 name|NameBuffer
 index|[
 literal|1
 index|]
-argument_list|)
 argument_list|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
-operator|&
 name|ValueBuffer
 argument_list|)
-argument_list|)
-operator|==
+operator|!=
 literal|2
 condition|)
 block|{
+goto|goto
+name|CleanupAndExit
+goto|;
+block|}
 comment|/* Add a root prefix if not present in the string */
 name|i
 operator|=
@@ -278,6 +295,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Cleanup */
+name|CleanupAndExit
+label|:
 name|fclose
 argument_list|(
 name|InitFile
@@ -394,7 +413,9 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%s\n"
+literal|"%s %s\n"
+argument_list|,
+name|ValueString
 argument_list|,
 name|AcpiFormatException
 argument_list|(

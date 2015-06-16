@@ -97,7 +97,7 @@ operator|=
 operator|(
 name|char
 operator|)
-name|ACPI_TOLOWER
+name|tolower
 argument_list|(
 operator|*
 name|String
@@ -238,7 +238,7 @@ operator|=
 operator|(
 name|char
 operator|)
-name|ACPI_TOUPPER
+name|toupper
 argument_list|(
 operator|*
 name|String
@@ -364,7 +364,7 @@ name|String
 operator|)
 operator|&&
 operator|(
-name|ACPI_IS_SPACE
+name|isspace
 argument_list|(
 operator|*
 name|String
@@ -397,7 +397,7 @@ literal|'0'
 operator|)
 operator|&&
 operator|(
-name|ACPI_TOLOWER
+name|tolower
 argument_list|(
 operator|*
 operator|(
@@ -442,7 +442,7 @@ operator|*
 name|String
 operator|)
 operator|||
-name|ACPI_IS_SPACE
+name|isspace
 argument_list|(
 operator|*
 name|String
@@ -490,7 +490,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ACPI_IS_DIGIT
+name|isdigit
 argument_list|(
 operator|*
 name|String
@@ -532,7 +532,7 @@ operator|=
 operator|(
 name|UINT8
 operator|)
-name|ACPI_TOUPPER
+name|toupper
 argument_list|(
 operator|*
 name|String
@@ -540,7 +540,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_IS_XDIGIT
+name|isxdigit
 argument_list|(
 operator|(
 name|char
@@ -919,7 +919,7 @@ default|default:
 comment|/* Check for printable character or hex escape */
 if|if
 condition|(
-name|ACPI_IS_PRINT
+name|isprint
 argument_list|(
 name|String
 index|[
@@ -1355,7 +1355,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Source
 argument_list|)
@@ -1369,7 +1369,7 @@ name|TRUE
 operator|)
 return|;
 block|}
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|Dest
 argument_list|,
@@ -1403,12 +1403,12 @@ block|{
 if|if
 condition|(
 operator|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Dest
 argument_list|)
 operator|+
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Source
 argument_list|)
@@ -1423,7 +1423,7 @@ name|TRUE
 operator|)
 return|;
 block|}
-name|ACPI_STRCAT
+name|strcat
 argument_list|(
 name|Dest
 argument_list|,
@@ -1466,7 +1466,7 @@ name|ACPI_MIN
 argument_list|(
 name|MaxTransferLength
 argument_list|,
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Source
 argument_list|)
@@ -1475,7 +1475,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Dest
 argument_list|)
@@ -1492,7 +1492,7 @@ name|TRUE
 operator|)
 return|;
 block|}
-name|ACPI_STRNCAT
+name|strncat
 argument_list|(
 name|Dest
 argument_list|,

@@ -161,7 +161,7 @@ control|)
 block|{
 if|if
 condition|(
-name|ACPI_STRSTR
+name|strstr
 argument_list|(
 name|Arguments
 index|[
@@ -776,7 +776,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|Buffer
 argument_list|,

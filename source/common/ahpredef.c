@@ -1770,9 +1770,9 @@ name|AH_PREDEF
 argument_list|(
 literal|"_REV"
 argument_list|,
-literal|"Supported ACPI Revision"
+literal|"Supported Integer Width"
 argument_list|,
-literal|"Returns the revision of the ACPI specification that is implemented"
+literal|"Returns the supported integer width (<= 1: 32 bits only,>=2: both 32 and 64 bits"
 argument_list|)
 block|,
 name|AH_PREDEF

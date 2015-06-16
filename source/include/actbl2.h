@@ -20,7 +20,7 @@ name|__ACTBL2_H__
 end_define
 
 begin_comment
-comment|/*******************************************************************************  *  * Additional ACPI Tables (2)  *  * These tables are not consumed directly by the ACPICA subsystem, but are  * included here to support device drivers and the AML disassembler.  *  * The tables in this file are defined by third-party specifications, and are  * not defined directly by the ACPI specification itself.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Additional ACPI Tables (2)  *  * These tables are not consumed directly by the ACPICA subsystem, but are  * included here to support device drivers and the AML disassembler.  *  * Generally, the tables in this file are defined by third-party specifications,  * and are not defined directly by the ACPI specification itself.  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -234,6 +234,17 @@ end_define
 
 begin_comment
 comment|/* Trusted Computing Platform Alliance table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SIG_TPM2
+value|"TPM2"
+end_define
+
+begin_comment
+comment|/* Trusted Platform Module 2.0 H/W interface table */
 end_comment
 
 begin_define
@@ -3332,33 +3343,231 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*******************************************************************************  *  * TCPA - Trusted Computing Platform Alliance table  *        Version 1  *  * Conforms to "TCG PC Specific Implementation Specification",  * Version 1.1, August 18, 2003  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * TCPA - Trusted Computing Platform Alliance table  *        Version 2  *  * Conforms to "TCG ACPI Specification, Family 1.2 and 2.0",  * December 19, 2014  *  * NOTE: There are two versions of the table with the same signature --  * the client version and the server version.  *  ******************************************************************************/
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_table_tcpa
+name|acpi_table_tcpa_client
 block|{
 name|ACPI_TABLE_HEADER
 name|Header
 decl_stmt|;
 comment|/* Common ACPI table header */
 name|UINT16
-name|Reserved
+name|PlatformClass
 decl_stmt|;
 name|UINT32
-name|MaxLogLength
+name|MinimumLogLength
 decl_stmt|;
-comment|/* Maximum length for the event log area */
+comment|/* Minimum length for the event log area */
 name|UINT64
 name|LogAddress
 decl_stmt|;
 comment|/* Address of the event log area */
 block|}
-name|ACPI_TABLE_TCPA
+name|ACPI_TABLE_TCPA_CLIENT
 typedef|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_tcpa_server
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+comment|/* Common ACPI table header */
+name|UINT16
+name|PlatformClass
+decl_stmt|;
+name|UINT16
+name|Reserved
+decl_stmt|;
+name|UINT64
+name|MinimumLogLength
+decl_stmt|;
+comment|/* Minimum length for the event log area */
+name|UINT64
+name|LogAddress
+decl_stmt|;
+comment|/* Address of the event log area */
+name|UINT16
+name|SpecRevision
+decl_stmt|;
+name|UINT8
+name|DeviceFlags
+decl_stmt|;
+name|UINT8
+name|InterruptFlags
+decl_stmt|;
+name|UINT8
+name|GpeNumber
+decl_stmt|;
+name|UINT8
+name|Reserved2
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|UINT32
+name|GlobalInterrupt
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|Address
+decl_stmt|;
+name|UINT32
+name|Reserved3
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|ConfigAddress
+decl_stmt|;
+name|UINT8
+name|Group
+decl_stmt|;
+name|UINT8
+name|Bus
+decl_stmt|;
+comment|/* PCI Bus/Segment/Function numbers */
+name|UINT8
+name|Device
+decl_stmt|;
+name|UINT8
+name|Function
+decl_stmt|;
+block|}
+name|ACPI_TABLE_TCPA_SERVER
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Values for DeviceFlags above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_TCPA_PCI_DEVICE
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TCPA_BUS_PNP
+value|(1<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TCPA_ADDRESS_VALID
+value|(1<<2)
+end_define
+
+begin_comment
+comment|/* Values for InterruptFlags above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_TCPA_INTERRUPT_MODE
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TCPA_INTERRUPT_POLARITY
+value|(1<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TCPA_SCI_VIA_GPE
+value|(1<<2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TCPA_GLOBAL_INTERRUPT
+value|(1<<3)
+end_define
+
+begin_comment
+comment|/*******************************************************************************  *  * TPM2 - Trusted Platform Module (TPM) 2.0 Hardware Interface Table  *        Version 4  *  * Conforms to "TCG ACPI Specification, Family 1.2 and 2.0",  * December 19, 2014  *  ******************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_tpm2
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+comment|/* Common ACPI table header */
+name|UINT16
+name|PlatformClass
+decl_stmt|;
+name|UINT16
+name|Reserved
+decl_stmt|;
+name|UINT64
+name|ControlAddress
+decl_stmt|;
+name|UINT32
+name|StartMethod
+decl_stmt|;
+comment|/* Platform-specific data follows */
+block|}
+name|ACPI_TABLE_TPM2
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Values for StartMethod above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_TPM2_NOT_ALLOWED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TPM2_START_METHOD
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TPM2_MEMORY_MAPPED
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TPM2_COMMAND_BUFFER
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD
+value|8
+end_define
 
 begin_comment
 comment|/*******************************************************************************  *  * UEFI - UEFI Boot optimization Table  *        Version 1  *  * Conforms to "Unified Extensible Firmware Interface Specification",  * Version 2.3, May 8, 2009  *  ******************************************************************************/

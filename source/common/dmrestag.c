@@ -2621,7 +2621,7 @@ block|}
 comment|/*      * Create the full path to the resource and tag by: remove the buffer name,      * append the resource descriptor name, append a dot, append the tag name.      *      * TBD: Always using the full path is a bit brute force, the path can be      * often be optimized with carats (if the original buffer namepath is a      * single nameseg). This doesn't really matter, because these paths do not      * end up in the final compiled AML, it's just an appearance issue for the      * disassembled code.      */
 name|Pathname
 index|[
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Pathname
 argument_list|)
@@ -2631,7 +2631,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|ACPI_STRNCAT
+name|strncat
 argument_list|(
 name|Pathname
 argument_list|,
@@ -2644,14 +2644,14 @@ argument_list|,
 name|ACPI_NAME_SIZE
 argument_list|)
 expr_stmt|;
-name|ACPI_STRCAT
+name|strcat
 argument_list|(
 name|Pathname
 argument_list|,
 literal|"."
 argument_list|)
 expr_stmt|;
-name|ACPI_STRNCAT
+name|strncat
 argument_list|(
 name|Pathname
 argument_list|,

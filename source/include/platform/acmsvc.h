@@ -20,6 +20,10 @@ name|__ACMSVC_H__
 end_define
 
 begin_comment
+comment|/* Note: do not include any C library headers here */
+end_comment
+
+begin_comment
 comment|/*  * Map low I/O functions for MS. This allows us to disable MS language  * extensions for maximum portability.  */
 end_comment
 
@@ -431,18 +435,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<crtdbg.h>
 end_include
 
@@ -474,6 +466,35 @@ unit|Detected memory leaks! Dumping objects -> ..\..\source\os_specific\service_
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|_MSC_VER
+operator|>
+literal|1200
+end_if
+
+begin_comment
+comment|/* Versions above VC++ 6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COMPILER_VA_MACRO
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_endif
 endif|#

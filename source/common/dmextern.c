@@ -456,12 +456,12 @@ block|}
 name|Length
 operator|=
 operator|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|ParentPath
 argument_list|)
 operator|+
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Path
 argument_list|)
@@ -514,7 +514,7 @@ name|Cleanup
 goto|;
 block|}
 comment|/*      * Concatenate parent fullpath and path. For example,      * parent fullpath "\_SB_", Path "^INIT", Fullpath "\_SB_.INIT"      *      * Copy the parent path      */
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|Fullpath
 argument_list|,
@@ -534,7 +534,7 @@ literal|1
 index|]
 condition|)
 block|{
-name|ACPI_STRCAT
+name|strcat
 argument_list|(
 name|Fullpath
 argument_list|,
@@ -543,7 +543,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Copy child path (carat parent prefix(es) were skipped above) */
-name|ACPI_STRCAT
+name|strcat
 argument_list|(
 name|Fullpath
 argument_list|,
@@ -1373,7 +1373,7 @@ name|Temp
 operator|=
 name|ACPI_ALLOCATE_ZEROED
 argument_list|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|ExternalPath
 argument_list|)
@@ -1390,7 +1390,7 @@ block|{
 name|return_VOID
 expr_stmt|;
 block|}
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|Temp
 argument_list|,
@@ -1680,7 +1680,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|ExternalPath
 argument_list|,
@@ -1843,7 +1843,7 @@ operator|=
 operator|(
 name|UINT16
 operator|)
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|ExternalPath
 argument_list|)

@@ -74,11 +74,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_DragonFly
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|_FreeBSD
-end_ifdef
+argument_list|)
+end_if
 
 begin_define
 define|#

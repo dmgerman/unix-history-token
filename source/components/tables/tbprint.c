@@ -102,7 +102,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|ACPI_IS_PRINT
+name|isprint
 argument_list|(
 operator|*
 name|String
@@ -143,7 +143,7 @@ modifier|*
 name|Header
 parameter_list|)
 block|{
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|OutHeader
 argument_list|,
@@ -261,7 +261,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* RSDP has no common fields */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|LocalHeader
 operator|.

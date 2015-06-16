@@ -814,7 +814,7 @@ name|String
 operator|.
 name|Length
 operator|=
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Exception
 argument_list|)

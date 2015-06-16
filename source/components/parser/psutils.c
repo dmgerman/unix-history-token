@@ -133,7 +133,7 @@ name|Opcode
 expr_stmt|;
 name|ACPI_DISASM_ONLY_MEMBERS
 argument_list|(
-name|ACPI_STRNCPY
+name|strncpy
 argument_list|(
 name|Op
 operator|->

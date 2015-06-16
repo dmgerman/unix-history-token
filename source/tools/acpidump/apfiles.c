@@ -260,7 +260,7 @@ operator|=
 operator|(
 name|char
 operator|)
-name|ACPI_TOLOWER
+name|tolower
 argument_list|(
 name|Filename
 index|[
@@ -276,7 +276,7 @@ operator|=
 operator|(
 name|char
 operator|)
-name|ACPI_TOLOWER
+name|tolower
 argument_list|(
 name|Filename
 index|[
@@ -292,7 +292,7 @@ operator|=
 operator|(
 name|char
 operator|)
-name|ACPI_TOLOWER
+name|tolower
 argument_list|(
 name|Filename
 index|[
@@ -308,7 +308,7 @@ operator|=
 operator|(
 name|char
 operator|)
-name|ACPI_TOLOWER
+name|tolower
 argument_list|(
 name|Filename
 index|[
@@ -345,7 +345,7 @@ argument_list|,
 name|Instance
 argument_list|)
 expr_stmt|;
-name|ACPI_STRCAT
+name|strcat
 argument_list|(
 name|Filename
 argument_list|,
@@ -353,7 +353,7 @@ name|InstanceStr
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_STRCAT
+name|strcat
 argument_list|(
 name|Filename
 argument_list|,

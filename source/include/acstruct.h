@@ -125,6 +125,10 @@ name|UINT8
 name|PassNumber
 decl_stmt|;
 comment|/* Parse pass during table load */
+name|BOOLEAN
+name|NamespaceOverride
+decl_stmt|;
+comment|/* Override existing objects */
 name|UINT8
 name|ResultSize
 decl_stmt|;

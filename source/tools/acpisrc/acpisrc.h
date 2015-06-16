@@ -947,21 +947,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AsRemoveMacro
-parameter_list|(
-name|char
-modifier|*
-name|Buffer
-parameter_list|,
-name|char
-modifier|*
-name|Keyword
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|AsCheckForBraces
 parameter_list|(
 name|char

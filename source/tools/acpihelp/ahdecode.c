@@ -877,7 +877,7 @@ return|return;
 block|}
 name|Opcode
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|OpcodeString
 argument_list|,
@@ -2346,7 +2346,7 @@ block|}
 comment|/* Decode a single user-supplied exception code */
 name|Status
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|HexString
 argument_list|,

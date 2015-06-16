@@ -211,7 +211,7 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|LocalXSDT
 argument_list|,
@@ -386,7 +386,7 @@ name|Next
 expr_stmt|;
 block|}
 comment|/* Build an RSDP */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 operator|&
 name|LocalRSDP
@@ -406,7 +406,7 @@ operator|.
 name|Signature
 argument_list|)
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|LocalRSDP
 operator|.
@@ -598,7 +598,7 @@ block|}
 else|else
 block|{
 comment|/*          * Build a local FADT so we can test the hardware/event init          */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 operator|&
 name|LocalFADT
@@ -827,7 +827,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Build a FACS */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 operator|&
 name|LocalFACS

@@ -760,7 +760,7 @@ case|case
 name|ACPI_RESOURCE_TYPE_ADDRESS64
 case|:
 comment|/* Simple copy for 64 bit source */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Out
 argument_list|,
@@ -996,7 +996,7 @@ name|Subtype
 operator|)
 operator|||
 operator|(
-name|ACPI_MEMCMP
+name|memcmp
 argument_list|(
 name|Vendor
 operator|->
@@ -1052,7 +1052,7 @@ operator|)
 return|;
 block|}
 comment|/* Found the correct resource, copy and return it */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Buffer
 operator|->

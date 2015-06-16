@@ -119,6 +119,13 @@ name|ACPI_COMPARE_NAME
 argument_list|(
 name|Signature
 argument_list|,
+name|ACPI_SIG_OSDT
+argument_list|)
+operator|||
+name|ACPI_COMPARE_NAME
+argument_list|(
+name|Signature
+argument_list|,
 name|ACPI_SIG_SSDT
 argument_list|)
 operator|||
@@ -198,7 +205,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|Signature
 argument_list|,
@@ -206,7 +213,7 @@ literal|"ALL"
 argument_list|)
 operator|||
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|Signature
 argument_list|,
@@ -715,7 +722,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|" * Template for [%4.4s] ACPI Table\n"
+literal|" * Template for [%4.4s] ACPI Table"
 argument_list|,
 name|Signature
 argument_list|)
@@ -727,6 +734,11 @@ name|TableData
 condition|)
 block|{
 comment|/* Normal case, tables that appear in AcpiDmTableData */
+name|AcpiOsPrintf
+argument_list|(
+literal|" (static data table)\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Gbl_VerboseTemplates
@@ -744,7 +756,7 @@ block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|" * Format: [ByteLength]"
-literal|"  FieldName : HexFieldValue\n */\n\n"
+literal|"  FieldName : HexFieldValue\n */\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -763,10 +775,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Special ACPI tables - DSDT, SSDT, FADT, RSDP */
+comment|/* Special ACPI tables - DSDT, SSDT, OSDT, FADT, RSDP */
 name|AcpiOsPrintf
 argument_list|(
-literal|" */\n\n"
+literal|" (AML byte code table)\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|" */\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -863,6 +880,65 @@ operator|!=
 sizeof|sizeof
 argument_list|(
 name|TemplateSsdt
+argument_list|)
+operator|-
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Could not write to output file %s\n"
+argument_list|,
+name|DisasmFilename
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_ERROR
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|ACPI_COMPARE_NAME
+argument_list|(
+name|Signature
+argument_list|,
+name|ACPI_SIG_OSDT
+argument_list|)
+condition|)
+block|{
+name|Actual
+operator|=
+name|fwrite
+argument_list|(
+name|TemplateOsdt
+argument_list|,
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|TemplateOsdt
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+name|File
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Actual
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|TemplateOsdt
 argument_list|)
 operator|-
 literal|1

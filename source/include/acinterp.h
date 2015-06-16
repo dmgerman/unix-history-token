@@ -1715,6 +1715,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|AcpiExPciClsToString
+parameter_list|(
+name|char
+modifier|*
+name|Dest
+parameter_list|,
+name|UINT8
+name|ClassCode
+index|[
+literal|3
+index|]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|BOOLEAN
 name|AcpiIsValidSpaceId
 parameter_list|(

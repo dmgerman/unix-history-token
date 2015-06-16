@@ -266,7 +266,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|argv
 index|[
@@ -310,7 +310,7 @@ operator|||
 operator|(
 name|OptsPtr
 operator|=
-name|ACPI_STRCHR
+name|strchr
 argument_list|(
 name|opts
 argument_list|,

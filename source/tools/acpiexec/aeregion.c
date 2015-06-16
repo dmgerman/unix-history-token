@@ -1871,7 +1871,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Initialize the region with the default fill value */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|RegionElement
 operator|->
@@ -1908,7 +1908,7 @@ operator|->
 name|Address
 expr_stmt|;
 comment|/*                      * Copy the old buffer to its same location within the new                      * buffer                      */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|BufferValue
 argument_list|,
@@ -1985,7 +1985,7 @@ operator|)
 return|;
 block|}
 comment|/* Initialize the region with the default fill value */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|RegionElement
 operator|->
@@ -2195,7 +2195,7 @@ case|case
 name|ACPI_READ
 case|:
 comment|/*          * Set the pointer Value to whatever is in the buffer          */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Value
 argument_list|,
@@ -2209,7 +2209,7 @@ case|case
 name|ACPI_WRITE
 case|:
 comment|/*          * Write the contents of Value to the buffer          */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|BufferValue
 argument_list|,

@@ -3546,27 +3546,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|ACPI_IDENTIFIER_TABLE
-name|LinuxEliminateMacros
-index|[]
-init|=
-block|{
-block|{
-literal|"ACPI_GET_ADDRESS"
-block|}
-block|,
-block|{
-literal|"ACPI_VALID_ADDRESS"
-block|}
-block|,
-block|{
-name|NULL
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ACPI_IDENTIFIER_TABLE
 name|LinuxEliminateLines_C
 index|[]
 init|=
@@ -3868,7 +3847,7 @@ name|LinuxEliminateLines_C
 block|,
 name|NULL
 block|,
-name|LinuxEliminateMacros
+name|NULL
 block|,
 name|AcpiIdentifiers
 block|,

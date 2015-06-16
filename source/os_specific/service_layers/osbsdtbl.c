@@ -421,7 +421,7 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|LocalTable
 argument_list|,
@@ -1005,7 +1005,7 @@ condition|)
 block|{
 name|Address
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|Buffer
 argument_list|,
@@ -1128,7 +1128,7 @@ name|AE_ERROR
 operator|)
 return|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 operator|&
 name|Gbl_Rsdp
@@ -1231,7 +1231,7 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Gbl_Xsdt
 argument_list|,
@@ -1331,7 +1331,7 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Gbl_Rsdt
 argument_list|,
@@ -1468,7 +1468,7 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Gbl_Fadt
 argument_list|,
@@ -1972,7 +1972,7 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|LocalTable
 argument_list|,

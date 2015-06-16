@@ -179,7 +179,7 @@ argument_list|(
 name|ASL_TREE_OUTPUT
 argument_list|,
 literal|"%*s Value    P_Op A_Op OpLen PByts Len  SubLen PSubLen OpPtr"
-literal|"    Parent   Child    Next     Flags    AcTyp    Final Col L\n"
+literal|"    Parent   Child    Next     Flags    AcTyp    Final Col L#  EL#  LL#  ELL#\n"
 argument_list|,
 literal|76
 argument_list|,
@@ -232,7 +232,7 @@ argument_list|(
 name|ASL_TREE_OUTPUT
 argument_list|,
 literal|"%*s Value    P_Op A_Op OpLen PByts Len  SubLen PSubLen OpPtr"
-literal|"    Parent   Child    Next     Flags    AcTyp    Final Col L\n"
+literal|"    Parent   Child    Next     Flags    AcTyp    Final Col L#  EL#  LL#  ELL#\n"
 argument_list|,
 literal|76
 argument_list|,
@@ -323,7 +323,7 @@ argument_list|(
 name|ASL_TREE_OUTPUT
 argument_list|,
 literal|"%08X %04X %04X %01X     %04X  %04X %04X   %04X    "
-literal|"%08X %08X %08X %08X %08X %08X %04X  %02d  %02d\n"
+literal|"%08X %08X %08X %08X %08X %08X %04X  %02d  %02d   %02d   %02d   %02d\n"
 argument_list|,
 comment|/* 1  */
 operator|(
@@ -456,6 +456,27 @@ operator|->
 name|Asl
 operator|.
 name|LineNumber
+argument_list|,
+comment|/* 18 */
+name|Op
+operator|->
+name|Asl
+operator|.
+name|EndLine
+argument_list|,
+comment|/* 19 */
+name|Op
+operator|->
+name|Asl
+operator|.
+name|LogicalLineNumber
+argument_list|,
+comment|/* 20 */
+name|Op
+operator|->
+name|Asl
+operator|.
+name|EndLogicalLine
 argument_list|)
 expr_stmt|;
 comment|/* Generate the AML for this node */

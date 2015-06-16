@@ -351,9 +351,27 @@ block|,
 block|{
 literal|0x15
 block|,
+literal|0x15
+block|,
+literal|"0x15"
+block|,
+literal|"ExternalOp"
+block|,
+literal|"NameObject"
+block|,
+literal|"NameString ByteData ByteData"
+block|,
+name|NULL
+block|,
+literal|"DefExternal := ExternalOp NameString ObjectType ArgumentCount"
+block|}
+block|,
+block|{
+literal|0x16
+block|,
 literal|0x2D
 block|,
-literal|"0x15-0x2D"
+literal|"0x16-0x2D"
 block|,
 name|NULL
 block|,

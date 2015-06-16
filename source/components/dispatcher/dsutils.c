@@ -1323,7 +1323,7 @@ operator|)
 name|NameLength
 argument_list|)
 expr_stmt|;
-name|ACPI_STRNCPY
+name|strncpy
 argument_list|(
 name|ObjDesc
 operator|->

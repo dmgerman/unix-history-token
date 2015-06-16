@@ -279,7 +279,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ACPI_MEMCMP
+name|memcmp
 argument_list|(
 name|Data
 argument_list|,

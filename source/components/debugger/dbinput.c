@@ -1423,13 +1423,13 @@ condition|)
 block|{
 if|if
 condition|(
-name|ACPI_TOLOWER
+name|tolower
 argument_list|(
 operator|*
 name|Command
 argument_list|)
 operator|!=
-name|ACPI_TOLOWER
+name|tolower
 argument_list|(
 operator|*
 name|Invocation
@@ -2173,7 +2173,7 @@ control|)
 block|{
 if|if
 condition|(
-name|ACPI_STRSTR
+name|strstr
 argument_list|(
 name|AcpiGbl_DbCommands
 index|[
@@ -2805,7 +2805,7 @@ name|AcpiGbl_DbConsoleDebugLevel
 expr_stmt|;
 name|AcpiGbl_DbConsoleDebugLevel
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|AcpiGbl_DbArgs
 index|[
@@ -2835,7 +2835,7 @@ name|AcpiGbl_DbDebugLevel
 expr_stmt|;
 name|AcpiGbl_DbDebugLevel
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|AcpiGbl_DbArgs
 index|[
@@ -2942,7 +2942,7 @@ name|CMD_NOTIFY
 case|:
 name|Temp
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|AcpiGbl_DbArgs
 index|[

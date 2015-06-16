@@ -588,7 +588,7 @@ name|Gbl_Signature
 operator|=
 name|UtStringCacheCalloc
 argument_list|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Signature
 argument_list|)
@@ -763,6 +763,7 @@ operator|||
 name|Gbl_CompileGeneric
 condition|)
 block|{
+comment|/* Unknown table signature and/or force generic compile */
 name|DtCompileGeneric
 argument_list|(
 operator|(
@@ -1034,7 +1035,7 @@ operator|&
 name|DT_OPTIONAL
 operator|)
 operator|&&
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 operator|(
 operator|*
@@ -1429,7 +1430,7 @@ argument_list|(
 name|InlineSubtable
 argument_list|)
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Buffer
 argument_list|,

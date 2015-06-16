@@ -334,7 +334,7 @@ condition|)
 block|{
 return|return;
 block|}
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 operator|&
 name|BlockAddress

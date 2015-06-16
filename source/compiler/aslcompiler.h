@@ -2480,7 +2480,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|UtStrtoul64
+name|stroul64
 parameter_list|(
 name|char
 modifier|*

@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmclib - Local implementation of C library functions  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utclib - ACPICA implementations of C library functions  *  *****************************************************************************/
 end_comment
 
 begin_comment
 comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CLIBRARY
+end_define
 
 begin_include
 include|#
@@ -20,7 +26,11 @@ file|"accommon.h"
 end_include
 
 begin_comment
-comment|/*  * These implementations of standard C Library routines can optionally be  * used if a C library is not available. In general, they are less efficient  * than an inline or assembly implementation  */
+comment|/*  * This module contains implementations of the standard C library functions  * that are required by the ACPICA code at both application level and kernel  * level.  *  * The module is an optional feature that can be used if a local/system  * C library is not available. Some operating system kernels may not have  * an internal C library.  *  * In general, these functions are less efficient than an inline or assembly  * code implementation.  *  * These C functions and the associated prototypes are enabled by default  * unless the ACPI_USE_SYSTEM_CLIBRARY symbol is defined. This is usually  * automatically defined for the ACPICA applications such as iASL and  * AcpiExec, so that these user-level applications use the local C library  * instead of the functions in this module.  */
+end_comment
+
+begin_comment
+comment|/*******************************************************************************  *  * Functions implemented in this module:  *  * FUNCTION:    memcmp  * FUNCTION:    memcpy  * FUNCTION:    memset  * FUNCTION:    strlen  * FUNCTION:    strcpy  * FUNCTION:    strncpy  * FUNCTION:    strcmp  * FUNCTION:    strchr  * FUNCTION:    strncmp  * FUNCTION:    strcat  * FUNCTION:    strncat  * FUNCTION:    strstr  * FUNCTION:    strtoul  * FUNCTION:    toupper  * FUNCTION:    tolower  * FUNCTION:    is* functions  *  ******************************************************************************/
 end_comment
 
 begin_define
@@ -33,7 +43,7 @@ end_define
 begin_macro
 name|ACPI_MODULE_NAME
 argument_list|(
-literal|"cmclib"
+literal|"utclib"
 argument_list|)
 end_macro
 
@@ -42,6 +52,10 @@ ifndef|#
 directive|ifndef
 name|ACPI_USE_SYSTEM_CLIBRARY
 end_ifndef
+
+begin_comment
+comment|/* Entire module */
+end_comment
 
 begin_define
 define|#
@@ -58,27 +72,45 @@ value|0
 end_define
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtMemcmp (memcmp)  *  * PARAMETERS:  Buffer1         - First Buffer  *              Buffer2         - Second Buffer  *              Count           - Maximum # of bytes to compare  *  * RETURN:      Index where Buffers mismatched, or 0 if Buffers matched  *  * DESCRIPTION: Compare two Buffers, with a maximum length  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    memcmp  *  * PARAMETERS:  Buffer1         - First Buffer  *              Buffer2         - Second Buffer  *              Count           - Maximum # of bytes to compare  *  * RETURN:      Index where Buffers mismatched, or 0 if Buffers matched  *  * DESCRIPTION: Compare two Buffers, with a maximum length  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|int
-name|AcpiUtMemcmp
+name|memcmp
 parameter_list|(
-specifier|const
-name|char
+name|void
 modifier|*
-name|Buffer1
+name|VBuffer1
 parameter_list|,
-specifier|const
-name|char
+name|void
 modifier|*
-name|Buffer2
+name|VBuffer2
 parameter_list|,
 name|ACPI_SIZE
 name|Count
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|Buffer1
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|VBuffer1
+decl_stmt|;
+name|char
+modifier|*
+name|Buffer2
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|VBuffer2
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -131,13 +163,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtMemcpy (memcpy)  *  * PARAMETERS:  Dest        - Target of the copy  *              Src         - Source buffer to copy  *              Count       - Number of bytes to copy  *  * RETURN:      Dest  *  * DESCRIPTION: Copy arbitrary bytes of memory  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    memcpy  *  * PARAMETERS:  Dest        - Target of the copy  *              Src         - Source buffer to copy  *              Count       - Number of bytes to copy  *  * RETURN:      Dest  *  * DESCRIPTION: Copy arbitrary bytes of memory  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 modifier|*
-name|AcpiUtMemcpy
+name|memcpy
 parameter_list|(
 name|void
 modifier|*
@@ -202,19 +234,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtMemset (memset)  *  * PARAMETERS:  Dest        - Buffer to set  *              Value       - Value to set each byte of memory  *              Count       - Number of bytes to set  *  * RETURN:      Dest  *  * DESCRIPTION: Initialize a buffer to a known value.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    memset  *  * PARAMETERS:  Dest        - Buffer to set  *              Value       - Value to set each byte of memory  *              Count       - Number of bytes to set  *  * RETURN:      Dest  *  * DESCRIPTION: Initialize a buffer to a known value.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 modifier|*
-name|AcpiUtMemset
+name|memset
 parameter_list|(
 name|void
 modifier|*
 name|Dest
 parameter_list|,
-name|UINT8
+name|int
 name|Value
 parameter_list|,
 name|ACPI_SIZE
@@ -260,12 +292,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrlen (strlen)  *  * PARAMETERS:  String              - Null terminated string  *  * RETURN:      Length  *  * DESCRIPTION: Returns the length of the input string  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    strlen  *  * PARAMETERS:  String              - Null terminated string  *  * RETURN:      Length  *  * DESCRIPTION: Returns the length of the input string  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_SIZE
-name|AcpiUtStrlen
+name|strlen
 parameter_list|(
 specifier|const
 name|char
@@ -301,13 +333,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrcpy (strcpy)  *  * PARAMETERS:  DstString       - Target of the copy  *              SrcString       - The source string to copy  *  * RETURN:      DstString  *  * DESCRIPTION: Copy a null terminated string  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    strcpy  *  * PARAMETERS:  DstString       - Target of the copy  *              SrcString       - The source string to copy  *  * RETURN:      DstString  *  * DESCRIPTION: Copy a null terminated string  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|char
 modifier|*
-name|AcpiUtStrcpy
+name|strcpy
 parameter_list|(
 name|char
 modifier|*
@@ -360,13 +392,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrncpy (strncpy)  *  * PARAMETERS:  DstString       - Target of the copy  *              SrcString       - The source string to copy  *              Count           - Maximum # of bytes to copy  *  * RETURN:      DstString  *  * DESCRIPTION: Copy a null terminated string, with a maximum length  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    strncpy  *  * PARAMETERS:  DstString       - Target of the copy  *              SrcString       - The source string to copy  *              Count           - Maximum # of bytes to copy  *  * RETURN:      DstString  *  * DESCRIPTION: Copy a null terminated string, with a maximum length  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|char
 modifier|*
-name|AcpiUtStrncpy
+name|strncpy
 parameter_list|(
 name|char
 modifier|*
@@ -441,12 +473,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrcmp (strcmp)  *  * PARAMETERS:  String1         - First string  *              String2         - Second string  *  * RETURN:      Index where strings mismatched, or 0 if strings matched  *  * DESCRIPTION: Compare two null terminated strings  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    strcmp  *  * PARAMETERS:  String1         - First string  *              String2         - Second string  *  * RETURN:      Index where strings mismatched, or 0 if strings matched  *  * DESCRIPTION: Compare two null terminated strings  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|int
-name|AcpiUtStrcmp
+name|strcmp
 parameter_list|(
 specifier|const
 name|char
@@ -510,13 +542,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrchr (strchr)  *  * PARAMETERS:  String          - Search string  *              ch              - character to search for  *  * RETURN:      Ptr to char or NULL if not found  *  * DESCRIPTION: Search a string for a character  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    strchr  *  * PARAMETERS:  String          - Search string  *              ch              - character to search for  *  * RETURN:      Ptr to char or NULL if not found  *  * DESCRIPTION: Search a string for a character  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|char
 modifier|*
-name|AcpiUtStrchr
+name|strchr
 parameter_list|(
 specifier|const
 name|char
@@ -572,12 +604,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrncmp (strncmp)  *  * PARAMETERS:  String1         - First string  *              String2         - Second string  *              Count           - Maximum # of bytes to compare  *  * RETURN:      Index where strings mismatched, or 0 if strings matched  *  * DESCRIPTION: Compare two null terminated strings, with a maximum length  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    strncmp  *  * PARAMETERS:  String1         - First string  *              String2         - Second string  *              Count           - Maximum # of bytes to compare  *  * RETURN:      Index where strings mismatched, or 0 if strings matched  *  * DESCRIPTION: Compare two null terminated strings, with a maximum length  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|int
-name|AcpiUtStrncmp
+name|strncmp
 parameter_list|(
 specifier|const
 name|char
@@ -657,13 +689,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrcat (Strcat)  *  * PARAMETERS:  DstString       - Target of the copy  *              SrcString       - The source string to copy  *  * RETURN:      DstString  *  * DESCRIPTION: Append a null terminated string to a null terminated string  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    strcat  *  * PARAMETERS:  DstString       - Target of the copy  *              SrcString       - The source string to copy  *  * RETURN:      DstString  *  * DESCRIPTION: Append a null terminated string to a null terminated string  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|char
 modifier|*
-name|AcpiUtStrcat
+name|strcat
 parameter_list|(
 name|char
 modifier|*
@@ -723,13 +755,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrncat (strncat)  *  * PARAMETERS:  DstString       - Target of the copy  *              SrcString       - The source string to copy  *              Count           - Maximum # of bytes to copy  *  * RETURN:      DstString  *  * DESCRIPTION: Append a null terminated string to a null terminated string,  *              with a maximum count.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    strncat  *  * PARAMETERS:  DstString       - Target of the copy  *              SrcString       - The source string to copy  *              Count           - Maximum # of bytes to copy  *  * RETURN:      DstString  *  * DESCRIPTION: Append a null terminated string to a null terminated string,  *              with a maximum count.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|char
 modifier|*
-name|AcpiUtStrncat
+name|strncat
 parameter_list|(
 name|char
 modifier|*
@@ -814,13 +846,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrstr (strstr)  *  * PARAMETERS:  String1         - Target string  *              String2         - Substring to search for  *  * RETURN:      Where substring match starts, Null if no match found  *  * DESCRIPTION: Checks if String2 occurs in String1. This is not really a  *              full implementation of strstr, only sufficient for command  *              matching  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    strstr  *  * PARAMETERS:  String1         - Target string  *              String2         - Substring to search for  *  * RETURN:      Where substring match starts, Null if no match found  *  * DESCRIPTION: Checks if String2 occurs in String1. This is not really a  *              full implementation of strstr, only sufficient for command  *              matching  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|char
 modifier|*
-name|AcpiUtStrstr
+name|strstr
 parameter_list|(
 name|char
 modifier|*
@@ -836,7 +868,7 @@ name|Length
 decl_stmt|;
 name|Length
 operator|=
-name|AcpiUtStrlen
+name|strlen
 argument_list|(
 name|String2
 argument_list|)
@@ -855,7 +887,7 @@ return|;
 block|}
 while|while
 condition|(
-name|AcpiUtStrlen
+name|strlen
 argument_list|(
 name|String1
 argument_list|)
@@ -865,7 +897,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|AcpiUtMemcmp
+name|memcmp
 argument_list|(
 name|String1
 argument_list|,
@@ -896,12 +928,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrtoul (strtoul)  *  * PARAMETERS:  String          - Null terminated string  *              Terminater      - Where a pointer to the terminating byte is  *                                returned  *              Base            - Radix of the string  *  * RETURN:      Converted value  *  * DESCRIPTION: Convert a string into a 32-bit unsigned value.  *              Note: use AcpiUtStrtoul64 for 64-bit integers.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    strtoul  *  * PARAMETERS:  String          - Null terminated string  *              Terminater      - Where a pointer to the terminating byte is  *                                returned  *              Base            - Radix of the string  *  * RETURN:      Converted value  *  * DESCRIPTION: Convert a string into a 32-bit unsigned value.  *              Note: use strtoul64 for 64-bit integers.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|UINT32
-name|AcpiUtStrtoul
+name|strtoul
 parameter_list|(
 specifier|const
 name|char
@@ -950,7 +982,7 @@ name|String
 expr_stmt|;
 while|while
 condition|(
-name|ACPI_IS_SPACE
+name|isspace
 argument_list|(
 operator|*
 name|String
@@ -1025,7 +1057,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|AcpiUtToLower
+name|tolower
 argument_list|(
 operator|*
 operator|(
@@ -1106,7 +1138,7 @@ name|String
 operator|==
 literal|'0'
 operator|&&
-name|AcpiUtToLower
+name|tolower
 argument_list|(
 operator|*
 operator|(
@@ -1131,7 +1163,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ACPI_IS_DIGIT
+name|isdigit
 argument_list|(
 operator|*
 name|String
@@ -1161,7 +1193,7 @@ operator|=
 operator|(
 name|UINT32
 operator|)
-name|AcpiUtToUpper
+name|toupper
 argument_list|(
 operator|*
 name|String
@@ -1169,7 +1201,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_IS_UPPER
+name|isupper
 argument_list|(
 name|index
 argument_list|)
@@ -1339,12 +1371,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtToUpper (TOUPPER)  *  * PARAMETERS:  c           - Character to convert  *  * RETURN:      Converted character as an int  *  * DESCRIPTION: Convert character to uppercase  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    toupper  *  * PARAMETERS:  c           - Character to convert  *  * RETURN:      Converted character as an int  *  * DESCRIPTION: Convert character to uppercase  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|int
-name|AcpiUtToUpper
+name|toupper
 parameter_list|(
 name|int
 name|c
@@ -1352,7 +1384,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|ACPI_IS_LOWER
+name|islower
 argument_list|(
 name|c
 argument_list|)
@@ -1374,12 +1406,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtToLower (TOLOWER)  *  * PARAMETERS:  c           - Character to convert  *  * RETURN:      Converted character as an int  *  * DESCRIPTION: Convert character to lowercase  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    tolower  *  * PARAMETERS:  c           - Character to convert  *  * RETURN:      Converted character as an int  *  * DESCRIPTION: Convert character to lowercase  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|int
-name|AcpiUtToLower
+name|tolower
 parameter_list|(
 name|int
 name|c
@@ -1387,7 +1419,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|ACPI_IS_UPPER
+name|isupper
 argument_list|(
 name|c
 argument_list|)

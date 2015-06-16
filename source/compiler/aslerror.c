@@ -1211,7 +1211,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Keep a copy of the extra message */
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|MessageBuffer
 argument_list|,
@@ -1231,7 +1231,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|LineBuffer
 argument_list|,
@@ -1429,7 +1429,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Keep a copy of the extra message */
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|MessageBuffer
 argument_list|,

@@ -696,6 +696,10 @@ name|PR_FILE_NODE
 modifier|*
 name|Fnode
 decl_stmt|;
+name|Gbl_HasIncludeFiles
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/* Save the current state in an Fnode */
 name|Fnode
 operator|=
@@ -797,15 +801,15 @@ name|Handle
 operator|=
 name|InputFile
 expr_stmt|;
-name|Gbl_PreviousLineNumber
-operator|=
-literal|0
-expr_stmt|;
 name|Gbl_CurrentLineNumber
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 comment|/* Emit a new #line directive for the include file */
+name|Gbl_CurrentLineNumber
+operator|=
+literal|1
+expr_stmt|;
 name|FlPrintFile
 argument_list|(
 name|ASL_FILE_PREPROCESSOR
@@ -911,10 +915,6 @@ name|Fnode
 operator|->
 name|CurrentLineNumber
 expr_stmt|;
-name|Gbl_PreviousLineNumber
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Emit a new #line directive after the include file */
 name|FlPrintFile
 argument_list|(
@@ -923,8 +923,6 @@ argument_list|,
 literal|"#line %u \"%s\"\n"
 argument_list|,
 name|Gbl_CurrentLineNumber
-operator|+
-literal|1
 argument_list|,
 name|Fnode
 operator|->

@@ -413,7 +413,7 @@ goto|goto
 name|Exit
 goto|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|LocalTable
 argument_list|,
@@ -1001,7 +1001,7 @@ operator|-
 name|RsdpAddress
 operator|)
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 operator|&
 name|Gbl_Rsdp
@@ -2347,7 +2347,7 @@ goto|goto
 name|Exit
 goto|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|LocalTable
 argument_list|,

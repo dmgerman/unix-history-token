@@ -618,7 +618,7 @@ goto|goto
 name|Exit
 goto|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|LocalTable
 argument_list|,
@@ -1436,7 +1436,7 @@ operator|-
 name|RsdpAddress
 operator|)
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 operator|&
 name|Gbl_Rsdp
@@ -1530,6 +1530,12 @@ name|AE_OK
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|!
+name|Gbl_DumpCustomizedTables
+condition|)
+block|{
 comment|/* Get RSDP from memory */
 name|Status
 operator|=
@@ -1726,12 +1732,6 @@ name|Status
 operator|)
 return|;
 block|}
-if|if
-condition|(
-operator|!
-name|Gbl_DumpCustomizedTables
-condition|)
-block|{
 comment|/* Add mandatory tables to global table list first */
 name|Status
 operator|=
@@ -2842,7 +2842,7 @@ goto|goto
 name|Exit
 goto|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|LocalTable
 argument_list|,

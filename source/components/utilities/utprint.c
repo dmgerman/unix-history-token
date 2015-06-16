@@ -435,7 +435,7 @@ literal|0
 decl_stmt|;
 while|while
 condition|(
-name|ACPI_IS_DIGIT
+name|isdigit
 argument_list|(
 operator|*
 name|String
@@ -1223,7 +1223,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_IS_DIGIT
+name|isdigit
 argument_list|(
 operator|*
 name|Format
@@ -1306,7 +1306,7 @@ name|Format
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_IS_DIGIT
+name|isdigit
 argument_list|(
 operator|*
 name|Format

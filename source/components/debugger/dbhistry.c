@@ -153,7 +153,7 @@ operator|=
 operator|(
 name|UINT16
 operator|)
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|CommandLine
 argument_list|)
@@ -183,7 +183,7 @@ operator|=
 operator|(
 name|UINT16
 operator|)
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|AcpiGbl_HistoryBuffer
 index|[
@@ -243,7 +243,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|AcpiGbl_HistoryBuffer
 index|[
@@ -448,7 +448,7 @@ else|else
 block|{
 name|CmdNum
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|CommandNumArg
 argument_list|,

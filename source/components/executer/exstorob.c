@@ -179,7 +179,7 @@ name|Length
 condition|)
 block|{
 comment|/* Clear existing buffer and copy in the new one */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|TargetDesc
 operator|->
@@ -196,7 +196,7 @@ operator|.
 name|Length
 argument_list|)
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|TargetDesc
 operator|->
@@ -237,7 +237,7 @@ block|}
 else|else
 block|{
 comment|/* Truncate the source, copy only what will fit */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|TargetDesc
 operator|->
@@ -397,7 +397,7 @@ operator|)
 condition|)
 block|{
 comment|/*          * String will fit in existing non-static buffer.          * Clear old string and copy in the new one          */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|TargetDesc
 operator|->
@@ -419,7 +419,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|TargetDesc
 operator|->
@@ -510,7 +510,7 @@ operator|&=
 operator|~
 name|AOPOBJ_STATIC_POINTER
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|TargetDesc
 operator|->

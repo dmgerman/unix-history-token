@@ -20,7 +20,7 @@ name|__ACTBL3_H__
 end_define
 
 begin_comment
-comment|/*******************************************************************************  *  * Additional ACPI Tables (3)  *  * These tables are not consumed directly by the ACPICA subsystem, but are  * included here to support device drivers and the AML disassembler.  *  * The tables in this file are fully defined within the ACPI specification.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Additional ACPI Tables (3)  *  * These tables are not consumed directly by the ACPICA subsystem, but are  * included here to support device drivers and the AML disassembler.  *  * In general, the tables in this file are fully defined within the ACPI  * specification.  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -124,17 +124,6 @@ end_define
 
 begin_comment
 comment|/* Status Override table */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_SIG_TPM2
-value|"TPM2"
-end_define
-
-begin_comment
-comment|/* Trusted Platform Module 2.0 H/W interface table */
 end_comment
 
 begin_define
@@ -1983,74 +1972,6 @@ name|IgnoreUart
 decl_stmt|;
 block|}
 name|ACPI_TABLE_STAO
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*******************************************************************************  *  * TPM2 - Trusted Platform Module (TPM) 2.0 Hardware Interface Table  *        Version 3  *  * Conforms to "TPM 2.0 Hardware Interface Table (TPM2)" 29 November 2011  *  ******************************************************************************/
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_table_tpm2
-block|{
-name|ACPI_TABLE_HEADER
-name|Header
-decl_stmt|;
-comment|/* Common ACPI table header */
-name|UINT32
-name|Flags
-decl_stmt|;
-name|UINT64
-name|ControlAddress
-decl_stmt|;
-name|UINT32
-name|StartMethod
-decl_stmt|;
-block|}
-name|ACPI_TABLE_TPM2
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Control area structure (not part of table, pointed to by ControlAddress) */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_tpm2_control
-block|{
-name|UINT32
-name|Reserved
-decl_stmt|;
-name|UINT32
-name|Error
-decl_stmt|;
-name|UINT32
-name|Cancel
-decl_stmt|;
-name|UINT32
-name|Start
-decl_stmt|;
-name|UINT64
-name|InterruptControl
-decl_stmt|;
-name|UINT32
-name|CommandSize
-decl_stmt|;
-name|UINT64
-name|CommandAddress
-decl_stmt|;
-name|UINT32
-name|ResponseSize
-decl_stmt|;
-name|UINT64
-name|ResponseAddress
-decl_stmt|;
-block|}
-name|ACPI_TPM2_CONTROL
 typedef|;
 end_typedef
 

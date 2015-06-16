@@ -1310,7 +1310,7 @@ comment|/* Special typechecking for _HID */
 if|if
 condition|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|METHOD_NAME__HID
 argument_list|,
@@ -1347,7 +1347,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|METHOD_NAME__CID
 argument_list|,

@@ -426,7 +426,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_IS_PRINT
+name|isprint
 argument_list|(
 name|BufChar
 argument_list|)
@@ -1310,7 +1310,7 @@ comment|/* TBD: allow some escapes (non-ascii chars).          * they will be ha
 if|if
 condition|(
 operator|!
-name|ACPI_IS_PRINT
+name|isprint
 argument_list|(
 name|ByteData
 index|[
@@ -2202,7 +2202,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|ACPI_IS_PRINT
+name|isprint
 argument_list|(
 name|OutputValue
 argument_list|)
@@ -2386,7 +2386,7 @@ index|]
 argument_list|)
 operator|||
 operator|!
-name|ACPI_IS_ALPHA
+name|isalpha
 argument_list|(
 name|Prefix
 index|[

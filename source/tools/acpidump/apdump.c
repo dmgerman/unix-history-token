@@ -739,7 +739,7 @@ name|TableStatus
 decl_stmt|;
 if|if
 condition|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Signature
 argument_list|)
@@ -762,7 +762,7 @@ operator|)
 return|;
 block|}
 comment|/* Table signatures are expected to be uppercase */
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|LocalSignature
 argument_list|,
@@ -785,7 +785,7 @@ literal|"FADT"
 argument_list|)
 condition|)
 block|{
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|LocalSignature
 argument_list|,
@@ -804,7 +804,7 @@ literal|"MADT"
 argument_list|)
 condition|)
 block|{
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|LocalSignature
 argument_list|,

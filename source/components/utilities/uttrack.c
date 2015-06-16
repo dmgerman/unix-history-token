@@ -159,7 +159,7 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|Cache
 argument_list|,
@@ -959,7 +959,7 @@ name|Line
 operator|=
 name|Line
 expr_stmt|;
-name|ACPI_STRNCPY
+name|strncpy
 argument_list|(
 name|Allocation
 operator|->
@@ -1263,7 +1263,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Mark the segment as deleted */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 operator|&
 name|Allocation
@@ -1407,7 +1407,7 @@ operator|||
 operator|(
 literal|0
 operator|==
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|Module
 argument_list|,

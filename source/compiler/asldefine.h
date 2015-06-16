@@ -322,8 +322,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FILE_SUFFIX_PREPROC_USER
+value|"i  "
+end_define
+
+begin_define
+define|#
+directive|define
 name|FILE_SUFFIX_PREPROCESSOR
-value|"i"
+value|"pre"
 end_define
 
 begin_define
@@ -486,6 +493,20 @@ define|#
 directive|define
 name|ASL_EOF
 value|ACPI_UINT32_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_WITHIN_COMMENT
+value|(ACPI_UINT32_MAX -1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_BLANK_LINE
+value|(ACPI_UINT32_MAX -1)
 end_define
 
 begin_comment

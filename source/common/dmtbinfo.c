@@ -404,11 +404,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_TCPA_OFFSET
+name|ACPI_TCPA_CLIENT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT16) ACPI_OFFSET (ACPI_TABLE_TCPA,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_TCPA_CLIENT,f)
 end_define
 
 begin_define
@@ -16433,7 +16433,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * TCPA - Trusted Computing Platform Alliance table  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * TCPA - Trusted Computing Platform Alliance table (Client)  *  ******************************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -16445,12 +16445,12 @@ block|{
 block|{
 name|ACPI_DMT_UINT16
 block|,
-name|ACPI_TCPA_OFFSET
+name|ACPI_TCPA_CLIENT_OFFSET
 argument_list|(
-name|Reserved
+name|PlatformClass
 argument_list|)
 block|,
-literal|"Reserved"
+literal|"Platform Class"
 block|,
 literal|0
 block|}
@@ -16458,12 +16458,12 @@ block|,
 block|{
 name|ACPI_DMT_UINT32
 block|,
-name|ACPI_TCPA_OFFSET
+name|ACPI_TCPA_CLIENT_OFFSET
 argument_list|(
-name|MaxLogLength
+name|MinimumLogLength
 argument_list|)
 block|,
-literal|"Max Event Log Length"
+literal|"Min Event Log Length"
 block|,
 literal|0
 block|}
@@ -16471,7 +16471,7 @@ block|,
 block|{
 name|ACPI_DMT_UINT64
 block|,
-name|ACPI_TCPA_OFFSET
+name|ACPI_TCPA_CLIENT_OFFSET
 argument_list|(
 name|LogAddress
 argument_list|)
@@ -16497,14 +16497,27 @@ index|[]
 init|=
 block|{
 block|{
-name|ACPI_DMT_UINT32
+name|ACPI_DMT_UINT16
 block|,
 name|ACPI_TPM2_OFFSET
 argument_list|(
-name|Flags
+name|PlatformClass
 argument_list|)
 block|,
-literal|"Flags"
+literal|"Platform Class"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_TPM2_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
 block|,
 literal|0
 block|}

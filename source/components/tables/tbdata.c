@@ -69,7 +69,7 @@ name|Table
 parameter_list|)
 block|{
 comment|/*      * Initialize the table descriptor. Set the pointer to NULL, since the      * table is not fully mapped at this time.      */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|TableDesc
 argument_list|,
@@ -935,7 +935,7 @@ operator|.
 name|Tables
 condition|)
 block|{
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Tables
 argument_list|,

@@ -809,6 +809,35 @@ operator|!
 name|AcpiGbl_ReducedHardware
 condition|)
 block|{
+if|if
+condition|(
+name|AcpiGbl_FADT
+operator|.
+name|Facs
+condition|)
+block|{
+name|AcpiTbInstallFixedTable
+argument_list|(
+operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|)
+name|AcpiGbl_FADT
+operator|.
+name|Facs
+argument_list|,
+name|ACPI_SIG_FACS
+argument_list|,
+name|ACPI_TABLE_INDEX_FACS
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|AcpiGbl_FADT
+operator|.
+name|XFacs
+condition|)
+block|{
 name|AcpiTbInstallFixedTable
 argument_list|(
 operator|(
@@ -820,9 +849,10 @@ name|XFacs
 argument_list|,
 name|ACPI_SIG_FACS
 argument_list|,
-name|ACPI_TABLE_INDEX_FACS
+name|ACPI_TABLE_INDEX_X_FACS
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -880,7 +910,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Clear the entire local FADT */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 operator|&
 name|AcpiGbl_FADT
@@ -894,7 +924,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Copy the original FADT, up to sizeof (ACPI_TABLE_FADT) */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 operator|&
 name|AcpiGbl_FADT
@@ -1023,24 +1053,7 @@ argument_list|(
 name|ACPI_TABLE_FADT
 argument_list|)
 expr_stmt|;
-comment|/*      * Expand the 32-bit FACS and DSDT addresses to 64-bit as necessary.      * Later ACPICA code will always use the X 64-bit field.      */
-name|AcpiGbl_FADT
-operator|.
-name|XFacs
-operator|=
-name|AcpiTbSelectAddress
-argument_list|(
-literal|"FACS"
-argument_list|,
-name|AcpiGbl_FADT
-operator|.
-name|Facs
-argument_list|,
-name|AcpiGbl_FADT
-operator|.
-name|XFacs
-argument_list|)
-expr_stmt|;
+comment|/*      * Expand the 32-bit DSDT addresses to 64-bit as necessary.      * Later ACPICA code will always use the X 64-bit field.      */
 name|AcpiGbl_FADT
 operator|.
 name|XDsdt

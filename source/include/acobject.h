@@ -917,6 +917,11 @@ modifier|*
 name|Where
 decl_stmt|;
 comment|/* Target of Index */
+name|UINT8
+modifier|*
+name|IndexPointer
+decl_stmt|;
+comment|/* Used for Buffers and Strings */
 name|UINT32
 name|Value
 decl_stmt|;

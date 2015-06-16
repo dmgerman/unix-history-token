@@ -1705,7 +1705,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|ACPI_STRNCMP
+name|strncmp
 argument_list|(
 name|Table
 operator|->
@@ -2457,7 +2457,7 @@ name|ACPI_DMT_STRING
 case|:
 name|ByteLength
 operator|=
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|ACPI_CAST_PTR
 argument_list|(

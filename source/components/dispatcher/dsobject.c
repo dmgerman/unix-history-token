@@ -822,7 +822,7 @@ condition|(
 name|ByteList
 condition|)
 block|{
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|ObjDesc
 operator|->
@@ -1946,7 +1946,7 @@ operator|=
 operator|(
 name|UINT32
 operator|)
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Op
 operator|->

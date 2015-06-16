@@ -268,7 +268,7 @@ comment|/* Skip lines that start with a space */
 if|if
 condition|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|String
 argument_list|,
@@ -298,7 +298,7 @@ name|End
 operator|=
 name|String
 operator|+
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|String
 argument_list|)
@@ -423,13 +423,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Start
 argument_list|)
 condition|)
 block|{
-name|ACPI_STRNCPY
+name|strncpy
 argument_list|(
 name|ReturnString
 argument_list|,
@@ -733,7 +733,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|ACPI_STRNCPY
+name|strncpy
 argument_list|(
 name|TmpName
 argument_list|,
@@ -854,7 +854,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|ACPI_STRNCPY
+name|strncpy
 argument_list|(
 name|TmpValue
 argument_list|,
@@ -982,7 +982,7 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|Gbl_CurrentLineBuffer
 argument_list|,
@@ -1966,7 +1966,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_IS_PRINT
+name|isprint
 argument_list|(
 name|BufChar
 argument_list|)
