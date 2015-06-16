@@ -3164,6 +3164,11 @@ name|total
 operator|-
 literal|1
 expr_stmt|;
+name|free
+argument_list|(
+name|finet0
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
