@@ -557,17 +557,6 @@ argument_list|(
 name|count
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Since the caller has busied the requested page, that page's valid 	 * field will not be changed by other threads. 	 */
-name|vm_page_assert_xbusied
-argument_list|(
-name|pages
-index|[
-name|ap
-operator|->
-name|a_reqpage
-index|]
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If the requested page is partially valid, just return it and 	 * allow the pager to zero-out the blanks.  Partially valid pages 	 * can only occur at the file EOF. 	 */
 if|if
 condition|(
