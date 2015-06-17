@@ -515,7 +515,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	ti_prcm_clk_get_source_freq - gets the source clock frequency  *	@clk: identifier for the module to enable, see ti_prcm.h for a list  *	      of possible modules.  *	@freq: pointer to an integer that upon return will contain the src freq  *	  *	This function returns the frequency of the source clock.  *  *	The real work done to enable the clock is really done in the callback  *	function associated with the clock, this function is simply a wrapper  *	around that.  *  *	LOCKING:  *	Internally locks the driver context.  *  *	RETURNS:  *	Returns 0 on success or positive error code on failure.  */
+comment|/**  *	ti_prcm_clk_get_source_freq - gets the source clock frequency  *	@clk: identifier for the module to enable, see ti_prcm.h for a list  *	      of possible modules.  *	@freq: pointer to an integer that upon return will contain the src freq  *  *	This function returns the frequency of the source clock.  *  *	The real work done to enable the clock is really done in the callback  *	function associated with the clock, this function is simply a wrapper  *	around that.  *  *	LOCKING:  *	Internally locks the driver context.  *  *	RETURNS:  *	Returns 0 on success or positive error code on failure.  */
 end_comment
 
 begin_function
@@ -571,6 +571,80 @@ operator|=
 name|clk_dev
 operator|->
 name|clk_get_source_freq
+argument_list|(
+name|clk_dev
+argument_list|,
+name|freq
+argument_list|)
+expr_stmt|;
+else|else
+name|ret
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *	ti_prcm_clk_set_source_freq - sets the source clock frequency as close to freq as possible  *	@clk: identifier for the module to enable, see ti_prcm.h for a list  *	      of possible modules.  *	@freq: requested freq  *  *	LOCKING:  *	Internally locks the driver context.  *  *	RETURNS:  *	Returns 0 on success or positive error code on failure.  */
+end_comment
+
+begin_function
+name|int
+name|ti_prcm_clk_set_source_freq
+parameter_list|(
+name|clk_ident_t
+name|clk
+parameter_list|,
+name|unsigned
+name|int
+name|freq
+parameter_list|)
+block|{
+name|struct
+name|ti_clock_dev
+modifier|*
+name|clk_dev
+decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
+name|clk_dev
+operator|=
+name|ti_prcm_clk_dev
+argument_list|(
+name|clk
+argument_list|)
+expr_stmt|;
+comment|/* Sanity check we managed to find the clock */
+if|if
+condition|(
+name|clk_dev
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+comment|/* Get the source frequency of the clock */
+if|if
+condition|(
+name|clk_dev
+operator|->
+name|clk_set_source_freq
+condition|)
+name|ret
+operator|=
+name|clk_dev
+operator|->
+name|clk_set_source_freq
 argument_list|(
 name|clk_dev
 argument_list|,

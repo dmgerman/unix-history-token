@@ -874,7 +874,7 @@ parameter_list|(
 name|i
 parameter_list|)
 define|\
-value|{	.id = (i), \ 		.clk_activate = omap4_clk_generic_activate, \ 		.clk_deactivate = omap4_clk_generic_deactivate, \ 		.clk_set_source = omap4_clk_generic_set_source, \ 		.clk_accessible = omap4_clk_generic_accessible, \ 		.clk_get_source_freq = omap4_clk_generic_get_source_freq \ 	}
+value|{	.id = (i), \ 		.clk_activate = omap4_clk_generic_activate, \ 		.clk_deactivate = omap4_clk_generic_deactivate, \ 		.clk_set_source = omap4_clk_generic_set_source, \ 		.clk_accessible = omap4_clk_generic_accessible, \ 		.clk_get_source_freq = omap4_clk_generic_get_source_freq, \ 		.clk_set_source_freq = NULL \ 	}
 end_define
 
 begin_define
@@ -885,7 +885,7 @@ parameter_list|(
 name|i
 parameter_list|)
 define|\
-value|{	.id = (i), \ 		.clk_activate = omap4_clk_generic_activate, \ 		.clk_deactivate = omap4_clk_generic_deactivate, \ 		.clk_set_source = omap4_clk_gptimer_set_source, \ 		.clk_accessible = omap4_clk_generic_accessible, \ 		.clk_get_source_freq = omap4_clk_gptimer_get_source_freq \ 	}
+value|{	.id = (i), \ 		.clk_activate = omap4_clk_generic_activate, \ 		.clk_deactivate = omap4_clk_generic_deactivate, \ 		.clk_set_source = omap4_clk_gptimer_set_source, \ 		.clk_accessible = omap4_clk_generic_accessible, \ 		.clk_get_source_freq = omap4_clk_gptimer_get_source_freq, \ 		.clk_set_source_freq = NULL \ 	}
 end_define
 
 begin_define
@@ -896,7 +896,7 @@ parameter_list|(
 name|i
 parameter_list|)
 define|\
-value|{	.id = (i), \ 		.clk_activate = omap4_clk_generic_activate, \ 		.clk_deactivate = omap4_clk_generic_deactivate, \ 		.clk_set_source = omap4_clk_hsmmc_set_source, \ 		.clk_accessible = omap4_clk_generic_accessible, \ 		.clk_get_source_freq = omap4_clk_hsmmc_get_source_freq \ 	}
+value|{	.id = (i), \ 		.clk_activate = omap4_clk_generic_activate, \ 		.clk_deactivate = omap4_clk_generic_deactivate, \ 		.clk_set_source = omap4_clk_hsmmc_set_source, \ 		.clk_accessible = omap4_clk_generic_accessible, \ 		.clk_get_source_freq = omap4_clk_hsmmc_get_source_freq, \ 		.clk_set_source_freq = NULL \ 	}
 end_define
 
 begin_define
@@ -907,7 +907,7 @@ parameter_list|(
 name|i
 parameter_list|)
 define|\
-value|{	.id = (i), \ 		.clk_activate = omap4_clk_hsusbhost_activate, \ 		.clk_deactivate = omap4_clk_hsusbhost_deactivate, \ 		.clk_set_source = omap4_clk_hsusbhost_set_source, \ 		.clk_accessible = omap4_clk_hsusbhost_accessible, \ 		.clk_get_source_freq = NULL \ 	}
+value|{	.id = (i), \ 		.clk_activate = omap4_clk_hsusbhost_activate, \ 		.clk_deactivate = omap4_clk_hsusbhost_deactivate, \ 		.clk_set_source = omap4_clk_hsusbhost_set_source, \ 		.clk_accessible = omap4_clk_hsusbhost_accessible, \ 		.clk_get_source_freq = NULL, \ 		.clk_set_source_freq = NULL \ 	}
 end_define
 
 begin_decl_stmt
@@ -948,6 +948,11 @@ operator|.
 name|clk_get_source_freq
 operator|=
 name|omap4_clk_get_sysclk_freq
+block|,
+operator|.
+name|clk_set_source_freq
+operator|=
+name|NULL
 block|, 	}
 block|,
 comment|/* MPU (ARM) core clocks */
@@ -981,6 +986,11 @@ operator|.
 name|clk_get_source_freq
 operator|=
 name|omap4_clk_get_arm_fclk_freq
+block|,
+operator|.
+name|clk_set_source_freq
+operator|=
+name|NULL
 block|, 	}
 block|,
 comment|/* UART device clocks */
