@@ -528,6 +528,9 @@ operator|=
 operator|(
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 name|NameString
 index|[
 literal|3
@@ -541,6 +544,9 @@ operator|=
 operator|(
 name|isxdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 name|NameString
 index|[
 literal|2
@@ -550,6 +556,9 @@ operator|&&
 comment|/* xx */
 name|isxdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 name|NameString
 index|[
 literal|3

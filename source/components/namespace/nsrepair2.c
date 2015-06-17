@@ -1524,6 +1524,9 @@ name|char
 operator|)
 name|toupper
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|Source
 argument_list|)

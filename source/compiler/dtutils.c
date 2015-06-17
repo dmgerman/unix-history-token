@@ -404,6 +404,9 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|ThisChar
 argument_list|)
@@ -433,6 +436,9 @@ name|UINT32
 operator|)
 name|toupper
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|ThisChar
 argument_list|)
@@ -443,7 +449,7 @@ operator|!
 name|isxdigit
 argument_list|(
 operator|(
-name|char
+name|int
 operator|)
 name|ThisDigit
 argument_list|)

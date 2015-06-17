@@ -99,6 +99,9 @@ name|char
 operator|)
 name|tolower
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|String
 argument_list|)
@@ -240,6 +243,9 @@ name|char
 operator|)
 name|toupper
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|String
 argument_list|)
@@ -366,6 +372,9 @@ operator|&&
 operator|(
 name|isspace
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|String
 argument_list|)
@@ -399,6 +408,9 @@ operator|&&
 operator|(
 name|tolower
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 operator|(
 name|String
@@ -444,6 +456,9 @@ operator|)
 operator|||
 name|isspace
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|String
 argument_list|)
@@ -492,6 +507,9 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|String
 argument_list|)
@@ -534,6 +552,9 @@ name|UINT8
 operator|)
 name|toupper
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|String
 argument_list|)
@@ -543,7 +564,7 @@ condition|(
 name|isxdigit
 argument_list|(
 operator|(
-name|char
+name|int
 operator|)
 name|ThisDigit
 argument_list|)
@@ -921,6 +942,9 @@ if|if
 condition|(
 name|isprint
 argument_list|(
+operator|(
+name|int
+operator|)
 name|String
 index|[
 name|i

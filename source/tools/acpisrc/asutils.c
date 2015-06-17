@@ -57,6 +57,9 @@ name|char
 operator|)
 name|tolower
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|String
 argument_list|)

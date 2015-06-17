@@ -262,6 +262,9 @@ name|char
 operator|)
 name|tolower
 argument_list|(
+operator|(
+name|int
+operator|)
 name|Filename
 index|[
 literal|0
@@ -278,6 +281,9 @@ name|char
 operator|)
 name|tolower
 argument_list|(
+operator|(
+name|int
+operator|)
 name|Filename
 index|[
 literal|1
@@ -294,6 +300,9 @@ name|char
 operator|)
 name|tolower
 argument_list|(
+operator|(
+name|int
+operator|)
 name|Filename
 index|[
 literal|2
@@ -310,6 +319,9 @@ name|char
 operator|)
 name|tolower
 argument_list|(
+operator|(
+name|int
+operator|)
 name|Filename
 index|[
 literal|3

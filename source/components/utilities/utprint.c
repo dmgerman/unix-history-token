@@ -437,6 +437,9 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|String
 argument_list|)
@@ -1225,6 +1228,9 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|Format
 argument_list|)
@@ -1308,6 +1314,9 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|Format
 argument_list|)
