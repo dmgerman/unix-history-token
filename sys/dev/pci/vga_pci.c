@@ -438,6 +438,20 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * Disable interrupts until a chipset driver is loaded for 	 * this PCI device. Else unhandled display adapter interrupts 	 * might freeze the CPU. 	 */
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|PCIR_COMMAND
+argument_list|,
+name|config
+operator||
+name|PCIM_CMD_INTxDIS
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 comment|/* This video card is the boot display: record its unit number. */
 name|vga_pci_default_unit
 operator|=
