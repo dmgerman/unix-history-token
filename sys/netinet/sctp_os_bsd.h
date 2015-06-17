@@ -1869,10 +1869,6 @@ name|sctp_rtentry_t
 typedef|;
 end_typedef
 
-begin_comment
-comment|/*  * XXX multi-FIB support was backed out in r179783 and it seems clear that the  * VRF support as currently in FreeBSD is not ready to support multi-FIB.  * It might be best to implement multi-FIB support for both v4 and v6 indepedent  * of VRFs and leave those to a real MPLS stack.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1881,8 +1877,11 @@ parameter_list|(
 name|ro
 parameter_list|,
 name|vrf_id
+parameter_list|,
+name|fibnum
 parameter_list|)
-value|rtalloc_ign((struct route *)ro, 0UL)
+define|\
+value|rtalloc_ign_fib((struct route *)ro, 0UL, fibnum)
 end_define
 
 begin_comment

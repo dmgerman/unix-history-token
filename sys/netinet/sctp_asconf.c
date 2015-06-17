@@ -5105,6 +5105,12 @@ operator|->
 name|sctp_ep
 operator|->
 name|def_vrf_id
+argument_list|,
+name|stcb
+operator|->
+name|sctp_ep
+operator|->
+name|fibnum
 argument_list|)
 expr_stmt|;
 if|if
