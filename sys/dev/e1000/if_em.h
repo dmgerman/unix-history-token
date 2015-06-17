@@ -41,12 +41,35 @@ name|EM_MAX_TXD
 value|4096
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EM_MULTIQUEUE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|EM_DEFAULT_TXD
+value|4096
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|EM_DEFAULT_TXD
 value|1024
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * EM_RXD - Maximum number of receive Descriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *              80-4096 for others  * Default Value: 256  *   This value is the number of receive descriptors allocated by the driver.  *   Increasing this value allows the driver to buffer more incoming packets.  *   Each descriptor is 16 bytes.  A receive buffer is also allocated for each  *   descriptor. The maximum MTU size is 16110.  *   Since TDLEN should be multiple of 128bytes, the number of transmit  *   desscriptors should meet the following condition.  *      (num_tx_desc * sizeof(struct e1000_tx_desc)) % 128 == 0  */
@@ -66,12 +89,35 @@ name|EM_MAX_RXD
 value|4096
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EM_MULTIQUEUE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|EM_DEFAULT_RXD
+value|4096
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|EM_DEFAULT_RXD
 value|1024
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * EM_TIDV - Transmit Interrupt Delay Value  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value delays the generation of transmit interrupts in units of  *   1.024 microseconds. Transmit interrupt reduction can improve CPU  *   efficiency if properly tuned for specific network traffic. If the  *   system is reporting dropped transmits, this value may be set too high  *   causing the driver to run out of available transmit descriptors.  */
@@ -99,6 +145,24 @@ begin_comment
 comment|/*  * EM_RDTR - Receive Interrupt Delay Timer (Packet Timer)  * Valid Range: 0-65535 (0=off)  * Default Value: 0  *   This value delays the generation of receive interrupts in units of 1.024  *   microseconds.  Receive interrupt reduction can improve CPU efficiency if  *   properly tuned for specific network traffic. Increasing this value adds  *   extra latency to frame reception and can end up decreasing the throughput  *   of TCP traffic. If the system is reporting dropped receives, this value  *   may be set too high, causing the driver to run out of available receive  *   descriptors.  *  *   CAUTION: When setting EM_RDTR to a value other than 0, adapters  *            may hang (stop transmitting) under certain network conditions.  *            If this occurs a WATCHDOG message is logged in the system  *            event log. In addition, the controller is automatically reset,  *            restoring the network connection. To eliminate the potential  *            for the hang ensure that EM_RDTR is set to 0.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EM_MULTIQUEUE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|EM_RDTR
+value|64
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -106,9 +170,32 @@ name|EM_RDTR
 value|0
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Receive Interrupt Absolute Delay Timer (Not valid for 82542/82543/82544)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   receive interrupt is generated. Useful only if EM_RDTR is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is received within the set amount of time.  Proper tuning,  *   along with EM_RDTR, may improve traffic throughput in specific network  *   conditions.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EM_MULTIQUEUE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|EM_RADV
+value|128
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -116,6 +203,11 @@ directive|define
 name|EM_RADV
 value|64
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * This parameter controls the max duration of transmit watchdog.  */
@@ -328,15 +420,52 @@ name|EM_DBA_ALIGN
 value|128
 end_define
 
+begin_comment
+comment|/*  * See Intel 82574 Driver Programming Interface Manual, Section 10.2.6.9  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|SPEED_MODE_BIT
-value|(1<<21)
+name|TARC_COMPENSATION_MODE
+value|(1<< 7)
+end_define
+
+begin_comment
+comment|/* Compensation Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARC_SPEED_MODE_BIT
+value|(1<< 21)
 end_define
 
 begin_comment
 comment|/* On PCI-E MACs only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARC_MQ_FIX
+value|(1<< 23) | \ 				(1<< 24) | \ 				(1<< 25)
+end_define
+
+begin_comment
+comment|/* Handle errata in MQ mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARC_ERRATA_BIT
+value|(1<< 26)
+end_define
+
+begin_comment
+comment|/* Note from errata on 82574 */
 end_comment
 
 begin_comment
@@ -661,6 +790,31 @@ define|#
 directive|define
 name|EM_EIAC
 value|0x000DC
+end_define
+
+begin_comment
+comment|/*  * 82574 only reports 3 MSI-X vectors by default;  * defines assisting with making it report 5 are  * located here.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_NVM_PCIE_CTRL
+value|0x1B
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_NVM_MSIX_N_MASK
+value|(0x7<< EM_NVM_MSIX_N_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_NVM_MSIX_N_SHIFT
+value|7
 end_define
 
 begin_comment
@@ -1075,7 +1229,7 @@ decl_stmt|;
 name|u16
 name|num_vlans
 decl_stmt|;
-name|u16
+name|u8
 name|num_queues
 decl_stmt|;
 comment|/*          * Transmit rings:          *      Allocated at run time, an array of rings.          */
