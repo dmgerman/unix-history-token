@@ -2045,7 +2045,7 @@ argument_list|(
 name|fmt
 argument_list|)
 argument_list|,
-literal|"{:%s/%%s} "
+literal|"{:%s/%%hs} "
 argument_list|,
 name|field
 argument_list|)
