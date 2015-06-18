@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 2007-2009 Solarflare Communications Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2007-2015 Solarflare Communications Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * 1. Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright notice,  *    this list of conditions and the following disclaimer in the documentation  *    and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation are  * those of the authors and should not be interpreted as representing official  * policies, either expressed or implied, of the FreeBSD Project.  */
 end_comment
 
 begin_include
@@ -209,7 +209,6 @@ end_if
 begin_decl_stmt
 specifier|static
 name|efx_phy_ops_t
-name|__cs
 name|__efx_phy_null_ops
 init|=
 block|{
@@ -265,7 +264,10 @@ directive|endif
 comment|/* EFSYS_OPT_PHY_PROPS */
 if|#
 directive|if
-name|EFSYS_OPT_PHY_BIST
+name|EFSYS_OPT_BIST
+name|NULL
+block|,
+comment|/* epo_bist_enable_offline */
 name|NULL
 block|,
 comment|/* epo_bist_start */
@@ -277,7 +279,7 @@ block|,
 comment|/* epo_bist_stop */
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_PHY_BIST */
+comment|/* EFSYS_OPT_BIST */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -300,7 +302,6 @@ end_if
 begin_decl_stmt
 specifier|static
 name|efx_phy_ops_t
-name|__cs
 name|__efx_phy_qt2022c2_ops
 init|=
 block|{
@@ -356,7 +357,10 @@ directive|endif
 comment|/* EFSYS_OPT_PHY_PROPS */
 if|#
 directive|if
-name|EFSYS_OPT_PHY_BIST
+name|EFSYS_OPT_BIST
+name|NULL
+block|,
+comment|/* epo_bist_enable_offline */
 name|NULL
 block|,
 comment|/* epo_bist_start */
@@ -368,7 +372,7 @@ block|,
 comment|/* epo_bist_stop */
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_PHY_BIST */
+comment|/* EFSYS_OPT_BIST */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -391,7 +395,6 @@ end_if
 begin_decl_stmt
 specifier|static
 name|efx_phy_ops_t
-name|__cs
 name|__efx_phy_sfx7101_ops
 init|=
 block|{
@@ -447,7 +450,10 @@ directive|endif
 comment|/* EFSYS_OPT_PHY_PROPS */
 if|#
 directive|if
-name|EFSYS_OPT_PHY_BIST
+name|EFSYS_OPT_BIST
+name|NULL
+block|,
+comment|/* epo_bist_enable_offline */
 name|NULL
 block|,
 comment|/* epo_bist_start */
@@ -459,7 +465,7 @@ block|,
 comment|/* epo_bist_stop */
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_PHY_BIST */
+comment|/* EFSYS_OPT_BIST */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -482,7 +488,6 @@ end_if
 begin_decl_stmt
 specifier|static
 name|efx_phy_ops_t
-name|__cs
 name|__efx_phy_txc43128_ops
 init|=
 block|{
@@ -538,7 +543,10 @@ directive|endif
 comment|/* EFSYS_OPT_PHY_PROPS */
 if|#
 directive|if
-name|EFSYS_OPT_PHY_BIST
+name|EFSYS_OPT_BIST
+name|NULL
+block|,
+comment|/* epo_bist_enable_offline */
 name|NULL
 block|,
 comment|/* epo_bist_start */
@@ -550,7 +558,7 @@ block|,
 comment|/* epo_bist_stop */
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_PHY_BIST */
+comment|/* EFSYS_OPT_BIST */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -573,7 +581,6 @@ end_if
 begin_decl_stmt
 specifier|static
 name|efx_phy_ops_t
-name|__cs
 name|__efx_phy_sft9001_ops
 init|=
 block|{
@@ -629,7 +636,10 @@ directive|endif
 comment|/* EFSYS_OPT_PHY_PROPS */
 if|#
 directive|if
-name|EFSYS_OPT_PHY_BIST
+name|EFSYS_OPT_BIST
+name|NULL
+block|,
+comment|/* epo_bist_enable_offline */
 name|sft9001_bist_start
 block|,
 comment|/* epo_bist_start */
@@ -641,7 +651,7 @@ block|,
 comment|/* epo_bist_stop */
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_PHY_BIST */
+comment|/* EFSYS_OPT_BIST */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -664,7 +674,6 @@ end_if
 begin_decl_stmt
 specifier|static
 name|efx_phy_ops_t
-name|__cs
 name|__efx_phy_qt2025c_ops
 init|=
 block|{
@@ -720,7 +729,10 @@ directive|endif
 comment|/* EFSYS_OPT_PHY_PROPS */
 if|#
 directive|if
-name|EFSYS_OPT_PHY_BIST
+name|EFSYS_OPT_BIST
+name|NULL
+block|,
+comment|/* epo_bist_enable_offline */
 name|NULL
 block|,
 comment|/* epo_bist_start */
@@ -732,7 +744,7 @@ block|,
 comment|/* epo_bist_stop */
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_PHY_BIST */
+comment|/* EFSYS_OPT_BIST */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -755,7 +767,6 @@ end_if
 begin_decl_stmt
 specifier|static
 name|efx_phy_ops_t
-name|__cs
 name|__efx_phy_siena_ops
 init|=
 block|{
@@ -811,7 +822,10 @@ directive|endif
 comment|/* EFSYS_OPT_PHY_PROPS */
 if|#
 directive|if
-name|EFSYS_OPT_PHY_BIST
+name|EFSYS_OPT_BIST
+name|NULL
+block|,
+comment|/* epo_bist_enable_offline */
 name|siena_phy_bist_start
 block|,
 comment|/* epo_bist_start */
@@ -823,7 +837,7 @@ block|,
 comment|/* epo_bist_stop */
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_PHY_BIST */
+comment|/* EFSYS_OPT_BIST */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -835,6 +849,99 @@ end_endif
 
 begin_comment
 comment|/* EFSYS_OPT_SIENA */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|EFSYS_OPT_HUNTINGTON
+end_if
+
+begin_decl_stmt
+specifier|static
+name|efx_phy_ops_t
+name|__efx_phy_hunt_ops
+init|=
+block|{
+name|hunt_phy_power
+block|,
+comment|/* epo_power */
+name|NULL
+block|,
+comment|/* epo_reset */
+name|hunt_phy_reconfigure
+block|,
+comment|/* epo_reconfigure */
+name|hunt_phy_verify
+block|,
+comment|/* epo_verify */
+name|NULL
+block|,
+comment|/* epo_uplink_check */
+name|NULL
+block|,
+comment|/* epo_downlink_check */
+name|hunt_phy_oui_get
+block|,
+comment|/* epo_oui_get */
+if|#
+directive|if
+name|EFSYS_OPT_PHY_STATS
+name|hunt_phy_stats_update
+block|,
+comment|/* epo_stats_update */
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_PHY_STATS */
+if|#
+directive|if
+name|EFSYS_OPT_PHY_PROPS
+if|#
+directive|if
+name|EFSYS_OPT_NAMES
+name|hunt_phy_prop_name
+block|,
+comment|/* epo_prop_name */
+endif|#
+directive|endif
+name|hunt_phy_prop_get
+block|,
+comment|/* epo_prop_get */
+name|hunt_phy_prop_set
+block|,
+comment|/* epo_prop_set */
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_PHY_PROPS */
+if|#
+directive|if
+name|EFSYS_OPT_BIST
+name|hunt_bist_enable_offline
+block|,
+comment|/* epo_bist_enable_offline */
+name|hunt_bist_start
+block|,
+comment|/* epo_bist_start */
+name|hunt_bist_poll
+block|,
+comment|/* epo_bist_poll */
+name|hunt_bist_stop
+block|,
+comment|/* epo_bist_stop */
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_BIST */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EFSYS_OPT_HUNTINGTON */
 end_comment
 
 begin_function
@@ -1068,6 +1175,25 @@ break|break;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_SIENA */
+if|#
+directive|if
+name|EFSYS_OPT_HUNTINGTON
+case|case
+name|EFX_FAMILY_HUNTINGTON
+case|:
+name|epop
+operator|=
+operator|(
+name|efx_phy_ops_t
+operator|*
+operator|)
+operator|&
+name|__efx_phy_hunt_ops
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_HUNTINGTON */
 default|default:
 name|rc
 operator|=
@@ -1887,16 +2013,14 @@ name|EFSYS_OPT_NAMES
 end_if
 
 begin_comment
-comment|/* START MKCONFIG GENERATED PhyStatNamesBlock 271268f3da0e804f */
+comment|/* START MKCONFIG GENERATED PhyStatNamesBlock d5f79b4bc2c050fe */
 end_comment
 
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|__cs
 modifier|*
-name|__cs
 name|__efx_phy_stat_name
 index|[]
 init|=
@@ -2003,7 +2127,6 @@ end_comment
 begin_function
 specifier|const
 name|char
-name|__cs
 modifier|*
 name|efx_phy_stat_name
 parameter_list|(
@@ -2167,7 +2290,6 @@ end_if
 begin_function
 specifier|const
 name|char
-name|__cs
 modifier|*
 name|efx_phy_prop_name
 parameter_list|(
@@ -2422,13 +2544,123 @@ end_comment
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_PHY_BIST
+name|EFSYS_OPT_BIST
 end_if
 
 begin_function
 name|__checkReturn
 name|int
-name|efx_phy_bist_start
+name|efx_bist_enable_offline
+parameter_list|(
+name|__in
+name|efx_nic_t
+modifier|*
+name|enp
+parameter_list|)
+block|{
+name|efx_port_t
+modifier|*
+name|epp
+init|=
+operator|&
+operator|(
+name|enp
+operator|->
+name|en_port
+operator|)
+decl_stmt|;
+name|efx_phy_ops_t
+modifier|*
+name|epop
+init|=
+name|epp
+operator|->
+name|ep_epop
+decl_stmt|;
+name|int
+name|rc
+decl_stmt|;
+name|EFSYS_ASSERT3U
+argument_list|(
+name|enp
+operator|->
+name|en_magic
+argument_list|,
+operator|==
+argument_list|,
+name|EFX_NIC_MAGIC
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|epop
+operator|->
+name|epo_bist_enable_offline
+operator|==
+name|NULL
+condition|)
+block|{
+name|rc
+operator|=
+name|ENOTSUP
+expr_stmt|;
+goto|goto
+name|fail1
+goto|;
+block|}
+if|if
+condition|(
+operator|(
+name|rc
+operator|=
+name|epop
+operator|->
+name|epo_bist_enable_offline
+argument_list|(
+name|enp
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|fail2
+goto|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|fail2
+label|:
+name|EFSYS_PROBE
+argument_list|(
+name|fail2
+argument_list|)
+expr_stmt|;
+name|fail1
+label|:
+name|EFSYS_PROBE1
+argument_list|(
+name|fail1
+argument_list|,
+name|int
+argument_list|,
+name|rc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|rc
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__checkReturn
+name|int
+name|efx_bist_start
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2436,7 +2668,7 @@ modifier|*
 name|enp
 parameter_list|,
 name|__in
-name|efx_phy_bist_type_t
+name|efx_bist_type_t
 name|type
 parameter_list|)
 block|{
@@ -2475,22 +2707,11 @@ argument_list|)
 expr_stmt|;
 name|EFSYS_ASSERT3U
 argument_list|(
-name|enp
-operator|->
-name|en_mod_flags
-argument_list|,
-operator|&
-argument_list|,
-name|EFX_MOD_PORT
-argument_list|)
-expr_stmt|;
-name|EFSYS_ASSERT3U
-argument_list|(
 name|type
 argument_list|,
 operator|!=
 argument_list|,
-name|EFX_PHY_BIST_TYPE_UNKNOWN
+name|EFX_BIST_TYPE_UNKNOWN
 argument_list|)
 expr_stmt|;
 name|EFSYS_ASSERT3U
@@ -2499,7 +2720,7 @@ name|type
 argument_list|,
 operator|<
 argument_list|,
-name|EFX_PHY_BIST_TYPE_NTYPES
+name|EFX_BIST_TYPE_NTYPES
 argument_list|)
 expr_stmt|;
 name|EFSYS_ASSERT3U
@@ -2510,7 +2731,7 @@ name|ep_current_bist
 argument_list|,
 operator|==
 argument_list|,
-name|EFX_PHY_BIST_TYPE_UNKNOWN
+name|EFX_BIST_TYPE_UNKNOWN
 argument_list|)
 expr_stmt|;
 if|if
@@ -2590,7 +2811,7 @@ end_function
 begin_decl_stmt
 name|__checkReturn
 name|int
-name|efx_phy_bist_poll
+name|efx_bist_poll
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -2598,11 +2819,11 @@ operator|*
 name|enp
 argument_list|,
 name|__in
-name|efx_phy_bist_type_t
+name|efx_bist_type_t
 name|type
 argument_list|,
 name|__out
-name|efx_phy_bist_result_t
+name|efx_bist_result_t
 operator|*
 name|resultp
 argument_list|,
@@ -2660,22 +2881,11 @@ argument_list|)
 expr_stmt|;
 name|EFSYS_ASSERT3U
 argument_list|(
-name|enp
-operator|->
-name|en_mod_flags
-argument_list|,
-operator|&
-argument_list|,
-name|EFX_MOD_PORT
-argument_list|)
-expr_stmt|;
-name|EFSYS_ASSERT3U
-argument_list|(
 name|type
 argument_list|,
 operator|!=
 argument_list|,
-name|EFX_PHY_BIST_TYPE_UNKNOWN
+name|EFX_BIST_TYPE_UNKNOWN
 argument_list|)
 expr_stmt|;
 name|EFSYS_ASSERT3U
@@ -2684,7 +2894,7 @@ name|type
 argument_list|,
 operator|<
 argument_list|,
-name|EFX_PHY_BIST_TYPE_NTYPES
+name|EFX_BIST_TYPE_NTYPES
 argument_list|)
 expr_stmt|;
 name|EFSYS_ASSERT3U
@@ -2785,7 +2995,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|efx_phy_bist_stop
+name|efx_bist_stop
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -2793,7 +3003,7 @@ modifier|*
 name|enp
 parameter_list|,
 name|__in
-name|efx_phy_bist_type_t
+name|efx_bist_type_t
 name|type
 parameter_list|)
 block|{
@@ -2829,22 +3039,11 @@ argument_list|)
 expr_stmt|;
 name|EFSYS_ASSERT3U
 argument_list|(
-name|enp
-operator|->
-name|en_mod_flags
-argument_list|,
-operator|&
-argument_list|,
-name|EFX_MOD_PORT
-argument_list|)
-expr_stmt|;
-name|EFSYS_ASSERT3U
-argument_list|(
 name|type
 argument_list|,
 operator|!=
 argument_list|,
-name|EFX_PHY_BIST_TYPE_UNKNOWN
+name|EFX_BIST_TYPE_UNKNOWN
 argument_list|)
 expr_stmt|;
 name|EFSYS_ASSERT3U
@@ -2853,7 +3052,7 @@ name|type
 argument_list|,
 operator|<
 argument_list|,
-name|EFX_PHY_BIST_TYPE_NTYPES
+name|EFX_BIST_TYPE_NTYPES
 argument_list|)
 expr_stmt|;
 name|EFSYS_ASSERT3U
@@ -2897,7 +3096,7 @@ name|epp
 operator|->
 name|ep_current_bist
 operator|=
-name|EFX_PHY_BIST_TYPE_UNKNOWN
+name|EFX_BIST_TYPE_UNKNOWN
 expr_stmt|;
 block|}
 end_function
@@ -2908,7 +3107,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EFSYS_OPT_PHY_BIST */
+comment|/* EFSYS_OPT_BIST */
 end_comment
 
 begin_function
