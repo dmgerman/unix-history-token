@@ -283,7 +283,7 @@ name|)
 end_pragma
 
 begin_comment
-comment|// Suppress warnings about modification of EBP
+comment|/* Suppress warnings about modification of EBP */
 end_comment
 
 begin_endif

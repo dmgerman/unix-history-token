@@ -1441,13 +1441,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    is* functions  *  * DESCRIPTION: is* functions use the ctype table below  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    is* function array  *  * DESCRIPTION: is* functions use the ctype table below  *  ******************************************************************************/
 end_comment
 
 begin_decl_stmt
 specifier|const
 name|UINT8
-name|_acpi_ctype
+name|AcpiGbl_Ctypes
 index|[
 literal|257
 index|]

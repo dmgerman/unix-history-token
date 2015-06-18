@@ -103,6 +103,31 @@ begin_comment
 comment|/* Utility interfaces */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_SYSTEM_CLIBRARY
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"acclib.h"
+end_include
+
+begin_comment
+comment|/* C library interfaces */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !ACPI_USE_SYSTEM_CLIBRARY */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

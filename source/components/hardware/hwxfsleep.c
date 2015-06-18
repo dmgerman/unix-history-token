@@ -43,6 +43,15 @@ begin_comment
 comment|/* Local prototypes */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|(
+operator|!
+name|ACPI_REDUCED_HARDWARE
+operator|)
+end_if
+
 begin_function_decl
 specifier|static
 name|ACPI_STATUS
@@ -60,6 +69,11 @@ name|PhysicalAddress64
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -261,11 +275,11 @@ condition|(
 name|AcpiGbl_ReducedHardware
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(

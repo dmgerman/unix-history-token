@@ -394,6 +394,16 @@ expr_stmt|;
 block|}
 block|}
 comment|/*      * Obtain a permanent mapping for the FACS. This is required for the      * Global Lock and the Firmware Waking Vector      */
+if|if
+condition|(
+operator|!
+operator|(
+name|Flags
+operator|&
+name|ACPI_NO_FACS_INIT
+operator|)
+condition|)
+block|{
 name|Status
 operator|=
 name|AcpiTbInitializeFacs
@@ -421,6 +431,7 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif

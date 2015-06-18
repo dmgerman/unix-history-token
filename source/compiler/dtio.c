@@ -961,6 +961,9 @@ parameter_list|(
 name|FILE
 modifier|*
 name|Handle
+parameter_list|,
+name|UINT32
+name|Flags
 parameter_list|)
 block|{
 name|BOOLEAN
@@ -1261,6 +1264,16 @@ break|break;
 case|case
 literal|'\n'
 case|:
+if|if
+condition|(
+operator|!
+operator|(
+name|Flags
+operator|&
+name|DT_ALLOW_MULTILINE_QUOTES
+operator|)
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"ERROR at line %u: Unterminated quoted string\n"
@@ -1273,6 +1286,7 @@ name|State
 operator|=
 name|DT_NORMAL_TEXT
 expr_stmt|;
+block|}
 break|break;
 default|default:
 comment|/* Get next character */
@@ -1626,6 +1640,8 @@ operator|=
 name|DtGetNextLine
 argument_list|(
 name|Handle
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=

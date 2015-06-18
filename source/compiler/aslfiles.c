@@ -692,6 +692,8 @@ condition|(
 name|DtGetNextLine
 argument_list|(
 name|IncludeFile
+argument_list|,
+name|DT_ALLOW_MULTILINE_QUOTES
 argument_list|)
 operator|!=
 name|ASL_EOF

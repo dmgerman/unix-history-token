@@ -1811,6 +1811,13 @@ name|ACPI_NO_OBJECT_INIT
 value|0x40
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_NO_FACS_INIT
+value|0x80
+end_define
+
 begin_comment
 comment|/*  * Initialization state  */
 end_comment

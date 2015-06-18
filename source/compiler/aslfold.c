@@ -510,6 +510,13 @@ operator|==
 name|AML_BUFFER_OP
 condition|)
 block|{
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+literal|"\nBuffer+Buffer->Buffer constant reduction is not supported yet"
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AE_TYPE
@@ -1230,6 +1237,15 @@ goto|goto
 name|EvalError
 goto|;
 block|}
+comment|/* Truncate any subtree expressions, they have been evaluated */
+name|Child1
+operator|->
+name|Asl
+operator|.
+name|Child
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Folded constant is in ObjDesc, store into Child1 */
 name|TrInstallReducedConstant
 argument_list|(
@@ -1267,23 +1283,6 @@ operator|.
 name|Parent
 operator|=
 name|OriginalParent
-expr_stmt|;
-comment|/* Truncate any subtree expressions, they have been evaluated */
-name|Child1
-operator|->
-name|Asl
-operator|.
-name|Child
-operator|=
-name|NULL
-expr_stmt|;
-name|Child2
-operator|->
-name|Asl
-operator|.
-name|Child
-operator|=
-name|NULL
 expr_stmt|;
 comment|/* First child is the folded constant */
 comment|/* Second child will be the target */
