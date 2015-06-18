@@ -7812,6 +7812,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|pf_addr_cmp
+parameter_list|(
+name|struct
+name|pf_addr
+modifier|*
+parameter_list|,
+name|struct
+name|pf_addr
+modifier|*
+parameter_list|,
+name|sa_family_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|pf_qid2qname
 parameter_list|(
