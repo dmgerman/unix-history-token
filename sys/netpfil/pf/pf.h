@@ -73,6 +73,8 @@ block|,
 name|PF_IN
 block|,
 name|PF_OUT
+block|,
+name|PF_FWD
 block|}
 enum|;
 end_enum
