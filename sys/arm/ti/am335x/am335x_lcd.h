@@ -19,6 +19,7 @@ begin_struct
 struct|struct
 name|panel_info
 block|{
+comment|/* Timing part */
 name|uint32_t
 name|panel_width
 decl_stmt|;
@@ -44,6 +45,15 @@ name|uint32_t
 name|panel_vsw
 decl_stmt|;
 name|uint32_t
+name|hsync_active
+decl_stmt|;
+name|uint32_t
+name|vsync_active
+decl_stmt|;
+name|uint32_t
+name|panel_pxl_clk
+decl_stmt|;
+name|uint32_t
 name|ac_bias
 decl_stmt|;
 name|uint32_t
@@ -59,19 +69,10 @@ name|uint32_t
 name|fdd
 decl_stmt|;
 name|uint32_t
-name|hsync_active
-decl_stmt|;
-name|uint32_t
-name|vsync_active
-decl_stmt|;
-name|uint32_t
 name|sync_edge
 decl_stmt|;
 name|uint32_t
 name|sync_ctrl
-decl_stmt|;
-name|uint32_t
-name|panel_pxl_clk
 decl_stmt|;
 name|uint32_t
 name|pixelclk_active
