@@ -2524,7 +2524,7 @@ block|}
 endif|#
 directive|endif
 comment|/* _FFR_TLS_1 */
-comment|/* 	**  valid values for dhparam are (only the first char is checked) 	**  none	no parameters: don't use DH 	**  512		use precomputed 512 bit parameters 	**  1024	generate 1024 bit parameters 	**  2048	generate 2048 bit parameters 	**  /file/name	read parameters from /file/name 	**  default is: 1024 for server, 512 for client (OK? XXX) 	*/
+comment|/* 	**  valid values for dhparam are (only the first char is checked) 	**  none	no parameters: don't use DH 	**  512		use precomputed 512 bit parameters 	**  1024	generate 1024 bit parameters 	**  2048	generate 2048 bit parameters 	**  /file/name	read parameters from /file/name 	**  default is: 1024 	*/
 if|if
 condition|(
 name|bitset
@@ -2630,21 +2630,11 @@ condition|)
 block|{
 name|dhparam
 operator|=
-name|srv
-condition|?
 literal|"1"
-else|:
-literal|"5"
 expr_stmt|;
 name|req
 operator||=
-operator|(
-name|srv
-condition|?
 name|TLS_I_DH1024
-else|:
-name|TLS_I_DH512
-operator|)
 expr_stmt|;
 block|}
 elseif|else
