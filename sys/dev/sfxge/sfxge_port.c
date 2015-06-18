@@ -937,7 +937,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u_long
+name|uint64_t
 name|sfxge_link_baudrate
 index|[
 name|EFX_LINK_NMODES
@@ -1002,14 +1002,9 @@ index|[
 name|EFX_LINK_10000FDX
 index|]
 operator|=
-name|MIN
-argument_list|(
 name|IF_Gbps
 argument_list|(
-literal|10ULL
-argument_list|)
-argument_list|,
-name|ULONG_MAX
+literal|10
 argument_list|)
 block|, }
 decl_stmt|;
@@ -1073,18 +1068,19 @@ else|:
 name|LINK_STATE_DOWN
 operator|)
 expr_stmt|;
+name|if_initbaudrate
+argument_list|(
 name|sc
 operator|->
 name|ifnet
-operator|->
-name|if_baudrate
-operator|=
+argument_list|,
 name|sfxge_link_baudrate
 index|[
 name|port
 operator|->
 name|link_mode
 index|]
+argument_list|)
 expr_stmt|;
 name|if_link_state_change
 argument_list|(
