@@ -7195,6 +7195,9 @@ name|vm
 modifier|*
 name|vm
 parameter_list|,
+name|int
+name|vcpu
+parameter_list|,
 name|vm_paddr_t
 name|ptpphys
 parameter_list|,
@@ -7221,6 +7224,8 @@ operator|=
 name|vm_gpa_hold
 argument_list|(
 name|vm
+argument_list|,
+name|vcpu
 argument_list|,
 name|ptpphys
 argument_list|,
@@ -7445,6 +7450,8 @@ operator|=
 name|ptp_hold
 argument_list|(
 name|vm
+argument_list|,
+name|vcpuid
 argument_list|,
 name|ptpphys
 argument_list|,
@@ -7702,6 +7709,8 @@ name|ptp_hold
 argument_list|(
 name|vm
 argument_list|,
+name|vcpuid
+argument_list|,
 name|ptpphys
 argument_list|,
 sizeof|sizeof
@@ -7821,6 +7830,8 @@ operator|=
 name|ptp_hold
 argument_list|(
 name|vm
+argument_list|,
+name|vcpuid
 argument_list|,
 name|ptpphys
 argument_list|,
