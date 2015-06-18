@@ -5329,7 +5329,7 @@ operator|*
 name|PFieldList
 operator|&&
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 operator|(
 operator|*
@@ -9449,6 +9449,8 @@ expr_stmt|;
 comment|/* Now we can actually compile the parse tree */
 if|if
 condition|(
+name|Length
+operator|&&
 operator|*
 name|Length
 condition|)
@@ -9470,7 +9472,7 @@ condition|(
 name|Name
 operator|&&
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 operator|(
 operator|*

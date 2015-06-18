@@ -75,7 +75,7 @@ comment|/* Digit must be ascii [0-9a-fA-F] */
 if|if
 condition|(
 operator|!
-name|ACPI_IS_XDIGIT
+name|isxdigit
 argument_list|(
 name|HexChar
 argument_list|)
@@ -114,7 +114,7 @@ call|(
 name|UINT8
 call|)
 argument_list|(
-name|ACPI_TOUPPER
+name|toupper
 argument_list|(
 name|HexChar
 argument_list|)
@@ -706,7 +706,7 @@ operator|=
 operator|(
 name|UINT32
 operator|)
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|String
 argument_list|)
@@ -1309,7 +1309,7 @@ block|}
 comment|/* The two bit-packed buffers should match */
 if|if
 condition|(
-name|ACPI_MEMCMP
+name|memcmp
 argument_list|(
 name|NewBuffer
 argument_list|,

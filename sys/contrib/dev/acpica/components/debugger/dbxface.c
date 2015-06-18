@@ -991,7 +991,7 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|AcpiGbl_DbBuffer
 argument_list|,

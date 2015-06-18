@@ -219,8 +219,11 @@ name|i
 operator|++
 control|)
 block|{
-name|ACPI_IS_PRINT
+name|isprint
 argument_list|(
+operator|(
+name|int
+operator|)
 name|Pathname
 index|[
 name|i

@@ -516,13 +516,13 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|ACPI_IS_PRINT
+name|isprint
 argument_list|(
 name|Byte
 argument_list|)
 operator|&&
 operator|!
-name|ACPI_IS_SPACE
+name|isspace
 argument_list|(
 name|Byte
 argument_list|)

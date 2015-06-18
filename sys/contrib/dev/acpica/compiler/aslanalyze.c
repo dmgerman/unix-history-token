@@ -56,7 +56,7 @@ if|if
 condition|(
 operator|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|Op
 operator|->
@@ -70,7 +70,7 @@ operator|)
 operator|||
 operator|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|Op
 operator|->
@@ -114,7 +114,7 @@ if|if
 condition|(
 operator|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|Op
 operator|->
@@ -128,7 +128,7 @@ operator|)
 operator|||
 operator|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|Op
 operator|->
@@ -1031,7 +1031,7 @@ block|}
 comment|/* Verify 3rd/4th chars are a valid hex value */
 name|GpeNumber
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 operator|&
 name|Name

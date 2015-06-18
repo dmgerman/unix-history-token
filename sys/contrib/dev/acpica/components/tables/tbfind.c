@@ -79,7 +79,7 @@ name|TbFindTable
 argument_list|)
 expr_stmt|;
 comment|/* Normalize the input strings */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 operator|&
 name|Header
@@ -101,7 +101,7 @@ argument_list|,
 name|Signature
 argument_list|)
 expr_stmt|;
-name|ACPI_STRNCPY
+name|strncpy
 argument_list|(
 name|Header
 operator|.
@@ -112,7 +112,7 @@ argument_list|,
 name|ACPI_OEM_ID_SIZE
 argument_list|)
 expr_stmt|;
-name|ACPI_STRNCPY
+name|strncpy
 argument_list|(
 name|Header
 operator|.
@@ -142,7 +142,7 @@ control|)
 block|{
 if|if
 condition|(
-name|ACPI_MEMCMP
+name|memcmp
 argument_list|(
 operator|&
 operator|(
@@ -229,7 +229,7 @@ comment|/* Check for table match on all IDs */
 if|if
 condition|(
 operator|!
-name|ACPI_MEMCMP
+name|memcmp
 argument_list|(
 name|AcpiGbl_RootTableList
 operator|.
@@ -257,7 +257,7 @@ literal|0
 index|]
 operator|||
 operator|!
-name|ACPI_MEMCMP
+name|memcmp
 argument_list|(
 name|AcpiGbl_RootTableList
 operator|.
@@ -286,7 +286,7 @@ literal|0
 index|]
 operator|||
 operator|!
-name|ACPI_MEMCMP
+name|memcmp
 argument_list|(
 name|AcpiGbl_RootTableList
 operator|.

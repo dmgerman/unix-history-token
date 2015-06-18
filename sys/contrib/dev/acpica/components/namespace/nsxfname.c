@@ -178,7 +178,7 @@ comment|/* Special case for root-only, since we can't search for it */
 if|if
 condition|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|Pathname
 argument_list|,
@@ -519,7 +519,7 @@ operator|->
 name|Length
 expr_stmt|;
 comment|/* Copy actual string and return a pointer to the next string area */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|StringArea
 argument_list|,
@@ -545,7 +545,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiGetObjectInfo  *  * PARAMETERS:  Handle              - Object Handle  *              ReturnBuffer        - Where the info is returned  *  * RETURN:      Status  *  * DESCRIPTION: Returns information about an object as gleaned from the  *              namespace node and possibly by running several standard  *              control methods (Such as in the case of a device.)  *  * For Device and Processor objects, run the Device _HID, _UID, _CID, _SUB,  * _STA, _ADR, _SxW, and _SxD methods.  *  * Note: Allocates the return buffer, must be freed by the caller.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiGetObjectInfo  *  * PARAMETERS:  Handle              - Object Handle  *              ReturnBuffer        - Where the info is returned  *  * RETURN:      Status  *  * DESCRIPTION: Returns information about an object as gleaned from the  *              namespace node and possibly by running several standard  *              control methods (Such as in the case of a device.)  *  * For Device and Processor objects, run the Device _HID, _UID, _CID, _SUB,  * _CLS, _STA, _ADR, _SxW, and _SxD methods.  *  * Note: Allocates the return buffer, must be freed by the caller.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -593,6 +593,12 @@ name|Sub
 init|=
 name|NULL
 decl_stmt|;
+name|ACPI_PNP_DEVICE_ID
+modifier|*
+name|Cls
+init|=
+name|NULL
+decl_stmt|;
 name|char
 modifier|*
 name|NextIdString
@@ -608,7 +614,7 @@ name|ParamCount
 init|=
 literal|0
 decl_stmt|;
-name|UINT8
+name|UINT16
 name|Valid
 init|=
 literal|0
@@ -764,7 +770,7 @@ name|ACPI_TYPE_PROCESSOR
 operator|)
 condition|)
 block|{
-comment|/*          * Get extra info for ACPI Device/Processor objects only:          * Run the Device _HID, _UID, _SUB, and _CID methods.          *          * Note: none of these methods are required, so they may or may          * not be present for this device. The Info->Valid bitfield is used          * to indicate which methods were found and run successfully.          */
+comment|/*          * Get extra info for ACPI Device/Processor objects only:          * Run the Device _HID, _UID, _SUB, _CID, and _CLS methods.          *          * Note: none of these methods are required, so they may or may          * not be present for this device. The Info->Valid bitfield is used          * to indicate which methods were found and run successfully.          */
 comment|/* Execute the Device._HID method */
 name|Status
 operator|=
@@ -891,6 +897,36 @@ expr_stmt|;
 name|Valid
 operator||=
 name|ACPI_VALID_CID
+expr_stmt|;
+block|}
+comment|/* Execute the Device._CLS method */
+name|Status
+operator|=
+name|AcpiUtExecute_CLS
+argument_list|(
+name|Node
+argument_list|,
+operator|&
+name|Cls
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|InfoSize
+operator|+=
+name|Cls
+operator|->
+name|Length
+expr_stmt|;
+name|Valid
+operator||=
+name|ACPI_VALID_CLS
 expr_stmt|;
 block|}
 block|}
@@ -1252,6 +1288,26 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|Cls
+condition|)
+block|{
+name|NextIdString
+operator|=
+name|AcpiNsCopyDeviceId
+argument_list|(
+operator|&
+name|Info
+operator|->
+name|ClassCode
+argument_list|,
+name|Cls
+argument_list|,
+name|NextIdString
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Copy the fixed-length data */
 name|Info
 operator|->
@@ -1335,6 +1391,17 @@ block|{
 name|ACPI_FREE
 argument_list|(
 name|CidList
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Cls
+condition|)
+block|{
+name|ACPI_FREE
+argument_list|(
+name|Cls
 argument_list|)
 expr_stmt|;
 block|}
@@ -1676,7 +1743,7 @@ goto|;
 block|}
 block|}
 comment|/* Copy the method AML to the local buffer */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|AmlBuffer
 argument_list|,

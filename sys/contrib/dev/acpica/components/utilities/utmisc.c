@@ -57,7 +57,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|Id
 argument_list|,
@@ -67,7 +67,7 @@ operator|)
 operator|||
 operator|!
 operator|(
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|Id
 argument_list|,
@@ -143,6 +143,15 @@ operator|->
 name|Signature
 argument_list|,
 name|ACPI_SIG_SSDT
+argument_list|)
+operator|||
+name|ACPI_COMPARE_NAME
+argument_list|(
+name|Table
+operator|->
+name|Signature
+argument_list|,
+name|ACPI_SIG_OSDT
 argument_list|)
 condition|)
 block|{

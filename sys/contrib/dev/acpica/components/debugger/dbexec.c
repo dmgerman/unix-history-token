@@ -1036,7 +1036,7 @@ name|NameString
 operator|=
 name|ACPI_ALLOCATE
 argument_list|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Name
 argument_list|)
@@ -1052,7 +1052,7 @@ condition|)
 block|{
 return|return;
 block|}
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 operator|&
 name|AcpiGbl_DbMethodInfo
@@ -1065,7 +1065,7 @@ name|ACPI_DB_METHOD_INFO
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|NameString
 argument_list|,
@@ -1738,7 +1738,7 @@ decl_stmt|;
 comment|/* Get the arguments */
 name|NumThreads
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|NumThreadsArg
 argument_list|,
@@ -1749,7 +1749,7 @@ argument_list|)
 expr_stmt|;
 name|NumLoops
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|NumLoopsArg
 argument_list|,
@@ -1900,7 +1900,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 operator|&
 name|AcpiGbl_DbMethodInfo
@@ -1980,7 +1980,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|AcpiGbl_DbMethodInfo
 operator|.

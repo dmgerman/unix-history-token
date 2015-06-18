@@ -158,7 +158,7 @@ argument_list|,
 name|Name
 argument_list|)
 expr_stmt|;
-name|ACPI_STRNCPY
+name|strncpy
 argument_list|(
 name|AcpiGbl_DbDebugFilename
 argument_list|,

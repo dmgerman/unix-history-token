@@ -1367,7 +1367,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 operator|&
 name|Info

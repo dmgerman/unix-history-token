@@ -188,6 +188,16 @@ name|NULL
 block|,
 name|NULL
 block|,
+literal|"Preprocessor: "
+block|,
+literal|"Preprocessor Temp File"
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
 literal|"Listing File: "
 block|,
 literal|"Listing Output"
@@ -486,18 +496,6 @@ name|ASL_EXTERN
 name|UINT32
 name|ASL_INIT_GLOBAL
 argument_list|(
-name|Gbl_PreviousLineNumber
-argument_list|,
-literal|0
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ASL_EXTERN
-name|UINT32
-name|ASL_INIT_GLOBAL
-argument_list|(
 name|Gbl_CurrentLineNumber
 argument_list|,
 literal|1
@@ -523,6 +521,18 @@ name|UINT32
 name|ASL_INIT_GLOBAL
 argument_list|(
 name|Gbl_CurrentLineOffset
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ASL_EXTERN
+name|UINT32
+name|ASL_INIT_GLOBAL
+argument_list|(
+name|Gbl_OriginalInputFileSize
 argument_list|,
 literal|0
 argument_list|)
@@ -677,6 +687,18 @@ name|BOOLEAN
 name|ASL_INIT_GLOBAL
 parameter_list|(
 name|Gbl_PreprocessorOutputFlag
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ASL_EXTERN
+name|BOOLEAN
+name|ASL_INIT_GLOBAL
+parameter_list|(
+name|Gbl_KeepPreprocessorTempFile
 parameter_list|,
 name|FALSE
 parameter_list|)
