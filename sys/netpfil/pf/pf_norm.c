@@ -6242,6 +6242,12 @@ name|m_nextpkt
 operator|=
 name|NULL
 expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_SKIP_FIREWALL
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
