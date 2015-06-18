@@ -224,9 +224,6 @@ decl_stmt|;
 name|uint8_t
 name|frc_proto
 decl_stmt|;
-name|uint8_t
-name|frc_direction
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -259,10 +256,6 @@ define|#
 directive|define
 name|fr_proto
 value|fr_key.frc_proto
-define|#
-directive|define
-name|fr_direction
-value|fr_key.frc_direction
 name|RB_ENTRY
 argument_list|(
 argument|pf_fragment
@@ -835,8 +828,6 @@ name|uint16_t
 parameter_list|,
 name|uint16_t
 parameter_list|,
-name|int
-parameter_list|,
 name|u_short
 modifier|*
 parameter_list|)
@@ -943,12 +934,6 @@ operator|=
 name|ip
 operator|->
 name|ip_id
-expr_stmt|;
-name|key
-operator|->
-name|frc_direction
-operator|=
-name|dir
 expr_stmt|;
 block|}
 end_function
@@ -3612,9 +3597,6 @@ parameter_list|,
 name|uint16_t
 name|extoff
 parameter_list|,
-name|int
-name|dir
-parameter_list|,
 name|u_short
 modifier|*
 name|reason
@@ -3793,12 +3775,6 @@ operator|=
 name|fraghdr
 operator|->
 name|ip6f_ident
-expr_stmt|;
-name|key
-operator|.
-name|frc_direction
-operator|=
-name|dir
 expr_stmt|;
 if|if
 condition|(
@@ -8678,8 +8654,6 @@ argument_list|,
 name|off
 argument_list|,
 name|extoff
-argument_list|,
-name|dir
 argument_list|,
 name|reason
 argument_list|)
