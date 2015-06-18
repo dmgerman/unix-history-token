@@ -416,6 +416,12 @@ parameter_list|)
 value|((c)>= 0x30&& (c)<= 0x39)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RES_ENFORCE_RFC1034
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -426,11 +432,25 @@ parameter_list|)
 value|(alphachar(c) || digitchar(c))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RES_ENFORCE_RFC1034
-end_ifdef
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|borderchar
+parameter_list|(
+name|c
+parameter_list|)
+value|(alphachar(c) || digitchar(c) || underscorechar(c))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -441,26 +461,6 @@ name|c
 parameter_list|)
 value|(borderchar(c) || hyphenchar(c))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|middlechar
-parameter_list|(
-name|c
-parameter_list|)
-value|(borderchar(c) || hyphenchar(c) || underscorechar(c))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
