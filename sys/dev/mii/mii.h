@@ -1334,7 +1334,7 @@ value|0x0400
 end_define
 
 begin_comment
-comment|/* Inalid PD signature detected */
+comment|/* Invalid PD signature detected */
 end_comment
 
 begin_define
