@@ -667,9 +667,6 @@ decl_stmt|;
 name|int
 name|op
 decl_stmt|;
-name|int
-name|block_segs
-decl_stmt|;
 name|cm
 operator|=
 name|arg
@@ -707,6 +704,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|KASSERT
+argument_list|(
+name|nsegs
+operator|<=
+name|BLKIF_MAX_SEGMENTS_PER_REQUEST
+argument_list|,
+operator|(
+literal|"Too many segments in a blkfront I/O"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Fill out a communications ring structure. */
 name|ring_req
 operator|=
@@ -781,15 +789,6 @@ name|cm_nseg
 operator|=
 name|nsegs
 expr_stmt|;
-name|block_segs
-operator|=
-name|MIN
-argument_list|(
-name|nsegs
-argument_list|,
-name|BLKIF_MAX_SEGMENTS_PER_REQUEST
-argument_list|)
-expr_stmt|;
 name|sg
 operator|=
 name|ring_req
@@ -800,7 +799,7 @@ name|last_block_sg
 operator|=
 name|sg
 operator|+
-name|block_segs
+name|nsegs
 expr_stmt|;
 name|sg_ref
 operator|=
@@ -940,9 +939,6 @@ operator|++
 expr_stmt|;
 name|segs
 operator|++
-expr_stmt|;
-name|nsegs
-operator|--
 expr_stmt|;
 block|}
 if|if
