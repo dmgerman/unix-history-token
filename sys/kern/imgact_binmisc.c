@@ -1227,12 +1227,15 @@ name|ENOENT
 operator|)
 return|;
 block|}
+name|atomic_clear_32
+argument_list|(
+operator|&
 name|ibe
 operator|->
 name|ibe_flags
-operator|&=
-operator|~
+argument_list|,
 name|IBF_ENABLED
+argument_list|)
 expr_stmt|;
 name|sx_sunlock
 argument_list|(
@@ -1621,7 +1624,6 @@ name|count
 operator|=
 name|interp_list_entry_count
 expr_stmt|;
-comment|/* Don't block in malloc() while holding lock. */
 name|xbe
 operator|=
 name|malloc
@@ -1636,8 +1638,6 @@ name|count
 argument_list|,
 name|M_BINMISC
 argument_list|,
-name|M_NOWAIT
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
