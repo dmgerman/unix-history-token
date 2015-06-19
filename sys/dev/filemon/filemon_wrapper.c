@@ -333,7 +333,7 @@ operator|->
 name|pid
 condition|)
 block|{
-name|sx_xunlock
+name|sx_sunlock
 argument_list|(
 operator|&
 name|proctree_lock
@@ -354,7 +354,7 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-name|sx_xunlock
+name|sx_sunlock
 argument_list|(
 operator|&
 name|proctree_lock
