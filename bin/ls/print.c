@@ -749,7 +749,7 @@ name|name
 condition|)
 name|xo_emit
 argument_list|(
-literal|"{ke:name}"
+literal|"{ke:name/%hs}"
 argument_list|,
 name|name
 argument_list|)
@@ -1016,7 +1016,7 @@ condition|)
 block|{
 name|xo_emit
 argument_list|(
-literal|"{dk:name}"
+literal|"{dk:name/%hs}"
 argument_list|,
 name|name
 argument_list|)
@@ -2045,7 +2045,7 @@ argument_list|(
 name|fmt
 argument_list|)
 argument_list|,
-literal|"{:%s/%%s} "
+literal|"{:%s/%%hs} "
 argument_list|,
 name|field
 argument_list|)

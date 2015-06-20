@@ -242,7 +242,7 @@ operator|!
 name|ExpectedBtypes
 condition|)
 block|{
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|Buffer
 argument_list|,
@@ -288,7 +288,7 @@ operator|&
 name|ThisRtype
 condition|)
 block|{
-name|ACPI_STRCAT
+name|strcat
 argument_list|(
 name|Buffer
 argument_list|,

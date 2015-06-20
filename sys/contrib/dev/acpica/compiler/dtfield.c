@@ -273,7 +273,7 @@ name|Length
 decl_stmt|;
 name|Length
 operator|=
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Field
 operator|->
@@ -313,7 +313,7 @@ operator|=
 name|ByteLength
 expr_stmt|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Buffer
 argument_list|,
@@ -378,7 +378,7 @@ name|Buffer
 expr_stmt|;
 name|Count
 operator|=
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|AsciiString
 argument_list|)
@@ -592,7 +592,7 @@ comment|/* TBD: Should use a flag rather than compare "Reserved" */
 if|if
 condition|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|Field
 operator|->
@@ -744,7 +744,7 @@ name|MsgBuffer
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Buffer
 argument_list|,
@@ -802,7 +802,7 @@ name|NewBuffer
 operator|=
 name|UtLocalCalloc
 argument_list|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Buffer
 argument_list|)

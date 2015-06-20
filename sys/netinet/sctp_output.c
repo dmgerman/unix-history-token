@@ -15992,6 +15992,10 @@ argument_list|(
 name|ro
 argument_list|,
 name|vrf_id
+argument_list|,
+name|inp
+operator|->
+name|fibnum
 argument_list|)
 expr_stmt|;
 block|}
@@ -20525,6 +20529,10 @@ argument_list|(
 name|ro
 argument_list|,
 name|vrf_id
+argument_list|,
+name|inp
+operator|->
+name|fibnum
 argument_list|)
 expr_stmt|;
 block|}
@@ -22317,6 +22325,10 @@ argument_list|(
 name|ro
 argument_list|,
 name|vrf_id
+argument_list|,
+name|inp
+operator|->
+name|fibnum
 argument_list|)
 expr_stmt|;
 block|}
@@ -27963,6 +27975,10 @@ name|mflowtype
 argument_list|,
 name|mflowid
 argument_list|,
+name|inp
+operator|->
+name|fibnum
+argument_list|,
 name|vrf_id
 argument_list|,
 name|port
@@ -28078,6 +28094,10 @@ argument_list|,
 name|mflowtype
 argument_list|,
 name|mflowid
+argument_list|,
+name|inp
+operator|->
+name|fibnum
 argument_list|,
 name|vrf_id
 argument_list|,
@@ -53734,6 +53754,9 @@ parameter_list|,
 name|uint32_t
 name|mflowid
 parameter_list|,
+name|uint16_t
+name|fibnum
+parameter_list|,
 name|uint32_t
 name|vrf_id
 parameter_list|,
@@ -54082,6 +54105,13 @@ name|mout
 argument_list|)
 operator|=
 name|cause
+expr_stmt|;
+name|M_SETFIB
+argument_list|(
+name|mout
+argument_list|,
+name|fibnum
+argument_list|)
 expr_stmt|;
 name|mout
 operator|->
@@ -55206,6 +55236,9 @@ parameter_list|,
 name|uint32_t
 name|mflowid
 parameter_list|,
+name|uint16_t
+name|fibnum
+parameter_list|,
 name|uint32_t
 name|vrf_id
 parameter_list|,
@@ -55230,6 +55263,8 @@ argument_list|,
 name|mflowtype
 argument_list|,
 name|mflowid
+argument_list|,
+name|fibnum
 argument_list|,
 name|vrf_id
 argument_list|,
@@ -60299,6 +60334,9 @@ parameter_list|,
 name|uint32_t
 name|mflowid
 parameter_list|,
+name|uint16_t
+name|fibnum
+parameter_list|,
 name|uint32_t
 name|vrf_id
 parameter_list|,
@@ -60349,6 +60387,8 @@ name|mflowtype
 argument_list|,
 name|mflowid
 argument_list|,
+name|fibnum
+argument_list|,
 name|vrf_id
 argument_list|,
 name|port
@@ -60391,6 +60431,9 @@ parameter_list|,
 name|uint32_t
 name|mflowid
 parameter_list|,
+name|uint16_t
+name|fibnum
+parameter_list|,
 name|uint32_t
 name|vrf_id
 parameter_list|,
@@ -60415,6 +60458,8 @@ argument_list|,
 name|mflowtype
 argument_list|,
 name|mflowid
+argument_list|,
+name|fibnum
 argument_list|,
 name|vrf_id
 argument_list|,

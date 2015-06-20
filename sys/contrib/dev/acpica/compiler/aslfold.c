@@ -510,6 +510,13 @@ operator|==
 name|AML_BUFFER_OP
 condition|)
 block|{
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+literal|"\nBuffer+Buffer->Buffer constant reduction is not supported yet"
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AE_TYPE
@@ -911,6 +918,15 @@ name|Status
 operator|)
 return|;
 block|}
+comment|/* Disconnect any existing children, install new constant */
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+operator|=
+name|NULL
+expr_stmt|;
 name|TrInstallReducedConstant
 argument_list|(
 name|Op
@@ -922,14 +938,6 @@ name|UtSetParseOpName
 argument_list|(
 name|Op
 argument_list|)
-expr_stmt|;
-name|Op
-operator|->
-name|Asl
-operator|.
-name|Child
-operator|=
-name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -1229,6 +1237,15 @@ goto|goto
 name|EvalError
 goto|;
 block|}
+comment|/* Truncate any subtree expressions, they have been evaluated */
+name|Child1
+operator|->
+name|Asl
+operator|.
+name|Child
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Folded constant is in ObjDesc, store into Child1 */
 name|TrInstallReducedConstant
 argument_list|(
@@ -1266,23 +1283,6 @@ operator|.
 name|Parent
 operator|=
 name|OriginalParent
-expr_stmt|;
-comment|/* Truncate any subtree expressions, they have been evaluated */
-name|Child1
-operator|->
-name|Asl
-operator|.
-name|Child
-operator|=
-name|NULL
-expr_stmt|;
-name|Child2
-operator|->
-name|Asl
-operator|.
-name|Child
-operator|=
-name|NULL
 expr_stmt|;
 comment|/* First child is the folded constant */
 comment|/* Second child will be the target */
@@ -1346,7 +1346,11 @@ parameter_list|)
 block|{
 name|ACPI_PARSE_OBJECT
 modifier|*
-name|RootOp
+name|LengthOp
+decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|DataOp
 decl_stmt|;
 name|TotalFolds
 operator|++
@@ -1440,7 +1444,7 @@ name|Asl
 operator|.
 name|AmlLength
 operator|=
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|ObjDesc
 operator|->
@@ -1484,6 +1488,7 @@ break|break;
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
+comment|/*          * Create a new parse subtree of the form:          *          * BUFFER (Buffer AML opcode)          *    INTEGER (Buffer length in bytes)          *    RAW_DATA (Buffer byte data)          */
 name|Op
 operator|->
 name|Asl
@@ -1514,14 +1519,14 @@ name|Op
 argument_list|)
 expr_stmt|;
 comment|/* Child node is the buffer length */
-name|RootOp
+name|LengthOp
 operator|=
 name|TrAllocateNode
 argument_list|(
 name|PARSEOP_INTEGER
 argument_list|)
 expr_stmt|;
-name|RootOp
+name|LengthOp
 operator|->
 name|Asl
 operator|.
@@ -1529,7 +1534,7 @@ name|AmlOpcode
 operator|=
 name|AML_DWORD_OP
 expr_stmt|;
-name|RootOp
+name|LengthOp
 operator|->
 name|Asl
 operator|.
@@ -1543,7 +1548,7 @@ name|Buffer
 operator|.
 name|Length
 expr_stmt|;
-name|RootOp
+name|LengthOp
 operator|->
 name|Asl
 operator|.
@@ -1556,7 +1561,7 @@ name|void
 operator|)
 name|OpcSetOptimalIntegerSize
 argument_list|(
-name|RootOp
+name|LengthOp
 argument_list|)
 expr_stmt|;
 name|Op
@@ -1565,26 +1570,17 @@ name|Asl
 operator|.
 name|Child
 operator|=
-name|RootOp
+name|LengthOp
 expr_stmt|;
-name|Op
-operator|=
-name|RootOp
-expr_stmt|;
-name|UtSetParseOpName
-argument_list|(
-name|Op
-argument_list|)
-expr_stmt|;
-comment|/* Peer to the child is the raw buffer data */
-name|RootOp
+comment|/* Next child is the raw buffer data */
+name|DataOp
 operator|=
 name|TrAllocateNode
 argument_list|(
 name|PARSEOP_RAW_DATA
 argument_list|)
 expr_stmt|;
-name|RootOp
+name|DataOp
 operator|->
 name|Asl
 operator|.
@@ -1592,7 +1588,7 @@ name|AmlOpcode
 operator|=
 name|AML_RAW_DATA_BUFFER
 expr_stmt|;
-name|RootOp
+name|DataOp
 operator|->
 name|Asl
 operator|.
@@ -1604,7 +1600,7 @@ name|Buffer
 operator|.
 name|Length
 expr_stmt|;
-name|RootOp
+name|DataOp
 operator|->
 name|Asl
 operator|.
@@ -1622,29 +1618,21 @@ name|Buffer
 operator|.
 name|Pointer
 expr_stmt|;
-name|RootOp
+name|DataOp
 operator|->
 name|Asl
 operator|.
 name|Parent
 operator|=
 name|Op
-operator|->
-name|Asl
-operator|.
-name|Parent
 expr_stmt|;
-name|Op
+name|LengthOp
 operator|->
 name|Asl
 operator|.
 name|Next
 operator|=
-name|RootOp
-expr_stmt|;
-name|Op
-operator|=
-name|RootOp
+name|DataOp
 expr_stmt|;
 name|DbgPrint
 argument_list|(

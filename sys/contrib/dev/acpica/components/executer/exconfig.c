@@ -1272,7 +1272,7 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Table
 argument_list|,

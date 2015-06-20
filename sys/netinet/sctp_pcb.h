@@ -1191,6 +1191,9 @@ decl_stmt|;
 name|uint32_t
 name|def_vrf_id
 decl_stmt|;
+name|uint16_t
+name|fibnum
+decl_stmt|;
 name|uint32_t
 name|total_sends
 decl_stmt|;

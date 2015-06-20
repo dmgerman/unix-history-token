@@ -159,7 +159,7 @@ comment|/* _OSI is optional for now, will be permanent later */
 if|if
 condition|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|InitVal
 operator|->
@@ -402,7 +402,7 @@ operator|=
 operator|(
 name|UINT32
 operator|)
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Val
 argument_list|)
@@ -486,7 +486,7 @@ block|}
 comment|/* Special case for ACPI Global Lock */
 if|if
 condition|(
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|InitVal
 operator|->
@@ -732,6 +732,8 @@ operator|&
 operator|~
 operator|(
 name|ACPI_NS_ERROR_IF_FOUND
+operator||
+name|ACPI_NS_OVERRIDE_IF_FOUND
 operator||
 name|ACPI_NS_SEARCH_PARENT
 operator|)
@@ -1247,6 +1249,19 @@ block|{
 name|LocalFlags
 operator||=
 name|ACPI_NS_ERROR_IF_FOUND
+expr_stmt|;
+block|}
+comment|/* Set override flag according to caller */
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_NS_OVERRIDE_IF_FOUND
+condition|)
+block|{
+name|LocalFlags
+operator||=
+name|ACPI_NS_OVERRIDE_IF_FOUND
 expr_stmt|;
 block|}
 block|}

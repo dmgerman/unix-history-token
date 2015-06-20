@@ -756,6 +756,13 @@ name|AE_ERROR
 operator|)
 return|;
 block|}
+name|Gbl_OriginalInputFileSize
+operator|=
+name|FlGetFileSize
+argument_list|(
+name|ASL_FILE_INPUT
+argument_list|)
+expr_stmt|;
 comment|/* Determine input file type */
 name|Gbl_FileType
 operator|=

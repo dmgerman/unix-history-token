@@ -1703,7 +1703,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(!ACPI_STRNCMP (ACPI_CAST_PTR (char, (a)), ACPI_CAST_PTR (char, (b)), ACPI_NAME_SIZE))
+value|(!strncmp (ACPI_CAST_PTR (char, (a)), ACPI_CAST_PTR (char, (b)), ACPI_NAME_SIZE))
 end_define
 
 begin_define
@@ -1715,7 +1715,7 @@ name|dest
 parameter_list|,
 name|src
 parameter_list|)
-value|(ACPI_STRNCPY (ACPI_CAST_PTR (char, (dest)), ACPI_CAST_PTR (char, (src)), ACPI_NAME_SIZE))
+value|(strncpy (ACPI_CAST_PTR (char, (dest)), ACPI_CAST_PTR (char, (src)), ACPI_NAME_SIZE))
 end_define
 
 begin_endif
@@ -1734,7 +1734,7 @@ name|ACPI_VALIDATE_RSDP_SIG
 parameter_list|(
 name|a
 parameter_list|)
-value|(!ACPI_STRNCMP (ACPI_CAST_PTR (char, (a)), ACPI_SIG_RSDP, 8))
+value|(!strncmp (ACPI_CAST_PTR (char, (a)), ACPI_SIG_RSDP, 8))
 end_define
 
 begin_define
@@ -1744,7 +1744,7 @@ name|ACPI_MAKE_RSDP_SIG
 parameter_list|(
 name|dest
 parameter_list|)
-value|(ACPI_MEMCPY (ACPI_CAST_PTR (char, (dest)), ACPI_SIG_RSDP, 8))
+value|(memcpy (ACPI_CAST_PTR (char, (dest)), ACPI_SIG_RSDP, 8))
 end_define
 
 begin_comment
@@ -1809,6 +1809,13 @@ define|#
 directive|define
 name|ACPI_NO_OBJECT_INIT
 value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NO_FACS_INIT
+value|0x80
 end_define
 
 begin_comment
@@ -2594,27 +2601,6 @@ define|#
 directive|define
 name|ACPI_GPE_CONDITIONAL_ENABLE
 value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_SAVE_MASK
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_ENABLE_SAVE
-value|(ACPI_GPE_ENABLE | ACPI_GPE_SAVE_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_DISABLE_SAVE
-value|(ACPI_GPE_DISABLE | ACPI_GPE_SAVE_MASK)
 end_define
 
 begin_comment
@@ -4060,6 +4046,21 @@ value|16
 end_define
 
 begin_comment
+comment|/* Length of 3-byte PCI class code values when converted back to a string */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCICLS_STRING_SIZE
+value|7
+end_define
+
+begin_comment
+comment|/* Includes null terminator */
+end_comment
+
+begin_comment
 comment|/* Structures used for device/processor HID, UID, CID, and SUB */
 end_comment
 
@@ -4131,7 +4132,7 @@ name|UINT8
 name|ParamCount
 decl_stmt|;
 comment|/* If a method, required parameter count */
-name|UINT8
+name|UINT16
 name|Valid
 decl_stmt|;
 comment|/* Indicates which optional fields are valid */
@@ -4173,6 +4174,10 @@ name|ACPI_PNP_DEVICE_ID
 name|SubsystemId
 decl_stmt|;
 comment|/* _SUB value */
+name|ACPI_PNP_DEVICE_ID
+name|ClassCode
+decl_stmt|;
+comment|/* _CLS value */
 name|ACPI_PNP_DEVICE_ID_LIST
 name|CompatibleIdList
 decl_stmt|;
@@ -4201,56 +4206,63 @@ begin_define
 define|#
 directive|define
 name|ACPI_VALID_STA
-value|0x01
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_ADR
-value|0x02
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_HID
-value|0x04
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_UID
-value|0x08
+value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_SUB
-value|0x10
+value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_CID
-value|0x20
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_VALID_CLS
+value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_SXDS
-value|0x40
+value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_SXWS
-value|0x80
+value|0x0200
 end_define
 
 begin_comment

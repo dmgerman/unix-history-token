@@ -10542,6 +10542,14 @@ argument_list|(
 name|sctp_pktdrop_enable
 argument_list|)
 expr_stmt|;
+name|inp
+operator|->
+name|fibnum
+operator|=
+name|so
+operator|->
+name|so_fibnum
+expr_stmt|;
 comment|/* init the small hash table we use to track asocid<-> tcb */
 name|inp
 operator|->
@@ -17510,6 +17518,12 @@ operator|->
 name|asoc
 operator|.
 name|vrf_id
+argument_list|,
+name|stcb
+operator|->
+name|sctp_ep
+operator|->
+name|fibnum
 argument_list|)
 expr_stmt|;
 if|if

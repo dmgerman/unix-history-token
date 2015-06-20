@@ -82,7 +82,7 @@ name|Allocation
 condition|)
 block|{
 comment|/* Clear the memory block */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|Allocation
 argument_list|,
@@ -373,7 +373,7 @@ condition|(
 name|AcpiGbl_DisplayFinalMemStats
 condition|)
 block|{
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|Buffer
 argument_list|,
@@ -698,7 +698,7 @@ operator|)
 return|;
 block|}
 comment|/* Have a valid buffer, clear it */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|Buffer
 operator|->

@@ -12373,9 +12373,11 @@ name|ifp
 operator|->
 name|if_baudrate
 operator|=
-literal|4000000000
+name|IF_Gbps
+argument_list|(
+literal|40
+argument_list|)
 expr_stmt|;
-comment|// ??
 name|ifp
 operator|->
 name|if_init

@@ -856,6 +856,23 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|am335x_clk_set_arm_disp_freq
+parameter_list|(
+name|struct
+name|ti_clock_dev
+modifier|*
+name|clkdev
+parameter_list|,
+name|unsigned
+name|int
+name|freq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|am335x_prcm_reset
 parameter_list|(
@@ -924,7 +941,7 @@ parameter_list|(
 name|i
 parameter_list|)
 define|\
-value|{	.id = (i), \ 		.clk_activate = am335x_clk_noop_activate, \ 		.clk_deactivate = am335x_clk_noop_deactivate, \ 		.clk_set_source = am335x_clk_noop_set_source, \ 		.clk_accessible = NULL, \ 		.clk_get_source_freq = NULL \ 	}
+value|{	.id = (i), \ 		.clk_activate = am335x_clk_noop_activate, \ 		.clk_deactivate = am335x_clk_noop_deactivate, \ 		.clk_set_source = am335x_clk_noop_set_source, \ 		.clk_accessible = NULL, \ 		.clk_get_source_freq = NULL, \ 		.clk_set_source_freq = NULL \ 	}
 end_define
 
 begin_define
@@ -935,7 +952,7 @@ parameter_list|(
 name|i
 parameter_list|)
 define|\
-value|{	.id = (i), \ 		.clk_activate = am335x_clk_generic_activate, \ 		.clk_deactivate = am335x_clk_generic_deactivate, \ 		.clk_set_source = am335x_clk_generic_set_source, \ 		.clk_accessible = NULL, \ 		.clk_get_source_freq = NULL \ 	}
+value|{	.id = (i), \ 		.clk_activate = am335x_clk_generic_activate, \ 		.clk_deactivate = am335x_clk_generic_deactivate, \ 		.clk_set_source = am335x_clk_generic_set_source, \ 		.clk_accessible = NULL, \ 		.clk_get_source_freq = NULL, \ 		.clk_set_source_freq = NULL \ 	}
 end_define
 
 begin_define
@@ -946,7 +963,7 @@ parameter_list|(
 name|i
 parameter_list|)
 define|\
-value|{	.id = (i), \ 		.clk_activate = am335x_clk_gpio_activate, \ 		.clk_deactivate = am335x_clk_generic_deactivate, \ 		.clk_set_source = am335x_clk_generic_set_source, \ 		.clk_accessible = NULL, \ 		.clk_get_source_freq = NULL \ 	}
+value|{	.id = (i), \ 		.clk_activate = am335x_clk_gpio_activate, \ 		.clk_deactivate = am335x_clk_generic_deactivate, \ 		.clk_set_source = am335x_clk_generic_set_source, \ 		.clk_accessible = NULL, \ 		.clk_get_source_freq = NULL, \ 		.clk_set_source_freq = NULL \ 	}
 end_define
 
 begin_define
@@ -957,7 +974,7 @@ parameter_list|(
 name|i
 parameter_list|)
 define|\
-value|{	.id = (i), \ 		.clk_activate = am335x_clk_generic_activate, \ 		.clk_deactivate = am335x_clk_generic_deactivate, \ 		.clk_set_source = am335x_clk_generic_set_source, \ 		.clk_accessible = NULL, \ 		.clk_get_source_freq = am335x_clk_hsmmc_get_source_freq \ 	}
+value|{	.id = (i), \ 		.clk_activate = am335x_clk_generic_activate, \ 		.clk_deactivate = am335x_clk_generic_deactivate, \ 		.clk_set_source = am335x_clk_generic_set_source, \ 		.clk_accessible = NULL, \ 		.clk_get_source_freq = am335x_clk_hsmmc_get_source_freq, \ 		.clk_set_source_freq = NULL \ 	}
 end_define
 
 begin_decl_stmt
@@ -998,6 +1015,11 @@ operator|.
 name|clk_get_source_freq
 operator|=
 name|am335x_clk_get_sysclk_freq
+block|,
+operator|.
+name|clk_set_source_freq
+operator|=
+name|NULL
 block|, 	}
 block|,
 comment|/* MPU (ARM) core clocks */
@@ -1031,6 +1053,11 @@ operator|.
 name|clk_get_source_freq
 operator|=
 name|am335x_clk_get_arm_fclk_freq
+block|,
+operator|.
+name|clk_set_source_freq
+operator|=
+name|NULL
 block|, 	}
 block|,
 comment|/* CPSW Ethernet Switch core clocks */
@@ -1062,6 +1089,11 @@ name|NULL
 block|,
 operator|.
 name|clk_get_source_freq
+operator|=
+name|NULL
+block|,
+operator|.
+name|clk_set_source_freq
 operator|=
 name|NULL
 block|, 	}
@@ -1097,6 +1129,11 @@ operator|.
 name|clk_get_source_freq
 operator|=
 name|NULL
+block|,
+operator|.
+name|clk_set_source_freq
+operator|=
+name|NULL
 block|, 	}
 block|,
 comment|/* LCD controller clocks */
@@ -1130,6 +1167,11 @@ operator|.
 name|clk_get_source_freq
 operator|=
 name|am335x_clk_get_arm_disp_freq
+block|,
+operator|.
+name|clk_set_source_freq
+operator|=
+name|am335x_clk_set_arm_disp_freq
 block|, 	}
 block|,
 comment|/* UART */
@@ -1331,6 +1373,11 @@ name|NULL
 block|,
 operator|.
 name|clk_get_source_freq
+operator|=
+name|NULL
+block|,
+operator|.
+name|clk_set_source_freq
 operator|=
 name|NULL
 block|, 	}
@@ -2757,6 +2804,20 @@ parameter_list|)
 value|((reg>>8)& 0x7FF)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DPLL_MAX_MUL
+value|0x800
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPLL_MAX_DIV
+value|0x80
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -2894,6 +2955,219 @@ argument_list|(
 name|reg
 argument_list|)
 operator|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|am335x_clk_set_arm_disp_freq
+parameter_list|(
+name|struct
+name|ti_clock_dev
+modifier|*
+name|clkdev
+parameter_list|,
+name|unsigned
+name|int
+name|freq
+parameter_list|)
+block|{
+name|uint32_t
+name|sysclk
+decl_stmt|;
+name|uint32_t
+name|mul
+decl_stmt|,
+name|div
+decl_stmt|;
+name|uint32_t
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+name|unsigned
+name|int
+name|delta
+decl_stmt|,
+name|min_delta
+decl_stmt|;
+name|am335x_clk_get_sysclk_freq
+argument_list|(
+name|NULL
+argument_list|,
+operator|&
+name|sysclk
+argument_list|)
+expr_stmt|;
+comment|/* Bypass mode */
+name|prcm_write_4
+argument_list|(
+name|CM_WKUP_CM_CLKMODE_DPLL_DISP
+argument_list|,
+literal|0x4
+argument_list|)
+expr_stmt|;
+comment|/* Make sure it's in bypass mode */
+while|while
+condition|(
+operator|!
+operator|(
+name|prcm_read_4
+argument_list|(
+name|CM_WKUP_CM_IDLEST_DPLL_DISP
+argument_list|)
+operator|&
+operator|(
+literal|1
+operator|<<
+literal|8
+operator|)
+operator|)
+condition|)
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+comment|/* Dumb and non-optimal implementation */
+name|min_delta
+operator|=
+name|freq
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|DPLL_MAX_MUL
+condition|;
+name|i
+operator|++
+control|)
+block|{
+for|for
+control|(
+name|j
+operator|=
+literal|1
+init|;
+name|j
+operator|<
+name|DPLL_MAX_DIV
+condition|;
+name|j
+operator|++
+control|)
+block|{
+name|delta
+operator|=
+name|abs
+argument_list|(
+name|freq
+operator|-
+name|i
+operator|*
+operator|(
+name|sysclk
+operator|/
+name|j
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|delta
+operator|<
+name|min_delta
+condition|)
+block|{
+name|mul
+operator|=
+name|i
+expr_stmt|;
+name|div
+operator|=
+name|j
+expr_stmt|;
+name|min_delta
+operator|=
+name|delta
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|min_delta
+operator|==
+literal|0
+condition|)
+break|break;
+block|}
+block|}
+name|prcm_write_4
+argument_list|(
+name|CM_WKUP_CM_CLKSEL_DPLL_DISP
+argument_list|,
+operator|(
+name|mul
+operator|<<
+literal|8
+operator|)
+operator||
+operator|(
+name|div
+operator|-
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Locked mode */
+name|prcm_write_4
+argument_list|(
+name|CM_WKUP_CM_CLKMODE_DPLL_DISP
+argument_list|,
+literal|0x7
+argument_list|)
+expr_stmt|;
+name|int
+name|timeout
+init|=
+literal|10000
+decl_stmt|;
+while|while
+condition|(
+operator|(
+operator|!
+operator|(
+name|prcm_read_4
+argument_list|(
+name|CM_WKUP_CM_IDLEST_DPLL_DISP
+argument_list|)
+operator|&
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+operator|)
+operator|)
+operator|&&
+name|timeout
+operator|--
+condition|)
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -3129,87 +3403,14 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* Bypass mode */
-name|prcm_write_4
+comment|/* 	 * For now set frequency to 2*VGA_PIXEL_CLOCK  	 */
+name|am335x_clk_set_arm_disp_freq
 argument_list|(
-name|CM_WKUP_CM_CLKMODE_DPLL_DISP
+name|clkdev
 argument_list|,
-literal|0x4
-argument_list|)
-expr_stmt|;
-comment|/* Make sure it's in bypass mode */
-while|while
-condition|(
-operator|!
-operator|(
-name|prcm_read_4
-argument_list|(
-name|CM_WKUP_CM_IDLEST_DPLL_DISP
-argument_list|)
-operator|&
-operator|(
-literal|1
-operator|<<
-literal|8
-operator|)
-operator|)
-condition|)
-name|DELAY
-argument_list|(
-literal|10
-argument_list|)
-expr_stmt|;
-comment|/* 	 * For now set frequency to  99*SYSFREQ/8 which is twice as 	 * HDMI 1080p pixel clock (minimum LCDC freq divisor is 2) 	 */
-name|prcm_write_4
-argument_list|(
-name|CM_WKUP_CM_CLKSEL_DPLL_DISP
-argument_list|,
-operator|(
-literal|99
-operator|<<
-literal|8
-operator|)
-operator||
-literal|8
-argument_list|)
-expr_stmt|;
-comment|/* Locked mode */
-name|prcm_write_4
-argument_list|(
-name|CM_WKUP_CM_CLKMODE_DPLL_DISP
-argument_list|,
-literal|0x7
-argument_list|)
-expr_stmt|;
-name|int
-name|timeout
-init|=
-literal|10000
-decl_stmt|;
-while|while
-condition|(
-operator|(
-operator|!
-operator|(
-name|prcm_read_4
-argument_list|(
-name|CM_WKUP_CM_IDLEST_DPLL_DISP
-argument_list|)
-operator|&
-operator|(
-literal|1
-operator|<<
-literal|0
-operator|)
-operator|)
-operator|)
-operator|&&
-name|timeout
-operator|--
-condition|)
-name|DELAY
-argument_list|(
-literal|10
+literal|25175000
+operator|*
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/*set MODULEMODE to ENABLE(2) */

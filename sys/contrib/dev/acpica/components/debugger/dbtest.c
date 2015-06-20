@@ -1739,7 +1739,7 @@ literal|"...  "
 argument_list|)
 expr_stmt|;
 comment|/*      * Write a new value.      *      * Handle possible extra bits at the end of the buffer. Can      * happen for FieldUnits larger than an integer, but the bit      * count is not an integral number of bytes. Zero out the      * unused bits.      */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|Buffer
 argument_list|,
@@ -1843,7 +1843,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|ACPI_MEMCMP
+name|memcmp
 argument_list|(
 name|Temp2
 operator|->
@@ -1933,7 +1933,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|ACPI_MEMCMP
+name|memcmp
 argument_list|(
 name|Temp1
 operator|->
@@ -2119,7 +2119,7 @@ name|String
 operator|.
 name|Length
 operator|=
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|ValueToWrite
 argument_list|)
@@ -2181,7 +2181,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|Temp2
 operator|->
@@ -2214,7 +2214,7 @@ name|String
 operator|.
 name|Length
 operator|=
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Temp1
 operator|->
@@ -2284,7 +2284,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|Temp1
 operator|->
@@ -2673,7 +2673,7 @@ name|Node
 argument_list|)
 expr_stmt|;
 comment|/* Copy the incoming user parameter */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 operator|&
 name|Params
@@ -2788,7 +2788,7 @@ name|Info
 operator|.
 name|MaxCount
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|CountArg
 argument_list|,
@@ -3116,7 +3116,7 @@ name|String
 operator|.
 name|Length
 operator|=
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|ThisParam
 operator|->

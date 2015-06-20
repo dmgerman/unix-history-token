@@ -165,7 +165,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Set all init info to zero */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 operator|&
 name|Info
@@ -1261,7 +1261,7 @@ name|METHOD_NAME__INI
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|Info
 argument_list|,

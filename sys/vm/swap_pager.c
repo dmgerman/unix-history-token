@@ -3977,25 +3977,6 @@ index|[
 name|reqpage
 index|]
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|mreq
-operator|->
-name|object
-operator|==
-name|object
-argument_list|,
-operator|(
-literal|"swap_pager_getpages: object mismatch %p/%p"
-operator|,
-name|object
-operator|,
-name|mreq
-operator|->
-name|object
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Calculate range to retrieve.  The pages have already been assigned 	 * their swapblks.  We require a *contiguous* range but we know it to 	 * not span devices.   If we do not supply it, bad things 	 * happen.  Note that blk, iblk& jblk can be SWAPBLK_NONE, but the 	 * loops are set up such that the case(s) are handled implicitly. 	 * 	 * The swp_*() calls must be made with the object locked. 	 */
 name|blk
 operator|=

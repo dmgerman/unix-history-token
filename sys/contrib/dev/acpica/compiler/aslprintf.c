@@ -343,7 +343,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|ACPI_STRNCPY
+name|strncpy
 argument_list|(
 name|NewString
 argument_list|,
@@ -637,7 +637,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|ACPI_STRNCPY
+name|strncpy
 argument_list|(
 name|NewString
 argument_list|,

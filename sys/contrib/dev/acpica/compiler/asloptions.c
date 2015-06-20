@@ -390,6 +390,10 @@ name|Gbl_DebugFlag
 operator|=
 name|TRUE
 expr_stmt|;
+name|Gbl_KeepPreprocessorTempFile
+operator|=
+name|TRUE
+expr_stmt|;
 break|break;
 case|case
 literal|'p'

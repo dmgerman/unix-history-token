@@ -2332,7 +2332,7 @@ name|String
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Gbl_TableSignature
 argument_list|)
@@ -2460,7 +2460,7 @@ condition|)
 block|{
 name|Length
 operator|=
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Child
 operator|->
@@ -2480,7 +2480,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|Gbl_TableId
 argument_list|,

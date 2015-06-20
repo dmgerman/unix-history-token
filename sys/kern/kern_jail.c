@@ -6872,7 +6872,7 @@ name|pr
 operator|->
 name|pr_enforce_statfs
 operator|=
-name|JAIL_DEFAULT_ENFORCE_STATFS
+name|jail_default_enforce_statfs
 expr_stmt|;
 name|pr
 operator|->

@@ -46,17 +46,75 @@ end_endif
 
 begin_struct
 struct|struct
-name|vm_memory_segment
+name|vm_memmap
 block|{
 name|vm_paddr_t
 name|gpa
 decl_stmt|;
-comment|/* in */
+name|int
+name|segid
+decl_stmt|;
+comment|/* memory segment */
+name|vm_ooffset_t
+name|segoff
+decl_stmt|;
+comment|/* offset into memory segment */
 name|size_t
 name|len
 decl_stmt|;
+comment|/* mmap length */
 name|int
-name|wired
+name|prot
+decl_stmt|;
+comment|/* RWX */
+name|int
+name|flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|VM_MEMMAP_F_WIRED
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MEMMAP_F_IOMMU
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MEMSEG_NAME
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->name[0] != '\0' ? (m)->name : NULL)
+end_define
+
+begin_struct
+struct|struct
+name|vm_memseg
+block|{
+name|int
+name|segid
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+name|char
+name|name
+index|[
+name|SPECNAMELEN
+operator|+
+literal|1
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -604,10 +662,12 @@ name|IOCNUM_MAP_MEMORY
 init|=
 literal|10
 block|,
+comment|/* deprecated */
 name|IOCNUM_GET_MEMORY_SEG
 init|=
 literal|11
 block|,
+comment|/* deprecated */
 name|IOCNUM_GET_GPA_PMAP
 init|=
 literal|12
@@ -615,6 +675,22 @@ block|,
 name|IOCNUM_GLA2GPA
 init|=
 literal|13
+block|,
+name|IOCNUM_ALLOC_MEMSEG
+init|=
+literal|14
+block|,
+name|IOCNUM_GET_MEMSEG
+init|=
+literal|15
+block|,
+name|IOCNUM_MMAP_MEMSEG
+init|=
+literal|16
+block|,
+name|IOCNUM_MMAP_GETNEXT
+init|=
+literal|17
 block|,
 comment|/* register/state accessors */
 name|IOCNUM_SET_REGISTER
@@ -798,17 +874,33 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_MAP_MEMORY
+name|VM_ALLOC_MEMSEG
 define|\
-value|_IOWR('v', IOCNUM_MAP_MEMORY, struct vm_memory_segment)
+value|_IOW('v', IOCNUM_ALLOC_MEMSEG, struct vm_memseg)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_GET_MEMORY_SEG
+name|VM_GET_MEMSEG
 define|\
-value|_IOWR('v', IOCNUM_GET_MEMORY_SEG, struct vm_memory_segment)
+value|_IOWR('v', IOCNUM_GET_MEMSEG, struct vm_memseg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MMAP_MEMSEG
+define|\
+value|_IOW('v', IOCNUM_MMAP_MEMSEG, struct vm_memmap)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MMAP_GETNEXT
+define|\
+value|_IOWR('v', IOCNUM_MMAP_GETNEXT, struct vm_memmap)
 end_define
 
 begin_define

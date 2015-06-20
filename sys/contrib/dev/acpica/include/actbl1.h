@@ -2520,6 +2520,42 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* Values for Version field above */
+end_comment
+
+begin_enum
+enum|enum
+name|AcpiMadtGicVersion
+block|{
+name|ACPI_MADT_GIC_VERSION_NONE
+init|=
+literal|0
+block|,
+name|ACPI_MADT_GIC_VERSION_V1
+init|=
+literal|1
+block|,
+name|ACPI_MADT_GIC_VERSION_V2
+init|=
+literal|2
+block|,
+name|ACPI_MADT_GIC_VERSION_V3
+init|=
+literal|3
+block|,
+name|ACPI_MADT_GIC_VERSION_V4
+init|=
+literal|4
+block|,
+name|ACPI_MADT_GIC_VERSION_RESERVED
+init|=
+literal|5
+comment|/* 5 and greater are reserved */
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/* 13: Generic MSI Frame (ACPI 5.1) */
 end_comment
 

@@ -796,7 +796,7 @@ block|}
 comment|/* 4) The last two characters of the name are the hex GPE Number */
 name|GpeNumber
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 operator|&
 name|Name

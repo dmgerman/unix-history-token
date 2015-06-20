@@ -574,9 +574,23 @@ parameter_list|(
 name|FILE
 modifier|*
 name|Handle
+parameter_list|,
+name|UINT32
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Flags for DtGetNextLine */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_ALLOW_MULTILINE_QUOTES
+value|0x01
+end_define
 
 begin_function_decl
 name|DT_FIELD

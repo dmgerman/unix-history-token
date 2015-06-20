@@ -529,7 +529,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|ExternalFilename
 argument_list|,

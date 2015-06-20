@@ -1937,6 +1937,10 @@ condition|(
 name|env
 operator|==
 name|NULL
+operator|||
+name|last
+operator|==
+name|env
 condition|)
 comment|/* no more env. variables to enumerate */
 return|return

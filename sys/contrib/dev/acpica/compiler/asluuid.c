@@ -59,7 +59,7 @@ operator|!
 name|InString
 operator|||
 operator|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|InString
 argument_list|)
