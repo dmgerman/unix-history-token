@@ -702,10 +702,6 @@ name|void
 modifier|*
 name|arg
 parameter_list|,
-name|struct
-name|ctl_id
-name|targ_id
-parameter_list|,
 name|int
 name|lun_id
 parameter_list|)
@@ -720,10 +716,6 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
-parameter_list|,
-name|struct
-name|ctl_id
-name|targ_id
 parameter_list|,
 name|int
 name|lun_id
@@ -7875,10 +7867,6 @@ name|void
 modifier|*
 name|arg
 parameter_list|,
-name|struct
-name|ctl_id
-name|targ_id
-parameter_list|,
 name|int
 name|lun_id
 parameter_list|)
@@ -7929,9 +7917,7 @@ name|bus_softc
 operator|->
 name|path_id
 argument_list|,
-name|targ_id
-operator|.
-name|id
+literal|0
 argument_list|,
 name|lun_id
 argument_list|)
@@ -8137,10 +8123,6 @@ name|void
 modifier|*
 name|arg
 parameter_list|,
-name|struct
-name|ctl_id
-name|targ_id
-parameter_list|,
 name|int
 name|lun_id
 parameter_list|)
@@ -8202,9 +8184,7 @@ argument_list|(
 name|path
 argument_list|)
 operator|==
-name|targ_id
-operator|.
-name|id
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -8237,13 +8217,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: can't find target %d lun %d\n"
+literal|"%s: can't find lun %d\n"
 argument_list|,
 name|__func__
-argument_list|,
-name|targ_id
-operator|.
-name|id
 argument_list|,
 name|lun_id
 argument_list|)

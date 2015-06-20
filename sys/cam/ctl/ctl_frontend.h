@@ -108,10 +108,6 @@ name|void
 modifier|*
 name|arg
 parameter_list|,
-name|struct
-name|ctl_id
-name|targ_id
-parameter_list|,
 name|int
 name|lun_id
 parameter_list|)
