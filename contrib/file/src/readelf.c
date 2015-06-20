@@ -18,7 +18,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: readelf.c,v 1.117 2014/12/16 23:29:42 christos Exp $"
+literal|"@(#)$File: readelf.c,v 1.119 2015/04/09 20:01:41 christos Exp $"
 argument_list|)
 end_macro
 
@@ -1964,6 +1964,7 @@ end_function
 begin_decl_stmt
 name|private
 name|int
+comment|/*ARGSUSED*/
 name|do_bid_note
 argument_list|(
 expr|struct
@@ -2960,6 +2961,9 @@ operator|(
 operator|(
 literal|1
 operator|<<
+operator|(
+name|int
+operator|)
 name|i
 operator|)
 operator|&
@@ -4699,11 +4703,18 @@ name|xsh_addr
 argument_list|,
 name|xsh_sizeof
 argument_list|,
+name|CAST
+argument_list|(
+name|off_t
+argument_list|,
+operator|(
 name|off
 operator|+
 name|size
 operator|*
 name|strtab
+operator|)
+argument_list|)
 argument_list|)
 operator|<
 operator|(
@@ -6222,6 +6233,8 @@ operator|(
 name|MAGIC_MIME
 operator||
 name|MAGIC_APPLE
+operator||
+name|MAGIC_EXTENSION
 operator|)
 condition|)
 return|return

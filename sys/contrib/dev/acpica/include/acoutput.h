@@ -1070,6 +1070,12 @@ begin_comment
 comment|/* DEBUG_PRINT functions */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPILER_VA_MACRO
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1077,7 +1083,7 @@ name|ACPI_DEBUG_PRINT
 parameter_list|(
 name|plist
 parameter_list|)
-value|ACPI_ACTUAL_DEBUG plist
+value|AcpiDebugPrint plist
 end_define
 
 begin_define
@@ -1087,8 +1093,13 @@ name|ACPI_DEBUG_PRINT_RAW
 parameter_list|(
 name|plist
 parameter_list|)
-value|ACPI_ACTUAL_DEBUG_RAW plist
+value|AcpiDebugPrintRaw plist
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
 comment|/* Helper macros for DEBUG_PRINT */
@@ -1158,6 +1169,31 @@ parameter_list|)
 define|\
 value|ACPI_DO_DEBUG_PRINT (AcpiDebugPrintRaw, Level, Line, \         Filename, Modulename, Component, __VA_ARGS__)
 end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_PRINT
+parameter_list|(
+name|plist
+parameter_list|)
+value|ACPI_ACTUAL_DEBUG plist
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_PRINT_RAW
+parameter_list|(
+name|plist
+parameter_list|)
+value|ACPI_ACTUAL_DEBUG_RAW plist
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Function entry tracing  *  * The name of the function is emitted as a local variable that is  * intended to be used by both the entry trace and the exit trace.  */

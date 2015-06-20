@@ -406,7 +406,7 @@ name|GpeCount
 operator|=
 name|AcpiGpeCount
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Stats
 operator|->
@@ -588,7 +588,7 @@ operator|!
 name|InterfaceName
 operator|||
 operator|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|InterfaceName
 argument_list|)
@@ -722,7 +722,7 @@ operator|!
 name|InterfaceName
 operator|||
 operator|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|InterfaceName
 argument_list|)

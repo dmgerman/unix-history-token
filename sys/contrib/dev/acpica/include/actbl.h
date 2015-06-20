@@ -63,6 +63,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACPI_SIG_OSDT
+value|"OSDT"
+end_define
+
+begin_comment
+comment|/* Override System Description Table */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ACPI_SIG_PSDT
 value|"PSDT"
 end_define

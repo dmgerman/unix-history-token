@@ -5152,7 +5152,15 @@ case|:
 case|case
 name|IFT_L2VLAN
 case|:
-comment|/* 			 * Take the interface out of promiscuous mode. 			 */
+comment|/* 			 * Take the interface out of promiscuous mode, but only 			 * if it was promiscuous in the first place. It might 			 * not be if we're in the bridge_ioctl_add() error path. 			 */
+if|if
+condition|(
+name|ifs
+operator|->
+name|if_flags
+operator|&
+name|IFF_PROMISC
+condition|)
 operator|(
 name|void
 operator|)
@@ -5816,7 +5824,6 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 name|bridge_delete_member
 argument_list|(
 name|sc
@@ -5826,14 +5833,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|bif
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|error

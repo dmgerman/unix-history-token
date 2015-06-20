@@ -1011,7 +1011,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" [-attime timestamp]"
+literal|" [-no_alt_chains] [-attime timestamp]"
 argument_list|)
 expr_stmt|;
 ifndef|#

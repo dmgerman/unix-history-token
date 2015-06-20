@@ -72,7 +72,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsEvaluate  *  * PARAMETERS:  Info            - Evaluation info block, contains:  *                  PrefixNode      - Prefix or Method/Object Node to execute  *                  RelativePath    - Name of method to execute, If NULL, the  *                                    Node is the object to execute  *                  Parameters      - List of parameters to pass to the method,  *                                    terminated by NULL. Params itself may be  *                                    NULL if no parameters are being passed.  *                  ReturnObject    - Where to put method's return value (if  *                                    any). If NULL, no value is returned.  *                  ParameterType   - Type of Parameter list  *                  ReturnObject    - Where to put method's return value (if  *                                    any). If NULL, no value is returned.  *                  Flags           - ACPI_IGNORE_RETURN_VALUE to delete return  *  * RETURN:      Status  *  * DESCRIPTION: Execute a control method or return the current value of an  *              ACPI namespace object.  *  * MUTEX:       Locks interpreter  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsEvaluate  *  * PARAMETERS:  Info            - Evaluation info block, contains these fields  *                                and more:  *                  PrefixNode      - Prefix or Method/Object Node to execute  *                  RelativePath    - Name of method to execute, If NULL, the  *                                    Node is the object to execute  *                  Parameters      - List of parameters to pass to the method,  *                                    terminated by NULL. Params itself may be  *                                    NULL if no parameters are being passed.  *                  ParameterType   - Type of Parameter list  *                  ReturnObject    - Where to put method's return value (if  *                                    any). If NULL, no value is returned.  *                  Flags           - ACPI_IGNORE_RETURN_VALUE to delete return  *  * RETURN:      Status  *  * DESCRIPTION: Execute a control method or return the current value of an  *              ACPI namespace object.  *  * MUTEX:       Locks interpreter  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -938,7 +938,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Initialize the evaluation information block */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|Info
 argument_list|,

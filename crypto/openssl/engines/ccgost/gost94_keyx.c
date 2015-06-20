@@ -512,6 +512,9 @@ name|key_is_ephemeral
 init|=
 literal|1
 decl_stmt|;
+name|int
+name|tmp_outlen
+decl_stmt|;
 name|EVP_PKEY
 modifier|*
 name|mykey
@@ -873,8 +876,7 @@ operator|->
 name|nid
 argument_list|)
 expr_stmt|;
-operator|*
-name|outlen
+name|tmp_outlen
 operator|=
 name|i2d_GOST_KEY_TRANSPORT
 argument_list|(
@@ -890,8 +892,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|outlen
+name|tmp_outlen
 operator|<=
 literal|0
 condition|)
@@ -907,6 +908,11 @@ goto|goto
 name|err
 goto|;
 block|}
+operator|*
+name|outlen
+operator|=
+name|tmp_outlen
+expr_stmt|;
 if|if
 condition|(
 operator|!

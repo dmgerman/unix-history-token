@@ -2460,6 +2460,27 @@ name|mac_size
 index|]
 operator|)
 expr_stmt|;
+comment|/*      * It would be clearer to write this as follows:      *     if (mac_size + len + p> SSL2_MAX_RECORD_LENGTH_2_BYTE_HEADER)      * However |len| is user input that could in theory be very large. We      * know |mac_size| and |p| are small, so to avoid any possibility of      * overflow we write it like this.      *      * In theory this should never fail because the logic above should have      * modified |len| if it is too big. But we are being cautious.      */
+if|if
+condition|(
+name|len
+operator|>
+operator|(
+name|SSL2_MAX_RECORD_LENGTH_2_BYTE_HEADER
+operator|-
+operator|(
+name|mac_size
+operator|+
+name|p
+operator|)
+operator|)
+condition|)
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
 comment|/* we copy the data into s->s2->wbuf */
 name|memcpy
 argument_list|(

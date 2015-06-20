@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2005 Bruce D. Evans and Steven G. Kargl  * All righ
 end_comment
 
 begin_comment
-comment|/*  * Hyperbolic cosine of a complex argument.  See s_ccosh.c for details.  */
+comment|/*  * Float version of ccosh().  See s_ccosh.c for details.  */
 end_comment
 
 begin_include
@@ -153,7 +153,7 @@ name|ix
 operator|<
 literal|0x41100000
 condition|)
-comment|/* small x: normal case */
+comment|/* |x|< 9: normal case */
 return|return
 operator|(
 name|CMPLXF
@@ -199,7 +199,7 @@ name|x
 argument_list|)
 argument_list|)
 operator|*
-literal|0.5f
+literal|0.5F
 expr_stmt|;
 return|return
 operator|(
@@ -316,11 +316,8 @@ condition|(
 name|ix
 operator|==
 literal|0
-operator|&&
-name|iy
-operator|>=
-literal|0x7f800000
 condition|)
+comment|/*&& iy>= 0x7f800000 */
 return|return
 operator|(
 name|CMPLXF
@@ -329,17 +326,13 @@ name|y
 operator|-
 name|y
 argument_list|,
+name|x
+operator|*
 name|copysignf
 argument_list|(
 literal|0
 argument_list|,
-name|x
-operator|*
-operator|(
 name|y
-operator|-
-name|y
-operator|)
 argument_list|)
 argument_list|)
 operator|)
@@ -349,22 +342,8 @@ condition|(
 name|iy
 operator|==
 literal|0
-operator|&&
-name|ix
-operator|>=
-literal|0x7f800000
 condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|hx
-operator|&
-literal|0x7fffff
-operator|)
-operator|==
-literal|0
-condition|)
+comment|/*&& ix>= 0x7f800000 */
 return|return
 operator|(
 name|CMPLXF
@@ -384,40 +363,13 @@ name|y
 argument_list|)
 operator|)
 return|;
-return|return
-operator|(
-name|CMPLXF
-argument_list|(
-name|x
-operator|*
-name|x
-argument_list|,
-name|copysignf
-argument_list|(
-literal|0
-argument_list|,
-operator|(
-name|x
-operator|+
-name|x
-operator|)
-operator|*
-name|y
-argument_list|)
-argument_list|)
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|ix
 operator|<
 literal|0x7f800000
-operator|&&
-name|iy
-operator|>=
-literal|0x7f800000
 condition|)
+comment|/*&& iy>= 0x7f800000 */
 return|return
 operator|(
 name|CMPLXF
@@ -439,16 +391,8 @@ return|;
 if|if
 condition|(
 name|ix
-operator|>=
-literal|0x7f800000
-operator|&&
-operator|(
-name|hx
-operator|&
-literal|0x7fffff
-operator|)
 operator|==
-literal|0
+literal|0x7f800000
 condition|)
 block|{
 if|if
@@ -461,9 +405,7 @@ return|return
 operator|(
 name|CMPLXF
 argument_list|(
-name|x
-operator|*
-name|x
+name|INFINITY
 argument_list|,
 name|x
 operator|*
@@ -479,11 +421,7 @@ return|return
 operator|(
 name|CMPLXF
 argument_list|(
-operator|(
-name|x
-operator|*
-name|x
-operator|)
+name|INFINITY
 operator|*
 name|cosf
 argument_list|(

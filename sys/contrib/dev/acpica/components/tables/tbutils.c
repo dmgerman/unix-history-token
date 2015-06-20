@@ -78,9 +78,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
 comment|/* If Hardware Reduced flag is set, there is no FACS */
 if|if
 condition|(
@@ -97,8 +94,9 @@ name|AE_OK
 operator|)
 return|;
 block|}
-name|Status
-operator|=
+operator|(
+name|void
+operator|)
 name|AcpiGetTableByIndex
 argument_list|(
 name|ACPI_TABLE_INDEX_FACS
@@ -108,13 +106,59 @@ argument_list|(
 name|ACPI_TABLE_HEADER
 argument_list|,
 operator|&
-name|AcpiGbl_FACS
+name|AcpiGbl_Facs32
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|AcpiGetTableByIndex
+argument_list|(
+name|ACPI_TABLE_INDEX_X_FACS
+argument_list|,
+name|ACPI_CAST_INDIRECT_PTR
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|,
+operator|&
+name|AcpiGbl_Facs64
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|AcpiGbl_Facs64
+operator|&&
+operator|(
+operator|!
+name|AcpiGbl_Facs32
+operator|||
+operator|!
+name|AcpiGbl_Use32BitFacsAddresses
+operator|)
+condition|)
+block|{
+name|AcpiGbl_FACS
+operator|=
+name|AcpiGbl_Facs64
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|AcpiGbl_Facs32
+condition|)
+block|{
+name|AcpiGbl_FACS
+operator|=
+name|AcpiGbl_Facs32
+expr_stmt|;
+block|}
+comment|/* If there is no FACS, just continue. There was already an error msg */
 return|return
 operator|(
-name|Status
+name|AE_OK
 operator|)
 return|;
 block|}
@@ -146,7 +190,7 @@ name|AcpiGbl_RootTableList
 operator|.
 name|CurrentTableCount
 operator|>=
-literal|3
+literal|4
 condition|)
 block|{
 return|return
@@ -305,7 +349,7 @@ name|NULL
 operator|)
 return|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|NewTable
 argument_list|,
@@ -782,12 +826,12 @@ name|ACPI_TABLE_HEADER
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * First two entries in the table array are reserved for the DSDT      * and FACS, which are not actually present in the RSDT/XSDT - they      * come from the FADT      */
+comment|/*      * First three entries in the table array are reserved for the DSDT      * and 32bit/64bit FACS, which are not actually present in the      * RSDT/XSDT - they come from the FADT      */
 name|AcpiGbl_RootTableList
 operator|.
 name|CurrentTableCount
 operator|=
-literal|2
+literal|3
 expr_stmt|;
 comment|/* Initialize the root table array from the RSDT/XSDT */
 for|for

@@ -1008,7 +1008,7 @@ block|{
 case|case
 name|ACPI_READ
 case|:
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|ACPI_CAST_PTR
 argument_list|(
@@ -1032,7 +1032,7 @@ break|break;
 case|case
 name|ACPI_WRITE
 case|:
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|ACPI_PHYSADDR_TO_PTR
 argument_list|(

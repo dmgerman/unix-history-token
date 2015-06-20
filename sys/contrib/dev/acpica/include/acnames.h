@@ -61,6 +61,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|METHOD_NAME__CLS
+value|"_CLS"
+end_define
+
+begin_define
+define|#
+directive|define
 name|METHOD_NAME__CRS
 value|"_CRS"
 end_define

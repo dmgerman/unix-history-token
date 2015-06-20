@@ -15891,7 +15891,7 @@ name|off_t
 operator|)
 name|lim_cur
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|RLIMIT_CORE
 argument_list|)

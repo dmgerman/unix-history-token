@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2005 Bruce D. Evans and Steven G. Kargl  * All righ
 end_comment
 
 begin_comment
-comment|/*  * Hyperbolic sine of a complex argument z = x + i y.  *  * sinh(z) = sinh(x+iy)  *         = sinh(x) cos(y) + i cosh(x) sin(y).  *  * Exceptional values are noted in the comments within the source code.  * These values and the return value were taken from n1124.pdf.  */
+comment|/*  * Hyperbolic sine of a complex argument z = x + i y.  *  * sinh(z) = sinh(x+iy)  *         = sinh(x) cos(y) + i cosh(x) sin(y).  *  * Exceptional values are noted in the comments within the source code.  * These values and the return value were taken from n1124.pdf.  * The sign of the result for some exceptional values is unspecified but  * must satisfy both sinh(conj(z)) == conj(sinh(z)) and sinh(-z) == -sinh(z).  */
 end_comment
 
 begin_include
@@ -164,7 +164,7 @@ name|ix
 operator|<
 literal|0x40360000
 condition|)
-comment|/* small x: normal case */
+comment|/* |x|< 22: normal case */
 return|return
 operator|(
 name|CMPLX
@@ -322,7 +322,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * sinh(+-0 +- I Inf) = sign(d(+-0, dNaN))0 + I dNaN. 	 * The sign of 0 in the result is unspecified.  Choice = normally 	 * the same as dNaN.  Raise the invalid floating-point exception. 	 * 	 * sinh(+-0 +- I NaN) = sign(d(+-0, NaN))0 + I d(NaN). 	 * The sign of 0 in the result is unspecified.  Choice = normally 	 * the same as d(NaN). 	 */
+comment|/* 	 * sinh(+-0 +- I Inf) = +-0 + I dNaN. 	 * The sign of 0 in the result is unspecified.  Choice = same sign 	 * as the argument.  Raise the invalid floating-point exception. 	 * 	 * sinh(+-0 +- I NaN) = +-0 + I d(NaN). 	 * The sign of 0 in the result is unspecified.  Choice = same sign 	 * as the argument. 	 */
 if|if
 condition|(
 operator|(
@@ -332,27 +332,13 @@ name|lx
 operator|)
 operator|==
 literal|0
-operator|&&
-name|iy
-operator|>=
-literal|0x7ff00000
 condition|)
+comment|/*&& iy>= 0x7ff00000 */
 return|return
 operator|(
 name|CMPLX
 argument_list|(
-name|copysign
-argument_list|(
-literal|0
-argument_list|,
 name|x
-operator|*
-operator|(
-name|y
-operator|-
-name|y
-operator|)
-argument_list|)
 argument_list|,
 name|y
 operator|-
@@ -370,63 +356,28 @@ name|ly
 operator|)
 operator|==
 literal|0
-operator|&&
-name|ix
-operator|>=
-literal|0x7ff00000
 condition|)
-block|{
-if|if
-condition|(
-operator|(
-operator|(
-name|hx
-operator|&
-literal|0xfffff
-operator|)
-operator||
-name|lx
-operator|)
-operator|==
-literal|0
-condition|)
+comment|/*&& ix>= 0x7ff00000 */
 return|return
 operator|(
 name|CMPLX
 argument_list|(
+name|x
+operator|+
 name|x
 argument_list|,
 name|y
 argument_list|)
 operator|)
 return|;
-return|return
-operator|(
-name|CMPLX
-argument_list|(
-name|x
-argument_list|,
-name|copysign
-argument_list|(
-literal|0
-argument_list|,
-name|y
-argument_list|)
-argument_list|)
-operator|)
-return|;
-block|}
 comment|/* 	 * sinh(x +- I Inf) = dNaN + I dNaN. 	 * Raise the invalid floating-point exception for finite nonzero x. 	 * 	 * sinh(x + I NaN) = d(NaN) + I d(NaN). 	 * Optionally raises the invalid floating-point exception for finite 	 * nonzero x.  Choice = don't raise (except for signaling NaNs). 	 */
 if|if
 condition|(
 name|ix
 operator|<
 literal|0x7ff00000
-operator|&&
-name|iy
-operator|>=
-literal|0x7ff00000
 condition|)
+comment|/*&& iy>= 0x7ff00000 */
 return|return
 operator|(
 name|CMPLX
@@ -435,32 +386,20 @@ name|y
 operator|-
 name|y
 argument_list|,
-name|x
-operator|*
-operator|(
 name|y
 operator|-
 name|y
-operator|)
 argument_list|)
 operator|)
 return|;
-comment|/* 	 * sinh(+-Inf + I NaN)  = +-Inf + I d(NaN). 	 * The sign of Inf in the result is unspecified.  Choice = normally 	 * the same as d(NaN). 	 * 	 * sinh(+-Inf +- I Inf) = +Inf + I dNaN. 	 * The sign of Inf in the result is unspecified.  Choice = always +. 	 * Raise the invalid floating-point exception. 	 * 	 * sinh(+-Inf + I y)   = +-Inf cos(y) + I Inf sin(y) 	 */
+comment|/* 	 * sinh(+-Inf + I NaN)  = +-Inf + I d(NaN). 	 * The sign of Inf in the result is unspecified.  Choice = same sign 	 * as the argument. 	 * 	 * sinh(+-Inf +- I Inf) = +-Inf + I dNaN. 	 * The sign of Inf in the result is unspecified.  Choice = same sign 	 * as the argument.  Raise the invalid floating-point exception. 	 * 	 * sinh(+-Inf + I y)   = +-Inf cos(y) + I Inf sin(y) 	 */
 if|if
 condition|(
 name|ix
-operator|>=
+operator|==
 literal|0x7ff00000
 operator|&&
-operator|(
-operator|(
-name|hx
-operator|&
-literal|0xfffff
-operator|)
-operator||
 name|lx
-operator|)
 operator|==
 literal|0
 condition|)
@@ -476,16 +415,10 @@ operator|(
 name|CMPLX
 argument_list|(
 name|x
-operator|*
-name|x
 argument_list|,
-name|x
-operator|*
-operator|(
 name|y
 operator|-
 name|y
-operator|)
 argument_list|)
 operator|)
 return|;
@@ -510,14 +443,14 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* 	 * sinh(NaN + I NaN)  = d(NaN) + I d(NaN). 	 * 	 * sinh(NaN +- I Inf) = d(NaN) + I d(NaN). 	 * Optionally raises the invalid floating-point exception. 	 * Choice = raise. 	 * 	 * sinh(NaN + I y)    = d(NaN) + I d(NaN). 	 * Optionally raises the invalid floating-point exception for finite 	 * nonzero y.  Choice = don't raise (except for signaling NaNs). 	 */
+comment|/* 	 * sinh(NaN1 + I NaN2) = d(NaN1, NaN2) + I d(NaN1, NaN2). 	 * 	 * sinh(NaN +- I Inf)  = d(NaN, dNaN) + I d(NaN, dNaN). 	 * Optionally raises the invalid floating-point exception. 	 * Choice = raise. 	 * 	 * sinh(NaN + I y)     = d(NaN) + I d(NaN). 	 * Optionally raises the invalid floating-point exception for finite 	 * nonzero y.  Choice = don't raise (except for signaling NaNs). 	 */
 return|return
 operator|(
 name|CMPLX
 argument_list|(
 operator|(
 name|x
-operator|*
+operator|+
 name|x
 operator|)
 operator|*
@@ -529,7 +462,7 @@ operator|)
 argument_list|,
 operator|(
 name|x
-operator|+
+operator|*
 name|x
 operator|)
 operator|*
@@ -554,14 +487,13 @@ name|complex
 name|z
 parameter_list|)
 block|{
-comment|/* csin(z) = -I * csinh(I * z) */
+comment|/* csin(z) = -I * csinh(I * z) = I * conj(csinh(I * conj(z))). */
 name|z
 operator|=
 name|csinh
 argument_list|(
 name|CMPLX
 argument_list|(
-operator|-
 name|cimag
 argument_list|(
 name|z
@@ -583,7 +515,6 @@ argument_list|(
 name|z
 argument_list|)
 argument_list|,
-operator|-
 name|creal
 argument_list|(
 name|z

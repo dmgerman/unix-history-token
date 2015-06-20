@@ -1140,7 +1140,7 @@ name|vms
 operator|->
 name|vm_daddr
 operator|+
-name|lim_max
+name|lim_max_proc
 argument_list|(
 name|td
 operator|->
@@ -1162,7 +1162,7 @@ name|vms
 operator|->
 name|vm_daddr
 operator|+
-name|lim_max
+name|lim_max_proc
 argument_list|(
 name|td
 operator|->
@@ -4142,7 +4142,7 @@ if|if
 condition|(
 name|nsize
 operator|>
-name|lim_cur
+name|lim_cur_proc
 argument_list|(
 name|proc
 argument_list|,
@@ -4436,8 +4436,6 @@ operator|>
 name|lim_cur
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|RLIMIT_MEMLOCK
 argument_list|)
@@ -6202,7 +6200,7 @@ name|size
 operator|+
 name|size
 operator|>
-name|lim_cur
+name|lim_cur_proc
 argument_list|(
 name|td
 operator|->
@@ -6282,7 +6280,7 @@ argument_list|)
 operator|+
 name|size
 operator|>
-name|lim_cur
+name|lim_cur_proc
 argument_list|(
 name|td
 operator|->

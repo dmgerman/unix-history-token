@@ -4416,6 +4416,41 @@ name|queues_locked
 operator|=
 name|FALSE
 expr_stmt|;
+comment|/* 		 * Invalid pages can be easily freed. They cannot be 		 * mapped, vm_page_free() asserts this. 		 */
+if|if
+condition|(
+name|m
+operator|->
+name|valid
+operator|==
+literal|0
+operator|&&
+name|m
+operator|->
+name|hold_count
+operator|==
+literal|0
+condition|)
+block|{
+name|vm_page_free
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|PCPU_INC
+argument_list|(
+name|cnt
+operator|.
+name|v_dfree
+argument_list|)
+expr_stmt|;
+operator|--
+name|page_shortage
+expr_stmt|;
+goto|goto
+name|drop_page
+goto|;
+block|}
 comment|/* 		 * We bump the activation count if the page has been 		 * referenced while in the inactive queue.  This makes 		 * it less likely that the page will be added back to the 		 * inactive queue prematurely again.  Here we check the  		 * page tables (or emulated bits, if any), given the upper  		 * level VM system not knowing anything about existing  		 * references. 		 */
 if|if
 condition|(
@@ -4530,18 +4565,8 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_WUNLOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 goto|goto
-name|relock_queues
+name|drop_page
 goto|;
 block|}
 if|if
@@ -4553,22 +4578,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|vm_page_unlock
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|VM_OBJECT_WUNLOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Held pages are essentially stuck in the 			 * queue.  So, they ought to be discounted 			 * from the inactive count.  See the 			 * calculation of the page_shortage for the 			 * loop over the active queue below. 			 */
 name|addl_page_shortage
 operator|++
 expr_stmt|;
 goto|goto
-name|relock_queues
+name|drop_page
 goto|;
 block|}
 comment|/* 		 * If the page appears to be clean at the machine-independent 		 * layer, then remove all of its mappings from the pmap in 		 * anticipation of placing it onto the cache queue.  If, 		 * however, any of the page's mappings allow write access, 		 * then the page may still be modified until the last of those 		 * mappings are removed. 		 */
@@ -4600,12 +4615,12 @@ if|if
 condition|(
 name|m
 operator|->
-name|valid
+name|dirty
 operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * Invalid pages can be easily freed 			 */
+comment|/* 			 * Clean pages can be freed. 			 */
 name|vm_page_free
 argument_list|(
 name|m
@@ -4616,26 +4631,6 @@ argument_list|(
 name|cnt
 operator|.
 name|v_dfree
-argument_list|)
-expr_stmt|;
-operator|--
-name|page_shortage
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|m
-operator|->
-name|dirty
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 			 * Clean pages can be placed onto the cache queue. 			 * This effectively frees them. 			 */
-name|vm_page_cache
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 operator|--
@@ -4848,6 +4843,8 @@ goto|goto
 name|relock_queues
 goto|;
 block|}
+name|drop_page
+label|:
 name|vm_page_unlock
 argument_list|(
 name|m
@@ -6773,7 +6770,7 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 			 * get a limit 			 */
-name|lim_rlimit
+name|lim_rlimit_proc
 argument_list|(
 name|p
 argument_list|,

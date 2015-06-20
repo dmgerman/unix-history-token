@@ -25261,19 +25261,6 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|vp
-operator|->
-name|v_object
-operator|==
-name|object
-argument_list|,
-operator|(
-literal|"mismatching object"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|pcount

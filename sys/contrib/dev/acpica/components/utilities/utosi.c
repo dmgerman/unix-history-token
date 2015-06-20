@@ -538,7 +538,7 @@ name|Name
 operator|=
 name|ACPI_ALLOCATE_ZEROED
 argument_list|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|InterfaceName
 argument_list|)
@@ -566,7 +566,7 @@ operator|)
 return|;
 block|}
 comment|/* Initialize new info and insert at the head of the global list */
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|InterfaceInfo
 operator|->
@@ -633,7 +633,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|InterfaceName
 argument_list|,
@@ -875,7 +875,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|InterfaceName
 argument_list|,

@@ -526,8 +526,11 @@ comment|/*      * Check for the special ACPI names:      * _ACd, _ALd, _EJd, _Ex
 name|LastCharIsDigit
 operator|=
 operator|(
-name|ACPI_IS_DIGIT
+name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 name|NameString
 index|[
 literal|3
@@ -539,8 +542,11 @@ comment|/* d */
 name|LastCharsAreHex
 operator|=
 operator|(
-name|ACPI_IS_XDIGIT
+name|isxdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 name|NameString
 index|[
 literal|2
@@ -548,8 +554,11 @@ index|]
 argument_list|)
 operator|&&
 comment|/* xx */
-name|ACPI_IS_XDIGIT
+name|isxdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 name|NameString
 index|[
 literal|3

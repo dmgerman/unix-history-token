@@ -258,7 +258,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Always clear the external object */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|ExternalObject
 argument_list|,
@@ -335,7 +335,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 operator|(
 name|void
@@ -401,7 +401,7 @@ operator|.
 name|Length
 argument_list|)
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 operator|(
 name|void
@@ -1284,7 +1284,7 @@ goto|goto
 name|ErrorExit
 goto|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|InternalObject
 operator|->
@@ -1350,7 +1350,7 @@ goto|goto
 name|ErrorExit
 goto|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|InternalObject
 operator|->
@@ -1774,7 +1774,7 @@ name|ACPI_NAMESPACE_NODE
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|ACPI_CAST_PTR
 argument_list|(
@@ -1885,7 +1885,7 @@ operator|)
 return|;
 block|}
 comment|/* Copy the actual buffer data */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|DestDesc
 operator|->
@@ -1958,7 +1958,7 @@ operator|)
 return|;
 block|}
 comment|/* Copy the actual string data */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|DestDesc
 operator|->

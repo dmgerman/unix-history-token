@@ -18,6 +18,12 @@ end_ifndef
 begin_include
 include|#
 directive|include
+file|<openssl/crypto.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/evp.h>
 end_include
 
@@ -4263,7 +4269,7 @@ if|if
 condition|(
 name|arg
 operator|!=
-literal|13
+name|EVP_AEAD_TLS1_AAD_LEN
 condition|)
 return|return
 literal|0
@@ -5101,7 +5107,7 @@ expr_stmt|;
 comment|/* If tag mismatch wipe buffer */
 if|if
 condition|(
-name|memcmp
+name|CRYPTO_memcmp
 argument_list|(
 name|ctx
 operator|->
@@ -7135,7 +7141,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|memcmp
+name|CRYPTO_memcmp
 argument_list|(
 name|tag
 argument_list|,

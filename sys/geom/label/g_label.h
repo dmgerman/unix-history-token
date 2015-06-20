@@ -241,6 +241,21 @@ name|g_label_disk_ident
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|void
+name|g_label_rtrim
+parameter_list|(
+name|char
+modifier|*
+name|label
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

@@ -385,6 +385,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|uint64_t
 modifier|*
 name|zopt_object
@@ -394,6 +395,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|zopt_objects
 init|=
@@ -402,6 +404,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|libzfs_handle_t
 modifier|*
 name|g_zfs
@@ -409,6 +412,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|uint64_t
 name|max_inflight
 init|=
@@ -8392,6 +8396,7 @@ name|buf
 argument_list|)
 argument_list|,
 literal|"mintxg %llu -> "
+literal|"obj %llu"
 argument_list|,
 operator|(
 name|longlong_t

@@ -545,7 +545,7 @@ return|;
 default|default:
 name|db_printf
 argument_list|(
-literal|"db_var_curcpu: unknown operation\n"
+literal|"db_var_curvnet: unknown operation\n"
 argument_list|)
 expr_stmt|;
 return|return

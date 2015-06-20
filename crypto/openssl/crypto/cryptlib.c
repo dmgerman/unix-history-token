@@ -3305,13 +3305,6 @@ name|f
 call|)
 argument_list|()
 return|;
-operator|(
-name|void
-operator|)
-name|GetDesktopWindow
-argument_list|()
-expr_stmt|;
-comment|/* return value is ignored */
 name|h
 operator|=
 name|GetProcessWindowStation

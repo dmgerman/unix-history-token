@@ -2734,6 +2734,8 @@ index|[
 name|SSL_MAX_MASTER_KEY_LENGTH
 index|]
 decl_stmt|;
+if|if
+condition|(
 name|RAND_bytes
 argument_list|(
 name|rnd
@@ -2743,7 +2745,13 @@ argument_list|(
 name|rnd
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|s
 operator|->
 name|srp_ctx

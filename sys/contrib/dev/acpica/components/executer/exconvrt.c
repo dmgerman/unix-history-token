@@ -437,7 +437,7 @@ name|Buffer
 operator|.
 name|Pointer
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|NewBuf
 argument_list|,
@@ -493,7 +493,7 @@ name|Buffer
 operator|.
 name|Pointer
 expr_stmt|;
-name|ACPI_STRNCPY
+name|strncpy
 argument_list|(
 operator|(
 name|char

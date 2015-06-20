@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20150515
+value|0x20150619
 end_define
 
 begin_include
@@ -419,6 +419,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Optionally use 32-bit FACS table addresses.  * It is reported that some platforms fail to resume from system suspending  * if 64-bit FACS table address is selected:  * https://bugzilla.kernel.org/show_bug.cgi?id=74021  * Default is TRUE, favor the 32-bit addresses.  */
+end_comment
+
+begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|UINT8
+argument_list|,
+name|AcpiGbl_Use32BitFacsAddresses
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Optionally truncate I/O addresses to 16 bits. Provides compatibility  * with other ACPI implementations. NOTE: During ACPICA initialization,  * this value is set to TRUE if any Windows OSI strings have been  * requested by the BIOS.  */
 end_comment
 
@@ -462,6 +478,22 @@ argument_list|,
 name|AcpiGbl_DisableSsdtTableInstall
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Optionally enable runtime namespace override.  */
+end_comment
+
+begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|UINT8
+argument_list|,
+name|AcpiGbl_RuntimeNamespaceOverride
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1654,29 +1686,9 @@ end_macro
 begin_macro
 name|ACPI_HW_DEPENDENT_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiSetFirmwareWakingVector (     UINT32                  PhysicalAddress)
+argument|ACPI_STATUS AcpiSetFirmwareWakingVector (     ACPI_PHYSICAL_ADDRESS   PhysicalAddress,     ACPI_PHYSICAL_ADDRESS   PhysicalAddress64)
 argument_list|)
 end_macro
-
-begin_if
-if|#
-directive|if
-name|ACPI_MACHINE_WIDTH
-operator|==
-literal|64
-end_if
-
-begin_macro
-name|ACPI_HW_DEPENDENT_RETURN_STATUS
-argument_list|(
-argument|ACPI_STATUS AcpiSetFirmwareWakingVector64 (     UINT64                  PhysicalAddress)
-argument_list|)
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * ACPI Timer interfaces  */

@@ -4427,23 +4427,23 @@ operator|->
 name|krp_hid
 index|]
 expr_stmt|;
-name|cap
-operator|->
-name|cc_koperations
-operator|--
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|cap
 operator|->
 name|cc_koperations
-operator|>=
+operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"cc_koperations< 0"
+literal|"cc_koperations == 0"
 operator|)
 argument_list|)
+expr_stmt|;
+name|cap
+operator|->
+name|cc_koperations
+operator|--
 expr_stmt|;
 if|if
 condition|(

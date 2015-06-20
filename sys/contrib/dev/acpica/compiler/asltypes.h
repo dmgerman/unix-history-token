@@ -350,7 +350,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * File types. Note: Any changes to this table must also be reflected  * in the Gbl_Files array.  */
+comment|/*  * File types. Note: Any changes to this table must also be reflected  * in the Gbl_Files array.  *  * Corresponding filename suffixes are in comments  *  * NOTE: Don't move the first 4 file types  */
 end_comment
 
 begin_typedef
@@ -365,32 +365,48 @@ name|ASL_FILE_STDERR
 block|,
 name|ASL_FILE_INPUT
 block|,
+comment|/* .asl */
 name|ASL_FILE_AML_OUTPUT
 block|,
-comment|/* Don't move these first 4 file types */
+comment|/* .aml */
 name|ASL_FILE_SOURCE_OUTPUT
 block|,
+comment|/* .src */
 name|ASL_FILE_PREPROCESSOR
 block|,
+comment|/* .pre */
+name|ASL_FILE_PREPROCESSOR_USER
+block|,
+comment|/* .i   */
 name|ASL_FILE_LISTING_OUTPUT
 block|,
+comment|/* .lst */
 name|ASL_FILE_HEX_OUTPUT
 block|,
+comment|/* .hex */
 name|ASL_FILE_NAMESPACE_OUTPUT
 block|,
+comment|/* .nsp */
 name|ASL_FILE_DEBUG_OUTPUT
 block|,
+comment|/* .txt */
 name|ASL_FILE_ASM_SOURCE_OUTPUT
 block|,
+comment|/* .asm */
 name|ASL_FILE_C_SOURCE_OUTPUT
 block|,
+comment|/* .c   */
 name|ASL_FILE_ASM_INCLUDE_OUTPUT
 block|,
+comment|/* .inc */
 name|ASL_FILE_C_INCLUDE_OUTPUT
 block|,
+comment|/* .h   */
 name|ASL_FILE_C_OFFSET_OUTPUT
 block|,
+comment|/* offset.h */
 name|ASL_FILE_MAP_OUTPUT
+comment|/* .map */
 block|}
 name|ASL_FILE_TYPES
 typedef|;
@@ -400,7 +416,7 @@ begin_define
 define|#
 directive|define
 name|ASL_MAX_FILE_TYPE
-value|15
+value|16
 end_define
 
 begin_define
@@ -408,6 +424,122 @@ define|#
 directive|define
 name|ASL_NUM_FILES
 value|(ASL_MAX_FILE_TYPE + 1)
+end_define
+
+begin_comment
+comment|/* filename suffixes for output files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_PREPROC_USER
+value|"i  "
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_PREPROCESSOR
+value|"pre"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_AML_CODE
+value|"aml"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_MAP
+value|"map"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_LISTING
+value|"lst"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_HEX_DUMP
+value|"hex"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_DEBUG
+value|"txt"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_SOURCE
+value|"src"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_NAMESPACE
+value|"nsp"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_ASM_SOURCE
+value|"asm"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_C_SOURCE
+value|"c"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_DISASSEMBLY
+value|"dsl"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_ASM_INCLUDE
+value|"inc"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_C_INCLUDE
+value|"h"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_ASL_CODE
+value|"asl"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_C_OFFSET
+value|"offset.h"
 end_define
 
 begin_comment

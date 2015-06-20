@@ -736,7 +736,7 @@ name|Handle
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* the .i file is same as source file */
+comment|/* the .pre file is same as source file */
 for|for
 control|(
 name|i

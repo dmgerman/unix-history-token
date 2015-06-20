@@ -791,6 +791,10 @@ case|case
 literal|'b'
 case|:
 comment|/* cap input length at 72 bytes */
+case|case
+literal|'y'
+case|:
+comment|/* same as 'b', for compatibility 					 * with openwall crypt_blowfish 					 */
 name|minr
 operator|=
 name|salt

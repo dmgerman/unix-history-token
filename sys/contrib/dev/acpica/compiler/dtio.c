@@ -268,7 +268,7 @@ comment|/* Skip lines that start with a space */
 if|if
 condition|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|String
 argument_list|,
@@ -298,7 +298,7 @@ name|End
 operator|=
 name|String
 operator|+
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|String
 argument_list|)
@@ -423,13 +423,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Start
 argument_list|)
 condition|)
 block|{
-name|ACPI_STRNCPY
+name|strncpy
 argument_list|(
 name|ReturnString
 argument_list|,
@@ -733,7 +733,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|ACPI_STRNCPY
+name|strncpy
 argument_list|(
 name|TmpName
 argument_list|,
@@ -854,7 +854,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|ACPI_STRNCPY
+name|strncpy
 argument_list|(
 name|TmpValue
 argument_list|,
@@ -961,6 +961,9 @@ parameter_list|(
 name|FILE
 modifier|*
 name|Handle
+parameter_list|,
+name|UINT32
+name|Flags
 parameter_list|)
 block|{
 name|BOOLEAN
@@ -982,7 +985,7 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|Gbl_CurrentLineBuffer
 argument_list|,
@@ -1261,6 +1264,16 @@ break|break;
 case|case
 literal|'\n'
 case|:
+if|if
+condition|(
+operator|!
+operator|(
+name|Flags
+operator|&
+name|DT_ALLOW_MULTILINE_QUOTES
+operator|)
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"ERROR at line %u: Unterminated quoted string\n"
@@ -1273,6 +1286,7 @@ name|State
 operator|=
 name|DT_NORMAL_TEXT
 expr_stmt|;
+block|}
 break|break;
 default|default:
 comment|/* Get next character */
@@ -1626,6 +1640,8 @@ operator|=
 name|DtGetNextLine
 argument_list|(
 name|Handle
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -1966,7 +1982,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_IS_PRINT
+name|isprint
 argument_list|(
 name|BufChar
 argument_list|)

@@ -1154,21 +1154,23 @@ decl_stmt|;
 comment|/* fill digest values with some random data */
 if|if
 condition|(
-operator|!
 name|RAND_pseudo_bytes
 argument_list|(
 name|digest
 argument_list|,
 literal|20
 argument_list|)
+operator|<=
+literal|0
 operator|||
-operator|!
 name|RAND_pseudo_bytes
 argument_list|(
 name|wrong_digest
 argument_list|,
 literal|20
 argument_list|)
+operator|<=
+literal|0
 condition|)
 block|{
 name|BIO_printf

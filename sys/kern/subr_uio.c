@@ -1880,13 +1880,6 @@ operator|->
 name|p_vmspace
 expr_stmt|;
 comment|/* 	 * Map somewhere after heap in process memory. 	 */
-name|PROC_LOCK
-argument_list|(
-name|td
-operator|->
-name|td_proc
-argument_list|)
-expr_stmt|;
 operator|*
 name|addr
 operator|=
@@ -1902,18 +1895,9 @@ operator|+
 name|lim_max
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|RLIMIT_DATA
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|td
-operator|->
-name|td_proc
 argument_list|)
 expr_stmt|;
 comment|/* round size up to page boundry */

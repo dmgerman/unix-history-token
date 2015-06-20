@@ -40,6 +40,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|<openssl/crypto.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/evp.h>
 end_include
 
@@ -1077,7 +1083,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|memcmp
+name|CRYPTO_memcmp
 argument_list|(
 name|out
 operator|+
@@ -1355,7 +1361,19 @@ decl_stmt|;
 name|unsigned
 name|int
 name|len
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|arg
+operator|!=
+name|EVP_AEAD_TLS1_AAD_LEN
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|len
+operator|=
 name|p
 index|[
 name|arg
@@ -1371,7 +1389,7 @@ name|arg
 operator|-
 literal|1
 index|]
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|!

@@ -1446,6 +1446,10 @@ name|arg
 operator|=
 name|arg
 block|;
+if|if
+condition|(
+name|table
+condition|)
 name|lh_ENGINE_PILE_doall_arg
 argument_list|(
 operator|&
@@ -1463,7 +1467,8 @@ argument_list|,
 operator|&
 name|dall
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
 end_expr_stmt
 
 end_unit

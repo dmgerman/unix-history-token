@@ -3866,7 +3866,7 @@ name|SSL_R_BAD_HELLO_REQUEST
 argument_list|)
 expr_stmt|;
 goto|goto
-name|err
+name|f_err
 goto|;
 block|}
 comment|/*          * no need to check sequence number on HELLO REQUEST messages          */

@@ -123,6 +123,13 @@ name|ACPI_NS_TEMPORARY
 value|0x40
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_NS_OVERRIDE_IF_FOUND
+value|0x80
+end_define
+
 begin_comment
 comment|/* Flags for AcpiNsWalkNamespace */
 end_comment

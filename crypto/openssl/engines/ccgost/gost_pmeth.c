@@ -2404,6 +2404,9 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|keybuf
+operator|||
 name|keylen
 operator|!=
 literal|32

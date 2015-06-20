@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: compress.c,v 1.77 2014/12/12 16:33:01 christos Exp $"
+literal|"@(#)$File: compress.c,v 1.80 2015/06/03 18:21:24 christos Exp $"
 argument_list|)
 end_macro
 
@@ -72,11 +72,50 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SIGNAL_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<signal.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_SIG_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|sig_t
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SIG_T */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -579,9 +618,14 @@ name|flags
 operator|&
 name|MAGIC_MIME
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SIGNAL_H
 name|sig_t
 name|osigpipe
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -597,6 +641,9 @@ condition|)
 return|return
 literal|0
 return|;
+ifdef|#
+directive|ifdef
+name|HAVE_SIGNAL_H
 name|osigpipe
 operator|=
 name|signal
@@ -606,6 +653,8 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -714,6 +763,17 @@ name|error
 goto|;
 if|if
 condition|(
+operator|(
+name|ms
+operator|->
+name|flags
+operator|&
+name|MAGIC_COMPRESS_TRANSP
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
 name|mime
 operator|==
 name|MAGIC_MIME
@@ -721,6 +781,7 @@ operator|||
 name|mime
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 if|if
@@ -792,6 +853,9 @@ block|}
 block|}
 name|error
 label|:
+ifdef|#
+directive|ifdef
+name|HAVE_SIGNAL_H
 operator|(
 name|void
 operator|)
@@ -802,6 +866,8 @@ argument_list|,
 name|osigpipe
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|newbuf
@@ -2000,9 +2066,6 @@ decl_stmt|;
 name|ssize_t
 name|r
 decl_stmt|;
-name|pid_t
-name|pid
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|BUILTIN_DECOMPRESS
@@ -2084,8 +2147,6 @@ return|;
 block|}
 switch|switch
 condition|(
-name|pid
-operator|=
 name|fork
 argument_list|()
 condition|)

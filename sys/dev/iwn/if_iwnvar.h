@@ -1031,6 +1031,10 @@ name|struct
 name|task
 name|sc_panic_task
 decl_stmt|;
+name|struct
+name|task
+name|sc_xmit_task
+decl_stmt|;
 comment|/* Taskqueue */
 name|struct
 name|taskqueue
@@ -1222,6 +1226,10 @@ comment|/* Are we doing a scan? */
 name|int
 name|sc_is_scanning
 decl_stmt|;
+comment|/* Are we waiting for a beacon before xmit? */
+name|int
+name|sc_beacon_wait
+decl_stmt|;
 name|struct
 name|ieee80211_tx_ampdu
 modifier|*
@@ -1359,6 +1367,11 @@ parameter_list|)
 value|(((ver)& 0x0000FF00)>> 8)
 name|uint32_t
 name|ucode_rev
+decl_stmt|;
+comment|/* 	 * Global queue for queuing xmit frames 	 * when we can't yet transmit (eg raw 	 * frames whilst waiting for beacons.) 	 */
+name|struct
+name|mbufq
+name|sc_xmit_queue
 decl_stmt|;
 block|}
 struct|;

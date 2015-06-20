@@ -187,6 +187,23 @@ end_struct
 
 begin_struct
 struct|struct
+name|pptseg
+block|{
+name|vm_paddr_t
+name|gpa
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+name|int
+name|wired
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|pptdev
 block|{
 name|device_t
@@ -205,7 +222,7 @@ argument_list|)
 name|next
 expr_stmt|;
 name|struct
-name|vm_memory_segment
+name|pptseg
 name|mmio
 index|[
 name|MAX_MMIOSEGS
@@ -767,7 +784,7 @@ name|int
 name|i
 decl_stmt|;
 name|struct
-name|vm_memory_segment
+name|pptseg
 modifier|*
 name|seg
 decl_stmt|;
@@ -827,7 +844,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|vm_memory_segment
+name|pptseg
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1362,7 +1379,7 @@ modifier|*
 name|ppt
 decl_stmt|;
 name|struct
-name|vm_memory_segment
+name|pptseg
 modifier|*
 name|seg
 decl_stmt|;
@@ -1780,7 +1797,7 @@ decl_stmt|,
 name|error
 decl_stmt|;
 name|struct
-name|vm_memory_segment
+name|pptseg
 modifier|*
 name|seg
 decl_stmt|;

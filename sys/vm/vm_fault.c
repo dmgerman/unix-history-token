@@ -2530,41 +2530,16 @@ operator|==
 name|VM_PAGER_OK
 condition|)
 block|{
-comment|/* 				 * Found the page. Leave it busy while we play 				 * with it. 				 */
-comment|/* 				 * Relookup in case pager changed page. Pager 				 * is responsible for disposition of old page 				 * if moved. 				 */
+comment|/* 				 * Found the page. Leave it busy while we play 				 * with it. 				 * 				 * Pager could have changed the page.  Pager 				 * is responsible for disposition of old page 				 * if moved. 				 */
 name|fs
 operator|.
 name|m
 operator|=
-name|vm_page_lookup
-argument_list|(
-name|fs
-operator|.
-name|object
-argument_list|,
-name|fs
-operator|.
-name|pindex
-argument_list|)
+name|marray
+index|[
+name|reqpage
+index|]
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|fs
-operator|.
-name|m
-condition|)
-block|{
-name|unlock_and_deallocate
-argument_list|(
-operator|&
-name|fs
-argument_list|)
-expr_stmt|;
-goto|goto
-name|RetryFault
-goto|;
-block|}
 name|hardfault
 operator|++
 expr_stmt|;

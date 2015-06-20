@@ -311,7 +311,7 @@ name|Address
 decl_stmt|;
 name|Address
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|Target
 argument_list|,

@@ -143,7 +143,7 @@ name|Length
 operator|!=
 name|TableLength
 operator|||
-name|ACPI_MEMCMP
+name|memcmp
 argument_list|(
 name|TableDesc
 operator|->
@@ -602,7 +602,7 @@ argument_list|)
 operator|)
 operator|&&
 operator|(
-name|ACPI_STRNCMP
+name|strncmp
 argument_list|(
 name|NewTableDesc
 operator|.

@@ -4451,7 +4451,7 @@ if|if
 condition|(
 name|data_size
 operator|>
-name|lim_cur
+name|lim_cur_proc
 argument_list|(
 name|imgp
 operator|->
@@ -4480,7 +4480,7 @@ if|if
 condition|(
 name|total_size
 operator|>
-name|lim_cur
+name|lim_cur_proc
 argument_list|(
 name|imgp
 operator|->
@@ -4622,9 +4622,7 @@ name|vm_daddr
 operator|+
 name|lim_max
 argument_list|(
-name|imgp
-operator|->
-name|proc
+name|curthread
 argument_list|,
 name|RLIMIT_DATA
 argument_list|)
@@ -10776,7 +10774,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|lim_rlimit
+name|lim_rlimit_proc
 argument_list|(
 name|p
 argument_list|,

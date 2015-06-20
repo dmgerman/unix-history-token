@@ -638,6 +638,13 @@ name|ACPI_TABLE_INDEX_FACS
 value|(1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_TABLE_INDEX_X_FACS
+value|(2)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct

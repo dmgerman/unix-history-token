@@ -3787,7 +3787,6 @@ name|uio
 modifier|*
 name|uio
 parameter_list|,
-specifier|const
 name|struct
 name|thread
 modifier|*

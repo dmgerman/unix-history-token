@@ -1346,7 +1346,7 @@ return|;
 block|}
 name|NoMatch
 operator|=
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|Hid
 operator|->
@@ -1429,7 +1429,7 @@ control|)
 block|{
 if|if
 condition|(
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|Cid
 operator|->

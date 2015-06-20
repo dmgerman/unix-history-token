@@ -244,7 +244,7 @@ case|:
 case|case
 name|ACPI_RSC_MOVE_SERIAL_RES
 case|:
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Destination
 argument_list|,
@@ -681,7 +681,7 @@ operator|=
 operator|(
 name|UINT32
 operator|)
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|ACPI_CAST_PTR
 argument_list|(
@@ -707,7 +707,7 @@ argument_list|(
 name|TotalLength
 argument_list|)
 expr_stmt|;
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|ResourceSource
 operator|->
@@ -845,7 +845,7 @@ operator|->
 name|Index
 expr_stmt|;
 comment|/* Copy the ResourceSource string */
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|ACPI_CAST_PTR
 argument_list|(

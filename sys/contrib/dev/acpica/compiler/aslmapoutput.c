@@ -384,7 +384,7 @@ condition|(
 operator|!
 name|PrevDeviceName
 operator|||
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|PrevDeviceName
 argument_list|,
@@ -786,7 +786,7 @@ condition|(
 operator|!
 name|PrevDeviceName
 operator|||
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|PrevDeviceName
 argument_list|,
