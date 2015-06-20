@@ -3779,21 +3779,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"current process		= "
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|curproc
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%lu (%s)\n"
+literal|"current process		= %d (%s)\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|curproc
 operator|->
 name|p_pid
@@ -3803,15 +3790,6 @@ operator|->
 name|td_name
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"Idle\n"
-argument_list|)
-expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|KDB
