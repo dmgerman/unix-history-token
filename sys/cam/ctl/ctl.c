@@ -21540,11 +21540,6 @@ modifier|*
 name|lun
 decl_stmt|;
 name|struct
-name|ctl_port
-modifier|*
-name|port
-decl_stmt|;
-name|struct
 name|scsi_vpd_id_descriptor
 modifier|*
 name|desc
@@ -22951,75 +22946,6 @@ argument_list|,
 name|CTL_LUN_CONFIG_OK
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Run through each registered FETD and bring it online if it isn't 	 * already.  Enable the target ID if it hasn't been enabled, and 	 * enable this particular LUN. 	 */
-name|STAILQ_FOREACH
-argument_list|(
-argument|port
-argument_list|,
-argument|&ctl_softc->port_list
-argument_list|,
-argument|links
-argument_list|)
-block|{
-name|int
-name|retval
-decl_stmt|;
-name|retval
-operator|=
-name|port
-operator|->
-name|lun_enable
-argument_list|(
-name|port
-operator|->
-name|targ_lun_arg
-argument_list|,
-name|target_id
-argument_list|,
-name|lun_number
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|retval
-operator|!=
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ctl_alloc_lun: FETD %s port %d returned error "
-literal|"%d for lun_enable on target %ju lun %d\n"
-argument_list|,
-name|port
-operator|->
-name|port_name
-argument_list|,
-name|port
-operator|->
-name|targ_port
-argument_list|,
-name|retval
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|target_id
-operator|.
-name|id
-argument_list|,
-name|lun_number
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|port
-operator|->
-name|status
-operator||=
-name|CTL_PORT_STATUS_LUN_ONLINE
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -23153,20 +23079,6 @@ operator|->
 name|num_luns
 operator|--
 expr_stmt|;
-comment|/* 	 * XXX KDM this scheme only works for a single target/multiple LUN 	 * setup.  It needs to be revamped for a multiple target scheme. 	 * 	 * XXX KDM this results in port->lun_disable() getting called twice, 	 * once when ctl_disable_lun() is called, and a second time here. 	 * We really need to re-think the LUN disable semantics.  There 	 * should probably be several steps/levels to LUN removal: 	 *  - disable 	 *  - invalidate 	 *  - free  	 * 	 * Right now we only have a disable method when communicating to 	 * the front end ports, at least for individual LUNs. 	 */
-if|#
-directive|if
-literal|0
-block|STAILQ_FOREACH(port,&softc->port_list, links) { 		int retval;  		retval = port->lun_disable(port->targ_lun_arg, lun->target, 					 lun->lun); 		if (retval != 0) { 			printf("ctl_free_lun: FETD %s port %d returned error " 			       "%d for lun_disable on target %ju lun %jd\n", 			       port->port_name, port->targ_port, retval, 			       (uintmax_t)lun->target.id, (intmax_t)lun->lun); 		}  		if (STAILQ_FIRST(&softc->lun_list) == NULL) { 			port->status&= ~CTL_PORT_STATUS_LUN_ONLINE;  			retval = port->targ_disable(port->targ_lun_arg,lun->target); 			if (retval != 0) { 				printf("ctl_free_lun: FETD %s port %d " 				       "returned error %d for targ_disable on " 				       "target %ju\n", port->port_name, 				       port->targ_port, retval, 				       (uintmax_t)lun->target.id); 			} else 				port->status&= ~CTL_PORT_STATUS_TARG_ONLINE;  			if ((port->status& CTL_PORT_STATUS_TARG_ONLINE) != 0) 				continue;
-if|#
-directive|if
-literal|0
-block|port->port_offline(port->onoff_arg); 			port->status&= ~CTL_PORT_STATUS_ONLINE;
-endif|#
-directive|endif
-block|} 	}
-endif|#
-directive|endif
 comment|/* 	 * Tell the backend to free resources, if this LUN has a backend. 	 */
 name|atomic_subtract_int
 argument_list|(
@@ -23658,14 +23570,6 @@ name|lun
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|else {
-comment|/* NOTE:  TODO:  why does lun enable affect port status? */
-block|port->status |= CTL_PORT_STATUS_LUN_ONLINE; 		}
-endif|#
-directive|endif
 block|}
 name|mtx_unlock
 argument_list|(
