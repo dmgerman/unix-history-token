@@ -275,6 +275,9 @@ decl_stmt|;
 name|uint8_t
 name|mflowtype
 decl_stmt|;
+name|uint16_t
+name|fibnum
+decl_stmt|;
 name|iphlen
 operator|=
 operator|*
@@ -400,6 +403,13 @@ expr_stmt|;
 name|mflowtype
 operator|=
 name|M_HASHTYPE_GET
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|fibnum
+operator|=
+name|M_GETFIB
 argument_list|(
 name|m
 argument_list|)
@@ -855,6 +865,8 @@ argument_list|,
 name|mflowtype
 argument_list|,
 name|mflowid
+argument_list|,
+name|fibnum
 argument_list|,
 name|vrf_id
 argument_list|,

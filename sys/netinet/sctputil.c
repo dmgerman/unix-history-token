@@ -20822,6 +20822,10 @@ name|mflowtype
 argument_list|,
 name|mflowid
 argument_list|,
+name|inp
+operator|->
+name|fibnum
+argument_list|,
 name|vrf_id
 argument_list|,
 name|port
@@ -21815,6 +21819,9 @@ parameter_list|,
 name|uint32_t
 name|mflowid
 parameter_list|,
+name|uint16_t
+name|fibnum
+parameter_list|,
 name|uint32_t
 name|vrf_id
 parameter_list|,
@@ -21983,6 +21990,8 @@ name|mflowtype
 argument_list|,
 name|mflowid
 argument_list|,
+name|fibnum
+argument_list|,
 name|vrf_id
 argument_list|,
 name|port
@@ -22075,6 +22084,8 @@ argument_list|,
 name|mflowtype
 argument_list|,
 name|mflowid
+argument_list|,
+name|fibnum
 argument_list|,
 name|vrf_id
 argument_list|,
