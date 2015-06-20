@@ -1743,6 +1743,10 @@ name|struct
 name|callout
 name|tpc_timeout
 decl_stmt|;
+name|struct
+name|mtx
+name|tpc_lock
+decl_stmt|;
 block|}
 struct|;
 end_struct
