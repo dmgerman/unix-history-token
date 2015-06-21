@@ -83,6 +83,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* GCC supports __VA_ARGS__ in macros */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COMPILER_VA_MACRO
+value|1
+end_define
+
 begin_endif
 endif|#
 directive|endif

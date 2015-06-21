@@ -1004,7 +1004,7 @@ name|ACPI_READ
 condition|)
 block|{
 comment|/*              * Copy the data from the source buffer.              * Length is the field width in bytes.              */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Value
 argument_list|,
@@ -1039,7 +1039,7 @@ block|}
 else|else
 block|{
 comment|/*              * Copy the data to the target buffer.              * Length is the field width in bytes.              */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 operator|(
 name|ObjDesc
@@ -1755,7 +1755,7 @@ name|AE_BUFFER_OVERFLOW
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|Buffer
 argument_list|,
@@ -1840,7 +1840,7 @@ argument_list|,
 name|ACPI_READ
 argument_list|)
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Buffer
 argument_list|,
@@ -2057,7 +2057,7 @@ block|{
 break|break;
 block|}
 comment|/* Write merged datum to target buffer */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 operator|(
 operator|(
@@ -2130,7 +2130,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Write the last datum to the buffer */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 operator|(
 operator|(
@@ -2286,7 +2286,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*          * Copy the original data to the new buffer, starting          * at Byte zero. All unused (upper) bytes of the          * buffer will be 0.          */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 operator|(
 name|char
@@ -2421,7 +2421,7 @@ name|AccessBitWidth
 argument_list|)
 expr_stmt|;
 comment|/* Get initial Datum from the input buffer */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 operator|&
 name|RawDatum
@@ -2565,7 +2565,7 @@ name|CommonField
 operator|.
 name|AccessByteWidth
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 operator|&
 name|RawDatum

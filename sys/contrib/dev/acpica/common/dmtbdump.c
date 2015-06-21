@@ -248,7 +248,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|ACPI_IS_PRINT
+name|isprint
 argument_list|(
 name|Buffer
 index|[
@@ -4752,7 +4752,7 @@ argument_list|)
 expr_stmt|;
 name|Length
 operator|+=
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|String
 argument_list|)
@@ -9414,7 +9414,7 @@ argument_list|)
 expr_stmt|;
 name|StringLength
 operator|=
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Namepath
 argument_list|)

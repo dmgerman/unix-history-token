@@ -863,7 +863,7 @@ name|Filename
 argument_list|,
 name|Gbl_CurrentLineNumber
 argument_list|,
-name|Gbl_InputByteCount
+name|Gbl_OriginalInputFileSize
 argument_list|,
 name|TotalKeywords
 argument_list|)
@@ -883,6 +883,16 @@ operator|||
 operator|(
 name|Gbl_IgnoreErrors
 operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|Gbl_Files
+index|[
+name|ASL_FILE_AML_OUTPUT
+index|]
+operator|.
+name|Handle
 condition|)
 block|{
 name|FlPrintFile
@@ -907,6 +917,7 @@ argument_list|,
 name|TotalExecutableOpcodes
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Display summary of any optional files */
@@ -962,7 +973,7 @@ condition|)
 block|{
 continue|continue;
 block|}
-comment|/* .I is a temp file unless specifically requested */
+comment|/* .PRE is the preprocessor intermediate file */
 if|if
 condition|(
 operator|(
@@ -973,7 +984,7 @@ operator|)
 operator|&&
 operator|(
 operator|!
-name|Gbl_PreprocessorOutputFlag
+name|Gbl_KeepPreprocessorTempFile
 operator|)
 condition|)
 block|{
@@ -1951,7 +1962,7 @@ index|]
 decl_stmt|;
 name|Status
 operator|=
-name|UtStrtoul64
+name|stroul64
 argument_list|(
 name|String
 argument_list|,
@@ -2002,12 +2013,12 @@ comment|/* TBD: use version in ACPICA main code base? */
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtStrtoul64  *  * PARAMETERS:  String              - Null terminated string  *              Terminater          - Where a pointer to the terminating byte  *                                    is returned  *              Base                - Radix of the string  *  * RETURN:      Converted value  *  * DESCRIPTION: Convert a string into an unsigned value.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    stroul64  *  * PARAMETERS:  String              - Null terminated string  *              Terminater          - Where a pointer to the terminating byte  *                                    is returned  *              Base                - Radix of the string  *  * RETURN:      Converted value  *  * DESCRIPTION: Convert a string into an unsigned value.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|UtStrtoul64
+name|stroul64
 parameter_list|(
 name|char
 modifier|*

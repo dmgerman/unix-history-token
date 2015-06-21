@@ -925,6 +925,8 @@ name|WAKECODE_PADDR
 argument_list|(
 name|sc
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|intr_suspend
@@ -1340,6 +1342,8 @@ argument_list|)
 expr_stmt|;
 name|AcpiSetFirmwareWakingVector
 argument_list|(
+literal|0
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;

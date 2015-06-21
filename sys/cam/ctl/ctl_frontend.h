@@ -30,14 +30,6 @@ block|,
 name|CTL_PORT_STATUS_ONLINE
 init|=
 literal|0x01
-block|,
-name|CTL_PORT_STATUS_TARG_ONLINE
-init|=
-literal|0x02
-block|,
-name|CTL_PORT_STATUS_LUN_ONLINE
-init|=
-literal|0x04
 block|}
 name|ctl_port_status
 typedef|;
@@ -115,10 +107,6 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
-parameter_list|,
-name|struct
-name|ctl_id
-name|targ_id
 parameter_list|,
 name|int
 name|lun_id

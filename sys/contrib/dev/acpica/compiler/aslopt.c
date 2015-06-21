@@ -336,7 +336,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 operator|*
 name|NewPath
@@ -346,7 +346,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_STRNCMP
+name|strncmp
 argument_list|(
 operator|*
 name|NewPath
@@ -779,7 +779,7 @@ operator|->
 name|Length
 expr_stmt|;
 block|}
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 operator|&
 name|NewPathExternal
@@ -856,7 +856,7 @@ return|;
 block|}
 if|if
 condition|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|NewPath
 argument_list|)
@@ -874,7 +874,7 @@ operator|,
 operator|(
 name|UINT32
 operator|)
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|NewPath
 argument_list|)
@@ -1473,7 +1473,7 @@ block|}
 comment|/*      * The original path must be longer than one NameSeg (4 chars) for there      * to be any possibility that it can be optimized to a shorter string      */
 name|AmlNameStringLength
 operator|=
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|AmlNameString
 argument_list|)
@@ -1930,7 +1930,7 @@ operator|=
 operator|(
 name|AmlNameStringLength
 operator|-
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|NewPath
 argument_list|)
@@ -2007,7 +2007,7 @@ name|Asl
 operator|.
 name|AmlLength
 operator|=
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|NewPath
 argument_list|)
@@ -2039,7 +2039,7 @@ name|Asl
 operator|.
 name|AmlLength
 operator|=
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|NewPath
 argument_list|)
@@ -2103,7 +2103,7 @@ name|Asl
 operator|.
 name|AmlLength
 operator|=
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|NewPath
 argument_list|)
@@ -2128,7 +2128,7 @@ name|Asl
 operator|.
 name|AmlLength
 operator|=
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|NewPath
 argument_list|)

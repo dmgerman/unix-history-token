@@ -202,7 +202,7 @@ block|{
 comment|/* Numeric argument, convert */
 name|Address
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|InString
 argument_list|,
@@ -385,7 +385,7 @@ operator|=
 operator|(
 name|UINT8
 operator|)
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|ObjectArg
 argument_list|,
@@ -1181,7 +1181,7 @@ expr_stmt|;
 comment|/* Install - install an interface */
 name|SubString
 operator|=
-name|ACPI_STRSTR
+name|strstr
 argument_list|(
 literal|"INSTALL"
 argument_list|,
@@ -1226,7 +1226,7 @@ block|}
 comment|/* Remove - remove an interface */
 name|SubString
 operator|=
-name|ACPI_STRSTR
+name|strstr
 argument_list|(
 literal|"REMOVE"
 argument_list|,
@@ -1631,7 +1631,7 @@ comment|/* Check for descriptor byte match */
 elseif|else
 if|if
 condition|(
-name|ACPI_MEMCMP
+name|memcmp
 argument_list|(
 name|Aml1
 argument_list|,
@@ -2826,7 +2826,7 @@ name|ObjectArg
 operator|||
 operator|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|ObjectArg
 argument_list|,
@@ -2966,7 +2966,7 @@ name|GpeEventInfo
 decl_stmt|;
 name|GpeNumber
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|GpeArg
 argument_list|,
@@ -2983,7 +2983,7 @@ condition|)
 block|{
 name|BlockNumber
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|BlockArg
 argument_list|,

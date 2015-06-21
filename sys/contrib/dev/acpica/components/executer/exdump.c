@@ -1362,7 +1362,7 @@ specifier|static
 name|ACPI_EXDUMP_INFO
 name|AcpiExDumpReference
 index|[
-literal|8
+literal|9
 index|]
 init|=
 block|{
@@ -1453,6 +1453,19 @@ name|Where
 argument_list|)
 block|,
 literal|"Where"
+block|}
+block|,
+block|{
+name|ACPI_EXD_POINTER
+block|,
+name|ACPI_EXD_OFFSET
+argument_list|(
+name|Reference
+operator|.
+name|IndexPointer
+argument_list|)
+block|,
+literal|"Index Pointer"
 block|}
 block|,
 block|{
@@ -4148,7 +4161,9 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" Target: %p"
+literal|"%22s %p"
+argument_list|,
+literal|"Target :"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -4184,13 +4199,7 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" Target: %p [%s]\n"
-argument_list|,
-name|ObjDesc
-operator|->
-name|Reference
-operator|.
-name|Object
+literal|" [%s]\n"
 argument_list|,
 name|AcpiUtGetTypeName
 argument_list|(

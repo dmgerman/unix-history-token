@@ -2615,7 +2615,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|racct_alloc_resource
+name|racct_adjust_resource
 parameter_list|(
 name|struct
 name|racct
@@ -2849,7 +2849,7 @@ return|;
 block|}
 endif|#
 directive|endif
-name|racct_alloc_resource
+name|racct_adjust_resource
 argument_list|(
 name|p
 operator|->
@@ -2989,7 +2989,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|racct_alloc_resource
+name|racct_adjust_resource
 argument_list|(
 name|cred
 operator|->
@@ -3020,7 +3020,7 @@ name|pr
 operator|->
 name|pr_parent
 control|)
-name|racct_alloc_resource
+name|racct_adjust_resource
 argument_list|(
 name|pr
 operator|->
@@ -3033,7 +3033,7 @@ argument_list|,
 name|amount
 argument_list|)
 expr_stmt|;
-name|racct_alloc_resource
+name|racct_adjust_resource
 argument_list|(
 name|cred
 operator|->
@@ -3160,7 +3160,7 @@ operator|&
 name|racct_lock
 argument_list|)
 expr_stmt|;
-name|racct_alloc_resource
+name|racct_adjust_resource
 argument_list|(
 name|p
 operator|->
@@ -3391,7 +3391,7 @@ block|}
 block|}
 endif|#
 directive|endif
-name|racct_alloc_resource
+name|racct_adjust_resource
 argument_list|(
 name|p
 operator|->
@@ -3616,7 +3616,7 @@ name|diff_cred
 operator|=
 name|diff_proc
 expr_stmt|;
-name|racct_alloc_resource
+name|racct_adjust_resource
 argument_list|(
 name|p
 operator|->
@@ -3979,7 +3979,7 @@ name|p_pid
 operator|)
 argument_list|)
 expr_stmt|;
-name|racct_alloc_resource
+name|racct_adjust_resource
 argument_list|(
 name|p
 operator|->
@@ -4078,7 +4078,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|racct_alloc_resource
+name|racct_adjust_resource
 argument_list|(
 name|cred
 operator|->
@@ -4110,7 +4110,7 @@ name|pr
 operator|->
 name|pr_parent
 control|)
-name|racct_alloc_resource
+name|racct_adjust_resource
 argument_list|(
 name|pr
 operator|->
@@ -4124,7 +4124,7 @@ operator|-
 name|amount
 argument_list|)
 expr_stmt|;
-name|racct_alloc_resource
+name|racct_adjust_resource
 argument_list|(
 name|cred
 operator|->

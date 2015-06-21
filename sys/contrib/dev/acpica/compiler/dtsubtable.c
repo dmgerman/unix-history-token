@@ -86,7 +86,7 @@ argument_list|,
 name|String
 argument_list|)
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Subtable
 operator|->
@@ -578,7 +578,7 @@ condition|)
 block|{
 return|return;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Subtable
 operator|->

@@ -64,6 +64,9 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+name|int
+name|hskew
+decl_stmt|;
 block|}
 struct|;
 end_struct

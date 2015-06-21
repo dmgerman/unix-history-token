@@ -496,7 +496,7 @@ condition|(
 name|NextGpio
 operator|&&
 operator|(
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|DeviceName
 argument_list|,
@@ -534,7 +534,7 @@ name|PinNumber
 operator|)
 operator|&&
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|DeviceName
 argument_list|,
@@ -679,7 +679,7 @@ condition|(
 name|NextSerial
 operator|&&
 operator|(
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|DeviceName
 argument_list|,
@@ -717,7 +717,7 @@ name|Address
 operator|)
 operator|&&
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|DeviceName
 argument_list|,

@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capsicum.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ipc.h>
 end_include
 
@@ -3528,6 +3534,9 @@ name|int
 name|fd
 parameter_list|)
 block|{
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|struct
 name|kaudit_record
 modifier|*
@@ -3576,14 +3585,14 @@ condition|(
 name|getvnode
 argument_list|(
 name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
 argument_list|,
 name|fd
 argument_list|,
-literal|0
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|)
 argument_list|,
 operator|&
 name|fp

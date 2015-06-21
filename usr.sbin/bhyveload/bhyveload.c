@@ -2488,7 +2488,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-c<console-device>] [-d<disk-path>] [-e<name=value>]\n"
+literal|"usage: %s [-S][-c<console-device>] [-d<disk-path>] [-e<name=value>]\n"
 literal|"       %*s [-h<host-path>] [-m mem-size]<vmname>\n"
 argument_list|,
 name|progname
@@ -2556,6 +2556,8 @@ decl_stmt|,
 name|error
 decl_stmt|,
 name|need_reinit
+decl_stmt|,
+name|memflags
 decl_stmt|;
 name|progname
 operator|=
@@ -2566,6 +2568,10 @@ index|[
 literal|0
 index|]
 argument_list|)
+expr_stmt|;
+name|memflags
+operator|=
+literal|0
 expr_stmt|;
 name|mem_size
 operator|=
@@ -2592,7 +2598,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:d:e:h:m:"
+literal|"Sc:d:e:h:m:"
 argument_list|)
 operator|)
 operator|!=
@@ -2701,6 +2707,14 @@ literal|"Invalid memsize '%s'"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|memflags
+operator||=
+name|VM_MEM_F_WIRED
 expr_stmt|;
 break|break;
 case|case
@@ -2828,6 +2842,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|vm_set_memflags
+argument_list|(
+name|ctx
+argument_list|,
+name|memflags
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|vm_setup_memory

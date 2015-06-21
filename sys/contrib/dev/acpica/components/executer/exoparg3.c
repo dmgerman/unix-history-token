@@ -570,7 +570,7 @@ name|Buffer
 condition|)
 block|{
 comment|/* We have a buffer, copy the portion requested */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Buffer
 argument_list|,

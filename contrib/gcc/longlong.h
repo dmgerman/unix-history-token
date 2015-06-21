@@ -1504,7 +1504,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|__asm__ ("multu %2,%3"						\ 	   : "=l" ((USItype) (w0)),					\ 	     "=h" ((USItype) (w1))					\ 	   : "d" ((USItype) (u)),					\ 	     "d" ((USItype) (v)))
+value|do {								\ 	UDItype __x = (UDItype) (USItype) (u) * (USItype) (v);		\ 	 w1 = __x>> 32;						\ 	 w0 = __x;							\ 	} while (0)
 end_define
 
 begin_define

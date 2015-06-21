@@ -397,7 +397,7 @@ operator|)
 return|;
 block|}
 comment|/*          * Copy the raw buffer data with no transform. String is already NULL          * terminated at Length+1.          */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|NewObject
 operator|->
@@ -540,7 +540,7 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|NewObject
 operator|->

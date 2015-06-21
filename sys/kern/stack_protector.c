@@ -78,16 +78,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|__arraycount
-parameter_list|(
-name|__x
-parameter_list|)
-value|(sizeof(__x) / sizeof(__x[0]))
-end_define
-
 begin_function
 specifier|static
 name|void
@@ -105,7 +95,7 @@ decl_stmt|;
 name|long
 name|guard
 index|[
-name|__arraycount
+name|nitems
 argument_list|(
 name|__stack_chk_guard
 argument_list|)
@@ -131,7 +121,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|__arraycount
+name|nitems
 argument_list|(
 name|guard
 argument_list|)

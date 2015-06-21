@@ -149,6 +149,14 @@ comment|/* Preprocessor */
 name|PrDoPreprocess
 argument_list|()
 expr_stmt|;
+name|Gbl_CurrentLineNumber
+operator|=
+literal|1
+expr_stmt|;
+name|Gbl_LogicalLineNumber
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|Gbl_PreprocessOnly
@@ -1634,7 +1642,7 @@ name|TRUE
 expr_stmt|;
 block|}
 comment|/* Close all open files */
-comment|/*      * Take care with the preprocessor file (.i), it might be the same      * as the "input" file, depending on where the compiler has terminated      * or aborted. Prevent attempt to close the same file twice in      * loop below.      */
+comment|/*      * Take care with the preprocessor file (.pre), it might be the same      * as the "input" file, depending on where the compiler has terminated      * or aborted. Prevent attempt to close the same file twice in      * loop below.      */
 if|if
 condition|(
 name|Gbl_Files
@@ -1695,13 +1703,13 @@ name|ASL_FILE_AML_OUTPUT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Delete the preprocessor output file (.i) unless -li flag is set */
+comment|/* Delete the preprocessor temp file unless full debug was specified */
 if|if
 condition|(
-operator|!
-name|Gbl_PreprocessorOutputFlag
-operator|&&
 name|Gbl_PreprocessFlag
+operator|&&
+operator|!
+name|Gbl_KeepPreprocessorTempFile
 condition|)
 block|{
 name|FlDeleteFile
@@ -1710,7 +1718,7 @@ name|ASL_FILE_PREPROCESSOR
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Delete intermediate ("combined") source file (if -ls flag not set)      * This file is created during normal ASL/AML compiles. It is not      * created by the data table compiler.      *      * If the -ls flag is set, then the .SRC file should not be deleted.      * In this case, Gbl_SourceOutputFlag is set to TRUE.      *      * Note: Handles are cleared by FlCloseFile above, so we look at the      * filename instead, to determine if the .SRC file was actually      * created.      *      * TBD: SourceOutput should be .TMP, then rename if we want to keep it?      */
+comment|/*      * Delete intermediate ("combined") source file (if -ls flag not set)      * This file is created during normal ASL/AML compiles. It is not      * created by the data table compiler.      *      * If the -ls flag is set, then the .SRC file should not be deleted.      * In this case, Gbl_SourceOutputFlag is set to TRUE.      *      * Note: Handles are cleared by FlCloseFile above, so we look at the      * filename instead, to determine if the .SRC file was actually      * created.      */
 if|if
 condition|(
 operator|!

@@ -1465,7 +1465,7 @@ expr_stmt|;
 comment|/*      * The EISAID string must be exactly 7 characters and of the form      * "UUUXXXX" -- 3 uppercase letters and 4 hex digits (e.g., "PNP0001")      */
 if|if
 condition|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|InString
 argument_list|)
@@ -2278,13 +2278,13 @@ if|if
 condition|(
 operator|!
 operator|(
-name|ACPI_STRNCMP
+name|strncmp
 argument_list|(
 name|Str
 argument_list|,
 name|Name
 argument_list|,
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|Name
 argument_list|)
@@ -2410,7 +2410,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 operator|&
 name|PldInfo

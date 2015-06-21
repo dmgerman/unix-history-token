@@ -561,7 +561,7 @@ condition|)
 block|{
 name|MaxDepth
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|DepthArg
 argument_list|,
@@ -706,7 +706,7 @@ operator|=
 operator|(
 name|ACPI_OWNER_ID
 operator|)
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|OwnerArg
 argument_list|,
@@ -723,7 +723,7 @@ condition|)
 block|{
 name|MaxDepth
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|DepthArg
 argument_list|,
@@ -1005,7 +1005,7 @@ name|AcpiName
 decl_stmt|;
 if|if
 condition|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|NameArg
 argument_list|)
@@ -2056,7 +2056,7 @@ decl_stmt|;
 comment|/* Convert string to object pointer */
 name|Address
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|ObjectArg
 argument_list|,

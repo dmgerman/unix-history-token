@@ -115,7 +115,7 @@ operator|)
 return|;
 block|}
 comment|/* Populate the cache object and return it */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|Cache
 argument_list|,
@@ -411,7 +411,7 @@ operator|)
 return|;
 block|}
 comment|/* Mark the object as cached */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|Object
 argument_list|,
@@ -608,7 +608,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Clear (zero) the previously used Object */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|Object
 argument_list|,

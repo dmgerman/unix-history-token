@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capsicum.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -84,6 +90,9 @@ name|int
 name|fd
 parameter_list|)
 block|{
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|struct
 name|file
 modifier|*
@@ -101,7 +110,11 @@ name|p_fd
 argument_list|,
 name|fd
 argument_list|,
-name|NULL
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|)
 argument_list|,
 operator|&
 name|file
@@ -201,6 +214,9 @@ name|int
 name|fd
 parameter_list|)
 block|{
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|struct
 name|file
 modifier|*
@@ -218,7 +234,11 @@ name|p_fd
 argument_list|,
 name|fd
 argument_list|,
-name|NULL
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|)
 argument_list|,
 operator|&
 name|file
@@ -268,6 +288,9 @@ modifier|*
 name|filp
 parameter_list|)
 block|{
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|struct
 name|file
 modifier|*
@@ -285,7 +308,11 @@ name|p_fd
 argument_list|,
 name|fd
 argument_list|,
-name|NULL
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|)
 argument_list|,
 operator|&
 name|file

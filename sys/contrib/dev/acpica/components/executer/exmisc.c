@@ -444,7 +444,7 @@ name|Buffer
 operator|.
 name|Pointer
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|NewBuf
 argument_list|,
@@ -457,7 +457,7 @@ argument_list|,
 name|Length0
 argument_list|)
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|NewBuf
 operator|+
@@ -700,7 +700,7 @@ operator|.
 name|Pointer
 expr_stmt|;
 comment|/* Copy the first integer, LSB first */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|NewBuf
 argument_list|,
@@ -715,7 +715,7 @@ name|AcpiGbl_IntegerByteWidth
 argument_list|)
 expr_stmt|;
 comment|/* Copy the second integer (LSB first) after the first */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|NewBuf
 operator|+
@@ -781,7 +781,7 @@ operator|.
 name|Pointer
 expr_stmt|;
 comment|/* Concatenate the strings */
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|NewBuf
 argument_list|,
@@ -792,7 +792,7 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
-name|ACPI_STRCPY
+name|strcpy
 argument_list|(
 name|NewBuf
 operator|+
@@ -863,7 +863,7 @@ operator|.
 name|Pointer
 expr_stmt|;
 comment|/* Concatenate the buffers */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|NewBuf
 argument_list|,
@@ -880,7 +880,7 @@ operator|.
 name|Length
 argument_list|)
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|NewBuf
 operator|+
@@ -1484,7 +1484,7 @@ expr_stmt|;
 comment|/* Lexicographic compare: compare the data bytes */
 name|Compare
 operator|=
-name|ACPI_MEMCMP
+name|memcmp
 argument_list|(
 name|Operand0
 operator|->

@@ -115,7 +115,7 @@ block|}
 comment|/* Get and verify the breakpoint address */
 name|Address
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|Location
 argument_list|,
@@ -289,7 +289,7 @@ return|return;
 block|}
 name|Value
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|ValueArg
 argument_list|,
@@ -355,7 +355,7 @@ block|}
 comment|/* Get the index and value */
 name|Index
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|IndexArg
 argument_list|,
@@ -615,7 +615,7 @@ condition|)
 block|{
 name|NumStatements
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|Statements
 argument_list|,

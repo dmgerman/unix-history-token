@@ -374,7 +374,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_IS_PRINT
+name|isprint
 argument_list|(
 name|BufChar
 argument_list|)
@@ -825,7 +825,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_IS_PRINT
+name|isprint
 argument_list|(
 name|BufChar
 argument_list|)
