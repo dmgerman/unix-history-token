@@ -1585,7 +1585,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"RACCT/RCTL support not present in kernel; see rctl(8) for details."
+literal|"RACCT/RCTL support not present in kernel; see rctl(8) for details"
 argument_list|)
 expr_stmt|;
 name|err
