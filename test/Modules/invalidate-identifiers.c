@@ -4,7 +4,7 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -fmodules-cache-path=%t -I%S/Inputs/invalidate-identifiers -emit-llvm-only %s
+comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -fmodules-cache-path=%t -I%S/Inputs/invalidate-identifiers -emit-llvm-only %s
 end_comment
 
 begin_include

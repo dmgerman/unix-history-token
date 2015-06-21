@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -fsanitize=local-bounds -emit-llvm -triple x86_64-app
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsanitize=array-bounds -O -fsanitize-undefined-trap-on-error -emit-llvm -triple x86_64-apple-darwin10 -DNO_DYNAMIC %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -fsanitize=array-bounds -O -fsanitize-trap=array-bounds -emit-llvm -triple x86_64-apple-darwin10 -DNO_DYNAMIC %s -o - | FileCheck %s
 end_comment
 
 begin_comment

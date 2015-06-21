@@ -867,6 +867,8 @@ asm|__asm mov eax, (16 + 16) / -8
 comment|// CHECK: mov eax, $$4294967292
 asm|__asm mov eax, ~15
 comment|// CHECK: mov eax, $$4294967280
+asm|__asm mov eax, 6 ^ 3
+comment|// CHECK: mov eax, $$5
 comment|// CHECK: "~{eax},~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function

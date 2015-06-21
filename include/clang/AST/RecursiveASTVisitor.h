@@ -6829,6 +6829,12 @@ argument|{}
 argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
+argument|DesignatedInitUpdateExpr
+argument_list|,
+argument|{}
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
 argument|ExtVectorElementExpr
 argument_list|,
 argument|{}
@@ -6842,6 +6848,12 @@ argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ImplicitValueInitExpr
+argument_list|,
+argument|{}
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|NoInitExpr
 argument_list|,
 argument|{}
 argument_list|)
@@ -7372,6 +7384,15 @@ begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|OMPTaskwaitDirective
+argument_list|,
+argument|{ TRY_TO(TraverseOMPExecutableDirective(S)); }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|OMPTaskgroupDirective
 argument_list|,
 argument|{ TRY_TO(TraverseOMPExecutableDirective(S)); }
 argument_list|)

@@ -1110,13 +1110,6 @@ name|MachO
 block|{
 name|public
 operator|:
-comment|/// The host version.
-name|unsigned
-name|DarwinVersion
-index|[
-literal|3
-index|]
-block|;
 comment|/// Whether the information on the target has been initialized.
 comment|//
 comment|// FIXME: This should be eliminated. What we want to do is make this part of
@@ -1143,22 +1136,6 @@ comment|/// The OS version we are targeting.
 name|mutable
 name|VersionTuple
 name|TargetVersion
-block|;
-name|private
-operator|:
-comment|/// The default macosx-version-min of this tool chain; empty until
-comment|/// initialized.
-name|std
-operator|::
-name|string
-name|MacosxVersionMin
-block|;
-comment|/// The default ios-version-min of this tool chain; empty until
-comment|/// initialized.
-name|std
-operator|::
-name|string
-name|iOSVersionMin
 block|;
 name|private
 operator|:
@@ -1393,6 +1370,13 @@ name|isTargetMacOS
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|TargetInitialized
+operator|&&
+literal|"Target not initialized!"
+argument_list|)
+block|;
 return|return
 name|TargetPlatform
 operator|==
@@ -1635,6 +1619,12 @@ name|override
 block|;
 name|bool
 name|UseSjLjExceptions
+argument_list|()
+specifier|const
+name|override
+block|;
+name|SanitizerMask
+name|getSupportedSanitizers
 argument_list|()
 specifier|const
 name|override
@@ -2265,6 +2255,12 @@ argument_list|()
 specifier|const
 name|override
 block|;
+name|SanitizerMask
+name|getSupportedSanitizers
+argument_list|()
+specifier|const
+name|override
+block|;
 name|protected
 operator|:
 name|Tool
@@ -2551,6 +2547,12 @@ name|override
 block|;
 name|bool
 name|isPIEDefault
+argument_list|()
+specifier|const
+name|override
+block|;
+name|SanitizerMask
+name|getSupportedSanitizers
 argument_list|()
 specifier|const
 name|override
@@ -3110,6 +3112,12 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|SanitizerMask
+name|getSupportedSanitizers
+argument_list|()
+specifier|const
+name|override
+block|;
 name|protected
 operator|:
 name|void
@@ -3387,6 +3395,103 @@ argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 name|override
+block|; }
+decl_stmt|;
+comment|/// SHAVEToolChain - A tool chain using the compiler installed by the the
+comment|// Movidius SDK into MV_TOOLS_DIR (which we assume will be copied to llvm's
+comment|// installation dir) to perform all subcommands.
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|SHAVEToolChain
+range|:
+name|public
+name|Generic_GCC
+block|{
+name|public
+operator|:
+name|SHAVEToolChain
+argument_list|(
+specifier|const
+name|Driver
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+block|;
+operator|~
+name|SHAVEToolChain
+argument_list|()
+name|override
+block|;
+name|virtual
+name|Tool
+operator|*
+name|SelectTool
+argument_list|(
+argument|const JobAction&JA
+argument_list|)
+specifier|const
+name|override
+block|;
+name|protected
+operator|:
+name|Tool
+operator|*
+name|getTool
+argument_list|(
+argument|Action::ActionClass AC
+argument_list|)
+specifier|const
+name|override
+block|;
+name|Tool
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+name|override
+block|;
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
+specifier|const
+name|override
+block|;
+name|private
+operator|:
+name|mutable
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Tool
+operator|>
+name|Compiler
+block|;
+name|mutable
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Tool
+operator|>
+name|Assembler
 block|; }
 decl_stmt|;
 block|}

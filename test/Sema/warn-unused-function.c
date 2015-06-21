@@ -8,7 +8,7 @@ comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wunused %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wall %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wall -Wno-infinite-recursion %s
 end_comment
 
 begin_function

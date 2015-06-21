@@ -765,10 +765,6 @@ comment|/// \brief Retrieve the module that owns the given header file, if any.
 comment|///
 comment|/// \param File The header file that is likely to be included.
 comment|///
-comment|/// \param RequestingModule Specifies the module the header is intended to be
-comment|/// used from.  Used to disambiguate if a header is present in multiple
-comment|/// modules.
-comment|///
 comment|/// \returns The module KnownHeader, which provides the module that owns the
 comment|/// given header file.  The KnownHeader is default constructed to indicate
 comment|/// that no module owns this header file.
@@ -779,12 +775,6 @@ specifier|const
 name|FileEntry
 modifier|*
 name|File
-parameter_list|,
-name|Module
-modifier|*
-name|RequestingModule
-init|=
-name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// \brief Reports errors if a module must not include a specific file.

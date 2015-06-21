@@ -1220,6 +1220,11 @@ name|FileManager
 modifier|&
 name|FileMgr
 decl_stmt|;
+specifier|const
+name|PCHContainerOperations
+modifier|&
+name|PCHContainerOps
+decl_stmt|;
 name|DiagnosticsEngine
 modifier|&
 name|Diags
@@ -4051,6 +4056,18 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param PCHContainerOps the PCHContainerOperations to use for loading and
+end_comment
+
+begin_comment
+comment|/// creating modules.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// \param isysroot If non-NULL, the system include path specified by the
 end_comment
 
@@ -4140,6 +4157,8 @@ argument_list|(
 argument|Preprocessor&PP
 argument_list|,
 argument|ASTContext&Context
+argument_list|,
+argument|const PCHContainerOperations&PCHContainerOps
 argument_list|,
 argument|StringRef isysroot =
 literal|""
@@ -4944,6 +4963,11 @@ name|FileManager
 operator|&
 name|FileMgr
 argument_list|,
+specifier|const
+name|PCHContainerOperations
+operator|&
+name|PCHContainerOps
+argument_list|,
 name|DiagnosticsEngine
 operator|&
 name|Diags
@@ -4975,6 +4999,11 @@ name|FileManager
 modifier|&
 name|FileMgr
 parameter_list|,
+specifier|const
+name|PCHContainerOperations
+modifier|&
+name|PCHContainerOps
+parameter_list|,
 name|ASTReaderListener
 modifier|&
 name|Listener
@@ -5001,6 +5030,11 @@ argument_list|,
 name|FileManager
 operator|&
 name|FileMgr
+argument_list|,
+specifier|const
+name|PCHContainerOperations
+operator|&
+name|PCHContainerOps
 argument_list|,
 specifier|const
 name|LangOptions

@@ -281,7 +281,7 @@ operator|::
 name|string
 name|ResourceDir
 expr_stmt|;
-comment|/// A prefix directory used to emulated a limited subset of GCC's '-Bprefix'
+comment|/// A prefix directory used to emulate a limited subset of GCC's '-Bprefix'
 comment|/// functionality.
 comment|/// FIXME: This type of customization should be removed in favor of the
 comment|/// universal driver when it is ready.
@@ -1209,11 +1209,6 @@ decl_stmt|;
 name|bool
 name|IsUsingLTO
 argument_list|(
-specifier|const
-name|ToolChain
-operator|&
-name|TC
-argument_list|,
 specifier|const
 name|llvm
 operator|::

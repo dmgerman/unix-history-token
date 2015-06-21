@@ -105,7 +105,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define i32 @safe_div(i32 %numerator, i32 %denominator, i32* %res)
+comment|// CHECK-LABEL: define i32 @safe_div(i32 %numerator, i32 %denominator, i32* %res) {{.*}} personality i8* bitcast (i32 (...)* @__C_specific_handler to i8*)
 end_comment
 
 begin_comment
@@ -125,7 +125,7 @@ comment|// CHECK: [[lpad]]
 end_comment
 
 begin_comment
-comment|// CHECK: landingpad { i8*, i32 } personality i8* bitcast (i32 (...)* @__C_specific_handler to i8*)
+comment|// CHECK: landingpad { i8*, i32 }
 end_comment
 
 begin_comment
@@ -205,7 +205,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define i32 @filter_expr_capture()
+comment|// CHECK-LABEL: define i32 @filter_expr_capture() {{.*}} personality i8* bitcast (i32 (...)* @__C_specific_handler to i8*)
 end_comment
 
 begin_comment
@@ -318,7 +318,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define i32 @nested_try()
+comment|// CHECK-LABEL: define i32 @nested_try() {{.*}} personality i8* bitcast (i32 (...)* @__C_specific_handler to i8*)
 end_comment
 
 begin_comment
@@ -358,7 +358,7 @@ comment|// CHECK: [[lpad]]
 end_comment
 
 begin_comment
-comment|// CHECK: landingpad { i8*, i32 } personality i8* bitcast (i32 (...)* @__C_specific_handler to i8*)
+comment|// CHECK: landingpad { i8*, i32 }
 end_comment
 
 begin_comment
@@ -504,7 +504,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define void @basic_finally()
+comment|// CHECK-LABEL: define void @basic_finally() {{.*}} personality i8* bitcast (i32 (...)* @__C_specific_handler to i8*)
 end_comment
 
 begin_comment
@@ -560,7 +560,7 @@ comment|// CHECK: [[lpad]]
 end_comment
 
 begin_comment
-comment|// CHECK: landingpad { i8*, i32 } personality i8* bitcast (i32 (...)* @__C_specific_handler to i8*)
+comment|// CHECK: landingpad { i8*, i32 }
 end_comment
 
 begin_comment

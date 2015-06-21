@@ -458,6 +458,31 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+index|[
+name|unbalanced
+argument_list|(
+argument|attribute
+argument_list|)
+comment|/* expected-note {{to match this '['}} */
+name|void
+name|f
+argument_list|(
+name|void
+argument_list|)
+expr|;
+comment|/* expected-error {{expected ']'}} */
+index|[]
+name|__interface
+name|I
+block|{}
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* expected-error {{Microsoft attribute block cannot be empty}} */
+end_comment
+
 begin_function
 name|void
 name|ms_intrinsics

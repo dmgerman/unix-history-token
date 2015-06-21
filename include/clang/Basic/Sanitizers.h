@@ -168,6 +168,15 @@ name|K
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Check if one or more sanitizers are enabled.
+name|bool
+name|hasOneOf
+argument_list|(
+name|SanitizerMask
+name|K
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Enable or disable a certain (single) sanitizer.
 name|void
 name|set

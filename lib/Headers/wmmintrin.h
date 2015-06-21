@@ -21,83 +21,17 @@ directive|include
 file|<emmintrin.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__AES__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__PCLMUL__
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"AES/PCLMUL instructions not enabled"
-end_error
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__AES__
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<__wmmintrin_aes.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __AES__ */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__PCLMUL__
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<__wmmintrin_pclmul.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __PCLMUL__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __AES__ || __PCLMUL__ */
-end_comment
 
 begin_endif
 endif|#

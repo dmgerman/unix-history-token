@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -fsanitize=alignment,null,object-size,shift-base,shif
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsanitize-undefined-trap-on-error -fsanitize=alignment,null,object-size,shift-base,shift-exponent,return,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -fsanitize-recover=alignment,null,object-size,shift-base,shift-exponent,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -emit-llvm %s -o - -triple x86_64-linux-gnu | FileCheck %s --check-prefix=CHECK-COMMON --check-prefix=CHECK-TRAP
+comment|// RUN: %clang_cc1 -fsanitize-trap=alignment,null,object-size,shift-base,shift-exponent,return,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -fsanitize-recover=alignment,null,object-size,shift-base,shift-exponent,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -fsanitize=alignment,null,object-size,shift-base,shift-exponent,return,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -fsanitize-recover=alignment,null,object-size,shift-base,shift-exponent,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -emit-llvm %s -o - -triple x86_64-linux-gnu | FileCheck %s --check-prefix=CHECK-COMMON --check-prefix=CHECK-TRAP
 end_comment
 
 begin_comment

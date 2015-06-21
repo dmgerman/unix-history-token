@@ -17,6 +17,90 @@ end_comment
 
 begin_decl_stmt
 name|vector
+name|signed
+name|char
+name|vsc
+init|=
+block|{
+literal|0
+block|,
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|5
+block|,
+literal|6
+block|,
+literal|7
+block|,
+literal|8
+block|,
+literal|9
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|5
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|unsigned
+name|char
+name|vuc
+init|=
+block|{
+literal|0
+block|,
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|5
+block|,
+literal|6
+block|,
+literal|7
+block|,
+literal|8
+block|,
+literal|9
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|5
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
 name|int
 name|vi
 init|=
@@ -120,6 +204,22 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|res_i
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|signed
+name|char
+name|res_vsc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|unsigned
+name|char
+name|res_vuc
 decl_stmt|;
 end_decl_stmt
 
@@ -1855,6 +1955,50 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminud
 comment|// CHECK-LE: @llvm.ppc.altivec.vminud
+comment|/* vec_vbpermq */
+name|res_vsll
+operator|=
+name|vec_vbpermq
+argument_list|(
+name|vsc
+argument_list|,
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: llvm.ppc.altivec.vbpermq
+comment|// CHECK-LE: llvm.ppc.altivec.vbpermq
+name|res_vull
+operator|=
+name|vec_vbpermq
+argument_list|(
+name|vuc
+argument_list|,
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: llvm.ppc.altivec.vbpermq
+comment|// CHECK-LE: llvm.ppc.altivec.vbpermq
+comment|// CHECK-PPC: warning: implicit declaration of function 'vec_vbpermq'
+comment|/* vec_vgbbd */
+name|res_vsc
+operator|=
+name|vec_vgbbd
+argument_list|(
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: llvm.ppc.altivec.vgbbd
+comment|// CHECK-LE: llvm.ppc.altivec.vgbbd
+name|res_vuc
+operator|=
+name|vec_vgbbd
+argument_list|(
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: llvm.ppc.altivec.vgbbd
+comment|// CHECK-LE: llvm.ppc.altivec.vgbbd
+comment|// CHECK-PPC: warning: implicit declaration of function 'vec_vgbbd'
 block|}
 end_function
 

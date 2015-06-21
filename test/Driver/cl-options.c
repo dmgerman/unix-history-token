@@ -580,7 +580,7 @@ comment|// For some warning ids, we can map from MSVC warning to Clang warning.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -wd4005 -wd4996 -### -- %s 2>&1 | FileCheck -check-prefix=Wno %s
+comment|// RUN: %clang_cl -wd4005 -wd4996 -wd4910 -### -- %s 2>&1 | FileCheck -check-prefix=Wno %s
 end_comment
 
 begin_comment
@@ -593,6 +593,10 @@ end_comment
 
 begin_comment
 comment|// Wno: "-Wno-deprecated-declarations"
+end_comment
+
+begin_comment
+comment|// Wno: "-Wno-dllexport-explicit-instantiation-decl"
 end_comment
 
 begin_comment

@@ -29,8 +29,8 @@ name|int
 argument_list|)
 argument_list|)
 decl_stmt|;
-comment|// CHECK-LABEL:     define void @test1()
-comment|// CHECK-ARM-LABEL: define arm_aapcscc void @test1()
+comment|// CHECK-LABEL:     define void @test1() {{.*}} personality i8* bitcast (i32 (...)* @__gcc_personality_v0 to i8*)
+comment|// CHECK-ARM-LABEL: define arm_aapcscc void @test1() {{.*}} personality i8* bitcast (i32 (...)* @__gcc_personality_sj0 to i8*)
 specifier|__block
 name|int
 name|x
@@ -54,9 +54,9 @@ expr_stmt|;
 block|}
 argument_list|)
 expr_stmt|;
-comment|// CHECK:          landingpad { i8*, i32 } personality i8* bitcast (i32 (...)* @__gcc_personality_v0 to i8*)
+comment|// CHECK:          landingpad { i8*, i32 }
 comment|// CHECK-NEXT:       cleanup
-comment|// CHECK-ARM:      landingpad { i8*, i32 } personality i8* bitcast (i32 (...)* @__gcc_personality_sj0 to i8*)
+comment|// CHECK-ARM:      landingpad { i8*, i32 }
 comment|// CHECK-ARM-NEXT:   cleanup
 block|}
 end_function

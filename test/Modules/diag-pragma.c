@@ -4,11 +4,11 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache-path=%t -fmodule-name=diag_pragma %S/Inputs/module.map
+comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -x objective-c -emit-module -fmodules-cache-path=%t -fmodule-name=diag_pragma %S/Inputs/module.map
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -verify -fmodules-cache-path=%t -I %S/Inputs %s
+comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -x objective-c -verify -fmodules-cache-path=%t -I %S/Inputs %s
 end_comment
 
 begin_comment

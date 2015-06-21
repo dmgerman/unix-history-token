@@ -2307,9 +2307,14 @@ name|CXCursor_OMPTeamsDirective
 init|=
 literal|253
 block|,
+comment|/** \brief OpenMP taskwait directive.    */
+name|CXCursor_OMPTaskgroupDirective
+init|=
+literal|254
+block|,
 name|CXCursor_LastStmt
 init|=
-name|CXCursor_OMPTeamsDirective
+name|CXCursor_OMPTaskgroupDirective
 block|,
 comment|/**    * \brief Cursor that represents the translation unit itself.    *    * The translation unit cursor exists primarily to act as the root    * cursor for traversing the contents of a translation unit.    */
 name|CXCursor_TranslationUnit
@@ -6390,7 +6395,7 @@ literal|0x10
 block|}
 name|CXIndexOptFlags
 typedef|;
-comment|/**  * \brief Index the given source file and the translation unit corresponding  * to that file via callbacks implemented through #IndexerCallbacks.  *  * \param client_data pointer data supplied by the client, which will  * be passed to the invoked callbacks.  *  * \param index_callbacks Pointer to indexing callbacks that the client  * implements.  *  * \param index_callbacks_size Size of #IndexerCallbacks structure that gets  * passed in index_callbacks.  *  * \param index_options A bitmask of options that affects how indexing is  * performed. This should be a bitwise OR of the CXIndexOpt_XXX flags.  *  * \param[out] out_TU pointer to store a \c CXTranslationUnit that can be  * reused after indexing is finished. Set to \c NULL if you do not require it.  *  * \returns 0 on success or if there were errors from which the compiler could  * recover.  If there is a failure from which the there is no recovery, returns  * a non-zero \c CXErrorCode.  *  * The rest of the parameters are the same as #clang_parseTranslationUnit.  */
+comment|/**  * \brief Index the given source file and the translation unit corresponding  * to that file via callbacks implemented through #IndexerCallbacks.  *  * \param client_data pointer data supplied by the client, which will  * be passed to the invoked callbacks.  *  * \param index_callbacks Pointer to indexing callbacks that the client  * implements.  *  * \param index_callbacks_size Size of #IndexerCallbacks structure that gets  * passed in index_callbacks.  *  * \param index_options A bitmask of options that affects how indexing is  * performed. This should be a bitwise OR of the CXIndexOpt_XXX flags.  *  * \param[out] out_TU pointer to store a \c CXTranslationUnit that can be  * reused after indexing is finished. Set to \c NULL if you do not require it.  *  * \returns 0 on success or if there were errors from which the compiler could  * recover.  If there is a failure from which there is no recovery, returns  * a non-zero \c CXErrorCode.  *  * The rest of the parameters are the same as #clang_parseTranslationUnit.  */
 name|CINDEX_LINKAGE
 name|int
 name|clang_indexSourceFile
@@ -6441,7 +6446,7 @@ name|unsigned
 name|TU_options
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Index the given translation unit via callbacks implemented through  * #IndexerCallbacks.  *   * The order of callback invocations is not guaranteed to be the same as  * when indexing a source file. The high level order will be:  *   *   -Preprocessor callbacks invocations  *   -Declaration/reference callbacks invocations  *   -Diagnostic callback invocations  *  * The parameters are the same as #clang_indexSourceFile.  *   * \returns If there is a failure from which the there is no recovery, returns  * non-zero, otherwise returns 0.  */
+comment|/**  * \brief Index the given translation unit via callbacks implemented through  * #IndexerCallbacks.  *   * The order of callback invocations is not guaranteed to be the same as  * when indexing a source file. The high level order will be:  *   *   -Preprocessor callbacks invocations  *   -Declaration/reference callbacks invocations  *   -Diagnostic callback invocations  *  * The parameters are the same as #clang_indexSourceFile.  *   * \returns If there is a failure from which there is no recovery, returns  * non-zero, otherwise returns 0.  */
 name|CINDEX_LINKAGE
 name|int
 name|clang_indexTranslationUnit

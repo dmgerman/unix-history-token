@@ -1269,6 +1269,55 @@ return|;
 block|}
 endif|#
 directive|endif
+comment|/* 10.1 Special register intrinsics */
+define|#
+directive|define
+name|__arm_rsr
+parameter_list|(
+name|sysreg
+parameter_list|)
+value|__builtin_arm_rsr(sysreg)
+define|#
+directive|define
+name|__arm_rsr64
+parameter_list|(
+name|sysreg
+parameter_list|)
+value|__builtin_arm_rsr64(sysreg)
+define|#
+directive|define
+name|__arm_rsrp
+parameter_list|(
+name|sysreg
+parameter_list|)
+value|__builtin_arm_rsrp(sysreg)
+define|#
+directive|define
+name|__arm_wsr
+parameter_list|(
+name|sysreg
+parameter_list|,
+name|v
+parameter_list|)
+value|__builtin_arm_wsr(sysreg, v)
+define|#
+directive|define
+name|__arm_wsr64
+parameter_list|(
+name|sysreg
+parameter_list|,
+name|v
+parameter_list|)
+value|__builtin_arm_wsr64(sysreg, v)
+define|#
+directive|define
+name|__arm_wsrp
+parameter_list|(
+name|sysreg
+parameter_list|,
+name|v
+parameter_list|)
+value|__builtin_arm_wsrp(sysreg, v)
 if|#
 directive|if
 name|defined

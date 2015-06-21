@@ -4,19 +4,19 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -verify -fmodules-cache-path=%t -I %S/Inputs %s
+comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -x objective-c -verify -fmodules-cache-path=%t -I %S/Inputs %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -verify -fmodules-cache-path=%t -I %S/Inputs %s -detailed-preprocessing-record
+comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -x objective-c -verify -fmodules-cache-path=%t -I %S/Inputs %s -detailed-preprocessing-record
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -DLOCAL_VISIBILITY -fmodules-local-submodule-visibility -x objective-c++ -verify -fmodules-cache-path=%t -I %S/Inputs %s
+comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -DLOCAL_VISIBILITY -fmodules-local-submodule-visibility -x objective-c++ -verify -fmodules-cache-path=%t -I %S/Inputs %s
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -E -fmodules -x objective-c -fmodules-cache-path=%t -I %S/Inputs %s | FileCheck -check-prefix CHECK-PREPROCESSED %s
+comment|// RUN: not %clang_cc1 -E -fmodules -fimplicit-module-maps -x objective-c -fmodules-cache-path=%t -I %S/Inputs %s | FileCheck -check-prefix CHECK-PREPROCESSED %s
 end_comment
 
 begin_comment

@@ -199,5 +199,119 @@ comment|// CHECK: call {{.*}} @llvm.prefetch(i8* null, i32 0, i32 3, i32 0)
 block|}
 end_function
 
+begin_function
+name|unsigned
+name|rsr
+parameter_list|()
+block|{
+comment|// CHECK: [[V0:[%A-Za-z0-9.]+]] = {{.*}} call i64 @llvm.read_register.i64(metadata ![[M0:[0-9]]])
+comment|// CHECK-NEXT: trunc i64 [[V0]] to i32
+return|return
+name|__builtin_arm_rsr
+argument_list|(
+literal|"1:2:3:4:5"
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|long
+name|rsr64
+parameter_list|()
+block|{
+comment|// CHECK: call i64 @llvm.read_register.i64(metadata ![[M0:[0-9]]])
+return|return
+name|__builtin_arm_rsr64
+argument_list|(
+literal|"1:2:3:4:5"
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+modifier|*
+name|rsrp
+parameter_list|()
+block|{
+comment|// CHECK: [[V0:[%A-Za-z0-9.]+]] = {{.*}} call i64 @llvm.read_register.i64(metadata ![[M0:[0-9]]])
+comment|// CHECK-NEXT: inttoptr i64 [[V0]] to i8*
+return|return
+name|__builtin_arm_rsrp
+argument_list|(
+literal|"1:2:3:4:5"
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|wsr
+parameter_list|(
+name|unsigned
+name|v
+parameter_list|)
+block|{
+comment|// CHECK: [[V0:[%A-Za-z0-9.]+]] = zext i32 %v to i64
+comment|// CHECK-NEXT: call void @llvm.write_register.i64(metadata ![[M0:[0-9]]], i64 [[V0]])
+name|__builtin_arm_wsr
+argument_list|(
+literal|"1:2:3:4:5"
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|wsr64
+parameter_list|(
+name|unsigned
+name|long
+name|v
+parameter_list|)
+block|{
+comment|// CHECK: call void @llvm.write_register.i64(metadata ![[M0:[0-9]]], i64 %v)
+name|__builtin_arm_wsr64
+argument_list|(
+literal|"1:2:3:4:5"
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|wsrp
+parameter_list|(
+name|void
+modifier|*
+name|v
+parameter_list|)
+block|{
+comment|// CHECK: [[V0:[%A-Za-z0-9.]+]] = ptrtoint i8* %v to i64
+comment|// CHECK-NEXT: call void @llvm.write_register.i64(metadata ![[M0:[0-9]]], i64 [[V0]])
+name|__builtin_arm_wsrp
+argument_list|(
+literal|"1:2:3:4:5"
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: ![[M0]] = !{!"1:2:3:4:5"}
+end_comment
+
 end_unit
 

@@ -387,11 +387,11 @@ block|{
 comment|/// \brief Never merge functions into a single line.
 name|SFS_None
 block|,
-comment|/// \brief Only merge functions defined inside a class.
-name|SFS_Inline
-block|,
 comment|/// \brief Only merge empty functions.
 name|SFS_Empty
+block|,
+comment|/// \brief Only merge functions defined inside a class. Implies "empty".
+name|SFS_Inline
 block|,
 comment|/// \brief Merge all functions fitting on a single line.
 name|SFS_All
@@ -480,6 +480,11 @@ name|bool
 name|AlwaysBreakTemplateDeclarations
 decl_stmt|;
 comment|/// \brief If \c true, always break before multiline string literals.
+comment|///
+comment|/// This flag is mean to make cases where there are multiple multiline strings
+comment|/// in a file look more consistent. Thus, it will only take effect if wrapping
+comment|/// the string at that point leads to it being indented
+comment|/// \c ContinuationIndentWidth spaces from the start of the line.
 name|bool
 name|AlwaysBreakBeforeMultilineStrings
 decl_stmt|;

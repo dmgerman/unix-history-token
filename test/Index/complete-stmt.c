@@ -59,6 +59,14 @@ comment|// RUN: c-index-test -code-completion-at=%s:6:1 %s | FileCheck -check-pr
 end_comment
 
 begin_comment
+comment|// CHECK-STMT: NotImplemented:{TypedText __nonnull} (50)
+end_comment
+
+begin_comment
+comment|// CHECK-STMT: NotImplemented:{TypedText __nullable} (50)
+end_comment
+
+begin_comment
 comment|// CHECK-STMT: NotImplemented:{TypedText char} (50)
 end_comment
 

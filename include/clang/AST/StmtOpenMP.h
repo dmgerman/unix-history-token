@@ -1067,59 +1067,55 @@ name|CondOffset
 operator|=
 literal|5
 block|,
-name|SeparatedCondOffset
+name|InitOffset
 operator|=
 literal|6
 block|,
-name|InitOffset
-operator|=
-literal|7
-block|,
 name|IncOffset
 operator|=
-literal|8
+literal|7
 block|,
 comment|// The '...End' enumerators do not correspond to child expressions - they
 comment|// specify the offset to the end (and start of the following counters/
 comment|// updates/finals arrays).
 name|DefaultEnd
 operator|=
-literal|9
+literal|8
 block|,
 comment|// The following 7 exprs are used by worksharing loops only.
 name|IsLastIterVariableOffset
 operator|=
-literal|9
+literal|8
 block|,
 name|LowerBoundVariableOffset
 operator|=
-literal|10
+literal|9
 block|,
 name|UpperBoundVariableOffset
 operator|=
-literal|11
+literal|10
 block|,
 name|StrideVariableOffset
 operator|=
-literal|12
+literal|11
 block|,
 name|EnsureUpperBoundOffset
 operator|=
-literal|13
+literal|12
 block|,
 name|NextLowerBoundOffset
 operator|=
-literal|14
+literal|13
 block|,
 name|NextUpperBoundOffset
 operator|=
-literal|15
+literal|14
 block|,
 comment|// Offset to the end (and start of the following counters/updates/finals
 comment|// arrays) for worksharing loop directives.
 name|WorksharingEnd
 operator|=
-literal|16
+literal|15
 block|,   }
 block|;
 comment|/// \brief Get the counters storage.
@@ -1472,8 +1468,6 @@ name|void
 name|setCond
 argument_list|(
 argument|Expr *Cond
-argument_list|,
-argument|Expr *SeparatedCond
 argument_list|)
 block|{
 operator|*
@@ -1488,19 +1482,6 @@ name|CondOffset
 argument_list|)
 operator|=
 name|Cond
-block|;
-operator|*
-name|std
-operator|::
-name|next
-argument_list|(
-name|child_begin
-argument_list|()
-argument_list|,
-name|SeparatedCondOffset
-argument_list|)
-operator|=
-name|SeparatedCond
 block|;   }
 name|void
 name|setInit
@@ -1820,11 +1801,6 @@ name|Expr
 operator|*
 name|Cond
 block|;
-comment|/// \brief A condition with 1 iteration separated.
-name|Expr
-operator|*
-name|SeparatedCond
-block|;
 comment|/// \brief Loop iteration variable init.
 name|Expr
 operator|*
@@ -1927,10 +1903,6 @@ name|Cond
 operator|!=
 name|nullptr
 operator|&&
-name|SeparatedCond
-operator|!=
-name|nullptr
-operator|&&
 name|Init
 operator|!=
 name|nullptr
@@ -1965,10 +1937,6 @@ operator|=
 name|nullptr
 block|;
 name|Cond
-operator|=
-name|nullptr
-block|;
-name|SeparatedCond
 operator|=
 name|nullptr
 block|;
@@ -2218,9 +2186,7 @@ block|}
 name|Expr
 operator|*
 name|getCond
-argument_list|(
-argument|bool SeparateIter
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -2245,13 +2211,7 @@ argument_list|(
 name|child_begin
 argument_list|()
 argument_list|,
-operator|(
-name|SeparateIter
-operator|?
-name|SeparatedCondOffset
-operator|:
 name|CondOffset
-operator|)
 argument_list|)
 operator|)
 operator|)
@@ -4989,6 +4949,132 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|OMPTaskwaitDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp taskgroup' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp taskgroup
+comment|/// \endcode
+comment|///
+name|class
+name|OMPTaskgroupDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|///
+name|OMPTaskgroupDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTaskgroupDirectiveClass
+argument_list|,
+argument|OMPD_taskgroup
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+name|explicit
+name|OMPTaskgroupDirective
+argument_list|()
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTaskgroupDirectiveClass
+argument_list|,
+argument|OMPD_taskgroup
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|///
+specifier|static
+name|OMPTaskgroupDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive.
+comment|///
+comment|/// \param C AST context.
+comment|///
+specifier|static
+name|OMPTaskgroupDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTaskgroupDirectiveClass
 return|;
 block|}
 expr|}

@@ -11512,6 +11512,33 @@ block|}
 end_function
 
 begin_comment
+comment|// CHECK-LABEL: test_vget_lane_f16
+end_comment
+
+begin_comment
+comment|// CHECK: vmov
+end_comment
+
+begin_function
+name|float32_t
+name|test_vget_lane_f16
+parameter_list|(
+name|float16x4_t
+name|a
+parameter_list|)
+block|{
+return|return
+name|vget_lane_f16
+argument_list|(
+name|a
+argument_list|,
+literal|1
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|// CHECK-LABEL: test_vgetq_lane_u8
 end_comment
 
@@ -11745,6 +11772,33 @@ parameter_list|)
 block|{
 return|return
 name|vgetq_lane_f32
+argument_list|(
+name|a
+argument_list|,
+literal|3
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: test_vgetq_lane_f16
+end_comment
+
+begin_comment
+comment|// CHECK: vmov
+end_comment
+
+begin_function
+name|float32_t
+name|test_vgetq_lane_f16
+parameter_list|(
+name|float16x8_t
+name|a
+parameter_list|)
+block|{
+return|return
+name|vgetq_lane_f16
 argument_list|(
 name|a
 argument_list|,
@@ -43366,6 +43420,40 @@ block|}
 end_function
 
 begin_comment
+comment|// CHECK-LABEL: test_vset_lane_f16
+end_comment
+
+begin_comment
+comment|// CHECK: mov
+end_comment
+
+begin_function
+name|float16x4_t
+name|test_vset_lane_f16
+parameter_list|(
+name|float16_t
+modifier|*
+name|a
+parameter_list|,
+name|float16x4_t
+name|b
+parameter_list|)
+block|{
+return|return
+name|vset_lane_f16
+argument_list|(
+operator|*
+name|a
+argument_list|,
+name|b
+argument_list|,
+literal|1
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|// CHECK-LABEL: test_vsetq_lane_u8
 end_comment
 
@@ -43643,6 +43731,40 @@ block|{
 return|return
 name|vsetq_lane_f32
 argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+literal|3
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: test_vsetq_lane_f16
+end_comment
+
+begin_comment
+comment|// CHECK: vmov
+end_comment
+
+begin_function
+name|float16x8_t
+name|test_vsetq_lane_f16
+parameter_list|(
+name|float16_t
+modifier|*
+name|a
+parameter_list|,
+name|float16x8_t
+name|b
+parameter_list|)
+block|{
+return|return
+name|vsetq_lane_f16
+argument_list|(
+operator|*
 name|a
 argument_list|,
 name|b

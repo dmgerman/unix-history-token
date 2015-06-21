@@ -635,5 +635,293 @@ begin_comment
 comment|// CHECK-MIPS-G: "-mllvm" "-mips-ssection-threshold=16"
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -msoft-float (unknown vendor)
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s -msoft-float 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-SOFTFLOAT %s
+end_comment
+
+begin_comment
+comment|// CHECK-SOFTFLOAT: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
+comment|// CHECK-SOFTFLOAT-NOT: "-target-feature" "+fpxx"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -msoft-float -mfpxx (unknown vendor)
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s -msoft-float -mfpxx 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-SOFTFLOAT-FPXX %s
+end_comment
+
+begin_comment
+comment|// CHECK-SOFTFLOAT-FPXX: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
+comment|// CHECK-SOFTFLOAT-FPXX: "-target-feature" "+fpxx"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -msoft-float (MTI)
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-mti-linux-gnu -### -c %s -msoft-float 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MTI-SOFTFLOAT %s
+end_comment
+
+begin_comment
+comment|// CHECK-MTI-SOFTFLOAT: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
+comment|// CHECK-MTI-SOFTFLOAT-NOT: "-target-feature" "+fpxx"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -msoft-float -mfpxx (MTI)
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-mti-linux-gnu -### -c %s -msoft-float -mfpxx 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MTI-SOFTFLOAT-FPXX %s
+end_comment
+
+begin_comment
+comment|// CHECK-MTI-SOFTFLOAT-FPXX: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
+comment|// CHECK-MTI-SOFTFLOAT-FPXX: "-target-feature" "+fpxx"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -msoft-float (IMG)
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-img-linux-gnu -### -c %s -msoft-float 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-IMG-SOFTFLOAT %s
+end_comment
+
+begin_comment
+comment|// CHECK-IMG-SOFTFLOAT: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
+comment|// CHECK-IMG-SOFTFLOAT-NOT: "-target-feature" "+fpxx"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -msoft-float -mfpxx (IMG)
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-img-linux-gnu -### -c %s -msoft-float -mfpxx 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-IMG-SOFTFLOAT-FPXX %s
+end_comment
+
+begin_comment
+comment|// CHECK-IMG-SOFTFLOAT-FPXX: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
+comment|// CHECK-IMG-SOFTFLOAT-FPXX: "-target-feature" "+fpxx"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -msingle-float (unknown vendor)
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s -msingle-float 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-SINGLEFLOAT %s
+end_comment
+
+begin_comment
+comment|// CHECK-SINGLEFLOAT: "-target-feature" "+single-float"
+end_comment
+
+begin_comment
+comment|// CHECK-SINGLEFLOAT-NOT: "-target-feature" "+fpxx"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -msingle-float -mfpxx (unknown vendor)
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s -msingle-float -mfpxx 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-SINGLEFLOAT-FPXX %s
+end_comment
+
+begin_comment
+comment|// CHECK-SINGLEFLOAT-FPXX: "-target-feature" "+single-float"
+end_comment
+
+begin_comment
+comment|// CHECK-SINGLEFLOAT-FPXX: "-target-feature" "+fpxx"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -msingle-float (MTI)
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-mti-linux-gnu -### -c %s -msingle-float 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MTI-SINGLEFLOAT %s
+end_comment
+
+begin_comment
+comment|// CHECK-MTI-SINGLEFLOAT: "-target-feature" "+single-float"
+end_comment
+
+begin_comment
+comment|// CHECK-MTI-SINGLEFLOAT-NOT: "-target-feature" "+fpxx"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -msingle-float -mfpxx (MTI)
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-mti-linux-gnu -### -c %s -msingle-float -mfpxx 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MTI-SINGLEFLOAT-FPXX %s
+end_comment
+
+begin_comment
+comment|// CHECK-MTI-SINGLEFLOAT-FPXX: "-target-feature" "+single-float"
+end_comment
+
+begin_comment
+comment|// CHECK-MTI-SINGLEFLOAT-FPXX: "-target-feature" "+fpxx"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -msingle-float (IMG)
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-img-linux-gnu -### -c %s -msingle-float 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-IMG-SINGLEFLOAT %s
+end_comment
+
+begin_comment
+comment|// CHECK-IMG-SINGLEFLOAT: "-target-feature" "+single-float"
+end_comment
+
+begin_comment
+comment|// CHECK-IMG-SINGLEFLOAT-NOT: "-target-feature" "+fpxx"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -msingle-float -mfpxx (IMG)
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-img-linux-gnu -### -c %s -msingle-float -mfpxx 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-IMG-SINGLEFLOAT-FPXX %s
+end_comment
+
+begin_comment
+comment|// CHECK-IMG-SINGLEFLOAT-FPXX: "-target-feature" "+single-float"
+end_comment
+
+begin_comment
+comment|// CHECK-IMG-SINGLEFLOAT-FPXX: "-target-feature" "+fpxx"
+end_comment
+
 end_unit
 

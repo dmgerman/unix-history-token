@@ -406,6 +406,15 @@ name|Args
 argument_list|,
 name|Filename
 argument_list|,
+name|std
+operator|::
+name|make_shared
+operator|<
+name|RawPCHContainerOperations
+operator|>
+operator|(
+operator|)
+argument_list|,
 name|VirtualMappedFiles
 argument_list|)
 condition|)

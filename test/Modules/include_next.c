@@ -8,7 +8,7 @@ comment|// RUN: %clang_cc1 -I%S/Inputs/include_next/x -I%S/Inputs/include_next/y
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -I%S/Inputs/include_next/x -I%S/Inputs/include_next/y -verify %s -fmodules -fmodules-cache-path=%t
+comment|// RUN: %clang_cc1 -I%S/Inputs/include_next/x -I%S/Inputs/include_next/y -verify %s -fmodules -fimplicit-module-maps -fmodules-cache-path=%t
 end_comment
 
 begin_comment

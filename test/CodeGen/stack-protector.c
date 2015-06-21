@@ -31,6 +31,14 @@ begin_comment
 comment|// SSPREQ: define void @test1(i8* %msg) #0 {
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -emit-llvm -o - %s -fsanitize=safe-stack | FileCheck -check-prefix=SAFESTACK %s
+end_comment
+
+begin_comment
+comment|// SAFESTACK: define void @test1(i8* %msg) #0 {
+end_comment
+
 begin_typedef
 typedef|typedef
 name|__SIZE_TYPE__
@@ -133,6 +141,10 @@ end_comment
 
 begin_comment
 comment|// SSPREQ: attributes #{{.*}} = { nounwind sspreq{{.*}} }
+end_comment
+
+begin_comment
+comment|// SAFESTACK: attributes #{{.*}} = { nounwind safestack{{.*}} }
 end_comment
 
 end_unit

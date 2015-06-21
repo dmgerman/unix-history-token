@@ -40,11 +40,11 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c++ -fmodules-cache-path=%t -fdisable-module-hash -emit-module -fmodule-name=load_failure %S/Inputs/module.map
+comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -x objective-c++ -fmodules-cache-path=%t -fdisable-module-hash -emit-module -fmodule-name=load_failure %S/Inputs/module.map
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -I %S/Inputs -fdisable-module-hash %s -DNONEXISTENT 2>&1 | FileCheck -check-prefix=CHECK-NONEXISTENT %s
+comment|// RUN: not %clang_cc1 -fmodules -fimplicit-module-maps -x objective-c -fmodules-cache-path=%t -I %S/Inputs -fdisable-module-hash %s -DNONEXISTENT 2>&1 | FileCheck -check-prefix=CHECK-NONEXISTENT %s
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ comment|// CHECK-NONEXISTENT: load_failure.c:2:9: fatal error: module 'load_none
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -I %S/Inputs -fdisable-module-hash %s -DFAILURE 2> %t.out
+comment|// RUN: not %clang_cc1 -fmodules -fimplicit-module-maps -x objective-c -fmodules-cache-path=%t -I %S/Inputs -fdisable-module-hash %s -DFAILURE 2> %t.out
 end_comment
 
 begin_comment

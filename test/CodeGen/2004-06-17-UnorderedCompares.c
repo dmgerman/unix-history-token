@@ -8,7 +8,7 @@ comment|// CHECK: @Test
 end_comment
 
 begin_comment
-comment|// CHECK-NOT: call
+comment|// CHECK-NOT: call{{ }}
 end_comment
 
 begin_decl_stmt

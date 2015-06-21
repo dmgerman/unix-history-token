@@ -16,7 +16,7 @@ comment|// RUN: cd %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x c -verify -fmodules-cache-path=%t -I include-relative %s
+comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -x c -verify -fmodules-cache-path=%t -I include-relative %s
 end_comment
 
 begin_comment

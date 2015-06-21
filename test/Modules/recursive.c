@@ -4,7 +4,7 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -I %S/Inputs %s 2>&1 | FileCheck %s
+comment|// RUN: not %clang_cc1 -fmodules -fimplicit-module-maps -x objective-c -fmodules-cache-path=%t -I %S/Inputs %s 2>&1 | FileCheck %s
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -emit-module -fmodule-name=recursive1 %S/Inputs/module.map 2>&1 | FileCheck %s
+comment|// RUN: not %clang_cc1 -fmodules -fimplicit-module-maps -x objective-c -fmodules-cache-path=%t -emit-module -fmodule-name=recursive1 %S/Inputs/module.map 2>&1 | FileCheck %s
 end_comment
 
 begin_comment

@@ -1,5 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=undefined -fsanitize-trap=undefined %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-UNDEFINED-TRAP
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=undefined -fsanitize-trap=undefined -fno-sanitize-trap=signed-integer-overflow %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-UNDEFINED-TRAP2
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=undefined -fsanitize-undefined-trap-on-error %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-UNDEFINED-TRAP
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=undefined-trap -fsanitize-undefined-trap-on-error %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-UNDEFINED-TRAP
 end_comment
 
@@ -8,11 +20,15 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize-undefined-trap-on-err
 end_comment
 
 begin_comment
-comment|// CHECK-UNDEFINED-TRAP: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift-base|shift-exponent|unreachable|return|vla-bound|alignment|null|object-size|float-cast-overflow|array-bounds|enum|bool|returns-nonnull-attribute|nonnull-attribute),?){17}"}}
+comment|// CHECK-UNDEFINED-TRAP: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift-base|shift-exponent|unreachable|return|vla-bound|alignment|null|object-size|float-cast-overflow|array-bounds|enum|bool|returns-nonnull-attribute|nonnull-attribute|function),?){18}"}}
 end_comment
 
 begin_comment
-comment|// CHECK-UNDEFINED-TRAP: "-fsanitize-undefined-trap-on-error"
+comment|// CHECK-UNDEFINED-TRAP: "-fsanitize-trap=alignment,array-bounds,bool,enum,float-cast-overflow,float-divide-by-zero,function,integer-divide-by-zero,nonnull-attribute,null,object-size,return,returns-nonnull-attribute,shift-base,shift-exponent,signed-integer-overflow,unreachable,vla-bound"
+end_comment
+
+begin_comment
+comment|// CHECK-UNDEFINED-TRAP2: "-fsanitize-trap=alignment,array-bounds,bool,enum,float-cast-overflow,float-divide-by-zero,function,integer-divide-by-zero,nonnull-attribute,null,object-size,return,returns-nonnull-attribute,shift-base,shift-exponent,unreachable,vla-bound"
 end_comment
 
 begin_comment
@@ -29,6 +45,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-UNDEFINED-DARWIN: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift-base|shift-exponent|unreachable|return|vla-bound|alignment|null|vptr|object-size|float-cast-overflow|array-bounds|enum|bool|returns-nonnull-attribute|nonnull-attribute),?){18}"}}
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-openbsd -fsanitize=undefined %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-UNDEFINED-OPENBSD
+end_comment
+
+begin_comment
+comment|// CHECK-UNDEFINED-OPENBSD: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift-base|shift-exponent|unreachable|return|vla-bound|alignment|null|object-size|float-cast-overflow|array-bounds|enum|bool|returns-nonnull-attribute|nonnull-attribute),?){17}"}}
 end_comment
 
 begin_comment
@@ -80,19 +104,15 @@ comment|// CHECK-FSANITIZE-SHIFT-PARTIAL: "-fsanitize=shift-exponent"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=undefined -fsanitize-undefined-trap-on-error %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-UNDEFINED-TRAP-ON-ERROR-UNDEF
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=vptr -fsanitize-trap=undefined %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-VPTR-TRAP-UNDEF
 end_comment
 
 begin_comment
-comment|// CHECK-UNDEFINED-TRAP-ON-ERROR-UNDEF: '-fsanitize=undefined' not allowed with '-fsanitize-undefined-trap-on-error'
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=vptr -fsanitize-undefined-trap-on-error %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-VPTR-TRAP-UNDEF
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=vptr -fsanitize-undefined-trap-on-error %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-UNDEFINED-TRAP-ON-ERROR-VPTR
-end_comment
-
-begin_comment
-comment|// CHECK-UNDEFINED-TRAP-ON-ERROR-VPTR: '-fsanitize=vptr' not allowed with '-fsanitize-undefined-trap-on-error'
+comment|// CHECK-VPTR-TRAP-UNDEF: error: invalid argument '-fsanitize=vptr' not allowed with '-fsanitize-trap=undefined'
 end_comment
 
 begin_comment
@@ -157,6 +177,38 @@ end_comment
 
 begin_comment
 comment|// CHECK-SANL-SANM: '-fsanitize=leak' not allowed with '-fsanitize=memory'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=kernel-address,thread -fno-rtti %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANKA-SANT
+end_comment
+
+begin_comment
+comment|// CHECK-SANKA-SANT: '-fsanitize=kernel-address' not allowed with '-fsanitize=thread'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=kernel-address,memory -pie -fno-rtti %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANKA-SANM
+end_comment
+
+begin_comment
+comment|// CHECK-SANKA-SANM: '-fsanitize=kernel-address' not allowed with '-fsanitize=memory'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=kernel-address,address -fno-rtti %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANKA-SANA
+end_comment
+
+begin_comment
+comment|// CHECK-SANKA-SANA: '-fsanitize=kernel-address' not allowed with '-fsanitize=address'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=kernel-address,leak -pie -fno-rtti %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANKA-SANL
+end_comment
+
+begin_comment
+comment|// CHECK-SANKA-SANL: '-fsanitize=kernel-address' not allowed with '-fsanitize=leak'
 end_comment
 
 begin_comment
@@ -556,23 +608,39 @@ comment|// CHECK-FSAN-UBSAN-DARWIN: unsupported option '-fsanitize=function' for
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=cfi -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI
+comment|// RUN: %clang -target armv7-apple-ios7 -miphoneos-version-min=7.0 -fsanitize=address %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ASAN-IOS
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=cfi-derived-cast -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-DCAST
+comment|// CHECK-ASAN-IOS: unsupported option '-fsanitize=address' for target 'arm-apple-ios7'
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=cfi-unrelated-cast -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-UCAST
+comment|// RUN: %clang -target i386-pc-openbsd -fsanitize=address %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ASAN-OPENBSD
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=cfi-nvcall -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-NVCALL
+comment|// CHECK-ASAN-OPENBSD: unsupported option '-fsanitize=address' for target 'i386-pc-openbsd'
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=cfi-vcall -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-VCALL
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=cfi -flto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=cfi-derived-cast -flto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-DCAST
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=cfi-unrelated-cast -flto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-UCAST
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -flto -fsanitize=cfi-nvcall -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-NVCALL
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -flto -fsanitize=cfi-vcall -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-VCALL
 end_comment
 
 begin_comment
@@ -593,6 +661,22 @@ end_comment
 
 begin_comment
 comment|// CHECK-CFI-VCALL: -emit-llvm-bc{{.*}}-fsanitize=cfi-vcall
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -flto -fsanitize=cfi-derived-cast -fno-lto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-NOLTO
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-NOLTO: '-fsanitize=cfi-derived-cast' only allowed with '-flto'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize-trap=address -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ASAN-TRAP
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-TRAP: error: unsupported argument 'address' to option '-fsanitize-trap'
 end_comment
 
 begin_comment
@@ -657,6 +741,46 @@ end_comment
 
 begin_comment
 comment|// CHECK-ASAN-RELEASERTL-NOT: error: invalid argument
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fno-sanitize=safe-stack -### %s 2>&1 | FileCheck %s -check-prefix=NOSP
+end_comment
+
+begin_comment
+comment|// NOSP-NOT: "-fsanitize=safe-stack"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=safe-stack -### %s 2>&1 | FileCheck %s -check-prefix=SP
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address,safe-stack -### %s 2>&1 | FileCheck %s -check-prefix=SP-ASAN
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fstack-protector -fsanitize=safe-stack -### %s 2>&1 | FileCheck %s -check-prefix=SP
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=safe-stack -fstack-protector-all -### %s 2>&1 | FileCheck %s -check-prefix=SP
+end_comment
+
+begin_comment
+comment|// SP-NOT: stack-protector
+end_comment
+
+begin_comment
+comment|// SP: "-fsanitize=safe-stack"
+end_comment
+
+begin_comment
+comment|// SP-ASAN-NOT: stack-protector
+end_comment
+
+begin_comment
+comment|// SP-ASAN: "-fsanitize=address,safe-stack"
 end_comment
 
 end_unit

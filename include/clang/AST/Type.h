@@ -7183,6 +7183,30 @@ name|isLinkageValid
 argument_list|()
 specifier|const
 block|;
+comment|/// Determine the nullability of the given type.
+comment|///
+comment|/// Note that nullability is only captured as sugar within the type
+comment|/// system, not as part of the canonical type, so nullability will
+comment|/// be lost by canonicalization and desugaring.
+name|Optional
+operator|<
+name|NullabilityKind
+operator|>
+name|getNullability
+argument_list|(
+argument|const ASTContext&context
+argument_list|)
+specifier|const
+block|;
+comment|/// Determine whether the given type can have a nullability
+comment|/// specifier applied to it, i.e., if it is any kind of pointer type
+comment|/// or a dependent type that could instantiate to any kind of
+comment|/// pointer type.
+name|bool
+name|canHaveNullability
+argument_list|()
+specifier|const
+block|;
 specifier|const
 name|char
 operator|*
@@ -13937,7 +13961,13 @@ block|,
 name|attr_sptr
 block|,
 name|attr_uptr
-block|}
+block|,
+name|attr_nonnull
+block|,
+name|attr_nullable
+block|,
+name|attr_null_unspecified
+block|,   }
 block|;
 name|private
 operator|:
@@ -14071,6 +14101,82 @@ name|bool
 name|isCallingConv
 argument_list|()
 specifier|const
+block|;
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|NullabilityKind
+operator|>
+name|getImmediateNullability
+argument_list|()
+specifier|const
+block|;
+comment|/// Retrieve the attribute kind corresponding to the given
+comment|/// nullability kind.
+specifier|static
+name|Kind
+name|getNullabilityAttrKind
+argument_list|(
+argument|NullabilityKind kind
+argument_list|)
+block|{
+switch|switch
+condition|(
+name|kind
+condition|)
+block|{
+case|case
+name|NullabilityKind
+operator|::
+name|NonNull
+case|:
+return|return
+name|attr_nonnull
+return|;
+case|case
+name|NullabilityKind
+operator|::
+name|Nullable
+case|:
+return|return
+name|attr_nullable
+return|;
+case|case
+name|NullabilityKind
+operator|::
+name|Unspecified
+case|:
+return|return
+name|attr_null_unspecified
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Unknown nullability kind."
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Strip off the top-level nullability annotation on the given
+comment|/// type, if it's there.
+comment|///
+comment|/// \param T The type to strip. If the type is exactly an
+comment|/// AttributedType specifying nullability (without looking through
+comment|/// type sugar), the nullability is returned and this type changed
+comment|/// to the underlying modified type.
+comment|///
+comment|/// \returns the top-level nullability, if present.
+specifier|static
+name|Optional
+operator|<
+name|NullabilityKind
+operator|>
+name|stripOuterNullability
+argument_list|(
+name|QualType
+operator|&
+name|T
+argument_list|)
 block|;
 name|void
 name|Profile

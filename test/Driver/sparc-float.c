@@ -28,11 +28,11 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-DEF %s
 end_comment
 
 begin_comment
-comment|// CHECK-DEF: "-target-feature" "+soft-float"
+comment|// CHECK-DEF-NOT: "-target-feature" "+soft-float"
 end_comment
 
 begin_comment
-comment|// CHECK-DEF: "-msoft-float"
+comment|// CHECK-DEF-NOT: "-msoft-float"
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-HARD %s
 end_comment
 
 begin_comment
-comment|// CHECK-HARD: "-mhard-float"
+comment|// CHECK-HARD-NOT: "-msoft-float"
 end_comment
 
 begin_comment
@@ -80,11 +80,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-SOFT %s
 end_comment
 
 begin_comment
-comment|// CHECK-SOFT: "-target-feature" "+soft-float"
-end_comment
-
-begin_comment
-comment|// CHECK-SOFT: "-msoft-float"
+comment|// CHECK-SOFT: error: unsupported option '-msoft-float'
 end_comment
 
 begin_comment
@@ -108,11 +104,11 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-DEF-SPARC64 %s
 end_comment
 
 begin_comment
-comment|// CHECK-DEF-SPARC64: "-target-feature" "+soft-float"
+comment|// CHECK-DEF-SPARC64-NOT: "-target-feature" "+soft-float"
 end_comment
 
 begin_comment
-comment|// CHECK-DEF-SPARC64: "-msoft-float"
+comment|// CHECK-DEF-SPARC64-NOT: "-msoft-float"
 end_comment
 
 begin_comment
@@ -136,7 +132,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-HARD-SPARC64 %s
 end_comment
 
 begin_comment
-comment|// CHECK-HARD-SPARC64: "-mhard-float"
+comment|// CHECK-HARD-SPARC64-NOT: "-msoft-float"
 end_comment
 
 begin_comment
@@ -160,11 +156,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-SOFT-SPARC64 %s
 end_comment
 
 begin_comment
-comment|// CHECK-SOFT-SPARC64: "-target-feature" "+soft-float"
-end_comment
-
-begin_comment
-comment|// CHECK-SOFT-SPARC64: "-msoft-float"
+comment|// CHECK-SOFT-SPARC64: error: unsupported option '-msoft-float'
 end_comment
 
 end_unit

@@ -1131,5 +1131,309 @@ begin_comment
 comment|// NOODDSPREG: -mno-odd-spreg
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -no-integrated-as -mdouble-float -msingle-float -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=SINGLEFLOAT --implicit-check-not=-mdouble-float %s
+end_comment
+
+begin_comment
+comment|// SINGLEFLOAT: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// SINGLEFLOAT: -msingle-float
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -no-integrated-as -msingle-float -mdouble-float -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=DOUBLEFLOAT --implicit-check-not=-msingle-float %s
+end_comment
+
+begin_comment
+comment|// DOUBLEFLOAT: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// DOUBLEFLOAT: -mdouble-float
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -no-integrated-as -msoft-float -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=SOFTFLOAT-IMPLICIT-FPXX --implicit-check-not=-mfpxx %s
+end_comment
+
+begin_comment
+comment|// SOFTFLOAT-IMPLICIT-FPXX: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// SOFTFLOAT-IMPLICIT-FPXX: -msoft-float
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -no-integrated-as -msoft-float -mfpxx -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=SOFTFLOAT-EXPLICIT-FPXX %s
+end_comment
+
+begin_comment
+comment|// SOFTFLOAT-EXPLICIT-FPXX: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// SOFTFLOAT-EXPLICIT-FPXX: -mfpxx
+end_comment
+
+begin_comment
+comment|// SOFTFLOAT-EXPLICIT-FPXX: -msoft-float
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-mti-linux-gnu -### -no-integrated-as -msoft-float -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MTI-SOFTFLOAT-IMPLICIT-FPXX --implicit-check-not=-mfpxx %s
+end_comment
+
+begin_comment
+comment|// MTI-SOFTFLOAT-IMPLICIT-FPXX: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// MTI-SOFTFLOAT-IMPLICIT-FPXX: -msoft-float
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-mti-linux-gnu -### -no-integrated-as -msoft-float -mfpxx -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MTI-SOFTFLOAT-EXPLICIT-FPXX %s
+end_comment
+
+begin_comment
+comment|// MTI-SOFTFLOAT-EXPLICIT-FPXX: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// MTI-SOFTFLOAT-EXPLICIT-FPXX: -mfpxx
+end_comment
+
+begin_comment
+comment|// MTI-SOFTFLOAT-EXPLICIT-FPXX: -msoft-float
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-img-linux-gnu -### -no-integrated-as -msoft-float -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=IMG-SOFTFLOAT-IMPLICIT-FPXX --implicit-check-not=-mfpxx %s
+end_comment
+
+begin_comment
+comment|// IMG-SOFTFLOAT-IMPLICIT-FPXX: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// IMG-SOFTFLOAT-IMPLICIT-FPXX: -msoft-float
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-img-linux-gnu -### -no-integrated-as -msoft-float -mfpxx -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=IMG-SOFTFLOAT-EXPLICIT-FPXX %s
+end_comment
+
+begin_comment
+comment|// IMG-SOFTFLOAT-EXPLICIT-FPXX: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// IMG-SOFTFLOAT-EXPLICIT-FPXX: -mfpxx
+end_comment
+
+begin_comment
+comment|// IMG-SOFTFLOAT-EXPLICIT-FPXX: -msoft-float
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -no-integrated-as -msingle-float -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=SINGLEFLOAT-IMPLICIT-FPXX --implicit-check-not=-mfpxx %s
+end_comment
+
+begin_comment
+comment|// SINGLEFLOAT-IMPLICIT-FPXX: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// SINGLEFLOAT-IMPLICIT-FPXX: -msingle-float
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -no-integrated-as -msingle-float -mfpxx -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=SINGLEFLOAT-EXPLICIT-FPXX %s
+end_comment
+
+begin_comment
+comment|// SINGLEFLOAT-EXPLICIT-FPXX: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// SINGLEFLOAT-EXPLICIT-FPXX: -mfpxx
+end_comment
+
+begin_comment
+comment|// SINGLEFLOAT-EXPLICIT-FPXX: -msingle-float
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-mti-linux-gnu -### -no-integrated-as -msingle-float -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MTI-SINGLEFLOAT-IMPLICIT-FPXX --implicit-check-not=-mfpxx %s
+end_comment
+
+begin_comment
+comment|// MTI-SINGLEFLOAT-IMPLICIT-FPXX: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// MTI-SINGLEFLOAT-IMPLICIT-FPXX: -msingle-float
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-mti-linux-gnu -### -no-integrated-as -msingle-float -mfpxx -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MTI-SINGLEFLOAT-EXPLICIT-FPXX %s
+end_comment
+
+begin_comment
+comment|// MTI-SINGLEFLOAT-EXPLICIT-FPXX: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// MTI-SINGLEFLOAT-EXPLICIT-FPXX: -mfpxx
+end_comment
+
+begin_comment
+comment|// MTI-SINGLEFLOAT-EXPLICIT-FPXX: -msingle-float
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-img-linux-gnu -### -no-integrated-as -msingle-float -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=IMG-SINGLEFLOAT-IMPLICIT-FPXX --implicit-check-not=-mfpxx %s
+end_comment
+
+begin_comment
+comment|// IMG-SINGLEFLOAT-IMPLICIT-FPXX: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// IMG-SINGLEFLOAT-IMPLICIT-FPXX: -msingle-float
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-img-linux-gnu -### -no-integrated-as -msingle-float -mfpxx -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=IMG-SINGLEFLOAT-EXPLICIT-FPXX %s
+end_comment
+
+begin_comment
+comment|// IMG-SINGLEFLOAT-EXPLICIT-FPXX: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// IMG-SINGLEFLOAT-EXPLICIT-FPXX: -mfpxx
+end_comment
+
+begin_comment
+comment|// IMG-SINGLEFLOAT-EXPLICIT-FPXX: -msingle-float
+end_comment
+
 end_unit
 

@@ -423,7 +423,8 @@ name|void
 name|alignConsecutiveAssignments
 parameter_list|()
 function_decl|;
-comment|/// \brief Align consecutive assignments from change \p Start to change \p End at
+comment|/// \brief Align consecutive assignments from change \p Start to change \p End
+comment|/// at
 comment|/// the specified \p Column.
 name|void
 name|alignConsecutiveAssignments

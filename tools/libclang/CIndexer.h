@@ -72,6 +72,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/PCHContainerOperations.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/ModuleLoader.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -137,10 +149,35 @@ operator|::
 name|string
 name|ResourcesPath
 expr_stmt|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+expr_stmt|;
 name|public
 label|:
 name|CIndexer
-argument_list|()
+argument_list|(
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+operator|=
+name|std
+operator|::
+name|make_shared
+operator|<
+name|RawPCHContainerOperations
+operator|>
+operator|(
+operator|)
+argument_list|)
 operator|:
 name|OnlyLocalDecls
 argument_list|(
@@ -154,9 +191,14 @@ argument_list|)
 operator|,
 name|Options
 argument_list|(
-argument|CXGlobalOpt_None
+name|CXGlobalOpt_None
 argument_list|)
-block|{ }
+operator|,
+name|PCHContainerOps
+argument_list|(
+argument|PCHContainerOps
+argument_list|)
+block|{}
 comment|/// \brief Whether we only want to see "local" declarations (that did not
 comment|/// come from a previous precompiled header). If false, we want to see all
 comment|/// declarations.
@@ -205,6 +247,20 @@ name|DisplayDiagnostics
 operator|=
 name|Display
 expr_stmt|;
+block|}
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|getPCHContainerOperations
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PCHContainerOps
+return|;
 block|}
 name|unsigned
 name|getCXGlobalOptFlags

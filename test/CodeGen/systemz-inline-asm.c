@@ -28,7 +28,7 @@ parameter_list|)
 block|{
 asm|asm("st %1, %0" : "=m" (gi) : "r" (i));
 comment|// CHECK-LABEL: define void @test_store_m(i32 zeroext %i)
-comment|// CHECK: call void asm "st $1, $0", "=*m,r"(i32* @gi, i32 %i)
+comment|// CHECK: call void asm "st $1, $0", "=*m,r"(i32* nonnull @gi, i32 %i)
 block|}
 end_function
 
@@ -43,7 +43,7 @@ parameter_list|)
 block|{
 asm|asm("st %1, %0" : "=Q" (gi) : "r" (i));
 comment|// CHECK-LABEL: define void @test_store_Q(i32 zeroext %i)
-comment|// CHECK: call void asm "st $1, $0", "=*Q,r"(i32* @gi, i32 %i)
+comment|// CHECK: call void asm "st $1, $0", "=*Q,r"(i32* nonnull @gi, i32 %i)
 block|}
 end_function
 
@@ -58,7 +58,7 @@ parameter_list|)
 block|{
 asm|asm("st %1, %0" : "=R" (gi) : "r" (i));
 comment|// CHECK-LABEL: define void @test_store_R(i32 zeroext %i)
-comment|// CHECK: call void asm "st $1, $0", "=*R,r"(i32* @gi, i32 %i)
+comment|// CHECK: call void asm "st $1, $0", "=*R,r"(i32* nonnull @gi, i32 %i)
 block|}
 end_function
 
@@ -73,7 +73,7 @@ parameter_list|)
 block|{
 asm|asm("st %1, %0" : "=S" (gi) : "r" (i));
 comment|// CHECK-LABEL: define void @test_store_S(i32 zeroext %i)
-comment|// CHECK: call void asm "st $1, $0", "=*S,r"(i32* @gi, i32 %i)
+comment|// CHECK: call void asm "st $1, $0", "=*S,r"(i32* nonnull @gi, i32 %i)
 block|}
 end_function
 
@@ -88,7 +88,7 @@ parameter_list|)
 block|{
 asm|asm("st %1, %0" : "=T" (gi) : "r" (i));
 comment|// CHECK-LABEL: define void @test_store_T(i32 zeroext %i)
-comment|// CHECK: call void asm "st $1, $0", "=*T,r"(i32* @gi, i32 %i)
+comment|// CHECK: call void asm "st $1, $0", "=*T,r"(i32* nonnull @gi, i32 %i)
 block|}
 end_function
 
@@ -106,7 +106,7 @@ return|return
 name|i
 return|;
 comment|// CHECK-LABEL: define signext i32 @test_load_m()
-comment|// CHECK: call i32 asm "l $0, $1", "=r,*m"(i32* @gi)
+comment|// CHECK: call i32 asm "l $0, $1", "=r,*m"(i32* nonnull @gi)
 block|}
 end_function
 
@@ -124,7 +124,7 @@ return|return
 name|i
 return|;
 comment|// CHECK-LABEL: define signext i32 @test_load_Q()
-comment|// CHECK: call i32 asm "l $0, $1", "=r,*Q"(i32* @gi)
+comment|// CHECK: call i32 asm "l $0, $1", "=r,*Q"(i32* nonnull @gi)
 block|}
 end_function
 
@@ -142,7 +142,7 @@ return|return
 name|i
 return|;
 comment|// CHECK-LABEL: define signext i32 @test_load_R()
-comment|// CHECK: call i32 asm "l $0, $1", "=r,*R"(i32* @gi)
+comment|// CHECK: call i32 asm "l $0, $1", "=r,*R"(i32* nonnull @gi)
 block|}
 end_function
 
@@ -160,7 +160,7 @@ return|return
 name|i
 return|;
 comment|// CHECK-LABEL: define signext i32 @test_load_S()
-comment|// CHECK: call i32 asm "l $0, $1", "=r,*S"(i32* @gi)
+comment|// CHECK: call i32 asm "l $0, $1", "=r,*S"(i32* nonnull @gi)
 block|}
 end_function
 
@@ -178,7 +178,7 @@ return|return
 name|i
 return|;
 comment|// CHECK-LABEL: define signext i32 @test_load_T()
-comment|// CHECK: call i32 asm "l $0, $1", "=r,*T"(i32* @gi)
+comment|// CHECK: call i32 asm "l $0, $1", "=r,*T"(i32* nonnull @gi)
 block|}
 end_function
 

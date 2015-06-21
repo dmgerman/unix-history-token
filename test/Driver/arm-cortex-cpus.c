@@ -1375,5 +1375,33 @@ begin_comment
 comment|// CHECK-CASE-INSENSITIVE-CPUV7A: "-cc1"{{.*}} "-triple" "armv7-{{.*}}
 end_comment
 
+begin_comment
+comment|// ================== Check whether -march accepts mixed-case values.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -march=Armv5 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CASE-INSENSITIVE-V5 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -march=ARMV5 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CASE-INSENSITIVE-V5 %s
+end_comment
+
+begin_comment
+comment|// CHECK-CASE-INSENSITIVE-V5: "-cc1"{{.*}} "-triple" "armv5-{{.*}} "-target-cpu" "arm10tdmi"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -march=Armv6t2 -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CASE-INSENSITIVE-V6T2-THUMB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -march=ARMV6T2 -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CASE-INSENSITIVE-V6T2-THUMB %s
+end_comment
+
+begin_comment
+comment|// CHECK-CASE-INSENSITIVE-V6T2-THUMB: "-cc1"{{.*}} "-triple" "thumbv6t2-{{.*}} "-target-cpu" "arm1156t2-s"
+end_comment
+
 end_unit
 

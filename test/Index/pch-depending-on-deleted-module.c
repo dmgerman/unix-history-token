@@ -14,11 +14,11 @@ comment|// RUN: mkdir %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -x c-header -fmodules -fdisable-module-hash -fmodules-cache-path=%t/modules-cache -emit-pch -I %S/Inputs/Headers -o %t/use_LibA.pch %s
+comment|// RUN: %clang_cc1 -x c-header -fmodules -fimplicit-module-maps -fdisable-module-hash -fmodules-cache-path=%t/modules-cache -emit-pch -I %S/Inputs/Headers -o %t/use_LibA.pch %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -fdisable-module-hash -fmodules-cache-path=%t/modules-cache -I %S/Inputs/Headers -verify-pch %t/use_LibA.pch
+comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -fdisable-module-hash -fmodules-cache-path=%t/modules-cache -I %S/Inputs/Headers -verify-pch %t/use_LibA.pch
 end_comment
 
 begin_comment
@@ -26,11 +26,11 @@ comment|// RUN: rm -f %t/modules-cache/LibA.pcm
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -fmodules -fdisable-module-hash -fmodules-cache-path=%t/modules-cache -I %S/Inputs/Headers -verify-pch %t/use_LibA.pch 2>&1 | FileCheck -check-prefix=VERIFY %s
+comment|// RUN: not %clang_cc1 -fmodules -fimplicit-module-maps -fdisable-module-hash -fmodules-cache-path=%t/modules-cache -I %S/Inputs/Headers -verify-pch %t/use_LibA.pch 2>&1 | FileCheck -check-prefix=VERIFY %s
 end_comment
 
 begin_comment
-comment|// RUN: not c-index-test -test-load-source all -x c -fmodules -Xclang -fdisable-module-hash -fmodules-cache-path=%t/modules-cache -I %S/Inputs/Headers -include-pch %t/use_LibA.pch %s 2>&1 | FileCheck -check-prefix=INDEX %s
+comment|// RUN: not c-index-test -test-load-source all -x c -fmodules -fimplicit-module-maps -Xclang -fdisable-module-hash -fmodules-cache-path=%t/modules-cache -I %S/Inputs/Headers -include-pch %t/use_LibA.pch %s 2>&1 | FileCheck -check-prefix=INDEX %s
 end_comment
 
 begin_comment

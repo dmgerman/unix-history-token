@@ -16,7 +16,7 @@ comment|// RUN: %clang_cc1 %s -ffreestanding -triple x86_64-apple-macosx10.9.0 -
 end_comment
 
 begin_comment
-comment|// RUN:     -fmodules -fmodules-cache-path=%t -isystem %S/Inputs/include \
+comment|// RUN:     -fmodules -fimplicit-module-maps -fmodules-cache-path=%t -isystem %S/Inputs/include \
 end_comment
 
 begin_comment

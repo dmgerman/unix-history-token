@@ -4,7 +4,7 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -fmodules-cache-path=%t -I%S/Inputs/StdDef %s -verify -fno-modules-error-recovery
+comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -fmodules-cache-path=%t -I%S/Inputs/StdDef %s -verify -fno-modules-error-recovery
 end_comment
 
 begin_include

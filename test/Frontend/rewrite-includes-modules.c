@@ -4,7 +4,7 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -fmodules-cache-path=%t -x objective-c %s -F %S/../Modules/Inputs -E -frewrite-includes -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -fmodules-cache-path=%t -x objective-c %s -F %S/../Modules/Inputs -E -frewrite-includes -o - | FileCheck %s
 end_comment
 
 begin_function_decl

@@ -4,7 +4,7 @@ comment|// This checks that we are not parsing module maps if modules are not en
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -fmodules -I %S/Inputs/unnecessary-module-map-parsing -fsyntax-only %s 2>&1 | FileCheck %s
+comment|// RUN: not %clang_cc1 -fmodules -fimplicit-module-maps -I %S/Inputs/unnecessary-module-map-parsing -fsyntax-only %s 2>&1 | FileCheck %s
 end_comment
 
 begin_comment

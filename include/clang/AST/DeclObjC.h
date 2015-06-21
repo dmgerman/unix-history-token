@@ -569,7 +569,7 @@ comment|/// in, inout, etc.
 name|unsigned
 name|objcDeclQualifier
 range|:
-literal|6
+literal|7
 decl_stmt|;
 comment|/// \brief Indicates whether this method has a related result type.
 name|unsigned
@@ -10428,6 +10428,16 @@ block|,
 name|OBJC_PR_unsafe_unretained
 operator|=
 literal|0x800
+block|,
+comment|/// Indicates that the nullability of the type was spelled with a
+comment|/// property attribute rather than a type qualifier.
+name|OBJC_PR_nullability
+operator|=
+literal|0x1000
+block|,
+name|OBJC_PR_null_resettable
+operator|=
+literal|0x2000
 comment|// Adding a property should change NumPropertyAttrsBits
 block|}
 block|;    enum
@@ -10435,7 +10445,7 @@ block|{
 comment|/// \brief Number of bits fitting all the property attributes.
 name|NumPropertyAttrsBits
 operator|=
-literal|12
+literal|14
 block|}
 block|;    enum
 name|SetterKind
@@ -10468,9 +10478,12 @@ name|SourceLocation
 name|LParenLoc
 block|;
 comment|// location of '(' starting attribute list or null.
+name|QualType
+name|DeclType
+block|;
 name|TypeSourceInfo
 operator|*
-name|DeclType
+name|DeclTypeSourceInfo
 block|;
 name|unsigned
 name|PropertyAttributes
@@ -10523,7 +10536,11 @@ argument|SourceLocation AtLocation
 argument_list|,
 argument|SourceLocation LParenLocation
 argument_list|,
-argument|TypeSourceInfo *T
+argument|QualType T
+argument_list|,
+argument|TypeSourceInfo *TSI
+argument_list|,
+argument|PropertyControl propControl
 argument_list|)
 operator|:
 name|NamedDecl
@@ -10552,6 +10569,11 @@ argument_list|(
 name|T
 argument_list|)
 block|,
+name|DeclTypeSourceInfo
+argument_list|(
+name|TSI
+argument_list|)
+block|,
 name|PropertyAttributes
 argument_list|(
 name|OBJC_PR_noattr
@@ -10564,7 +10586,7 @@ argument_list|)
 block|,
 name|PropertyImplementation
 argument_list|(
-name|None
+name|propControl
 argument_list|)
 block|,
 name|GetterName
@@ -10613,7 +10635,9 @@ argument|SourceLocation AtLocation
 argument_list|,
 argument|SourceLocation LParenLocation
 argument_list|,
-argument|TypeSourceInfo *T
+argument|QualType T
+argument_list|,
+argument|TypeSourceInfo *TSI
 argument_list|,
 argument|PropertyControl propControl = None
 argument_list|)
@@ -10673,7 +10697,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|DeclType
+name|DeclTypeSourceInfo
 return|;
 block|}
 name|QualType
@@ -10683,21 +10707,24 @@ specifier|const
 block|{
 return|return
 name|DeclType
-operator|->
-name|getType
-argument_list|()
 return|;
 block|}
 name|void
 name|setType
 argument_list|(
-argument|TypeSourceInfo *T
+argument|QualType T
+argument_list|,
+argument|TypeSourceInfo *TSI
 argument_list|)
 block|{
 name|DeclType
 operator|=
 name|T
-block|; }
+block|;
+name|DeclTypeSourceInfo
+operator|=
+name|TSI
+block|;    }
 name|PropertyAttributeKind
 name|getPropertyAttributes
 argument_list|()

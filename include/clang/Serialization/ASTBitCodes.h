@@ -2307,8 +2307,14 @@ block|,
 comment|/// \brief A DesignatedInitExpr record.
 name|EXPR_DESIGNATED_INIT
 block|,
+comment|/// \brief A DesignatedInitUpdateExpr record.
+name|EXPR_DESIGNATED_INIT_UPDATE
+block|,
 comment|/// \brief An ImplicitValueInitExpr record.
 name|EXPR_IMPLICIT_VALUE_INIT
+block|,
+comment|/// \brief An NoInitExpr record.
+name|EXPR_NO_INIT
 block|,
 comment|/// \brief A VAArgExpr record.
 name|EXPR_VA_ARG
@@ -2618,6 +2624,8 @@ block|,
 name|STMT_OMP_TARGET_DIRECTIVE
 block|,
 name|STMT_OMP_TEAMS_DIRECTIVE
+block|,
+name|STMT_OMP_TASKGROUP_DIRECTIVE
 block|,
 comment|// ARC
 name|EXPR_OBJC_BRIDGED_CAST

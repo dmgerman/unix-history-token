@@ -115,31 +115,31 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: attributes [[GENERIC_ATTR]] = { nounwind alignstack=8 {{"interrupt"[^=]}}
+comment|// CHECK: attributes [[GENERIC_ATTR]] = { {{.*}} {{"interrupt"[^=]}}
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[IRQ_ATTR]] = { nounwind alignstack=8 "interrupt"="IRQ"
+comment|// CHECK: attributes [[IRQ_ATTR]] = { {{.*}} "interrupt"="IRQ"
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[FIQ_ATTR]] = { nounwind alignstack=8 "interrupt"="FIQ"
+comment|// CHECK: attributes [[FIQ_ATTR]] = { {{.*}} "interrupt"="FIQ"
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[SWI_ATTR]] = { nounwind alignstack=8 "interrupt"="SWI"
+comment|// CHECK: attributes [[SWI_ATTR]] = { {{.*}} "interrupt"="SWI"
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[ABORT_ATTR]] = { nounwind alignstack=8 "interrupt"="ABORT"
+comment|// CHECK: attributes [[ABORT_ATTR]] = { {{.*}} "interrupt"="ABORT"
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[UNDEF_ATTR]] = { nounwind alignstack=8 "interrupt"="UNDEF"
+comment|// CHECK: attributes [[UNDEF_ATTR]] = { {{.*}} "interrupt"="UNDEF"
 end_comment
 
 begin_comment
-comment|// CHECK-APCS: attributes [[GENERIC_ATTR]] = { nounwind "interrupt"
+comment|// CHECK-APCS: attributes [[GENERIC_ATTR]] = { {{.*}} "interrupt"
 end_comment
 
 end_unit

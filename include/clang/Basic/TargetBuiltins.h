@@ -274,9 +274,9 @@ name|LastTSBuiltin
 block|}
 enum|;
 block|}
-comment|/// \brief R600 builtins
+comment|/// \brief AMDGPU builtins
 name|namespace
-name|R600
+name|AMDGPU
 block|{
 enum|enum
 block|{
@@ -303,7 +303,7 @@ parameter_list|)
 value|BI##ID,
 include|#
 directive|include
-file|"clang/Basic/BuiltinsR600.def"
+file|"clang/Basic/BuiltinsAMDGPU.def"
 name|LastTSBuiltin
 block|}
 enum|;

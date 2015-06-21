@@ -6,23 +6,6 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__POPCNT__
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"POPCNT instruction set not enabled"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|_POPCNTINTRIN_H
 end_ifndef
 
@@ -32,24 +15,28 @@ directive|define
 name|_POPCNTINTRIN_H
 end_define
 
-begin_decl_stmt
+begin_comment
+comment|/* Define the default attributes for the functions in this file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_FN_ATTRS
+value|__attribute__((__always_inline__, __nodebug__, __target__("popcnt")))
+end_define
+
+begin_function
 specifier|static
 name|__inline__
 name|int
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
+name|DEFAULT_FN_ATTRS
 name|_mm_popcnt_u32
-argument_list|(
+parameter_list|(
 name|unsigned
 name|int
 name|__A
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|__builtin_popcount
@@ -58,7 +45,7 @@ name|__A
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_ifdef
 ifdef|#
@@ -66,26 +53,19 @@ directive|ifdef
 name|__x86_64__
 end_ifdef
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|__inline__
 name|long
 name|long
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
+name|DEFAULT_FN_ATTRS
 name|_mm_popcnt_u64
-argument_list|(
+parameter_list|(
 name|unsigned
 name|long
 name|long
 name|__A
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|__builtin_popcountll
@@ -94,7 +74,7 @@ name|__A
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_endif
 endif|#
@@ -104,6 +84,12 @@ end_endif
 begin_comment
 comment|/* __x86_64__ */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DEFAULT_FN_ATTRS
+end_undef
 
 begin_endif
 endif|#

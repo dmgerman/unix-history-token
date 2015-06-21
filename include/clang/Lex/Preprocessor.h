@@ -813,6 +813,11 @@ comment|/// \#pragma clang arc_cf_code_audited begin.
 name|SourceLocation
 name|PragmaARCCFCodeAuditedLoc
 block|;
+comment|/// \brief The source location of the currently-active
+comment|/// \#pragma clang assume_nonnull begin.
+name|SourceLocation
+name|PragmaAssumeNonNullLoc
+block|;
 comment|/// \brief True if we hit the code-completion point.
 name|bool
 name|CodeCompletionReached
@@ -1705,23 +1710,32 @@ name|II
 argument_list|)
 condition|)
 block|{
-for|for
-control|(
-name|auto
-operator|*
-name|Active
-operator|:
-name|Info
-operator|->
-name|ActiveModuleMacros
-control|)
 name|Info
 operator|->
 name|OverriddenMacros
 operator|.
-name|push_back
+name|insert
 argument_list|(
-name|Active
+name|Info
+operator|->
+name|OverriddenMacros
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|Info
+operator|->
+name|ActiveModuleMacros
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Info
+operator|->
+name|ActiveModuleMacros
+operator|.
+name|end
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|Info
@@ -5752,6 +5766,57 @@ name|Loc
 parameter_list|)
 block|{
 name|PragmaARCCFCodeAuditedLoc
+operator|=
+name|Loc
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief The location of the currently-active \#pragma clang
+end_comment
+
+begin_comment
+comment|/// assume_nonnull begin.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Returns an invalid location if there is no such pragma active.
+end_comment
+
+begin_expr_stmt
+name|SourceLocation
+name|getPragmaAssumeNonNullLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PragmaAssumeNonNullLoc
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Set the location of the currently-active \#pragma clang
+end_comment
+
+begin_comment
+comment|/// assume_nonnull begin.  An invalid location ends the pragma.
+end_comment
+
+begin_function
+name|void
+name|setPragmaAssumeNonNullLoc
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
+block|{
+name|PragmaAssumeNonNullLoc
 operator|=
 name|Loc
 expr_stmt|;

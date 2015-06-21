@@ -1436,5 +1436,253 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* 10.1 Special register intrinsics */
+end_comment
+
+begin_comment
+comment|// ARM-LABEL: test_rsr
+end_comment
+
+begin_comment
+comment|// AArch64: call i64 @llvm.read_register.i64(metadata ![[M0:[0-9]]])
+end_comment
+
+begin_comment
+comment|// AArch32: call i32 @llvm.read_register.i32(metadata ![[M2:[0-9]]])
+end_comment
+
+begin_function
+name|uint32_t
+name|test_rsr
+parameter_list|()
+block|{
+ifdef|#
+directive|ifdef
+name|__ARM_32BIT_STATE
+return|return
+name|__arm_rsr
+argument_list|(
+literal|"cp1:2:c3:c4:5"
+argument_list|)
+return|;
+else|#
+directive|else
+return|return
+name|__arm_rsr
+argument_list|(
+literal|"1:2:3:4:5"
+argument_list|)
+return|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_comment
+comment|// ARM-LABEL: test_rsr64
+end_comment
+
+begin_comment
+comment|// AArch64: call i64 @llvm.read_register.i64(metadata ![[M0:[0-9]]])
+end_comment
+
+begin_comment
+comment|// AArch32: call i64 @llvm.read_register.i64(metadata ![[M3:[0-9]]])
+end_comment
+
+begin_function
+name|uint64_t
+name|test_rsr64
+parameter_list|()
+block|{
+ifdef|#
+directive|ifdef
+name|__ARM_32BIT_STATE
+return|return
+name|__arm_rsr64
+argument_list|(
+literal|"cp1:2:c3"
+argument_list|)
+return|;
+else|#
+directive|else
+return|return
+name|__arm_rsr64
+argument_list|(
+literal|"1:2:3:4:5"
+argument_list|)
+return|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_comment
+comment|// ARM-LABEL: test_rsrp
+end_comment
+
+begin_comment
+comment|// AArch64: call i64 @llvm.read_register.i64(metadata ![[M1:[0-9]]])
+end_comment
+
+begin_comment
+comment|// AArch32: call i32 @llvm.read_register.i32(metadata ![[M4:[0-9]]])
+end_comment
+
+begin_function
+name|void
+modifier|*
+name|test_rsrp
+parameter_list|()
+block|{
+return|return
+name|__arm_rsrp
+argument_list|(
+literal|"sysreg"
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// ARM-LABEL: test_wsr
+end_comment
+
+begin_comment
+comment|// AArch64: call void @llvm.write_register.i64(metadata ![[M0:[0-9]]], i64 %{{.*}})
+end_comment
+
+begin_comment
+comment|// AArch32: call void @llvm.write_register.i32(metadata ![[M2:[0-9]]], i32 %{{.*}})
+end_comment
+
+begin_function
+name|void
+name|test_wsr
+parameter_list|(
+name|uint32_t
+name|v
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|__ARM_32BIT_STATE
+name|__arm_wsr
+argument_list|(
+literal|"cp1:2:c3:c4:5"
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|__arm_wsr
+argument_list|(
+literal|"1:2:3:4:5"
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_comment
+comment|// ARM-LABEL: test_wsr64
+end_comment
+
+begin_comment
+comment|// AArch64: call void @llvm.write_register.i64(metadata ![[M0:[0-9]]], i64 %{{.*}})
+end_comment
+
+begin_comment
+comment|// AArch32: call void @llvm.write_register.i64(metadata ![[M3:[0-9]]], i64 %{{.*}})
+end_comment
+
+begin_function
+name|void
+name|test_wsr64
+parameter_list|(
+name|uint64_t
+name|v
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|__ARM_32BIT_STATE
+name|__arm_wsr64
+argument_list|(
+literal|"cp1:2:c3"
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|__arm_wsr64
+argument_list|(
+literal|"1:2:3:4:5"
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_comment
+comment|// ARM-LABEL: test_wsrp
+end_comment
+
+begin_comment
+comment|// AArch64: call void @llvm.write_register.i64(metadata ![[M1:[0-9]]], i64 %{{.*}})
+end_comment
+
+begin_comment
+comment|// AArch32: call void @llvm.write_register.i32(metadata ![[M4:[0-9]]], i32 %{{.*}})
+end_comment
+
+begin_function
+name|void
+name|test_wsrp
+parameter_list|(
+name|void
+modifier|*
+name|v
+parameter_list|)
+block|{
+name|__arm_wsrp
+argument_list|(
+literal|"sysreg"
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// AArch32: ![[M2]] = !{!"cp1:2:c3:c4:5"}
+end_comment
+
+begin_comment
+comment|// AArch32: ![[M3]] = !{!"cp1:2:c3"}
+end_comment
+
+begin_comment
+comment|// AArch32: ![[M4]] = !{!"sysreg"}
+end_comment
+
+begin_comment
+comment|// AArch64: ![[M0]] = !{!"1:2:3:4:5"}
+end_comment
+
+begin_comment
+comment|// AArch64: ![[M1]] = !{!"sysreg"}
+end_comment
+
 end_unit
 

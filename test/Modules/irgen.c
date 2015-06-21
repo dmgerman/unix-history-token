@@ -4,11 +4,11 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -emit-module -fmodule-name=irgen -triple x86_64-apple-darwin10 %S/Inputs/module.map
+comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -x objective-c -fmodules-cache-path=%t -emit-module -fmodule-name=irgen -triple x86_64-apple-darwin10 %S/Inputs/module.map
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -I %S/Inputs -triple x86_64-apple-darwin10 -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -fmodules -fimplicit-module-maps -x objective-c -fmodules-cache-path=%t -I %S/Inputs -triple x86_64-apple-darwin10 -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment

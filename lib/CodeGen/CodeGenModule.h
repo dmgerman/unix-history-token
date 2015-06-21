@@ -5123,6 +5123,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Create a bitset entry for the given vtable.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|MDTuple
+operator|*
+name|CreateVTableBitSetEntry
+argument_list|(
+argument|llvm::GlobalVariable *VTable
+argument_list|,
+argument|CharUnits Offset
+argument_list|,
+argument|const CXXRecordDecl *RD
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \breif Get the declaration of std::terminate for the platform.
 end_comment
 

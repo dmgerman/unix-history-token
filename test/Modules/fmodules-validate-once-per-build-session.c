@@ -50,11 +50,11 @@ comment|// Compile the module.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -cc1 -fmodules -fdisable-module-hash -fmodules-cache-path=%t/modules-cache -fsyntax-only -isystem %t/Inputs -fbuild-session-timestamp=1390000000 -fmodules-validate-once-per-build-session %s
+comment|// RUN: %clang_cc1 -cc1 -fmodules -fimplicit-module-maps -fdisable-module-hash -fmodules-cache-path=%t/modules-cache -fsyntax-only -isystem %t/Inputs -fbuild-session-timestamp=1390000000 -fmodules-validate-once-per-build-session %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -cc1 -fmodules -fdisable-module-hash -fmodules-cache-path=%t/modules-cache-user -fsyntax-only -I %t/Inputs -fbuild-session-timestamp=1390000000 -fmodules-validate-once-per-build-session %s
+comment|// RUN: %clang_cc1 -cc1 -fmodules -fimplicit-module-maps -fdisable-module-hash -fmodules-cache-path=%t/modules-cache-user -fsyntax-only -I %t/Inputs -fbuild-session-timestamp=1390000000 -fmodules-validate-once-per-build-session %s
 end_comment
 
 begin_comment
@@ -82,11 +82,11 @@ comment|// Use it, and make sure that we did not recompile it.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -cc1 -fmodules -fdisable-module-hash -fmodules-cache-path=%t/modules-cache -fsyntax-only -isystem %t/Inputs -fbuild-session-timestamp=1390000000 -fmodules-validate-once-per-build-session %s
+comment|// RUN: %clang_cc1 -cc1 -fmodules -fimplicit-module-maps -fdisable-module-hash -fmodules-cache-path=%t/modules-cache -fsyntax-only -isystem %t/Inputs -fbuild-session-timestamp=1390000000 -fmodules-validate-once-per-build-session %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -cc1 -fmodules -fdisable-module-hash -fmodules-cache-path=%t/modules-cache-user -fsyntax-only -I %t/Inputs -fbuild-session-timestamp=1390000000 -fmodules-validate-once-per-build-session %s
+comment|// RUN: %clang_cc1 -cc1 -fmodules -fimplicit-module-maps -fdisable-module-hash -fmodules-cache-path=%t/modules-cache-user -fsyntax-only -I %t/Inputs -fbuild-session-timestamp=1390000000 -fmodules-validate-once-per-build-session %s
 end_comment
 
 begin_comment
@@ -138,11 +138,11 @@ comment|// system header, even though the sources changed.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -cc1 -fmodules -fdisable-module-hash -fmodules-cache-path=%t/modules-cache -fsyntax-only -isystem %t/Inputs -fbuild-session-timestamp=1390000000 -fmodules-validate-once-per-build-session %s
+comment|// RUN: %clang_cc1 -cc1 -fmodules -fimplicit-module-maps -fdisable-module-hash -fmodules-cache-path=%t/modules-cache -fsyntax-only -isystem %t/Inputs -fbuild-session-timestamp=1390000000 -fmodules-validate-once-per-build-session %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -cc1 -fmodules -fdisable-module-hash -fmodules-cache-path=%t/modules-cache-user -fsyntax-only -I %t/Inputs -fbuild-session-timestamp=1390000000 -fmodules-validate-once-per-build-session %s
+comment|// RUN: %clang_cc1 -cc1 -fmodules -fimplicit-module-maps -fdisable-module-hash -fmodules-cache-path=%t/modules-cache-user -fsyntax-only -I %t/Inputs -fbuild-session-timestamp=1390000000 -fmodules-validate-once-per-build-session %s
 end_comment
 
 begin_comment
@@ -182,7 +182,7 @@ comment|// Recompile the module if the today's date is before 01 January 2030.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -cc1 -fmodules -fdisable-module-hash -fmodules-cache-path=%t/modules-cache -fsyntax-only -isystem %t/Inputs -fbuild-session-timestamp=1893456000 -fmodules-validate-once-per-build-session %s
+comment|// RUN: %clang_cc1 -cc1 -fmodules -fimplicit-module-maps -fdisable-module-hash -fmodules-cache-path=%t/modules-cache -fsyntax-only -isystem %t/Inputs -fbuild-session-timestamp=1893456000 -fmodules-validate-once-per-build-session %s
 end_comment
 
 begin_comment

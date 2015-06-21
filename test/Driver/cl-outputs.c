@@ -767,21 +767,5 @@ begin_comment
 comment|// FioRACE2: "-o" "foo.x"
 end_comment
 
-begin_comment
-comment|// RUN: %clang_cl /c /GL -### -- %s 2>&1 | FileCheck -check-prefix=LTO-DEFAULT %s
-end_comment
-
-begin_comment
-comment|// LTO-DEFAULT: "-emit-llvm-bc"{{.*}}"-o" "cl-outputs.obj"
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cl /c /GL /Fofoo -### -- %s 2>&1 | FileCheck -check-prefix=LTO-FO %s
-end_comment
-
-begin_comment
-comment|// LTO-FO: "-emit-llvm-bc"{{.*}}"-o" "foo.obj"
-end_comment
-
 end_unit
 

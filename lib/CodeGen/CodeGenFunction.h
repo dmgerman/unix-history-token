@@ -6135,6 +6135,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_enum
+enum|enum
+name|CFITypeCheckKind
+block|{
+name|CFITCK_VCall
+block|,
+name|CFITCK_NVCall
+block|,
+name|CFITCK_DerivedCast
+block|,
+name|CFITCK_UnrelatedCast
+block|,   }
+enum|;
+end_enum
+
 begin_comment
 comment|/// \brief Derived is the presumed address of an object of type T after a
 end_comment
@@ -6162,6 +6177,12 @@ name|Derived
 argument_list|,
 name|bool
 name|MayBeNull
+argument_list|,
+name|CFITypeCheckKind
+name|TCK
+argument_list|,
+name|SourceLocation
+name|Loc
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -6188,6 +6209,12 @@ operator|::
 name|Value
 operator|*
 name|VTable
+argument_list|,
+name|CFITypeCheckKind
+name|TCK
+argument_list|,
+name|SourceLocation
+name|Loc
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -6214,6 +6241,12 @@ operator|::
 name|Value
 operator|*
 name|VTable
+argument_list|,
+name|CFITypeCheckKind
+name|TCK
+argument_list|,
+name|SourceLocation
+name|Loc
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -10757,7 +10790,7 @@ comment|/// it is the last iteration of the loop code in associated directive, o
 end_comment
 
 begin_comment
-comment|/// 'i1 false' otherwise.
+comment|/// 'i1 false' otherwise. If this item is nullptr, no final check is required.
 end_comment
 
 begin_decl_stmt
@@ -10774,6 +10807,8 @@ operator|::
 name|Value
 operator|*
 name|IsLastIterCond
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -10844,6 +10879,34 @@ name|EmitOMPReductionClauseFinal
 parameter_list|(
 specifier|const
 name|OMPExecutableDirective
+modifier|&
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit initial code for linear variables. Creates private copies
+end_comment
+
+begin_comment
+comment|/// and initializes them with the values according to OpenMP standard.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param D Directive (possibly) with the 'linear' clause.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitOMPLinearClauseInit
+parameter_list|(
+specifier|const
+name|OMPLoopDirective
 modifier|&
 name|D
 parameter_list|)
@@ -11044,6 +11107,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|EmitOMPTaskgroupDirective
+parameter_list|(
+specifier|const
+name|OMPTaskgroupDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|EmitOMPFlushDirective
 parameter_list|(
 specifier|const
@@ -11211,12 +11286,19 @@ parameter_list|(
 specifier|const
 name|OMPLoopDirective
 modifier|&
-name|Directive
-parameter_list|,
-name|bool
-name|SeparateIter
-init|=
-name|false
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitOMPSimdInit
+parameter_list|(
+specifier|const
+name|OMPLoopDirective
+modifier|&
+name|D
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11228,7 +11310,7 @@ parameter_list|(
 specifier|const
 name|OMPLoopDirective
 modifier|&
-name|S
+name|D
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13791,7 +13873,7 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|EmitR600BuiltinExpr
+name|EmitAMDGPUBuiltinExpr
 argument_list|(
 argument|unsigned BuiltinID
 argument_list|,

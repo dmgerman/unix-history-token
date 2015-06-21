@@ -15,28 +15,22 @@ directive|define
 name|__AMMINTRIN_H
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__SSE4A__
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"SSE4A instruction set not enabled"
-end_error
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<pmmintrin.h>
 end_include
+
+begin_comment
+comment|/* Define the default attributes for the functions in this file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_FN_ATTRS
+value|__attribute__((__always_inline__, __nodebug__, __target__("sse4a")))
+end_define
 
 begin_comment
 comment|/// \brief Extracts the specified bits from the lower 64 bits of the 128-bit
@@ -241,26 +235,19 @@ begin_comment
 comment|///    from the source operand.
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|__inline__
 name|__m128i
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
+name|DEFAULT_FN_ATTRS
 name|_mm_extract_si64
-argument_list|(
+parameter_list|(
 name|__m128i
 name|__x
-argument_list|,
+parameter_list|,
 name|__m128i
 name|__y
-argument_list|)
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -280,7 +267,7 @@ name|__y
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/// \brief Inserts bits of a specified length from the source integer vector
@@ -551,26 +538,19 @@ begin_comment
 comment|///    are undefined.
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|__inline__
 name|__m128i
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
+name|DEFAULT_FN_ATTRS
 name|_mm_insert_si64
-argument_list|(
+parameter_list|(
 name|__m128i
 name|__x
-argument_list|,
+parameter_list|,
 name|__m128i
 name|__y
-argument_list|)
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -590,7 +570,7 @@ name|__y
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/// \brief Stores a 64-bit double-precision value in a 64-bit memory location.
@@ -652,27 +632,20 @@ begin_comment
 comment|///    be stored.
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|__inline__
 name|void
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
+name|DEFAULT_FN_ATTRS
 name|_mm_stream_sd
-argument_list|(
+parameter_list|(
 name|double
-operator|*
+modifier|*
 name|__p
-argument_list|,
+parameter_list|,
 name|__m128d
 name|__a
-argument_list|)
+parameter_list|)
 block|{
 name|__builtin_ia32_movntsd
 argument_list|(
@@ -685,7 +658,7 @@ name|__a
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/// \brief Stores a 32-bit single-precision floating-point value in a 32-bit
@@ -747,27 +720,20 @@ begin_comment
 comment|///    be stored.
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|__inline__
 name|void
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
+name|DEFAULT_FN_ATTRS
 name|_mm_stream_ss
-argument_list|(
+parameter_list|(
 name|float
-operator|*
+modifier|*
 name|__p
-argument_list|,
+parameter_list|,
 name|__m128
 name|__a
-argument_list|)
+parameter_list|)
 block|{
 name|__builtin_ia32_movntss
 argument_list|(
@@ -780,16 +746,13 @@ name|__a
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __SSE4A__ */
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|DEFAULT_FN_ATTRS
+end_undef
 
 begin_endif
 endif|#

@@ -4,7 +4,7 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -x objective-c -fmodules -fmodules-cache-path=%t -I %S/Inputs/exclude-header %s -verify
+comment|// RUN: %clang_cc1 -x objective-c -fmodules -fimplicit-module-maps -fmodules-cache-path=%t -I %S/Inputs/exclude-header %s -verify
 end_comment
 
 begin_decl_stmt

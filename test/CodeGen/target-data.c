@@ -531,5 +531,29 @@ begin_comment
 comment|// SPIR64: target datalayout = "e-i64:64-v16:16-v24:32-v32:32-v48:64-v96:128-v192:256-v256:256-v512:512-v1024:1024"
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple bpfel -o - -emit-llvm %s | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s -check-prefix=BPFEL
+end_comment
+
+begin_comment
+comment|// BPFEL: target datalayout = "e-m:e-p:64:64-i64:64-n32:64-S128"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple bpfeb -o - -emit-llvm %s | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s -check-prefix=BPFEB
+end_comment
+
+begin_comment
+comment|// BPFEB: target datalayout = "E-m:e-p:64:64-i64:64-n32:64-S128"
+end_comment
+
 end_unit
 

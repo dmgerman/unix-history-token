@@ -290,6 +290,16 @@ block|,
 comment|// Call to kmp_int32 __kmpc_omp_taskwait(ident_t *loc, kmp_int32
 comment|// global_tid);
 name|OMPRTL__kmpc_omp_taskwait
+block|,
+comment|// Call to void __kmpc_taskgroup(ident_t *loc, kmp_int32 global_tid);
+name|OMPRTL__kmpc_taskgroup
+block|,
+comment|// Call to void __kmpc_end_taskgroup(ident_t *loc, kmp_int32 global_tid);
+name|OMPRTL__kmpc_end_taskgroup
+block|,
+comment|// Call to void __kmpc_push_proc_bind(ident_t *loc, kmp_int32 global_tid,
+comment|// int proc_bind);
+name|OMPRTL__kmpc_push_proc_bind
 block|,   }
 enum|;
 comment|/// \brief Values for bit flags used in the ident_t to describe the fields.
@@ -973,6 +983,26 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
+comment|/// \brief Emit a taskgroup region.
+comment|/// \param TaskgroupOpGen Generator for the statement associated with the
+comment|/// given taskgroup region.
+name|virtual
+name|void
+name|emitTaskgroupRegion
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|RegionCodeGenTy
+modifier|&
+name|TaskgroupOpGen
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
 comment|/// \brief Emits a single region.
 comment|/// \param SingleOpGen Generator for the statement associated with the given
 comment|/// single region.
@@ -1027,7 +1057,7 @@ argument_list|)
 decl_stmt|;
 comment|/// \brief Emit an ordered region.
 comment|/// \param OrderedOpGen Generator for the statement associated with the given
-comment|/// critical region.
+comment|/// ordered region.
 name|virtual
 name|void
 name|emitOrderedRegion
@@ -1278,6 +1308,23 @@ name|SourceLocation
 name|Loc
 argument_list|)
 decl_stmt|;
+comment|/// \brief Emit call to void __kmpc_push_proc_bind(ident_t *loc, kmp_int32
+comment|/// global_tid, int proc_bind) to generate code for 'proc_bind' clause.
+name|virtual
+name|void
+name|emitProcBindClause
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|OpenMPProcBindClauseKind
+name|ProcBind
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
 comment|/// \brief Returns address of the threadprivate variable for the current
 comment|/// thread.
 comment|/// \param VD Threadprivate variable.
@@ -1581,6 +1628,9 @@ name|ReductionOps
 argument_list|,
 name|bool
 name|WithNowait
+argument_list|,
+name|bool
+name|SimpleReduction
 argument_list|)
 decl_stmt|;
 comment|/// \brief Emit code for 'taskwait' directive.

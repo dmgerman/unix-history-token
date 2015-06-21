@@ -285,6 +285,7 @@ name|y
 operator|=
 literal|2.0
 block|,
+comment|// expected-note 2 {{previous initialization is here}}
 index|[
 literal|4
 operator|...
@@ -302,6 +303,7 @@ name|y
 operator|=
 literal|4.0
 block|}
+comment|// expected-warning 2 {{subobject initialization overrides initialization of other fields within its enclosing subobject}}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -974,7 +976,7 @@ block|,
 literal|2
 block|}
 block|,
-comment|// expected-note{{previous initialization is here}}
+comment|// expected-note 2 {{previous initialization is here}}
 index|[
 literal|0
 index|]
@@ -1014,6 +1016,7 @@ operator|.
 name|b
 operator|=
 literal|8
+comment|// expected-warning{{subobject initialization overrides initialization of other fields within its enclosing subobject}}
 block|}
 decl_stmt|;
 block|}
@@ -2005,7 +2008,7 @@ literal|2
 index|]
 operator|=
 literal|'x'
-comment|// expected-warning{{initializer overrides prior initialization of this subobject}}
+comment|// expected-warning{{subobject initialization overrides initialization of other fields}}
 block|}
 struct|;
 end_struct
@@ -2036,6 +2039,68 @@ block|,
 literal|1
 block|}
 block|,
+comment|// expected-note{{previous initialization is here}}
+index|[
+literal|0
+index|]
+operator|.
+name|L
+index|[
+literal|4
+index|]
+operator|=
+literal|'x'
+comment|// expected-warning{{subobject initialization overrides initialization of other fields}}
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|overwrite_string_struct
+name|overwrite_string3
+index|[]
+init|=
+block|{
+literal|"foo"
+block|,
+literal|1
+block|,
+comment|// expected-note{{previous initialization is here}}
+index|[
+literal|0
+index|]
+operator|.
+name|L
+index|[
+literal|4
+index|]
+operator|=
+literal|'x'
+comment|// expected-warning{{subobject initialization overrides initialization of other fields}}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|overwrite_string_struct
+name|overwrite_string4
+index|[]
+init|=
+block|{
+block|{
+block|{
+literal|'f'
+block|,
+literal|'o'
+block|,
+literal|'o'
+block|}
+block|,
+literal|1
+block|}
+block|,
 index|[
 literal|0
 index|]
@@ -2048,8 +2113,8 @@ operator|=
 literal|'x'
 comment|// no-warning
 block|}
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
