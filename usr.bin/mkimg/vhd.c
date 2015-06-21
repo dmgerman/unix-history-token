@@ -196,14 +196,15 @@ decl_stmt|;
 define|#
 directive|define
 name|VHD_CREATOR_VERSION
-value|0x00010000
+value|0x00020000
 name|uint32_t
 name|creator_os
 decl_stmt|;
 define|#
 directive|define
 name|VHD_CREATOR_OS
-value|0x46425344
+value|0x5769326b
+comment|/* Wi2k */
 name|uint64_t
 name|original_size
 decl_stmt|;
