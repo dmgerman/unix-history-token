@@ -5313,7 +5313,7 @@ index|]
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Try to perform most checks without a lock.  If this succeeds we 	 * can skip acquiring the lock and return success. 	 */
+comment|/* 	 * Try to perform most checks without a lock.  If this succeeds we 	 * can skip acquiring the lock and return success.  Otherwise we redo 	 * the check with the lock held to handle races with concurrent updates. 	 */
 name|w1
 operator|=
 name|plock
@@ -5332,13 +5332,30 @@ name|w
 argument_list|)
 condition|)
 return|return;
-comment|/* 	 * Check for duplicate locks of the same type.  Note that we only 	 * have to check for this on the last lock we just acquired.  Any 	 * other cases will be caught as lock order violations. 	 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
 name|w_mtx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|witness_lock_order_check
+argument_list|(
+name|w1
+argument_list|,
+name|w
+argument_list|)
+condition|)
+block|{
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|w_mtx
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|witness_lock_order_add
 argument_list|(
 name|w1
@@ -5346,6 +5363,7 @@ argument_list|,
 name|w
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Check for duplicate locks of the same type.  Note that we only 	 * have to check for this on the last lock we just acquired.  Any 	 * other cases will be caught as lock order violations. 	 */
 if|if
 condition|(
 name|w1
@@ -9278,6 +9296,21 @@ operator|)
 operator|)
 condition|)
 block|{
+comment|/* Don't squawk if we're potentially racing with an update. */
+if|if
+condition|(
+operator|!
+name|mtx_owned
+argument_list|(
+operator|&
+name|w_mtx
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|printf
 argument_list|(
 literal|"%s: rmatrix mismatch between %s (index %d) and %s "
