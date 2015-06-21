@@ -1058,7 +1058,7 @@ init|=
 literal|39
 block|,
 comment|// RESUME:     [opval]
-name|FUNC_CODE_INST_LANDINGPAD
+name|FUNC_CODE_INST_LANDINGPAD_OLD
 init|=
 literal|40
 block|,
@@ -1096,6 +1096,11 @@ literal|46
 block|,
 comment|// CMPXCHG: [ptrty,ptr,valty,cmp,new, align,
 comment|//           vol,ordering,synchscope]
+name|FUNC_CODE_INST_LANDINGPAD
+init|=
+literal|47
+block|,
+comment|// LANDINGPAD: [ty,val,num,id0,val0...]
 block|}
 enum|;
 enum|enum
@@ -1287,7 +1292,11 @@ block|,
 name|ATTR_KIND_CONVERGENT
 init|=
 literal|43
-block|}
+block|,
+name|ATTR_KIND_SAFESTACK
+init|=
+literal|44
+block|,   }
 enum|;
 enum|enum
 name|ComdatSelectionKindCodes
@@ -1314,12 +1323,12 @@ literal|5
 block|,   }
 enum|;
 block|}
-comment|// End bitc namespace
+comment|// namespace bitc
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

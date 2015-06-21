@@ -344,14 +344,13 @@ name|enableJoinGlobalCopies
 argument_list|()
 decl|const
 empty_stmt|;
-comment|/// \brief True if the subtarget should run PostMachineScheduler.
+comment|/// True if the subtarget should run a scheduler after register allocation.
 comment|///
-comment|/// This only takes effect if the target has configured the
-comment|/// PostMachineScheduler pass to run, or if the global cl::opt flag,
-comment|/// MISchedPostRA, is set.
+comment|/// By default this queries the PostRAScheduling bit in the scheduling model
+comment|/// which is the preferred way to influence this.
 name|virtual
 name|bool
-name|enablePostMachineScheduler
+name|enablePostRAScheduler
 argument_list|()
 decl|const
 empty_stmt|;
@@ -514,7 +513,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

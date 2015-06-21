@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCExpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -148,16 +142,6 @@ name|MCSection
 modifier|*
 name|AbsolutePseudoSection
 decl_stmt|;
-comment|/// Name - The name of the symbol.  The referred-to string data is actually
-comment|/// held by the StringMap that lives in MCContext.
-specifier|const
-name|StringMapEntry
-operator|<
-name|bool
-operator|>
-operator|*
-name|Name
-expr_stmt|;
 comment|/// If a symbol has a Fragment, the section is implied, so we only need
 comment|/// one pointer.
 comment|/// FIXME: We might be able to simplify this by having the asm streamer create
@@ -227,12 +211,27 @@ name|IsPrivateExtern
 range|:
 literal|1
 decl_stmt|;
+comment|/// True if this symbol is named.
+comment|/// A named symbol will have a pointer to the name allocated in the bytes
+comment|/// immediately prior to the MCSymbol.
+name|unsigned
+name|HasName
+range|:
+literal|1
+decl_stmt|;
 comment|/// LLVM RTTI discriminator. This is actually a SymbolKind enumerator, but is
 comment|/// unsigned to avoid sign extension and achieve better bitpacking with MSVC.
 name|unsigned
 name|Kind
 range|:
 literal|2
+decl_stmt|;
+comment|/// True if we have created a relocation that uses this symbol.
+name|mutable
+name|unsigned
+name|IsUsedInReloc
+range|:
+literal|1
 decl_stmt|;
 comment|/// Index field, for use by the object file implementation.
 name|mutable
@@ -281,6 +280,27 @@ name|friend
 name|class
 name|MCContext
 decl_stmt|;
+comment|/// \brief The name for a symbol.
+comment|/// MCSymbol contains a uint64_t so is probably aligned to 8.  On a 32-bit
+comment|/// system, the name is a pointer so isn't going to satisfy the 8 byte
+comment|/// alignment of uint64_t.  Account for that here.
+typedef|typedef
+union|union
+block|{
+specifier|const
+name|StringMapEntry
+operator|<
+name|bool
+operator|>
+operator|*
+name|NameEntry
+expr_stmt|;
+name|uint64_t
+name|AlignmentPadding
+decl_stmt|;
+block|}
+name|NameEntryStorageTy
+typedef|;
 name|MCSymbol
 argument_list|(
 argument|SymbolKind Kind
@@ -290,11 +310,6 @@ argument_list|,
 argument|bool isTemporary
 argument_list|)
 block|:
-name|Name
-argument_list|(
-name|Name
-argument_list|)
-operator|,
 name|Value
 argument_list|(
 name|nullptr
@@ -330,17 +345,106 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|HasName
+argument_list|(
+operator|!
+operator|!
+name|Name
+argument_list|)
+operator|,
 name|Kind
 argument_list|(
-argument|Kind
+name|Kind
+argument_list|)
+operator|,
+name|IsUsedInReloc
+argument_list|(
+argument|false
 argument_list|)
 block|{
 name|Offset
 operator|=
 literal|0
-block|;   }
+block|;
+if|if
+condition|(
+name|Name
+condition|)
+name|getNameEntryPtr
+argument_list|()
+operator|=
+name|Name
+expr_stmt|;
+block|}
+comment|// Provide custom new/delete as we will only allocate space for a name
+comment|// if we need one.
+name|void
+modifier|*
+name|operator
+name|new
+argument_list|(
+name|size_t
+name|s
+argument_list|,
+specifier|const
+name|StringMapEntry
+operator|<
+name|bool
+operator|>
+operator|*
+name|Name
+argument_list|,
+name|MCContext
+operator|&
+name|Ctx
+argument_list|)
+decl_stmt|;
 name|private
-operator|:
+label|:
+name|void
+name|operator
+name|delete
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/// \brief Placement delete - required by std, but never called.
+name|void
+name|operator
+name|delete
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|unsigned
+parameter_list|)
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Constructor throws?"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Placement delete - required by std, but never called.
+name|void
+name|operator
+name|delete
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|unsigned
+parameter_list|,
+name|bool
+parameter_list|)
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Constructor throws?"
+argument_list|)
+expr_stmt|;
+block|}
 name|MCSymbol
 argument_list|(
 specifier|const
@@ -431,6 +535,75 @@ name|findAssociatedSection
 argument_list|()
 return|;
 block|}
+comment|/// \brief Get a reference to the name field.  Requires that we have a name
+specifier|const
+name|StringMapEntry
+operator|<
+name|bool
+operator|>
+operator|*
+operator|&
+name|getNameEntryPtr
+argument_list|()
+block|{
+name|assert
+argument_list|(
+name|HasName
+operator|&&
+literal|"Name is required"
+argument_list|)
+block|;
+name|NameEntryStorageTy
+operator|*
+name|Name
+operator|=
+name|reinterpret_cast
+operator|<
+name|NameEntryStorageTy
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+block|;
+return|return
+operator|(
+operator|*
+operator|(
+name|Name
+operator|-
+literal|1
+operator|)
+operator|)
+operator|.
+name|NameEntry
+return|;
+block|}
+specifier|const
+name|StringMapEntry
+operator|<
+name|bool
+operator|>
+operator|*
+operator|&
+name|getNameEntryPtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|MCSymbol
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getNameEntryPtr
+argument_list|()
+return|;
+block|}
 name|public
 label|:
 comment|/// getName - Get the symbol name.
@@ -439,17 +612,26 @@ name|getName
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+operator|!
+name|HasName
+condition|)
 return|return
-name|Name
-operator|?
-name|Name
+name|StringRef
+argument_list|()
+return|;
+return|return
+name|getNameEntryPtr
+argument_list|()
 operator|->
 name|first
 argument_list|()
-operator|:
-literal|""
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|bool
 name|isRegistered
 argument_list|()
@@ -459,6 +641,9 @@ return|return
 name|IsRegistered
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|setIsRegistered
 argument_list|(
@@ -472,9 +657,42 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
+name|void
+name|setUsedInReloc
+argument_list|()
+specifier|const
+block|{
+name|IsUsedInReloc
+operator|=
+name|true
+block|; }
+name|bool
+name|isUsedInReloc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsUsedInReloc
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \name Accessors
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_comment
 comment|/// isTemporary - Check if this is an assembler temporary symbol.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isTemporary
 argument_list|()
@@ -484,7 +702,13 @@ return|return
 name|IsTemporary
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isUsed - Check if this is used.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isUsed
 argument_list|()
@@ -494,6 +718,9 @@ return|return
 name|IsUsed
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|setUsed
 argument_list|(
@@ -507,7 +734,13 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Check if this symbol is redefinable.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isRedefinable
 argument_list|()
@@ -517,7 +750,13 @@ return|return
 name|IsRedefinable
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Mark this symbol as redefinable.
+end_comment
+
+begin_function
 name|void
 name|setRedefinable
 parameter_list|(
@@ -530,7 +769,13 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Prepare this symbol to be redefined.
+end_comment
+
+begin_function
 name|void
 name|redefineIfPossible
 parameter_list|()
@@ -554,12 +799,33 @@ name|false
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/// @}
+end_comment
+
+begin_comment
 comment|/// \name Associated Sections
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_comment
 comment|/// isDefined - Check if this symbol is defined (i.e., it has an address).
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Defined symbols are either absolute or in some section.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isDefined
 argument_list|()
@@ -572,8 +838,17 @@ operator|!=
 name|nullptr
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isInSection - Check if this symbol is defined in some section (i.e., it
+end_comment
+
+begin_comment
 comment|/// is defined but not absolute).
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isInSection
 argument_list|()
@@ -588,7 +863,13 @@ name|isAbsolute
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isUndefined - Check if this symbol undefined (i.e., implicitly defined).
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isUndefined
 argument_list|()
@@ -600,7 +881,13 @@ name|isDefined
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isAbsolute - Check if this is an absolute symbol.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isAbsolute
 argument_list|()
@@ -613,7 +900,13 @@ operator|==
 name|AbsolutePseudoSection
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Get the section associated with a defined, non-absolute symbol.
+end_comment
+
+begin_expr_stmt
 name|MCSection
 operator|&
 name|getSection
@@ -634,7 +927,13 @@ name|getSectionPtr
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Mark the symbol as defined in the section \p S.
+end_comment
+
+begin_function
 name|void
 name|setSection
 parameter_list|(
@@ -674,7 +973,13 @@ operator|&
 name|S
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// Mark the symbol as undefined.
+end_comment
+
+begin_function
 name|void
 name|setUndefined
 parameter_list|()
@@ -684,6 +989,9 @@ operator|=
 name|nullptr
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|isELF
 argument_list|()
@@ -695,6 +1003,9 @@ operator|==
 name|SymbolKindELF
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isCOFF
 argument_list|()
@@ -706,6 +1017,9 @@ operator|==
 name|SymbolKindCOFF
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isMachO
 argument_list|()
@@ -717,10 +1031,25 @@ operator|==
 name|SymbolKindMachO
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// @}
+end_comment
+
+begin_comment
 comment|/// \name Variable Symbols
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_comment
 comment|/// isVariable - Check if this is a variable symbol.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isVariable
 argument_list|()
@@ -732,7 +1061,13 @@ operator|!=
 name|nullptr
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getVariableValue() - Get the value for variable symbols.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|MCExpr
 operator|*
@@ -756,6 +1091,9 @@ return|return
 name|Value
 return|;
 block|}
+end_expr_stmt
+
+begin_function_decl
 name|void
 name|setVariableValue
 parameter_list|(
@@ -765,8 +1103,17 @@ modifier|*
 name|Value
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// @}
+end_comment
+
+begin_comment
 comment|/// Get the (implementation defined) index.
+end_comment
+
+begin_expr_stmt
 name|uint32_t
 name|getIndex
 argument_list|()
@@ -776,7 +1123,13 @@ return|return
 name|Index
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Set the (implementation defined) index.
+end_comment
+
+begin_decl_stmt
 name|void
 name|setIndex
 argument_list|(
@@ -790,6 +1143,9 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|uint64_t
 name|getOffset
 argument_list|()
@@ -806,6 +1162,9 @@ return|return
 name|Offset
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setOffset
 parameter_list|(
@@ -825,7 +1184,13 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// Return the size of a 'common' symbol.
+end_comment
+
+begin_expr_stmt
 name|uint64_t
 name|getCommonSize
 argument_list|()
@@ -843,10 +1208,25 @@ return|return
 name|CommonSize
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Mark this symbol as being 'common'.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param Size - The size of the symbol.
+end_comment
+
+begin_comment
 comment|/// \param Align - The alignment of the symbol.
+end_comment
+
+begin_function
 name|void
 name|setCommon
 parameter_list|(
@@ -874,7 +1254,13 @@ operator|=
 name|Align
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|///  Return the alignment of a 'common' symbol.
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|getCommonAlignment
 argument_list|()
@@ -892,11 +1278,29 @@ return|return
 name|CommonAlign
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Declare this symbol as being 'common'.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param Size - The size of the symbol.
+end_comment
+
+begin_comment
 comment|/// \param Align - The alignment of the symbol.
+end_comment
+
+begin_comment
 comment|/// \return True if symbol was already declared as a different type
+end_comment
+
+begin_function
 name|bool
 name|declareCommon
 parameter_list|(
@@ -950,7 +1354,13 @@ return|return
 name|false
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// Is this a 'common' symbol.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isCommon
 argument_list|()
@@ -963,6 +1373,9 @@ operator|-
 literal|1U
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|MCFragment
 operator|*
 name|getFragment
@@ -981,6 +1394,9 @@ operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|setFragment
 argument_list|(
@@ -995,6 +1411,9 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|bool
 name|isExternal
 argument_list|()
@@ -1004,6 +1423,9 @@ return|return
 name|IsExternal
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|setExternal
 argument_list|(
@@ -1017,6 +1439,9 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|bool
 name|isPrivateExtern
 argument_list|()
@@ -1026,6 +1451,9 @@ return|return
 name|IsPrivateExtern
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setPrivateExtern
 parameter_list|(
@@ -1038,7 +1466,13 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// print - Print the value to the stream \p OS.
+end_comment
+
+begin_decl_stmt
 name|void
 name|print
 argument_list|(
@@ -1053,15 +1487,30 @@ name|MAI
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// dump - Print the value to stderr.
+end_comment
+
+begin_expr_stmt
 name|void
 name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|protected
 label|:
+end_label
+
+begin_comment
 comment|/// Get the (implementation defined) symbol flags.
+end_comment
+
+begin_expr_stmt
 name|uint32_t
 name|getFlags
 argument_list|()
@@ -1071,7 +1520,13 @@ return|return
 name|Flags
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Set the (implementation defined) symbol flags.
+end_comment
+
+begin_decl_stmt
 name|void
 name|setFlags
 argument_list|(
@@ -1085,7 +1540,13 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Modify the flags via a mask
+end_comment
+
+begin_decl_stmt
 name|void
 name|modifyFlags
 argument_list|(
@@ -1109,14 +1570,10 @@ operator||
 name|Value
 expr_stmt|;
 block|}
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_expr_stmt
+unit|};
 specifier|inline
 name|raw_ostream
 operator|&

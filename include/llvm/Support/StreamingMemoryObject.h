@@ -96,9 +96,13 @@ name|public
 operator|:
 name|StreamingMemoryObject
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|DataStreamer
-operator|*
-name|streamer
+operator|>
+name|Streamer
 argument_list|)
 block|;
 name|uint64_t
@@ -352,6 +356,10 @@ parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

@@ -668,6 +668,36 @@ return|return
 name|nullptr
 return|;
 block|}
+specifier|const
+name|GlobalValue
+modifier|*
+name|getSymbolGV
+parameter_list|(
+name|uint32_t
+name|index
+parameter_list|)
+block|{
+if|if
+condition|(
+name|index
+operator|<
+name|_symbols
+operator|.
+name|size
+argument_list|()
+condition|)
+return|return
+name|_symbols
+index|[
+name|index
+index|]
+operator|.
+name|symbol
+return|;
+return|return
+name|nullptr
+return|;
+block|}
 comment|/// Get the number of dependent libraries
 name|uint32_t
 name|getDependentLibraryCount
@@ -966,6 +996,10 @@ block|}
 struct|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

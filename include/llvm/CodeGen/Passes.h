@@ -1282,6 +1282,13 @@ name|char
 modifier|&
 name|MachineCSEID
 decl_stmt|;
+comment|/// ImplicitNullChecks - This pass folds null pointer checks into nearby
+comment|/// memory operations.
+specifier|extern
+name|char
+modifier|&
+name|ImplicitNullChecksID
+decl_stmt|;
 comment|/// MachineLICM - This pass performs LICM on machine instructions.
 specifier|extern
 name|char
@@ -1472,7 +1479,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_comment

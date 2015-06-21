@@ -276,11 +276,6 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// Emit a DW_OP_stack_value
-name|void
-name|AddOpStackValue
-parameter_list|()
-function_decl|;
 comment|/// Emit a signed constant.
 name|void
 name|AddSignedConstant
@@ -479,6 +474,10 @@ block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

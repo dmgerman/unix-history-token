@@ -364,8 +364,13 @@ comment|// 128-bit MSA
 block|}
 enum|;
 block|}
+comment|// namespace Mips
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

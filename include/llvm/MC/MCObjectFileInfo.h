@@ -82,9 +82,6 @@ name|class
 name|MCSection
 decl_stmt|;
 name|class
-name|StringRef
-decl_stmt|;
-name|class
 name|MCObjectFileInfo
 block|{
 name|protected
@@ -318,6 +315,11 @@ name|MCSection
 modifier|*
 name|StackMapSection
 decl_stmt|;
+comment|/// FaultMap section.
+name|MCSection
+modifier|*
+name|FaultMapSection
+decl_stmt|;
 comment|/// EH frame section.
 comment|///
 comment|/// It is initialized on demand so it can be overwritten (with uniquing).
@@ -446,7 +448,9 @@ label|:
 name|void
 name|InitMCObjectFileInfo
 argument_list|(
-name|StringRef
+specifier|const
+name|Triple
+operator|&
 name|TT
 argument_list|,
 name|Reloc
@@ -464,6 +468,13 @@ operator|&
 name|ctx
 argument_list|)
 decl_stmt|;
+name|LLVM_ATTRIBUTE_DEPRECATED
+argument_list|(
+argument|void InitMCObjectFileInfo(StringRef TT, Reloc::Model RM,                                 CodeModel::Model CM, MCContext&ctx)
+argument_list|,
+literal|"StringRef GNU Triple argument replaced by a llvm::Triple object"
+argument_list|)
+empty_stmt|;
 name|bool
 name|getSupportsWeakOmittedEHFrame
 argument_list|()
@@ -896,6 +907,16 @@ specifier|const
 block|{
 return|return
 name|StackMapSection
+return|;
+block|}
+name|MCSection
+operator|*
+name|getFaultMapSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FaultMapSection
 return|;
 block|}
 comment|// ELF specific sections.

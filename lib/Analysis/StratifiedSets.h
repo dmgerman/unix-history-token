@@ -2963,8 +2963,12 @@ return|;
 block|}
 end_decl_stmt
 
-begin_endif
+begin_comment
 unit|}; }
+comment|// namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif

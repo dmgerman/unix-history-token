@@ -305,7 +305,9 @@ name|MCRelocationInfo
 modifier|*
 name|createMCRelocationInfo
 parameter_list|(
-name|StringRef
+specifier|const
+name|Triple
+modifier|&
 name|TT
 parameter_list|,
 name|MCContext
@@ -464,7 +466,9 @@ modifier|*
 name|MCSubtargetInfoCtorFnTy
 function_decl|)
 parameter_list|(
-name|StringRef
+specifier|const
+name|Triple
+modifier|&
 name|TT
 parameter_list|,
 name|StringRef
@@ -559,7 +563,9 @@ name|MCRegisterInfo
 operator|&
 name|MRI
 operator|,
-name|StringRef
+specifier|const
+name|Triple
+operator|&
 name|TT
 operator|,
 name|StringRef
@@ -810,18 +816,20 @@ argument_list|)
 argument_list|;   typedef
 name|MCRelocationInfo
 operator|*
-operator|(
-operator|*
+call|(
+modifier|*
 name|MCRelocationInfoCtorTy
-operator|)
-operator|(
-name|StringRef
+call|)
+argument_list|(
+specifier|const
+name|Triple
+operator|&
 name|TT
-operator|,
+argument_list|,
 name|MCContext
 operator|&
 name|Ctx
-operator|)
+argument_list|)
 argument_list|;   typedef
 name|MCSymbolizer
 operator|*
@@ -1273,7 +1281,7 @@ return|;
 block|}
 comment|/// createMCSubtargetInfo - Create a MCSubtargetInfo implementation.
 comment|///
-comment|/// \param Triple This argument is used to determine the target machine
+comment|/// \param TheTriple This argument is used to determine the target machine
 comment|/// feature set; it should always be provided. Generally this should be
 comment|/// either the target triple from the module, or the target triple of the
 comment|/// host if that does not exist.
@@ -1285,7 +1293,7 @@ modifier|*
 name|createMCSubtargetInfo
 argument_list|(
 name|StringRef
-name|Triple
+name|TheTriple
 argument_list|,
 name|StringRef
 name|CPU
@@ -1307,6 +1315,9 @@ return|return
 name|MCSubtargetInfoCtorFn
 argument_list|(
 name|Triple
+argument_list|(
+name|TheTriple
+argument_list|)
 argument_list|,
 name|CPU
 argument_list|,
@@ -1400,7 +1411,7 @@ return|;
 block|}
 comment|/// createMCAsmBackend - Create a target specific assembly parser.
 comment|///
-comment|/// \param Triple The target triple string.
+comment|/// \param TheTriple The target triple string.
 name|MCAsmBackend
 modifier|*
 name|createMCAsmBackend
@@ -1411,7 +1422,7 @@ operator|&
 name|MRI
 argument_list|,
 name|StringRef
-name|Triple
+name|TheTriple
 argument_list|,
 name|StringRef
 name|CPU
@@ -1435,6 +1446,9 @@ argument_list|,
 name|MRI
 argument_list|,
 name|Triple
+argument_list|(
+name|TheTriple
+argument_list|)
 argument_list|,
 name|CPU
 argument_list|)
@@ -2078,7 +2092,10 @@ decl_stmt|;
 return|return
 name|Fn
 argument_list|(
+name|Triple
+argument_list|(
 name|TT
+argument_list|)
 argument_list|,
 name|Ctx
 argument_list|)
@@ -4480,7 +4497,7 @@ name|MCSubtargetInfo
 operator|*
 name|Allocator
 argument_list|(
-argument|StringRef
+argument|const Triple&
 comment|/*TT*/
 argument_list|,
 argument|StringRef
@@ -4642,7 +4659,10 @@ name|TargetMachineImpl
 argument_list|(
 name|T
 argument_list|,
+name|Triple
+argument_list|(
 name|TT
+argument_list|)
 argument_list|,
 name|CPU
 argument_list|,
@@ -4724,7 +4744,7 @@ argument|const Target&T
 argument_list|,
 argument|const MCRegisterInfo&MRI
 argument_list|,
-argument|StringRef Triple
+argument|const Triple&TheTriple
 argument_list|,
 argument|StringRef CPU
 argument_list|)
@@ -4737,7 +4757,7 @@ name|T
 argument_list|,
 name|MRI
 argument_list|,
-name|Triple
+name|TheTriple
 argument_list|,
 name|CPU
 argument_list|)
@@ -5002,8 +5022,12 @@ return|;
 block|}
 end_expr_stmt
 
-begin_endif
+begin_comment
 unit|}; }
+comment|// namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif

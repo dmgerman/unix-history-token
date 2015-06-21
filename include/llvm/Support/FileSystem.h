@@ -2644,6 +2644,7 @@ name|CurrentEntry
 block|;   }
 decl_stmt|;
 block|}
+comment|// namespace detail
 comment|/// directory_iterator - Iterates through the entries in path. There is no
 comment|/// operator++ because we need an error_code. If it's really needed we can make
 comment|/// it call report_fatal_error on error.
@@ -2956,6 +2957,10 @@ block|;   }
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace detail
+end_comment
 
 begin_comment
 comment|/// recursive_directory_iterator - Same as directory_iterator except for it

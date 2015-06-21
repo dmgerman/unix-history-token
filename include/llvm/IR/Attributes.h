@@ -300,6 +300,9 @@ comment|///< Stack protection required.
 name|StackProtectStrong
 block|,
 comment|///< Strong Stack protection.
+name|SafeStack
+block|,
+comment|///< Safe Stack protection.
 name|StructRet
 block|,
 comment|///< Hidden pointer to structure to return
@@ -2041,7 +2044,7 @@ end_comment
 
 begin_comment
 unit|}
-comment|// end llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

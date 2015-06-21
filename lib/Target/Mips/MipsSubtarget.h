@@ -363,7 +363,7 @@ name|public
 operator|:
 comment|/// This overrides the PostRAScheduler bit in the SchedModel for each CPU.
 name|bool
-name|enablePostMachineScheduler
+name|enablePostRAScheduler
 argument_list|()
 specifier|const
 name|override
@@ -428,7 +428,7 @@ comment|/// This constructor initializes the data members to match that
 comment|/// of the specified triple.
 name|MipsSubtarget
 argument_list|(
-argument|const std::string&TT
+argument|const Triple&TT
 argument_list|,
 argument|const std::string&CPU
 argument_list|,
@@ -1140,7 +1140,7 @@ block|; }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

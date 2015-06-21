@@ -473,6 +473,7 @@ name|TOC_ENTRY
 block|}
 enum|;
 block|}
+comment|// namespace PPCISD
 comment|/// Define some predicates that are used for node matching.
 name|namespace
 name|PPC
@@ -646,6 +647,7 @@ name|N
 parameter_list|)
 function_decl|;
 block|}
+comment|// namespace PPC
 name|class
 name|PPCTargetLowering
 range|:
@@ -3003,8 +3005,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif

@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/FaultMaps.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/StackMaps.h"
 end_include
 
@@ -107,6 +113,9 @@ name|Subtarget
 block|;
 name|StackMaps
 name|SM
+block|;
+name|FaultMaps
+name|FM
 block|;
 name|void
 name|GenerateExportDirective
@@ -289,6 +298,19 @@ name|MCIL
 argument_list|)
 block|;
 name|void
+name|LowerFAULTING_LOAD_OP
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|X86MCInstLower
+operator|&
+name|MCIL
+argument_list|)
+block|;
+name|void
 name|LowerTlsAddr
 argument_list|(
 name|X86MCInstLower
@@ -332,6 +354,12 @@ argument_list|)
 argument_list|)
 block|,
 name|SM
+argument_list|(
+operator|*
+name|this
+argument_list|)
+block|,
+name|FM
 argument_list|(
 operator|*
 name|this

@@ -880,6 +880,7 @@ name|Suld3DV4I32Zero
 block|}
 enum|;
 block|}
+comment|// namespace NVPTXISD
 name|class
 name|NVPTXSubtarget
 decl_stmt|;

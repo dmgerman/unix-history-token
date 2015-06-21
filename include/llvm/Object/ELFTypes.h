@@ -707,6 +707,14 @@ operator|>
 operator|::
 name|st_other
 block|;
+name|using
+name|Elf_Sym_Base
+operator|<
+name|ELFT
+operator|>
+operator|::
+name|st_value
+block|;
 comment|// These accessors and mutators correspond to the ELF32_ST_BIND,
 comment|// ELF32_ST_TYPE, and ELF32_ST_INFO macros defined in the ELF specification:
 name|unsigned
@@ -731,6 +739,18 @@ return|return
 name|st_info
 operator|&
 literal|0x0f
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|uint64_t
+name|getValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|st_value
 return|;
 block|}
 end_expr_stmt
@@ -921,21 +941,6 @@ return|return
 operator|!
 name|isUndefined
 argument_list|()
-operator|&&
-operator|!
-operator|(
-name|st_shndx
-operator|>=
-name|ELF
-operator|::
-name|SHN_LORESERVE
-operator|&&
-name|st_shndx
-operator|<
-name|ELF
-operator|::
-name|SHN_ABS
-operator|)
 return|;
 block|}
 end_expr_stmt
@@ -990,18 +995,14 @@ name|isReserved
 argument_list|()
 specifier|const
 block|{
+comment|// ELF::SHN_HIRESERVE is 0xffff so st_shndx<= ELF::SHN_HIRESERVE is always
+comment|// true and some compilers warn about it.
 return|return
 name|st_shndx
-operator|>
+operator|>=
 name|ELF
 operator|::
-name|SHN_HIOS
-operator|&&
-name|st_shndx
-operator|<
-name|ELF
-operator|::
-name|SHN_ABS
+name|SHN_LORESERVE
 return|;
 block|}
 end_expr_stmt

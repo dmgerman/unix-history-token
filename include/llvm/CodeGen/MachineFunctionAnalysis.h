@@ -73,6 +73,9 @@ name|class
 name|MachineFunction
 decl_stmt|;
 name|class
+name|MachineFunctionInitializer
+decl_stmt|;
+name|class
 name|TargetMachine
 decl_stmt|;
 comment|/// MachineFunctionAnalysis - This class is a Pass that manages a
@@ -97,6 +100,10 @@ block|;
 name|unsigned
 name|NextFnNum
 block|;
+name|MachineFunctionInitializer
+operator|*
+name|MFInitializer
+block|;
 name|public
 operator|:
 specifier|static
@@ -110,6 +117,10 @@ specifier|const
 name|TargetMachine
 operator|&
 name|tm
+argument_list|,
+name|MachineFunctionInitializer
+operator|*
+name|MFInitializer
 argument_list|)
 block|;
 operator|~
@@ -174,7 +185,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

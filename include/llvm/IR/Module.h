@@ -1640,10 +1640,7 @@ name|GlobalList
 return|;
 block|}
 specifier|static
-name|iplist
-operator|<
-name|GlobalVariable
-operator|>
+name|GlobalListType
 name|Module
 operator|::
 operator|*
@@ -1682,10 +1679,7 @@ name|FunctionList
 return|;
 block|}
 specifier|static
-name|iplist
-operator|<
-name|Function
-operator|>
+name|FunctionListType
 name|Module
 operator|::
 operator|*
@@ -1724,10 +1718,7 @@ name|AliasList
 return|;
 block|}
 specifier|static
-name|iplist
-operator|<
-name|GlobalAlias
-operator|>
+name|AliasListType
 name|Module
 operator|::
 operator|*
@@ -1766,10 +1757,7 @@ name|NamedMDList
 return|;
 block|}
 specifier|static
-name|ilist
-operator|<
-name|NamedMDNode
-operator|>
+name|NamedMDListType
 name|Module
 operator|::
 operator|*
@@ -2476,7 +2464,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

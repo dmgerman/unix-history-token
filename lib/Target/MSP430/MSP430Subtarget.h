@@ -160,9 +160,7 @@ comment|///
 name|MSP430Subtarget
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|Triple
 operator|&
 name|TT
 argument_list|,
@@ -278,7 +276,7 @@ block|; }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

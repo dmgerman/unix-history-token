@@ -136,7 +136,7 @@ literal|5
 block|}
 enum|;
 block|}
-comment|// end namespace X86;
+comment|// namespace X86
 comment|/// X86II - This namespace holds all of the target specific flags that
 comment|/// instruction info tracks.
 comment|///
@@ -389,7 +389,7 @@ name|RawFrmDst
 init|=
 literal|9
 block|,
-comment|/// RawFrmSrc - This form is for instructions that use the the source index
+comment|/// RawFrmSrc - This form is for instructions that use the source index
 comment|/// register SI/ESI/ERI with a possible segment override, and also the
 comment|/// destination index register DI/ESI/RDI.
 name|RawFrmDstSrc
@@ -2731,11 +2731,12 @@ operator|)
 return|;
 block|}
 block|}
+comment|// namespace X86II
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace llvm;
+comment|// namespace llvm
 end_comment
 
 begin_endif

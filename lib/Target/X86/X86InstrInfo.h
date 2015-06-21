@@ -106,6 +106,37 @@ name|class
 name|X86Subtarget
 decl_stmt|;
 name|namespace
+name|MachineCombinerPattern
+block|{
+enum|enum
+name|MC_PATTERN
+enum|:
+name|int
+block|{
+comment|// These are commutative variants for reassociating a computation chain
+comment|// of the form:
+comment|//   B = A op X (Prev)
+comment|//   C = B op Y (Root)
+name|MC_REASSOC_AX_BY
+init|=
+literal|0
+block|,
+name|MC_REASSOC_AX_YB
+init|=
+literal|1
+block|,
+name|MC_REASSOC_XA_BY
+init|=
+literal|2
+block|,
+name|MC_REASSOC_XA_YB
+init|=
+literal|3
+block|,     }
+enum|;
+block|}
+comment|// end namespace MachineCombinerPattern
+name|namespace
 name|X86
 block|{
 comment|// X86 specific condition code. These correspond to X86_*_COND in
@@ -250,7 +281,7 @@ name|CC
 parameter_list|)
 function_decl|;
 block|}
-comment|// end namespace X86;
+comment|// namespace X86
 comment|/// isGlobalStubReference - Return true if the specified TargetFlag operand is
 comment|/// a reference to a stub for a global, not the global itself.
 specifier|inline
@@ -729,6 +760,43 @@ name|void
 name|anchor
 parameter_list|()
 function_decl|;
+name|bool
+name|AnalyzeBranchImpl
+argument_list|(
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|,
+name|MachineBasicBlock
+operator|*
+operator|&
+name|TBB
+argument_list|,
+name|MachineBasicBlock
+operator|*
+operator|&
+name|FBB
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|MachineOperand
+operator|>
+operator|&
+name|Cond
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|MachineInstr
+operator|*
+operator|>
+operator|&
+name|CondBranches
+argument_list|,
+name|bool
+name|AllowModify
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -1063,6 +1131,50 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+name|bool
+name|getMemOpBaseRegImmOfs
+argument_list|(
+name|MachineInstr
+operator|*
+name|LdSt
+argument_list|,
+name|unsigned
+operator|&
+name|BaseReg
+argument_list|,
+name|unsigned
+operator|&
+name|Offset
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|bool
+name|AnalyzeBranchPredicate
+argument_list|(
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|,
+name|TargetInstrInfo
+operator|::
+name|MachineBranchPredicate
+operator|&
+name|MBP
+argument_list|,
+name|bool
+name|AllowModify
+operator|=
+name|false
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 name|unsigned
 name|RemoveBranch
 argument_list|(
@@ -1088,12 +1200,10 @@ name|MachineBasicBlock
 operator|*
 name|FBB
 argument_list|,
-specifier|const
-name|SmallVectorImpl
+name|ArrayRef
 operator|<
 name|MachineOperand
 operator|>
-operator|&
 name|Cond
 argument_list|,
 name|DebugLoc
@@ -1109,12 +1219,10 @@ specifier|const
 name|MachineBasicBlock
 operator|&
 argument_list|,
-specifier|const
-name|SmallVectorImpl
+name|ArrayRef
 operator|<
 name|MachineOperand
 operator|>
-operator|&
 name|Cond
 argument_list|,
 name|unsigned
@@ -1151,12 +1259,10 @@ argument_list|,
 name|unsigned
 name|DstReg
 argument_list|,
-specifier|const
-name|SmallVectorImpl
+name|ArrayRef
 operator|<
 name|MachineOperand
 operator|>
-operator|&
 name|Cond
 argument_list|,
 name|unsigned
@@ -1865,9 +1971,9 @@ name|bool
 name|hasHighOperandLatency
 argument_list|(
 specifier|const
-name|InstrItineraryData
-operator|*
-name|ItinData
+name|TargetSchedModel
+operator|&
+name|SchedModel
 argument_list|,
 specifier|const
 name|MachineRegisterInfo
@@ -1889,6 +1995,80 @@ name|UseMI
 argument_list|,
 name|unsigned
 name|UseIdx
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|bool
+name|useMachineCombiner
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// Return true when there is potentially a faster code sequence
+comment|/// for an instruction chain ending in<Root>. All potential patterns are
+comment|/// output in the<Pattern> array.
+name|bool
+name|getMachineCombinerPatterns
+argument_list|(
+name|MachineInstr
+operator|&
+name|Root
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|MachineCombinerPattern
+operator|::
+name|MC_PATTERN
+operator|>
+operator|&
+name|P
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+comment|/// When getMachineCombinerPatterns() finds a pattern, this function generates
+comment|/// the instructions that could replace the original code sequence.
+name|void
+name|genAlternativeCodeSequence
+argument_list|(
+name|MachineInstr
+operator|&
+name|Root
+argument_list|,
+name|MachineCombinerPattern
+operator|::
+name|MC_PATTERN
+name|P
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|MachineInstr
+operator|*
+operator|>
+operator|&
+name|InsInstrs
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|MachineInstr
+operator|*
+operator|>
+operator|&
+name|DelInstrs
+argument_list|,
+name|DenseMap
+operator|<
+name|unsigned
+argument_list|,
+name|unsigned
+operator|>
+operator|&
+name|InstrIdxForVirtReg
 argument_list|)
 decl|const
 name|override
@@ -2042,7 +2222,7 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

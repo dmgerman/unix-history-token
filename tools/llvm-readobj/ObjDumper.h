@@ -161,6 +161,11 @@ name|void
 name|printMipsABIFlags
 parameter_list|()
 block|{ }
+name|virtual
+name|void
+name|printMipsReginfo
+parameter_list|()
+block|{ }
 comment|// Only implemented for PE/COFF.
 name|virtual
 name|void

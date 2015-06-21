@@ -243,7 +243,7 @@ name|M
 block|; }
 decl_stmt|;
 block|}
-comment|// End legacy namespace
+comment|// namespace legacy
 comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
 name|DEFINE_STDCXX_CONVERSION_FUNCTIONS
 argument_list|(
@@ -255,7 +255,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

@@ -274,6 +274,14 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|void
+name|adjustStackMapLiveOutMask
+argument_list|(
+argument|uint32_t *Mask
+argument_list|)
+specifier|const
+name|override
+block|;
 name|bool
 name|hasBasePointer
 argument_list|(
@@ -391,7 +399,7 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

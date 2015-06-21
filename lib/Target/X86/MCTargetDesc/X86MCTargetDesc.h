@@ -193,13 +193,18 @@ operator|::
 name|string
 name|ParseX86Triple
 argument_list|(
-argument|StringRef TT
+specifier|const
+name|Triple
+operator|&
+name|TT
 argument_list|)
 expr_stmt|;
 name|unsigned
 name|getDwarfRegFlavour
 parameter_list|(
+specifier|const
 name|Triple
+modifier|&
 name|TT
 parameter_list|,
 name|bool
@@ -220,7 +225,9 @@ name|MCSubtargetInfo
 modifier|*
 name|createX86MCSubtargetInfo
 parameter_list|(
-name|StringRef
+specifier|const
+name|Triple
+modifier|&
 name|TT
 parameter_list|,
 name|StringRef
@@ -231,6 +238,7 @@ name|FS
 parameter_list|)
 function_decl|;
 block|}
+comment|// namespace X86_MC
 name|MCCodeEmitter
 modifier|*
 name|createX86MCCodeEmitter
@@ -264,7 +272,9 @@ name|MCRegisterInfo
 modifier|&
 name|MRI
 parameter_list|,
-name|StringRef
+specifier|const
+name|Triple
+modifier|&
 name|TT
 parameter_list|,
 name|StringRef
@@ -285,7 +295,9 @@ name|MCRegisterInfo
 modifier|&
 name|MRI
 parameter_list|,
-name|StringRef
+specifier|const
+name|Triple
+modifier|&
 name|TT
 parameter_list|,
 name|StringRef
@@ -395,7 +407,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_comment

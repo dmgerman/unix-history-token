@@ -221,6 +221,14 @@ comment|/// the symbol for the label and the frame index of the stack allocation
 name|FRAME_ALLOC
 init|=
 literal|21
+block|,
+comment|/// Loading instruction that may page fault, bundled with associated
+comment|/// information on how to handle such a page fault.  It is intended to support
+comment|/// "zero cost" null checks in managed languages by allowing LLVM to fold
+comment|/// comparisions into existing memory operations.
+name|FAULTING_LOAD_OP
+init|=
+literal|22
 block|, }
 enum|;
 block|}

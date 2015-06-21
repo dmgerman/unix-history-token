@@ -1258,16 +1258,21 @@ name|Encoding
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Emit the 4-byte offset of Label from the start of its section.  This can
-comment|/// be done with a special directive if the target supports it (e.g. cygwin)
-comment|/// or by emitting it as an offset from a label at the start of the section.
+comment|/// Emit a reference to a symbol for use in dwarf. Different object formats
+comment|/// represent this in different ways. Some use a relocation others encode
+comment|/// the label offset in its section.
 name|void
-name|emitSectionOffset
+name|emitDwarfSymbolReference
 argument_list|(
 specifier|const
 name|MCSymbol
 operator|*
 name|Label
+argument_list|,
+name|bool
+name|ForceOffset
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1275,7 +1280,7 @@ comment|/// Emit the 4-byte offset of a string from the start of its section.
 comment|///
 comment|/// When possible, emit a DwarfStringPool section offset without any
 comment|/// relocations, and without using the symbol.  Otherwise, defers to \a
-comment|/// emitSectionOffset().
+comment|/// emitDwarfSymbolReference().
 name|void
 name|emitDwarfStringOffset
 argument_list|(
@@ -1643,8 +1648,12 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif

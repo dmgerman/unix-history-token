@@ -178,7 +178,7 @@ name|ImmutableCallSite
 name|CS
 argument_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 operator|&
 name|Loc
 argument_list|)
@@ -275,7 +275,7 @@ name|ImmutableCallSite
 name|CS
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -286,7 +286,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End of llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

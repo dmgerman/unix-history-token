@@ -351,7 +351,7 @@ return|;
 block|}
 comment|/// \brief Clear unused high order bits
 comment|///
-comment|/// This method is used internally to clear the to "N" bits in the high order
+comment|/// This method is used internally to clear the top "N" bits in the high order
 comment|/// word that are not used by the APInt. This is needed after the most
 comment|/// significant word is assigned a value to ensure that those bits are
 comment|/// zero'd out.
@@ -3233,7 +3233,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Performs a bitwise or on *this and RHS. This is implemented bny simply
+comment|/// Performs a bitwise or on *this and RHS. This is implemented by simply
 end_comment
 
 begin_comment
@@ -9008,7 +9008,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End of APIntOps namespace
+comment|// namespace APIntOps
 end_comment
 
 begin_comment
@@ -9033,7 +9033,7 @@ end_function_decl
 
 begin_comment
 unit|}
-comment|// End of llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

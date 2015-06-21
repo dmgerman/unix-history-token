@@ -341,7 +341,7 @@ name|N
 parameter_list|)
 function_decl|;
 block|}
-comment|// end llvm:ISD namespace
+comment|// namespace ISD
 comment|//===----------------------------------------------------------------------===//
 comment|/// Unlike LLVM values, Selection DAG nodes may return multiple
 comment|/// values as the result of a computation.  Many nodes return multiple values,
@@ -5089,6 +5089,31 @@ name|ISD
 operator|::
 name|SHL
 case|:
+case|case
+name|ISD
+operator|::
+name|FADD
+case|:
+case|case
+name|ISD
+operator|::
+name|FDIV
+case|:
+case|case
+name|ISD
+operator|::
+name|FMUL
+case|:
+case|case
+name|ISD
+operator|::
+name|FREM
+case|:
+case|case
+name|ISD
+operator|::
+name|FSUB
+case|:
 return|return
 name|true
 return|;
@@ -5133,6 +5158,8 @@ argument_list|,
 argument|SDValue X
 argument_list|,
 argument|SDValue Y
+argument_list|,
+argument|const SDNodeFlags&NodeFlags
 argument_list|)
 operator|:
 name|BinarySDNode
@@ -5151,7 +5178,9 @@ name|Y
 argument_list|)
 block|,
 name|Flags
-argument_list|()
+argument_list|(
+argument|NodeFlags
+argument_list|)
 block|{}
 specifier|static
 name|bool
@@ -11297,11 +11326,13 @@ operator|::
 name|UNINDEXED
 return|;
 block|}
-expr|}  }
+expr|}
+comment|// namespace ISD
+expr|}
 end_decl_stmt
 
 begin_comment
-comment|// end llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

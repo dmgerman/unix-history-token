@@ -1261,6 +1261,11 @@ name|bool
 name|ShowColors
 operator|=
 name|true
+argument_list|,
+name|bool
+name|ShowKindLabel
+operator|=
+name|true
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1273,7 +1278,7 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// end llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

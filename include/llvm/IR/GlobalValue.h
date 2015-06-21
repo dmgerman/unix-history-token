@@ -313,6 +313,13 @@ literal|3
 block|;
 comment|// Is this symbol "Thread Local", if so, what is
 comment|// the desired model?
+specifier|static
+specifier|const
+name|unsigned
+name|GlobalValueSubClassDataBits
+operator|=
+literal|19
+block|;
 name|private
 operator|:
 comment|// Give subclasses access to what otherwise would be wasted padding.
@@ -320,7 +327,7 @@ comment|// (19 + 3 + 2 + 1 + 2 + 5) == 32.
 name|unsigned
 name|SubClassData
 operator|:
-literal|19
+name|GlobalValueSubClassDataBits
 block|;
 name|protected
 operator|:
@@ -334,13 +341,6 @@ name|Intrinsic
 operator|::
 name|ID
 name|IntID
-block|;
-specifier|static
-specifier|const
-name|unsigned
-name|GlobalValueSubClassDataBits
-operator|=
-literal|19
 block|;
 name|unsigned
 name|getGlobalValueSubClassData
@@ -364,7 +364,7 @@ operator|<
 operator|(
 literal|1
 operator|<<
-literal|19
+name|GlobalValueSubClassDataBits
 operator|)
 operator|&&
 literal|"It will not fit"
@@ -1472,7 +1472,7 @@ end_function
 
 begin_comment
 unit|};  }
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

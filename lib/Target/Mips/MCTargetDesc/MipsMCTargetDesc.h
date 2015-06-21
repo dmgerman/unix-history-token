@@ -97,6 +97,9 @@ name|class
 name|Target
 decl_stmt|;
 name|class
+name|Triple
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 name|class
@@ -170,7 +173,9 @@ name|MCRegisterInfo
 modifier|&
 name|MRI
 parameter_list|,
-name|StringRef
+specifier|const
+name|Triple
+modifier|&
 name|TT
 parameter_list|,
 name|StringRef
@@ -191,7 +196,9 @@ name|MCRegisterInfo
 modifier|&
 name|MRI
 parameter_list|,
-name|StringRef
+specifier|const
+name|Triple
+modifier|&
 name|TT
 parameter_list|,
 name|StringRef
@@ -212,7 +219,9 @@ name|MCRegisterInfo
 modifier|&
 name|MRI
 parameter_list|,
-name|StringRef
+specifier|const
+name|Triple
+modifier|&
 name|TT
 parameter_list|,
 name|StringRef
@@ -233,7 +242,9 @@ name|MCRegisterInfo
 modifier|&
 name|MRI
 parameter_list|,
-name|StringRef
+specifier|const
+name|Triple
+modifier|&
 name|TT
 parameter_list|,
 name|StringRef
@@ -264,7 +275,9 @@ block|{
 name|StringRef
 name|selectMipsCPU
 parameter_list|(
-name|StringRef
+specifier|const
+name|Triple
+modifier|&
 name|TT
 parameter_list|,
 name|StringRef
@@ -276,7 +289,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_comment

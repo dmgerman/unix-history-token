@@ -1318,12 +1318,12 @@ comment|/// Marker - Invalid opcode
 block|}
 enum|;
 block|}
-comment|// end llvm::ISD namespace
+comment|// namespace ISD
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// end llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

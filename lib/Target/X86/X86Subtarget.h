@@ -474,7 +474,7 @@ comment|/// of the specified triple.
 comment|///
 name|X86Subtarget
 argument_list|(
-argument|const std::string&TT
+argument|const Triple&TT
 argument_list|,
 argument|const std::string&CPU
 argument_list|,
@@ -1770,7 +1770,7 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

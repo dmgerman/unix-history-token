@@ -149,131 +149,29 @@ argument_list|)
 block|{}
 block|}
 struct|;
-comment|/// This POD struct holds information about a potential reduction operation.
+comment|/// The RecurrenceDescriptor is used to identify recurrences variables in a
+comment|/// loop. Reduction is a special case of recurrence that has uses of the
+comment|/// recurrence variable outside the loop. The method isReductionPHI identifies
+comment|/// reductions that are basic recurrences.
+comment|///
+comment|/// Basic recurrences are defined as the summation, product, OR, AND, XOR, min,
+comment|/// or max of a set of terms. For example: for(i=0; i<n; i++) { total +=
+comment|/// array[i]; } is a summation of array elements. Basic recurrences are a
+comment|/// special case of chains of recurrences (CR). See ScalarEvolution for CR
+comment|/// references.
+comment|/// This struct holds information about recurrence variables.
 name|class
-name|ReductionInstDesc
+name|RecurrenceDescriptor
 block|{
 name|public
 label|:
-comment|// This enum represents the kind of minmax reduction.
+comment|/// This enum represents the kinds of recurrences that we support.
 enum|enum
-name|MinMaxReductionKind
+name|RecurrenceKind
 block|{
-name|MRK_Invalid
+name|RK_NoRecurrence
 block|,
-name|MRK_UIntMin
-block|,
-name|MRK_UIntMax
-block|,
-name|MRK_SIntMin
-block|,
-name|MRK_SIntMax
-block|,
-name|MRK_FloatMin
-block|,
-name|MRK_FloatMax
-block|}
-enum|;
-name|ReductionInstDesc
-argument_list|(
-argument|bool IsRedux
-argument_list|,
-argument|Instruction *I
-argument_list|)
-block|:
-name|IsReduction
-argument_list|(
-name|IsRedux
-argument_list|)
-operator|,
-name|PatternLastInst
-argument_list|(
-name|I
-argument_list|)
-operator|,
-name|MinMaxKind
-argument_list|(
-argument|MRK_Invalid
-argument_list|)
-block|{}
-name|ReductionInstDesc
-argument_list|(
-argument|Instruction *I
-argument_list|,
-argument|MinMaxReductionKind K
-argument_list|)
-operator|:
-name|IsReduction
-argument_list|(
-name|true
-argument_list|)
-operator|,
-name|PatternLastInst
-argument_list|(
-name|I
-argument_list|)
-operator|,
-name|MinMaxKind
-argument_list|(
-argument|K
-argument_list|)
-block|{}
-name|bool
-name|isReduction
-argument_list|()
-block|{
-return|return
-name|IsReduction
-return|;
-block|}
-name|MinMaxReductionKind
-name|getMinMaxKind
-parameter_list|()
-block|{
-return|return
-name|MinMaxKind
-return|;
-block|}
-name|Instruction
-modifier|*
-name|getPatternInst
-parameter_list|()
-block|{
-return|return
-name|PatternLastInst
-return|;
-block|}
-name|private
-label|:
-comment|// Is this instruction a reduction candidate.
-name|bool
-name|IsReduction
-decl_stmt|;
-comment|// The last instruction in a min/max pattern (select of the select(icmp())
-comment|// pattern), or the current reduction instruction otherwise.
-name|Instruction
-modifier|*
-name|PatternLastInst
-decl_stmt|;
-comment|// If this is a min/max pattern the comparison predicate.
-name|MinMaxReductionKind
-name|MinMaxKind
-decl_stmt|;
-block|}
-empty_stmt|;
-comment|/// This struct holds information about reduction variables.
-name|class
-name|ReductionDescriptor
-block|{
-name|public
-label|:
-comment|/// This enum represents the kinds of reductions that we support.
-enum|enum
-name|ReductionKind
-block|{
-name|RK_NoReduction
-block|,
-comment|///< Not a reduction.
+comment|///< Not a recurrence.
 name|RK_IntegerAdd
 block|,
 comment|///< Sum of integers.
@@ -302,7 +200,26 @@ name|RK_FloatMinMax
 comment|///< Min/max implemented in terms of select(cmp()).
 block|}
 enum|;
-name|ReductionDescriptor
+comment|// This enum represents the kind of minmax recurrence.
+enum|enum
+name|MinMaxRecurrenceKind
+block|{
+name|MRK_Invalid
+block|,
+name|MRK_UIntMin
+block|,
+name|MRK_UIntMax
+block|,
+name|MRK_SIntMin
+block|,
+name|MRK_SIntMax
+block|,
+name|MRK_FloatMin
+block|,
+name|MRK_FloatMax
+block|}
+enum|;
+name|RecurrenceDescriptor
 argument_list|()
 operator|:
 name|StartValue
@@ -317,23 +234,23 @@ argument_list|)
 operator|,
 name|Kind
 argument_list|(
-name|RK_NoReduction
+name|RK_NoRecurrence
 argument_list|)
 operator|,
 name|MinMaxKind
 argument_list|(
-argument|ReductionInstDesc::MRK_Invalid
+argument|MRK_Invalid
 argument_list|)
 block|{}
-name|ReductionDescriptor
+name|RecurrenceDescriptor
 argument_list|(
 argument|Value *Start
 argument_list|,
 argument|Instruction *Exit
 argument_list|,
-argument|ReductionKind K
+argument|RecurrenceKind K
 argument_list|,
-argument|ReductionInstDesc::MinMaxReductionKind MK
+argument|MinMaxRecurrenceKind MK
 argument_list|)
 operator|:
 name|StartValue
@@ -356,24 +273,122 @@ argument_list|(
 argument|MK
 argument_list|)
 block|{}
-comment|/// Returns a struct describing if the instruction 'I' can be a reduction
-comment|/// variable of type 'Kind'. If the reduction is a min/max pattern of
+comment|/// This POD struct holds information about a potential recurrence operation.
+name|class
+name|InstDesc
+block|{
+name|public
+operator|:
+name|InstDesc
+argument_list|(
+argument|bool IsRecur
+argument_list|,
+argument|Instruction *I
+argument_list|)
+operator|:
+name|IsRecurrence
+argument_list|(
+name|IsRecur
+argument_list|)
+block|,
+name|PatternLastInst
+argument_list|(
+name|I
+argument_list|)
+block|,
+name|MinMaxKind
+argument_list|(
+argument|MRK_Invalid
+argument_list|)
+block|{}
+name|InstDesc
+argument_list|(
+argument|Instruction *I
+argument_list|,
+argument|MinMaxRecurrenceKind K
+argument_list|)
+operator|:
+name|IsRecurrence
+argument_list|(
+name|true
+argument_list|)
+block|,
+name|PatternLastInst
+argument_list|(
+name|I
+argument_list|)
+block|,
+name|MinMaxKind
+argument_list|(
+argument|K
+argument_list|)
+block|{}
+name|bool
+name|isRecurrence
+argument_list|()
+block|{
+return|return
+name|IsRecurrence
+return|;
+block|}
+name|MinMaxRecurrenceKind
+name|getMinMaxKind
+argument_list|()
+block|{
+return|return
+name|MinMaxKind
+return|;
+block|}
+name|Instruction
+operator|*
+name|getPatternInst
+argument_list|()
+block|{
+return|return
+name|PatternLastInst
+return|;
+block|}
+name|private
+operator|:
+comment|// Is this instruction a recurrence candidate.
+name|bool
+name|IsRecurrence
+block|;
+comment|// The last instruction in a min/max pattern (select of the select(icmp())
+comment|// pattern), or the current recurrence instruction otherwise.
+name|Instruction
+operator|*
+name|PatternLastInst
+block|;
+comment|// If this is a min/max pattern the comparison predicate.
+name|MinMaxRecurrenceKind
+name|MinMaxKind
+block|;   }
+expr_stmt|;
+comment|/// Returns a struct describing if the instruction 'I' can be a recurrence
+comment|/// variable of type 'Kind'. If the recurrence is a min/max pattern of
 comment|/// select(icmp()) this function advances the instruction pointer 'I' from the
 comment|/// compare instruction to the select instruction and stores this pointer in
 comment|/// 'PatternLastInst' member of the returned struct.
 specifier|static
-name|ReductionInstDesc
-name|isReductionInstr
-argument_list|(
-argument|Instruction *I
-argument_list|,
-argument|ReductionKind Kind
-argument_list|,
-argument|ReductionInstDesc&Prev
-argument_list|,
-argument|bool HasFunNoNaNAttr
-argument_list|)
-expr_stmt|;
+name|InstDesc
+name|isRecurrenceInstr
+parameter_list|(
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+name|RecurrenceKind
+name|Kind
+parameter_list|,
+name|InstDesc
+modifier|&
+name|Prev
+parameter_list|,
+name|bool
+name|HasFunNoNaNAttr
+parameter_list|)
+function_decl|;
 comment|/// Returns true if instuction I has multiple uses in Insts
 specifier|static
 name|bool
@@ -414,25 +429,25 @@ comment|/// Returns a struct describing if the instruction if the instruction is
 comment|/// Select(ICmp(X, Y), X, Y) instruction pattern corresponding to a min(X, Y)
 comment|/// or max(X, Y).
 specifier|static
-name|ReductionInstDesc
+name|InstDesc
 name|isMinMaxSelectCmpPattern
 parameter_list|(
 name|Instruction
 modifier|*
 name|I
 parameter_list|,
-name|ReductionInstDesc
+name|InstDesc
 modifier|&
 name|Prev
 parameter_list|)
 function_decl|;
-comment|/// Returns identity corresponding to the ReductionKind.
+comment|/// Returns identity corresponding to the RecurrenceKind.
 specifier|static
 name|Constant
 modifier|*
-name|getReductionIdentity
+name|getRecurrenceIdentity
 parameter_list|(
-name|ReductionKind
+name|RecurrenceKind
 name|K
 parameter_list|,
 name|Type
@@ -440,16 +455,17 @@ modifier|*
 name|Tp
 parameter_list|)
 function_decl|;
-comment|/// Returns the opcode of binary operation corresponding to the ReductionKind.
+comment|/// Returns the opcode of binary operation corresponding to the
+comment|/// RecurrenceKind.
 specifier|static
 name|unsigned
-name|getReductionBinOp
+name|getRecurrenceBinOp
 parameter_list|(
-name|ReductionKind
+name|RecurrenceKind
 name|Kind
 parameter_list|)
 function_decl|;
-comment|/// Returns a Min/Max operation corresponding to MinMaxReductionKind.
+comment|/// Returns a Min/Max operation corresponding to MinMaxRecurrenceKind.
 specifier|static
 name|Value
 modifier|*
@@ -461,9 +477,7 @@ operator|>
 operator|&
 name|Builder
 argument_list|,
-name|ReductionInstDesc
-operator|::
-name|MinMaxReductionKind
+name|MinMaxRecurrenceKind
 name|RK
 argument_list|,
 name|Value
@@ -476,7 +490,7 @@ name|Right
 argument_list|)
 decl_stmt|;
 comment|/// Returns true if Phi is a reduction of type Kind and adds it to the
-comment|/// ReductionDescriptor.
+comment|/// RecurrenceDescriptor.
 specifier|static
 name|bool
 name|AddReductionVar
@@ -485,7 +499,7 @@ name|PHINode
 modifier|*
 name|Phi
 parameter_list|,
-name|ReductionKind
+name|RecurrenceKind
 name|Kind
 parameter_list|,
 name|Loop
@@ -495,12 +509,12 @@ parameter_list|,
 name|bool
 name|HasFunNoNaNAttr
 parameter_list|,
-name|ReductionDescriptor
+name|RecurrenceDescriptor
 modifier|&
 name|RedDes
 parameter_list|)
 function_decl|;
-comment|/// Returns true if Phi is a reduction in TheLoop. The ReductionDescriptor is
+comment|/// Returns true if Phi is a reduction in TheLoop. The RecurrenceDescriptor is
 comment|/// returned in RedDes.
 specifier|static
 name|bool
@@ -514,24 +528,22 @@ name|Loop
 modifier|*
 name|TheLoop
 parameter_list|,
-name|ReductionDescriptor
+name|RecurrenceDescriptor
 modifier|&
 name|RedDes
 parameter_list|)
 function_decl|;
-name|ReductionKind
-name|getReductionKind
+name|RecurrenceKind
+name|getRecurrenceKind
 parameter_list|()
 block|{
 return|return
 name|Kind
 return|;
 block|}
-name|ReductionInstDesc
-operator|::
-name|MinMaxReductionKind
-name|getMinMaxReductionKind
-argument_list|()
+name|MinMaxRecurrenceKind
+name|getMinMaxRecurrenceKind
+parameter_list|()
 block|{
 return|return
 name|MinMaxKind
@@ -541,7 +553,7 @@ name|TrackingVH
 operator|<
 name|Value
 operator|>
-name|getReductionStartValue
+name|getRecurrenceStartValue
 argument_list|()
 block|{
 return|return
@@ -559,7 +571,7 @@ return|;
 block|}
 name|private
 label|:
-comment|// The starting value of the reduction.
+comment|// The starting value of the recurrence.
 comment|// It does not have to be zero!
 name|TrackingVH
 operator|<
@@ -572,16 +584,14 @@ name|Instruction
 modifier|*
 name|LoopExitInstr
 decl_stmt|;
-comment|// The kind of the reduction.
-name|ReductionKind
+comment|// The kind of the recurrence.
+name|RecurrenceKind
 name|Kind
 decl_stmt|;
-comment|// If this a min/max reduction the kind of reduction.
-name|ReductionInstDesc
-operator|::
-name|MinMaxReductionKind
+comment|// If this a min/max recurrence the kind of recurrence.
+name|MinMaxRecurrenceKind
 name|MinMaxKind
-expr_stmt|;
+decl_stmt|;
 block|}
 empty_stmt|;
 name|BasicBlock
@@ -855,6 +865,10 @@ parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

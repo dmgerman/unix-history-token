@@ -156,6 +156,7 @@ name|Kill
 block|}
 enum|;
 block|}
+comment|// namespace RegState
 name|class
 name|MachineInstrBuilder
 block|{
@@ -2732,7 +2733,7 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

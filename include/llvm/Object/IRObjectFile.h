@@ -309,8 +309,13 @@ argument_list|)
 block|; }
 decl_stmt|;
 block|}
+comment|// namespace object
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

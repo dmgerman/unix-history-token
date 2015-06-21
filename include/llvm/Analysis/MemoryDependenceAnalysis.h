@@ -1100,7 +1100,7 @@ argument_list|()
 operator|:
 name|Size
 argument_list|(
-argument|AliasAnalysis::UnknownSize
+argument|MemoryLocation::UnknownSize
 argument_list|)
 block|{}
 block|}
@@ -1621,9 +1621,7 @@ name|MemDepResult
 name|getPointerDependencyFrom
 argument_list|(
 specifier|const
-name|AliasAnalysis
-operator|::
-name|Location
+name|MemoryLocation
 operator|&
 name|Loc
 argument_list|,
@@ -1741,9 +1739,7 @@ operator|&
 name|Pointer
 argument_list|,
 specifier|const
-name|AliasAnalysis
-operator|::
-name|Location
+name|MemoryLocation
 operator|&
 name|Loc
 argument_list|,
@@ -1780,37 +1776,35 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|MemDepResult
 name|GetNonLocalInfoForBlock
-argument_list|(
+parameter_list|(
 name|Instruction
-operator|*
+modifier|*
 name|QueryInst
-argument_list|,
+parameter_list|,
 specifier|const
-name|AliasAnalysis
-operator|::
-name|Location
-operator|&
+name|MemoryLocation
+modifier|&
 name|Loc
-argument_list|,
+parameter_list|,
 name|bool
 name|isLoad
-argument_list|,
+parameter_list|,
 name|BasicBlock
-operator|*
+modifier|*
 name|BB
-argument_list|,
+parameter_list|,
 name|NonLocalDepInfo
-operator|*
+modifier|*
 name|Cache
-argument_list|,
+parameter_list|,
 name|unsigned
 name|NumSortedEntries
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -1844,7 +1838,7 @@ end_decl_stmt
 
 begin_comment
 unit|};  }
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

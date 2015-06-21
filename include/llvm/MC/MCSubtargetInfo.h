@@ -91,11 +91,9 @@ comment|///
 name|class
 name|MCSubtargetInfo
 block|{
-name|std
-operator|::
-name|string
+name|Triple
 name|TargetTriple
-expr_stmt|;
+decl_stmt|;
 comment|// Target triple
 name|std
 operator|::
@@ -168,7 +166,9 @@ label|:
 name|void
 name|InitMCSubtargetInfo
 argument_list|(
-name|StringRef
+specifier|const
+name|Triple
+operator|&
 name|TT
 argument_list|,
 name|StringRef
@@ -226,7 +226,9 @@ name|FP
 argument_list|)
 decl_stmt|;
 comment|/// getTargetTriple - Return the target triple string.
-name|StringRef
+specifier|const
+name|Triple
+operator|&
 name|getTargetTriple
 argument_list|()
 specifier|const
@@ -618,7 +620,7 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

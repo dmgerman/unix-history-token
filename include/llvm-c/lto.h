@@ -182,6 +182,10 @@ block|,
 name|LTO_SYMBOL_SCOPE_DEFAULT_CAN_BE_HIDDEN
 init|=
 literal|0x00002800
+block|,
+name|LTO_SYMBOL_COMDAT
+init|=
+literal|0x00004000
 block|}
 name|lto_symbol_attributes
 typedef|;

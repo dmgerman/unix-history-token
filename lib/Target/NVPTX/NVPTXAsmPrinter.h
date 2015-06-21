@@ -1864,7 +1864,7 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// end of namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

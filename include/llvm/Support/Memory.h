@@ -422,8 +422,13 @@ function_decl|;
 block|}
 empty_stmt|;
 block|}
+comment|// namespace sys
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

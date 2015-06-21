@@ -316,6 +316,8 @@ name|IRDumpLayer
 argument_list|,
 operator|*
 name|CCMgr
+argument_list|,
+name|false
 argument_list|)
 operator|,
 name|CXXRuntimeOverrides
@@ -486,9 +488,16 @@ comment|// Symbol resolution order:
 comment|//   1) Search the JIT symbols.
 comment|//   2) Check for C++ runtime overrides.
 comment|//   3) Search the host process (LLI)'s symbol table.
-name|auto
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|RuntimeDyld
+operator|::
+name|SymbolResolver
+operator|>
 name|Resolver
-init|=
+operator|=
 name|orc
 operator|::
 name|createLambdaResolver

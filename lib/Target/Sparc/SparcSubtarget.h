@@ -175,7 +175,7 @@ name|public
 operator|:
 name|SparcSubtarget
 argument_list|(
-argument|const std::string&TT
+argument|const Triple&TT
 argument_list|,
 argument|const std::string&CPU
 argument_list|,

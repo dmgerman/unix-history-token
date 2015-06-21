@@ -170,16 +170,6 @@ name|bundleInstructionsOffset
 init|=
 literal|1
 decl_stmt|;
-comment|// Returns the number of instructions in the bundle
-name|size_t
-name|bundleSize
-parameter_list|(
-name|MCInst
-specifier|const
-modifier|&
-name|MCI
-parameter_list|)
-function_decl|;
 comment|// Returns a iterator range of instructions in this bundle
 name|iterator_range
 operator|<
@@ -195,19 +185,28 @@ operator|&
 name|MCI
 argument_list|)
 expr_stmt|;
-comment|// Return the extender for instruction at Index or nullptr if none
-name|MCInst
-specifier|const
-modifier|*
-name|extenderForIndex
+comment|// Returns the number of instructions in the bundle
+name|size_t
+name|bundleSize
 parameter_list|(
 name|MCInst
 specifier|const
 modifier|&
-name|MCB
+name|MCI
+parameter_list|)
+function_decl|;
+comment|// Clamp off upper 26 bits of extendable operand for emission
+name|void
+name|clampExtended
+parameter_list|(
+name|MCInstrInfo
+specifier|const
+modifier|&
+name|MCII
 parameter_list|,
-name|size_t
-name|Index
+name|MCInst
+modifier|&
+name|MCI
 parameter_list|)
 function_decl|;
 comment|// Create a duplex instruction given the two subinsts
@@ -241,6 +240,21 @@ name|MCInst
 specifier|const
 modifier|&
 name|Inst
+parameter_list|)
+function_decl|;
+comment|// Return the extender for instruction at Index or nullptr if none
+name|MCInst
+specifier|const
+modifier|*
+name|extenderForIndex
+parameter_list|(
+name|MCInst
+specifier|const
+modifier|&
+name|MCB
+parameter_list|,
+name|size_t
+name|Index
 parameter_list|)
 function_decl|;
 comment|// Return memory access size
@@ -1021,8 +1035,13 @@ name|MCI
 parameter_list|)
 function_decl|;
 block|}
+comment|// namespace HexagonMCInstrInfo
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

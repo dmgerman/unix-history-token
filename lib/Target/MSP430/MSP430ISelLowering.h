@@ -147,6 +147,7 @@ name|SRL
 block|}
 enum|;
 block|}
+comment|// namespace MSP430ISD
 name|class
 name|MSP430Subtarget
 decl_stmt|;

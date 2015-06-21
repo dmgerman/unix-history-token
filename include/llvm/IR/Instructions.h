@@ -9569,8 +9569,6 @@ name|operator
 name|new
 argument_list|(
 name|s
-argument_list|,
-literal|0
 argument_list|)
 return|;
 block|}
@@ -9612,8 +9610,6 @@ argument_list|(
 name|NameStr
 argument_list|)
 block|;
-name|OperandList
-operator|=
 name|allocHungoffUses
 argument_list|(
 name|ReservedSpace
@@ -9655,8 +9651,6 @@ argument_list|(
 name|NameStr
 argument_list|)
 block|;
-name|OperandList
-operator|=
 name|allocHungoffUses
 argument_list|(
 name|ReservedSpace
@@ -9667,14 +9661,22 @@ operator|:
 comment|// allocHungoffUses - this is more complicated than the generic
 comment|// User::allocHungoffUses, because we have to allocate Uses for the incoming
 comment|// values and pointers to the incoming blocks, all in one allocation.
-name|Use
-operator|*
+name|void
 name|allocHungoffUses
 argument_list|(
-argument|unsigned
+argument|unsigned N
 argument_list|)
-specifier|const
-block|;
+block|{
+name|User
+operator|::
+name|allocHungoffUses
+argument_list|(
+name|N
+argument_list|,
+comment|/* IsPhi */
+name|true
+argument_list|)
+block|;   }
 name|PHINode
 operator|*
 name|clone_impl
@@ -9743,11 +9745,6 @@ name|InsertAtEnd
 argument_list|)
 return|;
 block|}
-operator|~
-name|PHINode
-argument_list|()
-name|override
-block|;
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -10085,7 +10082,8 @@ argument_list|)
 block|;
 if|if
 condition|(
-name|NumOperands
+name|getNumOperands
+argument_list|()
 operator|==
 name|ReservedSpace
 condition|)
@@ -10094,12 +10092,18 @@ argument_list|()
 expr_stmt|;
 comment|// Get more space!
 comment|// Initialize some new operands.
-operator|++
-name|NumOperands
+name|setNumHungOffUseOperands
+argument_list|(
+name|getNumOperands
+argument_list|()
+operator|+
+literal|1
+argument_list|)
 block|;
 name|setIncomingValue
 argument_list|(
-name|NumOperands
+name|getNumOperands
+argument_list|()
 operator|-
 literal|1
 argument_list|,
@@ -10108,7 +10112,8 @@ argument_list|)
 block|;
 name|setIncomingBlock
 argument_list|(
-name|NumOperands
+name|getNumOperands
+argument_list|()
 operator|-
 literal|1
 argument_list|,
@@ -10402,8 +10407,6 @@ name|operator
 name|new
 argument_list|(
 name|s
-argument_list|,
-literal|0
 argument_list|)
 return|;
 block|}
@@ -10416,8 +10419,6 @@ block|;
 name|void
 name|init
 argument_list|(
-argument|Value *PersFn
-argument_list|,
 argument|unsigned NumReservedValues
 argument_list|,
 argument|const Twine&NameStr
@@ -10427,8 +10428,6 @@ name|explicit
 name|LandingPadInst
 argument_list|(
 argument|Type *RetTy
-argument_list|,
-argument|Value *PersonalityFn
 argument_list|,
 argument|unsigned NumReservedValues
 argument_list|,
@@ -10441,8 +10440,6 @@ name|explicit
 name|LandingPadInst
 argument_list|(
 argument|Type *RetTy
-argument_list|,
-argument|Value *PersonalityFn
 argument_list|,
 argument|unsigned NumReservedValues
 argument_list|,
@@ -10471,8 +10468,6 @@ name|Create
 argument_list|(
 argument|Type *RetTy
 argument_list|,
-argument|Value *PersonalityFn
-argument_list|,
 argument|unsigned NumReservedClauses
 argument_list|,
 argument|const Twine&NameStr =
@@ -10488,8 +10483,6 @@ name|Create
 argument_list|(
 argument|Type *RetTy
 argument_list|,
-argument|Value *PersonalityFn
-argument_list|,
 argument|unsigned NumReservedClauses
 argument_list|,
 argument|const Twine&NameStr
@@ -10497,32 +10490,12 @@ argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|;
-operator|~
-name|LandingPadInst
-argument_list|()
-name|override
-block|;
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 name|Value
 argument_list|)
 block|;
-comment|/// getPersonalityFn - Get the personality function associated with this
-comment|/// landing pad.
-name|Value
-operator|*
-name|getPersonalityFn
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-return|;
-block|}
 comment|/// isCleanup - Return 'true' if this landingpad instruction is a
 comment|/// cleanup. I.e., it should be run when unwinding even if its landing pad
 comment|/// doesn't catch the exception.
@@ -10589,11 +10562,10 @@ operator|<
 name|Constant
 operator|>
 operator|(
-name|OperandList
+name|getOperandList
+argument_list|()
 index|[
 name|Idx
-operator|+
-literal|1
 index|]
 operator|)
 return|;
@@ -10613,11 +10585,10 @@ operator|<
 name|ArrayType
 operator|>
 operator|(
-name|OperandList
+name|getOperandList
+argument_list|()
 index|[
 name|Idx
-operator|+
-literal|1
 index|]
 operator|->
 name|getType
@@ -10639,11 +10610,10 @@ operator|<
 name|ArrayType
 operator|>
 operator|(
-name|OperandList
+name|getOperandList
+argument_list|()
 index|[
 name|Idx
-operator|+
-literal|1
 index|]
 operator|->
 name|getType
@@ -10660,8 +10630,6 @@ block|{
 return|return
 name|getNumOperands
 argument_list|()
-operator|-
-literal|1
 return|;
 block|}
 comment|/// reserveClauses - Grow the size of the operand list to accommodate the new
@@ -10740,7 +10708,7 @@ operator|:
 name|public
 name|HungoffOperandTraits
 operator|<
-literal|2
+literal|1
 operator|>
 block|{ }
 block|;
@@ -11629,8 +11597,6 @@ name|operator
 name|new
 argument_list|(
 name|s
-argument_list|,
-literal|0
 argument_list|)
 return|;
 block|}
@@ -12278,11 +12244,6 @@ name|InsertAtEnd
 argument_list|)
 return|;
 block|}
-operator|~
-name|SwitchInst
-argument_list|()
-name|override
-block|;
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -12954,8 +12915,6 @@ name|operator
 name|new
 argument_list|(
 name|s
-argument_list|,
-literal|0
 argument_list|)
 return|;
 block|}
@@ -13044,11 +13003,6 @@ name|InsertAtEnd
 argument_list|)
 return|;
 block|}
-operator|~
-name|IndirectBrInst
-argument_list|()
-name|override
-block|;
 comment|/// Provide fast operand accessors.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -16910,7 +16864,7 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

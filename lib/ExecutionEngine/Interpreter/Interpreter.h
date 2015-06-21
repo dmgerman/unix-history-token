@@ -571,14 +571,10 @@ name|Function
 operator|*
 name|F
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|GenericValue
 operator|>
-operator|&
 name|ArgValues
 argument_list|)
 name|override
@@ -611,14 +607,10 @@ name|Function
 operator|*
 name|F
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|GenericValue
 operator|>
-operator|&
 name|ArgVals
 argument_list|)
 decl_stmt|;
@@ -985,14 +977,10 @@ name|Function
 operator|*
 name|F
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|GenericValue
 operator|>
-operator|&
 name|ArgVals
 argument_list|)
 decl_stmt|;
@@ -1356,7 +1344,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

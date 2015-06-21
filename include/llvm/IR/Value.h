@@ -262,10 +262,20 @@ comment|///
 comment|/// This is stored here to save space in User on 64-bit hosts.  Since most
 comment|/// instances of Value have operands, 32-bit hosts aren't significantly
 comment|/// affected.
+comment|///
+comment|/// Note, this should *NOT* be used directly by any class other than User.
+comment|/// User uses this value to find the Use list.
+specifier|static
+specifier|const
 name|unsigned
-name|NumOperands
+name|NumUserOperandsBits
+init|=
+literal|29
+decl_stmt|;
+name|unsigned
+name|NumUserOperands
 range|:
-literal|30
+literal|29
 decl_stmt|;
 name|bool
 name|IsUsedByMD
@@ -274,6 +284,11 @@ literal|1
 decl_stmt|;
 name|bool
 name|HasName
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|HasHungOffUses
 range|:
 literal|1
 decl_stmt|;
@@ -2900,7 +2915,7 @@ end_function
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

@@ -494,7 +494,7 @@ comment|/// of the specified triple.
 comment|///
 name|ARMSubtarget
 argument_list|(
-argument|const std::string&TT
+argument|const Triple&TT
 argument_list|,
 argument|const std::string&CPU
 argument_list|,
@@ -1624,7 +1624,7 @@ specifier|const
 block|;
 comment|/// True for some subtargets at> -O0.
 name|bool
-name|enablePostMachineScheduler
+name|enablePostRAScheduler
 argument_list|()
 specifier|const
 name|override
@@ -1685,7 +1685,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

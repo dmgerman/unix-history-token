@@ -209,7 +209,7 @@ comment|//                             [id, name]
 block|}
 enum|;
 block|}
-comment|// End bitc namespace
+comment|// namespace bitc
 comment|/// BitCodeAbbrevOp - This describes one or more operands in an abbreviation.
 comment|/// This is actually a union of two different things:
 comment|///   1. It could be a literal integer value ("the operand is always 17").
@@ -777,7 +777,7 @@ block|; }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

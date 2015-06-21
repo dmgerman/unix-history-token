@@ -213,12 +213,12 @@ name|AliasResult
 name|alias
 argument_list|(
 specifier|const
-name|Location
+name|MemoryLocation
 operator|&
 name|LocA
 argument_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 operator|&
 name|LocB
 argument_list|)
@@ -228,7 +228,7 @@ name|bool
 name|pointsToConstantMemory
 argument_list|(
 specifier|const
-name|Location
+name|MemoryLocation
 operator|&
 name|Loc
 argument_list|,
@@ -262,7 +262,7 @@ name|ImmutableCallSite
 name|CS
 argument_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 operator|&
 name|Loc
 argument_list|)

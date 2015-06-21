@@ -9657,7 +9657,7 @@ argument|StringRef SetterName
 argument_list|,
 argument|unsigned Attributes
 argument_list|,
-argument|DIType *Type
+argument|DITypeRef Type
 argument_list|,
 argument|StorageType Storage
 argument_list|,
@@ -9770,7 +9770,7 @@ name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DIObjCProperty
 argument_list|,
-argument|(StringRef Name, DIFile *File, unsigned Line,                      StringRef GetterName, StringRef SetterName,                      unsigned Attributes, DIType *Type)
+argument|(StringRef Name, DIFile *File, unsigned Line,                      StringRef GetterName, StringRef SetterName,                      unsigned Attributes, DITypeRef Type)
 argument_list|,
 argument|(Name, File, Line, GetterName, SetterName, Attributes,                      Type)
 argument_list|)
@@ -9863,25 +9863,17 @@ literal|3
 argument_list|)
 return|;
 block|}
-comment|/// \brief Get the type.
-comment|///
-comment|/// \note Objective-C doesn't have an ODR, so there is no benefit in storing
-comment|/// a type ref here.
-name|DIType
-operator|*
+name|DITypeRef
 name|getType
 argument_list|()
 specifier|const
 block|{
 return|return
-name|cast_or_null
-operator|<
-name|DIType
-operator|>
-operator|(
+name|DITypeRef
+argument_list|(
 name|getRawType
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 name|StringRef

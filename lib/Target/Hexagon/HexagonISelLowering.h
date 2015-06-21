@@ -226,6 +226,7 @@ name|OP_END
 block|}
 enum|;
 block|}
+comment|// namespace HexagonISD
 name|class
 name|HexagonSubtarget
 decl_stmt|;

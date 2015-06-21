@@ -238,6 +238,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Intrinsics.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/ValueHandle.h"
 end_include
 
@@ -919,6 +925,20 @@ argument_list|()
 operator|->
 name|isIntrinsic
 argument_list|()
+operator|||
+operator|!
+name|Intrinsic
+operator|::
+name|isLeaf
+argument_list|(
+name|CS
+operator|.
+name|getCalledFunction
+argument_list|()
+operator|->
+name|getIntrinsicID
+argument_list|()
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|CalledFunctions
@@ -2113,7 +2133,7 @@ end_function
 
 begin_comment
 unit|};  }
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

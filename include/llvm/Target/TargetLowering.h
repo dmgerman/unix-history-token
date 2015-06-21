@@ -7940,7 +7940,7 @@ argument|CallLoweringInfo&CLI
 argument_list|)
 specifier|const
 block|;
-comment|/// This hook must be implemented to lower calls into the the specified
+comment|/// This hook must be implemented to lower calls into the specified
 comment|/// DAG. The outgoing arguments to the call are described by the Outs array,
 comment|/// and the values to be returned by the call are described by the Ins
 comment|/// array. The implementation should fill in the InVals array with legal-type
@@ -9387,7 +9387,7 @@ end_decl_stmt
 
 begin_comment
 unit|}
-comment|// end llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

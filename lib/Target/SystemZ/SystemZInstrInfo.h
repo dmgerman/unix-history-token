@@ -566,7 +566,7 @@ argument|MachineBasicBlock *TBB
 argument_list|,
 argument|MachineBasicBlock *FBB
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Cond
+argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|DebugLoc DL
 argument_list|)
@@ -654,7 +654,7 @@ name|PredicateInstruction
 argument_list|(
 argument|MachineInstr *MI
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Pred
+argument|ArrayRef<MachineOperand> Pred
 argument_list|)
 specifier|const
 name|override

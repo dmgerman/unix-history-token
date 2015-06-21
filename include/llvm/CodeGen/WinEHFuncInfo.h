@@ -670,31 +670,29 @@ name|IPToStateList
 block|;
 name|int
 name|UnwindHelpFrameIdx
+operator|=
+name|INT_MAX
 block|;
 name|int
 name|UnwindHelpFrameOffset
+operator|=
+operator|-
+literal|1
 block|;
 name|unsigned
 name|NumIPToStateFuncsVisited
+operator|=
+literal|0
+block|;
+comment|/// frameescape index of the 32-bit EH registration node. Set by
+comment|/// WinEHStatePass and used indirectly by SEH filter functions of the parent.
+name|int
+name|EHRegNodeEscapeIndex
+operator|=
+name|INT_MAX
 block|;
 name|WinEHFuncInfo
 argument_list|()
-operator|:
-name|UnwindHelpFrameIdx
-argument_list|(
-name|INT_MAX
-argument_list|)
-block|,
-name|UnwindHelpFrameOffset
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-block|,
-name|NumIPToStateFuncsVisited
-argument_list|(
-literal|0
-argument_list|)
 block|{}
 block|}
 block|;
@@ -715,6 +713,10 @@ name|FuncInfo
 argument_list|)
 block|;  }
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

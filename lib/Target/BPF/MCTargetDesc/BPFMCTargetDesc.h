@@ -97,10 +97,13 @@ name|class
 name|MCSubtargetInfo
 decl_stmt|;
 name|class
+name|StringRef
+decl_stmt|;
+name|class
 name|Target
 decl_stmt|;
 name|class
-name|StringRef
+name|Triple
 decl_stmt|;
 name|class
 name|raw_ostream
@@ -172,7 +175,9 @@ name|MCRegisterInfo
 modifier|&
 name|MRI
 parameter_list|,
-name|StringRef
+specifier|const
+name|Triple
+modifier|&
 name|TT
 parameter_list|,
 name|StringRef
@@ -193,7 +198,9 @@ name|MCRegisterInfo
 modifier|&
 name|MRI
 parameter_list|,
-name|StringRef
+specifier|const
+name|Triple
+modifier|&
 name|TT
 parameter_list|,
 name|StringRef
@@ -217,6 +224,10 @@ parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_comment
 comment|// Defines symbolic names for BPF registers.  This defines a mapping from

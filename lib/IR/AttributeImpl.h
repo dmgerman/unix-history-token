@@ -840,6 +840,25 @@ expr_stmt|;
 block|}
 expr|}
 block|;
+name|static_assert
+argument_list|(
+name|AlignOf
+operator|<
+name|AttributeSetNode
+operator|>
+operator|::
+name|Alignment
+operator|>=
+name|AlignOf
+operator|<
+name|Attribute
+operator|>
+operator|::
+name|Alignment
+argument_list|,
+literal|"Alignment is insufficient for objects appended to AttributeSetNode"
+argument_list|)
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// \class
 comment|/// \brief This class represents a set of attributes that apply to the function,
@@ -854,10 +873,8 @@ name|friend
 name|class
 name|AttributeSet
 block|;
-name|LLVMContext
-operator|&
-name|Context
-block|;
+name|public
+operator|:
 typedef|typedef
 name|std
 operator|::
@@ -870,6 +887,12 @@ operator|*
 operator|>
 name|IndexAttrPair
 expr_stmt|;
+name|private
+operator|:
+name|LLVMContext
+operator|&
+name|Context
+block|;
 name|unsigned
 name|NumAttrs
 block|;
@@ -1273,11 +1296,32 @@ name|dump
 argument_list|()
 specifier|const
 block|; }
+block|;
+name|static_assert
+argument_list|(
+name|AlignOf
+operator|<
+name|AttributeSetImpl
+operator|>
+operator|::
+name|Alignment
+operator|>=
+name|AlignOf
+operator|<
+name|AttributeSetImpl
+operator|::
+name|IndexAttrPair
+operator|>
+operator|::
+name|Alignment
+argument_list|,
+literal|"Alignment is insufficient for objects appended to AttributeSetImpl"
+argument_list|)
 block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// end llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

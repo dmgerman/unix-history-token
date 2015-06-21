@@ -101,6 +101,9 @@ decl_stmt|;
 name|class
 name|MemIntrinsic
 decl_stmt|;
+name|class
+name|TargetLibraryInfo
+decl_stmt|;
 comment|/// Representation for a specific memory location.
 comment|///
 comment|/// This abstraction can be used to represent a specific location in memory.
@@ -344,6 +347,23 @@ specifier|const
 name|MemIntrinsic
 modifier|*
 name|MI
+parameter_list|)
+function_decl|;
+comment|/// Return a location representing a particular argument of a call.
+specifier|static
+name|MemoryLocation
+name|getForArgument
+parameter_list|(
+name|ImmutableCallSite
+name|CS
+parameter_list|,
+name|unsigned
+name|ArgIdx
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|&
+name|TLI
 parameter_list|)
 function_decl|;
 name|explicit
@@ -597,6 +617,10 @@ block|}
 expr|}
 block|; }
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

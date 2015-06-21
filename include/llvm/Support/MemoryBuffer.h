@@ -437,7 +437,7 @@ argument|int64_t FileSize = -
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/// Map a subrange of the the specified file as a MemoryBuffer.
+comment|/// Map a subrange of the specified file as a MemoryBuffer.
 specifier|static
 name|ErrorOr
 operator|<

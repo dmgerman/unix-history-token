@@ -183,12 +183,12 @@ parameter_list|()
 parameter_list|)
 function_decl|;
 block|}
-comment|// End sys namespace
+comment|// namespace sys
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

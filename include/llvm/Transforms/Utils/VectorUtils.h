@@ -1100,7 +1100,7 @@ end_return
 
 begin_comment
 unit|}  }
-comment|// llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

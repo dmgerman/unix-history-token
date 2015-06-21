@@ -212,9 +212,7 @@ operator|:
 name|SystemZSubtarget
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|Triple
 operator|&
 name|TT
 argument_list|,

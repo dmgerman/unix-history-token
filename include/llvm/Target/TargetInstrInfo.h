@@ -151,6 +151,9 @@ name|class
 name|TargetSubtargetInfo
 decl_stmt|;
 name|class
+name|TargetSchedModel
+decl_stmt|;
+name|class
 name|DFAPacketizer
 decl_stmt|;
 name|template
@@ -869,6 +872,128 @@ return|return
 name|true
 return|;
 block|}
+comment|/// Represents a predicate at the MachineFunction level.  The control flow a
+comment|/// MachineBranchPredicate represents is:
+comment|///
+comment|///  Reg<def>= LHS `Predicate` RHS         == ConditionDef
+comment|///  if Reg then goto TrueDest else goto FalseDest
+comment|///
+expr|struct
+name|MachineBranchPredicate
+block|{     enum
+name|ComparePredicate
+block|{
+name|PRED_EQ
+block|,
+comment|// True if two values are equal
+name|PRED_NE
+block|,
+comment|// True if two values are not equal
+name|PRED_INVALID
+comment|// Sentinel value
+block|}
+block|;
+name|ComparePredicate
+name|Predicate
+block|;
+name|MachineOperand
+name|LHS
+block|;
+name|MachineOperand
+name|RHS
+block|;
+name|MachineBasicBlock
+operator|*
+name|TrueDest
+block|;
+name|MachineBasicBlock
+operator|*
+name|FalseDest
+block|;
+name|MachineInstr
+operator|*
+name|ConditionDef
+block|;
+comment|/// SingleUseCondition is true if ConditionDef is dead except for the
+comment|/// branch(es) at the end of the basic block.
+comment|///
+name|bool
+name|SingleUseCondition
+block|;
+name|explicit
+name|MachineBranchPredicate
+argument_list|()
+operator|:
+name|Predicate
+argument_list|(
+name|PRED_INVALID
+argument_list|)
+block|,
+name|LHS
+argument_list|(
+name|MachineOperand
+operator|::
+name|CreateImm
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+block|,
+name|RHS
+argument_list|(
+name|MachineOperand
+operator|::
+name|CreateImm
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+block|,
+name|TrueDest
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|FalseDest
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|ConditionDef
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|SingleUseCondition
+argument_list|(
+argument|false
+argument_list|)
+block|{     }
+block|}
+block|;
+comment|/// Analyze the branching code at the end of MBB and parse it into the
+comment|/// MachineBranchPredicate structure if possible.  Returns false on success
+comment|/// and true on failure.
+comment|///
+comment|/// If AllowModify is true, then this routine is allowed to modify the basic
+comment|/// block (e.g. delete instructions after the unconditional branch).
+comment|///
+name|virtual
+name|bool
+name|AnalyzeBranchPredicate
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBranchPredicate&MBP
+argument_list|,
+argument|bool AllowModify = false
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// Remove the branching code at the end of the specific MBB.
 comment|/// This is only invoked in cases where AnalyzeBranch returns success. It
 comment|/// returns the number of instructions that were removed.
@@ -905,7 +1030,7 @@ argument|MachineBasicBlock *TBB
 argument_list|,
 argument|MachineBasicBlock *FBB
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Cond
+argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|DebugLoc DL
 argument_list|)
@@ -1126,7 +1251,7 @@ name|canInsertSelect
 argument_list|(
 argument|const MachineBasicBlock&MBB
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Cond
+argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|unsigned TrueReg
 argument_list|,
@@ -1171,7 +1296,7 @@ argument|DebugLoc DL
 argument_list|,
 argument|unsigned DstReg
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Cond
+argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|unsigned TrueReg
 argument_list|,
@@ -1415,10 +1540,10 @@ comment|/// returned in the \p Pattern vector. Pattern should be sorted in prior
 comment|/// order since the pattern evaluator stops checking as soon as it finds a
 comment|/// faster sequence.
 comment|/// \param Root - Instruction that could be combined with one of its operands
-comment|/// \param Pattern - Vector of possible combination pattern
+comment|/// \param Pattern - Vector of possible combination patterns
 name|virtual
 name|bool
-name|hasPattern
+name|getMachineCombinerPatterns
 argument_list|(
 argument|MachineInstr&Root
 argument_list|,
@@ -1430,11 +1555,11 @@ return|return
 name|false
 return|;
 block|}
-comment|/// When hasPattern() finds a pattern this function generates the instructions
-comment|/// that could replace the original code sequence. The client has to decide
-comment|/// whether the actual replacement is beneficial or not.
+comment|/// When getMachineCombinerPatterns() finds patterns, this function generates
+comment|/// the instructions that could replace the original code sequence. The client
+comment|/// has to decide whether the actual replacement is beneficial or not.
 comment|/// \param Root - Instruction that could be combined with one of its operands
-comment|/// \param P - Combination pattern for Root
+comment|/// \param Pattern - Combination pattern for Root
 comment|/// \param InsInstrs - Vector of new instructions that implement P
 comment|/// \param DelInstrs - Old instructions, including Root, that could be
 comment|/// replaced by InsInstr
@@ -1446,7 +1571,7 @@ name|genAlternativeCodeSequence
 argument_list|(
 argument|MachineInstr&Root
 argument_list|,
-argument|MachineCombinerPattern::MC_PATTERN P
+argument|MachineCombinerPattern::MC_PATTERN Pattern
 argument_list|,
 argument|SmallVectorImpl<MachineInstr *>&InsInstrs
 argument_list|,
@@ -1727,12 +1852,13 @@ return|return
 name|false
 return|;
 block|}
-comment|/// Get the base register and byte offset of a load/store instr.
+comment|/// Get the base register and byte offset of an instruction that reads/writes
+comment|/// memory.
 name|virtual
 name|bool
-name|getLdStBaseRegImmOfs
+name|getMemOpBaseRegImmOfs
 argument_list|(
-argument|MachineInstr *LdSt
+argument|MachineInstr *MemOp
 argument_list|,
 argument|unsigned&BaseReg
 argument_list|,
@@ -1853,7 +1979,7 @@ name|PredicateInstruction
 argument_list|(
 argument|MachineInstr *MI
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Pred
+argument|ArrayRef<MachineOperand> Pred
 argument_list|)
 specifier|const
 block|;
@@ -1863,9 +1989,9 @@ name|virtual
 name|bool
 name|SubsumesPredicate
 argument_list|(
-argument|const SmallVectorImpl<MachineOperand>&Pred1
+argument|ArrayRef<MachineOperand> Pred1
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Pred2
+argument|ArrayRef<MachineOperand> Pred2
 argument_list|)
 specifier|const
 block|{
@@ -2272,7 +2398,7 @@ name|virtual
 name|bool
 name|hasHighOperandLatency
 argument_list|(
-argument|const InstrItineraryData *ItinData
+argument|const TargetSchedModel&SchedModel
 argument_list|,
 argument|const MachineRegisterInfo *MRI
 argument_list|,
@@ -2296,7 +2422,7 @@ name|virtual
 name|bool
 name|hasLowDefLatency
 argument_list|(
-argument|const InstrItineraryData *ItinData
+argument|const TargetSchedModel&SchedModel
 argument_list|,
 argument|const MachineInstr *DefMI
 argument_list|,
@@ -2592,7 +2718,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif
