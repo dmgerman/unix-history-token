@@ -1712,6 +1712,7 @@ decl_stmt|;
 name|int64_t
 name|imagesz
 decl_stmt|;
+comment|/* 	 * Round the image size to the pre-determined geometry that 	 * matches the image size. This circular dependency implies 	 * that we need to loop to handle boundary conditions. 	 */
 name|imgsz
 operator|*=
 name|secsz
@@ -1772,6 +1773,18 @@ operator|*
 name|VHD_SECTOR_SIZE
 expr_stmt|;
 block|}
+comment|/* 	 * Azure demands that images are a whole number of megabytes. 	 */
+name|imagesz
+operator|=
+operator|(
+name|imagesz
+operator|+
+literal|0xfffffULL
+operator|)
+operator|&
+operator|~
+literal|0xfffffULL
+expr_stmt|;
 return|return
 operator|(
 name|image_set_size
