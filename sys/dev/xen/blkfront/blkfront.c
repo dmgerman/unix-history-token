@@ -5116,7 +5116,7 @@ name|sc
 operator|->
 name|xbd_dev
 argument_list|,
-name|error
+name|ENOMEM
 argument_list|,
 literal|"Cannot allocate request structures\n"
 argument_list|)
