@@ -5174,6 +5174,11 @@ block|}
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -5215,6 +5220,7 @@ expr_stmt|;
 goto|goto
 name|done2
 goto|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -5811,6 +5817,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -5852,6 +5863,7 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|sops

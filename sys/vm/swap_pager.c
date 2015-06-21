@@ -687,6 +687,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|curproc
@@ -719,6 +724,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 endif|#
 directive|endif
 name|res

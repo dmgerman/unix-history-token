@@ -4269,6 +4269,11 @@ comment|/* 			 * The resource limits are here instead of e.g. 			 * fdalloc(), b
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -4316,6 +4321,7 @@ operator|(
 name|EMFILE
 operator|)
 return|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -7508,6 +7514,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -7540,6 +7551,7 @@ operator|(
 name|EMFILE
 operator|)
 return|;
+block|}
 endif|#
 directive|endif
 comment|/* 		 * fd is already equal to first free descriptor>= minfd, so 		 * we only need to grow the table and we are done. 		 */
@@ -9330,6 +9342,11 @@ return|return;
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -9355,6 +9372,7 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* Check for special need to clear POSIX style locks */

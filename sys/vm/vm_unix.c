@@ -432,6 +432,11 @@ block|}
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -627,6 +632,7 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|prot
@@ -699,6 +705,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -771,6 +782,7 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|error
@@ -869,6 +881,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -941,6 +958,7 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}

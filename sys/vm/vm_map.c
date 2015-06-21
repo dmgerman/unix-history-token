@@ -1092,6 +1092,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RACCT
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -1103,9 +1109,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|RACCT
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1161,10 +1164,13 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1544,11 +1550,20 @@ name|vm
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
 name|vmspace_container_reset
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -14997,6 +15012,11 @@ block|}
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -15044,6 +15064,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* Round up the grow amount modulo sgrowsiz */
@@ -15207,6 +15228,11 @@ block|}
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -15257,6 +15283,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -15288,6 +15315,11 @@ block|}
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -15332,6 +15364,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 if|if
@@ -15821,6 +15854,8 @@ directive|ifdef
 name|RACCT
 if|if
 condition|(
+name|racct_enable
+operator|&&
 name|rv
 operator|!=
 name|KERN_SUCCESS

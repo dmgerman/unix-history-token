@@ -9151,6 +9151,8 @@ directive|ifdef
 name|RACCT
 if|if
 condition|(
+name|racct_enable
+operator|&&
 name|created
 condition|)
 name|prison_racct_attach
@@ -9513,6 +9515,8 @@ directive|ifdef
 name|RACCT
 if|if
 condition|(
+name|racct_enable
+operator|&&
 operator|!
 name|created
 condition|)
@@ -13732,6 +13736,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
 name|prison_racct_detach
 argument_list|(
 name|pr
@@ -21706,6 +21714,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RACCT
+end_ifdef
+
 begin_function
 name|void
 name|prison_racct_foreach
@@ -21744,6 +21758,9 @@ name|prison_racct
 modifier|*
 name|prr
 decl_stmt|;
+name|ASSERT_RACCT_ENABLED
+argument_list|()
+expr_stmt|;
 name|sx_slock
 argument_list|(
 operator|&
@@ -21799,6 +21816,9 @@ name|prison_racct
 modifier|*
 name|prr
 decl_stmt|;
+name|ASSERT_RACCT_ENABLED
+argument_list|()
+expr_stmt|;
 name|sx_assert
 argument_list|(
 operator|&
@@ -21943,6 +21963,9 @@ name|prison_racct
 modifier|*
 name|prr
 decl_stmt|;
+name|ASSERT_RACCT_ENABLED
+argument_list|()
+expr_stmt|;
 name|sx_xlock
 argument_list|(
 operator|&
@@ -21980,6 +22003,9 @@ modifier|*
 name|prr
 parameter_list|)
 block|{
+name|ASSERT_RACCT_ENABLED
+argument_list|()
+expr_stmt|;
 name|refcount_acquire
 argument_list|(
 operator|&
@@ -22002,6 +22028,9 @@ modifier|*
 name|prr
 parameter_list|)
 block|{
+name|ASSERT_RACCT_ENABLED
+argument_list|()
+expr_stmt|;
 name|sx_assert
 argument_list|(
 operator|&
@@ -22060,6 +22089,9 @@ block|{
 name|int
 name|old
 decl_stmt|;
+name|ASSERT_RACCT_ENABLED
+argument_list|()
+expr_stmt|;
 name|sx_assert
 argument_list|(
 operator|&
@@ -22115,12 +22147,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RACCT
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -22137,6 +22163,9 @@ name|prison_racct
 modifier|*
 name|prr
 decl_stmt|;
+name|ASSERT_RACCT_ENABLED
+argument_list|()
+expr_stmt|;
 name|sx_assert
 argument_list|(
 operator|&
@@ -22204,6 +22233,9 @@ name|prison_racct
 modifier|*
 name|oldprr
 decl_stmt|;
+name|ASSERT_RACCT_ENABLED
+argument_list|()
+expr_stmt|;
 name|sx_slock
 argument_list|(
 operator|&
@@ -22350,6 +22382,9 @@ modifier|*
 name|pr
 parameter_list|)
 block|{
+name|ASSERT_RACCT_ENABLED
+argument_list|()
+expr_stmt|;
 name|sx_assert
 argument_list|(
 operator|&
