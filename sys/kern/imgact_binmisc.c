@@ -313,18 +313,6 @@ name|interp_list_sx
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-name|imgact_binmisc_exec
-parameter_list|(
-name|struct
-name|image_params
-modifier|*
-name|imgp
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Populate the entry with the information about the interpreter.  */
 end_comment
@@ -2459,6 +2447,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|imgact_binmisc_exec
 parameter_list|(
