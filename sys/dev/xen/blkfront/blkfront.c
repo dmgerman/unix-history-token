@@ -608,7 +608,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mksegarray
+name|xbd_mksegarray
 parameter_list|(
 name|bus_dma_segment_t
 modifier|*
@@ -940,7 +940,7 @@ name|cm_nseg
 operator|=
 name|nsegs
 expr_stmt|;
-name|mksegarray
+name|xbd_mksegarray
 argument_list|(
 name|segs
 argument_list|,
