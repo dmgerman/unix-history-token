@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2013-2014 Qlogic Corporation  * All rights reserved.  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *  *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  *  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  *  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  *  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  *  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  *  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  *  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  *  POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2013-2016 Qlogic Corporation  * All rights reserved.  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *  *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  *  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  *  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  *  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  *  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  *  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  *  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  *  POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -1065,6 +1065,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|Q8_MBX_IDC_REQ
+value|0x0062
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q8_MBX_IDC_ACK
+value|0x0063
+end_define
+
+begin_define
+define|#
+directive|define
 name|Q8_MBX_SET_PORT_CONFIG
 value|0x0066
 end_define
@@ -1693,8 +1707,24 @@ name|hash_type
 decl_stmt|;
 define|#
 directive|define
+name|Q8_MBX_RSS_HASH_TYPE_IPV4_IP
+value|(0x1<< 4)
+define|#
+directive|define
+name|Q8_MBX_RSS_HASH_TYPE_IPV4_TCP
+value|(0x2<< 4)
+define|#
+directive|define
 name|Q8_MBX_RSS_HASH_TYPE_IPV4_TCP_IP
 value|(0x3<< 4)
+define|#
+directive|define
+name|Q8_MBX_RSS_HASH_TYPE_IPV6_IP
+value|(0x1<< 6)
+define|#
+directive|define
+name|Q8_MBX_RSS_HASH_TYPE_IPV6_TCP
+value|(0x2<< 6)
 define|#
 directive|define
 name|Q8_MBX_RSS_HASH_TYPE_IPV6_TCP_IP
@@ -1813,7 +1843,7 @@ decl_stmt|;
 name|uint8_t
 name|ind_table
 index|[
-literal|40
+name|Q8_RSS_IND_TBL_SIZE
 index|]
 decl_stmt|;
 block|}
@@ -2547,6 +2577,27 @@ decl_stmt|;
 name|uint64_t
 name|align_error
 decl_stmt|;
+name|uint64_t
+name|eswitched_frames
+decl_stmt|;
+name|uint64_t
+name|eswitched_bytes
+decl_stmt|;
+name|uint64_t
+name|eswitched_mcast_frames
+decl_stmt|;
+name|uint64_t
+name|eswitched_bcast_frames
+decl_stmt|;
+name|uint64_t
+name|eswitched_ucast_frames
+decl_stmt|;
+name|uint64_t
+name|eswitched_err_free_frames
+decl_stmt|;
+name|uint64_t
+name|eswitched_err_free_bytes
+decl_stmt|;
 block|}
 name|__packed
 name|q80_mac_stats_t
@@ -2595,6 +2646,10 @@ define|#
 directive|define
 name|Q8_GET_STATS_CMD_TYPE_VPORT
 value|0x0C
+define|#
+directive|define
+name|Q8_GET_STATS_CMD_TYPE_ALL
+value|(0x7<< 2)
 block|}
 name|__packed
 name|q80_get_stats_t
@@ -2635,6 +2690,35 @@ name|q80_get_stats_rsp_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|_q80_get_mac_rcv_xmt_stats_rsp
+block|{
+name|uint16_t
+name|opcode
+decl_stmt|;
+name|uint16_t
+name|regcnt_status
+decl_stmt|;
+name|uint32_t
+name|cmd
+decl_stmt|;
+name|q80_mac_stats_t
+name|mac
+decl_stmt|;
+name|q80_rcv_stats_t
+name|rcv
+decl_stmt|;
+name|q80_xmt_stats_t
+name|xmt
+decl_stmt|;
+block|}
+name|__packed
+name|q80_get_mac_rcv_xmt_stats_rsp_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Init NIC Function  * Used to Register DCBX Configuration Change AEN  */
 end_comment
@@ -2653,6 +2737,10 @@ decl_stmt|;
 name|uint32_t
 name|options
 decl_stmt|;
+define|#
+directive|define
+name|Q8_INIT_NIC_REG_IDC_AEN
+value|0x01
 define|#
 directive|define
 name|Q8_INIT_NIC_REG_DCBX_CHNG_AEN
@@ -2799,6 +2887,56 @@ value|0xF0000000
 block|}
 name|__packed
 name|q80_query_fw_dcbx_caps_rsp_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * IDC Ack Cmd  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_q80_idc_ack
+block|{
+name|uint16_t
+name|opcode
+decl_stmt|;
+name|uint16_t
+name|count_version
+decl_stmt|;
+name|uint32_t
+name|aen_mb1
+decl_stmt|;
+name|uint32_t
+name|aen_mb2
+decl_stmt|;
+name|uint32_t
+name|aen_mb3
+decl_stmt|;
+name|uint32_t
+name|aen_mb4
+decl_stmt|;
+block|}
+name|__packed
+name|q80_idc_ack_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_q80_idc_ack_rsp
+block|{
+name|uint16_t
+name|opcode
+decl_stmt|;
+name|uint16_t
+name|regcnt_status
+decl_stmt|;
+block|}
+name|__packed
+name|q80_idc_ack_rsp_t
 typedef|;
 end_typedef
 
@@ -3659,6 +3797,35 @@ begin_comment
 comment|/* Max# of Receive Descriptor Rings */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|QL_ENABLE_ISCSI_TLV
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MAX_SDS_RINGS
+value|32
+end_define
+
+begin_comment
+comment|/* Max# of Status Descriptor Rings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NUM_TX_RINGS
+value|(MAX_SDS_RINGS * 2)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -3668,6 +3835,33 @@ end_define
 
 begin_comment
 comment|/* Max# of Status Descriptor Rings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NUM_TX_RINGS
+value|MAX_SDS_RINGS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* #ifdef QL_ENABLE_ISCSI_TLV */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_RDS_RINGS
+value|MAX_SDS_RINGS
+end_define
+
+begin_comment
+comment|/* Max# of Rcv Descriptor Rings */
 end_comment
 
 begin_typedef
@@ -3812,6 +4006,10 @@ define|#
 directive|define
 name|Q8_RCV_CNTXT_CAP0_SGL_LRO
 value|(1<< 19)
+define|#
+directive|define
+name|Q8_RCV_CNTXT_CAP0_SINGLE_JUMBO
+value|(1<< 26)
 name|uint32_t
 name|cap1
 decl_stmt|;
@@ -4598,17 +4796,6 @@ name|NUM_RX_DESCRIPTORS
 value|2048
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAX_RDS_RINGS
-value|MAX_SDS_RINGS
-end_define
-
-begin_comment
-comment|/* Max# of Rcv Descriptor Rings */
-end_comment
-
 begin_comment
 comment|/*  * structure describing various dma buffers  */
 end_comment
@@ -5032,13 +5219,6 @@ name|qla_flash_desc_table_t
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|NUM_TX_RINGS
-value|4
-end_define
-
 begin_comment
 comment|/*  * struct for storing hardware specific information for a given interface  */
 end_comment
@@ -5182,6 +5362,37 @@ decl_stmt|;
 name|uint32_t
 name|sds_cidx_thres
 decl_stmt|;
+name|uint32_t
+name|rcv_intr_coalesce
+decl_stmt|;
+name|uint32_t
+name|xmt_intr_coalesce
+decl_stmt|;
+comment|/* Immediate Completion */
+specifier|volatile
+name|uint32_t
+name|imd_compl
+decl_stmt|;
+specifier|volatile
+name|uint32_t
+name|aen_mb0
+decl_stmt|;
+specifier|volatile
+name|uint32_t
+name|aen_mb1
+decl_stmt|;
+specifier|volatile
+name|uint32_t
+name|aen_mb2
+decl_stmt|;
+specifier|volatile
+name|uint32_t
+name|aen_mb3
+decl_stmt|;
+specifier|volatile
+name|uint32_t
+name|aen_mb4
+decl_stmt|;
 comment|/* multicast address list */
 name|uint32_t
 name|nmcast
@@ -5218,6 +5429,18 @@ name|max_tx_segs
 decl_stmt|;
 name|uint32_t
 name|min_lro_pkt_size
+decl_stmt|;
+name|uint32_t
+name|enable_9kb
+decl_stmt|;
+name|uint32_t
+name|user_pri_nic
+decl_stmt|;
+name|uint32_t
+name|user_pri_iscsi
+decl_stmt|;
+name|uint64_t
+name|iscsi_pkt_count
 decl_stmt|;
 comment|/* Flash Descriptor Table */
 name|qla_flash_desc_table_t
