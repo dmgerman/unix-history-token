@@ -864,6 +864,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|pcicfg_read_byte
+value|hpt27xx_pcicfg_read_byte
+end_define
+
+begin_define
+define|#
+directive|define
 name|pcicfg_read_dword
 value|hpt27xx_pcicfg_read_dword
 end_define
@@ -880,6 +887,13 @@ define|#
 directive|define
 name|vdev_queue_cmd
 value|hpt27xx_vdev_queue_cmd
+end_define
+
+begin_define
+define|#
+directive|define
+name|get_dmapool_phy_addr
+value|hpt27xx_get_dmapool_phy_addr
 end_define
 
 begin_endif
