@@ -94,7 +94,7 @@ name|CPPTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -140,6 +140,8 @@ argument_list|,
 argument|AnalysisID StartAfter
 argument_list|,
 argument|AnalysisID StopAfter
+argument_list|,
+argument|MachineFunctionInitializer *MFInitializer
 argument_list|)
 name|override
 block|; }
@@ -152,7 +154,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

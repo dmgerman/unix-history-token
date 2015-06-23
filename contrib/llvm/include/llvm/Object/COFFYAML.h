@@ -208,6 +208,7 @@ operator|)
 return|;
 block|}
 block|}
+comment|// namespace COFF
 comment|// The structure of the yaml files is not an exact 1:1 match to COFF. In order
 comment|// to use yaml::IO, we use these structures which are closer to the source.
 name|namespace
@@ -405,8 +406,13 @@ expr_stmt|;
 block|}
 struct|;
 block|}
+comment|// namespace COFFYAML
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_macro
 name|LLVM_YAML_IS_SEQUENCE_VECTOR

@@ -474,6 +474,10 @@ comment|/// continued when possible).
 name|SanitizerSet
 name|SanitizeRecover
 block|;
+comment|/// Set of sanitizer checks that trap rather than diagnose.
+name|SanitizerSet
+name|SanitizeTrap
+block|;
 name|public
 operator|:
 comment|// Define accessors/mutators for code generation options of enumeration type.

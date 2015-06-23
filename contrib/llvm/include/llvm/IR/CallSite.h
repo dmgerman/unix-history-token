@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Attributes.h"
 end_include
 
@@ -714,6 +720,28 @@ argument_list|()
 operator|-
 name|getArgumentEndOffset
 argument_list|()
+return|;
+block|}
+name|iterator_range
+operator|<
+name|IterTy
+operator|>
+name|args
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|IterTy
+operator|>
+operator|(
+name|arg_begin
+argument_list|()
+operator|,
+name|arg_end
+argument_list|()
+operator|)
 return|;
 block|}
 name|bool
@@ -1759,7 +1787,7 @@ end_decl_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

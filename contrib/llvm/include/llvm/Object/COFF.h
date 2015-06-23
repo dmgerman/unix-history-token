@@ -3089,18 +3089,6 @@ name|override
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|section_iterator
-name|getRelocationSection
-argument_list|(
-name|DataRefImpl
-name|Rel
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|std
 operator|::

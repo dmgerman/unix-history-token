@@ -162,6 +162,9 @@ name|class
 name|LangOptions
 decl_stmt|;
 name|class
+name|PCHContainerOperations
+decl_stmt|;
+name|class
 name|Preprocessor
 decl_stmt|;
 name|class
@@ -221,6 +224,11 @@ specifier|const
 name|PreprocessorOptions
 modifier|&
 name|PPOpts
+parameter_list|,
+specifier|const
+name|PCHContainerOperations
+modifier|&
+name|PCHContainerOps
 parameter_list|,
 specifier|const
 name|FrontendOptions

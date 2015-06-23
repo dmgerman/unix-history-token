@@ -279,6 +279,10 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|// namespace llvm
+end_comment
+
+begin_comment
 comment|/// Marks that the current location is not supposed to be reachable.
 end_comment
 

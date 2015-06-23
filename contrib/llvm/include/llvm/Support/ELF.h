@@ -538,11 +538,11 @@ init|=
 literal|5
 block|,
 comment|// Motorola 88000
-name|EM_486
+name|EM_IAMCU
 init|=
 literal|6
 block|,
-comment|// Intel 486 (deprecated)
+comment|// Intel MCU
 name|EM_860
 init|=
 literal|7

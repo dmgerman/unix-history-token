@@ -67,6 +67,18 @@ directive|define
 name|LLVM_CLANG_BASIC_SPECIFIERS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -507,6 +519,37 @@ name|SD_Dynamic
 comment|///< Dynamic storage duration.
 block|}
 enum|;
+comment|/// Describes the nullability of a particular type.
+name|enum
+name|class
+name|NullabilityKind
+range|:
+name|uint8_t
+block|{
+comment|/// Values of this type can never be null.
+name|NonNull
+operator|=
+literal|0
+block|,
+comment|/// Values of this type can be null.
+name|Nullable
+block|,
+comment|/// Whether values of this type can be null is (explicitly)
+comment|/// unspecified. This captures a (fairly rare) case where we
+comment|/// can't conclude anything about the nullability of the type even
+comment|/// though it has been considered.
+name|Unspecified
+block|}
+decl_stmt|;
+comment|/// Retrieve the spelling of the given nullability kind.
+name|llvm
+operator|::
+name|StringRef
+name|getNullabilitySpelling
+argument_list|(
+argument|NullabilityKind kind
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

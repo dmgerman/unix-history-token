@@ -1376,6 +1376,24 @@ literal|4
 operator|>
 name|SwitchWorkList
 expr_stmt|;
+comment|/// Determine the rank by weight of CC in [First,Last]. If CC has more weight
+comment|/// than each cluster in the range, its rank is 0.
+specifier|static
+name|unsigned
+name|caseClusterRank
+parameter_list|(
+specifier|const
+name|CaseCluster
+modifier|&
+name|CC
+parameter_list|,
+name|CaseClusterIt
+name|First
+parameter_list|,
+name|CaseClusterIt
+name|Last
+parameter_list|)
+function_decl|;
 comment|/// Emit comparison and split W into two subtrees.
 name|void
 name|splitWorkItem

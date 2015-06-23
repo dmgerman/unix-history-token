@@ -558,8 +558,7 @@ comment|/// compute it.  Currently, that requires that both symbols are in the s
 comment|/// data fragment.  Otherwise, do nothing and return \c false.
 comment|///
 comment|/// \pre Offset of \c Hi is greater than the offset \c Lo.
-comment|/// \return true on success.
-name|bool
+name|void
 name|emitAbsoluteSymbolDiff
 argument_list|(
 argument|const MCSymbol *Hi

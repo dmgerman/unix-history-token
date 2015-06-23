@@ -207,11 +207,6 @@ name|getSymbol
 argument_list|()
 specifier|const
 expr_stmt|;
-name|section_iterator
-name|getSection
-argument_list|()
-specifier|const
-expr_stmt|;
 name|std
 operator|::
 name|error_code
@@ -1038,16 +1033,6 @@ block|;
 name|virtual
 name|symbol_iterator
 name|getRelocationSymbol
-argument_list|(
-argument|DataRefImpl Rel
-argument_list|)
-specifier|const
-operator|=
-literal|0
-block|;
-name|virtual
-name|section_iterator
-name|getRelocationSection
 argument_list|(
 argument|DataRefImpl Rel
 argument_list|)
@@ -2047,23 +2032,6 @@ return|return
 name|OwningObject
 operator|->
 name|getRelocationSymbol
-argument_list|(
-name|RelocationPimpl
-argument_list|)
-return|;
-block|}
-specifier|inline
-name|section_iterator
-name|RelocationRef
-operator|::
-name|getSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|OwningObject
-operator|->
-name|getRelocationSection
 argument_list|(
 name|RelocationPimpl
 argument_list|)

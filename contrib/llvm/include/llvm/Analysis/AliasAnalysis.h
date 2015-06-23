@@ -72,7 +72,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This API identifies memory regions with the Location class. The pointer
+comment|// This API identifies memory regions with the MemoryLocation class. The pointer
 end_comment
 
 begin_comment
@@ -80,15 +80,19 @@ comment|// component specifies the base memory address of the region. The Size s
 end_comment
 
 begin_comment
-comment|// the maximum size (in address units) of the memory region, or UnknownSize if
+comment|// the maximum size (in address units) of the memory region, or
 end_comment
 
 begin_comment
-comment|// the size is not known. The TBAA tag identifies the "type" of the memory
+comment|// MemoryLocation::UnknownSize if the size is not known. The TBAA tag
 end_comment
 
 begin_comment
-comment|// reference; see the TypeBasedAliasAnalysis class for details.
+comment|// identifies the "type" of the memory reference; see the
+end_comment
+
+begin_comment
+comment|// TypeBasedAliasAnalysis class for details.
 end_comment
 
 begin_comment
@@ -294,18 +298,6 @@ name|AliasAnalysis
 argument_list|()
 expr_stmt|;
 comment|// We want to be subclassed
-comment|/// UnknownSize - This is a special value which can be used with the
-comment|/// size arguments in alias queries to indicate that the caller does not
-comment|/// know the sizes of the potential memory references.
-specifier|static
-name|uint64_t
-specifier|const
-name|UnknownSize
-init|=
-name|MemoryLocation
-operator|::
-name|UnknownSize
-decl_stmt|;
 comment|/// getTargetLibraryInfo - Return a pointer to the current TargetLibraryInfo
 comment|/// object, or null if no TargetLibraryInfo object is available.
 comment|///
@@ -334,12 +326,6 @@ function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// Alias Queries...
 comment|///
-comment|/// Legacy typedef for the AA location object. New code should use \c
-comment|/// MemoryLocation directly.
-typedef|typedef
-name|MemoryLocation
-name|Location
-typedef|;
 comment|/// Alias analysis result - Either we know for sure that it does not alias, we
 comment|/// know for sure it must alias, or we don't know anything: The two pointers
 comment|/// _might_ alias.  This enum is designed so you can do things like:
@@ -376,12 +362,12 @@ name|AliasResult
 name|alias
 parameter_list|(
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|LocA
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|LocB
 parameter_list|)
@@ -410,14 +396,14 @@ block|{
 return|return
 name|alias
 argument_list|(
-name|Location
+name|MemoryLocation
 argument_list|(
 name|V1
 argument_list|,
 name|V1Size
 argument_list|)
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|V2
 argument_list|,
@@ -446,10 +432,14 @@ name|alias
 argument_list|(
 name|V1
 argument_list|,
+name|MemoryLocation
+operator|::
 name|UnknownSize
 argument_list|,
 name|V2
 argument_list|,
+name|MemoryLocation
+operator|::
 name|UnknownSize
 argument_list|)
 return|;
@@ -460,12 +450,12 @@ name|bool
 name|isNoAlias
 parameter_list|(
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|LocA
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|LocB
 parameter_list|)
@@ -505,14 +495,14 @@ block|{
 return|return
 name|isNoAlias
 argument_list|(
-name|Location
+name|MemoryLocation
 argument_list|(
 name|V1
 argument_list|,
 name|V1Size
 argument_list|)
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|V2
 argument_list|,
@@ -539,12 +529,12 @@ block|{
 return|return
 name|isNoAlias
 argument_list|(
-name|Location
+name|MemoryLocation
 argument_list|(
 name|V1
 argument_list|)
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|V2
 argument_list|)
@@ -556,12 +546,12 @@ name|bool
 name|isMustAlias
 parameter_list|(
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|LocA
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|LocB
 parameter_list|)
@@ -616,7 +606,7 @@ name|bool
 name|pointsToConstantMemory
 parameter_list|(
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|,
@@ -644,7 +634,7 @@ block|{
 return|return
 name|pointsToConstantMemory
 argument_list|(
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|)
@@ -760,24 +750,20 @@ operator||
 name|ModRef
 block|}
 enum|;
-comment|/// Get the location associated with a pointer argument of a callsite.
-comment|/// The mask bits are set to indicate the allowed aliasing ModRef kinds.
-comment|/// Note that these mask bits do not necessarily account for the overall
-comment|/// behavior of the function, but rather only provide additional
-comment|/// per-argument information.
+comment|/// Get the ModRef info associated with a pointer argument of a callsite. The
+comment|/// result's bits are set to indicate the allowed aliasing ModRef kinds. Note
+comment|/// that these bits do not necessarily account for the overall behavior of
+comment|/// the function, but rather only provide additional per-argument
+comment|/// information.
 name|virtual
-name|Location
-name|getArgLocation
+name|ModRefResult
+name|getArgModRefInfo
 parameter_list|(
 name|ImmutableCallSite
 name|CS
 parameter_list|,
 name|unsigned
 name|ArgIdx
-parameter_list|,
-name|ModRefResult
-modifier|&
-name|Mask
 parameter_list|)
 function_decl|;
 comment|/// getModRefBehavior - Return the behavior when calling the given call site.
@@ -1037,7 +1023,7 @@ name|getModRefInfo
 argument_list|(
 name|I
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|()
 argument_list|)
 return|;
@@ -1054,7 +1040,7 @@ modifier|*
 name|I
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1240,7 +1226,7 @@ name|getModRefInfo
 argument_list|(
 name|I
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1259,7 +1245,7 @@ name|ImmutableCallSite
 name|CS
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1285,7 +1271,7 @@ name|getModRefInfo
 argument_list|(
 name|CS
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1305,7 +1291,7 @@ modifier|*
 name|C
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1345,7 +1331,7 @@ name|getModRefInfo
 argument_list|(
 name|C
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1365,7 +1351,7 @@ modifier|*
 name|I
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1405,7 +1391,7 @@ name|getModRefInfo
 argument_list|(
 name|I
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1425,7 +1411,7 @@ modifier|*
 name|L
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1453,7 +1439,7 @@ name|getModRefInfo
 argument_list|(
 name|L
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1473,7 +1459,7 @@ modifier|*
 name|S
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1501,7 +1487,7 @@ name|getModRefInfo
 argument_list|(
 name|S
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1521,7 +1507,7 @@ modifier|*
 name|S
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1555,7 +1541,7 @@ name|getModRefInfo
 argument_list|(
 name|S
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1575,7 +1561,7 @@ modifier|*
 name|CX
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1603,7 +1589,7 @@ name|getModRefInfo
 argument_list|(
 name|CX
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1623,7 +1609,7 @@ modifier|*
 name|RMW
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1651,7 +1637,7 @@ name|getModRefInfo
 argument_list|(
 name|RMW
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1671,7 +1657,7 @@ modifier|*
 name|I
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1699,7 +1685,7 @@ name|getModRefInfo
 argument_list|(
 name|I
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1740,24 +1726,22 @@ comment|/// callCapturesBefore - Return information about whether a particular c
 comment|/// site modifies or reads the specified memory location.
 name|ModRefResult
 name|callCapturesBefore
-argument_list|(
+parameter_list|(
 specifier|const
 name|Instruction
-operator|*
+modifier|*
 name|I
-argument_list|,
+parameter_list|,
 specifier|const
-name|AliasAnalysis
-operator|::
-name|Location
-operator|&
+name|MemoryLocation
+modifier|&
 name|MemLoc
-argument_list|,
+parameter_list|,
 name|DominatorTree
-operator|*
+modifier|*
 name|DT
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// callCapturesBefore - A convenience wrapper.
 name|ModRefResult
 name|callCapturesBefore
@@ -1785,7 +1769,7 @@ name|callCapturesBefore
 argument_list|(
 name|I
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1810,7 +1794,7 @@ modifier|&
 name|BB
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1838,7 +1822,7 @@ name|canBasicBlockModify
 argument_list|(
 name|BB
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1866,7 +1850,7 @@ modifier|&
 name|I2
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|,
@@ -1909,7 +1893,7 @@ name|I1
 argument_list|,
 name|I2
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|Ptr
 argument_list|,
@@ -2062,7 +2046,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

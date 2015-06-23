@@ -1055,6 +1055,25 @@ return|return
 name|true
 return|;
 block|}
+comment|/// Retrieve the underscored keyword (__nonnull, __nullable) that corresponds
+comment|/// to the given nullability kind.
+name|IdentifierInfo
+modifier|*
+name|getNullabilityKeyword
+parameter_list|(
+name|NullabilityKind
+name|nullability
+parameter_list|)
+block|{
+return|return
+name|Actions
+operator|.
+name|getNullabilityKeyword
+argument_list|(
+name|nullability
+argument_list|)
+return|;
+block|}
 name|private
 label|:
 comment|//===--------------------------------------------------------------------===//
@@ -2141,6 +2160,44 @@ modifier|&
 name|isInvalid
 parameter_list|)
 function_decl|;
+comment|/// Returns true if the current token is the identifier 'instancetype'.
+comment|///
+comment|/// Should only be used in Objective-C language modes.
+name|bool
+name|isObjCInstancetype
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|getLangOpts
+argument_list|()
+operator|.
+name|ObjC1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Ident_instancetype
+condition|)
+name|Ident_instancetype
+operator|=
+name|PP
+operator|.
+name|getIdentifierInfo
+argument_list|(
+literal|"instancetype"
+argument_list|)
+expr_stmt|;
+return|return
+name|Tok
+operator|.
+name|getIdentifierInfo
+argument_list|()
+operator|==
+name|Ident_instancetype
+return|;
+block|}
 comment|/// TryKeywordIdentFallback - For compatibility with system headers using
 comment|/// keywords as identifiers, attempt to convert the current token to an
 comment|/// identifier and optionally disable the keyword for the remainder of the
@@ -4556,6 +4613,12 @@ name|objc_bycopy
 block|,
 name|objc_byref
 block|,
+name|objc_nonnull
+block|,
+name|objc_nullable
+block|,
+name|objc_null_unspecified
+block|,
 name|objc_NumQuals
 block|}
 enum|;
@@ -6087,7 +6150,11 @@ name|DSC_top_level
 block|,
 comment|// top-level/namespace declaration context
 name|DSC_template_type_arg
+block|,
 comment|// template type argument context
+name|DSC_objc_method_result
+block|,
+comment|// ObjC method result context, enables 'instancetype'
 block|}
 enum|;
 comment|/// Is this a context in which we are parsing just a type-specifier (or
@@ -6113,6 +6180,9 @@ name|DSC_class
 case|:
 case|case
 name|DSC_top_level
+case|:
+case|case
+name|DSC_objc_method_result
 case|:
 return|return
 name|false
@@ -7776,6 +7846,14 @@ parameter_list|(
 name|ParsedAttributes
 modifier|&
 name|Attrs
+parameter_list|)
+function_decl|;
+name|void
+name|ParseNullabilityTypeSpecifiers
+parameter_list|(
+name|ParsedAttributes
+modifier|&
+name|attrs
 parameter_list|)
 function_decl|;
 name|VersionTuple

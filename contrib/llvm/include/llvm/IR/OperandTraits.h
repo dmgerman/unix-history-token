@@ -303,7 +303,8 @@ block|{
 return|return
 name|U
 operator|->
-name|OperandList
+name|getOperandList
+argument_list|()
 return|;
 block|}
 specifier|static
@@ -317,7 +318,8 @@ block|{
 return|return
 name|U
 operator|->
-name|OperandList
+name|getOperandList
+argument_list|()
 operator|+
 name|U
 operator|->
@@ -367,7 +369,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

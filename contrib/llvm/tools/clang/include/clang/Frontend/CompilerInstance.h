@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/PCHContainerOperations.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Diagnostic.h"
 end_include
 
@@ -331,6 +337,15 @@ name|ModuleDependencyCollector
 operator|>
 name|ModuleDepCollector
 block|;
+comment|/// \brief The module provider.
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|ThePCHContainerOperations
+block|;
 comment|/// \brief The dependency file generator.
 name|std
 operator|::
@@ -561,6 +576,8 @@ operator|:
 name|explicit
 name|CompilerInstance
 argument_list|(
+argument|std::shared_ptr<PCHContainerOperations> PCHContainerOps =           std::make_shared<RawPCHContainerOperations>()
+argument_list|,
 argument|bool BuildingModule = false
 argument_list|)
 block|;
@@ -1502,6 +1519,20 @@ operator|>
 name|Collector
 argument_list|)
 block|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|getPCHContainerOperations
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ThePCHContainerOperations
+return|;
+block|}
 comment|/// }
 comment|/// @name Code Completion
 comment|/// {
@@ -1731,6 +1762,8 @@ argument_list|,
 argument|Preprocessor&PP
 argument_list|,
 argument|ASTContext&Context
+argument_list|,
+argument|const PCHContainerOperations&PCHContainerOps
 argument_list|,
 argument|void *DeserializationListener
 argument_list|,

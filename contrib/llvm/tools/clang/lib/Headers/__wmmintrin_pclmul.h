@@ -15,27 +15,6 @@ directive|define
 name|_WMMINTRIN_PCLMUL_H
 end_define
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__PCLMUL__
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"PCLMUL instruction is not enabled"
-end_error
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -50,11 +29,6 @@ parameter_list|)
 define|\
 value|((__m128i)__builtin_ia32_pclmulqdq128((__v2di)(__m128i)(__X), \                                         (__v2di)(__m128i)(__Y), (char)(__I)))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

@@ -224,9 +224,12 @@ comment|// SPIR: standard portable IR for OpenCL 64-bit version
 name|kalimba
 block|,
 comment|// Kalimba: generic kalimba
+name|shave
+block|,
+comment|// SHAVE: Movidius vector VLIW processors
 name|LastArchType
 init|=
-name|kalimba
+name|shave
 block|}
 enum|;
 enum|enum
@@ -1761,7 +1764,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

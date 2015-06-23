@@ -99,7 +99,7 @@ name|ARMAsmBackend
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|bool IsLittle
 argument_list|)
@@ -124,6 +124,9 @@ block|,
 name|isThumbMode
 argument_list|(
 name|TT
+operator|.
+name|getArchName
+argument_list|()
 operator|.
 name|startswith
 argument_list|(

@@ -992,7 +992,9 @@ name|Triple
 argument_list|)
 expr_stmt|;
 specifier|const
-name|StringRef
+name|std
+operator|::
+name|string
 name|getARMArch
 argument_list|(
 specifier|const
@@ -1011,7 +1013,7 @@ name|Triple
 operator|&
 name|Triple
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -1189,6 +1191,38 @@ name|CPUName
 argument_list|,
 name|StringRef
 name|ABIName
+argument_list|,
+name|StringRef
+name|FloatABI
+argument_list|)
+decl_stmt|;
+name|bool
+name|shouldUseFPXX
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|,
+name|StringRef
+name|CPUName
+argument_list|,
+name|StringRef
+name|ABIName
+argument_list|,
+name|StringRef
+name|FloatABI
 argument_list|)
 decl_stmt|;
 block|}
@@ -3292,6 +3326,122 @@ specifier|const
 name|override
 block|; }
 block|; }
+comment|/// SHAVE tools -- Directly call moviCompile and moviAsm
+name|namespace
+name|SHAVE
+block|{
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Compile
+operator|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Compile
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"moviCompile"
+argument_list|,
+literal|"movicompile"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|; }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Assemble
+operator|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Assemble
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"moviAsm"
+argument_list|,
+literal|"moviAsm"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|// not sure.
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|; }
+block|; }
+comment|// end namespace SHAVE
 block|}
 comment|// end namespace tools
 block|}

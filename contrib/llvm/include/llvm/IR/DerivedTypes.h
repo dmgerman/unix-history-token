@@ -498,6 +498,26 @@ return|;
 block|}
 expr|}
 block|;
+name|static_assert
+argument_list|(
+name|AlignOf
+operator|<
+name|FunctionType
+operator|>
+operator|::
+name|Alignment
+operator|>=
+name|AlignOf
+operator|<
+name|Type
+operator|*
+operator|>
+operator|::
+name|Alignment
+argument_list|,
+literal|"Alignment sufficient for objects appended to FunctionType"
+argument_list|)
+block|;
 comment|/// CompositeType - Common super class of ArrayType, StructType, PointerType
 comment|/// and VectorType.
 name|class
@@ -1788,7 +1808,7 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

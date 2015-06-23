@@ -1276,6 +1276,18 @@ operator|*
 name|LongDoubleFormat
 return|;
 block|}
+comment|/// \brief Return true if the 'long double' type should be mangled like
+comment|/// __float128.
+name|virtual
+name|bool
+name|useFloat128ManglingForLongDouble
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// \brief Return the value for the C99 FLT_EVAL_METHOD macro.
 name|virtual
 name|unsigned

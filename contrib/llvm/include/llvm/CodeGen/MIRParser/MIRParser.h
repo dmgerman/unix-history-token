@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineFunctionInitializer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Module.h"
 end_include
 
@@ -104,22 +110,94 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MIRParserImpl
+decl_stmt|;
+name|class
 name|SMDiagnostic
 decl_stmt|;
-comment|/// This function is the main interface to the MIR serialization format parser.
+comment|/// This class initializes machine functions by applying the state loaded from
+comment|/// a MIR file.
+name|class
+name|MIRParser
+range|:
+name|public
+name|MachineFunctionInitializer
+block|{
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MIRParserImpl
+operator|>
+name|Impl
+block|;
+name|public
+operator|:
+name|MIRParser
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MIRParserImpl
+operator|>
+name|Impl
+argument_list|)
+block|;
+name|MIRParser
+argument_list|(
+specifier|const
+name|MIRParser
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+operator|~
+name|MIRParser
+argument_list|()
+block|;
+comment|/// Parse the optional LLVM IR module that's embedded in the MIR file.
 comment|///
-comment|/// It reads a YAML file that has an optional LLVM IR and returns an LLVM
-comment|/// module.
-comment|/// \param Filename - The name of the file to parse.
-comment|/// \param Error - Error result info.
-comment|/// \param Context - Context in which to allocate globals info.
+comment|/// A new, empty module is created if the LLVM IR isn't present.
+comment|/// Returns null if a parsing error occurred.
 name|std
 operator|::
 name|unique_ptr
 operator|<
 name|Module
 operator|>
-name|parseMIRFile
+name|parseLLVMModule
+argument_list|()
+block|;
+comment|/// Initialize the machine function to the state that's described in the MIR
+comment|/// file.
+comment|///
+comment|/// Return true if error occurred.
+name|bool
+name|initializeMachineFunction
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+name|override
+block|; }
+decl_stmt|;
+comment|/// This function is the main interface to the MIR serialization format parser.
+comment|///
+comment|/// It reads in a MIR file and returns a MIR parser that can parse the embedded
+comment|/// LLVM IR module and initialize the machine functions by parsing the machine
+comment|/// function's state.
+comment|///
+comment|/// \param Filename - The name of the file to parse.
+comment|/// \param Error - Error result info.
+comment|/// \param Context - Context which will be used for the parsed LLVM IR module.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MIRParser
+operator|>
+name|createMIRParserFromFile
 argument_list|(
 argument|StringRef Filename
 argument_list|,
@@ -130,18 +208,19 @@ argument_list|)
 expr_stmt|;
 comment|/// This function is another interface to the MIR serialization format parser.
 comment|///
-comment|/// It parses the optional LLVM IR in the given buffer, and returns an LLVM
-comment|/// module.
+comment|/// It returns a MIR parser that works with the given memory buffer and that can
+comment|/// parse the embedded LLVM IR module and initialize the machine functions by
+comment|/// parsing the machine function's state.
+comment|///
 comment|/// \param Contents - The MemoryBuffer containing the machine level IR.
-comment|/// \param Error - Error result info.
-comment|/// \param Context - Context in which to allocate globals info.
+comment|/// \param Context - Context which will be used for the parsed LLVM IR module.
 name|std
 operator|::
 name|unique_ptr
 operator|<
-name|Module
+name|MIRParser
 operator|>
-name|parseMIR
+name|createMIRParser
 argument_list|(
 name|std
 operator|::
@@ -150,10 +229,6 @@ operator|<
 name|MemoryBuffer
 operator|>
 name|Contents
-argument_list|,
-name|SMDiagnostic
-operator|&
-name|Error
 argument_list|,
 name|LLVMContext
 operator|&

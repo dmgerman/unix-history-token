@@ -172,6 +172,16 @@ name|ID
 name|id
 parameter_list|)
 function_decl|;
+comment|/// Returns true if the intrinsic is a leaf, i.e. it does not make any calls
+comment|/// itself.  Most intrinsics are leafs, the exceptions being the patchpoint
+comment|/// and statepoint intrinsics. These call (or invoke) their "target" argument.
+name|bool
+name|isLeaf
+parameter_list|(
+name|ID
+name|id
+parameter_list|)
+function_decl|;
 comment|/// Return the attributes for an intrinsic.
 name|AttributeSet
 name|getAttributes
@@ -458,12 +468,12 @@ name|T
 argument_list|)
 decl_stmt|;
 block|}
-comment|// End Intrinsic namespace
+comment|// namespace Intrinsic
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

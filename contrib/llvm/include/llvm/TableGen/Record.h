@@ -4520,21 +4520,6 @@ operator|&
 name|FN
 argument_list|)
 block|;
-specifier|static
-name|FieldInit
-operator|*
-name|get
-argument_list|(
-name|Init
-operator|*
-name|R
-argument_list|,
-specifier|const
-name|Init
-operator|*
-name|FN
-argument_list|)
-block|;
 name|Init
 operator|*
 name|getBit
@@ -7591,7 +7576,7 @@ end_decl_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

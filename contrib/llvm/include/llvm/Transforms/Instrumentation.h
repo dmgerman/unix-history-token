@@ -275,12 +275,22 @@ comment|// Insert AddressSanitizer (address sanity checking) instrumentation
 name|FunctionPass
 modifier|*
 name|createAddressSanitizerFunctionPass
-parameter_list|()
+parameter_list|(
+name|bool
+name|CompileKernel
+init|=
+name|false
+parameter_list|)
 function_decl|;
 name|ModulePass
 modifier|*
 name|createAddressSanitizerModulePass
-parameter_list|()
+parameter_list|(
+name|bool
+name|CompileKernel
+init|=
+name|false
+parameter_list|)
 function_decl|;
 comment|// Insert MemorySanitizer instrumentation (detection of uninitialized reads)
 name|FunctionPass
@@ -489,11 +499,18 @@ modifier|*
 name|createBoundsCheckingPass
 parameter_list|()
 function_decl|;
+comment|/// \brief This pass splits the stack into a safe stack and an unsafe stack to
+comment|/// protect against stack-based overflow vulnerabilities.
+name|FunctionPass
+modifier|*
+name|createSafeStackPass
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

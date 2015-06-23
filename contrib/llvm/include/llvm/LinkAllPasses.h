@@ -897,6 +897,14 @@ name|void
 operator|)
 name|llvm
 operator|::
+name|createSafeStackPass
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|llvm
+operator|::
 name|createScalarReplAggregatesPass
 argument_list|()
 expr_stmt|;

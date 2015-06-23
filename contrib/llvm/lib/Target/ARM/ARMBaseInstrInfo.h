@@ -336,7 +336,7 @@ argument|MachineBasicBlock *TBB
 argument_list|,
 argument|MachineBasicBlock *FBB
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Cond
+argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|DebugLoc DL
 argument_list|)
@@ -408,7 +408,7 @@ name|PredicateInstruction
 argument_list|(
 argument|MachineInstr *MI
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Pred
+argument|ArrayRef<MachineOperand> Pred
 argument_list|)
 specifier|const
 name|override
@@ -416,9 +416,9 @@ block|;
 name|bool
 name|SubsumesPredicate
 argument_list|(
-argument|const SmallVectorImpl<MachineOperand>&Pred1
+argument|ArrayRef<MachineOperand> Pred1
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Pred2
+argument|ArrayRef<MachineOperand> Pred2
 argument_list|)
 specifier|const
 name|override
@@ -1079,7 +1079,7 @@ block|;
 name|bool
 name|hasHighOperandLatency
 argument_list|(
-argument|const InstrItineraryData *ItinData
+argument|const TargetSchedModel&SchedModel
 argument_list|,
 argument|const MachineRegisterInfo *MRI
 argument_list|,
@@ -1097,7 +1097,7 @@ block|;
 name|bool
 name|hasLowDefLatency
 argument_list|(
-argument|const InstrItineraryData *ItinData
+argument|const TargetSchedModel&SchedModel
 argument_list|,
 argument|const MachineInstr *DefMI
 argument_list|,
@@ -1815,7 +1815,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

@@ -71,7 +71,7 @@ name|ARMAsmBackendELF
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|uint8_t OSABI
 argument_list|,
@@ -116,6 +116,10 @@ block|}
 expr|}
 block|; }
 end_block
+
+begin_comment
+comment|// namespace
+end_comment
 
 begin_endif
 endif|#

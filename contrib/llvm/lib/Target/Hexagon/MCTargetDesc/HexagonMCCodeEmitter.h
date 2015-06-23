@@ -194,13 +194,6 @@ argument|MCInst const&MCI
 argument_list|)
 specifier|const
 block|;
-name|MCSubtargetInfo
-specifier|const
-operator|&
-name|getSubtargetInfo
-argument_list|()
-specifier|const
-block|;
 name|void
 name|encodeInstruction
 argument_list|(
@@ -258,28 +251,6 @@ argument_list|,
 argument|MCSubtargetInfo const&STI
 argument_list|)
 specifier|const
-block|;
-name|private
-operator|:
-name|HexagonMCCodeEmitter
-argument_list|(
-name|HexagonMCCodeEmitter
-specifier|const
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|void
-name|operator
-operator|=
-operator|(
-name|HexagonMCCodeEmitter
-specifier|const
-operator|&
-operator|)
-operator|=
-name|delete
 block|; }
 decl_stmt|;
 comment|// class HexagonMCCodeEmitter

@@ -429,6 +429,13 @@ block|,
 name|OBJC_TQ_Oneway
 init|=
 literal|0x20
+block|,
+comment|/// The nullability qualifier is set when the nullability of the
+comment|/// result or parameter was expressed via a context-sensitive
+comment|/// keyword.
+name|OBJC_TQ_CSNullability
+init|=
+literal|0x40
 block|}
 enum|;
 name|protected

@@ -1759,12 +1759,14 @@ comment|/// \brief Determine whether this expression involves a call to any func
 comment|/// that is not trivial.
 name|bool
 name|hasNonTrivialCall
-parameter_list|(
+argument_list|(
+specifier|const
 name|ASTContext
-modifier|&
+operator|&
 name|Ctx
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// EvaluateKnownConstInt - Call EvaluateAsRValue and return the folded
 comment|/// integer. This must be called on an expression that constant folds to an
 comment|/// integer.
@@ -9085,7 +9087,7 @@ comment|/// evaluate side-effects within its arguments.
 name|bool
 name|isUnevaluatedBuiltinCall
 argument_list|(
-argument|ASTContext&Ctx
+argument|const ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
@@ -18110,27 +18112,11 @@ end_function
 
 begin_comment
 unit|};
-comment|/// \brief Represents an implicitly-generated value initialization of
+comment|/// \brief Represents a place-holder for an object not to be initialized by
 end_comment
 
 begin_comment
-comment|/// an object of a given type.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Implicit value initializations occur within semantic initializer
-end_comment
-
-begin_comment
-comment|/// list expressions (InitListExpr) as placeholders for subobject
-end_comment
-
-begin_comment
-comment|/// initializations not explicitly specified by the user.
+comment|/// anything.
 end_comment
 
 begin_comment
@@ -18138,13 +18124,308 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \see InitListExpr
+comment|/// This only makes sense when it appears as part of an updater of a
+end_comment
+
+begin_comment
+comment|/// DesignatedInitUpdateExpr (see below). The base expression of a DIUE
+end_comment
+
+begin_comment
+comment|/// initializes a big object, and the NoInitExpr's mark the spots within the
+end_comment
+
+begin_comment
+comment|/// big object not to be overwritten by the updater.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \see DesignatedInitUpdateExpr
 end_comment
 
 begin_decl_stmt
 name|class
-name|ImplicitValueInitExpr
+name|NoInitExpr
 range|:
+name|public
+name|Expr
+block|{
+name|public
+operator|:
+name|explicit
+name|NoInitExpr
+argument_list|(
+argument|QualType ty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|NoInitExprClass
+argument_list|,
+argument|ty
+argument_list|,
+argument|VK_RValue
+argument_list|,
+argument|OK_Ordinary
+argument_list|,
+argument|false
+argument_list|,
+argument|false
+argument_list|,
+argument|ty->isInstantiationDependentType()
+argument_list|,
+argument|false
+argument_list|)
+block|{ }
+name|explicit
+name|NoInitExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|NoInitExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|NoInitExprClass
+return|;
+block|}
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|SourceLocation
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|SourceLocation
+argument_list|()
+return|;
+block|}
+comment|// Iterators
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|// In cases like:
+comment|//   struct Q { int a, b, c; };
+comment|//   Q *getQ();
+comment|//   void foo() {
+comment|//     struct A { Q q; } a = { *getQ(), .q.b = 3 };
+comment|//   }
+comment|//
+comment|// We will have an InitListExpr for a, with type A, and then a
+comment|// DesignatedInitUpdateExpr for "a.q" with type Q. The "base" for this DIUE
+comment|// is the call expression *getQ(); the "updater" for the DIUE is ".q.b = 3"
+comment|//
+name|class
+name|DesignatedInitUpdateExpr
+operator|:
+name|public
+name|Expr
+block|{
+comment|// BaseAndUpdaterExprs[0] is the base expression;
+comment|// BaseAndUpdaterExprs[1] is an InitListExpr overwriting part of the base.
+name|Stmt
+operator|*
+name|BaseAndUpdaterExprs
+index|[
+literal|2
+index|]
+block|;
+name|public
+operator|:
+name|DesignatedInitUpdateExpr
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation lBraceLoc
+argument_list|,
+argument|Expr *baseExprs
+argument_list|,
+argument|SourceLocation rBraceLoc
+argument_list|)
+block|;
+name|explicit
+name|DesignatedInitUpdateExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|DesignatedInitUpdateExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|;
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|DesignatedInitUpdateExprClass
+return|;
+block|}
+name|Expr
+operator|*
+name|getBase
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|BaseAndUpdaterExprs
+index|[
+literal|0
+index|]
+operator|)
+return|;
+block|}
+name|void
+name|setBase
+argument_list|(
+argument|Expr *Base
+argument_list|)
+block|{
+name|BaseAndUpdaterExprs
+index|[
+literal|0
+index|]
+operator|=
+name|Base
+block|; }
+name|InitListExpr
+operator|*
+name|getUpdater
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|InitListExpr
+operator|>
+operator|(
+name|BaseAndUpdaterExprs
+index|[
+literal|1
+index|]
+operator|)
+return|;
+block|}
+name|void
+name|setUpdater
+argument_list|(
+argument|Expr *Updater
+argument_list|)
+block|{
+name|BaseAndUpdaterExprs
+index|[
+literal|1
+index|]
+operator|=
+name|Updater
+block|; }
+comment|// Iterators
+comment|// children = the base and the updater
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|BaseAndUpdaterExprs
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|BaseAndUpdaterExprs
+index|[
+literal|0
+index|]
+operator|+
+literal|2
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Represents an implicitly-generated value initialization of
+comment|/// an object of a given type.
+comment|///
+comment|/// Implicit value initializations occur within semantic initializer
+comment|/// list expressions (InitListExpr) as placeholders for subobject
+comment|/// initializations not explicitly specified by the user.
+comment|///
+comment|/// \see InitListExpr
+name|class
+name|ImplicitValueInitExpr
+operator|:
 name|public
 name|Expr
 block|{
@@ -20355,9 +20636,6 @@ index|]
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|Expr
 operator|*
 name|getWeak
@@ -20384,9 +20662,6 @@ index|]
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|AtomicOp
 name|getOp
 argument_list|()
@@ -20396,25 +20671,19 @@ return|return
 name|Op
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|unsigned
 name|getNumSubExprs
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|NumSubExprs
 return|;
 block|}
-end_function
-
-begin_function
 name|Expr
-modifier|*
-modifier|*
+operator|*
+operator|*
 name|getSubExprs
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|reinterpret_cast
@@ -20428,9 +20697,6 @@ name|SubExprs
 operator|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|bool
 name|isVolatile
 argument_list|()
@@ -20450,9 +20716,6 @@ name|isVolatileQualified
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|isCmpXChg
 argument_list|()
@@ -20480,9 +20743,6 @@ operator|==
 name|AO__atomic_compare_exchange_n
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceLocation
 name|getBuiltinLoc
 argument_list|()
@@ -20492,9 +20752,6 @@ return|return
 name|BuiltinLoc
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceLocation
 name|getRParenLoc
 argument_list|()
@@ -20504,9 +20761,6 @@ return|return
 name|RParenLoc
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -20517,9 +20771,6 @@ return|return
 name|BuiltinLoc
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceLocation
 name|getLocEnd
 argument_list|()
@@ -20530,18 +20781,12 @@ return|return
 name|RParenLoc
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Stmt
-modifier|*
-name|T
-parameter_list|)
+argument_list|(
+argument|const Stmt *T
+argument_list|)
 block|{
 return|return
 name|T
@@ -20552,16 +20797,10 @@ operator|==
 name|AtomicExprClass
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// Iterators
-end_comment
-
-begin_function
 name|child_range
 name|children
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|child_range
@@ -20574,21 +20813,13 @@ name|NumSubExprs
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
-unit|};
+expr|}
+block|;
 comment|/// TypoExpr - Internal placeholder for expressions where typo correction
-end_comment
-
-begin_comment
 comment|/// still needs to be performed and/or an error diagnostic emitted.
-end_comment
-
-begin_decl_stmt
 name|class
 name|TypoExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{

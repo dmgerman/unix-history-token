@@ -365,14 +365,15 @@ argument_list|()
 name|override
 block|{
 comment|// ARM/Darwin adds ISA to the DWARF info for each function.
+specifier|const
 name|Triple
+operator|&
 name|TT
-argument_list|(
+operator|=
 name|TM
 operator|.
 name|getTargetTriple
 argument_list|()
-argument_list|)
 block|;
 if|if
 condition|(

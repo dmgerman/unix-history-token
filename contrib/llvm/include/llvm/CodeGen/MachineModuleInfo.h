@@ -544,19 +544,6 @@ operator|*
 operator|>
 name|Personalities
 block|;
-comment|/// UsedFunctions - The functions in the @llvm.used list in a more easily
-comment|/// searchable format.  This does not include the functions in
-comment|/// llvm.compiler.used.
-name|SmallPtrSet
-operator|<
-specifier|const
-name|Function
-operator|*
-block|,
-literal|32
-operator|>
-name|UsedFunctions
-block|;
 comment|/// AddrLabelSymbols - This map keeps track of which symbol is being used for
 comment|/// the specified basic block's address of label.
 name|MMIAddrLabelMap
@@ -894,26 +881,6 @@ operator|)
 return|;
 block|}
 end_expr_stmt
-
-begin_comment
-comment|/// AnalyzeModule - Scan the module for global debug information.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_function_decl
-name|void
-name|AnalyzeModule
-parameter_list|(
-specifier|const
-name|Module
-modifier|&
-name|M
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/// hasDebugInfo - Returns true if valid debug info is present.
@@ -1360,40 +1327,6 @@ name|Personalities
 return|;
 block|}
 end_expr_stmt
-
-begin_comment
-comment|/// isUsedFunction - Return true if the functions in the llvm.used list.  This
-end_comment
-
-begin_comment
-comment|/// does not return true for things in llvm.compiler.used unless they are also
-end_comment
-
-begin_comment
-comment|/// in llvm.used.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|isUsedFunction
-argument_list|(
-specifier|const
-name|Function
-operator|*
-name|F
-argument_list|)
-decl|const
-block|{
-return|return
-name|UsedFunctions
-operator|.
-name|count
-argument_list|(
-name|F
-argument_list|)
-return|;
-block|}
-end_decl_stmt
 
 begin_comment
 comment|/// addCatchTypeInfo - Provide the catch typeinfo for a landing pad.
@@ -1971,7 +1904,7 @@ end_comment
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

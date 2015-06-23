@@ -249,12 +249,12 @@ literal|80
 block|}
 enum|;
 block|}
-comment|// End CallingConv namespace
+comment|// namespace CallingConv
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

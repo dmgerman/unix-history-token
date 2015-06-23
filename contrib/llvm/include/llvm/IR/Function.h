@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/OperandTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -476,7 +482,7 @@ block|{
 return|return
 name|new
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 name|Function
 argument_list|(
@@ -495,6 +501,60 @@ name|Function
 argument_list|()
 name|override
 expr_stmt|;
+comment|/// \brief Provide fast operand accessors
+name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
+argument_list|(
+name|Value
+argument_list|)
+expr_stmt|;
+comment|/// \brief Get the personality function associated with this function.
+name|bool
+name|hasPersonalityFn
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNumOperands
+argument_list|()
+operator|!=
+literal|0
+return|;
+block|}
+name|Constant
+operator|*
+name|getPersonalityFn
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|hasPersonalityFn
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|cast
+operator|<
+name|Constant
+operator|>
+operator|(
+name|Op
+operator|<
+literal|0
+operator|>
+operator|(
+operator|)
+operator|)
+return|;
+block|}
+name|void
+name|setPersonalityFn
+parameter_list|(
+name|Constant
+modifier|*
+name|C
+parameter_list|)
+function_decl|;
 name|Type
 operator|*
 name|getReturnType
@@ -2266,11 +2326,33 @@ operator|:
 name|nullptr
 return|;
 block|}
+name|template
+operator|<
+operator|>
+expr|struct
+name|OperandTraits
+operator|<
+name|Function
+operator|>
+operator|:
+name|public
+name|OptionalOperandTraits
+operator|<
+name|Function
+operator|>
+block|{}
+expr_stmt|;
+name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
+argument_list|(
+argument|Function
+argument_list|,
+argument|Value
+argument_list|)
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

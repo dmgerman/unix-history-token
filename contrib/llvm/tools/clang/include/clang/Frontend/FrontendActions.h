@@ -281,7 +281,7 @@ comment|/// create the PCHGenerator instance returned by CreateASTConsumer.
 comment|///
 comment|/// \returns true if an error occurred, false otherwise.
 specifier|static
-name|raw_ostream
+name|raw_pwrite_stream
 operator|*
 name|ComputeASTConsumerArguments
 argument_list|(
@@ -385,7 +385,7 @@ comment|/// \brief Compute the AST consumer arguments that will be used to
 comment|/// create the PCHGenerator instance returned by CreateASTConsumer.
 comment|///
 comment|/// \returns true if an error occurred, false otherwise.
-name|raw_ostream
+name|raw_pwrite_stream
 operator|*
 name|ComputeASTConsumerArguments
 argument_list|(

@@ -218,6 +218,7 @@ argument_list|()
 block|;   }
 expr|}
 block|;  }
+comment|// namespace llvm
 name|template
 operator|<
 name|class

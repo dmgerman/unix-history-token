@@ -88,7 +88,7 @@ comment|// OPC_Fail()
 block|}
 enum|;
 block|}
-comment|// namespace MCDecode
+comment|// namespace MCD
 block|}
 end_decl_stmt
 

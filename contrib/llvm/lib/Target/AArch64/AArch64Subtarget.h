@@ -130,6 +130,9 @@ name|class
 name|StringRef
 decl_stmt|;
 name|class
+name|Triple
+decl_stmt|;
+name|class
 name|AArch64Subtarget
 range|:
 name|public
@@ -219,7 +222,7 @@ comment|/// This constructor initializes the data members to match that
 comment|/// of the specified triple.
 name|AArch64Subtarget
 argument_list|(
-argument|const std::string&TT
+argument|const Triple&TT
 argument_list|,
 argument|const std::string&CPU
 argument_list|,
@@ -321,7 +324,7 @@ name|true
 return|;
 block|}
 name|bool
-name|enablePostMachineScheduler
+name|enablePostRAScheduler
 argument_list|()
 specifier|const
 name|override
@@ -615,7 +618,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

@@ -233,8 +233,13 @@ literal|15
 block|}
 enum|;
 block|}
+comment|// namespace MipsII
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

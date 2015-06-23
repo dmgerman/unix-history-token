@@ -1193,14 +1193,10 @@ name|Function
 operator|*
 name|F
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|GenericValue
 operator|>
-operator|&
 name|ArgValues
 argument_list|)
 name|override

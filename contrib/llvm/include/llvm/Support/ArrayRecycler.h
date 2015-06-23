@@ -650,7 +650,7 @@ end_block
 
 begin_comment
 unit|};  }
-comment|// end llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

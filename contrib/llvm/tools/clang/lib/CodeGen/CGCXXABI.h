@@ -1369,6 +1369,8 @@ argument_list|,
 argument|llvm::Value *This
 argument_list|,
 argument|llvm::Type *Ty
+argument_list|,
+argument|SourceLocation Loc
 argument_list|)
 operator|=
 literal|0

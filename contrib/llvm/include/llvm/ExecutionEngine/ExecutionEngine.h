@@ -644,7 +644,7 @@ modifier|*
 name|M
 parameter_list|)
 function_decl|;
-comment|/// FindFunctionNamed - Search all of the active modules to find the one that
+comment|/// FindFunctionNamed - Search all of the active modules to find the function that
 comment|/// defines FnName.  This is very slow operation and shouldn't be used for
 comment|/// general code.
 name|virtual
@@ -658,6 +658,25 @@ modifier|*
 name|FnName
 parameter_list|)
 function_decl|;
+comment|/// FindGlobalVariableNamed - Search all of the active modules to find the global variable
+comment|/// that defines Name.  This is very slow operation and shouldn't be used for
+comment|/// general code.
+name|virtual
+name|GlobalVariable
+modifier|*
+name|FindGlobalVariableNamed
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Name
+parameter_list|,
+name|bool
+name|AllowInternal
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|/// runFunction - Execute the specified function with the specified arguments,
 comment|/// and return the result.
 name|virtual
@@ -668,14 +687,10 @@ name|Function
 operator|*
 name|F
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|GenericValue
 operator|>
-operator|&
 name|ArgValues
 argument_list|)
 init|=
@@ -1888,7 +1903,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

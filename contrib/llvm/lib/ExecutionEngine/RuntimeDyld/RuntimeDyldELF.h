@@ -386,7 +386,7 @@ name|void
 name|findPPC64TOCSection
 parameter_list|(
 specifier|const
-name|ObjectFile
+name|ELFObjectFileBase
 modifier|&
 name|Obj
 parameter_list|,
@@ -403,7 +403,7 @@ name|void
 name|findOPDEntrySection
 parameter_list|(
 specifier|const
-name|ObjectFile
+name|ELFObjectFileBase
 modifier|&
 name|Obj
 parameter_list|,

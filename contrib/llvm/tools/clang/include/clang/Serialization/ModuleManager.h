@@ -97,6 +97,9 @@ decl_stmt|;
 name|class
 name|ModuleMap
 decl_stmt|;
+name|class
+name|PCHContainerOperations
+decl_stmt|;
 name|namespace
 name|serialization
 block|{
@@ -161,6 +164,12 @@ comment|/// FileEntry *.
 name|FileManager
 modifier|&
 name|FileMgr
+decl_stmt|;
+comment|/// \brief Knows how to unwrap module containers.
+specifier|const
+name|PCHContainerOperations
+modifier|&
+name|PCHContainerOps
 decl_stmt|;
 comment|/// \brief A lookup of in-memory (virtual file) buffers
 name|llvm
@@ -357,6 +366,11 @@ parameter_list|(
 name|FileManager
 modifier|&
 name|FileMgr
+parameter_list|,
+specifier|const
+name|PCHContainerOperations
+modifier|&
+name|PCHContainerOps
 parameter_list|)
 function_decl|;
 operator|~

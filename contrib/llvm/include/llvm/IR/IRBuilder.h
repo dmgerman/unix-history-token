@@ -978,6 +978,11 @@ modifier|&
 name|Name
 init|=
 literal|""
+parameter_list|,
+name|unsigned
+name|AddressSpace
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// \brief Get a constant value representing either true or false.
@@ -8446,6 +8451,11 @@ modifier|&
 name|Name
 init|=
 literal|""
+parameter_list|,
+name|unsigned
+name|AddressSpace
+init|=
+literal|0
 parameter_list|)
 block|{
 name|GlobalVariable
@@ -8457,6 +8467,8 @@ argument_list|(
 name|Str
 argument_list|,
 name|Name
+argument_list|,
+name|AddressSpace
 argument_list|)
 decl_stmt|;
 name|Value
@@ -12058,10 +12070,6 @@ name|Type
 modifier|*
 name|Ty
 parameter_list|,
-name|Value
-modifier|*
-name|PersFn
-parameter_list|,
 name|unsigned
 name|NumClauses
 parameter_list|,
@@ -12081,8 +12089,6 @@ operator|::
 name|Create
 argument_list|(
 name|Ty
-argument_list|,
-name|PersFn
 argument_list|,
 name|NumClauses
 argument_list|)
@@ -12884,8 +12890,12 @@ argument|LLVMBuilderRef
 argument_list|)
 end_macro
 
-begin_endif
+begin_comment
 unit|}
+comment|// namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif

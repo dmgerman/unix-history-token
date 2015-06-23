@@ -320,6 +320,9 @@ name|ADDS
 block|,
 name|SUBS
 block|,
+comment|// Unsigned Integer average
+name|AVG
+block|,
 comment|/// Integer horizontal add.
 name|HADD
 block|,
@@ -403,6 +406,9 @@ name|VFPEXT
 block|,
 comment|// Vector FP round.
 name|VFPROUND
+block|,
+comment|// Vector signed integer to double.
+name|CVTDQ2PD
 block|,
 comment|// 128-bit vector logical left / right shift
 name|VSHLDQ
@@ -615,6 +621,12 @@ name|COMPRESS
 block|,
 name|EXPAND
 block|,
+comment|//Convert Unsigned/Integer to Scalar Floating-Point Value
+comment|//with rounding mode
+name|SINT_TO_FP_RND
+block|,
+name|UINT_TO_FP_RND
+block|,
 comment|// Save xmm argument registers to the stack, according to %al. An operator
 comment|// is needed so that this can be expanded with control flow.
 name|VASTART_SAVE_XMM_REGS
@@ -724,6 +736,7 @@ comment|// thought as target memory ops!
 block|}
 enum|;
 block|}
+comment|// namespace X86ISD
 comment|/// Define some predicates that are used for node matching.
 name|namespace
 name|X86
@@ -890,6 +903,7 @@ literal|4
 block|}
 enum|;
 block|}
+comment|// namespace X86
 comment|//===--------------------------------------------------------------------===//
 comment|//  X86 Implementation of the TargetLowering interface
 name|class
@@ -3264,8 +3278,12 @@ function_decl|;
 block|}
 end_decl_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif

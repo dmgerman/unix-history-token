@@ -147,6 +147,12 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|BumpPtrStringSaver
+decl_stmt|;
+name|class
+name|StringSaver
+decl_stmt|;
 comment|/// cl Namespace - This namespace contains all of the command line option
 comment|/// processing machinery.  It is intentionally a short name to make qualified
 comment|/// usage concise.
@@ -8315,53 +8321,6 @@ end_comment
 begin_comment
 comment|//
 end_comment
-
-begin_comment
-comment|/// \brief Saves strings in the inheritor's stable storage and returns a stable
-end_comment
-
-begin_comment
-comment|/// raw character pointer.
-end_comment
-
-begin_decl_stmt
-name|class
-name|StringSaver
-block|{
-name|virtual
-name|void
-name|anchor
-parameter_list|()
-function_decl|;
-name|public
-label|:
-name|virtual
-specifier|const
-name|char
-modifier|*
-name|SaveString
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Str
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-name|virtual
-operator|~
-name|StringSaver
-argument_list|()
-block|{}
-expr_stmt|;
-comment|// Pacify -Wnon-virtual-dtor.
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/// \brief Tokenizes a command line that can contain escapes and quotes.

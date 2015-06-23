@@ -212,11 +212,6 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|DisableTailCalls
-argument_list|(
-name|false
-argument_list|)
-operator|,
 name|StackAlignmentOverride
 argument_list|(
 literal|0
@@ -399,13 +394,6 @@ comment|/// criteria (being at the end of a function, having the same return typ
 comment|/// as their parent function, etc.), using an alternate ABI if necessary.
 name|unsigned
 name|GuaranteedTailCallOpt
-range|:
-literal|1
-decl_stmt|;
-comment|/// DisableTailCalls - This flag controls whether we will use tail calls.
-comment|/// Disabling them may be useful to maintain a correct call stack.
-name|unsigned
-name|DisableTailCalls
 range|:
 literal|1
 decl_stmt|;
@@ -598,11 +586,6 @@ argument_list|)
 operator|&&
 name|ARE_EQUAL
 argument_list|(
-name|DisableTailCalls
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
 name|StackAlignmentOverride
 argument_list|)
 operator|&&
@@ -694,7 +677,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

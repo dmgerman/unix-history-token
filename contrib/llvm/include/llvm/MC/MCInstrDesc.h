@@ -155,6 +155,7 @@ literal|5
 block|}
 enum|;
 block|}
+comment|// namespace MCOI
 comment|/// \brief This holds information about one operand of a machine instruction,
 comment|/// indicating the register class for register operands, etc.
 name|class
@@ -322,6 +323,7 @@ name|Convergent
 block|}
 enum|;
 block|}
+comment|// namespace MCID
 comment|/// \brief Describe properties that are true of each instruction in the target
 comment|/// description file.  This captures information about side effects, register
 comment|/// use and many other things.  There is one instance of this struct for each

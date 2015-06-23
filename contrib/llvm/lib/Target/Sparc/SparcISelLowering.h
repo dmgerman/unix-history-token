@@ -158,6 +158,7 @@ name|TLS_CALL
 block|}
 enum|;
 block|}
+comment|// namespace SPISD
 name|class
 name|SparcTargetLowering
 range|:

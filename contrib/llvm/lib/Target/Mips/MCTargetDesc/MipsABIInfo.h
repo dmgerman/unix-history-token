@@ -191,7 +191,9 @@ specifier|static
 name|MipsABIInfo
 name|computeTargetABI
 parameter_list|(
+specifier|const
 name|Triple
+modifier|&
 name|TT
 parameter_list|,
 name|StringRef
@@ -384,6 +386,10 @@ block|}
 empty_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

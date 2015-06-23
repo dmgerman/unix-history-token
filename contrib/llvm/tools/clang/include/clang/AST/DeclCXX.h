@@ -4390,7 +4390,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \todo add a separate paramaeter to configure IsDerivedFrom, rather than
+comment|/// \todo add a separate parameter to configure IsDerivedFrom, rather than
 end_comment
 
 begin_comment

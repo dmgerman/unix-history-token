@@ -283,12 +283,12 @@ name|GlobalVariable
 argument_list|()
 name|override
 block|{
-name|NumOperands
-operator|=
-literal|1
-block|;
 comment|// FIXME: needed by operator delete
-block|}
+name|setGlobalVariableNumOperands
+argument_list|(
+literal|1
+argument_list|)
+block|;   }
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -605,7 +605,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

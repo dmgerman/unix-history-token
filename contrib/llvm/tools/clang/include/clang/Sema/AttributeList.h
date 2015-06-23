@@ -245,6 +245,9 @@ block|,
 comment|/// __ptr16, alignas(...), etc.
 name|AS_Keyword
 block|,
+comment|/// Context-sensitive version of a keyword attribute.
+name|AS_ContextSensitiveKeyword
+block|,
 comment|/// #pragma ...
 name|AS_Pragma
 block|}
@@ -1640,9 +1643,8 @@ argument_list|()
 operator|==
 name|AT_Aligned
 operator|&&
-name|SyntaxUsed
-operator|==
-name|AS_Keyword
+name|isKeywordAttribute
+argument_list|()
 return|;
 block|}
 name|bool
@@ -1679,6 +1681,21 @@ return|return
 name|SyntaxUsed
 operator|==
 name|AS_Keyword
+operator|||
+name|SyntaxUsed
+operator|==
+name|AS_ContextSensitiveKeyword
+return|;
+block|}
+name|bool
+name|isContextSensitiveKeywordAttribute
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SyntaxUsed
+operator|==
+name|AS_ContextSensitiveKeyword
 return|;
 block|}
 name|bool

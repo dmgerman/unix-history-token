@@ -118,8 +118,22 @@ name|void
 name|emitCSpecificHandlerTable
 argument_list|()
 block|;
+comment|/// Emit the EH table data for 32-bit and 64-bit functions using
+comment|/// the __CxxFrameHandler3 personality.
 name|void
 name|emitCXXFrameHandler3Table
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+block|;
+comment|/// Emit the EH table data for _except_handler3 and _except_handler4
+comment|/// personality functions. These are only used on 32-bit and do not use CFI
+comment|/// tables.
+name|void
+name|emitExceptHandlerTable
 argument_list|(
 specifier|const
 name|MachineFunction
@@ -210,6 +224,10 @@ block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

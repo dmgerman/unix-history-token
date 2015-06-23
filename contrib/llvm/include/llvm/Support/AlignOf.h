@@ -136,7 +136,43 @@ name|T
 operator|>
 expr|struct
 name|AlignOf
-block|{   enum
+block|{
+ifndef|#
+directive|ifndef
+name|_MSC_VER
+comment|// Avoid warnings from GCC like:
+comment|//   comparison between 'enum llvm::AlignOf<X>::<anonymous>' and 'enum
+comment|//   llvm::AlignOf<Y>::<anonymous>' [-Wenum-compare]
+comment|// by using constexpr instead of enum.
+comment|// (except on MSVC, since it doesn't support constexpr yet).
+specifier|static
+name|constexpr
+name|unsigned
+name|Alignment
+operator|=
+name|static_cast
+operator|<
+name|unsigned
+name|int
+operator|>
+operator|(
+sizeof|sizeof
+argument_list|(
+name|AlignmentCalcImpl
+operator|<
+name|T
+operator|>
+argument_list|)
+operator|-
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+operator|)
+block|;
+else|#
+directive|else
+block|enum
 block|{
 name|Alignment
 operator|=
@@ -160,7 +196,10 @@ name|T
 argument_list|)
 operator|)
 block|}
-block|;    enum
+block|;
+endif|#
+directive|endif
+block|enum
 block|{
 name|Alignment_GreaterEqual_2Bytes
 operator|=
@@ -258,6 +297,25 @@ literal|0
 block|}
 block|; }
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_MSC_VER
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|constexpr
+name|unsigned
+name|AlignOf
+operator|<
+name|T
+operator|>
+operator|::
+name|Alignment
+expr_stmt|;
+endif|#
+directive|endif
 comment|/// alignOf - A templated function that returns the minimum alignment of
 comment|///  of a type.  This provides no extra functionality beyond the AlignOf
 comment|///  class besides some cosmetic cleanliness.  Example usage:

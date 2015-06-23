@@ -81,6 +81,9 @@ name|class
 name|Target
 decl_stmt|;
 name|class
+name|Triple
+decl_stmt|;
+name|class
 name|raw_pwrite_stream
 decl_stmt|;
 name|class
@@ -314,7 +317,9 @@ name|MCRegisterInfo
 modifier|&
 name|MRI
 parameter_list|,
-name|StringRef
+specifier|const
+name|Triple
+modifier|&
 name|TT
 parameter_list|,
 name|StringRef

@@ -272,6 +272,65 @@ operator|!=
 name|K
 return|;
 block|}
+name|bool
+name|isOneOf
+argument_list|(
+name|tok
+operator|::
+name|TokenKind
+name|K1
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|K2
+argument_list|)
+decl|const
+block|{
+return|return
+name|is
+argument_list|(
+name|K1
+argument_list|)
+operator|||
+name|is
+argument_list|(
+name|K2
+argument_list|)
+return|;
+block|}
+name|template
+operator|<
+name|typename
+operator|...
+name|Ts
+operator|>
+name|bool
+name|isOneOf
+argument_list|(
+argument|tok::TokenKind K1
+argument_list|,
+argument|tok::TokenKind K2
+argument_list|,
+argument|Ts... Ks
+argument_list|)
+specifier|const
+block|{
+return|return
+name|is
+argument_list|(
+name|K1
+argument_list|)
+operator|||
+name|isOneOf
+argument_list|(
+name|K2
+argument_list|,
+name|Ks
+operator|...
+argument_list|)
+return|;
+block|}
 comment|/// \brief Return true if this is a raw identifier (when lexing
 comment|/// in raw mode) or a non-keyword identifier (when lexing in non-raw mode).
 name|bool

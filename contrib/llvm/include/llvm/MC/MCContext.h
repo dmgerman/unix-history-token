@@ -701,7 +701,7 @@ operator|*
 name|Name
 argument_list|,
 name|bool
-name|IsTemporary
+name|CanBeUnnamed
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -932,7 +932,12 @@ begin_function_decl
 name|MCSymbol
 modifier|*
 name|createTempSymbol
-parameter_list|()
+parameter_list|(
+name|bool
+name|CanBeUnnamed
+init|=
+name|true
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -948,6 +953,11 @@ name|Name
 parameter_list|,
 name|bool
 name|AlwaysAddSuffix
+parameter_list|,
+name|bool
+name|CanBeUnnamed
+init|=
+name|true
 parameter_list|)
 function_decl|;
 end_function_decl

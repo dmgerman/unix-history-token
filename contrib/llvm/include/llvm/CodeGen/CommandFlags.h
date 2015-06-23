@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Module.h"
 end_include
 
@@ -851,7 +857,7 @@ name|Strict
 argument_list|,
 literal|"off"
 argument_list|,
-literal|"Only fuse FP ops when the result won't be effected."
+literal|"Only fuse FP ops when the result won't be affected."
 argument_list|)
 argument_list|,
 name|clEnumValEnd
@@ -1430,12 +1436,6 @@ name|EnableGuaranteedTailCallOpt
 expr_stmt|;
 name|Options
 operator|.
-name|DisableTailCalls
-operator|=
-name|DisableTailCalls
-expr_stmt|;
-name|Options
-operator|.
 name|StackAlignmentOverride
 operator|=
 name|OverrideStackAlignment
@@ -1768,6 +1768,35 @@ condition|?
 literal|"true"
 else|:
 literal|"false"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DisableTailCalls
+operator|.
+name|getNumOccurrences
+argument_list|()
+operator|>
+literal|0
+condition|)
+name|NewAttrs
+operator|=
+name|NewAttrs
+operator|.
+name|addAttribute
+argument_list|(
+name|Ctx
+argument_list|,
+name|AttributeSet
+operator|::
+name|FunctionIndex
+argument_list|,
+literal|"disable-tail-calls"
+argument_list|,
+name|toStringRef
+argument_list|(
+name|DisableTailCalls
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|// Let NewAttrs override Attrs.

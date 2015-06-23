@@ -267,6 +267,29 @@ parameter_list|)
 function_decl|;
 name|virtual
 name|void
+name|prettyPrintAsm
+parameter_list|(
+name|MCInstPrinter
+modifier|&
+name|InstPrinter
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+specifier|const
+name|MCInst
+modifier|&
+name|Inst
+parameter_list|,
+specifier|const
+name|MCSubtargetInfo
+modifier|&
+name|STI
+parameter_list|)
+function_decl|;
+name|virtual
+name|void
 name|finish
 parameter_list|()
 function_decl|;
@@ -2754,7 +2777,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Emit the absolute difference between two symbols if possible.
+comment|/// Emit the absolute difference between two symbols.
 end_comment
 
 begin_comment
@@ -2765,13 +2788,9 @@ begin_comment
 comment|/// \pre Offset of \c Hi is greater than the offset \c Lo.
 end_comment
 
-begin_comment
-comment|/// \return true on success.
-end_comment
-
-begin_function
+begin_function_decl
 name|virtual
-name|bool
+name|void
 name|emitAbsoluteSymbolDiff
 parameter_list|(
 specifier|const
@@ -2787,12 +2806,8 @@ parameter_list|,
 name|unsigned
 name|Size
 parameter_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|virtual

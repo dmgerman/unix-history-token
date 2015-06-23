@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Endian.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorOr.h"
 end_include
 
@@ -117,9 +123,12 @@ comment|/// lazily load metadata as well. If successful, this moves Buffer. On
 comment|/// error, this *does not* move Buffer.
 name|ErrorOr
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-operator|*
-operator|>
+operator|>>
 name|getLazyBitcodeModule
 argument_list|(
 argument|std::unique_ptr<MemoryBuffer>&&Buffer
@@ -145,7 +154,7 @@ name|getStreamedBitcodeModule
 argument_list|(
 argument|StringRef Name
 argument_list|,
-argument|DataStreamer *Streamer
+argument|std::unique_ptr<DataStreamer> Streamer
 argument_list|,
 argument|LLVMContext&Context
 argument_list|,
@@ -170,9 +179,12 @@ expr_stmt|;
 comment|/// Read the specified bitcode file, returning the module.
 name|ErrorOr
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-operator|*
-operator|>
+operator|>>
 name|parseBitcodeFile
 argument_list|(
 argument|MemoryBufferRef Buffer
@@ -433,88 +445,34 @@ return|;
 name|unsigned
 name|Offset
 init|=
-operator|(
+name|support
+operator|::
+name|endian
+operator|::
+name|read32le
+argument_list|(
+operator|&
 name|BufPtr
 index|[
 name|OffsetField
 index|]
-operator||
-operator|(
-name|BufPtr
-index|[
-name|OffsetField
-operator|+
-literal|1
-index|]
-operator|<<
-literal|8
-operator|)
-operator||
-operator|(
-name|BufPtr
-index|[
-name|OffsetField
-operator|+
-literal|2
-index|]
-operator|<<
-literal|16
-operator|)
-operator||
-operator|(
-name|BufPtr
-index|[
-name|OffsetField
-operator|+
-literal|3
-index|]
-operator|<<
-literal|24
-operator|)
-operator|)
+argument_list|)
 decl_stmt|;
 name|unsigned
 name|Size
 init|=
-operator|(
+name|support
+operator|::
+name|endian
+operator|::
+name|read32le
+argument_list|(
+operator|&
 name|BufPtr
 index|[
 name|SizeField
 index|]
-operator||
-operator|(
-name|BufPtr
-index|[
-name|SizeField
-operator|+
-literal|1
-index|]
-operator|<<
-literal|8
-operator|)
-operator||
-operator|(
-name|BufPtr
-index|[
-name|SizeField
-operator|+
-literal|2
-index|]
-operator|<<
-literal|16
-operator|)
-operator||
-operator|(
-name|BufPtr
-index|[
-name|SizeField
-operator|+
-literal|3
-index|]
-operator|<<
-literal|24
-operator|)
-operator|)
+argument_list|)
 decl_stmt|;
 comment|// Verify that Offset+Size fits in the file.
 if|if
@@ -658,7 +616,7 @@ return|;
 block|}
 expr|}
 block|;  }
-comment|// End llvm namespace
+comment|// namespace llvm
 name|namespace
 name|std
 block|{

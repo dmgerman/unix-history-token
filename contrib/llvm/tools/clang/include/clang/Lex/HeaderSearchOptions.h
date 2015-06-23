@@ -286,9 +286,10 @@ name|DisableModuleHash
 operator|:
 literal|1
 block|;
-comment|/// \brief Interpret module maps.  This option is implied by full modules.
+comment|/// \brief Implicit module maps.  This option is enabld by default when
+comment|/// modules is enabled.
 name|unsigned
-name|ModuleMaps
+name|ImplicitModuleMaps
 operator|:
 literal|1
 block|;
@@ -416,7 +417,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-name|ModuleMaps
+name|ImplicitModuleMaps
 argument_list|(
 literal|0
 argument_list|)

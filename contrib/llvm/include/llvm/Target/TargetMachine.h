@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/DataLayout.h"
 end_include
 
@@ -113,6 +119,9 @@ name|GlobalValue
 decl_stmt|;
 name|class
 name|Mangler
+decl_stmt|;
+name|class
+name|MachineFunctionInitializer
 decl_stmt|;
 name|class
 name|MCAsmInfo
@@ -234,7 +243,7 @@ argument|const Target&T
 argument_list|,
 argument|StringRef DataLayoutString
 argument_list|,
-argument|StringRef TargetTriple
+argument|const Triple&TargetTriple
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -256,11 +265,9 @@ name|DL
 decl_stmt|;
 comment|/// Triple string, CPU name, and target feature strings the TargetMachine
 comment|/// instance is created with.
-name|std
-operator|::
-name|string
+name|Triple
 name|TargetTriple
-expr_stmt|;
+decl_stmt|;
 name|std
 operator|::
 name|string
@@ -325,7 +332,9 @@ return|return
 name|TheTarget
 return|;
 block|}
-name|StringRef
+specifier|const
+name|Triple
+operator|&
 name|getTargetTriple
 argument_list|()
 specifier|const
@@ -698,6 +707,12 @@ name|AnalysisID
 comment|/*StopAfter*/
 init|=
 name|nullptr
+parameter_list|,
+name|MachineFunctionInitializer
+modifier|*
+comment|/*MFInitializer*/
+init|=
+name|nullptr
 parameter_list|)
 block|{
 return|return
@@ -794,7 +809,7 @@ argument|const Target&T
 argument_list|,
 argument|StringRef DataLayoutString
 argument_list|,
-argument|StringRef TargetTriple
+argument|const Triple&TargetTriple
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -852,6 +867,8 @@ argument_list|,
 argument|AnalysisID StartAfter = nullptr
 argument_list|,
 argument|AnalysisID StopAfter = nullptr
+argument_list|,
+argument|MachineFunctionInitializer *MFInitializer = nullptr
 argument_list|)
 name|override
 block|;
@@ -877,7 +894,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

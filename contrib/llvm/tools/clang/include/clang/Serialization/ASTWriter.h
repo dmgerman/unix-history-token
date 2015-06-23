@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/PCHContainerOperations.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/TemplateBase.h"
 end_include
 
@@ -3307,19 +3313,15 @@ operator|::
 name|string
 name|isysroot
 block|;
-name|raw_ostream
-operator|*
-name|Out
-block|;
 name|Sema
 operator|*
 name|SemaPtr
 block|;
-name|SmallVector
+name|std
+operator|::
+name|shared_ptr
 operator|<
-name|char
-block|,
-literal|128
+name|PCHBuffer
 operator|>
 name|Buffer
 block|;
@@ -3333,9 +3335,6 @@ name|Writer
 block|;
 name|bool
 name|AllowASTWithErrors
-block|;
-name|bool
-name|HasEmittedPCH
 block|;
 name|protected
 operator|:
@@ -3359,6 +3358,21 @@ return|return
 name|Writer
 return|;
 block|}
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|getPCH
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Buffer
+operator|->
+name|Data
+return|;
+block|}
 name|public
 operator|:
 name|PCHGenerator
@@ -3371,7 +3385,7 @@ argument|clang::Module *Module
 argument_list|,
 argument|StringRef isysroot
 argument_list|,
-argument|raw_ostream *Out
+argument|std::shared_ptr<PCHBuffer> Buffer
 argument_list|,
 argument|bool AllowASTWithErrors = false
 argument_list|)
@@ -3418,7 +3432,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|HasEmittedPCH
+name|Buffer
+operator|->
+name|IsComplete
 return|;
 block|}
 expr|}

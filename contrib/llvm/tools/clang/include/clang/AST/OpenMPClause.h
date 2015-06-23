@@ -6278,13 +6278,8 @@ operator|*
 operator|*
 operator|>
 operator|(
-name|getFinals
+name|varlist_end
 argument_list|()
-operator|.
-name|end
-argument_list|()
-operator|+
-literal|2
 operator|)
 argument_list|)
 return|;
@@ -6577,8 +6572,6 @@ operator|>
 operator|(
 name|varlist_end
 argument_list|()
-operator|+
-literal|1
 operator|)
 argument_list|)
 return|;

@@ -474,7 +474,7 @@ end_function_decl
 
 begin_comment
 unit|}
-comment|// end llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

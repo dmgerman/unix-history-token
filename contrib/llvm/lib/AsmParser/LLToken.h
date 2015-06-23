@@ -379,6 +379,8 @@ name|kw_sspreq
 block|,
 name|kw_sspstrong
 block|,
+name|kw_safestack
+block|,
 name|kw_sret
 block|,
 name|kw_sanitize_thread

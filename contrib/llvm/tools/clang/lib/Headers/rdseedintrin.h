@@ -32,31 +32,29 @@ directive|define
 name|__RDSEEDINTRIN_H
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__RDSEED__
-end_ifdef
+begin_comment
+comment|/* Define the default attributes for the functions in this file. */
+end_comment
 
-begin_decl_stmt
+begin_define
+define|#
+directive|define
+name|DEFAULT_FN_ATTRS
+value|__attribute__((__always_inline__, __nodebug__, __target__("rdseed")))
+end_define
+
+begin_function
 specifier|static
 name|__inline__
 name|int
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
+name|DEFAULT_FN_ATTRS
 name|_rdseed16_step
-argument_list|(
+parameter_list|(
 name|unsigned
 name|short
-operator|*
+modifier|*
 name|__p
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|__builtin_ia32_rdseed16_step
@@ -65,27 +63,20 @@ name|__p
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|__inline__
 name|int
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
+name|DEFAULT_FN_ATTRS
 name|_rdseed32_step
-argument_list|(
+parameter_list|(
 name|unsigned
 name|int
-operator|*
+modifier|*
 name|__p
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|__builtin_ia32_rdseed32_step
@@ -94,7 +85,7 @@ name|__p
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_ifdef
 ifdef|#
@@ -102,26 +93,19 @@ directive|ifdef
 name|__x86_64__
 end_ifdef
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|__inline__
 name|int
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
+name|DEFAULT_FN_ATTRS
 name|_rdseed64_step
-argument_list|(
+parameter_list|(
 name|unsigned
 name|long
 name|long
-operator|*
+modifier|*
 name|__p
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|__builtin_ia32_rdseed64_step
@@ -130,21 +114,18 @@ name|__p
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __RDSEED__ */
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|DEFAULT_FN_ATTRS
+end_undef
 
 begin_endif
 endif|#

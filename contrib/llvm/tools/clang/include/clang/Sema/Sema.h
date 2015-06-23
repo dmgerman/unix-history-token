@@ -791,6 +791,129 @@ name|SourceLocation
 operator|>
 name|UnexpandedParameterPack
 expr_stmt|;
+comment|/// Describes whether we've seen any nullability information for the given
+comment|/// file.
+struct|struct
+name|FileNullability
+block|{
+comment|/// The first pointer declarator (of any pointer kind) in the file that does
+comment|/// not have a corresponding nullability annotation.
+name|SourceLocation
+name|PointerLoc
+decl_stmt|;
+comment|/// Which kind of pointer declarator we saw.
+name|uint8_t
+name|PointerKind
+decl_stmt|;
+comment|/// Whether we saw any type nullability annotations in the given file.
+name|bool
+name|SawTypeNullability
+init|=
+name|false
+decl_stmt|;
+block|}
+struct|;
+comment|/// A mapping from file IDs to a record of whether we've seen nullability
+comment|/// information in that file.
+name|class
+name|FileNullabilityMap
+block|{
+comment|/// A mapping from file IDs to the nullability information for each file ID.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|FileID
+operator|,
+name|FileNullability
+operator|>
+name|Map
+expr_stmt|;
+comment|/// A single-element cache based on the file ID.
+struct|struct
+block|{
+name|FileID
+name|File
+decl_stmt|;
+name|FileNullability
+name|Nullability
+decl_stmt|;
+block|}
+name|Cache
+struct|;
+name|public
+label|:
+name|FileNullability
+modifier|&
+name|operator
+function|[]
+parameter_list|(
+name|FileID
+name|file
+parameter_list|)
+block|{
+comment|// Check the single-element cache.
+if|if
+condition|(
+name|file
+operator|==
+name|Cache
+operator|.
+name|File
+condition|)
+return|return
+name|Cache
+operator|.
+name|Nullability
+return|;
+comment|// It's not in the single-element cache; flush the cache if we have one.
+if|if
+condition|(
+operator|!
+name|Cache
+operator|.
+name|File
+operator|.
+name|isInvalid
+argument_list|()
+condition|)
+block|{
+name|Map
+index|[
+name|Cache
+operator|.
+name|File
+index|]
+operator|=
+name|Cache
+operator|.
+name|Nullability
+expr_stmt|;
+block|}
+comment|// Pull this entry into the cache.
+name|Cache
+operator|.
+name|File
+operator|=
+name|file
+expr_stmt|;
+name|Cache
+operator|.
+name|Nullability
+operator|=
+name|Map
+index|[
+name|file
+index|]
+expr_stmt|;
+return|return
+name|Cache
+operator|.
+name|Nullability
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// Sema - This implements semantic analysis and AST building for C.
 name|class
 name|Sema
@@ -1162,6 +1285,10 @@ operator|*
 operator|>
 name|CodeSegStack
 expr_stmt|;
+comment|/// A mapping that describes the nullability we've seen in each header file.
+name|FileNullabilityMap
+name|NullabilityMap
+decl_stmt|;
 comment|/// Last section used with #pragma init_seg.
 name|StringLiteral
 modifier|*
@@ -3669,6 +3796,60 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function
+name|unsigned
+name|deduceWeakPropertyFromType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|getLangOpts
+argument_list|()
+operator|.
+name|getGC
+argument_list|()
+operator|!=
+name|LangOptions
+operator|::
+name|NonGC
+operator|&&
+name|T
+operator|.
+name|isObjCGCWeak
+argument_list|()
+operator|)
+operator|||
+operator|(
+name|getLangOpts
+argument_list|()
+operator|.
+name|ObjCAutoRefCount
+operator|&&
+name|T
+operator|.
+name|getObjCLifetime
+argument_list|()
+operator|==
+name|Qualifiers
+operator|::
+name|OCL_Weak
+operator|)
+condition|)
+return|return
+name|ObjCDeclSpec
+operator|::
+name|DQ_PR_weak
+return|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/// \brief Build a function type.
 end_comment
@@ -4853,6 +5034,34 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// Determine if the template parameter \p D has a visible default argument.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|hasVisibleDefaultArgument
+argument_list|(
+specifier|const
+name|NamedDecl
+operator|*
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|Module
+operator|*
+operator|>
+operator|*
+name|Modules
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|bool
@@ -7304,6 +7513,91 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Kinds of missing import. Note, the values of these enumerators correspond
+end_comment
+
+begin_comment
+comment|/// to %select values in diagnostics.
+end_comment
+
+begin_decl_stmt
+name|enum
+name|class
+name|MissingImportKind
+block|{
+name|Declaration
+operator|,
+name|Definition
+operator|,
+name|DefaultArgument
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// \brief Diagnose that the specified declaration needs to be visible but
+end_comment
+
+begin_comment
+comment|/// isn't, and suggest a module import that would resolve the problem.
+end_comment
+
+begin_function_decl
+name|void
+name|diagnoseMissingImport
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|NamedDecl
+modifier|*
+name|Decl
+parameter_list|,
+name|bool
+name|NeedDefinition
+parameter_list|,
+name|bool
+name|Recover
+init|=
+name|true
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|void
+name|diagnoseMissingImport
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|,
+name|NamedDecl
+operator|*
+name|Decl
+argument_list|,
+name|SourceLocation
+name|DeclLoc
+argument_list|,
+name|ArrayRef
+operator|<
+name|Module
+operator|*
+operator|>
+name|Modules
+argument_list|,
+name|MissingImportKind
+name|MIK
+argument_list|,
+name|bool
+name|Recover
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Retrieve a suitable printing policy.
 end_comment
 
@@ -8031,12 +8325,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|SkippedDefinitionContext
+typedef|;
+end_typedef
+
 begin_comment
 comment|/// \brief Invoked when we enter a tag definition that we're skipping.
 end_comment
 
-begin_function
-name|void
+begin_function_decl
+name|SkippedDefinitionContext
 name|ActOnTagStartSkippedDefinition
 parameter_list|(
 name|Scope
@@ -8047,22 +8349,8 @@ name|Decl
 modifier|*
 name|TD
 parameter_list|)
-block|{
-name|PushDeclContext
-argument_list|(
-name|S
-argument_list|,
-name|cast
-operator|<
-name|DeclContext
-operator|>
-operator|(
-name|TD
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|Decl
@@ -8138,16 +8426,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function
+begin_function_decl
 name|void
 name|ActOnTagFinishSkippedDefinition
-parameter_list|()
-block|{
-name|PopDeclContext
-argument_list|()
-expr_stmt|;
-block|}
-end_function
+parameter_list|(
+name|SkippedDefinitionContext
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -13146,6 +13433,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|checkTargetAttr
+parameter_list|(
+name|SourceLocation
+name|LiteralLoc
+parameter_list|,
+name|StringRef
+name|Str
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|bool
 name|checkMSInheritanceAttrOnDefinition
@@ -13248,6 +13548,90 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// Check whether a nullability type specifier can be added to the given
+end_comment
+
+begin_comment
+comment|/// type.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param type The type to which the nullability specifier will be
+end_comment
+
+begin_comment
+comment|/// added. On success, this type will be updated appropriately.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param nullability The nullability specifier to add.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param nullabilityLoc The location of the nullability specifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param isContextSensitive Whether this nullability specifier was
+end_comment
+
+begin_comment
+comment|/// written as a context-sensitive keyword (in an Objective-C
+end_comment
+
+begin_comment
+comment|/// method) or an Objective-C property attribute, rather than as an
+end_comment
+
+begin_comment
+comment|/// underscored type specifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if nullability cannot be applied, false otherwise.
+end_comment
+
+begin_function_decl
+name|bool
+name|checkNullabilityTypeSpecifier
+parameter_list|(
+name|QualType
+modifier|&
+name|type
+parameter_list|,
+name|NullabilityKind
+name|nullability
+parameter_list|,
+name|SourceLocation
+name|nullabilityLoc
+parameter_list|,
+name|bool
+name|isContextSensitive
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Stmt attributes - this routine is the top level dispatcher.
@@ -13455,6 +13839,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Diagnose any null-resettable synthesized setters.
+end_comment
+
+begin_function_decl
+name|void
+name|diagnoseNullResettableSynthesizedSetters
+parameter_list|(
+name|ObjCImplDecl
+modifier|*
+name|impDecl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// DefaultSynthesizeProperties - This routine default synthesizes all
 end_comment
 
@@ -13636,9 +14035,12 @@ name|bool
 operator|*
 name|isOverridingProperty
 argument_list|,
+name|QualType
+name|T
+argument_list|,
 name|TypeSourceInfo
 operator|*
-name|T
+name|TSI
 argument_list|,
 name|tok
 operator|::
@@ -13701,9 +14103,12 @@ specifier|const
 name|unsigned
 name|AttributesAsWritten
 argument_list|,
+name|QualType
+name|T
+argument_list|,
 name|TypeSourceInfo
 operator|*
-name|T
+name|TSI
 argument_list|,
 name|tok
 operator|::
@@ -35827,6 +36232,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// \brief Called on well-formed '\#pragma omp taskgroup'.
+end_comment
+
+begin_function_decl
+name|StmtResult
+name|ActOnOpenMPTaskgroupDirective
+parameter_list|(
+name|Stmt
+modifier|*
+name|AStmt
+parameter_list|,
+name|SourceLocation
+name|StartLoc
+parameter_list|,
+name|SourceLocation
+name|EndLoc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Called on well-formed '\#pragma omp flush'.
 end_comment
 
@@ -40607,6 +41033,11 @@ name|NamedDecl
 operator|*
 name|FDecl
 argument_list|,
+specifier|const
+name|FunctionProtoType
+operator|*
+name|Proto
+argument_list|,
 name|ArrayRef
 operator|<
 specifier|const
@@ -40614,9 +41045,6 @@ name|Expr
 operator|*
 operator|>
 name|Args
-argument_list|,
-name|unsigned
-name|NumParams
 argument_list|,
 name|bool
 name|IsMemberFunction
@@ -40986,6 +41414,29 @@ name|Low
 parameter_list|,
 name|int
 name|High
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|SemaBuiltinARMSpecialReg
+parameter_list|(
+name|unsigned
+name|BuiltinID
+parameter_list|,
+name|CallExpr
+modifier|*
+name|TheCall
+parameter_list|,
+name|int
+name|ArgNum
+parameter_list|,
+name|unsigned
+name|ExpectedFieldNum
+parameter_list|,
+name|bool
+name|AllowName
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -41684,6 +42135,46 @@ name|Ident___float128
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// Nullability type specifiers.
+end_comment
+
+begin_decl_stmt
+name|IdentifierInfo
+modifier|*
+name|Ident___nonnull
+init|=
+name|nullptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|IdentifierInfo
+modifier|*
+name|Ident___nullable
+init|=
+name|nullptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|IdentifierInfo
+modifier|*
+name|Ident___null_unspecified
+init|=
+name|nullptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|IdentifierInfo
+modifier|*
+name|Ident_NSError
+init|=
+name|nullptr
+decl_stmt|;
+end_decl_stmt
+
 begin_label
 name|protected
 label|:
@@ -41728,6 +42219,46 @@ begin_label
 name|public
 label|:
 end_label
+
+begin_comment
+comment|/// Retrieve the keyword associated
+end_comment
+
+begin_function_decl
+name|IdentifierInfo
+modifier|*
+name|getNullabilityKeyword
+parameter_list|(
+name|NullabilityKind
+name|nullability
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// The struct behind the CFErrorRef pointer.
+end_comment
+
+begin_decl_stmt
+name|RecordDecl
+modifier|*
+name|CFError
+init|=
+name|nullptr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Retrieve the identifier "NSError".
+end_comment
+
+begin_function_decl
+name|IdentifierInfo
+modifier|*
+name|getNSErrorIdent
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Retrieve the parser's current scope.

@@ -831,6 +831,19 @@ argument_list|,
 argument|ModulePtrSet::iterator E
 argument_list|)
 block|;
+name|GlobalVariable
+operator|*
+name|FindGlobalVariableNamedInModulePtrSet
+argument_list|(
+argument|const char *Name
+argument_list|,
+argument|bool AllowInternal
+argument_list|,
+argument|ModulePtrSet::iterator I
+argument_list|,
+argument|ModulePtrSet::iterator E
+argument_list|)
+block|;
 name|void
 name|runStaticConstructorsDestructorsInModulePtrSet
 argument_list|(
@@ -885,14 +898,29 @@ argument|Module *M
 argument_list|)
 name|override
 block|;
-comment|/// FindFunctionNamed - Search all of the active modules to find the one that
+comment|/// FindFunctionNamed - Search all of the active modules to find the function that
 comment|/// defines FnName.  This is very slow operation and shouldn't be used for
 comment|/// general code.
+name|virtual
 name|Function
 operator|*
 name|FindFunctionNamed
 argument_list|(
 argument|const char *FnName
+argument_list|)
+name|override
+block|;
+comment|/// FindGlobalVariableNamed - Search all of the active modules to find the global variable
+comment|/// that defines Name.  This is very slow operation and shouldn't be used for
+comment|/// general code.
+name|virtual
+name|GlobalVariable
+operator|*
+name|FindGlobalVariableNamed
+argument_list|(
+argument|const char *Name
+argument_list|,
+argument|bool AllowInternal = false
 argument_list|)
 name|override
 block|;
@@ -975,7 +1003,7 @@ name|runFunction
 argument_list|(
 argument|Function *F
 argument_list|,
-argument|const std::vector<GenericValue>&ArgValues
+argument|ArrayRef<GenericValue> ArgValues
 argument_list|)
 name|override
 block|;
@@ -1219,7 +1247,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

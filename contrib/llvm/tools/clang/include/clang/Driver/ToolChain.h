@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Sanitizers.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Driver/Action.h"
 end_include
 
@@ -672,6 +678,10 @@ name|nullptr
 return|;
 block|}
 comment|/// Choose a tool to use to handle the action \p JA.
+comment|///
+comment|/// This can be overridden when a particular ToolChain needs to use
+comment|/// a C compiler other than Clang.
+name|virtual
 name|Tool
 modifier|*
 name|SelectTool
@@ -1235,6 +1245,13 @@ name|CmdArgs
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Return sanitizers which are available in this toolchain.
+name|virtual
+name|SanitizerMask
+name|getSupportedSanitizers
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

@@ -1505,6 +1505,59 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// Returns true if the given lane mask is imprecise.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// LaneMasks as given by getSubRegIndexLaneMask() have a limited number of
+end_comment
+
+begin_comment
+comment|/// bits, so for targets with more than 31 disjunct subregister indices there
+end_comment
+
+begin_comment
+comment|/// may be cases where:
+end_comment
+
+begin_comment
+comment|///    getSubReg(Reg,A) does not overlap getSubReg(Reg,B)
+end_comment
+
+begin_comment
+comment|/// but we still have
+end_comment
+
+begin_comment
+comment|///    (getSubRegIndexLaneMask(A)& getSubRegIndexLaneMask(B)) != 0.
+end_comment
+
+begin_comment
+comment|/// This function returns true in those cases.
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|isImpreciseLaneMask
+parameter_list|(
+name|unsigned
+name|LaneMask
+parameter_list|)
+block|{
+return|return
+name|LaneMask
+operator|&
+literal|0x80000000u
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// The lane masks returned by getSubRegIndexLaneMask() above can only be
 end_comment
 
@@ -4327,7 +4380,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif

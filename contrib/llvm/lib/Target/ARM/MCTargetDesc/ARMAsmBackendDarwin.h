@@ -80,7 +80,7 @@ name|ARMAsmBackendDarwin
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|MachO::CPUSubTypeARM st
 argument_list|)
@@ -132,6 +132,10 @@ block|}
 expr|}
 block|; }
 end_block
+
+begin_comment
+comment|// namespace
+end_comment
 
 begin_endif
 endif|#

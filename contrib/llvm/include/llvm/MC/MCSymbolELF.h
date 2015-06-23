@@ -159,16 +159,6 @@ argument_list|()
 specifier|const
 block|;
 name|void
-name|setUsedInReloc
-argument_list|()
-specifier|const
-block|;
-name|bool
-name|isUsedInReloc
-argument_list|()
-specifier|const
-block|;
-name|void
 name|setIsWeakrefUsedInReloc
 argument_list|()
 specifier|const
@@ -212,6 +202,10 @@ block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

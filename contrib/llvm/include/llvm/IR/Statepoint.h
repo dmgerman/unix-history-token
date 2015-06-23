@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__LLVM_IR_STATEPOINT_H
+name|LLVM_IR_STATEPOINT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__LLVM_IR_STATEPOINT_H
+name|LLVM_IR_STATEPOINT_H
 end_define
 
 begin_include
@@ -900,11 +900,7 @@ operator|<
 name|GCRelocateOperands
 operator|>
 name|getRelocates
-argument_list|(
-name|ImmutableStatepoint
-operator|&
-name|IS
-argument_list|)
+argument_list|()
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -1480,9 +1476,7 @@ name|CallSiteTy
 operator|>
 operator|::
 name|getRelocates
-argument_list|(
-argument|ImmutableStatepoint&IS
-argument_list|)
+argument_list|()
 block|{
 name|std
 operator|::
@@ -1492,11 +1486,9 @@ name|GCRelocateOperands
 operator|>
 name|Result
 block|;
-name|ImmutableCallSite
+name|CallSiteTy
 name|StatepointCS
 operator|=
-name|IS
-operator|.
 name|getCallSite
 argument_list|()
 block|;
@@ -1649,8 +1641,12 @@ name|Result
 return|;
 end_return
 
-begin_endif
+begin_comment
 unit|} }
+comment|// namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif

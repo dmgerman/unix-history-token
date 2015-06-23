@@ -137,7 +137,7 @@ name|PPCTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -211,12 +211,13 @@ name|isPPC64
 argument_list|()
 specifier|const
 block|{
+specifier|const
 name|Triple
+operator|&
 name|TT
-argument_list|(
+operator|=
 name|getTargetTriple
 argument_list|()
-argument_list|)
 block|;
 return|return
 operator|(
@@ -261,7 +262,7 @@ name|PPC32TargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -296,7 +297,7 @@ name|PPC64TargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,

@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -111,6 +117,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|Attr
+decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
@@ -282,6 +291,20 @@ operator|::
 name|BasicBlock
 operator|*
 name|Header
+argument_list|,
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+specifier|const
+name|Attr
+operator|*
+operator|>
+name|Attrs
+operator|=
+name|llvm
+operator|::
+name|None
 argument_list|)
 decl_stmt|;
 comment|/// \brief End the current loop.

@@ -5717,7 +5717,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_macro
@@ -5780,6 +5780,10 @@ argument_list|)
 block|;   }
 block|}
 end_block
+
+begin_comment
+comment|// namespace std
+end_comment
 
 begin_endif
 endif|#

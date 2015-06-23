@@ -192,6 +192,7 @@ name|DIR_64
 block|}
 enum|;
 block|}
+comment|// namespace PPC
 name|class
 name|GlobalValue
 decl_stmt|;
@@ -324,7 +325,7 @@ name|bool
 name|IsPPC6xx
 block|;
 name|bool
-name|DeprecatedMFTB
+name|FeatureMFTB
 block|;
 name|bool
 name|DeprecatedDST
@@ -381,9 +382,7 @@ comment|///
 name|PPCSubtarget
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|Triple
 operator|&
 name|TT
 argument_list|,
@@ -895,12 +894,12 @@ name|IsE500
 return|;
 block|}
 name|bool
-name|isDeprecatedMFTB
+name|isFeatureMFTB
 argument_list|()
 specifier|const
 block|{
 return|return
-name|DeprecatedMFTB
+name|FeatureMFTB
 return|;
 block|}
 name|bool
@@ -1106,7 +1105,7 @@ name|override
 expr_stmt|;
 comment|// This overrides the PostRAScheduler bit in the SchedModel for each CPU.
 name|bool
-name|enablePostMachineScheduler
+name|enablePostRAScheduler
 argument_list|()
 specifier|const
 name|override
@@ -1169,7 +1168,7 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// namespace llvm
 end_comment
 
 begin_endif
