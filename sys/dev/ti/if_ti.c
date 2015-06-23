@@ -16658,7 +16658,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ti_ifmedia_upd
+name|ti_ifmedia_upd_locked
 argument_list|(
 name|ifp
 argument_list|)
