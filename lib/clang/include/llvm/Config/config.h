@@ -34,6 +34,16 @@ file|<osreldate.h>
 end_include
 
 begin_comment
+comment|/* Exported configuration */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/Config/llvm-config.h"
+end_include
+
+begin_comment
 comment|/* Bug report URL. */
 end_comment
 
@@ -67,9 +77,12 @@ begin_comment
 comment|/* Multilib suffix for libdir. */
 end_comment
 
-begin_comment
-comment|/* #undef CLANG_LIBDIR_SUFFIX */
-end_comment
+begin_define
+define|#
+directive|define
+name|CLANG_LIBDIR_SUFFIX
+value|""
+end_define
 
 begin_comment
 comment|/* Relative directory for resource files */
@@ -514,6 +527,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `ole32' library (-lole32). */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBOLE32 */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `psapi' library (-lpsapi). */
 end_comment
 
@@ -525,9 +546,12 @@ begin_comment
 comment|/* Define to 1 if you have the `pthread' library (-lpthread). */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_LIBPTHREAD */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_LIBPTHREAD
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `shell32' library (-lshell32). */
@@ -747,33 +771,45 @@ begin_comment
 comment|/* Have pthread_getspecific */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PTHREAD_GETSPECIFIC */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PTHREAD_GETSPECIFIC
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<pthread.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PTHREAD_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PTHREAD_H
+value|1
+end_define
 
 begin_comment
 comment|/* Have pthread_mutex_lock */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PTHREAD_MUTEX_LOCK */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PTHREAD_MUTEX_LOCK
+value|1
+end_define
 
 begin_comment
 comment|/* Have pthread_rwlock_init */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PTHREAD_RWLOCK_INIT */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PTHREAD_RWLOCK_INIT
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if srand48/lrand48/drand48 exist in<stdlib.h> */
@@ -1414,7 +1450,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_ENABLE_THREADS
-value|0
+value|1
 end_define
 
 begin_comment
@@ -1444,7 +1480,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_HAS_ATOMICS
-value|0
+value|1
 end_define
 
 begin_comment
