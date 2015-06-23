@@ -17773,7 +17773,7 @@ name|br
 parameter_list|)
 block|{
 return|return
-name|drbr_inuse_drv
+name|drbr_inuse
 argument_list|(
 name|ifh
 argument_list|,
