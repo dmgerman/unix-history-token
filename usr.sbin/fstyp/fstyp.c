@@ -209,7 +209,7 @@ block|}
 block|,
 ifdef|#
 directive|ifdef
-name|HAVE_CDDL
+name|HAVE_ZFS
 block|{
 literal|"zfs"
 block|,
