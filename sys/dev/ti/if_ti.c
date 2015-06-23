@@ -16660,7 +16660,7 @@ name|error
 operator|=
 name|ti_ifmedia_upd_locked
 argument_list|(
-name|ifp
+name|sc
 argument_list|)
 expr_stmt|;
 name|TI_UNLOCK
