@@ -10996,13 +10996,14 @@ name|if_mtu
 operator|=
 name|ETHERMTU
 expr_stmt|;
+name|if_initbaudrate
+argument_list|(
 name|ifp
-operator|->
-name|if_baudrate
-operator|=
+argument_list|,
 name|IF_Gbps
 argument_list|(
 literal|40
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ifp
