@@ -4587,6 +4587,15 @@ name|drop_page
 goto|;
 block|}
 comment|/* 		 * If the page appears to be clean at the machine-independent 		 * layer, then remove all of its mappings from the pmap in 		 * anticipation of placing it onto the cache queue.  If, 		 * however, any of the page's mappings allow write access, 		 * then the page may still be modified until the last of those 		 * mappings are removed. 		 */
+if|if
+condition|(
+name|object
+operator|->
+name|ref_count
+operator|!=
+literal|0
+condition|)
+block|{
 name|vm_page_test_dirty
 argument_list|(
 name|m
@@ -4599,18 +4608,13 @@ operator|->
 name|dirty
 operator|==
 literal|0
-operator|&&
-name|object
-operator|->
-name|ref_count
-operator|!=
-literal|0
 condition|)
 name|pmap_remove_all
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|m

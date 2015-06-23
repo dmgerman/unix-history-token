@@ -184,13 +184,20 @@ name|sbuf
 modifier|*
 name|sb
 decl_stmt|;
-comment|/* For now we only attach to function 0 devices. */
 if|if
 condition|(
-name|pci_get_function
+operator|(
+name|pci_read_config
 argument_list|(
 name|dev
+argument_list|,
+name|PCIR_HDRTYPE
+argument_list|,
+literal|1
 argument_list|)
+operator|&
+name|PCIM_HDRTYPE
+operator|)
 operator|!=
 literal|0
 condition|)

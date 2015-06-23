@@ -9399,6 +9399,11 @@ name|pnext
 operator|=
 name|NULL
 expr_stmt|;
+name|M_ASSERTPKTHDR
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|m0

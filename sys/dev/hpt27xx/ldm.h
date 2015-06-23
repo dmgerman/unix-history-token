@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2011 HighPoint Technologies, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2005-2011 HighPoint Technologies, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -857,6 +857,9 @@ decl_stmt|;
 name|__HPT_RAW_LBA
 name|head_position
 decl_stmt|;
+name|HPT_U32
+name|logical_sector_size
+decl_stmt|;
 name|HPT_U16
 name|max_sectors_per_cmd
 decl_stmt|;
@@ -943,6 +946,26 @@ literal|1
 decl_stmt|;
 name|HPT_UINT
 name|enable_ncq
+range|:
+literal|1
+decl_stmt|;
+name|HPT_UINT
+name|bad_sector
+range|:
+literal|1
+decl_stmt|;
+name|HPT_UINT
+name|df_sas
+range|:
+literal|1
+decl_stmt|;
+name|HPT_UINT
+name|df_tape
+range|:
+literal|1
+decl_stmt|;
+name|HPT_UINT
+name|df_changer
 range|:
 literal|1
 decl_stmt|;
@@ -1673,12 +1696,10 @@ name|req
 parameter_list|)
 function_decl|;
 name|void
-name|ldm_queue_task
+name|ldm_queue_vbus_dpc
 parameter_list|(
-name|struct
-name|task_queue
-modifier|*
-name|tq
+name|PVBUS
+name|vbus
 parameter_list|,
 name|struct
 name|tq_item
@@ -1687,7 +1708,7 @@ name|t
 parameter_list|)
 function_decl|;
 name|void
-name|ldm_queue_vbus_dpc
+name|ldm_queue_vbus_idle
 parameter_list|(
 name|PVBUS
 name|vbus
@@ -1738,6 +1759,17 @@ name|ldm_resume
 parameter_list|(
 name|PVBUS
 name|vbus
+parameter_list|)
+function_decl|;
+name|LDM_ADAPTER
+modifier|*
+name|ldm_resume_adapter
+parameter_list|(
+name|PVBUS
+name|vbus
+parameter_list|,
+name|PLDM_ADAPTER
+name|ldm_adapter
 parameter_list|)
 function_decl|;
 name|void
