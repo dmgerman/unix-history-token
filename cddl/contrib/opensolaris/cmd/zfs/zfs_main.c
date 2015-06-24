@@ -2829,6 +2829,53 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Check if the dataset is mountable and should be automatically mounted.  */
+end_comment
+
+begin_function
+specifier|static
+name|boolean_t
+name|should_auto_mount
+parameter_list|(
+name|zfs_handle_t
+modifier|*
+name|zhp
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|zfs_prop_valid_for_type
+argument_list|(
+name|ZFS_PROP_CANMOUNT
+argument_list|,
+name|zfs_get_type
+argument_list|(
+name|zhp
+argument_list|)
+argument_list|)
+condition|)
+return|return
+operator|(
+name|B_FALSE
+operator|)
+return|;
+return|return
+operator|(
+name|zfs_prop_get_int
+argument_list|(
+name|zhp
+argument_list|,
+name|ZFS_PROP_CANMOUNT
+argument_list|)
+operator|==
+name|ZFS_CANMOUNT_ON
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * zfs clone [-p] [-o prop=value] ...<snap><fs | vol>  *  * Given an existing dataset, create a writable copy whose initial contents  * are the same as the source.  The newly created dataset maintains a  * dependency on the original; the original cannot be destroyed so long as  * the clone exists.  *  * The '-p' flag creates all the non-existing ancestors of the target first.  */
 end_comment
 
@@ -3176,15 +3223,15 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 			 * If the user doesn't want the dataset 			 * automatically mounted, then skip the mount/share 			 * step. 			 */
 if|if
 condition|(
-name|zfs_get_type
+name|should_auto_mount
 argument_list|(
 name|clone
 argument_list|)
-operator|!=
-name|ZFS_TYPE_VOLUME
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -3199,16 +3246,58 @@ argument_list|,
 literal|0
 argument_list|)
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"clone "
+literal|"successfully created, "
+literal|"but not mounted\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
 name|ret
 operator|=
 name|zfs_share
 argument_list|(
 name|clone
 argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"clone "
+literal|"successfully created, "
+literal|"but not shared\n"
+argument_list|)
+argument_list|)
 expr_stmt|;
+block|}
+block|}
 name|zfs_close
 argument_list|(
 name|clone
@@ -3329,11 +3418,6 @@ name|props
 decl_stmt|;
 name|uint64_t
 name|intval
-decl_stmt|;
-name|int
-name|canmount
-init|=
-name|ZFS_CANMOUNT_OFF
 decl_stmt|;
 if|if
 condition|(
@@ -3989,34 +4073,16 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * if the user doesn't want the dataset automatically mounted, 	 * then skip the mount/share step 	 */
-if|if
-condition|(
-name|zfs_prop_valid_for_type
-argument_list|(
-name|ZFS_PROP_CANMOUNT
-argument_list|,
-name|type
-argument_list|)
-condition|)
-name|canmount
-operator|=
-name|zfs_prop_get_int
-argument_list|(
-name|zhp
-argument_list|,
-name|ZFS_PROP_CANMOUNT
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Mount and/or share the new filesystem as appropriate.  We provide a 	 * verbose error message to let the user know that their filesystem was 	 * in fact created, even if we failed to mount or share it. 	 */
+comment|/* 	 * Mount and/or share the new filesystem as appropriate.  We provide a 	 * verbose error message to let the user know that their filesystem was 	 * in fact created, even if we failed to mount or share it. 	 * If the user doesn't want the dataset automatically mounted, 	 * then skip the mount/share step altogether. 	 */
 if|if
 condition|(
 operator|!
 name|nomount
 operator|&&
-name|canmount
-operator|==
-name|ZFS_CANMOUNT_ON
+name|should_auto_mount
+argument_list|(
+name|zhp
+argument_list|)
 condition|)
 block|{
 if|if
