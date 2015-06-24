@@ -600,6 +600,10 @@ define|#
 directive|define
 name|DS_FIND_CHILDREN
 value|(1<<1)
+define|#
+directive|define
+name|DS_FIND_SERIALIZE
+value|(1<<2)
 comment|/*  * The maximum number of bytes that can be accessed as part of one  * operation, including metadata.  */
 define|#
 directive|define

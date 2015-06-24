@@ -59,6 +59,12 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+struct_decl|struct
+name|dsl_pool
+struct_decl|;
+struct_decl|struct
+name|dsl_dataset
+struct_decl|;
 comment|/*  * Intent log format:  *  * Each objset has its own intent log.  The log header (zil_header_t)  * for objset N's intent log is kept in the Nth object of the SPA's  * intent_log objset.  The log header points to a chain of log blocks,  * each of which contains log records (i.e., transactions) followed by  * a log block trailer (zil_trailer_t).  The format of a log record  * depends on the record (or transaction) type, but all records begin  * with a common structure that defines the type, length, and txg.  */
 comment|/*  * Intent log header - this on disk structure holds fields to manage  * the log.  All fields are 64 bit to easily handle cross architectures.  */
 typedef|typedef
@@ -994,10 +1000,15 @@ specifier|extern
 name|int
 name|zil_claim
 parameter_list|(
-specifier|const
-name|char
+name|struct
+name|dsl_pool
 modifier|*
-name|osname
+name|dp
+parameter_list|,
+name|struct
+name|dsl_dataset
+modifier|*
+name|ds
 parameter_list|,
 name|void
 modifier|*
@@ -1008,14 +1019,19 @@ specifier|extern
 name|int
 name|zil_check_log_chain
 parameter_list|(
-specifier|const
-name|char
+name|struct
+name|dsl_pool
 modifier|*
-name|osname
+name|dp
+parameter_list|,
+name|struct
+name|dsl_dataset
+modifier|*
+name|ds
 parameter_list|,
 name|void
 modifier|*
-name|txarg
+name|tx
 parameter_list|)
 function_decl|;
 specifier|extern
