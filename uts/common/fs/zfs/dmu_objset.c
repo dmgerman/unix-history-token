@@ -8419,7 +8419,8 @@ name|dcp
 operator|->
 name|dc_dp
 decl_stmt|;
-name|dsl_pool_config_enter
+comment|/* 	 * We need to get a pool_config_lock here, as there are several 	 * asssert(pool_config_held) down the stack. Getting a lock via 	 * dsl_pool_config_enter is risky, as it might be stalled by a 	 * pending writer. This would deadlock, as the write lock can 	 * only be granted when our parent thread gives up the lock. 	 * The _prio interface gives us priority over a pending writer. 	 */
+name|dsl_pool_config_enter_prio
 argument_list|(
 name|dp
 argument_list|,
