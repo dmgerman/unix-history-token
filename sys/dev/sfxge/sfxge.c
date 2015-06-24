@@ -4010,9 +4010,21 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+comment|/* 		 * Unpriviledged functions deny VPD access. 		 * Simply skip VPD in this case. 		 */
+if|if
+condition|(
+name|rc
+operator|==
+name|EACCES
+condition|)
+goto|goto
+name|done
+goto|;
 goto|goto
 name|fail
 goto|;
+block|}
 name|sc
 operator|->
 name|vpd_data
@@ -4268,6 +4280,8 @@ argument_list|,
 name|keyword
 argument_list|)
 expr_stmt|;
+name|done
+label|:
 return|return
 operator|(
 literal|0
