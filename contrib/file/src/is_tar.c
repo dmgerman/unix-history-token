@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: is_tar.c,v 1.37 2010/11/30 14:58:53 rrt Exp $"
+literal|"@(#)$File: is_tar.c,v 1.38 2015/04/09 20:01:41 christos Exp $"
 argument_list|)
 end_macro
 
@@ -158,7 +158,11 @@ name|ms
 operator|->
 name|flags
 operator|&
+operator|(
 name|MAGIC_APPLE
+operator||
+name|MAGIC_EXTENSION
+operator|)
 operator|)
 operator|!=
 literal|0

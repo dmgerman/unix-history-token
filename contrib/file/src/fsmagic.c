@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: fsmagic.c,v 1.75 2014/12/04 15:56:46 christos Exp $"
+literal|"@(#)$File: fsmagic.c,v 1.76 2015/04/09 20:01:41 christos Exp $"
 argument_list|)
 end_macro
 
@@ -478,7 +478,11 @@ name|ms
 operator|->
 name|flags
 operator|&
+operator|(
 name|MAGIC_APPLE
+operator||
+name|MAGIC_EXTENSION
+operator|)
 condition|)
 return|return
 literal|0
