@@ -27,42 +27,42 @@ begin_define
 define|#
 directive|define
 name|FP_EXCEPT_INV
-value|0
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
 name|FP_EXCEPT_DZ
-value|1
+value|9
 end_define
 
 begin_define
 define|#
 directive|define
 name|FP_EXCEPT_OFL
-value|2
+value|10
 end_define
 
 begin_define
 define|#
 directive|define
 name|FP_EXCEPT_UFL
-value|3
+value|11
 end_define
 
 begin_define
 define|#
 directive|define
 name|FP_EXCEPT_IMP
-value|4
+value|12
 end_define
 
 begin_define
 define|#
 directive|define
 name|FP_EXCEPT_DNML
-value|7
+value|15
 end_define
 
 begin_typedef
