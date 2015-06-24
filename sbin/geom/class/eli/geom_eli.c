@@ -2259,9 +2259,9 @@ name|readpassphrase
 argument_list|(
 name|new
 condition|?
-literal|"Enter new passphrase:"
+literal|"Enter new passphrase: "
 else|:
-literal|"Enter passphrase:"
+literal|"Enter passphrase: "
 argument_list|,
 name|passbuf
 argument_list|,
