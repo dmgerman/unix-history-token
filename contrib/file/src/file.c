@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: file.c,v 1.160 2014/12/16 23:18:40 christos Exp $"
+literal|"@(#)$File: file.c,v 1.164 2015/06/03 18:21:24 christos Exp $"
 argument_list|)
 end_macro
 
@@ -250,7 +250,7 @@ begin_define
 define|#
 directive|define
 name|FILE_FLAGS
-value|"-bcEhikLlNnprsvz0"
+value|"-bcEhikLlNnprsvzZ0"
 end_define
 
 begin_else
@@ -262,7 +262,7 @@ begin_define
 define|#
 directive|define
 name|FILE_FLAGS
-value|"-bcEiklNnprsvz0"
+value|"-bcEiklNnprsvzZ0"
 end_define
 
 begin_endif
@@ -275,7 +275,7 @@ define|#
 directive|define
 name|USAGE
 define|\
-value|"Usage: %s [" FILE_FLAGS \ 	"] [--apple] [--mime-encoding] [--mime-type]\n" \     "            [-e testname] [-F separator] [-f namefile] [-m magicfiles] " \     "file ...\n" \     "       %s -C [-m magicfiles]\n" \     "       %s [--help]\n"
+value|"Usage: %s [" FILE_FLAGS \ 	"] [--apple] [--extension] [--mime-encoding] [--mime-type]\n" \     "            [-e testname] [-F separator] [-f namefile] [-m magicfiles] " \     "file ...\n" \     "       %s -C [-m magicfiles]\n" \     "       %s [--help]\n"
 end_define
 
 begin_decl_stmt
@@ -333,6 +333,26 @@ operator|=
 block|{
 define|#
 directive|define
+name|OPT_HELP
+value|1
+define|#
+directive|define
+name|OPT_APPLE
+value|2
+define|#
+directive|define
+name|OPT_EXTENSIONS
+value|3
+define|#
+directive|define
+name|OPT_MIME_TYPE
+value|4
+define|#
+directive|define
+name|OPT_MIME_ENCODING
+value|5
+define|#
+directive|define
 name|OPT
 parameter_list|(
 name|shortname
@@ -354,9 +374,11 @@ parameter_list|,
 name|opt
 parameter_list|,
 name|doc
+parameter_list|,
+name|id
 parameter_list|)
 define|\
-value|{longname, opt, NULL, 0},
+value|{longname, opt, NULL, id},
 include|#
 directive|include
 file|"file_opts.h"
@@ -383,7 +405,7 @@ begin_define
 define|#
 directive|define
 name|OPTSTRING
-value|"bcCde:Ef:F:hiklLm:nNpP:rsvz0"
+value|"bcCde:Ef:F:hiklLm:nNpP:rsvzZ0"
 end_define
 
 begin_expr_stmt
@@ -547,7 +569,16 @@ begin_comment
 comment|/* used throughout 		*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__dead
+end_ifdef
+
 begin_function_decl
+name|__dead
+endif|#
+directive|endif
 name|private
 name|void
 name|usage
@@ -569,7 +600,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__dead
+end_ifdef
+
 begin_function_decl
+name|__dead
+endif|#
+directive|endif
 name|private
 name|void
 name|help
@@ -820,22 +860,14 @@ name|c
 condition|)
 block|{
 case|case
-literal|0
-case|:
-switch|switch
-condition|(
-name|longindex
-condition|)
-block|{
-case|case
-literal|0
+name|OPT_HELP
 case|:
 name|help
 argument_list|()
 expr_stmt|;
 break|break;
 case|case
-literal|10
+name|OPT_APPLE
 case|:
 name|flags
 operator||=
@@ -843,7 +875,15 @@ name|MAGIC_APPLE
 expr_stmt|;
 break|break;
 case|case
-literal|11
+name|OPT_EXTENSIONS
+case|:
+name|flags
+operator||=
+name|MAGIC_EXTENSION
+expr_stmt|;
+break|break;
+case|case
+name|OPT_MIME_TYPE
 case|:
 name|flags
 operator||=
@@ -851,14 +891,12 @@ name|MAGIC_MIME_TYPE
 expr_stmt|;
 break|break;
 case|case
-literal|12
+name|OPT_MIME_ENCODING
 case|:
 name|flags
 operator||=
 name|MAGIC_MIME_ENCODING
 expr_stmt|;
-break|break;
-block|}
 break|break;
 case|case
 literal|'0'
@@ -1123,7 +1161,6 @@ operator||=
 name|MAGIC_RAW
 expr_stmt|;
 break|break;
-break|break;
 case|case
 literal|'s'
 case|:
@@ -1185,6 +1222,16 @@ case|:
 name|flags
 operator||=
 name|MAGIC_COMPRESS
+expr_stmt|;
+break|break;
+case|case
+literal|'Z'
+case|:
+name|flags
+operator||=
+name|MAGIC_COMPRESS
+operator||
+name|MAGIC_COMPRESS_TRANSP
 expr_stmt|;
 break|break;
 ifdef|#
@@ -2741,6 +2788,8 @@ parameter_list|,
 name|opt
 parameter_list|,
 name|doc
+parameter_list|,
+name|id
 parameter_list|)
 define|\
 value|fprintf(stdout, "      --" longname),	\ 	docprint(doc);

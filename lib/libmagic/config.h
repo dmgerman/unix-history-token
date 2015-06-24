@@ -223,6 +223,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `gmtime_r' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GMTIME_R
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if the system has the type `intptr_t'. */
 end_comment
 
@@ -282,6 +293,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_LOCALE_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `localtime_r' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LOCALTIME_R
 value|1
 end_define
 
@@ -375,6 +397,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_SETLOCALE
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<signal.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIGNAL_H
+value|1
+end_define
+
+begin_comment
+comment|/* Have sig_t type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIG_T
 value|1
 end_define
 
@@ -907,7 +951,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"file 5.22"
+value|"file 5.23"
 end_define
 
 begin_comment
@@ -940,7 +984,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"5.22"
+value|"5.23"
 end_define
 
 begin_comment
@@ -1080,7 +1124,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"5.22"
+value|"5.23"
 end_define
 
 begin_comment
