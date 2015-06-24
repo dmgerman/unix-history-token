@@ -1175,6 +1175,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|ASSYM
 argument_list|(
@@ -1190,11 +1195,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|ASSYM
