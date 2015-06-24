@@ -2228,11 +2228,9 @@ name|LIBUSB20_ME_IS_DECODED
 condition|)
 block|{
 comment|/* 						 * Repeat encode 						 * procedure - we have 						 * room for the 						 * complete structure: 						 */
-name|uint16_t
-name|dummy
-decl_stmt|;
-name|dummy
-operator|=
+operator|(
+name|void
+operator|)
 name|libusb20_me_encode
 argument_list|(
 name|buf
@@ -2881,9 +2879,6 @@ block|{
 name|uint16_t
 name|temp
 decl_stmt|;
-name|uint16_t
-name|dummy
-decl_stmt|;
 name|struct
 name|libusb20_me_struct
 modifier|*
@@ -3171,8 +3166,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 						 * Recursivly decode 						 * the next structure 						 */
-name|dummy
-operator|=
+operator|(
+name|void
+operator|)
 name|libusb20_me_decode
 argument_list|(
 name|buf
