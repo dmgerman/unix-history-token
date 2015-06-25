@@ -3373,8 +3373,11 @@ directive|ifdef
 name|ALTQ_DEBUG
 name|printf
 argument_list|(
-literal|"BW %6lld relative to %6u %d queue %p\n"
+literal|"BW %6ju relative to %6u %d queue %p\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|bw
 argument_list|,
 name|cl
