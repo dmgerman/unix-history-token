@@ -12025,7 +12025,7 @@ begin_define
 define|#
 directive|define
 name|TLS_I_SRV
-value|(TLS_I_SRV_CERT | TLS_I_RSA_TMP | TLS_I_VRFY_PATH | \ 			 TLS_I_VRFY_LOC | TLS_I_TRY_DH | TLS_I_DH512 | \ 			 TLS_I_CACHE)
+value|(TLS_I_SRV_CERT | TLS_I_RSA_TMP | TLS_I_VRFY_PATH | \ 			 TLS_I_VRFY_LOC | TLS_I_TRY_DH | TLS_I_DH1024 | \ 			 TLS_I_CACHE)
 end_define
 
 begin_comment
