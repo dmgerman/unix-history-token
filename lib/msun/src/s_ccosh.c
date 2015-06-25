@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2005 Bruce D. Evans and Steven G. Kargl  * All righ
 end_comment
 
 begin_comment
-comment|/*  * Hyperbolic cosine of a complex argument z = x + i y.  *  * cosh(z) = cosh(x+iy)  *         = cosh(x) cos(y) + i sinh(x) sin(y).  *  * Exceptional values are noted in the comments within the source code.  * These values and the return value were taken from n1124.pdf.  */
+comment|/*  * Hyperbolic cosine of a complex argument z = x + i y.  *  * cosh(z) = cosh(x+iy)  *         = cosh(x) cos(y) + i sinh(x) sin(y).  *  * Exceptional values are noted in the comments within the source code.  * These values and the return value were taken from n1124.pdf.  * The sign of the result for some exceptional values is unspecified but  * must satisfy both cosh(conj(z)) == conj(cosh(z)) and cosh(-z) == cosh(z).  */
 end_comment
 
 begin_include
@@ -147,7 +147,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|cosh
 argument_list|(
@@ -166,10 +166,10 @@ name|ix
 operator|<
 literal|0x40360000
 condition|)
-comment|/* small x: normal case */
+comment|/* |x|< 22: normal case */
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|cosh
 argument_list|(
@@ -216,7 +216,7 @@ literal|0.5
 expr_stmt|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|h
 operator|*
@@ -253,7 +253,7 @@ name|z
 operator|=
 name|__ldexp_cexp
 argument_list|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|fabs
 argument_list|(
@@ -269,7 +269,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|creal
 argument_list|(
@@ -302,7 +302,7 @@ name|x
 expr_stmt|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|h
 operator|*
@@ -324,7 +324,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * cosh(+-0 +- I Inf) = dNaN + I sign(d(+-0, dNaN))0. 	 * The sign of 0 in the result is unspecified.  Choice = normally 	 * the same as dNaN.  Raise the invalid floating-point exception. 	 * 	 * cosh(+-0 +- I NaN) = d(NaN) + I sign(d(+-0, NaN))0. 	 * The sign of 0 in the result is unspecified.  Choice = normally 	 * the same as d(NaN). 	 */
+comment|/* 	 * cosh(+-0 +- I Inf) = dNaN + I (+-)(+-)0. 	 * The sign of 0 in the result is unspecified.  Choice = product 	 * of the signs of the argument.  Raise the invalid floating-point 	 * exception. 	 * 	 * cosh(+-0 +- I NaN) = d(NaN) + I (+-)(+-)0. 	 * The sign of 0 in the result is unspecified.  Choice = product 	 * of the signs of the argument. 	 */
 if|if
 condition|(
 operator|(
@@ -334,35 +334,28 @@ name|lx
 operator|)
 operator|==
 literal|0
-operator|&&
-name|iy
-operator|>=
-literal|0x7ff00000
 condition|)
+comment|/*&& iy>= 0x7ff00000 */
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|y
 operator|-
 name|y
 argument_list|,
+name|x
+operator|*
 name|copysign
 argument_list|(
 literal|0
 argument_list|,
-name|x
-operator|*
-operator|(
 name|y
-operator|-
-name|y
-operator|)
 argument_list|)
 argument_list|)
 operator|)
 return|;
-comment|/* 	 * cosh(+-Inf +- I 0) = +Inf + I (+-)(+-)0. 	 * 	 * cosh(NaN +- I 0)   = d(NaN) + I sign(d(NaN, +-0))0. 	 * The sign of 0 in the result is unspecified. 	 */
+comment|/* 	 * cosh(+-Inf +- I 0) = +Inf + I (+-)(+-)0. 	 * 	 * cosh(NaN +- I 0)   = d(NaN) + I (+-)(+-)0. 	 * The sign of 0 in the result is unspecified.  Choice = product 	 * of the signs of the argument. 	 */
 if|if
 condition|(
 operator|(
@@ -372,29 +365,11 @@ name|ly
 operator|)
 operator|==
 literal|0
-operator|&&
-name|ix
-operator|>=
-literal|0x7ff00000
 condition|)
-block|{
-if|if
-condition|(
-operator|(
-operator|(
-name|hx
-operator|&
-literal|0xfffff
-operator|)
-operator||
-name|lx
-operator|)
-operator|==
-literal|0
-condition|)
+comment|/*&& ix>= 0x7ff00000 */
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|x
 operator|*
@@ -411,44 +386,17 @@ name|y
 argument_list|)
 operator|)
 return|;
-return|return
-operator|(
-name|cpack
-argument_list|(
-name|x
-operator|*
-name|x
-argument_list|,
-name|copysign
-argument_list|(
-literal|0
-argument_list|,
-operator|(
-name|x
-operator|+
-name|x
-operator|)
-operator|*
-name|y
-argument_list|)
-argument_list|)
-operator|)
-return|;
-block|}
 comment|/* 	 * cosh(x +- I Inf) = dNaN + I dNaN. 	 * Raise the invalid floating-point exception for finite nonzero x. 	 * 	 * cosh(x + I NaN) = d(NaN) + I d(NaN). 	 * Optionally raises the invalid floating-point exception for finite 	 * nonzero x.  Choice = don't raise (except for signaling NaNs). 	 */
 if|if
 condition|(
 name|ix
 operator|<
 literal|0x7ff00000
-operator|&&
-name|iy
-operator|>=
-literal|0x7ff00000
 condition|)
+comment|/*&& iy>= 0x7ff00000 */
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|y
 operator|-
@@ -468,18 +416,10 @@ comment|/* 	 * cosh(+-Inf + I NaN)  = +Inf + I d(NaN). 	 * 	 * cosh(+-Inf +- I I
 if|if
 condition|(
 name|ix
-operator|>=
+operator|==
 literal|0x7ff00000
 operator|&&
-operator|(
-operator|(
-name|hx
-operator|&
-literal|0xfffff
-operator|)
-operator||
 name|lx
-operator|)
 operator|==
 literal|0
 condition|)
@@ -492,11 +432,9 @@ literal|0x7ff00000
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
-name|x
-operator|*
-name|x
+name|INFINITY
 argument_list|,
 name|x
 operator|*
@@ -510,13 +448,9 @@ operator|)
 return|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
-operator|(
-name|x
-operator|*
-name|x
-operator|)
+name|INFINITY
 operator|*
 name|cos
 argument_list|(
@@ -536,7 +470,7 @@ block|}
 comment|/* 	 * cosh(NaN + I NaN)  = d(NaN) + I d(NaN). 	 * 	 * cosh(NaN +- I Inf) = d(NaN) + I d(NaN). 	 * Optionally raises the invalid floating-point exception. 	 * Choice = raise. 	 * 	 * cosh(NaN + I y)    = d(NaN) + I d(NaN). 	 * Optionally raises the invalid floating-point exception for finite 	 * nonzero y.  Choice = don't raise (except for signaling NaNs). 	 */
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 operator|(
 name|x
@@ -582,7 +516,7 @@ return|return
 operator|(
 name|ccosh
 argument_list|(
-name|cpack
+name|CMPLX
 argument_list|(
 operator|-
 name|cimag

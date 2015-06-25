@@ -27,7 +27,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|creal
 argument_list|(

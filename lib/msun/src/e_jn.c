@@ -40,6 +40,21 @@ end_include
 begin_decl_stmt
 specifier|static
 specifier|const
+specifier|volatile
+name|double
+name|vone
+init|=
+literal|1
+decl_stmt|,
+name|vzero
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
 name|double
 name|invsqrtpi
 init|=
@@ -906,7 +921,7 @@ literal|0x7fffffff
 operator|&
 name|hx
 expr_stmt|;
-comment|/* if Y(n,NaN) is NaN */
+comment|/* yn(n,NaN) = NaN */
 if|if
 condition|(
 operator|(
@@ -934,6 +949,7 @@ name|x
 operator|+
 name|x
 return|;
+comment|/* yn(n,+-0) = -inf and raise divide-by-zero exception. */
 if|if
 condition|(
 operator|(
@@ -948,8 +964,9 @@ return|return
 operator|-
 name|one
 operator|/
-name|zero
+name|vzero
 return|;
+comment|/* yn(n,x<0) = NaN and raise invalid exception. */
 if|if
 condition|(
 name|hx
@@ -957,9 +974,9 @@ operator|<
 literal|0
 condition|)
 return|return
-name|zero
+name|vzero
 operator|/
-name|zero
+name|vzero
 return|;
 name|sign
 operator|=

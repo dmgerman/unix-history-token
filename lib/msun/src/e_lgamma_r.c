@@ -4,7 +4,7 @@ comment|/* @(#)e_lgamma_r.c 1.3 95/01/18 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunSoft, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  *  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunSoft, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_include
@@ -22,8 +22,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* __ieee754_lgamma_r(x, signgamp)  * Reentrant version of the logarithm of the Gamma function   * with user provide pointer for the sign of Gamma(x).   *  * Method:  *   1. Argument Reduction for 0< x<= 8  * 	Since gamma(1+s)=s*gamma(s), for x in [0,8], we may   * 	reduce x to a number in [1.5,2.5] by  * 		lgamma(1+s) = log(s) + lgamma(s)  *	for example,  *		lgamma(7.3) = log(6.3) + lgamma(6.3)  *			    = log(6.3*5.3) + lgamma(5.3)  *			    = log(6.3*5.3*4.3*3.3*2.3) + lgamma(2.3)  *   2. Polynomial approximation of lgamma around its  *	minimun ymin=1.461632144968362245 to maintain monotonicity.  *	On [ymin-0.23, ymin+0.27] (i.e., [1.23164,1.73163]), use  *		Let z = x-ymin;  *		lgamma(x) = -1.214862905358496078218 + z^2*poly(z)  *	where  *		poly(z) is a 14 degree polynomial.  *   2. Rational approximation in the primary interval [2,3]  *	We use the following approximation:  *		s = x-2.0;  *		lgamma(x) = 0.5*s + s*P(s)/Q(s)  *	with accuracy  *		|P/Q - (lgamma(x)-0.5s)|< 2**-61.71  *	Our algorithms are based on the following observation  *  *                             zeta(2)-1    2    zeta(3)-1    3  * lgamma(2+s) = s*(1-Euler) + --------- * s  -  --------- * s  + ...  *                                 2                 3  *  *	where Euler = 0.5771... is the Euler constant, which is very  *	close to 0.5.  *  *   3. For x>=8, we have  *	lgamma(x)~(x-0.5)log(x)-x+0.5*log(2pi)+1/(12x)-1/(360x**3)+....  *	(better formula:  *	   lgamma(x)~(x-0.5)*(log(x)-1)-.5*(log(2pi)-1) + ...)  *	Let z = 1/x, then we approximation  *		f(z) = lgamma(x) - (x-0.5)(log(x)-1)  *	by  *	  			    3       5             11  *		w = w0 + w1*z + w2*z  + w3*z  + ... + w6*z  *	where   *		|w - f(z)|< 2**-58.74  *		  *   4. For negative x, since (G is gamma function)  *		-x*G(-x)*G(x) = pi/sin(pi*x),  * 	we have  * 		G(x) = pi/(sin(pi*x)*(-x)*G(-x))  *	since G(-x) is positive, sign(G(x)) = sign(sin(pi*x)) for x<0  *	Hence, for x<0, signgam = sign(sin(pi*x)) and   *		lgamma(x) = log(|Gamma(x)|)  *			  = log(pi/(|x*sin(pi*x)|)) - lgamma(-x);  *	Note: one should avoid compute pi*(-x) directly in the   *	      computation of sin(pi*(-x)).  *		  *   5. Special Cases  *		lgamma(2+s) ~ s*(1-Euler) for tiny s  *		lgamma(1) = lgamma(2) = 0  *		lgamma(x) ~ -log(|x|) for tiny x  *		lgamma(0) = lgamma(neg.integer) = inf and raise divide-by-zero  *		lgamma(inf) = inf  *		lgamma(-inf) = inf (bug for bug compatible with C99!?)  *	  */
+comment|/* __ieee754_lgamma_r(x, signgamp)  * Reentrant version of the logarithm of the Gamma function  * with user provide pointer for the sign of Gamma(x).  *  * Method:  *   1. Argument Reduction for 0< x<= 8  * 	Since gamma(1+s)=s*gamma(s), for x in [0,8], we may  * 	reduce x to a number in [1.5,2.5] by  * 		lgamma(1+s) = log(s) + lgamma(s)  *	for example,  *		lgamma(7.3) = log(6.3) + lgamma(6.3)  *			    = log(6.3*5.3) + lgamma(5.3)  *			    = log(6.3*5.3*4.3*3.3*2.3) + lgamma(2.3)  *   2. Polynomial approximation of lgamma around its  *	minimun ymin=1.461632144968362245 to maintain monotonicity.  *	On [ymin-0.23, ymin+0.27] (i.e., [1.23164,1.73163]), use  *		Let z = x-ymin;  *		lgamma(x) = -1.214862905358496078218 + z^2*poly(z)  *	where  *		poly(z) is a 14 degree polynomial.  *   2. Rational approximation in the primary interval [2,3]  *	We use the following approximation:  *		s = x-2.0;  *		lgamma(x) = 0.5*s + s*P(s)/Q(s)  *	with accuracy  *		|P/Q - (lgamma(x)-0.5s)|< 2**-61.71  *	Our algorithms are based on the following observation  *  *                             zeta(2)-1    2    zeta(3)-1    3  * lgamma(2+s) = s*(1-Euler) + --------- * s  -  --------- * s  + ...  *                                 2                 3  *  *	where Euler = 0.5771... is the Euler constant, which is very  *	close to 0.5.  *  *   3. For x>=8, we have  *	lgamma(x)~(x-0.5)log(x)-x+0.5*log(2pi)+1/(12x)-1/(360x**3)+....  *	(better formula:  *	   lgamma(x)~(x-0.5)*(log(x)-1)-.5*(log(2pi)-1) + ...)  *	Let z = 1/x, then we approximation  *		f(z) = lgamma(x) - (x-0.5)(log(x)-1)  *	by  *	  			    3       5             11  *		w = w0 + w1*z + w2*z  + w3*z  + ... + w6*z  *	where  *		|w - f(z)|< 2**-58.74  *  *   4. For negative x, since (G is gamma function)  *		-x*G(-x)*G(x) = pi/sin(pi*x),  * 	we have  * 		G(x) = pi/(sin(pi*x)*(-x)*G(-x))  *	since G(-x) is positive, sign(G(x)) = sign(sin(pi*x)) for x<0  *	Hence, for x<0, signgam = sign(sin(pi*x)) and  *		lgamma(x) = log(|Gamma(x)|)  *			  = log(pi/(|x*sin(pi*x)|)) - lgamma(-x);  *	Note: one should avoid compute pi*(-x) directly in the  *	      computation of sin(pi*(-x)).  *  *   5. Special Cases  *		lgamma(2+s) ~ s*(1-Euler) for tiny s  *		lgamma(1) = lgamma(2) = 0  *		lgamma(x) ~ -log(|x|) for tiny x  *		lgamma(0) = lgamma(neg.integer) = inf and raise divide-by-zero  *		lgamma(inf) = inf  *		lgamma(-inf) = inf (bug for bug compatible with C99!?)  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<float.h>
+end_include
 
 begin_include
 include|#
@@ -633,12 +639,6 @@ name|signgamp
 parameter_list|)
 block|{
 name|double
-name|t
-decl_stmt|,
-name|y
-decl_stmt|,
-name|z
-decl_stmt|,
 name|nadj
 decl_stmt|,
 name|p
@@ -653,7 +653,13 @@ name|q
 decl_stmt|,
 name|r
 decl_stmt|,
+name|t
+decl_stmt|,
 name|w
+decl_stmt|,
+name|y
+decl_stmt|,
+name|z
 decl_stmt|;
 name|int32_t
 name|hx
@@ -674,7 +680,7 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
-comment|/* purge off +-inf, NaN, +-0, tiny and negative arguments */
+comment|/* purge +-Inf and NaNs */
 operator|*
 name|signgamp
 operator|=
@@ -697,6 +703,31 @@ name|x
 operator|*
 name|x
 return|;
+comment|/* purge +-0 and tiny arguments */
+operator|*
+name|signgamp
+operator|=
+literal|1
+operator|-
+literal|2
+operator|*
+operator|(
+operator|(
+name|uint32_t
+operator|)
+name|hx
+operator|>>
+literal|31
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ix
+operator|<
+literal|0x3c700000
+condition|)
+block|{
+comment|/* |x|<2**-56, return -log(|x|) */
 if|if
 condition|(
 operator|(
@@ -712,14 +743,18 @@ name|one
 operator|/
 name|vzero
 return|;
-if|if
-condition|(
-name|ix
-operator|<
-literal|0x3b900000
-condition|)
-block|{
-comment|/* |x|<2**-70, return -log(|x|) */
+return|return
+operator|-
+name|__ieee754_log
+argument_list|(
+name|fabs
+argument_list|(
+name|x
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/* purge negative integers and start evaluation for other x< 0 */
 if|if
 condition|(
 name|hx
@@ -730,34 +765,8 @@ block|{
 operator|*
 name|signgamp
 operator|=
-operator|-
 literal|1
 expr_stmt|;
-return|return
-operator|-
-name|__ieee754_log
-argument_list|(
-operator|-
-name|x
-argument_list|)
-return|;
-block|}
-else|else
-return|return
-operator|-
-name|__ieee754_log
-argument_list|(
-name|x
-argument_list|)
-return|;
-block|}
-if|if
-condition|(
-name|hx
-operator|<
-literal|0
-condition|)
-block|{
 if|if
 condition|(
 name|ix
@@ -821,7 +830,7 @@ operator|-
 name|x
 expr_stmt|;
 block|}
-comment|/* purge off 1 and 2 */
+comment|/* purge 1 and 2 */
 if|if
 condition|(
 operator|(
@@ -1085,13 +1094,11 @@ name|p2
 expr_stmt|;
 name|r
 operator|+=
-operator|(
 name|p
 operator|-
-literal|0.5
-operator|*
 name|y
-operator|)
+operator|/
+literal|2
 expr_stmt|;
 break|break;
 case|case
@@ -1210,11 +1217,9 @@ operator|)
 expr_stmt|;
 name|r
 operator|+=
-operator|(
 name|tf
 operator|+
 name|p
-operator|)
 expr_stmt|;
 break|break;
 case|case
@@ -1290,19 +1295,17 @@ operator|)
 expr_stmt|;
 name|r
 operator|+=
-operator|(
-operator|-
-literal|0.5
-operator|*
-name|y
-operator|+
 name|p1
 operator|/
 name|p2
-operator|)
+operator|-
+name|y
+operator|/
+literal|2
 expr_stmt|;
 block|}
 block|}
+comment|/* x< 8.0 */
 elseif|else
 if|if
 condition|(
@@ -1311,21 +1314,14 @@ operator|<
 literal|0x40200000
 condition|)
 block|{
-comment|/* x< 8.0 */
 name|i
 operator|=
-operator|(
-name|int
-operator|)
 name|x
 expr_stmt|;
 name|y
 operator|=
 name|x
 operator|-
-operator|(
-name|double
-operator|)
 name|i
 expr_stmt|;
 name|p
@@ -1410,9 +1406,9 @@ operator|)
 expr_stmt|;
 name|r
 operator|=
-name|half
-operator|*
 name|y
+operator|/
+literal|2
 operator|+
 name|p
 operator|/
@@ -1436,7 +1432,7 @@ operator|*=
 operator|(
 name|y
 operator|+
-literal|6.0
+literal|6
 operator|)
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -1448,7 +1444,7 @@ operator|*=
 operator|(
 name|y
 operator|+
-literal|5.0
+literal|5
 operator|)
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -1460,7 +1456,7 @@ operator|*=
 operator|(
 name|y
 operator|+
-literal|4.0
+literal|4
 operator|)
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -1472,7 +1468,7 @@ operator|*=
 operator|(
 name|y
 operator|+
-literal|3.0
+literal|3
 operator|)
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -1484,7 +1480,7 @@ operator|*=
 operator|(
 name|y
 operator|+
-literal|2.0
+literal|2
 operator|)
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -1497,14 +1493,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 8.0<= x< 2**58 */
+comment|/* 8.0<= x< 2**56 */
 block|}
 elseif|else
 if|if
 condition|(
 name|ix
 operator|<
-literal|0x43900000
+literal|0x43700000
 condition|)
 block|{
 name|t
@@ -1582,7 +1578,7 @@ name|w
 expr_stmt|;
 block|}
 else|else
-comment|/* 2**58<= x<= inf */
+comment|/* 2**56<= x<= inf */
 name|r
 operator|=
 name|x
@@ -1613,6 +1609,31 @@ name|r
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+operator|(
+name|LDBL_MANT_DIG
+operator|==
+literal|53
+operator|)
+end_if
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|lgamma_r
+argument_list|,
+name|lgammal_r
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
