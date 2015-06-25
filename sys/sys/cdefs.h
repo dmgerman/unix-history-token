@@ -315,12 +315,6 @@ name|__GNUC__
 operator|>=
 literal|3
 operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
 end_if
 
 begin_define
