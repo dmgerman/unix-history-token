@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2015 RackTop Systems.  */
 end_comment
 
 begin_comment
@@ -4629,23 +4629,6 @@ name|rn_config
 operator|=
 name|config
 expr_stmt|;
-if|if
-condition|(
-name|config
-operator|!=
-name|NULL
-condition|)
-block|{
-name|assert
-argument_list|(
-name|rn
-operator|->
-name|rn_nozpool
-operator|==
-name|B_FALSE
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
