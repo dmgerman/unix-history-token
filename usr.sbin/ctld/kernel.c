@@ -2696,6 +2696,15 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|name
+condition|)
+name|free
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|port
 operator|->
 name|pp
