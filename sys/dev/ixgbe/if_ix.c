@@ -1760,7 +1760,8 @@ name|ixgbe_num_queues
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of queues to configure, 0 indicates autoconfigure"
+literal|"Number of queues to configure up to a maximum of 8; "
+literal|"0 indicates autoconfigure"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10395,6 +10396,26 @@ condition|)
 name|queues
 operator|=
 name|ixgbe_num_queues
+expr_stmt|;
+comment|/* Set max queues to 8 when autoconfiguring */
+elseif|else
+if|if
+condition|(
+operator|(
+name|ixgbe_num_queues
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|queues
+operator|>
+literal|8
+operator|)
+condition|)
+name|queues
+operator|=
+literal|8
 expr_stmt|;
 comment|/* reflect correct sysctl value */
 name|ixgbe_num_queues
