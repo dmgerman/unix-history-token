@@ -4628,6 +4628,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|de
+operator|->
+name|td_cookie
+operator|=
+name|de
+operator|->
+name|td_hash
+expr_stmt|;
 block|}
 else|else
 name|RB_REMOVE
