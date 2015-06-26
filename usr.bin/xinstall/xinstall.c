@@ -3252,6 +3252,42 @@ decl_stmt|,
 modifier|*
 name|s
 decl_stmt|;
+if|if
+condition|(
+operator|*
+name|from_name
+operator|!=
+literal|'/'
+condition|)
+block|{
+comment|/* this is already a relative link */
+name|do_symlink
+argument_list|(
+name|from_name
+argument_list|,
+name|to_name
+argument_list|,
+name|target_sb
+argument_list|)
+expr_stmt|;
+comment|/* XXX: from_name may point outside of destdir. */
+name|metadata_log
+argument_list|(
+name|to_name
+argument_list|,
+literal|"link"
+argument_list|,
+name|NULL
+argument_list|,
+name|from_name
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Resolve pathnames. */
 if|if
 condition|(
