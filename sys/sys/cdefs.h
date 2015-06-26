@@ -926,7 +926,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|__weak
+name|__weak_symbol
 end_define
 
 begin_else
@@ -937,7 +937,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|__weak
+name|__weak_symbol
 value|__attribute__((__weak__))
 end_define
 
