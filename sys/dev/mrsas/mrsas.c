@@ -12663,6 +12663,14 @@ name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* Now return commands back to the CAM layer */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sim_lock
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -12733,6 +12741,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sim_lock
+argument_list|)
+expr_stmt|;
 name|status_reg
 operator|=
 name|mrsas_read_reg
