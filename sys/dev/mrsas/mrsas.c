@@ -3939,6 +3939,11 @@ name|bar
 decl_stmt|,
 name|error
 decl_stmt|;
+name|struct
+name|cdev
+modifier|*
+name|linux_dev
+decl_stmt|;
 comment|/* Look up our softc and initialize its fields. */
 name|sc
 operator|->
@@ -4297,8 +4302,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|make_dev_alias
+name|make_dev_alias_p
 argument_list|(
+name|MAKEDEV_CHECKNAME
+argument_list|,
+operator|&
+name|linux_dev
+argument_list|,
 name|sc
 operator|->
 name|mrsas_cdev
