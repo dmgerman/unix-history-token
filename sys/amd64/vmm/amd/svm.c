@@ -352,6 +352,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AMD_CPUID_SVM_AVIC
+value|BIT(13)
+end_define
+
+begin_comment
+comment|/* AVIC present */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VMCB_CACHE_DEFAULT
 value|(VMCB_CACHE_ASID 	|	\ 				VMCB_CACHE_IOPM		|	\ 				VMCB_CACHE_I		|	\ 				VMCB_CACHE_TPR		|	\ 				VMCB_CACHE_CR2		|	\ 				VMCB_CACHE_CR		|	\ 				VMCB_CACHE_DT		|	\ 				VMCB_CACHE_SEG		|	\ 				VMCB_CACHE_NP)
 end_define
@@ -2506,6 +2517,13 @@ name|svm_sc
 argument_list|,
 name|i
 argument_list|)
+expr_stmt|;
+name|vcpu
+operator|->
+name|nextrip
+operator|=
+operator|~
+literal|0
 expr_stmt|;
 name|vcpu
 operator|->
@@ -5468,10 +5486,6 @@ name|svm_regctx
 modifier|*
 name|ctx
 decl_stmt|;
-name|struct
-name|vm_exception
-name|exception
-decl_stmt|;
 name|uint64_t
 name|code
 decl_stmt|,
@@ -5932,6 +5946,10 @@ name|errcode_valid
 operator|=
 literal|0
 expr_stmt|;
+name|info1
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 block|}
 name|KASSERT
@@ -5960,28 +5978,6 @@ name|reflect
 condition|)
 block|{
 comment|/* Reflect the exception back into the guest */
-name|exception
-operator|.
-name|vector
-operator|=
-name|idtvec
-expr_stmt|;
-name|exception
-operator|.
-name|error_code_valid
-operator|=
-name|errcode_valid
-expr_stmt|;
-name|exception
-operator|.
-name|error_code
-operator|=
-name|errcode_valid
-condition|?
-name|info1
-else|:
-literal|0
-expr_stmt|;
 name|VCPU_CTR2
 argument_list|(
 name|svm_sc
@@ -5993,13 +5989,12 @@ argument_list|,
 literal|"Reflecting exception "
 literal|"%d/%#x into the guest"
 argument_list|,
-name|exception
-operator|.
-name|vector
+name|idtvec
 argument_list|,
-name|exception
-operator|.
-name|error_code
+operator|(
+name|int
+operator|)
+name|info1
 argument_list|)
 expr_stmt|;
 name|error
@@ -6012,8 +6007,13 @@ name|vm
 argument_list|,
 name|vcpu
 argument_list|,
-operator|&
-name|exception
+name|idtvec
+argument_list|,
+name|errcode_valid
+argument_list|,
+name|info1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -6847,6 +6847,11 @@ name|vmcb_state
 modifier|*
 name|state
 decl_stmt|;
+name|struct
+name|svm_vcpu
+modifier|*
+name|vcpustate
+decl_stmt|;
 name|uint8_t
 name|v_tpr
 decl_stmt|;
@@ -6875,6 +6880,15 @@ argument_list|,
 name|vcpu
 argument_list|)
 expr_stmt|;
+name|vcpustate
+operator|=
+name|svm_get_vcpu
+argument_list|(
+name|sc
+argument_list|,
+name|vcpu
+argument_list|)
+expr_stmt|;
 name|need_intr_window
 operator|=
 literal|0
@@ -6883,6 +6897,44 @@ name|pending_apic_vector
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|vcpustate
+operator|->
+name|nextrip
+operator|!=
+name|state
+operator|->
+name|rip
+condition|)
+block|{
+name|ctrl
+operator|->
+name|intr_shadow
+operator|=
+literal|0
+expr_stmt|;
+name|VCPU_CTR2
+argument_list|(
+name|sc
+operator|->
+name|vm
+argument_list|,
+name|vcpu
+argument_list|,
+literal|"Guest interrupt blocking "
+literal|"cleared due to rip change: %#lx/%#lx"
+argument_list|,
+name|vcpustate
+operator|->
+name|nextrip
+argument_list|,
+name|state
+operator|->
+name|rip
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Inject pending events or exceptions for this vcpu. 	 * 	 * An event might be pending because the previous #VMEXIT happened 	 * during event delivery (i.e. ctrl->exitintinfo). 	 * 	 * An event might also be pending because an exception was injected 	 * by the hypervisor (e.g. #PF during instruction emulation). 	 */
 name|svm_inj_intinfo
 argument_list|(
@@ -7276,10 +7328,6 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|v_tpr
-operator|>=
-literal|0
-operator|&&
 name|v_tpr
 operator|<=
 literal|15
@@ -7864,7 +7912,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-asm|__asm __volatile("clgi" : : :);
+asm|__asm __volatile("clgi");
 block|}
 end_function
 
@@ -7877,7 +7925,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-asm|__asm __volatile("stgi" : : :);
+asm|__asm __volatile("stgi");
 block|}
 end_function
 
@@ -8316,6 +8364,15 @@ expr_stmt|;
 comment|/* #VMEXIT disables interrupts so re-enable them here. */
 name|enable_gintr
 argument_list|()
+expr_stmt|;
+comment|/* Update 'nextrip' */
+name|vcpustate
+operator|->
+name|nextrip
+operator|=
+name|state
+operator|->
+name|rip
 expr_stmt|;
 comment|/* Handle #VMEXIT and if required return to user space. */
 name|handled

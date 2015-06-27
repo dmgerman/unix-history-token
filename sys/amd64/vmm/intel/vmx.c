@@ -285,7 +285,7 @@ define|#
 directive|define
 name|VM_EXIT_CTLS_ONE_SETTING
 define|\
-value|(VM_EXIT_HOST_LMA			|			\ 	VM_EXIT_SAVE_EFER			|			\ 	VM_EXIT_LOAD_EFER			|			\ 	VM_EXIT_ACKNOWLEDGE_INTERRUPT		|			\ 	VM_EXIT_SAVE_PAT			|			\ 	VM_EXIT_LOAD_PAT)
+value|(VM_EXIT_HOST_LMA			|			\ 	VM_EXIT_SAVE_EFER			|			\ 	VM_EXIT_LOAD_EFER			|			\ 	VM_EXIT_ACKNOWLEDGE_INTERRUPT)
 end_define
 
 begin_define
@@ -299,7 +299,7 @@ begin_define
 define|#
 directive|define
 name|VM_ENTRY_CTLS_ONE_SETTING
-value|(VM_ENTRY_LOAD_EFER | VM_ENTRY_LOAD_PAT)
+value|(VM_ENTRY_LOAD_EFER)
 end_define
 
 begin_define
@@ -3269,7 +3269,7 @@ operator|->
 name|msr_bitmap
 argument_list|)
 expr_stmt|;
-comment|/* 	 * It is safe to allow direct access to MSR_GSBASE and MSR_FSBASE. 	 * The guest FSBASE and GSBASE are saved and restored during 	 * vm-exit and vm-entry respectively. The host FSBASE and GSBASE are 	 * always restored from the vmcs host state area on vm-exit. 	 * 	 * The SYSENTER_CS/ESP/EIP MSRs are identical to FS/GSBASE in 	 * how they are saved/restored so can be directly accessed by the 	 * guest. 	 * 	 * MSR_EFER is saved and restored in the guest VMCS area on a 	 * VM exit and entry respectively. It is also restored from the 	 * host VMCS area on a VM exit. 	 * 	 * MSR_PAT is saved and restored in the guest VMCS are on a VM exit 	 * and entry respectively. It is also restored from the host VMCS 	 * area on a VM exit. 	 * 	 * The TSC MSR is exposed read-only. Writes are disallowed as that 	 * will impact the host TSC. 	 * XXX Writes would be implemented with a wrmsr trap, and 	 * then modifying the TSC offset in the VMCS. 	 */
+comment|/* 	 * It is safe to allow direct access to MSR_GSBASE and MSR_FSBASE. 	 * The guest FSBASE and GSBASE are saved and restored during 	 * vm-exit and vm-entry respectively. The host FSBASE and GSBASE are 	 * always restored from the vmcs host state area on vm-exit. 	 * 	 * The SYSENTER_CS/ESP/EIP MSRs are identical to FS/GSBASE in 	 * how they are saved/restored so can be directly accessed by the 	 * guest. 	 * 	 * MSR_EFER is saved and restored in the guest VMCS area on a 	 * VM exit and entry respectively. It is also restored from the 	 * host VMCS area on a VM exit. 	 * 	 * The TSC MSR is exposed read-only. Writes are disallowed as that 	 * will impact the host TSC. 	 * XXX Writes would be implemented with a wrmsr trap, and 	 * then modifying the TSC offset in the VMCS. 	 */
 if|if
 condition|(
 name|guest_msr_rw
@@ -3312,13 +3312,6 @@ argument_list|(
 name|vmx
 argument_list|,
 name|MSR_EFER
-argument_list|)
-operator|||
-name|guest_msr_rw
-argument_list|(
-name|vmx
-argument_list|,
-name|MSR_PAT
 argument_list|)
 operator|||
 name|guest_msr_ro
@@ -3744,6 +3737,18 @@ operator|.
 name|proc_ctls2
 operator|=
 name|procbased_ctls2
+expr_stmt|;
+name|vmx
+operator|->
+name|state
+index|[
+name|i
+index|]
+operator|.
+name|nextrip
+operator|=
+operator|~
+literal|0
 expr_stmt|;
 name|vmx
 operator|->
@@ -4822,6 +4827,9 @@ name|struct
 name|vlapic
 modifier|*
 name|vlapic
+parameter_list|,
+name|uint64_t
+name|guestrip
 parameter_list|)
 block|{
 name|int
@@ -4841,6 +4849,71 @@ name|gi
 decl_stmt|,
 name|info
 decl_stmt|;
+if|if
+condition|(
+name|vmx
+operator|->
+name|state
+index|[
+name|vcpu
+index|]
+operator|.
+name|nextrip
+operator|!=
+name|guestrip
+condition|)
+block|{
+name|gi
+operator|=
+name|vmcs_read
+argument_list|(
+name|VMCS_GUEST_INTERRUPTIBILITY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|gi
+operator|&
+name|HWINTR_BLOCKING
+condition|)
+block|{
+name|VCPU_CTR2
+argument_list|(
+name|vmx
+operator|->
+name|vm
+argument_list|,
+name|vcpu
+argument_list|,
+literal|"Guest interrupt blocking "
+literal|"cleared due to rip change: %#lx/%#lx"
+argument_list|,
+name|vmx
+operator|->
+name|state
+index|[
+name|vcpu
+index|]
+operator|.
+name|nextrip
+argument_list|,
+name|guestrip
+argument_list|)
+expr_stmt|;
+name|gi
+operator|&=
+operator|~
+name|HWINTR_BLOCKING
+expr_stmt|;
+name|vmcs_write
+argument_list|(
+name|VMCS_GUEST_INTERRUPTIBILITY
+argument_list|,
+name|gi
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|vm_entry_intinfo
@@ -8347,6 +8420,10 @@ block|{
 name|int
 name|error
 decl_stmt|,
+name|errcode
+decl_stmt|,
+name|errcode_valid
+decl_stmt|,
 name|handled
 decl_stmt|,
 name|in
@@ -8370,10 +8447,6 @@ name|struct
 name|vm_task_switch
 modifier|*
 name|ts
-decl_stmt|;
-name|struct
-name|vm_exception
-name|vmexc
 decl_stmt|;
 name|uint32_t
 name|eax
@@ -9220,6 +9293,12 @@ name|exitcode
 operator|=
 name|VM_EXITCODE_MTRAP
 expr_stmt|;
+name|vmexit
+operator|->
+name|inst_length
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 name|EXIT_REASON_PAUSE
@@ -9840,23 +9919,11 @@ name|inst_length
 argument_list|)
 expr_stmt|;
 comment|/* Reflect all other exceptions back into the guest */
-name|bzero
-argument_list|(
-operator|&
-name|vmexc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|vm_exception
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|vmexc
-operator|.
-name|vector
+name|errcode_valid
 operator|=
-name|intr_vec
+name|errcode
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -9865,15 +9932,11 @@ operator|&
 name|VMCS_INTR_DEL_ERRCODE
 condition|)
 block|{
-name|vmexc
-operator|.
-name|error_code_valid
+name|errcode_valid
 operator|=
 literal|1
 expr_stmt|;
-name|vmexc
-operator|.
-name|error_code
+name|errcode
 operator|=
 name|vmcs_read
 argument_list|(
@@ -9892,13 +9955,9 @@ argument_list|,
 literal|"Reflecting exception %d/%#x into "
 literal|"the guest"
 argument_list|,
-name|vmexc
-operator|.
-name|vector
+name|intr_vec
 argument_list|,
-name|vmexc
-operator|.
-name|error_code
+name|errcode
 argument_list|)
 expr_stmt|;
 name|error
@@ -9911,8 +9970,13 @@ name|vm
 argument_list|,
 name|vcpu
 argument_list|,
-operator|&
-name|vmexc
+name|intr_vec
+argument_list|,
+name|errcode_valid
+argument_list|,
+name|errcode
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -9970,6 +10034,12 @@ operator|->
 name|exitcode
 operator|=
 name|VM_EXITCODE_PAGING
+expr_stmt|;
+name|vmexit
+operator|->
+name|inst_length
+operator|=
+literal|0
 expr_stmt|;
 name|vmexit
 operator|->
@@ -10559,7 +10629,7 @@ name|int
 name|vcpu
 parameter_list|,
 name|register_t
-name|startrip
+name|rip
 parameter_list|,
 name|pmap_t
 name|pmap
@@ -10609,9 +10679,6 @@ name|struct
 name|vlapic
 modifier|*
 name|vlapic
-decl_stmt|;
-name|uint64_t
-name|rip
 decl_stmt|;
 name|uint32_t
 name|exit_reason
@@ -10712,7 +10779,7 @@ name|vmcs_write
 argument_list|(
 name|VMCS_GUEST_RIP
 argument_list|,
-name|startrip
+name|rip
 argument_list|)
 expr_stmt|;
 name|vmx_set_pcpu_defaults
@@ -10726,6 +10793,26 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
+name|KASSERT
+argument_list|(
+name|vmcs_guest_rip
+argument_list|()
+operator|==
+name|rip
+argument_list|,
+operator|(
+literal|"%s: vmcs guest rip mismatch "
+literal|"%#lx/%#lx"
+operator|,
+name|__func__
+operator|,
+name|vmcs_guest_rip
+argument_list|()
+operator|,
+name|rip
+operator|)
+argument_list|)
+expr_stmt|;
 name|handled
 operator|=
 name|UNHANDLED
@@ -10741,6 +10828,8 @@ argument_list|,
 name|vcpu
 argument_list|,
 name|vlapic
+argument_list|,
+name|rip
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Check for vcpu suspension after injecting events because 		 * vmx_inject_interrupts() can suspend the vcpu due to a 		 * triple fault. 		 */
@@ -10763,8 +10852,7 @@ name|vm
 argument_list|,
 name|vcpu
 argument_list|,
-name|vmcs_guest_rip
-argument_list|()
+name|rip
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10788,8 +10876,7 @@ name|vm
 argument_list|,
 name|vcpu
 argument_list|,
-name|vmcs_guest_rip
-argument_list|()
+name|rip
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10815,8 +10902,7 @@ name|vm
 argument_list|,
 name|vcpu
 argument_list|,
-name|vmcs_guest_rip
-argument_list|()
+name|rip
 argument_list|)
 expr_stmt|;
 name|vmx_astpending_trace
@@ -10825,8 +10911,6 @@ name|vmx
 argument_list|,
 name|vcpu
 argument_list|,
-name|vmexit
-operator|->
 name|rip
 argument_list|)
 expr_stmt|;
@@ -10895,6 +10979,18 @@ operator|=
 name|vmcs_exit_qualification
 argument_list|()
 expr_stmt|;
+comment|/* Update 'nextrip' */
+name|vmx
+operator|->
+name|state
+index|[
+name|vcpu
+index|]
+operator|.
+name|nextrip
+operator|=
+name|rip
+expr_stmt|;
 if|if
 condition|(
 name|rc
@@ -10957,6 +11053,12 @@ name|exit_reason
 argument_list|,
 name|handled
 argument_list|)
+expr_stmt|;
+name|rip
+operator|=
+name|vmexit
+operator|->
+name|rip
 expr_stmt|;
 block|}
 do|while

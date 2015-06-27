@@ -67,6 +67,10 @@ name|uint64_t
 name|vmcb_pa
 decl_stmt|;
 comment|/* VMCB physical address */
+name|uint64_t
+name|nextrip
+decl_stmt|;
+comment|/* next instruction to be executed by guest */
 name|int
 name|lastcpu
 decl_stmt|;

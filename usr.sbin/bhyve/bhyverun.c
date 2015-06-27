@@ -496,7 +496,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-abehwxACHPWY] [-c vcpus] [-g<gdb port>] [-l<lpc>]\n"
+literal|"Usage: %s [-abehuwxACHPWY] [-c vcpus] [-g<gdb port>] [-l<lpc>]\n"
 literal|"       %*s [-m mem] [-p vcpu:hostcpu] [-s<pci>] [-U uuid]<vm>\n"
 literal|"       -a: local apic is in xAPIC mode (deprecated)\n"
 literal|"       -A: create ACPI tables\n"
@@ -511,6 +511,7 @@ literal|"       -m: memory size in MB\n"
 literal|"       -p: pin 'vcpu' to 'hostcpu'\n"
 literal|"       -P: vmexit from the guest on pause\n"
 literal|"       -s:<slot,driver,configinfo> PCI slot config\n"
+literal|"       -u: RTC keeps UTC time\n"
 literal|"       -U: uuid\n"
 literal|"       -w: ignore unimplemented MSRs\n"
 literal|"       -W: force virtio to use single-vector MSI\n"
@@ -748,29 +749,17 @@ name|ctx
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|restart_instruction
 decl_stmt|;
 name|ctx
 operator|=
 name|arg
 expr_stmt|;
-if|if
-condition|(
-name|errcode_valid
-condition|)
-name|error
+name|restart_instruction
 operator|=
-name|vm_inject_exception2
-argument_list|(
-name|ctx
-argument_list|,
-name|vcpu
-argument_list|,
-name|vector
-argument_list|,
-name|errcode
-argument_list|)
+literal|1
 expr_stmt|;
-else|else
 name|error
 operator|=
 name|vm_inject_exception
@@ -780,6 +769,12 @@ argument_list|,
 name|vcpu
 argument_list|,
 name|vector
+argument_list|,
+name|errcode_valid
+argument_list|,
+name|errcode
+argument_list|,
+name|restart_instruction
 argument_list|)
 expr_stmt|;
 name|assert
@@ -788,16 +783,6 @@ name|error
 operator|==
 literal|0
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Set the instruction length to 0 to ensure that the instruction is 	 * restarted when the fault handler returns. 	 */
-name|vmexit
-index|[
-name|vcpu
-index|]
-operator|.
-name|inst_length
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_function
@@ -1328,44 +1313,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|error
-operator|&&
-name|in
-operator|&&
-operator|!
-name|string
-condition|)
-block|{
-name|error
-operator|=
-name|vm_set_register
-argument_list|(
-name|ctx
-argument_list|,
-name|vcpu
-argument_list|,
-name|VM_REG_GUEST_RAX
-argument_list|,
-name|vme
-operator|->
-name|u
-operator|.
-name|inout
-operator|.
-name|eax
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|error
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|error
 condition|)
 block|{
@@ -1513,7 +1460,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VMEXIT_RESTART
+name|VMEXIT_CONTINUE
 operator|)
 return|;
 block|}
@@ -1675,7 +1622,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VMEXIT_RESTART
+name|VMEXIT_CONTINUE
 operator|)
 return|;
 block|}
@@ -2177,6 +2124,15 @@ modifier|*
 name|pvcpu
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|vmexit
+operator|->
+name|inst_length
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 name|stats
 operator|.
 name|vmexit_bogus
@@ -2184,7 +2140,7 @@ operator|++
 expr_stmt|;
 return|return
 operator|(
-name|VMEXIT_RESTART
+name|VMEXIT_CONTINUE
 operator|)
 return|;
 block|}
@@ -2277,6 +2233,15 @@ modifier|*
 name|pvcpu
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|vmexit
+operator|->
+name|inst_length
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 name|stats
 operator|.
 name|vmexit_mtrap
@@ -2284,7 +2249,7 @@ operator|++
 expr_stmt|;
 return|return
 operator|(
-name|VMEXIT_RESTART
+name|VMEXIT_CONTINUE
 operator|)
 return|;
 block|}
@@ -2700,7 +2665,7 @@ name|int
 name|vcpu
 parameter_list|,
 name|uint64_t
-name|rip
+name|startrip
 parameter_list|)
 block|{
 name|int
@@ -2774,6 +2739,26 @@ name|active_cpus
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|vm_set_register
+argument_list|(
+name|ctx
+argument_list|,
+name|vcpu
+argument_list|,
+name|VM_REG_GUEST_RIP
+argument_list|,
+name|startrip
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|error
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 literal|1
@@ -2786,8 +2771,6 @@ argument_list|(
 name|ctx
 argument_list|,
 name|vcpu
-argument_list|,
-name|rip
 argument_list|,
 operator|&
 name|vmexit
@@ -2875,35 +2858,6 @@ block|{
 case|case
 name|VMEXIT_CONTINUE
 case|:
-name|rip
-operator|=
-name|vmexit
-index|[
-name|vcpu
-index|]
-operator|.
-name|rip
-operator|+
-name|vmexit
-index|[
-name|vcpu
-index|]
-operator|.
-name|inst_length
-expr_stmt|;
-break|break;
-case|case
-name|VMEXIT_RESTART
-case|:
-name|rip
-operator|=
-name|vmexit
-index|[
-name|vcpu
-index|]
-operator|.
-name|rip
-expr_stmt|;
 break|break;
 case|case
 name|VMEXIT_ABORT
@@ -3225,6 +3179,9 @@ name|max_vcpus
 decl_stmt|,
 name|mptgen
 decl_stmt|;
+name|int
+name|rtc_localtime
+decl_stmt|;
 name|struct
 name|vmctx
 modifier|*
@@ -3272,6 +3229,10 @@ name|mptgen
 operator|=
 literal|1
 expr_stmt|;
+name|rtc_localtime
+operator|=
+literal|1
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -3283,7 +3244,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abehwxACHIPWYp:g:c:s:m:l:U:"
+literal|"abehuwxACHIPWYp:g:c:s:m:l:U:"
 argument_list|)
 operator|)
 operator|!=
@@ -3473,6 +3434,14 @@ case|:
 name|strictio
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+name|rtc_localtime
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -3706,6 +3675,8 @@ expr_stmt|;
 name|rtc_init
 argument_list|(
 name|ctx
+argument_list|,
+name|rtc_localtime
 argument_list|)
 expr_stmt|;
 name|sci_init

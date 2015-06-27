@@ -23,6 +23,9 @@ name|struct
 name|vmctx
 modifier|*
 name|ctx
+parameter_list|,
+name|int
+name|use_localtime
 parameter_list|)
 function_decl|;
 end_function_decl

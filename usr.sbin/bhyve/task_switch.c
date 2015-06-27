@@ -3520,7 +3520,7 @@ operator|==
 name|CPU_MODE_PROTECTED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Calculate the %eip to store in the old TSS before modifying the 	 * 'inst_length'. 	 */
+comment|/* 	 * Calculate the instruction pointer to store in the old TSS. 	 */
 name|eip
 operator|=
 name|vmexit
@@ -3530,13 +3530,6 @@ operator|+
 name|vmexit
 operator|->
 name|inst_length
-expr_stmt|;
-comment|/* 	 * Set the 'inst_length' to '0'. 	 * 	 * If an exception is triggered during emulation of the task switch 	 * then the exception handler should return to the instruction that 	 * caused the task switch as opposed to the subsequent instruction. 	 */
-name|vmexit
-operator|->
-name|inst_length
-operator|=
-literal|0
 expr_stmt|;
 comment|/* 	 * Section 4.6, "Access Rights" in Intel SDM Vol 3. 	 * The following page table accesses are implicitly supervisor mode: 	 * - accesses to GDT or LDT to load segment descriptors 	 * - accesses to the task state segment during task switch 	 */
 name|sup_paging
@@ -4201,19 +4194,24 @@ name|CR0_TS
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We are now committed to the task switch. Any exceptions encountered 	 * after this point will be handled in the context of the new task and 	 * the saved instruction pointer will belong to the new task. 	 */
-name|vmexit
-operator|->
-name|rip
+name|error
 operator|=
+name|vm_set_register
+argument_list|(
+name|ctx
+argument_list|,
+name|vcpu
+argument_list|,
+name|VM_REG_GUEST_RIP
+argument_list|,
 name|newtss
 operator|.
 name|tss_eip
+argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-name|vmexit
-operator|->
-name|inst_length
+name|error
 operator|==
 literal|0
 argument_list|)
