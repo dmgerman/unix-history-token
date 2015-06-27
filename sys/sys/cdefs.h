@@ -2696,11 +2696,14 @@ end_comment
 begin_if
 if|#
 directive|if
-name|__GNUC_PREREQ__
+name|defined
 argument_list|(
-literal|4
-operator|,
-literal|1
+name|__GNUC_GNU_INLINE__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GNUC_STDC_INLINE__
 argument_list|)
 end_if
 
