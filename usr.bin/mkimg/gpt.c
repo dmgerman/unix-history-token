@@ -203,6 +203,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|uuid_t
+name|gpt_uuid_ms_basic_data
+init|=
+name|GPT_ENT_TYPE_MS_BASIC_DATA
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|mkimg_alias
 name|gpt_aliases
@@ -287,6 +296,15 @@ block|,
 name|ALIAS_PTR2TYPE
 argument_list|(
 argument|&gpt_uuid_mbr
+argument_list|)
+block|}
+block|,
+block|{
+name|ALIAS_NTFS
+block|,
+name|ALIAS_PTR2TYPE
+argument_list|(
+argument|&gpt_uuid_ms_basic_data
 argument_list|)
 block|}
 block|,
