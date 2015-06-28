@@ -587,6 +587,15 @@ argument_list|,
 name|VIRTIO_TYPE_ENTROPY
 argument_list|)
 expr_stmt|;
+name|pci_set_cfgdata16
+argument_list|(
+name|pi
+argument_list|,
+name|PCIR_SUBVEND_0
+argument_list|,
+name|VIRTIO_VENDOR
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vi_intr_init

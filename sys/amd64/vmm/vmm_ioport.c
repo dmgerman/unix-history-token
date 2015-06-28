@@ -26,31 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/cpuset.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
 end_include
 
 begin_include
@@ -63,12 +39,6 @@ begin_include
 include|#
 directive|include
 file|<machine/vmm_instruction_emul.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<x86/psl.h>
 end_include
 
 begin_include

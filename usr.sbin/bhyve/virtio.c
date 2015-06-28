@@ -1073,7 +1073,9 @@ condition|(
 operator|(
 name|vs
 operator|->
-name|vs_negotiated_caps
+name|vs_vc
+operator|->
+name|vc_hv_caps
 operator|&
 name|VIRTIO_RING_F_INDIRECT_DESC
 operator|)

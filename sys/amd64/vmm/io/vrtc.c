@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/cpuset.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -546,6 +540,10 @@ name|struct
 name|vrtc
 modifier|*
 name|vrtc
+parameter_list|,
+name|sbintime_t
+modifier|*
+name|basetime
 parameter_list|)
 block|{
 name|sbintime_t
@@ -555,6 +553,8 @@ name|delta
 decl_stmt|;
 name|time_t
 name|t
+decl_stmt|,
+name|secs
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -575,6 +575,13 @@ operator|=
 name|vrtc
 operator|->
 name|base_rtctime
+expr_stmt|;
+operator|*
+name|basetime
+operator|=
+name|vrtc
+operator|->
+name|base_uptime
 expr_stmt|;
 if|if
 condition|(
@@ -615,10 +622,21 @@ name|now
 operator|)
 argument_list|)
 expr_stmt|;
-name|t
-operator|+=
+name|secs
+operator|=
 name|delta
 operator|/
+name|SBT_1S
+expr_stmt|;
+name|t
+operator|+=
+name|secs
+expr_stmt|;
+operator|*
+name|basetime
+operator|+=
+name|secs
+operator|*
 name|SBT_1S
 expr_stmt|;
 block|}
@@ -1895,12 +1913,18 @@ name|vrtc
 parameter_list|,
 name|time_t
 name|newtime
+parameter_list|,
+name|sbintime_t
+name|newbase
 parameter_list|)
 block|{
 name|struct
 name|rtcdev
 modifier|*
 name|rtc
+decl_stmt|;
+name|sbintime_t
+name|oldbase
 decl_stmt|;
 name|time_t
 name|oldtime
@@ -1963,12 +1987,37 @@ name|vrtc
 operator|->
 name|vm
 argument_list|,
-literal|"Updating RTC time from %#lx to %#lx"
+literal|"Updating RTC secs from %#lx to %#lx"
 argument_list|,
 name|oldtime
 argument_list|,
 name|newtime
 argument_list|)
+expr_stmt|;
+name|oldbase
+operator|=
+name|vrtc
+operator|->
+name|base_uptime
+expr_stmt|;
+name|VM_CTR2
+argument_list|(
+name|vrtc
+operator|->
+name|vm
+argument_list|,
+literal|"Updating RTC base uptime from %#lx to %#lx"
+argument_list|,
+name|oldbase
+argument_list|,
+name|newbase
+argument_list|)
+expr_stmt|;
+name|vrtc
+operator|->
+name|base_uptime
+operator|=
+name|newbase
 expr_stmt|;
 if|if
 condition|(
@@ -1981,7 +2030,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * If 'newtime' indicates that RTC updates are disabled then just 	 * record that and return. There is no need to do alarm interrupt 	 * processing or update 'base_uptime' in this case. 	 */
+comment|/* 	 * If 'newtime' indicates that RTC updates are disabled then just 	 * record that and return. There is no need to do alarm interrupt 	 * processing in this case. 	 */
 if|if
 condition|(
 name|newtime
@@ -2150,13 +2199,6 @@ name|reg_c
 operator||
 name|RTCIR_UPDATE
 argument_list|)
-expr_stmt|;
-name|vrtc
-operator|->
-name|base_uptime
-operator|=
-name|sbinuptime
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -2472,6 +2514,8 @@ name|arg
 decl_stmt|;
 name|sbintime_t
 name|freqsbt
+decl_stmt|,
+name|basetime
 decl_stmt|;
 name|time_t
 name|rtctime
@@ -2587,6 +2631,9 @@ operator|=
 name|vrtc_curtime
 argument_list|(
 name|vrtc
+argument_list|,
+operator|&
+name|basetime
 argument_list|)
 expr_stmt|;
 name|error
@@ -2596,6 +2643,8 @@ argument_list|(
 name|vrtc
 argument_list|,
 name|rtctime
+argument_list|,
+name|basetime
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -2972,6 +3021,8 @@ name|sbintime_t
 name|oldfreq
 decl_stmt|,
 name|newfreq
+decl_stmt|,
+name|basetime
 decl_stmt|;
 name|time_t
 name|curtime
@@ -3076,6 +3127,11 @@ argument_list|(
 name|vrtc
 argument_list|)
 expr_stmt|;
+name|basetime
+operator|=
+name|sbinuptime
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|rtctime
@@ -3102,6 +3158,9 @@ operator|=
 name|vrtc_curtime
 argument_list|(
 name|vrtc
+argument_list|,
+operator|&
+name|basetime
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -3156,6 +3215,8 @@ argument_list|(
 name|vrtc
 argument_list|,
 name|rtctime
+argument_list|,
+name|basetime
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -3468,6 +3529,9 @@ argument_list|(
 name|vrtc
 argument_list|,
 name|secs
+argument_list|,
+name|sbinuptime
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|VRTC_UNLOCK
@@ -3531,6 +3595,9 @@ name|vrtc
 modifier|*
 name|vrtc
 decl_stmt|;
+name|sbintime_t
+name|basetime
+decl_stmt|;
 name|time_t
 name|t
 decl_stmt|;
@@ -3551,6 +3618,9 @@ operator|=
 name|vrtc_curtime
 argument_list|(
 name|vrtc
+argument_list|,
+operator|&
+name|basetime
 argument_list|)
 expr_stmt|;
 name|VRTC_UNLOCK
@@ -3717,6 +3787,9 @@ name|vrtc
 modifier|*
 name|vrtc
 decl_stmt|;
+name|sbintime_t
+name|basetime
+decl_stmt|;
 name|time_t
 name|curtime
 decl_stmt|;
@@ -3773,6 +3846,9 @@ operator|=
 name|vrtc_curtime
 argument_list|(
 name|vrtc
+argument_list|,
+operator|&
+name|basetime
 argument_list|)
 expr_stmt|;
 name|secs_to_rtc
@@ -3948,6 +4024,9 @@ name|rtcdev
 modifier|*
 name|rtc
 decl_stmt|;
+name|sbintime_t
+name|basetime
+decl_stmt|;
 name|time_t
 name|curtime
 decl_stmt|;
@@ -4025,6 +4104,9 @@ operator|=
 name|vrtc_curtime
 argument_list|(
 name|vrtc
+argument_list|,
+operator|&
+name|basetime
 argument_list|)
 expr_stmt|;
 name|vrtc_time_update
@@ -4032,6 +4114,8 @@ argument_list|(
 name|vrtc
 argument_list|,
 name|curtime
+argument_list|,
+name|basetime
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Update RTC date/time fields if necessary. 	 * 	 * This is not just for reads of the RTC. The side-effect of writing 	 * the century byte requires other RTC date/time fields (e.g. sec) 	 * to be updated here. 	 */
@@ -4274,6 +4358,9 @@ argument_list|(
 name|vrtc
 argument_list|,
 name|curtime
+argument_list|,
+name|sbinuptime
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -4522,6 +4609,9 @@ argument_list|(
 name|vrtc
 argument_list|,
 name|curtime
+argument_list|,
+name|sbinuptime
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|secs_to_rtc

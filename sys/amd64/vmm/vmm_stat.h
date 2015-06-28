@@ -702,6 +702,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|VMM_STAT_DECLARE
+argument_list|(
+name|VMEXIT_REQIDLE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif

@@ -2170,6 +2170,17 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+specifier|static
+name|VMM_STAT
+argument_list|(
+name|VLAPIC_GRATUITOUS_EOI
+argument_list|,
+literal|"EOI without any in-service interrupt"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|void
@@ -2220,7 +2231,6 @@ name|lapic
 operator|->
 name|tmr0
 expr_stmt|;
-comment|/* 	 * The x86 architecture reserves the the first 32 vectors for use 	 * by the processor. 	 */
 for|for
 control|(
 name|i
@@ -2228,7 +2238,7 @@ operator|=
 literal|7
 init|;
 name|i
-operator|>
+operator|>=
 literal|0
 condition|;
 name|i
@@ -2290,6 +2300,29 @@ operator|<<
 name|bitpos
 operator|)
 expr_stmt|;
+name|vector
+operator|=
+name|i
+operator|*
+literal|32
+operator|+
+name|bitpos
+expr_stmt|;
+name|VCPU_CTR1
+argument_list|(
+name|vlapic
+operator|->
+name|vm
+argument_list|,
+name|vlapic
+operator|->
+name|vcpuid
+argument_list|,
+literal|"EOI vector %d"
+argument_list|,
+name|vector
+argument_list|)
+expr_stmt|;
 name|VLAPIC_CTR_ISR
 argument_list|(
 name|vlapic
@@ -2325,14 +2358,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|vector
-operator|=
-name|i
-operator|*
-literal|32
-operator|+
-name|bitpos
-expr_stmt|;
 name|vioapic_process_eoi
 argument_list|(
 name|vlapic
@@ -2350,6 +2375,34 @@ block|}
 return|return;
 block|}
 block|}
+name|VCPU_CTR0
+argument_list|(
+name|vlapic
+operator|->
+name|vm
+argument_list|,
+name|vlapic
+operator|->
+name|vcpuid
+argument_list|,
+literal|"Gratuitous EOI"
+argument_list|)
+expr_stmt|;
+name|vmm_stat_incr
+argument_list|(
+name|vlapic
+operator|->
+name|vm
+argument_list|,
+name|vlapic
+operator|->
+name|vcpuid
+argument_list|,
+name|VLAPIC_GRATUITOUS_EOI
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4545,7 +4598,6 @@ name|lapic
 operator|->
 name|irr0
 expr_stmt|;
-comment|/* 	 * The x86 architecture reserves the the first 32 vectors for use 	 * by the processor. 	 */
 for|for
 control|(
 name|i
@@ -4553,7 +4605,7 @@ operator|=
 literal|7
 init|;
 name|i
-operator|>
+operator|>=
 literal|0
 condition|;
 name|i

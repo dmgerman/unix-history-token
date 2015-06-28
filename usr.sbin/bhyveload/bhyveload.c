@@ -2424,7 +2424,7 @@ decl_stmt|;
 if|if
 condition|(
 name|ndisks
-operator|>
+operator|>=
 name|NDISKS
 condition|)
 return|return

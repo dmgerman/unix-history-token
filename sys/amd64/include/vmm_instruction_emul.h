@@ -280,12 +280,16 @@ name|struct
 name|vie
 modifier|*
 name|vie
+parameter_list|,
+name|int
+modifier|*
+name|is_fault
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Translate the guest linear address 'gla' to a guest physical address.  *  * Returns 0 on success and '*gpa' contains the result of the translation.  * Returns 1 if an exception was injected into the guest.  * Returns -1 otherwise.  */
+comment|/*  * Translate the guest linear address 'gla' to a guest physical address.  *  * retval	is_fault	Interpretation  *   0		   0		'gpa' contains result of the translation  *   0		   1		An exception was injected into the guest  * EFAULT	  N/A		An unrecoverable hypervisor error occurred  */
 end_comment
 
 begin_function_decl
@@ -314,6 +318,10 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|gpa
+parameter_list|,
+name|int
+modifier|*
+name|is_fault
 parameter_list|)
 function_decl|;
 end_function_decl

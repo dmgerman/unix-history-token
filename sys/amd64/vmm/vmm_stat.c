@@ -44,12 +44,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/smp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/vmm.h>
 end_include
 
@@ -699,6 +693,16 @@ argument_list|(
 name|VMEXIT_ASTPENDING
 argument_list|,
 literal|"number of times astpending at exit"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
+name|VMEXIT_REQIDLE
+argument_list|,
+literal|"number of times idle requested at exit"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -254,6 +254,10 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|gpa
+parameter_list|,
+name|int
+modifier|*
+name|fault
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1093,7 +1097,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Translate the GLA range [gla,gla+len) into GPA segments in 'iov'.  * The 'iovcnt' should be big enough to accomodate all GPA segments.  * Returns 0 on success, 1 on a guest fault condition and -1 otherwise.  */
+comment|/*  * Translate the GLA range [gla,gla+len) into GPA segments in 'iov'.  * The 'iovcnt' should be big enough to accomodate all GPA segments.  *  * retval	fault		Interpretation  *   0		  0		Success  *   0		  1		An exception was injected into the guest  * EFAULT	 N/A		Error  */
 end_comment
 
 begin_function_decl
@@ -1129,6 +1133,10 @@ name|iov
 parameter_list|,
 name|int
 name|iovcnt
+parameter_list|,
+name|int
+modifier|*
+name|fault
 parameter_list|)
 function_decl|;
 end_function_decl

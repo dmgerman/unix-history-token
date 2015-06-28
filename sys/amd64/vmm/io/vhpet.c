@@ -56,12 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/cpuset.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/acpica/acpi_hpet.h>
 end_include
 
