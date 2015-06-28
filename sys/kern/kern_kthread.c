@@ -133,13 +133,11 @@ begin_function
 name|void
 name|kproc_start
 parameter_list|(
-name|udata
-parameter_list|)
 specifier|const
 name|void
 modifier|*
 name|udata
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|struct
