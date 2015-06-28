@@ -2203,7 +2203,7 @@ name|data
 expr_stmt|;
 name|error
 operator|=
-name|vmm_gla2gpa
+name|vm_gla2gpa
 argument_list|(
 name|sc
 operator|->
@@ -2248,7 +2248,7 @@ operator|-
 literal|1
 argument_list|,
 operator|(
-literal|"%s: vmm_gla2gpa unknown error %d"
+literal|"%s: vm_gla2gpa unknown error %d"
 operator|,
 name|__func__
 operator|,

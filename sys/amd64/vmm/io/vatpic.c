@@ -912,6 +912,12 @@ literal|1
 expr_stmt|;
 name|atpic
 operator|->
+name|request
+operator|=
+literal|0
+expr_stmt|;
+name|atpic
+operator|->
 name|mask
 operator|=
 literal|0

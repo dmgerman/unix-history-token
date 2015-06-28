@@ -2735,11 +2735,6 @@ argument_list|,
 name|VIRTIO_TYPE_NET
 argument_list|)
 expr_stmt|;
-name|pci_lintr_request
-argument_list|(
-name|pi
-argument_list|)
-expr_stmt|;
 comment|/* Link is up if we managed to open tap device. */
 name|sc
 operator|->
