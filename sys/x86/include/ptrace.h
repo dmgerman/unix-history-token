@@ -96,6 +96,34 @@ name|PT_SETXSTATE
 value|(PT_FIRSTMACH + 6)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PT_GETFSBASE
+value|(PT_FIRSTMACH + 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_SETFSBASE
+value|(PT_FIRSTMACH + 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_GETGSBASE
+value|(PT_FIRSTMACH + 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_SETGSBASE
+value|(PT_FIRSTMACH + 10)
+end_define
+
 begin_comment
 comment|/* Argument structure for PT_GETXSTATE_INFO. */
 end_comment
