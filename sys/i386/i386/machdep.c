@@ -705,28 +705,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|CS_SECURE
-parameter_list|(
-name|cs
-parameter_list|)
-value|(ISPL(cs) == SEL_UPL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EFL_SECURE
-parameter_list|(
-name|ef
-parameter_list|,
-name|oef
-parameter_list|)
-value|((((ef) ^ (oef))& ~PSL_USERCHANGE) == 0)
-end_define
-
 begin_if
 if|#
 directive|if
