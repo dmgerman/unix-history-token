@@ -2361,8 +2361,8 @@ end_if
 begin_define
 define|#
 directive|define
-name|__hidden
-value|__attribute__((__visibility__("hidden")))
+name|__sentinel
+value|__attribute__((__sentinel__))
 end_define
 
 begin_define
@@ -2370,6 +2370,13 @@ define|#
 directive|define
 name|__exported
 value|__attribute__((__visibility__("default")))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__hidden
+value|__attribute__((__visibility__("hidden")))
 end_define
 
 begin_else
@@ -2380,13 +2387,19 @@ end_else
 begin_define
 define|#
 directive|define
-name|__hidden
+name|__sentinel
 end_define
 
 begin_define
 define|#
 directive|define
 name|__exported
+end_define
+
+begin_define
+define|#
+directive|define
+name|__hidden
 end_define
 
 begin_endif
