@@ -53568,6 +53568,21 @@ literal|1
 operator|)
 return|;
 block|}
+name|bzero
+argument_list|(
+name|mc_mac
+argument_list|,
+operator|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|mc_mac
+argument_list|)
+operator|*
+name|mc_count
+operator|)
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -53803,6 +53818,11 @@ argument_list|,
 literal|"Failed to clear multicast configuration: %d\n"
 argument_list|,
 name|rc
+argument_list|)
+expr_stmt|;
+name|BXE_MCAST_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
