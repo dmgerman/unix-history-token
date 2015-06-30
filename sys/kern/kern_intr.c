@@ -4286,7 +4286,7 @@ name|td
 operator|=
 name|ctd
 expr_stmt|;
-name|random_harvest
+name|random_harvest_queue
 argument_list|(
 operator|&
 name|entropy
@@ -4920,7 +4920,7 @@ name|td
 operator|=
 name|ctd
 expr_stmt|;
-name|random_harvest
+name|random_harvest_queue
 argument_list|(
 operator|&
 name|entropy
@@ -5330,7 +5330,7 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
-name|random_harvest
+name|random_harvest_queue
 argument_list|(
 operator|&
 name|entropy

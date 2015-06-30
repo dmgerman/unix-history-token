@@ -83,7 +83,7 @@ begin_define
 define|#
 directive|define
 name|ARC4_KEYBYTES
-value|(256 / 8)
+value|256
 end_define
 
 begin_decl_stmt
@@ -199,21 +199,20 @@ block|{
 name|u_int8_t
 name|key
 index|[
-literal|256
+name|ARC4_KEYBYTES
 index|]
 decl_stmt|;
 name|int
-name|r
-decl_stmt|,
 name|n
 decl_stmt|;
 name|struct
 name|timeval
 name|tv_now
 decl_stmt|;
-comment|/* 	 * XXX read_random() returns unsafe numbers if the entropy 	 * device is not loaded -- MarkM. 	 */
-name|r
-operator|=
+comment|/* 	 * XXX: FIX!! This isn't brilliant. Need more confidence. 	 * This returns zero entropy before random(4) is seeded. 	 */
+operator|(
+name|void
+operator|)
 name|read_random
 argument_list|(
 name|key
@@ -233,43 +232,6 @@ operator|&
 name|arc4_mtx
 argument_list|)
 expr_stmt|;
-comment|/* If r == 0 || -1, just use what was on the stack. */
-if|if
-condition|(
-name|r
-operator|>
-literal|0
-condition|)
-block|{
-for|for
-control|(
-name|n
-operator|=
-name|r
-init|;
-name|n
-operator|<
-sizeof|sizeof
-argument_list|(
-name|key
-argument_list|)
-condition|;
-name|n
-operator|++
-control|)
-name|key
-index|[
-name|n
-index|]
-operator|=
-name|key
-index|[
-name|n
-operator|%
-name|r
-index|]
-expr_stmt|;
-block|}
 for|for
 control|(
 name|n
@@ -337,7 +299,7 @@ name|arc4_numruns
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Throw away the first N words of output, as suggested in the 	 * paper "Weaknesses in the Key Scheduling Algorithm of RC4" 	 * by Fluher, Mantin, and Shamir.  (N = 256 in our case.) 	 */
+comment|/* 	 * Throw away the first N words of output, as suggested in the 	 * paper "Weaknesses in the Key Scheduling Algorithm of RC4" 	 * by Fluher, Mantin, and Shamir.  (N = 256 in our case.) 	 * 	 * http://dl.acm.org/citation.cfm?id=646557.694759 	 */
 for|for
 control|(
 name|n

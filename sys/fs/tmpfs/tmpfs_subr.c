@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/random.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rwlock.h>
 end_include
 
@@ -7729,6 +7735,22 @@ name|TMPFS_NODE_MODIFIED
 operator||
 name|TMPFS_NODE_CHANGED
 operator|)
+expr_stmt|;
+comment|/* XXX: FIX? The entropy here is desirable, but the harvesting may be expensive */
+name|random_harvest_queue
+argument_list|(
+name|node
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|node
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|RANDOM_FS_ATIME
+argument_list|)
 expr_stmt|;
 block|}
 end_function

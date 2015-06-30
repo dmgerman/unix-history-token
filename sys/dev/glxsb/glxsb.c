@@ -2600,7 +2600,8 @@ name|SB_RANDOM_NUM
 argument_list|)
 expr_stmt|;
 comment|/* feed with one uint32 */
-name|random_harvest
+comment|/* MarkM: FIX!! Check that this does not swamp the harvester! */
+name|random_harvest_queue
 argument_list|(
 operator|&
 name|value

@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/random.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/reboot.h>
 end_include
 
@@ -3458,6 +3464,21 @@ name|vd
 operator|->
 name|vd_curwindow
 decl_stmt|;
+name|random_harvest_queue
+argument_list|(
+operator|&
+name|c
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|c
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|RANDOM_KEYBOARD
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|VT_ALT_TO_ESC_HACK

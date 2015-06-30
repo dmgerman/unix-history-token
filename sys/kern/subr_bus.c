@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_random.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -10507,17 +10501,25 @@ argument_list|()
 operator|-
 name|attachtime
 expr_stmt|;
-comment|/* 	 * 4 bits per device is a reasonable value for desktop and server 	 * hardware with good get_cyclecount() implementations, but may 	 * need to be adjusted on other platforms. 	 */
-ifdef|#
-directive|ifdef
-name|RANDOM_DEBUG
+comment|/* 	 * 4 bits per device is a reasonable value for desktop and server 	 * hardware with good get_cyclecount() implementations, but WILL 	 * need to be adjusted on other platforms. 	 */
+define|#
+directive|define
+name|RANDOM_PROBE_BIT_GUESS
+value|4
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
-literal|"random: %s(): feeding %d bit(s) of entropy from %s%d\n"
+literal|"random: harvesting attach, %zu bytes (%d bits) from %s%d\n"
 argument_list|,
-name|__func__
+sizeof|sizeof
+argument_list|(
+name|attachtime
+argument_list|)
 argument_list|,
-literal|4
+name|RANDOM_PROBE_BIT_GUESS
 argument_list|,
 name|dev
 operator|->
@@ -10530,9 +10532,7 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-name|random_harvest
+name|random_harvest_direct
 argument_list|(
 operator|&
 name|attachtime
@@ -10542,7 +10542,7 @@ argument_list|(
 name|attachtime
 argument_list|)
 argument_list|,
-literal|4
+name|RANDOM_PROBE_BIT_GUESS
 argument_list|,
 name|RANDOM_ATTACH
 argument_list|)

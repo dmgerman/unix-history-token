@@ -655,43 +655,8 @@ operator|+=
 name|len
 expr_stmt|;
 else|else
-block|{
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-comment|/* XXX verify buffer is word aligned */
-name|u_int32_t
-modifier|*
-name|p
-init|=
-name|buf
-decl_stmt|;
-for|for
-control|(
-name|len
-operator|/=
-sizeof|sizeof
-argument_list|(
-name|u_int32_t
-argument_list|)
-init|;
-name|len
-condition|;
-name|len
-operator|--
-control|)
-name|add_true_randomness
-argument_list|(
-operator|*
-name|p
-operator|++
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|random_harvest
+comment|/* MarkM: FIX!! Check that this does not swamp the harvester! */
+name|random_harvest_queue
 argument_list|(
 name|buf
 argument_list|,
@@ -706,9 +671,6 @@ argument_list|,
 name|RANDOM_PURE_RNDTEST
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-block|}
 block|}
 end_function
 

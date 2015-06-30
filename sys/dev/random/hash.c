@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000-2013 Mark R V Murray  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (c) 2000-2015 Mark R V Murray  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -120,17 +120,17 @@ file|<dev/random/hash.h>
 end_include
 
 begin_comment
-comment|/* This code presumes that KEYSIZE is twice as large as BLOCKSIZE */
+comment|/* This code presumes that RANDOM_KEYSIZE is twice as large as RANDOM_BLOCKSIZE */
 end_comment
 
 begin_expr_stmt
 name|CTASSERT
 argument_list|(
-name|KEYSIZE
+name|RANDOM_KEYSIZE
 operator|==
 literal|2
 operator|*
-name|BLOCKSIZE
+name|RANDOM_BLOCKSIZE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -198,7 +198,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Conclude by returning the hash in the supplied<*buf> which must be  * KEYSIZE bytes long.  */
+comment|/* Conclude by returning the hash in the supplied<*buf> which must be  * RANDOM_KEYSIZE bytes long.  */
 end_comment
 
 begin_function
@@ -229,7 +229,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Initialise the encryption routine by setting up the key schedule  * from the supplied<*data> which must be KEYSIZE bytes of binary  * data. Use CBC mode for better avalanche.  */
+comment|/* Initialise the encryption routine by setting up the key schedule  * from the supplied<*data> which must be RANDOM_KEYSIZE bytes of binary  * data.  */
 end_comment
 
 begin_function
@@ -254,7 +254,7 @@ name|context
 operator|->
 name|cipher
 argument_list|,
-name|MODE_CBC
+name|MODE_ECB
 argument_list|,
 name|NULL
 argument_list|)
@@ -268,7 +268,7 @@ name|key
 argument_list|,
 name|DIR_ENCRYPT
 argument_list|,
-name|KEYSIZE
+name|RANDOM_KEYSIZE
 operator|*
 literal|8
 argument_list|,
@@ -279,7 +279,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Encrypt the supplied data using the key schedule preset in the context.  *<length> bytes are encrypted from<*d_in> to<*d_out>.<length> must be  * a multiple of BLOCKSIZE.  */
+comment|/* Encrypt the supplied data using the key schedule preset in the context.  *<length> bytes are encrypted from<*d_in> to<*d_out>.<length> must be  * a multiple of RANDOM_BLOCKSIZE.  */
 end_comment
 
 begin_function

@@ -548,7 +548,7 @@ name|iy
 decl_stmt|,
 name|z
 decl_stmt|;
-name|random_harvest
+name|random_harvest_queue
 argument_list|(
 name|mi
 argument_list|,
