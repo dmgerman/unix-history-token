@@ -11148,6 +11148,25 @@ name|if_ioctl
 operator|=
 name|ixgbe_ioctl
 expr_stmt|;
+comment|/* TSO parameters */
+name|ifp
+operator|->
+name|if_hw_tsomax
+operator|=
+literal|65518
+expr_stmt|;
+name|ifp
+operator|->
+name|if_hw_tsomaxsegcount
+operator|=
+name|IXGBE_82599_SCATTER
+expr_stmt|;
+name|ifp
+operator|->
+name|if_hw_tsomaxsegsize
+operator|=
+literal|2048
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|IXGBE_LEGACY_TX
