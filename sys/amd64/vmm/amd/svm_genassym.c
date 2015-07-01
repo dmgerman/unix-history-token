@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<x86/specialreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"svm.h"
 end_include
 
@@ -255,6 +261,16 @@ name|svm_regctx
 argument_list|,
 name|sctx_r15
 argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|MSR_GSBASE
+argument_list|,
+name|MSR_GSBASE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
