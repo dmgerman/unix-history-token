@@ -989,7 +989,13 @@ if|if
 condition|(
 name|rv
 operator|>=
-name|VM_MAXUSER_ADDRESS
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_sysent
+operator|->
+name|sv_maxuser
 condition|)
 block|{
 name|error
