@@ -27,11 +27,22 @@ begin_comment
 comment|//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_CRT_SECURE_NO_WARNINGS
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_CRT_SECURE_NO_WARNINGS
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

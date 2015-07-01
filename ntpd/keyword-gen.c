@@ -162,6 +162,14 @@ name|FOLLBY_STRING
 block|}
 block|,
 block|{
+literal|"dscp"
+block|,
+name|T_Dscp
+block|,
+name|FOLLBY_TOKEN
+block|}
+block|,
+block|{
 literal|"enable"
 block|,
 name|T_Enable
@@ -215,6 +223,14 @@ block|,
 name|T_Leapfile
 block|,
 name|FOLLBY_STRING
+block|}
+block|,
+block|{
+literal|"leapsmearinterval"
+block|,
+name|T_Leapsmearinterval
+block|,
+name|FOLLBY_TOKEN
 block|}
 block|,
 block|{
@@ -1977,9 +1993,6 @@ name|u_short
 name|this_state
 decl_stmt|;
 name|u_short
-name|prev_state
-decl_stmt|;
-name|u_short
 name|state
 decl_stmt|;
 name|u_short
@@ -1988,7 +2001,7 @@ decl_stmt|;
 name|u_short
 name|token
 decl_stmt|;
-comment|/*  	 * Sort ntp_keywords in alphabetical keyword order.  This is 	 * not necessary, but minimizes nonfunctional changes in the 	 * generated finite state machine when keywords are modified. 	 */
+comment|/* 	 * Sort ntp_keywords in alphabetical keyword order.  This is 	 * not necessary, but minimizes nonfunctional changes in the 	 * generated finite state machine when keywords are modified. 	 */
 name|qsort
 argument_list|(
 name|ntp_keywords
@@ -2009,7 +2022,7 @@ argument_list|,
 name|compare_key_tok_text
 argument_list|)
 expr_stmt|;
-comment|/* 	 * To save space, reserve the state array entry matching each  	 * token number for its terminal state, so the token identifier 	 * does not need to be stored in each state, but can be 	 * recovered trivially.  To mark the entry reserved, 	 * finishes_token is nonzero. 	 */
+comment|/* 	 * To save space, reserve the state array entry matching each 	 * token number for its terminal state, so the token identifier 	 * does not need to be stored in each state, but can be 	 * recovered trivially.  To mark the entry reserved, 	 * finishes_token is nonzero. 	 */
 for|for
 control|(
 name|i
@@ -2363,10 +2376,6 @@ name|prefix_len
 operator|=
 literal|0
 expr_stmt|;
-name|prev_state
-operator|=
-literal|0
-expr_stmt|;
 name|this_state
 operator|=
 name|i
@@ -2614,7 +2623,7 @@ name|prev_char_s
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Find the correct position to insert the state.  	 * All states should be in alphabetical order 	 */
+comment|/* Find the correct position to insert the state. 	 * All states should be in alphabetical order 	 */
 while|while
 condition|(
 name|curr_char_s
@@ -2648,7 +2657,7 @@ operator|.
 name|other_next_s
 expr_stmt|;
 block|}
-comment|/*  	 * Check if a previously seen keyword has the same prefix as 	 * the current keyword.  If so, simply use the state for that 	 * keyword as my_state, otherwise, allocate a new state. 	 */
+comment|/* 	 * Check if a previously seen keyword has the same prefix as 	 * the current keyword.  If so, simply use the state for that 	 * keyword as my_state, otherwise, allocate a new state. 	 */
 if|if
 condition|(
 name|curr_char_s

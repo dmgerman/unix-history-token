@@ -4,7 +4,7 @@ comment|/**  * \file file.c  *  * Handle options that have file names for argume
 end_comment
 
 begin_comment
-comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
+comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2015 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
 end_comment
 
 begin_comment
@@ -337,18 +337,14 @@ name|pOD
 operator|->
 name|optCookie
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|intptr_t
-operator|)
+name|VOIDP
+argument_list|(
 name|pOD
 operator|->
 name|optArg
 operator|.
 name|argString
+argument_list|)
 expr_stmt|;
 else|else
 name|AGDUPSTR
@@ -460,18 +456,14 @@ name|pOD
 operator|->
 name|optCookie
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|intptr_t
-operator|)
+name|VOIDP
+argument_list|(
 name|pOD
 operator|->
 name|optArg
 operator|.
 name|argString
+argument_list|)
 expr_stmt|;
 else|else
 name|AGDUPSTR
@@ -508,7 +500,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func  optionFileCheck  * private:  *  * what:  Decipher a boolean value  * arg:   + tOptions*     + pOpts    + program options descriptor  +  * arg:   + tOptDesc*     + pOptDesc + the descriptor for this arg +  * arg:   + teOptFileType + ftype    + File handling type          +  * arg:   + tuFileMode    + mode     + file open mode (if needed)  +  *  * doc:  *   Make sure the named file conforms with the file type mode.  *   The mode specifies if the file must exist, must not exist or may  *   (or may not) exist.  The mode may also specify opening the  *   file: don't, open just the descriptor (fd), or open as a stream  *   (FILE* pointer). =*/
+comment|/*=export_func  optionFileCheck  * private:  *  * what:  Decipher a boolean value  * arg:   + tOptions *    + pOpts    + program options descriptor  +  * arg:   + tOptDesc *    + pOptDesc + the descriptor for this arg +  * arg:   + teOptFileType + ftype    + File handling type          +  * arg:   + tuFileMode    + mode     + file open mode (if needed)  +  *  * doc:  *   Make sure the named file conforms with the file type mode.  *   The mode specifies if the file must exist, must not exist or may  *   (or may not) exist.  The mode may also specify opening the  *   file: don't, open just the descriptor (fd), or open as a stream  *   (FILE * pointer). =*/
 end_comment
 
 begin_function

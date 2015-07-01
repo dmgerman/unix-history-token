@@ -8,7 +8,7 @@ comment|/*  *  Sort options:     --start=END-[S]TATIC-FORWARD --patt='^/\*($|[^:
 end_comment
 
 begin_comment
-comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
+comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2015 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
 end_comment
 
 begin_comment
@@ -766,7 +766,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func  optionOnlyUsage  *  * what:  Print usage text for just the options  * arg:   + tOptions*   + pOpts    + program options descriptor +  * arg:   + int         + ex_code  + exit code for calling exit(3) +  *  * doc:  *  This routine will print only the usage for each option.  *  This function may be used when the emitted usage must incorporate  *  information not available to AutoOpts. =*/
+comment|/*=export_func  optionOnlyUsage  *  * what:  Print usage text for just the options  * arg:   + tOptions *  + pOpts    + program options descriptor +  * arg:   + int         + ex_code  + exit code for calling exit(3) +  *  * doc:  *  This routine will print only the usage for each option.  *  This function may be used when the emitted usage must incorporate  *  information not available to AutoOpts. =*/
 end_comment
 
 begin_function
@@ -1875,7 +1875,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func  optionUsage  * private:  *  * what:  Print usage text  * arg:   + tOptions* + opts + program options descriptor +  * arg:   + int       + exitCode + exit code for calling exit(3) +  *  * doc:  *  This routine will print usage in both GNU-standard and AutoOpts-expanded  *  formats.  The descriptor specifies the default, but AUTOOPTS_USAGE will  *  over-ride this, providing the value of it is set to either "gnu" or  *  "autoopts".  This routine will @strong{not} return.  *  *  If "exitCode" is "AO_EXIT_REQ_USAGE" (normally 64), then output will to  *  to stdout and the actual exit code will be "EXIT_SUCCESS". =*/
+comment|/*=export_func  optionUsage  * private:  *  * what:  Print usage text  * arg:   + tOptions * + opts + program options descriptor +  * arg:   + int        + exitCode + exit code for calling exit(3) +  *  * doc:  *  This routine will print usage in both GNU-standard and AutoOpts-expanded  *  formats.  The descriptor specifies the default, but AUTOOPTS_USAGE will  *  over-ride this, providing the value of it is set to either "gnu" or  *  "autoopts".  This routine will @strong{not} return.  *  *  If "exitCode" is "AO_EXIT_REQ_USAGE" (normally 64), then output will to  *  to stdout and the actual exit code will be "EXIT_SUCCESS". =*/
 end_comment
 
 begin_function

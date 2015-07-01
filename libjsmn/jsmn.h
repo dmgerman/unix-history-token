@@ -11,11 +11,25 @@ directive|define
 name|__JSMN_H_
 end_define
 
-begin_comment
-comment|/**  * JSON type identifier. Basic types are:  * 	o Object  * 	o Array  * 	o String  * 	o Other primitive: number, boolean (true/false) or null  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
 
-begin_typedef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
+comment|/**  * JSON type identifier. Basic types are:  * 	o Object  * 	o Array  * 	o String  * 	o Other primitive: number, boolean (true/false) or null  */
 typedef|typedef
 enum|enum
 block|{
@@ -37,9 +51,6 @@ literal|3
 block|}
 name|jsmntype_t
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 enum|enum
 block|{
@@ -60,21 +71,10 @@ name|JSMN_ERROR_PART
 init|=
 operator|-
 literal|3
-block|,
-comment|/* Everything was fine */
-name|JSMN_SUCCESS
-init|=
-literal|0
 block|}
 name|jsmnerr_t
 typedef|;
-end_typedef
-
-begin_comment
 comment|/**  * JSON token description.  * @param		type	type (object, array, string etc.)  * @param		start	start position in JSON data string  * @param		end		end position in JSON data string  */
-end_comment
-
-begin_typedef
 typedef|typedef
 struct|struct
 block|{
@@ -101,13 +101,7 @@ directive|endif
 block|}
 name|jsmntok_t
 typedef|;
-end_typedef
-
-begin_comment
 comment|/**  * JSON parser. Contains an array of token blocks available. Also stores  * the string being parsed now and current position in that string  */
-end_comment
-
-begin_typedef
 typedef|typedef
 struct|struct
 block|{
@@ -116,6 +110,7 @@ name|int
 name|pos
 decl_stmt|;
 comment|/* offset in the JSON string */
+name|unsigned
 name|int
 name|toknext
 decl_stmt|;
@@ -127,13 +122,7 @@ comment|/* superior token node, e.g parent object or array */
 block|}
 name|jsmn_parser
 typedef|;
-end_typedef
-
-begin_comment
 comment|/**  * Create JSON parser over an array of tokens  */
-end_comment
-
-begin_function_decl
 name|void
 name|jsmn_init
 parameter_list|(
@@ -142,13 +131,7 @@ modifier|*
 name|parser
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/**  * Run JSON parser. It parses a JSON data string into and array of tokens, each describing  * a single JSON object.  */
-end_comment
-
-begin_function_decl
 name|jsmnerr_t
 name|jsmn_parse
 parameter_list|(
@@ -161,6 +144,9 @@ name|char
 modifier|*
 name|js
 parameter_list|,
+name|size_t
+name|len
+parameter_list|,
 name|jsmntok_t
 modifier|*
 name|tokens
@@ -170,7 +156,16 @@ name|int
 name|num_tokens
 parameter_list|)
 function_decl|;
-end_function_decl
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

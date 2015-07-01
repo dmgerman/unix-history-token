@@ -740,12 +740,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUTOKEY
-end_define
-
-begin_define
-define|#
-directive|define
 name|SAVECONFIG
 value|1
 end_define
@@ -761,15 +755,14 @@ name|USE_MM_TIMER
 end_define
 
 begin_comment
-comment|/* Enable OpenSSL */
+comment|/* check for OpenSSL */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|OPENSSL
-value|1
-end_define
+end_ifdef
 
 begin_define
 define|#
@@ -777,6 +770,32 @@ directive|define
 name|USE_OPENSSL_CRYPTO_RAND
 value|1
 end_define
+
+begin_define
+define|#
+directive|define
+name|AUTOKEY
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+specifier|extern
+name|void
+name|arc4random_buf
+parameter_list|(
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|nbytes
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Keywords and functions that Microsoft maps  * to other names  */

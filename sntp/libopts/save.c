@@ -4,7 +4,7 @@ comment|/*  * \file save.c  *  *  This module's routines will take the currently
 end_comment
 
 begin_comment
-comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
+comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2015 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
 end_comment
 
 begin_comment
@@ -1178,7 +1178,7 @@ operator|(
 name|int
 operator|)
 operator|(
-name|t_word
+name|intptr_t
 operator|)
 name|l_arg
 argument_list|)
@@ -1823,9 +1823,6 @@ name|void
 operator|*
 operator|*
 operator|)
-operator|(
-name|intptr_t
-operator|)
 name|al
 operator|->
 name|apzArgs
@@ -1985,9 +1982,6 @@ operator|(
 name|void
 operator|*
 operator|*
-operator|)
-operator|(
-name|intptr_t
 operator|)
 name|al
 operator|->
@@ -2291,10 +2285,6 @@ name|HAVE_ALLOCATED_CTIME
 comment|/*          *  The return values for ctime(), localtime(), and gmtime()          *  normally point to static data that is overwritten by each call.          *  The test to detect allocated ctime, so we leak the memory.          */
 name|AGFREE
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|time_str
 argument_list|)
 expr_stmt|;
@@ -2533,13 +2523,7 @@ name|fp
 argument_list|,
 name|od
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-call|(
-name|intptr_t
-call|)
+name|VOIDP
 argument_list|(
 name|od
 operator|->
@@ -2748,7 +2732,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func  optionSaveFile  *  * what:  saves the option state to a file  *  * arg:   tOptions*,   opts,  program options descriptor  *  * doc:  *  * This routine will save the state of option processing to a file.  The name  * of that file can be specified with the argument to the @code{--save-opts}  * option, or by appending the @code{rcfile} attribute to the last  * @code{homerc} attribute.  If no @code{rcfile} attribute was specified, it  * will default to @code{.@i{programname}rc}.  If you wish to specify another  * file, you should invoke the @code{SET_OPT_SAVE_OPTS(@i{filename})} macro.  *  * The recommend usage is as follows:  * @example  *    optionProcess(&progOptions, argc, argv);  *    if (i_want_a_non_standard_place_for_this)  *        SET_OPT_SAVE_OPTS("myfilename");  *    optionSaveFile(&progOptions);  * @end example  *  * err:  *  * If no @code{homerc} file was specified, this routine will silently return  * and do nothing.  If the output file cannot be created or updated, a message  * will be printed to @code{stderr} and the routine will return. =*/
+comment|/*=export_func  optionSaveFile  *  * what:  saves the option state to a file  *  * arg:   tOptions *,   opts,  program options descriptor  *  * doc:  *  * This routine will save the state of option processing to a file.  The name  * of that file can be specified with the argument to the @code{--save-opts}  * option, or by appending the @code{rcfile} attribute to the last  * @code{homerc} attribute.  If no @code{rcfile} attribute was specified, it  * will default to @code{.@i{programname}rc}.  If you wish to specify another  * file, you should invoke the @code{SET_OPT_SAVE_OPTS(@i{filename})} macro.  *  * The recommend usage is as follows:  * @example  *    optionProcess(&progOptions, argc, argv);  *    if (i_want_a_non_standard_place_for_this)  *        SET_OPT_SAVE_OPTS("myfilename");  *    optionSaveFile(&progOptions);  * @end example  *  * err:  *  * If no @code{homerc} file was specified, this routine will silently return  * and do nothing.  If the output file cannot be created or updated, a message  * will be printed to @code{stderr} and the routine will return. =*/
 end_comment
 
 begin_function
@@ -2904,17 +2888,14 @@ name|fp
 argument_list|,
 name|p
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
+name|VOIDP
+argument_list|(
 name|p
 operator|->
 name|optArg
 operator|.
 name|argInt
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;

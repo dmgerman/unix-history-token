@@ -346,10 +346,6 @@ name|push
 name|)
 end_pragma
 
-begin_comment
-comment|//#pragma warning(disable: 201)		/* nonstd extension nameless union */
-end_comment
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -428,34 +424,68 @@ begin_comment
 comment|/* addition of NTP fixed-point format */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NTPFP_M_ADD
+begin_function
+specifier|static
+name|void
+name|ntpfp_add
 parameter_list|(
-name|r_i
+comment|/* *op1r += *op2 */
+name|ntp_fp_t
+modifier|*
+name|op1r
 parameter_list|,
-name|r_f
-parameter_list|,
-name|a_i
-parameter_list|,
-name|a_f
+specifier|const
+name|ntp_fp_t
+modifier|*
+name|op2
 parameter_list|)
-comment|/* r += a */
-define|\
-value|do { \ 		r_f = (u_int32)(r_f) + (u_int32)(a_f); \ 		r_i = (u_int32)(r_i) + (u_int32)(a_i) + \ 		      ((u_int32)(r_f)< (u_int32)(a_f)); \ 	} while (0)
-end_define
+block|{
+name|op1r
+operator|->
+name|F
+operator|.
+name|u
+operator|+=
+name|op2
+operator|->
+name|F
+operator|.
+name|u
+expr_stmt|;
+name|op1r
+operator|->
+name|I
+operator|.
+name|u
+operator|+=
+name|op2
+operator|->
+name|I
+operator|.
+name|u
+operator|+
+operator|(
+name|op1r
+operator|->
+name|F
+operator|.
+name|u
+operator|<
+name|op2
+operator|->
+name|F
+operator|.
+name|u
+operator|)
+expr_stmt|;
+block|}
+end_function
 
 begin_define
 define|#
 directive|define
 name|NTPFP_L_ADDS
-parameter_list|(
-name|r
-parameter_list|,
-name|a
-parameter_list|)
-value|NTPFP_M_ADD((r)->I.u, (r)->F.u, (a)->I.u, (a)->F.u)
+value|ntpfp_add
 end_define
 
 begin_comment
@@ -1121,6 +1151,32 @@ begin_comment
 comment|/*  * ntpd on Windows only looks to errno after finding  * GetLastError returns NO_ERROR.  To accomodate its  * use of msyslog in portable code such as refclock_atom.c,  * this implementation always clears the Windows  * error code using SetLastError(NO_ERROR) when  * returning an errno.  This is also a good idea  * for any non-ntpd clients as they should rely only  * the errno for PPSAPI functions.  */
 end_comment
 
+begin_function
+specifier|static
+name|__inline
+name|int
+name|pps_set_errno
+parameter_list|(
+name|int
+name|e
+parameter_list|)
+block|{
+name|SetLastError
+argument_list|(
+name|NO_ERROR
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|e
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -1128,8 +1184,7 @@ name|RETURN_PPS_ERRNO
 parameter_list|(
 name|e
 parameter_list|)
-define|\
-value|do {				\ 	SetLastError(NO_ERROR);	\ 	errno = (e);		\ 	return -1;		\ } while (0)
+value|return pps_set_errno(e)
 end_define
 
 begin_ifdef
@@ -1182,6 +1237,11 @@ block|{
 name|ULONGLONG
 name|BiasedTimestamp
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|Counterstamp
+expr_stmt|;
 comment|/* convert from 100ns units to NTP fixed point format */
 name|BiasedTimestamp
 operator|=

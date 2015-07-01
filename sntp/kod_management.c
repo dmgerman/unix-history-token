@@ -171,10 +171,10 @@ block|}
 operator|*
 name|dst
 operator|=
-name|emalloc
+name|eallocarray
 argument_list|(
 name|resc
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1120,8 +1120,10 @@ argument_list|)
 expr_stmt|;
 name|kod_db
 operator|=
-name|emalloc
+name|eallocarray
 argument_list|(
+name|kod_db_cnt
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|kod_db
@@ -1129,8 +1131,6 @@ index|[
 literal|0
 index|]
 argument_list|)
-operator|*
-name|kod_db_cnt
 argument_list|)
 expr_stmt|;
 comment|/* Read contents of file */
