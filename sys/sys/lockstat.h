@@ -802,6 +802,20 @@ parameter_list|)
 value|do {			     \ 	uint32_t id;							     \ 									     \ 	lock_profile_release_lock(&(lp)->lock_object);			     \ 	if ((id = lockstat_probemap[(probe)])) 			     	     \ 		(*lockstat_probe_func)(id, (uintptr_t)(lp), 0, 0, 0, 0);     \ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|LOCKSTAT_WRITER
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCKSTAT_READER
+value|1
+end_define
+
 begin_else
 else|#
 directive|else
