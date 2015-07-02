@@ -1372,11 +1372,12 @@ name|shmid_kernel
 modifier|*
 name|shmsegptr
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 endif|#
 directive|endif
 name|int
-name|error
-decl_stmt|,
 name|i
 decl_stmt|;
 name|SYSVSHM_ASSERT_LOCKED
@@ -1512,8 +1513,8 @@ operator|)
 return|;
 endif|#
 directive|endif
-name|error
-operator|=
+return|return
+operator|(
 name|shm_delete_mapping
 argument_list|(
 name|p
@@ -1522,10 +1523,6 @@ name|p_vmspace
 argument_list|,
 name|shmmap_s
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
@@ -2307,10 +2304,6 @@ operator|(
 name|ENOSYS
 operator|)
 return|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -2900,8 +2893,6 @@ parameter_list|)
 block|{
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|shmid_ds
@@ -5410,8 +5401,8 @@ expr_stmt|;
 name|SYSVSHM_UNLOCK
 argument_list|()
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|copyout
 argument_list|(
 operator|&
@@ -5426,10 +5417,6 @@ argument_list|(
 name|outbuf
 argument_list|)
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 else|#
@@ -5539,9 +5526,6 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -5581,8 +5565,8 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|error
-operator|=
+return|return
+operator|(
 call|(
 modifier|*
 name|shmcalls
@@ -5600,10 +5584,6 @@ name|uap
 operator|->
 name|a2
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
@@ -5926,8 +5906,6 @@ parameter_list|)
 block|{
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 union|union
 block|{
@@ -6558,8 +6536,6 @@ parameter_list|)
 block|{
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 union|union
 block|{
@@ -7262,8 +7238,6 @@ parameter_list|)
 block|{
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|shmid_ds_old
