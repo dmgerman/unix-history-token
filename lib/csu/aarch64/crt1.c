@@ -126,6 +126,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|long
+modifier|*
+name|_end
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|__start
@@ -241,9 +249,21 @@ name|cleanup
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+comment|/* 		 * Hack to resolve _end so we read the correct symbol. 		 * Without this it will resolve to the copy in the library 		 * that firsts requests it. We should fix the toolchain, 		 * however this is is needed until this can take place. 		 */
+operator|*
+operator|(
+specifier|volatile
+name|long
+operator|*
+operator|)
+operator|&
+name|_end
+expr_stmt|;
 name|_init_tls
 argument_list|()
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|GCRT
