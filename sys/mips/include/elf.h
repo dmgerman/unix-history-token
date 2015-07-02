@@ -103,6 +103,16 @@ name|ELF_ARCH32
 value|EM_MIPS
 end_define
 
+begin_define
+define|#
+directive|define
+name|ELF_MACHINE_OK
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) == ELF_ARCH)
+end_define
+
 begin_comment
 comment|/* Define "machine" characteristics */
 end_comment
