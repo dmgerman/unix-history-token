@@ -670,9 +670,11 @@ condition|(
 operator|(
 name|tfd
 operator|=
-name|mkstemp
+name|mkostemp
 argument_list|(
 name|tempname
+argument_list|,
+name|O_SYNC
 argument_list|)
 operator|)
 operator|==
