@@ -4384,7 +4384,7 @@ name|i
 operator|++
 control|)
 block|{
-name|shmsegs
+name|newsegs
 index|[
 name|i
 index|]
@@ -4397,7 +4397,7 @@ name|mode
 operator|=
 name|SHMSEG_FREE
 expr_stmt|;
-name|shmsegs
+name|newsegs
 index|[
 name|i
 index|]
@@ -4416,7 +4416,7 @@ name|MAC
 name|mac_sysvshm_init
 argument_list|(
 operator|&
-name|shmsegs
+name|newsegs
 index|[
 name|i
 index|]
