@@ -32,19 +32,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dnv.h>
+file|<sys/dnv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/nv.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nv.h>
 end_include
 
 begin_include

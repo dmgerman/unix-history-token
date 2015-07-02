@@ -269,7 +269,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nv.h>
+file|<sys/nv.h>
 end_include
 
 begin_include
