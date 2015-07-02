@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: canohost.c,v 1.71 2014/07/15 15:54:14 millert Exp $ */
+comment|/* $OpenBSD: canohost.c,v 1.72 2015/03/01 15:44:40 millert Exp $ */
 end_comment
 
 begin_comment
@@ -1159,6 +1159,7 @@ name|ss_family
 operator|==
 name|AF_INET6
 condition|)
+block|{
 name|addrlen
 operator|=
 sizeof|sizeof
@@ -1167,33 +1168,6 @@ expr|struct
 name|sockaddr_in6
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|addr
-operator|.
-name|ss_family
-operator|==
-name|AF_UNIX
-condition|)
-block|{
-comment|/* Get the Unix domain socket path. */
-return|return
-name|xstrdup
-argument_list|(
-operator|(
-operator|(
-expr|struct
-name|sockaddr_un
-operator|*
-operator|)
-operator|&
-name|addr
-operator|)
-operator|->
-name|sun_path
-argument_list|)
-return|;
-block|}
 name|ipv64_normalise_mapped
 argument_list|(
 operator|&
@@ -1203,6 +1177,20 @@ operator|&
 name|addrlen
 argument_list|)
 expr_stmt|;
+block|}
+switch|switch
+condition|(
+name|addr
+operator|.
+name|ss_family
+condition|)
+block|{
+case|case
+name|AF_INET
+case|:
+case|case
+name|AF_INET6
+case|:
 comment|/* Get the address in ascii. */
 if|if
 condition|(
@@ -1261,6 +1249,32 @@ argument_list|(
 name|ntop
 argument_list|)
 return|;
+case|case
+name|AF_UNIX
+case|:
+comment|/* Get the Unix domain socket path. */
+return|return
+name|xstrdup
+argument_list|(
+operator|(
+operator|(
+expr|struct
+name|sockaddr_un
+operator|*
+operator|)
+operator|&
+name|addr
+operator|)
+operator|->
+name|sun_path
+argument_list|)
+return|;
+default|default:
+comment|/* We can't look up remote Unix domain sockets. */
+return|return
+name|NULL
+return|;
+block|}
 block|}
 end_function
 
@@ -1727,14 +1741,20 @@ expr|struct
 name|sockaddr_in6
 argument_list|)
 expr_stmt|;
-comment|/* Unix domain sockets don't have a port number. */
+comment|/* Non-inet sockets don't have a port number. */
 if|if
 condition|(
 name|from
 operator|.
 name|ss_family
-operator|==
-name|AF_UNIX
+operator|!=
+name|AF_INET
+operator|&&
+name|from
+operator|.
+name|ss_family
+operator|!=
+name|AF_INET6
 condition|)
 return|return
 literal|0

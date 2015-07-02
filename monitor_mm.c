@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_mm.c,v 1.19 2014/01/04 17:50:55 tedu Exp $ */
+comment|/* $OpenBSD: monitor_mm.c,v 1.21 2015/02/06 23:21:59 millert Exp $ */
 end_comment
 
 begin_comment
@@ -39,12 +39,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"openbsd-compat/sys-tree.h"
 end_include
 
@@ -65,6 +59,23 @@ include|#
 directive|include
 file|<stddef.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDINT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -749,7 +760,7 @@ if|if
 condition|(
 name|size
 operator|>
-name|SIZE_T_MAX
+name|SIZE_MAX
 operator|-
 name|MM_MINSIZE
 operator|+

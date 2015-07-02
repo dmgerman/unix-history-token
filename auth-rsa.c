@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rsa.c,v 1.88 2014/07/15 15:54:14 millert Exp $ */
+comment|/* $OpenBSD: auth-rsa.c,v 1.90 2015/01/28 22:36:00 djm Exp $ */
 end_comment
 
 begin_comment
@@ -12,6 +12,12 @@ include|#
 directive|include
 file|"includes.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
+end_ifdef
 
 begin_include
 include|#
@@ -1032,17 +1038,26 @@ argument_list|,
 name|bits
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|fp
 operator|=
-name|key_fingerprint
+name|sshkey_fingerprint
 argument_list|(
 name|key
 argument_list|,
-name|SSH_FP_MD5
+name|options
+operator|.
+name|fingerprint_hash
 argument_list|,
-name|SSH_FP_HEX
+name|SSH_FP_DEFAULT
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+continue|continue;
 name|debug
 argument_list|(
 literal|"matching key found: file %s, line %lu %s %s"
@@ -1373,6 +1388,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_SSH1 */
+end_comment
 
 end_unit
 

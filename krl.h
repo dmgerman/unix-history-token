@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2012 Damien Miller<djm@mindrot.org>  *  * Permission
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: krl.h,v 1.2 2013/01/18 00:24:58 djm Exp $ */
+comment|/* $OpenBSD: krl.h,v 1.4 2015/01/13 19:06:49 djm Exp $ */
 end_comment
 
 begin_ifndef
@@ -103,6 +103,18 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
+name|sshkey
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sshbuf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|ssh_krl
 struct_decl|;
 end_struct_decl
@@ -155,7 +167,8 @@ modifier|*
 name|krl
 parameter_list|,
 specifier|const
-name|Key
+name|struct
+name|sshkey
 modifier|*
 name|sign_key
 parameter_list|)
@@ -163,7 +176,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ssh_krl_set_comment
 parameter_list|(
 name|struct
@@ -189,7 +202,8 @@ modifier|*
 name|krl
 parameter_list|,
 specifier|const
-name|Key
+name|struct
+name|sshkey
 modifier|*
 name|ca_key
 parameter_list|,
@@ -209,7 +223,8 @@ modifier|*
 name|krl
 parameter_list|,
 specifier|const
-name|Key
+name|struct
+name|sshkey
 modifier|*
 name|ca_key
 parameter_list|,
@@ -232,7 +247,8 @@ modifier|*
 name|krl
 parameter_list|,
 specifier|const
-name|Key
+name|struct
+name|sshkey
 modifier|*
 name|ca_key
 parameter_list|,
@@ -254,7 +270,8 @@ modifier|*
 name|krl
 parameter_list|,
 specifier|const
-name|Key
+name|struct
+name|sshkey
 modifier|*
 name|key
 parameter_list|)
@@ -271,7 +288,8 @@ modifier|*
 name|krl
 parameter_list|,
 specifier|const
-name|Key
+name|struct
+name|sshkey
 modifier|*
 name|key
 parameter_list|)
@@ -288,7 +306,8 @@ modifier|*
 name|krl
 parameter_list|,
 specifier|const
-name|Key
+name|struct
+name|sshkey
 modifier|*
 name|key
 parameter_list|)
@@ -304,12 +323,14 @@ name|ssh_krl
 modifier|*
 name|krl
 parameter_list|,
-name|Buffer
+name|struct
+name|sshbuf
 modifier|*
 name|buf
 parameter_list|,
 specifier|const
-name|Key
+name|struct
+name|sshkey
 modifier|*
 modifier|*
 name|sign_keys
@@ -324,7 +345,8 @@ begin_function_decl
 name|int
 name|ssh_krl_from_blob
 parameter_list|(
-name|Buffer
+name|struct
+name|sshbuf
 modifier|*
 name|buf
 parameter_list|,
@@ -335,12 +357,13 @@ modifier|*
 name|krlp
 parameter_list|,
 specifier|const
-name|Key
+name|struct
+name|sshkey
 modifier|*
 modifier|*
 name|sign_ca_keys
 parameter_list|,
-name|u_int
+name|size_t
 name|nsign_ca_keys
 parameter_list|)
 function_decl|;
@@ -356,7 +379,8 @@ modifier|*
 name|krl
 parameter_list|,
 specifier|const
-name|Key
+name|struct
+name|sshkey
 modifier|*
 name|key
 parameter_list|)
@@ -373,7 +397,8 @@ modifier|*
 name|path
 parameter_list|,
 specifier|const
-name|Key
+name|struct
+name|sshkey
 modifier|*
 name|key
 parameter_list|)

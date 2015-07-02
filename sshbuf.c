@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sshbuf.c,v 1.2 2014/06/25 14:16:09 deraadt Exp $	*/
+comment|/*	$OpenBSD: sshbuf.c,v 1.3 2015/01/20 23:14:00 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -22,13 +22,17 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
+
+begin_comment
+comment|/* roundup */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/types.h>
 end_include
 
 begin_include

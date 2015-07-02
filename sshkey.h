@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshkey.h,v 1.1 2014/06/24 01:16:58 djm Exp $ */
+comment|/* $OpenBSD: sshkey.h,v 1.5 2015/01/26 02:59:11 djm Exp $ */
 end_comment
 
 begin_comment
@@ -203,21 +203,15 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* Fingerprint hash algorithms */
+comment|/* Default fingerprint hash */
 end_comment
 
-begin_enum
-enum|enum
-name|sshkey_fp_type
-block|{
-name|SSH_FP_SHA1
-block|,
-name|SSH_FP_MD5
-block|,
-name|SSH_FP_SHA256
-block|}
-enum|;
-end_enum
+begin_define
+define|#
+directive|define
+name|SSH_FP_HASH_DEFAULT
+value|SSH_DIGEST_SHA256
+end_define
 
 begin_comment
 comment|/* Fingerprint representation formats */
@@ -227,7 +221,13 @@ begin_enum
 enum|enum
 name|sshkey_fp_rep
 block|{
+name|SSH_FP_DEFAULT
+init|=
+literal|0
+block|,
 name|SSH_FP_HEX
+block|,
+name|SSH_FP_BASE64
 block|,
 name|SSH_FP_BUBBLEBABBLE
 block|,
@@ -477,8 +477,7 @@ name|struct
 name|sshkey
 modifier|*
 parameter_list|,
-name|enum
-name|sshkey_fp_type
+name|int
 parameter_list|,
 name|enum
 name|sshkey_fp_rep
@@ -496,9 +495,7 @@ name|sshkey
 modifier|*
 name|k
 parameter_list|,
-name|enum
-name|sshkey_fp_type
-name|dgst_type
+name|int
 parameter_list|,
 name|u_char
 modifier|*
@@ -883,6 +880,8 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -919,15 +918,31 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sshkey_to_blob_buf
+name|sshkey_fromb
 parameter_list|(
-specifier|const
 name|struct
-name|sshkey
+name|sshbuf
 modifier|*
 parameter_list|,
 name|struct
+name|sshkey
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sshkey_froms
+parameter_list|(
+name|struct
 name|sshbuf
+modifier|*
+parameter_list|,
+name|struct
+name|sshkey
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
@@ -954,7 +969,23 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sshkey_plain_to_blob_buf
+name|sshkey_putb
+parameter_list|(
+specifier|const
+name|struct
+name|sshkey
+modifier|*
+parameter_list|,
+name|struct
+name|sshbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sshkey_puts
 parameter_list|(
 specifier|const
 name|struct
@@ -982,6 +1013,22 @@ modifier|*
 modifier|*
 parameter_list|,
 name|size_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sshkey_putb_plain
+parameter_list|(
+specifier|const
+name|struct
+name|sshkey
+modifier|*
+parameter_list|,
+name|struct
+name|sshbuf
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1160,37 +1207,6 @@ name|struct
 name|sshbuf
 modifier|*
 name|blob
-parameter_list|,
-name|struct
-name|sshkey
-modifier|*
-modifier|*
-name|keyp
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|commentp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|sshkey_parse_private_pem_fileblob
-parameter_list|(
-name|struct
-name|sshbuf
-modifier|*
-name|blob
-parameter_list|,
-name|int
-name|type
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|passphrase
 parameter_list|,
 name|struct
 name|sshkey

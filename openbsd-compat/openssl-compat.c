@@ -19,6 +19,12 @@ directive|include
 file|"includes.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -213,6 +219,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_OPENSSL */
+end_comment
 
 end_unit
 

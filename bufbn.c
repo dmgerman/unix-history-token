@@ -17,6 +17,12 @@ directive|include
 file|"includes.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -40,6 +46,12 @@ include|#
 directive|include
 file|"ssherr.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
+end_ifdef
 
 begin_function
 name|int
@@ -223,6 +235,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_SSH1 */
+end_comment
+
 begin_function
 name|int
 name|buffer_put_bignum2_ret
@@ -404,6 +425,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_OPENSSL */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.114 2014/07/15 15:54:14 millert Exp $ */
+comment|/* $OpenBSD: servconf.h,v 1.116 2015/01/13 07:39:19 djm Exp $ */
 end_comment
 
 begin_comment
@@ -463,6 +463,11 @@ name|int
 name|hostbased_uses_name_from_packet_only
 decl_stmt|;
 comment|/* experimental */
+name|char
+modifier|*
+name|hostbased_key_types
+decl_stmt|;
+comment|/* Key types allowed for hostbased */
 name|int
 name|rsa_authentication
 decl_stmt|;
@@ -471,6 +476,11 @@ name|int
 name|pubkey_authentication
 decl_stmt|;
 comment|/* If true, permit ssh2 pubkey authentication. */
+name|char
+modifier|*
+name|pubkey_key_types
+decl_stmt|;
+comment|/* Key types allowed for public key */
 name|int
 name|kerberos_authentication
 decl_stmt|;
@@ -708,6 +718,9 @@ index|[
 name|MAX_AUTH_METHODS
 index|]
 decl_stmt|;
+name|int
+name|fingerprint_hash
+decl_stmt|;
 block|}
 name|ServerOptions
 typedef|;
@@ -761,7 +774,7 @@ define|#
 directive|define
 name|COPY_MATCH_STRING_OPTS
 parameter_list|()
-value|do { \ 		M_CP_STROPT(banner); \ 		M_CP_STROPT(trusted_user_ca_keys); \ 		M_CP_STROPT(revoked_keys_file); \ 		M_CP_STROPT(authorized_principals_file); \ 		M_CP_STROPT(authorized_keys_command); \ 		M_CP_STROPT(authorized_keys_command_user); \ 		M_CP_STRARRAYOPT(authorized_keys_files, num_authkeys_files); \ 		M_CP_STRARRAYOPT(allow_users, num_allow_users); \ 		M_CP_STRARRAYOPT(deny_users, num_deny_users); \ 		M_CP_STRARRAYOPT(allow_groups, num_allow_groups); \ 		M_CP_STRARRAYOPT(deny_groups, num_deny_groups); \ 		M_CP_STRARRAYOPT(accept_env, num_accept_env); \ 		M_CP_STRARRAYOPT(auth_methods, num_auth_methods); \ 	} while (0)
+value|do { \ 		M_CP_STROPT(banner); \ 		M_CP_STROPT(trusted_user_ca_keys); \ 		M_CP_STROPT(revoked_keys_file); \ 		M_CP_STROPT(authorized_principals_file); \ 		M_CP_STROPT(authorized_keys_command); \ 		M_CP_STROPT(authorized_keys_command_user); \ 		M_CP_STROPT(hostbased_key_types); \ 		M_CP_STROPT(pubkey_key_types); \ 		M_CP_STRARRAYOPT(authorized_keys_files, num_authkeys_files); \ 		M_CP_STRARRAYOPT(allow_users, num_allow_users); \ 		M_CP_STRARRAYOPT(deny_users, num_deny_users); \ 		M_CP_STRARRAYOPT(allow_groups, num_allow_groups); \ 		M_CP_STRARRAYOPT(deny_groups, num_deny_groups); \ 		M_CP_STRARRAYOPT(accept_env, num_accept_env); \ 		M_CP_STRARRAYOPT(auth_methods, num_auth_methods); \ 	} while (0)
 end_define
 
 begin_function_decl

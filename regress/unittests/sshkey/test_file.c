@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* 	$OpenBSD: test_file.c,v 1.1 2014/06/24 01:14:18 djm Exp $ */
+comment|/* 	$OpenBSD: test_file.c,v 1.3 2015/03/04 23:22:35 djm Exp $ */
 end_comment
 
 begin_comment
@@ -152,6 +152,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"digest.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"common.h"
 end_include
 
@@ -216,6 +222,9 @@ expr_stmt|;
 name|TEST_DONE
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 name|TEST_START
 argument_list|(
 literal|"parse RSA1 from private"
@@ -424,7 +433,7 @@ name|sshkey_fingerprint
 argument_list|(
 name|k1
 argument_list|,
-name|SSH_FP_MD5
+name|SSH_DIGEST_MD5
 argument_list|,
 name|SSH_FP_HEX
 argument_list|)
@@ -482,7 +491,7 @@ name|sshkey_fingerprint
 argument_list|(
 name|k1
 argument_list|,
-name|SSH_FP_SHA1
+name|SSH_DIGEST_SHA1
 argument_list|,
 name|SSH_FP_BUBBLEBABBLE
 argument_list|)
@@ -527,6 +536,8 @@ argument_list|(
 name|k1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|TEST_START
 argument_list|(
 literal|"parse RSA from private"
@@ -979,7 +990,7 @@ name|sshkey_fingerprint
 argument_list|(
 name|k1
 argument_list|,
-name|SSH_FP_MD5
+name|SSH_DIGEST_MD5
 argument_list|,
 name|SSH_FP_HEX
 argument_list|)
@@ -1037,7 +1048,7 @@ name|sshkey_fingerprint
 argument_list|(
 name|k2
 argument_list|,
-name|SSH_FP_MD5
+name|SSH_DIGEST_MD5
 argument_list|,
 name|SSH_FP_HEX
 argument_list|)
@@ -1100,7 +1111,7 @@ name|sshkey_fingerprint
 argument_list|(
 name|k1
 argument_list|,
-name|SSH_FP_SHA1
+name|SSH_DIGEST_SHA1
 argument_list|,
 name|SSH_FP_BUBBLEBABBLE
 argument_list|)
@@ -1597,7 +1608,7 @@ name|sshkey_fingerprint
 argument_list|(
 name|k1
 argument_list|,
-name|SSH_FP_MD5
+name|SSH_DIGEST_MD5
 argument_list|,
 name|SSH_FP_HEX
 argument_list|)
@@ -1655,7 +1666,7 @@ name|sshkey_fingerprint
 argument_list|(
 name|k2
 argument_list|,
-name|SSH_FP_MD5
+name|SSH_DIGEST_MD5
 argument_list|,
 name|SSH_FP_HEX
 argument_list|)
@@ -1718,7 +1729,7 @@ name|sshkey_fingerprint
 argument_list|(
 name|k1
 argument_list|,
-name|SSH_FP_SHA1
+name|SSH_DIGEST_SHA1
 argument_list|,
 name|SSH_FP_BUBBLEBABBLE
 argument_list|)
@@ -2261,7 +2272,7 @@ name|sshkey_fingerprint
 argument_list|(
 name|k1
 argument_list|,
-name|SSH_FP_MD5
+name|SSH_DIGEST_MD5
 argument_list|,
 name|SSH_FP_HEX
 argument_list|)
@@ -2319,7 +2330,7 @@ name|sshkey_fingerprint
 argument_list|(
 name|k2
 argument_list|,
-name|SSH_FP_MD5
+name|SSH_DIGEST_MD5
 argument_list|,
 name|SSH_FP_HEX
 argument_list|)
@@ -2382,7 +2393,7 @@ name|sshkey_fingerprint
 argument_list|(
 name|k1
 argument_list|,
-name|SSH_FP_SHA1
+name|SSH_DIGEST_SHA1
 argument_list|,
 name|SSH_FP_BUBBLEBABBLE
 argument_list|)
@@ -2689,7 +2700,7 @@ name|sshkey_fingerprint
 argument_list|(
 name|k1
 argument_list|,
-name|SSH_FP_MD5
+name|SSH_DIGEST_MD5
 argument_list|,
 name|SSH_FP_HEX
 argument_list|)
@@ -2747,7 +2758,7 @@ name|sshkey_fingerprint
 argument_list|(
 name|k2
 argument_list|,
-name|SSH_FP_MD5
+name|SSH_DIGEST_MD5
 argument_list|,
 name|SSH_FP_HEX
 argument_list|)
@@ -2810,7 +2821,7 @@ name|sshkey_fingerprint
 argument_list|(
 name|k1
 argument_list|,
-name|SSH_FP_SHA1
+name|SSH_DIGEST_SHA1
 argument_list|,
 name|SSH_FP_BUBBLEBABBLE
 argument_list|)

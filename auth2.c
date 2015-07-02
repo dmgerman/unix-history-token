@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2.c,v 1.132 2014/07/15 15:54:14 millert Exp $ */
+comment|/* $OpenBSD: auth2.c,v 1.135 2015/01/19 20:07:45 markus Exp $ */
 end_comment
 
 begin_comment
@@ -305,7 +305,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|input_service_request
 parameter_list|(
 name|int
@@ -320,7 +320,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|input_userauth_request
 parameter_list|(
 name|int
@@ -672,17 +672,6 @@ name|banner
 operator|==
 name|NULL
 operator|||
-name|strcasecmp
-argument_list|(
-name|options
-operator|.
-name|banner
-argument_list|,
-literal|"none"
-argument_list|)
-operator|==
-literal|0
-operator|||
 operator|(
 name|datafellows
 operator|&
@@ -772,7 +761,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|input_service_request
 parameter_list|(
 name|int
@@ -904,6 +893,9 @@ argument_list|(
 name|service
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -913,7 +905,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|input_userauth_request
 parameter_list|(
 name|int
@@ -1368,6 +1360,9 @@ argument_list|(
 name|method
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -1669,6 +1664,9 @@ block|{
 comment|/* Allow initial try of "none" auth without failure penalty */
 if|if
 condition|(
+operator|!
+name|partial
+operator|&&
 operator|!
 name|authctxt
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: deattack.h,v 1.10 2006/09/16 19:53:37 djm Exp $ */
+comment|/* $OpenBSD: deattack.h,v 1.11 2015/01/19 19:52:16 markus Exp $ */
 end_comment
 
 begin_comment
@@ -44,10 +44,48 @@ name|DEATTACK_DOS_DETECTED
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEATTACK_ERROR
+value|3
+end_define
+
+begin_struct
+struct|struct
+name|deattack_ctx
+block|{
+name|u_int16_t
+modifier|*
+name|h
+decl_stmt|;
+name|u_int32_t
+name|n
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|void
+name|deattack_init
+parameter_list|(
+name|struct
+name|deattack_ctx
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|int
 name|detect_attack
 parameter_list|(
+name|struct
+name|deattack_ctx
+modifier|*
+parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,

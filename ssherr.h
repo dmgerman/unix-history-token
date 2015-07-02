@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ssherr.h,v 1.1 2014/04/30 05:29:56 djm Exp $	*/
+comment|/*	$OpenBSD: ssherr.h,v 1.3 2015/01/30 01:13:33 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -393,6 +393,34 @@ define|#
 directive|define
 name|SSH_ERR_KEY_REVOKED
 value|-51
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_ERR_CONN_CLOSED
+value|-52
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_ERR_CONN_TIMEOUT
+value|-53
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_ERR_CONN_CORRUPT
+value|-54
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_ERR_PROTOCOL_ERROR
+value|-55
 end_define
 
 begin_comment

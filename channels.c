@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.c,v 1.336 2014/07/15 15:54:14 millert Exp $ */
+comment|/* $OpenBSD: channels.c,v 1.341 2015/02/06 23:21:59 millert Exp $ */
 end_comment
 
 begin_comment
@@ -18,6 +18,16 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_comment
+comment|/* MIN MAX */
+end_comment
 
 begin_include
 include|#
@@ -89,6 +99,23 @@ include|#
 directive|include
 file|<netdb.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDINT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2802,6 +2829,10 @@ name|cp
 operator|=
 name|xstrdup
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|buffer_ptr
 argument_list|(
 operator|&
@@ -4817,6 +4848,10 @@ literal|0
 return|;
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|buffer_ptr
 argument_list|(
 operator|&
@@ -5036,6 +5071,10 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|buffer_ptr
 argument_list|(
 operator|&
@@ -5186,6 +5225,10 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|buffer_ptr
 argument_list|(
 operator|&
@@ -11251,7 +11294,7 @@ if|if
 condition|(
 name|nfdset
 operator|&&
-name|SIZE_T_MAX
+name|SIZE_MAX
 operator|/
 name|nfdset
 operator|<
@@ -11986,7 +12029,7 @@ block|}
 block|}
 comment|/* -- protocol input */
 comment|/* ARGSUSED */
-name|void
+name|int
 name|channel_input_data
 parameter_list|(
 name|int
@@ -12058,7 +12101,9 @@ name|type
 operator|!=
 name|SSH_CHANNEL_X11_OPEN
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 comment|/* Get the data. */
 name|data
 operator|=
@@ -12114,7 +12159,9 @@ operator|+=
 name|win_len
 expr_stmt|;
 block|}
-return|return;
+return|return
+literal|0
+return|;
 block|}
 if|if
 condition|(
@@ -12170,7 +12217,9 @@ operator|->
 name|local_window
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 name|c
 operator|->
@@ -12213,9 +12262,12 @@ expr_stmt|;
 name|packet_check_eom
 argument_list|()
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 comment|/* ARGSUSED */
-name|void
+name|int
 name|channel_input_extended_data
 parameter_list|(
 name|int
@@ -12287,7 +12339,9 @@ argument_list|,
 name|id
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 if|if
 condition|(
@@ -12355,7 +12409,9 @@ operator|->
 name|self
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 name|data
 operator|=
@@ -12397,7 +12453,9 @@ argument_list|(
 name|data
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 name|debug2
 argument_list|(
@@ -12433,9 +12491,12 @@ argument_list|(
 name|data
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 comment|/* ARGSUSED */
-name|void
+name|int
 name|channel_input_ieof
 parameter_list|(
 name|int
@@ -12536,9 +12597,12 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 comment|/* ARGSUSED */
-name|void
+name|int
 name|channel_input_close
 parameter_list|(
 name|int
@@ -12629,10 +12693,13 @@ operator|=
 name|SSH_CHANNEL_OUTPUT_DRAINING
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 comment|/* proto version 1.5 overloads CLOSE_CONFIRMATION with OCLOSE */
 comment|/* ARGSUSED */
-name|void
+name|int
 name|channel_input_oclose
 parameter_list|(
 name|int
@@ -12682,9 +12749,12 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 comment|/* ARGSUSED */
-name|void
+name|int
 name|channel_input_close_confirmation
 parameter_list|(
 name|int
@@ -12761,9 +12831,12 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 comment|/* ARGSUSED */
-name|void
+name|int
 name|channel_input_open_confirmation
 parameter_list|(
 name|int
@@ -12909,6 +12982,9 @@ block|}
 name|packet_check_eom
 argument_list|()
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 specifier|static
 name|char
@@ -12954,7 +13030,7 @@ literal|"unknown reason"
 return|;
 block|}
 comment|/* ARGSUSED */
-name|void
+name|int
 name|channel_input_open_failure
 parameter_list|(
 name|int
@@ -13132,9 +13208,12 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 comment|/* ARGSUSED */
-name|void
+name|int
 name|channel_input_window_adjust
 parameter_list|(
 name|int
@@ -13163,7 +13242,9 @@ condition|(
 operator|!
 name|compat20
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 comment|/* Get the channel number and verify it. */
 name|id
 operator|=
@@ -13191,7 +13272,9 @@ argument_list|,
 name|id
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 name|adjust
 operator|=
@@ -13216,9 +13299,12 @@ name|remote_window
 operator|+=
 name|adjust
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 comment|/* ARGSUSED */
-name|void
+name|int
 name|channel_input_port_open
 parameter_list|(
 name|int
@@ -13348,9 +13434,12 @@ name|remote_id
 operator|=
 name|remote_id
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 comment|/* ARGSUSED */
-name|void
+name|int
 name|channel_input_status_confirm
 parameter_list|(
 name|int
@@ -13420,9 +13509,10 @@ argument_list|,
 name|id
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
-empty_stmt|;
 if|if
 condition|(
 operator|(
@@ -13439,7 +13529,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 name|cc
 operator|->
 name|cb
@@ -13481,6 +13573,9 @@ argument_list|(
 name|cc
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 comment|/* -- tcp forwarding */
 name|void
@@ -20107,7 +20202,7 @@ return|;
 block|}
 comment|/*  * This is called when SSH_SMSG_X11_OPEN is received.  The packet contains  * the remote channel number.  We should do whatever we want, and respond  * with either SSH_MSG_OPEN_CONFIRMATION or SSH_MSG_OPEN_FAILURE.  */
 comment|/* ARGSUSED */
-name|void
+name|int
 name|x11_input_open
 parameter_list|(
 name|int
@@ -20279,10 +20374,13 @@ block|}
 name|packet_send
 argument_list|()
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 comment|/* dummy protocol handler that denies SSH-1 requests (agent/x11) */
 comment|/* ARGSUSED */
-name|void
+name|int
 name|deny_input_open
 parameter_list|(
 name|int
@@ -20353,6 +20451,9 @@ expr_stmt|;
 name|packet_send
 argument_list|()
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 comment|/*  * Requests forwarding of X11 connections, generates fake authentication  * data, and enables authentication spoofing.  * This should be called in the client only.  */
 name|void

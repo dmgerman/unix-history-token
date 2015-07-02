@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-common.h,v 1.11 2010/01/13 01:40:16 djm Exp $ */
+comment|/* $OpenBSD: sftp-common.h,v 1.12 2015/01/14 13:54:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -17,6 +17,12 @@ directive|define
 name|SFTP_MAX_MSG_LENGTH
 value|(256 * 1024)
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|sshbuf
+struct_decl|;
+end_struct_decl
 
 begin_typedef
 typedef|typedef
@@ -100,21 +106,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Attrib
-modifier|*
+name|int
 name|decode_attrib
 parameter_list|(
-name|Buffer
+name|struct
+name|sshbuf
+modifier|*
+parameter_list|,
+name|Attrib
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|encode_attrib
 parameter_list|(
-name|Buffer
+name|struct
+name|sshbuf
 modifier|*
 parameter_list|,
 specifier|const

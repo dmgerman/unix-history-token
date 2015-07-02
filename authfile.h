@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfile.h,v 1.19 2014/07/03 23:18:35 djm Exp $ */
+comment|/* $OpenBSD: authfile.h,v 1.21 2015/01/08 10:14:08 djm Exp $ */
 end_comment
 
 begin_comment
@@ -30,6 +30,14 @@ struct_decl|struct
 name|sshkey
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/* XXX document these */
+end_comment
+
+begin_comment
+comment|/* XXX some of these could probably be merged/retired */
+end_comment
 
 begin_function_decl
 name|int
@@ -67,10 +75,6 @@ name|int
 name|sshkey_load_file
 parameter_list|(
 name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
 parameter_list|,
 name|struct
 name|sshbuf
@@ -195,24 +199,29 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sshkey_load_private_pem
+name|sshkey_load_private_type_fd
 parameter_list|(
 name|int
+name|fd
 parameter_list|,
 name|int
+name|type
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|passphrase
 parameter_list|,
 name|struct
 name|sshkey
 modifier|*
 modifier|*
+name|keyp
 parameter_list|,
 name|char
 modifier|*
 modifier|*
+name|commentp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -243,6 +252,25 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sshkey_check_revoked
+parameter_list|(
+name|struct
+name|sshkey
+modifier|*
+name|key
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|revoked_keys_file
 parameter_list|)
 function_decl|;
 end_function_decl

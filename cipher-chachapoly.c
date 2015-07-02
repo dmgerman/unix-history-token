@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2013 Damien Miller<djm@mindrot.org>  *  * Permission
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: cipher-chachapoly.c,v 1.6 2014/07/03 12:42:16 jsing Exp $ */
+comment|/* $OpenBSD: cipher-chachapoly.c,v 1.7 2015/01/14 10:24:42 markus Exp $ */
 end_comment
 
 begin_include

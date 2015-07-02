@@ -149,6 +149,8 @@ decl_stmt|;
 name|ldns_resolver
 modifier|*
 name|ldns_res
+init|=
+name|NULL
 decl_stmt|;
 name|ldns_rdf
 modifier|*

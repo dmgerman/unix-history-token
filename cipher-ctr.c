@@ -13,11 +13,20 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|WITH_OPENSSL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|OPENSSL_HAVE_EVPCTR
-end_ifndef
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -635,7 +644,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* OPENSSL_HAVE_EVPCTR */
+comment|/* defined(WITH_OPENSSL)&& !defined(OPENSSL_HAVE_EVPCTR) */
 end_comment
 
 end_unit

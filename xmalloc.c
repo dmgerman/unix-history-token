@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: xmalloc.c,v 1.29 2014/01/04 17:50:55 tedu Exp $ */
+comment|/* $OpenBSD: xmalloc.c,v 1.31 2015/02/06 23:21:59 millert Exp $ */
 end_comment
 
 begin_comment
@@ -16,14 +16,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<stdarg.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDINT_H
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<stdarg.h>
+file|<stdint.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -138,7 +149,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SIZE_T_MAX
+name|SIZE_MAX
 operator|/
 name|nmemb
 operator|<
@@ -146,7 +157,7 @@ name|size
 condition|)
 name|fatal
 argument_list|(
-literal|"xcalloc: nmemb * size> SIZE_T_MAX"
+literal|"xcalloc: nmemb * size> SIZE_MAX"
 argument_list|)
 expr_stmt|;
 name|ptr
@@ -219,7 +230,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SIZE_T_MAX
+name|SIZE_MAX
 operator|/
 name|nmemb
 operator|<
@@ -227,7 +238,7 @@ name|size
 condition|)
 name|fatal
 argument_list|(
-literal|"xrealloc: nmemb * size> SIZE_T_MAX"
+literal|"xrealloc: nmemb * size> SIZE_MAX"
 argument_list|)
 expr_stmt|;
 if|if

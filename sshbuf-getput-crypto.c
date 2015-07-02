@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sshbuf-getput-crypto.c,v 1.2 2014/06/18 15:42:09 naddy Exp $	*/
+comment|/*	$OpenBSD: sshbuf-getput-crypto.c,v 1.4 2015/01/14 15:02:39 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -112,7 +112,7 @@ condition|(
 operator|(
 name|r
 operator|=
-name|sshbuf_peek_string_direct
+name|sshbuf_get_bignum2_bytes_direct
 argument_list|(
 name|buf
 argument_list|,
@@ -123,57 +123,11 @@ operator|&
 name|len
 argument_list|)
 operator|)
-operator|<
+operator|!=
 literal|0
 condition|)
 return|return
 name|r
-return|;
-comment|/* Refuse negative (MSB set) bignums */
-if|if
-condition|(
-operator|(
-name|len
-operator|!=
-literal|0
-operator|&&
-operator|(
-operator|*
-name|d
-operator|&
-literal|0x80
-operator|)
-operator|!=
-literal|0
-operator|)
-condition|)
-return|return
-name|SSH_ERR_BIGNUM_IS_NEGATIVE
-return|;
-comment|/* Refuse overlong bignums, allow prepended \0 to avoid MSB set */
-if|if
-condition|(
-name|len
-operator|>
-name|SSHBUF_MAX_BIGNUM
-operator|+
-literal|1
-operator|||
-operator|(
-name|len
-operator|==
-name|SSHBUF_MAX_BIGNUM
-operator|+
-literal|1
-operator|&&
-operator|*
-name|d
-operator|!=
-literal|0
-operator|)
-condition|)
-return|return
-name|SSH_ERR_BIGNUM_TOO_LARGE
 return|;
 if|if
 condition|(
@@ -195,36 +149,6 @@ condition|)
 return|return
 name|SSH_ERR_ALLOC_FAIL
 return|;
-comment|/* Consume the string */
-if|if
-condition|(
-name|sshbuf_get_string_direct
-argument_list|(
-name|buf
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* Shouldn't happen */
-name|SSHBUF_DBG
-argument_list|(
-operator|(
-literal|"SSH_ERR_INTERNAL_ERROR"
-operator|)
-argument_list|)
-expr_stmt|;
-name|SSHBUF_ABORT
-argument_list|()
-expr_stmt|;
-return|return
-name|SSH_ERR_INTERNAL_ERROR
-return|;
-block|}
 return|return
 literal|0
 return|;
@@ -1019,6 +943,12 @@ argument_list|,
 name|len_bits
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len_bytes
+operator|!=
+literal|0
+condition|)
 name|memcpy
 argument_list|(
 name|dp

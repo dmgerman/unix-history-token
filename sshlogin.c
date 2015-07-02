@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshlogin.c,v 1.29 2014/07/15 15:54:14 millert Exp $ */
+comment|/* $OpenBSD: sshlogin.c,v 1.31 2015/01/20 23:14:00 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -77,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -208,7 +208,9 @@ name|time_string
 decl_stmt|,
 name|hostname
 index|[
-name|MAXHOSTNAMELEN
+name|HOST_NAME_MAX
+operator|+
+literal|1
 index|]
 init|=
 literal|""

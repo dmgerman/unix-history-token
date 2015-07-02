@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* 	$OpenBSD: test_fuzz.c,v 1.1 2014/06/24 01:14:18 djm Exp $ */
+comment|/* 	$OpenBSD: test_fuzz.c,v 1.4 2015/03/04 23:22:35 djm Exp $ */
 end_comment
 
 begin_comment
@@ -232,7 +232,7 @@ argument_list|)
 expr_stmt|;
 name|ASSERT_INT_EQ
 argument_list|(
-name|sshkey_to_blob_buf
+name|sshkey_putb
 argument_list|(
 name|k
 argument_list|,
@@ -485,6 +485,17 @@ name|fuzz
 argument_list|)
 control|)
 block|{
+comment|/* Ensure 1-bit difference at least */
+if|if
+condition|(
+name|fuzz_matches_original
+argument_list|(
+name|fuzz
+argument_list|)
+condition|)
+continue|continue;
+name|ASSERT_INT_NE
+argument_list|(
 name|sshkey_verify
 argument_list|(
 name|k
@@ -504,6 +515,9 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|c
+argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 argument_list|,
 literal|0
@@ -546,6 +560,9 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 name|TEST_START
 argument_list|(
 literal|"fuzz RSA1 private"
@@ -862,6 +879,8 @@ expr_stmt|;
 name|TEST_DONE
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|TEST_START
 argument_list|(
 literal|"fuzz RSA private"

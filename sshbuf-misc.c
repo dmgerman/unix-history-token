@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sshbuf-misc.c,v 1.2 2014/06/24 01:13:21 djm Exp $	*/
+comment|/*	$OpenBSD: sshbuf-misc.c,v 1.3 2015/02/05 12:59:57 millert Exp $	*/
 end_comment
 
 begin_comment
@@ -42,6 +42,23 @@ include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDINT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

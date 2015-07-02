@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: session.c,v 1.274 2014/07/15 15:54:14 millert Exp $ */
+comment|/* $OpenBSD: session.c,v 1.277 2015/01/16 06:40:12 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -147,6 +147,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -6574,7 +6580,7 @@ decl_stmt|;
 name|char
 name|component
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|struct
@@ -7499,23 +7505,26 @@ name|void
 parameter_list|)
 block|{
 specifier|extern
-name|AuthenticationConnection
-modifier|*
-name|auth_conn
+name|int
+name|auth_sock
 decl_stmt|;
 if|if
 condition|(
-name|auth_conn
+name|auth_sock
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
-name|ssh_close_authentication_connection
+name|close
 argument_list|(
-name|auth_conn
+name|auth_sock
 argument_list|)
 expr_stmt|;
-name|auth_conn
+name|auth_sock
 operator|=
-name|NULL
+operator|-
+literal|1
 expr_stmt|;
 block|}
 if|if
@@ -12295,10 +12304,11 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
 name|options
 operator|.
 name|xauth_location
+operator|==
+name|NULL
 operator|||
 operator|(
 name|stat

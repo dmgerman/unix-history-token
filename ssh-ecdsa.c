@@ -13,11 +13,19 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|WITH_OPENSSL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|OPENSSL_HAS_ECC
-end_ifdef
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -929,7 +937,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* OPENSSL_HAS_ECC */
+comment|/* WITH_OPENSSL&& OPENSSL_HAS_ECC */
 end_comment
 
 end_unit

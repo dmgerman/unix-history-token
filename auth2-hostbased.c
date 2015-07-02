@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-hostbased.c,v 1.18 2014/07/15 15:54:14 millert Exp $ */
+comment|/* $OpenBSD: auth2-hostbased.c,v 1.24 2015/01/28 22:36:00 djm Exp $ */
 end_comment
 
 begin_comment
@@ -136,6 +136,12 @@ begin_include
 include|#
 directive|include
 file|"pathnames.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"match.h"
 end_include
 
 begin_comment
@@ -427,6 +433,48 @@ name|error
 argument_list|(
 literal|"Refusing RSA key because peer uses unsafe "
 literal|"signature format"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
+if|if
+condition|(
+name|match_pattern_list
+argument_list|(
+name|sshkey_ssh_name
+argument_list|(
+name|key
+argument_list|)
+argument_list|,
+name|options
+operator|.
+name|hostbased_key_types
+argument_list|,
+name|strlen
+argument_list|(
+name|options
+operator|.
+name|hostbased_key_types
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+operator|!=
+literal|1
+condition|)
+block|{
+name|logit
+argument_list|(
+literal|"%s: key type %s not in HostbasedAcceptedKeyTypes"
+argument_list|,
+name|__func__
+argument_list|,
+name|sshkey_type
+argument_list|(
+name|key
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -743,7 +791,9 @@ argument_list|()
 expr_stmt|;
 name|debug2
 argument_list|(
-literal|"userauth_hostbased: chost %s resolvedname %s ipaddr %s"
+literal|"%s: chost %s resolvedname %s ipaddr %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|chost
 argument_list|,
@@ -816,9 +866,23 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|debug2
+argument_list|(
+literal|"%s: auth_rhosts2 refused "
+literal|"user \"%.100s\" host \"%.100s\" (from packet)"
+argument_list|,
+name|__func__
+argument_list|,
+name|cuser
+argument_list|,
+name|chost
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 name|lookup
 operator|=
 name|chost
@@ -864,9 +928,25 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|debug2
+argument_list|(
+literal|"%s: auth_rhosts2 refused "
+literal|"user \"%.100s\" host \"%.100s\" addr \"%.100s\""
+argument_list|,
+name|__func__
+argument_list|,
+name|cuser
+argument_list|,
+name|resolvedname
+argument_list|,
+name|ipaddr
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 name|lookup
 operator|=
 name|resolvedname
@@ -874,7 +954,9 @@ expr_stmt|;
 block|}
 name|debug2
 argument_list|(
-literal|"userauth_hostbased: access allowed by auth_rhosts2"
+literal|"%s: access allowed by auth_rhosts2"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -983,9 +1065,12 @@ name|key
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|fp
 operator|=
-name|key_fingerprint
+name|sshkey_fingerprint
 argument_list|(
 name|key
 operator|->
@@ -993,9 +1078,21 @@ name|cert
 operator|->
 name|signature_key
 argument_list|,
-name|SSH_FP_MD5
+name|options
+operator|.
+name|fingerprint_hash
 argument_list|,
-name|SSH_FP_HEX
+name|SSH_FP_DEFAULT
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: sshkey_fingerprint fail"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|verbose
@@ -1028,15 +1125,30 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|(
 name|fp
 operator|=
-name|key_fingerprint
+name|sshkey_fingerprint
 argument_list|(
 name|key
 argument_list|,
-name|SSH_FP_MD5
+name|options
+operator|.
+name|fingerprint_hash
 argument_list|,
-name|SSH_FP_HEX
+name|SSH_FP_DEFAULT
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: sshkey_fingerprint fail"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|verbose

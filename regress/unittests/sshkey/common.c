@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* 	$OpenBSD: common.c,v 1.1 2014/06/24 01:14:18 djm Exp $ */
+comment|/* 	$OpenBSD: common.c,v 1.2 2015/01/08 13:10:58 djm Exp $ */
 end_comment
 
 begin_comment
@@ -208,8 +208,6 @@ argument_list|(
 name|sshkey_load_file
 argument_list|(
 name|fd
-argument_list|,
-name|name
 argument_list|,
 name|ret
 argument_list|)

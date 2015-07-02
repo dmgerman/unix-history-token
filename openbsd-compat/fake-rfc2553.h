@@ -349,6 +349,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|AI_NUMERICSERV
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AI_NUMERICSERV
+value|(1<<3)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|NI_MAXSERV
 end_ifndef
 

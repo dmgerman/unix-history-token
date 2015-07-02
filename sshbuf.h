@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sshbuf.h,v 1.3 2014/06/24 01:13:21 djm Exp $	*/
+comment|/*	$OpenBSD: sshbuf.h,v 1.4 2015/01/14 15:02:39 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -954,6 +954,28 @@ name|v
 parameter_list|,
 name|size_t
 name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sshbuf_get_bignum2_bytes_direct
+parameter_list|(
+name|struct
+name|sshbuf
+modifier|*
+name|buf
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+modifier|*
+name|valp
+parameter_list|,
+name|size_t
+modifier|*
+name|lenp
 parameter_list|)
 function_decl|;
 end_function_decl

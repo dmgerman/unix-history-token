@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: digest.h,v 1.6 2014/07/03 04:36:45 djm Exp $ */
+comment|/* $OpenBSD: digest.h,v 1.7 2014/12/21 22:27:56 djm Exp $ */
 end_comment
 
 begin_comment
@@ -94,6 +94,38 @@ struct_decl|struct
 name|ssh_digest_ctx
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/* Looks up a digest algorithm by name */
+end_comment
+
+begin_function_decl
+name|int
+name|ssh_digest_alg_by_name
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Returns the algorithm name for a digest identifier */
+end_comment
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|ssh_digest_alg_name
+parameter_list|(
+name|int
+name|alg
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Returns the algorithm's digest length in bytes or 0 for invalid algorithm */

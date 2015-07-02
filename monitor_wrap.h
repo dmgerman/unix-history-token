@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_wrap.h,v 1.24 2014/01/29 06:18:35 djm Exp $ */
+comment|/* $OpenBSD: monitor_wrap.h,v 1.26 2015/02/16 22:13:32 djm Exp $ */
 end_comment
 
 begin_comment
@@ -124,6 +124,7 @@ parameter_list|,
 name|u_int
 modifier|*
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
@@ -598,7 +599,7 @@ end_comment
 
 begin_function_decl
 name|struct
-name|Newkeys
+name|newkeys
 modifier|*
 name|mm_newkeys_from_blob
 parameter_list|(
@@ -762,36 +763,6 @@ end_function_decl
 begin_comment
 comment|/* zlib allocation hooks */
 end_comment
-
-begin_function_decl
-name|void
-modifier|*
-name|mm_zalloc
-parameter_list|(
-name|struct
-name|mm_master
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|mm_zfree
-parameter_list|(
-name|struct
-name|mm_master
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-ed25519.c,v 1.4 2014/06/24 01:13:21 djm Exp $ */
+comment|/* $OpenBSD: ssh-ed25519.c,v 1.6 2015/01/15 21:38:50 markus Exp $ */
 end_comment
 
 begin_comment
@@ -46,19 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xmalloc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"log.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buffer.h"
+file|"sshbuf.h"
 end_include
 
 begin_define
@@ -641,9 +635,15 @@ name|SIZE_MAX
 operator|-
 name|len
 condition|)
-return|return
+block|{
+name|r
+operator|=
 name|SSH_ERR_INVALID_ARGUMENT
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|smlen
 operator|=
 name|len
@@ -670,7 +670,7 @@ operator|||
 operator|(
 name|m
 operator|=
-name|xmalloc
+name|malloc
 argument_list|(
 name|mlen
 argument_list|)
