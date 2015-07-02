@@ -1627,7 +1627,6 @@ literal|"Invalid L1 index"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * TODO: Turn the cache on here when we have cache 		 * flushing code. 		 */
 name|pmap_load_store
 argument_list|(
 operator|&
