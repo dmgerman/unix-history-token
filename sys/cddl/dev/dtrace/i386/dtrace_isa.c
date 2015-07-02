@@ -110,16 +110,6 @@ name|kernbase
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|INKERNEL
-parameter_list|(
-name|va
-parameter_list|)
-value|(((vm_offset_t)(va))>= USRSTACK&& \ 	 ((vm_offset_t)(va))< VM_MAX_KERNEL_ADDRESS)
-end_define
-
 begin_function_decl
 name|uint8_t
 name|dtrace_fuword8_nocheck
