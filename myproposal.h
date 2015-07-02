@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: myproposal.h,v 1.41 2014/07/11 13:54:34 tedu Exp $ */
+comment|/* $OpenBSD: myproposal.h,v 1.44 2015/05/27 23:51:10 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -126,7 +126,7 @@ define|#
 directive|define
 name|AESGCM_CIPHER_MODES
 define|\
-value|"aes128-gcm@openssh.com,aes256-gcm@openssh.com,"
+value|",aes128-gcm@openssh.com,aes256-gcm@openssh.com"
 end_define
 
 begin_else
@@ -228,16 +228,16 @@ end_endif
 begin_define
 define|#
 directive|define
-name|KEX_SERVER_KEX
+name|KEX_COMMON_KEX
 define|\
-value|KEX_CURVE25519_METHODS \ 	KEX_ECDH_METHODS \ 	KEX_SHA256_METHODS \ 	"diffie-hellman-group14-sha1"
+value|KEX_CURVE25519_METHODS \ 	KEX_ECDH_METHODS \ 	KEX_SHA256_METHODS
 end_define
 
 begin_define
 define|#
 directive|define
-name|KEX_CLIENT_KEX
-value|KEX_SERVER_KEX "," \ 	"diffie-hellman-group-exchange-sha1," \ 	"diffie-hellman-group1-sha1"
+name|KEX_SERVER_KEX
+value|KEX_COMMON_KEX \ 	"diffie-hellman-group14-sha1" \  #define KEX_CLIENT_KEX KEX_COMMON_KEX \ 	"diffie-hellman-group-exchange-sha1," \ 	"diffie-hellman-group14-sha1," \ 	"diffie-hellman-group1-sha1"
 end_define
 
 begin_define
@@ -257,7 +257,7 @@ define|#
 directive|define
 name|KEX_SERVER_ENCRYPT
 define|\
-value|"aes128-ctr,aes192-ctr,aes256-ctr," \ 	AESGCM_CIPHER_MODES \ 	"chacha20-poly1305@openssh.com"
+value|"chacha20-poly1305@openssh.com," \ 	"aes128-ctr,aes192-ctr,aes256-ctr" \ 	AESGCM_CIPHER_MODES
 end_define
 
 begin_define
@@ -308,7 +308,7 @@ define|#
 directive|define
 name|KEX_SERVER_ENCRYPT
 define|\
-value|"aes128-ctr,aes192-ctr,aes256-ctr," \ 	"chacha20-poly1305@openssh.com"
+value|"chacha20-poly1305@openssh.com," \ 	"aes128-ctr,aes192-ctr,aes256-ctr"
 end_define
 
 begin_define

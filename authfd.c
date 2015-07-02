@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfd.c,v 1.94 2015/01/14 20:05:27 djm Exp $ */
+comment|/* $OpenBSD: authfd.c,v 1.97 2015/03/26 19:32:19 markus Exp $ */
 end_comment
 
 begin_comment
@@ -2079,23 +2079,11 @@ name|r
 init|=
 name|SSH_ERR_INTERNAL_ERROR
 decl_stmt|;
-if|if
-condition|(
-name|sigp
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|sigp
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-name|lenp
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|lenp
 operator|=

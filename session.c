@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: session.c,v 1.277 2015/01/16 06:40:12 deraadt Exp $ */
+comment|/* $OpenBSD: session.c,v 1.278 2015/04/24 01:36:00 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -4270,7 +4270,7 @@ operator|*
 name|envp
 operator|)
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 name|env
 argument_list|,
@@ -8694,7 +8694,7 @@ argument_list|)
 expr_stmt|;
 name|tmp
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 name|sessions
 argument_list|,
@@ -10327,7 +10327,7 @@ name|s
 operator|->
 name|env
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 name|s
 operator|->

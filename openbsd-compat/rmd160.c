@@ -25,11 +25,22 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ENDIAN_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<endian.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

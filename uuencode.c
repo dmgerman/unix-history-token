@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: uuencode.c,v 1.27 2013/05/17 00:13:14 djm Exp $ */
+comment|/* $OpenBSD: uuencode.c,v 1.28 2015/04/24 01:36:24 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -248,10 +248,12 @@ return|return;
 block|}
 name|buf
 operator|=
-name|xmalloc
+name|xreallocarray
 argument_list|(
+name|NULL
+argument_list|,
 literal|2
-operator|*
+argument_list|,
 name|len
 argument_list|)
 expr_stmt|;

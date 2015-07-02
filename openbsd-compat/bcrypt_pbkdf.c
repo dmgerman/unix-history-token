@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: bcrypt_pbkdf.c,v 1.9 2014/07/13 21:21:25 tedu Exp $ */
+comment|/* $OpenBSD: bcrypt_pbkdf.c,v 1.13 2015/01/12 03:20:04 tedu Exp $ */
 end_comment
 
 begin_comment
@@ -101,6 +101,18 @@ name|SHA512_DIGEST_LENGTH
 value|crypto_hash_sha512_BYTES
 end_define
 
+begin_define
+define|#
+directive|define
+name|MINIMUM
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)< (b)) ? (a) : (b))
+end_define
+
 begin_comment
 comment|/*  * pkcs #5 pbkdf2 implementation using the "bcrypt" hash  *  * The bcrypt hash function is derived from the bcrypt password hashing  * function with the following modifications:  * 1. The input password and salt are preprocessed with SHA512.  * 2. The output length is expanded to 256 bits.  * 3. Subsequently the magic string to be encrypted is lengthened and modifed  *    to "OxychromaticBlowfishSwatDynamite"  * 4. The hash function is defined to perform 64 rounds of initial state  *    expansion. (More rounds are performed by iterating the hash.)  *  * Note that this implementation pulls the SHA512 operations into the caller  * as a performance optimization.  *  * One modification from official pbkdf2. Instead of outputting key material  * linearly, we mix it. pbkdf2 has a known weakness where if one uses it to  * generate (e.g.) 512 bits of key material for use as two 256 bit keys, an  * attacker can merely run once through the outer loop, but the user  * always runs it twice. Shuffling output bytes requires computing the  * entirety of the key material to assemble any subkey. This is something a  * wise caller could do; we just do it for you.  */
 end_comment
@@ -108,7 +120,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BCRYPT_BLOCKS
+name|BCRYPT_WORDS
 value|8
 end_define
 
@@ -116,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|BCRYPT_HASHSIZE
-value|(BCRYPT_BLOCKS * 4)
+value|(BCRYPT_WORDS * 4)
 end_define
 
 begin_function
@@ -151,7 +163,7 @@ decl_stmt|;
 name|uint32_t
 name|cdata
 index|[
-name|BCRYPT_BLOCKS
+name|BCRYPT_WORDS
 index|]
 decl_stmt|;
 name|int
@@ -234,7 +246,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|BCRYPT_BLOCKS
+name|BCRYPT_WORDS
 condition|;
 name|i
 operator|++
@@ -297,7 +309,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|BCRYPT_BLOCKS
+name|BCRYPT_WORDS
 condition|;
 name|i
 operator|++
@@ -776,10 +788,10 @@ name|j
 index|]
 expr_stmt|;
 block|}
-comment|/* 		 * pbkdf2 deviation: ouput the key material non-linearly. 		 */
+comment|/* 		 * pbkdf2 deviation: output the key material non-linearly. 		 */
 name|amt
 operator|=
-name|MIN
+name|MINIMUM
 argument_list|(
 name|amt
 argument_list|,

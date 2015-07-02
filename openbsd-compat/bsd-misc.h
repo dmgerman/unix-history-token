@@ -599,7 +599,7 @@ define|#
 directive|define
 name|endgrent
 parameter_list|()
-value|{}
+value|do { } while(0)
 end_define
 
 begin_endif
@@ -640,7 +640,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|while(0)
+value|do { } while(0)
 end_define
 
 begin_endif

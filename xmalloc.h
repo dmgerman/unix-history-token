@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: xmalloc.h,v 1.14 2013/05/17 00:13:14 djm Exp $ */
+comment|/* $OpenBSD: xmalloc.h,v 1.15 2015/04/24 01:36:01 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ end_function_decl
 begin_function_decl
 name|void
 modifier|*
-name|xrealloc
+name|xreallocarray
 parameter_list|(
 name|void
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sshbuf-misc.c,v 1.3 2015/02/05 12:59:57 millert Exp $	*/
+comment|/*	$OpenBSD: sshbuf-misc.c,v 1.4 2015/03/24 20:03:44 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -161,7 +161,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%.4zd: "
+literal|"%.4zu: "
 argument_list|,
 name|i
 argument_list|)

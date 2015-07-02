@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-rsa.c,v 1.52 2014/06/24 01:13:21 djm Exp $ */
+comment|/* $OpenBSD: ssh-rsa.c,v 1.53 2015/06/15 01:32:50 djm Exp $ */
 end_comment
 
 begin_comment
@@ -565,7 +565,7 @@ name|b
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|ret
 return|;
 block|}
 end_function

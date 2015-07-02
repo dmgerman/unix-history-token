@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dns.h,v 1.14 2015/01/15 09:40:00 djm Exp $ */
+comment|/* $OpenBSD: dns.h,v 1.15 2015/05/08 06:45:13 djm Exp $ */
 end_comment
 
 begin_comment

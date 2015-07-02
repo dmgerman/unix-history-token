@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.c,v 1.117 2015/01/20 23:14:00 deraadt Exp $ */
+comment|/* $OpenBSD: sftp-client.c,v 1.120 2015/05/28 04:50:53 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2520,6 +2520,11 @@ argument_list|(
 name|msg
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|ret
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -3805,7 +3810,7 @@ block|{
 operator|*
 name|dir
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 operator|*
 name|dir
@@ -8335,11 +8340,28 @@ operator|)
 name|highwater
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|ftruncate
 argument_list|(
 name|local_fd
 argument_list|,
 name|highwater
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|error
+argument_list|(
+literal|"ftruncate \"%s\": %s"
+argument_list|,
+name|local_path
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

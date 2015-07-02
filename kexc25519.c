@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexc25519.c,v 1.8 2015/01/19 20:16:15 markus Exp $ */
+comment|/* $OpenBSD: kexc25519.c,v 1.9 2015/03/26 07:00:04 djm Exp $ */
 end_comment
 
 begin_comment
@@ -235,6 +235,30 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
+comment|/* Check for all-zero public key */
+name|explicit_bzero
+argument_list|(
+name|shared_key
+argument_list|,
+name|CURVE25519_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|timingsafe_bcmp
+argument_list|(
+name|pub
+argument_list|,
+name|shared_key
+argument_list|,
+name|CURVE25519_SIZE
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|SSH_ERR_KEY_INVALID_EC_VALUE
+return|;
 name|crypto_scalarmult_curve25519
 argument_list|(
 name|shared_key

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexc25519s.c,v 1.8 2015/01/26 06:10:03 djm Exp $ */
+comment|/* $OpenBSD: kexc25519s.c,v 1.9 2015/04/27 00:37:53 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include

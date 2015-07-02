@@ -3560,7 +3560,7 @@ operator|*
 operator|*
 name|prompts
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 operator|*
 operator|*
@@ -3629,7 +3629,7 @@ operator|*
 operator|*
 name|prompts
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 operator|*
 operator|*

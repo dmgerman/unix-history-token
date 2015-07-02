@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.c,v 1.145 2015/02/20 22:17:21 djm Exp $ */
+comment|/* $OpenBSD: monitor.c,v 1.150 2015/06/22 23:42:16 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2254,6 +2254,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|partial
+operator|&&
 operator|!
 name|authenticated
 condition|)
@@ -6069,6 +6072,8 @@ name|blob
 decl_stmt|;
 name|u_int
 name|bloblen
+decl_stmt|,
+name|pubkey_auth_attempt
 decl_stmt|;
 name|enum
 name|mm_keytype
@@ -6121,6 +6126,13 @@ name|m
 argument_list|,
 operator|&
 name|bloblen
+argument_list|)
+expr_stmt|;
+name|pubkey_auth_attempt
+operator|=
+name|buffer_get_int
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 name|key
@@ -6238,13 +6250,6 @@ name|options
 operator|.
 name|pubkey_key_types
 argument_list|,
-name|strlen
-argument_list|(
-name|options
-operator|.
-name|pubkey_key_types
-argument_list|)
-argument_list|,
 literal|0
 argument_list|)
 operator|==
@@ -6257,6 +6262,8 @@ operator|->
 name|pw
 argument_list|,
 name|key
+argument_list|,
+name|pubkey_auth_attempt
 argument_list|)
 expr_stmt|;
 name|pubkey_auth_info
@@ -6278,9 +6285,14 @@ name|options
 operator|.
 name|pubkey_authentication
 operator|&&
+operator|(
+operator|!
+name|pubkey_auth_attempt
+operator|||
 name|allowed
 operator|!=
 literal|1
+operator|)
 condition|)
 name|auth_clear_options
 argument_list|()
@@ -6305,13 +6317,6 @@ argument_list|,
 name|options
 operator|.
 name|hostbased_key_types
-argument_list|,
-name|strlen
-argument_list|(
-name|options
-operator|.
-name|hostbased_key_types
-argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -7583,6 +7588,13 @@ name|struct
 name|sockaddr_storage
 name|from
 decl_stmt|;
+if|if
+condition|(
+name|options
+operator|.
+name|use_login
+condition|)
+return|return;
 comment|/* 	 * Get IP address of client. If the connection is not a socket, let 	 * the address be 0.0.0.0. 	 */
 name|memset
 argument_list|(

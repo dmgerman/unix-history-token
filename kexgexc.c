@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexgexc.c,v 1.20 2015/01/26 06:10:03 djm Exp $ */
+comment|/* $OpenBSD: kexgexc.c,v 1.22 2015/05/26 23:23:40 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -18,6 +18,12 @@ ifdef|#
 directive|ifdef
 name|WITH_OPENSSL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
@@ -213,70 +219,23 @@ name|nbits
 expr_stmt|;
 if|if
 condition|(
-name|ssh
-operator|->
-name|compat
+name|datafellows
 operator|&
-name|SSH_OLD_DHGEX
+name|SSH_BUG_DHGEX_LARGE
 condition|)
-block|{
-comment|/* Old GEX request */
-if|if
-condition|(
-operator|(
-name|r
-operator|=
-name|sshpkt_start
-argument_list|(
-name|ssh
-argument_list|,
-name|SSH2_MSG_KEX_DH_GEX_REQUEST_OLD
-argument_list|)
-operator|)
-operator|!=
-literal|0
-operator|||
-operator|(
-name|r
-operator|=
-name|sshpkt_put_u32
-argument_list|(
-name|ssh
-argument_list|,
 name|kex
 operator|->
 name|nbits
-argument_list|)
-operator|)
-operator|!=
-literal|0
-operator|||
-operator|(
-name|r
 operator|=
-name|sshpkt_send
+name|MIN
 argument_list|(
-name|ssh
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-goto|goto
-name|out
-goto|;
-name|debug
-argument_list|(
-literal|"SSH2_MSG_KEX_DH_GEX_REQUEST_OLD(%u) sent"
-argument_list|,
 name|kex
 operator|->
 name|nbits
+argument_list|,
+literal|4096
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
 comment|/* New GEX request */
 if|if
 condition|(
@@ -369,7 +328,6 @@ operator|->
 name|max
 argument_list|)
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|DEBUG_KEXDH

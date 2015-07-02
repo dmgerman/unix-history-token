@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: hmac.c,v 1.11 2015/01/15 21:37:14 markus Exp $ */
+comment|/* $OpenBSD: hmac.c,v 1.12 2015/03/24 20:03:44 markus Exp $ */
 end_comment
 
 begin_comment
@@ -836,7 +836,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"[%zd] %2.2x %2.2x\n"
+literal|"[%zu] %2.2x %2.2x\n"
 argument_list|,
 name|i
 argument_list|,

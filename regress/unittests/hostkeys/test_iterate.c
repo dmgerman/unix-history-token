@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* 	$OpenBSD: test_iterate.c,v 1.3 2015/03/07 04:41:48 djm Exp $ */
+comment|/* 	$OpenBSD: test_iterate.c,v 1.4 2015/03/31 22:59:01 djm Exp $ */
 end_comment
 
 begin_comment
@@ -404,6 +404,9 @@ directive|ifndef
 name|WITH_SSH1
 if|if
 condition|(
+name|parse_key
+operator|&&
+operator|(
 name|expected
 operator|->
 name|l
@@ -417,6 +420,7 @@ operator|->
 name|no_parse_keytype
 operator|==
 name|KEY_RSA1
+operator|)
 condition|)
 block|{
 name|expected_status

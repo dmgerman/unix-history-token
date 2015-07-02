@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keyscan.c,v 1.99 2015/01/30 10:44:49 djm Exp $ */
+comment|/* $OpenBSD: ssh-keyscan.c,v 1.101 2015/04/10 00:08:55 djm Exp $ */
 end_comment
 
 begin_comment
@@ -421,7 +421,7 @@ name|int
 name|c_keytype
 decl_stmt|;
 comment|/* Only one of KT_RSA1, KT_DSA, or KT_RSA */
-name|int
+name|sig_atomic_t
 name|c_done
 decl_stmt|;
 comment|/* SSH2 done */
@@ -1515,6 +1515,12 @@ name|c
 operator|->
 name|c_name
 decl_stmt|;
+name|char
+modifier|*
+name|hostport
+init|=
+name|NULL
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1545,13 +1551,22 @@ argument_list|(
 literal|"host_hash failed"
 argument_list|)
 expr_stmt|;
+name|hostport
+operator|=
+name|put_host_port
+argument_list|(
+name|host
+argument_list|,
+name|ssh_port
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
 literal|"%s "
 argument_list|,
-name|host
+name|hostport
 argument_list|)
 expr_stmt|;
 name|sshkey_write
@@ -1566,6 +1581,11 @@ argument_list|(
 literal|"\n"
 argument_list|,
 name|stdout
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|hostport
 argument_list|)
 expr_stmt|;
 block|}
@@ -2737,11 +2757,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"# %s %s\n"
+literal|"# %s:%d %s\n"
 argument_list|,
 name|c
 operator|->
 name|c_name
+argument_list|,
+name|ssh_port
 argument_list|,
 name|chop
 argument_list|(

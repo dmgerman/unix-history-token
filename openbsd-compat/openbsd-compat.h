@@ -1328,7 +1328,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|1
+value|(1)
 end_define
 
 begin_endif

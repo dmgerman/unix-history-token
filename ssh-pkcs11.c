@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-pkcs11.c,v 1.17 2015/02/03 08:07:20 deraadt Exp $ */
+comment|/* $OpenBSD: ssh-pkcs11.c,v 1.19 2015/05/27 05:15:02 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1055,6 +1055,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|pin
+init|=
+name|NULL
 decl_stmt|,
 name|prompt
 index|[
@@ -1192,7 +1194,21 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"need pin"
+literal|"need pin entry%s"
+argument_list|,
+operator|(
+name|si
+operator|->
+name|token
+operator|.
+name|flags
+operator|&
+name|CKF_PROTECTED_AUTHENTICATION_PATH
+operator|)
+condition|?
+literal|" on reader keypad"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 return|return
@@ -1202,6 +1218,23 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|si
+operator|->
+name|token
+operator|.
+name|flags
+operator|&
+name|CKF_PROTECTED_AUTHENTICATION_PATH
+condition|)
+name|verbose
+argument_list|(
+literal|"Deferring PIN entry to reader keypad."
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|snprintf
 argument_list|(
 name|prompt
@@ -1242,6 +1275,7 @@ literal|1
 operator|)
 return|;
 comment|/* bail out */
+block|}
 name|rv
 operator|=
 name|f
@@ -1260,12 +1294,43 @@ operator|*
 operator|)
 name|pin
 argument_list|,
+operator|(
+name|pin
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|strlen
+argument_list|(
+name|pin
+argument_list|)
+else|:
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pin
+operator|!=
+name|NULL
+condition|)
+block|{
+name|explicit_bzero
+argument_list|(
+name|pin
+argument_list|,
 name|strlen
 argument_list|(
 name|pin
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|pin
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|rv
@@ -1277,11 +1342,6 @@ operator|!=
 name|CKR_USER_ALREADY_LOGGED_IN
 condition|)
 block|{
-name|free
-argument_list|(
-name|pin
-argument_list|)
-expr_stmt|;
 name|error
 argument_list|(
 literal|"C_Login failed: %lu"
@@ -1296,11 +1356,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|free
-argument_list|(
-name|pin
-argument_list|)
-expr_stmt|;
 name|si
 operator|->
 name|logged_in
@@ -2926,7 +2981,7 @@ comment|/* expand key array and add key */
 operator|*
 name|keysp
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 operator|*
 name|keysp

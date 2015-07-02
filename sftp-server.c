@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-server.c,v 1.105 2015/01/20 23:14:00 deraadt Exp $ */
+comment|/* $OpenBSD: sftp-server.c,v 1.106 2015/04/24 01:36:01 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -143,12 +143,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
 end_include
 
 begin_include
@@ -1602,7 +1596,7 @@ operator|++
 expr_stmt|;
 name|handles
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 name|handles
 argument_list|,
@@ -6242,7 +6236,7 @@ literal|2
 expr_stmt|;
 name|stats
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 name|stats
 argument_list|,

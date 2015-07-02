@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keygen.c,v 1.266 2015/02/26 20:45:47 djm Exp $ */
+comment|/* $OpenBSD: ssh-keygen.c,v 1.274 2015/05/28 07:37:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -250,6 +250,36 @@ include|#
 directive|include
 file|"digest.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_KEY_TYPE_NAME
+value|"rsa"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_KEY_TYPE_NAME
+value|"ed25519"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Number of bits in the RSA/DSA key.  This value can be set on the command line. */
@@ -753,6 +783,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+end_ifdef
+
 begin_comment
 comment|/* moduli.c */
 end_comment
@@ -800,6 +836,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -823,8 +864,7 @@ directive|ifdef
 name|WITH_OPENSSL
 name|u_int
 name|maxbits
-decl_stmt|;
-name|int
+decl_stmt|,
 name|nid
 decl_stmt|;
 endif|#
@@ -835,22 +875,13 @@ name|type
 operator|==
 name|KEY_UNSPEC
 condition|)
-block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"unknown key type %s\n"
+literal|"unknown key type %s"
 argument_list|,
 name|key_type_name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|*
@@ -950,22 +981,13 @@ name|bitsp
 operator|>
 name|maxbits
 condition|)
-block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"key bits exceeds maximum %d\n"
+literal|"key bits exceeds maximum %d"
 argument_list|,
 name|maxbits
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|type
@@ -1142,19 +1164,11 @@ name|_PATH_SSH_CLIENT_ID_ED25519
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"bad key type\n"
+literal|"bad key type"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-break|break;
 block|}
 block|}
 name|snprintf
@@ -1175,15 +1189,18 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s (%s): "
 argument_list|,
 name|prompt
 argument_list|,
 name|identity_file
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
 argument_list|)
 expr_stmt|;
 if|if
@@ -1462,20 +1479,11 @@ name|type
 operator|==
 name|KEY_RSA1
 condition|)
-block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"version 1 keys are not supported\n"
+literal|"version 1 keys are not supported"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -1495,12 +1503,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"key_to_blob failed: %s\n"
+literal|"key_to_blob failed: %s"
 argument_list|,
 name|ssh_err
 argument_list|(
@@ -1508,12 +1513,6 @@ name|r
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Comment + surrounds must fit into 72 chars (RFC 4716 sec 3.3) */
 name|snprintf
 argument_list|(
@@ -2912,20 +2911,11 @@ name|len
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"input line too long.\n"
+literal|"input line too long."
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|c
@@ -2960,12 +2950,9 @@ argument_list|)
 operator|==
 name|EOF
 condition|)
-block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"unget: %s\n"
+literal|"unget: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2973,12 +2960,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 name|pos
 return|;
@@ -3305,20 +3286,11 @@ name|blen
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"uudecode failed.\n"
+literal|"uudecode failed."
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|*
@@ -3352,12 +3324,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"decode blob failed: %s\n"
+literal|"decode blob failed: %s"
 argument_list|,
 name|ssh_err
 argument_list|(
@@ -3365,12 +3334,6 @@ name|r
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|fclose
 argument_list|(
 name|fp
@@ -4142,20 +4105,11 @@ condition|(
 operator|!
 name|ok
 condition|)
-block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"key write failed\n"
+literal|"key write failed"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|sshkey_free
 argument_list|(
 name|k
@@ -4221,18 +4175,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|fatal
 argument_list|(
+literal|"%s: %s"
+argument_list|,
 name|identity_file
-argument_list|)
-expr_stmt|;
-name|exit
+argument_list|,
+name|strerror
 argument_list|(
-literal|1
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|prv
 operator|=
 name|load_identity
@@ -4255,10 +4209,8 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
 literal|"key_write failed: %s"
 argument_list|,
 name|ssh_err
@@ -4655,18 +4607,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|fatal
 argument_list|(
+literal|"%s: %s"
+argument_list|,
 name|identity_file
-argument_list|)
-expr_stmt|;
-name|exit
+argument_list|,
+name|strerror
 argument_list|(
-literal|1
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -5266,20 +5218,13 @@ if|if
 condition|(
 name|invalid
 condition|)
-block|{
-name|printf
+name|fatal
 argument_list|(
-literal|"%s is not a public key file.\n"
+literal|"%s is not a public key file."
 argument_list|,
 name|identity_file
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|0
@@ -5318,6 +5263,12 @@ name|key_types
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 block|{
 literal|"rsa1"
 block|,
@@ -5326,6 +5277,9 @@ block|,
 name|_PATH_HOST_KEY_FILE
 block|}
 block|,
+endif|#
+directive|endif
+comment|/* WITH_SSH1 */
 block|{
 literal|"rsa"
 block|,
@@ -5355,6 +5309,10 @@ block|}
 block|,
 endif|#
 directive|endif
+comment|/* OPENSSL_HAS_ECC */
+endif|#
+directive|endif
+comment|/* WITH_OPENSSL */
 block|{
 literal|"ed25519"
 block|,
@@ -5450,7 +5408,7 @@ operator|!=
 name|ENOENT
 condition|)
 block|{
-name|printf
+name|error
 argument_list|(
 literal|"Could not stat %s: %s"
 argument_list|,
@@ -5571,11 +5529,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"key_generate failed: %s\n"
+literal|"key_generate failed: %s"
 argument_list|,
 name|ssh_err
 argument_list|(
@@ -5657,9 +5613,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|error
 argument_list|(
-literal|"Saving key \"%s\" failed: %s\n"
+literal|"Saving key \"%s\" failed: %s"
 argument_list|,
 name|identity_file
 argument_list|,
@@ -5725,9 +5681,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|error
 argument_list|(
-literal|"Could not save your public key in %s\n"
+literal|"Could not save your public key in %s"
 argument_list|,
 name|identity_file
 argument_list|)
@@ -5759,9 +5715,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|error
 argument_list|(
-literal|"fdopen %s failed\n"
+literal|"fdopen %s failed"
 argument_list|,
 name|identity_file
 argument_list|)
@@ -5798,11 +5754,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"write key failed: %s\n"
+literal|"write key failed: %s"
 argument_list|,
 name|ssh_err
 argument_list|(
@@ -6010,12 +5964,10 @@ operator|!
 name|find_host
 condition|)
 block|{
-name|fprintf
+name|logit
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s:%ld: ignoring host name "
-literal|"with wildcard: %.64s\n"
+literal|"with wildcard: %.64s"
 argument_list|,
 name|l
 operator|->
@@ -6131,11 +6083,9 @@ name|invalid
 operator|=
 literal|1
 expr_stmt|;
-name|fprintf
+name|logit
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s:%ld: invalid line\n"
+literal|"%s:%ld: invalid line"
 argument_list|,
 name|l
 operator|->
@@ -6200,6 +6150,33 @@ operator|*
 operator|)
 name|_ctx
 decl_stmt|;
+name|enum
+name|sshkey_fp_rep
+name|rep
+decl_stmt|;
+name|int
+name|fptype
+decl_stmt|;
+name|char
+modifier|*
+name|fp
+decl_stmt|;
+name|fptype
+operator|=
+name|print_bubblebabble
+condition|?
+name|SSH_DIGEST_SHA1
+else|:
+name|fingerprint_hash
+expr_stmt|;
+name|rep
+operator|=
+name|print_bubblebabble
+condition|?
+name|SSH_FP_BUBBLEBABBLE
+else|:
+name|SSH_FP_DEFAULT
+expr_stmt|;
 if|if
 condition|(
 name|l
@@ -6333,6 +6310,53 @@ argument_list|,
 name|ctx
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|print_fingerprint
+condition|)
+block|{
+name|fp
+operator|=
+name|sshkey_fingerprint
+argument_list|(
+name|l
+operator|->
+name|key
+argument_list|,
+name|fptype
+argument_list|,
+name|rep
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s %s %s %s\n"
+argument_list|,
+name|ctx
+operator|->
+name|host
+argument_list|,
+name|sshkey_type
+argument_list|(
+name|l
+operator|->
+name|key
+argument_list|)
+argument_list|,
+name|fp
+argument_list|,
+name|l
+operator|->
+name|comment
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|fprintf
 argument_list|(
@@ -6374,11 +6398,9 @@ name|invalid
 operator|=
 literal|1
 expr_stmt|;
-name|fprintf
+name|logit
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s:%ld: invalid line\n"
+literal|"%s:%ld: invalid line"
 argument_list|,
 name|l
 operator|->
@@ -6454,6 +6476,9 @@ decl_stmt|;
 name|struct
 name|known_hosts_ctx
 name|ctx
+decl_stmt|;
+name|u_int
+name|foreach_options
 decl_stmt|;
 if|if
 condition|(
@@ -6692,6 +6717,22 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* XXX support identity_file == "-" for stdin */
+name|foreach_options
+operator|=
+name|find_host
+condition|?
+name|HKF_WANT_MATCH
+else|:
+literal|0
+expr_stmt|;
+name|foreach_options
+operator||=
+name|print_fingerprint
+condition|?
+name|HKF_WANT_PARSE_KEY
+else|:
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6714,11 +6755,7 @@ name|name
 argument_list|,
 name|NULL
 argument_list|,
-name|find_host
-condition|?
-name|HKF_WANT_MATCH
-else|:
-literal|0
+name|foreach_options
 argument_list|)
 operator|)
 operator|!=
@@ -6754,11 +6791,9 @@ operator|.
 name|invalid
 condition|)
 block|{
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s is not a valid known_hosts file.\n"
+literal|"%s is not a valid known_hosts file."
 argument_list|,
 name|identity_file
 argument_list|)
@@ -6768,12 +6803,10 @@ condition|(
 name|inplace
 condition|)
 block|{
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Not replacing existing known_hosts "
-literal|"file because of errors\n"
+literal|"file because of errors"
 argument_list|)
 expr_stmt|;
 name|unlink
@@ -6799,11 +6832,9 @@ operator|.
 name|found_key
 condition|)
 block|{
-name|fprintf
+name|logit
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Host %s not found in %s\n"
+literal|"Host %s not found in %s"
 argument_list|,
 name|name
 argument_list|,
@@ -6919,19 +6950,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s updated.\n"
 argument_list|,
 name|identity_file
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Original contents retained as %s\n"
 argument_list|,
 name|old
@@ -6944,22 +6971,17 @@ operator|.
 name|has_unhashed
 condition|)
 block|{
-name|fprintf
+name|logit
 argument_list|(
-name|stderr
-argument_list|,
-literal|"WARNING: %s contains unhashed "
-literal|"entries\n"
+literal|"WARNING: %s contains unhashed entries"
 argument_list|,
 name|old
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|logit
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Delete this file to ensure privacy "
-literal|"of hostnames\n"
+literal|"of hostnames"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7042,18 +7064,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|fatal
 argument_list|(
+literal|"%s: %s"
+argument_list|,
 name|identity_file
-argument_list|)
-expr_stmt|;
-name|exit
+argument_list|,
+name|strerror
 argument_list|(
-literal|1
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Try to load the file with empty passphrase. */
 name|r
 operator|=
@@ -7148,11 +7170,9 @@ condition|)
 block|{
 name|badkey
 label|:
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Failed to load key \"%s\": %s\n"
+literal|"Failed to load key %s: %s"
 argument_list|,
 name|identity_file
 argument_list|,
@@ -7160,11 +7180,6 @@ name|ssh_err
 argument_list|(
 name|r
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -7316,9 +7331,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|error
 argument_list|(
-literal|"Saving key \"%s\" failed: %s.\n"
+literal|"Saving key \"%s\" failed: %s."
 argument_list|,
 name|identity_file
 argument_list|,
@@ -7475,14 +7490,16 @@ condition|)
 return|return
 literal|0
 return|;
-name|perror
+name|fatal
 argument_list|(
+literal|"%s: %s"
+argument_list|,
 name|fname
-argument_list|)
-expr_stmt|;
-name|exit
+argument_list|,
+name|strerror
 argument_list|(
-literal|1
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7505,10 +7522,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|printf
+name|fatal
 argument_list|(
-literal|"Failed to read v2 public key from \"%s\": %s.\n"
+literal|"Failed to read v2 public key from \"%s\": %s."
 argument_list|,
 name|fname
 argument_list|,
@@ -7518,12 +7534,6 @@ name|r
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|export_dns_rr
 argument_list|(
 name|hname
@@ -7625,18 +7635,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|fatal
 argument_list|(
+literal|"%s: %s"
+argument_list|,
 name|identity_file
-argument_list|)
-expr_stmt|;
-name|exit
+argument_list|,
+name|strerror
 argument_list|(
-literal|1
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -7672,10 +7682,9 @@ name|r
 operator|!=
 name|SSH_ERR_KEY_WRONG_PASSPHRASE
 condition|)
-block|{
-name|printf
+name|fatal
 argument_list|(
-literal|"Cannot load private key \"%s\": %s.\n"
+literal|"Cannot load private key \"%s\": %s."
 argument_list|,
 name|identity_file
 argument_list|,
@@ -7685,12 +7694,6 @@ name|r
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 else|else
 block|{
 if|if
@@ -7764,9 +7767,9 @@ argument_list|(
 name|passphrase
 argument_list|)
 expr_stmt|;
-name|printf
+name|fatal
 argument_list|(
-literal|"Cannot load private key \"%s\": %s.\n"
+literal|"Cannot load private key \"%s\": %s."
 argument_list|,
 name|identity_file
 argument_list|,
@@ -7776,13 +7779,9 @@ name|r
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 block|}
+comment|/* XXX what about new-format keys? */
 if|if
 condition|(
 name|private
@@ -7792,11 +7791,19 @@ operator|!=
 name|KEY_RSA1
 condition|)
 block|{
-name|fprintf
+name|error
 argument_list|(
-name|stderr
+literal|"Comments are only supported for RSA1 keys."
+argument_list|)
+expr_stmt|;
+name|explicit_bzero
+argument_list|(
+name|passphrase
 argument_list|,
-literal|"Comments are only supported for RSA1 keys.\n"
+name|strlen
+argument_list|(
+name|passphrase
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sshkey_free
@@ -7924,9 +7931,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|error
 argument_list|(
-literal|"Saving key \"%s\" failed: %s\n"
+literal|"Saving key \"%s\" failed: %s"
 argument_list|,
 name|identity_file
 argument_list|,
@@ -8047,20 +8054,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|printf
+name|fatal
 argument_list|(
-literal|"Could not save your public key in %s\n"
+literal|"Could not save your public key in %s"
 argument_list|,
 name|identity_file
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|f
 operator|=
 name|fdopen
@@ -8076,20 +8076,18 @@ name|f
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
+name|fatal
 argument_list|(
-literal|"fdopen %s failed\n"
+literal|"fdopen %s failed: %s"
 argument_list|,
 name|identity_file
-argument_list|)
-expr_stmt|;
-name|exit
+argument_list|,
+name|strerror
 argument_list|(
-literal|1
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -8105,11 +8103,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"write key failed: %s\n"
+literal|"write key failed: %s"
 argument_list|,
 name|ssh_err
 argument_list|(
@@ -9070,18 +9066,11 @@ condition|)
 break|break;
 comment|/* FALLTHROUGH */
 default|default:
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"unknown key type %s\n"
+literal|"unknown key type %s"
 argument_list|,
 name|key_type_name
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -9210,7 +9199,7 @@ control|)
 block|{
 name|plist
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 name|plist
 argument_list|,
@@ -12930,9 +12919,14 @@ literal|"       ssh-keygen -F hostname [-f known_hosts_file] [-l]\n"
 literal|"       ssh-keygen -H [-f known_hosts_file]\n"
 literal|"       ssh-keygen -R hostname [-f known_hosts_file]\n"
 literal|"       ssh-keygen -r hostname [-f input_keyfile] [-g]\n"
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 literal|"       ssh-keygen -G output_file [-v] [-b bits] [-M memory] [-S start_point]\n"
 literal|"       ssh-keygen -T output_file -f input_file [-v] [-a rounds] [-J num_lines]\n"
 literal|"                  [-j start_line] [-K checkpt] [-W generator]\n"
+endif|#
+directive|endif
 literal|"       ssh-keygen -s ca_key -I certificate_identity [-h] [-n principals]\n"
 literal|"                  [-O option] [-V validity_interval] [-z serial_number] file ...\n"
 literal|"       ssh-keygen -L [-f input_keyfile]\n"
@@ -12986,17 +12980,6 @@ name|passphrase2
 decl_stmt|;
 name|char
 modifier|*
-name|checkpoint
-init|=
-name|NULL
-decl_stmt|;
-name|char
-name|out_file
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|,
-modifier|*
 name|rr_hostname
 init|=
 name|NULL
@@ -13036,6 +13019,47 @@ name|type
 decl_stmt|,
 name|fd
 decl_stmt|;
+name|int
+name|gen_all_hostkeys
+init|=
+literal|0
+decl_stmt|,
+name|gen_krl
+init|=
+literal|0
+decl_stmt|,
+name|update_krl
+init|=
+literal|0
+decl_stmt|,
+name|check_krl
+init|=
+literal|0
+decl_stmt|;
+name|FILE
+modifier|*
+name|f
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|errstr
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
+comment|/* Moduli generation/screening */
+name|char
+name|out_file
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|,
+modifier|*
+name|checkpoint
+init|=
+name|NULL
+decl_stmt|;
 name|u_int32_t
 name|memory
 init|=
@@ -13051,23 +13075,6 @@ init|=
 literal|0
 decl_stmt|,
 name|do_screen_candidates
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|gen_all_hostkeys
-init|=
-literal|0
-decl_stmt|,
-name|gen_krl
-init|=
-literal|0
-decl_stmt|,
-name|update_krl
-init|=
-literal|0
-decl_stmt|,
-name|check_krl
 init|=
 literal|0
 decl_stmt|;
@@ -13087,15 +13094,8 @@ name|start
 init|=
 name|NULL
 decl_stmt|;
-name|FILE
-modifier|*
-name|f
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|errstr
-decl_stmt|;
+endif|#
+directive|endif
 specifier|extern
 name|int
 name|optind
@@ -13158,10 +13158,9 @@ condition|(
 operator|!
 name|pw
 condition|)
-block|{
-name|printf
+name|fatal
 argument_list|(
-literal|"No user exists for uid %lu\n"
+literal|"No user exists for uid %lu"
 argument_list|,
 operator|(
 name|u_long
@@ -13170,12 +13169,6 @@ name|getuid
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|gethostname
@@ -13190,18 +13183,16 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|fatal
 argument_list|(
-literal|"gethostname"
+literal|"gethostname: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Remaining characters: UYdw */
 while|while
 condition|(
@@ -13322,36 +13313,6 @@ case|:
 name|cert_key_id
 operator|=
 name|optarg
-expr_stmt|;
-break|break;
-case|case
-literal|'J'
-case|:
-name|lines_to_process
-operator|=
-name|strtoul
-argument_list|(
-name|optarg
-argument_list|,
-name|NULL
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'j'
-case|:
-name|start_lineno
-operator|=
-name|strtoul
-argument_list|(
-name|optarg
-argument_list|,
-name|NULL
-argument_list|,
-literal|10
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -13715,40 +13676,6 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
-literal|'W'
-case|:
-name|generator_wanted
-operator|=
-operator|(
-name|u_int32_t
-operator|)
-name|strtonum
-argument_list|(
-name|optarg
-argument_list|,
-literal|1
-argument_list|,
-name|UINT_MAX
-argument_list|,
-operator|&
-name|errstr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|errstr
-condition|)
-name|fatal
-argument_list|(
-literal|"Desired generator has bad value: %s (%s)"
-argument_list|,
-name|optarg
-argument_list|,
-name|errstr
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'a'
 case|:
 name|rounds
@@ -13782,9 +13709,107 @@ name|errstr
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'V'
+case|:
+name|parse_cert_times
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'z'
+case|:
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|cert_serial
+operator|=
+name|strtoull
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|ep
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|optarg
+operator|<
+literal|'0'
+operator|||
+operator|*
+name|optarg
+operator|>
+literal|'9'
+operator|||
+operator|*
+name|ep
+operator|!=
+literal|'\0'
+operator|||
+operator|(
+name|errno
+operator|==
+name|ERANGE
+operator|&&
+name|cert_serial
+operator|==
+name|ULLONG_MAX
+operator|)
+condition|)
+name|fatal
+argument_list|(
+literal|"Invalid serial number \"%s\""
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
 ifdef|#
 directive|ifdef
 name|WITH_OPENSSL
+comment|/* Moduli generation/screening */
+case|case
+literal|'W'
+case|:
+name|generator_wanted
+operator|=
+operator|(
+name|u_int32_t
+operator|)
+name|strtonum
+argument_list|(
+name|optarg
+argument_list|,
+literal|1
+argument_list|,
+name|UINT_MAX
+argument_list|,
+operator|&
+name|errstr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errstr
+condition|)
+name|fatal
+argument_list|(
+literal|"Desired generator has bad value: %s (%s)"
+argument_list|,
+name|optarg
+argument_list|,
+name|errstr
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'M'
 case|:
@@ -13934,69 +13959,6 @@ endif|#
 directive|endif
 comment|/* WITH_OPENSSL */
 case|case
-literal|'V'
-case|:
-name|parse_cert_times
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'z'
-case|:
-name|errno
-operator|=
-literal|0
-expr_stmt|;
-name|cert_serial
-operator|=
-name|strtoull
-argument_list|(
-name|optarg
-argument_list|,
-operator|&
-name|ep
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|optarg
-operator|<
-literal|'0'
-operator|||
-operator|*
-name|optarg
-operator|>
-literal|'9'
-operator|||
-operator|*
-name|ep
-operator|!=
-literal|'\0'
-operator|||
-operator|(
-name|errno
-operator|==
-name|ERANGE
-operator|&&
-name|cert_serial
-operator|==
-name|ULLONG_MAX
-operator|)
-condition|)
-name|fatal
-argument_list|(
-literal|"Invalid serial number \"%s\""
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'?'
 case|:
 default|default:
@@ -14045,9 +14007,9 @@ operator|!
 name|gen_krl
 condition|)
 block|{
-name|printf
+name|error
 argument_list|(
-literal|"Too few arguments.\n"
+literal|"Too few arguments."
 argument_list|)
 expr_stmt|;
 name|usage
@@ -14069,9 +14031,9 @@ operator|!
 name|check_krl
 condition|)
 block|{
-name|printf
+name|error
 argument_list|(
-literal|"Too many arguments.\n"
+literal|"Too many arguments."
 argument_list|)
 expr_stmt|;
 name|usage
@@ -14085,9 +14047,9 @@ operator|&&
 name|change_comment
 condition|)
 block|{
-name|printf
+name|error
 argument_list|(
-literal|"Can only have one of -p and -c.\n"
+literal|"Can only have one of -p and -c."
 argument_list|)
 expr_stmt|;
 name|usage
@@ -14105,9 +14067,9 @@ name|hash_hosts
 operator|)
 condition|)
 block|{
-name|printf
+name|error
 argument_list|(
-literal|"Cannot use -l with -H or -R.\n"
+literal|"Cannot use -l with -H or -R."
 argument_list|)
 expr_stmt|;
 name|usage
@@ -14315,18 +14277,18 @@ name|n
 operator|==
 literal|0
 condition|)
-block|{
-name|perror
+name|fatal
 argument_list|(
+literal|"%s: %s"
+argument_list|,
 name|identity_file
-argument_list|)
-expr_stmt|;
-name|exit
+argument_list|,
+name|strerror
 argument_list|(
-literal|1
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|0
@@ -14397,6 +14359,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|WITH_OPENSSL
 if|if
 condition|(
 name|do_gen_candidates
@@ -14602,6 +14567,8 @@ literal|0
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|gen_all_hostkeys
@@ -14626,7 +14593,7 @@ name|NULL
 condition|)
 name|key_type_name
 operator|=
-literal|"rsa"
+name|DEFAULT_KEY_TYPE_NAME
 expr_stmt|;
 name|type
 operator|=
@@ -14675,20 +14642,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"key_generate failed\n"
+literal|"key_generate failed"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -14705,11 +14663,8 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
 literal|"key_from_private failed: %s\n"
 argument_list|,
 name|ssh_err
@@ -14718,12 +14673,6 @@ name|r
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -15100,9 +15049,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|error
 argument_list|(
-literal|"Saving key \"%s\" failed: %s\n"
+literal|"Saving key \"%s\" failed: %s"
 argument_list|,
 name|identity_file
 argument_list|,
@@ -15179,6 +15128,9 @@ name|identity_file
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|fd
 operator|=
 name|open
@@ -15193,28 +15145,26 @@ name|O_TRUNC
 argument_list|,
 literal|0644
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fd
+operator|)
 operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|printf
+name|fatal
 argument_list|(
-literal|"Could not save your public key in %s\n"
+literal|"Unable to save public key to %s: %s"
 argument_list|,
 name|identity_file
-argument_list|)
-expr_stmt|;
-name|exit
+argument_list|,
+name|strerror
 argument_list|(
-literal|1
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
+if|if
+condition|(
+operator|(
 name|f
 operator|=
 name|fdopen
@@ -15223,27 +15173,22 @@ name|fd
 argument_list|,
 literal|"w"
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|f
+operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
+name|fatal
 argument_list|(
-literal|"fdopen %s failed\n"
+literal|"fdopen %s failed: %s"
 argument_list|,
 name|identity_file
-argument_list|)
-expr_stmt|;
-name|exit
+argument_list|,
+name|strerror
 argument_list|(
-literal|1
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -15259,11 +15204,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"write key failed: %s\n"
+literal|"write key failed: %s"
 argument_list|,
 name|ssh_err
 argument_list|(

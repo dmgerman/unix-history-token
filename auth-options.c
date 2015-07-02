@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-options.c,v 1.65 2015/01/14 10:30:34 markus Exp $ */
+comment|/* $OpenBSD: auth-options.c,v 1.67 2015/05/01 03:20:54 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1010,10 +1010,6 @@ literal|"environment=\""
 expr_stmt|;
 if|if
 condition|(
-name|options
-operator|.
-name|permit_user_env
-operator|&&
 name|strncasecmp
 argument_list|(
 name|opts
@@ -1156,9 +1152,20 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+name|opts
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|.
+name|permit_user_env
+condition|)
+block|{
 name|auth_debug_add
 argument_list|(
-literal|"Adding to environment: %.900s"
+literal|"Adding to environment: "
+literal|"%.900s"
 argument_list|,
 name|s
 argument_list|)
@@ -1170,9 +1177,6 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-name|opts
-operator|++
-expr_stmt|;
 name|new_envstring
 operator|=
 name|xcalloc
@@ -1181,8 +1185,8 @@ literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|envstring
+operator|*
+name|new_envstring
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1201,6 +1205,16 @@ expr_stmt|;
 name|custom_environment
 operator|=
 name|new_envstring
+expr_stmt|;
+name|s
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|free
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 goto|goto
 name|next_option
@@ -2904,7 +2918,7 @@ name|pw
 argument_list|,
 name|OPTIONS_EXTENSIONS
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|cert_no_port_forwarding_flag
