@@ -2985,6 +2985,8 @@ condition|)
 goto|goto
 name|end
 goto|;
+name|error
+operator|=
 name|eli_metadata_decode
 argument_list|(
 name|buf
@@ -2992,6 +2994,16 @@ argument_list|,
 name|md
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|end
+goto|;
+comment|/* Metadata was read and decoded successfully. */
 name|end
 label|:
 if|if
