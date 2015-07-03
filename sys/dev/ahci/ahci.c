@@ -4219,6 +4219,14 @@ name|caps2
 expr_stmt|;
 name|ch
 operator|->
+name|start
+operator|=
+name|ctlr
+operator|->
+name|ch_start
+expr_stmt|;
+name|ch
+operator|->
 name|quirks
 operator|=
 name|ctlr
@@ -13529,6 +13537,20 @@ block|{
 name|u_int32_t
 name|cmd
 decl_stmt|;
+comment|/* Run the channel start callback, if any. */
+if|if
+condition|(
+name|ch
+operator|->
+name|start
+condition|)
+name|ch
+operator|->
+name|start
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 comment|/* Clear SATA error register */
 name|ATA_OUTL
 argument_list|(
