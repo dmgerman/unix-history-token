@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmnLLDBDebugger.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMICmnLLDBDebugger interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -88,13 +44,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<queue>
+file|<condition_variable>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mutex>
 end_include
 
 begin_include
@@ -270,6 +232,24 @@ argument_list|(
 name|void
 argument_list|)
 expr_stmt|;
+name|void
+name|WaitForHandleEvent
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|bool
+name|CheckIfNeedToRebroadcastStopEvent
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|void
+name|RebroadcastStopEvent
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 comment|// MI Commands can use these functions to listen for events they require
 name|bool
 name|RegisterForEvent
@@ -609,6 +589,19 @@ name|m_mapBroadcastClassNameToEventMask
 decl_stmt|;
 name|MapIdToEventMask_t
 name|m_mapIdToEventMask
+decl_stmt|;
+name|std
+operator|::
+name|mutex
+name|m_mutexEventQueue
+expr_stmt|;
+name|std
+operator|::
+name|condition_variable
+name|m_conditionEventQueueEmpty
+expr_stmt|;
+name|uint32_t
+name|m_nLastStopId
 decl_stmt|;
 block|}
 end_decl_stmt

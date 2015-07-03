@@ -75,6 +75,7 @@ name|class
 name|SBLaunchInfo
 decl_stmt|;
 name|class
+name|LLDB_API
 name|SBPlatformConnectOptions
 block|{
 name|public
@@ -173,6 +174,7 @@ decl_stmt|;
 block|}
 empty_stmt|;
 name|class
+name|LLDB_API
 name|SBPlatformShellCommand
 block|{
 name|public
@@ -269,6 +271,7 @@ decl_stmt|;
 block|}
 empty_stmt|;
 name|class
+name|LLDB_API
 name|SBPlatform
 block|{
 name|public

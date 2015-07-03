@@ -164,6 +164,8 @@ name|ModuleFile
 operator|,
 name|File
 operator|,
+name|Lang
+operator|,
 name|FrameIndex
 operator|,
 name|FrameRegisterPC
@@ -197,6 +199,10 @@ operator|,
 name|FunctionLineOffset
 operator|,
 name|FunctionPCOffset
+operator|,
+name|FunctionInitial
+operator|,
+name|FunctionChanged
 operator|,
 name|LineEntryFile
 operator|,

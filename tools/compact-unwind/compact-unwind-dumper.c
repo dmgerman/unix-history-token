@@ -4924,7 +4924,7 @@ decl_stmt|;
 comment|// UNWIND_SECOND_LEVEL_REGULAR entries have a funcOffset which includes the
 comment|// functionOffset from the containing index table already.  UNWIND_SECOND_LEVEL_COMPRESSED
 comment|// entries only have the offset from the containing index table functionOffset.
-comment|// So strip off the contianing index table functionOffset value here so they can
+comment|// So strip off the containing index table functionOffset value here so they can
 comment|// be treated the same at the lower layers.
 name|print_function_encoding
 argument_list|(

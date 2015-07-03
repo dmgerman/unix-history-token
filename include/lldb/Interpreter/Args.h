@@ -79,6 +79,12 @@ begin_comment
 comment|// Other libraries and framework includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
 begin_comment
 comment|// Project includes
 end_comment
@@ -243,23 +249,11 @@ comment|/// @param[in] command
 comment|///     A NULL terminated command that will be copied and split up
 comment|///     into arguments.
 comment|///
-comment|/// @see Args::SetCommandString(const char *)
+comment|/// @see Args::SetCommandString(llvm::StringRef)
 comment|//------------------------------------------------------------------
 name|Args
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|command
-operator|=
-name|NULL
-argument_list|)
-expr_stmt|;
-name|Args
-argument_list|(
-argument|const char *command
-argument_list|,
-argument|size_t len
+argument|llvm::StringRef command = llvm::StringRef()
 argument_list|)
 empty_stmt|;
 name|Args
@@ -311,7 +305,7 @@ comment|/// The command string will be copied and split up into arguments
 comment|/// that can be accessed via the accessor functions.
 comment|///
 comment|/// @param[in] command
-comment|///     A NULL terminated command that will be copied and split up
+comment|///     A command StringRef that will be copied and split up
 comment|///     into arguments.
 comment|///
 comment|/// @see Args::GetArgumentCount() const
@@ -322,25 +316,13 @@ comment|/// @see Args::Unshift (const char *)
 comment|//------------------------------------------------------------------
 name|void
 name|SetCommandString
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|command
-parameter_list|)
-function_decl|;
-name|void
-name|SetCommandString
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|command
-parameter_list|,
-name|size_t
-name|len
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|bool
 name|GetCommandString
 argument_list|(
@@ -1172,6 +1154,14 @@ name|void
 name|UpdateArgvFromArgs
 parameter_list|()
 function_decl|;
+name|llvm
+operator|::
+name|StringRef
+name|ParseSingleArgument
+argument_list|(
+argument|llvm::StringRef command
+argument_list|)
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

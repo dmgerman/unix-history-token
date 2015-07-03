@@ -69,9 +69,9 @@ name|public
 operator|:
 name|StreamAsynchronousIO
 argument_list|(
-argument|Broadcaster&broadcaster
+argument|Debugger&debugger
 argument_list|,
-argument|uint32_t broadcast_event_type
+argument|bool for_stdout
 argument_list|)
 block|;
 name|virtual
@@ -95,17 +95,17 @@ argument_list|)
 block|;
 name|private
 operator|:
-name|Broadcaster
+name|Debugger
 operator|&
-name|m_broadcaster
-block|;
-name|uint32_t
-name|m_broadcast_event_type
+name|m_debugger
 block|;
 name|std
 operator|::
 name|string
-name|m_accumulated_data
+name|m_data
+block|;
+name|bool
+name|m_for_stdout
 block|; }
 decl_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- Platform.h ----------------------------------------------*- C++ -*-===//
+comment|//===-- CMICmdArgValBase.h --------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -29,50 +29,6 @@ end_comment
 
 begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmdArgValBase.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMICmdArgValBase interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
 end_comment
 
 begin_pragma

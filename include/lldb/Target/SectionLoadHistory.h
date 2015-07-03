@@ -82,7 +82,8 @@ name|SectionLoadHistory
 block|{
 name|public
 label|:
-enum|enum
+enum_decl|enum :
+name|unsigned
 block|{
 comment|// Pass eStopIDNow to any function that takes a stop ID to get
 comment|// the current value.
@@ -90,7 +91,7 @@ name|eStopIDNow
 init|=
 name|UINT32_MAX
 block|}
-enum|;
+enum_decl|;
 comment|//------------------------------------------------------------------
 comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------

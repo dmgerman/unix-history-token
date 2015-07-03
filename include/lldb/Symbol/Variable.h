@@ -108,7 +108,7 @@ argument|const char *name
 argument_list|,
 argument|const char *mangled
 argument_list|,
-comment|// The mangled variable name for variables in namespaces
+comment|// The mangled or fully qualified name of the variable.
 argument|const lldb::SymbolFileTypeSP&symfile_type_sp
 argument_list|,
 argument|lldb::ValueType scope

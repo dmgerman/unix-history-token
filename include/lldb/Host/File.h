@@ -867,9 +867,9 @@ name|uint32_t
 name|GetPermissions
 argument_list|(
 specifier|const
-name|char
-operator|*
-name|path
+name|FileSpec
+operator|&
+name|file_spec
 argument_list|,
 name|Error
 operator|&

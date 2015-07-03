@@ -292,6 +292,42 @@ name|ClearAllHardwareWatchpoints
 argument_list|()
 block|;
 name|virtual
+name|Error
+name|IsWatchpointHit
+argument_list|(
+argument|uint32_t wp_index
+argument_list|,
+argument|bool&is_hit
+argument_list|)
+block|;
+name|virtual
+name|Error
+name|GetWatchpointHitIndex
+argument_list|(
+argument|uint32_t&wp_index
+argument_list|,
+argument|lldb::addr_t trap_addr
+argument_list|)
+block|;
+name|virtual
+name|Error
+name|IsWatchpointVacant
+argument_list|(
+argument|uint32_t wp_index
+argument_list|,
+argument|bool&is_vacant
+argument_list|)
+block|;
+name|virtual
+name|lldb
+operator|::
+name|addr_t
+name|GetWatchpointAddress
+argument_list|(
+argument|uint32_t wp_index
+argument_list|)
+block|;
+name|virtual
 name|bool
 name|HardwareSingleStep
 argument_list|(
@@ -306,7 +342,7 @@ argument|const lldb_private::RegisterInfo *reg_info
 argument_list|,
 argument|lldb::addr_t src_addr
 argument_list|,
-argument|lldb::addr_t src_len
+argument|size_t src_len
 argument_list|,
 argument|RegisterValue&reg_value
 argument_list|)
@@ -319,7 +355,7 @@ argument|const lldb_private::RegisterInfo *reg_info
 argument_list|,
 argument|lldb::addr_t dst_addr
 argument_list|,
-argument|lldb::addr_t dst_len
+argument|size_t dst_len
 argument_list|,
 argument|const RegisterValue&reg_value
 argument_list|)
@@ -370,6 +406,15 @@ name|lldb
 operator|::
 name|addr_t
 name|GetPC
+argument_list|(
+argument|lldb::addr_t fail_value = LLDB_INVALID_ADDRESS
+argument_list|)
+block|;
+name|virtual
+name|lldb
+operator|::
+name|addr_t
+name|GetPCfromBreakpointLocation
 argument_list|(
 argument|lldb::addr_t fail_value = LLDB_INVALID_ADDRESS
 argument_list|)

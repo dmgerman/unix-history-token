@@ -1547,6 +1547,24 @@ operator|!=
 name|LLDB_INVALID_ADDRESS
 return|;
 block|}
+comment|// Strip linker annotations (such as @@VERSION) from symbol names.
+name|virtual
+name|std
+operator|::
+name|string
+name|StripLinkerSymbolAnnotations
+argument_list|(
+argument|llvm::StringRef symbol_name
+argument_list|)
+specifier|const
+block|{
+return|return
+name|symbol_name
+operator|.
+name|str
+argument_list|()
+return|;
+block|}
 name|protected
 label|:
 comment|//------------------------------------------------------------------

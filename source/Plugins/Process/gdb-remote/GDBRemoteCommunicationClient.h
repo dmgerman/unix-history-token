@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/StructuredData.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Target/Process.h"
 end_include
 
@@ -84,6 +90,12 @@ file|"GDBRemoteCommunication.h"
 end_include
 
 begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|namespace
+name|process_gdb_remote
+block|{
 name|class
 name|GDBRemoteCommunicationClient
 range|:
@@ -96,9 +108,7 @@ comment|//------------------------------------------------------------------
 comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------
 name|GDBRemoteCommunicationClient
-argument_list|(
-argument|bool is_platform
-argument_list|)
+argument_list|()
 block|;
 operator|~
 name|GDBRemoteCommunicationClient
@@ -111,8 +121,6 @@ comment|//------------------------------------------------------------------
 name|bool
 name|HandshakeWithServer
 argument_list|(
-name|lldb_private
-operator|::
 name|Error
 operator|*
 name|error_ptr
@@ -187,8 +195,21 @@ argument|StringExtractorGDBRemote&response
 argument_list|)
 block|;
 name|bool
+name|SendvContPacket
+argument_list|(
+argument|ProcessGDBRemote *process
+argument_list|,
+argument|const char *payload
+argument_list|,
+argument|size_t packet_length
+argument_list|,
+argument|StringExtractorGDBRemote&response
+argument_list|)
+block|;
+name|bool
 name|GetThreadSuffixSupported
 argument_list|()
+name|override
 block|;
 comment|// This packet is usually sent first and the boolean return value
 comment|// indicates if the packet was send and any response was received
@@ -213,7 +234,7 @@ block|;
 name|bool
 name|SendInterrupt
 argument_list|(
-argument|lldb_private::Mutex::Locker&locker
+argument|Mutex::Locker&locker
 argument_list|,
 argument|uint32_t seconds_to_wait_for_stop
 argument_list|,
@@ -277,8 +298,6 @@ name|int
 name|SendArgumentsPacket
 argument_list|(
 specifier|const
-name|lldb_private
-operator|::
 name|ProcessLaunchInfo
 operator|&
 name|launch_info
@@ -392,28 +411,28 @@ comment|//------------------------------------------------------------------
 name|int
 name|SetSTDIN
 argument_list|(
-name|char
 specifier|const
-operator|*
-name|path
+name|FileSpec
+operator|&
+name|file_spec
 argument_list|)
 block|;
 name|int
 name|SetSTDOUT
 argument_list|(
-name|char
 specifier|const
-operator|*
-name|path
+name|FileSpec
+operator|&
+name|file_spec
 argument_list|)
 block|;
 name|int
 name|SetSTDERR
 argument_list|(
-name|char
 specifier|const
-operator|*
-name|path
+name|FileSpec
+operator|&
+name|file_spec
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -454,7 +473,7 @@ comment|/// connections. If this packet is sent to a GDB server that
 comment|/// implements the platform, it will change the current working
 comment|/// directory for the platform process.
 comment|///
-comment|/// @param[in] path
+comment|/// @param[in] working_dir
 comment|///     The path to a directory to use when launching our process
 comment|///
 comment|/// @return
@@ -463,17 +482,17 @@ comment|//------------------------------------------------------------------
 name|int
 name|SetWorkingDir
 argument_list|(
-name|char
 specifier|const
-operator|*
-name|path
+name|FileSpec
+operator|&
+name|working_dir
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Gets the current working directory of a remote platform GDB
 comment|/// server.
 comment|///
-comment|/// @param[out] cwd
+comment|/// @param[out] working_dir
 comment|///     The current working directory on the remote platform.
 comment|///
 comment|/// @return
@@ -482,11 +501,9 @@ comment|//------------------------------------------------------------------
 name|bool
 name|GetWorkingDir
 argument_list|(
-name|std
-operator|::
-name|string
+name|FileSpec
 operator|&
-name|cwd
+name|working_dir
 argument_list|)
 block|;
 name|lldb
@@ -505,26 +522,20 @@ argument_list|(
 argument|lldb::addr_t addr
 argument_list|)
 block|;
-name|lldb_private
-operator|::
 name|Error
 name|Detach
 argument_list|(
 argument|bool keep_stopped
 argument_list|)
 block|;
-name|lldb_private
-operator|::
 name|Error
 name|GetMemoryRegionInfo
 argument_list|(
 argument|lldb::addr_t addr
 argument_list|,
-argument|lldb_private::MemoryRegionInfo&range_info
+argument|MemoryRegionInfo&range_info
 argument_list|)
 block|;
-name|lldb_private
-operator|::
 name|Error
 name|GetWatchpointSupportInfo
 argument_list|(
@@ -533,8 +544,6 @@ operator|&
 name|num
 argument_list|)
 block|;
-name|lldb_private
-operator|::
 name|Error
 name|GetWatchpointSupportInfo
 argument_list|(
@@ -547,8 +556,6 @@ operator|&
 name|after
 argument_list|)
 block|;
-name|lldb_private
-operator|::
 name|Error
 name|GetWatchpointsTriggerAfterInstruction
 argument_list|(
@@ -558,8 +565,6 @@ name|after
 argument_list|)
 block|;
 specifier|const
-name|lldb_private
-operator|::
 name|ArchSpec
 operator|&
 name|GetHostArchitecture
@@ -570,8 +575,6 @@ name|GetHostDefaultPacketTimeout
 argument_list|()
 block|;
 specifier|const
-name|lldb_private
-operator|::
 name|ArchSpec
 operator|&
 name|GetProcessArchitecture
@@ -607,12 +610,24 @@ argument_list|()
 block|;
 name|void
 name|ResetDiscoverableSettings
-argument_list|()
+argument_list|(
+argument|bool did_exec
+argument_list|)
 block|;
 name|bool
 name|GetHostInfo
 argument_list|(
 argument|bool force = false
+argument_list|)
+block|;
+name|bool
+name|GetDefaultThreadId
+argument_list|(
+name|lldb
+operator|::
+name|tid_t
+operator|&
+name|tid
 argument_list|)
 block|;
 name|bool
@@ -651,8 +666,6 @@ operator|&
 name|s
 argument_list|)
 block|;
-name|lldb_private
-operator|::
 name|ArchSpec
 name|GetSystemArchitecture
 argument_list|()
@@ -682,21 +695,17 @@ name|GetProcessInfo
 argument_list|(
 argument|lldb::pid_t pid
 argument_list|,
-argument|lldb_private::ProcessInstanceInfo&process_info
+argument|ProcessInstanceInfo&process_info
 argument_list|)
 block|;
 name|uint32_t
 name|FindProcesses
 argument_list|(
 specifier|const
-name|lldb_private
-operator|::
 name|ProcessInstanceInfoMatch
 operator|&
 name|process_match_info
 argument_list|,
-name|lldb_private
-operator|::
 name|ProcessInstanceInfoList
 operator|&
 name|process_infos
@@ -797,9 +806,7 @@ case|:
 return|return
 name|m_supports_z4
 return|;
-case|case
-name|eStoppointInvalid
-case|:
+default|default:
 return|return
 name|false
 return|;
@@ -821,10 +828,24 @@ argument|uint32_t length
 argument_list|)
 block|;
 comment|// Byte Size of breakpoint or watchpoint
+name|bool
+name|SetNonStopMode
+argument_list|(
+argument|const bool enable
+argument_list|)
+block|;
 name|void
 name|TestPacketSpeed
 argument_list|(
 argument|const uint32_t num_packets
+argument_list|,
+argument|uint32_t max_send
+argument_list|,
+argument|uint32_t max_recv
+argument_list|,
+argument|bool json
+argument_list|,
+argument|Stream&strm
 argument_list|)
 block|;
 comment|// This packet is for testing the speed of the interface only. Both
@@ -869,11 +890,17 @@ name|GetRemoteMaxPacketSize
 argument_list|()
 block|;
 name|bool
+name|GetEchoSupported
+argument_list|()
+block|;
+name|bool
 name|GetAugmentedLibrariesSVR4ReadSupported
 argument_list|()
 block|;
-name|lldb_private
-operator|::
+name|bool
+name|GetQXferFeaturesReadSupported
+argument_list|()
+block|;
 name|LazyBool
 name|SupportsAllocDeallocMemory
 argument_list|()
@@ -918,13 +945,13 @@ operator|::
 name|user_id_t
 name|OpenFile
 argument_list|(
-argument|const lldb_private::FileSpec& file_spec
+argument|const FileSpec& file_spec
 argument_list|,
 argument|uint32_t flags
 argument_list|,
 argument|mode_t mode
 argument_list|,
-argument|lldb_private::Error&error
+argument|Error&error
 argument_list|)
 block|;
 name|bool
@@ -932,7 +959,7 @@ name|CloseFile
 argument_list|(
 argument|lldb::user_id_t fd
 argument_list|,
-argument|lldb_private::Error&error
+argument|Error&error
 argument_list|)
 block|;
 name|lldb
@@ -941,34 +968,28 @@ name|user_id_t
 name|GetFileSize
 argument_list|(
 specifier|const
-name|lldb_private
-operator|::
 name|FileSpec
 operator|&
 name|file_spec
 argument_list|)
 block|;
-name|lldb_private
-operator|::
 name|Error
 name|GetFilePermissions
 argument_list|(
 specifier|const
-name|char
-operator|*
-name|path
+name|FileSpec
+operator|&
+name|file_spec
 argument_list|,
 name|uint32_t
 operator|&
 name|file_permissions
 argument_list|)
 block|;
-name|lldb_private
-operator|::
 name|Error
 name|SetFilePermissions
 argument_list|(
-argument|const char *path
+argument|const FileSpec&file_spec
 argument_list|,
 argument|uint32_t file_permissions
 argument_list|)
@@ -984,7 +1005,7 @@ argument|void *dst
 argument_list|,
 argument|uint64_t dst_len
 argument_list|,
-argument|lldb_private::Error&error
+argument|Error&error
 argument_list|)
 block|;
 name|uint64_t
@@ -998,42 +1019,36 @@ argument|const void* src
 argument_list|,
 argument|uint64_t src_len
 argument_list|,
-argument|lldb_private::Error&error
+argument|Error&error
 argument_list|)
 block|;
-name|lldb_private
-operator|::
 name|Error
 name|CreateSymlink
 argument_list|(
 specifier|const
-name|char
-operator|*
+name|FileSpec
+operator|&
 name|src
 argument_list|,
 specifier|const
-name|char
-operator|*
+name|FileSpec
+operator|&
 name|dst
 argument_list|)
 block|;
-name|lldb_private
-operator|::
 name|Error
 name|Unlink
 argument_list|(
 specifier|const
-name|char
-operator|*
-name|path
+name|FileSpec
+operator|&
+name|file_spec
 argument_list|)
 block|;
-name|lldb_private
-operator|::
 name|Error
 name|MakeDirectory
 argument_list|(
-argument|const char *path
+argument|const FileSpec&file_spec
 argument_list|,
 argument|uint32_t mode
 argument_list|)
@@ -1042,24 +1057,20 @@ name|bool
 name|GetFileExists
 argument_list|(
 specifier|const
-name|lldb_private
-operator|::
 name|FileSpec
 operator|&
 name|file_spec
 argument_list|)
 block|;
-name|lldb_private
-operator|::
 name|Error
 name|RunShellCommand
 argument_list|(
 argument|const char *command
 argument_list|,
 comment|// Shouldn't be NULL
-argument|const char *working_dir
+argument|const FileSpec&working_dir
 argument_list|,
-comment|// Pass NULL to use the current working directory
+comment|// Pass empty FileSpec to use the current working directory
 argument|int *status_ptr
 argument_list|,
 comment|// Pass NULL if you don't want the process exit status
@@ -1077,8 +1088,6 @@ name|bool
 name|CalculateMD5
 argument_list|(
 specifier|const
-name|lldb_private
-operator|::
 name|FileSpec
 operator|&
 name|file_spec
@@ -1158,9 +1167,55 @@ operator|*
 name|process
 argument_list|)
 block|;
+name|StructuredData
+operator|::
+name|ObjectSP
+name|GetThreadsInfo
+argument_list|()
+block|;
 name|bool
 name|GetThreadExtendedInfoSupported
 argument_list|()
+block|;
+name|bool
+name|GetModuleInfo
+argument_list|(
+specifier|const
+name|FileSpec
+operator|&
+name|module_file_spec
+argument_list|,
+specifier|const
+name|ArchSpec
+operator|&
+name|arch_spec
+argument_list|,
+name|ModuleSpec
+operator|&
+name|module_spec
+argument_list|)
+block|;
+name|bool
+name|ReadExtFeature
+argument_list|(
+argument|const lldb_private::ConstString object
+argument_list|,
+argument|const lldb_private::ConstString annex
+argument_list|,
+argument|std::string& out
+argument_list|,
+argument|lldb_private::Error& err
+argument_list|)
+block|;
+name|void
+name|ServeSymbolLookups
+argument_list|(
+name|lldb_private
+operator|::
+name|Process
+operator|*
+name|process
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -1184,151 +1239,112 @@ name|bool
 name|GetGDBServerVersion
 argument_list|()
 block|;
+comment|// Given the list of compression types that the remote debug stub can support,
+comment|// possibly enable compression if we find an encoding we can handle.
+name|void
+name|MaybeEnableCompression
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|supported_compressions
+argument_list|)
+block|;
 comment|//------------------------------------------------------------------
 comment|// Classes that inherit from GDBRemoteCommunicationClient can see and modify these
 comment|//------------------------------------------------------------------
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_not_sending_acks
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_thread_suffix
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_threads_in_stop_reply
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_vCont_all
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_vCont_any
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_vCont_c
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_vCont_C
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_vCont_s
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_vCont_S
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_qHostInfo_is_valid
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_curr_pid_is_valid
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_qProcessInfo_is_valid
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_qGDBServerVersion_is_valid
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_alloc_dealloc_memory
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_memory_region_info
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_watchpoint_support_info
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_detach_stay_stopped
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_watchpoints_trigger_after_instruction
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_attach_or_wait_reply
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_prepare_for_reg_writing_reply
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_p
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_x
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_avoid_g_packets
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_QSaveRegisterState
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_qXfer_auxv_read
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_qXfer_libraries_read
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_qXfer_libraries_svr4_read
 block|;
-name|lldb_private
-operator|::
+name|LazyBool
+name|m_supports_qXfer_features_read
+block|;
 name|LazyBool
 name|m_supports_augmented_libraries_svr4_read
 block|;
-name|lldb_private
-operator|::
 name|LazyBool
 name|m_supports_jThreadExtendedInfo
 block|;
@@ -1380,6 +1396,14 @@ block|,
 name|m_supports_QEnvironmentHexEncoded
 operator|:
 literal|1
+block|,
+name|m_supports_qSymbol
+operator|:
+literal|1
+block|,
+name|m_supports_jThreadsInfo
+operator|:
+literal|1
 block|;
 name|lldb
 operator|::
@@ -1403,13 +1427,9 @@ name|m_num_supported_hardware_watchpoints
 block|;
 comment|// If we need to send a packet while the target is running, the m_async_XXX
 comment|// member variables take care of making this happen.
-name|lldb_private
-operator|::
 name|Mutex
 name|m_async_mutex
 block|;
-name|lldb_private
-operator|::
 name|Predicate
 operator|<
 name|bool
@@ -1449,13 +1469,9 @@ name|uint32_t
 operator|>
 name|m_thread_id_to_used_usec_map
 block|;
-name|lldb_private
-operator|::
 name|ArchSpec
 name|m_host_arch
 block|;
-name|lldb_private
-operator|::
 name|ArchSpec
 name|m_process_arch
 block|;
@@ -1507,8 +1523,6 @@ name|StringExtractorGDBRemote
 operator|&
 name|response
 argument_list|,
-name|lldb_private
-operator|::
 name|ProcessInstanceInfo
 operator|&
 name|process_info
@@ -1525,7 +1539,14 @@ name|GDBRemoteCommunicationClient
 argument_list|)
 block|; }
 decl_stmt|;
+block|}
+comment|// namespace process_gdb_remote
+block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace lldb_private
+end_comment
 
 begin_endif
 endif|#

@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MIDriverMgr.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMIImplCmn interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadme.txt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -284,17 +240,6 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|void
-name|DoResizeWindow
-parameter_list|(
-specifier|const
-name|uint32_t
-name|vWindowSizeWsCol
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-name|virtual
 name|lldb
 operator|::
 name|SBError
@@ -379,6 +324,16 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+name|virtual
+name|void
+name|DeliverSignal
+parameter_list|(
+name|int
+name|signal
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|// Not part of the interface, ignore
 comment|/* dtor */
 name|virtual
@@ -492,14 +447,6 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-name|void
-name|DriverResizeWindow
-parameter_list|(
-specifier|const
-name|uint32_t
-name|vWindowSizeWsCol
-parameter_list|)
-function_decl|;
 name|bool
 name|DriverParseArgs
 parameter_list|(
@@ -545,6 +492,13 @@ argument_list|(
 name|void
 argument_list|)
 expr_stmt|;
+name|void
+name|DeliverSignal
+parameter_list|(
+name|int
+name|signal
+parameter_list|)
+function_decl|;
 comment|// Typedef:
 name|private
 label|:

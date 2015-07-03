@@ -279,6 +279,24 @@ operator|&
 name|start_idx
 argument_list|)
 decl_stmt|;
+comment|//----------------------------------------------------------------------
+comment|/// Get the parent symbol for the given symbol.
+comment|///
+comment|/// Many symbols in symbol tables are scoped by other symbols that
+comment|/// contain one or more symbol. This function will look for such a
+comment|/// containing symbol and return it if there is one.
+comment|//----------------------------------------------------------------------
+specifier|const
+name|Symbol
+modifier|*
+name|GetParent
+argument_list|(
+name|Symbol
+operator|*
+name|symbol
+argument_list|)
+decl|const
+decl_stmt|;
 name|uint32_t
 name|AppendSymbolIndexesWithType
 argument_list|(

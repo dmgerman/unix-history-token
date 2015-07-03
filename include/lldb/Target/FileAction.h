@@ -49,6 +49,12 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Host/FileSpec.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -101,9 +107,9 @@ name|int
 name|fd
 parameter_list|,
 specifier|const
-name|char
-modifier|*
-name|path
+name|FileSpec
+modifier|&
+name|file_spec
 parameter_list|,
 name|bool
 name|read
@@ -146,6 +152,13 @@ name|GetPath
 argument_list|()
 specifier|const
 expr_stmt|;
+specifier|const
+name|FileSpec
+operator|&
+name|GetFileSpec
+argument_list|()
+specifier|const
+expr_stmt|;
 name|void
 name|Dump
 argument_list|(
@@ -169,12 +182,10 @@ name|int
 name|m_arg
 decl_stmt|;
 comment|// oflag for eFileActionOpen*, dup_fd for eFileActionDuplicate
-name|std
-operator|::
-name|string
-name|m_path
-expr_stmt|;
-comment|// A file path to use for opening after fork or posix_spawn
+name|FileSpec
+name|m_file_spec
+decl_stmt|;
+comment|// A file spec to use for opening after fork or posix_spawn
 block|}
 empty_stmt|;
 block|}

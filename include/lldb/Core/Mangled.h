@@ -101,6 +101,18 @@ block|,
 name|ePreferDemangledWithoutArguments
 block|}
 enum|;
+enum|enum
+name|ManglingScheme
+block|{
+name|eManglingSchemeNone
+init|=
+literal|0
+block|,
+name|eManglingSchemeMSVC
+block|,
+name|eManglingSchemeItanium
+block|}
+enum|;
 comment|//----------------------------------------------------------------------
 comment|/// Default constructor.
 comment|///
@@ -481,12 +493,12 @@ name|name
 parameter_list|)
 function_decl|;
 comment|//----------------------------------------------------------------------
-comment|/// Get the language only if it is definitive what the language is from
-comment|/// the mangling.
+comment|/// Try to guess the language from the mangling.
 comment|///
 comment|/// For a mangled name to have a language it must have both a mangled
-comment|/// and a demangled name and it must be definitive from the mangling
-comment|/// what the language is.
+comment|/// and a demangled name and it can be guessed from the mangling what
+comment|/// the language is.  Note: this will return C++ for any language that
+comment|/// uses Itanium ABI mangling.
 comment|///
 comment|/// Standard C function names will return eLanguageTypeUnknown because
 comment|/// they aren't mangled and it isn't clear what language the name
@@ -499,8 +511,9 @@ comment|//----------------------------------------------------------------------
 name|lldb
 operator|::
 name|LanguageType
-name|GetLanguage
+name|GuessLanguage
 argument_list|()
+specifier|const
 expr_stmt|;
 name|private
 label|:

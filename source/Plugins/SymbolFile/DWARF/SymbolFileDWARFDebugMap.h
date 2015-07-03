@@ -179,30 +179,29 @@ operator|*
 name|ofile
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|SymbolFileDWARFDebugMap
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|CalculateAbilities
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|InitializeObject
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Compile Unit function calls
 comment|//------------------------------------------------------------------
-name|virtual
 name|uint32_t
 name|GetNumCompileUnits
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|CompUnitSP
@@ -210,100 +209,70 @@ name|ParseCompileUnitAtIndex
 argument_list|(
 argument|uint32_t index
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|LanguageType
 name|ParseCompileUnitLanguage
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|SymbolContext
-operator|&
-name|sc
+argument|const lldb_private::SymbolContext& sc
 argument_list|)
+name|override
 block|;
-name|virtual
 name|size_t
 name|ParseCompileUnitFunctions
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|SymbolContext
-operator|&
-name|sc
+argument|const lldb_private::SymbolContext& sc
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseCompileUnitLineTable
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|SymbolContext
-operator|&
-name|sc
+argument|const lldb_private::SymbolContext& sc
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseCompileUnitSupportFiles
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|SymbolContext
-operator|&
-name|sc
+argument|const lldb_private::SymbolContext& sc
 argument_list|,
-name|lldb_private
-operator|::
-name|FileSpecList
-operator|&
-name|support_files
+argument|lldb_private::FileSpecList&support_files
 argument_list|)
+name|override
 block|;
-name|virtual
+name|bool
+name|ParseImportedModules
+argument_list|(
+argument|const lldb_private::SymbolContext&sc
+argument_list|,
+argument|std::vector<lldb_private::ConstString>&imported_modules
+argument_list|)
+name|override
+block|;
 name|size_t
 name|ParseFunctionBlocks
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|SymbolContext
-operator|&
-name|sc
+argument|const lldb_private::SymbolContext& sc
 argument_list|)
+name|override
 block|;
-name|virtual
 name|size_t
 name|ParseTypes
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|SymbolContext
-operator|&
-name|sc
+argument|const lldb_private::SymbolContext& sc
 argument_list|)
+name|override
 block|;
-name|virtual
 name|size_t
 name|ParseVariablesForContext
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|SymbolContext
-operator|&
-name|sc
+argument|const lldb_private::SymbolContext& sc
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Type
@@ -312,8 +281,8 @@ name|ResolveTypeUID
 argument_list|(
 argument|lldb::user_id_t type_uid
 argument_list|)
+name|override
 block|;
-name|virtual
 name|clang
 operator|::
 name|DeclContext
@@ -322,8 +291,8 @@ name|GetClangDeclContextContainingTypeUID
 argument_list|(
 argument|lldb::user_id_t type_uid
 argument_list|)
+name|override
 block|;
-name|virtual
 name|clang
 operator|::
 name|DeclContext
@@ -334,19 +303,15 @@ argument|const lldb_private::SymbolContext&sc
 argument_list|,
 argument|lldb::user_id_t type_uid
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ResolveClangOpaqueTypeDefinition
 argument_list|(
-name|lldb_private
-operator|::
-name|ClangASTType
-operator|&
-name|clang_type
+argument|lldb_private::ClangASTType& clang_type
 argument_list|)
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|ResolveSymbolContext
 argument_list|(
@@ -356,8 +321,8 @@ argument|uint32_t resolve_scope
 argument_list|,
 argument|lldb_private::SymbolContext& sc
 argument_list|)
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|ResolveSymbolContext
 argument_list|(
@@ -371,8 +336,8 @@ argument|uint32_t resolve_scope
 argument_list|,
 argument|lldb_private::SymbolContextList& sc_list
 argument_list|)
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|FindGlobalVariables
 argument_list|(
@@ -386,8 +351,8 @@ argument|uint32_t max_matches
 argument_list|,
 argument|lldb_private::VariableList& variables
 argument_list|)
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|FindGlobalVariables
 argument_list|(
@@ -399,8 +364,8 @@ argument|uint32_t max_matches
 argument_list|,
 argument|lldb_private::VariableList& variables
 argument_list|)
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|FindFunctions
 argument_list|(
@@ -416,8 +381,8 @@ argument|bool append
 argument_list|,
 argument|lldb_private::SymbolContextList& sc_list
 argument_list|)
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|FindFunctions
 argument_list|(
@@ -429,8 +394,8 @@ argument|bool append
 argument_list|,
 argument|lldb_private::SymbolContextList& sc_list
 argument_list|)
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|FindTypes
 argument_list|(
@@ -446,36 +411,21 @@ argument|uint32_t max_matches
 argument_list|,
 argument|lldb_private::TypeList& types
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|ClangNamespaceDecl
 name|FindNamespace
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|SymbolContext
-operator|&
-name|sc
+argument|const lldb_private::SymbolContext& sc
 argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|ConstString
-operator|&
-name|name
+argument|const lldb_private::ConstString&name
 argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|ClangNamespaceDecl
-operator|*
-name|parent_namespace_decl
+argument|const lldb_private::ClangNamespaceDecl *parent_namespace_decl
 argument_list|)
+name|override
 block|;
-name|virtual
 name|size_t
 name|GetTypes
 argument_list|(
@@ -485,6 +435,7 @@ argument|uint32_t type_mask
 argument_list|,
 argument|lldb_private::TypeList&type_list
 argument_list|)
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// ClangASTContext callbacks for external source lookups.
@@ -593,17 +544,17 @@ block|;
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
@@ -1013,6 +964,78 @@ name|oso_idx
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|// If closure returns "false", iteration continues.  If it returns
+end_comment
+
+begin_comment
+comment|// "true", iteration terminates.
+end_comment
+
+begin_decl_stmt
+name|void
+name|ForEachSymbolFile
+argument_list|(
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+name|SymbolFileDWARF
+operator|*
+argument_list|)
+operator|>
+name|closure
+argument_list|)
+block|{
+for|for
+control|(
+name|uint32_t
+name|oso_idx
+init|=
+literal|0
+init|,
+name|num_oso_idxs
+init|=
+name|m_compile_unit_infos
+operator|.
+name|size
+argument_list|()
+init|;
+name|oso_idx
+operator|<
+name|num_oso_idxs
+condition|;
+operator|++
+name|oso_idx
+control|)
+block|{
+if|if
+condition|(
+name|SymbolFileDWARF
+modifier|*
+name|oso_dwarf
+init|=
+name|GetSymbolFileByOSOIndex
+argument_list|(
+name|oso_idx
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|closure
+argument_list|(
+name|oso_dwarf
+argument_list|)
+condition|)
+return|return;
+block|}
+block|}
+block|}
+end_decl_stmt
 
 begin_function_decl
 name|CompileUnitInfo

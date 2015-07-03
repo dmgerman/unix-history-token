@@ -32,50 +32,6 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MIUtilSingletonHelper.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    Contains template functions to aid the initialisation and
-end_comment
-
-begin_comment
-comment|//              shutdown of MI modules. MI modules (or components) can
-end_comment
-
-begin_comment
-comment|//              use other MI modules to help them achieve their one task
-end_comment
-
-begin_comment
-comment|//              (Modules only do one task).
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
 comment|//
 end_comment
 

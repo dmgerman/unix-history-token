@@ -57,6 +57,7 @@ name|class
 name|SBTypeList
 decl_stmt|;
 name|class
+name|LLDB_API
 name|SBTypeMember
 block|{
 name|public

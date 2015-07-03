@@ -535,27 +535,23 @@ name|StateType
 name|state
 argument_list|)
 decl_stmt|;
-name|lldb
-operator|::
-name|StateType
-name|GetResumeState
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_resume_state
-return|;
-block|}
-comment|// This sets the "external resume state" of the thread.  If the thread is suspended here, it should never
-comment|// get scheduled.  Note that just because a thread is marked as "running" does not mean we will let it run in
-comment|// a given bit of process control.  For instance "step" tries to stay on the selected thread it was issued on,
-comment|// which may involve suspending other threads temporarily.  This temporary suspension is NOT reflected in the
-comment|// state set here and reported in GetResumeState.
-comment|//
-comment|// If you are just preparing all threads to run, you should not override the threads that are
-comment|// marked as suspended by the debugger.  In that case, pass override_suspend = false.  If you want
-comment|// to force the thread to run (e.g. the "thread continue" command, or are resetting the state
-comment|// (e.g. in SBThread::Resume()), then pass true to override_suspend.
+comment|//------------------------------------------------------------------
+comment|/// Sets the USER resume state for this thread.  If you set a thread to suspended with
+comment|/// this API, it won't take part in any of the arbitration for ShouldResume, and will stay
+comment|/// suspended even when other threads do get to run.
+comment|///
+comment|/// N.B. This is not the state that is used internally by thread plans to implement
+comment|/// staying on one thread while stepping over a breakpoint, etc.  The is the
+comment|/// TemporaryResume state, and if you are implementing some bit of strategy in the stepping
+comment|/// machinery you should be using that state and not the user resume state.
+comment|///
+comment|/// If you are just preparing all threads to run, you should not override the threads that are
+comment|/// marked as suspended by the debugger.  In that case, pass override_suspend = false.  If you want
+comment|/// to force the thread to run (e.g. the "thread continue" command, or are resetting the state
+comment|/// (e.g. in SBThread::Resume()), then pass true to override_suspend.
+comment|/// @return
+comment|///    The User resume state for this thread.
+comment|//------------------------------------------------------------------
 name|void
 name|SetResumeState
 argument_list|(
@@ -586,6 +582,26 @@ name|m_resume_state
 operator|=
 name|state
 expr_stmt|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Gets the USER resume state for this thread.  This is not the same as what
+comment|/// this thread is going to do for any particular step, however if this thread
+comment|/// returns eStateSuspended, then the process control logic will never allow this
+comment|/// thread to run.
+comment|///
+comment|/// @return
+comment|///    The User resume state for this thread.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|StateType
+name|GetResumeState
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_resume_state
+return|;
 block|}
 comment|// This function is called on all the threads before "ShouldResume" and
 comment|// "WillResume" in case a thread needs to change its state before the
@@ -2473,11 +2489,11 @@ name|uint32_t
 name|m_stop_info_stop_id
 decl_stmt|;
 comment|// This is the stop id for which the StopInfo is valid.  Can use this so you know that
+comment|// the thread's m_stop_info_sp is current and you don't have to fetch it again
 name|uint32_t
 name|m_stop_info_override_stop_id
 decl_stmt|;
 comment|// The stop ID containing the last time the stop info was checked against the stop info override
-comment|// the thread's m_stop_info_sp is current and you don't have to fetch it again
 specifier|const
 name|uint32_t
 name|m_index_id

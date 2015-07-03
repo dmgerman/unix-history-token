@@ -123,9 +123,9 @@ argument_list|)
 name|override
 block|;
 name|Error
-name|SetValueFromCString
+name|SetValueFromString
 argument_list|(
-argument|const char *value
+argument|llvm::StringRef value
 argument_list|,
 argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)

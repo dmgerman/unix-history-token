@@ -1622,6 +1622,26 @@ name|GetPromptOnQuit
 argument_list|()
 specifier|const
 expr_stmt|;
+name|void
+name|SetPromptOnQuit
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
+function_decl|;
+name|void
+name|ResolveCommand
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|command_line
+parameter_list|,
+name|CommandReturnObject
+modifier|&
+name|result
+parameter_list|)
+function_decl|;
 name|bool
 name|GetStopCmdSourceOnError
 argument_list|()
@@ -1757,6 +1777,24 @@ operator|::
 name|string
 operator|&
 name|command
+argument_list|)
+decl_stmt|;
+comment|// Completely resolves aliases and abbreviations, returning a pointer to the
+comment|// final command object and updating command_line to the fully substituted
+comment|// and translated command.
+name|CommandObject
+modifier|*
+name|ResolveCommandImpl
+argument_list|(
+name|std
+operator|::
+name|string
+operator|&
+name|command_line
+argument_list|,
+name|CommandReturnObject
+operator|&
+name|result
 argument_list|)
 decl_stmt|;
 name|Debugger

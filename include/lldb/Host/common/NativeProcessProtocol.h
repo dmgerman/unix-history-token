@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"NativeBreakpointList.h"
 end_include
 
@@ -222,9 +228,24 @@ argument|lldb::addr_t addr
 argument_list|,
 argument|void *buf
 argument_list|,
-argument|lldb::addr_t size
+argument|size_t size
 argument_list|,
-argument|lldb::addr_t&bytes_read
+argument|size_t&bytes_read
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|Error
+name|ReadMemoryWithoutTrap
+argument_list|(
+argument|lldb::addr_t addr
+argument_list|,
+argument|void *buf
+argument_list|,
+argument|size_t size
+argument_list|,
+argument|size_t&bytes_read
 argument_list|)
 operator|=
 literal|0
@@ -237,9 +258,9 @@ argument|lldb::addr_t addr
 argument_list|,
 argument|const void *buf
 argument_list|,
-argument|lldb::addr_t size
+argument|size_t size
 argument_list|,
-argument|lldb::addr_t&bytes_written
+argument|size_t&bytes_written
 argument_list|)
 operator|=
 literal|0
@@ -248,7 +269,7 @@ name|virtual
 name|Error
 name|AllocateMemory
 argument_list|(
-argument|lldb::addr_t size
+argument|size_t size
 argument_list|,
 argument|uint32_t permissions
 argument_list|,
@@ -639,6 +660,48 @@ name|NativeDelegate
 operator|&
 name|native_delegate
 argument_list|)
+block|;
+comment|// Called before termination of NativeProcessProtocol's instance.
+name|virtual
+name|void
+name|Terminate
+argument_list|()
+block|;
+name|virtual
+name|Error
+name|GetLoadedModuleFileSpec
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|module_path
+argument_list|,
+name|FileSpec
+operator|&
+name|file_spec
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|Error
+name|GetFileLoadAddress
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|StringRef
+operator|&
+name|file_name
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+operator|&
+name|load_addr
+argument_list|)
+operator|=
+literal|0
 block|;
 name|protected
 operator|:

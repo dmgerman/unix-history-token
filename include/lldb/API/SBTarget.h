@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/API/SBAttachInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/API/SBBroadcaster.h"
 end_include
 
@@ -111,254 +117,7 @@ name|class
 name|SBPlatform
 decl_stmt|;
 name|class
-name|SBAttachInfo
-block|{
-name|public
-label|:
-name|SBAttachInfo
-argument_list|()
-expr_stmt|;
-name|SBAttachInfo
-argument_list|(
-argument|lldb::pid_t pid
-argument_list|)
-empty_stmt|;
-name|SBAttachInfo
-argument_list|(
-argument|const char *path
-argument_list|,
-argument|bool wait_for
-argument_list|)
-empty_stmt|;
-name|SBAttachInfo
-argument_list|(
-specifier|const
-name|SBAttachInfo
-operator|&
-name|rhs
-argument_list|)
-expr_stmt|;
-operator|~
-name|SBAttachInfo
-argument_list|()
-expr_stmt|;
-name|SBAttachInfo
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|SBAttachInfo
-operator|&
-name|rhs
-operator|)
-decl_stmt|;
-name|lldb
-operator|::
-name|pid_t
-name|GetProcessID
-argument_list|()
-expr_stmt|;
-name|void
-name|SetProcessID
-argument_list|(
-name|lldb
-operator|::
-name|pid_t
-name|pid
-argument_list|)
-decl_stmt|;
-name|void
-name|SetExecutable
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|)
-function_decl|;
-name|void
-name|SetExecutable
-argument_list|(
-name|lldb
-operator|::
-name|SBFileSpec
-name|exe_file
-argument_list|)
-decl_stmt|;
-name|bool
-name|GetWaitForLaunch
-parameter_list|()
-function_decl|;
-name|void
-name|SetWaitForLaunch
-parameter_list|(
-name|bool
-name|b
-parameter_list|)
-function_decl|;
-name|bool
-name|GetIgnoreExisting
-parameter_list|()
-function_decl|;
-name|void
-name|SetIgnoreExisting
-parameter_list|(
-name|bool
-name|b
-parameter_list|)
-function_decl|;
-name|uint32_t
-name|GetResumeCount
-parameter_list|()
-function_decl|;
-name|void
-name|SetResumeCount
-parameter_list|(
-name|uint32_t
-name|c
-parameter_list|)
-function_decl|;
-specifier|const
-name|char
-modifier|*
-name|GetProcessPluginName
-parameter_list|()
-function_decl|;
-name|void
-name|SetProcessPluginName
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|plugin_name
-parameter_list|)
-function_decl|;
-name|uint32_t
-name|GetUserID
-parameter_list|()
-function_decl|;
-name|uint32_t
-name|GetGroupID
-parameter_list|()
-function_decl|;
-name|bool
-name|UserIDIsValid
-parameter_list|()
-function_decl|;
-name|bool
-name|GroupIDIsValid
-parameter_list|()
-function_decl|;
-name|void
-name|SetUserID
-parameter_list|(
-name|uint32_t
-name|uid
-parameter_list|)
-function_decl|;
-name|void
-name|SetGroupID
-parameter_list|(
-name|uint32_t
-name|gid
-parameter_list|)
-function_decl|;
-name|uint32_t
-name|GetEffectiveUserID
-parameter_list|()
-function_decl|;
-name|uint32_t
-name|GetEffectiveGroupID
-parameter_list|()
-function_decl|;
-name|bool
-name|EffectiveUserIDIsValid
-parameter_list|()
-function_decl|;
-name|bool
-name|EffectiveGroupIDIsValid
-parameter_list|()
-function_decl|;
-name|void
-name|SetEffectiveUserID
-parameter_list|(
-name|uint32_t
-name|uid
-parameter_list|)
-function_decl|;
-name|void
-name|SetEffectiveGroupID
-parameter_list|(
-name|uint32_t
-name|gid
-parameter_list|)
-function_decl|;
-name|lldb
-operator|::
-name|pid_t
-name|GetParentProcessID
-argument_list|()
-expr_stmt|;
-name|void
-name|SetParentProcessID
-argument_list|(
-name|lldb
-operator|::
-name|pid_t
-name|pid
-argument_list|)
-decl_stmt|;
-name|bool
-name|ParentProcessIDIsValid
-parameter_list|()
-function_decl|;
-comment|//----------------------------------------------------------------------
-comment|/// Get the listener that will be used to receive process events.
-comment|///
-comment|/// If no listener has been set via a call to
-comment|/// SBLaunchInfo::SetListener(), then an invalid SBListener will be
-comment|/// returned (SBListener::IsValid() will return false). If a listener
-comment|/// has been set, then the valid listener object will be returned.
-comment|//----------------------------------------------------------------------
-name|SBListener
-name|GetListener
-parameter_list|()
-function_decl|;
-comment|//----------------------------------------------------------------------
-comment|/// Set the listener that will be used to receive process events.
-comment|///
-comment|/// By default the SBDebugger, which has a listener, that the SBTarget
-comment|/// belongs to will listen for the process events. Calling this function
-comment|/// allows a different listener to be used to listen for process events.
-comment|//----------------------------------------------------------------------
-name|void
-name|SetListener
-parameter_list|(
-name|SBListener
-modifier|&
-name|listener
-parameter_list|)
-function_decl|;
-name|protected
-label|:
-name|friend
-name|class
-name|SBTarget
-decl_stmt|;
-name|lldb_private
-operator|::
-name|ProcessAttachInfo
-operator|&
-name|ref
-argument_list|()
-expr_stmt|;
-name|ProcessAttachInfoSP
-name|m_opaque_sp
-decl_stmt|;
-block|}
-empty_stmt|;
-name|class
+name|LLDB_API
 name|SBTarget
 block|{
 name|public
@@ -464,6 +223,55 @@ argument_list|()
 specifier|const
 expr_stmt|;
 specifier|static
+name|bool
+name|EventIsTargetEvent
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|SBEvent
+operator|&
+name|event
+argument_list|)
+decl_stmt|;
+specifier|static
+name|lldb
+operator|::
+name|SBTarget
+name|GetTargetFromEvent
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|SBEvent
+operator|&
+name|event
+argument_list|)
+expr_stmt|;
+specifier|static
+name|uint32_t
+name|GetNumModulesFromEvent
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|SBEvent
+operator|&
+name|event
+argument_list|)
+decl_stmt|;
+specifier|static
+name|lldb
+operator|::
+name|SBModule
+name|GetModuleAtIndexFromEvent
+argument_list|(
+argument|const uint32_t idx
+argument_list|,
+argument|const lldb::SBEvent&event
+argument_list|)
+expr_stmt|;
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -559,7 +367,7 @@ comment|///
 comment|/// @param[in] stop_at_entry
 comment|///     If false do not stop the inferior at the entry point.
 comment|///
-comment|/// @param[out]
+comment|/// @param[out] error
 comment|///     An error object. Contains the reason if there is some failure.
 comment|///
 comment|/// @return
@@ -684,7 +492,7 @@ comment|///
 comment|/// @param[in] pid
 comment|///     The process ID to attach to.
 comment|///
-comment|/// @param[out]
+comment|/// @param[out] error
 comment|///     An error explaining what went wrong if attach fails.
 comment|///
 comment|/// @return
@@ -741,7 +549,7 @@ comment|///
 comment|/// @param[in] wait_for
 comment|///     If true wait for a new instance of 'name' to be launched.
 comment|///
-comment|/// @param[out]
+comment|/// @param[out] error
 comment|///     An error explaining what went wrong if attach fails.
 comment|///
 comment|/// @return
@@ -776,7 +584,7 @@ comment|///
 comment|/// @param[in] plugin_name
 comment|///     The plugin name to be used; can be NULL.
 comment|///
-comment|/// @param[out]
+comment|/// @param[out] error
 comment|///     An error explaining what went wrong if the connect fails.
 comment|///
 comment|/// @return
@@ -1446,8 +1254,6 @@ operator|*
 name|source_regex
 argument_list|,
 specifier|const
-name|lldb
-operator|::
 name|SBFileSpec
 operator|&
 name|source_file
@@ -1476,8 +1282,6 @@ operator|&
 name|module_list
 argument_list|,
 specifier|const
-name|lldb
-operator|::
 name|SBFileSpecList
 operator|&
 name|source_file
@@ -1833,6 +1637,24 @@ name|addr_t
 name|GetStackRedZoneSize
 argument_list|()
 expr_stmt|;
+name|lldb
+operator|::
+name|SBLaunchInfo
+name|GetLaunchInfo
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|SetLaunchInfo
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|SBLaunchInfo
+operator|&
+name|launch_info
+argument_list|)
+decl_stmt|;
 name|protected
 label|:
 name|friend

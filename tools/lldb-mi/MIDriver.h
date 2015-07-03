@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MIDriver.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMIDriver interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -211,11 +167,6 @@ name|IDriver
 decl_stmt|,
 name|public
 name|CMIDriverBase
-decl_stmt|,
-name|public
-name|CMICmnStreamStdin
-decl|::
-name|IStreamStdin
 decl_stmt|,
 name|public
 name|MI
@@ -381,15 +332,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|bool
-name|InjectMICommand
-parameter_list|(
-specifier|const
-name|CMIUtilString
-modifier|&
-name|vMICmd
-parameter_list|)
-function_decl|;
-name|bool
 name|HaveExecutableFileNamePathOnCmdLine
 argument_list|(
 name|void
@@ -428,15 +370,6 @@ name|bool
 name|DoMainLoop
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-name|virtual
-name|void
-name|DoResizeWindow
-parameter_list|(
-specifier|const
-name|uint32_t
-name|vWindowSizeWsCol
 parameter_list|)
 function_decl|;
 name|virtual
@@ -591,19 +524,12 @@ name|void
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// From CMICmnStreamStdin
 name|virtual
-name|bool
-name|ReadLine
+name|void
+name|DeliverSignal
 parameter_list|(
-specifier|const
-name|CMIUtilString
-modifier|&
-name|vStdInBuffer
-parameter_list|,
-name|bool
-modifier|&
-name|vrbYesExit
+name|int
+name|signal
 parameter_list|)
 function_decl|;
 comment|// Typedefs:
@@ -659,12 +585,6 @@ argument|bool&vwbExiting
 argument_list|)
 expr_stmt|;
 name|bool
-name|ReadStdinLineQueue
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-name|bool
 name|DoAppQuit
 parameter_list|(
 name|void
@@ -692,6 +612,16 @@ modifier|&
 name|vwbCmdYesValid
 parameter_list|)
 function_decl|;
+name|CMIUtilString
+name|WrapCLICommandIntoMICommand
+argument_list|(
+specifier|const
+name|CMIUtilString
+operator|&
+name|vTextLine
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|InterpretCommandFallThruDriver
 parameter_list|(
@@ -741,18 +671,17 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|bool
-name|QueueMICommand
+name|LocalDebugSessionStartupExecuteCommands
 parameter_list|(
-specifier|const
-name|CMIUtilString
-modifier|&
-name|vMICmd
+name|void
 parameter_list|)
 function_decl|;
 name|bool
-name|LocalDebugSessionStartupInjectCommands
+name|ExecuteCommandFile
 parameter_list|(
-name|void
+specifier|const
+name|bool
+name|vbAsyncMode
 parameter_list|)
 function_decl|;
 comment|// Overridden:
@@ -793,10 +722,6 @@ comment|// True = yes fall through, false = do not pass on command
 name|CMIUtilThreadMutex
 name|m_threadMutex
 decl_stmt|;
-name|QueueStdinLine_t
-name|m_queueStdinLine
-decl_stmt|;
-comment|// Producer = stdin monitor, consumer = *this driver
 name|bool
 name|m_bDriverIsExiting
 decl_stmt|;
@@ -824,15 +749,22 @@ decl_stmt|;
 name|bool
 name|m_bHaveExecutableFileNamePathOnCmdLine
 decl_stmt|;
-comment|// True = Yes executable given as one of the parameters to the MI Driver, false = not found
+comment|// True = yes, executable given as one of the parameters to the MI Driver, false = not found
 name|CMIUtilString
 name|m_strCmdLineArgExecuteableFileNamePath
 decl_stmt|;
 name|bool
 name|m_bDriverDebuggingArgExecutable
 decl_stmt|;
-comment|// True = The MI Driver (MI mode) is debugging executable passed as argument, false = running via
-comment|// a client i.e Eclipse
+comment|// True = the MI Driver (MI mode) is debugging executable passed as argument,
+comment|// false = running via a client (e.g. Eclipse)
+name|bool
+name|m_bHaveCommandFileNamePathOnCmdLine
+decl_stmt|;
+comment|// True = file with initial commands given as one of the parameters to the MI Driver, false = not found
+name|CMIUtilString
+name|m_strCmdLineArgCommandFileNamePath
+decl_stmt|;
 block|}
 end_decl_stmt
 

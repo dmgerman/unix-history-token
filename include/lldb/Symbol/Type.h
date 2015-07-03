@@ -218,9 +218,16 @@ name|eEncodingIsSyntheticUID
 block|}
 name|EncodingDataType
 typedef|;
+comment|// We must force the underlying type of the enum to be unsigned here.  Not all compilers
+comment|// behave the same with regards to the default underlying type of an enum, but because
+comment|// this enum is used in an enum bitfield and integer comparisons are done with the value
+comment|// we need to guarantee that it's always unsigned so that, for example, eResolveStateFull
+comment|// doesn't compare less than eResolveStateUnresolved when used in a 2-bit bitfield.
 typedef|typedef
 enum|enum
 name|ResolveStateTag
+enum|:
+name|unsigned
 block|{
 name|eResolveStateUnresolved
 init|=
@@ -773,11 +780,24 @@ decl_stmt|;
 struct|struct
 name|Flags
 block|{
+ifdef|#
+directive|ifdef
+name|__GNUC__
+comment|// using unsigned type here to work around a very noisy gcc warning
+name|unsigned
+name|clang_type_resolve_state
+range|:
+literal|2
+decl_stmt|;
+else|#
+directive|else
 name|ResolveState
 name|clang_type_resolve_state
 range|:
 literal|2
 decl_stmt|;
+endif|#
+directive|endif
 name|bool
 name|is_complete_objc_class
 range|:

@@ -297,6 +297,12 @@ comment|///
 comment|/// @param[in] disassembly_addr_format
 comment|///     The format specification for how addresses are printed.
 comment|///     Only needed if show_address is true.
+comment|///
+comment|/// @param[in] max_address_text_size
+comment|///     The length of the longest address string at the start of the
+comment|///     disassembly line that will be printed (the Debugger::FormatDisassemblerAddress() string)
+comment|///     so this method can properly align the instruction opcodes.
+comment|///     May be 0 to indicate no indentation/alignment of the opcodes.
 comment|//------------------------------------------------------------------
 name|virtual
 name|void
@@ -336,6 +342,9 @@ operator|::
 name|Entry
 operator|*
 name|disassembly_addr_format
+argument_list|,
+name|size_t
+name|max_address_text_size
 argument_list|)
 decl_stmt|;
 name|virtual
@@ -589,6 +598,10 @@ name|GetIndexOfNextBranchInstruction
 argument_list|(
 name|uint32_t
 name|start
+argument_list|,
+name|Target
+operator|&
+name|target
 argument_list|)
 decl|const
 decl_stmt|;

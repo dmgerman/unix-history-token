@@ -211,6 +211,13 @@ comment|/// @param[in] dst_len
 comment|///     The number of bytes to attempt to read, and also the max
 comment|///     number of bytes that can be placed into \a dst.
 comment|///
+comment|/// @param[in] timeout_usec
+comment|///     The number of microseconds to wait for the data.
+comment|///
+comment|/// @param[out] status
+comment|///     On return, indicates whether the call was sucessful or terminated
+comment|///     due to some error condition.
+comment|///
 comment|/// @param[out] error_ptr
 comment|///     A pointer to an error object that should be given an
 comment|///     approriate error value if this method returns zero. This
@@ -312,6 +319,26 @@ argument_list|()
 operator|=
 literal|0
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Interrupts an ongoing Read() operation.
+comment|///
+comment|/// If there is an ongoing read operation in another thread, this operation
+comment|/// return with status == eConnectionStatusInterrupted. Note that if there
+comment|/// data waiting to be read and an interrupt request is issued, the Read()
+comment|/// function will return the data immediately without processing the
+comment|/// interrupt request (which will remain queued for the next Read()
+comment|/// operation).
+comment|///
+comment|/// @return
+comment|///     Returns true is the interrupt request was sucessful.
+comment|//------------------------------------------------------------------
+name|virtual
+name|bool
+name|InterruptRead
+parameter_list|()
+init|=
+literal|0
+function_decl|;
 name|private
 label|:
 comment|//------------------------------------------------------------------

@@ -351,6 +351,16 @@ return|;
 block|}
 name|virtual
 name|bool
+name|GetIsConstant
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
 name|SetValueFromCString
 argument_list|(
 specifier|const
@@ -363,6 +373,13 @@ operator|&
 name|error
 argument_list|)
 block|;
+name|virtual
+name|void
+name|SetFormat
+argument_list|(
+argument|lldb::Format format
+argument_list|)
+block|;
 name|protected
 operator|:
 name|virtual
@@ -370,6 +387,15 @@ name|bool
 name|UpdateValue
 argument_list|()
 block|;
+name|virtual
+name|bool
+name|CanUpdateWithInvalidExecutionContext
+argument_list|()
+block|{
+return|return
+name|true
+return|;
+block|}
 name|virtual
 name|ClangASTType
 name|GetClangTypeImpl

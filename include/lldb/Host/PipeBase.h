@@ -233,6 +233,20 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+name|virtual
+name|void
+name|CloseReadFileDescriptor
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|void
+name|CloseWriteFileDescriptor
+parameter_list|()
+init|=
+literal|0
+function_decl|;
 comment|// Close both descriptors
 name|virtual
 name|void

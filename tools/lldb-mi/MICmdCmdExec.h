@@ -32,18 +32,6 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmdCmdExec.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// Overview:    CMICmdCmdExecRun                interface.
 end_comment
 
@@ -73,6 +61,14 @@ end_comment
 
 begin_comment
 comment|//              CMICmdCmdExecInterrupt          interface.
+end_comment
+
+begin_comment
+comment|//              CMICmdCmdExecArguments          interface.
+end_comment
+
+begin_comment
+comment|//              CMICmdCmdExecAbort              interface.
 end_comment
 
 begin_comment
@@ -109,34 +105,6 @@ end_comment
 
 begin_comment
 comment|//              command class as an example.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
 end_comment
 
 begin_pragma
@@ -1011,6 +979,180 @@ name|lldb
 operator|::
 name|SBCommandReturnObject
 name|m_lldbResult
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|//++ ============================================================================
+end_comment
+
+begin_comment
+comment|// Details: MI command class. MI commands derived from the command base class.
+end_comment
+
+begin_comment
+comment|//          *this class implements MI command "exec-arguments".
+end_comment
+
+begin_comment
+comment|// Gotchas: None.
+end_comment
+
+begin_comment
+comment|// Authors: Ilia Kirianovskii 25/11/2014.
+end_comment
+
+begin_comment
+comment|// Changes: None.
+end_comment
+
+begin_comment
+comment|//--
+end_comment
+
+begin_decl_stmt
+name|class
+name|CMICmdCmdExecArguments
+range|:
+name|public
+name|CMICmdBase
+block|{
+comment|// Statics:
+name|public
+operator|:
+comment|// Required by the CMICmdFactory when registering *this command
+specifier|static
+name|CMICmdBase
+operator|*
+name|CreateSelf
+argument_list|(
+name|void
+argument_list|)
+block|;
+comment|// Methods:
+name|public
+operator|:
+comment|/* ctor */
+name|CMICmdCmdExecArguments
+argument_list|(
+name|void
+argument_list|)
+block|;
+comment|// Overridden:
+name|public
+operator|:
+comment|// From CMICmdInvoker::ICmd
+name|virtual
+name|bool
+name|Execute
+argument_list|(
+name|void
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|Acknowledge
+argument_list|(
+name|void
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|ParseArgs
+argument_list|(
+name|void
+argument_list|)
+block|;
+comment|// From CMICmnBase
+comment|/* dtor */
+name|virtual
+operator|~
+name|CMICmdCmdExecArguments
+argument_list|(
+name|void
+argument_list|)
+block|;
+comment|// Attributes:
+name|private
+operator|:
+specifier|const
+name|CMIUtilString
+name|m_constStrArgArguments
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|//++ ============================================================================
+end_comment
+
+begin_comment
+comment|// Details: MI command class. MI commands derived from the command base class.
+end_comment
+
+begin_comment
+comment|//          *this class implements MI command "exec-abort".
+end_comment
+
+begin_comment
+comment|//--
+end_comment
+
+begin_decl_stmt
+name|class
+name|CMICmdCmdExecAbort
+range|:
+name|public
+name|CMICmdBase
+block|{
+comment|// Statics:
+name|public
+operator|:
+comment|// Required by the CMICmdFactory when registering *this command
+specifier|static
+name|CMICmdBase
+operator|*
+name|CreateSelf
+argument_list|(
+name|void
+argument_list|)
+block|;
+comment|// Methods:
+name|public
+operator|:
+comment|/* ctor */
+name|CMICmdCmdExecAbort
+argument_list|(
+name|void
+argument_list|)
+block|;
+comment|// Overridden:
+name|public
+operator|:
+comment|// From CMICmdInvoker::ICmd
+name|virtual
+name|bool
+name|Execute
+argument_list|(
+name|void
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|Acknowledge
+argument_list|(
+name|void
+argument_list|)
+block|;
+comment|// From CMICmnBase
+comment|/* dtor */
+name|virtual
+operator|~
+name|CMICmdCmdExecAbort
+argument_list|(
+name|void
+argument_list|)
 block|; }
 decl_stmt|;
 end_decl_stmt

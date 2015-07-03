@@ -65,6 +65,10 @@ range|:
 name|public
 name|NativeBreakpoint
 block|{
+name|friend
+name|class
+name|NativeBreakpointList
+block|;
 name|public
 operator|:
 specifier|static
