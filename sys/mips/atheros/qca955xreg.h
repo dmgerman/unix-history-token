@@ -1003,7 +1003,7 @@ begin_define
 define|#
 directive|define
 name|QCA955X_DDR_REG_FLUSH_SRC1
-value|(AR71XX_APB_BSAE + 0xb0)
+value|(AR71XX_APB_BASE + 0xb0)
 end_define
 
 begin_comment
@@ -1014,7 +1014,7 @@ begin_define
 define|#
 directive|define
 name|QCA955X_DDR_REG_FLUSH_SRC2
-value|(AR71XX_APB_BSAE + 0xb2)
+value|(AR71XX_APB_BASE + 0xb2)
 end_define
 
 begin_comment
