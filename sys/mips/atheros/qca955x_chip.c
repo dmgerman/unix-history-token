@@ -1091,7 +1091,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Configure the GPIO output mux setup.  *  * The AR934x introduced an output mux which allowed  * certain functions to be configured on any pin.  * Specifically, the switch PHY link LEDs and  * WMAC external RX LNA switches are not limited to  * a specific GPIO pin.  */
+comment|/*  * Configure the GPIO output mux setup.  *  * The QCA955x has an output mux which allowed  * certain functions to be configured on any pin.  * Specifically, the switch PHY link LEDs and  * WMAC external RX LNA switches are not limited to  * a specific GPIO pin.  */
 end_comment
 
 begin_function
@@ -1106,16 +1106,85 @@ name|uint8_t
 name|func
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|uint32_t reg, s; 	uint32_t t;  	if (gpio> QCA955X_GPIO_COUNT) 		return;  	reg = AR934X_GPIO_REG_OUT_FUNC0 + 4 * (gpio / 4); 	s = 8 * (gpio % 4);
+name|uint32_t
+name|reg
+decl_stmt|,
+name|s
+decl_stmt|;
+name|uint32_t
+name|t
+decl_stmt|;
+if|if
+condition|(
+name|gpio
+operator|>
+name|QCA955X_GPIO_COUNT
+condition|)
+return|return;
+name|reg
+operator|=
+name|QCA955X_GPIO_REG_OUT_FUNC0
+operator|+
+literal|4
+operator|*
+operator|(
+name|gpio
+operator|/
+literal|4
+operator|)
+expr_stmt|;
+name|s
+operator|=
+literal|8
+operator|*
+operator|(
+name|gpio
+operator|%
+literal|4
+operator|)
+expr_stmt|;
 comment|/* read-modify-write */
-block|t = ATH_READ_REG(AR71XX_GPIO_BASE + reg); 	t&= ~(0xff<< s); 	t |= func<< s; 	ATH_WRITE_REG(AR71XX_GPIO_BASE + reg, t);
+name|t
+operator|=
+name|ATH_READ_REG
+argument_list|(
+name|AR71XX_GPIO_BASE
+operator|+
+name|reg
+argument_list|)
+expr_stmt|;
+name|t
+operator|&=
+operator|~
+operator|(
+literal|0xff
+operator|<<
+name|s
+operator|)
+expr_stmt|;
+name|t
+operator||=
+name|func
+operator|<<
+name|s
+expr_stmt|;
+name|ATH_WRITE_REG
+argument_list|(
+name|AR71XX_GPIO_BASE
+operator|+
+name|reg
+argument_list|,
+name|t
+argument_list|)
+expr_stmt|;
 comment|/* flush write */
-block|ATH_READ_REG(AR71XX_GPIO_BASE + reg);
-endif|#
-directive|endif
+name|ATH_READ_REG
+argument_list|(
+name|AR71XX_GPIO_BASE
+operator|+
+name|reg
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
