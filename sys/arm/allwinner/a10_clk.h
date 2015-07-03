@@ -18,13 +18,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CCMU_BASE
-value|0xe1c20000
-end_define
-
-begin_define
-define|#
-directive|define
 name|CCM_PLL1_CFG
 value|0x0000
 end_define
