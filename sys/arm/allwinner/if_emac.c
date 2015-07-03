@@ -658,32 +658,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
+comment|/* Activate EMAC clock. */
 name|a10_clk_emac_activate
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Configure pin mux settings for MII. 	 * Pins PA0 from PA17. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<=
-literal|17
-condition|;
-name|i
-operator|++
-control|)
-name|a10_emac_gpio_config
+comment|/* Set the pin mux to EMAC (mii). */
+name|a10_gpio_ethernet_activate
 argument_list|(
-name|i
+name|A10_GPIO_FUNC_MII
 argument_list|)
 expr_stmt|;
-comment|/* Map sram */
+comment|/* Map sram. */
 name|a10_map_to_emac
 argument_list|()
 expr_stmt|;
