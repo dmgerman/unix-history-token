@@ -494,6 +494,59 @@ end_define
 begin_define
 define|#
 directive|define
+name|CCM_GMAC_CLK
+value|0x0164
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCM_GMAC_CLK_DELAY_SHIFT
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCM_GMAC_CLK_MODE_MASK
+value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCM_GMAC_MODE_RGMII
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCM_GMAC_CLK_MII
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCM_GMAC_CLK_EXT_RGMII
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCM_GMAC_CLK_RGMII
+value|0x2
+end_define
+
+begin_comment
+comment|/* AHB_GATING_REG0 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CCM_AHB_GATING_USB0
 value|(1<< 0)
 end_define
@@ -531,6 +584,17 @@ define|#
 directive|define
 name|CCM_AHB_GATING_SATA
 value|(1<< 25)
+end_define
+
+begin_comment
+comment|/* AHB_GATING_REG1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCM_AHB_GATING_GMAC
+value|(1<< 17)
 end_define
 
 begin_define
@@ -738,6 +802,15 @@ name|int
 name|a10_clk_emac_activate
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|a10_clk_gmac_activate
+parameter_list|(
+name|phandle_t
 parameter_list|)
 function_decl|;
 end_function_decl
