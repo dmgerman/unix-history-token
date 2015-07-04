@@ -96,19 +96,19 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/dnv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/nv.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/nv_impl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dnv.h>
+file|"nv_impl.h"
 end_include
 
 begin_define

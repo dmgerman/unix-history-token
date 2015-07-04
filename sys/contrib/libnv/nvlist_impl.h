@@ -15,6 +15,12 @@ directive|define
 name|_NVLIST_IMPL_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/nv.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -31,12 +37,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"nv.h"
-end_include
 
 begin_function_decl
 name|nvpair_t

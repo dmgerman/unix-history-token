@@ -179,19 +179,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/nv_impl.h>
+file|"nv_impl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/nvlist_impl.h>
+file|"nvlist_impl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/nvpair_impl.h>
+file|"nvpair_impl.h"
 end_include
 
 begin_ifndef
