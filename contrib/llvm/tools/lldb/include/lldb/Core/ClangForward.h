@@ -224,6 +224,9 @@ name|class
 name|HeaderSearchOptions
 decl_stmt|;
 name|class
+name|IdentifierInfo
+decl_stmt|;
+name|class
 name|IdentifierTable
 decl_stmt|;
 name|class
@@ -236,7 +239,13 @@ name|class
 name|LangOptions
 decl_stmt|;
 name|class
+name|MacroDirective
+decl_stmt|;
+name|class
 name|MemberExpr
+decl_stmt|;
+name|class
+name|Module
 decl_stmt|;
 name|class
 name|NamedDecl

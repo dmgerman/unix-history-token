@@ -72,6 +72,7 @@ name|namespace
 name|lldb
 block|{
 name|class
+name|LLDB_API
 name|SBSymbol
 block|{
 name|public

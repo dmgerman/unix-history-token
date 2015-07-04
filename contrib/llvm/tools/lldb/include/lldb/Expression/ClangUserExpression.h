@@ -158,22 +158,13 @@ name|ClangExpression
 block|{
 name|public
 operator|:
-typedef|typedef
-name|std
-operator|::
-name|shared_ptr
-operator|<
-name|ClangUserExpression
-operator|>
-name|ClangUserExpressionSP
-expr_stmt|;
-block|enum
+expr|enum
 block|{
 name|kDefaultTimeout
 operator|=
 literal|500000u
 block|}
-decl_stmt|;
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Constructor
 comment|///
@@ -203,7 +194,7 @@ argument|lldb::LanguageType language
 argument_list|,
 argument|ResultType desired_type
 argument_list|)
-empty_stmt|;
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Destructor
 comment|//------------------------------------------------------------------
@@ -211,7 +202,7 @@ name|virtual
 operator|~
 name|ClangUserExpression
 argument_list|()
-expr_stmt|;
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Parse the expression
 comment|///
@@ -236,29 +227,20 @@ comment|//------------------------------------------------------------------
 name|bool
 name|Parse
 argument_list|(
-name|Stream
-operator|&
-name|error_stream
+argument|Stream&error_stream
 argument_list|,
-name|ExecutionContext
-operator|&
-name|exe_ctx
+argument|ExecutionContext&exe_ctx
 argument_list|,
-name|lldb_private
-operator|::
-name|ExecutionPolicy
-name|execution_policy
+argument|lldb_private::ExecutionPolicy execution_policy
 argument_list|,
-name|bool
-name|keep_result_in_memory
+argument|bool keep_result_in_memory
 argument_list|,
-name|bool
-name|generate_debug_info
+argument|bool generate_debug_info
 argument_list|)
-decl_stmt|;
+block|;
 name|bool
 name|CanInterpret
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|m_can_interpret
@@ -266,12 +248,12 @@ return|;
 block|}
 name|bool
 name|MatchesContext
-parameter_list|(
+argument_list|(
 name|ExecutionContext
-modifier|&
+operator|&
 name|exe_ctx
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Execute the parsed expression
 comment|///
@@ -317,6 +299,8 @@ name|EvaluateExpressionOptions
 operator|&
 name|options
 argument_list|,
+name|lldb
+operator|::
 name|ClangUserExpressionSP
 operator|&
 name|shared_ptr_to_me
@@ -327,7 +311,7 @@ name|ClangExpressionVariableSP
 operator|&
 name|result
 argument_list|)
-expr_stmt|;
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Apply the side effects of the function to program state.
 comment|///
@@ -354,44 +338,26 @@ comment|//------------------------------------------------------------------
 name|bool
 name|FinalizeJITExecution
 argument_list|(
-name|Stream
-operator|&
-name|error_stream
+argument|Stream&error_stream
 argument_list|,
-name|ExecutionContext
-operator|&
-name|exe_ctx
+argument|ExecutionContext&exe_ctx
 argument_list|,
-name|lldb
-operator|::
-name|ClangExpressionVariableSP
-operator|&
-name|result
+argument|lldb::ClangExpressionVariableSP&result
 argument_list|,
-name|lldb
-operator|::
-name|addr_t
-name|function_stack_bottom
-operator|=
-name|LLDB_INVALID_ADDRESS
+argument|lldb::addr_t function_stack_bottom = LLDB_INVALID_ADDRESS
 argument_list|,
-name|lldb
-operator|::
-name|addr_t
-name|function_stack_top
-operator|=
-name|LLDB_INVALID_ADDRESS
+argument|lldb::addr_t function_stack_top = LLDB_INVALID_ADDRESS
 argument_list|)
-decl_stmt|;
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Return the string that the parser should parse.  Must be a full
 comment|/// translation unit.
 comment|//------------------------------------------------------------------
 specifier|const
 name|char
-modifier|*
+operator|*
 name|Text
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|m_transformed_text
@@ -405,9 +371,9 @@ comment|/// Return the string that the user typed.
 comment|//------------------------------------------------------------------
 specifier|const
 name|char
-modifier|*
+operator|*
 name|GetUserText
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|m_expr_text
@@ -423,9 +389,9 @@ comment|/// function.
 comment|//------------------------------------------------------------------
 specifier|const
 name|char
-modifier|*
+operator|*
 name|FunctionName
-parameter_list|()
+argument_list|()
 block|{
 return|return
 literal|"$__lldb_expr"
@@ -451,9 +417,9 @@ comment|/// Return the object that the parser should use when resolving external
 comment|/// values.  May be NULL if everything should be self-contained.
 comment|//------------------------------------------------------------------
 name|ClangExpressionDeclMap
-modifier|*
+operator|*
 name|DeclMap
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|m_expr_decl_map
@@ -482,7 +448,7 @@ name|ASTConsumer
 operator|*
 name|passthrough
 argument_list|)
-expr_stmt|;
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Return the desired result type of the function, or
 comment|/// eResultTypeAny if indifferent.
@@ -490,7 +456,7 @@ comment|//------------------------------------------------------------------
 name|virtual
 name|ResultType
 name|DesiredResultType
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|m_desired_type
@@ -502,7 +468,7 @@ comment|/// expression.
 comment|//------------------------------------------------------------------
 name|bool
 name|NeedsValidation
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|true
@@ -514,7 +480,7 @@ comment|/// resolved.
 comment|//------------------------------------------------------------------
 name|bool
 name|NeedsVariableResolution
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|true
@@ -581,7 +547,7 @@ name|Error
 operator|&
 name|error
 argument_list|)
-expr_stmt|;
+block|;
 specifier|static
 specifier|const
 name|Error
@@ -590,12 +556,12 @@ name|ValueType
 name|kNoResult
 operator|=
 literal|0x1001
-expr_stmt|;
+block|;
 comment|///< ValueObject::GetError() returns this if there is no result from the expression.
 name|private
-label|:
+operator|:
 comment|//------------------------------------------------------------------
-comment|/// Populate m_cplusplus and m_objectivec based on the environment.
+comment|/// Populate m_in_cplusplus_method and m_in_objectivec_method based on the environment.
 comment|//------------------------------------------------------------------
 name|void
 name|ScanContext
@@ -610,7 +576,7 @@ name|Error
 operator|&
 name|err
 argument_list|)
-decl_stmt|;
+block|;
 name|bool
 name|PrepareToExecuteJITExpression
 argument_list|(
@@ -640,15 +606,15 @@ name|addr_t
 operator|&
 name|cmd_ptr
 argument_list|)
-decl_stmt|;
+block|;
 name|void
 name|InstallContext
-parameter_list|(
+argument_list|(
 name|ExecutionContext
-modifier|&
+operator|&
 name|exe_ctx
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|bool
 name|LockAndCheckContext
 argument_list|(
@@ -674,64 +640,64 @@ name|StackFrameSP
 operator|&
 name|frame_sp
 argument_list|)
-decl_stmt|;
+block|;
 name|lldb
 operator|::
 name|ProcessWP
 name|m_process_wp
-expr_stmt|;
+block|;
 comment|///< The process used as the context for the expression.
 name|Address
 name|m_address
-decl_stmt|;
+block|;
 comment|///< The address the process is stopped in.
 name|lldb
 operator|::
 name|addr_t
 name|m_stack_frame_bottom
-expr_stmt|;
+block|;
 comment|///< The bottom of the allocated stack frame.
 name|lldb
 operator|::
 name|addr_t
 name|m_stack_frame_top
-expr_stmt|;
+block|;
 comment|///< The top of the allocated stack frame.
 name|std
 operator|::
 name|string
 name|m_expr_text
-expr_stmt|;
+block|;
 comment|///< The text of the expression, as typed by the user
 name|std
 operator|::
 name|string
 name|m_expr_prefix
-expr_stmt|;
+block|;
 comment|///< The text of the translation-level definitions, as provided by the user
 name|lldb
 operator|::
 name|LanguageType
 name|m_language
-expr_stmt|;
+block|;
 comment|///< The language to use when parsing (eLanguageTypeUnknown means use defaults)
 name|bool
 name|m_allow_cxx
-decl_stmt|;
+block|;
 comment|///< True if the language allows C++.
 name|bool
 name|m_allow_objc
-decl_stmt|;
+block|;
 comment|///< True if the language allows Objective-C.
 name|std
 operator|::
 name|string
 name|m_transformed_text
-expr_stmt|;
+block|;
 comment|///< The text of the expression, as send to the parser
 name|ResultType
 name|m_desired_type
-decl_stmt|;
+block|;
 comment|///< The type to coerce the expression's result to.  If eResultTypeAny, inferred from the expression.
 name|std
 operator|::
@@ -740,7 +706,7 @@ operator|<
 name|ClangExpressionDeclMap
 operator|>
 name|m_expr_decl_map
-expr_stmt|;
+block|;
 comment|///< The map to use when parsing the expression.
 name|std
 operator|::
@@ -749,7 +715,7 @@ operator|<
 name|IRExecutionUnit
 operator|>
 name|m_execution_unit_sp
-expr_stmt|;
+block|;
 comment|///< The execution unit the expression is stored in.
 name|std
 operator|::
@@ -758,7 +724,7 @@ operator|<
 name|Materializer
 operator|>
 name|m_materializer_ap
-expr_stmt|;
+block|;
 comment|///< The materializer to use when running the expression.
 name|std
 operator|::
@@ -767,67 +733,64 @@ operator|<
 name|ASTResultSynthesizer
 operator|>
 name|m_result_synthesizer
-expr_stmt|;
+block|;
 comment|///< The result synthesizer, if one is needed.
 name|lldb
 operator|::
 name|ModuleWP
 name|m_jit_module_wp
-expr_stmt|;
+block|;
 name|bool
 name|m_enforce_valid_object
-decl_stmt|;
+block|;
 comment|///< True if the expression parser should enforce the presence of a valid class pointer in order to generate the expression as a method.
 name|bool
-name|m_cplusplus
-decl_stmt|;
+name|m_in_cplusplus_method
+block|;
 comment|///< True if the expression is compiled as a C++ member function (true if it was parsed when exe_ctx was in a C++ method).
 name|bool
-name|m_objectivec
-decl_stmt|;
+name|m_in_objectivec_method
+block|;
 comment|///< True if the expression is compiled as an Objective-C method (true if it was parsed when exe_ctx was in an Objective-C method).
 name|bool
-name|m_static_method
-decl_stmt|;
+name|m_in_static_method
+block|;
 comment|///< True if the expression is compiled as a static (or class) method (currently true if it was parsed when exe_ctx was in an Objective-C class method).
 name|bool
 name|m_needs_object_ptr
-decl_stmt|;
+block|;
 comment|///< True if "this" or "self" must be looked up and passed in.  False if the expression doesn't really use them and they can be NULL.
 name|bool
 name|m_const_object
-decl_stmt|;
+block|;
 comment|///< True if "this" is const.
 name|Target
-modifier|*
+operator|*
 name|m_target
-decl_stmt|;
+block|;
 comment|///< The target for storing persistent data like types and variables.
 name|bool
 name|m_can_interpret
-decl_stmt|;
+block|;
 comment|///< True if the expression could be evaluated statically; false otherwise.
 name|lldb
 operator|::
 name|addr_t
 name|m_materialized_address
-expr_stmt|;
+block|;
 comment|///< The address at which the arguments to the expression have been materialized.
 name|Materializer
 operator|::
 name|DematerializerSP
 name|m_dematerializer_sp
-expr_stmt|;
+block|;
 comment|///< The dematerializer.
+block|}
+decl_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// namespace lldb_private
 end_comment
 

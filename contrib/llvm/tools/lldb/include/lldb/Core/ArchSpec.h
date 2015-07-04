@@ -55,19 +55,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/lldb-forward.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"lldb/Core/ConstString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -97,6 +91,36 @@ name|ArchSpec
 block|{
 name|public
 label|:
+enum|enum
+name|MIPSSubType
+block|{
+name|eMIPSSubType_unknown
+block|,
+name|eMIPSSubType_mips32
+block|,
+name|eMIPSSubType_mips32r2
+block|,
+name|eMIPSSubType_mips32r6
+block|,
+name|eMIPSSubType_mips32el
+block|,
+name|eMIPSSubType_mips32r2el
+block|,
+name|eMIPSSubType_mips32r6el
+block|,
+name|eMIPSSubType_mips64
+block|,
+name|eMIPSSubType_mips64r2
+block|,
+name|eMIPSSubType_mips64r6
+block|,
+name|eMIPSSubType_mips64el
+block|,
+name|eMIPSSubType_mips64r2el
+block|,
+name|eMIPSSubType_mips64r6el
+block|,     }
+enum|;
 enum|enum
 name|Core
 block|{
@@ -160,7 +184,45 @@ name|eCore_arm_armv8
 block|,
 name|eCore_arm_aarch64
 block|,
+name|eCore_mips32
+block|,
+name|eCore_mips32r2
+block|,
+name|eCore_mips32r3
+block|,
+name|eCore_mips32r5
+block|,
+name|eCore_mips32r6
+block|,
+name|eCore_mips32el
+block|,
+name|eCore_mips32r2el
+block|,
+name|eCore_mips32r3el
+block|,
+name|eCore_mips32r5el
+block|,
+name|eCore_mips32r6el
+block|,
 name|eCore_mips64
+block|,
+name|eCore_mips64r2
+block|,
+name|eCore_mips64r3
+block|,
+name|eCore_mips64r5
+block|,
+name|eCore_mips64r6
+block|,
+name|eCore_mips64el
+block|,
+name|eCore_mips64r2el
+block|,
+name|eCore_mips64r3el
+block|,
+name|eCore_mips64r5el
+block|,
+name|eCore_mips64r6el
 block|,
 name|eCore_ppc_generic
 block|,
@@ -307,6 +369,38 @@ block|,
 name|kCore_kalimba_last
 init|=
 name|eCore_kalimba5
+block|,
+name|kCore_mips32_first
+init|=
+name|eCore_mips32
+block|,
+name|kCore_mips32_last
+init|=
+name|eCore_mips32r6
+block|,
+name|kCore_mips32el_first
+init|=
+name|eCore_mips32el
+block|,
+name|kCore_mips32el_last
+init|=
+name|eCore_mips32r6el
+block|,
+name|kCore_mips64_first
+init|=
+name|eCore_mips64
+block|,
+name|kCore_mips64_last
+init|=
+name|eCore_mips64r6
+block|,
+name|kCore_mips64el_first
+init|=
+name|eCore_mips64el
+block|,
+name|kCore_mips64el_last
+init|=
+name|eCore_mips64r6el
 block|}
 enum|;
 typedef|typedef
@@ -562,50 +656,61 @@ argument_list|()
 return|;
 block|}
 comment|//------------------------------------------------------------------
-comment|/// Sets this ArchSpec according to the given architecture name.
+comment|/// Merges fields from another ArchSpec into this ArchSpec.
 comment|///
-comment|/// The architecture name can be one of the generic system default
-comment|/// values:
+comment|/// This will use the supplied ArchSpec to fill in any fields of
+comment|/// the triple in this ArchSpec which were unspecified.  This can
+comment|/// be used to refine a generic ArchSpec with a more specific one.
+comment|/// For example, if this ArchSpec's triple is something like
+comment|/// i386-unknown-unknown-unknown, and we have a triple which is
+comment|/// x64-pc-windows-msvc, then merging that triple into this one
+comment|/// will result in the triple i386-pc-windows-msvc.
 comment|///
-comment|/// @li \c LLDB_ARCH_DEFAULT - The arch the current system defaults
-comment|///        to when a program is launched without any extra
-comment|///        attributes or settings.
-comment|/// @li \c LLDB_ARCH_DEFAULT_32BIT - The default host architecture
-comment|///        for 32 bit (if any).
-comment|/// @li \c LLDB_ARCH_DEFAULT_64BIT - The default host architecture
-comment|///        for 64 bit (if any).
-comment|///
-comment|/// Alternatively, if the object type of this ArchSpec has been
-comment|/// configured,  a concrete architecture can be specified to set
-comment|/// the CPU type ("x86_64" for example).
-comment|///
-comment|/// Finally, an encoded object and archetecture format is accepted.
-comment|/// The format contains an object type (like "macho" or "elf"),
-comment|/// followed by a platform dependent encoding of CPU type and
-comment|/// subtype.  For example:
-comment|///
-comment|///     "macho"        : Specifies an object type of MachO.
-comment|///     "macho-16-6"   : MachO specific encoding for ARMv6.
-comment|///     "elf-43        : ELF specific encoding for Sparc V9.
-comment|///
-comment|/// @param[in] arch_name The name of an architecture.
-comment|///
-comment|/// @return True if @p arch_name was successfully translated, false
-comment|///         otherwise.
 comment|//------------------------------------------------------------------
-comment|//    bool
-comment|//    SetArchitecture (const llvm::StringRef& arch_name);
-comment|//
-comment|//    bool
-comment|//    SetArchitecture (const char *arch_name);
+name|void
+name|MergeFrom
+parameter_list|(
+specifier|const
+name|ArchSpec
+modifier|&
+name|other
+parameter_list|)
+function_decl|;
 comment|//------------------------------------------------------------------
-comment|/// Change the architecture object type and CPU type.
+comment|/// Change the architecture object type, CPU type and OS type.
 comment|///
 comment|/// @param[in] arch_type The object type of this ArchSpec.
 comment|///
 comment|/// @param[in] cpu The required CPU type.
 comment|///
-comment|/// @return True if the object and CPU type were successfully set.
+comment|/// @param[in] os The optional OS type
+comment|/// The default value of 0 was choosen to from the ELF spec value
+comment|/// ELFOSABI_NONE.  ELF is the only one using this parameter.  If another
+comment|/// format uses this parameter and 0 does not work, use a value over
+comment|/// 255 because in the ELF header this is value is only a byte.
+comment|///
+comment|/// @return True if the object, and CPU were successfully set.
+comment|///
+comment|/// As a side effect, the vendor value is usually set to unknown.
+comment|/// The exections are
+comment|///   aarch64-apple-ios
+comment|///   arm-apple-ios
+comment|///   thumb-apple-ios
+comment|///   x86-apple-
+comment|///   x86_64-apple-
+comment|///
+comment|/// As a side effect, the os value is usually set to unknown
+comment|/// The exceptions are
+comment|///   *-*-aix
+comment|///   aarch64-apple-ios
+comment|///   arm-apple-ios
+comment|///   thumb-apple-ios
+comment|///   powerpc-apple-darwin
+comment|///   *-*-freebsd
+comment|///   *-*-linux
+comment|///   *-*-netbsd
+comment|///   *-*-openbsd
+comment|///   *-*-solaris
 comment|//------------------------------------------------------------------
 name|bool
 name|SetArchitecture
@@ -618,6 +723,11 @@ name|cpu
 parameter_list|,
 name|uint32_t
 name|sub
+parameter_list|,
+name|uint32_t
+name|os
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -795,6 +905,18 @@ name|lldb
 operator|::
 name|ByteOrder
 name|GetDefaultEndian
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Returns true if 'char' is a signed type by defualt in the
+comment|/// architecture false otherwise
+comment|///
+comment|/// @return True if 'char' is a signed type by default on the
+comment|///         architecture and false otherwise.
+comment|//------------------------------------------------------------------
+name|bool
+name|CharIsSignedByDefault
 argument_list|()
 specifier|const
 expr_stmt|;

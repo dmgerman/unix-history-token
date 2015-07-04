@@ -67,6 +67,9 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|lldb_private
+block|{
+name|namespace
 name|process_linux
 block|{
 comment|/// Linux specific set of Unix signals.
@@ -91,7 +94,13 @@ argument_list|()
 block|;     }
 decl_stmt|;
 block|}
+comment|// namespace lldb_private
+block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace process_linux
+end_comment
 
 begin_endif
 endif|#

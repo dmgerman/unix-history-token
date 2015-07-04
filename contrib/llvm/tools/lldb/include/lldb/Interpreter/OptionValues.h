@@ -112,6 +112,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Interpreter/OptionValueLanguage.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Interpreter/OptionValueFormatEntity.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Interpreter/OptionValuePathMappings.h"
 end_include
 

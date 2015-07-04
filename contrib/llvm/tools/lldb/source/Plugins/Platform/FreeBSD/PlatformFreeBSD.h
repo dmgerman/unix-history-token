@@ -66,17 +66,20 @@ file|"lldb/Target/Platform.h"
 end_include
 
 begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|namespace
+name|platform_freebsd
+block|{
 name|class
 name|PlatformFreeBSD
 range|:
 name|public
-name|lldb_private
-operator|::
 name|Platform
 block|{
 name|public
 operator|:
-comment|// Mostly taken from PlatformDarwin and PlatformMacOSX
 comment|//------------------------------------------------------------
 comment|// Class functions
 comment|//------------------------------------------------------------
@@ -88,7 +91,7 @@ name|CreateInstance
 argument_list|(
 argument|bool force
 argument_list|,
-argument|const lldb_private::ArchSpec *arch
+argument|const ArchSpec *arch
 argument_list|)
 block|;
 specifier|static
@@ -102,8 +105,6 @@ name|Terminate
 argument_list|()
 block|;
 specifier|static
-name|lldb_private
-operator|::
 name|ConstString
 name|GetPluginNameStatic
 argument_list|(
@@ -135,12 +136,10 @@ block|;
 comment|//------------------------------------------------------------
 comment|// lldb_private::PluginInterface functions
 comment|//------------------------------------------------------------
-name|virtual
-name|lldb_private
-operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|{
 return|return
 name|GetPluginNameStatic
@@ -150,21 +149,21 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
+name|override
 block|{
 return|return
 literal|1
 return|;
 block|}
-name|virtual
 specifier|const
 name|char
 operator|*
 name|GetDescription
 argument_list|()
+name|override
 block|{
 return|return
 name|GetDescriptionStatic
@@ -177,15 +176,23 @@ block|}
 comment|//------------------------------------------------------------
 comment|// lldb_private::Platform functions
 comment|//------------------------------------------------------------
-name|virtual
-name|lldb_private
-operator|::
+name|bool
+name|GetModuleSpec
+argument_list|(
+argument|const FileSpec& module_file_spec
+argument_list|,
+argument|const ArchSpec& arch
+argument_list|,
+argument|ModuleSpec&module_spec
+argument_list|)
+name|override
+block|;
 name|Error
 name|RunShellCommand
 argument_list|(
 argument|const char *command
 argument_list|,
-argument|const char *working_dir
+argument|const FileSpec&working_dir
 argument_list|,
 argument|int *status_ptr
 argument_list|,
@@ -195,120 +202,78 @@ argument|std::string *command_output
 argument_list|,
 argument|uint32_t timeout_sec
 argument_list|)
+name|override
 block|;
-name|virtual
-name|lldb_private
-operator|::
 name|Error
 name|ResolveExecutable
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|ModuleSpec
-operator|&
-name|module_spec
+argument|const ModuleSpec&module_spec
 argument_list|,
-name|lldb
-operator|::
-name|ModuleSP
-operator|&
-name|module_sp
+argument|lldb::ModuleSP&module_sp
 argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|FileSpecList
-operator|*
-name|module_search_paths_ptr
+argument|const FileSpecList *module_search_paths_ptr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|size_t
 name|GetSoftwareBreakpointTrapOpcode
 argument_list|(
-name|lldb_private
-operator|::
-name|Target
-operator|&
-name|target
+argument|Target&target
 argument_list|,
-name|lldb_private
-operator|::
-name|BreakpointSite
-operator|*
-name|bp_site
+argument|BreakpointSite *bp_site
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|GetRemoteOSVersion
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|GetRemoteOSBuildString
 argument_list|(
-name|std
-operator|::
-name|string
-operator|&
-name|s
+argument|std::string&s
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|GetRemoteOSKernelDescription
 argument_list|(
-name|std
-operator|::
-name|string
-operator|&
-name|s
+argument|std::string&s
 argument_list|)
+name|override
 block|;
 comment|// Remote Platform subclasses need to override this function
-name|virtual
-name|lldb_private
-operator|::
 name|ArchSpec
 name|GetRemoteSystemArchitecture
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|IsConnected
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
-name|lldb_private
-operator|::
 name|Error
 name|ConnectRemote
 argument_list|(
-name|lldb_private
-operator|::
-name|Args
-operator|&
-name|args
+argument|Args& args
 argument_list|)
+name|override
 block|;
-name|virtual
-name|lldb_private
-operator|::
 name|Error
 name|DisconnectRemote
 argument_list|()
+name|override
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
 name|GetHostname
 argument_list|()
+name|override
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -316,8 +281,8 @@ name|GetUserName
 argument_list|(
 argument|uint32_t uid
 argument_list|)
+name|override
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -325,176 +290,107 @@ name|GetGroupName
 argument_list|(
 argument|uint32_t gid
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|GetProcessInfo
 argument_list|(
 argument|lldb::pid_t pid
 argument_list|,
-argument|lldb_private::ProcessInstanceInfo&proc_info
+argument|ProcessInstanceInfo&proc_info
 argument_list|)
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|FindProcesses
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|ProcessInstanceInfoMatch
-operator|&
-name|match_info
+argument|const ProcessInstanceInfoMatch&match_info
 argument_list|,
-name|lldb_private
-operator|::
-name|ProcessInstanceInfoList
-operator|&
-name|process_infos
+argument|ProcessInstanceInfoList&process_infos
 argument_list|)
+name|override
 block|;
-name|virtual
-name|lldb_private
-operator|::
 name|Error
 name|LaunchProcess
 argument_list|(
-name|lldb_private
-operator|::
-name|ProcessLaunchInfo
-operator|&
-name|launch_info
+argument|ProcessLaunchInfo&launch_info
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|ProcessSP
 name|Attach
 argument_list|(
-name|lldb_private
-operator|::
-name|ProcessAttachInfo
-operator|&
-name|attach_info
+argument|ProcessAttachInfo&attach_info
 argument_list|,
-name|lldb_private
-operator|::
-name|Debugger
-operator|&
-name|debugger
+argument|Debugger&debugger
 argument_list|,
-name|lldb_private
-operator|::
-name|Target
-operator|*
-name|target
+argument|Target *target
 argument_list|,
-name|lldb_private
-operator|::
-name|Error
-operator|&
-name|error
+argument|Error&error
 argument_list|)
+name|override
 block|;
 comment|// FreeBSD processes can not be launched by spawning and attaching.
-name|virtual
 name|bool
 name|CanDebugProcess
 argument_list|()
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
 comment|// Only on PlatformMacOSX:
-name|virtual
-name|lldb_private
-operator|::
 name|Error
 name|GetFileWithUUID
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|FileSpec
-operator|&
-name|platform_file
+argument|const FileSpec&platform_file
 argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|UUID
-operator|*
-name|uuid
+argument|const UUID* uuid
 argument_list|,
-name|lldb_private
-operator|::
-name|FileSpec
-operator|&
-name|local_file
+argument|FileSpec&local_file
 argument_list|)
+name|override
 block|;
-name|lldb_private
-operator|::
 name|Error
 name|GetSharedModule
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|ModuleSpec
-operator|&
-name|module_spec
+argument|const ModuleSpec&module_spec
 argument_list|,
-name|lldb
-operator|::
-name|ModuleSP
-operator|&
-name|module_sp
+argument|Process* process
 argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|FileSpecList
-operator|*
-name|module_search_paths_ptr
+argument|lldb::ModuleSP&module_sp
 argument_list|,
-name|lldb
-operator|::
-name|ModuleSP
-operator|*
-name|old_module_sp_ptr
+argument|const FileSpecList *module_search_paths_ptr
 argument_list|,
-name|bool
-operator|*
-name|did_create_ptr
+argument|lldb::ModuleSP *old_module_sp_ptr
+argument_list|,
+argument|bool *did_create_ptr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|GetSupportedArchitectureAtIndex
 argument_list|(
 argument|uint32_t idx
 argument_list|,
-argument|lldb_private::ArchSpec&arch
+argument|ArchSpec&arch
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|GetStatus
 argument_list|(
-name|lldb_private
-operator|::
-name|Stream
-operator|&
-name|strm
+argument|Stream&strm
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|CalculateTrapHandlerSymbolNames
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
@@ -510,9 +406,16 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|PlatformFreeBSD
 argument_list|)
-block|; }
+block|;     }
 decl_stmt|;
+block|}
+comment|// namespace platform_freebsd
+block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace lldb_private
+end_comment
 
 begin_endif
 endif|#

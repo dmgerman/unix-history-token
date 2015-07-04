@@ -63,6 +63,12 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<queue>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -120,18 +126,64 @@ file|"Utility/StringExtractorGDBRemote.h"
 end_include
 
 begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|namespace
+name|process_gdb_remote
+block|{
+typedef|typedef
+enum|enum
+block|{
+name|eStoppointInvalid
+init|=
+operator|-
+literal|1
+block|,
+name|eBreakpointSoftware
+init|=
+literal|0
+block|,
+name|eBreakpointHardware
+block|,
+name|eWatchpointWrite
+block|,
+name|eWatchpointRead
+block|,
+name|eWatchpointReadWrite
+block|}
+name|GDBStoppointType
+typedef|;
+name|enum
+name|class
+name|CompressionType
+block|{
+name|None
+operator|=
+literal|0
+operator|,
+comment|// no compression
+name|ZlibDeflate
+operator|,
+comment|// zlib's deflate compression scheme, requires zlib or Apple's libcompression
+name|LZFSE
+operator|,
+comment|// an Apple compression scheme, requires Apple's libcompression
+name|LZ4
+operator|,
+comment|// lz compression - called "lz4 raw" in libcompression terms, compat with https://code.google.com/p/lz4/
+name|LZMA
+operator|,
+comment|// LempelâZivâMarkov chain algorithm
+block|}
+empty_stmt|;
 name|class
 name|ProcessGDBRemote
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|class
 name|GDBRemoteCommunication
 range|:
 name|public
-name|lldb_private
-operator|::
 name|Communication
 block|{
 name|public
@@ -141,8 +193,27 @@ block|{
 name|eBroadcastBitRunPacketSent
 operator|=
 name|kLoUserBroadcastBit
+block|,
+name|eBroadcastBitGdbReadThreadGotNotify
+operator|=
+name|kLoUserBroadcastBit
+operator|<<
+literal|1
+comment|// Sent when we received a notify packet.
 block|}
-block|;          enum
+block|;      enum
+name|class
+name|PacketType
+block|{
+name|Invalid
+operator|=
+literal|0
+block|,
+name|Standard
+block|,
+name|Notify
+block|}
+block|;      enum
 name|class
 name|PacketResult
 block|{
@@ -176,16 +247,48 @@ name|ErrorNoSequenceLock
 comment|// We couldn't get the sequence lock for a multi-packet request
 block|}
 block|;
+comment|// Class to change the timeout for a given scope and restore it to the original value when the
+comment|// created ScopedTimeout object got out of scope
+name|class
+name|ScopedTimeout
+block|{
+name|public
+operator|:
+name|ScopedTimeout
+argument_list|(
+argument|GDBRemoteCommunication& gdb_comm
+argument_list|,
+argument|uint32_t timeout
+argument_list|)
+block|;
+operator|~
+name|ScopedTimeout
+argument_list|()
+block|;
+name|private
+operator|:
+name|GDBRemoteCommunication
+operator|&
+name|m_gdb_comm
+block|;
+name|uint32_t
+name|m_saved_timeout
+block|;     }
+block|;
 comment|//------------------------------------------------------------------
 comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------
 name|GDBRemoteCommunication
 argument_list|(
-argument|const char *comm_name
+specifier|const
+name|char
+operator|*
+name|comm_name
 argument_list|,
-argument|const char *listener_name
-argument_list|,
-argument|bool is_platform
+specifier|const
+name|char
+operator|*
+name|listener_name
 argument_list|)
 block|;
 name|virtual
@@ -216,8 +319,6 @@ block|;
 name|bool
 name|GetSequenceMutex
 argument_list|(
-name|lldb_private
-operator|::
 name|Mutex
 operator|::
 name|Locker
@@ -232,7 +333,7 @@ operator|=
 name|NULL
 argument_list|)
 block|;
-name|bool
+name|PacketType
 name|CheckForPacket
 argument_list|(
 argument|const uint8_t *src
@@ -308,8 +409,6 @@ block|{
 return|return
 name|m_packet_timeout
 operator|*
-name|lldb_private
-operator|::
 name|TimeValue
 operator|::
 name|MicroSecPerSec
@@ -319,8 +418,6 @@ comment|//------------------------------------------------------------------
 comment|// Start a debugserver instance on the current host using the
 comment|// supplied connection URL.
 comment|//------------------------------------------------------------------
-name|lldb_private
-operator|::
 name|Error
 name|StartDebugserverProcess
 argument_list|(
@@ -329,7 +426,7 @@ argument_list|,
 argument|uint16_t in_port
 argument_list|,
 comment|// If set to zero, then out_port will contain the bound port on exit
-argument|lldb_private::ProcessLaunchInfo&launch_info
+argument|ProcessLaunchInfo&launch_info
 argument_list|,
 argument|uint16_t&out_port
 argument_list|)
@@ -337,8 +434,6 @@ block|;
 name|void
 name|DumpHistory
 argument_list|(
-name|lldb_private
-operator|::
 name|Stream
 operator|&
 name|strm
@@ -471,14 +566,14 @@ block|;
 name|void
 name|Dump
 argument_list|(
-argument|lldb_private::Stream&strm
+argument|Stream&strm
 argument_list|)
 specifier|const
 block|;
 name|void
 name|Dump
 argument_list|(
-argument|lldb_private::Log *log
+argument|Log *log
 argument_list|)
 specifier|const
 block|;
@@ -623,23 +718,65 @@ argument|size_t payload_length
 argument_list|)
 block|;
 name|PacketResult
-name|WaitForPacketWithTimeoutMicroSecondsNoLock
+name|ReadPacket
+argument_list|(
+argument|StringExtractorGDBRemote&response
+argument_list|,
+argument|uint32_t timeout_usec
+argument_list|,
+argument|bool sync_on_timeout
+argument_list|)
+block|;
+comment|// Pop a packet from the queue in a thread safe manner
+name|PacketResult
+name|PopPacketFromQueue
 argument_list|(
 argument|StringExtractorGDBRemote&response
 argument_list|,
 argument|uint32_t timeout_usec
 argument_list|)
 block|;
+name|PacketResult
+name|WaitForPacketWithTimeoutMicroSecondsNoLock
+argument_list|(
+argument|StringExtractorGDBRemote&response
+argument_list|,
+argument|uint32_t timeout_usec
+argument_list|,
+argument|bool sync_on_timeout
+argument_list|)
+block|;
 name|bool
 name|WaitForNotRunningPrivate
 argument_list|(
 specifier|const
-name|lldb_private
-operator|::
 name|TimeValue
 operator|*
 name|timeout_ptr
 argument_list|)
+block|;
+name|bool
+name|CompressionIsEnabled
+argument_list|()
+block|{
+return|return
+name|m_compression_type
+operator|!=
+name|CompressionType
+operator|::
+name|None
+return|;
+block|}
+comment|// If compression is enabled, decompress the packet in m_bytes and update
+comment|// m_bytes with the uncompressed version.
+comment|// Returns 'true' packet was decompressed and m_bytes is the now-decompressed text.
+comment|// Returns 'false' if unable to decompress or if the checksum was invalid.
+comment|//
+comment|// NB: Once the packet has been decompressed, checksum cannot be computed based
+comment|// on m_bytes.  The checksum was for the compressed packet.
+name|bool
+name|DecompressPacket
+argument_list|()
 block|;
 comment|//------------------------------------------------------------------
 comment|// Classes that inherit from GDBRemoteCommunication can see and modify these
@@ -647,34 +784,32 @@ comment|//------------------------------------------------------------------
 name|uint32_t
 name|m_packet_timeout
 block|;
+name|uint32_t
+name|m_echo_number
+block|;
+name|LazyBool
+name|m_supports_qEcho
+block|;
 ifdef|#
 directive|ifdef
 name|ENABLE_MUTEX_ERROR_CHECKING
-name|lldb_private
-operator|::
 name|TrackingMutex
 name|m_sequence_mutex
 block|;
 else|#
 directive|else
-name|lldb_private
-operator|::
 name|Mutex
 name|m_sequence_mutex
 block|;
 comment|// Restrict access to sending/receiving packets to a single thread at a time
 endif|#
 directive|endif
-name|lldb_private
-operator|::
 name|Predicate
 operator|<
 name|bool
 operator|>
 name|m_public_is_running
 block|;
-name|lldb_private
-operator|::
 name|Predicate
 operator|<
 name|bool
@@ -693,8 +828,9 @@ block|;
 comment|// Set to true if this class represents a platform,
 comment|// false if this class represents a debug session for
 comment|// a single process
-name|lldb_private
-operator|::
+name|CompressionType
+name|m_compression_type
+block|;
 name|Error
 name|StartListenThread
 argument_list|(
@@ -718,10 +854,49 @@ argument_list|(
 argument|lldb::thread_arg_t arg
 argument_list|)
 block|;
+comment|// GDB-Remote read thread
+comment|//  . this thread constantly tries to read from the communication
+comment|//    class and stores all packets received in a queue.  The usual
+comment|//    threads read requests simply pop packets off the queue in the
+comment|//    usual order.
+comment|//    This setup allows us to intercept and handle async packets, such
+comment|//    as the notify packet.
+comment|// This method is defined as part of communication.h
+comment|// when the read thread gets any bytes it will pass them on to this function
+name|virtual
+name|void
+name|AppendBytesToCache
+argument_list|(
+argument|const uint8_t * bytes
+argument_list|,
+argument|size_t len
+argument_list|,
+argument|bool broadcast
+argument_list|,
+argument|lldb::ConnectionStatus status
+argument_list|)
+block|;
 name|private
 operator|:
+name|std
+operator|::
+name|queue
+operator|<
+name|StringExtractorGDBRemote
+operator|>
+name|m_packet_queue
+block|;
+comment|// The packet queue
 name|lldb_private
 operator|::
+name|Mutex
+name|m_packet_queue_mutex
+block|;
+comment|// Mutex for accessing queue
+name|Condition
+name|m_condition_queue_not_empty
+block|;
+comment|// Condition variable to wait for packets
 name|HostThread
 name|m_listen_thread
 block|;
@@ -739,7 +914,14 @@ name|GDBRemoteCommunication
 argument_list|)
 block|; }
 decl_stmt|;
+block|}
+comment|// namespace process_gdb_remote
+block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace lldb_private
+end_comment
 
 begin_endif
 endif|#

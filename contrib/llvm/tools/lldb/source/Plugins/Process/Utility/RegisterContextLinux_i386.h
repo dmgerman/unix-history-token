@@ -91,6 +91,12 @@ name|GetRegisterCount
 argument_list|()
 specifier|const
 name|override
+block|;
+name|uint32_t
+name|GetUserRegisterCount
+argument_list|()
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 end_decl_stmt

@@ -78,12 +78,9 @@ name|namespace
 name|lldb
 block|{
 name|class
+name|LLDB_API
 name|SBValue
 block|{
-name|friend
-name|class
-name|ValueLocker
-decl_stmt|;
 name|public
 label|:
 name|SBValue
@@ -235,6 +232,7 @@ name|ValueType
 name|GetValueType
 parameter_list|()
 function_decl|;
+comment|// If you call this on a newly created ValueObject, it will always return false.
 name|bool
 name|GetValueDidChange
 parameter_list|()
@@ -527,7 +525,7 @@ comment|///     An enumeration that specifies whether to get dynamic values,
 comment|///     and also if the target can be run to figure out the dynamic
 comment|///     type of the child value.
 comment|///
-comment|/// @param[in] synthetic_allowed
+comment|/// @param[in] can_create_synthetic
 comment|///     If \b true, then allow child values to be created by index
 comment|///     for pointers and arrays for indexes that normally wouldn't
 comment|///     be allowed.
@@ -704,6 +702,10 @@ name|bool
 name|MightHaveChildren
 parameter_list|()
 function_decl|;
+name|bool
+name|IsRuntimeSupportValue
+parameter_list|()
+function_decl|;
 name|uint32_t
 name|GetNumChildren
 parameter_list|()
@@ -819,7 +821,7 @@ comment|///
 comment|/// @param[in] write
 comment|///     Stop when this value is modified
 comment|///
-comment|/// @param[out]
+comment|/// @param[out] error
 comment|///     An error object. Contains the reason if there is some failure.
 comment|///
 comment|/// @return
@@ -872,7 +874,7 @@ comment|///
 comment|/// @param[in] write
 comment|///     Stop when this value is modified
 comment|///
-comment|/// @param[out]
+comment|/// @param[out] error
 comment|///     An error object. Contains the reason if there is some failure.
 comment|///
 comment|/// @return

@@ -55,6 +55,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-private.h"
 end_include
 
@@ -176,6 +182,57 @@ init|=
 name|ePathSyntaxHostNative
 parameter_list|)
 function_decl|;
+name|explicit
+name|FileSpec
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|bool
+name|resolve_path
+parameter_list|,
+name|ArchSpec
+name|arch
+parameter_list|)
+function_decl|;
+name|explicit
+name|FileSpec
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|path
+argument_list|,
+name|bool
+name|resolve_path
+argument_list|,
+name|PathSyntax
+name|syntax
+operator|=
+name|ePathSyntaxHostNative
+argument_list|)
+decl_stmt|;
+name|explicit
+name|FileSpec
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|path
+argument_list|,
+name|bool
+name|resolve_path
+argument_list|,
+name|ArchSpec
+name|arch
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Copy constructor
 comment|///
@@ -578,15 +635,26 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Returns true if the filespec represents path that is relative
-comment|/// path to the current working directory.
+comment|/// Returns true if the filespec represents a relative path.
 comment|///
 comment|/// @return
-comment|///     \b true if the filespec represents a current working
-comment|///     directory relative path, \b false otherwise.
+comment|///     \b true if the filespec represents a relative path,
+comment|///     \b false otherwise.
 comment|//------------------------------------------------------------------
 name|bool
-name|IsRelativeToCurrentWorkingDirectory
+name|IsRelative
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Returns true if the filespec represents an absolute path.
+comment|///
+comment|/// @return
+comment|///     \b true if the filespec represents an absolute path,
+comment|///     \b false otherwise.
+comment|//------------------------------------------------------------------
+name|bool
+name|IsAbsolute
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -651,6 +719,46 @@ argument|bool denormalize = true
 argument_list|)
 specifier|const
 expr_stmt|;
+specifier|const
+name|char
+modifier|*
+name|GetCString
+argument_list|(
+name|bool
+name|denormalize
+operator|=
+name|true
+argument_list|)
+decl|const
+decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Extract the full path to the file.
+comment|///
+comment|/// Extract the directory and path into an llvm::SmallVectorImpl<>
+comment|///
+comment|/// @return
+comment|///     Returns a std::string with the directory and filename
+comment|///     concatenated.
+comment|//------------------------------------------------------------------
+name|void
+name|GetPath
+argument_list|(
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|path
+argument_list|,
+name|bool
+name|denormalize
+operator|=
+name|true
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Extract the extension of the file.
 comment|///
@@ -833,6 +941,52 @@ argument_list|)
 specifier|const
 expr_stmt|;
 comment|//------------------------------------------------------------------
+comment|/// Memory map part of, or the entire contents of, a file only if
+comment|/// the file is local (not on a network mount).
+comment|///
+comment|/// Returns a shared pointer to a data buffer that contains all or
+comment|/// part of the contents of a file. The data will be memory mapped
+comment|/// if the file is local and will lazily page in data from the file
+comment|/// as memory is accessed. If the data is memory mapped, the data
+comment|/// that is mapped will start \a offset bytes into the file, and
+comment|/// \a length bytes will be mapped. If \a length is
+comment|/// greater than the number of bytes available in the file starting
+comment|/// at \a offset, the number of bytes will be appropriately
+comment|/// truncated. The final number of bytes that get mapped can be
+comment|/// verified using the DataBuffer::GetByteSize() function on the return
+comment|/// shared data pointer object contents.
+comment|///
+comment|/// If the file is on a network mount the data will be read into a
+comment|/// heap buffer immediately so that accesses to the data won't later
+comment|/// cause a crash if we touch a page that isn't paged in and the
+comment|/// network mount has been disconnected or gone away.
+comment|///
+comment|/// @param[in] offset
+comment|///     The offset in bytes from the beginning of the file where
+comment|///     memory mapping should begin.
+comment|///
+comment|/// @param[in] length
+comment|///     The size in bytes that should be mapped starting \a offset
+comment|///     bytes into the file. If \a length is \c SIZE_MAX, map
+comment|///     as many bytes as possible.
+comment|///
+comment|/// @return
+comment|///     A shared pointer to the memory mapped data. This shared
+comment|///     pointer can contain a NULL DataBuffer pointer, so the contained
+comment|///     pointer must be checked prior to using it.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|DataBufferSP
+name|MemoryMapFileContentsIfLocal
+argument_list|(
+argument|off_t file_offset
+argument_list|,
+argument|size_t file_size
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|//------------------------------------------------------------------
 comment|/// Read part of, or the entire contents of, a file into a heap based data buffer.
 comment|///
 comment|/// Returns a shared pointer to a data buffer that contains all or
@@ -916,44 +1070,14 @@ operator|=
 name|NULL
 argument_list|)
 expr_stmt|;
-specifier|static
+comment|//------------------------------------------------------------------
+comment|/// Normalize a pathname by collapsing redundant separators and
+comment|/// up-level references.
+comment|//------------------------------------------------------------------
 name|void
-name|Normalize
-argument_list|(
-name|llvm
-operator|::
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|path
-argument_list|,
-name|PathSyntax
-name|syntax
-operator|=
-name|ePathSyntaxHostNative
-argument_list|)
-decl_stmt|;
-specifier|static
-name|void
-name|DeNormalize
-argument_list|(
-name|llvm
-operator|::
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|path
-argument_list|,
-name|PathSyntax
-name|syntax
-operator|=
-name|ePathSyntaxHostNative
-argument_list|)
-decl_stmt|;
+name|NormalizePath
+parameter_list|()
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Run through the input string, replaying the effect of any ".." and produce
 comment|/// the resultant path.  The input path is not required to be in the host file system
@@ -1010,6 +1134,57 @@ init|=
 name|ePathSyntaxHostNative
 parameter_list|)
 function_decl|;
+name|void
+name|SetFile
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|bool
+name|resolve_path
+parameter_list|,
+name|ArchSpec
+name|arch
+parameter_list|)
+function_decl|;
+name|void
+name|SetFile
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|path
+argument_list|,
+name|bool
+name|resolve_path
+argument_list|,
+name|PathSyntax
+name|syntax
+operator|=
+name|ePathSyntaxHostNative
+argument_list|)
+decl_stmt|;
+name|void
+name|SetFile
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|path
+argument_list|,
+name|bool
+name|resolve_path
+argument_list|,
+name|ArchSpec
+name|arch
+argument_list|)
+decl_stmt|;
 name|bool
 name|IsResolved
 argument_list|()
@@ -1102,11 +1277,60 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|void
+name|PrependPathComponent
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|new_path
+parameter_list|)
+function_decl|;
+name|void
+name|PrependPathComponent
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|new_path
+argument_list|)
+decl_stmt|;
+name|void
+name|PrependPathComponent
+parameter_list|(
+specifier|const
+name|FileSpec
+modifier|&
+name|new_path
+parameter_list|)
+function_decl|;
+name|void
 name|AppendPathComponent
 parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|new_path
+parameter_list|)
+function_decl|;
+name|void
+name|AppendPathComponent
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|new_path
+argument_list|)
+decl_stmt|;
+name|void
+name|AppendPathComponent
+parameter_list|(
+specifier|const
+name|FileSpec
+modifier|&
 name|new_path
 parameter_list|)
 function_decl|;
@@ -1219,6 +1443,35 @@ parameter_list|,
 name|void
 modifier|*
 name|callback_baton
+parameter_list|)
+function_decl|;
+typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
+name|EnumerateDirectoryResult
+argument_list|(
+argument|FileType file_type
+argument_list|,
+argument|const FileSpec&spec
+argument_list|)
+operator|>
+name|DirectoryCallback
+expr_stmt|;
+specifier|static
+name|EnumerateDirectoryResult
+name|ForEachItemInDirectory
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|dir_path
+parameter_list|,
+name|DirectoryCallback
+specifier|const
+modifier|&
+name|callback
 parameter_list|)
 function_decl|;
 name|protected

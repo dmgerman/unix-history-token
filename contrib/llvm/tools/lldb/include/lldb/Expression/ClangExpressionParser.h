@@ -330,17 +330,6 @@ name|unique_ptr
 operator|<
 name|clang
 operator|::
-name|ASTContext
-operator|>
-name|m_ast_context
-expr_stmt|;
-comment|///< The AST context used to hold types and names for the parser
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|clang
-operator|::
 name|CodeGenerator
 operator|>
 name|m_code_generator

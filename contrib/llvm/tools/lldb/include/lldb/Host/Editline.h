@@ -573,19 +573,14 @@ name|uint32_t
 name|GetCurrentLine
 parameter_list|()
 function_decl|;
-comment|/// Hides the current input session in preparation for output
-name|void
-name|Hide
-parameter_list|()
-function_decl|;
-comment|/// Prepare to return to editing after a call to Hide()
-name|void
-name|Refresh
-parameter_list|()
-function_decl|;
 comment|/// Interrupt the current edit as if ^C was pressed
 name|bool
 name|Interrupt
+parameter_list|()
+function_decl|;
+comment|/// Cancel this edit and oblitarate all trace of it
+name|bool
+name|Cancel
 parameter_list|()
 function_decl|;
 comment|/// Register a callback for the tab key
@@ -660,6 +655,22 @@ parameter_list|,
 name|bool
 modifier|&
 name|interrupted
+parameter_list|)
+function_decl|;
+name|void
+name|PrintAsync
+parameter_list|(
+name|Stream
+modifier|*
+name|stream
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|size_t
+name|len
 parameter_list|)
 function_decl|;
 name|private
@@ -954,11 +965,6 @@ name|EditorStatus
 name|m_editor_status
 decl_stmt|;
 name|bool
-name|m_editor_getting_char
-init|=
-name|false
-decl_stmt|;
-name|bool
 name|m_color_prompts
 init|=
 name|true
@@ -1073,6 +1079,9 @@ modifier|*
 name|m_completion_callback_baton
 init|=
 name|nullptr
+decl_stmt|;
+name|Mutex
+name|m_output_mutex
 decl_stmt|;
 block|}
 empty_stmt|;

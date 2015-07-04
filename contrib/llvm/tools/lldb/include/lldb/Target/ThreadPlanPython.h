@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/StructuredData.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/UserID.h"
 end_include
 
@@ -224,9 +230,9 @@ operator|::
 name|string
 name|m_class_name
 block|;
-name|lldb
+name|StructuredData
 operator|::
-name|ScriptInterpreterObjectSP
+name|ObjectSP
 name|m_implementation_sp
 block|;
 name|DISALLOW_COPY_AND_ASSIGN
