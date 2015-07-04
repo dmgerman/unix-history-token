@@ -334,6 +334,9 @@ name|char
 modifier|*
 name|config
 decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
 name|bool
 name|dryrun
 decl_stmt|;
@@ -345,6 +348,9 @@ name|v7
 decl_stmt|;
 name|bool
 name|checkduplicate
+decl_stmt|;
+name|bool
+name|precrypted
 decl_stmt|;
 name|struct
 name|userconf
