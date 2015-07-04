@@ -43,9 +43,6 @@ modifier|*
 name|func
 parameter_list|,
 name|int
-name|flags
-parameter_list|,
-name|int
 modifier|*
 name|chanfdp
 parameter_list|,
