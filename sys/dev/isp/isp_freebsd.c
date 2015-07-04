@@ -17746,7 +17746,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * In case of target mode disable at least ISP2532 return 		 * invalid zero ct_rxid value.  Try to workaround that using 		 * tag_id from the CCB, pointed by valid ct_syshandle. 		 */
+comment|/* 		 * XXX: isp_clear_commands() generates fake CTIO with zero 		 * ct_rxid value, filling only ct_syshandle.  Workaround 		 * that using tag_id from the CCB, pointed by ct_syshandle. 		 */
 name|atp
 operator|=
 name|isp_find_atpd
