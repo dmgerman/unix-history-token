@@ -2380,6 +2380,17 @@ name|int
 name|fbs_enabled
 decl_stmt|;
 comment|/* FIS-based switching enabled */
+name|void
+function_decl|(
+modifier|*
+name|start
+function_decl|)
+parameter_list|(
+name|struct
+name|ahci_channel
+modifier|*
+parameter_list|)
+function_decl|;
 name|union
 name|ccb
 modifier|*
@@ -2752,6 +2763,17 @@ index|[
 name|AHCI_MAX_PORTS
 index|]
 struct|;
+name|void
+function_decl|(
+modifier|*
+name|ch_start
+function_decl|)
+parameter_list|(
+name|struct
+name|ahci_channel
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct

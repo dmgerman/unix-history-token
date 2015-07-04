@@ -19,16 +19,6 @@ begin_comment
 comment|/*  * Stack trace.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|INKERNEL
-parameter_list|(
-name|va
-parameter_list|)
-value|(((va)>= DMAP_MIN_ADDRESS&& (va)< DMAP_MAX_ADDRESS) \ 	    || ((va)>= VM_MIN_KERNEL_ADDRESS&& (va)< VM_MAX_KERNEL_ADDRESS))
-end_define
-
 begin_struct
 struct|struct
 name|amd64_frame

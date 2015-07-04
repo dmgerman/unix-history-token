@@ -303,6 +303,24 @@ argument_list|)
 assert|;
 end_assert
 
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|OFFSETOF_MONITORBUF
+operator|==
+name|offsetof
+argument_list|(
+expr|struct
+name|pcpu
+argument_list|,
+name|pc_monitorbuf
+argument_list|)
+argument_list|,
+literal|"OFFSETOF_MONINORBUF does not correspond with offset of pc_monitorbuf."
+argument_list|)
+assert|;
+end_assert
+
 begin_function
 name|struct
 name|savefpu

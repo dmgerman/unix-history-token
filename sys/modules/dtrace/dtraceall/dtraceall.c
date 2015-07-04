@@ -221,9 +221,20 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__aarch64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__amd64__
 argument_list|)
 operator|||
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|||
+expr|\
 name|defined
 argument_list|(
 name|__i386__
@@ -232,11 +243,6 @@ operator|||
 name|defined
 argument_list|(
 name|__powerpc__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__arm__
 argument_list|)
 end_if
 

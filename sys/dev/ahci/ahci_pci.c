@@ -1417,6 +1417,8 @@ literal|"Marvell 88SE6111"
 block|,
 name|AHCI_Q_NOFORCE
 operator||
+name|AHCI_Q_NOPMP
+operator||
 name|AHCI_Q_1CH
 operator||
 name|AHCI_Q_EDGEIS
@@ -1430,6 +1432,8 @@ block|,
 literal|"Marvell 88SE6121"
 block|,
 name|AHCI_Q_NOFORCE
+operator||
+name|AHCI_Q_NOPMP
 operator||
 name|AHCI_Q_2CH
 operator||
@@ -1449,6 +1453,8 @@ literal|"Marvell 88SE6141"
 block|,
 name|AHCI_Q_NOFORCE
 operator||
+name|AHCI_Q_NOPMP
+operator||
 name|AHCI_Q_4CH
 operator||
 name|AHCI_Q_EDGEIS
@@ -1466,6 +1472,8 @@ block|,
 literal|"Marvell 88SE6145"
 block|,
 name|AHCI_Q_NOFORCE
+operator||
+name|AHCI_Q_NOPMP
 operator||
 name|AHCI_Q_4CH
 operator||

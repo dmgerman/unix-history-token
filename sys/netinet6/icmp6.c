@@ -10555,7 +10555,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* validation passed */
 name|icmp6len
 operator|-=
 sizeof|sizeof
@@ -10713,6 +10712,7 @@ goto|goto
 name|bad
 goto|;
 block|}
+comment|/* Validation passed. */
 comment|/* RFC 2461 8.3 */
 name|nd6_cache_lladdr
 argument_list|(

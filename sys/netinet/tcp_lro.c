@@ -2482,12 +2482,10 @@ operator|-
 name|tcp_data_len
 argument_list|)
 expr_stmt|;
+name|m_demote_pkthdr
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&=
-operator|~
-name|M_PKTHDR
+argument_list|)
 expr_stmt|;
 name|le
 operator|->

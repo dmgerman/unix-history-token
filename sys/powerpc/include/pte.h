@@ -877,7 +877,7 @@ begin_struct
 struct|struct
 name|pte
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|rpn
 decl_stmt|;
 name|uint32_t
@@ -1249,7 +1249,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* BOOKE_PPC4XX */
+comment|/* BOOKE */
 end_comment
 
 begin_endif

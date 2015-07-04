@@ -162,6 +162,10 @@ name|SYS_RES_IRQ
 operator|!=
 name|PROTO_RES_UNUSED
 operator|&&
+name|SYS_RES_DRQ
+operator|!=
+name|PROTO_RES_UNUSED
+operator|&&
 name|SYS_RES_MEMORY
 operator|!=
 name|PROTO_RES_UNUSED
@@ -180,6 +184,10 @@ name|SYS_RES_IRQ
 operator|!=
 name|PROTO_RES_PCICFG
 operator|&&
+name|SYS_RES_DRQ
+operator|!=
+name|PROTO_RES_PCICFG
+operator|&&
 name|SYS_RES_MEMORY
 operator|!=
 name|PROTO_RES_PCICFG
@@ -195,6 +203,10 @@ begin_expr_stmt
 name|CTASSERT
 argument_list|(
 name|SYS_RES_IRQ
+operator|!=
+name|PROTO_RES_BUSDMA
+operator|&&
+name|SYS_RES_DRQ
 operator|!=
 name|PROTO_RES_BUSDMA
 operator|&&
@@ -530,6 +542,10 @@ case|:
 comment|/* XXX TODO */
 break|break;
 case|case
+name|SYS_RES_DRQ
+case|:
+break|break;
+case|case
 name|SYS_RES_MEMORY
 case|:
 case|case
@@ -848,6 +864,29 @@ case|case
 name|SYS_RES_IRQ
 case|:
 comment|/* XXX TODO */
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|r
+operator|->
+name|r_type
+argument_list|,
+name|r
+operator|->
+name|r_rid
+argument_list|,
+name|r
+operator|->
+name|r_d
+operator|.
+name|res
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SYS_RES_DRQ
+case|:
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -1986,6 +2025,8 @@ operator|.
 name|busdma
 argument_list|,
 name|busdma
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 break|break;

@@ -7,12 +7,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2003 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project by Jake Burkholder,  * Safeport Network Services, and Network Associates Laboratories, the  * Security Research Division of Network Associates, Inc. under  * DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the DARPA  * CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|AMD64_NPT_AWARE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -1627,7 +1621,6 @@ literal|"Invalid L1 index"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * TODO: Turn the cache on here when we have cache 		 * flushing code. 		 */
 name|pmap_load_store
 argument_list|(
 operator|&
@@ -3183,8 +3176,10 @@ operator|&&
 operator|(
 name|l3
 operator|=
-operator|*
+name|pmap_load
+argument_list|(
 name|l3p
+argument_list|)
 operator|)
 operator|!=
 literal|0
@@ -4667,8 +4662,10 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l1
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -4856,8 +4853,10 @@ name|l2
 operator|!=
 name|NULL
 operator|&&
-operator|*
+name|pmap_load
+argument_list|(
 name|l2
+argument_list|)
 operator|!=
 literal|0
 condition|)
@@ -4866,8 +4865,10 @@ name|m
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l2
+argument_list|)
 operator|&
 operator|~
 name|ATTR_MASK
@@ -5093,8 +5094,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l1
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -5183,8 +5186,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l2
+argument_list|)
 operator|&
 name|ATTR_AF
 operator|)
@@ -6828,8 +6833,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l1
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -6963,8 +6970,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l3
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -7486,8 +7495,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l1
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -9046,8 +9057,10 @@ name|l2
 operator|!=
 name|NULL
 operator|&&
-operator|*
+name|pmap_load
+argument_list|(
 name|l2
+argument_list|)
 operator|!=
 literal|0
 condition|)
@@ -9056,8 +9069,10 @@ name|mpte
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l2
+argument_list|)
 operator|&
 operator|~
 name|ATTR_MASK
@@ -9452,8 +9467,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l1
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -9513,8 +9530,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l2
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -9554,8 +9573,10 @@ control|)
 block|{
 if|if
 condition|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l3
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -9563,8 +9584,10 @@ continue|continue;
 if|if
 condition|(
 operator|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l3
+argument_list|)
 operator|&
 name|ATTR_SW_WIRED
 operator|)
@@ -10344,8 +10367,10 @@ operator|!=
 name|NULL
 operator|&&
 operator|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l3
+argument_list|)
 operator|&
 name|ATTR_SW_WIRED
 operator|)
@@ -11254,8 +11279,10 @@ name|l3
 operator|!=
 name|NULL
 operator|&&
-operator|*
+name|pmap_load
+argument_list|(
 name|l3
+argument_list|)
 operator|!=
 literal|0
 condition|)
@@ -11873,8 +11900,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l3
+argument_list|)
 operator|&
 name|ATTR_AF
 operator|)
@@ -11904,8 +11933,10 @@ elseif|else
 if|if
 condition|(
 operator|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l3
+argument_list|)
 operator|&
 name|ATTR_SW_WIRED
 operator|)
@@ -12514,7 +12545,6 @@ operator|(
 name|FALSE
 operator|)
 return|;
-comment|/* 	 * NB:  The sequence of updating a page table followed by accesses 	 * to the corresponding pages used in the !DMAP case is subject to 	 * the situation described in the "AMD64 Architecture Programmer's 	 * Manual Volume 2: System Programming" rev. 3.23, "7.3.1 Special 	 * Coherency Considerations".  Therefore, issuing the INVLPG right 	 * after modifying the PTE bits is crucial. 	 */
 if|if
 condition|(
 operator|!

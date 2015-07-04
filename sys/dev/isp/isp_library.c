@@ -3172,18 +3172,6 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-name|isp_del_all_wwn_entries
-argument_list|(
-name|isp
-argument_list|,
-name|chan
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|isp_clear_commands
 argument_list|(
 name|isp
@@ -3303,7 +3291,6 @@ argument_list|,
 name|QENTRY_LEN
 argument_list|)
 expr_stmt|;
-comment|/* Acquire Scratch */
 if|if
 condition|(
 name|FC_SCRATCH_ACQUIRE
@@ -3625,19 +3612,6 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-name|isp_del_all_wwn_entries
-argument_list|(
-name|isp
-argument_list|,
-name|chan
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* 		 * Release Scratch 		 */
 name|FC_SCRATCH_RELEASE
 argument_list|(
 name|isp

@@ -806,7 +806,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|random_harvest
+name|random_harvest_queue
 argument_list|(
 operator|&
 name|value

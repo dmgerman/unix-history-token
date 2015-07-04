@@ -51,6 +51,8 @@ name|ALIAS_FREEBSD_ZFS
 block|,
 name|ALIAS_MBR
 block|,
+name|ALIAS_NTFS
+block|,
 comment|/* end */
 name|ALIAS_COUNT
 comment|/* Keep last! */

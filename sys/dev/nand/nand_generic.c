@@ -1930,7 +1930,7 @@ name|chip_params
 operator|->
 name|spare_bytes_per_page
 operator|=
-name|le32dec
+name|le16dec
 argument_list|(
 operator|&
 name|params

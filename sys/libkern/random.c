@@ -87,7 +87,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Pseudo-random number generator for randomizing the profiling clock,  * and whatever else we might use it for.  The result is uniform on  * [0, 2^31 - 1].  */
+comment|/*  * Pseudo-random number generator for perturbing the profiling clock,  * and whatever else we might use it for.  The result is uniform on  * [0, 2^31 - 1].  */
 end_comment
 
 begin_function

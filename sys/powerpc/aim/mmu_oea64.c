@@ -1037,7 +1037,7 @@ parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t
@@ -1511,7 +1511,7 @@ name|moea64_mapdev_attr
 parameter_list|(
 name|mmu_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|,
@@ -1567,7 +1567,7 @@ name|mmu_t
 parameter_list|,
 name|vm_offset_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_memattr_t
 name|ma
@@ -2439,7 +2439,7 @@ name|__inline
 name|uint64_t
 name|moea64_calc_wimg
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_memattr_t
@@ -5436,7 +5436,7 @@ parameter_list|,
 name|int
 name|which
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 block|{
@@ -6021,7 +6021,7 @@ name|int
 name|size
 parameter_list|)
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 init|=
 name|VM_PAGE_TO_PHYS
@@ -6117,7 +6117,7 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 init|=
 name|VM_PAGE_TO_PHYS
@@ -6745,7 +6745,7 @@ parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t
@@ -8344,7 +8344,7 @@ parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_memattr_t
@@ -11906,7 +11906,7 @@ parameter_list|(
 name|mmu_t
 name|mmu
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t

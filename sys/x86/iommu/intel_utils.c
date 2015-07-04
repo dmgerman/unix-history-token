@@ -422,13 +422,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|SIZEOF_SAGAW_BITS
-value|(sizeof(sagaw_bits) / sizeof(sagaw_bits[0]))
-end_define
-
 begin_function
 name|bool
 name|dmar_pglvl_supported
@@ -453,7 +446,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|SIZEOF_SAGAW_BITS
+name|nitems
+argument_list|(
+name|sagaw_bits
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -507,12 +503,12 @@ end_function
 
 begin_function
 name|int
-name|ctx_set_agaw
+name|domain_set_agaw
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|int
 name|mgaw
@@ -523,7 +519,7 @@ name|sagaw
 decl_stmt|,
 name|i
 decl_stmt|;
-name|ctx
+name|domain
 operator|->
 name|mgaw
 operator|=
@@ -533,7 +529,7 @@ name|sagaw
 operator|=
 name|DMAR_CAP_SAGAW
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|dmar
 operator|->
@@ -548,7 +544,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|SIZEOF_SAGAW_BITS
+name|nitems
+argument_list|(
+name|sagaw_bits
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -566,7 +565,7 @@ operator|>=
 name|mgaw
 condition|)
 block|{
-name|ctx
+name|domain
 operator|->
 name|agaw
 operator|=
@@ -577,7 +576,7 @@ index|]
 operator|.
 name|agaw
 expr_stmt|;
-name|ctx
+name|domain
 operator|->
 name|pglvl
 operator|=
@@ -588,7 +587,7 @@ index|]
 operator|.
 name|pglvl
 expr_stmt|;
-name|ctx
+name|domain
 operator|->
 name|awlvl
 operator|=
@@ -608,49 +607,15 @@ block|}
 block|}
 name|device_printf
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|dmar
 operator|->
 name|dev
 argument_list|,
-literal|"context request mgaw %d for pci%d:%d:%d:%d, "
-literal|"no agaw found, sagaw %x\n"
+literal|"context request mgaw %d: no agaw found, sagaw %x\n"
 argument_list|,
 name|mgaw
-argument_list|,
-name|ctx
-operator|->
-name|dmar
-operator|->
-name|segment
-argument_list|,
-name|pci_get_bus
-argument_list|(
-name|ctx
-operator|->
-name|ctx_tag
-operator|.
-name|owner
-argument_list|)
-argument_list|,
-name|pci_get_slot
-argument_list|(
-name|ctx
-operator|->
-name|ctx_tag
-operator|.
-name|owner
-argument_list|)
-argument_list|,
-name|pci_get_function
-argument_list|(
-name|ctx
-operator|->
-name|ctx_tag
-operator|.
-name|owner
-argument_list|)
 argument_list|,
 name|sagaw
 argument_list|)
@@ -694,7 +659,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|SIZEOF_SAGAW_BITS
+name|nitems
+argument_list|(
+name|sagaw_bits
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -741,7 +709,10 @@ name|allow_less
 operator|&&
 name|i
 operator|==
-name|SIZEOF_SAGAW_BITS
+name|nitems
+argument_list|(
+name|sagaw_bits
+argument_list|)
 condition|)
 block|{
 do|do
@@ -776,7 +747,10 @@ if|if
 condition|(
 name|i
 operator|<
-name|SIZEOF_SAGAW_BITS
+name|nitems
+argument_list|(
+name|sagaw_bits
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -871,12 +845,12 @@ end_comment
 
 begin_function
 name|int
-name|ctx_is_sp_lvl
+name|domain_is_sp_lvl
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|int
 name|lvl
@@ -905,7 +879,7 @@ block|}
 decl_stmt|;
 name|alvl
 operator|=
-name|ctx
+name|domain
 operator|->
 name|pglvl
 operator|-
@@ -917,7 +891,7 @@ name|cap_sps
 operator|=
 name|DMAR_CAP_SPS
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|dmar
 operator|->
@@ -928,17 +902,9 @@ return|return
 operator|(
 name|alvl
 operator|<
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|sagaw_sp
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|sagaw_sp
-index|[
-literal|0
-index|]
 argument_list|)
 operator|&&
 operator|(
@@ -1065,17 +1031,9 @@ name|KASSERT
 argument_list|(
 name|rlvl
 operator|<
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|pg_sz
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|pg_sz
-index|[
-literal|0
-index|]
 argument_list|)
 argument_list|,
 operator|(
@@ -1098,12 +1056,12 @@ end_function
 
 begin_function
 name|dmar_gaddr_t
-name|ctx_page_size
+name|domain_page_size
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|int
 name|lvl
@@ -1113,7 +1071,7 @@ return|return
 operator|(
 name|pglvl_page_size
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|pglvl
 argument_list|,

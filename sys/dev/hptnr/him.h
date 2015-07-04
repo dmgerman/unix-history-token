@@ -574,6 +574,12 @@ decl_stmt|;
 name|HPT_U32
 name|logical_sector_size
 decl_stmt|;
+name|HPT_U8
+name|logicalsectors_per_physicalsector
+decl_stmt|;
+name|HPT_U16
+name|lowest_aligned
+decl_stmt|;
 name|DEVICE_FLAGS
 name|flags
 decl_stmt|;

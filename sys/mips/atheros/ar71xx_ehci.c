@@ -144,6 +144,22 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mips/atheros/ar71xxreg.h>
+end_include
+
+begin_comment
+comment|/* for stuff in ar71xx_cpudef.h */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<mips/atheros/ar71xx_cpudef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mips/atheros/ar71xx_bus_space_reversed.h>
 end_include
 
@@ -217,6 +233,30 @@ operator|(
 name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ar71xx_ehci_intr
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+comment|/* XXX TODO: should really see if this was our interrupt.. */
+name|ar71xx_device_flush_ddr
+argument_list|(
+name|AR71XX_CPU_DDR_FLUSH_USB
+argument_list|)
+expr_stmt|;
+name|ehci_interrupt
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -521,11 +561,7 @@ name|INTR_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
-operator|(
-name|driver_intr_t
-operator|*
-operator|)
-name|ehci_interrupt
+name|ar71xx_ehci_intr
 argument_list|,
 name|sc
 argument_list|,

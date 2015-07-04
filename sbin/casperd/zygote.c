@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/nv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<assert.h>
 end_include
 
@@ -99,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|<libcapsicum_impl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nv.h>
 end_include
 
 begin_include
@@ -258,9 +258,6 @@ modifier|*
 name|func
 parameter_list|,
 name|int
-name|flags
-parameter_list|,
-name|int
 modifier|*
 name|chanfdp
 parameter_list|,
@@ -316,18 +313,6 @@ operator|(
 name|uintptr_t
 operator|)
 name|func
-argument_list|)
-expr_stmt|;
-name|nvlist_add_number
-argument_list|(
-name|nvl
-argument_list|,
-literal|"flags"
-argument_list|,
-operator|(
-name|uint64_t
-operator|)
-name|flags
 argument_list|)
 expr_stmt|;
 name|nvl
@@ -441,8 +426,6 @@ name|int
 name|error
 decl_stmt|,
 name|fd
-decl_stmt|,
-name|flags
 decl_stmt|,
 name|procfd
 decl_stmt|;
@@ -567,18 +550,6 @@ argument_list|(
 name|nvlin
 argument_list|,
 literal|"func"
-argument_list|)
-expr_stmt|;
-name|flags
-operator|=
-operator|(
-name|int
-operator|)
-name|nvlist_get_number
-argument_list|(
-name|nvlin
-argument_list|,
-literal|"flags"
 argument_list|)
 expr_stmt|;
 name|nvlist_destroy

@@ -961,9 +961,9 @@ name|void
 name|dmar_qi_invalidate_locked
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|base
@@ -990,7 +990,7 @@ name|am
 decl_stmt|;
 name|unit
 operator|=
-name|ctx
+name|domain
 operator|->
 name|dmar
 expr_stmt|;
@@ -1050,7 +1050,7 @@ name|DMAR_IQ_DESCR_IOTLB_DR
 operator||
 name|DMAR_IQ_DESCR_IOTLB_DID
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|domain
 argument_list|)
@@ -1604,7 +1604,7 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
-name|dmar_ctx_free_entry
+name|dmar_domain_free_entry
 argument_list|(
 name|entry
 argument_list|,

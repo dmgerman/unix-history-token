@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
@@ -48,6 +54,14 @@ include|#
 directive|include
 file|<dev/hyperv/include/hyperv.h>
 end_include
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_NETVSC
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -73,6 +87,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|NVSP_PROTOCOL_VERSION_4
+value|0x40000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVSP_PROTOCOL_VERSION_5
+value|0x50000
+end_define
+
+begin_define
+define|#
+directive|define
 name|NVSP_MIN_PROTOCOL_VERSION
 value|(NVSP_PROTOCOL_VERSION_1)
 end_define
@@ -89,6 +117,13 @@ define|#
 directive|define
 name|NVSP_PROTOCOL_VERSION_CURRENT
 value|NVSP_PROTOCOL_VERSION_2
+end_define
+
+begin_define
+define|#
+directive|define
+name|VERSION_4_OFFLOAD_SIZE
+value|22
 end_define
 
 begin_define
@@ -958,7 +993,7 @@ begin_define
 define|#
 directive|define
 name|NVSP_1_CHIMNEY_SEND_INVALID_SECTION_INDEX
-value|0xffffu
+value|0xffffffff
 end_define
 
 begin_comment
@@ -1389,11 +1424,11 @@ begin_define
 define|#
 directive|define
 name|NETVSC_SEND_BUFFER_SIZE
-value|(64*1024)
+value|(1024*1024*15)
 end_define
 
 begin_comment
-comment|/* 64K */
+comment|/* 15M */
 end_comment
 
 begin_define
@@ -1407,11 +1442,11 @@ begin_define
 define|#
 directive|define
 name|NETVSC_RECEIVE_BUFFER_SIZE
-value|(1024*1024)
+value|(1024*1024*16)
 end_define
 
 begin_comment
-comment|/* 1MB */
+comment|/* 16MB */
 end_comment
 
 begin_define
@@ -1450,6 +1485,13 @@ name|NETVSC_MAX_CONFIGURABLE_MTU
 value|(9 * 1024)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NETVSC_PACKET_SIZE
+value|PAGE_SIZE
+end_define
+
 begin_comment
 comment|/*  * Data types  */
 end_comment
@@ -1471,19 +1513,6 @@ decl_stmt|;
 name|int
 name|num_outstanding_sends
 decl_stmt|;
-comment|/* List of free preallocated NETVSC_PACKET to represent RX packet */
-name|STAILQ_HEAD
-argument_list|(
-argument|PQ
-argument_list|,
-argument|netvsc_packet_
-argument_list|)
-name|myrx_packet_list
-expr_stmt|;
-name|struct
-name|mtx
-name|rx_pkt_list_lock
-decl_stmt|;
 comment|/* Send buffer allocated by us but manages by NetVSP */
 name|void
 modifier|*
@@ -1497,6 +1526,18 @@ name|send_buf_gpadl_handle
 decl_stmt|;
 name|uint32_t
 name|send_section_size
+decl_stmt|;
+name|uint32_t
+name|send_section_count
+decl_stmt|;
+name|unsigned
+name|long
+name|bitsmap_words
+decl_stmt|;
+name|unsigned
+name|long
+modifier|*
+name|send_section_bitsmap
 decl_stmt|;
 comment|/* Receive buffer allocated by us but managed by NetVSP */
 name|void
@@ -1540,6 +1581,12 @@ comment|/* Negotiated NVSP version */
 name|uint32_t
 name|nvsp_version
 decl_stmt|;
+name|uint8_t
+name|callback_buf
+index|[
+name|NETVSC_PACKET_SIZE
+index|]
+decl_stmt|;
 block|}
 name|netvsc_dev
 typedef|;
@@ -1563,48 +1610,135 @@ begin_define
 define|#
 directive|define
 name|NETVSC_DEVICE_RING_BUFFER_SIZE
-value|(64 * PAGE_SIZE)
+value|(128 * PAGE_SIZE)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NETVSC_PACKET_MAXPAGE
-value|16
+value|32
 end_define
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|xfer_page_packet_
-block|{
-comment|/* 	 * This needs to be here because the network RX code casts 	 * an instantiation of this structure to a netvsc_packet. 	 */
-name|STAILQ_ENTRY
-argument_list|(
-argument|netvsc_packet_
-argument_list|)
-name|mylist_entry
-expr_stmt|;
-name|uint32_t
-name|count
-decl_stmt|;
-block|}
-name|xfer_page_packet
-typedef|;
-end_typedef
+begin_define
+define|#
+directive|define
+name|NETVSC_VLAN_PRIO_MASK
+value|0xe000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NETVSC_VLAN_PRIO_SHIFT
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|NETVSC_VLAN_VID_MASK
+value|0x0fff
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_IPV4
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_IPV6
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_TCP
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_UDP
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANSPORT_TYPE_NOT_IP
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANSPORT_TYPE_IPV4_TCP
+value|((TYPE_IPV4<< 16) | TYPE_TCP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANSPORT_TYPE_IPV4_UDP
+value|((TYPE_IPV4<< 16) | TYPE_UDP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANSPORT_TYPE_IPV6_TCP
+value|((TYPE_IPV6<< 16) | TYPE_TCP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANSPORT_TYPE_IPV6_UDP
+value|((TYPE_IPV6<< 16) | TYPE_UDP)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LP64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BITS_PER_LONG
+value|64
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|BITS_PER_LONG
+value|32
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
 struct|struct
 name|netvsc_packet_
 block|{
-comment|/* 	 * List used when enqueued on&net_dev->rx_packet_list, 	 * and when enqueued within the netvsc code 	 */
-name|STAILQ_ENTRY
-argument_list|(
-argument|netvsc_packet_
-argument_list|)
-name|mylist_entry
-expr_stmt|;
 name|struct
 name|hv_device
 modifier|*
@@ -1617,9 +1751,8 @@ comment|/* One byte */
 name|uint16_t
 name|vlan_tci
 decl_stmt|;
-name|xfer_page_packet
-modifier|*
-name|xfer_page_pkt
+name|uint32_t
+name|status
 decl_stmt|;
 comment|/* Completion */
 union|union
@@ -1659,12 +1792,22 @@ struct|;
 block|}
 name|compl
 union|;
+name|uint32_t
+name|send_buf_section_idx
+decl_stmt|;
+name|uint32_t
+name|send_buf_section_size
+decl_stmt|;
 name|void
 modifier|*
-name|extension
+name|rndis_mesg
 decl_stmt|;
 name|uint32_t
 name|tot_data_buf_len
+decl_stmt|;
+name|void
+modifier|*
+name|data
 decl_stmt|;
 name|uint32_t
 name|page_buf_count
@@ -1762,7 +1905,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
 name|void
 name|netvsc_linkstatus_callback
 parameter_list|(
@@ -1778,24 +1920,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|int
-name|netvsc_recv
-parameter_list|(
-name|struct
-name|hv_device
-modifier|*
-name|device_obj
-parameter_list|,
-name|netvsc_packet
-modifier|*
-name|packet
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|netvsc_xmit_completion
 parameter_list|(
@@ -1807,19 +1931,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|hv_nv_on_receive_completion
 parameter_list|(
-name|void
+name|struct
+name|hv_device
 modifier|*
-name|context
+name|device
+parameter_list|,
+name|uint64_t
+name|tid
+parameter_list|,
+name|uint32_t
+name|status
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|netvsc_dev
 modifier|*
 name|hv_nv_on_device_add
@@ -1837,7 +1966,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|hv_nv_on_device_remove
 parameter_list|(
@@ -1853,7 +1981,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|hv_nv_on_send
 parameter_list|(
@@ -1865,6 +1992,17 @@ parameter_list|,
 name|netvsc_packet
 modifier|*
 name|pkt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|hv_nv_get_next_send_section
+parameter_list|(
+name|netvsc_dev
+modifier|*
+name|net_dev
 parameter_list|)
 function_decl|;
 end_function_decl

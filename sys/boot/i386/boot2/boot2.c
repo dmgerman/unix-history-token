@@ -730,6 +730,15 @@ directive|endif
 end_endif
 
 begin_function_decl
+name|int
+name|main
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|exit
 parameter_list|(
@@ -2753,13 +2762,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-if|if
-condition|(
 name|k
 operator|=
 name|ep
 operator|-
 name|arg
+expr_stmt|;
+if|if
+condition|(
+name|k
+operator|>
+literal|0
 condition|)
 block|{
 if|if

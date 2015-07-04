@@ -22,13 +22,13 @@ name|_KERNEL
 end_ifdef
 
 begin_function_decl
-name|int
+name|u_int
 name|read_random
 parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -66,12 +66,16 @@ name|RANDOM_INTERRUPT
 block|,
 name|RANDOM_SWI
 block|,
-name|RANDOM_UMA_ALLOC
+name|RANDOM_FS_ATIME
 block|,
+name|RANDOM_FAST
+block|,
+comment|/* Special!! Miscellaneous high performance stuff, like UMA/SLAB Allocator */
 name|RANDOM_ENVIRONMENTAL_END
+init|=
+name|RANDOM_FAST
 block|,
-comment|/* This one is wasted */
-comment|/* High-quality HW RNGs from here on. */
+comment|/* Fast hardware random-number sources from here on. */
 name|RANDOM_PURE_OCTEON
 block|,
 name|RANDOM_PURE_SAFE
@@ -95,9 +99,82 @@ block|}
 enum|;
 end_enum
 
+begin_define
+define|#
+directive|define
+name|RANDOM_HARVEST_EVERYTHING_MASK
+value|((1<< (RANDOM_ENVIRONMENTAL_END + 1)) - 1)
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|RANDOM_DUMMY
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|random_harvest_queue
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|do {} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|random_harvest_fast
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|do {} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|random_harvest_direct
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|do {} while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !defined(RANDOM_DUMMY) */
+end_comment
+
 begin_function_decl
 name|void
-name|random_harvest
+name|random_harvest_queue
 parameter_list|(
 specifier|const
 name|void
@@ -112,6 +189,51 @@ name|random_entropy_source
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|random_harvest_fast
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|,
+name|enum
+name|random_entropy_source
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|random_harvest_direct
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|,
+name|enum
+name|random_entropy_source
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(RANDOM_DUMMY) */
+end_comment
 
 begin_endif
 endif|#

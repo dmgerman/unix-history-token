@@ -466,17 +466,12 @@ block|,
 operator|.
 name|sv_sigsize
 operator|=
-name|SVR4_NSIG
-operator|-
-literal|1
+literal|0
 block|,
-comment|/* NB: signal trans table indexed with signno-1 */
 operator|.
 name|sv_sigtbl
 operator|=
-name|bsd_to_svr4_sig
-operator|+
-literal|1
+name|NULL
 block|,
 operator|.
 name|sv_errsize

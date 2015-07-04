@@ -4609,6 +4609,94 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SPR_MSSSR0
+value|0x3f7
+end_define
+
+begin_comment
+comment|/* .6. Memory Subsystem Status Register (MPC745x) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSSSR0_L2TAG
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* 13: L2 tag parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSSSR0_L2DAT
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* 14: L2 data parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSSSR0_L3TAG
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* 15: L3 tag parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSSSR0_L3DAT
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* 16: L3 data parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSSSR0_APE
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* 17: Address parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSSSR0_DPE
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* 18: Data parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSSSR0_TEA
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* 19: Bus transfer error acknowledge */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_LDSTCR
 value|0x3f8
 end_define

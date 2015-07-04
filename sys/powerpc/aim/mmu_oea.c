@@ -821,7 +821,7 @@ modifier|*
 parameter_list|,
 name|vm_offset_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|u_int
 parameter_list|,
@@ -907,7 +907,7 @@ specifier|static
 name|void
 name|moea_syncicache
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
@@ -1435,7 +1435,7 @@ name|moea_mapdev_attr
 parameter_list|(
 name|mmu_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|,
@@ -1476,7 +1476,7 @@ name|mmu_t
 parameter_list|,
 name|vm_offset_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_memattr_t
 parameter_list|)
@@ -1917,7 +1917,7 @@ name|__inline
 name|uint32_t
 name|moea_calc_wimg
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_memattr_t
@@ -7263,7 +7263,7 @@ parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_memattr_t
@@ -9041,7 +9041,7 @@ specifier|static
 name|void
 name|moea_syncicache
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t
@@ -9081,7 +9081,7 @@ parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|u_int
@@ -11501,7 +11501,7 @@ parameter_list|(
 name|int
 name|idx
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t
@@ -11749,7 +11749,7 @@ parameter_list|(
 name|mmu_t
 name|mmu
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t
