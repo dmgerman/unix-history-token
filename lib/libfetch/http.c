@@ -6313,12 +6313,6 @@ parameter_list|)
 block|{
 name|http_auth_challenge_t
 modifier|*
-name|basic
-init|=
-name|NULL
-decl_stmt|;
-name|http_auth_challenge_t
-modifier|*
 name|digest
 init|=
 name|NULL
@@ -6357,7 +6351,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* Look for a Digest and a Basic challenge */
+comment|/* Look for a Digest */
 for|for
 control|(
 name|i
@@ -6374,28 +6368,6 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|cs
-operator|->
-name|challenges
-index|[
-name|i
-index|]
-operator|->
-name|scheme
-operator|==
-name|HTTPAS_BASIC
-condition|)
-name|basic
-operator|=
-name|cs
-operator|->
-name|challenges
-index|[
-name|i
-index|]
-expr_stmt|;
 if|if
 condition|(
 name|cs
