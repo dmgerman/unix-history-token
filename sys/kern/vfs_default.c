@@ -3129,6 +3129,8 @@ name|LOOKUP
 argument_list|,
 name|FOLLOW
 operator||
+name|LOCKSHARED
+operator||
 name|LOCKLEAF
 argument_list|,
 name|UIO_SYSSPACE
@@ -3284,7 +3286,7 @@ argument_list|(
 operator|*
 name|dvp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)
@@ -3436,7 +3438,7 @@ name|vn_lock
 argument_list|(
 name|mvp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)
@@ -3471,7 +3473,7 @@ argument_list|(
 operator|*
 name|dvp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)
@@ -3492,7 +3494,7 @@ argument_list|(
 operator|*
 name|dvp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)
