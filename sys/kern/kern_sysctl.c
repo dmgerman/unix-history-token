@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rmlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sbuf.h>
 end_include
 
@@ -212,13 +218,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * The sysctllock protects the MIB tree.  It also protects sysctl  * contexts used with dynamic sysctls.  The sysctl_register_oid() and  * sysctl_unregister_oid() routines require the sysctllock to already  * be held, so the sysctl_xlock() and sysctl_xunlock() routines are  * provided for the few places in the kernel which need to use that  * API rather than using the dynamic API.  Use of the dynamic API is  * strongly encouraged for most code.  *  * The sysctlmemlock is used to limit the amount of user memory wired for  * sysctl requests.  This is implemented by serializing any userland  * sysctl requests larger than a single page via an exclusive lock.  */
+comment|/*  * The sysctllock protects the MIB tree.  It also protects sysctl  * contexts used with dynamic sysctls.  The sysctl_register_oid() and  * sysctl_unregister_oid() routines require the sysctllock to already  * be held, so the sysctl_wlock() and sysctl_wunlock() routines are  * provided for the few places in the kernel which need to use that  * API rather than using the dynamic API.  Use of the dynamic API is  * strongly encouraged for most code.  *  * The sysctlmemlock is used to limit the amount of user memory wired for  * sysctl requests.  This is implemented by serializing any userland  * sysctl requests larger than a single page via an exclusive lock.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|struct
-name|sx
+name|rmlock
 name|sysctllock
 decl_stmt|;
 end_decl_stmt
@@ -234,41 +240,45 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|SYSCTL_XLOCK
+name|SYSCTL_WLOCK
 parameter_list|()
-value|sx_xlock(&sysctllock)
+value|do { printf("wlocked!\n"); rm_wlock(&sysctllock); } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SYSCTL_XUNLOCK
+name|SYSCTL_WUNLOCK
 parameter_list|()
-value|sx_xunlock(&sysctllock)
+value|rm_wunlock(&sysctllock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SYSCTL_SLOCK
-parameter_list|()
-value|sx_slock(&sysctllock)
+name|SYSCTL_RLOCK
+parameter_list|(
+name|tracker
+parameter_list|)
+value|rm_rlock(&sysctllock, (tracker))
 end_define
 
 begin_define
 define|#
 directive|define
-name|SYSCTL_SUNLOCK
-parameter_list|()
-value|sx_sunlock(&sysctllock)
+name|SYSCTL_RUNLOCK
+parameter_list|(
+name|tracker
+parameter_list|)
+value|rm_runlock(&sysctllock, (tracker))
 end_define
 
 begin_define
 define|#
 directive|define
-name|SYSCTL_XLOCKED
+name|SYSCTL_WLOCKED
 parameter_list|()
-value|sx_xlocked(&sysctllock)
+value|rm_wowned(&sysctllock)
 end_define
 
 begin_define
@@ -276,23 +286,23 @@ define|#
 directive|define
 name|SYSCTL_ASSERT_LOCKED
 parameter_list|()
-value|sx_assert(&sysctllock, SA_LOCKED)
+value|rm_assert(&sysctllock, RA_LOCKED)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SYSCTL_ASSERT_XLOCKED
+name|SYSCTL_ASSERT_WLOCKED
 parameter_list|()
-value|sx_assert(&sysctllock, SA_XLOCKED)
+value|rm_assert(&sysctllock, RA_WLOCKED)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SYSCTL_ASSERT_SLOCKED
+name|SYSCTL_ASSERT_RLOCKED
 parameter_list|()
-value|sx_assert(&sysctllock, SA_SLOCKED)
+value|rm_assert(&sysctllock, RA_RLOCKED)
 end_define
 
 begin_define
@@ -300,7 +310,7 @@ define|#
 directive|define
 name|SYSCTL_INIT
 parameter_list|()
-value|sx_init(&sysctllock, "sysctl lock")
+value|rm_init_flags(&sysctllock, "sysctl lock", \ 				    RM_SLEEPABLE)
 end_define
 
 begin_define
@@ -315,7 +325,7 @@ parameter_list|,
 name|timo
 parameter_list|)
 define|\
-value|sx_sleep(ch,&sysctllock, 0, wmesg, timo)
+value|rm_sleep(ch,&sysctllock, 0, wmesg, timo)
 end_define
 
 begin_function_decl
@@ -404,19 +414,25 @@ specifier|static
 name|void
 name|sysctl_lock
 parameter_list|(
-name|bool
-name|xlock
+name|struct
+name|rm_priotracker
+modifier|*
+name|tracker
 parameter_list|)
 block|{
 if|if
 condition|(
-name|xlock
+name|tracker
+operator|!=
+name|NULL
 condition|)
-name|SYSCTL_XLOCK
-argument_list|()
+name|SYSCTL_RLOCK
+argument_list|(
+name|tracker
+argument_list|)
 expr_stmt|;
 else|else
-name|SYSCTL_SLOCK
+name|SYSCTL_WLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -424,36 +440,30 @@ end_function
 
 begin_function
 specifier|static
-name|bool
+name|void
 name|sysctl_unlock
 parameter_list|(
-name|void
+name|struct
+name|rm_priotracker
+modifier|*
+name|tracker
 parameter_list|)
 block|{
-name|bool
-name|xlocked
-decl_stmt|;
-name|xlocked
-operator|=
-name|SYSCTL_XLOCKED
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
-name|xlocked
+name|tracker
+operator|!=
+name|NULL
 condition|)
-name|SYSCTL_XUNLOCK
-argument_list|()
+name|SYSCTL_RUNLOCK
+argument_list|(
+name|tracker
+argument_list|)
 expr_stmt|;
 else|else
-name|SYSCTL_SUNLOCK
+name|SYSCTL_WUNLOCK
 argument_list|()
 expr_stmt|;
-return|return
-operator|(
-name|xlocked
-operator|)
-return|;
 block|}
 end_function
 
@@ -527,12 +537,12 @@ end_comment
 
 begin_function
 name|void
-name|sysctl_xlock
+name|sysctl_wlock
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|SYSCTL_XLOCK
+name|SYSCTL_WLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -540,12 +550,12 @@ end_function
 
 begin_function
 name|void
-name|sysctl_xunlock
+name|sysctl_wunlock
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|SYSCTL_XUNLOCK
+name|SYSCTL_WUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -572,13 +582,15 @@ name|struct
 name|sysctl_req
 modifier|*
 name|req
+parameter_list|,
+name|struct
+name|rm_priotracker
+modifier|*
+name|tracker
 parameter_list|)
 block|{
 name|int
 name|error
-decl_stmt|;
-name|bool
-name|xlocked
 decl_stmt|;
 if|if
 condition|(
@@ -598,10 +610,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|xlocked
-operator|=
 name|sysctl_unlock
-argument_list|()
+argument_list|(
+name|tracker
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -654,7 +666,7 @@ argument_list|)
 expr_stmt|;
 name|sysctl_lock
 argument_list|(
-name|xlocked
+name|tracker
 argument_list|)
 expr_stmt|;
 if|if
@@ -1195,6 +1207,8 @@ name|oid_arg2
 argument_list|,
 operator|&
 name|req
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1266,7 +1280,7 @@ init|=
 literal|2
 decl_stmt|;
 comment|/* 	 * First check if another oid with the same name already 	 * exists in the parent's list. 	 */
-name|SYSCTL_ASSERT_XLOCKED
+name|SYSCTL_ASSERT_WLOCKED
 argument_list|()
 expr_stmt|;
 name|p
@@ -1599,7 +1613,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|SYSCTL_ASSERT_XLOCKED
+name|SYSCTL_ASSERT_WLOCKED
 argument_list|()
 expr_stmt|;
 name|error
@@ -1745,7 +1759,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * First perform a "dry run" to check if it's ok to remove oids. 	 * XXX FIXME 	 * XXX This algorithm is a hack. But I don't know any 	 * XXX better solution for now... 	 */
-name|SYSCTL_XLOCK
+name|SYSCTL_WLOCK
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -1833,7 +1847,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|SYSCTL_XUNLOCK
+name|SYSCTL_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -1906,7 +1920,7 @@ operator|=
 name|e1
 expr_stmt|;
 block|}
-name|SYSCTL_XUNLOCK
+name|SYSCTL_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -1943,7 +1957,7 @@ name|sysctl_ctx_entry
 modifier|*
 name|e
 decl_stmt|;
-name|SYSCTL_ASSERT_XLOCKED
+name|SYSCTL_ASSERT_WLOCKED
 argument_list|()
 expr_stmt|;
 if|if
@@ -2025,7 +2039,7 @@ name|sysctl_ctx_entry
 modifier|*
 name|e
 decl_stmt|;
-name|SYSCTL_ASSERT_XLOCKED
+name|SYSCTL_ASSERT_WLOCKED
 argument_list|()
 expr_stmt|;
 if|if
@@ -2113,7 +2127,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|SYSCTL_XLOCK
+name|SYSCTL_WLOCK
 argument_list|()
 expr_stmt|;
 name|e
@@ -2141,7 +2155,7 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-name|SYSCTL_XUNLOCK
+name|SYSCTL_WUNLOCK
 argument_list|()
 expr_stmt|;
 name|free
@@ -2159,7 +2173,7 @@ return|;
 block|}
 else|else
 block|{
-name|SYSCTL_XUNLOCK
+name|SYSCTL_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -2194,7 +2208,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SYSCTL_XLOCK
+name|SYSCTL_WLOCK
 argument_list|()
 expr_stmt|;
 name|error
@@ -2208,7 +2222,7 @@ argument_list|,
 name|recurse
 argument_list|)
 expr_stmt|;
-name|SYSCTL_XUNLOCK
+name|SYSCTL_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -2255,7 +2269,7 @@ name|error
 operator|=
 name|ENOENT
 expr_stmt|;
-name|SYSCTL_XLOCK
+name|SYSCTL_WLOCK
 argument_list|()
 expr_stmt|;
 name|SLIST_FOREACH_SAFE
@@ -2297,7 +2311,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|SYSCTL_XUNLOCK
+name|SYSCTL_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -2336,7 +2350,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|SYSCTL_ASSERT_XLOCKED
+name|SYSCTL_ASSERT_WLOCKED
 argument_list|()
 expr_stmt|;
 if|if
@@ -2670,7 +2684,7 @@ name|NULL
 operator|)
 return|;
 comment|/* Check if the node already exists, otherwise create it */
-name|SYSCTL_XLOCK
+name|SYSCTL_WLOCK
 argument_list|()
 expr_stmt|;
 name|oidp
@@ -2721,7 +2735,7 @@ argument_list|,
 name|oidp
 argument_list|)
 expr_stmt|;
-name|SYSCTL_XUNLOCK
+name|SYSCTL_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -2732,7 +2746,7 @@ return|;
 block|}
 else|else
 block|{
-name|SYSCTL_XUNLOCK
+name|SYSCTL_WUNLOCK
 argument_list|()
 expr_stmt|;
 name|printf
@@ -2872,7 +2886,7 @@ argument_list|(
 name|oidp
 argument_list|)
 expr_stmt|;
-name|SYSCTL_XUNLOCK
+name|SYSCTL_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -2919,7 +2933,7 @@ argument_list|,
 name|M_SYSCTLOID
 argument_list|)
 expr_stmt|;
-name|SYSCTL_XLOCK
+name|SYSCTL_WLOCK
 argument_list|()
 expr_stmt|;
 name|oldname
@@ -2940,7 +2954,7 @@ name|oid_name
 operator|=
 name|newname
 expr_stmt|;
-name|SYSCTL_XUNLOCK
+name|SYSCTL_WUNLOCK
 argument_list|()
 expr_stmt|;
 name|free
@@ -2977,7 +2991,7 @@ name|sysctl_oid
 modifier|*
 name|oidp
 decl_stmt|;
-name|SYSCTL_XLOCK
+name|SYSCTL_WLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -2989,7 +3003,7 @@ operator|==
 name|parent
 condition|)
 block|{
-name|SYSCTL_XUNLOCK
+name|SYSCTL_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -3016,7 +3030,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|SYSCTL_XUNLOCK
+name|SYSCTL_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -3047,7 +3061,7 @@ argument_list|(
 name|oid
 argument_list|)
 expr_stmt|;
-name|SYSCTL_XUNLOCK
+name|SYSCTL_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -3100,7 +3114,7 @@ expr_stmt|;
 name|SYSCTL_INIT
 argument_list|()
 expr_stmt|;
-name|SYSCTL_XLOCK
+name|SYSCTL_WLOCK
 argument_list|()
 expr_stmt|;
 name|SET_FOREACH
@@ -3115,7 +3129,7 @@ operator|*
 name|oidp
 argument_list|)
 expr_stmt|;
-name|SYSCTL_XUNLOCK
+name|SYSCTL_WUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -3378,6 +3392,10 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|struct
+name|rm_priotracker
+name|tracker
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -3401,8 +3419,11 @@ operator|(
 name|error
 operator|)
 return|;
-name|SYSCTL_SLOCK
-argument_list|()
+name|SYSCTL_RLOCK
+argument_list|(
+operator|&
+name|tracker
+argument_list|)
 expr_stmt|;
 name|sysctl_sysctl_debug_dump_node
 argument_list|(
@@ -3412,8 +3433,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|SYSCTL_SUNLOCK
-argument_list|()
+name|SYSCTL_RUNLOCK
+argument_list|(
+operator|&
+name|tracker
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -3500,14 +3524,21 @@ decl_stmt|,
 modifier|*
 name|lsp2
 decl_stmt|;
+name|struct
+name|rm_priotracker
+name|tracker
+decl_stmt|;
 name|char
 name|buf
 index|[
 literal|10
 index|]
 decl_stmt|;
-name|SYSCTL_SLOCK
-argument_list|()
+name|SYSCTL_RLOCK
+argument_list|(
+operator|&
+name|tracker
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -3709,8 +3740,11 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|SYSCTL_SUNLOCK
-argument_list|()
+name|SYSCTL_RUNLOCK
+argument_list|(
+operator|&
+name|tracker
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -4117,14 +4151,21 @@ init|=
 operator|&
 name|sysctl__children
 decl_stmt|;
+name|struct
+name|rm_priotracker
+name|tracker
+decl_stmt|;
 name|int
 name|newoid
 index|[
 name|CTL_MAXNAME
 index|]
 decl_stmt|;
-name|SYSCTL_SLOCK
-argument_list|()
+name|SYSCTL_RLOCK
+argument_list|(
+operator|&
+name|tracker
+argument_list|)
 expr_stmt|;
 name|i
 operator|=
@@ -4147,8 +4188,11 @@ operator|&
 name|oid
 argument_list|)
 expr_stmt|;
-name|SYSCTL_SUNLOCK
-argument_list|()
+name|SYSCTL_RUNLOCK
+argument_list|(
+operator|&
+name|tracker
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4433,6 +4477,10 @@ name|op
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|rm_priotracker
+name|tracker
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -4514,8 +4562,11 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|SYSCTL_SLOCK
-argument_list|()
+name|SYSCTL_RLOCK
+argument_list|(
+operator|&
+name|tracker
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -4532,8 +4583,11 @@ operator|&
 name|op
 argument_list|)
 expr_stmt|;
-name|SYSCTL_SUNLOCK
-argument_list|()
+name|SYSCTL_RUNLOCK
+argument_list|(
+operator|&
+name|tracker
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
@@ -4623,11 +4677,18 @@ name|sysctl_oid
 modifier|*
 name|oid
 decl_stmt|;
+name|struct
+name|rm_priotracker
+name|tracker
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|SYSCTL_SLOCK
-argument_list|()
+name|SYSCTL_RLOCK
+argument_list|(
+operator|&
+name|tracker
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -4717,8 +4778,11 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|SYSCTL_SUNLOCK
-argument_list|()
+name|SYSCTL_RUNLOCK
+argument_list|(
+operator|&
+name|tracker
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -4764,11 +4828,18 @@ name|sysctl_oid
 modifier|*
 name|oid
 decl_stmt|;
+name|struct
+name|rm_priotracker
+name|tracker
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|SYSCTL_SLOCK
-argument_list|()
+name|SYSCTL_RLOCK
+argument_list|(
+operator|&
+name|tracker
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -4832,8 +4903,11 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|SYSCTL_SUNLOCK
-argument_list|()
+name|SYSCTL_RUNLOCK
+argument_list|(
+operator|&
+name|tracker
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -6068,9 +6142,6 @@ name|lock
 operator|=
 name|REQ_UNWIRED
 expr_stmt|;
-name|SYSCTL_SLOCK
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|sysctl_root
@@ -6084,9 +6155,6 @@ argument_list|,
 operator|&
 name|req
 argument_list|)
-expr_stmt|;
-name|SYSCTL_SUNLOCK
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -6995,6 +7063,10 @@ name|sysctl_oid
 modifier|*
 name|oid
 decl_stmt|;
+name|struct
+name|rm_priotracker
+name|tracker
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -7002,8 +7074,11 @@ name|indx
 decl_stmt|,
 name|lvl
 decl_stmt|;
-name|SYSCTL_ASSERT_SLOCKED
-argument_list|()
+name|SYSCTL_RLOCK
+argument_list|(
+operator|&
+name|tracker
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -7026,11 +7101,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
 operator|(
@@ -7053,11 +7126,15 @@ name|oid_handler
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EISDIR
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 block|}
 comment|/* Is this sysctl writable? */
 if|if
@@ -7075,11 +7152,15 @@ operator|&
 name|CTLFLAG_WR
 operator|)
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EPERM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|KASSERT
 argument_list|(
 name|req
@@ -7109,6 +7190,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|req
 operator|->
 name|oldptr
@@ -7121,14 +7203,9 @@ name|oid_kind
 operator|&
 name|CTLFLAG_CAPRD
 operator|)
-condition|)
-return|return
-operator|(
-name|EPERM
 operator|)
-return|;
-if|if
-condition|(
+operator|||
+operator|(
 name|req
 operator|->
 name|newptr
@@ -7141,12 +7218,17 @@ name|oid_kind
 operator|&
 name|CTLFLAG_CAPWR
 operator|)
-condition|)
-return|return
-operator|(
-name|EPERM
 operator|)
-return|;
+condition|)
+block|{
+name|error
+operator|=
+name|EPERM
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -7195,11 +7277,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* Is this sysctl writable by only privileged users? */
 if|if
@@ -7282,11 +7362,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
@@ -7295,11 +7373,15 @@ name|oid
 operator|->
 name|oid_handler
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 if|if
 condition|(
 operator|(
@@ -7371,11 +7453,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 endif|#
 directive|endif
 ifdef|#
@@ -7425,6 +7505,9 @@ argument_list|,
 name|arg2
 argument_list|,
 name|req
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 name|KFAIL_POINT_ERROR
@@ -7434,6 +7517,14 @@ argument_list|,
 name|sysctl_running
 argument_list|,
 name|error
+argument_list|)
+expr_stmt|;
+name|out
+label|:
+name|SYSCTL_RUNLOCK
+argument_list|(
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 return|return
@@ -7946,9 +8037,6 @@ name|newidx
 operator|=
 literal|0
 expr_stmt|;
-name|SYSCTL_SLOCK
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|sysctl_root
@@ -7962,9 +8050,6 @@ argument_list|,
 operator|&
 name|req
 argument_list|)
-expr_stmt|;
-name|SYSCTL_SUNLOCK
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
