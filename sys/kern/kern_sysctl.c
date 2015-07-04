@@ -242,7 +242,7 @@ define|#
 directive|define
 name|SYSCTL_WLOCK
 parameter_list|()
-value|do { printf("wlocked!\n"); rm_wlock(&sysctllock); } while (0)
+value|rm_wlock(&sysctllock)
 end_define
 
 begin_define
