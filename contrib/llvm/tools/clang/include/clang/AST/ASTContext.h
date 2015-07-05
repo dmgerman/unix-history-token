@@ -7326,6 +7326,21 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Get default simd alignment of the specified complete type in bits.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|getOpenMPDefaultSimdAlign
+argument_list|(
+name|QualType
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Return the size of the specified (complete) type \p T, in bits.
 end_comment
 
@@ -7987,6 +8002,55 @@ name|method
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// Loading virtual member pointers using the virtual inheritance model
+end_comment
+
+begin_comment
+comment|/// always results in an adjustment using the vbtable even if the index is
+end_comment
+
+begin_comment
+comment|/// zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is usually OK because the first slot in the vbtable points
+end_comment
+
+begin_comment
+comment|/// backwards to the top of the MDC.  However, the MDC might be reusing a
+end_comment
+
+begin_comment
+comment|/// vbptr from an nv-base.  In this case, the first slot in the vbtable
+end_comment
+
+begin_comment
+comment|/// points to the start of the nv-base which introduced the vbptr and *not*
+end_comment
+
+begin_comment
+comment|/// the MDC.  Modify the NonVirtualBaseAdjustment to account for this.
+end_comment
+
+begin_decl_stmt
+name|CharUnits
+name|getOffsetOfBaseWithVBPtr
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Get the offset of a FieldDecl or IndirectFieldDecl, in bits.

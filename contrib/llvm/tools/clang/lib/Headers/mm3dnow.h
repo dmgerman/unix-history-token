@@ -44,7 +44,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("3dnow")))
 end_define
 
@@ -52,7 +52,7 @@ begin_function
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_femms
 parameter_list|()
 block|{
@@ -66,7 +66,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pavgusb
 parameter_list|(
 name|__m64
@@ -100,7 +100,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pf2id
 parameter_list|(
 name|__m64
@@ -126,7 +126,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pfacc
 parameter_list|(
 name|__m64
@@ -160,7 +160,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pfadd
 parameter_list|(
 name|__m64
@@ -194,7 +194,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pfcmpeq
 parameter_list|(
 name|__m64
@@ -228,7 +228,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pfcmpge
 parameter_list|(
 name|__m64
@@ -262,7 +262,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pfcmpgt
 parameter_list|(
 name|__m64
@@ -296,7 +296,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pfmax
 parameter_list|(
 name|__m64
@@ -330,7 +330,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pfmin
 parameter_list|(
 name|__m64
@@ -364,7 +364,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pfmul
 parameter_list|(
 name|__m64
@@ -398,7 +398,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pfrcp
 parameter_list|(
 name|__m64
@@ -424,7 +424,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pfrcpit1
 parameter_list|(
 name|__m64
@@ -458,7 +458,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pfrcpit2
 parameter_list|(
 name|__m64
@@ -492,7 +492,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pfrsqrt
 parameter_list|(
 name|__m64
@@ -518,7 +518,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pfrsqrtit1
 parameter_list|(
 name|__m64
@@ -552,7 +552,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pfsub
 parameter_list|(
 name|__m64
@@ -586,7 +586,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pfsubr
 parameter_list|(
 name|__m64
@@ -620,7 +620,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pi2fd
 parameter_list|(
 name|__m64
@@ -646,7 +646,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pmulhrw
 parameter_list|(
 name|__m64
@@ -680,7 +680,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pf2iw
 parameter_list|(
 name|__m64
@@ -706,7 +706,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pfnacc
 parameter_list|(
 name|__m64
@@ -740,7 +740,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pfpnacc
 parameter_list|(
 name|__m64
@@ -774,7 +774,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pi2fw
 parameter_list|(
 name|__m64
@@ -800,7 +800,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pswapdsf
 parameter_list|(
 name|__m64
@@ -826,7 +826,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_m_pswapdsi
 parameter_list|(
 name|__m64
@@ -851,7 +851,7 @@ end_function
 begin_undef
 undef|#
 directive|undef
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 end_undef
 
 begin_endif

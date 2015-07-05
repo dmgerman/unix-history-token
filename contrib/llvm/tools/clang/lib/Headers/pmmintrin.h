@@ -28,7 +28,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("sse3")))
 end_define
 
@@ -36,7 +36,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_lddqu_si128
 parameter_list|(
 name|__m128i
@@ -66,7 +66,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_addsub_ps
 parameter_list|(
 name|__m128
@@ -91,7 +91,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_hadd_ps
 parameter_list|(
 name|__m128
@@ -116,7 +116,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_hsub_ps
 parameter_list|(
 name|__m128
@@ -141,7 +141,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_movehdup_ps
 parameter_list|(
 name|__m128
@@ -171,7 +171,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_moveldup_ps
 parameter_list|(
 name|__m128
@@ -201,7 +201,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_addsub_pd
 parameter_list|(
 name|__m128d
@@ -226,7 +226,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_hadd_pd
 parameter_list|(
 name|__m128d
@@ -251,7 +251,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_hsub_pd
 parameter_list|(
 name|__m128d
@@ -286,7 +286,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_movedup_pd
 parameter_list|(
 name|__m128d
@@ -351,7 +351,7 @@ begin_function
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_monitor
 parameter_list|(
 name|void
@@ -386,7 +386,7 @@ begin_function
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_mwait
 parameter_list|(
 name|unsigned
@@ -409,7 +409,7 @@ end_function
 begin_undef
 undef|#
 directive|undef
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 end_undef
 
 begin_endif

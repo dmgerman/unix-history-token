@@ -386,7 +386,7 @@ argument|const TargetRegisterClass *DstRC
 argument_list|)
 specifier|const
 block|;
-name|unsigned
+name|int
 name|commuteOpcode
 argument_list|(
 argument|const MachineInstr&MI

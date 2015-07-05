@@ -279,10 +279,6 @@ enum|;
 block|}
 end_decl_stmt
 
-begin_comment
-comment|// namespace R600_InstFlag
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -503,10 +499,6 @@ block|}
 enum|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// namespace OpName
-end_comment
 
 begin_comment
 comment|//===----------------------------------------------------------------------===//

@@ -168,212 +168,57 @@ comment|/// specific guidelines.
 struct|struct
 name|FormatStyle
 block|{
-comment|/// \brief Supported languages. When stored in a configuration file, specifies
-comment|/// the language, that the configuration targets. When passed to the
-comment|/// reformat() function, enables syntax features specific to the language.
-enum|enum
-name|LanguageKind
-block|{
-comment|/// Do not use.
-name|LK_None
-block|,
-comment|/// Should be used for C, C++, ObjectiveC, ObjectiveC++.
-name|LK_Cpp
-block|,
-comment|/// Should be used for Java.
-name|LK_Java
-block|,
-comment|/// Should be used for JavaScript.
-name|LK_JavaScript
-block|,
-comment|/// Should be used for Protocol Buffers
-comment|/// (https://developers.google.com/protocol-buffers/).
-name|LK_Proto
-block|}
-enum|;
-comment|/// \brief Language, this format style is targeted at.
-name|LanguageKind
-name|Language
-decl_stmt|;
-comment|/// \brief The column limit.
-comment|///
-comment|/// A column limit of \c 0 means that there is no column limit. In this case,
-comment|/// clang-format will respect the input's line breaking decisions within
-comment|/// statements unless they contradict other rules.
-name|unsigned
-name|ColumnLimit
-decl_stmt|;
-comment|/// \brief The maximum number of consecutive empty lines to keep.
-name|unsigned
-name|MaxEmptyLinesToKeep
-decl_stmt|;
-comment|/// \brief If true, empty lines at the start of blocks are kept.
-name|bool
-name|KeepEmptyLinesAtTheStartOfBlocks
-decl_stmt|;
-comment|/// \brief The penalty for each line break introduced inside a comment.
-name|unsigned
-name|PenaltyBreakComment
-decl_stmt|;
-comment|/// \brief The penalty for each line break introduced inside a string literal.
-name|unsigned
-name|PenaltyBreakString
-decl_stmt|;
-comment|/// \brief The penalty for each character outside of the column limit.
-name|unsigned
-name|PenaltyExcessCharacter
-decl_stmt|;
-comment|/// \brief The penalty for breaking before the first \c<<.
-name|unsigned
-name|PenaltyBreakFirstLessLess
-decl_stmt|;
-comment|/// \brief The penalty for breaking a function call after "call(".
-name|unsigned
-name|PenaltyBreakBeforeFirstCallParameter
-decl_stmt|;
-comment|/// \brief The& and * alignment style.
-enum|enum
-name|PointerAlignmentStyle
-block|{
-comment|/// Align pointer to the left.
-name|PAS_Left
-block|,
-comment|/// Align pointer to the right.
-name|PAS_Right
-block|,
-comment|/// Align pointer in the middle.
-name|PAS_Middle
-block|}
-enum|;
-comment|/// Pointer and reference alignment style.
-name|PointerAlignmentStyle
-name|PointerAlignment
-decl_stmt|;
-comment|/// \brief If \c true, analyze the formatted file for the most common
-comment|/// alignment of& and *. \c PointerAlignment is then used only as fallback.
-name|bool
-name|DerivePointerAlignment
-decl_stmt|;
 comment|/// \brief The extra indent or outdent of access modifiers, e.g. \c public:.
 name|int
 name|AccessModifierOffset
 decl_stmt|;
-comment|/// \brief Supported language standards.
-enum|enum
-name|LanguageStandard
-block|{
-comment|/// Use C++03-compatible syntax.
-name|LS_Cpp03
-block|,
-comment|/// Use features of C++11 (e.g. \c A<A<int>> instead of
-comment|///<tt>A<A<int>></tt>).
-name|LS_Cpp11
-block|,
-comment|/// Automatic detection based on the input.
-name|LS_Auto
-block|}
-enum|;
-comment|/// \brief Format compatible with this standard, e.g. use
-comment|///<tt>A<A<int>></tt> instead of \c A<A<int>> for LS_Cpp03.
-name|LanguageStandard
-name|Standard
-decl_stmt|;
-comment|/// \brief Indent case labels one level from the switch statement.
+comment|/// \brief If \c true, horizontally aligns arguments after an open bracket.
 comment|///
-comment|/// When \c false, use the same indentation level as for the switch statement.
-comment|/// Switch statement body is always indented one level more than case labels.
+comment|/// This applies to round brackets (parentheses), angle brackets and square
+comment|/// brackets. This will result in formattings like
+comment|/// \code
+comment|/// someLongFunction(argument1,
+comment|///                  argument2);
+comment|/// \endcode
 name|bool
-name|IndentCaseLabels
+name|AlignAfterOpenBracket
 decl_stmt|;
-comment|/// \brief Indent if a function definition or declaration is wrapped after the
-comment|/// type.
-name|bool
-name|IndentWrappedFunctionNames
-decl_stmt|;
-comment|/// \brief Different ways to indent namespace contents.
-enum|enum
-name|NamespaceIndentationKind
-block|{
-comment|/// Don't indent in namespaces.
-name|NI_None
-block|,
-comment|/// Indent only in inner namespaces (nested in other namespaces).
-name|NI_Inner
-block|,
-comment|/// Indent in all namespaces.
-name|NI_All
-block|}
-enum|;
-comment|/// \brief The indentation used for namespaces.
-name|NamespaceIndentationKind
-name|NamespaceIndentation
-decl_stmt|;
-comment|/// \brief The number of spaces before trailing line comments
-comment|/// (\c // - comments).
+comment|/// \brief If \c true, aligns consecutive assignments.
 comment|///
-comment|/// This does not affect trailing block comments (\c /**/ - comments) as those
-comment|/// commonly have different usage patterns and a number of special cases.
-name|unsigned
-name|SpacesBeforeTrailingComments
-decl_stmt|;
-comment|/// \brief If \c false, a function declaration's or function definition's
-comment|/// parameters will either all be on the same line or will have one line each.
+comment|/// This will align the assignment operators of consecutive lines. This
+comment|/// will result in formattings like
+comment|/// \code
+comment|/// int aaaa = 12;
+comment|/// int b    = 23;
+comment|/// int ccc  = 23;
+comment|/// \endcode
 name|bool
-name|BinPackParameters
+name|AlignConsecutiveAssignments
 decl_stmt|;
-comment|/// \brief If \c false, a function call's arguments will either be all on the
-comment|/// same line or will have one line each.
+comment|/// \brief If \c true, aligns escaped newlines as far left as possible.
+comment|/// Otherwise puts them into the right-most column.
 name|bool
-name|BinPackArguments
+name|AlignEscapedNewlinesLeft
 decl_stmt|;
-comment|/// \brief If \c true, clang-format detects whether function calls and
-comment|/// definitions are formatted with one parameter per line.
-comment|///
-comment|/// Each call can be bin-packed, one-per-line or inconclusive. If it is
-comment|/// inconclusive, e.g. completely on one line, but a decision needs to be
-comment|/// made, clang-format analyzes whether there are other bin-packed cases in
-comment|/// the input file and act accordingly.
-comment|///
-comment|/// NOTE: This is an experimental flag, that might go away or be renamed. Do
-comment|/// not use this in config files, etc. Use at your own risk.
+comment|/// \brief If \c true, horizontally align operands of binary and ternary
+comment|/// expressions.
 name|bool
-name|ExperimentalAutoDetectBinPacking
+name|AlignOperands
+decl_stmt|;
+comment|/// \brief If \c true, aligns trailing comments.
+name|bool
+name|AlignTrailingComments
 decl_stmt|;
 comment|/// \brief Allow putting all parameters of a function declaration onto
 comment|/// the next line even if \c BinPackParameters is \c false.
 name|bool
 name|AllowAllParametersOfDeclarationOnNextLine
 decl_stmt|;
-comment|/// \brief Penalty for putting the return type of a function onto its own
-comment|/// line.
-name|unsigned
-name|PenaltyReturnTypeOnItsOwnLine
-decl_stmt|;
-comment|/// \brief If the constructor initializers don't fit on a line, put each
-comment|/// initializer on its own line.
-name|bool
-name|ConstructorInitializerAllOnOneLineOrOnePerLine
-decl_stmt|;
-comment|/// \brief Always break constructor initializers before commas and align
-comment|/// the commas with the colon.
-name|bool
-name|BreakConstructorInitializersBeforeComma
-decl_stmt|;
 comment|/// \brief Allows contracting simple braced statements to a single line.
 comment|///
 comment|/// E.g., this allows<tt>if (a) { return; }</tt> to be put on a single line.
 name|bool
 name|AllowShortBlocksOnASingleLine
-decl_stmt|;
-comment|/// \brief If \c true,<tt>if (a) return;</tt> can be put on a single
-comment|/// line.
-name|bool
-name|AllowShortIfStatementsOnASingleLine
-decl_stmt|;
-comment|/// \brief If \c true,<tt>while (true) continue;</tt> can be put on a
-comment|/// single line.
-name|bool
-name|AllowShortLoopsOnASingleLine
 decl_stmt|;
 comment|/// \brief If \c true, short case labels will be contracted to a single line.
 name|bool
@@ -402,82 +247,34 @@ comment|/// on a single line.
 name|ShortFunctionStyle
 name|AllowShortFunctionsOnASingleLine
 decl_stmt|;
-comment|/// \brief Add a space after \c @property in Objective-C, i.e. use
-comment|///<tt>\@property (readonly)</tt> instead of<tt>\@property(readonly)</tt>.
+comment|/// \brief If \c true,<tt>if (a) return;</tt> can be put on a single
+comment|/// line.
 name|bool
-name|ObjCSpaceAfterProperty
+name|AllowShortIfStatementsOnASingleLine
 decl_stmt|;
-comment|/// \brief Add a space in front of an Objective-C protocol list, i.e. use
-comment|///<tt>Foo<Protocol></tt> instead of \c Foo<Protocol>.
+comment|/// \brief If \c true,<tt>while (true) continue;</tt> can be put on a
+comment|/// single line.
 name|bool
-name|ObjCSpaceBeforeProtocolList
+name|AllowShortLoopsOnASingleLine
 decl_stmt|;
-comment|/// \brief If \c true, horizontally aligns arguments after an open bracket.
-comment|///
-comment|/// This applies to round brackets (parentheses), angle brackets and square
-comment|/// brackets. This will result in formattings like
-comment|/// \code
-comment|/// someLongFunction(argument1,
-comment|///                  argument2);
-comment|/// \endcode
-name|bool
-name|AlignAfterOpenBracket
-decl_stmt|;
-comment|/// \brief If \c true, horizontally align operands of binary and ternary
-comment|/// expressions.
-name|bool
-name|AlignOperands
-decl_stmt|;
-comment|/// \brief If \c true, aligns trailing comments.
-name|bool
-name|AlignTrailingComments
-decl_stmt|;
-comment|/// \brief If \c true, aligns consecutive assignments.
-comment|///
-comment|/// This will align the assignment operators of consecutive lines. This
-comment|/// will result in formattings like
-comment|/// \code
-comment|/// int aaaa = 12;
-comment|/// int b    = 23;
-comment|/// int ccc  = 23;
-comment|/// \endcode
-name|bool
-name|AlignConsecutiveAssignments
-decl_stmt|;
-comment|/// \brief If \c true, aligns escaped newlines as far left as possible.
-comment|/// Otherwise puts them into the right-most column.
-name|bool
-name|AlignEscapedNewlinesLeft
-decl_stmt|;
-comment|/// \brief The number of columns to use for indentation.
-name|unsigned
-name|IndentWidth
-decl_stmt|;
-comment|/// \brief The number of columns used for tab stops.
-name|unsigned
-name|TabWidth
-decl_stmt|;
-comment|/// \brief The number of characters to use for indentation of constructor
-comment|/// initializer lists.
-name|unsigned
-name|ConstructorInitializerIndentWidth
-decl_stmt|;
-comment|/// \brief The number of characters to use for indentation of ObjC blocks.
-name|unsigned
-name|ObjCBlockIndentWidth
-decl_stmt|;
-comment|/// \brief If \c true, always break after function definition return types.
-comment|///
-comment|/// More truthfully called 'break before the identifier following the type
-comment|/// in a function definition'. PenaltyReturnTypeOnItsOwnLine becomes
-comment|/// irrelevant.
-name|bool
+comment|/// \brief Different ways to break after the function definition return type.
+enum|enum
+name|DefinitionReturnTypeBreakingStyle
+block|{
+comment|/// Break after return type automatically.
+comment|/// \c PenaltyReturnTypeOnItsOwnLine is taken into account.
+name|DRTBS_None
+block|,
+comment|/// Always break after the return type.
+name|DRTBS_All
+block|,
+comment|/// Always break after the return types of top level functions.
+name|DRTBS_TopLevel
+block|,   }
+enum|;
+comment|/// \brief The function definition return type breaking style to use.
+name|DefinitionReturnTypeBreakingStyle
 name|AlwaysBreakAfterDefinitionReturnType
-decl_stmt|;
-comment|/// \brief If \c true, always break after the<tt>template<...></tt> of a
-comment|/// template declaration.
-name|bool
-name|AlwaysBreakTemplateDeclarations
 decl_stmt|;
 comment|/// \brief If \c true, always break before multiline string literals.
 comment|///
@@ -488,24 +285,20 @@ comment|/// \c ContinuationIndentWidth spaces from the start of the line.
 name|bool
 name|AlwaysBreakBeforeMultilineStrings
 decl_stmt|;
-comment|/// \brief Different ways to use tab in formatting.
-enum|enum
-name|UseTabStyle
-block|{
-comment|/// Never use tab.
-name|UT_Never
-block|,
-comment|/// Use tabs only for indentation.
-name|UT_ForIndentation
-block|,
-comment|/// Use tabs whenever we need to fill whitespace that spans at least from
-comment|/// one tab stop to the next one.
-name|UT_Always
-block|}
-enum|;
-comment|/// \brief The way to use tab characters in the resulting file.
-name|UseTabStyle
-name|UseTab
+comment|/// \brief If \c true, always break after the<tt>template<...></tt> of a
+comment|/// template declaration.
+name|bool
+name|AlwaysBreakTemplateDeclarations
+decl_stmt|;
+comment|/// \brief If \c false, a function call's arguments will either be all on the
+comment|/// same line or will have one line each.
+name|bool
+name|BinPackArguments
+decl_stmt|;
+comment|/// \brief If \c false, a function declaration's or function definition's
+comment|/// parameters will either all be on the same line or will have one line each.
+name|bool
+name|BinPackParameters
 decl_stmt|;
 comment|/// \brief The style of breaking before or after binary operators.
 enum|enum
@@ -524,10 +317,6 @@ enum|;
 comment|/// \brief The way to wrap binary operators.
 name|BinaryOperatorStyle
 name|BreakBeforeBinaryOperators
-decl_stmt|;
-comment|/// \brief If \c true, ternary operators will be placed after line breaks.
-name|bool
-name|BreakBeforeTernaryOperators
 decl_stmt|;
 comment|/// \brief Different ways to attach braces to their surrounding context.
 enum|enum
@@ -556,6 +345,44 @@ comment|/// \brief The brace breaking style to use.
 name|BraceBreakingStyle
 name|BreakBeforeBraces
 decl_stmt|;
+comment|/// \brief If \c true, ternary operators will be placed after line breaks.
+name|bool
+name|BreakBeforeTernaryOperators
+decl_stmt|;
+comment|/// \brief Always break constructor initializers before commas and align
+comment|/// the commas with the colon.
+name|bool
+name|BreakConstructorInitializersBeforeComma
+decl_stmt|;
+comment|/// \brief The column limit.
+comment|///
+comment|/// A column limit of \c 0 means that there is no column limit. In this case,
+comment|/// clang-format will respect the input's line breaking decisions within
+comment|/// statements unless they contradict other rules.
+name|unsigned
+name|ColumnLimit
+decl_stmt|;
+comment|/// \brief A regular expression that describes comments with special meaning,
+comment|/// which should not be split into lines or otherwise changed.
+name|std
+operator|::
+name|string
+name|CommentPragmas
+expr_stmt|;
+comment|/// \brief If the constructor initializers don't fit on a line, put each
+comment|/// initializer on its own line.
+name|bool
+name|ConstructorInitializerAllOnOneLineOrOnePerLine
+decl_stmt|;
+comment|/// \brief The number of characters to use for indentation of constructor
+comment|/// initializer lists.
+name|unsigned
+name|ConstructorInitializerIndentWidth
+decl_stmt|;
+comment|/// \brief Indent width for line continuations.
+name|unsigned
+name|ContinuationIndentWidth
+decl_stmt|;
 comment|/// \brief If \c true, format braced lists as best suited for C++11 braced
 comment|/// lists.
 comment|///
@@ -572,35 +399,181 @@ comment|/// a zero-length name is assumed.
 name|bool
 name|Cpp11BracedListStyle
 decl_stmt|;
-comment|/// \brief If \c true, spaces will be inserted after '(' and before ')'.
+comment|/// \brief If \c true, analyze the formatted file for the most common
+comment|/// alignment of& and *. \c PointerAlignment is then used only as fallback.
 name|bool
-name|SpacesInParentheses
+name|DerivePointerAlignment
 decl_stmt|;
-comment|/// \brief If \c true, spaces will be inserted after '<' and before '>' in
-comment|/// template argument lists
+comment|/// \brief Disables formatting completely.
 name|bool
-name|SpacesInAngles
+name|DisableFormat
 decl_stmt|;
-comment|/// \brief If \c true, spaces will be inserted after '[' and before ']'.
+comment|/// \brief If \c true, clang-format detects whether function calls and
+comment|/// definitions are formatted with one parameter per line.
+comment|///
+comment|/// Each call can be bin-packed, one-per-line or inconclusive. If it is
+comment|/// inconclusive, e.g. completely on one line, but a decision needs to be
+comment|/// made, clang-format analyzes whether there are other bin-packed cases in
+comment|/// the input file and act accordingly.
+comment|///
+comment|/// NOTE: This is an experimental flag, that might go away or be renamed. Do
+comment|/// not use this in config files, etc. Use at your own risk.
 name|bool
-name|SpacesInSquareBrackets
+name|ExperimentalAutoDetectBinPacking
 decl_stmt|;
-comment|/// \brief If \c true, spaces may be inserted into '()'.
+comment|/// \brief A vector of macros that should be interpreted as foreach loops
+comment|/// instead of as function calls.
+comment|///
+comment|/// These are expected to be macros of the form:
+comment|/// \code
+comment|/// FOREACH(<variable-declaration>, ...)
+comment|///<loop-body>
+comment|/// \endcode
+comment|///
+comment|/// For example: BOOST_FOREACH.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ForEachMacros
+expr_stmt|;
+comment|/// \brief Indent case labels one level from the switch statement.
+comment|///
+comment|/// When \c false, use the same indentation level as for the switch statement.
+comment|/// Switch statement body is always indented one level more than case labels.
 name|bool
-name|SpaceInEmptyParentheses
+name|IndentCaseLabels
 decl_stmt|;
-comment|/// \brief If \c true, spaces are inserted inside container literals (e.g.
-comment|/// ObjC and Javascript array and dict literals).
-name|bool
-name|SpacesInContainerLiterals
+comment|/// \brief The number of columns to use for indentation.
+name|unsigned
+name|IndentWidth
 decl_stmt|;
-comment|/// \brief If \c true, spaces may be inserted into C style casts.
+comment|/// \brief Indent if a function definition or declaration is wrapped after the
+comment|/// type.
 name|bool
-name|SpacesInCStyleCastParentheses
+name|IndentWrappedFunctionNames
+decl_stmt|;
+comment|/// \brief If true, empty lines at the start of blocks are kept.
+name|bool
+name|KeepEmptyLinesAtTheStartOfBlocks
+decl_stmt|;
+comment|/// \brief Supported languages. When stored in a configuration file, specifies
+comment|/// the language, that the configuration targets. When passed to the
+comment|/// reformat() function, enables syntax features specific to the language.
+enum|enum
+name|LanguageKind
+block|{
+comment|/// Do not use.
+name|LK_None
+block|,
+comment|/// Should be used for C, C++, ObjectiveC, ObjectiveC++.
+name|LK_Cpp
+block|,
+comment|/// Should be used for Java.
+name|LK_Java
+block|,
+comment|/// Should be used for JavaScript.
+name|LK_JavaScript
+block|,
+comment|/// Should be used for Protocol Buffers
+comment|/// (https://developers.google.com/protocol-buffers/).
+name|LK_Proto
+block|}
+enum|;
+comment|/// \brief Language, this format style is targeted at.
+name|LanguageKind
+name|Language
+decl_stmt|;
+comment|/// \brief The maximum number of consecutive empty lines to keep.
+name|unsigned
+name|MaxEmptyLinesToKeep
+decl_stmt|;
+comment|/// \brief Different ways to indent namespace contents.
+enum|enum
+name|NamespaceIndentationKind
+block|{
+comment|/// Don't indent in namespaces.
+name|NI_None
+block|,
+comment|/// Indent only in inner namespaces (nested in other namespaces).
+name|NI_Inner
+block|,
+comment|/// Indent in all namespaces.
+name|NI_All
+block|}
+enum|;
+comment|/// \brief The indentation used for namespaces.
+name|NamespaceIndentationKind
+name|NamespaceIndentation
+decl_stmt|;
+comment|/// \brief The number of characters to use for indentation of ObjC blocks.
+name|unsigned
+name|ObjCBlockIndentWidth
+decl_stmt|;
+comment|/// \brief Add a space after \c @property in Objective-C, i.e. use
+comment|///<tt>\@property (readonly)</tt> instead of<tt>\@property(readonly)</tt>.
+name|bool
+name|ObjCSpaceAfterProperty
+decl_stmt|;
+comment|/// \brief Add a space in front of an Objective-C protocol list, i.e. use
+comment|///<tt>Foo<Protocol></tt> instead of \c Foo<Protocol>.
+name|bool
+name|ObjCSpaceBeforeProtocolList
+decl_stmt|;
+comment|/// \brief The penalty for breaking a function call after "call(".
+name|unsigned
+name|PenaltyBreakBeforeFirstCallParameter
+decl_stmt|;
+comment|/// \brief The penalty for each line break introduced inside a comment.
+name|unsigned
+name|PenaltyBreakComment
+decl_stmt|;
+comment|/// \brief The penalty for breaking before the first \c<<.
+name|unsigned
+name|PenaltyBreakFirstLessLess
+decl_stmt|;
+comment|/// \brief The penalty for each line break introduced inside a string literal.
+name|unsigned
+name|PenaltyBreakString
+decl_stmt|;
+comment|/// \brief The penalty for each character outside of the column limit.
+name|unsigned
+name|PenaltyExcessCharacter
+decl_stmt|;
+comment|/// \brief Penalty for putting the return type of a function onto its own
+comment|/// line.
+name|unsigned
+name|PenaltyReturnTypeOnItsOwnLine
+decl_stmt|;
+comment|/// \brief The& and * alignment style.
+enum|enum
+name|PointerAlignmentStyle
+block|{
+comment|/// Align pointer to the left.
+name|PAS_Left
+block|,
+comment|/// Align pointer to the right.
+name|PAS_Right
+block|,
+comment|/// Align pointer in the middle.
+name|PAS_Middle
+block|}
+enum|;
+comment|/// Pointer and reference alignment style.
+name|PointerAlignmentStyle
+name|PointerAlignment
 decl_stmt|;
 comment|/// \brief If \c true, a space may be inserted after C style casts.
 name|bool
 name|SpaceAfterCStyleCast
+decl_stmt|;
+comment|/// \brief If \c false, spaces will be removed before assignment operators.
+name|bool
+name|SpaceBeforeAssignmentOperators
 decl_stmt|;
 comment|/// \brief Different ways to put a space before opening parentheses.
 enum|enum
@@ -624,45 +597,83 @@ comment|/// \brief Defines in which cases to put a space before opening parenthe
 name|SpaceBeforeParensOptions
 name|SpaceBeforeParens
 decl_stmt|;
-comment|/// \brief If \c false, spaces will be removed before assignment operators.
+comment|/// \brief If \c true, spaces may be inserted into '()'.
 name|bool
-name|SpaceBeforeAssignmentOperators
+name|SpaceInEmptyParentheses
 decl_stmt|;
-comment|/// \brief Indent width for line continuations.
+comment|/// \brief The number of spaces before trailing line comments
+comment|/// (\c // - comments).
+comment|///
+comment|/// This does not affect trailing block comments (\c /**/ - comments) as those
+comment|/// commonly have different usage patterns and a number of special cases.
 name|unsigned
-name|ContinuationIndentWidth
+name|SpacesBeforeTrailingComments
 decl_stmt|;
-comment|/// \brief A regular expression that describes comments with special meaning,
-comment|/// which should not be split into lines or otherwise changed.
-name|std
-operator|::
-name|string
-name|CommentPragmas
-expr_stmt|;
-comment|/// \brief Disables formatting at all.
+comment|/// \brief If \c true, spaces will be inserted after '<' and before '>' in
+comment|/// template argument lists
 name|bool
-name|DisableFormat
+name|SpacesInAngles
 decl_stmt|;
-comment|/// \brief A vector of macros that should be interpreted as foreach loops
-comment|/// instead of as function calls.
-comment|///
-comment|/// These are expected to be macros of the form:
-comment|/// \code
-comment|/// FOREACH(<variable-declaration>, ...)
-comment|///<loop-body>
-comment|/// \endcode
-comment|///
-comment|/// For example: BOOST_FOREACH.
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-name|ForEachMacros
-expr_stmt|;
+comment|/// \brief If \c true, spaces are inserted inside container literals (e.g.
+comment|/// ObjC and Javascript array and dict literals).
+name|bool
+name|SpacesInContainerLiterals
+decl_stmt|;
+comment|/// \brief If \c true, spaces may be inserted into C style casts.
+name|bool
+name|SpacesInCStyleCastParentheses
+decl_stmt|;
+comment|/// \brief If \c true, spaces will be inserted after '(' and before ')'.
+name|bool
+name|SpacesInParentheses
+decl_stmt|;
+comment|/// \brief If \c true, spaces will be inserted after '[' and before ']'.
+name|bool
+name|SpacesInSquareBrackets
+decl_stmt|;
+comment|/// \brief Supported language standards.
+enum|enum
+name|LanguageStandard
+block|{
+comment|/// Use C++03-compatible syntax.
+name|LS_Cpp03
+block|,
+comment|/// Use features of C++11 (e.g. \c A<A<int>> instead of
+comment|///<tt>A<A<int>></tt>).
+name|LS_Cpp11
+block|,
+comment|/// Automatic detection based on the input.
+name|LS_Auto
+block|}
+enum|;
+comment|/// \brief Format compatible with this standard, e.g. use
+comment|///<tt>A<A<int>></tt> instead of \c A<A<int>> for LS_Cpp03.
+name|LanguageStandard
+name|Standard
+decl_stmt|;
+comment|/// \brief The number of columns used for tab stops.
+name|unsigned
+name|TabWidth
+decl_stmt|;
+comment|/// \brief Different ways to use tab in formatting.
+enum|enum
+name|UseTabStyle
+block|{
+comment|/// Never use tab.
+name|UT_Never
+block|,
+comment|/// Use tabs only for indentation.
+name|UT_ForIndentation
+block|,
+comment|/// Use tabs whenever we need to fill whitespace that spans at least from
+comment|/// one tab stop to the next one.
+name|UT_Always
+block|}
+enum|;
+comment|/// \brief The way to use tab characters in the resulting file.
+name|UseTabStyle
+name|UseTab
+decl_stmt|;
 name|bool
 name|operator
 operator|==
@@ -687,17 +698,23 @@ name|R
 operator|.
 name|AlignAfterOpenBracket
 operator|&&
-name|AlignOperands
+name|AlignConsecutiveAssignments
 operator|==
 name|R
 operator|.
-name|AlignOperands
+name|AlignConsecutiveAssignments
 operator|&&
 name|AlignEscapedNewlinesLeft
 operator|==
 name|R
 operator|.
 name|AlignEscapedNewlinesLeft
+operator|&&
+name|AlignOperands
+operator|==
+name|R
+operator|.
+name|AlignOperands
 operator|&&
 name|AlignTrailingComments
 operator|==
@@ -711,17 +728,23 @@ name|R
 operator|.
 name|AllowAllParametersOfDeclarationOnNextLine
 operator|&&
-name|AllowShortFunctionsOnASingleLine
+name|AllowShortBlocksOnASingleLine
 operator|==
 name|R
 operator|.
-name|AllowShortFunctionsOnASingleLine
+name|AllowShortBlocksOnASingleLine
 operator|&&
-name|AllowShortBlocksOnASingleLine
+name|AllowShortCaseLabelsOnASingleLine
 operator|==
 name|R
 operator|.
-name|AllowShortBlocksOnASingleLine
+name|AllowShortCaseLabelsOnASingleLine
+operator|&&
+name|AllowShortFunctionsOnASingleLine
+operator|==
+name|R
+operator|.
+name|AllowShortFunctionsOnASingleLine
 operator|&&
 name|AllowShortIfStatementsOnASingleLine
 operator|==
@@ -741,23 +764,17 @@ name|R
 operator|.
 name|AlwaysBreakAfterDefinitionReturnType
 operator|&&
-name|AlwaysBreakTemplateDeclarations
-operator|==
-name|R
-operator|.
-name|AlwaysBreakTemplateDeclarations
-operator|&&
 name|AlwaysBreakBeforeMultilineStrings
 operator|==
 name|R
 operator|.
 name|AlwaysBreakBeforeMultilineStrings
 operator|&&
-name|BinPackParameters
+name|AlwaysBreakTemplateDeclarations
 operator|==
 name|R
 operator|.
-name|BinPackParameters
+name|AlwaysBreakTemplateDeclarations
 operator|&&
 name|BinPackArguments
 operator|==
@@ -765,23 +782,29 @@ name|R
 operator|.
 name|BinPackArguments
 operator|&&
+name|BinPackParameters
+operator|==
+name|R
+operator|.
+name|BinPackParameters
+operator|&&
 name|BreakBeforeBinaryOperators
 operator|==
 name|R
 operator|.
 name|BreakBeforeBinaryOperators
 operator|&&
-name|BreakBeforeTernaryOperators
+name|BreakBeforeBraces
 operator|==
 name|R
 operator|.
-name|BreakBeforeTernaryOperators
+name|BreakBeforeBraces
 operator|&&
-name|BreakBeforeBraces
+name|BreakBeforeTernaryOperators
 operator|==
 name|R
 operator|.
-name|BreakBeforeBraces
+name|BreakBeforeTernaryOperators
 operator|&&
 name|BreakConstructorInitializersBeforeComma
 operator|==
@@ -795,6 +818,12 @@ name|R
 operator|.
 name|ColumnLimit
 operator|&&
+name|CommentPragmas
+operator|==
+name|R
+operator|.
+name|CommentPragmas
+operator|&&
 name|ConstructorInitializerAllOnOneLineOrOnePerLine
 operator|==
 name|R
@@ -807,11 +836,29 @@ name|R
 operator|.
 name|ConstructorInitializerIndentWidth
 operator|&&
+name|ContinuationIndentWidth
+operator|==
+name|R
+operator|.
+name|ContinuationIndentWidth
+operator|&&
+name|Cpp11BracedListStyle
+operator|==
+name|R
+operator|.
+name|Cpp11BracedListStyle
+operator|&&
 name|DerivePointerAlignment
 operator|==
 name|R
 operator|.
 name|DerivePointerAlignment
+operator|&&
+name|DisableFormat
+operator|==
+name|R
+operator|.
+name|DisableFormat
 operator|&&
 name|ExperimentalAutoDetectBinPacking
 operator|==
@@ -819,17 +866,17 @@ name|R
 operator|.
 name|ExperimentalAutoDetectBinPacking
 operator|&&
-name|IndentCaseLabels
+name|ForEachMacros
 operator|==
 name|R
 operator|.
-name|IndentCaseLabels
+name|ForEachMacros
 operator|&&
-name|IndentWrappedFunctionNames
+name|IndentCaseLabels
 operator|==
 name|R
 operator|.
-name|IndentWrappedFunctionNames
+name|IndentCaseLabels
 operator|&&
 name|IndentWidth
 operator|==
@@ -843,17 +890,23 @@ name|R
 operator|.
 name|Language
 operator|&&
-name|MaxEmptyLinesToKeep
+name|IndentWrappedFunctionNames
 operator|==
 name|R
 operator|.
-name|MaxEmptyLinesToKeep
+name|IndentWrappedFunctionNames
 operator|&&
 name|KeepEmptyLinesAtTheStartOfBlocks
 operator|==
 name|R
 operator|.
 name|KeepEmptyLinesAtTheStartOfBlocks
+operator|&&
+name|MaxEmptyLinesToKeep
+operator|==
+name|R
+operator|.
+name|MaxEmptyLinesToKeep
 operator|&&
 name|NamespaceIndentation
 operator|==
@@ -878,6 +931,12 @@ operator|==
 name|R
 operator|.
 name|ObjCSpaceBeforeProtocolList
+operator|&&
+name|PenaltyBreakBeforeFirstCallParameter
+operator|==
+name|R
+operator|.
+name|PenaltyBreakBeforeFirstCallParameter
 operator|&&
 name|PenaltyBreakComment
 operator|==
@@ -915,17 +974,65 @@ name|R
 operator|.
 name|PointerAlignment
 operator|&&
+name|SpaceAfterCStyleCast
+operator|==
+name|R
+operator|.
+name|SpaceAfterCStyleCast
+operator|&&
+name|SpaceBeforeAssignmentOperators
+operator|==
+name|R
+operator|.
+name|SpaceBeforeAssignmentOperators
+operator|&&
+name|SpaceBeforeParens
+operator|==
+name|R
+operator|.
+name|SpaceBeforeParens
+operator|&&
+name|SpaceInEmptyParentheses
+operator|==
+name|R
+operator|.
+name|SpaceInEmptyParentheses
+operator|&&
 name|SpacesBeforeTrailingComments
 operator|==
 name|R
 operator|.
 name|SpacesBeforeTrailingComments
 operator|&&
-name|Cpp11BracedListStyle
+name|SpacesInAngles
 operator|==
 name|R
 operator|.
-name|Cpp11BracedListStyle
+name|SpacesInAngles
+operator|&&
+name|SpacesInContainerLiterals
+operator|==
+name|R
+operator|.
+name|SpacesInContainerLiterals
+operator|&&
+name|SpacesInCStyleCastParentheses
+operator|==
+name|R
+operator|.
+name|SpacesInCStyleCastParentheses
+operator|&&
+name|SpacesInParentheses
+operator|==
+name|R
+operator|.
+name|SpacesInParentheses
+operator|&&
+name|SpacesInSquareBrackets
+operator|==
+name|R
+operator|.
+name|SpacesInSquareBrackets
 operator|&&
 name|Standard
 operator|==
@@ -944,78 +1051,6 @@ operator|==
 name|R
 operator|.
 name|UseTab
-operator|&&
-name|SpacesInParentheses
-operator|==
-name|R
-operator|.
-name|SpacesInParentheses
-operator|&&
-name|SpacesInSquareBrackets
-operator|==
-name|R
-operator|.
-name|SpacesInSquareBrackets
-operator|&&
-name|SpacesInAngles
-operator|==
-name|R
-operator|.
-name|SpacesInAngles
-operator|&&
-name|SpaceInEmptyParentheses
-operator|==
-name|R
-operator|.
-name|SpaceInEmptyParentheses
-operator|&&
-name|SpacesInContainerLiterals
-operator|==
-name|R
-operator|.
-name|SpacesInContainerLiterals
-operator|&&
-name|SpacesInCStyleCastParentheses
-operator|==
-name|R
-operator|.
-name|SpacesInCStyleCastParentheses
-operator|&&
-name|SpaceAfterCStyleCast
-operator|==
-name|R
-operator|.
-name|SpaceAfterCStyleCast
-operator|&&
-name|SpaceBeforeParens
-operator|==
-name|R
-operator|.
-name|SpaceBeforeParens
-operator|&&
-name|SpaceBeforeAssignmentOperators
-operator|==
-name|R
-operator|.
-name|SpaceBeforeAssignmentOperators
-operator|&&
-name|ContinuationIndentWidth
-operator|==
-name|R
-operator|.
-name|ContinuationIndentWidth
-operator|&&
-name|CommentPragmas
-operator|==
-name|R
-operator|.
-name|CommentPragmas
-operator|&&
-name|ForEachMacros
-operator|==
-name|R
-operator|.
-name|ForEachMacros
 return|;
 block|}
 block|}

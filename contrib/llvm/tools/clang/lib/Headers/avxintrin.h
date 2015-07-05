@@ -131,7 +131,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("avx")))
 end_define
 
@@ -143,7 +143,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_add_pd
 parameter_list|(
 name|__m256d
@@ -165,7 +165,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_add_ps
 parameter_list|(
 name|__m256
@@ -187,7 +187,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sub_pd
 parameter_list|(
 name|__m256d
@@ -209,7 +209,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sub_ps
 parameter_list|(
 name|__m256
@@ -231,7 +231,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_addsub_pd
 parameter_list|(
 name|__m256d
@@ -265,7 +265,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_addsub_ps
 parameter_list|(
 name|__m256
@@ -299,7 +299,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_div_pd
 parameter_list|(
 name|__m256d
@@ -321,7 +321,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_div_ps
 parameter_list|(
 name|__m256
@@ -343,7 +343,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_max_pd
 parameter_list|(
 name|__m256d
@@ -377,7 +377,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_max_ps
 parameter_list|(
 name|__m256
@@ -411,7 +411,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_min_pd
 parameter_list|(
 name|__m256d
@@ -445,7 +445,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_min_ps
 parameter_list|(
 name|__m256
@@ -479,7 +479,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_mul_pd
 parameter_list|(
 name|__m256d
@@ -501,7 +501,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_mul_ps
 parameter_list|(
 name|__m256
@@ -523,7 +523,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sqrt_pd
 parameter_list|(
 name|__m256d
@@ -549,7 +549,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sqrt_ps
 parameter_list|(
 name|__m256
@@ -575,7 +575,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_rsqrt_ps
 parameter_list|(
 name|__m256
@@ -601,7 +601,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_rcp_ps
 parameter_list|(
 name|__m256
@@ -695,7 +695,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_and_pd
 parameter_list|(
 name|__m256d
@@ -728,7 +728,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_and_ps
 parameter_list|(
 name|__m256
@@ -761,7 +761,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_andnot_pd
 parameter_list|(
 name|__m256d
@@ -795,7 +795,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_andnot_ps
 parameter_list|(
 name|__m256
@@ -829,7 +829,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_or_pd
 parameter_list|(
 name|__m256d
@@ -862,7 +862,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_or_ps
 parameter_list|(
 name|__m256
@@ -895,7 +895,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_xor_pd
 parameter_list|(
 name|__m256d
@@ -928,7 +928,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_xor_ps
 parameter_list|(
 name|__m256
@@ -965,7 +965,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_hadd_pd
 parameter_list|(
 name|__m256d
@@ -999,7 +999,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_hadd_ps
 parameter_list|(
 name|__m256
@@ -1033,7 +1033,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_hsub_pd
 parameter_list|(
 name|__m256d
@@ -1067,7 +1067,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_hsub_ps
 parameter_list|(
 name|__m256
@@ -1105,7 +1105,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m128d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_permutevar_pd
 parameter_list|(
 name|__m128d
@@ -1139,7 +1139,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_permutevar_pd
 parameter_list|(
 name|__m256d
@@ -1173,7 +1173,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_permutevar_ps
 parameter_list|(
 name|__m128
@@ -1207,7 +1207,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_permutevar_ps
 parameter_list|(
 name|__m256
@@ -1363,7 +1363,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_blendv_pd
 parameter_list|(
 name|__m256d
@@ -1405,7 +1405,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_blendv_ps
 parameter_list|(
 name|__m256
@@ -1937,7 +1937,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_extract_epi32
 parameter_list|(
 name|__m256i
@@ -1971,7 +1971,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_extract_epi16
 parameter_list|(
 name|__m256i
@@ -2005,7 +2005,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_extract_epi8
 parameter_list|(
 name|__m256i
@@ -2046,7 +2046,7 @@ specifier|static
 name|__inline
 name|long
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_extract_epi64
 parameter_list|(
 name|__m256i
@@ -2085,7 +2085,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_insert_epi32
 parameter_list|(
 name|__m256i
@@ -2129,7 +2129,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_insert_epi16
 parameter_list|(
 name|__m256i
@@ -2173,7 +2173,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_insert_epi8
 parameter_list|(
 name|__m256i
@@ -2223,7 +2223,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_insert_epi64
 parameter_list|(
 name|__m256i
@@ -2277,7 +2277,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtepi32_pd
 parameter_list|(
 name|__m128i
@@ -2303,7 +2303,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtepi32_ps
 parameter_list|(
 name|__m256i
@@ -2329,7 +2329,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtpd_ps
 parameter_list|(
 name|__m256d
@@ -2355,7 +2355,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtps_epi32
 parameter_list|(
 name|__m256
@@ -2381,7 +2381,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtps_pd
 parameter_list|(
 name|__m128
@@ -2407,7 +2407,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m128i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvttpd_epi32
 parameter_list|(
 name|__m256d
@@ -2433,7 +2433,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m128i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtpd_epi32
 parameter_list|(
 name|__m256d
@@ -2459,7 +2459,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvttps_epi32
 parameter_list|(
 name|__m256
@@ -2489,7 +2489,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_movehdup_ps
 parameter_list|(
 name|__m256
@@ -2527,7 +2527,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_moveldup_ps
 parameter_list|(
 name|__m256
@@ -2565,7 +2565,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_movedup_pd
 parameter_list|(
 name|__m256d
@@ -2599,7 +2599,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_unpackhi_pd
 parameter_list|(
 name|__m256d
@@ -2636,7 +2636,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_unpacklo_pd
 parameter_list|(
 name|__m256d
@@ -2673,7 +2673,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_unpackhi_ps
 parameter_list|(
 name|__m256
@@ -2722,7 +2722,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_unpacklo_ps
 parameter_list|(
 name|__m256
@@ -2775,7 +2775,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_testz_pd
 parameter_list|(
 name|__m128d
@@ -2806,7 +2806,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_testc_pd
 parameter_list|(
 name|__m128d
@@ -2837,7 +2837,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_testnzc_pd
 parameter_list|(
 name|__m128d
@@ -2868,7 +2868,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_testz_ps
 parameter_list|(
 name|__m128
@@ -2899,7 +2899,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_testc_ps
 parameter_list|(
 name|__m128
@@ -2930,7 +2930,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_testnzc_ps
 parameter_list|(
 name|__m128
@@ -2961,7 +2961,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_testz_pd
 parameter_list|(
 name|__m256d
@@ -2992,7 +2992,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_testc_pd
 parameter_list|(
 name|__m256d
@@ -3023,7 +3023,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_testnzc_pd
 parameter_list|(
 name|__m256d
@@ -3054,7 +3054,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_testz_ps
 parameter_list|(
 name|__m256
@@ -3085,7 +3085,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_testc_ps
 parameter_list|(
 name|__m256
@@ -3116,7 +3116,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_testnzc_ps
 parameter_list|(
 name|__m256
@@ -3147,7 +3147,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_testz_si256
 parameter_list|(
 name|__m256i
@@ -3178,7 +3178,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_testc_si256
 parameter_list|(
 name|__m256i
@@ -3209,7 +3209,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_testnzc_si256
 parameter_list|(
 name|__m256i
@@ -3244,7 +3244,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_movemask_pd
 parameter_list|(
 name|__m256d
@@ -3267,7 +3267,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_movemask_ps
 parameter_list|(
 name|__m256
@@ -3294,7 +3294,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_zeroall
 parameter_list|(
 name|void
@@ -3310,7 +3310,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_zeroupper
 parameter_list|(
 name|void
@@ -3330,7 +3330,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_broadcast_ss
 parameter_list|(
 name|float
@@ -3369,7 +3369,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_broadcast_sd
 parameter_list|(
 name|double
@@ -3408,7 +3408,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_broadcast_ss
 parameter_list|(
 name|float
@@ -3455,7 +3455,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_broadcast_pd
 parameter_list|(
 name|__m128d
@@ -3480,7 +3480,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_broadcast_ps
 parameter_list|(
 name|__m128
@@ -3509,7 +3509,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_load_pd
 parameter_list|(
 name|double
@@ -3533,7 +3533,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_load_ps
 parameter_list|(
 name|float
@@ -3557,7 +3557,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_loadu_pd
 parameter_list|(
 name|double
@@ -3601,7 +3601,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_loadu_ps
 parameter_list|(
 name|float
@@ -3645,7 +3645,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_load_si256
 parameter_list|(
 name|__m256i
@@ -3665,7 +3665,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_loadu_si256
 parameter_list|(
 name|__m256i
@@ -3709,7 +3709,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_lddqu_si256
 parameter_list|(
 name|__m256i
@@ -3743,7 +3743,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_store_pd
 parameter_list|(
 name|double
@@ -3770,7 +3770,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_store_ps
 parameter_list|(
 name|float
@@ -3797,7 +3797,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_storeu_pd
 parameter_list|(
 name|double
@@ -3825,7 +3825,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_storeu_ps
 parameter_list|(
 name|float
@@ -3853,7 +3853,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_store_si256
 parameter_list|(
 name|__m256i
@@ -3876,7 +3876,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_storeu_si256
 parameter_list|(
 name|__m256i
@@ -3912,7 +3912,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m128d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_maskload_pd
 parameter_list|(
 name|double
@@ -3950,7 +3950,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_maskload_pd
 parameter_list|(
 name|double
@@ -3988,7 +3988,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_maskload_ps
 parameter_list|(
 name|float
@@ -4026,7 +4026,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_maskload_ps
 parameter_list|(
 name|float
@@ -4068,7 +4068,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_maskstore_ps
 parameter_list|(
 name|float
@@ -4108,7 +4108,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_maskstore_pd
 parameter_list|(
 name|double
@@ -4148,7 +4148,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_maskstore_pd
 parameter_list|(
 name|double
@@ -4188,7 +4188,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_maskstore_ps
 parameter_list|(
 name|float
@@ -4232,7 +4232,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_stream_si256
 parameter_list|(
 name|__m256i
@@ -4264,7 +4264,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_stream_pd
 parameter_list|(
 name|double
@@ -4292,7 +4292,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_stream_ps
 parameter_list|(
 name|float
@@ -4324,7 +4324,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_set_pd
 parameter_list|(
 name|double
@@ -4361,7 +4361,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_set_ps
 parameter_list|(
 name|float
@@ -4418,7 +4418,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_set_epi32
 parameter_list|(
 name|int
@@ -4478,7 +4478,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_set_epi16
 parameter_list|(
 name|short
@@ -4578,7 +4578,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_set_epi8
 parameter_list|(
 name|char
@@ -4758,7 +4758,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_set_epi64x
 parameter_list|(
 name|long
@@ -4806,7 +4806,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_setr_pd
 parameter_list|(
 name|double
@@ -4843,7 +4843,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_setr_ps
 parameter_list|(
 name|float
@@ -4900,7 +4900,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_setr_epi32
 parameter_list|(
 name|int
@@ -4960,7 +4960,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_setr_epi16
 parameter_list|(
 name|short
@@ -5060,7 +5060,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_setr_epi8
 parameter_list|(
 name|char
@@ -5240,7 +5240,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_setr_epi64x
 parameter_list|(
 name|long
@@ -5288,7 +5288,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_set1_pd
 parameter_list|(
 name|double
@@ -5316,7 +5316,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_set1_ps
 parameter_list|(
 name|float
@@ -5352,7 +5352,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_set1_epi32
 parameter_list|(
 name|int
@@ -5391,7 +5391,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_set1_epi16
 parameter_list|(
 name|short
@@ -5446,7 +5446,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_set1_epi8
 parameter_list|(
 name|char
@@ -5533,7 +5533,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_set1_epi64x
 parameter_list|(
 name|long
@@ -5569,7 +5569,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_setzero_pd
 parameter_list|(
 name|void
@@ -5596,7 +5596,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_setzero_ps
 parameter_list|(
 name|void
@@ -5631,7 +5631,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_setzero_si256
 parameter_list|(
 name|void
@@ -5662,7 +5662,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_castpd_ps
 parameter_list|(
 name|__m256d
@@ -5682,7 +5682,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_castpd_si256
 parameter_list|(
 name|__m256d
@@ -5702,7 +5702,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_castps_pd
 parameter_list|(
 name|__m256
@@ -5722,7 +5722,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_castps_si256
 parameter_list|(
 name|__m256
@@ -5742,7 +5742,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_castsi256_ps
 parameter_list|(
 name|__m256i
@@ -5762,7 +5762,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_castsi256_pd
 parameter_list|(
 name|__m256i
@@ -5782,7 +5782,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m128d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_castpd256_pd128
 parameter_list|(
 name|__m256d
@@ -5808,7 +5808,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_castps256_ps128
 parameter_list|(
 name|__m256
@@ -5838,7 +5838,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m128i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_castsi256_si128
 parameter_list|(
 name|__m256i
@@ -5864,7 +5864,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_castpd128_pd256
 parameter_list|(
 name|__m128d
@@ -5896,7 +5896,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_castps128_ps256
 parameter_list|(
 name|__m128
@@ -5938,7 +5938,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_castsi128_si256
 parameter_list|(
 name|__m128i
@@ -6060,7 +6060,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_loadu2_m128
 parameter_list|(
 name|float
@@ -6133,7 +6133,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_loadu2_m128d
 parameter_list|(
 name|double
@@ -6206,7 +6206,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_loadu2_m128i
 parameter_list|(
 name|__m128i
@@ -6283,7 +6283,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_storeu2_m128
 parameter_list|(
 name|float
@@ -6338,7 +6338,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_storeu2_m128d
 parameter_list|(
 name|double
@@ -6393,7 +6393,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_storeu2_m128i
 parameter_list|(
 name|__m128i
@@ -6462,7 +6462,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_set_m128
 parameter_list|(
 name|__m128
@@ -6506,7 +6506,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_set_m128d
 parameter_list|(
 name|__m128d
@@ -6540,7 +6540,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_set_m128i
 parameter_list|(
 name|__m128i
@@ -6574,7 +6574,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_setr_m128
 parameter_list|(
 name|__m128
@@ -6599,7 +6599,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_setr_m128d
 parameter_list|(
 name|__m128d
@@ -6633,7 +6633,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_setr_m128i
 parameter_list|(
 name|__m128i
@@ -6666,7 +6666,7 @@ end_function
 begin_undef
 undef|#
 directive|undef
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 end_undef
 
 begin_endif

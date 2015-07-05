@@ -93,6 +93,7 @@ name|class
 name|TargetRegisterInfo
 decl_stmt|;
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|BranchFolder
 block|{
 name|public
@@ -655,10 +656,6 @@ block|}
 empty_stmt|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// namespace llvm
-end_comment
 
 begin_endif
 endif|#

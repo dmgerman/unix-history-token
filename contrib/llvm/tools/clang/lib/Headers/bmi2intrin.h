@@ -45,7 +45,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("bmi2")))
 end_define
 
@@ -54,7 +54,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_bzhi_u32
 parameter_list|(
 name|unsigned
@@ -82,7 +82,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_pdep_u32
 parameter_list|(
 name|unsigned
@@ -110,7 +110,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_pext_u32
 parameter_list|(
 name|unsigned
@@ -145,7 +145,7 @@ name|__inline__
 name|unsigned
 name|long
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_bzhi_u64
 parameter_list|(
 name|unsigned
@@ -176,7 +176,7 @@ name|__inline__
 name|unsigned
 name|long
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_pdep_u64
 parameter_list|(
 name|unsigned
@@ -207,7 +207,7 @@ name|__inline__
 name|unsigned
 name|long
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_pext_u64
 parameter_list|(
 name|unsigned
@@ -238,7 +238,7 @@ name|__inline__
 name|unsigned
 name|long
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mulx_u64
 parameter_list|(
 name|unsigned
@@ -309,7 +309,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mulx_u32
 parameter_list|(
 name|unsigned
@@ -375,7 +375,7 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 end_undef
 
 begin_endif

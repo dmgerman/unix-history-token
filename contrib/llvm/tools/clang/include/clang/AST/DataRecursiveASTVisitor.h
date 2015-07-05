@@ -5661,7 +5661,7 @@ parameter_list|,
 name|CODE
 parameter_list|)
 define|\
-value|template<typename Derived>                                                  \   bool RecursiveASTVisitor<Derived>::Traverse##STMT(STMT *S) {                 \     TRY_TO(WalkUpFrom##STMT(S));                                               \     StmtQueueAction StmtQueue(*this);                                          \     { CODE; }                                                                  \     for (Stmt::child_range range = S->children(); range; ++range) {            \       StmtQueue.queue(*range);                                                 \     }                                                                          \     return true;                                                               \   }
+value|template<typename Derived>                                                  \   bool RecursiveASTVisitor<Derived>::Traverse##STMT(STMT *S) {                 \     TRY_TO(WalkUpFrom##STMT(S));                                               \     StmtQueueAction StmtQueue(*this);                                          \     { CODE; }                                                                  \     for (Stmt *SubStmt : S->children()) {                                      \       StmtQueue.queue(SubStmt);                                                \     }                                                                          \     return true;                                                               \   }
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|GCCAsmStmt
@@ -5996,27 +5996,20 @@ begin_for
 for|for
 control|(
 name|Stmt
-operator|::
-name|child_range
-name|range
-operator|=
+modifier|*
+name|SubStmt
+range|:
 name|S
 operator|->
 name|children
 argument_list|()
-init|;
-name|range
-condition|;
-operator|++
-name|range
 control|)
 block|{
 name|StmtQueue
 operator|.
 name|queue
 argument_list|(
-operator|*
-name|range
+name|SubStmt
 argument_list|)
 expr_stmt|;
 block|}
@@ -7356,6 +7349,24 @@ begin_macro
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|OMPTaskgroupDirective
+argument_list|,
+argument|{ TRY_TO(TraverseOMPExecutableDirective(S)); }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|OMPCancellationPointDirective
+argument_list|,
+argument|{ TRY_TO(TraverseOMPExecutableDirective(S)); }
+argument_list|)
+end_macro
+
+begin_macro
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|OMPCancelDirective
 argument_list|,
 argument|{ TRY_TO(TraverseOMPExecutableDirective(S)); }
 argument_list|)
@@ -8792,6 +8803,37 @@ operator|::
 name|VisitOMPFlushClause
 argument_list|(
 argument|OMPFlushClause *C
+argument_list|)
+block|{
+name|TRY_TO
+argument_list|(
+name|VisitOMPClauseList
+argument_list|(
+name|C
+argument_list|)
+argument_list|)
+block|;
+return|return
+name|true
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|bool
+name|RecursiveASTVisitor
+operator|<
+name|Derived
+operator|>
+operator|::
+name|VisitOMPDependClause
+argument_list|(
+argument|OMPDependClause *C
 argument_list|)
 block|{
 name|TRY_TO

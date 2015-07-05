@@ -139,6 +139,19 @@ argument_list|(
 argument|isUnsigned
 argument_list|)
 block|{}
+comment|/// Construct an APSInt from a string representation.
+comment|///
+comment|/// This constructor interprets the string \p Str using the radix of 10.
+comment|/// The interpretation stops at the end of the string. The bit width of the
+comment|/// constructed APSInt is determined automatically.
+comment|///
+comment|/// \param Str the string to be interpreted.
+name|explicit
+name|APSInt
+argument_list|(
+argument|StringRef Str
+argument_list|)
+block|;
 name|APSInt
 operator|&
 name|operator

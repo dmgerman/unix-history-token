@@ -241,6 +241,10 @@ operator|*
 operator|>
 name|Umbrella
 expr_stmt|;
+comment|/// \brief The module signature.
+name|uint64_t
+name|Signature
+decl_stmt|;
 comment|/// \brief The name of the umbrella entry, as written in the module map.
 name|std
 operator|::

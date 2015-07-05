@@ -162,6 +162,10 @@ argument_list|(
 name|position
 argument_list|)
 expr_stmt|;
+name|flag
+operator|=
+name|true
+expr_stmt|;
 name|this
 operator|->
 name|position
@@ -1683,6 +1687,10 @@ name|OptionalFlag
 name|HasLeadingZeroes
 block|;
 comment|// '0'
+name|OptionalFlag
+name|HasObjCTechnicalTerm
+block|;
+comment|// '[tt]'
 name|OptionalAmount
 name|Precision
 block|;
@@ -1726,6 +1734,11 @@ name|HasLeadingZeroes
 argument_list|(
 literal|"0"
 argument_list|)
+block|,
+name|HasObjCTechnicalTerm
+argument_list|(
+literal|"tt"
+argument_list|)
 block|{}
 specifier|static
 name|PrintfSpecifier
@@ -1760,10 +1773,6 @@ argument|const char *position
 argument_list|)
 block|{
 name|HasThousandsGrouping
-operator|=
-name|true
-block|;
-name|HasThousandsGrouping
 operator|.
 name|setPosition
 argument_list|(
@@ -1776,10 +1785,6 @@ argument_list|(
 argument|const char *position
 argument_list|)
 block|{
-name|IsLeftJustified
-operator|=
-name|true
-block|;
 name|IsLeftJustified
 operator|.
 name|setPosition
@@ -1794,10 +1799,6 @@ argument|const char *position
 argument_list|)
 block|{
 name|HasPlusPrefix
-operator|=
-name|true
-block|;
-name|HasPlusPrefix
 operator|.
 name|setPosition
 argument_list|(
@@ -1810,10 +1811,6 @@ argument_list|(
 argument|const char *position
 argument_list|)
 block|{
-name|HasSpacePrefix
-operator|=
-name|true
-block|;
 name|HasSpacePrefix
 operator|.
 name|setPosition
@@ -1828,10 +1825,6 @@ argument|const char *position
 argument_list|)
 block|{
 name|HasAlternativeForm
-operator|=
-name|true
-block|;
-name|HasAlternativeForm
 operator|.
 name|setPosition
 argument_list|(
@@ -1845,10 +1838,19 @@ argument|const char *position
 argument_list|)
 block|{
 name|HasLeadingZeroes
-operator|=
-name|true
-block|;
-name|HasLeadingZeroes
+operator|.
+name|setPosition
+argument_list|(
+name|position
+argument_list|)
+block|;   }
+name|void
+name|setHasObjCTechnicalTerm
+argument_list|(
+argument|const char *position
+argument_list|)
+block|{
+name|HasObjCTechnicalTerm
 operator|.
 name|setPosition
 argument_list|(
@@ -1998,6 +2000,17 @@ specifier|const
 block|{
 return|return
 name|HasSpacePrefix
+return|;
+block|}
+specifier|const
+name|OptionalFlag
+operator|&
+name|hasObjCTechnicalTerm
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasObjCTechnicalTerm
 return|;
 block|}
 name|bool
@@ -2199,10 +2212,6 @@ argument|const char *position
 argument_list|)
 block|{
 name|SuppressAssignment
-operator|=
-name|true
-block|;
-name|SuppressAssignment
 operator|.
 name|setPosition
 argument_list|(
@@ -2377,6 +2386,35 @@ argument_list|(
 argument|const char *startSpecifier
 argument_list|,
 argument|unsigned specifierLen
+argument_list|)
+block|{}
+name|virtual
+name|void
+name|HandleEmptyObjCModifierFlag
+argument_list|(
+argument|const char *startFlags
+argument_list|,
+argument|unsigned flagsLen
+argument_list|)
+block|{}
+name|virtual
+name|void
+name|HandleInvalidObjCModifierFlag
+argument_list|(
+argument|const char *startFlag
+argument_list|,
+argument|unsigned flagLen
+argument_list|)
+block|{}
+name|virtual
+name|void
+name|HandleObjCFlagsWithNonObjCConversion
+argument_list|(
+argument|const char *flagsStart
+argument_list|,
+argument|const char *flagsEnd
+argument_list|,
+argument|const char *conversionPosition
 argument_list|)
 block|{}
 comment|// Printf-specific handlers.

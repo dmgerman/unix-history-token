@@ -136,7 +136,7 @@ literal|5
 block|}
 enum|;
 block|}
-comment|// namespace X86
+comment|// end namespace X86;
 comment|/// X86II - This namespace holds all of the target specific flags that
 comment|/// instruction info tracks.
 comment|///
@@ -311,11 +311,7 @@ comment|/// the offset from beginning of section.
 comment|///
 comment|/// This is the TLS offset for the COFF/Windows TLS mechanism.
 name|MO_SECREL
-block|,
-comment|/// MO_NOPREFIX - On a symbol operand this indicates that the symbol should
-comment|/// not be mangled with a prefix.
-name|MO_NOPREFIX
-block|,   }
+block|}
 enum|;
 enum_decl|enum :
 name|uint64_t
@@ -2731,12 +2727,11 @@ operator|)
 return|;
 block|}
 block|}
-comment|// namespace X86II
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm;
 end_comment
 
 begin_endif

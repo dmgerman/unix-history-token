@@ -670,6 +670,21 @@ name|int
 name|Consecutive
 parameter_list|)
 function_decl|;
+name|bool
+name|hasCompatibleFunctionAttributes
+argument_list|(
+specifier|const
+name|Function
+operator|*
+name|Caller
+argument_list|,
+specifier|const
+name|Function
+operator|*
+name|Callee
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
 block|}
 end_decl_stmt

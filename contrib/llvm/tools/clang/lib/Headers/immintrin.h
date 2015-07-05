@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<avx512cdintrin.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<avx512dqintrin.h>
 end_include
 
@@ -532,6 +538,12 @@ begin_include
 include|#
 directive|include
 file|<shaintrin.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fxsrintrin.h>
 end_include
 
 begin_comment

@@ -206,6 +206,9 @@ comment|// Call to kmp_int32 __kmpc_cancel_barrier(ident_t *loc, kmp_int32
 comment|// global_tid);
 name|OMPRTL__kmpc_cancel_barrier
 block|,
+comment|// Call to void __kmpc_barrier(ident_t *loc, kmp_int32 global_tid);
+name|OMPRTL__kmpc_barrier
+block|,
 comment|// Call to void __kmpc_for_static_fini(ident_t *loc, kmp_int32 global_tid);
 name|OMPRTL__kmpc_for_static_fini
 block|,
@@ -300,6 +303,20 @@ block|,
 comment|// Call to void __kmpc_push_proc_bind(ident_t *loc, kmp_int32 global_tid,
 comment|// int proc_bind);
 name|OMPRTL__kmpc_push_proc_bind
+block|,
+comment|// Call to kmp_int32 __kmpc_omp_task_with_deps(ident_t *loc_ref, kmp_int32
+comment|// gtid, kmp_task_t * new_task, kmp_int32 ndeps, kmp_depend_info_t
+comment|// *dep_list, kmp_int32 ndeps_noalias, kmp_depend_info_t *noalias_dep_list);
+name|OMPRTL__kmpc_omp_task_with_deps
+block|,
+comment|// Call to void __kmpc_omp_wait_deps(ident_t *loc_ref, kmp_int32
+comment|// gtid, kmp_int32 ndeps, kmp_depend_info_t *dep_list, kmp_int32
+comment|// ndeps_noalias, kmp_depend_info_t *noalias_dep_list);
+name|OMPRTL__kmpc_omp_wait_deps
+block|,
+comment|// Call to kmp_int32 __kmpc_cancellationpoint(ident_t *loc, kmp_int32
+comment|// global_tid, kmp_int32 cncl_kind);
+name|OMPRTL__kmpc_cancellationpoint
 block|,   }
 enum|;
 comment|/// \brief Values for bit flags used in the ident_t to describe the fields.
@@ -557,6 +574,17 @@ comment|///    deconstructors of firstprivate C++ objects */
 comment|/// } kmp_task_t;
 name|QualType
 name|KmpTaskTQTy
+decl_stmt|;
+comment|/// \brief Type typedef struct kmp_depend_info {
+comment|///    kmp_intptr_t               base_addr;
+comment|///    size_t                     len;
+comment|///    struct {
+comment|///             bool                   in:1;
+comment|///             bool                   out:1;
+comment|///    } flags;
+comment|/// } kmp_depend_info_t;
+name|QualType
+name|KmpDependInfoTy
 decl_stmt|;
 comment|/// \brief Build type kmp_routine_entry_t (if not built yet).
 name|void
@@ -823,6 +851,8 @@ comment|/// \a D. This outlined function has type void(*)(kmp_int32 *ThreadID,
 comment|/// kmp_int32 BoundID, struct context_vars*).
 comment|/// \param D OpenMP directive.
 comment|/// \param ThreadIDVar Variable for thread id in the current OpenMP region.
+comment|/// \param InnermostKind Kind of innermost directive (for simple directives it
+comment|/// is a directive itself, for combined - its innermost directive).
 comment|/// \param CodeGen Code generation sequence for the \a D directive.
 name|virtual
 name|llvm
@@ -831,20 +861,13 @@ name|Value
 operator|*
 name|emitParallelOutlinedFunction
 argument_list|(
-specifier|const
-name|OMPExecutableDirective
-operator|&
-name|D
+argument|const OMPExecutableDirective&D
 argument_list|,
-specifier|const
-name|VarDecl
-operator|*
-name|ThreadIDVar
+argument|const VarDecl *ThreadIDVar
 argument_list|,
-specifier|const
-name|RegionCodeGenTy
-operator|&
-name|CodeGen
+argument|OpenMPDirectiveKind InnermostKind
+argument_list|,
+argument|const RegionCodeGenTy&CodeGen
 argument_list|)
 expr_stmt|;
 comment|/// \brief Emits outlined function for the OpenMP task directive \a D. This
@@ -852,6 +875,8 @@ comment|/// outlined function has type void(*)(kmp_int32 ThreadID, kmp_int32
 comment|/// PartID, struct context_vars*).
 comment|/// \param D OpenMP directive.
 comment|/// \param ThreadIDVar Variable for thread id in the current OpenMP region.
+comment|/// \param InnermostKind Kind of innermost directive (for simple directives it
+comment|/// is a directive itself, for combined - its innermost directive).
 comment|/// \param CodeGen Code generation sequence for the \a D directive.
 comment|///
 name|virtual
@@ -861,20 +886,13 @@ name|Value
 operator|*
 name|emitTaskOutlinedFunction
 argument_list|(
-specifier|const
-name|OMPExecutableDirective
-operator|&
-name|D
+argument|const OMPExecutableDirective&D
 argument_list|,
-specifier|const
-name|VarDecl
-operator|*
-name|ThreadIDVar
+argument|const VarDecl *ThreadIDVar
 argument_list|,
-specifier|const
-name|RegionCodeGenTy
-operator|&
-name|CodeGen
+argument|OpenMPDirectiveKind InnermostKind
+argument_list|,
+argument|const RegionCodeGenTy&CodeGen
 argument_list|)
 expr_stmt|;
 comment|/// \brief Cleans up references to the objects in finished function.
@@ -1078,6 +1096,8 @@ function_decl|;
 comment|/// \brief Emit an implicit/explicit barrier for OpenMP threads.
 comment|/// \param Kind Directive for which this implicit barrier call must be
 comment|/// generated. Must be OMPD_barrier for explicit barrier generation.
+comment|/// \param CheckForCancel true if check for possible cancellation must be
+comment|/// performed, false otherwise.
 comment|///
 name|virtual
 name|void
@@ -1092,6 +1112,11 @@ name|Loc
 parameter_list|,
 name|OpenMPDirectiveKind
 name|Kind
+parameter_list|,
+name|bool
+name|CheckForCancel
+init|=
+name|true
 parameter_list|)
 function_decl|;
 comment|/// \brief Check if the specified \a ScheduleKind is static non-chunked.
@@ -1422,7 +1447,7 @@ comment|/// child tasks to become final and included tasks.
 comment|/// \param TaskFunction An LLVM function with type void (*)(i32 /*gtid*/, i32
 comment|/// /*part_id*/, captured_struct */*__context*/);
 comment|/// \param SharedsTy A type which contains references the shared variables.
-comment|/// \param Shareds Context with the list of shared variables from the \a
+comment|/// \param Shareds Context with the list of shared variables from the \p
 comment|/// TaskFunction.
 comment|/// \param IfCond Not a nullptr if 'if' clause was specified, nullptr
 comment|/// otherwise.
@@ -1437,6 +1462,8 @@ comment|/// in \p FirstprivateVars.
 comment|/// \param FirstprivateInits List of references to auto generated variables
 comment|/// used for initialization of a single array element. Used if firstprivate
 comment|/// variable is of array type.
+comment|/// \param Dependences List of dependences for the 'task' construct, including
+comment|/// original expression and dependency type.
 name|virtual
 name|void
 name|emitTaskCall
@@ -1491,7 +1518,6 @@ name|Expr
 operator|*
 name|IfCond
 argument_list|,
-specifier|const
 name|ArrayRef
 operator|<
 specifier|const
@@ -1500,7 +1526,6 @@ operator|*
 operator|>
 name|PrivateVars
 argument_list|,
-specifier|const
 name|ArrayRef
 operator|<
 specifier|const
@@ -1509,7 +1534,6 @@ operator|*
 operator|>
 name|PrivateCopies
 argument_list|,
-specifier|const
 name|ArrayRef
 operator|<
 specifier|const
@@ -1518,7 +1542,6 @@ operator|*
 operator|>
 name|FirstprivateVars
 argument_list|,
-specifier|const
 name|ArrayRef
 operator|<
 specifier|const
@@ -1527,7 +1550,6 @@ operator|*
 operator|>
 name|FirstprivateCopies
 argument_list|,
-specifier|const
 name|ArrayRef
 operator|<
 specifier|const
@@ -1535,10 +1557,26 @@ name|Expr
 operator|*
 operator|>
 name|FirstprivateInits
+argument_list|,
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|OpenMPDependClauseKind
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+operator|>>
+name|Dependences
 argument_list|)
 decl_stmt|;
 comment|/// \brief Emit code for the directive that does not require outlining.
 comment|///
+comment|/// \param InnermostKind Kind of innermost directive (for simple directives it
+comment|/// is a directive itself, for combined - its innermost directive).
 comment|/// \param CodeGen Code generation sequence for the \a D directive.
 name|virtual
 name|void
@@ -1547,6 +1585,9 @@ parameter_list|(
 name|CodeGenFunction
 modifier|&
 name|CGF
+parameter_list|,
+name|OpenMPDirectiveKind
+name|InnermostKind
 parameter_list|,
 specifier|const
 name|RegionCodeGenTy
@@ -1644,6 +1685,25 @@ name|CGF
 parameter_list|,
 name|SourceLocation
 name|Loc
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit code for 'cancellation point' construct.
+comment|/// \param CancelRegion Region kind for which the cancellation point must be
+comment|/// emitted.
+comment|///
+name|virtual
+name|void
+name|emitCancellationPointCall
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|OpenMPDirectiveKind
+name|CancelRegion
 parameter_list|)
 function_decl|;
 block|}

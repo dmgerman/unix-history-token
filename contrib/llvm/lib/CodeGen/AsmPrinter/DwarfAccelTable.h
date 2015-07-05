@@ -1139,12 +1139,8 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_comment
-unit|}
-comment|// namespace llvm
-end_comment
-
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

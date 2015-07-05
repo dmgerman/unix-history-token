@@ -8035,6 +8035,275 @@ name|OMPC_flush
 return|;
 block|}
 expr|}
+block|;
+comment|/// \brief This represents implicit clause 'depend' for the '#pragma omp task'
+comment|/// directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp task depend(in:a,b)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp task' with clause 'depend' with the
+comment|/// variables 'a' and 'b' with dependency 'in'.
+comment|///
+name|class
+name|OMPDependClause
+operator|:
+name|public
+name|OMPVarListClause
+operator|<
+name|OMPDependClause
+operator|>
+block|{
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// \brief Dependency type (one of in, out, inout).
+name|OpenMPDependClauseKind
+name|DepKind
+block|;
+comment|/// \brief Dependency type location.
+name|SourceLocation
+name|DepLoc
+block|;
+comment|/// \brief Colon location.
+name|SourceLocation
+name|ColonLoc
+block|;
+comment|/// \brief Build clause with number of variables \a N.
+comment|///
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param LParenLoc Location of '('.
+comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param N Number of the variables in the clause.
+comment|///
+name|OMPDependClause
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned N
+argument_list|)
+operator|:
+name|OMPVarListClause
+operator|<
+name|OMPDependClause
+operator|>
+operator|(
+name|OMPC_depend
+expr|,
+name|StartLoc
+expr|,
+name|LParenLoc
+expr|,
+name|EndLoc
+expr|,
+name|N
+operator|)
+block|,
+name|DepKind
+argument_list|(
+argument|OMPC_DEPEND_unknown
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+comment|/// \param N Number of variables.
+comment|///
+name|explicit
+name|OMPDependClause
+argument_list|(
+argument|unsigned N
+argument_list|)
+operator|:
+name|OMPVarListClause
+operator|<
+name|OMPDependClause
+operator|>
+operator|(
+name|OMPC_depend
+expr|,
+name|SourceLocation
+argument_list|()
+expr|,
+name|SourceLocation
+argument_list|()
+expr|,
+name|SourceLocation
+argument_list|()
+expr|,
+name|N
+operator|)
+block|,
+name|DepKind
+argument_list|(
+argument|OMPC_DEPEND_unknown
+argument_list|)
+block|{}
+comment|/// \brief Set dependency kind.
+name|void
+name|setDependencyKind
+argument_list|(
+argument|OpenMPDependClauseKind K
+argument_list|)
+block|{
+name|DepKind
+operator|=
+name|K
+block|; }
+comment|/// \brief Set dependency kind and its location.
+name|void
+name|setDependencyLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|DepLoc
+operator|=
+name|Loc
+block|; }
+comment|/// \brief Set colon location.
+name|void
+name|setColonLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|ColonLoc
+operator|=
+name|Loc
+block|; }
+name|public
+operator|:
+comment|/// \brief Creates clause with a list of variables \a VL.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param LParenLoc Location of '('.
+comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param DepKind Dependency type.
+comment|/// \param DepLoc Location of the dependency type.
+comment|/// \param ColonLoc Colon location.
+comment|/// \param VL List of references to the variables.
+comment|///
+specifier|static
+name|OMPDependClause
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|OpenMPDependClauseKind DepKind
+argument_list|,
+argument|SourceLocation DepLoc
+argument_list|,
+argument|SourceLocation ColonLoc
+argument_list|,
+argument|ArrayRef<Expr *> VL
+argument_list|)
+block|;
+comment|/// \brief Creates an empty clause with \a N variables.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param N The number of variables.
+comment|///
+specifier|static
+name|OMPDependClause
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned N
+argument_list|)
+block|;
+comment|/// \brief Get dependency type.
+name|OpenMPDependClauseKind
+name|getDependencyKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DepKind
+return|;
+block|}
+comment|/// \brief Get dependency type location.
+name|SourceLocation
+name|getDependencyLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DepLoc
+return|;
+block|}
+comment|/// \brief Get colon location.
+name|SourceLocation
+name|getColonLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ColonLoc
+return|;
+block|}
+name|StmtRange
+name|children
+argument_list|()
+block|{
+return|return
+name|StmtRange
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|varlist_begin
+argument_list|()
+operator|)
+argument_list|,
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|varlist_end
+argument_list|()
+operator|)
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_depend
+return|;
+block|}
+expr|}
 block|;  }
 end_decl_stmt
 

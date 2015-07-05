@@ -750,9 +750,11 @@ comment|///
 comment|/// This representation is in the same format accepted by the string
 comment|/// constructor above. This should not be used to compare two DataLayout as
 comment|/// different string can represent the same layout.
+specifier|const
 name|std
 operator|::
 name|string
+operator|&
 name|getStringRepresentation
 argument_list|()
 specifier|const
@@ -1937,7 +1939,7 @@ end_expr_stmt
 
 begin_comment
 unit|} }  }
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

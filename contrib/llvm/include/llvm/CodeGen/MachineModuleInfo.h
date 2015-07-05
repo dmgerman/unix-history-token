@@ -1097,7 +1097,7 @@ begin_comment
 comment|/// because the block may be accessed outside its containing function.
 end_comment
 
-begin_function_decl
+begin_function
 name|MCSymbol
 modifier|*
 name|getAddrLabelSymbol
@@ -1107,8 +1107,18 @@ name|BasicBlock
 modifier|*
 name|BB
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+return|return
+name|getAddrLabelSymbolToEmit
+argument_list|(
+name|BB
+argument_list|)
+operator|.
+name|front
+argument_list|()
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/// getAddrLabelSymbolToEmit - Return the symbol to be used for the specified
@@ -1123,9 +1133,7 @@ comment|/// this one, we may have to emit them as well, return the whole set.
 end_comment
 
 begin_expr_stmt
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|MCSymbol
 operator|*
@@ -1904,7 +1912,7 @@ end_comment
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

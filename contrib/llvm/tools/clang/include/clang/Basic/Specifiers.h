@@ -548,6 +548,8 @@ name|StringRef
 name|getNullabilitySpelling
 argument_list|(
 argument|NullabilityKind kind
+argument_list|,
+argument|bool isContextSensitive = false
 argument_list|)
 expr_stmt|;
 block|}

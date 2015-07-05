@@ -374,6 +374,54 @@ return|return
 name|nullptr
 return|;
 block|}
+comment|/// \brief Holds everything needed to generate debug info for an
+comment|/// imported module or precompiled header file.
+expr|struct
+name|ASTSourceDescriptor
+block|{
+name|std
+operator|::
+name|string
+name|ModuleName
+block|;
+name|std
+operator|::
+name|string
+name|Path
+block|;
+name|std
+operator|::
+name|string
+name|ASTFile
+block|;
+name|uint64_t
+name|Signature
+block|;   }
+block|;
+comment|/// \brief Return a descriptor for the corresponding module, if one exists.
+name|virtual
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|ASTSourceDescriptor
+operator|>
+name|getSourceDescriptor
+argument_list|(
+argument|unsigned ID
+argument_list|)
+block|;
+comment|/// \brief Return a descriptor for the module.
+name|virtual
+name|ASTSourceDescriptor
+name|getSourceDescriptor
+argument_list|(
+specifier|const
+name|Module
+operator|&
+name|M
+argument_list|)
+block|;
 comment|/// \brief Finds all declarations lexically contained within the given
 comment|/// DeclContext, after applying an optional filter predicate.
 comment|///

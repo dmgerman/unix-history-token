@@ -85,6 +85,7 @@ struct_decl|struct
 name|WinEHFuncInfo
 struct_decl|;
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|WinException
 range|:
 name|public
@@ -159,6 +160,16 @@ operator|&
 name|FuncInfo
 argument_list|)
 block|;
+comment|/// Emits the label used with llvm.x86.seh.recoverfp, which is used by
+comment|/// outlined funclets.
+name|void
+name|emitEHRegistrationOffsetLabel
+argument_list|(
+argument|const WinEHFuncInfo&FuncInfo
+argument_list|,
+argument|StringRef FLinkageName
+argument_list|)
+block|;
 specifier|const
 name|MCExpr
 operator|*
@@ -224,10 +235,6 @@ block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// namespace llvm
-end_comment
 
 begin_endif
 endif|#

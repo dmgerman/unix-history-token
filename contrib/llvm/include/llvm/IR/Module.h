@@ -880,6 +880,7 @@ specifier|const
 name|std
 operator|::
 name|string
+operator|&
 name|getDataLayoutStr
 argument_list|()
 specifier|const
@@ -2464,7 +2465,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

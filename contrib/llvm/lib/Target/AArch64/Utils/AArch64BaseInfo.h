@@ -2170,7 +2170,6 @@ argument_list|()
 block|;   }
 decl_stmt|;
 block|}
-comment|// namespace AArch64AT
 name|namespace
 name|AArch64DB
 block|{
@@ -2247,7 +2246,6 @@ argument_list|()
 block|;   }
 decl_stmt|;
 block|}
-comment|// namespace AArch64DB
 name|namespace
 name|AArch64DC
 block|{
@@ -2317,7 +2315,6 @@ argument_list|()
 block|;   }
 decl_stmt|;
 block|}
-comment|// namespace AArch64DC
 name|namespace
 name|AArch64IC
 block|{
@@ -2377,7 +2374,6 @@ name|IVAU
 return|;
 block|}
 block|}
-comment|// namespace AArch64IC
 name|namespace
 name|AArch64ISB
 block|{
@@ -2410,7 +2406,6 @@ argument_list|()
 block|;   }
 decl_stmt|;
 block|}
-comment|// namespace AArch64ISB
 name|namespace
 name|AArch64PRFM
 block|{
@@ -2511,7 +2506,6 @@ argument_list|()
 block|;   }
 decl_stmt|;
 block|}
-comment|// namespace AArch64PRFM
 name|namespace
 name|AArch64PState
 block|{
@@ -2557,7 +2551,6 @@ argument_list|()
 block|;   }
 decl_stmt|;
 block|}
-comment|// namespace AArch64PState
 name|namespace
 name|AArch64SE
 block|{
@@ -2597,7 +2590,6 @@ name|SXTX
 block|}
 enum|;
 block|}
-comment|// namespace AArch64SE
 name|namespace
 name|AArch64Layout
 block|{
@@ -2637,7 +2629,6 @@ name|VL_D
 block|}
 enum|;
 block|}
-comment|// namespace AArch64Layout
 specifier|inline
 specifier|static
 specifier|const
@@ -6081,7 +6072,6 @@ name|Valid
 parameter_list|)
 function_decl|;
 block|}
-comment|// namespace AArch64SysReg
 name|namespace
 name|AArch64TLBI
 block|{
@@ -6324,7 +6314,6 @@ return|;
 block|}
 block|}
 block|}
-comment|// namespace AArch64TLBI
 name|namespace
 name|AArch64II
 block|{

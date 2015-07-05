@@ -5863,6 +5863,35 @@ name|Builder
 argument_list|)
 return|;
 block|}
+comment|/// \brief Matches a C++ catch statement that has a catch-all handler.
+comment|///
+comment|/// Given
+comment|/// \code
+comment|///   try {
+comment|///     // ...
+comment|///   } catch (int) {
+comment|///     // ...
+comment|///   } catch (...) {
+comment|///     // ...
+comment|///   }
+comment|/// /endcode
+comment|/// catchStmt(isCatchAll()) matches catch(...) but not catch(int).
+name|AST_MATCHER
+argument_list|(
+argument|CXXCatchStmt
+argument_list|,
+argument|isCatchAll
+argument_list|)
+block|{
+return|return
+name|Node
+operator|.
+name|getExceptionDecl
+argument_list|()
+operator|==
+name|nullptr
+return|;
+block|}
 comment|/// \brief Matches a constructor initializer.
 comment|///
 comment|/// Given

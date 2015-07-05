@@ -344,6 +344,11 @@ argument_list|)
 name|override
 block|;
 name|void
+name|EmitFunctionBodyStart
+argument_list|()
+name|override
+block|;
+name|void
 name|EmitEndOfAsmFile
 argument_list|(
 argument|Module&M
@@ -387,7 +392,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End anonymous llvm
 end_comment
 
 begin_endif

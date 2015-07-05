@@ -54,6 +54,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/SubtargetFeature.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstddef>
 end_include
 
@@ -61,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Debug.h"
 end_include
 
 begin_comment
@@ -536,7 +548,7 @@ comment|/// The value used must match the value that the runtime configures
 comment|/// the GPU flat scratch (SH_STATIC_MEM_CONFIG.ELEMENT_SIZE). This
 comment|/// is generally DWORD.
 comment|///
-comment|/// Use values from the amd_element_byte_size_t enum.
+comment|/// uSE VALUES FROM THE AMD_ELEMENT_BYTE_SIZE_T ENUM.
 name|AMD_CODE_PROPERTY_PRIVATE_ELEMENT_SIZE_SHIFT
 init|=
 literal|11
@@ -638,6 +650,28 @@ literal|1
 operator|)
 operator|<<
 name|AMD_CODE_PROPERTY_IS_DEBUG_SUPPORTED_SHIFT
+block|,
+name|AMD_CODE_PROPERTY_IS_XNACK_SUPPORTED_SHIFT
+init|=
+literal|15
+block|,
+name|AMD_CODE_PROPERTY_IS_XNACK_SUPPORTED_WIDTH
+init|=
+literal|1
+block|,
+name|AMD_CODE_PROPERTY_IS_XNACK_SUPPORTED
+init|=
+operator|(
+operator|(
+literal|1
+operator|<<
+name|AMD_CODE_PROPERTY_IS_XNACK_SUPPORTED_WIDTH
+operator|)
+operator|-
+literal|1
+operator|)
+operator|<<
+name|AMD_CODE_PROPERTY_IS_XNACK_SUPPORTED_SHIFT
 block|}
 enum|;
 end_enum
@@ -1124,7 +1158,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|///     The second SGPR is 32 bit byte size of a single work-items scratch
+comment|///     The second SGPR is 32 bit byte size of a single work-item's scratch
 end_comment
 
 begin_comment
@@ -1188,7 +1222,7 @@ comment|///   Number of User SGPR registers: 1. The 32 bit byte size of a single
 end_comment
 
 begin_comment
-comment|///   work-items scratch memory allocation. This is the value from the dispatch
+comment|///   work-item's scratch memory allocation. This is the value from the dispatch
 end_comment
 
 begin_comment
@@ -1380,7 +1414,7 @@ comment|/// Work-Group Info (enable_sgpr_workgroup_info):
 end_comment
 
 begin_comment
-comment|///   Number of System SGPR registers: 1. {first_wave, 14b0000,
+comment|///   Number of System SGPR registers: 1. {first_wave, 14'b0000,
 end_comment
 
 begin_comment
@@ -1648,28 +1682,23 @@ typedef|typedef
 struct|struct
 name|amd_kernel_code_s
 block|{
-comment|/// The AMD major version of the Code Object. Must be the value
-comment|/// AMD_CODE_VERSION_MAJOR.
-name|amd_code_version32_t
-name|amd_code_version_major
-decl_stmt|;
-comment|/// The AMD minor version of the Code Object. Minor versions must be
-comment|/// backward compatible. Must be the value
-comment|/// AMD_CODE_VERSION_MINOR.
-name|amd_code_version32_t
-name|amd_code_version_minor
-decl_stmt|;
-comment|/// The byte size of this struct. Must be set to
-comment|/// sizeof(amd_kernel_code_t). Used for backward
-comment|/// compatibility.
 name|uint32_t
-name|struct_byte_size
+name|amd_kernel_code_version_major
 decl_stmt|;
-comment|/// The target chip instruction set for which code has been
-comment|/// generated. Values are from the E_SC_INSTRUCTION_SET enumeration
-comment|/// in sc/Interface/SCCommon.h.
 name|uint32_t
-name|target_chip
+name|amd_kernel_code_version_minor
+decl_stmt|;
+name|uint16_t
+name|amd_machine_kind
+decl_stmt|;
+name|uint16_t
+name|amd_machine_version_major
+decl_stmt|;
+name|uint16_t
+name|amd_machine_version_minor
+decl_stmt|;
+name|uint16_t
+name|amd_machine_version_stepping
 decl_stmt|;
 comment|/// Byte offset (possibly negative) from start of amd_kernel_code_t
 comment|/// object to kernel's entry point instruction. The actual code for
@@ -1688,10 +1717,6 @@ comment|/// Range of bytes to consider prefetching expressed as an offset
 comment|/// and size. The offset is from the start (possibly negative) of
 comment|/// amd_kernel_code_t object. Set both to 0 if no prefetch
 comment|/// information is available.
-comment|///
-comment|/// \todo ttye 11/15/2013 Is the prefetch definition we want? Did
-comment|/// not make the size a uint64_t as prefetching more than 4GiB seems
-comment|/// excessive.
 name|int64_t
 name|kernel_code_prefetch_byte_offset
 decl_stmt|;
@@ -1710,12 +1735,12 @@ name|max_scratch_backing_memory_byte_size
 decl_stmt|;
 comment|/// Shader program settings for CS. Contains COMPUTE_PGM_RSRC1 and
 comment|/// COMPUTE_PGM_RSRC2 registers.
-name|amd_compute_pgm_resource_register64_t
+name|uint64_t
 name|compute_pgm_resource_registers
 decl_stmt|;
 comment|/// Code properties. See amd_code_property_mask_t for a full list of
 comment|/// properties.
-name|amd_code_property32_t
+name|uint32_t
 name|code_properties
 decl_stmt|;
 comment|/// The amount of memory required for the combined private, spill
@@ -1801,92 +1826,41 @@ decl_stmt|;
 comment|/// The maximum byte alignment of variables used by the kernel in
 comment|/// the specified memory segment. Expressed as a power of two. Must
 comment|/// be at least HSA_POWERTWO_16.
-name|hsa_powertwo8_t
+name|uint8_t
 name|kernarg_segment_alignment
 decl_stmt|;
-name|hsa_powertwo8_t
+name|uint8_t
 name|group_segment_alignment
 decl_stmt|;
-name|hsa_powertwo8_t
-name|private_segment_alignment
-decl_stmt|;
 name|uint8_t
-name|reserved3
-decl_stmt|;
-comment|/// Type of code object.
-name|hsa_ext_code_kind32_t
-name|code_type
-decl_stmt|;
-comment|/// Reserved for code properties if any are defined in the future.
-comment|/// There are currently no code properties so this field must be 0.
-name|uint32_t
-name|reserved4
+name|private_segment_alignment
 decl_stmt|;
 comment|/// Wavefront size expressed as a power of two. Must be a power of 2
 comment|/// in range 1..64 inclusive. Used to support runtime query that
 comment|/// obtains wavefront size, which may be used by application to
 comment|/// allocated dynamic group memory and set the dispatch work-group
 comment|/// size.
-name|hsa_powertwo8_t
+name|uint8_t
 name|wavefront_size
 decl_stmt|;
-comment|/// The optimization level specified when the kernel was
-comment|/// finalized.
+name|int32_t
+name|call_convention
+decl_stmt|;
 name|uint8_t
-name|optimization_level
+name|reserved3
+index|[
+literal|12
+index|]
 decl_stmt|;
-comment|/// The HSAIL profile defines which features are used. This
-comment|/// information is from the HSAIL version directive. If this
-comment|/// amd_kernel_code_t is not generated from an HSAIL compilation
-comment|/// unit then must be 0.
-name|hsa_ext_brig_profile8_t
-name|hsail_profile
+name|uint64_t
+name|runtime_loader_kernel_symbol
 decl_stmt|;
-comment|/// The HSAIL machine model gives the address sizes used by the
-comment|/// code. This information is from the HSAIL version directive. If
-comment|/// not generated from an HSAIL compilation unit then must still
-comment|/// indicate for what machine mode the code is generated.
-name|hsa_ext_brig_machine_model8_t
-name|hsail_machine_model
+name|uint64_t
+name|control_directives
+index|[
+literal|16
+index|]
 decl_stmt|;
-comment|/// The HSAIL major version. This information is from the HSAIL
-comment|/// version directive. If this amd_kernel_code_t is not
-comment|/// generated from an HSAIL compilation unit then must be 0.
-name|uint32_t
-name|hsail_version_major
-decl_stmt|;
-comment|/// The HSAIL minor version. This information is from the HSAIL
-comment|/// version directive. If this amd_kernel_code_t is not
-comment|/// generated from an HSAIL compilation unit then must be 0.
-name|uint32_t
-name|hsail_version_minor
-decl_stmt|;
-comment|/// Reserved for HSAIL target options if any are defined in the
-comment|/// future. There are currently no target options so this field
-comment|/// must be 0.
-name|uint16_t
-name|reserved5
-decl_stmt|;
-comment|/// Reserved. Must be 0.
-name|uint16_t
-name|reserved6
-decl_stmt|;
-comment|/// The values should be the actually values used by the finalizer
-comment|/// in generating the code. This may be the union of values
-comment|/// specified as finalizer arguments and explicit HSAIL control
-comment|/// directives. If the finalizer chooses to ignore a control
-comment|/// directive, and not generate constrained code, then the control
-comment|/// directive should not be marked as enabled even though it was
-comment|/// present in the HSAIL or finalizer argument. The values are
-comment|/// intended to reflect the constraints that the code actually
-comment|/// requires to correctly execute, not the values that were
-comment|/// actually specified at finalize time.
-name|hsa_ext_control_directives_t
-name|control_directive
-decl_stmt|;
-comment|/// The code can immediately follow the amd_kernel_code_t, or can
-comment|/// come after subsequent amd_kernel_code_t structs when there are
-comment|/// multiple kernels in the compilation unit.
 block|}
 name|amd_kernel_code_t
 typedef|;

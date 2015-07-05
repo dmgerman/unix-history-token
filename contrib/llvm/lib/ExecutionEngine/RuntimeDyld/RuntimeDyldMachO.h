@@ -286,13 +286,11 @@ argument_list|)
 block|;
 name|uint64_t
 name|Offset
-block|;
+operator|=
 name|RI
 operator|->
 name|getOffset
-argument_list|(
-name|Offset
-argument_list|)
+argument_list|()
 block|;
 name|MachO
 operator|::

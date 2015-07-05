@@ -4521,12 +4521,8 @@ argument_list|)
 return|;
 end_return
 
-begin_comment
-unit|}  }
-comment|// namespace llvm
-end_comment
-
 begin_endif
+unit|}  }
 endif|#
 directive|endif
 end_endif

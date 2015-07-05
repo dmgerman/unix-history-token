@@ -132,6 +132,8 @@ init|=
 literal|0x3
 block|}
 enum|;
+union|union
+block|{
 name|Stmt
 modifier|*
 modifier|*
@@ -142,6 +144,8 @@ modifier|*
 modifier|*
 name|DGI
 decl_stmt|;
+block|}
+union|;
 name|uintptr_t
 name|RawVAPtr
 decl_stmt|;
@@ -293,11 +297,6 @@ argument_list|(
 name|s
 argument_list|)
 operator|,
-name|DGI
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
 name|RawVAPtr
 argument_list|(
 literal|0
@@ -328,11 +327,6 @@ name|StmtIteratorBase
 argument_list|()
 operator|:
 name|stmt
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|DGI
 argument_list|(
 name|nullptr
 argument_list|)

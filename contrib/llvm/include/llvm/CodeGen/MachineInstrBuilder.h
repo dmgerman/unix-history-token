@@ -156,7 +156,6 @@ name|Kill
 block|}
 enum|;
 block|}
-comment|// namespace RegState
 name|class
 name|MachineInstrBuilder
 block|{
@@ -998,6 +997,12 @@ argument_list|(
 name|MCSymbol
 operator|*
 name|Sym
+argument_list|,
+name|unsigned
+name|char
+name|TargetFlags
+operator|=
+literal|0
 argument_list|)
 decl|const
 block|{
@@ -1013,6 +1018,8 @@ operator|::
 name|CreateMCSymbol
 argument_list|(
 name|Sym
+argument_list|,
+name|TargetFlags
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2733,7 +2740,7 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

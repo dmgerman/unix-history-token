@@ -1384,7 +1384,12 @@ comment|// Nanoradio Optimized RISC
 name|EM_CSR_KALIMBA
 init|=
 literal|219
+block|,
 comment|// CSR Kalimba architecture family
+name|EM_AMDGPU
+init|=
+literal|224
+comment|// AMD GPU architecture
 block|}
 enum|;
 comment|// Object file classes.
@@ -1522,6 +1527,11 @@ init|=
 literal|64
 block|,
 comment|// Bare-metal TMS320C6000
+name|ELFOSABI_AMDGPU_HSA
+init|=
+literal|64
+block|,
+comment|// AMD HSA runtime
 name|ELFOSABI_C6000_LINUX
 init|=
 literal|65
@@ -3049,21 +3059,21 @@ init|=
 literal|6
 block|,
 comment|// Thread local data object
-name|STT_LOOS
-init|=
-literal|7
-block|,
-comment|// Lowest operating system-specific symbol type
-name|STT_HIOS
-init|=
-literal|8
-block|,
-comment|// Highest operating system-specific symbol type
 name|STT_GNU_IFUNC
 init|=
 literal|10
 block|,
 comment|// GNU indirect function
+name|STT_LOOS
+init|=
+literal|10
+block|,
+comment|// Lowest operating system-specific symbol type
+name|STT_HIOS
+init|=
+literal|12
+block|,
+comment|// Highest operating system-specific symbol type
 name|STT_LOPROC
 init|=
 literal|13

@@ -1684,50 +1684,6 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// \brief An abstract class used to resolve numerical identifier
-end_comment
-
-begin_comment
-comment|/// references (meaningful only to some external source) into
-end_comment
-
-begin_comment
-comment|/// IdentifierInfo pointers.
-end_comment
-
-begin_decl_stmt
-name|class
-name|ExternalIdentifierLookup
-block|{
-name|public
-label|:
-name|virtual
-operator|~
-name|ExternalIdentifierLookup
-argument_list|()
-expr_stmt|;
-comment|/// \brief Return the identifier associated with the given ID number.
-comment|///
-comment|/// The ID 0 is associated with the NULL identifier.
-name|virtual
-name|IdentifierInfo
-modifier|*
-name|GetIdentifier
-parameter_list|(
-name|unsigned
-name|ID
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// \brief Implements an efficient mapping from strings to IdentifierInfo nodes.
 end_comment
 

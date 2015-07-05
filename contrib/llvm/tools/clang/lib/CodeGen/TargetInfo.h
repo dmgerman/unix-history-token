@@ -605,22 +605,6 @@ name|Opt
 argument_list|)
 decl|const
 block|{}
-comment|/// Gets the target-specific default alignment used when an 'aligned' clause
-comment|/// is used with a 'simd' OpenMP directive without specifying a specific
-comment|/// alignment.
-name|virtual
-name|unsigned
-name|getOpenMPSimdDefaultAlignment
-argument_list|(
-name|QualType
-name|Type
-argument_list|)
-decl|const
-block|{
-return|return
-literal|0
-return|;
-block|}
 block|}
 empty_stmt|;
 block|}

@@ -535,25 +535,6 @@ name|eraseFromParent
 argument_list|()
 name|override
 expr_stmt|;
-comment|/// Override Constant's implementation of this method so we can
-comment|/// replace constant initializers.
-name|void
-name|replaceUsesOfWithOnConstant
-argument_list|(
-name|Value
-operator|*
-name|From
-argument_list|,
-name|Value
-operator|*
-name|To
-argument_list|,
-name|Use
-operator|*
-name|U
-argument_list|)
-name|override
-decl_stmt|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -605,7 +586,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

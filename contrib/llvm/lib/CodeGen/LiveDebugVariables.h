@@ -119,6 +119,7 @@ name|class
 name|VirtRegMap
 decl_stmt|;
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|LiveDebugVariables
 range|:
 name|public

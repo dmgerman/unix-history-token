@@ -1060,9 +1060,6 @@ name|public
 name|IdentifierInfoLookup
 decl_stmt|,
 name|public
-name|ExternalIdentifierLookup
-decl_stmt|,
-name|public
 name|ExternalSLocEntrySource
 block|{
 name|public
@@ -7184,6 +7181,42 @@ name|getModule
 argument_list|(
 name|unsigned
 name|ID
+argument_list|)
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Return a descriptor for the corresponding module.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|ASTSourceDescriptor
+operator|>
+name|getSourceDescriptor
+argument_list|(
+argument|unsigned ID
+argument_list|)
+name|override
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Return a descriptor for the module.
+end_comment
+
+begin_decl_stmt
+name|ASTSourceDescriptor
+name|getSourceDescriptor
+argument_list|(
+specifier|const
+name|Module
+operator|&
+name|M
 argument_list|)
 name|override
 decl_stmt|;

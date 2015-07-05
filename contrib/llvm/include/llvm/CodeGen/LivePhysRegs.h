@@ -522,7 +522,9 @@ operator|&
 name|Clobbers
 argument_list|)
 decl_stmt|;
-comment|/// \brief Adds all live-in registers of basic block @p MBB.
+comment|/// \brief Adds all live-in registers of basic block @p MBB; After prologue/
+comment|/// epilogue insertion \p AddPristines should be set to true to insert the
+comment|/// pristine registers.
 name|void
 name|addLiveIns
 parameter_list|(
@@ -530,42 +532,16 @@ specifier|const
 name|MachineBasicBlock
 modifier|*
 name|MBB
+parameter_list|,
+name|bool
+name|AddPristines
+init|=
+name|false
 parameter_list|)
-block|{
-for|for
-control|(
-name|MachineBasicBlock
-operator|::
-name|livein_iterator
-name|LI
-operator|=
-name|MBB
-operator|->
-name|livein_begin
-argument_list|()
-operator|,
-name|LE
-operator|=
-name|MBB
-operator|->
-name|livein_end
-argument_list|()
-init|;
-name|LI
-operator|!=
-name|LE
-condition|;
-operator|++
-name|LI
-control|)
-name|addReg
-argument_list|(
-operator|*
-name|LI
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// \brief Adds all live-out registers of basic block @p MBB.
+function_decl|;
+comment|/// \brief Adds all live-out registers of basic block @p MBB; After prologue/
+comment|/// epilogue insertion \p AddPristines should be set to true to insert the
+comment|/// pristine registers.
 name|void
 name|addLiveOuts
 parameter_list|(
@@ -573,41 +549,13 @@ specifier|const
 name|MachineBasicBlock
 modifier|*
 name|MBB
+parameter_list|,
+name|bool
+name|AddPristines
+init|=
+name|false
 parameter_list|)
-block|{
-for|for
-control|(
-name|MachineBasicBlock
-operator|::
-name|const_succ_iterator
-name|SI
-operator|=
-name|MBB
-operator|->
-name|succ_begin
-argument_list|()
-operator|,
-name|SE
-operator|=
-name|MBB
-operator|->
-name|succ_end
-argument_list|()
-init|;
-name|SI
-operator|!=
-name|SE
-condition|;
-operator|++
-name|SI
-control|)
-name|addLiveIns
-argument_list|(
-operator|*
-name|SI
-argument_list|)
-expr_stmt|;
-block|}
+function_decl|;
 typedef|typedef
 name|SparseSet
 operator|<

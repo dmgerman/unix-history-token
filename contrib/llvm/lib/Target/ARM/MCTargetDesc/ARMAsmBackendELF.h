@@ -117,10 +117,6 @@ expr|}
 block|; }
 end_block
 
-begin_comment
-comment|// namespace
-end_comment
-
 begin_endif
 endif|#
 directive|endif

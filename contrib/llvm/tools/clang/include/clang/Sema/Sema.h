@@ -986,6 +986,13 @@ comment|// link it with the hidden decl (which also has external linkage) and
 comment|// it will keep having external linkage. If it has internal linkage, we
 comment|// will not link it. Since it has no previous decls, it will remain
 comment|// with internal linkage.
+if|if
+condition|(
+name|getLangOpts
+argument_list|()
+operator|.
+name|ModulesHideInternalLinkage
+condition|)
 return|return
 name|isVisible
 argument_list|(
@@ -996,6 +1003,9 @@ name|New
 operator|->
 name|isExternallyVisible
 argument_list|()
+return|;
+return|return
+name|true
 return|;
 block|}
 name|public
@@ -2194,9 +2204,18 @@ name|ObjCInterfaceDecl
 modifier|*
 name|NSNumberDecl
 decl_stmt|;
+comment|/// \brief The declaration of the Objective-C NSValue class.
+name|ObjCInterfaceDecl
+modifier|*
+name|NSValueDecl
+decl_stmt|;
 comment|/// \brief Pointer to NSNumber type (NSNumber *).
 name|QualType
 name|NSNumberPointer
+decl_stmt|;
+comment|/// \brief Pointer to NSValue type (NSValue *).
+name|QualType
+name|NSValuePointer
 decl_stmt|;
 comment|/// \brief The Objective-C NSNumber methods used to create NSNumber literals.
 name|ObjCMethodDecl
@@ -2221,6 +2240,11 @@ comment|/// \brief The declaration of the stringWithUTF8String: method.
 name|ObjCMethodDecl
 modifier|*
 name|StringWithUTF8StringMethod
+decl_stmt|;
+comment|/// \brief The declaration of the valueWithBytes:objCType: method.
+name|ObjCMethodDecl
+modifier|*
+name|ValueWithBytesObjCTypeMethod
 decl_stmt|;
 comment|/// \brief The declaration of the Objective-C NSArray class.
 name|ObjCInterfaceDecl
@@ -6810,6 +6834,20 @@ parameter_list|(
 name|Decl
 modifier|*
 name|Dcl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ActOnPureSpecifier
+parameter_list|(
+name|Decl
+modifier|*
+name|D
+parameter_list|,
+name|SourceLocation
+name|PureSpecLoc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13846,6 +13884,7 @@ begin_function_decl
 name|void
 name|diagnoseNullResettableSynthesizedSetters
 parameter_list|(
+specifier|const
 name|ObjCImplDecl
 modifier|*
 name|impDecl
@@ -24398,15 +24437,15 @@ comment|/// '@' prefixed parenthesized expression. The type of the expression wi
 end_comment
 
 begin_comment
-comment|/// either be "NSNumber *" or "NSString *" depending on the type of
+comment|/// either be "NSNumber *", "NSString *" or "NSValue *" depending on the type
 end_comment
 
 begin_comment
-comment|/// ValueType, which is allowed to be a built-in numeric type or
+comment|/// of ValueType, which is allowed to be a built-in numeric type, "char *",
 end_comment
 
 begin_comment
-comment|/// "char *" or "const char *".
+comment|/// "const char *" or C structure with attribute 'objc_boxable'.
 end_comment
 
 begin_function_decl
@@ -35442,6 +35481,36 @@ name|public
 label|:
 end_label
 
+begin_comment
+comment|/// \brief Check if the specified variable is used in one of the private
+end_comment
+
+begin_comment
+comment|/// clauses in OpenMP constructs.
+end_comment
+
+begin_comment
+comment|/// \param Level Relative level of nested OpenMP construct for that the check
+end_comment
+
+begin_comment
+comment|/// is performed.
+end_comment
+
+begin_function_decl
+name|bool
+name|isOpenMPPrivateVar
+parameter_list|(
+name|VarDecl
+modifier|*
+name|VD
+parameter_list|,
+name|unsigned
+name|Level
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|ExprResult
 name|PerformOpenMPImplicitIntegerConversion
@@ -35488,8 +35557,11 @@ end_comment
 
 begin_function_decl
 name|void
-name|StartOpenMPClauses
-parameter_list|()
+name|StartOpenMPClause
+parameter_list|(
+name|OpenMPClauseKind
+name|K
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -35499,7 +35571,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|EndOpenMPClauses
+name|EndOpenMPClause
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -35694,6 +35766,9 @@ specifier|const
 name|DeclarationNameInfo
 operator|&
 name|DirName
+argument_list|,
+name|OpenMPDirectiveKind
+name|CancelRegion
 argument_list|,
 name|ArrayRef
 operator|<
@@ -36397,6 +36472,46 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// \brief Called on well-formed '\#pragma omp cancellation point'.
+end_comment
+
+begin_function_decl
+name|StmtResult
+name|ActOnOpenMPCancellationPointDirective
+parameter_list|(
+name|SourceLocation
+name|StartLoc
+parameter_list|,
+name|SourceLocation
+name|EndLoc
+parameter_list|,
+name|OpenMPDirectiveKind
+name|CancelRegion
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Called on well-formed '\#pragma omp cancel'.
+end_comment
+
+begin_function_decl
+name|StmtResult
+name|ActOnOpenMPCancelDirective
+parameter_list|(
+name|SourceLocation
+name|StartLoc
+parameter_list|,
+name|SourceLocation
+name|EndLoc
+parameter_list|,
+name|OpenMPDirectiveKind
+name|CancelRegion
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|OMPClause
 modifier|*
@@ -36911,6 +37026,12 @@ specifier|const
 name|DeclarationNameInfo
 operator|&
 name|ReductionId
+argument_list|,
+name|OpenMPDependClauseKind
+name|DepKind
+argument_list|,
+name|SourceLocation
+name|DepLoc
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -37202,6 +37323,43 @@ name|OMPClause
 modifier|*
 name|ActOnOpenMPFlushClause
 argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|VarList
+argument_list|,
+name|SourceLocation
+name|StartLoc
+argument_list|,
+name|SourceLocation
+name|LParenLoc
+argument_list|,
+name|SourceLocation
+name|EndLoc
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Called on well-formed 'depend' clause.
+end_comment
+
+begin_decl_stmt
+name|OMPClause
+modifier|*
+name|ActOnOpenMPDependClause
+argument_list|(
+name|OpenMPDependClauseKind
+name|DepKind
+argument_list|,
+name|SourceLocation
+name|DepLoc
+argument_list|,
+name|SourceLocation
+name|ColonLoc
+argument_list|,
 name|ArrayRef
 operator|<
 name|Expr
@@ -41441,6 +41599,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|bool
+name|SemaBuiltinCpuSupports
+parameter_list|(
+name|CallExpr
+modifier|*
+name|TheCall
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_label
 name|public
 label|:
@@ -42142,7 +42311,7 @@ end_comment
 begin_decl_stmt
 name|IdentifierInfo
 modifier|*
-name|Ident___nonnull
+name|Ident__Nonnull
 init|=
 name|nullptr
 decl_stmt|;
@@ -42151,7 +42320,7 @@ end_decl_stmt
 begin_decl_stmt
 name|IdentifierInfo
 modifier|*
-name|Ident___nullable
+name|Ident__Nullable
 init|=
 name|nullptr
 decl_stmt|;
@@ -42160,7 +42329,7 @@ end_decl_stmt
 begin_decl_stmt
 name|IdentifierInfo
 modifier|*
-name|Ident___null_unspecified
+name|Ident__Null_unspecified
 init|=
 name|nullptr
 decl_stmt|;

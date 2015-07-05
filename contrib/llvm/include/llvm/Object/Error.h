@@ -95,6 +95,10 @@ name|parse_failed
 operator|,
 name|unexpected_eof
 operator|,
+name|string_table_non_null_end
+operator|,
+name|invalid_section_index
+operator|,
 name|bitcode_section_not_found
 operator|,
 name|macho_small_load_command

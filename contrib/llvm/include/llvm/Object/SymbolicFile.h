@@ -515,7 +515,7 @@ name|basic_symbol_iterator
 expr_stmt|;
 specifier|const
 name|uint64_t
-name|UnknownAddressOrSize
+name|UnknownAddress
 init|=
 operator|~
 literal|0ULL
@@ -866,16 +866,8 @@ block|}
 block|}
 end_decl_stmt
 
-begin_comment
-comment|// namespace object
-end_comment
-
-begin_comment
-unit|}
-comment|// namespace llvm
-end_comment
-
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

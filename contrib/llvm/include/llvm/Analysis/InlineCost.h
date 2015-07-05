@@ -146,7 +146,6 @@ init|=
 literal|1024
 decl_stmt|;
 block|}
-comment|// namespace InlineConstants
 comment|/// \brief Represents the cost of inlining a function.
 comment|///
 comment|/// This supports special values for functions which should "always" or
@@ -444,10 +443,6 @@ block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// namespace llvm
-end_comment
 
 begin_endif
 endif|#

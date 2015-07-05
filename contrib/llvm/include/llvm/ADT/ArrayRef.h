@@ -1410,6 +1410,45 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|MutableArrayRef
+operator|<
+name|T
+operator|>
+name|drop_back
+argument_list|(
+argument|unsigned N
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|this
+operator|->
+name|size
+argument_list|()
+operator|>=
+name|N
+operator|&&
+literal|"Dropping more elements than exist"
+argument_list|)
+block|;
+return|return
+name|slice
+argument_list|(
+literal|0
+argument_list|,
+name|this
+operator|->
+name|size
+argument_list|()
+operator|-
+name|N
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|/// @}
 end_comment
@@ -1799,12 +1838,8 @@ block|;   }
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-unit|}
-comment|// namespace llvm
-end_comment
-
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

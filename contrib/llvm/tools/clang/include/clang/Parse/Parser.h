@@ -1055,7 +1055,7 @@ return|return
 name|true
 return|;
 block|}
-comment|/// Retrieve the underscored keyword (__nonnull, __nullable) that corresponds
+comment|/// Retrieve the underscored keyword (_Nonnull, _Nullable) that corresponds
 comment|/// to the given nullability kind.
 name|IdentifierInfo
 modifier|*
@@ -3970,9 +3970,8 @@ name|VirtSpecifiers
 modifier|&
 name|VS
 parameter_list|,
-name|ExprResult
-modifier|&
-name|Init
+name|SourceLocation
+name|PureSpecLoc
 parameter_list|)
 function_decl|;
 name|void
@@ -4748,6 +4747,10 @@ name|isTypeCast
 init|=
 name|NotTypeCast
 parameter_list|)
+function_decl|;
+name|ExprResult
+name|ParseConstraintExpression
+parameter_list|()
 function_decl|;
 comment|// Expr that doesn't include commas.
 name|ExprResult
@@ -6155,6 +6158,8 @@ comment|// template type argument context
 name|DSC_objc_method_result
 block|,
 comment|// ObjC method result context, enables 'instancetype'
+name|DSC_condition
+comment|// condition declaration context
 block|}
 enum|;
 comment|/// Is this a context in which we are parsing just a type-specifier (or
@@ -6183,6 +6188,9 @@ name|DSC_top_level
 case|:
 case|case
 name|DSC_objc_method_result
+case|:
+case|case
+name|DSC_condition
 case|:
 return|return
 name|false

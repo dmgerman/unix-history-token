@@ -1985,12 +1985,8 @@ begin_comment
 comment|/// @}
 end_comment
 
-begin_comment
-unit|}
-comment|// namespace llvm
-end_comment
-
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

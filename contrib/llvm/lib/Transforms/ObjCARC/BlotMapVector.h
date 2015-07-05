@@ -719,7 +719,7 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|//
 end_comment
 
 end_unit

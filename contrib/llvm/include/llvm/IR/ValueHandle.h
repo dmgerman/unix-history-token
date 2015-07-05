@@ -845,6 +845,34 @@ return|;
 block|}
 expr|}
 block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|simplify_type
+operator|<
+specifier|const
+name|WeakVH
+operator|>
+block|{
+typedef|typedef
+name|Value
+modifier|*
+name|SimpleType
+typedef|;
+specifier|static
+name|SimpleType
+name|getSimplifiedValue
+argument_list|(
+argument|const WeakVH&WVH
+argument_list|)
+block|{
+return|return
+name|WVH
+return|;
+block|}
+expr|}
+block|;
 comment|/// \brief Value handle that asserts if the Value is deleted.
 comment|///
 comment|/// This is a Value Handle that points to a value and asserts out if the value
@@ -1739,7 +1767,7 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

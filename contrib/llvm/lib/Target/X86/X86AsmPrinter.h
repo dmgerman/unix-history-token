@@ -117,14 +117,6 @@ block|;
 name|FaultMaps
 name|FM
 block|;
-name|void
-name|GenerateExportDirective
-argument_list|(
-argument|const MCSymbol *Sym
-argument_list|,
-argument|bool IsData
-argument_list|)
-block|;
 comment|// This utility class tracks the length of a stackmap instruction's 'shadow'.
 comment|// It is used by the X86AsmPrinter to ensure that the stackmap shadow
 comment|// invariants (i.e. no other stackmaps, patchpoints, or control flow within

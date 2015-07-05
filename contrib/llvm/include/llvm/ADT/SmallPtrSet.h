@@ -1577,13 +1577,8 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-unit|};  }
-comment|// namespace llvm
-end_comment
-
 begin_macro
-unit|namespace
+unit|};  }  namespace
 name|std
 end_macro
 

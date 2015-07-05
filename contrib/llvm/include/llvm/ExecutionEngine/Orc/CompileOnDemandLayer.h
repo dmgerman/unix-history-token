@@ -1164,13 +1164,6 @@ argument_list|,
 argument|const DataLayout&DL
 argument_list|)
 block|{
-name|Mangler
-name|M
-argument_list|(
-operator|&
-name|DL
-argument_list|)
-block|;
 name|std
 operator|::
 name|string
@@ -1183,13 +1176,15 @@ argument_list|(
 name|MangledName
 argument_list|)
 block|;
-name|M
-operator|.
+name|Mangler
+operator|::
 name|getNameWithPrefix
 argument_list|(
 name|MangledNameStream
 argument_list|,
 name|Name
+argument_list|,
+name|DL
 argument_list|)
 block|;     }
 return|return

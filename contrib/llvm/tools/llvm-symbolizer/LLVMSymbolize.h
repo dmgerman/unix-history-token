@@ -653,6 +653,9 @@ name|SymbolRef
 modifier|&
 name|Symbol
 parameter_list|,
+name|uint64_t
+name|SymbolSize
+parameter_list|,
 name|DataExtractor
 modifier|*
 name|OpdExtractor

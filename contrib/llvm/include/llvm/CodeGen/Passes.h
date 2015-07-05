@@ -1475,11 +1475,24 @@ modifier|*
 name|createForwardControlFlowIntegrityPass
 parameter_list|()
 function_decl|;
+comment|/// InterleavedAccess Pass - This pass identifies and matches interleaved
+comment|/// memory accesses to target specific intrinsics.
+comment|///
+name|FunctionPass
+modifier|*
+name|createInterleavedAccessPass
+parameter_list|(
+specifier|const
+name|TargetMachine
+modifier|*
+name|TM
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_comment

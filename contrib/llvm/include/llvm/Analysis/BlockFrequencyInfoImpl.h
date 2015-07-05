@@ -3212,10 +3212,6 @@ end_if
 
 begin_comment
 unit|} }
-comment|// namespace bfi_detail
-end_comment
-
-begin_comment
 comment|/// \brief Shared implementation for block frequency analysis.
 end_comment
 
@@ -6078,13 +6074,8 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_comment
-unit|}
-comment|// namespace bfi_detail
-end_comment
-
 begin_expr_stmt
-unit|template
+unit|} template
 operator|<
 name|class
 name|BT

@@ -1811,12 +1811,16 @@ comment|/// folded based on the profile value, which is done to coalesce similar
 comment|/// reports.
 name|void
 name|emitReport
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|BugReport
-modifier|*
+operator|>
 name|R
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|EmitBasicReport
 argument_list|(

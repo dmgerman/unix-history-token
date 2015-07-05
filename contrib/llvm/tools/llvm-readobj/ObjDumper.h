@@ -131,6 +131,11 @@ function_decl|;
 comment|// Only implemented for ELF at this time.
 name|virtual
 name|void
+name|printDynamicRelocations
+parameter_list|()
+block|{ }
+name|virtual
+name|void
 name|printDynamicTable
 parameter_list|()
 block|{ }
@@ -187,6 +192,14 @@ name|void
 name|printCOFFBaseReloc
 parameter_list|()
 block|{ }
+name|virtual
+name|void
+name|printStackMap
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 name|protected
 label|:
 name|StreamWriter

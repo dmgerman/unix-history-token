@@ -277,13 +277,8 @@ literal|0x1000
 block|}
 enum|;
 block|}
-comment|// namespace NVPTXII
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// namespace llvm
-end_comment
 
 begin_endif
 endif|#

@@ -227,9 +227,15 @@ comment|// Kalimba: generic kalimba
 name|shave
 block|,
 comment|// SHAVE: Movidius vector VLIW processors
+name|wasm32
+block|,
+comment|// WebAssembly with 32-bit pointers
+name|wasm64
+block|,
+comment|// WebAssembly with 64-bit pointers
 name|LastArchType
 init|=
-name|shave
+name|wasm64
 block|}
 enum|;
 enum|enum
@@ -1764,7 +1770,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

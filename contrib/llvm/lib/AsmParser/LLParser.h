@@ -156,6 +156,9 @@ decl_stmt|;
 name|class
 name|MDNode
 decl_stmt|;
+struct_decl|struct
+name|SlotMapping
+struct_decl|;
 name|class
 name|StructType
 decl_stmt|;
@@ -359,6 +362,10 @@ decl_stmt|;
 name|Module
 modifier|*
 name|M
+decl_stmt|;
+name|SlotMapping
+modifier|*
+name|Slots
 decl_stmt|;
 comment|// Instruction metadata resolution.  Each instruction can have a list of
 comment|// MDRef info associated with them.
@@ -579,12 +586,14 @@ argument|SourceMgr&SM
 argument_list|,
 argument|SMDiagnostic&Err
 argument_list|,
-argument|Module *m
+argument|Module *M
+argument_list|,
+argument|SlotMapping *Slots = nullptr
 argument_list|)
 block|:
 name|Context
 argument_list|(
-name|m
+name|M
 operator|->
 name|getContext
 argument_list|()
@@ -598,7 +607,7 @@ name|SM
 argument_list|,
 name|Err
 argument_list|,
-name|m
+name|M
 operator|->
 name|getContext
 argument_list|()
@@ -606,7 +615,12 @@ argument_list|)
 operator|,
 name|M
 argument_list|(
-name|m
+name|M
+argument_list|)
+operator|,
+name|Slots
+argument_list|(
+name|Slots
 argument_list|)
 operator|,
 name|BlockAddressPFS
@@ -2960,7 +2974,7 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

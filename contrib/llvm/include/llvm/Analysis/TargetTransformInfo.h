@@ -1392,6 +1392,23 @@ name|ExpectedType
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \returns True if the two functions have compatible attributes for inlining
+comment|/// purposes.
+name|bool
+name|hasCompatibleFunctionAttributes
+argument_list|(
+specifier|const
+name|Function
+operator|*
+name|Caller
+argument_list|,
+specifier|const
+name|Function
+operator|*
+name|Callee
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
 name|private
 label|:
@@ -2085,6 +2102,18 @@ name|Type
 operator|*
 name|ExpectedType
 argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|hasCompatibleFunctionAttributes
+argument_list|(
+argument|const Function *Caller
+argument_list|,
+argument|const Function *Callee
+argument_list|)
+specifier|const
 operator|=
 literal|0
 block|; }
@@ -3186,6 +3215,27 @@ name|ExpectedType
 argument_list|)
 return|;
 block|}
+name|bool
+name|hasCompatibleFunctionAttributes
+argument_list|(
+argument|const Function *Caller
+argument_list|,
+argument|const Function *Callee
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|hasCompatibleFunctionAttributes
+argument_list|(
+name|Caller
+argument_list|,
+name|Callee
+argument_list|)
+return|;
+block|}
 expr|}
 block|;
 name|template
@@ -3467,7 +3517,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

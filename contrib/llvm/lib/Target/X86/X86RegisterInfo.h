@@ -376,9 +376,9 @@ return|;
 block|}
 expr|}
 block|;
-comment|// getX86SubSuperRegister - X86 utility function. It returns the sub or super
-comment|// register of a specific X86 register.
-comment|// e.g. getX86SubSuperRegister(X86::EAX, MVT::i16) return X86:AX
+comment|/// Returns the sub or super register of a specific X86 register.
+comment|/// e.g. getX86SubSuperRegister(X86::EAX, MVT::i16) returns X86::AX.
+comment|/// Aborts on error.
 name|unsigned
 name|getX86SubSuperRegister
 argument_list|(
@@ -387,6 +387,18 @@ argument_list|,
 argument|MVT::SimpleValueType
 argument_list|,
 argument|bool High=false
+argument_list|)
+block|;
+comment|/// Returns the sub or super register of a specific X86 register.
+comment|/// Like getX86SubSuperRegister() but returns 0 on error.
+name|unsigned
+name|getX86SubSuperRegisterOrZero
+argument_list|(
+argument|unsigned
+argument_list|,
+argument|MVT::SimpleValueType
+argument_list|,
+argument|bool High = false
 argument_list|)
 block|;
 comment|//get512BitRegister - X86 utility - returns 512-bit super register
@@ -399,7 +411,7 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

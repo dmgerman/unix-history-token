@@ -175,7 +175,7 @@ name|class
 name|InputInfo
 decl_stmt|;
 name|class
-name|Job
+name|JobList
 decl_stmt|;
 name|class
 name|JobAction
@@ -555,9 +555,9 @@ name|Compilation
 modifier|&
 name|C
 parameter_list|,
-name|Job
+name|Command
 modifier|&
-name|J
+name|Cmd
 parameter_list|)
 function_decl|;
 name|void
@@ -812,7 +812,6 @@ operator|::
 name|opt
 operator|::
 name|InputArgList
-operator|*
 name|ParseArgStrings
 argument_list|(
 name|ArrayRef

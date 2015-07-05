@@ -63,7 +63,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("mmx")))
 end_define
 
@@ -71,7 +71,7 @@ begin_function
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_empty
 parameter_list|(
 name|void
@@ -87,7 +87,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_cvtsi32_si64
 parameter_list|(
 name|int
@@ -112,7 +112,7 @@ begin_function
 specifier|static
 name|__inline__
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_cvtsi64_si32
 parameter_list|(
 name|__m64
@@ -137,7 +137,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_cvtsi64_m64
 parameter_list|(
 name|long
@@ -159,7 +159,7 @@ specifier|static
 name|__inline__
 name|long
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_cvtm64_si64
 parameter_list|(
 name|__m64
@@ -180,7 +180,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_packs_pi16
 parameter_list|(
 name|__m64
@@ -214,7 +214,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_packs_pi32
 parameter_list|(
 name|__m64
@@ -248,7 +248,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_packs_pu16
 parameter_list|(
 name|__m64
@@ -282,7 +282,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_unpackhi_pi8
 parameter_list|(
 name|__m64
@@ -316,7 +316,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_unpackhi_pi16
 parameter_list|(
 name|__m64
@@ -350,7 +350,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_unpackhi_pi32
 parameter_list|(
 name|__m64
@@ -384,7 +384,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_unpacklo_pi8
 parameter_list|(
 name|__m64
@@ -418,7 +418,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_unpacklo_pi16
 parameter_list|(
 name|__m64
@@ -452,7 +452,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_unpacklo_pi32
 parameter_list|(
 name|__m64
@@ -486,7 +486,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_add_pi8
 parameter_list|(
 name|__m64
@@ -520,7 +520,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_add_pi16
 parameter_list|(
 name|__m64
@@ -554,7 +554,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_add_pi32
 parameter_list|(
 name|__m64
@@ -588,7 +588,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_adds_pi8
 parameter_list|(
 name|__m64
@@ -622,7 +622,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_adds_pi16
 parameter_list|(
 name|__m64
@@ -656,7 +656,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_adds_pu8
 parameter_list|(
 name|__m64
@@ -690,7 +690,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_adds_pu16
 parameter_list|(
 name|__m64
@@ -724,7 +724,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_sub_pi8
 parameter_list|(
 name|__m64
@@ -758,7 +758,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_sub_pi16
 parameter_list|(
 name|__m64
@@ -792,7 +792,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_sub_pi32
 parameter_list|(
 name|__m64
@@ -826,7 +826,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_subs_pi8
 parameter_list|(
 name|__m64
@@ -860,7 +860,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_subs_pi16
 parameter_list|(
 name|__m64
@@ -894,7 +894,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_subs_pu8
 parameter_list|(
 name|__m64
@@ -928,7 +928,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_subs_pu16
 parameter_list|(
 name|__m64
@@ -962,7 +962,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_madd_pi16
 parameter_list|(
 name|__m64
@@ -996,7 +996,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_mulhi_pi16
 parameter_list|(
 name|__m64
@@ -1030,7 +1030,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_mullo_pi16
 parameter_list|(
 name|__m64
@@ -1064,7 +1064,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_sll_pi16
 parameter_list|(
 name|__m64
@@ -1095,7 +1095,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_slli_pi16
 parameter_list|(
 name|__m64
@@ -1126,7 +1126,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_sll_pi32
 parameter_list|(
 name|__m64
@@ -1157,7 +1157,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_slli_pi32
 parameter_list|(
 name|__m64
@@ -1188,7 +1188,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_sll_si64
 parameter_list|(
 name|__m64
@@ -1216,7 +1216,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_slli_si64
 parameter_list|(
 name|__m64
@@ -1244,7 +1244,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_sra_pi16
 parameter_list|(
 name|__m64
@@ -1275,7 +1275,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_srai_pi16
 parameter_list|(
 name|__m64
@@ -1306,7 +1306,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_sra_pi32
 parameter_list|(
 name|__m64
@@ -1337,7 +1337,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_srai_pi32
 parameter_list|(
 name|__m64
@@ -1368,7 +1368,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_srl_pi16
 parameter_list|(
 name|__m64
@@ -1399,7 +1399,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_srli_pi16
 parameter_list|(
 name|__m64
@@ -1430,7 +1430,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_srl_pi32
 parameter_list|(
 name|__m64
@@ -1461,7 +1461,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_srli_pi32
 parameter_list|(
 name|__m64
@@ -1492,7 +1492,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_srl_si64
 parameter_list|(
 name|__m64
@@ -1520,7 +1520,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_srli_si64
 parameter_list|(
 name|__m64
@@ -1548,7 +1548,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_and_si64
 parameter_list|(
 name|__m64
@@ -1573,7 +1573,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_andnot_si64
 parameter_list|(
 name|__m64
@@ -1598,7 +1598,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_or_si64
 parameter_list|(
 name|__m64
@@ -1623,7 +1623,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_xor_si64
 parameter_list|(
 name|__m64
@@ -1648,7 +1648,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_cmpeq_pi8
 parameter_list|(
 name|__m64
@@ -1682,7 +1682,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_cmpeq_pi16
 parameter_list|(
 name|__m64
@@ -1716,7 +1716,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_cmpeq_pi32
 parameter_list|(
 name|__m64
@@ -1750,7 +1750,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_cmpgt_pi8
 parameter_list|(
 name|__m64
@@ -1784,7 +1784,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_cmpgt_pi16
 parameter_list|(
 name|__m64
@@ -1818,7 +1818,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_cmpgt_pi32
 parameter_list|(
 name|__m64
@@ -1852,7 +1852,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_setzero_si64
 parameter_list|(
 name|void
@@ -1873,7 +1873,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_set_pi32
 parameter_list|(
 name|int
@@ -1901,7 +1901,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_set_pi16
 parameter_list|(
 name|short
@@ -1939,7 +1939,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_set_pi8
 parameter_list|(
 name|char
@@ -1997,7 +1997,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_set1_pi32
 parameter_list|(
 name|int
@@ -2019,7 +2019,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_set1_pi16
 parameter_list|(
 name|short
@@ -2045,7 +2045,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_set1_pi8
 parameter_list|(
 name|char
@@ -2079,7 +2079,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_setr_pi32
 parameter_list|(
 name|int
@@ -2104,7 +2104,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_setr_pi16
 parameter_list|(
 name|short
@@ -2139,7 +2139,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_setr_pi8
 parameter_list|(
 name|char
@@ -2193,7 +2193,7 @@ end_function
 begin_undef
 undef|#
 directive|undef
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 end_undef
 
 begin_comment

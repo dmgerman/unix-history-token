@@ -257,7 +257,6 @@ return|;
 block|}
 expr|}
 block|; }
-comment|// namespace detail
 name|template
 operator|<
 name|typename

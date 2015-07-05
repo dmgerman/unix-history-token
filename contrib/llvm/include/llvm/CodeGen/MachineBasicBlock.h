@@ -2605,7 +2605,21 @@ name|const_iterator
 name|getFirstTerminator
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|const_cast
+operator|<
+name|MachineBasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getFirstTerminator
+argument_list|()
+return|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -2622,6 +2636,43 @@ name|getFirstInstrTerminator
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// getFirstNonDebugInstr - returns an iterator to the first non-debug
+end_comment
+
+begin_comment
+comment|/// instruction in the basic block, or end()
+end_comment
+
+begin_function_decl
+name|iterator
+name|getFirstNonDebugInstr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+name|const_iterator
+name|getFirstNonDebugInstr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|MachineBasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getFirstNonDebugInstr
+argument_list|()
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|/// getLastNonDebugInstr - returns an iterator to the last non-debug
@@ -2643,7 +2694,21 @@ name|const_iterator
 name|getLastNonDebugInstr
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|const_cast
+operator|<
+name|MachineBasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getLastNonDebugInstr
+argument_list|()
+return|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -3584,6 +3649,27 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+name|ModuleSlotTracker
+operator|&
+name|MST
+argument_list|,
+name|SlotIndexes
+operator|*
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|// Printing method used by LoopInfo.
 end_comment
@@ -4427,7 +4513,7 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

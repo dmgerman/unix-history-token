@@ -310,6 +310,9 @@ block|,
 comment|// FP vector get exponent
 name|FGETEXP_RND
 block|,
+comment|// FP Scale
+name|SCALEF
+block|,
 comment|// Integer add/sub with unsigned saturation.
 name|ADDUS
 block|,
@@ -344,6 +347,9 @@ comment|/// Signed integer max and min.
 name|SMAX
 block|,
 name|SMIN
+block|,
+comment|// Integer absolute value
+name|ABS
 block|,
 comment|/// Floating point max and min.
 name|FMAX
@@ -736,7 +742,6 @@ comment|// thought as target memory ops!
 block|}
 enum|;
 block|}
-comment|// namespace X86ISD
 comment|/// Define some predicates that are used for node matching.
 name|namespace
 name|X86
@@ -903,7 +908,6 @@ literal|4
 block|}
 enum|;
 block|}
-comment|// namespace X86
 comment|//===--------------------------------------------------------------------===//
 comment|//  X86 Implementation of the TargetLowering interface
 name|class
@@ -1053,9 +1057,8 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// Returns true if the target allows
-comment|/// unaligned memory accesses. of the specified type. Returns whether it
-comment|/// is "fast" by reference in the second argument.
+comment|/// Returns true if the target allows unaligned memory accesses of the
+comment|/// specified type. Returns whether it is "fast" in the last argument.
 name|bool
 name|allowsMisalignedMemoryAccesses
 argument_list|(
@@ -3278,12 +3281,8 @@ function_decl|;
 block|}
 end_decl_stmt
 
-begin_comment
-unit|}
-comment|// namespace llvm
-end_comment
-
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

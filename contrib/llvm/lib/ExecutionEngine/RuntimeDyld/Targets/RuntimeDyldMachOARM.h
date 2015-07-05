@@ -1128,14 +1128,12 @@ argument_list|)
 decl_stmt|;
 name|uint64_t
 name|Offset
-decl_stmt|;
+init|=
 name|RelI
 operator|->
 name|getOffset
-argument_list|(
-name|Offset
-argument_list|)
-expr_stmt|;
+argument_list|()
+decl_stmt|;
 name|uint8_t
 modifier|*
 name|LocalAddress
@@ -1478,12 +1476,8 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_comment
-unit|}
-comment|// namespace llvm
-end_comment
-
 begin_undef
+unit|}
 undef|#
 directive|undef
 name|DEBUG_TYPE

@@ -189,6 +189,9 @@ name|MCObjectWriter
 modifier|*
 name|createAMDGPUELFObjectWriter
 parameter_list|(
+name|bool
+name|Is64Bit
+parameter_list|,
 name|raw_pwrite_stream
 modifier|&
 name|OS
@@ -198,7 +201,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_define

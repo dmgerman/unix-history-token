@@ -22,7 +22,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("popcnt")))
 end_define
 
@@ -30,7 +30,7 @@ begin_function
 specifier|static
 name|__inline__
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_popcnt_u32
 parameter_list|(
 name|unsigned
@@ -58,7 +58,7 @@ specifier|static
 name|__inline__
 name|long
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_popcnt_u64
 parameter_list|(
 name|unsigned
@@ -88,7 +88,7 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 end_undef
 
 begin_endif

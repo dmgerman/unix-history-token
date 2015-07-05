@@ -66,7 +66,16 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AsmPrinter
+decl_stmt|;
+name|class
+name|DbgVariable
+decl_stmt|;
+name|class
 name|DwarfCompileUnit
+decl_stmt|;
+name|class
+name|MachineInstr
 decl_stmt|;
 name|class
 name|MCSymbol
@@ -93,6 +102,8 @@ decl_stmt|;
 name|MCSymbol
 modifier|*
 name|Label
+init|=
+name|nullptr
 decl_stmt|;
 name|size_t
 name|EntryOffset
@@ -101,19 +112,12 @@ name|List
 argument_list|(
 argument|DwarfCompileUnit *CU
 argument_list|,
-argument|MCSymbol *Label
-argument_list|,
 argument|size_t EntryOffset
 argument_list|)
 block|:
 name|CU
 argument_list|(
 name|CU
-argument_list|)
-operator|,
-name|Label
-argument_list|(
-name|Label
 argument_list|)
 operator|,
 name|EntryOffset
@@ -267,6 +271,14 @@ return|return
 name|Lists
 return|;
 block|}
+name|class
+name|ListBuilder
+decl_stmt|;
+name|class
+name|EntryBuilder
+decl_stmt|;
+name|private
+label|:
 comment|/// \brief Start a new .debug_loc entry list.
 comment|///
 comment|/// Start a new .debug_loc entry list.  Return the new list's index so it can
@@ -279,10 +291,6 @@ parameter_list|(
 name|DwarfCompileUnit
 modifier|*
 name|CU
-parameter_list|,
-name|MCSymbol
-modifier|*
-name|Label
 parameter_list|)
 block|{
 name|size_t
@@ -299,8 +307,6 @@ name|emplace_back
 argument_list|(
 name|CU
 argument_list|,
-name|Label
-argument_list|,
 name|Entries
 operator|.
 name|size
@@ -311,6 +317,20 @@ return|return
 name|LI
 return|;
 block|}
+comment|/// Finalize a .debug_loc entry list.
+comment|///
+comment|/// If there are no entries in this list, delete it outright.  Otherwise,
+comment|/// create a label with \a Asm.
+comment|///
+comment|/// \return false iff the list is deleted.
+name|bool
+name|finalizeList
+parameter_list|(
+name|AsmPrinter
+modifier|&
+name|Asm
+parameter_list|)
+function_decl|;
 comment|/// \brief Start a new .debug_loc entry.
 comment|///
 comment|/// Until the next call, bytes added to the stream will be added to this
@@ -349,6 +369,13 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// Finalize a .debug_loc entry, deleting if it's empty.
+name|void
+name|finalizeEntry
+parameter_list|()
+function_decl|;
+name|public
+label|:
 name|BufferByteStreamer
 name|getStreamer
 parameter_list|()
@@ -736,7 +763,168 @@ return|;
 block|}
 block|}
 empty_stmt|;
+comment|/// Builder for DebugLocStream lists.
+name|class
+name|DebugLocStream
+operator|::
+name|ListBuilder
+block|{
+name|DebugLocStream
+operator|&
+name|Locs
+block|;
+name|AsmPrinter
+operator|&
+name|Asm
+block|;
+name|DbgVariable
+operator|&
+name|V
+block|;
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+block|;
+name|size_t
+name|ListIndex
+block|;
+name|public
+operator|:
+name|ListBuilder
+argument_list|(
+name|DebugLocStream
+operator|&
+name|Locs
+argument_list|,
+name|DwarfCompileUnit
+operator|&
+name|CU
+argument_list|,
+name|AsmPrinter
+operator|&
+name|Asm
+argument_list|,
+name|DbgVariable
+operator|&
+name|V
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+operator|:
+name|Locs
+argument_list|(
+name|Locs
+argument_list|)
+block|,
+name|Asm
+argument_list|(
+name|Asm
+argument_list|)
+block|,
+name|V
+argument_list|(
+name|V
+argument_list|)
+block|,
+name|MI
+argument_list|(
+name|MI
+argument_list|)
+block|,
+name|ListIndex
+argument_list|(
+argument|Locs.startList(&CU)
+argument_list|)
+block|{}
+comment|/// Finalize the list.
+comment|///
+comment|/// If the list is empty, delete it.  Otherwise, finalize it by creating a
+comment|/// temp symbol in \a Asm and setting up the \a DbgVariable.
+operator|~
+name|ListBuilder
+argument_list|()
+block|;
+name|DebugLocStream
+operator|&
+name|getLocs
+argument_list|()
+block|{
+return|return
+name|Locs
+return|;
 block|}
+expr|}
+block|;
+comment|/// Builder for DebugLocStream entries.
+name|class
+name|DebugLocStream
+operator|::
+name|EntryBuilder
+block|{
+name|DebugLocStream
+operator|&
+name|Locs
+block|;
+name|public
+operator|:
+name|EntryBuilder
+argument_list|(
+name|ListBuilder
+operator|&
+name|List
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+name|Begin
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+name|End
+argument_list|)
+operator|:
+name|Locs
+argument_list|(
+argument|List.getLocs()
+argument_list|)
+block|{
+name|Locs
+operator|.
+name|startEntry
+argument_list|(
+name|Begin
+argument_list|,
+name|End
+argument_list|)
+block|;   }
+comment|/// Finalize the entry, deleting it if it's empty.
+operator|~
+name|EntryBuilder
+argument_list|()
+block|{
+name|Locs
+operator|.
+name|finalizeEntry
+argument_list|()
+block|; }
+name|BufferByteStreamer
+name|getStreamer
+argument_list|()
+block|{
+return|return
+name|Locs
+operator|.
+name|getStreamer
+argument_list|()
+return|;
+block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

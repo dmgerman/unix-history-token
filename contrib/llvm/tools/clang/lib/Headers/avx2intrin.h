@@ -39,7 +39,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("avx2")))
 end_define
 
@@ -65,7 +65,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_abs_epi8
 parameter_list|(
 name|__m256i
@@ -91,7 +91,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_abs_epi16
 parameter_list|(
 name|__m256i
@@ -117,7 +117,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_abs_epi32
 parameter_list|(
 name|__m256i
@@ -143,7 +143,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_packs_epi16
 parameter_list|(
 name|__m256i
@@ -177,7 +177,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_packs_epi32
 parameter_list|(
 name|__m256i
@@ -211,7 +211,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_packus_epi16
 parameter_list|(
 name|__m256i
@@ -245,7 +245,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_packus_epi32
 parameter_list|(
 name|__m256i
@@ -279,7 +279,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_add_epi8
 parameter_list|(
 name|__m256i
@@ -312,7 +312,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_add_epi16
 parameter_list|(
 name|__m256i
@@ -345,7 +345,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_add_epi32
 parameter_list|(
 name|__m256i
@@ -378,7 +378,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_add_epi64
 parameter_list|(
 name|__m256i
@@ -400,7 +400,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_adds_epi8
 parameter_list|(
 name|__m256i
@@ -434,7 +434,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_adds_epi16
 parameter_list|(
 name|__m256i
@@ -468,7 +468,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_adds_epu8
 parameter_list|(
 name|__m256i
@@ -502,7 +502,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_adds_epu16
 parameter_list|(
 name|__m256i
@@ -550,7 +550,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_and_si256
 parameter_list|(
 name|__m256i
@@ -572,7 +572,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_andnot_si256
 parameter_list|(
 name|__m256i
@@ -595,7 +595,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_avg_epu8
 parameter_list|(
 name|__m256i
@@ -629,7 +629,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_avg_epu16
 parameter_list|(
 name|__m256i
@@ -663,7 +663,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_blendv_epi8
 parameter_list|(
 name|__m256i
@@ -719,7 +719,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cmpeq_epi8
 parameter_list|(
 name|__m256i
@@ -752,7 +752,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cmpeq_epi16
 parameter_list|(
 name|__m256i
@@ -785,7 +785,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cmpeq_epi32
 parameter_list|(
 name|__m256i
@@ -818,7 +818,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cmpeq_epi64
 parameter_list|(
 name|__m256i
@@ -845,7 +845,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cmpgt_epi8
 parameter_list|(
 name|__m256i
@@ -878,7 +878,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cmpgt_epi16
 parameter_list|(
 name|__m256i
@@ -911,7 +911,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cmpgt_epi32
 parameter_list|(
 name|__m256i
@@ -944,7 +944,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cmpgt_epi64
 parameter_list|(
 name|__m256i
@@ -971,7 +971,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_hadd_epi16
 parameter_list|(
 name|__m256i
@@ -1005,7 +1005,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_hadd_epi32
 parameter_list|(
 name|__m256i
@@ -1039,7 +1039,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_hadds_epi16
 parameter_list|(
 name|__m256i
@@ -1073,7 +1073,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_hsub_epi16
 parameter_list|(
 name|__m256i
@@ -1107,7 +1107,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_hsub_epi32
 parameter_list|(
 name|__m256i
@@ -1141,7 +1141,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_hsubs_epi16
 parameter_list|(
 name|__m256i
@@ -1175,7 +1175,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_maddubs_epi16
 parameter_list|(
 name|__m256i
@@ -1209,7 +1209,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_madd_epi16
 parameter_list|(
 name|__m256i
@@ -1243,7 +1243,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_max_epi8
 parameter_list|(
 name|__m256i
@@ -1277,7 +1277,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_max_epi16
 parameter_list|(
 name|__m256i
@@ -1311,7 +1311,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_max_epi32
 parameter_list|(
 name|__m256i
@@ -1345,7 +1345,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_max_epu8
 parameter_list|(
 name|__m256i
@@ -1379,7 +1379,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_max_epu16
 parameter_list|(
 name|__m256i
@@ -1413,7 +1413,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_max_epu32
 parameter_list|(
 name|__m256i
@@ -1447,7 +1447,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_min_epi8
 parameter_list|(
 name|__m256i
@@ -1481,7 +1481,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_min_epi16
 parameter_list|(
 name|__m256i
@@ -1515,7 +1515,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_min_epi32
 parameter_list|(
 name|__m256i
@@ -1549,7 +1549,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_min_epu8
 parameter_list|(
 name|__m256i
@@ -1583,7 +1583,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_min_epu16
 parameter_list|(
 name|__m256i
@@ -1617,7 +1617,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_min_epu32
 parameter_list|(
 name|__m256i
@@ -1651,7 +1651,7 @@ begin_function
 specifier|static
 name|__inline__
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_movemask_epi8
 parameter_list|(
 name|__m256i
@@ -1674,7 +1674,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtepi8_epi16
 parameter_list|(
 name|__m128i
@@ -1700,7 +1700,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtepi8_epi32
 parameter_list|(
 name|__m128i
@@ -1726,7 +1726,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtepi8_epi64
 parameter_list|(
 name|__m128i
@@ -1752,7 +1752,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtepi16_epi32
 parameter_list|(
 name|__m128i
@@ -1778,7 +1778,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtepi16_epi64
 parameter_list|(
 name|__m128i
@@ -1804,7 +1804,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtepi32_epi64
 parameter_list|(
 name|__m128i
@@ -1830,7 +1830,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtepu8_epi16
 parameter_list|(
 name|__m128i
@@ -1856,7 +1856,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtepu8_epi32
 parameter_list|(
 name|__m128i
@@ -1882,7 +1882,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtepu8_epi64
 parameter_list|(
 name|__m128i
@@ -1908,7 +1908,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtepu16_epi32
 parameter_list|(
 name|__m128i
@@ -1934,7 +1934,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtepu16_epi64
 parameter_list|(
 name|__m128i
@@ -1960,7 +1960,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtepu32_epi64
 parameter_list|(
 name|__m128i
@@ -1986,7 +1986,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_mul_epi32
 parameter_list|(
 name|__m256i
@@ -2020,7 +2020,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_mulhrs_epi16
 parameter_list|(
 name|__m256i
@@ -2054,7 +2054,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_mulhi_epu16
 parameter_list|(
 name|__m256i
@@ -2088,7 +2088,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_mulhi_epi16
 parameter_list|(
 name|__m256i
@@ -2122,7 +2122,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_mullo_epi16
 parameter_list|(
 name|__m256i
@@ -2155,7 +2155,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_mullo_epi32
 parameter_list|(
 name|__m256i
@@ -2188,7 +2188,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_mul_epu32
 parameter_list|(
 name|__m256i
@@ -2219,7 +2219,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_or_si256
 parameter_list|(
 name|__m256i
@@ -2241,7 +2241,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sad_epu8
 parameter_list|(
 name|__m256i
@@ -2272,7 +2272,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_shuffle_epi8
 parameter_list|(
 name|__m256i
@@ -2342,7 +2342,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sign_epi8
 parameter_list|(
 name|__m256i
@@ -2376,7 +2376,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sign_epi16
 parameter_list|(
 name|__m256i
@@ -2410,7 +2410,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sign_epi32
 parameter_list|(
 name|__m256i
@@ -2468,7 +2468,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_slli_epi16
 parameter_list|(
 name|__m256i
@@ -2499,7 +2499,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sll_epi16
 parameter_list|(
 name|__m256i
@@ -2533,7 +2533,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_slli_epi32
 parameter_list|(
 name|__m256i
@@ -2564,7 +2564,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sll_epi32
 parameter_list|(
 name|__m256i
@@ -2598,7 +2598,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_slli_epi64
 parameter_list|(
 name|__m256i
@@ -2623,7 +2623,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sll_epi64
 parameter_list|(
 name|__m256i
@@ -2648,7 +2648,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_srai_epi16
 parameter_list|(
 name|__m256i
@@ -2679,7 +2679,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sra_epi16
 parameter_list|(
 name|__m256i
@@ -2713,7 +2713,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_srai_epi32
 parameter_list|(
 name|__m256i
@@ -2744,7 +2744,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sra_epi32
 parameter_list|(
 name|__m256i
@@ -2802,7 +2802,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_srli_epi16
 parameter_list|(
 name|__m256i
@@ -2833,7 +2833,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_srl_epi16
 parameter_list|(
 name|__m256i
@@ -2867,7 +2867,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_srli_epi32
 parameter_list|(
 name|__m256i
@@ -2898,7 +2898,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_srl_epi32
 parameter_list|(
 name|__m256i
@@ -2932,7 +2932,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_srli_epi64
 parameter_list|(
 name|__m256i
@@ -2957,7 +2957,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_srl_epi64
 parameter_list|(
 name|__m256i
@@ -2982,7 +2982,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sub_epi8
 parameter_list|(
 name|__m256i
@@ -3015,7 +3015,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sub_epi16
 parameter_list|(
 name|__m256i
@@ -3048,7 +3048,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sub_epi32
 parameter_list|(
 name|__m256i
@@ -3081,7 +3081,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sub_epi64
 parameter_list|(
 name|__m256i
@@ -3103,7 +3103,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_subs_epi8
 parameter_list|(
 name|__m256i
@@ -3137,7 +3137,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_subs_epi16
 parameter_list|(
 name|__m256i
@@ -3171,7 +3171,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_subs_epu8
 parameter_list|(
 name|__m256i
@@ -3205,7 +3205,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_subs_epu16
 parameter_list|(
 name|__m256i
@@ -3239,7 +3239,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_unpackhi_epi8
 parameter_list|(
 name|__m256i
@@ -3369,7 +3369,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_unpackhi_epi16
 parameter_list|(
 name|__m256i
@@ -3451,7 +3451,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_unpackhi_epi32
 parameter_list|(
 name|__m256i
@@ -3509,7 +3509,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_unpackhi_epi64
 parameter_list|(
 name|__m256i
@@ -3549,7 +3549,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_unpacklo_epi8
 parameter_list|(
 name|__m256i
@@ -3679,7 +3679,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_unpacklo_epi16
 parameter_list|(
 name|__m256i
@@ -3761,7 +3761,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_unpacklo_epi32
 parameter_list|(
 name|__m256i
@@ -3819,7 +3819,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_unpacklo_epi64
 parameter_list|(
 name|__m256i
@@ -3859,7 +3859,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_xor_si256
 parameter_list|(
 name|__m256i
@@ -3881,7 +3881,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_stream_load_si256
 parameter_list|(
 name|__m256i
@@ -3909,7 +3909,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_broadcastss_ps
 parameter_list|(
 name|__m128
@@ -3935,7 +3935,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_broadcastsd_pd
 parameter_list|(
 name|__m128d
@@ -3961,7 +3961,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_broadcastss_ps
 parameter_list|(
 name|__m128
@@ -3987,7 +3987,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_broadcastsd_pd
 parameter_list|(
 name|__m128d
@@ -4013,7 +4013,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_broadcastsi128_si256
 parameter_list|(
 name|__m128i
@@ -4074,7 +4074,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_broadcastb_epi8
 parameter_list|(
 name|__m128i
@@ -4100,7 +4100,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_broadcastw_epi16
 parameter_list|(
 name|__m128i
@@ -4126,7 +4126,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_broadcastd_epi32
 parameter_list|(
 name|__m128i
@@ -4152,7 +4152,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_broadcastq_epi64
 parameter_list|(
 name|__m128i
@@ -4175,7 +4175,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_broadcastb_epi8
 parameter_list|(
 name|__m128i
@@ -4201,7 +4201,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_broadcastw_epi16
 parameter_list|(
 name|__m128i
@@ -4227,7 +4227,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_broadcastd_epi32
 parameter_list|(
 name|__m128i
@@ -4253,7 +4253,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_broadcastq_epi64
 parameter_list|(
 name|__m128i
@@ -4276,7 +4276,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_permutevar8x32_epi32
 parameter_list|(
 name|__m256i
@@ -4322,7 +4322,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_permutevar8x32_ps
 parameter_list|(
 name|__m256
@@ -4408,7 +4408,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_maskload_epi32
 parameter_list|(
 name|int
@@ -4446,7 +4446,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_maskload_epi64
 parameter_list|(
 name|long
@@ -4482,7 +4482,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_maskload_epi32
 parameter_list|(
 name|int
@@ -4520,7 +4520,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_maskload_epi64
 parameter_list|(
 name|long
@@ -4559,7 +4559,7 @@ begin_function
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_maskstore_epi32
 parameter_list|(
 name|int
@@ -4599,7 +4599,7 @@ begin_function
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_maskstore_epi64
 parameter_list|(
 name|long
@@ -4634,7 +4634,7 @@ begin_function
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_maskstore_epi32
 parameter_list|(
 name|int
@@ -4674,7 +4674,7 @@ begin_function
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_maskstore_epi64
 parameter_list|(
 name|long
@@ -4709,7 +4709,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sllv_epi32
 parameter_list|(
 name|__m256i
@@ -4743,7 +4743,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_sllv_epi32
 parameter_list|(
 name|__m128i
@@ -4777,7 +4777,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_sllv_epi64
 parameter_list|(
 name|__m256i
@@ -4805,7 +4805,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_sllv_epi64
 parameter_list|(
 name|__m128i
@@ -4833,7 +4833,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_srav_epi32
 parameter_list|(
 name|__m256i
@@ -4867,7 +4867,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_srav_epi32
 parameter_list|(
 name|__m128i
@@ -4901,7 +4901,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_srlv_epi32
 parameter_list|(
 name|__m256i
@@ -4935,7 +4935,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_srlv_epi32
 parameter_list|(
 name|__m128i
@@ -4969,7 +4969,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_srlv_epi64
 parameter_list|(
 name|__m256i
@@ -4997,7 +4997,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_srlv_epi64
 parameter_list|(
 name|__m128i
@@ -5536,7 +5536,7 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 end_undef
 
 begin_endif

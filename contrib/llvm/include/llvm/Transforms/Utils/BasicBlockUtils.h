@@ -222,7 +222,8 @@ name|V
 argument_list|)
 decl_stmt|;
 comment|// ReplaceInstWithInst - Replace the instruction specified by BI with the
-comment|// instruction specified by I.  The original instruction is deleted and BI is
+comment|// instruction specified by I. Copies DebugLoc from BI to I, if I doesn't
+comment|// already have a DebugLoc. The original instruction is deleted and BI is
 comment|// updated to point to the new instruction.
 comment|//
 name|void
@@ -246,7 +247,8 @@ name|I
 argument_list|)
 decl_stmt|;
 comment|// ReplaceInstWithInst - Replace the instruction specified by From with the
-comment|// instruction specified by To.
+comment|// instruction specified by To. Copies DebugLoc from BI to I, if I doesn't
+comment|// already have a DebugLoc.
 comment|//
 name|void
 name|ReplaceInstWithInst
@@ -1054,7 +1056,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

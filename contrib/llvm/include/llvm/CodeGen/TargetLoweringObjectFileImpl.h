@@ -306,16 +306,6 @@ block|{}
 name|TargetLoweringObjectFileMachO
 argument_list|()
 block|;
-comment|/// Extract the dependent library name from a linker option string. Returns
-comment|/// StringRef() if the option does not specify a library.
-name|StringRef
-name|getDepLibFromLinkerOpt
-argument_list|(
-argument|StringRef LinkerOption
-argument_list|)
-specifier|const
-name|override
-block|;
 comment|/// Emit the module flags that specify the garbage collection information.
 name|void
 name|emitModuleFlags
@@ -501,16 +491,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// Extract the dependent library name from a linker option string. Returns
-comment|/// StringRef() if the option does not specify a library.
-name|StringRef
-name|getDepLibFromLinkerOpt
-argument_list|(
-argument|StringRef LinkerOption
-argument_list|)
-specifier|const
-name|override
-block|;
 comment|/// Emit Obj-C garbage collection and linker options. Only linker option
 comment|/// emission is implemented for COFF.
 name|void
@@ -545,6 +525,18 @@ argument_list|(
 argument|unsigned Priority
 argument_list|,
 argument|const MCSymbol *KeySym
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|emitLinkerFlagsForGlobal
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|const GlobalValue *GV
+argument_list|,
+argument|const Mangler&Mang
 argument_list|)
 specifier|const
 name|override

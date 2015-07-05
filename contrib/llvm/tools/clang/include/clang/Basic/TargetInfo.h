@@ -309,6 +309,10 @@ name|unsigned
 name|short
 name|MaxVectorAlign
 block|;
+name|unsigned
+name|short
+name|SimdDefaultAlign
+block|;
 specifier|const
 name|char
 operator|*
@@ -1391,6 +1395,18 @@ return|return
 name|MaxVectorAlign
 return|;
 block|}
+comment|/// \brief Return default simd alignment for the given target. Generally, this
+comment|/// value is type-specific, but this alignment can be used for most of the
+comment|/// types for the given target.
+name|unsigned
+name|getSimdDefaultAlign
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SimdDefaultAlign
+return|;
+block|}
 comment|/// \brief Return the size of intmax_t and uintmax_t for this target, in bits.
 name|unsigned
 name|getIntMaxTWidth
@@ -2065,6 +2081,19 @@ comment|// Don't copy Name or constraint string.
 block|}
 expr|}
 block|;
+comment|// Validate the contents of the __builtin_cpu_supports(const char*) argument.
+name|virtual
+name|bool
+name|validateCpuSupports
+argument_list|(
+argument|StringRef Name
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|// validateOutputConstraint, validateInputConstraint - Checks that
 comment|// a constraint is valid and provides information about it.
 comment|// FIXME: These should return a real error instead of just true/false.

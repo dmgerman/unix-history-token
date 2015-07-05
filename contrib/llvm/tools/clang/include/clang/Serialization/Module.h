@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Endian.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
@@ -565,10 +571,14 @@ name|InputFilesCursor
 expr_stmt|;
 comment|/// \brief Offsets for all of the input file entries in the AST file.
 specifier|const
-name|uint64_t
-modifier|*
+name|llvm
+operator|::
+name|support
+operator|::
+name|unaligned_uint64_t
+operator|*
 name|InputFileOffsets
-decl_stmt|;
+expr_stmt|;
 comment|/// \brief The input files that have been loaded from this AST file.
 name|std
 operator|::

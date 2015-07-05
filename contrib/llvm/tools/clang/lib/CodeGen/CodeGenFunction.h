@@ -921,6 +921,61 @@ name|CGCapturedStmtInfo
 modifier|*
 name|CapturedStmtInfo
 decl_stmt|;
+comment|/// \brief RAII for correct setting/restoring of CapturedStmtInfo.
+name|class
+name|CGCapturedStmtRAII
+block|{
+name|private
+label|:
+name|CodeGenFunction
+modifier|&
+name|CGF
+decl_stmt|;
+name|CGCapturedStmtInfo
+modifier|*
+name|PrevCapturedStmtInfo
+decl_stmt|;
+name|public
+label|:
+name|CGCapturedStmtRAII
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|CGCapturedStmtInfo
+operator|*
+name|NewCapturedStmtInfo
+argument_list|)
+operator|:
+name|CGF
+argument_list|(
+name|CGF
+argument_list|)
+operator|,
+name|PrevCapturedStmtInfo
+argument_list|(
+argument|CGF.CapturedStmtInfo
+argument_list|)
+block|{
+name|CGF
+operator|.
+name|CapturedStmtInfo
+operator|=
+name|NewCapturedStmtInfo
+block|;     }
+operator|~
+name|CGCapturedStmtRAII
+argument_list|()
+block|{
+name|CGF
+operator|.
+name|CapturedStmtInfo
+operator|=
+name|PrevCapturedStmtInfo
+block|; }
+block|}
+empty_stmt|;
 comment|/// BoundsChecking - Emit run-time bounds checks. Higher values mean
 comment|/// potentially higher performance penalties.
 name|unsigned
@@ -1056,14 +1111,10 @@ block|{
 comment|/// The size of the following cleanup object.
 name|unsigned
 name|Size
-range|:
-literal|29
 decl_stmt|;
 comment|/// The kind of cleanup to push: a value from the CleanupKind enumeration.
-name|unsigned
+name|CleanupKind
 name|Kind
-range|:
-literal|3
 decl_stmt|;
 name|size_t
 name|getSize
@@ -1071,10 +1122,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|size_t
-argument_list|(
 name|Size
-argument_list|)
 return|;
 block|}
 name|CleanupKind
@@ -1083,13 +1131,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|static_cast
-operator|<
-name|CleanupKind
-operator|>
-operator|(
 name|Kind
-operator|)
 return|;
 block|}
 block|}
@@ -1456,6 +1498,27 @@ operator|+
 name|Header
 operator|.
 name|Size
+argument_list|)
+block|;
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|Header
+argument_list|)
+operator|%
+name|llvm
+operator|::
+name|AlignOf
+operator|<
+name|T
+operator|>
+operator|::
+name|Alignment
+operator|==
+literal|0
+argument_list|,
+literal|"Cleanup will be allocated on misaligned address"
 argument_list|)
 block|;
 name|char
@@ -5942,31 +6005,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|void
-name|GenerateVarArgsThunk
-argument_list|(
+begin_expr_stmt
 name|llvm
 operator|::
 name|Function
 operator|*
-name|Fn
+name|GenerateVarArgsThunk
+argument_list|(
+argument|llvm::Function *Fn
 argument_list|,
-specifier|const
-name|CGFunctionInfo
-operator|&
-name|FnInfo
+argument|const CGFunctionInfo&FnInfo
 argument_list|,
-name|GlobalDecl
-name|GD
+argument|GlobalDecl GD
 argument_list|,
-specifier|const
-name|ThunkInfo
-operator|&
-name|Thunk
+argument|const ThunkInfo&Thunk
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|void
@@ -11177,6 +11232,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|EmitOMPCancellationPointDirective
+parameter_list|(
+specifier|const
+name|OMPCancellationPointDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitOMPCancelDirective
+parameter_list|(
+specifier|const
+name|OMPCancelDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/// \brief Emit inner loop of the worksharing/simd construct.
 end_comment
@@ -11270,6 +11349,16 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|JumpDest
+name|getOMPCancelDestination
+parameter_list|(
+name|OpenMPDirectiveKind
+name|Kind
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_label
 name|private
 label|:
@@ -11287,6 +11376,9 @@ specifier|const
 name|OMPLoopDirective
 modifier|&
 name|D
+parameter_list|,
+name|JumpDest
+name|LoopExit
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11390,6 +11482,22 @@ name|Chunk
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Emit code for sections directive.
+end_comment
+
+begin_function_decl
+name|OpenMPDirectiveKind
+name|EmitSections
+parameter_list|(
+specifier|const
+name|OMPExecutableDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_label
 name|public
@@ -13901,6 +14009,20 @@ name|llvm
 operator|::
 name|Value
 operator|*
+name|EmitNVPTXBuiltinExpr
+argument_list|(
+argument|unsigned BuiltinID
+argument_list|,
+argument|const CallExpr *E
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
 name|EmitObjCProtocolExpr
 argument_list|(
 specifier|const
@@ -15714,6 +15836,26 @@ name|Checked
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Emit a call to trap or debugtrap and attach function attribute
+end_comment
+
+begin_comment
+comment|/// "trap-func-name" if specified.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|CallInst
+operator|*
+name|EmitTrapCall
+argument_list|(
+argument|llvm::Intrinsic::ID IntrID
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Create a check for a function parameter that may potentially be

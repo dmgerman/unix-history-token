@@ -135,6 +135,7 @@ name|class
 name|TargetRegisterInfo
 decl_stmt|;
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|CriticalAntiDepBreaker
 range|:
 name|public
@@ -390,12 +391,8 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_comment
-unit|}
-comment|// namespace llvm
-end_comment
-
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

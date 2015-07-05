@@ -308,6 +308,19 @@ if|if
 condition|(
 name|isa
 operator|<
+name|MCSymbolSDNode
+operator|>
+operator|(
+name|Node
+operator|)
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+name|isa
+operator|<
 name|BlockAddressSDNode
 operator|>
 operator|(
@@ -866,12 +879,8 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-unit|}; }
-comment|// namespace llvm
-end_comment
-
 begin_endif
+unit|}; }
 endif|#
 directive|endif
 end_endif

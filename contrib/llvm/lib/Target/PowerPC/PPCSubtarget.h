@@ -192,7 +192,6 @@ name|DIR_64
 block|}
 enum|;
 block|}
-comment|// namespace PPC
 name|class
 name|GlobalValue
 decl_stmt|;
@@ -1168,7 +1167,7 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

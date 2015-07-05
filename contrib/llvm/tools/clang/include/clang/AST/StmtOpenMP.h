@@ -6132,6 +6132,332 @@ name|OMPTeamsDirectiveClass
 return|;
 block|}
 expr|}
+block|;
+comment|/// \brief This represents '#pragma omp cancellation point' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp cancellation point for
+comment|/// \endcode
+comment|///
+comment|/// In this example a cancellation point is created for innermost 'for' region.
+name|class
+name|OMPCancellationPointDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|OpenMPDirectiveKind
+name|CancelRegion
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|///
+name|OMPCancellationPointDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+name|this
+argument_list|,
+name|OMPCancellationPointDirectiveClass
+argument_list|,
+name|OMPD_cancellation_point
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|CancelRegion
+argument_list|(
+argument|OMPD_unknown
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+name|explicit
+name|OMPCancellationPointDirective
+argument_list|()
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+name|this
+argument_list|,
+name|OMPCancellationPointDirectiveClass
+argument_list|,
+name|OMPD_cancellation_point
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|CancelRegion
+argument_list|(
+argument|OMPD_unknown
+argument_list|)
+block|{}
+comment|/// \brief Set cancel region for current cancellation point.
+comment|/// \param CR Cancellation region.
+name|void
+name|setCancelRegion
+argument_list|(
+argument|OpenMPDirectiveKind CR
+argument_list|)
+block|{
+name|CancelRegion
+operator|=
+name|CR
+block|; }
+name|public
+operator|:
+comment|/// \brief Creates directive.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|///
+specifier|static
+name|OMPCancellationPointDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|OpenMPDirectiveKind CancelRegion
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive.
+comment|///
+comment|/// \param C AST context.
+comment|///
+specifier|static
+name|OMPCancellationPointDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|EmptyShell
+argument_list|)
+block|;
+comment|/// \brief Get cancellation region for the current cancellation point.
+name|OpenMPDirectiveKind
+name|getCancelRegion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CancelRegion
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPCancellationPointDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp cancel' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp cancel for
+comment|/// \endcode
+comment|///
+comment|/// In this example a cancel is created for innermost 'for' region.
+name|class
+name|OMPCancelDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|OpenMPDirectiveKind
+name|CancelRegion
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|///
+name|OMPCancelDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+name|this
+argument_list|,
+name|OMPCancelDirectiveClass
+argument_list|,
+name|OMPD_cancel
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|CancelRegion
+argument_list|(
+argument|OMPD_unknown
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+name|explicit
+name|OMPCancelDirective
+argument_list|()
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+name|this
+argument_list|,
+name|OMPCancelDirectiveClass
+argument_list|,
+name|OMPD_cancel
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|CancelRegion
+argument_list|(
+argument|OMPD_unknown
+argument_list|)
+block|{}
+comment|/// \brief Set cancel region for current cancellation point.
+comment|/// \param CR Cancellation region.
+name|void
+name|setCancelRegion
+argument_list|(
+argument|OpenMPDirectiveKind CR
+argument_list|)
+block|{
+name|CancelRegion
+operator|=
+name|CR
+block|; }
+name|public
+operator|:
+comment|/// \brief Creates directive.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|///
+specifier|static
+name|OMPCancelDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|OpenMPDirectiveKind CancelRegion
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive.
+comment|///
+comment|/// \param C AST context.
+comment|///
+specifier|static
+name|OMPCancelDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|EmptyShell
+argument_list|)
+block|;
+comment|/// \brief Get cancellation region for the current cancellation point.
+name|OpenMPDirectiveKind
+name|getCancelRegion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CancelRegion
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPCancelDirectiveClass
+return|;
+block|}
+expr|}
 block|;  }
 end_decl_stmt
 

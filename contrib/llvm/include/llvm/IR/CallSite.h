@@ -156,6 +156,12 @@ specifier|const
 name|Function
 operator|,
 name|typename
+name|BBTy
+operator|=
+specifier|const
+name|BasicBlock
+operator|,
+name|typename
 name|ValTy
 operator|=
 specifier|const
@@ -427,6 +433,21 @@ return|return
 name|I
 operator|.
 name|getPointer
+argument_list|()
+return|;
+block|}
+comment|/// Get the basic block containing the call site
+name|BBTy
+operator|*
+name|getParent
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getInstruction
+argument_list|()
+operator|->
+name|getParent
 argument_list|()
 return|;
 block|}
@@ -875,8 +896,71 @@ name|METHOD
 parameter_list|)
 define|\
 value|InstrTy *II = getInstruction();    \   if (isCall())                          \     cast<CallInst>(II)->METHOD;          \   else                                   \     cast<InvokeInst>(II)->METHOD
+name|unsigned
+name|getNumArgOperands
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getNumArgOperands
+argument_list|()
+argument_list|)
+block|;   }
+name|ValTy
+operator|*
+name|getArgOperand
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getArgOperand
+argument_list|(
+name|i
+argument_list|)
+argument_list|)
+block|;   }
+name|bool
+name|isInlineAsm
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|isCall
+argument_list|()
+condition|)
+return|return
+name|cast
+operator|<
+name|CallInst
+operator|>
+operator|(
+name|getInstruction
+argument_list|()
+operator|)
+operator|->
+name|isInlineAsm
+argument_list|()
+return|;
+return|return
+name|false
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// getCallingConv/setCallingConv - get or set the calling convention of the
+end_comment
+
+begin_comment
 comment|/// call.
+end_comment
+
+begin_expr_stmt
 name|CallingConv
 operator|::
 name|ID
@@ -1200,7 +1284,13 @@ name|NoCapture
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// @brief Determine whether this argument is passed by value.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isByValArgument
 argument_list|(
@@ -1222,7 +1312,13 @@ name|ByVal
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// @brief Determine whether this argument is passed in an alloca.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isInAllocaArgument
 argument_list|(
@@ -1244,7 +1340,13 @@ name|InAlloca
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// @brief Determine whether this argument is passed by value or in an alloca.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isByValOrInAllocaArgument
 argument_list|(
@@ -1277,8 +1379,17 @@ name|InAlloca
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// @brief Determine if there are is an inalloca argument.  Only the last
+end_comment
+
+begin_comment
 comment|/// argument can have the inalloca attribute.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasInAllocaArgument
 argument_list|()
@@ -1296,6 +1407,9 @@ name|InAlloca
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|bool
 name|doesNotAccessMemory
 argument_list|(
@@ -1317,6 +1431,9 @@ name|ReadNone
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|onlyReadsMemory
 argument_list|(
@@ -1349,9 +1466,21 @@ name|ReadNone
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// @brief Return true if the return value is known to be not null.
+end_comment
+
+begin_comment
 comment|/// This may be because it has the nonnull attribute, or because at least
+end_comment
+
+begin_comment
 comment|/// one byte is dereferenceable and the pointer is in addrspace(0).
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isReturnNonNull
 argument_list|()
@@ -1392,13 +1521,16 @@ condition|)
 return|return
 name|true
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// hasArgument - Returns true if this CallSite passes the given Value* as an
 end_comment
 
@@ -1406,16 +1538,16 @@ begin_comment
 comment|/// argument to the called function.
 end_comment
 
-begin_decl_stmt
-name|bool
+begin_macro
+unit|bool
 name|hasArgument
 argument_list|(
-specifier|const
-name|Value
-operator|*
-name|Arg
+argument|const Value *Arg
 argument_list|)
-decl|const
+end_macro
+
+begin_expr_stmt
+specifier|const
 block|{
 for|for
 control|(
@@ -1453,18 +1585,16 @@ condition|)
 return|return
 name|true
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-end_decl_stmt
-
-begin_label
-name|private
-label|:
-end_label
+end_return
 
 begin_expr_stmt
+unit|}  private:
 name|unsigned
 name|getArgumentEndOffset
 argument_list|()
@@ -1543,6 +1673,8 @@ name|public
 name|CallSiteBase
 operator|<
 name|Function
+decl_stmt|,
+name|BasicBlock
 decl_stmt|,
 name|Value
 decl_stmt|,
@@ -1787,7 +1919,7 @@ end_decl_stmt
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

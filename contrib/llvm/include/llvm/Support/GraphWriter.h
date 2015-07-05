@@ -1924,7 +1924,7 @@ name|DisplayGraph
 argument_list|(
 name|Filename
 argument_list|,
-name|true
+name|false
 argument_list|,
 name|Program
 argument_list|)
@@ -1933,7 +1933,7 @@ end_expr_stmt
 
 begin_comment
 unit|}  }
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

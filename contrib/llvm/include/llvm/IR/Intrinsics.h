@@ -468,12 +468,12 @@ name|T
 argument_list|)
 decl_stmt|;
 block|}
-comment|// namespace Intrinsic
+comment|// End Intrinsic namespace
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

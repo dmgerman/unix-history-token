@@ -131,6 +131,9 @@ decl_stmt|;
 name|class
 name|Module
 decl_stmt|;
+name|class
+name|ModuleSlotTracker
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -230,6 +233,8 @@ block|,
 name|DILexicalBlockFileKind
 block|,
 name|DINamespaceKind
+block|,
+name|DIModuleKind
 block|,
 name|DITemplateTypeParameterKind
 block|,
@@ -349,6 +354,7 @@ comment|/// Prints definition of \c this.
 comment|///
 comment|/// If \c M is provided, metadata nodes will be numbered canonically;
 comment|/// otherwise, pointer addresses are substituted.
+comment|/// @{
 name|void
 name|print
 argument_list|(
@@ -365,12 +371,34 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+name|ModuleSlotTracker
+operator|&
+name|MST
+argument_list|,
+specifier|const
+name|Module
+operator|*
+name|M
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// @}
 comment|/// \brief Print as operand.
 comment|///
 comment|/// Prints reference of \c this.
 comment|///
 comment|/// If \c M is provided, metadata nodes will be numbered canonically;
 comment|/// otherwise, pointer addresses are substituted.
+comment|/// @{
 name|void
 name|printAsOperand
 argument_list|(
@@ -387,6 +415,27 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|printAsOperand
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+name|ModuleSlotTracker
+operator|&
+name|MST
+argument_list|,
+specifier|const
+name|Module
+operator|*
+name|M
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// @}
 block|}
 empty_stmt|;
 define|#
@@ -5873,7 +5922,7 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end llvm namespace
 end_comment
 
 begin_endif

@@ -329,6 +329,31 @@ name|SubClassData
 operator|:
 name|GlobalValueSubClassDataBits
 block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
+block|;
 name|protected
 operator|:
 comment|/// \brief The intrinsic ID for this subclass (which must be a Function).
@@ -1329,12 +1354,6 @@ name|dematerialize
 parameter_list|()
 function_decl|;
 comment|/// @}
-comment|/// Override from Constant class.
-name|void
-name|destroyConstant
-argument_list|()
-name|override
-expr_stmt|;
 comment|/// Return true if the primary definition of this global value is outside of
 comment|/// the current translation unit.
 name|bool
@@ -1472,7 +1491,7 @@ end_function
 
 begin_comment
 unit|};  }
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

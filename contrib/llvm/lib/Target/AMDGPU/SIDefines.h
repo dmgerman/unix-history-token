@@ -178,10 +178,6 @@ enum|;
 block|}
 end_decl_stmt
 
-begin_comment
-comment|// namespace SIInstrFlags
-end_comment
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -314,10 +310,6 @@ block|}
 enum|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// namespace SIInstrFlags
-end_comment
 
 begin_decl_stmt
 name|namespace
@@ -452,11 +444,45 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_00B84C_SCRATCH_EN
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 0)& 0x1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_00B84C_SCRATCH_EN
+value|0xFFFFFFFE
+end_define
+
+begin_define
+define|#
+directive|define
 name|S_00B84C_USER_SGPR
 parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x1F)<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_00B84C_USER_SGPR
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 1)& 0x1F)
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_00B84C_USER_SGPR
+value|0xFFFFFFC1
 end_define
 
 begin_define
@@ -472,11 +498,45 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_00B84C_TGID_X_EN
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 7)& 0x1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_00B84C_TGID_X_EN
+value|0xFFFFFF7F
+end_define
+
+begin_define
+define|#
+directive|define
 name|S_00B84C_TGID_Y_EN
 parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x1)<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_00B84C_TGID_Y_EN
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 8)& 0x1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_00B84C_TGID_Y_EN
+value|0xFFFFFEFF
 end_define
 
 begin_define
@@ -492,11 +552,45 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_00B84C_TGID_Z_EN
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 9)& 0x1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_00B84C_TGID_Z_EN
+value|0xFFFFFDFF
+end_define
+
+begin_define
+define|#
+directive|define
 name|S_00B84C_TG_SIZE_EN
 parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x1)<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_00B84C_TG_SIZE_EN
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 10)& 0x1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_00B84C_TG_SIZE_EN
+value|0xFFFFFBFF
 end_define
 
 begin_define
@@ -512,11 +606,106 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_00B84C_TIDIG_COMP_CNT
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 11)& 0x03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_00B84C_TIDIG_COMP_CNT
+value|0xFFFFE7FF
+end_define
+
+begin_comment
+comment|/* CIK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_00B84C_EXCP_EN_MSB
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x03)<< 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_00B84C_EXCP_EN_MSB
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 13)& 0x03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_00B84C_EXCP_EN_MSB
+value|0xFFFF9FFF
+end_define
+
+begin_comment
+comment|/*     */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|S_00B84C_LDS_SIZE
 parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x1FF)<< 15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_00B84C_LDS_SIZE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 15)& 0x1FF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_00B84C_LDS_SIZE
+value|0xFF007FFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_00B84C_EXCP_EN
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x7F)<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_00B84C_EXCP_EN
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 24)& 0x7F)
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_00B84C_EXCP_EN
 end_define
 
 begin_define

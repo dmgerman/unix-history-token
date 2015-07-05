@@ -299,6 +299,11 @@ modifier|*
 name|createNVPTXLowerAllocaPass
 parameter_list|()
 function_decl|;
+name|MachineFunctionPass
+modifier|*
+name|createNVPTXPeephole
+parameter_list|()
+function_decl|;
 name|bool
 name|isImageOrSamplerVal
 parameter_list|(
@@ -475,7 +480,6 @@ literal|4
 block|}
 enum|;
 block|}
-comment|// namespace PTXLdStInstCode
 comment|/// PTXCvtMode - Conversion code enumeration
 name|namespace
 name|PTXCvtMode
@@ -517,7 +521,6 @@ literal|0x20
 block|}
 enum|;
 block|}
-comment|// namespace PTXCvtMode
 comment|/// PTXCmpMode - Comparison mode enumeration
 name|namespace
 name|PTXCmpMode
@@ -574,14 +577,12 @@ literal|0x100
 block|}
 enum|;
 block|}
-comment|// namespace PTXCmpMode
 block|}
-comment|// namespace NVPTX
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm;
 end_comment
 
 begin_comment
