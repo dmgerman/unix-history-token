@@ -358,10 +358,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * Convert a pathname into a pointer to a locked vnode.  *  * The FOLLOW flag is set when symbolic links are to be followed  * when they occur at the end of the name translation process.  * Symbolic links are always followed for all other pathname  * components other than the last.  *  * The segflg defines whether the name is to be copied from user  * space or kernel space.  *  * Overall outline of namei:  *  *	copy in name  *	get starting directory  *	while (!done&& !error) {  *		call lookup to search path.  *		if symbolic link, massage name in buffer and continue  *	}  */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -401,6 +397,10 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_comment
+comment|/*  * Convert a pathname into a pointer to a locked vnode.  *  * The FOLLOW flag is set when symbolic links are to be followed  * when they occur at the end of the name translation process.  * Symbolic links are always followed for all other pathname  * components other than the last.  *  * The segflg defines whether the name is to be copied from user  * space or kernel space.  *  * Overall outline of namei:  *  *	copy in name  *	get starting directory  *	while (!done&& !error) {  *		call lookup to search path.  *		if symbolic link, massage name in buffer and continue  *	}  */
+end_comment
 
 begin_function
 name|int
