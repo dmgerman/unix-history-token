@@ -1942,6 +1942,11 @@ argument_list|(
 name|freed
 argument_list|)
 expr_stmt|;
+name|evutil_closesocket
+argument_list|(
+name|new_fd
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 operator|--

@@ -860,7 +860,7 @@ name|fdopen
 argument_list|(
 name|fd
 argument_list|,
-literal|"r+"
+literal|"w"
 argument_list|)
 operator|)
 condition|)

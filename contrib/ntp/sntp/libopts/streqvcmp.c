@@ -4,7 +4,7 @@ comment|/**  * \file streqvcmp.c  *  *  String Equivalence Comparison  *  *  The
 end_comment
 
 begin_comment
-comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  *  * This array is designed for mapping upper and lower case letter  * together for a case independent comparison.  The mappings are  * based upon ascii character sequences.  */
+comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2015 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  *  * This array is designed for mapping upper and lower case letter  * together for a case independent comparison.  The mappings are  * based upon ascii character sequences.  */
 end_comment
 
 begin_decl_stmt
@@ -531,7 +531,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*=export_func strneqvcmp  *  * what: compare two strings with an equivalence mapping  *  * arg:  + char const* + str1 + first string +  * arg:  + char const* + str2 + second string +  * arg:  + int         + ct   + compare length +  *  * ret_type:  int  * ret_desc:  the difference between two differing characters  *  * doc:  *  * Using a character mapping, two strings are compared for "equivalence".  * Each input character is mapped to a comparison character and the  * mapped-to characters are compared for the two NUL terminated input strings.  * The comparison is limited to @code{ct} bytes.  * This function name is mapped to option_strneqvcmp so as to not conflict  * with the POSIX name space.  *  * err:  none checked.  Caller responsible for seg faults. =*/
+comment|/*=export_func strneqvcmp  *  * what: compare two strings with an equivalence mapping  *  * arg:  + char const * + str1 + first string +  * arg:  + char const * + str2 + second string +  * arg:  + int          + ct   + compare length +  *  * ret_type:  int  * ret_desc:  the difference between two differing characters  *  * doc:  *  * Using a character mapping, two strings are compared for "equivalence".  * Each input character is mapped to a comparison character and the  * mapped-to characters are compared for the two NUL terminated input strings.  * The comparison is limited to @code{ct} bytes.  * This function name is mapped to option_strneqvcmp so as to not conflict  * with the POSIX name space.  *  * err:  none checked.  Caller responsible for seg faults. =*/
 end_comment
 
 begin_function
@@ -646,7 +646,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func streqvcmp  *  * what: compare two strings with an equivalence mapping  *  * arg:  + char const* + str1 + first string +  * arg:  + char const* + str2 + second string +  *  * ret_type:  int  * ret_desc:  the difference between two differing characters  *  * doc:  *  * Using a character mapping, two strings are compared for "equivalence".  * Each input character is mapped to a comparison character and the  * mapped-to characters are compared for the two NUL terminated input strings.  * This function name is mapped to option_streqvcmp so as to not conflict  * with the POSIX name space.  *  * err:  none checked.  Caller responsible for seg faults. =*/
+comment|/*=export_func streqvcmp  *  * what: compare two strings with an equivalence mapping  *  * arg:  + char const * + str1 + first string +  * arg:  + char const * + str2 + second string +  *  * ret_type:  int  * ret_desc:  the difference between two differing characters  *  * doc:  *  * Using a character mapping, two strings are compared for "equivalence".  * Each input character is mapped to a comparison character and the  * mapped-to characters are compared for the two NUL terminated input strings.  * This function name is mapped to option_streqvcmp so as to not conflict  * with the POSIX name space.  *  * err:  none checked.  Caller responsible for seg faults. =*/
 end_comment
 
 begin_function
@@ -884,7 +884,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func strequate  *  * what: map a list of characters to the same value  *  * arg:  + char const* + ch_list + characters to equivalence +  *  * doc:  *  * Each character in the input string get mapped to the first character  * in the string.  * This function name is mapped to option_strequate so as to not conflict  * with the POSIX name space.  *  * err:  none. =*/
+comment|/*=export_func strequate  *  * what: map a list of characters to the same value  *  * arg:  + char const * + ch_list + characters to equivalence +  *  * doc:  *  * Each character in the input string get mapped to the first character  * in the string.  * This function name is mapped to option_strequate so as to not conflict  * with the POSIX name space.  *  * err:  none. =*/
 end_comment
 
 begin_function
@@ -951,7 +951,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func strtransform  *  * what: convert a string into its mapped-to value  *  * arg:  + char*       + dest + output string +  * arg:  + char const* + src  + input string +  *  * doc:  *  * Each character in the input string is mapped and the mapped-to  * character is put into the output.  * This function name is mapped to option_strtransform so as to not conflict  * with the POSIX name space.  *  * The source and destination may be the same.  *  * err:  none. =*/
+comment|/*=export_func strtransform  *  * what: convert a string into its mapped-to value  *  * arg:  + char *       + dest + output string +  * arg:  + char const * + src  + input string +  *  * doc:  *  * Each character in the input string is mapped and the mapped-to  * character is put into the output.  * This function name is mapped to option_strtransform so as to not conflict  * with the POSIX name space.  *  * The source and destination may be the same.  *  * err:  none. =*/
 end_comment
 
 begin_function

@@ -4,7 +4,7 @@ comment|/*  * \file restore.c  *  *  This module's routines will save the curren
 end_comment
 
 begin_comment
-comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
+comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2015 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
 end_comment
 
 begin_comment
@@ -179,7 +179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func optionSaveState  *  * what:  saves the option state to memory  * arg:   tOptions*, pOpts, program options descriptor  *  * doc:  *  *  This routine will allocate enough memory to save the current option  *  processing state.  If this routine has been called before, that memory  *  will be reused.  You may only save one copy of the option state.  This  *  routine may be called before optionProcess(3AO).  If you do call it  *  before the first call to optionProcess, then you may also change the  *  contents of argc/argv after you call optionRestore(3AO)  *  *  In fact, more strongly put: it is safest to only use this function  *  before having processed any options.  In particular, the saving and  *  restoring of stacked string arguments and hierarchical values is  *  disabled.  The values are not saved.  *  * err:   If it fails to allocate the memory,  *        it will print a message to stderr and exit.  *        Otherwise, it will always succeed. =*/
+comment|/*=export_func optionSaveState  *  * what:  saves the option state to memory  * arg:   tOptions *, pOpts, program options descriptor  *  * doc:  *  *  This routine will allocate enough memory to save the current option  *  processing state.  If this routine has been called before, that memory  *  will be reused.  You may only save one copy of the option state.  This  *  routine may be called before optionProcess(3AO).  If you do call it  *  before the first call to optionProcess, then you may also change the  *  contents of argc/argv after you call optionRestore(3AO)  *  *  In fact, more strongly put: it is safest to only use this function  *  before having processed any options.  In particular, the saving and  *  restoring of stacked string arguments and hierarchical values is  *  disabled.  The values are not saved.  *  * err:   If it fails to allocate the memory,  *        it will print a message to stderr and exit.  *        Otherwise, it will always succeed. =*/
 end_comment
 
 begin_function
@@ -294,7 +294,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func optionRestore  *  * what:  restore option state from memory copy  * arg:   tOptions*, pOpts, program options descriptor  *  * doc:  Copy back the option state from saved memory.  *       The allocated memory is left intact, so this routine can be  *       called repeatedly without having to call optionSaveState again.  *       If you are restoring a state that was saved before the first call  *       to optionProcess(3AO), then you may change the contents of the  *       argc/argv parameters to optionProcess.  *  * err:  If you have not called @code{optionSaveState} before, a diagnostic is  *       printed to @code{stderr} and exit is called. =*/
+comment|/*=export_func optionRestore  *  * what:  restore option state from memory copy  * arg:   tOptions *, pOpts, program options descriptor  *  * doc:  Copy back the option state from saved memory.  *       The allocated memory is left intact, so this routine can be  *       called repeatedly without having to call optionSaveState again.  *       If you are restoring a state that was saved before the first call  *       to optionProcess(3AO), then you may change the contents of the  *       argc/argv parameters to optionProcess.  *  * err:  If you have not called @code{optionSaveState} before, a diagnostic is  *       printed to @code{stderr} and exit is called. =*/
 end_comment
 
 begin_function
@@ -439,7 +439,7 @@ comment|/* = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 end_comment
 
 begin_comment
-comment|/*=export_func optionFree  *  * what:  free allocated option processing memory  * arg:   tOptions*, pOpts, program options descriptor  *  * doc:   AutoOpts sometimes allocates memory and puts pointers to it in the  *        option state structures.  This routine deallocates all such memory.  *  * err:   As long as memory has not been corrupted,  *        this routine is always successful. =*/
+comment|/*=export_func optionFree  *  * what:  free allocated option processing memory  * arg:   tOptions *, pOpts, program options descriptor  *  * doc:   AutoOpts sometimes allocates memory and puts pointers to it in the  *        option state structures.  This routine deallocates all such memory.  *  * err:   As long as memory has not been corrupted,  *        this routine is always successful. =*/
 end_comment
 
 begin_function

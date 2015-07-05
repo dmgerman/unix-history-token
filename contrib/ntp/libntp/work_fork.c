@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"iosignal.h"
 end_include
 
@@ -388,6 +394,74 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * harvest_child_status() runs in the parent.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|harvest_child_status
+parameter_list|(
+name|blocking_child
+modifier|*
+name|c
+parameter_list|)
+block|{
+if|if
+condition|(
+name|c
+operator|->
+name|pid
+condition|)
+block|{
+comment|/* Wait on the child so it can finish terminating */
+if|if
+condition|(
+name|waitpid
+argument_list|(
+name|c
+operator|->
+name|pid
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+name|c
+operator|->
+name|pid
+condition|)
+name|TRACE
+argument_list|(
+literal|4
+argument_list|,
+operator|(
+literal|"harvested child %d\n"
+operator|,
+name|c
+operator|->
+name|pid
+operator|)
+argument_list|)
+expr_stmt|;
+else|else
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"error waiting on child %d: %m"
+argument_list|,
+name|c
+operator|->
+name|pid
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/*  * req_child_exit() runs in the parent.  */
 end_comment
 
@@ -428,6 +502,12 @@ return|return
 literal|0
 return|;
 block|}
+comment|/* Closing the pipe forces the child to exit */
+name|harvest_child_status
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
@@ -449,31 +529,11 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|-
-literal|1
-operator|!=
-name|c
-operator|->
-name|req_write_pipe
-condition|)
-block|{
-name|close
+name|harvest_child_status
 argument_list|(
 name|c
-operator|->
-name|req_write_pipe
 argument_list|)
 expr_stmt|;
-name|c
-operator|->
-name|req_write_pipe
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|-
@@ -771,6 +831,12 @@ argument_list|,
 name|rc
 argument_list|,
 name|octets
+argument_list|)
+expr_stmt|;
+comment|/* Fatal error.  Clean up the child process.  */
+name|req_child_exit
+argument_list|(
+name|c
 argument_list|)
 expr_stmt|;
 name|exit

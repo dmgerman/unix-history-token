@@ -214,22 +214,6 @@ file|"ntpd-opts.h"
 end_include
 
 begin_comment
-comment|/* Bison still(!) does not emit usable prototypes for the calling code */
-end_comment
-
-begin_function_decl
-name|int
-name|yyparse
-parameter_list|(
-name|struct
-name|FILE_INFO
-modifier|*
-name|ip_file
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* list of servers from command line for config_peers() */
 end_comment
 
@@ -645,29 +629,6 @@ comment|/* ntp_parser.c (.y) */
 end_comment
 
 begin_decl_stmt
-name|int
-name|curr_include_level
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The current include level */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|FILE_INFO
-modifier|*
-name|fp
-index|[
-name|MAXINCLUDELEVEL
-operator|+
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|config_tree
 name|cfgt
 decl_stmt|;
@@ -943,18 +904,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Remote configuration buffer and 					     pointer info */
-end_comment
-
-begin_decl_stmt
-name|int
-name|input_from_file
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* A boolean flag, which when set, indicates that 			        the input is to be taken from the configuration 			        file, instead of the remote-configuration buffer 			     */
 end_comment
 
 begin_decl_stmt
@@ -1417,7 +1366,9 @@ specifier|static
 name|void
 name|save_and_apply_config_tree
 parameter_list|(
-name|void
+name|int
+comment|/*BOOL*/
+name|from_file
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1710,6 +1661,10 @@ name|config_ntpd
 parameter_list|(
 name|config_tree
 modifier|*
+parameter_list|,
+name|int
+comment|/*BOOL*/
+name|input_from_file
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1842,6 +1797,10 @@ name|config_nic_rules
 parameter_list|(
 name|config_tree
 modifier|*
+parameter_list|,
+name|int
+comment|/*BOOL*/
+name|input_from_file
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11577,6 +11536,10 @@ parameter_list|(
 name|config_tree
 modifier|*
 name|ptree
+parameter_list|,
+name|int
+comment|/*BOOL*/
+name|input_from_file
 parameter_list|)
 block|{
 name|nic_rule_node
@@ -14484,6 +14447,21 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|T_Dscp
+case|:
+comment|/* DSCP is in the upper 6 bits of the IP TOS/DS field */
+name|qos
+operator|=
+name|curr_var
+operator|->
+name|value
+operator|.
+name|i
+operator|<<
+literal|2
+expr_stmt|;
+break|break;
+case|case
 name|T_Ident
 case|:
 name|sys_ident
@@ -14526,6 +14504,32 @@ name|s
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|LEAP_SMEAR
+case|case
+name|T_Leapsmearinterval
+case|:
+name|leap_smear_intv
+operator|=
+name|curr_var
+operator|->
+name|value
+operator|.
+name|i
+expr_stmt|;
+name|msyslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"config: leap smear interval %i s"
+argument_list|,
+name|leap_smear_intv
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 name|T_Pidfile
 case|:
@@ -17162,12 +17166,12 @@ name|simulation
 operator|.
 name|servers
 operator|=
-name|emalloc
+name|eallocarray
 argument_list|(
 name|simulation
 operator|.
 name|num_of_servers
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|simulation
@@ -17475,15 +17479,18 @@ parameter_list|(
 name|config_tree
 modifier|*
 name|ptree
+parameter_list|,
+name|int
+comment|/*BOOL*/
+name|input_from_files
 parameter_list|)
 block|{
 name|config_nic_rules
 argument_list|(
 name|ptree
+argument_list|,
+name|input_from_files
 argument_list|)
-expr_stmt|;
-name|io_open_sockets
-argument_list|()
 expr_stmt|;
 name|config_monitor
 argument_list|(
@@ -17554,6 +17561,9 @@ name|config_vars
 argument_list|(
 name|ptree
 argument_list|)
+expr_stmt|;
+name|io_open_sockets
+argument_list|()
 expr_stmt|;
 name|config_other_modes
 argument_list|(
@@ -17762,10 +17772,6 @@ modifier|*
 name|remote_addr
 parameter_list|)
 block|{
-name|struct
-name|FILE_INFO
-name|remote_cuckoo
-decl_stmt|;
 name|char
 name|origin
 index|[
@@ -17789,33 +17795,14 @@ name|remote_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ZERO
+name|lex_init_stack
 argument_list|(
-name|remote_cuckoo
+name|origin
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-name|remote_cuckoo
-operator|.
-name|fname
-operator|=
-name|origin
-expr_stmt|;
-name|remote_cuckoo
-operator|.
-name|line_no
-operator|=
-literal|1
-expr_stmt|;
-name|remote_cuckoo
-operator|.
-name|col_no
-operator|=
-literal|1
-expr_stmt|;
-name|input_from_file
-operator|=
-literal|0
-expr_stmt|;
+comment|/* no checking needed... */
 name|init_syntax_tree
 argument_list|(
 operator|&
@@ -17823,10 +17810,10 @@ name|cfgt
 argument_list|)
 expr_stmt|;
 name|yyparse
-argument_list|(
-operator|&
-name|remote_cuckoo
-argument_list|)
+argument_list|()
+expr_stmt|;
+name|lex_drop_stack
+argument_list|()
 expr_stmt|;
 name|cfgt
 operator|.
@@ -17871,11 +17858,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 name|save_and_apply_config_tree
-argument_list|()
-expr_stmt|;
-name|input_from_file
-operator|=
-literal|1
+argument_list|(
+name|FALSE
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -18047,19 +18032,10 @@ operator|&
 name|cfgt
 argument_list|)
 expr_stmt|;
-name|curr_include_level
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
-operator|(
-name|fp
-index|[
-name|curr_include_level
-index|]
-operator|=
-name|F_OPEN
+operator|!
+name|lex_init_stack
 argument_list|(
 name|FindConfig
 argument_list|(
@@ -18068,9 +18044,6 @@ argument_list|)
 argument_list|,
 literal|"r"
 argument_list|)
-operator|)
-operator|==
-name|NULL
 ifdef|#
 directive|ifdef
 name|HAVE_NETINFO
@@ -18114,13 +18087,8 @@ directive|else
 comment|/* Under WinNT try alternate_config_file name, first NTP.CONF, then NTP.INI */
 if|if
 condition|(
-operator|(
-name|fp
-index|[
-name|curr_include_level
-index|]
-operator|=
-name|F_OPEN
+operator|!
+name|lex_init_stack
 argument_list|(
 name|FindConfig
 argument_list|(
@@ -18129,9 +18097,6 @@ argument_list|)
 argument_list|,
 literal|"r"
 argument_list|)
-operator|)
-operator|==
-name|NULL
 condition|)
 block|{
 comment|/* 			 * Broadcast clients can sometimes run without 			 * a configuration file. 			 */
@@ -18200,12 +18165,10 @@ expr_stmt|;
 endif|#
 directive|endif
 name|yyparse
-argument_list|(
-name|fp
-index|[
-name|curr_include_level
-index|]
-argument_list|)
+argument_list|()
+expr_stmt|;
+name|lex_drop_stack
+argument_list|()
 expr_stmt|;
 name|DPRINTF
 argument_list|(
@@ -18234,22 +18197,8 @@ name|NULL
 argument_list|)
 expr_stmt|;
 name|save_and_apply_config_tree
-argument_list|()
-expr_stmt|;
-while|while
-condition|(
-name|curr_include_level
-operator|!=
-operator|-
-literal|1
-condition|)
-name|FCLOSE
 argument_list|(
-name|fp
-index|[
-name|curr_include_level
-operator|--
-index|]
+name|TRUE
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -18274,7 +18223,9 @@ begin_function
 name|void
 name|save_and_apply_config_tree
 parameter_list|(
-name|void
+name|int
+comment|/*BOOL*/
+name|input_from_file
 parameter_list|)
 block|{
 name|config_tree
@@ -18452,6 +18403,8 @@ name|SIM
 name|config_ntpd
 argument_list|(
 name|ptree
+argument_list|,
+name|input_from_file
 argument_list|)
 expr_stmt|;
 else|#
@@ -19246,14 +19199,8 @@ name|config
 operator|->
 name|val_list
 operator|=
-name|emalloc
+name|eallocarray
 argument_list|(
-sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
-operator|*
 operator|(
 name|namelist
 operator|.
@@ -19261,6 +19208,12 @@ name|ni_namelist_len
 operator|+
 literal|1
 operator|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|val_list
@@ -19863,7 +19816,7 @@ name|RLIMIT_NOFILE
 case|case
 name|RLIMIT_NOFILE
 case|:
-comment|/* 		 * For large systems the default file descriptor limit may 		 * not be enough.  		 */
+comment|/* 		 * For large systems the default file descriptor limit may 		 * not be enough. 		 */
 name|DPRINTF
 argument_list|(
 literal|2
@@ -19963,7 +19916,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"getrlimit() failed: %m"
+literal|"getrlimit(RLIMIT_STACK) failed: %m"
 argument_list|)
 expr_stmt|;
 block|}
@@ -20004,6 +19957,12 @@ operator|.
 name|rlim_max
 expr_stmt|;
 block|}
+name|rl
+operator|.
+name|rlim_cur
+operator|=
+name|rl_value
+expr_stmt|;
 if|if
 condition|(
 operator|-
@@ -20022,7 +19981,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ntp_rlimit: Cannot adjust stack limit: %m"
+literal|"ntp_rlimit: Cannot set RLIMIT_STACK: %m"
 argument_list|)
 expr_stmt|;
 block|}
