@@ -1842,7 +1842,9 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"    msssr0         = 0x%x\n"
+literal|"    msssr0         = 0x%"
+name|PRIxPTR
+literal|"\n"
 argument_list|,
 name|mfspr
 argument_list|(
@@ -1858,7 +1860,9 @@ name|BOOKE
 argument_list|)
 name|printf
 argument_list|(
-literal|"    mcsr           = 0x%x\n"
+literal|"    mcsr           = 0x%"
+name|PRIxPTR
+literal|"\n"
 argument_list|,
 name|mfspr
 argument_list|(
