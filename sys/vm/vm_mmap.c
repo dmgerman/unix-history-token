@@ -5882,6 +5882,10 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
+name|object
+operator|=
+name|NULL
+expr_stmt|;
 name|writecounted
 operator|=
 name|FALSE
