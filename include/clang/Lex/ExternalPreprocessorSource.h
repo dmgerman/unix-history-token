@@ -77,7 +77,7 @@ comment|/// \brief Abstract interface for external sources of preprocessor
 comment|/// information.
 comment|///
 comment|/// This abstract class allows an external sources (such as the \c ASTReader)
-comment|/// to provide additional macro definitions.
+comment|/// to provide additional preprocessing information.
 name|class
 name|ExternalPreprocessorSource
 block|{
@@ -104,6 +104,20 @@ parameter_list|(
 name|IdentifierInfo
 modifier|&
 name|II
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// \brief Return the identifier associated with the given ID number.
+comment|///
+comment|/// The ID 0 is associated with the NULL identifier.
+name|virtual
+name|IdentifierInfo
+modifier|*
+name|GetIdentifier
+parameter_list|(
+name|unsigned
+name|ID
 parameter_list|)
 init|=
 literal|0

@@ -2307,14 +2307,24 @@ name|CXCursor_OMPTeamsDirective
 init|=
 literal|253
 block|,
-comment|/** \brief OpenMP taskwait directive.    */
+comment|/** \brief OpenMP taskgroup directive.    */
 name|CXCursor_OMPTaskgroupDirective
 init|=
 literal|254
 block|,
+comment|/** \brief OpenMP cancellation point directive.    */
+name|CXCursor_OMPCancellationPointDirective
+init|=
+literal|255
+block|,
+comment|/** \brief OpenMP cancel directive.    */
+name|CXCursor_OMPCancelDirective
+init|=
+literal|256
+block|,
 name|CXCursor_LastStmt
 init|=
-name|CXCursor_OMPTaskgroupDirective
+name|CXCursor_OMPCancelDirective
 block|,
 comment|/**    * \brief Cursor that represents the translation unit itself.    *    * The translation unit cursor exists primarily to act as the root    * cursor for traversing the contents of a translation unit.    */
 name|CXCursor_TranslationUnit

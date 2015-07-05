@@ -35,12 +35,12 @@ end_endif
 begin_function_decl
 name|int
 modifier|*
-name|__nullable
+name|_Nullable
 name|foo
 parameter_list|(
 name|int
 modifier|*
-name|__nonnull
+name|_Nonnull
 name|x
 parameter_list|)
 function_decl|;
@@ -49,7 +49,7 @@ end_function_decl
 begin_function_decl
 name|int
 modifier|*
-name|__nonnull
+name|_Nonnull
 name|ret_nonnull
 parameter_list|()
 function_decl|;
@@ -74,12 +74,12 @@ end_function
 begin_function_decl
 name|int
 modifier|*
-name|__nullable
+name|_Nullable
 name|foo1
 parameter_list|(
 name|int
 modifier|*
-name|__nonnull
+name|_Nonnull
 name|x
 parameter_list|)
 function_decl|;
@@ -96,11 +96,11 @@ name|foo1
 parameter_list|(
 name|int
 modifier|*
-name|__nullable
+name|_Nullable
 name|x
 parameter_list|)
 block|{
-comment|// expected-warning {{nullability specifier '__nullable' conflicts with existing specifier '__nonnull'}}
+comment|// expected-warning {{nullability specifier '_Nullable' conflicts with existing specifier '_Nonnull'}}
 return|return
 literal|0
 return|;
@@ -110,12 +110,12 @@ end_function
 begin_function_decl
 name|int
 modifier|*
-name|__nullable
+name|_Nullable
 name|foo2
 parameter_list|(
 name|int
 modifier|*
-name|__nonnull
+name|_Nonnull
 name|x
 parameter_list|)
 function_decl|;
@@ -128,7 +128,7 @@ name|foo2
 parameter_list|(
 name|int
 modifier|*
-name|__nonnull
+name|_Nonnull
 name|x
 parameter_list|)
 block|{
@@ -141,12 +141,12 @@ end_function
 begin_function_decl
 name|int
 modifier|*
-name|__nullable
+name|_Nullable
 name|foo3
 parameter_list|(
 name|int
 modifier|*
-name|__nullable
+name|_Nullable
 name|x
 parameter_list|)
 function_decl|;
@@ -163,11 +163,11 @@ name|foo3
 parameter_list|(
 name|int
 modifier|*
-name|__nonnull
+name|_Nonnull
 name|x
 parameter_list|)
 block|{
-comment|// expected-warning {{nullability specifier '__nonnull' conflicts with existing specifier '__nullable'}}
+comment|// expected-warning {{nullability specifier '_Nonnull' conflicts with existing specifier '_Nullable'}}
 return|return
 literal|0
 return|;

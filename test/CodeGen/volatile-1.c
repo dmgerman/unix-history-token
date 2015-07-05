@@ -113,7 +113,7 @@ comment|// reduced.
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL: define void @test()
+comment|// CHECK-LABEL: define {{.*}}void @test()
 end_comment
 
 begin_function
@@ -745,7 +745,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK-LABEL: define void @test1()
+comment|// CHECK-LABEL: define {{.*}}void @test1()
 end_comment
 
 begin_function
@@ -763,7 +763,7 @@ decl_stmt|;
 name|test1_helper
 argument_list|()
 expr_stmt|;
-comment|// CHECK: call void @test1_helper()
+comment|// CHECK: call {{.*}}void @test1_helper()
 comment|// CHECK-NEXT: ret void
 name|x
 expr_stmt|;

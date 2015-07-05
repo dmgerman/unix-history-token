@@ -37,7 +37,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: call double @pow
+comment|// CHECK: call {{.*}}double @pow
 block|}
 end_function
 

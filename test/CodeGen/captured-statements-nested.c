@@ -140,7 +140,7 @@ index|]
 operator|=
 literal|12
 expr_stmt|;
-comment|// CHECK1: define internal void @__captured_stmt{{.*}}([[T]]
+comment|// CHECK1: define internal {{.*}}void @__captured_stmt{{.*}}([[T]]
 comment|// CHECK1: [[PARAM_ARR_SIZE_REF:%.+]] = getelementptr inbounds [[T]], [[T]]* {{.+}}, i{{[0-9]+}} 0, i{{[0-9]+}} 5
 comment|// CHECK1: [[PARAM_ARR_SIZE:%.+]] = load [[SIZE_TYPE]], [[SIZE_TYPE]]* [[PARAM_ARR_SIZE_REF]]
 comment|// CHECK1: [[ARR_SIZE1_REF:%.+]] = getelementptr inbounds [[T]], [[T]]* {{.+}}, i{{[0-9]+}} 0, i{{[0-9]+}} 8
@@ -241,7 +241,7 @@ block|}
 block|}
 argument_list|()
 expr_stmt|;
-comment|// CHECK2: define internal void @{{.*}}test_nest_block_block_invoke
+comment|// CHECK2: define internal {{.*}}void @{{.*}}test_nest_block_block_invoke
 comment|//
 comment|// CHECK2: [[Z:%[0-9a-z_]*]] = alloca i{{[0-9]+}},
 comment|// CHECK2: alloca %struct.anon{{.*}}

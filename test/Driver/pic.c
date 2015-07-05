@@ -975,5 +975,29 @@ begin_comment
 comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIC1
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// On Windows-X64 PIC is enabled by default
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -target x86_64-pc-windows-msvc18.0.0 -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIC2
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -target x86_64-pc-windows-gnu -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIC2
+end_comment
+
 end_unit
 

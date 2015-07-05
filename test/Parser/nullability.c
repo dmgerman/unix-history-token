@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -fsyntax-only -std=c99 -Wno-nullability-declspec -ped
 end_comment
 
 begin_decl_stmt
-name|__nonnull
+name|_Nonnull
 name|int
 modifier|*
 name|ptr
@@ -12,7 +12,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning{{type nullability specifier '__nonnull' is a Clang extension}}
+comment|// expected-warning{{type nullability specifier '_Nonnull' is a Clang extension}}
 end_comment
 
 begin_pragma
@@ -33,7 +33,7 @@ literal|"-Wnullability-extension"
 end_pragma
 
 begin_decl_stmt
-name|__nonnull
+name|_Nonnull
 name|int
 modifier|*
 name|ptr2
@@ -55,6 +55,7 @@ end_pragma
 begin_if
 if|#
 directive|if
+operator|!
 name|__has_feature
 argument_list|(
 name|nullability
@@ -64,7 +65,7 @@ end_if
 begin_error
 error|#
 directive|error
-error|Nullability should not be supported in C under -pedantic -std=c99
+error|Nullability should always be supported
 end_error
 
 begin_endif

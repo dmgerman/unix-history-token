@@ -44,7 +44,7 @@ comment|// RUN: %clang -target x86_64-apple-darwin10 -fsanitize=undefined %s -##
 end_comment
 
 begin_comment
-comment|// CHECK-UNDEFINED-DARWIN: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift-base|shift-exponent|unreachable|return|vla-bound|alignment|null|vptr|object-size|float-cast-overflow|array-bounds|enum|bool|returns-nonnull-attribute|nonnull-attribute),?){18}"}}
+comment|// CHECK-UNDEFINED-DARWIN: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift-base|shift-exponent|unreachable|return|vla-bound|alignment|null|object-size|float-cast-overflow|array-bounds|enum|bool|returns-nonnull-attribute|nonnull-attribute),?){17}"}}
 end_comment
 
 begin_comment
@@ -53,6 +53,38 @@ end_comment
 
 begin_comment
 comment|// CHECK-UNDEFINED-OPENBSD: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift-base|shift-exponent|unreachable|return|vla-bound|alignment|null|object-size|float-cast-overflow|array-bounds|enum|bool|returns-nonnull-attribute|nonnull-attribute),?){17}"}}
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-pc-win32 -fsanitize=undefined %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-UNDEFINED-WIN --check-prefix=CHECK-UNDEFINED-WIN32
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-pc-win32 -fsanitize=undefined -x c++ %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-UNDEFINED-WIN --check-prefix=CHECK-UNDEFINED-WIN32 --check-prefix=CHECK-UNDEFINED-WIN-CXX
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-pc-win32 -fsanitize=undefined %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-UNDEFINED-WIN --check-prefix=CHECK-UNDEFINED-WIN64
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-pc-win32 -fsanitize=undefined -x c++ %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-UNDEFINED-WIN --check-prefix=CHECK-UNDEFINED-WIN64 --check-prefix=CHECK-UNDEFINED-WIN-CXX
+end_comment
+
+begin_comment
+comment|// CHECK-UNDEFINED-WIN: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift-base|shift-exponent|unreachable|return|vla-bound|alignment|null|object-size|float-cast-overflow|array-bounds|enum|bool|returns-nonnull-attribute|nonnull-attribute),?){17}"}}
+end_comment
+
+begin_comment
+comment|// CHECK-UNDEFINED-WIN32-SAME: "--dependent-lib={{[^"]*}}ubsan_standalone-i386.lib"
+end_comment
+
+begin_comment
+comment|// CHECK-UNDEFINED-WIN64-SAME: "--dependent-lib={{[^"]*}}ubsan_standalone-x86_64.lib"
+end_comment
+
+begin_comment
+comment|// CHECK-UNDEFINED-WIN-CXX-SAME: "--dependent-lib={{[^"]*}}ubsan_standalone_cxx{{[^"]*}}.lib"
 end_comment
 
 begin_comment
@@ -608,6 +640,22 @@ comment|// CHECK-FSAN-UBSAN-DARWIN: unsupported option '-fsanitize=function' for
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin10 -mmacosx-version-min=10.8 -fsanitize=vptr %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-VPTR-DARWIN-OLD
+end_comment
+
+begin_comment
+comment|// CHECK-VPTR-DARWIN-OLD: unsupported option '-fsanitize=vptr' for target 'x86_64-apple-darwin10'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin10 -mmacosx-version-min=10.9 -fsanitize=alignment,vptr %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-VPTR-DARWIN-NEW
+end_comment
+
+begin_comment
+comment|// CHECK-VPTR-DARWIN-NEW: -fsanitize=alignment,vptr
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target armv7-apple-ios7 -miphoneos-version-min=7.0 -fsanitize=address %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ASAN-IOS
 end_comment
 
@@ -677,6 +725,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-ASAN-TRAP: error: unsupported argument 'address' to option '-fsanitize-trap'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin10 -mmacosx-version-min=10.7 -flto -fsanitize=cfi-vcall -fno-sanitize-trap=cfi -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-NOTRAP-OLD-MACOS
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-NOTRAP-OLD-MACOS: error: unsupported option '-fno-sanitize-trap=cfi-vcall' for target 'x86_64-apple-darwin10'
 end_comment
 
 begin_comment
@@ -781,6 +837,18 @@ end_comment
 
 begin_comment
 comment|// SP-ASAN: "-fsanitize=address,safe-stack"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu -fsanitize=memory %s -### 2>&1 | FileCheck %s -check-prefix=CHECK-SANM
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64le-unknown-linux-gnu -fsanitize=memory %s -### 2>&1 | FileCheck %s -check-prefix=CHECK-SANM
+end_comment
+
+begin_comment
+comment|// CHECK-SANM: "-fsanitize=memory"
 end_comment
 
 end_unit

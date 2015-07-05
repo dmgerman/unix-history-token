@@ -3276,6 +3276,58 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
+comment|// RUN:     --target=powerpc64le-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/debian_multiarch_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-DEBIAN-PPC64LE %s
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC64LE: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC64LE: "{{.*}}/usr/lib/gcc/powerpc64le-linux-gnu/4.5{{/|\\\\}}crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC64LE: "-L[[SYSROOT]]/usr/lib/gcc/powerpc64le-linux-gnu/4.5"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC64LE: "-L[[SYSROOT]]/usr/lib/gcc/powerpc64le-linux-gnu/4.5/../../../powerpc64le-linux-gnu"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC64LE: "-L[[SYSROOT]]/usr/lib/powerpc64le-linux-gnu"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC64LE: "-L[[SYSROOT]]/usr/lib/gcc/powerpc64le-linux-gnu/4.5/../../.."
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC64LE: "-L[[SYSROOT]]/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC64LE: "-L[[SYSROOT]]/usr/lib"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
 comment|// RUN:     --target=powerpc64-linux-gnu \
 end_comment
 

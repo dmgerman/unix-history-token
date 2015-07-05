@@ -121,7 +121,7 @@ name|class
 name|DiagnosticsEngine
 decl_stmt|;
 name|class
-name|ExternalIdentifierLookup
+name|ExternalPreprocessorSource
 decl_stmt|;
 name|class
 name|FileEntry
@@ -324,7 +324,7 @@ name|IdentifierInfo
 operator|*
 name|getControllingMacro
 argument_list|(
-name|ExternalIdentifierLookup
+name|ExternalPreprocessorSource
 operator|*
 name|External
 argument_list|)
@@ -694,8 +694,9 @@ operator|>
 name|FrameworkNames
 expr_stmt|;
 comment|/// \brief Entity used to resolve the identifier IDs of controlling
-comment|/// macros into IdentifierInfo pointers, as needed.
-name|ExternalIdentifierLookup
+comment|/// macros into IdentifierInfo pointers, and keep the identifire up to date,
+comment|/// as needed.
+name|ExternalPreprocessorSource
 modifier|*
 name|ExternalLookup
 decl_stmt|;
@@ -1099,17 +1100,17 @@ block|}
 name|void
 name|SetExternalLookup
 parameter_list|(
-name|ExternalIdentifierLookup
+name|ExternalPreprocessorSource
 modifier|*
-name|EIL
+name|EPS
 parameter_list|)
 block|{
 name|ExternalLookup
 operator|=
-name|EIL
+name|EPS
 expr_stmt|;
 block|}
-name|ExternalIdentifierLookup
+name|ExternalPreprocessorSource
 operator|*
 name|getExternalLookup
 argument_list|()
@@ -1314,6 +1315,10 @@ name|File
 parameter_list|,
 name|bool
 name|isImport
+parameter_list|,
+name|Module
+modifier|*
+name|CorrespondingModule
 parameter_list|)
 function_decl|;
 comment|/// \brief Return whether the specified file is a normal header,

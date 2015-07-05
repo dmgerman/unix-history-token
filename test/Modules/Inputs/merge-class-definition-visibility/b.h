@@ -9,5 +9,12 @@ directive|include
 file|"a.h"
 end_include
 
+begin_struct
+struct|struct
+name|B
+block|{}
+struct|;
+end_struct
+
 end_unit
 

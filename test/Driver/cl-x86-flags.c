@@ -32,19 +32,19 @@ comment|// MFLAGS-NOT: argument unused during compilation
 end_comment
 
 begin_comment
-comment|// -arch:IA32 is no-op.
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cl -m32 -arch:IA32 --target=i386 -### -- 2>&1 %s | FileCheck -check-prefix=IA32 %s
 end_comment
 
 begin_comment
-comment|// IA32-NOT: argument unused during compilation
+comment|// IA32: "-target-cpu" "i386"
 end_comment
 
 begin_comment
 comment|// IA32-NOT: -target-feature
+end_comment
+
+begin_comment
+comment|// IA32-NOT: argument unused during compilation
 end_comment
 
 begin_comment
@@ -76,6 +76,10 @@ comment|// RUN: %clang_cl -m32 -arch:SSE --target=i386 -### -- 2>&1 %s | FileChe
 end_comment
 
 begin_comment
+comment|// SSE: "-target-cpu" "pentium3"
+end_comment
+
+begin_comment
 comment|// SSE: -target-feature
 end_comment
 
@@ -101,6 +105,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cl -m32 -arch:SSE2 --target=i386 -### -- 2>&1 %s | FileCheck -check-prefix=SSE2 %s
+end_comment
+
+begin_comment
+comment|// SSE2: "-target-cpu" "pentium4"
 end_comment
 
 begin_comment
@@ -140,6 +148,10 @@ comment|// SSE64-NOT: -target-feature
 end_comment
 
 begin_comment
+comment|// SSE64-NOT: pentium3
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cl -m64 -arch:SSE2 --target=x86_64 -### -- 2>&1 %s | FileCheck -check-prefix=SSE264 %s
 end_comment
 
@@ -153,6 +165,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cl -m32 -arch:AVX --target=i386 -### -- 2>&1 %s | FileCheck -check-prefix=AVX %s
+end_comment
+
+begin_comment
+comment|// AVX: "-target-cpu" "sandybridge"
 end_comment
 
 begin_comment
@@ -180,6 +196,10 @@ comment|// RUN: %clang_cl -m32 -arch:AVX2 --target=i386 -### -- 2>&1 %s | FileCh
 end_comment
 
 begin_comment
+comment|// AVX2: "-target-cpu" "haswell"
+end_comment
+
+begin_comment
 comment|// AVX2: -target-feature
 end_comment
 
@@ -204,6 +224,10 @@ comment|// RUN: %clang_cl -m64 -arch:AVX --target=x86_64 -### -- 2>&1 %s | FileC
 end_comment
 
 begin_comment
+comment|// AVX64: "-target-cpu" "sandybridge"
+end_comment
+
+begin_comment
 comment|// AVX64: -target-feature
 end_comment
 
@@ -225,6 +249,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cl -m64 -arch:AVX2 --target=x86_64 -### -- 2>&1 %s | FileCheck -check-prefix=AVX264 %s
+end_comment
+
+begin_comment
+comment|// AVX264: "-target-cpu" "haswell"
 end_comment
 
 begin_comment

@@ -386,6 +386,20 @@ literal|32
 operator|>
 name|ObjCInterfaceCache
 expr_stmt|;
+comment|/// \brief Cache of references to AST files such as PCHs or modules.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|uint64_t
+operator|,
+name|llvm
+operator|::
+name|DIModule
+operator|*
+operator|>
+name|ModuleRefCache
+expr_stmt|;
 comment|/// \brief list of interfaces we want to keep even if orphaned.
 name|std
 operator|::
@@ -1700,6 +1714,16 @@ modifier|&
 name|UD
 parameter_list|)
 function_decl|;
+comment|/// \brief Emit an @import declaration.
+name|void
+name|EmitImportDecl
+parameter_list|(
+specifier|const
+name|ImportDecl
+modifier|&
+name|ID
+parameter_list|)
+function_decl|;
 comment|/// \brief Emit C++ namespace alias.
 name|llvm
 operator|::
@@ -1917,6 +1941,16 @@ argument_list|(
 argument|QualType Ty
 argument_list|,
 argument|llvm::DIFile *Fg
+argument_list|)
+expr_stmt|;
+comment|/// \brief Get a reference to a clang module.
+name|llvm
+operator|::
+name|DIModule
+operator|*
+name|getOrCreateModuleRef
+argument_list|(
+argument|ExternalASTSource::ASTSourceDescriptor Mod
 argument_list|)
 expr_stmt|;
 comment|/// \brief Get the type from the cache or create a new

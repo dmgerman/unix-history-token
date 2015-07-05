@@ -109,6 +109,29 @@ return|;
 block|}
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|__attribute__
+argument_list|(
+operator|(
+name|target
+argument_list|(
+literal|"sse4"
+argument_list|)
+operator|)
+argument_list|)
+name|panda
+argument_list|(
+name|int
+name|a
+argument_list|)
+block|{
+return|return
+literal|4
+return|;
+block|}
+end_decl_stmt
+
 begin_function
 name|int
 name|bar
@@ -172,11 +195,15 @@ comment|// CHECK: #0 = {{.*}}"target-cpu"="x86-64" "target-features"="+sse,+sse2
 end_comment
 
 begin_comment
-comment|// CHECK: #1 = {{.*}}"target-cpu"="ivybridge" "target-features"="+sse,+sse2,+avx,+sse4.2"
+comment|// CHECK: #1 = {{.*}}"target-cpu"="ivybridge" "target-features"="+avx,+sse,+sse2,+sse3,+sse4.1,+sse4.2,+ssse3"
 end_comment
 
 begin_comment
-comment|// CHECK: #2 = {{.*}}"target-cpu"="x86-64" "target-features"="+sse,+sse2,-sse2"
+comment|// CHECK: #2 = {{.*}}"target-cpu"="x86-64" "target-features"="+sse,-aes,-avx,-avx2,-avx512bw,-avx512cd,-avx512dq,-avx512er,-avx512f,-avx512pf,-avx512vl,-f16c,-fma,-fma4,-pclmul,-sha,-sse2,-sse3,-sse4.1,-sse4.2,-sse4a,-ssse3,-xop"
+end_comment
+
+begin_comment
+comment|// CHECK: #3 = {{.*}}"target-cpu"="x86-64" "target-features"="+sse,+sse2,+sse3,+sse4.1,+sse4.2,+ssse3"
 end_comment
 
 end_unit

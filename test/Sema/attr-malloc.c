@@ -212,7 +212,7 @@ comment|// no-warning
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define noalias .* @xalloc(' %t
+comment|// RUN: grep 'define .*noalias .* @xalloc(' %t %t
 end_comment
 
 begin_define
@@ -252,7 +252,7 @@ block|}
 end_function
 
 begin_comment
-comment|// RUN: grep 'define noalias .* @xalloc2(' %t
+comment|// RUN: grep 'define .*noalias .* @xalloc2(' %t %t
 end_comment
 
 end_unit

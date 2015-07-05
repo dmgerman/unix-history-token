@@ -71,5 +71,53 @@ begin_comment
 comment|// CHECK:   load i32, i32* @alias
 end_comment
 
+begin_comment
+comment|// This is a case when redefenition is deferred *and* we have a local of the
+end_comment
+
+begin_comment
+comment|// same name. PR23923.
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|foo
+name|bar
+end_pragma
+
+begin_function
+name|int
+name|f
+parameter_list|()
+block|{
+name|int
+name|foo
+init|=
+literal|0
+decl_stmt|;
+return|return
+name|foo
+return|;
+block|}
+end_function
+
+begin_function
+specifier|extern
+name|int
+name|foo
+parameter_list|()
+block|{
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: define i32 @bar()
+end_comment
+
 end_unit
 

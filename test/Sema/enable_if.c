@@ -381,7 +381,7 @@ name|int
 name|i
 parameter_list|)
 block|{
-comment|// CHECK: define void @test2
+comment|// CHECK: define {{.*}}void @test2
 specifier|const
 name|char
 name|c

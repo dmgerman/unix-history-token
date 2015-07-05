@@ -4,14 +4,43 @@ comment|// REQUIRES: nvptx-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple nvptx-unknown-unknown -S -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple nvptx-unknown-unknown -fcuda-is-device -S -emit-llvm -o - -x cuda %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple nvptx64-unknown-unknown -S -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple nvptx64-unknown-unknown -fcuda-is-device -S -emit-llvm -o - -x cuda %s | FileCheck %s
 end_comment
 
+begin_define
+define|#
+directive|define
+name|__device__
+value|__attribute__((device))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__global__
+value|__attribute__((global))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__shared__
+value|__attribute__((shared))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__constant__
+value|__attribute__((constant))
+end_define
+
 begin_function
+name|__device__
 name|int
 name|read_tid
 parameter_list|()
@@ -57,6 +86,7 @@ block|}
 end_function
 
 begin_function
+name|__device__
 name|int
 name|read_ntid
 parameter_list|()
@@ -102,6 +132,7 @@ block|}
 end_function
 
 begin_function
+name|__device__
 name|int
 name|read_ctaid
 parameter_list|()
@@ -147,6 +178,7 @@ block|}
 end_function
 
 begin_function
+name|__device__
 name|int
 name|read_nctaid
 parameter_list|()
@@ -192,6 +224,7 @@ block|}
 end_function
 
 begin_function
+name|__device__
 name|int
 name|read_ids
 parameter_list|()
@@ -255,6 +288,7 @@ block|}
 end_function
 
 begin_function
+name|__device__
 name|int
 name|read_lanemasks
 parameter_list|()
@@ -309,6 +343,7 @@ block|}
 end_function
 
 begin_function
+name|__device__
 name|long
 name|read_clocks
 parameter_list|()
@@ -339,6 +374,7 @@ block|}
 end_function
 
 begin_function
+name|__device__
 name|int
 name|read_pms
 parameter_list|()
@@ -384,6 +420,7 @@ block|}
 end_function
 
 begin_function
+name|__device__
 name|void
 name|sync
 parameter_list|()
@@ -410,6 +447,7 @@ comment|// builtins defined in BuiltinsNVPTX.def
 end_comment
 
 begin_function
+name|__device__
 name|void
 name|nvvm_math
 parameter_list|(
@@ -533,6 +571,430 @@ comment|// CHECK: call void @llvm.nvvm.barrier0()
 name|__nvvm_bar0
 argument_list|()
 expr_stmt|;
+block|}
+end_function
+
+begin_decl_stmt
+name|__device__
+name|int
+name|di
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|__shared__
+name|int
+name|si
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|__device__
+name|long
+name|dl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|__shared__
+name|long
+name|sl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|__device__
+name|long
+name|long
+name|dll
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|__shared__
+name|long
+name|long
+name|sll
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Check for atomic intrinsics
+end_comment
+
+begin_comment
+comment|// CHECK-LABEL: nvvm_atom
+end_comment
+
+begin_function
+name|__device__
+name|void
+name|nvvm_atom
+parameter_list|(
+name|float
+modifier|*
+name|fp
+parameter_list|,
+name|float
+name|f
+parameter_list|,
+name|int
+modifier|*
+name|ip
+parameter_list|,
+name|int
+name|i
+parameter_list|,
+name|long
+modifier|*
+name|lp
+parameter_list|,
+name|long
+name|l
+parameter_list|,
+name|long
+name|long
+modifier|*
+name|llp
+parameter_list|,
+name|long
+name|long
+name|ll
+parameter_list|)
+block|{
+comment|// CHECK: atomicrmw add
+name|__nvvm_atom_add_gen_i
+argument_list|(
+name|ip
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw add
+name|__nvvm_atom_add_gen_l
+argument_list|(
+operator|&
+name|dl
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw add
+name|__nvvm_atom_add_gen_ll
+argument_list|(
+operator|&
+name|sll
+argument_list|,
+name|ll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw sub
+name|__nvvm_atom_sub_gen_i
+argument_list|(
+name|ip
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw sub
+name|__nvvm_atom_sub_gen_l
+argument_list|(
+operator|&
+name|dl
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw sub
+name|__nvvm_atom_sub_gen_ll
+argument_list|(
+operator|&
+name|sll
+argument_list|,
+name|ll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw and
+name|__nvvm_atom_and_gen_i
+argument_list|(
+name|ip
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw and
+name|__nvvm_atom_and_gen_l
+argument_list|(
+operator|&
+name|dl
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw and
+name|__nvvm_atom_and_gen_ll
+argument_list|(
+operator|&
+name|sll
+argument_list|,
+name|ll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw or
+name|__nvvm_atom_or_gen_i
+argument_list|(
+name|ip
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw or
+name|__nvvm_atom_or_gen_l
+argument_list|(
+operator|&
+name|dl
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw or
+name|__nvvm_atom_or_gen_ll
+argument_list|(
+operator|&
+name|sll
+argument_list|,
+name|ll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw xor
+name|__nvvm_atom_xor_gen_i
+argument_list|(
+name|ip
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw xor
+name|__nvvm_atom_xor_gen_l
+argument_list|(
+operator|&
+name|dl
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw xor
+name|__nvvm_atom_xor_gen_ll
+argument_list|(
+operator|&
+name|sll
+argument_list|,
+name|ll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw xchg
+name|__nvvm_atom_xchg_gen_i
+argument_list|(
+name|ip
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw xchg
+name|__nvvm_atom_xchg_gen_l
+argument_list|(
+operator|&
+name|dl
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw xchg
+name|__nvvm_atom_xchg_gen_ll
+argument_list|(
+operator|&
+name|sll
+argument_list|,
+name|ll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw max
+name|__nvvm_atom_max_gen_i
+argument_list|(
+name|ip
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw max
+name|__nvvm_atom_max_gen_ui
+argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+name|ip
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw max
+name|__nvvm_atom_max_gen_l
+argument_list|(
+operator|&
+name|dl
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw max
+name|__nvvm_atom_max_gen_ul
+argument_list|(
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+operator|&
+name|dl
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw max
+name|__nvvm_atom_max_gen_ll
+argument_list|(
+operator|&
+name|sll
+argument_list|,
+name|ll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw max
+name|__nvvm_atom_max_gen_ull
+argument_list|(
+operator|(
+name|unsigned
+name|long
+name|long
+operator|*
+operator|)
+operator|&
+name|sll
+argument_list|,
+name|ll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw min
+name|__nvvm_atom_min_gen_i
+argument_list|(
+name|ip
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw min
+name|__nvvm_atom_min_gen_ui
+argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+name|ip
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw min
+name|__nvvm_atom_min_gen_l
+argument_list|(
+operator|&
+name|dl
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw min
+name|__nvvm_atom_min_gen_ul
+argument_list|(
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+operator|&
+name|dl
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw min
+name|__nvvm_atom_min_gen_ll
+argument_list|(
+operator|&
+name|sll
+argument_list|,
+name|ll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: atomicrmw min
+name|__nvvm_atom_min_gen_ull
+argument_list|(
+operator|(
+name|unsigned
+name|long
+name|long
+operator|*
+operator|)
+operator|&
+name|sll
+argument_list|,
+name|ll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: cmpxchg
+name|__nvvm_atom_cas_gen_i
+argument_list|(
+name|ip
+argument_list|,
+literal|0
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: cmpxchg
+name|__nvvm_atom_cas_gen_l
+argument_list|(
+operator|&
+name|dl
+argument_list|,
+literal|0
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+comment|// CHECK: cmpxchg
+name|__nvvm_atom_cas_gen_ll
+argument_list|(
+operator|&
+name|sll
+argument_list|,
+literal|0
+argument_list|,
+name|ll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call float @llvm.nvvm.atomic.load.add.f32.p0f32
+name|__nvvm_atom_add_gen_f
+argument_list|(
+name|fp
+argument_list|,
+name|f
+argument_list|)
+expr_stmt|;
+comment|// CHECK: ret
 block|}
 end_function
 

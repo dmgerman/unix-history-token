@@ -28,7 +28,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("sse4a")))
 end_define
 
@@ -239,7 +239,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_extract_si64
 parameter_list|(
 name|__m128i
@@ -542,7 +542,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_insert_si64
 parameter_list|(
 name|__m128i
@@ -636,7 +636,7 @@ begin_function
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_stream_sd
 parameter_list|(
 name|double
@@ -724,7 +724,7 @@ begin_function
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_stream_ss
 parameter_list|(
 name|float
@@ -751,7 +751,7 @@ end_function
 begin_undef
 undef|#
 directive|undef
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 end_undef
 
 begin_endif

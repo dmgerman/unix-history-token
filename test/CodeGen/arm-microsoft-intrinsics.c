@@ -182,18 +182,20 @@ begin_function
 name|void
 name|check_MoveToCoprocessor
 parameter_list|(
-name|void
+name|unsigned
+name|int
+name|value
 parameter_list|)
 block|{
 name|_MoveToCoprocessor
 argument_list|(
-literal|0
+name|value
 argument_list|,
-literal|0
+literal|10
 argument_list|,
-literal|0
+literal|7
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|0
 argument_list|,
@@ -204,7 +206,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-MSVC: @llvm.arm.mcr(i32 0, i32 0, i32 0, i32 0, i32 0, i32 0)
+comment|// CHECK-MSVC: @llvm.arm.mcr(i32 10, i32 7, i32 %{{[^,]*}}, i32 1, i32 0, i32 0)
 end_comment
 
 begin_comment
@@ -215,18 +217,20 @@ begin_function
 name|void
 name|check_MoveToCoprocessor2
 parameter_list|(
-name|void
+name|unsigned
+name|int
+name|value
 parameter_list|)
 block|{
 name|_MoveToCoprocessor2
 argument_list|(
-literal|0
+name|value
 argument_list|,
-literal|0
+literal|10
 argument_list|,
-literal|0
+literal|7
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|0
 argument_list|,
@@ -237,7 +241,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-MSVC: @llvm.arm.mcr2(i32 0, i32 0, i32 0, i32 0, i32 0, i32 0)
+comment|// CHECK-MSVC: @llvm.arm.mcr2(i32 10, i32 7, i32 %{{[^,]*}}, i32 1, i32 0, i32 0)
 end_comment
 
 begin_comment

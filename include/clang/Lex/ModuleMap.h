@@ -675,9 +675,6 @@ name|Module
 modifier|*
 name|inferFrameworkModule
 parameter_list|(
-name|StringRef
-name|ModuleName
-parameter_list|,
 specifier|const
 name|DirectoryEntry
 modifier|*
@@ -932,9 +929,6 @@ name|Module
 modifier|*
 name|inferFrameworkModule
 parameter_list|(
-name|StringRef
-name|ModuleName
-parameter_list|,
 specifier|const
 name|DirectoryEntry
 modifier|*

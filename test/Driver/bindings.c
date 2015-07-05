@@ -12,11 +12,11 @@ comment|// CHECK01: "clang", inputs: ["{{.*}}bindings.c"], output: "{{.*}}.s"
 end_comment
 
 begin_comment
-comment|// CHECK01: "GNU::Assemble", inputs: ["{{.*}}.s"], output: "{{.*}}.o"
+comment|// CHECK01: "GNU::Assembler", inputs: ["{{.*}}.s"], output: "{{.*}}.o"
 end_comment
 
 begin_comment
-comment|// CHECK01: "gcc::Link", inputs: ["{{.*}}.o"], output: "a.out"
+comment|// CHECK01: "gcc::Linker", inputs: ["{{.*}}.o"], output: "a.out"
 end_comment
 
 begin_comment
@@ -68,11 +68,11 @@ comment|// CHECK14: "clang", inputs: ["{{.*}}bindings.c"], output: "{{.*}}.s"
 end_comment
 
 begin_comment
-comment|// CHECK14: "darwin::Assemble", inputs: ["{{.*}}.s"], output: "{{.*}}.o"
+comment|// CHECK14: "darwin::Assembler", inputs: ["{{.*}}.s"], output: "{{.*}}.o"
 end_comment
 
 begin_comment
-comment|// CHECK14: "darwin::Link", inputs: ["{{.*}}.o"], output: "a.out"
+comment|// CHECK14: "darwin::Linker", inputs: ["{{.*}}.o"], output: "a.out"
 end_comment
 
 end_unit

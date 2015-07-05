@@ -216,5 +216,56 @@ comment|// expected-error {{use of undeclared identifier '__v2di'}}
 block|}
 end_function
 
+begin_function
+name|void
+name|f
+parameter_list|(
+name|long
+modifier|*
+name|a
+parameter_list|,
+name|long
+name|b
+parameter_list|)
+block|{
+name|__atomic_or_fetch
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{use of undeclared identifier 'c'}}
+block|}
+end_function
+
+begin_function_decl
+specifier|extern
+name|double
+name|cabs
+parameter_list|(
+specifier|_Complex
+name|double
+name|z
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|fn1
+parameter_list|()
+block|{
+name|cabs
+argument_list|(
+name|errij
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{use of undeclared identifier 'errij'}}
+block|}
+end_function
+
 end_unit
 

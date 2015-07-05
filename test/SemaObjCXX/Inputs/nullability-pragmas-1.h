@@ -191,7 +191,7 @@ name|f7
 parameter_list|(
 name|int
 modifier|*
-name|__nullable
+name|_Nullable
 name|x
 parameter_list|)
 function_decl|;
@@ -203,7 +203,7 @@ name|f8
 parameter_list|(
 name|A
 modifier|*
-name|__nullable
+name|_Nullable
 name|obj
 parameter_list|)
 function_decl|;
@@ -250,7 +250,7 @@ name|int
 name|X
 operator|::
 operator|*
-name|__nullable
+name|_Nullable
 name|mem_ptr
 argument_list|)
 decl_stmt|;
@@ -262,7 +262,7 @@ name|f12
 argument_list|(
 name|int
 argument_list|(
-argument|X::* __nullable mem_func
+argument|X::* _Nullable mem_func
 argument_list|)
 operator|(
 name|int
@@ -295,7 +295,7 @@ end_function_decl
 begin_function_decl
 name|int
 modifier|*
-name|__null_unspecified
+name|_Null_unspecified
 name|f15
 parameter_list|(
 name|void
@@ -306,7 +306,7 @@ end_function_decl
 begin_function_decl
 name|A
 modifier|*
-name|__null_unspecified
+name|_Null_unspecified
 name|f16
 parameter_list|(
 name|void
@@ -326,7 +326,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-note{{no known conversion from 'A * __nonnull' to 'CFErrorRef  __nullable * __nullable' (aka '__CFError **') for 1st argument}}
+comment|// expected-note{{no known conversion from 'A * _Nonnull' to 'CFErrorRef  _Nullable * _Nullable' (aka '__CFError **') for 1st argument}}
 end_comment
 
 begin_function_decl
@@ -599,7 +599,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// typedefs not inferred __nonnull
+comment|// typedefs not inferred _Nonnull
 end_comment
 
 begin_typedef
@@ -635,7 +635,7 @@ name|fp
 init|=
 name|global_int_ptr
 decl_stmt|;
-comment|// expected-error{{cannot initialize a variable of type 'float *' with an lvalue of type 'int * __nonnull'}}
+comment|// expected-error{{cannot initialize a variable of type 'float *' with an lvalue of type 'int * _Nonnull'}}
 name|int_ptr_2
 name|ip2
 decl_stmt|;
@@ -670,7 +670,7 @@ name|public
 name|id
 name|ivar1
 block|;
-name|__nonnull
+name|_Nonnull
 name|id
 name|ivar2
 block|; }
@@ -728,7 +728,7 @@ name|void
 name|f23
 parameter_list|(
 name|int_ptr
-name|__nullable
+name|_Nullable
 name|x
 parameter_list|)
 function_decl|;
@@ -739,7 +739,7 @@ name|void
 name|f24
 parameter_list|(
 name|A_ptr
-name|__nullable
+name|_Nullable
 name|y
 parameter_list|)
 function_decl|;

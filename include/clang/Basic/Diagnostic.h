@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Specifiers.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
@@ -4933,8 +4939,49 @@ name|DB
 return|;
 end_return
 
+begin_comment
+unit|}
+comment|/// A nullability kind paired with a bit indicating whether it used a
+end_comment
+
+begin_comment
+comment|/// context-sensitive keyword.
+end_comment
+
 begin_expr_stmt
-unit|}  inline
+unit|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|NullabilityKind
+operator|,
+name|bool
+operator|>
+name|DiagNullabilityKind
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|DB
+operator|,
+name|DiagNullabilityKind
+name|nullability
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
 name|DiagnosticBuilder
 name|DiagnosticsEngine
 operator|::

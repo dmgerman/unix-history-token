@@ -615,7 +615,7 @@ name|llvm
 operator|::
 name|Constant
 operator|*
-name|EmitMemberPointer
+name|EmitMemberFunctionPointer
 argument_list|(
 specifier|const
 name|CXXMethodDecl

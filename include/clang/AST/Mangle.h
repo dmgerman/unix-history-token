@@ -1096,6 +1096,27 @@ literal|0
 block|;
 name|virtual
 name|void
+name|mangleCXXVirtualDisplacementMap
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|SrcRD
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|DstRD
+argument_list|,
+name|raw_ostream
+operator|&
+name|Out
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
 name|mangleCXXThrowInfo
 argument_list|(
 argument|QualType T

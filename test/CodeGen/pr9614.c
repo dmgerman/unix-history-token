@@ -27,12 +27,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
-name|bar_alias
+name|int
+name|abs_alias
 argument_list|(
-name|void
+name|int
 argument_list|)
-asm|__asm ("bar");
+asm|__asm ("abs");
 specifier|inline
 namespace|__attribute__ ((
 name|__always_inline__
@@ -41,15 +41,18 @@ end_decl_stmt
 
 begin_function
 unit|)
-name|void
-name|bar
+name|int
+name|abs
 parameter_list|(
-name|void
+name|int
+name|x
 parameter_list|)
 block|{
 return|return
-name|bar_alias
-argument_list|()
+name|abs_alias
+argument_list|(
+name|x
+argument_list|)
 return|;
 block|}
 end_function
@@ -109,6 +112,74 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+specifier|inline
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|always_inline
+operator|,
+name|__gnu_inline__
+operator|)
+argument_list|)
+name|prefetch
+argument_list|(
+name|void
+argument_list|)
+block|{
+name|__builtin_prefetch
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_extern
+extern|extern
+specifier|inline
+namespace|__attribute__((
+name|__always_inline__
+operator|,
+name|__gnu_inline__
+end_extern
+
+begin_function
+unit|))
+name|void
+modifier|*
+name|memchr
+parameter_list|(
+name|void
+modifier|*
+name|__s
+parameter_list|,
+name|int
+name|__c
+parameter_list|,
+name|__SIZE_TYPE__
+name|__n
+parameter_list|)
+block|{
+return|return
+name|__builtin_memchr
+argument_list|(
+name|__s
+argument_list|,
+name|__c
+argument_list|,
+name|__n
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_function
 name|void
 name|f
@@ -119,14 +190,28 @@ block|{
 name|foo
 argument_list|()
 expr_stmt|;
-name|bar
-argument_list|()
+name|abs
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|strrchr_foo
 argument_list|(
 literal|""
 argument_list|,
 literal|'.'
+argument_list|)
+expr_stmt|;
+name|prefetch
+argument_list|()
+expr_stmt|;
+name|memchr
+argument_list|(
+literal|""
+argument_list|,
+literal|'.'
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -141,15 +226,23 @@ comment|// CHECK: call void @foo()
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: call void @bar()
+comment|// CHECK: call i32 @abs(i32 0)
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: call i8* @strrchr(
+comment|// CHECK: call i8* @strrchr(
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: ret void
+comment|// CHECK: call void @llvm.prefetch(
+end_comment
+
+begin_comment
+comment|// CHECK: call i8* @memchr(
+end_comment
+
+begin_comment
+comment|// CHECK: ret void
 end_comment
 
 begin_comment
@@ -157,11 +250,19 @@ comment|// CHECK: declare void @foo()
 end_comment
 
 begin_comment
-comment|// CHECK: declare void @bar()
+comment|// CHECK: declare i32 @abs(i32
 end_comment
 
 begin_comment
 comment|// CHECK: declare i8* @strrchr(i8*, i32)
+end_comment
+
+begin_comment
+comment|// CHECK: declare i8* @memchr(
+end_comment
+
+begin_comment
+comment|// CHECK: declare void @llvm.prefetch(
 end_comment
 
 end_unit

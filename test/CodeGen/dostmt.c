@@ -267,7 +267,7 @@ operator|,
 literal|0
 condition|)
 do|;
-comment|// CHECK: call void @test6f()
+comment|// CHECK: call {{.*}}void @test6f()
 block|}
 end_function
 

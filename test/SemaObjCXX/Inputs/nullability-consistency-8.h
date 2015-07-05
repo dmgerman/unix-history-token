@@ -3,7 +3,7 @@ begin_typedef
 typedef|typedef
 name|int
 modifier|*
-name|__nonnull
+name|_Nonnull
 name|mynonnull
 typedef|;
 end_typedef
@@ -94,7 +94,7 @@ name|cf2
 parameter_list|(
 name|CFTypeRef
 modifier|*
-name|__nullable
+name|_Nullable
 name|p
 name|CF_RETURNS_NOT_RETAINED
 parameter_list|)
@@ -107,7 +107,7 @@ name|cf3
 parameter_list|(
 name|CFTypeRef
 modifier|*
-name|__nonnull
+name|_Nonnull
 name|p
 name|CF_RETURNS_NOT_RETAINED
 parameter_list|)
@@ -119,9 +119,9 @@ name|void
 name|cf4
 parameter_list|(
 name|CFTypeRef
-name|__nullable
+name|_Nullable
 modifier|*
-name|__nullable
+name|_Nullable
 name|p
 name|CF_RETURNS_NOT_RETAINED
 parameter_list|)
@@ -133,9 +133,9 @@ name|void
 name|cf5
 parameter_list|(
 name|CFTypeRef
-name|__nonnull
+name|_Nonnull
 modifier|*
-name|__nullable
+name|_Nullable
 name|p
 name|CF_RETURNS_NOT_RETAINED
 parameter_list|)
@@ -148,7 +148,7 @@ name|cf6
 parameter_list|(
 name|CFTypeRef
 modifier|*
-name|__nullable
+name|_Nullable
 name|CF_RETURNS_NOT_RETAINED
 name|p
 parameter_list|)
@@ -162,7 +162,7 @@ parameter_list|(
 name|CF_RETURNS_NOT_RETAINED
 name|CFTypeRef
 modifier|*
-name|__nonnull
+name|_Nonnull
 name|p
 parameter_list|)
 function_decl|;
@@ -171,7 +171,7 @@ end_function_decl
 begin_typedef
 typedef|typedef
 name|CFTypeRef
-name|__nullable
+name|_Nullable
 modifier|*
 name|CFTypeRefPtr
 typedef|;
@@ -197,7 +197,7 @@ name|void
 name|cfp2
 parameter_list|(
 name|CFTypeRefPtr
-name|__nonnull
+name|_Nonnull
 name|p
 name|CF_RETURNS_NOT_RETAINED
 parameter_list|)

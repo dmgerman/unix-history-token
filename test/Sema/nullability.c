@@ -44,20 +44,20 @@ begin_typedef
 typedef|typedef
 name|int
 modifier|*
-name|__nonnull
+name|_Nonnull
 name|nonnull_int_ptr
 typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-note{{'__nonnull' specified here}}
+comment|// expected-note{{'_Nonnull' specified here}}
 end_comment
 
 begin_typedef
 typedef|typedef
 name|int
 modifier|*
-name|__nullable
+name|_Nullable
 name|nullable_int_ptr
 typedef|;
 end_typedef
@@ -66,7 +66,7 @@ begin_typedef
 typedef|typedef
 name|int
 modifier|*
-name|__null_unspecified
+name|_Null_unspecified
 name|null_unspecified_int_ptr
 typedef|;
 end_typedef
@@ -79,14 +79,14 @@ begin_typedef
 typedef|typedef
 name|int
 modifier|*
-name|__nonnull
-name|__nonnull
+name|_Nonnull
+name|_Nonnull
 name|redundant_1
 typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-warning{{duplicate nullability specifier '__nonnull'}}
+comment|// expected-warning{{duplicate nullability specifier '_Nonnull'}}
 end_comment
 
 begin_comment
@@ -97,28 +97,28 @@ begin_typedef
 typedef|typedef
 name|int
 modifier|*
-name|__nonnull
-name|__nullable
+name|_Nonnull
+name|_Nullable
 name|conflicting_1
 typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-error{{nullability specifier '__nonnull' conflicts with existing specifier '__nullable'}}
+comment|// expected-error{{nullability specifier '_Nonnull' conflicts with existing specifier '_Nullable'}}
 end_comment
 
 begin_typedef
 typedef|typedef
 name|int
 modifier|*
-name|__null_unspecified
-name|__nonnull
+name|_Null_unspecified
+name|_Nonnull
 name|conflicting_2
 typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-error{{nullability specifier '__null_unspecified' conflicts with existing specifier '__nonnull'}}
+comment|// expected-error{{nullability specifier '_Null_unspecified' conflicts with existing specifier '_Nonnull'}}
 end_comment
 
 begin_comment
@@ -128,7 +128,7 @@ end_comment
 begin_typedef
 typedef|typedef
 name|nonnull_int_ptr
-name|__nonnull
+name|_Nonnull
 name|redundant_okay_1
 typedef|;
 end_typedef
@@ -140,13 +140,13 @@ end_comment
 begin_typedef
 typedef|typedef
 name|nonnull_int_ptr
-name|__nullable
+name|_Nullable
 name|conflicting_2
 typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-error{{nullability specifier '__nullable' conflicts with existing specifier '__nonnull'}}
+comment|// expected-error{{nullability specifier '_Nullable' conflicts with existing specifier '_Nonnull'}}
 end_comment
 
 begin_typedef
@@ -159,13 +159,13 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|nonnull_int_ptr_typedef
-name|__nullable
+name|_Nullable
 name|conflicting_2
 typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-error{{nullability specifier '__nullable' conflicts with existing specifier '__nonnull'}}
+comment|// expected-error{{nullability specifier '_Nullable' conflicts with existing specifier '_Nonnull'}}
 end_comment
 
 begin_typedef
@@ -178,13 +178,13 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|nonnull_int_ptr_typedef_typedef
-name|__null_unspecified
+name|_Null_unspecified
 name|conflicting_3
 typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-error{{nullability specifier '__null_unspecified' conflicts with existing specifier '__nonnull'}}
+comment|// expected-error{{nullability specifier '_Null_unspecified' conflicts with existing specifier '_Nonnull'}}
 end_comment
 
 begin_comment
@@ -196,7 +196,7 @@ typedef|typedef
 name|int
 function_decl|(
 modifier|*
-name|__nonnull
+name|_Nonnull
 name|function_pointer_type_1
 function_decl|)
 parameter_list|(
@@ -212,7 +212,7 @@ typedef|typedef
 name|int
 function_decl|(
 modifier|^
-name|__nonnull
+name|_Nonnull
 name|block_type_1
 function_decl|)
 parameter_list|(
@@ -230,13 +230,13 @@ end_comment
 begin_typedef
 typedef|typedef
 name|int
-name|__nonnull
+name|_Nonnull
 name|int_type_1
 typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-error{{nullability specifier '__nonnull' cannot be applied to non-pointer type 'int'}}
+comment|// expected-error{{nullability specifier '_Nonnull' cannot be applied to non-pointer type 'int'}}
 end_comment
 
 begin_comment
@@ -249,7 +249,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__nonnull
+name|_Nonnull
 name|int
 modifier|*
 name|nonnull_int_ptr_2
@@ -259,7 +259,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|int
-name|__nullable
+name|_Nullable
 modifier|*
 name|nullable_int_ptr_2
 typedef|;
@@ -267,7 +267,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__nonnull
+name|_Nonnull
 name|int
 function_decl|(
 modifier|*
@@ -283,7 +283,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__nonnull
+name|_Nonnull
 name|int
 function_decl|(
 modifier|^
@@ -299,18 +299,18 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__nonnull
+name|_Nonnull
 name|int
 modifier|*
 modifier|*
-name|__nullable
+name|_Nullable
 name|nonnull_int_ptr_ptr_1
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|__nonnull
+name|_Nonnull
 name|int
 modifier|*
 function_decl|(
@@ -327,7 +327,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__nonnull
+name|_Nonnull
 name|int
 modifier|*
 function_decl|(
@@ -344,7 +344,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__nonnull
+name|_Nonnull
 name|int_ptr
 function_decl|(
 modifier|^
@@ -360,7 +360,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__nonnull
+name|_Nonnull
 name|int_ptr
 function_decl|(
 modifier|*
@@ -378,7 +378,7 @@ begin_decl_stmt
 name|void
 name|acceptFunctionPtr
 argument_list|(
-name|__nonnull
+name|_Nonnull
 name|int
 operator|*
 call|(
@@ -395,7 +395,7 @@ begin_decl_stmt
 name|void
 name|acceptBlockPtr
 argument_list|(
-name|__nonnull
+name|_Nonnull
 name|int
 operator|*
 call|(
@@ -424,7 +424,7 @@ name|function_pointer_type_3
 operator|)
 literal|0
 expr_stmt|;
-comment|// expected-warning{{from 'function_pointer_type_3' (aka 'int * __nonnull (*)(int, int)')}}
+comment|// expected-warning{{from 'function_pointer_type_3' (aka 'int * _Nonnull (*)(int, int)')}}
 name|fp
 operator|=
 operator|(
@@ -432,7 +432,7 @@ name|block_type_3
 operator|)
 literal|0
 expr_stmt|;
-comment|// expected-error{{from incompatible type 'block_type_3' (aka 'int * __nonnull (^)(int, int)')}}
+comment|// expected-error{{from incompatible type 'block_type_3' (aka 'int * _Nonnull (^)(int, int)')}}
 name|fp
 operator|=
 operator|(
@@ -440,7 +440,7 @@ name|function_pointer_type_4
 operator|)
 literal|0
 expr_stmt|;
-comment|// expected-warning{{from 'function_pointer_type_4' (aka 'int_ptr  __nonnull (*)(int, int)')}}
+comment|// expected-warning{{from 'function_pointer_type_4' (aka 'int_ptr  _Nonnull (*)(int, int)')}}
 name|fp
 operator|=
 operator|(
@@ -448,7 +448,7 @@ name|block_type_4
 operator|)
 literal|0
 expr_stmt|;
-comment|// expected-error{{from incompatible type 'block_type_4' (aka 'int_ptr  __nonnull (^)(int, int)')}}
+comment|// expected-error{{from incompatible type 'block_type_4' (aka 'int_ptr  _Nonnull (^)(int, int)')}}
 name|acceptFunctionPtr
 argument_list|(
 literal|0
@@ -470,17 +470,17 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__nonnull
+name|_Nonnull
 name|int
 modifier|*
-name|__nullable
+name|_Nullable
 modifier|*
 name|conflict_int_ptr_ptr_2
 typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-error{{nullability specifier '__nonnull' cannot be applied to non-pointer type 'int'}}
+comment|// expected-error{{nullability specifier '_Nonnull' cannot be applied to non-pointer type 'int'}}
 end_comment
 
 begin_comment
@@ -491,7 +491,7 @@ begin_typedef
 typedef|typedef
 name|int
 modifier|*
-name|__nonnull
+name|_Nonnull
 name|ambiguous_int_ptr
 typedef|;
 end_typedef
@@ -508,7 +508,7 @@ begin_typedef
 typedef|typedef
 name|int
 modifier|*
-name|__nullable
+name|_Nullable
 name|ambiguous_int_ptr
 typedef|;
 end_typedef
@@ -526,7 +526,7 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 modifier|*
-name|__nonnull
+name|_Nonnull
 name|ip_1
 init|=
 operator|&
@@ -535,7 +535,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning{{incompatible pointer types initializing 'int * __nonnull' with an expression of type 'float *'}}
+comment|// expected-warning{{incompatible pointer types initializing 'int * _Nonnull' with an expression of type 'float *'}}
 end_comment
 
 begin_comment
@@ -551,7 +551,7 @@ parameter_list|)
 block|{
 name|int
 modifier|*
-name|__nonnull
+name|_Nonnull
 name|iptr
 decl_stmt|;
 name|float
@@ -560,11 +560,11 @@ name|fptr
 init|=
 name|iptr
 decl_stmt|;
-comment|// expected-warning{{incompatible pointer types initializing 'float *' with an expression of type 'int * __nonnull'}}
+comment|// expected-warning{{incompatible pointer types initializing 'float *' with an expression of type 'int * _Nonnull'}}
 name|int
 modifier|*
 modifier|*
-name|__nonnull
+name|_Nonnull
 name|iptrptr
 decl_stmt|;
 name|float
@@ -574,12 +574,12 @@ name|fptrptr
 init|=
 name|iptrptr
 decl_stmt|;
-comment|// expected-warning{{incompatible pointer types initializing 'float **' with an expression of type 'int ** __nonnull'}}
+comment|// expected-warning{{incompatible pointer types initializing 'float **' with an expression of type 'int ** _Nonnull'}}
 name|int
 modifier|*
-name|__nullable
+name|_Nullable
 modifier|*
-name|__nonnull
+name|_Nonnull
 name|iptrptr2
 decl_stmt|;
 name|float
@@ -589,19 +589,19 @@ name|fptrptr2
 init|=
 name|iptrptr2
 decl_stmt|;
-comment|// expected-warning{{incompatible pointer types initializing 'float **' with an expression of type 'int * __nullable * __nonnull'}}
+comment|// expected-warning{{incompatible pointer types initializing 'float **' with an expression of type 'int * _Nullable * _Nonnull'}}
 block|}
 end_function
 
 begin_comment
-comment|// Check passing null to a __nonnull argument.
+comment|// Check passing null to a _Nonnull argument.
 end_comment
 
 begin_function_decl
 name|void
 name|accepts_nonnull_1
 parameter_list|(
-name|__nonnull
+name|_Nonnull
 name|int
 modifier|*
 name|ptr
@@ -616,7 +616,7 @@ modifier|*
 name|accepts_nonnull_2
 function_decl|)
 parameter_list|(
-name|__nonnull
+name|_Nonnull
 name|int
 modifier|*
 name|ptr
@@ -631,7 +631,7 @@ modifier|^
 name|accepts_nonnull_3
 function_decl|)
 parameter_list|(
-name|__nonnull
+name|_Nonnull
 name|int
 modifier|*
 name|ptr
@@ -666,11 +666,11 @@ block|}
 end_function
 
 begin_comment
-comment|// Check returning nil from a __nonnull-returning function.
+comment|// Check returning nil from a _Nonnull-returning function.
 end_comment
 
 begin_function
-name|__nonnull
+name|_Nonnull
 name|int
 modifier|*
 name|returns_int_ptr
@@ -691,7 +691,7 @@ comment|// expected-warning{{null returned from function that requires a non-nul
 block|}
 return|return
 operator|(
-name|__nonnull
+name|_Nonnull
 name|int
 operator|*
 operator|)
@@ -708,7 +708,7 @@ begin_function
 name|void
 name|nullable_to_nonnull
 parameter_list|(
-name|__nullable
+name|_Nullable
 name|int
 modifier|*
 name|ptr
@@ -721,14 +721,14 @@ init|=
 name|ptr
 decl_stmt|;
 comment|// okay
-name|__nonnull
+name|_Nonnull
 name|int
 modifier|*
 name|b
 init|=
 name|ptr
 decl_stmt|;
-comment|// expected-warning{{implicit conversion from nullable pointer 'int * __nullable' to non-nullable pointer type 'int * __nonnull'}}
+comment|// expected-warning{{implicit conversion from nullable pointer 'int * _Nullable' to non-nullable pointer type 'int * _Nonnull'}}
 block|}
 end_function
 

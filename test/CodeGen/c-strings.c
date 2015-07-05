@@ -104,7 +104,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECK-LABEL: define void @f0()
+comment|// CHECK-LABEL: define {{.*}}void @f0()
 end_comment
 
 begin_function
@@ -117,13 +117,13 @@ argument_list|(
 literal|"hello"
 argument_list|)
 expr_stmt|;
-comment|// ITANIUM: call void @bar({{.*}} @.str
-comment|// MSABI: call void @bar({{.*}} @"\01??_C@_05CJBACGMB@hello?$AA@"
+comment|// ITANIUM: call {{.*}}void @bar({{.*}} @.str
+comment|// MSABI: call {{.*}}void @bar({{.*}} @"\01??_C@_05CJBACGMB@hello?$AA@"
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define void @f1()
+comment|// CHECK-LABEL: define {{.*}}void @f1()
 end_comment
 
 begin_function
@@ -144,12 +144,12 @@ name|x
 argument_list|)
 expr_stmt|;
 comment|// CHECK: [[T1:%.*]] = load i8*, i8** @f1.x
-comment|// CHECK: call void @bar(i8* [[T1:%.*]])
+comment|// CHECK: call {{.*}}void @bar(i8* [[T1:%.*]])
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define void @f2()
+comment|// CHECK-LABEL: define {{.*}}void @f2()
 end_comment
 
 begin_function
@@ -169,12 +169,12 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @bar({{.*}} @f2.x
+comment|// CHECK: call {{.*}}void @bar({{.*}} @f2.x
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define void @f3()
+comment|// CHECK-LABEL: define {{.*}}void @f3()
 end_comment
 
 begin_function
@@ -196,7 +196,7 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @bar({{.*}} @f3.x
+comment|// CHECK: call {{.*}}void @bar({{.*}} @f3.x
 block|}
 end_function
 
@@ -211,7 +211,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECK-LABEL: define void @f4()
+comment|// CHECK-LABEL: define {{.*}}void @f4()
 end_comment
 
 begin_function
@@ -240,7 +240,7 @@ operator|&
 name|x
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @gaz({{.*}} @f4.x
+comment|// CHECK: call {{.*}}void @gaz({{.*}} @f4.x
 block|}
 end_function
 

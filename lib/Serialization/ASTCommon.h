@@ -114,6 +114,8 @@ block|,
 name|UPD_DECL_MARKED_OPENMP_THREADPRIVATE
 block|,
 name|UPD_DECL_EXPORTED
+block|,
+name|UPD_ADDED_ATTR_TO_RECORD
 block|}
 enum|;
 name|TypeIdx

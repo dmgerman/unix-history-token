@@ -86,7 +86,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-1: define internal void @[[HelperName]](%struct.anon
+comment|// CHECK-1: define internal {{.*}}void @[[HelperName]](%struct.anon
 end_comment
 
 begin_comment
@@ -154,7 +154,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-2: define internal void @[[HelperName]]
+comment|// CHECK-2: define internal {{.*}}void @[[HelperName]]
 end_comment
 
 begin_comment
@@ -300,7 +300,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-GLOBALS: define internal void @__captured_stmt[[HelperName]]
+comment|// CHECK-GLOBALS: define internal {{.*}}void @__captured_stmt[[HelperName]]
 end_comment
 
 begin_comment

@@ -20,7 +20,7 @@ comment|// RUN: %clang_cc1 -triple thumbv7-linux-gnueabihf -target-cpu cortex-a5
 end_comment
 
 begin_comment
-comment|// CHECK-VFP4: "target-features"="+vfp4,+neon"
+comment|// CHECK-VFP4: "target-features"="+neon,+vfp4"
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|// RUN: %clang_cc1 -triple thumbv7-linux-gnueabihf -target-cpu krait -em
 end_comment
 
 begin_comment
-comment|// CHECK-VFP4-DIV: "target-features"="+vfp4,+neon,+hwdiv,+hwdiv-arm"
+comment|// CHECK-VFP4-DIV: "target-features"="+hwdiv,+hwdiv-arm,+neon,+vfp4"
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|// RUN: %clang_cc1 -triple thumbv8-linux-gnueabihf -target-cpu cortex-a7
 end_comment
 
 begin_comment
-comment|// CHECK-BASIC-V8: "target-features"="+neon,+fp-armv8,+hwdiv,+crypto,+crc,+hwdiv-arm"
+comment|// CHECK-BASIC-V8: "target-features"="+crc,+crypto,+fp-armv8,+hwdiv,+hwdiv-arm,+neon"
 end_comment
 
 begin_comment

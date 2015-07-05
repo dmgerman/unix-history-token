@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -emit-llvm -o - %s -stack-protector 0 | FileCheck -ch
 end_comment
 
 begin_comment
-comment|// NOSSP: define void @test1(i8* %msg) #0 {
+comment|// NOSSP: define {{.*}}void @test1(i8* %msg) #0 {
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// RUN: %clang_cc1 -emit-llvm -o - %s -stack-protector 1 | FileCheck -ch
 end_comment
 
 begin_comment
-comment|// WITHSSP: define void @test1(i8* %msg) #0 {
+comment|// WITHSSP: define {{.*}}void @test1(i8* %msg) #0 {
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ comment|// RUN: %clang_cc1 -emit-llvm -o - %s -stack-protector 2 | FileCheck -ch
 end_comment
 
 begin_comment
-comment|// SSPSTRONG: define void @test1(i8* %msg) #0 {
+comment|// SSPSTRONG: define {{.*}}void @test1(i8* %msg) #0 {
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ comment|// RUN: %clang_cc1 -emit-llvm -o - %s -stack-protector 3 | FileCheck -ch
 end_comment
 
 begin_comment
-comment|// SSPREQ: define void @test1(i8* %msg) #0 {
+comment|// SSPREQ: define {{.*}}void @test1(i8* %msg) #0 {
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|// RUN: %clang_cc1 -emit-llvm -o - %s -fsanitize=safe-stack | FileCheck 
 end_comment
 
 begin_comment
-comment|// SAFESTACK: define void @test1(i8* %msg) #0 {
+comment|// SAFESTACK: define {{.*}}void @test1(i8* %msg) #0 {
 end_comment
 
 begin_typedef

@@ -159,5 +159,145 @@ begin_comment
 comment|// This test passes using env.exe from GnuWin32.
 end_comment
 
+begin_comment
+comment|// Check if clang set the correct deployment target from -sysroot
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: rm -rf %t/SDKs/iPhoneOS8.0.0.sdk
+end_comment
+
+begin_comment
+comment|// RUN: mkdir -p %t/SDKs/iPhoneOS8.0.0.sdk
+end_comment
+
+begin_comment
+comment|// RUN: env SDKROOT=%t/SDKs/iPhoneOS8.0.0.sdk %clang -target arm64-apple-darwin %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-IPHONE %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-IPHONE: clang
+end_comment
+
+begin_comment
+comment|// CHECK-IPHONE: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-IPHONE: "-triple" "arm64-apple-ios8.0.0"
+end_comment
+
+begin_comment
+comment|// CHECK-IPHONE: ld
+end_comment
+
+begin_comment
+comment|// CHECK-IPHONE: "-iphoneos_version_min" "8.0.0"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: rm -rf %t/SDKs/iPhoneSimulator8.0.sdk
+end_comment
+
+begin_comment
+comment|// RUN: mkdir -p %t/SDKs/iPhoneSimulator8.0.sdk
+end_comment
+
+begin_comment
+comment|// RUN: env SDKROOT=%t/SDKs/iPhoneSimulator8.0.sdk %clang -target x86_64-apple-darwin %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-SIMULATOR %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-SIMULATOR: clang
+end_comment
+
+begin_comment
+comment|// CHECK-SIMULATOR: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-SIMULATOR: "-triple" "x86_64-apple-ios8.0.0"
+end_comment
+
+begin_comment
+comment|// CHECK-SIMULATOR: ld
+end_comment
+
+begin_comment
+comment|// CHECK-SIMULATOR: "-ios_simulator_version_min" "8.0.0"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: rm -rf %t/SDKs/MacOSX10.10.0.sdk
+end_comment
+
+begin_comment
+comment|// RUN: mkdir -p %t/SDKs/MacOSX10.10.0.sdk
+end_comment
+
+begin_comment
+comment|// RUN: env SDKROOT=%t/SDKs/MacOSX10.10.0.sdk %clang -target x86_64-apple-darwin %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MACOSX %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-MACOSX: clang
+end_comment
+
+begin_comment
+comment|// CHECK-MACOSX: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-MACOSX: "-triple" "x86_64-apple-macosx10.10.0"
+end_comment
+
+begin_comment
+comment|// CHECK-MACOSX: ld
+end_comment
+
+begin_comment
+comment|// CHECK-MACOSX: "-macosx_version_min" "10.10.0"
+end_comment
+
 end_unit
 

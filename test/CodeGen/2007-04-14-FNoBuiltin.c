@@ -22,7 +22,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// CHECK: define void {{.*}}foo(
+comment|// CHECK: define {{.*}}void {{.*}}foo(
 end_comment
 
 begin_function

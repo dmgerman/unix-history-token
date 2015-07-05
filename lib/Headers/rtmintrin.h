@@ -98,7 +98,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("rtm")))
 end_define
 
@@ -107,7 +107,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_xbegin
 parameter_list|(
 name|void
@@ -124,7 +124,7 @@ begin_function
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_xend
 parameter_list|(
 name|void
@@ -149,7 +149,7 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 end_undef
 
 begin_endif

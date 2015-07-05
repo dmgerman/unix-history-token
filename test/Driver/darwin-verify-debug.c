@@ -88,7 +88,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-OUTPUT-NAME: "x86_64-apple-darwin10" - "darwin::Link", inputs: [{{.*}}], output: "foo"
+comment|// CHECK-OUTPUT-NAME: "x86_64-apple-darwin10" - "darwin::Linker", inputs: [{{.*}}], output: "foo"
 end_comment
 
 begin_comment

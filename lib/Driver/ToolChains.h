@@ -681,7 +681,7 @@ name|tools
 operator|::
 name|gcc
 operator|::
-name|Preprocess
+name|Preprocessor
 operator|>
 name|Preprocess
 block|;
@@ -694,7 +694,7 @@ name|tools
 operator|::
 name|gcc
 operator|::
-name|Compile
+name|Compiler
 operator|>
 name|Compile
 block|; }
@@ -845,7 +845,7 @@ argument_list|,
 argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
-block|{}
+block|{   }
 name|virtual
 name|void
 name|addMinVersionArgs
@@ -1413,10 +1413,10 @@ name|isIPhoneOSVersionLT
 argument_list|(
 argument|unsigned V0
 argument_list|,
-argument|unsigned V1=
+argument|unsigned V1 =
 literal|0
 argument_list|,
-argument|unsigned V2=
+argument|unsigned V2 =
 literal|0
 argument_list|)
 specifier|const
@@ -1447,10 +1447,10 @@ name|isMacosxVersionLT
 argument_list|(
 argument|unsigned V0
 argument_list|,
-argument|unsigned V1=
+argument|unsigned V1 =
 literal|0
 argument_list|,
-argument|unsigned V2=
+argument|unsigned V2 =
 literal|0
 argument_list|)
 specifier|const
@@ -1962,7 +1962,164 @@ name|buildLinker
 argument_list|()
 specifier|const
 name|override
-block|;  }
+block|; }
+decl_stmt|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|MinGW
+range|:
+name|public
+name|ToolChain
+block|{
+name|public
+operator|:
+name|MinGW
+argument_list|(
+specifier|const
+name|Driver
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+block|;
+name|bool
+name|IsIntegratedAssemblerDefault
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|IsUnwindTablesDefault
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|isPICDefault
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|isPIEDefault
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|isPICDefaultForced
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|UseSEHExceptions
+argument_list|()
+specifier|const
+block|;
+name|void
+name|AddClangSystemIncludeArgs
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|AddClangCXXStdlibIncludeArgs
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
+specifier|const
+name|override
+block|;
+name|protected
+operator|:
+name|Tool
+operator|*
+name|getTool
+argument_list|(
+argument|Action::ActionClass AC
+argument_list|)
+specifier|const
+name|override
+block|;
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
+specifier|const
+name|override
+block|;
+name|Tool
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+name|override
+block|;
+name|private
+operator|:
+name|std
+operator|::
+name|string
+name|Base
+block|;
+name|std
+operator|::
+name|string
+name|GccLibDir
+block|;
+name|std
+operator|::
+name|string
+name|Arch
+block|;
+name|mutable
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|tools
+operator|::
+name|gcc
+operator|::
+name|Preprocessor
+operator|>
+name|Preprocessor
+block|;
+name|mutable
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|tools
+operator|::
+name|gcc
+operator|::
+name|Compiler
+operator|>
+name|Compiler
+block|; }
 decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY

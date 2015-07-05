@@ -12,7 +12,23 @@ comment|// RUN: %clang_cc1 -faltivec -target-feature +power8-vector -triple powe
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -faltivec -triple powerpc64-unknown-unknown -emit-llvm %s -o - 2>&1 | FileCheck %s -check-prefix=CHECK-PPC
+comment|// RUN: not %clang_cc1 -faltivec -target-feature +vsx -triple powerpc64-unknown-unknown -emit-llvm %s -o - 2>&1 | FileCheck %s -check-prefix=CHECK-PPC
+end_comment
+
+begin_comment
+comment|// Added -target-feature +vsx above to avoid errors about "vector double" and to
+end_comment
+
+begin_comment
+comment|// generate the correct errors for functions that are only overloaded with VSX
+end_comment
+
+begin_comment
+comment|// (vec_cmpge, vec_cmple). Without this option, there is only one overload so
+end_comment
+
+begin_comment
+comment|// it is selected.
 end_comment
 
 begin_decl_stmt
@@ -202,6 +218,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|vector
+name|double
+name|vda
+init|=
+block|{
+literal|1.e-11
+block|,
+operator|-
+literal|132.23e10
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|res_i
 decl_stmt|;
@@ -273,6 +303,13 @@ name|res_vull
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|vector
+name|double
+name|res_vd
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|// CHECK-LABEL: define void @test1
 end_comment
@@ -282,6 +319,124 @@ name|void
 name|test1
 parameter_list|()
 block|{
+comment|/* vec_abs */
+name|res_vsll
+operator|=
+name|vec_abs
+argument_list|(
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<2 x i64> @llvm.ppc.altivec.vmaxsd(<2 x i64> %{{[0-9]*}},<2 x i64>
+comment|// CHECK-LE: call<2 x i64> @llvm.ppc.altivec.vmaxsd(<2 x i64> %{{[0-9]*}},<2 x i64>
+comment|// CHECK-PPC: error: call to 'vec_abs' is ambiguous
+name|res_vd
+operator|=
+name|vec_abs
+argument_list|(
+name|vda
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<2 x i64><i64 9223372036854775807, i64 9223372036854775807>,<2 x i64>*
+comment|// CHECK: and<2 x i64>
+comment|// CHECK-LE: store<2 x i64><i64 9223372036854775807, i64 9223372036854775807>,<2 x i64>*
+comment|// CHECK-LE: and<2 x i64>
+comment|// CHECK-PPC: error: call to 'vec_abs' is ambiguous
+comment|/* vec_add */
+name|res_vsll
+operator|=
+name|vec_add
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add<2 x i64>
+comment|// CHECK-LE: add<2 x i64>
+comment|// CHECK-PPC: error: call to 'vec_add' is ambiguous
+name|res_vull
+operator|=
+name|vec_add
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add<2 x i64>
+comment|// CHECK-LE: add<2 x i64>
+comment|// CHECK-PPC: error: call to 'vec_add' is ambiguous
+comment|/* vec_mergee */
+name|res_vbi
+operator|=
+name|vec_mergee
+argument_list|(
+name|vbi
+argument_list|,
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vi
+operator|=
+name|vec_mergee
+argument_list|(
+name|vi
+argument_list|,
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vui
+operator|=
+name|vec_mergee
+argument_list|(
+name|vui
+argument_list|,
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-PPC: warning: implicit declaration of function 'vec_mergee'
+comment|/* vec_mergeo */
+name|res_vbi
+operator|=
+name|vec_mergeo
+argument_list|(
+name|vbi
+argument_list|,
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vi
+operator|=
+name|vec_mergeo
+argument_list|(
+name|vi
+argument_list|,
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vui
+operator|=
+name|vec_mergeo
+argument_list|(
+name|vui
+argument_list|,
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-PPC: warning: implicit declaration of function 'vec_mergeo'
 comment|/* vec_cmpeq */
 name|res_vbll
 operator|=
@@ -307,6 +462,56 @@ expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequd
 comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequd
 comment|// CHECK-PPC: error: call to 'vec_cmpeq' is ambiguous
+comment|/* vec_cmpge */
+name|res_vbll
+operator|=
+name|vec_cmpge
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsd
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsd
+comment|// CHECK-PPC: error: call to 'vec_cmpge' is ambiguous
+name|res_vbll
+operator|=
+name|vec_cmpge
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtud
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtud
+comment|// CHECK-PPC: error: call to 'vec_cmpge' is ambiguous
+comment|/* vec_cmple */
+name|res_vbll
+operator|=
+name|vec_cmple
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsd
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsd
+comment|// CHECK-PPC: error: call to 'vec_cmple' is ambiguous
+name|res_vbll
+operator|=
+name|vec_cmple
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtud
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtud
+comment|// CHECK-PPC: error: call to 'vec_cmple' is ambiguous
 comment|/* vec_cmpgt */
 name|res_vbll
 operator|=
@@ -332,6 +537,31 @@ expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtud
 comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtud
 comment|// CHECK-PPC: error: call to 'vec_cmpgt' is ambiguous
+comment|/* vec_cmplt */
+name|res_vbll
+operator|=
+name|vec_cmplt
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<2 x i64> @llvm.ppc.altivec.vcmpgtsd(<2 x i64> %{{[0-9]*}},<2 x i64> %{{[0-9]*}})
+comment|// CHECK-LE: call<2 x i64> @llvm.ppc.altivec.vcmpgtsd(<2 x i64> %{{[0-9]*}},<2 x i64> %{{[0-9]*}})
+comment|// CHECK-PPC: error: call to 'vec_cmplt' is ambiguous
+name|res_vbll
+operator|=
+name|vec_cmplt
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<2 x i64> @llvm.ppc.altivec.vcmpgtud(<2 x i64> %{{[0-9]*}},<2 x i64> %{{[0-9]*}})
+comment|// CHECK-LE: call<2 x i64> @llvm.ppc.altivec.vcmpgtud(<2 x i64> %{{[0-9]*}},<2 x i64> %{{[0-9]*}})
+comment|// CHECK-PPC: error: call to 'vec_cmplt' is ambiguous
 comment|/* ----------------------- predicates --------------------------- */
 comment|/* vec_all_eq */
 name|res_i

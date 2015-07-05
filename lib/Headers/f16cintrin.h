@@ -65,7 +65,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("f16c")))
 end_define
 
@@ -97,7 +97,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_cvtph_ps
 parameter_list|(
 name|__m128i
@@ -123,7 +123,7 @@ begin_function
 specifier|static
 name|__inline
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtph_ps
 parameter_list|(
 name|__m128i
@@ -148,7 +148,7 @@ end_function
 begin_undef
 undef|#
 directive|undef
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 end_undef
 
 begin_endif

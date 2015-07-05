@@ -91,7 +91,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__))
 end_define
 
@@ -1075,23 +1075,6 @@ name|__cdecl
 name|_enable
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-name|void
-name|__cdecl
-name|_fxrstor
-parameter_list|(
-name|void
-specifier|const
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-name|__cdecl
-name|_fxsave
-parameter_list|(
-name|void
-modifier|*
 parameter_list|)
 function_decl|;
 name|long
@@ -2355,23 +2338,6 @@ name|unsigned
 name|__int64
 parameter_list|)
 function_decl|;
-name|void
-name|__cdecl
-name|_fxrstor64
-parameter_list|(
-name|void
-specifier|const
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-name|__cdecl
-name|_fxsave64
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
 name|long
 name|_InterlockedAnd_np
 parameter_list|(
@@ -2856,7 +2822,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|__int64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_umul128
 parameter_list|(
 name|unsigned
@@ -2904,7 +2870,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|__int64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__umulh
 parameter_list|(
 name|unsigned
@@ -2980,7 +2946,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_rotl8
 parameter_list|(
 name|unsigned
@@ -3022,7 +2988,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_rotr8
 parameter_list|(
 name|unsigned
@@ -3064,7 +3030,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|short
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_rotl16
 parameter_list|(
 name|unsigned
@@ -3106,7 +3072,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|short
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_rotr16
 parameter_list|(
 name|unsigned
@@ -3148,7 +3114,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_rotl
 parameter_list|(
 name|unsigned
@@ -3189,7 +3155,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_rotr
 parameter_list|(
 name|unsigned
@@ -3230,7 +3196,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_lrotl
 parameter_list|(
 name|unsigned
@@ -3271,7 +3237,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_lrotr
 parameter_list|(
 name|unsigned
@@ -3312,7 +3278,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|__int64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_rotl64
 parameter_list|(
 name|unsigned
@@ -3353,7 +3319,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|__int64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_rotr64
 parameter_list|(
 name|unsigned
@@ -3395,7 +3361,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_BitScanForward
 parameter_list|(
 name|unsigned
@@ -3432,7 +3398,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_BitScanReverse
 parameter_list|(
 name|unsigned
@@ -3471,7 +3437,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|short
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__popcnt16
 parameter_list|(
 name|unsigned
@@ -3493,7 +3459,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__popcnt
 parameter_list|(
 name|unsigned
@@ -3512,7 +3478,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_bittest
 parameter_list|(
 name|long
@@ -3539,7 +3505,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_bittestandcomplement
 parameter_list|(
 name|long
@@ -3583,7 +3549,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_bittestandreset
 parameter_list|(
 name|long
@@ -3628,7 +3594,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_bittestandset
 parameter_list|(
 name|long
@@ -3683,7 +3649,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_interlockedbittestandset
 parameter_list|(
 name|long
@@ -3713,7 +3679,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_BitScanForward64
 parameter_list|(
 name|unsigned
@@ -3750,7 +3716,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_BitScanReverse64
 parameter_list|(
 name|unsigned
@@ -3789,7 +3755,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|__int64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__popcnt64
 parameter_list|(
 name|unsigned
@@ -3808,7 +3774,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_bittest64
 parameter_list|(
 name|__int64
@@ -3835,7 +3801,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_bittestandcomplement64
 parameter_list|(
 name|__int64
@@ -3879,7 +3845,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_bittestandreset64
 parameter_list|(
 name|__int64
@@ -3924,7 +3890,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_bittestandset64
 parameter_list|(
 name|__int64
@@ -3968,7 +3934,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_interlockedbittestandset64
 parameter_list|(
 name|__int64
@@ -3995,7 +3961,7 @@ comment|/*----------------------------------------------------------------------
 specifier|static
 name|__inline__
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedExchangeAdd8
 parameter_list|(
 name|char
@@ -4023,7 +3989,7 @@ block|}
 specifier|static
 name|__inline__
 name|short
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedExchangeAdd16
 parameter_list|(
 name|short
@@ -4054,7 +4020,7 @@ name|__x86_64__
 specifier|static
 name|__inline__
 name|__int64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedExchangeAdd64
 parameter_list|(
 name|__int64
@@ -4085,7 +4051,7 @@ comment|/*----------------------------------------------------------------------
 specifier|static
 name|__inline__
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedExchangeSub8
 parameter_list|(
 name|char
@@ -4113,7 +4079,7 @@ block|}
 specifier|static
 name|__inline__
 name|short
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedExchangeSub16
 parameter_list|(
 name|short
@@ -4141,7 +4107,7 @@ block|}
 specifier|static
 name|__inline__
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedExchangeSub
 parameter_list|(
 name|long
@@ -4172,7 +4138,7 @@ name|__x86_64__
 specifier|static
 name|__inline__
 name|__int64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedExchangeSub64
 parameter_list|(
 name|__int64
@@ -4203,7 +4169,7 @@ comment|/*----------------------------------------------------------------------
 specifier|static
 name|__inline__
 name|short
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedIncrement16
 parameter_list|(
 name|short
@@ -4229,7 +4195,7 @@ name|__x86_64__
 specifier|static
 name|__inline__
 name|__int64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedIncrement64
 parameter_list|(
 name|__int64
@@ -4255,7 +4221,7 @@ comment|/*----------------------------------------------------------------------
 specifier|static
 name|__inline__
 name|short
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedDecrement16
 parameter_list|(
 name|short
@@ -4281,7 +4247,7 @@ name|__x86_64__
 specifier|static
 name|__inline__
 name|__int64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedDecrement64
 parameter_list|(
 name|__int64
@@ -4307,7 +4273,7 @@ comment|/*----------------------------------------------------------------------
 specifier|static
 name|__inline__
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedAnd8
 parameter_list|(
 name|char
@@ -4333,7 +4299,7 @@ block|}
 specifier|static
 name|__inline__
 name|short
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedAnd16
 parameter_list|(
 name|short
@@ -4359,7 +4325,7 @@ block|}
 specifier|static
 name|__inline__
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedAnd
 parameter_list|(
 name|long
@@ -4388,7 +4354,7 @@ name|__x86_64__
 specifier|static
 name|__inline__
 name|__int64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedAnd64
 parameter_list|(
 name|__int64
@@ -4417,7 +4383,7 @@ comment|/*----------------------------------------------------------------------
 specifier|static
 name|__inline__
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedOr8
 parameter_list|(
 name|char
@@ -4443,7 +4409,7 @@ block|}
 specifier|static
 name|__inline__
 name|short
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedOr16
 parameter_list|(
 name|short
@@ -4469,7 +4435,7 @@ block|}
 specifier|static
 name|__inline__
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedOr
 parameter_list|(
 name|long
@@ -4498,7 +4464,7 @@ name|__x86_64__
 specifier|static
 name|__inline__
 name|__int64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedOr64
 parameter_list|(
 name|__int64
@@ -4527,7 +4493,7 @@ comment|/*----------------------------------------------------------------------
 specifier|static
 name|__inline__
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedXor8
 parameter_list|(
 name|char
@@ -4553,7 +4519,7 @@ block|}
 specifier|static
 name|__inline__
 name|short
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedXor16
 parameter_list|(
 name|short
@@ -4579,7 +4545,7 @@ block|}
 specifier|static
 name|__inline__
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedXor
 parameter_list|(
 name|long
@@ -4608,7 +4574,7 @@ name|__x86_64__
 specifier|static
 name|__inline__
 name|__int64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedXor64
 parameter_list|(
 name|__int64
@@ -4637,7 +4603,7 @@ comment|/*----------------------------------------------------------------------
 specifier|static
 name|__inline__
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedExchange8
 parameter_list|(
 name|char
@@ -4669,7 +4635,7 @@ block|}
 specifier|static
 name|__inline__
 name|short
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedExchange16
 parameter_list|(
 name|short
@@ -4704,7 +4670,7 @@ name|__x86_64__
 specifier|static
 name|__inline__
 name|__int64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedExchange64
 parameter_list|(
 name|__int64
@@ -4739,7 +4705,7 @@ comment|/*----------------------------------------------------------------------
 specifier|static
 name|__inline__
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedCompareExchange8
 parameter_list|(
 name|char
@@ -4778,7 +4744,7 @@ block|}
 specifier|static
 name|__inline__
 name|short
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedCompareExchange16
 parameter_list|(
 name|short
@@ -4817,7 +4783,7 @@ block|}
 specifier|static
 name|__inline__
 name|__int64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_InterlockedCompareExchange64
 parameter_list|(
 name|__int64
@@ -4868,7 +4834,7 @@ argument_list|)
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__attribute__
 argument_list|(
 operator|(
@@ -4890,7 +4856,7 @@ block|}
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__attribute__
 argument_list|(
 operator|(
@@ -4912,7 +4878,7 @@ block|}
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__attribute__
 argument_list|(
 operator|(
@@ -4939,7 +4905,7 @@ name|__x86_64__
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__faststorefence
 parameter_list|(
 name|void
@@ -4971,7 +4937,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__readfsbyte
 parameter_list|(
 name|unsigned
@@ -4995,7 +4961,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|__int64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__readfsqword
 parameter_list|(
 name|unsigned
@@ -5019,7 +4985,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|short
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__readfsword
 parameter_list|(
 name|unsigned
@@ -5048,7 +5014,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|char
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__readgsbyte
 parameter_list|(
 name|unsigned
@@ -5072,7 +5038,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__readgsdword
 parameter_list|(
 name|unsigned
@@ -5096,7 +5062,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|__int64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__readgsqword
 parameter_list|(
 name|unsigned
@@ -5120,7 +5086,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|short
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__readgsword
 parameter_list|(
 name|unsigned
@@ -5160,7 +5126,7 @@ argument_list|)
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__movsb
 parameter_list|(
 name|unsigned
@@ -5183,7 +5149,7 @@ block|}
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__movsd
 parameter_list|(
 name|unsigned
@@ -5206,7 +5172,7 @@ block|}
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__movsw
 parameter_list|(
 name|unsigned
@@ -5229,7 +5195,7 @@ block|}
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__stosb
 parameter_list|(
 name|unsigned
@@ -5250,7 +5216,7 @@ block|}
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__stosd
 parameter_list|(
 name|unsigned
@@ -5271,7 +5237,7 @@ block|}
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__stosw
 parameter_list|(
 name|unsigned
@@ -5297,7 +5263,7 @@ name|__x86_64__
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__movsq
 parameter_list|(
 name|unsigned
@@ -5322,7 +5288,7 @@ block|}
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__stosq
 parameter_list|(
 name|unsigned
@@ -5347,7 +5313,7 @@ specifier|static
 name|__inline__
 name|void
 modifier|*
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_AddressOfReturnAddress
 parameter_list|(
 name|void
@@ -5380,7 +5346,7 @@ specifier|static
 name|__inline__
 name|void
 modifier|*
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_ReturnAddress
 parameter_list|(
 name|void
@@ -5407,7 +5373,7 @@ argument_list|)
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__cpuid
 parameter_list|(
 name|int
@@ -5425,7 +5391,7 @@ block|}
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__cpuidex
 parameter_list|(
 name|int
@@ -5448,7 +5414,7 @@ name|__inline__
 name|unsigned
 name|__int64
 name|__cdecl
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_xgetbv
 parameter_list|(
 name|unsigned
@@ -5480,7 +5446,7 @@ block|}
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__halt
 parameter_list|(
 name|void
@@ -5508,7 +5474,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|__int64
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__readmsr
 parameter_list|(
 name|unsigned
@@ -5555,7 +5521,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__readcr3
 parameter_list|(
 name|void
@@ -5575,7 +5541,7 @@ block|}
 specifier|static
 name|__inline__
 name|void
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__writecr3
 parameter_list|(
 name|unsigned
@@ -5601,7 +5567,7 @@ end_endif
 begin_undef
 undef|#
 directive|undef
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 end_undef
 
 begin_endif

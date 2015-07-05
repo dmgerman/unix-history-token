@@ -20,7 +20,7 @@ name|f2
 parameter_list|(
 name|int
 modifier|*
-name|__nonnull
+name|_Nonnull
 parameter_list|)
 function_decl|;
 end_function_decl

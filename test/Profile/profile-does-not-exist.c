@@ -4,7 +4,7 @@ comment|// RUN: not %clang_cc1 -emit-llvm %s -o - -fprofile-instr-use=%t.nonexis
 end_comment
 
 begin_comment
-comment|// CHECK: error: Could not read profile:
+comment|// CHECK: error: Could not read profile {{.*}}.nonexistent.profdata:
 end_comment
 
 begin_comment

@@ -39,7 +39,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("avx512dq")))
 end_define
 
@@ -47,7 +47,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_mullo_epi64
 parameter_list|(
 name|__m512i
@@ -80,7 +80,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_mask_mullo_epi64
 parameter_list|(
 name|__m512i
@@ -130,7 +130,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512i
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_maskz_mullo_epi64
 parameter_list|(
 name|__mmask8
@@ -178,7 +178,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_xor_pd
 parameter_list|(
 name|__m512d
@@ -211,7 +211,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_mask_xor_pd
 parameter_list|(
 name|__m512d
@@ -261,7 +261,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_maskz_xor_pd
 parameter_list|(
 name|__mmask8
@@ -309,7 +309,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_xor_ps
 parameter_list|(
 name|__m512
@@ -342,7 +342,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_mask_xor_ps
 parameter_list|(
 name|__m512
@@ -392,7 +392,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_maskz_xor_ps
 parameter_list|(
 name|__mmask16
@@ -440,7 +440,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_or_pd
 parameter_list|(
 name|__m512d
@@ -473,7 +473,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_mask_or_pd
 parameter_list|(
 name|__m512d
@@ -523,7 +523,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_maskz_or_pd
 parameter_list|(
 name|__mmask8
@@ -571,7 +571,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_or_ps
 parameter_list|(
 name|__m512
@@ -604,7 +604,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_mask_or_ps
 parameter_list|(
 name|__m512
@@ -654,7 +654,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_maskz_or_ps
 parameter_list|(
 name|__mmask16
@@ -702,7 +702,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_and_pd
 parameter_list|(
 name|__m512d
@@ -735,7 +735,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_mask_and_pd
 parameter_list|(
 name|__m512d
@@ -785,7 +785,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_maskz_and_pd
 parameter_list|(
 name|__mmask8
@@ -833,7 +833,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_and_ps
 parameter_list|(
 name|__m512
@@ -866,7 +866,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_mask_and_ps
 parameter_list|(
 name|__m512
@@ -916,7 +916,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_maskz_and_ps
 parameter_list|(
 name|__mmask16
@@ -964,7 +964,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_andnot_pd
 parameter_list|(
 name|__m512d
@@ -1010,7 +1010,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_mask_andnot_pd
 parameter_list|(
 name|__m512d
@@ -1060,7 +1060,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_maskz_andnot_pd
 parameter_list|(
 name|__mmask8
@@ -1108,7 +1108,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_andnot_ps
 parameter_list|(
 name|__m512
@@ -1154,7 +1154,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_mask_andnot_ps
 parameter_list|(
 name|__m512
@@ -1204,7 +1204,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m512
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm512_maskz_andnot_ps
 parameter_list|(
 name|__mmask16
@@ -1251,7 +1251,7 @@ end_function
 begin_undef
 undef|#
 directive|undef
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 end_undef
 
 begin_endif

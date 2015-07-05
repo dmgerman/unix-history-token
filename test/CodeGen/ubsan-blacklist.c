@@ -54,9 +54,9 @@ name|unsigned
 name|hash
 parameter_list|()
 block|{
-comment|// DEFAULT: call void @__ubsan
-comment|// FUNC-NOT: call void @__ubsan
-comment|// FILE-NOT: call void @__ubsan
+comment|// DEFAULT: call {{.*}}void @__ubsan
+comment|// FUNC-NOT: call {{.*}}void @__ubsan
+comment|// FILE-NOT: call {{.*}}void @__ubsan
 return|return
 name|i
 operator|*
@@ -82,9 +82,9 @@ name|unsigned
 name|add
 parameter_list|()
 block|{
-comment|// DEFAULT: call void @__ubsan
-comment|// FUNC: call void @__ubsan
-comment|// FILE-NOT: call void @__ubsan
+comment|// DEFAULT: call {{.*}}void @__ubsan
+comment|// FUNC: call {{.*}}void @__ubsan
+comment|// FILE-NOT: call {{.*}}void @__ubsan
 return|return
 name|i
 operator|+

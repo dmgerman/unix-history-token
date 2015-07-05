@@ -25,7 +25,7 @@ typedef|(4)));
 end_typedef
 
 begin_comment
-comment|// CHECK-LABEL: define void @clang_shufflevector_v_v(
+comment|// CHECK-LABEL: define {{.*}}void @clang_shufflevector_v_v(
 end_comment
 
 begin_function
@@ -75,7 +75,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define void @clang_shufflevector_v_v_c(
+comment|// CHECK-LABEL: define {{.*}}void @clang_shufflevector_v_v_c(
 end_comment
 
 begin_function
@@ -117,7 +117,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define void @clang_shufflevector_v_v_undef(
+comment|// CHECK-LABEL: define {{.*}}void @clang_shufflevector_v_v_undef(
 end_comment
 
 begin_function

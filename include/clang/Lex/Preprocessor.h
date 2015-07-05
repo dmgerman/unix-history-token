@@ -1297,6 +1297,7 @@ operator|->
 name|hasMacroDefinition
 argument_list|()
 operator|||
+operator|(
 operator|!
 name|PP
 operator|.
@@ -1304,6 +1305,15 @@ name|getLangOpts
 argument_list|()
 operator|.
 name|Modules
+operator|&&
+operator|!
+name|PP
+operator|.
+name|getLangOpts
+argument_list|()
+operator|.
+name|ModulesLocalVisibility
+operator|)
 operator|||
 operator|!
 name|PP
@@ -1669,9 +1679,17 @@ argument_list|)
 specifier|const
 block|{
 comment|// FIXME: Incorporate module macros into the result of this.
-return|return
+if|if
+condition|(
+name|auto
+operator|*
+name|Latest
+operator|=
 name|getLatest
 argument_list|()
+condition|)
+return|return
+name|Latest
 operator|->
 name|findDirectiveAtLoc
 argument_list|(
@@ -1680,21 +1698,28 @@ argument_list|,
 name|SourceMgr
 argument_list|)
 return|;
-block|}
 end_expr_stmt
 
-begin_function
-name|void
+begin_return
+return|return
+name|MacroDirective
+operator|::
+name|DefInfo
+argument_list|()
+return|;
+end_return
+
+begin_macro
+unit|}      void
 name|overrideActiveModuleMacros
-parameter_list|(
-name|Preprocessor
-modifier|&
-name|PP
-parameter_list|,
-name|IdentifierInfo
-modifier|*
-name|II
-parameter_list|)
+argument_list|(
+argument|Preprocessor&PP
+argument_list|,
+argument|IdentifierInfo *II
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -1753,7 +1778,7 @@ name|false
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 begin_expr_stmt
 name|ArrayRef

@@ -120,14 +120,16 @@ block|,
 name|ClassId_NSCountedSet
 block|,
 name|ClassId_NSMutableOrderedSet
-block|,   }
+block|,
+name|ClassId_NSValue
+block|}
 enum|;
 specifier|static
 specifier|const
 name|unsigned
 name|NumClassIds
 init|=
-literal|10
+literal|11
 decl_stmt|;
 enum|enum
 name|NSStringMethodKind

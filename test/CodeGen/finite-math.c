@@ -28,7 +28,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define void @foo()
+comment|// CHECK-LABEL: define {{.*}}void @foo()
 comment|// FINITE: fadd nnan ninf
 comment|// NSZ: fadd nsz
 comment|// RECIP: fadd arcp

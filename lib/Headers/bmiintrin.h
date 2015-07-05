@@ -111,7 +111,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("bmi")))
 end_define
 
@@ -120,7 +120,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|short
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__tzcnt_u16
 parameter_list|(
 name|unsigned
@@ -146,7 +146,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__andn_u32
 parameter_list|(
 name|unsigned
@@ -176,7 +176,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__bextr_u32
 parameter_list|(
 name|unsigned
@@ -208,7 +208,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_bextr_u32
 parameter_list|(
 name|unsigned
@@ -256,7 +256,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__blsi_u32
 parameter_list|(
 name|unsigned
@@ -278,7 +278,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__blsmsk_u32
 parameter_list|(
 name|unsigned
@@ -303,7 +303,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__blsr_u32
 parameter_list|(
 name|unsigned
@@ -328,7 +328,7 @@ specifier|static
 name|__inline__
 name|unsigned
 name|int
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__tzcnt_u32
 parameter_list|(
 name|unsigned
@@ -417,7 +417,7 @@ name|__inline__
 name|unsigned
 name|long
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__andn_u64
 parameter_list|(
 name|unsigned
@@ -450,7 +450,7 @@ name|__inline__
 name|unsigned
 name|long
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__bextr_u64
 parameter_list|(
 name|unsigned
@@ -485,7 +485,7 @@ name|__inline__
 name|unsigned
 name|long
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_bextr_u64
 parameter_list|(
 name|unsigned
@@ -535,7 +535,7 @@ name|__inline__
 name|unsigned
 name|long
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__blsi_u64
 parameter_list|(
 name|unsigned
@@ -559,7 +559,7 @@ name|__inline__
 name|unsigned
 name|long
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__blsmsk_u64
 parameter_list|(
 name|unsigned
@@ -586,7 +586,7 @@ name|__inline__
 name|unsigned
 name|long
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__blsr_u64
 parameter_list|(
 name|unsigned
@@ -613,7 +613,7 @@ name|__inline__
 name|unsigned
 name|long
 name|long
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|__tzcnt_u64
 parameter_list|(
 name|unsigned
@@ -647,7 +647,7 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 end_undef
 
 begin_endif

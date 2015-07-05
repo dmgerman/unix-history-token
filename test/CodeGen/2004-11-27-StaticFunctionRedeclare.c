@@ -20,7 +20,7 @@ comment|// This is PR244
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL: define void @bar(
+comment|// CHECK-LABEL: define {{.*}}void @bar(
 end_comment
 
 begin_comment

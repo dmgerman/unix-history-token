@@ -7,6 +7,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -faltivec -target-feature +vsx -triple powerpc64-unknown-unknown -emit-llvm %s -o - | FileCheck %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -faltivec -target-feature +vsx -triple powerpc64le-unknown-unknown -emit-llvm %s -o - | FileCheck %s
+end_comment
+
 begin_decl_stmt
 name|vector
 name|unsigned
@@ -207,6 +211,14 @@ end_decl_stmt
 begin_decl_stmt
 name|vector
 name|bool
+name|int
+name|res_vbi
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|bool
 name|long
 name|long
 name|res_vbll
@@ -239,10 +251,231 @@ end_decl_stmt
 
 begin_function
 name|void
+name|dummy
+parameter_list|()
+block|{ }
+end_function
+
+begin_function
+name|void
 name|test1
 parameter_list|()
 block|{
 comment|// CHECK-LABEL: define void @test1
+name|res_vd
+operator|=
+name|vec_add
+argument_list|(
+name|vd
+argument_list|,
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: fadd<2 x double>
+name|res_vd
+operator|=
+name|vec_and
+argument_list|(
+name|vbll
+argument_list|,
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<2 x i64>
+comment|// CHECK: bitcast<2 x i64> %{{[0-9]*}} to<2 x double>
+name|res_vd
+operator|=
+name|vec_and
+argument_list|(
+name|vd
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<2 x i64>
+comment|// CHECK: bitcast<2 x i64> %{{[0-9]*}} to<2 x double>
+name|res_vd
+operator|=
+name|vec_and
+argument_list|(
+name|vd
+argument_list|,
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<2 x i64>
+comment|// CHECK: bitcast<2 x i64> %{{[0-9]*}} to<2 x double>
+name|dummy
+argument_list|()
+expr_stmt|;
+comment|// CHECK: call void @dummy()
+name|res_vd
+operator|=
+name|vec_andc
+argument_list|(
+name|vbll
+argument_list|,
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: bitcast<2 x double> %{{[0-9]*}} to<2 x i64>
+comment|// CHECK: xor<2 x i64> %{{[0-9]*}},<i64 -1, i64 -1>
+comment|// CHECK: and<2 x i64>
+comment|// CHECK: bitcast<2 x i64> %{{[0-9]*}} to<2 x double>
+name|dummy
+argument_list|()
+expr_stmt|;
+comment|// CHECK: call void @dummy()
+name|res_vd
+operator|=
+name|vec_andc
+argument_list|(
+name|vd
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: bitcast<2 x double> %{{[0-9]*}} to<2 x i64>
+comment|// CHECK: xor<2 x i64> %{{[0-9]*}},<i64 -1, i64 -1>
+comment|// CHECK: and<2 x i64>
+comment|// CHECK: bitcast<2 x i64> %{{[0-9]*}} to<2 x double>
+name|dummy
+argument_list|()
+expr_stmt|;
+comment|// CHECK: call void @dummy()
+name|res_vd
+operator|=
+name|vec_andc
+argument_list|(
+name|vd
+argument_list|,
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: bitcast<2 x double> %{{[0-9]*}} to<2 x i64>
+comment|// CHECK: xor<2 x i64> %{{[0-9]*}},<i64 -1, i64 -1>
+comment|// CHECK: and<2 x i64>
+comment|// CHECK: bitcast<2 x i64> %{{[0-9]*}} to<2 x double>
+name|dummy
+argument_list|()
+expr_stmt|;
+comment|// CHECK: call void @dummy()
+name|res_vd
+operator|=
+name|vec_ceil
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<2 x double> @llvm.ceil.v2f64(<2 x double> %{{[0-9]*}})
+name|res_vf
+operator|=
+name|vec_ceil
+argument_list|(
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x float> @llvm.ceil.v4f32(<4 x float> %{{[0-9]*}})
+name|res_vbll
+operator|=
+name|vec_cmpeq
+argument_list|(
+name|vd
+argument_list|,
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<2 x i64> @llvm.ppc.vsx.xvcmpeqdp(<2 x double> %{{[0-9]*}},<2 x double> %{{[0-9]*}})
+name|res_vbi
+operator|=
+name|vec_cmpeq
+argument_list|(
+name|vf
+argument_list|,
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x i32> @llvm.ppc.vsx.xvcmpeqsp(<4 x float> %{{[0-9]*}},<4 x float> %{{[0-9]*}})
+name|res_vbll
+operator|=
+name|vec_cmpge
+argument_list|(
+name|vd
+argument_list|,
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<2 x i64> @llvm.ppc.vsx.xvcmpgedp(<2 x double> %{{[0-9]*}},<2 x double> %{{[0-9]*}})
+name|res_vbi
+operator|=
+name|vec_cmpge
+argument_list|(
+name|vf
+argument_list|,
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x i32> @llvm.ppc.vsx.xvcmpgesp(<4 x float> %{{[0-9]*}},<4 x float> %{{[0-9]*}})
+name|res_vbll
+operator|=
+name|vec_cmpgt
+argument_list|(
+name|vd
+argument_list|,
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<2 x i64> @llvm.ppc.vsx.xvcmpgtdp(<2 x double> %{{[0-9]*}},<2 x double> %{{[0-9]*}})
+name|res_vbi
+operator|=
+name|vec_cmpgt
+argument_list|(
+name|vf
+argument_list|,
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x i32> @llvm.ppc.vsx.xvcmpgtsp(<4 x float> %{{[0-9]*}},<4 x float> %{{[0-9]*}})
+name|res_vbll
+operator|=
+name|vec_cmple
+argument_list|(
+name|vd
+argument_list|,
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<2 x i64> @llvm.ppc.vsx.xvcmpgedp(<2 x double> %{{[0-9]*}},<2 x double> %{{[0-9]*}})
+name|res_vbi
+operator|=
+name|vec_cmple
+argument_list|(
+name|vf
+argument_list|,
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x i32> @llvm.ppc.vsx.xvcmpgesp(<4 x float> %{{[0-9]*}},<4 x float> %{{[0-9]*}})
+name|res_vbll
+operator|=
+name|vec_cmplt
+argument_list|(
+name|vd
+argument_list|,
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<2 x i64> @llvm.ppc.vsx.xvcmpgtdp(<2 x double> %{{[0-9]*}},<2 x double> %{{[0-9]*}})
+name|res_vbi
+operator|=
+name|vec_cmplt
+argument_list|(
+name|vf
+argument_list|,
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x i32> @llvm.ppc.vsx.xvcmpgtsp(<4 x float> %{{[0-9]*}},<4 x float> %{{[0-9]*}})
 comment|/* vec_div */
 name|res_vf
 operator|=

@@ -12,7 +12,7 @@ modifier|*
 name|iptr
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define void @pr8880_cg_1(
+comment|// CHECK-LABEL: define {{.*}}void @pr8880_cg_1(
 name|int
 name|i
 decl_stmt|,
@@ -111,7 +111,7 @@ end_macro
 
 begin_block
 block|{
-comment|// CHECK-LABEL: define void @pr8880_cg_2(
+comment|// CHECK-LABEL: define {{.*}}void @pr8880_cg_2(
 name|int
 name|i
 decl_stmt|,
@@ -210,7 +210,7 @@ end_macro
 
 begin_block
 block|{
-comment|// CHECK-LABEL: define void @pr8880_cg_3(
+comment|// CHECK-LABEL: define {{.*}}void @pr8880_cg_3(
 name|int
 name|i
 decl_stmt|,
@@ -312,7 +312,7 @@ end_macro
 
 begin_block
 block|{
-comment|// CHECK-LABEL: define void @pr8880_cg_4(
+comment|// CHECK-LABEL: define {{.*}}void @pr8880_cg_4(
 name|int
 name|i
 decl_stmt|,
@@ -416,7 +416,7 @@ end_macro
 
 begin_block
 block|{
-comment|// CHECK-LABEL: define void @pr8880_cg_5(
+comment|// CHECK-LABEL: define {{.*}}void @pr8880_cg_5(
 name|int
 name|y
 init|=
@@ -495,7 +495,7 @@ modifier|*
 name|iptr
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define void @pr8880_cg_6(
+comment|// CHECK-LABEL: define {{.*}}void @pr8880_cg_6(
 name|int
 name|y
 init|=

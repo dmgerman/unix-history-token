@@ -5,14 +5,14 @@ name|double_declarator1
 parameter_list|(
 name|int
 modifier|*
-name|__nonnull
+name|_Nonnull
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-warning{{pointer is missing a nullability type specifier (__nonnull, __nullable, or __null_unspecified)}}
+comment|// expected-warning{{pointer is missing a nullability type specifier (_Nonnull, _Nullable, or _Null_unspecified)}}
 end_comment
 
 end_unit

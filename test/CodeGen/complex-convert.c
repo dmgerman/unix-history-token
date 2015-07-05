@@ -116,7 +116,7 @@ name|long
 name|long
 name|cull1
 decl_stmt|;
-comment|// CHECK-LABEL: define void @foo(
+comment|// CHECK-LABEL: define {{.*}}void @foo(
 comment|// Match the prototype to pick up the size of sc and sll.
 comment|// CHECK: i[[CHSIZE:[0-9]+]]{{[^,]*}},
 comment|// CHECK: i[[CHSIZE]]{{[^,]*}},

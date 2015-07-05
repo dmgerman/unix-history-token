@@ -40,7 +40,7 @@ comment|// LINK: "baz"
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /Tc%s -### -fsanitize=address 2>&1 | FileCheck --check-prefix=ASAN %s
+comment|// RUN: %clang_cl -m32 -arch:IA32 --target=i386-pc-win32 /Tc%s -### -fsanitize=address 2>&1 | FileCheck --check-prefix=ASAN %s
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|// ASAN: "{{.*}}cl-link{{.*}}.obj"
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /MD /Tc%s -### -fsanitize=address 2>&1 | FileCheck --check-prefix=ASAN-MD %s
+comment|// RUN: %clang_cl -m32 -arch:IA32 --target=i386-pc-win32 /MD /Tc%s -### -fsanitize=address 2>&1 | FileCheck --check-prefix=ASAN-MD %s
 end_comment
 
 begin_comment
@@ -116,11 +116,11 @@ comment|// "-dll"
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /LD /Tc%s -### -fsanitize=address 2>&1 | FileCheck --check-prefix=ASAN-DLL %s
+comment|// RUN: %clang_cl -m32 -arch:IA32 --target=i386-pc-win32 /LD /Tc%s -### -fsanitize=address 2>&1 | FileCheck --check-prefix=ASAN-DLL %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /LDd /Tc%s -### -fsanitize=address 2>&1 | FileCheck --check-prefix=ASAN-DLL %s
+comment|// RUN: %clang_cl -m32 -arch:IA32 --target=i386-pc-win32 /LDd /Tc%s -### -fsanitize=address 2>&1 | FileCheck --check-prefix=ASAN-DLL %s
 end_comment
 
 begin_comment

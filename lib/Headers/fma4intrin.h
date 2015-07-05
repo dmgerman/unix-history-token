@@ -45,7 +45,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("fma4")))
 end_define
 
@@ -53,7 +53,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_macc_ps
 parameter_list|(
 name|__m128
@@ -86,7 +86,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_macc_pd
 parameter_list|(
 name|__m128d
@@ -119,7 +119,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_macc_ss
 parameter_list|(
 name|__m128
@@ -152,7 +152,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_macc_sd
 parameter_list|(
 name|__m128d
@@ -185,7 +185,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_msub_ps
 parameter_list|(
 name|__m128
@@ -218,7 +218,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_msub_pd
 parameter_list|(
 name|__m128d
@@ -251,7 +251,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_msub_ss
 parameter_list|(
 name|__m128
@@ -284,7 +284,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_msub_sd
 parameter_list|(
 name|__m128d
@@ -317,7 +317,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_nmacc_ps
 parameter_list|(
 name|__m128
@@ -350,7 +350,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_nmacc_pd
 parameter_list|(
 name|__m128d
@@ -383,7 +383,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_nmacc_ss
 parameter_list|(
 name|__m128
@@ -416,7 +416,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_nmacc_sd
 parameter_list|(
 name|__m128d
@@ -449,7 +449,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_nmsub_ps
 parameter_list|(
 name|__m128
@@ -482,7 +482,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_nmsub_pd
 parameter_list|(
 name|__m128d
@@ -515,7 +515,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_nmsub_ss
 parameter_list|(
 name|__m128
@@ -548,7 +548,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_nmsub_sd
 parameter_list|(
 name|__m128d
@@ -581,7 +581,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_maddsub_ps
 parameter_list|(
 name|__m128
@@ -614,7 +614,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_maddsub_pd
 parameter_list|(
 name|__m128d
@@ -647,7 +647,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_msubadd_ps
 parameter_list|(
 name|__m128
@@ -680,7 +680,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m128d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm_msubadd_pd
 parameter_list|(
 name|__m128d
@@ -713,7 +713,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_macc_ps
 parameter_list|(
 name|__m256
@@ -746,7 +746,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_macc_pd
 parameter_list|(
 name|__m256d
@@ -779,7 +779,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_msub_ps
 parameter_list|(
 name|__m256
@@ -812,7 +812,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_msub_pd
 parameter_list|(
 name|__m256d
@@ -845,7 +845,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_nmacc_ps
 parameter_list|(
 name|__m256
@@ -878,7 +878,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_nmacc_pd
 parameter_list|(
 name|__m256d
@@ -911,7 +911,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_nmsub_ps
 parameter_list|(
 name|__m256
@@ -944,7 +944,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_nmsub_pd
 parameter_list|(
 name|__m256d
@@ -977,7 +977,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_maddsub_ps
 parameter_list|(
 name|__m256
@@ -1010,7 +1010,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_maddsub_pd
 parameter_list|(
 name|__m256d
@@ -1043,7 +1043,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_msubadd_ps
 parameter_list|(
 name|__m256
@@ -1076,7 +1076,7 @@ begin_function
 specifier|static
 name|__inline__
 name|__m256d
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 name|_mm256_msubadd_pd
 parameter_list|(
 name|__m256d
@@ -1108,7 +1108,7 @@ end_function
 begin_undef
 undef|#
 directive|undef
-name|DEFAULT_FN_ATTRS
+name|__DEFAULT_FN_ATTRS
 end_undef
 
 begin_endif

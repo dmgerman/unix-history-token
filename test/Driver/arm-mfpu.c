@@ -124,6 +124,46 @@ comment|// CHECK-VFP3: "-target-feature" "-neon"
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm-linux-eabi -mfpu=vfpv3-fp16 %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-VFP3-FP16 %s
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3-FP16: "-target-feature" "-fp-only-sp"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3-FP16: "-target-feature" "-d16"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3-FP16: "-target-feature" "+vfp3"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3-FP16: "-target-feature" "+fp16"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3-FP16: "-target-feature" "-vfp4"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3-FP16: "-target-feature" "-fp-armv8"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3-FP16: "-target-feature" "-neon"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3-FP16: "-target-feature" "-crypto"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target arm-linux-eabi -mfpu=vfp3-d16 %s -### -o %t.o 2>&1 \
 end_comment
 
@@ -161,6 +201,126 @@ end_comment
 
 begin_comment
 comment|// CHECK-VFP3-D16: "-target-feature" "-neon"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-eabi -mfpu=vfpv3-d16-fp16 %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-VFP3-D16-FP16 %s
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3-D16-FP16: "-target-feature" "-fp-only-sp"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3-D16-FP16: "-target-feature" "+d16"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3-D16-FP16: "-target-feature" "+vfp3"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3-D16-FP16: "-target-feature" "+fp16"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3-D16-FP16: "-target-feature" "-vfp4"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3-D16-FP16: "-target-feature" "-fp-armv8"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3-D16-FP16: "-target-feature" "-neon"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3-D16-FP16: "-target-feature" "-crypto"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-eabi -mfpu=vfpv3xd %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-VFP3XD %s
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3XD: "-target-feature" "+fp-only-sp"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3XD: "-target-feature" "+d16"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3XD: "-target-feature" "+vfp3"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3XD: "-target-feature" "-fp16"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3XD: "-target-feature" "-vfp4"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3XD: "-target-feature" "-fp-armv8"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3XD: "-target-feature" "-neon"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3XD: "-target-feature" "-crypto"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-eabi -mfpu=vfpv3xd-fp16 %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-VFP3XD-FP16 %s
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3XD-FP16: "-target-feature" "+fp-only-sp"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3XD-FP16: "-target-feature" "+d16"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3XD-FP16: "-target-feature" "+vfp3"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3XD-FP16: "-target-feature" "+fp16"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3XD-FP16: "-target-feature" "-vfp4"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3XD-FP16: "-target-feature" "-fp-armv8"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3XD-FP16: "-target-feature" "-neon"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3XD-FP16: "-target-feature" "-crypto"
 end_comment
 
 begin_comment
@@ -345,6 +505,46 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEON: "-target-feature" "+neon"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-eabi -mfpu=neon-fp16 %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NEON-FP16 %s
+end_comment
+
+begin_comment
+comment|// CHECK-NEON-FP16: "-target-feature" "-fp-only-sp"
+end_comment
+
+begin_comment
+comment|// CHECK-NEON-FP16: "-target-feature" "-d16"
+end_comment
+
+begin_comment
+comment|// CHECK-NEON-FP16: "-target-feature" "+vfp3"
+end_comment
+
+begin_comment
+comment|// CHECK-NEON-FP16: "-target-feature" "+fp16"
+end_comment
+
+begin_comment
+comment|// CHECK-NEON-FP16: "-target-feature" "-vfp4"
+end_comment
+
+begin_comment
+comment|// CHECK-NEON-FP16: "-target-feature" "-fp-armv8"
+end_comment
+
+begin_comment
+comment|// CHECK-NEON-FP16: "-target-feature" "+neon"
+end_comment
+
+begin_comment
+comment|// CHECK-NEON-FP16: "-target-feature" "-crypto"
 end_comment
 
 begin_comment

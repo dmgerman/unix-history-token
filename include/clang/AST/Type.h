@@ -6523,6 +6523,11 @@ argument_list|()
 specifier|const
 block|;
 name|bool
+name|isObjCBoxableRecordType
+argument_list|()
+specifier|const
+block|;
+name|bool
 name|isInterfaceType
 argument_list|()
 specifier|const

@@ -47,12 +47,65 @@ begin_comment
 comment|// are correct.
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|elem
+struct_decl|;
+end_struct_decl
+
+begin_struct
+struct|struct
+name|ptr
+block|{
+name|struct
+name|elem
+modifier|*
+name|ptr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
-comment|// CHECK: @testStructGlobal = global {{.*}} { i16 1, i16 2, i16 3, i16 4 }
+comment|// CHECK-DAG: %struct.ptr = type { %struct.elem* }
+end_comment
+
+begin_struct
+struct|struct
+name|elem
+block|{
+atomic|_Atomic
+argument_list|(
+expr|struct
+name|ptr
+argument_list|)
+name|link
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|// CHECK-DAG: %struct.elem = type { %struct.ptr }
+end_comment
+
+begin_decl_stmt
+name|struct
+name|ptr
+name|object
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK-DAG: @object = common global %struct.ptr zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK: @testPromotedStructGlobal = global {{.*}} { %{{.*}} { i16 1, i16 2, i16 3 }, [2 x i8] zeroinitializer }
+comment|// CHECK-DAG: @testStructGlobal = global {{.*}} { i16 1, i16 2, i16 3, i16 4 }
+end_comment
+
+begin_comment
+comment|// CHECK-DAG: @testPromotedStructGlobal = global {{.*}} { %{{.*}} { i16 1, i16 2, i16 3 }, [2 x i8] zeroinitializer }
 end_comment
 
 begin_typedef

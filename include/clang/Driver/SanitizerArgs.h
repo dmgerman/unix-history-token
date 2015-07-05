@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Driver/Types.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Option/Arg.h"
 end_include
 
@@ -286,6 +292,11 @@ name|void
 name|addArgs
 argument_list|(
 specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|,
+specifier|const
 name|llvm
 operator|::
 name|opt
@@ -301,6 +312,11 @@ operator|::
 name|ArgStringList
 operator|&
 name|CmdArgs
+argument_list|,
+name|types
+operator|::
+name|ID
+name|InputType
 argument_list|)
 decl|const
 decl_stmt|;
