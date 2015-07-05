@@ -262,9 +262,6 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|TrapFuncName
-argument_list|()
-operator|,
 name|FloatABIType
 argument_list|(
 name|FloatABI
@@ -460,19 +457,6 @@ name|TrapUnreachable
 range|:
 literal|1
 decl_stmt|;
-comment|/// getTrapFunctionName - If this returns a non-empty string, this means
-comment|/// isel should lower Intrinsic::trap to a call to the specified function
-comment|/// name instead of an ISD::TRAP node.
-name|std
-operator|::
-name|string
-name|TrapFuncName
-expr_stmt|;
-name|StringRef
-name|getTrapFunctionName
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// FloatABIType - This setting is set by -float-abi=xxx option is specfied
 comment|/// on the command line. This setting may either be Default, Soft, or Hard.
 comment|/// Default selects the target's default behavior. Soft selects the ABI for
@@ -611,11 +595,6 @@ argument_list|)
 operator|&&
 name|ARE_EQUAL
 argument_list|(
-name|TrapFuncName
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
 name|FloatABIType
 argument_list|)
 operator|&&
@@ -677,7 +656,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

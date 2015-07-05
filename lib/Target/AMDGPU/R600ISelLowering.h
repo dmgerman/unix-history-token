@@ -376,7 +376,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End namespace llvm;
 end_comment
 
 begin_endif

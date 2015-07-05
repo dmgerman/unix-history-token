@@ -262,16 +262,6 @@ name|TM
 argument_list|)
 argument_list|)
 operator|,
-name|Mang
-argument_list|(
-name|this
-operator|->
-name|TM
-operator|->
-name|getDataLayout
-argument_list|()
-argument_list|)
-operator|,
 name|ObjectLayer
 argument_list|()
 operator|,
@@ -790,13 +780,19 @@ argument_list|(
 name|MangledName
 argument_list|)
 block|;
-name|Mang
-operator|.
+name|Mangler
+operator|::
 name|getNameWithPrefix
 argument_list|(
 name|MangledNameStream
 argument_list|,
 name|Name
+argument_list|,
+operator|*
+name|TM
+operator|->
+name|getDataLayout
+argument_list|()
 argument_list|)
 block|;     }
 return|return
@@ -823,12 +819,6 @@ operator|>
 name|TM
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|Mangler
-name|Mang
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|SectionMemoryManager

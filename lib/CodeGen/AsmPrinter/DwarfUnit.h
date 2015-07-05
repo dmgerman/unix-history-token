@@ -327,8 +327,13 @@ name|DICompileUnit
 modifier|*
 name|CUNode
 decl_stmt|;
+comment|// All DIEValues are allocated through this allocator.
+name|BumpPtrAllocator
+name|DIEValueAllocator
+decl_stmt|;
 comment|/// Unit debug information entry.
 name|DIE
+modifier|&
 name|UnitDie
 decl_stmt|;
 comment|/// Offset of the UnitDie from beginning of debug info section.
@@ -401,10 +406,6 @@ operator|*
 operator|>
 name|ContainingTypeMap
 expr_stmt|;
-comment|// All DIEValues are allocated through this allocator.
-name|BumpPtrAllocator
-name|DIEValueAllocator
-decl_stmt|;
 comment|/// The section this unit will be emitted in.
 name|MCSection
 modifier|*
@@ -827,29 +828,20 @@ name|Str
 argument_list|)
 decl_stmt|;
 comment|/// \brief Add a Dwarf label attribute data and value.
-name|void
+name|DIE
+operator|::
+name|value_iterator
 name|addLabel
 argument_list|(
-name|DIE
-operator|&
-name|Die
+argument|DIE&Die
 argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
+argument|dwarf::Attribute Attribute
 argument_list|,
-name|dwarf
-operator|::
-name|Form
-name|Form
+argument|dwarf::Form Form
 argument_list|,
-specifier|const
-name|MCSymbol
-operator|*
-name|Label
+argument|const MCSymbol *Label
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|void
 name|addLabel
 argument_list|(
@@ -1343,6 +1335,16 @@ specifier|const
 name|DINamespace
 modifier|*
 name|NS
+parameter_list|)
+function_decl|;
+name|DIE
+modifier|*
+name|getOrCreateModule
+parameter_list|(
+specifier|const
+name|DIModule
+modifier|*
+name|M
 parameter_list|)
 function_decl|;
 name|DIE
@@ -1874,7 +1876,7 @@ block|; }
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end llvm namespace
 end_comment
 
 begin_endif

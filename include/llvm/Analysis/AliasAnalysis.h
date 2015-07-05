@@ -213,6 +213,41 @@ decl_stmt|;
 name|class
 name|DominatorTree
 decl_stmt|;
+comment|/// The possible results of an alias query.
+comment|///
+comment|/// These results are always computed between two MemoryLocation objects as
+comment|/// a query to some alias analysis.
+comment|///
+comment|/// Note that these are unscoped enumerations because we would like to support
+comment|/// implicitly testing a result for the existence of any possible aliasing with
+comment|/// a conversion to bool, but an "enum class" doesn't support this. The
+comment|/// canonical names from the literature are suffixed and unique anyways, and so
+comment|/// they serve as global constants in LLVM for these results.
+comment|///
+comment|/// See docs/AliasAnalysis.html for more information on the specific meanings
+comment|/// of these values.
+enum|enum
+name|AliasResult
+block|{
+comment|/// The two locations do not alias at all.
+comment|///
+comment|/// This value is arranged to convert to false, while all other values
+comment|/// convert to true. This allows a boolean context to convert the result to
+comment|/// a binary flag indicating whether there is the possibility of aliasing.
+name|NoAlias
+init|=
+literal|0
+block|,
+comment|/// The two locations may or may not alias. This is the least precise result.
+name|MayAlias
+block|,
+comment|/// The two locations alias, but only due to a partial overlap.
+name|PartialAlias
+block|,
+comment|/// The two locations precisely alias each other.
+name|MustAlias
+block|, }
+enum|;
 name|class
 name|AliasAnalysis
 block|{
@@ -326,33 +361,6 @@ function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// Alias Queries...
 comment|///
-comment|/// Alias analysis result - Either we know for sure that it does not alias, we
-comment|/// know for sure it must alias, or we don't know anything: The two pointers
-comment|/// _might_ alias.  This enum is designed so you can do things like:
-comment|///     if (AA.alias(P1, P2)) { ... }
-comment|/// to check to see if two pointers might alias.
-comment|///
-comment|/// See docs/AliasAnalysis.html for more information on the specific meanings
-comment|/// of these values.
-comment|///
-enum|enum
-name|AliasResult
-block|{
-name|NoAlias
-init|=
-literal|0
-block|,
-comment|///< No dependencies.
-name|MayAlias
-block|,
-comment|///< Anything goes.
-name|PartialAlias
-block|,
-comment|///< Pointers differ, but pointees overlap.
-name|MustAlias
-comment|///< Pointers are equal.
-block|}
-enum|;
 comment|/// alias - The main low level interface to the alias analysis implementation.
 comment|/// Returns an AliasResult indicating whether the two pointers are aliased to
 comment|/// each other.  This is the interface that must be implemented by specific
@@ -2046,7 +2054,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

@@ -376,52 +376,26 @@ argument_list|,
 argument|bool IsReg
 argument_list|)
 block|;
-comment|/// Emit a '.module fp=value' directive using the given values.
-comment|/// Updates the .MIPS.abiflags section
+comment|// FP abiflags directives
 name|virtual
 name|void
 name|emitDirectiveModuleFP
-argument_list|(
-argument|MipsABIFlagsSection::FpABIKind Value
-argument_list|,
-argument|bool Is32BitABI
-argument_list|)
-block|{
-name|ABIFlagsSection
-operator|.
-name|setFpABI
-argument_list|(
-name|Value
-argument_list|,
-name|Is32BitABI
-argument_list|)
-block|;   }
-comment|/// Emit a '.module fp=value' directive using the current values of the
-comment|/// .MIPS.abiflags section.
-name|void
-name|emitDirectiveModuleFP
 argument_list|()
-block|{
-name|emitDirectiveModuleFP
-argument_list|(
-name|ABIFlagsSection
-operator|.
-name|getFpABI
-argument_list|()
-argument_list|,
-name|ABIFlagsSection
-operator|.
-name|Is32BitABI
-argument_list|)
-block|;   }
+block|;
 name|virtual
 name|void
 name|emitDirectiveModuleOddSPReg
-argument_list|(
-argument|bool Enabled
-argument_list|,
-argument|bool IsO32ABI
-argument_list|)
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveModuleSoftFloat
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveModuleHardFloat
+argument_list|()
 block|;
 name|virtual
 name|void
@@ -429,6 +403,16 @@ name|emitDirectiveSetFp
 argument_list|(
 argument|MipsABIFlagsSection::FpABIKind Value
 argument_list|)
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetOddSPReg
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetNoOddSPReg
+argument_list|()
 block|;
 name|void
 name|forbidModuleDirective
@@ -858,23 +842,25 @@ argument|bool IsReg
 argument_list|)
 name|override
 block|;
-comment|// ABI Flags
+comment|// FP abiflags directives
 name|void
 name|emitDirectiveModuleFP
-argument_list|(
-argument|MipsABIFlagsSection::FpABIKind Value
-argument_list|,
-argument|bool Is32BitABI
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|void
 name|emitDirectiveModuleOddSPReg
-argument_list|(
-argument|bool Enabled
-argument_list|,
-argument|bool IsO32ABI
-argument_list|)
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveModuleSoftFloat
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveModuleHardFloat
+argument_list|()
 name|override
 block|;
 name|void
@@ -882,6 +868,16 @@ name|emitDirectiveSetFp
 argument_list|(
 argument|MipsABIFlagsSection::FpABIKind Value
 argument_list|)
+name|override
+block|;
+name|void
+name|emitDirectiveSetOddSPReg
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetNoOddSPReg
+argument_list|()
 name|override
 block|; }
 decl_stmt|;
@@ -1066,16 +1062,6 @@ argument|bool IsReg
 argument_list|)
 name|override
 block|;
-comment|// ABI Flags
-name|void
-name|emitDirectiveModuleOddSPReg
-argument_list|(
-argument|bool Enabled
-argument_list|,
-argument|bool IsO32ABI
-argument_list|)
-name|override
-block|;
 name|void
 name|emitMipsAbiFlags
 argument_list|()
@@ -1083,10 +1069,6 @@ block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// namespace llvm
-end_comment
 
 begin_endif
 endif|#

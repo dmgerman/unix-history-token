@@ -1704,14 +1704,14 @@ argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
 empty_stmt|;
-name|virtual
+name|private
+label|:
+comment|/// Create a copy of this instruction.
 name|Instruction
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-operator|=
-literal|0
 expr_stmt|;
 block|}
 empty_stmt|;
@@ -1811,7 +1811,7 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

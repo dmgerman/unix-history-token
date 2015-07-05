@@ -1884,7 +1884,7 @@ argument|StringRef ObjectFilename
 argument_list|,
 argument|StringRef ProfileFilename
 argument_list|,
-argument|Triple::ArchType Arch = Triple::ArchType::UnknownArch
+argument|StringRef Arch = StringRef()
 argument_list|)
 expr_stmt|;
 comment|/// \brief The number of functions that couldn't have their profiles mapped.

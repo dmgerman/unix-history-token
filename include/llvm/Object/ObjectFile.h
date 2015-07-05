@@ -139,8 +139,8 @@ name|SectionRef
 operator|>
 name|section_iterator
 expr_stmt|;
-comment|/// RelocationRef - This is a value type class that represents a single
-comment|/// relocation in the list of relocations in the object file.
+comment|/// This is a value type class that represents a single relocation in the list
+comment|/// of relocations in the object file.
 name|class
 name|RelocationRef
 block|{
@@ -184,22 +184,17 @@ name|void
 name|moveNext
 parameter_list|()
 function_decl|;
-name|std
-operator|::
-name|error_code
+name|ErrorOr
+operator|<
+name|uint64_t
+operator|>
 name|getAddress
-argument_list|(
-argument|uint64_t&Result
-argument_list|)
+argument_list|()
 specifier|const
 expr_stmt|;
-name|std
-operator|::
-name|error_code
+name|uint64_t
 name|getOffset
-argument_list|(
-argument|uint64_t&Result
-argument_list|)
+argument_list|()
 specifier|const
 expr_stmt|;
 name|symbol_iterator
@@ -207,39 +202,26 @@ name|getSymbol
 argument_list|()
 specifier|const
 expr_stmt|;
-name|std
-operator|::
-name|error_code
+name|uint64_t
 name|getType
-argument_list|(
-argument|uint64_t&Result
-argument_list|)
-specifier|const
-expr_stmt|;
-comment|/// @brief Indicates whether this relocation should hidden when listing
-comment|/// relocations, usually because it is the trailing part of a multipart
-comment|/// relocation that will be printed as part of the leading relocation.
-name|std
-operator|::
-name|error_code
-name|getHidden
-argument_list|(
-argument|bool&Result
-argument_list|)
+argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// @brief Get a string that represents the type of this relocation.
 comment|///
 comment|/// This is for display purposes only.
-name|std
-operator|::
-name|error_code
+name|void
 name|getTypeName
 argument_list|(
-argument|SmallVectorImpl<char>&Result
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Result
 argument_list|)
-specifier|const
-expr_stmt|;
+decl|const
+decl_stmt|;
 name|DataRefImpl
 name|getRawDataRefImpl
 argument_list|()
@@ -248,7 +230,7 @@ expr_stmt|;
 specifier|const
 name|ObjectFile
 operator|*
-name|getObjectFile
+name|getObject
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -261,8 +243,8 @@ name|RelocationRef
 operator|>
 name|relocation_iterator
 expr_stmt|;
-comment|/// SectionRef - This is a value type class that represents a single section in
-comment|/// the list of sections in the object file.
+comment|/// This is a value type class that represents a single section in the list of
+comment|/// sections in the object file.
 name|class
 name|SectionRef
 block|{
@@ -445,8 +427,8 @@ specifier|const
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|/// SymbolRef - This is a value type class that represents a single symbol in
-comment|/// the list of symbols in the object file.
+comment|/// This is a value type class that represents a single symbol in the list of
+comment|/// symbols in the object file.
 name|class
 name|SymbolRef
 range|:
@@ -489,13 +471,39 @@ argument_list|,
 argument|const ObjectFile *Owner
 argument_list|)
 block|;
-name|std
-operator|::
-name|error_code
-name|getName
+name|SymbolRef
 argument_list|(
-argument|StringRef&Result
+specifier|const
+name|BasicSymbolRef
+operator|&
+name|B
 argument_list|)
+operator|:
+name|BasicSymbolRef
+argument_list|(
+argument|B
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|isa
+operator|<
+name|ObjectFile
+operator|>
+operator|(
+name|BasicSymbolRef
+operator|::
+name|getObject
+argument_list|()
+operator|)
+argument_list|)
+block|;   }
+name|ErrorOr
+operator|<
+name|StringRef
+operator|>
+name|getName
+argument_list|()
 specifier|const
 block|;
 comment|/// Returns the symbol virtual address (i.e. address at which it will be
@@ -509,6 +517,13 @@ argument|uint64_t&Result
 argument_list|)
 specifier|const
 block|;
+comment|/// Return the value of the symbol depending on the object this can be an
+comment|/// offset or a virtual address.
+name|uint64_t
+name|getValue
+argument_list|()
+specifier|const
+block|;
 comment|/// @brief Get the alignment of this symbol as the actual value (not log 2).
 name|uint32_t
 name|getAlignment
@@ -516,26 +531,15 @@ argument_list|()
 specifier|const
 block|;
 name|uint64_t
-name|getSize
+name|getCommonSize
 argument_list|()
 specifier|const
 block|;
-name|std
+name|SymbolRef
 operator|::
-name|error_code
+name|Type
 name|getType
-argument_list|(
-argument|SymbolRef::Type&Result
-argument_list|)
-specifier|const
-block|;
-name|std
-operator|::
-name|error_code
-name|getOther
-argument_list|(
-argument|uint8_t&Result
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 comment|/// @brief Get section this symbol is defined in reference to. Result is
@@ -657,9 +661,9 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// ObjectFile - This class is the base class for all object file types.
-comment|/// Concrete instances of this object are created by createObjectFile, which
-comment|/// figures out which type to create.
+comment|/// This class is the base class for all object file types. Concrete instances
+comment|/// of this object are created by createObjectFile, which figures out which type
+comment|/// to create.
 name|class
 name|ObjectFile
 range|:
@@ -730,14 +734,13 @@ name|class
 name|SymbolRef
 block|;
 name|virtual
-name|std
-operator|::
-name|error_code
+name|ErrorOr
+operator|<
+name|StringRef
+operator|>
 name|getSymbolName
 argument_list|(
 argument|DataRefImpl Symb
-argument_list|,
-argument|StringRef&Res
 argument_list|)
 specifier|const
 operator|=
@@ -770,6 +773,16 @@ operator|=
 literal|0
 block|;
 name|virtual
+name|uint64_t
+name|getSymbolValue
+argument_list|(
+argument|DataRefImpl Symb
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
 name|uint32_t
 name|getSymbolAlignment
 argument_list|(
@@ -779,7 +792,7 @@ specifier|const
 block|;
 name|virtual
 name|uint64_t
-name|getSymbolSize
+name|getCommonSymbolSizeImpl
 argument_list|(
 argument|DataRefImpl Symb
 argument_list|)
@@ -788,14 +801,12 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|std
+name|SymbolRef
 operator|::
-name|error_code
+name|Type
 name|getSymbolType
 argument_list|(
 argument|DataRefImpl Symb
-argument_list|,
-argument|SymbolRef::Type&Res
 argument_list|)
 specifier|const
 operator|=
@@ -815,24 +826,6 @@ specifier|const
 operator|=
 literal|0
 block|;
-name|virtual
-name|std
-operator|::
-name|error_code
-name|getSymbolOther
-argument_list|(
-argument|DataRefImpl Symb
-argument_list|,
-argument|uint8_t&Res
-argument_list|)
-specifier|const
-block|{
-return|return
-name|object_error
-operator|::
-name|invalid_file_type
-return|;
-block|}
 comment|// Same as above for SectionRef.
 name|friend
 name|class
@@ -948,18 +941,6 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|bool
-name|sectionContainsSymbol
-argument_list|(
-argument|DataRefImpl Sec
-argument_list|,
-argument|DataRefImpl Symb
-argument_list|)
-specifier|const
-operator|=
-literal|0
-block|;
-name|virtual
 name|relocation_iterator
 name|section_rel_begin
 argument_list|(
@@ -1003,28 +984,23 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|std
-operator|::
-name|error_code
+name|ErrorOr
+operator|<
+name|uint64_t
+operator|>
 name|getRelocationAddress
 argument_list|(
 argument|DataRefImpl Rel
-argument_list|,
-argument|uint64_t&Res
 argument_list|)
 specifier|const
 operator|=
 literal|0
 block|;
 name|virtual
-name|std
-operator|::
-name|error_code
+name|uint64_t
 name|getRelocationOffset
 argument_list|(
 argument|DataRefImpl Rel
-argument_list|,
-argument|uint64_t&Res
 argument_list|)
 specifier|const
 operator|=
@@ -1041,23 +1017,17 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|std
-operator|::
-name|error_code
+name|uint64_t
 name|getRelocationType
 argument_list|(
 argument|DataRefImpl Rel
-argument_list|,
-argument|uint64_t&Res
 argument_list|)
 specifier|const
 operator|=
 literal|0
 block|;
 name|virtual
-name|std
-operator|::
-name|error_code
+name|void
 name|getRelocationTypeName
 argument_list|(
 argument|DataRefImpl Rel
@@ -1068,31 +1038,34 @@ specifier|const
 operator|=
 literal|0
 block|;
-name|virtual
-name|std
-operator|::
-name|error_code
-name|getRelocationHidden
+name|public
+operator|:
+name|uint64_t
+name|getCommonSymbolSize
 argument_list|(
-argument|DataRefImpl Rel
-argument_list|,
-argument|bool&Result
+argument|DataRefImpl Symb
 argument_list|)
 specifier|const
 block|{
-name|Result
-operator|=
-name|false
+name|assert
+argument_list|(
+name|getSymbolFlags
+argument_list|(
+name|Symb
+argument_list|)
+operator|&
+name|SymbolRef
+operator|::
+name|SF_Common
+argument_list|)
 block|;
 return|return
-name|std
-operator|::
-name|error_code
-argument_list|()
+name|getCommonSymbolSizeImpl
+argument_list|(
+name|Symb
+argument_list|)
 return|;
 block|}
-name|public
-operator|:
 typedef|typedef
 name|iterator_range
 operator|<
@@ -1354,15 +1327,14 @@ argument|Owner
 argument_list|)
 block|{}
 specifier|inline
-name|std
-operator|::
-name|error_code
+name|ErrorOr
+operator|<
+name|StringRef
+operator|>
 name|SymbolRef
 operator|::
 name|getName
-argument_list|(
-argument|StringRef&Result
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -1373,8 +1345,6 @@ name|getSymbolName
 argument_list|(
 name|getRawDataRefImpl
 argument_list|()
-argument_list|,
-name|Result
 argument_list|)
 return|;
 block|}
@@ -1404,6 +1374,25 @@ argument_list|)
 return|;
 block|}
 specifier|inline
+name|uint64_t
+name|SymbolRef
+operator|::
+name|getValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getObject
+argument_list|()
+operator|->
+name|getSymbolValue
+argument_list|(
+name|getRawDataRefImpl
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|inline
 name|uint32_t
 name|SymbolRef
 operator|::
@@ -1426,7 +1415,7 @@ specifier|inline
 name|uint64_t
 name|SymbolRef
 operator|::
-name|getSize
+name|getCommonSize
 argument_list|()
 specifier|const
 block|{
@@ -1434,7 +1423,7 @@ return|return
 name|getObject
 argument_list|()
 operator|->
-name|getSymbolSize
+name|getCommonSymbolSize
 argument_list|(
 name|getRawDataRefImpl
 argument_list|()
@@ -1467,15 +1456,13 @@ argument_list|)
 return|;
 block|}
 specifier|inline
-name|std
+name|SymbolRef
 operator|::
-name|error_code
+name|Type
 name|SymbolRef
 operator|::
 name|getType
-argument_list|(
-argument|SymbolRef::Type&Result
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -1486,33 +1473,6 @@ name|getSymbolType
 argument_list|(
 name|getRawDataRefImpl
 argument_list|()
-argument_list|,
-name|Result
-argument_list|)
-return|;
-block|}
-specifier|inline
-name|std
-operator|::
-name|error_code
-name|SymbolRef
-operator|::
-name|getOther
-argument_list|(
-argument|uint8_t&Result
-argument_list|)
-specifier|const
-block|{
-return|return
-name|getObject
-argument_list|()
-operator|->
-name|getSymbolOther
-argument_list|(
-name|getRawDataRefImpl
-argument_list|()
-argument_list|,
-name|Result
 argument_list|)
 return|;
 block|}
@@ -1815,30 +1775,6 @@ argument_list|)
 return|;
 block|}
 specifier|inline
-name|bool
-name|SectionRef
-operator|::
-name|containsSymbol
-argument_list|(
-argument|SymbolRef S
-argument_list|)
-specifier|const
-block|{
-return|return
-name|OwningObject
-operator|->
-name|sectionContainsSymbol
-argument_list|(
-name|SectionPimpl
-argument_list|,
-name|S
-operator|.
-name|getRawDataRefImpl
-argument_list|()
-argument_list|)
-return|;
-block|}
-specifier|inline
 name|relocation_iterator
 name|SectionRef
 operator|::
@@ -1975,15 +1911,14 @@ argument_list|)
 return|;
 block|}
 specifier|inline
-name|std
-operator|::
-name|error_code
+name|ErrorOr
+operator|<
+name|uint64_t
+operator|>
 name|RelocationRef
 operator|::
 name|getAddress
-argument_list|(
-argument|uint64_t&Result
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -1992,21 +1927,15 @@ operator|->
 name|getRelocationAddress
 argument_list|(
 name|RelocationPimpl
-argument_list|,
-name|Result
 argument_list|)
 return|;
 block|}
 specifier|inline
-name|std
-operator|::
-name|error_code
+name|uint64_t
 name|RelocationRef
 operator|::
 name|getOffset
-argument_list|(
-argument|uint64_t&Result
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -2015,8 +1944,6 @@ operator|->
 name|getRelocationOffset
 argument_list|(
 name|RelocationPimpl
-argument_list|,
-name|Result
 argument_list|)
 return|;
 block|}
@@ -2038,15 +1965,11 @@ argument_list|)
 return|;
 block|}
 specifier|inline
-name|std
-operator|::
-name|error_code
+name|uint64_t
 name|RelocationRef
 operator|::
 name|getType
-argument_list|(
-argument|uint64_t&Result
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -2055,15 +1978,11 @@ operator|->
 name|getRelocationType
 argument_list|(
 name|RelocationPimpl
-argument_list|,
-name|Result
 argument_list|)
 return|;
 block|}
 specifier|inline
-name|std
-operator|::
-name|error_code
+name|void
 name|RelocationRef
 operator|::
 name|getTypeName
@@ -2076,29 +1995,6 @@ return|return
 name|OwningObject
 operator|->
 name|getRelocationTypeName
-argument_list|(
-name|RelocationPimpl
-argument_list|,
-name|Result
-argument_list|)
-return|;
-block|}
-specifier|inline
-name|std
-operator|::
-name|error_code
-name|RelocationRef
-operator|::
-name|getHidden
-argument_list|(
-argument|bool&Result
-argument_list|)
-specifier|const
-block|{
-return|return
-name|OwningObject
-operator|->
-name|getRelocationHidden
 argument_list|(
 name|RelocationPimpl
 argument_list|,
@@ -2124,7 +2020,7 @@ name|ObjectFile
 operator|*
 name|RelocationRef
 operator|::
-name|getObjectFile
+name|getObject
 argument_list|()
 specifier|const
 block|{

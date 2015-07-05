@@ -109,7 +109,15 @@ name|FK_VFPV2
 block|,
 name|FK_VFPV3
 block|,
+name|FK_VFPV3_FP16
+block|,
 name|FK_VFPV3_D16
+block|,
+name|FK_VFPV3_D16_FP16
+block|,
+name|FK_VFPV3XD
+block|,
+name|FK_VFPV3XD_FP16
 block|,
 name|FK_VFPV4
 block|,
@@ -125,6 +133,8 @@ name|FK_FP_ARMV8
 block|,
 name|FK_NEON
 block|,
+name|FK_NEON_FP16
+block|,
 name|FK_NEON_VFPV4
 block|,
 name|FK_NEON_FP_ARMV8
@@ -134,6 +144,25 @@ block|,
 name|FK_SOFTVFP
 block|,
 name|FK_LAST
+block|}
+enum|;
+comment|// FPU Version
+enum|enum
+name|FPUVersion
+block|{
+name|FV_NONE
+init|=
+literal|0
+block|,
+name|FV_VFPV2
+block|,
+name|FV_VFPV3
+block|,
+name|FV_VFPV3_FP16
+block|,
+name|FV_VFPV4
+block|,
+name|FV_VFPV5
 block|}
 enum|;
 comment|// An FPU name implies one of three levels of Neon support:

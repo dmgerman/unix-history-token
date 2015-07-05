@@ -137,10 +137,6 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
-begin_comment
-comment|// namespace llvm
-end_comment
-
 begin_endif
 endif|#
 directive|endif

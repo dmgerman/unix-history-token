@@ -137,6 +137,7 @@ name|llvm
 block|{
 comment|/// \brief Collects and handles line tables information in a CodeView format.
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|WinCodeViewLineTables
 range|:
 name|public

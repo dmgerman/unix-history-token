@@ -552,79 +552,95 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// AccessType - Keep track of whether this alias set merely refers to the
-end_comment
-
-begin_comment
-comment|/// locations of memory, whether it modifies the memory, or whether it does
-end_comment
-
-begin_comment
-comment|/// both.  The lattice goes from "NoModRef" to either Refs or Mods, then to
-end_comment
-
-begin_comment
-comment|/// ModRef as necessary.
+comment|/// The kinds of access this alias set models.
 end_comment
 
 begin_comment
 comment|///
 end_comment
 
+begin_comment
+comment|/// We keep track of whether this alias set merely refers to the locations of
+end_comment
+
+begin_comment
+comment|/// memory (and not any particular access), whether it modifies or references
+end_comment
+
+begin_comment
+comment|/// the memory, or whether it does both. The lattice goes from "NoAccess" to
+end_comment
+
+begin_comment
+comment|/// either RefAccess or ModAccess, then to ModRefAccess as necessary.
+end_comment
+
 begin_enum
 enum|enum
-name|AccessType
+name|AccessLattice
 block|{
-name|NoModRef
+name|NoAccess
 init|=
 literal|0
 block|,
-name|Refs
+name|RefAccess
 init|=
 literal|1
 block|,
-comment|// Ref = bit 1
-name|Mods
+name|ModAccess
 init|=
 literal|2
 block|,
-name|ModRef
+name|ModRefAccess
 init|=
-literal|3
-comment|// Mod = bit 2
+name|RefAccess
+operator||
+name|ModAccess
 block|}
 enum|;
 end_enum
 
 begin_decl_stmt
 name|unsigned
-name|AccessTy
+name|Access
 range|:
 literal|2
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// AliasType - Keep track the relationships between the pointers in the set.
-end_comment
-
-begin_comment
-comment|/// Lattice goes from MustAlias to MayAlias.
+comment|/// The kind of alias relationship between pointers of the set.
 end_comment
 
 begin_comment
 comment|///
 end_comment
 
+begin_comment
+comment|/// These represent conservatively correct alias results between any members
+end_comment
+
+begin_comment
+comment|/// of the set. We represent these independently of the values of alias
+end_comment
+
+begin_comment
+comment|/// results in order to pack it into a single bit. Lattice goes from
+end_comment
+
+begin_comment
+comment|/// MustAlias to MayAlias.
+end_comment
+
 begin_enum
 enum|enum
-name|AliasType
+name|AliasLattice
 block|{
-name|MustAlias
+name|SetMustAlias
 init|=
 literal|0
 block|,
-name|MayAlias
+name|SetMayAlias
 init|=
 literal|1
 block|}
@@ -633,7 +649,7 @@ end_enum
 
 begin_decl_stmt
 name|unsigned
-name|AliasTy
+name|Alias
 range|:
 literal|1
 decl_stmt|;
@@ -740,9 +756,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AccessTy
+name|Access
 operator|&
-name|Refs
+name|RefAccess
 return|;
 block|}
 end_expr_stmt
@@ -754,9 +770,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AccessTy
+name|Access
 operator|&
-name|Mods
+name|ModAccess
 return|;
 block|}
 end_expr_stmt
@@ -768,9 +784,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AliasTy
+name|Alias
 operator|==
-name|MustAlias
+name|SetMustAlias
 return|;
 block|}
 end_expr_stmt
@@ -782,9 +798,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AliasTy
+name|Alias
 operator|==
-name|MayAlias
+name|SetMayAlias
 return|;
 block|}
 end_expr_stmt
@@ -1201,14 +1217,14 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|AccessTy
+name|Access
 argument_list|(
-name|NoModRef
+name|NoAccess
 argument_list|)
 operator|,
-name|AliasTy
+name|Alias
 argument_list|(
-name|MustAlias
+name|SetMustAlias
 argument_list|)
 operator|,
 name|Volatile
@@ -2162,7 +2178,7 @@ name|AAInfo
 argument_list|,
 name|AliasSet
 operator|::
-name|AccessType
+name|AccessLattice
 name|E
 argument_list|,
 name|bool
@@ -2192,7 +2208,7 @@ argument_list|)
 decl_stmt|;
 name|AS
 operator|.
-name|AccessTy
+name|Access
 operator||=
 name|E
 expr_stmt|;
@@ -2268,7 +2284,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

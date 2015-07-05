@@ -120,10 +120,6 @@ enum|;
 block|}
 end_decl_stmt
 
-begin_comment
-comment|// namespace MSP430CC
-end_comment
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -160,7 +156,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm;
 end_comment
 
 begin_endif

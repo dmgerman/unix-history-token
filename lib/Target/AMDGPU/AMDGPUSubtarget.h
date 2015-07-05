@@ -102,6 +102,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"AMDKernelCodeT.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"Utils/AMDGPUBaseInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringExtras.h"
 end_include
 
@@ -168,6 +180,18 @@ block|{
 name|FIXED_SGPR_COUNT_FOR_INIT_BUG
 operator|=
 literal|80
+block|}
+block|;    enum
+block|{
+name|ISAVersion0_0_0
+block|,
+name|ISAVersion7_0_0
+block|,
+name|ISAVersion7_0_1
+block|,
+name|ISAVersion8_0_0
+block|,
+name|ISAVersion8_0_1
 block|}
 block|;
 name|private
@@ -257,6 +281,9 @@ name|FeatureDisable
 block|;
 name|int
 name|LDSBankCount
+block|;
+name|unsigned
+name|IsaVersion
 block|;
 name|AMDGPUFrameLowering
 name|FrameLowering
@@ -793,6 +820,16 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|AMDGPU
+operator|::
+name|IsaVersion
+name|getIsaVersion
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|enableMachineScheduler
 argument_list|()
@@ -951,6 +988,31 @@ name|override
 block|{
 return|return
 name|true
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Returns the offset in bytes from the start of the input buffer
+end_comment
+
+begin_comment
+comment|///        of the first explicit kernel argument.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|getExplicitKernelArgOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isAmdHsaOS
+argument_list|()
+operator|?
+literal|0
+operator|:
+literal|36
 return|;
 block|}
 end_expr_stmt

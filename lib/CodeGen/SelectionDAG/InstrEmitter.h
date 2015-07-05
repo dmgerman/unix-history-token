@@ -99,6 +99,7 @@ name|class
 name|SDDbgValue
 decl_stmt|;
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|InstrEmitter
 block|{
 name|MachineFunction
@@ -571,10 +572,6 @@ block|}
 empty_stmt|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// namespace llvm
-end_comment
 
 begin_endif
 endif|#

@@ -106,6 +106,7 @@ name|SmallVectorImpl
 expr_stmt|;
 comment|/// Emits exception handling directives.
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|EHStreamer
 range|:
 name|public
@@ -424,12 +425,8 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_comment
-unit|}
-comment|// namespace llvm
-end_comment
-
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

@@ -209,6 +209,8 @@ name|TargetExternalSymbol
 block|,
 name|TargetBlockAddress
 block|,
+name|MCSymbol
+block|,
 comment|/// TargetIndex - Like a constant pool entry, but with completely
 comment|/// target-dependent semantics. Holds target flags, a 32-bit index, and a
 comment|/// 64-bit index. Targets can use this however they like.
@@ -1318,12 +1320,12 @@ comment|/// Marker - Invalid opcode
 block|}
 enum|;
 block|}
-comment|// namespace ISD
+comment|// end llvm::ISD namespace
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end llvm namespace
 end_comment
 
 begin_endif

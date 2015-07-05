@@ -612,16 +612,6 @@ name|ClientResolver
 argument_list|)
 argument_list|)
 operator|,
-name|Mang
-argument_list|(
-name|this
-operator|->
-name|TM
-operator|->
-name|getDataLayout
-argument_list|()
-argument_list|)
-operator|,
 name|NotifyObjectLoaded
 argument_list|(
 operator|*
@@ -1748,6 +1738,12 @@ argument_list|(
 name|MangledNameStream
 argument_list|,
 name|Name
+argument_list|,
+operator|*
+name|TM
+operator|->
+name|getDataLayout
+argument_list|()
 argument_list|)
 block|;     }
 return|return

@@ -230,7 +230,6 @@ operator|~
 name|MCTargetStreamer
 argument_list|()
 expr_stmt|;
-specifier|const
 name|MCStreamer
 modifier|&
 name|getStreamer

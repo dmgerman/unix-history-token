@@ -3231,7 +3231,7 @@ end_endif
 
 begin_comment
 unit|}  }
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

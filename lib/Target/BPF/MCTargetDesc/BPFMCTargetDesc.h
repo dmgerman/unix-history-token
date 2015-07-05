@@ -226,10 +226,6 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
-end_comment
-
-begin_comment
 comment|// Defines symbolic names for BPF registers.  This defines a mapping from
 end_comment
 

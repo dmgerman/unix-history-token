@@ -136,16 +136,11 @@ name|s
 operator|&
 operator|~
 operator|(
-operator|-
-literal|1
+operator|~
+literal|0U
 operator|<<
 name|HEXAGON_PACKET_SIZE
 operator|)
-expr_stmt|;
-name|setWeight
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
@@ -607,10 +602,6 @@ block|}
 empty_stmt|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// namespace llvm
-end_comment
 
 begin_endif
 endif|#

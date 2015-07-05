@@ -762,7 +762,7 @@ name|create
 argument_list|(
 argument|std::unique_ptr<MemoryBuffer>&ObjectBuffer
 argument_list|,
-argument|Triple::ArchType Arch = Triple::ArchType::UnknownArch
+argument|StringRef Arch
 argument_list|)
 block|;
 name|std

@@ -3730,6 +3730,24 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+name|ModuleSlotTracker
+operator|&
+name|MST
+argument_list|,
+name|bool
+name|SkipOpers
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
 name|dump
 argument_list|()
 specifier|const
@@ -4193,7 +4211,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

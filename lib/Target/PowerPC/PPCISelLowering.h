@@ -473,7 +473,6 @@ name|TOC_ENTRY
 block|}
 enum|;
 block|}
-comment|// namespace PPCISD
 comment|/// Define some predicates that are used for node matching.
 name|namespace
 name|PPC
@@ -569,6 +568,26 @@ modifier|&
 name|DAG
 parameter_list|)
 function_decl|;
+comment|/// isVMRGEOShuffleMask - Return true if this is a shuffle mask suitable for
+comment|/// a VMRGEW or VMRGOW instruction
+name|bool
+name|isVMRGEOShuffleMask
+parameter_list|(
+name|ShuffleVectorSDNode
+modifier|*
+name|N
+parameter_list|,
+name|bool
+name|CheckEven
+parameter_list|,
+name|unsigned
+name|ShuffleKind
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
 comment|/// isVSLDOIShuffleMask - If this is a vsldoi shuffle mask, return the
 comment|/// shift amount, otherwise return -1.
 name|int
@@ -647,7 +666,6 @@ name|N
 parameter_list|)
 function_decl|;
 block|}
-comment|// namespace PPC
 name|class
 name|PPCTargetLowering
 range|:
@@ -3005,12 +3023,8 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-unit|}
-comment|// namespace llvm
-end_comment
-
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

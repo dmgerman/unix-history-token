@@ -599,12 +599,16 @@ argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|;
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|BinaryOperator
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -3352,7 +3356,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

@@ -807,6 +807,34 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+comment|/// \brief Parse an arbitrary expression of a specified parenthesis depth,
+comment|/// assuming that the initial '(' characters have already been consumed.
+comment|///
+comment|/// \param ParenDepth - Specifies how many trailing expressions outside the
+comment|/// current parentheses we have to parse.
+comment|/// \param Res - The value of the expression. The result is undefined
+comment|/// on error.
+comment|/// \return - False on success.
+name|virtual
+name|bool
+name|parseParenExprOfDepth
+parameter_list|(
+name|unsigned
+name|ParenDepth
+parameter_list|,
+specifier|const
+name|MCExpr
+modifier|*
+modifier|&
+name|Res
+parameter_list|,
+name|SMLoc
+modifier|&
+name|EndLoc
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 block|}
 empty_stmt|;
 comment|/// \brief Create an MCAsmParser instance.
@@ -832,7 +860,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

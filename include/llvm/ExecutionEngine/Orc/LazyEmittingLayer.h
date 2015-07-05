@@ -867,13 +867,6 @@ control|)
 block|{
 name|Mangler
 name|Mang
-argument_list|(
-operator|&
-name|M
-operator|->
-name|getDataLayout
-argument_list|()
-argument_list|)
 decl_stmt|;
 for|for
 control|(

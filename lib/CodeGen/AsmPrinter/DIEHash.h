@@ -408,7 +408,7 @@ argument_list|(
 specifier|const
 name|DIE
 operator|::
-name|value_range
+name|const_value_range
 operator|&
 name|Values
 argument_list|)
@@ -524,10 +524,6 @@ block|}
 empty_stmt|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// namespace llvm
-end_comment
 
 begin_endif
 endif|#

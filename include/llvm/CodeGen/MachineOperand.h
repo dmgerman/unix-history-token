@@ -100,6 +100,9 @@ name|class
 name|MDNode
 decl_stmt|;
 name|class
+name|ModuleSlotTracker
+decl_stmt|;
+name|class
 name|TargetMachine
 decl_stmt|;
 name|class
@@ -576,6 +579,26 @@ argument_list|(
 name|raw_ostream
 operator|&
 name|os
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|os
+argument_list|,
+name|ModuleSlotTracker
+operator|&
+name|MST
 argument_list|,
 specifier|const
 name|TargetRegisterInfo
@@ -1525,8 +1548,8 @@ operator|.
 name|CFIIndex
 return|;
 block|}
-comment|/// getOffset - Return the offset from the symbol in this operand. This always
-comment|/// returns 0 for ExternalSymbol operands.
+comment|/// Return the offset from the symbol in this operand. This always returns 0
+comment|/// for ExternalSymbol operands.
 name|int64_t
 name|getOffset
 argument_list|()
@@ -1539,6 +1562,9 @@ name|isGlobal
 argument_list|()
 operator|||
 name|isSymbol
+argument_list|()
+operator|||
+name|isMCSymbol
 argument_list|()
 operator|||
 name|isCPI
@@ -1798,6 +1824,9 @@ name|isGlobal
 argument_list|()
 operator|||
 name|isSymbol
+argument_list|()
+operator|||
+name|isMCSymbol
 argument_list|()
 operator|||
 name|isCPI
@@ -2778,6 +2807,12 @@ parameter_list|(
 name|MCSymbol
 modifier|*
 name|Sym
+parameter_list|,
+name|unsigned
+name|char
+name|TargetFlags
+init|=
+literal|0
 parameter_list|)
 block|{
 name|MachineOperand
@@ -2795,6 +2830,20 @@ operator|.
 name|Sym
 operator|=
 name|Sym
+expr_stmt|;
+name|Op
+operator|.
+name|setOffset
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|Op
+operator|.
+name|setTargetFlags
+argument_list|(
+name|TargetFlags
+argument_list|)
 expr_stmt|;
 return|return
 name|Op
@@ -2917,7 +2966,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

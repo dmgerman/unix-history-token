@@ -506,7 +506,6 @@ return|;
 block|}
 block|}
 block|}
-comment|// namespace ARM_PROC
 name|namespace
 name|ARM_MB
 block|{
@@ -1710,7 +1709,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm;
 end_comment
 
 begin_endif

@@ -142,7 +142,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm;
 end_comment
 
 begin_decl_stmt
@@ -351,7 +351,6 @@ comment|// Ordered
 block|}
 enum|;
 block|}
-comment|// namespace SPCC
 specifier|inline
 specifier|static
 specifier|const

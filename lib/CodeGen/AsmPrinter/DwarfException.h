@@ -82,6 +82,7 @@ name|class
 name|ARMTargetStreamer
 decl_stmt|;
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|DwarfCFIExceptionBase
 range|:
 name|public
@@ -107,6 +108,7 @@ name|override
 block|; }
 decl_stmt|;
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|DwarfCFIException
 range|:
 name|public
@@ -171,6 +173,7 @@ name|override
 block|; }
 decl_stmt|;
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|ARMException
 range|:
 name|public

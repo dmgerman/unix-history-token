@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringSet.h"
 end_include
 
@@ -414,8 +420,6 @@ comment|///
 comment|/// The only error that can occur in this routine is if an argument is
 comment|/// missing values; in this case \p MissingArgCount will be non-zero.
 comment|///
-comment|/// \param ArgBegin - The beginning of the argument vector.
-comment|/// \param ArgEnd - The end of the argument vector.
 comment|/// \param MissingArgIndex - On error, the index of the option which could
 comment|/// not be parsed.
 comment|/// \param MissingArgCount - On error, the number of missing options.
@@ -426,22 +430,15 @@ comment|/// is the default and means exclude nothing.
 comment|/// \return An InputArgList; on error this will contain all the options
 comment|/// which could be parsed.
 name|InputArgList
-modifier|*
 name|ParseArgs
 argument_list|(
+name|ArrayRef
+operator|<
 specifier|const
 name|char
 operator|*
-specifier|const
-operator|*
-name|ArgBegin
-argument_list|,
-specifier|const
-name|char
-operator|*
-specifier|const
-operator|*
-name|ArgEnd
+operator|>
+name|Args
 argument_list|,
 name|unsigned
 operator|&

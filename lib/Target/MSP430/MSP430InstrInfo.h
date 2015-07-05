@@ -140,7 +140,6 @@ name|SizeShift
 block|}
 enum|;
 block|}
-comment|// namespace MSP430II
 name|class
 name|MSP430InstrInfo
 range|:
@@ -304,10 +303,6 @@ block|;  }
 decl_stmt|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// namespace llvm
-end_comment
 
 begin_endif
 endif|#

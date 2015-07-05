@@ -164,7 +164,6 @@ name|MEMBARRIER
 block|}
 enum|;
 block|}
-comment|// namespace XCoreISD
 comment|//===--------------------------------------------------------------------===//
 comment|// TargetLowering Implementation
 comment|//===--------------------------------------------------------------------===//
@@ -705,10 +704,6 @@ block|;   }
 decl_stmt|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// namespace llvm
-end_comment
 
 begin_endif
 endif|#

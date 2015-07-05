@@ -207,6 +207,31 @@ block|;
 name|APInt
 name|Val
 block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
+block|;
 name|protected
 operator|:
 comment|// allocate space for exactly zero operands
@@ -734,6 +759,31 @@ name|friend
 name|class
 name|LLVMContextImpl
 block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
+block|;
 name|protected
 operator|:
 name|ConstantFP
@@ -1039,6 +1089,31 @@ argument_list|)
 operator|=
 name|delete
 block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
+block|;
 name|protected
 operator|:
 name|explicit
@@ -1094,11 +1169,6 @@ name|Type
 operator|*
 name|Ty
 argument_list|)
-block|;
-name|void
-name|destroyConstant
-argument_list|()
-name|override
 block|;
 comment|/// getSequentialElement - If this CAZ has array or vector type, return a zero
 comment|/// with the right element type.
@@ -1189,6 +1259,31 @@ argument_list|)
 operator|=
 name|delete
 block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
+block|;
 name|protected
 operator|:
 name|ConstantArray
@@ -1275,22 +1370,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|void
-name|destroyConstant
-argument_list|()
-name|override
-block|;
-name|void
-name|replaceUsesOfWithOnConstant
-argument_list|(
-argument|Value *From
-argument_list|,
-argument|Value *To
-argument_list|,
-argument|Use *U
-argument_list|)
-name|override
-block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 name|bool
@@ -1356,6 +1435,31 @@ operator|&
 argument_list|)
 operator|=
 name|delete
+block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -1512,22 +1616,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|void
-name|destroyConstant
-argument_list|()
-name|override
-block|;
-name|void
-name|replaceUsesOfWithOnConstant
-argument_list|(
-argument|Value *From
-argument_list|,
-argument|Value *To
-argument_list|,
-argument|Use *U
-argument_list|)
-name|override
-block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 name|bool
@@ -1593,6 +1681,31 @@ operator|&
 argument_list|)
 operator|=
 name|delete
+block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -1692,22 +1805,6 @@ name|getSplatValue
 argument_list|()
 specifier|const
 block|;
-name|void
-name|destroyConstant
-argument_list|()
-name|override
-block|;
-name|void
-name|replaceUsesOfWithOnConstant
-argument_list|(
-argument|Value *From
-argument_list|,
-argument|Value *To
-argument_list|,
-argument|Use *U
-argument_list|)
-name|override
-block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 name|bool
@@ -1779,6 +1876,31 @@ argument_list|)
 operator|=
 name|delete
 block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
+block|;
 name|protected
 operator|:
 name|explicit
@@ -1835,11 +1957,6 @@ name|PointerType
 operator|*
 name|T
 argument_list|)
-block|;
-name|void
-name|destroyConstant
-argument_list|()
-name|override
 block|;
 comment|/// getType - Specialize the getType() method to always return an PointerType,
 comment|/// which reduces the amount of casting needed in parts of the compiler.
@@ -1937,6 +2054,31 @@ operator|&
 argument_list|)
 operator|=
 name|delete
+block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -2199,11 +2341,6 @@ name|StringRef
 name|getRawDataValues
 argument_list|()
 specifier|const
-block|;
-name|void
-name|destroyConstant
-argument_list|()
-name|override
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 comment|///
@@ -2899,6 +3036,31 @@ operator|*
 name|BB
 argument_list|)
 block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
+block|;
 name|public
 operator|:
 comment|/// get - Return a BlockAddress for the specified function and basic block.
@@ -2993,22 +3155,6 @@ name|get
 argument_list|()
 return|;
 block|}
-name|void
-name|destroyConstant
-argument_list|()
-name|override
-block|;
-name|void
-name|replaceUsesOfWithOnConstant
-argument_list|(
-argument|Value *From
-argument_list|,
-argument|Value *To
-argument_list|,
-argument|Use *U
-argument_list|)
-name|override
-block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -3069,6 +3215,31 @@ block|{
 name|friend
 expr|struct
 name|ConstantExprKeyType
+block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -4605,22 +4776,6 @@ operator|*
 name|getAsInstruction
 argument_list|()
 block|;
-name|void
-name|destroyConstant
-argument_list|()
-name|override
-block|;
-name|void
-name|replaceUsesOfWithOnConstant
-argument_list|(
-argument|Value *From
-argument_list|,
-argument|Value *To
-argument_list|,
-argument|Use *U
-argument_list|)
-name|override
-block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -4718,6 +4873,31 @@ operator|&
 argument_list|)
 operator|=
 name|delete
+block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -4822,11 +5002,6 @@ name|getNumElements
 argument_list|()
 specifier|const
 block|;
-name|void
-name|destroyConstant
-argument_list|()
-name|override
-block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 name|bool
@@ -4849,7 +5024,7 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

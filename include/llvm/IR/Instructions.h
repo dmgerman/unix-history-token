@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Function.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/InstrTypes.h"
 end_include
 
@@ -254,12 +260,16 @@ name|AllocatedType
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|AllocaInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -627,12 +637,16 @@ argument_list|()
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|LoadInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -1295,12 +1309,16 @@ argument_list|()
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|StoreInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -1867,12 +1885,16 @@ argument_list|)
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|FenceInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -2109,12 +2131,16 @@ argument_list|)
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|AtomicCmpXchgInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -2680,12 +2706,16 @@ name|delete
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|AtomicRMWInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -3277,12 +3307,16 @@ argument_list|)
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|GetElementPtrInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -4430,13 +4464,17 @@ argument_list|)
 block|;   }
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 comment|/// \brief Clone an identical ICmpInst
 name|ICmpInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -4810,13 +4848,17 @@ name|CmpInst
 block|{
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 comment|/// \brief Clone an identical FCmpInst
 name|FCmpInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -5475,12 +5517,16 @@ argument_list|)
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|CallInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -6142,6 +6188,17 @@ argument_list|,
 argument|Attribute::AttrKind attr
 argument_list|)
 block|;
+comment|/// addAttribute - adds the attribute to the list of attributes.
+name|void
+name|addAttribute
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|StringRef Kind
+argument_list|,
+argument|StringRef Value
+argument_list|)
+block|;
 comment|/// removeAttribute - removes the attribute from the list of attributes.
 name|void
 name|removeAttribute
@@ -6189,6 +6246,21 @@ operator|&&
 literal|"Use CallInst::isNoBuiltin() to check for Attribute::NoBuiltin"
 argument_list|)
 block|;
+return|return
+name|hasFnAttrImpl
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+comment|/// \brief Determine whether this call has the given attribute.
+name|bool
+name|hasFnAttr
+argument_list|(
+argument|StringRef A
+argument_list|)
+specifier|const
+block|{
 return|return
 name|hasFnAttrImpl
 argument_list|(
@@ -6745,13 +6817,63 @@ return|;
 block|}
 name|private
 operator|:
+name|template
+operator|<
+name|typename
+name|AttrKind
+operator|>
 name|bool
 name|hasFnAttrImpl
 argument_list|(
-argument|Attribute::AttrKind A
+argument|AttrKind A
 argument_list|)
 specifier|const
-block|;
+block|{
+if|if
+condition|(
+name|AttributeList
+operator|.
+name|hasAttribute
+argument_list|(
+name|AttributeSet
+operator|::
+name|FunctionIndex
+argument_list|,
+name|A
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+specifier|const
+name|Function
+modifier|*
+name|F
+init|=
+name|getCalledFunction
+argument_list|()
+condition|)
+return|return
+name|F
+operator|->
+name|getAttributes
+argument_list|()
+operator|.
+name|hasAttribute
+argument_list|(
+name|AttributeSet
+operator|::
+name|FunctionIndex
+argument_list|,
+name|A
+argument_list|)
+return|;
+return|return
+name|false
+return|;
+block|}
 comment|// Shadow Instruction::setInstructionSubclassData with a private forwarding
 comment|// method so that subclasses cannot accidentally use it.
 name|void
@@ -6767,7 +6889,7 @@ argument_list|(
 name|D
 argument_list|)
 block|;   }
-block|}
+expr|}
 block|;
 name|template
 operator|<
@@ -7075,12 +7197,16 @@ argument_list|)
 block|;   }
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|SelectInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -7379,12 +7505,16 @@ name|UnaryInstruction
 block|{
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|VAArgInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -7606,12 +7736,16 @@ argument_list|)
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|ExtractElementInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -7922,12 +8056,16 @@ argument_list|)
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|InsertElementInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -8140,12 +8278,16 @@ name|Instruction
 block|{
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|ShuffleVectorInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -8572,12 +8714,16 @@ return|;
 block|}
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|ExtractValueInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -9072,12 +9218,16 @@ argument_list|)
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|InsertValueInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -9677,12 +9827,16 @@ comment|/* IsPhi */
 name|true
 argument_list|)
 block|;   }
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|PHINode
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -10450,12 +10604,16 @@ argument_list|)
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|LandingPadInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -10801,12 +10959,16 @@ argument_list|)
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|ReturnInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -11130,12 +11292,16 @@ argument_list|)
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|BranchInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -11632,12 +11798,16 @@ argument_list|)
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|SwitchInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -12946,12 +13116,16 @@ argument_list|)
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|IndirectBrInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -13455,12 +13629,16 @@ argument_list|)
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|InvokeInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -14813,12 +14991,16 @@ argument_list|)
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|ResumeInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -15027,12 +15209,16 @@ name|delete
 block|;
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|UnreachableInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -15180,13 +15366,17 @@ name|CastInst
 block|{
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 comment|/// \brief Clone an identical TruncInst
 name|TruncInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -15305,13 +15495,17 @@ name|CastInst
 block|{
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 comment|/// \brief Clone an identical ZExtInst
 name|ZExtInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -15430,13 +15624,17 @@ name|CastInst
 block|{
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 comment|/// \brief Clone an identical SExtInst
 name|SExtInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -15555,13 +15753,17 @@ name|CastInst
 block|{
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 comment|/// \brief Clone an identical FPTruncInst
 name|FPTruncInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -15680,13 +15882,17 @@ name|CastInst
 block|{
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 comment|/// \brief Clone an identical FPExtInst
 name|FPExtInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -15805,13 +16011,17 @@ name|CastInst
 block|{
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 comment|/// \brief Clone an identical UIToFPInst
 name|UIToFPInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -15930,13 +16140,17 @@ name|CastInst
 block|{
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 comment|/// \brief Clone an identical SIToFPInst
 name|SIToFPInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -16055,13 +16269,17 @@ name|CastInst
 block|{
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 comment|/// \brief Clone an identical FPToUIInst
 name|FPToUIInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -16180,13 +16398,17 @@ name|CastInst
 block|{
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 comment|/// \brief Clone an identical FPToSIInst
 name|FPToSIInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -16359,13 +16581,17 @@ name|InsertAtEnd
 comment|///< The block to insert the instruction into
 argument_list|)
 block|;
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 comment|/// \brief Clone an identical IntToPtrInst
 name|IntToPtrInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 comment|/// \brief Returns the address space of this instruction's pointer type.
 name|unsigned
@@ -16442,13 +16668,17 @@ name|CastInst
 block|{
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 comment|/// \brief Clone an identical PtrToIntInst
 name|PtrToIntInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -16622,13 +16852,17 @@ name|CastInst
 block|{
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 comment|/// \brief Clone an identical BitCastInst
 name|BitCastInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -16748,13 +16982,17 @@ name|CastInst
 block|{
 name|protected
 operator|:
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 comment|/// \brief Clone an identical AddrSpaceCastInst
 name|AddrSpaceCastInst
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -16864,7 +17102,7 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

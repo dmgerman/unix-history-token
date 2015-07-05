@@ -70,7 +70,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<system_error>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -145,6 +163,53 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// Profiling information for a single function.
+struct|struct
+name|InstrProfRecord
+block|{
+name|InstrProfRecord
+argument_list|()
+block|{}
+name|InstrProfRecord
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|uint64_t Hash
+argument_list|,
+argument|std::vector<uint64_t> Counts
+argument_list|)
+block|:
+name|Name
+argument_list|(
+name|Name
+argument_list|)
+operator|,
+name|Hash
+argument_list|(
+name|Hash
+argument_list|)
+operator|,
+name|Counts
+argument_list|(
+argument|std::move(Counts)
+argument_list|)
+block|{}
+name|StringRef
+name|Name
+expr_stmt|;
+name|uint64_t
+name|Hash
+decl_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|uint64_t
+operator|>
+name|Counts
+expr_stmt|;
+block|}
+struct|;
 block|}
 end_decl_stmt
 

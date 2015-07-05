@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/PointerIntPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/PointerUnion.h"
 end_include
 
@@ -134,6 +140,22 @@ block|,
 name|SymbolKindMachO
 block|,   }
 enum|;
+comment|/// A symbol can contain an Offset, or Value, or be Common, but never more
+comment|/// than one of these.
+enum|enum
+name|Contents
+enum|:
+name|uint8_t
+block|{
+name|SymContentsUnset
+block|,
+name|SymContentsOffset
+block|,
+name|SymContentsVariable
+block|,
+name|SymContentsCommon
+block|,   }
+enum|;
 comment|// Special sentinal value for the absolute pseudo section.
 comment|//
 comment|// FIXME: Use a PointerInt wrapper for this?
@@ -153,7 +175,13 @@ comment|/// value's section.
 comment|///
 comment|/// If this is a fragment, then it gives the fragment this symbol's value is
 comment|/// relative to, if any.
+comment|///
+comment|/// For the 'HasName' integer, this is true if this symbol is named.
+comment|/// A named symbol will have a pointer to the name allocated in the bytes
+comment|/// immediately prior to the MCSymbol.
 name|mutable
+name|PointerIntPair
+operator|<
 name|PointerUnion
 operator|<
 name|MCSection
@@ -162,14 +190,11 @@ operator|,
 name|MCFragment
 operator|*
 operator|>
-name|SectionOrFragment
+operator|,
+literal|1
+operator|>
+name|SectionOrFragmentAndHasName
 expr_stmt|;
-comment|/// Value - If non-null, the value for a variable symbol.
-specifier|const
-name|MCExpr
-modifier|*
-name|Value
-decl_stmt|;
 comment|/// IsTemporary - True if this is an assembler temporary label, which
 comment|/// typically does not survive in the .o file's symbol table.  Usually
 comment|/// "Lfoo" or ".foo".
@@ -211,14 +236,6 @@ name|IsPrivateExtern
 range|:
 literal|1
 decl_stmt|;
-comment|/// True if this symbol is named.
-comment|/// A named symbol will have a pointer to the name allocated in the bytes
-comment|/// immediately prior to the MCSymbol.
-name|unsigned
-name|HasName
-range|:
-literal|1
-decl_stmt|;
 comment|/// LLVM RTTI discriminator. This is actually a SymbolKind enumerator, but is
 comment|/// unsigned to avoid sign extension and achieve better bitpacking with MSVC.
 name|unsigned
@@ -232,6 +249,45 @@ name|unsigned
 name|IsUsedInReloc
 range|:
 literal|1
+decl_stmt|;
+comment|/// This is actually a Contents enumerator, but is unsigned to avoid sign
+comment|/// extension and achieve better bitpacking with MSVC.
+name|unsigned
+name|SymbolContents
+range|:
+literal|2
+decl_stmt|;
+comment|/// The alignment of the symbol, if it is 'common', or -1.
+comment|///
+comment|/// The alignment is stored as log2(align) + 1.  This allows all values from
+comment|/// 0 to 2^31 to be stored which is every power of 2 representable by an
+comment|/// unsigned.
+specifier|static
+specifier|const
+name|unsigned
+name|NumCommonAlignmentBits
+init|=
+literal|5
+decl_stmt|;
+name|unsigned
+name|CommonAlignLog2
+range|:
+name|NumCommonAlignmentBits
+decl_stmt|;
+comment|/// The Flags field is used by object file implementations to store
+comment|/// additional per symbol information which is not easily classified.
+specifier|static
+specifier|const
+name|unsigned
+name|NumFlagsBits
+init|=
+literal|16
+decl_stmt|;
+name|mutable
+name|uint32_t
+name|Flags
+range|:
+name|NumFlagsBits
 decl_stmt|;
 comment|/// Index field, for use by the object file implementation.
 name|mutable
@@ -250,25 +306,14 @@ comment|/// The size of the symbol, if it is 'common'.
 name|uint64_t
 name|CommonSize
 decl_stmt|;
+comment|/// If non-null, the value for a variable symbol.
+specifier|const
+name|MCExpr
+modifier|*
+name|Value
+decl_stmt|;
 block|}
 union|;
-comment|/// The alignment of the symbol, if it is 'common', or -1.
-comment|//
-comment|// FIXME: Pack this in with other fields?
-name|unsigned
-name|CommonAlign
-init|=
-operator|-
-literal|1U
-decl_stmt|;
-comment|/// The Flags field is used by object file implementations to store
-comment|/// additional per symbol information which is not easily classified.
-name|mutable
-name|uint32_t
-name|Flags
-init|=
-literal|0
-decl_stmt|;
 name|protected
 label|:
 comment|// MCContext creates and uniques these.
@@ -310,11 +355,6 @@ argument_list|,
 argument|bool isTemporary
 argument_list|)
 block|:
-name|Value
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
 name|IsTemporary
 argument_list|(
 name|isTemporary
@@ -345,13 +385,6 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|HasName
-argument_list|(
-operator|!
-operator|!
-name|Name
-argument_list|)
-operator|,
 name|Kind
 argument_list|(
 name|Kind
@@ -359,12 +392,36 @@ argument_list|)
 operator|,
 name|IsUsedInReloc
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|SymbolContents
+argument_list|(
+name|SymContentsUnset
+argument_list|)
+operator|,
+name|CommonAlignLog2
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Flags
+argument_list|(
+literal|0
 argument_list|)
 block|{
 name|Offset
 operator|=
 literal|0
+block|;
+name|SectionOrFragmentAndHasName
+operator|.
+name|setInt
+argument_list|(
+operator|!
+operator|!
+name|Name
+argument_list|)
 block|;
 if|if
 condition|(
@@ -486,6 +543,16 @@ operator|->
 name|getParent
 argument_list|()
 return|;
+specifier|const
+name|auto
+operator|&
+name|SectionOrFragment
+operator|=
+name|SectionOrFragmentAndHasName
+operator|.
+name|getPointer
+argument_list|()
+expr_stmt|;
 name|assert
 argument_list|(
 operator|!
@@ -521,7 +588,8 @@ condition|(
 name|Section
 operator|||
 operator|!
-name|Value
+name|isVariable
+argument_list|()
 condition|)
 return|return
 name|Section
@@ -529,7 +597,8 @@ return|;
 return|return
 name|Section
 operator|=
-name|Value
+name|getVariableValue
+argument_list|()
 operator|->
 name|findAssociatedSection
 argument_list|()
@@ -548,7 +617,10 @@ argument_list|()
 block|{
 name|assert
 argument_list|(
-name|HasName
+name|SectionOrFragmentAndHasName
+operator|.
+name|getInt
+argument_list|()
 operator|&&
 literal|"Name is required"
 argument_list|)
@@ -615,7 +687,10 @@ block|{
 if|if
 condition|(
 operator|!
-name|HasName
+name|SectionOrFragmentAndHasName
+operator|.
+name|getInt
+argument_list|()
 condition|)
 return|return
 name|StringRef
@@ -785,13 +860,24 @@ condition|(
 name|IsRedefinable
 condition|)
 block|{
+if|if
+condition|(
+name|SymbolContents
+operator|==
+name|SymContentsVariable
+condition|)
+block|{
 name|Value
 operator|=
 name|nullptr
 expr_stmt|;
-name|SectionOrFragment
+name|SymbolContents
 operator|=
-name|nullptr
+name|SymContentsUnset
+expr_stmt|;
+block|}
+name|setUndefined
+argument_list|()
 expr_stmt|;
 name|IsRedefinable
 operator|=
@@ -954,7 +1040,10 @@ expr_stmt|;
 name|assert
 argument_list|(
 operator|!
-name|SectionOrFragment
+name|SectionOrFragmentAndHasName
+operator|.
+name|getPointer
+argument_list|()
 operator|.
 name|is
 operator|<
@@ -967,10 +1056,13 @@ operator|&&
 literal|"Section or null expected"
 argument_list|)
 expr_stmt|;
-name|SectionOrFragment
-operator|=
+name|SectionOrFragmentAndHasName
+operator|.
+name|setPointer
+argument_list|(
 operator|&
 name|S
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -984,9 +1076,21 @@ name|void
 name|setUndefined
 parameter_list|()
 block|{
-name|SectionOrFragment
-operator|=
-name|nullptr
+name|SectionOrFragmentAndHasName
+operator|.
+name|setPointer
+argument_list|(
+name|PointerUnion
+operator|<
+name|MCSection
+operator|*
+argument_list|,
+name|MCFragment
+operator|*
+operator|>
+operator|(
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1056,9 +1160,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Value
-operator|!=
-name|nullptr
+name|SymbolContents
+operator|==
+name|SymContentsVariable
 return|;
 block|}
 end_expr_stmt
@@ -1153,9 +1257,17 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-operator|!
-name|isCommon
-argument_list|()
+operator|(
+name|SymbolContents
+operator|==
+name|SymContentsUnset
+operator|||
+name|SymbolContents
+operator|==
+name|SymContentsOffset
+operator|)
+operator|&&
+literal|"Cannot get offset for a common/variable symbol"
 argument_list|)
 block|;
 return|return
@@ -1174,14 +1286,26 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
-operator|!
-name|isCommon
-argument_list|()
+operator|(
+name|SymbolContents
+operator|==
+name|SymContentsUnset
+operator|||
+name|SymbolContents
+operator|==
+name|SymContentsOffset
+operator|)
+operator|&&
+literal|"Cannot set offset for a common/variable symbol"
 argument_list|)
 expr_stmt|;
 name|Offset
 operator|=
 name|Value
+expr_stmt|;
+name|SymbolContents
+operator|=
+name|SymContentsOffset
 expr_stmt|;
 block|}
 end_function
@@ -1249,9 +1373,51 @@ name|CommonSize
 operator|=
 name|Size
 expr_stmt|;
-name|CommonAlign
+name|SymbolContents
 operator|=
+name|SymContentsCommon
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+operator|!
 name|Align
+operator|||
+name|isPowerOf2_32
+argument_list|(
+name|Align
+argument_list|)
+operator|)
+operator|&&
+literal|"Alignment must be a power of 2"
+argument_list|)
+expr_stmt|;
+name|unsigned
+name|Log2Align
+init|=
+name|Log2_32
+argument_list|(
+name|Align
+argument_list|)
+operator|+
+literal|1
+decl_stmt|;
+name|assert
+argument_list|(
+name|Log2Align
+operator|<
+operator|(
+literal|1U
+operator|<<
+name|NumCommonAlignmentBits
+operator|)
+operator|&&
+literal|"Out of range alignment"
+argument_list|)
+expr_stmt|;
+name|CommonAlignLog2
+operator|=
+name|Log2Align
 expr_stmt|;
 block|}
 end_function
@@ -1275,7 +1441,19 @@ literal|"Not a 'common' symbol!"
 argument_list|)
 block|;
 return|return
-name|CommonAlign
+name|CommonAlignLog2
+condition|?
+operator|(
+literal|1U
+operator|<<
+operator|(
+name|CommonAlignLog2
+operator|-
+literal|1
+operator|)
+operator|)
+else|:
+literal|0
 return|;
 block|}
 end_expr_stmt
@@ -1334,7 +1512,8 @@ name|CommonSize
 operator|!=
 name|Size
 operator|||
-name|CommonAlign
+name|getCommonAlignment
+argument_list|()
 operator|!=
 name|Align
 condition|)
@@ -1367,10 +1546,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|CommonAlign
-operator|!=
-operator|-
-literal|1U
+name|SymbolContents
+operator|==
+name|SymContentsCommon
 return|;
 block|}
 end_expr_stmt
@@ -1383,7 +1561,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|SectionOrFragment
+name|SectionOrFragmentAndHasName
+operator|.
+name|getPointer
+argument_list|()
 operator|.
 name|dyn_cast
 operator|<
@@ -1406,9 +1587,12 @@ name|Value
 argument_list|)
 decl|const
 block|{
-name|SectionOrFragment
-operator|=
+name|SectionOrFragmentAndHasName
+operator|.
+name|setPointer
+argument_list|(
 name|Value
+argument_list|)
 expr_stmt|;
 block|}
 end_decl_stmt
@@ -1535,6 +1719,19 @@ name|Value
 argument_list|)
 decl|const
 block|{
+name|assert
+argument_list|(
+name|Value
+operator|<
+operator|(
+literal|1U
+operator|<<
+name|NumFlagsBits
+operator|)
+operator|&&
+literal|"Out of range flags"
+argument_list|)
+expr_stmt|;
 name|Flags
 operator|=
 name|Value
@@ -1558,6 +1755,19 @@ name|Mask
 argument_list|)
 decl|const
 block|{
+name|assert
+argument_list|(
+name|Value
+operator|<
+operator|(
+literal|1U
+operator|<<
+name|NumFlagsBits
+operator|)
+operator|&&
+literal|"Out of range flags"
+argument_list|)
+expr_stmt|;
 name|Flags
 operator|=
 operator|(

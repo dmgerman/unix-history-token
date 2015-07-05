@@ -778,8 +778,10 @@ operator|&
 name|AP
 argument_list|,
 name|DebugLocStream
+operator|::
+name|ListBuilder
 operator|&
-name|Locs
+name|List
 argument_list|,
 specifier|const
 name|DIBasicType
@@ -987,12 +989,8 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-unit|}
-comment|// namespace llvm
-end_comment
-
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

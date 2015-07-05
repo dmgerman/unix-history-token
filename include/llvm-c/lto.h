@@ -103,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|LTO_API_VERSION
-value|15
+value|16
 end_define
 
 begin_comment
@@ -554,54 +554,15 @@ name|int
 name|index
 parameter_list|)
 function_decl|;
-comment|/**  * Returns the number of dependent libraries in the object module.  *  * \since LTO_API_VERSION=8  */
-specifier|extern
-name|unsigned
-name|int
-name|lto_module_get_num_deplibs
-parameter_list|(
-name|lto_module_t
-name|mod
-parameter_list|)
-function_decl|;
-comment|/**  * Returns the ith dependent library in the module.  *  * \since LTO_API_VERSION=8  */
+comment|/**  * Returns the module's linker options.  *  * The linker options may consist of multiple flags. It is the linker's  * responsibility to split the flags using a platform-specific mechanism.  *  * \since LTO_API_VERSION=16  */
 specifier|extern
 specifier|const
 name|char
 modifier|*
-name|lto_module_get_deplib
+name|lto_module_get_linkeropts
 parameter_list|(
 name|lto_module_t
 name|mod
-parameter_list|,
-name|unsigned
-name|int
-name|index
-parameter_list|)
-function_decl|;
-comment|/**  * Returns the number of linker options in the object module.  *  * \since LTO_API_VERSION=8  */
-specifier|extern
-name|unsigned
-name|int
-name|lto_module_get_num_linkeropts
-parameter_list|(
-name|lto_module_t
-name|mod
-parameter_list|)
-function_decl|;
-comment|/**  * Returns the ith linker option in the module.  *  * \since LTO_API_VERSION=8  */
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|lto_module_get_linkeropt
-parameter_list|(
-name|lto_module_t
-name|mod
-parameter_list|,
-name|unsigned
-name|int
-name|index
 parameter_list|)
 function_decl|;
 comment|/**  * Diagnostic severity.  *  * \since LTO_API_VERSION=7  */

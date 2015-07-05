@@ -3187,6 +3187,149 @@ argument_list|()
 specifier|const
 name|override
 block|;
+comment|/// Collect parametric terms occurring in step expressions.
+name|void
+name|collectParametricTerms
+argument_list|(
+specifier|const
+name|SCEV
+operator|*
+name|Expr
+argument_list|,
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|>
+operator|&
+name|Terms
+argument_list|)
+block|;
+comment|/// Return in Subscripts the access functions for each dimension in Sizes.
+name|void
+name|computeAccessFunctions
+argument_list|(
+specifier|const
+name|SCEV
+operator|*
+name|Expr
+argument_list|,
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|>
+operator|&
+name|Subscripts
+argument_list|,
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|>
+operator|&
+name|Sizes
+argument_list|)
+block|;
+comment|/// Split this SCEVAddRecExpr into two vectors of SCEVs representing the
+comment|/// subscripts and sizes of an array access.
+comment|///
+comment|/// The delinearization is a 3 step process: the first two steps compute the
+comment|/// sizes of each subscript and the third step computes the access functions
+comment|/// for the delinearized array:
+comment|///
+comment|/// 1. Find the terms in the step functions
+comment|/// 2. Compute the array size
+comment|/// 3. Compute the access function: divide the SCEV by the array size
+comment|///    starting with the innermost dimensions found in step 2. The Quotient
+comment|///    is the SCEV to be divided in the next step of the recursion. The
+comment|///    Remainder is the subscript of the innermost dimension. Loop over all
+comment|///    array dimensions computed in step 2.
+comment|///
+comment|/// To compute a uniform array size for several memory accesses to the same
+comment|/// object, one can collect in step 1 all the step terms for all the memory
+comment|/// accesses, and compute in step 2 a unique array shape. This guarantees
+comment|/// that the array shape will be the same across all memory accesses.
+comment|///
+comment|/// FIXME: We could derive the result of steps 1 and 2 from a description of
+comment|/// the array shape given in metadata.
+comment|///
+comment|/// Example:
+comment|///
+comment|/// A[][n][m]
+comment|///
+comment|/// for i
+comment|///   for j
+comment|///     for k
+comment|///       A[j+k][2i][5i] =
+comment|///
+comment|/// The initial SCEV:
+comment|///
+comment|/// A[{{{0,+,2*m+5}_i, +, n*m}_j, +, n*m}_k]
+comment|///
+comment|/// 1. Find the different terms in the step functions:
+comment|/// -> [2*m, 5, n*m, n*m]
+comment|///
+comment|/// 2. Compute the array size: sort and unique them
+comment|/// -> [n*m, 2*m, 5]
+comment|/// find the GCD of all the terms = 1
+comment|/// divide by the GCD and erase constant terms
+comment|/// -> [n*m, 2*m]
+comment|/// GCD = m
+comment|/// divide by GCD -> [n, 2]
+comment|/// remove constant terms
+comment|/// -> [n]
+comment|/// size of the array is A[unknown][n][m]
+comment|///
+comment|/// 3. Compute the access function
+comment|/// a. Divide {{{0,+,2*m+5}_i, +, n*m}_j, +, n*m}_k by the innermost size m
+comment|/// Quotient: {{{0,+,2}_i, +, n}_j, +, n}_k
+comment|/// Remainder: {{{0,+,5}_i, +, 0}_j, +, 0}_k
+comment|/// The remainder is the subscript of the innermost array dimension: [5i].
+comment|///
+comment|/// b. Divide Quotient: {{{0,+,2}_i, +, n}_j, +, n}_k by next outer size n
+comment|/// Quotient: {{{0,+,0}_i, +, 1}_j, +, 1}_k
+comment|/// Remainder: {{{0,+,2}_i, +, 0}_j, +, 0}_k
+comment|/// The Remainder is the subscript of the next array dimension: [2i].
+comment|///
+comment|/// The subscript of the outermost dimension is the Quotient: [j+k].
+comment|///
+comment|/// Overall, we have: A[][n][m], and the access function: A[j+k][2i][5i].
+name|void
+name|delinearize
+argument_list|(
+specifier|const
+name|SCEV
+operator|*
+name|Expr
+argument_list|,
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|>
+operator|&
+name|Subscripts
+argument_list|,
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|>
+operator|&
+name|Sizes
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|ElementSize
+argument_list|)
+block|;
 name|private
 operator|:
 comment|/// Compute the backedge taken count knowing the interval difference, the
@@ -3253,10 +3396,6 @@ name|FirstUnknown
 block|;   }
 block|; }
 end_decl_stmt
-
-begin_comment
-comment|// namespace llvm
-end_comment
 
 begin_endif
 endif|#

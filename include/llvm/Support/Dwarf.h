@@ -832,6 +832,19 @@ name|DW_AT_GNU_pubtypes
 init|=
 literal|0x2135
 block|,
+comment|// LLVM project extensions.
+name|DW_AT_LLVM_include_path
+init|=
+literal|0x3e00
+block|,
+name|DW_AT_LLVM_config_macros
+init|=
+literal|0x3e01
+block|,
+name|DW_AT_LLVM_isysroot
+init|=
+literal|0x3e02
+block|,
 comment|// Apple extensions.
 name|DW_AT_APPLE_optimized
 init|=

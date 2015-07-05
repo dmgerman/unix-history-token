@@ -136,7 +136,6 @@ name|TPOFF
 block|}
 enum|;
 block|}
-comment|// namespace ARMCP
 comment|/// ARMConstantPoolValue - ARM specific constantpool value. This is used to
 comment|/// represent PC-relative displacement between the address of the load
 comment|/// instruction and the constant being loaded, i.e. (&GV-(LPIC+8)).
@@ -1057,7 +1056,7 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

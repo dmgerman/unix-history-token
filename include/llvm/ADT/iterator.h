@@ -750,8 +750,19 @@ argument_list|(
 argument|std::forward<U&&>(u)
 argument_list|)
 block|{}
+specifier|const
+name|WrappedIteratorT
+operator|&
+name|wrapped
+argument_list|()
+specifier|const
+block|{
+return|return
+name|I
+return|;
+block|}
 name|public
-operator|:
+label|:
 typedef|typedef
 name|DifferenceTypeT
 name|difference_type
@@ -1125,12 +1136,8 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-unit|};  }
-comment|// namespace llvm
-end_comment
-
 begin_endif
+unit|};  }
 endif|#
 directive|endif
 end_endif

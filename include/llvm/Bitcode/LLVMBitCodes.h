@@ -509,6 +509,11 @@ init|=
 literal|31
 block|,
 comment|// [distinct, tag, scope, entity, line, name]
+name|METADATA_MODULE
+init|=
+literal|32
+block|,
+comment|// [distinct, scope, name, ...]
 block|}
 enum|;
 comment|// The constants block (CONSTANTS_BLOCK_ID) describes emission for each
@@ -1323,12 +1328,12 @@ literal|5
 block|,   }
 enum|;
 block|}
-comment|// namespace bitc
+comment|// End bitc namespace
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

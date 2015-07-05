@@ -146,6 +146,7 @@ name|RegisterClassInfo
 decl_stmt|;
 comment|/// Contains all the state necessary for anti-dep breaking.
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|AggressiveAntiDepState
 block|{
 name|public
@@ -360,6 +361,7 @@ function_decl|;
 block|}
 empty_stmt|;
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|AggressiveAntiDepBreaker
 range|:
 name|public
@@ -614,12 +616,8 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_comment
-unit|}
-comment|// namespace llvm
-end_comment
-
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

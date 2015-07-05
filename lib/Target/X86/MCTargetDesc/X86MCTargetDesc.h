@@ -238,7 +238,6 @@ name|FS
 parameter_list|)
 function_decl|;
 block|}
-comment|// namespace X86_MC
 name|MCCodeEmitter
 modifier|*
 name|createX86MCCodeEmitter
@@ -407,7 +406,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_comment

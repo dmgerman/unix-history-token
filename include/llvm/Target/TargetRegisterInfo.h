@@ -1956,6 +1956,42 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// Return all the call-preserved register masks defined for this target.
+end_comment
+
+begin_expr_stmt
+name|virtual
+name|ArrayRef
+operator|<
+specifier|const
+name|uint32_t
+operator|*
+operator|>
+name|getRegMasks
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|virtual
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|getRegMaskNames
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// getReservedRegs - Returns a bitset indexed by physical register number
 end_comment
 
@@ -4380,7 +4416,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

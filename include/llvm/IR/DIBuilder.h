@@ -138,31 +138,21 @@ name|LLVMContext
 modifier|&
 name|VMContext
 decl_stmt|;
-name|TempMDTuple
-name|TempEnumTypes
+name|DICompileUnit
+modifier|*
+name|CUNode
 decl_stmt|;
-name|TempMDTuple
-name|TempRetainTypes
-decl_stmt|;
-name|TempMDTuple
-name|TempSubprograms
-decl_stmt|;
-name|TempMDTuple
-name|TempGVs
-decl_stmt|;
-name|TempMDTuple
-name|TempImportedModules
-decl_stmt|;
+comment|///< The one compile unit created by this DIBuiler.
 name|Function
 modifier|*
 name|DeclareFn
 decl_stmt|;
-comment|// llvm.dbg.declare
+comment|///< llvm.dbg.declare
 name|Function
 modifier|*
 name|ValueFn
 decl_stmt|;
-comment|// llvm.dbg.value
+comment|///< llvm.dbg.value
 name|SmallVector
 operator|<
 name|Metadata
@@ -1837,6 +1827,36 @@ name|unsigned
 name|LineNo
 parameter_list|)
 function_decl|;
+comment|/// createModule - This creates new descriptor for a module
+comment|/// with the specified parent scope.
+comment|/// @param Scope       Parent scope
+comment|/// @param Name        Name of this module
+comment|/// @param ConfigurationMacros
+comment|///                    A space-separated shell-quoted list of -D macro
+comment|///                    definitions as they would appear on a command line.
+comment|/// @param IncludePath The path to the module map file.
+comment|/// @param ISysRoot    The clang system root (value of -isysroot).
+name|DIModule
+modifier|*
+name|createModule
+parameter_list|(
+name|DIScope
+modifier|*
+name|Scope
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|,
+name|StringRef
+name|ConfigurationMacros
+parameter_list|,
+name|StringRef
+name|IncludePath
+parameter_list|,
+name|StringRef
+name|ISysRoot
+parameter_list|)
+function_decl|;
 comment|/// createLexicalBlockFile - This creates a descriptor for a lexical
 comment|/// block with a new file attached. This merely extends the existing
 comment|/// lexical block as it crosses a file.
@@ -1921,6 +1941,26 @@ parameter_list|,
 name|DIImportedEntity
 modifier|*
 name|NS
+parameter_list|,
+name|unsigned
+name|Line
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a descriptor for an imported module.
+comment|/// @param Context The scope this module is imported into
+comment|/// @param M The module being imported here
+comment|/// @param Line Line number
+name|DIImportedEntity
+modifier|*
+name|createImportedModule
+parameter_list|(
+name|DIScope
+modifier|*
+name|Context
+parameter_list|,
+name|DIModule
+modifier|*
+name|M
 parameter_list|,
 name|unsigned
 name|Line

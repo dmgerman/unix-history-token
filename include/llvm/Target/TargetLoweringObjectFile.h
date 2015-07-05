@@ -243,21 +243,6 @@ argument|const MCSymbol *Sym
 argument_list|)
 specifier|const
 block|;
-comment|/// Extract the dependent library name from a linker option string. Returns
-comment|/// StringRef() if the option does not specify a library.
-name|virtual
-name|StringRef
-name|getDepLibFromLinkerOpt
-argument_list|(
-argument|StringRef LinkerOption
-argument_list|)
-specifier|const
-block|{
-return|return
-name|StringRef
-argument_list|()
-return|;
-block|}
 comment|/// Emit the module flags that the platform cares about.
 name|virtual
 name|void
@@ -603,6 +588,18 @@ return|return
 name|nullptr
 return|;
 block|}
+name|virtual
+name|void
+name|emitLinkerFlagsForGlobal
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|const GlobalValue *GV
+argument_list|,
+argument|const Mangler&Mang
+argument_list|)
+specifier|const
+block|{}
 name|protected
 operator|:
 name|virtual

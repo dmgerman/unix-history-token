@@ -145,6 +145,9 @@ name|class
 name|Module
 decl_stmt|;
 name|class
+name|ModuleSlotTracker
+decl_stmt|;
+name|class
 name|StringRef
 decl_stmt|;
 name|class
@@ -742,6 +745,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// \brief Implement operator<< on Value.
+comment|/// @{
 name|void
 name|print
 argument_list|(
@@ -751,12 +755,27 @@ name|O
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|O
+argument_list|,
+name|ModuleSlotTracker
+operator|&
+name|MST
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// @}
 comment|/// \brief Print the name of this Value out to the specified raw_ostream.
 comment|///
 comment|/// This is useful when you just want to print 'int %reg126', not the
 comment|/// instruction that generated it. If you specify a Module for context, then
 comment|/// even constanst get pretty-printed; for example, the type of a null
 comment|/// pointer is printed symbolically.
+comment|/// @{
 name|void
 name|printAsOperand
 argument_list|(
@@ -778,6 +797,23 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|printAsOperand
+argument_list|(
+name|raw_ostream
+operator|&
+name|O
+argument_list|,
+name|bool
+name|PrintType
+argument_list|,
+name|ModuleSlotTracker
+operator|&
+name|MST
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// @}
 comment|/// \brief All values are typed, get the type of this value.
 name|Type
 operator|*
@@ -1255,76 +1291,29 @@ comment|/// identification.
 enum|enum
 name|ValueTy
 block|{
-name|ArgumentVal
-block|,
-comment|// This is an instance of Argument
-name|BasicBlockVal
-block|,
-comment|// This is an instance of BasicBlock
-name|FunctionVal
-block|,
-comment|// This is an instance of Function
-name|GlobalAliasVal
-block|,
-comment|// This is an instance of GlobalAlias
-name|GlobalVariableVal
-block|,
-comment|// This is an instance of GlobalVariable
-name|UndefValueVal
-block|,
-comment|// This is an instance of UndefValue
-name|BlockAddressVal
-block|,
-comment|// This is an instance of BlockAddress
-name|ConstantExprVal
-block|,
-comment|// This is an instance of ConstantExpr
-name|ConstantAggregateZeroVal
-block|,
-comment|// This is an instance of ConstantAggregateZero
-name|ConstantDataArrayVal
-block|,
-comment|// This is an instance of ConstantDataArray
-name|ConstantDataVectorVal
-block|,
-comment|// This is an instance of ConstantDataVector
-name|ConstantIntVal
-block|,
-comment|// This is an instance of ConstantInt
-name|ConstantFPVal
-block|,
-comment|// This is an instance of ConstantFP
-name|ConstantArrayVal
-block|,
-comment|// This is an instance of ConstantArray
-name|ConstantStructVal
-block|,
-comment|// This is an instance of ConstantStruct
-name|ConstantVectorVal
-block|,
-comment|// This is an instance of ConstantVector
-name|ConstantPointerNullVal
-block|,
-comment|// This is an instance of ConstantPointerNull
-name|MetadataAsValueVal
-block|,
-comment|// This is an instance of MetadataAsValue
-name|InlineAsmVal
-block|,
-comment|// This is an instance of InlineAsm
-name|InstructionVal
-block|,
-comment|// This is an instance of Instruction
-comment|// Enum values starting at InstructionVal are used for Instructions;
-comment|// don't add new values here!
+define|#
+directive|define
+name|HANDLE_VALUE
+parameter_list|(
+name|Name
+parameter_list|)
+value|Name##Val,
+include|#
+directive|include
+file|"llvm/IR/Value.def"
 comment|// Markers:
-name|ConstantFirstVal
-init|=
-name|FunctionVal
-block|,
-name|ConstantLastVal
-init|=
-name|ConstantPointerNullVal
+define|#
+directive|define
+name|HANDLE_CONSTANT_MARKER
+parameter_list|(
+name|Marker
+parameter_list|,
+name|Constant
+parameter_list|)
+value|Marker = Constant##Val,
+include|#
+directive|include
+file|"llvm/IR/Value.def"
 block|}
 enum|;
 comment|/// \brief Return an ID for the concrete type of this object.
@@ -2915,7 +2904,7 @@ end_function
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

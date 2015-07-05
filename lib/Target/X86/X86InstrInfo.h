@@ -281,7 +281,7 @@ name|CC
 parameter_list|)
 function_decl|;
 block|}
-comment|// namespace X86
+comment|// end namespace X86;
 comment|/// isGlobalStubReference - Return true if the specified TargetFlag operand is
 comment|/// a reference to a stub for a global, not the global itself.
 specifier|inline
@@ -2222,7 +2222,7 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

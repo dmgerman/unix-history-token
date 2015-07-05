@@ -245,7 +245,6 @@ name|CodeFragment
 block|}
 enum|;
 block|}
-comment|// namespace tgtok
 comment|/// TGLexer - TableGen Lexer class.
 name|class
 name|TGLexer

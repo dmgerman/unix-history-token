@@ -467,7 +467,6 @@ name|VST4LN_UPD
 block|}
 enum|;
 block|}
-comment|// namespace ARMISD
 comment|/// Define some predicates that are used for node matching.
 name|namespace
 name|ARM
@@ -1200,6 +1199,42 @@ argument_list|,
 argument|bool IsStore
 argument_list|,
 argument|bool IsLoad
+argument_list|)
+specifier|const
+name|override
+block|;
+name|unsigned
+name|getMaxSupportedInterleaveFactor
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+literal|4
+return|;
+block|}
+name|bool
+name|lowerInterleavedLoad
+argument_list|(
+argument|LoadInst *LI
+argument_list|,
+argument|ArrayRef<ShuffleVectorInst *> Shuffles
+argument_list|,
+argument|ArrayRef<unsigned> Indices
+argument_list|,
+argument|unsigned Factor
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|lowerInterleavedStore
+argument_list|(
+argument|StoreInst *SI
+argument_list|,
+argument|ShuffleVectorInst *SVI
+argument_list|,
+argument|unsigned Factor
 argument_list|)
 specifier|const
 name|override
@@ -2457,12 +2492,8 @@ function_decl|;
 block|}
 end_decl_stmt
 
-begin_comment
-unit|}
-comment|// namespace llvm
-end_comment
-
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

@@ -309,13 +309,17 @@ block|}
 block|}
 empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// \brief This class is used to track local variable information.
+comment|/// This class is used to track local variable information.
 comment|///
-comment|/// - Variables whose location changes over time have a DebugLocListIndex and
-comment|///   the other fields are not used.
+comment|/// Variables can be created from allocas, in which case they're generated from
+comment|/// the MMI table.  Such variables can have multiple expressions and frame
+comment|/// indices.  The \a Expr and \a FrameIndices array must match.
 comment|///
-comment|/// - Variables that are described by multiple MMI table entries have multiple
-comment|///   expressions and frame indices.
+comment|/// Variables can be created from \c DBG_VALUE instructions.  Those whose
+comment|/// location changes over time use \a DebugLocListIndex, while those with a
+comment|/// single instruction use \a MInsn and (optionally) a single entry of \a Expr.
+comment|///
+comment|/// Variables that have been optimized out use none of these fields.
 name|class
 name|DbgVariable
 block|{
@@ -341,22 +345,29 @@ literal|1
 operator|>
 name|Expr
 expr_stmt|;
-comment|/// Complex address location expression.
+comment|/// Complex address.
 name|DIE
 modifier|*
 name|TheDIE
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// Variable DIE.
 name|unsigned
 name|DebugLocListIndex
+init|=
+operator|~
+literal|0u
 decl_stmt|;
 comment|/// Offset in DebugLocs.
 specifier|const
 name|MachineInstr
 modifier|*
 name|MInsn
+init|=
+name|nullptr
 decl_stmt|;
-comment|/// DBG_VALUE instruction of the variable.
+comment|/// DBG_VALUE instruction.
 name|SmallVector
 operator|<
 name|int
@@ -365,28 +376,34 @@ literal|1
 operator|>
 name|FrameIndex
 expr_stmt|;
-comment|/// Frame index of the variable.
+comment|/// Frame index.
 name|DwarfDebug
 modifier|*
 name|DD
 decl_stmt|;
 name|public
 label|:
-comment|/// Construct a DbgVariable from a variable.
+comment|/// Construct a DbgVariable.
+comment|///
+comment|/// Creates a variable without any DW_AT_location.  Call \a initializeMMI()
+comment|/// for MMI entries, or \a initializeDbgValue() for DBG_VALUE instructions.
 name|DbgVariable
 argument_list|(
-argument|const DILocalVariable *V
+specifier|const
+name|DILocalVariable
+operator|*
+name|V
 argument_list|,
-argument|const DILocation *IA
+specifier|const
+name|DILocation
+operator|*
+name|IA
 argument_list|,
-argument|const DIExpression *E
-argument_list|,
-argument|DwarfDebug *DD
-argument_list|,
-argument|int FI = ~
-literal|0
+name|DwarfDebug
+operator|*
+name|DD
 argument_list|)
-block|:
+operator|:
 name|Var
 argument_list|(
 name|V
@@ -397,43 +414,51 @@ argument_list|(
 name|IA
 argument_list|)
 operator|,
-name|Expr
-argument_list|(
-literal|1
-argument_list|,
-name|E
-argument_list|)
-operator|,
-name|TheDIE
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|DebugLocListIndex
-argument_list|(
-operator|~
-literal|0U
-argument_list|)
-operator|,
-name|MInsn
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
 name|DD
 argument_list|(
 argument|DD
 argument_list|)
-block|{
-name|FrameIndex
-operator|.
-name|push_back
+block|{}
+comment|/// Initialize from the MMI table.
+name|void
+name|initializeMMI
 argument_list|(
-name|FI
+argument|const DIExpression *E
+argument_list|,
+argument|int FI
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Expr
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Already initialized?"
 argument_list|)
 block|;
 name|assert
 argument_list|(
+name|FrameIndex
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Already initialized?"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|!
+name|MInsn
+operator|&&
+literal|"Already initialized?"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|(
 operator|!
 name|E
 operator|||
@@ -441,32 +466,84 @@ name|E
 operator|->
 name|isValid
 argument_list|()
+operator|)
+operator|&&
+literal|"Expected valid expression"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|~
+name|FI
+operator|&&
+literal|"Expected valid index"
+argument_list|)
+block|;
+name|Expr
+operator|.
+name|push_back
+argument_list|(
+name|E
+argument_list|)
+block|;
+name|FrameIndex
+operator|.
+name|push_back
+argument_list|(
+name|FI
 argument_list|)
 block|;   }
-comment|/// Construct a DbgVariable from a DEBUG_VALUE.
-comment|/// AbstractVar may be NULL.
-name|DbgVariable
+comment|/// Initialize from a DBG_VALUE instruction.
+name|void
+name|initializeDbgValue
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|DbgValue
-argument_list|,
-name|DwarfDebug
-operator|*
-name|DD
+argument|const MachineInstr *DbgValue
 argument_list|)
-operator|:
-name|Var
+block|{
+name|assert
 argument_list|(
+name|Expr
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Already initialized?"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|FrameIndex
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Already initialized?"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|!
+name|MInsn
+operator|&&
+literal|"Already initialized?"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|Var
+operator|==
 name|DbgValue
 operator|->
 name|getDebugVariable
 argument_list|()
+operator|&&
+literal|"Wrong variable"
 argument_list|)
-operator|,
-name|IA
+block|;
+name|assert
 argument_list|(
+name|IA
+operator|==
 name|DbgValue
 operator|->
 name|getDebugLoc
@@ -474,47 +551,40 @@ argument_list|()
 operator|->
 name|getInlinedAt
 argument_list|()
+operator|&&
+literal|"Wrong inlined-at"
 argument_list|)
-operator|,
-name|Expr
-argument_list|(
-literal|1
-argument_list|,
+block|;
+name|MInsn
+operator|=
+name|DbgValue
+block|;
+if|if
+condition|(
+name|auto
+operator|*
+name|E
+operator|=
 name|DbgValue
 operator|->
 name|getDebugExpression
 argument_list|()
-argument_list|)
-operator|,
-name|TheDIE
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|DebugLocListIndex
-argument_list|(
-operator|~
-literal|0U
-argument_list|)
-operator|,
-name|MInsn
-argument_list|(
-name|DbgValue
-argument_list|)
-operator|,
-name|DD
-argument_list|(
-argument|DD
-argument_list|)
-block|{
-name|FrameIndex
+condition|)
+if|if
+condition|(
+name|E
+operator|->
+name|getNumElements
+argument_list|()
+condition|)
+name|Expr
 operator|.
 name|push_back
 argument_list|(
-operator|~
-literal|0
+name|E
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|// Accessors.
 specifier|const
 name|DILocalVariable
@@ -695,46 +765,78 @@ operator|&&
 literal|"conflicting inlined-at location"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|assert
+argument_list|(
+operator|!
+name|FrameIndex
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Expected an MMI entry"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|!
 name|V
 operator|.
-name|getFrameIndex
-argument_list|()
+name|FrameIndex
 operator|.
-name|back
+name|empty
 argument_list|()
-operator|!=
-operator|~
-literal|0
-condition|)
-block|{
-name|auto
-name|E
-init|=
+operator|&&
+literal|"Expected an MMI entry"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|Expr
+operator|.
+name|size
+argument_list|()
+operator|==
+name|FrameIndex
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Mismatched expressions"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
 name|V
 operator|.
-name|getExpression
+name|Expr
+operator|.
+name|size
 argument_list|()
-decl_stmt|;
-name|auto
-name|FI
-init|=
+operator|==
 name|V
 operator|.
-name|getFrameIndex
+name|FrameIndex
+operator|.
+name|size
 argument_list|()
-decl_stmt|;
+operator|&&
+literal|"Mismatched expressions"
+argument_list|)
+expr_stmt|;
 name|Expr
 operator|.
 name|append
 argument_list|(
-name|E
+name|V
+operator|.
+name|Expr
 operator|.
 name|begin
 argument_list|()
 argument_list|,
-name|E
+name|V
+operator|.
+name|Expr
 operator|.
 name|end
 argument_list|()
@@ -744,27 +846,23 @@ name|FrameIndex
 operator|.
 name|append
 argument_list|(
-name|FI
+name|V
+operator|.
+name|FrameIndex
 operator|.
 name|begin
 argument_list|()
 argument_list|,
-name|FI
+name|V
+operator|.
+name|FrameIndex
 operator|.
 name|end
 argument_list|()
 argument_list|)
 expr_stmt|;
-block|}
 name|assert
 argument_list|(
-name|Expr
-operator|.
-name|size
-argument_list|()
-operator|>
-literal|1
-condition|?
 name|std
 operator|::
 name|all_of
@@ -789,17 +887,17 @@ operator|)
 block|{
 return|return
 name|E
+operator|&&
+name|E
 operator|->
 name|isBitPiece
 argument_list|()
 return|;
 block|}
 block|)
-function|:
-parameter_list|(
-function|true&& "conflicting locations for variable"
+function|&& "conflicting locations for variable"
 block|)
-decl_stmt|);
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -930,7 +1028,7 @@ end_return
 
 begin_macro
 unit|}    bool
-name|variableHasComplexAddress
+name|hasComplexAddress
 argument_list|()
 end_macro
 
@@ -939,13 +1037,30 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|Var
+name|MInsn
 operator|&&
-literal|"Invalid complex DbgVariable!"
+literal|"Expected DBG_VALUE, not MMI variable"
 argument_list|)
 block|;
 name|assert
 argument_list|(
+name|FrameIndex
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Expected DBG_VALUE, not MMI variable"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|(
+name|Expr
+operator|.
+name|empty
+argument_list|()
+operator|||
+operator|(
 name|Expr
 operator|.
 name|size
@@ -953,10 +1068,6 @@ argument_list|()
 operator|==
 literal|1
 operator|&&
-literal|"variableHasComplexAddress() invoked on multi-FI variable"
-argument_list|)
-block|;
-return|return
 name|Expr
 operator|.
 name|back
@@ -964,8 +1075,18 @@ argument_list|()
 operator|->
 name|getNumElements
 argument_list|()
-operator|>
-literal|0
+operator|)
+operator|)
+operator|&&
+literal|"Invalid Expr for DBG_VALUE"
+argument_list|)
+block|;
+return|return
+operator|!
+name|Expr
+operator|.
+name|empty
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -1652,6 +1773,21 @@ specifier|const
 name|MDNode
 modifier|*
 name|Scope
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|DbgVariable
+modifier|*
+name|createConcreteVariable
+parameter_list|(
+name|LexicalScope
+modifier|&
+name|Scope
+parameter_list|,
+name|InlinedVariable
+name|IV
 parameter_list|)
 function_decl|;
 end_function_decl

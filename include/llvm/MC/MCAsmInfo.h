@@ -145,7 +145,6 @@ operator|,
 block|}
 empty_stmt|;
 block|}
-comment|// namespace WinEH
 name|enum
 name|class
 name|ExceptionHandling
@@ -1570,12 +1569,8 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_comment
-unit|}
-comment|// namespace llvm
-end_comment
-
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

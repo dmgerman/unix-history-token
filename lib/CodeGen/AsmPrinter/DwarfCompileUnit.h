@@ -113,8 +113,10 @@ name|DwarfUnit
 block|{
 comment|/// The attribute index of DW_AT_stmt_list in the compile unit DIE, avoiding
 comment|/// the need to search for it in applyStmtList.
-name|unsigned
-name|stmtListIndex
+name|DIE
+operator|::
+name|value_iterator
+name|StmtListValue
 block|;
 comment|/// Skeleton unit associated with this unit.
 name|DwarfCompileUnit
@@ -172,12 +174,8 @@ name|BaseAddress
 block|;
 comment|/// \brief Construct a DIE for the given DbgVariable without initializing the
 comment|/// DbgVariable's DIE reference.
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|DIE
-operator|>
+operator|*
 name|constructVariableDIEImpl
 argument_list|(
 argument|const DbgVariable&DV
@@ -270,7 +268,9 @@ argument|const MCSymbol *Label
 argument_list|)
 block|;
 comment|/// addSectionDelta - Add a label delta attribute data and value.
-name|void
+name|DIE
+operator|::
+name|value_iterator
 name|addSectionDelta
 argument_list|(
 argument|DIE&Die
@@ -329,7 +329,9 @@ argument_list|)
 block|;
 comment|/// addSectionLabel - Add a Dwarf section label attribute data and value.
 comment|///
-name|void
+name|DIE
+operator|::
+name|value_iterator
 name|addSectionLabel
 argument_list|(
 argument|DIE&Die
@@ -364,12 +366,9 @@ name|Scope
 argument_list|,
 name|SmallVectorImpl
 operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|DIE
-operator|>>
+operator|*
+operator|>
 operator|&
 name|FinalChildren
 argument_list|)
@@ -426,12 +425,8 @@ argument_list|)
 block|;
 comment|/// \brief This scope represents inlined body of a function. Construct
 comment|/// DIE to represent this concrete inlined copy of the function.
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|DIE
-operator|>
+operator|*
 name|constructInlinedScopeDIE
 argument_list|(
 name|LexicalScope
@@ -441,12 +436,8 @@ argument_list|)
 block|;
 comment|/// \brief Construct new DW_TAG_lexical_block for this scope and
 comment|/// attach DW_AT_low_pc/DW_AT_high_pc labels.
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|DIE
-operator|>
+operator|*
 name|constructLexicalScopeDIE
 argument_list|(
 name|LexicalScope
@@ -455,12 +446,8 @@ name|Scope
 argument_list|)
 block|;
 comment|/// constructVariableDIE - Construct a DIE for the given DbgVariable.
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|DIE
-operator|>
+operator|*
 name|constructVariableDIE
 argument_list|(
 argument|DbgVariable&DV
@@ -468,12 +455,8 @@ argument_list|,
 argument|bool Abstract = false
 argument_list|)
 block|;
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|DIE
-operator|>
+operator|*
 name|constructVariableDIE
 argument_list|(
 name|DbgVariable
@@ -502,12 +485,9 @@ name|Scope
 argument_list|,
 name|SmallVectorImpl
 operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|DIE
-operator|>>
+operator|*
+operator|>
 operator|&
 name|Children
 argument_list|,
@@ -549,12 +529,8 @@ name|Scope
 argument_list|)
 block|;
 comment|/// \brief Construct import_module DIE.
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|DIE
-operator|>
+operator|*
 name|constructImportedEntityDIE
 argument_list|(
 specifier|const
@@ -879,7 +855,7 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end llvm namespace
 end_comment
 
 begin_endif

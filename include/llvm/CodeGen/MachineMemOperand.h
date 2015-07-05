@@ -114,6 +114,9 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+name|class
+name|ModuleSlotTracker
+decl_stmt|;
 comment|/// MachinePointerInfo - This class contains a discriminated union of
 comment|/// information about pointers in memory operands, relating them back to LLVM IR
 comment|/// or to virtual locations (such as frame indices) that are exposed during
@@ -778,6 +781,31 @@ name|ID
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Support for operator<<.
+comment|/// @{
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+name|ModuleSlotTracker
+operator|&
+name|MST
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// @}
 name|friend
 name|bool
 name|operator
@@ -919,6 +947,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_expr_stmt
+specifier|inline
 name|raw_ostream
 operator|&
 name|operator
@@ -933,12 +962,23 @@ name|MachineMemOperand
 operator|&
 name|MRO
 operator|)
-expr_stmt|;
+block|{
+name|MRO
+operator|.
+name|print
+argument_list|(
+name|OS
+argument_list|)
+block|;
+return|return
+name|OS
+return|;
+block|}
 end_expr_stmt
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

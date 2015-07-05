@@ -5341,8 +5341,12 @@ name|RecordKeeper
 operator|&
 name|TrackedRecords
 block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|DefInit
-operator|*
+operator|>
 name|TheInit
 block|;
 name|bool
@@ -5413,11 +5417,6 @@ argument_list|(
 name|records
 argument_list|)
 block|,
-name|TheInit
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
 name|IsAnonymous
 argument_list|(
 name|Anonymous
@@ -5455,7 +5454,8 @@ argument|Anonymous
 argument_list|)
 block|{}
 comment|// When copy-constructing a Record, we must still guarantee a globally unique
-comment|// ID number.  All other fields can be copied normally.
+comment|// ID number.  Don't copy TheInit either since it's owned by the original
+comment|// record. All other fields can be copied normally.
 name|Record
 argument_list|(
 specifier|const
@@ -5517,13 +5517,6 @@ argument_list|(
 name|O
 operator|.
 name|TrackedRecords
-argument_list|)
-block|,
-name|TheInit
-argument_list|(
-name|O
-operator|.
-name|TheInit
 argument_list|)
 block|,
 name|IsAnonymous
@@ -7576,7 +7569,7 @@ end_decl_stmt
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// End llvm namespace
 end_comment
 
 begin_endif

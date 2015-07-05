@@ -326,7 +326,6 @@ name|override
 block|; }
 decl_stmt|;
 block|}
-comment|// namespace Win64EH
 block|}
 end_decl_stmt
 

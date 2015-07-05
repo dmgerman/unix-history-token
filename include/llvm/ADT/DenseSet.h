@@ -138,7 +138,6 @@ return|;
 block|}
 expr|}
 block|; }
-comment|// namespace detail
 comment|/// DenseSet - This implements a dense probed hash-table based set.
 name|template
 operator|<

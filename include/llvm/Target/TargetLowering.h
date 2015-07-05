@@ -4305,8 +4305,9 @@ operator|=
 name|hasExtractInsn
 expr_stmt|;
 block|}
-comment|/// Tells the code generator not to expand sequence of operations into a
-comment|/// separate sequences that increases the amount of flow control.
+comment|/// Tells the code generator not to expand logic operations on comparison
+comment|/// predicates into separate sequences that increase the amount of flow
+comment|/// control.
 name|void
 name|setJumpIsExpensive
 parameter_list|(
@@ -4315,12 +4316,7 @@ name|isExpensive
 init|=
 name|true
 parameter_list|)
-block|{
-name|JumpIsExpensive
-operator|=
-name|isExpensive
-expr_stmt|;
-block|}
+function_decl|;
 comment|/// Tells the code generator that integer divide is expensive, and if
 comment|/// possible, should be replaced by an alternate sequence of instructions not
 comment|/// containing an integer divide.
@@ -5593,6 +5589,82 @@ argument_list|,
 name|unsigned
 operator|&
 comment|/*RequiredAligment*/
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief Get the maximum supported factor for interleaved memory accesses.
+comment|/// Default to be the minimum interleave factor: 2.
+name|virtual
+name|unsigned
+name|getMaxSupportedInterleaveFactor
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|2
+return|;
+block|}
+comment|/// \brief Lower an interleaved load to target specific intrinsics. Return
+comment|/// true on success.
+comment|///
+comment|/// \p LI is the vector load instruction.
+comment|/// \p Shuffles is the shufflevector list to DE-interleave the loaded vector.
+comment|/// \p Indices is the corresponding indices for each shufflevector.
+comment|/// \p Factor is the interleave factor.
+name|virtual
+name|bool
+name|lowerInterleavedLoad
+argument_list|(
+name|LoadInst
+operator|*
+name|LI
+argument_list|,
+name|ArrayRef
+operator|<
+name|ShuffleVectorInst
+operator|*
+operator|>
+name|Shuffles
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Indices
+argument_list|,
+name|unsigned
+name|Factor
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief Lower an interleaved store to target specific intrinsics. Return
+comment|/// true on success.
+comment|///
+comment|/// \p SI is the vector store instruction.
+comment|/// \p SVI is the shufflevector to RE-interleave the stored vector.
+comment|/// \p Factor is the interleave factor.
+name|virtual
+name|bool
+name|lowerInterleavedStore
+argument_list|(
+name|StoreInst
+operator|*
+name|SI
+argument_list|,
+name|ShuffleVectorInst
+operator|*
+name|SVI
+argument_list|,
+name|unsigned
+name|Factor
 argument_list|)
 decl|const
 block|{
@@ -8811,27 +8883,6 @@ end_comment
 
 begin_decl_stmt
 name|SDValue
-name|BuildExactSDIV
-argument_list|(
-name|SDValue
-name|Op1
-argument_list|,
-name|SDValue
-name|Op2
-argument_list|,
-name|SDLoc
-name|dl
-argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|SDValue
 name|BuildSDIV
 argument_list|(
 name|SDNode
@@ -9387,7 +9438,7 @@ end_decl_stmt
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// end llvm namespace
 end_comment
 
 begin_endif

@@ -616,7 +616,7 @@ return|;
 block|}
 expr|}
 block|;  }
-comment|// namespace llvm
+comment|// End llvm namespace
 name|namespace
 name|std
 block|{

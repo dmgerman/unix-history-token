@@ -1372,20 +1372,11 @@ literal|2
 return|;
 block|}
 block|}
-comment|// namespace WinEH
 block|}
 end_decl_stmt
 
-begin_comment
-comment|// namespace ARM
-end_comment
-
-begin_comment
-unit|}
-comment|// namespace llvm
-end_comment
-
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

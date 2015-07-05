@@ -139,6 +139,7 @@ decl_stmt|;
 comment|/// SplitAnalysis - Analyze a LiveInterval, looking for live range splitting
 comment|/// opportunities.
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|SplitAnalysis
 block|{
 name|public
@@ -590,6 +591,7 @@ comment|/// - Finish the current interval with closeIntv and repeat from 2.
 comment|/// - Rewrite instructions with finish().
 comment|///
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|SplitEditor
 block|{
 name|SplitAnalysis
@@ -1175,10 +1177,6 @@ block|}
 empty_stmt|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// namespace llvm
-end_comment
 
 begin_endif
 endif|#

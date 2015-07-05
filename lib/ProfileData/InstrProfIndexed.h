@@ -213,7 +213,6 @@ operator|::
 name|MD5
 decl_stmt|;
 block|}
-comment|// namespace IndexedInstrProf
 block|}
 end_decl_stmt
 
