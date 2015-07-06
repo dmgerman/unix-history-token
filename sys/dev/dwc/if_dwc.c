@@ -296,7 +296,7 @@ name|DWC_ASSERT_LOCKED
 parameter_list|(
 name|sc
 parameter_list|)
-value|mtx_assert(&(sc)->mtx, MA_OWNED);
+value|mtx_assert(&(sc)->mtx, MA_OWNED)
 end_define
 
 begin_define
@@ -306,63 +306,63 @@ name|DWC_ASSERT_UNLOCKED
 parameter_list|(
 name|sc
 parameter_list|)
-value|mtx_assert(&(sc)->mtx, MA_NOTOWNED);
+value|mtx_assert(&(sc)->mtx, MA_NOTOWNED)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DDESC_TDES0_OWN
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DDESC_TDES0_TXINT
-value|(1<< 30)
+value|(1U<< 30)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DDESC_TDES0_TXLAST
-value|(1<< 29)
+value|(1U<< 29)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DDESC_TDES0_TXFIRST
-value|(1<< 28)
+value|(1U<< 28)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DDESC_TDES0_TXCRCDIS
-value|(1<< 27)
+value|(1U<< 27)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DDESC_TDES0_TXRINGEND
-value|(1<< 21)
+value|(1U<< 21)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DDESC_TDES0_TXCHAIN
-value|(1<< 20)
+value|(1U<< 20)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DDESC_RDES0_OWN
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -387,7 +387,7 @@ begin_define
 define|#
 directive|define
 name|DDESC_RDES1_CHAINED
-value|(1<< 14)
+value|(1U<< 14)
 end_define
 
 begin_struct
@@ -526,12 +526,6 @@ decl_stmt|;
 name|struct
 name|callout
 name|dwc_callout
-decl_stmt|;
-name|uint8_t
-name|phy_conn_type
-decl_stmt|;
-name|uint8_t
-name|mactype
 decl_stmt|;
 name|boolean_t
 name|link_is_up
@@ -1352,7 +1346,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|int
+name|uint32_t
 name|reg
 decl_stmt|;
 name|DWC_ASSERT_LOCKED
@@ -1516,7 +1510,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|int
+name|uint32_t
 name|reg
 decl_stmt|;
 name|reg
@@ -1910,7 +1904,7 @@ name|sc
 operator|->
 name|ifp
 decl_stmt|;
-name|int
+name|uint32_t
 name|reg
 decl_stmt|;
 name|DWC_ASSERT_LOCKED
@@ -2679,30 +2673,23 @@ decl_stmt|;
 name|uint8_t
 modifier|*
 name|eaddr
+decl_stmt|,
+name|val
 decl_stmt|;
 name|uint32_t
 name|crc
-decl_stmt|;
-name|uint8_t
-name|val
-decl_stmt|;
-name|int
-name|hashbit
-decl_stmt|;
-name|int
-name|hashreg
-decl_stmt|;
-name|int
+decl_stmt|,
 name|ffval
-decl_stmt|;
-name|int
-name|reg
-decl_stmt|;
-name|int
-name|lo
-decl_stmt|;
-name|int
+decl_stmt|,
+name|hashbit
+decl_stmt|,
+name|hashreg
+decl_stmt|,
 name|hi
+decl_stmt|,
+name|lo
+decl_stmt|,
+name|reg
 decl_stmt|;
 name|DWC_ASSERT_LOCKED
 argument_list|(
@@ -3443,15 +3430,13 @@ name|m
 decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-name|int
-name|rdes0
-decl_stmt|;
-name|int
+decl_stmt|,
 name|idx
-decl_stmt|;
-name|int
+decl_stmt|,
 name|len
+decl_stmt|;
+name|uint32_t
+name|rdes0
 decl_stmt|;
 name|ifp
 operator|=
@@ -4628,14 +4613,12 @@ modifier|*
 name|hwaddr
 parameter_list|)
 block|{
-name|int
-name|rnd
-decl_stmt|;
-name|int
-name|lo
-decl_stmt|;
-name|int
+name|uint32_t
 name|hi
+decl_stmt|,
+name|lo
+decl_stmt|,
+name|rnd
 decl_stmt|;
 comment|/* 	 * Try to recover a MAC address from the running hardware. If there's 	 * something non-zero there, assume the bootloader did the right thing 	 * and just use it. 	 * 	 * Otherwise, set the address to a convenient locally assigned address, 	 * 'bsd' + random 24 low-order bits.  'b' is 0x62, which has the locally 	 * assigned bit set, and the broadcast/multicast bit clear. 	 */
 name|lo
@@ -4903,12 +4886,11 @@ name|ifp
 decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-name|int
-name|reg
-decl_stmt|;
-name|int
+decl_stmt|,
 name|i
+decl_stmt|;
+name|uint32_t
+name|reg
 decl_stmt|;
 name|sc
 operator|=
@@ -5764,7 +5746,7 @@ name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
-name|int
+name|uint32_t
 name|reg
 decl_stmt|;
 comment|/* 	 * Called by the MII bus driver when the PHY establishes 	 * link to set the MAC interface registers. 	 */
