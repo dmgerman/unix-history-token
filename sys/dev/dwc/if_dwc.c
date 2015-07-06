@@ -3383,6 +3383,15 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
+name|ifp
+argument_list|,
+name|IFCOUNTER_OPACKETS
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* If there are no buffers outstanding, muzzle the watchdog. */
 if|if
