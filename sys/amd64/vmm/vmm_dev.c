@@ -4783,7 +4783,7 @@ name|GID_WHEEL
 argument_list|,
 literal|0600
 argument_list|,
-literal|"vmm/%s.%s"
+literal|"vmm.io/%s.%s"
 argument_list|,
 name|vmname
 argument_list|,

@@ -2044,7 +2044,7 @@ name|strlcpy
 argument_list|(
 name|pathname
 argument_list|,
-literal|"/dev/vmm/"
+literal|"/dev/vmm.io/"
 argument_list|,
 sizeof|sizeof
 argument_list|(
