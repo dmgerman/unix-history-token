@@ -19164,6 +19164,28 @@ comment|/* ! SM_UINT16 */
 end_comment
 
 begin_comment
+comment|/* additional valid chars in user/group names in passwd */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SM_PWN_CHARS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SM_PWN_CHARS
+value|"-_."
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* **  SVr4 and similar systems use different routines for setjmp/longjmp **  with signal support */
 end_comment
 

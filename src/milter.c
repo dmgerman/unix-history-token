@@ -9211,6 +9211,13 @@ name|macros
 operator|=
 name|NULL
 expr_stmt|;
+define|#
+directive|define
+name|SM_M_MACRO_NAME
+parameter_list|(
+name|i
+parameter_list|)
+value|(((i)< SM_ARRAY_SIZE(MilterOptTab)&& (i)>= 0) \ 				?  MilterOptTab[i].mo_name : "?")
 switch|switch
 condition|(
 name|i
@@ -9285,7 +9292,7 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|>
+operator|>=
 literal|0
 condition|)
 block|{
@@ -9327,11 +9334,16 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"milter_getsymlist(%s, %s)=%d\n"
+literal|"milter_getsymlist(%s, %s, \"%s\")=%d\n"
 argument_list|,
 name|m
 operator|->
 name|mf_name
+argument_list|,
+name|SM_M_MACRO_NAME
+argument_list|(
+name|i
+argument_list|)
 argument_list|,
 name|buf
 operator|+
@@ -9348,16 +9360,6 @@ operator|-
 literal|1
 return|;
 block|}
-if|if
-condition|(
-name|len
-operator|==
-literal|0
-condition|)
-return|return
-operator|-
-literal|1
-return|;
 name|offset
 operator|+=
 name|len

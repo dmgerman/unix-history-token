@@ -25433,6 +25433,12 @@ block|{
 if|#
 directive|if
 name|_FFR_USE_SEM_LOCKING
+if|if
+condition|(
+name|SemId
+operator|>=
+literal|0
+condition|)
 name|r
 operator|=
 name|sm_sem_acq
@@ -25459,6 +25465,10 @@ directive|if
 name|_FFR_USE_SEM_LOCKING
 if|if
 condition|(
+name|SemId
+operator|>=
+literal|0
+operator|&&
 name|r
 operator|>=
 literal|0

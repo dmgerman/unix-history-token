@@ -917,17 +917,6 @@ block|}
 if|#
 directive|if
 name|HASFCHOWN
-if|if
-condition|(
-operator|!
-name|unmake
-operator|&&
-name|geteuid
-argument_list|()
-operator|==
-literal|0
-condition|)
-block|{
 comment|/* Find TrustedUser value in sendmail.cf */
 if|if
 condition|(
@@ -1215,7 +1204,6 @@ argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* HASFCHOWN */

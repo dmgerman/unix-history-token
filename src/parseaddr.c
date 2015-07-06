@@ -10279,7 +10279,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  CATADDR -- concatenate pieces of addresses (putting in<LWSP> subs) ** **	Parameters: **		pvp -- parameter vector to rebuild. **		evp -- last parameter to include.  Can be NULL to **			use entire pvp. **		buf -- buffer to build the string into. **		sz -- size of buf. **		spacesub -- the space separator character; if '\0', **			use SpaceSub. **		external -- convert to external form? **			(no metacharacters; METAQUOTEs removed, see below) ** **	Returns: **		none. ** **	Side Effects: **		Destroys buf. ** **	Notes: **	There are two formats for strings: internal and external. **	The external format is just an eight-bit clean string (no **	null bytes, everything else OK).  The internal format can **	include sendmail metacharacters.  The special character **	METAQUOTE essentially quotes the character following, stripping **	it of all special semantics. ** **	The cataddr routine needs to be aware of whether it is producing **	an internal or external form as output (it only takes internal **	form as input). ** **	The parseaddr routine has a similar issue on input, but that **	is flagged on the basis of which token table is passed in. */
+comment|/* **  CATADDR -- concatenate pieces of addresses (putting in<LWSP> subs) ** **	Parameters: **		pvp -- parameter vector to rebuild. **		evp -- last parameter to include.  Can be NULL to **			use entire pvp. **		buf -- buffer to build the string into. **		sz -- size of buf. **		spacesub -- the space separator character; **			'\0': SpaceSub. **			NOSPACESEP: no separator **		external -- convert to external form? **			(no metacharacters; METAQUOTEs removed, see below) ** **	Returns: **		none. ** **	Side Effects: **		Destroys buf. ** **	Notes: **	There are two formats for strings: internal and external. **	The external format is just an eight-bit clean string (no **	null bytes, everything else OK).  The internal format can **	include sendmail metacharacters.  The special character **	METAQUOTE essentially quotes the character following, stripping **	it of all special semantics. ** **	The cataddr routine needs to be aware of whether it is producing **	an internal or external form as output (it only takes internal **	form as input). ** **	The parseaddr routine has a similar issue on input, but that **	is flagged on the basis of which token table is passed in. */
 end_comment
 
 begin_function
@@ -10439,6 +10439,10 @@ condition|(
 name|oatomtok
 operator|&&
 name|natomtok
+operator|&&
+name|spacesub
+operator|!=
+name|NOSPACESEP
 condition|)
 block|{
 operator|*
@@ -13932,6 +13936,15 @@ argument_list|(
 name|ubuf
 argument_list|)
 argument_list|,
+name|bitset
+argument_list|(
+name|RSF_STRING
+argument_list|,
+name|flags
+argument_list|)
+condition|?
+name|NOSPACESEP
+else|:
 literal|' '
 argument_list|,
 name|true

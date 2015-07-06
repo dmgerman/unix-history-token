@@ -1211,6 +1211,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SM_ARRAY_SIZE
+parameter_list|(
+name|array
+parameter_list|)
+value|(sizeof(array) / sizeof((array)[0]))
+end_define
+
 begin_comment
 comment|/* **  An 'argument class' describes the storage allocation status **  of an object pointed to by an argument to a function. */
 end_comment
@@ -2077,6 +2087,17 @@ end_decl_stmt
 begin_comment
 comment|/* a null (template) address [main.c] */
 end_comment
+
+begin_comment
+comment|/* for cataddr() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOSPACESEP
+value|256
+end_define
 
 begin_comment
 comment|/* functions */
@@ -11186,6 +11207,17 @@ begin_comment
 comment|/* reassemble address */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RSF_STRING
+value|0x0010
+end_define
+
+begin_comment
+comment|/* reassemble address as string */
+end_comment
+
 begin_comment
 comment|/* **  Flags passed to mime8to7 and putheader. */
 end_comment
@@ -12311,6 +12343,17 @@ begin_comment
 comment|/* CRL file must be g/o unreadable */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TLS_I_DHFIXED
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* use fixed DH param */
+end_comment
+
 begin_comment
 comment|/* require server cert */
 end_comment
@@ -12330,7 +12373,7 @@ begin_define
 define|#
 directive|define
 name|TLS_I_SRV
-value|(TLS_I_SRV_CERT | TLS_I_RSA_TMP | TLS_I_VRFY_PATH | \ 			 TLS_I_VRFY_LOC | TLS_I_TRY_DH | TLS_I_DH512 | \ 			 TLS_I_CACHE)
+value|(TLS_I_SRV_CERT | TLS_I_RSA_TMP | TLS_I_VRFY_PATH | \ 			 TLS_I_VRFY_LOC | TLS_I_TRY_DH | TLS_I_CACHE)
 end_define
 
 begin_comment
@@ -14939,6 +14982,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* using DNS -- interpret h_errno& MX RRs */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|UseCompressedIPv6Addresses
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for more specific zero-subnet matches */
 end_comment
 
 begin_decl_stmt
@@ -18951,6 +19005,75 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|_FFR_TLS_SE_OPTS
+operator|&&
+name|STARTTLS
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TLS_VRFY_PER_CTX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TLS_VRFY_PER_CTX
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|get_tls_se_options
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
+operator|*
+operator|,
+name|SSL
+operator|*
+operator|,
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|get_tls_se_options
+parameter_list|(
+name|e
+parameter_list|,
+name|s
+parameter_list|,
+name|w
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -19101,6 +19224,41 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|_FFR_TLS_SE_OPTS
+operator|&&
+name|STARTTLS
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|load_certkey
+name|__P
+argument_list|(
+operator|(
+name|SSL
+operator|*
+operator|,
+name|bool
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -20854,8 +21012,7 @@ operator|(
 name|ADDRESS
 operator|*
 operator|,
-name|char
-name|fl
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

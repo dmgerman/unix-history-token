@@ -16971,23 +16971,10 @@ name|dst_len
 operator|-=
 name|sz
 expr_stmt|;
-if|#
-directive|if
-name|IPV6_FULL
-name|ap
-operator|=
-name|sm_inet6_ntop
-argument_list|(
-name|s6a
-argument_list|,
-name|dst
-argument_list|,
-name|dst_len
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* IPV6_FULL */
+if|if
+condition|(
+name|UseCompressedIPv6Addresses
+condition|)
 name|ap
 operator|=
 operator|(
@@ -17005,9 +16992,18 @@ argument_list|,
 name|dst_len
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* IPV6_FULL */
+else|else
+name|ap
+operator|=
+name|sm_inet6_ntop
+argument_list|(
+name|s6a
+argument_list|,
+name|dst
+argument_list|,
+name|dst_len
+argument_list|)
+expr_stmt|;
 comment|/* Restore pointer to beginning of string */
 if|if
 condition|(

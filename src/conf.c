@@ -1726,6 +1726,16 @@ name|InetMode
 operator|=
 name|AF_INET
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|IPV6_FULL
+name|UseCompressedIPv6Addresses
+operator|=
+name|true
+expr_stmt|;
+endif|#
+directive|endif
 else|#
 directive|else
 comment|/* NETINET6 */
@@ -22734,7 +22744,7 @@ directive|endif
 if|#
 directive|if
 name|IPV6_FULL
-comment|/* Use uncompressed IPv6 address format (no "::") */
+comment|/* Use uncompressed IPv6 address format (no "::") by default */
 literal|"IPV6_FULL"
 block|,
 endif|#
@@ -23839,7 +23849,7 @@ directive|endif
 if|#
 directive|if
 name|_FFR_HANDLE_ISO8859_GECOS
-comment|/* 	**  Allow ISO 8859 characters in GECOS field: replace them 	**  ith ASCII "equivalent". 	*/
+comment|/* 	**  Allow ISO 8859 characters in GECOS field: replace them 	**  with ASCII "equivalent". 	*/
 comment|/* Peter Eriksson of Linkopings universitet */
 literal|"_FFR_HANDLE_ISO8859_GECOS"
 block|,
@@ -24250,6 +24260,14 @@ directive|if
 name|_FFR_TLS_USE_CERTIFICATE_CHAIN_FILE
 comment|/* 	**  Use SSL_CTX_use_certificate_chain_file() 	**  instead of SSL_CTX_use_certificate_file() 	*/
 literal|"_FFR_TLS_USE_CERTIFICATE_CHAIN_FILE"
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|_FFR_TLS_SE_OPTS
+comment|/* TLS session options */
+literal|"_FFR_TLS_SE_OPTS"
 block|,
 endif|#
 directive|endif

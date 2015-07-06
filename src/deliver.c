@@ -25310,6 +25310,34 @@ return|return
 name|EX_SOFTWARE
 return|;
 block|}
+comment|/* SSL_clear(clt_ssl); ? */
+if|if
+condition|(
+name|get_tls_se_options
+argument_list|(
+name|e
+argument_list|,
+name|clt_ssl
+argument_list|,
+name|false
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"STARTTLS=client, get_tls_se_options=fail"
+argument_list|)
+expr_stmt|;
+return|return
+name|EX_SOFTWARE
+return|;
+block|}
 name|rfd
 operator|=
 name|sm_io_getinfo
@@ -25336,7 +25364,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* SSL_clear(clt_ssl); ? */
 if|if
 condition|(
 name|rfd
@@ -25441,6 +25468,11 @@ name|i
 decl_stmt|,
 name|ssl_err
 decl_stmt|;
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
 name|ssl_err
 operator|=
 name|SSL_get_error
@@ -25528,7 +25560,7 @@ name|sr
 argument_list|,
 name|ssl_err
 argument_list|,
-name|errno
+name|save_errno
 argument_list|,
 name|i
 argument_list|)
