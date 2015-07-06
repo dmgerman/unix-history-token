@@ -934,8 +934,6 @@ name|fpu_ctx
 operator|=
 name|fpu_kern_alloc_ctx
 argument_list|(
-name|FPU_KERN_NORMAL
-operator||
 name|FPU_KERN_NOWAIT
 argument_list|)
 expr_stmt|;
