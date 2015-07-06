@@ -983,6 +983,10 @@ name|active_irq
 operator|<=
 name|GIC_LAST_SPI
 operator|)
+operator|||
+name|active_irq
+operator|>=
+name|GIC_FIRST_LPI
 argument_list|)
 condition|)
 block|{
@@ -1000,26 +1004,14 @@ condition|(
 name|active_irq
 operator|<=
 name|GIC_LAST_SGI
-operator|||
-name|active_irq
-operator|>=
-name|GIC_FIRST_LPI
 condition|)
 block|{
-comment|/* 			 * TODO: Implement proper SGI/LPI handling. 			 *       Mask it if such is received for some reason. 			 */
+comment|/* 			 * TODO: Implement proper SGI handling. 			 *       Mask it if such is received for some reason. 			 */
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Received unsupported interrupt type: %s\n"
-argument_list|,
-name|active_irq
-operator|>=
-name|GIC_FIRST_LPI
-condition|?
-literal|"LPI"
-else|:
-literal|"SGI"
+literal|"Received unsupported interrupt type: SGI\n"
 argument_list|)
 expr_stmt|;
 name|PIC_MASK
@@ -1160,6 +1152,23 @@ name|DIST
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|irq
+operator|>=
+name|GIC_FIRST_LPI
+condition|)
+block|{
+comment|/* LPIs */
+name|lpi_mask_irq
+argument_list|(
+name|dev
+argument_list|,
+name|irq
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|panic
 argument_list|(
@@ -1271,6 +1280,23 @@ argument_list|(
 name|sc
 argument_list|,
 name|DIST
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|irq
+operator|>=
+name|GIC_FIRST_LPI
+condition|)
+block|{
+comment|/* LPIs */
+name|lpi_unmask_irq
+argument_list|(
+name|dev
+argument_list|,
+name|irq
 argument_list|)
 expr_stmt|;
 block|}
