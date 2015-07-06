@@ -1965,7 +1965,7 @@ name|linkaddr_string
 argument_list|(
 name|ndo
 argument_list|,
-name|THA
+name|SHA
 argument_list|(
 name|ap
 argument_list|)
@@ -1982,7 +1982,7 @@ name|ipaddr_string
 argument_list|(
 name|ndo
 argument_list|,
-name|TPA
+name|SPA
 argument_list|(
 name|ap
 argument_list|)

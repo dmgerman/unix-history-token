@@ -321,9 +321,6 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 literal|6
 case|:
@@ -341,8 +338,6 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 name|ND_PRINT
 argument_list|(

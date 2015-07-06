@@ -2893,7 +2893,11 @@ return|return
 operator|(
 name|q922_string
 argument_list|(
+name|ndo
+argument_list|,
 name|ep
+argument_list|,
+name|len
 argument_list|)
 operator|)
 return|;
@@ -6674,6 +6678,64 @@ end_endif
 begin_comment
 comment|/* INET6 */
 end_comment
+
+begin_comment
+comment|/* Represent TCI part of the 802.1Q 4-octet tag as text. */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|ieee8021q_tci_string
+parameter_list|(
+specifier|const
+name|uint16_t
+name|tci
+parameter_list|)
+block|{
+specifier|static
+name|char
+name|buf
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"vlan %u, p %u%s"
+argument_list|,
+name|tci
+operator|&
+literal|0xfff
+argument_list|,
+name|tci
+operator|>>
+literal|13
+argument_list|,
+operator|(
+name|tci
+operator|&
+literal|0x1000
+operator|)
+condition|?
+literal|", DEI"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+return|return
+name|buf
+return|;
+block|}
+end_function
 
 end_unit
 

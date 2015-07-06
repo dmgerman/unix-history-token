@@ -542,9 +542,6 @@ break|break;
 case|case
 name|PT_IPV6
 case|:
-ifdef|#
-directive|ifdef
-name|INET6
 name|ip6_print
 argument_list|(
 name|ndo
@@ -560,21 +557,6 @@ name|bp
 operator|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"IPv6, length: %u"
-operator|,
-name|length
-operator|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|PT_OSI

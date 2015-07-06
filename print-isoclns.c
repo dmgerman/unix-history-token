@@ -3825,9 +3825,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|NLPID_IP6
 case|:
@@ -3845,8 +3842,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|NLPID_PPP
 case|:
@@ -5515,10 +5510,11 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-operator|--
-name|length
-operator|!=
-literal|0
+name|pptr
+operator|<
+name|ndo
+operator|->
+name|ndo_snapend
 condition|)
 name|ND_PRINT
 argument_list|(
@@ -12460,9 +12456,9 @@ operator|)
 expr_stmt|;
 break|break;
 default|default:
-if|if
-condition|(
-operator|!
+operator|(
+name|void
+operator|)
 name|print_unknown_data
 argument_list|(
 name|ndo
@@ -12473,12 +12469,7 @@ literal|"\n\t  "
 argument_list|,
 name|length
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -15879,11 +15870,27 @@ block|{
 name|uint16_t
 name|calculated_checksum
 decl_stmt|;
-comment|/* do not attempt to verify the checksum if it is zero */
+comment|/* do not attempt to verify the checksum if it is zero,          * if the total length is nonsense,          * if the offset is nonsense,          * or the base pointer is not sane          */
 if|if
 condition|(
 operator|!
 name|checksum
+operator|||
+name|length
+operator|>
+name|ndo
+operator|->
+name|ndo_snaplen
+operator|||
+name|checksum_offset
+operator|>
+name|ndo
+operator|->
+name|ndo_snaplen
+operator|||
+name|checksum_offset
+operator|>
+name|length
 condition|)
 block|{
 name|ND_PRINT
@@ -15898,6 +15905,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|unsigned
+name|char
+modifier|*
+name|truncated
+init|=
+literal|"trunc"
+decl_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("\nosi_print_cksum: %p %u %u %u\n", pptr, checksum_offset, length, ndo->ndo_snaplen);                 ND_TCHECK2(pptr, checksum_offset+length);
+endif|#
+directive|endif
 name|calculated_checksum
 operator|=
 name|create_osi_cksum
@@ -15928,12 +15948,24 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|truncated
+operator|=
+literal|"incorrect"
+expr_stmt|;
+if|#
+directive|if
+literal|0
+block|trunc:
+endif|#
+directive|endif
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|" (incorrect should be 0x%04x)"
+literal|" (%s should be 0x%04x)"
+operator|,
+name|truncated
 operator|,
 name|calculated_checksum
 operator|)

@@ -2046,9 +2046,6 @@ expr_stmt|;
 return|return;
 block|}
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|IPPROTO_IPV6
 case|:
@@ -2067,9 +2064,6 @@ name|len
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/*INET6*/
 case|case
 name|IPPROTO_RSVP
 case|:
@@ -2577,22 +2571,6 @@ literal|4
 condition|)
 block|{
 comment|/* print version if != 4 */
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"IP%u "
-operator|,
-name|IP_V
-argument_list|(
-name|ipds
-operator|->
-name|ip
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|IP_V
@@ -2609,7 +2587,24 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|", wrong link-layer encapsulation"
+literal|"IP6, wrong link-layer encapsulation "
+operator|)
+argument_list|)
+expr_stmt|;
+else|else
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"IP%u "
+operator|,
+name|IP_V
+argument_list|(
+name|ipds
+operator|->
+name|ip
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3513,9 +3508,6 @@ name|length
 argument_list|)
 expr_stmt|;
 return|return;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 literal|6
 case|:
@@ -3529,8 +3521,6 @@ name|length
 argument_list|)
 expr_stmt|;
 return|return;
-endif|#
-directive|endif
 default|default:
 name|ND_PRINT
 argument_list|(
