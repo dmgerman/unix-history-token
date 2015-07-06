@@ -16319,11 +16319,14 @@ name|struct
 name|port_info
 modifier|*
 name|pi
+parameter_list|,
+name|int
+name|drop
 parameter_list|)
 block|{
 if|if
 condition|(
-name|cong_drop
+name|drop
 operator|==
 operator|-
 literal|1
@@ -16337,7 +16340,7 @@ return|;
 elseif|else
 if|if
 condition|(
-name|cong_drop
+name|drop
 operator|==
 literal|1
 condition|)
@@ -16419,6 +16422,8 @@ argument_list|,
 name|tnl_cong
 argument_list|(
 name|pi
+argument_list|,
+name|cong_drop
 argument_list|)
 argument_list|)
 expr_stmt|;
