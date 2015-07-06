@@ -20,6 +20,18 @@ file|"util/rtt.h"
 end_include
 
 begin_comment
+comment|/* overwritten by config: infra_cache_min_rtt: */
+end_comment
+
+begin_decl_stmt
+name|int
+name|RTT_MIN_TIMEOUT
+init|=
+literal|50
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/** calculate RTO from rtt information */
 end_comment
 

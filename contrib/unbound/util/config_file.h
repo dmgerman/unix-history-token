@@ -186,6 +186,10 @@ comment|/** max number of hosts in the infra cache */
 name|size_t
 name|infra_cache_numhosts
 decl_stmt|;
+comment|/** min value for infra cache rtt */
+name|int
+name|infra_cache_min_rtt
+decl_stmt|;
 comment|/** delay close of udp-timeouted ports, if 0 no delayclose. in msec */
 name|int
 name|delay_close
@@ -530,6 +534,10 @@ comment|/** port number for the control port */
 name|int
 name|control_port
 decl_stmt|;
+comment|/** use certificates for remote control */
+name|int
+name|remote_control_use_cert
+decl_stmt|;
 comment|/** private key file for server */
 name|char
 modifier|*
@@ -571,9 +579,91 @@ comment|/* maximum UDP response size */
 name|size_t
 name|max_udp_size
 decl_stmt|;
+comment|/* DNS64 prefix */
+name|char
+modifier|*
+name|dns64_prefix
+decl_stmt|;
+comment|/* Synthetize all AAAA record despite the presence of an authoritative one */
+name|int
+name|dns64_synthall
+decl_stmt|;
+comment|/** true to enable dnstap support */
+name|int
+name|dnstap
+decl_stmt|;
+comment|/** dnstap socket path */
+name|char
+modifier|*
+name|dnstap_socket_path
+decl_stmt|;
+comment|/** true to send "identity" via dnstap */
+name|int
+name|dnstap_send_identity
+decl_stmt|;
+comment|/** true to send "version" via dnstap */
+name|int
+name|dnstap_send_version
+decl_stmt|;
+comment|/** dnstap "identity", hostname is used if "". */
+name|char
+modifier|*
+name|dnstap_identity
+decl_stmt|;
+comment|/** dnstap "version", package version is used if "". */
+name|char
+modifier|*
+name|dnstap_version
+decl_stmt|;
+comment|/** true to log dnstap RESOLVER_QUERY message events */
+name|int
+name|dnstap_log_resolver_query_messages
+decl_stmt|;
+comment|/** true to log dnstap RESOLVER_RESPONSE message events */
+name|int
+name|dnstap_log_resolver_response_messages
+decl_stmt|;
+comment|/** true to log dnstap CLIENT_QUERY message events */
+name|int
+name|dnstap_log_client_query_messages
+decl_stmt|;
+comment|/** true to log dnstap CLIENT_RESPONSE message events */
+name|int
+name|dnstap_log_client_response_messages
+decl_stmt|;
+comment|/** true to log dnstap FORWARDER_QUERY message events */
+name|int
+name|dnstap_log_forwarder_query_messages
+decl_stmt|;
+comment|/** true to log dnstap FORWARDER_RESPONSE message events */
+name|int
+name|dnstap_log_forwarder_response_messages
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/** from cfg username, after daemonise setup performed */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uid_t
+name|cfg_uid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/** from cfg username, after daemonise setup performed */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|gid_t
+name|cfg_gid
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/**  * Stub config options  */
@@ -772,6 +862,22 @@ end_comment
 begin_function_decl
 name|void
 name|config_apply
+parameter_list|(
+name|struct
+name|config_file
+modifier|*
+name|config
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Find username, sets cfg_uid and cfg_gid.  * @param config: the config structure.  */
+end_comment
+
+begin_function_decl
+name|void
+name|config_lookup_uid
 parameter_list|(
 name|struct
 name|config_file

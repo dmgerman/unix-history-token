@@ -78,10 +78,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|linux
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|linux
+name|HAVE_ENDIAN_H
 end_ifdef
 
 begin_include
@@ -93,6 +107,26 @@ end_include
 begin_comment
 comment|/* attempt to define endianness */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<machine/endian.h>
+end_include
+
+begin_comment
+comment|/* on older OpenBSD */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -122,27 +156,6 @@ begin_include
 include|#
 directive|include
 file|<sys/endian.h>
-end_include
-
-begin_comment
-comment|/* attempt to define endianness */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__OpenBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/endian.h>
 end_include
 
 begin_comment

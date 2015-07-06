@@ -192,7 +192,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Create commpoints with for this thread for the shared ports.  * @param base: the comm_base that provides event functionality.  *	for default all ifs.  * @param ports: the list of shared ports.  * @param bufsize: size of datagram buffer.  * @param tcp_accept_count: max number of simultaneous TCP connections   * 	from clients.  * @param sslctx: nonNULL if ssl context.  * @param cb: callback function when a request arrives. It is passed  *	  the packet and user argument. Return true to send a reply.  * @param cb_arg: user data argument for callback function.  * @return: the malloced listening structure, ready for use. NULL on error.  */
+comment|/**  * Create commpoints with for this thread for the shared ports.  * @param base: the comm_base that provides event functionality.  *	for default all ifs.  * @param ports: the list of shared ports.  * @param bufsize: size of datagram buffer.  * @param tcp_accept_count: max number of simultaneous TCP connections   * 	from clients.  * @param sslctx: nonNULL if ssl context.  * @param dtenv: nonNULL if dnstap enabled.  * @param cb: callback function when a request arrives. It is passed  *	  the packet and user argument. Return true to send a reply.  * @param cb_arg: user data argument for callback function.  * @return: the malloced listening structure, ready for use. NULL on error.  */
 end_comment
 
 begin_function_decl
@@ -220,6 +220,11 @@ parameter_list|,
 name|void
 modifier|*
 name|sslctx
+parameter_list|,
+name|struct
+name|dt_env
+modifier|*
+name|dtenv
 parameter_list|,
 name|comm_point_callback_t
 modifier|*
@@ -384,6 +389,26 @@ parameter_list|,
 name|int
 modifier|*
 name|reuseport
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Create and bind local listening socket  * @param path: path to the socket.  * @param noproto: on error, this is set true if cause is that local sockets  *	are not supported.  * @return: the socket. -1 on error.  */
+end_comment
+
+begin_function_decl
+name|int
+name|create_local_accept_sock
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|int
+modifier|*
+name|noproto
 parameter_list|)
 function_decl|;
 end_function_decl

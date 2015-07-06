@@ -190,6 +190,28 @@ name|logkey
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|THREADS_DISABLED
+end_ifndef
+
+begin_comment
+comment|/** pthread mutex to protect FILE* */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|lock_quick_t
+name|log_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/** the identity of this executable/process */
 end_comment
@@ -308,7 +330,19 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|lock_quick_init
+argument_list|(
+operator|&
+name|log_lock
+argument_list|)
+expr_stmt|;
 block|}
+name|lock_quick_lock
+argument_list|(
+operator|&
+name|log_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|logfile
@@ -328,6 +362,14 @@ name|logging_to_syslog
 endif|#
 directive|endif
 condition|)
+block|{
+name|lock_quick_unlock
+argument_list|(
+operator|&
+name|log_lock
+argument_list|)
+expr_stmt|;
+comment|/* verbose() needs the lock */
 name|verbose
 argument_list|(
 name|VERB_QUERY
@@ -352,6 +394,13 @@ literal|"stderr"
 operator|)
 argument_list|)
 expr_stmt|;
+name|lock_quick_lock
+argument_list|(
+operator|&
+name|log_lock
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|logfile
@@ -400,6 +449,12 @@ name|logging_to_syslog
 operator|=
 literal|1
 expr_stmt|;
+name|lock_quick_unlock
+argument_list|(
+operator|&
+name|log_lock
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 elif|#
@@ -427,6 +482,12 @@ name|logging_to_syslog
 operator|=
 literal|1
 expr_stmt|;
+name|lock_quick_unlock
+argument_list|(
+operator|&
+name|log_lock
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 endif|#
@@ -447,6 +508,12 @@ block|{
 name|logfile
 operator|=
 name|stderr
+expr_stmt|;
+name|lock_quick_unlock
+argument_list|(
+operator|&
+name|log_lock
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -496,6 +563,12 @@ operator|!
 name|f
 condition|)
 block|{
+name|lock_quick_unlock
+argument_list|(
+operator|&
+name|log_lock
+argument_list|)
+expr_stmt|;
 name|log_err
 argument_list|(
 literal|"Could not open logfile %s: %s"
@@ -534,6 +607,12 @@ name|logfile
 operator|=
 name|f
 expr_stmt|;
+name|lock_quick_unlock
+argument_list|(
+operator|&
+name|log_lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -546,9 +625,21 @@ modifier|*
 name|f
 parameter_list|)
 block|{
+name|lock_quick_lock
+argument_list|(
+operator|&
+name|log_lock
+argument_list|)
+expr_stmt|;
 name|logfile
 operator|=
 name|f
+expr_stmt|;
+name|lock_quick_unlock
+argument_list|(
+operator|&
+name|log_lock
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -940,12 +1031,26 @@ block|}
 endif|#
 directive|endif
 comment|/* HAVE_SYSLOG_H */
+name|lock_quick_lock
+argument_list|(
+operator|&
+name|log_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|logfile
 condition|)
+block|{
+name|lock_quick_unlock
+argument_list|(
+operator|&
+name|log_lock
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 name|log_now
@@ -1172,6 +1277,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|lock_quick_unlock
+argument_list|(
+operator|&
+name|log_lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

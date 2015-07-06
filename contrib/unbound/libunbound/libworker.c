@@ -1288,6 +1288,8 @@ argument_list|,
 name|cfg
 operator|->
 name|delay_close
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3538,6 +3540,8 @@ operator|->
 name|env
 operator|->
 name|scratch
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -3972,6 +3976,8 @@ operator|->
 name|env
 operator|->
 name|scratch
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -4734,6 +4740,8 @@ operator|->
 name|env
 operator|->
 name|scratch
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -4915,6 +4923,9 @@ parameter_list|,
 name|int
 name|want_dnssec
 parameter_list|,
+name|int
+name|nocaps
+parameter_list|,
 name|struct
 name|sockaddr_storage
 modifier|*
@@ -5012,6 +5023,8 @@ argument_list|,
 name|dnssec
 argument_list|,
 name|want_dnssec
+argument_list|,
+name|nocaps
 argument_list|,
 name|q
 operator|->
@@ -5748,6 +5761,12 @@ name|int
 name|ATTR_UNUSED
 argument_list|(
 name|want_dnssec
+argument_list|)
+argument_list|,
+name|int
+name|ATTR_UNUSED
+argument_list|(
+name|nocaps
 argument_list|)
 argument_list|,
 expr|struct

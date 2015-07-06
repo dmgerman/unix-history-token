@@ -3889,7 +3889,8 @@ condition|(
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|lab1
@@ -3898,7 +3899,8 @@ operator|!=
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|lab2
@@ -3910,7 +3912,8 @@ condition|(
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|lab1
@@ -3919,7 +3922,8 @@ operator|<
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|lab2

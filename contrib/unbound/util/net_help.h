@@ -422,6 +422,35 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * Log errno and addr.  * @param str: descriptive string printed with it.  * @param err: errno string to print, i.e. strerror(errno).  * @param addr: the sockaddr to print. Can be ip4 or ip6.  * @param addrlen: length of addr.  */
+end_comment
+
+begin_function_decl
+name|void
+name|log_err_addr
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|err
+parameter_list|,
+name|struct
+name|sockaddr_storage
+modifier|*
+name|addr
+parameter_list|,
+name|socklen_t
+name|addrlen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * Convert address string, with "@port" appendix, to sockaddr.  * Uses DNS port by default.  * @param str: the string  * @param addr: where to store sockaddr.  * @param addrlen: length of stored sockaddr is returned.  * @return 0 on error.  */
 end_comment
 

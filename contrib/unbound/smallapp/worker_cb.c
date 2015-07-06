@@ -390,6 +390,12 @@ argument_list|(
 name|want_dnssec
 argument_list|)
 argument_list|,
+name|int
+name|ATTR_UNUSED
+argument_list|(
+name|nocaps
+argument_list|)
+argument_list|,
 expr|struct
 name|sockaddr_storage
 operator|*
@@ -571,6 +577,12 @@ name|int
 name|ATTR_UNUSED
 argument_list|(
 name|want_dnssec
+argument_list|)
+argument_list|,
+name|int
+name|ATTR_UNUSED
+argument_list|(
+name|nocaps
 argument_list|)
 argument_list|,
 expr|struct

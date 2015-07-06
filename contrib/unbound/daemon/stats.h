@@ -170,6 +170,10 @@ comment|/** number of queries over TCP */
 name|size_t
 name|qtcp
 decl_stmt|;
+comment|/** number of outgoing queries over TCP */
+name|size_t
+name|qtcp_outgoing
+decl_stmt|;
 comment|/** number of queries over IPv6 */
 name|size_t
 name|qipv6
@@ -251,6 +255,22 @@ name|hist
 index|[
 name|NUM_BUCKETS_HIST
 index|]
+decl_stmt|;
+comment|/** number of message cache entries */
+name|size_t
+name|msg_cache_count
+decl_stmt|;
+comment|/** number of rrset cache entries */
+name|size_t
+name|rrset_cache_count
+decl_stmt|;
+comment|/** number of infra cache entries */
+name|size_t
+name|infra_cache_count
+decl_stmt|;
+comment|/** number of key cache entries */
+name|size_t
+name|key_cache_count
 decl_stmt|;
 block|}
 struct|;

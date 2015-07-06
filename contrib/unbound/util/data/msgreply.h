@@ -239,6 +239,52 @@ struct|;
 end_struct
 
 begin_comment
+comment|/**  * Constructor for replyinfo.  * @param region: where to allocate the results, pass NULL to use malloc.  * @param flags: flags for the replyinfo.  * @param qd: qd count  * @param ttl: TTL of replyinfo  * @param prettl: prefetch ttl  * @param an: an count  * @param ns: ns count  * @param ar: ar count  * @param total: total rrset count (presumably an+ns+ar).  * @param sec: security status of the reply info.  * @return the reply_info base struct with the array for putting the rrsets  * in.  The array has been zeroed.  Returns NULL on malloc failure.  */
+end_comment
+
+begin_function_decl
+name|struct
+name|reply_info
+modifier|*
+name|construct_reply_info_base
+parameter_list|(
+name|struct
+name|regional
+modifier|*
+name|region
+parameter_list|,
+name|uint16_t
+name|flags
+parameter_list|,
+name|size_t
+name|qd
+parameter_list|,
+name|time_t
+name|ttl
+parameter_list|,
+name|time_t
+name|prettl
+parameter_list|,
+name|size_t
+name|an
+parameter_list|,
+name|size_t
+name|ns
+parameter_list|,
+name|size_t
+name|ar
+parameter_list|,
+name|size_t
+name|total
+parameter_list|,
+name|enum
+name|sec_status
+name|sec
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**   * Parse wire query into a queryinfo structure, return 0 on parse error.   * initialises the (prealloced) queryinfo structure as well.  * This query structure contains a pointer back info the buffer!  * This pointer avoids memory allocation. allocqname does memory allocation.  * @param m: the prealloced queryinfo structure to put query into.  *    must be unused, or _clear()ed.  * @param query: the wireformat packet query. starts with ID.  * @return: 0 on format error.  */
 end_comment
 
@@ -492,7 +538,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** calculate hash value of query_info, lowercases the qname */
+comment|/** calculate hash value of query_info, lowercases the qname,  * uses CD flag for AAAA qtype */
 end_comment
 
 begin_function_decl
@@ -503,6 +549,9 @@ name|struct
 name|query_info
 modifier|*
 name|q
+parameter_list|,
+name|uint16_t
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -352,6 +352,13 @@ name|comm_ssl_shake_hs_write
 block|}
 name|ssl_shake_state
 enum|;
+comment|/* -------- dnstap ------- */
+comment|/** the dnstap environment */
+name|struct
+name|dt_env
+modifier|*
+name|dtenv
+decl_stmt|;
 comment|/** is this a UDP, TCP-accept or TCP socket. */
 enum|enum
 name|comm_point_type

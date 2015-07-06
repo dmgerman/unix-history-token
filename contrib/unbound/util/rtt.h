@@ -47,12 +47,12 @@ begin_comment
 comment|/** min retransmit timeout value, in milliseconds */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+specifier|extern
+name|int
 name|RTT_MIN_TIMEOUT
-value|50
-end_define
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/** max retransmit timeout value, in milliseconds */

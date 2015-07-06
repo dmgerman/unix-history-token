@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"dns64/dns64.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"iterator/iterator.h"
 end_include
 
@@ -109,7 +115,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|s
@@ -127,7 +134,8 @@ operator|!
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|s
@@ -147,7 +155,8 @@ operator|!
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|s
@@ -392,6 +401,8 @@ name|names
 index|[]
 init|=
 block|{
+literal|"dns64"
+block|,
 ifdef|#
 directive|ifdef
 name|WITH_PYTHONMODULE
@@ -458,11 +469,13 @@ name|void
 parameter_list|)
 init|=
 block|{
+operator|&
+name|dns64_get_funcblock
+operator|,
 ifdef|#
 directive|ifdef
 name|WITH_PYTHONMODULE
-operator|&
-name|pythonmod_get_funcblock
+function_decl|&pythonmod_get_funcblock
 operator|,
 endif|#
 directive|endif
@@ -534,7 +547,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|s

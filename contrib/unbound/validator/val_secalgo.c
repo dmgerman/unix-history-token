@@ -13,16 +13,20 @@ directive|include
 file|"config.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"validator/val_secalgo.h"
-end_include
+begin_comment
+comment|/* packed_rrset on top to define enum types (forced by c99 standard) */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|"util/data/packed_rrset.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"validator/val_secalgo.h"
 end_include
 
 begin_include

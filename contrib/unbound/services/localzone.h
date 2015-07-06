@@ -67,6 +67,12 @@ name|sldns_buffer
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|comm_reply
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/**  * Local zone type  * This type determines processing for queries that did not match  * local-data directly.  */
 end_comment
@@ -97,6 +103,9 @@ name|local_zone_redirect
 block|,
 comment|/** remove default AS112 blocking contents for zone 	 * nodefault is used in config not during service. */
 name|local_zone_nodefault
+block|,
+comment|/** log client address, but no block (transparent) */
+name|local_zone_inform
 block|}
 enum|;
 end_enum
@@ -402,7 +411,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Answer authoritatively for local zones.  * Takes care of locking.  * @param zones: the stored zones (shared, read only).  * @param qinfo: query info (parsed).  * @param edns: edns info (parsed).  * @param buf: buffer with query ID and flags, also for reply.  * @param temp: temporary storage region.  * @return true if answer is in buffer. false if query is not answered   * by authority data. If the reply should be dropped altogether, the return   * value is true, but the buffer is cleared (empty).  */
+comment|/**  * Answer authoritatively for local zones.  * Takes care of locking.  * @param zones: the stored zones (shared, read only).  * @param qinfo: query info (parsed).  * @param edns: edns info (parsed).  * @param buf: buffer with query ID and flags, also for reply.  * @param temp: temporary storage region.  * @param repinfo: source address for checks. may be NULL.  * @return true if answer is in buffer. false if query is not answered   * by authority data. If the reply should be dropped altogether, the return   * value is true, but the buffer is cleared (empty).  */
 end_comment
 
 begin_function_decl
@@ -433,6 +442,11 @@ name|struct
 name|regional
 modifier|*
 name|temp
+parameter_list|,
+name|struct
+name|comm_reply
+modifier|*
+name|repinfo
 parameter_list|)
 function_decl|;
 end_function_decl

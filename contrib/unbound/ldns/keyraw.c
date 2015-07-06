@@ -1547,10 +1547,17 @@ argument_list|(
 name|buf
 argument_list|)
 condition|)
+block|{
+comment|/* sanity check */
+name|EC_KEY_free
+argument_list|(
+name|ec
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
-comment|/* sanity check */
+block|}
 comment|/* prepend the 0x02 (from docs) (or actually 0x04 from implementation 	 * of openssl) for uncompressed data */
 name|buf
 index|[
