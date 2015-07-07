@@ -6710,9 +6710,6 @@ modifier|*
 name|val
 parameter_list|)
 block|{
-name|dns_fixedname_t
-name|fixed
-decl_stmt|;
 name|dns_rdataset_t
 modifier|*
 name|rdataset
@@ -7011,11 +7008,7 @@ argument_list|,
 operator|&
 name|sigrdata
 argument_list|,
-name|dns_fixedname_name
-argument_list|(
-operator|&
-name|fixed
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|dst_key_free
