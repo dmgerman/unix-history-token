@@ -257,7 +257,7 @@ begin_define
 define|#
 directive|define
 name|HV_MAX_PAGE_BUFFER_COUNT
-value|16
+value|32
 end_define
 
 begin_define
