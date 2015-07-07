@@ -3239,10 +3239,6 @@ operator|==
 literal|0
 operator|&&
 name|secflavor
-operator|>=
-literal|0
-operator|&&
-name|secflavor
 operator|!=
 name|AUTH_SYS
 operator|&&
