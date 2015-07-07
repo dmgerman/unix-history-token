@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pwupd.h"
 end_include
 
@@ -268,6 +274,27 @@ argument_list|(
 name|line
 argument_list|,
 name|PWSCAN_MASTER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pw
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"Invalid user entry in '%s':"
+literal|" '%s'"
+argument_list|,
+name|getpwpath
+argument_list|(
+name|_MASTERPASSWD
+argument_list|)
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 if|if
@@ -612,6 +639,27 @@ name|gr
 operator|=
 name|gr_scan
 argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|gr
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"Invalid group entry in '%s':"
+literal|" '%s'"
+argument_list|,
+name|getgrpath
+argument_list|(
+name|_GROUP
+argument_list|)
+argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
