@@ -159,6 +159,12 @@ directive|include
 file|<dev/wi/if_wivar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<powerpc/powermac/maciovar.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|int
@@ -417,6 +423,16 @@ operator|==
 literal|0
 condition|)
 block|{
+name|macio_enable_wireless
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* Make sure interrupts are disabled. */
 name|CSR_WRITE_2
 argument_list|(
