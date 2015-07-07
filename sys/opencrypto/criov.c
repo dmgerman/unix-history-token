@@ -890,7 +890,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|crypto_mbuftoiov
 parameter_list|(
 name|struct
@@ -1015,9 +1015,18 @@ operator|)
 argument_list|,
 name|M_CRYPTO_DATA
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|iov
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOMEM
+return|;
 operator|*
 name|allocated
 operator|=
@@ -1109,6 +1118,9 @@ name|cnt
 operator|=
 name|i
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
