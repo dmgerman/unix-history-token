@@ -200,6 +200,8 @@ operator|->
 name|e_id
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Process the header, 	**  select the queue, open the data file. 	*/
@@ -920,6 +922,9 @@ decl_stmt|;
 name|int
 name|afd
 decl_stmt|;
+name|int
+name|old_rd_tmo
+decl_stmt|;
 name|unsigned
 name|char
 modifier|*
@@ -988,6 +993,8 @@ operator|&
 name|dbto
 argument_list|)
 expr_stmt|;
+name|old_rd_tmo
+operator|=
 name|set_tls_rd_tmo
 argument_list|(
 name|TimeOuts
@@ -2481,7 +2488,9 @@ if|if
 condition|(
 name|headeronly
 condition|)
-return|return;
+goto|goto
+name|end
+goto|;
 if|if
 condition|(
 name|mstate
@@ -3487,6 +3496,16 @@ name|STATS_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
+name|end
+label|:
+operator|(
+name|void
+operator|)
+name|set_tls_rd_tmo
+argument_list|(
+name|old_rd_tmo
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3775,20 +3794,20 @@ block|}
 else|else
 name|syserr
 argument_list|(
-literal|"421 4.3.0 collect: Cannot write %s (%s, uid=%d, gid=%d)"
+literal|"421 4.3.0 collect: Cannot write %s (%s, uid=%ld, gid=%ld)"
 argument_list|,
 name|dfname
 argument_list|,
 name|msg
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getegid
 argument_list|()

@@ -871,6 +871,61 @@ name|p
 expr_stmt|;
 break|break;
 case|case
+literal|'d'
+case|:
+block|{
+name|char
+modifier|*
+name|h
+decl_stmt|;
+operator|++
+name|p
+expr_stmt|;
+name|h
+operator|=
+name|strchr
+argument_list|(
+name|p
+argument_list|,
+literal|' '
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|h
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|h
+operator|=
+literal|'\0'
+expr_stmt|;
+name|map
+operator|->
+name|map_timeout
+operator|=
+name|convtime
+argument_list|(
+name|p
+argument_list|,
+literal|'s'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|h
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|h
+operator|=
+literal|' '
+expr_stmt|;
+block|}
+break|break;
+case|case
 literal|'T'
 case|:
 name|map
@@ -7948,6 +8003,10 @@ name|sm_dprintf
 argument_list|(
 literal|"ndbm_map_store append=%s\n"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|data
 operator|.
 name|dptr
@@ -31767,12 +31826,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|_FFR_ARPA_MAP
-end_if
-
 begin_function
 name|char
 modifier|*
@@ -32050,7 +32103,7 @@ name|in_addr
 decl_stmt|;
 name|r
 operator|=
-name|anynet_pton
+name|inet_pton
 argument_list|(
 name|AF_INET
 argument_list|,
@@ -32215,15 +32268,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_ARPA_MAP */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -32288,6 +32332,9 @@ name|int
 name|sock
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|tmo
 decl_stmt|;
 name|SOCKADDR_LEN_T
 name|addrlen
@@ -33962,6 +34009,41 @@ return|return
 name|false
 return|;
 block|}
+name|tmo
+operator|=
+name|map
+operator|->
+name|map_timeout
+expr_stmt|;
+if|if
+condition|(
+name|tmo
+operator|==
+literal|0
+condition|)
+name|tmo
+operator|=
+literal|30000
+expr_stmt|;
+comment|/* default: 30s */
+else|else
+name|tmo
+operator|*=
+literal|1000
+expr_stmt|;
+comment|/* s -> ms */
+name|sm_io_setinfo
+argument_list|(
+name|map
+operator|->
+name|map_db1
+argument_list|,
+name|SM_IO_WHAT_TIMEOUT
+argument_list|,
+operator|&
+name|tmo
+argument_list|)
+expr_stmt|;
 comment|/* Save connection for reuse */
 name|s
 operator|->
@@ -34529,15 +34611,37 @@ operator|!=
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EAGAIN
+condition|)
+block|{
 name|syserr
 argument_list|(
-literal|"451 4.3.0 socket_map_lookup(%s): failed to read length parameter of reply"
+literal|"451 4.3.0 socket_map_lookup(%s): read timeout"
 argument_list|,
 name|map
 operator|->
 name|map_mname
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|syserr
+argument_list|(
+literal|"451 4.3.0 socket_map_lookup(%s): failed to read length parameter of reply %d"
+argument_list|,
+name|map
+operator|->
+name|map_mname
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+block|}
 operator|*
 name|statp
 operator|=

@@ -2170,6 +2170,10 @@ name|sm_dprintf
 argument_list|(
 literal|"bfcommit(): filemode %o flags %ld\n"
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|bfp
 operator|->
 name|bf_filemode

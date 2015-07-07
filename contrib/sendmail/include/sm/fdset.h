@@ -57,7 +57,7 @@ name|SM_FD_OK_SELECT
 parameter_list|(
 name|fd
 parameter_list|)
-value|(FD_SETSIZE<= 0 || (fd)< FD_SETSIZE)
+value|(SM_FD_SETSIZE<= 0 || (fd)< SM_FD_SETSIZE)
 end_define
 
 begin_endif

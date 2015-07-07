@@ -754,7 +754,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  MI_POOL_CONTROLER_INIT -- Launch the worker pool controller **		Must be called before starting sessions. ** **	Parameters: **		none ** **	Returns: **		MI_SUCCESS/MI_FAILURE */
+comment|/* **  MI_POOL_CONTROLLER_INIT -- Launch the worker pool controller **		Must be called before starting sessions. ** **	Parameters: **		none ** **	Returns: **		MI_SUCCESS/MI_FAILURE */
 end_comment
 
 begin_function
