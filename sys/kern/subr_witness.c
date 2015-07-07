@@ -5594,7 +5594,9 @@ name|MPASS
 argument_list|(
 name|j
 operator|<
-name|witness_count
+name|LOCK_CHILDCOUNT
+operator|*
+name|LOCK_NCHILDREN
 argument_list|)
 expr_stmt|;
 name|lock1
