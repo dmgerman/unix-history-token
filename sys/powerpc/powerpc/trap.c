@@ -1842,10 +1842,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"    msssr0         = 0x%"
-name|PRIxPTR
-literal|"\n"
+literal|"    msssr0         = 0x%lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|mfspr
 argument_list|(
 name|SPR_MSSSR0
@@ -1860,10 +1861,11 @@ name|BOOKE
 argument_list|)
 name|printf
 argument_list|(
-literal|"    mcsr           = 0x%"
-name|PRIxPTR
-literal|"\n"
+literal|"    mcsr           = 0x%lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|mfspr
 argument_list|(
 name|SPR_MCSR
