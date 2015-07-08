@@ -1236,6 +1236,15 @@ name|line
 comment|/* line number of ntp_adjtime call */
 parameter_list|)
 block|{
+name|char
+name|des
+index|[
+literal|1024
+index|]
+init|=
+literal|""
+decl_stmt|;
+comment|/* Decoded Error Status */
 switch|switch
 condition|(
 name|ret
@@ -1474,11 +1483,278 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|TIME_ERROR
+if|#
+directive|if
+literal|0
+block|from the reference implementation of ntp_gettime():
+comment|// Hardware or software error
+block|if ((time_status& (STA_UNSYNC | STA_CLOCKERR))
+comment|/*          * PPS signal lost when either time or frequency synchronization          * requested          */
+block||| (time_status& (STA_PPSFREQ | STA_PPSTIME)&& !(time_status& STA_PPSSIGNAL))
+comment|/*          * PPS jitter exceeded when time synchronization requested          */
+block||| (time_status& STA_PPSTIME&&             time_status& STA_PPSJITTER)
+comment|/*          * PPS wander exceeded or calibration error when frequency          * synchronization requested          */
+block||| (time_status& STA_PPSFREQ&&             time_status& (STA_PPSWANDER | STA_PPSERROR)))                 return (TIME_ERROR);  or, from ntp_adjtime():  	if (  (time_status& (STA_UNSYNC | STA_CLOCKERR)) 	    || (time_status& (STA_PPSFREQ | STA_PPSTIME)&& !(time_status& STA_PPSSIGNAL))  	    || (time_status& STA_PPSTIME&& time_status& STA_PPSJITTER) 	    || (time_status& STA_PPSFREQ&& time_status& (STA_PPSWANDER | STA_PPSERROR)) 	   ) 		return (TIME_ERROR);
+endif|#
+directive|endif
 case|case
 name|TIME_ERROR
 case|:
 comment|/* 5: unsynchronized, or loss of synchronization */
 comment|/* error (see status word) */
+if|if
+condition|(
+name|ptimex
+operator|->
+name|status
+operator|&
+name|STA_UNSYNC
+condition|)
+name|snprintf
+argument_list|(
+name|des
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|des
+argument_list|)
+argument_list|,
+literal|"%s%sClock Unsynchronized"
+argument_list|,
+name|des
+argument_list|,
+operator|(
+operator|*
+name|des
+operator|)
+condition|?
+literal|"; "
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ptimex
+operator|->
+name|status
+operator|&
+name|STA_CLOCKERR
+condition|)
+name|snprintf
+argument_list|(
+name|des
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|des
+argument_list|)
+argument_list|,
+literal|"%s%sClock Error"
+argument_list|,
+name|des
+argument_list|,
+operator|(
+operator|*
+name|des
+operator|)
+condition|?
+literal|"; "
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|ptimex
+operator|->
+name|status
+operator|&
+name|STA_PPSSIGNAL
+operator|)
+operator|&&
+name|ptimex
+operator|->
+name|status
+operator|&
+name|STA_PPSFREQ
+condition|)
+name|snprintf
+argument_list|(
+name|des
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|des
+argument_list|)
+argument_list|,
+literal|"%s%sPPS Frequency Sync wanted but no PPS"
+argument_list|,
+name|des
+argument_list|,
+operator|(
+operator|*
+name|des
+operator|)
+condition|?
+literal|"; "
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|ptimex
+operator|->
+name|status
+operator|&
+name|STA_PPSSIGNAL
+operator|)
+operator|&&
+name|ptimex
+operator|->
+name|status
+operator|&
+name|STA_PPSTIME
+condition|)
+name|snprintf
+argument_list|(
+name|des
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|des
+argument_list|)
+argument_list|,
+literal|"%s%sPPS Time Sync wanted but no PPS signal"
+argument_list|,
+name|des
+argument_list|,
+operator|(
+operator|*
+name|des
+operator|)
+condition|?
+literal|"; "
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ptimex
+operator|->
+name|status
+operator|&
+name|STA_PPSTIME
+operator|&&
+name|ptimex
+operator|->
+name|status
+operator|&
+name|STA_PPSJITTER
+condition|)
+name|snprintf
+argument_list|(
+name|des
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|des
+argument_list|)
+argument_list|,
+literal|"%s%sPPS Time Sync wanted but PPS Jitter exceeded"
+argument_list|,
+name|des
+argument_list|,
+operator|(
+operator|*
+name|des
+operator|)
+condition|?
+literal|"; "
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ptimex
+operator|->
+name|status
+operator|&
+name|STA_PPSFREQ
+operator|&&
+name|ptimex
+operator|->
+name|status
+operator|&
+name|STA_PPSWANDER
+condition|)
+name|snprintf
+argument_list|(
+name|des
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|des
+argument_list|)
+argument_list|,
+literal|"%s%sPPS Frequency Sync wanted but PPS Wander exceeded"
+argument_list|,
+name|des
+argument_list|,
+operator|(
+operator|*
+name|des
+operator|)
+condition|?
+literal|"; "
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ptimex
+operator|->
+name|status
+operator|&
+name|STA_PPSFREQ
+operator|&&
+name|ptimex
+operator|->
+name|status
+operator|&
+name|STA_PPSERROR
+condition|)
+name|snprintf
+argument_list|(
+name|des
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|des
+argument_list|)
+argument_list|,
+literal|"%s%sPPS Frequency Sync wanted but Calibration error detected"
+argument_list|,
+name|des
+argument_list|,
+operator|(
+operator|*
+name|des
+operator|)
+condition|?
+literal|"; "
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pps_call
@@ -1498,53 +1774,36 @@ name|EVNT_KERN
 argument_list|,
 name|NULL
 argument_list|,
-literal|"PPS no signal"
+literal|"no PPS signal"
 argument_list|)
-expr_stmt|;
-name|errno
-operator|=
-name|saved_errno
 expr_stmt|;
 name|DPRINTF
 argument_list|(
 literal|1
 argument_list|,
 operator|(
-literal|"kernel loop status (%s) %d %m\n"
+literal|"kernel loop status %#x (%s)\n"
 operator|,
-name|k_st_flags
-argument_list|(
 name|ptimex
 operator|->
 name|status
-argument_list|)
 operator|,
-name|errno
+name|des
 operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * This code may be returned when ntp_adjtime() has just 		 * been called for the first time, quite a while after 		 * startup, when ntpd just starts to discipline the kernel 		 * time. In this case the occurrence of this message 		 * can be pretty confusing. 		 * 		 * HMS: How about a message when we begin kernel processing: 		 *    Determining kernel clock state... 		 * so an initial TIME_ERROR message is less confising, 		 * or skipping the first message (ugh), 		 * or ??? 		 * msyslog(LOG_INFO, "kernel reports time synchronization lost"); 		 */
-name|errno
-operator|=
-name|saved_errno
-expr_stmt|;
-comment|/* may not be needed */
 name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"kernel reports TIME_ERROR: %#x: %s %m"
+literal|"kernel reports TIME_ERROR: %#x: %s"
 argument_list|,
 name|ptimex
 operator|->
 name|status
 argument_list|,
-name|k_st_flags
-argument_list|(
-name|ptimex
-operator|->
-name|status
-argument_list|)
+name|des
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1560,7 +1819,7 @@ name|msyslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"%s: %s line %d: unhandled return value %d from ntp_adjtime in %s at line %d"
+literal|"%s: %s line %d: unhandled return value %d from ntp_adjtime() in %s at line %d"
 argument_list|,
 name|caller
 argument_list|,

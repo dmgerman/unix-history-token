@@ -2977,6 +2977,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_NEW
 argument_list|)
 expr_stmt|;
 name|ki
@@ -10078,6 +10080,9 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -10110,7 +10115,11 @@ name|uap
 operator|->
 name|fd
 argument_list|,
-name|NULL
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|)
 argument_list|,
 operator|&
 name|fp

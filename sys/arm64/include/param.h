@@ -228,6 +228,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PAGE_SHIFT_16K
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_SIZE_16K
+value|(1<< PAGE_SHIFT_16K)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_MASK_16K
+value|(PAGE_SIZE_16K - 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PAGE_SHIFT_64K
 value|16
 end_define

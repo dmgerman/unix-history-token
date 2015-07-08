@@ -2013,7 +2013,7 @@ end_struct_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|crypto_mbuftoiov
 parameter_list|(
 name|struct

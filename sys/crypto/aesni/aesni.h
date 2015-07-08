@@ -187,12 +187,6 @@ argument_list|(
 literal|16
 argument_list|)
 decl_stmt|;
-name|uint8_t
-name|iv
-index|[
-name|AES_BLOCK_LEN
-index|]
-decl_stmt|;
 name|int
 name|algo
 decl_stmt|;

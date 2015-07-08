@@ -3406,7 +3406,7 @@ name|void
 name|pmap_kenter_device
 parameter_list|(
 name|vm_offset_t
-name|va
+name|sva
 parameter_list|,
 name|vm_size_t
 name|size
@@ -3418,6 +3418,9 @@ block|{
 name|pt_entry_t
 modifier|*
 name|l3
+decl_stmt|;
+name|vm_offset_t
+name|va
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -3437,7 +3440,7 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
-name|va
+name|sva
 operator|&
 name|L3_OFFSET
 operator|)
@@ -3463,6 +3466,10 @@ operator|(
 literal|"pmap_kenter_device: Mapping is not page-sized"
 operator|)
 argument_list|)
+expr_stmt|;
+name|va
+operator|=
+name|sva
 expr_stmt|;
 while|while
 condition|(
@@ -3532,6 +3539,15 @@ operator|-=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
+name|pmap_invalidate_range
+argument_list|(
+name|kernel_pmap
+argument_list|,
+name|sva
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3599,6 +3615,13 @@ argument_list|(
 name|l3
 argument_list|)
 expr_stmt|;
+name|pmap_invalidate_page
+argument_list|(
+name|kernel_pmap
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3607,7 +3630,7 @@ name|void
 name|pmap_kremove_device
 parameter_list|(
 name|vm_offset_t
-name|va
+name|sva
 parameter_list|,
 name|vm_size_t
 name|size
@@ -3617,10 +3640,13 @@ name|pt_entry_t
 modifier|*
 name|l3
 decl_stmt|;
+name|vm_offset_t
+name|va
+decl_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
-name|va
+name|sva
 operator|&
 name|L3_OFFSET
 operator|)
@@ -3646,6 +3672,10 @@ operator|(
 literal|"pmap_kremove_device: Mapping is not page-sized"
 operator|)
 argument_list|)
+expr_stmt|;
+name|va
+operator|=
+name|sva
 expr_stmt|;
 while|while
 condition|(
@@ -3695,6 +3725,15 @@ operator|-=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
+name|pmap_invalidate_range
+argument_list|(
+name|kernel_pmap
+argument_list|,
+name|sva
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3839,6 +3878,15 @@ operator|+=
 name|L3_SIZE
 expr_stmt|;
 block|}
+name|pmap_invalidate_range
+argument_list|(
+name|kernel_pmap
+argument_list|,
+name|sva
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3857,9 +3905,26 @@ name|int
 name|count
 parameter_list|)
 block|{
+name|pt_entry_t
+modifier|*
+name|l3
+decl_stmt|;
 name|vm_offset_t
 name|va
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|sva
+operator|>=
+name|VM_MIN_KERNEL_ADDRESS
+argument_list|,
+operator|(
+literal|"usermode va %lx"
+operator|,
+name|sva
+operator|)
+argument_list|)
+expr_stmt|;
 name|va
 operator|=
 name|sva
@@ -3872,22 +3937,51 @@ operator|>
 literal|0
 condition|)
 block|{
+name|l3
+operator|=
+name|pmap_l3
+argument_list|(
+name|kernel_pmap
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
-name|va
-operator|>=
-name|VM_MIN_KERNEL_ADDRESS
+name|l3
+operator|!=
+name|NULL
 argument_list|,
 operator|(
-literal|"usermode va %lx"
-operator|,
-name|va
+literal|"pmap_kremove: Invalid address"
 operator|)
 argument_list|)
 expr_stmt|;
-name|pmap_kremove
+if|if
+condition|(
+name|pmap_l3_valid_cacheable
+argument_list|(
+name|pmap_load
+argument_list|(
+name|l3
+argument_list|)
+argument_list|)
+condition|)
+name|cpu_dcache_wb_range
 argument_list|(
 name|va
+argument_list|,
+name|L3_SIZE
+argument_list|)
+expr_stmt|;
+name|pmap_load_clear
+argument_list|(
+name|l3
+argument_list|)
+expr_stmt|;
+name|PTE_SYNC
+argument_list|(
+name|l3
 argument_list|)
 expr_stmt|;
 name|va
@@ -4219,6 +4313,13 @@ name|free
 argument_list|)
 expr_stmt|;
 block|}
+name|pmap_invalidate_page
+argument_list|(
+name|pmap
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
 comment|/* 	 * This is a release store so that the ordinary store unmapping 	 * the page table page is globally performed before TLB shoot- 	 * down is begun. 	 */
 name|atomic_subtract_rel_int
 argument_list|(
@@ -4908,12 +5009,6 @@ goto|goto
 name|retry
 goto|;
 block|}
-comment|/* 	 * XXXARM64: I'm not sure why we need this but it fixes a crash 	 * when running things from a shell script. 	 */
-name|pmap_invalidate_all
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|m
@@ -5295,6 +5390,13 @@ expr_stmt|;
 name|PTE_SYNC
 argument_list|(
 name|l2
+argument_list|)
+expr_stmt|;
+name|pmap_invalidate_page
+argument_list|(
+name|kernel_pmap
+argument_list|,
+name|kernel_vm_end
 argument_list|)
 expr_stmt|;
 name|kernel_vm_end
@@ -6614,6 +6716,13 @@ argument_list|(
 name|l3
 argument_list|)
 expr_stmt|;
+name|pmap_invalidate_page
+argument_list|(
+name|pmap
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|old_l3
@@ -7272,6 +7381,15 @@ argument_list|(
 name|l3
 argument_list|)
 expr_stmt|;
+name|pmap_invalidate_page
+argument_list|(
+name|pmap
+argument_list|,
+name|pv
+operator|->
+name|pv_va
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tl3
@@ -7328,15 +7446,6 @@ name|l2
 argument_list|,
 operator|&
 name|free
-argument_list|)
-expr_stmt|;
-name|pmap_invalidate_page
-argument_list|(
-name|pmap
-argument_list|,
-name|pv
-operator|->
-name|pv_va
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -7639,6 +7748,14 @@ argument_list|(
 name|l3p
 argument_list|)
 expr_stmt|;
+comment|/* XXX: Use pmap_invalidate_range */
+name|pmap_invalidate_page
+argument_list|(
+name|pmap
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -7840,6 +7957,17 @@ operator|.
 name|pv_memattr
 argument_list|)
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"pmap_enter: %.16lx -> %.16lx"
+argument_list|,
+name|va
+argument_list|,
+name|pa
+argument_list|)
+expr_stmt|;
 name|mpte
 operator|=
 name|NULL
@@ -7901,6 +8029,13 @@ operator|&&
 name|nosleep
 condition|)
 block|{
+name|CTR0
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"pmap_enter: mpte == NULL"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lock
@@ -8146,6 +8281,13 @@ name|va
 argument_list|)
 expr_stmt|;
 block|}
+name|pmap_invalidate_page
+argument_list|(
+name|pmap
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
 block|}
 name|om
 operator|=
@@ -8575,23 +8717,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
-name|orig_l3
-operator|&
-name|ATTR_AF
-operator|)
-operator|!=
-literal|0
-condition|)
-name|pmap_invalidate_page
-argument_list|(
-name|pmap
-argument_list|,
-name|va
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -8608,6 +8733,13 @@ name|l3
 argument_list|)
 expr_stmt|;
 block|}
+name|pmap_invalidate_page
+argument_list|(
+name|pmap
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -9000,6 +9132,17 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"pmap_enter_quick_locked: %p %lx"
+argument_list|,
+name|pmap
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
 comment|/* 	 * In the case that a page table page is not 	 * resident, we are creating it here. 	 */
 if|if
 condition|(
@@ -9166,8 +9309,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l3
+argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -10739,6 +10886,15 @@ expr_stmt|;
 name|PTE_SYNC
 argument_list|(
 name|l3
+argument_list|)
+expr_stmt|;
+name|pmap_invalidate_page
+argument_list|(
+name|pmap
+argument_list|,
+name|pv
+operator|->
+name|pv_va
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Update the vm_page_t clean/reference bits. 				 */
@@ -12358,6 +12514,11 @@ name|pm_l1
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("msr ttbr0_el1, %0" : : "r"(td->td_pcb->pcb_l1addr));
+name|pmap_invalidate_all
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;

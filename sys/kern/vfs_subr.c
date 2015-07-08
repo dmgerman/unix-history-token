@@ -7085,7 +7085,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Lookup a buffer using the splay tree.  Note that we specifically avoid  * shadow buffers used in background bitmap writes.  *  * This code isn't quite efficient as it could be because we are maintaining  * two sorted lists and do not know which list the block resides in.  *  * During a "make buildworld" the desired buffer is found at one of  * the roots more than 60% of the time.  Thus, checking both roots  * before performing either splay eliminates unnecessary splays on the  * first tree splayed.  */
+comment|/*  * Look up a buffer using the buffer tries.  */
 end_comment
 
 begin_function

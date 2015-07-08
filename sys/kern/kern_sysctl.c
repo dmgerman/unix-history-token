@@ -7952,6 +7952,10 @@ if|if
 condition|(
 name|req
 operator|.
+name|oldptr
+operator|&&
+name|req
+operator|.
 name|oldlen
 operator|>
 name|PAGE_SIZE

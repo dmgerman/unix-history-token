@@ -1603,6 +1603,16 @@ name|ch
 operator|->
 name|ident
 expr_stmt|;
+name|ip
+operator|->
+name|linktype
+operator|=
+name|ch
+operator|->
+name|con
+operator|->
+name|linktype
+expr_stmt|;
 name|NG_SEND_MSG_HOOK
 argument_list|(
 name|error

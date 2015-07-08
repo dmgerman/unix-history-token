@@ -34,6 +34,28 @@ end_struct
 begin_define
 define|#
 directive|define
+name|BOOTPS_PORT
+value|67
+end_define
+
+begin_comment
+comment|/* RFC951 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BOOTPC_PORT
+value|68
+end_define
+
+begin_comment
+comment|/* RFC951 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TFTP_PORT
 value|69
 end_define
@@ -310,6 +332,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RADIUS_COA_PORT
+value|3799
+end_define
+
+begin_define
+define|#
+directive|define
 name|HSRP_PORT
 value|1985
 end_define
@@ -423,7 +452,7 @@ value|12222
 end_define
 
 begin_comment
-comment|/* draft-ohara-capwap-lwapp-04.txt */
+comment|/* RFC 5412 */
 end_comment
 
 begin_define
@@ -434,7 +463,7 @@ value|12223
 end_define
 
 begin_comment
-comment|/* draft-ohara-capwap-lwapp-04.txt */
+comment|/* RFC 5412 */
 end_comment
 
 begin_define
@@ -456,7 +485,18 @@ value|4789
 end_define
 
 begin_comment
-comment|/* draft-mahalingam-dutt-dcops-vxlan-04 */
+comment|/* RFC 7348 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GENEVE_PORT
+value|6081
+end_define
+
+begin_comment
+comment|/* draft-gross-geneve-02 */
 end_comment
 
 begin_ifdef
@@ -473,7 +513,7 @@ value|521
 end_define
 
 begin_comment
-comment|/*XXX*/
+comment|/* RFC 2080 */
 end_comment
 
 begin_define
@@ -516,12 +556,20 @@ name|BABEL_PORT
 value|6696
 end_define
 
+begin_comment
+comment|/* RFC 6126 errata */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BABEL_PORT_OLD
 value|6697
 end_define
+
+begin_comment
+comment|/* RFC 6126 */
+end_comment
 
 begin_endif
 endif|#

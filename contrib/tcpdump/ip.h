@@ -15,6 +15,12 @@ directive|define
 name|TCPDUMP_IP_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"tcpdump-stdinc.h"
+end_include
+
 begin_comment
 comment|/*  * Definitions for internet protocol version 4.  * Per RFC 791, September 1981.  */
 end_comment

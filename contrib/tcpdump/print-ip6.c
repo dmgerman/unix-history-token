@@ -26,12 +26,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -61,6 +55,12 @@ include|#
 directive|include
 file|"extract.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
 
 begin_include
 include|#
@@ -1161,6 +1161,47 @@ operator|(
 name|ndo
 operator|,
 literal|"[|ip6]"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* INET6 */
+end_comment
+
+begin_function
+name|void
+name|ip6_print
+parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+name|bp
+name|_U_
+parameter_list|,
+name|u_int
+name|length
+parameter_list|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"IP6, length: %u (printing not supported)"
+operator|,
+name|length
 operator|)
 argument_list|)
 expr_stmt|;

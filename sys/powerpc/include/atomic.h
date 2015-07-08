@@ -2276,6 +2276,83 @@ directive|undef
 name|__ATOMIC_ACQ
 end_undef
 
+begin_function
+unit|static
+name|__inline
+name|void
+name|atomic_thread_fence_acq
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* See above comment about lwsync being broken on Book-E. */
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+asm|__asm __volatile("lwsync" : : : "memory");
+else|#
+directive|else
+asm|__asm __volatile("sync" : : : "memory");
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_thread_fence_rel
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+asm|__asm __volatile("lwsync" : : : "memory");
+else|#
+directive|else
+asm|__asm __volatile("sync" : : : "memory");
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_thread_fence_acq_rel
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+asm|__asm __volatile("lwsync" : : : "memory");
+else|#
+directive|else
+asm|__asm __volatile("sync" : : : "memory");
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_thread_fence_seq_cst
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("sync" : : : "memory");
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif

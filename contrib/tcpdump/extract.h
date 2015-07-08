@@ -260,7 +260,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((uint16_t)((uint16_t)*((const uint8_t *)(p) + 0)<< 8 | \ 		     (uint16_t)*((const uint8_t *)(p) + 1)))
+value|((uint16_t)(((uint16_t)(*((const uint8_t *)(p) + 0))<< 8) | \ 	            ((uint16_t)(*((const uint8_t *)(p) + 1))<< 0)))
 end_define
 
 begin_define
@@ -271,7 +271,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((uint32_t)((uint32_t)*((const uint8_t *)(p) + 0)<< 24 | \ 		     (uint32_t)*((const uint8_t *)(p) + 1)<< 16 | \ 		     (uint32_t)*((const uint8_t *)(p) + 2)<< 8 | \ 		     (uint32_t)*((const uint8_t *)(p) + 3)))
+value|((uint32_t)(((uint32_t)(*((const uint8_t *)(p) + 0))<< 24) | \ 	            ((uint32_t)(*((const uint8_t *)(p) + 1))<< 16) | \ 	            ((uint32_t)(*((const uint8_t *)(p) + 2))<< 8) | \ 	            ((uint32_t)(*((const uint8_t *)(p) + 3))<< 0)))
 end_define
 
 begin_define
@@ -282,7 +282,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((uint64_t)((uint64_t)*((const uint8_t *)(p) + 0)<< 56 | \ 		     (uint64_t)*((const uint8_t *)(p) + 1)<< 48 | \ 		     (uint64_t)*((const uint8_t *)(p) + 2)<< 40 | \ 		     (uint64_t)*((const uint8_t *)(p) + 3)<< 32 | \ 	             (uint64_t)*((const uint8_t *)(p) + 4)<< 24 | \ 		     (uint64_t)*((const uint8_t *)(p) + 5)<< 16 | \ 		     (uint64_t)*((const uint8_t *)(p) + 6)<< 8 | \ 		     (uint64_t)*((const uint8_t *)(p) + 7)))
+value|((uint64_t)(((uint64_t)(*((const uint8_t *)(p) + 0))<< 56) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 1))<< 48) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 2))<< 40) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 3))<< 32) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 4))<< 24) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 5))<< 16) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 6))<< 8) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 7))<< 0)))
 end_define
 
 begin_endif
@@ -464,7 +464,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((uint32_t)((uint32_t)*((const uint8_t *)(p) + 0)<< 16 | \ 		     (uint32_t)*((const uint8_t *)(p) + 1)<< 8 | \ 		     (uint32_t)*((const uint8_t *)(p) + 2)))
+value|((uint32_t)(((uint32_t)(*((const uint8_t *)(p) + 0))<< 16) | \ 	            ((uint32_t)(*((const uint8_t *)(p) + 1))<< 8) | \ 	            ((uint32_t)(*((const uint8_t *)(p) + 2))<< 0)))
 end_define
 
 begin_define
@@ -475,7 +475,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((uint64_t)((uint64_t)*((const uint8_t *)(p) + 0)<< 32 | \ 		     (uint64_t)*((const uint8_t *)(p) + 1)<< 24 | \ 		     (uint64_t)*((const uint8_t *)(p) + 2)<< 16 | \ 		     (uint64_t)*((const uint8_t *)(p) + 3)<< 8 | \ 		     (uint64_t)*((const uint8_t *)(p) + 4)))
+value|((uint64_t)(((uint64_t)(*((const uint8_t *)(p) + 0))<< 32) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 1))<< 24) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 2))<< 16) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 3))<< 8) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 4))<< 0)))
 end_define
 
 begin_define
@@ -486,7 +486,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((uint64_t)((uint64_t)*((const uint8_t *)(p) + 0)<< 40 | \ 		     (uint64_t)*((const uint8_t *)(p) + 1)<< 32 | \ 		     (uint64_t)*((const uint8_t *)(p) + 2)<< 24 | \ 		     (uint64_t)*((const uint8_t *)(p) + 3)<< 16 | \ 		     (uint64_t)*((const uint8_t *)(p) + 4)<< 8 | \ 		     (uint64_t)*((const uint8_t *)(p) + 5)))
+value|((uint64_t)(((uint64_t)(*((const uint8_t *)(p) + 0))<< 40) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 1))<< 32) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 2))<< 24) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 3))<< 16) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 4))<< 8) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 5))<< 0)))
 end_define
 
 begin_define
@@ -497,7 +497,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((uint64_t)((uint64_t)*((const uint8_t *)(p) + 0)<< 48 | \ 		     (uint64_t)*((const uint8_t *)(p) + 1)<< 40 | \ 		     (uint64_t)*((const uint8_t *)(p) + 2)<< 32 | \ 		     (uint64_t)*((const uint8_t *)(p) + 3)<< 24 | \ 		     (uint64_t)*((const uint8_t *)(p) + 4)<< 16 | \ 		     (uint64_t)*((const uint8_t *)(p) + 5)<< 8 | \ 		     (uint64_t)*((const uint8_t *)(p) + 6)))
+value|((uint64_t)(((uint64_t)(*((const uint8_t *)(p) + 0))<< 48) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 1))<< 40) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 2))<< 32) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 3))<< 24) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 4))<< 16) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 5))<< 8) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 6))<< 0)))
 end_define
 
 begin_comment
@@ -522,7 +522,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((uint16_t)((uint16_t)*((const uint8_t *)(p) + 1)<< 8 | \ 		     (uint16_t)*((const uint8_t *)(p) + 0)))
+value|((uint16_t)(((uint16_t)(*((const uint8_t *)(p) + 1))<< 8) | \ 	            ((uint16_t)(*((const uint8_t *)(p) + 0))<< 0)))
 end_define
 
 begin_define
@@ -533,7 +533,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((uint32_t)((uint32_t)*((const uint8_t *)(p) + 3)<< 24 | \ 		     (uint32_t)*((const uint8_t *)(p) + 2)<< 16 | \ 		     (uint32_t)*((const uint8_t *)(p) + 1)<< 8 | \ 		     (uint32_t)*((const uint8_t *)(p) + 0)))
+value|((uint32_t)(((uint32_t)(*((const uint8_t *)(p) + 3))<< 24) | \ 	            ((uint32_t)(*((const uint8_t *)(p) + 2))<< 16) | \ 	            ((uint32_t)(*((const uint8_t *)(p) + 1))<< 8) | \ 	            ((uint32_t)(*((const uint8_t *)(p) + 0))<< 0)))
 end_define
 
 begin_define
@@ -544,7 +544,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((uint32_t)((uint32_t)*((const uint8_t *)(p) + 2)<< 16 | \ 		     (uint32_t)*((const uint8_t *)(p) + 1)<< 8 | \ 		     (uint32_t)*((const uint8_t *)(p) + 0)))
+value|((uint32_t)(((uint32_t)(*((const uint8_t *)(p) + 2))<< 16) | \ 	            ((uint32_t)(*((const uint8_t *)(p) + 1))<< 8) | \ 	            ((uint32_t)(*((const uint8_t *)(p) + 0))<< 0)))
 end_define
 
 begin_define
@@ -555,7 +555,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((uint64_t)((uint64_t)*((const uint8_t *)(p) + 7)<< 56 | \ 		     (uint64_t)*((const uint8_t *)(p) + 6)<< 48 | \ 		     (uint64_t)*((const uint8_t *)(p) + 5)<< 40 | \ 		     (uint64_t)*((const uint8_t *)(p) + 4)<< 32 | \ 	             (uint64_t)*((const uint8_t *)(p) + 3)<< 24 | \ 		     (uint64_t)*((const uint8_t *)(p) + 2)<< 16 | \ 		     (uint64_t)*((const uint8_t *)(p) + 1)<< 8 | \ 		     (uint64_t)*((const uint8_t *)(p) + 0)))
+value|((uint64_t)(((uint64_t)(*((const uint8_t *)(p) + 7))<< 56) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 6))<< 48) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 5))<< 40) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 4))<< 32) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 3))<< 24) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 2))<< 16) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 1))<< 8) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 0))<< 0)))
 end_define
 
 end_unit

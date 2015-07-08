@@ -537,6 +537,7 @@ end_ifndef
 begin_if
 if|#
 directive|if
+operator|(
 name|__GNUC__
 operator|==
 literal|2
@@ -544,6 +545,11 @@ operator|&&
 name|__GNUC_MINOR__
 operator|>=
 literal|7
+operator|)
+operator|||
+name|__GNUC__
+operator|>
+literal|2
 end_if
 
 begin_define
@@ -558,10 +564,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* __GNUC__ == 2&& __GNUC_MINOR__>= 7 */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -573,10 +575,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* __GNUC__ == 2&& __GNUC_MINOR__>= 7 */
-end_comment
 
 begin_endif
 endif|#

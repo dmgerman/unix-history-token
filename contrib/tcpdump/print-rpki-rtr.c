@@ -422,7 +422,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Build a identation string for a given identation level.  * XXX this should be really in util.c  */
+comment|/*  * Build a indentation string for a given indentation level.  * XXX this should be really in util.c  */
 end_comment
 
 begin_function
@@ -613,6 +613,14 @@ argument_list|(
 name|pdu_header
 operator|->
 name|length
+argument_list|)
+expr_stmt|;
+name|ND_TCHECK2
+argument_list|(
+operator|*
+name|tptr
+argument_list|,
+name|pdu_len
 argument_list|)
 expr_stmt|;
 name|hexdump
@@ -893,12 +901,6 @@ name|tlen
 decl_stmt|,
 name|error_code
 decl_stmt|;
-name|u_char
-name|buf
-index|[
-literal|80
-index|]
-decl_stmt|;
 name|pdu
 operator|=
 operator|(
@@ -913,6 +915,14 @@ name|EXTRACT_32BITS
 argument_list|(
 name|pdu
 operator|->
+name|encapsulated_pdu_length
+argument_list|)
+expr_stmt|;
+name|ND_TCHECK2
+argument_list|(
+operator|*
+name|tptr
+argument_list|,
 name|encapsulated_pdu_length
 argument_list|)
 expr_stmt|;
@@ -1054,6 +1064,14 @@ operator|-=
 literal|4
 expr_stmt|;
 block|}
+name|ND_TCHECK2
+argument_list|(
+operator|*
+name|tptr
+argument_list|,
+name|text_length
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|text_length
@@ -1065,38 +1083,12 @@ name|tlen
 operator|)
 condition|)
 block|{
-name|memcpy
-argument_list|(
-name|buf
-argument_list|,
-name|tptr
-argument_list|,
-name|min
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-operator|-
-literal|1
-argument_list|,
-name|text_length
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|buf
-index|[
-name|text_length
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"%sError text: %s"
+literal|"%sError text: "
 operator|,
 name|indent_string
 argument_list|(
@@ -1104,9 +1096,20 @@ name|indent
 operator|+
 literal|2
 argument_list|)
-operator|,
-name|buf
 operator|)
+argument_list|)
+expr_stmt|;
+name|fn_printn
+argument_list|(
+name|ndo
+argument_list|,
+name|tptr
+argument_list|,
+name|text_length
+argument_list|,
+name|ndo
+operator|->
+name|ndo_snapend
 argument_list|)
 expr_stmt|;
 block|}
@@ -1149,6 +1152,19 @@ name|pdu_len
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
+name|trunc
+label|:
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"|trunc"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1259,6 +1275,14 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
+name|ND_TCHECK2
+argument_list|(
+operator|*
+name|tptr
+argument_list|,
+name|pdu_len
+argument_list|)
+expr_stmt|;
 comment|/* infinite loop check */
 if|if
 condition|(
@@ -1271,14 +1295,6 @@ condition|)
 block|{
 break|break;
 block|}
-name|ND_TCHECK2
-argument_list|(
-operator|*
-name|tptr
-argument_list|,
-name|pdu_len
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tlen

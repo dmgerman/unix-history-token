@@ -2462,7 +2462,9 @@ operator|->
 name|parse_badformat
 operator|++
 expr_stmt|;
-break|break;
+return|return
+name|cvtrtc
+return|;
 case|case
 name|CVT_NONE
 case|:
@@ -2472,7 +2474,9 @@ operator|->
 name|parse_badformat
 operator|++
 expr_stmt|;
-break|break;
+return|return
+name|CVT_NONE
+return|;
 case|case
 name|CVT_OK
 case|:

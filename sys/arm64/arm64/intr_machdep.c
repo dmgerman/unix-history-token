@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpufunc.h>
 end_include
 
@@ -1799,10 +1805,47 @@ name|u_int
 name|ipi
 parameter_list|)
 block|{
-comment|/* ARM64TODO: We should support this */
-name|panic
+name|cpuset_t
+name|other_cpus
+decl_stmt|;
+name|other_cpus
+operator|=
+name|all_cpus
+expr_stmt|;
+name|CPU_CLR
 argument_list|(
-literal|"ipi_all_but_self"
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|,
+operator|&
+name|other_cpus
+argument_list|)
+expr_stmt|;
+comment|/* ARM64TODO: This will be fixed with arm_intrng */
+name|ipi
+operator|+=
+literal|16
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_SMP
+argument_list|,
+literal|"%s: ipi: %x"
+argument_list|,
+name|__func__
+argument_list|,
+name|ipi
+argument_list|)
+expr_stmt|;
+name|PIC_IPI_SEND
+argument_list|(
+name|root_pic
+argument_list|,
+name|other_cpus
+argument_list|,
+name|ipi
 argument_list|)
 expr_stmt|;
 block|}

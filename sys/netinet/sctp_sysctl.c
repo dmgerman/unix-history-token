@@ -2809,6 +2809,14 @@ name|heart_beat_delay
 expr_stmt|;
 name|xraddr
 operator|.
+name|ssthresh
+operator|=
+name|net
+operator|->
+name|ssthresh
+expr_stmt|;
+name|xraddr
+operator|.
 name|start_time
 operator|.
 name|tv_sec

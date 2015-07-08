@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/ntp4-dev/ntpd/refclock_parse.c,v 4.81 2009/05/01 10:15:29 kardel RELEASE_20090105_A  *  * refclock_parse.c,v 4.81 2009/05/01 10:15:29 kardel RELEASE_20090105_A  *  * generic reference clock driver for several DCF/GPS/MSF/... receivers  *  * PPS notes:  *   On systems that support PPSAPI (RFC2783) PPSAPI is the  *   preferred interface.  *  *   Optionally make use of a STREAMS module for input processing where  *   available and configured. This STREAMS module reduces the time  *   stamp latency for serial and PPS events.  *   Currently the STREAMS module is only available for Suns running  *   SunOS 4.x and SunOS5.x.  *  * Copyright (c) 1995-2009 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/ntp4-dev/ntpd/refclock_parse.c,v 4.81 2009/05/01 10:15:29 kardel RELEASE_20090105_A  *  * refclock_parse.c,v 4.81 2009/05/01 10:15:29 kardel RELEASE_20090105_A  *  * generic reference clock driver for several DCF/GPS/MSF/... receivers  *  * PPS notes:  *   On systems that support PPSAPI (RFC2783) PPSAPI is the  *   preferred interface.  *  *   Optionally make use of a STREAMS module for input processing where  *   available and configured. This STREAMS module reduces the time  *   stamp latency for serial and PPS events.  *   Currently the STREAMS module is only available for Suns running  *   SunOS 4.x and SunOS5.x.  *  * Copyright (c) 1995-2015 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifdef
@@ -9903,9 +9903,9 @@ literal|"PPS SIGNAL"
 block|}
 block|,
 block|{
-name|PARSEB_S_ANTENNA
+name|PARSEB_S_CALLBIT
 block|,
-literal|"ANTENNA"
+literal|"CALLBIT"
 block|}
 block|,
 block|{
@@ -10019,7 +10019,7 @@ operator|&
 operator|(
 name|PARSEB_S_LEAP
 operator||
-name|PARSEB_S_ANTENNA
+name|PARSEB_S_CALLBIT
 operator||
 name|PARSEB_S_PPS
 operator||
@@ -11786,7 +11786,7 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"NTP PARSE support: Copyright (c) 1989-2009, Frank Kardel"
+literal|"NTP PARSE support: Copyright (c) 1989-2015, Frank Kardel"
 argument_list|)
 expr_stmt|;
 name|notice
@@ -15477,6 +15477,17 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* copy status to show only changes in case of failures */
+name|parse
+operator|->
+name|timedata
+operator|.
+name|parse_status
+operator|=
+name|parsetime
+operator|->
+name|parse_status
+expr_stmt|;
 block|}
 block|}
 comment|/* 	 * examine status and post appropriate events 	 */

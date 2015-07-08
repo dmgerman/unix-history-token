@@ -356,9 +356,6 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|IPH_AF_INET6
 case|:
@@ -372,9 +369,6 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/*INET6*/
 default|default:
 if|if
 condition|(
