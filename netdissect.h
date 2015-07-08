@@ -1167,6 +1167,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IS_NOT_NEGATIVE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)> 0) || ((x) == 0))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ND_TTEST2
 parameter_list|(
 name|var
@@ -1174,7 +1184,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|((l)>= 0&& \ 	((uintptr_t)ndo->ndo_snapend - (l)<= (uintptr_t)ndo->ndo_snapend&& \          (uintptr_t)&(var)<= (uintptr_t)ndo->ndo_snapend - (l)))
+value|(IS_NOT_NEGATIVE(l)&& \ 	((uintptr_t)ndo->ndo_snapend - (l)<= (uintptr_t)ndo->ndo_snapend&& \          (uintptr_t)&(var)<= (uintptr_t)ndo->ndo_snapend - (l)))
 end_define
 
 begin_comment
