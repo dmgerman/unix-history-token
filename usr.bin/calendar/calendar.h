@@ -848,38 +848,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* calcpp.c */
-end_comment
-
-begin_function_decl
-name|void
-name|initcpp
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|FILE
-modifier|*
-name|fincludegets
-parameter_list|(
-name|char
-modifier|*
-name|buf
-parameter_list|,
-name|int
-name|size
-parameter_list|,
-name|FILE
-modifier|*
-name|fp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* ostern.c / paskha.c */
 end_comment
 
