@@ -662,7 +662,7 @@ operator|=
 block|{
 literal|"jid"
 block|,
-literal|0
+name|PF_IMMUTABLE
 block|}
 block|,
 index|[
@@ -672,7 +672,7 @@ operator|=
 block|{
 literal|"name"
 block|,
-literal|0
+name|PF_IMMUTABLE
 block|}
 block|,
 index|[
@@ -2184,6 +2184,28 @@ name|NULL
 condition|)
 block|{
 comment|/* Found it - append or replace. */
+if|if
+condition|(
+name|dp
+operator|->
+name|flags
+operator|&
+name|PF_IMMUTABLE
+condition|)
+block|{
+name|jail_warnx
+argument_list|(
+name|j
+argument_list|,
+literal|"cannot redefine variable \"%s\"."
+argument_list|,
+name|dp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|strcmp
