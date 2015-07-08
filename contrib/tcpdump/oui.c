@@ -141,6 +141,60 @@ literal|"DCBX"
 block|}
 block|,
 block|{
+name|OUI_NICIRA
+block|,
+literal|"Nicira Networks"
+block|}
+block|,
+block|{
+name|OUI_BSN
+block|,
+literal|"Big Switch Networks"
+block|}
+block|,
+block|{
+name|OUI_VELLO
+block|,
+literal|"Vello Systems"
+block|}
+block|,
+block|{
+name|OUI_HP2
+block|,
+literal|"HP"
+block|}
+block|,
+block|{
+name|OUI_HPLABS
+block|,
+literal|"HP-Labs"
+block|}
+block|,
+block|{
+name|OUI_INFOBLOX
+block|,
+literal|"Infoblox Inc"
+block|}
+block|,
+block|{
+name|OUI_ONLAB
+block|,
+literal|"Open Networking Lab"
+block|}
+block|,
+block|{
+name|OUI_FREESCALE
+block|,
+literal|"Freescale"
+block|}
+block|,
+block|{
+name|OUI_NETRONOME
+block|,
+literal|"Netronome"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL

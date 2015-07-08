@@ -6686,12 +6686,14 @@ modifier|*
 name|b
 decl_stmt|,
 modifier|*
-name|s
-decl_stmt|,
-modifier|*
 name|t
 decl_stmt|,
 name|c
+decl_stmt|;
+specifier|const
+name|u_char
+modifier|*
+name|s
 decl_stmt|;
 name|int
 name|i
@@ -6713,7 +6715,7 @@ return|return;
 name|b
 operator|=
 operator|(
-name|uint8_t
+name|u_char
 operator|*
 operator|)
 name|malloc
@@ -6733,10 +6735,6 @@ for|for
 control|(
 name|s
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|p
 operator|,
 name|t
@@ -6750,6 +6748,12 @@ init|;
 name|i
 operator|>
 literal|0
+operator|&&
+name|ND_TTEST
+argument_list|(
+operator|*
+name|s
+argument_list|)
 condition|;
 name|i
 operator|--
@@ -6771,10 +6775,17 @@ block|{
 if|if
 condition|(
 name|i
-operator|>
+operator|<=
 literal|1
+operator|||
+operator|!
+name|ND_TTEST
+argument_list|(
+operator|*
+name|s
+argument_list|)
 condition|)
-block|{
+break|break;
 name|i
 operator|--
 expr_stmt|;
@@ -6786,9 +6797,6 @@ operator|++
 operator|^
 literal|0x20
 expr_stmt|;
-block|}
-else|else
-continue|continue;
 block|}
 operator|*
 name|t
@@ -6855,9 +6863,6 @@ expr_stmt|;
 goto|goto
 name|cleanup
 goto|;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|PPP_IPV6
 case|:
@@ -6877,8 +6882,6 @@ expr_stmt|;
 goto|goto
 name|cleanup
 goto|;
-endif|#
-directive|endif
 default|default:
 comment|/* no luck - try next guess */
 break|break;
@@ -7170,9 +7173,6 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|ETHERTYPE_IPV6
 case|:
@@ -7190,8 +7190,6 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|ETHERTYPE_IPX
 case|:
@@ -8343,9 +8341,6 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|PPP_IPV6
 case|:
@@ -8359,8 +8354,6 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|PPP_MPLS_UCAST
 case|:
@@ -8421,9 +8414,6 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|PPP_IPV6
 case|:
@@ -8437,8 +8427,6 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|PPP_MPLS_UCAST
 case|:
@@ -8549,9 +8537,6 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|PPP_IPV6
 case|:
@@ -8565,8 +8550,6 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|PPP_MPLS_UCAST
 case|:

@@ -96,6 +96,10 @@ file|"ipproto.h"
 end_include
 
 begin_comment
+comment|/* RFC4340: Datagram Congestion Control Protocol (DCCP) */
+end_comment
+
+begin_comment
 comment|/**  * struct dccp_hdr - generic part of DCCP packet header, with a 24-bit  * sequence number  *  * @dccph_sport - Relevant port on the endpoint that sent this packet  * @dccph_dport - Relevant port on the other endpoint  * @dccph_doff - Data Offset from the start of the DCCP header, in 32-bit words  * @dccph_ccval - Used by the HC-Sender CCID  * @dccph_cscov - Parts of the packet that are covered by the Checksum field  * @dccph_checksum - Internet checksum, depends on dccph_cscov  * @dccph_x - 0 = 24 bit sequence number, 1 = 48  * @dccph_type - packet type, see DCCP_PKT_ prefixed macros  * @dccph_seq - 24-bit sequence number  */
 end_comment
 
@@ -302,11 +306,87 @@ block|,
 name|DCCP_PKT_SYNC
 block|,
 name|DCCP_PKT_SYNCACK
-block|,
-name|DCCP_PKT_INVALID
 block|}
 enum|;
 end_enum
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|tok
+name|dccp_pkt_type_str
+index|[]
+init|=
+block|{
+block|{
+name|DCCP_PKT_REQUEST
+block|,
+literal|"DCCP-Request"
+block|}
+block|,
+block|{
+name|DCCP_PKT_RESPONSE
+block|,
+literal|"DCCP-Response"
+block|}
+block|,
+block|{
+name|DCCP_PKT_DATA
+block|,
+literal|"DCCP-Data"
+block|}
+block|,
+block|{
+name|DCCP_PKT_ACK
+block|,
+literal|"DCCP-Ack"
+block|}
+block|,
+block|{
+name|DCCP_PKT_DATAACK
+block|,
+literal|"DCCP-DataAck"
+block|}
+block|,
+block|{
+name|DCCP_PKT_CLOSEREQ
+block|,
+literal|"DCCP-CloseReq"
+block|}
+block|,
+block|{
+name|DCCP_PKT_CLOSE
+block|,
+literal|"DCCP-Close"
+block|}
+block|,
+block|{
+name|DCCP_PKT_RESET
+block|,
+literal|"DCCP-Reset"
+block|}
+block|,
+block|{
+name|DCCP_PKT_SYNC
+block|,
+literal|"DCCP-Sync"
+block|}
+block|,
+block|{
+name|DCCP_PKT_SYNCACK
+block|,
+literal|"DCCP-SyncAck"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_enum
 enum|enum
@@ -945,6 +1025,9 @@ decl_stmt|;
 name|u_int
 name|fixed_hdrlen
 decl_stmt|;
+name|uint8_t
+name|dccph_type
+decl_stmt|;
 name|dh
 operator|=
 operator|(
@@ -1208,6 +1291,15 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"DCCP"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ndo
@@ -1240,7 +1332,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"dccp [bad hdr length %u - too long,> %u]"
+literal|" [bad hdr length %u - too long,> %u]"
 operator|,
 name|hlen
 operator|,
@@ -1264,7 +1356,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"CCVal %d, CsCov %d, "
+literal|" (CCVal %d, CsCov %d, "
 operator|,
 name|DCCPH_CCVAL
 argument_list|(
@@ -1384,7 +1476,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"(incorrect -> 0x%04x), "
+literal|"(incorrect -> 0x%04x)"
 operator|,
 name|in_cksum_shouldbe
 argument_list|(
@@ -1401,17 +1493,45 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"(correct), "
+literal|"(correct)"
 operator|)
 argument_list|)
 expr_stmt|;
 block|}
-switch|switch
+if|if
 condition|(
+name|ndo
+operator|->
+name|ndo_vflag
+condition|)
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|")"
+operator|)
+argument_list|)
+expr_stmt|;
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" "
+operator|)
+argument_list|)
+expr_stmt|;
+name|dccph_type
+operator|=
 name|DCCPH_TYPE
 argument_list|(
 name|dh
 argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|dccph_type
 condition|)
 block|{
 case|case
@@ -1450,7 +1570,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"truncated-dccp request - %u bytes missing!"
+literal|"truncated-%s - %u bytes missing!"
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|,
 name|len
 operator|-
@@ -1471,7 +1600,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"request (service=%d) "
+literal|"%s (service=%d) "
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -1521,7 +1659,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"truncated-dccp response - %u bytes missing!"
+literal|"truncated-%s - %u bytes missing!"
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|,
 name|len
 operator|-
@@ -1542,7 +1689,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"response (service=%d) "
+literal|"%s (service=%d) "
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -1564,7 +1720,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"data "
+literal|"%s "
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1589,7 +1754,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"truncated-dccp ack - %u bytes missing!"
+literal|"truncated-%s - %u bytes missing!"
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|,
 name|len
 operator|-
@@ -1604,7 +1778,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"ack "
+literal|"%s "
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1630,7 +1813,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"truncated-dccp dataack - %u bytes missing!"
+literal|"truncated-%s - %u bytes missing!"
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|,
 name|len
 operator|-
@@ -1645,7 +1837,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"dataack "
+literal|"%s "
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1670,7 +1871,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"truncated-dccp closereq - %u bytes missing!"
+literal|"truncated-%s - %u bytes missing!"
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|,
 name|len
 operator|-
@@ -1685,7 +1895,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"closereq "
+literal|"%s "
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1709,7 +1928,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"truncated-dccp close - %u bytes missing!"
+literal|"truncated-%s - %u bytes missing!"
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|,
 name|len
 operator|-
@@ -1724,7 +1952,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"close "
+literal|"%s "
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1765,7 +2002,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"truncated-dccp reset - %u bytes missing!"
+literal|"truncated-%s - %u bytes missing!"
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|,
 name|len
 operator|-
@@ -1786,7 +2032,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"reset (code=%s) "
+literal|"%s (code=%s) "
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|,
 name|dccp_reset_code
 argument_list|(
@@ -1818,7 +2073,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"truncated-dccp sync - %u bytes missing!"
+literal|"truncated-%s - %u bytes missing!"
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|,
 name|len
 operator|-
@@ -1833,7 +2097,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"sync "
+literal|"%s "
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1857,7 +2130,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"truncated-dccp syncack - %u bytes missing!"
+literal|"truncated-%s - %u bytes missing!"
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|,
 name|len
 operator|-
@@ -1872,7 +2154,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"syncack "
+literal|"%s "
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|""
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1883,7 +2174,16 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"invalid "
+literal|"%s "
+operator|,
+name|tok2str
+argument_list|(
+name|dccp_pkt_type_str
+argument_list|,
+literal|"unknown-type-%u"
+argument_list|,
+name|dccph_type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

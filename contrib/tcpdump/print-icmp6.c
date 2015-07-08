@@ -3234,7 +3234,7 @@ name|snprintf
 argument_list|(
 name|d
 argument_list|,
-literal|4
+literal|5
 argument_list|,
 literal|"0x%02x"
 argument_list|,
@@ -3244,6 +3244,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* 4 + null char */
 name|d
 operator|+=
 literal|4

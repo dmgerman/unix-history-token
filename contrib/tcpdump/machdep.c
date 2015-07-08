@@ -149,6 +149,10 @@ directive|include
 file|"machdep.h"
 end_include
 
+begin_comment
+comment|/*  * On platforms where the CPU doesn't support unaligned loads, force  * unaligned accesses to abort with SIGBUS, rather than being fixed  * up (slowly) by the OS kernel; on those platforms, misaligned accesses  * are bugs, and we want tcpdump to crash so that the bugs are reported.  *  * The only OS on which this is necessary is DEC OSF/1^W^WDigital  * UNIX^W^WTru64 UNIX.  */
+end_comment
+
 begin_function
 name|int
 name|abort_on_misalignment

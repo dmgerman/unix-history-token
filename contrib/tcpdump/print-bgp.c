@@ -2824,7 +2824,7 @@ literal|0
 index|]
 expr_stmt|;
 comment|/* get prefix length */
-comment|/* this is one of the weirdnesses of rfc3107            the label length (actually the label + COS bits)            is added to the prefix length;            we also do only read out just one label -            there is no real application for advertisement of            stacked labels in a a single BGP message         */
+comment|/* this is one of the weirdnesses of rfc3107            the label length (actually the label + COS bits)            is added to the prefix length;            we also do only read out just one label -            there is no real application for advertisement of            stacked labels in a single BGP message         */
 if|if
 condition|(
 literal|24
@@ -3761,10 +3761,20 @@ literal|0
 operator|==
 name|plen
 condition|)
+block|{
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+name|buflen
+argument_list|,
+literal|"default route target"
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
-comment|/* default route target */
+block|}
 if|if
 condition|(
 literal|32
@@ -14912,9 +14922,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|": BGP, length: %u"
-operator|,
-name|length
+literal|": BGP"
 operator|)
 argument_list|)
 expr_stmt|;

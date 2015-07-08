@@ -2727,9 +2727,6 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|JUNIPER_PROTO_IPV6
 case|:
@@ -2745,9 +2742,6 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* INET6 */
 default|default:
 if|if
 condition|(
@@ -4210,9 +4204,6 @@ name|l2info
 operator|.
 name|header_len
 return|;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|JUNIPER_LSQ_L3_PROTO_IPV6
 case|:
@@ -4232,8 +4223,6 @@ name|l2info
 operator|.
 name|header_len
 return|;
-endif|#
-directive|endif
 case|case
 name|JUNIPER_LSQ_L3_PROTO_MPLS
 case|:
@@ -4474,9 +4463,6 @@ name|l2info
 operator|.
 name|header_len
 return|;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|JUNIPER_LSQ_L3_PROTO_IPV6
 case|:
@@ -4496,8 +4482,6 @@ name|l2info
 operator|.
 name|header_len
 return|;
-endif|#
-directive|endif
 case|case
 name|JUNIPER_LSQ_L3_PROTO_MPLS
 case|:
@@ -5598,9 +5582,6 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 literal|0x60
 case|:
@@ -5659,8 +5640,6 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 return|return
 literal|0

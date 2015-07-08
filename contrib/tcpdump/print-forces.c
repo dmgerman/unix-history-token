@@ -56,7 +56,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Per draft-ietf-forces-protocol-22 */
+comment|/*  * RFC5810: Forwarding and Control Element Separation (ForCES) Protocol  */
 end_comment
 
 begin_define
@@ -808,38 +808,76 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* this is defined in RFC5810 section A.2 */
+end_comment
+
+begin_comment
+comment|/*   http://www.iana.org/assignments/forces/forces.xhtml#oper-tlv-types */
+end_comment
+
 begin_enum
 enum|enum
 block|{
 name|F_OP_RSV
+init|=
+literal|0
 block|,
 name|F_OP_SET
+init|=
+literal|1
 block|,
 name|F_OP_SETPROP
+init|=
+literal|2
 block|,
 name|F_OP_SETRESP
+init|=
+literal|3
 block|,
 name|F_OP_SETPRESP
+init|=
+literal|4
 block|,
 name|F_OP_DEL
+init|=
+literal|5
 block|,
 name|F_OP_DELRESP
+init|=
+literal|6
 block|,
 name|F_OP_GET
+init|=
+literal|7
 block|,
 name|F_OP_GETPROP
+init|=
+literal|8
 block|,
 name|F_OP_GETRESP
+init|=
+literal|9
 block|,
 name|F_OP_GETPRESP
+init|=
+literal|10
 block|,
 name|F_OP_REPORT
+init|=
+literal|11
 block|,
 name|F_OP_COMMIT
+init|=
+literal|12
 block|,
 name|F_OP_RCOMMIT
+init|=
+literal|13
 block|,
 name|F_OP_RTRCOMP
+init|=
+literal|14
 block|,
 name|_F_OP_MAX
 block|}
@@ -6422,41 +6460,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* empty TLVs like COMMIT and TRCOMMIT are empty, we stop here .. */
-if|if
-condition|(
-operator|!
-name|ops
-operator|->
-name|flags
-operator|&
-name|ZERO_TTLV
-condition|)
-block|{
-if|if
-condition|(
-name|tll
-operator|!=
-literal|0
-condition|)
-comment|/* instead of "if (tll)" - for readability .. */
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"%s: Illegal - MUST be empty\n"
-operator|,
-name|ops
-operator|->
-name|s
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-name|rc
-return|;
-block|}
 comment|/* rest of ops must at least have 12B {pathinfo} */
 if|if
 condition|(
@@ -6518,6 +6521,14 @@ name|indent
 argument_list|)
 return|;
 block|}
+comment|/* XXX - do anything with ops->flags? */
+if|if
+condition|(
+name|ops
+operator|->
+name|print
+condition|)
+block|{
 name|rc
 operator|=
 name|ops
@@ -6539,6 +6550,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|rc
 return|;

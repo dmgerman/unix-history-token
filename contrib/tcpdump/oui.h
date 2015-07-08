@@ -177,6 +177,105 @@ begin_comment
 comment|/* DCBX */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|OUI_NICIRA
+value|0x002320
+end_define
+
+begin_comment
+comment|/* Nicira Networks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUI_BSN
+value|0x5c16c7
+end_define
+
+begin_comment
+comment|/* Big Switch Networks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUI_VELLO
+value|0xb0d2f5
+end_define
+
+begin_comment
+comment|/* Vello Systems */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUI_HP2
+value|0x002481
+end_define
+
+begin_comment
+comment|/* HP too */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUI_HPLABS
+value|0x0004ea
+end_define
+
+begin_comment
+comment|/* HP-Labs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUI_INFOBLOX
+value|0x748771
+end_define
+
+begin_comment
+comment|/* Infoblox Inc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUI_ONLAB
+value|0xa42305
+end_define
+
+begin_comment
+comment|/* Open Networking Lab */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUI_FREESCALE
+value|0x00049f
+end_define
+
+begin_comment
+comment|/* Freescale */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUI_NETRONOME
+value|0x0015ad
+end_define
+
+begin_comment
+comment|/* Netronome */
+end_comment
+
 begin_comment
 comment|/*  * These are SMI Network Management Private Enterprise Codes for  * organizations; see  *  *	http://www.iana.org/assignments/enterprise-numbers  *  * for a list.  *  * List taken from Ethereal's epan/sminmpec.h.  */
 end_comment
