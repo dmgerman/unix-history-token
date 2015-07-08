@@ -888,14 +888,6 @@ operator|->
 name|cid
 argument_list|)
 expr_stmt|;
-comment|/* XXX - wait for anyone in _newsession to leave */
-name|pause
-argument_list|(
-literal|"aniwait"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 name|rw_destroy
 argument_list|(
 operator|&
