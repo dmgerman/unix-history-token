@@ -809,7 +809,7 @@ begin_define
 define|#
 directive|define
 name|__BUS_DMAMAP_SYNC_DEFAULT
-value|mb();
+value|mb()
 end_define
 
 begin_elif
@@ -825,7 +825,7 @@ begin_define
 define|#
 directive|define
 name|__BUS_DMAMAP_SYNC_DEFAULT
-value|dmb(sy);
+value|dmb(sy)
 end_define
 
 begin_else
@@ -837,7 +837,7 @@ begin_define
 define|#
 directive|define
 name|__BUS_DMAMAP_SYNC_DEFAULT
-value|{}
+value|do {} while (0)
 end_define
 
 begin_endif
@@ -857,7 +857,7 @@ parameter_list|,
 name|op
 parameter_list|)
 define|\
-value|do {							\ 		if ((dmamap) != NULL)				\ 			_bus_dmamap_sync(dmat, dmamap, op);	\ 		else						\ 			__BUS_DMAMAP_SYNC_DEFAULT		\ 	} while (0)
+value|do {							\ 		if ((dmamap) != NULL)				\ 			_bus_dmamap_sync(dmat, dmamap, op);	\ 		else						\ 			__BUS_DMAMAP_SYNC_DEFAULT;		\ 	} while (0)
 end_define
 
 begin_comment
