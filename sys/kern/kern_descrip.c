@@ -1842,10 +1842,16 @@ name|arg1
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|newcmd
 decl_stmt|;
 name|error
 operator|=
 literal|0
+expr_stmt|;
+name|newcmd
+operator|=
+name|cmd
 expr_stmt|;
 switch|switch
 condition|(
@@ -1938,7 +1944,7 @@ block|{
 case|case
 name|F_OGETLK
 case|:
-name|cmd
+name|newcmd
 operator|=
 name|F_GETLK
 expr_stmt|;
@@ -1946,7 +1952,7 @@ break|break;
 case|case
 name|F_OSETLK
 case|:
-name|cmd
+name|newcmd
 operator|=
 name|F_SETLK
 expr_stmt|;
@@ -1954,7 +1960,7 @@ break|break;
 case|case
 name|F_OSETLKW
 case|:
-name|cmd
+name|newcmd
 operator|=
 name|F_SETLKW
 expr_stmt|;
@@ -2036,7 +2042,7 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
-name|cmd
+name|newcmd
 argument_list|,
 name|arg1
 argument_list|)
