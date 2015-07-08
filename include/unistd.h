@@ -2050,22 +2050,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|execl
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 specifier|const
 name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|,
+operator|...
+argument_list|)
+name|__sentinel
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
@@ -2084,22 +2085,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|execlp
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 specifier|const
 name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|,
+operator|...
+argument_list|)
+name|__sentinel
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
