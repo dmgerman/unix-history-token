@@ -1159,6 +1159,28 @@ comment|/* ! INADDR_NONE */
 end_comment
 
 begin_comment
+comment|/* By default use uncompressed IPv6 address format (no "::") */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IPV6_FULL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IPV6_FULL
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* (f)open() modes for queue files */
 end_comment
 
@@ -1167,6 +1189,36 @@ define|#
 directive|define
 name|QF_O_EXTRA
 value|0
+end_define
+
+begin_if
+if|#
+directive|if
+name|_FFR_PROXY
+operator|||
+name|_FFR_LOGREPLY
+end_if
+
+begin_define
+define|#
+directive|define
+name|_FFR_ERRCODE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|SM_ARRAY_SIZE
+parameter_list|(
+name|array
+parameter_list|)
+value|(sizeof(array) / sizeof((array)[0]))
 end_define
 
 begin_comment
@@ -1578,6 +1630,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|QINTBCC
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* internal Bcc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QDYNMAILER
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* "dynamic mailer" */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|QTHISPASS
 value|0x40000000
 end_define
@@ -1600,9 +1674,73 @@ end_comment
 begin_define
 define|#
 directive|define
+name|QDYNMAILFLG
+value|'Y'
+end_define
+
+begin_define
+define|#
+directive|define
 name|Q_PINGFLAGS
 value|(QPINGONSUCCESS|QPINGONFAILURE|QPINGONDELAY)
 end_define
+
+begin_if
+if|#
+directive|if
+name|_FFR_RCPTFLAGS
+end_if
+
+begin_define
+define|#
+directive|define
+name|QMATCHFLAGS
+value|(QINTBCC|QDYNMAILER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QMATCH_FLAG
+parameter_list|(
+name|a
+parameter_list|)
+value|((a)->q_flags& QMATCHFLAGS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADDR_FLAGS_MATCH
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(QMATCH_FLAG(a) == QMATCH_FLAG(b))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ADDR_FLAGS_MATCH
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|true
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* values for q_state */
@@ -1949,6 +2087,17 @@ end_decl_stmt
 begin_comment
 comment|/* a null (template) address [main.c] */
 end_comment
+
+begin_comment
+comment|/* for cataddr() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOSPACESEP
+value|256
+end_define
 
 begin_comment
 comment|/* functions */
@@ -2600,6 +2749,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_xSMTP
+value|0x01
+end_define
+
+begin_comment
+comment|/* internal: {ES,S,L}MTP */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_ESMTP
 value|'a'
 end_define
@@ -2873,6 +3033,10 @@ begin_comment
 comment|/* always run mailer as recipient */
 end_comment
 
+begin_comment
+comment|/*	'O'	   free? */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3017,6 +3181,14 @@ begin_comment
 comment|/* use hidden-dot algorithm */
 end_comment
 
+begin_comment
+comment|/*	'y'	   free? */
+end_comment
+
+begin_comment
+comment|/*	'Y'	   free? */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3070,6 +3242,10 @@ end_define
 
 begin_comment
 comment|/* force SMTP (no ESMTP even if offered) */
+end_comment
+
+begin_comment
+comment|/*	'4'	   free? */
 end_comment
 
 begin_define
@@ -3373,6 +3549,32 @@ begin_comment
 comment|/* ptr to program mailer */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|_FFR_RCPTFLAGS
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|MAILER
+modifier|*
+name|Mailer
+index|[
+name|MAXMAILERS
+operator|*
+literal|2
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|EXTERN
 name|MAILER
@@ -3385,6 +3587,11 @@ literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* **  Queue group definition structure. **	Every queue group known to the system is declared in this structure. **	It defines the basic pathname of the queue group, some flags **	associated with it, and the argument vector to pass to it. */
@@ -4785,6 +4992,40 @@ begin_comment
 comment|/* use only EHLO in smtpinit */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|_FFR_HANDLE_HDR_RW_TEMPFAIL
+end_if
+
+begin_comment
+comment|/* an error is not sticky (if put{header,body}() etc fail) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_NOTSTICKY
+value|0x20000000
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MCIF_NOTSTICKY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -6101,13 +6342,13 @@ name|int
 name|e_features
 decl_stmt|;
 comment|/* server features */
-if|#
-directive|if
-name|_FFR_MILTER_ENHSC
 define|#
 directive|define
 name|ENHSC_LEN
 value|11
+if|#
+directive|if
+name|_FFR_MILTER_ENHSC
 name|char
 name|e_enhsc
 index|[
@@ -6118,6 +6359,29 @@ comment|/* enhanced status code */
 endif|#
 directive|endif
 comment|/* _FFR_MILTER_ENHSC */
+if|#
+directive|if
+name|_FFR_ERRCODE
+comment|/* smtp error codes during delivery */
+name|int
+name|e_rcode
+decl_stmt|;
+comment|/* reply code */
+name|char
+name|e_renhsc
+index|[
+name|ENHSC_LEN
+index|]
+decl_stmt|;
+comment|/* enhanced status code */
+name|char
+modifier|*
+name|e_text
+decl_stmt|;
+comment|/* reply text */
+endif|#
+directive|endif
+comment|/* _FFR_ERRCODE */
 block|}
 struct|;
 end_struct
@@ -7354,6 +7618,10 @@ operator|*
 operator|,
 name|ADDRESS
 operator|*
+operator|,
+name|char
+operator|*
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8184,67 +8452,6 @@ end_define
 begin_comment
 comment|/* member map returns temp failure */
 end_comment
-
-begin_comment
-comment|/* macros to handle MapTempFail */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BIT_IS_MTP
-value|0x01
-end_define
-
-begin_comment
-comment|/* temp.failure occurred */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BIT_ASK_MTP
-value|0x02
-end_define
-
-begin_comment
-comment|/* do we care about MapTempFail? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RESET_MAPTEMPFAIL
-value|MapTempFail = 0
-end_define
-
-begin_define
-define|#
-directive|define
-name|INIT_MAPTEMPFAIL
-value|MapTempFail = BIT_ASK_MTP
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_MAPTEMPFAIL
-value|MapTempFail |= BIT_IS_MTP
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_MAPTEMPFAIL
-value|bitset(BIT_IS_MTP, MapTempFail)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASK_MAPTEMPFAIL
-value|bitset(BIT_ASK_MTP, MapTempFail)
-end_define
 
 begin_comment
 comment|/* **  The class of a map -- essentially the functions to call */
@@ -10211,6 +10418,43 @@ begin_comment
 comment|/* interactive delivery */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|_FFR_PROXY
+end_if
+
+begin_define
+define|#
+directive|define
+name|SM_PROXY_REQ
+value|'s'
+end_define
+
+begin_comment
+comment|/* synchronous mode requested */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_PROXY
+value|'S'
+end_define
+
+begin_comment
+comment|/* synchronous mode activated */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_PROXY */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10292,6 +10536,31 @@ begin_comment
 comment|/* DeliveryMode (per daemon) option not set */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|_FFR_PROXY
+end_if
+
+begin_define
+define|#
+directive|define
+name|SM_IS_INTERACTIVE
+parameter_list|(
+name|m
+parameter_list|)
+value|((m) == SM_DELIVER || (m) == SM_PROXY_REQ || (m) == SM_PROXY)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _FFR_PROXY */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10301,6 +10570,15 @@ name|m
 parameter_list|)
 value|((m) == SM_DELIVER)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_PROXY */
+end_comment
 
 begin_define
 define|#
@@ -10916,6 +11194,28 @@ end_define
 
 begin_comment
 comment|/* count rejections (statistics)? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSF_ADDR
+value|0x0008
+end_define
+
+begin_comment
+comment|/* reassemble address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSF_STRING
+value|0x0010
+end_define
+
+begin_comment
+comment|/* reassemble address as string */
 end_comment
 
 begin_comment
@@ -11709,6 +12009,43 @@ end_comment
 begin_if
 if|#
 directive|if
+name|_FFR_XCNCT
+end_if
+
+begin_define
+define|#
+directive|define
+name|D_XCNCT
+value|((char)0x04)
+end_define
+
+begin_comment
+comment|/* X-Connect was used */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_XCNCT_M
+value|((char)0x05)
+end_define
+
+begin_comment
+comment|/* X-Connect was used + "forged" */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_XCNCT */
+end_comment
+
+begin_if
+if|#
+directive|if
 name|STARTTLS
 end_if
 
@@ -12006,6 +12343,17 @@ begin_comment
 comment|/* CRL file must be g/o unreadable */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TLS_I_DHFIXED
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* use fixed DH param */
+end_comment
+
 begin_comment
 comment|/* require server cert */
 end_comment
@@ -12025,7 +12373,7 @@ begin_define
 define|#
 directive|define
 name|TLS_I_SRV
-value|(TLS_I_SRV_CERT | TLS_I_RSA_TMP | TLS_I_VRFY_PATH | \ 			 TLS_I_VRFY_LOC | TLS_I_TRY_DH | TLS_I_DH1024 | \ 			 TLS_I_CACHE)
+value|(TLS_I_SRV_CERT | TLS_I_RSA_TMP | TLS_I_VRFY_PATH | \ 			 TLS_I_VRFY_LOC | TLS_I_TRY_DH | TLS_I_CACHE)
 end_define
 
 begin_comment
@@ -12092,6 +12440,7 @@ operator|,
 name|unsigned
 name|long
 operator|,
+name|unsigned
 name|long
 operator|,
 name|bool
@@ -12260,12 +12609,6 @@ begin_comment
 comment|/* file with client private key */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_TLS_1
-end_if
-
 begin_decl_stmt
 name|EXTERN
 name|char
@@ -12282,21 +12625,25 @@ begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
-name|DHParams5
+name|CertFingerprintAlgorithm
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* file with DH parameters (512) */
+comment|/* name of fingerprint alg */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+name|EXTERN
+specifier|const
+name|EVP_MD
+modifier|*
+name|EVP_digest
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/* _FFR_TLS_1 */
+comment|/* digest for cert fp */
 end_comment
 
 begin_decl_stmt
@@ -12400,6 +12747,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|unsigned
 name|long
 name|Srv_SSL_Options
 decl_stmt|,
@@ -12971,12 +13319,6 @@ begin_comment
 comment|/* min delivery interval */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_EXPDELAY
-end_if
-
 begin_decl_stmt
 name|EXTERN
 name|time_t
@@ -12986,15 +13328,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* max delivery interval */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_EXPDELAY */
 end_comment
 
 begin_decl_stmt
@@ -13084,6 +13417,24 @@ end_decl_stmt
 begin_comment
 comment|/* queue groups */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_BOUNCE_QUEUE
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|BounceQueue
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* functions */
@@ -13955,6 +14306,10 @@ name|XS_DEFAULT
 value|0
 end_define
 
+begin_comment
+comment|/* other commands, e.g., RSET */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -14018,23 +14373,38 @@ name|XS_DATA2
 value|9
 end_define
 
-begin_define
-define|#
-directive|define
-name|XS_RCPT2
-value|10
-end_define
+begin_comment
+comment|/* LMTP */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|XS_QUIT
-value|15
+value|10
 end_define
 
 begin_comment
 comment|/* **  Global variables. */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_ADD_BCC
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|AddBcc
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -14612,6 +14982,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* using DNS -- interpret h_errno& MX RRs */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|UseCompressedIPv6Addresses
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for more specific zero-subnet matches */
 end_comment
 
 begin_decl_stmt
@@ -16314,6 +16695,75 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|_FFR_PROXY
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|PRINTFLIKE
+argument_list|(
+literal|3
+argument_list|,
+literal|4
+argument_list|)
+name|emessage
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|extsc
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_PROXY */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -16574,6 +17024,11 @@ name|time_t
 operator|,
 name|ENVELOPE
 operator|*
+operator|,
+name|ADDRESS
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -18550,6 +19005,75 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|_FFR_TLS_SE_OPTS
+operator|&&
+name|STARTTLS
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TLS_VRFY_PER_CTX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TLS_VRFY_PER_CTX
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|get_tls_se_options
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
+operator|*
+operator|,
+name|SSL
+operator|*
+operator|,
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|get_tls_se_options
+parameter_list|(
+name|e
+parameter_list|,
+name|s
+parameter_list|,
+name|w
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -18700,6 +19224,41 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|_FFR_TLS_SE_OPTS
+operator|&&
+name|STARTTLS
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|load_certkey
+name|__P
+argument_list|(
+operator|(
+name|SSL
+operator|*
+operator|,
+name|bool
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -19537,7 +20096,7 @@ end_if
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|set_tls_rd_tmo
 name|__P
 argument_list|(
@@ -19553,10 +20112,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* STARTTLS */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -19564,16 +20119,13 @@ name|set_tls_rd_tmo
 parameter_list|(
 name|rd_tmo
 parameter_list|)
+value|0
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* STARTTLS */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -20336,6 +20888,35 @@ begin_comment
 comment|/* SM_HEAP_CHECK */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|_FFR_XCNCT
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|xconnect
+name|__P
+argument_list|(
+operator|(
+name|SM_FILE_T
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_XCNCT */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -20414,6 +20995,33 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|_FFR_RCPTFLAGS
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|newmodmailer
+name|__P
+argument_list|(
+operator|(
+name|ADDRESS
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#

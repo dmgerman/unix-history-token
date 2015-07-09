@@ -319,11 +319,6 @@ modifier|*
 name|cfile
 decl_stmt|;
 name|bool
-name|verbose
-init|=
-name|false
-decl_stmt|;
-name|bool
 name|query
 init|=
 name|false
@@ -608,7 +603,7 @@ expr_stmt|;
 define|#
 directive|define
 name|OPTIONS
-value|"C:fquxvN"
+value|"C:fquxN"
 while|while
 condition|(
 operator|(
@@ -680,14 +675,6 @@ name|true
 expr_stmt|;
 name|nops
 operator|++
-expr_stmt|;
-break|break;
-case|case
-literal|'v'
-case|:
-name|verbose
-operator|=
-name|true
 expr_stmt|;
 break|break;
 case|case

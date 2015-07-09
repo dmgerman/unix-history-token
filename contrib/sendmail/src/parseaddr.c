@@ -10279,7 +10279,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  CATADDR -- concatenate pieces of addresses (putting in<LWSP> subs) ** **	Parameters: **		pvp -- parameter vector to rebuild. **		evp -- last parameter to include.  Can be NULL to **			use entire pvp. **		buf -- buffer to build the string into. **		sz -- size of buf. **		spacesub -- the space separator character; if '\0', **			use SpaceSub. **		external -- convert to external form? **			(no metacharacters; METAQUOTEs removed, see below) ** **	Returns: **		none. ** **	Side Effects: **		Destroys buf. ** **	Notes: **	There are two formats for strings: internal and external. **	The external format is just an eight-bit clean string (no **	null bytes, everything else OK).  The internal format can **	include sendmail metacharacters.  The special character **	METAQUOTE essentially quotes the character following, stripping **	it of all special semantics. ** **	The cataddr routine needs to be aware of whether it is producing **	an internal or external form as output (it only takes internal **	form as input). ** **	The parseaddr routine has a similar issue on input, but that **	is flagged on the basis of which token table is passed in. */
+comment|/* **  CATADDR -- concatenate pieces of addresses (putting in<LWSP> subs) ** **	Parameters: **		pvp -- parameter vector to rebuild. **		evp -- last parameter to include.  Can be NULL to **			use entire pvp. **		buf -- buffer to build the string into. **		sz -- size of buf. **		spacesub -- the space separator character; **			'\0': SpaceSub. **			NOSPACESEP: no separator **		external -- convert to external form? **			(no metacharacters; METAQUOTEs removed, see below) ** **	Returns: **		none. ** **	Side Effects: **		Destroys buf. ** **	Notes: **	There are two formats for strings: internal and external. **	The external format is just an eight-bit clean string (no **	null bytes, everything else OK).  The internal format can **	include sendmail metacharacters.  The special character **	METAQUOTE essentially quotes the character following, stripping **	it of all special semantics. ** **	The cataddr routine needs to be aware of whether it is producing **	an internal or external form as output (it only takes internal **	form as input). ** **	The parseaddr routine has a similar issue on input, but that **	is flagged on the basis of which token table is passed in. */
 end_comment
 
 begin_function
@@ -10439,6 +10439,10 @@ condition|(
 name|oatomtok
 operator|&&
 name|natomtok
+operator|&&
+name|spacesub
+operator|!=
+name|NOSPACESEP
 condition|)
 block|{
 operator|*
@@ -10651,6 +10655,20 @@ condition|)
 return|return
 name|false
 return|;
+comment|/* do the required flags match? */
+if|if
+condition|(
+operator|!
+name|ADDR_FLAGS_MATCH
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
 comment|/* if we have good uids for both but they differ, these are different */
 if|if
 condition|(
@@ -10791,6 +10809,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* :'a,.s;^#define \(Q[A-Z]*\)	.*;	{ "\1",	\1	},; */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -10887,6 +10909,42 @@ block|{
 literal|"QTHISPASS"
 block|,
 name|QTHISPASS
+block|}
+block|,
+block|{
+literal|"QALIAS"
+block|,
+name|QALIAS
+block|}
+block|,
+block|{
+literal|"QBYTRACE"
+block|,
+name|QBYTRACE
+block|}
+block|,
+block|{
+literal|"QBYNDELAY"
+block|,
+name|QBYNDELAY
+block|}
+block|,
+block|{
+literal|"QBYNRELAY"
+block|,
+name|QBYNRELAY
+block|}
+block|,
+block|{
+literal|"QINTBCC"
+block|,
+name|QINTBCC
+block|}
+block|,
+block|{
+literal|"QDYNMAILER"
+block|,
+name|QDYNMAILER
 block|}
 block|,
 block|{
@@ -12438,7 +12496,10 @@ argument_list|)
 expr_stmt|;
 name|sm_dprintf
 argument_list|(
-literal|"'\n"
+literal|"', stat=%d\n"
+argument_list|,
+operator|*
+name|pstat
 argument_list|)
 expr_stmt|;
 block|}
@@ -13395,7 +13456,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  RSCHECK -- check string(s) for validity using rewriting sets ** **	Parameters: **		rwset -- the rewriting set to use. **		p1 -- the first string to check. **		p2 -- the second string to check -- may be null. **		e -- the current envelope. **		flags -- control some behavior, see RSF_ in sendmail.h **		logl -- logging level. **		host -- NULL or relay host. **		logid -- id for sm_syslog. **		addr -- if not NULL and ruleset returns $#error: **				store mailer triple here. ** **	Returns: **		EX_OK -- if the rwset doesn't resolve to $#error **		else -- the failure status (message printed) */
+comment|/* **  RSCHECK -- check string(s) for validity using rewriting sets ** **	Parameters: **		rwset -- the rewriting set to use. **		p1 -- the first string to check. **		p2 -- the second string to check -- may be null. **		e -- the current envelope. **		flags -- control some behavior, see RSF_ in sendmail.h **		logl -- logging level. **		host -- NULL or relay host. **		logid -- id for sm_syslog. **		addr -- if not NULL and ruleset returns $#error: **				store mailer triple here. **		addrstr -- if not NULL and ruleset does not return $#: **				address string ** **	Returns: **		EX_OK -- if the rwset doesn't resolve to $#error **		else -- the failure status (message printed) */
 end_comment
 
 begin_function
@@ -13419,6 +13480,8 @@ parameter_list|,
 name|logid
 parameter_list|,
 name|addr
+parameter_list|,
+name|addrstr
 parameter_list|)
 name|char
 modifier|*
@@ -13453,6 +13516,11 @@ decl_stmt|;
 name|ADDRESS
 modifier|*
 name|addr
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|addrstr
 decl_stmt|;
 block|{
 name|char
@@ -13814,6 +13882,90 @@ name|SuprErrs
 operator|=
 name|saveSuprErrs
 expr_stmt|;
+if|if
+condition|(
+name|pvp
+index|[
+literal|0
+index|]
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|pvp
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
+operator|&
+literal|0377
+operator|)
+operator|!=
+name|CANONNET
+operator|&&
+name|bitset
+argument_list|(
+name|RSF_ADDR
+argument_list|,
+name|flags
+argument_list|)
+operator|&&
+name|addrstr
+operator|!=
+name|NULL
+condition|)
+block|{
+name|cataddr
+argument_list|(
+operator|&
+operator|(
+name|pvp
+index|[
+literal|0
+index|]
+operator|)
+argument_list|,
+name|NULL
+argument_list|,
+name|ubuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ubuf
+argument_list|)
+argument_list|,
+name|bitset
+argument_list|(
+name|RSF_STRING
+argument_list|,
+name|flags
+argument_list|)
+condition|?
+name|NOSPACESEP
+else|:
+literal|' '
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
+operator|*
+name|addrstr
+operator|=
+name|sm_rpool_strdup_x
+argument_list|(
+name|e
+operator|->
+name|e_rpool
+argument_list|,
+name|ubuf
+argument_list|)
+expr_stmt|;
+goto|goto
+name|finis
+goto|;
+block|}
 if|if
 condition|(
 name|pvp
