@@ -391,7 +391,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|do_dup
+name|kern_dup
 parameter_list|(
 name|struct
 name|thread
@@ -523,13 +523,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Flags for do_dup() */
+comment|/* Flags for kern_dup() */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DUP_FIXED
+name|FDDUP_FIXED
 value|0x1
 end_define
 
@@ -540,7 +540,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DUP_FCNTL
+name|FDDUP_FCNTL
 value|0x2
 end_define
 
@@ -551,7 +551,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DUP_CLOEXEC
+name|FDDUP_CLOEXEC
 value|0x4
 end_define
 
@@ -1644,11 +1644,11 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|do_dup
+name|kern_dup
 argument_list|(
 name|td
 argument_list|,
-name|DUP_FIXED
+name|FDDUP_FIXED
 argument_list|,
 operator|(
 name|int
@@ -1716,7 +1716,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|do_dup
+name|kern_dup
 argument_list|(
 name|td
 argument_list|,
@@ -2267,11 +2267,11 @@ name|arg
 expr_stmt|;
 name|error
 operator|=
-name|do_dup
+name|kern_dup
 argument_list|(
 name|td
 argument_list|,
-name|DUP_FCNTL
+name|FDDUP_FCNTL
 argument_list|,
 name|fd
 argument_list|,
@@ -2288,13 +2288,13 @@ name|arg
 expr_stmt|;
 name|error
 operator|=
-name|do_dup
+name|kern_dup
 argument_list|(
 name|td
 argument_list|,
-name|DUP_FCNTL
+name|FDDUP_FCNTL
 operator||
-name|DUP_CLOEXEC
+name|FDDUP_CLOEXEC
 argument_list|,
 name|fd
 argument_list|,
@@ -2311,11 +2311,11 @@ name|arg
 expr_stmt|;
 name|error
 operator|=
-name|do_dup
+name|kern_dup
 argument_list|(
 name|td
 argument_list|,
-name|DUP_FIXED
+name|FDDUP_FIXED
 argument_list|,
 name|fd
 argument_list|,
@@ -2332,13 +2332,13 @@ name|arg
 expr_stmt|;
 name|error
 operator|=
-name|do_dup
+name|kern_dup
 argument_list|(
 name|td
 argument_list|,
-name|DUP_FIXED
+name|FDDUP_FIXED
 operator||
-name|DUP_CLOEXEC
+name|FDDUP_CLOEXEC
 argument_list|,
 name|fd
 argument_list|,
@@ -3804,7 +3804,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|do_dup
+name|kern_dup
 parameter_list|(
 name|struct
 name|thread
@@ -3866,6 +3866,24 @@ name|p
 operator|->
 name|p_fd
 expr_stmt|;
+name|MPASS
+argument_list|(
+operator|(
+name|flags
+operator|&
+operator|~
+operator|(
+name|FDDUP_FIXED
+operator||
+name|FDDUP_FCNTL
+operator||
+name|FDDUP_CLOEXEC
+operator|)
+operator|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Verify we have a valid descriptor to dup from and possibly to 	 * dup to. Unlike dup() and dup2(), fcntl()'s F_DUPFD should 	 * return EINVAL when the new descriptor is out of bounds. 	 */
 if|if
 condition|(
@@ -3888,7 +3906,7 @@ return|return
 operator|(
 name|flags
 operator|&
-name|DUP_FCNTL
+name|FDDUP_FCNTL
 condition|?
 name|EINVAL
 else|:
@@ -3912,7 +3930,7 @@ return|return
 operator|(
 name|flags
 operator|&
-name|DUP_FCNTL
+name|FDDUP_FCNTL
 condition|?
 name|EINVAL
 else|:
@@ -3961,7 +3979,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|DUP_FIXED
+name|FDDUP_FIXED
 operator|&&
 name|old
 operator|==
@@ -3981,7 +3999,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|DUP_CLOEXEC
+name|FDDUP_CLOEXEC
 condition|)
 name|fdp
 operator|->
@@ -4021,7 +4039,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|DUP_FIXED
+name|FDDUP_FIXED
 condition|)
 block|{
 if|if
@@ -4268,7 +4286,7 @@ condition|(
 operator|(
 name|flags
 operator|&
-name|DUP_CLOEXEC
+name|FDDUP_CLOEXEC
 operator|)
 operator|!=
 literal|0
@@ -9068,7 +9086,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * close() or do_dup() has cleared a reference 			 * in a shared file descriptor table. 			 */
+comment|/* 			 * close() or kern_dup() has cleared a reference 			 * in a shared file descriptor table. 			 */
 name|fdp
 operator|->
 name|fd_holdleaderswakeup
@@ -10096,11 +10114,11 @@ condition|)
 block|{
 name|error
 operator|=
-name|do_dup
+name|kern_dup
 argument_list|(
 name|td
 argument_list|,
-name|DUP_FIXED
+name|FDDUP_FIXED
 argument_list|,
 name|devnull
 argument_list|,
