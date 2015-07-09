@@ -1045,6 +1045,15 @@ argument_list|)
 expr_stmt|;
 end_if
 
+begin_expr_stmt
+name|conf
+operator|.
+name|which
+operator|=
+name|which
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* 	 * We know which mode we're in and what we're about to do, so now 	 * let's dispatch the remaining command line args in a genric way. 	 */
 end_comment

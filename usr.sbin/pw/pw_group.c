@@ -981,6 +981,12 @@ if|if
 condition|(
 name|conf
 operator|.
+name|which
+operator|==
+name|W_GROUP
+operator|&&
+name|conf
+operator|.
 name|fd
 operator|!=
 operator|-
