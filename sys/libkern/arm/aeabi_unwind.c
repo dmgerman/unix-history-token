@@ -55,12 +55,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ARM_EABI__
-end_ifdef
-
 begin_comment
 comment|/* We need to provide these functions never call them */
 end_comment
@@ -136,11 +130,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
