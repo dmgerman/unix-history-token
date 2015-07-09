@@ -122,6 +122,46 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATTR_SH_MASK
+value|ATTR_SH(3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTR_SH_NS
+value|0
+end_define
+
+begin_comment
+comment|/* Non-shareable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATTR_SH_OS
+value|2
+end_define
+
+begin_comment
+comment|/* Outer-shareable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATTR_SH_IS
+value|3
+end_define
+
+begin_comment
+comment|/* Inner-shareable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATTR_AP_RW_BIT
 value|(1<< 7)
 end_define

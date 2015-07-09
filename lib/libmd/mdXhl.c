@@ -251,7 +251,9 @@ name|unsigned
 name|char
 name|buffer
 index|[
-name|BUFSIZ
+literal|16
+operator|*
+literal|1024
 index|]
 decl_stmt|;
 name|MDX_CTX

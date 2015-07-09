@@ -380,6 +380,9 @@ operator|*
 name|cert
 condition|)
 block|{
+name|ERR_set_mark
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|X509_check_private_key
@@ -401,6 +404,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|ERR_pop_to_mark
+argument_list|()
+expr_stmt|;
 block|}
 if|if
 condition|(

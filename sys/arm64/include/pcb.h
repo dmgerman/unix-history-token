@@ -74,7 +74,7 @@ decl_stmt|;
 name|uint32_t
 name|pcb_fpsr
 decl_stmt|;
-name|u_int
+name|int
 name|pcb_fpflags
 decl_stmt|;
 define|#

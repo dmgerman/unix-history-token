@@ -549,6 +549,27 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|kern_dup
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|int
+name|old
+parameter_list|,
+name|int
+name|new
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|kern_execve
 parameter_list|(
 name|struct

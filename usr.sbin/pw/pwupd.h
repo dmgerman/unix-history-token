@@ -337,6 +337,9 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+name|int
+name|which
+decl_stmt|;
 name|bool
 name|dryrun
 decl_stmt|;
