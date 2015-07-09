@@ -1049,6 +1049,23 @@ literal|"Invalid instruction length in exception"
 operator|)
 argument_list|)
 expr_stmt|;
+name|CTR4
+argument_list|(
+name|KTR_TRAP
+argument_list|,
+literal|"do_el1_sync: curthread: %p, esr %lx, elr: %lx, frame: %p"
+argument_list|,
+name|curthread
+argument_list|,
+name|esr
+argument_list|,
+name|frame
+operator|->
+name|tf_elr
+argument_list|,
+name|frame
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|exception
@@ -1203,6 +1220,23 @@ operator|=
 name|ESR_ELx_EXCEPTION
 argument_list|(
 name|esr
+argument_list|)
+expr_stmt|;
+name|CTR4
+argument_list|(
+name|KTR_TRAP
+argument_list|,
+literal|"do_el0_sync: curthread: %p, esr %lx, elr: %lx, frame: %p"
+argument_list|,
+name|curthread
+argument_list|,
+name|esr
+argument_list|,
+name|frame
+operator|->
+name|tf_elr
+argument_list|,
+name|frame
 argument_list|)
 expr_stmt|;
 switch|switch
