@@ -448,6 +448,54 @@ parameter_list|)
 value|sx_assert(&(fdp)->fd_sx, SX_UNLOCKED)
 end_define
 
+begin_comment
+comment|/* Flags for kern_dup(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDUP_FIXED
+value|0x1
+end_define
+
+begin_comment
+comment|/* Force fixed allocation. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDUP_FCNTL
+value|0x2
+end_define
+
+begin_comment
+comment|/* fcntl()-style errors. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDUP_CLOEXEC
+value|0x4
+end_define
+
+begin_comment
+comment|/* Atomically set FD_CLOEXEC. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDUP_MUSTREPLACE
+value|0x8
+end_define
+
+begin_comment
+comment|/* Target must exist. */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|thread
