@@ -419,12 +419,14 @@ name|struct
 name|componentname
 modifier|*
 name|cnp
-init|=
+decl_stmt|;
+name|cnp
+operator|=
 operator|&
 name|ndp
 operator|->
 name|ni_cnd
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|ndp
@@ -781,8 +783,9 @@ expr_stmt|;
 comment|/* 	 * Don't allow empty pathnames. 	 */
 if|if
 condition|(
-operator|!
 name|error
+operator|==
+literal|0
 operator|&&
 operator|*
 name|cnp
@@ -870,6 +873,8 @@ directive|endif
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|namei_cleanup_cnp
@@ -1334,6 +1339,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|vrele
@@ -1501,6 +1508,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 break|break;
 block|}
@@ -1604,6 +1613,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
