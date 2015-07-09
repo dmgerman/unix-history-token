@@ -719,7 +719,7 @@ name|BIO_CB_return
 parameter_list|(
 name|a
 parameter_list|)
-value|((a)|BIO_CB_RETURN))
+value|((a)|BIO_CB_RETURN)
 define|#
 directive|define
 name|BIO_cb_pre

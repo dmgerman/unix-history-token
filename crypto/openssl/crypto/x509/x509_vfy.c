@@ -643,6 +643,28 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
+name|ctx
+operator|->
+name|chain
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/*          * This X509_STORE_CTX has already been used to verify a cert. We          * cannot do another one.          */
+name|X509err
+argument_list|(
+name|X509_F_X509_VERIFY_CERT
+argument_list|,
+name|ERR_R_SHOULD_NOT_HAVE_BEEN_CALLED
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|cb
 operator|=
 name|ctx
@@ -650,15 +672,6 @@ operator|->
 name|verify_cb
 expr_stmt|;
 comment|/*      * first we make sure the chain we are going to build is present and that      * the first entry is in place      */
-if|if
-condition|(
-name|ctx
-operator|->
-name|chain
-operator|==
-name|NULL
-condition|)
-block|{
 if|if
 condition|(
 operator|(
@@ -720,7 +733,6 @@ name|last_untrusted
 operator|=
 literal|1
 expr_stmt|;
-block|}
 comment|/* We use a temporary STACK so we can chop and hack at it */
 if|if
 condition|(
@@ -1225,7 +1237,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|j
+name|num
 operator|==
 name|ctx
 operator|->
@@ -1326,12 +1338,18 @@ expr_stmt|;
 name|num
 operator|--
 expr_stmt|;
+block|}
 name|ctx
 operator|->
 name|last_untrusted
-operator|--
+operator|=
+name|sk_X509_num
+argument_list|(
+name|ctx
+operator|->
+name|chain
+argument_list|)
 expr_stmt|;
-block|}
 name|retry
 operator|=
 literal|1
