@@ -2382,6 +2382,7 @@ parameter_list|,
 name|int
 name|sig
 parameter_list|,
+specifier|const
 name|struct
 name|sigaction
 modifier|*
