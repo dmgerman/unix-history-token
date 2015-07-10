@@ -5192,11 +5192,6 @@ operator|->
 name|nkr_num_slots
 expr_stmt|;
 block|}
-name|nm_txsync_finalize
-argument_list|(
-name|kring
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -5289,10 +5284,9 @@ name|u_int
 specifier|const
 name|head
 init|=
-name|nm_rxsync_prologue
-argument_list|(
 name|kring
-argument_list|)
+operator|->
+name|rhead
 decl_stmt|;
 name|u_int
 name|n
@@ -5654,11 +5648,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|nm_rxsync_finalize
-argument_list|(
-name|kring
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
