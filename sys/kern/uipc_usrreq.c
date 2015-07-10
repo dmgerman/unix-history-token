@@ -3411,6 +3411,19 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* Already connected or not bound to an address. */
+name|error
+operator|=
+name|unp
+operator|->
+name|unp_conn
+operator|!=
+name|NULL
+condition|?
+name|EINVAL
+else|:
+name|EDESTADDRREQ
+expr_stmt|;
 name|UNP_PCB_UNLOCK
 argument_list|(
 name|unp
@@ -3418,7 +3431,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EINVAL
+name|error
 operator|)
 return|;
 block|}
