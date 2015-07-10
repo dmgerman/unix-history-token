@@ -556,6 +556,9 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
+name|u_int
+name|mode
+parameter_list|,
 name|int
 name|flags
 parameter_list|,
