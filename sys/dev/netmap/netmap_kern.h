@@ -3331,27 +3331,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|netmap_rxsync_from_host
-parameter_list|(
-name|struct
-name|netmap_adapter
-modifier|*
-name|na
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|void
-modifier|*
-name|pwait
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* set the stopped/enabled status of ring  * When stopping, they also wait for all current activity on the ring to  * terminate. The status change is then notified using the na nm_notify  * callback.  */
 end_comment
@@ -3416,27 +3395,6 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|netmap_rxsync_from_host
-parameter_list|(
-name|struct
-name|netmap_adapter
-modifier|*
-name|na
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|void
-modifier|*
-name|pwait
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5314,23 +5272,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Generic version of NMB, which uses device-specific memory. */
-end_comment
-
-begin_function_decl
-name|void
-name|netmap_txsync_to_host
-parameter_list|(
-name|struct
-name|netmap_adapter
-modifier|*
-name|na
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Structure associated to each thread which registered an interface.  *  * The first 4 fields of this structure are written by NIOCREGIF and  * read by poll() and NIOC?XSYNC.  *  * There is low contention among writers (a correct user program  * should have none) and among writers and readers, so we use a  * single global lock to protect the structure initialization;  * since initialization involves the allocation of memory,  * we reuse the memory allocator lock.  *  * Read access to the structure is lock free. Readers must check that  * np_nifp is not NULL before using the other fields.  * If np_nifp is NULL initialization has not been performed,  * so they should return an error to userspace.  *  * The ref_done field (XXX ?) is used to regulate access to the refcount in the  * memory allocator. The refcount must be incremented at most once for  * each open("/dev/netmap"). The increment is performed by the first  * function that calls netmap_get_memory() (currently called by  * mmap(), NIOCGINFO and NIOCREGIF).  * If the refcount is incremented, it is then decremented when the  * private structure is destroyed.  */
+comment|/*  * Structure associated to each netmap file descriptor.  * It is created on open and left unbound (np_nifp == NULL).  * A successful NIOCREGIF will set np_nifp and the first few fields;  * this is protected by a global lock (NMG_LOCK) due to low contention.  *  * np_refs counts the number of references to the structure: one for the fd,  * plus (on FreeBSD) one for each active mmap which we track ourselves  * (they are not unmapped on close(), unlike linux).  * np_refs is protected by NMG_LOCK.  *  * Read access to the structure is lock free, because ni_nifp once set  * can only go to 0 when nobody is using the entry anymore. Readers  * must check that np_nifp != NULL before using the other fields.  */
 end_comment
 
 begin_struct
@@ -5369,9 +5311,8 @@ name|uint16_t
 name|np_txpoll
 decl_stmt|;
 comment|/* XXX and also np_rxpoll ? */
-comment|/* np_refcount is only used on FreeBSD */
 name|int
-name|np_refcount
+name|np_refs
 decl_stmt|;
 comment|/* use with NMG_LOCK held */
 comment|/* pointers to the selinfo to be used for selrecord. 	 * Either the local or the global one depending on the 	 * number of rings. 	 */

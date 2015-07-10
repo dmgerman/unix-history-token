@@ -8104,11 +8104,6 @@ modifier|*
 name|bkring
 decl_stmt|;
 name|struct
-name|netmap_ring
-modifier|*
-name|ring
-decl_stmt|;
-name|struct
 name|netmap_vp_adapter
 modifier|*
 name|vpna
@@ -8172,13 +8167,6 @@ index|[
 name|ring_nr
 index|]
 expr_stmt|;
-name|ring
-operator|=
-name|kring
-operator|->
-name|ring
-expr_stmt|;
-comment|/* == kbkring->ring */
 comment|/* make sure the ring is not disabled */
 if|if
 condition|(

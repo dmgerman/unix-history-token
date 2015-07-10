@@ -2393,7 +2393,7 @@ name|priv
 expr_stmt|;
 name|priv
 operator|->
-name|np_refcount
+name|np_refs
 operator|++
 expr_stmt|;
 name|NMG_UNLOCK
@@ -2455,7 +2455,7 @@ argument_list|()
 expr_stmt|;
 name|priv
 operator|->
-name|np_refcount
+name|np_refs
 operator|--
 expr_stmt|;
 name|err_unlock
@@ -2478,7 +2478,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * netmap_close() is called on every close(), but we do not need to do  * anything at that moment, since the process may have other open file  * descriptors for /dev/netmap. Instead, we pass netmap_dtor() to  * devfs_set_cdevpriv() on open(). The FreeBSD kernel will call the destructor  * when the last fd pointing to the device is closed.   *  * Unfortunately, FreeBSD does not automatically track active mmap()s on an fd,  * so we have to track them by ourselvesi (see above). The result is that  * netmap_dtor() is called when the process has no open fds and no active  * memory maps on /dev/netmap, as in linux.  */
+comment|/*  * On FreeBSD the close routine is only called on the last close on  * the device (/dev/netmap) so we cannot do anything useful.  * To track close() on individual file descriptors we pass netmap_dtor() to  * devfs_set_cdevpriv() on open(). The FreeBSD kernel will call the destructor  * when the last fd pointing to the device is closed.   *  * Note that FreeBSD does not even munmap() on close() so we also have  * to track mmap() ourselves, and postpone the call to  * netmap_dtor() is called when the process has no open fds and no active  * memory maps on /dev/netmap, as in linux.  */
 end_comment
 
 begin_function
@@ -2576,7 +2576,6 @@ name|void
 operator|)
 name|td
 expr_stmt|;
-comment|// XXX wait or nowait ?
 name|priv
 operator|=
 name|malloc
@@ -2616,17 +2615,17 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|free
+argument_list|(
+name|priv
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|error
-return|;
-name|priv
-operator|->
-name|np_refcount
-operator|=
-literal|1
-expr_stmt|;
-return|return
-literal|0
 return|;
 block|}
 end_function

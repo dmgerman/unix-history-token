@@ -1634,6 +1634,41 @@ return|;
 block|}
 end_function
 
+begin_function_decl
+specifier|static
+name|void
+name|netmap_txsync_to_host
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|netmap_rxsync_from_host
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|void
+modifier|*
+name|pwait
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* kring->nm_sync callback for the host tx ring */
 end_comment
@@ -2589,7 +2624,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Destructor of the netmap_priv_d, called when the fd has  * no active open() and mmap().  * Undo all the things done by NIOCREGIF.  *  * returns 1 if this is the last instance and we can free priv  */
+comment|/*  * Destructor of the netmap_priv_d, called when the fd is closed  * Action: undo all the things done by NIOCREGIF,  * On FreeBSD we need to track whether there are active mmap()s,  * and we use np_active_mmaps for that. On linux, the field is always 0.  * Return: 1 if we can free priv, 0 otherwise.  *  */
 end_comment
 
 begin_comment
@@ -2615,16 +2650,13 @@ name|priv
 operator|->
 name|np_na
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-comment|/* 	 * np_refcount is the number of active mmaps on 	 * this file descriptor 	 */
+comment|/* number of active mmaps on this fd (FreeBSD only) */
 if|if
 condition|(
 operator|--
 name|priv
 operator|->
-name|np_refcount
+name|np_refs
 operator|>
 literal|0
 condition|)
@@ -2633,9 +2665,6 @@ return|return
 literal|0
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* __FreeBSD__ */
 if|if
 condition|(
 operator|!
@@ -3266,6 +3295,7 @@ comment|/*  * netmap_txsync_to_host() passes packets up. We are called from a  *
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|netmap_txsync_to_host
 parameter_list|(
@@ -3389,6 +3419,7 @@ comment|/*  * rxsync backend for packets coming from the host stack.  * They hav
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|netmap_rxsync_from_host
 parameter_list|(
