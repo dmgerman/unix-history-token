@@ -456,8 +456,6 @@ begin_enum
 enum|enum
 block|{
 name|FDDUP_NORMAL
-init|=
-literal|0x01
 block|,
 comment|/* dup() behavior. */
 name|FDDUP_FCNTL
@@ -481,12 +479,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FDDUP_CLOEXEC
+name|FDDUP_FLAG_CLOEXEC
 value|0x1
 end_define
 
 begin_comment
-comment|/* Atomically set FD_CLOEXEC. */
+comment|/* Atomically set UF_EXCLOSE. */
 end_comment
 
 begin_struct_decl
