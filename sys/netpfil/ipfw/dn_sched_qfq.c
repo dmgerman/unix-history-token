@@ -623,17 +623,6 @@ name|QFQ_MAX_WSUM
 value|(2*QFQ_MAX_WEIGHT)
 end_define
 
-begin_comment
-comment|//#define IWSUM	(q->i_wsum)
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWSUM
-value|((1<<FRAC_BITS)/QFQ_MAX_WSUM)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -802,6 +791,10 @@ name|uint32_t
 name|wsum
 decl_stmt|;
 comment|/* weight sum */
+name|uint32_t
+name|iwsum
+decl_stmt|;
+comment|/* inverse weight sum */
 name|NO
 argument_list|(
 argument|uint32_t	i_wsum;
@@ -1233,8 +1226,18 @@ name|wsum
 operator|+=
 name|w
 expr_stmt|;
+name|q
+operator|->
+name|iwsum
+operator|=
+name|ONE_FP
+operator|/
+name|q
+operator|->
+name|wsum
+expr_stmt|;
+comment|/* XXX note theory */
 comment|// XXX cl->S = q->V; ?
-comment|// XXX compute q->i_wsum
 return|return
 literal|0
 return|;
@@ -1302,6 +1305,24 @@ operator|/
 name|cl
 operator|->
 name|inv_w
+expr_stmt|;
+if|if
+condition|(
+name|q
+operator|->
+name|wsum
+operator|!=
+literal|0
+condition|)
+name|q
+operator|->
+name|iwsum
+operator|=
+name|ONE_FP
+operator|/
+name|q
+operator|->
+name|wsum
 expr_stmt|;
 name|cl
 operator|->
@@ -1659,10 +1680,11 @@ operator|!=
 name|old_vslot
 condition|)
 block|{
+comment|/* should be 1ULL not 2ULL */
 name|mask
 operator|=
 operator|(
-literal|2UL
+literal|1ULL
 operator|<<
 operator|(
 name|__fls
@@ -2390,7 +2412,9 @@ name|m_pkthdr
 operator|.
 name|len
 operator|*
-name|IWSUM
+name|q
+operator|->
+name|iwsum
 expr_stmt|;
 name|ND
 argument_list|(
@@ -2645,7 +2669,7 @@ name|slot_shift
 argument_list|)
 operator|+
 operator|(
-literal|1UL
+literal|1ULL
 operator|<<
 name|slot_shift
 operator|)
@@ -2720,6 +2744,18 @@ name|F
 argument_list|)
 condition|)
 block|{
+comment|/* from pv 71261956973ba9e0637848a5adb4a5819b4bae83 */
+if|if
+condition|(
+name|qfq_gt
+argument_list|(
+name|limit
+argument_list|,
+name|next
+operator|->
+name|F
+argument_list|)
+condition|)
 name|cl
 operator|->
 name|S
@@ -2727,6 +2763,14 @@ operator|=
 name|next
 operator|->
 name|F
+expr_stmt|;
+else|else
+comment|/* preserve timestamp correctness */
+name|cl
+operator|->
+name|S
+operator|=
+name|limit
 expr_stmt|;
 return|return;
 block|}
