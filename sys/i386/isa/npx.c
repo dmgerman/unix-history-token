@@ -4191,14 +4191,6 @@ name|en_sw
 expr_stmt|;
 name|penv_87
 operator|->
-name|en_tw
-operator|=
-name|penv_xmm
-operator|->
-name|en_tw
-expr_stmt|;
-name|penv_87
-operator|->
 name|en_fip
 operator|=
 name|penv_xmm
@@ -4237,7 +4229,13 @@ name|penv_xmm
 operator|->
 name|en_fos
 expr_stmt|;
-comment|/* FPU registers */
+comment|/* FPU registers and tags */
+name|penv_87
+operator|->
+name|en_tw
+operator|=
+literal|0xffff
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4251,6 +4249,7 @@ condition|;
 operator|++
 name|i
 control|)
+block|{
 name|sv_87
 operator|->
 name|sv_ac
@@ -4267,6 +4266,35 @@ index|]
 operator|.
 name|fp_acc
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|penv_xmm
+operator|->
+name|en_tw
+operator|&
+operator|(
+literal|1
+operator|<<
+name|i
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+comment|/* zero and special are set as valid */
+name|penv_87
+operator|->
+name|en_tw
+operator|&=
+operator|~
+operator|(
+literal|3
+operator|<<
+name|i
+operator|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -4367,14 +4395,6 @@ name|en_sw
 expr_stmt|;
 name|penv_xmm
 operator|->
-name|en_tw
-operator|=
-name|penv_87
-operator|->
-name|en_tw
-expr_stmt|;
-name|penv_xmm
-operator|->
 name|en_fip
 operator|=
 name|penv_87
@@ -4413,7 +4433,13 @@ name|penv_87
 operator|->
 name|en_fos
 expr_stmt|;
-comment|/* FPU registers */
+comment|/* FPU registers and tags */
+name|penv_xmm
+operator|->
+name|en_tw
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4427,6 +4453,7 @@ condition|;
 operator|++
 name|i
 control|)
+block|{
 name|sv_xmm
 operator|->
 name|sv_fp
@@ -4443,6 +4470,35 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|penv_87
+operator|->
+name|en_tw
+operator|&&
+operator|(
+literal|3
+operator|<<
+name|i
+operator|)
+operator|)
+operator|!=
+operator|(
+literal|3
+operator|<<
+name|i
+operator|)
+condition|)
+name|penv_xmm
+operator|->
+name|en_tw
+operator||=
+literal|1
+operator|<<
+name|i
+expr_stmt|;
+block|}
 block|}
 end_function
 
