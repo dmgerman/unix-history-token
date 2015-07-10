@@ -3465,12 +3465,12 @@ name|start
 operator|=
 name|g_eli_start
 expr_stmt|;
-comment|/* 	 * Spoiling cannot happen actually, because we keep provider open for 	 * writing all the time or provider is read-only. 	 */
+comment|/* 	 * Spoiling can happen even though we have the provider open 	 * exclusively, e.g. through media change events. 	 */
 name|gp
 operator|->
 name|spoiled
 operator|=
-name|g_eli_orphan_spoil_assert
+name|g_eli_orphan
 expr_stmt|;
 name|gp
 operator|->
