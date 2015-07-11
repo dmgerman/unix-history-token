@@ -865,8 +865,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BV_BKGRDERR
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Error from background write */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PRINT_BUF_VFLAGS
-value|"\20\3bkgrdwait\2bkgrdinprog\1scanned"
+value|"\20\4bkgrderr\3bkgrdwait\2bkgrdinprog\1scanned"
 end_define
 
 begin_ifdef
