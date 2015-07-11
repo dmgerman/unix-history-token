@@ -300,11 +300,6 @@ name|userconf
 modifier|*
 name|cnf
 parameter_list|,
-name|struct
-name|cargs
-modifier|*
-name|args
-parameter_list|,
 name|char
 specifier|const
 modifier|*
@@ -3672,8 +3667,6 @@ name|pw_password
 argument_list|(
 name|cnf
 argument_list|,
-name|args
-argument_list|,
 name|pwd
 operator|->
 name|pw_name
@@ -3878,8 +3871,6 @@ operator|=
 name|pw_password
 argument_list|(
 name|cnf
-argument_list|,
-name|args
 argument_list|,
 name|pwd
 operator|->
@@ -6087,11 +6078,6 @@ name|struct
 name|userconf
 modifier|*
 name|cnf
-parameter_list|,
-name|struct
-name|cargs
-modifier|*
-name|args
 parameter_list|,
 name|char
 specifier|const
