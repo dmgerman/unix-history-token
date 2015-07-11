@@ -51,6 +51,12 @@ directive|include
 file|<stdbool.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stringlist.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -271,8 +277,7 @@ modifier|*
 name|default_group
 decl_stmt|;
 comment|/* Default group number */
-name|char
-modifier|*
+name|StringList
 modifier|*
 name|groups
 decl_stmt|;
@@ -302,10 +307,6 @@ name|int
 name|password_days
 decl_stmt|;
 comment|/* Days to password expiry */
-name|int
-name|numgroups
-decl_stmt|;
-comment|/* (internal) size of default_group array */
 block|}
 struct|;
 end_struct
@@ -831,26 +832,6 @@ name|dir
 parameter_list|,
 name|uid_t
 name|uid
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|extendarray
-parameter_list|(
-name|char
-modifier|*
-modifier|*
-modifier|*
-name|buf
-parameter_list|,
-name|int
-modifier|*
-name|buflen
-parameter_list|,
-name|int
-name|needed
 parameter_list|)
 function_decl|;
 end_function_decl
