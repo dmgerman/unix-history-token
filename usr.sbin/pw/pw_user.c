@@ -365,9 +365,6 @@ specifier|static
 name|void
 name|create_and_populate_homedir
 parameter_list|(
-name|int
-name|mode
-parameter_list|,
 name|struct
 name|passwd
 modifier|*
@@ -489,7 +486,7 @@ name|pw_log
 argument_list|(
 name|cnf
 argument_list|,
-name|mode
+name|M_ADD
 argument_list|,
 name|W_USER
 argument_list|,
@@ -4428,8 +4425,6 @@ index|]
 condition|)
 name|create_and_populate_homedir
 argument_list|(
-name|mode
-argument_list|,
 name|pwd
 argument_list|)
 expr_stmt|;
