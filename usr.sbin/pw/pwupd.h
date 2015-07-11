@@ -362,6 +362,9 @@ name|bool
 name|checkduplicate
 decl_stmt|;
 name|bool
+name|deletehome
+decl_stmt|;
+name|bool
 name|precrypted
 decl_stmt|;
 name|struct

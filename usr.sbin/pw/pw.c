@@ -1616,6 +1616,16 @@ operator|=
 name|true
 expr_stmt|;
 break|break;
+case|case
+literal|'r'
+case|:
+name|conf
+operator|.
+name|deletehome
+operator|=
+name|true
+expr_stmt|;
+break|break;
 default|default:
 name|addarg
 argument_list|(
