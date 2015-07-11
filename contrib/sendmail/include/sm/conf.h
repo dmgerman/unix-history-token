@@ -3228,6 +3228,34 @@ begin_comment
 comment|/* ! HASGETUSERSHELL */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|SOLARIS
+operator|<
+literal|21200
+end_if
+
+begin_define
+define|#
+directive|define
+name|SIGWAIT_TAKES_1_ARG
+value|1
+end_define
+
+begin_comment
+comment|/* S12 moves to UNIX V7 semantic */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOLARIS< 21200 */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -12953,6 +12981,13 @@ name|SOCKOPT_LEN_T
 value|size_t
 end_define
 
+begin_define
+define|#
+directive|define
+name|SIGWAIT_TAKES_1_ARG
+value|1
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18866,6 +18901,28 @@ begin_comment
 comment|/* ! FD_SETSIZE */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SIGWAIT_TAKES_1_ARG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SIGWAIT_TAKES_1_ARG
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! SIGWAIT_TAKES_1_ARG */
+end_comment
+
 begin_comment
 comment|/* **  Size of prescan buffer. **	Despite comments in the _sendmail_ book, this probably should **	not be changed; there are some hard-to-define dependencies. */
 end_comment
@@ -19105,6 +19162,28 @@ end_endif
 begin_comment
 comment|/* ! SM_UINT16 */
 end_comment
+
+begin_comment
+comment|/* additional valid chars in user/group names in passwd */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SM_PWN_CHARS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SM_PWN_CHARS
+value|"-_."
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* **  SVr4 and similar systems use different routines for setjmp/longjmp **  with signal support */

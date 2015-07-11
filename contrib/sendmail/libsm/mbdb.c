@@ -1343,9 +1343,12 @@ name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|HESIOD
+operator|&&
+operator|!
+name|HESIOD_ALLOW_NUMERIC_LOGIN
 comment|/* DEC Hesiod getpwnam accepts numeric strings -- short circuit it */
 block|{
 name|char
@@ -1396,7 +1399,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* HESIOD */
+comment|/* HESIOD&& !HESIOD_ALLOW_NUMERIC_LOGIN */
 name|errno
 operator|=
 literal|0

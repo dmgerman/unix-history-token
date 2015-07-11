@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002, 2003 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: bdb.h,v 1.5 2013-11-22 20:51:31 ca Exp $  */
+comment|/*  * Copyright (c) 2002, 2003, 2014 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: bdb.h,v 1.5 2013-11-22 20:51:31 ca Exp $  */
 end_comment
 
 begin_ifndef
@@ -52,13 +52,19 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
 name|DB_VERSION_MAJOR
-operator|>=
+operator|==
 literal|4
 operator|&&
 name|DB_VERSION_MINOR
 operator|>=
 literal|1
+operator|)
+operator|||
+name|DB_VERSION_MAJOR
+operator|>=
+literal|5
 end_if
 
 begin_define
@@ -88,7 +94,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* DB_VERSION_MAJOR>= 4&& DB_VERSION_MINOR>= 1 */
+comment|/* (DB_VERSION_MAJOR == 4&& DB_VERSION_MINOR>= 1) || DB_VERSION_MAJOR>= 5 */
 end_comment
 
 begin_define
@@ -153,7 +159,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DB_VERSION_MAJOR>= 4&& DB_VERSION_MINOR>= 1 */
+comment|/* (DB_VERSION_MAJOR == 4&& DB_VERSION_MINOR>= 1) || DB_VERSION_MAJOR>= 5 */
 end_comment
 
 begin_endif

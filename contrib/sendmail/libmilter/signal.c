@@ -244,15 +244,7 @@ literal|0
 expr_stmt|;
 if|#
 directive|if
-name|defined
-argument_list|(
-name|SOLARIS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__svr5__
-argument_list|)
+name|SIGWAIT_TAKES_1_ARG
 if|if
 condition|(
 operator|(
@@ -269,7 +261,6 @@ literal|0
 condition|)
 else|#
 directive|else
-comment|/* defined(SOLARIS) || defined(__svr5__) */
 if|if
 condition|(
 operator|(
@@ -289,7 +280,6 @@ literal|0
 condition|)
 endif|#
 directive|endif
-comment|/* defined(SOLARIS) || defined(__svr5__) */
 block|{
 comment|/* some OS return -1 and set errno: copy it */
 if|if
