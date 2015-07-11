@@ -344,6 +344,12 @@ name|bool
 name|quiet
 decl_stmt|;
 name|bool
+name|force
+decl_stmt|;
+name|bool
+name|all
+decl_stmt|;
+name|bool
 name|dryrun
 decl_stmt|;
 name|bool
