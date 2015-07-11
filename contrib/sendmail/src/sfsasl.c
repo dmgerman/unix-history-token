@@ -37,6 +37,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sm/fdset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -1947,19 +1953,16 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|FD_SETSIZE
-operator|>
-literal|0
-operator|&&
-operator|(
 operator|(
 name|err
 operator|==
 name|SSL_ERROR_WANT_READ
 operator|&&
+operator|!
+name|SM_FD_OK_SELECT
+argument_list|(
 name|rfd
-operator|>=
-name|FD_SETSIZE
+argument_list|)
 operator|)
 operator|||
 operator|(
@@ -1967,10 +1970,11 @@ name|err
 operator|==
 name|SSL_ERROR_WANT_WRITE
 operator|&&
+operator|!
+name|SM_FD_OK_SELECT
+argument_list|(
 name|wfd
-operator|>=
-name|FD_SETSIZE
-operator|)
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -2264,7 +2268,7 @@ comment|/* ETIMEDOUT */
 end_comment
 
 begin_comment
-comment|/* **  SET_TLS_RD_TMO -- read secured information for the caller ** **	Parameters: **		rd_tmo -- read timeout ** **	Results: **		none **	This is a hack: there is no way to pass it in */
+comment|/* **  SET_TLS_RD_TMO -- read secured information for the caller ** **	Parameters: **		rd_tmo -- read timeout ** **	Results: **		previous read timeout **	This is a hack: there is no way to pass it in */
 end_comment
 
 begin_decl_stmt
@@ -2278,7 +2282,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
+name|int
 name|set_tls_rd_tmo
 parameter_list|(
 name|rd_tmo
@@ -2287,10 +2291,20 @@ name|int
 name|rd_tmo
 decl_stmt|;
 block|{
+name|int
+name|old_rd_tmo
+decl_stmt|;
+name|old_rd_tmo
+operator|=
+name|tls_rd_tmo
+expr_stmt|;
 name|tls_rd_tmo
 operator|=
 name|rd_tmo
 expr_stmt|;
+return|return
+name|old_rd_tmo
+return|;
 block|}
 end_function
 
@@ -2753,7 +2767,7 @@ name|LOG_WARNING
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"STARTTLS: read error=%s (%d), retry=%d, ssl_err=%d"
+literal|"STARTTLS: read error=%s (%d), errno=%d, retry=%d, ssl_err=%d"
 argument_list|,
 name|err
 argument_list|,

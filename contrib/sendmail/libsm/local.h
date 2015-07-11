@@ -13,6 +13,12 @@ directive|include
 file|<sm/time.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sm/fdset.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -933,7 +939,7 @@ name|fd
 parameter_list|,
 name|to
 parameter_list|)
-value|{ \ 	struct timeval sm_io_to_before, sm_io_to_after, sm_io_to_diff; \ 	struct timeval sm_io_to; \ 	int sm_io_to_sel; \ 	fd_set sm_io_to_mask, sm_io_x_mask; \ 	errno = 0; \ 	if ((to) == SM_TIME_DEFAULT) \ 		(to) = (fp)->f_timeout; \ 	if ((to) == SM_TIME_IMMEDIATE) \ 	{ \ 		errno = EAGAIN; \ 		return SM_IO_EOF; \ 	} \ 	else if ((to) == SM_TIME_FOREVER) \ 	{ \ 		errno = EINVAL; \ 		return SM_IO_EOF; \ 	} \ 	else \ 	{ \ 		sm_io_to.tv_sec = (to) / 1000; \ 		sm_io_to.tv_usec = ((to) - (sm_io_to.tv_sec * 1000)) * 1000; \ 	} \ 	if (FD_SETSIZE> 0&& (fd)>= FD_SETSIZE) \ 	{ \ 		errno = EINVAL; \ 		return SM_IO_EOF; \ 	} \ 	FD_ZERO(&sm_io_to_mask); \ 	FD_SET((fd),&sm_io_to_mask); \ 	FD_ZERO(&sm_io_x_mask); \ 	FD_SET((fd),&sm_io_x_mask); \ 	if (gettimeofday(&sm_io_to_before, NULL)< 0) \ 		return SM_IO_EOF; \ 	do \ 	{	\ 		sm_io_to_sel = select((fd) + 1, NULL,&sm_io_to_mask, \&sm_io_x_mask,&sm_io_to); \ 	} while (sm_io_to_sel< 0&& errno == EINTR); \ 	if (sm_io_to_sel< 0) \ 	{ \
+value|{ \ 	struct timeval sm_io_to_before, sm_io_to_after, sm_io_to_diff; \ 	struct timeval sm_io_to; \ 	int sm_io_to_sel; \ 	fd_set sm_io_to_mask, sm_io_x_mask; \ 	errno = 0; \ 	if ((to) == SM_TIME_DEFAULT) \ 		(to) = (fp)->f_timeout; \ 	if ((to) == SM_TIME_IMMEDIATE) \ 	{ \ 		errno = EAGAIN; \ 		return SM_IO_EOF; \ 	} \ 	else if ((to) == SM_TIME_FOREVER) \ 	{ \ 		errno = EINVAL; \ 		return SM_IO_EOF; \ 	} \ 	else \ 	{ \ 		sm_io_to.tv_sec = (to) / 1000; \ 		sm_io_to.tv_usec = ((to) - (sm_io_to.tv_sec * 1000)) * 1000; \ 	} \ 	if (!SM_FD_OK_SELECT(fd)) \ 	{ \ 		errno = EINVAL; \ 		return SM_IO_EOF; \ 	} \ 	FD_ZERO(&sm_io_to_mask); \ 	FD_SET((fd),&sm_io_to_mask); \ 	FD_ZERO(&sm_io_x_mask); \ 	FD_SET((fd),&sm_io_x_mask); \ 	if (gettimeofday(&sm_io_to_before, NULL)< 0) \ 		return SM_IO_EOF; \ 	do \ 	{	\ 		sm_io_to_sel = select((fd) + 1, NULL,&sm_io_to_mask, \&sm_io_x_mask,&sm_io_to); \ 	} while (sm_io_to_sel< 0&& errno == EINTR); \ 	if (sm_io_to_sel< 0) \ 	{ \
 comment|/* something went wrong, errno set */
 value|\ 		return SM_IO_EOF; \ 	} \ 	else if (sm_io_to_sel == 0) \ 	{ \
 comment|/* timeout */

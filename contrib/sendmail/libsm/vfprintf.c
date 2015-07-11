@@ -622,7 +622,7 @@ comment|/* Floating point number */
 end_comment
 
 begin_comment
-comment|/* **  SM_IO_VPRINTF -- performs actual formating for o/p ** **	Parameters: **		fp -- file pointer for o/p **		timeout -- time to complete the print **		fmt0 -- formating directives **		ap -- vectors with data units for formating ** **	Results: **		Success: number of data units used for formatting **		Failure: SM_IO_EOF and sets errno */
+comment|/* **  SM_IO_VFPRINTF -- performs actual formating for o/p ** **	Parameters: **		fp -- file pointer for o/p **		timeout -- time to complete the print **		fmt0 -- formating directives **		ap -- vectors with data units for formating ** **	Results: **		Success: number of data units used for formatting **		Failure: SM_IO_EOF and sets errno */
 end_comment
 
 begin_function

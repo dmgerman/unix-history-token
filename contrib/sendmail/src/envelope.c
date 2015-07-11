@@ -210,9 +210,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_TLS_1
 name|macdefine
 argument_list|(
 operator|&
@@ -264,9 +261,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_TLS_1 */
 endif|#
 directive|endif
 comment|/* STARTTLS */
@@ -1084,6 +1078,79 @@ operator||
 name|EF_CLRQUEUE
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_PROXY
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|87
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+block|{
+name|q
+operator|=
+name|e
+operator|->
+name|e_sendqueue
+expr_stmt|;
+name|sm_dprintf
+argument_list|(
+literal|"dropenvelope: mode=%c, e=%p, sibling=%p, nrcpts=%d, sendqueue=%p, next=%p, state=%d\n"
+argument_list|,
+name|e
+operator|->
+name|e_sendmode
+argument_list|,
+name|e
+argument_list|,
+name|e
+operator|->
+name|e_sibling
+argument_list|,
+name|e
+operator|->
+name|e_nrcpts
+argument_list|,
+name|q
+argument_list|,
+operator|(
+name|q
+operator|==
+name|NULL
+operator|)
+condition|?
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+else|:
+name|q
+operator|->
+name|q_next
+argument_list|,
+operator|(
+name|q
+operator|==
+name|NULL
+operator|)
+condition|?
+operator|-
+literal|1
+else|:
+name|q
+operator|->
+name|q_state
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_PROXY */
 name|e
 operator|->
 name|e_flags
@@ -1123,6 +1190,26 @@ name|queueit
 operator|=
 name|true
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_PROXY
+if|if
+condition|(
+name|queueit
+operator|&&
+name|e
+operator|->
+name|e_sendmode
+operator|==
+name|SM_PROXY
+condition|)
+name|queueit
+operator|=
+name|false
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_PROXY */
 comment|/* see if a notification is needed */
 if|if
 condition|(
@@ -2653,7 +2740,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"!dropenvelope(%s): cannot commit data file %s, uid=%d"
+literal|"!dropenvelope(%s): cannot commit data file %s, uid=%ld"
 argument_list|,
 name|e
 operator|->
@@ -2667,7 +2754,7 @@ name|DATAFL_LETTER
 argument_list|)
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|geteuid
 argument_list|()
