@@ -556,14 +556,9 @@ name|pw_groupnext
 argument_list|(
 name|cnf
 argument_list|,
-name|getarg
-argument_list|(
-name|args
-argument_list|,
-literal|'q'
-argument_list|)
-operator|!=
-name|NULL
+name|conf
+operator|.
+name|quiet
 argument_list|)
 operator|)
 return|;
