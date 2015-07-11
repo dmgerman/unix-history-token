@@ -346,6 +346,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|vm_phys_mem_affinity
+parameter_list|(
+name|int
+name|f
+parameter_list|,
+name|int
+name|t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  *	vm_phys_domain:  *  * 	Return the memory domain the page belongs to.  */
 end_comment

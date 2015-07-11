@@ -181,6 +181,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_vm_domain.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/proc.h>
 end_include
 
@@ -568,6 +574,11 @@ modifier|*
 name|td_umtxq
 decl_stmt|;
 comment|/* (c?) Link for when we're blocked. */
+name|struct
+name|vm_domain_policy
+name|td_vm_dom_policy
+decl_stmt|;
+comment|/* (c) current numa domain policy */
 name|lwpid_t
 name|td_tid
 decl_stmt|;
@@ -2789,6 +2800,11 @@ name|u_char
 name|p_throttled
 decl_stmt|;
 comment|/* (c) Flag for racct pcpu throttling */
+name|struct
+name|vm_domain_policy
+name|p_vm_dom_policy
+decl_stmt|;
+comment|/* (c) process default VM domain, or -1 */
 comment|/* 	 * An orphan is the child that has beed re-parented to the 	 * debugger as a result of attaching to it.  Need to keep 	 * track of them for parent to be able to collect the exit 	 * status of what used to be children. 	 */
 name|LIST_ENTRY
 argument_list|(

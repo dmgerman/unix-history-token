@@ -176,6 +176,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_domain.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
 end_include
 
@@ -1192,6 +1198,20 @@ operator||=
 name|TDF_ASTPENDING
 operator||
 name|TDF_NEEDSUSPCHK
+expr_stmt|;
+comment|/* 	 * Copy the existing thread VM policy into the new thread. 	 */
+name|vm_domain_policy_localcopy
+argument_list|(
+operator|&
+name|newtd
+operator|->
+name|td_vm_dom_policy
+argument_list|,
+operator|&
+name|td
+operator|->
+name|td_vm_dom_policy
+argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(

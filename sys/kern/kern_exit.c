@@ -296,6 +296,12 @@ directive|include
 file|<vm/uma.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_domain.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3667,6 +3673,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Free any domain policy that's still hiding around. 	 */
+name|vm_domain_policy_cleanup
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_vm_dom_policy
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|FIRST_THREAD_IN_PROC

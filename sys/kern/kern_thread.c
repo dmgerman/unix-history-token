@@ -187,6 +187,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_domain.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/eventhandler.h>
 end_include
 
@@ -1382,6 +1388,14 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|vm_domain_policy_init
+argument_list|(
+operator|&
+name|td
+operator|->
+name|td_vm_dom_policy
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|td
@@ -1498,6 +1512,14 @@ condition|)
 name|vm_thread_dispose
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+name|vm_domain_policy_cleanup
+argument_list|(
+operator|&
+name|td
+operator|->
+name|td_vm_dom_policy
 argument_list|)
 expr_stmt|;
 name|uma_zfree
