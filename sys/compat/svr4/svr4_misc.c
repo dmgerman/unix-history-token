@@ -3111,11 +3111,11 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|change_root
+name|pwd_chroot
 argument_list|(
-name|vp
-argument_list|,
 name|td
+argument_list|,
+name|vp
 argument_list|)
 expr_stmt|;
 name|vrele

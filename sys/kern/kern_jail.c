@@ -12652,13 +12652,13 @@ condition|(
 operator|(
 name|error
 operator|=
-name|change_root
+name|pwd_chroot
 argument_list|(
+name|td
+argument_list|,
 name|pr
 operator|->
 name|pr_root
-argument_list|,
-name|td
 argument_list|)
 operator|)
 condition|)
