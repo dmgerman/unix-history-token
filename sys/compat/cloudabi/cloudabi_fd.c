@@ -201,7 +201,7 @@ name|kern_dup
 argument_list|(
 name|td
 argument_list|,
-literal|0
+name|FDDUP_NORMAL
 argument_list|,
 literal|0
 argument_list|,
