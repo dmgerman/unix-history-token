@@ -1740,6 +1740,12 @@ comment|/* 546 = freebsd32_futimens */
 literal|"freebsd32_utimensat"
 block|,
 comment|/* 547 = freebsd32_utimensat */
+literal|"numa_getaffinity"
+block|,
+comment|/* 548 = numa_getaffinity */
+literal|"numa_setaffinity"
+block|,
+comment|/* 549 = numa_setaffinity */
 block|}
 decl_stmt|;
 end_decl_stmt
