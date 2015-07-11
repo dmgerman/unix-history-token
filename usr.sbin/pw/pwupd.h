@@ -334,6 +334,10 @@ name|char
 modifier|*
 name|config
 decl_stmt|;
+name|char
+modifier|*
+name|gecos
+decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
