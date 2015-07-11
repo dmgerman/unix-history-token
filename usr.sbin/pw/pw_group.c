@@ -787,13 +787,6 @@ name|grp
 init|=
 name|NULL
 decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|members
-init|=
-name|NULL
-decl_stmt|;
 name|struct
 name|userconf
 modifier|*
@@ -1497,11 +1490,6 @@ argument_list|,
 name|grp
 operator|->
 name|gr_gid
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|members
 argument_list|)
 expr_stmt|;
 return|return
