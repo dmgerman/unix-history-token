@@ -2033,9 +2033,15 @@ operator|==
 operator|-
 literal|1
 condition|)
-goto|goto
-name|direrr
-goto|;
+name|err
+argument_list|(
+name|EX_OSFILE
+argument_list|,
+literal|"mkdir '%s'"
+argument_list|,
+name|dbuf
+argument_list|)
+expr_stmt|;
 name|chown
 argument_list|(
 name|dbuf
@@ -2099,9 +2105,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|direrr
-label|:
 name|err
 argument_list|(
 name|EX_OSFILE
@@ -2111,7 +2114,6 @@ argument_list|,
 name|dbuf
 argument_list|)
 expr_stmt|;
-block|}
 name|chown
 argument_list|(
 name|dbuf
