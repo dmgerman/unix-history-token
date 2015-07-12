@@ -4384,15 +4384,6 @@ operator|!=
 name|PWF_ALT
 condition|)
 block|{
-name|arg
-operator|=
-name|getarg
-argument_list|(
-name|args
-argument_list|,
-literal|'R'
-argument_list|)
-expr_stmt|;
 name|snprintf
 argument_list|(
 name|path
@@ -4402,15 +4393,7 @@ argument_list|(
 name|path
 argument_list|)
 argument_list|,
-literal|"%s%s/%s"
-argument_list|,
-name|arg
-condition|?
-name|arg
-operator|->
-name|val
-else|:
-literal|""
+literal|"%s/%s"
 argument_list|,
 name|_PATH_MAILDIR
 argument_list|,
@@ -4421,9 +4404,15 @@ argument_list|)
 expr_stmt|;
 name|close
 argument_list|(
-name|open
+name|openat
 argument_list|(
+name|conf
+operator|.
+name|rootfd
+argument_list|,
 name|path
+operator|+
+literal|1
 argument_list|,
 name|O_RDWR
 operator||
@@ -4433,10 +4422,16 @@ literal|0600
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Preserve contents& 									 * mtime */
-name|chown
+comment|/* Preserve contents& mtime */
+name|fchownat
 argument_list|(
+name|conf
+operator|.
+name|rootfd
+argument_list|,
 name|path
+operator|+
+literal|1
 argument_list|,
 name|pwd
 operator|->
@@ -4445,6 +4440,8 @@ argument_list|,
 name|pwd
 operator|->
 name|pw_gid
+argument_list|,
+name|AT_SYMLINK_NOFOLLOW
 argument_list|)
 expr_stmt|;
 block|}
@@ -6263,14 +6260,14 @@ argument_list|,
 literal|"cannot remove user 'root'"
 argument_list|)
 expr_stmt|;
+comment|/* Remove opie record from /etc/opiekeys */
 if|if
 condition|(
-operator|!
 name|PWALTDIR
 argument_list|()
+operator|!=
+name|PWF_ALT
 condition|)
-block|{
-comment|/* 		 * Remove opie record from /etc/opiekeys 		*/
 name|rmopie
 argument_list|(
 name|pwd
@@ -6278,7 +6275,14 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Remove crontabs 		 */
+if|if
+condition|(
+operator|!
+name|PWALTDIR
+argument_list|()
+condition|)
+block|{
+comment|/* Remove crontabs */
 name|snprintf
 argument_list|(
 name|file
@@ -6687,22 +6691,34 @@ argument_list|,
 name|uid
 argument_list|)
 expr_stmt|;
+comment|/* Remove mail file */
+if|if
+condition|(
+name|PWALTDIR
+argument_list|()
+operator|!=
+name|PWF_ALT
+condition|)
+name|unlinkat
+argument_list|(
+name|conf
+operator|.
+name|rootfd
+argument_list|,
+name|file
+operator|+
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Remove at jobs */
 if|if
 condition|(
 operator|!
 name|PWALTDIR
 argument_list|()
-condition|)
-block|{
-comment|/* 		 * Remove mail file 		 */
-name|remove
-argument_list|(
-name|file
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Remove at jobs 		 */
-if|if
-condition|(
+operator|&&
 name|getpwuid
 argument_list|(
 name|uid
@@ -6715,9 +6731,14 @@ argument_list|(
 name|uid
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Remove home directory and contents 		 */
+comment|/* Remove home directory and contents */
 if|if
 condition|(
+name|PWALTDIR
+argument_list|()
+operator|!=
+name|PWF_ALT
+operator|&&
 name|conf
 operator|.
 name|deletehome
@@ -6734,12 +6755,20 @@ argument_list|)
 operator|==
 name|NULL
 operator|&&
-name|stat
+name|fstatat
 argument_list|(
+name|conf
+operator|.
+name|rootfd
+argument_list|,
 name|home
+operator|+
+literal|1
 argument_list|,
 operator|&
 name|st
+argument_list|,
+literal|0
 argument_list|)
 operator|!=
 operator|-
@@ -6748,6 +6777,10 @@ condition|)
 block|{
 name|rm_r
 argument_list|(
+name|conf
+operator|.
+name|rootfd
+argument_list|,
 name|home
 argument_list|,
 name|uid
@@ -6763,7 +6796,8 @@ name|M_DELETE
 argument_list|,
 name|W_USER
 argument_list|,
-literal|"%s(%u) home '%s' %sremoved"
+literal|"%s(%u) home '%s' %s"
+literal|"removed"
 argument_list|,
 name|name
 argument_list|,
@@ -6771,12 +6805,20 @@ name|uid
 argument_list|,
 name|home
 argument_list|,
-name|stat
+name|fstatat
 argument_list|(
+name|conf
+operator|.
+name|rootfd
+argument_list|,
 name|home
+operator|+
+literal|1
 argument_list|,
 operator|&
 name|st
+argument_list|,
+literal|0
 argument_list|)
 operator|==
 operator|-
@@ -6784,10 +6826,10 @@ literal|1
 condition|?
 literal|""
 else|:
-literal|"not completely "
+literal|"not "
+literal|"completely "
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -7754,51 +7796,64 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-specifier|static
-specifier|const
 name|char
-name|etcopie
-index|[]
-init|=
-literal|"/etc/opiekeys"
+name|tmp
+index|[
+literal|1014
+index|]
 decl_stmt|;
 name|FILE
 modifier|*
 name|fp
-init|=
-name|fopen
-argument_list|(
-name|etcopie
-argument_list|,
-literal|"r+"
-argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|fp
-operator|!=
-name|NULL
-condition|)
-block|{
-name|char
-name|tmp
-index|[
-literal|1024
-index|]
+name|int
+name|fd
+decl_stmt|;
+name|size_t
+name|len
 decl_stmt|;
 name|off_t
 name|atofs
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|length
-init|=
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|openat
+argument_list|(
+name|conf
+operator|.
+name|rootfd
+argument_list|,
+literal|"etc/opiekeys"
+argument_list|,
+name|O_RDWR
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return;
+name|fp
+operator|=
+name|fdopen
+argument_list|(
+name|fd
+argument_list|,
+literal|"r+"
+argument_list|)
+expr_stmt|;
+name|len
+operator|=
 name|strlen
 argument_list|(
 name|name
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 while|while
 condition|(
 name|fgets
@@ -7806,7 +7861,9 @@ argument_list|(
 name|tmp
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|tmp
+argument_list|)
 argument_list|,
 name|fp
 argument_list|)
@@ -7822,19 +7879,20 @@ name|name
 argument_list|,
 name|tmp
 argument_list|,
-name|length
+name|len
 argument_list|)
 operator|==
 literal|0
 operator|&&
 name|tmp
 index|[
-name|length
+name|len
 index|]
 operator|==
 literal|' '
 condition|)
 block|{
+comment|/* Comment username out */
 if|if
 condition|(
 name|fseek
@@ -7848,7 +7906,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|fwrite
 argument_list|(
 literal|"#"
@@ -7860,8 +7917,6 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* Comment username out */
-block|}
 break|break;
 block|}
 name|atofs
@@ -7872,13 +7927,12 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * If we got an error of any sort, don't update! 		 */
+comment|/* 	 * If we got an error of any sort, don't update! 	 */
 name|fclose
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

@@ -832,6 +832,9 @@ begin_function_decl
 name|void
 name|rm_r
 parameter_list|(
+name|int
+name|rootfd
+parameter_list|,
 name|char
 specifier|const
 modifier|*
