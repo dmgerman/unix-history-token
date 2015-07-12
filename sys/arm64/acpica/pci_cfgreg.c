@@ -69,6 +69,7 @@ name|int
 name|bytes
 parameter_list|)
 block|{
+comment|/* ARM64TODO */
 name|panic
 argument_list|(
 literal|"pci_cfgregread not implemented"
@@ -109,6 +110,7 @@ name|int
 name|bytes
 parameter_list|)
 block|{
+comment|/* ARM64TODO */
 name|panic
 argument_list|(
 literal|"pci_cfgregwrite not implemented"
@@ -128,6 +130,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* ARM64TODO */
 name|panic
 argument_list|(
 literal|"pci_cfgregopen not implemented"
