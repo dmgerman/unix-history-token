@@ -15,6 +15,12 @@ directive|define
 name|SYS_DEV_RANDOM_RANDOMDEV_H_INCLUDED
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/* This header contains only those definitions that are global  * and non algorithm-specific for the entropy processor  */
 end_comment
@@ -76,6 +82,15 @@ name|RANDOM_ALG_READ_RATE_MINIMUM
 value|32
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|harvest_event
@@ -101,16 +116,6 @@ name|uint8_t
 modifier|*
 parameter_list|,
 name|u_int
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-name|random_alg_post_read_t
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_typedef
@@ -189,6 +194,26 @@ decl_stmt|;
 name|u_int
 name|ra_poolcount
 decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|ra_init_alg
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|ra_deinit_alg
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 name|random_alg_pre_read_t
 modifier|*
 name|ra_pre_read
@@ -196,10 +221,6 @@ decl_stmt|;
 name|random_alg_read_t
 modifier|*
 name|ra_read
-decl_stmt|;
-name|random_alg_post_read_t
-modifier|*
-name|ra_post_read
 decl_stmt|;
 name|random_alg_write_t
 modifier|*
@@ -228,6 +249,12 @@ name|random_algorithm
 name|random_alg_context
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_comment
 comment|/*  * Random Source is a source of entropy that can provide  * specified or approximate amount of entropy immediately  * upon request.  */
@@ -322,6 +349,15 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_function_decl
 name|void

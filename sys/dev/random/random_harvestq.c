@@ -191,7 +191,7 @@ specifier|static
 struct|struct
 name|harvest_context
 block|{
-comment|/* The harvest mutex protects the consistency of the entropy Fifos and 	 * empty fifo and other associated structures. 	 */
+comment|/* The harvest mutex protects all of harvest_context and 	 * the related data. 	 */
 name|struct
 name|mtx
 name|hc_mtx
@@ -213,7 +213,7 @@ comment|/* Allow the sysadmin to select the broad category of 	 * entropy types 
 name|u_int
 name|hc_source_mask
 decl_stmt|;
-comment|/* 	 * Lockless ring buffer holding entropy events 	 * If ring.in == ring.out, 	 *     the buffer is empty. 	 * If ring.in != ring.out, 	 *     the buffer contains harvested entropy. 	 * If (ring.in + 1) == ring.out (mod RANDOM_RING_MAX), 	 *     the buffer is full. 	 * 	 * The ring.in variable needs locking as there are multiple 	 * sources to the ring. Only the sources may change ring.in, 	 * but the consumer may examine it. 	 * 	 * The ring.out variable does not need locking as there is 	 * only one consumer. Only the consumer may change ring.out, 	 * but the sources may examine it. 	 */
+comment|/* 	 * Lockless ring buffer holding entropy events 	 * If ring.in == ring.out, 	 *     the buffer is empty. 	 * If ring.in != ring.out, 	 *     the buffer contains harvested entropy. 	 * If (ring.in + 1) == ring.out (mod RANDOM_RING_MAX), 	 *     the buffer is full. 	 * 	 * NOTE: ring.in points to the last added element, 	 * and ring.out points to the last consumed element. 	 * 	 * The ring.in variable needs locking as there are multiple 	 * sources to the ring. Only the sources may change ring.in, 	 * but the consumer may examine it. 	 * 	 * The ring.out variable does not need locking as there is 	 * only one consumer. Only the consumer may change ring.out, 	 * but the sources may examine it. 	 */
 struct|struct
 name|entropy_ring
 block|{
@@ -245,7 +245,7 @@ decl_stmt|;
 name|uint32_t
 name|buf
 index|[
-literal|8
+name|RANDOM_ACCUM_MAX
 index|]
 decl_stmt|;
 block|}
@@ -397,7 +397,7 @@ block|}
 name|random_sources_feed
 argument_list|()
 expr_stmt|;
-comment|/* XXX: FIX!! This This seems a little slow; 8 items every 0.1s from UMA? */
+comment|/* XXX: FIX!! Increase the high-performance data rate? Need some measurements first. */
 for|for
 control|(
 name|i
@@ -881,17 +881,6 @@ name|sysctl_oid
 modifier|*
 name|random_sys_o
 decl_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"random: %s\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 name|random_sys_o
 operator|=
 name|SYSCTL_ADD_NODE
@@ -1113,6 +1102,20 @@ argument_list|(
 name|keyfile
 argument_list|)
 expr_stmt|;
+comment|/* Trim the size. If the admin has a file with a funny size, we lose some. Tough. */
+name|size
+operator|-=
+operator|(
+name|size
+operator|%
+sizeof|sizeof
+argument_list|(
+name|event
+operator|.
+name|he_entropy
+argument_list|)
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|data
@@ -1310,7 +1313,7 @@ name|hc_kthread_proc
 argument_list|,
 literal|0
 argument_list|,
-literal|"term"
+literal|"harvqterm"
 argument_list|,
 literal|0
 argument_list|)
@@ -1358,7 +1361,7 @@ modifier|*
 name|entropy
 parameter_list|,
 name|u_int
-name|count
+name|size
 parameter_list|,
 name|u_int
 name|bits
@@ -1486,7 +1489,7 @@ name|bits
 expr_stmt|;
 if|if
 condition|(
-name|count
+name|size
 operator|<=
 sizeof|sizeof
 argument_list|(
@@ -1500,7 +1503,7 @@ name|event
 operator|->
 name|he_size
 operator|=
-name|count
+name|size
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -1510,7 +1513,7 @@ name|he_entropy
 argument_list|,
 name|entropy
 argument_list|,
-name|count
+name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -1542,7 +1545,7 @@ name|jenkins_hash
 argument_list|(
 name|entropy
 argument_list|,
-name|count
+name|size
 argument_list|,
 operator|(
 name|uint32_t
@@ -1583,7 +1586,7 @@ modifier|*
 name|entropy
 parameter_list|,
 name|u_int
-name|count
+name|size
 parameter_list|,
 name|u_int
 name|bits
@@ -1653,7 +1656,7 @@ name|jenkins_hash
 argument_list|(
 name|entropy
 argument_list|,
-name|count
+name|size
 argument_list|,
 operator|(
 name|uint32_t
@@ -1693,7 +1696,7 @@ modifier|*
 name|entropy
 parameter_list|,
 name|u_int
-name|count
+name|size
 parameter_list|,
 name|u_int
 name|bits
@@ -1742,11 +1745,11 @@ operator|)
 operator|)
 condition|)
 return|return;
-name|count
+name|size
 operator|=
 name|MIN
 argument_list|(
-name|count
+name|size
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1770,7 +1773,7 @@ name|event
 operator|.
 name|he_size
 operator|=
-name|count
+name|size
 expr_stmt|;
 name|event
 operator|.
@@ -1804,7 +1807,7 @@ name|he_entropy
 argument_list|,
 name|entropy
 argument_list|,
-name|count
+name|size
 argument_list|)
 expr_stmt|;
 name|random_harvestq_fast_process_event
