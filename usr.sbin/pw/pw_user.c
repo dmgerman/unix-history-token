@@ -5127,22 +5127,12 @@ comment|/* Already created? Use it anyway... */
 block|}
 else|else
 block|{
-name|struct
-name|cargs
-name|grpargs
-decl_stmt|;
 name|gid_t
 name|grid
 init|=
 operator|-
 literal|1
 decl_stmt|;
-name|LIST_INIT
-argument_list|(
-operator|&
-name|grpargs
-argument_list|)
-expr_stmt|;
 comment|/* 		 * We need to auto-create a group with the user's name. We 		 * can send all the appropriate output to our sister routine 		 * bit first see if we can create a group with gid==uid so we 		 * can keep the user and group ids in sync. We purposely do 		 * NOT check the gid range if we can force the sync. If the 		 * user's name dups an existing group, then the group add 		 * function will happily handle that case for us and exit. 		 */
 if|if
 condition|(
@@ -5184,8 +5174,7 @@ name|nam
 argument_list|,
 name|grid
 argument_list|,
-operator|&
-name|grpargs
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
