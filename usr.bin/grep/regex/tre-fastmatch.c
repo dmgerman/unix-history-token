@@ -1331,6 +1331,10 @@ index|]
 operator|==
 literal|'.'
 operator|&&
+name|fg
+operator|->
+name|escmap
+operator|&&
 name|escaped
 condition|)
 block|{
