@@ -546,7 +546,7 @@ name|conf
 operator|.
 name|checkduplicate
 operator|=
-name|false
+name|true
 expr_stmt|;
 end_expr_stmt
 
