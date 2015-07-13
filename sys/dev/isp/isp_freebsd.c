@@ -525,6 +525,21 @@ argument_list|)
 operator|->
 name|role
 expr_stmt|;
+comment|/* We don't allow target mode switch from here. */
+name|value
+operator|=
+operator|(
+name|old
+operator|&
+name|ISP_ROLE_TARGET
+operator|)
+operator||
+operator|(
+name|value
+operator|&
+name|ISP_ROLE_INITIATOR
+operator|)
+expr_stmt|;
 comment|/* If nothing has changed -- we are done. */
 if|if
 condition|(
@@ -541,29 +556,6 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-comment|/* We don't allow target mode switch from here. */
-if|if
-condition|(
-operator|(
-name|value
-operator|^
-name|old
-operator|)
-operator|&
-name|ISP_ROLE_TARGET
-condition|)
-block|{
-name|ISP_UNLOCK
-argument_list|(
-name|isp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EPERM
 operator|)
 return|;
 block|}
