@@ -4688,7 +4688,7 @@ comment|/* 	 * Check the given uid, if any 	 */
 if|if
 condition|(
 name|id
-operator|>
+operator|>=
 literal|0
 condition|)
 block|{
