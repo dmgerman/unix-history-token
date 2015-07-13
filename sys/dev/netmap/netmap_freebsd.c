@@ -2602,6 +2602,12 @@ condition|)
 return|return
 name|ENOMEM
 return|;
+name|priv
+operator|->
+name|np_refs
+operator|=
+literal|1
+expr_stmt|;
 name|error
 operator|=
 name|devfs_set_cdevpriv
