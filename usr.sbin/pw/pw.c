@@ -542,6 +542,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|conf
+operator|.
+name|checkduplicate
+operator|=
+name|false
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -1678,7 +1687,7 @@ name|conf
 operator|.
 name|checkduplicate
 operator|=
-name|true
+name|false
 expr_stmt|;
 break|break;
 case|case
