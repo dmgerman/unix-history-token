@@ -1500,7 +1500,17 @@ name|ct
 operator|.
 name|year
 operator|+=
+operator|(
+name|ct
+operator|.
+name|year
+operator|<
+literal|80
+condition|?
 literal|2000
+else|:
+literal|1900
+operator|)
 expr_stmt|;
 endif|#
 directive|endif
