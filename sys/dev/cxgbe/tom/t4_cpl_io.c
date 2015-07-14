@@ -2851,14 +2851,14 @@ name|ULP_MODE_ISCSI
 condition|)
 name|wr_ulp_mode
 operator|=
-name|V_FW_OFLD_TX_DATA_WR_ULPMODE
+name|V_TX_ULP_MODE
 argument_list|(
 name|ulp_mode
 operator|>>
 literal|4
 argument_list|)
 operator||
-name|V_FW_OFLD_TX_DATA_WR_ULPSUBMODE
+name|V_TX_ULP_SUBMODE
 argument_list|(
 name|ulp_mode
 operator|&
@@ -2868,7 +2868,7 @@ expr_stmt|;
 else|else
 name|wr_ulp_mode
 operator|=
-name|V_FW_OFLD_TX_DATA_WR_ULPMODE
+name|V_TX_ULP_MODE
 argument_list|(
 name|toep
 operator|->
@@ -2877,19 +2877,19 @@ argument_list|)
 expr_stmt|;
 name|txwr
 operator|->
-name|lsodisable_to_proxy
+name|lsodisable_to_flags
 operator|=
 name|htobe32
 argument_list|(
 name|wr_ulp_mode
 operator||
-name|V_FW_OFLD_TX_DATA_WR_URGENT
+name|V_TX_URG
 argument_list|(
 literal|0
 argument_list|)
 operator||
-comment|/* XXX */
-name|V_FW_OFLD_TX_DATA_WR_SHOVE
+comment|/*XXX*/
+name|V_TX_SHOVE
 argument_list|(
 name|shove
 argument_list|)
@@ -2942,7 +2942,7 @@ argument_list|)
 condition|)
 name|txwr
 operator|->
-name|lsodisable_to_proxy
+name|lsodisable_to_flags
 operator||=
 name|htobe32
 argument_list|(
@@ -2952,7 +2952,7 @@ expr_stmt|;
 else|else
 name|txwr
 operator|->
-name|lsodisable_to_proxy
+name|lsodisable_to_flags
 operator||=
 name|htobe32
 argument_list|(
