@@ -754,6 +754,15 @@ literal|"okay"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|status
+argument_list|,
+literal|"ok"
+argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
