@@ -37739,7 +37739,7 @@ else|:
 name|stderr
 argument_list|,
 literal|"usage:  camcontrol<command>  [device id][generic args][command args]\n"
-literal|"        camcontrol devlist    [-v]\n"
+literal|"        camcontrol devlist    [-b] [-v]\n"
 ifndef|#
 directive|ifndef
 name|MINIMALISTIC
