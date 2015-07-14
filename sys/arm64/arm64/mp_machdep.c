@@ -901,6 +901,16 @@ name|td_pcb
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* Configure the interrupt controller */
+end_comment
+
+begin_expr_stmt
+name|arm_init_secondary
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
 begin_for
 for|for
 control|(
@@ -948,16 +958,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Configure the interrupt controller */
-end_comment
-
-begin_expr_stmt
-name|arm_init_secondary
-argument_list|()
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* Enable interrupts */
