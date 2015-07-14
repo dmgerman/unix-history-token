@@ -1186,6 +1186,14 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|cpu_model
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|platform_start
@@ -1627,6 +1635,14 @@ argument_list|(
 literal|"  a3 = %08x\n"
 argument_list|,
 name|a3
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+name|ar71xx_get_system_type
+argument_list|()
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX this code is very redboot specific. 	 */
