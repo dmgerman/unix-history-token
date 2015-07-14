@@ -664,9 +664,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|flags
-operator|&
-name|O_NONBLOCK
+name|nonblock
 condition|)
 block|{
 name|error
