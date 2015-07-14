@@ -2784,13 +2784,13 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* cloudabi64_sys_thread_tcb_set */
+comment|/* cloudabi_sys_thread_tcb_set */
 case|case
 literal|55
 case|:
 block|{
 name|struct
-name|cloudabi64_sys_thread_tcb_set_args
+name|cloudabi_sys_thread_tcb_set_args
 modifier|*
 name|p
 init|=
@@ -4880,7 +4880,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cloudabi64_sys_thread_tcb_set */
+comment|/* cloudabi_sys_thread_tcb_set */
 case|case
 literal|55
 case|:
@@ -5990,7 +5990,7 @@ operator|=
 literal|"void"
 expr_stmt|;
 break|break;
-comment|/* cloudabi64_sys_thread_tcb_set */
+comment|/* cloudabi_sys_thread_tcb_set */
 case|case
 literal|55
 case|:
