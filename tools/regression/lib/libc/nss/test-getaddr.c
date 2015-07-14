@@ -2289,6 +2289,7 @@ name|ai_family
 operator|=
 name|PF_INET
 expr_stmt|;
+break|break;
 case|case
 literal|'6'
 case|:
