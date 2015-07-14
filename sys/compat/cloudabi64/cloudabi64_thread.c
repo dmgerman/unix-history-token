@@ -53,29 +53,5 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
-name|cloudabi64_sys_thread_tcb_set
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|cloudabi64_sys_thread_tcb_set_args
-modifier|*
-name|uap
-parameter_list|)
-block|{
-comment|/* Not implemented. */
-return|return
-operator|(
-name|ENOSYS
-operator|)
-return|;
-block|}
-end_function
-
 end_unit
 
