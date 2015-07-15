@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2011-2014 Matteo Landi, Luigi Rizzo. All rights rese
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  *  * netmap support for: ixgbe  *  * This file is meant to be a reference on how to implement  * netmap support for a network driver.  * This file contains code but only static or inline functions used  * by a single driver. To avoid replication of code we just #include  * it near the beginning of the standard driver.  */
+comment|/*  * $FreeBSD$  *  * netmap support for: ixgbe (both ix and ixv)  *  * This file is meant to be a reference on how to implement  * netmap support for a network driver.  * This file contains code but only static or inline functions used  * by a single driver. To avoid replication of code we just #include  * it near the beginning of the standard driver.  */
 end_comment
 
 begin_include
@@ -28,6 +28,18 @@ include|#
 directive|include
 file|<dev/netmap/netmap_kern.h>
 end_include
+
+begin_function_decl
+name|void
+name|ixgbe_netmap_attach
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * device-specific sysctl variables:  *  * ix_crcstrip: 0: keep CRC in rx frames (default), 1: strip it.  *	During regular operations the CRC is stripped, but on some  *	hardware reception of frames not multiple of 64 is slower,  *	so using crcstrip=0 helps in benchmarks.  *  * ix_rx_miss, ix_rx_miss_bufs:  *	count packets that might be missed due to lost interrupts.  */
@@ -299,24 +311,21 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-name|ixgbe_disable_intr
+name|adapter
+operator|->
+name|stop_locked
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-comment|// XXX maybe ixgbe_stop ?
-comment|/* Tell the stack that the interface is no longer active */
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&=
-operator|~
-operator|(
-name|IFF_DRV_RUNNING
-operator||
-name|IFF_DRV_OACTIVE
-operator|)
-expr_stmt|;
+if|if
+condition|(
+operator|!
+name|IXGBE_IS_VF
+argument_list|(
+name|adapter
+argument_list|)
+condition|)
 name|set_crcstrip
 argument_list|(
 operator|&
@@ -347,12 +356,22 @@ name|na
 argument_list|)
 expr_stmt|;
 block|}
-name|ixgbe_init_locked
+name|adapter
+operator|->
+name|init_locked
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
 comment|/* also enables intr */
+if|if
+condition|(
+operator|!
+name|IXGBE_IS_VF
+argument_list|(
+name|adapter
+argument_list|)
+condition|)
 name|set_crcstrip
 argument_list|(
 operator|&
@@ -840,12 +859,9 @@ name|adapter
 operator|->
 name|hw
 argument_list|,
-name|IXGBE_TDT
-argument_list|(
 name|txr
 operator|->
-name|me
-argument_list|)
+name|tail
 argument_list|,
 name|nic_i
 argument_list|)
@@ -977,6 +993,18 @@ name|adapter
 operator|->
 name|hw
 argument_list|,
+name|IXGBE_IS_VF
+argument_list|(
+name|adapter
+argument_list|)
+condition|?
+name|IXGBE_VFTDH
+argument_list|(
+name|kring
+operator|->
+name|ring_id
+argument_list|)
+else|:
 name|IXGBE_TDH
 argument_list|(
 name|kring
@@ -1206,7 +1234,14 @@ block|{
 name|int
 name|crclen
 init|=
+operator|(
 name|ix_crcstrip
+operator|||
+name|IXGBE_IS_VF
+argument_list|(
+name|adapter
+argument_list|)
+operator|)
 condition|?
 literal|0
 else|:
@@ -1632,12 +1667,9 @@ name|adapter
 operator|->
 name|hw
 argument_list|,
-name|IXGBE_RDT
-argument_list|(
 name|rxr
 operator|->
-name|me
-argument_list|)
+name|tail
 argument_list|,
 name|nic_i
 argument_list|)
@@ -1662,7 +1694,6 @@ comment|/*  * The attach routine, called near the end of ixgbe_attach(),  * fill
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|ixgbe_netmap_attach
 parameter_list|(

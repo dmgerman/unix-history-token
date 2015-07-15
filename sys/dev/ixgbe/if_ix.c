@@ -2416,6 +2416,23 @@ name|adapter
 operator|->
 name|hw
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+name|adapter
+operator|->
+name|init_locked
+operator|=
+name|ixgbe_init_locked
+expr_stmt|;
+name|adapter
+operator|->
+name|stop_locked
+operator|=
+name|ixgbe_stop
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Core Lock Init*/
 name|IXGBE_CORE_LOCK_INIT
 argument_list|(
