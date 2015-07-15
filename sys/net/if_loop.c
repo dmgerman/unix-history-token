@@ -1015,6 +1015,12 @@ operator|->
 name|sa_family
 operator|==
 name|AF_UNSPEC
+operator|||
+name|dst
+operator|->
+name|sa_family
+operator|==
+name|pseudo_AF_HDRCMPLT
 condition|)
 name|bcopy
 argument_list|(
