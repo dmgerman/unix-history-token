@@ -6158,7 +6158,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|atomic_load_acq_int
 argument_list|(
 operator|&
@@ -6168,9 +6167,7 @@ name|it_need
 argument_list|)
 operator|==
 literal|0
-operator|)
 operator|&&
-operator|!
 operator|(
 name|ithd
 operator|->
@@ -6182,6 +6179,8 @@ operator||
 name|IT_WAIT
 operator|)
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|TD_SET_IWAIT
@@ -6838,7 +6837,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|atomic_load_acq_int
 argument_list|(
 operator|&
@@ -6848,9 +6846,7 @@ name|it_need
 argument_list|)
 operator|==
 literal|0
-operator|)
 operator|&&
-operator|!
 operator|(
 name|ithd
 operator|->
@@ -6862,6 +6858,8 @@ operator||
 name|IT_WAIT
 operator|)
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|TD_SET_IWAIT
