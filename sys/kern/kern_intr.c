@@ -6103,19 +6103,7 @@ block|}
 comment|/* 		 * Service interrupts.  If another interrupt arrives while 		 * we are running, it will set it_need to note that we 		 * should make another pass. 		 */
 while|while
 condition|(
-name|atomic_load_acq_int
-argument_list|(
-operator|&
-name|ithd
-operator|->
-name|it_need
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* 			 * This might need a full read and write barrier 			 * to make sure that this write posts before any 			 * of the memory or device accesses in the 			 * handlers. 			 */
-name|atomic_store_rel_int
+name|atomic_swap_int
 argument_list|(
 operator|&
 name|ithd
@@ -6124,6 +6112,13 @@ name|it_need
 argument_list|,
 literal|0
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * This needs a release barrier to make sure 			 * that this write posts before any of the 			 * memory or device accesses in the handlers. 			 */
+name|atomic_thread_fence_acq_rel
+argument_list|()
 expr_stmt|;
 name|ithread_execute_handlers
 argument_list|(
@@ -6770,19 +6765,7 @@ block|}
 comment|/* 		 * Service interrupts.  If another interrupt arrives while 		 * we are running, it will set it_need to note that we 		 * should make another pass. 		 */
 while|while
 condition|(
-name|atomic_load_acq_int
-argument_list|(
-operator|&
-name|ithd
-operator|->
-name|it_need
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* 			 * This might need a full read and write barrier 			 * to make sure that this write posts before any 			 * of the memory or device accesses in the 			 * handlers. 			 */
-name|atomic_store_rel_int
+name|atomic_swap_int
 argument_list|(
 operator|&
 name|ithd
@@ -6791,6 +6774,13 @@ name|it_need
 argument_list|,
 literal|0
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * This needs a release barrier to make sure 			 * that this write posts before any of the 			 * memory or device accesses in the handlers. 			 */
+name|atomic_thread_fence_acq_rel
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
