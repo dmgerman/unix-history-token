@@ -24747,7 +24747,7 @@ switch|switch
 condition|(
 name|msg
 index|[
-literal|0
+literal|1
 index|]
 condition|)
 block|{
@@ -24763,7 +24763,7 @@ name|api_ver
 operator|=
 name|msg
 index|[
-literal|0
+literal|1
 index|]
 expr_stmt|;
 name|ixgbe_send_vf_ack

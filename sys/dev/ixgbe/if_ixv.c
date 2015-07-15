@@ -7151,25 +7151,6 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-comment|/* Set the Tail Pointer */
-name|IXGBE_WRITE_REG
-argument_list|(
-name|hw
-argument_list|,
-name|IXGBE_VFRDT
-argument_list|(
-name|rxr
-operator|->
-name|me
-argument_list|)
-argument_list|,
-name|adapter
-operator|->
-name|num_rx_desc
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* Set the processing limit */
 name|rxr
 operator|->
@@ -7257,6 +7238,25 @@ expr_stmt|;
 block|}
 name|wmb
 argument_list|()
+expr_stmt|;
+comment|/* Set the Tail Pointer */
+name|IXGBE_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_VFRDT
+argument_list|(
+name|rxr
+operator|->
+name|me
+argument_list|)
+argument_list|,
+name|adapter
+operator|->
+name|num_rx_desc
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 name|rxcsum
