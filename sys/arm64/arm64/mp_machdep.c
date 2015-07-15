@@ -902,6 +902,16 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* 	 * Identify current CPU. This is necessary to setup 	 * affinity registers and to provide support for 	 * runtime chip identification. 	 */
+end_comment
+
+begin_expr_stmt
+name|identify_cpu
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Configure the interrupt controller */
 end_comment
 
