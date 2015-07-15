@@ -90,22 +90,19 @@ directive|include
 file|"sys/parsestreams.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|printf
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -116,8 +113,22 @@ begin_comment
 comment|/*  * In private e-mail alastair@wharton.co.uk said :  * "If you are going to use the 400A and 404.2 system [for ntp] I recommend  * that you set the 400A to output the message every second.  The start of  * transmission of the first byte of the message is synchronised to the  * second edge."  * The WHARTON 400A Series is able to send date/time serial messages  * in 7 output formats.  We use format 1 here because it is the shortest.  * For use with this driver, the WHARTON 400A Series clock must be set-up  * as follows :  *					Programmable	Selected  *					Option No	Option  *	BST or CET display		3		9 or 11  *	No external controller		7		0  *	Serial Output Format 1		9		1  *	Baud rate 9600 bps		10		96  *	Bit length 8 bits		11		8  *	Parity even			12		E  *  * WHARTON 400A Series output format 1 is as follows :  *   * Timestamp	STXssmmhhDDMMYYSETX  * Pos		0  12345678901234  *		0  00000000011111  *  *	STX	start transmission (ASCII 0x02)  *	ETX	end transmission (ASCII 0x03)  *	ss	Second expressed in reversed decimal (units then tens)  *	mm	Minute expressed in reversed decimal  *	hh	Hour expressed in reversed decimal  *	DD	Day of month expressed in reversed decimal  *	MM	Month expressed in reversed decimal (January is 1)  *	YY	Year (without century) expressed in reversed decimal  *	S	Status byte : 0x30 +  *			bit 0	0 = MSF source		1 = DCF source  *			bit 1	0 = Winter time		1 = Summer time  *			bit 2	0 = not synchronised	1 = synchronised  *			bit 3	0 = no early warning	1 = early warning  *   */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|parse_cvt_fnc_t
+name|cvt_wharton_400a
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|parse_inp_fnc_t
+name|inp_wharton_400a
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * cvt_wharton_400a  *   * convert simple type format  */
+comment|/*  * parse_cvt_fnc_t cvt_wharton_400a  *   * convert simple type format  */
 end_comment
 
 begin_function
@@ -155,7 +166,7 @@ if|if
 condition|(
 name|size
 operator|!=
-literal|16
+literal|15
 operator|||
 name|buffer
 index|[
@@ -460,7 +471,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * inp_wharton_400a  *  * grep data from input stream  */
+comment|/*  * parse_inp_fnc_t inp_wharton_400a  *  * grab data from input stream  */
 end_comment
 
 begin_function
@@ -472,8 +483,7 @@ name|parse_t
 modifier|*
 name|parseio
 parameter_list|,
-name|unsigned
-name|int
+name|char
 name|ch
 parameter_list|,
 name|timestamp_t
@@ -620,7 +630,7 @@ literal|15
 block|,
 comment|/* string buffer */
 literal|0
-comment|/* no private data (complete pakets) */
+comment|/* no private data (complete packets) */
 block|}
 decl_stmt|;
 end_decl_stmt

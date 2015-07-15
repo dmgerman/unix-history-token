@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp4-dev/libparse/clk_trimtaip.c,v 4.11 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *  * clk_trimtaip.c,v 4.11 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *  * Trimble SV6 clock support - several collected codepieces  *  * Copyright (c) 1995-2005 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * /src/NTP/ntp4-dev/libparse/clk_trimtaip.c,v 4.11 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *  * clk_trimtaip.c,v 4.11 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *  * Trimble SV6 clock support - several collected codepieces  *  * Copyright (c) 1995-2005 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifdef
@@ -92,22 +92,19 @@ directive|include
 file|"sys/parsestreams.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|void
+name|int
 name|printf
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -250,50 +247,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|long
+name|parse_cvt_fnc_t
 name|cvt_trimtaip
-name|P
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|format
-operator|*
-operator|,
-name|clocktime_t
-operator|*
-operator|,
-name|void
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|long
+name|parse_inp_fnc_t
 name|inp_trimtaip
-name|P
-argument_list|(
-operator|(
-name|parse_t
-operator|*
-operator|,
-name|unsigned
-name|int
-operator|,
-name|timestamp_t
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -330,10 +292,13 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* parse_cvt_fnc_t cvt_trimtaip */
+end_comment
+
 begin_function
 specifier|static
-name|unsigned
-name|long
+name|u_long
 name|cvt_trimtaip
 parameter_list|(
 name|unsigned
@@ -615,7 +580,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * inp_trimtaip  *  * grep data from input stream  */
+comment|/*  * parse_inp_fnc_t inp_trimtaip  *  * grab data from input stream  */
 end_comment
 
 begin_function
@@ -627,8 +592,7 @@ name|parse_t
 modifier|*
 name|parseio
 parameter_list|,
-name|unsigned
-name|int
+name|char
 name|ch
 parameter_list|,
 name|timestamp_t

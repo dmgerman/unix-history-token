@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/ntp4-dev/libparse/clk_meinberg.c,v 4.12.2.1 2005/09/25 10:22:35 kardel RELEASE_20050925_A  *    * clk_meinberg.c,v 4.12.2.1 2005/09/25 10:22:35 kardel RELEASE_20050925_A  *  * Meinberg clock support  *  * Copyright (c) 1995-2005 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/ntp4-dev/libparse/clk_meinberg.c,v 4.12.2.1 2005/09/25 10:22:35 kardel RELEASE_20050925_A  *  * clk_meinberg.c,v 4.12.2.1 2005/09/25 10:22:35 kardel RELEASE_20050925_A  *  * Meinberg clock support  *  * Copyright (c) 1995-2015 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifdef
@@ -128,7 +128,7 @@ file|"ascii.h"
 end_include
 
 begin_comment
-comment|/*  * The Meinberg receiver every second sends a datagram of the following form  * (Standard Format)  *   *<STX>D:<dd>.<mm>.<yy>;T:<w>;U:<hh>:<mm>:<ss>;<S><F><D><A><ETX>  * pos:  0  00 00 0 00 0 11 111 1 111 12 2 22 2 22 2 2  2  3  3   3  *       1  23 45 6 78 9 01 234 5 678 90 1 23 4 56 7 8  9  0  1   2  *<STX>           = '\002' ASCII start of text  *<ETX>           = '\003' ASCII end of text  *<dd>,<mm>,<yy>  = day, month, year(2 digits!!)  *<w>             = day of week (sunday= 0)  *<hh>,<mm>,<ss>  = hour, minute, second  *<S>             = '#' if never synced since powerup for DCF C51  *                 = '#' if not PZF sychronisation available for PZF 535/509  *                 = ' ' if ok  *<F>             = '*' if time comes from internal quartz  *                 = ' ' if completely synched  *<D>             = 'S' if daylight saving time is active  *                 = 'U' if time is represented in UTC  *                 = ' ' if no special condition exists  *<A>             = '!' during the hour preceeding an daylight saving time  *                       start/end change  *                 = 'A' leap second insert warning  *                 = ' ' if no special condition exists  *  * Extended data format (PZFUERL for PZF type clocks)  *  *<STX><dd>.<mm>.<yy>;<w>;<hh>:<mm>:<ss>;<U><S><F><D><A><L><R><ETX>  * pos:  0   00 0 00 0 00 11 1 11 11 1 11 2 22 22 2  2  2  2  2  3  3   3  *       1   23 4 56 7 89 01 2 34 56 7 89 0 12 34 5  6  7  8  9  0  1   2  *<STX>           = '\002' ASCII start of text  *<ETX>           = '\003' ASCII end of text  *<dd>,<mm>,<yy>  = day, month, year(2 digits!!)  *<w>             = day of week (sunday= 0)  *<hh>,<mm>,<ss>  = hour, minute, second  *<U>             = 'U' UTC time display  *<S>             = '#' if never synced since powerup else ' ' for DCF C51  *                   '#' if not PZF sychronisation available else ' ' for PZF 535/509  *<F>             = '*' if time comes from internal quartz else ' '  *<D>             = 'S' if daylight saving time is active else ' '  *<A>             = '!' during the hour preceeding an daylight saving time  *                       start/end change  *<L>             = 'A' LEAP second announcement  *<R>             = 'R' alternate antenna  *  * Meinberg GPS166 receiver  *  * You must get the Uni-Erlangen firmware for the GPS receiver support  * to work to full satisfaction !  *  *<STX><dd>.<mm>.<yy>;<w>;<hh>:<mm>:<ss>;<+/-><00:00>;<U><S><F><D><A><L><R><L>;<position...><ETX>  *  *        000000000111111111122222222223333333333444444444455555555556666666  *        123456789012345678901234567890123456789012345678901234567890123456  *     \x0209.07.93; 5; 08:48:26; +00:00; #*S!A L; 49.5736N  11.0280E  373m\x03  *  *   *<STX>           = '\002' ASCII start of text  *<ETX>           = '\003' ASCII end of text  *<dd>,<mm>,<yy>  = day, month, year(2 digits!!)  *<w>             = day of week (sunday= 0)  *<hh>,<mm>,<ss>  = hour, minute, second  *<+/->,<00:00>   = offset to UTC  *<S>             = '#' if never synced since powerup else ' '  *<F>             = '*' if position is not confirmed else ' '  *<D>             = 'S' if daylight saving time is active else ' '  *<A>             = '!' during the hour preceeding an daylight saving time  *                       start/end change  *<L>             = 'A' LEAP second announcement  *<R>             = 'R' alternate antenna (reminiscent of PZF535) usually ' '  *<L>		   = 'L' on 23:59:60  *  * Binary messages have a lead in for a fixed header of SOH  */
+comment|/*  * The Meinberg receiver every second sends a datagram of the following form  * (Standard Format)  *  *<STX>D:<dd>.<mm>.<yy>;T:<w>;U:<hh>:<mm>:<ss>;<S><F><D><A><ETX>  * pos:  0  00 00 0 00 0 11 111 1 111 12 2 22 2 22 2 2  2  3  3   3  *       1  23 45 6 78 9 01 234 5 678 90 1 23 4 56 7 8  9  0  1   2  *<STX>           = '\002' ASCII start of text  *<ETX>           = '\003' ASCII end of text  *<dd>,<mm>,<yy>  = day, month, year(2 digits!!)  *<w>             = day of week (sunday= 0)  *<hh>,<mm>,<ss>  = hour, minute, second  *<S>             = '#' if never synced since powerup for DCF C51  *                 = '#' if not PZF sychronisation available for PZF 535/509  *                 = ' ' if ok  *<F>             = '*' if time comes from internal quartz  *                 = ' ' if completely synched  *<D>             = 'S' if daylight saving time is active  *                 = 'U' if time is represented in UTC  *                 = ' ' if no special condition exists  *<A>             = '!' during the hour preceeding an daylight saving time  *                       start/end change  *                 = 'A' leap second insert warning  *                 = ' ' if no special condition exists  *  * Extended data format (PZFUERL for PZF type clocks)  *  *<STX><dd>.<mm>.<yy>;<w>;<hh>:<mm>:<ss>;<U><S><F><D><A><L><R><ETX>  * pos:  0   00 0 00 0 00 11 1 11 11 1 11 2 22 22 2  2  2  2  2  3  3   3  *       1   23 4 56 7 89 01 2 34 56 7 89 0 12 34 5  6  7  8  9  0  1   2  *<STX>           = '\002' ASCII start of text  *<ETX>           = '\003' ASCII end of text  *<dd>,<mm>,<yy>  = day, month, year(2 digits!!)  *<w>             = day of week (sunday= 0)  *<hh>,<mm>,<ss>  = hour, minute, second  *<U>             = 'U' UTC time display  *<S>             = '#' if never synced since powerup else ' ' for DCF C51  *                   '#' if not PZF sychronisation available else ' ' for PZF 535/509  *<F>             = '*' if time comes from internal quartz else ' '  *<D>             = 'S' if daylight saving time is active else ' '  *<A>             = '!' during the hour preceeding an daylight saving time  *                       start/end change  *<L>             = 'A' LEAP second announcement  *<R>             = 'R' "call bit" used to signalize irregularities in the control facilities,  *                   usually ' ', until 2003 indicated transmission via alternate antenna  *  * Meinberg GPS receivers  *  * For very old devices you must get the Uni-Erlangen firmware for the GPS receiver support  * to work to full satisfaction !  * With newer GPS receiver types the Uni Erlangen string format can be configured at the device.  *  *<STX><dd>.<mm>.<yy>;<w>;<hh>:<mm>:<ss>;<+/-><00:00>;<U><S><F><D><A><L><R><L>;<position...><ETX>  *  *        000000000111111111122222222223333333333444444444455555555556666666  *        123456789012345678901234567890123456789012345678901234567890123456  *     \x0209.07.93; 5; 08:48:26; +00:00; #*S!A L; 49.5736N  11.0280E  373m\x03  *  *  *<STX>           = '\002' ASCII start of text  *<ETX>           = '\003' ASCII end of text  *<dd>,<mm>,<yy>  = day, month, year(2 digits!!)  *<w>             = day of week (sunday= 0)  *<hh>,<mm>,<ss>  = hour, minute, second  *<+/->,<00:00>   = offset to UTC  *<S>             = '#' if never synced since powerup else ' '  *<F>             = '*' if position is not confirmed else ' '  *<D>             = 'S' if daylight saving time is active else ' '  *<A>             = '!' during the hour preceeding an daylight saving time  *                       start/end change  *<L>             = 'A' LEAP second announcement  *<R>             = 'R' "call bit" used to signalize irregularities in the control facilities,  *                   usually ' ', until 2003 indicated transmission via alternate antenna  *                   (reminiscent of PZF receivers)  *<L>             = 'L' on 23:59:60  *  * Binary messages have a lead in for a fixed header of SOH  */
 end_comment
 
 begin_comment
@@ -180,8 +180,7 @@ comment|/*+-------------------------------------------------------------*/
 end_comment
 
 begin_function
-name|unsigned
-name|long
+name|CSUM
 name|mbg_csum
 parameter_list|(
 name|unsigned
@@ -195,12 +194,13 @@ name|n
 parameter_list|)
 block|{
 name|unsigned
-name|long
+name|int
 name|sum
 init|=
 literal|0
 decl_stmt|;
-name|short
+name|unsigned
+name|int
 name|i
 decl_stmt|;
 for|for
@@ -224,8 +224,9 @@ operator|++
 expr_stmt|;
 return|return
 operator|(
-name|sum
+name|CSUM
 operator|)
+name|sum
 return|;
 block|}
 end_function
@@ -251,8 +252,11 @@ parameter_list|)
 block|{
 name|headerp
 operator|->
-name|gps_cmd
+name|cmd
 operator|=
+operator|(
+name|GPS_CMD
+operator|)
 name|get_lsb_short
 argument_list|(
 name|bufpp
@@ -260,8 +264,20 @@ argument_list|)
 expr_stmt|;
 name|headerp
 operator|->
-name|gps_len
+name|len
 operator|=
+name|get_lsb_uint16
+argument_list|(
+name|bufpp
+argument_list|)
+expr_stmt|;
+name|headerp
+operator|->
+name|data_csum
+operator|=
+operator|(
+name|CSUM
+operator|)
 name|get_lsb_short
 argument_list|(
 name|bufpp
@@ -269,17 +285,11 @@ argument_list|)
 expr_stmt|;
 name|headerp
 operator|->
-name|gps_data_csum
+name|hdr_csum
 operator|=
-name|get_lsb_short
-argument_list|(
-name|bufpp
-argument_list|)
-expr_stmt|;
-name|headerp
-operator|->
-name|gps_hdr_csum
-operator|=
+operator|(
+name|CSUM
+operator|)
 name|get_lsb_short
 argument_list|(
 name|bufpp
@@ -525,95 +535,29 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|parse_cvt_fnc_t
 name|cvt_meinberg
-name|P
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|format
-operator|*
-operator|,
-name|clocktime_t
-operator|*
-operator|,
-name|void
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|parse_cvt_fnc_t
 name|cvt_mgps
-name|P
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|format
-operator|*
-operator|,
-name|clocktime_t
-operator|*
-operator|,
-name|void
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|parse_inp_fnc_t
 name|mbg_input
-name|P
-argument_list|(
-operator|(
-name|parse_t
-operator|*
-operator|,
-name|unsigned
-name|int
-operator|,
-name|timestamp_t
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|parse_inp_fnc_t
 name|gps_input
-name|P
-argument_list|(
-operator|(
-name|parse_t
-operator|*
-operator|,
-name|unsigned
-name|int
-operator|,
-name|timestamp_t
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -705,7 +649,7 @@ literal|32
 block|,
 comment|/* string buffer */
 literal|0
-comment|/* no private data (complete pakets) */
+comment|/* no private data (complete packets) */
 block|}
 block|,
 block|{
@@ -728,7 +672,7 @@ literal|32
 block|,
 comment|/* string buffer */
 literal|0
-comment|/* no private data (complete pakets) */
+comment|/* no private data (complete packets) */
 block|}
 block|,
 block|{
@@ -737,7 +681,7 @@ block|,
 comment|/* no input handling */
 name|cvt_mgps
 block|,
-comment|/* Meinberg GPS166 conversion */
+comment|/* Meinberg GPS receiver conversion */
 name|pps_one
 block|,
 comment|/* easy PPS monitoring */
@@ -763,14 +707,14 @@ operator|(
 expr|struct
 name|msg_buf
 operator|)
-comment|/* no private data (complete pakets) */
+comment|/* no private data (complete packets) */
 block|}
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * cvt_meinberg  *  * convert simple type format  */
+comment|/*  * parse_cvt_fnc_t cvt_meinberg  *  * convert simple type format  */
 end_comment
 
 begin_function
@@ -1326,7 +1270,7 @@ name|clock_time
 operator|->
 name|flags
 operator||=
-name|PARSEB_S_ANTENNA
+name|PARSEB_S_CALLBIT
 expr_stmt|;
 comment|/* 			 * DCF77 does not encode the direction - 			 * so we take the current default - 			 * earth slowing down 			 */
 name|clock_time
@@ -1364,7 +1308,7 @@ name|clock_time
 operator|->
 name|flags
 operator||=
-name|PARSEB_ALTERNATE
+name|PARSEB_CALLBIT
 expr_stmt|;
 block|}
 return|return
@@ -1375,7 +1319,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mbg_input  *  * grep data from input stream  */
+comment|/*  * parse_inp_fnc_t mbg_input  *  * grab data from input stream  */
 end_comment
 
 begin_function
@@ -1387,8 +1331,7 @@ name|parse_t
 modifier|*
 name|parseio
 parameter_list|,
-name|unsigned
-name|int
+name|char
 name|ch
 parameter_list|,
 name|timestamp_t
@@ -1512,7 +1455,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cvt_mgps  *  * convert Meinberg GPS format  */
+comment|/*  * parse_cvt_fnc_t cvt_mgps  *  * convert Meinberg GPS format  */
 end_comment
 
 begin_function
@@ -2095,7 +2038,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * gps_input  *  * grep binary data from input stream  */
+comment|/*  * parse_inp_fnc_t gps_input  *  * grep binary data from input stream  */
 end_comment
 
 begin_function
@@ -2107,8 +2050,7 @@ name|parse_t
 modifier|*
 name|parseio
 parameter_list|,
-name|unsigned
-name|int
+name|char
 name|ch
 parameter_list|,
 name|timestamp_t
@@ -2600,28 +2542,28 @@ name|int
 operator|)
 name|header
 operator|.
-name|gps_cmd
+name|cmd
 operator|,
 operator|(
 name|int
 operator|)
 name|header
 operator|.
-name|gps_len
+name|len
 operator|,
 operator|(
 name|int
 operator|)
 name|header
 operator|.
-name|gps_data_csum
+name|data_csum
 operator|,
 operator|(
 name|int
 operator|)
 name|header
 operator|.
-name|gps_hdr_csum
+name|hdr_csum
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2655,7 +2597,7 @@ name|calc_csum
 operator|!=
 name|header
 operator|.
-name|gps_hdr_csum
+name|hdr_csum
 condition|)
 block|{
 name|parseprintf
@@ -2712,7 +2654,7 @@ condition|(
 operator|(
 name|header
 operator|.
-name|gps_len
+name|len
 operator|==
 literal|0
 operator|)
@@ -2721,7 +2663,7 @@ comment|/* no data to wait for */
 operator|(
 name|header
 operator|.
-name|gps_len
+name|len
 operator|>=
 operator|(
 sizeof|sizeof
@@ -2755,7 +2697,7 @@ return|return
 operator|(
 name|header
 operator|.
-name|gps_len
+name|len
 operator|==
 literal|0
 operator|)
@@ -2778,7 +2720,7 @@ name|int
 operator|)
 name|header
 operator|.
-name|gps_len
+name|len
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2788,7 +2730,7 @@ name|len
 operator|=
 name|header
 operator|.
-name|gps_len
+name|len
 expr_stmt|;
 comment|/* save number of bytes to wait for */
 name|msg_buf

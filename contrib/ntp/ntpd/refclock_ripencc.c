@@ -2781,41 +2781,35 @@ begin_comment
 comment|/* Trimble parse functions */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|parse0x8FAD
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|TSIPPKT
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|parse0x8F0B
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|TSIPPKT
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -2823,40 +2817,34 @@ directive|ifdef
 name|TRIMBLE_OUTPUT_FUNC
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|parseany
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|TSIPPKT
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|TranslateTSIPReportToText
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|TSIPPKT
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -2867,302 +2855,255 @@ begin_comment
 comment|/* TRIMBLE_OUTPUT_FUNC */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|parse0x5C
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|TSIPPKT
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|parse0x4F
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|TSIPPKT
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|tsip_input_proc
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|TSIPPKT
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Trimble helper functions */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|bPutFloat
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|float
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|bPutDouble
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|double
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|bPutULong
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|long
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|print_msg_table_header
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|rptcode
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 name|HdrStr
-operator|,
+parameter_list|,
 name|int
 name|force
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|show_time
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|float
 name|time_of_week
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* RIPE NCC functions */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ripencc_control
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+specifier|const
+name|struct
 name|refclockstat
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|refclockstat
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ripencc_ppsapi
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ripencc_get_pps_ts
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ripencc_unit
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ripencc_start
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ripencc_shutdown
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ripencc_poll
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ripencc_send
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|TSIPPKT
 name|spt
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ripencc_receive
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|recvbuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* fill in reflock structure for our clock */
@@ -3315,6 +3256,12 @@ decl_stmt|;
 name|TSIPPKT
 name|spt
 decl_stmt|;
+name|pp
+operator|=
+name|peer
+operator|->
+name|procptr
+expr_stmt|;
 comment|/* 	 * Open serial port 	 */
 operator|(
 name|void
@@ -3333,10 +3280,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
 name|fd
 operator|=
 name|refclock_open
@@ -3347,13 +3290,37 @@ name|SPEED232
 argument_list|,
 name|LDISC_RAW
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|<=
+literal|0
 condition|)
+block|{
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+operator|=
+name|fd
+expr_stmt|;
 comment|/* from refclock_palisade.c */
 if|if
 condition|(
@@ -3433,64 +3400,16 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Allocate and initialize unit structure 	 */
-if|if
-condition|(
-operator|!
-operator|(
 name|up
 operator|=
-operator|(
-expr|struct
-name|ripencc_unit
-operator|*
-operator|)
-name|emalloc
+name|emalloc_zero
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|ripencc_unit
-argument_list|)
-argument_list|)
-operator|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-name|memset
-argument_list|(
-operator|(
-name|char
 operator|*
-operator|)
 name|up
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ripencc_unit
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|pp
-operator|=
-name|peer
-operator|->
-name|procptr
 expr_stmt|;
 name|pp
 operator|->
@@ -3506,9 +3425,6 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|peer
 expr_stmt|;
 name|pp
@@ -3518,14 +3434,6 @@ operator|.
 name|datalen
 operator|=
 literal|0
-expr_stmt|;
-name|pp
-operator|->
-name|io
-operator|.
-name|fd
-operator|=
-name|fd
 expr_stmt|;
 if|if
 condition|(
@@ -3539,9 +3447,15 @@ name|io
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|close
 argument_list|(
 name|fd
@@ -3562,9 +3476,6 @@ name|pp
 operator|->
 name|unitptr
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|up
 expr_stmt|;
 comment|/* 	 * Initialize miscellaneous variables 	 */
@@ -3908,6 +3819,7 @@ name|int
 name|unit
 parameter_list|,
 comment|/* unit (not used) */
+specifier|const
 name|struct
 name|refclockstat
 modifier|*
@@ -4017,11 +3929,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|ripencc_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -4201,7 +4108,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|pps_enable
+name|hardpps_enable
 operator|=
 literal|1
 expr_stmt|;
@@ -4306,7 +4213,7 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"ripencc_get_pps_ts\n"
+literal|"ripencc_get_pps_ts"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4536,7 +4443,7 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"ts.tv_sec: %d\n"
+literal|"ts.tv_sec: %d"
 argument_list|,
 operator|(
 name|int
@@ -4550,7 +4457,7 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"ts.tv_nsec: %ld\n"
+literal|"ts.tv_nsec: %ld"
 argument_list|,
 name|ts
 operator|.
@@ -4610,15 +4517,17 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|ripencc_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
 expr_stmt|;
+if|if
+condition|(
+name|up
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 name|up
@@ -4634,6 +4543,23 @@ operator|->
 name|handle
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|up
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|-
+literal|1
+operator|!=
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+condition|)
 name|io_closeclock
 argument_list|(
 operator|&
@@ -4642,11 +4568,7 @@ operator|->
 name|io
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|up
-argument_list|)
-expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -4709,11 +4631,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|ripencc_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -4824,11 +4741,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|ripencc_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -5097,7 +5009,7 @@ specifier|static
 name|TSIPPKT
 name|rpt
 decl_stmt|;
-comment|/* structure for current incoming TSIP report  */
+comment|/* for current incoming TSIP report */
 name|TSIPPKT
 name|spt
 decl_stmt|;
@@ -5112,7 +5024,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-comment|/* Use these variables to hold data until we decide its worth keeping */
+comment|/* these variables hold data until we decide it's worth keeping */
 name|char
 name|rd_lastcode
 index|[
@@ -5129,14 +5041,9 @@ comment|/* msyslog(LOG_INFO, "%s",__FUNCTION__); */
 comment|/* 	 * Initialize pointers and read the timecode and timestamp 	 */
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -5146,11 +5053,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|ripencc_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -5349,7 +5251,7 @@ case|case
 literal|0xAD
 case|:
 comment|/* UTC Time */
-comment|/* 				 * When polling on port B the timecode  				 * is the time of the previous PPS. 				 * If we completed receiving the packet  				 * less than 150ms after the turn of the second,  				 * it may have the code of the previous second. 				 * We do not trust that and simply poll again 				 * without even parsing it. 				 * 				 * More elegant would be to re-schedule the poll, 				 * but I do not know (yet) how to do that cleanly. 				 * 				 */
+comment|/* 				** When polling on port B the timecode is 				** the time of the previous PPS.  If we 				** completed receiving the packet less than 				** 150ms after the turn of the second, it 				** may have the code of the previous second. 				** We do not trust that and simply poll 				** again without even parsing it. 				** 				** More elegant would be to re-schedule the 				** poll, but I do not know (yet) how to do 				** that cleanly. 				** 				*/
 comment|/* BLA ns_since_pps = ncc_tstmp(rbufp,&trtmp); */
 comment|/*   if (up->polled&& ns_since_pps> -1&& ns_since_pps< 150) { */
 name|ns_since_pps
@@ -5455,7 +5357,7 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s(): ripencc_get_pps_ts returns failure\n"
+literal|"%s(): ripencc_get_pps_ts returns failure"
 argument_list|,
 name|__FUNCTION__
 argument_list|)
@@ -5472,7 +5374,7 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s(): unrequested packet\n"
+literal|"%s(): unrequested packet"
 argument_list|,
 name|__FUNCTION__
 argument_list|)
@@ -5533,7 +5435,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 				 * Process the new sample in the median filter and determine the 				 * reference clock offset and dispersion.   				 */
+comment|/* 				** Process the new sample in the median 				** filter and determine the reference clock 				** offset and dispersion. 				*/
 if|if
 condition|(
 operator|!
@@ -5672,6 +5574,10 @@ begin_comment
 comment|/*   * All trimble functions that are directly referenced from driver code  * (so not from parseany)  */
 end_comment
 
+begin_comment
+comment|/* request software versions */
+end_comment
+
 begin_function
 name|void
 name|cmd_0x1F
@@ -5680,7 +5586,6 @@ name|TSIPPKT
 modifier|*
 name|cmd
 parameter_list|)
-comment|/* request software versions */
 block|{
 name|cmd
 operator|->
@@ -5697,6 +5602,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* request receiver health */
+end_comment
+
 begin_function
 name|void
 name|cmd_0x26
@@ -5705,7 +5614,6 @@ name|TSIPPKT
 modifier|*
 name|cmd
 parameter_list|)
-comment|/* request receiver health */
 block|{
 name|cmd
 operator|->
@@ -5722,6 +5630,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* request UTC params */
+end_comment
+
 begin_function
 name|void
 name|cmd_0x2F
@@ -5730,7 +5642,6 @@ name|TSIPPKT
 modifier|*
 name|cmd
 parameter_list|)
-comment|/* request UTC params */
 block|{
 name|cmd
 operator|->
@@ -5746,6 +5657,10 @@ literal|0x2F
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* set serial I/O options */
+end_comment
 
 begin_function
 name|void
@@ -5771,7 +5686,6 @@ name|unsigned
 name|char
 name|opts_code
 parameter_list|)
-comment|/* set serial I/O options */
 block|{
 name|cmd
 operator|->
@@ -5824,6 +5738,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* request tracking status */
+end_comment
+
 begin_function
 name|void
 name|cmd_0x3C
@@ -5836,7 +5754,6 @@ name|unsigned
 name|char
 name|sv_prn
 parameter_list|)
-comment|/* request tracking status */
 block|{
 name|cmd
 operator|->
@@ -5861,6 +5778,10 @@ literal|0x3C
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* set Channel A configuration for dual-port operation */
+end_comment
 
 begin_function
 name|void
@@ -5894,7 +5815,6 @@ name|unsigned
 name|char
 name|input_mode
 parameter_list|)
-comment|/* set Channel A configuration for dual-port operation */
 block|{
 name|cmd
 operator|->
@@ -6016,6 +5936,10 @@ begin_comment
 comment|/**** Superpackets ****/
 end_comment
 
+begin_comment
+comment|/* 8E-0B to query 8F-0B controls */
+end_comment
+
 begin_function
 name|void
 name|cmd_0x8E0Bq
@@ -6024,7 +5948,6 @@ name|TSIPPKT
 modifier|*
 name|cmd
 parameter_list|)
-comment|/* 8E-0B to query 8F-0B controls */
 block|{
 name|cmd
 operator|->
@@ -6050,6 +5973,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* 8F-41 to query board serial number */
+end_comment
+
 begin_function
 name|void
 name|cmd_0x8E41q
@@ -6058,7 +5985,6 @@ name|TSIPPKT
 modifier|*
 name|cmd
 parameter_list|)
-comment|/* 8F-41 to query board serial number */
 block|{
 name|cmd
 operator|->
@@ -6084,6 +6010,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* 8F-42 to query product serial number */
+end_comment
+
 begin_function
 name|void
 name|cmd_0x8E42q
@@ -6092,7 +6022,6 @@ name|TSIPPKT
 modifier|*
 name|cmd
 parameter_list|)
-comment|/* 8F-42 to query product serial number */
 block|{
 name|cmd
 operator|->
@@ -6118,6 +6047,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* 8F-4A to query PPS parameters */
+end_comment
+
 begin_function
 name|void
 name|cmd_0x8E4Aq
@@ -6126,7 +6059,6 @@ name|TSIPPKT
 modifier|*
 name|cmd
 parameter_list|)
-comment|/* 8F-4A to query PPS parameters */
 block|{
 name|cmd
 operator|->
@@ -6262,6 +6194,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* 8F-4B query survey limit */
+end_comment
+
 begin_function
 name|void
 name|cmd_0x8E4Bq
@@ -6270,7 +6206,6 @@ name|TSIPPKT
 modifier|*
 name|cmd
 parameter_list|)
-comment|/* 8F-4B query survey limit */
 block|{
 name|cmd
 operator|->
@@ -6300,6 +6235,10 @@ begin_comment
 comment|/* poll for UTC superpacket */
 end_comment
 
+begin_comment
+comment|/* 8E-AD to query 8F-AD controls */
+end_comment
+
 begin_function
 name|void
 name|cmd_0x8EADq
@@ -6308,7 +6247,6 @@ name|TSIPPKT
 modifier|*
 name|cmd
 parameter_list|)
-comment|/* 8E-AD to query 8F-AD controls */
 block|{
 name|cmd
 operator|->
@@ -6390,7 +6328,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* for DOS machines, reverse order of bytes as they come through the  * serial port. */
+comment|/*  * for DOS machines, reverse order of bytes as they come through the  * serial port.  */
 end_comment
 
 begin_ifdef
@@ -7249,19 +7187,15 @@ specifier|static
 name|int
 name|parse0x8FAD
 parameter_list|(
-name|rpt
-parameter_list|,
-name|peer
-parameter_list|)
 name|TSIPPKT
 modifier|*
 name|rpt
-decl_stmt|;
+parameter_list|,
 name|struct
 name|peer
 modifier|*
 name|peer
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -7650,6 +7584,7 @@ operator|%
 literal|4
 condition|)
 block|{
+comment|/* XXX: use is_leapyear() ? */
 if|if
 condition|(
 name|day
@@ -7786,11 +7721,11 @@ operator|->
 name|leapdelta
 operator|>
 literal|0
+operator|)
 condition|?
 name|LEAP_ADDSECOND
 else|:
 name|LEAP_DELSECOND
-operator|)
 expr_stmt|;
 else|else
 name|pp
@@ -7808,26 +7743,22 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse comprehensive time packet   *  * 0 = success  * -1 = errors  */
+comment|/*  * Parse comprehensive time packet   *  *  0 = success  * -1 = errors  */
 end_comment
 
 begin_function
 name|int
 name|parse0x8F0B
 parameter_list|(
-name|rpt
-parameter_list|,
-name|peer
-parameter_list|)
 name|TSIPPKT
 modifier|*
 name|rpt
-decl_stmt|;
+parameter_list|,
 name|struct
 name|peer
 modifier|*
 name|peer
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -8520,19 +8451,15 @@ begin_function
 name|int
 name|parseany
 parameter_list|(
-name|rpt
-parameter_list|,
-name|peer
-parameter_list|)
 name|TSIPPKT
 modifier|*
 name|rpt
-decl_stmt|;
+parameter_list|,
 name|struct
 name|peer
 modifier|*
 name|peer
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -8608,19 +8535,15 @@ begin_function
 name|int
 name|parse0x4F
 parameter_list|(
-name|rpt
-parameter_list|,
-name|peer
-parameter_list|)
 name|TSIPPKT
 modifier|*
 name|rpt
-decl_stmt|;
+parameter_list|,
 name|struct
 name|peer
 modifier|*
 name|peer
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -8853,19 +8776,15 @@ begin_function
 name|int
 name|parse0x5C
 parameter_list|(
-name|rpt
-parameter_list|,
-name|peer
-parameter_list|)
 name|TSIPPKT
 modifier|*
 name|rpt
-decl_stmt|;
+parameter_list|,
 name|struct
 name|peer
 modifier|*
 name|peer
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -9067,7 +8986,7 @@ comment|/*  * ******************************************************************
 end_comment
 
 begin_comment
-comment|/**/
+comment|/*  * reads bytes until serial buffer is empty or a complete report  * has been received; end of report is signified by DLE ETX.  */
 end_comment
 
 begin_function
@@ -9082,7 +9001,6 @@ parameter_list|,
 name|int
 name|inbyte
 parameter_list|)
-comment|/* reads bytes until serial buffer is empty or a complete report  * has been received; end of report is signified by DLE ETX.  */
 block|{
 name|unsigned
 name|char
@@ -9375,6 +9293,10 @@ begin_comment
 comment|/**/
 end_comment
 
+begin_comment
+comment|/* Channel A configuration for dual port operation */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x3D
@@ -9413,7 +9335,6 @@ name|char
 modifier|*
 name|rx_mode_index
 parameter_list|)
-comment|/* Channel A configuration for dual port operation */
 block|{
 name|unsigned
 name|char
@@ -9509,6 +9430,10 @@ begin_comment
 comment|/**/
 end_comment
 
+begin_comment
+comment|/* almanac data for specified satellite */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x40
@@ -9562,7 +9487,6 @@ name|float
 modifier|*
 name|M_0
 parameter_list|)
-comment|/* almanac data for specified satellite */
 block|{
 name|unsigned
 name|char
@@ -9720,6 +9644,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* GPS time */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x41
@@ -9740,7 +9668,6 @@ name|short
 modifier|*
 name|week_num
 parameter_list|)
-comment|/* GPS time */
 block|{
 name|unsigned
 name|char
@@ -9802,6 +9729,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* position in ECEF, single precision */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x42
@@ -9820,7 +9751,6 @@ name|float
 modifier|*
 name|time_of_fix
 parameter_list|)
-comment|/* position in ECEF, single precision */
 block|{
 name|unsigned
 name|char
@@ -9900,6 +9830,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* velocity in ECEF, single precision */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x43
@@ -9922,7 +9856,6 @@ name|float
 modifier|*
 name|time_of_fix
 parameter_list|)
-comment|/* velocity in ECEF, single precision */
 block|{
 name|unsigned
 name|char
@@ -10014,6 +9947,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* software versions */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x45
@@ -10072,7 +10009,6 @@ name|char
 modifier|*
 name|dsp_year
 parameter_list|)
-comment|/* software versions */
 block|{
 name|unsigned
 name|char
@@ -10182,6 +10118,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* receiver health and status */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x46
@@ -10200,7 +10140,6 @@ name|char
 modifier|*
 name|status2
 parameter_list|)
-comment|/* receiver health and status */
 block|{
 name|unsigned
 name|char
@@ -10246,6 +10185,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* signal levels for all satellites tracked */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x47
@@ -10268,7 +10211,6 @@ name|float
 modifier|*
 name|snr
 parameter_list|)
-comment|/* signal levels for all satellites tracked */
 block|{
 name|short
 name|isv
@@ -10366,6 +10308,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* GPS system message */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x48
@@ -10379,7 +10325,6 @@ name|char
 modifier|*
 name|message
 parameter_list|)
-comment|/* GPS system message */
 block|{
 name|unsigned
 name|char
@@ -10425,6 +10370,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* health for all satellites from almanac health page */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x49
@@ -10438,7 +10387,6 @@ name|char
 modifier|*
 name|sv_health
 parameter_list|)
-comment|/* health for all satellites from almanac health page */
 block|{
 name|short
 name|i
@@ -10494,6 +10442,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* position in lat-lon-alt, single precision */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x4A
@@ -10522,7 +10474,6 @@ name|float
 modifier|*
 name|time_of_fix
 parameter_list|)
-comment|/* position in lat-lon-alt, single precision */
 block|{
 name|unsigned
 name|char
@@ -10608,6 +10559,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* reference altitude parameters */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x4A_2
@@ -10629,7 +10584,6 @@ name|char
 modifier|*
 name|alt_flag
 parameter_list|)
-comment|/* reference altitude parameters */
 block|{
 name|unsigned
 name|char
@@ -10687,6 +10641,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* machine ID code, status */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x4B
@@ -10710,7 +10668,6 @@ name|char
 modifier|*
 name|status4
 parameter_list|)
-comment|/* machine ID code, status */
 block|{
 name|unsigned
 name|char
@@ -10764,6 +10721,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* operating parameters and masks */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x4C
@@ -10793,7 +10754,6 @@ name|float
 modifier|*
 name|dop_switch
 parameter_list|)
-comment|/* operating parameters and masks */
 block|{
 name|unsigned
 name|char
@@ -10879,6 +10839,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* oscillator offset */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x4D
@@ -10891,7 +10855,6 @@ name|float
 modifier|*
 name|osc_offset
 parameter_list|)
-comment|/* oscillator offset */
 block|{
 name|unsigned
 name|char
@@ -10929,6 +10892,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* yes/no response to command to set GPS time */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x4E
@@ -10942,7 +10909,6 @@ name|char
 modifier|*
 name|response
 parameter_list|)
-comment|/* yes/no response to command to set GPS time */
 block|{
 name|unsigned
 name|char
@@ -10979,6 +10945,10 @@ name|FALSE
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* UTC data */
+end_comment
 
 begin_function
 name|short
@@ -11020,7 +10990,6 @@ name|short
 modifier|*
 name|dt_lsf
 parameter_list|)
-comment|/* UTC data */
 block|{
 name|unsigned
 name|char
@@ -11146,6 +11115,10 @@ begin_comment
 comment|/**/
 end_comment
 
+begin_comment
+comment|/* clock offset and frequency offset in 1-SV (0-D) mode */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x54
@@ -11166,7 +11139,6 @@ name|float
 modifier|*
 name|time_of_fix
 parameter_list|)
-comment|/* clock offset and frequency offset in 1-SV (0-D) mode */
 block|{
 name|unsigned
 name|char
@@ -11228,6 +11200,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* I/O serial options */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x55
@@ -11256,7 +11232,6 @@ name|char
 modifier|*
 name|aux_code
 parameter_list|)
-comment|/* I/O serial options */
 block|{
 name|unsigned
 name|char
@@ -11318,6 +11293,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* velocity in east-north-up coordinates */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x56
@@ -11340,7 +11319,6 @@ name|float
 modifier|*
 name|time_of_fix
 parameter_list|)
-comment|/* velocity in east-north-up coordinates */
 block|{
 name|unsigned
 name|char
@@ -11435,6 +11413,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* info about last computed fix */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x57
@@ -11461,7 +11443,6 @@ name|float
 modifier|*
 name|time_of_fix
 parameter_list|)
-comment|/* info about last computed fix */
 block|{
 name|unsigned
 name|char
@@ -11531,6 +11512,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* GPS system data or acknowledgment of GPS system data load */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x58
@@ -11564,7 +11549,6 @@ name|char
 modifier|*
 name|data_packet
 parameter_list|)
-comment|/* GPS system data or acknowledgment of GPS system data load */
 block|{
 name|unsigned
 name|char
@@ -12831,6 +12815,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* satellite enable/disable or health heed/ignore list */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x59
@@ -12851,7 +12839,6 @@ index|[
 literal|32
 index|]
 parameter_list|)
-comment|/* satellite enable/disable or health heed/ignore list */
 block|{
 name|short
 name|iprn
@@ -12917,6 +12904,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* raw measurement data - code phase/Doppler */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x5A
@@ -12950,7 +12941,6 @@ name|double
 modifier|*
 name|time_of_fix
 parameter_list|)
-comment|/* raw measurement data - code phase/Doppler */
 block|{
 name|unsigned
 name|char
@@ -13048,6 +13038,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* satellite ephorb status */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x5B
@@ -13088,7 +13082,6 @@ name|float
 modifier|*
 name|sv_accy
 parameter_list|)
-comment|/* satellite ephorb status */
 block|{
 name|unsigned
 name|char
@@ -13186,6 +13179,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* satellite tracking status */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x5C
@@ -13255,7 +13252,6 @@ name|char
 modifier|*
 name|data_collect_flag
 parameter_list|)
-comment|/* satellite tracking status */
 block|{
 name|unsigned
 name|char
@@ -13448,6 +13444,10 @@ begin_comment
 comment|/**/
 end_comment
 
+begin_comment
+comment|/* over-determined satellite selection for position fixes, PDOP, fix mode */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x6D
@@ -13492,7 +13492,6 @@ name|float
 modifier|*
 name|tdop
 parameter_list|)
-comment|/* over-determined satellite selection for position fixes, PDOP, fix mode */
 block|{
 name|short
 name|islot
@@ -13676,6 +13675,10 @@ begin_comment
 comment|/**/
 end_comment
 
+begin_comment
+comment|/* differential fix mode */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x82
@@ -13689,7 +13692,6 @@ name|char
 modifier|*
 name|diff_mode
 parameter_list|)
-comment|/* differential fix mode */
 block|{
 name|unsigned
 name|char
@@ -13727,6 +13729,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* position, ECEF double precision */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x83
@@ -13749,7 +13755,6 @@ name|float
 modifier|*
 name|time_of_fix
 parameter_list|)
-comment|/* position, ECEF double precision */
 block|{
 name|unsigned
 name|char
@@ -13841,6 +13846,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* position, lat-lon-alt double precision */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x84
@@ -13869,7 +13878,6 @@ name|float
 modifier|*
 name|time_of_fix
 parameter_list|)
-comment|/* position, lat-lon-alt double precision */
 block|{
 name|unsigned
 name|char
@@ -13979,7 +13987,7 @@ name|rpt
 operator|->
 name|buf
 expr_stmt|;
-comment|/* Palisade is inconsistent with other TSIP, which has a kength of 40 */
+comment|/* Palisade is inconsistent with other TSIP, which has a length of 40 */
 comment|/* if (rpt->len != 40) return TRUE; */
 if|if
 condition|(
@@ -14077,6 +14085,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Receiver serial port configuration */
+end_comment
+
 begin_function
 name|short
 name|rpt_0xBC
@@ -14135,7 +14147,6 @@ name|char
 modifier|*
 name|reserved
 parameter_list|)
-comment|/* Receiver serial port configuration */
 block|{
 name|unsigned
 name|char
@@ -14536,6 +14547,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* datum index and coefficients  */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x8F14
@@ -14554,7 +14569,6 @@ index|[
 literal|5
 index|]
 parameter_list|)
-comment|/*  datum index and coefficients  */
 block|{
 name|unsigned
 name|char
@@ -14666,6 +14680,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* datum index and coefficients  */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x8F15
@@ -14684,7 +14702,6 @@ index|[
 literal|5
 index|]
 parameter_list|)
-comment|/*  datum index and coefficients  */
 block|{
 name|unsigned
 name|char
@@ -15550,6 +15567,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Stinger PPS definition */
+end_comment
+
 begin_function
 name|short
 name|rpt_0x8F4A_16
@@ -15581,7 +15602,6 @@ name|float
 modifier|*
 name|bias_unc_threshold
 parameter_list|)
-comment|/* Stinger PPS definition */
 block|{
 name|unsigned
 name|char
@@ -17084,8 +17104,15 @@ name|status1
 decl_stmt|,
 name|status2
 decl_stmt|;
-specifier|static
+specifier|const
 name|char
+modifier|*
+name|text
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+specifier|const
 modifier|*
 name|sc_text
 index|[]
@@ -17139,6 +17166,24 @@ name|BADLEN_PARSE
 expr_stmt|;
 return|return;
 block|}
+name|text
+operator|=
+operator|(
+name|status1
+operator|<
+name|COUNTOF
+argument_list|(
+name|sc_text
+argument_list|)
+operator|)
+condition|?
+name|sc_text
+index|[
+name|status1
+index|]
+else|:
+literal|"(out of range)"
+expr_stmt|;
 name|pbuf
 operator|+=
 name|sprintf
@@ -17147,15 +17192,7 @@ name|pbuf
 argument_list|,
 literal|"\nRcvr status1: %s (%02Xh); "
 argument_list|,
-name|sc_text
-index|[
-name|rpt
-operator|->
-name|buf
-index|[
-literal|0
-index|]
-index|]
+name|text
 argument_list|,
 name|status1
 argument_list|)
@@ -17881,7 +17918,7 @@ name|sprintf
 argument_list|(
 name|pbuf
 argument_list|,
-literal|"\n     Elevation mask = %.2fø"
+literal|"\n     Elevation mask = %.2f"
 argument_list|,
 name|el_mask
 operator|*
@@ -21931,6 +21968,10 @@ begin_comment
 comment|/* 0x8F14 */
 end_comment
 
+begin_comment
+comment|/* Datum parameters */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -21940,7 +21981,6 @@ name|TSIPPKT
 modifier|*
 name|rpt
 parameter_list|)
-comment|/* Datum parameters */
 block|{
 name|double
 name|datum_coeffs
@@ -22098,6 +22138,10 @@ begin_comment
 comment|/* 0x8F15 */
 end_comment
 
+begin_comment
+comment|/* Datum parameters */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -22107,7 +22151,6 @@ name|TSIPPKT
 modifier|*
 name|rpt
 parameter_list|)
-comment|/* Datum parameters */
 block|{
 name|double
 name|datum_coeffs
@@ -23101,6 +23144,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Stinger PPS def */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -23110,7 +23157,6 @@ name|TSIPPKT
 modifier|*
 name|rpt
 parameter_list|)
-comment|/* Stinger PPS def */
 block|{
 name|unsigned
 name|char
@@ -23229,6 +23275,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* fast-SA decorrolation time for self-survey */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -23238,7 +23288,6 @@ name|TSIPPKT
 modifier|*
 name|rpt
 parameter_list|)
-comment|/* fast-SA decorrolation time for self-survey */
 block|{
 name|unsigned
 name|long
@@ -24393,7 +24442,7 @@ operator|->
 name|len
 condition|)
 block|{
-comment|/*       ** special case (=slip-up) in the TSIP protocol;       ** parsing method depends on length       */
+comment|/* 			** special case (=slip-up) in the TSIP protocol; 			** parsing method depends on length 			*/
 case|case
 literal|20
 case|:
@@ -24738,7 +24787,7 @@ operator|!=
 name|GOOD_PARSE
 condition|)
 block|{
-comment|/*    	**The message has TSIP structure (DLEs, etc.) 	   ** but could not be parsed by above routines    	*/
+comment|/* 		**The message has TSIP structure (DLEs, etc.) 		** but could not be parsed by above routines 		*/
 name|unknown_rpt
 argument_list|(
 name|rpt

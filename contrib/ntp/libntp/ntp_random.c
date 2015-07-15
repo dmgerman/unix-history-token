@@ -43,22 +43,11 @@ directive|include
 file|"config.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_TYPES_H
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -86,7 +75,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ntp_types.h>
+file|<l_stdlib.h>
 end_include
 
 begin_include
@@ -269,10 +258,6 @@ name|SEP_4
 value|1
 end_define
 
-begin_comment
-comment|/*  * Array versions of the above information to make code run faster --  * relies on fact that TYPE_i == i.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -284,56 +269,13 @@ begin_comment
 comment|/* max number of types above */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|long
-name|degrees
-index|[
-name|MAX_TYPES
-index|]
-init|=
-block|{
-name|DEG_0
-block|,
-name|DEG_1
-block|,
-name|DEG_2
-block|,
-name|DEG_3
-block|,
-name|DEG_4
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|seps
-index|[
-name|MAX_TYPES
-index|]
-init|=
-block|{
-name|SEP_0
-block|,
-name|SEP_1
-block|,
-name|SEP_2
-block|,
-name|SEP_3
-block|,
-name|SEP_4
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Initially, everything is set up as if from:  *  *	initstate(1, randtbl, 128);  *  * Note that this initialization takes advantage of the fact that srandom()  * advances the front and rear pointers 10*rand_deg times, and hence the  * rear pointer which starts at 0 will also end up at zero; thus the zeroeth  * element of the state information, which contains info about the current  * position of the rear pointer is just  *  *	MAX_TYPES * (rptr - state) + TYPE_3 == TYPE_3.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|long
 name|randtbl
 index|[
@@ -489,6 +431,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|long
 modifier|*
 name|fptr
@@ -505,6 +448,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|long
 modifier|*
 name|rptr
@@ -523,6 +467,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|long
 modifier|*
 name|state
@@ -564,6 +509,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|long
 modifier|*
 name|end_ptr
@@ -578,19 +524,16 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 specifier|inline
 name|long
 name|good_rand
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -682,7 +625,6 @@ name|long
 name|x
 parameter_list|)
 block|{
-specifier|register
 name|long
 name|i
 decl_stmt|;
@@ -692,6 +634,7 @@ name|rand_type
 operator|==
 name|TYPE_0
 condition|)
+block|{
 name|state
 index|[
 literal|0
@@ -699,6 +642,7 @@ index|]
 operator|=
 name|x
 expr_stmt|;
+block|}
 else|else
 block|{
 name|state
@@ -767,13 +711,21 @@ condition|;
 name|i
 operator|++
 control|)
-operator|(
-name|void
-operator|)
+name|x
+operator|=
 name|ntp_random
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* seed the likely faster (and poorer) rand() as well */
+name|srand
+argument_list|(
+operator|(
+name|u_int
+operator|)
+name|x
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -835,6 +787,75 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * ntp_initstate() and ntp_setstate() are unused in our codebase and  * trigger warnings due to casting to a more-strictly-aligned pointer  * on alignment-sensitive platforms.  #ifdef them away to save noise,  * build time, and binary space, but retain the code in case we find a  * use.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPILE_UNUSED_FUNCTIONS
+end_ifdef
+
+begin_comment
+comment|/*  * Array versions of the above information to make code run faster --  * relies on fact that TYPE_i == i.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_TYPES
+value|5
+end_define
+
+begin_comment
+comment|/* max number of types above */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|long
+name|degrees
+index|[
+name|MAX_TYPES
+index|]
+init|=
+block|{
+name|DEG_0
+block|,
+name|DEG_1
+block|,
+name|DEG_2
+block|,
+name|DEG_3
+block|,
+name|DEG_4
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|long
+name|seps
+index|[
+name|MAX_TYPES
+index|]
+init|=
+block|{
+name|SEP_0
+block|,
+name|SEP_1
+block|,
+name|SEP_2
+block|,
+name|SEP_3
+block|,
+name|SEP_4
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * initstate:  *  * Initialize the state information in the given array of n bytes for future  * random number generation.  Based on the number of bytes we are given, and  * the break values for the different R.N.G.'s, we choose the best (largest)  * one we can and set things up for it.  srandom() is then called to  * initialize the state information.  *  * Note that on return from srandom(), we set state[-1] to be the type  * multiplexed with the current value of the rear pointer; this is so  * successive calls to initstate() won't lose this information and will be  * able to restart with setstate().  *  * Note: the first thing we do is save the current state, if any, just like  * setstate() so that it doesn't matter when initstate is called.  *  * Returns a pointer to the old state.  *  * Note: The Sparc platform requires that arg_state begin on a long  * word boundary; otherwise a bus error will occur. Even so, lint will  * complain about mis-alignment, but you should disregard these messages.  */
@@ -1046,6 +1067,7 @@ block|}
 name|state
 operator|=
 operator|(
+name|unsigned
 name|long
 operator|*
 operator|)
@@ -1123,11 +1145,13 @@ comment|/* pointer to state array */
 parameter_list|)
 block|{
 specifier|register
+name|unsigned
 name|long
 modifier|*
 name|new_state
 init|=
 operator|(
+name|unsigned
 name|long
 operator|*
 operator|)
@@ -1257,10 +1281,6 @@ block|}
 name|state
 operator|=
 operator|(
-name|long
-operator|*
-operator|)
-operator|(
 name|new_state
 operator|+
 literal|1
@@ -1313,6 +1333,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* COMPILE_UNUSED_FUNCTIONS */
+end_comment
+
 begin_comment
 comment|/*  * random:  *  * If we are using the trivial TYPE_0 R.N.G., just do the old linear  * congruential bit.  Otherwise, we do our fancy trinomial stuff, which is  * the same in all the other cases due to all the global variables that have  * been set up.  The basic operation is to add the number at the rear pointer  * into the one at the front pointer.  Then both pointers are advanced to  * the next location cyclically in the table.  The value returned is the sum  * generated, reduced to 31 bits by throwing away the "least random" low bit.  *  * Note: the code takes advantage of the fact that both the front and  * rear pointers can't wrap on the same call by not testing the rear  * pointer if the front one has wrapped.  *  * Returns a 31-bit random number.  */
 end_comment
@@ -1329,6 +1358,7 @@ name|long
 name|i
 decl_stmt|;
 specifier|register
+name|unsigned
 name|long
 modifier|*
 name|f

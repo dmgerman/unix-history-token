@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp4-dev/libparse/parse.c,v 4.20 2005/08/06 17:39:40 kardel RELEASE_20050806_A  *    * parse.c,v 4.20 2005/08/06 17:39:40 kardel RELEASE_20050806_A  *  * Parser module for reference clock  *  * PARSEKERNEL define switches between two personalities of the module  * if PARSEKERNEL is defined this module can be used  * as kernel module. In this case the time stamps will be  * a struct timeval.  * when PARSEKERNEL is not defined NTP time stamps will be used.  *  * Copyright (c) 1995-2005 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * /src/NTP/ntp4-dev/libparse/parse.c,v 4.20 2005/08/06 17:39:40 kardel RELEASE_20050806_A  *  * parse.c,v 4.20 2005/08/06 17:39:40 kardel RELEASE_20050806_A  *  * Parser module for reference clock  *  * PARSEKERNEL define switches between two personalities of the module  * if PARSEKERNEL is defined this module can be used  * as kernel module. In this case the time stamps will be  * a struct timeval.  * when PARSEKERNEL is not defined NTP time stamps will be used.  *  * Copyright (c) 1995-2005 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifdef
@@ -75,7 +75,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_unixtime.h"
+file|"timevalops.h"
 end_include
 
 begin_include
@@ -157,19 +157,16 @@ name|nformats
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|u_long
 name|timepacket
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|parse_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * strings support usually not in kernel - duplicated, but what the heck  */
@@ -375,21 +372,6 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-specifier|extern
-name|long
-name|tstouslo
-index|[]
-decl_stmt|;
-specifier|extern
-name|long
-name|tstousmid
-index|[]
-decl_stmt|;
-specifier|extern
-name|long
-name|tstoushi
-index|[]
-decl_stmt|;
 name|l_fp
 name|delt
 decl_stmt|;
@@ -633,8 +615,7 @@ name|parse_t
 modifier|*
 name|parseio
 parameter_list|,
-name|unsigned
-name|int
+name|char
 name|ch
 parameter_list|)
 block|{
@@ -740,8 +721,7 @@ name|parse_t
 modifier|*
 name|parseio
 parameter_list|,
-name|unsigned
-name|int
+name|char
 name|ch
 parameter_list|)
 block|{
@@ -783,6 +763,9 @@ name|parse_index
 operator|++
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|ch
 expr_stmt|;
 return|return
@@ -889,8 +872,7 @@ modifier|*
 name|parseio
 parameter_list|,
 specifier|register
-name|unsigned
-name|int
+name|char
 name|ch
 parameter_list|,
 specifier|register
@@ -900,7 +882,7 @@ name|tstamp
 parameter_list|)
 block|{
 specifier|register
-name|unsigned
+name|u_int
 name|updated
 init|=
 name|CVT_NONE
@@ -944,7 +926,10 @@ name|PARSE_IO_CS8
 case|:
 name|ch
 operator|&=
-literal|0xFF
+operator|(
+name|char
+operator|)
+literal|0xFFU
 expr_stmt|;
 break|break;
 block|}
@@ -1049,6 +1034,9 @@ comment|/* time sample is available */
 block|{
 name|updated
 operator|=
+operator|(
+name|u_int
+operator|)
 name|timepacket
 argument_list|(
 name|parseio
@@ -1167,7 +1155,7 @@ name|ptime
 parameter_list|)
 block|{
 specifier|register
-name|unsigned
+name|u_int
 name|updated
 init|=
 name|CVT_NONE
@@ -1206,6 +1194,9 @@ condition|)
 block|{
 name|updated
 operator|=
+operator|(
+name|u_int
+operator|)
 name|clockformats
 index|[
 name|parseio
@@ -2191,7 +2182,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pps_simple  *  * handle a pps time stamp  */
+comment|/*  * parse_pps_fnc_t pps_simple  *  * handle a pps time stamp  */
 end_comment
 
 begin_comment
@@ -2243,7 +2234,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pps_one  *  * handle a pps time stamp in ONE edge  */
+comment|/*  * parse_pps_fnc_t pps_one  *  * handle a pps time stamp in ONE edge  */
 end_comment
 
 begin_comment
@@ -2290,7 +2281,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pps_zero  *  * handle a pps time stamp in ZERO edge  */
+comment|/*  * parse_pps_fnc_t pps_zero  *  * handle a pps time stamp in ZERO edge  */
 end_comment
 
 begin_comment
@@ -2471,7 +2462,9 @@ operator|->
 name|parse_badformat
 operator|++
 expr_stmt|;
-break|break;
+return|return
+name|cvtrtc
+return|;
 case|case
 name|CVT_NONE
 case|:
@@ -2481,7 +2474,9 @@ operator|->
 name|parse_badformat
 operator|++
 expr_stmt|;
-break|break;
+return|return
+name|CVT_NONE
+return|;
 case|case
 name|CVT_OK
 case|:
@@ -2501,7 +2496,7 @@ name|msyslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"parse: INTERNAL error: bad return code of convert routine \"%s\"\n"
+literal|"parse: INTERNAL error: bad return code of convert routine \"%s\""
 argument_list|,
 name|clockformats
 index|[
@@ -2586,9 +2581,14 @@ name|fp
 operator|.
 name|l_ui
 operator|=
+call|(
+name|uint32_t
+call|)
+argument_list|(
 name|t
 operator|+
 name|JAN_1970
+argument_list|)
 expr_stmt|;
 name|TVUTOTSF
 argument_list|(
@@ -3109,6 +3109,11 @@ name|parseformat
 operator|.
 name|parse_count
 operator|=
+call|(
+name|unsigned
+name|short
+call|)
+argument_list|(
 name|Strlen
 argument_list|(
 name|clockformats
@@ -3124,6 +3129,7 @@ name|name
 argument_list|)
 operator|+
 literal|1
+argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -3192,6 +3198,10 @@ name|parse
 operator|->
 name|parse_ioflags
 operator||=
+call|(
+name|int
+call|)
+argument_list|(
 name|dct
 operator|->
 name|parsesetcs
@@ -3199,6 +3209,7 @@ operator|.
 name|parse_cs
 operator|&
 name|PARSE_IO_CSIZE
+argument_list|)
 expr_stmt|;
 return|return
 literal|1

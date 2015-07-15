@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/ntp4-dev/parseutil/dcfd.c,v 4.18 2005/10/07 22:08:18 kardel RELEASE_20051008_A  *    * dcfd.c,v 4.18 2005/10/07 22:08:18 kardel RELEASE_20051008_A  *  * DCF77 100/200ms pulse synchronisation daemon program (via 50Baud serial line)  *  * Features:  *  DCF77 decoding  *  simple NTP loopfilter logic for local clock  *  interactive display for debugging  *  * Lacks:  *  Leap second handling (at that level you should switch to NTP Version 4 - really!)  *  * Copyright (c) 1995-2005 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/ntp4-dev/parseutil/dcfd.c,v 4.18 2005/10/07 22:08:18 kardel RELEASE_20051008_A  *  * dcfd.c,v 4.18 2005/10/07 22:08:18 kardel RELEASE_20051008_A  *  * DCF77 100/200ms pulse synchronisation daemon program (via 50Baud serial line)  *  * Features:  *  DCF77 decoding  *  simple NTP loopfilter logic for local clock  *  interactive display for debugging  *  * Lacks:  *  Leap second handling (at that level you should switch to NTP Version 4 - really!)  *  * Copyright (c) 1995-2015 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifdef
@@ -604,15 +604,10 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|timeval
-name|max_adj_offset
+name|long
+name|max_adj_offset_usec
 init|=
-block|{
-literal|0
-block|,
 literal|128000
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -704,12 +699,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DCFB_ALTERNATE
+name|DCFB_CALLBIT
 value|0x0008
 end_define
 
 begin_comment
-comment|/* alternate antenna used */
+comment|/* "call bit" used to signalize irregularities in the control facilities */
 end_comment
 
 begin_struct
@@ -766,6 +761,12 @@ begin_comment
 comment|/*  * (usually) quick constant multiplications  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TIMES10
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -779,6 +780,17 @@ end_define
 begin_comment
 comment|/* *8 + *2 */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TIMES24
+end_ifndef
 
 begin_define
 define|#
@@ -794,6 +806,17 @@ begin_comment
 comment|/* *16 + *8 */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TIMES60
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -807,6 +830,11 @@ end_define
 begin_comment
 comment|/* *(16 - 1) *4 */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * generic l_abs() function  */
@@ -904,7 +932,7 @@ comment|/* invalid time */
 end_comment
 
 begin_comment
-comment|/*  * DCF77 raw time code  *  * From "Zur Zeit", Physikalisch-Technische Bundesanstalt (PTB), Braunschweig  * und Berlin, Maerz 1989  *  * Timecode transmission:  * AM:  *	time marks are send every second except for the second before the  *	next minute mark  *	time marks consist of a reduction of transmitter power to 25%  *	of the nominal level  *	the falling edge is the time indication (on time)  *	time marks of a 100ms duration constitute a logical 0  *	time marks of a 200ms duration constitute a logical 1  * FM:  *	see the spec. (basically a (non-)inverted psuedo random phase shift)  *  * Encoding:  * Second	Contents  * 0  - 10	AM: free, FM: 0  * 11 - 14	free  * 15		R     - alternate antenna  * 16		A1    - expect zone change (1 hour before)  * 17 - 18	Z1,Z2 - time zone  *		 0  0 illegal  *		 0  1 MEZ  (MET)  *		 1  0 MESZ (MED, MET DST)  *		 1  1 illegal  * 19		A2    - expect leap insertion/deletion (1 hour before)  * 20		S     - start of time code (1)  * 21 - 24	M1    - BCD (lsb first) Minutes  * 25 - 27	M10   - BCD (lsb first) 10 Minutes  * 28		P1    - Minute Parity (even)  * 29 - 32	H1    - BCD (lsb first) Hours  * 33 - 34      H10   - BCD (lsb first) 10 Hours  * 35		P2    - Hour Parity (even)  * 36 - 39	D1    - BCD (lsb first) Days  * 40 - 41	D10   - BCD (lsb first) 10 Days  * 42 - 44	DW    - BCD (lsb first) day of week (1: Monday -> 7: Sunday)  * 45 - 49	MO    - BCD (lsb first) Month  * 50           MO0   - 10 Months  * 51 - 53	Y1    - BCD (lsb first) Years  * 54 - 57	Y10   - BCD (lsb first) 10 Years  * 58 		P3    - Date Parity (even)  * 59		      - usually missing (minute indication), except for leap insertion  */
+comment|/*  * DCF77 raw time code  *  * From "Zur Zeit", Physikalisch-Technische Bundesanstalt (PTB), Braunschweig  * und Berlin, Maerz 1989  *  * Timecode transmission:  * AM:  *	time marks are send every second except for the second before the  *	next minute mark  *	time marks consist of a reduction of transmitter power to 25%  *	of the nominal level  *	the falling edge is the time indication (on time)  *	time marks of a 100ms duration constitute a logical 0  *	time marks of a 200ms duration constitute a logical 1  * FM:  *	see the spec. (basically a (non-)inverted psuedo random phase shift)  *  * Encoding:  * Second	Contents  * 0  - 10	AM: free, FM: 0  * 11 - 14	free  * 15		R     - "call bit" used to signalize irregularities in the control facilities  *		        (until 2003 indicated transmission via alternate antenna)  * 16		A1    - expect zone change (1 hour before)  * 17 - 18	Z1,Z2 - time zone  *		 0  0 illegal  *		 0  1 MEZ  (MET)  *		 1  0 MESZ (MED, MET DST)  *		 1  1 illegal  * 19		A2    - expect leap insertion/deletion (1 hour before)  * 20		S     - start of time code (1)  * 21 - 24	M1    - BCD (lsb first) Minutes  * 25 - 27	M10   - BCD (lsb first) 10 Minutes  * 28		P1    - Minute Parity (even)  * 29 - 32	H1    - BCD (lsb first) Hours  * 33 - 34      H10   - BCD (lsb first) 10 Hours  * 35		P2    - Hour Parity (even)  * 36 - 39	D1    - BCD (lsb first) Days  * 40 - 41	D10   - BCD (lsb first) 10 Days  * 42 - 44	DW    - BCD (lsb first) day of week (1: Monday -> 7: Sunday)  * 45 - 49	MO    - BCD (lsb first) Month  * 50           MO0   - 10 Months  * 51 - 53	Y1    - BCD (lsb first) Years  * 54 - 57	Y10   - BCD (lsb first) 10 Years  * 58 		P3    - Date Parity (even)  * 59		      - usually missing (minute indication), except for leap insertion  */
 end_comment
 
 begin_comment
@@ -1797,7 +1825,7 @@ name|clock_time
 operator|->
 name|flags
 operator||=
-name|DCFB_ALTERNATE
+name|DCFB_CALLBIT
 expr_stmt|;
 return|return
 name|CVT_OK
@@ -2025,14 +2053,22 @@ comment|/* 			 * invalid character (no consecutive bit sequence) 			 */
 name|dprintf
 argument_list|(
 operator|(
-literal|"parse: cvt_rawdcf: character check for 0x%x@%d FAILED\n"
+literal|"parse: cvt_rawdcf: character check for 0x%x@%ld FAILED\n"
 operator|,
+operator|(
+name|u_int
+operator|)
 operator|*
 name|s
 operator|,
+call|(
+name|long
+call|)
+argument_list|(
 name|s
 operator|-
 name|buffer
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2953,9 +2989,14 @@ name|tv_sec
 operator|==
 literal|0
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%c0.%06ld"
 argument_list|,
@@ -2984,9 +3025,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%ld.%06ld"
 argument_list|,
@@ -3542,16 +3588,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|timercmp
-argument_list|(
-operator|&
 name|toffset
-argument_list|,
-operator|&
-name|max_adj_offset
-argument_list|,
+operator|.
+name|tv_sec
+operator|||
+operator|(
+operator|!
+name|toffset
+operator|.
+name|tv_sec
+operator|&&
+name|toffset
+operator|.
+name|tv_usec
 operator|>
-argument_list|)
+name|max_adj_offset_usec
+operator|)
 condition|)
 block|{
 comment|/* 		 * hopeless - set the clock - and clear the timing 		 */
@@ -4638,188 +4690,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
-name|year
-operator|>=
-name|YEAR_PIVOT
-operator|+
-literal|1900
-condition|)
-block|{
-comment|/* check year % 100 code we put into dcf_to_unixtime() */
-name|ct
-operator|.
-name|year
-operator|=
-name|year
-operator|%
-literal|100
-expr_stmt|;
-name|Flag
-operator|=
-literal|0
-expr_stmt|;
-name|Observed
-operator|=
-name|dcf_to_unixtime
-argument_list|(
-operator|&
-name|ct
-argument_list|,
-operator|&
-name|Flag
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Observed
-operator|!=
-name|Expected
-operator|||
-name|Flag
-condition|)
-block|{
-comment|/* time difference */
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"%04d: dcf_to_unixtime(%d,%d) FAILURE: was=%lu s/b=%lu  (%ld)\n"
-argument_list|,
-name|year
-argument_list|,
-operator|(
-name|int
-operator|)
-name|ct
-operator|.
-name|year
-argument_list|,
-operator|(
-name|int
-operator|)
-name|Flag
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|Observed
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|Expected
-argument_list|,
-operator|(
-operator|(
-name|long
-operator|)
-name|Observed
-operator|-
-operator|(
-name|long
-operator|)
-name|Expected
-operator|)
-argument_list|)
-expr_stmt|;
-name|Error
-argument_list|(
-name|year
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-comment|/* check year - 1900 code we put into dcf_to_unixtime() */
-name|ct
-operator|.
-name|year
-operator|=
-name|year
-operator|-
-literal|1900
-expr_stmt|;
-name|Flag
-operator|=
-literal|0
-expr_stmt|;
-name|Observed
-operator|=
-name|dcf_to_unixtime
-argument_list|(
-operator|&
-name|ct
-argument_list|,
-operator|&
-name|Flag
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Observed
-operator|!=
-name|Expected
-operator|||
-name|Flag
-condition|)
-block|{
-comment|/* time difference */
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"%04d: dcf_to_unixtime(%d,%d) FAILURE: was=%lu s/b=%lu  (%ld)\n"
-argument_list|,
-name|year
-argument_list|,
-operator|(
-name|int
-operator|)
-name|ct
-operator|.
-name|year
-argument_list|,
-operator|(
-name|int
-operator|)
-name|Flag
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|Observed
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|Expected
-argument_list|,
-operator|(
-operator|(
-name|long
-operator|)
-name|Observed
-operator|-
-operator|(
-name|long
-operator|)
-name|Expected
-operator|)
-argument_list|)
-expr_stmt|;
-name|Error
-argument_list|(
-name|year
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
 block|}
 return|return
 operator|(
@@ -5696,19 +5566,16 @@ operator|=
 operator|(
 name|void
 argument_list|(
-argument|*
+operator|*
 argument_list|)
-name|P
 argument_list|(
-operator|(
 name|int
-operator|,
+argument_list|,
 name|siginfo_t
 operator|*
-operator|,
+argument_list|,
 name|void
 operator|*
-operator|)
 argument_list|)
 operator|)
 literal|0
@@ -6598,7 +6465,7 @@ name|clock_time
 operator|.
 name|flags
 operator|&
-name|DCFB_ALTERNATE
+name|DCFB_CALLBIT
 operator|)
 condition|?
 literal|"R"

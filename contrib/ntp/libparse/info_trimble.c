@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ntp_types.h"
 end_include
 
@@ -513,6 +519,10 @@ block|,
 literal|""
 block|,
 literal|""
+block|,
+literal|""
+block|,
+literal|0
 block|}
 block|}
 decl_stmt|;
@@ -1000,6 +1010,10 @@ block|,
 literal|""
 block|,
 literal|""
+block|,
+literal|""
+block|,
+literal|0
 block|}
 block|}
 decl_stmt|;

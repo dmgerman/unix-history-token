@@ -7,6 +7,23 @@ begin_comment
 comment|/*  * This can be used to get a rough idea of the HF propagation delay  * between two points (usually between you and the radio station).  * The usage is  *  * propdelay latitudeA longitudeA latitudeB longitudeB  *  * where points A and B are the locations in question.  You obviously  * need to know the latitude and longitude of each of the places.  * The program expects the latitude to be preceded by an 'n' or 's'  * and the longitude to be preceded by an 'e' or 'w'.  It understands  * either decimal degrees or degrees:minutes:seconds.  Thus to compute  * the delay between the WWVH (21:59:26N, 159:46:00W) and WWV (40:40:49N,  * 105:02:27W) you could use:  *  * propdelay n21:59:26 w159:46 n40:40:49 w105:02:27  *  * By default it prints out a summer (F2 average virtual height 350 km) and  * winter (F2 average virtual height 250 km) number.  The results will be  * quite approximate but are about as good as you can do with HF time anyway.  * You might pick a number between the values to use, or use the summer  * value in the summer and switch to the winter value when the static  * above 10 MHz starts to drop off in the fall.  You can also use the  * -h switch if you want to specify your own virtual height.  *  * You can also do a  *  * propdelay -W n45:17:47 w75:45:22  *  * to find the propagation delays to WWV and WWVH (from CHU in this  * case), a  *  * propdelay -C n40:40:49 w105:02:27  *  * to find the delays to CHU, and a  *  * propdelay -G n52:03:17 w98:34:18  *  * to find delays to GOES via each of the three satellites.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<config.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -422,13 +439,6 @@ name|progname
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|volatile
-name|int
-name|debug
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -620,6 +630,9 @@ name|lat3
 decl_stmt|,
 name|long3
 decl_stmt|;
+name|init_lib
+argument_list|()
+expr_stmt|;
 name|progname
 operator|=
 name|argv

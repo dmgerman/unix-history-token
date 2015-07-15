@@ -176,57 +176,48 @@ begin_comment
 comment|/*  * Function prototypes  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|tt560_start
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|tt560_shutdown
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|tt560_poll
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|unit
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Transfer vector  */
@@ -304,12 +295,14 @@ name|caddr_t
 name|membase
 decl_stmt|;
 comment|/* 	 * Open TT560 device 	 */
-operator|(
-name|void
-operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|device
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|device
+argument_list|)
 argument_list|,
 name|DEVICE
 argument_list|,
@@ -528,12 +521,6 @@ operator|->
 name|precision
 operator|=
 name|PRECISION
-expr_stmt|;
-name|peer
-operator|->
-name|burst
-operator|=
-name|NSTAGE
 expr_stmt|;
 name|pp
 operator|->
@@ -777,12 +764,19 @@ operator|->
 name|polls
 operator|++
 expr_stmt|;
-comment|/* 	 * We get down to business, check the timecode format and decode 	 * its contents. If the timecode has invalid length or is not in 	 * proper format, we declare bad format and exit. Note: we 	 * can't use the sec/usec conversion produced by the driver, 	 * since the year may be suspect. All format error checking is 	 * done by the sprintf() and sscanf() routines. 	 */
-name|sprintf
+comment|/* 	 * We get down to business, check the timecode format and decode 	 * its contents. If the timecode has invalid length or is not in 	 * proper format, we declare bad format and exit. Note: we 	 * can't use the sec/usec conversion produced by the driver, 	 * since the year may be suspect. All format error checking is 	 * done by the snprintf() and sscanf() routines. 	 */
+name|snprintf
 argument_list|(
 name|pp
 operator|->
 name|a_lastcode
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pp
+operator|->
+name|a_lastcode
+argument_list|)
 argument_list|,
 literal|"%1x%1x%1x %1x%1x:%1x%1x:%1x%1x.%1x%1x%1x%1x%1x%1x %1x"
 argument_list|,
@@ -987,15 +981,6 @@ return|return;
 block|}
 if|if
 condition|(
-name|peer
-operator|->
-name|burst
-operator|>
-literal|0
-condition|)
-return|return;
-if|if
-condition|(
 name|pp
 operator|->
 name|coderecv
@@ -1030,12 +1015,6 @@ name|refclock_receive
 argument_list|(
 name|peer
 argument_list|)
-expr_stmt|;
-name|peer
-operator|->
-name|burst
-operator|=
-name|NSTAGE
 expr_stmt|;
 block|}
 end_function

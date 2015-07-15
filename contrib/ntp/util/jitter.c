@@ -41,26 +41,15 @@ end_include
 begin_include
 include|#
 directive|include
-file|"jitter.h"
+file|"ntp_fp.h"
 end_include
 
 begin_define
 define|#
 directive|define
 name|NBUF
-value|80002
+value|800002
 end_define
-
-begin_define
-define|#
-directive|define
-name|FRAC
-value|4294967296.
-end_define
-
-begin_comment
-comment|/* a bbbbillion */
-end_comment
 
 begin_define
 define|#
@@ -82,12 +71,6 @@ end_define
 begin_comment
 comment|/* Solaris hires clock */
 end_comment
-
-begin_decl_stmt
-name|int
-name|debug
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
