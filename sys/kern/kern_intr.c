@@ -6103,12 +6103,14 @@ block|}
 comment|/* 		 * Service interrupts.  If another interrupt arrives while 		 * we are running, it will set it_need to note that we 		 * should make another pass. 		 */
 while|while
 condition|(
-name|atomic_swap_int
+name|atomic_cmpset_int
 argument_list|(
 operator|&
 name|ithd
 operator|->
 name|it_need
+argument_list|,
+literal|1
 argument_list|,
 literal|0
 argument_list|)
@@ -6765,12 +6767,14 @@ block|}
 comment|/* 		 * Service interrupts.  If another interrupt arrives while 		 * we are running, it will set it_need to note that we 		 * should make another pass. 		 */
 while|while
 condition|(
-name|atomic_swap_int
+name|atomic_cmpset_int
 argument_list|(
 operator|&
 name|ithd
 operator|->
 name|it_need
+argument_list|,
+literal|1
 argument_list|,
 literal|0
 argument_list|)
