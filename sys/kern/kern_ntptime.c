@@ -404,7 +404,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* time at last adjustment (s) */
+comment|/* uptime at last adjustment (s) */
 end_comment
 
 begin_decl_stmt
@@ -2520,7 +2520,7 @@ condition|)
 block|{
 name|time_reftime
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 return|return;
 block|}
@@ -2536,11 +2536,11 @@ literal|0
 condition|)
 name|time_reftime
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|mtemp
 operator|=
-name|time_second
+name|time_uptime
 operator|-
 name|time_reftime
 expr_stmt|;
@@ -2638,7 +2638,7 @@ expr_stmt|;
 block|}
 name|time_reftime
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 if|if
 condition|(
