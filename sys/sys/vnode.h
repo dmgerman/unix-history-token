@@ -147,7 +147,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  *  * Lock reference:  *	c - namecache mutex  *	f - freelist mutex  *	i - interlock  *	m - mount point interlock  *	p - pollinfo lock  *	u - Only a reference to the vnode is needed to read.  *	v - vnode lock  *  * Vnodes may be found on many lists.  The general way to deal with operating  * on a vnode that is on a list is:  *	1) Lock the list and find the vnode.  *	2) Lock interlock so that the vnode does not go away.  *	3) Unlock the list to avoid lock order reversals.  *	4) vget with LK_INTERLOCK and check for ENOENT, or  *	5) Check for DOOMED if the vnode lock is not required.  *	6) Perform your operation, then vput().  */
+comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  *  * Lock reference:  *	c - namecache mutex  *	f - freelist mutex  *	i - interlock  *	I - updated with atomics, 0->1 and 1->0 transitions with interlock held  *	m - mount point interlock  *	p - pollinfo lock  *	u - Only a reference to the vnode is needed to read.  *	v - vnode lock  *  * Vnodes may be found on many lists.  The general way to deal with operating  * on a vnode that is on a list is:  *	1) Lock the list and find the vnode.  *	2) Lock interlock so that the vnode does not go away.  *	3) Unlock the list to avoid lock order reversals.  *	4) vget with LK_INTERLOCK and check for ENOENT, or  *	5) Check for DOOMED if the vnode lock is not required.  *	6) Perform your operation, then vput().  */
 end_comment
 
 begin_if
@@ -331,14 +331,14 @@ name|int
 name|v_clen
 decl_stmt|;
 comment|/* v length of cur. cluster */
-name|int
+name|u_int
 name|v_holdcnt
 decl_stmt|;
-comment|/* i prevents recycling. */
-name|int
+comment|/* I prevents recycling. */
+name|u_int
 name|v_usecount
 decl_stmt|;
-comment|/* i ref count of users */
+comment|/* I ref count of users */
 name|u_int
 name|v_iflag
 decl_stmt|;
@@ -3182,24 +3182,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
+begin_define
+define|#
+directive|define
 name|vdrop
 parameter_list|(
-name|struct
-name|vnode
-modifier|*
+name|vp
 parameter_list|)
-function_decl|;
-end_function_decl
+value|_vdrop((vp), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vdropl
+parameter_list|(
+name|vp
+parameter_list|)
+value|_vdrop((vp), 1)
+end_define
 
 begin_function_decl
 name|void
-name|vdropl
+name|_vdrop
 parameter_list|(
 name|struct
 name|vnode
 modifier|*
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3259,24 +3270,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
+begin_define
+define|#
+directive|define
 name|vhold
 parameter_list|(
-name|struct
-name|vnode
-modifier|*
+name|vp
 parameter_list|)
-function_decl|;
-end_function_decl
+value|_vhold((vp), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vholdl
+parameter_list|(
+name|vp
+parameter_list|)
+value|_vhold((vp), 1)
+end_define
 
 begin_function_decl
 name|void
-name|vholdl
+name|_vhold
 parameter_list|(
 name|struct
 name|vnode
 modifier|*
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
