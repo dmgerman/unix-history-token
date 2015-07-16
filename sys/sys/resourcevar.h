@@ -844,18 +844,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-name|void
-name|lim_update_thread
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

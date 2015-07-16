@@ -423,18 +423,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cred_update_thread
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|proc_set_cred_init
 parameter_list|(
 name|struct
