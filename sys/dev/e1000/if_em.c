@@ -29606,7 +29606,17 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|EM_CORE_LOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 name|em_init_locked
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|EM_CORE_UNLOCK
 argument_list|(
 name|adapter
 argument_list|)
