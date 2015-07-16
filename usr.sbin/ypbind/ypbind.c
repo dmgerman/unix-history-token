@@ -501,6 +501,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|domain_name
@@ -508,6 +509,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|_dom_binding
 modifier|*
@@ -546,6 +548,7 @@ value|2
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ypsetmode
 init|=
@@ -554,6 +557,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ypsecuremode
 init|=
@@ -562,6 +566,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ppid
 decl_stmt|;
@@ -595,6 +600,7 @@ value|10
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|yp_restricted
 init|=
@@ -603,6 +609,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|yp_manycast
 init|=
@@ -611,6 +618,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|in_addr
 name|restricted_addrs
@@ -709,6 +717,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|int
 name|retries
 init|=
@@ -717,6 +726,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|children
 init|=
@@ -725,6 +735,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|domains
 init|=
@@ -733,18 +744,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|yplockfd
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|fd_set
 name|fdsr
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|SVCXPRT
 modifier|*
 name|udptransp
@@ -795,6 +809,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|ypbind_resp
 modifier|*
@@ -1129,11 +1144,8 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Success */
-operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
+name|memcpy
+argument_list|(
 operator|&
 name|res
 operator|.
@@ -1142,7 +1154,8 @@ operator|.
 name|ypbind_bindinfo
 operator|.
 name|ypbind_binding_addr
-operator|=
+argument_list|,
+operator|&
 name|ypdb
 operator|->
 name|dom_server_addr
@@ -1150,12 +1163,15 @@ operator|.
 name|sin_addr
 operator|.
 name|s_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+argument_list|)
 expr_stmt|;
-operator|*
-operator|(
-name|u_short
-operator|*
-operator|)
+name|memcpy
+argument_list|(
 operator|&
 name|res
 operator|.
@@ -1164,12 +1180,19 @@ operator|.
 name|ypbind_bindinfo
 operator|.
 name|ypbind_binding_port
-operator|=
+argument_list|,
+operator|&
 name|ypdb
 operator|->
 name|dom_server_addr
 operator|.
 name|sin_port
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|u_short
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/*printf("domain %s at %s/%d\n", ypdb->dom_domain, 		inet_ntoa(ypdb->dom_server_addr.sin_addr), 		ntohs(ypdb->dom_server_addr.sin_port));*/
 return|return
@@ -1360,37 +1383,47 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
 name|bindsin
 operator|.
 name|sin_addr
 operator|.
 name|s_addr
-operator|=
-operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
+argument_list|,
+operator|&
 name|argp
 operator|->
 name|ypsetdom_binding
 operator|.
 name|ypbind_binding_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+argument_list|)
 expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
 name|bindsin
 operator|.
 name|sin_port
-operator|=
-operator|*
-operator|(
-name|u_short
-operator|*
-operator|)
+argument_list|,
+operator|&
 name|argp
 operator|->
 name|ypsetdom_binding
 operator|.
 name|ypbind_binding_port
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|u_short
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|rpc_received
 argument_list|(
@@ -3056,22 +3089,19 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|bool_t
 name|broadcast_result
 parameter_list|(
-name|out
-parameter_list|,
-name|addr
-parameter_list|)
 name|bool_t
 modifier|*
 name|out
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr_in
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4601,11 +4631,8 @@ name|ypbind_status
 operator|=
 name|YPBIND_SUCC_VAL
 expr_stmt|;
-operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
+name|memcpy
+argument_list|(
 operator|&
 name|ybr
 operator|.
@@ -4614,18 +4641,22 @@ operator|.
 name|ypbind_bindinfo
 operator|.
 name|ypbind_binding_addr
-operator|=
+argument_list|,
+operator|&
 name|raddrp
 operator|->
 name|sin_addr
 operator|.
 name|s_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+argument_list|)
 expr_stmt|;
-operator|*
-operator|(
-name|u_short
-operator|*
-operator|)
+name|memcpy
+argument_list|(
 operator|&
 name|ybr
 operator|.
@@ -4634,10 +4665,17 @@ operator|.
 name|ypbind_bindinfo
 operator|.
 name|ypbind_binding_port
-operator|=
+argument_list|,
+operator|&
 name|raddrp
 operator|->
 name|sin_port
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|u_short
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
