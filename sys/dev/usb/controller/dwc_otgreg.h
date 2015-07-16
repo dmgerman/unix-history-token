@@ -155,6 +155,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|DOTG_GSNPSID_REV_2_80a
+value|0x4f54280a
+end_define
+
+begin_comment
+comment|/* RPi model B/RPi2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOTG_GSNPSID_REV_3_10a
+value|0x4f54310a
+end_define
+
+begin_comment
+comment|/* ODROID-C1 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DOTG_GHWCFG1
 value|0x0044
 end_define
