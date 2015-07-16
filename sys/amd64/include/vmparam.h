@@ -209,14 +209,14 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * Create two free page lists: VM_FREELIST_DEFAULT is for physical  * pages that are above the largest physical address that is  * accessible by ISA DMA and VM_FREELIST_ISADMA is for physical pages  * that are below that address.  */
+comment|/*  * Create up to three free page lists: VM_FREELIST_DMA32 is for physical pages  * that have physical addresses below 4G but are not accessible by ISA DMA,  * and VM_FREELIST_ISADMA is for physical pages that are accessible by ISA  * DMA.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VM_NFREELIST
-value|2
+value|3
 end_define
 
 begin_define
@@ -229,8 +229,26 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_FREELIST_ISADMA
+name|VM_FREELIST_DMA32
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FREELIST_ISADMA
+value|2
+end_define
+
+begin_comment
+comment|/*  * Create the DMA32 free list only if the number of physical pages above  * physical address 4G is at least 16M, which amounts to 64GB of physical  * memory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_DMA32_NPAGES_THRESHOLD
+value|16777216
 end_define
 
 begin_comment
