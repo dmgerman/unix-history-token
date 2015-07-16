@@ -1540,10 +1540,9 @@ name|vm_page_t
 name|m
 decl_stmt|;
 name|vm_offset_t
-name|offset
-decl_stmt|;
-name|int
 name|i
+decl_stmt|,
+name|offset
 decl_stmt|;
 name|KASSERT
 argument_list|(
