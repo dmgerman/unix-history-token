@@ -95,6 +95,22 @@ directive|include
 file|<netinet/tcp.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|TCPSTATES
+end_define
+
+begin_comment
+comment|/* load state names */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_fsm.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -282,6 +298,17 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|opt_s
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Show protocol state if applicable */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|opt_u
 decl_stmt|;
 end_decl_stmt
@@ -435,6 +462,9 @@ name|family
 decl_stmt|;
 name|int
 name|proto
+decl_stmt|;
+name|int
+name|state
 decl_stmt|;
 specifier|const
 name|char
@@ -2939,8 +2969,12 @@ name|hash
 decl_stmt|,
 name|retry
 decl_stmt|,
+name|state
+decl_stmt|,
 name|vflag
 decl_stmt|;
+name|state
+operator|=
 name|vflag
 operator|=
 literal|0
@@ -3302,6 +3336,14 @@ condition|?
 literal|"toe"
 else|:
 literal|"tcp"
+expr_stmt|;
+name|state
+operator|=
+name|xtp
+operator|->
+name|xt_tp
+operator|.
+name|t_state
 expr_stmt|;
 break|break;
 case|case
@@ -3761,6 +3803,22 @@ operator|=
 name|inp
 operator|->
 name|inp_vflag
+expr_stmt|;
+if|if
+condition|(
+name|proto
+operator|==
+name|IPPROTO_TCP
+condition|)
+name|sock
+operator|->
+name|state
+operator|=
+name|xtp
+operator|->
+name|xt_tp
+operator|.
+name|t_state
 expr_stmt|;
 name|sock
 operator|->
@@ -5710,11 +5768,67 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|opt_s
+operator|&&
+name|s
+operator|->
+name|proto
+operator|==
+name|IPPROTO_TCP
+condition|)
+block|{
+while|while
+condition|(
+name|pos
+operator|<
+literal|80
+condition|)
+name|pos
+operator|+=
 name|xprintf
 argument_list|(
-literal|"\n"
+literal|" "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|state
+operator|>=
+literal|0
+operator|&&
+name|s
+operator|->
+name|state
+operator|<
+name|TCP_NSTATES
+condition|)
+name|pos
+operator|+=
+name|xprintf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|tcpstates
+index|[
+name|s
+operator|->
+name|state
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|pos
+operator|+=
+name|xprintf
+argument_list|(
+literal|"?"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -5750,7 +5864,7 @@ name|pos
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%-8s %-10s %-5s %-2s %-6s %-21s %-21s\n"
+literal|"%-8s %-10s %-5s %-2s %-6s %-21s %-21s"
 argument_list|,
 literal|"USER"
 argument_list|,
@@ -5765,6 +5879,22 @@ argument_list|,
 literal|"LOCAL ADDRESS"
 argument_list|,
 literal|"FOREIGN ADDRESS"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|opt_s
+condition|)
+name|printf
+argument_list|(
+literal|" %-12s"
+argument_list|,
+literal|"STATE"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|setpassent
@@ -6014,6 +6144,11 @@ argument_list|,
 name|pos
 argument_list|)
 expr_stmt|;
+name|xprintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -6097,6 +6232,11 @@ argument_list|(
 name|s
 argument_list|,
 name|pos
+argument_list|)
+expr_stmt|;
+name|xprintf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6207,7 +6347,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: sockstat [-46cLlu] [-j jid] [-p ports] [-P protocols]\n"
+literal|"usage: sockstat [-46cLlsu] [-j jid] [-p ports] [-P protocols]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6258,7 +6398,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46cj:Llp:P:uv"
+literal|"46cj:Llp:P:suv"
 argument_list|)
 operator|)
 operator|!=
@@ -6339,6 +6479,14 @@ name|parse_protos
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|opt_s
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
