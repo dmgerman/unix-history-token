@@ -131,17 +131,13 @@ begin_comment
 comment|// #define	SA_FW_TEST_INTERRUPT_REASSERT
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SALLSDK_DEBUG
-end_define
+begin_comment
+comment|// #define	SALLSDK_DEBUG
+end_comment
 
-begin_define
-define|#
-directive|define
-name|AGTIAPI_DEBUG
-end_define
+begin_comment
+comment|// #define	AGTIAPI_DEBUG
+end_comment
 
 begin_comment
 comment|// #define	TD_DEBUG_ENABLE
@@ -165,11 +161,9 @@ directive|define
 name|PMC_PM8001_BAR64KB
 end_define
 
-begin_define
-define|#
-directive|define
-name|DM_DEBUG
-end_define
+begin_comment
+comment|// #define	DM_DEBUG
+end_comment
 
 begin_define
 define|#
@@ -177,11 +171,9 @@ directive|define
 name|FDS_DM
 end_define
 
-begin_define
-define|#
-directive|define
-name|SM_DEBUG
-end_define
+begin_comment
+comment|// #define	SM_DEBUG
+end_comment
 
 begin_define
 define|#
