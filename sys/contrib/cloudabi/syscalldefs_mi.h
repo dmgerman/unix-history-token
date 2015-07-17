@@ -1250,6 +1250,17 @@ value|0x8
 end_define
 
 begin_comment
+comment|// File descriptor that must be passed in when using CLOUDABI_MAP_ANON.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_MAP_ANON_FD
+value|0xffffffff
+end_define
+
+begin_comment
 comment|// msync() flags.
 end_comment
 
