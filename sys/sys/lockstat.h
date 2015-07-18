@@ -606,6 +606,12 @@ begin_comment
 comment|/*  * The following must match the type definition of dtrace_probe.  It is  * defined this way to avoid having to rely on CDDL code.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|lock_object
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 specifier|extern
 name|uint32_t
@@ -656,7 +662,9 @@ specifier|extern
 name|uint64_t
 name|lockstat_nsecs
 parameter_list|(
-name|void
+name|struct
+name|lock_object
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
