@@ -1538,6 +1538,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ix.enable_aim"
+argument_list|,
+operator|&
+name|ixgbe_enable_aim
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_ix
@@ -1570,6 +1581,17 @@ name|IXGBE_LOW_LATENCY
 operator|)
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ix.max_interrupt_rate"
+argument_list|,
+operator|&
+name|ixgbe_max_interrupt_rate
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -1711,6 +1733,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ix.enable_msix"
+argument_list|,
+operator|&
+name|ixgbe_enable_msix
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_ix
@@ -1743,6 +1776,17 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ix.num_queues"
+argument_list|,
+operator|&
+name|ixgbe_num_queues
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -1780,6 +1824,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ix.txd"
+argument_list|,
+operator|&
+name|ixgbe_txd
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_ix
@@ -1812,6 +1867,17 @@ init|=
 name|PERFORM_RXD
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ix.rxd"
+argument_list|,
+operator|&
+name|ixgbe_rxd
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
