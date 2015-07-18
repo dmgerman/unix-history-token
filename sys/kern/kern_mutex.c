@@ -2894,6 +2894,9 @@ name|line
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
 if|if
 condition|(
 name|spin_time
@@ -2909,6 +2912,8 @@ argument_list|,
 name|spin_time
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
