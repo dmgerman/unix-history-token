@@ -66,6 +66,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|int
+name|lockstat_enabled
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|uint64_t
 name|lockstat_nsecs
@@ -80,6 +88,16 @@ decl_stmt|;
 name|uint64_t
 name|ns
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|lockstat_enabled
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|binuptime
 argument_list|(
 operator|&
