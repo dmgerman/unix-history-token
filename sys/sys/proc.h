@@ -2693,15 +2693,19 @@ name|pid_t
 name|p_reapsubtree
 decl_stmt|;
 comment|/* (e) Pid of the direct child of the 					       reaper which spawned 					       our subtree. */
+name|u_int
+name|p_xexit
+decl_stmt|;
+comment|/* (c) Exit code. */
+name|u_int
+name|p_xsig
+decl_stmt|;
+comment|/* (c) Stop/kill sig. */
 comment|/* End area that is copied on creation. */
 define|#
 directive|define
 name|p_endcopy
-value|p_xstat
-name|u_short
-name|p_xstat
-decl_stmt|;
-comment|/* (c) Exit status; also stop sig. */
+value|p_xsig
 name|struct
 name|knlist
 name|p_klist
@@ -5545,6 +5549,8 @@ argument_list|(
 expr|struct
 name|thread
 operator|*
+argument_list|,
+name|int
 argument_list|,
 name|int
 argument_list|)

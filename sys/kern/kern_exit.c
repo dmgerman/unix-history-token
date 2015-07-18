@@ -805,14 +805,11 @@ name|exit1
 argument_list|(
 name|td
 argument_list|,
-name|W_EXITCODE
-argument_list|(
 name|uap
 operator|->
 name|rval
 argument_list|,
 literal|0
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -833,7 +830,10 @@ modifier|*
 name|td
 parameter_list|,
 name|int
-name|rv
+name|rval
+parameter_list|,
+name|int
+name|signo
 parameter_list|)
 block|{
 name|struct
@@ -870,6 +870,25 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|rval
+operator|==
+literal|0
+operator|||
+name|signo
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"exit1 rv %d sig %d"
+operator|,
+name|rval
+operator|,
+name|signo
+operator|)
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|td
@@ -892,15 +911,9 @@ name|printf
 argument_list|(
 literal|"init died (signal %d, exit %d)\n"
 argument_list|,
-name|WTERMSIG
-argument_list|(
-name|rv
-argument_list|)
+name|signo
 argument_list|,
-name|WEXITSTATUS
-argument_list|(
-name|rv
-argument_list|)
+name|rval
 argument_list|)
 expr_stmt|;
 name|panic
@@ -988,6 +1001,19 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Let event handler change exit status */
+name|p
+operator|->
+name|p_xexit
+operator|=
+name|rval
+expr_stmt|;
+name|p
+operator|->
+name|p_xsig
+operator|=
+name|signo
+expr_stmt|;
 comment|/* 	 * Wakeup anyone in procfs' PIOCWAIT.  They should have a hold 	 * on our vmspace, so we should block below until they have 	 * released their reference to us.  Note that if they have 	 * requested S_EXIT stops we will block here until they ack 	 * via PIOCCONT. 	 */
 name|_STOPEVENT
 argument_list|(
@@ -995,7 +1021,7 @@ name|p
 argument_list|,
 name|S_EXIT
 argument_list|,
-name|rv
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Ignore any pending request to stop due to a stop signal. 	 * Once P_WEXIT is set, future requests will be ignored as 	 * well. 	 */
@@ -1062,13 +1088,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|p
-operator|->
-name|p_xstat
-operator|=
-name|rv
-expr_stmt|;
-comment|/* Let event handler change exit status */
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -1089,10 +1108,7 @@ name|AUDIT
 comment|/* 	 * The Sun BSM exit token contains two components: an exit status as 	 * passed to exit(), and a return value to indicate what sort of exit 	 * it was.  The exit status is WEXITSTATUS(rv), but it's not clear 	 * what the return value is. 	 */
 name|AUDIT_ARG_EXIT
 argument_list|(
-name|WEXITSTATUS
-argument_list|(
-name|rv
-argument_list|)
+name|rval
 argument_list|,
 literal|0
 argument_list|)
@@ -1194,7 +1210,7 @@ name|ppeers_lock
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Check if any loadable modules need anything done at process exit. 	 * E.g. SYSV IPC stuff 	 * XXX what if one of these generates an error? 	 */
+comment|/* 	 * Check if any loadable modules need anything done at process exit. 	 * E.g. SYSV IPC stuff. 	 * Event handler could change exit status. 	 * XXX what if one of these generates an error? 	 */
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|process_exit
@@ -1208,13 +1224,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|rv
-operator|=
-name|p
-operator|->
-name|p_xstat
-expr_stmt|;
-comment|/* Event handler could change exit status */
 name|stopprofclock
 argument_list|(
 name|p
@@ -2017,7 +2026,7 @@ if|if
 condition|(
 name|WCOREDUMP
 argument_list|(
-name|rv
+name|signo
 argument_list|)
 condition|)
 name|reason
@@ -2029,7 +2038,7 @@ if|if
 condition|(
 name|WIFSIGNALED
 argument_list|(
-name|rv
+name|signo
 argument_list|)
 condition|)
 name|reason
@@ -2730,12 +2739,9 @@ name|exit1
 argument_list|(
 name|td
 argument_list|,
-name|W_EXITCODE
-argument_list|(
 literal|0
 argument_list|,
 name|sig
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3266,11 +3272,17 @@ condition|)
 operator|*
 name|status
 operator|=
+name|KW_EXITCODE
+argument_list|(
 name|p
 operator|->
-name|p_xstat
+name|p_xexit
+argument_list|,
+name|p
+operator|->
+name|p_xsig
+argument_list|)
 expr_stmt|;
-comment|/* convert to int */
 if|if
 condition|(
 name|options
@@ -3516,7 +3528,11 @@ expr_stmt|;
 comment|/* 	 * Removal from allproc list and process group list paired with 	 * PROC_LOCK which was executed during that time should guarantee 	 * nothing can reach this process anymore. As such further locking 	 * is unnecessary. 	 */
 name|p
 operator|->
-name|p_xstat
+name|p_xexit
+operator|=
+name|p
+operator|->
+name|p_xsig
 operator|=
 literal|0
 expr_stmt|;
@@ -4096,7 +4112,7 @@ name|WCOREDUMP
 argument_list|(
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 argument_list|)
 condition|)
 block|{
@@ -4114,7 +4130,7 @@ name|WTERMSIG
 argument_list|(
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 argument_list|)
 expr_stmt|;
 block|}
@@ -4125,7 +4141,7 @@ name|WIFSIGNALED
 argument_list|(
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 argument_list|)
 condition|)
 block|{
@@ -4143,7 +4159,7 @@ name|WTERMSIG
 argument_list|(
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 argument_list|)
 expr_stmt|;
 block|}
@@ -4159,12 +4175,9 @@ name|siginfo
 operator|->
 name|si_status
 operator|=
-name|WEXITSTATUS
-argument_list|(
 name|p
 operator|->
-name|p_xstat
-argument_list|)
+name|p_xexit
 expr_stmt|;
 block|}
 name|siginfo
@@ -4868,7 +4881,7 @@ name|W_STOPCODE
 argument_list|(
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 argument_list|)
 expr_stmt|;
 if|if
@@ -4884,7 +4897,7 @@ name|si_status
 operator|=
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 expr_stmt|;
 name|siginfo
 operator|->
@@ -4936,12 +4949,12 @@ name|W_STOPCODE
 argument_list|(
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 argument_list|)
 argument_list|,
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 argument_list|,
 name|p
 operator|->
@@ -5062,7 +5075,7 @@ name|W_STOPCODE
 argument_list|(
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 argument_list|)
 expr_stmt|;
 if|if
@@ -5078,7 +5091,7 @@ name|si_status
 operator|=
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 expr_stmt|;
 name|siginfo
 operator|->

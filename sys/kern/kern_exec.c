@@ -3968,12 +3968,9 @@ name|exit1
 argument_list|(
 name|td
 argument_list|,
-name|W_EXITCODE
-argument_list|(
 literal|0
 argument_list|,
 name|SIGABRT
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* NOT REACHED */

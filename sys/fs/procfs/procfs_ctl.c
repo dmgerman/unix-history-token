@@ -543,7 +543,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 operator|=
 literal|0
 expr_stmt|;
@@ -698,7 +698,7 @@ directive|endif
 comment|/* 	 * Don't deliver any signal by default. 	 * To continue with a signal, just send 	 * the signal name to the ctl file 	 */
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 operator|=
 literal|0
 expr_stmt|;
@@ -1288,7 +1288,7 @@ condition|)
 block|{
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 operator|=
 name|nm
 operator|->

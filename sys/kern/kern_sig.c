@@ -11301,7 +11301,7 @@ name|P_CONTINUED
 expr_stmt|;
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 operator|=
 name|SIGCONT
 expr_stmt|;
@@ -11563,7 +11563,7 @@ name|P_STOPPED_SIG
 expr_stmt|;
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 operator|=
 name|sig
 expr_stmt|;
@@ -11609,7 +11609,7 @@ name|p
 argument_list|,
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 argument_list|)
 expr_stmt|;
 block|}
@@ -12282,7 +12282,7 @@ block|}
 comment|/* 		 * Just make wait() to work, the last stopped thread 		 * will win. 		 */
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 operator|=
 name|sig
 expr_stmt|;
@@ -13153,7 +13153,7 @@ operator|!=
 name|newsig
 condition|)
 block|{
-comment|/* 				 * If parent wants us to take the signal, 				 * then it will leave it in p->p_xstat; 				 * otherwise we just look for signals again. 				*/
+comment|/* 				 * If parent wants us to take the signal, 				 * then it will leave it in p->p_xsig; 				 * otherwise we just look for signals again. 				*/
 if|if
 condition|(
 name|newsig
@@ -13413,7 +13413,7 @@ name|P_STOPPED_SIG
 expr_stmt|;
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 operator|=
 name|sig
 expr_stmt|;
@@ -14261,12 +14261,9 @@ name|exit1
 argument_list|(
 name|td
 argument_list|,
-name|W_EXITCODE
-argument_list|(
 literal|0
 argument_list|,
 name|sig
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -14518,7 +14515,6 @@ name|int
 name|reason
 parameter_list|)
 block|{
-comment|/* p_xstat is a plain signal number, not a full wait() status here. */
 name|childproc_jobstate
 argument_list|(
 name|p
@@ -14527,7 +14523,7 @@ name|reason
 argument_list|,
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 argument_list|)
 expr_stmt|;
 block|}
@@ -14567,67 +14563,71 @@ parameter_list|)
 block|{
 name|int
 name|reason
-decl_stmt|;
-name|int
-name|xstat
-init|=
-name|p
-operator|->
-name|p_xstat
-decl_stmt|;
-comment|/* convert to int */
-name|int
+decl_stmt|,
 name|status
 decl_stmt|;
 if|if
 condition|(
 name|WCOREDUMP
 argument_list|(
-name|xstat
+name|p
+operator|->
+name|p_xsig
 argument_list|)
 condition|)
+block|{
 name|reason
 operator|=
 name|CLD_DUMPED
-operator|,
+expr_stmt|;
 name|status
 operator|=
 name|WTERMSIG
 argument_list|(
-name|xstat
+name|p
+operator|->
+name|p_xsig
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
 name|WIFSIGNALED
 argument_list|(
-name|xstat
+name|p
+operator|->
+name|p_xsig
 argument_list|)
 condition|)
+block|{
 name|reason
 operator|=
 name|CLD_KILLED
-operator|,
+expr_stmt|;
 name|status
 operator|=
 name|WTERMSIG
 argument_list|(
-name|xstat
+name|p
+operator|->
+name|p_xsig
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|reason
 operator|=
 name|CLD_EXITED
-operator|,
+expr_stmt|;
 name|status
 operator|=
-name|WEXITSTATUS
-argument_list|(
-name|xstat
-argument_list|)
+name|p
+operator|->
+name|p_xexit
 expr_stmt|;
+block|}
 comment|/* 	 * XXX avoid calling wakeup(p->p_pptr), the work is 	 * done in exit1(). 	 */
 name|sigparent
 argument_list|(

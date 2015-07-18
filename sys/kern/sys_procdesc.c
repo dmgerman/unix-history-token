@@ -1026,9 +1026,16 @@ name|pd
 operator|->
 name|pd_xstat
 operator|=
+name|KW_EXITCODE
+argument_list|(
 name|p
 operator|->
-name|p_xstat
+name|p_xexit
+argument_list|,
+name|p
+operator|->
+name|p_xsig
+argument_list|)
 expr_stmt|;
 comment|/* 	 * If the process descriptor has been closed, then we have nothing 	 * to do; return 1 so that init will get SIGCHLD and do the reaping. 	 * Clean up the procdesc now rather than letting it happen during 	 * that reap. 	 */
 if|if

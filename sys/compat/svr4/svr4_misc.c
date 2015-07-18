@@ -5700,9 +5700,16 @@ name|p_pid
 expr_stmt|;
 name|status
 operator|=
+name|KW_EXITCODE
+argument_list|(
 name|p
 operator|->
-name|p_xstat
+name|p_xexit
+argument_list|,
+name|p
+operator|->
+name|p_xsig
+argument_list|)
 expr_stmt|;
 name|ru
 operator|=
@@ -5868,7 +5875,7 @@ name|W_STOPCODE
 argument_list|(
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 argument_list|)
 expr_stmt|;
 name|ru

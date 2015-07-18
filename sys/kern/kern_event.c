@@ -2146,9 +2146,16 @@ name|kn
 operator|->
 name|kn_data
 operator|=
+name|KW_EXITCODE
+argument_list|(
 name|p
 operator|->
-name|p_xstat
+name|p_xexit
+argument_list|,
+name|p
+operator|->
+name|p_xsig
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

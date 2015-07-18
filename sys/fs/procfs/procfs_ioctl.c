@@ -579,7 +579,7 @@ name|p_step
 condition|?
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 else|:
 literal|0
 expr_stmt|;
@@ -715,7 +715,7 @@ name|p_step
 condition|?
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 else|:
 literal|0
 expr_stmt|;
@@ -821,7 +821,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|p->p_step = 0; 		if (P_SHOULDSTOP(p)) { 			p->p_xstat = sig; 			p->p_flag&= ~(P_STOPPED_TRACE|P_STOPPED_SIG); 			PROC_SLOCK(p); 			thread_unsuspend(p); 			PROC_SUNLOCK(p); 		} else if (sig) 			kern_psignal(p, sig);
+block|p->p_step = 0; 		if (P_SHOULDSTOP(p)) { 			p->p_xsig = sig; 			p->p_flag&= ~(P_STOPPED_TRACE|P_STOPPED_SIG); 			PROC_SLOCK(p); 			thread_unsuspend(p); 			PROC_SUNLOCK(p); 		} else if (sig) 			kern_psignal(p, sig);
 else|#
 directive|else
 if|if

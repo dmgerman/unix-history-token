@@ -168,14 +168,11 @@ name|exit1
 argument_list|(
 name|td
 argument_list|,
-name|W_EXITCODE
-argument_list|(
 name|uap
 operator|->
 name|rval
 argument_list|,
 literal|0
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
