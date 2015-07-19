@@ -743,15 +743,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|error
 operator|==
 name|ERESTART
-operator||
+operator|||
 name|error
 operator|==
 name|EINTR
-operator|)
 condition|)
 break|break;
 block|}
