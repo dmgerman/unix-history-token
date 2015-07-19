@@ -379,6 +379,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|LOCKSTAT_PROFILE_OBTAIN_RWLOCK_SUCCESS
+parameter_list|(
+name|probe
+parameter_list|,
+name|lp
+parameter_list|,
+name|c
+parameter_list|,
+name|wt
+parameter_list|,
+name|f
+parameter_list|,
+name|l
+parameter_list|,
+name|a
+parameter_list|)
+value|do { \ 	lock_profile_obtain_lock_success(&(lp)->lock_object, c, wt, f, l); \ 	LOCKSTAT_RECORD1(probe, lp, a);					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LOCKSTAT_PROFILE_RELEASE_LOCK
 parameter_list|(
 name|probe
@@ -386,6 +408,20 @@ parameter_list|,
 name|lp
 parameter_list|)
 value|do {			\ 	lock_profile_release_lock(&(lp)->lock_object);			\ 	LOCKSTAT_RECORD0(probe, lp);					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCKSTAT_PROFILE_RELEASE_RWLOCK
+parameter_list|(
+name|probe
+parameter_list|,
+name|lp
+parameter_list|,
+name|a
+parameter_list|)
+value|do {		\ 	lock_profile_release_lock(&(lp)->lock_object);			\ 	LOCKSTAT_RECORD1(probe, lp, a);					\ } while (0)
 end_define
 
 begin_decl_stmt
@@ -402,7 +438,6 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-specifier|extern
 name|uint64_t
 name|lockstat_nsecs
 parameter_list|(
@@ -521,6 +556,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|LOCKSTAT_PROFILE_OBTAIN_RWLOCK_SUCCESS
+parameter_list|(
+name|probe
+parameter_list|,
+name|lp
+parameter_list|,
+name|c
+parameter_list|,
+name|wt
+parameter_list|,
+name|f
+parameter_list|,
+name|l
+parameter_list|,
+name|a
+parameter_list|)
+define|\
+value|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(probe, lp, c, wt, f, l)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LOCKSTAT_PROFILE_RELEASE_LOCK
 parameter_list|(
 name|probe
@@ -529,6 +587,21 @@ name|lp
 parameter_list|)
 define|\
 value|lock_profile_release_lock(&(lp)->lock_object)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCKSTAT_PROFILE_RELEASE_RWLOCK
+parameter_list|(
+name|probe
+parameter_list|,
+name|lp
+parameter_list|,
+name|a
+parameter_list|)
+define|\
+value|LOCKSTAT_PROFILE_RELEASE_LOCK(probe, lp)
 end_define
 
 begin_endif

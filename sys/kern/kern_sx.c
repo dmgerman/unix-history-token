@@ -1351,7 +1351,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
+name|LOCKSTAT_PROFILE_OBTAIN_RWLOCK_SUCCESS
 argument_list|(
 name|sx__acquire
 argument_list|,
@@ -1364,6 +1364,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|LOCKSTAT_READER
 argument_list|)
 expr_stmt|;
 name|curthread
@@ -1755,7 +1757,7 @@ argument_list|(
 name|sx
 argument_list|)
 condition|)
-name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
+name|LOCKSTAT_PROFILE_OBTAIN_RWLOCK_SUCCESS
 argument_list|(
 name|sx__acquire
 argument_list|,
@@ -1768,6 +1770,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|LOCKSTAT_WRITER
 argument_list|)
 expr_stmt|;
 name|curthread
@@ -3495,7 +3499,7 @@ condition|(
 operator|!
 name|error
 condition|)
-name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
+name|LOCKSTAT_PROFILE_OBTAIN_RWLOCK_SUCCESS
 argument_list|(
 name|sx__acquire
 argument_list|,
@@ -3508,6 +3512,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|LOCKSTAT_WRITER
 argument_list|)
 expr_stmt|;
 name|GIANT_RESTORE
@@ -4622,7 +4628,7 @@ name|error
 operator|==
 literal|0
 condition|)
-name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
+name|LOCKSTAT_PROFILE_OBTAIN_RWLOCK_SUCCESS
 argument_list|(
 name|sx__acquire
 argument_list|,
@@ -4635,6 +4641,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|LOCKSTAT_READER
 argument_list|)
 expr_stmt|;
 name|GIANT_RESTORE

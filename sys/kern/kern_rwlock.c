@@ -1438,7 +1438,7 @@ argument_list|(
 name|rw
 argument_list|)
 condition|)
-name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
+name|LOCKSTAT_PROFILE_OBTAIN_RWLOCK_SUCCESS
 argument_list|(
 name|rw__acquire
 argument_list|,
@@ -1451,6 +1451,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|LOCKSTAT_WRITER
 argument_list|)
 expr_stmt|;
 name|curthread
@@ -2507,7 +2509,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * TODO: acquire "owner of record" here.  Here be turnstile dragons 	 * however.  turnstiles don't like owners changing between calls to 	 * turnstile_wait() currently. 	 */
-name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
+name|LOCKSTAT_PROFILE_OBTAIN_RWLOCK_SUCCESS
 argument_list|(
 name|rw__acquire
 argument_list|,
@@ -2520,6 +2522,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|LOCKSTAT_READER
 argument_list|)
 expr_stmt|;
 name|LOCK_LOG_LOCK
@@ -2727,7 +2731,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
+name|LOCKSTAT_PROFILE_OBTAIN_RWLOCK_SUCCESS
 argument_list|(
 name|rw__acquire
 argument_list|,
@@ -2740,6 +2744,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|LOCKSTAT_READER
 argument_list|)
 expr_stmt|;
 name|curthread
@@ -3199,11 +3205,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|LOCKSTAT_PROFILE_RELEASE_LOCK
+name|LOCKSTAT_PROFILE_RELEASE_RWLOCK
 argument_list|(
 name|rw__release
 argument_list|,
 name|rw
+argument_list|,
+name|LOCKSTAT_READER
 argument_list|)
 expr_stmt|;
 name|curthread
@@ -4165,7 +4173,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
+name|LOCKSTAT_PROFILE_OBTAIN_RWLOCK_SUCCESS
 argument_list|(
 name|rw__acquire
 argument_list|,
@@ -4178,6 +4186,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|LOCKSTAT_WRITER
 argument_list|)
 expr_stmt|;
 block|}

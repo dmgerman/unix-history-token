@@ -696,7 +696,7 @@ name|line
 argument_list|)
 expr_stmt|;
 else|else
-name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
+name|LOCKSTAT_PROFILE_OBTAIN_RWLOCK_SUCCESS
 argument_list|(
 name|sx__acquire
 argument_list|,
@@ -709,6 +709,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|LOCKSTAT_WRITER
 argument_list|)
 expr_stmt|;
 return|return
@@ -764,11 +766,13 @@ name|sx_recurse
 operator|==
 literal|0
 condition|)
-name|LOCKSTAT_PROFILE_RELEASE_LOCK
+name|LOCKSTAT_PROFILE_RELEASE_RWLOCK
 argument_list|(
 name|sx__release
 argument_list|,
 name|sx
+argument_list|,
+name|LOCKSTAT_WRITER
 argument_list|)
 expr_stmt|;
 if|if
@@ -877,7 +881,7 @@ name|line
 argument_list|)
 expr_stmt|;
 else|else
-name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
+name|LOCKSTAT_PROFILE_OBTAIN_RWLOCK_SUCCESS
 argument_list|(
 name|sx__acquire
 argument_list|,
@@ -890,6 +894,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|LOCKSTAT_READER
 argument_list|)
 expr_stmt|;
 return|return
@@ -931,11 +937,13 @@ name|sx
 operator|->
 name|sx_lock
 decl_stmt|;
-name|LOCKSTAT_PROFILE_RELEASE_LOCK
+name|LOCKSTAT_PROFILE_RELEASE_RWLOCK
 argument_list|(
 name|sx__release
 argument_list|,
 name|sx
+argument_list|,
+name|LOCKSTAT_READER
 argument_list|)
 expr_stmt|;
 if|if

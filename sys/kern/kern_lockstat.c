@@ -146,25 +146,29 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE1
+name|SDT_PROBE_DEFINE2
 argument_list|(
 name|lockstat
 argument_list|, , ,
 name|rw__acquire
 argument_list|,
 literal|"struct rwlock *"
+argument_list|,
+literal|"int"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE1
+name|SDT_PROBE_DEFINE2
 argument_list|(
 name|lockstat
 argument_list|, , ,
 name|rw__release
 argument_list|,
 literal|"struct rwlock *"
+argument_list|,
+literal|"int"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -228,25 +232,29 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE1
+name|SDT_PROBE_DEFINE2
 argument_list|(
 name|lockstat
 argument_list|, , ,
 name|sx__acquire
 argument_list|,
 literal|"struct sx *"
+argument_list|,
+literal|"int"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE1
+name|SDT_PROBE_DEFINE2
 argument_list|(
 name|lockstat
 argument_list|, , ,
 name|sx__release
 argument_list|,
 literal|"struct sx *"
+argument_list|,
+literal|"int"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
