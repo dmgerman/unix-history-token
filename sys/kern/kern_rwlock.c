@@ -1820,14 +1820,6 @@ init|;
 condition|;
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|KDTRACE_HOOKS
-name|spin_cnt
-operator|++
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 		 * Handle the easy case.  If no other thread has a write 		 * lock, then try to bump up the count of read locks.  Note 		 * that we have to preserve the current state of the 		 * RW_LOCK_WRITE_WAITERS flag.  If we fail to acquire a 		 * read lock, then rw_lock must have changed, so restart 		 * the loop.  Note that this handles the case of a 		 * completely unlocked rwlock since such a lock is encoded 		 * as a read lock with no waiters. 		 */
 name|v
 operator|=
@@ -1904,6 +1896,14 @@ break|break;
 block|}
 continue|continue;
 block|}
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+name|spin_cnt
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|HWPMC_HOOKS
