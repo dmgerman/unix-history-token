@@ -1440,7 +1440,7 @@ argument_list|)
 condition|)
 name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
 argument_list|(
-name|LS_RW_WLOCK_ACQUIRE
+name|rw__acquire
 argument_list|,
 name|rw
 argument_list|,
@@ -2429,7 +2429,7 @@ name|sleep_time
 condition|)
 name|LOCKSTAT_RECORD4
 argument_list|(
-name|LS_RW_RLOCK_BLOCK
+name|rw__block
 argument_list|,
 name|rw
 argument_list|,
@@ -2470,7 +2470,7 @@ name|sleep_cnt
 condition|)
 name|LOCKSTAT_RECORD4
 argument_list|(
-name|LS_RW_RLOCK_SPIN
+name|rw__spin
 argument_list|,
 name|rw
 argument_list|,
@@ -2509,7 +2509,7 @@ directive|endif
 comment|/* 	 * TODO: acquire "owner of record" here.  Here be turnstile dragons 	 * however.  turnstiles don't like owners changing between calls to 	 * turnstile_wait() currently. 	 */
 name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
 argument_list|(
-name|LS_RW_RLOCK_ACQUIRE
+name|rw__acquire
 argument_list|,
 name|rw
 argument_list|,
@@ -2729,7 +2729,7 @@ argument_list|)
 expr_stmt|;
 name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
 argument_list|(
-name|LS_RW_RLOCK_ACQUIRE
+name|rw__acquire
 argument_list|,
 name|rw
 argument_list|,
@@ -3201,7 +3201,7 @@ break|break;
 block|}
 name|LOCKSTAT_PROFILE_RELEASE_LOCK
 argument_list|(
-name|LS_RW_RUNLOCK_RELEASE
+name|rw__release
 argument_list|,
 name|rw
 argument_list|)
@@ -4088,7 +4088,7 @@ name|sleep_time
 condition|)
 name|LOCKSTAT_RECORD4
 argument_list|(
-name|LS_RW_WLOCK_BLOCK
+name|rw__block
 argument_list|,
 name|rw
 argument_list|,
@@ -4129,7 +4129,7 @@ name|sleep_cnt
 condition|)
 name|LOCKSTAT_RECORD4
 argument_list|(
-name|LS_RW_WLOCK_SPIN
+name|rw__spin
 argument_list|,
 name|rw
 argument_list|,
@@ -4167,7 +4167,7 @@ endif|#
 directive|endif
 name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
 argument_list|(
-name|LS_RW_WLOCK_ACQUIRE
+name|rw__acquire
 argument_list|,
 name|rw
 argument_list|,
@@ -4734,7 +4734,7 @@ argument_list|)
 expr_stmt|;
 name|LOCKSTAT_RECORD0
 argument_list|(
-name|LS_RW_TRYUPGRADE_UPGRADE
+name|rw__upgrade
 argument_list|,
 name|rw
 argument_list|)
@@ -5036,7 +5036,7 @@ argument_list|)
 expr_stmt|;
 name|LOCKSTAT_RECORD0
 argument_list|(
-name|LS_RW_DOWNGRADE_DOWNGRADE
+name|rw__downgrade
 argument_list|,
 name|rw
 argument_list|)

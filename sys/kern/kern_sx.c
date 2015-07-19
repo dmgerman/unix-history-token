@@ -1353,7 +1353,7 @@ argument_list|)
 expr_stmt|;
 name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
 argument_list|(
-name|LS_SX_SLOCK_ACQUIRE
+name|sx__acquire
 argument_list|,
 name|sx
 argument_list|,
@@ -1757,7 +1757,7 @@ argument_list|)
 condition|)
 name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
 argument_list|(
-name|LS_SX_XLOCK_ACQUIRE
+name|sx__acquire
 argument_list|,
 name|sx
 argument_list|,
@@ -2130,7 +2130,7 @@ argument_list|)
 expr_stmt|;
 name|LOCKSTAT_RECORD0
 argument_list|(
-name|LS_SX_TRYUPGRADE_UPGRADE
+name|sx__upgrade
 argument_list|,
 name|sx
 argument_list|)
@@ -2386,7 +2386,7 @@ argument_list|)
 expr_stmt|;
 name|LOCKSTAT_RECORD0
 argument_list|(
-name|LS_SX_DOWNGRADE_DOWNGRADE
+name|sx__downgrade
 argument_list|,
 name|sx
 argument_list|)
@@ -3414,7 +3414,7 @@ name|sleep_time
 condition|)
 name|LOCKSTAT_RECORD4
 argument_list|(
-name|LS_SX_XLOCK_BLOCK
+name|sx__block
 argument_list|,
 name|sx
 argument_list|,
@@ -3454,7 +3454,7 @@ name|sleep_cnt
 condition|)
 name|LOCKSTAT_RECORD4
 argument_list|(
-name|LS_SX_XLOCK_SPIN
+name|sx__spin
 argument_list|,
 name|sx
 argument_list|,
@@ -3497,7 +3497,7 @@ name|error
 condition|)
 name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
 argument_list|(
-name|LS_SX_XLOCK_ACQUIRE
+name|sx__acquire
 argument_list|,
 name|sx
 argument_list|,
@@ -4540,7 +4540,7 @@ name|sleep_time
 condition|)
 name|LOCKSTAT_RECORD4
 argument_list|(
-name|LS_SX_SLOCK_BLOCK
+name|sx__block
 argument_list|,
 name|sx
 argument_list|,
@@ -4580,7 +4580,7 @@ name|sleep_cnt
 condition|)
 name|LOCKSTAT_RECORD4
 argument_list|(
-name|LS_SX_SLOCK_SPIN
+name|sx__spin
 argument_list|,
 name|sx
 argument_list|,
@@ -4624,7 +4624,7 @@ literal|0
 condition|)
 name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
 argument_list|(
-name|LS_SX_SLOCK_ACQUIRE
+name|sx__acquire
 argument_list|,
 name|sx
 argument_list|,

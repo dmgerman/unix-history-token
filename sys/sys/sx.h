@@ -698,7 +698,7 @@ expr_stmt|;
 else|else
 name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
 argument_list|(
-name|LS_SX_XLOCK_ACQUIRE
+name|sx__acquire
 argument_list|,
 name|sx
 argument_list|,
@@ -766,7 +766,7 @@ literal|0
 condition|)
 name|LOCKSTAT_PROFILE_RELEASE_LOCK
 argument_list|(
-name|LS_SX_XUNLOCK_RELEASE
+name|sx__release
 argument_list|,
 name|sx
 argument_list|)
@@ -879,7 +879,7 @@ expr_stmt|;
 else|else
 name|LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS
 argument_list|(
-name|LS_SX_SLOCK_ACQUIRE
+name|sx__acquire
 argument_list|,
 name|sx
 argument_list|,
@@ -933,7 +933,7 @@ name|sx_lock
 decl_stmt|;
 name|LOCKSTAT_PROFILE_RELEASE_LOCK
 argument_list|(
-name|LS_SX_SUNLOCK_RELEASE
+name|sx__release
 argument_list|,
 name|sx
 argument_list|)
