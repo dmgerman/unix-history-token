@@ -5695,7 +5695,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-comment|/* 		 * For software interrupt threads, we only execute 		 * handlers that have their need flag set.  Hardware 		 * interrupt threads always invoke all of their handlers. 		 */
+comment|/* 		 * For software interrupt threads, we only execute 		 * handlers that have their need flag set.  Hardware 		 * interrupt threads always invoke all of their handlers. 		 * 		 * ih_need can only be 0 or 1.  Failed cmpset below 		 * means that there is no request to execute handlers, 		 * so a retry of the cmpset is not needed. 		 */
 if|if
 condition|(
 operator|(
@@ -5707,11 +5707,7 @@ name|IE_SOFT
 operator|)
 operator|!=
 literal|0
-condition|)
-block|{
-comment|/* 			 * ih_need can only be 0 or 1.  Failed cmpset 			 * below means that there is no request to 			 * execute handlers, so a retry of the cmpset 			 * is not needed. 			 */
-if|if
-condition|(
+operator|&&
 name|atomic_cmpset_int
 argument_list|(
 operator|&
@@ -5727,7 +5723,6 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-block|}
 comment|/* Execute this handler. */
 name|CTR6
 argument_list|(
