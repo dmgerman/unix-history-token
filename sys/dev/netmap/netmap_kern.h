@@ -1474,7 +1474,7 @@ define|#
 directive|define
 name|NAF_NATIVE
 value|16
-comment|/* the adapter is native. 				 * Virtual ports (vale, pipe, monitor...) 				 * should never use this flag. 				 */
+comment|/* the adapter is native. 				 * Virtual ports (non persistent vale ports, 				 * pipes, monitors...) should never use 				 * this flag. 				 */
 define|#
 directive|define
 name|NAF_NETMAP_ON
@@ -5272,7 +5272,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Structure associated to each netmap file descriptor.  * It is created on open and left unbound (np_nifp == NULL).  * A successful NIOCREGIF will set np_nifp and the first few fields;  * this is protected by a global lock (NMG_LOCK) due to low contention.  *  * np_refs counts the number of references to the structure: one for the fd,  * plus (on FreeBSD) one for each active mmap which we track ourselves  * (they are not unmapped on close(), unlike linux).  * np_refs is protected by NMG_LOCK.  *  * Read access to the structure is lock free, because ni_nifp once set  * can only go to 0 when nobody is using the entry anymore. Readers  * must check that np_nifp != NULL before using the other fields.  */
+comment|/*  * Structure associated to each netmap file descriptor.  * It is created on open and left unbound (np_nifp == NULL).  * A successful NIOCREGIF will set np_nifp and the first few fields;  * this is protected by a global lock (NMG_LOCK) due to low contention.  *  * np_refs counts the number of references to the structure: one for the fd,  * plus (on FreeBSD) one for each active mmap which we track ourselves  * (linux automatically tracks them, but FreeBSD does not).  * np_refs is protected by NMG_LOCK.  *  * Read access to the structure is lock free, because ni_nifp once set  * can only go to 0 when nobody is using the entry anymore. Readers  * must check that np_nifp != NULL before using the other fields.  */
 end_comment
 
 begin_struct
