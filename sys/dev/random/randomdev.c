@@ -640,6 +640,8 @@ name|random_buf
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|spamcount
 decl_stmt|;
 name|ssize_t
 name|read_len
@@ -664,11 +666,15 @@ operator|.
 name|ra_pre_read
 argument_list|()
 expr_stmt|;
-comment|/* (Un)Blocking logic */
 name|error
 operator|=
 literal|0
 expr_stmt|;
+name|spamcount
+operator|=
+literal|0
+expr_stmt|;
+comment|/* (Un)Blocking logic */
 while|while
 condition|(
 operator|!
@@ -689,12 +695,44 @@ name|EWOULDBLOCK
 expr_stmt|;
 break|break;
 block|}
+comment|/* keep tapping away at the pre-read until we seed/unblock. */
+name|random_alg_context
+operator|.
+name|ra_pre_read
+argument_list|()
+expr_stmt|;
+comment|/* Only bother the console every 10 seconds or so */
+if|if
+condition|(
+name|spamcount
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"random: %s unblock wait\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|spamcount
+operator|=
+operator|(
+name|spamcount
+operator|+
+literal|1
+operator|)
+operator|%
+literal|100
+expr_stmt|;
+name|error
+operator|=
 name|tsleep
 argument_list|(
 operator|&
 name|random_alg_context
 argument_list|,
-literal|0
+name|PCATCH
 argument_list|,
 literal|"randseed"
 argument_list|,
@@ -703,19 +741,19 @@ operator|/
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* keep tapping away at the pre-read until we seed/unblock. */
-name|random_alg_context
-operator|.
-name|ra_pre_read
-argument_list|()
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"random: %s unblock wait\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|==
+name|ERESTART
+operator||
+name|error
+operator|==
+name|EINTR
+operator|)
+condition|)
+break|break;
 block|}
 if|if
 condition|(
