@@ -537,10 +537,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Interface to Adaptors system */
-end_comment
-
 begin_decl_stmt
 name|struct
 name|random_algorithm
