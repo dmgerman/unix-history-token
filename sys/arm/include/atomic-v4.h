@@ -195,23 +195,23 @@ begin_function
 unit|static
 name|__inline
 name|void
-name|atomic_set_32
+name|atomic_add_32
 parameter_list|(
 specifier|volatile
-name|uint32_t
+name|u_int32_t
 modifier|*
-name|address
+name|p
 parameter_list|,
-name|uint32_t
-name|setmask
+name|u_int32_t
+name|val
 parameter_list|)
 block|{
 name|__with_interrupts_disabled
 argument_list|(
 operator|*
-name|address
-operator||=
-name|setmask
+name|p
+operator|+=
+name|val
 argument_list|)
 expr_stmt|;
 block|}
@@ -221,23 +221,23 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|atomic_set_64
+name|atomic_add_64
 parameter_list|(
 specifier|volatile
-name|uint64_t
+name|u_int64_t
 modifier|*
-name|address
+name|p
 parameter_list|,
-name|uint64_t
-name|setmask
+name|u_int64_t
+name|val
 parameter_list|)
 block|{
 name|__with_interrupts_disabled
 argument_list|(
 operator|*
-name|address
-operator||=
-name|setmask
+name|p
+operator|+=
+name|val
 argument_list|)
 expr_stmt|;
 block|}
@@ -380,110 +380,6 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|void
-name|atomic_add_32
-parameter_list|(
-specifier|volatile
-name|u_int32_t
-modifier|*
-name|p
-parameter_list|,
-name|u_int32_t
-name|val
-parameter_list|)
-block|{
-name|__with_interrupts_disabled
-argument_list|(
-operator|*
-name|p
-operator|+=
-name|val
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|atomic_add_64
-parameter_list|(
-specifier|volatile
-name|u_int64_t
-modifier|*
-name|p
-parameter_list|,
-name|u_int64_t
-name|val
-parameter_list|)
-block|{
-name|__with_interrupts_disabled
-argument_list|(
-operator|*
-name|p
-operator|+=
-name|val
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|atomic_subtract_32
-parameter_list|(
-specifier|volatile
-name|u_int32_t
-modifier|*
-name|p
-parameter_list|,
-name|u_int32_t
-name|val
-parameter_list|)
-block|{
-name|__with_interrupts_disabled
-argument_list|(
-operator|*
-name|p
-operator|-=
-name|val
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|atomic_subtract_64
-parameter_list|(
-specifier|volatile
-name|u_int64_t
-modifier|*
-name|p
-parameter_list|,
-name|u_int64_t
-name|val
-parameter_list|)
-block|{
-name|__with_interrupts_disabled
-argument_list|(
-operator|*
-name|p
-operator|-=
-name|val
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
 name|uint32_t
 name|atomic_fetchadd_32
 parameter_list|(
@@ -578,6 +474,58 @@ begin_function
 specifier|static
 name|__inline
 name|void
+name|atomic_set_32
+parameter_list|(
+specifier|volatile
+name|uint32_t
+modifier|*
+name|address
+parameter_list|,
+name|uint32_t
+name|setmask
+parameter_list|)
+block|{
+name|__with_interrupts_disabled
+argument_list|(
+operator|*
+name|address
+operator||=
+name|setmask
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_set_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|address
+parameter_list|,
+name|uint64_t
+name|setmask
+parameter_list|)
+block|{
+name|__with_interrupts_disabled
+argument_list|(
+operator|*
+name|address
+operator||=
+name|setmask
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
 name|atomic_store_64
 parameter_list|(
 specifier|volatile
@@ -600,6 +548,58 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_subtract_32
+parameter_list|(
+specifier|volatile
+name|u_int32_t
+modifier|*
+name|p
+parameter_list|,
+name|u_int32_t
+name|val
+parameter_list|)
+block|{
+name|__with_interrupts_disabled
+argument_list|(
+operator|*
+name|p
+operator|-=
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_subtract_64
+parameter_list|(
+specifier|volatile
+name|u_int64_t
+modifier|*
+name|p
+parameter_list|,
+name|u_int64_t
+name|val
+parameter_list|)
+block|{
+name|__with_interrupts_disabled
+argument_list|(
+operator|*
+name|p
+operator|-=
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_else
 else|#
 directive|else
@@ -611,6 +611,130 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline
+name|void
+name|atomic_add_32
+parameter_list|(
+specifier|volatile
+name|u_int32_t
+modifier|*
+name|p
+parameter_list|,
+name|u_int32_t
+name|val
+parameter_list|)
+block|{
+name|int
+name|start
+decl_stmt|,
+name|ras_start
+init|=
+name|ARM_RAS_START
+decl_stmt|;
+asm|__asm __volatile("1:\n"
+literal|"adr	%1, 1b\n"
+literal|"str	%1, [%0]\n"
+literal|"adr	%1, 2f\n"
+literal|"str	%1, [%0, #4]\n"
+literal|"ldr	%1, [%2]\n"
+literal|"add	%1, %1, %3\n"
+literal|"str	%1, [%2]\n"
+literal|"2:\n"
+literal|"mov	%1, #0\n"
+literal|"str	%1, [%0]\n"
+literal|"mov	%1, #0xffffffff\n"
+literal|"str	%1, [%0, #4]\n"
+operator|:
+literal|"+r"
+operator|(
+name|ras_start
+operator|)
+operator|,
+literal|"=r"
+operator|(
+name|start
+operator|)
+operator|,
+literal|"+r"
+operator|(
+name|p
+operator|)
+operator|,
+literal|"+r"
+operator|(
+name|val
+operator|)
+operator|:
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|atomic_clear_32
+parameter_list|(
+specifier|volatile
+name|uint32_t
+modifier|*
+name|address
+parameter_list|,
+name|uint32_t
+name|clearmask
+parameter_list|)
+block|{
+name|int
+name|start
+decl_stmt|,
+name|ras_start
+init|=
+name|ARM_RAS_START
+decl_stmt|;
+asm|__asm __volatile("1:\n"
+literal|"adr	%1, 1b\n"
+literal|"str	%1, [%0]\n"
+literal|"adr	%1, 2f\n"
+literal|"str	%1, [%0, #4]\n"
+literal|"ldr	%1, [%2]\n"
+literal|"bic	%1, %1, %3\n"
+literal|"str	%1, [%2]\n"
+literal|"2:\n"
+literal|"mov	%1, #0\n"
+literal|"str	%1, [%0]\n"
+literal|"mov	%1, #0xffffffff\n"
+literal|"str	%1, [%0, #4]\n"
+operator|:
+literal|"+r"
+operator|(
+name|ras_start
+operator|)
+operator|,
+literal|"=r"
+operator|(
+name|start
+operator|)
+operator|,
+literal|"+r"
+operator|(
+name|address
+operator|)
+operator|,
+literal|"+r"
+operator|(
+name|clearmask
+operator|)
+operator|:
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
 name|__inline
 name|u_int32_t
 name|atomic_cmpset_32
@@ -697,254 +821,6 @@ end_return
 begin_function
 unit|}  static
 name|__inline
-name|void
-name|atomic_add_32
-parameter_list|(
-specifier|volatile
-name|u_int32_t
-modifier|*
-name|p
-parameter_list|,
-name|u_int32_t
-name|val
-parameter_list|)
-block|{
-name|int
-name|start
-decl_stmt|,
-name|ras_start
-init|=
-name|ARM_RAS_START
-decl_stmt|;
-asm|__asm __volatile("1:\n"
-literal|"adr	%1, 1b\n"
-literal|"str	%1, [%0]\n"
-literal|"adr	%1, 2f\n"
-literal|"str	%1, [%0, #4]\n"
-literal|"ldr	%1, [%2]\n"
-literal|"add	%1, %1, %3\n"
-literal|"str	%1, [%2]\n"
-literal|"2:\n"
-literal|"mov	%1, #0\n"
-literal|"str	%1, [%0]\n"
-literal|"mov	%1, #0xffffffff\n"
-literal|"str	%1, [%0, #4]\n"
-operator|:
-literal|"+r"
-operator|(
-name|ras_start
-operator|)
-operator|,
-literal|"=r"
-operator|(
-name|start
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_subtract_32
-parameter_list|(
-specifier|volatile
-name|u_int32_t
-modifier|*
-name|p
-parameter_list|,
-name|u_int32_t
-name|val
-parameter_list|)
-block|{
-name|int
-name|start
-decl_stmt|,
-name|ras_start
-init|=
-name|ARM_RAS_START
-decl_stmt|;
-asm|__asm __volatile("1:\n"
-literal|"adr	%1, 1b\n"
-literal|"str	%1, [%0]\n"
-literal|"adr	%1, 2f\n"
-literal|"str	%1, [%0, #4]\n"
-literal|"ldr	%1, [%2]\n"
-literal|"sub	%1, %1, %3\n"
-literal|"str	%1, [%2]\n"
-literal|"2:\n"
-literal|"mov	%1, #0\n"
-literal|"str	%1, [%0]\n"
-literal|"mov	%1, #0xffffffff\n"
-literal|"str	%1, [%0, #4]\n"
-operator|:
-literal|"+r"
-operator|(
-name|ras_start
-operator|)
-operator|,
-literal|"=r"
-operator|(
-name|start
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|val
-operator|)
-operator|:
-operator|:
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_set_32
-parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|address
-parameter_list|,
-name|uint32_t
-name|setmask
-parameter_list|)
-block|{
-name|int
-name|start
-decl_stmt|,
-name|ras_start
-init|=
-name|ARM_RAS_START
-decl_stmt|;
-asm|__asm __volatile("1:\n"
-literal|"adr	%1, 1b\n"
-literal|"str	%1, [%0]\n"
-literal|"adr	%1, 2f\n"
-literal|"str	%1, [%0, #4]\n"
-literal|"ldr	%1, [%2]\n"
-literal|"orr	%1, %1, %3\n"
-literal|"str	%1, [%2]\n"
-literal|"2:\n"
-literal|"mov	%1, #0\n"
-literal|"str	%1, [%0]\n"
-literal|"mov	%1, #0xffffffff\n"
-literal|"str	%1, [%0, #4]\n"
-operator|:
-literal|"+r"
-operator|(
-name|ras_start
-operator|)
-operator|,
-literal|"=r"
-operator|(
-name|start
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|address
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|setmask
-operator|)
-operator|:
-operator|:
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_clear_32
-parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|address
-parameter_list|,
-name|uint32_t
-name|clearmask
-parameter_list|)
-block|{
-name|int
-name|start
-decl_stmt|,
-name|ras_start
-init|=
-name|ARM_RAS_START
-decl_stmt|;
-asm|__asm __volatile("1:\n"
-literal|"adr	%1, 1b\n"
-literal|"str	%1, [%0]\n"
-literal|"adr	%1, 2f\n"
-literal|"str	%1, [%0, #4]\n"
-literal|"ldr	%1, [%2]\n"
-literal|"bic	%1, %1, %3\n"
-literal|"str	%1, [%2]\n"
-literal|"2:\n"
-literal|"mov	%1, #0\n"
-literal|"str	%1, [%0]\n"
-literal|"mov	%1, #0xffffffff\n"
-literal|"str	%1, [%0, #4]\n"
-operator|:
-literal|"+r"
-operator|(
-name|ras_start
-operator|)
-operator|,
-literal|"=r"
-operator|(
-name|start
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|address
-operator|)
-operator|,
-literal|"+r"
-operator|(
-name|clearmask
-operator|)
-operator|:
-operator|:
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
 name|uint32_t
 name|atomic_fetchadd_32
 parameter_list|(
@@ -1019,6 +895,130 @@ name|start
 operator|)
 return|;
 end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|atomic_set_32
+parameter_list|(
+specifier|volatile
+name|uint32_t
+modifier|*
+name|address
+parameter_list|,
+name|uint32_t
+name|setmask
+parameter_list|)
+block|{
+name|int
+name|start
+decl_stmt|,
+name|ras_start
+init|=
+name|ARM_RAS_START
+decl_stmt|;
+asm|__asm __volatile("1:\n"
+literal|"adr	%1, 1b\n"
+literal|"str	%1, [%0]\n"
+literal|"adr	%1, 2f\n"
+literal|"str	%1, [%0, #4]\n"
+literal|"ldr	%1, [%2]\n"
+literal|"orr	%1, %1, %3\n"
+literal|"str	%1, [%2]\n"
+literal|"2:\n"
+literal|"mov	%1, #0\n"
+literal|"str	%1, [%0]\n"
+literal|"mov	%1, #0xffffffff\n"
+literal|"str	%1, [%0, #4]\n"
+operator|:
+literal|"+r"
+operator|(
+name|ras_start
+operator|)
+operator|,
+literal|"=r"
+operator|(
+name|start
+operator|)
+operator|,
+literal|"+r"
+operator|(
+name|address
+operator|)
+operator|,
+literal|"+r"
+operator|(
+name|setmask
+operator|)
+operator|:
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|atomic_subtract_32
+parameter_list|(
+specifier|volatile
+name|u_int32_t
+modifier|*
+name|p
+parameter_list|,
+name|u_int32_t
+name|val
+parameter_list|)
+block|{
+name|int
+name|start
+decl_stmt|,
+name|ras_start
+init|=
+name|ARM_RAS_START
+decl_stmt|;
+asm|__asm __volatile("1:\n"
+literal|"adr	%1, 1b\n"
+literal|"str	%1, [%0]\n"
+literal|"adr	%1, 2f\n"
+literal|"str	%1, [%0, #4]\n"
+literal|"ldr	%1, [%2]\n"
+literal|"sub	%1, %1, %3\n"
+literal|"str	%1, [%2]\n"
+literal|"2:\n"
+literal|"mov	%1, #0\n"
+literal|"str	%1, [%0]\n"
+literal|"mov	%1, #0xffffffff\n"
+literal|"str	%1, [%0, #4]\n"
+operator|:
+literal|"+r"
+operator|(
+name|ras_start
+operator|)
+operator|,
+literal|"=r"
+operator|(
+name|start
+operator|)
+operator|,
+literal|"+r"
+operator|(
+name|p
+operator|)
+operator|,
+literal|"+r"
+operator|(
+name|val
+operator|)
+operator|:
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
 
 begin_endif
 unit|}
