@@ -194,12 +194,13 @@ name|tmp2
 init|=
 literal|0
 decl_stmt|;
-asm|__asm __volatile("1: ldrex %0, [%2]\n"
-literal|"add %0, %0, %3\n"
-literal|"strex %1, %0, [%2]\n"
-literal|"cmp %1, #0\n"
-literal|"it ne\n"
-literal|"bne	1b\n"
+asm|__asm __volatile(
+literal|"1: ldrex	%0, [%2]	\n"
+literal|"   add	%0, %0, %3	\n"
+literal|"   strex	%1, %0, [%2]	\n"
+literal|"   cmp	%1, #0		\n"
+literal|"   it	ne		\n"
+literal|"   bne	1b		\n"
 operator|:
 literal|"=&r"
 operator|(
@@ -251,14 +252,14 @@ name|uint32_t
 name|exflag
 decl_stmt|;
 asm|__asm __volatile(
-literal|"1:          \n"
-literal|"   ldrexd   %Q[tmp], %R[tmp], [%[ptr]]\n"
-literal|"   adds     %Q[tmp], %Q[val]\n"
-literal|"   adc      %R[tmp], %R[tmp], %R[val]\n"
-literal|"   strexd   %[exf], %Q[tmp], %R[tmp], [%[ptr]]\n"
-literal|"   teq      %[exf], #0\n"
-literal|"   it ne    \n"
-literal|"   bne      1b\n"
+literal|"1:							\n"
+literal|"   ldrexd	%Q[tmp], %R[tmp], [%[ptr]]		\n"
+literal|"   adds	%Q[tmp], %Q[val]			\n"
+literal|"   adc	%R[tmp], %R[tmp], %R[val]		\n"
+literal|"   strexd	%[exf], %Q[tmp], %R[tmp], [%[ptr]]	\n"
+literal|"   teq	%[exf], #0				\n"
+literal|"   it	ne					\n"
+literal|"   bne	1b					\n"
 operator|:
 index|[
 name|exf
@@ -378,12 +379,13 @@ name|tmp2
 init|=
 literal|0
 decl_stmt|;
-asm|__asm __volatile("1: ldrex %0, [%2]\n"
-literal|"bic %0, %0, %3\n"
-literal|"strex %1, %0, [%2]\n"
-literal|"cmp %1, #0\n"
-literal|"it ne\n"
-literal|"bne	1b\n"
+asm|__asm __volatile(
+literal|"1: ldrex	%0, [%2]	\n"
+literal|"   bic	%0, %0, %3	\n"
+literal|"   strex	%1, %0, [%2]	\n"
+literal|"   cmp	%1, #0		\n"
+literal|"   it	ne		\n"
+literal|"   bne	1b		\n"
 operator|:
 literal|"=&r"
 operator|(
@@ -435,14 +437,14 @@ name|uint32_t
 name|exflag
 decl_stmt|;
 asm|__asm __volatile(
-literal|"1:          \n"
-literal|"   ldrexd   %Q[tmp], %R[tmp], [%[ptr]]\n"
-literal|"   bic      %Q[tmp], %Q[val]\n"
-literal|"   bic      %R[tmp], %R[val]\n"
-literal|"   strexd   %[exf], %Q[tmp], %R[tmp], [%[ptr]]\n"
-literal|"   teq      %[exf], #0\n"
-literal|"   it ne    \n"
-literal|"   bne      1b\n"
+literal|"1:							\n"
+literal|"   ldrexd	%Q[tmp], %R[tmp], [%[ptr]]		\n"
+literal|"   bic	%Q[tmp], %Q[val]			\n"
+literal|"   bic	%R[tmp], %R[val]			\n"
+literal|"   strexd	%[exf], %Q[tmp], %R[tmp], [%[ptr]]	\n"
+literal|"   teq	%[exf], #0				\n"
+literal|"   it	ne					\n"
+literal|"   bne	1b					\n"
 operator|:
 index|[
 name|exf
@@ -559,16 +561,17 @@ block|{
 name|uint32_t
 name|ret
 decl_stmt|;
-asm|__asm __volatile("1: ldrex %0, [%1]\n"
-literal|"cmp %0, %2\n"
-literal|"itt ne\n"
-literal|"movne %0, #0\n"
-literal|"bne 2f\n"
-literal|"strex %0, %3, [%1]\n"
-literal|"cmp %0, #0\n"
-literal|"ite eq\n"
-literal|"moveq %0, #1\n"
-literal|"bne	1b\n"
+asm|__asm __volatile(
+literal|"1: ldrex	%0, [%1]	\n"
+literal|"   cmp	%0, %2		\n"
+literal|"   itt	ne		\n"
+literal|"   movne	%0, #0		\n"
+literal|"   bne	2f		\n"
+literal|"   strex	%0, %3, [%1]	\n"
+literal|"   cmp	%0, #0		\n"
+literal|"   ite	eq		\n"
+literal|"   moveq	%0, #1		\n"
+literal|"   bne	1b		\n"
 literal|"2:"
 operator|:
 literal|"=&r"
@@ -632,19 +635,19 @@ name|uint32_t
 name|ret
 decl_stmt|;
 asm|__asm __volatile(
-literal|"1:          \n"
-literal|"   ldrexd   %Q[tmp], %R[tmp], [%[ptr]]\n"
-literal|"   teq      %Q[tmp], %Q[cmpval]\n"
-literal|"   itee eq  \n"
-literal|"   teqeq    %R[tmp], %R[cmpval]\n"
-literal|"   movne    %[ret], #0\n"
-literal|"   bne      2f\n"
-literal|"   strexd   %[ret], %Q[newval], %R[newval], [%[ptr]]\n"
-literal|"   teq      %[ret], #0\n"
-literal|"   it ne    \n"
-literal|"   bne      1b\n"
-literal|"   mov      %[ret], #1\n"
-literal|"2:          \n"
+literal|"1:							\n"
+literal|"   ldrexd	%Q[tmp], %R[tmp], [%[ptr]]		\n"
+literal|"   teq	%Q[tmp], %Q[cmpval]			\n"
+literal|"   itee	eq					\n"
+literal|"   teqeq	%R[tmp], %R[cmpval]			\n"
+literal|"   movne	%[ret], #0				\n"
+literal|"   bne	2f					\n"
+literal|"   strexd	%[ret], %Q[newval], %R[newval], [%[ptr]]\n"
+literal|"   teq	%[ret], #0				\n"
+literal|"   it	ne					\n"
+literal|"   bne	1b					\n"
+literal|"   mov	%[ret], #1				\n"
+literal|"2:							\n"
 operator|:
 index|[
 name|ret
@@ -1004,12 +1007,13 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-asm|__asm __volatile("1: ldrex %0, [%3]\n"
-literal|"add %1, %0, %4\n"
-literal|"strex %2, %1, [%3]\n"
-literal|"cmp %2, #0\n"
-literal|"it ne\n"
-literal|"bne	1b\n"
+asm|__asm __volatile(
+literal|"1: ldrex	%0, [%3]	\n"
+literal|"   add	%1, %0, %4	\n"
+literal|"   strex	%2, %1, [%3]	\n"
+literal|"   cmp	%2, #0		\n"
+literal|"   it	ne		\n"
+literal|"   bne	1b		\n"
 operator|:
 literal|"+r"
 operator|(
@@ -1076,14 +1080,14 @@ name|uint32_t
 name|exflag
 decl_stmt|;
 asm|__asm __volatile(
-literal|"1:          \n"
-literal|"   ldrexd   %Q[tmp], %R[tmp], [%[ptr]]\n"
-literal|"   adds     %Q[tmp], %Q[ret], %Q[val]\n"
-literal|"   adc      %R[tmp], %R[ret], %R[val]\n"
-literal|"   strexd   %[exf], %Q[tmp], %R[tmp], [%[ptr]]\n"
-literal|"   teq      %[exf], #0\n"
-literal|"   it ne    \n"
-literal|"   bne      1b\n"
+literal|"1:							\n"
+literal|"   ldrexd	%Q[tmp], %R[tmp], [%[ptr]]		\n"
+literal|"   adds	%Q[tmp], %Q[ret], %Q[val]		\n"
+literal|"   adc	%R[tmp], %R[ret], %R[val]		\n"
+literal|"   strexd	%[exf], %Q[tmp], %R[tmp], [%[ptr]]	\n"
+literal|"   teq	%[exf], #0				\n"
+literal|"   it	ne					\n"
+literal|"   bne	1b					\n"
 operator|:
 index|[
 name|ret
@@ -1221,9 +1225,8 @@ name|ret
 decl_stmt|;
 comment|/* 	 * The only way to atomically load 64 bits is with LDREXD which puts the 	 * exclusive monitor into the exclusive state, so reset it to open state 	 * with CLREX because we don't actually need to store anything. 	 */
 asm|__asm __volatile(
-literal|"1:          \n"
-literal|"   ldrexd   %Q[ret], %R[ret], [%[ptr]]\n"
-literal|"   clrex    \n"
+literal|"ldrexd	%Q[ret], %R[ret], [%[ptr]]	\n"
+literal|"clrex					\n"
 operator|:
 index|[
 name|ret
@@ -1343,12 +1346,13 @@ name|tmp2
 init|=
 literal|0
 decl_stmt|;
-asm|__asm __volatile("1: ldrex %0, [%3]\n"
-literal|"mov %1, #0\n"
-literal|"strex %2, %1, [%3]\n"
-literal|"cmp %2, #0\n"
-literal|"it ne\n"
-literal|"bne 1b\n"
+asm|__asm __volatile(
+literal|"1: ldrex	%0, [%3]	\n"
+literal|"   mov	%1, #0		\n"
+literal|"   strex	%2, %1, [%3]	\n"
+literal|"   cmp	%2, #0		\n"
+literal|"   it	ne		\n"
+literal|"   bne	1b		\n"
 operator|:
 literal|"=r"
 operator|(
@@ -1407,14 +1411,14 @@ name|uint32_t
 name|exflag
 decl_stmt|;
 asm|__asm __volatile(
-literal|"1:          \n"
-literal|"   ldrexd   %Q[ret], %R[ret], [%[ptr]]\n"
-literal|"   mov      %Q[tmp], #0\n"
-literal|"   mov      %R[tmp], #0\n"
-literal|"   strexd   %[exf], %Q[tmp], %R[tmp], [%[ptr]]\n"
-literal|"   teq      %[exf], #0\n"
-literal|"   it ne    \n"
-literal|"   bne      1b\n"
+literal|"1:							\n"
+literal|"   ldrexd	%Q[ret], %R[ret], [%[ptr]]		\n"
+literal|"   mov	%Q[tmp], #0				\n"
+literal|"   mov	%R[tmp], #0				\n"
+literal|"   strexd	%[exf], %Q[tmp], %R[tmp], [%[ptr]]	\n"
+literal|"   teq	%[exf], #0				\n"
+literal|"   it	ne					\n"
+literal|"   bne	1b					\n"
 operator|:
 index|[
 name|ret
@@ -1515,12 +1519,13 @@ name|tmp2
 init|=
 literal|0
 decl_stmt|;
-asm|__asm __volatile("1: ldrex %0, [%2]\n"
-literal|"orr %0, %0, %3\n"
-literal|"strex %1, %0, [%2]\n"
-literal|"cmp %1, #0\n"
-literal|"it ne\n"
-literal|"bne	1b\n"
+asm|__asm __volatile(
+literal|"1: ldrex	%0, [%2]	\n"
+literal|"   orr	%0, %0, %3	\n"
+literal|"   strex	%1, %0, [%2]	\n"
+literal|"   cmp	%1, #0		\n"
+literal|"   it	ne		\n"
+literal|"   bne	1b		\n"
 operator|:
 literal|"=&r"
 operator|(
@@ -1572,14 +1577,14 @@ name|uint32_t
 name|exflag
 decl_stmt|;
 asm|__asm __volatile(
-literal|"1:          \n"
-literal|"   ldrexd   %Q[tmp], %R[tmp], [%[ptr]]\n"
-literal|"   orr      %Q[tmp], %Q[val]\n"
-literal|"   orr      %R[tmp], %R[val]\n"
-literal|"   strexd   %[exf], %Q[tmp], %R[tmp], [%[ptr]]\n"
-literal|"   teq      %[exf], #0\n"
-literal|"   it ne    \n"
-literal|"   bne      1b\n"
+literal|"1:							\n"
+literal|"   ldrexd	%Q[tmp], %R[tmp], [%[ptr]]		\n"
+literal|"   orr	%Q[tmp], %Q[val]			\n"
+literal|"   orr	%R[tmp], %R[val]			\n"
+literal|"   strexd	%[exf], %Q[tmp], %R[tmp], [%[ptr]]	\n"
+literal|"   teq	%[exf], #0				\n"
+literal|"   it	ne					\n"
+literal|"   bne	1b					\n"
 operator|:
 index|[
 name|exf
@@ -1699,12 +1704,13 @@ name|tmp2
 init|=
 literal|0
 decl_stmt|;
-asm|__asm __volatile("1: ldrex %0, [%2]\n"
-literal|"sub %0, %0, %3\n"
-literal|"strex %1, %0, [%2]\n"
-literal|"cmp %1, #0\n"
-literal|"it ne\n"
-literal|"bne	1b\n"
+asm|__asm __volatile(
+literal|"1: ldrex	%0, [%2]	\n"
+literal|"   sub	%0, %0, %3	\n"
+literal|"   strex	%1, %0, [%2]	\n"
+literal|"   cmp	%1, #0		\n"
+literal|"   it	ne		\n"
+literal|"   bne	1b		\n"
 operator|:
 literal|"=&r"
 operator|(
@@ -1756,14 +1762,14 @@ name|uint32_t
 name|exflag
 decl_stmt|;
 asm|__asm __volatile(
-literal|"1:          \n"
-literal|"   ldrexd   %Q[tmp], %R[tmp], [%[ptr]]\n"
-literal|"   subs     %Q[tmp], %Q[val]\n"
-literal|"   sbc      %R[tmp], %R[tmp], %R[val]\n"
-literal|"   strexd   %[exf], %Q[tmp], %R[tmp], [%[ptr]]\n"
-literal|"   teq      %[exf], #0\n"
-literal|"   it ne    \n"
-literal|"   bne      1b\n"
+literal|"1:							\n"
+literal|"   ldrexd	%Q[tmp], %R[tmp], [%[ptr]]		\n"
+literal|"   subs	%Q[tmp], %Q[val]			\n"
+literal|"   sbc	%R[tmp], %R[tmp], %R[val]		\n"
+literal|"   strexd	%[exf], %Q[tmp], %R[tmp], [%[ptr]]	\n"
+literal|"   teq	%[exf], #0				\n"
+literal|"   it	ne					\n"
+literal|"   bne	1b					\n"
 operator|:
 index|[
 name|exf
@@ -1882,12 +1888,12 @@ name|exflag
 decl_stmt|;
 comment|/* 	 * The only way to atomically store 64 bits is with STREXD, which will 	 * succeed only if paired up with a preceeding LDREXD using the same 	 * address, so we read and discard the existing value before storing. 	 */
 asm|__asm __volatile(
-literal|"1:          \n"
-literal|"   ldrexd   %Q[tmp], %R[tmp], [%[ptr]]\n"
-literal|"   strexd   %[exf], %Q[tmp], %R[tmp], [%[ptr]]\n"
-literal|"   teq      %[exf], #0\n"
-literal|"   it ne    \n"
-literal|"   bne      1b\n"
+literal|"1:							\n"
+literal|"   ldrexd	%Q[tmp], %R[tmp], [%[ptr]]		\n"
+literal|"   strexd	%[exf], %Q[tmp], %R[tmp], [%[ptr]]	\n"
+literal|"   teq	%[exf], #0				\n"
+literal|"   it	ne					\n"
+literal|"   bne	1b					\n"
 operator|:
 index|[
 name|tmp
