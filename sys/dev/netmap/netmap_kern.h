@@ -4387,6 +4387,13 @@ name|netmap_generic_rings
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|netmap_use_count
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * NA returns a pointer to the struct netmap adapter from the ifp,  * WNA is used to write it.  */
 end_comment

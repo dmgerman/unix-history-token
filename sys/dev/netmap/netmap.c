@@ -757,6 +757,18 @@ name|netmap_global_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|netmap_use_count
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of active netmap instances */
+end_comment
+
 begin_comment
 comment|/*  * mark the ring as stopped, and run through the locks  * to make sure other users get to see it.  */
 end_comment
@@ -2650,7 +2662,7 @@ name|priv
 operator|->
 name|np_na
 decl_stmt|;
-comment|/* number of active mmaps on this fd (FreeBSD only) */
+comment|/* number of active references to this fd */
 if|if
 condition|(
 operator|--
@@ -2665,6 +2677,9 @@ return|return
 literal|0
 return|;
 block|}
+name|netmap_use_count
+operator|--
+expr_stmt|;
 if|if
 condition|(
 operator|!

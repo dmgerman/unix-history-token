@@ -2630,6 +2630,18 @@ name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|NMG_LOCK
+argument_list|()
+expr_stmt|;
+name|netmap_use_count
+operator|++
+expr_stmt|;
+name|NMG_UNLOCK
+argument_list|()
+expr_stmt|;
+block|}
 return|return
 name|error
 return|;
@@ -3354,6 +3366,25 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
+comment|/* 		 * if some one is still using netmap, 		 * then the module can not be unloaded. 		 */
+if|if
+condition|(
+name|netmap_use_count
+condition|)
+block|{
+name|D
+argument_list|(
+literal|"netmap module can not be unloaded - netmap_use_count: %d"
+argument_list|,
+name|netmap_use_count
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
+break|break;
+block|}
 name|netmap_fini
 argument_list|()
 expr_stmt|;
