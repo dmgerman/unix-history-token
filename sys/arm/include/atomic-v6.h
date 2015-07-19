@@ -1890,7 +1890,7 @@ comment|/* 	 * The only way to atomically store 64 bits is with STREXD, which wi
 asm|__asm __volatile(
 literal|"1:							\n"
 literal|"   ldrexd	%Q[tmp], %R[tmp], [%[ptr]]		\n"
-literal|"   strexd	%[exf], %Q[tmp], %R[tmp], [%[ptr]]	\n"
+literal|"   strexd	%[exf], %Q[val], %R[val], [%[ptr]]	\n"
 literal|"   teq	%[exf], #0				\n"
 literal|"   it	ne					\n"
 literal|"   bne	1b					\n"
