@@ -2033,49 +2033,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* nm_dtor callback for persistent VALE ports */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|netmap_persist_vp_dtor
-parameter_list|(
-name|struct
-name|netmap_adapter
-modifier|*
-name|na
-parameter_list|)
-block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|na
-operator|->
-name|ifp
-decl_stmt|;
-name|netmap_vp_dtor
-argument_list|(
-name|na
-argument_list|)
-expr_stmt|;
-name|na
-operator|->
-name|ifp
-operator|=
-name|NULL
-expr_stmt|;
-name|nm_vi_detach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/* remove a persistent VALE port from the system */
 end_comment
 
@@ -2182,6 +2139,11 @@ name|ifp
 argument_list|)
 expr_stmt|;
 name|netmap_detach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|nm_vi_detach
 argument_list|(
 name|ifp
 argument_list|)
@@ -2342,14 +2304,6 @@ operator|.
 name|nm_bdg_ctl
 operator|=
 name|netmap_vp_bdg_ctl
-expr_stmt|;
-name|vpna
-operator|->
-name|up
-operator|.
-name|nm_dtor
-operator|=
-name|netmap_persist_vp_dtor
 expr_stmt|;
 name|netmap_adapter_get
 argument_list|(
@@ -7819,6 +7773,17 @@ operator|->
 name|na_flags
 operator||=
 name|NAF_BDG_MAYSLEEP
+expr_stmt|;
+comment|/* persistent VALE ports look like hw devices 	 * with a native netmap adapter 	 */
+if|if
+condition|(
+name|ifp
+condition|)
+name|na
+operator|->
+name|na_flags
+operator||=
+name|NAF_NATIVE
 expr_stmt|;
 name|na
 operator|->
