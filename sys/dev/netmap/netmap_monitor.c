@@ -1109,6 +1109,15 @@ operator|->
 name|na
 decl_stmt|;
 comment|/* forget about this adapter */
+name|netmap_adapter_put
+argument_list|(
+name|mna
+operator|->
+name|priv
+operator|.
+name|np_na
+argument_list|)
+expr_stmt|;
 name|mna
 operator|->
 name|priv
