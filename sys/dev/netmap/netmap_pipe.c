@@ -2617,7 +2617,7 @@ operator|=
 name|ENOMEM
 expr_stmt|;
 goto|goto
-name|free_mna
+name|unregister_mna
 goto|;
 block|}
 comment|/* most fields are the same, copy from master and then fix */
@@ -2840,6 +2840,15 @@ argument_list|(
 name|sna
 argument_list|,
 name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|unregister_mna
+label|:
+name|netmap_pipe_remove
+argument_list|(
+name|pna
+argument_list|,
+name|mna
 argument_list|)
 expr_stmt|;
 name|free_mna
