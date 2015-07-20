@@ -265,6 +265,13 @@ name|LOCKSTAT_READER
 value|1
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|lockstat_enabled
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -423,13 +430,6 @@ name|a
 parameter_list|)
 value|do {		\ 	lock_profile_release_lock(&(lp)->lock_object);			\ 	LOCKSTAT_RECORD1(probe, lp, a);					\ } while (0)
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|lockstat_enabled
-decl_stmt|;
-end_decl_stmt
 
 begin_struct_decl
 struct_decl|struct
