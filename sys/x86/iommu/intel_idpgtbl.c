@@ -1596,7 +1596,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 			 * Prevent potential free while pgtbl_obj is 			 * unlocked in the recursive call to 			 * domain_pgtbl_map_pte(), if other thread did 			 * pte write and clean while the lock if 			 * dropped. 			 */
+comment|/* 			 * Prevent potential free while pgtbl_obj is 			 * unlocked in the recursive call to 			 * domain_pgtbl_map_pte(), if other thread did 			 * pte write and clean while the lock is 			 * dropped. 			 */
 name|m
 operator|->
 name|wire_count
