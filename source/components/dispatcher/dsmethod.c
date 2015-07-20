@@ -40,12 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acdisasm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acparser.h"
 end_include
 
@@ -53,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|"amlcode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acdebug.h"
 end_include
 
 begin_define
@@ -161,6 +161,12 @@ operator|=
 name|AcpiPsAllocOp
 argument_list|(
 name|AML_METHOD_OP
+argument_list|,
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|AmlStart
 argument_list|)
 expr_stmt|;
 if|if
@@ -422,7 +428,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodError  *  * PARAMETERS:  Status          - Execution status  *              WalkState       - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Called on method error. Invoke the global exception handler if  *              present, dump the method data if the disassembler is configured  *  *              Note: Allows the exception handler to change the status code  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodError  *  * PARAMETERS:  Status          - Execution status  *              WalkState       - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Called on method error. Invoke the global exception handler if  *              present, dump the method data if the debugger is configured  *  *              Note: Allows the exception handler to change the status code  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -437,6 +443,9 @@ modifier|*
 name|WalkState
 parameter_list|)
 block|{
+name|UINT32
+name|AmlOffset
+decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
@@ -472,6 +481,24 @@ name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
 comment|/*          * Handler can map the exception code to anything it wants, including          * AE_OK, in which case the executing method will not be aborted.          */
+name|AmlOffset
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|ACPI_PTR_DIFF
+argument_list|(
+name|WalkState
+operator|->
+name|Aml
+argument_list|,
+name|WalkState
+operator|->
+name|ParserState
+operator|.
+name|AmlStart
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiGbl_ExceptionHandler
@@ -496,8 +523,6 @@ name|WalkState
 operator|->
 name|Opcode
 argument_list|,
-name|WalkState
-operator|->
 name|AmlOffset
 argument_list|,
 name|NULL
@@ -512,9 +537,6 @@ argument_list|(
 name|WalkState
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ACPI_DISASSEMBLER
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -523,8 +545,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/* Display method locals/args if disassembler is present */
-name|AcpiDmDumpMethodInfo
+name|AcpiDsDumpMethodStack
 argument_list|(
 name|Status
 argument_list|,
@@ -535,9 +556,20 @@ operator|->
 name|Op
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* Display method locals/args if debugger is present */
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUGGER
+name|AcpiDbDumpMethodInfo
+argument_list|(
+name|Status
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
+block|}
 return|return
 operator|(
 name|Status
@@ -697,6 +729,15 @@ name|AE_NULL_ENTRY
 argument_list|)
 expr_stmt|;
 block|}
+name|AcpiExStartTraceMethod
+argument_list|(
+name|MethodNode
+argument_list|,
+name|ObjDesc
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
 comment|/* Prevent wraparound of thread count */
 if|if
 condition|(
@@ -1446,17 +1487,11 @@ argument_list|,
 name|NextWalkState
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|NextWalkState
-condition|)
-block|{
 name|AcpiDsDeleteWalkState
 argument_list|(
 name|NextWalkState
 argument_list|)
 expr_stmt|;
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -1974,6 +2009,23 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|AcpiExStopTraceMethod
+argument_list|(
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
+name|MethodDesc
+operator|->
+name|Method
+operator|.
+name|Node
+argument_list|,
+name|MethodDesc
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}

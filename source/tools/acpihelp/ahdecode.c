@@ -209,6 +209,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AhDisplayDirectives  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Display all iASL preprocessor directives.  *  ******************************************************************************/
+end_comment
+
 begin_function
 name|void
 name|AhDisplayDirectives
@@ -223,7 +227,7 @@ name|Info
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"iASL Preprocessor directives:\n\n"
+literal|"iASL Preprocessor Directives\n\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -242,7 +246,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"%16s : %s\n"
+literal|"  %-36s : %s\n"
 argument_list|,
 name|Info
 operator|->
@@ -250,7 +254,7 @@ name|Name
 argument_list|,
 name|Info
 operator|->
-name|Operands
+name|Description
 argument_list|)
 expr_stmt|;
 block|}
@@ -300,7 +304,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Contruct a local name or name prefix */
-name|AhStrupr
+name|AcpiUtStrupr
 argument_list|(
 name|NamePrefix
 argument_list|)
@@ -735,7 +739,7 @@ name|Found
 init|=
 name|FALSE
 decl_stmt|;
-name|AhStrupr
+name|AcpiUtStrupr
 argument_list|(
 name|Name
 argument_list|)
@@ -793,7 +797,7 @@ operator|->
 name|OpcodeName
 argument_list|)
 expr_stmt|;
-name|AhStrupr
+name|AcpiUtStrupr
 argument_list|(
 name|Gbl_Buffer
 argument_list|)
@@ -1179,7 +1183,7 @@ name|Found
 init|=
 name|FALSE
 decl_stmt|;
-name|AhStrupr
+name|AcpiUtStrupr
 argument_list|(
 name|Name
 argument_list|)
@@ -1225,7 +1229,7 @@ operator|->
 name|Name
 argument_list|)
 expr_stmt|;
-name|AhStrupr
+name|AcpiUtStrupr
 argument_list|(
 name|Gbl_Buffer
 argument_list|)
@@ -1393,7 +1397,7 @@ name|MatchCount
 init|=
 literal|0
 decl_stmt|;
-name|AhStrupr
+name|AcpiUtStrupr
 argument_list|(
 name|Name
 argument_list|)
@@ -1439,7 +1443,7 @@ operator|->
 name|Name
 argument_list|)
 expr_stmt|;
-name|AhStrupr
+name|AcpiUtStrupr
 argument_list|(
 name|Gbl_Buffer
 argument_list|)
@@ -1972,7 +1976,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Find/display all names that match the input name prefix */
-name|AhStrupr
+name|AcpiUtStrupr
 argument_list|(
 name|Name
 argument_list|)

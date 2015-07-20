@@ -3343,13 +3343,13 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*******************************************************************************  *  * TCPA - Trusted Computing Platform Alliance table  *        Version 2  *  * Conforms to "TCG ACPI Specification, Family 1.2 and 2.0",  * December 19, 2014  *  * NOTE: There are two versions of the table with the same signature --  * the client version and the server version.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * TCPA - Trusted Computing Platform Alliance table  *        Version 2  *  * Conforms to "TCG ACPI Specification, Family 1.2 and 2.0",  * December 19, 2014  *  * NOTE: There are two versions of the table with the same signature --  * the client version and the server version. The common PlatformClass  * field is used to differentiate the two types of tables.  *  ******************************************************************************/
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_table_tcpa_client
+name|acpi_table_tcpa_hdr
 block|{
 name|ACPI_TABLE_HEADER
 name|Header
@@ -3358,6 +3358,34 @@ comment|/* Common ACPI table header */
 name|UINT16
 name|PlatformClass
 decl_stmt|;
+block|}
+name|ACPI_TABLE_TCPA_HDR
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Values for PlatformClass above.  * This is how the client and server subtables are differentiated  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_TCPA_CLIENT_TABLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TCPA_SERVER_TABLE
+value|1
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_tcpa_client
+block|{
 name|UINT32
 name|MinimumLogLength
 decl_stmt|;
@@ -3376,13 +3404,6 @@ typedef|typedef
 struct|struct
 name|acpi_table_tcpa_server
 block|{
-name|ACPI_TABLE_HEADER
-name|Header
-decl_stmt|;
-comment|/* Common ACPI table header */
-name|UINT16
-name|PlatformClass
-decl_stmt|;
 name|UINT16
 name|Reserved
 decl_stmt|;

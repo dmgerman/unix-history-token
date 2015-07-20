@@ -532,6 +532,15 @@ literal|"Illegal forward reference within a method"
 block|,
 comment|/*    ASL_MSG_ILLEGAL_METHOD_REF */
 literal|"Illegal reference across two methods"
+block|,
+comment|/*    ASL_MSG_LOCAL_NOT_USED */
+literal|"Method Local is set but never used"
+block|,
+comment|/*    ASL_MSG_ARG_AS_LOCAL_NOT_USED */
+literal|"Method Argument (as a local) is set but never used"
+block|,
+comment|/*    ASL_MSG_ARG_NOT_USED */
+literal|"Method Argument is never used"
 block|}
 decl_stmt|;
 end_decl_stmt

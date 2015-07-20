@@ -366,7 +366,7 @@ operator|&
 name|FLG_LOWERCASE_DIRNAMES
 condition|)
 block|{
-name|AsStrlwr
+name|AcpiUtStrlwr
 argument_list|(
 name|TargetPath
 argument_list|)

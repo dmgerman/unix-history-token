@@ -597,6 +597,14 @@ operator|=
 name|FALSE
 expr_stmt|;
 break|break;
+case|case
+literal|'v'
+case|:
+name|AcpiGbl_DbOpt_Verbose
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(

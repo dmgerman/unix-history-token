@@ -3633,7 +3633,7 @@ argument_list|,
 name|Keyword
 argument_list|)
 expr_stmt|;
-name|AsStrlwr
+name|AcpiUtStrlwr
 argument_list|(
 name|LowerKeyword
 argument_list|)

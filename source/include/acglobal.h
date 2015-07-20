@@ -1239,26 +1239,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|ACPI_GLOBAL
-argument_list|(
-name|UINT32
-argument_list|,
-name|AcpiGbl_TraceDbgLevel
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ACPI_GLOBAL
-argument_list|(
-name|UINT32
-argument_list|,
-name|AcpiGbl_TraceDbgLayer
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*****************************************************************************  *  * Debugger and Disassembler globals  *  ****************************************************************************/
 end_comment
@@ -1329,6 +1309,19 @@ argument_list|,
 name|AcpiGbl_ForceAmlDisassembly
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|ACPI_PARSE_OBJECT
+operator|*
+argument_list|,
+name|AcpiGbl_PreviousOp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

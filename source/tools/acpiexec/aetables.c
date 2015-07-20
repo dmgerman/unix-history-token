@@ -916,6 +916,19 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Build an FADT. There are three options for the FADT:      * 1) Incoming external FADT specified on the command line      * 2) A "hardware reduced" local FADT      * 3) A fully featured local FADT      */
+name|memset
+argument_list|(
+operator|&
+name|LocalFADT
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_FADT
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ExternalFadt
@@ -1040,10 +1053,7 @@ name|LocalFADT
 argument_list|,
 name|HwReducedFadtCode
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_TABLE_FADT
-argument_list|)
+name|ACPI_FADT_V5_SIZE
 argument_list|)
 expr_stmt|;
 name|LocalFADT
@@ -1099,19 +1109,6 @@ block|}
 else|else
 block|{
 comment|/*          * Build a local FADT so we can test the hardware/event init          */
-name|memset
-argument_list|(
-operator|&
-name|LocalFADT
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_TABLE_FADT
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|LocalFADT
 operator|.
 name|Header

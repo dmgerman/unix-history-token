@@ -529,14 +529,6 @@ name|AcpiGbl_NextOwnerIdOffset
 operator|=
 literal|0
 expr_stmt|;
-name|AcpiGbl_TraceDbgLevel
-operator|=
-literal|0
-expr_stmt|;
-name|AcpiGbl_TraceDbgLayer
-operator|=
-literal|0
-expr_stmt|;
 name|AcpiGbl_DebuggerConfiguration
 operator|=
 name|DEBUGGER_THREADING

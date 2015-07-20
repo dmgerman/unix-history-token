@@ -1631,6 +1631,8 @@ name|TargetNode
 argument_list|,
 operator|&
 name|TargetPath
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1676,6 +1678,8 @@ name|CurrentNode
 argument_list|,
 operator|&
 name|CurrentPath
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if

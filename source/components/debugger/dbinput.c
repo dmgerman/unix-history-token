@@ -983,7 +983,7 @@ block|,
 block|{
 literal|1
 block|,
-literal|"  Prefix [<NamePath>]"
+literal|"  Prefix [<Namepath>]"
 block|,
 literal|"Set or Get current execution prefix\n"
 block|}
@@ -1191,17 +1191,49 @@ block|,
 block|{
 literal|1
 block|,
-literal|"  Thread<Threads><Loops><NamePath>"
+literal|"  Thread<Threads><Loops><Namepath>"
 block|,
 literal|"Spawn threads to execute method(s)\n"
 block|}
 block|,
 block|{
+literal|5
+block|,
+literal|"  Trace<State> [<Namepath>] [Once]"
+block|,
+literal|"Trace control method execution\n"
+block|}
+block|,
+block|{
 literal|1
 block|,
-literal|"  Trace<method name>"
+literal|"     Enable"
 block|,
-literal|"Trace method execution\n"
+literal|"Enable all messages\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     Disable"
+block|,
+literal|"Disable tracing\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     Method"
+block|,
+literal|"Enable method execution messages\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     Opcode"
+block|,
+literal|"Enable opcode execution messages\n"
 block|}
 block|,
 block|{
@@ -2266,12 +2298,7 @@ name|AE_CTRL_TERMINATE
 operator|)
 return|;
 block|}
-comment|/* Add all commands that come here to the history buffer */
-name|AcpiDbAddToHistory
-argument_list|(
-name|InputBuffer
-argument_list|)
-expr_stmt|;
+comment|/* Find command and add to the history buffer */
 name|ParamCount
 operator|=
 name|AcpiDbGetLine
@@ -2293,6 +2320,20 @@ name|Temp
 operator|=
 literal|0
 expr_stmt|;
+comment|/*      * We don't want to add the !! command to the history buffer. It      * would cause an infinite loop because it would always be the      * previous command.      */
+if|if
+condition|(
+name|CommandIndex
+operator|!=
+name|CMD_HISTORY_LAST
+condition|)
+block|{
+name|AcpiDbAddToHistory
+argument_list|(
+name|InputBuffer
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Verify that we have the minimum number of params */
 if|if
 condition|(
@@ -3241,21 +3282,22 @@ break|break;
 case|case
 name|CMD_TRACE
 case|:
-operator|(
-name|void
-operator|)
-name|AcpiDebugTrace
+name|AcpiDbTrace
 argument_list|(
 name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
 argument_list|,
-literal|0
+name|AcpiGbl_DbArgs
+index|[
+literal|2
+index|]
 argument_list|,
-literal|0
-argument_list|,
-literal|1
+name|AcpiGbl_DbArgs
+index|[
+literal|3
+index|]
 argument_list|)
 expr_stmt|;
 break|break;

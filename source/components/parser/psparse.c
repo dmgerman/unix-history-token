@@ -232,6 +232,13 @@ argument_list|)
 expr_stmt|;
 comment|/* OK for now */
 block|}
+name|AcpiExStopTraceOpcode
+argument_list|(
+name|Op
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
 comment|/* Delete this op and the subtree below it if asked to */
 if|if
 condition|(
@@ -335,6 +342,12 @@ operator|=
 name|AcpiPsAllocOp
 argument_list|(
 name|AML_INT_RETURN_VALUE_OP
+argument_list|,
+name|Op
+operator|->
+name|Common
+operator|.
+name|Aml
 argument_list|)
 expr_stmt|;
 if|if
@@ -445,6 +458,12 @@ operator|=
 name|AcpiPsAllocOp
 argument_list|(
 name|AML_INT_RETURN_VALUE_OP
+argument_list|,
+name|Op
+operator|->
+name|Common
+operator|.
+name|Aml
 argument_list|)
 expr_stmt|;
 if|if
@@ -527,6 +546,12 @@ operator|->
 name|Common
 operator|.
 name|AmlOpcode
+argument_list|,
+name|Op
+operator|->
+name|Common
+operator|.
+name|Aml
 argument_list|)
 expr_stmt|;
 if|if
@@ -576,6 +601,12 @@ operator|=
 name|AcpiPsAllocOp
 argument_list|(
 name|AML_INT_RETURN_VALUE_OP
+argument_list|,
+name|Op
+operator|->
+name|Common
+operator|.
+name|Aml
 argument_list|)
 expr_stmt|;
 if|if

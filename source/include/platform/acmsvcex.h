@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acenvex.h - Extra host and compiler configuration  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmsvcex.h - Extra VC specific defines, etc.  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,101 +10,39 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__ACENVEX_H__
+name|__ACMSVCEX_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__ACENVEX_H__
+name|__ACMSVCEX_H__
 end_define
 
 begin_comment
-comment|/*! [Begin] no source code translation */
+comment|/* Debug support. */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_CRTDBG_MAP_ALLOC
+end_define
 
 begin_comment
-comment|/******************************************************************************  *  * Extra host configuration files. All ACPICA headers are included before  * including these files.  *  *****************************************************************************/
+comment|/* Enables specific file/lineno for leaks */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_LINUX
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
-file|"aclinuxex.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|WIN32
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|"acwinex.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_AED_EFI
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|"acefiex.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_GNU_EFI
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|"acefiex.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__DragonFly__
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|"acdragonflyex.h"
+file|<crtdbg.h>
 end_include
 
 begin_endif
@@ -112,17 +50,13 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*! [End] no source code translation !*/
-end_comment
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* __ACENVEX_H__ */
+comment|/* __ACMSVCEX_H__ */
 end_comment
 
 end_unit

@@ -259,12 +259,6 @@ literal|1
 block|}
 block|,
 block|{
-literal|"loadbuffer"
-block|,
-literal|0
-block|}
-block|,
-block|{
 literal|"pragma"
 block|,
 literal|1
@@ -328,7 +322,7 @@ block|,
 name|PR_DIRECTIVE_UNDEF
 block|,
 name|PR_DIRECTIVE_WARNING
-block|, }
+block|}
 enum|;
 end_enum
 
@@ -614,7 +608,7 @@ decl_stmt|;
 name|PrGetNextLineInit
 argument_list|()
 expr_stmt|;
-comment|/* Scan line-by-line. Comments and blank lines are skipped by this function */
+comment|/* Scan source line-by-line and process directives. Then write the .i file */
 while|while
 condition|(
 operator|(
@@ -1006,6 +1000,30 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/*      * Emit a line directive into the preprocessor file (.pre) after      * every matched directive. This is passed through to the compiler      * so that error/warning messages are kept in sync with the      * original source file.      */
+name|FlPrintFile
+argument_list|(
+name|ASL_FILE_PREPROCESSOR
+argument_list|,
+literal|"#line %u \"%s\" // #%s\n"
+argument_list|,
+name|Gbl_CurrentLineNumber
+argument_list|,
+name|Gbl_Files
+index|[
+name|ASL_FILE_INPUT
+index|]
+operator|.
+name|Filename
+argument_list|,
+name|Gbl_DirectiveInfo
+index|[
+name|Directive
+index|]
+operator|.
+name|Name
+argument_list|)
+expr_stmt|;
 comment|/*      * If we are currently ignoring this block and we encounter a #else or      * #elif, we must ignore their blocks also if the parent block is also      * being ignored.      */
 if|if
 condition|(
@@ -1969,6 +1987,14 @@ name|Token
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|Gbl_SourceLine
+operator|=
+literal|0
+expr_stmt|;
+name|Gbl_NextError
+operator|=
+name|Gbl_ErrorLog
+expr_stmt|;
 break|break;
 default|default:
 comment|/* Should never get here */
@@ -2019,8 +2045,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|PR_WITHIN_COMMENT
+name|PR_MULTI_LINE_COMMENT
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_SINGLE_LINE_COMMENT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_QUOTED_STRING
+value|3
 end_define
 
 begin_decl_stmt
@@ -2123,16 +2163,18 @@ name|ASL_EOF
 operator|)
 return|;
 block|}
-comment|/* We need to worry about multi-line slash-asterisk comments */
-comment|/* Check for comment open */
+comment|/* Update state machine as necessary */
+switch|switch
+condition|(
+name|AcpiGbl_LineScanState
+condition|)
+block|{
+case|case
+name|PR_NORMAL_TEXT
+case|:
+comment|/* Check for multi-line comment start */
 if|if
 condition|(
-operator|(
-name|AcpiGbl_LineScanState
-operator|==
-name|PR_NORMAL_TEXT
-operator|)
-operator|&&
 operator|(
 name|PreviousChar
 operator|==
@@ -2148,18 +2190,68 @@ condition|)
 block|{
 name|AcpiGbl_LineScanState
 operator|=
-name|PR_WITHIN_COMMENT
+name|PR_MULTI_LINE_COMMENT
 expr_stmt|;
 block|}
-comment|/* Check for comment close */
+comment|/* Check for single-line comment start */
+elseif|else
 if|if
 condition|(
 operator|(
-name|AcpiGbl_LineScanState
+name|PreviousChar
 operator|==
-name|PR_WITHIN_COMMENT
+literal|'/'
 operator|)
 operator|&&
+operator|(
+name|c
+operator|==
+literal|'/'
+operator|)
+condition|)
+block|{
+name|AcpiGbl_LineScanState
+operator|=
+name|PR_SINGLE_LINE_COMMENT
+expr_stmt|;
+block|}
+comment|/* Check for quoted string start */
+elseif|else
+if|if
+condition|(
+name|PreviousChar
+operator|==
+literal|'"'
+condition|)
+block|{
+name|AcpiGbl_LineScanState
+operator|=
+name|PR_QUOTED_STRING
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|PR_QUOTED_STRING
+case|:
+if|if
+condition|(
+name|PreviousChar
+operator|==
+literal|'"'
+condition|)
+block|{
+name|AcpiGbl_LineScanState
+operator|=
+name|PR_NORMAL_TEXT
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|PR_MULTI_LINE_COMMENT
+case|:
+comment|/* Check for multi-line comment end */
+if|if
+condition|(
 operator|(
 name|PreviousChar
 operator|==
@@ -2177,6 +2269,14 @@ name|AcpiGbl_LineScanState
 operator|=
 name|PR_NORMAL_TEXT
 expr_stmt|;
+block|}
+break|break;
+case|case
+name|PR_SINGLE_LINE_COMMENT
+case|:
+comment|/* Just ignore text until EOL */
+default|default:
+break|break;
 block|}
 comment|/* Always copy the character into line buffer */
 name|Gbl_CurrentLineBuffer
@@ -2205,7 +2305,7 @@ if|if
 condition|(
 name|AcpiGbl_LineScanState
 operator|==
-name|PR_WITHIN_COMMENT
+name|PR_MULTI_LINE_COMMENT
 condition|)
 block|{
 return|return
@@ -2214,6 +2314,25 @@ name|ASL_WITHIN_COMMENT
 operator|)
 return|;
 block|}
+comment|/* End of single-line comment */
+if|if
+condition|(
+name|AcpiGbl_LineScanState
+operator|==
+name|PR_SINGLE_LINE_COMMENT
+condition|)
+block|{
+name|AcpiGbl_LineScanState
+operator|=
+name|PR_NORMAL_TEXT
+expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+comment|/* Blank line */
 if|if
 condition|(
 name|i

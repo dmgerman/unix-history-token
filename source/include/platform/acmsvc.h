@@ -79,13 +79,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|strlwr
-value|_strlwr
-end_define
-
-begin_define
-define|#
-directive|define
 name|O_RDONLY
 value|_O_RDONLY
 end_define
@@ -413,7 +406,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Debug support. Must be last in this file, do not move. */
+comment|/* Debug support. */
 end_comment
 
 begin_ifdef
@@ -421,22 +414,6 @@ ifdef|#
 directive|ifdef
 name|_DEBUG
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_CRTDBG_MAP_ALLOC
-end_define
-
-begin_comment
-comment|/* Enables specific file/lineno for leaks */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<crtdbg.h>
-end_include
 
 begin_comment
 comment|/*  * Debugging memory corruption issues with windows:  * Add #include<crtdbg.h> to accommon.h if necessary.  * Add _ASSERTE(_CrtCheckMemory()); where needed to test memory integrity.  * This can quickly localize the memory corruption.  */

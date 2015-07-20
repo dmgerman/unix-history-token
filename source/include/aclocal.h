@@ -423,11 +423,22 @@ name|acpi_parse_object
 modifier|*
 name|Op
 decl_stmt|;
+name|void
+modifier|*
+name|MethodLocals
+decl_stmt|;
+name|void
+modifier|*
+name|MethodArgs
+decl_stmt|;
 name|UINT32
 name|Value
 decl_stmt|;
 name|UINT32
 name|Length
+decl_stmt|;
+name|UINT8
+name|ArgCount
 decl_stmt|;
 endif|#
 directive|endif
@@ -2339,11 +2350,19 @@ name|ACPI_PARSE_VALUE
 typedef|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ACPI_DISASSEMBLER
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ACPI_DEBUG_OUTPUT
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -2387,8 +2406,8 @@ value|\     UINT8                           Flags;
 comment|/* Type of Op */
 value|\     UINT16                          AmlOpcode;
 comment|/* AML opcode */
-value|\     UINT32                          AmlOffset;
-comment|/* Offset of declaration in AML */
+value|\     UINT8                           *Aml;
+comment|/* Address of declaration in AML */
 value|\     union acpi_parse_object         *Next;
 comment|/* Next op */
 value|\     ACPI_NAMESPACE_NODE             *Node;
@@ -3899,12 +3918,17 @@ comment|/*      * Arguments to be passed to method for the command      * Thread
 name|char
 name|InitArgs
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUGGER
 name|ACPI_OBJECT_TYPE
 name|ArgTypes
 index|[
 literal|4
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 modifier|*
 name|Arguments

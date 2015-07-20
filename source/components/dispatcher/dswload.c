@@ -890,6 +890,10 @@ argument_list|(
 name|WalkState
 operator|->
 name|Opcode
+argument_list|,
+name|WalkState
+operator|->
+name|Aml
 argument_list|)
 expr_stmt|;
 if|if

@@ -1136,6 +1136,17 @@ name|AmlLength
 operator|=
 name|AmlLength
 expr_stmt|;
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|Node
+operator|=
+name|Operand
+index|[
+literal|0
+index|]
+expr_stmt|;
 comment|/*      * Disassemble the method flags. Split off the ArgCount, Serialized      * flag, and SyncLevel for efficiency.      */
 name|MethodFlags
 operator|=

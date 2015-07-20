@@ -31,11 +31,22 @@ directive|include
 file|"acdebug.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DISASSEMBLER
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|"acdisasm.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -322,6 +333,9 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|ParentOp
 decl_stmt|;
+name|UINT32
+name|AmlOffset
+decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
@@ -341,6 +355,26 @@ name|AE_ABORT_METHOD
 operator|)
 return|;
 block|}
+name|AmlOffset
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|ACPI_PTR_DIFF
+argument_list|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|Aml
+argument_list|,
+name|WalkState
+operator|->
+name|ParserState
+operator|.
+name|AmlStart
+argument_list|)
+expr_stmt|;
 comment|/* Check for single-step breakpoint */
 if|if
 condition|(
@@ -353,10 +387,6 @@ name|WalkState
 operator|->
 name|MethodBreakpoint
 operator|<=
-name|Op
-operator|->
-name|Common
-operator|.
 name|AmlOffset
 operator|)
 condition|)
@@ -367,10 +397,6 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"***Break*** at AML offset %X\n"
 argument_list|,
-name|Op
-operator|->
-name|Common
-operator|.
 name|AmlOffset
 argument_list|)
 expr_stmt|;
@@ -402,10 +428,6 @@ name|WalkState
 operator|->
 name|UserBreakpoint
 operator|==
-name|Op
-operator|->
-name|Common
-operator|.
 name|AmlOffset
 operator|)
 condition|)
@@ -414,10 +436,6 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"***UserBreakpoint*** at AML offset %X\n"
 argument_list|,
-name|Op
-operator|->
-name|Common
-operator|.
 name|AmlOffset
 argument_list|)
 expr_stmt|;
@@ -703,6 +721,9 @@ block|}
 block|}
 block|}
 comment|/* Now we can display it */
+ifdef|#
+directive|ifdef
+name|ACPI_DISASSEMBLER
 name|AcpiDmDisassemble
 argument_list|(
 name|WalkState
@@ -712,6 +733,8 @@ argument_list|,
 name|ACPI_UINT32_MAX
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(

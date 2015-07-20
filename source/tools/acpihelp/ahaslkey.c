@@ -395,135 +395,183 @@ index|[]
 init|=
 block|{
 block|{
-literal|"#define"
+literal|"#include \"Filename\""
 block|,
-literal|"OriginalName, DefinedName"
+literal|"Standard include of an ASCII ASL source code file"
 block|}
 block|,
 block|{
-literal|"#elif"
+literal|"#include<Filename>"
 block|,
-literal|"Expression"
+literal|"Alternate syntax for #include, alternate search path"
+block|}
+block|,
+block|{
+literal|"#includebuffer \"Filename\"<Name>"
+block|,
+literal|"Include a binary file to create AML Buffer with ASL namepath"
+block|}
+block|,
+block|{
+literal|"#includebuffer<Filename><Name>"
+block|,
+literal|"Alternate syntax for #includebuffer, alternate search path"
+block|}
+block|,
+block|{
+literal|""
+block|,
+literal|""
+block|}
+block|,
+block|{
+literal|"#define<Name>,<Defined name>"
+block|,
+literal|"Simple macro definition (full macros not supported at this time)"
+block|}
+block|,
+block|{
+literal|"#define<Expression>,<Defined name>"
+block|,
+literal|"Simple macro definition (full macros not supported at this time)"
+block|}
+block|,
+block|{
+literal|"#undef<Defined name>"
+block|,
+literal|"Delete a previous #define"
+block|}
+block|,
+block|{
+literal|""
+block|,
+literal|""
+block|}
+block|,
+block|{
+literal|"#if<Expression>"
+block|,
+literal|"Evaluate<Expression> and test return value"
+block|}
+block|,
+block|{
+literal|"#ifdef<Defined name>"
+block|,
+literal|"Test existence of the<Defined Name>"
+block|}
+block|,
+block|{
+literal|"#ifndef<Defined name>"
+block|,
+literal|"Test non-existence of the<Defined Name>"
+block|}
+block|,
+block|{
+literal|"#elif<Expression>"
+block|,
+literal|"Else-If contraction - evaluate #if<Expression>, test return value"
 block|}
 block|,
 block|{
 literal|"#else"
 block|,
-literal|""
+literal|"Execute alternate case for a previous #if, #ifdef or #ifndef block"
 block|}
 block|,
 block|{
 literal|"#endif"
 block|,
+literal|"Close a previous #if, #ifdef or #ifndef block"
+block|}
+block|,
+block|{
 literal|""
-block|}
-block|,
-block|{
-literal|"#error"
-block|,
-literal|"Message"
-block|}
-block|,
-block|{
-literal|"#if"
-block|,
-literal|"Expression"
-block|}
-block|,
-block|{
-literal|"#ifdef"
-block|,
-literal|"DefinedName"
-block|}
-block|,
-block|{
-literal|"#ifndef"
-block|,
-literal|"DefinedName"
-block|}
-block|,
-block|{
-literal|"#include"
-block|,
-literal|"\"Filename\""
-block|}
-block|,
-block|{
-literal|"#include"
-block|,
-literal|"<Filename>"
-block|}
-block|,
-block|{
-literal|"#includebuffer"
-block|,
-literal|"\"Filename\""
-block|}
-block|,
-block|{
-literal|"#includebuffer"
-block|,
-literal|"<Filename>"
-block|}
-block|,
-block|{
-literal|"#line"
 block|,
 literal|""
 block|}
 block|,
 block|{
-literal|"#pragma"
+literal|"#line<LineNumber> [Filename]"
 block|,
-literal|"Disable error-number"
+literal|"Set the current ASL source code line number, optional filename"
 block|}
 block|,
 block|{
-literal|"#pragma"
-block|,
-literal|"Message"
-block|}
-block|,
-block|{
-literal|"#undef"
-block|,
-literal|"DefinedName"
-block|}
-block|,
-block|{
-literal|"#warning"
+literal|""
 block|,
 literal|""
 block|}
 block|,
 block|{
-literal|"__DATE__"
+literal|"#error \"String\""
 block|,
-literal|"Returns current date"
+literal|"Emit error message and abort compilation"
+block|}
+block|,
+block|{
+literal|"#warning \"String\""
+block|,
+literal|"Emit an iASL warning at this location in the ASL source"
+block|}
+block|,
+block|{
+literal|""
+block|,
+literal|""
+block|}
+block|,
+block|{
+literal|"#pragma disable (Error number)"
+block|,
+literal|"Disable an iASL error or warning number"
+block|}
+block|,
+block|{
+literal|"#pragma message \"String\""
+block|,
+literal|"Emit an informational message to the output file(s)"
+block|}
+block|,
+block|{
+literal|""
+block|,
+literal|""
 block|}
 block|,
 block|{
 literal|"__FILE__"
 block|,
-literal|"Returns name of current ASL file"
-block|}
-block|,
-block|{
-literal|"__LINE__"
-block|,
-literal|"Returns line number in ASL file"
+literal|"Return the simple filename of the current ASL file"
 block|}
 block|,
 block|{
 literal|"__PATH__"
 block|,
-literal|"Returns full pathname of current ASL file"
+literal|"Return the full pathname of the current ASL file"
+block|}
+block|,
+block|{
+literal|"__LINE__"
+block|,
+literal|"Return the current line number within the current ASL file"
+block|}
+block|,
+block|{
+literal|"__DATE__"
+block|,
+literal|"Return the current date"
+block|}
+block|,
+block|{
+literal|"__IASL__"
+block|,
+literal|"Permanently defined for the iASL compiler"
 block|}
 block|,
 block|{
 name|NULL
 block|,
-literal|0
+name|NULL
 block|}
 block|}
 decl_stmt|;

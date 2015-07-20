@@ -49,6 +49,12 @@ directive|include
 file|"acnamesp.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acdebug.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2480,7 +2486,7 @@ name|ResultCount
 operator|)
 condition|)
 block|{
-name|AcpiDmDecodeInternalObject
+name|AcpiDbDecodeInternalObject
 argument_list|(
 name|WalkState
 operator|->

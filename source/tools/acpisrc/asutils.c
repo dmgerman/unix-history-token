@@ -14,62 +14,6 @@ file|"acpisrc.h"
 end_include
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AsStrlwr (strlwr)  *  * PARAMETERS:  SrcString       - The source string to convert  *  * RETURN:      None  *  * DESCRIPTION: Convert string to lowercase  *  * NOTE: This is not a POSIX function, so it appears here so that we don't have  * header file issues with the various hosts/compilers/clibs.  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|void
-name|AsStrlwr
-parameter_list|(
-name|char
-modifier|*
-name|SrcString
-parameter_list|)
-block|{
-name|char
-modifier|*
-name|String
-decl_stmt|;
-comment|/* Walk entire string, lowercasing the letters */
-if|if
-condition|(
-name|SrcString
-condition|)
-block|{
-for|for
-control|(
-name|String
-operator|=
-name|SrcString
-init|;
-operator|*
-name|String
-condition|;
-name|String
-operator|++
-control|)
-block|{
-operator|*
-name|String
-operator|=
-operator|(
-name|char
-operator|)
-name|tolower
-argument_list|(
-operator|(
-name|int
-operator|)
-operator|*
-name|String
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-end_function
-
-begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AsSkipUntilChar  *  * DESCRIPTION: Find the next instance of the input character  *  ******************************************************************************/
 end_comment
 

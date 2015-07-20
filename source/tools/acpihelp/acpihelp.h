@@ -245,7 +245,7 @@ name|Name
 decl_stmt|;
 name|char
 modifier|*
-name|Operands
+name|Description
 decl_stmt|;
 block|}
 name|AH_DIRECTIVE_INFO
@@ -312,17 +312,6 @@ name|BOOLEAN
 name|AhDisplayAll
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|void
-name|AhStrupr
-parameter_list|(
-name|char
-modifier|*
-name|SrcString
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void

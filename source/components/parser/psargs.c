@@ -601,6 +601,8 @@ operator|=
 name|AcpiPsAllocOp
 argument_list|(
 name|AML_INT_NAMEPATH_OP
+argument_list|,
+name|Start
 argument_list|)
 expr_stmt|;
 if|if
@@ -1136,8 +1138,9 @@ modifier|*
 name|ParserState
 parameter_list|)
 block|{
-name|UINT32
-name|AmlOffset
+name|UINT8
+modifier|*
+name|Aml
 decl_stmt|;
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -1179,21 +1182,11 @@ argument_list|(
 name|PsGetNextField
 argument_list|)
 expr_stmt|;
-name|AmlOffset
+name|Aml
 operator|=
-operator|(
-name|UINT32
-operator|)
-name|ACPI_PTR_DIFF
-argument_list|(
 name|ParserState
 operator|->
 name|Aml
-argument_list|,
-name|ParserState
-operator|->
-name|AmlStart
-argument_list|)
 expr_stmt|;
 comment|/* Determine field type */
 switch|switch
@@ -1271,6 +1264,8 @@ operator|=
 name|AcpiPsAllocOp
 argument_list|(
 name|Opcode
+argument_list|,
+name|Aml
 argument_list|)
 expr_stmt|;
 if|if
@@ -1285,14 +1280,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|Field
-operator|->
-name|Common
-operator|.
-name|AmlOffset
-operator|=
-name|AmlOffset
-expr_stmt|;
 comment|/* Decode the field type */
 switch|switch
 condition|(
@@ -1470,6 +1457,12 @@ case|case
 name|AML_INT_CONNECTION_OP
 case|:
 comment|/*          * Argument for Connection operator can be either a Buffer          * (resource descriptor), or a NameString.          */
+name|Aml
+operator|=
+name|ParserState
+operator|->
+name|Aml
+expr_stmt|;
 if|if
 condition|(
 name|ACPI_GET8
@@ -1519,6 +1512,8 @@ operator|=
 name|AcpiPsAllocOp
 argument_list|(
 name|AML_INT_BYTELIST_OP
+argument_list|,
+name|Aml
 argument_list|)
 expr_stmt|;
 if|if
@@ -1662,6 +1657,8 @@ operator|=
 name|AcpiPsAllocOp
 argument_list|(
 name|AML_INT_NAMEPATH_OP
+argument_list|,
+name|Aml
 argument_list|)
 expr_stmt|;
 if|if
@@ -1802,6 +1799,10 @@ operator|=
 name|AcpiPsAllocOp
 argument_list|(
 name|AML_BYTE_OP
+argument_list|,
+name|ParserState
+operator|->
+name|Aml
 argument_list|)
 expr_stmt|;
 if|if
@@ -1942,6 +1943,10 @@ operator|=
 name|AcpiPsAllocOp
 argument_list|(
 name|AML_INT_BYTELIST_OP
+argument_list|,
+name|ParserState
+operator|->
+name|Aml
 argument_list|)
 expr_stmt|;
 if|if
@@ -2044,6 +2049,10 @@ operator|=
 name|AcpiPsAllocOp
 argument_list|(
 name|AML_INT_NAMEPATH_OP
+argument_list|,
+name|ParserState
+operator|->
+name|Aml
 argument_list|)
 expr_stmt|;
 if|if

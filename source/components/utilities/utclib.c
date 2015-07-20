@@ -57,20 +57,6 @@ begin_comment
 comment|/* Entire module */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NEGATIVE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|POSITIVE
-value|0
-end_define
-
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    memcmp  *  * PARAMETERS:  Buffer1         - First Buffer  *              Buffer2         - Second Buffer  *              Count           - Maximum # of bytes to compare  *  * RETURN:      Index where Buffers mismatched, or 0 if Buffers matched  *  * DESCRIPTION: Compare two Buffers, with a maximum length  *  ******************************************************************************/
 end_comment
@@ -1009,7 +995,7 @@ condition|)
 block|{
 name|sign
 operator|=
-name|NEGATIVE
+name|ACPI_SIGN_NEGATIVE
 expr_stmt|;
 operator|++
 name|String
@@ -1029,14 +1015,14 @@ name|String
 expr_stmt|;
 name|sign
 operator|=
-name|POSITIVE
+name|ACPI_SIGN_POSITIVE
 expr_stmt|;
 block|}
 else|else
 block|{
 name|sign
 operator|=
-name|POSITIVE
+name|ACPI_SIGN_POSITIVE
 expr_stmt|;
 block|}
 comment|/*      * If the input parameter Base is zero, then we need to      * determine if it is octal, decimal, or hexadecimal:      */
@@ -1348,7 +1334,7 @@ if|if
 condition|(
 name|sign
 operator|==
-name|NEGATIVE
+name|ACPI_SIGN_NEGATIVE
 condition|)
 block|{
 name|ReturnValue

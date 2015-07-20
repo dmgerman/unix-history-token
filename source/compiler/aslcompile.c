@@ -145,6 +145,16 @@ condition|(
 name|Gbl_PreprocessFlag
 condition|)
 block|{
+comment|/* Enter compiler name as a #define */
+name|PrAddDefine
+argument_list|(
+name|ASL_DEFINE
+argument_list|,
+literal|""
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
 comment|/* Preprocessor */
 name|PrDoPreprocess
 argument_list|()

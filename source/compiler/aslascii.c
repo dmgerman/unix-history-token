@@ -379,6 +379,23 @@ argument_list|,
 literal|"rb"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Handle
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"Could not open input file"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_ERROR
+operator|)
+return|;
+block|}
 name|Status
 operator|.
 name|Line

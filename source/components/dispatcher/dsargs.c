@@ -131,6 +131,8 @@ operator|=
 name|AcpiPsAllocOp
 argument_list|(
 name|AML_INT_EVAL_SUBTREE_OP
+argument_list|,
+name|AmlStart
 argument_list|)
 expr_stmt|;
 if|if
@@ -271,6 +273,8 @@ operator|=
 name|AcpiPsAllocOp
 argument_list|(
 name|AML_INT_EVAL_SUBTREE_OP
+argument_list|,
+name|AmlStart
 argument_list|)
 expr_stmt|;
 if|if

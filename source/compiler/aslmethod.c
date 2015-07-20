@@ -743,7 +743,7 @@ name|Asl
 operator|.
 name|AmlOpcode
 operator|&
-literal|0x000F
+literal|0x0007
 operator|)
 expr_stmt|;
 comment|/*          * If the local is being used as a target, mark the local          * initialized          */
