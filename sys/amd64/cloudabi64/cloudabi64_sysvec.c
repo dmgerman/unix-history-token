@@ -790,6 +790,44 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|cloudabi64_schedtail
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+name|struct
+name|trapframe
+modifier|*
+name|frame
+init|=
+name|td
+operator|->
+name|td_frame
+decl_stmt|;
+comment|/* Initial register values for processes returning from fork. */
+name|frame
+operator|->
+name|tf_rax
+operator|=
+name|CLOUDABI_PROCESS_CHILD
+expr_stmt|;
+name|frame
+operator|->
+name|tf_rdx
+operator|=
+name|td
+operator|->
+name|td_tid
+expr_stmt|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -873,6 +911,11 @@ operator|.
 name|sv_syscallnames
 operator|=
 name|cloudabi64_syscallnames
+block|,
+operator|.
+name|sv_schedtail
+operator|=
+name|cloudabi64_schedtail
 block|, }
 decl_stmt|;
 end_decl_stmt
