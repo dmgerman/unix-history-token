@@ -6255,7 +6255,7 @@ comment|/* PEM otherwise */
 block|}
 else|else
 block|{
-comment|/* PEM number is equal to domain */
+comment|/* PEM (PCIe MAC/root complex) number is equal to domain */
 name|pem
 operator|=
 name|pci_get_domain
@@ -6263,7 +6263,7 @@ argument_list|(
 name|pci_dev
 argument_list|)
 expr_stmt|;
-comment|/* Hardcode appropriate PEM numbers */
+comment|/* 		 * Set appropriate device ID (passed by the HW along with 		 * the transaction to memory) for different root complex 		 * numbers using hard-coded domain portion for each group. 		 */
 if|if
 condition|(
 name|pem
