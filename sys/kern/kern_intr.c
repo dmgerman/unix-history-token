@@ -4033,14 +4033,18 @@ name|ih_flags
 operator||=
 name|IH_DEAD
 expr_stmt|;
-comment|/* 		 * Ensure that the thread will process the handler list 		 * again and remove this handler if it has already passed 		 * it on the list. 		 */
+comment|/* 		 * Ensure that the thread will process the handler list 		 * again and remove this handler if it has already passed 		 * it on the list. 		 * 		 * The release part of the following store ensures 		 * that the update of ih_flags is ordered before the 		 * it_need setting.  See the comment before 		 * atomic_cmpset_acq(&ithd->it_need, ...) operation in 		 * the ithread_execute_handlers(). 		 */
+name|atomic_store_rel_int
+argument_list|(
+operator|&
 name|ie
 operator|->
 name|ie_thread
 operator|->
 name|it_need
-operator|=
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -4658,12 +4662,16 @@ name|ih_flags
 operator||=
 name|IH_DEAD
 expr_stmt|;
-comment|/* 		 * Ensure that the thread will process the handler list 		 * again and remove this handler if it has already passed 		 * it on the list. 		 */
+comment|/* 		 * Ensure that the thread will process the handler list 		 * again and remove this handler if it has already passed 		 * it on the list. 		 * 		 * The release part of the following store ensures 		 * that the update of ih_flags is ordered before the 		 * it_need setting.  See the comment before 		 * atomic_cmpset_acq(&ithd->it_need, ...) operation in 		 * the ithread_execute_handlers(). 		 */
+name|atomic_store_rel_int
+argument_list|(
+operator|&
 name|it
 operator|->
 name|it_need
-operator|=
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 block|}
 else|else
