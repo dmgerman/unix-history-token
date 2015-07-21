@@ -21,6 +21,12 @@ directive|include
 file|<compat/cloudabi/cloudabi_syscalldefs.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|timespec
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* Converts a FreeBSD errno to a CloudABI errno. */
 end_comment
@@ -30,6 +36,25 @@ name|cloudabi_errno_t
 name|cloudabi_convert_errno
 parameter_list|(
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Converts a struct timespec to a CloudABI timestamp. */
+end_comment
+
+begin_function_decl
+name|int
+name|cloudabi_convert_timespec
+parameter_list|(
+specifier|const
+name|struct
+name|timespec
+modifier|*
+parameter_list|,
+name|cloudabi_timestamp_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
