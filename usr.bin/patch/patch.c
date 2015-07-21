@@ -579,6 +579,15 @@ name|false
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|bool
+name|Vflag
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* buffer holding the name of the rejected patch file. */
 end_comment
@@ -1175,9 +1184,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|backup_type
-operator|==
-name|none
+operator|!
+name|Vflag
 condition|)
 block|{
 if|if
@@ -2941,6 +2949,10 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
+name|Vflag
+operator|=
+name|true
+expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
@@ -3067,8 +3079,8 @@ name|stderr
 argument_list|,
 literal|"usage: patch [-bCcEeflNnRstuv] [-B backup-prefix] [-D symbol] [-d directory]\n"
 literal|"             [-F max-fuzz] [-i patchfile] [-o out-file] [-p strip-count]\n"
-literal|"             [-r rej-name] [-V t | nil | never] [-x number] [-z backup-ext]\n"
-literal|"             [--posix] [origfile [patchfile]]\n"
+literal|"             [-r rej-name] [-V t | nil | never | none] [-x number]\n"
+literal|"             [-z backup-ext] [--posix] [origfile [patchfile]]\n"
 literal|"       patch<patchfile\n"
 argument_list|)
 expr_stmt|;
