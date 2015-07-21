@@ -734,6 +734,9 @@ name|lsp_probe
 index|]
 argument_list|)
 expr_stmt|;
+name|lockstat_enabled
+operator|++
+expr_stmt|;
 name|lockstat_probemap
 index|[
 name|probe
@@ -811,6 +814,9 @@ operator|->
 name|lsp_probe
 index|]
 argument_list|)
+expr_stmt|;
+name|lockstat_enabled
+operator|--
 expr_stmt|;
 name|lockstat_probemap
 index|[
