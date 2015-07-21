@@ -102,7 +102,7 @@ name|struct
 name|blkif_request_segment
 name|seg
 index|[
-name|BLKIF_MAX_SEGMENTS_PER_HEADER_BLOCK
+name|BLKIF_MAX_SEGMENTS_PER_REQUEST
 index|]
 decl_stmt|;
 block|}
@@ -194,7 +194,7 @@ name|struct
 name|blkif_request_segment
 name|seg
 index|[
-name|BLKIF_MAX_SEGMENTS_PER_HEADER_BLOCK
+name|BLKIF_MAX_SEGMENTS_PER_REQUEST
 index|]
 decl_stmt|;
 block|}
@@ -384,7 +384,7 @@ name|i
 decl_stmt|,
 name|n
 init|=
-name|BLKIF_MAX_SEGMENTS_PER_HEADER_BLOCK
+name|BLKIF_MAX_SEGMENTS_PER_REQUEST
 decl_stmt|;
 name|dst
 operator|->
@@ -493,7 +493,7 @@ name|i
 decl_stmt|,
 name|n
 init|=
-name|BLKIF_MAX_SEGMENTS_PER_HEADER_BLOCK
+name|BLKIF_MAX_SEGMENTS_PER_REQUEST
 decl_stmt|;
 name|dst
 operator|->

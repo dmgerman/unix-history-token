@@ -52,6 +52,17 @@ value|((size / PAGE_SIZE) + 1)
 end_define
 
 begin_comment
+comment|/**  * The maximum number of shared memory ring pages we will allow in a  * negotiated block-front/back communication channel.  Allow enough  * ring space for all requests to be  XBD_MAX_REQUEST_SIZE'd.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XBD_MAX_RING_PAGES
+value|32
+end_define
+
+begin_comment
 comment|/**  * The maximum number of outstanding requests blocks (request headers plus  * additional segment blocks) we will allow in a negotiated block-front/back  * communication channel.  */
 end_comment
 
@@ -59,7 +70,8 @@ begin_define
 define|#
 directive|define
 name|XBD_MAX_REQUESTS
-value|256
+define|\
+value|__CONST_RING_SIZE(blkif, PAGE_SIZE * XBD_MAX_RING_PAGES)
 end_define
 
 begin_comment
@@ -84,18 +96,6 @@ directive|define
 name|XBD_MAX_SEGMENTS_PER_REQUEST
 define|\
 value|(MIN(BLKIF_MAX_SEGMENTS_PER_REQUEST,				\ 	     XBD_SIZE_TO_SEGS(XBD_MAX_REQUEST_SIZE)))
-end_define
-
-begin_comment
-comment|/**  * The maximum number of shared memory ring pages we will allow in a  * negotiated block-front/back communication channel.  Allow enough  * ring space for all requests to be  XBD_MAX_REQUEST_SIZE'd.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XBD_MAX_RING_PAGES
-define|\
-value|BLKIF_RING_PAGES(BLKIF_SEGS_TO_BLOCKS(XBD_MAX_SEGMENTS_PER_REQUEST) \ 		       * XBD_MAX_REQUESTS)
 end_define
 
 begin_typedef
@@ -383,9 +383,6 @@ name|xbd_max_requests
 decl_stmt|;
 name|uint32_t
 name|xbd_max_request_segments
-decl_stmt|;
-name|uint32_t
-name|xbd_max_request_blocks
 decl_stmt|;
 name|uint32_t
 name|xbd_max_request_size
