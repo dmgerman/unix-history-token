@@ -723,6 +723,40 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Stuff that is specific to the vendor's implementation */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+function_decl|(
+modifier|*
+name|its_devid_func_t
+function_decl|)
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_struct
+struct|struct
+name|its_quirks
+block|{
+name|uint64_t
+name|cpuid
+decl_stmt|;
+name|uint64_t
+name|cpuid_mask
+decl_stmt|;
+name|its_devid_func_t
+name|devid_func
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 specifier|extern
 name|devclass_t
@@ -885,12 +919,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCI_DEVID
+name|PCI_DEVID_GENERIC
 parameter_list|(
 name|pci_dev
 parameter_list|)
 define|\
-value|({							\ 	(((pci_get_domain(pci_dev)>> 2)<< 19) |	\ 	 ((pci_get_domain(pci_dev) % 4)<< 16) |	\ 	 (pci_get_bus(pci_dev)<< 8) |			\ 	 (pci_get_slot(pci_dev)<< 3) |			\ 	 (pci_get_function(pci_dev)<< 0));		\ })
+value|({								\ 	((pci_get_domain(pci_dev)<< PCI_RID_DOMAIN_SHIFT) |	\ 	(pci_get_bus(pci_dev)<< PCI_RID_BUS_SHIFT) |		\ 	(pci_get_slot(pci_dev)<< PCI_RID_SLOT_SHIFT) |		\ 	(pci_get_function(pci_dev)<< PCI_RID_FUNC_SHIFT));	\ })
 end_define
 
 begin_comment
