@@ -1202,12 +1202,12 @@ name|INET
 end_ifdef
 
 begin_comment
-comment|/*  * Subroutine of udp_input(), which appends the provided mbuf chain to the  * passed pcb/socket.  The caller must provide a sockaddr_in via udp_in that  * contains the source address.  If the socket ends up being an IPv6 socket,  * udp_append() will convert to a sockaddr_in6 before passing the address  * into the socket code.  */
+comment|/*  * Subroutine of udp_input(), which appends the provided mbuf chain to the  * passed pcb/socket.  The caller must provide a sockaddr_in via udp_in that  * contains the source address.  If the socket ends up being an IPv6 socket,  * udp_append() will convert to a sockaddr_in6 before passing the address  * into the socket code.  *  * In the normal case udp_append() will return 0, indicating that you  * must unlock the inp. However if a tunneling protocol is in place we increment  * the inpcb refcnt and unlock the inp, on return from the tunneling protocol we  * then decrement the reference count. If the inp_rele returns 1, indicating the  * inp is gone, we return that to the caller to tell them *not* to unlock  * the inp. In the case of multi-cast this will cause the distribution  * to stop (though most tunneling protocols known currently do *not* use  * multicast).  */
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|udp_append
 parameter_list|(
 name|struct
@@ -1287,6 +1287,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|in_pcbref
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+name|INP_RUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|up
@@ -1312,7 +1322,19 @@ operator|->
 name|u_tun_ctx
 argument_list|)
 expr_stmt|;
-return|return;
+name|INP_RLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|in_pcbrele_rlocked
+argument_list|(
+name|inp
+argument_list|)
+operator|)
+return|;
 block|}
 name|off
 operator|+=
@@ -1341,7 +1363,11 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 ifdef|#
 directive|ifdef
@@ -1394,7 +1420,11 @@ operator|==
 name|NULL
 condition|)
 comment|/* Consumed. */
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 endif|#
 directive|endif
@@ -1422,7 +1452,11 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 endif|#
 directive|endif
@@ -1635,6 +1669,11 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -2645,6 +2684,8 @@ argument_list|,
 name|uh
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|udp_append
 argument_list|(
 name|last
@@ -2658,7 +2699,12 @@ argument_list|,
 operator|&
 name|udp_in
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
+goto|goto
+name|inp_lost
+goto|;
+block|}
 block|}
 name|INP_RUNLOCK
 argument_list|(
@@ -2737,6 +2783,8 @@ argument_list|,
 name|uh
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|udp_append
 argument_list|(
 name|last
@@ -2750,12 +2798,16 @@ argument_list|,
 operator|&
 name|udp_in
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
 name|INP_RUNLOCK
 argument_list|(
 name|last
 argument_list|)
 expr_stmt|;
+name|inp_lost
+label|:
 name|INP_INFO_RUNLOCK
 argument_list|(
 name|pcbinfo
@@ -3173,6 +3225,8 @@ argument_list|,
 name|uh
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|udp_append
 argument_list|(
 name|inp
@@ -3186,7 +3240,9 @@ argument_list|,
 operator|&
 name|udp_in
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
 name|INP_RUNLOCK
 argument_list|(
 name|inp
