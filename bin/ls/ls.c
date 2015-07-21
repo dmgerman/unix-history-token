@@ -514,7 +514,6 @@ comment|/* don't use tab-separated multi-col output */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|f_numericonly
 decl_stmt|;
@@ -1037,6 +1036,11 @@ argument_list|(
 name|NULL
 argument_list|,
 name|XOF_COLUMNS
+argument_list|)
+expr_stmt|;
+name|xo_set_version
+argument_list|(
+name|LS_XO_VERSION
 argument_list|)
 expr_stmt|;
 while|while
