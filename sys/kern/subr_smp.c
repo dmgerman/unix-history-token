@@ -1567,8 +1567,8 @@ name|local_func_arg
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Signal that the rendezvous is fully completed by this CPU. 	 * This means that no member of smp_rv_* pseudo-structure will be 	 * accessed by this target CPU after this point; in particular, 	 * memory pointed by smp_rv_func_arg. 	 */
-name|atomic_add_int
+comment|/* 	 * Signal that the rendezvous is fully completed by this CPU. 	 * This means that no member of smp_rv_* pseudo-structure will be 	 * accessed by this target CPU after this point; in particular, 	 * memory pointed by smp_rv_func_arg. 	 * 	 * The release semantic ensures that all accesses performed by 	 * the current CPU are visible when smp_rendezvous_cpus() 	 * returns, by synchronizing with the 	 * atomic_load_acq_int(&smp_rv_waiters[3]). 	 */
+name|atomic_add_rel_int
 argument_list|(
 operator|&
 name|smp_rv_waiters
@@ -1824,7 +1824,7 @@ condition|)
 name|smp_rendezvous_action
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Ensure that the master CPU waits for all the other 	 * CPUs to finish the rendezvous, so that smp_rv_* 	 * pseudo-structure and the arg are guaranteed to not 	 * be in use. 	 */
+comment|/* 	 * Ensure that the master CPU waits for all the other 	 * CPUs to finish the rendezvous, so that smp_rv_* 	 * pseudo-structure and the arg are guaranteed to not 	 * be in use. 	 * 	 * Load acquire synchronizes with the release add in 	 * smp_rendezvous_action(), which ensures that our caller sees 	 * all memory actions done by the called functions on other 	 * CPUs. 	 */
 while|while
 condition|(
 name|atomic_load_acq_int
