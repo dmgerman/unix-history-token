@@ -437,6 +437,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|VT_SYSCTL_INT
 argument_list|(
 name|enable_altgr
@@ -449,6 +450,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|VT_SYSCTL_INT
 argument_list|(
 name|enable_bell
@@ -461,6 +463,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|VT_SYSCTL_INT
 argument_list|(
 name|debug
@@ -473,6 +476,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|VT_SYSCTL_INT
 argument_list|(
 name|deadtimer
@@ -485,6 +489,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|VT_SYSCTL_INT
 argument_list|(
 name|suspendswitch
@@ -501,6 +506,7 @@ comment|/* Allow to disable some keyboard combinations. */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|VT_SYSCTL_INT
 argument_list|(
 name|kbd_halt
@@ -514,6 +520,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|VT_SYSCTL_INT
 argument_list|(
 name|kbd_poweroff
@@ -527,6 +534,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|VT_SYSCTL_INT
 argument_list|(
 name|kbd_reboot
@@ -540,6 +548,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|VT_SYSCTL_INT
 argument_list|(
 name|kbd_debug
@@ -553,6 +562,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|VT_SYSCTL_INT
 argument_list|(
 name|kbd_panic
