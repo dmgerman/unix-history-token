@@ -27,6 +27,12 @@ directive|include
 file|<machine/frame.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/armreg.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -495,10 +501,19 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* TODO: This is bogus */
+name|uint64_t
+name|ret
+decl_stmt|;
+name|ret
+operator|=
+name|READ_SPECIALREG
+argument_list|(
+name|cntvct_el0
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|1
+name|ret
 operator|)
 return|;
 block|}
