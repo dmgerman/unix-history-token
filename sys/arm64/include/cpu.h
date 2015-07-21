@@ -357,6 +357,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_ID_RAW
+parameter_list|(
+name|impl
+parameter_list|,
+name|part
+parameter_list|,
+name|var
+parameter_list|,
+name|rev
+parameter_list|)
+define|\
+value|(CPU_IMPL_TO_MIDR((impl)) |				\     CPU_PART_TO_MIDR((part)) | CPU_VAR_TO_MIDR((var)) |	\     CPU_REV_TO_MIDR((rev)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_MATCH
 parameter_list|(
 name|mask
@@ -370,7 +387,20 @@ parameter_list|,
 name|rev
 parameter_list|)
 define|\
-value|(((mask)& PCPU_GET(midr)) == (CPU_IMPL_TO_MIDR((impl)) |		\     CPU_PART_TO_MIDR((part)) | CPU_VAR_TO_MIDR((var)) |				\     CPU_REV_TO_MIDR((rev))))
+value|(((mask)& PCPU_GET(midr)) ==			\     ((mask)& CPU_ID_RAW((impl), (part), (var), (rev))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_MATCH_RAW
+parameter_list|(
+name|mask
+parameter_list|,
+name|devid
+parameter_list|)
+define|\
+value|(((mask)& PCPU_GET(midr)) == ((mask)& (devid)))
 end_define
 
 begin_decl_stmt
