@@ -695,6 +695,7 @@ name|vtterm_draw_cpu_logos
 parameter_list|(
 modifier|...
 parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_decl_stmt
