@@ -567,18 +567,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|release_aps
-parameter_list|(
-name|void
-modifier|*
-name|dummy
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|u_int
