@@ -586,7 +586,7 @@ argument_list|,
 literal|2
 argument_list|,
 literal|"Draw logo style "
-literal|"(0=Beastie, 1=Alternate beastie, 2=Orb)"
+literal|"(0 = Alternate beastie, 1 = Beastie, 2 = Orb)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
