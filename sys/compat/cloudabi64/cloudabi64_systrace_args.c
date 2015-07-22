@@ -139,13 +139,23 @@ index|]
 operator|=
 name|p
 operator|->
+name|scope
+expr_stmt|;
+comment|/* cloudabi_futexscope_t */
+name|iarg
+index|[
+literal|2
+index|]
+operator|=
+name|p
+operator|->
 name|nwaiters
 expr_stmt|;
 comment|/* cloudabi_nthreads_t */
 operator|*
 name|n_args
 operator|=
-literal|2
+literal|3
 expr_stmt|;
 break|break;
 block|}
@@ -1681,10 +1691,20 @@ operator|->
 name|lock
 expr_stmt|;
 comment|/* cloudabi_lock_t * */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|scope
+expr_stmt|;
+comment|/* cloudabi_futexscope_t */
 operator|*
 name|n_args
 operator|=
-literal|1
+literal|2
 expr_stmt|;
 break|break;
 block|}
@@ -2777,10 +2797,20 @@ operator|->
 name|lock
 expr_stmt|;
 comment|/* cloudabi_lock_t * */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|scope
+expr_stmt|;
+comment|/* cloudabi_futexscope_t */
 operator|*
 name|n_args
 operator|=
-literal|1
+literal|2
 expr_stmt|;
 break|break;
 block|}
@@ -2942,6 +2972,14 @@ expr_stmt|;
 break|break;
 case|case
 literal|1
+case|:
+name|p
+operator|=
+literal|"cloudabi_futexscope_t"
+expr_stmt|;
+break|break;
+case|case
+literal|2
 case|:
 name|p
 operator|=
@@ -4082,6 +4120,14 @@ operator|=
 literal|"cloudabi_lock_t *"
 expr_stmt|;
 break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"cloudabi_futexscope_t"
+expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
@@ -4873,6 +4919,14 @@ case|:
 name|p
 operator|=
 literal|"cloudabi_lock_t *"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"cloudabi_futexscope_t"
 expr_stmt|;
 break|break;
 default|default:
