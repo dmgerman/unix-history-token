@@ -2315,7 +2315,7 @@ argument_list|(
 name|fmt
 argument_list|)
 argument_list|,
-literal|"{en:%s/%%ld} "
+literal|"{en:%s/%%ld}"
 argument_list|,
 name|field
 argument_list|)
