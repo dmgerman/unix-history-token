@@ -1582,6 +1582,8 @@ argument_list|,
 operator|&
 name|fromsa
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|INP_RUNLOCK
 argument_list|(
