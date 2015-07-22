@@ -682,6 +682,34 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEV_SPLASH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|vtterm_draw_cpu_logos
+parameter_list|(
+modifier|...
+parameter_list|)
+end_define
+
+begin_decl_stmt
+specifier|const
+name|unsigned
+name|int
+name|vt_logo_sprite_height
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Font. */
 end_comment
