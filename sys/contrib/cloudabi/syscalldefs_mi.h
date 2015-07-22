@@ -1105,6 +1105,24 @@ value|0x90
 end_define
 
 begin_comment
+comment|// Futex object scopes.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_FUTEXSCOPE_GLOBAL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_FUTEXSCOPE_PROCESS_LOCAL
+value|2
+end_define
+
+begin_comment
 comment|// Read-write lock related constants.
 end_comment
 
@@ -2152,6 +2170,17 @@ end_typedef
 
 begin_comment
 comment|// file_stat_put().
+end_comment
+
+begin_typedef
+typedef|typedef
+name|uint8_t
+name|cloudabi_futexscope_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|// Scope of lock or condition variable.
 end_comment
 
 begin_typedef
