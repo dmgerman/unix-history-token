@@ -583,7 +583,7 @@ name|VT_SYSCTL_INT
 argument_list|(
 name|splash_cpu_style
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 literal|"Draw logo style "
 literal|"(0=Beastie, 1=Alternate beastie, 2=Orb)"
