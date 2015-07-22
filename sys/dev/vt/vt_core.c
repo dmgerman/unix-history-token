@@ -558,7 +558,7 @@ name|VT_SYSCTL_INT
 argument_list|(
 name|splash_cpu
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|"Show logo CPUs during boot"
 argument_list|)
