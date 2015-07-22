@@ -520,7 +520,7 @@ begin_define
 define|#
 directive|define
 name|W_DISPHOSTSIZE
-value|24
+value|40
 end_define
 
 begin_function_decl

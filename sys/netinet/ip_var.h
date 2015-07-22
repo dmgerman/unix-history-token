@@ -1414,7 +1414,7 @@ name|IPFW_IS_PIPE
 init|=
 literal|0x08000000
 block|,
-comment|/* pip1=1, queue = 0 */
+comment|/* pipe=1, queue = 0 */
 block|}
 enum|;
 end_enum

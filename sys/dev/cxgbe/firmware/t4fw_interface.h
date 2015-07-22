@@ -420,6 +420,14 @@ name|FW_POFCOE_ULPTX_WR
 init|=
 literal|0x43
 block|,
+name|FW_ISCSI_TX_DATA_WR
+init|=
+literal|0x45
+block|,
+name|FW_PTP_TX_PKT_WR
+init|=
+literal|0x46
+block|,
 name|FW_LASTC2E_WR
 init|=
 literal|0x70
@@ -3115,6 +3123,58 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|S_FW_PTP_TX_PKT_WR_IMMDLEN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_PTP_TX_PKT_WR_IMMDLEN
+value|0x1ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_PTP_TX_PKT_WR_IMMDLEN
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_PTP_TX_PKT_WR_IMMDLEN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_PTP_TX_PKT_WR_IMMDLEN
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_PTP_TX_PKT_WR_IMMDLEN)& M_FW_PTP_TX_PKT_WR_IMMDLEN)
+end_define
+
+begin_struct
+struct|struct
+name|fw_eth_tx_pkt_ptp_wr
+block|{
+name|__be32
+name|op_immdlen
+decl_stmt|;
+name|__be32
+name|equiq_to_len16
+decl_stmt|;
+name|__be64
+name|r3
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_enum
 enum|enum
 name|fw_eth_tx_eo_type
@@ -3124,6 +3184,10 @@ block|,
 name|FW_ETH_TX_EO_TYPE_TCPSEG
 block|,
 name|FW_ETH_TX_EO_TYPE_NVGRESEG
+block|,
+name|FW_ETH_TX_EO_TYPE_VXLANSEG
+block|,
+name|FW_ETH_TX_EO_TYPE_GENEVESEG
 block|, }
 enum|;
 end_enum
@@ -3239,6 +3303,66 @@ name|plen
 decl_stmt|;
 block|}
 name|nvgreseg
+struct|;
+struct|struct
+name|fw_eth_tx_eo_vxlanseg
+block|{
+name|__u8
+name|type
+decl_stmt|;
+name|__u8
+name|iphdroffout
+decl_stmt|;
+name|__be16
+name|vxlanhdroff
+decl_stmt|;
+name|__be16
+name|iphdroffin
+decl_stmt|;
+name|__be16
+name|tcphdroffin
+decl_stmt|;
+name|__be16
+name|mss
+decl_stmt|;
+name|__be16
+name|r4
+decl_stmt|;
+name|__be32
+name|plen
+decl_stmt|;
+block|}
+name|vxlanseg
+struct|;
+struct|struct
+name|fw_eth_tx_eo_geneveseg
+block|{
+name|__u8
+name|type
+decl_stmt|;
+name|__u8
+name|iphdroffout
+decl_stmt|;
+name|__be16
+name|genevehdroff
+decl_stmt|;
+name|__be16
+name|iphdroffin
+decl_stmt|;
+name|__be16
+name|tcphdroffin
+decl_stmt|;
+name|__be16
+name|mss
+decl_stmt|;
+name|__be16
+name|r4
+decl_stmt|;
+name|__be32
+name|plen
+decl_stmt|;
+block|}
+name|geneveseg
 struct|;
 block|}
 name|u
@@ -3928,6 +4052,14 @@ block|,
 name|FW_FLOWC_MNEM_DCBPRIO
 init|=
 literal|12
+block|,
+name|FW_FLOWC_MNEM_SND_SCALE
+init|=
+literal|13
+block|,
+name|FW_FLOWC_MNEM_RCV_SCALE
+init|=
+literal|14
 block|, }
 enum|;
 end_enum
@@ -4027,7 +4159,7 @@ name|__be32
 name|plen
 decl_stmt|;
 name|__be32
-name|lsodisable_to_proxy
+name|lsodisable_to_flags
 decl_stmt|;
 block|}
 struct|;
@@ -4166,366 +4298,288 @@ end_define
 begin_define
 define|#
 directive|define
-name|S_FW_OFLD_TX_DATA_WR_TUNNEL
-value|19
+name|S_FW_OFLD_TX_DATA_WR_FLAGS
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|M_FW_OFLD_TX_DATA_WR_TUNNEL
-value|0x1
+name|M_FW_OFLD_TX_DATA_WR_FLAGS
+value|0xfffffff
 end_define
 
 begin_define
 define|#
 directive|define
-name|V_FW_OFLD_TX_DATA_WR_TUNNEL
+name|V_FW_OFLD_TX_DATA_WR_FLAGS
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< S_FW_OFLD_TX_DATA_WR_TUNNEL)
+value|((x)<< S_FW_OFLD_TX_DATA_WR_FLAGS)
 end_define
 
 begin_define
 define|#
 directive|define
-name|G_FW_OFLD_TX_DATA_WR_TUNNEL
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|(((x)>> S_FW_OFLD_TX_DATA_WR_TUNNEL)& M_FW_OFLD_TX_DATA_WR_TUNNEL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|F_FW_OFLD_TX_DATA_WR_TUNNEL
-value|V_FW_OFLD_TX_DATA_WR_TUNNEL(1U)
-end_define
-
-begin_define
-define|#
-directive|define
-name|S_FW_OFLD_TX_DATA_WR_SAVE
-value|18
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_FW_OFLD_TX_DATA_WR_SAVE
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_FW_OFLD_TX_DATA_WR_SAVE
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< S_FW_OFLD_TX_DATA_WR_SAVE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|G_FW_OFLD_TX_DATA_WR_SAVE
+name|G_FW_OFLD_TX_DATA_WR_FLAGS
 parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(((x)>> S_FW_OFLD_TX_DATA_WR_SAVE)& M_FW_OFLD_TX_DATA_WR_SAVE)
+value|(((x)>> S_FW_OFLD_TX_DATA_WR_FLAGS)& M_FW_OFLD_TX_DATA_WR_FLAGS)
 end_define
+
+begin_comment
+comment|/* Use fw_ofld_tx_data_wr structure */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|F_FW_OFLD_TX_DATA_WR_SAVE
-value|V_FW_OFLD_TX_DATA_WR_SAVE(1U)
-end_define
-
-begin_define
-define|#
-directive|define
-name|S_FW_OFLD_TX_DATA_WR_FLUSH
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_FW_OFLD_TX_DATA_WR_FLUSH
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_FW_OFLD_TX_DATA_WR_FLUSH
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< S_FW_OFLD_TX_DATA_WR_FLUSH)
-end_define
-
-begin_define
-define|#
-directive|define
-name|G_FW_OFLD_TX_DATA_WR_FLUSH
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|(((x)>> S_FW_OFLD_TX_DATA_WR_FLUSH)& M_FW_OFLD_TX_DATA_WR_FLUSH)
-end_define
-
-begin_define
-define|#
-directive|define
-name|F_FW_OFLD_TX_DATA_WR_FLUSH
-value|V_FW_OFLD_TX_DATA_WR_FLUSH(1U)
-end_define
-
-begin_define
-define|#
-directive|define
-name|S_FW_OFLD_TX_DATA_WR_URGENT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_FW_OFLD_TX_DATA_WR_URGENT
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_FW_OFLD_TX_DATA_WR_URGENT
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< S_FW_OFLD_TX_DATA_WR_URGENT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|G_FW_OFLD_TX_DATA_WR_URGENT
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|(((x)>> S_FW_OFLD_TX_DATA_WR_URGENT)& M_FW_OFLD_TX_DATA_WR_URGENT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|F_FW_OFLD_TX_DATA_WR_URGENT
-value|V_FW_OFLD_TX_DATA_WR_URGENT(1U)
-end_define
-
-begin_define
-define|#
-directive|define
-name|S_FW_OFLD_TX_DATA_WR_MORE
-value|15
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_FW_OFLD_TX_DATA_WR_MORE
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_FW_OFLD_TX_DATA_WR_MORE
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< S_FW_OFLD_TX_DATA_WR_MORE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|G_FW_OFLD_TX_DATA_WR_MORE
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|(((x)>> S_FW_OFLD_TX_DATA_WR_MORE)& M_FW_OFLD_TX_DATA_WR_MORE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|F_FW_OFLD_TX_DATA_WR_MORE
-value|V_FW_OFLD_TX_DATA_WR_MORE(1U)
-end_define
-
-begin_define
-define|#
-directive|define
-name|S_FW_OFLD_TX_DATA_WR_SHOVE
-value|14
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_FW_OFLD_TX_DATA_WR_SHOVE
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_FW_OFLD_TX_DATA_WR_SHOVE
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< S_FW_OFLD_TX_DATA_WR_SHOVE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|G_FW_OFLD_TX_DATA_WR_SHOVE
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|(((x)>> S_FW_OFLD_TX_DATA_WR_SHOVE)& M_FW_OFLD_TX_DATA_WR_SHOVE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|F_FW_OFLD_TX_DATA_WR_SHOVE
-value|V_FW_OFLD_TX_DATA_WR_SHOVE(1U)
-end_define
-
-begin_define
-define|#
-directive|define
-name|S_FW_OFLD_TX_DATA_WR_ULPMODE
+name|S_FW_ISCSI_TX_DATA_WR_FLAGS_HI
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|M_FW_OFLD_TX_DATA_WR_ULPMODE
-value|0xf
+name|M_FW_ISCSI_TX_DATA_WR_FLAGS_HI
+value|0x3fffff
 end_define
 
 begin_define
 define|#
 directive|define
-name|V_FW_OFLD_TX_DATA_WR_ULPMODE
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< S_FW_OFLD_TX_DATA_WR_ULPMODE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|G_FW_OFLD_TX_DATA_WR_ULPMODE
+name|V_FW_ISCSI_TX_DATA_WR_FLAGS_HI
 parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(((x)>> S_FW_OFLD_TX_DATA_WR_ULPMODE)& M_FW_OFLD_TX_DATA_WR_ULPMODE)
+value|((x)<< S_FW_ISCSI_TX_DATA_WR_FLAGS_HI)
 end_define
 
 begin_define
 define|#
 directive|define
-name|S_FW_OFLD_TX_DATA_WR_ULPSUBMODE
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_FW_OFLD_TX_DATA_WR_ULPSUBMODE
-value|0xf
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_FW_OFLD_TX_DATA_WR_ULPSUBMODE
+name|G_FW_ISCSI_TX_DATA_WR_FLAGS_HI
 parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|((x)<< S_FW_OFLD_TX_DATA_WR_ULPSUBMODE)
+value|(((x)>> S_FW_ISCSI_TX_DATA_WR_FLAGS_HI)& M_FW_ISCSI_TX_DATA_WR_FLAGS_HI)
 end_define
 
 begin_define
 define|#
 directive|define
-name|G_FW_OFLD_TX_DATA_WR_ULPSUBMODE
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|(((x)>> S_FW_OFLD_TX_DATA_WR_ULPSUBMODE)& \      M_FW_OFLD_TX_DATA_WR_ULPSUBMODE)
+name|S_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_ISO
+value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|S_FW_OFLD_TX_DATA_WR_PROXY
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_FW_OFLD_TX_DATA_WR_PROXY
+name|M_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_ISO
 value|0x1
 end_define
 
 begin_define
 define|#
 directive|define
-name|V_FW_OFLD_TX_DATA_WR_PROXY
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< S_FW_OFLD_TX_DATA_WR_PROXY)
-end_define
-
-begin_define
-define|#
-directive|define
-name|G_FW_OFLD_TX_DATA_WR_PROXY
+name|V_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_ISO
 parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(((x)>> S_FW_OFLD_TX_DATA_WR_PROXY)& M_FW_OFLD_TX_DATA_WR_PROXY)
+value|((x)<< S_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_ISO)
 end_define
 
 begin_define
 define|#
 directive|define
-name|F_FW_OFLD_TX_DATA_WR_PROXY
-value|V_FW_OFLD_TX_DATA_WR_PROXY(1U)
+name|G_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_ISO
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_ISO)& \      M_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_ISO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_ISO
+define|\
+value|V_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_ISO(1U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_PI
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_PI
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_PI
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((x)<< S_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_PI)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_PI
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_PI)& \      M_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_PI)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_PI
+define|\
+value|V_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_PI(1U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_DCRC
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_DCRC
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_DCRC
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((x)<< S_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_DCRC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_DCRC
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_DCRC)& \      M_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_DCRC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_DCRC
+define|\
+value|V_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_DCRC(1U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_HCRC
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_HCRC
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_HCRC
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((x)<< S_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_HCRC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_HCRC
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_HCRC)& \      M_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_HCRC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_HCRC
+define|\
+value|V_FW_ISCSI_TX_DATA_WR_ULPSUBMODE_HCRC(1U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_ISCSI_TX_DATA_WR_FLAGS_LO
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_ISCSI_TX_DATA_WR_FLAGS_LO
+value|0x3f
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_ISCSI_TX_DATA_WR_FLAGS_LO
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((x)<< S_FW_ISCSI_TX_DATA_WR_FLAGS_LO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_ISCSI_TX_DATA_WR_FLAGS_LO
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_ISCSI_TX_DATA_WR_FLAGS_LO)& M_FW_ISCSI_TX_DATA_WR_FLAGS_LO)
 end_define
 
 begin_struct
@@ -8696,6 +8750,16 @@ name|FW_CHNET_IFCONF_WR_SUBOP_DHCP_SET
 block|,
 name|FW_CHNET_IFCONF_WR_SUBOP_DHCP_GET
 block|,
+name|FW_CHNET_IFCONF_WR_SUBOP_DHCPV6_SET
+block|,
+name|FW_CHNET_IFCONF_WR_SUBOP_DHCPV6_GET
+block|,
+name|FW_CHNET_IFCONF_WR_SUBOP_LINKLOCAL_ADDR_SET
+block|,
+name|FW_CHNET_IFCONF_WR_SUBOP_RA_BASED_ADDR_SET
+block|,
+name|FW_CHNET_IFCONF_WR_SUBOP_ADDR_EXPIRED
+block|,
 name|FW_CHNET_IFCONF_WR_SUBOP_MAX
 block|, }
 enum|;
@@ -8771,38 +8835,29 @@ struct|;
 struct|struct
 name|fw_chnet_ifconf_ipv6
 block|{
-name|__be64
-name|linklocal_lo
+name|__u8
+name|prefix_len
+decl_stmt|;
+name|__u8
+name|r0
+decl_stmt|;
+name|__be16
+name|r1
+decl_stmt|;
+name|__be32
+name|r2
 decl_stmt|;
 name|__be64
-name|linklocal_hi
+name|addr_hi
+decl_stmt|;
+name|__be64
+name|addr_lo
 decl_stmt|;
 name|__be64
 name|router_hi
 decl_stmt|;
 name|__be64
 name|router_lo
-decl_stmt|;
-name|__be64
-name|aconf_hi
-decl_stmt|;
-name|__be64
-name|aconf_lo
-decl_stmt|;
-name|__be64
-name|linklocal_aconf_hi
-decl_stmt|;
-name|__be64
-name|linklocal_aconf_lo
-decl_stmt|;
-name|__be64
-name|router_aconf_hi
-decl_stmt|;
-name|__be64
-name|router_aconf_lo
-decl_stmt|;
-name|__be64
-name|r0
 decl_stmt|;
 block|}
 name|ipv6
@@ -11121,6 +11176,48 @@ name|x
 parameter_list|)
 define|\
 value|(((x)>> S_FW_FOISCSI_CTRL_WR_DDP_PGSZ)& M_FW_FOISCSI_CTRL_WR_DDP_PGSZ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_FOISCSI_CTRL_WR_IPV6
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_FOISCSI_CTRL_WR_IPV6
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_FOISCSI_CTRL_WR_IPV6
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_FOISCSI_CTRL_WR_IPV6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_FOISCSI_CTRL_WR_IPV6
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_FOISCSI_CTRL_WR_IPV6)& M_FW_FOISCSI_CTRL_WR_IPV6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_FW_FOISCSI_CTRL_WR_IPV6
+value|V_FW_FOISCSI_CTRL_WR_IPV6(1U)
 end_define
 
 begin_struct
@@ -13601,8 +13698,11 @@ decl_stmt|;
 name|__be32
 name|equiq_to_len16
 decl_stmt|;
-name|__be64
-name|cookie
+name|__be32
+name|r4
+decl_stmt|;
+name|__be32
+name|xfer_len
 decl_stmt|;
 name|__be32
 name|tid_to_port
@@ -13613,6 +13713,9 @@ decl_stmt|;
 name|__be16
 name|vlan_id
 decl_stmt|;
+name|__be64
+name|cookie
+decl_stmt|;
 name|__be32
 name|s_id
 decl_stmt|;
@@ -13622,14 +13725,8 @@ decl_stmt|;
 name|__be32
 name|tag
 decl_stmt|;
-name|__be32
-name|xfer_len
-decl_stmt|;
-name|__be32
-name|r4
-decl_stmt|;
 name|__be16
-name|r5
+name|r6
 decl_stmt|;
 name|__be16
 name|iqid
@@ -13808,6 +13905,539 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*******************************************************************  *  T10 DIF related definition  *******************************************************************/
+end_comment
+
+begin_struct
+struct|struct
+name|fw_tx_pi_header
+block|{
+name|__be16
+name|op_to_inline
+decl_stmt|;
+name|__u8
+name|pi_interval_tag_type
+decl_stmt|;
+name|__u8
+name|num_pi
+decl_stmt|;
+name|__be32
+name|pi_start4_pi_end4
+decl_stmt|;
+name|__u8
+name|tag_gen_enabled_pkd
+decl_stmt|;
+name|__u8
+name|num_pi_dsg
+decl_stmt|;
+name|__be16
+name|app_tag
+decl_stmt|;
+name|__be32
+name|ref_tag
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|S_FW_TX_PI_HEADER_OP
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_TX_PI_HEADER_OP
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_TX_PI_HEADER_OP
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_TX_PI_HEADER_OP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_TX_PI_HEADER_OP
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_TX_PI_HEADER_OP)& M_FW_TX_PI_HEADER_OP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_TX_PI_HEADER_ULPTXMORE
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_TX_PI_HEADER_ULPTXMORE
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_TX_PI_HEADER_ULPTXMORE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_TX_PI_HEADER_ULPTXMORE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_TX_PI_HEADER_ULPTXMORE
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_TX_PI_HEADER_ULPTXMORE)& M_FW_TX_PI_HEADER_ULPTXMORE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_FW_TX_PI_HEADER_ULPTXMORE
+value|V_FW_TX_PI_HEADER_ULPTXMORE(1U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_TX_PI_HEADER_PI_CONTROL
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_TX_PI_HEADER_PI_CONTROL
+value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_TX_PI_HEADER_PI_CONTROL
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_TX_PI_HEADER_PI_CONTROL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_TX_PI_HEADER_PI_CONTROL
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_TX_PI_HEADER_PI_CONTROL)& M_FW_TX_PI_HEADER_PI_CONTROL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_TX_PI_HEADER_GUARD_TYPE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_TX_PI_HEADER_GUARD_TYPE
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_TX_PI_HEADER_GUARD_TYPE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_TX_PI_HEADER_GUARD_TYPE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_TX_PI_HEADER_GUARD_TYPE
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_TX_PI_HEADER_GUARD_TYPE)& M_FW_TX_PI_HEADER_GUARD_TYPE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_FW_TX_PI_HEADER_GUARD_TYPE
+value|V_FW_TX_PI_HEADER_GUARD_TYPE(1U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_TX_PI_HEADER_VALIDATE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_TX_PI_HEADER_VALIDATE
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_TX_PI_HEADER_VALIDATE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_TX_PI_HEADER_VALIDATE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_TX_PI_HEADER_VALIDATE
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_TX_PI_HEADER_VALIDATE)& M_FW_TX_PI_HEADER_VALIDATE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_FW_TX_PI_HEADER_VALIDATE
+value|V_FW_TX_PI_HEADER_VALIDATE(1U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_TX_PI_HEADER_INLINE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_TX_PI_HEADER_INLINE
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_TX_PI_HEADER_INLINE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_TX_PI_HEADER_INLINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_TX_PI_HEADER_INLINE
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_TX_PI_HEADER_INLINE)& M_FW_TX_PI_HEADER_INLINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_FW_TX_PI_HEADER_INLINE
+value|V_FW_TX_PI_HEADER_INLINE(1U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_TX_PI_HEADER_PI_INTERVAL
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_TX_PI_HEADER_PI_INTERVAL
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_TX_PI_HEADER_PI_INTERVAL
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((x)<< S_FW_TX_PI_HEADER_PI_INTERVAL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_TX_PI_HEADER_PI_INTERVAL
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_TX_PI_HEADER_PI_INTERVAL)& M_FW_TX_PI_HEADER_PI_INTERVAL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_FW_TX_PI_HEADER_PI_INTERVAL
+value|V_FW_TX_PI_HEADER_PI_INTERVAL(1U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_TX_PI_HEADER_TAG_TYPE
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_TX_PI_HEADER_TAG_TYPE
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_TX_PI_HEADER_TAG_TYPE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_TX_PI_HEADER_TAG_TYPE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_TX_PI_HEADER_TAG_TYPE
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_TX_PI_HEADER_TAG_TYPE)& M_FW_TX_PI_HEADER_TAG_TYPE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_TX_PI_HEADER_PI_START4
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_TX_PI_HEADER_PI_START4
+value|0x3ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_TX_PI_HEADER_PI_START4
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_TX_PI_HEADER_PI_START4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_TX_PI_HEADER_PI_START4
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_TX_PI_HEADER_PI_START4)& M_FW_TX_PI_HEADER_PI_START4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_TX_PI_HEADER_PI_END4
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_TX_PI_HEADER_PI_END4
+value|0x3fffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_TX_PI_HEADER_PI_END4
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_TX_PI_HEADER_PI_END4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_TX_PI_HEADER_PI_END4
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_TX_PI_HEADER_PI_END4)& M_FW_TX_PI_HEADER_PI_END4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_TX_PI_HEADER_TAG_GEN_ENABLED
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_TX_PI_HEADER_TAG_GEN_ENABLED
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_TX_PI_HEADER_TAG_GEN_ENABLED
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((x)<< S_FW_TX_PI_HEADER_TAG_GEN_ENABLED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_TX_PI_HEADER_TAG_GEN_ENABLED
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_TX_PI_HEADER_TAG_GEN_ENABLED)& \      M_FW_TX_PI_HEADER_TAG_GEN_ENABLED)
+end_define
+
+begin_enum
+enum|enum
+name|fw_pi_error_type
+block|{
+name|FW_PI_ERROR_GUARD_CHECK_FAILED
+init|=
+literal|0
+block|, }
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|fw_pi_error
+block|{
+name|__be32
+name|err_type_pkd
+decl_stmt|;
+name|__be32
+name|flowid_len16
+decl_stmt|;
+name|__be16
+name|r2
+decl_stmt|;
+name|__be16
+name|app_tag
+decl_stmt|;
+name|__be32
+name|ref_tag
+decl_stmt|;
+name|__be32
+name|pisc
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|S_FW_PI_ERROR_ERR_TYPE
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_PI_ERROR_ERR_TYPE
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_PI_ERROR_ERR_TYPE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_PI_ERROR_ERR_TYPE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_PI_ERROR_ERR_TYPE
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_PI_ERROR_ERR_TYPE)& M_FW_PI_ERROR_ERR_TYPE)
+end_define
 
 begin_comment
 comment|/******************************************************************************  *  C O M M A N D s  *********************/
@@ -14001,6 +14631,10 @@ block|,
 name|FW_FCOE_FCF_CMD
 init|=
 literal|0x38
+block|,
+name|FW_PTP_CMD
+init|=
+literal|0x39
 block|,
 name|FW_LASTC2E_CMD
 init|=
@@ -14456,6 +15090,10 @@ block|,
 name|FW_LDST_ADDRSPC_PCIE_PHY
 init|=
 literal|0x0042
+block|,
+name|FW_LDST_ADDRSPC_CIM_Q
+init|=
+literal|0x0048
 block|, }
 enum|;
 end_enum
@@ -14588,13 +15226,64 @@ block|}
 name|mdio
 struct|;
 struct|struct
+name|fw_ldst_cim_rq
+block|{
+name|__u8
+name|req_first64
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|__u8
+name|req_second64
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|__u8
+name|resp_first64
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|__u8
+name|resp_second64
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|__be32
+name|r3
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|cim_rq
+struct|;
+union|union
 name|fw_ldst_mps
 block|{
+struct|struct
+name|fw_ldst_mps_rplc
+block|{
 name|__be16
-name|fid_ctl
+name|fid_idx
 decl_stmt|;
 name|__be16
 name|rplcpf_pkd
+decl_stmt|;
+name|__be32
+name|rplc255_224
+decl_stmt|;
+name|__be32
+name|rplc223_192
+decl_stmt|;
+name|__be32
+name|rplc191_160
+decl_stmt|;
+name|__be32
+name|rplc159_128
 decl_stmt|;
 name|__be32
 name|rplc127_96
@@ -14608,6 +15297,30 @@ decl_stmt|;
 name|__be32
 name|rplc31_0
 decl_stmt|;
+block|}
+name|rplc
+struct|;
+struct|struct
+name|fw_ldst_mps_atrb
+block|{
+name|__be16
+name|fid_mpsid
+decl_stmt|;
+name|__be16
+name|r2
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|__be32
+name|r3
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|__be32
+name|r4
+decl_stmt|;
 name|__be32
 name|atrb
 decl_stmt|;
@@ -14618,8 +15331,11 @@ literal|16
 index|]
 decl_stmt|;
 block|}
-name|mps
+name|atrb
 struct|;
+block|}
+name|mps
+union|;
 struct|struct
 name|fw_ldst_func
 block|{
@@ -15025,36 +15741,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|S_FW_LDST_CMD_CTL
+name|S_FW_LDST_CMD_IDX
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|M_FW_LDST_CMD_CTL
+name|M_FW_LDST_CMD_IDX
 value|0x7fff
 end_define
 
 begin_define
 define|#
 directive|define
-name|V_FW_LDST_CMD_CTL
+name|V_FW_LDST_CMD_IDX
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< S_FW_LDST_CMD_CTL)
+value|((x)<< S_FW_LDST_CMD_IDX)
 end_define
 
 begin_define
 define|#
 directive|define
-name|G_FW_LDST_CMD_CTL
+name|G_FW_LDST_CMD_IDX
 parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(((x)>> S_FW_LDST_CMD_CTL)& M_FW_LDST_CMD_CTL)
+value|(((x)>> S_FW_LDST_CMD_IDX)& M_FW_LDST_CMD_IDX)
 end_define
 
 begin_define
@@ -15090,6 +15806,41 @@ name|x
 parameter_list|)
 define|\
 value|(((x)>> S_FW_LDST_CMD_RPLCPF)& M_FW_LDST_CMD_RPLCPF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_LDST_CMD_MPSID
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_LDST_CMD_MPSID
+value|0x7fff
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_LDST_CMD_MPSID
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_LDST_CMD_MPSID)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_LDST_CMD_MPSID
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_LDST_CMD_MPSID)& M_FW_LDST_CMD_MPSID)
 end_define
 
 begin_define
@@ -15165,6 +15916,7 @@ name|G_FW_LDST_CMD_LC
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x)>> S_FW_LDST_CMD_LC)& M_FW_LDST_CMD_LC)
 end_define
 
@@ -15206,6 +15958,7 @@ name|G_FW_LDST_CMD_AI
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x)>> S_FW_LDST_CMD_AI)& M_FW_LDST_CMD_AI)
 end_define
 
@@ -15247,6 +16000,7 @@ name|G_FW_LDST_CMD_FN
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x)>> S_FW_LDST_CMD_FN)& M_FW_LDST_CMD_FN)
 end_define
 
@@ -16178,6 +16932,10 @@ block|,
 name|FW_CAPS_CONFIG_ISCSI_TARGET_SSNOFLD
 init|=
 literal|0x00000020
+block|,
+name|FW_CAPS_CONFIG_ISCSI_T10DIF
+init|=
+literal|0x00000040
 block|, }
 enum|;
 end_enum
@@ -16441,6 +17199,11 @@ init|=
 literal|4
 block|,
 comment|/* dma queue params */
+name|FW_PARAMS_MNEM_CHNET
+init|=
+literal|5
+block|,
+comment|/* chnet params */
 name|FW_PARAMS_MNEM_LAST
 block|}
 enum|;
@@ -16559,6 +17322,88 @@ block|,
 name|FW_PARAMS_PARAM_DEV_FWCACHE
 init|=
 literal|0x18
+block|,
+name|FW_PARAMS_PARAM_DEV_RSSINFO
+init|=
+literal|0x19
+block|, }
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * dev bypass parameters; actions and modes  */
+end_comment
+
+begin_enum
+enum|enum
+name|fw_params_param_dev_bypass
+block|{
+comment|/* actions 	 */
+name|FW_PARAMS_PARAM_DEV_BYPASS_PFAIL
+init|=
+literal|0x00
+block|,
+name|FW_PARAMS_PARAM_DEV_BYPASS_CURRENT
+init|=
+literal|0x01
+block|,
+comment|/* modes 	 */
+name|FW_PARAMS_PARAM_DEV_BYPASS_NORMAL
+init|=
+literal|0x00
+block|,
+name|FW_PARAMS_PARAM_DEV_BYPASS_DROP
+init|=
+literal|0x1
+block|,
+name|FW_PARAMS_PARAM_DEV_BYPASS_BYPASS
+init|=
+literal|0x2
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|fw_params_param_dev_phyfw
+block|{
+name|FW_PARAMS_PARAM_DEV_PHYFW_DOWNLOAD
+init|=
+literal|0x00
+block|,
+name|FW_PARAMS_PARAM_DEV_PHYFW_VERSION
+init|=
+literal|0x01
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|fw_params_param_dev_diag
+block|{
+name|FW_PARAM_DEV_DIAG_TMP
+init|=
+literal|0x00
+block|,
+name|FW_PARAM_DEV_DIAG_VDD
+init|=
+literal|0x01
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|fw_params_param_dev_fwcache
+block|{
+name|FW_PARAM_DEV_FWCACHE_FLUSH
+init|=
+literal|0x00
+block|,
+name|FW_PARAM_DEV_FWCACHE_FLUSHINV
+init|=
+literal|0x01
 block|, }
 enum|;
 end_enum
@@ -16778,79 +17623,35 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * dev bypass parameters; actions and modes  */
+comment|/*  * chnet parameters  */
 end_comment
 
 begin_enum
 enum|enum
-name|fw_params_param_dev_bypass
+name|fw_params_param_chnet
 block|{
-comment|/* actions 	 */
-name|FW_PARAMS_PARAM_DEV_BYPASS_PFAIL
+name|FW_PARAMS_PARAM_CHNET_FLAGS
 init|=
 literal|0x00
-block|,
-name|FW_PARAMS_PARAM_DEV_BYPASS_CURRENT
-init|=
-literal|0x01
-block|,
-comment|/* modes 	 */
-name|FW_PARAMS_PARAM_DEV_BYPASS_NORMAL
-init|=
-literal|0x00
-block|,
-name|FW_PARAMS_PARAM_DEV_BYPASS_DROP
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|fw_params_param_chnet_flags
+block|{
+name|FW_PARAMS_PARAM_CHNET_FLAGS_ENABLE_IPV6
 init|=
 literal|0x1
 block|,
-name|FW_PARAMS_PARAM_DEV_BYPASS_BYPASS
+name|FW_PARAMS_PARAM_CHNET_FLAGS_ENABLE_DAD
 init|=
 literal|0x2
-block|, }
-enum|;
-end_enum
-
-begin_enum
-enum|enum
-name|fw_params_param_dev_phyfw
-block|{
-name|FW_PARAMS_PARAM_DEV_PHYFW_DOWNLOAD
-init|=
-literal|0x00
 block|,
-name|FW_PARAMS_PARAM_DEV_PHYFW_VERSION
+name|FW_PARAMS_PARAM_CHNET_FLAGS_ENABLE_MLDV2
 init|=
-literal|0x01
-block|, }
-enum|;
-end_enum
-
-begin_enum
-enum|enum
-name|fw_params_param_dev_diag
-block|{
-name|FW_PARAM_DEV_DIAG_TMP
-init|=
-literal|0x00
-block|,
-name|FW_PARAM_DEV_DIAG_VDD
-init|=
-literal|0x01
-block|, }
-enum|;
-end_enum
-
-begin_enum
-enum|enum
-name|fw_params_param_dev_fwcache
-block|{
-name|FW_PARAM_DEV_FWCACHE_FLUSH
-init|=
-literal|0x00
-block|,
-name|FW_PARAM_DEV_FWCACHE_FLUSHINV
-init|=
-literal|0x01
+literal|0x4
 block|, }
 enum|;
 end_enum
@@ -17517,6 +18318,7 @@ name|G_FW_PFVF_CMD_TC
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x)>> S_FW_PFVF_CMD_TC)& M_FW_PFVF_CMD_TC)
 end_define
 
@@ -17803,6 +18605,7 @@ name|G_FW_IQ_CMD_PFN
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x)>> S_FW_IQ_CMD_PFN)& M_FW_IQ_CMD_PFN)
 end_define
 
@@ -17837,6 +18640,7 @@ name|G_FW_IQ_CMD_VFN
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x)>> S_FW_IQ_CMD_VFN)& M_FW_IQ_CMD_VFN)
 end_define
 
@@ -17913,6 +18717,7 @@ name|G_FW_IQ_CMD_FREE
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x)>> S_FW_IQ_CMD_FREE)& M_FW_IQ_CMD_FREE)
 end_define
 
@@ -18080,6 +18885,7 @@ name|G_FW_IQ_CMD_TYPE
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x)>> S_FW_IQ_CMD_TYPE)& M_FW_IQ_CMD_TYPE)
 end_define
 
@@ -18156,6 +18962,7 @@ name|G_FW_IQ_CMD_VIID
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x)>> S_FW_IQ_CMD_VIID)& M_FW_IQ_CMD_VIID)
 end_define
 
@@ -18575,6 +19382,7 @@ name|G_FW_IQ_CMD_IQO
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x)>> S_FW_IQ_CMD_IQO)& M_FW_IQ_CMD_IQO)
 end_define
 
@@ -18693,6 +19501,7 @@ name|G_FW_IQ_CMD_IQNS
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x)>> S_FW_IQ_CMD_IQNS)& M_FW_IQ_CMD_IQNS)
 end_define
 
@@ -18734,6 +19543,7 @@ name|G_FW_IQ_CMD_IQRO
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x)>> S_FW_IQ_CMD_IQRO)& M_FW_IQ_CMD_IQRO)
 end_define
 
@@ -18896,6 +19706,48 @@ name|x
 parameter_list|)
 define|\
 value|(((x)>> S_FW_IQ_CMD_FL0CNGCHMAP)& M_FW_IQ_CMD_FL0CNGCHMAP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_IQ_CMD_FL0CONGDROP
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_IQ_CMD_FL0CONGDROP
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_IQ_CMD_FL0CONGDROP
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_IQ_CMD_FL0CONGDROP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_IQ_CMD_FL0CONGDROP
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_IQ_CMD_FL0CONGDROP)& M_FW_IQ_CMD_FL0CONGDROP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_FW_IQ_CMD_FL0CONGDROP
+value|V_FW_IQ_CMD_FL0CONGDROP(1U)
 end_define
 
 begin_define
@@ -19778,6 +20630,48 @@ name|x
 parameter_list|)
 define|\
 value|(((x)>> S_FW_IQ_CMD_FL1CNGCHMAP)& M_FW_IQ_CMD_FL1CNGCHMAP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_IQ_CMD_FL1CONGDROP
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_IQ_CMD_FL1CONGDROP
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_IQ_CMD_FL1CONGDROP
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_IQ_CMD_FL1CONGDROP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_IQ_CMD_FL1CONGDROP
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_IQ_CMD_FL1CONGDROP)& M_FW_IQ_CMD_FL1CONGDROP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_FW_IQ_CMD_FL1CONGDROP
+value|V_FW_IQ_CMD_FL1CONGDROP(1U)
 end_define
 
 begin_define
@@ -25204,6 +26098,7 @@ name|G_FW_VI_CMD_PFN
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x)>> S_FW_VI_CMD_PFN)& M_FW_VI_CMD_PFN)
 end_define
 
@@ -25238,6 +26133,7 @@ name|G_FW_VI_CMD_VFN
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x)>> S_FW_VI_CMD_VFN)& M_FW_VI_CMD_VFN)
 end_define
 
@@ -25314,6 +26210,7 @@ name|G_FW_VI_CMD_FREE
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x)>> S_FW_VI_CMD_FREE)& M_FW_VI_CMD_FREE)
 end_define
 
@@ -25355,6 +26252,7 @@ name|G_FW_VI_CMD_TYPE
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x)>> S_FW_VI_CMD_TYPE)& M_FW_VI_CMD_TYPE)
 end_define
 
@@ -25396,6 +26294,7 @@ name|G_FW_VI_CMD_FUNC
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x)>> S_FW_VI_CMD_FUNC)& M_FW_VI_CMD_FUNC)
 end_define
 
@@ -25430,6 +26329,7 @@ name|G_FW_VI_CMD_VIID
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x)>> S_FW_VI_CMD_VIID)& M_FW_VI_CMD_VIID)
 end_define
 
@@ -27334,6 +28234,14 @@ block|,
 name|FW_PORT_CAP_TECHKX4
 init|=
 literal|0x2000
+block|,
+name|FW_PORT_CAP_802_3_PAUSE
+init|=
+literal|0x4000
+block|,
+name|FW_PORT_CAP_802_3_ASM_DIR
+init|=
+literal|0x8000
 block|, }
 enum|;
 end_enum
@@ -27639,6 +28547,41 @@ define|\
 value|(((x)>> S_FW_PORT_CAP_ANEG)& M_FW_PORT_CAP_ANEG)
 end_define
 
+begin_define
+define|#
+directive|define
+name|S_FW_PORT_CAP_802_3
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_PORT_CAP_802_3
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_PORT_CAP_802_3
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_PORT_CAP_802_3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_PORT_CAP_802_3
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_PORT_CAP_802_3)& M_FW_PORT_CAP_802_3)
+end_define
+
 begin_enum
 enum|enum
 name|fw_port_mdi
@@ -27845,13 +28788,15 @@ begin_enum
 enum|enum
 name|fw_port_dcb_versions
 block|{
+name|FW_PORT_DCB_VER_UNKNOWN
+block|,
 name|FW_PORT_DCB_VER_CEE1D0
 block|,
 name|FW_PORT_DCB_VER_CEE1D01
 block|,
 name|FW_PORT_DCB_VER_IEEE
 block|,
-name|FW_PORT_DCB_VER_UNKNOWN
+name|FW_PORT_DCB_VER_AUTO
 init|=
 literal|7
 block|}
@@ -28067,7 +29012,7 @@ name|__u8
 name|r8_lo
 decl_stmt|;
 name|__be16
-name|lpcap
+name|lpacap
 decl_stmt|;
 name|__be64
 name|r9
@@ -28140,6 +29085,12 @@ name|num_tcs_supported
 decl_stmt|;
 name|__u8
 name|pgrate
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|__u8
+name|tsa
 index|[
 literal|8
 index|]
@@ -28235,7 +29186,7 @@ name|__u8
 name|all_syncd_pkd
 decl_stmt|;
 name|__be16
-name|pfc_state_to_app_state
+name|dcb_version_to_app_state
 decl_stmt|;
 name|__be32
 name|r11
@@ -29211,6 +30162,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|S_FW_PORT_CMD_DCB_VERSION
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_PORT_CMD_DCB_VERSION
+value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_PORT_CMD_DCB_VERSION
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_PORT_CMD_DCB_VERSION)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_PORT_CMD_DCB_VERSION
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_PORT_CMD_DCB_VERSION)& M_FW_PORT_CMD_DCB_VERSION)
+end_define
+
+begin_define
+define|#
+directive|define
 name|S_FW_PORT_CMD_PFC_STATE
 value|8
 end_define
@@ -29340,12 +30326,12 @@ name|FW_PORT_TYPE_BT_XFI
 init|=
 literal|3
 block|,
-comment|/* Y, 1, No, No, No, No, 10G */
+comment|/* Y, 1, No, No, No, No, 10G/1G/100M */
 name|FW_PORT_TYPE_BT_XAUI
 init|=
 literal|4
 block|,
-comment|/* Y, 4, No, No, No, No, 10G/1G/100M? */
+comment|/* Y, 4, No, No, No, No, 10G/1G/100M */
 name|FW_PORT_TYPE_KX4
 init|=
 literal|5
@@ -29384,6 +30370,11 @@ comment|/* No, 4, No, No, Yes, Yes, 10G, BP ANGE */
 name|FW_PORT_TYPE_QSFP_10G
 init|=
 literal|12
+block|,
+comment|/* No, 1, Yes, No, No, No, 10G */
+name|FW_PORT_TYPE_QSA
+init|=
+literal|13
 block|,
 comment|/* No, 1, Yes, No, No, No, 10G */
 name|FW_PORT_TYPE_QSFP
@@ -29498,6 +30489,10 @@ name|FW_PORT_MOD_SUB_TYPE_BCM5482
 init|=
 literal|0x6
 block|,
+name|FW_PORT_MOD_SUB_TYPE_BCM84856
+init|=
+literal|0x7
+block|,
 name|FW_PORT_MOD_SUB_TYPE_BT_VSC8634
 init|=
 literal|0x8
@@ -29554,36 +30549,13 @@ block|}
 enum|;
 end_enum
 
-begin_comment
-comment|/* port stats */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FW_NUM_PORT_STATS
-value|50
-end_define
-
-begin_define
-define|#
-directive|define
-name|FW_NUM_PORT_TX_STATS
-value|23
-end_define
-
-begin_define
-define|#
-directive|define
-name|FW_NUM_PORT_RX_STATS
-value|27
-end_define
-
 begin_enum
 enum|enum
 name|fw_port_stats_tx_index
 block|{
 name|FW_STAT_TX_PORT_BYTES_IX
+init|=
+literal|0
 block|,
 name|FW_STAT_TX_PORT_FRAMES_IX
 block|,
@@ -29628,6 +30600,8 @@ block|,
 name|FW_STAT_TX_PORT_PPP6_IX
 block|,
 name|FW_STAT_TX_PORT_PPP7_IX
+block|,
+name|FW_NUM_PORT_TX_STATS
 block|}
 enum|;
 end_enum
@@ -29637,6 +30611,8 @@ enum|enum
 name|fw_port_stat_rx_index
 block|{
 name|FW_STAT_RX_PORT_BYTES_IX
+init|=
+literal|0
 block|,
 name|FW_STAT_RX_PORT_FRAMES_IX
 block|,
@@ -29689,9 +30665,24 @@ block|,
 name|FW_STAT_RX_PORT_PPP7_IX
 block|,
 name|FW_STAT_RX_PORT_LESS_64B_IX
+block|,
+name|FW_STAT_RX_PORT_MAC_ERROR_IX
+block|,
+name|FW_NUM_PORT_RX_STATS
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/* port stats */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FW_NUM_PORT_STATS
+value|(FW_NUM_PORT_TX_STATS + \                                  FW_NUM_PORT_RX_STATS)
+end_define
 
 begin_struct
 struct|struct
@@ -30806,7 +31797,6 @@ begin_define
 define|#
 directive|define
 name|F_FW_PORT_TRACE_MMAP_CMD_DCMAPEN
-define|\
 value|V_FW_PORT_TRACE_MMAP_CMD_DCMAPEN(1U)
 end_define
 
@@ -30952,6 +31942,171 @@ name|x
 parameter_list|)
 define|\
 value|(((x)>> S_FW_PORT_TRACE_MMAP_CMD_CAPTUREMAX)& \      M_FW_PORT_TRACE_MMAP_CMD_CAPTUREMAX)
+end_define
+
+begin_enum
+enum|enum
+name|fw_ptp_subop
+block|{
+comment|/* none */
+name|FW_PTP_SC_INIT_TIMER
+init|=
+literal|0x00
+block|,
+name|FW_PTP_SC_TX_TYPE
+init|=
+literal|0x01
+block|,
+comment|/* init */
+name|FW_PTP_SC_RXTIME_STAMP
+init|=
+literal|0x08
+block|,
+name|FW_PTP_SC_RDRX_TYPE
+init|=
+literal|0x09
+block|,
+comment|/* ts */
+name|FW_PTP_SC_ADJ_FREQ
+init|=
+literal|0x10
+block|,
+name|FW_PTP_SC_ADJ_TIME
+init|=
+literal|0x11
+block|,
+name|FW_PTP_SC_ADJ_FTIME
+init|=
+literal|0x12
+block|,
+name|FW_PTP_SC_WALL_CLOCK
+init|=
+literal|0x13
+block|,
+name|FW_PTP_SC_GET_TIME
+init|=
+literal|0x14
+block|,
+name|FW_PTP_SC_SET_TIME
+init|=
+literal|0x15
+block|, }
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|fw_ptp_cmd
+block|{
+name|__be32
+name|op_to_portid
+decl_stmt|;
+name|__be32
+name|retval_len16
+decl_stmt|;
+union|union
+name|fw_ptp
+block|{
+struct|struct
+name|fw_ptp_sc
+block|{
+name|__u8
+name|sc
+decl_stmt|;
+name|__u8
+name|r3
+index|[
+literal|7
+index|]
+decl_stmt|;
+block|}
+name|scmd
+struct|;
+struct|struct
+name|fw_ptp_init
+block|{
+name|__u8
+name|sc
+decl_stmt|;
+name|__u8
+name|txchan
+decl_stmt|;
+name|__be16
+name|absid
+decl_stmt|;
+name|__be16
+name|mode
+decl_stmt|;
+name|__be16
+name|r3
+decl_stmt|;
+block|}
+name|init
+struct|;
+struct|struct
+name|fw_ptp_ts
+block|{
+name|__u8
+name|sc
+decl_stmt|;
+name|__u8
+name|r3
+decl_stmt|;
+name|__be16
+name|ppb
+decl_stmt|;
+name|__be32
+name|r4
+decl_stmt|;
+name|__be64
+name|tm
+decl_stmt|;
+block|}
+name|ts
+struct|;
+block|}
+name|u
+union|;
+name|__be64
+name|r3
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|S_FW_PTP_CMD_PORTID
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_PTP_CMD_PORTID
+value|0xf
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_PTP_CMD_PORTID
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_PTP_CMD_PORTID)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_PTP_CMD_PORTID
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_PTP_CMD_PORTID)& M_FW_PTP_CMD_PORTID)
 end_define
 
 begin_struct
@@ -32320,7 +33475,6 @@ begin_define
 define|#
 directive|define
 name|F_FW_RSS_GLB_CONFIG_CMD_SYNMAPEN
-define|\
 value|V_FW_RSS_GLB_CONFIG_CMD_SYNMAPEN(1U)
 end_define
 
@@ -32540,7 +33694,6 @@ begin_define
 define|#
 directive|define
 name|F_FW_RSS_GLB_CONFIG_CMD_OFDMAPEN
-define|\
 value|V_FW_RSS_GLB_CONFIG_CMD_OFDMAPEN(1U)
 end_define
 
@@ -32584,7 +33737,6 @@ begin_define
 define|#
 directive|define
 name|F_FW_RSS_GLB_CONFIG_CMD_TNLMAPEN
-define|\
 value|V_FW_RSS_GLB_CONFIG_CMD_TNLMAPEN(1U)
 end_define
 
@@ -33375,10 +34527,14 @@ name|FW_DEVLOG_FACILITY_FOFCOE
 init|=
 literal|0x32
 block|,
+name|FW_DEVLOG_FACILITY_CHNET
+init|=
+literal|0x34
+block|,
 name|FW_DEVLOG_FACILITY_MAX
 init|=
-literal|0x32
-block|, }
+literal|0x34
+block|}
 enum|;
 end_enum
 
@@ -33554,9 +34710,13 @@ name|FW_WATCHDOG_ACTION_TMPCHK
 init|=
 literal|3
 block|,
-name|FW_WATCHDOG_ACTION_MAX
+name|FW_WATCHDOG_ACTION_PAUSEOFF
 init|=
 literal|4
+block|,
+name|FW_WATCHDOG_ACTION_MAX
+init|=
+literal|5
 block|, }
 enum|;
 end_enum
@@ -33948,10 +35108,6 @@ parameter_list|)
 define|\
 value|(((x)>> S_FW_CHNET_IFACE_CMD_IFSTATE)& M_FW_CHNET_IFACE_CMD_IFSTATE)
 end_define
-
-begin_comment
-comment|/******************************************************************************  *   F O F C O E   C O M M A N D s  ************************************/
-end_comment
 
 begin_struct
 struct|struct
@@ -36585,6 +37741,127 @@ comment|/*  *	this register is available as 32-bit of persistent storage (accros
 end_comment
 
 begin_comment
+comment|/******************************************************************************  *   P C I E   F W   P F 7   R E G I S T E R  **********************************************/
+end_comment
+
+begin_comment
+comment|/*  * PF7 stores the Firmware Device Log parameters which allows Host Drivers to  * access the "devlog" which needing to contact firmware.  The encoding is  * mostly the same as that returned by the DEVLOG command except for the size  * which is encoded as the number of entries in multiples-1 of 128 here rather  * than the memory size as is done in the DEVLOG command.  Thus, 0 means 128  * and 15 means 2048.  This of course in turn constrains the allowed values  * for the devlog size ...  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIE_FW_PF_DEVLOG
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_PCIE_FW_PF_DEVLOG_NENTRIES128
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_PCIE_FW_PF_DEVLOG_NENTRIES128
+value|0xf
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_PCIE_FW_PF_DEVLOG_NENTRIES128
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((x)<< S_PCIE_FW_PF_DEVLOG_NENTRIES128)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_PCIE_FW_PF_DEVLOG_NENTRIES128
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_PCIE_FW_PF_DEVLOG_NENTRIES128)& \ 	 M_PCIE_FW_PF_DEVLOG_NENTRIES128)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_PCIE_FW_PF_DEVLOG_ADDR16
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_PCIE_FW_PF_DEVLOG_ADDR16
+value|0xffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_PCIE_FW_PF_DEVLOG_ADDR16
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_PCIE_FW_PF_DEVLOG_ADDR16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_PCIE_FW_PF_DEVLOG_ADDR16
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_PCIE_FW_PF_DEVLOG_ADDR16)& M_PCIE_FW_PF_DEVLOG_ADDR16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_PCIE_FW_PF_DEVLOG_MEMTYPE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_PCIE_FW_PF_DEVLOG_MEMTYPE
+value|0xf
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_PCIE_FW_PF_DEVLOG_MEMTYPE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_PCIE_FW_PF_DEVLOG_MEMTYPE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_PCIE_FW_PF_DEVLOG_MEMTYPE
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_PCIE_FW_PF_DEVLOG_MEMTYPE)& M_PCIE_FW_PF_DEVLOG_MEMTYPE)
+end_define
+
+begin_comment
 comment|/******************************************************************************  *   B I N A R Y   H E A D E R   F O R M A T  **********************************************/
 end_comment
 
@@ -36645,7 +37922,7 @@ decl_stmt|;
 name|__u32
 name|reserved3
 decl_stmt|;
-name|__u32
+name|__be32
 name|magic
 decl_stmt|;
 comment|/* runtime or bootstrap fw */
@@ -36669,6 +37946,8 @@ block|{
 name|FW_HDR_CHIP_T4
 block|,
 name|FW_HDR_CHIP_T5
+block|,
+name|FW_HDR_CHIP_T6
 block|}
 enum|;
 end_enum
@@ -36826,11 +38105,11 @@ literal|0x01
 block|,
 name|T4FW_VERSION_MINOR
 init|=
-literal|0x0b
+literal|0x0e
 block|,
 name|T4FW_VERSION_MICRO
 init|=
-literal|0x1b
+literal|0x02
 block|,
 name|T4FW_VERSION_BUILD
 init|=
@@ -36842,11 +38121,11 @@ literal|0x01
 block|,
 name|T5FW_VERSION_MINOR
 init|=
-literal|0x0b
+literal|0x0e
 block|,
 name|T5FW_VERSION_MICRO
 init|=
-literal|0x1b
+literal|0x02
 block|,
 name|T5FW_VERSION_BUILD
 init|=
@@ -36858,6 +38137,7 @@ end_enum
 begin_enum
 enum|enum
 block|{
+comment|/* T4 	 */
 name|T4FW_HDR_INTFVER_NIC
 init|=
 literal|0x00
@@ -36890,6 +38170,7 @@ name|T4FW_HDR_INTFVER_FCOE
 init|=
 literal|0x00
 block|,
+comment|/* T5 	 */
 name|T5FW_HDR_INTFVER_NIC
 init|=
 literal|0x00
@@ -36919,6 +38200,39 @@ init|=
 literal|0x00
 block|,
 name|T5FW_HDR_INTFVER_FCOE
+init|=
+literal|0x00
+block|,
+comment|/* T6 	 */
+name|T6FW_HDR_INTFVER_NIC
+init|=
+literal|0x00
+block|,
+name|T6FW_HDR_INTFVER_VNIC
+init|=
+literal|0x00
+block|,
+name|T6FW_HDR_INTFVER_OFLD
+init|=
+literal|0x00
+block|,
+name|T6FW_HDR_INTFVER_RI
+init|=
+literal|0x00
+block|,
+name|T6FW_HDR_INTFVER_ISCSIPDU
+init|=
+literal|0x00
+block|,
+name|T6FW_HDR_INTFVER_ISCSI
+init|=
+literal|0x00
+block|,
+name|T6FW_HDR_INTFVER_FCOEPDU
+init|=
+literal|0x00
+block|,
+name|T6FW_HDR_INTFVER_FCOE
 init|=
 literal|0x00
 block|, }

@@ -182,6 +182,84 @@ value|6
 end_define
 
 begin_comment
+comment|// Auxiliary vector entries. All entries that are also part of the
+end_comment
+
+begin_comment
+comment|// x86-64 ABI use the same number. All extensions start at 256.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_AT_ARGDATA
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_AT_ARGDATALEN
+value|257
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_AT_CANARY
+value|258
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_AT_CANARYLEN
+value|259
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_AT_NCPUS
+value|260
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_AT_NULL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_AT_PAGESZ
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_AT_PHDR
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_AT_PHNUM
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_AT_TID
+value|261
+end_define
+
+begin_comment
 comment|// Clocks.
 end_comment
 
@@ -1027,6 +1105,24 @@ value|0x90
 end_define
 
 begin_comment
+comment|// Futex object scopes.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_FUTEXSCOPE_GLOBAL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_FUTEXSCOPE_PROCESS_LOCAL
+value|2
+end_define
+
+begin_comment
 comment|// Read-write lock related constants.
 end_comment
 
@@ -1169,6 +1265,17 @@ define|#
 directive|define
 name|CLOUDABI_MAP_SHARED
 value|0x8
+end_define
+
+begin_comment
+comment|// File descriptor that must be passed in when using CLOUDABI_MAP_ANON.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_MAP_ANON_FD
+value|0xffffffff
 end_define
 
 begin_comment
@@ -2063,6 +2170,17 @@ end_typedef
 
 begin_comment
 comment|// file_stat_put().
+end_comment
+
+begin_typedef
+typedef|typedef
+name|uint8_t
+name|cloudabi_futexscope_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|// Scope of lock or condition variable.
 end_comment
 
 begin_typedef

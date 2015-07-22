@@ -1221,9 +1221,9 @@ name|CRYPTO_AES_ICM
 block|,
 literal|"AES-ICM"
 block|,
-name|RIJNDAEL128_BLOCK_LEN
+name|AES_BLOCK_LEN
 block|,
-name|RIJNDAEL128_BLOCK_LEN
+name|AES_BLOCK_LEN
 block|,
 name|AES_MIN_KEY
 block|,
@@ -1252,9 +1252,9 @@ name|CRYPTO_AES_NIST_GCM_16
 block|,
 literal|"AES-GCM"
 block|,
-name|AES_MIN_BLOCK_LEN
+name|AES_ICM_BLOCK_LEN
 block|,
-name|AES_IV_LEN
+name|AES_GCM_IV_LEN
 block|,
 name|AES_MIN_KEY
 block|,
@@ -1283,9 +1283,9 @@ name|CRYPTO_AES_NIST_GMAC
 block|,
 literal|"AES-GMAC"
 block|,
-name|AES_MIN_BLOCK_LEN
+name|AES_ICM_BLOCK_LEN
 block|,
-name|AES_IV_LEN
+name|AES_GCM_IV_LEN
 block|,
 name|AES_MIN_KEY
 block|,
@@ -1314,7 +1314,7 @@ name|CRYPTO_AES_XTS
 block|,
 literal|"AES-XTS"
 block|,
-name|AES_MIN_BLOCK_LEN
+name|AES_BLOCK_LEN
 block|,
 name|AES_XTS_IV_LEN
 block|,

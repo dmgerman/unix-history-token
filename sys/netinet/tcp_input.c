@@ -8257,6 +8257,14 @@ if|if
 condition|(
 name|V_tcp_do_autorcvbuf
 operator|&&
+operator|(
+name|to
+operator|.
+name|to_flags
+operator|&
+name|TOF_TS
+operator|)
+operator|&&
 name|to
 operator|.
 name|to_tsecr

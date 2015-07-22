@@ -15,6 +15,10 @@ directive|define
 name|SYS_DEV_RANDOM_HASH_H_INCLUDED
 end_define
 
+begin_comment
+comment|/* Keys are formed from cipher blocks */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -58,6 +62,10 @@ name|RANDOM_KEYS_PER_BLOCK
 value|(RANDOM_KEYSIZE/RANDOM_BLOCKSIZE)
 end_define
 
+begin_comment
+comment|/* The size of the zero block portion used to form H_d(m) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -73,7 +81,6 @@ begin_struct
 struct|struct
 name|randomdev_hash
 block|{
-comment|/* Big! Make static! */
 name|SHA256_CTX
 name|sha
 decl_stmt|;
@@ -85,7 +92,6 @@ begin_struct
 struct|struct
 name|randomdev_key
 block|{
-comment|/* Big! Make static! */
 name|keyInstance
 name|key
 decl_stmt|;

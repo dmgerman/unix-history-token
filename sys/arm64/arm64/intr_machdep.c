@@ -1715,7 +1715,6 @@ name|u_int
 name|ipi
 parameter_list|)
 block|{
-comment|/* ARM64TODO: The hard coded 16 will be fixed with am_intrng */
 name|arm_setup_intr
 argument_list|(
 literal|"ipi"
@@ -1740,8 +1739,6 @@ literal|16
 operator|)
 argument_list|,
 name|ipi
-operator|+
-literal|16
 argument_list|,
 name|INTR_TYPE_MISC
 operator||
@@ -1771,8 +1768,6 @@ argument_list|(
 name|root_pic
 argument_list|,
 name|ipi
-operator|+
-literal|16
 argument_list|)
 expr_stmt|;
 block|}
@@ -1879,11 +1874,6 @@ operator|&
 name|cpus
 argument_list|)
 expr_stmt|;
-comment|/* ARM64TODO: This will be fixed with arm_intrng */
-name|ipi
-operator|+=
-literal|16
-expr_stmt|;
 name|CTR2
 argument_list|(
 name|KTR_SMP
@@ -1918,11 +1908,6 @@ name|u_int
 name|ipi
 parameter_list|)
 block|{
-comment|/* ARM64TODO: This will be fixed with arm_intrng */
-name|ipi
-operator|+=
-literal|16
-expr_stmt|;
 name|CTR1
 argument_list|(
 name|KTR_SMP

@@ -97,11 +97,11 @@ begin_define
 define|#
 directive|define
 name|DWC_OTG_NAK_MAX
-value|8
+value|16
 end_define
 
 begin_comment
-comment|/* 1 ms */
+comment|/* 16 NAKs = 2 ms */
 end_comment
 
 begin_ifndef
@@ -564,19 +564,11 @@ name|uint16_t
 name|allocated
 decl_stmt|;
 name|uint16_t
-name|wait_sof
+name|wait_halted
 decl_stmt|;
 name|uint32_t
 name|hcint
 decl_stmt|;
-name|uint16_t
-name|tx_p_size
-decl_stmt|;
-comment|/* periodic */
-name|uint16_t
-name|tx_np_size
-decl_stmt|;
-comment|/* non-periodic */
 block|}
 struct|;
 end_struct
@@ -668,17 +660,6 @@ decl_stmt|;
 name|uint32_t
 name|sc_fifo_size
 decl_stmt|;
-name|uint32_t
-name|sc_tx_max_size
-decl_stmt|;
-name|uint32_t
-name|sc_tx_cur_p_level
-decl_stmt|;
-comment|/* periodic */
-name|uint32_t
-name|sc_tx_cur_np_level
-decl_stmt|;
-comment|/* non-periodic */
 name|uint32_t
 name|sc_irq_mask
 decl_stmt|;

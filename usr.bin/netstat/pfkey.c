@@ -373,7 +373,7 @@ name|p
 argument_list|(
 name|out_total
 argument_list|,
-literal|"\t{:sent-requests//%ju} "
+literal|"\t{:sent-requests/%ju} "
 literal|"{N:/request%s sent from userland}\n"
 argument_list|)
 expr_stmt|;
@@ -551,7 +551,7 @@ name|p
 argument_list|(
 name|out_invsatype
 argument_list|,
-literal|"\t:dropped-bad-sa-type/%ju} "
+literal|"\t{:dropped-bad-sa-type/%ju} "
 literal|"{N:/message%s with invalid sa type}\n"
 argument_list|)
 expr_stmt|;

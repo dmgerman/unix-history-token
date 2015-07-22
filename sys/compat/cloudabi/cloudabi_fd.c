@@ -201,6 +201,8 @@ name|kern_dup
 argument_list|(
 name|td
 argument_list|,
+name|FDDUP_NORMAL
+argument_list|,
 literal|0
 argument_list|,
 name|uap
@@ -240,6 +242,8 @@ argument_list|(
 name|td
 argument_list|,
 name|FDDUP_MUSTREPLACE
+argument_list|,
+literal|0
 argument_list|,
 name|uap
 operator|->

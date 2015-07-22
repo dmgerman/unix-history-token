@@ -4919,13 +4919,13 @@ literal|2
 expr_stmt|;
 break|break;
 case|case
-name|CRYPTO_AES_128_GMAC
+name|CRYPTO_AES_128_NIST_GMAC
 case|:
 case|case
-name|CRYPTO_AES_192_GMAC
+name|CRYPTO_AES_192_NIST_GMAC
 case|:
 case|case
-name|CRYPTO_AES_256_GMAC
+name|CRYPTO_AES_256_NIST_GMAC
 case|:
 name|alen
 operator|=

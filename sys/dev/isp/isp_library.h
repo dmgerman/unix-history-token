@@ -1390,6 +1390,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|int
 name|isp_find_pdb_by_wwn
@@ -1408,9 +1413,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
+end_ifdef
+
 begin_function_decl
 name|int
-name|isp_find_pdb_by_loopid
+name|isp_find_pdb_by_handle
 parameter_list|(
 name|ispsoftc_t
 modifier|*

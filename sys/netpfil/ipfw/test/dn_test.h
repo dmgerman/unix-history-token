@@ -110,9 +110,24 @@ name|t
 parameter_list|,
 name|m
 parameter_list|)
-value|(int)((&((t *)0L)->m))
+value|(int)(intptr_t)((&((t *)0L)->m))
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+comment|// XXX osx
+typedef|typedef
+name|unsigned
+name|int
+name|u_int
+typedef|;
+endif|#
+directive|endif
+comment|/* osx */
 include|#
 directive|include
 file|<mylist.h>
@@ -226,6 +241,14 @@ name|list_head
 name|h
 decl_stmt|;
 comment|/* used by the generator */
+comment|/* bytes served by the flow since the last backlog time */
+name|uint64_t
+name|bytes
+decl_stmt|;
+comment|/* bytes served by the system at the last backlog time  */
+name|uint64_t
+name|sch_bytes
+decl_stmt|;
 block|}
 struct|;
 struct|struct
@@ -270,6 +293,7 @@ name|MALLOC_DECLARE
 parameter_list|(
 name|x
 parameter_list|)
+value|extern volatile int __dummy__ ## x
 define|#
 directive|define
 name|KASSERT

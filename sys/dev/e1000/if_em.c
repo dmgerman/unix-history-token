@@ -2461,6 +2461,37 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+end_ifdef
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|em
+argument_list|,
+name|netmap
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEV_NETMAP */
+end_comment
+
 begin_comment
 comment|/*********************************************************************  *  Tunable default values.  *********************************************************************/
 end_comment
@@ -29575,7 +29606,17 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|EM_CORE_LOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 name|em_init_locked
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|EM_CORE_UNLOCK
 argument_list|(
 name|adapter
 argument_list|)

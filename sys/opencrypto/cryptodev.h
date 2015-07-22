@@ -355,7 +355,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AES_MIN_BLOCK_LEN
+name|AES_ICM_BLOCK_LEN
 value|1
 end_define
 
@@ -398,7 +398,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AES_IV_LEN
+name|AES_GCM_IV_LEN
 value|12
 end_define
 
@@ -419,13 +419,6 @@ end_define
 begin_comment
 comment|/* GF(2^128) generator polynomial */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|AES_CTR_NONCE_SIZE
-value|4
-end_define
 
 begin_comment
 comment|/* Min and Max Encryption Key Sizes */
@@ -541,28 +534,28 @@ begin_define
 define|#
 directive|define
 name|AES_MIN_KEY
-value|16
+value|RIJNDAEL_MIN_KEY
 end_define
 
 begin_define
 define|#
 directive|define
 name|AES_MAX_KEY
-value|32
+value|RIJNDAEL_MAX_KEY
 end_define
 
 begin_define
 define|#
 directive|define
 name|AES_XTS_MIN_KEY
-value|32
+value|(2 * AES_MIN_KEY)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AES_XTS_MAX_KEY
-value|64
+value|(2 * AES_MAX_KEY)
 end_define
 
 begin_define

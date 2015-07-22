@@ -129,23 +129,6 @@ parameter_list|)
 value|((frame)->srr0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|cpu_swapout
-parameter_list|(
-name|p
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cpu_number
-parameter_list|()
-value|0
-end_define
-
 begin_comment
 comment|/*  * CTL_MACHDEP definitions.  */
 end_comment

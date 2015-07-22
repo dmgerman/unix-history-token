@@ -1210,7 +1210,7 @@ name|error
 operator|=
 name|netmap_catch_rx
 argument_list|(
-name|na
+name|gna
 argument_list|,
 literal|1
 argument_list|)
@@ -1365,7 +1365,7 @@ expr_stmt|;
 comment|/* Do not intercept packets on the rx path. */
 name|netmap_catch_rx
 argument_list|(
-name|na
+name|gna
 argument_list|,
 literal|0
 argument_list|)
@@ -2624,11 +2624,6 @@ argument_list|(
 name|kring
 argument_list|)
 expr_stmt|;
-name|nm_txsync_finalize
-argument_list|(
-name|kring
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2915,10 +2910,9 @@ name|u_int
 specifier|const
 name|head
 init|=
-name|nm_rxsync_prologue
-argument_list|(
 name|kring
-argument_list|)
+operator|->
+name|rhead
 decl_stmt|;
 name|int
 name|force_update
@@ -3211,12 +3205,6 @@ operator|=
 name|head
 expr_stmt|;
 block|}
-comment|/* tell userspace that there might be new packets. */
-name|nm_rxsync_finalize
-argument_list|(
-name|kring
-argument_list|)
-expr_stmt|;
 name|IFRATE
 argument_list|(
 name|rate_ctx
@@ -3245,15 +3233,6 @@ name|na
 parameter_list|)
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|na
-operator|->
-name|ifp
-decl_stmt|;
-name|struct
 name|netmap_generic_adapter
 modifier|*
 name|gna
@@ -3264,6 +3243,16 @@ name|netmap_generic_adapter
 operator|*
 operator|)
 name|na
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|netmap_generic_getifp
+argument_list|(
+name|gna
+argument_list|)
 decl_stmt|;
 name|struct
 name|netmap_adapter
@@ -3290,8 +3279,6 @@ argument_list|)
 expr_stmt|;
 name|if_rele
 argument_list|(
-name|na
-operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
@@ -3300,14 +3287,23 @@ argument_list|(
 name|prev_na
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
+name|na
+operator|->
 name|ifp
-operator|!=
+operator|==
 name|NULL
 condition|)
 block|{
+comment|/* 		         * The driver has been removed without releasing 		         * the reference so we need to do it here. 		         */
+name|netmap_adapter_put
+argument_list|(
+name|prev_na
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|WNA
 argument_list|(
 name|ifp
@@ -3328,7 +3324,6 @@ name|ifp
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -3457,6 +3452,24 @@ name|netmap_adapter
 operator|*
 operator|)
 name|gna
+expr_stmt|;
+name|strncpy
+argument_list|(
+name|na
+operator|->
+name|name
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|na
+operator|->
+name|name
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|na
 operator|->

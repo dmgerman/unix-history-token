@@ -4033,7 +4033,7 @@ name|ih_flags
 operator||=
 name|IH_DEAD
 expr_stmt|;
-comment|/* 		 * Ensure that the thread will process the handler list 		 * again and remove this handler if it has already passed 		 * it on the list. 		 */
+comment|/* 		 * Ensure that the thread will process the handler list 		 * again and remove this handler if it has already passed 		 * it on the list. 		 * 		 * The release part of the following store ensures 		 * that the update of ih_flags is ordered before the 		 * it_need setting.  See the comment before 		 * atomic_cmpset_acq(&ithd->it_need, ...) operation in 		 * the ithread_execute_handlers(). 		 */
 name|atomic_store_rel_int
 argument_list|(
 operator|&
@@ -4317,7 +4317,7 @@ name|ie_name
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set it_need to tell the thread to keep running if it is already 	 * running.  Then, lock the thread and see if we actually need to 	 * put it on the runqueue. 	 */
+comment|/* 	 * Set it_need to tell the thread to keep running if it is already 	 * running.  Then, lock the thread and see if we actually need to 	 * put it on the runqueue. 	 * 	 * Use store_rel to arrange that the store to ih_need in 	 * swi_sched() is before the store to it_need and prepare for 	 * transfer of this order to loads in the ithread. 	 */
 name|atomic_store_rel_int
 argument_list|(
 operator|&
@@ -4662,7 +4662,7 @@ name|ih_flags
 operator||=
 name|IH_DEAD
 expr_stmt|;
-comment|/* 		 * Ensure that the thread will process the handler list 		 * again and remove this handler if it has already passed 		 * it on the list. 		 */
+comment|/* 		 * Ensure that the thread will process the handler list 		 * again and remove this handler if it has already passed 		 * it on the list. 		 * 		 * The release part of the following store ensures 		 * that the update of ih_flags is ordered before the 		 * it_need setting.  See the comment before 		 * atomic_cmpset_acq(&ithd->it_need, ...) operation in 		 * the ithread_execute_handlers(). 		 */
 name|atomic_store_rel_int
 argument_list|(
 operator|&
@@ -4951,7 +4951,7 @@ name|ie_name
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set it_need to tell the thread to keep running if it is already 	 * running.  Then, lock the thread and see if we actually need to 	 * put it on the runqueue. 	 */
+comment|/* 	 * Set it_need to tell the thread to keep running if it is already 	 * running.  Then, lock the thread and see if we actually need to 	 * put it on the runqueue. 	 * 	 * Use store_rel to arrange that the store to ih_need in 	 * swi_sched() is before the store to it_need and prepare for 	 * transfer of this order to loads in the ithread. 	 */
 name|atomic_store_rel_int
 argument_list|(
 operator|&
@@ -5346,15 +5346,11 @@ name|RANDOM_SWI
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set ih_need for this handler so that if the ithread is already 	 * running it will execute this handler on the next pass.  Otherwise, 	 * it will execute it the next time it runs. 	 */
-name|atomic_store_rel_int
-argument_list|(
-operator|&
 name|ih
 operator|->
 name|ih_need
-argument_list|,
+operator|=
 literal|1
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5707,41 +5703,34 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-comment|/* 		 * For software interrupt threads, we only execute 		 * handlers that have their need flag set.  Hardware 		 * interrupt threads always invoke all of their handlers. 		 */
+comment|/* 		 * For software interrupt threads, we only execute 		 * handlers that have their need flag set.  Hardware 		 * interrupt threads always invoke all of their handlers. 		 * 		 * ih_need can only be 0 or 1.  Failed cmpset below 		 * means that there is no request to execute handlers, 		 * so a retry of the cmpset is not needed. 		 */
 if|if
 condition|(
+operator|(
 name|ie
 operator|->
 name|ie_flags
 operator|&
 name|IE_SOFT
-condition|)
-block|{
-if|if
-condition|(
-name|atomic_load_acq_int
-argument_list|(
-operator|&
-name|ih
-operator|->
-name|ih_need
-argument_list|)
-operator|==
+operator|)
+operator|!=
 literal|0
-condition|)
-continue|continue;
-else|else
-name|atomic_store_rel_int
+operator|&&
+name|atomic_cmpset_int
 argument_list|(
 operator|&
 name|ih
 operator|->
 name|ih_need
 argument_list|,
+literal|1
+argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-block|}
+operator|==
+literal|0
+condition|)
+continue|continue;
 comment|/* Execute this handler. */
 name|CTR6
 argument_list|(
@@ -6100,31 +6089,23 @@ name|kthread_exit
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 		 * Service interrupts.  If another interrupt arrives while 		 * we are running, it will set it_need to note that we 		 * should make another pass. 		 */
+comment|/* 		 * Service interrupts.  If another interrupt arrives while 		 * we are running, it will set it_need to note that we 		 * should make another pass. 		 * 		 * The load_acq part of the following cmpset ensures 		 * that the load of ih_need in ithread_execute_handlers() 		 * is ordered after the load of it_need here. 		 */
 while|while
 condition|(
-name|atomic_load_acq_int
-argument_list|(
-operator|&
-name|ithd
-operator|->
-name|it_need
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* 			 * This might need a full read and write barrier 			 * to make sure that this write posts before any 			 * of the memory or device accesses in the 			 * handlers. 			 */
-name|atomic_store_rel_int
+name|atomic_cmpset_acq_int
 argument_list|(
 operator|&
 name|ithd
 operator|->
 name|it_need
 argument_list|,
+literal|1
+argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
 name|ithread_execute_handlers
 argument_list|(
 name|p
@@ -6132,7 +6113,6 @@ argument_list|,
 name|ie
 argument_list|)
 expr_stmt|;
-block|}
 name|WITNESS_WARN
 argument_list|(
 name|WARN_PANIC
@@ -6158,7 +6138,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|atomic_load_acq_int
 argument_list|(
 operator|&
@@ -6168,9 +6147,7 @@ name|it_need
 argument_list|)
 operator|==
 literal|0
-operator|)
 operator|&&
-operator|!
 operator|(
 name|ithd
 operator|->
@@ -6182,6 +6159,8 @@ operator||
 name|IT_WAIT
 operator|)
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|TD_SET_IWAIT
@@ -6768,31 +6747,24 @@ name|kthread_exit
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 		 * Service interrupts.  If another interrupt arrives while 		 * we are running, it will set it_need to note that we 		 * should make another pass. 		 */
+comment|/* 		 * Service interrupts.  If another interrupt arrives while 		 * we are running, it will set it_need to note that we 		 * should make another pass. 		 * 		 * The load_acq part of the following cmpset ensures 		 * that the load of ih_need in ithread_execute_handlers() 		 * is ordered after the load of it_need here. 		 */
 while|while
 condition|(
-name|atomic_load_acq_int
-argument_list|(
-operator|&
-name|ithd
-operator|->
-name|it_need
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* 			 * This might need a full read and write barrier 			 * to make sure that this write posts before any 			 * of the memory or device accesses in the 			 * handlers. 			 */
-name|atomic_store_rel_int
+name|atomic_cmpset_acq_int
 argument_list|(
 operator|&
 name|ithd
 operator|->
 name|it_need
 argument_list|,
+literal|1
+argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|priv
@@ -6838,7 +6810,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|atomic_load_acq_int
 argument_list|(
 operator|&
@@ -6848,9 +6819,7 @@ name|it_need
 argument_list|)
 operator|==
 literal|0
-operator|)
 operator|&&
-operator|!
 operator|(
 name|ithd
 operator|->
@@ -6862,6 +6831,8 @@ operator||
 name|IT_WAIT
 operator|)
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|TD_SET_IWAIT

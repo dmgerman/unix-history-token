@@ -2013,6 +2013,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Ok, got both sockets, time to create provider. 	 */
+name|memset
+argument_list|(
+operator|&
+name|ggioc
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ggioc
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ggioc
 operator|.
 name|gctl_version

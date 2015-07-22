@@ -3499,7 +3499,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|VI_LOCK
+name|vhold
 argument_list|(
 operator|*
 name|vpp
@@ -3527,7 +3527,7 @@ name|cnp
 operator|->
 name|cn_lkflags
 operator||
-name|LK_INTERLOCK
+name|LK_VNHELD
 argument_list|,
 name|cnp
 operator|->
@@ -7048,7 +7048,7 @@ name|ncp
 operator|->
 name|nc_dvp
 expr_stmt|;
-name|VI_LOCK
+name|vhold
 argument_list|(
 name|ddvp
 argument_list|)
@@ -7062,11 +7062,11 @@ name|vget
 argument_list|(
 name|ddvp
 argument_list|,
-name|LK_INTERLOCK
-operator||
 name|LK_SHARED
 operator||
 name|LK_NOWAIT
+operator||
+name|LK_VNHELD
 argument_list|,
 name|curthread
 argument_list|)

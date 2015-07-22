@@ -978,6 +978,9 @@ name|db_addr_t
 name|loc
 parameter_list|)
 block|{
+name|db_expr_t
+name|off
+decl_stmt|;
 name|db_printsym
 argument_list|(
 name|loc
@@ -985,6 +988,21 @@ argument_list|,
 name|DB_STGY_PROC
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|db_search_symbol
+argument_list|(
+name|loc
+argument_list|,
+name|DB_STGY_PROC
+argument_list|,
+operator|&
+name|off
+argument_list|)
+operator|!=
+name|C_DB_SYM_NULL
+condition|)
+block|{
 name|db_printf
 argument_list|(
 literal|":\t"
@@ -1000,6 +1018,7 @@ argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

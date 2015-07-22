@@ -184,67 +184,67 @@ value|0x02
 end_define
 
 begin_comment
-comment|/*  * Definitions for IP precedence (also in ip_tos) (hopefully unused).  */
+comment|/*  * Definitions for IP precedence (also in ip_tos) (deprecated).  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IPTOS_PREC_NETCONTROL
-value|0xe0
+value|IPTOS_DSCP_CS7
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPTOS_PREC_INTERNETCONTROL
-value|0xc0
+value|IPTOS_DSCP_CS6
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPTOS_PREC_CRITIC_ECP
-value|0xa0
+value|IPTOS_DSCP_CS5
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPTOS_PREC_FLASHOVERRIDE
-value|0x80
+value|IPTOS_DSCP_CS4
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPTOS_PREC_FLASH
-value|0x60
+value|IPTOS_DSCP_CS3
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPTOS_PREC_IMMEDIATE
-value|0x40
+value|IPTOS_DSCP_CS2
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPTOS_PREC_PRIORITY
-value|0x20
+value|IPTOS_DSCP_CS1
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPTOS_PREC_ROUTINE
-value|0x00
+value|IPTOS_DSCP_CS0
 end_define
 
 begin_comment
-comment|/*  * Definitions for DiffServ Codepoints as per RFC2474  */
+comment|/*  * Definitions for DiffServ Codepoints as per RFC2474 and RFC5865.  */
 end_comment
 
 begin_define
@@ -371,6 +371,13 @@ define|#
 directive|define
 name|IPTOS_DSCP_CS5
 value|0xa0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPTOS_DSCP_VA
+value|0xb0
 end_define
 
 begin_define

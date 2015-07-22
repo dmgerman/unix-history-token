@@ -1062,6 +1062,238 @@ literal|10
 block|}
 block|,
 block|{
+name|DEVICEID_LPT3
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT4
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT5
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT6
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT7
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT8
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT9
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT10
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT11
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT12
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT13
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT14
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT15
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT16
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT17
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT18
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT19
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT20
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT21
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT22
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT23
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT24
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT25
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT26
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT27
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT28
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT29
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT30
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_LPT31
+block|,
+literal|"Intel Lynx Point watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
 name|DEVICEID_WCPT2
 block|,
 literal|"Intel Wildcat Point watchdog timer"

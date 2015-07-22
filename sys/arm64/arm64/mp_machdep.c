@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_kstack_pages.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_platform.h"
 end_include
 
@@ -901,6 +907,26 @@ name|td_pcb
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* 	 * Identify current CPU. This is necessary to setup 	 * affinity registers and to provide support for 	 * runtime chip identification. 	 */
+end_comment
+
+begin_expr_stmt
+name|identify_cpu
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Configure the interrupt controller */
+end_comment
+
+begin_expr_stmt
+name|arm_init_secondary
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
 begin_for
 for|for
 control|(
@@ -948,16 +974,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Configure the interrupt controller */
-end_comment
-
-begin_expr_stmt
-name|arm_init_secondary
-argument_list|()
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* Enable interrupts */

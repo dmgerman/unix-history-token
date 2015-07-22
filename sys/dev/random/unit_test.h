@@ -32,14 +32,23 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-name|void
-name|random_adaptor_unblock
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
 
 begin_if
 if|#
@@ -173,6 +182,13 @@ define|#
 directive|define
 name|HARVESTSIZE
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|RANDOM_BLOCKSIZE
+value|16
 end_define
 
 begin_enum

@@ -711,22 +711,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * When doing RSS, map it to the same outbound queue 	 * as the incoming flow would be mapped to. 	 * 	 * If everything is setup correctly, it should be the 	 * same bucket that the current CPU we're on is. 	 */
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|1100054
-if|if
-condition|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
-condition|)
-block|{
-else|#
-directive|else
 if|if
 condition|(
 name|M_HASHTYPE_GET
@@ -737,8 +721,6 @@ operator|!=
 name|M_HASHTYPE_NONE
 condition|)
 block|{
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|RSS
@@ -905,6 +887,9 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|ixgbe_mq_start_locked
 parameter_list|(
@@ -8009,14 +7994,16 @@ argument_list|,
 name|ptype
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
-ifdef|#
-directive|ifdef
-name|RSS
+comment|/*                          * In case of multiqueue, we have RXCSUM.PCSD bit set                          * and never cleared. This means we have RSS hash                          * available to be used.                             */
+if|if
+condition|(
+name|adapter
+operator|->
+name|num_queues
+operator|>
+literal|1
+condition|)
+block|{
 name|sendmp
 operator|->
 name|m_pkthdr
@@ -8036,19 +8023,6 @@ operator|.
 name|rss
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|1100054
-name|sendmp
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
-expr_stmt|;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|pkt_info
@@ -8164,9 +8138,9 @@ name|M_HASHTYPE_OPAQUE
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-comment|/* RSS */
+block|}
+else|else
+block|{
 name|sendmp
 operator|->
 name|m_pkthdr
@@ -8177,11 +8151,6 @@ name|que
 operator|->
 name|msix
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|1100054
 name|M_HASHTYPE_SET
 argument_list|(
 name|sendmp
@@ -8189,22 +8158,7 @@ argument_list|,
 name|M_HASHTYPE_OPAQUE
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|sendmp
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
-expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
-comment|/* RSS */
-endif|#
-directive|endif
-comment|/* FreeBSD_version */
+block|}
 block|}
 name|next_desc
 label|:

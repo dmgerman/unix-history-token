@@ -4479,11 +4479,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|connection_remove
-argument_list|(
-name|conn
-argument_list|)
-expr_stmt|;
 name|sendfail
 argument_list|(
 name|sfd
@@ -4491,6 +4486,11 @@ argument_list|,
 name|errno
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|connection_remove
+argument_list|(
+name|conn
 argument_list|)
 expr_stmt|;
 return|return

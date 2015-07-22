@@ -2006,11 +2006,36 @@ argument_list|,
 name|child
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|devi
+operator|->
+name|npins
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|devi
+operator|->
+name|npins
+operator|>
+literal|1
+condition|)
 name|retval
 operator|+=
 name|printf
 argument_list|(
-literal|" at pin(s) "
+literal|" at pins "
+argument_list|)
+expr_stmt|;
+else|else
+name|retval
+operator|+=
+name|printf
+argument_list|(
+literal|" at pin "
 argument_list|)
 expr_stmt|;
 name|gpiobus_print_pins
@@ -2034,6 +2059,7 @@ argument_list|,
 name|pins
 argument_list|)
 expr_stmt|;
+block|}
 name|resource_list_print_type
 argument_list|(
 operator|&

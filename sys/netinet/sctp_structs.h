@@ -136,6 +136,9 @@ argument_list|)
 name|next_resp
 expr_stmt|;
 name|uint32_t
+name|seq
+decl_stmt|;
+name|uint32_t
 name|tsn
 decl_stmt|;
 name|uint32_t
@@ -1574,6 +1577,52 @@ union|;
 end_union
 
 begin_comment
+comment|/* States for outgoing streams */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_STREAM_CLOSED
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_STREAM_OPENING
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_STREAM_OPEN
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_STREAM_RESET_PENDING
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_STREAM_RESET_IN_FLIGHT
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MAX_STREAMS_AT_ONCE_RESET
+value|200
+end_define
+
+begin_comment
 comment|/* This struct is used to track the traffic on outbound streams */
 end_comment
 
@@ -1592,6 +1641,7 @@ decl_stmt|;
 name|uint32_t
 name|chunks_on_queues
 decl_stmt|;
+comment|/* send queue and sent queue */
 if|#
 directive|if
 name|defined
@@ -1640,6 +1690,9 @@ decl_stmt|;
 comment|/* next one I expect to send out */
 name|uint8_t
 name|last_msg_incomplete
+decl_stmt|;
+name|uint8_t
+name|state
 decl_stmt|;
 block|}
 struct|;
@@ -3264,6 +3317,9 @@ name|uint8_t
 name|asconf_del_pending
 decl_stmt|;
 comment|/* asconf delete last addr pending */
+name|uint8_t
+name|trigger_reset
+decl_stmt|;
 comment|/* 	 * This value, plus all other ack'd but above cum-ack is added 	 * together to cross check against the bit that we have yet to 	 * define (probably in the SACK). When the cum-ack is updated, this 	 * sum is updated as well. 	 */
 comment|/* Flags whether an extension is supported or not */
 name|uint8_t
