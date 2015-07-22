@@ -137,8 +137,9 @@ name|UINT8
 name|ResultCount
 decl_stmt|;
 comment|/* Current number of occupied elements of result stack */
-name|UINT32
-name|AmlOffset
+name|UINT8
+modifier|*
+name|Aml
 decl_stmt|;
 name|UINT32
 name|ArgTypes

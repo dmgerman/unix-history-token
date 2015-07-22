@@ -901,6 +901,8 @@ name|Node
 argument_list|,
 operator|&
 name|PathBuffer
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* +1 to include null terminator */

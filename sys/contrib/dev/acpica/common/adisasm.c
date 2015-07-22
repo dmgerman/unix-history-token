@@ -406,6 +406,10 @@ name|Tables
 operator|=
 name|LocalTables
 expr_stmt|;
+name|AcpiGbl_PreviousOp
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|Status
@@ -1995,6 +1999,8 @@ argument_list|,
 name|Table
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiTbValidateTable
 argument_list|(
 name|TableDesc
@@ -2002,7 +2008,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|AE_OK
+name|Status
 operator|)
 return|;
 block|}
@@ -2225,7 +2231,9 @@ comment|/* Create the root object */
 name|AcpiGbl_ParseOpRoot
 operator|=
 name|AcpiPsCreateScopeOp
-argument_list|()
+argument_list|(
+name|AmlStart
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

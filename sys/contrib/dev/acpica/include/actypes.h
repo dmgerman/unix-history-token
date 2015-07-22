@@ -3424,8 +3424,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_FULL_PATHNAME_NO_TRAILING
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_NAME_TYPE_MAX
-value|1
+value|2
 end_define
 
 begin_comment
@@ -4422,6 +4429,24 @@ endif|#
 directive|endif
 block|}
 name|ACPI_MEMORY_LIST
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Definitions of trace event types */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|ACPI_TRACE_AML_METHOD
+block|,
+name|ACPI_TRACE_AML_OPCODE
+block|,
+name|ACPI_TRACE_AML_REGION
+block|}
+name|ACPI_TRACE_EVENT_TYPE
 typedef|;
 end_typedef
 

@@ -336,6 +336,10 @@ condition|(
 name|NameType
 operator|==
 name|ACPI_FULL_PATHNAME
+operator|||
+name|NameType
+operator|==
+name|ACPI_FULL_PATHNAME_NO_TRAILING
 condition|)
 block|{
 comment|/* Get the full pathname (From the namespace root) */
@@ -346,6 +350,14 @@ argument_list|(
 name|Handle
 argument_list|,
 name|Buffer
+argument_list|,
+name|NameType
+operator|==
+name|ACPI_FULL_PATHNAME
+condition|?
+name|FALSE
+else|:
+name|TRUE
 argument_list|)
 expr_stmt|;
 return|return

@@ -414,6 +414,12 @@ name|ASL_MSG_ILLEGAL_FORWARD_REF
 block|,
 name|ASL_MSG_ILLEGAL_METHOD_REF
 block|,
+name|ASL_MSG_LOCAL_NOT_USED
+block|,
+name|ASL_MSG_ARG_AS_LOCAL_NOT_USED
+block|,
+name|ASL_MSG_ARG_NOT_USED
+block|,
 comment|/* These messages are used by the Data Table compiler only */
 name|ASL_MSG_BUFFER_ELEMENT
 init|=
