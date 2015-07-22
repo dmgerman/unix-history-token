@@ -9302,6 +9302,15 @@ argument_list|,
 name|next_resp
 argument_list|)
 expr_stmt|;
+name|sctp_send_deferred_reset_response
+argument_list|(
+name|stcb
+argument_list|,
+name|liste
+argument_list|,
+name|SCTP_STREAM_RESET_RESULT_PERFORMED
+argument_list|)
+expr_stmt|;
 name|SCTP_FREE
 argument_list|(
 name|liste
