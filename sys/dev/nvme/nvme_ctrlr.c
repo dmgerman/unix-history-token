@@ -3549,14 +3549,6 @@ argument_list|)
 expr_stmt|;
 name|buf
 operator|->
-name|b_saveaddr
-operator|=
-name|buf
-operator|->
-name|b_data
-expr_stmt|;
-name|buf
-operator|->
 name|b_data
 operator|=
 name|pt

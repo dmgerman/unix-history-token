@@ -10257,15 +10257,10 @@ name|normal_write
 goto|;
 name|KASSERT
 argument_list|(
-operator|(
+name|buf_mapped
+argument_list|(
 name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_UNMAPPED
-operator|)
-operator|==
-literal|0
+argument_list|)
 argument_list|,
 operator|(
 literal|"Unmapped cg"

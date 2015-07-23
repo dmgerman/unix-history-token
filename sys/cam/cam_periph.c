@@ -3777,25 +3777,6 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* save the buffer's data address */
-name|mapinfo
-operator|->
-name|bp
-index|[
-name|i
-index|]
-operator|->
-name|b_saveaddr
-operator|=
-name|mapinfo
-operator|->
-name|bp
-index|[
-name|i
-index|]
-operator|->
-name|b_data
-expr_stmt|;
 comment|/* put our pointer in the data slot */
 name|mapinfo
 operator|->
@@ -3805,6 +3786,22 @@ name|i
 index|]
 operator|->
 name|b_data
+operator|=
+operator|*
+name|data_ptrs
+index|[
+name|i
+index|]
+expr_stmt|;
+comment|/* save the user's data address */
+name|mapinfo
+operator|->
+name|bp
+index|[
+name|i
+index|]
+operator|->
+name|b_caller1
 operator|=
 operator|*
 name|data_ptrs
@@ -3887,7 +3884,7 @@ index|[
 name|j
 index|]
 operator|->
-name|b_saveaddr
+name|b_caller1
 expr_stmt|;
 name|vunmapbuf
 argument_list|(
@@ -4288,7 +4285,7 @@ index|[
 name|i
 index|]
 operator|->
-name|b_saveaddr
+name|b_caller1
 expr_stmt|;
 comment|/* unmap the buffer */
 name|vunmapbuf
