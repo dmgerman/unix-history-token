@@ -6360,32 +6360,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|__noinline
-name|int
-name|buf_vm_page_count_severe
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|KFAIL_POINT_CODE
-argument_list|(
-argument|DEBUG_FP
-argument_list|,
-argument|buf_pressure
-argument_list|,
-argument|return
-literal|1
-argument_list|)
-empty_stmt|;
-return|return
-name|vm_page_count_severe
-argument_list|()
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  *	brelse:  *  *	Release a busy buffer and, if requested, free its resources.  The  *	buffer will be stashed in the appropriate bufqueue[] allowing it  *	to be accessed later as a cache entity or reused for other purposes.  */
 end_comment
@@ -6680,7 +6654,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * We must clear B_RELBUF if B_DELWRI is set.  If vfs_vmio_release()  	 * is called with B_DELWRI set, the underlying pages may wind up 	 * getting freed causing a previous write (bdwrite()) to get 'lost' 	 * because pages associated with a B_DELWRI bp are marked clean. 	 *  	 * We still allow the B_INVAL case to call vfs_vmio_release(), even 	 * if B_DELWRI is set. 	 * 	 * If B_DELWRI is not set we may have to set B_RELBUF if we are low 	 * on pages to return pages to the VM page queues. 	 */
+comment|/* 	 * We must clear B_RELBUF if B_DELWRI is set.  If vfs_vmio_release()  	 * is called with B_DELWRI set, the underlying pages may wind up 	 * getting freed causing a previous write (bdwrite()) to get 'lost' 	 * because pages associated with a B_DELWRI bp are marked clean. 	 *  	 * We still allow the B_INVAL case to call vfs_vmio_release(), even 	 * if B_DELWRI is set. 	 */
 if|if
 condition|(
 name|bp
@@ -6696,32 +6670,6 @@ operator|&=
 operator|~
 name|B_RELBUF
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|buf_vm_page_count_severe
-argument_list|()
-condition|)
-block|{
-comment|/* 		 * BKGRDINPROG can only be set with the buf and bufobj 		 * locks both held.  We tolerate a race to clear it here. 		 */
-if|if
-condition|(
-operator|!
-operator|(
-name|bp
-operator|->
-name|b_vflags
-operator|&
-name|BV_BKGRDINPROG
-operator|)
-condition|)
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_RELBUF
-expr_stmt|;
-block|}
 comment|/* 	 * VMIO buffer rundown.  It is not very necessary to keep a VMIO buffer 	 * constituted, not even NFS buffers now.  Two flags effect this.  If 	 * B_INVAL, the struct buf is invalidated but the VM object is kept 	 * around ( i.e. so it is trivial to reconstitute the buffer later ). 	 * 	 * If BIO_ERROR or B_NOCACHE is set, pages in the VM object will be 	 * invalidated.  BIO_ERROR cannot be set for a failed write unless the 	 * buffer is also B_INVAL because it hits the re-dirtying code above. 	 * 	 * Normally we can do this whether a buffer is B_DELWRI or not.  If 	 * the buffer is an NFS buffer, it is tracking piecemeal writes or 	 * the commit state and we cannot afford to lose the buffer. If the 	 * buffer has a background write in progress, we need to keep it 	 * around to prevent it from being reconstituted and starting a second 	 * background write. 	 */
 if|if
 condition|(
@@ -7716,31 +7664,6 @@ argument_list|(
 literal|"bqrelse: not dirty"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * BKGRDINPROG can only be set with the buf and bufobj 		 * locks both held.  We tolerate a race to clear it here. 		 */
-if|if
-condition|(
-name|buf_vm_page_count_severe
-argument_list|()
-operator|&&
-operator|(
-name|bp
-operator|->
-name|b_vflags
-operator|&
-name|BV_BKGRDINPROG
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 			 * We are too low on memory, we have to try to free 			 * the buffer (most importantly: the wired pages 			 * making up its backing store) *now*. 			 */
-name|brelse
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|qindex
 operator|=
 name|QUEUE_CLEAN
@@ -7945,17 +7868,6 @@ operator|&
 name|B_DIRECT
 condition|)
 name|vm_page_try_to_free
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|buf_vm_page_count_severe
-argument_list|()
-condition|)
-name|vm_page_try_to_cache
 argument_list|(
 name|m
 argument_list|)
