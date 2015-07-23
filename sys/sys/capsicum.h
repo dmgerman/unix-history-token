@@ -1186,12 +1186,10 @@ define|#
 directive|define
 name|cap_rights_set
 parameter_list|(
-name|rights
-parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|__cap_rights_set((rights), __VA_ARGS__, 0ULL)
+value|__cap_rights_set(__VA_ARGS__, 0ULL)
 end_define
 
 begin_function_decl
@@ -1213,12 +1211,10 @@ define|#
 directive|define
 name|cap_rights_clear
 parameter_list|(
-name|rights
-parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|__cap_rights_clear((rights), __VA_ARGS__, 0ULL)
+value|__cap_rights_clear(__VA_ARGS__, 0ULL)
 end_define
 
 begin_function_decl
@@ -1240,12 +1236,10 @@ define|#
 directive|define
 name|cap_rights_is_set
 parameter_list|(
-name|rights
-parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|__cap_rights_is_set((rights), __VA_ARGS__, 0ULL)
+value|__cap_rights_is_set(__VA_ARGS__, 0ULL)
 end_define
 
 begin_function_decl
