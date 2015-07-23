@@ -2918,8 +2918,10 @@ operator|==
 literal|128
 condition|)
 block|{
-break|break;
 comment|/* we don't need to install a host route. */
+goto|goto
+name|aifaddr_out
+goto|;
 block|}
 name|pr0
 operator|.
@@ -3186,15 +3188,20 @@ comment|/* 		 * this might affect the status of autoconfigured addresses, 		 * t
 name|pfxlist_onlink_check
 argument_list|()
 expr_stmt|;
+name|aifaddr_out
+label|:
 if|if
 condition|(
 name|error
-operator|==
+operator|!=
 literal|0
-operator|&&
+operator|||
 name|ia
+operator|==
+name|NULL
 condition|)
-block|{
+break|break;
+comment|/* 		 * Try to clear the flag when a new IPv6 address is added 		 * onto an IFDISABLED interface and it succeeds. 		 */
 if|if
 condition|(
 name|ND_IFINFO
@@ -3207,7 +3214,6 @@ operator|&
 name|ND6_IFF_IFDISABLED
 condition|)
 block|{
-comment|/* 				 * Try to clear the flag when a new 				 * IPv6 address is added onto an 				 * IFDISABLED interface and it 				 * succeeds. 				 */
 name|struct
 name|in6_ndireq
 name|nd
@@ -3273,7 +3279,7 @@ literal|"SIOCSIFINFO_FLAGS for -ifdisabled "
 literal|"failed."
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Ignore failure of clearing the flag 				 * intentionally.  The failure means 				 * address duplication was detected. 				 */
+comment|/* 			 * Ignore failure of clearing the flag intentionally. 			 * The failure means address duplication was detected. 			 */
 block|}
 name|EVENTHANDLER_INVOKE
 argument_list|(
@@ -3282,7 +3288,6 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 block|}
 case|case
