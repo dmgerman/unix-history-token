@@ -5538,18 +5538,15 @@ name|i
 operator|++
 control|)
 block|{
-name|mpt_write
+name|mpt_write_stream
 argument_list|(
 name|mpt
 argument_list|,
 name|MPT_OFFSET_DOORBELL
 argument_list|,
-name|htole32
-argument_list|(
 operator|*
 name|data32
 operator|++
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5693,7 +5690,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Get Second Word */
+comment|/* Get second word */
 if|if
 condition|(
 name|mpt_wait_db_int
@@ -5814,9 +5811,6 @@ name|left
 operator|--
 condition|)
 block|{
-name|u_int16_t
-name|datum
-decl_stmt|;
 if|if
 condition|(
 name|mpt_wait_db_int
@@ -5847,15 +5841,6 @@ argument_list|,
 name|MPT_OFFSET_DOORBELL
 argument_list|)
 expr_stmt|;
-name|datum
-operator|=
-name|le16toh
-argument_list|(
-name|data
-operator|&
-name|MPT_DB_DATA_MASK
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|reply_left
@@ -5867,7 +5852,12 @@ operator|*
 name|data16
 operator|++
 operator|=
-name|datum
+name|le16toh
+argument_list|(
+name|data
+operator|&
+name|MPT_DB_DATA_MASK
+argument_list|)
 expr_stmt|;
 name|mpt_write
 argument_list|(
