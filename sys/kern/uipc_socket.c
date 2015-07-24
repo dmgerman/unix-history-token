@@ -1657,7 +1657,7 @@ argument_list|,
 name|RLIM_INFINITY
 argument_list|)
 expr_stmt|;
-comment|/* remove acccept filter if one is present. */
+comment|/* remove accept filter if one is present. */
 if|if
 condition|(
 name|so
