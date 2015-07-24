@@ -3982,6 +3982,12 @@ case|:
 return|return
 literal|"AArch64"
 return|;
+case|case
+name|EM_RISCV
+case|:
+return|return
+literal|"RISC-V"
+return|;
 default|default:
 name|snprintf
 argument_list|(
