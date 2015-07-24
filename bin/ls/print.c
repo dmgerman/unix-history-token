@@ -873,6 +873,9 @@ name|np
 operator|->
 name|user
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sp
 operator|->
 name|st_uid
@@ -885,6 +888,9 @@ name|np
 operator|->
 name|group
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sp
 operator|->
 name|st_gid
@@ -2439,7 +2445,7 @@ name|S_IFWHT
 case|:
 name|xo_emit
 argument_list|(
-literal|"{D:%}{e:type/whiteout}"
+literal|"{D:%%}{e:type/whiteout}"
 argument_list|)
 expr_stmt|;
 return|return
