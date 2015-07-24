@@ -18758,6 +18758,8 @@ block|{
 name|sctp_send_stream_reset_out_if_possible
 argument_list|(
 name|stcb
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -19217,6 +19219,8 @@ block|}
 name|sctp_send_stream_reset_out_if_possible
 argument_list|(
 name|stcb
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -20058,6 +20062,7 @@ index|]
 operator|=
 name|SCTP_STREAM_RESET_RESULT_IN_PROGRESS
 expr_stmt|;
+name|x
 block|}
 name|sctp_add_stream_reset_result
 argument_list|(
