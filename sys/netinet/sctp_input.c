@@ -20062,7 +20062,6 @@ index|]
 operator|=
 name|SCTP_STREAM_RESET_RESULT_IN_PROGRESS
 expr_stmt|;
-name|x
 block|}
 name|sctp_add_stream_reset_result
 argument_list|(
