@@ -5977,5 +5977,23 @@ begin_comment
 comment|/* !defined(_KERNEL)&& !defined(PARSESTREAM) */
 end_comment
 
+begin_comment
+comment|/*  * FreeBSD specific: Explicitly specify date/time for reproducible build.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MKREPRO_DATE
+value|"Jul 04 2015"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MKREPRO_TIME
+value|"15:42:16"
+end_define
+
 end_unit
 
