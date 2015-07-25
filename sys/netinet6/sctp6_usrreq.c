@@ -53,22 +53,11 @@ directive|include
 file|<netinet/sctp_var.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netinet6/sctp6_var.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -145,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/icmp6.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/udp.h>
 end_include
 
@@ -160,26 +155,11 @@ directive|include
 file|<netipsec/ipsec.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netipsec/ipsec6.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET6 */
-end_comment
 
 begin_endif
 endif|#
