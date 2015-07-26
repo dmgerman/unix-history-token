@@ -319,6 +319,11 @@ specifier|const
 name|char
 modifier|*
 name|dev
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|resource
 parameter_list|)
 block|{
 return|return
@@ -326,6 +331,8 @@ operator|(
 name|bs_map
 argument_list|(
 name|dev
+argument_list|,
+name|resource
 argument_list|)
 operator|)
 return|;

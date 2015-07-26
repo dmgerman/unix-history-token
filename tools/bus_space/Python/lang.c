@@ -596,6 +596,9 @@ block|{
 name|char
 modifier|*
 name|dev
+decl_stmt|,
+modifier|*
+name|resource
 decl_stmt|;
 name|int
 name|rid
@@ -607,10 +610,13 @@ name|PyArg_ParseTuple
 argument_list|(
 name|args
 argument_list|,
-literal|"s"
+literal|"ss"
 argument_list|,
 operator|&
 name|dev
+argument_list|,
+operator|&
+name|resource
 argument_list|)
 condition|)
 return|return
@@ -623,6 +629,8 @@ operator|=
 name|bs_map
 argument_list|(
 name|dev
+argument_list|,
+name|resource
 argument_list|)
 expr_stmt|;
 if|if
