@@ -23528,7 +23528,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"OOTB, %s:%d at %s\n"
+literal|"OOTB, %s:%d at %s"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -23755,7 +23755,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"OOTB, %s:%d at %s\n"
+literal|"OOTB, %s:%d at %s"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -29610,7 +29610,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"OOTB, %s:%d at %s\n"
+literal|"OOTB, %s:%d at %s"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -29850,7 +29850,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"OOTB, %s:%d at %s\n"
+literal|"OOTB, %s:%d at %s"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -30096,7 +30096,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"OOTB, %s:%d at %s\n"
+literal|"OOTB, %s:%d at %s"
 argument_list|,
 name|__FILE__
 argument_list|,
