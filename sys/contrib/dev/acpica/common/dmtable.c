@@ -1221,11 +1221,11 @@ block|,
 block|{
 name|ACPI_SIG_TCPA
 block|,
-name|AcpiDmTableInfoTcpa
-block|,
 name|NULL
 block|,
-name|NULL
+name|AcpiDmDumpTcpa
+block|,
+name|DtCompileTcpa
 block|,
 name|TemplateTcpa
 block|}
@@ -1593,6 +1593,8 @@ name|Table
 operator|->
 name|Length
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiDmDumpTable
 argument_list|(
 name|Length
@@ -1606,6 +1608,16 @@ argument_list|,
 name|AcpiDmTableInfoFacs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
 block|}
 elseif|else
 if|if
@@ -1801,6 +1813,8 @@ name|TableInfo
 condition|)
 block|{
 comment|/* Simple table, just walk the info table */
+name|Status
+operator|=
 name|AcpiDmDumpTable
 argument_list|(
 name|Length
@@ -1816,6 +1830,16 @@ operator|->
 name|TableInfo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
 block|}
 block|}
 if|if
@@ -2157,6 +2181,9 @@ name|BOOLEAN
 name|LastOutputBlankLine
 init|=
 name|FALSE
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
 decl_stmt|;
 name|char
 name|RepairedName
@@ -3236,6 +3263,8 @@ argument_list|,
 literal|"Generic Address Structure"
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiDmDumpTable
 argument_list|(
 name|TableLength
@@ -3252,6 +3281,20 @@ argument_list|,
 name|AcpiDmTableInfoGas
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -3605,6 +3648,8 @@ argument_list|,
 literal|"Hardware Error Notification Structure"
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiDmDumpTable
 argument_list|(
 name|TableLength
@@ -3621,6 +3666,20 @@ argument_list|,
 name|AcpiDmTableInfoHestNotify
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -3676,6 +3735,8 @@ argument_list|,
 literal|"IORT Memory Access Properties"
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiDmDumpTable
 argument_list|(
 name|TableLength
@@ -3692,6 +3753,20 @@ argument_list|,
 name|AcpiDmTableInfoIortAcc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 name|LastOutputBlankLine
 operator|=
 name|TRUE

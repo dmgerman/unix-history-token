@@ -31,12 +31,6 @@ directive|include
 file|<contrib/dev/acpica/include/acdebug.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/include/acdisasm.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -492,7 +486,7 @@ argument_list|(
 literal|"[Object Reference] = "
 argument_list|)
 expr_stmt|;
-name|AcpiDmDisplayInternalObject
+name|AcpiDbDisplayInternalObject
 argument_list|(
 name|ObjDesc
 operator|->

@@ -1510,7 +1510,7 @@ expr_stmt|;
 comment|/* On no queue (QUEUE_NONE) */
 name|bp
 operator|->
-name|b_saveaddr
+name|b_kvabase
 operator|=
 call|(
 name|caddr_t
@@ -1533,15 +1533,7 @@ name|b_data
 operator|=
 name|bp
 operator|->
-name|b_saveaddr
-expr_stmt|;
-name|bp
-operator|->
 name|b_kvabase
-operator|=
-name|bp
-operator|->
-name|b_saveaddr
 expr_stmt|;
 name|bp
 operator|->
@@ -1551,13 +1543,13 @@ name|MAXPHYS
 expr_stmt|;
 name|bp
 operator|->
-name|b_xflags
+name|b_flags
 operator|=
 literal|0
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_xflags
 operator|=
 literal|0
 expr_stmt|;

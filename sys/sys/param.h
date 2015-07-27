@@ -120,6 +120,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|P_OSREL_SHUTDOWN_ENOTCONN
+value|1100077
+end_define
+
+begin_define
+define|#
+directive|define
 name|P_OSREL_MAJOR
 parameter_list|(
 name|x

@@ -1657,7 +1657,7 @@ argument_list|,
 name|RLIM_INFINITY
 argument_list|)
 expr_stmt|;
-comment|/* remove acccept filter if one is present. */
+comment|/* remove accept filter if one is present. */
 if|if
 condition|(
 name|so
@@ -10785,6 +10785,29 @@ condition|)
 return|return
 operator|(
 name|EINVAL
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+operator|(
+name|SS_ISCONNECTED
+operator||
+name|SS_ISCONNECTING
+operator||
+name|SS_ISDISCONNECTING
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENOTCONN
 operator|)
 return|;
 name|CURVNET_SET

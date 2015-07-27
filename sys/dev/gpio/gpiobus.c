@@ -2954,6 +2954,29 @@ condition|)
 block|{
 if|if
 condition|(
+name|sc
+operator|->
+name|sc_owner
+operator|==
+name|child
+condition|)
+name|panic
+argument_list|(
+literal|"%s: %s still owns the bus."
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|busdev
+argument_list|)
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|child
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|how
 operator|==
 name|GPIOBUS_DONTWAIT
@@ -3058,7 +3081,17 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"gpiobus: releasing unowned bus."
+literal|"%s: %s releasing unowned bus."
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|busdev
+argument_list|)
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|child
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3071,7 +3104,24 @@ name|child
 condition|)
 name|panic
 argument_list|(
-literal|"gpiobus: you don't own the bus. game over."
+literal|"%s: %s trying to release bus owned by %s"
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|busdev
+argument_list|)
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|child
+argument_list|)
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|sc
+operator|->
+name|sc_owner
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sc

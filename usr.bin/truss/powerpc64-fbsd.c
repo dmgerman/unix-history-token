@@ -537,6 +537,17 @@ name|fsc
 operator|->
 name|name
 argument_list|,
+literal|"pdfork"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|fsc
+operator|->
+name|name
+argument_list|,
 literal|"rfork"
 argument_list|)
 operator|==

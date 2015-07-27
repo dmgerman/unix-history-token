@@ -334,7 +334,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"tDV"
+literal|"tDUV"
 argument_list|,
 name|longopts
 argument_list|,
@@ -363,6 +363,17 @@ name|bsdar
 operator|->
 name|options
 operator||=
+name|AR_D
+expr_stmt|;
+break|break;
+case|case
+literal|'U'
+case|:
+name|bsdar
+operator|->
+name|options
+operator|&=
+operator|~
 name|AR_D
 expr_stmt|;
 break|break;
@@ -538,7 +549,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abCcdDfijlMmopqrSsTtuVvxz"
+literal|"abCcdDfijlMmopqrSsTtUuVvxz"
 argument_list|,
 name|longopts
 argument_list|,
@@ -736,6 +747,17 @@ name|bsdar
 argument_list|,
 name|opt
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'U'
+case|:
+name|bsdar
+operator|->
+name|options
+operator|&=
+operator|~
+name|AR_D
 expr_stmt|;
 break|break;
 case|case
@@ -1482,7 +1504,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tar -q [-TcDjsvz] archive file ...\n"
+literal|"\tar -q [-TcDjsUvz] archive file ...\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1492,7 +1514,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tar -r [-TcDjsuvz] archive file ...\n"
+literal|"\tar -r [-TcDjsUuvz] archive file ...\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1502,7 +1524,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tar -r [-TabcDijsuvz] position archive file ...\n"
+literal|"\tar -r [-TabcDijsUuvz] position archive file ...\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1568,7 +1590,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:	ranlib [-t] archive ...\n"
+literal|"usage:	ranlib [-DtU] archive ...\n"
 argument_list|)
 expr_stmt|;
 operator|(

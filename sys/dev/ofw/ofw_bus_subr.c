@@ -1854,7 +1854,7 @@ decl_stmt|;
 comment|/* 	 * This may be just redundant when having ofw_bus_devinfo 	 * but makes this routine independent of it. 	 */
 name|ret
 operator|=
-name|OF_getencprop_alloc
+name|OF_getprop_alloc
 argument_list|(
 name|node
 argument_list|,
@@ -2573,7 +2573,7 @@ control|)
 block|{
 name|ret
 operator|=
-name|OF_getencprop_alloc
+name|OF_getprop_alloc
 argument_list|(
 name|child
 argument_list|,

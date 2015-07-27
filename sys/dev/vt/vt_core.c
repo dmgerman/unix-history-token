@@ -558,7 +558,7 @@ name|VT_SYSCTL_INT
 argument_list|(
 name|splash_cpu
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|"Show logo CPUs during boot"
 argument_list|)
@@ -583,10 +583,10 @@ name|VT_SYSCTL_INT
 argument_list|(
 name|splash_cpu_style
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 literal|"Draw logo style "
-literal|"(0=Beastie, 1=Alternate beastie, 2=Orb)"
+literal|"(0 = Alternate beastie, 1 = Beastie, 2 = Orb)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -681,6 +681,35 @@ name|vt_logo_image
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEV_SPLASH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|vtterm_draw_cpu_logos
+parameter_list|(
+modifier|...
+parameter_list|)
+value|do {} while (0)
+end_define
+
+begin_decl_stmt
+specifier|const
+name|unsigned
+name|int
+name|vt_logo_sprite_height
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Font. */

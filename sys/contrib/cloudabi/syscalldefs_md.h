@@ -1207,13 +1207,13 @@ name|lock
 expr_stmt|;
 name|MEMBER
 argument_list|(
-argument|cloudabi_futexscope_t
+argument|cloudabi_mflags_t
 argument_list|)
 name|condvar_scope
 expr_stmt|;
 name|MEMBER
 argument_list|(
-argument|cloudabi_futexscope_t
+argument|cloudabi_mflags_t
 argument_list|)
 name|lock_scope
 expr_stmt|;
@@ -1246,7 +1246,7 @@ name|lock
 expr_stmt|;
 name|MEMBER
 argument_list|(
-argument|cloudabi_futexscope_t
+argument|cloudabi_mflags_t
 argument_list|)
 name|lock_scope
 expr_stmt|;

@@ -498,6 +498,18 @@ name|Status
 operator|)
 return|;
 block|}
+comment|/* Handle additional output files for disassembler */
+name|Gbl_FileType
+operator|=
+name|ASL_INPUT_TYPE_ACPI_TABLE
+expr_stmt|;
+name|Status
+operator|=
+name|FlOpenMiscOutputFiles
+argument_list|(
+name|Gbl_OutputFilenamePrefix
+argument_list|)
+expr_stmt|;
 comment|/* This is where the disassembly happens */
 name|AcpiGbl_DbOpt_Disasm
 operator|=
@@ -547,13 +559,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* TBD: Handle additional output files for disassembler */
-block|Status = FlOpenMiscOutputFiles (Gbl_OutputFilenamePrefix);     NsDisplayNamespace ();
-endif|#
-directive|endif
 comment|/* Shutdown compiler and ACPICA subsystem */
 name|AeClearErrorLog
 argument_list|()

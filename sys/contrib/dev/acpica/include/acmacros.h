@@ -816,6 +816,38 @@ value|_ACPI_MOD(a, 32)
 end_define
 
 begin_comment
+comment|/* Test for ASCII character */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_ASCII
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)< 0x80)
+end_define
+
+begin_comment
+comment|/* Signed integers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SIGN_POSITIVE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SIGN_NEGATIVE
+value|1
+end_define
+
+begin_comment
 comment|/*  * Rounding macros (Power of two boundaries only)  */
 end_comment
 

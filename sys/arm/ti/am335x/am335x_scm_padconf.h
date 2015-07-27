@@ -63,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|PADCONF_OUTPUT
-value|(0)
+value|(PULLUDEN)
 end_define
 
 begin_define
@@ -71,6 +71,13 @@ define|#
 directive|define
 name|PADCONF_OUTPUT_PULLUP
 value|(PULLTYPESEL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PADCONF_OUTPUT_PULLDOWN
+value|(0)
 end_define
 
 begin_define

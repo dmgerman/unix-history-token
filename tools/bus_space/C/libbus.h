@@ -23,6 +23,11 @@ specifier|const
 name|char
 modifier|*
 name|dev
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|resource
 parameter_list|)
 function_decl|;
 end_function_decl

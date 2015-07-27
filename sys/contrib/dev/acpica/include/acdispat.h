@@ -1163,6 +1163,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * dsdebug - parser debugging routines  */
+end_comment
+
+begin_function_decl
+name|void
+name|AcpiDsDumpMethodStack
+parameter_list|(
+name|ACPI_STATUS
+name|Status
+parameter_list|,
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
