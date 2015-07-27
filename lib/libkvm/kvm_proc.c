@@ -179,6 +179,18 @@ directive|include
 file|<sys/conf.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_WANT_KW_EXITCODE
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -1943,9 +1955,16 @@ name|kp
 operator|->
 name|ki_xstat
 operator|=
+name|KW_EXITCODE
+argument_list|(
 name|proc
 operator|.
-name|p_xstat
+name|p_xexit
+argument_list|,
+name|proc
+operator|.
+name|p_xsig
+argument_list|)
 expr_stmt|;
 name|kp
 operator|->

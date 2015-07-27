@@ -230,12 +230,12 @@ end_include
 begin_function_decl
 specifier|static
 name|int
-name|ctx_unmap_buf_locked
+name|domain_unmap_buf_locked
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|base
@@ -340,7 +340,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|ctx_idmap_nextlvl
+name|domain_idmap_nextlvl
 parameter_list|(
 name|struct
 name|idpgtbl
@@ -464,7 +464,7 @@ name|f
 operator|+=
 name|pg_sz
 control|)
-name|ctx_idmap_nextlvl
+name|domain_idmap_nextlvl
 argument_list|(
 name|tbl
 argument_list|,
@@ -643,7 +643,7 @@ name|DMAR_PTE_W
 expr_stmt|;
 block|}
 block|}
-comment|/* ctx_get_idmap_pgtbl flushes CPU cache if needed. */
+comment|/* domain_get_idmap_pgtbl flushes CPU cache if needed. */
 name|dmar_unmap_pgtbl
 argument_list|(
 name|sf
@@ -665,12 +665,12 @@ end_comment
 
 begin_function
 name|vm_object_t
-name|ctx_get_idmap_pgtbl
+name|domain_get_idmap_pgtbl
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|maxaddr
@@ -711,7 +711,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|ctx
+name|domain
 operator|->
 name|pglvl
 condition|;
@@ -723,15 +723,15 @@ if|if
 condition|(
 name|i
 operator|==
-name|ctx
+name|domain
 operator|->
 name|pglvl
 operator|-
 literal|1
 operator|||
-name|ctx_is_sp_lvl
+name|domain_is_sp_lvl
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|i
 argument_list|)
@@ -770,7 +770,7 @@ name|maxaddr
 operator|&&
 name|dmar_pglvl_supported
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|dmar
 argument_list|,
@@ -803,7 +803,7 @@ operator|&
 name|idpgtbl_lock
 argument_list|)
 expr_stmt|;
-name|ctx
+name|domain
 operator|->
 name|pglvl
 operator|=
@@ -849,7 +849,7 @@ name|maxaddr
 operator|&&
 name|dmar_pglvl_supported
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|dmar
 argument_list|,
@@ -882,7 +882,7 @@ operator|&
 name|idpgtbl_lock
 argument_list|)
 expr_stmt|;
-name|ctx
+name|domain
 operator|->
 name|pglvl
 operator|=
@@ -918,7 +918,7 @@ name|tbl
 operator|->
 name|pglvl
 operator|=
-name|ctx
+name|domain
 operator|->
 name|pglvl
 expr_stmt|;
@@ -968,7 +968,7 @@ operator|->
 name|pgtbl_obj
 argument_list|)
 expr_stmt|;
-name|ctx_idmap_nextlvl
+name|domain_idmap_nextlvl
 argument_list|(
 name|tbl
 argument_list|,
@@ -1018,7 +1018,7 @@ label|:
 comment|/* 	 * Table was found or created. 	 * 	 * If DMAR does not snoop paging structures accesses, flush 	 * CPU cache to memory.  Note that dmar_unmap_pgtbl() coherent 	 * argument was possibly invalid at the time of the identity 	 * page table creation, since DMAR which was passed at the 	 * time of creation could be coherent, while current DMAR is 	 * not. 	 * 	 * If DMAR cannot look into the chipset write buffer, flush it 	 * as well. 	 */
 name|unit
 operator|=
-name|ctx
+name|domain
 operator|->
 name|dmar
 expr_stmt|;
@@ -1264,12 +1264,12 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ctx_pgtbl_pte_off
+name|domain_pgtbl_pte_off
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|base
@@ -1283,7 +1283,7 @@ operator|>>=
 name|DMAR_PAGE_SHIFT
 operator|+
 operator|(
-name|ctx
+name|domain
 operator|->
 name|pglvl
 operator|-
@@ -1311,12 +1311,12 @@ end_comment
 begin_function
 specifier|static
 name|vm_pindex_t
-name|ctx_pgtbl_get_pindex
+name|domain_pgtbl_get_pindex
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|base
@@ -1341,14 +1341,14 @@ literal|0
 operator|&&
 name|lvl
 operator|<
-name|ctx
+name|domain
 operator|->
 name|pglvl
 argument_list|,
 operator|(
 literal|"wrong lvl %p %d"
 operator|,
-name|ctx
+name|domain
 operator|,
 name|lvl
 operator|)
@@ -1377,11 +1377,12 @@ name|pidx
 operator|=
 name|idx
 control|)
+block|{
 name|idx
 operator|=
-name|ctx_pgtbl_pte_off
+name|domain_pgtbl_pte_off
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|base
 argument_list|,
@@ -1394,6 +1395,7 @@ name|DMAR_NPTEPG
 operator|+
 literal|1
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|idx
@@ -1406,12 +1408,12 @@ begin_function
 specifier|static
 name|dmar_pte_t
 modifier|*
-name|ctx_pgtbl_map_pte
+name|domain_pgtbl_map_pte
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|base
@@ -1453,9 +1455,9 @@ name|idx
 decl_stmt|,
 name|idx1
 decl_stmt|;
-name|DMAR_CTX_ASSERT_PGLOCKED
+name|DMAR_DOMAIN_ASSERT_PGLOCKED
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1475,9 +1477,9 @@ argument_list|)
 expr_stmt|;
 name|idx
 operator|=
-name|ctx_pgtbl_get_pindex
+name|domain_pgtbl_get_pindex
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|base
 argument_list|,
@@ -1536,7 +1538,7 @@ name|pte
 operator|=
 name|dmar_map_pgtbl
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|pgtbl_obj
 argument_list|,
@@ -1563,7 +1565,7 @@ argument_list|,
 operator|(
 literal|"lost root page table page %p"
 operator|,
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1572,7 +1574,7 @@ name|m
 operator|=
 name|dmar_pgalloc
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|pgtbl_obj
 argument_list|,
@@ -1594,7 +1596,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 			 * Prevent potential free while pgtbl_obj is 			 * unlocked in the recursive call to 			 * ctx_pgtbl_map_pte(), if other thread did 			 * pte write and clean while the lock if 			 * dropped. 			 */
+comment|/* 			 * Prevent potential free while pgtbl_obj is 			 * unlocked in the recursive call to 			 * domain_pgtbl_map_pte(), if other thread did 			 * pte write and clean while the lock is 			 * dropped. 			 */
 name|m
 operator|->
 name|wire_count
@@ -1606,9 +1608,9 @@ name|NULL
 expr_stmt|;
 name|ptep
 operator|=
-name|ctx_pgtbl_map_pte
+name|domain_pgtbl_map_pte
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|base
 argument_list|,
@@ -1643,7 +1645,7 @@ argument_list|,
 operator|(
 literal|"loosing root page %p"
 operator|,
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1654,7 +1656,7 @@ operator|--
 expr_stmt|;
 name|dmar_pgfree
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|pgtbl_obj
 argument_list|,
@@ -1690,7 +1692,7 @@ argument_list|)
 expr_stmt|;
 name|dmar_flush_pte_to_ram
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|dmar
 argument_list|,
@@ -1724,9 +1726,9 @@ block|}
 block|}
 name|pte
 operator|+=
-name|ctx_pgtbl_pte_off
+name|domain_pgtbl_pte_off
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|base
 argument_list|,
@@ -1744,12 +1746,12 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ctx_map_buf_locked
+name|domain_map_buf_locked
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|base
@@ -1799,9 +1801,9 @@ decl_stmt|;
 name|bool
 name|superpage
 decl_stmt|;
-name|DMAR_CTX_ASSERT_PGLOCKED
+name|DMAR_DOMAIN_ASSERT_PGLOCKED
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 name|base1
@@ -1866,9 +1868,9 @@ control|)
 block|{
 name|pg_sz
 operator|=
-name|ctx_page_size
+name|domain_page_size
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|lvl
 argument_list|)
@@ -1883,7 +1885,7 @@ if|if
 condition|(
 name|lvl
 operator|==
-name|ctx
+name|domain
 operator|->
 name|pglvl
 operator|-
@@ -1894,9 +1896,9 @@ comment|/* 			 * Check if the current base suitable for the 			 * superpage mapp
 if|if
 condition|(
 operator|!
-name|ctx_is_sp_lvl
+name|domain_is_sp_lvl
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|lvl
 argument_list|)
@@ -2014,7 +2016,7 @@ argument_list|,
 operator|(
 literal|"mapping loop overflow %p %jx %jx %jx"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -2048,9 +2050,9 @@ argument_list|)
 expr_stmt|;
 name|pte
 operator|=
-name|ctx_pgtbl_map_pte
+name|domain_pgtbl_map_pte
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|base
 argument_list|,
@@ -2085,7 +2087,7 @@ argument_list|,
 operator|(
 literal|"failed waitable pte alloc %p"
 operator|,
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2100,9 +2102,9 @@ argument_list|(
 name|sf
 argument_list|)
 expr_stmt|;
-name|ctx_unmap_buf_locked
+name|domain_unmap_buf_locked
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|base1
 argument_list|,
@@ -2149,7 +2151,7 @@ argument_list|)
 expr_stmt|;
 name|dmar_flush_pte_to_ram
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|dmar
 argument_list|,
@@ -2189,12 +2191,12 @@ end_function
 
 begin_function
 name|int
-name|ctx_map_buf
+name|domain_map_buf
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|base
@@ -2223,26 +2225,26 @@ name|error
 decl_stmt|;
 name|unit
 operator|=
-name|ctx
+name|domain
 operator|->
 name|dmar
 expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
-name|ctx
+name|domain
 operator|->
 name|flags
 operator|&
-name|DMAR_CTX_IDMAP
+name|DMAR_DOMAIN_IDMAP
 operator|)
 operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"modifying idmap pagetable ctx %p"
+literal|"modifying idmap pagetable domain %p"
 operator|,
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2259,7 +2261,7 @@ argument_list|,
 operator|(
 literal|"non-aligned base %p %jx %jx"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -2286,7 +2288,7 @@ argument_list|,
 operator|(
 literal|"non-aligned size %p %jx %jx"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -2309,7 +2311,7 @@ argument_list|,
 operator|(
 literal|"zero size %p %jx %jx"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -2330,7 +2332,7 @@ operator|<
 operator|(
 literal|1ULL
 operator|<<
-name|ctx
+name|domain
 operator|->
 name|agaw
 operator|)
@@ -2338,7 +2340,7 @@ argument_list|,
 operator|(
 literal|"base too high %p %jx %jx agaw %d"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -2350,7 +2352,7 @@ name|uintmax_t
 operator|)
 name|size
 operator|,
-name|ctx
+name|domain
 operator|->
 name|agaw
 operator|)
@@ -2365,7 +2367,7 @@ operator|<
 operator|(
 literal|1ULL
 operator|<<
-name|ctx
+name|domain
 operator|->
 name|agaw
 operator|)
@@ -2373,7 +2375,7 @@ argument_list|,
 operator|(
 literal|"end too high %p %jx %jx agaw %d"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -2385,7 +2387,7 @@ name|uintmax_t
 operator|)
 name|size
 operator|,
-name|ctx
+name|domain
 operator|->
 name|agaw
 operator|)
@@ -2402,7 +2404,7 @@ argument_list|,
 operator|(
 literal|"size overflow %p %jx %jx"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -2492,7 +2494,7 @@ argument_list|,
 operator|(
 literal|"PTE_SNP for dmar without snoop control %p %jx"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -2524,7 +2526,7 @@ argument_list|,
 operator|(
 literal|"PTE_TM for dmar without DIOTLB %p %jx"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -2551,16 +2553,16 @@ name|flags
 operator|)
 argument_list|)
 expr_stmt|;
-name|DMAR_CTX_PGLOCK
+name|DMAR_DOMAIN_PGLOCK
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ctx_map_buf_locked
+name|domain_map_buf_locked
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|base
 argument_list|,
@@ -2573,9 +2575,9 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|DMAR_CTX_PGUNLOCK
+name|DMAR_DOMAIN_PGUNLOCK
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 if|if
@@ -2601,9 +2603,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|ctx_flush_iotlb_sync
+name|domain_flush_iotlb_sync
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|base
 argument_list|,
@@ -2652,12 +2654,12 @@ end_function
 begin_function_decl
 specifier|static
 name|void
-name|ctx_unmap_clear_pte
+name|domain_unmap_clear_pte
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|base
@@ -2687,12 +2689,12 @@ end_function_decl
 begin_function
 specifier|static
 name|void
-name|ctx_free_pgtbl_pde
+name|domain_free_pgtbl_pde
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|base
@@ -2722,9 +2724,9 @@ name|NULL
 expr_stmt|;
 name|pde
 operator|=
-name|ctx_pgtbl_map_pte
+name|domain_pgtbl_map_pte
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|base
 argument_list|,
@@ -2739,9 +2741,9 @@ operator|&
 name|sf
 argument_list|)
 expr_stmt|;
-name|ctx_unmap_clear_pte
+name|domain_unmap_clear_pte
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|base
 argument_list|,
@@ -2763,12 +2765,12 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ctx_unmap_clear_pte
+name|domain_unmap_clear_pte
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|base
@@ -2806,7 +2808,7 @@ argument_list|)
 expr_stmt|;
 name|dmar_flush_pte_to_ram
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|dmar
 argument_list|,
@@ -2859,9 +2861,9 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"lost reference (lvl) on root pg ctx %p base %jx lvl %d"
+literal|"lost reference (lvl) on root pg domain %p base %jx lvl %d"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -2881,9 +2883,9 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"lost reference (idx) on root pg ctx %p base %jx lvl %d"
+literal|"lost reference (idx) on root pg domain %p base %jx lvl %d"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -2896,7 +2898,7 @@ argument_list|)
 expr_stmt|;
 name|dmar_pgfree
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|pgtbl_obj
 argument_list|,
@@ -2907,9 +2909,9 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|ctx_free_pgtbl_pde
+name|domain_free_pgtbl_pde
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|base
 argument_list|,
@@ -2930,12 +2932,12 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ctx_unmap_buf_locked
+name|domain_unmap_buf_locked
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|base
@@ -2965,9 +2967,9 @@ decl_stmt|;
 name|int
 name|lvl
 decl_stmt|;
-name|DMAR_CTX_ASSERT_PGLOCKED
+name|DMAR_DOMAIN_ASSERT_PGLOCKED
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 if|if
@@ -2984,19 +2986,19 @@ return|;
 name|KASSERT
 argument_list|(
 operator|(
-name|ctx
+name|domain
 operator|->
 name|flags
 operator|&
-name|DMAR_CTX_IDMAP
+name|DMAR_DOMAIN_IDMAP
 operator|)
 operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"modifying idmap pagetable ctx %p"
+literal|"modifying idmap pagetable domain %p"
 operator|,
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3013,7 +3015,7 @@ argument_list|,
 operator|(
 literal|"non-aligned base %p %jx %jx"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -3040,7 +3042,7 @@ argument_list|,
 operator|(
 literal|"non-aligned size %p %jx %jx"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -3061,7 +3063,7 @@ operator|<
 operator|(
 literal|1ULL
 operator|<<
-name|ctx
+name|domain
 operator|->
 name|agaw
 operator|)
@@ -3069,7 +3071,7 @@ argument_list|,
 operator|(
 literal|"base too high %p %jx %jx agaw %d"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -3081,7 +3083,7 @@ name|uintmax_t
 operator|)
 name|size
 operator|,
-name|ctx
+name|domain
 operator|->
 name|agaw
 operator|)
@@ -3096,7 +3098,7 @@ operator|<
 operator|(
 literal|1ULL
 operator|<<
-name|ctx
+name|domain
 operator|->
 name|agaw
 operator|)
@@ -3104,7 +3106,7 @@ argument_list|,
 operator|(
 literal|"end too high %p %jx %jx agaw %d"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -3116,7 +3118,7 @@ name|uintmax_t
 operator|)
 name|size
 operator|,
-name|ctx
+name|domain
 operator|->
 name|agaw
 operator|)
@@ -3133,7 +3135,7 @@ argument_list|,
 operator|(
 literal|"size overflow %p %jx %jx"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -3203,7 +3205,7 @@ literal|0
 init|;
 name|lvl
 operator|<
-name|ctx
+name|domain
 operator|->
 name|pglvl
 condition|;
@@ -3215,16 +3217,16 @@ if|if
 condition|(
 name|lvl
 operator|!=
-name|ctx
+name|domain
 operator|->
 name|pglvl
 operator|-
 literal|1
 operator|&&
 operator|!
-name|ctx_is_sp_lvl
+name|domain_is_sp_lvl
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|lvl
 argument_list|)
@@ -3232,9 +3234,9 @@ condition|)
 continue|continue;
 name|pg_sz
 operator|=
-name|ctx_page_size
+name|domain_page_size
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|lvl
 argument_list|)
@@ -3248,9 +3250,9 @@ condition|)
 continue|continue;
 name|pte
 operator|=
-name|ctx_pgtbl_map_pte
+name|domain_pgtbl_map_pte
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|base
 argument_list|,
@@ -3274,7 +3276,7 @@ argument_list|,
 operator|(
 literal|"sleeping or page missed %p %jx %d 0x%x"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -3301,16 +3303,16 @@ literal|0
 operator|||
 name|lvl
 operator|==
-name|ctx
+name|domain
 operator|->
 name|pglvl
 operator|-
 literal|1
 condition|)
 block|{
-name|ctx_unmap_clear_pte
+name|domain_unmap_clear_pte
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|base
 argument_list|,
@@ -3338,7 +3340,7 @@ argument_list|,
 operator|(
 literal|"unmapping loop overflow %p %jx %jx %jx"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -3382,12 +3384,12 @@ end_function
 
 begin_function
 name|int
-name|ctx_unmap_buf
+name|domain_unmap_buf
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|base
@@ -3402,16 +3404,16 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|DMAR_CTX_PGLOCK
+name|DMAR_DOMAIN_PGLOCK
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ctx_unmap_buf_locked
+name|domain_unmap_buf_locked
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|base
 argument_list|,
@@ -3420,9 +3422,9 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|DMAR_CTX_PGUNLOCK
+name|DMAR_DOMAIN_PGUNLOCK
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 return|return
@@ -3435,12 +3437,12 @@ end_function
 
 begin_function
 name|int
-name|ctx_alloc_pgtbl
+name|domain_alloc_pgtbl
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|)
 block|{
 name|vm_page_t
@@ -3448,7 +3450,7 @@ name|m
 decl_stmt|;
 name|KASSERT
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|pgtbl_obj
 operator|==
@@ -3457,11 +3459,11 @@ argument_list|,
 operator|(
 literal|"already initialized %p"
 operator|,
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
-name|ctx
+name|domain
 operator|->
 name|pgtbl_obj
 operator|=
@@ -3475,7 +3477,7 @@ name|IDX_TO_OFF
 argument_list|(
 name|pglvl_max_pages
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|pglvl
 argument_list|)
@@ -3488,16 +3490,16 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|DMAR_CTX_PGLOCK
+name|DMAR_DOMAIN_PGLOCK
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 name|m
 operator|=
 name|dmar_pgalloc
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|pgtbl_obj
 argument_list|,
@@ -3517,9 +3519,29 @@ name|wire_count
 operator|=
 literal|1
 expr_stmt|;
-name|DMAR_CTX_PGUNLOCK
+name|DMAR_DOMAIN_PGUNLOCK
 argument_list|(
-name|ctx
+name|domain
+argument_list|)
+expr_stmt|;
+name|DMAR_LOCK
+argument_list|(
+name|domain
+operator|->
+name|dmar
+argument_list|)
+expr_stmt|;
+name|domain
+operator|->
+name|flags
+operator||=
+name|DMAR_DOMAIN_PGTBL_INITED
+expr_stmt|;
+name|DMAR_UNLOCK
+argument_list|(
+name|domain
+operator|->
+name|dmar
 argument_list|)
 expr_stmt|;
 return|return
@@ -3532,12 +3554,12 @@ end_function
 
 begin_function
 name|void
-name|ctx_free_pgtbl
+name|domain_free_pgtbl
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|)
 block|{
 name|vm_object_t
@@ -3548,7 +3570,7 @@ name|m
 decl_stmt|;
 name|obj
 operator|=
-name|ctx
+name|domain
 operator|->
 name|pgtbl_obj
 expr_stmt|;
@@ -3562,7 +3584,7 @@ block|{
 name|KASSERT
 argument_list|(
 operator|(
-name|ctx
+name|domain
 operator|->
 name|dmar
 operator|->
@@ -3574,30 +3596,30 @@ operator|!=
 literal|0
 operator|&&
 operator|(
-name|ctx
+name|domain
 operator|->
 name|flags
 operator|&
-name|DMAR_CTX_IDMAP
+name|DMAR_DOMAIN_IDMAP
 operator|)
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"lost pagetable object ctx %p"
+literal|"lost pagetable object domain %p"
 operator|,
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|DMAR_CTX_ASSERT_PGLOCKED
+name|DMAR_DOMAIN_ASSERT_PGLOCKED
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
-name|ctx
+name|domain
 operator|->
 name|pgtbl_obj
 operator|=
@@ -3606,11 +3628,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|ctx
+name|domain
 operator|->
 name|flags
 operator|&
-name|DMAR_CTX_IDMAP
+name|DMAR_DOMAIN_IDMAP
 operator|)
 operator|!=
 literal|0
@@ -3621,12 +3643,12 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-name|ctx
+name|domain
 operator|->
 name|flags
 operator|&=
 operator|~
-name|DMAR_CTX_IDMAP
+name|DMAR_DOMAIN_IDMAP
 expr_stmt|;
 return|return;
 block|}
@@ -3681,7 +3703,7 @@ begin_function
 specifier|static
 specifier|inline
 name|uint64_t
-name|ctx_wait_iotlb_flush
+name|domain_wait_iotlb_flush
 parameter_list|(
 name|struct
 name|dmar_unit
@@ -3757,12 +3779,12 @@ end_function
 
 begin_function
 name|void
-name|ctx_flush_iotlb_sync
+name|domain_flush_iotlb_sync
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|base
@@ -3789,7 +3811,7 @@ name|iro
 decl_stmt|;
 name|unit
 operator|=
-name|ctx
+name|domain
 operator|->
 name|dmar
 expr_stmt|;
@@ -3848,7 +3870,7 @@ condition|)
 block|{
 name|iotlbr
 operator|=
-name|ctx_wait_iotlb_flush
+name|domain_wait_iotlb_flush
 argument_list|(
 name|unit
 argument_list|,
@@ -3856,7 +3878,7 @@ name|DMAR_IOTLB_IIRG_DOM
 operator||
 name|DMAR_IOTLB_DID
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|domain
 argument_list|)
@@ -3934,7 +3956,7 @@ argument_list|)
 expr_stmt|;
 name|iotlbr
 operator|=
-name|ctx_wait_iotlb_flush
+name|domain_wait_iotlb_flush
 argument_list|(
 name|unit
 argument_list|,
@@ -3942,7 +3964,7 @@ name|DMAR_IOTLB_IIRG_PAGE
 operator||
 name|DMAR_IOTLB_DID
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|domain
 argument_list|)

@@ -360,6 +360,17 @@ block|, }
 block|,
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|SADB_X_EALG_AESGCM16
+block|{
+name|SADB_X_EALG_AESGCM16
+block|,
+literal|"aes-gcm-16"
+block|, }
+block|,
+endif|#
+directive|endif
 block|{
 operator|-
 literal|1

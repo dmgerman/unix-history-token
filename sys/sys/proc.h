@@ -181,6 +181,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_vm_domain.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/proc.h>
 end_include
 
@@ -568,6 +574,11 @@ modifier|*
 name|td_umtxq
 decl_stmt|;
 comment|/* (c?) Link for when we're blocked. */
+name|struct
+name|vm_domain_policy
+name|td_vm_dom_policy
+decl_stmt|;
+comment|/* (c) current numa domain policy */
 name|lwpid_t
 name|td_tid
 decl_stmt|;
@@ -2682,15 +2693,19 @@ name|pid_t
 name|p_reapsubtree
 decl_stmt|;
 comment|/* (e) Pid of the direct child of the 					       reaper which spawned 					       our subtree. */
+name|u_int
+name|p_xexit
+decl_stmt|;
+comment|/* (c) Exit code. */
+name|u_int
+name|p_xsig
+decl_stmt|;
+comment|/* (c) Stop/kill sig. */
 comment|/* End area that is copied on creation. */
 define|#
 directive|define
 name|p_endcopy
-value|p_xstat
-name|u_short
-name|p_xstat
-decl_stmt|;
-comment|/* (c) Exit status; also stop sig. */
+value|p_xsig
 name|struct
 name|knlist
 name|p_klist
@@ -2789,6 +2804,11 @@ name|u_char
 name|p_throttled
 decl_stmt|;
 comment|/* (c) Flag for racct pcpu throttling */
+name|struct
+name|vm_domain_policy
+name|p_vm_dom_policy
+decl_stmt|;
+comment|/* (c) process default VM domain, or -1 */
 comment|/* 	 * An orphan is the child that has beed re-parented to the 	 * debugger as a result of attaching to it.  Need to keep 	 * track of them for parent to be able to collect the exit 	 * status of what used to be children. 	 */
 name|LIST_ENTRY
 argument_list|(
@@ -5531,6 +5551,8 @@ name|thread
 operator|*
 argument_list|,
 name|int
+argument_list|,
+name|int
 argument_list|)
 name|__dead2
 decl_stmt|;
@@ -5820,6 +5842,41 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|thread_create
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|rtprio
+modifier|*
+name|rtp
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|initialize_thread
+function_decl|)
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|thunk
 parameter_list|)
 function_decl|;
 end_function_decl

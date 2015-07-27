@@ -4757,9 +4757,40 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|rc
+operator|!=
+name|ENOTSUP
+condition|)
 goto|goto
 name|fail13
 goto|;
+comment|/* Fallback for old firmware without privilege mask support */
+if|if
+condition|(
+name|EFX_PCI_FUNCTION_IS_PF
+argument_list|(
+name|encp
+argument_list|)
+condition|)
+block|{
+comment|/* Assume PF has admin privilege */
+name|mask
+operator|=
+name|HUNT_LEGACY_PF_PRIVILEGE_MASK
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* VF is always unprivileged by default */
+name|mask
+operator|=
+name|HUNT_LEGACY_VF_PRIVILEGE_MASK
+expr_stmt|;
+block|}
+block|}
 name|encp
 operator|->
 name|enc_privilege_mask

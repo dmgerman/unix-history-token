@@ -1076,6 +1076,24 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__aarch64__
+argument_list|)
+comment|/* XXX */
+name|printf
+argument_list|(
+literal|"%s:%s(%d): DOODAD\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|)
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|__arm__
 argument_list|)
 comment|/* XXX */
@@ -2104,6 +2122,13 @@ control|)
 block|{
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+comment|/* XXX */
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|__arm__
@@ -4555,9 +4580,66 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__arm__
+name|__aarch64__
 argument_list|)
 end_if
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|dt_modtext
+parameter_list|(
+name|dtrace_hdl_t
+modifier|*
+name|dtp
+parameter_list|,
+name|char
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|isenabled
+parameter_list|,
+name|GElf_Rela
+modifier|*
+name|rela
+parameter_list|,
+name|uint32_t
+modifier|*
+name|off
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%s:%s(%d): DOODAD\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_elif
 
 begin_comment
 comment|/* XXX */

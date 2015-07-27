@@ -41,7 +41,9 @@ name|PCPU_MD_FIELDS
 define|\
 value|u_int	pc_acpi_id;
 comment|/* ACPI CPU id */
-value|\ 	char __pad[125]
+value|\ 	u_int	pc_midr;
+comment|/* stored MIDR value */
+value|\ 	char __pad[121]
 end_define
 
 begin_ifdef

@@ -257,6 +257,12 @@ directive|include
 file|<vm/uma.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_domain.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2083,6 +2089,28 @@ condition|)
 name|startprofclock
 argument_list|(
 name|p2
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Whilst the proc lock is held, copy the VM domain data out 	 * using the VM domain method. 	 */
+name|vm_domain_policy_init
+argument_list|(
+operator|&
+name|p2
+operator|->
+name|p_vm_dom_policy
+argument_list|)
+expr_stmt|;
+name|vm_domain_policy_localcopy
+argument_list|(
+operator|&
+name|p2
+operator|->
+name|p_vm_dom_policy
+argument_list|,
+operator|&
+name|p1
+operator|->
+name|p_vm_dom_policy
 argument_list|)
 expr_stmt|;
 if|if

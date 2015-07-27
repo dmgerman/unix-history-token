@@ -916,6 +916,8 @@ name|backup_args
 index|[]
 init|=
 block|{
+literal|"none"
+block|,
 literal|"never"
 block|,
 literal|"simple"
@@ -941,6 +943,8 @@ name|backup_types
 index|[]
 init|=
 block|{
+name|none
+block|,
 name|simple
 block|,
 name|simple

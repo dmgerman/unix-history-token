@@ -821,6 +821,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|oreallocarray
+parameter_list|(
+name|void
+modifier|*
+name|optr
+parameter_list|,
+name|size_t
+name|nmemb
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -838,7 +857,7 @@ name|f
 parameter_list|,
 name|l
 parameter_list|)
-value|ereallocz(p, n, o, (z))
+value|ereallocz((p), (n), (o), (z))
 end_define
 
 begin_define
@@ -848,7 +867,7 @@ name|emalloc
 parameter_list|(
 name|n
 parameter_list|)
-value|ereallocz(NULL, n, 0, FALSE)
+value|ereallocz(NULL, (n), 0, FALSE)
 end_define
 
 begin_define
@@ -870,7 +889,7 @@ name|p
 parameter_list|,
 name|c
 parameter_list|)
-value|ereallocz(p, (c), 0, FALSE)
+value|ereallocz((p), (c), 0, FALSE)
 end_define
 
 begin_define
@@ -884,7 +903,33 @@ name|n
 parameter_list|,
 name|o
 parameter_list|)
-value|ereallocz(p, n, (o), TRUE)
+value|ereallocz((p), (n), (o), TRUE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ereallocarray
+parameter_list|(
+name|p
+parameter_list|,
+name|n
+parameter_list|,
+name|s
+parameter_list|)
+value|oreallocarray((p), (n), (s))
+end_define
+
+begin_define
+define|#
+directive|define
+name|eallocarray
+parameter_list|(
+name|n
+parameter_list|,
+name|s
+parameter_list|)
+value|oreallocarray(NULL, (n), (s))
 end_define
 
 begin_function_decl
@@ -939,6 +984,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|oreallocarray
+parameter_list|(
+name|void
+modifier|*
+name|optr
+parameter_list|,
+name|size_t
+name|nmemb
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -975,7 +1045,7 @@ name|p
 parameter_list|,
 name|c
 parameter_list|)
-value|ereallocz(p, (c), 0, FALSE, \ 					  __FILE__, __LINE__)
+value|ereallocz((p), (c), 0, FALSE, \ 					  __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -989,7 +1059,33 @@ name|n
 parameter_list|,
 name|o
 parameter_list|)
-value|ereallocz(p, n, (o), TRUE, \ 					  __FILE__, __LINE__)
+value|ereallocz((p), (n), (o), TRUE, \ 					  __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ereallocarray
+parameter_list|(
+name|p
+parameter_list|,
+name|n
+parameter_list|,
+name|s
+parameter_list|)
+value|oreallocarray((p), (n), (s), \ 					  __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|eallocarray
+parameter_list|(
+name|n
+parameter_list|,
+name|s
+parameter_list|)
+value|oreallocarray(NULL, (n), (s), \ 					  __FILE__, __LINE__)
 end_define
 
 begin_function_decl

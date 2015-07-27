@@ -35,6 +35,12 @@ name|ifnet
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|socket
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|domain
@@ -94,7 +100,7 @@ function_decl|)
 comment|/* dispose of internalized rights */
 parameter_list|(
 name|struct
-name|mbuf
+name|socket
 modifier|*
 parameter_list|)
 function_decl|;

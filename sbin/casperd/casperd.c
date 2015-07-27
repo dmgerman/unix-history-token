@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/nv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<assert.h>
 end_include
 
@@ -159,12 +165,6 @@ begin_include
 include|#
 directive|include
 file|<msgio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nv.h>
 end_include
 
 begin_include
@@ -1088,8 +1088,6 @@ condition|(
 name|zygote_clone
 argument_list|(
 name|service_external_execute
-argument_list|,
-literal|0
 argument_list|,
 operator|&
 name|chanfd

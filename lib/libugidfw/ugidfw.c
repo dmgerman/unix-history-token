@@ -2829,6 +2829,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bsde_parse_uidrange
 parameter_list|(
@@ -3065,6 +3066,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bsde_parse_gidrange
 parameter_list|(
@@ -3301,6 +3303,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bsde_parse_subject
 parameter_list|(
@@ -3353,6 +3356,8 @@ name|gid_max
 decl_stmt|;
 name|int
 name|jid
+init|=
+literal|0
 decl_stmt|;
 name|size_t
 name|len
@@ -3957,6 +3962,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bsde_parse_type
 parameter_list|(
@@ -4121,6 +4127,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bsde_parse_fsid
 parameter_list|(
@@ -4202,6 +4209,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bsde_parse_object
 parameter_list|(
@@ -4238,6 +4246,9 @@ name|neg
 decl_stmt|,
 name|nextnot
 decl_stmt|;
+name|int
+name|type
+decl_stmt|;
 name|uid_t
 name|uid_min
 decl_stmt|,
@@ -4247,9 +4258,6 @@ name|gid_t
 name|gid_min
 decl_stmt|,
 name|gid_max
-decl_stmt|;
-name|int
-name|type
 decl_stmt|;
 name|struct
 name|fsid
@@ -4271,6 +4279,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|nextnot
+operator|=
+literal|0
+expr_stmt|;
+name|type
 operator|=
 literal|0
 expr_stmt|;
@@ -5918,6 +5930,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bsde_check_version
 parameter_list|(

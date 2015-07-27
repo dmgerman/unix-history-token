@@ -3572,7 +3572,7 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
-name|random_harvest
+name|random_harvest_queue
 argument_list|(
 name|mouse
 argument_list|,

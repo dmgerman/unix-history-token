@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2011 HighPoint Technologies, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * HighPoint RAID Driver for FreeBSD  *  * Copyright (C) 2005-2011 HighPoint Technologies, Inc. All Rights Reserved.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -14,6 +14,21 @@ include|#
 directive|include
 file|<dev/hpt27xx/os_bsd.h>
 end_include
+
+begin_function_decl
+name|BUS_ADDRESS
+name|get_dmapool_phy_addr
+parameter_list|(
+name|void
+modifier|*
+name|osext
+parameter_list|,
+name|void
+modifier|*
+name|dmapool_virt_addr
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* hardware access */
@@ -470,6 +485,31 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|BUS_ADDRESS
+name|get_dmapool_phy_addr
+parameter_list|(
+name|void
+modifier|*
+name|osext
+parameter_list|,
+name|void
+modifier|*
+name|dmapool_virt_addr
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BUS_ADDRESS
+operator|)
+name|vtophys
+argument_list|(
+name|dmapool_virt_addr
+argument_list|)
+return|;
 block|}
 end_function
 
@@ -1526,6 +1566,13 @@ operator|==
 name|EXT_TYPE_VBUS
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|1000510
+operator|)
 name|callout_reset_sbt
 argument_list|(
 operator|&
@@ -1546,6 +1593,38 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|untimeout
+argument_list|(
+name|os_timer_for_ldm
+argument_list|,
+name|vbus_ext
+argument_list|,
+name|vbus_ext
+operator|->
+name|timer
+argument_list|)
+expr_stmt|;
+name|vbus_ext
+operator|->
+name|timer
+operator|=
+name|timeout
+argument_list|(
+name|os_timer_for_ldm
+argument_list|,
+name|vbus_ext
+argument_list|,
+name|interval
+operator|*
+name|hz
+operator|/
+literal|1000000
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

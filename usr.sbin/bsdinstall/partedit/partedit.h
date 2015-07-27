@@ -357,6 +357,37 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|gpart_set_root
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|lg_name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|attribute
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|choose_part_type
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|def_scheme
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* machine-dependent bootability checks */
 end_comment

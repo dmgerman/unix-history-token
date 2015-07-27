@@ -697,14 +697,34 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AF_INET6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|OPENBSD_AF_INET6
+argument_list|)
 ifdef|#
 directive|ifdef
-name|INET6
+name|AF_INET6
 case|case
 name|AF_INET6
 case|:
+endif|#
+directive|endif
+comment|/* AF_INET6 */
 if|#
 directive|if
+operator|!
+name|defined
+argument_list|(
+name|AF_INET6
+argument_list|)
+operator|||
 name|OPENBSD_AF_INET6
 operator|!=
 name|AF_INET6
@@ -714,6 +734,7 @@ case|:
 comment|/* XXX: read pcap files */
 endif|#
 directive|endif
+comment|/* !defined(AF_INET6) || OPENBSD_AF_INET6 != AF_INET6 */
 name|ip6_print
 argument_list|(
 name|ndo
@@ -726,6 +747,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+comment|/* defined(AF_INET6) || defined(OPENBSD_AF_INET6) */
 default|default:
 comment|/* address family not handled, print raw packet */
 if|if

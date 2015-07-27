@@ -54,7 +54,9 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|AcpiPsCreateScopeOp
 parameter_list|(
-name|void
+name|UINT8
+modifier|*
+name|Aml
 parameter_list|)
 block|{
 name|ACPI_PARSE_OBJECT
@@ -66,6 +68,8 @@ operator|=
 name|AcpiPsAllocOp
 argument_list|(
 name|AML_SCOPE_OP
+argument_list|,
+name|Aml
 argument_list|)
 expr_stmt|;
 if|if
@@ -165,7 +169,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsAllocOp  *  * PARAMETERS:  Opcode          - Opcode that will be stored in the new Op  *  * RETURN:      Pointer to the new Op, null on failure  *  * DESCRIPTION: Allocate an acpi_op, choose op type (and thus size) based on  *              opcode. A cache of opcodes is available for the pure  *              GENERIC_OP, since this is by far the most commonly used.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsAllocOp  *  * PARAMETERS:  Opcode          - Opcode that will be stored in the new Op  *              Aml             - Address of the opcode  *  * RETURN:      Pointer to the new Op, null on failure  *  * DESCRIPTION: Allocate an acpi_op, choose op type (and thus size) based on  *              opcode. A cache of opcodes is available for the pure  *              GENERIC_OP, since this is by far the most commonly used.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -175,6 +179,10 @@ name|AcpiPsAllocOp
 parameter_list|(
 name|UINT16
 name|Opcode
+parameter_list|,
+name|UINT8
+modifier|*
+name|Aml
 parameter_list|)
 block|{
 name|ACPI_PARSE_OBJECT
@@ -284,6 +292,14 @@ name|Op
 argument_list|,
 name|Opcode
 argument_list|)
+expr_stmt|;
+name|Op
+operator|->
+name|Common
+operator|.
+name|Aml
+operator|=
+name|Aml
 expr_stmt|;
 name|Op
 operator|->

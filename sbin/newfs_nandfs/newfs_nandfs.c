@@ -4752,7 +4752,7 @@ name|rsv_segment_percent
 operator|<
 literal|1
 operator|)
-operator|&&
+operator|||
 operator|(
 name|rsv_segment_percent
 operator|>

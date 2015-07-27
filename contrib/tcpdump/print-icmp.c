@@ -720,12 +720,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICMP_INFOTYPE
+name|ICMP_ERRTYPE
 parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|((type) == ICMP_ECHOREPLY || (type) == ICMP_ECHO || \ 	(type) == ICMP_ROUTERADVERT || (type) == ICMP_ROUTERSOLICIT || \ 	(type) == ICMP_TSTAMP || (type) == ICMP_TSTAMPREPLY || \ 	(type) == ICMP_IREQ || (type) == ICMP_IREQREPLY || \ 	(type) == ICMP_MASKREQ || (type) == ICMP_MASKREPLY)
+value|((type) == ICMP_UNREACH || (type) == ICMP_SOURCEQUENCH || \ 	(type) == ICMP_REDIRECT || (type) == ICMP_TIMXCEED || \ 	(type) == ICMP_PARAMPROB)
 end_define
 
 begin_define
@@ -2970,8 +2970,7 @@ name|ndo_vflag
 operator|>=
 literal|1
 operator|&&
-operator|!
-name|ICMP_INFOTYPE
+name|ICMP_ERRTYPE
 argument_list|(
 name|dp
 operator|->

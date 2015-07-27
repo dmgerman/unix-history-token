@@ -4,8 +4,45 @@ comment|/**  * \file makeshell.c  *  *  This module will interpret the options s
 end_comment
 
 begin_comment
-comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
+comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2015 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
 end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|unsigned
+name|char
+name|to_uchar
+parameter_list|(
+name|char
+name|ch
+parameter_list|)
+block|{
+return|return
+name|ch
+return|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|UPPER
+parameter_list|(
+name|_c
+parameter_list|)
+value|(toupper(to_uchar(_c)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOWER
+parameter_list|(
+name|_c
+parameter_list|)
+value|(tolower(to_uchar(_c)))
+end_define
 
 begin_comment
 comment|/* = = = START-STATIC-FORWARD = = = */
@@ -347,7 +384,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func  optionParseShell  * private:  *  * what:  Decipher a boolean value  * arg:   + tOptions* + pOpts    + program options descriptor +  *  * doc:  *  Emit a shell script that will parse the command line options. =*/
+comment|/*=export_func  optionParseShell  * private:  *  * what:  Decipher a boolean value  * arg:   + tOptions * + pOpts    + program options descriptor +  *  * doc:  *  Emit a shell script that will parse the command line options. =*/
 end_comment
 
 begin_function
@@ -1428,10 +1465,6 @@ name|char
 operator|)
 name|tolower
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|pz
 operator|++
@@ -1444,24 +1477,15 @@ break|break;
 block|}
 name|pp
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|intptr_t
-operator|)
+name|VOIDP
+argument_list|(
 operator|&
 operator|(
 name|opts
 operator|->
 name|pzProgPath
 operator|)
+argument_list|)
 expr_stmt|;
 operator|*
 name|pp
@@ -1470,24 +1494,15 @@ name|tm_nm_buf
 expr_stmt|;
 name|pp
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|intptr_t
-operator|)
+name|VOIDP
+argument_list|(
 operator|&
 operator|(
 name|opts
 operator|->
 name|pzProgName
 operator|)
+argument_list|)
 expr_stmt|;
 operator|*
 name|pp
@@ -2564,12 +2579,8 @@ continue|continue;
 comment|/*              *  Check each character of the name case insensitively.              *  They must not be the same.  They cannot be, because it would              *  not compile correctly if they were.              */
 while|while
 condition|(
-name|toupper
+name|UPPER
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|od
 operator|->
 name|pz_Name
@@ -2578,12 +2589,8 @@ name|match_ct
 index|]
 argument_list|)
 operator|==
-name|toupper
+name|UPPER
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|name
 index|[
 name|match_ct
@@ -2621,10 +2628,6 @@ while|while
 condition|(
 name|toupper
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|od
 operator|->
 name|pz_DisableName
@@ -2635,10 +2638,6 @@ argument_list|)
 operator|==
 name|toupper
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|name
 index|[
 name|match_ct
@@ -2989,11 +2988,10 @@ name|inct
 init|=
 name|fread
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
+name|VOIDP
+argument_list|(
 name|scan
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,
@@ -3205,7 +3203,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func genshelloptUsage  * private:  * what: The usage function for the genshellopt generated program  *  * arg:  + tOptions* + opts    + program options descriptor +  * arg:  + int       + exit_cd + usage text type to produce +  *  * doc:  *  This function is used to create the usage strings for the option  *  processing shell script code.  Two child processes are spawned  *  each emitting the usage text in either the short (error exit)  *  style or the long style.  The generated program will capture this  *  and create shell script variables containing the two types of text. =*/
+comment|/*=export_func genshelloptUsage  * private:  * what: The usage function for the genshellopt generated program  *  * arg:  + tOptions * + opts    + program options descriptor +  * arg:  + int        + exit_cd + usage text type to produce +  *  * doc:  *  This function is used to create the usage strings for the option  *  processing shell script code.  Two child processes are spawned  *  each emitting the usage text in either the short (error exit)  *  style or the long style.  The generated program will capture this  *  and create shell script variables containing the two types of text. =*/
 end_comment
 
 begin_function
@@ -3344,24 +3342,15 @@ modifier|*
 modifier|*
 name|pp
 init|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|intptr_t
-operator|)
+name|VOIDP
+argument_list|(
 operator|&
 operator|(
 name|optionParseShellOptions
 operator|->
 name|pzProgName
 operator|)
+argument_list|)
 decl_stmt|;
 name|AGDUPSTR
 argument_list|(
@@ -3393,12 +3382,8 @@ operator|=
 operator|(
 name|char
 operator|)
-name|tolower
+name|LOWER
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|pz
 argument_list|)

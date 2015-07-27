@@ -54,6 +54,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASL_DEFINE
+value|"__IASL__"
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASL_COMPLIANCE
 value|"Supports ACPI Specification Revision 6.0"
 end_define
@@ -557,24 +564,6 @@ define|#
 directive|define
 name|ACPI_COMPILER_RESERVED_NAME
 value|(ACPI_UINT32_MAX - 3)
-end_define
-
-begin_comment
-comment|/* String to Integer conversion */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NEGATIVE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|POSITIVE
-value|0
 end_define
 
 begin_comment

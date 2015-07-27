@@ -570,12 +570,14 @@ block|}
 if|#
 directive|if
 name|LDAPMAP
-comment|/* 	**  LDAP error messages. 	*/
+comment|/* 	**  LDAP error messages.  Handle small negative errors from 	**  libldap (in the range -E_LDAP_SHIM to zero, offset by E_LDAPBASE) 	**  as well. 	*/
 if|if
 condition|(
 name|errnum
 operator|>=
 name|E_LDAPBASE
+operator|-
+name|E_LDAP_SHIM
 condition|)
 return|return
 name|ldap_err2string

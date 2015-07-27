@@ -825,7 +825,7 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%sSS_CANTSENDMORE"
+literal|"%sSBS_CANTSENDMORE"
 argument_list|,
 name|comma
 condition|?
@@ -848,7 +848,7 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%sSS_CANTRCVMORE"
+literal|"%sSBS_CANTRCVMORE"
 argument_list|,
 name|comma
 condition|?
@@ -871,7 +871,7 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%sSS_RCVATMARK"
+literal|"%sSBS_RCVATMARK"
 argument_list|,
 name|comma
 condition|?

@@ -1141,11 +1141,11 @@ literal|"R/W writer hold"
 block|,
 literal|"nsec"
 block|,
-literal|"lockstat::rw_wunlock:rw-release"
+literal|"lockstat:::rw-release"
 block|,
-name|NULL
+literal|"arg1 == 0"
 block|,
-literal|"lockstat::rw_wlock:rw-acquire"
+literal|"lockstat:::rw-acquire"
 block|}
 block|,
 block|{
@@ -1157,11 +1157,11 @@ literal|"R/W reader hold"
 block|,
 literal|"nsec"
 block|,
-literal|"lockstat::rw_runlock:rw-release"
+literal|"lockstat:::rw-release"
 block|,
-name|NULL
+literal|"arg1 == 1"
 block|,
-literal|"lockstat::rw_rlock:rw-acquire"
+literal|"lockstat:::rw-acquire"
 block|}
 block|,
 block|{
@@ -1173,11 +1173,11 @@ literal|"SX shared hold"
 block|,
 literal|"nsec"
 block|,
-literal|"lockstat::sx_sunlock:sx-release"
+literal|"lockstat:::sx-release"
 block|,
-name|NULL
+literal|"arg1 == 0"
 block|,
-literal|"lockstat::sx_slock:sx-acquire"
+literal|"lockstat:::sx-acquire"
 block|}
 block|,
 block|{
@@ -1189,11 +1189,11 @@ literal|"SX exclusive hold"
 block|,
 literal|"nsec"
 block|,
-literal|"lockstat::sx_xunlock:sx-release"
+literal|"lockstat:::sx-release"
 block|,
-name|NULL
+literal|"arg1 == 1"
 block|,
-literal|"lockstat::sx_xlock:sx-acquire"
+literal|"lockstat:::sx-acquire"
 block|}
 block|,
 block|{

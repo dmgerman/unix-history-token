@@ -488,9 +488,18 @@ begin_comment
 comment|/* Define to 1 if you have the<immintrin.h> header file. */
 end_comment
 
+begin_comment
+comment|/* FreeBSD - only with clang because the base gcc does not support it */
+end_comment
+
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+operator|&&
 name|defined
 argument_list|(
 name|__FreeBSD__

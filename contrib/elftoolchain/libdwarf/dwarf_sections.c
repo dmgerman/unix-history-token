@@ -511,7 +511,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|dwarf_get_section_max_offsets
+name|dwarf_get_section_max_offsets_b
 argument_list|(
 name|dbg
 argument_list|,
@@ -536,6 +536,8 @@ argument_list|,
 name|debug_ranges
 argument_list|,
 name|debug_pubtypes
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 return|;

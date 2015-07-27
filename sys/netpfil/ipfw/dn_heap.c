@@ -154,6 +154,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
+value|volatile int __dummy__ ## a __attribute__((__unused__))
 end_define
 
 begin_function

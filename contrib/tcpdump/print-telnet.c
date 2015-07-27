@@ -2838,6 +2838,7 @@ operator|==
 name|IAC
 condition|)
 block|{
+comment|/* 		 * Parse the Telnet command without printing it, 		 * to determine its length. 		 */
 name|l
 operator|=
 name|telnet_parse

@@ -1434,7 +1434,7 @@ value|0xffffffff
 end_define
 
 begin_comment
-comment|/*  * FC Port Database entry.  *  * It has a handle that the f/w uses to address commands to a device.  * This handle's value may be assigned by the firmware (e.g., for local loop  * devices) or by the driver (e.g., for fabric devices).  *  * It has a state. If the state if VALID, that means that we've logged into  * the device. We also *may* have a initiator map index entry. This is a value  * from 0..MAX_FC_TARG that is used to index into the isp_dev_map array. If  * the value therein is non-zero, then that value minus one is used to index  * into the Port Database to find the handle for forming commands. There is  * back-index minus one value within to Port Database entry that tells us  * which entry in isp_dev_map points to us (to avoid searching).  *  * Local loop devices the firmware automatically performs PLOGI on for us  * (which is why that handle is imposed upon us). Fabric devices we assign  * a handle to and perform the PLOGI on.  *  * When a PORT DATABASE CHANGED asynchronous event occurs, we mark all VALID  * entries as PROBATIONAL. This allows us, if policy says to, just keep track  * of devices whose handles change but are otherwise the same device (and  * thus keep 'target' constant).  *  * In any case, we search all possible local loop handles. For each one that  * has a port database entity returned, we search for any PROBATIONAL entry  * that matches it and update as appropriate. Otherwise, as a new entry, we  * find room for it in the Port Database. We *try* and use the handle as the  * index to put it into the Database, but that's just an optimization. We mark  * the entry VALID and make sure that the target index is updated and correct.  *  * When we get done searching the local loop, we then search similarily for  * a list of devices we've gotten from the fabric name controller (if we're  * on a fabric). VALID marking is also done similarily.  *  * When all of this is done, we can march through the database and clean up  * any entry that is still PROBATIONAL (these represent devices which have  * departed). Then we're done and can resume normal operations.  *  * Negative invariants that we try and test for are:  *  *  + There can never be two non-NIL entries with the same { Port, Node } WWN  *    duples.  *  *  + There can never be two non-NIL entries with the same handle.  *  *  + There can never be two non-NIL entries which have the same dev_map_idx  *    value.  */
+comment|/*  * FC Port Database entry.  *  * It has a handle that the f/w uses to address commands to a device.  * This handle's value may be assigned by the firmware (e.g., for local loop  * devices) or by the driver (e.g., for fabric devices).  *  * It has a state. If the state if VALID, that means that we've logged into  * the device.  *  * Local loop devices the firmware automatically performs PLOGI on for us  * (which is why that handle is imposed upon us). Fabric devices we assign  * a handle to and perform the PLOGI on.  *  * When a PORT DATABASE CHANGED asynchronous event occurs, we mark all VALID  * entries as PROBATIONAL. This allows us, if policy says to, just keep track  * of devices whose handles change but are otherwise the same device (and  * thus keep 'target' constant).  *  * In any case, we search all possible local loop handles. For each one that  * has a port database entity returned, we search for any PROBATIONAL entry  * that matches it and update as appropriate. Otherwise, as a new entry, we  * find room for it in the Port Database. We *try* and use the handle as the  * index to put it into the Database, but that's just an optimization. We mark  * the entry VALID and make sure that the target index is updated and correct.  *  * When we get done searching the local loop, we then search similarily for  * a list of devices we've gotten from the fabric name controller (if we're  * on a fabric). VALID marking is also done similarily.  *  * When all of this is done, we can march through the database and clean up  * any entry that is still PROBATIONAL (these represent devices which have  * departed). Then we're done and can resume normal operations.  *  * Negative invariants that we try and test for are:  *  *  + There can never be two non-NIL entries with the same { Port, Node } WWN  *    duples.  *  *  + There can never be two non-NIL entries with the same handle.  */
 end_comment
 
 begin_typedef
@@ -1445,7 +1445,7 @@ comment|/* 	 * This is the handle that the firmware needs in order for us to 	 *
 name|uint16_t
 name|handle
 decl_stmt|;
-comment|/* 	 * The dev_map_idx, if nonzero, is the system virtual target ID (+1) 	 * as a cross-reference with the isp_dev_map. 	 * 	 * A device is 'autologin' if the firmware automatically logs into 	 * it (re-logins as needed). Basically, local private loop devices. 	 * 	 * PRLI word 3 parameters contains role as well as other things. 	 * 	 * The state is the current state of this entry. 	 * 	 * Portid is obvious, as are node&& port WWNs. The new_role and 	 * new_portid is for when we are pending a change. 	 * 	 * The 'target_mode' tag means that this entry arrived via a 	 * target mode command and is immune from normal flushing rules. 	 * You should also never see anything with an initiator role 	 * with this set. 	 */
+comment|/* 	 * A device is 'autologin' if the firmware automatically logs into 	 * it (re-logins as needed). Basically, local private loop devices. 	 * 	 * PRLI word 3 parameters contains role as well as other things. 	 * 	 * The state is the current state of this entry. 	 * 	 * The is_target is the current state of target on this port. 	 * 	 * The is_initiator is the current state of initiator on this port. 	 * 	 * Portid is obvious, as are node&& port WWNs. The new_role and 	 * new_portid is for when we are pending a change. 	 */
 name|uint16_t
 name|prli_word3
 decl_stmt|;
@@ -1455,24 +1455,27 @@ name|new_prli_word3
 decl_stmt|;
 comment|/* Incoming new PRLI parameters */
 name|uint16_t
-name|dev_map_idx
-range|:
+label|:
 literal|12
-decl_stmt|,
+operator|,
 name|autologin
-range|:
+operator|:
 literal|1
-decl_stmt|,
+operator|,
 comment|/* F/W does PLOGI/PLOGO */
 name|state
-range|:
+operator|:
 literal|3
-decl_stmt|;
+expr_stmt|;
 name|uint32_t
 label|:
-literal|7
+literal|6
 operator|,
-name|target_mode
+name|is_target
+operator|:
+literal|1
+operator|,
+name|is_initiator
 operator|:
 literal|1
 operator|,
@@ -1482,21 +1485,8 @@ literal|24
 expr_stmt|;
 name|uint32_t
 label|:
-literal|5
+literal|8
 operator|,
-name|reported_gone
-operator|:
-literal|1
-operator|,
-name|announced
-operator|:
-literal|1
-operator|,
-name|dirty
-operator|:
-literal|1
-operator|,
-comment|/* commands have been run */
 name|new_portid
 operator|:
 literal|24
@@ -1569,6 +1559,20 @@ define|#
 directive|define
 name|FC_PORTDB_STATE_VALID
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_PORTDB_TGT
+parameter_list|(
+name|isp
+parameter_list|,
+name|bus
+parameter_list|,
+name|pdb
+parameter_list|)
+value|(int)(lp - FCPARAM(isp, bus)->portdb)
 end_define
 
 begin_comment
@@ -1682,25 +1686,6 @@ index|[
 name|MAX_FC_TARG
 index|]
 decl_stmt|;
-comment|/* 	 * This maps system virtual 'target' id to a portdb entry. 	 * 	 * The mapping function is to take any non-zero entry and 	 * subtract one to get the portdb index. This means that 	 * entries which are zero are unmapped (i.e., don't exist). 	 */
-name|uint16_t
-name|isp_dev_map
-index|[
-name|MAX_FC_TARG
-index|]
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-comment|/* 	 * This maps N-Port Handle to portdb entry so we 	 * don't have to search for every incoming command. 	 * 	 * The mapping function is to take any non-zero entry and 	 * subtract one to get the portdb index. This means that 	 * entries which are zero are unmapped (i.e., don't exist). 	 */
-name|uint16_t
-name|isp_tgt_map
-index|[
-name|MAX_NPORT_HANDLE
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Scratch DMA mapped in area to fetch Port Database stuff, etc. 	 */
 name|void
 modifier|*
@@ -3219,7 +3204,7 @@ comment|/*  * Reset the ISP and call completion for any orphaned commands.  */
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|isp_reinit
 parameter_list|(
 name|ispsoftc_t
@@ -3327,7 +3312,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Platform Dependent to External to Internal Control Function  *  * Assumes locks are held on entry. You should note that with many of  * these commands locks may be released while this function is called.  *  * ... ISPCTL_RESET_BUS, int channel);  *        Reset BUS on this channel  * ... ISPCTL_RESET_DEV, int channel, int target);  *        Reset Device on this channel at this target.  * ... ISPCTL_ABORT_CMD, XS_T *xs);  *        Abort active transaction described by xs.  * ... IPCTL_UPDATE_PARAMS);  *        Update any operating parameters (speed, etc.)  * ... ISPCTL_FCLINK_TEST, int channel);  *        Test FC link status on this channel  * ... ISPCTL_SCAN_FABRIC, int channel);  *        Scan fabric on this channel  * ... ISPCTL_SCAN_LOOP, int channel);  *        Scan local loop on this channel  * ... ISPCTL_PDB_SYNC, int channel);  *        Synchronize port database on this channel  * ... ISPCTL_SEND_LIP, int channel);  *        Send a LIP on this channel  * ... ISPCTL_GET_NAMES, int channel, int np, uint64_t *wwnn, uint64_t *wwpn)  *        Get a WWNN/WWPN for this N-port handle on this channel  * ... ISPCTL_RUN_MBOXCMD, mbreg_t *mbp)  *        Run this mailbox command  * ... ISPCTL_GET_PDB, int channel, int nphandle, isp_pdb_t *pdb)  *        Get PDB on this channel for this N-port handle  * ... ISPCTL_PLOGX, isp_plcmd_t *)  *        Performa a port login/logout  *  * ISPCTL_PDB_SYNC is somewhat misnamed. It actually is the final step, in  * order, of ISPCTL_FCLINK_TEST, ISPCTL_SCAN_FABRIC, and ISPCTL_SCAN_LOOP.  * The main purpose of ISPCTL_PDB_SYNC is to complete management of logging  * and logging out of fabric devices (if one is on a fabric) and then marking  * the 'loop state' as being ready to now be used for sending commands to  * devices. Originally fabric name server and local loop scanning were  * part of this function. It's now been separated to allow for finer control.  */
+comment|/*  * Platform Dependent to External to Internal Control Function  *  * Assumes locks are held on entry. You should note that with many of  * these commands locks may be released while this function is called.  *  * ... ISPCTL_RESET_BUS, int channel);  *        Reset BUS on this channel  * ... ISPCTL_RESET_DEV, int channel, int target);  *        Reset Device on this channel at this target.  * ... ISPCTL_ABORT_CMD, XS_T *xs);  *        Abort active transaction described by xs.  * ... IPCTL_UPDATE_PARAMS);  *        Update any operating parameters (speed, etc.)  * ... ISPCTL_FCLINK_TEST, int channel);  *        Test FC link status on this channel  * ... ISPCTL_SCAN_FABRIC, int channel);  *        Scan fabric on this channel  * ... ISPCTL_SCAN_LOOP, int channel);  *        Scan local loop on this channel  * ... ISPCTL_PDB_SYNC, int channel);  *        Synchronize port database on this channel  * ... ISPCTL_SEND_LIP, int channel);  *        Send a LIP on this channel  * ... ISPCTL_GET_NAMES, int channel, int np, uint64_t *wwnn, uint64_t *wwpn)  *        Get a WWNN/WWPN for this N-port handle on this channel  * ... ISPCTL_RUN_MBOXCMD, mbreg_t *mbp)  *        Run this mailbox command  * ... ISPCTL_GET_PDB, int channel, int nphandle, isp_pdb_t *pdb)  *        Get PDB on this channel for this N-port handle  * ... ISPCTL_PLOGX, isp_plcmd_t *)  *        Performa a port login/logout  * ... ISPCTL_CHANGE_ROLE, int channel, int role);  *        Change role of specified channel  *  * ISPCTL_PDB_SYNC is somewhat misnamed. It actually is the final step, in  * order, of ISPCTL_FCLINK_TEST, ISPCTL_SCAN_FABRIC, and ISPCTL_SCAN_LOOP.  * The main purpose of ISPCTL_PDB_SYNC is to complete management of logging  * and logging out of fabric devices (if one is on a fabric) and then marking  * the 'loop state' as being ready to now be used for sending commands to  * devices. Originally fabric name server and local loop scanning were  * part of this function. It's now been separated to allow for finer control.  */
 end_comment
 
 begin_typedef
@@ -3359,6 +3344,8 @@ block|,
 name|ISPCTL_GET_PDB
 block|,
 name|ISPCTL_PLOGX
+block|,
+name|ISPCTL_CHANGE_ROLE
 block|}
 name|ispctl_t
 typedef|;

@@ -206,7 +206,7 @@ value|(((sav)->flags& SADB_X_EXT_OLD) ? \ 		sizeof (struct ah) : sizeof (struct 
 end_define
 
 begin_comment
-comment|/*   * Return authenticator size in bytes.  The old protocol is known  * to use a fixed 16-byte authenticator.  The new algorithm use 12-byte  * authenticator.  */
+comment|/*   * Return authenticator size in bytes, based on a field in the  * algorithm descriptor.  */
 end_comment
 
 begin_define
@@ -216,7 +216,8 @@ name|AUTHSIZE
 parameter_list|(
 name|sav
 parameter_list|)
-value|ah_authsize(sav)
+define|\
+value|((sav->flags& SADB_X_EXT_OLD) ? 16 : (sav)->tdb_authalgxform->hashsize)
 end_define
 
 begin_expr_stmt
@@ -422,75 +423,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function
-specifier|static
-name|int
-name|ah_authsize
-parameter_list|(
-name|struct
-name|secasvar
-modifier|*
-name|sav
-parameter_list|)
-block|{
-name|IPSEC_ASSERT
-argument_list|(
-name|sav
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"%s: sav == NULL"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sav
-operator|->
-name|flags
-operator|&
-name|SADB_X_EXT_OLD
-condition|)
-return|return
-literal|16
-return|;
-switch|switch
-condition|(
-name|sav
-operator|->
-name|alg_auth
-condition|)
-block|{
-case|case
-name|SADB_X_AALG_SHA2_256
-case|:
-return|return
-literal|16
-return|;
-case|case
-name|SADB_X_AALG_SHA2_384
-case|:
-return|return
-literal|24
-return|;
-case|case
-name|SADB_X_AALG_SHA2_512
-case|:
-return|return
-literal|32
-return|;
-default|default:
-return|return
-name|AH_HMAC_HASHLEN
-return|;
-block|}
-comment|/* NOTREACHED */
-block|}
-end_function
-
 begin_comment
 comment|/*  * NB: this is public for use by the PF_KEY support.  */
 end_comment
@@ -581,6 +513,27 @@ case|:
 return|return
 operator|&
 name|auth_hash_hmac_sha2_512
+return|;
+case|case
+name|SADB_X_AALG_AES128GMAC
+case|:
+return|return
+operator|&
+name|auth_hash_nist_gmac_aes_128
+return|;
+case|case
+name|SADB_X_AALG_AES192GMAC
+case|:
+return|return
+operator|&
+name|auth_hash_nist_gmac_aes_192
+return|;
+case|case
+name|SADB_X_AALG_AES256GMAC
+case|:
+return|return
+operator|&
+name|auth_hash_nist_gmac_aes_256
 return|;
 block|}
 return|return

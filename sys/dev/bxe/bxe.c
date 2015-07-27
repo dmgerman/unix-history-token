@@ -27388,12 +27388,28 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* just in case bxe_mq_flush() wasn't called */
+if|if
+condition|(
+name|mtx_initialized
+argument_list|(
+operator|&
+name|fp
+operator|->
+name|tx_mtx
+argument_list|)
+condition|)
+block|{
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-comment|/* just in case bxe_mq_flush() wasn't called */
+name|BXE_FP_TX_LOCK
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -27409,10 +27425,14 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-block|{
 name|m_freem
 argument_list|(
 name|m
+argument_list|)
+expr_stmt|;
+name|BXE_FP_TX_UNLOCK
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 block|}

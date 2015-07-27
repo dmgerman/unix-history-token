@@ -371,13 +371,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|A10_MMC_ACCESS_BY_DMA
-value|(1U<< 30)
-end_define
-
-begin_define
-define|#
-directive|define
 name|A10_MMC_ACCESS_BY_AHB
 value|(1U<< 31)
 end_define
@@ -1017,6 +1010,74 @@ directive|define
 name|A10_MMC_IDMAC_DESC_CLOSE
 value|(8U<< 13)
 end_define
+
+begin_define
+define|#
+directive|define
+name|A10_MMC_IDMAC_ERROR
+define|\
+value|(A10_MMC_IDMAC_FATAL_BUS_ERR | A10_MMC_IDMAC_CARD_ERR_SUM |	\ 	 A10_MMC_IDMAC_DES_INVALID | A10_MMC_IDMAC_ABNORMAL_INT_SUM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|A10_MMC_IDMAC_COMPLETE
+define|\
+value|(A10_MMC_IDMAC_TRANSMIT_INT | A10_MMC_IDMAC_RECEIVE_INT)
+end_define
+
+begin_comment
+comment|/* The DMA descriptor table. */
+end_comment
+
+begin_struct
+struct|struct
+name|a10_mmc_dma_desc
+block|{
+name|uint32_t
+name|config
+decl_stmt|;
+define|#
+directive|define
+name|A10_MMC_DMA_CONFIG_DIC
+value|(1U<< 1)
+define|#
+directive|define
+name|A10_MMC_DMA_CONFIG_LD
+value|(1U<< 2)
+define|#
+directive|define
+name|A10_MMC_DMA_CONFIG_FD
+value|(1U<< 3)
+define|#
+directive|define
+name|A10_MMC_DMA_CONFIG_CH
+value|(1U<< 4)
+define|#
+directive|define
+name|A10_MMC_DMA_CONFIG_ER
+value|(1U<< 5)
+define|#
+directive|define
+name|A10_MMC_DMA_CONFIG_CES
+value|(1U<< 30)
+define|#
+directive|define
+name|A10_MMC_DMA_CONFIG_OWN
+value|(1U<< 31)
+name|uint32_t
+name|buf_size
+decl_stmt|;
+name|uint32_t
+name|buf_addr
+decl_stmt|;
+name|uint32_t
+name|next
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#

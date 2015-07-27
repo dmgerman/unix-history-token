@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lockstat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -880,6 +886,24 @@ operator|->
 name|nenabled
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|probe
+operator|->
+name|prov
+operator|->
+name|name
+argument_list|,
+literal|"lockstat"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|lockstat_enabled
+operator|++
+expr_stmt|;
 block|}
 end_function
 
@@ -922,6 +946,24 @@ operator|(
 literal|"no probes enabled"
 operator|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|probe
+operator|->
+name|prov
+operator|->
+name|name
+argument_list|,
+literal|"lockstat"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|lockstat_enabled
+operator|--
 expr_stmt|;
 name|probe
 operator|->

@@ -603,6 +603,7 @@ comment|/* Global defs */
 end_comment
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|add_expdir
@@ -621,6 +622,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|add_dlist
 parameter_list|(
@@ -647,6 +649,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|add_mlist
 parameter_list|(
@@ -660,6 +663,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|check_dirpath
 parameter_list|(
@@ -670,6 +674,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|check_options
 parameter_list|(
@@ -681,6 +686,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|checkmask
 parameter_list|(
@@ -693,6 +699,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|chk_host
 parameter_list|(
@@ -761,6 +768,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|del_mlist
 parameter_list|(
@@ -776,6 +784,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|dirlist
 modifier|*
@@ -792,6 +801,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|do_mount
 parameter_list|(
@@ -822,6 +832,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|do_opt
 parameter_list|(
@@ -855,6 +866,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|exportlist
 modifier|*
@@ -867,6 +879,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|exportlist
 modifier|*
@@ -878,6 +891,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|free_dir
 parameter_list|(
@@ -889,6 +903,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|free_exp
 parameter_list|(
@@ -900,6 +915,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|free_grp
 parameter_list|(
@@ -911,6 +927,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|free_host
 parameter_list|(
@@ -922,6 +939,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|get_exportlist
 parameter_list|(
@@ -931,6 +949,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|get_host
 parameter_list|(
@@ -949,6 +968,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|hostlist
 modifier|*
@@ -960,6 +980,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|get_line
 parameter_list|(
@@ -969,6 +990,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|get_mountlist
 parameter_list|(
@@ -978,6 +1000,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|get_net
 parameter_list|(
@@ -994,6 +1017,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|getexp_err
 parameter_list|(
@@ -1009,6 +1033,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|grouplist
 modifier|*
@@ -1020,6 +1045,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|hang_dirp
 parameter_list|(
@@ -1041,6 +1067,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|huphandler
 parameter_list|(
@@ -1051,6 +1078,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|makemask
 parameter_list|(
@@ -1066,6 +1094,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|mntsrv
 parameter_list|(
@@ -1080,6 +1109,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|nextfield
 parameter_list|(
@@ -1095,6 +1125,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|out_of_mem
 parameter_list|(
@@ -1104,6 +1135,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|parsecred
 parameter_list|(
@@ -1118,6 +1150,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|parsesec
 parameter_list|(
@@ -1132,6 +1165,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|put_exlist
 parameter_list|(
@@ -1155,6 +1189,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 modifier|*
 name|sa_rawaddr
@@ -1172,6 +1207,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|sacmp
 parameter_list|(
@@ -1194,6 +1230,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|scan_tree
 parameter_list|(
@@ -1219,6 +1256,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|xdr_dir
 parameter_list|(
@@ -1232,6 +1270,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|xdr_explist
 parameter_list|(
@@ -1244,6 +1283,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|xdr_explist_brief
 parameter_list|(
@@ -1256,6 +1296,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|xdr_explist_common
 parameter_list|(
@@ -1270,6 +1311,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|xdr_fhs
 parameter_list|(
@@ -1282,6 +1324,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|xdr_mlist
 parameter_list|(
@@ -1294,6 +1337,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|terminate
 parameter_list|(
@@ -1303,6 +1347,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|exportlist
 modifier|*
@@ -1311,6 +1356,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mountlist
 modifier|*
@@ -1319,6 +1365,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|grouplist
 modifier|*
@@ -1327,6 +1374,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|exnames_default
@@ -1343,6 +1391,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -1351,6 +1400,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -1361,6 +1411,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|xucred
 name|def_anon
@@ -1390,6 +1441,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|force_v2
 init|=
@@ -1398,6 +1450,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|resvport_only
 init|=
@@ -1406,6 +1459,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nhosts
 init|=
@@ -1414,6 +1468,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dir_only
 init|=
@@ -1422,6 +1477,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dolog
 init|=
@@ -1430,6 +1486,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|got_sighup
 init|=
@@ -1438,6 +1495,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|xcreated
 init|=
@@ -1446,6 +1504,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|svcport_str
@@ -1495,6 +1554,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|opt_flags
 decl_stmt|;
@@ -1510,6 +1570,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|v4root_phase
 init|=
@@ -1518,6 +1579,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|v4root_dirpath
 index|[
@@ -1529,6 +1591,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|has_publicfh
 init|=
@@ -1537,6 +1600,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pidfh
 modifier|*
@@ -1628,6 +1692,7 @@ name|DEBUG
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|debug
 init|=
@@ -1636,6 +1701,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|SYSLOG
 parameter_list|(
@@ -1672,6 +1738,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|int
 name|debug
 init|=
@@ -5723,6 +5790,7 @@ comment|/*  * Xdr conversion for a dirpath string  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|xdr_dir
 parameter_list|(
@@ -5756,6 +5824,7 @@ comment|/*  * Xdr routine to generate file handle reply  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|xdr_fhs
 parameter_list|(
@@ -5997,6 +6066,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|xdr_mlist
 parameter_list|(
@@ -6145,6 +6215,7 @@ comment|/*  * Xdr conversion for export list  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|xdr_explist_common
 parameter_list|(
@@ -6333,6 +6404,7 @@ comment|/*  * Called from xdr_explist() to traverse the tree and export the  * d
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|put_exlist
 parameter_list|(
@@ -6762,6 +6834,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|xdr_explist
 parameter_list|(
@@ -6787,6 +6860,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|xdr_explist_brief
 parameter_list|(
@@ -6812,6 +6886,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|line
@@ -6819,12 +6894,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+specifier|static
+name|size_t
 name|linesize
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|exp_file
@@ -8278,6 +8355,7 @@ comment|/*  * Get the export list from all specified files  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|get_exportlist
 parameter_list|(
@@ -9063,6 +9141,7 @@ comment|/*  * Allocate an export list element  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|exportlist
 modifier|*
@@ -9121,6 +9200,7 @@ comment|/*  * Allocate a group list element  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|grouplist
 modifier|*
@@ -9179,6 +9259,7 @@ comment|/*  * Clean up upon an error in get_exportlist().  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|getexp_err
 parameter_list|(
@@ -9264,6 +9345,7 @@ comment|/*  * Search the export list for a matching fs.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|exportlist
 modifier|*
@@ -9347,6 +9429,7 @@ comment|/*  * Add a directory path to the list.  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|add_expdir
@@ -9466,6 +9549,7 @@ comment|/*  * Hang the dir list element off the dirpath binary tree as required 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|hang_dirp
 parameter_list|(
@@ -9704,6 +9788,7 @@ comment|/*  * Traverse the binary tree either updating a node that is already th
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|add_dlist
 parameter_list|(
@@ -9985,6 +10070,7 @@ comment|/*  * Search for a dirpath on the export point.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|dirlist
 modifier|*
@@ -10076,6 +10162,7 @@ comment|/*  * Scan for a host match in a directory tree.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|chk_host
 parameter_list|(
@@ -10347,6 +10434,7 @@ comment|/*  * Scan tree for a host that matches the address.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|scan_tree
 parameter_list|(
@@ -10441,6 +10529,7 @@ comment|/*  * Traverse the dirlist tree and free it up.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|free_dir
 parameter_list|(
@@ -10493,6 +10582,7 @@ comment|/*  * Parse a colon separated list of security flavors  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|parsesec
 parameter_list|(
@@ -10721,6 +10811,7 @@ comment|/*  * Parse the option string and update fields.  * Option arguments may
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|do_opt
 parameter_list|(
@@ -11459,6 +11550,7 @@ comment|/*  * Translate a character string to the corresponding list of network 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|get_host
 parameter_list|(
@@ -11796,6 +11888,7 @@ comment|/*  * Free up an exports list component  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|free_exp
 parameter_list|(
@@ -11881,6 +11974,7 @@ comment|/*  * Free hosts.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|free_host
 parameter_list|(
@@ -11923,6 +12017,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|hostlist
 modifier|*
@@ -11996,6 +12091,7 @@ comment|/*  * Out of memory, fatal  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|out_of_mem
 parameter_list|(
@@ -12022,6 +12118,7 @@ comment|/*  * Do the nmount() syscall with the update flag to push the export in
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|do_mount
 parameter_list|(
@@ -13217,6 +13314,7 @@ comment|/*  * Translate a net address.  *  * If `maskflg' is nonzero, then `cp' 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|get_net
 parameter_list|(
@@ -13930,6 +14028,7 @@ comment|/*  * Parse out the next white space separated field  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|nextfield
 parameter_list|(
@@ -14035,6 +14134,7 @@ comment|/*  * Get an exports file line. Skip over blank lines and handle line  *
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|get_line
 parameter_list|(
@@ -14245,6 +14345,7 @@ comment|/*  * Parse a description of a credential.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|parsecred
 parameter_list|(
@@ -14684,6 +14785,7 @@ comment|/*  * Routines that maintain the remote mounttab  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|get_mountlist
 parameter_list|(
@@ -14913,6 +15015,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|del_mlist
 parameter_list|(
@@ -15106,6 +15209,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|add_mlist
 parameter_list|(
@@ -15323,6 +15427,7 @@ comment|/*  * Free up a group list.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|free_grp
 parameter_list|(
@@ -15411,6 +15516,7 @@ name|DEBUG
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|SYSLOG
 parameter_list|(
@@ -15466,6 +15572,7 @@ comment|/*  * Check options for consistency.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|check_options
 parameter_list|(
@@ -15688,6 +15795,7 @@ comment|/*  * Check an absolute directory path for any symbolic links. Return tr
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|check_dirpath
 parameter_list|(
@@ -15807,6 +15915,7 @@ comment|/*  * Make a netmask according to the specified prefix length. The ss_fa
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|makemask
 parameter_list|(
@@ -15929,6 +16038,7 @@ comment|/*  * Check that the sockaddr is a valid netmask. Returns 0 if the mask 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|checkmask
 parameter_list|(
@@ -16068,6 +16178,7 @@ comment|/*  * Compare two sockaddrs according to a specified mask. Return zero i
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|sacmp
 parameter_list|(
@@ -16291,6 +16402,7 @@ comment|/*  * Return a pointer to the part of the sockaddr that contains the  * 
 end_comment
 
 begin_function
+specifier|static
 name|void
 modifier|*
 name|sa_rawaddr
@@ -16417,6 +16529,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|huphandler
 parameter_list|(
@@ -16433,6 +16546,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|terminate
 parameter_list|(

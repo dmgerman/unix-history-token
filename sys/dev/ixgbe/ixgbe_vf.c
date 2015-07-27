@@ -805,6 +805,14 @@ condition|)
 return|return
 name|ret_val
 return|;
+name|msgbuf
+index|[
+literal|0
+index|]
+operator|&=
+operator|~
+name|IXGBE_VT_MSGTYPE_CTS
+expr_stmt|;
 if|if
 condition|(
 name|msgbuf

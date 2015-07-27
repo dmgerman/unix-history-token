@@ -184,6 +184,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PF_IMMUTABLE
+value|0x100
+end_define
+
+begin_comment
+comment|/* Immutable parameter */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|JF_START
 value|0x0001
 end_define

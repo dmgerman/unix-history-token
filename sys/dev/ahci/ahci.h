@@ -2380,6 +2380,17 @@ name|int
 name|fbs_enabled
 decl_stmt|;
 comment|/* FIS-based switching enabled */
+name|void
+function_decl|(
+modifier|*
+name|start
+function_decl|)
+parameter_list|(
+name|struct
+name|ahci_channel
+modifier|*
+parameter_list|)
+function_decl|;
 name|union
 name|ccb
 modifier|*
@@ -2620,6 +2631,12 @@ decl_stmt|;
 name|int
 name|r_rid
 decl_stmt|;
+name|int
+name|r_msix_tab_rid
+decl_stmt|;
+name|int
+name|r_msix_pba_rid
+decl_stmt|;
 name|uint16_t
 name|vendorid
 decl_stmt|;
@@ -2640,6 +2657,16 @@ name|struct
 name|resource
 modifier|*
 name|r_mem
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|r_msix_table
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|r_msix_pba
 decl_stmt|;
 name|struct
 name|rman
@@ -2752,6 +2779,17 @@ index|[
 name|AHCI_MAX_PORTS
 index|]
 struct|;
+name|void
+function_decl|(
+modifier|*
+name|ch_start
+function_decl|)
+parameter_list|(
+name|struct
+name|ahci_channel
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -3158,7 +3196,7 @@ define|#
 directive|define
 name|AHCI_Q_BIT_STRING
 define|\
-value|"\020"			\ 	"\001NOFORCE"		\ 	"\002NOPMP"		\ 	"\003NONCQ"		\ 	"\0041CH"		\ 	"\0052CH"		\ 	"\0064CH"		\ 	"\007EDGEIS"		\ 	"\010SATA2"		\ 	"\011NOBSYRES"		\ 	"\012NOAA"		\ 	"\013NOCOUNT"		\ 	"\014ALTSIG"		\ 	"\015NOMSI"		\ 	"\016ATI_PMP_BUG"	\ 	"\017MAXIO_64K"		\ 	"\020SATA1_UNIT0"	\ 	"\021ABAR0"		\ 	"\0221MSI"              \ 	"\022FORCE_PI"          \ 	"\023RESTORE_CAP"
+value|"\020"			\ 	"\001NOFORCE"		\ 	"\002NOPMP"		\ 	"\003NONCQ"		\ 	"\0041CH"		\ 	"\0052CH"		\ 	"\0064CH"		\ 	"\007EDGEIS"		\ 	"\010SATA2"		\ 	"\011NOBSYRES"		\ 	"\012NOAA"		\ 	"\013NOCOUNT"		\ 	"\014ALTSIG"		\ 	"\015NOMSI"		\ 	"\016ATI_PMP_BUG"	\ 	"\017MAXIO_64K"		\ 	"\020SATA1_UNIT0"	\ 	"\021ABAR0"		\ 	"\0221MSI"              \ 	"\023FORCE_PI"          \ 	"\024RESTORE_CAP"
 end_define
 
 begin_function_decl
@@ -3368,6 +3406,16 @@ end_function_decl
 begin_function_decl
 name|int
 name|ahci_ctlr_setup
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahci_free_mem
 parameter_list|(
 name|device_t
 name|dev

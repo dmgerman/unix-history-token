@@ -443,6 +443,9 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|major
 decl_stmt|,
@@ -475,7 +478,11 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
-literal|0
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|)
 argument_list|,
 operator|&
 name|fp

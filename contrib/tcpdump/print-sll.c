@@ -733,25 +733,12 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"vlan %u, p %u%s, "
+literal|"%s, "
 operator|,
+name|ieee8021q_tci_string
+argument_list|(
 name|tag
-operator|&
-literal|0xfff
-operator|,
-name|tag
-operator|>>
-literal|13
-operator|,
-operator|(
-name|tag
-operator|&
-literal|0x1000
-operator|)
-condition|?
-literal|", CFI"
-else|:
-literal|""
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

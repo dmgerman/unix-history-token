@@ -77,6 +77,11 @@ name|void
 name|stack_capture
 parameter_list|(
 name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
 name|stack
 modifier|*
 name|st
@@ -167,12 +172,13 @@ name|frame
 operator|->
 name|f_frame
 operator|>=
-operator|(
-name|vm_offset_t
-operator|)
-name|rbp
+name|td
+operator|->
+name|td_kstack
 operator|+
-name|KSTACK_PAGES
+name|td
+operator|->
+name|td_kstack_pages
 operator|*
 name|PAGE_SIZE
 condition|)
@@ -239,6 +245,8 @@ name|pcb_rbp
 expr_stmt|;
 name|stack_capture
 argument_list|(
+name|td
+argument_list|,
 name|st
 argument_list|,
 name|rbp
@@ -263,6 +271,8 @@ decl_stmt|;
 asm|__asm __volatile("movq %%rbp,%0" : "=r" (rbp));
 name|stack_capture
 argument_list|(
+name|curthread
+argument_list|,
 name|st
 argument_list|,
 name|rbp

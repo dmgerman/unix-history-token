@@ -825,6 +825,55 @@ end_comment
 begin_define
 define|#
 directive|define
+name|QCA955X_GPIO_REG_OUT_FUNC0
+value|0x2c
+end_define
+
+begin_define
+define|#
+directive|define
+name|QCA955X_GPIO_REG_OUT_FUNC1
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|QCA955X_GPIO_REG_OUT_FUNC2
+value|0x34
+end_define
+
+begin_define
+define|#
+directive|define
+name|QCA955X_GPIO_REG_OUT_FUNC3
+value|0x38
+end_define
+
+begin_define
+define|#
+directive|define
+name|QCA955X_GPIO_REG_OUT_FUNC4
+value|0x3c
+end_define
+
+begin_define
+define|#
+directive|define
+name|QCA955X_GPIO_REG_OUT_FUNC5
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|QCA955X_GPIO_REG_FUNC
+value|0x6c
+end_define
+
+begin_define
+define|#
+directive|define
 name|QCA955X_GPIO_COUNT
 value|24
 end_define
@@ -944,6 +993,28 @@ define|#
 directive|define
 name|QCA955X_DDR_REG_FLUSH_WMAC
 value|(AR71XX_APB_BASE + 0xac)
+end_define
+
+begin_comment
+comment|/* PCIe EP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QCA955X_DDR_REG_FLUSH_SRC1
+value|(AR71XX_APB_BASE + 0xb0)
+end_define
+
+begin_comment
+comment|/* checksum engine */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QCA955X_DDR_REG_FLUSH_SRC2
+value|(AR71XX_APB_BASE + 0xb2)
 end_define
 
 begin_comment

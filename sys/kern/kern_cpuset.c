@@ -1445,7 +1445,6 @@ comment|/*  * Resolve the 'which' parameter of several cpuset apis.  *  * For WH
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|cpuset_which
 parameter_list|(

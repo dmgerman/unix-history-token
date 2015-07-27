@@ -263,6 +263,20 @@ operator|==
 name|CPACR_FPEN_TRAP_NONE
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|PCPU_GET
+argument_list|(
+name|fpcurthread
+argument_list|)
+operator|==
+name|td
+argument_list|,
+operator|(
+literal|"Storing an invalid VFP state"
+operator|)
+argument_list|)
+expr_stmt|;
 name|vfp_state
 operator|=
 name|td
@@ -392,6 +406,7 @@ expr_stmt|;
 name|vfp_enable
 argument_list|()
 expr_stmt|;
+comment|/* 	 * If the previous thread on this cpu to use the VFP was not the 	 * current threas, or the current thread last used it on a different 	 * cpu we need to restore the old state. 	 */
 if|if
 condition|(
 name|PCPU_GET
@@ -400,7 +415,7 @@ name|fpcurthread
 argument_list|)
 operator|!=
 name|curthread
-operator|&&
+operator|||
 name|cpu
 operator|!=
 name|curpcb

@@ -142,79 +142,16 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CM_ARG0
+name|CM_BUF
 value|0
 end_define
 
-begin_comment
-comment|/* no args */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|CM_ARG1
+name|CM_NULLOK
 value|1
 end_define
-
-begin_comment
-comment|/* one arg (string) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CM_ARG2
-value|2
-end_define
-
-begin_comment
-comment|/* two args (strings) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CM_ARGA
-value|4
-end_define
-
-begin_comment
-comment|/* one string and _SOCK_ADDR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CM_ARGO
-value|5
-end_define
-
-begin_comment
-comment|/* two integers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CM_ARGV
-value|8
-end_define
-
-begin_comment
-comment|/* \0 separated list of args, NULL-terminated */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CM_ARGN
-value|9
-end_define
-
-begin_comment
-comment|/* \0 separated list of args (strings) */
-end_comment
 
 begin_comment
 comment|/* possible values for cm_todo */
@@ -1193,7 +1130,7 @@ block|{
 block|{
 name|SMFIC_ABORT
 block|,
-name|CM_ARG0
+name|CM_NULLOK
 block|,
 name|ST_ABRT
 block|,
@@ -1207,7 +1144,7 @@ block|,
 block|{
 name|SMFIC_MACRO
 block|,
-name|CM_ARGV
+name|CM_BUF
 block|,
 name|ST_NONE
 block|,
@@ -1221,7 +1158,7 @@ block|,
 block|{
 name|SMFIC_BODY
 block|,
-name|CM_ARG1
+name|CM_BUF
 block|,
 name|ST_BODY
 block|,
@@ -1235,7 +1172,7 @@ block|,
 block|{
 name|SMFIC_CONNECT
 block|,
-name|CM_ARG2
+name|CM_BUF
 block|,
 name|ST_CONN
 block|,
@@ -1249,7 +1186,7 @@ block|,
 block|{
 name|SMFIC_BODYEOB
 block|,
-name|CM_ARG1
+name|CM_NULLOK
 block|,
 name|ST_ENDM
 block|,
@@ -1263,7 +1200,7 @@ block|,
 block|{
 name|SMFIC_HELO
 block|,
-name|CM_ARG1
+name|CM_BUF
 block|,
 name|ST_HELO
 block|,
@@ -1277,7 +1214,7 @@ block|,
 block|{
 name|SMFIC_HEADER
 block|,
-name|CM_ARG2
+name|CM_BUF
 block|,
 name|ST_HDRS
 block|,
@@ -1291,7 +1228,7 @@ block|,
 block|{
 name|SMFIC_MAIL
 block|,
-name|CM_ARGV
+name|CM_BUF
 block|,
 name|ST_MAIL
 block|,
@@ -1305,7 +1242,7 @@ block|,
 block|{
 name|SMFIC_OPTNEG
 block|,
-name|CM_ARGO
+name|CM_BUF
 block|,
 name|ST_OPTS
 block|,
@@ -1319,7 +1256,7 @@ block|,
 block|{
 name|SMFIC_EOH
 block|,
-name|CM_ARG0
+name|CM_NULLOK
 block|,
 name|ST_EOHS
 block|,
@@ -1333,7 +1270,7 @@ block|,
 block|{
 name|SMFIC_QUIT
 block|,
-name|CM_ARG0
+name|CM_NULLOK
 block|,
 name|ST_QUIT
 block|,
@@ -1347,7 +1284,7 @@ block|,
 block|{
 name|SMFIC_DATA
 block|,
-name|CM_ARG0
+name|CM_NULLOK
 block|,
 name|ST_DATA
 block|,
@@ -1361,7 +1298,7 @@ block|,
 block|{
 name|SMFIC_RCPT
 block|,
-name|CM_ARGV
+name|CM_BUF
 block|,
 name|ST_RCPT
 block|,
@@ -1375,7 +1312,7 @@ block|,
 block|{
 name|SMFIC_UNKNOWN
 block|,
-name|CM_ARG1
+name|CM_BUF
 block|,
 name|ST_UNKN
 block|,
@@ -1389,7 +1326,7 @@ block|,
 block|{
 name|SMFIC_QUIT_NC
 block|,
-name|CM_ARG0
+name|CM_NULLOK
 block|,
 name|ST_Q_NC
 block|,
@@ -2060,6 +1997,51 @@ expr_stmt|;
 block|}
 continue|continue;
 block|}
+block|}
+if|if
+condition|(
+name|cmds
+index|[
+name|i
+index|]
+operator|.
+name|cm_argt
+operator|!=
+name|CM_NULLOK
+operator|&&
+name|buf
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* stop for now */
+if|if
+condition|(
+name|ctx
+operator|->
+name|ctx_dbg
+operator|>
+literal|1
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"[%lu] cmd='%c', buf=NULL\n"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|ctx
+operator|->
+name|ctx_id
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|MI_FAILURE
+expr_stmt|;
+break|break;
 block|}
 name|arg
 operator|.
@@ -3384,7 +3366,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  CLR_MACROS -- clear set of macros starting from a given index ** **	Parameters: **		ctx -- context structure **		m -- index from which to clear all macros ** **	Returns: **		None. */
+comment|/* **  MI_CLR_MACROS -- clear set of macros starting from a given index ** **	Parameters: **		ctx -- context structure **		m -- index from which to clear all macros ** **	Returns: **		None. */
 end_comment
 
 begin_function
@@ -7282,7 +7264,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  SENDOK -- is it ok for the filter to send stuff to the MTA? ** **	Parameters: **		ctx -- context structure **		flag -- flag to check ** **	Returns: **		sending allowed (in current state) */
+comment|/* **  MI_SENDOK -- is it ok for the filter to send stuff to the MTA? ** **	Parameters: **		ctx -- context structure **		flag -- flag to check ** **	Returns: **		sending allowed (in current state) */
 end_comment
 
 begin_function

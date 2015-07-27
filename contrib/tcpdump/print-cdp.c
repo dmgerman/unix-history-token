@@ -84,6 +84,48 @@ name|CDP_HEADER_LEN
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|CDP_HEADER_VERSION_OFFSET
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDP_HEADER_TTL_OFFSET
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDP_HEADER_CHECKSUM_OFFSET
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDP_TLV_HEADER_LEN
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDP_TLV_TYPE_OFFSET
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDP_TLV_LEN_OFFSET
+value|2
+end_define
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -412,13 +454,17 @@ operator|,
 literal|"CDPv%u, ttl: %us"
 operator|,
 operator|*
+operator|(
 name|tptr
+operator|+
+name|CDP_HEADER_VERSION_OFFSET
+operator|)
 operator|,
 operator|*
 operator|(
 name|tptr
 operator|+
-literal|1
+name|CDP_HEADER_TTL_OFFSET
 operator|)
 operator|)
 argument_list|)
@@ -434,11 +480,13 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|", checksum: %u (unverified), length %u"
+literal|", checksum: 0x%04x (unverified), length %u"
 operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tptr
+operator|+
+name|CDP_HEADER_CHECKSUM_OFFSET
 argument_list|)
 operator|,
 name|length
@@ -465,7 +513,7 @@ argument_list|(
 operator|*
 name|tptr
 argument_list|,
-literal|4
+name|CDP_TLV_HEADER_LEN
 argument_list|)
 expr_stmt|;
 comment|/* read out Type and Length */
@@ -474,6 +522,8 @@ operator|=
 name|EXTRACT_16BITS
 argument_list|(
 name|tptr
+operator|+
+name|CDP_TLV_TYPE_OFFSET
 argument_list|)
 expr_stmt|;
 name|len
@@ -482,17 +532,81 @@ name|EXTRACT_16BITS
 argument_list|(
 name|tptr
 operator|+
-literal|2
+name|CDP_TLV_LEN_OFFSET
 argument_list|)
 expr_stmt|;
 comment|/* object length includes the 4 bytes header length */
+if|if
+condition|(
+name|len
+operator|<
+name|CDP_TLV_HEADER_LEN
+condition|)
+block|{
+if|if
+condition|(
+name|ndo
+operator|->
+name|ndo_vflag
+condition|)
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"\n\t%s (0x%02x), TLV length: %u byte%s (too short)"
+operator|,
+name|tok2str
+argument_list|(
+name|cdp_tlv_values
+argument_list|,
+literal|"unknown field type"
+argument_list|,
+name|type
+argument_list|)
+operator|,
+name|type
+operator|,
+name|len
+operator|,
+name|PLURAL_SUFFIX
+argument_list|(
+name|len
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* plural */
+else|else
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|", %s TLV length %u too short"
+operator|,
+name|tok2str
+argument_list|(
+name|cdp_tlv_values
+argument_list|,
+literal|"unknown field type"
+argument_list|,
+name|type
+argument_list|)
+operator|,
+name|len
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|tptr
 operator|+=
-literal|4
+name|CDP_TLV_HEADER_LEN
 expr_stmt|;
 name|len
 operator|-=
-literal|4
+name|CDP_TLV_HEADER_LEN
 expr_stmt|;
 name|ND_TCHECK2
 argument_list|(
@@ -525,7 +639,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"\n\t%s (0x%02x), length: %u byte%s: "
+literal|"\n\t%s (0x%02x), value length: %u byte%s: "
 operator|,
 name|tok2str
 argument_list|(
@@ -582,6 +696,9 @@ literal|"'"
 operator|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fn_printn
 argument_list|(
 name|ndo
@@ -637,6 +754,9 @@ literal|"'"
 operator|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fn_printn
 argument_list|(
 name|ndo
@@ -662,6 +782,15 @@ case|case
 literal|0x04
 case|:
 comment|/* Capabilities */
+if|if
+condition|(
+name|len
+operator|<
+literal|4
+condition|)
+goto|goto
+name|trunc
+goto|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -742,7 +871,7 @@ name|j
 operator|==
 literal|0x0a
 condition|)
-comment|/* lets rework the version string to get a nice identation */
+comment|/* lets rework the version string to get a nice indentation */
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -767,6 +896,9 @@ literal|"'"
 operator|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fn_printn
 argument_list|(
 name|ndo
@@ -817,7 +949,7 @@ break|break;
 case|case
 literal|0x09
 case|:
-comment|/* VTP Mgmt Domain  - not documented */
+comment|/* VTP Mgmt Domain  - CDPv2 */
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -827,6 +959,9 @@ literal|"'"
 operator|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fn_printn
 argument_list|(
 name|ndo
@@ -851,7 +986,16 @@ break|break;
 case|case
 literal|0x0a
 case|:
-comment|/* Native VLAN ID - not documented */
+comment|/* Native VLAN ID - CDPv2 */
+if|if
+condition|(
+name|len
+operator|<
+literal|2
+condition|)
+goto|goto
+name|trunc
+goto|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -870,7 +1014,16 @@ break|break;
 case|case
 literal|0x0b
 case|:
-comment|/* Duplex - not documented */
+comment|/* Duplex - CDPv2 */
+if|if
+condition|(
+name|len
+operator|<
+literal|1
+condition|)
+goto|goto
+name|trunc
+goto|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -890,11 +1043,20 @@ operator|)
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* http://www.cisco.com/univercd/cc/td/doc/product/voice/ata/atarn/186rn21m.htm                      * plus more details from other sources                      */
+comment|/* http://www.cisco.com/c/en/us/td/docs/voice_ip_comm/cata/186/2_12_m/english/release/notes/186rn21m.html 		     * plus more details from other sources 		     */
 case|case
 literal|0x0e
 case|:
 comment|/* ATA-186 VoIP VLAN request - incomplete doc. */
+if|if
+condition|(
+name|len
+operator|<
+literal|3
+condition|)
+goto|goto
+name|trunc
+goto|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -944,6 +1106,15 @@ case|case
 literal|0x11
 case|:
 comment|/* MTU - not documented */
+if|if
+condition|(
+name|len
+operator|<
+literal|4
+condition|)
+goto|goto
+name|trunc
+goto|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -963,6 +1134,15 @@ case|case
 literal|0x12
 case|:
 comment|/* AVVID trust bitmap - not documented */
+if|if
+condition|(
+name|len
+operator|<
+literal|1
+condition|)
+goto|goto
+name|trunc
+goto|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -982,6 +1162,15 @@ case|case
 literal|0x13
 case|:
 comment|/* AVVID untrusted port CoS - not documented */
+if|if
+condition|(
+name|len
+operator|<
+literal|1
+condition|)
+goto|goto
+name|trunc
+goto|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1010,6 +1199,9 @@ literal|"'"
 operator|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fn_printn
 argument_list|(
 name|ndo
@@ -1056,6 +1248,15 @@ case|case
 literal|0x17
 case|:
 comment|/* Physical Location - not documented */
+if|if
+condition|(
+name|len
+operator|<
+literal|1
+condition|)
+goto|goto
+name|trunc
+goto|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1086,6 +1287,9 @@ literal|"/"
 operator|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fn_printn
 argument_list|(
 name|ndo
@@ -1118,14 +1322,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* avoid infinite loop */
-if|if
-condition|(
-name|len
-operator|==
-literal|0
-condition|)
-break|break;
 name|tptr
 operator|=
 name|tptr
@@ -1265,9 +1461,20 @@ argument_list|(
 operator|*
 name|p
 argument_list|,
-literal|2
+literal|4
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|+
+literal|4
+operator|>
+name|endp
+condition|)
+goto|goto
+name|trunc
+goto|;
 name|num
 operator|=
 name|EXTRACT_32BITS

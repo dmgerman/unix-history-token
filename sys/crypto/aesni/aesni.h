@@ -187,12 +187,6 @@ argument_list|(
 literal|16
 argument_list|)
 decl_stmt|;
-name|uint8_t
-name|iv
-index|[
-name|AES_BLOCK_LEN
-index|]
-decl_stmt|;
 name|int
 name|algo
 decl_stmt|;
@@ -214,11 +208,6 @@ argument|aesni_session
 argument_list|)
 name|next
 expr_stmt|;
-name|struct
-name|fpu_kern_ctx
-modifier|*
-name|fpu_ctx
-decl_stmt|;
 block|}
 struct|;
 end_struct

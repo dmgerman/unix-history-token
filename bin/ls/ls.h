@@ -17,6 +17,13 @@ name|HUMANVALSTR_LEN
 value|5
 end_define
 
+begin_define
+define|#
+directive|define
+name|LS_XO_VERSION
+value|"1"
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|long
@@ -236,6 +243,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* don't use tab-separated multi-col output */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|f_numericonly
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't convert uid/gid to name */
 end_comment
 
 begin_decl_stmt

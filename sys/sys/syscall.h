@@ -3072,8 +3072,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_MAXSYSCALL
+name|SYS_numa_getaffinity
 value|548
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_numa_setaffinity
+value|549
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_MAXSYSCALL
+value|550
 end_define
 
 end_unit

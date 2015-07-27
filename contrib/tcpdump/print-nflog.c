@@ -566,7 +566,7 @@ expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
-name|INET6
+name|AF_INET6
 case|case
 name|AF_INET6
 case|:
@@ -582,7 +582,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-comment|/*INET6*/
+comment|/* AF_INET6 */
 default|default:
 if|if
 condition|(

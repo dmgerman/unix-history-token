@@ -525,6 +525,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__linux
+comment|/* 	 * [Bug 2792] 	 * burnicki: iter->pos is usually never NULL here (anymore?), 	 * so linux_if_inet6_current(iter) is never called here. 	 * However, that routine would check (under Linux), if the 	 * interface is in a tentative state, e.g. if there's no link 	 * yet but an IPv6 address has already be assigned. 	 */
 if|if
 condition|(
 name|iter
@@ -559,6 +560,29 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IFF_RUNNING
+comment|/* 	 * [Bug 2792] 	 * burnicki: if the interface is not running then 	 * it may be in a tentative state. See above. 	 */
+if|if
+condition|(
+operator|(
+name|ifa
+operator|->
+name|ifa_flags
+operator|&
+name|IFF_RUNNING
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ISC_R_IGNORE
+operator|)
+return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ifa

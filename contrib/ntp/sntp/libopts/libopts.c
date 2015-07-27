@@ -25,6 +25,17 @@ directive|include
 file|"ao-strs.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|char
+specifier|const
+name|ao_ver_string
+index|[]
+init|=
+literal|"41:0:16\n"
+decl_stmt|;
+end_decl_stmt
+
 begin_include
 include|#
 directive|include

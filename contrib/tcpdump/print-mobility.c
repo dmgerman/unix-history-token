@@ -234,6 +234,67 @@ begin_comment
 comment|/* Binding Error */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP6M_MAX
+value|7
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|unsigned
+name|ip6m_hdrlen
+index|[
+name|IP6M_MAX
+operator|+
+literal|1
+index|]
+init|=
+block|{
+name|IP6M_MINLEN
+block|,
+comment|/* IP6M_BINDING_REQUEST  */
+name|IP6M_MINLEN
+operator|+
+literal|8
+block|,
+comment|/* IP6M_HOME_TEST_INIT   */
+name|IP6M_MINLEN
+operator|+
+literal|8
+block|,
+comment|/* IP6M_CAREOF_TEST_INIT */
+name|IP6M_MINLEN
+operator|+
+literal|16
+block|,
+comment|/* IP6M_HOME_TEST        */
+name|IP6M_MINLEN
+operator|+
+literal|16
+block|,
+comment|/* IP6M_CAREOF_TEST      */
+name|IP6M_MINLEN
+operator|+
+literal|4
+block|,
+comment|/* IP6M_BINDING_UPDATE   */
+name|IP6M_MINLEN
+operator|+
+literal|4
+block|,
+comment|/* IP6M_BINDING_ACK      */
+name|IP6M_MINLEN
+operator|+
+literal|16
+block|,
+comment|/* IP6M_BINDING_ERROR    */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* XXX: unused */
 end_comment
@@ -403,6 +464,14 @@ operator|+=
 name|optlen
 control|)
 block|{
+name|ND_TCHECK
+argument_list|(
+name|bp
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -426,6 +495,17 @@ literal|1
 operator|<
 name|len
 condition|)
+block|{
+name|ND_TCHECK
+argument_list|(
+name|bp
+index|[
+name|i
+operator|+
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
 name|optlen
 operator|=
 name|bp
@@ -437,6 +517,7 @@ index|]
 operator|+
 literal|2
 expr_stmt|;
+block|}
 else|else
 goto|goto
 name|trunc
@@ -453,6 +534,16 @@ condition|)
 goto|goto
 name|trunc
 goto|;
+name|ND_TCHECK
+argument_list|(
+name|bp
+index|[
+name|i
+operator|+
+name|optlen
+index|]
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|bp
@@ -872,6 +963,37 @@ name|mh
 operator|->
 name|ip6m_type
 expr_stmt|;
+if|if
+condition|(
+name|type
+operator|<=
+name|IP6M_MAX
+operator|&&
+name|mhlen
+operator|<
+name|ip6m_hdrlen
+index|[
+name|type
+index|]
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"(header length %u is too small for type %u)"
+operator|,
+name|mhlen
+operator|,
+name|type
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|trunc
+goto|;
+block|}
 switch|switch
 condition|(
 name|type

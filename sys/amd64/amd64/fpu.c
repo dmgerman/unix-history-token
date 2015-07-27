@@ -3275,6 +3275,13 @@ begin_comment
 comment|/* avoided save for the kern thread */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FPU_KERN_CTX_INUSE
+value|0x04
+end_define
+
 begin_struct
 struct|struct
 name|fpu_kern_ctx
@@ -3366,6 +3373,23 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+operator|(
+name|ctx
+operator|->
+name|flags
+operator|&
+name|FPU_KERN_CTX_INUSE
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"free'ing inuse ctx"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* XXXKIB clear the memory ? */
 name|free
 argument_list|(
@@ -3448,6 +3472,23 @@ name|pcb
 modifier|*
 name|pcb
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|ctx
+operator|->
+name|flags
+operator|&
+name|FPU_KERN_CTX_INUSE
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"using inuse ctx"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3469,6 +3510,8 @@ operator|->
 name|flags
 operator|=
 name|FPU_KERN_CTX_DUMMY
+operator||
+name|FPU_KERN_CTX_INUSE
 expr_stmt|;
 return|return
 operator|(
@@ -3508,7 +3551,7 @@ name|ctx
 operator|->
 name|flags
 operator|=
-literal|0
+name|FPU_KERN_CTX_INUSE
 expr_stmt|;
 if|if
 condition|(
@@ -3592,6 +3635,30 @@ name|pcb
 modifier|*
 name|pcb
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|ctx
+operator|->
+name|flags
+operator|&
+name|FPU_KERN_CTX_INUSE
+operator|)
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"leaving not inuse ctx"
+operator|)
+argument_list|)
+expr_stmt|;
+name|ctx
+operator|->
+name|flags
+operator|&=
+operator|~
+name|FPU_KERN_CTX_INUSE
+expr_stmt|;
 if|if
 condition|(
 name|is_fpu_kern_thread

@@ -83,11 +83,11 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `cap_rights_init' function. */
+comment|/* Define to 1 if you have the<cap-ng.h> header file. */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_CAP_RIGHTS_INIT */
+comment|/* #undef HAVE_CAP_NG_H */
 end_comment
 
 begin_comment
@@ -207,6 +207,14 @@ directive|define
 name|HAVE_INTTYPES_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `cap-ng' library (-lcap-ng). */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBCAP_NG */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `crypto' library (-lcrypto). */
@@ -485,6 +493,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `pcap_set_immediate_mode' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PCAP_SET_IMMEDIATE_MODE
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `pcap_set_tstamp_precision' function. */
 end_comment
 
@@ -741,6 +760,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_TYPES_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `uintptr_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINTPTR_T
 value|1
 end_define
 
@@ -1234,6 +1264,14 @@ end_comment
 
 begin_comment
 comment|/* #undef uint8_t */
+end_comment
+
+begin_comment
+comment|/* Define to the type of an unsigned integer type wide enough to hold a    pointer, if such a type exists, and if the system does not define it. */
+end_comment
+
+begin_comment
+comment|/* #undef uintptr_t */
 end_comment
 
 end_unit

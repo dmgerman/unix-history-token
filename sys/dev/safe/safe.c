@@ -1212,7 +1212,8 @@ name|u_int
 name|count
 parameter_list|)
 block|{
-name|random_harvest
+comment|/* MarkM: FIX!! Check that this does not swamp the harvester! */
+name|random_harvest_queue
 argument_list|(
 name|buf
 argument_list|,

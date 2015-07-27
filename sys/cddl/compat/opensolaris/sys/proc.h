@@ -189,7 +189,7 @@ specifier|static
 name|__inline
 name|kthread_t
 modifier|*
-name|thread_create
+name|do_thread_create
 parameter_list|(
 name|caddr_t
 name|stk
@@ -330,6 +330,31 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|thread_create
+parameter_list|(
+name|stk
+parameter_list|,
+name|stksize
+parameter_list|,
+name|proc
+parameter_list|,
+name|arg
+parameter_list|,
+name|len
+parameter_list|,
+name|pp
+parameter_list|,
+name|state
+parameter_list|,
+name|pri
+parameter_list|)
+define|\
+value|do_thread_create(stk, stksize, proc, arg, len, pp, state, pri)
+end_define
 
 begin_define
 define|#

@@ -687,6 +687,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SV_ABI_CLOUDABI
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
 name|SV_ABI_UNDEF
 value|255
 end_define

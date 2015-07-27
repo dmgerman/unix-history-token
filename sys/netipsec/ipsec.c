@@ -1852,6 +1852,27 @@ name|dir
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|key_havesp
+argument_list|(
+name|dir
+argument_list|)
+condition|)
+block|{
+comment|/* No SP found, use system default. */
+name|sp
+operator|=
+name|KEY_ALLOCSP_DEFAULT
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|sp
+operator|)
+return|;
+block|}
 comment|/* Set spidx in pcb. */
 operator|*
 name|error

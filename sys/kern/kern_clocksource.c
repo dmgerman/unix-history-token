@@ -540,7 +540,7 @@ comment|/* Next timer tick time. */
 name|sbintime_t
 name|nexthard
 decl_stmt|;
-comment|/* Next hardlock() event. */
+comment|/* Next hardclock() event. */
 name|sbintime_t
 name|nextstat
 decl_stmt|;

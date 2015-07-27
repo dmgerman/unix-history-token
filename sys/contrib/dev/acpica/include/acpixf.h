@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20150619
+value|0x20150717
 end_define
 
 begin_include
@@ -549,11 +549,37 @@ end_expr_stmt
 begin_expr_stmt
 name|ACPI_INIT_GLOBAL
 argument_list|(
-name|ACPI_NAME
+specifier|const
+name|char
+operator|*
 argument_list|,
 name|AcpiGbl_TraceMethodName
 argument_list|,
-literal|0
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|UINT32
+argument_list|,
+name|AcpiGbl_TraceDbgLevel
+argument_list|,
+name|ACPI_TRACE_LEVEL_DEFAULT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|UINT32
+argument_list|,
+name|AcpiGbl_TraceDbgLayer
+argument_list|,
+name|ACPI_TRACE_LAYER_DEFAULT
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1155,7 +1181,7 @@ end_macro
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiDebugTrace (     char                    *Name,     UINT32                  DebugLevel,     UINT32                  DebugLayer,     UINT32                  Flags)
+argument|ACPI_STATUS AcpiDebugTrace (     const char              *Name,     UINT32                  DebugLevel,     UINT32                  DebugLayer,     UINT32                  Flags)
 argument_list|)
 end_macro
 
@@ -1792,6 +1818,13 @@ argument_list|(
 argument|ACPI_PRINTF_LIKE(
 literal|6
 argument|) void ACPI_INTERNAL_VAR_XFACE AcpiDebugPrintRaw (     UINT32                  RequestedDebugLevel,     UINT32                  LineNumber,     const char              *FunctionName,     const char              *ModuleName,     UINT32                  ComponentId,     const char              *Format,     ...)
+argument_list|)
+end_macro
+
+begin_macro
+name|ACPI_DBG_DEPENDENT_RETURN_VOID
+argument_list|(
+argument|void AcpiTracePoint (     ACPI_TRACE_EVENT_TYPE   Type,     BOOLEAN                 Begin,     UINT8                   *Aml,     char                    *Pathname)
 argument_list|)
 end_macro
 

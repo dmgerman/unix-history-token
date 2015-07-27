@@ -126,6 +126,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|long
+modifier|*
+name|_end
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|__start
@@ -163,12 +171,19 @@ begin_expr_stmt
 literal|"	.align	0		\n"
 literal|"	.globl	_start		\n"
 literal|"	_start:			\n"
-literal|"	mov	x3, x2		\n"
+comment|/* TODO: Remove this when the kernel correctly aligns the stack */
+literal|"	cbnz	x0, 1f		\n"
+comment|/* Are we using a new kernel? */
+literal|"	mov	x0, sp		\n"
+comment|/* No, load the args from sp */
+literal|"	and	sp, x0, #~0xf	\n"
+comment|/* And align the stack */
+literal|"1:	mov	x3, x2		\n"
 comment|/* cleanup */
-literal|"	ldr	x0, [sp]	\n"
-comment|/* Load argc */
-literal|"	add	x1, sp, #8	\n"
+literal|"	add	x1, x0, #8	\n"
 comment|/* load argv */
+literal|"	ldr	x0, [x0]	\n"
+comment|/* load argc */
 literal|"	add	x2, x1, x0, lsl #3 \n"
 comment|/* env is after argv */
 literal|"	add	x2, x2, #8	\n"
@@ -234,9 +249,21 @@ name|cleanup
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+comment|/* 		 * Hack to resolve _end so we read the correct symbol. 		 * Without this it will resolve to the copy in the library 		 * that firsts requests it. We should fix the toolchain, 		 * however this is is needed until this can take place. 		 */
+operator|*
+operator|(
+specifier|volatile
+name|long
+operator|*
+operator|)
+operator|&
+name|_end
+expr_stmt|;
 name|_init_tls
 argument_list|()
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|GCRT

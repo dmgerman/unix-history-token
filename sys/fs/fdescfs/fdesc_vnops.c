@@ -1158,6 +1158,9 @@ name|struct
 name|fdesc_get_ino_args
 name|arg
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|nlen
 init|=
@@ -1357,7 +1360,11 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
-name|NULL
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|)
 argument_list|,
 operator|&
 name|fp

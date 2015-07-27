@@ -468,6 +468,12 @@ operator|->
 name|st_name
 operator|==
 literal|0
+operator|||
+name|sym
+operator|->
+name|st_shndx
+operator|==
+name|SHN_UNDEF
 condition|)
 continue|continue;
 if|if

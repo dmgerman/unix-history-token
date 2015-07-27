@@ -754,6 +754,15 @@ literal|"okay"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|status
+argument_list|,
+literal|"ok"
+argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -1845,7 +1854,7 @@ decl_stmt|;
 comment|/* 	 * This may be just redundant when having ofw_bus_devinfo 	 * but makes this routine independent of it. 	 */
 name|ret
 operator|=
-name|OF_getencprop_alloc
+name|OF_getprop_alloc
 argument_list|(
 name|node
 argument_list|,
@@ -2197,7 +2206,7 @@ name|iparent
 operator|=
 name|OF_parent
 argument_list|(
-name|node
+name|iparent
 argument_list|)
 control|)
 block|{
@@ -2564,7 +2573,7 @@ control|)
 block|{
 name|ret
 operator|=
-name|OF_getencprop_alloc
+name|OF_getprop_alloc
 argument_list|(
 name|child
 argument_list|,

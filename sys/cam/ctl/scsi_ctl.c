@@ -212,6 +212,9 @@ decl_stmt|;
 name|path_id_t
 name|path_id
 decl_stmt|;
+name|target_id_t
+name|target_id
+decl_stmt|;
 name|u_int
 name|maxio
 decl_stmt|;
@@ -1359,6 +1362,14 @@ operator|->
 name|ccb_h
 operator|.
 name|path_id
+expr_stmt|;
+name|softc
+operator|->
+name|target_id
+operator|=
+name|cpi
+operator|->
+name|initiator_id
 expr_stmt|;
 name|softc
 operator|->
@@ -6903,14 +6914,6 @@ argument_list|,
 name|CAM_PRIORITY_NONE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Copan WWN format: 	 * 	 * Bits 63-60:	0x5		NAA, IEEE registered name 	 * Bits 59-36:	0x000ED5	IEEE Company name assigned to Copan 	 * Bits 35-12:			Copan SSN (Sequential Serial Number) 	 * Bits 11-8:			Type of port: 	 *					1 == N-Port 	 *					2 == F-Port 	 *					3 == NL-Port 	 * Bits 7-0:			0 == Node Name,>0 == Port Number 	 */
-if|if
-condition|(
-name|online
-operator|!=
-literal|0
-condition|)
-block|{
 name|ccb
 operator|->
 name|ccb_h
@@ -6924,6 +6927,14 @@ argument_list|(
 name|ccb
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Copan WWN format: 	 * 	 * Bits 63-60:	0x5		NAA, IEEE registered name 	 * Bits 59-36:	0x000ED5	IEEE Company name assigned to Copan 	 * Bits 35-12:			Copan SSN (Sequential Serial Number) 	 * Bits 11-8:			Type of port: 	 *					1 == N-Port 	 *					2 == F-Port 	 *					3 == NL-Port 	 * Bits 7-0:			0 == Node Name,>0 == Port Number 	 */
+if|if
+condition|(
+name|online
+operator|!=
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -7377,7 +7388,7 @@ operator|.
 name|fc
 operator|.
 name|role
-operator|=
+operator||=
 name|KNOB_ROLE_TARGET
 expr_stmt|;
 else|else
@@ -7390,8 +7401,9 @@ operator|.
 name|fc
 operator|.
 name|role
-operator|=
-name|KNOB_ROLE_NONE
+operator|&=
+operator|~
+name|KNOB_ROLE_TARGET
 expr_stmt|;
 name|xpt_action
 argument_list|(
@@ -7917,7 +7929,9 @@ name|bus_softc
 operator|->
 name|path_id
 argument_list|,
-literal|0
+name|bus_softc
+operator|->
+name|target_id
 argument_list|,
 name|lun_id
 argument_list|)

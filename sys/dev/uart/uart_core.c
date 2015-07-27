@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -144,6 +150,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|uart_driver_name
 index|[]
@@ -212,12 +219,50 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
+name|SYSCTL_INT
 argument_list|(
-literal|"debug.uart_poll_freq"
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|uart_poll_freq
+argument_list|,
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|uart_poll_freq
+argument_list|,
+literal|0
+argument_list|,
+literal|"UART poll frequency"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|uart_force_poll
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|uart_force_poll
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|uart_force_poll
+argument_list|,
+literal|0
+argument_list|,
+literal|"Force UART polling"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -939,6 +984,8 @@ name|int
 name|cnt
 decl_stmt|,
 name|ipend
+decl_stmt|,
+name|testintr
 decl_stmt|;
 if|if
 condition|(
@@ -955,11 +1002,22 @@ name|cnt
 operator|=
 literal|0
 expr_stmt|;
+name|testintr
+operator|=
+name|sc
+operator|->
+name|sc_testintr
+expr_stmt|;
 while|while
 condition|(
+operator|(
+operator|!
+name|testintr
+operator|||
 name|cnt
 operator|<
 literal|20
+operator|)
 operator|&&
 operator|(
 name|ipend
@@ -1072,6 +1130,8 @@ name|FILTER_STRAY
 else|:
 operator|(
 operator|(
+name|testintr
+operator|&&
 name|cnt
 operator|==
 literal|20
@@ -1694,7 +1754,7 @@ name|sc
 operator|=
 name|sc
 expr_stmt|;
-comment|/* 	 * Protect ourselves against interrupts while we're not completely 	 * finished attaching and initializing. We don't expect interrupts 	 * until after UART_ATTACH() though. 	 */
+comment|/* 	 * Protect ourselves against interrupts while we're not completely 	 * finished attaching and initializing. We don't expect interrupts 	 * until after UART_ATTACH(), though. 	 */
 name|sc
 operator|->
 name|sc_leaving
@@ -2112,6 +2172,12 @@ name|sc_leaving
 operator|=
 literal|0
 expr_stmt|;
+name|sc
+operator|->
+name|sc_testintr
+operator|=
+literal|1
+expr_stmt|;
 name|filt
 operator|=
 name|uart_intr
@@ -2119,12 +2185,21 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_testintr
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Don't use interrupts if we couldn't clear any pending interrupt 	 * conditions. We may have broken H/W and polling is probably the 	 * safest thing to do. 	 */
 if|if
 condition|(
 name|filt
 operator|!=
 name|FILTER_SCHEDULE_THREAD
+operator|&&
+operator|!
+name|uart_force_poll
 condition|)
 block|{
 name|sc
@@ -2297,6 +2372,26 @@ operator|->
 name|sc_timer
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_timer
+argument_list|,
+name|hz
+operator|/
+name|uart_poll_freq
+argument_list|,
+operator|(
+name|timeout_t
+operator|*
+operator|)
+name|uart_intr
+argument_list|,
+name|sc
 argument_list|)
 expr_stmt|;
 block|}

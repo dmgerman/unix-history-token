@@ -107,7 +107,7 @@ comment|/* buf_idx changed */
 end_comment
 
 begin_comment
-comment|/* 	 * must be set whenever buf_idx is changed (as it might be 	 * necessary to recompute the physical address and mapping) 	 */
+comment|/* 	 * must be set whenever buf_idx is changed (as it might be 	 * necessary to recompute the physical address and mapping) 	 * 	 * It is also set by the kernel whenever the buf_idx is 	 * changed internally (e.g., by pipes). Applications may 	 * use this information to know when they can reuse the 	 * contents of previously prepared buffers. 	 */
 end_comment
 
 begin_define
@@ -610,6 +610,24 @@ define|#
 directive|define
 name|NR_MONITOR_RX
 value|0x200
+end_define
+
+begin_define
+define|#
+directive|define
+name|NR_ZCOPY_MON
+value|0x400
+end_define
+
+begin_comment
+comment|/* request exclusive access to the selected rings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NR_EXCLUSIVE
+value|0x800
 end_define
 
 begin_comment

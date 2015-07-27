@@ -780,7 +780,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Perform a synchronization operation on the given map.  */
+comment|/*  * Perform a synchronization operation on the given map. If the map  * is NULL we have a fully IO-coherent system. On every ARM architecture  * there must be a memory barrier placed to ensure that all data  * accesses are visible before going any further.  */
 end_comment
 
 begin_function_decl
@@ -796,6 +796,55 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__BUS_DMAMAP_SYNC_DEFAULT
+value|mb()
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|__BUS_DMAMAP_SYNC_DEFAULT
+value|dmb(sy)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__BUS_DMAMAP_SYNC_DEFAULT
+value|do {} while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -808,7 +857,7 @@ parameter_list|,
 name|op
 parameter_list|)
 define|\
-value|do {							\ 		if ((dmamap) != NULL)				\ 			_bus_dmamap_sync(dmat, dmamap, op);	\ 	} while (0)
+value|do {							\ 		if ((dmamap) != NULL)				\ 			_bus_dmamap_sync(dmat, dmamap, op);	\ 		else						\ 			__BUS_DMAMAP_SYNC_DEFAULT;		\ 	} while (0)
 end_define
 
 begin_comment

@@ -170,6 +170,11 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -188,6 +193,10 @@ literal|"tty"
 argument_list|)
 condition|)
 return|return;
+name|p
+operator|=
+name|curproc
+expr_stmt|;
 name|sx_sunlock
 argument_list|(
 operator|&
@@ -213,9 +222,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|curthread
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_flag
 operator|&
@@ -230,9 +237,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|curthread
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_session
 operator|->
@@ -248,9 +253,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|curthread
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_session
 operator|->
@@ -260,9 +263,7 @@ name|v_type
 operator|==
 name|VBAD
 operator|||
-name|curthread
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_session
 operator|->
@@ -284,9 +285,7 @@ else|else
 operator|*
 name|dev
 operator|=
-name|curthread
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_session
 operator|->

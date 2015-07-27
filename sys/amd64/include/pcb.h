@@ -159,10 +159,8 @@ comment|/* copyin/out fault recovery */
 name|caddr_t
 name|pcb_onfault
 decl_stmt|;
-comment|/* 32-bit segment descriptor */
-name|struct
-name|user_segment_descriptor
-name|pcb_gs32sd
+name|uint64_t
+name|pcb_pad0
 decl_stmt|;
 comment|/* local tss, with i/o bitmap; NULL for common */
 name|struct

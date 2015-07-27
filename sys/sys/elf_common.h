@@ -2095,6 +2095,17 @@ begin_comment
 comment|/* AArch64 (64-bit ARM) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EM_RISCV
+value|243
+end_define
+
+begin_comment
+comment|/* RISC-V */
+end_comment
+
 begin_comment
 comment|/* Non-standard or deprecated. */
 end_comment

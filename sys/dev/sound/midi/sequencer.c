@@ -378,42 +378,42 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|d_open_t
-name|seq_open
+name|mseq_open
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_close_t
-name|seq_close
+name|mseq_close
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_ioctl_t
-name|seq_ioctl
+name|mseq_ioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_read_t
-name|seq_read
+name|mseq_read
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_write_t
-name|seq_write
+name|mseq_write
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_poll_t
-name|seq_poll
+name|mseq_poll
 decl_stmt|;
 end_decl_stmt
 
@@ -432,32 +432,32 @@ block|,
 operator|.
 name|d_open
 operator|=
-name|seq_open
+name|mseq_open
 block|,
 operator|.
 name|d_close
 operator|=
-name|seq_close
+name|mseq_close
 block|,
 operator|.
 name|d_read
 operator|=
-name|seq_read
+name|mseq_read
 block|,
 operator|.
 name|d_write
 operator|=
-name|seq_write
+name|mseq_write
 block|,
 operator|.
 name|d_ioctl
 operator|=
-name|seq_ioctl
+name|mseq_ioctl
 block|,
 operator|.
 name|d_poll
 operator|=
-name|seq_poll
+name|mseq_poll
 block|,
 operator|.
 name|d_name
@@ -3806,7 +3806,7 @@ end_function
 
 begin_function
 name|int
-name|seq_open
+name|mseq_open
 parameter_list|(
 name|struct
 name|cdev
@@ -4210,12 +4210,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * seq_close  */
+comment|/*  * mseq_close  */
 end_comment
 
 begin_function
 name|int
-name|seq_close
+name|mseq_close
 parameter_list|(
 name|struct
 name|cdev
@@ -4395,7 +4395,7 @@ end_function
 
 begin_function
 name|int
-name|seq_read
+name|mseq_read
 parameter_list|(
 name|struct
 name|cdev
@@ -4450,7 +4450,7 @@ literal|7
 argument_list|,
 name|printf
 argument_list|(
-literal|"seq_read: unit %d, resid %zd.\n"
+literal|"mseq_read: unit %d, resid %zd.\n"
 argument_list|,
 name|scp
 operator|->
@@ -4489,7 +4489,7 @@ literal|2
 argument_list|,
 name|printf
 argument_list|(
-literal|"seq_read: unit %d is not for reading.\n"
+literal|"mseq_read: unit %d is not for reading.\n"
 argument_list|,
 name|scp
 operator|->
@@ -4665,7 +4665,7 @@ literal|6
 argument_list|,
 name|printf
 argument_list|(
-literal|"seq_read: ret %d, resid %zd.\n"
+literal|"mseq_read: ret %d, resid %zd.\n"
 argument_list|,
 name|retval
 argument_list|,
@@ -4683,7 +4683,7 @@ end_function
 
 begin_function
 name|int
-name|seq_write
+name|mseq_write
 parameter_list|(
 name|struct
 name|cdev
@@ -5350,7 +5350,7 @@ end_function
 
 begin_function
 name|int
-name|seq_ioctl
+name|mseq_ioctl
 parameter_list|(
 name|struct
 name|cdev
@@ -6725,7 +6725,7 @@ end_function
 
 begin_function
 name|int
-name|seq_poll
+name|mseq_poll
 parameter_list|(
 name|struct
 name|cdev

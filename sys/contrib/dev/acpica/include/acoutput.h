@@ -217,8 +217,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_LV_TRACE_POINT
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_LV_ALL_EXCEPTIONS
-value|0x0000000F
+value|0x0000001F
 end_define
 
 begin_comment
@@ -496,6 +503,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_DB_TRACE_POINT
+value|ACPI_DEBUG_LEVEL (ACPI_LV_TRACE_POINT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_DB_ALL_EXCEPTIONS
 value|ACPI_DEBUG_LEVEL (ACPI_LV_ALL_EXCEPTIONS)
 end_define
@@ -688,6 +702,63 @@ define|#
 directive|define
 name|ACPI_DEBUG_ALL
 value|(ACPI_LV_AML_DISASSEMBLE | ACPI_LV_ALL_EXCEPTIONS | ACPI_LV_ALL)
+end_define
+
+begin_comment
+comment|/*  * Global trace flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_ENABLED
+value|((UINT32) 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_ONESHOT
+value|((UINT32) 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_OPCODE
+value|((UINT32) 1)
+end_define
+
+begin_comment
+comment|/* Defaults for trace debugging level/layer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_LEVEL_ALL
+value|ACPI_LV_ALL
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_LAYER_ALL
+value|0x000001FF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_LEVEL_DEFAULT
+value|ACPI_LV_TRACE_POINT
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_LAYER_DEFAULT
+value|ACPI_EXECUTER
 end_define
 
 begin_if
@@ -1510,6 +1581,22 @@ parameter_list|)
 value|AcpiUtDebugDumpBuffer((UINT8 *) a, b, DB_BYTE_DISPLAY, _COMPONENT)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_POINT
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|AcpiTracePoint (a, b, c, d)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1686,6 +1773,21 @@ parameter_list|,
 name|Component
 parameter_list|)
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_POINT
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
 end_define
 
 begin_comment

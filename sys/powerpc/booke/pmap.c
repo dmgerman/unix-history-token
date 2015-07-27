@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_kstack_pages.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -728,7 +734,7 @@ name|tlb1_set_entry
 parameter_list|(
 name|vm_offset_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|,
@@ -2335,7 +2341,7 @@ name|__inline
 name|uint32_t
 name|tlb_calc_wimg
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_memattr_t
@@ -13245,7 +13251,7 @@ parameter_list|(
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t
@@ -13919,9 +13925,12 @@ literal|0
 condition|)
 name|kernload
 operator|=
-name|mas3
-operator|&
-name|MAS3_RPN
+name|tlb1
+index|[
+name|i
+index|]
+operator|.
+name|phys
 expr_stmt|;
 name|tsz
 operator|=

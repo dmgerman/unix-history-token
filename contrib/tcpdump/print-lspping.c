@@ -2759,7 +2759,7 @@ break|break;
 case|case
 name|LSPPING_TLV_DOWNSTREAM_MAPPING
 case|:
-comment|/* that strange thing with the downstream map TLV is that until now              * we do not know if its IPv4 or IPv6 , after we found the adress-type              * lets recast the tlv_tptr and move on */
+comment|/* that strange thing with the downstream map TLV is that until now              * we do not know if its IPv4 or IPv6 , after we found the address-type              * lets recast the tlv_tptr and move on */
 name|tlv_ptr
 operator|.
 name|lspping_tlv_downstream_map_ipv4

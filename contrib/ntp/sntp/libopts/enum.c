@@ -4,7 +4,7 @@ comment|/**  * \file enumeration.c  *  *  Handle options with enumeration names 
 end_comment
 
 begin_comment
-comment|/*  *  This routine will run run-on options through a pager so the  *  user may examine, print or edit them at their leisure.  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
+comment|/*  *  This routine will run run-on options through a pager so the  *  user may examine, print or edit them at their leisure.  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2015 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
 end_comment
 
 begin_comment
@@ -661,7 +661,7 @@ name|int
 name|name_ct
 parameter_list|)
 block|{
-comment|/*      *  Return the matching index as a pointer sized integer.      *  The result gets stashed in a char* pointer.      */
+comment|/*      *  Return the matching index as a pointer sized integer.      *  The result gets stashed in a char * pointer.      */
 name|uintptr_t
 name|res
 init|=
@@ -673,7 +673,6 @@ init|=
 name|strlen
 argument_list|(
 operator|(
-specifier|const
 name|char
 operator|*
 operator|)
@@ -696,18 +695,10 @@ name|char
 modifier|*
 name|pz
 init|=
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|intptr_t
-operator|)
+name|VOIDP
+argument_list|(
 name|name
+argument_list|)
 decl_stmt|;
 name|unsigned
 name|long
@@ -867,9 +858,6 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|(
-name|intptr_t
-operator|)
 name|paz_names
 index|[
 name|idx
@@ -878,9 +866,6 @@ argument_list|,
 operator|(
 name|char
 operator|*
-operator|)
-operator|(
-name|intptr_t
 operator|)
 name|name
 argument_list|,
@@ -978,7 +963,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func  optionKeywordName  * what:  Convert between enumeration values and strings  * private:  *  * arg:   tOptDesc*,     pOD,       enumeration option description  * arg:   unsigned int,  enum_val,  the enumeration value to map  *  * ret_type:  char const *  * ret_desc:  the enumeration name from const memory  *  * doc:   This converts an enumeration value into the matching string. =*/
+comment|/*=export_func  optionKeywordName  * what:  Convert between enumeration values and strings  * private:  *  * arg:   tOptDesc *,    pOD,       enumeration option description  * arg:   unsigned int,  enum_val,  the enumeration value to map  *  * ret_type:  char const *  * ret_desc:  the enumeration name from const memory  *  * doc:   This converts an enumeration value into the matching string. =*/
 end_comment
 
 begin_function
@@ -1037,7 +1022,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func  optionEnumerationVal  * what:  Convert from a string to an enumeration value  * private:  *  * arg:   tOptions*,     pOpts,     the program options descriptor  * arg:   tOptDesc*,     pOD,       enumeration option description  * arg:   char const * const *,  paz_names, list of enumeration names  * arg:   unsigned int,  name_ct,   number of names in list  *  * ret_type:  uintptr_t  * ret_desc:  the enumeration value  *  * doc:   This converts the optArg.argString string from the option description  *        into the index corresponding to an entry in the name list.  *        This will match the generated enumeration value.  *        Full matches are always accepted.  Partial matches are accepted  *        if there is only one partial match. =*/
+comment|/*=export_func  optionEnumerationVal  * what:  Convert from a string to an enumeration value  * private:  *  * arg:   tOptions *,    pOpts,     the program options descriptor  * arg:   tOptDesc *,    pOD,       enumeration option description  * arg:   char const * const *,  paz_names, list of enumeration names  * arg:   unsigned int,  name_ct,   number of names in list  *  * ret_type:  uintptr_t  * ret_desc:  the enumeration value  *  * doc:   This converts the optArg.argString string from the option description  *        into the index corresponding to an entry in the name list.  *        This will match the generated enumeration value.  *        Full matches are always accepted.  Partial matches are accepted  *        if there is only one partial match. =*/
 end_comment
 
 begin_function
@@ -1910,7 +1895,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func  optionMemberList  * what:  Get the list of members of a bit mask set  *  * arg:   tOptDesc *,  od,   the set membership option description  *  * ret_type: char*  * ret_desc: the names of the set bits  *  * doc:   This converts the OPT_VALUE_name mask value to a allocated string.  *        It is the caller's responsibility to free the string. =*/
+comment|/*=export_func  optionMemberList  * what:  Get the list of members of a bit mask set  *  * arg:   tOptDesc *,  od,   the set membership option description  *  * ret_type: char *  * ret_desc: the names of the set bits  *  * doc:   This converts the OPT_VALUE_name mask value to a allocated string.  *        It is the caller's responsibility to free the string. =*/
 end_comment
 
 begin_function
@@ -1952,18 +1937,14 @@ operator|)
 expr_stmt|;
 name|res
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|intptr_t
-operator|)
+name|VOIDP
+argument_list|(
 name|od
 operator|->
 name|optArg
 operator|.
 name|argString
+argument_list|)
 expr_stmt|;
 name|od
 operator|->
@@ -1980,7 +1961,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func  optionSetMembers  * what:  Convert between bit flag values and strings  * private:  *  * arg:   tOptions*,     opts,     the program options descriptor  * arg:   tOptDesc*,     od,       the set membership option description  * arg:   char const * const *,  *                       nm_list,  list of enumeration names  * arg:   unsigned int,  nm_ct,    number of names in list  *  * doc:   This converts the optArg.argString string from the option description  *        into the index corresponding to an entry in the name list.  *        This will match the generated enumeration value.  *        Full matches are always accepted.  Partial matches are accepted  *        if there is only one partial match. =*/
+comment|/*=export_func  optionSetMembers  * what:  Convert between bit flag values and strings  * private:  *  * arg:   tOptions *,     opts,     the program options descriptor  * arg:   tOptDesc *,     od,       the set membership option description  * arg:   char const * const *,  *                       nm_list,  list of enumeration names  * arg:   unsigned int,  nm_ct,    number of names in list  *  * doc:   This converts the optArg.argString string from the option description  *        into the index corresponding to an entry in the name list.  *        This will match the generated enumeration value.  *        Full matches are always accepted.  Partial matches are accepted  *        if there is only one partial match. =*/
 end_comment
 
 begin_function
@@ -2412,11 +2393,10 @@ name|od
 operator|->
 name|optCookie
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
+name|VOIDP
+argument_list|(
 name|res
+argument_list|)
 expr_stmt|;
 block|}
 return|return;
@@ -2426,11 +2406,10 @@ name|od
 operator|->
 name|optCookie
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
+name|VOIDP
+argument_list|(
 literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_function

@@ -1199,6 +1199,31 @@ begin_comment
 comment|/* draft-ietf-ipsec-ciph-aes-xcbc-mac-04 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SADB_X_AALG_AES128GMAC
+value|11
+end_define
+
+begin_comment
+comment|/* RFC4543 + Errata1821 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SADB_X_AALG_AES192GMAC
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|SADB_X_AALG_AES256GMAC
+value|13
+end_define
+
 begin_comment
 comment|/* private allocations should use 249-255 (RFC2407) */
 end_comment
@@ -1318,6 +1343,31 @@ name|SADB_X_EALG_AES
 value|12
 end_define
 
+begin_define
+define|#
+directive|define
+name|SADB_X_EALG_AESGCM8
+value|18
+end_define
+
+begin_comment
+comment|/* RFC4106 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SADB_X_EALG_AESGCM12
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|SADB_X_EALG_AESGCM16
+value|20
+end_define
+
 begin_comment
 comment|/* private allocations - based on RFC4312/IANA assignment */
 end_comment
@@ -1328,6 +1378,17 @@ directive|define
 name|SADB_X_EALG_CAMELLIACBC
 value|22
 end_define
+
+begin_define
+define|#
+directive|define
+name|SADB_X_EALG_AESGMAC
+value|23
+end_define
+
+begin_comment
+comment|/* RFC4543 + Errata1821 */
+end_comment
 
 begin_comment
 comment|/* private allocations should use 249-255 (RFC2407) */

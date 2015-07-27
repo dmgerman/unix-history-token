@@ -313,18 +313,6 @@ name|interp_list_sx
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-name|imgact_binmisc_exec
-parameter_list|(
-name|struct
-name|image_params
-modifier|*
-name|imgp
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Populate the entry with the information about the interpreter.  */
 end_comment
@@ -1195,7 +1183,7 @@ name|imgact_binmisc_entry_t
 modifier|*
 name|ibe
 decl_stmt|;
-name|sx_slock
+name|sx_xlock
 argument_list|(
 operator|&
 name|interp_list_sx
@@ -1215,7 +1203,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sx_sunlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|interp_list_sx
@@ -1227,17 +1215,14 @@ name|ENOENT
 operator|)
 return|;
 block|}
-name|atomic_clear_32
-argument_list|(
-operator|&
 name|ibe
 operator|->
 name|ibe_flags
-argument_list|,
+operator|&=
+operator|~
 name|IBF_ENABLED
-argument_list|)
 expr_stmt|;
-name|sx_sunlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|interp_list_sx
@@ -1269,7 +1254,7 @@ name|imgact_binmisc_entry_t
 modifier|*
 name|ibe
 decl_stmt|;
-name|sx_slock
+name|sx_xlock
 argument_list|(
 operator|&
 name|interp_list_sx
@@ -1289,7 +1274,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sx_sunlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|interp_list_sx
@@ -1301,17 +1286,13 @@ name|ENOENT
 operator|)
 return|;
 block|}
-name|atomic_set_32
-argument_list|(
-operator|&
 name|ibe
 operator|->
 name|ibe_flags
-argument_list|,
+operator||=
 name|IBF_ENABLED
-argument_list|)
 expr_stmt|;
-name|sx_sunlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|interp_list_sx
@@ -2459,6 +2440,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|imgact_binmisc_exec
 parameter_list|(

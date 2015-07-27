@@ -420,6 +420,11 @@ name|acpi_operand_object
 modifier|*
 name|Mutex
 decl_stmt|;
+name|union
+name|acpi_operand_object
+modifier|*
+name|Node
+decl_stmt|;
 name|UINT8
 modifier|*
 name|AmlStart

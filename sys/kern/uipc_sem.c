@@ -3257,6 +3257,9 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|struct
 name|ksem
 modifier|*
@@ -3281,7 +3284,11 @@ name|uap
 operator|->
 name|id
 argument_list|,
-literal|0
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|)
 argument_list|,
 operator|&
 name|fp
@@ -4411,6 +4418,9 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|struct
 name|file
 modifier|*
@@ -4435,7 +4445,11 @@ name|uap
 operator|->
 name|id
 argument_list|,
-literal|0
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|)
 argument_list|,
 operator|&
 name|fp

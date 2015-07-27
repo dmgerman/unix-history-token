@@ -56,6 +56,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Bug 2813 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIMITS_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

@@ -455,7 +455,8 @@ operator|=
 name|cvmx_rng_get_random64
 argument_list|()
 expr_stmt|;
-name|random_harvest
+comment|/* MarkM: FIX!! Check that this does not swamp the harvester! */
+name|random_harvest_queue
 argument_list|(
 name|sc
 operator|->

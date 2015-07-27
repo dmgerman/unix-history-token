@@ -315,12 +315,6 @@ name|__GNUC__
 operator|>=
 literal|3
 operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
 end_if
 
 begin_define
@@ -926,7 +920,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|__weak
+name|__weak_symbol
 end_define
 
 begin_else
@@ -937,7 +931,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|__weak
+name|__weak_symbol
 value|__attribute__((__weak__))
 end_define
 
@@ -2367,8 +2361,8 @@ end_if
 begin_define
 define|#
 directive|define
-name|__hidden
-value|__attribute__((__visibility__("hidden")))
+name|__sentinel
+value|__attribute__((__sentinel__))
 end_define
 
 begin_define
@@ -2376,6 +2370,13 @@ define|#
 directive|define
 name|__exported
 value|__attribute__((__visibility__("default")))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__hidden
+value|__attribute__((__visibility__("hidden")))
 end_define
 
 begin_else
@@ -2386,13 +2387,19 @@ end_else
 begin_define
 define|#
 directive|define
-name|__hidden
+name|__sentinel
 end_define
 
 begin_define
 define|#
 directive|define
 name|__exported
+end_define
+
+begin_define
+define|#
+directive|define
+name|__hidden
 end_define
 
 begin_endif
@@ -2702,11 +2709,14 @@ end_comment
 begin_if
 if|#
 directive|if
-name|__GNUC_PREREQ__
+name|defined
 argument_list|(
-literal|4
-operator|,
-literal|1
+name|__GNUC_GNU_INLINE__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GNUC_STDC_INLINE__
 argument_list|)
 end_if
 

@@ -29,6 +29,7 @@ begin_struct
 struct|struct
 name|kproc_desc
 block|{
+specifier|const
 name|char
 modifier|*
 name|arg0
@@ -63,6 +64,7 @@ begin_struct
 struct|struct
 name|kthread_desc
 block|{
+specifier|const
 name|char
 modifier|*
 name|arg0

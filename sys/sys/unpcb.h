@@ -217,6 +217,17 @@ begin_comment
 comment|/* Has been scanned. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UNPGC_IGNORE_RIGHTS
+value|0x8
+end_define
+
+begin_comment
+comment|/* Attached rights are freed */
+end_comment
+
 begin_comment
 comment|/*  * These flags are used to handle non-atomicity in connect() and bind()  * operations on a socket: in particular, to avoid races between multiple  * threads or processes operating simultaneously on the same socket.  */
 end_comment
