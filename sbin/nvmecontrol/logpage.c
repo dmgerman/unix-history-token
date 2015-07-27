@@ -1429,6 +1429,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|read_controller_data
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|cdata
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The log page attribtues indicate whether or not the controller 	 * supports the SMART/Health information log page on a per 	 * namespace basis. 	 */
 if|if
 condition|(
@@ -1448,14 +1456,6 @@ argument_list|,
 literal|"log page %d valid only at controller level"
 argument_list|,
 name|log_page
-argument_list|)
-expr_stmt|;
-name|read_controller_data
-argument_list|(
-name|fd
-argument_list|,
-operator|&
-name|cdata
 argument_list|)
 expr_stmt|;
 if|if
