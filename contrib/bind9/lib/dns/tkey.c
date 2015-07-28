@@ -3249,6 +3249,10 @@ name|ISC_R_SUCCESS
 condition|)
 block|{
 comment|/* 		 * Try the answer section, since that's where Win2000 		 * puts it. 		 */
+name|name
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|dns_message_findname
