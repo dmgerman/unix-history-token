@@ -36575,6 +36575,8 @@ name|PFRES_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 if|if
 condition|(
 name|pqid
@@ -36608,7 +36610,7 @@ name|r
 operator|->
 name|qid
 expr_stmt|;
-comment|/* add hints for ecn */
+comment|/* Add hints for ecn. */
 name|pd
 operator|.
 name|pf_mtag
@@ -36617,6 +36619,7 @@ name|hdr
 operator|=
 name|h
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -36869,6 +36872,8 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 name|pd
 operator|.
 name|pf_mtag
@@ -36884,6 +36889,7 @@ operator|&=
 operator|~
 name|M_FASTFWD_OURS
 expr_stmt|;
+block|}
 block|}
 name|ip_divert_ptr
 argument_list|(
@@ -39273,6 +39279,8 @@ name|PFRES_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 if|if
 condition|(
 name|pd
@@ -39302,7 +39310,7 @@ name|r
 operator|->
 name|qid
 expr_stmt|;
-comment|/* add hints for ecn */
+comment|/* Add hints for ecn. */
 name|pd
 operator|.
 name|pf_mtag
@@ -39311,6 +39319,7 @@ name|hdr
 operator|=
 name|h
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
