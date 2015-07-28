@@ -36514,6 +36514,12 @@ argument_list|,
 name|PFRES_IPOPTIONS
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|->
+name|log
+condition|)
 name|log
 operator|=
 literal|1
@@ -39235,6 +39241,12 @@ argument_list|,
 name|PFRES_IPOPTIONS
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|->
+name|log
+condition|)
 name|log
 operator|=
 literal|1
