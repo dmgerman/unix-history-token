@@ -3929,7 +3929,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|atomic_add_acq_32
+name|atomic_add_32
 argument_list|(
 operator|&
 name|xprt
