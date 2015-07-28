@@ -28058,6 +28058,13 @@ name|zfs_shutdown_event_tag
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|ZFS_MIN_KSTACK_PAGES
+value|4
+end_define
+
 begin_function
 name|int
 name|zfs__init
@@ -28065,6 +28072,24 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|#
+directive|if
+name|KSTACK_PAGES
+operator|<
+name|ZFS_MIN_KSTACK_PAGES
+name|printf
+argument_list|(
+literal|"ZFS NOTICE: KSTACK_PAGES is %d which could result in stack "
+literal|"overflow panic!\nPlease consider adding "
+literal|"'options KSTACK_PAGES=%d' to your kernel config\n"
+argument_list|,
+name|KSTACK_PAGES
+argument_list|,
+name|ZFS_MIN_KSTACK_PAGES
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|zfs_root_token
 operator|=
 name|root_mount_hold
