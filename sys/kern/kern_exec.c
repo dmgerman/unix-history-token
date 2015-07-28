@@ -4960,11 +4960,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|sv
-operator|->
-name|sv_usrstack
-operator|-
-name|ssiz
+name|stack_addr
 expr_stmt|;
 return|return
 operator|(
