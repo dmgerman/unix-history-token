@@ -2932,7 +2932,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|tcp_reass_init
+name|tcp_reass_global_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -2949,26 +2949,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE
-end_ifdef
-
-begin_function_decl
-name|void
-name|tcp_reass_destroy
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void

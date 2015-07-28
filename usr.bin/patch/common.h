@@ -77,20 +77,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|GET
-value|"get -e %s"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCCSDIFF
-value|"get -p %s | diff - %s>/dev/null"
-end_define
-
-begin_define
-define|#
-directive|define
 name|RCSSUFFIX
 value|",v"
 end_define
@@ -99,14 +85,14 @@ begin_define
 define|#
 directive|define
 name|CHECKOUT
-value|"co -l %s"
+value|"/usr/bin/co"
 end_define
 
 begin_define
 define|#
 directive|define
 name|RCSDIFF
-value|"rcsdiff %s> /dev/null"
+value|"/usr/bin/rcsdiff"
 end_define
 
 begin_define
