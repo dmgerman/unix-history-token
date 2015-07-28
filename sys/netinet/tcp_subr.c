@@ -1866,9 +1866,6 @@ expr_stmt|;
 name|tcp_hc_init
 argument_list|()
 expr_stmt|;
-name|tcp_reass_init
-argument_list|()
-expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"net.inet.tcp.sack.enable"
@@ -1912,6 +1909,9 @@ name|curvnet
 argument_list|)
 condition|)
 return|return;
+name|tcp_reass_global_init
+argument_list|()
+expr_stmt|;
 comment|/* XXX virtualize those bellow? */
 name|tcp_delacktime
 operator|=
@@ -2069,9 +2069,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|tcp_reass_destroy
-argument_list|()
-expr_stmt|;
 name|tcp_hc_destroy
 argument_list|()
 expr_stmt|;
