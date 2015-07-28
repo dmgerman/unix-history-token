@@ -5746,6 +5746,12 @@ name|char
 modifier|*
 name|fp
 decl_stmt|;
+name|Key
+modifier|*
+name|plain
+init|=
+name|NULL
+decl_stmt|;
 name|fp
 operator|=
 name|key_fingerprint
@@ -5774,26 +5780,42 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* XXX certs are not yet supported for DNS */
 if|if
 condition|(
-operator|!
-name|key_is_cert
-argument_list|(
-name|host_key
-argument_list|)
-operator|&&
 name|options
 operator|.
 name|verify_host_key_dns
-operator|&&
+condition|)
+block|{
+comment|/* 		 * XXX certs are not yet supported for DNS, so downgrade 		 * them and try the plain key. 		 */
+name|plain
+operator|=
+name|key_from_private
+argument_list|(
+name|host_key
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|key_is_cert
+argument_list|(
+name|plain
+argument_list|)
+condition|)
+name|key_drop_cert
+argument_list|(
+name|plain
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|verify_host_key_dns
 argument_list|(
 name|host
 argument_list|,
 name|hostaddr
 argument_list|,
-name|host_key
+name|plain
 argument_list|,
 operator|&
 name|flags
@@ -5825,9 +5847,16 @@ name|flags
 operator|&
 name|DNS_VERIFY_SECURE
 condition|)
+block|{
+name|key_free
+argument_list|(
+name|plain
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 if|if
 condition|(
 name|flags
@@ -5844,17 +5873,24 @@ else|else
 block|{
 name|warn_changed_key
 argument_list|(
-name|host_key
+name|plain
 argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"Update the SSHFP RR in DNS with the new "
-literal|"host key to get rid of this message."
+literal|"Update the SSHFP RR in DNS "
+literal|"with the new host key to get rid "
+literal|"of this message."
 argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
+name|key_free
+argument_list|(
+name|plain
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|check_host_key
