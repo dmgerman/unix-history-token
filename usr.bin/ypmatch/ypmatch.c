@@ -96,6 +96,7 @@ file|<unistd.h>
 end_include
 
 begin_struct
+specifier|const
 struct|struct
 name|ypalias
 block|{
@@ -107,6 +108,7 @@ modifier|*
 name|name
 decl_stmt|;
 block|}
+decl|static
 name|ypaliases
 index|[]
 init|=
