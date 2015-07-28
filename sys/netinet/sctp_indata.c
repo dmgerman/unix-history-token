@@ -12464,7 +12464,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"DATA chunk followwd by chunk of type %2.2x"
+literal|"DATA chunk followed by chunk of type %2.2x"
 argument_list|,
 name|ch
 operator|->
