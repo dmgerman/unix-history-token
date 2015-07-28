@@ -1345,7 +1345,7 @@ name|optarg
 argument_list|,
 literal|0
 argument_list|,
-name|LONG_MAX
+name|GID_MAX
 argument_list|,
 operator|&
 name|errstr
@@ -1425,7 +1425,7 @@ name|optarg
 argument_list|,
 literal|0
 argument_list|,
-name|LONG_MAX
+name|UID_MAX
 argument_list|,
 operator|&
 name|errstr
