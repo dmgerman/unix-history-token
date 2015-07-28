@@ -23,6 +23,12 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
+name|file
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|thread
 struct_decl|;
 end_struct_decl
@@ -62,6 +68,22 @@ name|cloudabi_errno_t
 name|cloudabi_convert_errno
 parameter_list|(
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Converts a file descriptor to a CloudABI file descriptor type. */
+end_comment
+
+begin_function_decl
+name|cloudabi_filetype_t
+name|cloudabi_convert_filetype
+parameter_list|(
+specifier|const
+name|struct
+name|file
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
