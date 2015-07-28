@@ -1184,7 +1184,13 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
 name|warn
 argument_list|(
 literal|"NIS passwd update"
@@ -4034,7 +4040,13 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
 name|warn
 argument_list|(
 literal|"NIS passwd update"
