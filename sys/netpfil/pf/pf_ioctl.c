@@ -1108,6 +1108,13 @@ name|pf_rules_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|sx
+name|pf_ioctl_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* pfsync */
 end_comment
@@ -5782,8 +5789,11 @@ block|{
 case|case
 name|DIOCSTART
 case|:
-name|PF_RULES_WLOCK
-argument_list|()
+name|sx_xlock
+argument_list|(
+operator|&
+name|pf_ioctl_lock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5800,9 +5810,6 @@ block|{
 name|int
 name|cpu
 decl_stmt|;
-name|PF_RULES_WUNLOCK
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|hook_pf
@@ -5824,9 +5831,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|PF_RULES_WLOCK
-argument_list|()
-expr_stmt|;
 name|V_pf_status
 operator|.
 name|running
@@ -5860,15 +5864,15 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|PF_RULES_WUNLOCK
-argument_list|()
-expr_stmt|;
 break|break;
 case|case
 name|DIOCSTOP
 case|:
-name|PF_RULES_WLOCK
-argument_list|()
+name|sx_xlock
+argument_list|(
+operator|&
+name|pf_ioctl_lock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5888,9 +5892,6 @@ operator|.
 name|running
 operator|=
 literal|0
-expr_stmt|;
-name|PF_RULES_WUNLOCK
-argument_list|()
 expr_stmt|;
 name|error
 operator|=
@@ -5918,9 +5919,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|PF_RULES_WLOCK
-argument_list|()
-expr_stmt|;
 name|V_pf_status
 operator|.
 name|since
@@ -5937,9 +5935,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|PF_RULES_WUNLOCK
-argument_list|()
-expr_stmt|;
 break|break;
 case|case
 name|DIOCADDRULE
@@ -17719,6 +17714,20 @@ break|break;
 block|}
 name|fail
 label|:
+if|if
+condition|(
+name|sx_xlocked
+argument_list|(
+operator|&
+name|pf_ioctl_lock
+argument_list|)
+condition|)
+name|sx_xunlock
+argument_list|(
+operator|&
+name|pf_ioctl_lock
+argument_list|)
+expr_stmt|;
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
@@ -20415,6 +20424,14 @@ argument_list|,
 literal|"pf rulesets"
 argument_list|)
 expr_stmt|;
+name|sx_init
+argument_list|(
+operator|&
+name|pf_ioctl_lock
+argument_list|,
+literal|"pf ioctl"
+argument_list|)
+expr_stmt|;
 name|pf_dev
 operator|=
 name|make_dev
@@ -20470,17 +20487,11 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|PF_RULES_WLOCK
-argument_list|()
-expr_stmt|;
 name|V_pf_status
 operator|.
 name|running
 operator|=
 literal|0
-expr_stmt|;
-name|PF_RULES_WUNLOCK
-argument_list|()
 expr_stmt|;
 name|swi_remove
 argument_list|(
@@ -20583,6 +20594,12 @@ name|rw_destroy
 argument_list|(
 operator|&
 name|pf_rules_lock
+argument_list|)
+expr_stmt|;
+name|sx_destroy
+argument_list|(
+operator|&
+name|pf_ioctl_lock
 argument_list|)
 expr_stmt|;
 return|return
