@@ -271,28 +271,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
-name|VNET_DEFINE
-argument_list|(
 name|int
-argument_list|,
 name|tcp_reass_maxseg
-argument_list|)
-operator|=
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_tcp_reass_maxseg
-value|VNET(tcp_reass_maxseg)
-end_define
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp_reass
 argument_list|,
@@ -303,10 +292,7 @@ argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
-name|VNET_NAME
-argument_list|(
 name|tcp_reass_maxseg
-argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -316,7 +302,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_tcp_reass
 argument_list|,
@@ -344,28 +330,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
-name|VNET_DEFINE
-argument_list|(
 name|int
-argument_list|,
 name|tcp_reass_overflows
-argument_list|)
-operator|=
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_tcp_reass_overflows
-value|VNET(tcp_reass_overflows)
-end_define
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp_reass
 argument_list|,
@@ -376,10 +351,7 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|VNET_NAME
-argument_list|(
 name|tcp_reass_overflows
-argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -388,23 +360,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
-name|VNET_DEFINE
-argument_list|(
 name|uma_zone_t
-argument_list|,
 name|tcp_reass_zone
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_tcp_reass_zone
-value|VNET(tcp_reass_zone)
-end_define
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Initialize TCP reassembly queue */
@@ -421,19 +382,19 @@ name|tag
 parameter_list|)
 block|{
 comment|/* Set the zone limit and read back the effective value. */
-name|V_tcp_reass_maxseg
+name|tcp_reass_maxseg
 operator|=
 name|nmbclusters
 operator|/
 literal|16
 expr_stmt|;
-name|V_tcp_reass_maxseg
+name|tcp_reass_maxseg
 operator|=
 name|uma_zone_set_max
 argument_list|(
-name|V_tcp_reass_zone
+name|tcp_reass_zone
 argument_list|,
-name|V_tcp_reass_maxseg
+name|tcp_reass_maxseg
 argument_list|)
 expr_stmt|;
 block|}
@@ -441,12 +402,12 @@ end_function
 
 begin_function
 name|void
-name|tcp_reass_init
+name|tcp_reass_global_init
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|V_tcp_reass_maxseg
+name|tcp_reass_maxseg
 operator|=
 name|nmbclusters
 operator|/
@@ -457,10 +418,10 @@ argument_list|(
 literal|"net.inet.tcp.reass.maxsegments"
 argument_list|,
 operator|&
-name|V_tcp_reass_maxseg
+name|tcp_reass_maxseg
 argument_list|)
 expr_stmt|;
-name|V_tcp_reass_zone
+name|tcp_reass_zone
 operator|=
 name|uma_zcreate
 argument_list|(
@@ -486,13 +447,13 @@ name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
 comment|/* Set the zone limit and read back the effective value. */
-name|V_tcp_reass_maxseg
+name|tcp_reass_maxseg
 operator|=
 name|uma_zone_set_max
 argument_list|(
-name|V_tcp_reass_zone
+name|tcp_reass_zone
 argument_list|,
-name|V_tcp_reass_maxseg
+name|tcp_reass_maxseg
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_REGISTER
@@ -508,32 +469,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE
-end_ifdef
-
-begin_function
-name|void
-name|tcp_reass_destroy
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|uma_zdestroy
-argument_list|(
-name|V_tcp_reass_zone
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -590,7 +525,7 @@ argument_list|)
 expr_stmt|;
 name|uma_zfree
 argument_list|(
-name|V_tcp_reass_zone
+name|tcp_reass_zone
 argument_list|,
 name|qe
 argument_list|)
@@ -640,7 +575,7 @@ name|qsize
 operator|=
 name|uma_zone_get_cur
 argument_list|(
-name|V_tcp_reass_zone
+name|tcp_reass_zone
 argument_list|)
 expr_stmt|;
 return|return
@@ -791,7 +726,7 @@ operator|+
 literal|1
 condition|)
 block|{
-name|V_tcp_reass_overflows
+name|tcp_reass_overflows
 operator|++
 expr_stmt|;
 name|TCPSTAT_INC
@@ -863,7 +798,7 @@ name|te
 operator|=
 name|uma_zalloc
 argument_list|(
-name|V_tcp_reass_zone
+name|tcp_reass_zone
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1128,7 +1063,7 @@ name|tqs
 condition|)
 name|uma_zfree
 argument_list|(
-name|V_tcp_reass_zone
+name|tcp_reass_zone
 argument_list|,
 name|te
 argument_list|)
@@ -1272,7 +1207,7 @@ argument_list|)
 expr_stmt|;
 name|uma_zfree
 argument_list|(
-name|V_tcp_reass_zone
+name|tcp_reass_zone
 argument_list|,
 name|q
 argument_list|)
@@ -1485,7 +1420,7 @@ name|tqs
 condition|)
 name|uma_zfree
 argument_list|(
-name|V_tcp_reass_zone
+name|tcp_reass_zone
 argument_list|,
 name|q
 argument_list|)
