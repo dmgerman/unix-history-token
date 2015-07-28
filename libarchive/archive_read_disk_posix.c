@@ -4375,11 +4375,10 @@ name|t
 operator|->
 name|current_filesystem_id
 condition|)
-return|return
-operator|(
-name|ARCHIVE_RETRY
-operator|)
-return|;
+name|descend
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|t
 operator|->
