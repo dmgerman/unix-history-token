@@ -803,18 +803,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * These have to be allocated somewhere; allocating  * them here forces loader errors if this file is omitted  * (if they've been externed everywhere else; hah!).  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|buf
-modifier|*
-name|swbuf
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * The elements of this array are ordered based upon the values of the  * corresponding enum VM_GUEST members.  */
 end_comment
 
