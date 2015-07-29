@@ -177,6 +177,7 @@ function_decl|;
 end_function_decl
 
 begin_struct
+specifier|static
 specifier|const
 struct|struct
 name|ypalias
@@ -189,7 +190,6 @@ modifier|*
 name|name
 decl_stmt|;
 block|}
-decl|static
 name|ypaliases
 index|[]
 init|=
