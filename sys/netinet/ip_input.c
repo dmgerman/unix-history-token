@@ -5929,6 +5929,11 @@ name|ia_ifa
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|ia
+operator|=
+name|NULL
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|IPSEC
