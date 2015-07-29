@@ -637,7 +637,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * We assume that a = b will do atomic loads and stores.  Due to the  * IA32 memory model, a simple store guarantees release semantics.  *  * However, a load may pass a store if they are performed on distinct  * addresses, so for atomic_load_acq we introduce a Store/Load barrier  * before the load in SMP kernels.  We use "lock addl $0,mem", as  * recommended by the AMD Software Optimization Guide, and not mfence.  * In the kernel, we use a private per-cpu cache line as the target  * for the locked addition, to avoid introducing false data  * dependencies.  In userspace, a word at the top of the stack is  * utilized.  *  * For UP kernels, however, the memory of the single processor is  * always consistent, so we only need to stop the compiler from  * reordering accesses in a way that violates the semantics of acquire  * and release.  */
+comment|/*  * We assume that a = b will do atomic loads and stores.  Due to the  * IA32 memory model, a simple store guarantees release semantics.  *  * However, a load may pass a store if they are performed on distinct  * addresses, so we need Store/Load barrier for sequentially  * consistent fences in SMP kernels.  We use "lock addl $0,mem" for a  * Store/Load barrier, as recommended by the AMD Software Optimization  * Guide, and not mfence.  In the kernel, we use a private per-cpu  * cache line as the target for the locked addition, to avoid  * introducing false data dependencies.  In userspace, a word at the  * top of the stack is utilized.  *  * For UP kernels, however, the memory of the single processor is  * always consistent, so we only need to stop the compiler from  * reordering accesses in a way that violates the semantics of acquire  * and release.  */
 end_comment
 
 begin_if
@@ -763,10 +763,6 @@ begin_comment
 comment|/* _KERNEL*/
 end_comment
 
-begin_comment
-comment|/*  * C11-standard acq/rel semantics only apply when the variable in the  * call is the same for acq as it is for rel.  However, our previous  * (x86) implementations provided much stronger ordering than required  * (essentially what is called seq_cst order in C11).  This  * implementation provides the historical strong ordering since some  * callers depend on it.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -775,7 +771,7 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|static __inline u_##TYPE					\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)			\ {								\ 	u_##TYPE res;						\ 								\ 	__storeload_barrier();					\ 	res = *p;						\ 	__compiler_membar();					\ 	return (res);						\ }								\ struct __hack
+value|static __inline u_##TYPE					\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)			\ {								\ 	u_##TYPE res;						\ 								\ 	res = *p;						\ 	__compiler_membar();					\ 	return (res);						\ }								\ struct __hack
 end_define
 
 begin_define
