@@ -3031,6 +3031,20 @@ argument_list|(
 name|ro
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|rte
+operator|==
+name|NULL
+condition|)
+comment|/* 		 * If the caller supplied a route but somehow the reference 		 * to it has been released need to prevent the caller 		 * calling RTFREE on it again. 		 */
+name|ro
+operator|->
+name|ro_rt
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|have_ia_ref
