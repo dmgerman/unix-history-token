@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -73,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rmlock.h>
 end_include
 
 begin_include
@@ -2647,6 +2659,10 @@ name|m
 parameter_list|)
 block|{
 name|struct
+name|rm_priotracker
+name|in_ifa_tracker
+decl_stmt|;
+name|struct
 name|arphdr
 modifier|*
 name|ah
@@ -2961,7 +2977,10 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * For a bridge, we want to check the address irrespective 	 * of the receive interface. (This will change slightly 	 * when we have clusters of interfaces). 	 */
 name|IN_IFADDR_RLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -3042,7 +3061,10 @@ name|ia_ifa
 argument_list|)
 expr_stmt|;
 name|IN_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 goto|goto
 name|match
@@ -3103,7 +3125,10 @@ name|ia_ifa
 argument_list|)
 expr_stmt|;
 name|IN_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 goto|goto
 name|match
@@ -3165,7 +3190,10 @@ operator|->
 name|ia_ifp
 expr_stmt|;
 name|IN_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 goto|goto
 name|match
@@ -3177,7 +3205,10 @@ undef|#
 directive|undef
 name|BDG_MEMBER_MATCHES_ARP
 name|IN_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 comment|/* 	 * No match, use the first inet address on the receive interface 	 * as a dummy address for the rest of the function. 	 */
 name|IF_ADDR_RLOCK
@@ -3251,7 +3282,10 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * If bridging, fall back to using any inet address. 	 */
 name|IN_IFADDR_RLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3272,7 +3306,10 @@ name|NULL
 condition|)
 block|{
 name|IN_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 goto|goto
 name|drop
@@ -3287,7 +3324,10 @@ name|ia_ifa
 argument_list|)
 expr_stmt|;
 name|IN_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 name|match
 label|:

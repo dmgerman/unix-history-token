@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rmlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
@@ -650,6 +656,10 @@ modifier|*
 name|srcp
 parameter_list|)
 block|{
+name|struct
+name|rm_priotracker
+name|in6_ifa_tracker
+decl_stmt|;
 name|struct
 name|in6_addr
 name|dst
@@ -1278,7 +1288,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|IN6_IFADDR_RLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in6_ifa_tracker
+argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -2138,7 +2151,10 @@ name|NULL
 condition|)
 block|{
 name|IN6_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in6_ifa_tracker
+argument_list|)
 expr_stmt|;
 name|IP6STAT_INC
 argument_list|(
@@ -2194,7 +2210,10 @@ literal|0
 condition|)
 block|{
 name|IN6_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in6_ifa_tracker
+argument_list|)
 expr_stmt|;
 name|IP6STAT_INC
 argument_list|(
@@ -2294,7 +2313,10 @@ index|]
 argument_list|)
 expr_stmt|;
 name|IN6_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in6_ifa_tracker
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

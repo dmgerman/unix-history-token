@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -111,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rmlock.h>
 end_include
 
 begin_include
@@ -446,6 +458,10 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
+name|struct
+name|rm_priotracker
+name|in_ifa_tracker
+decl_stmt|;
 name|struct
 name|ip
 modifier|*
@@ -1177,6 +1193,9 @@ argument_list|(
 name|ifp
 argument_list|,
 name|ia
+argument_list|,
+operator|&
+name|in_ifa_tracker
 argument_list|)
 expr_stmt|;
 if|if

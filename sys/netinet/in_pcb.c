@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -93,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rmlock.h>
 end_include
 
 begin_include
@@ -4752,6 +4764,10 @@ name|cred
 parameter_list|)
 block|{
 name|struct
+name|rm_priotracker
+name|in_ifa_tracker
+decl_stmt|;
+name|struct
 name|sockaddr_in
 modifier|*
 name|sin
@@ -4899,7 +4915,10 @@ name|INADDR_ANY
 condition|)
 block|{
 name|IN_IFADDR_RLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 name|faddr
 operator|=
@@ -4915,7 +4934,10 @@ operator|->
 name|sin_addr
 expr_stmt|;
 name|IN_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4957,7 +4979,10 @@ name|INADDR_BROADCAST
 condition|)
 block|{
 name|IN_IFADDR_RLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4990,7 +5015,10 @@ operator|->
 name|sin_addr
 expr_stmt|;
 name|IN_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -5070,7 +5098,10 @@ operator|->
 name|imo_multicast_ifp
 expr_stmt|;
 name|IN_IFADDR_RLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -5139,7 +5170,10 @@ literal|0
 expr_stmt|;
 block|}
 name|IN_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 block|}
 block|}

@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
 end_include
 
@@ -91,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rmlock.h>
 end_include
 
 begin_include
@@ -2398,6 +2410,10 @@ decl_stmt|;
 comment|/* incoming interface */
 block|{
 name|struct
+name|rm_priotracker
+name|in_ifa_tracker
+decl_stmt|;
+name|struct
 name|in_ifaddr
 modifier|*
 name|ia4
@@ -2463,7 +2479,10 @@ literal|1
 return|;
 comment|/* 	 * reject packets with broadcast 	 */
 name|IN_IFADDR_RLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -2507,7 +2526,10 @@ name|s_addr
 condition|)
 block|{
 name|IN_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 return|return
 operator|-
@@ -2516,7 +2538,10 @@ return|;
 block|}
 block|}
 name|IN_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 comment|/* 	 * perform ingress filter 	 */
 if|if
