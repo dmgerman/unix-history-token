@@ -1722,6 +1722,9 @@ name|curvnet
 argument_list|)
 condition|)
 return|return;
+name|tcp_reass_global_init
+argument_list|()
+expr_stmt|;
 comment|/* XXX virtualize those bellow? */
 name|tcp_delacktime
 operator|=
