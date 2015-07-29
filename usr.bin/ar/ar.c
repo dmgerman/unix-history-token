@@ -266,6 +266,13 @@ name|bsdar
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Enable deterministic mode by default. */
+name|bsdar
+operator|->
+name|options
+operator||=
+name|AR_D
+expr_stmt|;
 if|if
 condition|(
 operator|(
