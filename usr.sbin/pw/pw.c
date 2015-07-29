@@ -980,7 +980,7 @@ condition|)
 block|{
 name|id
 operator|=
-name|strtonum
+name|strtounum
 argument_list|(
 name|argv
 index|[
@@ -989,7 +989,7 @@ index|]
 argument_list|,
 literal|0
 argument_list|,
-name|LONG_MAX
+name|UID_MAX
 argument_list|,
 operator|&
 name|errstr
@@ -1339,7 +1339,7 @@ argument_list|)
 expr_stmt|;
 name|id
 operator|=
-name|strtonum
+name|strtounum
 argument_list|(
 name|optarg
 argument_list|,
@@ -1419,7 +1419,7 @@ break|break;
 block|}
 name|id
 operator|=
-name|strtonum
+name|strtounum
 argument_list|(
 name|optarg
 argument_list|,

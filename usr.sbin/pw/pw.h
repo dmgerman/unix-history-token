@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -508,6 +514,30 @@ name|Which
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|uintmax_t
+name|strtounum
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|numstr
+parameter_list|,
+name|uintmax_t
+name|minval
+parameter_list|,
+name|uintmax_t
+name|maxval
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|errmsg
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 
