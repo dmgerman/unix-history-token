@@ -38,18 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/pcpu.h>
 end_include
 
@@ -105,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
 end_include
 
 begin_include
@@ -1389,6 +1371,7 @@ modifier|*
 name|tc
 parameter_list|)
 block|{
+specifier|static
 name|u_long
 name|stick
 decl_stmt|;
@@ -1442,6 +1425,7 @@ modifier|*
 name|tc
 parameter_list|)
 block|{
+specifier|static
 name|u_long
 name|tick
 decl_stmt|;
