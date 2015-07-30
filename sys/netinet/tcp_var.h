@@ -308,7 +308,7 @@ comment|/* back pointer to parent vnet */
 name|tcp_seq
 name|snd_una
 decl_stmt|;
-comment|/* send unacknowledged */
+comment|/* sent but unacknowledged */
 name|tcp_seq
 name|snd_max
 decl_stmt|;
