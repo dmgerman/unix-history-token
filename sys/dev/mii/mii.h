@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: mii.h,v 1.9 2001/05/31 03:07:14 thorpej Exp $	*/
+comment|/*	$NetBSD: mii.h,v 1.18 2014/06/16 14:43:22 msaitoh Exp $	*/
 end_comment
 
 begin_comment
@@ -414,7 +414,7 @@ value|0xffffffff
 end_define
 
 begin_comment
-comment|/*  * Note that the EXTSTAT bit indicates that there is extended status  * info available in register 15, but 802.3 section 22.2.4.3 also  * states that that all 1000 Mb/s capable PHYs will set this bit to 1.  */
+comment|/*  * Note that the EXTSTAT bit indicates that there is extended status  * info available in register 15, but 802.3 section 22.2.4.3 also  * states that all 1000 Mb/s capable PHYs will set this bit to 1.  */
 end_comment
 
 begin_define
@@ -541,6 +541,10 @@ begin_comment
 comment|/* remote fault (ro) */
 end_comment
 
+begin_comment
+comment|/* Annex 28B.2 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -645,6 +649,10 @@ directive|define
 name|ANAR_PAUSE_TOWARDS
 value|(3<< 10)
 end_define
+
+begin_comment
+comment|/* Annex 28D */
+end_comment
 
 begin_define
 define|#
@@ -1150,7 +1158,7 @@ value|0x1000
 end_define
 
 begin_comment
-comment|/* remove rx status, 1 = ok */
+comment|/* remote rx status, 1 = ok */
 end_comment
 
 begin_define
@@ -1195,6 +1203,347 @@ end_define
 
 begin_comment
 comment|/* IDLE error count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_PSECR
+value|0x0b
+end_define
+
+begin_comment
+comment|/* PSE control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSECR_PACTLMASK
+value|0x000c
+end_define
+
+begin_comment
+comment|/* pair control mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSECR_PSEENMASK
+value|0x0003
+end_define
+
+begin_comment
+comment|/* PSE enable mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSECR_PINOUTB
+value|0x0008
+end_define
+
+begin_comment
+comment|/* PSE pinout Alternative B */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSECR_PINOUTA
+value|0x0004
+end_define
+
+begin_comment
+comment|/* PSE pinout Alternative A */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSECR_FOPOWTST
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Force Power Test Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSECR_PSEEN
+value|0x0001
+end_define
+
+begin_comment
+comment|/* PSE Enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSECR_PSEDIS
+value|0x0000
+end_define
+
+begin_comment
+comment|/* PSE Disabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_PSESR
+value|0x0c
+end_define
+
+begin_comment
+comment|/* PSE status register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSESR_PWRDENIED
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Power Denied */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSESR_VALSIG
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Valid PD signature detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSESR_INVALSIG
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Invalid PD signature detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSESR_SHORTCIRC
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Short circuit condition detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSESR_OVERLOAD
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Overload condition detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSESR_MPSABSENT
+value|0x0080
+end_define
+
+begin_comment
+comment|/* MPS absent condition detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSESR_PDCLMASK
+value|0x0070
+end_define
+
+begin_comment
+comment|/* PD Class mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSESR_STATMASK
+value|0x000e
+end_define
+
+begin_comment
+comment|/* PSE Status mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSESR_PAIRCTABL
+value|0x0001
+end_define
+
+begin_comment
+comment|/* PAIR Control Ability */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSESR_PDCL_4
+value|(4<< 4)
+end_define
+
+begin_comment
+comment|/* Class 4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSESR_PDCL_3
+value|(3<< 4)
+end_define
+
+begin_comment
+comment|/* Class 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSESR_PDCL_2
+value|(2<< 4)
+end_define
+
+begin_comment
+comment|/* Class 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSESR_PDCL_1
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* Class 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSESR_PDCL_0
+value|(0<< 4)
+end_define
+
+begin_comment
+comment|/* Class 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_MMDACR
+value|0x0d
+end_define
+
+begin_comment
+comment|/* MMD access control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMDACR_FUNCMASK
+value|0xc000
+end_define
+
+begin_comment
+comment|/* function */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMDACR_DADDRMASK
+value|0x001f
+end_define
+
+begin_comment
+comment|/* device address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMDACR_FN_ADDRESS
+value|(0<< 14)
+end_define
+
+begin_comment
+comment|/* address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMDACR_FN_DATANPI
+value|(1<< 14)
+end_define
+
+begin_comment
+comment|/* data, no post increment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMDACR_FN_DATAPIRW
+value|(2<< 14)
+end_define
+
+begin_comment
+comment|/* data, post increment on r/w */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMDACR_FN_DATAPIW
+value|(3<< 14)
+end_define
+
+begin_comment
+comment|/* data, post increment on wr only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_MMDAADR
+value|0x0e
+end_define
+
+begin_comment
+comment|/* MMD access address data register */
 end_comment
 
 begin_define
