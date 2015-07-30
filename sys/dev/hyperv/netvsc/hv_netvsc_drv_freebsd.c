@@ -1224,6 +1224,13 @@ name|IFCAP_HWCSUM
 operator||
 name|IFCAP_TSO
 expr_stmt|;
+comment|/* 	 * Only enable UDP checksum offloading when it is on 2012R2 or 	 * later. UDP checksum offloading doesn't work on earlier 	 * Windows releases. 	 */
+if|if
+condition|(
+name|hv_vmbus_protocal_version
+operator|>=
+name|HV_VMBUS_VERSION_WIN8_1
+condition|)
 name|ifp
 operator|->
 name|if_hwassist
@@ -1231,6 +1238,15 @@ operator|=
 name|CSUM_TCP
 operator||
 name|CSUM_UDP
+operator||
+name|CSUM_TSO
+expr_stmt|;
+else|else
+name|ifp
+operator|->
+name|if_hwassist
+operator|=
+name|CSUM_TCP
 operator||
 name|CSUM_TSO
 expr_stmt|;
@@ -4116,6 +4132,14 @@ name|if_capenable
 operator||=
 name|IFCAP_TXCSUM
 expr_stmt|;
+comment|/* 				 * Only enable UDP checksum offloading on 				 * Windows Server 2012R2 or later releases. 				 */
+if|if
+condition|(
+name|hv_vmbus_protocal_version
+operator|>=
+name|HV_VMBUS_VERSION_WIN8_1
+condition|)
+block|{
 name|ifp
 operator|->
 name|if_hwassist
@@ -4126,6 +4150,16 @@ operator||
 name|CSUM_UDP
 operator|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|ifp
+operator|->
+name|if_hwassist
+operator||=
+name|CSUM_TCP
+expr_stmt|;
+block|}
 block|}
 block|}
 if|if
