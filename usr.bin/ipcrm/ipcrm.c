@@ -746,6 +746,8 @@ name|semctl
 argument_list|(
 name|id
 argument_list|,
+literal|0
+argument_list|,
 name|IPC_RMID
 argument_list|,
 name|NULL
