@@ -565,6 +565,12 @@ name|nreq
 operator|=
 literal|0
 expr_stmt|;
+name|kbdintctxt
+operator|->
+name|devices_done
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|kbdintctxt
 return|;
