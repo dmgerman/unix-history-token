@@ -55,29 +55,69 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|mb
-parameter_list|()
-value|__asm __volatile("lock; addl $0,(%%esp)" : : : "memory", "cc")
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__OFFSETOF_MONITORBUF
+end_ifndef
+
+begin_comment
+comment|/*  * __OFFSETOF_MONITORBUF == __pcpu_offset(pc_monitorbuf).  *  * The open-coded number is used instead of the symbolic expression to  * avoid a dependency on sys/pcpu.h in machine/atomic.h consumers.  * An assertion in i386/vm_machdep.c ensures that the value is correct.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|wmb
-parameter_list|()
-value|__asm __volatile("lock; addl $0,(%%esp)" : : : "memory", "cc")
+name|__OFFSETOF_MONITORBUF
+value|0x180
 end_define
 
-begin_define
-define|#
-directive|define
-name|rmb
-parameter_list|()
-value|__asm __volatile("lock; addl $0,(%%esp)" : : : "memory", "cc")
-end_define
+begin_function
+specifier|static
+name|__inline
+name|void
+name|__mbk
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("lock; addl $0,%%fs:%0"
+block|:
+literal|"+m"
+operator|(
+operator|*
+operator|(
+name|u_int
+operator|*
+operator|)
+name|__OFFSETOF_MONITORBUF
+operator|)
+operator|:
+operator|:
+literal|"memory"
+operator|,
+literal|"cc"
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|__mbu
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("lock; addl $0,(%%esp)" : : : "memory", "cc");
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Various simple operations on memory, each of which is atomic in the  * presence of interrupts and multiple processors.  *  * atomic_set_char(P, V)	(*(u_char *)(P) |= (V))  * atomic_clear_char(P, V)	(*(u_char *)(P)&= ~(V))  * atomic_add_char(P, V)	(*(u_char *)(P) += (V))  * atomic_subtract_char(P, V)	(*(u_char *)(P) -= (V))  *  * atomic_set_short(P, V)	(*(u_short *)(P) |= (V))  * atomic_clear_short(P, V)	(*(u_short *)(P)&= ~(V))  * atomic_add_short(P, V)	(*(u_short *)(P) += (V))  * atomic_subtract_short(P, V)	(*(u_short *)(P) -= (V))  *  * atomic_set_int(P, V)		(*(u_int *)(P) |= (V))  * atomic_clear_int(P, V)	(*(u_int *)(P)&= ~(V))  * atomic_add_int(P, V)		(*(u_int *)(P) += (V))  * atomic_subtract_int(P, V)	(*(u_int *)(P) -= (V))  * atomic_swap_int(P, V)	(return (*(u_int *)(P)); *(u_int *)(P) = (V);)  * atomic_readandclear_int(P)	(return (*(u_int *)(P)); *(u_int *)(P) = 0;)  *  * atomic_set_long(P, V)	(*(u_long *)(P) |= (V))  * atomic_clear_long(P, V)	(*(u_long *)(P)&= ~(V))  * atomic_add_long(P, V)	(*(u_long *)(P) += (V))  * atomic_subtract_long(P, V)	(*(u_long *)(P) -= (V))  * atomic_swap_long(P, V)	(return (*(u_long *)(P)); *(u_long *)(P) = (V);)  * atomic_readandclear_long(P)	(return (*(u_long *)(P)); *(u_long *)(P) = 0;)  */
@@ -649,17 +689,6 @@ name|_KERNEL
 argument_list|)
 end_if
 
-begin_comment
-comment|/*  * OFFSETOF_MONITORBUF == __pcpu_offset(pc_monitorbuf).  *  * The open-coded number is used instead of the symbolic expression to  * avoid a dependency on sys/pcpu.h in machine/atomic.h consumers.  * An assertion in i386/vm_machdep.c ensures that the value is correct.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OFFSETOF_MONITORBUF
-value|0x180
-end_define
-
 begin_if
 if|#
 directive|if
@@ -669,37 +698,15 @@ name|SMP
 argument_list|)
 end_if
 
-begin_function
-unit|static
-name|__inline
-name|void
+begin_define
+define|#
+directive|define
 name|__storeload_barrier
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-asm|__asm __volatile("lock; addl $0,%%fs:%0"
-block|:
-literal|"+m"
-operator|(
-operator|*
-operator|(
-name|u_int
-operator|*
-operator|)
-name|OFFSETOF_MONITORBUF
-operator|)
-operator|:
-operator|:
-literal|"memory"
-operator|,
-literal|"cc"
-block|)
-function|;
-end_function
+parameter_list|()
+value|__mbk()
+end_define
 
 begin_else
-unit|}
 else|#
 directive|else
 end_else
@@ -708,20 +715,13 @@ begin_comment
 comment|/* _KERNEL&& UP */
 end_comment
 
-begin_function
-unit|static
-name|__inline
-name|void
+begin_define
+define|#
+directive|define
 name|__storeload_barrier
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|__compiler_membar
-argument_list|()
-expr_stmt|;
-block|}
-end_function
+parameter_list|()
+value|__compiler_membar()
+end_define
 
 begin_endif
 endif|#
@@ -741,18 +741,13 @@ begin_comment
 comment|/* !_KERNEL */
 end_comment
 
-begin_function
-specifier|static
-name|__inline
-name|void
+begin_define
+define|#
+directive|define
 name|__storeload_barrier
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-asm|__asm __volatile("lock; addl $0,(%%esp)" : : : "memory", "cc");
-block|}
-end_function
+parameter_list|()
+value|__mbu()
+end_define
 
 begin_endif
 endif|#
@@ -786,7 +781,7 @@ value|static __inline void						\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, 
 end_define
 
 begin_function
-specifier|static
+unit|static
 name|__inline
 name|void
 name|atomic_thread_fence_acq
@@ -3250,6 +3245,73 @@ end_endif
 begin_comment
 comment|/* !WANT_FUNCTIONS */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|mb
+parameter_list|()
+value|__mbk()
+end_define
+
+begin_define
+define|#
+directive|define
+name|wmb
+parameter_list|()
+value|__mbk()
+end_define
+
+begin_define
+define|#
+directive|define
+name|rmb
+parameter_list|()
+value|__mbk()
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|mb
+parameter_list|()
+value|__mbu()
+end_define
+
+begin_define
+define|#
+directive|define
+name|wmb
+parameter_list|()
+value|__mbu()
+end_define
+
+begin_define
+define|#
+directive|define
+name|rmb
+parameter_list|()
+value|__mbu()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
