@@ -80,7 +80,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"memrw"
+literal|"ARM64TODO: memrw"
 argument_list|)
 expr_stmt|;
 block|}

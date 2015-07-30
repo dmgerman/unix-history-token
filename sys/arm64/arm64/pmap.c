@@ -5597,7 +5597,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"reclaim_pv_chunk"
+literal|"ARM64TODO: reclaim_pv_chunk"
 argument_list|)
 expr_stmt|;
 block|}
@@ -12072,7 +12072,7 @@ block|{
 comment|/* 				 * TODO: We don't handle the access flag 				 * at all. We need to be able to set it in 				 * the exception handler. 				 */
 name|panic
 argument_list|(
-literal|"TODO: safe_to_clear_referenced\n"
+literal|"ARM64TODO: safe_to_clear_referenced\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -12370,7 +12370,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* TODO: We lack support for tracking if a page is modified */
+comment|/* ARM64TODO: We lack support for tracking if a page is modified */
 block|}
 end_function
 
@@ -12431,7 +12431,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_page_set_memattr"
+literal|"ARM64TODO: pmap_page_set_memattr"
 argument_list|)
 expr_stmt|;
 block|}
@@ -12458,7 +12458,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_mincore"
+literal|"ARM64TODO: pmap_mincore"
 argument_list|)
 expr_stmt|;
 block|}
@@ -12532,7 +12532,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_sync_icache"
+literal|"ARM64TODO: pmap_sync_icache"
 argument_list|)
 expr_stmt|;
 block|}
@@ -12817,7 +12817,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_unmap_io_transient: TODO: Unmap data"
+literal|"ARM64TODO: pmap_unmap_io_transient: Unmap data"
 argument_list|)
 expr_stmt|;
 block|}

@@ -910,7 +910,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"fill_dbregs"
+literal|"ARM64TODO: fill_dbregs"
 argument_list|)
 expr_stmt|;
 block|}
@@ -933,7 +933,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"set_dbregs"
+literal|"ARM64TODO: set_dbregs"
 argument_list|)
 expr_stmt|;
 block|}
@@ -954,7 +954,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"ptrace_set_pc"
+literal|"ARM64TODO: ptrace_set_pc"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1685,7 +1685,7 @@ begin_block
 block|{
 name|panic
 argument_list|(
-literal|"cpu_halt"
+literal|"ARM64TODO: cpu_halt"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1707,7 +1707,7 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-comment|/* TBD */
+comment|/* ARM64TODO TBD */
 block|}
 end_function
 
@@ -1729,7 +1729,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"cpu_est_clockrate"
+literal|"ARM64TODO: cpu_est_clockrate"
 argument_list|)
 expr_stmt|;
 block|}

@@ -522,7 +522,7 @@ name|nap
 condition|)
 name|panic
 argument_list|(
-literal|"TODO: Could we have more then 8 args?"
+literal|"ARM64TODO: Could we have more then 8 args?"
 argument_list|)
 expr_stmt|;
 name|td
@@ -1321,7 +1321,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"do_el0_error"
+literal|"ARM64TODO: do_el0_error"
 argument_list|)
 expr_stmt|;
 block|}

@@ -1083,7 +1083,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"uma_small_alloc"
+literal|"ARM64TODO: uma_small_alloc"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1106,7 +1106,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"uma_small_free"
+literal|"ARM64TODO: uma_small_free"
 argument_list|)
 expr_stmt|;
 block|}

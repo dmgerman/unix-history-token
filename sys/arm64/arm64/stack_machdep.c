@@ -103,6 +103,7 @@ argument_list|(
 name|st
 argument_list|)
 expr_stmt|;
+comment|/* ARM64TODO */
 block|}
 end_function
 
@@ -121,6 +122,7 @@ argument_list|(
 name|st
 argument_list|)
 expr_stmt|;
+comment|/* ARM64TODO */
 block|}
 end_function
 
