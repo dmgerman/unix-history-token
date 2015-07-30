@@ -144,6 +144,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|uart_driver_name
 index|[]
@@ -911,6 +912,8 @@ name|int
 name|cnt
 decl_stmt|,
 name|ipend
+decl_stmt|,
+name|testintr
 decl_stmt|;
 if|if
 condition|(
@@ -927,11 +930,22 @@ name|cnt
 operator|=
 literal|0
 expr_stmt|;
+name|testintr
+operator|=
+name|sc
+operator|->
+name|sc_testintr
+expr_stmt|;
 while|while
 condition|(
+operator|(
+operator|!
+name|testintr
+operator|||
 name|cnt
 operator|<
 literal|20
+operator|)
 operator|&&
 operator|(
 name|ipend
@@ -1044,6 +1058,8 @@ name|FILTER_STRAY
 else|:
 operator|(
 operator|(
+name|testintr
+operator|&&
 name|cnt
 operator|==
 literal|20
@@ -1666,7 +1682,7 @@ name|sc
 operator|=
 name|sc
 expr_stmt|;
-comment|/* 	 * Protect ourselves against interrupts while we're not completely 	 * finished attaching and initializing. We don't expect interrupts 	 * until after UART_ATTACH() though. 	 */
+comment|/* 	 * Protect ourselves against interrupts while we're not completely 	 * finished attaching and initializing. We don't expect interrupts 	 * until after UART_ATTACH(), though. 	 */
 name|sc
 operator|->
 name|sc_leaving
@@ -2084,12 +2100,24 @@ name|sc_leaving
 operator|=
 literal|0
 expr_stmt|;
+name|sc
+operator|->
+name|sc_testintr
+operator|=
+literal|1
+expr_stmt|;
 name|filt
 operator|=
 name|uart_intr
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_testintr
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * Don't use interrupts if we couldn't clear any pending interrupt 	 * conditions. We may have broken H/W and polling is probably the 	 * safest thing to do. 	 */
 if|if
