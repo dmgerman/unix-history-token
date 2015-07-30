@@ -4084,6 +4084,7 @@ operator|||
 name|bp
 operator|->
 name|b_data
+operator|=
 operator|>
 name|unmapped_buf
 operator|+
