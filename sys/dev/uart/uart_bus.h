@@ -324,6 +324,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* This UART has input squelched. */
+name|int
+name|sc_testintr
+range|:
+literal|1
+decl_stmt|;
+comment|/* This UART is under int. testing. */
 name|struct
 name|uart_devinfo
 modifier|*
@@ -415,6 +421,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 name|uart_driver_name
 index|[]
