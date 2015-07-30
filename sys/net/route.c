@@ -2158,7 +2158,7 @@ name|rt_ifa
 argument_list|)
 expr_stmt|;
 comment|/* 		 * The key is separatly alloc'd so free it (see rt_setgate()). 		 * This also frees the gateway, as they are always malloc'd 		 * together. 		 */
-name|Free
+name|R_Free
 argument_list|(
 name|rt_key
 argument_list|(
@@ -5422,7 +5422,7 @@ operator|->
 name|rt_ifa
 argument_list|)
 expr_stmt|;
-name|Free
+name|R_Free
 argument_list|(
 name|rt_key
 argument_list|(
@@ -5706,7 +5706,7 @@ operator|->
 name|rt_ifa
 argument_list|)
 expr_stmt|;
-name|Free
+name|R_Free
 argument_list|(
 name|rt_key
 argument_list|(
@@ -6693,7 +6693,7 @@ argument_list|,
 name|dlen
 argument_list|)
 expr_stmt|;
-name|Free
+name|R_Free
 argument_list|(
 name|rt_key
 argument_list|(
