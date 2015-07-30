@@ -12429,6 +12429,35 @@ name|vm_memattr_t
 name|ma
 parameter_list|)
 block|{
+name|m
+operator|->
+name|md
+operator|.
+name|pv_memattr
+operator|=
+name|ma
+expr_stmt|;
+comment|/* 	 * ARM64TODO: Implement the below (from the amd64 pmap) 	 * If "m" is a normal page, update its direct mapping.  This update 	 * can be relied upon to perform any cache operations that are 	 * required for data coherence. 	 */
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_FICTITIOUS
+operator|)
+operator|==
+literal|0
+operator|&&
+name|PHYS_IN_DMAP
+argument_list|(
+name|VM_PAGE_TO_PHYS
+argument_list|(
+name|m
+argument_list|)
+argument_list|)
+condition|)
 name|panic
 argument_list|(
 literal|"ARM64TODO: pmap_page_set_memattr"
