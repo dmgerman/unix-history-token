@@ -1269,6 +1269,10 @@ break|break;
 case|case
 name|EXCP_SVC
 case|:
+comment|/* 		 * Ensure the svc_handler is being run with interrupts enabled. 		 * They will be automatically restored when returning from 		 * exception handler. 		 */
+name|intr_enable
+argument_list|()
+expr_stmt|;
 name|svc_handler
 argument_list|(
 name|frame
