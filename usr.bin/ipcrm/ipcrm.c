@@ -26,6 +26,24 @@ end_include
 begin_define
 define|#
 directive|define
+name|_WANT_MSG_PROTOTYPES
+end_define
+
+begin_define
+define|#
+directive|define
+name|_WANT_SEM_PROTOTYPES
+end_define
+
+begin_define
+define|#
+directive|define
+name|_WANT_SHM_PROTOTYPES
+end_define
+
+begin_define
+define|#
+directive|define
 name|_KERNEL
 end_define
 
