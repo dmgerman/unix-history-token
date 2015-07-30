@@ -10509,7 +10509,7 @@ name|faddr
 argument_list|,
 name|VM_PROT_NONE
 argument_list|,
-name|VM_FAULT_CHANGE_WIRING
+name|VM_FAULT_WIRE
 argument_list|)
 operator|)
 operator|!=

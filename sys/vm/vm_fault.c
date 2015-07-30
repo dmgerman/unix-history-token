@@ -632,7 +632,7 @@ operator|&&
 operator|(
 name|fault_flags
 operator|&
-name|VM_FAULT_CHANGE_WIRING
+name|VM_FAULT_WIRE
 operator|)
 operator|==
 literal|0
@@ -736,17 +736,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * TRYPAGER - used by vm_fault to calculate whether the pager for the  *	      current object *might* contain the page.  *  *	      default objects are zero-fill, there is no real pager.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TRYPAGER
-value|(fs.object->type != OBJT_DEFAULT&& \ 			((fault_flags& VM_FAULT_CHANGE_WIRING) == 0 || wired))
-end_define
 
 begin_comment
 comment|/*  *	vm_fault:  *  *	Handle a page fault occurring at the given address,  *	requiring the given permissions, in the map specified.  *	If successful, the page is inserted into the  *	associated physical map.  *  *	NOTE: the given address should be truncated to the  *	proper page address.  *  *	KERN_SUCCESS is returned if the page fault is handled; otherwise,  *	a standard error specifying why the fault is fatal is returned.  *  *	The map in question must be referenced, and remains so.  *	Caller may hold no locks.  */
@@ -1237,6 +1226,22 @@ operator|&
 name|VM_PROT_COPY
 operator|)
 expr_stmt|;
+else|else
+name|KASSERT
+argument_list|(
+operator|(
+name|fault_flags
+operator|&
+name|VM_FAULT_WIRE
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"!wired&& VM_FAULT_WIRE"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fs
@@ -1250,7 +1255,7 @@ operator|(
 name|fault_flags
 operator|&
 operator|(
-name|VM_FAULT_CHANGE_WIRING
+name|VM_FAULT_WIRE
 operator||
 name|VM_FAULT_DIRTY
 operator|)
@@ -1890,10 +1895,16 @@ name|readrest
 goto|;
 break|break;
 block|}
-comment|/* 		 * Page is not resident, If this is the search termination 		 * or the pager might contain the page, allocate a new page. 		 */
+comment|/* 		 * Page is not resident.  If this is the search termination 		 * or the pager might contain the page, allocate a new page. 		 * Default objects are zero-fill, there is no real pager. 		 */
 if|if
 condition|(
-name|TRYPAGER
+name|fs
+operator|.
+name|object
+operator|->
+name|type
+operator|!=
+name|OBJT_DEFAULT
 operator|||
 name|fs
 operator|.
@@ -2058,10 +2069,16 @@ break|break;
 block|}
 name|readrest
 label|:
-comment|/* 		 * We have found a valid page or we have allocated a new page. 		 * The page thus may not be valid or may not be entirely  		 * valid. 		 * 		 * Attempt to fault-in the page if there is a chance that the 		 * pager has it, and potentially fault in additional pages 		 * at the same time. 		 */
+comment|/* 		 * We have found a valid page or we have allocated a new page. 		 * The page thus may not be valid or may not be entirely  		 * valid. 		 * 		 * Attempt to fault-in the page if there is a chance that the 		 * pager has it, and potentially fault in additional pages 		 * at the same time.  For default objects simply provide 		 * zero-filled pages. 		 */
 if|if
 condition|(
-name|TRYPAGER
+name|fs
+operator|.
+name|object
+operator|->
+name|type
+operator|!=
+name|OBJT_DEFAULT
 condition|)
 block|{
 name|int
@@ -3174,7 +3191,7 @@ operator|&&
 operator|(
 name|fault_flags
 operator|&
-name|VM_FAULT_CHANGE_WIRING
+name|VM_FAULT_WIRE
 operator|)
 operator|==
 literal|0
@@ -3589,7 +3606,7 @@ operator|&&
 operator|(
 name|fault_flags
 operator|&
-name|VM_FAULT_CHANGE_WIRING
+name|VM_FAULT_WIRE
 operator|)
 operator|==
 literal|0
@@ -3627,30 +3644,29 @@ expr_stmt|;
 comment|/* 	 * If the page is not wired down, then put it where the pageout daemon 	 * can find it. 	 */
 if|if
 condition|(
+operator|(
 name|fault_flags
 operator|&
-name|VM_FAULT_CHANGE_WIRING
+name|VM_FAULT_WIRE
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|wired
-condition|)
+argument_list|,
+operator|(
+literal|"VM_FAULT_WIRE&& !wired"
+operator|)
+argument_list|)
+expr_stmt|;
 name|vm_page_wire
 argument_list|(
 name|fs
 operator|.
 name|m
-argument_list|)
-expr_stmt|;
-else|else
-name|vm_page_unwire
-argument_list|(
-name|fs
-operator|.
-name|m
-argument_list|,
-name|PQ_ACTIVE
 argument_list|)
 expr_stmt|;
 block|}
