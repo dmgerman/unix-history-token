@@ -1683,11 +1683,17 @@ end_macro
 
 begin_block
 block|{
-name|panic
-argument_list|(
-literal|"ARM64TODO: cpu_halt"
-argument_list|)
+comment|/* We should have shutdown by now, if not enter a low power sleep */
+name|intr_disable
+argument_list|()
 expr_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+asm|__asm __volatile("wfi");
+block|}
 block|}
 end_block
 
