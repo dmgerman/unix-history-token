@@ -1062,55 +1062,5 @@ comment|/* Nothing to do here - busdma bounce buffers are not implemented. */
 block|}
 end_function
 
-begin_function
-name|void
-modifier|*
-name|uma_small_alloc
-parameter_list|(
-name|uma_zone_t
-name|zone
-parameter_list|,
-name|vm_size_t
-name|bytes
-parameter_list|,
-name|u_int8_t
-modifier|*
-name|flags
-parameter_list|,
-name|int
-name|wait
-parameter_list|)
-block|{
-name|panic
-argument_list|(
-literal|"ARM64TODO: uma_small_alloc"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|uma_small_free
-parameter_list|(
-name|void
-modifier|*
-name|mem
-parameter_list|,
-name|vm_size_t
-name|size
-parameter_list|,
-name|u_int8_t
-name|flags
-parameter_list|)
-block|{
-name|panic
-argument_list|(
-literal|"ARM64TODO: uma_small_free"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 end_unit
 
