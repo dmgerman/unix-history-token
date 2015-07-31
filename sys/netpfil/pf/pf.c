@@ -36459,7 +36459,9 @@ argument_list|)
 expr_stmt|;
 name|log
 operator|=
-literal|1
+name|r
+operator|->
+name|log
 expr_stmt|;
 name|DPFPRINTF
 argument_list|(
@@ -39163,7 +39165,9 @@ argument_list|)
 expr_stmt|;
 name|log
 operator|=
-literal|1
+name|r
+operator|->
+name|log
 expr_stmt|;
 name|DPFPRINTF
 argument_list|(
