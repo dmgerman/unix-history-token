@@ -10622,6 +10622,11 @@ modifier|*
 name|xfer
 decl_stmt|;
 name|uint32_t
+name|count
+init|=
+literal|0
+decl_stmt|;
+name|uint32_t
 name|temp
 decl_stmt|;
 name|uint8_t
@@ -10632,7 +10637,23 @@ name|x
 decl_stmt|;
 name|repeat
 label|:
-comment|/* get all channel interrupts */
+if|if
+condition|(
+operator|++
+name|count
+operator|==
+literal|16
+condition|)
+block|{
+comment|/* give other interrupts a chance */
+name|DPRINTF
+argument_list|(
+literal|"Yield\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* get all host channel interrupts */
 for|for
 control|(
 name|x
