@@ -27,6 +27,27 @@ directive|define
 name|_NET_PFKEYV2_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CTASSERT
+parameter_list|(
+name|x
+parameter_list|)
+value|struct __thisisjustnothing;
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* This file defines structures and symbols for the PF_KEY Version 2 key management interface. It was written at the U.S. Naval Research Laboratory. This file is in the public domain. The authors ask that you leave this credit intact on any copies of this file. */
 end_comment
