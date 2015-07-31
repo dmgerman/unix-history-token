@@ -155,7 +155,6 @@ name|cnt
 decl_stmt|,
 name|fd
 decl_stmt|;
-specifier|static
 name|char
 name|device
 index|[
@@ -209,6 +208,18 @@ operator|(
 literal|"too many iov's (change code in wall/ttymsg.c)"
 operator|)
 return|;
+name|strlcat
+argument_list|(
+name|device
+argument_list|,
+name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|device
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|device
@@ -219,18 +230,6 @@ name|_PATH_DEV
 argument_list|)
 operator|-
 literal|1
-expr_stmt|;
-name|strlcpy
-argument_list|(
-name|p
-argument_list|,
-name|line
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|device
-argument_list|)
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
