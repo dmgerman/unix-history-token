@@ -411,13 +411,6 @@ operator|&
 name|enc_xform_cast5
 return|;
 case|case
-name|SADB_X_EALG_SKIPJACK
-case|:
-return|return
-operator|&
-name|enc_xform_skipjack
-return|;
-case|case
 name|SADB_EALG_NULL
 case|:
 return|return

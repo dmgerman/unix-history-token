@@ -633,10 +633,6 @@ begin_comment
 comment|/* XXX Policy Extension */
 end_comment
 
-begin_comment
-comment|/* sizeof(struct sadb_x_policy) == 16 */
-end_comment
-
 begin_struct
 struct|struct
 name|sadb_x_policy
@@ -667,6 +663,20 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sadb_x_policy
+argument_list|)
+operator|==
+literal|16
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * When policy_type == IPSEC, it is followed by some of  * the ipsec policy request.  * [total length of ipsec policy requests]  *	= (sadb_x_policy_len * sizeof(uint64_t) - sizeof(struct sadb_x_policy))  */
@@ -713,10 +723,6 @@ begin_comment
 comment|/* NAT-Traversal type, see RFC 3948 (and drafts). */
 end_comment
 
-begin_comment
-comment|/* sizeof(struct sadb_x_nat_t_type) == 8 */
-end_comment
-
 begin_struct
 struct|struct
 name|sadb_x_nat_t_type
@@ -740,12 +746,22 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* NAT-Traversal source or destination port. */
-end_comment
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sadb_x_nat_t_type
+argument_list|)
+operator|==
+literal|8
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* sizeof(struct sadb_x_nat_t_port) == 8 */
+comment|/* NAT-Traversal source or destination port. */
 end_comment
 
 begin_struct
@@ -768,12 +784,22 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* ESP fragmentation size. */
-end_comment
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sadb_x_nat_t_port
+argument_list|)
+operator|==
+literal|8
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* sizeof(struct sadb_x_nat_t_frag) == 8 */
+comment|/* ESP fragmentation size. */
 end_comment
 
 begin_struct
@@ -795,6 +821,20 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sadb_x_nat_t_frag
+argument_list|)
+operator|==
+literal|8
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -1125,7 +1165,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* RFC2367 numbers - meets RFC2407 */
+comment|/*  * Though some of these numbers (both _AALG and _EALG) appear to be  * IKEv2 numbers and others original IKE numbers, they have no meaning.  * These are constants that the various IKE daemons use to tell the kernel  * what cipher to use.  *  * Do not use these constants directly to decide which Transformation ID  * to send.  You are responsible for mapping them yourself.  */
 end_comment
 
 begin_define
@@ -1155,10 +1195,6 @@ directive|define
 name|SADB_AALG_MAX
 value|252
 end_define
-
-begin_comment
-comment|/* private allocations - based on RFC2407/IANA assignment */
-end_comment
 
 begin_define
 define|#
@@ -1196,7 +1232,7 @@ value|9
 end_define
 
 begin_comment
-comment|/* draft-ietf-ipsec-ciph-aes-xcbc-mac-04 */
+comment|/* RFC3566 */
 end_comment
 
 begin_define
@@ -1223,10 +1259,6 @@ directive|define
 name|SADB_X_AALG_AES256GMAC
 value|13
 end_define
-
-begin_comment
-comment|/* private allocations should use 249-255 (RFC2407) */
-end_comment
 
 begin_define
 define|#
@@ -1272,10 +1304,6 @@ begin_comment
 comment|/* Keyed TCP-MD5 (RFC2385) */
 end_comment
 
-begin_comment
-comment|/* RFC2367 numbers - meets RFC2407 */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1300,24 +1328,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SADB_EALG_NULL
-value|11
-end_define
-
-begin_define
-define|#
-directive|define
-name|SADB_EALG_MAX
-value|250
-end_define
-
-begin_comment
-comment|/* private allocations - based on RFC2407/IANA assignment */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SADB_X_EALG_CAST128CBC
 value|6
 end_define
@@ -1332,6 +1342,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SADB_EALG_NULL
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
 name|SADB_X_EALG_RIJNDAELCBC
 value|12
 end_define
@@ -1341,6 +1358,13 @@ define|#
 directive|define
 name|SADB_X_EALG_AES
 value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|SADB_X_EALG_AESCTR
+value|13
 end_define
 
 begin_define
@@ -1368,10 +1392,6 @@ name|SADB_X_EALG_AESGCM16
 value|20
 end_define
 
-begin_comment
-comment|/* private allocations - based on RFC4312/IANA assignment */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1390,38 +1410,15 @@ begin_comment
 comment|/* RFC4543 + Errata1821 */
 end_comment
 
-begin_comment
-comment|/* private allocations should use 249-255 (RFC2407) */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|SADB_X_EALG_SKIPJACK
-value|249
+name|SADB_EALG_MAX
+value|23
 end_define
 
 begin_comment
-comment|/*250*/
-end_comment
-
-begin_comment
-comment|/* for IPSEC */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SADB_X_EALG_AESCTR
-value|250
-end_define
-
-begin_comment
-comment|/*249*/
-end_comment
-
-begin_comment
-comment|/* draft-ietf-ipsec-ciph-aes-ctr-03 */
+comment|/* !!! keep updated !!! */
 end_comment
 
 begin_comment
