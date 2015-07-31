@@ -3361,7 +3361,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bcmp
+name|timingsafe_bcmp
 argument_list|(
 name|ptr
 operator|+

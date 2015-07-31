@@ -2531,7 +2531,7 @@ expr_stmt|;
 comment|/* Verify authenticator */
 if|if
 condition|(
-name|bcmp
+name|timingsafe_bcmp
 argument_list|(
 name|ptr
 argument_list|,
