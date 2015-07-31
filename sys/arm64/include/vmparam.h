@@ -359,6 +359,20 @@ parameter_list|)
 value|((pa)<= DMAP_MAX_PHYSADDR)
 end_define
 
+begin_comment
+comment|/* True if va is in the dmap range */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIRT_IN_DMAP
+parameter_list|(
+name|va
+parameter_list|)
+value|((va)>= DMAP_MIN_ADDRESS&& \     (va)<= DMAP_MAX_ADDRESS)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -378,7 +392,7 @@ parameter_list|(
 name|va
 parameter_list|)
 define|\
-value|({									\ 	KASSERT(((va)<= DMAP_MAX_ADDRESS || (va)>= DMAP_MIN_ADDRESS),	\ 	    ("%s: VA out of range, VA: 0x%lx", __func__,		\ 	    (vm_offset_t)(va)));					\ 	(va)& ~DMAP_MIN_ADDRESS;					\ })
+value|({									\ 	KASSERT(VIRT_IN_DMAP(va),					\ 	    ("%s: VA out of range, VA: 0x%lx", __func__,		\ 	    (vm_offset_t)(va)));					\ 	(va)& ~DMAP_MIN_ADDRESS;					\ })
 end_define
 
 begin_define
