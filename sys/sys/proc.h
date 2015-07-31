@@ -348,6 +348,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|filecaps
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|kaioinfo
 struct_decl|;
 end_struct_decl
@@ -4815,6 +4821,10 @@ name|int
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|filecaps
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
