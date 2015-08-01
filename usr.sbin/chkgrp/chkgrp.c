@@ -396,6 +396,17 @@ name|len
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|line
+argument_list|,
+literal|"+:*::"
+argument_list|,
+name|len
+argument_list|)
+operator|==
+literal|0
 condition|)
 continue|continue;
 comment|/* 		 * A correct group entry has four colon-separated fields, 		 * the third of which must be entirely numeric and the 		 * fourth of which may be empty. 		 */
