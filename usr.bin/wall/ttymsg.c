@@ -160,8 +160,6 @@ name|device
 index|[
 name|MAXNAMLEN
 index|]
-init|=
-name|_PATH_DEV
 decl_stmt|;
 specifier|static
 name|char
@@ -208,11 +206,11 @@ operator|(
 literal|"too many iov's (change code in wall/ttymsg.c)"
 operator|)
 return|;
-name|strlcat
+name|strlcpy
 argument_list|(
 name|device
 argument_list|,
-name|line
+name|_PATH_DEV
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -230,6 +228,23 @@ name|_PATH_DEV
 argument_list|)
 operator|-
 literal|1
+expr_stmt|;
+name|strlcpy
+argument_list|(
+name|p
+argument_list|,
+name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|device
+argument_list|)
+operator|-
+sizeof|sizeof
+argument_list|(
+name|_PATH_DEV
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
