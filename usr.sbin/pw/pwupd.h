@@ -340,12 +340,6 @@ modifier|*
 name|gecos
 decl_stmt|;
 name|int
-name|expire_days
-decl_stmt|;
-name|int
-name|password_days
-decl_stmt|;
-name|int
 name|fd
 decl_stmt|;
 name|int
