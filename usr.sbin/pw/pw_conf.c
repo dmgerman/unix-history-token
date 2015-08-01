@@ -1543,6 +1543,7 @@ argument_list|,
 name|q
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|_UC_MAXGID
@@ -1712,6 +1713,9 @@ name|config
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|write_userconfig
 parameter_list|(
