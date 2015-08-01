@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -751,7 +757,7 @@ literal|0
 expr_stmt|;
 name|gid
 operator|=
-name|strtoul
+name|strtoumax
 argument_list|(
 name|f
 index|[
@@ -772,7 +778,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: line %d: strtoul failed"
+literal|"%s: line %d: strtoumax failed"
 argument_list|,
 name|gfn
 argument_list|,
