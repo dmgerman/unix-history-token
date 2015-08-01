@@ -738,16 +738,16 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|errstr
+decl_stmt|;
 name|size_t
 name|linecap
 decl_stmt|;
 name|ssize_t
 name|linelen
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|errstr
 decl_stmt|;
 name|buf
 operator|=
@@ -1421,10 +1421,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|errstr
-operator|=
-name|NULL
-expr_stmt|;
 name|config
 operator|.
 name|min_uid
@@ -1447,7 +1443,8 @@ name|errstr
 condition|)
 name|warnx
 argument_list|(
-literal|"Invalid min_uid: '%s', ignoring"
+literal|"Invalid min_uid: '%s';"
+literal|" ignoring"
 argument_list|,
 name|q
 argument_list|)
@@ -1471,10 +1468,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|errstr
-operator|=
-name|NULL
-expr_stmt|;
 name|config
 operator|.
 name|max_uid
@@ -1497,7 +1490,8 @@ name|errstr
 condition|)
 name|warnx
 argument_list|(
-literal|"Invalid max_uid: '%s', ignoring"
+literal|"Invalid max_uid: '%s';"
+literal|" ignoring"
 argument_list|,
 name|q
 argument_list|)
@@ -1519,17 +1513,8 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
-operator|&&
-name|isdigit
-argument_list|(
-operator|*
-name|q
-argument_list|)
 condition|)
-name|errstr
-operator|=
-name|NULL
-expr_stmt|;
+block|{
 name|config
 operator|.
 name|min_gid
@@ -1552,7 +1537,8 @@ name|errstr
 condition|)
 name|warnx
 argument_list|(
-literal|"Invalid min_gid: '%s', ignoring"
+literal|"Invalid min_gid: '%s';"
+literal|" ignoring"
 argument_list|,
 name|q
 argument_list|)
@@ -1575,10 +1561,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|errstr
-operator|=
-name|NULL
-expr_stmt|;
 name|config
 operator|.
 name|max_gid
@@ -1601,7 +1583,8 @@ name|errstr
 condition|)
 name|warnx
 argument_list|(
-literal|"Invalid max_gid: '%s', ignoring"
+literal|"Invalid max_gid: '%s';"
+literal|" ignoring"
 argument_list|,
 name|q
 argument_list|)
@@ -1625,10 +1608,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|errstr
-operator|=
-name|NULL
-expr_stmt|;
 name|config
 operator|.
 name|expire_days
@@ -1651,7 +1630,8 @@ name|errstr
 condition|)
 name|warnx
 argument_list|(
-literal|"Invalid expire days: '%s', ignoring"
+literal|"Invalid expire days:"
+literal|" '%s'; ignoring"
 argument_list|,
 name|q
 argument_list|)
@@ -1675,10 +1655,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|errstr
-operator|=
-name|NULL
-expr_stmt|;
 name|config
 operator|.
 name|password_days
@@ -1701,7 +1677,8 @@ name|errstr
 condition|)
 name|warnx
 argument_list|(
-literal|"Invalid password days: '%s', ignoring"
+literal|"Invalid password days:"
+literal|" '%s'; ignoring"
 argument_list|,
 name|q
 argument_list|)
@@ -1735,9 +1712,6 @@ name|config
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|write_userconfig
 parameter_list|(
