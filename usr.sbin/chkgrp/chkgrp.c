@@ -768,7 +768,7 @@ literal|0
 expr_stmt|;
 name|gid
 operator|=
-name|strtoumax
+name|strtoul
 argument_list|(
 name|f
 index|[
@@ -789,7 +789,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: line %d: strtoumax failed"
+literal|"%s: line %d: strtoul failed"
 argument_list|,
 name|gfn
 argument_list|,
