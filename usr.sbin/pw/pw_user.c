@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -465,12 +471,15 @@ name|M_ADD
 argument_list|,
 name|W_USER
 argument_list|,
-literal|"%s(%u) home %s made"
+literal|"%s(%ju) home %s made"
 argument_list|,
 name|pwd
 operator|->
 name|pw_name
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pwd
 operator|->
 name|pw_uid
@@ -892,8 +901,11 @@ operator|)
 return|;
 name|printf
 argument_list|(
-literal|"%u:"
+literal|"%ju:"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|next
 argument_list|)
 expr_stmt|;
@@ -4431,12 +4443,15 @@ name|mode
 argument_list|,
 name|W_USER
 argument_list|,
-literal|"%s(%u):%s(%u):%s:%s:%s"
+literal|"%s(%ju):%s(%ju):%s:%s:%s"
 argument_list|,
 name|pwd
 operator|->
 name|pw_name
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pwd
 operator|->
 name|pw_uid
@@ -4449,7 +4464,10 @@ name|gr_name
 else|:
 literal|"unknown"
 argument_list|,
-operator|(
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|grp
 condition|?
 name|grp
@@ -4461,7 +4479,7 @@ name|uid_t
 operator|)
 operator|-
 literal|1
-operator|)
+argument_list|)
 argument_list|,
 name|pwd
 operator|->
@@ -4707,12 +4725,15 @@ name|mode
 argument_list|,
 name|W_USER
 argument_list|,
-literal|"%s(%u) new user mail sent"
+literal|"%s(%ju) new user mail sent"
 argument_list|,
 name|pwd
 operator|->
 name|pw_name
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pwd
 operator|->
 name|pw_uid
@@ -4795,8 +4816,11 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"uid `%u' has already been allocated"
+literal|"uid `%ju' has already been allocated"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pwd
 operator|->
 name|pw_uid
@@ -6855,10 +6879,13 @@ name|M_DELETE
 argument_list|,
 name|W_USER
 argument_list|,
-literal|"%s(%u) account removed"
+literal|"%s(%ju) account removed"
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|uid
 argument_list|)
 expr_stmt|;
@@ -6967,11 +6994,14 @@ name|M_DELETE
 argument_list|,
 name|W_USER
 argument_list|,
-literal|"%s(%u) home '%s' %s"
+literal|"%s(%ju) home '%s' %s"
 literal|"removed"
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|uid
 argument_list|,
 name|home
@@ -7402,7 +7432,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Login Name: %-15s   #%-12u Group: %-15s   #%u\n"
+literal|"Login Name: %-15s   #%-12ju Group: %-15s   #%ju\n"
 literal|" Full Name: %s\n"
 literal|"      Home: %-26.26s      Class: %s\n"
 literal|"     Shell: %-26.26s     Office: %s\n"
@@ -7413,6 +7443,9 @@ name|pwd
 operator|->
 name|pw_name
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pwd
 operator|->
 name|pw_uid
@@ -7425,6 +7458,9 @@ name|gr_name
 else|:
 literal|"(invalid)"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pwd
 operator|->
 name|pw_gid

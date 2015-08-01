@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -2101,8 +2107,11 @@ name|sbuf_printf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%u"
+literal|"%ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|config
 operator|.
 name|min_uid
@@ -2120,8 +2129,11 @@ name|sbuf_printf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%u"
+literal|"%ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|config
 operator|.
 name|max_uid
@@ -2139,8 +2151,11 @@ name|sbuf_printf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%u"
+literal|"%ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|config
 operator|.
 name|min_gid
@@ -2158,8 +2173,11 @@ name|sbuf_printf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%u"
+literal|"%ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|config
 operator|.
 name|max_gid

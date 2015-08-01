@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<termios.h>
 end_include
 
@@ -444,8 +450,11 @@ operator|)
 return|;
 name|printf
 argument_list|(
-literal|"%u\n"
+literal|"%ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|next
 argument_list|)
 expr_stmt|;
@@ -1481,12 +1490,15 @@ name|mode
 argument_list|,
 name|W_GROUP
 argument_list|,
-literal|"%s(%u)"
+literal|"%s(%ju)"
 argument_list|,
 name|grp
 operator|->
 name|gr_name
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|grp
 operator|->
 name|gr_gid
@@ -1789,8 +1801,11 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"gid `%u' has already been allocated"
+literal|"gid `%ju' has already been allocated"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|grp
 operator|->
 name|gr_gid
