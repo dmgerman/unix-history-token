@@ -27,26 +27,11 @@ directive|define
 name|_NET_PFKEYV2_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CTASSERT
-parameter_list|(
-name|x
-parameter_list|)
-value|struct __thisisjustnothing;
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_comment
 comment|/* This file defines structures and symbols for the PF_KEY Version 2 key management interface. It was written at the U.S. Naval Research Laboratory. This file is in the public domain. The authors ask that you leave this credit intact on any copies of this file. */
@@ -685,8 +670,8 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -695,9 +680,11 @@ name|sadb_x_policy
 argument_list|)
 operator|==
 literal|16
+argument_list|,
+literal|"struct size mismatch"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_comment
 comment|/*  * When policy_type == IPSEC, it is followed by some of  * the ipsec policy request.  * [total length of ipsec policy requests]  *	= (sadb_x_policy_len * sizeof(uint64_t) - sizeof(struct sadb_x_policy))  */
@@ -767,8 +754,8 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -777,9 +764,11 @@ name|sadb_x_nat_t_type
 argument_list|)
 operator|==
 literal|8
+argument_list|,
+literal|"struct size mismatch"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_comment
 comment|/* NAT-Traversal source or destination port. */
@@ -805,8 +794,8 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -815,9 +804,11 @@ name|sadb_x_nat_t_port
 argument_list|)
 operator|==
 literal|8
+argument_list|,
+literal|"struct size mismatch"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_comment
 comment|/* ESP fragmentation size. */
@@ -843,8 +834,8 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -853,9 +844,11 @@ name|sadb_x_nat_t_frag
 argument_list|)
 operator|==
 literal|8
+argument_list|,
+literal|"struct size mismatch"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_define
 define|#
