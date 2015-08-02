@@ -2272,8 +2272,12 @@ name|sbuf_printf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%ld"
+literal|"%lld"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|cnf
 operator|->
 name|expire_days
@@ -2291,8 +2295,12 @@ name|sbuf_printf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%ld"
+literal|"%lld"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|cnf
 operator|->
 name|password_days
