@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<inttypes.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<libutil.h>
 end_include
 
@@ -68,7 +62,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdbool.h>
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
 end_include
 
 begin_include

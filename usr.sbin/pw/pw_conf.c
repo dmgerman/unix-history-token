@@ -44,19 +44,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<inttypes.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -68,7 +56,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include

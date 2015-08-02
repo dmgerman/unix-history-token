@@ -50,19 +50,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdbool.h>
+file|<sysexits.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
+file|<unistd.h>
 end_include
 
 begin_include
