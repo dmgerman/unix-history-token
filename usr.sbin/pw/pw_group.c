@@ -2601,6 +2601,24 @@ argument_list|,
 literal|"group name required"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|GETGRNAM
+argument_list|(
+name|name
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"group name `%s' already exists"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|cnf
 operator|=
 name|get_userconfig
