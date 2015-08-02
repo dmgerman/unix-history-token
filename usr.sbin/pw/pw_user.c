@@ -8558,7 +8558,8 @@ literal|0
 condition|)
 name|warnx
 argument_list|(
-literal|"WARNING: account `%s' will have a uid of 0 (superuser access!)"
+literal|"WARNING: account `%s' will have a uid of 0 "
+literal|"(superuser access!)"
 argument_list|,
 name|pwd
 operator|->
