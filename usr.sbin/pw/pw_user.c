@@ -6814,6 +6814,24 @@ argument_list|,
 literal|"login name required"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|GETPWNAM
+argument_list|(
+name|name
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"login name `%s' already exists"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|pwd
 operator|=
 operator|&
