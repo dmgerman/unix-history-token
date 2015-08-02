@@ -1095,7 +1095,8 @@ name|errx
 argument_list|(
 name|EX_SOFTWARE
 argument_list|,
-literal|"unable to allocate a new gid - range fully used"
+literal|"unable to allocate a new gid - range fully "
+literal|"used"
 argument_list|)
 expr_stmt|;
 name|bm_dealloc
