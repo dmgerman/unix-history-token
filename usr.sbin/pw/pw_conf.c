@@ -2272,11 +2272,10 @@ name|sbuf_printf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%lld"
+literal|"%jd"
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|cnf
 operator|->
@@ -2295,11 +2294,10 @@ name|sbuf_printf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%lld"
+literal|"%jd"
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|cnf
 operator|->
