@@ -59,6 +59,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|rtrim
+parameter_list|(
+name|char
+modifier|*
+name|label
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|fstyp_cd9660
 parameter_list|(
