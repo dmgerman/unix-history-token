@@ -1536,12 +1536,22 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
-literal|"partition %d is not aligned on %u "
-literal|"bytes\n"
+literal|"partition %d on (%s, %s) is not "
+literal|"aligned on %u bytes\n"
 argument_list|,
 name|e1
 operator|->
 name|gpe_index
+argument_list|,
+name|pp
+operator|->
+name|name
+argument_list|,
+name|table
+operator|->
+name|gpt_scheme
+operator|->
+name|name
 argument_list|,
 name|pp
 operator|->
