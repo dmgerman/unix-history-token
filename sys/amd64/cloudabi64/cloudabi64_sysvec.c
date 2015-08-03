@@ -1008,6 +1008,8 @@ operator|.
 name|sv_flags
 operator|=
 name|SV_ABI_CLOUDABI
+operator||
+name|SV_CAPSICUM
 block|,
 operator|.
 name|sv_set_syscall_retval
