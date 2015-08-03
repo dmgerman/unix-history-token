@@ -3036,8 +3036,9 @@ modifier|*
 name|res
 parameter_list|)
 block|{
-name|int
-name|pin
+name|struct
+name|ti_gpio_mask_arg
+name|mask_arg
 decl_stmt|;
 if|if
 condition|(
@@ -3051,11 +3052,22 @@ name|ENXIO
 operator|)
 return|;
 comment|/* Unmask the interrupt. */
+name|mask_arg
+operator|.
 name|pin
 operator|=
 name|rman_get_start
 argument_list|(
 name|res
+argument_list|)
+expr_stmt|;
+name|mask_arg
+operator|.
+name|softc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 name|ti_gpio_unmask_irq
@@ -3064,10 +3076,8 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|(
-name|uintptr_t
-operator|)
-name|pin
+operator|&
+name|mask_arg
 argument_list|)
 expr_stmt|;
 return|return
