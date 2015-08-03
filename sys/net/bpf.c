@@ -9137,6 +9137,18 @@ name|bd_dcount
 expr_stmt|;
 return|return;
 block|}
+name|KASSERT
+argument_list|(
+operator|!
+name|d
+operator|->
+name|bd_hbuf_in_use
+argument_list|,
+operator|(
+literal|"hold buffer is in use"
+operator|)
+argument_list|)
+expr_stmt|;
 name|ROTATE_BUFFERS
 argument_list|(
 name|d
