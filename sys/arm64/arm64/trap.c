@@ -1285,6 +1285,9 @@ case|:
 case|case
 name|EXCP_DATA_ABORT_L
 case|:
+case|case
+name|EXCP_DATA_ABORT
+case|:
 name|data_abort
 argument_list|(
 name|frame
