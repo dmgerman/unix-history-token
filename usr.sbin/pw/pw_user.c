@@ -3725,7 +3725,7 @@ name|name
 init|=
 name|NULL
 decl_stmt|;
-name|uid_t
+name|intmax_t
 name|id
 init|=
 operator|-
@@ -4121,8 +4121,11 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
-name|uid_t
+name|intmax_t
 name|id
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|int
 name|ch
@@ -7749,6 +7752,9 @@ name|edited
 decl_stmt|,
 name|docreatehome
 decl_stmt|;
+name|bool
+name|precrypted
+decl_stmt|;
 name|mode_t
 name|homemode
 init|=
@@ -7760,8 +7766,6 @@ decl_stmt|,
 name|password_days
 decl_stmt|,
 name|now
-decl_stmt|,
-name|precrypted
 decl_stmt|;
 name|expire_days
 operator|=
