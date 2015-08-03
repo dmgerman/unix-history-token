@@ -866,7 +866,7 @@ name|status
 operator|!=
 name|EAGAIN
 condition|)
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -898,7 +898,7 @@ name|status
 operator|!=
 name|EAGAIN
 condition|)
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo

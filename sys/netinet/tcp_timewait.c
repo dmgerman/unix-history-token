@@ -874,7 +874,7 @@ name|tcptw
 modifier|*
 name|tw
 decl_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -901,7 +901,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -977,7 +977,7 @@ name|INC_ISIPV6
 decl_stmt|;
 endif|#
 directive|endif
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -1095,7 +1095,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Reached limit on total number of TIMEWAIT connections 		 * allowed. Remove a connection from TIMEWAIT queue in LRU 		 * fashion to make room for this connection. 		 * 		 * pcbinfo lock is needed here to prevent deadlock as 		 * two inpcb locks can be acquired simultaneously. 		 */
+comment|/* 		 * Reached limit on total number of TIMEWAIT connections 		 * allowed. Remove a connection from TIMEWAIT queue in LRU 		 * fashion to make room for this connection. 		 * 		 * XXX:  Check if it possible to always have enough room 		 * in advance based on guarantees provided by uma_zalloc(). 		 */
 name|tw
 operator|=
 name|tcp_tw_2msl_scan
@@ -1479,7 +1479,7 @@ decl_stmt|;
 name|tcp_seq
 name|seq
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -1738,7 +1738,7 @@ literal|"tcp_twclose: inp_ppcb != tw"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -2534,7 +2534,7 @@ name|int
 name|rearm
 parameter_list|)
 block|{
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -2621,7 +2621,7 @@ decl_stmt|;
 name|int
 name|released
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -2744,8 +2744,8 @@ condition|(
 name|reuse
 condition|)
 block|{
-comment|/* 		 * pcbinfo lock is needed in reuse case to prevent deadlock 		 * as two inpcb locks can be acquired simultaneously: 		 *  - the inpcb transitioning to TIME_WAIT state in 		 *    tcp_tw_start(), 		 *  - the inpcb closed by tcp_twclose(). 		 */
-name|INP_INFO_WLOCK_ASSERT
+comment|/* 		 * Exclusive pcbinfo lock is not required in reuse case even if 		 * two inpcb locks can be acquired simultaneously: 		 *  - the inpcb transitioning to TIME_WAIT state in 		 *    tcp_tw_start(), 		 *  - the inpcb closed by tcp_twclose(). 		 * 		 * It is because only inpcbs in FIN_WAIT2 or CLOSING states can 		 * transition in TIME_WAIT state.  Then a pcbcb cannot be in 		 * TIME_WAIT list and transitioning to TIME_WAIT state at same 		 * time. 		 */
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -2835,7 +2835,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|INP_INFO_TRY_WLOCK
+name|INP_INFO_TRY_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -2876,7 +2876,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -2897,7 +2897,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -2912,7 +2912,7 @@ argument_list|,
 name|reuse
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo

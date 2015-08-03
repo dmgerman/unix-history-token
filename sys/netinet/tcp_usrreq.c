@@ -650,7 +650,7 @@ name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -703,7 +703,7 @@ operator|&
 name|INP_TIMEWAIT
 condition|)
 block|{
-comment|/* 		 * There are two cases to handle: one in which the time wait 		 * state is being discarded (INP_DROPPED), and one in which 		 * this connection will remain in timewait.  In the former, 		 * it is time to discard all state (except tcptw, which has 		 * already been discarded by the timewait close code, which 		 * should be further up the call stack somewhere).  In the 		 * latter case, we detach from the socket, but leave the pcb 		 * present until timewait ends. 		 * 		 * XXXRW: Would it be cleaner to free the tcptw here? 		 * 		 * Astute question indeed, from twtcp perspective there are 		 * three cases to consider: 		 * 		 * #1 tcp_detach is called at tcptw creation time by 		 *  tcp_twstart, then do not discard the newly created tcptw 		 *  and leave inpcb present until timewait ends 		 * #2 tcp_detach is called at timewait end (or reuse) by 		 *  tcp_twclose, then the tcptw has already been discarded 		 *  and inpcb is freed here 		 * #3 tcp_detach is called() after timewait ends (or reuse) 		 *  (e.g. by soclose), then tcptw has already been discarded 		 *  and inpcb is freed here 		 * 		 *  In all three cases the tcptw should not be freed here. 		 */
+comment|/* 		 * There are two cases to handle: one in which the time wait 		 * state is being discarded (INP_DROPPED), and one in which 		 * this connection will remain in timewait.  In the former, 		 * it is time to discard all state (except tcptw, which has 		 * already been discarded by the timewait close code, which 		 * should be further up the call stack somewhere).  In the 		 * latter case, we detach from the socket, but leave the pcb 		 * present until timewait ends. 		 * 		 * XXXRW: Would it be cleaner to free the tcptw here? 		 * 		 * Astute question indeed, from twtcp perspective there are 		 * three cases to consider: 		 * 		 * #1 tcp_detach is called at tcptw creation time by 		 *  tcp_twstart, then do not discard the newly created tcptw 		 *  and leave inpcb present until timewait ends 		 * #2 tcp_detach is called at timewait end (or reuse) by 		 *  tcp_twclose, then the tcptw has already been discarded 		 *  (or reused) and inpcb is freed here 		 * #3 tcp_detach is called() after timewait ends (or reuse) 		 *  (e.g. by soclose), then tcptw has already been discarded 		 *  (or reused) and inpcb is freed here 		 * 		 *  In all three cases the tcptw should not be freed here. 		 */
 if|if
 condition|(
 name|inp
@@ -839,7 +839,7 @@ literal|"tcp_usr_detach: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -870,7 +870,7 @@ argument_list|,
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -2719,7 +2719,7 @@ literal|0
 decl_stmt|;
 name|TCPDEBUG0
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -2803,7 +2803,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -3277,7 +3277,7 @@ name|NULL
 decl_stmt|;
 name|TCPDEBUG0
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -3377,7 +3377,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -3598,7 +3598,7 @@ name|flags
 operator|&
 name|PRUS_EOF
 condition|)
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -3858,7 +3858,7 @@ name|PRUS_EOF
 condition|)
 block|{
 comment|/* 			 * Close the send side of the connection after 			 * the data is sent. 			 */
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4164,7 +4164,7 @@ name|flags
 operator|&
 name|PRUS_EOF
 condition|)
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4377,7 +4377,7 @@ literal|"tcp_usr_abort: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4486,7 +4486,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4542,7 +4542,7 @@ literal|"tcp_usr_close: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4649,7 +4649,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -7360,7 +7360,7 @@ name|sb_flags
 operator||=
 name|SB_AUTOSIZE
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -7381,7 +7381,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -7460,7 +7460,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -7483,7 +7483,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -7530,7 +7530,7 @@ name|inp
 operator|->
 name|inp_socket
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -7664,7 +7664,7 @@ modifier|*
 name|tp
 parameter_list|)
 block|{
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo

@@ -3034,7 +3034,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Build a new TCP socket structure from a syncache entry.  */
+comment|/*  * Build a new TCP socket structure from a syncache entry.  *  * On success return the newly created socket with its underlying inp locked.  */
 end_comment
 
 begin_function
@@ -3084,7 +3084,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -3192,6 +3192,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Exclusive pcbinfo lock is not required in syncache socket case even 	 * if two inpcb locks can be acquired simultaneously: 	 *  - the inpcb in LISTEN state, 	 *  - the newly created inp. 	 * 	 * In this case, an inp cannot be at same time in LISTEN state and 	 * just created by an accept() call. 	 */
 name|INP_HASH_WLOCK
 argument_list|(
 operator|&
@@ -4303,11 +4304,6 @@ name|tp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|INP_WUNLOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 name|soisconnected
 argument_list|(
 name|so
@@ -4352,7 +4348,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function gets called when we receive an ACK for a  * socket in the LISTEN state.  We look up the connection  * in the syncache, and if its there, we pull it out of  * the cache and turn it into a full-blown connection in  * the SYN-RECEIVED state.  */
+comment|/*  * This function gets called when we receive an ACK for a  * socket in the LISTEN state.  We look up the connection  * in the syncache, and if its there, we pull it out of  * the cache and turn it into a full-blown connection in  * the SYN-RECEIVED state.  *  * On syncache_socket() success the newly created socket  * has its underlying inp locked.  */
 end_comment
 
 begin_function
@@ -4405,7 +4401,7 @@ modifier|*
 name|s
 decl_stmt|;
 comment|/* 	 * Global TCP locks are held because we manipulate the PCB lists 	 * and create a new socket. 	 */
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
