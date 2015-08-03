@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/md5.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<iscsi_ioctl.h>
 end_include
 
@@ -208,6 +202,17 @@ name|CHAP_CHALLENGE_LEN
 value|1024
 end_define
 
+begin_define
+define|#
+directive|define
+name|CHAP_DIGEST_LEN
+value|16
+end_define
+
+begin_comment
+comment|/* Equal to MD5 digest size. */
+end_comment
+
 begin_struct
 struct|struct
 name|chap
@@ -225,7 +230,7 @@ decl_stmt|;
 name|char
 name|chap_response
 index|[
-name|MD5_DIGEST_LENGTH
+name|CHAP_DIGEST_LEN
 index|]
 decl_stmt|;
 block|}
