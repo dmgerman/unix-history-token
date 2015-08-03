@@ -430,7 +430,8 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m
+modifier|*
+name|mp
 parameter_list|,
 name|struct
 name|ifnet
@@ -464,6 +465,11 @@ init|=
 name|NULL
 decl_stmt|;
 name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+name|struct
 name|in_addr
 name|odst
 decl_stmt|;
@@ -472,6 +478,11 @@ name|ip
 modifier|*
 name|ip
 decl_stmt|;
+name|m
+operator|=
+operator|*
+name|mp
+expr_stmt|;
 name|ip
 operator|=
 name|mtod
@@ -502,8 +513,7 @@ argument_list|(
 operator|&
 name|V_inet_pfil_hook
 argument_list|,
-operator|&
-name|m
+name|mp
 argument_list|,
 name|ifp
 argument_list|,
@@ -511,6 +521,11 @@ name|PFIL_OUT
 argument_list|,
 name|inp
 argument_list|)
+expr_stmt|;
+name|m
+operator|=
+operator|*
+name|mp
 expr_stmt|;
 if|if
 condition|(
@@ -2373,6 +2388,7 @@ switch|switch
 condition|(
 name|ip_output_pfil
 argument_list|(
+operator|&
 name|m
 argument_list|,
 name|ifp
