@@ -4906,17 +4906,13 @@ ifdef|#
 directive|ifdef
 name|__ia64__
 comment|/* Allocate a new register stack */
-name|stack_addr
-operator|=
-name|IA64_BACKINGSTORE
-expr_stmt|;
 name|error
 operator|=
 name|vm_map_stack
 argument_list|(
 name|map
 argument_list|,
-name|stack_addr
+name|IA64_BACKINGSTORE
 argument_list|,
 operator|(
 name|vm_size_t
