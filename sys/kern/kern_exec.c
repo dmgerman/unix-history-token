@@ -2579,6 +2579,23 @@ goto|goto
 name|exec_fail_dealloc
 goto|;
 block|}
+comment|/* ABI enforces the use of Capsicum. Switch into capabilities mode. */
+if|if
+condition|(
+name|SV_PROC_FLAG
+argument_list|(
+name|p
+argument_list|,
+name|SV_CAPSICUM
+argument_list|)
+condition|)
+name|sys_cap_enter
+argument_list|(
+name|td
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Copy out strings (args and env) and initialize stack base 	 */
 if|if
 condition|(
