@@ -756,6 +756,8 @@ comment|/* 		 * If we have just been running VFP instructions we will 		 * need 
 name|vfp_save_state
 argument_list|(
 name|td
+argument_list|,
+name|pcb
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -1447,6 +1449,8 @@ comment|/* 		 * If we have just been running VFP instructions we will 		 * need 
 name|vfp_save_state
 argument_list|(
 name|td
+argument_list|,
+name|curpcb
 argument_list|)
 expr_stmt|;
 name|memcpy
