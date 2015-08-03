@@ -3634,6 +3634,8 @@ case|case
 literal|'q'
 case|:
 name|quiet
+operator|=
+name|true
 expr_stmt|;
 break|break;
 block|}
