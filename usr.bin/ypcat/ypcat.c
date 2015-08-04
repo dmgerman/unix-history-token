@@ -42,13 +42,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -66,13 +66,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -98,37 +98,6 @@ include|#
 directive|include
 file|<rpcsvc/ypclnt.h>
 end_include
-
-begin_function_decl
-name|void
-name|usage
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|printit
-parameter_list|(
-name|u_long
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_struct
 specifier|static
@@ -219,6 +188,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -229,8 +199,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ypcat [-kt] [-d domainname] mapname\n"
-literal|"       ypcat -x\n"
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: ypcat [-kt] [-d domainname] mapname"
+argument_list|,
+literal|"       ypcat -x"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -242,6 +215,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|printit
 parameter_list|(
@@ -338,19 +312,10 @@ name|struct
 name|ypall_callback
 name|ypcb
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
 name|int
-name|optind
-decl_stmt|;
-name|int
-name|notrans
-decl_stmt|,
 name|c
+decl_stmt|,
+name|notrans
 decl_stmt|,
 name|r
 decl_stmt|;
@@ -475,8 +440,9 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|domain
+operator|==
+name|NULL
 condition|)
 name|yp_get_default_domain
 argument_list|(
@@ -583,12 +549,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"ypcat: not running ypbind\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
+literal|"not running ypbind"
 argument_list|)
 expr_stmt|;
 default|default:
@@ -596,7 +557,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"No such map %s. Reason: %s\n"
+literal|"no such map %s. Reason: %s"
 argument_list|,
 name|inmap
 argument_list|,
@@ -604,11 +565,6 @@ name|yperr_string
 argument_list|(
 name|r
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
