@@ -10218,6 +10218,38 @@ block|}
 block|}
 end_function
 
+begin_function
+name|vm_offset_t
+name|pmap_quick_enter_page
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+return|return
+operator|(
+name|PHYS_TO_DMAP
+argument_list|(
+name|VM_PAGE_TO_PHYS
+argument_list|(
+name|m
+argument_list|)
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|pmap_quick_remove_page
+parameter_list|(
+name|vm_offset_t
+name|addr
+parameter_list|)
+block|{ }
+end_function
+
 begin_comment
 comment|/*  * Returns true if the pmap's pv is one of the first  * 16 pvs linked to from this page.  This count may  * be changed upwards or downwards in the future; it  * is only necessary that true be returned for a small  * subset of pmaps for proper page aging.  */
 end_comment
