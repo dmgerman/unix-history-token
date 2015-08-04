@@ -1856,6 +1856,22 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * This happens on attempt to open a device node with O_EXEC. 	 */
+if|if
+condition|(
+name|r
+operator|+
+name|w
+operator|+
+name|e
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 if|if
 condition|(
 name|w
