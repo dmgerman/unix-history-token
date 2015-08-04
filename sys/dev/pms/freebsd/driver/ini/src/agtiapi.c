@@ -1051,27 +1051,6 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|char
-name|cardMap
-index|[
-name|AGTIAPI_MAX_CARDS
-index|]
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|ag_card_info_t
 name|agCardInfoList
 index|[
@@ -3275,32 +3254,20 @@ block|{
 name|int
 name|retVal
 decl_stmt|;
-if|if
-condition|(
-name|pci_get_vendor
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|PCI_VENDOR_ID_PMC_SIERRA
-operator|||
-name|pci_get_vendor
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|PCI_VENDOR_ID_HIALEAH
-condition|)
-block|{
 name|int
 name|thisCard
-init|=
+decl_stmt|;
+name|ag_card_info_t
+modifier|*
+name|thisCardInst
+decl_stmt|;
+name|thisCard
+operator|=
 name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
-decl_stmt|;
-comment|//    AGTIAPI_PRINTK("agtiapi_probe: thisCard %d\n", thisCard);
+expr_stmt|;
 if|if
 condition|(
 name|thisCard
@@ -3322,16 +3289,14 @@ operator|)
 return|;
 comment|// maybe change to different return value?
 block|}
-name|ag_card_info_t
-modifier|*
 name|thisCardInst
-init|=
+operator|=
 operator|&
 name|agCardInfoList
 index|[
 name|thisCard
 index|]
-decl_stmt|;
+expr_stmt|;
 name|retVal
 operator|=
 name|agtiapi_ProbeCard
@@ -3347,69 +3312,18 @@ if|if
 condition|(
 name|retVal
 condition|)
-block|{
-comment|// error on probe
-if|if
-condition|(
-name|retVal
-operator|==
-literal|2
-condition|)
-return|return
-literal|0
-return|;
-comment|// another thread ran probe on this card
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"agtiapi_probe: PCI DEVICE NOT SUPPORTED by this driver!!"
-literal|"Vendor ID : 0x%x Device ID : 0x%x\n"
-argument_list|,
-name|pci_get_vendor
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|pci_get_device
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
 comment|// maybe change to different return value?
-block|}
-else|else
-block|{
-comment|// AGTIAPI_PRINTK( "agtiapi_ProbeCard: returned with pointer values "
-comment|//                 "%p / %p\n",
-comment|//                 thisCardInst->pPCIDev, thisCardInst );
-name|cardMap
-index|[
-name|thisCard
-index|]
-operator|=
-literal|11
-expr_stmt|;
-comment|// record this card is present
 return|return
 operator|(
 name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 comment|// successful probe
-block|}
-block|}
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 block|}
 end_function
 
