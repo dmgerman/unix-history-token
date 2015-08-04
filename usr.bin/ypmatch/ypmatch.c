@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992/3 Theo de Raadt<deraadt@fsa.ca>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*	$OpenBSD: ypmatch.c,v 1.16 2015/02/08 23:40:35 deraadt Exp $ */
+end_comment
+
+begin_comment
+comment|/*	$NetBSD: ypmatch.c,v 1.8 1996/05/07 01:24:52 jtc Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1992, 1993, 1996 Theo de Raadt<deraadt@theos.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -38,6 +46,42 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/rpc.h>
 end_include
 
@@ -59,41 +103,14 @@ directive|include
 file|<rpcsvc/ypclnt.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
+begin_function_decl
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_struct
 specifier|static
@@ -177,7 +194,6 @@ struct|;
 end_struct
 
 begin_function
-specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -188,11 +204,19 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n"
+literal|"usage: ypmatch [-kt] [-d domain] key ... mapname\n"
+literal|"       ypmatch -x\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
 argument_list|,
-literal|"usage: ypmatch [-kt] [-d domainname] key ... mapname"
-argument_list|,
-literal|"       ypmatch -x"
+literal|"where\n"
+literal|"\tmapname may be either a mapname or a nickname for a map.\n"
+literal|"\t-k prints keys as well as values.\n"
+literal|"\t-t inhibits map nickname translation.\n"
+literal|"\t-x dumps the map nickname translation table.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -219,10 +243,7 @@ block|{
 name|char
 modifier|*
 name|domainname
-init|=
-name|NULL
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|inkey
 decl_stmt|,
@@ -232,12 +253,23 @@ decl_stmt|,
 modifier|*
 name|outbuf
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
 name|int
 name|outbuflen
 decl_stmt|,
 name|key
 decl_stmt|,
 name|notrans
+decl_stmt|,
+name|rval
 decl_stmt|;
 name|int
 name|c
@@ -247,6 +279,10 @@ decl_stmt|;
 name|u_int
 name|i
 decl_stmt|;
+name|domainname
+operator|=
+name|NULL
+expr_stmt|;
 name|notrans
 operator|=
 name|key
@@ -335,14 +371,16 @@ case|case
 literal|'t'
 case|:
 name|notrans
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
 literal|'k'
 case|:
 name|key
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 default|default:
@@ -368,12 +406,14 @@ condition|(
 operator|!
 name|domainname
 condition|)
+block|{
 name|yp_get_default_domain
 argument_list|(
 operator|&
 name|domainname
 argument_list|)
 expr_stmt|;
+block|}
 name|inmap
 operator|=
 name|argv
@@ -383,17 +423,18 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|notrans
+condition|)
+block|{
 for|for
 control|(
 name|i
 operator|=
 literal|0
 init|;
-operator|(
-operator|!
-name|notrans
-operator|)
-operator|&&
 name|i
 operator|<
 sizeof|sizeof
@@ -432,6 +473,11 @@ name|i
 index|]
 operator|.
 name|name
+expr_stmt|;
+block|}
+name|rval
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -489,7 +535,7 @@ name|key
 condition|)
 name|printf
 argument_list|(
-literal|"%s "
+literal|"%s: "
 argument_list|,
 name|inkey
 argument_list|)
@@ -513,7 +559,12 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"not running ypbind"
+literal|"yp_match: not running ypbind"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 default|default:
@@ -521,7 +572,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"can't match key %s in map %s. reason: %s"
+literal|"Can't match key %s in map %s. Reason: %s\n"
 argument_list|,
 name|inkey
 argument_list|,
@@ -533,11 +584,16 @@ name|r
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|rval
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 block|}
 block|}
 name|exit
 argument_list|(
-literal|0
+name|rval
 argument_list|)
 expr_stmt|;
 block|}
