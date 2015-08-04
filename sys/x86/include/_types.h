@@ -718,14 +718,46 @@ begin_comment
 comment|/* internally known to gcc */
 end_comment
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_elif
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LP64__
+end_ifdef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|unsigned
+name|int
+name|__gpo
+decl_stmt|;
+name|unsigned
+name|int
+name|__fpo
+decl_stmt|;
+name|void
+modifier|*
+name|__oaa
+decl_stmt|;
+name|void
+modifier|*
+name|__rsa
+decl_stmt|;
+block|}
+name|__va_list
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_typedef
 typedef|typedef
@@ -735,9 +767,10 @@ name|__va_list
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* pretend */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
