@@ -298,6 +298,30 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Congestion drops.  * -1: no congestion feedback (not recommended).  *  0: backpressure the channel instead of dropping packets right away.  *  1: no backpressure, drop packets for the congested queue immediately.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nm_cong_drop
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.cxgbe.nm_cong_drop"
+argument_list|,
+operator|&
+name|nm_cong_drop
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* netmap ifnet routines */
 end_comment
 
@@ -2263,6 +2287,8 @@ name|autoequiqe_to_viid
 operator|=
 name|htobe32
 argument_list|(
+name|F_FW_EQ_ETH_CMD_AUTOEQUIQE
+operator||
 name|F_FW_EQ_ETH_CMD_AUTOEQUEQE
 operator||
 name|V_FW_EQ_ETH_CMD_VIID
@@ -2915,6 +2941,8 @@ argument_list|,
 name|tnl_cong
 argument_list|(
 name|pi
+argument_list|,
+name|nm_cong_drop
 argument_list|)
 argument_list|)
 expr_stmt|;
