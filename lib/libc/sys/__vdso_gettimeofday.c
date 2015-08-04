@@ -92,6 +92,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Calculate the absolute or boot-relative time from the  * machine-specific fast timecounter and the published timehands  * structure read from the shared page.  *  * The lockless reading scheme is similar to the one used to read the  * in-kernel timehands, see sys/kern/kern_tc.c:binuptime().  This code  * is based on the kernel implementation.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -135,15 +139,15 @@ operator|(
 name|ENOSYS
 operator|)
 return|;
-comment|/* 		 * XXXKIB. The load of tk->tk_current should use 		 * atomic_load_acq_32 to provide load barrier. But 		 * since tk points to r/o mapped page, x86 		 * implementation of atomic_load_acq faults. 		 */
 name|curr
 operator|=
+name|atomic_load_acq_32
+argument_list|(
+operator|&
 name|tk
 operator|->
 name|tk_current
-expr_stmt|;
-name|rmb
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|th
 operator|=
@@ -170,9 +174,13 @@ operator|)
 return|;
 name|gen
 operator|=
+name|atomic_load_acq_32
+argument_list|(
+operator|&
 name|th
 operator|->
 name|th_gen
+argument_list|)
 expr_stmt|;
 operator|*
 name|bt
@@ -209,8 +217,8 @@ operator|->
 name|th_boottime
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Barrier for load of both tk->tk_current and th->th_gen. 		 */
-name|rmb
+comment|/* 		 * Ensure that the load of th_offset is completed 		 * before the load of th_gen. 		 */
+name|atomic_thread_fence_acq
 argument_list|()
 expr_stmt|;
 block|}

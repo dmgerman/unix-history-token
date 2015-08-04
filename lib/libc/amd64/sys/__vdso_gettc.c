@@ -65,10 +65,10 @@ modifier|*
 name|th
 parameter_list|)
 block|{
-name|uint32_t
+name|u_int
 name|rv
 decl_stmt|;
-asm|__asm __volatile("rdtsc; shrd %%cl, %%edx, %0"
+asm|__asm __volatile("lfence; rdtsc; shrd %%cl, %%edx, %0"
 block|:
 literal|"=a"
 operator|(
@@ -95,23 +95,43 @@ operator|)
 return|;
 end_return
 
+begin_function
+unit|}  static
+name|u_int
+name|__vdso_rdtsc32
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int
+name|rv
+decl_stmt|;
+asm|__asm __volatile("lfence;rdtsc" : "=a" (rv) : : "edx");
+return|return
+operator|(
+name|rv
+operator|)
+return|;
+block|}
+end_function
+
 begin_pragma
-unit|}
 pragma|#
 directive|pragma
 name|weak
 name|__vdso_gettc
 end_pragma
 
-begin_macro
-unit|u_int
+begin_function
+name|u_int
 name|__vdso_gettc
-argument_list|(
-argument|const struct vdso_timehands *th
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+specifier|const
+name|struct
+name|vdso_timehands
+modifier|*
+name|th
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -126,12 +146,12 @@ argument_list|(
 name|th
 argument_list|)
 else|:
-name|rdtsc32
+name|__vdso_rdtsc32
 argument_list|()
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_pragma
 pragma|#
