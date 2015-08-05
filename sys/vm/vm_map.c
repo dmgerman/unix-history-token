@@ -14973,6 +14973,17 @@ operator|)
 name|vm
 operator|->
 name|vm_maxsaddr
+operator|&&
+name|addr
+operator|<
+operator|(
+name|vm_offset_t
+operator|)
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_usrstack
 operator|)
 condition|?
 literal|1
