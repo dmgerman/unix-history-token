@@ -734,14 +734,14 @@ struct|struct
 name|__s_va_list
 block|{
 name|__uint32_t
-name|pad1
+name|_pad1
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* gp_offset, fp_offset */
 name|__uint64_t
-name|pad2
+name|_pad2
 index|[
 literal|2
 index|]
