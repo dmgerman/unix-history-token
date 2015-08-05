@@ -2457,11 +2457,13 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|LOCK_DEBUG
-end_ifdef
+operator|>
+literal|0
+end_if
 
 begin_function
 name|void
