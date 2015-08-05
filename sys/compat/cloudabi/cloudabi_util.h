@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/cloudabi/cloudabi_syscalldefs.h>
 end_include
 
@@ -68,6 +74,27 @@ name|cloudabi_errno_t
 name|cloudabi_convert_errno
 parameter_list|(
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Converts FreeBSD's struct sockaddr to CloudABI's cloudabi_sockaddr_t. */
+end_comment
+
+begin_function_decl
+name|void
+name|cloudabi_convert_sockaddr
+parameter_list|(
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|socklen_t
+parameter_list|,
+name|cloudabi_sockaddr_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
