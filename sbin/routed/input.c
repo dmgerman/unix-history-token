@@ -656,6 +656,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|sifp
+operator|==
+literal|0
+condition|)
+block|{
+name|trace_pkt
+argument_list|(
+literal|"    discard a request from an indirect router"
+literal|" (possibly an attack)"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|rip
 operator|->
 name|rip_vers
