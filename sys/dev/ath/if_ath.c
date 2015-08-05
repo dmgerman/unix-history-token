@@ -9323,6 +9323,13 @@ name|void
 modifier|*
 name|sp
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_invalid
+condition|)
+return|return;
 name|device_printf
 argument_list|(
 name|sc
