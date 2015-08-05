@@ -2382,7 +2382,6 @@ name|info
 operator|.
 name|base_addr
 expr_stmt|;
-comment|/* XXXKIB	pcb->pcb_gs32sd = sd; */
 name|td
 operator|->
 name|td_frame
