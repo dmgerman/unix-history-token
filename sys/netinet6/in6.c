@@ -11915,6 +11915,15 @@ name|la_flags
 operator||=
 name|LLE_DELETED
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|lle_event
+argument_list|,
+name|lle
+argument_list|,
+name|LLENTRY_DELETED
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
