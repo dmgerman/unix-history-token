@@ -433,6 +433,12 @@ name|dumperinfo
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|segment_descriptor
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 modifier|*
@@ -576,6 +582,21 @@ name|base
 parameter_list|,
 name|size_t
 name|cnt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|fill_based_sd
+parameter_list|(
+name|struct
+name|segment_descriptor
+modifier|*
+name|sdp
+parameter_list|,
+name|uint32_t
+name|base
 parameter_list|)
 function_decl|;
 end_function_decl
