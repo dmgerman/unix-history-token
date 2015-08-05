@@ -550,6 +550,16 @@ parameter_list|)
 value|((x) * (PAGE_SIZE / 1024))
 end_define
 
+begin_define
+define|#
+directive|define
+name|INKERNEL
+parameter_list|(
+name|va
+parameter_list|)
+value|(((vm_offset_t)(va))>= VM_MAXUSER_ADDRESS&& \     ((vm_offset_t)(va))< VM_MAX_KERNEL_ADDRESS)
+end_define
+
 begin_endif
 endif|#
 directive|endif

@@ -353,7 +353,7 @@ name|PMC_IN_KERNEL
 parameter_list|(
 name|va
 parameter_list|)
-value|(((va)>= USRSTACK)&&	\ 	((va)< VM_MAX_KERNEL_ADDRESS))
+value|INKERNEL(va)
 end_define
 
 begin_define

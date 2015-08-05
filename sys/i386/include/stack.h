@@ -19,16 +19,6 @@ begin_comment
 comment|/*  * Stack trace.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|INKERNEL
-parameter_list|(
-name|va
-parameter_list|)
-value|(((vm_offset_t)(va))>= USRSTACK&& \ 	    ((vm_offset_t)(va))< VM_MAX_KERNEL_ADDRESS)
-end_define
-
 begin_struct
 struct|struct
 name|i386_frame

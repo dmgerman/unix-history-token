@@ -216,7 +216,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|INKERNEL
+name|PINKERNEL
 parameter_list|(
 name|x
 parameter_list|)
@@ -1150,7 +1150,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|INKERNEL
+name|PINKERNEL
 argument_list|(
 name|addr
 argument_list|)
@@ -1256,7 +1256,7 @@ name|kvm
 operator|!=
 name|NULL
 operator|&&
-name|INKERNEL
+name|PINKERNEL
 argument_list|(
 name|addr
 argument_list|)
