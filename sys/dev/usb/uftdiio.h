@@ -56,12 +56,14 @@ block|,
 name|UFTDI_BITMODE_NONE
 init|=
 literal|0xff
-block|, }
+block|,
+comment|/* aka UART mode. */
+block|}
 enum|;
 end_enum
 
 begin_comment
-comment|/*  * For UFTDIIOC_SET_BITMODE:  *   mode   = One of the uftdi_bitmodes enum values.  *   iomask = Mask of bits enabled for bitbang output.  *  * For UFTDIIOC_GET_BITMODE:  *   mode   = Unused.  *   iomask = Returned snapshot of bitbang pin states at time of call.  */
+comment|/*  * For UFTDIIOC_SET_BITMODE:  *   mode   = One of the uftdi_bitmodes enum values.  *   iomask = Mask of bits enabled for bitbang output.  *  * For UFTDIIOC_GET_BITMODE:  *   mode   = Mode most recently set using UFTDIIOC_SET_BITMODE.  *   iomask = Returned snapshot of DBUS0..DBUS7 pin states at time of call.  *            Pin states can be read in any mode, not just bitbang modes.  */
 end_comment
 
 begin_struct
