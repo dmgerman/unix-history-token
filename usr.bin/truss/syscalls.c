@@ -339,8 +339,6 @@ block|}
 block|,
 block|{
 name|Fcntlflag
-operator||
-name|OUT
 block|,
 literal|2
 block|}
