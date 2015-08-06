@@ -170,12 +170,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xenvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<geom/geom_disk.h>
 end_include
 
@@ -3222,7 +3216,7 @@ operator|->
 name|xbd_dev
 argument_list|,
 operator|(
-name|vtomach
+name|vtophys
 argument_list|(
 name|sring_page_addr
 argument_list|)
@@ -6026,7 +6020,7 @@ name|xbd_dev
 argument_list|)
 argument_list|,
 operator|(
-name|vtomach
+name|vtophys
 argument_list|(
 name|indirectpages
 argument_list|)
