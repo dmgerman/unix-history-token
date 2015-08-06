@@ -8073,7 +8073,7 @@ argument_list|(
 operator|&
 name|tmp
 argument_list|,
-literal|"{%ld.%09ld }"
+literal|"{ %ld.%09ld }"
 argument_list|,
 operator|(
 name|long
@@ -8173,9 +8173,9 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
-name|fputc
+name|fputs
 argument_list|(
-literal|'{'
+literal|"{ "
 argument_list|,
 name|fp
 argument_list|)
@@ -8272,9 +8272,9 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|fputc
+name|fputs
 argument_list|(
-literal|'}'
+literal|" }"
 argument_list|,
 name|fp
 argument_list|)
@@ -8345,7 +8345,7 @@ argument_list|(
 operator|&
 name|tmp
 argument_list|,
-literal|"{%ld.%06ld }"
+literal|"{ %ld.%06ld }"
 argument_list|,
 operator|(
 name|long
@@ -8422,7 +8422,7 @@ argument_list|(
 operator|&
 name|tmp
 argument_list|,
-literal|"{%ld.%06ld, %ld.%06ld }"
+literal|"{ %ld.%06ld, %ld.%06ld }"
 argument_list|,
 operator|(
 name|long
@@ -8519,7 +8519,7 @@ argument_list|(
 operator|&
 name|tmp
 argument_list|,
-literal|"{%ld.%06ld, %ld.%06ld }"
+literal|"{ %ld.%06ld, %ld.%06ld }"
 argument_list|,
 operator|(
 name|long
@@ -8971,6 +8971,14 @@ index|]
 operator|=
 literal|'{'
 expr_stmt|;
+name|tmp
+index|[
+name|used
+operator|++
+index|]
+operator|=
+literal|' '
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -9042,6 +9050,14 @@ else|:
 name|per_fd
 expr_stmt|;
 block|}
+name|tmp
+index|[
+name|used
+operator|++
+index|]
+operator|=
+literal|' '
+expr_stmt|;
 name|tmp
 index|[
 name|used
@@ -9221,6 +9237,14 @@ index|]
 operator|=
 literal|'{'
 expr_stmt|;
+name|tmp
+index|[
+name|used
+operator|++
+index|]
+operator|=
+literal|' '
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -9278,20 +9302,6 @@ name|per_fd
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|tmp
-index|[
-name|used
-operator|-
-literal|1
-index|]
-operator|==
-literal|' '
-condition|)
-name|used
-operator|--
-expr_stmt|;
 name|tmp
 index|[
 name|used
@@ -10404,7 +10414,7 @@ operator|&
 name|tmp
 argument_list|,
 literal|"{ sa_len = %d, sa_family = %d, sa_data "
-literal|"= {%n%*s } }"
+literal|"= { %n%*s } }"
 argument_list|,
 operator|(
 name|int
@@ -10829,6 +10839,14 @@ index|]
 operator|=
 literal|'{'
 expr_stmt|;
+name|tmp
+index|[
+name|used
+operator|++
+index|]
+operator|=
+literal|' '
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -10945,6 +10963,14 @@ else|:
 name|per_ke
 expr_stmt|;
 block|}
+name|tmp
+index|[
+name|used
+operator|++
+index|]
+operator|=
+literal|' '
+expr_stmt|;
 name|tmp
 index|[
 name|used
