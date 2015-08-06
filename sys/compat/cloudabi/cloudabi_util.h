@@ -116,6 +116,41 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Converts CloudABI rights to a set of Capsicum capabilities. */
+end_comment
+
+begin_function_decl
+name|int
+name|cloudabi_convert_rights
+parameter_list|(
+name|cloudabi_rights_t
+parameter_list|,
+name|cap_rights_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Removes rights that conflict with the file descriptor type. */
+end_comment
+
+begin_function_decl
+name|void
+name|cloudabi_remove_conflicting_rights
+parameter_list|(
+name|cloudabi_filetype_t
+parameter_list|,
+name|cloudabi_rights_t
+modifier|*
+parameter_list|,
+name|cloudabi_rights_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Converts a struct timespec to a CloudABI timestamp. */
 end_comment
 
