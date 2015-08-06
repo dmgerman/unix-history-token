@@ -78,6 +78,41 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * For UFTDIIOC_READ_EEPROM, UFTDIIOC_WRITE_EEPROM:  *  * IO is done in 16-bit words at the chip level; offset and length are in bytes,  * but must each be evenly divisible by two.  *  * It is not necessary to erase before writing.  For the FT232R device (only)  * you must set the latency timer to 0x77 before doing a series of eeprom writes  * (and restore it to the prior value when done).  */
+end_comment
+
+begin_struct
+struct|struct
+name|uftdi_eeio
+block|{
+name|uint16_t
+name|offset
+decl_stmt|;
+name|uint16_t
+name|length
+decl_stmt|;
+name|uint16_t
+name|data
+index|[
+literal|64
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Pass this value to confirm that eeprom erase request is not accidental. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UFTDI_CONFIRM_ERASE
+value|0x26139108
+end_define
+
 begin_define
 define|#
 directive|define
@@ -170,6 +205,27 @@ define|#
 directive|define
 name|UFTDIIOC_GET_HWREV
 value|_IOR('c', 9, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFTDIIOC_READ_EEPROM
+value|_IOWR('c', 10, struct uftdi_eeio)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFTDIIOC_WRITE_EEPROM
+value|_IOW('c', 11, struct uftdi_eeio)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFTDIIOC_ERASE_EEPROM
+value|_IOW('c', 12, int)
 end_define
 
 begin_endif
