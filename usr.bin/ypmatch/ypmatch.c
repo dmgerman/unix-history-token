@@ -198,9 +198,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: ypmatch [-kt] [-d domain] key ... mapname"
+literal|"usage: ypmatch [-kt] [-d domainname] key ... mapname"
 argument_list|,
-literal|"       ypmatch -x\n"
+literal|"       ypmatch -x"
 argument_list|)
 expr_stmt|;
 name|fprintf
