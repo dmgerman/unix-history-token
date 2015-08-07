@@ -6900,6 +6900,14 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
+name|xflags
+operator|&
+name|BX_VNDIRTY
+operator|)
+operator|==
+literal|0
+operator|||
+operator|(
 name|bo
 operator|->
 name|bo_flag
@@ -12363,9 +12371,6 @@ literal|0
 condition|)
 empty_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|INVARIANTS
 name|BO_LOCK
 argument_list|(
 operator|&
@@ -12443,8 +12448,6 @@ operator|->
 name|v_bufobj
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Reclaim the vnode. 	 */
 if|if
 condition|(
