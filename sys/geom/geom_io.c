@@ -2332,6 +2332,8 @@ name|flags
 operator|&
 name|G_CF_DIRECT_SEND
 operator|)
+operator|!=
+literal|0
 operator|&&
 operator|(
 name|pp
@@ -2340,6 +2342,8 @@ name|flags
 operator|&
 name|G_PF_DIRECT_RECEIVE
 operator|)
+operator|!=
+literal|0
 operator|&&
 operator|!
 name|g_is_geom_thread
