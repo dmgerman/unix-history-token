@@ -7589,6 +7589,22 @@ literal|"NULL pps pointer in pps_event"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Nothing to do if not currently set to capture this event type. */
+if|if
+condition|(
+operator|(
+name|event
+operator|&
+name|pps
+operator|->
+name|ppsparam
+operator|.
+name|mode
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
 comment|/* If the timecounter was wound up underneath us, bail out. */
 if|if
 condition|(
