@@ -46,6 +46,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -65,18 +77,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
 end_include
 
 begin_include
@@ -102,15 +102,6 @@ include|#
 directive|include
 file|<rpcsvc/ypclnt.h>
 end_include
-
-begin_function_decl
-name|void
-name|usage
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_struct
 specifier|static
@@ -194,6 +185,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -204,7 +196,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ypmatch [-kt] [-d domain] key ... mapname\n"
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: ypmatch [-kt] [-d domain] key ... mapname"
+argument_list|,
 literal|"       ypmatch -x\n"
 argument_list|)
 expr_stmt|;
@@ -252,15 +247,6 @@ name|inmap
 decl_stmt|,
 modifier|*
 name|outbuf
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
 decl_stmt|;
 name|int
 name|outbuflen
@@ -403,8 +389,9 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|domainname
+operator|==
+name|NULL
 condition|)
 block|{
 name|yp_get_default_domain
@@ -425,8 +412,9 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|notrans
+operator|==
+literal|0
 condition|)
 block|{
 for|for
@@ -559,12 +547,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"yp_match: not running ypbind"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
+literal|"not running ypbind"
 argument_list|)
 expr_stmt|;
 default|default:
@@ -572,7 +555,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Can't match key %s in map %s. Reason: %s\n"
+literal|"can't match key %s in map %s. Reason: %s"
 argument_list|,
 name|inkey
 argument_list|,
