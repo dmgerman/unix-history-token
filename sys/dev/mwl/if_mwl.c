@@ -1827,7 +1827,7 @@ name|sc
 parameter_list|,
 name|wh
 parameter_list|)
-value|do {} while (0)
+value|0
 end_define
 
 begin_define
@@ -1837,7 +1837,7 @@ name|IFF_DUMPPKTS_XMIT
 parameter_list|(
 name|sc
 parameter_list|)
-value|do {} while (0)
+value|0
 end_define
 
 begin_define
@@ -1853,7 +1853,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {} while (0)
+value|do { (void )sc; } while (0)
 end_define
 
 begin_define
@@ -1867,7 +1867,7 @@ name|k
 parameter_list|,
 name|mac
 parameter_list|)
-value|do {} while (0)
+value|do { (void )sc; } while (0)
 end_define
 
 begin_endif
