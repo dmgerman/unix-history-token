@@ -3108,18 +3108,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_CTLIO
-argument_list|,
-literal|"ctlio"
-argument_list|,
-literal|"Memory used for CTL requests"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -65962,6 +65950,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_comment
 comment|/*  * Init component  * 	Initializes component into configuration defined by bootMode  *	(see hasc-sv.c)  *  	returns hasc_Status:  * 		OK  *		ERROR - fatal error  */
 end_comment
@@ -66208,6 +66202,11 @@ name|ctl_isc_quiesce
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *  vim: ts=8  */
