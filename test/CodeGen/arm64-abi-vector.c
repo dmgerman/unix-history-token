@@ -1437,7 +1437,7 @@ block|{
 comment|// CHECK: args_vec_5c
 comment|// CHECK: [[C5:%.*]] = alloca<5 x i8>, align 8
 comment|// CHECK: [[TMP:%.*]] = bitcast<5 x i8>* [[C5]] to<2 x i32>*
-comment|// CHECK: store<2 x i32> {{%.*}},<2 x i32>* [[TMP]], align 1
+comment|// CHECK: store<2 x i32> {{%.*}},<2 x i32>* [[TMP]], align 8
 name|double
 name|sum
 init|=
@@ -1505,7 +1505,7 @@ block|{
 comment|// CHECK: args_vec_9c
 comment|// CHECK: [[C9:%.*]] = alloca<9 x i8>, align 16
 comment|// CHECK: [[TMP:%.*]] = bitcast<9 x i8>* [[C9]] to<4 x i32>*
-comment|// CHECK: store<4 x i32> {{%.*}},<4 x i32>* [[TMP]], align 1
+comment|// CHECK: store<4 x i32> {{%.*}},<4 x i32>* [[TMP]], align 16
 name|double
 name|sum
 init|=
@@ -1639,7 +1639,7 @@ block|{
 comment|// CHECK: args_vec_3s
 comment|// CHECK: [[C3:%.*]] = alloca<3 x i16>, align 8
 comment|// CHECK: [[TMP:%.*]] = bitcast<3 x i16>* [[C3]] to<2 x i32>*
-comment|// CHECK: store<2 x i32> {{%.*}},<2 x i32>* [[TMP]], align 1
+comment|// CHECK: store<2 x i32> {{%.*}},<2 x i32>* [[TMP]], align 8
 name|double
 name|sum
 init|=
@@ -1707,7 +1707,7 @@ block|{
 comment|// CHECK: args_vec_5s
 comment|// CHECK: [[C5:%.*]] = alloca<5 x i16>, align 16
 comment|// CHECK: [[TMP:%.*]] = bitcast<5 x i16>* [[C5]] to<4 x i32>*
-comment|// CHECK: store<4 x i32> {{%.*}},<4 x i32>* [[TMP]], align 1
+comment|// CHECK: store<4 x i32> {{%.*}},<4 x i32>* [[TMP]], align 16
 name|double
 name|sum
 init|=
@@ -1775,7 +1775,7 @@ block|{
 comment|// CHECK: args_vec_3i
 comment|// CHECK: [[C3:%.*]] = alloca<3 x i32>, align 16
 comment|// CHECK: [[TMP:%.*]] = bitcast<3 x i32>* [[C3]] to<4 x i32>*
-comment|// CHECK: store<4 x i32> {{%.*}},<4 x i32>* [[TMP]], align 1
+comment|// CHECK: store<4 x i32> {{%.*}},<4 x i32>* [[TMP]], align 16
 name|double
 name|sum
 init|=

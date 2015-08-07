@@ -44,7 +44,7 @@ name|bp11
 parameter_list|)
 block|{
 comment|// IR: callee_b0f(i64 [[ARG:%.*]])
-comment|// IR: store i64 [[ARG]], i64* [[PTR:%.*]]
+comment|// IR: store i64 [[ARG]], i64* [[PTR:%.*]], align 8
 comment|// IR: [[BITCAST:%.*]] = bitcast i64* [[PTR]] to i8*
 comment|// IR: call void @llvm.memcpy.p0i8.p0i8.i64(i8* {{.*}}, i8* [[BITCAST]], i64 4
 comment|// ARM: asr x0, x0, #54

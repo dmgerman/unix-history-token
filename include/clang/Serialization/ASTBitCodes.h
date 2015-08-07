@@ -2151,7 +2151,10 @@ name|DECL_OMP_THREADPRIVATE
 block|,
 comment|/// \brief An EmptyDecl record.
 name|DECL_EMPTY
-block|}
+block|,
+comment|/// \brief An ObjCTypeParamDecl record.
+name|DECL_OBJC_TYPE_PARAM
+block|,     }
 enum|;
 comment|/// \brief Record codes for each kind of statement or expression.
 comment|///

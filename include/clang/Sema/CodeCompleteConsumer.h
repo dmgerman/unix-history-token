@@ -2131,6 +2131,11 @@ name|Sema
 modifier|&
 name|S
 parameter_list|,
+specifier|const
+name|CodeCompletionContext
+modifier|&
+name|CCContext
+parameter_list|,
 name|CodeCompletionAllocator
 modifier|&
 name|Allocator
@@ -2154,6 +2159,11 @@ parameter_list|,
 name|Preprocessor
 modifier|&
 name|PP
+parameter_list|,
+specifier|const
+name|CodeCompletionContext
+modifier|&
+name|CCContext
 parameter_list|,
 name|CodeCompletionAllocator
 modifier|&

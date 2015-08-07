@@ -19,6 +19,10 @@ begin_comment
 comment|// RUN: not %clang -target x86_64-apple-darwin10 -include-pch %t %s
 end_comment
 
+begin_comment
+comment|// REQUIRES: x86-registered-target
+end_comment
+
 begin_include
 include|#
 directive|include

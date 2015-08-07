@@ -149,6 +149,9 @@ decl_stmt|;
 name|class
 name|Timer
 decl_stmt|;
+name|class
+name|TimerGroup
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -310,7 +313,18 @@ name|Sema
 operator|>
 name|TheSema
 block|;
-comment|/// \brief The frontend timer
+comment|/// \brief The frontend timer group.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|TimerGroup
+operator|>
+name|FrontendTimerGroup
+block|;
+comment|/// \brief The frontend timer.
 name|std
 operator|::
 name|unique_ptr
@@ -453,37 +467,31 @@ name|OS
 block|;
 name|OutputFile
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|filename
+argument|std::string filename
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|tempFilename
+argument|std::string tempFilename
 argument_list|,
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|raw_ostream
-operator|>
-name|OS
+argument|std::unique_ptr<raw_ostream> OS
 argument_list|)
 operator|:
 name|Filename
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|filename
+argument_list|)
 argument_list|)
 block|,
 name|TempFilename
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|tempFilename
+argument_list|)
 argument_list|)
 block|,
 name|OS
@@ -1753,7 +1761,7 @@ name|createPCHExternalASTSource
 argument_list|(
 argument|StringRef Path
 argument_list|,
-argument|const std::string&Sysroot
+argument|StringRef Sysroot
 argument_list|,
 argument|bool DisablePCHValidation
 argument_list|,
@@ -1790,7 +1798,7 @@ name|createCodeCompletionConsumer
 argument_list|(
 argument|Preprocessor&PP
 argument_list|,
-argument|const std::string&Filename
+argument|StringRef Filename
 argument_list|,
 argument|unsigned Line
 argument_list|,

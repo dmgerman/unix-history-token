@@ -1,6 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple x86_64-pc-win32 -fms-extensions -emit-llvm -o - | FileCheck %s
+comment|// RUN: %clang_cc1 %s -triple x86_64-pc-win32 -fms-extensions -emit-llvm -o - \
+end_comment
+
+begin_comment
+comment|// RUN:         | FileCheck %s --check-prefix=CHECK --check-prefix=X64
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple i686-pc-win32 -fms-extensions -emit-llvm -o - \
+end_comment
+
+begin_comment
+comment|// RUN:         | FileCheck %s --check-prefix=CHECK --check-prefix=X86
 end_comment
 
 begin_function
@@ -105,47 +117,15 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define i32 @safe_div(i32 %numerator, i32 %denominator, i32* %res) {{.*}} personality i8* bitcast (i32 (...)* @__C_specific_handler to i8*)
+comment|// X64-LABEL: define i32 @safe_div(i32 %numerator, i32 %denominator, i32* %res) {{.*}} personality i8* bitcast (i32 (...)* @__C_specific_handler to i8*)
 end_comment
 
 begin_comment
-comment|// CHECK: invoke void @try_body(i32 %{{.*}}, i32 %{{.*}}, i32* %{{.*}}) #[[NOINLINE:[0-9]+]]
+comment|// X64: invoke void @try_body(i32 %{{.*}}, i32 %{{.*}}, i32* %{{.*}}) #[[NOINLINE:[0-9]+]]
 end_comment
 
 begin_comment
-comment|// CHECK:       to label %{{.*}} unwind label %[[lpad:[^ ]*]]
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// CHECK: [[lpad]]
-end_comment
-
-begin_comment
-comment|// CHECK: landingpad { i8*, i32 }
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: catch i8* null
-end_comment
-
-begin_comment
-comment|// CHECK-NOT: br i1
-end_comment
-
-begin_comment
-comment|// CHECK: br label %[[except:[^ ]*]]
-end_comment
-
-begin_comment
-comment|// CHECK: [[except]]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: store i32 -42, i32* %[[success:[^ ]*]]
+comment|// X64:       to label %{{.*}} unwind label %[[lpad:[^ ]*]]
 end_comment
 
 begin_comment
@@ -153,11 +133,135 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: %[[res:[^ ]*]] = load i32, i32* %[[success]]
+comment|// X64: [[lpad]]
 end_comment
 
 begin_comment
-comment|// CHECK: ret i32 %[[res]]
+comment|// X64: landingpad { i8*, i32 }
+end_comment
+
+begin_comment
+comment|// X64-NEXT: catch i8* null
+end_comment
+
+begin_comment
+comment|// X64-NOT: br i1
+end_comment
+
+begin_comment
+comment|// X64: br label %[[except:[^ ]*]]
+end_comment
+
+begin_comment
+comment|// X64: [[except]]
+end_comment
+
+begin_comment
+comment|// X64: store i32 -42, i32* %[[success:[^ ]*]]
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// X64: %[[res:[^ ]*]] = load i32, i32* %[[success]]
+end_comment
+
+begin_comment
+comment|// X64: ret i32 %[[res]]
+end_comment
+
+begin_comment
+comment|// X86-LABEL: define i32 @safe_div(i32 %numerator, i32 %denominator, i32* %res) {{.*}} personality i8* bitcast (i32 (...)* @_except_handler3 to i8*)
+end_comment
+
+begin_comment
+comment|// X86: invoke void @try_body(i32 %{{.*}}, i32 %{{.*}}, i32* %{{.*}}) #[[NOINLINE:[0-9]+]]
+end_comment
+
+begin_comment
+comment|// X86:       to label %{{.*}} unwind label %[[lpad:[^ ]*]]
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// X86: [[lpad]]
+end_comment
+
+begin_comment
+comment|// X86: landingpad { i8*, i32 }
+end_comment
+
+begin_comment
+comment|// X86-NEXT: catch i8* bitcast (i32 ()* @"\01?filt$0@0@safe_div@@" to i8*)
+end_comment
+
+begin_comment
+comment|// X86-NOT: br i1
+end_comment
+
+begin_comment
+comment|// X86: br label %[[except:[^ ]*]]
+end_comment
+
+begin_comment
+comment|// X86: [[except]]
+end_comment
+
+begin_comment
+comment|// X86: store i32 -42, i32* %[[success:[^ ]*]]
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// X86: %[[res:[^ ]*]] = load i32, i32* %[[success]]
+end_comment
+
+begin_comment
+comment|// X86: ret i32 %[[res]]
+end_comment
+
+begin_comment
+comment|// X86-LABEL: define internal i32 @"\01?filt$0@0@safe_div@@"()
+end_comment
+
+begin_comment
+comment|// X86: %[[ebp:[^ ]*]] = call i8* @llvm.frameaddress(i32 1)
+end_comment
+
+begin_comment
+comment|// X86: %[[fp:[^ ]*]] = call i8* @llvm.x86.seh.recoverfp(i8* bitcast (i32 (i32, i32, i32*)* @safe_div to i8*), i8* %[[ebp]])
+end_comment
+
+begin_comment
+comment|// X86: call i8* @llvm.localrecover(i8* bitcast (i32 (i32, i32, i32*)* @safe_div to i8*), i8* %[[fp]], i32 0)
+end_comment
+
+begin_comment
+comment|// X86: load i8*, i8**
+end_comment
+
+begin_comment
+comment|// X86: load i32*, i32**
+end_comment
+
+begin_comment
+comment|// X86: load i32, i32*
+end_comment
+
+begin_comment
+comment|// X86: store i32 %{{.*}}, i32*
+end_comment
+
+begin_comment
+comment|// X86: ret i32 1
 end_comment
 
 begin_function_decl
@@ -205,11 +309,23 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define i32 @filter_expr_capture() {{.*}} personality i8* bitcast (i32 (...)* @__C_specific_handler to i8*)
+comment|// CHECK-LABEL: define i32 @filter_expr_capture()
 end_comment
 
 begin_comment
-comment|// CHECK: call void (...) @llvm.frameescape(i32* %[[r:[^ ,]*]])
+comment|// X64-SAME: personality i8* bitcast (i32 (...)* @__C_specific_handler to i8*)
+end_comment
+
+begin_comment
+comment|// X86-SAME: personality i8* bitcast (i32 (...)* @_except_handler3 to i8*)
+end_comment
+
+begin_comment
+comment|// X64: call void (...) @llvm.localescape(i32* %[[r:[^ ,]*]])
+end_comment
+
+begin_comment
+comment|// X86: call void (...) @llvm.localescape(i32* %[[r:[^ ,]*]], i32* %[[code:[^ ,]*]])
 end_comment
 
 begin_comment
@@ -229,7 +345,7 @@ comment|// CHECK: landingpad
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: catch i8* bitcast (i32 (i8*, i8*)* @"\01?filt$0@0@filter_expr_capture@@" to i8*)
+comment|// CHECK-NEXT: catch i8* bitcast (i32 ({{.*}})* @"\01?filt$0@0@filter_expr_capture@@" to i8*)
 end_comment
 
 begin_comment
@@ -249,11 +365,35 @@ comment|// CHECK: ret i32 %[[rv]]
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL: define internal i32 @"\01?filt$0@0@filter_expr_capture@@"(i8* %exception_pointers, i8* %frame_pointer)
+comment|// X64-LABEL: define internal i32 @"\01?filt$0@0@filter_expr_capture@@"(i8* %exception_pointers, i8* %frame_pointer)
 end_comment
 
 begin_comment
-comment|// CHECK: call i8* @llvm.framerecover(i8* bitcast (i32 ()* @filter_expr_capture to i8*), i8* %frame_pointer, i32 0)
+comment|// X64: call i8* @llvm.localrecover(i8* bitcast (i32 ()* @filter_expr_capture to i8*), i8* %frame_pointer, i32 0)
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// X86-LABEL: define internal i32 @"\01?filt$0@0@filter_expr_capture@@"()
+end_comment
+
+begin_comment
+comment|// X86: %[[ebp:[^ ]*]] = call i8* @llvm.frameaddress(i32 1)
+end_comment
+
+begin_comment
+comment|// X86: %[[fp:[^ ]*]] = call i8* @llvm.x86.seh.recoverfp(i8* bitcast (i32 ()* @filter_expr_capture to i8*), i8* %[[ebp]])
+end_comment
+
+begin_comment
+comment|// X86: call i8* @llvm.localrecover(i8* bitcast (i32 ()* @filter_expr_capture to i8*), i8* %[[fp]], i32 0)
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_comment
@@ -318,7 +458,15 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define i32 @nested_try() {{.*}} personality i8* bitcast (i32 (...)* @__C_specific_handler to i8*)
+comment|// CHECK-LABEL: define i32 @nested_try()
+end_comment
+
+begin_comment
+comment|// X64-SAME: personality i8* bitcast (i32 (...)* @__C_specific_handler to i8*)
+end_comment
+
+begin_comment
+comment|// X86-SAME: personality i8* bitcast (i32 (...)* @_except_handler3 to i8*)
 end_comment
 
 begin_comment
@@ -362,11 +510,11 @@ comment|// CHECK: landingpad { i8*, i32 }
 end_comment
 
 begin_comment
-comment|// CHECK: catch i8* bitcast (i32 (i8*, i8*)* @"\01?filt$1@0@nested_try@@" to i8*)
+comment|// CHECK: catch i8* bitcast (i32 ({{.*}})* @"\01?filt$1@0@nested_try@@" to i8*)
 end_comment
 
 begin_comment
-comment|// CHECK: catch i8* bitcast (i32 (i8*, i8*)* @"\01?filt$0@0@nested_try@@" to i8*)
+comment|// CHECK: catch i8* bitcast (i32 ({{.*}})* @"\01?filt$0@0@nested_try@@" to i8*)
 end_comment
 
 begin_comment
@@ -386,7 +534,7 @@ comment|// CHECK: load i32, i32* %[[sel_slot]]
 end_comment
 
 begin_comment
-comment|// CHECK: call i32 @llvm.eh.typeid.for(i8* bitcast (i32 (i8*, i8*)* @"\01?filt$1@0@nested_try@@" to i8*))
+comment|// CHECK: call i32 @llvm.eh.typeid.for(i8* bitcast (i32 ({{.*}})* @"\01?filt$1@0@nested_try@@" to i8*))
 end_comment
 
 begin_comment
@@ -406,7 +554,7 @@ comment|// CHECK: load i32, i32* %[[sel_slot]]
 end_comment
 
 begin_comment
-comment|// CHECK: call i32 @llvm.eh.typeid.for(i8* bitcast (i32 (i8*, i8*)* @"\01?filt$0@0@nested_try@@" to i8*))
+comment|// CHECK: call i32 @llvm.eh.typeid.for(i8* bitcast (i32 ({{.*}})* @"\01?filt$0@0@nested_try@@" to i8*))
 end_comment
 
 begin_comment
@@ -469,25 +617,62 @@ begin_comment
 comment|// CHECK: br label %[[outer_try_cont]]
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|g
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-LABEL: define internal i32 @"\01?filt$0@0@nested_try@@"({{.*}})
+end_comment
+
+begin_comment
+comment|// X86: call i8* @llvm.x86.seh.recoverfp({{.*}})
+end_comment
+
+begin_comment
+comment|// CHECK: load i32*, i32**
+end_comment
+
+begin_comment
+comment|// CHECK: load i32, i32*
+end_comment
+
+begin_comment
+comment|// CHECK: icmp eq i32 %{{.*}}, 456
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-LABEL: define internal i32 @"\01?filt$1@0@nested_try@@"({{.*}})
+end_comment
+
+begin_comment
+comment|// X86: call i8* @llvm.x86.seh.recoverfp({{.*}})
+end_comment
+
+begin_comment
+comment|// CHECK: load i32*, i32**
+end_comment
+
+begin_comment
+comment|// CHECK: load i32, i32*
+end_comment
+
+begin_comment
+comment|// CHECK: icmp eq i32 %{{.*}}, 123
+end_comment
 
 begin_function
-name|void
+name|int
 name|basic_finally
 parameter_list|(
-name|void
+name|int
+name|g
 parameter_list|)
 block|{
-operator|++
-name|g
-expr_stmt|;
 name|__try
 block|{
 name|j
@@ -496,27 +681,38 @@ expr_stmt|;
 block|}
 name|__finally
 block|{
-operator|--
+operator|++
 name|g
 expr_stmt|;
 block|}
+return|return
+name|g
+return|;
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define void @basic_finally() {{.*}} personality i8* bitcast (i32 (...)* @__C_specific_handler to i8*)
+comment|// CHECK-LABEL: define i32 @basic_finally(i32 %g)
 end_comment
 
 begin_comment
-comment|// CHECK: load i32, i32* @g
+comment|// X64-SAME: personality i8* bitcast (i32 (...)* @__C_specific_handler to i8*)
 end_comment
 
 begin_comment
-comment|// CHECK: add i32 %{{.*}}, 1
+comment|// X86-SAME: personality i8* bitcast (i32 (...)* @_except_handler3 to i8*)
 end_comment
 
 begin_comment
-comment|// CHECK: store i32 %{{.*}}, i32* @g
+comment|// CHECK: %[[g_addr:[^ ]*]] = alloca i32, align 4
+end_comment
+
+begin_comment
+comment|// CHECK: call void (...) @llvm.localescape(i32* %[[g_addr]])
+end_comment
+
+begin_comment
+comment|// CHECK: store i32 %g, i32* %[[g_addr]]
 end_comment
 
 begin_comment
@@ -540,15 +736,19 @@ comment|// CHECK: [[cont]]
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
-comment|// CHECK: call void @"\01?fin$0@0@basic_finally@@"(i8 0, i8* %[[fp]])
+comment|// CHECK: call void @"\01?fin$0@0@basic_finally@@"({{i8( zeroext)?}} 0, i8* %[[fp]])
 end_comment
 
 begin_comment
-comment|// CHECK: ret void
+comment|// CHECK: load i32, i32* %[[g_addr]], align 4
+end_comment
+
+begin_comment
+comment|// CHECK: ret i32
 end_comment
 
 begin_comment
@@ -568,11 +768,11 @@ comment|// CHECK-NEXT: cleanup
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
-comment|// CHECK: call void @"\01?fin$0@0@basic_finally@@"(i8 1, i8* %[[fp]])
+comment|// CHECK: call void @"\01?fin$0@0@basic_finally@@"({{i8( zeroext)?}} 1, i8* %[[fp]])
 end_comment
 
 begin_comment
@@ -580,19 +780,23 @@ comment|// CHECK: resume
 end_comment
 
 begin_comment
-comment|// CHECK: define internal void @"\01?fin$0@0@basic_finally@@"(i8 %abnormal_termination, i8* %frame_pointer)
+comment|// CHECK: define internal void @"\01?fin$0@0@basic_finally@@"({{i8( zeroext)?}} %abnormal_termination, i8* %frame_pointer)
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32, i32* @g, align 4
+comment|// CHECK:   call i8* @llvm.localrecover(i8* bitcast (i32 (i32)* @basic_finally to i8*), i8* %frame_pointer, i32 0)
 end_comment
 
 begin_comment
-comment|// CHECK:   add i32 %{{.*}}, -1
+comment|// CHECK:   load i32, i32* %{{.*}}, align 4
 end_comment
 
 begin_comment
-comment|// CHECK:   store i32 %{{.*}}, i32* @g, align 4
+comment|// CHECK:   add nsw i32 %{{.*}}, 1
+end_comment
+
+begin_comment
+comment|// CHECK:   store i32 %{{.*}}, i32* %{{.*}}, align 4
 end_comment
 
 begin_comment

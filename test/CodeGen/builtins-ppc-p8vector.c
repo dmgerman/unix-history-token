@@ -117,8 +117,129 @@ end_decl_stmt
 
 begin_decl_stmt
 name|vector
+name|bool
+name|char
+name|vbc
+init|=
+block|{
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|signed
+name|short
+name|vss
+init|=
+block|{
+literal|0
+block|,
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|5
+block|,
+literal|6
+block|,
+literal|7
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|unsigned
+name|short
+name|vus
+init|=
+block|{
+literal|0
+block|,
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|5
+block|,
+literal|6
+block|,
+literal|7
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|bool
+name|short
+name|vbs
+init|=
+block|{
+literal|1
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|signed
 name|int
-name|vi
+name|vsi
 init|=
 block|{
 operator|-
@@ -174,21 +295,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|vector
-name|bool
-name|long
-name|long
-name|vbll
-init|=
-block|{
-literal|1
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vector
 name|signed
 name|long
 name|long
@@ -213,6 +319,40 @@ block|{
 literal|1
 block|,
 literal|2
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|bool
+name|long
+name|long
+name|vbll
+init|=
+block|{
+literal|1
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|float
+name|vfa
+init|=
+block|{
+literal|1.e-4f
+block|,
+operator|-
+literal|132.23f
+block|,
+operator|-
+literal|22.1
+block|,
+literal|32.00f
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -255,8 +395,41 @@ end_decl_stmt
 
 begin_decl_stmt
 name|vector
+name|bool
+name|char
+name|res_vbc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|signed
+name|short
+name|res_vss
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|unsigned
+name|short
+name|res_vus
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|bool
+name|short
+name|res_vbs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|signed
 name|int
-name|res_vi
+name|res_vsi
 decl_stmt|;
 end_decl_stmt
 
@@ -278,15 +451,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|vector
-name|bool
-name|long
-name|long
-name|res_vbll
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vector
 name|signed
 name|long
 name|long
@@ -300,6 +464,22 @@ name|unsigned
 name|long
 name|long
 name|res_vull
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|bool
+name|long
+name|long
+name|res_vbll
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|double
+name|res_vf
 decl_stmt|;
 end_decl_stmt
 
@@ -379,13 +559,13 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
-name|res_vi
+name|res_vsi
 operator|=
 name|vec_mergee
 argument_list|(
-name|vi
+name|vsi
 argument_list|,
-name|vi
+name|vsi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -414,13 +594,13 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
-name|res_vi
+name|res_vsi
 operator|=
 name|vec_mergeo
 argument_list|(
-name|vi
+name|vsi
 argument_list|,
-name|vi
+name|vsi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
@@ -562,6 +742,575 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.ppc.altivec.vcmpgtud(<2 x i64> %{{[0-9]*}},<2 x i64> %{{[0-9]*}})
 comment|// CHECK-LE: call<2 x i64> @llvm.ppc.altivec.vcmpgtud(<2 x i64> %{{[0-9]*}},<2 x i64> %{{[0-9]*}})
 comment|// CHECK-PPC: error: call to 'vec_cmplt' is ambiguous
+comment|/* vec_eqv */
+name|res_vsc
+operator|=
+name|vec_eqv
+argument_list|(
+name|vsc
+argument_list|,
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<16 x i8>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<16 x i8>
+comment|// CHECK-PPC: error: assigning to
+name|res_vsc
+operator|=
+name|vec_eqv
+argument_list|(
+name|vbc
+argument_list|,
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<16 x i8>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<16 x i8>
+comment|// CHECK-PPC: error: assigning to
+name|res_vsc
+operator|=
+name|vec_eqv
+argument_list|(
+name|vsc
+argument_list|,
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<16 x i8>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<16 x i8>
+comment|// CHECK-PPC: error: assigning to
+name|res_vuc
+operator|=
+name|vec_eqv
+argument_list|(
+name|vuc
+argument_list|,
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<16 x i8>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<16 x i8>
+comment|// CHECK-PPC: error: assigning to
+name|res_vuc
+operator|=
+name|vec_eqv
+argument_list|(
+name|vbc
+argument_list|,
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<16 x i8>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<16 x i8>
+comment|// CHECK-PPC: error: assigning to
+name|res_vuc
+operator|=
+name|vec_eqv
+argument_list|(
+name|vuc
+argument_list|,
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<16 x i8>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<16 x i8> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<16 x i8>
+comment|// CHECK-PPC: error: assigning to
+name|res_vss
+operator|=
+name|vec_eqv
+argument_list|(
+name|vss
+argument_list|,
+name|vss
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<8 x i16>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<8 x i16>
+comment|// CHECK-PPC: error: assigning to
+name|res_vss
+operator|=
+name|vec_eqv
+argument_list|(
+name|vbs
+argument_list|,
+name|vss
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<8 x i16>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<8 x i16>
+comment|// CHECK-PPC: error: assigning to
+name|res_vss
+operator|=
+name|vec_eqv
+argument_list|(
+name|vss
+argument_list|,
+name|vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<8 x i16>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<8 x i16>
+comment|// CHECK-PPC: error: assigning to
+name|res_vus
+operator|=
+name|vec_eqv
+argument_list|(
+name|vus
+argument_list|,
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<8 x i16>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<8 x i16>
+comment|// CHECK-PPC: error: assigning to
+name|res_vus
+operator|=
+name|vec_eqv
+argument_list|(
+name|vbs
+argument_list|,
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<8 x i16>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<8 x i16>
+comment|// CHECK-PPC: error: assigning to
+name|res_vus
+operator|=
+name|vec_eqv
+argument_list|(
+name|vus
+argument_list|,
+name|vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<8 x i16>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<8 x i16>
+comment|// CHECK-PPC: error: assigning to
+name|res_vsi
+operator|=
+name|vec_eqv
+argument_list|(
+name|vsi
+argument_list|,
+name|vsi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> {{.*}},<4 x i32> {{.+}})
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> {{.*}},<4 x i32> {{.+}})
+comment|// CHECK-PPC: error: assigning to
+name|res_vsi
+operator|=
+name|vec_eqv
+argument_list|(
+name|vbi
+argument_list|,
+name|vsi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> {{.*}},<4 x i32> {{.+}})
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> {{.*}},<4 x i32> {{.+}})
+comment|// CHECK-PPC: error: assigning to
+name|res_vsi
+operator|=
+name|vec_eqv
+argument_list|(
+name|vsi
+argument_list|,
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> {{.*}},<4 x i32> {{.+}})
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> {{.*}},<4 x i32> {{.+}})
+comment|// CHECK-PPC: error: assigning to
+name|res_vui
+operator|=
+name|vec_eqv
+argument_list|(
+name|vui
+argument_list|,
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> {{.*}},<4 x i32> {{.+}})
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> {{.*}},<4 x i32> {{.+}})
+comment|// CHECK-PPC: error: assigning to
+name|res_vui
+operator|=
+name|vec_eqv
+argument_list|(
+name|vbi
+argument_list|,
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> {{.*}},<4 x i32> {{.+}})
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> {{.*}},<4 x i32> {{.+}})
+comment|// CHECK-PPC: error: assigning to
+name|res_vui
+operator|=
+name|vec_eqv
+argument_list|(
+name|vui
+argument_list|,
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> {{.*}},<4 x i32> {{.+}})
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> {{.*}},<4 x i32> {{.+}})
+comment|// CHECK-PPC: error: assigning to
+name|res_vsll
+operator|=
+name|vec_eqv
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<2 x i64>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<2 x i64>
+comment|// CHECK-PPC: error: assigning to
+name|res_vsll
+operator|=
+name|vec_eqv
+argument_list|(
+name|vbll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<2 x i64>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<2 x i64>
+comment|// CHECK-PPC: error: assigning to
+name|res_vsll
+operator|=
+name|vec_eqv
+argument_list|(
+name|vsll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<2 x i64>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<2 x i64>
+comment|// CHECK-PPC: error: assigning to
+name|res_vull
+operator|=
+name|vec_eqv
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<2 x i64>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<2 x i64>
+comment|// CHECK-PPC: error: assigning to
+name|res_vull
+operator|=
+name|vec_eqv
+argument_list|(
+name|vbll
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<2 x i64>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<2 x i64>
+comment|// CHECK-PPC: error: assigning to
+name|res_vull
+operator|=
+name|vec_eqv
+argument_list|(
+name|vull
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<2 x i64>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<2 x i64> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<2 x i64>
+comment|// CHECK-PPC: error: assigning to
+name|res_vf
+operator|=
+name|vec_eqv
+argument_list|(
+name|vfa
+argument_list|,
+name|vfa
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<4 x float> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<4 x float> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<4 x float>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<4 x float> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<4 x float> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<4 x float>
+comment|// CHECK-PPC: error: assigning to
+name|res_vf
+operator|=
+name|vec_eqv
+argument_list|(
+name|vbi
+argument_list|,
+name|vfa
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T2:%.+]] = bitcast<4 x float> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> {{.+}},<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<4 x float>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<4 x float> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> {{.+}},<4 x i32> [[T2]])
+comment|// CHECK-PPC: error: assigning to
+name|res_vf
+operator|=
+name|vec_eqv
+argument_list|(
+name|vfa
+argument_list|,
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<4 x float> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32>
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<4 x float>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<4 x float> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32>
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<4 x float>
+comment|// CHECK-PPC: error: assigning to
+name|res_vd
+operator|=
+name|vec_eqv
+argument_list|(
+name|vda
+argument_list|,
+name|vda
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<2 x double> {{.+}} to<4 x i32>
+comment|// CHECK: [[T2:%.+]] = bitcast<2 x double> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<2 x double>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<2 x double> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<2 x double> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<2 x double>
+comment|// CHECK-PPC: error: assigning to
+name|res_vd
+operator|=
+name|vec_eqv
+argument_list|(
+name|vbll
+argument_list|,
+name|vda
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T2:%.+]] = bitcast<2 x double> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> {{.+}},<4 x i32> [[T2]])
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<2 x double>
+comment|// CHECK-LE: [[T2:%.+]] = bitcast<2 x double> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> {{.+}},<4 x i32> [[T2]])
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<2 x double>
+comment|// CHECK-PPC: error: assigning to
+name|res_vd
+operator|=
+name|vec_eqv
+argument_list|(
+name|vda
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = bitcast<2 x double> {{.+}} to<4 x i32>
+comment|// CHECK: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32>
+comment|// CHECK: bitcast<4 x i32> [[T3]] to<2 x double>
+comment|// CHECK-LE: [[T1:%.+]] = bitcast<2 x double> {{.+}} to<4 x i32>
+comment|// CHECK-LE: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxleqv(<4 x i32> [[T1]],<4 x i32>
+comment|// CHECK-LE: bitcast<4 x i32> [[T3]] to<2 x double>
+comment|// CHECK-PPC: error: assigning to
+name|res_vsc
+operator|=
+name|vec_cntlz
+argument_list|(
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<16 x i8> @llvm.ctlz.v16i8(<16 x i8> %{{.+}}, i1 false)
+comment|// CHECK-LE: call<16 x i8> @llvm.ctlz.v16i8(<16 x i8> %{{.+}}, i1 false)
+comment|// CHECK-PPC: warning: implicit declaration of function 'vec_cntlz' is invalid in C99
+name|res_vuc
+operator|=
+name|vec_cntlz
+argument_list|(
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<16 x i8> @llvm.ctlz.v16i8(<16 x i8> %{{.+}}, i1 false)
+comment|// CHECK-LE: call<16 x i8> @llvm.ctlz.v16i8(<16 x i8> %{{.+}}, i1 false)
+name|res_vss
+operator|=
+name|vec_cntlz
+argument_list|(
+name|vss
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<8 x i16> @llvm.ctlz.v8i16(<8 x i16> %{{.+}}, i1 false)
+comment|// CHECK-LE: call<8 x i16> @llvm.ctlz.v8i16(<8 x i16> %{{.+}}, i1 false)
+name|res_vus
+operator|=
+name|vec_cntlz
+argument_list|(
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<8 x i16> @llvm.ctlz.v8i16(<8 x i16> %{{.+}}, i1 false)
+comment|// CHECK-LE: call<8 x i16> @llvm.ctlz.v8i16(<8 x i16> %{{.+}}, i1 false)
+name|res_vsi
+operator|=
+name|vec_cntlz
+argument_list|(
+name|vsi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x i32> @llvm.ctlz.v4i32(<4 x i32> %{{.+}}, i1 false)
+comment|// CHECK-LE: call<4 x i32> @llvm.ctlz.v4i32(<4 x i32> %{{.+}}, i1 false)
+name|res_vui
+operator|=
+name|vec_cntlz
+argument_list|(
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x i32> @llvm.ctlz.v4i32(<4 x i32> %{{.+}}, i1 false)
+comment|// CHECK-LE: call<4 x i32> @llvm.ctlz.v4i32(<4 x i32> %{{.+}}, i1 false)
+name|res_vsll
+operator|=
+name|vec_cntlz
+argument_list|(
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<2 x i64> @llvm.ctlz.v2i64(<2 x i64> %{{.+}}, i1 false)
+comment|// CHECK-LE: call<2 x i64> @llvm.ctlz.v2i64(<2 x i64> %{{.+}}, i1 false)
+name|res_vull
+operator|=
+name|vec_cntlz
+argument_list|(
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<2 x i64> @llvm.ctlz.v2i64(<2 x i64> %{{.+}}, i1 false)
+comment|// CHECK-LE: call<2 x i64> @llvm.ctlz.v2i64(<2 x i64> %{{.+}}, i1 false)
 comment|/* ----------------------- predicates --------------------------- */
 comment|/* vec_all_eq */
 name|res_i
@@ -1734,9 +2483,9 @@ name|res_vsll
 operator|=
 name|vec_mule
 argument_list|(
-name|vi
+name|vsi
 argument_list|,
-name|vi
+name|vsi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmulesw
@@ -1759,9 +2508,9 @@ name|res_vsll
 operator|=
 name|vec_mulo
 argument_list|(
-name|vi
+name|vsi
 argument_list|,
-name|vi
+name|vsi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmulosw
@@ -1780,7 +2529,7 @@ comment|// CHECK: @llvm.ppc.altivec.vmulouw
 comment|// CHECK-LE: @llvm.ppc.altivec.vmuleuw
 comment|// CHECK-PPC: error: call to 'vec_mulo' is ambiguous
 comment|/* vec_packs */
-name|res_vi
+name|res_vsi
 operator|=
 name|vec_packs
 argument_list|(
@@ -1889,8 +2638,8 @@ argument_list|,
 name|vull
 argument_list|)
 expr_stmt|;
-comment|// CHECK: ashr<2 x i64>
-comment|// CHECK-LE: ashr<2 x i64>
+comment|// CHECK: lshr<2 x i64>
+comment|// CHECK-LE: lshr<2 x i64>
 comment|// CHECK-PPC: error: call to 'vec_sr' is ambiguous
 name|res_vull
 operator|=
@@ -1934,7 +2683,7 @@ name|res_vsll
 operator|=
 name|vec_unpackh
 argument_list|(
-name|vi
+name|vsi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: llvm.ppc.altivec.vupkhsw
@@ -1955,7 +2704,7 @@ name|res_vsll
 operator|=
 name|vec_unpackl
 argument_list|(
-name|vi
+name|vsi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: llvm.ppc.altivec.vupklsw
@@ -1972,7 +2721,7 @@ comment|// CHECK: llvm.ppc.altivec.vupklsw
 comment|// CHECK-LE: llvm.ppc.altivec.vupkhsw
 comment|// CHECK-PPC: error: call to 'vec_unpackl' is ambiguous
 comment|/* vec_vpksdss */
-name|res_vi
+name|res_vsi
 operator|=
 name|vec_vpksdss
 argument_list|(
@@ -1998,7 +2747,7 @@ comment|// CHECK: llvm.ppc.altivec.vpksdus
 comment|// CHECK-LE: llvm.ppc.altivec.vpksdus
 comment|// CHECK-PPC: warning: implicit declaration of function 'vec_vpksdus'
 comment|/* vec_vpkudum */
-name|res_vi
+name|res_vsi
 operator|=
 name|vec_vpkudum
 argument_list|(
@@ -2038,7 +2787,7 @@ name|res_vsll
 operator|=
 name|vec_vupkhsw
 argument_list|(
-name|vi
+name|vsi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: llvm.ppc.altivec.vupkhsw
@@ -2058,7 +2807,7 @@ name|res_vsll
 operator|=
 name|vec_vupklsw
 argument_list|(
-name|vi
+name|vsi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: llvm.ppc.altivec.vupklsw
@@ -2185,6 +2934,634 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminud
 comment|// CHECK-LE: @llvm.ppc.altivec.vminud
+comment|/* vec_nand */
+name|res_vsc
+operator|=
+name|vec_nand
+argument_list|(
+name|vsc
+argument_list|,
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<16 x i8>
+comment|// CHECK: xor<16 x i8> [[T1]],<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8> [[T1]],<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK-PPC: warning: implicit declaration of function 'vec_nand' is invalid in C99
+name|res_vsc
+operator|=
+name|vec_nand
+argument_list|(
+name|vsc
+argument_list|,
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<16 x i8>
+comment|// CHECK: xor<16 x i8> [[T1]],<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8> [[T1]],<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+name|res_vsc
+operator|=
+name|vec_nand
+argument_list|(
+name|vbc
+argument_list|,
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<16 x i8>
+comment|// CHECK: xor<16 x i8> [[T1]],<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8> [[T1]],<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+name|res_vuc
+operator|=
+name|vec_nand
+argument_list|(
+name|vuc
+argument_list|,
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<16 x i8>
+comment|// CHECK: xor<16 x i8> [[T1]],<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8> [[T1]],<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+name|res_vuc
+operator|=
+name|vec_nand
+argument_list|(
+name|vuc
+argument_list|,
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<16 x i8>
+comment|// CHECK: xor<16 x i8> [[T1]],<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8> [[T1]],<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+name|res_vuc
+operator|=
+name|vec_nand
+argument_list|(
+name|vbc
+argument_list|,
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<16 x i8>
+comment|// CHECK: xor<16 x i8> [[T1]],<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8> [[T1]],<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+name|res_vss
+operator|=
+name|vec_nand
+argument_list|(
+name|vss
+argument_list|,
+name|vss
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<8 x i16>
+comment|// CHECK: xor<8 x i16> [[T1]],<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16> [[T1]],<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+name|res_vss
+operator|=
+name|vec_nand
+argument_list|(
+name|vss
+argument_list|,
+name|vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<8 x i16>
+comment|// CHECK: xor<8 x i16> [[T1]],<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16> [[T1]],<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+name|res_vss
+operator|=
+name|vec_nand
+argument_list|(
+name|vbs
+argument_list|,
+name|vss
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<8 x i16>
+comment|// CHECK: xor<8 x i16> [[T1]],<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16> [[T1]],<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+name|res_vus
+operator|=
+name|vec_nand
+argument_list|(
+name|vus
+argument_list|,
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<8 x i16>
+comment|// CHECK: xor<8 x i16> [[T1]],<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16> [[T1]],<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+name|res_vus
+operator|=
+name|vec_nand
+argument_list|(
+name|vus
+argument_list|,
+name|vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<8 x i16>
+comment|// CHECK: xor<8 x i16> [[T1]],<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16> [[T1]],<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+name|res_vus
+operator|=
+name|vec_nand
+argument_list|(
+name|vbs
+argument_list|,
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<8 x i16>
+comment|// CHECK: xor<8 x i16> [[T1]],<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16> [[T1]],<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+name|res_vsi
+operator|=
+name|vec_nand
+argument_list|(
+name|vsi
+argument_list|,
+name|vsi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<4 x i32>
+comment|// CHECK: xor<4 x i32> [[T1]],<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32> [[T1]],<i32 -1, i32 -1, i32 -1, i32 -1>
+name|res_vsi
+operator|=
+name|vec_nand
+argument_list|(
+name|vsi
+argument_list|,
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<4 x i32>
+comment|// CHECK: xor<4 x i32> [[T1]],<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32> [[T1]],<i32 -1, i32 -1, i32 -1, i32 -1>
+name|res_vsi
+operator|=
+name|vec_nand
+argument_list|(
+name|vbi
+argument_list|,
+name|vsi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<4 x i32>
+comment|// CHECK: xor<4 x i32> [[T1]],<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32> [[T1]],<i32 -1, i32 -1, i32 -1, i32 -1>
+name|res_vui
+operator|=
+name|vec_nand
+argument_list|(
+name|vui
+argument_list|,
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<4 x i32>
+comment|// CHECK: xor<4 x i32> [[T1]],<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32> [[T1]],<i32 -1, i32 -1, i32 -1, i32 -1>
+name|res_vui
+operator|=
+name|vec_nand
+argument_list|(
+name|vui
+argument_list|,
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<4 x i32>
+comment|// CHECK: xor<4 x i32> [[T1]],<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32> [[T1]],<i32 -1, i32 -1, i32 -1, i32 -1>
+name|res_vui
+operator|=
+name|vec_nand
+argument_list|(
+name|vbi
+argument_list|,
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<4 x i32>
+comment|// CHECK: xor<4 x i32> [[T1]],<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32> [[T1]],<i32 -1, i32 -1, i32 -1, i32 -1>
+name|res_vsll
+operator|=
+name|vec_nand
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<2 x i64>
+comment|// CHECK: xor<2 x i64> [[T1]],<i64 -1, i64 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<2 x i64>
+comment|// CHECK-LE: xor<2 x i64> [[T1]],<i64 -1, i64 -1>
+name|res_vsll
+operator|=
+name|vec_nand
+argument_list|(
+name|vsll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<2 x i64>
+comment|// CHECK: xor<2 x i64> [[T1]],<i64 -1, i64 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<2 x i64>
+comment|// CHECK-LE: xor<2 x i64> [[T1]],<i64 -1, i64 -1>
+name|res_vsll
+operator|=
+name|vec_nand
+argument_list|(
+name|vbll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<2 x i64>
+comment|// CHECK: xor<2 x i64> [[T1]],<i64 -1, i64 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<2 x i64>
+comment|// CHECK-LE: xor<2 x i64> [[T1]],<i64 -1, i64 -1>
+name|res_vull
+operator|=
+name|vec_nand
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<2 x i64>
+comment|// CHECK: xor<2 x i64> [[T1]],<i64 -1, i64 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<2 x i64>
+comment|// CHECK-LE: xor<2 x i64> [[T1]],<i64 -1, i64 -1>
+name|res_vull
+operator|=
+name|vec_nand
+argument_list|(
+name|vull
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<2 x i64>
+comment|// CHECK: xor<2 x i64> [[T1]],<i64 -1, i64 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<2 x i64>
+comment|// CHECK-LE: xor<2 x i64> [[T1]],<i64 -1, i64 -1>
+name|res_vull
+operator|=
+name|vec_nand
+argument_list|(
+name|vbll
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<2 x i64>
+comment|// CHECK: xor<2 x i64> [[T1]],<i64 -1, i64 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<2 x i64>
+comment|// CHECK-LE: xor<2 x i64> [[T1]],<i64 -1, i64 -1>
+comment|/* vec_orc */
+name|res_vsc
+operator|=
+name|vec_orc
+argument_list|(
+name|vsc
+argument_list|,
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<16 x i8> {{%.+}},<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK: or<16 x i8> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<16 x i8> {{%.+}},<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK-LE: or<16 x i8> {{%.+}}, [[T1]]
+comment|// CHECK-PPC: warning: implicit declaration of function 'vec_orc' is invalid in C99
+name|res_vsc
+operator|=
+name|vec_orc
+argument_list|(
+name|vsc
+argument_list|,
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<16 x i8> {{%.+}},<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK: or<16 x i8> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<16 x i8> {{%.+}},<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK-LE: or<16 x i8> {{%.+}}, [[T1]]
+name|res_vsc
+operator|=
+name|vec_orc
+argument_list|(
+name|vbc
+argument_list|,
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<16 x i8> {{%.+}},<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK: or<16 x i8> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<16 x i8> {{%.+}},<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK-LE: or<16 x i8> {{%.+}}, [[T1]]
+name|res_vuc
+operator|=
+name|vec_orc
+argument_list|(
+name|vuc
+argument_list|,
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<16 x i8> {{%.+}},<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK: or<16 x i8> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<16 x i8> {{%.+}},<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK-LE: or<16 x i8> {{%.+}}, [[T1]]
+name|res_vuc
+operator|=
+name|vec_orc
+argument_list|(
+name|vuc
+argument_list|,
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<16 x i8> {{%.+}},<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK: or<16 x i8> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<16 x i8> {{%.+}},<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK-LE: or<16 x i8> {{%.+}}, [[T1]]
+name|res_vuc
+operator|=
+name|vec_orc
+argument_list|(
+name|vbc
+argument_list|,
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<16 x i8> {{%.+}},<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK: or<16 x i8> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<16 x i8> {{%.+}},<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+comment|// CHECK-LE: or<16 x i8> {{%.+}}, [[T1]]
+name|res_vss
+operator|=
+name|vec_orc
+argument_list|(
+name|vss
+argument_list|,
+name|vss
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<8 x i16> {{%.+}},<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+comment|// CHECK: or<8 x i16> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<8 x i16> {{%.+}},<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+comment|// CHECK-LE: or<8 x i16> {{%.+}}, [[T1]]
+name|res_vss
+operator|=
+name|vec_orc
+argument_list|(
+name|vss
+argument_list|,
+name|vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<8 x i16> {{%.+}},<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+comment|// CHECK: or<8 x i16> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<8 x i16> {{%.+}},<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+comment|// CHECK-LE: or<8 x i16> {{%.+}}, [[T1]]
+name|res_vss
+operator|=
+name|vec_orc
+argument_list|(
+name|vbs
+argument_list|,
+name|vss
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<8 x i16> {{%.+}},<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+comment|// CHECK: or<8 x i16> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<8 x i16> {{%.+}},<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+comment|// CHECK-LE: or<8 x i16> {{%.+}}, [[T1]]
+name|res_vus
+operator|=
+name|vec_orc
+argument_list|(
+name|vus
+argument_list|,
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<8 x i16> {{%.+}},<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+comment|// CHECK: or<8 x i16> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<8 x i16> {{%.+}},<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+comment|// CHECK-LE: or<8 x i16> {{%.+}}, [[T1]]
+name|res_vus
+operator|=
+name|vec_orc
+argument_list|(
+name|vus
+argument_list|,
+name|vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<8 x i16> {{%.+}},<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+comment|// CHECK: or<8 x i16> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<8 x i16> {{%.+}},<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+comment|// CHECK-LE: or<8 x i16> {{%.+}}, [[T1]]
+name|res_vus
+operator|=
+name|vec_orc
+argument_list|(
+name|vbs
+argument_list|,
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<8 x i16> {{%.+}},<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+comment|// CHECK: or<8 x i16> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<8 x i16> {{%.+}},<i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1, i16 -1>
+comment|// CHECK-LE: or<8 x i16> {{%.+}}, [[T1]]
+name|res_vsi
+operator|=
+name|vec_orc
+argument_list|(
+name|vsi
+argument_list|,
+name|vsi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<4 x i32> {{%.+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK: or<4 x i32> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<4 x i32> {{%.+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK-LE: or<4 x i32> {{%.+}}, [[T1]]
+name|res_vsi
+operator|=
+name|vec_orc
+argument_list|(
+name|vsi
+argument_list|,
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<4 x i32> {{%.+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK: or<4 x i32> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<4 x i32> {{%.+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK-LE: or<4 x i32> {{%.+}}, [[T1]]
+name|res_vsi
+operator|=
+name|vec_orc
+argument_list|(
+name|vbi
+argument_list|,
+name|vsi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<4 x i32> {{%.+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK: or<4 x i32> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<4 x i32> {{%.+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK-LE: or<4 x i32> {{%.+}}, [[T1]]
+name|res_vui
+operator|=
+name|vec_orc
+argument_list|(
+name|vui
+argument_list|,
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<4 x i32> {{%.+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK: or<4 x i32> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<4 x i32> {{%.+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK-LE: or<4 x i32> {{%.+}}, [[T1]]
+name|res_vui
+operator|=
+name|vec_orc
+argument_list|(
+name|vui
+argument_list|,
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<4 x i32> {{%.+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK: or<4 x i32> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<4 x i32> {{%.+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK-LE: or<4 x i32> {{%.+}}, [[T1]]
+name|res_vui
+operator|=
+name|vec_orc
+argument_list|(
+name|vbi
+argument_list|,
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<4 x i32> {{%.+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK: or<4 x i32> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<4 x i32> {{%.+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK-LE: or<4 x i32> {{%.+}}, [[T1]]
+name|res_vsll
+operator|=
+name|vec_orc
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<2 x i64> {{%.+}},<i64 -1, i64 -1>
+comment|// CHECK: or<2 x i64> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<2 x i64> {{%.+}},<i64 -1, i64 -1>
+comment|// CHECK-LE: or<2 x i64> {{%.+}}, [[T1]]
+name|res_vsll
+operator|=
+name|vec_orc
+argument_list|(
+name|vsll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<2 x i64> {{%.+}},<i64 -1, i64 -1>
+comment|// CHECK: or<2 x i64> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<2 x i64> {{%.+}},<i64 -1, i64 -1>
+comment|// CHECK-LE: or<2 x i64> {{%.+}}, [[T1]]
+name|res_vsll
+operator|=
+name|vec_orc
+argument_list|(
+name|vbll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<2 x i64> {{%.+}},<i64 -1, i64 -1>
+comment|// CHECK: or<2 x i64> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<2 x i64> {{%.+}},<i64 -1, i64 -1>
+comment|// CHECK-LE: or<2 x i64> {{%.+}}, [[T1]]
+name|res_vull
+operator|=
+name|vec_orc
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<2 x i64> {{%.+}},<i64 -1, i64 -1>
+comment|// CHECK: or<2 x i64> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<2 x i64> {{%.+}},<i64 -1, i64 -1>
+comment|// CHECK-LE: or<2 x i64> {{%.+}}, [[T1]]
+name|res_vull
+operator|=
+name|vec_orc
+argument_list|(
+name|vull
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<2 x i64> {{%.+}},<i64 -1, i64 -1>
+comment|// CHECK: or<2 x i64> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<2 x i64> {{%.+}},<i64 -1, i64 -1>
+comment|// CHECK-LE: or<2 x i64> {{%.+}}, [[T1]]
+name|res_vull
+operator|=
+name|vec_orc
+argument_list|(
+name|vbll
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<2 x i64> {{%.+}},<i64 -1, i64 -1>
+comment|// CHECK: or<2 x i64> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<2 x i64> {{%.+}},<i64 -1, i64 -1>
+comment|// CHECK-LE: or<2 x i64> {{%.+}}, [[T1]]
 comment|/* vec_vbpermq */
 name|res_vsll
 operator|=

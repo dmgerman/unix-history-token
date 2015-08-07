@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdint.h>
+file|"llvm/Support/MathExtras.h"
 end_include
 
 begin_decl_stmt
@@ -158,16 +158,36 @@ name|SanitizerSet
 block|{
 name|SanitizerSet
 argument_list|()
-expr_stmt|;
+operator|:
+name|Mask
+argument_list|(
+literal|0
+argument_list|)
+block|{}
 comment|/// \brief Check if a certain (single) sanitizer is enabled.
 name|bool
 name|has
 argument_list|(
-name|SanitizerMask
+argument|SanitizerMask K
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|llvm
+operator|::
+name|isPowerOf2_64
+argument_list|(
 name|K
 argument_list|)
-decl|const
-decl_stmt|;
+argument_list|)
+block|;
+return|return
+name|Mask
+operator|&
+name|K
+return|;
+block|}
 comment|/// \brief Check if one or more sanitizers are enabled.
 name|bool
 name|hasOneOf
@@ -176,7 +196,13 @@ name|SanitizerMask
 name|K
 argument_list|)
 decl|const
-decl_stmt|;
+block|{
+return|return
+name|Mask
+operator|&
+name|K
+return|;
+block|}
 comment|/// \brief Enable or disable a certain (single) sanitizer.
 name|void
 name|set
@@ -187,18 +213,57 @@ parameter_list|,
 name|bool
 name|Value
 parameter_list|)
-function_decl|;
+block|{
+name|assert
+argument_list|(
+name|llvm
+operator|::
+name|isPowerOf2_64
+argument_list|(
+name|K
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|Mask
+operator|=
+name|Value
+condition|?
+operator|(
+name|Mask
+operator||
+name|K
+operator|)
+else|:
+operator|(
+name|Mask
+operator|&
+operator|~
+name|K
+operator|)
+expr_stmt|;
+block|}
 comment|/// \brief Disable all sanitizers.
 name|void
 name|clear
 parameter_list|()
-function_decl|;
+block|{
+name|Mask
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/// \brief Returns true if at least one sanitizer is enabled.
 name|bool
 name|empty
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|Mask
+operator|==
+literal|0
+return|;
+block|}
 comment|/// \brief Bitmask of enabled sanitizers.
 name|SanitizerMask
 name|Mask

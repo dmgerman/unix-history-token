@@ -12,6 +12,10 @@ comment|// RUN: FileCheck %s< %t.err
 end_comment
 
 begin_comment
+comment|// REQUIRES: x86-registered-target
+end_comment
+
+begin_comment
 comment|// CHECK: for the target
 end_comment
 

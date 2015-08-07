@@ -776,6 +776,13 @@ name|Args
 operator|.
 name|push_back
 argument_list|(
+literal|"--cuda-host-only"
+argument_list|)
+expr_stmt|;
+name|Args
+operator|.
+name|push_back
+argument_list|(
 name|CompileArg
 argument_list|)
 expr_stmt|;

@@ -253,7 +253,7 @@ name|test7
 parameter_list|()
 block|{
 comment|// CHECK: @test7
-comment|// CHECK: load i32, i32* getelementptr inbounds (%struct.YBitfield, %struct.YBitfield* @gbitfield, i32 0, i32 1, i32 0), align 4
+comment|// CHECK: load i32, i32* getelementptr inbounds (%struct.YBitfield, %struct.YBitfield* @gbitfield, i32 0, i32 1, i32 0), align 1
 return|return
 name|gbitfield
 operator|.
@@ -261,6 +261,89 @@ name|y
 operator|.
 name|b2
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test8
+parameter_list|(
+name|unsigned
+name|x
+parameter_list|)
+block|{
+comment|// CHECK: @test8
+comment|// CHECK: load i32, i32* getelementptr inbounds (%struct.YBitfield, %struct.YBitfield* @gbitfield, i32 0, i32 1, i32 0), align 1
+comment|// CHECK: store i32 {{.*}}, i32* getelementptr inbounds (%struct.YBitfield, %struct.YBitfield* @gbitfield, i32 0, i32 1, i32 0), align 1
+name|gbitfield
+operator|.
+name|y
+operator|.
+name|b2
+operator|=
+name|x
+expr_stmt|;
+block|}
+end_function
+
+begin_struct
+struct|struct
+name|TBitfield
+block|{
+name|long
+name|a
+decl_stmt|;
+name|char
+name|b
+decl_stmt|;
+name|unsigned
+name|c
+range|:
+literal|15
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|TBitfield
+name|tbitfield
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|unsigned
+name|test9
+parameter_list|()
+block|{
+comment|// CHECK: @test9
+comment|// CHECK: load i16, i16* getelementptr inbounds (%struct.TBitfield, %struct.TBitfield* @tbitfield, i32 0, i32 2), align 1
+return|return
+name|tbitfield
+operator|.
+name|c
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test10
+parameter_list|(
+name|unsigned
+name|x
+parameter_list|)
+block|{
+comment|// CHECK: @test10
+comment|// CHECK: load i16, i16* getelementptr inbounds (%struct.TBitfield, %struct.TBitfield* @tbitfield, i32 0, i32 2), align 1
+comment|// CHECK: store i16 {{.*}}, i16* getelementptr inbounds (%struct.TBitfield, %struct.TBitfield* @tbitfield, i32 0, i32 2), align 1
+name|tbitfield
+operator|.
+name|c
+operator|=
+name|x
+expr_stmt|;
 block|}
 end_function
 

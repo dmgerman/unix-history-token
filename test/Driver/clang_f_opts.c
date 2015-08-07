@@ -224,6 +224,134 @@ comment|// CHECK-NO-PROFILE-ARCS-NOT: "-femit-coverage-data"
 end_comment
 
 begin_comment
+comment|// RUN: %clang -### -S -fprofile-generate %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-GENERATE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-instr-generate %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-GENERATE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-generate=/some/dir %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-GENERATE-DIR %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-instr-generate=/tmp/somefile.profraw %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-GENERATE-FILE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-generate -fprofile-use %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GEN-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-generate -fprofile-use=dir %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GEN-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-generate -fprofile-instr-use %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GEN-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-generate -fprofile-instr-use=file %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GEN-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-instr-generate -fprofile-use %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GEN-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-instr-generate -fprofile-use=dir %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GEN-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-instr-generate -fprofile-instr-use %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GEN-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-instr-generate -fprofile-instr-use=file %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GEN-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-instr-generate=file -fprofile-use %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GEN-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-instr-generate=file -fprofile-use=dir %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GEN-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-instr-generate=file -fprofile-instr-use %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GEN-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-instr-generate=file -fprofile-instr-use=file %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GEN-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-generate=dir -fprofile-use %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GEN-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-generate=dir -fprofile-use=dir %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GEN-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-generate=dir -fprofile-instr-use %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GEN-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-generate=dir -fprofile-instr-use=file %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GEN-USE %s
+end_comment
+
+begin_comment
+comment|// CHECK-PROFILE-GENERATE: "-fprofile-instr-generate"
+end_comment
+
+begin_comment
+comment|// CHECK-PROFILE-GENERATE-DIR: "-fprofile-instr-generate=/some/dir{{/|\\\\}}default.profraw"
+end_comment
+
+begin_comment
+comment|// CHECK-PROFILE-GENERATE-FILE: "-fprofile-instr-generate=/tmp/somefile.profraw"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-MIX-GEN-USE: '{{[a-z=-]*}}' not allowed with '{{[a-z=-]*}}'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-use %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-instr-use %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: mkdir -p %t.d/some/dir
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-use=%t.d/some/dir %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-USE-DIR %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-instr-use=/tmp/somefile.prof %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-USE-FILE %s
+end_comment
+
+begin_comment
+comment|// CHECK-PROFILE-USE: "-fprofile-instr-use=default.profdata"
+end_comment
+
+begin_comment
+comment|// CHECK-PROFILE-USE-DIR: "-fprofile-instr-use={{.*}}.d/some/dir{{/|\\\\}}default.profdata"
+end_comment
+
+begin_comment
+comment|// CHECK-PROFILE-USE-FILE: "-fprofile-instr-use=/tmp/somefile.prof"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -S -fvectorize %s 2>&1 | FileCheck -check-prefix=CHECK-VECTORIZE %s
 end_comment
 
@@ -568,10 +696,6 @@ comment|// RUN:     -fprofile-dir=bar                                           
 end_comment
 
 begin_comment
-comment|// RUN:     -fprofile-use -fprofile-use=zed -fno-profile-use                  \
-end_comment
-
-begin_comment
 comment|// RUN:     -fprofile-values -fno-profile-values                              \
 end_comment
 
@@ -884,14 +1008,6 @@ comment|// RUN: -fprofile-dir=/rand/dir                                         
 end_comment
 
 begin_comment
-comment|// RUN: -fprofile-use                                                         \
-end_comment
-
-begin_comment
-comment|// RUN: -fprofile-use=/rand/dir                                               \
-end_comment
-
-begin_comment
 comment|// RUN: -falign-functions                                                     \
 end_comment
 
@@ -1161,14 +1277,6 @@ end_comment
 
 begin_comment
 comment|// CHECK-WARNING-DAG: optimization flag '-fprofile-dir=/rand/dir' is not supported
-end_comment
-
-begin_comment
-comment|// CHECK-WARNING-DAG: optimization flag '-fprofile-use' is not supported
-end_comment
-
-begin_comment
-comment|// CHECK-WARNING-DAG: optimization flag '-fprofile-use=/rand/dir' is not supported
 end_comment
 
 begin_comment

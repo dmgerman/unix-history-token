@@ -1486,7 +1486,15 @@ comment|/// \brief Determine the type of an expression that sends a message to t
 end_comment
 
 begin_comment
-comment|/// function.
+comment|/// function. This replaces the type parameters with the types they would
+end_comment
+
+begin_comment
+comment|/// get if the receiver was parameterless (e.g. it may replace the type
+end_comment
+
+begin_comment
+comment|/// parameter with 'id').
 end_comment
 
 begin_expr_stmt
@@ -1494,19 +1502,27 @@ name|QualType
 name|getSendResultType
 argument_list|()
 specifier|const
-block|{
-return|return
-name|getReturnType
-argument_list|()
-operator|.
-name|getNonLValueExprType
-argument_list|(
-name|getASTContext
-argument_list|()
-argument_list|)
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// Determine the type of an expression that sends a message to this
+end_comment
+
+begin_comment
+comment|/// function with the given receiver type.
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|getSendResultType
+argument_list|(
+name|QualType
+name|receiverType
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|TypeSourceInfo
@@ -1920,6 +1936,38 @@ specifier|const
 name|ObjCInterfaceDecl
 modifier|*
 name|ID
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \return the type for \c self and set \arg selfIsPseudoStrong and
+end_comment
+
+begin_comment
+comment|/// \arg selfIsConsumed accordingly.
+end_comment
+
+begin_function_decl
+name|QualType
+name|getSelfType
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+specifier|const
+name|ObjCInterfaceDecl
+modifier|*
+name|OID
+parameter_list|,
+name|bool
+modifier|&
+name|selfIsPseudoStrong
+parameter_list|,
+name|bool
+modifier|&
+name|selfIsConsumed
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2600,6 +2648,640 @@ end_decl_stmt
 
 begin_comment
 unit|};
+comment|/// Describes the variance of a given generic parameter.
+end_comment
+
+begin_decl_stmt
+name|enum
+name|class
+name|ObjCTypeParamVariance
+range|:
+name|uint8_t
+block|{
+comment|/// The parameter is invariant: must match exactly.
+name|Invariant
+block|,
+comment|/// The parameter is covariant, e.g., X<T> is a subtype of X<U> when
+comment|/// the type parameter is covariant and T is a subtype of U.
+name|Covariant
+block|,
+comment|/// The parameter is contravariant, e.g., X<T> is a subtype of X<U>
+comment|/// when the type parameter is covariant and U is a subtype of T.
+name|Contravariant
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Represents the declaration of an Objective-C type parameter.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// @interface NSDictionary<Key : id<NSCopying>, Value>
+end_comment
+
+begin_comment
+comment|/// @end
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// In the example above, both \c Key and \c Value are represented by
+end_comment
+
+begin_comment
+comment|/// \c ObjCTypeParamDecl. \c Key has an explicit bound of \c id<NSCopying>,
+end_comment
+
+begin_comment
+comment|/// while \c Value gets an implicit bound of \c id.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Objective-C type parameters are typedef-names in the grammar,
+end_comment
+
+begin_decl_stmt
+name|class
+name|ObjCTypeParamDecl
+range|:
+name|public
+name|TypedefNameDecl
+block|{
+name|void
+name|anchor
+argument_list|()
+name|override
+block|;
+comment|/// Index of this type parameter in the type parameter list.
+name|unsigned
+name|Index
+operator|:
+literal|14
+block|;
+comment|/// The variance of the type parameter.
+name|unsigned
+name|Variance
+operator|:
+literal|2
+block|;
+comment|/// The location of the variance, if any.
+name|SourceLocation
+name|VarianceLoc
+block|;
+comment|/// The location of the ':', which will be valid when the bound was
+comment|/// explicitly specified.
+name|SourceLocation
+name|ColonLoc
+block|;
+name|ObjCTypeParamDecl
+argument_list|(
+argument|ASTContext&ctx
+argument_list|,
+argument|DeclContext *dc
+argument_list|,
+argument|ObjCTypeParamVariance variance
+argument_list|,
+argument|SourceLocation varianceLoc
+argument_list|,
+argument|unsigned index
+argument_list|,
+argument|SourceLocation nameLoc
+argument_list|,
+argument|IdentifierInfo *name
+argument_list|,
+argument|SourceLocation colonLoc
+argument_list|,
+argument|TypeSourceInfo *boundInfo
+argument_list|)
+operator|:
+name|TypedefNameDecl
+argument_list|(
+name|ObjCTypeParam
+argument_list|,
+name|ctx
+argument_list|,
+name|dc
+argument_list|,
+name|nameLoc
+argument_list|,
+name|nameLoc
+argument_list|,
+name|name
+argument_list|,
+name|boundInfo
+argument_list|)
+block|,
+name|Index
+argument_list|(
+name|index
+argument_list|)
+block|,
+name|Variance
+argument_list|(
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|variance
+operator|)
+argument_list|)
+block|,
+name|VarianceLoc
+argument_list|(
+name|varianceLoc
+argument_list|)
+block|,
+name|ColonLoc
+argument_list|(
+argument|colonLoc
+argument_list|)
+block|{ }
+name|public
+operator|:
+specifier|static
+name|ObjCTypeParamDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&ctx
+argument_list|,
+argument|DeclContext *dc
+argument_list|,
+argument|ObjCTypeParamVariance variance
+argument_list|,
+argument|SourceLocation varianceLoc
+argument_list|,
+argument|unsigned index
+argument_list|,
+argument|SourceLocation nameLoc
+argument_list|,
+argument|IdentifierInfo *name
+argument_list|,
+argument|SourceLocation colonLoc
+argument_list|,
+argument|TypeSourceInfo *boundInfo
+argument_list|)
+block|;
+specifier|static
+name|ObjCTypeParamDecl
+operator|*
+name|CreateDeserialized
+argument_list|(
+argument|ASTContext&ctx
+argument_list|,
+argument|unsigned ID
+argument_list|)
+block|;
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+name|override
+name|LLVM_READONLY
+block|;
+comment|/// Determine the variance of this type parameter.
+name|ObjCTypeParamVariance
+name|getVariance
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|ObjCTypeParamVariance
+operator|>
+operator|(
+name|Variance
+operator|)
+return|;
+block|}
+comment|/// Set the variance of this type parameter.
+name|void
+name|setVariance
+argument_list|(
+argument|ObjCTypeParamVariance variance
+argument_list|)
+block|{
+name|Variance
+operator|=
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|variance
+operator|)
+block|;   }
+comment|/// Retrieve the location of the variance keyword.
+name|SourceLocation
+name|getVarianceLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarianceLoc
+return|;
+block|}
+comment|/// Retrieve the index into its type parameter list.
+name|unsigned
+name|getIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Index
+return|;
+block|}
+comment|/// Whether this type parameter has an explicitly-written type bound, e.g.,
+comment|/// "T : NSView".
+name|bool
+name|hasExplicitBound
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ColonLoc
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+comment|/// Retrieve the location of the ':' separating the type parameter name
+comment|/// from the explicitly-specified bound.
+name|SourceLocation
+name|getColonLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ColonLoc
+return|;
+block|}
+comment|// Implement isa/cast/dyncast/etc.
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Decl *D
+argument_list|)
+block|{
+return|return
+name|classofKind
+argument_list|(
+name|D
+operator|->
+name|getKind
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classofKind
+argument_list|(
+argument|Kind K
+argument_list|)
+block|{
+return|return
+name|K
+operator|==
+name|ObjCTypeParam
+return|;
+block|}
+name|friend
+name|class
+name|ASTDeclReader
+block|;
+name|friend
+name|class
+name|ASTDeclWriter
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Stores a list of Objective-C type parameters for a parameterized class
+end_comment
+
+begin_comment
+comment|/// or a category/extension thereof.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// @interface NSArray<T> // stores the<T>
+end_comment
+
+begin_comment
+comment|/// @end
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_decl_stmt
+name|class
+name|ObjCTypeParamList
+block|{
+comment|/// Stores the components of a SourceRange as a POD.
+struct|struct
+name|PODSourceRange
+block|{
+name|unsigned
+name|Begin
+decl_stmt|;
+name|unsigned
+name|End
+decl_stmt|;
+block|}
+struct|;
+union|union
+block|{
+comment|/// Location of the left and right angle brackets.
+name|PODSourceRange
+name|Brackets
+decl_stmt|;
+comment|// Used only for alignment.
+name|ObjCTypeParamDecl
+modifier|*
+name|AlignmentHack
+decl_stmt|;
+block|}
+union|;
+comment|/// The number of parameters in the list, which are tail-allocated.
+name|unsigned
+name|NumParams
+decl_stmt|;
+name|ObjCTypeParamList
+argument_list|(
+argument|SourceLocation lAngleLoc
+argument_list|,
+argument|ArrayRef<ObjCTypeParamDecl *> typeParams
+argument_list|,
+argument|SourceLocation rAngleLoc
+argument_list|)
+empty_stmt|;
+name|public
+label|:
+comment|/// Create a new Objective-C type parameter list.
+specifier|static
+name|ObjCTypeParamList
+modifier|*
+name|create
+argument_list|(
+name|ASTContext
+operator|&
+name|ctx
+argument_list|,
+name|SourceLocation
+name|lAngleLoc
+argument_list|,
+name|ArrayRef
+operator|<
+name|ObjCTypeParamDecl
+operator|*
+operator|>
+name|typeParams
+argument_list|,
+name|SourceLocation
+name|rAngleLoc
+argument_list|)
+decl_stmt|;
+comment|/// Iterate through the type parameters in the list.
+typedef|typedef
+name|ObjCTypeParamDecl
+modifier|*
+modifier|*
+name|iterator
+typedef|;
+name|iterator
+name|begin
+parameter_list|()
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|ObjCTypeParamDecl
+operator|*
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+name|iterator
+name|end
+parameter_list|()
+block|{
+return|return
+name|begin
+argument_list|()
+operator|+
+name|size
+argument_list|()
+return|;
+block|}
+comment|/// Determine the number of type parameters in this list.
+name|unsigned
+name|size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumParams
+return|;
+block|}
+comment|// Iterate through the type parameters in the list.
+typedef|typedef
+name|ObjCTypeParamDecl
+modifier|*
+specifier|const
+modifier|*
+name|const_iterator
+typedef|;
+name|const_iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|ObjCTypeParamDecl
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+name|const_iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|begin
+argument_list|()
+operator|+
+name|size
+argument_list|()
+return|;
+block|}
+name|ObjCTypeParamDecl
+operator|*
+name|front
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|size
+argument_list|()
+operator|>
+literal|0
+operator|&&
+literal|"empty Objective-C type parameter list"
+argument_list|)
+block|;
+return|return
+operator|*
+name|begin
+argument_list|()
+return|;
+block|}
+name|ObjCTypeParamDecl
+operator|*
+name|back
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|size
+argument_list|()
+operator|>
+literal|0
+operator|&&
+literal|"empty Objective-C type parameter list"
+argument_list|)
+block|;
+return|return
+operator|*
+operator|(
+name|end
+argument_list|()
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+name|SourceLocation
+name|getLAngleLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|Brackets
+operator|.
+name|Begin
+argument_list|)
+return|;
+block|}
+name|SourceLocation
+name|getRAngleLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|Brackets
+operator|.
+name|End
+argument_list|)
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|getLAngleLoc
+argument_list|()
+argument_list|,
+name|getRAngleLoc
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// Gather the default set of type arguments to be substituted for
+comment|/// these type parameters when dealing with an unspecialized type.
+name|void
+name|gatherDefaultTypeArgs
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|QualType
+operator|>
+operator|&
+name|typeArgs
+argument_list|)
+decl|const
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// ObjCContainerDecl - Represents a container for method declarations.
 end_comment
 
@@ -3385,10 +4067,10 @@ name|ObjCInterfaceDecl
 modifier|*
 name|Definition
 decl_stmt|;
-comment|/// Class's super class.
-name|ObjCInterfaceDecl
+comment|/// When non-null, this is always an ObjCObjectType.
+name|TypeSourceInfo
 modifier|*
-name|SuperClass
+name|SuperClassTInfo
 decl_stmt|;
 comment|/// Protocols referenced in the \@interface  declaration
 name|ObjCProtocolList
@@ -3466,10 +4148,6 @@ name|InheritedDesignatedInitializers
 range|:
 literal|2
 decl_stmt|;
-comment|/// \brief The location of the superclass, if any.
-name|SourceLocation
-name|SuperClassLoc
-decl_stmt|;
 comment|/// \brief The location of the last location in this declaration, before
 comment|/// the properties/methods. For example, this will be the '>', '}', or
 comment|/// identifier,
@@ -3482,7 +4160,7 @@ operator|:
 name|Definition
 argument_list|()
 operator|,
-name|SuperClass
+name|SuperClassTInfo
 argument_list|()
 operator|,
 name|CategoryList
@@ -3519,6 +4197,8 @@ argument|SourceLocation AtLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
+argument|ObjCTypeParamList *typeParamList
+argument_list|,
 argument|SourceLocation CLoc
 argument_list|,
 argument|ObjCInterfaceDecl *PrevDecl
@@ -3531,6 +4211,11 @@ name|LoadExternalDefinition
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// The type parameters associated with this class, if any.
+name|ObjCTypeParamList
+modifier|*
+name|TypeParamList
+decl_stmt|;
 comment|/// \brief Contains a pointer to the data associated with this class,
 comment|/// which will be NULL if this class has not yet been defined.
 comment|///
@@ -3641,6 +4326,10 @@ name|IdentifierInfo
 modifier|*
 name|Id
 parameter_list|,
+name|ObjCTypeParamList
+modifier|*
+name|typeParamList
+parameter_list|,
 name|ObjCInterfaceDecl
 modifier|*
 name|PrevDecl
@@ -3671,6 +4360,42 @@ name|unsigned
 name|ID
 parameter_list|)
 function_decl|;
+comment|/// Retrieve the type parameters of this class.
+comment|///
+comment|/// This function looks for a type parameter list for the given
+comment|/// class; if the class has been declared (with \c \@class) but not
+comment|/// defined (with \c \@interface), it will search for a declaration that
+comment|/// has type parameters, skipping any declarations that do not.
+name|ObjCTypeParamList
+operator|*
+name|getTypeParamList
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Set the type parameters of this class.
+comment|///
+comment|/// This function is used by the AST importer, which must import the type
+comment|/// parameters after creating their DeclContext to avoid loops.
+name|void
+name|setTypeParamList
+parameter_list|(
+name|ObjCTypeParamList
+modifier|*
+name|TPL
+parameter_list|)
+function_decl|;
+comment|/// Retrieve the type parameters written on this particular declaration of
+comment|/// the class.
+name|ObjCTypeParamList
+operator|*
+name|getTypeParamListAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeParamList
+return|;
+block|}
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -4893,10 +5618,57 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/// Retrieve the superclass type.
+end_comment
+
 begin_expr_stmt
-name|ObjCInterfaceDecl
+specifier|const
+name|ObjCObjectType
 operator|*
-name|getSuperClass
+name|getSuperClassType
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|TypeSourceInfo
+modifier|*
+name|TInfo
+init|=
+name|getSuperClassTInfo
+argument_list|()
+condition|)
+return|return
+name|TInfo
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|castAs
+operator|<
+name|ObjCObjectType
+operator|>
+operator|(
+operator|)
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|nullptr
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|// Retrieve the type source information for the superclass.
+end_comment
+
+begin_expr_stmt
+unit|TypeSourceInfo
+operator|*
+name|getSuperClassTInfo
 argument_list|()
 specifier|const
 block|{
@@ -4930,43 +5702,46 @@ return|return
 name|data
 argument_list|()
 operator|.
-name|SuperClass
+name|SuperClassTInfo
 return|;
 end_return
 
-begin_macro
-unit|}    void
-name|setSuperClass
-argument_list|(
-argument|ObjCInterfaceDecl * superCls
-argument_list|)
-end_macro
+begin_comment
+unit|}
+comment|// Retrieve the declaration for the superclass of this class, which
+end_comment
 
-begin_block
+begin_comment
+comment|// does not include any type arguments that apply to the superclass.
+end_comment
+
+begin_expr_stmt
+unit|ObjCInterfaceDecl
+operator|*
+name|getSuperClass
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+name|void
+name|setSuperClass
+parameter_list|(
+name|TypeSourceInfo
+modifier|*
+name|superClass
+parameter_list|)
 block|{
 name|data
 argument_list|()
 operator|.
-name|SuperClass
+name|SuperClassTInfo
 operator|=
-operator|(
-name|superCls
-operator|&&
-name|superCls
-operator|->
-name|hasDefinition
-argument_list|()
-operator|)
-condition|?
-name|superCls
-operator|->
-name|getDefinition
-argument_list|()
-else|:
-name|superCls
+name|superClass
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/// \brief Iterator that walks over the list of categories, filtering out
@@ -6268,37 +7043,16 @@ expr_stmt|;
 block|}
 end_block
 
-begin_function
-name|void
-name|setSuperClassLoc
-parameter_list|(
-name|SourceLocation
-name|Loc
-parameter_list|)
-block|{
-name|data
-argument_list|()
-operator|.
-name|SuperClassLoc
-operator|=
-name|Loc
-expr_stmt|;
-block|}
-end_function
+begin_comment
+comment|/// Retrieve the starting location of the superclass.
+end_comment
 
 begin_expr_stmt
 name|SourceLocation
 name|getSuperClassLoc
 argument_list|()
 specifier|const
-block|{
-return|return
-name|data
-argument_list|()
-operator|.
-name|SuperClassLoc
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -6877,6 +7631,15 @@ return|return
 name|Synthesized
 return|;
 block|}
+comment|/// Retrieve the type of this instance variable when viewed as a member of a
+comment|/// specific object type.
+name|QualType
+name|getUsageType
+argument_list|(
+argument|QualType objectType
+argument_list|)
+specifier|const
+block|;
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
@@ -8112,6 +8875,11 @@ name|ObjCInterfaceDecl
 operator|*
 name|ClassInterface
 block|;
+comment|/// The type parameters associated with this category, if any.
+name|ObjCTypeParamList
+operator|*
+name|TypeParamList
+block|;
 comment|/// referenced protocols in this category.
 name|ObjCProtocolList
 name|ReferencedProtocols
@@ -8147,49 +8915,13 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|ObjCInterfaceDecl *IDecl
 argument_list|,
+argument|ObjCTypeParamList *typeParamList
+argument_list|,
 argument|SourceLocation IvarLBraceLoc=SourceLocation()
 argument_list|,
 argument|SourceLocation IvarRBraceLoc=SourceLocation()
 argument_list|)
-operator|:
-name|ObjCContainerDecl
-argument_list|(
-name|ObjCCategory
-argument_list|,
-name|DC
-argument_list|,
-name|Id
-argument_list|,
-name|ClassNameLoc
-argument_list|,
-name|AtLoc
-argument_list|)
-block|,
-name|ClassInterface
-argument_list|(
-name|IDecl
-argument_list|)
-block|,
-name|NextClassCategory
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|CategoryNameLoc
-argument_list|(
-name|CategoryNameLoc
-argument_list|)
-block|,
-name|IvarLBraceLoc
-argument_list|(
-name|IvarLBraceLoc
-argument_list|)
-block|,
-name|IvarRBraceLoc
-argument_list|(
-argument|IvarRBraceLoc
-argument_list|)
-block|{   }
+block|;
 name|public
 operator|:
 specifier|static
@@ -8210,6 +8942,8 @@ argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
 argument|ObjCInterfaceDecl *IDecl
+argument_list|,
+argument|ObjCTypeParamList *typeParamList
 argument_list|,
 argument|SourceLocation IvarLBraceLoc=SourceLocation()
 argument_list|,
@@ -8246,6 +8980,30 @@ return|return
 name|ClassInterface
 return|;
 block|}
+comment|/// Retrieve the type parameter list associated with this category or
+comment|/// extension.
+name|ObjCTypeParamList
+operator|*
+name|getTypeParamList
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeParamList
+return|;
+block|}
+comment|/// Set the type parameters of this category.
+comment|///
+comment|/// This function is used by the AST importer, which must import the type
+comment|/// parameters after creating their DeclContext to avoid loops.
+name|void
+name|setTypeParamList
+argument_list|(
+name|ObjCTypeParamList
+operator|*
+name|TPL
+argument_list|)
+block|;
 name|ObjCCategoryImplDecl
 operator|*
 name|getImplementation
@@ -10725,6 +11483,15 @@ name|DeclTypeSourceInfo
 operator|=
 name|TSI
 block|;    }
+comment|/// Retrieve the type when this property is used with a specific base object
+comment|/// type.
+name|QualType
+name|getUsageType
+argument_list|(
+argument|QualType objectType
+argument_list|)
+specifier|const
+block|;
 name|PropertyAttributeKind
 name|getPropertyAttributes
 argument_list|()

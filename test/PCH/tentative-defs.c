@@ -12,6 +12,10 @@ comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin9 -include-pch %t.pch -ver
 end_comment
 
 begin_comment
+comment|// REQUIRES: x86-registered-target
+end_comment
+
+begin_comment
 comment|// RUN: grep "@variable = common global i32 0" %t | count 1
 end_comment
 

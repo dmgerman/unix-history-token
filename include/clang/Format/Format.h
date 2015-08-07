@@ -329,6 +329,10 @@ comment|/// Like \c Attach, but break before braces on function, namespace and
 comment|/// class definitions.
 name|BS_Linux
 block|,
+comment|/// Like ``Attach``, but break before braces on enum, function, and record
+comment|/// definitions.
+name|BS_Mozilla
+block|,
 comment|/// Like \c Attach, but break before function definitions, and 'else'.
 name|BS_Stroustrup
 block|,
@@ -488,6 +492,18 @@ comment|/// \brief Language, this format style is targeted at.
 name|LanguageKind
 name|Language
 decl_stmt|;
+comment|/// \brief A regular expression matching macros that start a block.
+name|std
+operator|::
+name|string
+name|MacroBlockBegin
+expr_stmt|;
+comment|/// \brief A regular expression matching macros that end a block.
+name|std
+operator|::
+name|string
+name|MacroBlockEnd
+expr_stmt|;
 comment|/// \brief The maximum number of consecutive empty lines to keep.
 name|unsigned
 name|MaxEmptyLinesToKeep
@@ -901,6 +917,18 @@ operator|==
 name|R
 operator|.
 name|KeepEmptyLinesAtTheStartOfBlocks
+operator|&&
+name|MacroBlockBegin
+operator|==
+name|R
+operator|.
+name|MacroBlockBegin
+operator|&&
+name|MacroBlockEnd
+operator|==
+name|R
+operator|.
+name|MacroBlockEnd
 operator|&&
 name|MaxEmptyLinesToKeep
 operator|==

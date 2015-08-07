@@ -216,5 +216,11 @@ function_decl|;
 block|}
 end_decl_stmt
 
+begin_decl_stmt
+name|namespace
+name|Empty
+block|{}
+end_decl_stmt
+
 end_unit
 

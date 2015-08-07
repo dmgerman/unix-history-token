@@ -675,7 +675,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note{{previous definition is here}}
+comment|// expected-note{{previous declaration is here}}
 end_comment
 
 begin_macro
@@ -692,7 +692,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note{{previous definition is here}}
+comment|// expected-note{{previous declaration is here}}
 end_comment
 
 begin_macro
@@ -709,7 +709,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note{{previous definition is here}}
+comment|// expected-note{{previous declaration is here}}
 end_comment
 
 begin_macro
@@ -737,7 +737,7 @@ argument_list|)
 name|int
 name|LocalRedecl1
 decl_stmt|;
-comment|// expected-error{{redefinition of 'LocalRedecl1' with a different type: 'int' vs 'float'}}
+comment|// expected-error{{redeclaration of 'LocalRedecl1' with a different type: 'int' vs 'float'}}
 name|int
 modifier|*
 name|__attribute__
@@ -748,7 +748,7 @@ operator|)
 argument_list|)
 name|LocalRedecl2
 decl_stmt|;
-comment|// expected-error{{redefinition of 'LocalRedecl2' with a different type: 'int *' vs 'float'}}
+comment|// expected-error{{redeclaration of 'LocalRedecl2' with a different type: 'int *' vs 'float'}}
 name|int
 name|LocalRedecl3
 name|__attribute__
@@ -758,7 +758,7 @@ name|dllimport
 operator|)
 argument_list|)
 decl_stmt|;
-comment|// expected-error{{redefinition of 'LocalRedecl3' with a different type: 'int' vs 'float'}}
+comment|// expected-error{{redeclaration of 'LocalRedecl3' with a different type: 'int' vs 'float'}}
 name|__declspec
 argument_list|(
 argument|dllimport

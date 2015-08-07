@@ -4,7 +4,23 @@ comment|// RUN: %clang_cc1 -emit-llvm -o - -triple x86_64-apple-darwin10 %s | Fi
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -O2 -fno-inline -emit-llvm -o - -triple x86_64-apple-darwin10 %s | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -flto -O2 -fno-inline -emit-llvm -o - -triple x86_64-apple-darwin10 %s | FileCheck %s -check-prefix=LTO
+end_comment
+
+begin_comment
 comment|// Ensure that we don't emit available_externally functions at -O0.
+end_comment
+
+begin_comment
+comment|// Also should not emit them at -O2, unless -flto is present in which case
+end_comment
+
+begin_comment
+comment|// we should preserve them for link-time inlining decisions.
 end_comment
 
 begin_decl_stmt
@@ -35,6 +51,14 @@ end_comment
 
 begin_comment
 comment|// CHECK: declare void @f0(i32)
+end_comment
+
+begin_comment
+comment|// LTO-LABEL: define void @test()
+end_comment
+
+begin_comment
+comment|// LTO: define available_externally void @f0
 end_comment
 
 begin_function
@@ -102,6 +126,10 @@ begin_comment
 comment|// CHECK: @test1
 end_comment
 
+begin_comment
+comment|// LTO: @test1
+end_comment
+
 begin_function
 name|int
 name|test1
@@ -113,6 +141,9 @@ block|{
 comment|// CHECK: br i1
 comment|// CHECK-NOT: call {{.*}} @f1
 comment|// CHECK: ret i32
+comment|// LTO: br i1
+comment|// LTO-NOT: call {{.*}} @f1
+comment|// LTO: ret i32
 return|return
 name|f1
 argument_list|(

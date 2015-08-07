@@ -1174,18 +1174,29 @@ name|AllocaInst
 operator|*
 name|EHSelectorSlot
 expr_stmt|;
+comment|/// A stack of exception code slots. Entering an __except block pushes a slot
+comment|/// on the stack and leaving pops one. The __exception_code() intrinsic loads
+comment|/// a value from the top of the stack.
+name|SmallVector
+operator|<
 name|llvm
 operator|::
-name|AllocaInst
+name|Value
 operator|*
-name|AbnormalTerminationSlot
+operator|,
+literal|1
+operator|>
+name|SEHCodeSlotStack
 expr_stmt|;
-comment|/// The implicit parameter to SEH filter functions of type
-comment|/// 'EXCEPTION_POINTERS*'.
-name|ImplicitParamDecl
-modifier|*
-name|SEHPointersDecl
-decl_stmt|;
+comment|/// Value returned by __exception_info intrinsic.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|SEHInfo
+operator|=
+name|nullptr
+expr_stmt|;
 comment|/// Emits a landing pad for the current EH stack.
 name|llvm
 operator|::
@@ -3595,7 +3606,7 @@ comment|/// Track escaped local variables with auto storage. Used during SEH
 end_comment
 
 begin_comment
-comment|/// outlining to produce a call to llvm.frameescape.
+comment|/// outlining to produce a call to llvm.localescape.
 end_comment
 
 begin_expr_stmt
@@ -5976,12 +5987,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// GenerateThunk - Generate a thunk for the given method.
+comment|/// Generate a thunk for the given method.
 end_comment
 
 begin_decl_stmt
 name|void
-name|GenerateThunk
+name|generateThunk
 argument_list|(
 name|llvm
 operator|::
@@ -10196,15 +10207,8 @@ name|CodeGenFunction
 modifier|&
 name|ParentCGF
 parameter_list|,
-name|StringRef
-name|Name
-parameter_list|,
-name|QualType
-name|RetTy
-parameter_list|,
-name|FunctionArgList
-modifier|&
-name|Args
+name|bool
+name|IsFilter
 parameter_list|,
 specifier|const
 name|Stmt
@@ -10252,12 +10256,28 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|EmitSEHExceptionCodeSave
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|ParentCGF
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|ParentFP
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EntryEBP
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|llvm
@@ -10298,21 +10318,64 @@ comment|/// each capture, mark the capture as escaped and emit a call to
 end_comment
 
 begin_comment
-comment|/// llvm.framerecover. Insert the framerecover result into the LocalDeclMap.
+comment|/// llvm.localrecover. Insert the localrecover result into the LocalDeclMap.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|EmitCapturedLocals
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|ParentCGF
+parameter_list|,
+specifier|const
+name|Stmt
+modifier|*
+name|OutlinedStmt
+parameter_list|,
+name|bool
+name|IsFilter
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Recovers the address of a local in a parent function. ParentVar is the
+end_comment
+
+begin_comment
+comment|/// address of the variable used in the immediate parent function. It can
+end_comment
+
+begin_comment
+comment|/// either be an alloca or a call to llvm.localrecover if there are nested
+end_comment
+
+begin_comment
+comment|/// outlined functions. ParentFP is the frame pointer of the outermost parent
+end_comment
+
+begin_comment
+comment|/// frame.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|recoverAddrOfEscapedLocal
 argument_list|(
 name|CodeGenFunction
 operator|&
 name|ParentCGF
 argument_list|,
-specifier|const
-name|Stmt
+name|llvm
+operator|::
+name|Value
 operator|*
-name|OutlinedStmt
+name|ParentVar
 argument_list|,
 name|llvm
 operator|::
@@ -10320,8 +10383,8 @@ name|Value
 operator|*
 name|ParentFP
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|void
@@ -16181,6 +16244,117 @@ name|public
 label|:
 end_label
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NDEBUG
+end_ifndef
+
+begin_comment
+comment|// Determine whether the given argument is an Objective-C method
+end_comment
+
+begin_comment
+comment|// that may have type parameters in its signature.
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|isObjCMethodWithTypeParams
+parameter_list|(
+specifier|const
+name|ObjCMethodDecl
+modifier|*
+name|method
+parameter_list|)
+block|{
+specifier|const
+name|DeclContext
+modifier|*
+name|dc
+init|=
+name|method
+operator|->
+name|getDeclContext
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+specifier|const
+name|ObjCInterfaceDecl
+modifier|*
+name|classDecl
+init|=
+name|dyn_cast
+operator|<
+name|ObjCInterfaceDecl
+operator|>
+operator|(
+name|dc
+operator|)
+condition|)
+block|{
+return|return
+name|classDecl
+operator|->
+name|getTypeParamListAsWritten
+argument_list|()
+return|;
+block|}
+if|if
+condition|(
+specifier|const
+name|ObjCCategoryDecl
+modifier|*
+name|catDecl
+init|=
+name|dyn_cast
+operator|<
+name|ObjCCategoryDecl
+operator|>
+operator|(
+name|dc
+operator|)
+condition|)
+block|{
+return|return
+name|catDecl
+operator|->
+name|getTypeParamList
+argument_list|()
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|static
+name|bool
+name|isObjCMethodWithTypeParams
+argument_list|(
+argument|const T *
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/// EmitCallArgs - Emit call arguments for a function.
 end_comment
@@ -16241,6 +16415,19 @@ condition|(
 name|CallArgTypeInfo
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|bool
+name|isGenericMethod
+init|=
+name|isObjCMethodWithTypeParams
+argument_list|(
+name|CallArgTypeInfo
+argument_list|)
+decl_stmt|;
+endif|#
+directive|endif
 comment|// First, use the argument types that the type info knows about
 for|for
 control|(
@@ -16284,12 +16471,26 @@ expr_stmt|;
 name|assert
 argument_list|(
 operator|(
+name|isGenericMethod
+operator|||
+operator|(
 operator|(
 operator|*
 name|I
 operator|)
 operator|->
 name|isVariablyModifiedType
+argument_list|()
+operator|||
+operator|(
+operator|*
+name|I
+operator|)
+operator|.
+name|getNonReferenceType
+argument_list|()
+operator|->
+name|isObjCRetainableType
 argument_list|()
 operator|||
 name|getContext
@@ -16322,6 +16523,7 @@ argument_list|)
 operator|.
 name|getTypePtr
 argument_list|()
+operator|)
 operator|)
 operator|&&
 literal|"type mismatch in call argument!"

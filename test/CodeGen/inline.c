@@ -212,6 +212,10 @@ comment|// RUN: %clang_cc1 %s -triple i386-unknown-unknown -O1 -disable-llvm-opt
 end_comment
 
 begin_comment
+comment|// CHECK4-NOT: define weak_odr void @_Exit(
+end_comment
+
+begin_comment
 comment|// CHECK4-LABEL: define weak_odr i32 @ei()
 end_comment
 
@@ -238,6 +242,42 @@ end_comment
 begin_comment
 comment|// CHECK4-LABEL: define available_externally void @gnu_ei_inline()
 end_comment
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(noreturn)
+argument_list|)
+end_macro
+
+begin_function_decl
+name|void
+name|__cdecl
+name|_exit
+parameter_list|(
+name|int
+name|_Code
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|__inline
+name|void
+name|__cdecl
+name|_Exit
+parameter_list|(
+name|int
+name|status
+parameter_list|)
+block|{
+name|_exit
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|extern

@@ -230,6 +230,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Timer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<deque>
 end_include
 
@@ -1251,6 +1257,17 @@ comment|/// \brief The module manager which manages modules and their dependenci
 name|ModuleManager
 name|ModuleMgr
 decl_stmt|;
+comment|/// \brief A timer used to track the time spent deserializing.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|Timer
+operator|>
+name|ReadTimer
+expr_stmt|;
 comment|/// \brief The location where the module file will be considered as
 comment|/// imported from. For non-module AST types it should be invalid.
 name|SourceLocation
@@ -2800,13 +2817,15 @@ operator|,
 literal|2
 operator|>
 expr|>
-name|MergedDeclsMap
+name|KeyDeclsMap
 expr_stmt|;
-comment|/// \brief A mapping from canonical declarations to the set of additional
-comment|/// (global, previously-canonical) declaration IDs that have been merged with
-comment|/// that canonical declaration.
-name|MergedDeclsMap
-name|MergedDecls
+comment|/// \brief A mapping from canonical declarations to the set of global
+comment|/// declaration IDs for key declaration that have been merged with that
+comment|/// canonical declaration. A key declaration is a formerly-canonical
+comment|/// declaration whose module did not import any other key declaration for that
+comment|/// entity. These are the IDs that we use as keys when finding redecl chains.
+name|KeyDeclsMap
+name|KeyDecls
 decl_stmt|;
 comment|/// \brief A mapping from DeclContexts to the semantic DeclContext that we
 comment|/// are treating as the definition of the entity. This is used, for instance,
@@ -3042,6 +3061,178 @@ name|StringRef
 name|Prefix
 argument_list|)
 decl_stmt|;
+comment|/// \brief Returns the first key declaration for the given declaration. This
+comment|/// is one that is formerly-canonical (or still canonical) and whose module
+comment|/// did not import any other key declaration of the entity.
+name|Decl
+modifier|*
+name|getKeyDeclaration
+parameter_list|(
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+block|{
+name|D
+operator|=
+name|D
+operator|->
+name|getCanonicalDecl
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|D
+operator|->
+name|isFromASTFile
+argument_list|()
+condition|)
+return|return
+name|D
+return|;
+name|auto
+name|I
+init|=
+name|KeyDecls
+operator|.
+name|find
+argument_list|(
+name|D
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|I
+operator|==
+name|KeyDecls
+operator|.
+name|end
+argument_list|()
+operator|||
+name|I
+operator|->
+name|second
+operator|.
+name|empty
+argument_list|()
+condition|)
+return|return
+name|D
+return|;
+return|return
+name|GetExistingDecl
+argument_list|(
+name|I
+operator|->
+name|second
+index|[
+literal|0
+index|]
+argument_list|)
+return|;
+block|}
+specifier|const
+name|Decl
+modifier|*
+name|getKeyDeclaration
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+block|{
+return|return
+name|getKeyDeclaration
+argument_list|(
+name|const_cast
+operator|<
+name|Decl
+operator|*
+operator|>
+operator|(
+name|D
+operator|)
+argument_list|)
+return|;
+block|}
+comment|/// \brief Run a callback on each imported key declaration of \p D.
+name|template
+operator|<
+name|typename
+name|Fn
+operator|>
+name|void
+name|forEachImportedKeyDecl
+argument_list|(
+argument|const Decl *D
+argument_list|,
+argument|Fn Visit
+argument_list|)
+block|{
+name|D
+operator|=
+name|D
+operator|->
+name|getCanonicalDecl
+argument_list|()
+block|;
+if|if
+condition|(
+name|D
+operator|->
+name|isFromASTFile
+argument_list|()
+condition|)
+name|Visit
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+name|auto
+name|It
+operator|=
+name|KeyDecls
+operator|.
+name|find
+argument_list|(
+name|const_cast
+operator|<
+name|Decl
+operator|*
+operator|>
+operator|(
+name|D
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|It
+operator|!=
+name|KeyDecls
+operator|.
+name|end
+argument_list|()
+condition|)
+for|for
+control|(
+name|auto
+name|ID
+range|:
+name|It
+operator|->
+name|second
+control|)
+name|Visit
+argument_list|(
+name|GetExistingDecl
+argument_list|(
+name|ID
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 name|private
 label|:
 struct|struct
@@ -3453,82 +3644,6 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
-name|template
-operator|<
-name|typename
-name|Fn
-operator|>
-name|void
-name|forEachFormerlyCanonicalImportedDecl
-argument_list|(
-argument|const Decl *D
-argument_list|,
-argument|Fn Visit
-argument_list|)
-block|{
-name|D
-operator|=
-name|D
-operator|->
-name|getCanonicalDecl
-argument_list|()
-block|;
-if|if
-condition|(
-name|D
-operator|->
-name|isFromASTFile
-argument_list|()
-condition|)
-name|Visit
-argument_list|(
-name|D
-argument_list|)
-expr_stmt|;
-name|auto
-name|It
-operator|=
-name|MergedDecls
-operator|.
-name|find
-argument_list|(
-name|const_cast
-operator|<
-name|Decl
-operator|*
-operator|>
-operator|(
-name|D
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|It
-operator|!=
-name|MergedDecls
-operator|.
-name|end
-argument_list|()
-condition|)
-for|for
-control|(
-name|auto
-name|ID
-range|:
-name|It
-operator|->
-name|second
-control|)
-name|Visit
-argument_list|(
-name|GetExistingDecl
-argument_list|(
-name|ID
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 name|RecordLocation
 name|DeclCursorForID
 argument_list|(
@@ -4148,6 +4263,18 @@ begin_comment
 comment|/// the global module index.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ReadTimer If non-null, a timer used to track the time spent
+end_comment
+
+begin_comment
+comment|/// deserializing.
+end_comment
+
 begin_macro
 name|ASTReader
 argument_list|(
@@ -4169,6 +4296,8 @@ argument_list|,
 argument|bool ValidateSystemInputs = false
 argument_list|,
 argument|bool UseGlobalIndex = true
+argument_list|,
+argument|std::unique_ptr<llvm::Timer> ReadTimer = {}
 argument_list|)
 end_macro
 
@@ -6313,17 +6442,13 @@ begin_comment
 comment|/// decls that are initializing. Must be paired with FinishedDeserializing.
 end_comment
 
-begin_function
+begin_expr_stmt
 name|void
 name|StartedDeserializing
-parameter_list|()
-function|override
-block|{
-operator|++
-name|NumCurrentElementsDeserializing
+argument_list|()
+name|override
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Notify ASTReader that we finished the deserialization of

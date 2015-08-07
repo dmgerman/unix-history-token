@@ -534,6 +534,107 @@ directive|endif
 block|}
 end_function
 
+begin_comment
+comment|// Verify that the alternate spelling __enable_if__ works as well.
+end_comment
+
+begin_function_decl
+name|int
+name|isdigit2
+parameter_list|(
+name|int
+name|c
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(overloadable
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-note{{candidate function}}
+end_comment
+
+begin_function_decl
+name|int
+name|isdigit2
+parameter_list|(
+name|int
+name|c
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(overloadable
+end_function_decl
+
+begin_comment
+unit|))
+comment|// expected-note{{candidate function has been explicitly made unavailable}}
+end_comment
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(__enable_if__(c<= -
+literal|1
+argument||| c>
+literal|255
+argument|,
+literal|"'c' must have the value of an unsigned char or EOF"
+argument|))
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|__attribute__
+argument_list|(
+operator|(
+name|unavailable
+argument_list|(
+literal|"'c' must have the value of an unsigned char or EOF"
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+name|void
+name|test4
+parameter_list|(
+name|int
+name|c
+parameter_list|)
+block|{
+name|isdigit2
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+name|isdigit2
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|CODEGEN
+name|isdigit2
+argument_list|(
+operator|-
+literal|10
+argument_list|)
+expr_stmt|;
+comment|// expected-error{{call to unavailable function 'isdigit2': 'c' must have the value of an unsigned char or EOF}}
+endif|#
+directive|endif
+block|}
+end_function
+
 begin_ifndef
 ifndef|#
 directive|ifndef

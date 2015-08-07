@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// REQUIRES: x86-registered-target
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target i386-unknown-unknown -emit-ast -o %t.ast %s
 end_comment
 

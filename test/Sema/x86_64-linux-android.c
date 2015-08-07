@@ -7,6 +7,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -x ast -ast-print %t | FileCheck %s
 end_comment
 
+begin_comment
+comment|// REQUIRES: x86-registered-target
+end_comment
+
 begin_extern
 extern|extern int a1_0[sizeof(long double
 end_extern

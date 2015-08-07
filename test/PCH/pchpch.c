@@ -12,6 +12,10 @@ comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -fsyntax-only %s -includ
 end_comment
 
 begin_comment
+comment|// REQUIRES: x86-registered-target
+end_comment
+
+begin_comment
 comment|// The purpose of this test is to make sure that a PCH created while including
 end_comment
 

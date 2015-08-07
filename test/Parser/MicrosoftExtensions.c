@@ -472,49 +472,32 @@ name|void
 argument_list|)
 expr|;
 comment|/* expected-error {{expected ']'}} */
-index|[]
-name|__interface
-name|I
-block|{}
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* expected-error {{Microsoft attribute block cannot be empty}} */
-end_comment
-
-begin_function
 name|void
 name|ms_intrinsics
-parameter_list|(
-name|int
-name|a
-parameter_list|)
+argument_list|(
+argument|int a
+argument_list|)
 block|{
 name|__noop
 argument_list|()
-expr_stmt|;
+block|;
 name|__assume
 argument_list|(
 name|a
 argument_list|)
-expr_stmt|;
+block|;
 name|__debugbreak
 argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_struct
-struct|struct
+block|; }
+expr|struct
 name|__declspec
 argument_list|(
 argument|frobble
 argument_list|)
 name|S1
 block|{}
-struct|;
-end_struct
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* expected-warning {{__declspec attribute 'frobble' is not supported}} */

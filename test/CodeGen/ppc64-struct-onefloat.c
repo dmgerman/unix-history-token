@@ -103,7 +103,7 @@ comment|// CHECK:  %{{[a-zA-Z0-9.]+}} = getelementptr %struct.s1, %struct.s1* %a
 end_comment
 
 begin_comment
-comment|// CHECK:  store float %a.coerce, float* %{{[a-zA-Z0-9.]+}}, align 1
+comment|// CHECK:  store float %a.coerce, float* %{{[a-zA-Z0-9.]+}}, align 4
 end_comment
 
 begin_comment
@@ -111,7 +111,7 @@ comment|// CHECK:  %{{[a-zA-Z0-9.]+}} = getelementptr %struct.s2, %struct.s2* %b
 end_comment
 
 begin_comment
-comment|// CHECK:  store double %b.coerce, double* %{{[a-zA-Z0-9.]+}}, align 1
+comment|// CHECK:  store double %b.coerce, double* %{{[a-zA-Z0-9.]+}}, align 8
 end_comment
 
 begin_comment
@@ -123,7 +123,7 @@ comment|// CHECK:  %{{[a-zA-Z0-9.]+}} = getelementptr %struct.s1, %struct.s1* %{
 end_comment
 
 begin_comment
-comment|// CHECK:  store float %d.coerce, float* %{{[a-zA-Z0-9.]+}}, align 1
+comment|// CHECK:  store float %d.coerce, float* %{{[a-zA-Z0-9.]+}}, align 4
 end_comment
 
 begin_comment
@@ -135,7 +135,7 @@ comment|// CHECK:  %{{[a-zA-Z0-9.]+}} = getelementptr %struct.s2, %struct.s2* %{
 end_comment
 
 begin_comment
-comment|// CHECK:  store double %e.coerce, double* %{{[a-zA-Z0-9.]+}}, align 1
+comment|// CHECK:  store double %e.coerce, double* %{{[a-zA-Z0-9.]+}}, align 8
 end_comment
 
 begin_comment
@@ -204,7 +204,7 @@ comment|// CHECK:  %{{[a-zA-Z0-9.]+}} = getelementptr %struct.s1, %struct.s1* %p
 end_comment
 
 begin_comment
-comment|// CHECK:  %{{[0-9]+}} = load float, float* %{{[a-zA-Z0-9.]+}}, align 1
+comment|// CHECK:  %{{[0-9]+}} = load float, float* %{{[a-zA-Z0-9.]+}}, align 4
 end_comment
 
 begin_comment
@@ -212,7 +212,7 @@ comment|// CHECK:  %{{[a-zA-Z0-9.]+}} = getelementptr %struct.s2, %struct.s2* %p
 end_comment
 
 begin_comment
-comment|// CHECK:  %{{[0-9]+}} = load double, double* %{{[a-zA-Z0-9.]+}}, align 1
+comment|// CHECK:  %{{[0-9]+}} = load double, double* %{{[a-zA-Z0-9.]+}}, align 8
 end_comment
 
 begin_comment
@@ -224,7 +224,7 @@ comment|// CHECK:  %{{[a-zA-Z0-9.]+}} = getelementptr %struct.s1, %struct.s1* %{
 end_comment
 
 begin_comment
-comment|// CHECK:  %{{[0-9]+}} = load float, float* %{{[a-zA-Z0-9.]+}}, align 1
+comment|// CHECK:  %{{[0-9]+}} = load float, float* %{{[a-zA-Z0-9.]+}}, align 4
 end_comment
 
 begin_comment
@@ -236,7 +236,7 @@ comment|// CHECK:  %{{[a-zA-Z0-9.]+}} = getelementptr %struct.s2, %struct.s2* %{
 end_comment
 
 begin_comment
-comment|// CHECK:  %{{[0-9]+}} = load double, double* %{{[a-zA-Z0-9.]+}}, align 1
+comment|// CHECK:  %{{[0-9]+}} = load double, double* %{{[a-zA-Z0-9.]+}}, align 8
 end_comment
 
 begin_comment

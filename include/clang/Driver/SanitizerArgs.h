@@ -117,6 +117,9 @@ decl_stmt|;
 name|int
 name|MsanTrackOrigins
 decl_stmt|;
+name|bool
+name|MsanUseAfterDtor
+decl_stmt|;
 name|int
 name|AsanFieldPadding
 decl_stmt|;

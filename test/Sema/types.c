@@ -247,7 +247,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note {{previous definition}}
+comment|// expected-note {{previous declaration}}
 end_comment
 
 begin_decl_stmt

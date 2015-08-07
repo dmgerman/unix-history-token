@@ -317,6 +317,10 @@ block|,
 comment|// Call to kmp_int32 __kmpc_cancellationpoint(ident_t *loc, kmp_int32
 comment|// global_tid, kmp_int32 cncl_kind);
 name|OMPRTL__kmpc_cancellationpoint
+block|,
+comment|// Call to kmp_int32 __kmpc_cancel(ident_t *loc, kmp_int32 global_tid,
+comment|// kmp_int32 cncl_kind);
+name|OMPRTL__kmpc_cancel
 block|,   }
 enum|;
 comment|/// \brief Values for bit flags used in the ident_t to describe the fields.
@@ -1694,6 +1698,24 @@ comment|///
 name|virtual
 name|void
 name|emitCancellationPointCall
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|OpenMPDirectiveKind
+name|CancelRegion
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit code for 'cancel' construct.
+comment|/// \param CancelRegion Region kind for which the cancel must be emitted.
+comment|///
+name|virtual
+name|void
+name|emitCancelCall
 parameter_list|(
 name|CodeGenFunction
 modifier|&

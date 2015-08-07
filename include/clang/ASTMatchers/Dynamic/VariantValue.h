@@ -789,7 +789,7 @@ comment|/// copy/assignment.
 comment|///
 comment|/// Supported types:
 comment|///  - \c unsigned
-comment|///  - \c std::string
+comment|///  - \c llvm::StringRef
 comment|///  - \c VariantMatcher (\c DynTypedMatcher / \c Matcher<T>)
 name|class
 name|VariantValue
@@ -835,14 +835,9 @@ argument_list|)
 empty_stmt|;
 name|VariantValue
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|String
+argument|StringRef String
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|VariantValue
 argument_list|(
 specifier|const
@@ -909,15 +904,11 @@ specifier|const
 expr_stmt|;
 name|void
 name|setString
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|(
+name|StringRef
 name|String
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Matcher value functions.
 name|bool
 name|isMatcher

@@ -260,6 +260,98 @@ comment|// CHECK-ARM-NOT: -lpthread
 end_comment
 
 begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -### -o %t.o %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mipsel-unknown-nacl -resource-dir foo 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MIPS %s
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: {{.*}}clang{{.*}}" "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: "-fuse-init-array"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: "-target-cpu" "mips32r2"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: "-target-abi" "o32"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: "-mfloat-abi" "hard"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: "-resource-dir" "foo"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: "-internal-isystem" "foo{{/|\\\\}}include"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: "-internal-isystem" "{{.*}}{{/|\\\\}}..{{/|\\\\}}mipsel-nacl{{/|\\\\}}usr{{/|\\\\}}include"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: "-internal-isystem" "{{.*}}{{/|\\\\}}..{{/|\\\\}}mipsel-nacl{{/|\\\\}}include"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS-NOT: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: "--build-id"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: "-m" "mipselelf_nacl"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: "-static"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: "-L{{.*}}{{/|\\\\}}..{{/|\\\\}}mipsel-nacl{{/|\\\\}}lib"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: "-L{{.*}}{{/|\\\\}}..{{/|\\\\}}mipsel-nacl{{/|\\\\}}usr{{/|\\\\}}lib"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: "-Lfoo{{/|\\\\}}lib{{/|\\\\}}mipsel-nacl"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: "-lpnacl_legacy"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS-NOT: "-lpthread"
+end_comment
+
+begin_comment
 comment|// Check that even when the target arch is just "arm" (as will be the case when
 end_comment
 
@@ -421,6 +513,50 @@ end_comment
 
 begin_comment
 comment|// CHECK-x86_64-CXX: "-lpthread"
+end_comment
+
+begin_comment
+comment|// RUN: %clangxx -no-canonical-prefixes -### -o %t.o %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mipsel-unknown-nacl -resource-dir foo 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MIPS-CXX %s
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS-CXX: {{.*}}clang{{.*}}" "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS-CXX: "-resource-dir" "foo"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS-CXX: "-internal-isystem" "{{.*}}{{/|\\\\}}..{{/|\\\\}}mipsel-nacl{{/|\\\\}}include{{/|\\\\}}c++{{/|\\\\}}v1"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS-CXX: "-internal-isystem" "foo{{/|\\\\}}include"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS-CXX: "-internal-isystem" "{{.*}}{{/|\\\\}}..{{/|\\\\}}mipsel-nacl{{/|\\\\}}usr{{/|\\\\}}include"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS-CXX: "-internal-isystem" "{{.*}}{{/|\\\\}}..{{/|\\\\}}mipsel-nacl{{/|\\\\}}include"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS-CXX: "-lnacl"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS-CXX: "-lpthread"
 end_comment
 
 end_unit

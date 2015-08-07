@@ -429,7 +429,7 @@ comment|// CHECK-LABEL: @call_f1
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load float, float* getelementptr inbounds (%struct.f1, %struct.f1* @global_f1, i32 0, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load float, float* getelementptr inbounds (%struct.f1, %struct.f1* @global_f1, i32 0, i32 0, i32 0), align 4
 end_comment
 
 begin_comment
@@ -465,7 +465,7 @@ comment|// CHECK-LABEL: @call_f2
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [2 x float], [2 x float]* getelementptr inbounds (%struct.f2, %struct.f2* @global_f2, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [2 x float], [2 x float]* getelementptr inbounds (%struct.f2, %struct.f2* @global_f2, i32 0, i32 0), align 4
 end_comment
 
 begin_comment
@@ -501,7 +501,7 @@ comment|// CHECK-LABEL: @call_f3
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [3 x float], [3 x float]* getelementptr inbounds (%struct.f3, %struct.f3* @global_f3, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [3 x float], [3 x float]* getelementptr inbounds (%struct.f3, %struct.f3* @global_f3, i32 0, i32 0), align 4
 end_comment
 
 begin_comment
@@ -537,7 +537,7 @@ comment|// CHECK-LABEL: @call_f4
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [4 x float], [4 x float]* getelementptr inbounds (%struct.f4, %struct.f4* @global_f4, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [4 x float], [4 x float]* getelementptr inbounds (%struct.f4, %struct.f4* @global_f4, i32 0, i32 0), align 4
 end_comment
 
 begin_comment
@@ -573,7 +573,7 @@ comment|// CHECK-LABEL: @call_f5
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [5 x float], [5 x float]* getelementptr inbounds (%struct.f5, %struct.f5* @global_f5, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [5 x float], [5 x float]* getelementptr inbounds (%struct.f5, %struct.f5* @global_f5, i32 0, i32 0), align 4
 end_comment
 
 begin_comment
@@ -609,7 +609,7 @@ comment|// CHECK-LABEL: @call_f6
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [6 x float], [6 x float]* getelementptr inbounds (%struct.f6, %struct.f6* @global_f6, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [6 x float], [6 x float]* getelementptr inbounds (%struct.f6, %struct.f6* @global_f6, i32 0, i32 0), align 4
 end_comment
 
 begin_comment
@@ -645,7 +645,7 @@ comment|// CHECK-LABEL: @call_f7
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [7 x float], [7 x float]* getelementptr inbounds (%struct.f7, %struct.f7* @global_f7, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [7 x float], [7 x float]* getelementptr inbounds (%struct.f7, %struct.f7* @global_f7, i32 0, i32 0), align 4
 end_comment
 
 begin_comment
@@ -681,7 +681,7 @@ comment|// CHECK-LABEL: @call_f8
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [8 x float], [8 x float]* getelementptr inbounds (%struct.f8, %struct.f8* @global_f8, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [8 x float], [8 x float]* getelementptr inbounds (%struct.f8, %struct.f8* @global_f8, i32 0, i32 0), align 4
 end_comment
 
 begin_comment
@@ -725,7 +725,7 @@ comment|// CHECK: %[[TMP2:[^ ]+]] = bitcast [5 x i64]* %[[TMP1]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK: call void @llvm.memcpy.p0i8.p0i8.i64(i8* %[[TMP2]], i8* bitcast (%struct.f9* @global_f9 to i8*), i64 36, i32 1, i1 false)
+comment|// CHECK: call void @llvm.memcpy.p0i8.p0i8.i64(i8* %[[TMP2]], i8* bitcast (%struct.f9* @global_f9 to i8*), i64 36, i32 4, i1 false)
 end_comment
 
 begin_comment

@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -triple mips64-none-linux-gnu -emit-pch -o %t %s
 end_comment
 
 begin_comment
+comment|// REQUIRES: mips-registered-target
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -x ast -ast-print %t | FileCheck %s
 end_comment
 

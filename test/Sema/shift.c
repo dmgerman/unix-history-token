@@ -222,6 +222,15 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+comment|// expected-warning {{shifting a negative signed value is undefined}}
+name|i
+operator|=
+operator|-
+literal|1
+operator|<<
+literal|0
+expr_stmt|;
+comment|// expected-warning {{shifting a negative signed value is undefined}}
 name|i
 operator|=
 literal|0
@@ -279,7 +288,7 @@ name|INT_MIN
 operator|<<
 literal|2
 expr_stmt|;
-comment|// expected-warning {{bits to represent, but 'int' only has}}
+comment|// expected-warning {{shifting a negative signed value is undefined}}
 name|lli
 operator|=
 literal|1LL

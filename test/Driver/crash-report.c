@@ -28,7 +28,7 @@ comment|// RUN:  -Xclang -internal-externc-isystem -Xclang /tmp/                
 end_comment
 
 begin_comment
-comment|// RUN:  -DFOO=BAR 2>&1 | FileCheck %s
+comment|// RUN:  -DFOO=BAR -DBAR="BAZ QUX" 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
@@ -80,6 +80,18 @@ comment|// CHECKSH: # Crash reproducer
 end_comment
 
 begin_comment
+comment|// CHECKSH-NEXT: # Driver args: "-fsyntax-only"
+end_comment
+
+begin_comment
+comment|// CHECKSH-SAME: "-D" "FOO=BAR"
+end_comment
+
+begin_comment
+comment|// CHECKSH-SAME: "-D" "BAR=BAZ QUX"
+end_comment
+
+begin_comment
 comment|// CHECKSH-NEXT: # Original command: {{.*$}}
 end_comment
 
@@ -93,6 +105,10 @@ end_comment
 
 begin_comment
 comment|// CHECKSH: "-D" "FOO=BAR"
+end_comment
+
+begin_comment
+comment|// CHECKSH: "-D" "BAR=BAZ QUX"
 end_comment
 
 begin_comment

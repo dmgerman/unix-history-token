@@ -151,11 +151,11 @@ name|MRTD
 end_ifdef
 
 begin_comment
-comment|// expected-note@+3 {{previous definition is here}}
+comment|// expected-note@+3 {{previous declaration is here}}
 end_comment
 
 begin_comment
-comment|// expected-error@+3 {{redefinition of 'a' with a different type: 'void ((*))(int, int) __attribute__((cdecl))' vs 'void (*)(int, int) __attribute__((stdcall))'}}
+comment|// expected-error@+3 {{redeclaration of 'a' with a different type: 'void ((*))(int, int) __attribute__((cdecl))' vs 'void (*)(int, int) __attribute__((stdcall))'}}
 end_comment
 
 begin_endif
@@ -244,11 +244,11 @@ name|MRTD
 end_ifndef
 
 begin_comment
-comment|// expected-note@+3 {{previous definition is here}}
+comment|// expected-note@+3 {{previous declaration is here}}
 end_comment
 
 begin_comment
-comment|// expected-error@+3 {{redefinition of 'c' with a different type: 'void ((*))(int, int) __attribute__((stdcall))' vs 'void (*)(int, int)'}}
+comment|// expected-error@+3 {{redeclaration of 'c' with a different type: 'void ((*))(int, int) __attribute__((stdcall))' vs 'void (*)(int, int)'}}
 end_comment
 
 begin_endif

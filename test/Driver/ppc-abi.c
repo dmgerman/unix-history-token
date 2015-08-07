@@ -84,6 +84,14 @@ comment|// RUN:   -mabi=elfv2 | FileCheck -check-prefix=CHECK-ELFv2 %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target powerpc64le-unknown-linux-gnu %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   -mabi=altivec | FileCheck -check-prefix=CHECK-ELFv2 %s
+end_comment
+
+begin_comment
 comment|// CHECK-ELFv1: "-target-abi" "elfv1"
 end_comment
 

@@ -409,7 +409,7 @@ name|T
 operator|>
 name|id
 argument_list|(
-argument|const std::string&ID
+argument|StringRef ID
 argument_list|,
 argument|const internal::BindableMatcher<T>&InnerMatcher
 argument_list|)

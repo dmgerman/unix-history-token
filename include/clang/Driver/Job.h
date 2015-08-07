@@ -376,6 +376,26 @@ return|return
 name|Arguments
 return|;
 block|}
+comment|/// Print a command argument, and optionally quote it.
+specifier|static
+name|void
+name|printArg
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Arg
+argument_list|,
+name|bool
+name|Quote
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// Like Command, but with a fallback which is executed in case

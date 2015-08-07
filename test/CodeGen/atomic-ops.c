@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 %s -emit-llvm -o - -ffreestanding -triple=i686-apple-
 end_comment
 
 begin_comment
+comment|// REQUIRES: x86-registered-target
+end_comment
+
+begin_comment
 comment|// Also test serialization of atomic operations here, to avoid duplicating the
 end_comment
 

@@ -263,7 +263,7 @@ comment|// CHECK: [[tryleave]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK-NEXT: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
@@ -330,7 +330,7 @@ comment|// CHECK: [[tryleave]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK-NEXT: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
@@ -412,7 +412,7 @@ comment|// CHECK: [[tryleave]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK-NEXT: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
@@ -494,7 +494,7 @@ comment|// CHECK: [[g1_cont1]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK-NEXT: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
@@ -530,7 +530,7 @@ comment|// CHECK-NEXT: catch i8* null
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
@@ -667,7 +667,7 @@ comment|// CHECK: [[except]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: invoke void @g()
+comment|// CHECK: invoke void @g()
 end_comment
 
 begin_comment
@@ -699,7 +699,7 @@ comment|// CHECK: [[outerexcept]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: br label %[[trycont4:[^ ]*]]
+comment|// CHECK: br label %[[trycont4:[^ ]*]]
 end_comment
 
 begin_comment
@@ -817,7 +817,7 @@ comment|// CHECK: [[except]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: invoke void @g()
+comment|// CHECK: invoke void @g()
 end_comment
 
 begin_comment
@@ -829,7 +829,7 @@ comment|// CHECK: [[g2_cont]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: br label %[[tryleave:[^ ]*]]
+comment|// CHECK: br label %[[tryleave:[^ ]*]]
 end_comment
 
 begin_comment
@@ -841,7 +841,7 @@ comment|// CHECK: [[g2_lpad]]
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
@@ -869,7 +869,7 @@ comment|// CHECK: [[tryleave]]
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
@@ -972,7 +972,7 @@ comment|// CHECK: store i32 16, i32* %[[myres:[^ ]*]],
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
@@ -992,7 +992,7 @@ comment|// CHECK: store i32 51, i32* %[[myres]]
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
@@ -1016,7 +1016,7 @@ comment|// CHECK-NEXT: cleanup
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
@@ -1056,7 +1056,7 @@ comment|// CHECK: [[ehcleanup]]
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment

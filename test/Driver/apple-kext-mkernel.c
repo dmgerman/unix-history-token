@@ -40,7 +40,7 @@ comment|// RUN: FileCheck --check-prefix=CHECK-ARM< %t %s
 end_comment
 
 begin_comment
-comment|// CHECK-ARM: "-backend-option" "-arm-long-calls"
+comment|// CHECK-ARM: "-target-feature" "+long-calls"
 end_comment
 
 begin_comment

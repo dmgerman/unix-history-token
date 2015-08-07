@@ -24,15 +24,15 @@ comment|// RUN:    | FileCheck %s -check-prefix CHECK-NO-LONG-CALLS
 end_comment
 
 begin_comment
-comment|// CHECK-DEFAULT-NOT: "-backend-option" "-arm-long-calls"
+comment|// CHECK-DEFAULT-NOT: "-target-feature" "+long-calls"
 end_comment
 
 begin_comment
-comment|// CHECK-LONG-CALLS: "-backend-option" "-arm-long-calls"
+comment|// CHECK-LONG-CALLS: "-target-feature" "+long-calls"
 end_comment
 
 begin_comment
-comment|// CHECK-NO-LONG-CALLS-NOT: "-backend-option" "-arm-long-calls"
+comment|// CHECK-NO-LONG-CALLS-NOT: "-target-feature" "+long-calls"
 end_comment
 
 end_unit

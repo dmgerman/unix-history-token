@@ -360,6 +360,14 @@ comment|// CHECK-TRACK-ORIGINS-3: error: invalid value '3' in '-fsanitize-memory
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=memory -fsanitize-memory-use-after-dtor -pie %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-MSAN-USE-AFTER-DTOR
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-USE-AFTER-DTOR: -cc1{{.*}}-fsanitize-memory-use-after-dtor
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-address-field-padding=0 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ASAN-FIELD-PADDING-0
 end_comment
 
@@ -733,6 +741,18 @@ end_comment
 
 begin_comment
 comment|// CHECK-CFI-NOTRAP-OLD-MACOS: error: unsupported option '-fno-sanitize-trap=cfi-vcall' for target 'x86_64-apple-darwin10'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-pc-win32 -flto -fsanitize=cfi-vcall -fno-sanitize-trap=cfi -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-NOTRAP-WIN
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-NOTRAP-WIN: -emit-llvm-bc
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-NOTRAP-WIN-NOT: -fsanitize-trap=cfi
 end_comment
 
 begin_comment

@@ -154,6 +154,29 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+name|int
+name|__attribute__
+argument_list|(
+operator|(
+name|target
+argument_list|(
+literal|"avx,      sse4.2,      arch=   ivybridge"
+argument_list|)
+operator|)
+argument_list|)
+name|qux
+argument_list|(
+name|int
+name|a
+argument_list|)
+block|{
+return|return
+literal|4
+return|;
+block|}
+end_decl_stmt
+
 begin_comment
 comment|// Check that we emit the additional subtarget and cpu features for foo and not for baz or bar.
 end_comment
@@ -188,6 +211,10 @@ end_comment
 
 begin_comment
 comment|// CHECK: bar{{.*}} #0
+end_comment
+
+begin_comment
+comment|// CHECK: qux{{.*}} #1
 end_comment
 
 begin_comment

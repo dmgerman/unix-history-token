@@ -525,11 +525,7 @@ comment|/// \brief Add a binding from an id to a node.
 name|void
 name|setBinding
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|Id
 argument_list|,
 specifier|const

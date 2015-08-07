@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -triple x86_64-pc-win32 -fms-extensions -emit-llvm -o - | FileCheck %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple i686-pc-win32 -fms-extensions -emit-llvm -o - | FileCheck %s
+end_comment
+
 begin_function_decl
 name|void
 name|abort
@@ -89,11 +93,11 @@ comment|// CHECK: [[invoke_cont]]
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
-comment|// CHECK: call void @"\01?fin$0@0@basic_finally@@"(i8 0, i8* %[[fp]])
+comment|// CHECK: call void @"\01?fin$0@0@basic_finally@@"({{i8( zeroext)?}} 0, i8* %[[fp]])
 end_comment
 
 begin_comment
@@ -117,11 +121,11 @@ comment|// CHECK-NEXT: cleanup
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
-comment|// CHECK: call void @"\01?fin$0@0@basic_finally@@"(i8 1, i8* %[[fp]])
+comment|// CHECK: call void @"\01?fin$0@0@basic_finally@@"({{i8( zeroext)?}} 1, i8* %[[fp]])
 end_comment
 
 begin_comment
@@ -129,7 +133,7 @@ comment|// CHECK: resume { i8*, i32 }
 end_comment
 
 begin_comment
-comment|// CHECK: define internal void @"\01?fin$0@0@basic_finally@@"(i8 %abnormal_termination, i8* %frame_pointer)
+comment|// CHECK: define internal void @"\01?fin$0@0@basic_finally@@"({{.*}})
 end_comment
 
 begin_comment
@@ -219,11 +223,11 @@ comment|// CHECK: [[invoke_cont]]
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
-comment|// CHECK: call void @"\01?fin$0@0@label_in_finally@@"(i8 0, i8* %[[fp]])
+comment|// CHECK: call void @"\01?fin$0@0@label_in_finally@@"({{i8( zeroext)?}} 0, i8* %[[fp]])
 end_comment
 
 begin_comment
@@ -231,7 +235,7 @@ comment|// CHECK: ret void
 end_comment
 
 begin_comment
-comment|// CHECK: define internal void @"\01?fin$0@0@label_in_finally@@"(i8 %abnormal_termination, i8* %frame_pointer)
+comment|// CHECK: define internal void @"\01?fin$0@0@label_in_finally@@"({{.*}})
 end_comment
 
 begin_comment
@@ -313,11 +317,11 @@ comment|// CHECK: [[invoke_cont]]
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
-comment|// CHECK: call void @"\01?fin$0@0@use_abnormal_termination@@"(i8 0, i8* %[[fp]])
+comment|// CHECK: call void @"\01?fin$0@0@use_abnormal_termination@@"({{i8( zeroext)?}} 0, i8* %[[fp]])
 end_comment
 
 begin_comment
@@ -341,11 +345,11 @@ comment|// CHECK-NEXT: cleanup
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.localaddress()
 end_comment
 
 begin_comment
-comment|// CHECK: call void @"\01?fin$0@0@use_abnormal_termination@@"(i8 1, i8* %[[fp]])
+comment|// CHECK: call void @"\01?fin$0@0@use_abnormal_termination@@"({{i8( zeroext)?}} 1, i8* %[[fp]])
 end_comment
 
 begin_comment
@@ -353,11 +357,11 @@ comment|// CHECK: resume { i8*, i32 }
 end_comment
 
 begin_comment
-comment|// CHECK: define internal void @"\01?fin$0@0@use_abnormal_termination@@"(i8 %abnormal_termination, i8* %frame_pointer)
+comment|// CHECK: define internal void @"\01?fin$0@0@use_abnormal_termination@@"({{i8( zeroext)?}} %[[abnormal:abnormal_termination]], i8* %frame_pointer)
 end_comment
 
 begin_comment
-comment|// CHECK: %[[abnormal_zext:[^ ]*]] = zext i8 %abnormal_termination to i32
+comment|// CHECK: %[[abnormal_zext:[^ ]*]] = zext i8 %[[abnormal]] to i32
 end_comment
 
 begin_comment
@@ -393,11 +397,7 @@ comment|// CHECK-LABEL: define void @noreturn_noop_finally()
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
-end_comment
-
-begin_comment
-comment|// CHECK: call void @"\01?fin$0@0@noreturn_noop_finally@@"(i8 0, i8* %[[fp]])
+comment|// CHECK: call void @"\01?fin$0@0@noreturn_noop_finally@@"({{.*}})
 end_comment
 
 begin_comment
@@ -405,7 +405,7 @@ comment|// CHECK: ret void
 end_comment
 
 begin_comment
-comment|// CHECK: define internal void @"\01?fin$0@0@noreturn_noop_finally@@"(i8 %abnormal_termination, i8* %frame_pointer)
+comment|// CHECK: define internal void @"\01?fin$0@0@noreturn_noop_finally@@"({{.*}})
 end_comment
 
 begin_comment
@@ -457,11 +457,7 @@ comment|// CHECK: [[cont]]
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
-end_comment
-
-begin_comment
-comment|// CHECK: call void @"\01?fin$0@0@noreturn_finally@@"(i8 0, i8* %[[fp]])
+comment|// CHECK: call void @"\01?fin$0@0@noreturn_finally@@"({{.*}})
 end_comment
 
 begin_comment
@@ -485,11 +481,7 @@ comment|// CHECK-NEXT: cleanup
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
-end_comment
-
-begin_comment
-comment|// CHECK: call void @"\01?fin$0@0@noreturn_finally@@"(i8 1, i8* %[[fp]])
+comment|// CHECK: call void @"\01?fin$0@0@noreturn_finally@@"({{.*}})
 end_comment
 
 begin_comment
@@ -497,7 +489,7 @@ comment|// CHECK: resume { i8*, i32 }
 end_comment
 
 begin_comment
-comment|// CHECK: define internal void @"\01?fin$0@0@noreturn_finally@@"(i8 %abnormal_termination, i8* %frame_pointer)
+comment|// CHECK: define internal void @"\01?fin$0@0@noreturn_finally@@"({{.*}})
 end_comment
 
 begin_comment
@@ -529,11 +521,7 @@ comment|// CHECK-LABEL: define i32 @finally_with_return()
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: call void @"\01?fin$0@0@finally_with_return@@"(i8 0, i8* %[[fp]])
+comment|// CHECK: call void @"\01?fin$0@0@finally_with_return@@"({{.*}})
 end_comment
 
 begin_comment
@@ -541,7 +529,7 @@ comment|// CHECK-NEXT: ret i32 42
 end_comment
 
 begin_comment
-comment|// CHECK: define internal void @"\01?fin$0@0@finally_with_return@@"(i8 %abnormal_termination, i8* %frame_pointer)
+comment|// CHECK: define internal void @"\01?fin$0@0@finally_with_return@@"({{.*}})
 end_comment
 
 begin_comment
@@ -587,11 +575,7 @@ comment|// CHECK-LABEL: define i32 @nested___finally___finally
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
-end_comment
-
-begin_comment
-comment|// CHECK: invoke void @"\01?fin$1@0@nested___finally___finally@@"(i8 0, i8* %[[fp]])
+comment|// CHECK: invoke void @"\01?fin$1@0@nested___finally___finally@@"({{.*}})
 end_comment
 
 begin_comment
@@ -607,11 +591,7 @@ comment|// CHECK: [[outercont]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: call void @"\01?fin$0@0@nested___finally___finally@@"(i8 0, i8* %[[fp]])
+comment|// CHECK: call void @"\01?fin$0@0@nested___finally___finally@@"({{.*}})
 end_comment
 
 begin_comment
@@ -635,15 +615,11 @@ comment|// CHECK-NEXT: cleanup
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
+comment|// CHECK: call void @"\01?fin$0@0@nested___finally___finally@@"({{.*}})
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: call void @"\01?fin$0@0@nested___finally___finally@@"(i8 1, i8* %[[fp]])
-end_comment
-
-begin_comment
-comment|// CHECK-LABEL: define internal void @"\01?fin$0@0@nested___finally___finally@@"(i8 %abnormal_termination, i8* %frame_pointer)
+comment|// CHECK-LABEL: define internal void @"\01?fin$0@0@nested___finally___finally@@"({{.*}})
 end_comment
 
 begin_comment
@@ -651,7 +627,7 @@ comment|// CHECK: ret void
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL: define internal void @"\01?fin$1@0@nested___finally___finally@@"(i8 %abnormal_termination, i8* %frame_pointer)
+comment|// CHECK-LABEL: define internal void @"\01?fin$1@0@nested___finally___finally@@"({{.*}})
 end_comment
 
 begin_comment
@@ -709,11 +685,7 @@ comment|// [[invokecont]]
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
-end_comment
-
-begin_comment
-comment|// CHECK: invoke void @"\01?fin$1@0@nested___finally___finally_with_eh_edge@@"(i8 0, i8* %[[fp]])
+comment|// CHECK: invoke void @"\01?fin$1@0@nested___finally___finally_with_eh_edge@@"({{.*}})
 end_comment
 
 begin_comment
@@ -729,11 +701,7 @@ comment|// CHECK: [[outercont]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: call void @"\01?fin$0@0@nested___finally___finally_with_eh_edge@@"(i8 0, i8* %[[fp]])
+comment|// CHECK: call void @"\01?fin$0@0@nested___finally___finally_with_eh_edge@@"({{.*}})
 end_comment
 
 begin_comment
@@ -757,11 +725,7 @@ comment|// CHECK-NEXT: cleanup
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
-end_comment
-
-begin_comment
-comment|// CHECK: invoke void @"\01?fin$1@0@nested___finally___finally_with_eh_edge@@"(i8 1, i8* %[[fp]])
+comment|// CHECK: invoke void @"\01?fin$1@0@nested___finally___finally_with_eh_edge@@"({{.*}})
 end_comment
 
 begin_comment
@@ -785,11 +749,7 @@ comment|// CHECK-NEXT: cleanup
 end_comment
 
 begin_comment
-comment|// CHECK: %[[fp:[^ ]*]] = call i8* @llvm.frameaddress(i32 0)
-end_comment
-
-begin_comment
-comment|// CHECK: call void @"\01?fin$0@0@nested___finally___finally_with_eh_edge@@"(i8 1, i8* %[[fp]])
+comment|// CHECK: call void @"\01?fin$0@0@nested___finally___finally_with_eh_edge@@"({{.*}})
 end_comment
 
 begin_comment
@@ -797,7 +757,7 @@ comment|// CHECK: resume
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL: define internal void @"\01?fin$0@0@nested___finally___finally_with_eh_edge@@"(i8 %abnormal_termination, i8* %frame_pointer)
+comment|// CHECK-LABEL: define internal void @"\01?fin$0@0@nested___finally___finally_with_eh_edge@@"({{.*}})
 end_comment
 
 begin_comment
@@ -805,7 +765,7 @@ comment|// CHECK: ret void
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL: define internal void @"\01?fin$1@0@nested___finally___finally_with_eh_edge@@"(i8 %abnormal_termination, i8* %frame_pointer)
+comment|// CHECK-LABEL: define internal void @"\01?fin$1@0@nested___finally___finally_with_eh_edge@@"({{.*}})
 end_comment
 
 begin_comment

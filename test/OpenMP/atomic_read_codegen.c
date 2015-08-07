@@ -15,6 +15,10 @@ begin_comment
 comment|// expected-no-diagnostics
 end_comment
 
+begin_comment
+comment|// REQUIRES: x86-registered-target
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef

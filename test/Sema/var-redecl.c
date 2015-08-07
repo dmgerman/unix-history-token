@@ -21,7 +21,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note{{previous definition is here}}
+comment|// expected-note{{previous declaration is here}}
 end_comment
 
 begin_decl_stmt
@@ -77,17 +77,17 @@ specifier|extern
 name|float
 name|outer1
 decl_stmt|;
-comment|// expected-error{{redefinition of 'outer1' with a different type}}
+comment|// expected-error{{redeclaration of 'outer1' with a different type}}
 specifier|extern
 name|float
 name|outer2
 decl_stmt|;
-comment|// expected-error{{redefinition of 'outer2' with a different type}}
+comment|// expected-error{{redeclaration of 'outer2' with a different type}}
 specifier|extern
 name|float
 name|outer3
 decl_stmt|;
-comment|// expected-note{{previous definition is here}}
+comment|// expected-note{{previous declaration is here}}
 name|double
 name|outer4
 decl_stmt|;
@@ -95,7 +95,7 @@ specifier|extern
 name|int
 name|outer5
 decl_stmt|;
-comment|// expected-note{{previous definition is here}}
+comment|// expected-note{{previous declaration is here}}
 specifier|extern
 name|int
 name|outer6
@@ -118,7 +118,7 @@ specifier|extern
 name|int
 name|outer9
 decl_stmt|;
-comment|// expected-note{{previous definition is here}}
+comment|// expected-note{{previous declaration is here}}
 block|}
 block|}
 end_function
@@ -184,7 +184,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note{{previous definition is here}}
+comment|// expected-note{{previous declaration is here}}
 end_comment
 
 begin_function
@@ -200,12 +200,12 @@ specifier|extern
 name|int
 name|outer11
 decl_stmt|;
-comment|// expected-note{{previous definition is here}}
+comment|// expected-note{{previous declaration is here}}
 specifier|extern
 name|int
 name|outer12
 decl_stmt|;
-comment|// expected-note{{previous definition is here}}
+comment|// expected-note{{previous declaration is here}}
 block|{
 name|float
 name|outer10
@@ -226,7 +226,7 @@ specifier|extern
 name|float
 name|outer11
 decl_stmt|;
-comment|// expected-error{{redefinition of 'outer11' with a different type}}
+comment|// expected-error{{redeclaration of 'outer11' with a different type}}
 specifier|static
 name|double
 name|outer12
@@ -236,12 +236,12 @@ specifier|extern
 name|float
 name|outer12
 decl_stmt|;
-comment|// expected-error{{redefinition of 'outer12' with a different type}}
+comment|// expected-error{{redeclaration of 'outer12' with a different type}}
 specifier|extern
 name|float
 name|outer13
 decl_stmt|;
-comment|// expected-error{{redefinition of 'outer13' with a different type}}
+comment|// expected-error{{redeclaration of 'outer13' with a different type}}
 block|}
 block|}
 block|}
@@ -354,7 +354,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-note{{previous definition is here}}
+comment|// expected-note{{previous declaration is here}}
 end_comment
 
 begin_function
@@ -373,7 +373,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-error{{redefinition of 'b' with a different type: 'int [4]' vs 'int [3]'}}
+comment|// expected-error{{redeclaration of 'b' with a different type: 'int [4]' vs 'int [3]'}}
 end_comment
 
 end_unit

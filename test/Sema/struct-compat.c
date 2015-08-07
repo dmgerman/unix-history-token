@@ -16,7 +16,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// expected-note {{previous definition is here}}
+comment|// expected-note {{previous declaration is here}}
 end_comment
 
 begin_struct
@@ -32,7 +32,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// expected-error {{redefinition of 'x'}}
+comment|// expected-error {{redeclaration of 'x'}}
 end_comment
 
 begin_struct_decl

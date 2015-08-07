@@ -52,7 +52,7 @@ comment|// CHECK-RECORD:   BitFields:[
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:<CGBitFieldInfo Offset:0 Size:24 IsSigned:1 StorageSize:24 StorageAlignment:1>
+comment|// CHECK-RECORD:<CGBitFieldInfo Offset:0 Size:24 IsSigned:1 StorageSize:24 StorageOffset:0>
 end_comment
 
 begin_struct
@@ -267,11 +267,11 @@ comment|// CHECK-RECORD:   BitFields:[
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:<CGBitFieldInfo Offset:0 Size:10 IsSigned:1 StorageSize:24 StorageAlignment:1>
+comment|// CHECK-RECORD:<CGBitFieldInfo Offset:0 Size:10 IsSigned:1 StorageSize:24 StorageOffset:0>
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:<CGBitFieldInfo Offset:10 Size:10 IsSigned:1 StorageSize:24 StorageAlignment:1>
+comment|// CHECK-RECORD:<CGBitFieldInfo Offset:10 Size:10 IsSigned:1 StorageSize:24 StorageOffset:0>
 end_comment
 
 begin_pragma
@@ -538,7 +538,7 @@ comment|// CHECK-RECORD:   BitFields:[
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:<CGBitFieldInfo Offset:0 Size:3 IsSigned:0 StorageSize:8 StorageAlignment:1>
+comment|// CHECK-RECORD:<CGBitFieldInfo Offset:0 Size:3 IsSigned:0 StorageSize:8 StorageOffset:0>
 end_comment
 
 begin_union
@@ -1534,11 +1534,11 @@ comment|// CHECK-RECORD:   BitFields:[
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:<CGBitFieldInfo Offset:0 Size:5 IsSigned:1 StorageSize:8 StorageAlignment:4>
+comment|// CHECK-RECORD:<CGBitFieldInfo Offset:0 Size:5 IsSigned:1 StorageSize:8 StorageOffset:12>
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:<CGBitFieldInfo Offset:0 Size:29 IsSigned:1 StorageSize:32 StorageAlignment:16>
+comment|// CHECK-RECORD:<CGBitFieldInfo Offset:0 Size:29 IsSigned:1 StorageSize:32 StorageOffset:16>
 end_comment
 
 begin_struct

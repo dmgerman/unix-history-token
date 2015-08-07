@@ -915,5 +915,28 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_enum_decl
+enum_decl|enum
+name|ScopedEnum
+enum_decl|:
+name|int
+enum_decl|;
+end_enum_decl
+
+begin_enum
+enum|enum
+name|ScopedEnum
+enum|:
+name|int
+block|{
+name|a
+block|,
+name|b
+block|,
+name|c
+block|}
+enum|;
+end_enum
+
 end_unit
 
