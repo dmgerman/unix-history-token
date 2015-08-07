@@ -1532,8 +1532,6 @@ name|makeValueAddendPCRel
 argument_list|(
 name|Value
 argument_list|,
-name|Obj
-argument_list|,
 name|RelI
 argument_list|,
 literal|1

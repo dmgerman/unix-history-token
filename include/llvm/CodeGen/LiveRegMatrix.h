@@ -128,9 +128,6 @@ name|class
 name|LiveIntervalAnalysis
 decl_stmt|;
 name|class
-name|MachineRegisterInfo
-decl_stmt|;
-name|class
 name|TargetRegisterInfo
 decl_stmt|;
 name|class
@@ -146,10 +143,6 @@ specifier|const
 name|TargetRegisterInfo
 operator|*
 name|TRI
-block|;
-name|MachineRegisterInfo
-operator|*
-name|MRI
 block|;
 name|LiveIntervals
 operator|*
@@ -300,6 +293,14 @@ name|LiveInterval
 operator|&
 name|VirtReg
 argument_list|)
+block|;
+comment|/// Returns true if the given \p PhysReg has any live intervals assigned.
+name|bool
+name|isPhysRegUsed
+argument_list|(
+argument|unsigned PhysReg
+argument_list|)
+specifier|const
 block|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Low-level interface.

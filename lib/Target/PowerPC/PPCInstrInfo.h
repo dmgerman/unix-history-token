@@ -310,6 +310,18 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|unsigned
+name|getInstrLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned *PredCost = nullptr
+argument_list|)
+specifier|const
+name|override
+block|;
 name|int
 name|getOperandLatency
 argument_list|(

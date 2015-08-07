@@ -103,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|LTO_API_VERSION
-value|16
+value|17
 end_define
 
 begin_comment
@@ -186,6 +186,10 @@ block|,
 name|LTO_SYMBOL_COMDAT
 init|=
 literal|0x00004000
+block|,
+name|LTO_SYMBOL_ALIAS
+init|=
+literal|0x00008000
 block|}
 name|lto_symbol_attributes
 typedef|;

@@ -469,7 +469,9 @@ block|;
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
-argument|EVT LHSTy
+argument|const DataLayout&DL
+argument_list|,
+argument|EVT
 argument_list|)
 specifier|const
 name|override
@@ -701,6 +703,11 @@ begin_decl_stmt
 name|EVT
 name|getSetCCResultType
 argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
 name|LLVMContext
 operator|&
 name|Context
@@ -1037,6 +1044,11 @@ name|bool
 name|isLegalAddressingMode
 argument_list|(
 specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+specifier|const
 name|AddrMode
 operator|&
 name|AM
@@ -1077,6 +1089,11 @@ begin_decl_stmt
 name|int
 name|getScalingFactorCost
 argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
 specifier|const
 name|AddrMode
 operator|&
@@ -2397,11 +2414,7 @@ begin_decl_stmt
 name|ConstraintType
 name|getConstraintType
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|Constraint
 argument_list|)
 decl|const
@@ -2420,6 +2433,10 @@ name|RegName
 argument_list|,
 name|EVT
 name|VT
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
 decl|const
 name|override
@@ -2467,7 +2484,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const TargetRegisterInfo *TRI
 argument_list|,
-argument|const std::string&Constraint
+argument|StringRef Constraint
 argument_list|,
 argument|MVT VT
 argument_list|)
@@ -2511,11 +2528,7 @@ begin_decl_stmt
 name|unsigned
 name|getInlineAsmMemConstraint
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|ConstraintCode
 argument_list|)
 decl|const

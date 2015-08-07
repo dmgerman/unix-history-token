@@ -503,6 +503,14 @@ return|return
 name|Ctx
 return|;
 block|}
+comment|/// Return the DataLayout attached to the Module associated to this MF.
+specifier|const
+name|DataLayout
+operator|&
+name|getDataLayout
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getFunction - Return the LLVM function that this machine code represents
 comment|///
 specifier|const

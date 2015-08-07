@@ -116,9 +116,6 @@ argument_list|,
 argument|StringRef Name
 argument_list|)
 empty_stmt|;
-name|NewArchiveIterator
-argument_list|()
-expr_stmt|;
 name|bool
 name|isNewMember
 argument_list|()
@@ -185,6 +182,10 @@ argument_list|,
 argument|std::vector<NewArchiveIterator>&NewMembers
 argument_list|,
 argument|bool WriteSymtab
+argument_list|,
+argument|object::Archive::Kind Kind
+argument_list|,
+argument|bool Deterministic
 argument_list|)
 expr_stmt|;
 block|}

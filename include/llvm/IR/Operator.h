@@ -1353,6 +1353,15 @@ argument_list|()
 operator|->
 name|isFPOrFPVectorTy
 argument_list|()
+operator|||
+name|I
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|Instruction
+operator|::
+name|FCmp
 return|;
 block|}
 specifier|static

@@ -1017,10 +1017,6 @@ block|{
 return|return
 name|Linkage
 operator|==
-name|AvailableExternallyLinkage
-operator|||
-name|Linkage
-operator|==
 name|WeakAnyLinkage
 operator|||
 name|Linkage
@@ -1380,6 +1376,33 @@ argument_list|()
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// Returns true if this global's definition will be the one chosen by the
+end_comment
+
+begin_comment
+comment|/// linker.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isStrongDefinitionForLinker
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+name|isDeclarationForLinker
+argument_list|()
+operator|||
+name|isWeakForLinker
+argument_list|()
+operator|)
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|/// This method unlinks 'this' from the containing module, but does not delete

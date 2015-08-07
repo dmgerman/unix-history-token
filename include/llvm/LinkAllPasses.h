@@ -1282,6 +1282,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
+name|llvm
+operator|::
+name|createEliminateAvailableExternallyPass
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|new
 name|llvm
 operator|::

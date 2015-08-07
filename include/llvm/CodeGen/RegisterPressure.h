@@ -485,6 +485,17 @@ modifier|*
 name|MRI
 parameter_list|)
 function_decl|;
+name|LLVM_DUMP_METHOD
+name|void
+name|dump
+argument_list|(
+specifier|const
+name|TargetRegisterInfo
+operator|&
+name|TRI
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// Array of PressureDiffs.

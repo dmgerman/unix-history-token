@@ -319,7 +319,9 @@ name|MCSymbolizer
 modifier|*
 name|createMCSymbolizer
 argument_list|(
-name|StringRef
+specifier|const
+name|Triple
+operator|&
 name|TT
 argument_list|,
 name|LLVMOpInfoCallback
@@ -402,7 +404,9 @@ operator|*
 name|MCCodeGenInfoCtorFnTy
 operator|)
 operator|(
-name|StringRef
+specifier|const
+name|Triple
+operator|&
 name|TT
 operator|,
 name|Reloc
@@ -454,7 +458,9 @@ modifier|*
 name|MCRegInfoCtorFnTy
 function_decl|)
 parameter_list|(
-name|StringRef
+specifier|const
+name|Triple
+modifier|&
 name|TT
 parameter_list|)
 function_decl|;
@@ -491,7 +497,9 @@ name|Target
 operator|&
 name|T
 operator|,
-name|StringRef
+specifier|const
+name|Triple
+operator|&
 name|TT
 operator|,
 name|StringRef
@@ -838,7 +846,9 @@ operator|*
 name|MCSymbolizerCtorTy
 operator|)
 operator|(
-name|StringRef
+specifier|const
+name|Triple
+operator|&
 name|TT
 operator|,
 name|LLVMOpInfoCallback
@@ -1164,7 +1174,7 @@ modifier|*
 name|createMCCodeGenInfo
 argument_list|(
 name|StringRef
-name|Triple
+name|TT
 argument_list|,
 name|Reloc
 operator|::
@@ -1195,6 +1205,9 @@ return|return
 name|MCCodeGenInfoCtorFn
 argument_list|(
 name|Triple
+argument_list|(
+name|TT
+argument_list|)
 argument_list|,
 name|RM
 argument_list|,
@@ -1260,7 +1273,7 @@ modifier|*
 name|createMCRegInfo
 argument_list|(
 name|StringRef
-name|Triple
+name|TT
 argument_list|)
 decl|const
 block|{
@@ -1276,6 +1289,9 @@ return|return
 name|MCRegInfoCtorFn
 argument_list|(
 name|Triple
+argument_list|(
+name|TT
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -1328,7 +1344,7 @@ block|}
 comment|/// createTargetMachine - Create a target specific machine implementation
 comment|/// for the specified \p Triple.
 comment|///
-comment|/// \param Triple This argument is used to determine the target machine
+comment|/// \param TT This argument is used to determine the target machine
 comment|/// feature set; it should always be provided. Generally this should be
 comment|/// either the target triple from the module, or the target triple of the
 comment|/// host if that does not exist.
@@ -1337,7 +1353,7 @@ modifier|*
 name|createTargetMachine
 argument_list|(
 name|StringRef
-name|Triple
+name|TT
 argument_list|,
 name|StringRef
 name|CPU
@@ -1394,6 +1410,9 @@ operator|*
 name|this
 argument_list|,
 name|Triple
+argument_list|(
+name|TT
+argument_list|)
 argument_list|,
 name|CPU
 argument_list|,
@@ -2159,7 +2178,10 @@ decl_stmt|;
 return|return
 name|Fn
 argument_list|(
+name|Triple
+argument_list|(
 name|TT
+argument_list|)
 argument_list|,
 name|GetOpInfo
 argument_list|,
@@ -3958,7 +3980,7 @@ name|MCCodeGenInfo
 operator|*
 name|Allocator
 argument_list|(
-argument|StringRef
+argument|const Triple&
 comment|/*TT*/
 argument_list|,
 argument|Reloc::Model
@@ -4364,7 +4386,7 @@ name|MCRegisterInfo
 operator|*
 name|Allocator
 argument_list|(
-argument|StringRef
+argument|const Triple&
 comment|/*TT*/
 argument_list|)
 block|{
@@ -4638,7 +4660,7 @@ name|Allocator
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -4659,10 +4681,7 @@ name|TargetMachineImpl
 argument_list|(
 name|T
 argument_list|,
-name|Triple
-argument_list|(
 name|TT
-argument_list|)
 argument_list|,
 name|CPU
 argument_list|,

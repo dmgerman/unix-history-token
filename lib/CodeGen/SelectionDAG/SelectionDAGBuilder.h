@@ -2655,18 +2655,6 @@ modifier|*
 name|SwitchBB
 parameter_list|)
 function_decl|;
-name|unsigned
-name|visitLandingPadClauseBB
-parameter_list|(
-name|GlobalValue
-modifier|*
-name|ClauseGV
-parameter_list|,
-name|MachineBasicBlock
-modifier|*
-name|LPadMBB
-parameter_list|)
-function_decl|;
 name|private
 label|:
 comment|// These all get lowered before this pass.
@@ -3749,7 +3737,9 @@ name|RegsForValue
 argument_list|(
 argument|LLVMContext&Context
 argument_list|,
-argument|const TargetLowering&tli
+argument|const TargetLowering&TLI
+argument_list|,
+argument|const DataLayout&DL
 argument_list|,
 argument|unsigned Reg
 argument_list|,

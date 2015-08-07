@@ -323,6 +323,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|performShlCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|performMulCombine
 argument_list|(
 argument|SDNode *N
@@ -595,7 +604,9 @@ name|override
 block|;
 name|MVT
 name|getVectorIdxTy
-argument_list|()
+argument_list|(
+argument|const DataLayout&
+argument_list|)
 specifier|const
 name|override
 block|;
@@ -892,6 +903,24 @@ argument_list|,
 argument|unsigned Reg
 argument_list|,
 argument|EVT VT
+argument_list|)
+specifier|const
+block|;    enum
+name|ImplicitParameter
+block|{
+name|GRID_DIM
+block|,
+name|GRID_OFFSET
+block|}
+block|;
+comment|/// \brief Helper function that returns the byte offset of the given
+comment|/// type of implicit parameter.
+name|unsigned
+name|getImplicitParameterOffset
+argument_list|(
+argument|const AMDGPUMachineFunction *MFI
+argument_list|,
+argument|const ImplicitParameter Param
 argument_list|)
 specifier|const
 block|; }

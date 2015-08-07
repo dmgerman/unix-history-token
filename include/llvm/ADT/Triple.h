@@ -1669,6 +1669,32 @@ name|get64BitArchVariant
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Form a triple with a big endian variant of the current architecture.
+comment|///
+comment|/// This can be used to move across "families" of architectures where useful.
+comment|///
+comment|/// \returns A new triple with a big endian architecture or an unknown
+comment|///          architecture if no such variant can be found.
+name|llvm
+operator|::
+name|Triple
+name|getBigEndianArchVariant
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Form a triple with a little endian variant of the current architecture.
+comment|///
+comment|/// This can be used to move across "families" of architectures where useful.
+comment|///
+comment|/// \returns A new triple with a little endian architecture or an unknown
+comment|///          architecture if no such variant can be found.
+name|llvm
+operator|::
+name|Triple
+name|getLittleEndianArchVariant
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Get the (LLVM) name of the minimum ARM CPU for the arch we are targeting.
 comment|///
 comment|/// \param Arch the architecture name (e.g., "armv7s"). If it is an empty

@@ -975,6 +975,8 @@ comment|/// address mode (CodeGenPrepare.cpp)
 name|bool
 name|isLegalAddressingMode
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|const AddrMode&AM
 argument_list|,
 argument|Type *Ty
@@ -995,6 +997,8 @@ block|;
 name|EVT
 name|getSetCCResultType
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|LLVMContext&Ctx
 argument_list|,
 argument|EVT VT
@@ -1035,11 +1039,7 @@ block|}
 name|ConstraintType
 name|getConstraintType
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|Constraint
 argument_list|)
 decl|const
@@ -1059,7 +1059,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const TargetRegisterInfo *TRI
 argument_list|,
-argument|const std::string&Constraint
+argument|StringRef Constraint
 argument_list|,
 argument|MVT VT
 argument_list|)
@@ -1129,6 +1129,8 @@ operator|::
 name|string
 name|getPrototype
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|Type *
 argument_list|,
 argument|const ArgListTy&
@@ -1220,8 +1222,11 @@ comment|// PTX always uses 32-bit shift amounts
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+argument_list|,
 name|EVT
-name|LHSTy
 argument_list|)
 decl|const
 name|override

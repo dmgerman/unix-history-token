@@ -137,6 +137,8 @@ argument|CodeGenFileType FileType
 argument_list|,
 argument|bool DisableVerify
 argument_list|,
+argument|AnalysisID StartBefore
+argument_list|,
 argument|AnalysisID StartAfter
 argument_list|,
 argument|AnalysisID StopAfter

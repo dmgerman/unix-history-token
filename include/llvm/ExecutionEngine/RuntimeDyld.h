@@ -539,6 +539,10 @@ block|{}
 block|;
 comment|/// This method returns the address of the specified function or variable.
 comment|/// It is used to resolve symbols during module linking.
+comment|///
+comment|/// If the returned symbol's address is equal to ~0ULL then RuntimeDyld will
+comment|/// skip all relocations for that symbol, and the client will be responsible
+comment|/// for handling them manually.
 name|virtual
 name|SymbolInfo
 name|findSymbol

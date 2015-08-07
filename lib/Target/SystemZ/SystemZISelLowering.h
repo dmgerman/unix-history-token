@@ -511,7 +511,9 @@ comment|// Override TargetLowering.
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
-argument|EVT LHSTy
+argument|const DataLayout&
+argument_list|,
+argument|EVT
 argument_list|)
 specifier|const
 name|override
@@ -524,7 +526,9 @@ return|;
 block|}
 name|MVT
 name|getVectorIdxTy
-argument_list|()
+argument_list|(
+argument|const DataLayout&DL
+argument_list|)
 specifier|const
 name|override
 block|{
@@ -586,6 +590,11 @@ block|}
 name|EVT
 name|getSetCCResultType
 argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
 name|LLVMContext
 operator|&
 argument_list|,
@@ -638,6 +647,11 @@ decl_stmt|;
 name|bool
 name|isLegalAddressingMode
 argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
 specifier|const
 name|AddrMode
 operator|&
@@ -719,7 +733,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const TargetRegisterInfo *TRI
 argument_list|,
-argument|const std::string&Constraint
+argument|StringRef Constraint
 argument_list|,
 argument|MVT VT
 argument_list|)
@@ -731,7 +745,7 @@ operator|::
 name|ConstraintType
 name|getConstraintType
 argument_list|(
-argument|const std::string&Constraint
+argument|StringRef Constraint
 argument_list|)
 specifier|const
 name|override
@@ -779,11 +793,7 @@ decl_stmt|;
 name|unsigned
 name|getInlineAsmMemConstraint
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|ConstraintCode
 argument_list|)
 decl|const

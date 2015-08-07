@@ -3437,17 +3437,10 @@ name|override
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_extern
 unit|};
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class basic_parser<bool>
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+extern|extern template class basic_parser<bool>;
+end_extern
 
 begin_comment
 comment|//--------------------------------------------------
@@ -3559,17 +3552,10 @@ name|override
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_extern
 unit|};
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class basic_parser<boolOrDefault>
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+extern|extern template class basic_parser<boolOrDefault>;
+end_extern
 
 begin_comment
 comment|//--------------------------------------------------
@@ -3667,17 +3653,10 @@ name|override
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_extern
 unit|};
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class basic_parser<int>
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+extern|extern template class basic_parser<int>;
+end_extern
 
 begin_comment
 comment|//--------------------------------------------------
@@ -3775,17 +3754,10 @@ name|override
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_extern
 unit|};
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class basic_parser<unsigned>
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+extern|extern template class basic_parser<unsigned>;
+end_extern
 
 begin_comment
 comment|//--------------------------------------------------
@@ -3887,17 +3859,10 @@ name|override
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_extern
 unit|};
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class basic_parser<unsigned long long>
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+extern|extern template class basic_parser<unsigned long long>;
+end_extern
 
 begin_comment
 comment|//--------------------------------------------------
@@ -3995,17 +3960,10 @@ name|override
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_extern
 unit|};
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class basic_parser<double>
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+extern|extern template class basic_parser<double>;
+end_extern
 
 begin_comment
 comment|//--------------------------------------------------
@@ -4103,17 +4061,10 @@ name|override
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_extern
 unit|};
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class basic_parser<float>
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+extern|extern template class basic_parser<float>;
+end_extern
 
 begin_comment
 comment|//--------------------------------------------------
@@ -4235,17 +4186,10 @@ name|override
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_extern
 unit|};
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class basic_parser<std::string>
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+extern|extern template class basic_parser<std::string>;
+end_extern
 
 begin_comment
 comment|//--------------------------------------------------
@@ -4363,17 +4307,10 @@ name|override
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_extern
 unit|};
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class basic_parser<char>
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+extern|extern template class basic_parser<char>;
+end_extern
 
 begin_comment
 comment|//--------------------------------------------------
@@ -5892,61 +5829,26 @@ argument_list|()
 block|;   }
 end_expr_stmt
 
-begin_macro
+begin_extern
 unit|};
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class opt<unsigned>
-argument_list|)
-end_macro
+extern|extern template class opt<unsigned>;
+end_extern
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_extern
+extern|extern template class opt<int>;
+end_extern
 
-begin_macro
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class opt<int>
-argument_list|)
-end_macro
+begin_extern
+extern|extern template class opt<std::string>;
+end_extern
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_extern
+extern|extern template class opt<char>;
+end_extern
 
-begin_macro
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class opt<std::string>
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class opt<char>
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class opt<bool>
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_extern
+extern|extern template class opt<bool>;
+end_extern
 
 begin_comment
 comment|//===----------------------------------------------------------------------===//

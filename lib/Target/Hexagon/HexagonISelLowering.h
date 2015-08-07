@@ -646,6 +646,8 @@ block|;
 name|EVT
 name|getSetCCResultType
 argument_list|(
+argument|const DataLayout&
+argument_list|,
 argument|LLVMContext&C
 argument_list|,
 argument|EVT VT
@@ -717,7 +719,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const TargetRegisterInfo *TRI
 argument_list|,
-argument|const std::string&Constraint
+argument|StringRef Constraint
 argument_list|,
 argument|MVT VT
 argument_list|)
@@ -727,7 +729,7 @@ block|;
 name|unsigned
 name|getInlineAsmMemConstraint
 argument_list|(
-argument|const std::string&ConstraintCode
+argument|StringRef ConstraintCode
 argument_list|)
 specifier|const
 name|override
@@ -786,6 +788,11 @@ name|bool
 name|isLegalAddressingMode
 argument_list|(
 specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+specifier|const
 name|AddrMode
 operator|&
 name|AM
@@ -827,6 +834,97 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+comment|// Handling of atomic RMW instructions.
+name|bool
+name|hasLoadLinkedStoreConditional
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|Value
+modifier|*
+name|emitLoadLinked
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|Builder
+argument_list|,
+name|Value
+operator|*
+name|Addr
+argument_list|,
+name|AtomicOrdering
+name|Ord
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|Value
+modifier|*
+name|emitStoreConditional
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|Builder
+argument_list|,
+name|Value
+operator|*
+name|Val
+argument_list|,
+name|Value
+operator|*
+name|Addr
+argument_list|,
+name|AtomicOrdering
+name|Ord
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|bool
+name|shouldExpandAtomicLoadInIR
+argument_list|(
+name|LoadInst
+operator|*
+name|LI
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|bool
+name|shouldExpandAtomicStoreInIR
+argument_list|(
+name|StoreInst
+operator|*
+name|SI
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|AtomicRMWExpansionKind
+name|shouldExpandAtomicRMWInIR
+argument_list|(
+name|AtomicRMWInst
+operator|*
+name|AI
+argument_list|)
+decl|const
+name|override
+block|{
+return|return
+name|AtomicRMWExpansionKind
+operator|::
+name|LLSC
+return|;
+block|}
 block|}
 end_decl_stmt
 

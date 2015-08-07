@@ -555,6 +555,7 @@ comment|// Return true if this node is an operand of N.
 name|bool
 name|isOperandOf
 argument_list|(
+specifier|const
 name|SDNode
 operator|*
 name|N
@@ -1433,10 +1434,6 @@ name|NumOperands
 decl_stmt|,
 name|NumValues
 decl_stmt|;
-comment|/// Source line information.
-name|DebugLoc
-name|debugLoc
-decl_stmt|;
 comment|// The ordering of the SDNodes. It roughly corresponds to the ordering of the
 comment|// original LLVM instructions.
 comment|// This is used for turning off scheduling, because we'll forgo
@@ -1444,6 +1441,10 @@ comment|// the normal scheduling algorithms and output the instructions accordin
 comment|// this ordering.
 name|unsigned
 name|IROrder
+decl_stmt|;
+comment|/// Source line information.
+name|DebugLoc
+name|debugLoc
 decl_stmt|;
 comment|/// Return a pointer to the specified value type.
 specifier|static
@@ -2162,6 +2163,7 @@ begin_decl_stmt
 name|bool
 name|isOnlyUserOf
 argument_list|(
+specifier|const
 name|SDNode
 operator|*
 name|N
@@ -2178,6 +2180,7 @@ begin_decl_stmt
 name|bool
 name|isOperandOf
 argument_list|(
+specifier|const
 name|SDNode
 operator|*
 name|N
@@ -3359,19 +3362,14 @@ operator|.
 name|NumVTs
 argument_list|)
 operator|,
-name|debugLoc
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|dl
-argument_list|)
-argument_list|)
-operator|,
 name|IROrder
 argument_list|(
-argument|Order
+name|Order
+argument_list|)
+operator|,
+name|debugLoc
+argument_list|(
+argument|std::move(dl)
 argument_list|)
 block|{
 name|assert
@@ -3543,19 +3541,14 @@ operator|.
 name|NumVTs
 argument_list|)
 operator|,
-name|debugLoc
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|dl
-argument_list|)
-argument_list|)
-operator|,
 name|IROrder
 argument_list|(
-argument|Order
+name|Order
+argument_list|)
+operator|,
+name|debugLoc
+argument_list|(
+argument|std::move(dl)
 argument_list|)
 block|{
 name|assert

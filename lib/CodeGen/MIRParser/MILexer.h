@@ -113,6 +113,19 @@ name|equal
 block|,
 name|underscore
 block|,
+name|colon
+block|,
+comment|// Keywords
+name|kw_implicit
+block|,
+name|kw_implicit_define
+block|,
+name|kw_dead
+block|,
+name|kw_killed
+block|,
+name|kw_undef
+block|,
 comment|// Identifier tokens
 name|Identifier
 block|,
@@ -126,6 +139,8 @@ name|GlobalValue
 block|,
 comment|// Other tokens
 name|IntegerLiteral
+block|,
+name|VirtualRegister
 block|}
 enum|;
 name|private
@@ -234,6 +249,37 @@ operator|||
 name|Kind
 operator|==
 name|underscore
+operator|||
+name|Kind
+operator|==
+name|VirtualRegister
+return|;
+block|}
+name|bool
+name|isRegisterFlag
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|kw_implicit
+operator|||
+name|Kind
+operator|==
+name|kw_implicit_define
+operator|||
+name|Kind
+operator|==
+name|kw_dead
+operator|||
+name|Kind
+operator|==
+name|kw_killed
+operator|||
+name|Kind
+operator|==
+name|kw_undef
 return|;
 block|}
 name|bool
@@ -320,6 +366,10 @@ operator|||
 name|Kind
 operator|==
 name|GlobalValue
+operator|||
+name|Kind
+operator|==
+name|VirtualRegister
 return|;
 block|}
 block|}

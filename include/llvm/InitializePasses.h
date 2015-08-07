@@ -650,6 +650,13 @@ modifier|&
 parameter_list|)
 function_decl|;
 name|void
+name|initializeEliminateAvailableExternallyPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+name|void
 name|initializeExpandISelPseudosPass
 parameter_list|(
 name|PassRegistry
@@ -1848,6 +1855,13 @@ parameter_list|)
 function_decl|;
 name|void
 name|initializeLoopDistributePass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+name|void
+name|initializeSjLjEHPreparePass
 parameter_list|(
 name|PassRegistry
 modifier|&

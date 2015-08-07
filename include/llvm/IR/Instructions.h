@@ -4024,18 +4024,53 @@ block|{
 name|unsigned
 name|NumElem
 init|=
-name|cast
-operator|<
-name|VectorType
-operator|>
-operator|(
 name|Ptr
 operator|->
 name|getType
 argument_list|()
-operator|)
 operator|->
-name|getNumElements
+name|getVectorNumElements
+argument_list|()
+decl_stmt|;
+return|return
+name|VectorType
+operator|::
+name|get
+argument_list|(
+name|PtrTy
+argument_list|,
+name|NumElem
+argument_list|)
+return|;
+block|}
+for|for
+control|(
+name|Value
+modifier|*
+name|Index
+range|:
+name|IdxList
+control|)
+if|if
+condition|(
+name|Index
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isVectorTy
+argument_list|()
+condition|)
+block|{
+name|unsigned
+name|NumElem
+init|=
+name|Index
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|getVectorNumElements
 argument_list|()
 decl_stmt|;
 return|return
@@ -6476,6 +6511,37 @@ argument_list|,
 name|Attribute
 operator|::
 name|ReadOnly
+argument_list|)
+block|;   }
+comment|/// @brief Determine if the call can access memmory only using pointers based
+comment|/// on its arguments.
+name|bool
+name|onlyAccessesArgMemory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasFnAttr
+argument_list|(
+name|Attribute
+operator|::
+name|ArgMemOnly
+argument_list|)
+return|;
+block|}
+name|void
+name|setOnlyAccessesArgMemory
+argument_list|()
+block|{
+name|addAttribute
+argument_list|(
+name|AttributeSet
+operator|::
+name|FunctionIndex
+argument_list|,
+name|Attribute
+operator|::
+name|ArgMemOnly
 argument_list|)
 block|;   }
 comment|/// \brief Determine if the call cannot return.
@@ -14280,6 +14346,37 @@ argument_list|,
 name|Attribute
 operator|::
 name|ReadOnly
+argument_list|)
+block|;   }
+comment|/// @brief Determine if the call access memmory only using it's pointer
+comment|/// arguments.
+name|bool
+name|onlyAccessesArgMemory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasFnAttr
+argument_list|(
+name|Attribute
+operator|::
+name|ArgMemOnly
+argument_list|)
+return|;
+block|}
+name|void
+name|setOnlyAccessesArgMemory
+argument_list|()
+block|{
+name|addAttribute
+argument_list|(
+name|AttributeSet
+operator|::
+name|FunctionIndex
+argument_list|,
+name|Attribute
+operator|::
+name|ArgMemOnly
 argument_list|)
 block|;   }
 comment|/// \brief Determine if the call cannot return.

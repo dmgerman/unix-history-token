@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/AssumptionCache.h"
 end_include
 
@@ -719,6 +725,10 @@ specifier|const
 name|bool
 name|MinimizeSize
 block|;
+name|AliasAnalysis
+operator|*
+name|AA
+block|;
 comment|// Required analyses.
 comment|// FIXME: These can never be null and should be references.
 name|AssumptionCache
@@ -757,6 +767,8 @@ argument|BuilderTy *Builder
 argument_list|,
 argument|bool MinimizeSize
 argument_list|,
+argument|AliasAnalysis *AA
+argument_list|,
 argument|AssumptionCache *AC
 argument_list|,
 argument|TargetLibraryInfo *TLI
@@ -781,6 +793,11 @@ block|,
 name|MinimizeSize
 argument_list|(
 name|MinimizeSize
+argument_list|)
+block|,
+name|AA
+argument_list|(
+name|AA
 argument_list|)
 block|,
 name|AC

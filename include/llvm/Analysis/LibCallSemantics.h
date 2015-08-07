@@ -450,6 +450,41 @@ literal|"invalid enum"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// \brief Return true if this personality may be safely removed if there
+comment|/// are no invoke instructions remaining in the current function.
+specifier|inline
+name|bool
+name|isNoOpWithoutInvoke
+parameter_list|(
+name|EHPersonality
+name|Pers
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|Pers
+condition|)
+block|{
+case|case
+name|EHPersonality
+operator|::
+name|Unknown
+case|:
+return|return
+name|false
+return|;
+comment|// All known personalities currently have this behavior
+default|default:
+return|return
+name|true
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"invalid enum"
+argument_list|)
+expr_stmt|;
+block|}
 name|bool
 name|canSimplifyInvokeNoUnwind
 parameter_list|(

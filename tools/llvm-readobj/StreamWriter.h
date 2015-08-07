@@ -952,14 +952,14 @@ block|}
 name|template
 operator|<
 name|typename
-name|T_
+name|T
 operator|>
 name|void
 name|printList
 argument_list|(
 argument|StringRef Label
 argument_list|,
-argument|const SmallVectorImpl<T_>&List
+argument|const T&List
 argument_list|)
 block|{
 name|startLine

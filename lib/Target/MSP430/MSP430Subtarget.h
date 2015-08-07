@@ -86,13 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MSP430SelectionDAGInfo.h"
+file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DataLayout.h"
+file|"llvm/Target/TargetSelectionDAGInfo.h"
 end_include
 
 begin_include
@@ -149,7 +149,7 @@ block|;
 name|MSP430TargetLowering
 name|TLInfo
 block|;
-name|MSP430SelectionDAGInfo
+name|TargetSelectionDAGInfo
 name|TSInfo
 block|;
 name|public
@@ -259,7 +259,7 @@ name|TLInfo
 return|;
 block|}
 specifier|const
-name|MSP430SelectionDAGInfo
+name|TargetSelectionDAGInfo
 operator|*
 name|getSelectionDAGInfo
 argument_list|()

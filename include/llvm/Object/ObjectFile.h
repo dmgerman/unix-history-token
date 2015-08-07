@@ -184,14 +184,6 @@ name|void
 name|moveNext
 parameter_list|()
 function_decl|;
-name|ErrorOr
-operator|<
-name|uint64_t
-operator|>
-name|getAddress
-argument_list|()
-specifier|const
-expr_stmt|;
 name|uint64_t
 name|getOffset
 argument_list|()
@@ -508,13 +500,12 @@ specifier|const
 block|;
 comment|/// Returns the symbol virtual address (i.e. address at which it will be
 comment|/// mapped).
-name|std
-operator|::
-name|error_code
+name|ErrorOr
+operator|<
+name|uint64_t
+operator|>
 name|getAddress
-argument_list|(
-argument|uint64_t&Result
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 comment|/// Return the value of the symbol depending on the object this can be an
@@ -759,14 +750,13 @@ specifier|const
 name|override
 block|;
 name|virtual
-name|std
-operator|::
-name|error_code
+name|ErrorOr
+operator|<
+name|uint64_t
+operator|>
 name|getSymbolAddress
 argument_list|(
 argument|DataRefImpl Symb
-argument_list|,
-argument|uint64_t&Res
 argument_list|)
 specifier|const
 operator|=
@@ -774,7 +764,7 @@ literal|0
 block|;
 name|virtual
 name|uint64_t
-name|getSymbolValue
+name|getSymbolValueImpl
 argument_list|(
 argument|DataRefImpl Symb
 argument_list|)
@@ -984,19 +974,6 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|ErrorOr
-operator|<
-name|uint64_t
-operator|>
-name|getRelocationAddress
-argument_list|(
-argument|DataRefImpl Rel
-argument_list|)
-specifier|const
-operator|=
-literal|0
-block|;
-name|virtual
 name|uint64_t
 name|getRelocationOffset
 argument_list|(
@@ -1037,6 +1014,13 @@ argument_list|)
 specifier|const
 operator|=
 literal|0
+block|;
+name|uint64_t
+name|getSymbolValue
+argument_list|(
+argument|DataRefImpl Symb
+argument_list|)
+specifier|const
 block|;
 name|public
 operator|:
@@ -1349,15 +1333,14 @@ argument_list|)
 return|;
 block|}
 specifier|inline
-name|std
-operator|::
-name|error_code
+name|ErrorOr
+operator|<
+name|uint64_t
+operator|>
 name|SymbolRef
 operator|::
 name|getAddress
-argument_list|(
-argument|uint64_t&Result
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -1368,8 +1351,6 @@ name|getSymbolAddress
 argument_list|(
 name|getRawDataRefImpl
 argument_list|()
-argument_list|,
-name|Result
 argument_list|)
 return|;
 block|}
@@ -1905,26 +1886,6 @@ return|return
 name|OwningObject
 operator|->
 name|moveRelocationNext
-argument_list|(
-name|RelocationPimpl
-argument_list|)
-return|;
-block|}
-specifier|inline
-name|ErrorOr
-operator|<
-name|uint64_t
-operator|>
-name|RelocationRef
-operator|::
-name|getAddress
-argument_list|()
-specifier|const
-block|{
-return|return
-name|OwningObject
-operator|->
-name|getRelocationAddress
 argument_list|(
 name|RelocationPimpl
 argument_list|)

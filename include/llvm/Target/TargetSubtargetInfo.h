@@ -160,11 +160,40 @@ operator|)
 operator|=
 name|delete
 block|;
+name|TargetSubtargetInfo
+argument_list|()
+operator|=
+name|delete
+block|;
 name|protected
 operator|:
 comment|// Can only create subclasses...
 name|TargetSubtargetInfo
-argument_list|()
+argument_list|(
+argument|const Triple&TT
+argument_list|,
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|,
+argument|ArrayRef<SubtargetFeatureKV> PF
+argument_list|,
+argument|ArrayRef<SubtargetFeatureKV> PD
+argument_list|,
+argument|const SubtargetInfoKV *ProcSched
+argument_list|,
+argument|const MCWriteProcResEntry *WPR
+argument_list|,
+argument|const MCWriteLatencyEntry *WL
+argument_list|,
+argument|const MCReadAdvanceEntry *RA
+argument_list|,
+argument|const InstrStage *IS
+argument_list|,
+argument|const unsigned *OC
+argument_list|,
+argument|const unsigned *FP
+argument_list|)
 block|;
 name|public
 operator|:

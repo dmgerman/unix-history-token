@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"SparcSelectionDAGInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/DataLayout.h"
 end_include
 
@@ -93,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetFrameLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetSelectionDAGInfo.h"
 end_include
 
 begin_include
@@ -165,7 +165,7 @@ block|;
 name|SparcTargetLowering
 name|TLInfo
 block|;
-name|SparcSelectionDAGInfo
+name|TargetSelectionDAGInfo
 name|TSInfo
 block|;
 name|SparcFrameLowering
@@ -242,7 +242,7 @@ name|TLInfo
 return|;
 block|}
 specifier|const
-name|SparcSelectionDAGInfo
+name|TargetSelectionDAGInfo
 operator|*
 name|getSelectionDAGInfo
 argument_list|()

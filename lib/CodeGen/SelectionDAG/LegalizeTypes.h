@@ -237,6 +237,11 @@ name|TLI
 operator|.
 name|getSetCCResultType
 argument_list|(
+name|DAG
+operator|.
+name|getDataLayout
+argument_list|()
+argument_list|,
 operator|*
 name|DAG
 operator|.
@@ -2112,7 +2117,9 @@ name|SDNode
 modifier|*
 name|N
 parameter_list|,
-name|unsigned
+specifier|const
+name|APInt
+modifier|&
 name|Amt
 parameter_list|,
 name|SDValue

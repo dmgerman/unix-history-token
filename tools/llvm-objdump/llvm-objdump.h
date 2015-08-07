@@ -82,7 +82,6 @@ extern|extern cl::opt<std::string> ArchName;
 extern|extern cl::opt<std::string> MCPU;
 extern|extern cl::list<std::string> MAttrs;
 extern|extern cl::list<std::string> DumpSections;
-extern|extern cl::opt<bool> Raw;
 extern|extern cl::opt<bool> Disassemble;
 extern|extern cl::opt<bool> NoShowRawInsn;
 extern|extern cl::opt<bool> PrivateHeaders;
@@ -91,6 +90,7 @@ extern|extern cl::opt<bool> Rebase;
 extern|extern cl::opt<bool> Bind;
 extern|extern cl::opt<bool> LazyBind;
 extern|extern cl::opt<bool> WeakBind;
+extern|extern cl::opt<bool> RawClangAST;
 extern|extern cl::opt<bool> UniversalHeaders;
 extern|extern cl::opt<bool> ArchiveHeaders;
 extern|extern cl::opt<bool> IndirectSymbols;
@@ -295,6 +295,17 @@ argument_list|)
 decl_stmt|;
 name|void
 name|printWeakBindTable
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|ObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
+name|printRawClangAST
 argument_list|(
 specifier|const
 name|object

@@ -1243,7 +1243,7 @@ comment|/// mayHaveSideEffects - Return true if the instruction may have side ef
 comment|///
 comment|/// Note that this does not consider malloc and alloca to have side
 comment|/// effects because the newly allocated memory is completely invisible to
-comment|/// instructions which don't used the returned value.  For cases where this
+comment|/// instructions which don't use the returned value.  For cases where this
 comment|/// matters, isSafeToSpeculativelyExecute may be more appropriate.
 name|bool
 name|mayHaveSideEffects

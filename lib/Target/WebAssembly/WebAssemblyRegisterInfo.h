@@ -67,6 +67,18 @@ directive|define
 name|LLVM_LIB_TARGET_WEBASSEMBLY_WEBASSEMBLYREGISTERINFO_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|GET_REGINFO_HEADER
+end_define
+
+begin_include
+include|#
+directive|include
+file|"WebAssemblyGenRegisterInfo.inc"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -86,25 +98,85 @@ decl_stmt|;
 name|class
 name|WebAssemblyRegisterInfo
 name|final
+range|:
+name|public
+name|WebAssemblyGenRegisterInfo
 block|{
 specifier|const
 name|Triple
-modifier|&
+operator|&
 name|TT
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|explicit
 name|WebAssemblyRegisterInfo
-parameter_list|(
+argument_list|(
 specifier|const
 name|Triple
-modifier|&
+operator|&
 name|TT
-parameter_list|)
-function_decl|;
-block|}
-empty_stmt|;
+argument_list|)
+block|;
+comment|// Code Generation virtual methods.
+specifier|const
+name|MCPhysReg
+operator|*
+name|getCalleeSavedRegs
+argument_list|(
+argument|const MachineFunction *MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|BitVector
+name|getReservedRegs
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|eliminateFrameIndex
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|int SPAdj
+argument_list|,
+argument|unsigned FIOperandNum
+argument_list|,
+argument|RegScavenger *RS = nullptr
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|// Debug information queries.
+name|unsigned
+name|getFrameRegister
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|// Base pointer (stack realignment) support.
+name|bool
+name|canRealignStack
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|needsStackRealignment
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

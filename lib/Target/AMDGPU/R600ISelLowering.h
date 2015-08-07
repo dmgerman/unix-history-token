@@ -162,6 +162,8 @@ block|;
 name|EVT
 name|getSetCCResultType
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|LLVMContext&
 argument_list|,
 argument|EVT VT

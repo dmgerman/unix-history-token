@@ -309,6 +309,8 @@ name|kw_attributes
 block|,
 name|kw_alwaysinline
 block|,
+name|kw_argmemonly
+block|,
 name|kw_sanitize_address
 block|,
 name|kw_builtin

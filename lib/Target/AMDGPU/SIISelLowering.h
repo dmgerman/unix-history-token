@@ -349,6 +349,8 @@ block|;
 name|bool
 name|isLegalAddressingMode
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|const AddrMode&AM
 argument_list|,
 argument|Type *Ty
@@ -454,6 +456,8 @@ block|;
 name|EVT
 name|getSetCCResultType
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|LLVMContext&Context
 argument_list|,
 argument|EVT VT
@@ -464,7 +468,9 @@ block|;
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
-argument|EVT VT
+argument|const DataLayout&
+argument_list|,
+argument|EVT
 argument_list|)
 specifier|const
 name|override
@@ -602,7 +608,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const TargetRegisterInfo *TRI
 argument_list|,
-argument|const std::string&Constraint
+argument|StringRef Constraint
 argument_list|,
 argument|MVT VT
 argument_list|)

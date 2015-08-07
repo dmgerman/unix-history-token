@@ -262,13 +262,14 @@ comment|///
 comment|/// The alignment is stored as log2(align) + 1.  This allows all values from
 comment|/// 0 to 2^31 to be stored which is every power of 2 representable by an
 comment|/// unsigned.
-specifier|static
-specifier|const
+enum_decl|enum :
 name|unsigned
+block|{
 name|NumCommonAlignmentBits
 init|=
 literal|5
-decl_stmt|;
+block|}
+enum_decl|;
 name|unsigned
 name|CommonAlignLog2
 range|:
@@ -276,13 +277,14 @@ name|NumCommonAlignmentBits
 decl_stmt|;
 comment|/// The Flags field is used by object file implementations to store
 comment|/// additional per symbol information which is not easily classified.
-specifier|static
-specifier|const
+enum_decl|enum :
 name|unsigned
+block|{
 name|NumFlagsBits
 init|=
 literal|16
-decl_stmt|;
+block|}
+enum_decl|;
 name|mutable
 name|uint32_t
 name|Flags

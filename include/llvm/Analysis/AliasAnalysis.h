@@ -719,6 +719,8 @@ comment|/// OnlyReadsArgumentPointees - The only memory references in this funct
 comment|/// (if it has any) are non-volatile loads from objects pointed to by its
 comment|/// pointer-typed arguments, with arbitrary offsets.
 comment|///
+comment|/// This property corresponds to the LLVM IR 'argmemonly' attribute combined
+comment|/// with 'readonly' attribute.
 comment|/// This property corresponds to the IntrReadArgMem LLVM intrinsic flag.
 name|OnlyReadsArgumentPointees
 init|=
@@ -730,6 +732,7 @@ comment|/// OnlyAccessesArgumentPointees - The only memory references in this
 comment|/// function (if it has any) are non-volatile loads and stores from objects
 comment|/// pointed to by its pointer-typed arguments, with arbitrary offsets.
 comment|///
+comment|/// This property corresponds to the LLVM IR 'argmemonly' attribute.
 comment|/// This property corresponds to the IntrReadWriteArgMem LLVM intrinsic flag.
 name|OnlyAccessesArgumentPointees
 init|=
@@ -1931,25 +1934,6 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
-comment|/// copyValue - This method should be used whenever a preexisting value in the
-comment|/// program is copied or cloned, introducing a new value.  Note that analysis
-comment|/// implementations should tolerate clients that use this method to introduce
-comment|/// the same value multiple times: if the analysis already knows about a
-comment|/// value, it should ignore the request.
-comment|///
-name|virtual
-name|void
-name|copyValue
-parameter_list|(
-name|Value
-modifier|*
-name|From
-parameter_list|,
-name|Value
-modifier|*
-name|To
-parameter_list|)
-function_decl|;
 comment|/// addEscapingUse - This method should be used whenever an escaping use is
 comment|/// added to a pointer value.  Analysis implementations may either return
 comment|/// conservative responses for that value in the future, or may recompute
@@ -1983,13 +1967,6 @@ modifier|*
 name|New
 parameter_list|)
 block|{
-name|copyValue
-argument_list|(
-name|Old
-argument_list|,
-name|New
-argument_list|)
-expr_stmt|;
 name|deleteValue
 argument_list|(
 name|Old

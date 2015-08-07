@@ -1164,6 +1164,40 @@ name|ReadOnly
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// @brief Determine if the call can access memmory only using pointers based
+comment|/// on its arguments.
+name|bool
+name|onlyAccessesArgMemory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AttributeSets
+operator|.
+name|hasAttribute
+argument_list|(
+name|AttributeSet
+operator|::
+name|FunctionIndex
+argument_list|,
+name|Attribute
+operator|::
+name|ArgMemOnly
+argument_list|)
+return|;
+block|}
+name|void
+name|setOnlyAccessesArgMemory
+parameter_list|()
+block|{
+name|addFnAttr
+argument_list|(
+name|Attribute
+operator|::
+name|ArgMemOnly
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// @brief Determine if the function cannot return.
 name|bool
 name|doesNotReturn

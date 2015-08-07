@@ -492,6 +492,19 @@ return|return
 literal|500
 return|;
 block|}
+name|MachineInstr
+operator|*
+name|convertToThreeAddress
+argument_list|(
+argument|MachineFunction::iterator&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator&MI
+argument_list|,
+argument|LiveVariables *LV
+argument_list|)
+specifier|const
+name|override
+block|;
 name|bool
 name|isSALU
 argument_list|(
