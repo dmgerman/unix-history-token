@@ -1755,6 +1755,12 @@ name|SCSI_EVPD_NUM_SUPPORTED_PAGES
 value|10
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -1789,6 +1795,11 @@ name|dest
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2538,6 +2549,12 @@ begin_comment
 comment|//static int ctl_check_rtr(union ctl_io *pending_io, struct ctl_softc *softc);
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -2547,6 +2564,11 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2976,6 +2998,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -2988,6 +3016,11 @@ name|io
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -3177,6 +3210,12 @@ literal|"ioctl"
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
 
 begin_function
 specifier|static
@@ -4924,6 +4963,11 @@ name|status
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -53808,6 +53852,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -54808,6 +54858,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -65851,6 +65906,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -65949,12 +66010,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
 
 begin_comment
 comment|/*  * Init component  * 	Initializes component into configuration defined by bootMode  *	(see hasc-sv.c)  *  	returns hasc_Status:  * 		OK  *		ERROR - fatal error  */
