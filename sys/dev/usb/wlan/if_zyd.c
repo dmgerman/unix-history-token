@@ -14949,7 +14949,7 @@ name|ZYD_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|,
-name|MA_LOCKED
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 while|while
