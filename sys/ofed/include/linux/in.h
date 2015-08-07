@@ -55,14 +55,20 @@ begin_define
 define|#
 directive|define
 name|ipv4_is_zeronet
-value|IN_ZERONET
+parameter_list|(
+name|be
+parameter_list|)
+value|IN_ZERONET(ntohl(be))
 end_define
 
 begin_define
 define|#
 directive|define
 name|ipv4_is_loopback
-value|IN_LOOPBACK
+parameter_list|(
+name|be
+parameter_list|)
+value|IN_LOOPBACK(ntohl(be))
 end_define
 
 begin_endif

@@ -487,6 +487,27 @@ begin_comment
 comment|/* Atomically set UF_EXCLOSE. */
 end_comment
 
+begin_comment
+comment|/* For backward compatibility. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|falloc
+parameter_list|(
+name|td
+parameter_list|,
+name|resultfp
+parameter_list|,
+name|resultfd
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|falloc_caps(td, resultfp, resultfd, flags, NULL)
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|thread
@@ -601,7 +622,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|falloc
+name|falloc_caps
 parameter_list|(
 name|struct
 name|thread
@@ -620,6 +641,11 @@ name|resultfd
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|struct
+name|filecaps
+modifier|*
+name|fcaps
 parameter_list|)
 function_decl|;
 end_function_decl

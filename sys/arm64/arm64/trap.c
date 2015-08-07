@@ -522,7 +522,7 @@ name|nap
 condition|)
 name|panic
 argument_list|(
-literal|"TODO: Could we have more then 8 args?"
+literal|"ARM64TODO: Could we have more then 8 args?"
 argument_list|)
 expr_stmt|;
 name|td
@@ -1269,6 +1269,10 @@ break|break;
 case|case
 name|EXCP_SVC
 case|:
+comment|/* 		 * Ensure the svc_handler is being run with interrupts enabled. 		 * They will be automatically restored when returning from 		 * exception handler. 		 */
+name|intr_enable
+argument_list|()
+expr_stmt|;
 name|svc_handler
 argument_list|(
 name|frame
@@ -1280,6 +1284,9 @@ name|EXCP_INSN_ABORT_L
 case|:
 case|case
 name|EXCP_DATA_ABORT_L
+case|:
+case|case
+name|EXCP_DATA_ABORT
 case|:
 name|data_abort
 argument_list|(
@@ -1317,7 +1324,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"do_el0_error"
+literal|"ARM64TODO: do_el0_error"
 argument_list|)
 expr_stmt|;
 block|}

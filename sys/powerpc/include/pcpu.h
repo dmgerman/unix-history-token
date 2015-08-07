@@ -39,6 +39,12 @@ name|pmap
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|pvo_entry
+struct_decl|;
+end_struct_decl
+
 begin_define
 define|#
 directive|define
@@ -64,6 +70,8 @@ begin_define
 define|#
 directive|define
 name|PCPU_MD_AIM32_FIELDS
+define|\
+value|vm_offset_t	pc_qmap_addr;					\ 	struct pvo_entry *pc_qmap_pvo;					\ 	struct mtx	pc_qmap_lock;
 end_define
 
 begin_comment
@@ -76,7 +84,7 @@ define|#
 directive|define
 name|PCPU_MD_AIM64_FIELDS
 define|\
-value|struct slb	pc_slb[64];					\ 	struct slb	**pc_userslb;					\ 	register_t	pc_slbsave[18];					\ 	uint8_t		pc_slbstack[1024];				\ 	char		__pad[1137]
+value|struct slb	pc_slb[64];					\ 	struct slb	**pc_userslb;					\ 	register_t	pc_slbsave[18];					\ 	uint8_t		pc_slbstack[1024];				\ 	vm_offset_t	pc_qmap_addr;					\ 	struct pvo_entry *pc_qmap_pvo;					\ 	struct mtx	pc_qmap_lock;					\ 	char		__pad[1121 - sizeof(struct mtx)]
 end_define
 
 begin_ifdef
@@ -142,7 +150,7 @@ define|#
 directive|define
 name|PCPU_MD_BOOKE_FIELDS
 define|\
-value|register_t	pc_booke_critsave[BOOKE_CRITSAVE_LEN];		\ 	register_t	pc_booke_mchksave[CPUSAVE_LEN];			\ 	register_t	pc_booke_tlbsave[BOOKE_TLBSAVE_LEN];		\ 	register_t	pc_booke_tlb_level;				\ 	uint32_t	*pc_booke_tlb_lock;				\ 	int		pc_tid_next;					\ 	char		__pad[173]
+value|register_t	pc_booke_critsave[BOOKE_CRITSAVE_LEN];		\ 	register_t	pc_booke_mchksave[CPUSAVE_LEN];			\ 	register_t	pc_booke_tlbsave[BOOKE_TLBSAVE_LEN];		\ 	register_t	pc_booke_tlb_level;				\ 	vm_offset_t	pc_qmap_addr;					\ 	uint32_t	*pc_booke_tlb_lock;				\ 	int		pc_tid_next;					\ 	char		__pad[165]
 end_define
 
 begin_comment

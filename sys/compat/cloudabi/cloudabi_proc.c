@@ -26,6 +26,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capsicum.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/filedesc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/imgact.h>
 end_include
 
@@ -33,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -207,6 +225,12 @@ name|uap
 parameter_list|)
 block|{
 name|struct
+name|filecaps
+name|fcaps
+init|=
+block|{}
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
 name|p2
@@ -216,6 +240,18 @@ name|error
 decl_stmt|,
 name|fd
 decl_stmt|;
+name|cap_rights_init
+argument_list|(
+operator|&
+name|fcaps
+operator|.
+name|fc_rights
+argument_list|,
+name|CAP_FSTAT
+argument_list|,
+name|CAP_PDWAIT
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|fork1
@@ -237,6 +273,9 @@ operator|&
 name|fd
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|fcaps
 argument_list|)
 expr_stmt|;
 if|if
@@ -567,6 +606,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|cloudabi
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

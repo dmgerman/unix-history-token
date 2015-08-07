@@ -5206,7 +5206,7 @@ operator|+
 literal|1
 operator|)
 decl_stmt|;
-name|INP_INFO_LOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6887,7 +6887,7 @@ argument_list|(
 name|wr
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6911,7 +6911,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6928,7 +6928,7 @@ name|REJECT_PASS_ACCEPT
 argument_list|()
 expr_stmt|;
 block|}
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -7866,6 +7866,9 @@ init|=
 name|lctx
 operator|->
 name|inp
+decl_stmt|,
+modifier|*
+name|new_inp
 decl_stmt|;
 name|struct
 name|socket
@@ -7976,7 +7979,7 @@ name|synqe
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -8055,7 +8058,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -8201,7 +8204,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -8410,6 +8413,19 @@ goto|goto
 name|reset
 goto|;
 block|}
+comment|/* New connection inpcb is already locked by syncache_expand(). */
+name|new_inp
+operator|=
+name|sotoinpcb
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+name|INP_WLOCK_ASSERT
+argument_list|(
+name|new_inp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * This is for the unlikely case where the syncache entry that we added 	 * has been evicted from the syncache, but the syncache_expand above 	 * works because of syncookies. 	 * 	 * XXX: we've held the tcbinfo lock throughout so there's no risk of 	 * anyone accept'ing a connection before we've installed our hooks, but 	 * this somewhat defeats the purpose of having a tod_offload_socket :-( 	 */
 if|if
 condition|(
@@ -8426,21 +8442,6 @@ operator|)
 argument_list|)
 condition|)
 block|{
-name|struct
-name|inpcb
-modifier|*
-name|new_inp
-init|=
-name|sotoinpcb
-argument_list|(
-name|so
-argument_list|)
-decl_stmt|;
-name|INP_WLOCK
-argument_list|(
-name|new_inp
-argument_list|)
-expr_stmt|;
 name|tcp_timer_activate
 argument_list|(
 name|intotcpcb
@@ -8465,12 +8466,12 @@ argument_list|,
 name|so
 argument_list|)
 expr_stmt|;
+block|}
 name|INP_WUNLOCK
 argument_list|(
 name|new_inp
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Done with the synqe */
 name|TAILQ_REMOVE
 argument_list|(
@@ -8504,7 +8505,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo

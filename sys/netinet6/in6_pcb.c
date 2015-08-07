@@ -3469,7 +3469,7 @@ name|i
 decl_stmt|,
 name|gap
 decl_stmt|;
-name|INP_INFO_RLOCK
+name|INP_INFO_WLOCK
 argument_list|(
 name|pcbinfo
 argument_list|)
@@ -3614,7 +3614,7 @@ name|in6p
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_RUNLOCK
+name|INP_INFO_WUNLOCK
 argument_list|(
 name|pcbinfo
 argument_list|)

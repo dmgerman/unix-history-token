@@ -229,7 +229,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Whether Stream or Datagram ? */
+comment|/* Whether Stream or Datagram? */
 end_comment
 
 begin_decl_stmt

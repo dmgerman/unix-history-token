@@ -1799,32 +1799,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|buf
-modifier|*
-name|buf
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The buffer headers. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|buf
-modifier|*
-name|swbuf
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Swap I/O buffer headers. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|nswbuf
 decl_stmt|;
@@ -1940,6 +1914,15 @@ name|void
 name|bufinit
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bufshutdown
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

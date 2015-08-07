@@ -1196,17 +1196,6 @@ value|0x8
 end_define
 
 begin_comment
-comment|// File descriptor passed to poll() to poll just once.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLOUDABI_POLL_ONCE
-value|0xffffffff
-end_define
-
-begin_comment
 comment|// File descriptor returned to pdfork()'s child process.
 end_comment
 
@@ -1940,6 +1929,28 @@ define|#
 directive|define
 name|CLOUDABI_SUBSCRIPTION_ONESHOT
 value|0x20
+end_define
+
+begin_comment
+comment|// cloudabi_subscription_t::clock.flags.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_SUBSCRIPTION_CLOCK_ABSTIME
+value|0x1
+end_define
+
+begin_comment
+comment|// cloudabi_subscription_t::fd_readwrite.flags.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_SUBSCRIPTION_FD_READWRITE_POLL
+value|0x1
 end_define
 
 begin_comment

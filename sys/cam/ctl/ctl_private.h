@@ -323,6 +323,8 @@ name|CTL_SERIDX_WRITE
 block|,
 name|CTL_SERIDX_UNMAP
 block|,
+name|CTL_SERIDX_SYNC
+block|,
 name|CTL_SERIDX_MD_SNS
 block|,
 name|CTL_SERIDX_MD_SEL

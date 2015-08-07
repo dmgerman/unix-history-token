@@ -257,18 +257,6 @@ directive|include
 file|<xen/xenbus/xenbusvar.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/xen/xenvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/xen/xenfunc.h>
-end_include
-
 begin_comment
 comment|/*--------------------------- Forward Declarations --------------------------*/
 end_comment

@@ -1625,6 +1625,15 @@ decl_stmt|;
 name|uint32_t
 name|i
 decl_stmt|;
+comment|/* 	 * This controller failed during initialization (i.e. IDENTIFY 	 *  command failed or timed out).  Do not notify any nvme 	 *  consumers of the failure here, since the consumer does not 	 *  even know about the controller yet. 	 */
+if|if
+condition|(
+operator|!
+name|ctrlr
+operator|->
+name|is_initialized
+condition|)
+return|return;
 for|for
 control|(
 name|i

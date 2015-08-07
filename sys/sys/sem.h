@@ -587,14 +587,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* ! _KERNEL */
+comment|/* _KERNEL */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WANT_SEM_PROTOTYPES
+argument_list|)
+end_if
 
 begin_function_decl
 name|__BEGIN_DECLS
@@ -669,7 +684,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_KERNEL */
+comment|/* !_KERNEL || _WANT_SEM_PROTOTYPES */
 end_comment
 
 begin_endif

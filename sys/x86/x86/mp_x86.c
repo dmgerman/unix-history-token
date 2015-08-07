@@ -2246,7 +2246,11 @@ expr_stmt|;
 comment|/* Wait until all the AP's are up. */
 while|while
 condition|(
+name|atomic_load_acq_int
+argument_list|(
+operator|&
 name|smp_started
+argument_list|)
 operator|==
 literal|0
 condition|)

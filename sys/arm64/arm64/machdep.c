@@ -756,6 +756,8 @@ comment|/* 		 * If we have just been running VFP instructions we will 		 * need 
 name|vfp_save_state
 argument_list|(
 name|td
+argument_list|,
+name|pcb
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -910,7 +912,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"fill_dbregs"
+literal|"ARM64TODO: fill_dbregs"
 argument_list|)
 expr_stmt|;
 block|}
@@ -933,7 +935,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"set_dbregs"
+literal|"ARM64TODO: set_dbregs"
 argument_list|)
 expr_stmt|;
 block|}
@@ -954,7 +956,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"ptrace_set_pc"
+literal|"ARM64TODO: ptrace_set_pc"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1447,6 +1449,8 @@ comment|/* 		 * If we have just been running VFP instructions we will 		 * need 
 name|vfp_save_state
 argument_list|(
 name|td
+argument_list|,
+name|curpcb
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -1683,11 +1687,17 @@ end_macro
 
 begin_block
 block|{
-name|panic
-argument_list|(
-literal|"cpu_halt"
-argument_list|)
+comment|/* We should have shutdown by now, if not enter a low power sleep */
+name|intr_disable
+argument_list|()
 expr_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+asm|__asm __volatile("wfi");
+block|}
 block|}
 end_block
 
@@ -1707,7 +1717,7 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-comment|/* TBD */
+comment|/* ARM64TODO TBD */
 block|}
 end_function
 
@@ -1729,7 +1739,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"cpu_est_clockrate"
+literal|"ARM64TODO: cpu_est_clockrate"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3716,6 +3726,31 @@ name|i
 operator|+=
 literal|2
 control|)
+block|{
+name|dump_avail
+index|[
+name|i
+index|]
+operator|=
+name|physmap
+index|[
+name|i
+index|]
+expr_stmt|;
+name|dump_avail
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|=
+name|physmap
+index|[
+name|i
+operator|+
+literal|1
+index|]
+expr_stmt|;
 name|mem_len
 operator|+=
 name|physmap
@@ -3729,6 +3764,23 @@ name|physmap
 index|[
 name|i
 index|]
+expr_stmt|;
+block|}
+name|dump_avail
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|dump_avail
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Set the pcpu data, this is needed by pmap_bootstrap */
 name|pcpup

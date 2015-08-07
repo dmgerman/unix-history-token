@@ -718,14 +718,51 @@ begin_comment
 comment|/* internally known to gcc */
 end_comment
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_elif
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LP64__
+end_ifdef
+
+begin_struct
+struct|struct
+name|__s_va_list
+block|{
+name|__uint32_t
+name|_pad1
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* gp_offset, fp_offset */
+name|__uint64_t
+name|_pad2
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* overflow_arg_area, reg_save_area */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|__s_va_list
+name|__va_list
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_typedef
 typedef|typedef
@@ -735,9 +772,10 @@ name|__va_list
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* pretend */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -4943,7 +4943,7 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"STRIP?= strip\n"
+literal|"STRIPBIN?= strip\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5255,7 +5255,7 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"\t$(STRIP) %s\n"
+literal|"\t$(STRIPBIN) %s\n"
 argument_list|,
 name|execfname
 argument_list|)

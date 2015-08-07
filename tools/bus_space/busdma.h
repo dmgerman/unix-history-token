@@ -234,10 +234,10 @@ name|u_int
 name|op
 parameter_list|,
 name|u_long
-name|base
+name|ofs
 parameter_list|,
 name|u_long
-name|size
+name|len
 parameter_list|)
 function_decl|;
 end_function_decl

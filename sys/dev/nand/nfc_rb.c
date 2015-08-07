@@ -36,19 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
 end_include
 
 begin_include
@@ -73,24 +61,6 @@ begin_include
 include|#
 directive|include
 file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include

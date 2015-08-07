@@ -313,12 +313,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xenvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"xenbus_if.h"
 end_include
 
@@ -999,7 +993,7 @@ name|virt_to_mfn
 parameter_list|(
 name|x
 parameter_list|)
-value|(vtomach(x)>> PAGE_SHIFT)
+value|(vtophys(x)>> PAGE_SHIFT)
 end_define
 
 begin_define
@@ -3876,7 +3870,7 @@ index|[
 name|i
 index|]
 operator|=
-name|vtomach
+name|vtophys
 argument_list|(
 name|mtod
 argument_list|(

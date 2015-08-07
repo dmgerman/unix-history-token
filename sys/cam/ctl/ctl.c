@@ -1755,6 +1755,12 @@ name|SCSI_EVPD_NUM_SUPPORTED_PAGES
 value|10
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -1789,6 +1795,11 @@ name|dest
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2538,6 +2549,12 @@ begin_comment
 comment|//static int ctl_check_rtr(union ctl_io *pending_io, struct ctl_softc *softc);
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -2547,6 +2564,11 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2976,6 +2998,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -2988,6 +3016,11 @@ name|io
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -3108,18 +3141,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_CTLIO
-argument_list|,
-literal|"ctlio"
-argument_list|,
-literal|"Memory used for CTL requests"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -3189,6 +3210,12 @@ literal|"ioctl"
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
 
 begin_function
 specifier|static
@@ -4936,6 +4963,11 @@ name|status
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -25981,6 +26013,11 @@ name|ctl_softc
 modifier|*
 name|softc
 decl_stmt|;
+name|struct
+name|ctl_lba_len_flags
+modifier|*
+name|lbalen
+decl_stmt|;
 name|uint64_t
 name|starting_lba
 decl_stmt|;
@@ -25989,6 +26026,9 @@ name|block_count
 decl_stmt|;
 name|int
 name|retval
+decl_stmt|;
+name|uint8_t
+name|byte2
 decl_stmt|;
 name|CTL_DEBUG_PRINT
 argument_list|(
@@ -26073,6 +26113,12 @@ operator|->
 name|lb_count
 argument_list|)
 expr_stmt|;
+name|byte2
+operator|=
+name|cdb
+operator|->
+name|byte2
+expr_stmt|;
 break|break;
 block|}
 case|case
@@ -26112,6 +26158,12 @@ name|cdb
 operator|->
 name|lb_count
 argument_list|)
+expr_stmt|;
+name|byte2
+operator|=
+name|cdb
+operator|->
+name|byte2
 expr_stmt|;
 break|break;
 block|}
@@ -26205,6 +26257,41 @@ goto|goto
 name|bailout
 goto|;
 block|}
+name|lbalen
+operator|=
+operator|(
+expr|struct
+name|ctl_lba_len_flags
+operator|*
+operator|)
+operator|&
+name|ctsio
+operator|->
+name|io_hdr
+operator|.
+name|ctl_private
+index|[
+name|CTL_PRIV_LBA_LEN
+index|]
+expr_stmt|;
+name|lbalen
+operator|->
+name|lba
+operator|=
+name|starting_lba
+expr_stmt|;
+name|lbalen
+operator|->
+name|len
+operator|=
+name|block_count
+expr_stmt|;
+name|lbalen
+operator|->
+name|flags
+operator|=
+name|byte2
+expr_stmt|;
 comment|/* 	 * Check to see whether we're configured to send the SYNCHRONIZE 	 * CACHE command directly to the back end. 	 */
 name|mtx_lock
 argument_list|(
@@ -53765,6 +53852,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -54765,6 +54858,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -65808,6 +65906,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -66153,6 +66257,11 @@ name|ctl_isc_quiesce
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *  vim: ts=8  */

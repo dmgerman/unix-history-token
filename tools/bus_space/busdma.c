@@ -2946,10 +2946,10 @@ name|u_int
 name|op
 parameter_list|,
 name|u_long
-name|base
+name|ofs
 parameter_list|,
 name|u_long
-name|size
+name|len
 parameter_list|)
 block|{
 name|struct
@@ -3026,7 +3026,7 @@ name|sync
 operator|.
 name|base
 operator|=
-name|base
+name|ofs
 expr_stmt|;
 name|ioc
 operator|.
@@ -3036,7 +3036,7 @@ name|sync
 operator|.
 name|size
 operator|=
-name|size
+name|len
 expr_stmt|;
 if|if
 condition|(

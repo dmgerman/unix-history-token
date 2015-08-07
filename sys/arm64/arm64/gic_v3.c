@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/intr.h>
 end_include
 
@@ -953,6 +959,27 @@ condition|(
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|CPU_MATCH_ERRATA_CAVIUM_THUNDER_1_1
+condition|)
+block|{
+comment|/* 			 * Hardware:		Cavium ThunderX 			 * Chip revision:	Pass 1.0 (early version) 			 *			Pass 1.1 (production) 			 * ERRATUM:		22978, 23154 			 */
+asm|__asm __volatile(
+literal|"nop;nop;nop;nop;nop;nop;nop;nop;	\n"
+literal|"mrs %0, ICC_IAR1_EL1		\n"
+literal|"nop;nop;nop;nop;			\n"
+literal|"dsb sy				\n"
+operator|:
+literal|"=&r"
+operator|(
+name|active_irq
+operator|)
+block|)
+empty_stmt|;
+block|}
+else|else
+block|{
 name|active_irq
 operator|=
 name|gic_icc_read
@@ -960,6 +987,7 @@ argument_list|(
 name|IAR1
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|__predict_false
@@ -1023,11 +1051,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 end_function
 
 begin_function
-specifier|static
+unit|}  static
 name|void
 name|gic_v3_eoi
 parameter_list|(

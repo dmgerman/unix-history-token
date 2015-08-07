@@ -379,6 +379,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -474,6 +476,8 @@ argument_list|,
 name|uap
 operator|->
 name|flags
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -584,6 +588,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -688,6 +694,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3196,6 +3204,11 @@ name|procdescp
 parameter_list|,
 name|int
 name|pdflags
+parameter_list|,
+name|struct
+name|filecaps
+modifier|*
+name|fcaps
 parameter_list|)
 block|{
 name|struct
@@ -3428,7 +3441,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|falloc
+name|falloc_caps
 argument_list|(
 name|td
 argument_list|,
@@ -3438,6 +3451,8 @@ argument_list|,
 name|procdescp
 argument_list|,
 literal|0
+argument_list|,
+name|fcaps
 argument_list|)
 expr_stmt|;
 if|if

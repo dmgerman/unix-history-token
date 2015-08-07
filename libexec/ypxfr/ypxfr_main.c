@@ -146,6 +146,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ypxfr_use_yplib
 init|=
@@ -158,6 +159,7 @@ comment|/* Assume the worst. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ypxfr_clear
 init|=
@@ -166,6 +168,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ypxfr_prognum
 init|=
@@ -174,6 +177,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_in
 name|ypxfr_callback_addr
@@ -181,6 +185,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|yppushresp_xfr
 name|ypxfr_resp
@@ -188,6 +193,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|DB
 modifier|*
 name|dbp

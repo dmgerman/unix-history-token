@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rmlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rwlock.h>
 end_include
 
@@ -3142,6 +3148,10 @@ name|vip
 parameter_list|)
 block|{
 name|struct
+name|rm_priotracker
+name|in_ifa_tracker
+decl_stmt|;
+name|struct
 name|in_ifaddr
 modifier|*
 name|ia
@@ -3166,7 +3176,10 @@ case|case
 name|PRC_IFDOWN
 case|:
 name|IN_IFADDR_RLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -3205,7 +3218,10 @@ name|ia_ifa
 argument_list|)
 expr_stmt|;
 name|IN_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 comment|/* 				 * in_scrubprefix() kills the interface route. 				 */
 name|in_scrubprefix
@@ -3245,14 +3261,20 @@ name|NULL
 condition|)
 comment|/* If ia matched, already unlocked. */
 name|IN_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|PRC_IFUP
 case|:
 name|IN_IFADDR_RLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -3291,7 +3313,10 @@ operator|)
 condition|)
 block|{
 name|IN_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -3304,7 +3329,10 @@ name|ia_ifa
 argument_list|)
 expr_stmt|;
 name|IN_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 name|flags
 operator|=

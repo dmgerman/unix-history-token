@@ -143,11 +143,8 @@ name|debug
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* NIS v1 */
-end_comment
-
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -155,6 +152,7 @@ name|yp_procs
 index|[]
 init|=
 block|{
+comment|/* NIS v1 */
 literal|"ypoldproc_null"
 block|,
 literal|"ypoldproc_domain"
@@ -232,6 +230,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|securenet
 modifier|*

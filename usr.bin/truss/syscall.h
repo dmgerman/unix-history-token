@@ -102,6 +102,14 @@ block|,
 name|LinuxSockArgs
 block|,
 name|Umtxop
+block|,
+name|Atfd
+block|,
+name|Atflags
+block|,
+name|Timespec2
+block|,
+name|Accessmode
 block|}
 enum|;
 end_enum

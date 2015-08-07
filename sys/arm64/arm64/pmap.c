@@ -5597,7 +5597,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"reclaim_pv_chunk"
+literal|"ARM64TODO: reclaim_pv_chunk"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10218,6 +10218,38 @@ block|}
 block|}
 end_function
 
+begin_function
+name|vm_offset_t
+name|pmap_quick_enter_page
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+return|return
+operator|(
+name|PHYS_TO_DMAP
+argument_list|(
+name|VM_PAGE_TO_PHYS
+argument_list|(
+name|m
+argument_list|)
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|pmap_quick_remove_page
+parameter_list|(
+name|vm_offset_t
+name|addr
+parameter_list|)
+block|{ }
+end_function
+
 begin_comment
 comment|/*  * Returns true if the pmap's pv is one of the first  * 16 pvs linked to from this page.  This count may  * be changed upwards or downwards in the future; it  * is only necessary that true be returned for a small  * subset of pmaps for proper page aging.  */
 end_comment
@@ -12072,7 +12104,7 @@ block|{
 comment|/* 				 * TODO: We don't handle the access flag 				 * at all. We need to be able to set it in 				 * the exception handler. 				 */
 name|panic
 argument_list|(
-literal|"TODO: safe_to_clear_referenced\n"
+literal|"ARM64TODO: safe_to_clear_referenced\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -12370,7 +12402,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* TODO: We lack support for tracking if a page is modified */
+comment|/* ARM64TODO: We lack support for tracking if a page is modified */
 block|}
 end_function
 
@@ -12429,9 +12461,38 @@ name|vm_memattr_t
 name|ma
 parameter_list|)
 block|{
+name|m
+operator|->
+name|md
+operator|.
+name|pv_memattr
+operator|=
+name|ma
+expr_stmt|;
+comment|/* 	 * ARM64TODO: Implement the below (from the amd64 pmap) 	 * If "m" is a normal page, update its direct mapping.  This update 	 * can be relied upon to perform any cache operations that are 	 * required for data coherence. 	 */
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_FICTITIOUS
+operator|)
+operator|==
+literal|0
+operator|&&
+name|PHYS_IN_DMAP
+argument_list|(
+name|VM_PAGE_TO_PHYS
+argument_list|(
+name|m
+argument_list|)
+argument_list|)
+condition|)
 name|panic
 argument_list|(
-literal|"pmap_page_set_memattr"
+literal|"ARM64TODO: pmap_page_set_memattr"
 argument_list|)
 expr_stmt|;
 block|}
@@ -12458,7 +12519,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_mincore"
+literal|"ARM64TODO: pmap_mincore"
 argument_list|)
 expr_stmt|;
 block|}
@@ -12532,7 +12593,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_sync_icache"
+literal|"ARM64TODO: pmap_sync_icache"
 argument_list|)
 expr_stmt|;
 block|}
@@ -12817,7 +12878,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_unmap_io_transient: TODO: Unmap data"
+literal|"ARM64TODO: pmap_unmap_io_transient: Unmap data"
 argument_list|)
 expr_stmt|;
 block|}

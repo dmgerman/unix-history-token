@@ -978,6 +978,9 @@ name|pc_curthread
 operator|=
 literal|0
 expr_stmt|;
+name|intel_fix_cpuid
+argument_list|()
+expr_stmt|;
 name|gdt_segs
 index|[
 name|GPRIV_SEL
