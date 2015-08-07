@@ -6805,7 +6805,10 @@ condition|(
 name|err
 operator|==
 name|EWOULDBLOCK
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|fapi
 operator|->
 name|timeout
@@ -6817,6 +6820,15 @@ literal|1
 condition|)
 block|{
 continue|continue;
+block|}
+else|else
+block|{
+return|return
+operator|(
+name|ETIMEDOUT
+operator|)
+return|;
+block|}
 block|}
 elseif|else
 if|if
