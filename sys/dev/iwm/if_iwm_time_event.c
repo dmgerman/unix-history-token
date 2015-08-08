@@ -248,37 +248,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<if_iwmreg.h>
+file|<dev/iwm/if_iwmreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<if_iwmvar.h>
+file|<dev/iwm/if_iwmvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<if_iwm_debug.h>
+file|<dev/iwm/if_iwm_debug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<if_iwm_util.h>
+file|<dev/iwm/if_iwm_util.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<if_iwm_pcie_trans.h>
+file|<dev/iwm/if_iwm_pcie_trans.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<if_iwm_time_event.h>
+file|<dev/iwm/if_iwm_time_event.h>
 end_include
 
 begin_comment

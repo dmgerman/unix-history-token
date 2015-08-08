@@ -248,73 +248,73 @@ end_include
 begin_include
 include|#
 directive|include
-file|<if_iwmreg.h>
+file|<dev/iwm/if_iwmreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<if_iwmvar.h>
+file|<dev/iwm/if_iwmvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<if_iwm_debug.h>
+file|<dev/iwm/if_iwm_debug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<if_iwm_util.h>
+file|<dev/iwm/if_iwm_util.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<if_iwm_binding.h>
+file|<dev/iwm/if_iwm_binding.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<if_iwm_phy_db.h>
+file|<dev/iwm/if_iwm_phy_db.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<if_iwm_mac_ctxt.h>
+file|<dev/iwm/if_iwm_mac_ctxt.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<if_iwm_phy_ctxt.h>
+file|<dev/iwm/if_iwm_phy_ctxt.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<if_iwm_time_event.h>
+file|<dev/iwm/if_iwm_time_event.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<if_iwm_power.h>
+file|<dev/iwm/if_iwm_power.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<if_iwm_scan.h>
+file|<dev/iwm/if_iwm_scan.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<if_iwm_pcie_trans.h>
+file|<dev/iwm/if_iwm_pcie_trans.h>
 end_include
 
 begin_decl_stmt
