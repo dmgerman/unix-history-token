@@ -279,21 +279,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|RB_PROTOTYPE
-argument_list|(
-name|ctypes
-argument_list|,
-name|ctype_node
-argument_list|,
-name|entry
-argument_list|,
-name|ctype_compare
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|RB_GENERATE
+name|RB_GENERATE_STATIC
 argument_list|(
 name|ctypes
 argument_list|,
