@@ -4033,6 +4033,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|optind
+operator|==
+name|argc
+operator|-
+literal|2
+condition|)
+block|{
+if|if
+condition|(
 name|cap_enter
 argument_list|()
 operator|<
@@ -4049,15 +4058,6 @@ argument_list|,
 literal|"unable to enter capability mode"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|optind
-operator|==
-name|argc
-operator|-
-literal|2
-condition|)
-block|{
 name|havestr
 operator|=
 name|argv
@@ -4224,6 +4224,24 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"Could not initialize history"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cap_enter
+argument_list|()
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOSYS
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"unable to enter capability mode"
 argument_list|)
 expr_stmt|;
 if|if
