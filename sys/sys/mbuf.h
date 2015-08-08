@@ -4033,6 +4033,7 @@ name|mbuf
 modifier|*
 name|m_copym
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -4173,6 +4174,7 @@ name|mbuf
 modifier|*
 name|m_dup
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -4190,6 +4192,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -4895,6 +4898,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|mbuf
 modifier|*
