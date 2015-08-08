@@ -348,7 +348,7 @@ index|[
 literal|0
 index|]
 operator|.
-name|ds_size
+name|ds_len
 argument_list|,
 operator|(
 literal|"fragmented DMA memory"
