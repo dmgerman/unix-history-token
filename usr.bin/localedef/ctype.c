@@ -264,16 +264,14 @@ name|ctype_node_t
 typedef|;
 end_typedef
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|RB_HEAD
 argument_list|(
 argument|ctypes
 argument_list|,
 argument|ctype_node
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|ctypes
 expr_stmt|;
 end_expr_stmt
