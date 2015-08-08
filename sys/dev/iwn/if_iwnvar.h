@@ -798,6 +798,12 @@ decl_stmt|;
 name|int
 name|beacon_int
 decl_stmt|;
+name|uint8_t
+name|macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -819,20 +825,17 @@ block|{
 name|device_t
 name|sc_dev
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|sc_ifp
+decl_stmt|;
 name|int
 name|sc_debug
 decl_stmt|;
 name|struct
 name|mtx
 name|sc_mtx
-decl_stmt|;
-name|struct
-name|ieee80211com
-name|sc_ic
-decl_stmt|;
-name|struct
-name|mbufq
-name|sc_snd
 decl_stmt|;
 name|u_int
 name|sc_flags
@@ -873,10 +876,6 @@ define|#
 directive|define
 name|IWN_FLAG_BTCOEX
 value|(1<< 10)
-define|#
-directive|define
-name|IWN_FLAG_RUNNING
-value|(1<< 11)
 name|uint8_t
 name|hw_type
 decl_stmt|;
@@ -1060,6 +1059,10 @@ decl_stmt|;
 name|struct
 name|callout
 name|watchdog_to
+decl_stmt|;
+name|struct
+name|callout
+name|ct_kill_exit_to
 decl_stmt|;
 name|struct
 name|iwn_fw_info

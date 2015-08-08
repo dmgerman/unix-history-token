@@ -205,12 +205,9 @@ struct|struct
 name|ipw_softc
 block|{
 name|struct
-name|ieee80211com
-name|sc_ic
-decl_stmt|;
-name|struct
-name|mbufq
-name|sc_snd
+name|ifnet
+modifier|*
+name|sc_ifp
 decl_stmt|;
 name|device_t
 name|sc_dev
@@ -267,10 +264,6 @@ define|#
 directive|define
 name|IPW_FLAG_ASSOCIATED
 value|0x0100
-define|#
-directive|define
-name|IPW_FLAG_RUNNING
-value|0x0200
 name|struct
 name|resource
 modifier|*

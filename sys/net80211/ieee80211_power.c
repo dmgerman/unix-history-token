@@ -1792,6 +1792,14 @@ modifier|*
 name|qhead
 decl_stmt|;
 name|struct
+name|ifnet
+modifier|*
+name|parent
+decl_stmt|,
+modifier|*
+name|ifp
+decl_stmt|;
+name|struct
 name|mbuf
 modifier|*
 name|parent_q
@@ -1849,6 +1857,14 @@ name|NULL
 condition|)
 block|{
 comment|/* XXX could dispatch through vap and check M_ENCAP */
+name|parent
+operator|=
+name|vap
+operator|->
+name|iv_ic
+operator|->
+name|ic_ifp
+expr_stmt|;
 comment|/* XXX need different driver interface */
 comment|/* XXX bypasses q max and OACTIVE */
 name|parent_q
@@ -1874,6 +1890,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+else|else
+name|parent
+operator|=
+name|NULL
+expr_stmt|;
 name|qhead
 operator|=
 operator|&
@@ -1894,6 +1915,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|ifp
+operator|=
+name|vap
+operator|->
+name|iv_ifp
+expr_stmt|;
 comment|/* XXX need different driver interface */
 comment|/* XXX bypasses q max and OACTIVE */
 name|ifp_q
@@ -1919,6 +1946,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+else|else
+name|ifp
+operator|=
+name|NULL
+expr_stmt|;
 name|psq
 operator|->
 name|psq_len
@@ -1933,6 +1965,13 @@ expr_stmt|;
 comment|/* NB: do this outside the psq lock */
 comment|/* XXX packets might get reordered if parent is OACTIVE */
 comment|/* parent frames, should be encapsulated */
+if|if
+condition|(
+name|parent
+operator|!=
+name|NULL
+condition|)
+block|{
 while|while
 condition|(
 name|parent_q
@@ -1974,7 +2013,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * For encaped frames, we need to free the node 		 * reference upon failure. 		 */
+comment|/* 			 * For encaped frames, we need to free the node 			 * reference upon failure. 			 */
 if|if
 condition|(
 name|ieee80211_parent_xmitpkt
@@ -1992,7 +2031,15 @@ name|ni
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/* VAP frames, aren't encapsulated */
+if|if
+condition|(
+name|ifp
+operator|!=
+name|NULL
+condition|)
+block|{
 while|while
 condition|(
 name|ifp_q
@@ -2046,6 +2093,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function

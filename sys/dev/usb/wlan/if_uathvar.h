@@ -581,12 +581,9 @@ struct|struct
 name|uath_softc
 block|{
 name|struct
-name|ieee80211com
-name|sc_ic
-decl_stmt|;
-name|struct
-name|mbufq
-name|sc_snd
+name|ifnet
+modifier|*
+name|sc_ifp
 decl_stmt|;
 name|device_t
 name|sc_dev
