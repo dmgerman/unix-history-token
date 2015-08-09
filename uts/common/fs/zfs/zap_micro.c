@@ -2820,11 +2820,9 @@ name|db_size
 expr_stmt|;
 name|mzp
 operator|=
-name|kmem_alloc
+name|zio_buf_alloc
 argument_list|(
 name|sz
-argument_list|,
-name|KM_SLEEP
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -2880,7 +2878,7 @@ condition|(
 name|err
 condition|)
 block|{
-name|kmem_free
+name|zio_buf_free
 argument_list|(
 name|mzp
 argument_list|,
@@ -3028,7 +3026,7 @@ name|err
 condition|)
 break|break;
 block|}
-name|kmem_free
+name|zio_buf_free
 argument_list|(
 name|mzp
 argument_list|,
