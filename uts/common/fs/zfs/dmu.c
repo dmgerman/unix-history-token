@@ -8185,19 +8185,6 @@ condition|(
 name|ismd
 condition|)
 block|{
-comment|/* 		 * XXX -- we should design a compression algorithm 		 * that specializes in arrays of bps. 		 */
-name|boolean_t
-name|lz4_ac
-init|=
-name|spa_feature_is_active
-argument_list|(
-name|os
-operator|->
-name|os_spa
-argument_list|,
-name|SPA_FEATURE_LZ4_COMPRESS
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|zfs_mdcomp_disable
@@ -8208,22 +8195,21 @@ operator|=
 name|ZIO_COMPRESS_EMPTY
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|lz4_ac
-condition|)
-block|{
-name|compress
-operator|=
-name|ZIO_COMPRESS_LZ4
-expr_stmt|;
-block|}
 else|else
 block|{
+comment|/* 			 * XXX -- we should design a compression algorithm 			 * that specializes in arrays of bps. 			 */
 name|compress
 operator|=
-name|ZIO_COMPRESS_LZJB
+name|zio_compress_select
+argument_list|(
+name|os
+operator|->
+name|os_spa
+argument_list|,
+name|ZIO_COMPRESS_ON
+argument_list|,
+name|ZIO_COMPRESS_ON
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * Metadata always gets checksummed.  If the data 		 * checksum is multi-bit correctable, and it's not a 		 * ZBT-style checksum, then it's suitable for metadata 		 * as well.  Otherwise, the metadata checksum defaults 		 * to fletcher4. 		 */
@@ -8317,6 +8303,10 @@ name|compress
 operator|=
 name|zio_compress_select
 argument_list|(
+name|os
+operator|->
+name|os_spa
+argument_list|,
 name|dn
 operator|->
 name|dn_compress

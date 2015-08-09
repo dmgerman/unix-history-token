@@ -511,9 +511,13 @@ name|os_compress
 operator|=
 name|zio_compress_select
 argument_list|(
+name|os
+operator|->
+name|os_spa
+argument_list|,
 name|newval
 argument_list|,
-name|ZIO_COMPRESS_ON_VALUE
+name|ZIO_COMPRESS_ON
 argument_list|)
 expr_stmt|;
 block|}
@@ -1706,7 +1710,7 @@ name|os
 operator|->
 name|os_compress
 operator|=
-name|ZIO_COMPRESS_LZJB
+name|ZIO_COMPRESS_ON
 expr_stmt|;
 name|os
 operator|->
