@@ -40,7 +40,7 @@ file|"xlocale_private.h"
 end_include
 
 begin_comment
-comment|/*  * Work around buildworld bootstrapping from older systems whos limits.h  * sets COLL_WEIGHTS_MAX to 0.  */
+comment|/*  * Work around buildworld bootstrapping from older systems whose limits.h  * sets COLL_WEIGHTS_MAX to 0.  */
 end_comment
 
 begin_if

@@ -107,6 +107,12 @@ directive|include
 file|"ldpart.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
 begin_decl_stmt
 name|struct
 name|xlocale_collate
@@ -156,12 +162,6 @@ literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_include
-include|#
-directive|include
-file|"libc_private.h"
-end_include
 
 begin_function_decl
 name|int
