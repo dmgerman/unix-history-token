@@ -1434,12 +1434,35 @@ name|int
 name|flags
 parameter_list|)
 function_decl|;
+comment|/*  * Add a reference to a dmu buffer that has already been held via  * dmu_buf_hold() in the current context.  */
 name|void
 name|dmu_buf_add_ref
 parameter_list|(
 name|dmu_buf_t
 modifier|*
 name|db
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
+comment|/*  * Attempt to add a reference to a dmu buffer that is in an unknown state,  * using a pointer that may have been invalidated by eviction processing.  * The request will succeed if the passed in dbuf still represents the  * same os/object/blkid, is ineligible for eviction, and has at least  * one hold by a user other than the syncer.  */
+name|boolean_t
+name|dmu_buf_try_add_ref
+parameter_list|(
+name|dmu_buf_t
+modifier|*
+parameter_list|,
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|uint64_t
+name|object
+parameter_list|,
+name|uint64_t
+name|blkid
 parameter_list|,
 name|void
 modifier|*
