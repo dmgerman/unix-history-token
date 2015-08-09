@@ -439,7 +439,7 @@ name|_LDP_CACHE
 operator|)
 return|;
 block|}
-name|asnprintf
+name|asprintf
 argument_list|(
 operator|&
 name|buf
