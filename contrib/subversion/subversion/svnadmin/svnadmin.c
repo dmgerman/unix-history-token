@@ -4276,11 +4276,13 @@ name|char
 operator|*
 argument_list|)
 operator|*
+operator|(
 name|args
 operator|->
 name|nelts
 operator|+
 literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 for|for

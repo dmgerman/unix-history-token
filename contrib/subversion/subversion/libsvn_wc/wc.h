@@ -133,6 +133,11 @@ define|#
 directive|define
 name|SVN_WC__HAS_WORK_QUEUE
 value|13
+comment|/* While we still have this DB version we should verify if there is    sqlite_stat1 table on opening */
+define|#
+directive|define
+name|SVN_WC__ENSURE_STAT1_TABLE
+value|31
 comment|/* Return a string indicating the released version (or versions) of  * Subversion that used WC format number WC_FORMAT, or some other  * suitable string if no released version used WC_FORMAT.  *  * ### It's not ideal to encode this sort of knowledge in this low-level  * library.  On the other hand, it doesn't need to be updated often and  * should be easily found when it does need to be updated.  */
 specifier|const
 name|char
