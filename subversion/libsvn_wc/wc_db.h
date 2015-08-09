@@ -2076,11 +2076,11 @@ name|apr_array_header_t
 modifier|*
 name|children
 parameter_list|,
-name|svn_boolean_t
-name|is_move
-parameter_list|,
 name|svn_depth_t
 name|depth
+parameter_list|,
+name|svn_boolean_t
+name|is_move
 parameter_list|,
 specifier|const
 name|svn_skel_t
@@ -2227,6 +2227,9 @@ specifier|const
 name|char
 modifier|*
 name|target
+parameter_list|,
+name|svn_boolean_t
+name|is_move
 parameter_list|,
 specifier|const
 name|svn_skel_t
