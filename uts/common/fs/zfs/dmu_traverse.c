@@ -92,12 +92,20 @@ file|<sys/zfeature.h>
 end_include
 
 begin_decl_stmt
-name|int
-name|zfs_pd_blks_max
+name|int32_t
+name|zfs_pd_bytes_max
 init|=
-literal|100
+literal|50
+operator|*
+literal|1024
+operator|*
+literal|1024
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* 50MB */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -110,11 +118,8 @@ decl_stmt|;
 name|kcondvar_t
 name|pd_cv
 decl_stmt|;
-name|int
-name|pd_blks_max
-decl_stmt|;
-name|int
-name|pd_blks_fetched
+name|int32_t
+name|pd_bytes_fetched
 decl_stmt|;
 name|int
 name|pd_flags
@@ -1034,6 +1039,14 @@ name|bp
 argument_list|)
 condition|)
 block|{
+name|uint64_t
+name|size
+init|=
+name|BP_GET_LSIZE
+argument_list|(
+name|bp
+argument_list|)
+decl_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
@@ -1046,7 +1059,7 @@ name|ASSERT
 argument_list|(
 name|pd
 operator|->
-name|pd_blks_fetched
+name|pd_bytes_fetched
 operator|>=
 literal|0
 argument_list|)
@@ -1055,9 +1068,9 @@ while|while
 condition|(
 name|pd
 operator|->
-name|pd_blks_fetched
-operator|==
-literal|0
+name|pd_bytes_fetched
+operator|<
+name|size
 operator|&&
 operator|!
 name|pd
@@ -1079,8 +1092,9 @@ argument_list|)
 expr_stmt|;
 name|pd
 operator|->
-name|pd_blks_fetched
-operator|--
+name|pd_bytes_fetched
+operator|-=
+name|size
 expr_stmt|;
 name|cv_broadcast
 argument_list|(
@@ -2265,7 +2279,7 @@ name|ASSERT
 argument_list|(
 name|pfd
 operator|->
-name|pd_blks_fetched
+name|pd_bytes_fetched
 operator|>=
 literal|0
 argument_list|)
@@ -2316,11 +2330,9 @@ name|pd_cancel
 operator|&&
 name|pfd
 operator|->
-name|pd_blks_fetched
+name|pd_bytes_fetched
 operator|>=
-name|pfd
-operator|->
-name|pd_blks_max
+name|zfs_pd_bytes_max
 condition|)
 name|cv_wait
 argument_list|(
@@ -2337,8 +2349,12 @@ argument_list|)
 expr_stmt|;
 name|pfd
 operator|->
-name|pd_blks_fetched
-operator|++
+name|pd_bytes_fetched
+operator|+=
+name|BP_GET_LSIZE
+argument_list|(
+name|bp
+argument_list|)
 expr_stmt|;
 name|cv_broadcast
 argument_list|(
@@ -2710,12 +2726,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|pd
-operator|.
-name|pd_blks_max
-operator|=
-name|zfs_pd_blks_max
-expr_stmt|;
 name|pd
 operator|.
 name|pd_flags
