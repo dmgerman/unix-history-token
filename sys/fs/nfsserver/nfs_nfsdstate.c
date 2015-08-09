@@ -1203,6 +1203,12 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|gotit
+operator|==
+literal|0
+condition|)
 name|i
 operator|++
 expr_stmt|;
