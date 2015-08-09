@@ -164,6 +164,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|__collate_load_tables_l
 parameter_list|(
