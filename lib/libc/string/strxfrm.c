@@ -278,10 +278,6 @@ condition|)
 goto|goto
 name|error
 goto|;
-if|if
-condition|(
-name|wcs
-condition|)
 name|free
 argument_list|(
 name|wcs
@@ -326,18 +322,11 @@ return|;
 name|error
 label|:
 comment|/* errno should be set to ENOMEM if malloc failed */
-if|if
-condition|(
-name|wcs
-condition|)
 name|free
 argument_list|(
 name|wcs
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strlcpy
 argument_list|(
 name|dest

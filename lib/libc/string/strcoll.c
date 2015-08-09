@@ -48,7 +48,7 @@ file|"collate.h"
 end_include
 
 begin_comment
-comment|/*  * In order to properly handle multibyte locales, its easiet to just  * convert to wide characters and then use wcscoll.  However if an  * error occurs, we gracefully fall back to simple strcmp.  Caller  * should check errno.  */
+comment|/*  * In order to properly handle multibyte locales, its easiest to just  * convert to wide characters and then use wcscoll.  However if an  * error occurs, we gracefully fall back to simple strcmp.  Caller  * should check errno.  */
 end_comment
 
 begin_function
@@ -315,19 +315,11 @@ argument_list|,
 name|locale
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|t1
-condition|)
 name|free
 argument_list|(
 name|t1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|t2
-condition|)
 name|free
 argument_list|(
 name|t2
@@ -340,19 +332,11 @@ operator|)
 return|;
 name|error
 label|:
-if|if
-condition|(
-name|t1
-condition|)
 name|free
 argument_list|(
 name|t1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|t2
-condition|)
 name|free
 argument_list|(
 name|t2
