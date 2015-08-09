@@ -2784,7 +2784,7 @@ control|)
 operator|*
 name|ptr
 operator|=
-literal|0x2f5baddb10c
+literal|0x2f5baddb10cULL
 expr_stmt|;
 block|}
 else|else
