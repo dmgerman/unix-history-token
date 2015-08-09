@@ -346,9 +346,8 @@ modifier|*
 name|encoding
 parameter_list|)
 block|{
-name|int
-name|ret
-init|=
+return|return
+operator|(
 name|__collate_load_tables_l
 argument_list|(
 name|encoding
@@ -356,9 +355,7 @@ argument_list|,
 operator|&
 name|__xlocale_global_collate
 argument_list|)
-decl_stmt|;
-return|return
-name|ret
+operator|)
 return|;
 block|}
 end_function
