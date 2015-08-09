@@ -2202,13 +2202,13 @@ name|mac
 parameter_list|)
 block|{
 comment|/* TODO:11B */
-name|device_printf
+name|if_printf
 argument_list|(
 name|mac
 operator|->
 name|mac_sc
 operator|->
-name|sc_dev
+name|sc_ifp
 argument_list|,
 literal|"%s is not implemented yet\n"
 argument_list|,

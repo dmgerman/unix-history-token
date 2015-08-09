@@ -806,7 +806,7 @@ name|strtonum
 argument_list|(
 name|optarg
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 name|INT_MAX
 argument_list|,
@@ -846,33 +846,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"getrlimit failed"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|endptr
-operator|!=
-literal|'\0'
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"invalid number for -P option"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|maxprocs
-operator|<
-literal|0
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"value for -P option should be>= 0"
 argument_list|)
 expr_stmt|;
 if|if

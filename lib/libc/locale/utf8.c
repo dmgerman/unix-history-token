@@ -537,13 +537,6 @@ name|lbound
 operator|=
 literal|0x10000
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* These would be illegal in the UTF-8 space */
-block|} else if ((ch& 0xfc) == 0xf8) { 			mask = 0x03; 			want = 5; 			lbound = 0x200000; 		} else if ((ch& 0xfe) == 0xfc) { 			mask = 0x01; 			want = 6; 			lbound = 0x4000000;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -1312,14 +1305,13 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
 name|wc
-operator|&
-operator|~
-literal|0x1fffff
-operator|)
-operator|==
+operator|>=
 literal|0
+operator|&&
+name|wc
+operator|<=
+literal|0x10ffff
 condition|)
 block|{
 name|lead
@@ -1330,13 +1322,6 @@ name|len
 operator|=
 literal|4
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Again, 5 and 6 byte encodings are simply not permitted */
-block|} else if ((wc& ~0x3ffffff) == 0) { 		lead = 0xf8; 		len = 5; 	} else if ((wc& ~0x7fffffff) == 0) { 		lead = 0xfc; 		len = 6;
-endif|#
-directive|endif
 block|}
 else|else
 block|{

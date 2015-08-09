@@ -890,13 +890,11 @@ struct|struct
 name|mwl_softc
 block|{
 name|struct
-name|ieee80211com
-name|sc_ic
+name|ifnet
+modifier|*
+name|sc_ifp
 decl_stmt|;
-name|struct
-name|mbufq
-name|sc_snd
-decl_stmt|;
+comment|/* interface common */
 name|struct
 name|mwl_stats
 name|sc_stats
@@ -946,10 +944,6 @@ name|sc_tx_timer
 decl_stmt|;
 name|unsigned
 name|int
-name|sc_running
-range|:
-literal|1
-decl_stmt|,
 name|sc_invalid
 range|:
 literal|1

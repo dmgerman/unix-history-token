@@ -203,7 +203,7 @@ name|int
 name|ath_reset
 parameter_list|(
 name|struct
-name|ath_softc
+name|ifnet
 modifier|*
 parameter_list|,
 name|ATH_RESET_TYPE

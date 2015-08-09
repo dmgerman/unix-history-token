@@ -4131,7 +4131,7 @@ name|t_inpcb
 operator|->
 name|inp_socket
 decl_stmt|;
-name|INP_INFO_RLOCK_ASSERT
+name|INP_INFO_LOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4940,7 +4940,7 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
-name|INP_INFO_RLOCK_ASSERT
+name|INP_INFO_LOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5214,7 +5214,7 @@ name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-name|INP_INFO_RLOCK_ASSERT
+name|INP_INFO_LOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo

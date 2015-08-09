@@ -1659,6 +1659,7 @@ name|mbuf
 modifier|*
 name|to
 parameter_list|,
+specifier|const
 name|struct
 name|mbuf
 modifier|*

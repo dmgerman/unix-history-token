@@ -1610,12 +1610,9 @@ name|struct
 name|ifnet
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr_in6
 modifier|*
 parameter_list|)
 function_decl|;
