@@ -368,6 +368,12 @@ init|=
 name|dbuf_find
 argument_list|(
 name|dn
+operator|->
+name|dn_objset
+argument_list|,
+name|dn
+operator|->
+name|dn_object
 argument_list|,
 name|old_toplvl
 argument_list|,
