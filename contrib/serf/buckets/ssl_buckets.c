@@ -5073,6 +5073,7 @@ name|allocator
 operator|=
 name|allocator
 expr_stmt|;
+comment|/* Use the best possible protocol version, but disable the broken SSLv2/3 */
 name|ssl_ctx
 operator|->
 name|ctx
@@ -5081,6 +5082,17 @@ name|SSL_CTX_new
 argument_list|(
 name|SSLv23_client_method
 argument_list|()
+argument_list|)
+expr_stmt|;
+name|SSL_CTX_set_options
+argument_list|(
+name|ssl_ctx
+operator|->
+name|ctx
+argument_list|,
+name|SSL_OP_NO_SSLv2
+operator||
+name|SSL_OP_NO_SSLv3
 argument_list|)
 expr_stmt|;
 name|SSL_CTX_set_client_cert_cb

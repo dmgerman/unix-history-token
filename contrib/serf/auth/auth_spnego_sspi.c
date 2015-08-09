@@ -305,7 +305,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|sspi_context
+name|sspi_credentials
 argument_list|)
 expr_stmt|;
 name|SecInvalidateHandle
@@ -313,7 +313,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|sspi_context
+name|sspi_credentials
 argument_list|)
 expr_stmt|;
 block|}
