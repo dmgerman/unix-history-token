@@ -879,8 +879,12 @@ begin_define
 define|#
 directive|define
 name|DRM_DEV_GID
-value|0
+value|44
 end_define
+
+begin_comment
+comment|/* "video" group */
+end_comment
 
 begin_define
 define|#
