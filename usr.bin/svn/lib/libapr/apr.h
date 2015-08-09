@@ -816,7 +816,7 @@ value|0
 define|#
 directive|define
 name|APR_USE_SHMEM_MMAP_SHM
-value|0
+value|1
 define|#
 directive|define
 name|APR_USE_SHMEM_MMAP_ZERO
@@ -828,7 +828,7 @@ value|0
 define|#
 directive|define
 name|APR_USE_SHMEM_SHMGET
-value|1
+value|0
 define|#
 directive|define
 name|APR_USE_SHMEM_MMAP_ANON
