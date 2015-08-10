@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -436,6 +436,9 @@ begin_struct
 struct|struct
 name|sa_handle
 block|{
+name|dmu_buf_user_t
+name|sa_dbu
+decl_stmt|;
 name|kmutex_t
 name|sa_lock
 decl_stmt|;

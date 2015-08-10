@@ -23028,10 +23028,9 @@ operator|==
 literal|0
 operator|&&
 operator|!
-name|dsl_dataset_is_snapshot
-argument_list|(
 name|new
-argument_list|)
+operator|->
+name|ds_is_snapshot
 condition|)
 block|{
 name|dsl_dataset_rele
@@ -23090,10 +23089,9 @@ operator|==
 literal|0
 operator|&&
 operator|!
-name|dsl_dataset_is_snapshot
-argument_list|(
 name|old
-argument_list|)
+operator|->
+name|ds_is_snapshot
 condition|)
 block|{
 name|dsl_dataset_rele
