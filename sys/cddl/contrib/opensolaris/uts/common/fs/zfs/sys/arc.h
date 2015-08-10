@@ -321,6 +321,8 @@ name|arc_space_type
 block|{
 name|ARC_SPACE_DATA
 block|,
+name|ARC_SPACE_META
+block|,
 name|ARC_SPACE_HDRS
 block|,
 name|ARC_SPACE_L2HDRS
