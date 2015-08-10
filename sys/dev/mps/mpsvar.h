@@ -3074,23 +3074,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mps_request_polled
-parameter_list|(
-name|struct
-name|mps_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|mps_command
-modifier|*
-name|cm
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|mps_config_get_bios_pg3
 parameter_list|(
 name|struct
