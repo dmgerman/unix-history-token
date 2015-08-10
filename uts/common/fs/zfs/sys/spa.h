@@ -818,6 +818,22 @@ define|\
 value|(0 == (((zc1).zc_word[0] - (zc2).zc_word[0]) | \ 	((zc1).zc_word[1] - (zc2).zc_word[1]) | \ 	((zc1).zc_word[2] - (zc2).zc_word[2]) | \ 	((zc1).zc_word[3] - (zc2).zc_word[3])))
 define|#
 directive|define
+name|ZIO_CHECKSUM_IS_ZERO
+parameter_list|(
+name|zc
+parameter_list|)
+define|\
+value|(0 == ((zc)->zc_word[0] | (zc)->zc_word[1] | \ 	(zc)->zc_word[2] | (zc)->zc_word[3]))
+define|#
+directive|define
+name|ZIO_CHECKSUM_BSWAP
+parameter_list|(
+name|zcp
+parameter_list|)
+define|\
+value|{								\ 	(zcp)->zc_word[0] = BSWAP_64((zcp)->zc_word[0]);	\ 	(zcp)->zc_word[1] = BSWAP_64((zcp)->zc_word[1]);	\ 	(zcp)->zc_word[2] = BSWAP_64((zcp)->zc_word[2]);	\ 	(zcp)->zc_word[3] = BSWAP_64((zcp)->zc_word[3]);	\ }
+define|#
+directive|define
 name|DVA_IS_VALID
 parameter_list|(
 name|dva

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -40,19 +40,16 @@ directive|endif
 comment|/*  * Signature for checksum functions.  */
 typedef|typedef
 name|void
-name|zio_checksum_t
+name|zio_checksum_func_t
 parameter_list|(
 specifier|const
 name|void
 modifier|*
-name|data
 parameter_list|,
 name|uint64_t
-name|size
 parameter_list|,
 name|zio_cksum_t
 modifier|*
-name|zcp
 parameter_list|)
 function_decl|;
 comment|/*  * Information about each checksum function.  */
@@ -60,14 +57,14 @@ typedef|typedef
 struct|struct
 name|zio_checksum_info
 block|{
-name|zio_checksum_t
+name|zio_checksum_func_t
 modifier|*
 name|ci_func
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* checksum function for each byteorder */
+comment|/* checksum function per byteorder */
 name|int
 name|ci_correctable
 decl_stmt|;
@@ -125,7 +122,7 @@ index|]
 decl_stmt|;
 comment|/*  * Checksum routines.  */
 specifier|extern
-name|zio_checksum_t
+name|zio_checksum_func_t
 name|zio_checksum_SHA256
 decl_stmt|;
 specifier|extern

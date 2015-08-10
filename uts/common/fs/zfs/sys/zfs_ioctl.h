@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -510,6 +510,23 @@ comment|/* compr. (real) size of payload */
 comment|/* (possibly compressed) content follows */
 block|}
 name|drr_write_embedded
+struct|;
+comment|/* 		 * Nore: drr_checksum is overlaid with all record types 		 * except DRR_BEGIN.  Therefore its (non-pad) members 		 * must not overlap with members from the other structs. 		 * We accomplish this by putting its members at the very 		 * end of the struct. 		 */
+struct|struct
+name|drr_checksum
+block|{
+name|uint64_t
+name|drr_pad
+index|[
+literal|34
+index|]
+decl_stmt|;
+comment|/* 			 * fletcher-4 checksum of everything preceding the 			 * checksum. 			 */
+name|zio_cksum_t
+name|drr_checksum
+decl_stmt|;
+block|}
+name|drr_checksum
 struct|;
 block|}
 name|drr_u
