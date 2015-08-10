@@ -3483,7 +3483,7 @@ literal|0
 condition|)
 name|pages
 operator|=
-name|KSTACK_PAGES
+name|kstack_pages
 expr_stmt|;
 comment|/* Allocate new proc. */
 name|newproc

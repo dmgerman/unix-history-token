@@ -1726,7 +1726,7 @@ name|kmem_malloc
 argument_list|(
 name|kernel_arena
 argument_list|,
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|PAGE_SIZE
 argument_list|,
@@ -1797,7 +1797,7 @@ index|[
 name|cpu
 index|]
 operator|+
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|PAGE_SIZE
 operator|-

@@ -860,7 +860,7 @@ specifier|const
 name|size_t
 name|stacksize
 init|=
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|PAGE_SIZE
 decl_stmt|;
@@ -947,7 +947,7 @@ index|[
 name|cpu
 index|]
 operator|+
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|PAGE_SIZE
 operator|-

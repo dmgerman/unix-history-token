@@ -7108,6 +7108,29 @@ decl_stmt|;
 name|size_t
 name|kstack0_sz
 decl_stmt|;
+comment|/*  	 * This may be done better later if it gets more high level  	 * components in it. If so just link td->td_proc here. 	 */
+name|proc_linkup0
+argument_list|(
+operator|&
+name|proc0
+argument_list|,
+operator|&
+name|thread0
+argument_list|)
+expr_stmt|;
+name|kmdp
+operator|=
+name|init_ops
+operator|.
+name|parse_preload_data
+argument_list|(
+name|modulep
+argument_list|)
+expr_stmt|;
+comment|/* Init basic tunables, hz etc */
+name|init_param1
+argument_list|()
+expr_stmt|;
 name|thread0
 operator|.
 name|td_kstack
@@ -7120,7 +7143,7 @@ name|thread0
 operator|.
 name|td_kstack_pages
 operator|=
-name|KSTACK_PAGES
+name|kstack_pages
 expr_stmt|;
 name|kstack0_sz
 operator|=
@@ -7146,29 +7169,6 @@ expr_stmt|;
 name|physfree
 operator|+=
 name|kstack0_sz
-expr_stmt|;
-comment|/*  	 * This may be done better later if it gets more high level  	 * components in it. If so just link td->td_proc here. 	 */
-name|proc_linkup0
-argument_list|(
-operator|&
-name|proc0
-argument_list|,
-operator|&
-name|thread0
-argument_list|)
-expr_stmt|;
-name|kmdp
-operator|=
-name|init_ops
-operator|.
-name|parse_preload_data
-argument_list|(
-name|modulep
-argument_list|)
-expr_stmt|;
-comment|/* Init basic tunables, hz etc */
-name|init_param1
-argument_list|()
 expr_stmt|;
 comment|/* 	 * make gdt memory segments 	 */
 for|for

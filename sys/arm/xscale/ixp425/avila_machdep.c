@@ -1058,7 +1058,7 @@ name|valloc_pages
 argument_list|(
 name|kernelstack
 argument_list|,
-name|KSTACK_PAGES
+name|kstack_pages
 argument_list|)
 expr_stmt|;
 name|alloc_pages

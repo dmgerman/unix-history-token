@@ -5011,7 +5011,7 @@ name|thread0
 operator|.
 name|td_kstack
 operator|+
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|PAGE_SIZE
 operator|)
@@ -6360,7 +6360,7 @@ name|valloc_pages
 argument_list|(
 name|kernelstack
 argument_list|,
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|MAXCPU
 argument_list|)
@@ -7248,7 +7248,7 @@ name|kernelstack
 operator|=
 name|pmap_preboot_get_vpages
 argument_list|(
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|MAXCPU
 argument_list|)
