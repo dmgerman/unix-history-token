@@ -365,12 +365,23 @@ name|APU_HAVE_APR_ICONV
 value|0
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|APU_HAVE_ICONV
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|APU_HAVE_ICONV
 value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
