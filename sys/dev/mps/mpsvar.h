@@ -1690,12 +1690,6 @@ modifier|*
 name|chain
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|bzero(chain->chain, 128);
-endif|#
-directive|endif
 name|sc
 operator|->
 name|chain_free
