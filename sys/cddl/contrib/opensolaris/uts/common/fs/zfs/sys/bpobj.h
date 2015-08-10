@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -265,22 +265,6 @@ modifier|*
 parameter_list|,
 name|dmu_tx_t
 modifier|*
-parameter_list|)
-function_decl|;
-name|int
-name|bpobj_iterate_dbg
-parameter_list|(
-name|bpobj_t
-modifier|*
-name|bpo
-parameter_list|,
-name|uint64_t
-modifier|*
-name|itorp
-parameter_list|,
-name|blkptr_t
-modifier|*
-name|bp
 parameter_list|)
 function_decl|;
 name|void
