@@ -369,7 +369,7 @@ begin_define
 define|#
 directive|define
 name|APU_HAVE_ICONV
-value|1
+value|0
 end_define
 
 begin_define

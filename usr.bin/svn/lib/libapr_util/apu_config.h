@@ -123,12 +123,9 @@ begin_comment
 comment|/* Define to 1 if you have the<iconv.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_ICONV_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_ICONV_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<inttypes.h> header file. */
