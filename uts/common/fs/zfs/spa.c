@@ -12307,6 +12307,11 @@ operator|)
 return|;
 if|if
 condition|(
+name|spa_writeable
+argument_list|(
+name|spa
+argument_list|)
+operator|&&
 name|spa_check_logs
 argument_list|(
 name|spa
