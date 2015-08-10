@@ -162,6 +162,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syscallsubr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -3402,23 +3408,30 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* System calls. */
-end_comment
-
 begin_function
 name|int
-name|sys_shm_open
+name|kern_shm_open
 parameter_list|(
 name|struct
 name|thread
 modifier|*
 name|td
 parameter_list|,
-name|struct
-name|shm_open_args
+specifier|const
+name|char
 modifier|*
-name|uap
+name|userpath
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|mode_t
+name|mode
+parameter_list|,
+name|struct
+name|filecaps
+modifier|*
+name|fcaps
 parameter_list|)
 block|{
 name|struct
@@ -3463,9 +3476,7 @@ name|td
 argument_list|)
 operator|&&
 operator|(
-name|uap
-operator|->
-name|path
+name|userpath
 operator|!=
 name|SHM_ANON
 operator|)
@@ -3480,8 +3491,6 @@ directive|endif
 if|if
 condition|(
 operator|(
-name|uap
-operator|->
 name|flags
 operator|&
 name|O_ACCMODE
@@ -3490,8 +3499,6 @@ operator|!=
 name|O_RDONLY
 operator|&&
 operator|(
-name|uap
-operator|->
 name|flags
 operator|&
 name|O_ACCMODE
@@ -3507,8 +3514,6 @@ return|;
 if|if
 condition|(
 operator|(
-name|uap
-operator|->
 name|flags
 operator|&
 operator|~
@@ -3543,8 +3548,6 @@ expr_stmt|;
 name|cmode
 operator|=
 operator|(
-name|uap
-operator|->
 name|mode
 operator|&
 operator|~
@@ -3557,7 +3560,7 @@ name|ACCESSPERMS
 expr_stmt|;
 name|error
 operator|=
-name|falloc
+name|falloc_caps
 argument_list|(
 name|td
 argument_list|,
@@ -3568,6 +3571,8 @@ operator|&
 name|fd
 argument_list|,
 name|O_CLOEXEC
+argument_list|,
+name|fcaps
 argument_list|)
 expr_stmt|;
 if|if
@@ -3582,9 +3587,7 @@ return|;
 comment|/* A SHM_ANON path pointer creates an anonymous object. */
 if|if
 condition|(
-name|uap
-operator|->
-name|path
+name|userpath
 operator|==
 name|SHM_ANON
 condition|)
@@ -3593,8 +3596,6 @@ comment|/* A read-only anonymous object is pointless. */
 if|if
 condition|(
 operator|(
-name|uap
-operator|->
 name|flags
 operator|&
 name|O_ACCMODE
@@ -3654,9 +3655,7 @@ name|error
 operator|=
 name|copyinstr
 argument_list|(
-name|uap
-operator|->
-name|path
+name|userpath
 argument_list|,
 name|path
 argument_list|,
@@ -3774,8 +3773,6 @@ block|{
 comment|/* Object does not yet exist, create it if requested. */
 if|if
 condition|(
-name|uap
-operator|->
 name|flags
 operator|&
 name|O_CREAT
@@ -3859,8 +3856,6 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|uap
-operator|->
 name|flags
 operator|&
 operator|(
@@ -3897,8 +3892,6 @@ name|shmfd
 argument_list|,
 name|FFLAGS
 argument_list|(
-name|uap
-operator|->
 name|flags
 operator|&
 name|O_ACCMODE
@@ -3925,8 +3918,6 @@ name|td_ucred
 argument_list|,
 name|FFLAGS
 argument_list|(
-name|uap
-operator|->
 name|flags
 operator|&
 name|O_ACCMODE
@@ -3942,8 +3933,6 @@ operator|==
 literal|0
 operator|&&
 operator|(
-name|uap
-operator|->
 name|flags
 operator|&
 operator|(
@@ -4046,8 +4035,6 @@ name|fp
 argument_list|,
 name|FFLAGS
 argument_list|(
-name|uap
-operator|->
 name|flags
 operator|&
 name|O_ACCMODE
@@ -4080,6 +4067,50 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* System calls. */
+end_comment
+
+begin_function
+name|int
+name|sys_shm_open
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|shm_open_args
+modifier|*
+name|uap
+parameter_list|)
+block|{
+return|return
+operator|(
+name|kern_shm_open
+argument_list|(
+name|td
+argument_list|,
+name|uap
+operator|->
+name|path
+argument_list|,
+name|uap
+operator|->
+name|flags
+argument_list|,
+name|uap
+operator|->
+name|mode
+argument_list|,
+name|NULL
+argument_list|)
 operator|)
 return|;
 block|}

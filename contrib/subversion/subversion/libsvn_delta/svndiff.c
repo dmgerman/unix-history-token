@@ -3370,9 +3370,7 @@ name|p
 operator|==
 name|NULL
 condition|)
-return|return
-name|SVN_NO_ERROR
-return|;
+break|break;
 name|p
 operator|=
 name|decode_size
@@ -3391,9 +3389,7 @@ name|p
 operator|==
 name|NULL
 condition|)
-return|return
-name|SVN_NO_ERROR
-return|;
+break|break;
 name|p
 operator|=
 name|decode_size
@@ -3412,9 +3408,7 @@ name|p
 operator|==
 name|NULL
 condition|)
-return|return
-name|SVN_NO_ERROR
-return|;
+break|break;
 name|p
 operator|=
 name|decode_size
@@ -3433,9 +3427,7 @@ name|p
 operator|==
 name|NULL
 condition|)
-return|return
-name|SVN_NO_ERROR
-return|;
+break|break;
 name|p
 operator|=
 name|decode_size
@@ -3454,9 +3446,7 @@ name|p
 operator|==
 name|NULL
 condition|)
-return|return
-name|SVN_NO_ERROR
-return|;
+break|break;
 if|if
 condition|(
 name|tview_len
@@ -3724,7 +3714,35 @@ operator|=
 name|newpool
 expr_stmt|;
 block|}
-comment|/* NOTREACHED */
+comment|/* At this point we processed all integral windows and DB->BUFFER is empty      or contains partially read window header.      Check that unprocessed data is not larger that theoretical maximum      window header size. */
+if|if
+condition|(
+name|db
+operator|->
+name|buffer
+operator|->
+name|len
+operator|>
+literal|5
+operator|*
+name|MAX_ENCODED_INT_LEN
+condition|)
+return|return
+name|svn_error_create
+argument_list|(
+name|SVN_ERR_SVNDIFF_CORRUPT_WINDOW
+argument_list|,
+name|NULL
+argument_list|,
+name|_
+argument_list|(
+literal|"Svndiff contains a too-large window header"
+argument_list|)
+argument_list|)
+return|;
+return|return
+name|SVN_NO_ERROR
+return|;
 block|}
 end_function
 

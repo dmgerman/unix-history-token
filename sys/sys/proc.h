@@ -348,6 +348,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|filecaps
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|kaioinfo
 struct_decl|;
 end_struct_decl
@@ -651,7 +657,7 @@ comment|/* (t) Turnstile queue blocked on. */
 name|short
 name|td_locks
 decl_stmt|;
-comment|/* (k) Count of non-spin locks. */
+comment|/* (k) Debug: count of non-spin locks */
 name|short
 name|td_rw_rlocks
 decl_stmt|;
@@ -1125,6 +1131,26 @@ define|\
 value|do {									\ 	struct mtx *__m = (td)->td_lock;				\ 	KASSERT((__m ==&blocked_lock || __m == (lock)),		\ 	    ("Thread %p lock %p does not match %p", td, __m, (lock)));	\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TD_LOCKS_INC
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_locks++)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_LOCKS_DEC
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_locks--)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1138,6 +1164,24 @@ parameter_list|(
 name|td
 parameter_list|,
 name|lock
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_LOCKS_INC
+parameter_list|(
+name|td
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_LOCKS_DEC
+parameter_list|(
+name|td
 parameter_list|)
 end_define
 
@@ -4815,6 +4859,10 @@ name|int
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|filecaps
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1743,40 +1743,19 @@ name|fildes
 index|[
 literal|2
 index|]
-parameter_list|)
-block|{
-return|return
-operator|(
-name|kern_pipe2
-argument_list|(
-name|td
-argument_list|,
-name|fildes
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|kern_pipe2
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|int
-name|fildes
-index|[
-literal|2
-index|]
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|struct
+name|filecaps
+modifier|*
+name|fcaps1
+parameter_list|,
+name|struct
+name|filecaps
+modifier|*
+name|fcaps2
 parameter_list|)
 block|{
 name|struct
@@ -1831,7 +1810,7 @@ name|pp_wpipe
 expr_stmt|;
 name|error
 operator|=
-name|falloc
+name|falloc_caps
 argument_list|(
 name|td
 argument_list|,
@@ -1842,6 +1821,8 @@ operator|&
 name|fd
 argument_list|,
 name|flags
+argument_list|,
+name|fcaps1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1865,7 +1846,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* An extra reference on `rf' has been held for us by falloc(). */
+comment|/* An extra reference on `rf' has been held for us by falloc_caps(). */
 name|fildes
 index|[
 literal|0
@@ -1910,7 +1891,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|falloc
+name|falloc_caps
 argument_list|(
 name|td
 argument_list|,
@@ -1921,6 +1902,8 @@ operator|&
 name|fd
 argument_list|,
 name|flags
+argument_list|,
+name|fcaps2
 argument_list|)
 expr_stmt|;
 if|if
@@ -1959,7 +1942,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* An extra reference on `wf' has been held for us by falloc(). */
+comment|/* An extra reference on `wf' has been held for us by falloc_caps(). */
 name|finit
 argument_list|(
 name|wf
@@ -2038,6 +2021,12 @@ argument_list|(
 name|td
 argument_list|,
 name|fildes
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2124,7 +2113,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|kern_pipe2
+name|kern_pipe
 argument_list|(
 name|td
 argument_list|,
@@ -2133,6 +2122,10 @@ argument_list|,
 name|uap
 operator|->
 name|flags
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

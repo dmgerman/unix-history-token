@@ -446,6 +446,68 @@ end_function
 begin_function
 unit|}  static
 name|__inline
+name|uint32_t
+name|atomic_swap_32
+parameter_list|(
+specifier|volatile
+name|uint32_t
+modifier|*
+name|p
+parameter_list|,
+name|uint32_t
+name|val
+parameter_list|)
+block|{
+name|uint32_t
+name|tmp
+decl_stmt|;
+name|int
+name|res
+decl_stmt|;
+asm|__asm __volatile(
+literal|"1: ldxr	%w0, [%2]      \n"
+literal|"   stxr	%w1, %w3, [%2] \n"
+literal|"   cbnz	%w1, 1b        \n"
+operator|:
+literal|"=&r"
+operator|(
+name|tmp
+operator|)
+operator|,
+literal|"=&r"
+operator|(
+name|res
+operator|)
+operator|,
+literal|"+r"
+operator|(
+name|p
+operator|)
+operator|,
+literal|"+r"
+operator|(
+name|val
+operator|)
+operator|:
+operator|:
+literal|"cc"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|tmp
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
 name|void
 name|atomic_subtract_32
 parameter_list|(
@@ -537,6 +599,13 @@ define|#
 directive|define
 name|atomic_set_int
 value|atomic_set_32
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_swap_int
+value|atomic_swap_32
 end_define
 
 begin_define
@@ -1826,6 +1895,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|atomic_swap_long
+value|atomic_swap_64
+end_define
+
+begin_define
+define|#
+directive|define
 name|atomic_subtract_long
 value|atomic_subtract_64
 end_define
@@ -1870,6 +1946,13 @@ define|#
 directive|define
 name|atomic_set_ptr
 value|atomic_set_64
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_swap_ptr
+value|atomic_swap_64
 end_define
 
 begin_define

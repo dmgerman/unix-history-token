@@ -1831,7 +1831,7 @@ end_function
 begin_decl_stmt
 specifier|extern
 name|struct
-name|rwlock
+name|rmlock
 name|in6_ifaddr_lock
 decl_stmt|;
 end_decl_stmt
@@ -1840,16 +1840,18 @@ begin_define
 define|#
 directive|define
 name|IN6_IFADDR_LOCK_ASSERT
-parameter_list|(	)
-value|rw_assert(&in6_ifaddr_lock, RA_LOCKED)
+parameter_list|()
+value|rm_assert(&in6_ifaddr_lock, RA_LOCKED)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IN6_IFADDR_RLOCK
-parameter_list|()
-value|rw_rlock(&in6_ifaddr_lock)
+parameter_list|(
+name|t
+parameter_list|)
+value|rm_rlock(&in6_ifaddr_lock, (t))
 end_define
 
 begin_define
@@ -1857,15 +1859,17 @@ define|#
 directive|define
 name|IN6_IFADDR_RLOCK_ASSERT
 parameter_list|()
-value|rw_assert(&in6_ifaddr_lock, RA_RLOCKED)
+value|rm_assert(&in6_ifaddr_lock, RA_RLOCKED)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IN6_IFADDR_RUNLOCK
-parameter_list|()
-value|rw_runlock(&in6_ifaddr_lock)
+parameter_list|(
+name|t
+parameter_list|)
+value|rm_runlock(&in6_ifaddr_lock, (t))
 end_define
 
 begin_define
@@ -1873,7 +1877,7 @@ define|#
 directive|define
 name|IN6_IFADDR_WLOCK
 parameter_list|()
-value|rw_wlock(&in6_ifaddr_lock)
+value|rm_wlock(&in6_ifaddr_lock)
 end_define
 
 begin_define
@@ -1881,7 +1885,7 @@ define|#
 directive|define
 name|IN6_IFADDR_WLOCK_ASSERT
 parameter_list|()
-value|rw_assert(&in6_ifaddr_lock, RA_WLOCKED)
+value|rm_assert(&in6_ifaddr_lock, RA_WLOCKED)
 end_define
 
 begin_define
@@ -1889,7 +1893,7 @@ define|#
 directive|define
 name|IN6_IFADDR_WUNLOCK
 parameter_list|()
-value|rw_wunlock(&in6_ifaddr_lock)
+value|rm_wunlock(&in6_ifaddr_lock)
 end_define
 
 begin_define

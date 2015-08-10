@@ -1227,6 +1227,9 @@ name|pc
 argument_list|)
 expr_stmt|;
 comment|/* XXX User value while we're in the kernel */
+name|intel_fix_cpuid
+argument_list|()
+expr_stmt|;
 name|lidt
 argument_list|(
 operator|&
@@ -1723,7 +1726,7 @@ name|kmem_malloc
 argument_list|(
 name|kernel_arena
 argument_list|,
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|PAGE_SIZE
 argument_list|,
@@ -1794,7 +1797,7 @@ index|[
 name|cpu
 index|]
 operator|+
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|PAGE_SIZE
 operator|-

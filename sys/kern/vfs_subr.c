@@ -12515,6 +12515,7 @@ comment|/*  * vgone, with the vp interlock held.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|vgonel
 parameter_list|(
@@ -20924,10 +20925,18 @@ operator|=
 operator|(
 name|kn
 operator|->
+name|kn_sfflags
+operator|&
+name|NOTE_FILE_POLL
+operator|)
+operator|!=
+literal|0
+operator|||
+name|kn
+operator|->
 name|kn_data
 operator|!=
 literal|0
-operator|)
 expr_stmt|;
 name|VI_UNLOCK
 argument_list|(

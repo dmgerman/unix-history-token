@@ -632,6 +632,7 @@ begin_function_decl
 name|int
 name|umtx_key_get
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 parameter_list|,

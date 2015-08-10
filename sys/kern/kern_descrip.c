@@ -7610,7 +7610,7 @@ end_comment
 
 begin_function
 name|int
-name|falloc
+name|falloc_caps
 parameter_list|(
 name|struct
 name|thread
@@ -7629,6 +7629,11 @@ name|resultfd
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|struct
+name|filecaps
+modifier|*
+name|fcaps
 parameter_list|)
 block|{
 name|struct
@@ -7674,7 +7679,7 @@ name|fd
 argument_list|,
 name|flags
 argument_list|,
-name|NULL
+name|fcaps
 argument_list|)
 expr_stmt|;
 if|if

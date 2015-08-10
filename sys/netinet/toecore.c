@@ -1349,7 +1349,7 @@ modifier|*
 name|lsop
 parameter_list|)
 block|{
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -1501,7 +1501,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -1898,16 +1898,14 @@ argument_list|)
 expr_stmt|;
 name|lle
 operator|=
-name|nd6_lookup
+name|nd6_create
 argument_list|(
 operator|&
 name|sin6
 operator|->
 name|sin6_addr
 argument_list|,
-name|ND6_CREATE
-operator||
-name|ND6_EXCLUSIVE
+literal|0
 argument_list|,
 name|ifp
 argument_list|)
@@ -2361,7 +2359,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo

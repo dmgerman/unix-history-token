@@ -541,12 +541,6 @@ name|bucket
 operator|->
 name|data
 decl_stmt|;
-name|unsigned
-name|long
-name|compCRC
-decl_stmt|,
-name|compLen
-decl_stmt|;
 name|apr_status_t
 name|status
 decl_stmt|;
@@ -744,6 +738,15 @@ break|break;
 case|case
 name|STATE_VERIFY
 case|:
+block|{
+name|unsigned
+name|long
+name|compCRC
+decl_stmt|,
+name|compLen
+decl_stmt|,
+name|actualLen
+decl_stmt|;
 comment|/* Do the checksum computation. */
 name|compCRC
 operator|=
@@ -788,13 +791,22 @@ operator|+
 literal|4
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+comment|/* The length in the trailer is module 2^32, so do the same for                the actual length. */
+name|actualLen
+operator|=
 name|ctx
 operator|->
 name|zstream
 operator|.
 name|total_out
+expr_stmt|;
+name|actualLen
+operator|&=
+literal|0xFFFFFFFF
+expr_stmt|;
+if|if
+condition|(
+name|actualLen
 operator|!=
 name|compLen
 condition|)
@@ -809,6 +821,7 @@ name|state
 operator|++
 expr_stmt|;
 break|break;
+block|}
 case|case
 name|STATE_INIT
 case|:
@@ -1077,24 +1090,30 @@ operator|=
 name|private_len
 expr_stmt|;
 block|}
-name|zRC
-operator|=
-name|Z_OK
-expr_stmt|;
 while|while
 condition|(
+literal|1
+condition|)
+block|{
+name|zRC
+operator|=
+name|inflate
+argument_list|(
+operator|&
 name|ctx
 operator|->
 name|zstream
-operator|.
-name|avail_in
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* We're full, clear out our buffer, reset, and return. */
+argument_list|,
+name|Z_NO_FLUSH
+argument_list|)
+expr_stmt|;
+comment|/* We're full or zlib requires more space. Either case, clear                    out our buffer, reset, and return. */
 if|if
 condition|(
+name|zRC
+operator|==
+name|Z_BUF_ERROR
+operator|||
 name|ctx
 operator|->
 name|zstream
@@ -1193,18 +1212,6 @@ name|bufferSize
 expr_stmt|;
 break|break;
 block|}
-name|zRC
-operator|=
-name|inflate
-argument_list|(
-operator|&
-name|ctx
-operator|->
-name|zstream
-argument_list|,
-name|Z_NO_FLUSH
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|zRC
@@ -1395,6 +1402,7 @@ return|;
 block|}
 break|break;
 block|}
+comment|/* Any other error? */
 if|if
 condition|(
 name|zRC
@@ -1406,6 +1414,7 @@ return|return
 name|SERF_ERROR_DECOMPRESSION_FAILED
 return|;
 block|}
+comment|/* As long as zRC == Z_OK, just keep looping. */
 block|}
 comment|/* Okay, we've inflated.  Try to read. */
 name|status
@@ -1438,7 +1447,17 @@ name|ctx
 operator|->
 name|stream_status
 expr_stmt|;
-comment|/* If our stream is finished too, return SUCCESS so                  * we'll iterate one more time.                  */
+comment|/* If the inflation wasn't finished, return APR_SUCCESS. */
+if|if
+condition|(
+name|zRC
+operator|!=
+name|Z_STREAM_END
+condition|)
+return|return
+name|APR_SUCCESS
+return|;
+comment|/* If our stream is finished too and all data was inflated,                  * return SUCCESS so we'll iterate one more time.                  */
 if|if
 condition|(
 name|APR_STATUS_IS_EOF

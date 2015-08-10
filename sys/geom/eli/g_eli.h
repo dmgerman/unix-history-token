@@ -303,6 +303,17 @@ value|0x00000020
 end_define
 
 begin_comment
+comment|/* Don't pass through BIO_DELETE requests. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|G_ELI_FLAG_NODELETE
+value|0x00000040
+end_define
+
+begin_comment
 comment|/* RUNTIME FLAGS. */
 end_comment
 

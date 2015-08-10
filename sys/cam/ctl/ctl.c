@@ -1755,6 +1755,12 @@ name|SCSI_EVPD_NUM_SUPPORTED_PAGES
 value|10
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -1789,6 +1795,11 @@ name|dest
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2538,6 +2549,12 @@ begin_comment
 comment|//static int ctl_check_rtr(union ctl_io *pending_io, struct ctl_softc *softc);
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -2547,6 +2564,11 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2976,6 +2998,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -2988,6 +3016,11 @@ name|io
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -3108,18 +3141,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_CTLIO
-argument_list|,
-literal|"ctlio"
-argument_list|,
-literal|"Memory used for CTL requests"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -3189,6 +3210,12 @@ literal|"ioctl"
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
 
 begin_function
 specifier|static
@@ -4937,6 +4964,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -6109,15 +6141,6 @@ name|error
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"ctl: CAM Target Layer loaded\n"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Initialize the ioctl front end. 	 */
 name|ctl_frontend_register
 argument_list|(
@@ -6497,15 +6520,6 @@ expr_stmt|;
 name|control_softc
 operator|=
 name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"ctl: CAM Target Layer unloaded\n"
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -25981,6 +25995,11 @@ name|ctl_softc
 modifier|*
 name|softc
 decl_stmt|;
+name|struct
+name|ctl_lba_len_flags
+modifier|*
+name|lbalen
+decl_stmt|;
 name|uint64_t
 name|starting_lba
 decl_stmt|;
@@ -25989,6 +26008,9 @@ name|block_count
 decl_stmt|;
 name|int
 name|retval
+decl_stmt|;
+name|uint8_t
+name|byte2
 decl_stmt|;
 name|CTL_DEBUG_PRINT
 argument_list|(
@@ -26073,6 +26095,12 @@ operator|->
 name|lb_count
 argument_list|)
 expr_stmt|;
+name|byte2
+operator|=
+name|cdb
+operator|->
+name|byte2
+expr_stmt|;
 break|break;
 block|}
 case|case
@@ -26112,6 +26140,12 @@ name|cdb
 operator|->
 name|lb_count
 argument_list|)
+expr_stmt|;
+name|byte2
+operator|=
+name|cdb
+operator|->
+name|byte2
 expr_stmt|;
 break|break;
 block|}
@@ -26205,6 +26239,41 @@ goto|goto
 name|bailout
 goto|;
 block|}
+name|lbalen
+operator|=
+operator|(
+expr|struct
+name|ctl_lba_len_flags
+operator|*
+operator|)
+operator|&
+name|ctsio
+operator|->
+name|io_hdr
+operator|.
+name|ctl_private
+index|[
+name|CTL_PRIV_LBA_LEN
+index|]
+expr_stmt|;
+name|lbalen
+operator|->
+name|lba
+operator|=
+name|starting_lba
+expr_stmt|;
+name|lbalen
+operator|->
+name|len
+operator|=
+name|block_count
+expr_stmt|;
+name|lbalen
+operator|->
+name|flags
+operator|=
+name|byte2
+expr_stmt|;
 comment|/* 	 * Check to see whether we're configured to send the SYNCHRONIZE 	 * CACHE command directly to the back end. 	 */
 name|mtx_lock
 argument_list|(
@@ -53765,6 +53834,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -54765,6 +54840,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -63000,13 +63080,9 @@ name|CTL_IO_TASK
 case|:
 if|if
 condition|(
-name|bootverbose
-operator|||
-operator|(
 name|ctl_debug
 operator|&
 name|CTL_DEBUG_INFO
-operator|)
 condition|)
 name|ctl_io_error_print
 argument_list|(
@@ -63486,9 +63562,7 @@ operator|->
 name|scsiio
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If enabled, print command error status. 	 * We don't print UAs unless debugging was enabled explicitly. 	 */
-do|do
-block|{
+comment|/* 	 * If enabled, print command error status. 	 */
 if|if
 condition|(
 operator|(
@@ -63500,107 +63574,17 @@ name|status
 operator|&
 name|CTL_STATUS_MASK
 operator|)
-operator|==
+operator|!=
 name|CTL_SUCCESS
-condition|)
-break|break;
-if|if
-condition|(
-operator|!
-name|bootverbose
 operator|&&
 operator|(
 name|ctl_debug
 operator|&
 name|CTL_DEBUG_INFO
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
-break|break;
-if|if
-condition|(
-operator|(
-name|ctl_debug
-operator|&
-name|CTL_DEBUG_INFO
-operator|)
-operator|==
-literal|0
-operator|&&
-operator|(
-operator|(
-name|io
-operator|->
-name|io_hdr
-operator|.
-name|status
-operator|&
-name|CTL_STATUS_MASK
-operator|)
-operator|==
-name|CTL_SCSI_ERROR
-operator|)
-operator|&&
-operator|(
-name|io
-operator|->
-name|scsiio
-operator|.
-name|scsi_status
-operator|==
-name|SCSI_STATUS_CHECK_COND
-operator|)
-condition|)
-block|{
-name|int
-name|error_code
-decl_stmt|,
-name|sense_key
-decl_stmt|,
-name|asc
-decl_stmt|,
-name|ascq
-decl_stmt|;
-name|scsi_extract_sense_len
-argument_list|(
-operator|&
-name|io
-operator|->
-name|scsiio
-operator|.
-name|sense_data
-argument_list|,
-name|io
-operator|->
-name|scsiio
-operator|.
-name|sense_len
-argument_list|,
-operator|&
-name|error_code
-argument_list|,
-operator|&
-name|sense_key
-argument_list|,
-operator|&
-name|asc
-argument_list|,
-operator|&
-name|ascq
-argument_list|,
-comment|/*show_errors*/
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sense_key
-operator|==
-name|SSD_KEY_UNIT_ATTENTION
-condition|)
-break|break;
-block|}
 name|ctl_io_error_print
 argument_list|(
 name|io
@@ -63608,12 +63592,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
-do|while
-condition|(
-literal|0
-condition|)
-do|;
 comment|/* 	 * Tell the FETD or the other shelf controller we're done with this 	 * command.  Note that only SCSI commands get to this point.  Task 	 * management commands are completed above. 	 * 	 * We only send status to the other controller if we're in XFER 	 * mode.  In SER_ONLY mode, the I/O is done on the controller that 	 * received the I/O (from CTL's perspective), and so the status is 	 * generated there. 	 *  	 * XXX KDM if we hold the lock here, we could cause a deadlock 	 * if the frontend comes back in in this context to queue 	 * something. 	 */
 if|if
 condition|(
@@ -65808,6 +65786,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -66153,6 +66137,11 @@ name|ctl_isc_quiesce
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *  vim: ts=8  */

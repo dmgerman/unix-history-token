@@ -3421,6 +3421,8 @@ argument_list|(
 name|td
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 return|;
@@ -3438,6 +3440,11 @@ name|td
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|struct
+name|filecaps
+modifier|*
+name|fcaps
 parameter_list|)
 block|{
 name|struct
@@ -3526,7 +3533,7 @@ name|p_fd
 expr_stmt|;
 name|error
 operator|=
-name|falloc
+name|falloc_caps
 argument_list|(
 name|td
 argument_list|,
@@ -3537,6 +3544,8 @@ operator|&
 name|fd
 argument_list|,
 name|flags
+argument_list|,
+name|fcaps
 argument_list|)
 expr_stmt|;
 if|if

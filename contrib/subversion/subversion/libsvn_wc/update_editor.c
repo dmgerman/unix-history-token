@@ -6479,8 +6479,12 @@ block|{
 name|svn_wc_conflict_reason_t
 name|reason
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|move_src_op_root_abspath
+decl_stmt|;
 comment|/* So this deletion wasn't just a deletion, it is actually a              replacement. Let's install a better tree conflict. */
-comment|/* ### Should store the conflict in DB to allow reinstalling              ### with theoretically more data in close_directory() */
 name|SVN_ERR
 argument_list|(
 name|svn_wc__conflict_read_tree_conflict
@@ -6490,7 +6494,8 @@ name|reason
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+operator|&
+name|move_src_op_root_abspath
 argument_list|,
 name|eb
 operator|->
@@ -6539,7 +6544,7 @@ name|reason
 argument_list|,
 name|svn_wc_conflict_action_replace
 argument_list|,
-name|NULL
+name|move_src_op_root_abspath
 argument_list|,
 name|db
 operator|->
@@ -10806,8 +10811,12 @@ block|{
 name|svn_wc_conflict_reason_t
 name|reason
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|move_src_op_root_abspath
+decl_stmt|;
 comment|/* So this deletion wasn't just a deletion, it is actually a              replacement. Let's install a better tree conflict. */
-comment|/* ### Should store the conflict in DB to allow reinstalling              ### with theoretically more data in close_directory() */
 name|SVN_ERR
 argument_list|(
 name|svn_wc__conflict_read_tree_conflict
@@ -10817,7 +10826,8 @@ name|reason
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+operator|&
+name|move_src_op_root_abspath
 argument_list|,
 name|eb
 operator|->
@@ -10866,7 +10876,7 @@ name|reason
 argument_list|,
 name|svn_wc_conflict_action_replace
 argument_list|,
-name|NULL
+name|move_src_op_root_abspath
 argument_list|,
 name|fb
 operator|->
@@ -18855,10 +18865,10 @@ argument_list|,
 name|NULL
 comment|/* children */
 argument_list|,
+name|svn_depth_infinity
+argument_list|,
 name|FALSE
 comment|/* is_move */
-argument_list|,
-name|svn_depth_infinity
 argument_list|,
 name|NULL
 comment|/* conflict */

@@ -23528,7 +23528,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"OOTB, %s:%d at %s\n"
+literal|"OOTB, %s:%d at %s"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -23755,7 +23755,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"OOTB, %s:%d at %s\n"
+literal|"OOTB, %s:%d at %s"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -29610,7 +29610,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"OOTB, %s:%d at %s\n"
+literal|"OOTB, %s:%d at %s"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -29850,7 +29850,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"OOTB, %s:%d at %s\n"
+literal|"OOTB, %s:%d at %s"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -30096,7 +30096,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"OOTB, %s:%d at %s\n"
+literal|"OOTB, %s:%d at %s"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -30196,12 +30196,6 @@ name|offset
 argument_list|,
 name|length
 argument_list|,
-name|src
-argument_list|,
-name|dst
-argument_list|,
-name|sh
-argument_list|,
 name|inp
 argument_list|,
 name|stcb
@@ -30210,14 +30204,6 @@ name|net
 argument_list|,
 operator|&
 name|high_tsn
-argument_list|,
-name|mflowtype
-argument_list|,
-name|mflowid
-argument_list|,
-name|vrf_id
-argument_list|,
-name|port
 argument_list|)
 expr_stmt|;
 if|if

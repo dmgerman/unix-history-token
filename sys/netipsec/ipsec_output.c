@@ -664,6 +664,14 @@ argument_list|,
 name|mtag
 argument_list|)
 expr_stmt|;
+name|key_sa_recordxfer
+argument_list|(
+name|sav
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* record data transfer */
 comment|/* 	 * If there's another (bundled) SA to apply, do so. 	 * Note that this puts a burden on the kernel stack size. 	 * If this is a problem we'll need to introduce a queue 	 * to set the packet on so we can unwind the stack before 	 * doing further processing. 	 * 	 * If ipsec[46]_process_packet() will successfully queue 	 * the request, we need to take additional reference to SP, 	 * because xform callback will release reference. 	 */
 if|if
 condition|(
@@ -820,14 +828,6 @@ name|bad
 goto|;
 block|}
 block|}
-name|key_sa_recordxfer
-argument_list|(
-name|sav
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-comment|/* record data transfer */
 comment|/* 	 * We're done with IPsec processing, transmit the packet using the 	 * appropriate network protocol (IP or IPv6). 	 */
 switch|switch
 condition|(

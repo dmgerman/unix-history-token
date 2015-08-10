@@ -4,6 +4,10 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/****************************************************************************** This program is part of PMC-Sierra initiator/target device driver.  The functions here are commonly used by different type of drivers that support PMC-Sierra storage network initiator hardware.  ******************************************************************************/
 end_comment
 
@@ -3233,23 +3237,10 @@ block|{
 name|int
 name|idx
 decl_stmt|;
-specifier|static
-name|U32
-name|cardMap
-index|[
-literal|4
-index|]
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
+name|u_int16_t
+name|agtiapi_vendor
 decl_stmt|;
+comment|// PCI vendor ID
 name|u_int16_t
 name|agtiapi_dev
 decl_stmt|;
@@ -3259,38 +3250,14 @@ argument_list|(
 literal|"agtiapi_ProbeCard: start\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|atomic_cmpset_32
+name|agtiapi_vendor
+operator|=
+name|pci_get_vendor
 argument_list|(
-operator|&
-name|cardMap
-index|[
-name|thisCard
-index|]
-argument_list|,
-literal|0
-argument_list|,
-literal|5
-argument_list|)
-condition|)
-block|{
-comment|// card already ran
-name|AGTIAPI_PRINTK
-argument_list|(
-literal|"We'll only ID this card once -- %d\n"
-argument_list|,
-name|thisCard
+name|dev
 argument_list|)
 expr_stmt|;
-return|return
-literal|2
-return|;
-comment|// error return value; card already ran this function
-block|}
-else|else
-block|{
+comment|// get PCI vendor ID
 name|agtiapi_dev
 operator|=
 name|pci_get_device
@@ -3326,6 +3293,15 @@ operator|.
 name|deviceId
 operator|==
 name|agtiapi_dev
+operator|&&
+name|ag_card_type
+index|[
+name|idx
+index|]
+operator|.
+name|vendorId
+operator|==
+name|agtiapi_vendor
 condition|)
 block|{
 comment|// device ID match
@@ -3402,20 +3378,6 @@ argument_list|,
 name|thisCardInst
 argument_list|)
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"agtiapi PCI Probe Vendor ID : 0x%x Device ID : 0x%x\n"
-argument_list|,
-name|pci_get_vendor
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|agtiapi_dev
-argument_list|)
-expr_stmt|;
 name|device_set_desc
 argument_list|(
 name|dev
@@ -3436,9 +3398,8 @@ literal|0
 return|;
 block|}
 block|}
-block|}
 return|return
-literal|7
+literal|1
 return|;
 block|}
 end_function

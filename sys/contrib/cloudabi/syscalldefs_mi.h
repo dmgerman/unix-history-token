@@ -1105,24 +1105,6 @@ value|0x90
 end_define
 
 begin_comment
-comment|// Futex object scopes.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLOUDABI_FUTEXSCOPE_GLOBAL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLOUDABI_FUTEXSCOPE_PROCESS_LOCAL
-value|2
-end_define
-
-begin_comment
 comment|// Read-write lock related constants.
 end_comment
 
@@ -1211,17 +1193,6 @@ define|#
 directive|define
 name|CLOUDABI_O_TRUNC
 value|0x8
-end_define
-
-begin_comment
-comment|// File descriptor passed to poll() to poll just once.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLOUDABI_POLL_ONCE
-value|0xffffffff
 end_define
 
 begin_comment
@@ -1961,6 +1932,28 @@ value|0x20
 end_define
 
 begin_comment
+comment|// cloudabi_subscription_t::clock.flags.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_SUBSCRIPTION_CLOCK_ABSTIME
+value|0x1
+end_define
+
+begin_comment
+comment|// cloudabi_subscription_t::fd_readwrite.flags.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_SUBSCRIPTION_FD_READWRITE_POLL
+value|0x1
+end_define
+
+begin_comment
 comment|// unlinkat().
 end_comment
 
@@ -2170,17 +2163,6 @@ end_typedef
 
 begin_comment
 comment|// file_stat_put().
-end_comment
-
-begin_typedef
-typedef|typedef
-name|uint8_t
-name|cloudabi_futexscope_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|// Scope of lock or condition variable.
 end_comment
 
 begin_typedef

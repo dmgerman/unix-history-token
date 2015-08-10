@@ -964,6 +964,29 @@ value|SVN_SQLITE__WITH_LOCK(expr, (wcroot)->sdb)
 end_define
 
 begin_comment
+comment|/* Evaluate the expressions EXPR1..EXPR4 within a transaction, returning the  * first error if an error occurs.  *  * Begin a transaction in WCROOT's DB; evaluate the expressions, which would  * typically be  function calls that do some work in DB; finally commit  * the transaction if EXPR evaluated to SVN_NO_ERROR, otherwise roll back  * the transaction.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SVN_WC__DB_WITH_TXN4
+parameter_list|(
+name|expr1
+parameter_list|,
+name|expr2
+parameter_list|,
+name|expr3
+parameter_list|,
+name|expr4
+parameter_list|,
+name|wcroot
+parameter_list|)
+define|\
+value|SVN_SQLITE__WITH_LOCK4(expr1, expr2, expr3, expr4, (wcroot)->sdb)
+end_define
+
+begin_comment
 comment|/* Return CHILDREN mapping const char * names to svn_node_kind_t * for the    children of LOCAL_RELPATH at OP_DEPTH. */
 end_comment
 

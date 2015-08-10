@@ -9153,7 +9153,18 @@ operator|(
 name|EACCES
 operator|)
 return|;
-comment|/* 	 * Character devices always share mappings, so 	 * require a writable fd for writable mappings. 	 */
+comment|/* 	 * If we are sharing potential changes via MAP_SHARED and we 	 * are trying to get write permission although we opened it 	 * without asking for it, bail out. 	 * 	 * Note that most character devices always share mappings. 	 * The one exception is that D_MMAP_ANON devices 	 * (i.e. /dev/zero) permit private writable mappings. 	 * 	 * Rely on vm_mmap_cdev() to fail invalid MAP_PRIVATE requests 	 * as well as updating maxprot to permit writing for 	 * D_MMAP_ANON devices rather than doing that here. 	 */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|MAP_SHARED
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -9186,6 +9197,7 @@ operator|(
 name|EACCES
 operator|)
 return|;
+block|}
 name|maxprot
 operator|&=
 name|cap_maxprot

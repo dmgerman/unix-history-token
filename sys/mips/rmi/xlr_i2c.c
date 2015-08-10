@@ -850,7 +850,7 @@ name|sc
 operator|->
 name|iicbus
 argument_list|,
-literal|"ds1374u"
+literal|"ds1374_rtc"
 argument_list|,
 literal|0
 argument_list|)

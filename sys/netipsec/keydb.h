@@ -317,10 +317,6 @@ modifier|*
 name|key_enc
 decl_stmt|;
 comment|/* Key for Encryption */
-name|caddr_t
-name|iv
-decl_stmt|;
-comment|/* Initilization Vector */
 name|u_int
 name|ivlen
 decl_stmt|;
@@ -333,6 +329,10 @@ comment|/* intermediate encryption key */
 name|size_t
 name|schedlen
 decl_stmt|;
+name|uint64_t
+name|cntr
+decl_stmt|;
+comment|/* counter for GCM and CTR */
 name|struct
 name|secreplay
 modifier|*
@@ -466,6 +466,37 @@ parameter_list|(
 name|_sav
 parameter_list|)
 value|mtx_assert(&(_sav)->lock, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAV_ISGCM
+parameter_list|(
+name|_sav
+parameter_list|)
+define|\
+value|((_sav)->alg_enc == SADB_X_EALG_AESGCM8 ||	\ 			(_sav)->alg_enc == SADB_X_EALG_AESGCM12 ||	\ 			(_sav)->alg_enc == SADB_X_EALG_AESGCM16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAV_ISCTR
+parameter_list|(
+name|_sav
+parameter_list|)
+value|((_sav)->alg_enc == SADB_X_EALG_AESCTR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAV_ISCTRORGCM
+parameter_list|(
+name|_sav
+parameter_list|)
+value|(SAV_ISCTR((_sav)) || SAV_ISGCM((_sav)))
 end_define
 
 begin_comment

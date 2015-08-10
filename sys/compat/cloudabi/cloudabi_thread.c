@@ -38,7 +38,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syscallsubr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/cloudabi/cloudabi_proto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<compat/cloudabi/cloudabi_syscalldefs.h>
 end_include
 
 begin_function
@@ -56,12 +68,51 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
-comment|/* Not implemented. */
-return|return
-operator|(
-name|ENOSYS
-operator|)
-return|;
+name|struct
+name|cloudabi_sys_lock_unlock_args
+name|cloudabi_sys_lock_unlock_args
+init|=
+block|{
+operator|.
+name|lock
+operator|=
+name|uap
+operator|->
+name|lock
+block|,
+operator|.
+name|scope
+operator|=
+name|uap
+operator|->
+name|scope
+block|, 	}
+decl_stmt|;
+comment|/* Wake up joining thread. */
+name|cloudabi_sys_lock_unlock
+argument_list|(
+name|td
+argument_list|,
+operator|&
+name|cloudabi_sys_lock_unlock_args
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Attempt to terminate the thread. Terminate the process if 	 * it's the last thread. 	 */
+name|kern_thr_exit
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|exit1
+argument_list|(
+name|td
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 end_function
 

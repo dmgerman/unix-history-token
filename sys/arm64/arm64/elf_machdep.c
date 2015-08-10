@@ -504,7 +504,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"elf_reloc_local"
+literal|"ARM64TODO: elf_reloc_local"
 argument_list|)
 expr_stmt|;
 block|}
@@ -538,7 +538,7 @@ parameter_list|)
 block|{
 name|panic
 argument_list|(
-literal|"elf_reloc"
+literal|"ARM64TODO: elf_reloc"
 argument_list|)
 expr_stmt|;
 block|}

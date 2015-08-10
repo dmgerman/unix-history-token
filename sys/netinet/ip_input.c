@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rmlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rwlock.h>
 end_include
 
@@ -384,13 +390,13 @@ end_endif
 
 begin_decl_stmt
 name|struct
-name|rwlock
+name|rmlock
 name|in_ifaddr_lock
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|RW_SYSINIT
+name|RM_SYSINIT
 argument_list|(
 name|in_ifaddr_lock
 argument_list|,

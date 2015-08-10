@@ -98,6 +98,33 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
+comment|/** Canonicalize the @a rangelist: sort the ranges, and combine adjacent or  * overlapping ranges into single ranges where possible.  *  * If overlapping ranges have different inheritability, return an error.  *  * Modify @a rangelist in place. Use @a scratch_pool for temporary  * allocations.  */
+name|svn_error_t
+modifier|*
+name|svn_rangelist__canonicalize
+parameter_list|(
+name|svn_rangelist_t
+modifier|*
+name|rangelist
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/** Canonicalize the revision range lists in the @a mergeinfo.  *  * Modify @a mergeinfo in place. Use @a scratch_pool for temporary  * allocations.  */
+name|svn_error_t
+modifier|*
+name|svn_mergeinfo__canonicalize_ranges
+parameter_list|(
+name|svn_mergeinfo_t
+name|mergeinfo
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
 comment|/* Set inheritability of all rangelists in MERGEINFO to INHERITABLE.    If MERGEINFO is NULL do nothing.  If a rangelist in MERGEINFO is    NULL leave it alone. */
 name|void
 name|svn_mergeinfo__set_inheritance

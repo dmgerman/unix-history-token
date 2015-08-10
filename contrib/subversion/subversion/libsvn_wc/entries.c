@@ -7281,6 +7281,14 @@ name|work
 operator|->
 name|repos_id
 expr_stmt|;
+name|below_working_node
+operator|->
+name|revision
+operator|=
+name|work
+operator|->
+name|revision
+expr_stmt|;
 comment|/* This is just guessing. If the node below would have been switched          or if it was updated to a different version, the guess would          fail. But we don't have better information pre wc-ng :( */
 if|if
 condition|(
@@ -7298,9 +7306,12 @@ name|work
 operator|->
 name|repos_relpath
 argument_list|,
-name|entry
-operator|->
-name|name
+name|svn_relpath_basename
+argument_list|(
+name|local_relpath
+argument_list|,
+name|NULL
+argument_list|)
 argument_list|,
 name|result_pool
 argument_list|)
@@ -7311,16 +7322,6 @@ operator|->
 name|repos_relpath
 operator|=
 name|NULL
-expr_stmt|;
-name|below_working_node
-operator|->
-name|revision
-operator|=
-name|parent_node
-operator|->
-name|work
-operator|->
-name|revision
 expr_stmt|;
 comment|/* The revert_base checksum isn't available in the entry structure,          so the caller provides it. */
 comment|/* text_base_info is NULL for files scheduled to be added. */

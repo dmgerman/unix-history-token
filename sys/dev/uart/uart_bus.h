@@ -554,6 +554,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|mtx
+modifier|*
+name|uart_tty_getlock
+parameter_list|(
+name|struct
+name|uart_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|uart_tty_intr
 parameter_list|(

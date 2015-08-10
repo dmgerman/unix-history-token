@@ -5331,6 +5331,10 @@ name|state
 operator|!=
 name|state_start
 operator|&&
+name|state
+operator|!=
+name|state_git_diff_seen
+operator|&&
 operator|!
 name|starts_with
 argument_list|(

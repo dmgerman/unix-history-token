@@ -67,12 +67,6 @@ name|int
 name|fbtp_loadcnt
 decl_stmt|;
 name|int
-name|fbtp_primary
-decl_stmt|;
-name|int
-name|fbtp_invop_cnt
-decl_stmt|;
-name|int
 name|fbtp_symindx
 decl_stmt|;
 name|struct

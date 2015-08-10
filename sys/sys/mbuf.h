@@ -404,13 +404,6 @@ name|csum_data
 value|PH_per.thirtytwo[1]
 end_define
 
-begin_define
-define|#
-directive|define
-name|pkt_tcphdr
-value|PH_loc.ptr
-end_define
-
 begin_comment
 comment|/*  * Description of external storage mapped into mbuf; valid only if M_EXT is  * set.  * Size ILP32: 28  *	 LP64: 48  * Compile-time assertions in uipc_mbuf.c test these values to ensure that  * they are correct.  */
 end_comment
@@ -4040,6 +4033,7 @@ name|mbuf
 modifier|*
 name|m_copym
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -4180,6 +4174,7 @@ name|mbuf
 modifier|*
 name|m_dup
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -4197,6 +4192,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -4902,6 +4898,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|mbuf
 modifier|*

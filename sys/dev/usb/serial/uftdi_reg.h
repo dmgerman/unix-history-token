@@ -148,7 +148,40 @@ value|12
 end_define
 
 begin_comment
-comment|/* Read pin states in bit bang mode */
+comment|/* Read pin states from any mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTDI_SIO_READ_EEPROM
+value|144
+end_define
+
+begin_comment
+comment|/* Read eeprom word */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTDI_SIO_WRITE_EEPROM
+value|145
+end_define
+
+begin_comment
+comment|/* Write eeprom word */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTDI_SIO_ERASE_EEPROM
+value|146
+end_define
+
+begin_comment
+comment|/* Erase entire eeprom */
 end_comment
 
 begin_comment

@@ -479,14 +479,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* !_KERNEL */
+comment|/* _KERNEL */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WANT_SHM_PROTOTYPES
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -603,7 +618,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_KERNEL */
+comment|/* _KERNEL || _WANT_SHM_PROTOTYPES */
 end_comment
 
 begin_endif

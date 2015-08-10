@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -385,6 +391,17 @@ argument_list|(
 name|line
 argument_list|,
 literal|"+:::"
+argument_list|,
+name|len
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|line
+argument_list|,
+literal|"+:*::"
 argument_list|,
 name|len
 argument_list|)

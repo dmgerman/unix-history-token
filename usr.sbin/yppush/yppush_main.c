@@ -166,6 +166,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|yppush_mapname
@@ -179,6 +180,7 @@ comment|/* Map to transfer. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|yppush_domain
@@ -192,6 +194,7 @@ comment|/* Domain in which map resides. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|yppush_master
@@ -205,6 +208,7 @@ comment|/* Master NIS server for said domain. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|skip_master
 init|=
@@ -217,6 +221,7 @@ comment|/* Do not attempt to push map to master. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|verbose
 init|=
@@ -229,6 +234,7 @@ comment|/* Toggle verbose mode. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|long
 name|yppush_transid
@@ -238,6 +244,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|yppush_timeout
 init|=
@@ -250,6 +257,7 @@ comment|/* Default timeout. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|yppush_jobs
 init|=
@@ -262,6 +270,7 @@ comment|/* Number of allowed concurrent jobs. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|yppush_running_jobs
 init|=
@@ -316,6 +325,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|jobs
 modifier|*

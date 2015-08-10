@@ -1808,7 +1808,10 @@ name|TRUE
 expr_stmt|;
 if|if
 condition|(
-operator|!
+name|x_pool
+operator|!=
+name|cfg
+operator|->
 name|x_pool
 condition|)
 block|{
@@ -1841,6 +1844,11 @@ name|x_value
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|x_pool
+condition|)
 name|svn_pool_destroy
 argument_list|(
 name|tmp_pool

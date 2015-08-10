@@ -112,6 +112,40 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Field flags required for this function */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|apr_uint32_t
+name|print_dirent_fields
+init|=
+name|SVN_DIRENT_KIND
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|apr_uint32_t
+name|print_dirent_fields_verbose
+init|=
+operator|(
+name|SVN_DIRENT_KIND
+operator||
+name|SVN_DIRENT_SIZE
+operator||
+name|SVN_DIRENT_TIME
+operator||
+name|SVN_DIRENT_CREATED_REV
+operator||
+name|SVN_DIRENT_LAST_AUTHOR
+operator|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* This implements the svn_client_list_func2_t API, printing a single    directory entry in text format. */
 end_comment
 
@@ -640,6 +674,30 @@ return|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/* Field flags required for this function */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|apr_uint32_t
+name|print_dirent_xml_fields
+init|=
+operator|(
+name|SVN_DIRENT_KIND
+operator||
+name|SVN_DIRENT_SIZE
+operator||
+name|SVN_DIRENT_TIME
+operator||
+name|SVN_DIRENT_CREATED_REV
+operator||
+name|SVN_DIRENT_LAST_AUTHOR
+operator|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* This implements the svn_client_list_func2_t API, printing a single dirent    in XML format. */
@@ -1387,22 +1445,28 @@ if|if
 condition|(
 name|opt_state
 operator|->
-name|verbose
-operator|||
-name|opt_state
-operator|->
 name|xml
 condition|)
 name|dirent_fields
 operator|=
-name|SVN_DIRENT_ALL
+name|print_dirent_xml_fields
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|opt_state
+operator|->
+name|verbose
+condition|)
+name|dirent_fields
+operator|=
+name|print_dirent_fields_verbose
 expr_stmt|;
 else|else
 name|dirent_fields
 operator|=
-name|SVN_DIRENT_KIND
+name|print_dirent_fields
 expr_stmt|;
-comment|/* the only thing we actually need... */
 name|pb
 operator|.
 name|ctx

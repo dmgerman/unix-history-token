@@ -978,6 +978,9 @@ name|pc_curthread
 operator|=
 literal|0
 expr_stmt|;
+name|intel_fix_cpuid
+argument_list|()
+expr_stmt|;
 name|gdt_segs
 index|[
 name|GPRIV_SEL
@@ -1472,7 +1475,7 @@ name|kmem_malloc
 argument_list|(
 name|kernel_arena
 argument_list|,
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|PAGE_SIZE
 argument_list|,
@@ -1558,7 +1561,7 @@ index|[
 name|cpu
 index|]
 operator|+
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|PAGE_SIZE
 operator|-

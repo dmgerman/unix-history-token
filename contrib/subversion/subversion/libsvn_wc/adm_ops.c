@@ -3407,9 +3407,10 @@ argument_list|,
 name|NULL
 comment|/* children */
 argument_list|,
-name|FALSE
-argument_list|,
 name|depth
+argument_list|,
+name|FALSE
+comment|/* is_move */
 argument_list|,
 name|NULL
 comment|/* conflicts */

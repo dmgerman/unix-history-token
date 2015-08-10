@@ -1923,7 +1923,7 @@ name|valloc_pages
 argument_list|(
 name|kernelstack
 argument_list|,
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|MAXCPU
 argument_list|)
@@ -2202,7 +2202,7 @@ name|kernelstack
 operator|.
 name|pv_pa
 argument_list|,
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|PAGE_SIZE
 argument_list|,

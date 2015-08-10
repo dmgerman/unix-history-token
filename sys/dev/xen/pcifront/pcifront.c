@@ -269,7 +269,7 @@ name|virt_to_mfn
 parameter_list|(
 name|x
 parameter_list|)
-value|(vtomach(x)>> PAGE_SHIFT)
+value|(vtophys(x)>> PAGE_SHIFT)
 end_define
 
 begin_struct

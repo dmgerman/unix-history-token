@@ -50,11 +50,159 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/specialreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libc_private.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|lfence_works
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
+name|int
+name|get_lfence_usage
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int
+name|cpuid_supported
+decl_stmt|,
+name|p
+index|[
+literal|4
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|lfence_works
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+asm|__asm __volatile(
+literal|"	pushfl\n"
+literal|"	popl	%%eax\n"
+literal|"	movl    %%eax,%%ecx\n"
+literal|"	xorl    $0x200000,%%eax\n"
+literal|"	pushl	%%eax\n"
+literal|"	popfl\n"
+literal|"	pushfl\n"
+literal|"	popl    %%eax\n"
+literal|"	xorl    %%eax,%%ecx\n"
+literal|"	je	1f\n"
+literal|"	movl	$1,%0\n"
+literal|"	jmp	2f\n"
+literal|"1:	movl	$0,%0\n"
+literal|"2:\n"
+operator|:
+literal|"=r"
+operator|(
+name|cpuid_supported
+operator|)
+operator|:
+operator|:
+literal|"eax"
+operator|,
+literal|"ecx"
+block|)
+empty_stmt|;
+if|if
+condition|(
+name|cpuid_supported
+condition|)
+block|{
+asm|__asm __volatile(
+literal|"	pushl	%%ebx\n"
+literal|"	cpuid\n"
+literal|"	movl	%%ebx,%1\n"
+literal|"	popl	%%ebx\n"
+operator|:
+literal|"=a"
+operator|(
+name|p
+index|[
+literal|0
+index|]
+operator|)
+operator|,
+literal|"=r"
+operator|(
+name|p
+index|[
+literal|1
+index|]
+operator|)
+operator|,
+literal|"=c"
+operator|(
+name|p
+index|[
+literal|2
+index|]
+operator|)
+operator|,
+literal|"=d"
+operator|(
+name|p
+index|[
+literal|3
+index|]
+operator|)
+operator|:
+literal|"0"
+operator|(
+literal|0x1
+operator|)
+block|)
+empty_stmt|;
+name|lfence_works
+operator|=
+operator|(
+name|p
+index|[
+literal|3
+index|]
+operator|&
+name|CPUID_SSE2
+operator|)
+operator|!=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_else
+else|else
+name|lfence_works
+operator|=
+literal|0
+expr_stmt|;
+end_else
+
+begin_expr_stmt
+unit|} 	return
+operator|(
+name|lfence_works
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+unit|}  static
 name|u_int
 name|__vdso_gettc_low
 parameter_list|(
@@ -65,9 +213,19 @@ modifier|*
 name|th
 parameter_list|)
 block|{
-name|uint32_t
+name|u_int
 name|rv
 decl_stmt|;
+if|if
+condition|(
+name|get_lfence_usage
+argument_list|()
+operator|==
+literal|1
+condition|)
+name|lfence
+argument_list|()
+expr_stmt|;
 asm|__asm __volatile("rdtsc; shrd %%cl, %%edx, %0"
 block|:
 literal|"=a"
@@ -95,23 +253,57 @@ operator|)
 return|;
 end_return
 
+begin_function
+unit|}  static
+name|u_int
+name|__vdso_rdtsc32
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int
+name|rv
+decl_stmt|;
+if|if
+condition|(
+name|get_lfence_usage
+argument_list|()
+operator|==
+literal|1
+condition|)
+name|lfence
+argument_list|()
+expr_stmt|;
+name|rv
+operator|=
+name|rdtsc32
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|rv
+operator|)
+return|;
+block|}
+end_function
+
 begin_pragma
-unit|}
 pragma|#
 directive|pragma
 name|weak
 name|__vdso_gettc
 end_pragma
 
-begin_macro
-unit|u_int
+begin_function
+name|u_int
 name|__vdso_gettc
-argument_list|(
-argument|const struct vdso_timehands *th
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+specifier|const
+name|struct
+name|vdso_timehands
+modifier|*
+name|th
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -126,12 +318,12 @@ argument_list|(
 name|th
 argument_list|)
 else|:
-name|rdtsc32
+name|__vdso_rdtsc32
 argument_list|()
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_pragma
 pragma|#
