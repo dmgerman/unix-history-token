@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
+comment|/*  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1606,7 +1606,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If fromsnap is NULL, a full (non-incremental) stream will be estimated.  */
+comment|/*  * "from" can be NULL, a snapshot, or a bookmark.  *  * If from is NULL, a full (non-incremental) stream will be estimated.  This  * is calculated very efficiently.  *  * If from is a snapshot, lzc_send_space uses the deadlists attached to  * each snapshot to efficiently estimate the stream size.  *  * If from is a bookmark, the indirect blocks in the destination snapshot  * are traversed, looking for blocks with a birth time since the creation TXG of  * the snapshot this bookmark was created from.  This will result in  * significantly more I/O and be less efficient than a send space estimation on  * an equivalent snapshot.  */
 end_comment
 
 begin_function
@@ -1621,7 +1621,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|fromsnap
+name|from
 parameter_list|,
 name|uint64_t
 modifier|*
@@ -1646,7 +1646,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|fromsnap
+name|from
 operator|!=
 name|NULL
 condition|)
@@ -1654,9 +1654,9 @@ name|fnvlist_add_string
 argument_list|(
 name|args
 argument_list|,
-literal|"fromsnap"
+literal|"from"
 argument_list|,
-name|fromsnap
+name|from
 argument_list|)
 expr_stmt|;
 name|err
