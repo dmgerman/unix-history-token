@@ -1176,6 +1176,26 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|kern_kevent_anonymous
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|nevents
+parameter_list|,
+name|struct
+name|kevent_copyops
+modifier|*
+name|k_ops
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|kern_kevent_fp
 parameter_list|(
 name|struct
