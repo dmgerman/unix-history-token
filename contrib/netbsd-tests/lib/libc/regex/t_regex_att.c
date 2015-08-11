@@ -3159,7 +3159,13 @@ argument_list|,
 name|nullsubexpr
 argument_list|)
 expr_stmt|;
-comment|//	ATF_TP_ADD_TC(tp, leftassoc);
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
+name|leftassoc
+argument_list|)
+expr_stmt|;
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
