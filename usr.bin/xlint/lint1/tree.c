@@ -4627,7 +4627,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 	 * Apply class conversions to the left operand, but only if its 	 * value is needed or it is compaired with null. 	 */
+comment|/* 	 * Apply class conversions to the left operand, but only if its 	 * value is needed or it is compared with null. 	 */
 if|if
 condition|(
 name|mp
@@ -4850,7 +4850,7 @@ operator|&
 name|rn
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check types for compatibility with the operation and mutual 	 * compatibility. Return if there are serios problems. 	 */
+comment|/* 	 * Check types for compatibility with the operation and mutual 	 * compatibility. Return if there are serious problems. 	 */
 if|if
 condition|(
 operator|!
@@ -5345,7 +5345,7 @@ operator|->
 name|tn_lvalue
 condition|)
 block|{
-comment|/* %soperand of '%s' must be lvalue */
+comment|/* operand of '%s' must be lvalue */
 comment|/* XXX print correct operator */
 operator|(
 name|void
@@ -5458,7 +5458,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform most type checks. First the types are checked using  * informations from modtab[]. After that it is done by hand for  * more complicated operators and type combinations.  *  * If the types are ok, typeok() returns 1, otherwise 0.  */
+comment|/*  * Perform most type checks. First the types are checked using  * information from modtab[]. After that it is done by hand for  * more complicated operators and type combinations.  *  * If the types are ok, typeok() returns 1, otherwise 0.  */
 end_comment
 
 begin_function
@@ -5635,7 +5635,7 @@ operator|->
 name|m_rqint
 condition|)
 block|{
-comment|/* integertypes required */
+comment|/* integer types required */
 if|if
 condition|(
 operator|!
@@ -5858,7 +5858,7 @@ block|{
 case|case
 name|POINT
 case|:
-comment|/* 		 * Most errors required by ANSI C are reported in strmemb(). 		 * Here we only must check for totaly wrong things. 		 */
+comment|/* 		 * Most errors required by ANSI C are reported in strmemb(). 		 * Here we only must check for totally wrong things. 		 */
 if|if
 condition|(
 name|lt
@@ -5891,7 +5891,7 @@ name|tn_lvalue
 operator|)
 condition|)
 block|{
-comment|/* Without tflag we got already an error */
+comment|/* Without tflag we already got an error */
 if|if
 condition|(
 name|tflag
@@ -5939,7 +5939,7 @@ if|if
 condition|(
 name|tflag
 condition|)
-comment|/* unacceptabel operand of %s */
+comment|/* unacceptable operand of %s */
 name|error
 argument_list|(
 literal|111
@@ -6005,7 +6005,7 @@ literal|163
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* %soperand of %s must be lvalue */
+comment|/* operand of %s must be lvalue */
 name|error
 argument_list|(
 literal|114
@@ -6031,7 +6031,7 @@ operator|->
 name|t_const
 condition|)
 block|{
-comment|/* %soperand of %s must be modifiable lvalue */
+comment|/* operand of %s must be modifiable lvalue */
 if|if
 condition|(
 operator|!
@@ -9501,7 +9501,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Insert conversions which are necessary to give both operands the same  * type. This is done in different ways for traditional C and ANIS C.  */
+comment|/*  * Insert conversions which are necessary to give both operands the same  * type. This is done in different ways for traditional C and ANSI C.  */
 end_comment
 
 begin_function
@@ -10515,7 +10515,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print warnings for conversions of integer types which my cause  * problems.  */
+comment|/*  * Print warnings for conversions of integer types which may cause  * problems.  */
 end_comment
 
 begin_comment
@@ -10750,7 +10750,7 @@ operator|!=
 name|CVT
 condition|)
 block|{
-comment|/* We got already an error. */
+comment|/* We already got an error. */
 return|return;
 block|}
 if|if
@@ -10859,7 +10859,7 @@ decl_stmt|,
 modifier|*
 name|ots
 decl_stmt|;
-comment|/* 	 * We got already an error (pointers of different types 	 * without a cast) or we will not get a warning. 	 */
+comment|/* 	 * We already got an error (pointers of different types 	 * without a cast) or we will not get a warning. 	 */
 if|if
 condition|(
 name|op
@@ -11075,7 +11075,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Converts a typed constant in a constant of another type.  *  * op		operator which requires conversion  * arg		if op is FARG, # of argument  * tp		type in which to convert the constant  * nv		new constant  * v		old constant  */
+comment|/*  * Converts a typed constant in a constant of another type.  *  * op		operator which requires conversion  * arg		if op is FARG, # of argument  * tp		type to which convert the constant  * nv		new constant  * v		old constant  */
 end_comment
 
 begin_function
@@ -11354,7 +11354,7 @@ break|break;
 case|case
 name|PTR
 case|:
-comment|/* Got already an error because of float --> ptr */
+comment|/* Already got an error because of float --> ptr */
 case|case
 name|LDOUBLE
 case|:
@@ -14883,7 +14883,7 @@ argument_list|(
 literal|"bldcol()"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX For now we simply take the left type. This is 		 * probably wrong, if one type contains a functionprototype 		 * and the other one, at the same place, only an old style 		 * declaration. 		 */
+comment|/* 		 * XXX For now we simply take the left type. This is 		 * probably wrong, if one type contains a function prototype 		 * and the other one, at the same place, only an old style 		 * declaration. 		 */
 name|rtp
 operator|=
 name|ln
@@ -20369,7 +20369,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Checks the range of array indices, if possible.  * amper is set if only the address of the element is used. This  * means that the index is allowd to refere to the first element  * after the array.  */
+comment|/*  * Checks the range of array indices, if possible.  * amper is set if only the address of the element is used. This  * means that the index is allowed to refer to the first element  * after the array.  */
 end_comment
 
 begin_function
@@ -21074,7 +21074,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Takes an expression an returns 0 if this expression can be used  * for static initialisation, otherwise -1.  *  * Constant initialisation expressions must be constant or an address  * of a static object with an optional offset. In the first case,  * the result is returned in *offsp. In the second case, the static  * object is returned in *symp and the offset in *offsp.  *  * The expression can consist of PLUS, MINUS, AMPER, NAME, STRING and  * CON. Type conversions are allowed if they do not change binary  * representation (including width).  */
+comment|/*  * Takes an expression and returns 0 if this expression can be used  * for static initialisation, otherwise -1.  *  * Constant initialisation expressions must be constant or an address  * of a static object with an optional offset. In the first case,  * the result is returned in *offsp. In the second case, the static  * object is returned in *symp and the offset in *offsp.  *  * The expression can consist of PLUS, MINUS, AMPER, NAME, STRING and  * CON. Type conversions are allowed if they do not change binary  * representation (including width).  */
 end_comment
 
 begin_function
