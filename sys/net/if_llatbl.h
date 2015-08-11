@@ -248,20 +248,10 @@ argument_list|)
 name|lle_chain
 expr_stmt|;
 comment|/* chain of deleted items */
-comment|/* XXX af-private? */
-union|union
-block|{
 name|struct
 name|callout
-name|ln_timer_ch
-decl_stmt|;
-name|struct
-name|callout
-name|la_timer
-decl_stmt|;
-block|}
 name|lle_timer
-union|;
+decl_stmt|;
 name|struct
 name|rwlock
 name|lle_lock
@@ -410,20 +400,6 @@ parameter_list|(
 name|lle
 parameter_list|)
 value|do {					\ 	LLE_WLOCK(lle);						\ 	LLE_FREE_LOCKED(lle);					\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ln_timer_ch
-value|lle_timer.ln_timer_ch
-end_define
-
-begin_define
-define|#
-directive|define
-name|la_timer
-value|lle_timer.la_timer
 end_define
 
 begin_typedef

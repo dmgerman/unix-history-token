@@ -1551,7 +1551,7 @@ argument_list|(
 operator|&
 name|lle
 operator|->
-name|la_timer
+name|lle_timer
 argument_list|)
 condition|)
 name|LLE_REMREF
@@ -2748,12 +2748,12 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|" la_timer=%p\n"
+literal|" lle_timer=%p\n"
 argument_list|,
 operator|&
 name|lle
 operator|->
-name|la_timer
+name|lle_timer
 argument_list|)
 expr_stmt|;
 switch|switch

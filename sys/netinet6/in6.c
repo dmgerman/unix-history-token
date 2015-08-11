@@ -8833,7 +8833,7 @@ name|lle
 operator|->
 name|base
 operator|.
-name|ln_timer_ch
+name|lle_timer
 argument_list|,
 literal|1
 argument_list|)
@@ -9032,7 +9032,7 @@ argument_list|(
 operator|&
 name|lle
 operator|->
-name|la_timer
+name|lle_timer
 argument_list|)
 condition|)
 name|LLE_REMREF

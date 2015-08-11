@@ -2216,7 +2216,7 @@ argument_list|(
 operator|&
 name|ln
 operator|->
-name|ln_timer_ch
+name|lle_timer
 argument_list|)
 expr_stmt|;
 block|}
@@ -2259,7 +2259,7 @@ argument_list|(
 operator|&
 name|ln
 operator|->
-name|ln_timer_ch
+name|lle_timer
 argument_list|,
 name|INT_MAX
 argument_list|,
@@ -2284,7 +2284,7 @@ argument_list|(
 operator|&
 name|ln
 operator|->
-name|ln_timer_ch
+name|lle_timer
 argument_list|,
 name|tick
 argument_list|,
@@ -2406,7 +2406,7 @@ argument_list|(
 operator|&
 name|ln
 operator|->
-name|la_timer
+name|lle_timer
 argument_list|)
 condition|)
 block|{

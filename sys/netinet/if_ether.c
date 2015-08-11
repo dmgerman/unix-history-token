@@ -831,7 +831,7 @@ argument_list|(
 operator|&
 name|lle
 operator|->
-name|la_timer
+name|lle_timer
 argument_list|)
 condition|)
 block|{
@@ -906,7 +906,7 @@ argument_list|(
 operator|&
 name|lle
 operator|->
-name|la_timer
+name|lle_timer
 argument_list|)
 expr_stmt|;
 comment|/* XXX: LOR avoidance. We still have ref on lle. */
@@ -2113,7 +2113,7 @@ argument_list|(
 operator|&
 name|la
 operator|->
-name|la_timer
+name|lle_timer
 argument_list|,
 name|hz
 operator|*
@@ -3958,7 +3958,7 @@ argument_list|(
 operator|&
 name|la
 operator|->
-name|la_timer
+name|lle_timer
 argument_list|,
 name|hz
 operator|*
