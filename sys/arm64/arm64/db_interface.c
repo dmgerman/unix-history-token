@@ -761,8 +761,8 @@ name|pmap
 argument_list|,
 name|addr
 argument_list|)
-operator|==
-name|FALSE
+operator|!=
+literal|0
 operator|)
 return|;
 block|}
