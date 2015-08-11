@@ -502,7 +502,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"WARNING: more then one ti,hwmod \n"
+literal|"WARNING: more than one ti,hwmod \n"
 argument_list|)
 expr_stmt|;
 name|free

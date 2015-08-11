@@ -2472,7 +2472,7 @@ literal|1
 argument_list|,
 name|sc
 argument_list|,
-literal|"More then one disk for pos %d"
+literal|"More than one disk for pos %d"
 argument_list|,
 name|disk_pos
 argument_list|)
