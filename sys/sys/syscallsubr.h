@@ -415,6 +415,25 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|kern_cap_rights_limit
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|fd
+parameter_list|,
+name|cap_rights_t
+modifier|*
+name|rights
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|kern_chdir
 parameter_list|(
 name|struct
