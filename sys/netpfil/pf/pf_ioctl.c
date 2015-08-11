@@ -9249,7 +9249,7 @@ name|sk
 operator|->
 name|port
 index|[
-literal|0
+literal|1
 index|]
 expr_stmt|;
 name|dstport
@@ -9299,7 +9299,7 @@ name|sk
 operator|->
 name|port
 index|[
-literal|0
+literal|1
 index|]
 expr_stmt|;
 block|}
