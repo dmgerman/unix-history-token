@@ -214,16 +214,6 @@ directive|include
 file|<net/if_llatbl.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|L3_ADDR_SIN6
-parameter_list|(
-name|le
-parameter_list|)
-value|((struct sockaddr_in6 *) L3_ADDR(le))
-end_define
-
 begin_include
 include|#
 directive|include
@@ -4089,12 +4079,11 @@ decl_stmt|;
 name|in6
 operator|=
 operator|&
-name|L3_ADDR_SIN6
-argument_list|(
 name|ln
-argument_list|)
 operator|->
-name|sin6_addr
+name|r_l3addr
+operator|.
+name|addr6
 expr_stmt|;
 comment|/* 			 * Lock to protect the default router list. 			 * XXX: this might be unnecessary, since this function 			 * is only called under the network software interrupt 			 * context.  However, we keep it just for safety. 			 */
 name|dr
