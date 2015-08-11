@@ -1315,6 +1315,9 @@ operator|==
 name|NULL
 condition|)
 break|break;
+operator|(
+name|void
+operator|)
 name|nvlist_move_nvpair
 argument_list|(
 name|newnvl
@@ -3863,13 +3866,19 @@ condition|)
 goto|goto
 name|failed
 goto|;
+if|if
+condition|(
+operator|!
 name|nvlist_move_nvpair
 argument_list|(
 name|nvl
 argument_list|,
 name|nvp
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|failed
+goto|;
 if|if
 condition|(
 name|tmpnvl
@@ -5156,6 +5165,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|nvlist_move_nvpair
 argument_list|(
 name|nvl
@@ -5238,6 +5250,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|nvlist_move_nvpair
 argument_list|(
 name|nvl
@@ -5332,6 +5347,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|nvlist_move_nvpair
 argument_list|(
 name|nvl
@@ -5353,7 +5371,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|void									\ nvlist_add_##type(nvlist_t *nvl, const char *name, vtype value)		\ {									\ 	nvpair_t *nvp;							\ 									\ 	if (nvlist_error(nvl) != 0) {					\ 		ERRNO_SET(nvlist_error(nvl));				\ 		return;							\ 	}								\ 									\ 	nvp = nvpair_create_##type(name, value);			\ 	if (nvp == NULL) {						\ 		nvl->nvl_error = ERRNO_OR_DEFAULT(ENOMEM);		\ 		ERRNO_SET(nvl->nvl_error);				\ 	} else {							\ 		nvlist_move_nvpair(nvl, nvp);				\ 	}								\ }
+value|void									\ nvlist_add_##type(nvlist_t *nvl, const char *name, vtype value)		\ {									\ 	nvpair_t *nvp;							\ 									\ 	if (nvlist_error(nvl) != 0) {					\ 		ERRNO_SET(nvlist_error(nvl));				\ 		return;							\ 	}								\ 									\ 	nvp = nvpair_create_##type(name, value);			\ 	if (nvp == NULL) {						\ 		nvl->nvl_error = ERRNO_OR_DEFAULT(ENOMEM);		\ 		ERRNO_SET(nvl->nvl_error);				\ 	} else {							\ 		(void)nvlist_move_nvpair(nvl, nvp);			\ 	}								\ }
 end_define
 
 begin_macro
@@ -5420,7 +5438,7 @@ name|NVLIST_ADD
 end_undef
 
 begin_function
-name|void
+name|bool
 name|nvlist_move_nvpair
 parameter_list|(
 name|nvlist_t
@@ -5470,7 +5488,11 @@ name|nvl
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|false
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -5516,7 +5538,11 @@ operator|->
 name|nvl_error
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|false
+operator|)
+return|;
 block|}
 block|}
 name|nvpair_insert
@@ -5531,6 +5557,11 @@ argument_list|,
 name|nvl
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|true
+operator|)
+return|;
 block|}
 end_function
 
@@ -5616,6 +5647,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|nvlist_move_nvpair
 argument_list|(
 name|nvl
@@ -5722,6 +5756,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|nvlist_move_nvpair
 argument_list|(
 name|nvl
@@ -5820,6 +5857,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|nvlist_move_nvpair
 argument_list|(
 name|nvl
@@ -5923,6 +5963,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|nvlist_move_nvpair
 argument_list|(
 name|nvl
