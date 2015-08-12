@@ -371,6 +371,14 @@ name|MAX_TAG_PREFIX_LEN
 value|17
 define|#
 directive|define
+name|dsl_dataset_is_snapshot
+parameter_list|(
+name|ds
+parameter_list|)
+define|\
+value|(dsl_dataset_phys(ds)->ds_num_children != 0)
+define|#
+directive|define
 name|DS_UNIQUE_IS_ACCURATE
 parameter_list|(
 name|ds
