@@ -13424,14 +13424,14 @@ name|n
 operator|=
 name|PAGESIZE
 operator|*
-call|(
+operator|(
+operator|(
 name|int64_t
-call|)
-argument_list|(
+operator|)
 name|freemem
 operator|-
 name|zfs_arc_free_target
-argument_list|)
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -13563,6 +13563,9 @@ argument_list|)
 comment|/* 	 * If we're on an i386 platform, it's possible that we'll exhaust the 	 * kernel heap space before we ever run out of available physical 	 * memory.  Most checks of the size of the heap_area compare against 	 * tune.t_minarmem, which is the minimum available real memory that we 	 * can have in the system.  However, this is generally fixed at 25 pages 	 * which is so low that it's useless.  In this comparison, we seek to 	 * calculate the total heap-size, and reclaim if more than 3/4ths of the 	 * heap is allocated.  (Or, in the calculation, if less than 1/4th is 	 * free) 	 */
 name|n
 operator|=
+operator|(
+name|int64_t
+operator|)
 name|vmem_size
 argument_list|(
 name|heap_arena
@@ -13621,6 +13624,9 @@ condition|)
 block|{
 name|n
 operator|=
+operator|(
+name|int64_t
+operator|)
 name|vmem_size
 argument_list|(
 name|zio_arena
@@ -13679,6 +13685,9 @@ operator|)
 condition|?
 operator|-
 operator|(
+operator|(
+name|int64_t
+operator|)
 name|vmem_size
 argument_list|(
 name|heap_arena
