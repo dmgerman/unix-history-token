@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2012 by Frederik Wessels. All rights reserved.  * Copyright (c) 2013 by Prasad Joshi (sTec). All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012 by Frederik Wessels. All rights reserved.  * Copyright (c) 2013 by Prasad Joshi (sTec). All rights reserved.  */
 end_comment
 
 begin_include
@@ -20676,9 +20676,13 @@ name|char
 modifier|*
 name|ro
 init|=
+operator|(
 name|fi
 operator|->
-name|fi_can_readonly
+name|fi_flags
+operator|&
+name|ZFEATURE_FLAG_READONLY_COMPAT
+operator|)
 condition|?
 literal|" (read-only compatible)"
 else|:
