@@ -4808,6 +4808,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Performs a kevent() call on a temporarily created kqueue. This can be  * used to perform one-shot polling, similar to poll() and select().  */
+end_comment
+
 begin_function
 name|int
 name|kern_kevent_anonymous
@@ -8843,6 +8847,19 @@ modifier|*
 name|kq
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|kq
+operator|->
+name|kq_fdp
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"kqueue still attached to a file descriptor"
+operator|)
+argument_list|)
+expr_stmt|;
 name|seldrain
 argument_list|(
 operator|&
@@ -8984,6 +9001,12 @@ operator|=
 name|kq
 operator|->
 name|kq_fdp
+expr_stmt|;
+name|kq
+operator|->
+name|kq_fdp
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
