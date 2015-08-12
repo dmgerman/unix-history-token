@@ -2080,13 +2080,9 @@ name|smp_tlb_pmap
 operator|=
 name|pmap
 expr_stmt|;
-name|atomic_store_rel_int
-argument_list|(
-operator|&
 name|smp_tlb_wait
-argument_list|,
+operator|=
 literal|0
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
