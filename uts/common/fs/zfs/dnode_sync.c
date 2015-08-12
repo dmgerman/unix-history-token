@@ -1027,6 +1027,8 @@ name|i
 argument_list|,
 name|TRUE
 argument_list|,
+name|FALSE
+argument_list|,
 name|FTAG
 argument_list|,
 operator|&
@@ -1569,7 +1571,9 @@ literal|1
 argument_list|,
 name|i
 argument_list|,
-name|B_TRUE
+name|TRUE
+argument_list|,
+name|FALSE
 argument_list|,
 name|FTAG
 argument_list|,
@@ -1982,6 +1986,8 @@ argument_list|,
 name|i
 argument_list|,
 name|TRUE
+argument_list|,
+name|FALSE
 argument_list|,
 name|FTAG
 argument_list|,

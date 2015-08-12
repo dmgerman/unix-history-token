@@ -680,6 +680,8 @@ name|zap
 operator|->
 name|zap_object
 argument_list|,
+literal|0
+argument_list|,
 name|tbl
 operator|->
 name|zt_blk
@@ -691,6 +693,8 @@ operator|->
 name|zt_numblks
 operator|<<
 name|bs
+argument_list|,
+name|ZIO_PRIORITY_SYNC_READ
 argument_list|)
 expr_stmt|;
 block|}
@@ -5142,6 +5146,8 @@ name|zap
 operator|->
 name|zap_object
 argument_list|,
+literal|0
+argument_list|,
 name|blk
 operator|<<
 name|bs
@@ -5149,6 +5155,8 @@ argument_list|,
 literal|1
 operator|<<
 name|bs
+argument_list|,
+name|ZIO_PRIORITY_SYNC_READ
 argument_list|)
 expr_stmt|;
 block|}
@@ -7198,6 +7206,8 @@ name|zap
 operator|->
 name|zap_object
 argument_list|,
+literal|0
+argument_list|,
 name|zap_f_phys
 argument_list|(
 name|zap
@@ -7219,6 +7229,8 @@ operator|.
 name|zt_numblks
 operator|<<
 name|bs
+argument_list|,
+name|ZIO_PRIORITY_SYNC_READ
 argument_list|)
 expr_stmt|;
 for|for

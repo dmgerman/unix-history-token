@@ -1234,11 +1234,15 @@ name|dbuf_prefetch
 argument_list|(
 name|dn
 argument_list|,
+literal|0
+argument_list|,
 name|blkid
 operator|+
 name|i
 argument_list|,
 name|ZIO_PRIORITY_ASYNC_READ
+argument_list|,
+name|ARC_FLAG_PREFETCH
 argument_list|)
 expr_stmt|;
 block|}
