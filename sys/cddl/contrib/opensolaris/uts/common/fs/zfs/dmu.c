@@ -7281,6 +7281,7 @@ name|io_prop
 operator|.
 name|zp_copies
 expr_stmt|;
+comment|/* 		 * Old style holes are filled with all zeros, whereas 		 * new-style holes maintain their lsize, type, level, 		 * and birth time (see zio_write_compress). While we 		 * need to reset the BP_SET_LSIZE() call that happened 		 * in dmu_sync_ready for old style holes, we do *not* 		 * want to wipe out the information contained in new 		 * style holes. Thus, only zero out the block pointer if 		 * it's an old style hole. 		 */
 if|if
 condition|(
 name|BP_IS_HOLE
@@ -7294,6 +7295,18 @@ name|dl
 operator|.
 name|dr_overridden_by
 argument_list|)
+operator|&&
+name|dr
+operator|->
+name|dt
+operator|.
+name|dl
+operator|.
+name|dr_overridden_by
+operator|.
+name|blk_birth
+operator|==
+literal|0
 condition|)
 name|BP_ZERO
 argument_list|(
