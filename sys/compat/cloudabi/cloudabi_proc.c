@@ -249,7 +249,7 @@ name|fc_rights
 argument_list|,
 name|CAP_FSTAT
 argument_list|,
-name|CAP_PDWAIT
+name|CAP_EVENT
 argument_list|)
 expr_stmt|;
 name|error
