@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2014, Nexenta Systems, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2014, Nexenta Systems, Inc. All rights reserved.  */
 end_comment
 
 begin_ifdef
@@ -487,14 +487,8 @@ name|char
 modifier|*
 name|desc
 parameter_list|,
-name|boolean_t
-name|readonly
-parameter_list|,
-name|boolean_t
-name|mos
-parameter_list|,
-name|boolean_t
-name|activate_on_enable
+name|zfeature_flags_t
+name|flags
 parameter_list|,
 specifier|const
 name|spa_feature_t
@@ -537,11 +531,21 @@ argument_list|)
 expr_stmt|;
 name|ASSERT
 argument_list|(
-operator|!
-name|readonly
+operator|(
+name|flags
+operator|&
+name|ZFEATURE_FLAG_READONLY_COMPAT
+operator|)
+operator|==
+literal|0
 operator|||
-operator|!
-name|mos
+operator|(
+name|flags
+operator|&
+name|ZFEATURE_FLAG_MOS
+operator|)
+operator|==
+literal|0
 argument_list|)
 expr_stmt|;
 name|ASSERT3U
@@ -597,21 +601,9 @@ name|desc
 expr_stmt|;
 name|feature
 operator|->
-name|fi_can_readonly
+name|fi_flags
 operator|=
-name|readonly
-expr_stmt|;
-name|feature
-operator|->
-name|fi_mos
-operator|=
-name|mos
-expr_stmt|;
-name|feature
-operator|->
-name|fi_activate_on_enable
-operator|=
-name|activate_on_enable
+name|flags
 expr_stmt|;
 name|feature
 operator|->
@@ -639,11 +631,7 @@ literal|"async_destroy"
 argument_list|,
 literal|"Destroy filesystems asynchronously."
 argument_list|,
-name|B_TRUE
-argument_list|,
-name|B_FALSE
-argument_list|,
-name|B_FALSE
+name|ZFEATURE_FLAG_READONLY_COMPAT
 argument_list|,
 name|NULL
 argument_list|)
@@ -658,11 +646,7 @@ literal|"empty_bpobj"
 argument_list|,
 literal|"Snapshots use less space."
 argument_list|,
-name|B_TRUE
-argument_list|,
-name|B_FALSE
-argument_list|,
-name|B_FALSE
+name|ZFEATURE_FLAG_READONLY_COMPAT
 argument_list|,
 name|NULL
 argument_list|)
@@ -677,11 +661,7 @@ literal|"lz4_compress"
 argument_list|,
 literal|"LZ4 compression algorithm support."
 argument_list|,
-name|B_FALSE
-argument_list|,
-name|B_FALSE
-argument_list|,
-name|B_TRUE
+name|ZFEATURE_FLAG_ACTIVATE_ON_ENABLE
 argument_list|,
 name|NULL
 argument_list|)
@@ -696,11 +676,7 @@ literal|"multi_vdev_crash_dump"
 argument_list|,
 literal|"Crash dumps to multiple vdev pools."
 argument_list|,
-name|B_FALSE
-argument_list|,
-name|B_FALSE
-argument_list|,
-name|B_FALSE
+literal|0
 argument_list|,
 name|NULL
 argument_list|)
@@ -715,11 +691,7 @@ literal|"spacemap_histogram"
 argument_list|,
 literal|"Spacemaps maintain space histograms."
 argument_list|,
-name|B_TRUE
-argument_list|,
-name|B_FALSE
-argument_list|,
-name|B_FALSE
+name|ZFEATURE_FLAG_READONLY_COMPAT
 argument_list|,
 name|NULL
 argument_list|)
@@ -734,11 +706,7 @@ literal|"enabled_txg"
 argument_list|,
 literal|"Record txg at which a feature is enabled"
 argument_list|,
-name|B_TRUE
-argument_list|,
-name|B_FALSE
-argument_list|,
-name|B_FALSE
+name|ZFEATURE_FLAG_READONLY_COMPAT
 argument_list|,
 name|NULL
 argument_list|)
@@ -764,11 +732,9 @@ literal|"hole_birth"
 argument_list|,
 literal|"Retain hole birth txg for more precise zfs send"
 argument_list|,
-name|B_FALSE
-argument_list|,
-name|B_TRUE
-argument_list|,
-name|B_TRUE
+name|ZFEATURE_FLAG_MOS
+operator||
+name|ZFEATURE_FLAG_ACTIVATE_ON_ENABLE
 argument_list|,
 name|hole_birth_deps
 argument_list|)
@@ -783,11 +749,7 @@ literal|"extensible_dataset"
 argument_list|,
 literal|"Enhanced dataset functionality, used by other features."
 argument_list|,
-name|B_FALSE
-argument_list|,
-name|B_FALSE
-argument_list|,
-name|B_FALSE
+literal|0
 argument_list|,
 name|NULL
 argument_list|)
@@ -814,11 +776,7 @@ literal|"bookmarks"
 argument_list|,
 literal|"\"zfs bookmark\" command"
 argument_list|,
-name|B_TRUE
-argument_list|,
-name|B_FALSE
-argument_list|,
-name|B_FALSE
+name|ZFEATURE_FLAG_READONLY_COMPAT
 argument_list|,
 name|bookmarks_deps
 argument_list|)
@@ -845,11 +803,7 @@ literal|"filesystem_limits"
 argument_list|,
 literal|"Filesystem and snapshot limits."
 argument_list|,
-name|B_TRUE
-argument_list|,
-name|B_FALSE
-argument_list|,
-name|B_FALSE
+name|ZFEATURE_FLAG_READONLY_COMPAT
 argument_list|,
 name|filesystem_limits_deps
 argument_list|)
@@ -864,11 +818,9 @@ literal|"embedded_data"
 argument_list|,
 literal|"Blocks which compress very well use even less space."
 argument_list|,
-name|B_FALSE
-argument_list|,
-name|B_TRUE
-argument_list|,
-name|B_TRUE
+name|ZFEATURE_FLAG_MOS
+operator||
+name|ZFEATURE_FLAG_ACTIVATE_ON_ENABLE
 argument_list|,
 name|NULL
 argument_list|)
@@ -895,11 +847,7 @@ literal|"large_blocks"
 argument_list|,
 literal|"Support for blocks larger than 128KB."
 argument_list|,
-name|B_FALSE
-argument_list|,
-name|B_FALSE
-argument_list|,
-name|B_FALSE
+name|ZFEATURE_FLAG_PER_DATASET
 argument_list|,
 name|large_blocks_deps
 argument_list|)

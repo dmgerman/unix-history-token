@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -405,9 +405,13 @@ decl_stmt|;
 name|uint64_t
 name|zapobj
 init|=
+operator|(
 name|feature
 operator|->
-name|fi_can_readonly
+name|fi_flags
+operator|&
+name|ZFEATURE_FLAG_READONLY_COMPAT
+operator|)
 condition|?
 name|spa
 operator|->
@@ -636,9 +640,13 @@ expr_stmt|;
 name|uint64_t
 name|zapobj
 init|=
+operator|(
 name|feature
 operator|->
-name|fi_can_readonly
+name|fi_flags
+operator|&
+name|ZFEATURE_FLAG_READONLY_COMPAT
+operator|)
 condition|?
 name|spa
 operator|->
@@ -736,7 +744,9 @@ if|if
 condition|(
 name|feature
 operator|->
-name|fi_mos
+name|fi_flags
+operator|&
+name|ZFEATURE_FLAG_MOS
 condition|)
 name|spa_activate_mos_feature
 argument_list|(
@@ -776,9 +786,13 @@ block|{
 name|uint64_t
 name|initial_refcount
 init|=
+operator|(
 name|feature
 operator|->
-name|fi_activate_on_enable
+name|fi_flags
+operator|&
+name|ZFEATURE_FLAG_ACTIVATE_ON_ENABLE
+operator|)
 condition|?
 literal|1
 else|:
@@ -787,9 +801,13 @@ decl_stmt|;
 name|uint64_t
 name|zapobj
 init|=
+operator|(
 name|feature
 operator|->
-name|fi_can_readonly
+name|fi_flags
+operator|&
+name|ZFEATURE_FLAG_READONLY_COMPAT
+operator|)
 condition|?
 name|spa
 operator|->
@@ -1052,9 +1070,13 @@ decl_stmt|;
 name|uint64_t
 name|zapobj
 init|=
+operator|(
 name|feature
 operator|->
-name|fi_can_readonly
+name|fi_flags
+operator|&
+name|ZFEATURE_FLAG_READONLY_COMPAT
+operator|)
 condition|?
 name|spa
 operator|->

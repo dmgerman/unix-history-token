@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -94,6 +94,48 @@ directive|define
 name|SPA_FEATURE_DISABLED
 value|(-1ULL)
 typedef|typedef
+enum|enum
+name|zfeature_flags
+block|{
+comment|/* Can open pool readonly even if this feature is not supported. */
+name|ZFEATURE_FLAG_READONLY_COMPAT
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+block|,
+comment|/* Is this feature necessary to read the MOS? */
+name|ZFEATURE_FLAG_MOS
+init|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,
+comment|/* Activate this feature at the same time it is enabled. */
+name|ZFEATURE_FLAG_ACTIVATE_ON_ENABLE
+init|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|,
+comment|/* Each dataset has a field set if it has ever used this feature. */
+name|ZFEATURE_FLAG_PER_DATASET
+init|=
+operator|(
+literal|1
+operator|<<
+literal|3
+operator|)
+block|}
+name|zfeature_flags_t
+typedef|;
+typedef|typedef
 struct|struct
 name|zfeature_info
 block|{
@@ -118,17 +160,8 @@ modifier|*
 name|fi_desc
 decl_stmt|;
 comment|/* Feature description */
-name|boolean_t
-name|fi_can_readonly
-decl_stmt|;
-comment|/* Can open pool readonly w/o support? */
-name|boolean_t
-name|fi_mos
-decl_stmt|;
-comment|/* Is the feature necessary to read the MOS? */
-comment|/* Activate this feature at the same time it is enabled */
-name|boolean_t
-name|fi_activate_on_enable
+name|zfeature_flags_t
+name|fi_flags
 decl_stmt|;
 comment|/* array of dependencies, terminated by SPA_FEATURE_NONE */
 specifier|const
