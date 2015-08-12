@@ -8958,6 +8958,12 @@ decl_stmt|;
 name|int
 name|response_code
 decl_stmt|;
+name|svn_error_t
+modifier|*
+name|err
+init|=
+name|NULL
+decl_stmt|;
 comment|/* MERGE our activity */
 name|SVN_ERR
 argument_list|(
@@ -9022,6 +9028,13 @@ name|response_code
 argument_list|)
 return|;
 block|}
+name|ctx
+operator|->
+name|txn_url
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* If HTTPv2, the txn is now done */
 comment|/* Inform the WC that we did a commit.  */
 if|if
 condition|(
@@ -9029,8 +9042,8 @@ name|ctx
 operator|->
 name|callback
 condition|)
-name|SVN_ERR
-argument_list|(
+name|err
+operator|=
 name|ctx
 operator|->
 name|callback
@@ -9042,7 +9055,6 @@ operator|->
 name|callback_baton
 argument_list|,
 name|pool
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* If we're using activities, DELETE our completed activity.  */
@@ -9118,13 +9130,25 @@ name|response_baton
 operator|=
 name|handler
 expr_stmt|;
+name|ctx
+operator|->
+name|activity_url
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Don't try again in abort_edit() on fail */
 name|SVN_ERR
 argument_list|(
+name|svn_error_compose_create
+argument_list|(
+name|err
+argument_list|,
 name|svn_ra_serf__context_run_one
 argument_list|(
 name|handler
 argument_list|,
 name|pool
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9140,6 +9164,11 @@ literal|204
 argument_list|)
 expr_stmt|;
 block|}
+name|SVN_ERR
+argument_list|(
+name|err
+argument_list|)
+expr_stmt|;
 return|return
 name|SVN_NO_ERROR
 return|;

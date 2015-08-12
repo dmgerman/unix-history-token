@@ -522,7 +522,7 @@ name|nap
 condition|)
 name|panic
 argument_list|(
-literal|"ARM64TODO: Could we have more then 8 args?"
+literal|"ARM64TODO: Could we have more than 8 args?"
 argument_list|)
 expr_stmt|;
 name|td

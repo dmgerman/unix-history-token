@@ -1452,6 +1452,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|INP_INFO_WLOCKED
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_wowned(&(ipi)->ipi_lock)
+end_define
+
+begin_define
+define|#
+directive|define
 name|INP_INFO_RUNLOCK
 parameter_list|(
 name|ipi

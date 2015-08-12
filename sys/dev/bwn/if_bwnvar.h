@@ -2599,6 +2599,9 @@ name|uint16_t
 name|tq_free
 decl_stmt|;
 name|uint8_t
+name|tq_stop
+decl_stmt|;
+name|uint8_t
 name|tq_index
 decl_stmt|;
 name|struct
@@ -3461,12 +3464,9 @@ name|mtx
 name|sc_mtx
 decl_stmt|;
 name|struct
-name|ieee80211com
-name|sc_ic
-decl_stmt|;
-name|struct
-name|mbufq
-name|sc_snd
+name|ifnet
+modifier|*
+name|sc_ifp
 decl_stmt|;
 name|unsigned
 name|sc_flags
@@ -3483,10 +3483,6 @@ define|#
 directive|define
 name|BWN_FLAG_NEED_BEACON_TP
 value|(1<< 2)
-define|#
-directive|define
-name|BWN_FLAG_RUNNING
-value|(1<< 3)
 name|unsigned
 name|sc_debug
 decl_stmt|;
@@ -3502,6 +3498,12 @@ argument|bwn_mac
 argument_list|)
 name|sc_maclist
 expr_stmt|;
+name|uint8_t
+name|sc_macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
 name|uint8_t
 name|sc_bssid
 index|[

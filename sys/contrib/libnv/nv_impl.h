@@ -385,7 +385,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|bool
 name|nvlist_move_nvpair
 parameter_list|(
 name|nvlist_t

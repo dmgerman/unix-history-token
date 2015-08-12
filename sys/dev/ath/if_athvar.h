@@ -1977,14 +1977,16 @@ struct|struct
 name|ath_softc
 block|{
 name|struct
-name|ieee80211com
-name|sc_ic
+name|ifnet
+modifier|*
+name|sc_ifp
 decl_stmt|;
+comment|/* interface common */
 name|struct
 name|ath_stats
 name|sc_stats
 decl_stmt|;
-comment|/* device statistics */
+comment|/* interface statistics */
 name|struct
 name|ath_tx_aggr_stats
 name|sc_aggr_stats
@@ -2375,11 +2377,6 @@ decl_stmt|;
 comment|/* supports mybeacon */
 comment|/* 	 * Second set of flags. 	 */
 name|u_int32_t
-name|sc_running
-range|:
-literal|1
-decl_stmt|,
-comment|/* initialized */
 name|sc_use_ent
 range|:
 literal|1

@@ -3217,9 +3217,11 @@ condition|(
 name|k
 operator|>=
 operator|-
+operator|(
 literal|1021
 operator|<<
 literal|20
+operator|)
 condition|)
 name|INSERT_WORDS
 argument_list|(
@@ -3290,9 +3292,11 @@ condition|(
 name|k
 operator|>=
 operator|-
+operator|(
 literal|1021
 operator|<<
 literal|20
+operator|)
 condition|)
 block|{
 if|if

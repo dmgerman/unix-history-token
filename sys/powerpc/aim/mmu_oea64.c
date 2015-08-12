@@ -4785,7 +4785,7 @@ name|pa
 operator|=
 name|moea64_bootstrap_alloc
 argument_list|(
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|PAGE_SIZE
 argument_list|,
@@ -4804,7 +4804,7 @@ name|virtual_avail
 operator|=
 name|va
 operator|+
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
@@ -4829,7 +4829,7 @@ name|thread0
 operator|.
 name|td_kstack_pages
 operator|=
-name|KSTACK_PAGES
+name|kstack_pages
 expr_stmt|;
 for|for
 control|(
@@ -4839,7 +4839,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|KSTACK_PAGES
+name|kstack_pages
 condition|;
 name|i
 operator|++

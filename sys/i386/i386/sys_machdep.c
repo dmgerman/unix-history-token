@@ -1271,7 +1271,9 @@ name|td_kstack
 operator|+
 name|ctob
 argument_list|(
-name|KSTACK_PAGES
+name|td
+operator|->
+name|td_kstack_pages
 argument_list|)
 operator|-
 sizeof|sizeof

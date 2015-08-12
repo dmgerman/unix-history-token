@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syscall.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -1107,8 +1113,10 @@ name|errno
 operator|=
 name|err
 expr_stmt|;
-name|__sys_sigreturn
+name|syscall
 argument_list|(
+name|SYS_sigreturn
+argument_list|,
 operator|&
 name|uc2
 argument_list|)

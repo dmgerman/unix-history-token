@@ -4870,7 +4870,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"DEPRECATED: inserting data info "
+literal|"DEPRECATED: inserting data into "
 literal|"non-existent table %s. (auto-created)\n"
 argument_list|,
 name|xi

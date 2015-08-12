@@ -3307,6 +3307,13 @@ literal|"  Subversion recognizes the following special versioned properties on a
 literal|"  directory:\n"
 literal|"    svn:ignore         - A list of file glob patterns to ignore, one per line.\n"
 literal|"    svn:global-ignores - Like svn:ignore, but inheritable.\n"
+literal|"    svn:auto-props     - Automatically set properties on files when they are\n"
+literal|"      added or imported. Contains key-value pairs, one per line, in the format:\n"
+literal|"        PATTERN = PROPNAME=VALUE[;PROPNAME=VALUE ...]\n"
+literal|"      Example (where a literal ';' is escaped by adding another ';'):\n"
+literal|"        *.html = svn:eol-style=native;svn:mime-type=text/html;; charset=UTF8\n"
+literal|"      Applies recursively to all files added or imported under the directory\n"
+literal|"      it is set on.  See also [auto-props] in the client configuration file.\n"
 literal|"    svn:externals      - A list of module specifiers, one per line, in the\n"
 literal|"      following format similar to the syntax of 'svn checkout':\n"
 literal|"        [-r REV] URL[@PEG] LOCALPATH\n"
@@ -7456,6 +7463,10 @@ name|apr_err
 argument_list|)
 condition|)
 block|{
+name|svn_config_t
+modifier|*
+name|empty_cfg
+decl_stmt|;
 name|svn_handle_warning2
 argument_list|(
 name|stderr
@@ -7472,7 +7483,58 @@ argument_list|)
 expr_stmt|;
 name|cfg_hash
 operator|=
-name|NULL
+name|apr_hash_make
+argument_list|(
+name|pool
+argument_list|)
+expr_stmt|;
+name|SVN_INT_ERR
+argument_list|(
+name|svn_config_create2
+argument_list|(
+operator|&
+name|empty_cfg
+argument_list|,
+name|FALSE
+argument_list|,
+name|FALSE
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|svn_hash_sets
+argument_list|(
+name|cfg_hash
+argument_list|,
+name|SVN_CONFIG_CATEGORY_CONFIG
+argument_list|,
+name|empty_cfg
+argument_list|)
+expr_stmt|;
+name|SVN_INT_ERR
+argument_list|(
+name|svn_config_create2
+argument_list|(
+operator|&
+name|empty_cfg
+argument_list|,
+name|FALSE
+argument_list|,
+name|FALSE
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|svn_hash_sets
+argument_list|(
+name|cfg_hash
+argument_list|,
+name|SVN_CONFIG_CATEGORY_SERVERS
+argument_list|,
+name|empty_cfg
+argument_list|)
 expr_stmt|;
 block|}
 else|else

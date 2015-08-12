@@ -5774,7 +5774,7 @@ operator|&
 name|V_tcbinfo
 condition|)
 block|{
-name|INP_INFO_RLOCK_ASSERT
+name|INP_INFO_LOCK_ASSERT
 argument_list|(
 name|pcbinfo
 argument_list|)

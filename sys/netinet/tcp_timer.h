@@ -59,17 +59,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPTV_SRTTDFLT
-value|(  3*hz)
-end_define
-
-begin_comment
-comment|/* assumed RTT if no info */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TCPTV_PERSMIN
 value|(  5*hz)
 end_define

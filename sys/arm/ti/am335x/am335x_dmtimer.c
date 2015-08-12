@@ -621,24 +621,6 @@ begin_comment
 comment|/* Capture Reg */
 end_comment
 
-begin_comment
-comment|/*  * Use timer 2 for the eventtimer.  When PPS support is not compiled in, there's  * no need to use a timer that has an associated capture-input pin, so use timer  * 3 for timecounter.  When PPS is compiled in we ignore the default and use  * whichever of timers 4-7 have the capture pin configured.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_ET_TIMER
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_TC_TIMER
-value|3
-end_define
-
 begin_define
 define|#
 directive|define
@@ -1552,6 +1534,13 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Create the PPS cdev.  */
+name|unit
+operator|=
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|pps_cdev
@@ -1579,15 +1568,6 @@ operator|->
 name|si_drv1
 operator|=
 name|sc
-expr_stmt|;
-name|unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|sc
-operator|->
-name|pps_cdev
-argument_list|)
 expr_stmt|;
 name|device_printf
 argument_list|(
@@ -2520,7 +2500,6 @@ decl_stmt|;
 name|int
 name|enable
 decl_stmt|;
-comment|/* 	 * Note that if this routine returns an error status rather than running 	 * to completion it makes no attempt to clean up allocated resources; 	 * the system is essentially dead anyway without functional timers. 	 */
 name|sc
 operator|=
 name|device_get_softc

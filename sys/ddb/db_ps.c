@@ -2243,7 +2243,7 @@ name|ks_ce
 operator|+
 name|PAGE_SIZE
 operator|*
-name|KSTACK_PAGES
+name|kstack_pages
 condition|)
 block|{
 name|db_printf

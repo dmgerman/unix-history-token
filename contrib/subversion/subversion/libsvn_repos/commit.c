@@ -2919,6 +2919,19 @@ name|err
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Make sure a future abort doesn't perform          any work. This may occur if the commit          callback returns an error! */
+name|eb
+operator|->
+name|txn
+operator|=
+name|NULL
+expr_stmt|;
+name|eb
+operator|->
+name|txn_root
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 else|else
 block|{

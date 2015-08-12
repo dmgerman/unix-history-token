@@ -3256,7 +3256,7 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|child_abpath
+name|child_abspath
 decl_stmt|;
 name|marker_abspath
 operator|=
@@ -3273,13 +3273,11 @@ argument_list|)
 expr_stmt|;
 name|child_relpath
 operator|=
-name|svn_dirent_is_child
+name|svn_dirent_skip_ancestor
 argument_list|(
 name|src_dir
 argument_list|,
 name|marker_abspath
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3287,7 +3285,7 @@ condition|(
 name|child_relpath
 condition|)
 block|{
-name|child_abpath
+name|child_abspath
 operator|=
 name|svn_dirent_join
 argument_list|(
@@ -3302,7 +3300,7 @@ name|SVN_ERR
 argument_list|(
 name|svn_io_remove_file2
 argument_list|(
-name|child_abpath
+name|child_abspath
 argument_list|,
 name|TRUE
 argument_list|,
@@ -3341,7 +3339,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|wc_dir_abspath
+name|dst_dir_abspath
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -3462,7 +3460,7 @@ argument_list|)
 argument_list|,
 name|svn_dirent_join
 argument_list|(
-name|wc_dir_abspath
+name|dst_dir_abspath
 argument_list|,
 name|name
 argument_list|,
@@ -3505,7 +3503,7 @@ argument_list|)
 argument_list|,
 name|svn_dirent_join
 argument_list|(
-name|wc_dir_abspath
+name|dst_dir_abspath
 argument_list|,
 name|name
 argument_list|,
@@ -3777,6 +3775,8 @@ if|if
 condition|(
 name|conflicted
 condition|)
+block|{
+comment|/* When we moved a directory, we moved the conflict markers          with the target... if we moved a file we only moved the          file itself and the markers are still in the old location */
 name|SVN_ERR
 argument_list|(
 name|remove_node_conflict_markers
@@ -3785,12 +3785,21 @@ name|db
 argument_list|,
 name|src_abspath
 argument_list|,
+operator|(
+name|kind
+operator|==
+name|svn_node_dir
+operator|)
+condition|?
 name|dst_abspath
+else|:
+name|src_abspath
 argument_list|,
 name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|SVN_ERR
 argument_list|(
 name|svn_wc__db_op_delete

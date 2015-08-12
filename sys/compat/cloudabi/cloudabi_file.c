@@ -841,17 +841,17 @@ literal|0
 expr_stmt|;
 name|fflags
 operator|=
-name|read
-condition|?
 name|write
+condition|?
+name|read
 condition|?
 name|FREAD
 operator||
 name|FWRITE
 else|:
-name|FREAD
-else|:
 name|FWRITE
+else|:
+name|FREAD
 expr_stmt|;
 comment|/* Convert open flags. */
 if|if

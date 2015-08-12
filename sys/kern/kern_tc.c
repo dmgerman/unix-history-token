@@ -6805,7 +6805,10 @@ condition|(
 name|err
 operator|==
 name|EWOULDBLOCK
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|fapi
 operator|->
 name|timeout
@@ -6817,6 +6820,15 @@ literal|1
 condition|)
 block|{
 continue|continue;
+block|}
+else|else
+block|{
+return|return
+operator|(
+name|ETIMEDOUT
+operator|)
+return|;
+block|}
 block|}
 elseif|else
 if|if
@@ -7577,6 +7589,22 @@ literal|"NULL pps pointer in pps_event"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Nothing to do if not currently set to capture this event type. */
+if|if
+condition|(
+operator|(
+name|event
+operator|&
+name|pps
+operator|->
+name|ppsparam
+operator|.
+name|mode
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
 comment|/* If the timecounter was wound up underneath us, bail out. */
 if|if
 condition|(

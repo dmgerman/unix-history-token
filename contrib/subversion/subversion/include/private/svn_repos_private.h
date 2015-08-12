@@ -195,6 +195,12 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
+comment|/* A private addition to svn_repos_notify_warning_t. */
+define|#
+directive|define
+name|svn_repos__notify_warning_invalid_mergeinfo
+define|\
+value|((svn_repos_notify_warning_t)(-1))
 ifdef|#
 directive|ifdef
 name|__cplusplus
