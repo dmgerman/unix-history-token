@@ -367,8 +367,6 @@ name|makeValueAddendPCRel
 argument_list|(
 argument|RelocationValueRef&Value
 argument_list|,
-argument|const ObjectFile&BaseTObj
-argument_list|,
 argument|const relocation_iterator&RI
 argument_list|,
 argument|unsigned OffsetToNextPC

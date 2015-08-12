@@ -514,39 +514,6 @@ return|return
 name|TM
 return|;
 block|}
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TM
-operator|.
-name|getDataLayout
-argument_list|()
-return|;
-block|}
-name|bool
-name|isBigEndian
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|!
-name|IsLittleEndian
-return|;
-block|}
-name|bool
-name|isLittleEndian
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsLittleEndian
-return|;
-block|}
 name|virtual
 name|bool
 name|useSoftFloat
@@ -560,42 +527,46 @@ block|}
 comment|/// Return the pointer type for the given address space, defaults to
 comment|/// the pointer type from the data layout.
 comment|/// FIXME: The default needs to be removed once all the code is updated.
-name|virtual
 name|MVT
 name|getPointerTy
 argument_list|(
-name|uint32_t
-comment|/*AS*/
-operator|=
-literal|0
-argument_list|)
-decl|const
-decl_stmt|;
-name|unsigned
-name|getPointerSizeInBits
-argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
 name|uint32_t
 name|AS
 operator|=
 literal|0
 argument_list|)
 decl|const
-decl_stmt|;
-name|unsigned
-name|getPointerTypeSizeInBits
+block|{
+return|return
+name|MVT
+operator|::
+name|getIntegerVT
 argument_list|(
-name|Type
-operator|*
-name|Ty
+name|DL
+operator|.
+name|getPointerSizeInBits
+argument_list|(
+name|AS
 argument_list|)
-decl|const
-decl_stmt|;
+argument_list|)
+return|;
+block|}
+comment|/// EVT is not used in-tree, but is used by out-of-tree target.
+comment|/// A documentation for this function would be nice...
 name|virtual
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+argument_list|,
 name|EVT
-name|LHSTy
 argument_list|)
 decl|const
 decl_stmt|;
@@ -604,6 +575,11 @@ name|getShiftAmountTy
 argument_list|(
 name|EVT
 name|LHSTy
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
 argument_list|)
 decl|const
 decl_stmt|;
@@ -613,12 +589,19 @@ comment|/// ISD::INSERT_SUBVECTOR, and ISD::EXTRACT_SUBVECTOR
 name|virtual
 name|MVT
 name|getVectorIdxTy
-argument_list|()
+argument_list|(
 specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl|const
 block|{
 return|return
 name|getPointerTy
-argument_list|()
+argument_list|(
+name|DL
+argument_list|)
 return|;
 block|}
 comment|/// Return true if the select operation is expensive for this target.
@@ -962,6 +945,11 @@ name|virtual
 name|EVT
 name|getSetCCResultType
 argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
 name|LLVMContext
 operator|&
 name|Context
@@ -2754,6 +2742,11 @@ comment|/// otherwise it will assert.
 name|EVT
 name|getValueType
 argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
 name|Type
 operator|*
 name|Ty
@@ -2783,6 +2776,8 @@ condition|)
 return|return
 name|getPointerTy
 argument_list|(
+name|DL
+argument_list|,
 name|PTy
 operator|->
 name|getAddressSpace
@@ -2839,6 +2834,8 @@ name|PointerTy
 argument_list|(
 name|getPointerTy
 argument_list|(
+name|DL
+argument_list|,
 name|PT
 operator|->
 name|getAddressSpace
@@ -2900,6 +2897,11 @@ comment|/// Return the MVT corresponding to this LLVM type. See getValueType.
 name|MVT
 name|getSimpleValueType
 argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
 name|Type
 operator|*
 name|Ty
@@ -2914,6 +2916,8 @@ block|{
 return|return
 name|getValueType
 argument_list|(
+name|DL
+argument_list|,
 name|Ty
 argument_list|,
 name|AllowUnknown
@@ -2933,6 +2937,11 @@ argument_list|(
 name|Type
 operator|*
 name|Ty
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
 argument_list|)
 decl|const
 decl_stmt|;
@@ -3271,10 +3280,17 @@ name|hasBigEndianPartOrdering
 argument_list|(
 name|EVT
 name|VT
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
 argument_list|)
 decl|const
 block|{
 return|return
+name|DL
+operator|.
 name|isBigEndian
 argument_list|()
 operator|||
@@ -3730,6 +3746,8 @@ name|MVT
 operator|>
 name|getTypeLegalizationCost
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|Type *Ty
 argument_list|)
 specifier|const
@@ -5216,6 +5234,11 @@ name|bool
 name|isLegalAddressingMode
 argument_list|(
 specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+specifier|const
 name|AddrMode
 operator|&
 name|AM
@@ -5241,6 +5264,11 @@ name|int
 name|getScalingFactorCost
 argument_list|(
 specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+specifier|const
 name|AddrMode
 operator|&
 name|AM
@@ -5261,6 +5289,8 @@ if|if
 condition|(
 name|isLegalAddressingMode
 argument_list|(
+name|DL
+argument_list|,
 name|AM
 argument_list|,
 name|Ty
@@ -6001,10 +6031,6 @@ specifier|const
 name|TargetMachine
 modifier|&
 name|TM
-decl_stmt|;
-comment|/// True if this is a little endian target.
-name|bool
-name|IsLittleEndian
 decl_stmt|;
 comment|/// Tells the code generator not to expand operations into sequences that use
 comment|/// the select operations if possible.
@@ -8170,6 +8196,8 @@ argument_list|(
 argument|const char* RegName
 argument_list|,
 argument|EVT VT
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|{
@@ -8583,6 +8611,8 @@ name|virtual
 name|AsmOperandInfoVector
 name|ParseConstraints
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|,
 argument|ImmutableCallSite CS
@@ -8688,11 +8718,7 @@ name|virtual
 name|ConstraintType
 name|getConstraintType
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|Constraint
 argument_list|)
 decl|const
@@ -8751,7 +8777,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const TargetRegisterInfo *TRI
 argument_list|,
-argument|const std::string&Constraint
+argument|StringRef Constraint
 argument_list|,
 argument|MVT VT
 argument_list|)
@@ -8764,11 +8790,7 @@ name|virtual
 name|unsigned
 name|getInlineAsmMemConstraint
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|ConstraintCode
 argument_list|)
 decl|const
@@ -9432,6 +9454,11 @@ specifier|const
 name|TargetLowering
 operator|&
 name|TLI
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
 argument_list|)
 decl_stmt|;
 end_decl_stmt

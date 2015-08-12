@@ -466,7 +466,9 @@ block|;
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
-argument|EVT LHSTy
+argument|const DataLayout&
+argument_list|,
+argument|EVT
 argument_list|)
 specifier|const
 name|override
@@ -531,6 +533,8 @@ comment|/// getSetCCResultType - get the ISD::SETCC result ValueType
 name|EVT
 name|getSetCCResultType
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|LLVMContext&Context
 argument_list|,
 argument|EVT VT
@@ -608,6 +612,8 @@ argument_list|(
 argument|const char* RegName
 argument_list|,
 argument|EVT VT
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 name|override
@@ -1754,7 +1760,7 @@ comment|// Inline asm support
 name|ConstraintType
 name|getConstraintType
 argument_list|(
-argument|const std::string&Constraint
+argument|StringRef Constraint
 argument_list|)
 specifier|const
 name|override
@@ -1805,7 +1811,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const TargetRegisterInfo *TRI
 argument_list|,
-argument|const std::string&Constraint
+argument|StringRef Constraint
 argument_list|,
 argument|MVT VT
 argument_list|)
@@ -1833,7 +1839,7 @@ block|;
 name|unsigned
 name|getInlineAsmMemConstraint
 argument_list|(
-argument|const std::string&ConstraintCode
+argument|StringRef ConstraintCode
 argument_list|)
 specifier|const
 name|override
@@ -1873,6 +1879,8 @@ block|}
 name|bool
 name|isLegalAddressingMode
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|const AddrMode&AM
 argument_list|,
 argument|Type *Ty

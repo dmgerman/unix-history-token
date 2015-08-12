@@ -1283,6 +1283,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|addPersonality
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|Personality
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|addWinEHState
 parameter_list|(
 name|MachineBasicBlock

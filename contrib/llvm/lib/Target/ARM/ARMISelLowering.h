@@ -571,6 +571,8 @@ comment|/// getSetCCResultType - Return the value type to use for ISD::SETCC.
 name|EVT
 name|getSetCCResultType
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|LLVMContext&Context
 argument_list|,
 argument|EVT VT
@@ -703,6 +705,8 @@ comment|/// by AM is legal for this target, for a load/store of the specified ty
 name|bool
 name|isLegalAddressingMode
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|const AddrMode&AM
 argument_list|,
 argument|Type *Ty
@@ -812,7 +816,7 @@ block|;
 name|ConstraintType
 name|getConstraintType
 argument_list|(
-argument|const std::string&Constraint
+argument|StringRef Constraint
 argument_list|)
 specifier|const
 name|override
@@ -843,7 +847,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const TargetRegisterInfo *TRI
 argument_list|,
-argument|const std::string&Constraint
+argument|StringRef Constraint
 argument_list|,
 argument|MVT VT
 argument_list|)
@@ -871,7 +875,7 @@ block|;
 name|unsigned
 name|getInlineAsmMemConstraint
 argument_list|(
-argument|const std::string&ConstraintCode
+argument|StringRef ConstraintCode
 argument_list|)
 specifier|const
 name|override
@@ -1896,6 +1900,10 @@ name|RegName
 argument_list|,
 name|EVT
 name|VT
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
 decl|const
 name|override

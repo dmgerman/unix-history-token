@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"PPCSelectionDAGInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/Triple.h"
 end_include
 
@@ -99,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/MC/MCInstrItineraries.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetSelectionDAGInfo.h"
 end_include
 
 begin_include
@@ -370,7 +370,7 @@ block|;
 name|PPCTargetLowering
 name|TLInfo
 block|;
-name|PPCSelectionDAGInfo
+name|TargetSelectionDAGInfo
 name|TSInfo
 block|;
 name|public
@@ -493,7 +493,7 @@ name|TLInfo
 return|;
 block|}
 specifier|const
-name|PPCSelectionDAGInfo
+name|TargetSelectionDAGInfo
 operator|*
 name|getSelectionDAGInfo
 argument_list|()

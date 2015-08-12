@@ -1221,7 +1221,7 @@ decl|const
 decl_stmt|;
 name|private
 label|:
-comment|/// \brief Retrieves a ToolChain for a particular target triple.
+comment|/// \brief Retrieves a ToolChain for a particular \p Target triple.
 comment|///
 comment|/// Will cache ToolChains for the life of the driver object, and create them
 comment|/// on-demand.
@@ -1239,10 +1239,12 @@ name|ArgList
 operator|&
 name|Args
 argument_list|,
-name|StringRef
-name|DarwinArchName
-operator|=
-literal|""
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Target
 argument_list|)
 decl|const
 decl_stmt|;

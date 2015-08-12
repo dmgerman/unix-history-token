@@ -215,10 +215,10 @@ name|STATEPOINT
 init|=
 literal|20
 block|,
-comment|/// Instruction that records the offset of a function's frame allocation in a
-comment|/// label. Created by the llvm.frameallocate intrinsic. It has two arguments:
-comment|/// the symbol for the label and the frame index of the stack allocation.
-name|FRAME_ALLOC
+comment|/// Instruction that records the offset of a local stack allocation passed to
+comment|/// llvm.localescape. It has two arguments: the symbol for the label and the
+comment|/// frame index of the local stack allocation.
+name|LOCAL_ESCAPE
 init|=
 literal|21
 block|,

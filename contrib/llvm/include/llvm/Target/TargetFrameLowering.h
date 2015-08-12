@@ -82,6 +82,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|BitVector
+decl_stmt|;
+name|class
 name|CalleeSavedInfo
 decl_stmt|;
 name|class
@@ -661,16 +664,24 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// processFunctionBeforeCalleeSavedScan - This method is called immediately
-comment|/// before PrologEpilogInserter scans the physical registers used to determine
-comment|/// what callee saved registers should be spilled. This method is optional.
+comment|/// This method determines which of the registers reported by
+comment|/// TargetRegisterInfo::getCalleeSavedRegs() should actually get saved.
+comment|/// The default implementation checks populates the \p SavedRegs bitset with
+comment|/// all registers which are modified in the function, targets may override
+comment|/// this function to save additional registers.
+comment|/// This method also sets up the register scavenger ensuring there is a free
+comment|/// register or a frameindex available.
 name|virtual
 name|void
-name|processFunctionBeforeCalleeSavedScan
+name|determineCalleeSaves
 argument_list|(
 name|MachineFunction
 operator|&
 name|MF
+argument_list|,
+name|BitVector
+operator|&
+name|SavedRegs
 argument_list|,
 name|RegScavenger
 operator|*
@@ -679,7 +690,7 @@ operator|=
 name|nullptr
 argument_list|)
 decl|const
-block|{    }
+decl_stmt|;
 comment|/// processFunctionBeforeFrameFinalized - This method is called immediately
 comment|/// before the specified function's frame layout (MF.getFrameInfo()) is
 comment|/// finalized.  Once the frame is finalized, MO_FrameIndex operands are

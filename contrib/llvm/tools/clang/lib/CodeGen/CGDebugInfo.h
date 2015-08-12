@@ -166,9 +166,9 @@ decl_stmt|;
 name|class
 name|CGBlockInfo
 decl_stmt|;
-comment|/// \brief This class gathers all debug information during compilation
-comment|/// and is responsible for emitting to llvm globals or pass directly to
-comment|/// the backend.
+comment|/// This class gathers all debug information during compilation and is
+comment|/// responsible for emitting to llvm globals or pass directly to the
+comment|/// backend.
 name|class
 name|CGDebugInfo
 block|{
@@ -294,15 +294,7 @@ name|OCLEventDITy
 operator|=
 name|nullptr
 expr_stmt|;
-name|llvm
-operator|::
-name|DIType
-operator|*
-name|BlockLiteralGeneric
-operator|=
-name|nullptr
-expr_stmt|;
-comment|/// \brief Cache of previously constructed Types.
+comment|/// Cache of previously constructed Types.
 name|llvm
 operator|::
 name|DenseMap
@@ -374,8 +366,7 @@ argument_list|)
 block|{}
 block|}
 struct|;
-comment|/// \brief Cache of previously constructed interfaces
-comment|/// which may change.
+comment|/// Cache of previously constructed interfaces which may change.
 name|llvm
 operator|::
 name|SmallVector
@@ -386,7 +377,7 @@ literal|32
 operator|>
 name|ObjCInterfaceCache
 expr_stmt|;
-comment|/// \brief Cache of references to AST files such as PCHs or modules.
+comment|/// Cache of references to AST files such as PCHs or modules.
 name|llvm
 operator|::
 name|DenseMap
@@ -400,7 +391,7 @@ operator|*
 operator|>
 name|ModuleRefCache
 expr_stmt|;
-comment|/// \brief list of interfaces we want to keep even if orphaned.
+comment|/// List of interfaces we want to keep even if orphaned.
 name|std
 operator|::
 name|vector
@@ -410,7 +401,7 @@ operator|*
 operator|>
 name|RetainedTypes
 expr_stmt|;
-comment|/// \brief Cache of forward declared types to RAUW at the end of
+comment|/// Cache of forward declared types to RAUW at the end of
 comment|/// compilation.
 name|std
 operator|::
@@ -430,7 +421,7 @@ name|TrackingMDRef
 operator|>>
 name|ReplaceMap
 expr_stmt|;
-comment|/// \brief Cache of replaceable forward declarartions (functions and
+comment|/// Cache of replaceable forward declarartions (functions and
 comment|/// variables) to RAUW at the end of compilation.
 name|std
 operator|::
@@ -450,7 +441,7 @@ name|TrackingMDRef
 operator|>>
 name|FwdDeclReplaceMap
 expr_stmt|;
-comment|// LexicalBlockStack - Keep track of our current nested lexical block.
+comment|/// Keep track of our current nested lexical block.
 name|std
 operator|::
 name|vector
@@ -479,9 +470,9 @@ name|TrackingMDRef
 operator|>
 name|RegionMap
 expr_stmt|;
-comment|// FnBeginRegionCount - Keep track of LexicalBlockStack counter at the
-comment|// beginning of a function. This is used to pop unbalanced regions at
-comment|// the end of a function.
+comment|/// Keep track of LexicalBlockStack counter at the beginning of a
+comment|/// function. This is used to pop unbalanced regions at the end of a
+comment|/// function.
 name|std
 operator|::
 name|vector
@@ -490,8 +481,8 @@ name|unsigned
 operator|>
 name|FnBeginRegionCount
 expr_stmt|;
-comment|/// \brief This is a storage for names that are
-comment|/// constructed on demand. For example, C++ destructors, C++ operators etc..
+comment|/// This is a storage for names that are constructed on demand. For
+comment|/// example, C++ destructors, C++ operators etc..
 name|llvm
 operator|::
 name|BumpPtrAllocator
@@ -528,7 +519,7 @@ name|TrackingMDRef
 operator|>
 name|SPCache
 expr_stmt|;
-comment|/// \brief Cache declarations relevant to DW_TAG_imported_declarations (C++
+comment|/// Cache declarations relevant to DW_TAG_imported_declarations (C++
 comment|/// using declarations) that aren't covered by other more specific caches.
 name|llvm
 operator|::
@@ -587,6 +578,9 @@ operator|>
 name|StaticDataMemberCache
 expr_stmt|;
 comment|/// Helper functions for getOrCreateType.
+comment|/// @{
+comment|/// Currently the checksum of an interface includes the number of
+comment|/// ivars and property accessors.
 name|unsigned
 name|Checksum
 parameter_list|(
@@ -739,6 +733,7 @@ operator|*
 name|F
 argument_list|)
 expr_stmt|;
+comment|/// Get structure or union type.
 name|llvm
 operator|::
 name|DIType
@@ -790,6 +785,7 @@ operator|*
 name|CT
 argument_list|)
 decl_stmt|;
+comment|/// Get Objective-C interface type.
 name|llvm
 operator|::
 name|DIType
@@ -826,6 +822,7 @@ operator|*
 name|F
 argument_list|)
 expr_stmt|;
+comment|/// Get Objective-C object type.
 name|llvm
 operator|::
 name|DIType
@@ -952,6 +949,7 @@ operator|*
 name|F
 argument_list|)
 expr_stmt|;
+comment|/// Get enumeration type.
 name|llvm
 operator|::
 name|DIType
@@ -976,6 +974,12 @@ operator|*
 name|Ty
 argument_list|)
 expr_stmt|;
+comment|/// Look up the completed type for a self pointer in the TypeCache and
+comment|/// create a copy of it with the ObjectPointer and Artificial flags
+comment|/// set. If the type is not cached, a new one is created. This should
+comment|/// never happen though, since creating a type for the implicit self
+comment|/// argument implies that we already parsed the interface definition
+comment|/// and the ivar declarations in the implementation.
 name|llvm
 operator|::
 name|DIType
@@ -994,6 +998,9 @@ operator|*
 name|Ty
 argument_list|)
 expr_stmt|;
+comment|/// @}
+comment|/// Get the type from the cache or return null type if it doesn't
+comment|/// exist.
 name|llvm
 operator|::
 name|DIType
@@ -1004,6 +1011,10 @@ specifier|const
 name|QualType
 argument_list|)
 expr_stmt|;
+comment|/// Return the debug type for a C++ method.
+comment|/// \arg CXXMethodDecl is of FunctionType. This function type is
+comment|/// not updated to include implicit \c this pointer. Use this routine
+comment|/// to get a method type which includes \c this pointer.
 name|llvm
 operator|::
 name|DISubroutineType
@@ -1048,6 +1059,7 @@ argument_list|,
 argument|llvm::DIFile *F
 argument_list|)
 expr_stmt|;
+comment|/// \return debug info descriptor for vtable.
 name|llvm
 operator|::
 name|DIType
@@ -1061,6 +1073,7 @@ operator|*
 name|F
 argument_list|)
 expr_stmt|;
+comment|/// \return namespace descriptor for the given namespace decl.
 name|llvm
 operator|::
 name|DINamespace
@@ -1119,6 +1132,8 @@ argument_list|,
 argument|llvm::DIType *&Cache
 argument_list|)
 expr_stmt|;
+comment|/// A helper function to create a subprogram for a single member
+comment|/// function GlobalDecl.
 name|llvm
 operator|::
 name|DISubprogram
@@ -1143,6 +1158,9 @@ operator|*
 name|RecordTy
 argument_list|)
 expr_stmt|;
+comment|/// A helper function to collect debug info for C++ member
+comment|/// functions. This is used while creating debug info entry for a
+comment|/// Record.
 name|void
 name|CollectCXXMemberFunctions
 argument_list|(
@@ -1174,6 +1192,9 @@ operator|*
 name|T
 argument_list|)
 decl_stmt|;
+comment|/// A helper function to collect debug info for C++ base
+comment|/// classes. This is used while creating debug info entry for a
+comment|/// Record.
 name|void
 name|CollectCXXBases
 argument_list|(
@@ -1205,6 +1226,7 @@ operator|*
 name|RecordTy
 argument_list|)
 decl_stmt|;
+comment|/// A helper function to collect template parameters.
 name|llvm
 operator|::
 name|DINodeArray
@@ -1228,6 +1250,8 @@ operator|*
 name|Unit
 argument_list|)
 expr_stmt|;
+comment|/// A helper function to collect debug info for function template
+comment|/// parameters.
 name|llvm
 operator|::
 name|DINodeArray
@@ -1245,6 +1269,8 @@ operator|*
 name|Unit
 argument_list|)
 expr_stmt|;
+comment|/// A helper function to collect debug info for template
+comment|/// parameters.
 name|llvm
 operator|::
 name|DINodeArray
@@ -1287,7 +1313,8 @@ argument_list|,
 argument|const RecordDecl *RD = nullptr
 argument_list|)
 expr_stmt|;
-comment|// Helpers for collecting fields of a record.
+comment|/// Helpers for collecting fields of a record.
+comment|/// @{
 name|void
 name|CollectRecordLambdaFields
 argument_list|(
@@ -1406,6 +1433,8 @@ operator|*
 name|RecordTy
 argument_list|)
 decl_stmt|;
+comment|/// If the C++ class has vtable info then insert appropriate debug
+comment|/// info entry in EltTys vector.
 name|void
 name|CollectVTableInfo
 argument_list|(
@@ -1431,8 +1460,8 @@ operator|&
 name|EltTys
 argument_list|)
 decl_stmt|;
-comment|// CreateLexicalBlock - Create a new lexical block node and push it on
-comment|// the stack.
+comment|/// @}
+comment|/// Create a new lexical block node and push it on the stack.
 name|void
 name|CreateLexicalBlock
 parameter_list|(
@@ -1457,8 +1486,8 @@ name|void
 name|finalize
 parameter_list|()
 function_decl|;
-comment|/// \brief Update the current source location. If \arg loc is
-comment|/// invalid it is ignored.
+comment|/// Update the current source location. If \arg loc is invalid it is
+comment|/// ignored.
 name|void
 name|setLocation
 parameter_list|(
@@ -1466,8 +1495,9 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
-comment|/// \brief Emit metadata to indicate a change in line/column
-comment|/// information in the source file.
+comment|/// Emit metadata to indicate a change in line/column information in
+comment|/// the source file. If the location is invalid, the previous
+comment|/// location will be reused.
 name|void
 name|EmitLocation
 parameter_list|(
@@ -1479,7 +1509,7 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
-comment|/// \brief Emit a call to llvm.dbg.function.start to indicate
+comment|/// Emit a call to llvm.dbg.function.start to indicate
 comment|/// start of a new function.
 comment|/// \param Loc       The location of the function header.
 comment|/// \param ScopeLoc  The location of the function body.
@@ -1509,7 +1539,7 @@ operator|&
 name|Builder
 argument_list|)
 decl_stmt|;
-comment|/// \brief Constructs the debug code for exiting a function.
+comment|/// Constructs the debug code for exiting a function.
 name|void
 name|EmitFunctionEnd
 parameter_list|(
@@ -1518,8 +1548,8 @@ modifier|&
 name|Builder
 parameter_list|)
 function_decl|;
-comment|/// \brief Emit metadata to indicate the beginning of a
-comment|/// new lexical block and push the block onto the stack.
+comment|/// Emit metadata to indicate the beginning of a new lexical block
+comment|/// and push the block onto the stack.
 name|void
 name|EmitLexicalBlockStart
 parameter_list|(
@@ -1531,8 +1561,8 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
-comment|/// \brief Emit metadata to indicate the end of a new lexical
-comment|/// block and pop the current block.
+comment|/// Emit metadata to indicate the end of a new lexical block and pop
+comment|/// the current block.
 name|void
 name|EmitLexicalBlockEnd
 parameter_list|(
@@ -1544,8 +1574,8 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
-comment|/// \brief Emit call to llvm.dbg.declare for an automatic
-comment|/// variable declaration.
+comment|/// Emit call to \c llvm.dbg.declare for an automatic variable
+comment|/// declaration.
 name|void
 name|EmitDeclareOfAutoVariable
 argument_list|(
@@ -1565,8 +1595,8 @@ operator|&
 name|Builder
 argument_list|)
 decl_stmt|;
-comment|/// \brief Emit call to llvm.dbg.declare for an
-comment|/// imported variable declaration in a block.
+comment|/// Emit call to \c llvm.dbg.declare for an imported variable
+comment|/// declaration in a block.
 name|void
 name|EmitDeclareOfBlockDeclRefVariable
 argument_list|(
@@ -1599,8 +1629,8 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
-comment|/// \brief Emit call to llvm.dbg.declare for an argument
-comment|/// variable declaration.
+comment|/// Emit call to \c llvm.dbg.declare for an argument variable
+comment|/// declaration.
 name|void
 name|EmitDeclareOfArgVariable
 argument_list|(
@@ -1623,9 +1653,8 @@ operator|&
 name|Builder
 argument_list|)
 decl_stmt|;
-comment|/// \brief Emit call to
-comment|/// llvm.dbg.declare for the block-literal argument to a block
-comment|/// invocation function.
+comment|/// Emit call to \c llvm.dbg.declare for the block-literal argument
+comment|/// to a block invocation function.
 name|void
 name|EmitDeclareOfBlockLiteralArgVariable
 argument_list|(
@@ -1654,7 +1683,7 @@ operator|&
 name|Builder
 argument_list|)
 decl_stmt|;
-comment|/// \brief Emit information about a global variable.
+comment|/// Emit information about a global variable.
 name|void
 name|EmitGlobalVariable
 argument_list|(
@@ -1670,7 +1699,7 @@ operator|*
 name|Decl
 argument_list|)
 decl_stmt|;
-comment|/// \brief Emit global variable's debug info.
+comment|/// Emit global variable's debug info.
 name|void
 name|EmitGlobalVariable
 argument_list|(
@@ -1686,7 +1715,7 @@ operator|*
 name|Init
 argument_list|)
 decl_stmt|;
-comment|/// \brief Emit C++ using directive.
+comment|/// Emit C++ using directive.
 name|void
 name|EmitUsingDirective
 parameter_list|(
@@ -1696,7 +1725,7 @@ modifier|&
 name|UD
 parameter_list|)
 function_decl|;
-comment|/// \brief Emit the type explicitly casted to.
+comment|/// Emit the type explicitly casted to.
 name|void
 name|EmitExplicitCastType
 parameter_list|(
@@ -1704,7 +1733,7 @@ name|QualType
 name|Ty
 parameter_list|)
 function_decl|;
-comment|/// \brief Emit C++ using declaration.
+comment|/// Emit C++ using declaration.
 name|void
 name|EmitUsingDecl
 parameter_list|(
@@ -1714,7 +1743,7 @@ modifier|&
 name|UD
 parameter_list|)
 function_decl|;
-comment|/// \brief Emit an @import declaration.
+comment|/// Emit an @import declaration.
 name|void
 name|EmitImportDecl
 parameter_list|(
@@ -1724,7 +1753,7 @@ modifier|&
 name|ID
 parameter_list|)
 function_decl|;
-comment|/// \brief Emit C++ namespace alias.
+comment|/// Emit C++ namespace alias.
 name|llvm
 operator|::
 name|DIImportedEntity
@@ -1737,7 +1766,7 @@ operator|&
 name|NA
 argument_list|)
 expr_stmt|;
-comment|/// \brief Emit record type's standalone debug info.
+comment|/// Emit record type's standalone debug info.
 name|llvm
 operator|::
 name|DIType
@@ -1749,8 +1778,7 @@ argument_list|,
 argument|SourceLocation L
 argument_list|)
 expr_stmt|;
-comment|/// \brief Emit an objective c interface type standalone
-comment|/// debug info.
+comment|/// Emit an Objective-C interface type standalone debug info.
 name|llvm
 operator|::
 name|DIType
@@ -1809,7 +1837,7 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
-comment|/// \brief Emit call to llvm.dbg.declare for a variable declaration.
+comment|/// Emit call to llvm.dbg.declare for a variable declaration.
 comment|/// Tag accepts custom types DW_TAG_arg_variable and DW_TAG_auto_variable,
 comment|/// otherwise would be of type llvm::dwarf::Tag.
 name|void
@@ -1841,8 +1869,7 @@ operator|&
 name|Builder
 argument_list|)
 decl_stmt|;
-comment|// EmitTypeForVarWithBlocksAttr - Build up structure info for the byref.
-comment|// See BuildByRefType.
+comment|/// Build up structure info for the byref.  See \a BuildByRefType.
 name|llvm
 operator|::
 name|DIType
@@ -1859,7 +1886,7 @@ operator|*
 name|OffSet
 argument_list|)
 expr_stmt|;
-comment|/// \brief Get context info for the decl.
+comment|/// Get context info for the decl.
 name|llvm
 operator|::
 name|DIScope
@@ -1884,7 +1911,7 @@ operator|*
 name|Decl
 argument_list|)
 expr_stmt|;
-comment|/// \brief Create a forward decl for a RecordType in a given context.
+comment|/// Create a forward decl for a RecordType in a given context.
 name|llvm
 operator|::
 name|DICompositeType
@@ -1901,18 +1928,17 @@ name|DIScope
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/// \brief Return current directory name.
+comment|/// Return current directory name.
 name|StringRef
 name|getCurrentDirname
 parameter_list|()
 function_decl|;
-comment|/// \brief Create new compile unit.
+comment|/// Create new compile unit.
 name|void
 name|CreateCompileUnit
 parameter_list|()
 function_decl|;
-comment|/// \brief Get the file debug info descriptor for the input
-comment|/// location.
+comment|/// Get the file debug info descriptor for the input location.
 name|llvm
 operator|::
 name|DIFile
@@ -1922,7 +1948,7 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|)
 expr_stmt|;
-comment|/// \brief Get the file info for main compile unit.
+comment|/// Get the file info for main compile unit.
 name|llvm
 operator|::
 name|DIFile
@@ -1930,8 +1956,7 @@ operator|*
 name|getOrCreateMainFile
 argument_list|()
 expr_stmt|;
-comment|/// \brief Get the type from the cache or create a new type if
-comment|/// necessary.
+comment|/// Get the type from the cache or create a new type if necessary.
 name|llvm
 operator|::
 name|DIType
@@ -1943,7 +1968,7 @@ argument_list|,
 argument|llvm::DIFile *Fg
 argument_list|)
 expr_stmt|;
-comment|/// \brief Get a reference to a clang module.
+comment|/// Get a reference to a clang module.
 name|llvm
 operator|::
 name|DIModule
@@ -1953,8 +1978,8 @@ argument_list|(
 argument|ExternalASTSource::ASTSourceDescriptor Mod
 argument_list|)
 expr_stmt|;
-comment|/// \brief Get the type from the cache or create a new
-comment|/// partial type if necessary.
+comment|/// Get the type from the cache or create a new partial type if
+comment|/// necessary.
 name|llvm
 operator|::
 name|DIType
@@ -1973,7 +1998,7 @@ operator|*
 name|F
 argument_list|)
 expr_stmt|;
-comment|/// \brief Create type metadata for a source language type.
+comment|/// Create type metadata for a source language type.
 name|llvm
 operator|::
 name|DIType
@@ -1985,8 +2010,8 @@ argument_list|,
 argument|llvm::DIFile *Fg
 argument_list|)
 expr_stmt|;
-comment|/// \brief return the underlying ObjCInterfaceDecl
-comment|/// if Ty is an ObjCInterface or a pointer to one.
+comment|/// Return the underlying ObjCInterfaceDecl if \arg Ty is an
+comment|/// ObjCInterface or a pointer to one.
 name|ObjCInterfaceDecl
 modifier|*
 name|getObjCInterfaceDecl
@@ -1995,7 +2020,7 @@ name|QualType
 name|Ty
 parameter_list|)
 function_decl|;
-comment|/// \brief Create new member and increase Offset by FType's size.
+comment|/// Create new member and increase Offset by FType's size.
 name|llvm
 operator|::
 name|DIType
@@ -2011,7 +2036,7 @@ argument_list|,
 argument|uint64_t *Offset
 argument_list|)
 expr_stmt|;
-comment|/// \brief Retrieve the DIDescriptor, if any, for the canonical form of this
+comment|/// Retrieve the DIDescriptor, if any, for the canonical form of this
 comment|/// declaration.
 name|llvm
 operator|::
@@ -2025,7 +2050,7 @@ operator|*
 name|D
 argument_list|)
 expr_stmt|;
-comment|/// \brief Return debug info descriptor to describe method
+comment|/// \return debug info descriptor to describe method
 comment|/// declaration for the given method definition.
 name|llvm
 operator|::
@@ -2039,8 +2064,10 @@ operator|*
 name|D
 argument_list|)
 expr_stmt|;
-comment|/// Return debug info descriptor to describe in-class static data member
-comment|/// declaration for the given out-of-class definition.
+comment|/// \return debug info descriptor to describe in-class static data
+comment|/// member declaration for the given out-of-class definition.  If D
+comment|/// is an out-of-class definition of a static data member of a
+comment|/// class, find its corresponding in-class declaration.
 name|llvm
 operator|::
 name|DIDerivedType
@@ -2053,8 +2080,8 @@ operator|*
 name|D
 argument_list|)
 expr_stmt|;
-comment|/// \brief Create a subprogram describing the forward
-comment|/// decalration represented in the given FunctionDecl.
+comment|/// Create a subprogram describing the forward declaration
+comment|/// represented in the given FunctionDecl.
 name|llvm
 operator|::
 name|DISubprogram
@@ -2067,7 +2094,7 @@ operator|*
 name|FD
 argument_list|)
 expr_stmt|;
-comment|/// \brief Create a global variable describing the forward decalration
+comment|/// Create a global variable describing the forward decalration
 comment|/// represented in the given VarDecl.
 name|llvm
 operator|::
@@ -2081,8 +2108,13 @@ operator|*
 name|VD
 argument_list|)
 expr_stmt|;
-comment|/// Return a global variable that represents one of the collection of
-comment|/// global variables created for an anonmyous union.
+comment|/// \brief Return a global variable that represents one of the
+comment|/// collection of global variables created for an anonmyous union.
+comment|///
+comment|/// Recursively collect all of the member fields of a global
+comment|/// anonymous decl and create static variables for them. The first
+comment|/// time this is called it needs to be on a union and then from
+comment|/// there we can have additional unnamed fields.
 name|llvm
 operator|::
 name|DIGlobalVariable
@@ -2102,9 +2134,9 @@ argument_list|,
 argument|llvm::DIScope *DContext
 argument_list|)
 expr_stmt|;
-comment|/// \brief Get function name for the given FunctionDecl. If the
-comment|/// name is constructed on demand (e.g. C++ destructor) then the name
-comment|/// is stored on the side.
+comment|/// Get function name for the given FunctionDecl. If the name is
+comment|/// constructed on demand (e.g., C++ destructor) then the name is
+comment|/// stored on the side.
 name|StringRef
 name|getFunctionName
 parameter_list|(
@@ -2114,7 +2146,7 @@ modifier|*
 name|FD
 parameter_list|)
 function_decl|;
-comment|/// \brief Returns the unmangled name of an Objective-C method.
+comment|/// Returns the unmangled name of an Objective-C method.
 comment|/// This is the display name for the debugging info.
 name|StringRef
 name|getObjCMethodName
@@ -2125,7 +2157,7 @@ modifier|*
 name|FD
 parameter_list|)
 function_decl|;
-comment|/// \brief Return selector name. This is used for debugging
+comment|/// Return selector name. This is used for debugging
 comment|/// info.
 name|StringRef
 name|getSelectorName
@@ -2134,7 +2166,7 @@ name|Selector
 name|S
 parameter_list|)
 function_decl|;
-comment|/// \brief Get class name including template argument list.
+comment|/// Get class name including template argument list.
 name|StringRef
 name|getClassName
 parameter_list|(
@@ -2144,7 +2176,7 @@ modifier|*
 name|RD
 parameter_list|)
 function_decl|;
-comment|/// \brief Get vtable name for the given Class.
+comment|/// Get the vtable name for the given class.
 name|StringRef
 name|getVTableName
 parameter_list|(
@@ -2154,7 +2186,7 @@ modifier|*
 name|Decl
 parameter_list|)
 function_decl|;
-comment|/// \brief Get line number for the location. If location is invalid
+comment|/// Get line number for the location. If location is invalid
 comment|/// then use current location.
 name|unsigned
 name|getLineNumber
@@ -2163,7 +2195,7 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
-comment|/// \brief Get column number for the location. If location is
+comment|/// Get column number for the location. If location is
 comment|/// invalid then use current location.
 comment|/// \param Force  Assume DebugColumnInfo option is true.
 name|unsigned
@@ -2178,7 +2210,7 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// \brief Collect various properties of a FunctionDecl.
+comment|/// Collect various properties of a FunctionDecl.
 comment|/// \param GD  A GlobalDecl whose getDecl() must return a FunctionDecl.
 name|void
 name|collectFunctionDeclProps
@@ -2218,7 +2250,7 @@ operator|&
 name|Flags
 argument_list|)
 decl_stmt|;
-comment|/// \brief Collect various properties of a VarDecl.
+comment|/// Collect various properties of a VarDecl.
 name|void
 name|collectVarDeclProps
 argument_list|(
@@ -2258,7 +2290,7 @@ operator|&
 name|VDContext
 argument_list|)
 decl_stmt|;
-comment|/// \brief Allocate a copy of \p A using the DebugInfoNames allocator
+comment|/// Allocate a copy of \p A using the DebugInfoNames allocator
 comment|/// and return a reference to it. If multiple arguments are given the strings
 comment|/// are concatenated.
 name|StringRef
@@ -2354,7 +2386,7 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// \brief A scoped helper to set the current debug location to the specified
+comment|/// A scoped helper to set the current debug location to the specified
 comment|/// location or preferred location of the specified Expr.
 name|class
 name|ApplyDebugLocation
@@ -2393,7 +2425,7 @@ name|CGF
 decl_stmt|;
 name|public
 label|:
-comment|/// \brief Set the location to the (valid) TemporaryLocation.
+comment|/// Set the location to the (valid) TemporaryLocation.
 name|ApplyDebugLocation
 argument_list|(
 argument|CodeGenFunction&CGF
@@ -2424,15 +2456,17 @@ operator|~
 name|ApplyDebugLocation
 argument_list|()
 expr_stmt|;
-comment|/// \brief Apply TemporaryLocation if it is valid. Otherwise switch to an
-comment|/// artificial debug location that has a valid scope, but no line information.
+comment|/// \brief Apply TemporaryLocation if it is valid. Otherwise switch
+comment|/// to an artificial debug location that has a valid scope, but no
+comment|/// line information.
 comment|///
-comment|/// Artificial locations are useful when emitting compiler-generated helper
-comment|/// functions that have no source location associated with them. The DWARF
-comment|/// specification allows the compiler to use the special line number 0 to
-comment|/// indicate code that can not be attributed to any source location. Note that
-comment|/// passing an empty SourceLocation to CGDebugInfo::setLocation() will result
-comment|/// in the last valid location being reused.
+comment|/// Artificial locations are useful when emitting compiler-generated
+comment|/// helper functions that have no source location associated with
+comment|/// them. The DWARF specification allows the compiler to use the
+comment|/// special line number 0 to indicate code that can not be
+comment|/// attributed to any source location. Note that passing an empty
+comment|/// SourceLocation to CGDebugInfo::setLocation() will result in the
+comment|/// last valid location being reused.
 specifier|static
 name|ApplyDebugLocation
 name|CreateArtificial
@@ -2454,8 +2488,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// \brief Apply TemporaryLocation if it is valid. Otherwise switch to an
-comment|/// artificial debug location that has a valid scope, but no line information.
+comment|/// \brief Apply TemporaryLocation if it is valid. Otherwise switch
+comment|/// to an artificial debug location that has a valid scope, but no
+comment|/// line information.
 specifier|static
 name|ApplyDebugLocation
 name|CreateDefaultArtificial
@@ -2479,11 +2514,11 @@ name|TemporaryLocation
 argument_list|)
 return|;
 block|}
-comment|/// \brief Set the IRBuilder to not attach debug locations.  Note that passing
-comment|/// an empty SourceLocation to CGDebugInfo::setLocation() will result in the
-comment|/// last valid location being reused.  Note that all instructions that do not
-comment|/// have a location at the beginning of a function are counted towards to
-comment|/// funciton prologue.
+comment|/// Set the IRBuilder to not attach debug locations.  Note that
+comment|/// passing an empty SourceLocation to \a CGDebugInfo::setLocation()
+comment|/// will result in the last valid location being reused.  Note that
+comment|/// all instructions that do not have a location at the beginning of
+comment|/// a function are counted towards to funciton prologue.
 specifier|static
 name|ApplyDebugLocation
 name|CreateEmpty

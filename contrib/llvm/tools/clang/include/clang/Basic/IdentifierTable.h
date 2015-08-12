@@ -175,7 +175,7 @@ comment|// are for builtins.
 name|unsigned
 name|ObjCOrBuiltinID
 range|:
-literal|11
+literal|13
 decl_stmt|;
 name|bool
 name|HasMacro
@@ -256,7 +256,7 @@ literal|1
 decl_stmt|;
 comment|// True if this is the 'import' contextual
 comment|// keyword.
-comment|// 32-bit word is filled.
+comment|// 30 bit left in 64-bit word.
 name|void
 modifier|*
 name|FETokenInfo

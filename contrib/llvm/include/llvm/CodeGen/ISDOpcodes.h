@@ -149,10 +149,13 @@ name|FRAMEADDR
 block|,
 name|RETURNADDR
 block|,
-comment|/// FRAME_ALLOC_RECOVER - Represents the llvm.framerecover
-comment|/// intrinsic. Materializes the offset from the frame pointer of another
-comment|/// function to the result of llvm.frameallocate.
-name|FRAME_ALLOC_RECOVER
+comment|/// LOCAL_RECOVER - Represents the llvm.localrecover intrinsic.
+comment|/// Materializes the offset from the local object pointer of another
+comment|/// function to a particular local object passed to llvm.localescape. The
+comment|/// operand is the MCSymbol label used to represent this offset, since
+comment|/// typically the offset is not known until after code generation of the
+comment|/// parent.
+name|LOCAL_RECOVER
 block|,
 comment|/// READ_REGISTER, WRITE_REGISTER - This node represents llvm.register on
 comment|/// the DAG, which implements the named register global variables extension.
@@ -944,7 +947,7 @@ name|FIRST_TARGET_MEMORY_OPCODE
 init|=
 name|BUILTIN_OP_END
 operator|+
-literal|200
+literal|300
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// MemIndexedMode enum - This enum defines the load / store indexed

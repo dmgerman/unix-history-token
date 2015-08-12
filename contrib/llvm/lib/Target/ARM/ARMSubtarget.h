@@ -445,6 +445,10 @@ comment|/// NaCl TRAP instruction is generated instead of the regular TRAP.
 name|bool
 name|UseNaClTrap
 block|;
+comment|/// Generate calls via indirect call instructions.
+name|bool
+name|GenLongCalls
+block|;
 comment|/// Target machine allowed unsafe FP math (such as use of NEON fp)
 name|bool
 name|UnsafeFPMath
@@ -1149,6 +1153,15 @@ specifier|const
 block|{
 return|return
 name|UseNaClTrap
+return|;
+block|}
+name|bool
+name|genLongCalls
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GenLongCalls
 return|;
 block|}
 name|bool

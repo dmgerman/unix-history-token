@@ -5175,6 +5175,26 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Returns whether the given record is blacklisted from control flow
+end_comment
+
+begin_comment
+comment|/// integrity checks.
+end_comment
+
+begin_function_decl
+name|bool
+name|IsCFIBlacklistedRecord
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Emit bit set entries for the given vtable using the given layout if
 end_comment
 

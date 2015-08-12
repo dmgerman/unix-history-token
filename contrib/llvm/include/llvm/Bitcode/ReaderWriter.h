@@ -520,6 +520,8 @@ name|class
 name|BitcodeError
 block|{
 name|InvalidBitcodeSignature
+operator|=
+literal|1
 operator|,
 name|CorruptedBitcode
 block|}

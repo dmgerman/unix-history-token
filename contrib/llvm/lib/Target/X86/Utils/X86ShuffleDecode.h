@@ -506,6 +506,42 @@ operator|&
 name|ShuffleMask
 argument_list|)
 decl_stmt|;
+comment|/// \brief Decode a SSE4A EXTRQ instruction as a v16i8 shuffle mask.
+name|void
+name|DecodeEXTRQIMask
+argument_list|(
+name|int
+name|Len
+argument_list|,
+name|int
+name|Idx
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|int
+operator|>
+operator|&
+name|ShuffleMask
+argument_list|)
+decl_stmt|;
+comment|/// \brief Decode a SSE4A INSERTQ instruction as a v16i8 shuffle mask.
+name|void
+name|DecodeINSERTQIMask
+argument_list|(
+name|int
+name|Len
+argument_list|,
+name|int
+name|Idx
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|int
+operator|>
+operator|&
+name|ShuffleMask
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

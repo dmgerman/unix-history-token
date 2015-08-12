@@ -136,7 +136,9 @@ name|MCReadAdvanceEntry
 modifier|*
 name|ReadAdvanceTable
 decl_stmt|;
+specifier|const
 name|MCSchedModel
+modifier|*
 name|CPUSchedModel
 decl_stmt|;
 specifier|const
@@ -161,70 +163,72 @@ name|FeatureBitset
 name|FeatureBits
 decl_stmt|;
 comment|// Feature bits for current CPU + FS
+name|MCSubtargetInfo
+argument_list|()
+operator|=
+name|delete
+expr_stmt|;
+name|MCSubtargetInfo
+modifier|&
+name|operator
+init|=
+operator|(
+name|MCSubtargetInfo
+operator|&&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+name|MCSubtargetInfo
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MCSubtargetInfo
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 name|public
 label|:
-name|void
-name|InitMCSubtargetInfo
+name|MCSubtargetInfo
 argument_list|(
 specifier|const
-name|Triple
+name|MCSubtargetInfo
 operator|&
-name|TT
-argument_list|,
-name|StringRef
-name|CPU
-argument_list|,
-name|StringRef
-name|FS
-argument_list|,
-name|ArrayRef
-operator|<
-name|SubtargetFeatureKV
-operator|>
-name|PF
-argument_list|,
-name|ArrayRef
-operator|<
-name|SubtargetFeatureKV
-operator|>
-name|PD
-argument_list|,
-specifier|const
-name|SubtargetInfoKV
-operator|*
-name|ProcSched
-argument_list|,
-specifier|const
-name|MCWriteProcResEntry
-operator|*
-name|WPR
-argument_list|,
-specifier|const
-name|MCWriteLatencyEntry
-operator|*
-name|WL
-argument_list|,
-specifier|const
-name|MCReadAdvanceEntry
-operator|*
-name|RA
-argument_list|,
-specifier|const
-name|InstrStage
-operator|*
-name|IS
-argument_list|,
-specifier|const
-name|unsigned
-operator|*
-name|OC
-argument_list|,
-specifier|const
-name|unsigned
-operator|*
-name|FP
 argument_list|)
-decl_stmt|;
+operator|=
+expr|default
+expr_stmt|;
+name|MCSubtargetInfo
+argument_list|(
+argument|const Triple&TT
+argument_list|,
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|,
+argument|ArrayRef<SubtargetFeatureKV> PF
+argument_list|,
+argument|ArrayRef<SubtargetFeatureKV> PD
+argument_list|,
+argument|const SubtargetInfoKV *ProcSched
+argument_list|,
+argument|const MCWriteProcResEntry *WPR
+argument_list|,
+argument|const MCWriteLatencyEntry *WL
+argument_list|,
+argument|const MCReadAdvanceEntry *RA
+argument_list|,
+argument|const InstrStage *IS
+argument_list|,
+argument|const unsigned *OC
+argument_list|,
+argument|const unsigned *FP
+argument_list|)
+empty_stmt|;
 comment|/// getTargetTriple - Return the target triple string.
 specifier|const
 name|Triple
@@ -276,8 +280,12 @@ operator|=
 name|FeatureBits_
 expr_stmt|;
 block|}
-comment|/// InitMCProcessorInfo - Set or change the CPU (optionally supplemented with
-comment|/// feature string). Recompute feature bits and scheduling model.
+name|protected
+label|:
+comment|/// Initialize the scheduling model and feature bits.
+comment|///
+comment|/// FIXME: Find a way to stick this in the constructor, since it should only
+comment|/// be called during initialization.
 name|void
 name|InitMCProcessorInfo
 parameter_list|(
@@ -288,9 +296,11 @@ name|StringRef
 name|FS
 parameter_list|)
 function_decl|;
-comment|/// InitCPUSchedModel - Recompute scheduling model based on CPU.
+name|public
+label|:
+comment|/// Set the features to the default for the given CPU.
 name|void
-name|InitCPUSchedModel
+name|setDefaultFeatures
 parameter_list|(
 name|StringRef
 name|CPU
@@ -336,7 +346,9 @@ parameter_list|)
 function_decl|;
 comment|/// getSchedModelForCPU - Get the machine model of a CPU.
 comment|///
+specifier|const
 name|MCSchedModel
+modifier|&
 name|getSchedModelForCPU
 argument_list|(
 name|StringRef
@@ -344,8 +356,7 @@ name|CPU
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getSchedModel - Get the machine model for this subtarget's CPU.
-comment|///
+comment|/// Get the machine model for this subtarget's CPU.
 specifier|const
 name|MCSchedModel
 operator|&
@@ -354,6 +365,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|*
 name|CPUSchedModel
 return|;
 block|}
@@ -560,10 +572,11 @@ decl_stmt|;
 comment|/// Check whether the CPU string is valid.
 name|bool
 name|isCPUStringValid
-parameter_list|(
+argument_list|(
 name|StringRef
 name|CPU
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 name|auto
 name|Found
@@ -601,7 +614,7 @@ name|Key
 return|;
 block|}
 block|)
-function|;
+decl_stmt|;
 return|return
 name|Found
 operator|!=

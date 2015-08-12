@@ -1351,25 +1351,6 @@ comment|// Scope specifier for the type spec, if applicable.
 name|CXXScopeSpec
 name|TypeScope
 decl_stmt|;
-comment|// List of protocol qualifiers for objective-c classes.  Used for
-comment|// protocol-qualified interfaces "NString<foo>" and protocol-qualified id
-comment|// "id<foo>".
-name|Decl
-modifier|*
-specifier|const
-modifier|*
-name|ProtocolQualifiers
-decl_stmt|;
-name|unsigned
-name|NumProtocolQualifiers
-decl_stmt|;
-name|SourceLocation
-name|ProtocolLAngleLoc
-decl_stmt|;
-name|SourceLocation
-modifier|*
-name|ProtocolLocs
-decl_stmt|;
 comment|// SourceLocation info.  These are null if the item wasn't specified or if
 comment|// the setting was synthesized.
 name|SourceRange
@@ -1656,21 +1637,6 @@ argument_list|(
 name|attrFactory
 argument_list|)
 operator|,
-name|ProtocolQualifiers
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|NumProtocolQualifiers
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|ProtocolLocs
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
 name|writtenBS
 argument_list|()
 operator|,
@@ -1679,18 +1645,6 @@ argument_list|(
 argument|nullptr
 argument_list|)
 block|{   }
-operator|~
-name|DeclSpec
-argument_list|()
-block|{
-name|delete
-index|[]
-name|ProtocolQualifiers
-block|;
-name|delete
-index|[]
-name|ProtocolLocs
-block|;   }
 comment|// storage-class-specifier
 name|SCS
 name|getStorageClassSpec
@@ -1889,6 +1843,21 @@ specifier|const
 block|{
 return|return
 name|TypeSpecOwned
+return|;
+block|}
+name|bool
+name|isTypeRep
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isTypeRep
+argument_list|(
+operator|(
+name|TST
+operator|)
+name|TypeSpecType
+argument_list|)
 return|;
 block|}
 name|ParsedType
@@ -3342,70 +3311,6 @@ name|attrs
 argument_list|)
 expr_stmt|;
 block|}
-typedef|typedef
-name|Decl
-modifier|*
-specifier|const
-modifier|*
-name|ProtocolQualifierListTy
-typedef|;
-name|ProtocolQualifierListTy
-name|getProtocolQualifiers
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ProtocolQualifiers
-return|;
-block|}
-name|SourceLocation
-operator|*
-name|getProtocolLocs
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ProtocolLocs
-return|;
-block|}
-name|unsigned
-name|getNumProtocolQualifiers
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumProtocolQualifiers
-return|;
-block|}
-name|SourceLocation
-name|getProtocolLAngleLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ProtocolLAngleLoc
-return|;
-block|}
-name|void
-name|setProtocolQualifiers
-parameter_list|(
-name|Decl
-modifier|*
-specifier|const
-modifier|*
-name|Protos
-parameter_list|,
-name|unsigned
-name|NP
-parameter_list|,
-name|SourceLocation
-modifier|*
-name|ProtoLocs
-parameter_list|,
-name|SourceLocation
-name|LAngleLoc
-parameter_list|)
-function_decl|;
 comment|/// Finish - This does final analysis of the declspec, issuing diagnostics for
 comment|/// things like "_Imaginary" (lacking an FP type).  After calling this method,
 comment|/// DeclSpec is guaranteed self-consistent, even if an error occurred.

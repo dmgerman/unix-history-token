@@ -3169,7 +3169,7 @@ argument_list|,
 argument|{
 comment|// We have to watch out here because an ObjCInterfaceType's base
 comment|// type is itself.
-argument|if (T->getBaseType().getTypePtr() != T)     TRY_TO(TraverseType(T->getBaseType())); }
+argument|if (T->getBaseType().getTypePtr() != T)     TRY_TO(TraverseType(T->getBaseType()));   for (auto typeArg : T->getTypeArgsAsWritten()) {     TRY_TO(TraverseType(typeArg));   } }
 argument_list|)
 end_macro
 
@@ -3728,7 +3728,9 @@ argument_list|,
 argument|{
 comment|// We have to watch out here because an ObjCInterfaceType's base
 comment|// type is itself.
-argument|if (TL.getTypePtr()->getBaseType().getTypePtr() != TL.getTypePtr())     TRY_TO(TraverseTypeLoc(TL.getBaseLoc())); }
+argument|if (TL.getTypePtr()->getBaseType().getTypePtr() != TL.getTypePtr())     TRY_TO(TraverseTypeLoc(TL.getBaseLoc()));   for (unsigned i =
+literal|0
+argument|, n = TL.getNumTypeArgs(); i != n; ++i)     TRY_TO(TraverseTypeLoc(TL.getTypeArgTInfo(i)->getTypeLoc())); }
 argument_list|)
 end_macro
 
@@ -4025,7 +4027,7 @@ argument|ObjCCategoryDecl
 argument_list|,
 argument|{
 comment|// FIXME: implement
-argument|}
+argument|if (ObjCTypeParamList *typeParamList = D->getTypeParamList()) {     for (auto typeParam : *typeParamList) {       TRY_TO(TraverseObjCTypeParamDecl(typeParam));     }   }   return true; }
 argument_list|)
 name|DEF_TRAVERSE_DECL
 argument_list|(
@@ -4049,7 +4051,7 @@ argument|ObjCInterfaceDecl
 argument_list|,
 argument|{
 comment|// FIXME: implement
-argument|}
+argument|if (ObjCTypeParamList *typeParamList = D->getTypeParamListAsWritten()) {     for (auto typeParam : *typeParamList) {       TRY_TO(TraverseObjCTypeParamDecl(typeParam));     }   }    if (TypeSourceInfo *superTInfo = D->getSuperClassTInfo()) {     TRY_TO(TraverseTypeLoc(superTInfo->getTypeLoc()));   } }
 argument_list|)
 name|DEF_TRAVERSE_DECL
 argument_list|(
@@ -4064,6 +4066,16 @@ argument_list|(
 argument|ObjCMethodDecl
 argument_list|,
 argument|{   if (D->getReturnTypeSourceInfo()) {     TRY_TO(TraverseTypeLoc(D->getReturnTypeSourceInfo()->getTypeLoc()));   }   for (ObjCMethodDecl::param_iterator I = D->param_begin(), E = D->param_end();        I != E; ++I) {     TRY_TO(TraverseDecl(*I));   }   if (D->isThisDeclarationADefinition()) {     TRY_TO(TraverseStmt(D->getBody()));   }   return true; }
+argument_list|)
+name|DEF_TRAVERSE_DECL
+argument_list|(
+argument|ObjCTypeParamDecl
+argument_list|,
+argument|{   if (D->hasExplicitBound()) {     TRY_TO(TraverseTypeLoc(D->getTypeSourceInfo()->getTypeLoc()));
+comment|// We shouldn't traverse D->getTypeForDecl(); it's a result of
+comment|// declaring the type alias, not something that was written in the
+comment|// source.
+argument|} }
 argument_list|)
 name|DEF_TRAVERSE_DECL
 argument_list|(

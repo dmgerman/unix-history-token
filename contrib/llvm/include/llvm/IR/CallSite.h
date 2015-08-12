@@ -1213,6 +1213,29 @@ name|setOnlyReadsMemory
 argument_list|()
 argument_list|)
 block|;   }
+comment|/// @brief Determine if the call can access memmory only using pointers based
+comment|/// on its arguments.
+name|bool
+name|onlyAccessesArgMemory
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|onlyAccessesArgMemory
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|setOnlyAccessesArgMemory
+argument_list|()
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|setOnlyAccessesArgMemory
+argument_list|()
+argument_list|)
+block|;   }
 comment|/// @brief Determine if the call cannot return.
 name|bool
 name|doesNotReturn

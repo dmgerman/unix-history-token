@@ -149,6 +149,11 @@ name|void
 name|printProgramHeaders
 parameter_list|()
 block|{ }
+name|virtual
+name|void
+name|printHashTable
+parameter_list|()
+block|{ }
 comment|// Only implemented for ARM ELF at this time.
 name|virtual
 name|void

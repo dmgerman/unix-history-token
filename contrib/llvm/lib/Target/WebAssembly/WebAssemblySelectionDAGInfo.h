@@ -86,15 +86,6 @@ name|TargetSelectionDAGInfo
 block|{
 name|public
 operator|:
-name|explicit
-name|WebAssemblySelectionDAGInfo
-argument_list|(
-specifier|const
-name|DataLayout
-operator|*
-name|DL
-argument_list|)
-block|;
 operator|~
 name|WebAssemblySelectionDAGInfo
 argument_list|()

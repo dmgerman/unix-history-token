@@ -2070,11 +2070,11 @@ block|{
 return|return
 operator|(
 name|TypeInfo
-operator|&
-literal|0x7
-operator|)
 operator|>>
 literal|2
+operator|)
+operator|&
+literal|0x7
 return|;
 block|}
 block|}
@@ -2979,14 +2979,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|std
-operator|::
-name|error_code
+name|ErrorOr
+operator|<
+name|uint64_t
+operator|>
 name|getSymbolAddress
 argument_list|(
 argument|DataRefImpl Symb
-argument_list|,
-argument|uint64_t&Res
 argument_list|)
 specifier|const
 name|override
@@ -2995,7 +2994,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|uint64_t
-name|getSymbolValue
+name|getSymbolValueImpl
 argument_list|(
 name|DataRefImpl
 name|Symb
@@ -3220,20 +3219,6 @@ decl|const
 name|override
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|ErrorOr
-operator|<
-name|uint64_t
-operator|>
-name|getRelocationAddress
-argument_list|(
-argument|DataRefImpl Rel
-argument_list|)
-specifier|const
-name|override
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 name|uint64_t

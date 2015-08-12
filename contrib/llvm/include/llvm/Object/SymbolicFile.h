@@ -513,13 +513,6 @@ name|BasicSymbolRef
 operator|>
 name|basic_symbol_iterator
 expr_stmt|;
-specifier|const
-name|uint64_t
-name|UnknownAddress
-init|=
-operator|~
-literal|0ULL
-decl_stmt|;
 name|class
 name|SymbolicFile
 range|:

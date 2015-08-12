@@ -268,17 +268,18 @@ comment|/// affected.
 comment|///
 comment|/// Note, this should *NOT* be used directly by any class other than User.
 comment|/// User uses this value to find the Use list.
-specifier|static
-specifier|const
+enum_decl|enum :
 name|unsigned
+block|{
 name|NumUserOperandsBits
 init|=
 literal|29
-decl_stmt|;
+block|}
+enum_decl|;
 name|unsigned
 name|NumUserOperands
 range|:
-literal|29
+name|NumUserOperandsBits
 decl_stmt|;
 name|bool
 name|IsUsedByMD

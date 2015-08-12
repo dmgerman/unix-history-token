@@ -755,27 +755,17 @@ name|Sec
 argument_list|)
 decl|const
 decl_stmt|;
-name|std
-operator|::
-name|error_code
+name|ErrorOr
+operator|<
+name|uint64_t
+operator|>
 name|getSymbolAddress
 argument_list|(
 argument|DataRefImpl Symb
-argument_list|,
-argument|uint64_t&Res
 argument_list|)
 specifier|const
 name|override
 expr_stmt|;
-name|uint64_t
-name|getSymbolValue
-argument_list|(
-name|DataRefImpl
-name|Symb
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
 name|uint32_t
 name|getSymbolAlignment
 argument_list|(
@@ -966,17 +956,6 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
-name|ErrorOr
-operator|<
-name|uint64_t
-operator|>
-name|getRelocationAddress
-argument_list|(
-argument|DataRefImpl Rel
-argument_list|)
-specifier|const
-name|override
-expr_stmt|;
 name|uint64_t
 name|getRelocationOffset
 argument_list|(
@@ -1048,6 +1027,14 @@ argument|StringRef&
 argument_list|)
 specifier|const
 expr_stmt|;
+name|section_iterator
+name|getRelocationRelocatedSection
+argument_list|(
+name|relocation_iterator
+name|Rel
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// TODO: Would be useful to have an iterator based version
 comment|// of the load command interface too.
 name|basic_symbol_iterator
@@ -1956,6 +1943,15 @@ return|;
 block|}
 name|private
 label|:
+name|uint64_t
+name|getSymbolValueImpl
+argument_list|(
+name|DataRefImpl
+name|Symb
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 union|union
 block|{
 name|MachO

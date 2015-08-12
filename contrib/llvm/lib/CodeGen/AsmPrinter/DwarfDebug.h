@@ -214,7 +214,7 @@ name|class
 name|MachineModuleInfo
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// \brief This class is used to record source line correspondence.
+comment|/// This class is used to record source line correspondence.
 name|class
 name|SrcLineInfo
 block|{
@@ -941,7 +941,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// \brief Return true if DbgVariable is artificial.
+comment|/// Return true if DbgVariable is artificial.
 end_comment
 
 begin_macro
@@ -1115,7 +1115,7 @@ label|:
 end_label
 
 begin_comment
-comment|/// resolve - Look in the DwarfDebug map for the MDNode that
+comment|/// Look in the DwarfDebug map for the MDNode that
 end_comment
 
 begin_comment
@@ -1140,7 +1140,7 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|/// \brief Helper used to pair up a symbol and its DWARF compile unit.
+comment|/// Helper used to pair up a symbol and its DWARF compile unit.
 end_comment
 
 begin_struct
@@ -1183,7 +1183,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/// \brief Collects and handles dwarf debug information.
+comment|/// Collects and handles dwarf debug information.
 end_comment
 
 begin_decl_stmt
@@ -1193,21 +1193,21 @@ range|:
 name|public
 name|AsmPrinterHandler
 block|{
-comment|// Target of Dwarf emission.
+comment|/// Target of Dwarf emission.
 name|AsmPrinter
 operator|*
 name|Asm
 block|;
-comment|// Collected machine module information.
+comment|/// Collected machine module information.
 name|MachineModuleInfo
 operator|*
 name|MMI
 block|;
-comment|// All DIEValues are allocated through this allocator.
+comment|/// All DIEValues are allocated through this allocator.
 name|BumpPtrAllocator
 name|DIEValueAllocator
 block|;
-comment|// Maps MDNode with its corresponding DwarfCompileUnit.
+comment|/// Maps MDNode with its corresponding DwarfCompileUnit.
 name|MapVector
 operator|<
 specifier|const
@@ -1219,7 +1219,7 @@ operator|*
 operator|>
 name|CUMap
 block|;
-comment|// Maps subprogram MDNode with its corresponding DwarfCompileUnit.
+comment|/// Maps subprogram MDNode with its corresponding DwarfCompileUnit.
 name|MapVector
 operator|<
 specifier|const
@@ -1231,7 +1231,7 @@ operator|*
 operator|>
 name|SPMap
 block|;
-comment|// Maps a CU DIE with its corresponding DwarfCompileUnit.
+comment|/// Maps a CU DIE with its corresponding DwarfCompileUnit.
 name|DenseMap
 operator|<
 specifier|const
@@ -1243,7 +1243,7 @@ operator|*
 operator|>
 name|CUDieMap
 block|;
-comment|// List of all labels used in aranges generation.
+comment|/// List of all labels used in aranges generation.
 name|std
 operator|::
 name|vector
@@ -1252,7 +1252,7 @@ name|SymbolCU
 operator|>
 name|ArangeLabels
 block|;
-comment|// Size of each symbol emitted (for those symbols that have a specific size).
+comment|/// Size of each symbol emitted (for those symbols that have a specific size).
 name|DenseMap
 operator|<
 specifier|const
@@ -1266,7 +1266,7 @@ block|;
 name|LexicalScopes
 name|LScopes
 block|;
-comment|// Collection of abstract variables.
+comment|/// Collection of abstract variables.
 name|DenseMap
 operator|<
 specifier|const
@@ -1294,13 +1294,13 @@ literal|64
 operator|>
 name|ConcreteVariables
 block|;
-comment|// Collection of DebugLocEntry. Stored in a linked list so that DIELocLists
-comment|// can refer to them in spite of insertions into this list.
+comment|/// Collection of DebugLocEntry. Stored in a linked list so that DIELocLists
+comment|/// can refer to them in spite of insertions into this list.
 name|DebugLocStream
 name|DebugLocs
 block|;
-comment|// This is a collection of subprogram MDNodes that are processed to
-comment|// create DIEs.
+comment|/// This is a collection of subprogram MDNodes that are processed to
+comment|/// create DIEs.
 name|SmallPtrSet
 operator|<
 specifier|const
@@ -1311,7 +1311,7 @@ literal|16
 operator|>
 name|ProcessedSPNodes
 block|;
-comment|// Maps instruction with label emitted before instruction.
+comment|/// Maps instruction with label emitted before instruction.
 name|DenseMap
 operator|<
 specifier|const
@@ -1323,7 +1323,7 @@ operator|*
 operator|>
 name|LabelsBeforeInsn
 block|;
-comment|// Maps instruction with label emitted after instruction.
+comment|/// Maps instruction with label emitted after instruction.
 name|DenseMap
 operator|<
 specifier|const
@@ -1335,13 +1335,14 @@ operator|*
 operator|>
 name|LabelsAfterInsn
 block|;
-comment|// History of DBG_VALUE and clobber instructions for each user variable.
-comment|// Variables are listed in order of appearance.
+comment|/// History of DBG_VALUE and clobber instructions for each user
+comment|/// variable.  Variables are listed in order of appearance.
 name|DbgValueHistoryMap
 name|DbgValues
 block|;
-comment|// Previous instruction's location information. This is used to determine
-comment|// label location to indicate scope boundries in dwarf debug info.
+comment|/// Previous instruction's location information. This is used to
+comment|/// determine label location to indicate scope boundries in dwarf
+comment|/// debug info.
 name|DebugLoc
 name|PrevInstLoc
 block|;
@@ -1349,41 +1350,41 @@ name|MCSymbol
 operator|*
 name|PrevLabel
 block|;
-comment|// This location indicates end of function prologue and beginning of function
-comment|// body.
+comment|/// This location indicates end of function prologue and beginning of
+comment|/// function body.
 name|DebugLoc
 name|PrologEndLoc
 block|;
-comment|// If nonnull, stores the current machine function we're processing.
+comment|/// If nonnull, stores the current machine function we're processing.
 specifier|const
 name|MachineFunction
 operator|*
 name|CurFn
 block|;
-comment|// If nonnull, stores the current machine instruction we're processing.
+comment|/// If nonnull, stores the current machine instruction we're processing.
 specifier|const
 name|MachineInstr
 operator|*
 name|CurMI
 block|;
-comment|// If nonnull, stores the CU in which the previous subprogram was contained.
+comment|/// If nonnull, stores the CU in which the previous subprogram was contained.
 specifier|const
 name|DwarfCompileUnit
 operator|*
 name|PrevCU
 block|;
-comment|// As an optimization, there is no need to emit an entry in the directory
-comment|// table for the same directory as DW_AT_comp_dir.
+comment|/// As an optimization, there is no need to emit an entry in the directory
+comment|/// table for the same directory as DW_AT_comp_dir.
 name|StringRef
 name|CompilationDir
 block|;
-comment|// Holder for the file specific debug information.
+comment|/// Holder for the file specific debug information.
 name|DwarfFile
 name|InfoHolder
 block|;
-comment|// Holders for the various debug information flags that we might need to
-comment|// have exposed. See accessor functions below for description.
-comment|// Holder for imported entities.
+comment|/// Holders for the various debug information flags that we might need to
+comment|/// have exposed. See accessor functions below for description.
+comment|/// Holder for imported entities.
 typedef|typedef
 name|SmallVector
 operator|<
@@ -1410,11 +1411,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Map from MDNodes for user-defined types to the type units that describe
+comment|/// Map from MDNodes for user-defined types to the type units that
 end_comment
 
 begin_comment
-comment|// them.
+comment|/// describe them.
 end_comment
 
 begin_expr_stmt
@@ -1458,7 +1459,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// Whether to emit the pubnames/pubtypes sections.
+comment|/// Whether to emit the pubnames/pubtypes sections.
 end_comment
 
 begin_decl_stmt
@@ -1468,7 +1469,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Whether or not to use AT_ranges for compilation units.
+comment|/// Whether or not to use AT_ranges for compilation units.
 end_comment
 
 begin_decl_stmt
@@ -1478,11 +1479,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Whether we emitted a function into a section other than the default
+comment|/// Whether we emitted a function into a section other than the
 end_comment
 
 begin_comment
-comment|// text.
+comment|/// default text.
 end_comment
 
 begin_decl_stmt
@@ -1492,7 +1493,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Whether to use the GNU TLS opcode (instead of the standard opcode).
+comment|/// Whether to use the GNU TLS opcode (instead of the standard opcode).
 end_comment
 
 begin_decl_stmt
@@ -1502,7 +1503,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Version of dwarf we're emitting.
+comment|/// Version of dwarf we're emitting.
 end_comment
 
 begin_decl_stmt
@@ -1512,7 +1513,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Maps from a type identifier to the actual MDNode.
+comment|/// Maps from a type identifier to the actual MDNode.
 end_comment
 
 begin_decl_stmt
@@ -1522,7 +1523,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// DWARF5 Experimental Options
+comment|/// DWARF5 Experimental Options
+end_comment
+
+begin_comment
+comment|/// @{
 end_comment
 
 begin_decl_stmt
@@ -1538,23 +1543,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Separated Dwarf Variables
+comment|/// Separated Dwarf Variables
 end_comment
 
 begin_comment
-comment|// In general these will all be for bits that are left in the
+comment|/// In general these will all be for bits that are left in the
 end_comment
 
 begin_comment
-comment|// original object file, rather than things that are meant
+comment|/// original object file, rather than things that are meant
 end_comment
 
 begin_comment
-comment|// to be in the .dwo sections.
+comment|/// to be in the .dwo sections.
 end_comment
 
 begin_comment
-comment|// Holder for the skeleton information.
+comment|/// Holder for the skeleton information.
 end_comment
 
 begin_decl_stmt
@@ -1564,23 +1569,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Store file names for type units under fission in a line table header that
+comment|/// Store file names for type units under fission in a line table
 end_comment
 
 begin_comment
-comment|/// will be emitted into debug_line.dwo.
+comment|/// header that will be emitted into debug_line.dwo.
 end_comment
 
 begin_comment
-comment|// FIXME: replace this with a map from comp_dir to table so that we can emit
+comment|// FIXME: replace this with a map from comp_dir to table so that we
 end_comment
 
 begin_comment
-comment|// multiple tables during LTO each of which uses directory 0, referencing the
+comment|// can emit multiple tables during LTO each of which uses directory
 end_comment
 
 begin_comment
-comment|// comp_dir of all the type units that use it.
+comment|// 0, referencing the comp_dir of all the type units that use it.
 end_comment
 
 begin_decl_stmt
@@ -1590,7 +1595,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// True iff there are multiple CUs in this module.
+comment|/// @}
+end_comment
+
+begin_comment
+comment|/// True iff there are multiple CUs in this module.
 end_comment
 
 begin_decl_stmt
@@ -1700,7 +1709,7 @@ expr_stmt|;
 end_typedef
 
 begin_comment
-comment|/// \brief Find abstract variable associated with Var.
+comment|/// Find abstract variable associated with Var.
 end_comment
 
 begin_function_decl
@@ -1793,7 +1802,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Construct a DIE for this abstract scope.
+comment|/// Construct a DIE for this abstract scope.
 end_comment
 
 begin_function_decl
@@ -1808,7 +1817,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Compute the size and offset of a DIE given an incoming Offset.
+comment|/// Compute the size and offset of a DIE given an incoming Offset.
 end_comment
 
 begin_function_decl
@@ -1826,7 +1835,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Compute the size and offset of all the DIEs.
+comment|/// Compute the size and offset of all the DIEs.
 end_comment
 
 begin_function_decl
@@ -1837,7 +1846,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Collect info for variables that were optimized out.
+comment|/// Collect info for variables that were optimized out.
 end_comment
 
 begin_function_decl
@@ -1862,7 +1871,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Finish off debug information after all functions have been
+comment|/// Finish off debug information after all functions have been
 end_comment
 
 begin_comment
@@ -1877,7 +1886,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit the debug info section.
+comment|/// Emit the debug info section.
 end_comment
 
 begin_function_decl
@@ -1888,7 +1897,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit the abbreviation section.
+comment|/// Emit the abbreviation section.
 end_comment
 
 begin_function_decl
@@ -1899,7 +1908,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit a specified accelerator table.
+comment|/// Emit a specified accelerator table.
 end_comment
 
 begin_function_decl
@@ -1921,7 +1930,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit visible names into a hashed accelerator table section.
+comment|/// Emit visible names into a hashed accelerator table section.
 end_comment
 
 begin_function_decl
@@ -1932,7 +1941,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit objective C classes and categories into a hashed
+comment|/// Emit objective C classes and categories into a hashed
 end_comment
 
 begin_comment
@@ -1947,7 +1956,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit namespace dies into a hashed accelerator table.
+comment|/// Emit namespace dies into a hashed accelerator table.
 end_comment
 
 begin_function_decl
@@ -1958,7 +1967,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit type dies into a hashed accelerator table.
+comment|/// Emit type dies into a hashed accelerator table.
 end_comment
 
 begin_function_decl
@@ -1969,7 +1978,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit visible names into a debug pubnames section.
+comment|/// Emit visible names into a debug pubnames section.
 end_comment
 
 begin_comment
@@ -1997,7 +2006,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit visible types into a debug pubtypes section.
+comment|/// Emit visible types into a debug pubtypes section.
 end_comment
 
 begin_comment
@@ -2060,7 +2069,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Emit visible names into a debug str section.
+comment|/// Emit visible names into a debug str section.
 end_comment
 
 begin_function_decl
@@ -2071,7 +2080,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit visible names into a debug loc section.
+comment|/// Emit visible names into a debug loc section.
 end_comment
 
 begin_function_decl
@@ -2082,7 +2091,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit visible names into a debug loc dwo section.
+comment|/// Emit visible names into a debug loc dwo section.
 end_comment
 
 begin_function_decl
@@ -2093,7 +2102,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit visible names into a debug aranges section.
+comment|/// Emit visible names into a debug aranges section.
 end_comment
 
 begin_function_decl
@@ -2104,7 +2113,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit visible names into a debug ranges section.
+comment|/// Emit visible names into a debug ranges section.
 end_comment
 
 begin_function_decl
@@ -2115,7 +2124,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit inline info using custom format.
+comment|/// Emit inline info using custom format.
 end_comment
 
 begin_function_decl
@@ -2130,7 +2139,7 @@ comment|/// DWARF 5 Experimental Split Dwarf Emitters
 end_comment
 
 begin_comment
-comment|/// \brief Initialize common features of skeleton units.
+comment|/// Initialize common features of skeleton units.
 end_comment
 
 begin_decl_stmt
@@ -2158,7 +2167,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Construct the split debug info compile unit for the debug info
+comment|/// Construct the split debug info compile unit for the debug info
 end_comment
 
 begin_comment
@@ -2179,7 +2188,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Construct the split debug info compile unit for the debug info
+comment|/// Construct the split debug info compile unit for the debug info
 end_comment
 
 begin_comment
@@ -2199,7 +2208,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit the debug info dwo section.
+comment|/// Emit the debug info dwo section.
 end_comment
 
 begin_function_decl
@@ -2210,7 +2219,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit the debug abbrev dwo section.
+comment|/// Emit the debug abbrev dwo section.
 end_comment
 
 begin_function_decl
@@ -2221,7 +2230,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit the debug line dwo section.
+comment|/// Emit the debug line dwo section.
 end_comment
 
 begin_function_decl
@@ -2232,7 +2241,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit the debug str dwo section.
+comment|/// Emit the debug str dwo section.
 end_comment
 
 begin_function_decl
@@ -2267,7 +2276,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Create new DwarfCompileUnit for the given metadata node with tag
+comment|/// Create new DwarfCompileUnit for the given metadata node with tag
 end_comment
 
 begin_comment
@@ -2288,7 +2297,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Construct imported_module or imported_declaration DIE.
+comment|/// Construct imported_module or imported_declaration DIE.
 end_comment
 
 begin_function_decl
@@ -2308,7 +2317,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Register a source line with debug info. Returns the unique
+comment|/// Register a source line with debug info. Returns the unique
 end_comment
 
 begin_comment
@@ -2341,7 +2350,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Indentify instructions that are marking the beginning of or
+comment|/// Indentify instructions that are marking the beginning of or
 end_comment
 
 begin_comment
@@ -2356,7 +2365,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Populate LexicalScope entries with variables' info.
+comment|/// Populate LexicalScope entries with variables' info.
 end_comment
 
 begin_decl_stmt
@@ -2383,7 +2392,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Build the location list for all DBG_VALUEs in the
+comment|/// Build the location list for all DBG_VALUEs in the
 end_comment
 
 begin_comment
@@ -2412,7 +2421,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Collect variable information from the side table maintained
+comment|/// Collect variable information from the side table maintained
 end_comment
 
 begin_comment
@@ -2434,7 +2443,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Ensure that a label will be emitted before MI.
+comment|/// Ensure that a label will be emitted before MI.
 end_comment
 
 begin_function
@@ -2465,7 +2474,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Ensure that a label will be emitted after MI.
+comment|/// Ensure that a label will be emitted after MI.
 end_comment
 
 begin_function
@@ -2535,7 +2544,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Emit all Dwarf sections that should come prior to the
+comment|/// Emit all Dwarf sections that should come prior to the
 end_comment
 
 begin_comment
@@ -2550,7 +2559,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit all Dwarf sections that should come after the content.
+comment|/// Emit all Dwarf sections that should come after the content.
 end_comment
 
 begin_expr_stmt
@@ -2562,7 +2571,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Gather pre-function debug information.
+comment|/// Gather pre-function debug information.
 end_comment
 
 begin_decl_stmt
@@ -2579,7 +2588,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Gather and emit post-function debug information.
+comment|/// Gather and emit post-function debug information.
 end_comment
 
 begin_decl_stmt
@@ -2596,7 +2605,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Process beginning of an instruction.
+comment|/// Process beginning of an instruction.
 end_comment
 
 begin_decl_stmt
@@ -2613,7 +2622,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Process end of an instruction.
+comment|/// Process end of an instruction.
 end_comment
 
 begin_expr_stmt
@@ -2625,7 +2634,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Add a DIE to the set of types that we're going to pull into
+comment|/// Add a DIE to the set of types that we're going to pull into
 end_comment
 
 begin_comment
@@ -2656,7 +2665,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Add a label so that arange data can be generated for it.
+comment|/// Add a label so that arange data can be generated for it.
 end_comment
 
 begin_function
@@ -2678,7 +2687,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief For symbols that have a size designated (e.g. common symbols),
+comment|/// For symbols that have a size designated (e.g. common symbols),
 end_comment
 
 begin_comment
@@ -2710,7 +2719,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Returns whether to use DW_OP_GNU_push_tls_address, instead of the
+comment|/// Returns whether to use DW_OP_GNU_push_tls_address, instead of the
 end_comment
 
 begin_comment
@@ -2734,7 +2743,7 @@ comment|// Experimental DWARF5 features.
 end_comment
 
 begin_comment
-comment|/// \brief Returns whether or not to emit tables that dwarf consumers can
+comment|/// Returns whether or not to emit tables that dwarf consumers can
 end_comment
 
 begin_comment
@@ -2754,7 +2763,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Returns whether or not to change the current debug info for the
+comment|/// Returns whether or not to change the current debug info for the
 end_comment
 
 begin_comment
@@ -2845,7 +2854,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Emit an entry for the debug loc section. This can be used to
+comment|/// Emit an entry for the debug loc section. This can be used to
 end_comment
 
 begin_comment
@@ -2918,7 +2927,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Return the TypeIdentifierMap.
+comment|/// Return the TypeIdentifierMap.
 end_comment
 
 begin_expr_stmt
@@ -3144,7 +3153,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief A helper function to check whether the DIE for a given Scope is
+comment|/// A helper function to check whether the DIE for a given Scope is
 end_comment
 
 begin_comment
@@ -3163,7 +3172,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Return Label preceding the instruction.
+comment|/// Return Label preceding the instruction.
 end_comment
 
 begin_function_decl
@@ -3180,7 +3189,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Return Label immediately following the instruction.
+comment|/// Return Label immediately following the instruction.
 end_comment
 
 begin_function_decl

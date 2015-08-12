@@ -5166,7 +5166,7 @@ comment|/// @{
 name|void
 name|replaceEnumTypes
 argument_list|(
-argument|DISubprogramArray N
+argument|DICompositeTypeArray N
 argument_list|)
 block|{
 name|replaceOperandWith
@@ -5182,7 +5182,7 @@ block|;   }
 name|void
 name|replaceRetainedTypes
 argument_list|(
-argument|DISubprogramArray N
+argument|DITypeArray N
 argument_list|)
 block|{
 name|replaceOperandWith
@@ -5230,7 +5230,7 @@ block|;   }
 name|void
 name|replaceImportedEntities
 argument_list|(
-argument|DIGlobalVariableArray N
+argument|DIImportedEntityArray N
 argument_list|)
 block|{
 name|replaceOperandWith
@@ -7759,7 +7759,7 @@ name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DIModule
 argument_list|,
-argument|(DIScope *Scope, StringRef Name, 			       StringRef ConfigurationMacros, StringRef IncludePath, 			       StringRef ISysRoot)
+argument|(DIScope *Scope, StringRef Name,                                StringRef ConfigurationMacros, StringRef IncludePath,                                StringRef ISysRoot)
 argument_list|,
 argument|(Scope, Name, ConfigurationMacros, IncludePath, ISysRoot)
 argument_list|)
@@ -7767,7 +7767,7 @@ name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DIModule
 argument_list|,
-argument|(Metadata *Scope, MDString *Name, MDString *ConfigurationMacros, 		     MDString *IncludePath, MDString *ISysRoot)
+argument|(Metadata *Scope, MDString *Name, MDString *ConfigurationMacros,                      MDString *IncludePath, MDString *ISysRoot)
 argument_list|,
 argument|(Scope, Name, ConfigurationMacros, IncludePath, ISysRoot)
 argument_list|)

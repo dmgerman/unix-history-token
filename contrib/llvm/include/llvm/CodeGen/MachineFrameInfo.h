@@ -478,10 +478,10 @@ comment|/// Whether the "realign-stack" option is on.
 name|bool
 name|RealignOption
 decl_stmt|;
-comment|/// True if the function includes inline assembly that adjusts the stack
-comment|/// pointer.
+comment|/// True if the function dynamically adjusts the stack pointer through some
+comment|/// opaque mechanism like inline assembly or Win32 EH.
 name|bool
-name|HasInlineAsmWithSPAdjust
+name|HasOpaqueSPAdjustment
 decl_stmt|;
 comment|/// True if the function contains a call to the llvm.vastart intrinsic.
 name|bool
@@ -602,7 +602,7 @@ name|UseLocalStackAllocationBlock
 operator|=
 name|false
 block|;
-name|HasInlineAsmWithSPAdjust
+name|HasOpaqueSPAdjustment
 operator|=
 name|false
 block|;
@@ -1476,24 +1476,24 @@ operator|=
 name|V
 expr_stmt|;
 block|}
-comment|/// Returns true if the function contains any stack-adjusting inline assembly.
+comment|/// Returns true if the function contains opaque dynamic stack adjustments.
 name|bool
-name|hasInlineAsmWithSPAdjust
+name|hasOpaqueSPAdjustment
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HasInlineAsmWithSPAdjust
+name|HasOpaqueSPAdjustment
 return|;
 block|}
 name|void
-name|setHasInlineAsmWithSPAdjust
+name|setHasOpaqueSPAdjustment
 parameter_list|(
 name|bool
 name|B
 parameter_list|)
 block|{
-name|HasInlineAsmWithSPAdjust
+name|HasOpaqueSPAdjustment
 operator|=
 name|B
 expr_stmt|;
@@ -1805,6 +1805,46 @@ name|Size
 operator|==
 operator|~
 literal|0ULL
+return|;
+block|}
+comment|/// Returns true if the specified index corresponds to a variable sized
+comment|/// object.
+name|bool
+name|isVariableSizedObjectIndex
+argument_list|(
+name|int
+name|ObjectIdx
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|unsigned
+argument_list|(
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+argument_list|)
+operator|<
+name|Objects
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid Object Idx!"
+argument_list|)
+expr_stmt|;
+return|return
+name|Objects
+index|[
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+index|]
+operator|.
+name|Size
+operator|==
+literal|0
 return|;
 block|}
 comment|/// Create a new statically sized stack object, returning

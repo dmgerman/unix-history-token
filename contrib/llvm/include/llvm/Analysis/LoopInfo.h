@@ -1822,30 +1822,11 @@ begin_comment
 comment|// Implementation in LoopInfoImpl.h
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
-
-begin_expr_stmt
-name|__extension__
-specifier|extern
-name|template
-name|class
-name|LoopBase
-operator|<
-name|BasicBlock
+begin_extern
+extern|extern template class LoopBase<BasicBlock
 operator|,
-name|Loop
-operator|>
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+extern|Loop>;
+end_extern
 
 begin_decl_stmt
 name|class
@@ -3068,30 +3049,11 @@ unit|};
 comment|// Implementation in LoopInfoImpl.h
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
-
-begin_expr_stmt
-name|__extension__
-specifier|extern
-name|template
-name|class
-name|LoopInfoBase
-operator|<
-name|BasicBlock
+begin_extern
+extern|extern template class LoopInfoBase<BasicBlock
 operator|,
-name|Loop
-operator|>
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+extern|Loop>;
+end_extern
 
 begin_decl_stmt
 name|class

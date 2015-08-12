@@ -1215,6 +1215,9 @@ comment|///
 comment|/// \param HomeDir The directory in which relative paths within this module
 comment|///        map file will be resolved.
 comment|///
+comment|/// \param ExternModuleLoc The location of the "extern module" declaration
+comment|///        that caused us to load this module map file, if any.
+comment|///
 comment|/// \returns true if an error occurred, false otherwise.
 name|bool
 name|parseModuleMapFile
@@ -1231,6 +1234,12 @@ specifier|const
 name|DirectoryEntry
 modifier|*
 name|HomeDir
+parameter_list|,
+name|SourceLocation
+name|ExternModuleLoc
+init|=
+name|SourceLocation
+argument_list|()
 parameter_list|)
 function_decl|;
 comment|/// \brief Dump the contents of the module map, for debugging purposes.

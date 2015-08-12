@@ -383,7 +383,7 @@ name|MI
 argument_list|(
 argument|MI
 argument_list|)
-block|{ }
+block|{}
 comment|/// Get starting index of non call related arguments
 comment|/// (calling convention, statepoint flags, vm state and gc state).
 name|unsigned
@@ -498,7 +498,7 @@ name|ConstantIndex
 block|}
 enum|;
 name|LocationType
-name|LocType
+name|Type
 decl_stmt|;
 name|unsigned
 name|Size
@@ -512,7 +512,7 @@ decl_stmt|;
 name|Location
 argument_list|()
 operator|:
-name|LocType
+name|Type
 argument_list|(
 name|Unprocessed
 argument_list|)
@@ -534,7 +534,7 @@ argument_list|)
 block|{}
 name|Location
 argument_list|(
-argument|LocationType LocType
+argument|LocationType Type
 argument_list|,
 argument|unsigned Size
 argument_list|,
@@ -543,9 +543,9 @@ argument_list|,
 argument|int64_t Offset
 argument_list|)
 operator|:
-name|LocType
+name|Type
 argument_list|(
-name|LocType
+name|Type
 argument_list|)
 operator|,
 name|Size
@@ -574,7 +574,7 @@ name|Reg
 decl_stmt|;
 name|unsigned
 name|short
-name|RegNo
+name|DwarfRegNum
 decl_stmt|;
 name|unsigned
 name|short
@@ -588,7 +588,7 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|RegNo
+name|DwarfRegNum
 argument_list|(
 literal|0
 argument_list|)
@@ -602,7 +602,7 @@ name|LiveOutReg
 argument_list|(
 argument|unsigned short Reg
 argument_list|,
-argument|unsigned short RegNo
+argument|unsigned short DwarfRegNum
 argument_list|,
 argument|unsigned short Size
 argument_list|)
@@ -612,9 +612,9 @@ argument_list|(
 name|Reg
 argument_list|)
 operator|,
-name|RegNo
+name|DwarfRegNum
 argument_list|(
-name|RegNo
+name|DwarfRegNum
 argument_list|)
 operator|,
 name|Size
@@ -622,52 +622,6 @@ argument_list|(
 argument|Size
 argument_list|)
 block|{}
-name|void
-name|MarkInvalid
-argument_list|()
-block|{
-name|Reg
-operator|=
-literal|0
-block|; }
-comment|// Only sort by the dwarf register number.
-name|bool
-name|operator
-operator|<
-operator|(
-specifier|const
-name|LiveOutReg
-operator|&
-name|LO
-operator|)
-specifier|const
-block|{
-return|return
-name|RegNo
-operator|<
-name|LO
-operator|.
-name|RegNo
-return|;
-block|}
-specifier|static
-name|bool
-name|IsInvalid
-parameter_list|(
-specifier|const
-name|LiveOutReg
-modifier|&
-name|LO
-parameter_list|)
-block|{
-return|return
-name|LO
-operator|.
-name|Reg
-operator|==
-literal|0
-return|;
-block|}
 block|}
 struct|;
 comment|// OpTypes are used to encode information about the following logical

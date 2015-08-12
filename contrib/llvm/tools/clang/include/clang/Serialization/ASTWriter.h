@@ -1327,12 +1327,13 @@ comment|/// \brief The set of declarations that may have redeclaration chains th
 comment|/// need to be serialized.
 name|llvm
 operator|::
-name|SmallSetVector
+name|SmallVector
 operator|<
+specifier|const
 name|Decl
 operator|*
 operator|,
-literal|4
+literal|16
 operator|>
 name|Redeclarations
 expr_stmt|;

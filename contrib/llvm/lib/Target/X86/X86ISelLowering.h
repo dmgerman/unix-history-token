@@ -338,16 +338,6 @@ block|,
 comment|/// Floating point horizontal sub.
 name|FHSUB
 block|,
-comment|/// Unsigned integer max and min.
-name|UMAX
-block|,
-name|UMIN
-block|,
-comment|/// Signed integer max and min.
-name|SMAX
-block|,
-name|SMIN
-block|,
 comment|// Integer absolute value
 name|ABS
 block|,
@@ -413,8 +403,10 @@ block|,
 comment|// Vector FP round.
 name|VFPROUND
 block|,
-comment|// Vector signed integer to double.
+comment|// Vector signed/unsigned integer to double.
 name|CVTDQ2PD
+block|,
+name|CVTUDQ2PD
 block|,
 comment|// 128-bit vector logical left / right shift
 name|VSHLDQ
@@ -588,11 +580,19 @@ name|VINSERT
 block|,
 name|VEXTRACT
 block|,
+comment|/// SSE4A Extraction and Insertion.
+name|EXTRQI
+block|,
+name|INSERTQI
+block|,
 comment|// Vector multiply packed unsigned doubleword integers
 name|PMULUDQ
 block|,
 comment|// Vector multiply packed signed doubleword integers
 name|PMULDQ
+block|,
+comment|// Vector Multiply Packed UnsignedIntegers with Round and Scale
+name|MULHRS
 block|,
 comment|// FMA nodes
 name|FMADD
@@ -632,6 +632,11 @@ comment|//with rounding mode
 name|SINT_TO_FP_RND
 block|,
 name|UINT_TO_FP_RND
+block|,
+comment|// Vector float/double to signed/unsigned integer.
+name|FP_TO_SINT_RND
+block|,
+name|FP_TO_UINT_RND
 block|,
 comment|// Save xmm argument registers to the stack, according to %al. An operator
 comment|// is needed so that this can be expanded with control flow.
@@ -948,7 +953,9 @@ block|;
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
-argument|EVT LHSTy
+argument|const DataLayout&
+argument_list|,
+argument|EVT
 argument_list|)
 specifier|const
 name|override
@@ -1008,6 +1015,8 @@ name|unsigned
 name|getByValTypeAlignment
 argument_list|(
 argument|Type *Ty
+argument_list|,
+argument|const DataLayout&DL
 argument_list|)
 specifier|const
 name|override
@@ -1176,6 +1185,8 @@ comment|/// Return the value type to use for ISD::SETCC.
 name|EVT
 name|getSetCCResultType
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|LLVMContext&Context
 argument_list|,
 argument|EVT VT
@@ -1245,7 +1256,7 @@ block|;
 name|ConstraintType
 name|getConstraintType
 argument_list|(
-argument|const std::string&Constraint
+argument|StringRef Constraint
 argument_list|)
 specifier|const
 name|override
@@ -1292,7 +1303,7 @@ block|;
 name|unsigned
 name|getInlineAsmMemConstraint
 argument_list|(
-argument|const std::string&ConstraintCode
+argument|StringRef ConstraintCode
 argument_list|)
 specifier|const
 name|override
@@ -1371,7 +1382,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const TargetRegisterInfo *TRI
 argument_list|,
-argument|const std::string&Constraint
+argument|StringRef Constraint
 argument_list|,
 argument|MVT VT
 argument_list|)
@@ -1383,6 +1394,11 @@ comment|/// by AM is legal for this target, for a load/store of the specified ty
 name|bool
 name|isLegalAddressingMode
 argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
 specifier|const
 name|AddrMode
 operator|&
@@ -1432,6 +1448,11 @@ comment|/// If the AM is not supported, it returns a negative value.
 name|int
 name|getScalingFactorCost
 argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
 specifier|const
 name|AddrMode
 operator|&
@@ -1803,6 +1824,10 @@ name|RegName
 argument_list|,
 name|EVT
 name|VT
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
 decl|const
 name|override

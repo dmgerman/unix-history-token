@@ -127,16 +127,15 @@ argument_list|(
 name|MBB
 argument_list|)
 block|; }
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class DomTreeNodeBase<MachineBasicBlock>
-argument_list|)
+specifier|extern
+name|template
+name|class
+name|DomTreeNodeBase
+operator|<
+name|MachineBasicBlock
+operator|>
 expr_stmt|;
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class DominatorTreeBase<MachineBasicBlock>
-argument_list|)
-empty_stmt|;
+extern|extern template class DominatorTreeBase<MachineBasicBlock>;
 typedef|typedef
 name|DomTreeNodeBase
 operator|<

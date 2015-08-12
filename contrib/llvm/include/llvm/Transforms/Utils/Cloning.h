@@ -166,6 +166,9 @@ decl_stmt|;
 name|class
 name|AssumptionCacheTracker
 decl_stmt|;
+name|class
+name|DominatorTree
+decl_stmt|;
 comment|/// CloneModule - Return an exact copy of the specified module
 comment|///
 name|Module
@@ -721,6 +724,71 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
+comment|/// \brief Clones a loop \p OrigLoop.  Returns the loop and the blocks in \p
+comment|/// Blocks.
+comment|///
+comment|/// Updates LoopInfo and DominatorTree assuming the loop is dominated by block
+comment|/// \p LoopDomBB.  Insert the new blocks before block specified in \p Before.
+name|Loop
+modifier|*
+name|cloneLoopWithPreheader
+argument_list|(
+name|BasicBlock
+operator|*
+name|Before
+argument_list|,
+name|BasicBlock
+operator|*
+name|LoopDomBB
+argument_list|,
+name|Loop
+operator|*
+name|OrigLoop
+argument_list|,
+name|ValueToValueMapTy
+operator|&
+name|VMap
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|NameSuffix
+argument_list|,
+name|LoopInfo
+operator|*
+name|LI
+argument_list|,
+name|DominatorTree
+operator|*
+name|DT
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|&
+name|Blocks
+argument_list|)
+decl_stmt|;
+comment|/// \brief Remaps instructions in \p Blocks using the mapping in \p VMap.
+name|void
+name|remapInstructionsInBlocks
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|&
+name|Blocks
+argument_list|,
+name|ValueToValueMapTy
+operator|&
+name|VMap
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

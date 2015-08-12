@@ -382,6 +382,7 @@ operator|>
 name|DependentLibraries
 block|;
 comment|/// Name of the profile file to use as output for -fprofile-instr-generate
+comment|/// and -fprofile-generate.
 name|std
 operator|::
 name|string

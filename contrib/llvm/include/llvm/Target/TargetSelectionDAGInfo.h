@@ -77,9 +77,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|DataLayout
-decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// TargetSelectionDAGInfo - Targets can subclass this to parameterize the
 comment|/// SelectionDAG lowering and instruction selection process.
@@ -107,34 +104,13 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-specifier|const
-name|DataLayout
-modifier|*
-name|DL
-decl_stmt|;
-name|protected
-label|:
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DL
-return|;
-block|}
 name|public
 label|:
 name|explicit
 name|TargetSelectionDAGInfo
-parameter_list|(
-specifier|const
-name|DataLayout
-modifier|*
-name|DL
-parameter_list|)
+parameter_list|()
+init|=
+init|default
 function_decl|;
 name|virtual
 operator|~

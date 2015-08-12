@@ -426,7 +426,7 @@ argument_list|,
 argument|DwarfFile *DWU
 argument_list|)
 empty_stmt|;
-comment|/// \brief Add a string attribute data and value.
+comment|/// Add a string attribute data and value.
 comment|///
 comment|/// This is guaranteed to be in the local string pool instead of indirected.
 name|void
@@ -577,7 +577,7 @@ operator|=
 name|DbgInfoOff
 expr_stmt|;
 block|}
-comment|/// \brief Return true if this compile unit has something to write out.
+comment|/// Return true if this compile unit has something to write out.
 name|bool
 name|hasContent
 argument_list|()
@@ -590,7 +590,7 @@ name|hasChildren
 argument_list|()
 return|;
 block|}
-comment|/// \brief Get string containing language specific context for a global name.
+comment|/// Get string containing language specific context for a global name.
 comment|///
 comment|/// Walks the metadata parent chain in a language specific manner (using the
 comment|/// compile unit language) and returns it as a string. This is done at the
@@ -645,7 +645,7 @@ modifier|*
 name|Context
 parameter_list|)
 block|{}
-comment|/// \brief Add a new name to the namespace accelerator table.
+comment|/// Add a new name to the namespace accelerator table.
 name|void
 name|addAccelNamespace
 parameter_list|(
@@ -658,7 +658,7 @@ modifier|&
 name|Die
 parameter_list|)
 function_decl|;
-comment|/// \brief Returns the DIE map slot for the specified debug variable.
+comment|/// Returns the DIE map slot for the specified debug variable.
 comment|///
 comment|/// We delegate the request to DwarfDebug when the MDNode can be part of the
 comment|/// type system, since DIEs for the type system can be shared across CUs and
@@ -674,7 +674,7 @@ name|D
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Returns a fresh newly allocated DIELoc.
+comment|/// Returns a fresh newly allocated DIELoc.
 name|DIELoc
 modifier|*
 name|getDIELoc
@@ -688,7 +688,7 @@ argument_list|)
 name|DIELoc
 return|;
 block|}
-comment|/// \brief Insert DIE into the map.
+comment|/// Insert DIE into the map.
 comment|///
 comment|/// We delegate the request to DwarfDebug when the MDNode can be part of the
 comment|/// type system, since DIEs for the type system can be shared across CUs and
@@ -706,7 +706,7 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
-comment|/// \brief Add a flag that is true to the DIE.
+comment|/// Add a flag that is true to the DIE.
 name|void
 name|addFlag
 argument_list|(
@@ -720,7 +720,7 @@ name|Attribute
 name|Attribute
 argument_list|)
 decl_stmt|;
-comment|/// \brief Add an unsigned integer attribute data and value.
+comment|/// Add an unsigned integer attribute data and value.
 name|void
 name|addUInt
 argument_list|(
@@ -761,7 +761,7 @@ name|uint64_t
 name|Integer
 argument_list|)
 decl_stmt|;
-comment|/// \brief Add an signed integer attribute data and value.
+comment|/// Add an signed integer attribute data and value.
 name|void
 name|addSInt
 argument_list|(
@@ -805,7 +805,7 @@ name|int64_t
 name|Integer
 argument_list|)
 decl_stmt|;
-comment|/// \brief Add a string attribute data and value.
+comment|/// Add a string attribute data and value.
 comment|///
 comment|/// We always emit a reference to the string pool instead of immediate
 comment|/// strings so that DIEs have more predictable sizes. In the case of split
@@ -827,7 +827,7 @@ name|StringRef
 name|Str
 argument_list|)
 decl_stmt|;
-comment|/// \brief Add a Dwarf label attribute data and value.
+comment|/// Add a Dwarf label attribute data and value.
 name|DIE
 operator|::
 name|value_iterator
@@ -860,7 +860,7 @@ operator|*
 name|Label
 argument_list|)
 decl_stmt|;
-comment|/// \brief Add an offset into a section attribute data and value.
+comment|/// Add an offset into a section attribute data and value.
 name|void
 name|addSectionOffset
 argument_list|(
@@ -877,7 +877,7 @@ name|uint64_t
 name|Integer
 argument_list|)
 decl_stmt|;
-comment|/// \brief Add a dwarf op address data and value using the form given and an
+comment|/// Add a dwarf op address data and value using the form given and an
 comment|/// op of either DW_FORM_addr or DW_FORM_GNU_addr_index.
 name|void
 name|addOpAddress
@@ -892,7 +892,7 @@ modifier|*
 name|Label
 parameter_list|)
 function_decl|;
-comment|/// \brief Add a label delta attribute data and value.
+comment|/// Add a label delta attribute data and value.
 name|void
 name|addLabelDelta
 argument_list|(
@@ -916,7 +916,7 @@ operator|*
 name|Lo
 argument_list|)
 decl_stmt|;
-comment|/// \brief Add a DIE attribute data and value.
+comment|/// Add a DIE attribute data and value.
 name|void
 name|addDIEEntry
 argument_list|(
@@ -934,7 +934,7 @@ operator|&
 name|Entry
 argument_list|)
 decl_stmt|;
-comment|/// \brief Add a DIE attribute data and value.
+comment|/// Add a DIE attribute data and value.
 name|void
 name|addDIEEntry
 argument_list|(
@@ -964,7 +964,7 @@ modifier|&
 name|Type
 parameter_list|)
 function_decl|;
-comment|/// \brief Add block data.
+comment|/// Add block data.
 name|void
 name|addBlock
 argument_list|(
@@ -982,7 +982,7 @@ operator|*
 name|Block
 argument_list|)
 decl_stmt|;
-comment|/// \brief Add block data.
+comment|/// Add block data.
 name|void
 name|addBlock
 argument_list|(
@@ -1000,7 +1000,7 @@ operator|*
 name|Block
 argument_list|)
 decl_stmt|;
-comment|/// \brief Add location information to specified debug information entry.
+comment|/// Add location information to specified debug information entry.
 name|void
 name|addSourceLine
 parameter_list|(
@@ -1096,7 +1096,7 @@ modifier|*
 name|Ty
 parameter_list|)
 function_decl|;
-comment|/// \brief Add constant value entry in variable DIE.
+comment|/// Add constant value entry in variable DIE.
 name|void
 name|addConstantValue
 parameter_list|(
@@ -1181,7 +1181,7 @@ name|uint64_t
 name|Val
 parameter_list|)
 function_decl|;
-comment|/// \brief Add constant value entry in variable DIE.
+comment|/// Add constant value entry in variable DIE.
 name|void
 name|addConstantFPValue
 parameter_list|(
@@ -1208,7 +1208,7 @@ modifier|*
 name|CFP
 parameter_list|)
 function_decl|;
-comment|/// \brief Add a linkage name, if it isn't empty.
+comment|/// Add a linkage name, if it isn't empty.
 name|void
 name|addLinkageName
 parameter_list|(
@@ -1220,7 +1220,7 @@ name|StringRef
 name|LinkageName
 parameter_list|)
 function_decl|;
-comment|/// \brief Add template parameters in buffer.
+comment|/// Add template parameters in buffer.
 name|void
 name|addTemplateParams
 parameter_list|(
@@ -1232,7 +1232,7 @@ name|DINodeArray
 name|TParams
 parameter_list|)
 function_decl|;
-comment|/// \brief Add register operand.
+comment|/// Add register operand.
 comment|/// \returns false if the register does not exist, e.g., because it was never
 comment|/// materialized.
 name|bool
@@ -1256,7 +1256,7 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// \brief Add register offset.
+comment|/// Add register offset.
 comment|/// \returns false if the register does not exist, e.g., because it was never
 comment|/// materialized.
 name|bool
@@ -1301,7 +1301,7 @@ operator|&
 name|Location
 argument_list|)
 decl_stmt|;
-comment|/// \brief Add a new type attribute to the specified entity.
+comment|/// Add a new type attribute to the specified entity.
 comment|///
 comment|/// This takes and attribute parameter because DW_AT_friend attributes are
 comment|/// also type references.
@@ -1380,7 +1380,7 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// \brief Find existing DIE or create new DIE for the given type.
+comment|/// Find existing DIE or create new DIE for the given type.
 name|DIE
 modifier|*
 name|getOrCreateTypeDIE
@@ -1391,7 +1391,7 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// \brief Get context owner's DIE.
+comment|/// Get context owner's DIE.
 name|DIE
 modifier|*
 name|createTypeDIE
@@ -1402,7 +1402,7 @@ modifier|*
 name|Ty
 parameter_list|)
 function_decl|;
-comment|/// \brief Get context owner's DIE.
+comment|/// Get context owner's DIE.
 name|DIE
 modifier|*
 name|getOrCreateContextDIE
@@ -1413,12 +1413,12 @@ modifier|*
 name|Context
 parameter_list|)
 function_decl|;
-comment|/// \brief Construct DIEs for types that contain vtables.
+comment|/// Construct DIEs for types that contain vtables.
 name|void
 name|constructContainingTypeDIEs
 parameter_list|()
 function_decl|;
-comment|/// \brief Construct function argument DIEs.
+comment|/// Construct function argument DIEs.
 name|void
 name|constructSubprogramArguments
 parameter_list|(
@@ -1511,7 +1511,7 @@ parameter_list|)
 function_decl|;
 name|protected
 label|:
-comment|/// \brief Create new static data member DIE.
+comment|/// Create new static data member DIE.
 name|DIE
 modifier|*
 name|getOrCreateStaticMemberDIE
@@ -1537,7 +1537,7 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// \brief Look in the DwarfDebug map for the MDNode that corresponds to the
+comment|/// Look in the DwarfDebug map for the MDNode that corresponds to the
 comment|/// reference.
 name|template
 operator|<
@@ -1684,7 +1684,7 @@ modifier|*
 name|TVP
 parameter_list|)
 function_decl|;
-comment|/// \brief Return the default lower bound for an array.
+comment|/// Return the default lower bound for an array.
 comment|///
 comment|/// If the DWARF version doesn't handle the language, return -1.
 name|int64_t
@@ -1692,13 +1692,13 @@ name|getDefaultLowerBound
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief Get an anonymous type for index type.
+comment|/// Get an anonymous type for index type.
 name|DIE
 modifier|*
 name|getIndexTyDie
 parameter_list|()
 function_decl|;
-comment|/// \brief Set D as anonymous type for index which can be reused later.
+comment|/// Set D as anonymous type for index which can be reused later.
 name|void
 name|setIndexTyDie
 parameter_list|(

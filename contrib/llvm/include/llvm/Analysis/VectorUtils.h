@@ -81,6 +81,21 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|GetElementPtrInst
+decl_stmt|;
+name|class
+name|Loop
+decl_stmt|;
+name|class
+name|ScalarEvolution
+decl_stmt|;
+name|class
+name|Type
+decl_stmt|;
+name|class
+name|Value
+decl_stmt|;
 comment|/// \brief Identify if the intrinsic is trivially vectorizable.
 comment|/// This method returns true if the intrinsic's argument types are all
 comment|/// scalars for the scalar form of the intrinsic and all vectors for
@@ -156,6 +171,90 @@ operator|*
 name|TLI
 argument_list|)
 expr_stmt|;
+comment|/// \brief Find the operand of the GEP that should be checked for consecutive
+comment|/// stores. This ignores trailing indices that have no effect on the final
+comment|/// pointer.
+name|unsigned
+name|getGEPInductionOperand
+parameter_list|(
+specifier|const
+name|GetElementPtrInst
+modifier|*
+name|Gep
+parameter_list|)
+function_decl|;
+comment|/// \brief If the argument is a GEP, then returns the operand identified by
+comment|/// getGEPInductionOperand. However, if there is some other non-loop-invariant
+comment|/// operand, it returns that instead.
+name|Value
+modifier|*
+name|stripGetElementPtr
+parameter_list|(
+name|Value
+modifier|*
+name|Ptr
+parameter_list|,
+name|ScalarEvolution
+modifier|*
+name|SE
+parameter_list|,
+name|Loop
+modifier|*
+name|Lp
+parameter_list|)
+function_decl|;
+comment|/// \brief If a value has only one user that is a CastInst, return it.
+name|Value
+modifier|*
+name|getUniqueCastUse
+parameter_list|(
+name|Value
+modifier|*
+name|Ptr
+parameter_list|,
+name|Loop
+modifier|*
+name|Lp
+parameter_list|,
+name|Type
+modifier|*
+name|Ty
+parameter_list|)
+function_decl|;
+comment|/// \brief Get the stride of a pointer access in a loop. Looks for symbolic
+comment|/// strides "a[i*stride]". Returns the symbolic stride, or null otherwise.
+name|Value
+modifier|*
+name|getStrideFromPointer
+parameter_list|(
+name|Value
+modifier|*
+name|Ptr
+parameter_list|,
+name|ScalarEvolution
+modifier|*
+name|SE
+parameter_list|,
+name|Loop
+modifier|*
+name|Lp
+parameter_list|)
+function_decl|;
+comment|/// \brief Given a vector and an element number, see if the scalar value is
+comment|/// already around as a register, for example if it were inserted then extracted
+comment|/// from the vector.
+name|Value
+modifier|*
+name|findScalarElement
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|unsigned
+name|EltNo
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

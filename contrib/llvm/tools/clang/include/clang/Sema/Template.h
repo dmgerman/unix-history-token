@@ -1423,6 +1423,14 @@ name|BASE
 parameter_list|)
 define|#
 directive|define
+name|OBJCTYPEPARAM
+parameter_list|(
+name|DERIVED
+parameter_list|,
+name|BASE
+parameter_list|)
+define|#
+directive|define
 name|OBJCIVAR
 parameter_list|(
 name|DERIVED

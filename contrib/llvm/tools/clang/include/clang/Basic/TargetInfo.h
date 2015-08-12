@@ -311,6 +311,10 @@ name|MaxVectorAlign
 block|;
 name|unsigned
 name|short
+name|MaxTLSAlign
+block|;
+name|unsigned
+name|short
 name|SimdDefaultAlign
 block|;
 specifier|const
@@ -2600,6 +2604,60 @@ specifier|const
 block|{
 return|return
 name|TLSSupported
+return|;
+block|}
+comment|/// \brief Return the maximum alignment (in bits) of a TLS variable
+comment|///
+comment|/// Gets the maximum alignment (in bits) of a TLS variable on this target.
+comment|/// Returns zero if there is no such constraint.
+name|unsigned
+name|short
+name|getMaxTLSAlign
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MaxTLSAlign
+return|;
+block|}
+comment|/// \brief Whether the target supports SEH __try.
+name|bool
+name|isSEHTrySupported
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTriple
+argument_list|()
+operator|.
+name|isOSWindows
+argument_list|()
+operator|&&
+operator|(
+name|getTriple
+argument_list|()
+operator|.
+name|getArch
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|x86
+operator|||
+name|getTriple
+argument_list|()
+operator|.
+name|getArch
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|x86_64
+operator|)
 return|;
 block|}
 comment|/// \brief Return true if {|} are normal characters in the asm string.

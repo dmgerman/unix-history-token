@@ -276,6 +276,10 @@ comment|///< Function does not access memory
 name|ReadOnly
 block|,
 comment|///< Function only reads from memory
+name|ArgMemOnly
+block|,
+comment|///< Funciton can access memory only using pointers
+comment|///< based on its arguments.
 name|Returned
 block|,
 comment|///< Return value is always equal to this argument

@@ -4511,38 +4511,17 @@ return|;
 block|}
 end_decl_stmt
 
-begin_macro
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class RegionBase<RegionTraits<Function>>
-argument_list|)
-end_macro
+begin_extern
+extern|extern template class RegionBase<RegionTraits<Function>>;
+end_extern
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_extern
+extern|extern template class RegionNodeBase<RegionTraits<Function>>;
+end_extern
 
-begin_macro
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class RegionNodeBase<RegionTraits<Function>>
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class RegionInfoBase<RegionTraits<Function>>
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_extern
+extern|extern template class RegionInfoBase<RegionTraits<Function>>;
+end_extern
 
 begin_comment
 unit|}

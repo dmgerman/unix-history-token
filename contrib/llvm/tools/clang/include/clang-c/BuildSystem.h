@@ -103,7 +103,7 @@ name|int
 name|caseSensitive
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Write out the \c CXVirtualFileOverlay object to a char buffer.  *  * \param options is reserved, always pass 0.  * \param out_buffer_ptr pointer to receive the buffer pointer, which should be  * disposed using \c free().  * \param out_buffer_size pointer to receive the buffer size.  * \returns 0 for success, non-zero to indicate an error.  */
+comment|/**  * \brief Write out the \c CXVirtualFileOverlay object to a char buffer.  *  * \param options is reserved, always pass 0.  * \param out_buffer_ptr pointer to receive the buffer pointer, which should be  * disposed using \c clang_free().  * \param out_buffer_size pointer to receive the buffer size.  * \returns 0 for success, non-zero to indicate an error.  */
 name|CINDEX_LINKAGE
 name|enum
 name|CXErrorCode
@@ -122,6 +122,16 @@ parameter_list|,
 name|unsigned
 modifier|*
 name|out_buffer_size
+parameter_list|)
+function_decl|;
+comment|/**  * \brief free memory allocated by libclang, such as the buffer returned by  * \c CXVirtualFileOverlay() or \c clang_ModuleMapDescriptor_writeToBuffer().  *  * \param buffer memory pointer to free.  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_free
+parameter_list|(
+name|void
+modifier|*
+name|buffer
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Dispose a \c CXVirtualFileOverlay object.  */
@@ -176,7 +186,7 @@ modifier|*
 name|name
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Write out the \c CXModuleMapDescriptor object to a char buffer.  *  * \param options is reserved, always pass 0.  * \param out_buffer_ptr pointer to receive the buffer pointer, which should be  * disposed using \c free().  * \param out_buffer_size pointer to receive the buffer size.  * \returns 0 for success, non-zero to indicate an error.  */
+comment|/**  * \brief Write out the \c CXModuleMapDescriptor object to a char buffer.  *  * \param options is reserved, always pass 0.  * \param out_buffer_ptr pointer to receive the buffer pointer, which should be  * disposed using \c clang_free().  * \param out_buffer_size pointer to receive the buffer size.  * \returns 0 for success, non-zero to indicate an error.  */
 name|CINDEX_LINKAGE
 name|enum
 name|CXErrorCode

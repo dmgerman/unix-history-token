@@ -412,7 +412,7 @@ comment|// exception object) and the ExceptionObjectIndex field will be -1.
 comment|// When the parseEHActions function is called to populate a vector of
 comment|// instances of this class, the ExceptionObjectVar field will be nullptr
 comment|// and the ExceptionObjectIndex will be the index of the exception object in
-comment|// the parent function's frameescape block.
+comment|// the parent function's localescape block.
 specifier|const
 name|Value
 operator|*
@@ -684,7 +684,7 @@ name|NumIPToStateFuncsVisited
 operator|=
 literal|0
 block|;
-comment|/// frameescape index of the 32-bit EH registration node. Set by
+comment|/// localescape index of the 32-bit EH registration node. Set by
 comment|/// WinEHStatePass and used indirectly by SEH filter functions of the parent.
 name|int
 name|EHRegNodeEscapeIndex

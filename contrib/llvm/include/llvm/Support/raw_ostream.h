@@ -514,6 +514,14 @@ argument_list|,
 name|Size
 argument_list|)
 return|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|Size
+condition|)
+block|{
 name|memcpy
 argument_list|(
 name|OutBufCur
@@ -526,14 +534,12 @@ argument_list|,
 name|Size
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|OutBufCur
 operator|+=
 name|Size
 expr_stmt|;
-end_expr_stmt
+block|}
+end_if
 
 begin_return
 return|return

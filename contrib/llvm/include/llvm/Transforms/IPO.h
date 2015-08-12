@@ -160,6 +160,15 @@ name|createGlobalDCEPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
+comment|/// This transform is designed to eliminate available external globals
+comment|/// (functions or global variables)
+comment|///
+name|ModulePass
+modifier|*
+name|createEliminateAvailableExternallyPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
 comment|/// createGVExtractionPass - If deleteFn is true, this pass deletes
 comment|/// the specified global values. Otherwise, it deletes as much of the module as
 comment|/// possible, except for the global values specified.

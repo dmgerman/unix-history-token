@@ -159,6 +159,12 @@ directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -296,6 +302,24 @@ parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
+name|using
+name|FunctionCreator
+init|=
+name|std
+operator|::
+name|function
+operator|<
+name|void
+operator|*
+operator|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+operator|)
+operator|>
+decl_stmt|;
 comment|/// \brief Abstract interface for implementation execution of LLVM modules,
 comment|/// designed to support both interpreter and just-in-time (JIT) compiler
 comment|/// implementations.
@@ -497,20 +521,9 @@ expr_stmt|;
 comment|/// LazyFunctionCreator - If an unknown function is needed, this function
 comment|/// pointer is invoked to create it.  If this returns null, the JIT will
 comment|/// abort.
-name|void
-argument_list|*
-call|(
-modifier|*
+name|FunctionCreator
 name|LazyFunctionCreator
-call|)
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-argument_list|)
-argument_list|;
+decl_stmt|;
 comment|/// getMangledName - Get mangled name.
 name|std
 operator|::
@@ -522,16 +535,16 @@ name|GlobalValue
 operator|*
 name|GV
 argument_list|)
-argument_list|;
+expr_stmt|;
 name|public
-operator|:
+label|:
 comment|/// lock - This lock protects the ExecutionEngine and MCJIT classes. It must
 comment|/// be held while changing the internal state of any of those classes.
 name|sys
 operator|::
 name|Mutex
 name|lock
-argument_list|;
+expr_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|//  ExecutionEngine Startup
 comment|//===--------------------------------------------------------------------===//
@@ -539,13 +552,19 @@ name|virtual
 operator|~
 name|ExecutionEngine
 argument_list|()
-argument_list|;
+expr_stmt|;
 comment|/// Add a Module to the list of modules that we can JIT from.
 name|virtual
 name|void
 name|addModule
 argument_list|(
-argument|std::unique_ptr<Module> M
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Module
+operator|>
+name|M
 argument_list|)
 block|{
 name|Modules
@@ -559,7 +578,8 @@ argument_list|(
 name|M
 argument_list|)
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|/// addObjectFile - Add an ObjectFile to the execution engine.
 comment|///
 comment|/// This method is only supported by MCJIT.  MCJIT will immediately load the
@@ -584,7 +604,7 @@ name|ObjectFile
 operator|>
 name|O
 argument_list|)
-argument_list|;
+decl_stmt|;
 name|virtual
 name|void
 name|addObjectFile
@@ -599,7 +619,7 @@ name|ObjectFile
 operator|>
 name|O
 argument_list|)
-argument_list|;
+decl_stmt|;
 comment|/// addArchive - Add an Archive to the execution engine.
 comment|///
 comment|/// This method is only supported by MCJIT.  MCJIT will use the archive to
@@ -620,7 +640,7 @@ name|Archive
 operator|>
 name|A
 argument_list|)
-argument_list|;
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 specifier|const
 name|DataLayout
@@ -1309,25 +1329,14 @@ comment|/// specified function pointer is invoked to create it.  If it returns n
 comment|/// the JIT will abort.
 name|void
 name|InstallLazyFunctionCreator
-argument_list|(
-name|void
-operator|*
-call|(
-modifier|*
-name|P
-call|)
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-argument_list|)
-argument_list|)
+parameter_list|(
+name|FunctionCreator
+name|C
+parameter_list|)
 block|{
 name|LazyFunctionCreator
 operator|=
-name|P
+name|C
 expr_stmt|;
 block|}
 name|protected

@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MipsSelectionDAGInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/DataLayout.h"
 end_include
 
@@ -105,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetSelectionDAGInfo.h"
 end_include
 
 begin_include
@@ -329,7 +329,7 @@ name|Triple
 name|TargetTriple
 block|;
 specifier|const
-name|MipsSelectionDAGInfo
+name|TargetSelectionDAGInfo
 name|TSInfo
 block|;
 name|std
@@ -1049,7 +1049,7 @@ name|setHelperClassesMipsSE
 argument_list|()
 block|;
 specifier|const
-name|MipsSelectionDAGInfo
+name|TargetSelectionDAGInfo
 operator|*
 name|getSelectionDAGInfo
 argument_list|()

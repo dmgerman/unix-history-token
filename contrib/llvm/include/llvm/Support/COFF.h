@@ -2041,6 +2041,10 @@ struct|;
 enum|enum
 name|CodeViewIdentifiers
 block|{
+name|DEBUG_LINE_TABLES_HAVE_COLUMN_RECORDS
+init|=
+literal|0x1
+block|,
 name|DEBUG_SECTION_MAGIC
 init|=
 literal|0x4

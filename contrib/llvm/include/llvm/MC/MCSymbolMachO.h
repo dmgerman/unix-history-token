@@ -40,7 +40,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|setIsWeakExternal
+name|LLVM_MC_MCSYMBOLMACHO_H
 end_define
 
 begin_include

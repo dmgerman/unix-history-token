@@ -827,21 +827,36 @@ return|;
 block|}
 expr|}
 block|;
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class RegionBase<RegionTraits<MachineFunction>>
-argument_list|)
+specifier|extern
+name|template
+name|class
+name|RegionBase
+operator|<
+name|RegionTraits
+operator|<
+name|MachineFunction
+operator|>>
 block|;
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class RegionNodeBase<RegionTraits<MachineFunction>>
-argument_list|)
+specifier|extern
+name|template
+name|class
+name|RegionNodeBase
+operator|<
+name|RegionTraits
+operator|<
+name|MachineFunction
+operator|>>
 block|;
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class RegionInfoBase<RegionTraits<MachineFunction>>
-argument_list|)
-block|;  }
+specifier|extern
+name|template
+name|class
+name|RegionInfoBase
+operator|<
+name|RegionTraits
+operator|<
+name|MachineFunction
+operator|>>
+block|; }
 end_decl_stmt
 
 begin_endif

@@ -201,9 +201,11 @@ specifier|const
 name|override
 block|;
 name|void
-name|processFunctionBeforeCalleeSavedScan
+name|determineCalleeSaves
 argument_list|(
 argument|MachineFunction&MF
+argument_list|,
+argument|BitVector&SavedRegs
 argument_list|,
 argument|RegScavenger *RS = nullptr
 argument_list|)

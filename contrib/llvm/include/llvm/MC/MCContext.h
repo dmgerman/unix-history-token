@@ -1058,7 +1058,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param Idx - The index of a local variable passed to @llvm.frameescape.
+comment|/// \param Idx - The index of a local variable passed to @llvm.localescape.
 end_comment
 
 begin_function_decl

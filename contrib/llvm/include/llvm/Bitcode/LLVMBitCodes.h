@@ -1301,7 +1301,11 @@ block|,
 name|ATTR_KIND_SAFESTACK
 init|=
 literal|44
-block|,   }
+block|,
+name|ATTR_KIND_ARGMEMONLY
+init|=
+literal|45
+block|}
 enum|;
 enum|enum
 name|ComdatSelectionKindCodes

@@ -258,6 +258,40 @@ operator|>
 name|Idxs
 argument_list|)
 decl_stmt|;
+comment|/// \brief Attempt to constant fold an extractvalue instruction with the
+comment|/// specified operands and indices.  The constant result is returned if
+comment|/// successful; if not, null is returned.
+name|Constant
+modifier|*
+name|ConstantFoldExtractValueInstruction
+argument_list|(
+name|Constant
+operator|*
+name|Agg
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Idxs
+argument_list|)
+decl_stmt|;
+comment|/// \brief Attempt to constant fold an extractelement instruction with the
+comment|/// specified operands and indices.  The constant result is returned if
+comment|/// successful; if not, null is returned.
+name|Constant
+modifier|*
+name|ConstantFoldExtractElementInstruction
+parameter_list|(
+name|Constant
+modifier|*
+name|Val
+parameter_list|,
+name|Constant
+modifier|*
+name|Idx
+parameter_list|)
+function_decl|;
 comment|/// ConstantFoldLoadFromConstPtr - Return the value that a load from C would
 comment|/// produce if it is constant and determinable.  If this is not determinable,
 comment|/// return null.

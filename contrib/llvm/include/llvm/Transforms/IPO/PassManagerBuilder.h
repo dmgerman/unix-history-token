@@ -238,6 +238,9 @@ decl_stmt|;
 name|bool
 name|MergeFunctions
 decl_stmt|;
+name|bool
+name|PrepareForLTO
+decl_stmt|;
 name|private
 label|:
 comment|/// ExtensionList - This is list of all of the extensions that are registered.

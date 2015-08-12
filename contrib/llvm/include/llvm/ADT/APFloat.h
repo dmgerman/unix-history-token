@@ -712,6 +712,18 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+comment|/// Returns the size of the floating point number (in bits) in the given
+comment|/// semantics.
+specifier|static
+name|unsigned
+name|getSizeInBits
+parameter_list|(
+specifier|const
+name|fltSemantics
+modifier|&
+name|Sem
+parameter_list|)
+function_decl|;
 comment|/// @}
 comment|/// Used to insert APFloat objects, or objects that contain APFloat objects,
 comment|/// into FoldingSets.

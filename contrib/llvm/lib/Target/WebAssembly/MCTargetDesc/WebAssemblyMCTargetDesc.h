@@ -172,6 +172,18 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GET_REGINFO_ENUM
+end_define
+
+begin_include
+include|#
+directive|include
+file|"WebAssemblyGenRegisterInfo.inc"
+end_include
+
+begin_define
+define|#
+directive|define
 name|GET_SUBTARGETINFO_ENUM
 end_define
 

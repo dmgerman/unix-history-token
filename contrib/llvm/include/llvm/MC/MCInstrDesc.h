@@ -400,6 +400,7 @@ argument_list|(
 name|MCInst
 operator|&
 argument_list|,
+specifier|const
 name|MCSubtargetInfo
 operator|&
 argument_list|,
@@ -487,6 +488,7 @@ name|MCInst
 operator|&
 name|MI
 argument_list|,
+specifier|const
 name|MCSubtargetInfo
 operator|&
 name|STI

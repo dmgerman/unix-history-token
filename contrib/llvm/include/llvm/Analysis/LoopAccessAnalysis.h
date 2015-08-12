@@ -884,36 +884,123 @@ parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
-comment|/// \brief Drive the analysis of memory accesses in the loop
-comment|///
-comment|/// This class is responsible for analyzing the memory accesses of a loop.  It
-comment|/// collects the accesses and then its main helper the AccessAnalysis class
-comment|/// finds and categorizes the dependences in buildDependenceSets.
-comment|///
-comment|/// For memory dependences that can be analyzed at compile time, it determines
-comment|/// whether the dependence is part of cycle inhibiting vectorization.  This work
-comment|/// is delegated to the MemoryDepChecker class.
-comment|///
-comment|/// For memory dependences that cannot be determined at compile time, it
-comment|/// generates run-time checks to prove independence.  This is done by
-comment|/// AccessAnalysis::canCheckPtrAtRT and the checks are maintained by the
-comment|/// RuntimePointerCheck class.
+comment|/// \brief Holds information about the memory runtime legality checks to verify
+comment|/// that a group of pointers do not overlap.
 name|class
-name|LoopAccessInfo
+name|RuntimePointerChecking
 block|{
 name|public
 label|:
-comment|/// This struct holds information about the memory runtime legality check that
-comment|/// a group of pointers do not overlap.
 struct|struct
-name|RuntimePointerCheck
+name|PointerInfo
 block|{
-name|RuntimePointerCheck
-argument_list|()
+comment|/// Holds the pointer value that we need to check.
+name|TrackingVH
+operator|<
+name|Value
+operator|>
+name|PointerValue
+expr_stmt|;
+comment|/// Holds the pointer value at the beginning of the loop.
+specifier|const
+name|SCEV
+modifier|*
+name|Start
+decl_stmt|;
+comment|/// Holds the pointer value at the end of the loop.
+specifier|const
+name|SCEV
+modifier|*
+name|End
+decl_stmt|;
+comment|/// Holds the information if this pointer is used for writing to memory.
+name|bool
+name|IsWritePtr
+decl_stmt|;
+comment|/// Holds the id of the set of pointers that could be dependent because of a
+comment|/// shared underlying object.
+name|unsigned
+name|DependencySetId
+decl_stmt|;
+comment|/// Holds the id of the disjoint alias set to which this pointer belongs.
+name|unsigned
+name|AliasSetId
+decl_stmt|;
+comment|/// SCEV for the access.
+specifier|const
+name|SCEV
+modifier|*
+name|Expr
+decl_stmt|;
+name|PointerInfo
+argument_list|(
+argument|Value *PointerValue
+argument_list|,
+argument|const SCEV *Start
+argument_list|,
+argument|const SCEV *End
+argument_list|,
+argument|bool IsWritePtr
+argument_list|,
+argument|unsigned DependencySetId
+argument_list|,
+argument|unsigned AliasSetId
+argument_list|,
+argument|const SCEV *Expr
+argument_list|)
+block|:
+name|PointerValue
+argument_list|(
+name|PointerValue
+argument_list|)
+operator|,
+name|Start
+argument_list|(
+name|Start
+argument_list|)
+operator|,
+name|End
+argument_list|(
+name|End
+argument_list|)
+operator|,
+name|IsWritePtr
+argument_list|(
+name|IsWritePtr
+argument_list|)
+operator|,
+name|DependencySetId
+argument_list|(
+name|DependencySetId
+argument_list|)
+operator|,
+name|AliasSetId
+argument_list|(
+name|AliasSetId
+argument_list|)
+operator|,
+name|Expr
+argument_list|(
+argument|Expr
+argument_list|)
+block|{}
+block|}
+struct|;
+name|RuntimePointerChecking
+argument_list|(
+name|ScalarEvolution
+operator|*
+name|SE
+argument_list|)
 operator|:
 name|Need
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|SE
+argument_list|(
+argument|SE
 argument_list|)
 block|{}
 comment|/// Reset the state of the pointer runtime information.
@@ -929,38 +1016,11 @@ name|Pointers
 operator|.
 name|clear
 argument_list|()
-block|;
-name|Starts
-operator|.
-name|clear
-argument_list|()
-block|;
-name|Ends
-operator|.
-name|clear
-argument_list|()
-block|;
-name|IsWritePtr
-operator|.
-name|clear
-argument_list|()
-block|;
-name|DependencySetId
-operator|.
-name|clear
-argument_list|()
-block|;
-name|AliasSetId
-operator|.
-name|clear
-argument_list|()
-block|;     }
+block|;   }
 comment|/// Insert a pointer and calculate the start and end SCEVs.
 name|void
 name|insert
 argument_list|(
-argument|ScalarEvolution *SE
-argument_list|,
 argument|Loop *Lp
 argument_list|,
 argument|Value *Ptr
@@ -987,20 +1047,123 @@ name|empty
 argument_list|()
 return|;
 block|}
-comment|/// \brief Decide whether we need to issue a run-time check for pointer at
-comment|/// index \p I and \p J to prove their independence.
-comment|///
-comment|/// If \p PtrPartition is set, it contains the partition number for
-comment|/// pointers (-1 if the pointer belongs to multiple partitions).  In this
-comment|/// case omit checks between pointers belonging to the same partition.
+comment|/// A grouping of pointers. A single memcheck is required between
+comment|/// two groups.
+struct|struct
+name|CheckingPtrGroup
+block|{
+comment|/// \brief Create a new pointer checking group containing a single
+comment|/// pointer, with index \p Index in RtCheck.
+name|CheckingPtrGroup
+argument_list|(
+argument|unsigned Index
+argument_list|,
+argument|RuntimePointerChecking&RtCheck
+argument_list|)
+block|:
+name|RtCheck
+argument_list|(
+name|RtCheck
+argument_list|)
+operator|,
+name|High
+argument_list|(
+name|RtCheck
+operator|.
+name|Pointers
+index|[
+name|Index
+index|]
+operator|.
+name|End
+argument_list|)
+operator|,
+name|Low
+argument_list|(
+argument|RtCheck.Pointers[Index].Start
+argument_list|)
+block|{
+name|Members
+operator|.
+name|push_back
+argument_list|(
+name|Index
+argument_list|)
+block|;     }
+comment|/// \brief Tries to add the pointer recorded in RtCheck at index
+comment|/// \p Index to this pointer checking group. We can only add a pointer
+comment|/// to a checking group if we will still be able to get
+comment|/// the upper and lower bounds of the check. Returns true in case
+comment|/// of success, false otherwise.
+name|bool
+name|addPointer
+argument_list|(
+argument|unsigned Index
+argument_list|)
+expr_stmt|;
+comment|/// Constitutes the context of this pointer checking group. For each
+comment|/// pointer that is a member of this group we will retain the index
+comment|/// at which it appears in RtCheck.
+name|RuntimePointerChecking
+modifier|&
+name|RtCheck
+decl_stmt|;
+comment|/// The SCEV expression which represents the upper bound of all the
+comment|/// pointers in this group.
+specifier|const
+name|SCEV
+modifier|*
+name|High
+decl_stmt|;
+comment|/// The SCEV expression which represents the lower bound of all the
+comment|/// pointers in this group.
+specifier|const
+name|SCEV
+modifier|*
+name|Low
+decl_stmt|;
+comment|/// Indices of all the pointers that constitute this grouping.
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|2
+operator|>
+name|Members
+expr_stmt|;
+block|}
+struct|;
+comment|/// \brief Groups pointers such that a single memcheck is required
+comment|/// between two different groups. This will clear the CheckingGroups vector
+comment|/// and re-compute it. We will only group dependecies if \p UseDependencies
+comment|/// is true, otherwise we will create a separate group for each pointer.
+name|void
+name|groupChecks
+argument_list|(
+name|MemoryDepChecker
+operator|::
+name|DepCandidates
+operator|&
+name|DepCands
+argument_list|,
+name|bool
+name|UseDependencies
+argument_list|)
+decl_stmt|;
+comment|/// \brief Decide if we need to add a check between two groups of pointers,
+comment|/// according to needsChecking.
 name|bool
 name|needsChecking
 argument_list|(
-name|unsigned
-name|I
+specifier|const
+name|CheckingPtrGroup
+operator|&
+name|M
 argument_list|,
-name|unsigned
-name|J
+specifier|const
+name|CheckingPtrGroup
+operator|&
+name|N
 argument_list|,
 specifier|const
 name|SmallVectorImpl
@@ -1075,70 +1238,77 @@ comment|/// This flag indicates if we need to add the runtime check.
 name|bool
 name|Need
 decl_stmt|;
-comment|/// Holds the pointers that we need to check.
+comment|/// Information about the pointers that may require checking.
 name|SmallVector
 operator|<
-name|TrackingVH
-operator|<
-name|Value
-operator|>
+name|PointerInfo
 operator|,
 literal|2
 operator|>
 name|Pointers
 expr_stmt|;
-comment|/// Holds the pointer value at the beginning of the loop.
+comment|/// Holds a partitioning of pointers into "check groups".
 name|SmallVector
 operator|<
-specifier|const
-name|SCEV
-operator|*
+name|CheckingPtrGroup
 operator|,
 literal|2
 operator|>
-name|Starts
+name|CheckingGroups
 expr_stmt|;
-comment|/// Holds the pointer value at the end of the loop.
-name|SmallVector
-operator|<
-specifier|const
-name|SCEV
-operator|*
-operator|,
-literal|2
-operator|>
-name|Ends
-expr_stmt|;
-comment|/// Holds the information if this pointer is used for writing to memory.
-name|SmallVector
-operator|<
+name|private
+label|:
+comment|/// \brief Decide whether we need to issue a run-time check for pointer at
+comment|/// index \p I and \p J to prove their independence.
+comment|///
+comment|/// If \p PtrPartition is set, it contains the partition number for
+comment|/// pointers (-1 if the pointer belongs to multiple partitions).  In this
+comment|/// case omit checks between pointers belonging to the same partition.
 name|bool
-operator|,
-literal|2
-operator|>
-name|IsWritePtr
-expr_stmt|;
-comment|/// Holds the id of the set of pointers that could be dependent because of a
-comment|/// shared underlying object.
-name|SmallVector
-operator|<
+name|needsChecking
+argument_list|(
 name|unsigned
-operator|,
-literal|2
-operator|>
-name|DependencySetId
-expr_stmt|;
-comment|/// Holds the id of the disjoint alias set to which this pointer belongs.
-name|SmallVector
-operator|<
+name|I
+argument_list|,
 name|unsigned
-operator|,
-literal|2
+name|J
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|int
 operator|>
-name|AliasSetId
-expr_stmt|;
+operator|*
+name|PtrPartition
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Holds a pointer to the ScalarEvolution analysis.
+name|ScalarEvolution
+modifier|*
+name|SE
+decl_stmt|;
 block|}
-struct|;
+empty_stmt|;
+comment|/// \brief Drive the analysis of memory accesses in the loop
+comment|///
+comment|/// This class is responsible for analyzing the memory accesses of a loop.  It
+comment|/// collects the accesses and then its main helper the AccessAnalysis class
+comment|/// finds and categorizes the dependences in buildDependenceSets.
+comment|///
+comment|/// For memory dependences that can be analyzed at compile time, it determines
+comment|/// whether the dependence is part of cycle inhibiting vectorization.  This work
+comment|/// is delegated to the MemoryDepChecker class.
+comment|///
+comment|/// For memory dependences that cannot be determined at compile time, it
+comment|/// generates run-time checks to prove independence.  This is done by
+comment|/// AccessAnalysis::canCheckPtrAtRT and the checks are maintained by the
+comment|/// RuntimePointerCheck class.
+name|class
+name|LoopAccessInfo
+block|{
+name|public
+label|:
 name|LoopAccessInfo
 argument_list|(
 name|Loop
@@ -1189,15 +1359,15 @@ name|CanVecMem
 return|;
 block|}
 specifier|const
-name|RuntimePointerCheck
+name|RuntimePointerChecking
 operator|*
-name|getRuntimePointerCheck
+name|getRuntimePointerChecking
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|&
-name|PtrRtCheck
+name|PtrRtChecking
 return|;
 block|}
 comment|/// \brief Number of memchecks required to prove independence of otherwise
@@ -1218,7 +1388,7 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|PtrRtCheck
+name|PtrRtChecking
 operator|.
 name|getNumberOfChecks
 argument_list|(
@@ -1427,8 +1597,8 @@ parameter_list|)
 function_decl|;
 comment|/// We need to check that all of the pointers in this list are disjoint
 comment|/// at runtime.
-name|RuntimePointerCheck
-name|PtrRtCheck
+name|RuntimePointerChecking
+name|PtrRtChecking
 decl_stmt|;
 comment|/// \brief the Memory Dependence Checker which can determine the
 comment|/// loop-independent and loop-carried dependences between memory accesses.

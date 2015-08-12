@@ -3389,6 +3389,25 @@ name|LLVMValueRef
 name|Fn
 parameter_list|)
 function_decl|;
+comment|/**  * Obtain the personality function attached to the function.  *  * @see llvm::Function::getPersonalityFn()  */
+name|LLVMValueRef
+name|LLVMGetPersonalityFn
+parameter_list|(
+name|LLVMValueRef
+name|Fn
+parameter_list|)
+function_decl|;
+comment|/**  * Set the personality function attached to the function.  *  * @see llvm::Function::setPersonalityFn()  */
+name|void
+name|LLVMSetPersonalityFn
+parameter_list|(
+name|LLVMValueRef
+name|Fn
+parameter_list|,
+name|LLVMValueRef
+name|PersonalityFn
+parameter_list|)
+function_decl|;
 comment|/**  * Obtain the ID number from a function instance.  *  * @see llvm::Function::getIntrinsicID()  */
 name|unsigned
 name|LLVMGetIntrinsicID

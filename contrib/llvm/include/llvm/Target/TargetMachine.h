@@ -699,6 +699,11 @@ init|=
 name|true
 parameter_list|,
 name|AnalysisID
+comment|/*StartBefore*/
+init|=
+name|nullptr
+parameter_list|,
+name|AnalysisID
 comment|/*StartAfter*/
 init|=
 name|nullptr
@@ -863,6 +868,8 @@ argument_list|,
 argument|CodeGenFileType FileType
 argument_list|,
 argument|bool DisableVerify = true
+argument_list|,
+argument|AnalysisID StartBefore = nullptr
 argument_list|,
 argument|AnalysisID StartAfter = nullptr
 argument_list|,
