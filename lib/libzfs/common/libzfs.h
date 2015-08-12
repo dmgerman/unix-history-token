@@ -2852,6 +2852,9 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+name|nvlist_t
+modifier|*
+parameter_list|,
 name|recvflags_t
 modifier|*
 parameter_list|,

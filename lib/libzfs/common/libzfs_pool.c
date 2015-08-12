@@ -16550,7 +16550,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|zbookmark_compare
+name|zbookmark_mem_compare
 parameter_list|(
 specifier|const
 name|void
@@ -16849,7 +16849,7 @@ argument_list|(
 name|zbookmark_phys_t
 argument_list|)
 argument_list|,
-name|zbookmark_compare
+name|zbookmark_mem_compare
 argument_list|)
 expr_stmt|;
 name|verify

@@ -17831,6 +17831,8 @@ name|os
 argument_list|,
 name|bigobj
 argument_list|,
+literal|0
+argument_list|,
 name|n
 operator|*
 name|chunksize
@@ -17838,6 +17840,8 @@ argument_list|,
 name|s
 operator|*
 name|chunksize
+argument_list|,
+name|ZIO_PRIORITY_SYNC_READ
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Pick a random index and compute the offsets into packobj and bigobj. 	 */
@@ -28208,6 +28212,7 @@ condition|;
 name|object
 operator|++
 control|)
+block|{
 name|dmu_prefetch
 argument_list|(
 name|spa
@@ -28218,11 +28223,16 @@ name|object
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 literal|1ULL
 operator|<<
 literal|20
+argument_list|,
+name|ZIO_PRIORITY_SYNC_READ
 argument_list|)
 expr_stmt|;
+block|}
 name|spa_close
 argument_list|(
 name|spa
