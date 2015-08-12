@@ -45,6 +45,12 @@ directive|include
 file|<sys/fs/zfs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/zio_priority.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2354,11 +2360,18 @@ parameter_list|,
 name|uint64_t
 name|object
 parameter_list|,
+name|int64_t
+name|level
+parameter_list|,
 name|uint64_t
 name|offset
 parameter_list|,
 name|uint64_t
 name|len
+parameter_list|,
+name|enum
+name|zio_priority
+name|pri
 parameter_list|)
 function_decl|;
 typedef|typedef
