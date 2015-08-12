@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright 2014 HybridCluster. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright 2014 HybridCluster. All rights reserved.  */
 end_comment
 
 begin_include
@@ -3698,7 +3698,10 @@ name|large_block_ok
 operator|&&
 name|to_ds
 operator|->
-name|ds_large_blocks
+name|ds_feature_inuse
+index|[
+name|SPA_FEATURE_LARGE_BLOCKS
+index|]
 condition|)
 name|featureflags
 operator||=
@@ -7087,39 +7090,6 @@ name|newds
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|DMU_GET_FEATUREFLAGS
-argument_list|(
-name|drrb
-operator|->
-name|drr_versioninfo
-argument_list|)
-operator|&
-name|DMU_BACKUP_FEATURE_LARGE_BLOCKS
-operator|)
-operator|&&
-operator|!
-name|newds
-operator|->
-name|ds_large_blocks
-condition|)
-block|{
-name|dsl_dataset_activate_large_blocks_sync_impl
-argument_list|(
-name|dsobj
-argument_list|,
-name|tx
-argument_list|)
-expr_stmt|;
-name|newds
-operator|->
-name|ds_large_blocks
-operator|=
-name|B_TRUE
-expr_stmt|;
-block|}
 name|dmu_buf_will_dirty
 argument_list|(
 name|newds
