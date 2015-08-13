@@ -564,6 +564,10 @@ name|int
 name|vd_unit
 decl_stmt|;
 comment|/* (c) Device unit. */
+name|int
+name|vd_altbrk
+decl_stmt|;
+comment|/* (?) Alt break seq. state */
 block|}
 struct|;
 end_struct
