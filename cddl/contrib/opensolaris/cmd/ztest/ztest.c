@@ -29166,6 +29166,11 @@ argument_list|(
 name|nvroot
 argument_list|)
 expr_stmt|;
+name|nvlist_free
+argument_list|(
+name|props
+argument_list|)
+expr_stmt|;
 name|VERIFY3U
 argument_list|(
 literal|0
