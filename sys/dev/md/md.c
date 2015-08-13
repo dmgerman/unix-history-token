@@ -392,7 +392,15 @@ name|defined
 argument_list|(
 name|MD_ROOT
 argument_list|)
-operator|&&
+end_if
+
+begin_comment
+comment|/*  * Preloaded image gets put here.  */
+end_comment
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|MD_ROOT_SIZE
@@ -400,7 +408,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Preloaded image gets put here.  * Applications that patch the object with the image can determine  * the size looking at the start and end markers (strings),  * so we want them contiguous.  */
+comment|/*  * Applications that patch the object with the image can determine  * the size looking at the start and end markers (strings),  * so we want them contiguous.  */
 end_comment
 
 begin_struct
@@ -437,6 +445,71 @@ literal|"MFS Filesystem had better STOP here"
 block|, }
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|const
+name|int
+name|mfs_root_size
+init|=
+sizeof|sizeof
+argument_list|(
+name|mfs_root
+operator|.
+name|start
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|u_char
+name|__weak_symbol
+name|mfs_root
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|u_char
+name|__weak_symbol
+name|mfs_root_end
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|__GLOBL
+argument_list|(
+name|mfs_root
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__GLOBL
+argument_list|(
+name|mfs_root_end
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|mfs_root_size
+value|((uintptr_t)(&mfs_root_end -&mfs_root))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -8174,6 +8247,24 @@ name|image
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"%s%d: Embedded image %zd bytes as %p\n"
+argument_list|,
+name|MD_NAME
+argument_list|,
+name|sc
+operator|->
+name|unit
+argument_list|,
+name|length
+argument_list|,
+name|image
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -8257,7 +8348,14 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|MD_ROOT_SIZE
+name|MD_ROOT
+if|if
+condition|(
+name|mfs_root_size
+operator|!=
+literal|0
+condition|)
+block|{
 name|sx_xlock
 argument_list|(
 operator|&
@@ -8266,16 +8364,16 @@ argument_list|)
 expr_stmt|;
 name|md_preloaded
 argument_list|(
-name|mfs_root
-operator|.
-name|start
-argument_list|,
-sizeof|sizeof
+name|__DEVOLATILE
 argument_list|(
+name|u_char
+operator|*
+argument_list|,
+operator|&
 name|mfs_root
-operator|.
-name|start
 argument_list|)
+argument_list|,
+name|mfs_root_size
 argument_list|,
 name|NULL
 argument_list|)
@@ -8286,6 +8384,7 @@ operator|&
 name|md_sx
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* XXX: are preload_* static or do they need Giant ? */
