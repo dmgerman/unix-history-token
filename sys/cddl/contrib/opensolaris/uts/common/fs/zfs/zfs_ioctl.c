@@ -22283,6 +22283,14 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|VN_RELE
+argument_list|(
+name|ZTOV
+argument_list|(
+name|sharedir
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ZFS_EXIT
 argument_list|(
 name|zfsvfs
