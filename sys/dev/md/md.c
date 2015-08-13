@@ -8251,7 +8251,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: Embedded image %zd bytes as %p\n"
+literal|"%s%d: Embedded image %zd bytes at %p\n"
 argument_list|,
 name|MD_NAME
 argument_list|,
