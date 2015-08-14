@@ -3724,11 +3724,11 @@ operator|->
 name|bpages
 argument_list|)
 operator|)
-operator|!=
+operator|==
 name|NULL
 condition|)
-block|{
-comment|/* 		 * Handle data bouncing.  We might also 		 * want to add support for invalidating 		 * the caches on broken hardware 		 */
+return|return;
+comment|/* 	 * Handle data bouncing.  We might also want to add support for 	 * invalidating the caches on broken hardware. 	 */
 name|CTR4
 argument_list|(
 name|KTR_BUSDMA
@@ -3930,7 +3930,6 @@ operator|->
 name|total_bounced
 operator|++
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
