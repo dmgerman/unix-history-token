@@ -3130,6 +3130,8 @@ operator|&
 name|ARC_anon
 operator|.
 name|arcs_size
+operator|.
+name|rc_count
 argument_list|,
 literal|0
 argument_list|,
@@ -3205,6 +3207,8 @@ operator|&
 name|ARC_mru
 operator|.
 name|arcs_size
+operator|.
+name|rc_count
 argument_list|,
 literal|0
 argument_list|,
@@ -3280,6 +3284,8 @@ operator|&
 name|ARC_mru_ghost
 operator|.
 name|arcs_size
+operator|.
+name|rc_count
 argument_list|,
 literal|0
 argument_list|,
@@ -3355,6 +3361,8 @@ operator|&
 name|ARC_mfu
 operator|.
 name|arcs_size
+operator|.
+name|rc_count
 argument_list|,
 literal|0
 argument_list|,
@@ -3430,6 +3438,8 @@ operator|&
 name|ARC_mfu_ghost
 operator|.
 name|arcs_size
+operator|.
+name|rc_count
 argument_list|,
 literal|0
 argument_list|,
@@ -3505,6 +3515,8 @@ operator|&
 name|ARC_l2c_only
 operator|.
 name|arcs_size
+operator|.
+name|rc_count
 argument_list|,
 literal|0
 argument_list|,
