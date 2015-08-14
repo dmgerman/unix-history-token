@@ -46,6 +46,11 @@ file|<sys/dmu.h>
 include|#
 directive|include
 file|<sys/spa.h>
+comment|/*  * Used by arc_flush() to inform arc_evict_state() that it should evict  * all available buffers from the arc state being passed in.  */
+define|#
+directive|define
+name|ARC_EVICT_ALL
+value|-1ULL
 typedef|typedef
 name|struct
 name|arc_buf_hdr
@@ -642,6 +647,9 @@ parameter_list|(
 name|spa_t
 modifier|*
 name|spa
+parameter_list|,
+name|boolean_t
+name|retry
 parameter_list|)
 function_decl|;
 name|void
