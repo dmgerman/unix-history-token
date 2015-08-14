@@ -2332,6 +2332,8 @@ name|flags
 operator|&
 name|G_CF_DIRECT_SEND
 operator|)
+operator|!=
+literal|0
 operator|&&
 operator|(
 name|pp
@@ -2340,6 +2342,8 @@ name|flags
 operator|&
 name|G_PF_DIRECT_RECEIVE
 operator|)
+operator|!=
+literal|0
 operator|&&
 operator|!
 name|g_is_geom_thread
@@ -2349,16 +2353,15 @@ argument_list|)
 operator|&&
 operator|(
 operator|(
-operator|(
 name|pp
 operator|->
 name|flags
 operator|&
 name|G_PF_ACCEPT_UNMAPPED
 operator|)
-operator|==
+operator|!=
 literal|0
-operator|&&
+operator|||
 operator|(
 name|bp
 operator|->
@@ -2366,9 +2369,8 @@ name|bio_flags
 operator|&
 name|BIO_UNMAPPED
 operator|)
-operator|!=
+operator|==
 literal|0
-operator|)
 operator|||
 name|THREAD_CAN_SLEEP
 argument_list|()
