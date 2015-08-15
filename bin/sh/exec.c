@@ -2252,6 +2252,7 @@ name|int
 name|add
 parameter_list|)
 block|{
+name|unsigned
 name|int
 name|hashval
 decl_stmt|;
@@ -2280,6 +2281,10 @@ name|name
 expr_stmt|;
 name|hashval
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 operator|<<
@@ -2295,10 +2300,6 @@ operator|+=
 operator|*
 name|p
 operator|++
-expr_stmt|;
-name|hashval
-operator|&=
-literal|0x7FFF
 expr_stmt|;
 name|pp
 operator|=

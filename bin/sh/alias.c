@@ -1095,6 +1095,10 @@ name|hashval
 decl_stmt|;
 name|hashval
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 operator|<<
