@@ -4116,7 +4116,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|1100036
+literal|1002500
 case|case
 name|SIOCGI2C
 case|:
