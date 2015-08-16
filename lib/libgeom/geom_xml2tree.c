@@ -1679,13 +1679,6 @@ operator|->
 name|lg_val
 operator|=
 name|p
-condition|?
-name|p
-else|:
-name|strdup
-argument_list|(
-literal|"1"
-argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
