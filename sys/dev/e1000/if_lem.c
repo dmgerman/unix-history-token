@@ -301,7 +301,7 @@ name|char
 name|lem_driver_version
 index|[]
 init|=
-literal|"1.0.6"
+literal|"1.1.0"
 decl_stmt|;
 end_decl_stmt
 
@@ -13843,30 +13843,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
-if|if
-condition|(
-name|adapter
-operator|->
-name|br
-operator|!=
-name|NULL
-condition|)
-name|buf_ring_free
-argument_list|(
-name|adapter
-operator|->
-name|br
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
