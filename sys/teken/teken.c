@@ -2013,10 +2013,12 @@ operator|->
 name|t_curnum
 index|]
 operator|<
-name|USHRT_MAX
+name|UINT_MAX
+operator|/
+literal|100
 condition|)
 block|{
-comment|/* 			 * Screen positions are stored as unsigned 			 * shorts. There is no need to continue parsing 			 * input once the value exceeds USHRT_MAX. It 			 * would only allow for integer overflows when 			 * performing arithmetic on the cursor position. 			 */
+comment|/* 			 * There is no need to continue parsing input 			 * once the value exceeds the size of the 			 * terminal. It would only allow for integer 			 * overflows when performing arithmetic on the 			 * cursor position. 			 * 			 * Ignore any further digits if the value is 			 * already UINT_MAX / 100. 			 */
 name|t
 operator|->
 name|t_nums
