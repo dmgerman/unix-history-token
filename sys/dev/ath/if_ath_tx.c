@@ -8758,9 +8758,9 @@ name|ath_softc
 modifier|*
 name|sc
 init|=
-name|ifp
+name|ic
 operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|struct
 name|ath_buf
@@ -20346,9 +20346,7 @@ name|ni
 operator|->
 name|ni_ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|int
 name|tid
@@ -20516,9 +20514,7 @@ name|ni
 operator|->
 name|ni_ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|int
 name|tid
@@ -20685,9 +20681,7 @@ name|ni
 operator|->
 name|ni_ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|int
 name|tid
@@ -21121,9 +21115,7 @@ name|ni
 operator|->
 name|ni_ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|int
 name|tid
@@ -21362,9 +21354,7 @@ name|ni
 operator|->
 name|ni_ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|int
 name|tid

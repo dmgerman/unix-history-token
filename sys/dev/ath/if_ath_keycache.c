@@ -1946,9 +1946,7 @@ name|vap
 operator|->
 name|iv_ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 comment|/* 	 * Group key allocation must be handled specially for 	 * parts that do not support multicast key cache search 	 * functionality.  For those parts the key id must match 	 * the h/w key index so lookups find the right key.  On 	 * parts w/ the key search facility we install the sender's 	 * mac address (with the high bit set) and let the hardware 	 * find the key w/o using the key id.  This is preferred as 	 * it permits us to support multiple users for adhoc and/or 	 * multi-station operation. 	 */
 if|if
@@ -2167,9 +2165,7 @@ name|vap
 operator|->
 name|iv_ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|struct
 name|ath_hal
@@ -2397,9 +2393,7 @@ name|vap
 operator|->
 name|iv_ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 return|return
 name|ath_keyset
