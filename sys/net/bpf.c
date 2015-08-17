@@ -2302,7 +2302,7 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Point d at bp, and add d to the interface's list. 	 * Since there are many applicaiotns using BPF for 	 * sending raw packets only (dhcpd, cdpd are good examples) 	 * we can delay adding d to the list of active listeners until 	 * some filter is configured. 	 */
+comment|/* 	 * Point d at bp, and add d to the interface's list. 	 * Since there are many applications using BPF for 	 * sending raw packets only (dhcpd, cdpd are good examples) 	 * we can delay adding d to the list of active listeners until 	 * some filter is configured. 	 */
 name|BPFIF_WLOCK
 argument_list|(
 name|bp
@@ -2419,7 +2419,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add d to the list of active bp filters.  * Reuqires bpf_attachd() to be called before  */
+comment|/*  * Add d to the list of active bp filters.  * Requires bpf_attachd() to be called before.  */
 end_comment
 
 begin_function
@@ -8867,31 +8867,6 @@ name|d
 argument_list|)
 condition|)
 block|{
-while|while
-condition|(
-name|d
-operator|->
-name|bd_hbuf_in_use
-condition|)
-name|mtx_sleep
-argument_list|(
-operator|&
-name|d
-operator|->
-name|bd_hbuf_in_use
-argument_list|,
-operator|&
-name|d
-operator|->
-name|bd_lock
-argument_list|,
-name|PRINET
-argument_list|,
-literal|"bd_hbuf"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|d
 operator|->
 name|bd_fbuf
@@ -9021,29 +8996,16 @@ name|bd_dcount
 expr_stmt|;
 return|return;
 block|}
-while|while
-condition|(
-name|d
-operator|->
-name|bd_hbuf_in_use
-condition|)
-name|mtx_sleep
+name|KASSERT
 argument_list|(
-operator|&
+operator|!
 name|d
 operator|->
 name|bd_hbuf_in_use
 argument_list|,
-operator|&
-name|d
-operator|->
-name|bd_lock
-argument_list|,
-name|PRINET
-argument_list|,
-literal|"bd_hbuf"
-argument_list|,
-literal|0
+operator|(
+literal|"hold buffer is in use"
+operator|)
 argument_list|)
 expr_stmt|;
 name|ROTATE_BUFFERS
