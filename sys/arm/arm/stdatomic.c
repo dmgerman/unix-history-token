@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/atomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpufunc.h>
 end_include
 
@@ -128,27 +134,6 @@ elif|#
 directive|elif
 name|__ARM_ARCH
 operator|>=
-literal|7
-end_elif
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|do_sync
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-asm|__asm volatile ("dmb" : : : "memory");
-block|}
-end_function
-
-begin_elif
-elif|#
-directive|elif
-name|__ARM_ARCH
-operator|>=
 literal|6
 end_elif
 
@@ -161,7 +146,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-asm|__asm volatile ("mcr p15, 0, %0, c7, c10, 5" : : "r" (0) : "memory");
+name|dmb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

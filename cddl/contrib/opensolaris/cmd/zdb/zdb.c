@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -12730,7 +12730,10 @@ end_function
 begin_decl_stmt
 specifier|static
 name|uint64_t
-name|num_large_blocks
+name|dataset_feature_count
+index|[
+name|SPA_FEATURES
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -12799,18 +12802,54 @@ literal|0
 operator|)
 return|;
 block|}
+for|for
+control|(
+name|spa_feature_t
+name|f
+init|=
+literal|0
+init|;
+name|f
+operator|<
+name|SPA_FEATURES
+condition|;
+name|f
+operator|++
+control|)
+block|{
 if|if
 condition|(
+operator|!
 name|dmu_objset_ds
 argument_list|(
 name|os
 argument_list|)
 operator|->
-name|ds_large_blocks
+name|ds_feature_inuse
+index|[
+name|f
+index|]
 condition|)
-name|num_large_blocks
+continue|continue;
+name|ASSERT
+argument_list|(
+name|spa_feature_table
+index|[
+name|f
+index|]
+operator|.
+name|fi_flags
+operator|&
+name|ZFEATURE_FLAG_PER_DATASET
+argument_list|)
+expr_stmt|;
+name|dataset_feature_count
+index|[
+name|f
+index|]
 operator|++
 expr_stmt|;
+block|}
 name|dump_dir
 argument_list|(
 name|os
@@ -13766,6 +13805,17 @@ decl_stmt|;
 name|boolean_t
 name|is_metadata
 decl_stmt|;
+if|if
+condition|(
+name|bp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|dump_opt
@@ -16389,6 +16439,10 @@ name|zdde_search
 decl_stmt|;
 if|if
 condition|(
+name|bp
+operator|==
+name|NULL
+operator|||
 name|BP_IS_HOLE
 argument_list|(
 name|bp
@@ -17025,9 +17079,6 @@ literal|'i'
 index|]
 condition|)
 block|{
-name|uint64_t
-name|refcount
-decl_stmt|;
 name|dump_dir
 argument_list|(
 name|dp
@@ -17137,6 +17188,49 @@ operator||
 name|DS_FIND_CHILDREN
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|spa_feature_t
+name|f
+init|=
+literal|0
+init|;
+name|f
+operator|<
+name|SPA_FEATURES
+condition|;
+name|f
+operator|++
+control|)
+block|{
+name|uint64_t
+name|refcount
+decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|spa_feature_table
+index|[
+name|f
+index|]
+operator|.
+name|fi_flags
+operator|&
+name|ZFEATURE_FLAG_PER_DATASET
+operator|)
+condition|)
+block|{
+name|ASSERT0
+argument_list|(
+name|dataset_feature_count
+index|[
+name|f
+index|]
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 operator|(
 name|void
 operator|)
@@ -17147,7 +17241,7 @@ argument_list|,
 operator|&
 name|spa_feature_table
 index|[
-name|SPA_FEATURE_LARGE_BLOCKS
+name|f
 index|]
 argument_list|,
 operator|&
@@ -17156,7 +17250,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|num_large_blocks
+name|dataset_feature_count
+index|[
+name|f
+index|]
 operator|!=
 name|refcount
 condition|)
@@ -17166,13 +17263,23 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"large_blocks feature refcount mismatch: "
-literal|"expected %lld != actual %lld\n"
+literal|"%s feature refcount mismatch: "
+literal|"%lld datasets != %lld refcount\n"
+argument_list|,
+name|spa_feature_table
+index|[
+name|f
+index|]
+operator|.
+name|fi_uname
 argument_list|,
 operator|(
 name|longlong_t
 operator|)
-name|num_large_blocks
+name|dataset_feature_count
+index|[
+name|f
+index|]
 argument_list|,
 operator|(
 name|longlong_t
@@ -17192,8 +17299,15 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Verified large_blocks feature refcount "
-literal|"is correct (%llu)\n"
+literal|"Verified %s feature refcount "
+literal|"of %llu is correct\n"
+argument_list|,
+name|spa_feature_table
+index|[
+name|f
+index|]
+operator|.
+name|fi_uname
 argument_list|,
 operator|(
 name|longlong_t
@@ -17201,6 +17315,7 @@ operator|)
 name|refcount
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if

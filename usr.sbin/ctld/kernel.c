@@ -158,12 +158,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cam/ctl/ctl_frontend_internal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cam/ctl/ctl_backend.h>
 end_include
 

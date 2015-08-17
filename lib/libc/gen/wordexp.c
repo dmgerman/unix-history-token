@@ -579,7 +579,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * We are the child; just get /bin/sh to run the wordexp 		 * builtin on `words'. 		 */
+comment|/* 		 * We are the child; make /bin/sh expand `words'. 		 */
 operator|(
 name|void
 operator|)
@@ -649,7 +649,8 @@ literal|"+u"
 argument_list|,
 literal|"-c"
 argument_list|,
-literal|"IFS=$1;eval \"$2\";eval \"wordexp $3\""
+literal|"IFS=$1;eval \"$2\";eval \"set -- $3\";IFS=;a=\"$*\";"
+literal|"printf '%08x' \"$#\" \"${#a}\";printf '%s\\0' \"$@\""
 argument_list|,
 literal|""
 argument_list|,

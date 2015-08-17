@@ -127,7 +127,17 @@ end_define
 begin_define
 define|#
 directive|define
-name|USB_BUS_NON_GIANT_PROC
+name|USB_BUS_NON_GIANT_BULK_PROC
+parameter_list|(
+name|bus
+parameter_list|)
+value|(usb_process + 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_BUS_NON_GIANT_ISOC_PROC
 parameter_list|(
 name|bus
 parameter_list|)

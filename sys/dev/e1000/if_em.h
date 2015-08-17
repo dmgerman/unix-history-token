@@ -706,7 +706,7 @@ begin_define
 define|#
 directive|define
 name|EM_MAX_SCATTER
-value|32
+value|64
 end_define
 
 begin_define

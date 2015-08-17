@@ -3250,6 +3250,65 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|uint8_t
+name|usbd_transfer_setup_has_bulk
+parameter_list|(
+specifier|const
+name|struct
+name|usb_config
+modifier|*
+name|setup_start
+parameter_list|,
+name|uint16_t
+name|n_setup
+parameter_list|)
+block|{
+while|while
+condition|(
+name|n_setup
+operator|--
+condition|)
+block|{
+name|uint8_t
+name|type
+init|=
+name|setup_start
+index|[
+name|n_setup
+index|]
+operator|.
+name|type
+decl_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|UE_BULK
+operator|||
+name|type
+operator|==
+name|UE_BULK_INTR
+operator|||
+name|type
+operator|==
+name|UE_TYPE_ANY
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usbd_transfer_setup - setup an array of USB transfers  *  * NOTE: You must always call "usbd_transfer_unsetup" after calling  * "usbd_transfer_setup" if success was returned.  *  * The idea is that the USB device driver should pre-allocate all its  * transfers by one call to this function.  *  * Return values:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
@@ -3895,12 +3954,33 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|usbd_transfer_setup_has_bulk
+argument_list|(
+name|setup_start
+argument_list|,
+name|n_setup
+argument_list|)
+condition|)
+name|info
+operator|->
+name|done_p
+operator|=
+name|USB_BUS_NON_GIANT_BULK_PROC
+argument_list|(
+name|udev
+operator|->
+name|bus
+argument_list|)
+expr_stmt|;
 else|else
 name|info
 operator|->
 name|done_p
 operator|=
-name|USB_BUS_NON_GIANT_PROC
+name|USB_BUS_NON_GIANT_ISOC_PROC
 argument_list|(
 name|udev
 operator|->
@@ -8214,8 +8294,9 @@ name|recurse_1
 condition|)
 block|{
 comment|/* 	         * We have to postpone the callback due to the fact we 	         * will have a Lock Order Reversal, LOR, if we try to 	         * proceed ! 	         */
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|usb_proc_msignal
 argument_list|(
 name|info
@@ -8238,10 +8319,7 @@ index|[
 literal|1
 index|]
 argument_list|)
-condition|)
-block|{
-comment|/* ignore */
-block|}
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -8301,30 +8379,41 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
+operator|(
+name|pq
+operator|->
+name|recurse_3
+operator|!=
+literal|0
+operator|||
 name|mtx_owned
 argument_list|(
 name|info
 operator|->
 name|xfer_mtx
 argument_list|)
+operator|==
+literal|0
+operator|)
 operator|&&
-operator|!
 name|SCHEDULER_STOPPED
 argument_list|()
+operator|==
+literal|0
 condition|)
 block|{
-comment|/* 	       	 * Cases that end up here: 		 * 		 * 5) HW interrupt done callback or other source. 		 */
+comment|/* 	       	 * Cases that end up here: 		 * 		 * 5) HW interrupt done callback or other source. 		 * 6) HW completed transfer during callback 		 */
 name|DPRINTFN
 argument_list|(
 literal|3
 argument_list|,
-literal|"case 5\n"
+literal|"case 5 and 6\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	         * We have to postpone the callback due to the fact we 	         * will have a Lock Order Reversal, LOR, if we try to 	         * proceed ! 	         */
-if|if
-condition|(
+comment|/* 	         * We have to postpone the callback due to the fact we 	         * will have a Lock Order Reversal, LOR, if we try to 	         * proceed! 		 * 		 * Postponing the callback also ensures that other USB 		 * transfer queues get a chance. 	         */
+operator|(
+name|void
+operator|)
 name|usb_proc_msignal
 argument_list|(
 name|info
@@ -8347,10 +8436,7 @@ index|[
 literal|1
 index|]
 argument_list|)
-condition|)
-block|{
-comment|/* ignore */
-block|}
+expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Cases that end up here: 	 * 	 * 1) We are starting a transfer 	 * 2) We are prematurely calling back a transfer 	 * 3) We are stopping a transfer 	 * 4) We are doing an ordinary callback 	 */
@@ -8545,6 +8631,14 @@ name|usb_state
 operator|!=
 name|USB_ST_SETUP
 condition|)
+block|{
+name|USB_BUS_LOCK
+argument_list|(
+name|info
+operator|->
+name|bus
+argument_list|)
+expr_stmt|;
 name|usbpf_xfertap
 argument_list|(
 name|xfer
@@ -8552,6 +8646,14 @@ argument_list|,
 name|USBPF_XFERTAP_DONE
 argument_list|)
 expr_stmt|;
+name|USB_BUS_UNLOCK
+argument_list|(
+name|info
+operator|->
+name|bus
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* call processing routine */
@@ -9493,7 +9595,7 @@ name|xroot
 expr_stmt|;
 name|usb_proc_msignal
 argument_list|(
-name|USB_BUS_NON_GIANT_PROC
+name|USB_BUS_CS_PROC
 argument_list|(
 name|info
 operator|->
@@ -10639,9 +10741,16 @@ operator|->
 name|recurse_1
 condition|)
 block|{
+comment|/* clear third recurse flag */
+name|pq
+operator|->
+name|recurse_3
+operator|=
+literal|0
+expr_stmt|;
 do|do
 block|{
-comment|/* set both recurse flags */
+comment|/* set two first recurse flags */
 name|pq
 operator|->
 name|recurse_1
@@ -10738,6 +10847,13 @@ name|pq
 operator|->
 name|curr
 argument_list|)
+expr_stmt|;
+comment|/* 			 * Set third recurse flag to indicate 			 * recursion happened: 			 */
+name|pq
+operator|->
+name|recurse_3
+operator|=
+literal|1
 expr_stmt|;
 block|}
 do|while
@@ -11586,7 +11702,18 @@ name|up_msleep
 operator|=
 literal|0
 expr_stmt|;
-name|USB_BUS_NON_GIANT_PROC
+name|USB_BUS_NON_GIANT_ISOC_PROC
+argument_list|(
+name|udev
+operator|->
+name|bus
+argument_list|)
+operator|->
+name|up_msleep
+operator|=
+literal|0
+expr_stmt|;
+name|USB_BUS_NON_GIANT_BULK_PROC
 argument_list|(
 name|udev
 operator|->
