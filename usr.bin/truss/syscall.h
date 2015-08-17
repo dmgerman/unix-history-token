@@ -110,6 +110,10 @@ block|,
 name|Timespec2
 block|,
 name|Accessmode
+block|,
+name|Long
+block|,
+name|Sysarch
 block|}
 enum|;
 end_enum
