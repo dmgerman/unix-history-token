@@ -3629,11 +3629,6 @@ operator|->
 name|ar_hln
 condition|)
 block|{
-name|LLE_WUNLOCK
-argument_list|(
-name|la
-argument_list|)
-expr_stmt|;
 name|ARP_LOG
 argument_list|(
 name|LOG_WARNING
