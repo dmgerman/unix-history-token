@@ -35055,7 +35055,9 @@ name|u
 operator|.
 name|mps
 operator|.
-name|fid_ctl
+name|rplc
+operator|.
+name|fid_idx
 operator|=
 name|htobe16
 argument_list|(
@@ -35064,7 +35066,7 @@ argument_list|(
 name|FW_LDST_MPS_RPLC
 argument_list|)
 operator||
-name|V_FW_LDST_CMD_CTL
+name|V_FW_LDST_CMD_IDX
 argument_list|(
 name|i
 argument_list|)
@@ -35157,6 +35159,8 @@ name|u
 operator|.
 name|mps
 operator|.
+name|rplc
+operator|.
 name|rplc127_96
 argument_list|)
 argument_list|,
@@ -35167,6 +35171,8 @@ operator|.
 name|u
 operator|.
 name|mps
+operator|.
+name|rplc
 operator|.
 name|rplc95_64
 argument_list|)
@@ -35179,6 +35185,8 @@ name|u
 operator|.
 name|mps
 operator|.
+name|rplc
+operator|.
 name|rplc63_32
 argument_list|)
 argument_list|,
@@ -35189,6 +35197,8 @@ operator|.
 name|u
 operator|.
 name|mps
+operator|.
+name|rplc
 operator|.
 name|rplc31_0
 argument_list|)
