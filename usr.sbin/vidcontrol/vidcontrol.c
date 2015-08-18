@@ -6239,7 +6239,7 @@ expr_stmt|;
 else|else
 name|opts
 operator|=
-literal|"b:Cc:df:g:h:Hi:l:LM:m:pPr:S:s:T:t:x"
+literal|"b:Cc:dfg:h:Hi:l:LM:m:pPr:S:s:T:t:x"
 expr_stmt|;
 while|while
 condition|(
