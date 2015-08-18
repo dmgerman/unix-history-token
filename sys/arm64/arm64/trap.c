@@ -1271,7 +1271,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The attempted execution of an instruction bit pattern that has no allocated  * instruction resuls in an exception with an unknown reason.  */
+comment|/*  * The attempted execution of an instruction bit pattern that has no allocated  * instruction results in an exception with an unknown reason.  */
 end_comment
 
 begin_function
