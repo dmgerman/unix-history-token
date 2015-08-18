@@ -1271,7 +1271,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We get EXCP_UNKNOWN from QEMU when executing zeroed memory. For now turn  * this into a SIGILL.  */
+comment|/*  * The attempted execution of an instruction bit pattern that has no allocated  * instruction resuls in an exception with an unknown reason.  */
 end_comment
 
 begin_function
@@ -1302,16 +1302,6 @@ operator|=
 name|READ_SPECIALREG
 argument_list|(
 name|far_el1
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"el0 EXCP_UNKNOWN exception\n"
-argument_list|)
-expr_stmt|;
-name|print_registers
-argument_list|(
-name|frame
 argument_list|)
 expr_stmt|;
 name|call_trapsignal
