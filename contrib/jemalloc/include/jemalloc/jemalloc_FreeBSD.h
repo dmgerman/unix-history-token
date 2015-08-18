@@ -200,24 +200,6 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__aarch64__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|LG_SIZEOF_PTR
-value|3
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|__mips__
 end_ifdef
 
@@ -400,6 +382,12 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|je_aligned_alloc
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|je_malloc_usable_size
 end_undef
 
@@ -502,6 +490,13 @@ define|#
 directive|define
 name|je_posix_memalign
 value|__posix_memalign
+end_define
+
+begin_define
+define|#
+directive|define
+name|je_aligned_alloc
+value|__aligned_alloc
 end_define
 
 begin_define
@@ -686,6 +681,16 @@ argument_list|(
 name|__posix_memalign
 argument_list|,
 name|posix_memalign
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__aligned_alloc
+argument_list|,
+name|aligned_alloc
 argument_list|)
 expr_stmt|;
 end_expr_stmt

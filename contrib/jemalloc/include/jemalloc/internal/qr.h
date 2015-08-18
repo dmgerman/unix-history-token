@@ -98,7 +98,7 @@ value|do {				\ 	void *t;							\ 	(a_qr_a)->a_field.qre_prev->a_field.qre_next 
 end_define
 
 begin_comment
-comment|/* qr_meld() and qr_split() are functionally equivalent, so there's no need to  * have two copies of the code. */
+comment|/*  * qr_meld() and qr_split() are functionally equivalent, so there's no need to  * have two copies of the code.  */
 end_comment
 
 begin_define
