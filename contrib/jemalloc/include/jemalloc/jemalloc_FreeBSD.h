@@ -33,12 +33,6 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|CPU_SPINWAIT
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|JEMALLOC_TLS_MODEL
 end_undef
 
@@ -83,13 +77,6 @@ define|#
 directive|define
 name|LG_SIZEOF_PTR
 value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_SPINWAIT
-value|__asm__ volatile("pause")
 end_define
 
 begin_define
@@ -158,13 +145,6 @@ define|#
 directive|define
 name|LG_SIZEOF_PTR
 value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_SPINWAIT
-value|__asm__ volatile("pause")
 end_define
 
 begin_define
@@ -311,24 +291,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CPU_SPINWAIT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CPU_SPINWAIT
-value|do {} while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -355,6 +317,31 @@ define|#
 directive|define
 name|LG_SIZEOF_INTMAX_T
 value|3
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|CPU_SPINWAIT
+end_undef
+
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|CPU_SPINWAIT
+value|cpu_spinwait()
 end_define
 
 begin_comment
