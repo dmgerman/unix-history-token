@@ -15,6 +15,23 @@ directive|define
 name|__TMMINTRIN_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__SSSE3__
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"SSSE3 instruction set not enabled"
+end_error
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -29,7 +46,7 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
-value|__attribute__((__always_inline__, __nodebug__, __target__("ssse3")))
+value|__attribute__((__always_inline__, __nodebug__))
 end_define
 
 begin_function
@@ -1037,6 +1054,15 @@ undef|#
 directive|undef
 name|__DEFAULT_FN_ATTRS
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __SSSE3__ */
+end_comment
 
 begin_endif
 endif|#
