@@ -936,6 +936,10 @@ name|uint16_t
 name|rss_size
 decl_stmt|;
 comment|/* size of VI's RSS table slice */
+name|uint16_t
+name|rss_base
+decl_stmt|;
+comment|/* start of VI's RSS table slice */
 name|uint8_t
 name|lport
 decl_stmt|;
