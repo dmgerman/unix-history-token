@@ -3863,6 +3863,12 @@ operator|&
 name|sin
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|la
+operator|!=
+name|NULL
+condition|)
 name|arp_update_lle
 argument_list|(
 name|ah
@@ -3877,6 +3883,13 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|la
+operator|!=
+name|NULL
+condition|)
+block|{
 name|arp_mark_lle_reachable
 argument_list|(
 name|la
@@ -3887,6 +3900,7 @@ argument_list|(
 name|la
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|reply
 label|:
