@@ -6893,6 +6893,12 @@ name|last_op_thr
 operator|=
 name|curthread
 expr_stmt|;
+name|sc
+operator|->
+name|last_op_flags
+operator|=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
 name|ADAPTER_UNLOCK
@@ -17626,6 +17632,12 @@ operator|->
 name|last_op_thr
 operator|=
 name|curthread
+expr_stmt|;
+name|sc
+operator|->
+name|last_op_flags
+operator|=
+name|flags
 expr_stmt|;
 endif|#
 directive|endif
