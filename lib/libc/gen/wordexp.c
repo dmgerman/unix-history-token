@@ -373,19 +373,12 @@ index|]
 decl_stmt|;
 comment|/* Pipe to child */
 name|char
-name|bbuf
+name|buf
 index|[
-literal|9
+literal|18
 index|]
 decl_stmt|;
-comment|/* Buffer for byte count */
-name|char
-name|wbuf
-index|[
-literal|9
-index|]
-decl_stmt|;
-comment|/* Buffer for word count */
+comment|/* Buffer for byte and word count */
 name|long
 name|nwords
 decl_stmt|,
@@ -452,6 +445,9 @@ specifier|const
 name|char
 modifier|*
 name|ifs
+decl_stmt|;
+name|char
+name|save
 decl_stmt|;
 name|serrno
 operator|=
@@ -649,8 +645,9 @@ literal|"+u"
 argument_list|,
 literal|"-c"
 argument_list|,
-literal|"IFS=$1;eval \"$2\";eval \"set -- $3\";IFS=;a=\"$*\";"
-literal|"printf '%08x' \"$#\" \"${#a}\";printf '%s\\0' \"$@\""
+literal|"IFS=$1;eval \"$2\";eval \"echo;set -- $3\";"
+literal|"IFS=;a=\"$*\";printf '%08x' \"$#\" \"${#a}\";"
+literal|"printf '%s\\0' \"$@\""
 argument_list|,
 literal|""
 argument_list|,
@@ -685,7 +682,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * We are the parent; read the output of the shell wordexp function, 	 * which is a 32-bit hexadecimal word count, a 32-bit hexadecimal 	 * byte count (not including terminating null bytes), followed by 	 * the expanded words separated by nulls. 	 */
+comment|/* 	 * We are the parent; read the output of the shell wordexp function, 	 * which is a byte indicating that the words were parsed successfully, 	 * a 32-bit hexadecimal word count, a 32-bit hexadecimal byte count 	 * (not including terminating null bytes), followed by the expanded 	 * words separated by nulls. 	 */
 name|_close
 argument_list|(
 name|pdes
@@ -694,7 +691,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|we_read_fully
 argument_list|(
@@ -703,36 +700,33 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|wbuf
+name|buf
 argument_list|,
-literal|8
+literal|17
 argument_list|)
-operator|!=
-literal|8
-operator|||
-name|we_read_fully
-argument_list|(
-name|pdes
-index|[
-literal|0
-index|]
-argument_list|,
-name|bbuf
-argument_list|,
-literal|8
-argument_list|)
-operator|!=
-literal|8
 condition|)
 block|{
+case|case
+literal|1
+case|:
 name|error
 operator|=
-name|flags
-operator|&
-name|WRDE_UNDEF
-condition|?
 name|WRDE_BADVAL
-else|:
+expr_stmt|;
+name|serrno
+operator|=
+name|errno
+expr_stmt|;
+goto|goto
+name|cleanup
+goto|;
+case|case
+literal|17
+case|:
+break|break;
+default|default:
+name|error
+operator|=
 name|WRDE_SYNTAX
 expr_stmt|;
 name|serrno
@@ -743,14 +737,16 @@ goto|goto
 name|cleanup
 goto|;
 block|}
-name|wbuf
-index|[
-literal|8
-index|]
+name|save
 operator|=
-name|bbuf
+name|buf
 index|[
-literal|8
+literal|9
+index|]
+expr_stmt|;
+name|buf
+index|[
+literal|9
 index|]
 operator|=
 literal|'\0'
@@ -759,18 +755,36 @@ name|nwords
 operator|=
 name|strtol
 argument_list|(
-name|wbuf
+name|buf
+operator|+
+literal|1
 argument_list|,
 name|NULL
 argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
+name|buf
+index|[
+literal|9
+index|]
+operator|=
+name|save
+expr_stmt|;
+name|buf
+index|[
+literal|17
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|nbytes
 operator|=
 name|strtol
 argument_list|(
-name|bbuf
+name|buf
+operator|+
+literal|9
 argument_list|,
 name|NULL
 argument_list|,
@@ -978,14 +992,9 @@ condition|)
 block|{
 name|error
 operator|=
-name|flags
-operator|&
-name|WRDE_UNDEF
-condition|?
-name|WRDE_BADVAL
-else|:
-name|WRDE_SYNTAX
+name|WRDE_NOSPACE
 expr_stmt|;
+comment|/* abort for unknown reason */
 name|serrno
 operator|=
 name|errno
@@ -1083,15 +1092,10 @@ literal|0
 condition|)
 return|return
 operator|(
-name|flags
-operator|&
-name|WRDE_UNDEF
-condition|?
-name|WRDE_BADVAL
-else|:
-name|WRDE_SYNTAX
+name|WRDE_NOSPACE
 operator|)
 return|;
+comment|/* abort for unknown reason */
 comment|/* 	 * Break the null-terminated expanded word strings out into 	 * the vector. 	 */
 if|if
 condition|(
