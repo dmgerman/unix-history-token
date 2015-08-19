@@ -152,11 +152,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|printf
-argument_list|(
-literal|"Probe called\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|pci_get_vendor
