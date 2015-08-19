@@ -7264,7 +7264,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Searches an xlat array containing bitfield values.  Remaining bits    set after removing the known ones are printed at the end:    IN|0x400 */
+comment|/*  * Searches an xlat array containing bitfield values.  Remaining bits  * set after removing the known ones are printed at the end:  * IN|0x400.  */
 end_comment
 
 begin_function
@@ -7330,7 +7330,7 @@ operator|->
 name|val
 condition|)
 block|{
-comment|/* don't print the "all-bits-zero" string unless all 			   bits are really zero */
+comment|/* 			 * Don't print the "all-bits-zero" string unless all 			 * bits are really zero. 			 */
 if|if
 condition|(
 name|xlat
@@ -7370,7 +7370,7 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-comment|/* if we have leftover bits or didn't match anything */
+comment|/* 	 * If we have leftover bits or didn't match anything, print 	 * the remainder. 	 */
 if|if
 condition|(
 name|rem
@@ -7497,7 +7497,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * get_struct  *  * Copy a fixed amount of bytes from the process.  */
+comment|/*  * Copy a fixed amount of bytes from the process.  */
 end_comment
 
 begin_function
@@ -7589,7 +7589,7 @@ value|4096
 end_define
 
 begin_comment
-comment|/*  * get_string  * Copy a string from the process.  Note that it is  * expected to be a C string, but if max is set, it will  * only get that much.  */
+comment|/*  * Copy a string from the process.  Note that it is  * expected to be a C string, but if max is set, it will  * only get that much.  */
 end_comment
 
 begin_function
@@ -8270,7 +8270,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * print_arg  * Converts a syscall argument into a string.  Said string is  * allocated via malloc(), so needs to be free()'d.  The file  * descriptor is for the process' memory (via /proc), and is used  * to get any data (where the argument is a pointer).  sc is  * a pointer to the syscall description (see above); args is  * an array of all of the system call arguments.  */
+comment|/*  * Converts a syscall argument into a string.  Said string is  * allocated via malloc(), so needs to be free()'d.  sc is  * a pointer to the syscall description (see above); args is  * an array of all of the system call arguments.  */
 end_comment
 
 begin_function
@@ -8485,7 +8485,7 @@ case|case
 name|BinString
 case|:
 block|{
-comment|/* Binary block of data that might have printable characters. 		   XXX If type|OUT, assume that the length is the syscall's 		   return value.  Otherwise, assume that the length of the block 		   is in the next syscall argument. */
+comment|/* 		 * Binary block of data that might have printable characters. 		 * XXX If type|OUT, assume that the length is the syscall's 		 * return value.  Otherwise, assume that the length of the block 		 * is in the next syscall argument. 		 */
 name|int
 name|max_string
 init|=
@@ -8536,7 +8536,7 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
-comment|/* Don't print more than max_string characters, to avoid word 		   wrap.  If we have to truncate put some ... after the string. 		*/
+comment|/* 		 * Don't print more than max_string characters, to avoid word 		 * wrap.  If we have to truncate put some ... after the string. 		 */
 if|if
 condition|(
 name|len
@@ -9044,17 +9044,27 @@ specifier|const
 name|char
 modifier|*
 name|temp
-init|=
-name|ioctlname
-argument_list|(
+decl_stmt|;
+name|unsigned
+name|long
+name|cmd
+decl_stmt|;
+name|cmd
+operator|=
 name|args
 index|[
 name|sc
 operator|->
 name|offset
 index|]
+expr_stmt|;
+name|temp
+operator|=
+name|ioctlname
+argument_list|(
+name|cmd
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|temp
@@ -9068,26 +9078,15 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|unsigned
-name|long
-name|arg
-init|=
-name|args
-index|[
-name|sc
-operator|->
-name|offset
-index|]
-decl_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
 literal|"0x%lx { IO%s%s 0x%lx('%c'), %lu, %lu }"
 argument_list|,
-name|arg
+name|cmd
 argument_list|,
-name|arg
+name|cmd
 operator|&
 name|IOC_OUT
 condition|?
@@ -9095,7 +9094,7 @@ literal|"R"
 else|:
 literal|""
 argument_list|,
-name|arg
+name|cmd
 operator|&
 name|IOC_IN
 condition|?
@@ -9105,14 +9104,14 @@ literal|""
 argument_list|,
 name|IOCGROUP
 argument_list|(
-name|arg
+name|cmd
 argument_list|)
 argument_list|,
 name|isprint
 argument_list|(
 name|IOCGROUP
 argument_list|(
-name|arg
+name|cmd
 argument_list|)
 argument_list|)
 condition|?
@@ -9121,18 +9120,18 @@ name|char
 operator|)
 name|IOCGROUP
 argument_list|(
-name|arg
+name|cmd
 argument_list|)
 else|:
 literal|'?'
 argument_list|,
-name|arg
+name|cmd
 operator|&
 literal|0xFF
 argument_list|,
 name|IOCPARM_LEN
 argument_list|(
-name|arg
+name|cmd
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10247,7 +10246,7 @@ case|case
 name|Fcntlflag
 case|:
 block|{
-comment|/* XXX output depends on the value of the previous argument */
+comment|/* XXX: Output depends on the value of the previous argument. */
 switch|switch
 condition|(
 name|args
@@ -10965,7 +10964,9 @@ argument_list|,
 name|addr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -11010,7 +11011,9 @@ argument_list|,
 name|addr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -11274,7 +11277,7 @@ case|case
 name|Kevent
 case|:
 block|{
-comment|/* 		 * XXX XXX: the size of the array is determined by either the 		 * next syscall argument, or by the syscall returnvalue, 		 * depending on which argument number we are.  This matches the 		 * kevent syscall, but luckily that's the only syscall that uses 		 * them. 		 */
+comment|/* 		 * XXX XXX: The size of the array is determined by either the 		 * next syscall argument, or by the syscall return value, 		 * depending on which argument number we are.  This matches the 		 * kevent syscall, but luckily that's the only syscall that uses 		 * them. 		 */
 name|struct
 name|kevent
 modifier|*
@@ -12146,7 +12149,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * print_syscall  * Print (to outfile) the system call and its arguments.  Note that  * nargs is the number of arguments (not the number of words; this is  * potentially confusing, I know).  */
+comment|/*  * Print (to outfile) the system call and its arguments.  Note that  * nargs is the number of arguments (not the number of words; this is  * potentially confusing, I know).  */
 end_comment
 
 begin_function
