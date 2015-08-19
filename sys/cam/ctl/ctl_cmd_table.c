@@ -3215,7 +3215,7 @@ comment|/* 35 SYNCHRONIZE CACHE(10) */
 block|{
 name|ctl_sync_cache
 block|,
-name|CTL_SERIDX_START
+name|CTL_SERIDX_SYNC
 block|,
 name|CTL_CMD_FLAG_OK_ON_SLUN
 operator||
@@ -4767,7 +4767,7 @@ comment|/* 91 SYNCHRONIZE CACHE(16) */
 block|{
 name|ctl_sync_cache
 block|,
-name|CTL_SERIDX_START
+name|CTL_SERIDX_SYNC
 block|,
 name|CTL_CMD_FLAG_OK_ON_SLUN
 operator||
