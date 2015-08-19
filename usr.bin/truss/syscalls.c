@@ -11542,12 +11542,12 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{ mode=%s,inode=%jd,size=%jd,blksize=%ld }"
+literal|"{ mode=%s,inode=%ju,size=%jd,blksize=%ld }"
 argument_list|,
 name|mode
 argument_list|,
 operator|(
-name|intmax_t
+name|uintmax_t
 operator|)
 name|st
 operator|.
