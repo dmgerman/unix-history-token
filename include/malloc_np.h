@@ -52,10 +52,10 @@ name|size_t
 parameter_list|,
 name|size_t
 parameter_list|,
-name|bool
+name|_Bool
 modifier|*
 parameter_list|,
-name|bool
+name|_Bool
 modifier|*
 parameter_list|,
 name|unsigned
@@ -65,7 +65,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|bool
+name|_Bool
 function_decl|(
 name|chunk_dalloc_t
 function_decl|)
@@ -75,7 +75,7 @@ modifier|*
 parameter_list|,
 name|size_t
 parameter_list|,
-name|bool
+name|_Bool
 parameter_list|,
 name|unsigned
 parameter_list|)
@@ -84,7 +84,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|bool
+name|_Bool
 function_decl|(
 name|chunk_commit_t
 function_decl|)
@@ -105,7 +105,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|bool
+name|_Bool
 function_decl|(
 name|chunk_decommit_t
 function_decl|)
@@ -126,7 +126,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|bool
+name|_Bool
 function_decl|(
 name|chunk_purge_t
 function_decl|)
@@ -147,7 +147,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|bool
+name|_Bool
 function_decl|(
 name|chunk_split_t
 function_decl|)
@@ -161,7 +161,7 @@ name|size_t
 parameter_list|,
 name|size_t
 parameter_list|,
-name|bool
+name|_Bool
 parameter_list|,
 name|unsigned
 parameter_list|)
@@ -170,7 +170,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|bool
+name|_Bool
 function_decl|(
 name|chunk_merge_t
 function_decl|)
@@ -185,7 +185,7 @@ modifier|*
 parameter_list|,
 name|size_t
 parameter_list|,
-name|bool
+name|_Bool
 parameter_list|,
 name|unsigned
 parameter_list|)
