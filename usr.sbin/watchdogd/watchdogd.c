@@ -342,6 +342,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|u_int
+name|exit_timeout
+init|=
+name|WD_TO_NEVER
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_int
 name|pretimeout
 init|=
 literal|0
@@ -1938,7 +1947,7 @@ block|{
 return|return
 name|watchdog_patpat
 argument_list|(
-literal|0
+name|exit_timeout
 argument_list|)
 return|;
 block|}
@@ -1946,7 +1955,7 @@ name|failsafe
 label|:
 name|watchdog_patpat
 argument_list|(
-literal|0
+name|exit_timeout
 argument_list|)
 expr_stmt|;
 return|return
@@ -1978,8 +1987,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage:\n"
-literal|"  watchdogd [-dnSw] [-e cmd] [-I file] [-s sleep] [-t timeout]\n"
-literal|"            [-T script_timeout]\n"
+literal|"  watchdogd [-dnSw] [-e cmd] [-I pidfile] [-s sleep] [-t timeout]\n"
+literal|"            [-T script_timeout] [-x exit_timeout]\n"
 literal|"            [--debug]\n"
 literal|"            [--pretimeout seconds] [-pretimeout-action action]\n"
 literal|"            [--softtimeout] [-softtimeout-action action]\n"
@@ -2924,7 +2933,7 @@ name|is_daemon
 condition|)
 name|getopt_shortopts
 operator|=
-literal|"I:de:ns:t:ST:w?"
+literal|"I:de:ns:t:ST:wx:?"
 expr_stmt|;
 else|else
 name|getopt_shortopts
@@ -3089,6 +3098,31 @@ case|:
 name|do_timedog
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+name|exit_timeout
+operator|=
+name|parse_timeout_to_pow2ns
+argument_list|(
+name|c
+argument_list|,
+name|NULL
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|exit_timeout
+operator|!=
+literal|0
+condition|)
+name|exit_timeout
+operator||=
+name|WD_ACTIVE
 expr_stmt|;
 break|break;
 case|case
