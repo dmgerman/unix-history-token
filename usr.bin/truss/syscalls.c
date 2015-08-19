@@ -9179,10 +9179,10 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{ %ld.%09ld }"
+literal|"{ %jd.%09ld }"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|ts
 operator|.
@@ -9336,10 +9336,10 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%ld.%09ld"
+literal|"%jd.%09ld"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|ts
 index|[
@@ -9425,10 +9425,10 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{ %ld.%06ld }"
+literal|"{ %jd.%06ld }"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|tv
 operator|.
@@ -9500,10 +9500,10 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{ %ld.%06ld, %ld.%06ld }"
+literal|"{ %jd.%06ld, %jd.%06ld }"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|tv
 index|[
@@ -9520,7 +9520,7 @@ operator|.
 name|tv_usec
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|tv
 index|[
@@ -9595,10 +9595,10 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{ %ld.%06ld, %ld.%06ld }"
+literal|"{ %jd.%06ld, %jd.%06ld }"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|itv
 operator|.
@@ -9613,7 +9613,7 @@ operator|.
 name|tv_usec
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|itv
 operator|.
@@ -11630,10 +11630,10 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{ u=%ld.%06ld,s=%ld.%06ld,in=%ld,out=%ld }"
+literal|"{ u=%jd.%06ld,s=%jd.%06ld,in=%ld,out=%ld }"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|ru
 operator|.
@@ -11648,7 +11648,7 @@ operator|.
 name|tv_usec
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|ru
 operator|.
@@ -12286,10 +12286,10 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"%ld.%09ld "
+literal|"%jd.%09ld "
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|timediff
 operator|.
@@ -12338,10 +12338,10 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"%ld.%09ld "
+literal|"%jd.%09ld "
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|timediff
 operator|.

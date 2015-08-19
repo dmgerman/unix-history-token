@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1299,10 +1305,10 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"%ld.%09ld "
+literal|"%jd.%09ld "
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|timediff
 operator|.
@@ -1349,10 +1355,10 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"%ld.%09ld "
+literal|"%jd.%09ld "
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|timediff
 operator|.
@@ -1461,10 +1467,10 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"%ld.%09ld "
+literal|"%jd.%09ld "
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|timediff
 operator|.
@@ -1511,10 +1517,10 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"%ld.%09ld "
+literal|"%jd.%09ld "
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|timediff
 operator|.
