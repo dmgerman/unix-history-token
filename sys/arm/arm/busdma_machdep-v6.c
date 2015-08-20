@@ -345,11 +345,11 @@ block|{
 name|vm_offset_t
 name|vaddr
 decl_stmt|;
-comment|/* kva of bounce buffer */
+comment|/* kva of client data */
 name|bus_addr_t
 name|busaddr
 decl_stmt|;
-comment|/* Physical address */
+comment|/* client physical address */
 name|bus_size_t
 name|datacount
 decl_stmt|;
