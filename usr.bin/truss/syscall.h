@@ -114,6 +114,10 @@ block|,
 name|Long
 block|,
 name|Sysarch
+block|,
+name|ExecArgs
+block|,
+name|ExecEnv
 block|}
 enum|;
 end_enum
