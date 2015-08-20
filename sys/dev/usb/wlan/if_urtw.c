@@ -10077,15 +10077,6 @@ name|data
 parameter_list|)
 block|{
 name|struct
-name|urtw_softc
-modifier|*
-name|sc
-init|=
-name|ifp
-operator|->
-name|if_softc
-decl_stmt|;
-name|struct
 name|ieee80211com
 modifier|*
 name|ic
@@ -10093,6 +10084,15 @@ init|=
 name|ifp
 operator|->
 name|if_l2com
+decl_stmt|;
+name|struct
+name|urtw_softc
+modifier|*
+name|sc
+init|=
+name|ic
+operator|->
+name|ic_softc
 decl_stmt|;
 name|struct
 name|ifreq
@@ -10201,9 +10201,7 @@ else|else
 block|{
 name|urtw_init
 argument_list|(
-name|ifp
-operator|->
-name|if_softc
+name|sc
 argument_list|)
 expr_stmt|;
 name|startall
@@ -10937,9 +10935,9 @@ name|urtw_softc
 modifier|*
 name|sc
 init|=
-name|ifp
+name|ic
 operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 comment|/* prevent management frames from being sent if we're not ready */
 if|if
@@ -11140,9 +11138,7 @@ name|sc
 init|=
 name|ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|struct
 name|ifnet
@@ -12586,9 +12582,7 @@ name|sc
 init|=
 name|ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|struct
 name|urtw_vap
