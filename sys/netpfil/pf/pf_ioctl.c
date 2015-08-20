@@ -14939,15 +14939,9 @@ break|break;
 block|}
 name|totlen
 operator|=
-operator|(
 name|io
 operator|->
 name|pfrio_size
-operator|+
-name|io
-operator|->
-name|pfrio_size2
-operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
