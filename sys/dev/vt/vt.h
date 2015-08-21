@@ -1891,6 +1891,14 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
+name|vt_device
+name|vt_consdev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
 name|terminal
 name|vt_consterm
 decl_stmt|;
