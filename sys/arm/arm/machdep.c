@@ -6959,12 +6959,6 @@ argument_list|(
 literal|"elf kernel"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|kmdp
-operator|!=
-name|NULL
-condition|)
 name|dtbp
 operator|=
 name|MD_FETCH
@@ -6975,14 +6969,6 @@ name|MODINFOMD_DTBP
 argument_list|,
 name|vm_offset_t
 argument_list|)
-expr_stmt|;
-else|else
-name|dtbp
-operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|NULL
 expr_stmt|;
 if|#
 directive|if
