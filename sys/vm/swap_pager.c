@@ -4928,15 +4928,6 @@ argument_list|(
 name|mreq
 argument_list|)
 expr_stmt|;
-name|rtvals
-index|[
-name|i
-operator|+
-name|j
-index|]
-operator|=
-name|VM_PAGER_OK
-expr_stmt|;
 name|mreq
 operator|->
 name|oflags
@@ -4997,6 +4988,29 @@ operator|->
 name|b_npages
 argument_list|)
 expr_stmt|;
+comment|/* 		 * We unconditionally set rtvals[] to VM_PAGER_PEND so that we 		 * can call the async completion routine at the end of a 		 * synchronous I/O operation.  Otherwise, our caller would 		 * perform duplicate unbusy and wakeup operations on the page 		 * and object, respectively. 		 */
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|n
+condition|;
+name|j
+operator|++
+control|)
+name|rtvals
+index|[
+name|i
+operator|+
+name|j
+index|]
+operator|=
+name|VM_PAGER_PEND
+expr_stmt|;
 comment|/* 		 * asynchronous 		 * 		 * NOTE: b_blkno is destroyed by the call to swapdev_strategy 		 */
 if|if
 condition|(
@@ -5021,29 +5035,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<
-name|n
-condition|;
-operator|++
-name|j
-control|)
-name|rtvals
-index|[
-name|i
-operator|+
-name|j
-index|]
-operator|=
-name|VM_PAGER_PEND
-expr_stmt|;
-comment|/* restart outter loop */
 continue|continue;
 block|}
 comment|/* 		 * synchronous 		 * 		 * NOTE: b_blkno is destroyed by the call to swapdev_strategy 		 */
@@ -5058,7 +5049,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Wait for the sync I/O to complete, then update rtvals. 		 * We just set the rtvals[] to VM_PAGER_PEND so we can call 		 * our async completion routine at the end, thus avoiding a 		 * double-free. 		 */
+comment|/* 		 * Wait for the sync I/O to complete. 		 */
 name|bwait
 argument_list|(
 name|bp
@@ -5067,28 +5058,6 @@ name|PVM
 argument_list|,
 literal|"swwrt"
 argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<
-name|n
-condition|;
-operator|++
-name|j
-control|)
-name|rtvals
-index|[
-name|i
-operator|+
-name|j
-index|]
-operator|=
-name|VM_PAGER_PEND
 expr_stmt|;
 comment|/* 		 * Now that we are through with the bp, we can call the 		 * normal async completion, which frees everything up. 		 */
 name|swp_pager_async_iodone
