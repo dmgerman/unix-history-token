@@ -535,6 +535,10 @@ name|cbq_opts
 name|cbq_opts
 decl_stmt|;
 name|struct
+name|codel_opts
+name|codel_opts
+decl_stmt|;
+name|struct
 name|priq_opts
 name|priq_opts
 decl_stmt|;

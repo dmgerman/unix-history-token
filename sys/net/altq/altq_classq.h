@@ -48,6 +48,10 @@ define|#
 directive|define
 name|Q_DROPTAIL
 value|0x03
+define|#
+directive|define
+name|Q_CODEL
+value|0x04
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -69,6 +73,10 @@ name|int
 name|qlim_
 decl_stmt|;
 comment|/* Queue limit (in number of packets*) */
+name|int
+name|qsize_
+decl_stmt|;
+comment|/* Queue size (in number of bytes*) */
 name|int
 name|qtype_
 decl_stmt|;
@@ -106,6 +114,14 @@ value|(q)->qlen_
 comment|/* Current queue length. */
 define|#
 directive|define
+name|qsize
+parameter_list|(
+name|q
+parameter_list|)
+value|(q)->qsize_
+comment|/* Current queue size. */
+define|#
+directive|define
 name|qtail
 parameter_list|(
 name|q
@@ -127,6 +143,14 @@ name|q
 parameter_list|)
 value|((q)->qlen_ == 0)
 comment|/* Is the queue empty?? */
+define|#
+directive|define
+name|q_is_codel
+parameter_list|(
+name|q
+parameter_list|)
+value|((q)->qtype_ == Q_CODEL)
+comment|/* Is the queue a codel queue */
 define|#
 directive|define
 name|q_is_red
@@ -293,6 +317,16 @@ name|q
 argument_list|)
 operator|++
 expr_stmt|;
+name|qsize
+argument_list|(
+name|q
+argument_list|)
+operator|+=
+name|m_pktlen
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 block|}
 specifier|static
 name|__inline
@@ -362,6 +396,16 @@ argument_list|(
 name|q
 argument_list|)
 operator|--
+expr_stmt|;
+name|qsize
+argument_list|(
+name|q
+argument_list|)
+operator|-=
+name|m_pktlen
+argument_list|(
+name|m0
+argument_list|)
 expr_stmt|;
 name|m0
 operator|->
