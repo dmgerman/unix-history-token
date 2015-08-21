@@ -124,6 +124,20 @@ name|console_page
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|xen_disable_pv_disks
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|xen_disable_pv_nics
+decl_stmt|;
+end_decl_stmt
+
 begin_enum
 enum|enum
 name|xen_domain_type
