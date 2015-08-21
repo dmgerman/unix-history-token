@@ -574,8 +574,6 @@ argument_list|,
 name|dfd
 argument_list|,
 name|dirs
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
