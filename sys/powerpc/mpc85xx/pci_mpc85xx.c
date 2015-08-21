@@ -1219,6 +1219,10 @@ literal|0
 else|:
 name|PCI_SLOTMAX
 expr_stmt|;
+name|sc
+operator|->
+name|sc_busnr
+operator|=
 name|fsl_pcib_init
 argument_list|(
 name|sc
@@ -2930,36 +2934,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 			 * The PCI Root Complex comes up as a Processor/PowerPC, 			 * but is a bridge. 			 */
-comment|/* Allow only proper PCI-PCI briges */
+comment|/* Allow all DEVTYPE 1 devices */
 if|if
 condition|(
-name|class
-operator|!=
-name|PCIC_BRIDGE
-operator|&&
-name|class
-operator|!=
-name|PCIC_PROCESSOR
-condition|)
-continue|continue;
-if|if
-condition|(
-name|subclass
-operator|!=
-name|PCIS_BRIDGE_PCI
-operator|&&
-name|subclass
-operator|!=
-name|PCIS_PROCESSOR_POWERPC
-condition|)
-continue|continue;
-if|if
-condition|(
-name|subclass
-operator|==
-name|PCIS_PROCESSOR_POWERPC
-operator|&&
 name|hdrtype
 operator|!=
 name|PCIM_HDRTYPE_BRIDGE
