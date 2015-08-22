@@ -3490,6 +3490,12 @@ case|:
 return|return
 literal|"SATA300"
 return|;
+case|case
+name|ATA_SA600
+case|:
+return|return
+literal|"SATA600"
+return|;
 default|default:
 if|if
 condition|(
