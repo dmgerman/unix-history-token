@@ -461,8 +461,19 @@ name|argc
 operator|>
 literal|2
 condition|)
-name|usage
-argument_list|()
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s is not a directory"
+argument_list|,
+name|argv
+index|[
+name|argc
+operator|-
+literal|1
+index|]
+argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
