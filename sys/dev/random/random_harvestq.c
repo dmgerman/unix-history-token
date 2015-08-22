@@ -517,7 +517,7 @@ argument_list|)
 argument_list|,
 literal|4
 argument_list|,
-name|RANDOM_FAST
+name|RANDOM_UMA
 argument_list|)
 expr_stmt|;
 name|harvest_context
@@ -949,7 +949,7 @@ literal|"SWI"
 block|,
 literal|"FS_ATIME"
 block|,
-literal|"HIGH_PERFORMANCE"
+literal|"UMA"
 block|,
 comment|/* ENVIRONMENTAL_END */
 literal|"PURE_OCTEON"

@@ -9123,8 +9123,8 @@ decl_stmt|;
 name|int
 name|cpu
 decl_stmt|;
-comment|/* XXX: FIX? The entropy here is desirable, but the harvesting may be expensive */
-name|random_harvest_fast
+comment|/* Enable entropy collection for RANDOM_ENABLE_UMA kernel option */
+name|random_harvest_fast_uma
 argument_list|(
 operator|&
 name|zone
@@ -9136,7 +9136,7 @@ argument_list|)
 argument_list|,
 literal|1
 argument_list|,
-name|RANDOM_FAST
+name|RANDOM_UMA
 argument_list|)
 expr_stmt|;
 comment|/* This is the fast path allocation */
@@ -11278,8 +11278,8 @@ decl_stmt|;
 name|int
 name|cpu
 decl_stmt|;
-comment|/* XXX: FIX? The entropy here is desirable, but the harvesting may be expensive */
-name|random_harvest_fast
+comment|/* Enable entropy collection for RANDOM_ENABLE_UMA kernel option */
+name|random_harvest_fast_uma
 argument_list|(
 operator|&
 name|zone
@@ -11291,7 +11291,7 @@ argument_list|)
 argument_list|,
 literal|1
 argument_list|,
-name|RANDOM_FAST
+name|RANDOM_UMA
 argument_list|)
 expr_stmt|;
 ifdef|#
