@@ -925,6 +925,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|tc_chosen
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Non-zero if a specific tc was chosen via sysctl. */
+end_comment
+
 begin_function_decl
 specifier|static
 name|void
@@ -5282,7 +5293,12 @@ argument_list|,
 literal|"goodness of time counter"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Never automatically use a timecounter with negative quality. 	 * Even though we run on the dummy counter, switching here may be 	 * worse since this timecounter may not be monotonous. 	 */
+comment|/* 	 * Do not automatically switch if the current tc was specifically 	 * chosen.  Never automatically use a timecounter with negative quality. 	 * Even though we run on the dummy counter, switching here may be 	 * worse since this timecounter may not be monotonic. 	 */
+if|if
+condition|(
+name|tc_chosen
+condition|)
+return|return;
 if|if
 condition|(
 name|tc
@@ -6167,7 +6183,19 @@ operator|->
 name|newptr
 operator|==
 name|NULL
-operator|||
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* Record that the tc in use now was specifically chosen. */
+name|tc_chosen
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|newname
@@ -6181,7 +6209,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 for|for
@@ -6284,7 +6312,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Report or change the active timecounter hardware. */
+comment|/* Report the available timecounter hardware. */
 end_comment
 
 begin_function
