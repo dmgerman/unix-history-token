@@ -116,12 +116,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ntp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/fdt/fdt_common.h>
 end_include
 
@@ -1025,12 +1019,6 @@ begin_comment
 comment|/*  * PPS driver routines, included when the kernel is built with option PPS_SYNC.  *  * Note that this PPS driver does not use an interrupt.  Instead it uses the  * hardware's ability to latch the timer's count register in response to a  * signal on an IO pin.  Each of timers 4-7 have an associated pin, and this  * code allows any one of those to be used.  *  * The timecounter routines in kern_tc.c call the pps poll routine periodically  * to see if a new counter value has been latched.  When a new value has been  * latched, the only processing done in the poll routine is to capture the  * current set of timecounter timehands (done with pps_capture()) and the  * latched value from the timer.  The remaining work (done by pps_event()) is  * scheduled to be done later in a non-interrupt context.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PPS_SYNC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -1753,9 +1741,6 @@ argument_list|,
 literal|0600
 argument_list|,
 name|PPS_CDEV_NAME
-literal|"%d"
-argument_list|,
-name|unit
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1786,47 +1771,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* PPS_SYNC */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|am335x_dmtimer_pps_init
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|struct
-name|am335x_dmtimer_softc
-modifier|*
-name|sc
-parameter_list|)
-block|{
-comment|/* 	 * When PPS support is not compiled in, there's no need to use a timer 	 * that has an associated capture-input pin, so use the default. 	 */
-return|return
-operator|(
-name|DEFAULT_TC_TIMER
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PPS_SYNC */
-end_comment
 
 begin_comment
 comment|/*  * End of PPS driver code.  */
