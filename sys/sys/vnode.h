@@ -5056,14 +5056,6 @@ name|default_vnodeops
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|vop_vector
-name|devfs_specops
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
