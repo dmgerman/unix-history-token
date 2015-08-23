@@ -8029,7 +8029,16 @@ argument_list|(
 literal|"Unexpected end of line in substitution"
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|BASESYNTAX
+index|[
+name|c
+index|]
+operator|!=
+name|CCTL
+condition|)
 name|USTPUTC
 argument_list|(
 name|c
@@ -8108,6 +8117,15 @@ argument_list|,
 name|out
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|BASESYNTAX
+index|[
+name|c
+index|]
+operator|!=
+name|CCTL
+condition|)
 name|STPUTC
 argument_list|(
 name|c
