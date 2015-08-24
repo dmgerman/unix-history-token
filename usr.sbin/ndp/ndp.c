@@ -262,19 +262,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-name|ntop_buf
-index|[
-name|INET6_ADDRSTRLEN
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* inet_ntop() */
-end_comment
-
-begin_decl_stmt
+specifier|static
 name|char
 name|host_buf
 index|[
@@ -288,6 +276,7 @@ comment|/* getnameinfo() */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|ifix_buf
 index|[
@@ -301,19 +290,6 @@ comment|/* if_indextoname() */
 end_comment
 
 begin_function_decl
-name|int
-name|main
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|int
 name|file
@@ -325,6 +301,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|getsocket
 parameter_list|(
@@ -334,6 +311,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|set
 parameter_list|(
@@ -347,6 +325,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|get
 parameter_list|(
@@ -357,6 +336,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|delete
 parameter_list|(
@@ -367,6 +347,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|dump
 parameter_list|(
@@ -411,6 +392,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ndp_ether_aton
 parameter_list|(
@@ -424,6 +406,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -433,6 +416,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|rtmsg
 parameter_list|(
@@ -442,6 +426,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ifinfo
 parameter_list|(
@@ -458,6 +443,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|rtrlist
 parameter_list|(
@@ -467,6 +453,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|plist
 parameter_list|(
@@ -476,6 +463,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pfx_flush
 parameter_list|(
@@ -485,6 +473,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|rtr_flush
 parameter_list|(
@@ -494,6 +483,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|harmonize_rtr
 parameter_list|(
@@ -585,23 +575,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|mode
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|arg
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|main
@@ -617,6 +590,16 @@ parameter_list|)
 block|{
 name|int
 name|ch
+decl_stmt|,
+name|mode
+init|=
+literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|arg
+init|=
+name|NULL
 decl_stmt|;
 name|pid
 operator|=
@@ -1402,6 +1385,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|getsocket
 parameter_list|()
@@ -1445,64 +1429,99 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_in6
 name|so_mask
 init|=
 block|{
+operator|.
+name|sin6_len
+operator|=
 sizeof|sizeof
 argument_list|(
 name|so_mask
 argument_list|)
 block|,
+operator|.
+name|sin6_family
+operator|=
 name|AF_INET6
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_in6
 name|blank_sin
 init|=
 block|{
+operator|.
+name|sin6_len
+operator|=
 sizeof|sizeof
 argument_list|(
 name|blank_sin
 argument_list|)
 block|,
+operator|.
+name|sin6_family
+operator|=
 name|AF_INET6
 block|}
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|sockaddr_in6
 name|sin_m
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_dl
 name|blank_sdl
 init|=
 block|{
+operator|.
+name|sdl_len
+operator|=
 sizeof|sizeof
 argument_list|(
 name|blank_sdl
 argument_list|)
 block|,
+operator|.
+name|sdl_family
+operator|=
 name|AF_LINK
 block|}
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|sockaddr_dl
 name|sdl_m
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|time_t
 name|expire_time
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|flags
 decl_stmt|,
@@ -1511,6 +1530,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_struct
+specifier|static
 struct|struct
 block|{
 name|struct
@@ -1533,6 +1553,7 @@ comment|/*  * Set an individual neighbor cache entry  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|set
 parameter_list|(
@@ -2010,6 +2031,7 @@ comment|/*  * Display an individual neighbor cache entry  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|get
 parameter_list|(
@@ -2197,6 +2219,7 @@ comment|/*  * Delete a neighbor cache entry  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|delete
 parameter_list|(
@@ -2572,6 +2595,7 @@ comment|/*  * Dump the entire neighbor cache  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|dump
 parameter_list|(
@@ -3747,10 +3771,6 @@ index|[
 name|NI_MAXHOST
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 if|if
 condition|(
 name|sdl
@@ -3851,6 +3871,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ndp_ether_aton
 parameter_list|(
@@ -3970,6 +3991,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -4028,6 +4050,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|rtmsg
 parameter_list|(
@@ -4355,6 +4378,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ifinfo
 parameter_list|(
@@ -5079,6 +5103,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|void
 name|rtrlist
 parameter_list|()
@@ -5431,6 +5456,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|plist
 parameter_list|()
@@ -6105,6 +6131,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pfx_flush
 parameter_list|()
@@ -6185,6 +6212,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|rtr_flush
 parameter_list|()
@@ -6270,6 +6298,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|harmonize_rtr
 parameter_list|()
