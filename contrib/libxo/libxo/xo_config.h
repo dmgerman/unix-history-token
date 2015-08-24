@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* libxo/xoconfig.h.  Generated from xoconfig.h.in by configure.  */
+comment|/* libxo/xo_config.h.  Generated from xo_config.h.in by configure.  */
 end_comment
 
 begin_comment
-comment|/* libxo/xoconfig.h.in.  Generated from configure.ac by autoheader.  */
+comment|/* libxo/xo_config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
@@ -87,6 +87,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the declaration of `__isthreaded', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL___ISTHREADED
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<dlfcn.h> header file. */
 end_comment
 
@@ -153,6 +164,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `getprogname' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETPROGNAME
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `getrusage' function. */
 end_comment
 
@@ -164,6 +186,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* gettext(3) */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETTEXT */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `gettimeofday' function. */
 end_comment
 
@@ -171,6 +201,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_GETTIMEOFDAY
+value|1
+end_define
+
+begin_comment
+comment|/* humanize_number(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_HUMANIZE_NUMBER
 value|1
 end_define
 
@@ -204,6 +245,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_LIBM
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<libutil.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIBUTIL_H
 value|1
 end_define
 
@@ -408,6 +460,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Have struct sockaddr_un.sun_len */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SUN_LEN
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `sysctlbyname' function. */
 end_comment
 
@@ -474,6 +537,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<threads.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_THREADS_H
+value|1
+end_define
+
+begin_comment
+comment|/* thread-local setting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_THREAD_LOCAL
+value|THREAD_LOCAL_before
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<tzfile.h> header file. */
 end_comment
 
@@ -515,6 +600,61 @@ end_comment
 begin_comment
 comment|/* #undef LIBXO_TEXT_ONLY */
 end_comment
+
+begin_comment
+comment|/* Version number as dotted value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LIBXO_VERSION
+value|"0.4.3"
+end_define
+
+begin_comment
+comment|/* Version number extra information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LIBXO_VERSION_EXTRA
+value|""
+end_define
+
+begin_comment
+comment|/* Version number as a number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LIBXO_VERSION_NUMBER
+value|4003
+end_define
+
+begin_comment
+comment|/* Version number as string */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LIBXO_VERSION_STRING
+value|"4003"
+end_define
+
+begin_comment
+comment|/* Enable local wcwidth implementation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LIBXO_WCWIDTH
+value|1
+end_define
 
 begin_comment
 comment|/* Define to the sub-directory where libtool stores uninstalled libraries. */
@@ -568,7 +708,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"libxo 0.3.2"
+value|"libxo 0.4.3"
 end_define
 
 begin_comment
@@ -601,7 +741,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"0.3.2"
+value|"0.4.3"
 end_define
 
 begin_comment
@@ -631,7 +771,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"0.3.2"
+value|"0.4.3"
 end_define
 
 begin_comment

@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
 
@@ -25,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -270,33 +258,9 @@ literal|"Number of items sold"
 block|}
 block|,
 block|{
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
+name|XO_INFO_NULL
 block|}
 block|,     }
-decl_stmt|;
-name|int
-name|info_count
-init|=
-operator|(
-sizeof|sizeof
-argument_list|(
-name|info
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|info
-index|[
-literal|0
-index|]
-argument_list|)
-operator|)
-operator|-
-literal|1
 decl_stmt|;
 name|argc
 operator|=
@@ -521,7 +485,8 @@ name|NULL
 argument_list|,
 name|info
 argument_list|,
-name|info_count
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|xo_set_flags
@@ -536,6 +501,15 @@ argument_list|(
 name|NULL
 argument_list|,
 literal|"top"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"Connecting to {:host}.{:domain}...\n"
+argument_list|,
+literal|"my-box"
+argument_list|,
+literal|"example.com"
 argument_list|)
 expr_stmt|;
 name|xo_attr
@@ -656,7 +630,7 @@ argument_list|)
 expr_stmt|;
 name|xo_open_container
 argument_list|(
-literal|"data"
+literal|"data2"
 argument_list|)
 expr_stmt|;
 name|xo_open_list
@@ -766,12 +740,12 @@ argument_list|)
 expr_stmt|;
 name|xo_close_container
 argument_list|(
-literal|"data"
+literal|"data2"
 argument_list|)
 expr_stmt|;
 name|xo_open_container
 argument_list|(
-literal|"data"
+literal|"data3"
 argument_list|)
 expr_stmt|;
 name|xo_open_list
@@ -881,12 +855,12 @@ argument_list|)
 expr_stmt|;
 name|xo_close_container
 argument_list|(
-literal|"data"
+literal|"data3"
 argument_list|)
 expr_stmt|;
 name|xo_open_container
 argument_list|(
-literal|"data"
+literal|"data4"
 argument_list|)
 expr_stmt|;
 name|xo_open_list
@@ -932,7 +906,7 @@ argument_list|)
 expr_stmt|;
 name|xo_close_container
 argument_list|(
-literal|"data"
+literal|"data4"
 argument_list|)
 expr_stmt|;
 name|xo_emit

@@ -33,6 +33,12 @@ directive|include
 file|"xo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"xo_humanize.h"
+end_include
+
 begin_function
 name|int
 name|main
@@ -255,6 +261,123 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
+literal|"We are {{emit}}{{ting}} some {:what}\n"
+argument_list|,
+literal|"braces"
+argument_list|)
+expr_stmt|;
+name|xo_message
+argument_list|(
+literal|"abcdef"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|xo_message_e
+argument_list|(
+literal|"abcdef"
+argument_list|)
+expr_stmt|;
+name|xo_message
+argument_list|(
+literal|"improper use of profanity; %s; %s"
+argument_list|,
+literal|"ten yard penalty"
+argument_list|,
+literal|"first down"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"length {:length/%6.6s}\n"
+argument_list|,
+literal|"abcdefghijklmnopqrstuvwxyz"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"close {:fd/%d} returned {:error/%m} {:test}\n"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"good"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"close {:fd/%d} returned {:error/%6.6m} {:test}\n"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"good"
+argument_list|)
+expr_stmt|;
+name|xo_message
+argument_list|(
+literal|"improper use of profanity; %s; %s"
+argument_list|,
+literal|"ten yard penalty"
+argument_list|,
+literal|"first down"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|" {:lines/%7ju} {:words/%7ju} "
+literal|"{:characters/%7ju} {d:filename/%s}\n"
+argument_list|,
+literal|20
+argument_list|,
+literal|30
+argument_list|,
+literal|40
+argument_list|,
+literal|"file"
+argument_list|)
+expr_stmt|;
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|5
+condition|;
+name|i
+operator|++
+control|)
+name|xo_emit
+argument_list|(
+literal|"{lw:bytes/%d}{Np:byte,bytes}\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
 literal|"{:mbuf-current/%u}/{:mbuf-cache/%u}/{:mbuf-total/%u} "
 literal|"{N:mbufs<&> in use (current\\/cache\\/total)}\n"
 argument_list|,
@@ -298,14 +421,15 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{T:/before%safter:}\n"
+literal|"{,title:/before%safter:}\n"
 argument_list|,
 literal|"working"
 argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{d:some/%s}{:ten/%ju}{:eleven/%ju}\n"
+literal|"{,display,white,colon:some/%s}"
+literal|"{,value:ten/%ju}{,value:eleven/%ju}\n"
 argument_list|,
 literal|"string"
 argument_list|,
@@ -324,6 +448,16 @@ name|xo_emit
 argument_list|(
 literal|"{:unknown/%u} "
 literal|"{N:/packet%s here\\/there\\/everywhere}\n"
+argument_list|,
+literal|1010
+argument_list|,
+literal|"s"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:unknown/%u} "
+literal|"{,note:/packet%s here\\/there\\/everywhere}\n"
 argument_list|,
 literal|1010
 argument_list|,
@@ -369,6 +503,37 @@ operator|-
 literal|30
 argument_list|)
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"Humanize: {h:val1/%u}, {h,hn-space:val2/%u}, "
+literal|"{h,hn-decimal:val3/%u}, {h,hn-1000:val4/%u}, "
+literal|"{h,hn-decimal:val5/%u}\n"
+argument_list|,
+literal|21
+argument_list|,
+literal|57
+operator|*
+literal|1024
+argument_list|,
+literal|96
+operator|*
+literal|1024
+operator|*
+literal|1024
+argument_list|,
+operator|(
+literal|42
+operator|*
+literal|1024
+operator|+
+literal|420
+operator|)
+operator|*
+literal|1024
+argument_list|,
+literal|1342172800
+argument_list|)
+expr_stmt|;
 name|xo_open_list
 argument_list|(
 literal|"flag"
@@ -386,12 +551,20 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
+literal|"{n:works/%s}\n"
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
 literal|"{e:empty-tag/}"
 argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"1:{qt:t1/%*d} 2:{qt:t2/test%-*u} 3:{qt:t3/%10sx} 4:{qt:t4/x%-*.*s}\n"
+literal|"1:{qt:t1/%*d} 2:{qt:t2/test%-*u} "
+literal|"3:{qt:t3/%10sx} 4:{qt:t4/x%-*.*s}\n"
 argument_list|,
 literal|6
 argument_list|,
