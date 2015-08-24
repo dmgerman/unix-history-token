@@ -6057,13 +6057,13 @@ name|pc
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* TODO: For minidump */
-block|dump_drop_page(m->phys_addr);
-endif|#
-directive|endif
+name|dump_drop_page
+argument_list|(
+name|m
+operator|->
+name|phys_addr
+argument_list|)
+expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|m
@@ -6403,13 +6403,13 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* TODO: This is for minidump */
-block|dump_add_page(m->phys_addr);
-endif|#
-directive|endif
+name|dump_add_page
+argument_list|(
+name|m
+operator|->
+name|phys_addr
+argument_list|)
+expr_stmt|;
 name|pc
 operator|=
 operator|(
