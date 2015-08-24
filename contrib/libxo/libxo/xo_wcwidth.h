@@ -13,10 +13,10 @@ begin_struct
 struct|struct
 name|interval
 block|{
-name|int
+name|wchar_t
 name|first
 decl_stmt|;
-name|int
+name|wchar_t
 name|last
 decl_stmt|;
 block|}
