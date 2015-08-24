@@ -186,6 +186,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NFSCL
+argument_list|)
+end_if
+
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
@@ -201,6 +210,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
