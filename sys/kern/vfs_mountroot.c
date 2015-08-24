@@ -219,6 +219,18 @@ name|rootvnode
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Mount of the system's /dev.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|mount
+modifier|*
+name|rootdevmp
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -852,6 +864,10 @@ argument_list|)
 expr_stmt|;
 operator|*
 name|mpp
+operator|=
+name|mp
+expr_stmt|;
+name|rootdevmp
 operator|=
 name|mp
 expr_stmt|;
