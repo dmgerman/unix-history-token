@@ -1575,7 +1575,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* don't perform DAD on this address 					 * (used only at first SIOC* call) 					 */
+comment|/* don't perform DAD on this address 					 * (obsolete) 					 */
 end_comment
 
 begin_define

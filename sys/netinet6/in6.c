@@ -5188,26 +5188,9 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Perform DAD, if needed. 	 * XXX It may be of use, if we can administratively disable DAD. 	 */
+comment|/* Perform DAD, if the address is TENTATIVE. */
 if|if
 condition|(
-name|in6if_do_dad
-argument_list|(
-name|ifp
-argument_list|)
-operator|&&
-operator|(
-operator|(
-name|ifra
-operator|->
-name|ifra_flags
-operator|&
-name|IN6_IFF_NODAD
-operator|)
-operator|==
-literal|0
-operator|)
-operator|&&
 operator|(
 name|ia
 operator|->
@@ -5740,7 +5723,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Notifies other other subsystems about address change/arrival:  * 1) Notifies device handler on first IPv6 address assignment  * 2) Handle routing table changes for P2P links and route  * 3) Handle routing table changes for address host route  */
+comment|/*  * Notifies other subsystems about address change/arrival:  * 1) Notifies device handler on the first IPv6 address assignment  * 2) Handle routing table changes for P2P links and route  * 3) Handle routing table changes for address host route  */
 end_comment
 
 begin_function
@@ -8409,7 +8392,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Our DAD routine requires the interface up and running. 	 * However, some interfaces can be up before the RUNNING 	 * status.  Additionaly, users may try to assign addresses 	 * before the interface becomes up (or running). 	 * We simply skip DAD in such a case as a work around. 	 * XXX: we should rather mark "tentative" on such addresses, 	 * and do DAD after the interface becomes ready. 	 */
+comment|/* 	 * Our DAD routine requires the interface up and running. 	 * However, some interfaces can be up before the RUNNING 	 * status.  Additionaly, users may try to assign addresses 	 * before the interface becomes up (or running). 	 * This function returns EAGAIN in that case. 	 * The caller should mark "tentative" on the address instead of 	 * performing DAD immediately. 	 */
 if|if
 condition|(
 operator|!
@@ -8433,7 +8416,7 @@ operator|)
 condition|)
 return|return
 operator|(
-literal|0
+name|EAGAIN
 operator|)
 return|;
 return|return
