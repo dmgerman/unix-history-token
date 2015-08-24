@@ -1608,7 +1608,7 @@ name|_n
 parameter_list|,
 name|_p
 parameter_list|)
-value|((_p)<< (2 * _n))
+value|((_p)<< (2 * (_n)))
 end_define
 
 begin_comment
@@ -1689,7 +1689,7 @@ name|_n
 parameter_list|,
 name|_s
 parameter_list|)
-value|((_s)<< (6 * _n))
+value|((_s)<< (6 * (_n)))
 end_define
 
 begin_define

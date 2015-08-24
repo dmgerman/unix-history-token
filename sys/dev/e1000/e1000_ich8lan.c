@@ -4407,7 +4407,6 @@ comment|/* max LTR latency encoded */
 name|s64
 name|lat_ns
 decl_stmt|;
-comment|/* latency (ns) */
 name|s64
 name|value
 decl_stmt|;

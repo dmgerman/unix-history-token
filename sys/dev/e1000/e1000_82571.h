@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|ID_LED_DEFAULT_82573
-value|((ID_LED_DEF1_DEF2<< 12) | \                               (ID_LED_OFF1_ON2<<  8) | \                               (ID_LED_DEF1_DEF2<<  4) | \                               (ID_LED_DEF1_DEF2))
+value|((ID_LED_DEF1_DEF2<< 12) | \ 				 (ID_LED_OFF1_ON2<<  8) | \ 				 (ID_LED_DEF1_DEF2<<  4) | \ 				 (ID_LED_DEF1_DEF2))
 end_define
 
 begin_define

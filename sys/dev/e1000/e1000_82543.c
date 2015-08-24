@@ -1256,6 +1256,8 @@ goto|;
 block|}
 name|state
 operator|=
+operator|!
+operator|!
 operator|(
 name|dev_spec
 operator|->
@@ -1263,10 +1265,6 @@ name|tbi_compatibility
 operator|&
 name|TBI_COMPAT_ENABLED
 operator|)
-condition|?
-name|TRUE
-else|:
-name|FALSE
 expr_stmt|;
 name|out
 label|:
@@ -1412,6 +1410,8 @@ goto|;
 block|}
 name|state
 operator|=
+operator|!
+operator|!
 operator|(
 name|dev_spec
 operator|->
@@ -1419,10 +1419,6 @@ name|tbi_compatibility
 operator|&
 name|TBI_SBP_ENABLED
 operator|)
-condition|?
-name|TRUE
-else|:
-name|FALSE
 expr_stmt|;
 name|out
 label|:
@@ -1609,19 +1605,19 @@ name|frame_len
 operator|--
 expr_stmt|;
 comment|/* 	 * We need to adjust the statistics counters, since the hardware 	 * counters overcount this packet as a CRC error and undercount 	 * the packet as a good packet 	 */
-comment|/* This packet should not be counted as a CRC error.    */
+comment|/* This packet should not be counted as a CRC error. */
 name|stats
 operator|->
 name|crcerrs
 operator|--
 expr_stmt|;
-comment|/* This packet does count as a Good Packet Received.    */
+comment|/* This packet does count as a Good Packet Received. */
 name|stats
 operator|->
 name|gprc
 operator|++
 expr_stmt|;
-comment|/* Adjust the Good Octets received counters             */
+comment|/* Adjust the Good Octets received counters */
 name|stats
 operator|->
 name|gorc
@@ -1669,7 +1665,7 @@ operator|->
 name|mprc
 operator|++
 expr_stmt|;
-comment|/* 	 * In this case, the hardware has overcounted the number of 	 * oversize frames. 	 */
+comment|/* 	 * In this case, the hardware has over counted the number of 	 * oversize frames. 	 */
 if|if
 condition|(
 operator|(
@@ -2695,14 +2691,13 @@ name|out
 goto|;
 if|if
 condition|(
+operator|!
 operator|(
 name|mii_status_reg
 operator|&
 operator|~
 name|MII_SR_LINK_STATUS
 operator|)
-operator|==
-literal|0
 condition|)
 break|break;
 name|msec_delay_irq
@@ -3865,7 +3860,6 @@ operator|&
 name|E1000_CTRL_SWDPIN1
 operator|)
 condition|)
-block|{
 name|ret_val
 operator|=
 name|e1000_poll_fiber_serdes_link_generic
@@ -3873,15 +3867,12 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|DEBUGOUT
 argument_list|(
 literal|"No signal detected\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|out
 label|:
 return|return
@@ -4126,13 +4117,11 @@ if|if
 condition|(
 name|ret_val
 condition|)
-block|{
 name|DEBUGOUT
 argument_list|(
 literal|"Error configuring flow control\n"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * At this point we know that we are on copper and we have 	 * auto-negotiated link.  These are conditions for checking the link 	 * partner capability register.  We use the link speed to determine if 	 * TBI compatibility needs to be turned on or off.  If the link is not 	 * at gigabit speed, then TBI compatibility is not needed.  If we are 	 * at gigabit speed, we turn on TBI compatibility. 	 */
 if|if
 condition|(
@@ -4377,18 +4366,17 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|mac
 operator|->
 name|autoneg_failed
-operator|==
-literal|0
 condition|)
 block|{
 name|mac
 operator|->
 name|autoneg_failed
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 name|ret_val
 operator|=

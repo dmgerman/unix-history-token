@@ -537,7 +537,7 @@ define|#
 directive|define
 name|IGP01E1000_AGC_LENGTH_TABLE_SIZE
 define|\
-value|(sizeof(e1000_igp_cable_length_table) / \                  sizeof(e1000_igp_cable_length_table[0]))
+value|(sizeof(e1000_igp_cable_length_table) / \ 		 sizeof(e1000_igp_cable_length_table[0]))
 end_define
 
 begin_comment
@@ -2597,13 +2597,11 @@ if|if
 condition|(
 name|ret_val
 condition|)
-block|{
 name|DEBUGOUT
 argument_list|(
 literal|"Error configuring flow control\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|out
 label|:
 return|return

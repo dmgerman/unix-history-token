@@ -1137,8 +1137,6 @@ condition|(
 name|mac
 operator|->
 name|report_tx_early
-operator|==
-literal|1
 condition|)
 name|hw
 operator|->

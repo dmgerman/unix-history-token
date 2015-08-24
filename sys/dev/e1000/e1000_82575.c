@@ -4386,7 +4386,6 @@ name|timeout
 init|=
 literal|200
 decl_stmt|;
-comment|/* FIXME: find real value to use here */
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_acquire_swfw_sync_82575"
@@ -8031,7 +8030,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_rx_fifo_flush_82575 - Clean rx fifo after Rx enable  *  @hw: pointer to the HW structure  *  *  After rx enable if managability is enabled then there is likely some  *  bad data at the start of the fifo and possibly in the DMA fifo.  This  *  function clears the fifos and flushes any packets that came in as rx was  *  being enabled.  **/
+comment|/**  *  e1000_rx_fifo_flush_82575 - Clean rx fifo after Rx enable  *  @hw: pointer to the HW structure  *  *  After Rx enable, if manageability is enabled then there is likely some  *  bad data at the start of the fifo and possibly in the DMA fifo.  This  *  function clears the fifos and flushes any packets that came in as rx was  *  being enabled.  **/
 end_comment
 
 begin_function
