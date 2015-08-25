@@ -4063,11 +4063,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ring
 index|[
 name|new_idx
 index|]
+operator|==
+name|NULL
 condition|)
 block|{
 while|while
