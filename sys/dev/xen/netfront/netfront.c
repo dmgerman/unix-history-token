@@ -2694,17 +2694,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-name|ifp
-operator|=
-name|info
-operator|->
-name|xn_ifp
-expr_stmt|;
 name|info
 operator|->
 name|tx_ring_ref

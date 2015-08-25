@@ -6074,9 +6074,6 @@ decl_stmt|;
 name|u_int
 name|nseg
 decl_stmt|;
-name|off_t
-name|sectors_sent
-decl_stmt|;
 name|struct
 name|uio
 name|xuio
@@ -6116,10 +6113,6 @@ operator|->
 name|backend
 operator|.
 name|file
-expr_stmt|;
-name|sectors_sent
-operator|=
-literal|0
 expr_stmt|;
 name|error
 operator|=
