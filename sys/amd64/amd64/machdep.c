@@ -2193,6 +2193,12 @@ name|_udatasel
 expr_stmt|;
 name|regs
 operator|->
+name|tf_ss
+operator|=
+name|_udatasel
+expr_stmt|;
+name|regs
+operator|->
 name|tf_es
 operator|=
 name|_udatasel
