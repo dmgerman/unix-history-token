@@ -445,7 +445,7 @@ begin_define
 define|#
 directive|define
 name|USPACE_SVC_STACK_TOP
-value|(KSTACK_PAGES * PAGE_SIZE)
+value|(kstack_pages * PAGE_SIZE)
 end_define
 
 begin_comment

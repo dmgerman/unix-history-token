@@ -214,16 +214,6 @@ directive|include
 file|<net/if_llatbl.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|L3_ADDR_SIN6
-parameter_list|(
-name|le
-parameter_list|)
-value|((struct sockaddr_in6 *) L3_ADDR(le))
-end_define
-
 begin_include
 include|#
 directive|include
@@ -2687,7 +2677,7 @@ name|if_addrlen
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Add a Nonce option (RFC 3971) to detect looped back NS messages. 	 * This behavior is documented as Enhanced Duplicate Address 	 * Detection in draft-ietf-6man-enhanced-dad-13. 	 * net.inet6.ip6.dad_enhanced=0 disables this. 	 */
+comment|/* 	 * Add a Nonce option (RFC 3971) to detect looped back NS messages. 	 * This behavior is documented as Enhanced Duplicate Address 	 * Detection in RFC 7527. 	 * net.inet6.ip6.dad_enhanced=0 disables this. 	 */
 if|if
 condition|(
 name|V_dad_enhanced
@@ -4089,12 +4079,11 @@ decl_stmt|;
 name|in6
 operator|=
 operator|&
-name|L3_ADDR_SIN6
-argument_list|(
 name|ln
-argument_list|)
 operator|->
-name|sin6_addr
+name|r_l3addr
+operator|.
+name|addr6
 expr_stmt|;
 comment|/* 			 * Lock to protect the default router list. 			 * XXX: this might be unnecessary, since this function 			 * is only called under the network software interrupt 			 * context.  However, we keep it just for safety. 			 */
 name|dr
@@ -5905,6 +5894,29 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ND_IFINFO
+argument_list|(
+name|ifa
+operator|->
+name|ifa_ifp
+argument_list|)
+operator|->
+name|flags
+operator|&
+name|ND6_IFF_NO_DAD
+condition|)
+block|{
+name|ia
+operator|->
+name|ia6_flags
+operator|&=
+operator|~
+name|IN6_IFF_TENTATIVE
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 operator|!
 operator|(
 name|ifa
@@ -5915,12 +5927,19 @@ name|if_flags
 operator|&
 name|IFF_UP
 operator|)
-condition|)
-block|{
-return|return;
-block|}
-if|if
-condition|(
+operator|||
+operator|!
+operator|(
+name|ifa
+operator|->
+name|ifa_ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|||
+operator|(
 name|ND_IFINFO
 argument_list|(
 name|ifa
@@ -5931,8 +5950,17 @@ operator|->
 name|flags
 operator|&
 name|ND6_IFF_IFDISABLED
+operator|)
 condition|)
+block|{
+name|ia
+operator|->
+name|ia6_flags
+operator||=
+name|IN6_IFF_TENTATIVE
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 operator|(

@@ -987,6 +987,23 @@ name|db
 parameter_list|)
 define|\
 value|do {                                                                        \     svn_sqlite__db_t *svn_sqlite__db = (db);                                  \     svn_error_t *svn_sqlite__err;                                             \                                                                               \     SVN_ERR(svn_sqlite__begin_savepoint(svn_sqlite__db));                     \     svn_sqlite__err = (expr);                                                 \     SVN_ERR(svn_sqlite__finish_savepoint(svn_sqlite__db, svn_sqlite__err));   \   } while (0)
+comment|/* Evaluate the expression EXPR1..EXPR4 within a 'savepoint'.  Savepoints can  * be nested.  *  * Begin a savepoint in DB; evaluate the expression EXPR1, which would  * typically be a function call that does some work in DB; if no error occurred,  * run EXPR2; if no error occurred EXPR3; ... and finally release  * the savepoint if EXPR evaluated to SVN_NO_ERROR, otherwise roll back  * to the savepoint and then release it.  */
+define|#
+directive|define
+name|SVN_SQLITE__WITH_LOCK4
+parameter_list|(
+name|expr1
+parameter_list|,
+name|expr2
+parameter_list|,
+name|expr3
+parameter_list|,
+name|expr4
+parameter_list|,
+name|db
+parameter_list|)
+define|\
+value|do {                                                                        \     svn_sqlite__db_t *svn_sqlite__db = (db);                                  \     svn_error_t *svn_sqlite__err;                                             \                                                                               \     SVN_ERR(svn_sqlite__begin_savepoint(svn_sqlite__db));                     \     svn_sqlite__err = (expr1);                                                \     if (!svn_sqlite__err)                                                     \       svn_sqlite__err = (expr2);                                              \     if (!svn_sqlite__err)                                                     \       svn_sqlite__err = (expr3);                                              \     if (!svn_sqlite__err)                                                     \       svn_sqlite__err = (expr4);                                              \     SVN_ERR(svn_sqlite__finish_savepoint(svn_sqlite__db, svn_sqlite__err));   \   } while (0)
 comment|/* Helper function to handle several SQLite operations inside a shared lock.    This callback is similar to svn_sqlite__with_transaction(), but can be    nested (even with a transaction).     Using this function as a wrapper around a group of operations can give a    *huge* performance boost as the shared-read lock will be shared over    multiple statements, instead of being reobtained every time, which may    require disk and/or network io, depending on SQLite's locking strategy.     SCRATCH_POOL will be passed to the callback (NULL is valid).     ### Since we now require SQLite>= 3.6.18, this function has the effect of        always behaving like a defered transaction.  Can it be combined with        svn_sqlite__with_transaction()?  */
 name|svn_error_t
 modifier|*

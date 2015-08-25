@@ -505,19 +505,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sa_update_user
-parameter_list|(
-name|sa_handle_t
-modifier|*
-parameter_list|,
-name|sa_handle_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 modifier|*
 name|sa_get_userdata
 parameter_list|(

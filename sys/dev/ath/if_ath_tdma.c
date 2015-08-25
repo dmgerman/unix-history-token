@@ -1399,9 +1399,7 @@ name|sc
 init|=
 name|ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|struct
 name|ath_hal

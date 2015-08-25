@@ -59,17 +59,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPTV_SRTTDFLT
-value|(  3*hz)
-end_define
-
-begin_comment
-comment|/* assumed RTT if no info */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TCPTV_PERSMIN
 value|(  5*hz)
 end_define
@@ -375,41 +364,6 @@ define|#
 directive|define
 name|TT_MASK
 value|(TT_DELACK|TT_REXMT|TT_PERSIST|TT_KEEP|TT_2MSL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TT_DELACK_RST
-value|0x0100
-end_define
-
-begin_define
-define|#
-directive|define
-name|TT_REXMT_RST
-value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|TT_PERSIST_RST
-value|0x0400
-end_define
-
-begin_define
-define|#
-directive|define
-name|TT_KEEP_RST
-value|0x0800
-end_define
-
-begin_define
-define|#
-directive|define
-name|TT_2MSL_RST
-value|0x1000
 end_define
 
 begin_define

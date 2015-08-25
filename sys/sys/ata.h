@@ -1917,6 +1917,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_CHECK_POWER_MODE
+value|0xe5
+end_define
+
+begin_comment
+comment|/* device power mode */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_SLEEP
 value|0xe6
 end_define

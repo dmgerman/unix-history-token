@@ -8519,7 +8519,7 @@ argument_list|)
 condition|)
 return|return;
 comment|/* XXX Do we really need to walk any but the default FIB? */
-name|rt_foreach_fib
+name|rt_foreach_fib_walk
 argument_list|(
 name|AF_INET6
 argument_list|,

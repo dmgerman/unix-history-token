@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysent.h>
 end_include
 
@@ -1220,6 +1226,16 @@ argument_list|,
 literal|1
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|cloudabi64
+argument_list|,
+literal|"CloudABI 64bit support"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

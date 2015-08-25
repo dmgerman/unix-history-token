@@ -6419,8 +6419,8 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|c
+init|=
+literal|0
 decl_stmt|;
 name|uint32_t
 modifier|*
@@ -6442,14 +6442,6 @@ name|bp
 argument_list|,
 literal|" dscp"
 argument_list|)
-expr_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
-name|c
-operator|=
-literal|0
 expr_stmt|;
 name|v
 operator|=
@@ -15030,7 +15022,7 @@ index|]
 operator|=
 name|htonl
 argument_list|(
-literal|0
+literal|0U
 argument_list|)
 expr_stmt|;
 comment|/* mask */
@@ -15059,7 +15051,7 @@ operator|=
 name|htonl
 argument_list|(
 operator|~
-literal|0
+literal|0U
 operator|<<
 operator|(
 literal|32
@@ -15081,7 +15073,7 @@ operator|=
 name|htonl
 argument_list|(
 operator|~
-literal|0
+literal|0U
 operator|<<
 operator|(
 literal|32
@@ -15125,7 +15117,7 @@ operator|=
 name|htonl
 argument_list|(
 operator|~
-literal|0
+literal|0U
 argument_list|)
 expr_stmt|;
 comment|/* force /32 */

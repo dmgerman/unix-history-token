@@ -1065,9 +1065,7 @@ name|vap
 operator|->
 name|iv_ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|uint64_t
 name|tsf_beacon_old

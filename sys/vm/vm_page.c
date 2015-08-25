@@ -1945,12 +1945,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__amd64__
+name|__aarch64__
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__i386__
+name|__amd64__
 argument_list|)
 operator|||
 name|defined
@@ -1959,6 +1959,11 @@ name|__arm__
 argument_list|)
 operator|||
 expr|\
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|__mips__
@@ -2290,6 +2295,11 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__aarch64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__amd64__
 argument_list|)
 operator|||
@@ -2297,7 +2307,7 @@ name|defined
 argument_list|(
 name|__mips__
 argument_list|)
-comment|/* 	 * pmap_map on amd64 and mips can come out of the direct-map, not kvm 	 * like i386, so the pages must be tracked for a crashdump to include 	 * this data.  This includes the vm_page_array and the early UMA 	 * bootstrap pages. 	 */
+comment|/* 	 * pmap_map on arm64, amd64, and mips can come out of the direct-map, 	 * not kvm like i386, so the pages must be tracked for a crashdump to 	 * include this data.  This includes the vm_page_array and the early 	 * UMA bootstrap pages. 	 */
 for|for
 control|(
 name|pa

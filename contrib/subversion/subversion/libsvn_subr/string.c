@@ -2139,7 +2139,7 @@ name|char
 modifier|*
 name|temp
 init|=
-name|apr_pstrndup
+name|apr_pmemdup
 argument_list|(
 name|str
 operator|->
@@ -2370,7 +2370,7 @@ name|char
 modifier|*
 name|temp
 init|=
-name|apr_pstrndup
+name|apr_pmemdup
 argument_list|(
 name|str
 operator|->

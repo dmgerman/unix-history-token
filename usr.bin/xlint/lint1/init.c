@@ -2235,7 +2235,7 @@ condition|)
 goto|goto
 name|end
 goto|;
-comment|/* 	 * Store the tree memory. This is nessesary because otherwise 	 * expr() would free it. 	 */
+comment|/* 	 * Store the tree memory. This is necessary because otherwise 	 * expr() would free it. 	 */
 name|tmem
 operator|=
 name|tsave

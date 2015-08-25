@@ -1830,6 +1830,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|GID_VIDEO
+value|44
+end_define
+
+begin_define
+define|#
+directive|define
 name|GID_DIALER
 value|68
 end_define

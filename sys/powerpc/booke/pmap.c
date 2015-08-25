@@ -4723,13 +4723,13 @@ name|pte
 operator|->
 name|rpn
 operator|=
+name|PTE_RPN_FROM_PA
+argument_list|(
 name|VM_PAGE_TO_PHYS
 argument_list|(
 name|m
 argument_list|)
-operator|&
-operator|~
-name|PTE_PA_MASK
+argument_list|)
 expr_stmt|;
 name|pte
 operator|->
@@ -5417,8 +5417,11 @@ argument_list|)
 expr_stmt|;
 name|debugf
 argument_list|(
-literal|" kernload    = 0x%08x\n"
+literal|" kernload    = 0x%09llx\n"
 argument_list|,
+operator|(
+name|uint64_t
+operator|)
 name|kernload
 argument_list|)
 expr_stmt|;
@@ -5792,7 +5795,7 @@ comment|/* of the first avail region                           */
 comment|/*******************************************************/
 name|kstack0_sz
 operator|=
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
@@ -6215,7 +6218,7 @@ index|[
 name|i
 index|]
 index|[
-literal|0
+name|TID_KERNEL
 index|]
 operator|=
 name|kernel_pmap
@@ -6327,7 +6330,7 @@ name|thread0
 operator|.
 name|td_kstack_pages
 operator|=
-name|KSTACK_PAGES
+name|kstack_pages
 expr_stmt|;
 name|debugf
 argument_list|(
@@ -6338,7 +6341,7 @@ argument_list|)
 expr_stmt|;
 name|debugf
 argument_list|(
-literal|"kstack0_phys at 0x%08x - 0x%08x\n"
+literal|"kstack0_phys at 0x%09llx - 0x%09llx\n"
 argument_list|,
 name|kstack0_phys
 argument_list|,
@@ -6374,7 +6377,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|KSTACK_PAGES
+name|kstack_pages
 condition|;
 name|i
 operator|++
@@ -7111,10 +7114,10 @@ name|pte
 operator|->
 name|rpn
 operator|=
+name|PTE_RPN_FROM_PA
+argument_list|(
 name|pa
-operator|&
-operator|~
-name|PTE_PA_MASK
+argument_list|)
 expr_stmt|;
 name|pte
 operator|->
@@ -11742,6 +11745,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|vm_offset_t
+operator|)
 name|pa
 expr_stmt|;
 return|return;
@@ -12474,7 +12480,10 @@ index|]
 operator|.
 name|virt
 operator|+
-operator|(
+call|(
+name|vm_offset_t
+call|)
+argument_list|(
 name|pa
 operator|-
 name|tlb1
@@ -12483,7 +12492,7 @@ name|i
 index|]
 operator|.
 name|phys
-operator|)
+argument_list|)
 operator|)
 return|;
 block|}
@@ -12563,7 +12572,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Wiring VA=%x to PA=%x (size=%x), "
+literal|"Wiring VA=%x to PA=%llx (size=%x), "
 literal|"using TLB1[%d]\n"
 argument_list|,
 name|va
@@ -13422,15 +13431,8 @@ parameter_list|)
 block|{
 name|uint32_t
 name|mas0
-decl_stmt|,
-name|mas7
 decl_stmt|;
 comment|//debugf("tlb1_write_entry: s\n");
-comment|/* Clear high order RPN bits */
-name|mas7
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Select entry */
 name|mas0
 operator|=
@@ -13496,6 +13498,11 @@ name|mtspr
 argument_list|(
 name|SPR_MAS7
 argument_list|,
+name|tlb1
+index|[
+name|idx
+index|]
+operator|.
 name|mas7
 argument_list|)
 expr_stmt|;
@@ -13780,6 +13787,21 @@ name|MAS3_SW
 operator||
 name|MAS3_SX
 expr_stmt|;
+name|tlb1
+index|[
+name|index
+index|]
+operator|.
+name|mas7
+operator|=
+operator|(
+name|pa
+operator|>>
+literal|32
+operator|)
+operator|&
+name|MAS7_RPN
+expr_stmt|;
 name|tlb1_write_entry
 argument_list|(
 name|index
@@ -14037,7 +14059,7 @@ index|]
 expr_stmt|;
 name|debugf
 argument_list|(
-literal|"%u: %x -> %x, size=%x\n"
+literal|"%u: %llx -> %x, size=%x\n"
 argument_list|,
 name|idx
 argument_list|,
@@ -14112,6 +14134,8 @@ decl_stmt|,
 name|mas2
 decl_stmt|,
 name|mas3
+decl_stmt|,
+name|mas7
 decl_stmt|;
 name|uint32_t
 name|tsz
@@ -14221,6 +14245,13 @@ argument_list|(
 name|SPR_MAS3
 argument_list|)
 expr_stmt|;
+name|mas7
+operator|=
+name|mfspr
+argument_list|(
+name|SPR_MAS7
+argument_list|)
+expr_stmt|;
 name|tlb1
 index|[
 name|i
@@ -14256,6 +14287,15 @@ index|[
 name|i
 index|]
 operator|.
+name|mas7
+operator|=
+name|mas7
+expr_stmt|;
+name|tlb1
+index|[
+name|i
+index|]
+operator|.
 name|virt
 operator|=
 name|mas2
@@ -14269,9 +14309,24 @@ index|]
 operator|.
 name|phys
 operator|=
+operator|(
+call|(
+name|vm_paddr_t
+call|)
+argument_list|(
+name|mas7
+operator|&
+name|MAS7_RPN
+argument_list|)
+operator|<<
+literal|32
+operator|)
+operator||
+operator|(
 name|mas3
 operator|&
 name|MAS3_RPN
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -14810,7 +14865,12 @@ index|]
 operator|.
 name|mas3
 argument_list|,
-literal|0
+name|tlb1
+index|[
+name|i
+index|]
+operator|.
+name|mas7
 argument_list|)
 expr_stmt|;
 block|}
@@ -14980,6 +15040,25 @@ argument_list|)
 expr_stmt|;
 name|pa_start
 operator|=
+operator|(
+operator|(
+operator|(
+name|vm_paddr_t
+operator|)
+name|tlb1
+index|[
+name|i
+index|]
+operator|.
+name|mas7
+operator|&
+name|MAS7_RPN
+operator|)
+operator|<<
+literal|32
+operator|)
+operator||
+operator|(
 name|tlb1
 index|[
 name|i
@@ -14988,14 +15067,13 @@ operator|.
 name|mas3
 operator|&
 name|MAS3_RPN
+operator|)
 expr_stmt|;
 name|pa_end
 operator|=
 name|pa_start
 operator|+
 name|entry_size
-operator|-
-literal|1
 expr_stmt|;
 if|if
 condition|(

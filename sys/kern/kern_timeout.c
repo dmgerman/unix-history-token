@@ -5185,6 +5185,8 @@ name|use_lock
 decl_stmt|;
 name|int
 name|not_on_a_list
+decl_stmt|,
+name|not_running
 decl_stmt|;
 if|if
 condition|(
@@ -6024,6 +6026,21 @@ argument_list|,
 name|cc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If we are asked to stop a callout which is currently in progress 	 * and indeed impossible to stop then return 0. 	 */
+name|not_running
+operator|=
+operator|!
+operator|(
+name|cc_exec_curr
+argument_list|(
+name|cc
+argument_list|,
+name|direct
+argument_list|)
+operator|==
+name|c
+operator|)
+expr_stmt|;
 name|CC_UNLOCK
 argument_list|(
 name|cc
@@ -6031,7 +6048,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|not_running
 operator|)
 return|;
 block|}

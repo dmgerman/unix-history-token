@@ -7466,9 +7466,9 @@ name|bwi_softc
 modifier|*
 name|sc
 init|=
-name|ifp
+name|ic
 operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 comment|/* XXX wme? */
 name|struct
@@ -8736,9 +8736,7 @@ name|sc
 init|=
 name|ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|BWI_LOCK
 argument_list|(
@@ -8781,9 +8779,7 @@ name|sc
 init|=
 name|ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|struct
 name|ieee80211_channel
@@ -8926,9 +8922,7 @@ name|sc
 init|=
 name|ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|BWI_LOCK
 argument_list|(
@@ -8989,15 +8983,6 @@ name|vap
 operator|->
 name|iv_ic
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|ic
-operator|->
-name|ic_ifp
-decl_stmt|;
 name|enum
 name|ieee80211_state
 name|ostate
@@ -9011,9 +8996,9 @@ name|bwi_softc
 modifier|*
 name|sc
 init|=
-name|ifp
+name|ic
 operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|struct
 name|bwi_mac

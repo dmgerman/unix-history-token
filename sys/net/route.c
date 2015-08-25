@@ -3411,9 +3411,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Iterates over all existing fibs in system calling  *  @setwa_f function prior to traversing each fib.  *  Calls @wa_f function for each element in current fib.  * If af is not AF_UNSPEC, iterates over fibs in particular  * address family.  */
+end_comment
+
 begin_function
 name|void
-name|rt_foreach_fib
+name|rt_foreach_fib_walk
 parameter_list|(
 name|int
 name|af
@@ -3739,7 +3743,7 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|rt_foreach_fib
+name|rt_foreach_fib_walk
 argument_list|(
 name|AF_UNSPEC
 argument_list|,

@@ -492,6 +492,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAS7_RPN
+value|0x0000000F
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAS1_GETTID
 parameter_list|(
 name|mas1
@@ -593,6 +600,9 @@ name|mas2
 decl_stmt|;
 name|uint32_t
 name|mas3
+decl_stmt|;
+name|uint32_t
+name|mas7
 decl_stmt|;
 block|}
 name|tlb_entry_t

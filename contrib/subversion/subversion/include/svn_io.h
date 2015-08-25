@@ -1628,7 +1628,7 @@ modifier|*
 name|len
 parameter_list|)
 function_decl|;
-comment|/**  * Skip @a len bytes from a generic @a stream. If the stream is exhausted  * before @a len bytes have been read, return an error.  *  * @note  No assumption can be made on the semantics of this function  * other than that the stream read pointer will be advanced by *len  * bytes. Depending on the capabilities of the underlying stream  * implementation, this may for instance be translated into a sequence  * of reads or a simple seek operation. If the stream implementation has  * not provided a skip function, this will read from the stream and  * discard the data.  */
+comment|/**  * Skip @a len bytes from a generic @a stream. If the stream is exhausted  * before @a len bytes have been read, return an error.  *  * @note  No assumption can be made on the semantics of this function  * other than that the stream read pointer will be advanced by *len  * bytes. Depending on the capabilities of the underlying stream  * implementation, this may for instance be translated into a sequence  * of reads or a simple seek operation. If the stream implementation has  * not provided a skip function, this will read from the stream and  * discard the data.  *  * @since New in 1.7.  */
 name|svn_error_t
 modifier|*
 name|svn_stream_skip

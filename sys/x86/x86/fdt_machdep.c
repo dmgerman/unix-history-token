@@ -130,12 +130,6 @@ argument_list|)
 expr_stmt|;
 name|dtbp
 operator|=
-operator|(
-name|mdp
-operator|!=
-name|NULL
-operator|)
-condition|?
 name|MD_FETCH
 argument_list|(
 name|mdp
@@ -145,8 +139,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|)
-else|:
-name|NULL
 expr_stmt|;
 if|#
 directive|if

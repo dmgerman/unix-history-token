@@ -133,8 +133,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_AFF0_MASK
+value|0xffUL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_AFF1_MASK
+value|0xff00UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_AFF2_MASK
+value|0xff0000UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_AFF3_MASK
+value|0xff00000000UL
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_AFF_MASK
-value|0xff00ffffffUL
+value|(CPU_AFF0_MASK | CPU_AFF1_MASK | \     CPU_AFF2_MASK| CPU_AFF3_MASK)
 end_define
 
 begin_comment

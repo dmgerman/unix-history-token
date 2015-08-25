@@ -66,6 +66,15 @@ name|__packed
 struct|;
 end_struct
 
+begin_function_decl
+name|void
+name|read_rate_increment
+parameter_list|(
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define

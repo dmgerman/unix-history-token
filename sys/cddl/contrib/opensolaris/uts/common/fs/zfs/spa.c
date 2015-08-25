@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013, 2014, Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013, 2014, Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_comment
@@ -5204,6 +5204,26 @@ argument_list|(
 operator|&
 name|spa
 operator|->
+name|spa_evicting_os_list
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|objset_t
+argument_list|)
+argument_list|,
+name|offsetof
+argument_list|(
+name|objset_t
+argument_list|,
+name|os_evicting_node
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|list_create
+argument_list|(
+operator|&
+name|spa
+operator|->
 name|spa_state_dirty_list
 argument_list|,
 sizeof|sizeof
@@ -5347,6 +5367,11 @@ argument_list|(
 name|spa
 argument_list|)
 expr_stmt|;
+name|spa_evicting_os_wait
+argument_list|(
+name|spa
+argument_list|)
+expr_stmt|;
 name|txg_list_destroy
 argument_list|(
 operator|&
@@ -5361,6 +5386,14 @@ operator|&
 name|spa
 operator|->
 name|spa_config_dirty_list
+argument_list|)
+expr_stmt|;
+name|list_destroy
+argument_list|(
+operator|&
+name|spa
+operator|->
+name|spa_evicting_os_list
 argument_list|)
 expr_stmt|;
 name|list_destroy
@@ -8181,6 +8214,15 @@ name|rv
 init|=
 name|B_FALSE
 decl_stmt|;
+name|dsl_pool_t
+modifier|*
+name|dp
+init|=
+name|spa_get_dsl
+argument_list|(
+name|spa
+argument_list|)
+decl_stmt|;
 switch|switch
 condition|(
 name|spa
@@ -8198,11 +8240,13 @@ case|:
 name|rv
 operator|=
 operator|(
-name|dmu_objset_find
+name|dmu_objset_find_dp
 argument_list|(
-name|spa
+name|dp
+argument_list|,
+name|dp
 operator|->
-name|spa_name
+name|dp_root_dir_obj
 argument_list|,
 name|zil_check_log_chain
 argument_list|,
@@ -8869,6 +8913,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|bp
+operator|==
+name|NULL
+operator|||
 name|BP_IS_HOLE
 argument_list|(
 name|bp
@@ -9987,6 +10035,12 @@ name|ereport
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Don't count references from objsets that are already closed 	 * and are making their way through the eviction process. 	 */
+name|spa_evicting_os_wait
+argument_list|(
+name|spa
+argument_list|)
+expr_stmt|;
 name|spa
 operator|->
 name|spa_minref
@@ -12540,6 +12594,11 @@ operator|)
 return|;
 if|if
 condition|(
+name|spa_writeable
+argument_list|(
+name|spa
+argument_list|)
+operator|&&
 name|spa_check_logs
 argument_list|(
 name|spa
@@ -12650,6 +12709,15 @@ name|need_update
 init|=
 name|B_FALSE
 decl_stmt|;
+name|dsl_pool_t
+modifier|*
+name|dp
+init|=
+name|spa_get_dsl
+argument_list|(
+name|spa
+argument_list|)
+decl_stmt|;
 name|ASSERT
 argument_list|(
 name|state
@@ -12668,10 +12736,7 @@ name|tx
 operator|=
 name|dmu_tx_create_assigned
 argument_list|(
-name|spa_get_dsl
-argument_list|(
-name|spa
-argument_list|)
+name|dp
 argument_list|,
 name|spa_first_txg
 argument_list|(
@@ -12682,12 +12747,13 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|dmu_objset_find
+name|dmu_objset_find_dp
 argument_list|(
-name|spa_name
-argument_list|(
-name|spa
-argument_list|)
+name|dp
+argument_list|,
+name|dp
+operator|->
+name|dp_root_dir_obj
 argument_list|,
 name|zil_claim
 argument_list|,
@@ -17063,6 +17129,12 @@ argument_list|,
 literal|"create"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Don't count references from objsets that are already closed 	 * and are making their way through the eviction process. 	 */
+name|spa_evicting_os_wait
+argument_list|(
+name|spa
+argument_list|)
+expr_stmt|;
 name|spa
 operator|->
 name|spa_minref
@@ -18838,6 +18910,17 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|mutex_exit
+argument_list|(
+operator|&
+name|spa_namespace_lock
+argument_list|)
+expr_stmt|;
+name|nvlist_free
+argument_list|(
+name|config
+argument_list|)
+expr_stmt|;
 name|cmn_err
 argument_list|(
 name|CE_NOTE
@@ -20408,6 +20491,11 @@ operator|->
 name|spa_dsl_pool
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|spa_evicting_os_wait
+argument_list|(
+name|spa
 argument_list|)
 expr_stmt|;
 comment|/* 		 * A pool cannot be exported or destroyed if there are active 		 * references.  If we are resetting a pool, allow references by 		 * fault injection handlers. 		 */

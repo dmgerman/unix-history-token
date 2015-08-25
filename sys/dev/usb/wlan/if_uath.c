@@ -8023,9 +8023,9 @@ name|uath_softc
 modifier|*
 name|sc
 init|=
-name|ifp
+name|ic
 operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|int
 name|error
@@ -8099,9 +8099,7 @@ condition|)
 block|{
 name|uath_init
 argument_list|(
-name|ifp
-operator|->
-name|if_softc
+name|sc
 argument_list|)
 expr_stmt|;
 name|startall
@@ -9477,9 +9475,9 @@ name|uath_softc
 modifier|*
 name|sc
 init|=
-name|ifp
+name|ic
 operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 comment|/* prevent management frames from being sent if we're not ready */
 if|if
@@ -9699,9 +9697,9 @@ name|uath_softc
 modifier|*
 name|sc
 init|=
-name|ifp
+name|ic
 operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|UATH_LOCK
 argument_list|(
@@ -10666,9 +10664,7 @@ name|sc
 init|=
 name|ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|struct
 name|uath_vap

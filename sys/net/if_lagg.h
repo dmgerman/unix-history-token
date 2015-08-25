@@ -528,6 +528,11 @@ directive|define
 name|LAGG_OPT_LACP_RXTEST
 value|0x40
 comment|/* LACP debug: rxtest */
+define|#
+directive|define
+name|LAGG_OPT_LACP_TIMEOUT
+value|0x80
+comment|/* LACP timeout */
 name|u_int
 name|ro_count
 decl_stmt|;

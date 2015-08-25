@@ -1814,7 +1814,7 @@ end_typedef
 
 begin_function_decl
 name|void
-name|rt_foreach_fib
+name|rt_foreach_fib_walk
 parameter_list|(
 name|int
 name|af

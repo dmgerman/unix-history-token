@@ -1780,10 +1780,11 @@ directive|ifdef
 name|AIM
 name|printf
 argument_list|(
-literal|"   dsisr           = 0x%"
-name|PRIxPTR
-literal|"\n"
+literal|"   dsisr           = 0x%lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|frame
 operator|->
 name|cpu
@@ -1909,10 +1910,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"   srr1            = 0x%"
-name|PRIxPTR
-literal|"\n"
+literal|"   srr1            = 0x%lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|frame
 operator|->
 name|srr1

@@ -46,6 +46,11 @@ file|<sys/dmu.h>
 include|#
 directive|include
 file|<sys/spa.h>
+comment|/*  * Used by arc_flush() to inform arc_evict_state() that it should evict  * all available buffers from the arc state being passed in.  */
+define|#
+directive|define
+name|ARC_EVICT_ALL
+value|-1ULL
 typedef|typedef
 name|struct
 name|arc_buf_hdr
@@ -186,34 +191,89 @@ operator|<<
 literal|12
 block|,
 comment|/* indirect block */
-name|ARC_FLAG_FREE_IN_PROGRESS
-init|=
-literal|1
-operator|<<
-literal|13
-block|,
-comment|/*  about to be freed */
 name|ARC_FLAG_L2_WRITING
 init|=
 literal|1
 operator|<<
-literal|14
+literal|13
 block|,
 comment|/* write in progress */
 name|ARC_FLAG_L2_EVICTED
 init|=
 literal|1
 operator|<<
-literal|15
+literal|14
 block|,
 comment|/* evicted during I/O */
 name|ARC_FLAG_L2_WRITE_HEAD
 init|=
 literal|1
 operator|<<
-literal|16
+literal|15
 block|,
 comment|/* head of write list */
+comment|/* indicates that the buffer contains metadata (otherwise, data) */
+name|ARC_FLAG_BUFC_METADATA
+init|=
+literal|1
+operator|<<
+literal|16
+block|,
+comment|/* Flags specifying whether optional hdr struct fields are defined */
+name|ARC_FLAG_HAS_L1HDR
+init|=
+literal|1
+operator|<<
+literal|17
+block|,
+name|ARC_FLAG_HAS_L2HDR
+init|=
+literal|1
+operator|<<
+literal|18
+block|,
+comment|/* 	 * The arc buffer's compression mode is stored in the top 7 bits of the 	 * flags field, so these dummy flags are included so that MDB can 	 * interpret the enum properly. 	 */
+name|ARC_FLAG_COMPRESS_0
+init|=
+literal|1
+operator|<<
+literal|24
+block|,
+name|ARC_FLAG_COMPRESS_1
+init|=
+literal|1
+operator|<<
+literal|25
+block|,
+name|ARC_FLAG_COMPRESS_2
+init|=
+literal|1
+operator|<<
+literal|26
+block|,
+name|ARC_FLAG_COMPRESS_3
+init|=
+literal|1
+operator|<<
+literal|27
+block|,
+name|ARC_FLAG_COMPRESS_4
+init|=
+literal|1
+operator|<<
+literal|28
+block|,
+name|ARC_FLAG_COMPRESS_5
+init|=
+literal|1
+operator|<<
+literal|29
+block|,
+name|ARC_FLAG_COMPRESS_6
+init|=
+literal|1
+operator|<<
+literal|30
 block|}
 name|arc_flags_t
 typedef|;
@@ -265,6 +325,8 @@ enum|enum
 name|arc_space_type
 block|{
 name|ARC_SPACE_DATA
+block|,
+name|ARC_SPACE_META
 block|,
 name|ARC_SPACE_HDRS
 block|,
@@ -585,6 +647,9 @@ parameter_list|(
 name|spa_t
 modifier|*
 name|spa
+parameter_list|,
+name|boolean_t
+name|retry
 parameter_list|)
 function_decl|;
 name|void

@@ -2827,6 +2827,14 @@ argument_list|,
 name|d
 argument_list|)
 expr_stmt|;
+name|size
+operator|+=
+literal|2
+expr_stmt|;
+name|found
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
 block|{

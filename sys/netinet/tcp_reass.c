@@ -313,7 +313,7 @@ name|OID_AUTO
 argument_list|,
 name|cursegments
 argument_list|,
-name|CTLFLAG_VNET
+literal|0
 argument_list|,
 operator|&
 name|tcp_reass_zone

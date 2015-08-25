@@ -6841,6 +6841,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|==
+name|rootdevmp
+condition|)
+name|rootdevmp
+operator|=
+name|NULL
+expr_stmt|;
 name|vfs_mount_destroy
 argument_list|(
 name|mp

@@ -344,17 +344,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* # of Applications processors */
-end_comment
-
-begin_decl_stmt
-specifier|volatile
-name|int
-name|mp_naps
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Set to 1 once we're ready to let the APs out of the pen. */
 end_comment
 
@@ -821,39 +810,6 @@ operator|)
 block|)
 function|;
 end_function
-
-begin_comment
-comment|/* 	 * pcpu_init() updates queue, so it should not be executed in parallel 	 * on several cores 	 */
-end_comment
-
-begin_while
-while|while
-condition|(
-name|mp_naps
-operator|<
-operator|(
-name|cpu
-operator|-
-literal|1
-operator|)
-condition|)
-empty_stmt|;
-end_while
-
-begin_comment
-comment|/* Signal our startup to BSP */
-end_comment
-
-begin_expr_stmt
-name|atomic_add_rel_32
-argument_list|(
-operator|&
-name|mp_naps
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* Spin until the BSP releases the APs */

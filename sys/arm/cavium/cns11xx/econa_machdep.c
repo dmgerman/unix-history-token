@@ -732,7 +732,7 @@ name|valloc_pages
 argument_list|(
 name|kernelstack
 argument_list|,
-name|KSTACK_PAGES
+name|kstack_pages
 argument_list|)
 expr_stmt|;
 name|valloc_pages
@@ -987,7 +987,7 @@ name|kernelstack
 operator|.
 name|pv_pa
 argument_list|,
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|PAGE_SIZE
 argument_list|,

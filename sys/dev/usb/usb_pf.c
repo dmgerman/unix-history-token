@@ -1028,11 +1028,22 @@ name|ifp
 operator|->
 name|if_dunit
 expr_stmt|;
+comment|/* 	 * Lock USB before clearing the "ifp" pointer, to avoid 	 * clearing the pointer in the middle of a TAP operation: 	 */
+name|USB_BUS_LOCK
+argument_list|(
+name|ubus
+argument_list|)
+expr_stmt|;
 name|ubus
 operator|->
 name|ifp
 operator|=
 name|NULL
+expr_stmt|;
+name|USB_BUS_UNLOCK
+argument_list|(
+name|ubus
+argument_list|)
 expr_stmt|;
 name|bpfdetach
 argument_list|(

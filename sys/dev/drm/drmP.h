@@ -872,14 +872,14 @@ begin_define
 define|#
 directive|define
 name|DRM_DEV_UID
-value|0
+value|UID_ROOT
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_DEV_GID
-value|0
+value|GID_VIDEO
 end_define
 
 begin_define

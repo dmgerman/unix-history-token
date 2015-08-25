@@ -4512,6 +4512,22 @@ end_function
 begin_define
 define|#
 directive|define
+name|RB_COUNT
+parameter_list|(
+name|x
+parameter_list|,
+name|name
+parameter_list|,
+name|head
+parameter_list|,
+name|cnt
+parameter_list|)
+value|do { \ 	(cnt) = 0; \ 	RB_FOREACH(x, name, (head)) { \ 		(cnt)++; \ 	} \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RB_NUMNODES
 parameter_list|(
 name|type
@@ -4522,7 +4538,7 @@ name|head
 parameter_list|,
 name|cnt
 parameter_list|)
-value|do { \ 	type *t; \ 	cnt = 0; \ 	RB_FOREACH(t, name, head) { \ 		cnt++; \ 	} \ } while (0);
+value|do { \ 	type *t; \ 	cnt = 0; \ 	RB_FOREACH(t, name, head) { \ 		cnt++; \ 	} \ } while (0)
 end_define
 
 begin_function
@@ -5027,9 +5043,13 @@ name|st
 init|=
 name|NULL
 decl_stmt|;
-name|RB_NUMNODES
-argument_list|(
 name|subst_t
+modifier|*
+name|temp
+decl_stmt|;
+name|RB_COUNT
+argument_list|(
+name|temp
 argument_list|,
 name|substs
 argument_list|,

@@ -21,17 +21,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-modifier|*
-name|checked_in
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|backup_file
 parameter_list|(
