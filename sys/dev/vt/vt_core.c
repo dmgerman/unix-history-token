@@ -1245,13 +1245,33 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"VT: running with driver \"%s\".\n"
+literal|"VT(%s): %s %ux%u\n"
 argument_list|,
 name|main_vd
 operator|->
 name|vd_driver
 operator|->
 name|vd_name
+argument_list|,
+operator|(
+name|main_vd
+operator|->
+name|vd_flags
+operator|&
+name|VDF_TEXTMODE
+operator|)
+condition|?
+literal|"text"
+else|:
+literal|"resolution"
+argument_list|,
+name|main_vd
+operator|->
+name|vd_width
+argument_list|,
+name|main_vd
+operator|->
+name|vd_height
 argument_list|)
 expr_stmt|;
 else|else

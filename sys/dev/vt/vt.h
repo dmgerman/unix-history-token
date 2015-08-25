@@ -485,6 +485,10 @@ name|vt_axis_t
 name|vd_height
 decl_stmt|;
 comment|/* (?) Screen height. */
+name|size_t
+name|vd_transpose
+decl_stmt|;
+comment|/* (?) Screen offset in FB */
 name|struct
 name|mtx
 name|vd_lock

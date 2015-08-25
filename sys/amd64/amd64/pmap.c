@@ -3141,12 +3141,12 @@ argument_list|(
 name|pt_pages
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Add some slop beyond the bare minimum required for bootstrapping 	 * the kernel. 	 * 	 * This is quite important when allocating KVA for kernel modules. 	 * The modules are required to be linked in the negative 2GB of 	 * the address space.  If we run out of KVA in this region then 	 * pmap_growkernel() will need to allocate page table pages to map 	 * the entire 512GB of KVA space which is an unnecessary tax on 	 * physical memory. 	 */
+comment|/* 	 * Add some slop beyond the bare minimum required for bootstrapping 	 * the kernel. 	 * 	 * This is quite important when allocating KVA for kernel modules. 	 * The modules are required to be linked in the negative 2GB of 	 * the address space.  If we run out of KVA in this region then 	 * pmap_growkernel() will need to allocate page table pages to map 	 * the entire 512GB of KVA space which is an unnecessary tax on 	 * physical memory. 	 * 	 * Secondly, device memory mapped as part of setting up the low- 	 * level console(s) is taken from KVA, starting at virtual_avail. 	 * This is because cninit() is called after pmap_bootstrap() but 	 * before vm_init() and pmap_init(). 20MB for a frame buffer is 	 * not uncommon. 	 */
 name|pt_pages
 operator|+=
-literal|8
+literal|32
 expr_stmt|;
-comment|/* 16MB additional slop for kernel modules */
+comment|/* 64MB additional slop. */
 endif|#
 directive|endif
 name|nkpt
