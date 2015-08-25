@@ -172,6 +172,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|BOOLEAN
+name|AcpiGbl_AeLoadOnly
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|UINT8
 name|AcpiGbl_ExecutionMode
@@ -215,7 +223,7 @@ begin_define
 define|#
 directive|define
 name|AE_SUPPORTED_OPTIONS
-value|"?b:d:e:f^ghm^orv^:x:"
+value|"?b:d:e:f^ghi:lm^rv^:x:"
 end_define
 
 begin_comment
@@ -399,16 +407,35 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-fi<File>"
+argument_list|,
+literal|"Specify namespace initialization file"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-fv<Value>"
 argument_list|,
 literal|"Operation Region initialization fill value"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-fi<file>"
+literal|"-i<Count>"
 argument_list|,
-literal|"Specify namespace initialization file"
+literal|"Maximum iterations for AML while loops"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-l"
+argument_list|,
+literal|"Load tables and namespace only"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -475,6 +502,9 @@ parameter_list|)
 block|{
 name|int
 name|j
+decl_stmt|;
+name|UINT32
+name|Temp
 decl_stmt|;
 while|while
 condition|(
@@ -833,6 +863,70 @@ literal|0
 operator|)
 return|;
 case|case
+literal|'i'
+case|:
+name|Temp
+operator|=
+name|strtoul
+argument_list|(
+name|AcpiGbl_Optarg
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Temp
+operator|||
+operator|(
+name|Temp
+operator|>
+name|ACPI_UINT16_MAX
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: Invalid max loops value\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+name|AcpiGbl_MaxLoopIterations
+operator|=
+operator|(
+name|UINT16
+operator|)
+name|Temp
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Max Loop Iterations is %u (0x%X)\n"
+argument_list|,
+name|AcpiGbl_MaxLoopIterations
+argument_list|,
+name|AcpiGbl_MaxLoopIterations
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|AcpiGbl_AeLoadOnly
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'m'
 case|:
 name|AcpiGbl_ExecutionMode
@@ -868,14 +962,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-break|break;
-case|case
-literal|'o'
-case|:
-name|AcpiGbl_DbOpt_Disasm
-operator|=
-name|TRUE
-expr_stmt|;
 break|break;
 case|case
 literal|'r'
@@ -1075,6 +1161,36 @@ goto|goto
 name|ErrorExit
 goto|;
 block|}
+comment|/* ACPICA runtime configuration */
+name|AcpiGbl_MaxLoopIterations
+operator|=
+literal|400
+expr_stmt|;
+comment|/* Initialize the AML debugger */
+name|Status
+operator|=
+name|AcpiInitializeDebugger
+argument_list|()
+expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|AcpiInitializeDebugger
+argument_list|,
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|ErrorExit
+goto|;
+block|}
 name|printf
 argument_list|(
 name|ACPI_COMMON_SIGNON
@@ -1174,8 +1290,10 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"**** Could not get table from file %s, %s\n"
 argument_list|,
 name|argv
@@ -1213,17 +1331,20 @@ name|Table
 argument_list|)
 condition|)
 block|{
-name|ACPI_INFO
+name|fprintf
 argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-literal|"Table [%4.4s] is not an AML table, ignoring"
-operator|,
+name|stderr
+argument_list|,
+literal|"    %s: [%4.4s] is not an AML table - ignoring\n"
+argument_list|,
+name|argv
+index|[
+name|AcpiGbl_Optind
+index|]
+argument_list|,
 name|Table
 operator|->
 name|Signature
-operator|)
 argument_list|)
 expr_stmt|;
 name|AcpiOsFree
@@ -1301,6 +1422,16 @@ operator|=
 name|AeInstallTables
 argument_list|()
 expr_stmt|;
+comment|/*      * Exit namespace initialization for the "load namespace only" option.      * No control methods will be executed. However, still enter the      * the debugger.      */
+if|if
+condition|(
+name|AcpiGbl_AeLoadOnly
+condition|)
+block|{
+goto|goto
+name|EnterDebugger
+goto|;
+block|}
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -1491,6 +1622,10 @@ argument_list|,
 name|EX_NO_SINGLE_STEP
 argument_list|)
 expr_stmt|;
+comment|/* Shut down the debugger */
+name|AcpiTerminateDebugger
+argument_list|()
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiTerminate
@@ -1637,6 +1772,10 @@ name|Ptr
 expr_stmt|;
 block|}
 block|}
+comment|/* Shut down the debugger */
+name|AcpiTerminateDebugger
+argument_list|()
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiTerminate

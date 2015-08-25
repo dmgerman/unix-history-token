@@ -352,7 +352,7 @@ if|if
 condition|(
 name|Length
 operator|>
-literal|4
+name|ACPI_NAME_SIZE
 condition|)
 block|{
 name|printf

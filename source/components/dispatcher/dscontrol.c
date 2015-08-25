@@ -399,7 +399,7 @@ name|Control
 operator|.
 name|LoopCount
 operator|>
-name|ACPI_MAX_LOOP_ITERATIONS
+name|AcpiGbl_MaxLoopIterations
 condition|)
 block|{
 name|Status

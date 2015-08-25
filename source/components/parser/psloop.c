@@ -778,6 +778,11 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|ParentNode
 decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|PsLinkModuleCode
+argument_list|)
+expr_stmt|;
 comment|/* Get the tail of the list */
 name|Prev
 operator|=
@@ -842,8 +847,20 @@ operator|!
 name|MethodObj
 condition|)
 block|{
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_PARSE
+operator|,
+literal|"Create/Link new code block: %p\n"
+operator|,
+name|MethodObj
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ParentOp
@@ -940,6 +957,17 @@ block|}
 block|}
 else|else
 block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_PARSE
+operator|,
+literal|"Appending to existing code block: %p\n"
+operator|,
+name|Prev
+operator|)
+argument_list|)
+expr_stmt|;
 name|Prev
 operator|->
 name|Method
@@ -949,6 +977,8 @@ operator|+=
 name|AmlLength
 expr_stmt|;
 block|}
+name|return_VOID
+expr_stmt|;
 block|}
 end_function
 

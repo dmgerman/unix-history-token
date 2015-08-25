@@ -1224,6 +1224,12 @@ name|SRC_TYPE_STRUCT
 block|}
 block|,
 block|{
+literal|"ACPI_OBJECT_INFO"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
 literal|"ACPI_OBJECT_LIST"
 block|,
 name|SRC_TYPE_STRUCT
@@ -1549,6 +1555,12 @@ block|}
 block|,
 block|{
 literal|"ACPI_REPAIR_INFO"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
+literal|"ACPI_REG_WALK_INFO"
 block|,
 name|SRC_TYPE_STRUCT
 block|}

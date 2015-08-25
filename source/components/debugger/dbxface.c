@@ -31,29 +31,6 @@ directive|include
 file|"acdebug.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DISASSEMBLER
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"acdisasm.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUGGER
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -928,12 +905,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbInitialize  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Init and start debugger  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiInitializeDebugger  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Init and start debugger  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiDbInitialize
+name|AcpiInitializeDebugger
 parameter_list|(
 name|void
 parameter_list|)
@@ -943,7 +920,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-name|DbInitialize
+name|AcpiInitializeDebugger
 argument_list|)
 expr_stmt|;
 comment|/* Init globals */
@@ -972,14 +949,6 @@ expr_stmt|;
 name|AcpiGbl_DbOutputFlags
 operator|=
 name|ACPI_DB_CONSOLE_OUTPUT
-expr_stmt|;
-name|AcpiGbl_DbOpt_Disasm
-operator|=
-name|FALSE
-expr_stmt|;
-name|AcpiGbl_DbOpt_Verbose
-operator|=
-name|TRUE
 expr_stmt|;
 name|AcpiGbl_DbOpt_NoIniMethods
 operator|=
@@ -1131,17 +1100,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-operator|!
-name|AcpiGbl_DbOpt_Verbose
-condition|)
-block|{
-name|AcpiGbl_DbOpt_Disasm
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -1150,13 +1108,20 @@ expr_stmt|;
 block|}
 end_function
 
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiInitializeDebugger
+argument_list|)
+end_macro
+
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbTerminate  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Stop debugger  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTerminateDebugger  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Stop debugger  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiDbTerminate
+name|AcpiTerminateDebugger
 parameter_list|(
 name|void
 parameter_list|)
@@ -1183,6 +1148,13 @@ name|ACPI_DB_DISABLE_OUTPUT
 expr_stmt|;
 block|}
 end_function
+
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiTerminateDebugger
+argument_list|)
+end_macro
 
 begin_ifdef
 ifdef|#
@@ -1230,15 +1202,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_DEBUGGER */
-end_comment
 
 end_unit
 

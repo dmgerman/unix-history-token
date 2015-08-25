@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"acutils.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../acpiexec/aecommon.h"
 end_include
 
@@ -55,6 +61,13 @@ directive|define
 name|ACPI_MAX_INIT_TABLES
 value|(32)
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|BOOLEAN
+name|AcpiGbl_NsLoadOnly
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

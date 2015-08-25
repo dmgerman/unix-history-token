@@ -31,6 +31,25 @@ begin_comment
 comment|/* Local prototypes */
 end_comment
 
+begin_function_decl
+specifier|static
+name|void
+name|AeInitializeTableHeader
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Header
+parameter_list|,
+name|char
+modifier|*
+name|Signature
+parameter_list|,
+name|UINT32
+name|Length
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Non-AML tables that are constructed locally and installed */
 end_comment
@@ -86,14 +105,117 @@ name|BASE_XSDT_SIZE
 value|(sizeof (ACPI_TABLE_XSDT) + \                                     ((BASE_XSDT_TABLES -1) * sizeof (UINT64)))
 end_define
 
-begin_decl_stmt
-name|ACPI_TABLE_DESC
-name|Tables
-index|[
-name|ACPI_MAX_INIT_TABLES
-index|]
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AeInitializeTableHeader  *  * PARAMETERS:  Header          - A valid standard ACPI table header  *              Signature       - Signature to insert  *              Length          - Length of the table  *  * RETURN:      None. Header is modified.  *  * DESCRIPTION: Initialize the table header for a local ACPI table.  *  *****************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|AeInitializeTableHeader
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Header
+parameter_list|,
+name|char
+modifier|*
+name|Signature
+parameter_list|,
+name|UINT32
+name|Length
+parameter_list|)
+block|{
+name|ACPI_MOVE_NAME
+argument_list|(
+name|Header
+operator|->
+name|Signature
+argument_list|,
+name|Signature
+argument_list|)
+expr_stmt|;
+name|Header
+operator|->
+name|Length
+operator|=
+name|Length
+expr_stmt|;
+name|Header
+operator|->
+name|OemRevision
+operator|=
+literal|0x1001
+expr_stmt|;
+name|strncpy
+argument_list|(
+name|Header
+operator|->
+name|OemId
+argument_list|,
+literal|"Intel"
+argument_list|,
+name|ACPI_OEM_ID_SIZE
+argument_list|)
+expr_stmt|;
+name|strncpy
+argument_list|(
+name|Header
+operator|->
+name|OemTableId
+argument_list|,
+literal|"AcpiName"
+argument_list|,
+name|ACPI_OEM_TABLE_ID_SIZE
+argument_list|)
+expr_stmt|;
+name|strncpy
+argument_list|(
+name|Header
+operator|->
+name|AslCompilerId
+argument_list|,
+literal|"INTL"
+argument_list|,
+name|ACPI_NAME_SIZE
+argument_list|)
+expr_stmt|;
+name|Header
+operator|->
+name|AslCompilerRevision
+operator|=
+name|ACPI_CA_VERSION
+expr_stmt|;
+comment|/* Set the checksum, must set to zero first */
+name|Header
+operator|->
+name|Checksum
+operator|=
+literal|0
+expr_stmt|;
+name|Header
+operator|->
+name|Checksum
+operator|=
+operator|(
+name|UINT8
+operator|)
+operator|-
+name|AcpiTbChecksum
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|Header
+argument_list|,
+name|Header
+operator|->
+name|Length
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AeBuildLocalTables  *  * PARAMETERS:  TableCount      - Number of tables on the command line  *              TableList       - List of actual tables from files  *  * RETURN:      Status  *  * DESCRIPTION: Build a complete ACPI table chain, with a local RSDP, XSDT,  *              FADT, FACS, and the input DSDT/SSDT.  *  *****************************************************************************/
@@ -132,7 +254,7 @@ name|ExternalFadt
 init|=
 name|NULL
 decl_stmt|;
-comment|/*      * Update the table count. For DSDT, it is not put into the XSDT. For      * FADT, this is already accounted for since we usually install a      * local FADT.      */
+comment|/*      * Update the table count. For the DSDT, it is not put into the XSDT.      * For the FADT, this table is already accounted for since we usually      * install a local FADT.      */
 name|NextTable
 operator|=
 name|TableList
@@ -220,33 +342,6 @@ argument_list|,
 name|XsdtSize
 argument_list|)
 expr_stmt|;
-name|ACPI_MOVE_NAME
-argument_list|(
-name|LocalXSDT
-operator|->
-name|Header
-operator|.
-name|Signature
-argument_list|,
-name|ACPI_SIG_XSDT
-argument_list|)
-expr_stmt|;
-name|LocalXSDT
-operator|->
-name|Header
-operator|.
-name|Length
-operator|=
-name|XsdtSize
-expr_stmt|;
-name|LocalXSDT
-operator|->
-name|Header
-operator|.
-name|Revision
-operator|=
-literal|1
-expr_stmt|;
 name|LocalXSDT
 operator|->
 name|TableOffsetEntry
@@ -260,7 +355,7 @@ operator|&
 name|LocalFADT
 argument_list|)
 expr_stmt|;
-comment|/*      * Install the user tables. The DSDT must be installed in the FADT.      * All other tables are installed directly into the XSDT.      */
+comment|/*      * Install the user tables. The DSDT must be installed in the FADT.      * All other tables are installed directly into the XSDT.      *      * Note: The tables are loaded in reverse order from the incoming      * input, which makes it match the command line order.      */
 name|NextIndex
 operator|=
 name|BASE_XSDT_TABLES
@@ -346,7 +441,7 @@ name|LocalXSDT
 operator|->
 name|TableOffsetEntry
 index|[
-literal|2
+literal|0
 index|]
 operator|=
 name|ACPI_PTR_TO_PHYSADDR
@@ -364,7 +459,11 @@ name|LocalXSDT
 operator|->
 name|TableOffsetEntry
 index|[
+name|TableCount
+operator|-
 name|NextIndex
+operator|+
+literal|1
 index|]
 operator|=
 name|ACPI_PTR_TO_PHYSADDR
@@ -385,7 +484,7 @@ operator|->
 name|Next
 expr_stmt|;
 block|}
-comment|/* Build an RSDP */
+comment|/* Build an RSDP. Contains a valid XSDT only, no RSDT */
 name|memset
 argument_list|(
 operator|&
@@ -412,7 +511,7 @@ name|LocalRSDP
 operator|.
 name|OemId
 argument_list|,
-literal|"I_TEST"
+literal|"Intel"
 argument_list|,
 literal|6
 argument_list|)
@@ -442,17 +541,7 @@ name|ACPI_TABLE_XSDT
 argument_list|)
 expr_stmt|;
 comment|/* Set checksums for both XSDT and RSDP */
-name|LocalXSDT
-operator|->
-name|Header
-operator|.
-name|Checksum
-operator|=
-operator|(
-name|UINT8
-operator|)
-operator|-
-name|AcpiTbChecksum
+name|AeInitializeTableHeader
 argument_list|(
 operator|(
 name|void
@@ -460,12 +549,16 @@ operator|*
 operator|)
 name|LocalXSDT
 argument_list|,
-name|LocalXSDT
-operator|->
-name|Header
-operator|.
-name|Length
+name|ACPI_SIG_XSDT
+argument_list|,
+name|XsdtSize
 argument_list|)
+expr_stmt|;
+name|LocalRSDP
+operator|.
+name|Checksum
+operator|=
+literal|0
 expr_stmt|;
 name|LocalRSDP
 operator|.
@@ -499,12 +592,26 @@ name|AE_SUPPORT
 operator|)
 return|;
 block|}
+comment|/*      * Build an FADT. There are two options for the FADT:      * 1) Incoming external FADT specified on the command line      * 2) A fully featured local FADT      */
+name|memset
+argument_list|(
+operator|&
+name|LocalFADT
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_FADT
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ExternalFadt
 condition|)
 block|{
-comment|/*          * Use the external FADT, but we must update the DSDT/FACS addresses          * as well as the checksum          */
+comment|/*          * Use the external FADT, but we must update the DSDT/FACS          * addresses as well as the checksum          */
 name|ExternalFadt
 operator|->
 name|Dsdt
@@ -524,6 +631,7 @@ operator|&
 name|LocalFACS
 argument_list|)
 expr_stmt|;
+comment|/*          * If there room in the FADT for the XDsdt and XFacs 64-bit          * pointers, use them.          */
 if|if
 condition|(
 name|ExternalFadt
@@ -545,6 +653,18 @@ condition|)
 block|{
 name|ExternalFadt
 operator|->
+name|Dsdt
+operator|=
+literal|0
+expr_stmt|;
+name|ExternalFadt
+operator|->
+name|Facs
+operator|=
+literal|0
+expr_stmt|;
+name|ExternalFadt
+operator|->
 name|XDsdt
 operator|=
 name|DsdtAddress
@@ -560,7 +680,7 @@ name|LocalFACS
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Complete the FADT with the checksum */
+comment|/* Complete the external FADT with the checksum */
 name|ExternalFadt
 operator|->
 name|Header
@@ -598,29 +718,13 @@ block|}
 else|else
 block|{
 comment|/*          * Build a local FADT so we can test the hardware/event init          */
-name|memset
-argument_list|(
-operator|&
-name|LocalFADT
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_TABLE_FADT
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ACPI_MOVE_NAME
-argument_list|(
 name|LocalFADT
 operator|.
 name|Header
 operator|.
-name|Signature
-argument_list|,
-name|ACPI_SIG_FADT
-argument_list|)
+name|Revision
+operator|=
+literal|5
 expr_stmt|;
 comment|/* Setup FADT header and DSDT/FACS addresses */
 name|LocalFADT
@@ -649,25 +753,6 @@ name|ACPI_PTR_TO_PHYSADDR
 argument_list|(
 operator|&
 name|LocalFACS
-argument_list|)
-expr_stmt|;
-name|LocalFADT
-operator|.
-name|Header
-operator|.
-name|Revision
-operator|=
-literal|3
-expr_stmt|;
-name|LocalFADT
-operator|.
-name|Header
-operator|.
-name|Length
-operator|=
-sizeof|sizeof
-argument_list|(
-name|ACPI_TABLE_FADT
 argument_list|)
 expr_stmt|;
 comment|/* Miscellaneous FADT fields */
@@ -790,26 +875,8 @@ operator|.
 name|Pm1EventLength
 argument_list|)
 expr_stmt|;
-comment|/* Complete the FADT with the checksum */
-name|LocalFADT
-operator|.
-name|Header
-operator|.
-name|Checksum
-operator|=
-literal|0
-expr_stmt|;
-name|LocalFADT
-operator|.
-name|Header
-operator|.
-name|Checksum
-operator|=
-operator|(
-name|UINT8
-operator|)
-operator|-
-name|AcpiTbChecksum
+block|}
+name|AeInitializeTableHeader
 argument_list|(
 operator|(
 name|void
@@ -818,14 +885,14 @@ operator|)
 operator|&
 name|LocalFADT
 argument_list|,
-name|LocalFADT
-operator|.
-name|Header
-operator|.
-name|Length
+name|ACPI_SIG_FADT
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_FADT
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Build a FACS */
 name|memset
 argument_list|(

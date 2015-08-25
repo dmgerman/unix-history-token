@@ -2188,7 +2188,7 @@ name|AcpiGetName
 argument_list|(
 name|ACPI_ROOT_OBJECT
 argument_list|,
-name|ACPI_FULL_PATHNAME
+name|ACPI_FULL_PATHNAME_NO_TRAILING
 argument_list|,
 operator|&
 name|ReturnBuf

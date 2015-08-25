@@ -2273,6 +2273,9 @@ name|ACPI_ASL_COMPILER
 operator|||
 name|defined
 name|ACPI_EXEC_APP
+operator|||
+name|defined
+name|ACPI_NAMES_APP
 operator|)
 end_if
 

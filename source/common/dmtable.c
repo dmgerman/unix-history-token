@@ -2120,7 +2120,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDumpTable  *  * PARAMETERS:  TableLength         - Length of the entire ACPI table  *              TableOffset         - Starting offset within the table for this  *                                    sub-descriptor (0 if main table)  *              Table               - The ACPI table  *              SubtableLength      - Length of this sub-descriptor  *              Info                - Info table for this ACPI table  *  * RETURN:      None  *  * DESCRIPTION: Display ACPI table contents by walking the Info table.  *  * Note: This function must remain in sync with DtGetFieldLength.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDumpTable  *  * PARAMETERS:  TableLength         - Length of the entire ACPI table  *              TableOffset         - Starting offset within the table for this  *                                    sub-descriptor (0 if main table)  *              Table               - The ACPI table  *              SubtableLength      - Length of this sub-descriptor  *              Info                - Info table for this ACPI table  *  * RETURN:      Status  *  * DESCRIPTION: Display ACPI table contents by walking the Info table.  *  * Note: This function must remain in sync with DtGetFieldLength.  *  ******************************************************************************/
 end_comment
 
 begin_function
