@@ -158,6 +158,15 @@ argument_list|)
 block|}
 block|,
 block|{
+name|ALIAS_NTFS
+block|,
+name|ALIAS_INT2TYPE
+argument_list|(
+argument|DOSPTYP_NTFS
+argument_list|)
+block|}
+block|,
+block|{
 name|ALIAS_NONE
 block|,
 literal|0
