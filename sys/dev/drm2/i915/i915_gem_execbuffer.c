@@ -5516,7 +5516,7 @@ control|)
 block|{
 name|ret
 operator|=
-name|i915_emit_box_p
+name|i915_emit_box
 argument_list|(
 name|dev
 argument_list|,
