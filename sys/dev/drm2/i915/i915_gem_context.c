@@ -910,7 +910,7 @@ specifier|static
 name|int
 name|context_idr_cleanup
 parameter_list|(
-name|int
+name|uint32_t
 name|id
 parameter_list|,
 name|void
