@@ -4,7 +4,7 @@ comment|/* i915_dma.c -- DMA support for the I915 -*- linux-c -*-  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright 2003 Tungsten Graphics, Inc., Cedar Park, Texas.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the  * "Software"), to deal in the Software without restriction, including  * without limitation the rights to use, copy, modify, merge, publish,  * distribute, sub license, and/or sell copies of the Software, and to  * permit persons to whom the Software is furnished to do so, subject to  * the following conditions:  *  * The above copyright notice and this permission notice (including the  * next paragraph) shall be included in all copies or substantial portions  * of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.  * IN NO EVENT SHALL TUNGSTEN GRAPHICS AND/OR ITS SUPPLIERS BE LIABLE FOR  * ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  *  */
+comment|/*  * Copyright 2003 Tungsten Graphics, Inc., Cedar Park, Texas.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the  * "Software"), to deal in the Software without restriction, including  * without limitation the rights to use, copy, modify, merge, publish,  * distribute, sub license, and/or sell copies of the Software, and to  * permit persons to whom the Software is furnished to do so, subject to  * the following conditions:  *  * The above copyright notice and this permission notice (including the  * next paragraph) shall be included in all copies or substantial portions  * of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.  * IN NO EVENT SHALL TUNGSTEN GRAPHICS AND/OR ITS SUPPLIERS BE LIABLE FOR  * ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  *  */
 end_comment
 
 begin_include
@@ -97,6 +97,10 @@ parameter_list|()
 define|\
 value|intel_ring_advance(LP_RING(dev_priv))
 end_define
+
+begin_comment
+comment|/**  * Lock test for when it's just for synchronization of ring access.  *  * In that case, we don't need to do it when GEM is initialized as nobody else  * has access to the ring.  */
+end_comment
 
 begin_define
 define|#
@@ -1228,7 +1232,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|do_validate_cmd
+name|validate_cmd
 parameter_list|(
 name|int
 name|cmd
@@ -1509,30 +1513,6 @@ end_function
 begin_function
 specifier|static
 name|int
-name|validate_cmd
-parameter_list|(
-name|int
-name|cmd
-parameter_list|)
-block|{
-name|int
-name|ret
-init|=
-name|do_validate_cmd
-argument_list|(
-name|cmd
-argument_list|)
-decl_stmt|;
-comment|/*	printk("validate_cmd( %x ): %d\n", cmd, ret); */
-return|return
-name|ret
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
 name|i915_emit_cmds
 parameter_list|(
 name|struct
@@ -1541,7 +1521,6 @@ modifier|*
 name|dev
 parameter_list|,
 name|int
-name|__user
 modifier|*
 name|buffer
 parameter_list|,
@@ -1819,7 +1798,8 @@ name|int
 name|DR4
 parameter_list|)
 block|{
-name|drm_i915_private_t
+name|struct
+name|drm_i915_private
 modifier|*
 name|dev_priv
 init|=
@@ -1909,13 +1889,9 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|!=
-literal|0
 condition|)
 return|return
-operator|(
 name|ret
-operator|)
 return|;
 name|OUT_RING
 argument_list|(
@@ -1986,13 +1962,9 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|!=
-literal|0
 condition|)
 return|return
-operator|(
 name|ret
-operator|)
 return|;
 name|OUT_RING
 argument_list|(
@@ -2356,7 +2328,8 @@ modifier|*
 name|cliprects
 parameter_list|)
 block|{
-name|drm_i915_private_t
+name|struct
+name|drm_i915_private
 modifier|*
 name|dev_priv
 init|=
@@ -2505,13 +2478,9 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|!=
-literal|0
 condition|)
 return|return
-operator|(
 name|ret
-operator|)
 return|;
 if|if
 condition|(
@@ -2582,13 +2551,9 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|!=
-literal|0
 condition|)
 return|return
-operator|(
 name|ret
-operator|)
 return|;
 name|OUT_RING
 argument_list|(
@@ -5087,8 +5052,6 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|!=
-literal|0
 condition|)
 goto|goto
 name|cleanup_gem_stolen
@@ -5147,9 +5110,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 name|cleanup_gem
 label|:
@@ -6066,6 +6027,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/**  * i915_driver_load - setup chip and create an initial config  * @dev: DRM device  * @flags: startup flags  *  * The driver load routine has to do several things:  *   - drive output discovery via intel_modeset_init()  *   - initialize the memory manager  *   - allocate initial config memory  *   - setup the DRM framebuffer with the allocated memory  */
+end_comment
 
 begin_function
 name|int
@@ -7027,9 +6992,7 @@ name|DRM_MEM_DRIVER
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -7046,7 +7009,7 @@ parameter_list|,
 name|struct
 name|drm_file
 modifier|*
-name|file_priv
+name|file
 parameter_list|)
 block|{
 name|struct
@@ -7097,7 +7060,7 @@ operator|.
 name|request_list
 argument_list|)
 expr_stmt|;
-name|file_priv
+name|file
 operator|->
 name|driver_priv
 operator|=
@@ -7112,12 +7075,14 @@ name|context_idr
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * i915_driver_lastclose - clean up after all DRM clients have exited  * @dev: DRM device  *  * Take care of cleaning up after all DRM clients have exited.  In the  * mode setting case, we want to restore the kernel's initial mode (just  * in case the last client left us in a bad state).  *  * Additionally, in the non-mode setting case, we'll tear down the GTT  * and DMA structures, since the kernel won't be using them, and clea  * up any GEM state.  */
+end_comment
 
 begin_function
 name|void
@@ -7137,11 +7102,15 @@ name|dev
 operator|->
 name|dev_private
 decl_stmt|;
+comment|/* On gen6+ we refuse to init without kms enabled, but then the drm core 	 * goes right around and calls lastclose. Check for this and don't clean 	 * up anything. */
 if|if
 condition|(
 operator|!
 name|dev_priv
-operator|||
+condition|)
+return|return;
+if|if
+condition|(
 name|drm_core_check_feature
 argument_list|(
 name|dev
