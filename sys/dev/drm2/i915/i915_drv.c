@@ -85,6 +85,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|INTEL_VGA_DEVICE
+parameter_list|(
+name|id
+parameter_list|,
+name|info_
+parameter_list|)
+value|{		\ 	.device = id,				\ 	.info = info_,				\ }
+end_define
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -932,17 +944,102 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|intel_device_info
+name|intel_valleyview_m_info
+init|=
+block|{
+operator|.
+name|gen
+operator|=
+literal|7
+block|,
+operator|.
+name|is_mobile
+operator|=
+literal|1
+block|,
+operator|.
+name|need_gfx_hws
+operator|=
+literal|1
+block|,
+operator|.
+name|has_hotplug
+operator|=
+literal|1
+block|,
+operator|.
+name|has_fbc
+operator|=
 literal|0
-end_if
+block|,
+operator|.
+name|has_bsd_ring
+operator|=
+literal|1
+block|,
+operator|.
+name|has_blt_ring
+operator|=
+literal|1
+block|,
+operator|.
+name|is_valleyview
+operator|=
+literal|1
+block|, }
+decl_stmt|;
+end_decl_stmt
 
-begin_endif
-unit|static const struct intel_device_info intel_valleyview_m_info = { 	.gen = 7, .is_mobile = 1, 	.need_gfx_hws = 1, .has_hotplug = 1, 	.has_fbc = 0, 	.has_bsd_ring = 1, 	.has_blt_ring = 1, 	.is_valleyview = 1, };  static const struct intel_device_info intel_valleyview_d_info = { 	.gen = 7, 	.need_gfx_hws = 1, .has_hotplug = 1, 	.has_fbc = 0, 	.has_bsd_ring = 1, 	.has_blt_ring = 1, 	.is_valleyview = 1, };
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|intel_device_info
+name|intel_valleyview_d_info
+init|=
+block|{
+operator|.
+name|gen
+operator|=
+literal|7
+block|,
+operator|.
+name|need_gfx_hws
+operator|=
+literal|1
+block|,
+operator|.
+name|has_hotplug
+operator|=
+literal|1
+block|,
+operator|.
+name|has_fbc
+operator|=
+literal|0
+block|,
+operator|.
+name|has_bsd_ring
+operator|=
+literal|1
+block|,
+operator|.
+name|has_blt_ring
+operator|=
+literal|1
+block|,
+operator|.
+name|is_valleyview
+operator|=
+literal|1
+block|, }
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1061,18 +1158,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|INTEL_VGA_DEVICE
-parameter_list|(
-name|id
-parameter_list|,
-name|info_
-parameter_list|)
-value|{		\ 	.device = id,				\ 	.info = info_,				\ }
-end_define
-
 begin_struct
 specifier|static
 specifier|const
@@ -1102,6 +1187,7 @@ operator|&
 name|intel_i830_info
 argument_list|)
 block|,
+comment|/* I830_M */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x2562
@@ -1110,6 +1196,7 @@ operator|&
 name|intel_845g_info
 argument_list|)
 block|,
+comment|/* 845_G */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x3582
@@ -1118,6 +1205,7 @@ operator|&
 name|intel_i85x_info
 argument_list|)
 block|,
+comment|/* I855_GM */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x358e
@@ -1134,6 +1222,7 @@ operator|&
 name|intel_i865g_info
 argument_list|)
 block|,
+comment|/* I865_G */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x2582
@@ -1142,6 +1231,7 @@ operator|&
 name|intel_i915g_info
 argument_list|)
 block|,
+comment|/* I915_G */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x258a
@@ -1150,6 +1240,7 @@ operator|&
 name|intel_i915g_info
 argument_list|)
 block|,
+comment|/* E7221_G */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x2592
@@ -1158,6 +1249,7 @@ operator|&
 name|intel_i915gm_info
 argument_list|)
 block|,
+comment|/* I915_GM */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x2772
@@ -1166,6 +1258,7 @@ operator|&
 name|intel_i945g_info
 argument_list|)
 block|,
+comment|/* I945_G */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x27a2
@@ -1174,6 +1267,7 @@ operator|&
 name|intel_i945gm_info
 argument_list|)
 block|,
+comment|/* I945_GM */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x27ae
@@ -1182,6 +1276,7 @@ operator|&
 name|intel_i945gm_info
 argument_list|)
 block|,
+comment|/* I945_GME */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x2972
@@ -1190,6 +1285,7 @@ operator|&
 name|intel_i965g_info
 argument_list|)
 block|,
+comment|/* I946_GZ */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x2982
@@ -1198,6 +1294,7 @@ operator|&
 name|intel_i965g_info
 argument_list|)
 block|,
+comment|/* G35_G */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x2992
@@ -1206,6 +1303,7 @@ operator|&
 name|intel_i965g_info
 argument_list|)
 block|,
+comment|/* I965_Q */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x29a2
@@ -1214,6 +1312,7 @@ operator|&
 name|intel_i965g_info
 argument_list|)
 block|,
+comment|/* I965_G */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x29b2
@@ -1222,6 +1321,7 @@ operator|&
 name|intel_g33_info
 argument_list|)
 block|,
+comment|/* Q35_G */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x29c2
@@ -1230,6 +1330,7 @@ operator|&
 name|intel_g33_info
 argument_list|)
 block|,
+comment|/* G33_G */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x29d2
@@ -1238,6 +1339,7 @@ operator|&
 name|intel_g33_info
 argument_list|)
 block|,
+comment|/* Q33_G */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x2a02
@@ -1246,6 +1348,7 @@ operator|&
 name|intel_i965gm_info
 argument_list|)
 block|,
+comment|/* I965_GM */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x2a12
@@ -1254,6 +1357,7 @@ operator|&
 name|intel_i965gm_info
 argument_list|)
 block|,
+comment|/* I965_GME */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x2a42
@@ -1262,6 +1366,7 @@ operator|&
 name|intel_gm45_info
 argument_list|)
 block|,
+comment|/* GM45_G */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x2e02
@@ -1270,6 +1375,7 @@ operator|&
 name|intel_g45_info
 argument_list|)
 block|,
+comment|/* IGD_E_G */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x2e12
@@ -1278,6 +1384,7 @@ operator|&
 name|intel_g45_info
 argument_list|)
 block|,
+comment|/* Q45_G */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x2e22
@@ -1286,6 +1393,7 @@ operator|&
 name|intel_g45_info
 argument_list|)
 block|,
+comment|/* G45_G */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x2e32
@@ -1294,6 +1402,7 @@ operator|&
 name|intel_g45_info
 argument_list|)
 block|,
+comment|/* G41_G */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x2e42
@@ -1302,6 +1411,7 @@ operator|&
 name|intel_g45_info
 argument_list|)
 block|,
+comment|/* B43_G */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x2e92
@@ -1310,6 +1420,7 @@ operator|&
 name|intel_g45_info
 argument_list|)
 block|,
+comment|/* B43_G.1 */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0xa001
@@ -1472,6 +1583,15 @@ block|,
 comment|/* GT2 desktop */
 name|INTEL_VGA_DEVICE
 argument_list|(
+literal|0x0422
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* GT2 desktop */
+name|INTEL_VGA_DEVICE
+argument_list|(
 literal|0x040a
 argument_list|,
 operator|&
@@ -1482,6 +1602,15 @@ comment|/* GT1 server */
 name|INTEL_VGA_DEVICE
 argument_list|(
 literal|0x041a
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* GT2 server */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x042a
 argument_list|,
 operator|&
 name|intel_haswell_d_info
@@ -1508,13 +1637,280 @@ block|,
 comment|/* GT2 mobile */
 name|INTEL_VGA_DEVICE
 argument_list|(
-literal|0x0c16
+literal|0x0426
+argument_list|,
+operator|&
+name|intel_haswell_m_info
+argument_list|)
+block|,
+comment|/* GT2 mobile */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0C02
 argument_list|,
 operator|&
 name|intel_haswell_d_info
 argument_list|)
 block|,
-comment|/* SDV */
+comment|/* SDV GT1 desktop */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0C12
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* SDV GT2 desktop */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0C22
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* SDV GT2 desktop */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0C0A
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* SDV GT1 server */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0C1A
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* SDV GT2 server */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0C2A
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* SDV GT2 server */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0C06
+argument_list|,
+operator|&
+name|intel_haswell_m_info
+argument_list|)
+block|,
+comment|/* SDV GT1 mobile */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0C16
+argument_list|,
+operator|&
+name|intel_haswell_m_info
+argument_list|)
+block|,
+comment|/* SDV GT2 mobile */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0C26
+argument_list|,
+operator|&
+name|intel_haswell_m_info
+argument_list|)
+block|,
+comment|/* SDV GT2 mobile */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0A02
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* ULT GT1 desktop */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0A12
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* ULT GT2 desktop */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0A22
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* ULT GT2 desktop */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0A0A
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* ULT GT1 server */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0A1A
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* ULT GT2 server */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0A2A
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* ULT GT2 server */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0A06
+argument_list|,
+operator|&
+name|intel_haswell_m_info
+argument_list|)
+block|,
+comment|/* ULT GT1 mobile */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0A16
+argument_list|,
+operator|&
+name|intel_haswell_m_info
+argument_list|)
+block|,
+comment|/* ULT GT2 mobile */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0A26
+argument_list|,
+operator|&
+name|intel_haswell_m_info
+argument_list|)
+block|,
+comment|/* ULT GT2 mobile */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0D02
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* CRW GT1 desktop */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0D12
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* CRW GT2 desktop */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0D22
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* CRW GT2 desktop */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0D0A
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* CRW GT1 server */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0D1A
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* CRW GT2 server */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0D2A
+argument_list|,
+operator|&
+name|intel_haswell_d_info
+argument_list|)
+block|,
+comment|/* CRW GT2 server */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0D06
+argument_list|,
+operator|&
+name|intel_haswell_m_info
+argument_list|)
+block|,
+comment|/* CRW GT1 mobile */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0D16
+argument_list|,
+operator|&
+name|intel_haswell_m_info
+argument_list|)
+block|,
+comment|/* CRW GT2 mobile */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0D26
+argument_list|,
+operator|&
+name|intel_haswell_m_info
+argument_list|)
+block|,
+comment|/* CRW GT2 mobile */
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0f30
+argument_list|,
+operator|&
+name|intel_valleyview_m_info
+argument_list|)
+block|,
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0157
+argument_list|,
+operator|&
+name|intel_valleyview_m_info
+argument_list|)
+block|,
+name|INTEL_VGA_DEVICE
+argument_list|(
+literal|0x0155
+argument_list|,
+operator|&
+name|intel_valleyview_d_info
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
@@ -1546,16 +1942,11 @@ name|struct
 name|drm_i915_private
 modifier|*
 name|dev_priv
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|dev_priv
-operator|=
+init|=
 name|dev
 operator|->
 name|dev_private
-expr_stmt|;
+decl_stmt|;
 name|drm_kms_helper_poll_disable
 argument_list|(
 name|dev
@@ -1578,13 +1969,14 @@ name|DRIVER_MODESET
 argument_list|)
 condition|)
 block|{
+name|int
 name|error
-operator|=
+init|=
 name|i915_gem_idle
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|error
@@ -1600,9 +1992,7 @@ literal|"GEM idle failed, resume might fail\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|error
-operator|)
 return|;
 block|}
 name|drm_irq_uninstall
@@ -3947,6 +4337,10 @@ name|struct
 name|drm_i915_private
 modifier|*
 name|dev_priv
+init|=
+name|dev
+operator|->
+name|dev_private
 decl_stmt|;
 name|u32
 name|gdrst
@@ -3954,12 +4348,6 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|dev_priv
-operator|=
-name|dev
-operator|->
-name|dev_private
-expr_stmt|;
 name|gdrst
 operator|=
 name|I915_READ
@@ -4061,16 +4449,14 @@ name|struct
 name|drm_i915_private
 modifier|*
 name|dev_priv
+init|=
+name|dev
+operator|->
+name|dev_private
 decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|dev_priv
-operator|=
-name|dev
-operator|->
-name|dev_private
-expr_stmt|;
 comment|/* Hold gt_lock across reset to prevent any register access 	 * with forcewake not set correctly 	 */
 name|mtx_lock
 argument_list|(
@@ -4294,6 +4680,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * i915_reset - reset chip after a hang  * @dev: drm device to reset  *  * Reset the chip.  Useful if a hang is detected. Returns zero on successful  * reset or otherwise an error code.  *  * Procedure is fairly simple:  *   - reset the chip using the reset reg  *   - re-init context state  *   - re-init hardware status page  *   - re-init ring buffer  *   - re-init interrupt state  *   - re-init display  */
+end_comment
+
 begin_function
 name|int
 name|i915_reset
@@ -4321,9 +4711,7 @@ operator|!
 name|i915_try_reset
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 if|if
 condition|(
@@ -4403,11 +4791,11 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|ret
-operator|)
 return|;
 block|}
+comment|/* Ok, now get things going again... */
+comment|/* 	 * Everything depends on having the GTT running, so we need to start 	 * there.  Fortunately we don't need to do this unless we reset the 	 * chip at a PCI level. 	 * 	 * Next we need to restore the context, but we don't use those 	 * yet either... 	 * 	 * Ring buffer needs to be re-initialized in the KMS case, or if X 	 * was running at the time of the reset (i.e. we weren't VT 	 * switched away). 	 */
 if|if
 condition|(
 name|drm_core_check_feature
@@ -4471,6 +4859,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* 		 * It would make sense to re-init all the other hw state, at 		 * least the rps/rc6/emon init done within modeset_init_hw. For 		 * some unknown reason, this blows up my ilk, so don't. 		 */
 name|DRM_UNLOCK
 argument_list|(
 name|dev
@@ -4502,15 +4891,15 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|DRM_UNLOCK
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+block|}
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
