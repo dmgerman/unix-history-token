@@ -49,12 +49,6 @@ directive|include
 file|<contrib/dev/acpica/include/actables.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUGGER
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -418,7 +412,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDoOneSleepState  *  * PARAMETERS:  SleepState          - Desired sleep state (0-5)  *  * RETURN:      Status  *  * DESCRIPTION: Simulate a sleep/wake sequence  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDoOneSleepState  *  * PARAMETERS:  SleepState          - Desired sleep state (0-5)  *  * RETURN:      None  *  * DESCRIPTION: Simulate a sleep/wake sequence  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -725,7 +719,8 @@ decl_stmt|;
 comment|/* Header */
 name|AcpiOsPrintf
 argument_list|(
-literal|"Idx ID    Status Type              TableHeader (Sig, Address, Length)\n"
+literal|"Idx ID    Status Type                    "
+literal|"TableHeader (Sig, Address, Length, Misc)\n"
 argument_list|)
 expr_stmt|;
 comment|/* Walk the entire root table list */
@@ -1059,7 +1054,8 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Named object [%4.4s] Type %s, must be Device/Thermal/Processor type\n"
+literal|"Named object [%4.4s] Type %s, "
+literal|"must be Device/Thermal/Processor type\n"
 argument_list|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -1547,7 +1543,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** Buffer length mismatch in converted AML: Original %X, New %X ****\n"
+literal|"**** Buffer length mismatch in converted "
+literal|"AML: Original %X, New %X ****\n"
 argument_list|,
 name|Aml1BufferLength
 argument_list|,
@@ -1623,7 +1620,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** Length mismatch in descriptor [%.2X] type %2.2X, Offset %8.8X Len1 %X, Len2 %X ****\n"
+literal|"**** Length mismatch in descriptor [%.2X] type %2.2X, "
+literal|"Offset %8.8X Len1 %X, Len2 %X ****\n"
 argument_list|,
 name|Count
 argument_list|,
@@ -1653,7 +1651,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** Data mismatch in descriptor [%.2X] type %2.2X, Offset %8.8X ****\n"
+literal|"**** Data mismatch in descriptor [%.2X] type %2.2X, "
+literal|"Offset %8.8X ****\n"
 argument_list|,
 name|Count
 argument_list|,
@@ -1691,7 +1690,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Mismatch at byte offset %.2X: is %2.2X, should be %2.2X\n"
+literal|"Mismatch at byte offset %.2X: is %2.2X, "
+literal|"should be %2.2X\n"
 argument_list|,
 name|i
 argument_list|,
@@ -3055,6 +3055,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGenerateSci  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Simulate an SCI -- just call the SCI dispatch.  *  ******************************************************************************/
+end_comment
+
 begin_function
 name|void
 name|AcpiDbGenerateSci
@@ -3305,15 +3309,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_DEBUGGER */
-end_comment
 
 end_unit
 
