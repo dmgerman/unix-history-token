@@ -440,6 +440,65 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Want to avoid defining INVARIANTS if not already defined */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|invariants
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|int
+name|invariants
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|invariants
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|invariants
+argument_list|,
+literal|0
+argument_list|,
+literal|"Kernel compiled with invariants"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * This ensures that there is at least one entry so that the sysinit_set  * symbol is not undefined.  A sybsystem ID of SI_SUB_DUMMY is never  * executed.  */
 end_comment
 
