@@ -1223,7 +1223,7 @@ condition|)
 return|return
 name|ret
 return|;
-comment|/* 		 * Map the page containing the relocation we're going 		 * to perform. 		 */
+comment|/* Map the page containing the relocation we're going to perform.  */
 name|reloc
 operator|->
 name|offset
@@ -1557,14 +1557,12 @@ name|count
 condition|)
 do|;
 block|}
+return|return
+literal|0
+return|;
 undef|#
 directive|undef
 name|N_RELOC
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -1717,8 +1715,6 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|!=
-literal|0
 condition|)
 break|break;
 block|}
@@ -1728,9 +1724,7 @@ name|pflags
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|ret
-operator|)
 return|;
 block|}
 end_function
@@ -1971,10 +1965,9 @@ name|drm_i915_gem_object
 modifier|*
 name|obj
 decl_stmt|;
-name|int
-name|ret
-decl_stmt|,
-name|retry
+name|struct
+name|list_head
+name|ordered_objects
 decl_stmt|;
 name|bool
 name|has_fenced_gpu_access
@@ -1990,9 +1983,10 @@ name|gen
 operator|<
 literal|4
 decl_stmt|;
-name|struct
-name|list_head
-name|ordered_objects
+name|int
+name|ret
+decl_stmt|,
+name|retry
 decl_stmt|;
 name|dev_priv
 operator|=
@@ -2122,7 +2116,7 @@ argument_list|,
 name|objects
 argument_list|)
 expr_stmt|;
-comment|/* Attempt to pin all of the buffers into the GTT. 	 * This is done in 3 phases: 	 * 	 * 1a. Unbind all objects that do not match the GTT constraints for 	 *     the execbuffer (fenceable, mappable, alignment etc). 	 * 1b. Increment pin count for already bound objects and obtain 	 *     a fence register if required. 	 * 2.  Bind new objects. 	 * 3.  Decrement pin count. 	 * 	 * This avoid unnecessary unbinding of later objects in order to makr 	 * room for the earlier objects *unless* we need to defragment. 	 */
+comment|/* Attempt to pin all of the buffers into the GTT. 	 * This is done in 3 phases: 	 * 	 * 1a. Unbind all objects that do not match the GTT constraints for 	 *     the execbuffer (fenceable, mappable, alignment etc). 	 * 1b. Increment pin count for already bound objects. 	 * 2.  Bind new objects. 	 * 3.  Decrement pin count. 	 * 	 * This avoid unnecessary unbinding of later objects in order to make 	 * room for the earlier objects *unless* we need to defragment. 	 */
 name|retry
 operator|=
 literal|0
@@ -6441,9 +6435,8 @@ name|DRM_I915_GEM
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|ret
-operator|)
+operator|-
+name|EFAULT
 return|;
 block|}
 name|ret
