@@ -760,10 +760,6 @@ name|obj
 parameter_list|)
 block|{
 return|return
-name|obj
-operator|->
-name|gtt_space
-operator|&&
 operator|!
 name|obj
 operator|->
