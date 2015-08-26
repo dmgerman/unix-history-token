@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-server.c,v 1.106 2015/04/24 01:36:01 deraadt Exp $ */
+comment|/* $OpenBSD: sftp-server.c,v 1.107 2015/08/20 22:32:42 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -9494,10 +9494,6 @@ argument_list|)
 expr_stmt|;
 name|rset
 operator|=
-operator|(
-name|fd_set
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 name|set_size
@@ -9505,10 +9501,6 @@ argument_list|)
 expr_stmt|;
 name|wset
 operator|=
-operator|(
-name|fd_set
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 name|set_size

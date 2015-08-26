@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.c,v 1.213 2015/07/29 04:43:06 djm Exp $ */
+comment|/* $OpenBSD: packet.c,v 1.214 2015/08/20 22:32:42 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -6453,10 +6453,6 @@ argument_list|)
 expr_stmt|;
 name|setp
 operator|=
-operator|(
-name|fd_set
-operator|*
-operator|)
 name|calloc
 argument_list|(
 name|howmany
@@ -10500,10 +10496,6 @@ name|state
 decl_stmt|;
 name|setp
 operator|=
-operator|(
-name|fd_set
-operator|*
-operator|)
 name|calloc
 argument_list|(
 name|howmany

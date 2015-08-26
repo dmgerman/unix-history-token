@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshd.c,v 1.457 2015/07/30 00:01:34 djm Exp $ */
+comment|/* $OpenBSD: sshd.c,v 1.458 2015/08/20 22:32:42 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -5534,10 +5534,6 @@ argument_list|)
 expr_stmt|;
 name|fdset
 operator|=
-operator|(
-name|fd_set
-operator|*
-operator|)
 name|xcalloc
 argument_list|(
 name|howmany
