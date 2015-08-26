@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.119 2015/05/22 03:50:02 djm Exp $ */
+comment|/* $OpenBSD: servconf.h,v 1.120 2015/07/10 06:21:53 markus Exp $ */
 end_comment
 
 begin_comment
@@ -475,6 +475,11 @@ modifier|*
 name|hostbased_key_types
 decl_stmt|;
 comment|/* Key types allowed for hostbased */
+name|char
+modifier|*
+name|hostkeyalgorithms
+decl_stmt|;
+comment|/* SSH2 server key types */
 name|int
 name|rsa_authentication
 decl_stmt|;

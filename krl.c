@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2012 Damien Miller<djm@mindrot.org>  *  * Permission
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: krl.c,v 1.32 2015/06/24 23:47:23 djm Exp $ */
+comment|/* $OpenBSD: krl.c,v 1.33 2015/07/03 03:43:18 djm Exp $ */
 end_comment
 
 begin_include
@@ -2358,11 +2358,6 @@ argument_list|)
 return|;
 if|if
 condition|(
-name|sshkey_cert_is_legacy
-argument_list|(
-name|key
-argument_list|)
-operator|||
 name|key
 operator|->
 name|cert
@@ -6554,14 +6549,9 @@ return|return
 name|SSH_ERR_KEY_REVOKED
 return|;
 block|}
-comment|/* 	 * Legacy cert formats lack serial numbers. Zero serials numbers 	 * are ignored (it's the default when the CA doesn't specify one). 	 */
+comment|/* 	 * Zero serials numbers are ignored (it's the default when the 	 * CA doesn't specify one). 	 */
 if|if
 condition|(
-name|sshkey_cert_is_legacy
-argument_list|(
-name|key
-argument_list|)
-operator|||
 name|key
 operator|->
 name|cert

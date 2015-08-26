@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* 	$OpenBSD: test_sshkey.c,v 1.4 2015/04/22 01:38:36 djm Exp $ */
+comment|/* 	$OpenBSD: test_sshkey.c,v 1.7 2015/08/05 05:27:33 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1826,7 +1826,22 @@ name|sshkey_generate
 argument_list|(
 name|KEY_RSA
 argument_list|,
-literal|768
+literal|767
+argument_list|,
+operator|&
+name|kr
+argument_list|)
+argument_list|,
+name|SSH_ERR_INVALID_ARGUMENT
+argument_list|)
+expr_stmt|;
+name|ASSERT_INT_EQ
+argument_list|(
+name|sshkey_generate
+argument_list|(
+name|KEY_RSA
+argument_list|,
+literal|1024
 argument_list|,
 operator|&
 name|kr
@@ -1895,7 +1910,7 @@ operator|->
 name|n
 argument_list|)
 argument_list|,
-literal|768
+literal|1024
 argument_list|)
 expr_stmt|;
 name|TEST_DONE
@@ -2587,7 +2602,7 @@ name|sshkey_generate
 argument_list|(
 name|KEY_RSA
 argument_list|,
-literal|768
+literal|1024
 argument_list|,
 operator|&
 name|k1
@@ -2777,8 +2792,6 @@ argument_list|(
 name|sshkey_to_certified
 argument_list|(
 name|k1
-argument_list|,
-literal|0
 argument_list|)
 argument_list|,
 literal|0

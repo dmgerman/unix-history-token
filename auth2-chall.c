@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-chall.c,v 1.42 2015/01/19 20:07:45 markus Exp $ */
+comment|/* $OpenBSD: auth2-chall.c,v 1.43 2015/07/18 07:57:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -274,6 +274,9 @@ name|device
 decl_stmt|;
 name|u_int
 name|nreq
+decl_stmt|;
+name|u_int
+name|devices_done
 decl_stmt|;
 block|}
 struct|;
@@ -749,6 +752,20 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
+name|kbdintctxt
+operator|->
+name|devices_done
+operator|&
+operator|(
+literal|1
+operator|<<
+name|i
+operator|)
+operator|)
+operator|!=
+literal|0
+operator|||
 operator|!
 name|auth2_method_allowed
 argument_list|(
@@ -785,6 +802,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|kbdintctxt
 operator|->
 name|device
@@ -794,6 +812,15 @@ index|[
 name|i
 index|]
 expr_stmt|;
+name|kbdintctxt
+operator|->
+name|devices_done
+operator||=
+literal|1
+operator|<<
+name|i
+expr_stmt|;
+block|}
 block|}
 name|t
 operator|=

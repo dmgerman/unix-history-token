@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sandbox-systrace.c,v 1.16 2015/06/29 22:35:12 djm Exp $ */
+comment|/* $OpenBSD: sandbox-systrace.c,v 1.17 2015/07/27 16:29:23 guenther Exp $ */
 end_comment
 
 begin_comment
@@ -223,6 +223,17 @@ block|,
 name|SYSTR_POLICY_PERMIT
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|SYS_kbind
+block|{
+name|SYS_kbind
+block|,
+name|SYSTR_POLICY_PERMIT
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 name|SYS_madvise
 block|,

@@ -3017,16 +3017,6 @@ operator|&
 name|m
 argument_list|)
 expr_stmt|;
-name|buffer_put_cstring
-argument_list|(
-operator|&
-name|m
-argument_list|,
-name|authctxt
-operator|->
-name|user
-argument_list|)
-expr_stmt|;
 name|mm_request_send
 argument_list|(
 name|pmonitor

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: key.h,v 1.47 2015/01/28 22:36:00 djm Exp $ */
+comment|/* $OpenBSD: key.h,v 1.48 2015/07/03 03:43:18 djm Exp $ */
 end_comment
 
 begin_comment
@@ -175,13 +175,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|key_cert_is_legacy
-value|sshkey_cert_is_legacy
-end_define
-
-begin_define
-define|#
-directive|define
 name|key_curve_name_to_nid
 value|sshkey_curve_name_to_nid
 end_define
@@ -326,8 +319,6 @@ name|key_to_certified
 parameter_list|(
 name|Key
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-pkcs11.c,v 1.19 2015/05/27 05:15:02 djm Exp $ */
+comment|/* $OpenBSD: ssh-pkcs11.c,v 1.21 2015/07/18 08:02:17 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2595,18 +2595,9 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* check that none of the attributes are zero length */
+comment|/* 		 * Allow CKA_ID (always first attribute) to be empty, but 		 * ensure that none of the others are zero length. 		 * XXX assumes CKA_ID is always first. 		 */
 if|if
 condition|(
-name|attribs
-index|[
-literal|0
-index|]
-operator|.
-name|ulValueLen
-operator|==
-literal|0
-operator|||
 name|attribs
 index|[
 literal|1
@@ -2642,6 +2633,19 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+if|if
+condition|(
+name|attribs
+index|[
+name|i
+index|]
+operator|.
+name|ulValueLen
+operator|>
+literal|0
+condition|)
+block|{
 name|attribs
 index|[
 name|i
@@ -2659,6 +2663,8 @@ operator|.
 name|ulValueLen
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 comment|/* 		 * retrieve ID, modulus and public exponent of RSA key, 		 * or ID, subject and value for certificates. 		 */
 name|rsa
 operator|=
@@ -3648,6 +3654,34 @@ argument_list|(
 literal|"C_GetTokenInfo failed: %lu"
 argument_list|,
 name|rv
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+operator|(
+name|token
+operator|->
+name|flags
+operator|&
+name|CKF_TOKEN_INITIALIZED
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|debug2
+argument_list|(
+literal|"%s: ignoring uninitialised token in slot %lu"
+argument_list|,
+name|__func__
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|i
 argument_list|)
 expr_stmt|;
 continue|continue;

@@ -250,6 +250,33 @@ name|BROKEN_REALPATH
 argument_list|)
 end_if
 
+begin_comment
+comment|/*  * glibc's FORTIFY_SOURCE can redefine this and prevent us picking up the  * compat version.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BROKEN_REALPATH
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|realpath
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|_ssh_compat_realpath(x, y)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|char
 modifier|*

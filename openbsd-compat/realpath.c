@@ -35,6 +35,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -54,6 +60,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
 end_include
 
 begin_include
@@ -308,6 +320,9 @@ name|s
 operator|-
 name|left
 operator|>=
+operator|(
+name|ptrdiff_t
+operator|)
 sizeof|sizeof
 argument_list|(
 name|next_token
@@ -714,6 +729,9 @@ name|slen
 operator|+
 literal|1
 operator|>=
+operator|(
+name|ptrdiff_t
+operator|)
 sizeof|sizeof
 argument_list|(
 name|symlink

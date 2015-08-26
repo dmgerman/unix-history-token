@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-add.c,v 1.122 2015/03/26 12:32:38 naddy Exp $ */
+comment|/* $OpenBSD: ssh-add.c,v 1.123 2015/07/03 03:43:18 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1340,11 +1340,6 @@ operator|=
 name|sshkey_to_certified
 argument_list|(
 name|private
-argument_list|,
-name|sshkey_cert_is_legacy
-argument_list|(
-name|cert
-argument_list|)
 argument_list|)
 operator|)
 operator|!=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh.h,v 1.79 2010/06/25 07:14:46 djm Exp $ */
+comment|/* $OpenBSD: ssh.h,v 1.81 2015/08/04 05:23:06 djm Exp $ */
 end_comment
 
 begin_comment

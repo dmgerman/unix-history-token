@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: key.c,v 1.127 2015/01/28 22:36:00 djm Exp $ */
+comment|/* $OpenBSD: key.c,v 1.128 2015/07/03 03:43:18 djm Exp $ */
 end_comment
 
 begin_comment
@@ -957,9 +957,6 @@ parameter_list|(
 name|Key
 modifier|*
 name|k
-parameter_list|,
-name|int
-name|legacy
 parameter_list|)
 block|{
 name|int
@@ -973,8 +970,6 @@ operator|=
 name|sshkey_to_certified
 argument_list|(
 name|k
-argument_list|,
-name|legacy
 argument_list|)
 operator|)
 operator|!=

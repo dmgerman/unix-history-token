@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfile.c,v 1.114 2015/04/17 13:32:09 djm Exp $ */
+comment|/* $OpenBSD: authfile.c,v 1.116 2015/07/09 09:49:46 markus Exp $ */
 end_comment
 
 begin_comment
@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"key.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ssh.h"
 end_include
 
@@ -125,6 +119,12 @@ begin_include
 include|#
 directive|include
 file|"atomicio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sshkey.h"
 end_include
 
 begin_include
@@ -2148,12 +2148,12 @@ case|:
 case|case
 name|KEY_ECDSA
 case|:
-case|case
-name|KEY_ED25519
-case|:
 endif|#
 directive|endif
 comment|/* WITH_OPENSSL */
+case|case
+name|KEY_ED25519
+case|:
 case|case
 name|KEY_UNSPEC
 case|:
@@ -2233,11 +2233,6 @@ operator|=
 name|sshkey_to_certified
 argument_list|(
 name|key
-argument_list|,
-name|sshkey_cert_is_legacy
-argument_list|(
-name|cert
-argument_list|)
 argument_list|)
 operator|)
 operator|!=

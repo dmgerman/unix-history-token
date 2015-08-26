@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: log.c,v 1.45 2013/05/16 09:08:41 dtucker Exp $ */
+comment|/* $OpenBSD: log.c,v 1.46 2015/07/08 19:04:21 markus Exp $ */
 end_comment
 
 begin_comment
@@ -101,12 +101,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"xmalloc.h"
-end_include
 
 begin_include
 include|#

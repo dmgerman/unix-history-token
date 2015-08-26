@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: addrmatch.c,v 1.9 2014/01/19 11:21:51 dtucker Exp $ */
+comment|/*	$OpenBSD: addrmatch.c,v 1.10 2015/07/08 19:04:21 markus Exp $ */
 end_comment
 
 begin_comment
@@ -77,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|"log.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xmalloc.h"
 end_include
 
 begin_struct

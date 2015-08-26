@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshkey.h,v 1.6 2015/05/21 04:55:51 djm Exp $ */
+comment|/* $OpenBSD: sshkey.h,v 1.9 2015/08/04 05:23:06 djm Exp $ */
 end_comment
 
 begin_comment
@@ -192,10 +192,6 @@ block|,
 name|KEY_ECDSA_CERT
 block|,
 name|KEY_ED25519_CERT
-block|,
-name|KEY_RSA_CERT_V00
-block|,
-name|KEY_DSA_CERT_V00
 block|,
 name|KEY_UNSPEC
 block|}
@@ -663,8 +659,6 @@ parameter_list|(
 name|struct
 name|sshkey
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -731,18 +725,6 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|sshkey_cert_is_legacy
-parameter_list|(
-specifier|const
-name|struct
-name|sshkey
 modifier|*
 parameter_list|)
 function_decl|;
