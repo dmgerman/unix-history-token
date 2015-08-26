@@ -407,10 +407,6 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
-comment|/* Grab a read lock on the filemon inuse list. */
-name|filemon_lock_read
-argument_list|()
-expr_stmt|;
 comment|/* Lock the found filemon structure. */
 name|filemon_filemon_lock
 argument_list|(
@@ -473,10 +469,6 @@ name|filemon_filemon_unlock
 argument_list|(
 name|filemon
 argument_list|)
-expr_stmt|;
-comment|/* Release the read lock. */
-name|filemon_unlock_read
-argument_list|()
 expr_stmt|;
 block|}
 end_function
