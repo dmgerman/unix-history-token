@@ -392,7 +392,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|DESC_COUNT
+name|DESC_MAX
 value|256
 end_define
 
@@ -400,7 +400,7 @@ begin_define
 define|#
 directive|define
 name|DESC_SIZE
-value|(sizeof(struct idmac_desc) * DESC_COUNT)
+value|(sizeof(struct idmac_desc) * DESC_MAX)
 end_define
 
 begin_define
@@ -471,6 +471,9 @@ name|use_pio
 decl_stmt|;
 name|uint32_t
 name|pwren_inverted
+decl_stmt|;
+name|u_int
+name|desc_count
 decl_stmt|;
 name|bus_dma_tag_t
 name|desc_tag
@@ -1231,7 +1234,9 @@ literal|0
 init|;
 name|idx
 operator|<
-name|DESC_COUNT
+name|sc
+operator|->
+name|desc_count
 condition|;
 name|idx
 operator|++
@@ -1267,7 +1272,9 @@ operator|+
 literal|1
 operator|)
 operator|%
-name|DESC_COUNT
+name|sc
+operator|->
+name|desc_count
 expr_stmt|;
 name|sc
 operator|->
@@ -1322,12 +1329,16 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|DESC_COUNT
+name|sc
+operator|->
+name|desc_count
 operator|*
 name|MMC_SECTOR_SIZE
 argument_list|,
 comment|/* maxsize */
-name|DESC_COUNT
+name|sc
+operator|->
+name|desc_count
 argument_list|,
 comment|/* nsegments */
 name|MMC_SECTOR_SIZE
@@ -2695,6 +2706,12 @@ operator|->
 name|pwren_inverted
 operator|=
 literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|desc_count
+operator|=
+name|DESC_MAX
 expr_stmt|;
 if|if
 condition|(
@@ -5328,7 +5345,9 @@ operator|*
 operator|)
 name|result
 operator|=
-name|DESC_COUNT
+name|sc
+operator|->
+name|desc_count
 expr_stmt|;
 block|}
 return|return
