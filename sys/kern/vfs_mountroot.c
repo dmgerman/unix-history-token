@@ -3672,6 +3672,25 @@ operator|&
 name|conf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"mountroot: invalid file system "
+literal|"specification.\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+block|}
 break|break;
 block|}
 if|if
