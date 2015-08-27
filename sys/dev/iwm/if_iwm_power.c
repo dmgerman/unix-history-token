@@ -802,6 +802,7 @@ name|ieee80211com
 modifier|*
 name|ic
 init|=
+operator|&
 name|sc
 operator|->
 name|sc_ic
