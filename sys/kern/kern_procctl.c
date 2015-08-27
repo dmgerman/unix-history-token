@@ -818,36 +818,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|LIST_EMPTY
-argument_list|(
-operator|&
-name|reap
-operator|->
-name|p_reaplist
-argument_list|)
-argument_list|,
-operator|(
-literal|"reap children list"
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|LIST_EMPTY
-argument_list|(
-operator|&
-name|reap
-operator|->
-name|p_children
-argument_list|)
-argument_list|,
-operator|(
-literal|"children list"
-operator|)
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 operator|(
