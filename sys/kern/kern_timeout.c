@@ -6026,7 +6026,13 @@ argument_list|,
 name|cc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we are asked to stop a callout which is currently in progress 	 * and indeed impossible to stop then return 0. 	 */
+if|if
+condition|(
+operator|!
+name|use_lock
+condition|)
+block|{
+comment|/* 		 * If we are asked to stop a callout which is currently in progress 		 * and indeed impossible to stop then return 0. 		 */
 name|not_running
 operator|=
 operator|!
@@ -6041,6 +6047,7 @@ operator|==
 name|c
 operator|)
 expr_stmt|;
+block|}
 name|CC_UNLOCK
 argument_list|(
 name|cc
