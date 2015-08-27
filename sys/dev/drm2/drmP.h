@@ -890,11 +890,9 @@ name|DRM_LOG
 parameter_list|(
 name|fmt
 parameter_list|,
-name|args
-parameter_list|,
 modifier|...
 parameter_list|)
-value|do {					\ 	if ((drm_debug& DRM_DEBUGBITS_KMS) != 0)			\ 		printf("[" DRM_NAME "]:pid%d:%s]" fmt, DRM_CURRENTPID,\ 			__func__ , ##__VA_ARGS__);			\ } while (0)
+value|do {						\ 	if ((drm_debug& DRM_DEBUGBITS_KMS) != 0)			\ 		printf("[" DRM_NAME "]:pid%d:%s]" fmt, DRM_CURRENTPID,	\ 			__func__ , ##__VA_ARGS__);			\ } while (0)
 end_define
 
 begin_define
@@ -904,11 +902,9 @@ name|DRM_LOG_KMS
 parameter_list|(
 name|fmt
 parameter_list|,
-name|args
-parameter_list|,
 modifier|...
 parameter_list|)
-value|do {				\ 	if ((drm_debug& DRM_DEBUGBITS_KMS) != 0)			\ 		printf("[" DRM_NAME "]:KMS:pid%d:%s]" fmt, DRM_CURRENTPID,\ 			__func__ , ##__VA_ARGS__);			\ } while (0)
+value|do {					\ 	if ((drm_debug& DRM_DEBUGBITS_KMS) != 0)			\ 		printf("[" DRM_NAME "]:KMS:pid%d:%s]" fmt, DRM_CURRENTPID,\ 			__func__ , ##__VA_ARGS__);			\ } while (0)
 end_define
 
 begin_define
@@ -918,11 +914,9 @@ name|DRM_LOG_MODE
 parameter_list|(
 name|fmt
 parameter_list|,
-name|args
-parameter_list|,
 modifier|...
 parameter_list|)
-value|do {				\ 	if ((drm_debug& DRM_DEBUGBITS_KMS) != 0)			\ 		printf("[" DRM_NAME "]:pid%d:%s]" fmt, DRM_CURRENTPID,	\ 			__func__ , ##__VA_ARGS__);			\ } while (0)
+value|do {					\ 	if ((drm_debug& DRM_DEBUGBITS_KMS) != 0)			\ 		printf("[" DRM_NAME "]:pid%d:%s]" fmt, DRM_CURRENTPID,	\ 			__func__ , ##__VA_ARGS__);			\ } while (0)
 end_define
 
 begin_define
@@ -932,10 +926,9 @@ name|DRM_LOG_DRIVER
 parameter_list|(
 name|fmt
 parameter_list|,
-name|args
 modifier|...
 parameter_list|)
-value|do {				\ 	if ((drm_debug& DRM_DEBUGBITS_KMS) != 0)			\ 		printf("[" DRM_NAME "]:KMS:pid%d:%s]" fmt, DRM_CURRENTPID,\ 			__func__ , ##__VA_ARGS__);			\ } while (0)
+value|do {					\ 	if ((drm_debug& DRM_DEBUGBITS_KMS) != 0)			\ 		printf("[" DRM_NAME "]:KMS:pid%d:%s]" fmt, DRM_CURRENTPID,\ 			__func__ , ##__VA_ARGS__);			\ } while (0)
 end_define
 
 begin_comment
