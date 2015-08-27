@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -37,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<libgen.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -349,7 +349,7 @@ decl_stmt|;
 name|char
 name|bakname
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|,
 modifier|*
@@ -1792,7 +1792,7 @@ name|filedir
 decl_stmt|,
 name|tmpbuf
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|struct
