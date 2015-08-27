@@ -3719,7 +3719,7 @@ name|frame
 operator|->
 name|srr1
 operator|&
-literal|0x20000
+name|EXC_PGM_TRAP
 operator|)
 operator|)
 else|#
@@ -3789,7 +3789,7 @@ name|frame
 operator|->
 name|srr1
 operator|&
-literal|0x20000
+name|EXC_PGM_TRAP
 operator|)
 condition|)
 block|{
