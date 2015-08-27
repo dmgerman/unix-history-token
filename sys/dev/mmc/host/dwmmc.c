@@ -3050,7 +3050,14 @@ name|host
 operator|.
 name|f_max
 operator|=
+name|min
+argument_list|(
 literal|200000000
+argument_list|,
+name|sc
+operator|->
+name|bus_hz
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
