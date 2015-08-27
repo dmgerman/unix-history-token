@@ -2982,11 +2982,11 @@ return|return;
 block|}
 name|memcpy
 argument_list|(
-name|V_pfi_buffer
-argument_list|,
 name|p
 argument_list|,
-name|V_pfi_buffer_cnt
+name|V_pfi_buffer
+argument_list|,
+name|V_pfi_buffer_max
 operator|*
 sizeof|sizeof
 argument_list|(
