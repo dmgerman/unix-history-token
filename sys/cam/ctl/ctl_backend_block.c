@@ -9669,6 +9669,8 @@ decl_stmt|,
 name|maxio
 decl_stmt|,
 name|unmap
+decl_stmt|,
+name|tmp
 decl_stmt|;
 name|off_t
 name|ps
@@ -9687,7 +9689,7 @@ name|uo
 decl_stmt|,
 name|uos
 decl_stmt|,
-name|tmp
+name|otmp
 decl_stmt|;
 name|params
 operator|=
@@ -10067,9 +10069,7 @@ name|params
 operator|->
 name|blocksize_bytes
 argument_list|,
-name|be_lun
-operator|->
-name|blocksize
+name|tmp
 argument_list|)
 expr_stmt|;
 return|return
@@ -10109,9 +10109,7 @@ name|params
 operator|->
 name|blocksize_bytes
 argument_list|,
-name|be_lun
-operator|->
-name|blocksize
+name|tmp
 argument_list|)
 expr_stmt|;
 return|return
@@ -10141,7 +10139,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|tmp
+name|otmp
 argument_list|,
 name|FREAD
 argument_list|,
@@ -10197,7 +10195,7 @@ name|params
 operator|->
 name|lun_size_bytes
 operator|>
-name|tmp
+name|otmp
 condition|)
 block|{
 name|snprintf
@@ -10226,9 +10224,7 @@ argument_list|,
 operator|(
 name|uintmax_t
 operator|)
-name|be_lun
-operator|->
-name|size_bytes
+name|otmp
 argument_list|)
 expr_stmt|;
 return|return
@@ -10251,7 +10247,7 @@ name|be_lun
 operator|->
 name|size_bytes
 operator|=
-name|tmp
+name|otmp
 expr_stmt|;
 name|error
 operator|=
