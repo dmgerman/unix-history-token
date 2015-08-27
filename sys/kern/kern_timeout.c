@@ -6048,6 +6048,11 @@ name|c
 operator|)
 expr_stmt|;
 block|}
+else|else
+name|not_running
+operator|=
+literal|1
+expr_stmt|;
 name|CC_UNLOCK
 argument_list|(
 name|cc
