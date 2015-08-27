@@ -5185,8 +5185,11 @@ name|use_lock
 decl_stmt|;
 name|int
 name|not_on_a_list
-decl_stmt|,
+decl_stmt|;
+name|int
 name|not_running
+init|=
+literal|1
 decl_stmt|;
 if|if
 condition|(
@@ -6048,11 +6051,6 @@ name|c
 operator|)
 expr_stmt|;
 block|}
-else|else
-name|not_running
-operator|=
-literal|1
-expr_stmt|;
 name|CC_UNLOCK
 argument_list|(
 name|cc
