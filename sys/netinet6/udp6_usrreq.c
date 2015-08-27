@@ -1115,7 +1115,7 @@ name|uh_sport
 expr_stmt|;
 name|pcbinfo
 operator|=
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 name|nxt
 argument_list|)
@@ -1155,7 +1155,7 @@ comment|/* 		 * In the event that laddr should be set to the link-local 		 * add
 comment|/* 		 * KAME note: traditionally we dropped udpiphdr from mbuf 		 * here.  We need udphdr for IPsec processing so we do that 		 * later. 		 */
 name|pcblist
 operator|=
-name|get_pcblist
+name|udp_get_pcblist
 argument_list|(
 name|nxt
 argument_list|)
@@ -3924,7 +3924,7 @@ name|pcbinfo
 decl_stmt|;
 name|pcbinfo
 operator|=
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 name|so
 operator|->
@@ -4080,7 +4080,7 @@ name|error
 decl_stmt|;
 name|pcbinfo
 operator|=
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 name|so
 operator|->
@@ -4322,7 +4322,7 @@ name|error
 decl_stmt|;
 name|pcbinfo
 operator|=
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 name|so
 operator|->
@@ -4542,7 +4542,7 @@ name|pcbinfo
 decl_stmt|;
 name|pcbinfo
 operator|=
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 name|so
 operator|->
@@ -4705,7 +4705,7 @@ name|error
 decl_stmt|;
 name|pcbinfo
 operator|=
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 name|so
 operator|->
@@ -5028,7 +5028,7 @@ name|up
 decl_stmt|;
 name|pcbinfo
 operator|=
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 name|so
 operator|->
@@ -5134,7 +5134,7 @@ name|error
 decl_stmt|;
 name|pcbinfo
 operator|=
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 name|so
 operator|->
@@ -5340,7 +5340,7 @@ literal|0
 decl_stmt|;
 name|pcbinfo
 operator|=
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 name|so
 operator|->
