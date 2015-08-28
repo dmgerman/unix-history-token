@@ -1124,16 +1124,16 @@ end_endif
 begin_if
 if|#
 directive|if
-name|__has_attribute
-argument_list|(
-name|alloc_size
-argument_list|)
-operator|||
 name|__GNUC_PREREQ__
 argument_list|(
 literal|4
 operator|,
 literal|3
+argument_list|)
+operator|||
+name|__has_attribute
+argument_list|(
+name|alloc_size
 argument_list|)
 end_if
 
@@ -1169,16 +1169,16 @@ end_endif
 begin_if
 if|#
 directive|if
-name|__has_attribute
-argument_list|(
-name|alloc_align
-argument_list|)
-operator|||
 name|__GNUC_PREREQ__
 argument_list|(
 literal|4
 operator|,
 literal|9
+argument_list|)
+operator|||
+name|__has_attribute
+argument_list|(
+name|alloc_align
 argument_list|)
 end_if
 
@@ -1992,16 +1992,16 @@ end_endif
 begin_if
 if|#
 directive|if
-name|__has_builtin
-argument_list|(
-name|__builtin_unreachable
-argument_list|)
-operator|||
 name|__GNUC_PREREQ__
 argument_list|(
 literal|4
 operator|,
 literal|6
+argument_list|)
+operator|||
+name|__has_builtin
+argument_list|(
+name|__builtin_unreachable
 argument_list|)
 end_if
 
@@ -2677,16 +2677,16 @@ end_if
 begin_if
 if|#
 directive|if
-name|__has_attribute
-argument_list|(
-name|artificial
-argument_list|)
-operator|||
 name|__GNUC_PREREQ__
 argument_list|(
 literal|4
 operator|,
 literal|3
+argument_list|)
+operator|||
+name|__has_attribute
+argument_list|(
+name|artificial
 argument_list|)
 end_if
 
