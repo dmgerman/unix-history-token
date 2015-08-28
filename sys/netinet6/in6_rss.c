@@ -611,11 +611,9 @@ operator|)
 return|;
 block|}
 comment|/* No configured available hashtypes! */
-name|printf
+name|RSS_DEBUG
 argument_list|(
-literal|"%s: no available hashtypes!\n"
-argument_list|,
-name|__func__
+literal|"no available hashtypes!\n"
 argument_list|)
 expr_stmt|;
 return|return

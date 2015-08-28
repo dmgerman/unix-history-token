@@ -490,6 +490,39 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Print verbose debugging messages.  * 0 - disable  * non-zero - enable  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rss_debug
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_rss
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debug
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|rss_debug
+argument_list|,
+literal|0
+argument_list|,
+literal|"RSS debug level"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * RSS secret key, intended to prevent attacks on load-balancing.  Its  * effectiveness may be limited by algorithm choice and available entropy  * during the boot.  *  * XXXRW: And that we don't randomize it yet!  *  * This is the default Microsoft RSS specification key which is also  * the Chelsio T5 firmware default key.  */
 end_comment
 
@@ -643,11 +676,9 @@ name|RSS_HASH_NAIVE
 case|:
 break|break;
 default|default:
-name|printf
+name|RSS_DEBUG
 argument_list|(
-literal|"%s: invalid RSS hashalgo %u, coercing to %u"
-argument_list|,
-name|__func__
+literal|"invalid RSS hashalgo %u, coercing to %u\n"
 argument_list|,
 name|rss_hashalgo
 argument_list|,
@@ -737,11 +768,9 @@ operator|>
 name|RSS_MAXBITS
 condition|)
 block|{
-name|printf
+name|RSS_DEBUG
 argument_list|(
-literal|"%s: RSS bits %u not valid, coercing to  %u"
-argument_list|,
-name|__func__
+literal|"RSS bits %u not valid, coercing to %u\n"
 argument_list|,
 name|rss_bits
 argument_list|,
@@ -768,12 +797,10 @@ name|rss_buckets
 operator|<
 name|rss_ncpus
 condition|)
-name|printf
+name|RSS_DEBUG
 argument_list|(
-literal|"%s: WARNING: rss_buckets (%u) less than "
+literal|"WARNING: rss_buckets (%u) less than "
 literal|"rss_ncpus (%u)\n"
-argument_list|,
-name|__func__
 argument_list|,
 name|rss_buckets
 argument_list|,
