@@ -5586,11 +5586,6 @@ argument_list|(
 name|pcbinfo
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET
-endif|#
-directive|endif
 name|INP_WUNLOCK
 argument_list|(
 name|inp
