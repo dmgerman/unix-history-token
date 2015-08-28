@@ -2185,6 +2185,15 @@ block|}
 comment|/* 	 * We need some platform-specific code to know 	 * what the clock is supplied for our device. 	 * For now rely on the value specified in FDT. 	 */
 if|if
 condition|(
+name|sc
+operator|->
+name|bus_hz
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|len
 operator|=
@@ -2223,6 +2232,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+block|}
 comment|/* 	 * Platform-specific stuff 	 * XXX: Move to separate file 	 */
 if|if
 condition|(
