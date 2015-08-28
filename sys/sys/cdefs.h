@@ -1133,7 +1133,7 @@ argument_list|)
 operator|||
 name|__has_attribute
 argument_list|(
-name|alloc_size
+name|__alloc_size__
 argument_list|)
 end_if
 
@@ -1178,7 +1178,7 @@ argument_list|)
 operator|||
 name|__has_attribute
 argument_list|(
-name|alloc_align
+name|__alloc_align__
 argument_list|)
 end_if
 
@@ -2686,7 +2686,7 @@ argument_list|)
 operator|||
 name|__has_attribute
 argument_list|(
-name|artificial
+name|__artificial__
 argument_list|)
 end_if
 
@@ -3965,13 +3965,13 @@ if|#
 directive|if
 name|__has_attribute
 argument_list|(
-name|argument_with_type_tag
+name|__argument_with_type_tag__
 argument_list|)
 operator|&&
 expr|\
 name|__has_attribute
 argument_list|(
-name|type_tag_for_datatype
+name|__type_tag_for_datatype__
 argument_list|)
 operator|&&
 operator|!
