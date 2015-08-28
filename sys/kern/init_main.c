@@ -439,10 +439,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* Want to avoid defining INVARIANTS if not already defined */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
