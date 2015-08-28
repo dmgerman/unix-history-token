@@ -138,7 +138,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/mmc/host/dwmmc.h>
+file|<dev/mmc/host/dwmmc_reg.h>
 end_include
 
 begin_include
