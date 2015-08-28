@@ -5580,7 +5580,9 @@ name|MPASS
 argument_list|(
 name|j
 operator|<
-name|WITNESS_COUNT
+name|LOCK_CHILDCOUNT
+operator|*
+name|LOCK_NCHILDREN
 argument_list|)
 expr_stmt|;
 name|lock1
