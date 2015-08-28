@@ -45,7 +45,7 @@ name|MAS0_ESEL
 parameter_list|(
 name|x
 parameter_list|)
-value|((x<< 16)& 0x000F0000)
+value|((x<< 16)& 0x003F0000)
 end_define
 
 begin_define
