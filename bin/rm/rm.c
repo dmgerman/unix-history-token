@@ -111,6 +111,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -338,6 +344,16 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Test for the special case where the utility is called as 	 * "unlink", for which the functionality provided is greatly 	 * simplified. 	 */
 if|if
 condition|(
