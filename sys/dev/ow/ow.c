@@ -2403,14 +2403,10 @@ name|size_t
 name|buflen
 parameter_list|)
 block|{
-name|snprintf
-argument_list|(
+operator|*
 name|buf
-argument_list|,
-name|buflen
-argument_list|,
-literal|""
-argument_list|)
+operator|=
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
