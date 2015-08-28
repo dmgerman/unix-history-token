@@ -1862,7 +1862,7 @@ name|BOOKE
 argument_list|)
 name|printf
 argument_list|(
-literal|"    mcsr           = 0x%lx\n"
+literal|"   mcsr           = 0x%lx\n"
 argument_list|,
 operator|(
 name|u_long
