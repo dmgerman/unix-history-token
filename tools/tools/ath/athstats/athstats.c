@@ -16,7 +16,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -58,6 +58,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -70,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
@@ -83,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
 end_include
 
 begin_include
@@ -6973,13 +6973,6 @@ modifier|*
 name|fmtstring
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
 name|struct
 name|athstatfoo_p
 modifier|*
@@ -7018,7 +7011,7 @@ literal|"athstats"
 argument_list|,
 name|athstats
 argument_list|,
-name|N
+name|nitems
 argument_list|(
 name|athstats
 argument_list|)
@@ -7175,9 +7168,6 @@ name|wf
 operator|->
 name|base
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
