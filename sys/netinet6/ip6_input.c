@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_rss.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -300,6 +306,12 @@ directive|include
 file|<netinet6/nd6.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet6/in6_rss.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -411,11 +423,34 @@ name|nh_proto
 operator|=
 name|NETISR_IPV6
 block|,
+ifdef|#
+directive|ifdef
+name|RSS
+operator|.
+name|nh_m2cpuid
+operator|=
+name|rss_soft_m2cpuid_v6
+block|,
+operator|.
+name|nh_policy
+operator|=
+name|NETISR_POLICY_CPU
+block|,
+operator|.
+name|nh_dispatch
+operator|=
+name|NETISR_DISPATCH_HYBRID
+block|,
+else|#
+directive|else
 operator|.
 name|nh_policy
 operator|=
 name|NETISR_POLICY_FLOW
-block|, }
+block|,
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -5754,6 +5789,7 @@ name|char
 modifier|*
 name|ip6_get_prevhdr
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -5931,6 +5967,7 @@ begin_function
 name|int
 name|ip6_nexthdr
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -6295,10 +6332,7 @@ operator|-
 literal|1
 return|;
 block|}
-return|return
-operator|-
-literal|1
-return|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -6310,6 +6344,7 @@ begin_function
 name|int
 name|ip6_lasthdr
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
