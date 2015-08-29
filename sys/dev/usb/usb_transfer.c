@@ -8544,6 +8544,14 @@ name|usb_state
 operator|!=
 name|USB_ST_SETUP
 condition|)
+block|{
+name|USB_BUS_LOCK
+argument_list|(
+name|info
+operator|->
+name|bus
+argument_list|)
+expr_stmt|;
 name|usbpf_xfertap
 argument_list|(
 name|xfer
@@ -8551,6 +8559,14 @@ argument_list|,
 name|USBPF_XFERTAP_DONE
 argument_list|)
 expr_stmt|;
+name|USB_BUS_UNLOCK
+argument_list|(
+name|info
+operator|->
+name|bus
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* call processing routine */
