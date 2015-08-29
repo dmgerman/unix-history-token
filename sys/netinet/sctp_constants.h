@@ -2670,17 +2670,6 @@ value|30000
 end_define
 
 begin_comment
-comment|/* Max time I will wait for Shutdown to complete */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_DEF_MAX_SHUTDOWN_SEC
-value|180
-end_define
-
-begin_comment
 comment|/*  * This is how long a secret lives, NOT how long a cookie lives how many  * ticks the current secret will live.  */
 end_comment
 
