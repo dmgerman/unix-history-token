@@ -4330,7 +4330,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NOPTS
+name|NSHORTOPTS
 condition|;
 name|i
 operator|++
