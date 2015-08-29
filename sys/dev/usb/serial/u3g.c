@@ -3542,6 +3542,15 @@ name|U3G_DEV
 argument_list|(
 name|QUALCOMMINC
 argument_list|,
+name|MF112
+argument_list|,
+name|U3GINIT_ZTESTOR
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|QUALCOMMINC
+argument_list|,
 name|MF195E
 argument_list|,
 literal|0
