@@ -521,18 +521,18 @@ value|4
 end_define
 
 begin_comment
-comment|/* LSI driver, ioctl front end */
+comment|/* Frontend storage */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CTL_PRIV_USER
+name|CTL_PRIV_FRONTEND2
 value|5
 end_define
 
 begin_comment
-comment|/* Userland use */
+comment|/* Another frontend storage */
 end_comment
 
 begin_define
@@ -547,17 +547,6 @@ define|#
 directive|define
 name|CTL_UNMAPPED_IID
 value|0xFF
-end_define
-
-begin_comment
-comment|/*  * XXX KDM this size is for the port_priv variable in struct ctl_io_hdr  * below.  This should be defined in terms of the size of struct  * ctlfe_lun_cmd_info at the moment:  * struct ctlfe_lun_cmd_info {  *	int cur_transfer_index;  * 	ctlfe_cmd_flags flags;  * 	bus_dma_segment_t cam_sglist[32];  * };  *  * This isn't really the way I'd prefer to do it, but it does make some  * sense, AS LONG AS we can guarantee that there will always only be one  * outstanding DMA request per ctl_io.  If that assumption isn't valid,  * then we've got problems.  *  * At some point it may be nice switch CTL over to using CCBs for  * everything.  At that point we can probably use the ATIO/CTIO model, so  * that multiple simultaneous DMAs per command will just work.  *  * Also note that the current size, 600, is appropriate for 64-bit  * architectures, but is overkill for 32-bit architectures.  Need a way to  * figure out the size at compile time, or just get rid of this altogether.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CTL_PORT_PRIV_SIZE
-value|600
 end_define
 
 begin_struct
@@ -784,13 +773,6 @@ name|CTL_NUM_PRIV
 index|]
 decl_stmt|;
 comment|/* CTL private area */
-name|uint8_t
-name|port_priv
-index|[
-name|CTL_PORT_PRIV_SIZE
-index|]
-decl_stmt|;
-comment|/* PORT private area*/
 name|struct
 name|ctl_sg_entry
 name|remote_sglist
