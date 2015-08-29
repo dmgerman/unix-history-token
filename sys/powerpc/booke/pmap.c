@@ -12624,7 +12624,7 @@ do|do
 block|{
 name|sz
 operator|>>=
-literal|1
+literal|2
 expr_stmt|;
 block|}
 do|while
