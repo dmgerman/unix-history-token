@@ -323,6 +323,22 @@ name|ubus
 operator|->
 name|ifp
 decl_stmt|;
+name|USB_BUS_LOCK
+argument_list|(
+name|ubus
+argument_list|)
+expr_stmt|;
+name|ubus
+operator|->
+name|ifp
+operator|=
+name|NULL
+expr_stmt|;
+name|USB_BUS_UNLOCK
+argument_list|(
+name|ubus
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -351,12 +367,6 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-name|ubus
-operator|->
-name|ifp
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 end_function
 
