@@ -93,16 +93,23 @@ name|DWC_OTG_SLOT_IDLE_MIN
 value|2
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DWC_OTG_TX_MAX_FIFO_SIZE
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|DWC_OTG_NAK_MAX
-value|8
+name|DWC_OTG_TX_MAX_FIFO_SIZE
+value|DWC_OTG_MAX_TXN
 end_define
 
-begin_comment
-comment|/* 1 ms */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -220,10 +227,6 @@ name|uint8_t
 name|tmr_val
 decl_stmt|;
 name|uint8_t
-name|did_nak
-decl_stmt|;
-comment|/* NAK counter */
-name|uint8_t
 name|ep_no
 decl_stmt|;
 name|uint8_t
@@ -231,6 +234,9 @@ name|ep_type
 decl_stmt|;
 name|uint8_t
 name|channel
+index|[
+literal|3
+index|]
 decl_stmt|;
 name|uint8_t
 name|tt_index
@@ -273,12 +279,8 @@ name|DWC_CHAN_ST_WAIT_C_PKT
 value|4
 define|#
 directive|define
-name|DWC_CHAN_ST_TX_PKT_ISOC
-value|5
-define|#
-directive|define
 name|DWC_CHAN_ST_TX_WAIT_ISOC
-value|6
+value|5
 name|uint8_t
 name|error_any
 range|:
@@ -321,6 +323,11 @@ literal|1
 decl_stmt|;
 name|uint8_t
 name|tt_scheduled
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|did_nak
 range|:
 literal|1
 decl_stmt|;
@@ -546,19 +553,11 @@ name|uint16_t
 name|allocated
 decl_stmt|;
 name|uint16_t
-name|wait_sof
+name|wait_halted
 decl_stmt|;
 name|uint32_t
 name|hcint
 decl_stmt|;
-name|uint16_t
-name|tx_p_size
-decl_stmt|;
-comment|/* periodic */
-name|uint16_t
-name|tx_np_size
-decl_stmt|;
-comment|/* non-periodic */
 block|}
 struct|;
 end_struct
@@ -650,17 +649,6 @@ decl_stmt|;
 name|uint32_t
 name|sc_fifo_size
 decl_stmt|;
-name|uint32_t
-name|sc_tx_max_size
-decl_stmt|;
-name|uint32_t
-name|sc_tx_cur_p_level
-decl_stmt|;
-comment|/* periodic */
-name|uint32_t
-name|sc_tx_cur_np_level
-decl_stmt|;
-comment|/* non-periodic */
 name|uint32_t
 name|sc_irq_mask
 decl_stmt|;
