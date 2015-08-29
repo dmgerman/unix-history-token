@@ -4126,7 +4126,8 @@ name|to_arg
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+operator|&
+name|p0
 argument_list|,
 name|TS_RUN
 argument_list|,
@@ -12658,7 +12659,8 @@ name|rwa
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+operator|&
+name|p0
 argument_list|,
 name|TS_RUN
 argument_list|,
