@@ -991,6 +991,11 @@ operator|.
 name|is_valleyview
 operator|=
 literal|1
+block|,
+operator|.
+name|not_supported
+operator|=
+literal|1
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1035,6 +1040,11 @@ literal|1
 block|,
 operator|.
 name|is_valleyview
+operator|=
+literal|1
+block|,
+operator|.
+name|not_supported
 operator|=
 literal|1
 block|, }
