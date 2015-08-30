@@ -397,7 +397,7 @@ operator|&
 name|POSIX_SPAWN_SETSIGMASK
 condition|)
 block|{
-name|__libc_sigprocmask
+name|__sys_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -447,7 +447,7 @@ argument_list|)
 condition|)
 if|if
 condition|(
-name|__libc_sigaction
+name|__sys_sigaction
 argument_list|(
 name|i
 argument_list|,
