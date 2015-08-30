@@ -753,10 +753,6 @@ name|TABLE_ENTRY
 modifier|*
 name|ptr
 decl_stmt|;
-name|ptr
-operator|=
-name|table
-expr_stmt|;
 if|if
 condition|(
 name|debug
