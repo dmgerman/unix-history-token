@@ -823,6 +823,11 @@ name|int
 name|sc_debug
 decl_stmt|;
 name|struct
+name|cdev
+modifier|*
+name|sc_cdev
+decl_stmt|;
+name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
