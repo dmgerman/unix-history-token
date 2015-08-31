@@ -8722,19 +8722,6 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
-name|ln
-operator|->
-name|la_expire
-operator|=
-literal|0
-expr_stmt|;
-comment|/* for IPv6 this means permanent */
-name|ln
-operator|->
-name|ln_state
-operator|=
-name|ND6_LLINFO_REACHABLE
-expr_stmt|;
 name|IF_AFDATA_WLOCK
 argument_list|(
 name|ifp
