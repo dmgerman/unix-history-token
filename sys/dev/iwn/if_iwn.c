@@ -174,12 +174,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/bpf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -187,18 +181,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_arp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/ethernet.h>
 end_include
 
 begin_include
@@ -216,37 +198,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
 end_include
 
 begin_include
