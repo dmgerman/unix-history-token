@@ -429,6 +429,19 @@ condition|)
 name|ranlib_usage
 argument_list|()
 expr_stmt|;
+comment|/* Enable determinstic mode unless -U is set. */
+if|if
+condition|(
+name|Uflag
+operator|==
+literal|0
+condition|)
+name|bsdar
+operator|->
+name|options
+operator||=
+name|AR_D
+expr_stmt|;
 name|bsdar
 operator|->
 name|options
