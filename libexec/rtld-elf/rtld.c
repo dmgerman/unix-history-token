@@ -7,23 +7,6 @@ begin_comment
 comment|/*  * Dynamic linker for ELF.  *  * John Polstra<jdp@polstra.com>.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__GNUC__
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"GCC is needed to compile this file"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
