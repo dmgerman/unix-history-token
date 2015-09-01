@@ -5410,6 +5410,8 @@ name|flags
 operator|&
 name|EV_ADD
 condition|)
+block|{
+comment|/* 		 * Prevent waiting with locks.  Non-sleepable 		 * allocation failures are handled in the loop, only 		 * if the spare knote appears to be actually required. 		 */
 name|tkn
 operator|=
 name|knote_alloc
@@ -5417,12 +5419,14 @@ argument_list|(
 name|waitok
 argument_list|)
 expr_stmt|;
-comment|/* prevent waiting with locks */
+block|}
 else|else
+block|{
 name|tkn
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 name|findkn
 label|:
 if|if
@@ -6370,12 +6374,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tkn
-operator|!=
-name|NULL
-condition|)
 name|knote_free
 argument_list|(
 name|tkn
@@ -7288,21 +7286,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|marker
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOMEM
-expr_stmt|;
-goto|goto
-name|done_nl
-goto|;
-block|}
 name|marker
 operator|->
 name|kn_status
@@ -11435,11 +11418,6 @@ parameter_list|)
 block|{
 return|return
 operator|(
-operator|(
-expr|struct
-name|knote
-operator|*
-operator|)
 name|uma_zalloc
 argument_list|(
 name|knote_zone
@@ -11470,12 +11448,6 @@ modifier|*
 name|kn
 parameter_list|)
 block|{
-if|if
-condition|(
-name|kn
-operator|!=
-name|NULL
-condition|)
 name|uma_zfree
 argument_list|(
 name|knote_zone
