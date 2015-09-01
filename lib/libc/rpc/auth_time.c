@@ -1083,7 +1083,9 @@ function_decl|(
 modifier|*
 name|oldsig
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
 init|=
 name|NULL
 function_decl|;
@@ -1911,7 +1913,9 @@ name|void
 argument_list|(
 operator|*
 argument_list|)
-argument_list|()
+argument_list|(
+name|int
+argument_list|)
 operator|)
 name|signal
 argument_list|(
