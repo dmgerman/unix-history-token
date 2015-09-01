@@ -2503,9 +2503,6 @@ name|dwmmc_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|device_t
-name|child
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -2669,18 +2666,6 @@ argument_list|)
 operator|&
 literal|0xffff
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|use_pio
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|pwren_inverted
-operator|=
-literal|0
 expr_stmt|;
 name|sc
 operator|->
@@ -3052,8 +3037,6 @@ name|caps
 operator|=
 name|MMC_CAP_4_BIT_DATA
 expr_stmt|;
-name|child
-operator|=
 name|device_add_child
 argument_list|(
 name|dev
