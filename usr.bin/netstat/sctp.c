@@ -270,6 +270,7 @@ value|0x9
 end_define
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -300,16 +301,14 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
 argument_list|(
 argument|xladdr_list
 argument_list|,
 argument|xladdr_entry
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|xladdr_head
 expr_stmt|;
 end_expr_stmt
@@ -333,16 +332,14 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
 argument_list|(
 argument|xraddr_list
 argument_list|,
 argument|xraddr_entry
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|xraddr_head
 expr_stmt|;
 end_expr_stmt

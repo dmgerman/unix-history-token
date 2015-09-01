@@ -228,13 +228,6 @@ directive|include
 file|"netstat.h"
 end_include
 
-begin_decl_stmt
-name|struct
-name|socket
-name|sockb
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|char
 modifier|*

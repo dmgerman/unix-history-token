@@ -2182,6 +2182,15 @@ literal|"unix"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"local"
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|af
 operator|=
@@ -2792,8 +2801,6 @@ argument_list|)
 expr_stmt|;
 name|intpr
 argument_list|(
-name|interval
-argument_list|,
 name|NULL
 argument_list|,
 name|af
@@ -3316,8 +3323,6 @@ name|pr_istats
 condition|)
 name|intpr
 argument_list|(
-name|interval
-argument_list|,
 name|tp
 operator|->
 name|pr_istats
