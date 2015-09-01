@@ -150,7 +150,7 @@ parameter_list|,
 name|align
 parameter_list|)
 define|\
-value|round(size, align)
+value|round(16, align)
 end_define
 
 begin_define
@@ -167,7 +167,7 @@ parameter_list|,
 name|align
 parameter_list|)
 define|\
-value|round((prev_offset) + (size), align)
+value|round(prev_offset + prev_size, align)
 end_define
 
 begin_define
@@ -186,7 +186,7 @@ begin_define
 define|#
 directive|define
 name|TLS_TCB_SIZE
-value|8
+value|16
 end_define
 
 begin_typedef
