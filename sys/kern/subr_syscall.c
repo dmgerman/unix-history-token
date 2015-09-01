@@ -758,7 +758,6 @@ name|struct
 name|syscall_args
 modifier|*
 name|sa
-name|__unused
 parameter_list|)
 block|{
 name|struct
