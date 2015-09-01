@@ -327,12 +327,10 @@ begin_function
 name|void
 name|des_setparity
 parameter_list|(
-name|p
-parameter_list|)
 name|char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i

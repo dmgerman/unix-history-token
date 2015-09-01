@@ -209,13 +209,11 @@ begin_function
 name|int
 name|__rpc_get_default_domain
 parameter_list|(
-name|domain
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|domain
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
