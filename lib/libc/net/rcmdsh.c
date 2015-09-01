@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: rcmdsh.c,v 1.5 1998/04/25 16:23:58 millert Exp $	*/
+comment|/*	$OpenBSD: rcmdsh.c,v 1.7 2002/03/12 00:05:44 millert Exp $	*/
 end_comment
 
 begin_comment
@@ -91,24 +91,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_RSH
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_PATH_RSH
-value|"/usr/bin/rsh"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * This is a replacement rcmd() function that uses the rsh(1)  * program in place of a direct rcmd(3) function call so as to  * avoid having to be root.  Note that rport is ignored.  */
 end_comment
@@ -117,43 +99,34 @@ begin_function
 name|int
 name|rcmdsh
 parameter_list|(
-name|ahost
-parameter_list|,
-name|rport
-parameter_list|,
-name|locuser
-parameter_list|,
-name|remuser
-parameter_list|,
-name|cmd
-parameter_list|,
-name|rshprog
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|ahost
-decl_stmt|;
+parameter_list|,
 name|int
 name|rport
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|locuser
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|remuser
-decl_stmt|,
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 name|cmd
-decl_stmt|,
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 name|rshprog
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|addrinfo
@@ -163,14 +136,15 @@ modifier|*
 name|res
 decl_stmt|;
 name|int
-name|cpid
-decl_stmt|,
 name|sp
 index|[
 literal|2
 index|]
 decl_stmt|,
 name|error
+decl_stmt|;
+name|pid_t
+name|cpid
 decl_stmt|;
 name|char
 modifier|*
@@ -757,7 +731,7 @@ return|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 end_unit
 
