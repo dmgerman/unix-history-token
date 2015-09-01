@@ -9281,6 +9281,9 @@ name|struct
 name|knote
 modifier|*
 name|kn
+decl_stmt|,
+modifier|*
+name|tkn
 decl_stmt|;
 name|int
 name|error
@@ -9320,14 +9323,16 @@ operator|->
 name|kl_lockarg
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we unlock the list lock (and set KN_INFLUX), we can eliminate 	 * the kqueue scheduling, but this will introduce four 	 * lock/unlock's for each knote to test.  If we do, continue to use 	 * SLIST_FOREACH, SLIST_FOREACH_SAFE is not safe in our case, it is 	 * only safe if you want to remove the current item, which we are 	 * not doing. 	 */
-name|SLIST_FOREACH
+comment|/* 	 * If we unlock the list lock (and set KN_INFLUX), we can 	 * eliminate the kqueue scheduling, but this will introduce 	 * four lock/unlock's for each knote to test.  Also, marker 	 * would be needed to keep iteration position, since filters 	 * or other threads could remove events. 	 */
+name|SLIST_FOREACH_SAFE
 argument_list|(
 argument|kn
 argument_list|,
 argument|&list->kl_list
 argument_list|,
 argument|kn_selnext
+argument_list|,
+argument|tkn
 argument_list|)
 block|{
 name|kq
