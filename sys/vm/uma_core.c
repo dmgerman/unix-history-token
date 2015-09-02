@@ -8293,7 +8293,11 @@ operator|!
 operator|(
 name|flags
 operator|&
+operator|(
 name|UMA_ZONE_ZINIT
+operator||
+name|UMA_ZONE_NOFREE
+operator|)
 operator|)
 operator|)
 operator|&&
