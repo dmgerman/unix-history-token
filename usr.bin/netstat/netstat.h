@@ -293,12 +293,6 @@ begin_comment
 comment|/* true if we are examining a live system */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|nlist
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 name|int
 name|kread
@@ -344,12 +338,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|kresolve_list
+name|void
+name|kset_dpcpu
 parameter_list|(
-name|struct
-name|nlist
-modifier|*
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -926,7 +918,6 @@ name|void
 name|netisr_stats
 parameter_list|(
 name|void
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

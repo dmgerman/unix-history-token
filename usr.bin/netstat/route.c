@@ -149,12 +149,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nlist.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdint.h>
 end_include
 
@@ -210,6 +204,12 @@ begin_include
 include|#
 directive|include
 file|"netstat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"nl_defs.h"
 end_include
 
 begin_comment
@@ -373,50 +373,6 @@ block|}
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * kvm(3) bindings for every needed symbol  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|nlist
-name|rl
-index|[]
-init|=
-block|{
-define|#
-directive|define
-name|N_RTSTAT
-value|0
-block|{
-operator|.
-name|n_name
-operator|=
-literal|"_rtstat"
-block|}
-block|,
-define|#
-directive|define
-name|N_RTTRASH
-value|1
-block|{
-operator|.
-name|n_name
-operator|=
-literal|"_rttrash"
-block|}
-block|,
-block|{
-operator|.
-name|n_name
-operator|=
-name|NULL
-block|}
-block|, }
-decl_stmt|;
-end_decl_stmt
 
 begin_struct
 struct|struct
@@ -3798,17 +3754,12 @@ decl_stmt|;
 name|int
 name|rttrash
 decl_stmt|;
-name|kresolve_list
-argument_list|(
-name|rl
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
 name|rtsaddr
 operator|=
-name|rl
+name|nl
 index|[
 name|N_RTSTAT
 index|]
@@ -3831,7 +3782,7 @@ condition|(
 operator|(
 name|rttaddr
 operator|=
-name|rl
+name|nl
 index|[
 name|N_RTTRASH
 index|]
