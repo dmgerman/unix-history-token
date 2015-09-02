@@ -809,6 +809,9 @@ name|value
 parameter_list|,
 name|short
 name|showvalue
+parameter_list|,
+name|int
+name|div1000
 parameter_list|)
 block|{
 specifier|const
@@ -943,6 +946,17 @@ argument_list|,
 name|HN_NOSPACE
 operator||
 name|HN_DECIMAL
+operator||
+expr|\
+operator|(
+operator|(
+name|div1000
+operator|)
+condition|?
+name|HN_DIVISOR_1000
+else|:
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 name|maybe_pad
@@ -1520,6 +1534,8 @@ name|IFA_MTU
 argument_list|(
 name|ifa
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 undef|#
@@ -1834,6 +1850,8 @@ argument_list|,
 name|link
 operator||
 name|network
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|show_stat
@@ -1850,6 +1868,8 @@ name|ierrors
 argument_list|)
 argument_list|,
 name|link
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|show_stat
@@ -1866,6 +1886,8 @@ name|iqdrops
 argument_list|)
 argument_list|,
 name|link
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1888,6 +1910,8 @@ argument_list|,
 name|link
 operator||
 name|network
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|show_stat
@@ -1906,6 +1930,8 @@ argument_list|,
 name|link
 operator||
 name|network
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|show_stat
@@ -1922,6 +1948,8 @@ name|oerrors
 argument_list|)
 argument_list|,
 name|link
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1944,6 +1972,8 @@ argument_list|,
 name|link
 operator||
 name|network
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|show_stat
@@ -1960,6 +1990,8 @@ name|collisions
 argument_list|)
 argument_list|,
 name|link
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1980,6 +2012,8 @@ name|oqdrops
 argument_list|)
 argument_list|,
 name|link
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|xo_emit
@@ -2798,6 +2832,8 @@ operator|->
 name|ift_ip
 argument_list|,
 literal|1
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|show_stat
@@ -2815,6 +2851,8 @@ operator|-
 name|old
 operator|->
 name|ift_ie
+argument_list|,
+literal|1
 argument_list|,
 literal|1
 argument_list|)
@@ -2836,6 +2874,8 @@ operator|->
 name|ift_id
 argument_list|,
 literal|1
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|show_stat
@@ -2855,6 +2895,8 @@ operator|->
 name|ift_ib
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|show_stat
@@ -2872,6 +2914,8 @@ operator|-
 name|old
 operator|->
 name|ift_op
+argument_list|,
+literal|1
 argument_list|,
 literal|1
 argument_list|)
@@ -2893,6 +2937,8 @@ operator|->
 name|ift_oe
 argument_list|,
 literal|1
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|show_stat
@@ -2912,6 +2958,8 @@ operator|->
 name|ift_ob
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|show_stat
@@ -2929,6 +2977,8 @@ operator|-
 name|old
 operator|->
 name|ift_co
+argument_list|,
+literal|1
 argument_list|,
 literal|1
 argument_list|)
@@ -2952,6 +3002,8 @@ operator|-
 name|old
 operator|->
 name|ift_od
+argument_list|,
+literal|1
 argument_list|,
 literal|1
 argument_list|)
