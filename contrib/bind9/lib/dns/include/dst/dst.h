@@ -272,6 +272,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DST_ALG_INDIRECT
+value|252
+end_define
+
+begin_define
+define|#
+directive|define
 name|DST_ALG_PRIVATE
 value|254
 end_define

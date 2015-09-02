@@ -39568,6 +39568,26 @@ name|resolver
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * DH is unsupported for DNSKEYs, see RFC 4034 sec. A.1. 	 */
+if|if
+condition|(
+operator|(
+name|alg
+operator|==
+name|DST_ALG_DH
+operator|)
+operator|||
+operator|(
+name|alg
+operator|==
+name|DST_ALG_INDIRECT
+operator|)
+condition|)
+return|return
+operator|(
+name|ISC_FALSE
+operator|)
+return|;
 if|#
 directive|if
 name|USE_ALGLOCK
