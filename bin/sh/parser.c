@@ -420,6 +420,13 @@ name|parser_temp
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|NOEOFMARK
+value|((const char *)&heredoclist)
+end_define
+
 begin_function_decl
 specifier|static
 name|union
@@ -4599,6 +4606,31 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|'\n'
+operator|&&
+operator|*
+name|eofmark
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|c
+operator|=
+name|PEOF
+expr_stmt|;
+name|plinno
+operator|++
+expr_stmt|;
+name|needprompt
+operator|=
+name|doprompt
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|c
@@ -6555,6 +6587,10 @@ comment|/* for each line, until end of word */
 if|if
 condition|(
 name|eofmark
+operator|&&
+name|eofmark
+operator|!=
+name|NOEOFMARK
 condition|)
 comment|/* set c to PEOF if at end of here document */
 name|c
@@ -9562,7 +9598,7 @@ argument_list|()
 argument_list|,
 name|DQSYNTAX
 argument_list|,
-literal|""
+name|NOEOFMARK
 argument_list|,
 literal|0
 argument_list|)
