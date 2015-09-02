@@ -17926,8 +17926,6 @@ argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
 name|UMA_ZONE_NOFREE
-operator||
-name|UMA_ZONE_ZINIT
 argument_list|)
 expr_stmt|;
 name|filedesc0_zone
