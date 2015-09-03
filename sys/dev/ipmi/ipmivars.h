@@ -1012,7 +1012,7 @@ begin_define
 define|#
 directive|define
 name|MAX_TIMEOUT
-value|3 * hz
+value|6 * hz
 end_define
 
 begin_function_decl
