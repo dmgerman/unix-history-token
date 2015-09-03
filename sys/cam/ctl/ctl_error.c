@@ -1611,32 +1611,6 @@ literal|0x02
 expr_stmt|;
 break|break;
 case|case
-name|CTL_UA_LVD
-case|:
-comment|/* 29h/06h  TRANSCEIVER MODE CHANGED TO LVD */
-name|asc
-operator|=
-literal|0x29
-expr_stmt|;
-name|ascq
-operator|=
-literal|0x06
-expr_stmt|;
-break|break;
-case|case
-name|CTL_UA_SE
-case|:
-comment|/* 29h/05h  TRANSCEIVER MODE CHANGED TO SINGLE-ENDED */
-name|asc
-operator|=
-literal|0x29
-expr_stmt|;
-name|ascq
-operator|=
-literal|0x05
-expr_stmt|;
-break|break;
-case|case
 name|CTL_UA_RES_PREEMPT
 case|:
 comment|/* 2Ah/03h  RESERVATIONS PREEMPTED */
