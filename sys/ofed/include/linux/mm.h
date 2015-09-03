@@ -60,6 +60,10 @@ name|vm_paddr_t
 name|vm_pfn
 decl_stmt|;
 comment|/* PFN For mmap. */
+name|vm_size_t
+name|vm_len
+decl_stmt|;
+comment|/* length for mmap. */
 name|vm_memattr_t
 name|vm_page_prot
 decl_stmt|;
@@ -184,6 +188,12 @@ operator|->
 name|vm_pfn
 operator|=
 name|pfn
+expr_stmt|;
+name|vma
+operator|->
+name|vm_len
+operator|=
+name|size
 expr_stmt|;
 return|return
 operator|(
