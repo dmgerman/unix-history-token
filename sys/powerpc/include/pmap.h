@@ -969,7 +969,7 @@ name|void
 modifier|*
 name|pmap_mapdev_attr
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|,
