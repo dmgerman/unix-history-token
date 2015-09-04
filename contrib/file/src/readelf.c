@@ -4890,6 +4890,9 @@ if|if
 condition|(
 name|xsh_size
 operator|+
+operator|(
+name|uintmax_t
+operator|)
 name|xsh_offset
 operator|>
 operator|(
