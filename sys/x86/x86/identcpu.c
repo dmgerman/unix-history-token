@@ -2865,7 +2865,8 @@ literal|"\012SSSE3"
 comment|/* SSSE3 */
 literal|"\013CNXT-ID"
 comment|/* L1 context ID available */
-literal|"\014<b11>"
+literal|"\014SDBG"
+comment|/* IA32 silicon debug */
 literal|"\015FMA"
 comment|/* Fused Multiply Add */
 literal|"\016CX16"
