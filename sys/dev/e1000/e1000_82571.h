@@ -86,8 +86,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_NVM_INIT_CTRL2_MNGM
-value|0x6000
+name|E1000_IVAR_INT_ALLOC_VALID
+value|0x8
 end_define
 
 begin_comment
@@ -97,13 +97,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_RXCFGL
-value|0x0B634
+name|E1000_NVM_INIT_CTRL2_MNGM
+value|0x6000
 end_define
-
-begin_comment
-comment|/* TimeSync Rx EtherType& Msg Type Reg - RW */
-end_comment
 
 begin_define
 define|#

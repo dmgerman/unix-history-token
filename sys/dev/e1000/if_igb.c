@@ -3212,6 +3212,10 @@ operator|&
 name|adapter
 operator|->
 name|hw
+argument_list|,
+name|TRUE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 else|else
@@ -3221,6 +3225,10 @@ operator|&
 name|adapter
 operator|->
 name|hw
+argument_list|,
+name|TRUE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -6395,6 +6403,10 @@ operator|&
 name|adapter
 operator|->
 name|hw
+argument_list|,
+name|TRUE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 else|else
@@ -6404,6 +6416,10 @@ operator|&
 name|adapter
 operator|->
 name|hw
+argument_list|,
+name|TRUE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}

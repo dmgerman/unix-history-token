@@ -352,6 +352,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_FEXTNVM9
+value|0x5BB4
+end_define
+
+begin_comment
+comment|/* Future Extended NVM 9 - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_FEXTNVM11
+value|0x5BBC
+end_define
+
+begin_comment
+comment|/* Future Extended NVM 11 - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PCIEANACFG
+value|0x00F18
+end_define
+
+begin_comment
+comment|/* PCIE Analog Config */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_FCT
 value|0x00030
 end_define
@@ -800,6 +833,28 @@ end_define
 
 begin_comment
 comment|/* Packet Buffer ECC Status - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IOSFPC
+value|0x00F28
+end_define
+
+begin_comment
+comment|/* TX corrupted data  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IOSFPC
+value|0x00F28
+end_define
+
+begin_comment
+comment|/* TX corrupted data  */
 end_comment
 
 begin_define
@@ -5194,6 +5249,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_SYSSTMPL
+value|0x0B648
+end_define
+
+begin_comment
+comment|/* HH Timesync system stamp low register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SYSSTMPH
+value|0x0B64C
+end_define
+
+begin_comment
+comment|/* HH Timesync system stamp hi register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PLTSTMPL
+value|0x0B640
+end_define
+
+begin_comment
+comment|/* HH Timesync platform stamp low register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PLTSTMPH
+value|0x0B644
+end_define
+
+begin_comment
+comment|/* HH Timesync platform stamp hi register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_SYSTIMR
 value|0x0B6F8
 end_define
@@ -6000,17 +6099,6 @@ end_define
 
 begin_comment
 comment|/* OS2BMC packets transmitted by host */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_DOBFFCTL
-value|0x3F24
-end_define
-
-begin_comment
-comment|/* DMA OBFF Control Register */
 end_comment
 
 begin_endif

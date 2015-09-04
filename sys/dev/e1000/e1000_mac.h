@@ -31,12 +31,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|E1000_REMOVED
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -46,15 +40,6 @@ name|a
 parameter_list|)
 value|(0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* E1000_REMOVED */
-end_comment
 
 begin_function_decl
 name|void
@@ -161,21 +146,6 @@ parameter_list|,
 name|u8
 modifier|*
 name|h
-parameter_list|,
-name|u32
-name|a
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|s32
-name|e1000_null_set_obff_timer
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
 parameter_list|,
 name|u32
 name|a
