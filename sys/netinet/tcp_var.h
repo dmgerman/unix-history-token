@@ -3103,21 +3103,6 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|inpcb
-modifier|*
-name|tcp_mtudisc
-parameter_list|(
-name|struct
-name|inpcb
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
 name|tcpcb
 modifier|*
 name|tcp_newtcpcb
