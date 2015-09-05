@@ -10009,7 +10009,7 @@ name|ndpc
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* skip invalid entries */
+comment|/* skip deleted entries */
 if|if
 condition|(
 operator|(
@@ -10017,14 +10017,10 @@ name|lle
 operator|->
 name|la_flags
 operator|&
-operator|(
 name|LLE_DELETED
-operator||
-name|LLE_VALID
 operator|)
-operator|)
-operator|!=
-name|LLE_VALID
+operator|==
+name|LLE_DELETED
 condition|)
 return|return
 operator|(
