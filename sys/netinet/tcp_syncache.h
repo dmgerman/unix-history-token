@@ -512,7 +512,7 @@ decl_stmt|;
 name|u_int
 name|rexmt_limit
 decl_stmt|;
-name|u_int
+name|uint32_t
 name|hash_secret
 decl_stmt|;
 name|struct
