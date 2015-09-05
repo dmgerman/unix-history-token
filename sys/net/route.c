@@ -2941,6 +2941,7 @@ parameter_list|(
 name|int
 name|flags
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
