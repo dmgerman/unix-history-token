@@ -434,6 +434,11 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+operator|*
+name|cp_new
+operator|=
+literal|'\0'
+expr_stmt|;
 name|cp_tofree
 operator|=
 name|cp_loop
@@ -493,11 +498,6 @@ name|cp_line
 argument_list|)
 expr_stmt|;
 block|}
-operator|*
-name|cp_new
-operator|=
-literal|'\0'
-expr_stmt|;
 name|free
 argument_list|(
 name|cp_tofree
