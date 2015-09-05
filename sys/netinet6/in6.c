@@ -6339,6 +6339,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
+specifier|const
 name|struct
 name|in6_addr
 modifier|*
@@ -9128,19 +9129,11 @@ modifier|*
 name|ifa
 decl_stmt|;
 comment|/* 		 * Create an ND6 cache for an IPv6 neighbor 		 * that is not covered by our own prefix. 		 */
-comment|/* XXX ifaof_ifpforaddr should take a const param */
 name|ifa
 operator|=
 name|ifaof_ifpforaddr
 argument_list|(
-name|__DECONST
-argument_list|(
-expr|struct
-name|sockaddr
-operator|*
-argument_list|,
 name|l3addr
-argument_list|)
 argument_list|,
 name|ifp
 argument_list|)

@@ -3085,6 +3085,7 @@ name|struct
 name|ifnet
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|in6_addr
 modifier|*
