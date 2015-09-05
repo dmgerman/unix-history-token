@@ -871,9 +871,6 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
 block|}
 name|globfree
 argument_list|(
