@@ -2017,12 +2017,12 @@ name|ifp
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|sin6
 operator|->
 name|sin6_addr
-argument_list|,
-name|NULL
 argument_list|,
 literal|0
 argument_list|)

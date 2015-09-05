@@ -2197,8 +2197,9 @@ name|struct
 name|in6_addr
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
-name|llentry
+name|in6_addr
 modifier|*
 parameter_list|,
 name|uint8_t
