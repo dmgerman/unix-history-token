@@ -428,7 +428,7 @@ init|=
 name|false
 decl_stmt|;
 name|bool
-name|locate
+name|onoff
 decl_stmt|;
 if|if
 condition|(
@@ -470,7 +470,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|locate
+name|onoff
 operator|=
 name|true
 expr_stmt|;
@@ -491,7 +491,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|locate
+name|onoff
 operator|=
 name|false
 expr_stmt|;
@@ -832,7 +832,7 @@ name|objdn
 operator|.
 name|elm_idx
 argument_list|,
-name|locate
+name|onoff
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -859,7 +859,7 @@ name|objdn
 operator|.
 name|elm_idx
 argument_list|,
-name|locate
+name|onoff
 argument_list|)
 expr_stmt|;
 break|break;
