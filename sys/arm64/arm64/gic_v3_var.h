@@ -694,6 +694,9 @@ name|struct
 name|its_col
 modifier|*
 name|its_cols
+index|[
+name|MAXCPU
+index|]
 decl_stmt|;
 comment|/* Per-CPU collections */
 name|uint64_t
@@ -833,6 +836,17 @@ name|uint64_t
 modifier|*
 parameter_list|,
 name|uint32_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|its_init_cpu
+parameter_list|(
+name|struct
+name|gic_v3_its_softc
 modifier|*
 parameter_list|)
 function_decl|;

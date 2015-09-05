@@ -280,14 +280,6 @@ name|CTL_UA_LOG_CHANGE
 init|=
 literal|0x0080
 block|,
-name|CTL_UA_LVD
-init|=
-literal|0x0100
-block|,
-name|CTL_UA_SE
-init|=
-literal|0x0200
-block|,
 name|CTL_UA_RES_PREEMPT
 init|=
 literal|0x0400

@@ -1144,6 +1144,20 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|tcp_mtudisc
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|tcp_log_addr
@@ -8469,8 +8483,6 @@ name|int
 name|error
 parameter_list|)
 block|{
-return|return
-operator|(
 name|tcp_mtudisc
 argument_list|(
 name|inp
@@ -8478,15 +8490,18 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|inp
 operator|)
 return|;
 block|}
 end_function
 
 begin_function
-name|struct
-name|inpcb
-modifier|*
+specifier|static
+name|void
 name|tcp_mtudisc
 parameter_list|(
 name|struct
@@ -8531,11 +8546,7 @@ operator|&
 name|INP_DROPPED
 operator|)
 condition|)
-return|return
-operator|(
-name|inp
-operator|)
-return|;
+return|return;
 name|tp
 operator|=
 name|intotcpcb
@@ -8665,11 +8676,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|inp
-operator|)
-return|;
 block|}
 end_function
 

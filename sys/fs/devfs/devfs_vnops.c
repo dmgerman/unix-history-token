@@ -162,6 +162,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
+name|vop_vector
+name|devfs_specops
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
 name|fileops
 name|devfs_ops_f
 decl_stmt|;
@@ -9553,6 +9561,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vop_vector
 name|devfs_specops

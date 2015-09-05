@@ -4150,6 +4150,12 @@ operator|&=
 operator|~
 name|ACL_ENTRY_INHERIT_ONLY
 expr_stmt|;
+name|entry
+operator|->
+name|ae_flags
+operator||=
+name|ACL_ENTRY_INHERITED
+expr_stmt|;
 comment|/* 		 * If the type of the ACE is neither ALLOW nor DENY, 		 * then leave it as it is and proceed to the next one. 		 */
 if|if
 condition|(

@@ -192,11 +192,9 @@ specifier|static
 name|void
 name|alarm_hndler
 parameter_list|(
-name|s
-parameter_list|)
 name|int
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|saw_alarm
 operator|=
@@ -233,28 +231,15 @@ specifier|static
 name|int
 name|uaddr_to_sockaddr
 parameter_list|(
-name|uaddr
-parameter_list|,
-name|sin
-parameter_list|)
-ifdef|#
-directive|ifdef
-name|foo
-name|endpoint
-modifier|*
-name|endpt
-decl_stmt|;
-endif|#
-directive|endif
 name|char
 modifier|*
 name|uaddr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr_in
 modifier|*
 name|sin
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -440,17 +425,13 @@ specifier|static
 name|void
 name|free_eps
 parameter_list|(
-name|eps
-parameter_list|,
-name|num
-parameter_list|)
 name|endpoint
 name|eps
 index|[]
-decl_stmt|;
+parameter_list|,
 name|int
 name|num
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -505,7 +486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * get_server()  *  * This function constructs a nis_server structure description for the  * indicated hostname.  *  * NOTE: There is a chance we may end up recursing here due to the  * fact that gethostbyname() could do an NIS search. Ideally, the  * NIS+ server will call __rpc_get_time_offset() with the nis_server  * structure already populated.  */
+comment|/*  * get_server()  *  * This function constructs a nis_server structure description for the  * indicated hostname.  *  * NOTE: There is a chance we may end up recursing here due to the  * fact that gethostbyname() could do an NIS search. Ideally, the  * NIS+ server will call __rpc_get_time_offset() with the nis_server  * structure already populated.  *  * host  - name of the time host  * srv   - nis_server struct to use.  * eps[] - array of endpoints  * maxep - max array size  */
 end_comment
 
 begin_function
@@ -514,40 +495,26 @@ name|nis_server
 modifier|*
 name|get_server
 parameter_list|(
-name|sin
-parameter_list|,
-name|host
-parameter_list|,
-name|srv
-parameter_list|,
-name|eps
-parameter_list|,
-name|maxep
-parameter_list|)
 name|struct
 name|sockaddr_in
 modifier|*
 name|sin
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|host
-decl_stmt|;
-comment|/* name of the time host	*/
+parameter_list|,
 name|nis_server
 modifier|*
 name|srv
-decl_stmt|;
-comment|/* nis_server struct to use.	*/
+parameter_list|,
 name|endpoint
 name|eps
 index|[]
-decl_stmt|;
-comment|/* array of endpoints		*/
+parameter_list|,
 name|int
 name|maxep
-decl_stmt|;
-comment|/* max array size		*/
+parameter_list|)
 block|{
 name|char
 name|hname
@@ -989,51 +956,36 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __rpc_get_time_offset()  *  * This function uses a nis_server structure to contact the a remote  * machine (as named in that structure) and returns the offset in time  * between that machine and this one. This offset is returned in seconds  * and may be positive or negative.  *  * The first time through, a lot of fiddling is done with the netconfig  * stuff to find a suitable transport. The function is very aggressive  * about choosing UDP or at worst TCP if it can. This is because  * those transports support both the RCPBIND call and the internet  * time service.  *  * Once through, *uaddr is set to the universal address of  * the machine and *netid is set to the local netid for the transport  * that uaddr goes with. On the second call, the netconfig stuff  * is skipped and the uaddr/netid pair are used to fetch the netconfig  * structure and to then contact the machine for the time.  *  * td = "server" - "client"  */
+comment|/*  * __rpc_get_time_offset()  *  * This function uses a nis_server structure to contact the a remote  * machine (as named in that structure) and returns the offset in time  * between that machine and this one. This offset is returned in seconds  * and may be positive or negative.  *  * The first time through, a lot of fiddling is done with the netconfig  * stuff to find a suitable transport. The function is very aggressive  * about choosing UDP or at worst TCP if it can. This is because  * those transports support both the RCPBIND call and the internet  * time service.  *  * Once through, *uaddr is set to the universal address of  * the machine and *netid is set to the local netid for the transport  * that uaddr goes with. On the second call, the netconfig stuff  * is skipped and the uaddr/netid pair are used to fetch the netconfig  * structure and to then contact the machine for the time.  *  * td = "server" - "client"  *  * td    - Time difference  * srv   - NIS Server description  * thost - if no server, this is the timehost  * uaddr - known universal address  * netid - known network identifier  */
 end_comment
 
 begin_function
 name|int
 name|__rpc_get_time_offset
 parameter_list|(
-name|td
-parameter_list|,
-name|srv
-parameter_list|,
-name|thost
-parameter_list|,
-name|uaddr
-parameter_list|,
-name|netid
-parameter_list|)
 name|struct
 name|timeval
 modifier|*
 name|td
-decl_stmt|;
-comment|/* Time difference			*/
+parameter_list|,
 name|nis_server
 modifier|*
 name|srv
-decl_stmt|;
-comment|/* NIS Server description 		*/
+parameter_list|,
 name|char
 modifier|*
 name|thost
-decl_stmt|;
-comment|/* if no server, this is the timehost	*/
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|uaddr
-decl_stmt|;
-comment|/* known universal address		*/
+parameter_list|,
 name|struct
 name|sockaddr_in
 modifier|*
 name|netid
-decl_stmt|;
-comment|/* known network identifier		*/
+parameter_list|)
 block|{
 name|CLIENT
 modifier|*
@@ -1131,7 +1083,9 @@ function_decl|(
 modifier|*
 name|oldsig
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
 init|=
 name|NULL
 function_decl|;
@@ -1959,7 +1913,9 @@ name|void
 argument_list|(
 operator|*
 argument_list|)
-argument_list|()
+argument_list|(
+name|int
+argument_list|)
 operator|)
 name|signal
 argument_list|(

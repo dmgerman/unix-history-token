@@ -7526,7 +7526,7 @@ parameter_list|,
 name|a2
 parameter_list|)
 define|\
-value|((((struct sockaddr_dl *)(a1))->sdl_len ==			\ 	 ((struct sockaddr_dl *)(a2))->sdl_len)&&			\ 	 (bcmp(LLADDR((struct sockaddr_dl *)(a1)),			\ 	       LLADDR((struct sockaddr_dl *)(a2)),			\ 	       ((struct sockaddr_dl *)(a1))->sdl_alen) == 0))
+value|((((const struct sockaddr_dl *)(a1))->sdl_len ==		\ 	 ((const struct sockaddr_dl *)(a2))->sdl_len)&&		\ 	 (bcmp(CLLADDR((const struct sockaddr_dl *)(a1)),		\ 	       CLLADDR((const struct sockaddr_dl *)(a2)),		\ 	       ((const struct sockaddr_dl *)(a1))->sdl_alen) == 0))
 end_define
 
 begin_comment
@@ -7544,6 +7544,7 @@ name|ifaddr
 modifier|*
 name|ifa_ifwithaddr_internal
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -7713,6 +7714,7 @@ name|ifaddr
 modifier|*
 name|ifa_ifwithaddr
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -7736,6 +7738,7 @@ begin_function
 name|int
 name|ifa_ifwithaddr_check
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -7771,6 +7774,7 @@ name|ifaddr
 modifier|*
 name|ifa_ifwithbroadaddr
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -7930,6 +7934,7 @@ name|ifaddr
 modifier|*
 name|ifa_ifwithdstaddr
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -8084,6 +8089,7 @@ name|ifaddr
 modifier|*
 name|ifa_ifwithnet
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -8120,6 +8126,7 @@ name|addr
 operator|->
 name|sa_family
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|addr_data
@@ -8139,12 +8146,14 @@ operator|==
 name|AF_LINK
 condition|)
 block|{
+specifier|const
 name|struct
 name|sockaddr_dl
 modifier|*
 name|sdl
 init|=
 operator|(
+specifier|const
 expr|struct
 name|sockaddr_dl
 operator|*
@@ -8218,6 +8227,7 @@ argument_list|,
 argument|ifa_link
 argument_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -8468,6 +8478,7 @@ name|ifaddr
 modifier|*
 name|ifaof_ifpforaddr
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -8484,6 +8495,7 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -13411,6 +13423,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*

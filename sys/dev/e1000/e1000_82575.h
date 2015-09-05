@@ -2773,6 +2773,13 @@ parameter_list|(
 name|struct
 name|e1000_hw
 modifier|*
+name|hw
+parameter_list|,
+name|bool
+name|adv1G
+parameter_list|,
+name|bool
+name|adv100M
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2784,6 +2791,13 @@ parameter_list|(
 name|struct
 name|e1000_hw
 modifier|*
+name|hw
+parameter_list|,
+name|bool
+name|adv1G
+parameter_list|,
+name|bool
+name|adv100M
 parameter_list|)
 function_decl|;
 end_function_decl

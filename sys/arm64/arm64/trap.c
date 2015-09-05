@@ -666,6 +666,21 @@ name|sig
 decl_stmt|,
 name|ucode
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KDB
+if|if
+condition|(
+name|kdb_active
+condition|)
+block|{
+name|kdb_reenter
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 name|td
 operator|=
 name|curthread
@@ -939,6 +954,32 @@ name|pcb_onfault
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|KDB
+if|if
+condition|(
+name|debugger_on_panic
+operator|||
+name|kdb_active
+condition|)
+if|if
+condition|(
+name|kdb_trap
+argument_list|(
+name|ESR_ELx_EXCEPTION
+argument_list|(
+name|esr
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+name|frame
+argument_list|)
+condition|)
+return|return;
+endif|#
+directive|endif
 name|panic
 argument_list|(
 literal|"vm_fault failed: %lx"
@@ -1223,6 +1264,7 @@ break|break;
 block|}
 endif|#
 directive|endif
+comment|/* FALLTHROUGH */
 case|case
 name|EXCP_WATCHPT_EL1
 case|:
@@ -1271,7 +1313,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We get EXCP_UNKNOWN from QEMU when executing zeroed memory. For now turn  * this into a SIGILL.  */
+comment|/*  * The attempted execution of an instruction bit pattern that has no allocated  * instruction results in an exception with an unknown reason.  */
 end_comment
 
 begin_function
@@ -1302,16 +1344,6 @@ operator|=
 name|READ_SPECIALREG
 argument_list|(
 name|far_el1
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"el0 EXCP_UNKNOWN exception\n"
-argument_list|)
-expr_stmt|;
-name|print_registers
-argument_list|(
-name|frame
 argument_list|)
 expr_stmt|;
 name|call_trapsignal
@@ -1349,6 +1381,11 @@ modifier|*
 name|frame
 parameter_list|)
 block|{
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|uint32_t
 name|exception
 decl_stmt|;
@@ -1474,6 +1511,38 @@ name|EXCP_UNKNOWN
 case|:
 name|el0_excp_unknown
 argument_list|(
+name|frame
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EXCP_BRK
+case|:
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+name|call_trapsignal
+argument_list|(
+name|td
+argument_list|,
+name|SIGTRAP
+argument_list|,
+name|TRAP_BRKPT
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|frame
+operator|->
+name|tf_elr
+argument_list|)
+expr_stmt|;
+name|userret
+argument_list|(
+name|td
+argument_list|,
 name|frame
 argument_list|)
 expr_stmt|;

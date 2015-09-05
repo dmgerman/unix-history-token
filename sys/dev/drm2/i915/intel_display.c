@@ -6177,7 +6177,7 @@ block|{
 comment|/* On Haswell, DDI is used instead of FDI_TX_CTL */
 name|reg
 operator|=
-name|DDI_FUNC_CTL
+name|TRANS_DDI_FUNC_CTL
 argument_list|(
 name|pipe
 argument_list|)
@@ -6196,7 +6196,7 @@ operator|!
 operator|(
 name|val
 operator|&
-name|PIPE_DDI_FUNC_ENABLE
+name|TRANS_DDI_FUNC_ENABLE
 operator|)
 expr_stmt|;
 block|}
@@ -10117,12 +10117,12 @@ literal|15
 condition|)
 name|dspcntr
 operator||=
-name|DISPPLANE_15_16BPP
+name|DISPPLANE_BGRX555
 expr_stmt|;
 else|else
 name|dspcntr
 operator||=
-name|DISPPLANE_16BPP
+name|DISPPLANE_BGRX565
 expr_stmt|;
 break|break;
 case|case
@@ -10133,7 +10133,7 @@ literal|32
 case|:
 name|dspcntr
 operator||=
-name|DISPPLANE_32BPP_NO_ALPHA
+name|DISPPLANE_BGRX888
 expr_stmt|;
 break|break;
 default|default:
@@ -10509,7 +10509,7 @@ return|;
 block|}
 name|dspcntr
 operator||=
-name|DISPPLANE_16BPP
+name|DISPPLANE_BGRX565
 expr_stmt|;
 break|break;
 case|case
@@ -10528,7 +10528,7 @@ literal|24
 condition|)
 name|dspcntr
 operator||=
-name|DISPPLANE_32BPP_NO_ALPHA
+name|DISPPLANE_BGRX888
 expr_stmt|;
 elseif|else
 if|if
@@ -10541,7 +10541,7 @@ literal|30
 condition|)
 name|dspcntr
 operator||=
-name|DISPPLANE_32BPP_30BIT_NO_ALPHA
+name|DISPPLANE_BGRX101010
 expr_stmt|;
 else|else
 block|{

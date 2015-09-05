@@ -573,6 +573,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|Info
+operator|->
+name|ReturnObject
+operator|=
+name|NULL
+expr_stmt|;
 goto|goto
 name|Cleanup
 goto|;
@@ -1010,7 +1016,7 @@ expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INIT
+name|ACPI_DB_INIT_NAMES
 operator|,
 literal|"Executed module-level code at %p\n"
 operator|,

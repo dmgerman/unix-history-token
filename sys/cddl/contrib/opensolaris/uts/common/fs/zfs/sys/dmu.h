@@ -2973,6 +2973,18 @@ modifier|*
 name|off
 parameter_list|)
 function_decl|;
+comment|/*  * Check if a DMU object has any dirty blocks. If so, sync out  * all pending transaction groups. Otherwise, this function  * does not alter DMU state. This could be improved to only sync  * out the necessary transaction groups for this particular  * object.  */
+name|int
+name|dmu_object_wait_synced
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|uint64_t
+name|object
+parameter_list|)
+function_decl|;
 comment|/*  * Initial setup and final teardown.  */
 specifier|extern
 name|void

@@ -550,6 +550,17 @@ decl_stmt|;
 name|int
 name|next
 decl_stmt|;
+if|if
+condition|(
+name|mod
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|curp
 operator|=
 name|mod

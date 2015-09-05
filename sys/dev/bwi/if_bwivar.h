@@ -2031,11 +2031,6 @@ begin_struct
 struct|struct
 name|bwi_softc
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
-decl_stmt|;
 name|uint32_t
 name|sc_flags
 decl_stmt|;
@@ -2046,6 +2041,14 @@ decl_stmt|;
 name|struct
 name|mtx
 name|sc_mtx
+decl_stmt|;
+name|struct
+name|ieee80211com
+name|sc_ic
+decl_stmt|;
+name|struct
+name|mbufq
+name|sc_snd
 decl_stmt|;
 name|int
 name|sc_invalid
@@ -2437,6 +2440,13 @@ define|#
 directive|define
 name|BWI_F_STOP
 value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|BWI_F_RUNNING
+value|0x8
 end_define
 
 begin_define

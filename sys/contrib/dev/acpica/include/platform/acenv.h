@@ -82,12 +82,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_DISASSEMBLER
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_DEBUG_OUTPUT
 end_define
 
@@ -119,6 +113,13 @@ begin_define
 define|#
 directive|define
 name|ACPI_32BIT_PHYSICAL_ADDRESS
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DISASSEMBLER
+value|1
 end_define
 
 begin_endif
@@ -166,7 +167,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * AcpiBin/AcpiDump/AcpiHelp/AcpiNames/AcpiSrc/AcpiXtract/Example configuration.  * All single threaded.  */
+comment|/*  * AcpiBin/AcpiDump/AcpiHelp/AcpiNames/AcpiSrc/AcpiXtract/Example  * configuration. All single threaded.  */
 end_comment
 
 begin_if
@@ -310,7 +311,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* AcpiDump configuration. Native mapping used if provied by OSPMs */
+comment|/* AcpiDump configuration. Native mapping used if provided by the host */
 end_comment
 
 begin_ifdef
@@ -383,6 +384,12 @@ directive|define
 name|ACPI_USE_LOCAL_CACHE
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_FULL_DEBUG
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -416,7 +423,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Common debug support */
+comment|/* Common debug/disassembler support */
 end_comment
 
 begin_ifdef
@@ -428,19 +435,21 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|ACPI_DEBUGGER
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_DEBUG_OUTPUT
 end_define
 
 begin_define
 define|#
 directive|define
+name|ACPI_DEBUGGER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_DISASSEMBLER
+value|1
 end_define
 
 begin_endif
@@ -1020,7 +1029,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * ACPI_USE_SYSTEM_CLIBRARY - Define this if linking to an actual C library.  *      Otherwise, local versions of string/memory functions will be used.  * ACPI_USE_STANDARD_HEADERS - Define this if linking to a C library and  *      the standard header files may be used.  *  * The ACPICA subsystem only uses low level C library functions that do not call  * operating system services and may therefore be inlined in the code.  *  * It may be necessary to tailor these include files to the target  * generation environment.  */
+comment|/*  * ACPI_USE_SYSTEM_CLIBRARY - Define this if linking to an actual C library.  *      Otherwise, local versions of string/memory functions will be used.  * ACPI_USE_STANDARD_HEADERS - Define this if linking to a C library and  *      the standard header files may be used.  *  * The ACPICA subsystem only uses low level C library functions that do not  * call operating system services and may therefore be inlined in the code.  *  * It may be necessary to tailor these include files to the target  * generation environment.  */
 end_comment
 
 begin_ifdef

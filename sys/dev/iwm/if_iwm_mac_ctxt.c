@@ -542,6 +542,7 @@ name|ieee80211com
 modifier|*
 name|ic
 init|=
+operator|&
 name|sc
 operator|->
 name|sc_ic
@@ -628,9 +629,9 @@ name|cmd
 operator|->
 name|node_addr
 argument_list|,
-name|sc
+name|ic
 operator|->
-name|sc_bssid
+name|ic_macaddr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX should we error out if in_assoc is 1 and ni == NULL? 	 */
@@ -1000,6 +1001,7 @@ name|ieee80211com
 modifier|*
 name|ic
 init|=
+operator|&
 name|sc
 operator|->
 name|sc_ic

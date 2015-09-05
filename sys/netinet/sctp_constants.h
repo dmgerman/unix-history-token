@@ -1988,7 +1988,7 @@ value|0x0c
 end_define
 
 begin_comment
-comment|/*  * SCTP states for internal state machine XXX (should match "user" values)  */
+comment|/*  * SCTP states for internal state machine  */
 end_comment
 
 begin_define
@@ -2667,17 +2667,6 @@ define|#
 directive|define
 name|SCTP_HB_DEFAULT_MSEC
 value|30000
-end_define
-
-begin_comment
-comment|/* Max time I will wait for Shutdown to complete */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_DEF_MAX_SHUTDOWN_SEC
-value|180
 end_define
 
 begin_comment

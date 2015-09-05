@@ -605,14 +605,6 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|vt_device
-name|vt_consdev
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|unsigned
 name|int
 name|vt_unit
@@ -940,7 +932,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|vt_device
 name|vt_consdev

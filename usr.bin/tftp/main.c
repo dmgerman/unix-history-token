@@ -1152,7 +1152,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|uri
 argument_list|,
@@ -1680,7 +1680,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|hostname
 argument_list|,
@@ -1699,7 +1699,7 @@ else|else
 operator|(
 name|void
 operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|hostname
 argument_list|,
@@ -1710,18 +1710,6 @@ argument_list|(
 name|hostname
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|hostname
-index|[
-sizeof|sizeof
-argument_list|(
-name|hostname
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|0
 expr_stmt|;
 name|connected
 operator|=

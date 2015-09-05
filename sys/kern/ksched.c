@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996, 1997  *	HD Associates, Inc.  All rights reser
 end_comment
 
 begin_comment
-comment|/* ksched: Soft real time scheduling based on "rtprio".  */
+comment|/* ksched: Soft real time scheduling based on "rtprio". */
 end_comment
 
 begin_include
@@ -98,7 +98,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* ksched: Real-time extension to support POSIX priority scheduling.  */
+comment|/* ksched: Real-time extension to support POSIX priority scheduling. */
 end_comment
 
 begin_struct
@@ -128,16 +128,22 @@ name|struct
 name|ksched
 modifier|*
 name|ksched
-init|=
-name|p31b_malloc
+decl_stmt|;
+name|ksched
+operator|=
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
 name|ksched
 argument_list|)
+argument_list|,
+name|M_P31B
+argument_list|,
+name|M_WAITOK
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|ksched
 operator|->
 name|rr_interval
@@ -165,7 +171,9 @@ operator|=
 name|ksched
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -180,13 +188,17 @@ modifier|*
 name|ks
 parameter_list|)
 block|{
-name|p31b_free
+name|free
 argument_list|(
 name|ks
+argument_list|,
+name|M_P31B
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -284,9 +296,11 @@ name|rtp
 decl_stmt|;
 name|int
 name|e
-init|=
-literal|0
 decl_stmt|;
+name|e
+operator|=
+literal|0
+expr_stmt|;
 name|pri_to_rtp
 argument_list|(
 name|td
@@ -329,7 +343,9 @@ expr_stmt|;
 break|break;
 block|}
 return|return
+operator|(
 name|e
+operator|)
 return|;
 block|}
 end_function
@@ -356,10 +372,9 @@ name|param
 parameter_list|)
 block|{
 name|int
-name|policy
-decl_stmt|;
-name|int
 name|e
+decl_stmt|,
+name|policy
 decl_stmt|;
 name|e
 operator|=
@@ -379,7 +394,6 @@ name|e
 operator|==
 literal|0
 condition|)
-block|{
 name|e
 operator|=
 name|ksched_setscheduler
@@ -393,9 +407,10 @@ argument_list|,
 name|param
 argument_list|)
 expr_stmt|;
-block|}
 return|return
+operator|(
 name|e
+operator|)
 return|;
 block|}
 end_function
@@ -462,16 +477,14 @@ name|rtp
 operator|.
 name|prio
 condition|)
-comment|/* 		 	 * The interactive score has it to min realtime 			 * so we must show max (64 most likely 			 */
+comment|/* 		 	 * The interactive score has it to min realtime 			 * so we must show max (64 most likely). 			 */
 name|param
 operator|->
 name|sched_priority
 operator|=
-operator|(
 name|PRI_MAX_TIMESHARE
 operator|-
 name|PRI_MIN_TIMESHARE
-operator|)
 expr_stmt|;
 else|else
 name|param
@@ -487,7 +500,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -520,15 +535,17 @@ modifier|*
 name|param
 parameter_list|)
 block|{
-name|int
-name|e
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|rtprio
 name|rtp
 decl_stmt|;
+name|int
+name|e
+decl_stmt|;
+name|e
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|policy
@@ -590,10 +607,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|e
 operator|=
 name|EPERM
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|SCHED_OTHER
@@ -644,10 +663,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|e
 operator|=
 name|EINVAL
 expr_stmt|;
+block|}
 break|break;
 default|default:
 name|e
@@ -657,7 +678,9 @@ expr_stmt|;
 break|break;
 block|}
 return|return
+operator|(
 name|e
+operator|)
 return|;
 block|}
 end_function
@@ -682,6 +705,7 @@ name|policy
 parameter_list|)
 block|{
 return|return
+operator|(
 name|getscheduler
 argument_list|(
 name|ksched
@@ -690,12 +714,13 @@ name|td
 argument_list|,
 name|policy
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ksched_yield: Yield the CPU.  */
+comment|/* ksched_yield: Yield the CPU. */
 end_comment
 
 begin_function
@@ -714,7 +739,9 @@ name|curthread
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -738,9 +765,11 @@ parameter_list|)
 block|{
 name|int
 name|e
-init|=
-literal|0
 decl_stmt|;
+name|e
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|policy
@@ -755,7 +784,7 @@ case|:
 operator|*
 name|prio
 operator|=
-name|RTP_PRIO_MAX
+name|P1B_PRIO_MAX
 expr_stmt|;
 break|break;
 case|case
@@ -774,9 +803,12 @@ name|e
 operator|=
 name|EINVAL
 expr_stmt|;
+break|break;
 block|}
 return|return
+operator|(
 name|e
+operator|)
 return|;
 block|}
 end_function
@@ -800,9 +832,11 @@ parameter_list|)
 block|{
 name|int
 name|e
-init|=
-literal|0
 decl_stmt|;
+name|e
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|policy
@@ -834,9 +868,12 @@ name|e
 operator|=
 name|EINVAL
 expr_stmt|;
+break|break;
 block|}
 return|return
+operator|(
 name|e
+operator|)
 return|;
 block|}
 end_function
@@ -869,7 +906,9 @@ operator|->
 name|rr_interval
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

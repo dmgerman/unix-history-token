@@ -78,6 +78,11 @@ decl_stmt|;
 name|uintmax_t
 name|ret
 decl_stmt|;
+operator|*
+name|errpp
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|minval

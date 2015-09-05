@@ -269,7 +269,16 @@ begin_function_decl
 specifier|extern
 name|int
 name|key_encryptsession_pk
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|netobj
+modifier|*
+parameter_list|,
+name|des_block
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1306,6 +1315,7 @@ parameter_list|(
 name|AUTH
 modifier|*
 name|auth
+name|__unused
 parameter_list|)
 block|{
 comment|/* what the heck am I supposed to do??? */
@@ -2202,6 +2212,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|__unused
 parameter_list|)
 block|{
 comment|/* LINTED pointer alignment */

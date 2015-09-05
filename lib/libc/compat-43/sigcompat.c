@@ -205,7 +205,7 @@ name|NULL
 expr_stmt|;
 name|ret
 operator|=
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|signo
 argument_list|,
@@ -300,7 +300,7 @@ name|mask
 expr_stmt|;
 name|n
 operator|=
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -368,7 +368,7 @@ name|mask
 expr_stmt|;
 name|n
 operator|=
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,
@@ -429,7 +429,7 @@ name|mask
 expr_stmt|;
 return|return
 operator|(
-name|_sigsuspend
+name|__libc_sigsuspend
 argument_list|(
 operator|&
 name|set
@@ -452,7 +452,7 @@ name|set
 decl_stmt|;
 if|if
 condition|(
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,
@@ -492,7 +492,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|_sigsuspend
+name|__libc_sigsuspend
 argument_list|(
 operator|&
 name|set
@@ -540,7 +540,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,
@@ -585,7 +585,7 @@ name|SIG_IGN
 expr_stmt|;
 return|return
 operator|(
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|sig
 argument_list|,
@@ -637,7 +637,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_UNBLOCK
 argument_list|,
@@ -702,7 +702,7 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,
@@ -736,7 +736,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,
@@ -774,7 +774,7 @@ else|else
 block|{
 if|if
 condition|(
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|sig
 argument_list|,
@@ -805,7 +805,7 @@ else|else
 block|{
 if|if
 condition|(
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_UNBLOCK
 argument_list|,
@@ -853,7 +853,7 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|sig
 argument_list|,

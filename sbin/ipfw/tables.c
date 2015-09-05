@@ -2068,9 +2068,6 @@ name|fset
 decl_stmt|,
 name|fclear
 decl_stmt|;
-name|size_t
-name|sz
-decl_stmt|;
 name|char
 modifier|*
 name|e
@@ -2084,13 +2081,6 @@ index|[
 literal|128
 index|]
 decl_stmt|;
-name|sz
-operator|=
-sizeof|sizeof
-argument_list|(
-name|tbuf
-argument_list|)
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -2628,22 +2618,6 @@ decl_stmt|;
 name|int
 name|tcmd
 decl_stmt|;
-name|size_t
-name|sz
-decl_stmt|;
-name|char
-name|tbuf
-index|[
-literal|128
-index|]
-decl_stmt|;
-name|sz
-operator|=
-sizeof|sizeof
-argument_list|(
-name|tbuf
-argument_list|)
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -7312,8 +7286,6 @@ decl_stmt|,
 name|flag
 decl_stmt|,
 name|val
-decl_stmt|,
-name|vm
 decl_stmt|;
 name|ipfw_table_value
 modifier|*
@@ -7349,10 +7321,6 @@ operator|->
 name|v
 operator|.
 name|value
-expr_stmt|;
-name|vm
-operator|=
-name|vmask
 expr_stmt|;
 comment|/* Compat layer: keep old behavior for legacy value types */
 if|if

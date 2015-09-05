@@ -4622,6 +4622,7 @@ name|c_lock
 operator|!=
 name|NULL
 operator|&&
+operator|!
 name|cc_exec_cancel
 argument_list|(
 name|cc

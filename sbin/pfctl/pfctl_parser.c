@@ -6429,34 +6429,6 @@ argument_list|(
 literal|" reassemble tcp"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|r
-operator|->
-name|rule_flag
-operator|&
-name|PFRULE_FRAGDROP
-condition|)
-name|printf
-argument_list|(
-literal|" fragment drop-ovl"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|r
-operator|->
-name|rule_flag
-operator|&
-name|PFRULE_FRAGCROP
-condition|)
-name|printf
-argument_list|(
-literal|" fragment crop"
-argument_list|)
-expr_stmt|;
-else|else
 name|printf
 argument_list|(
 literal|" fragment reassemble"

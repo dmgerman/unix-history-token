@@ -5410,6 +5410,8 @@ name|flags
 operator|&
 name|EV_ADD
 condition|)
+block|{
+comment|/* 		 * Prevent waiting with locks.  Non-sleepable 		 * allocation failures are handled in the loop, only 		 * if the spare knote appears to be actually required. 		 */
 name|tkn
 operator|=
 name|knote_alloc
@@ -5417,12 +5419,14 @@ argument_list|(
 name|waitok
 argument_list|)
 expr_stmt|;
-comment|/* prevent waiting with locks */
+block|}
 else|else
+block|{
 name|tkn
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 name|findkn
 label|:
 if|if
@@ -6370,12 +6374,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tkn
-operator|!=
-name|NULL
-condition|)
 name|knote_free
 argument_list|(
 name|tkn
@@ -7288,21 +7286,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|marker
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOMEM
-expr_stmt|;
-goto|goto
-name|done_nl
-goto|;
-block|}
 name|marker
 operator|->
 name|kn_status
@@ -9298,6 +9281,9 @@ name|struct
 name|knote
 modifier|*
 name|kn
+decl_stmt|,
+modifier|*
+name|tkn
 decl_stmt|;
 name|int
 name|error
@@ -9337,14 +9323,16 @@ operator|->
 name|kl_lockarg
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we unlock the list lock (and set KN_INFLUX), we can eliminate 	 * the kqueue scheduling, but this will introduce four 	 * lock/unlock's for each knote to test.  If we do, continue to use 	 * SLIST_FOREACH, SLIST_FOREACH_SAFE is not safe in our case, it is 	 * only safe if you want to remove the current item, which we are 	 * not doing. 	 */
-name|SLIST_FOREACH
+comment|/* 	 * If we unlock the list lock (and set KN_INFLUX), we can 	 * eliminate the kqueue scheduling, but this will introduce 	 * four lock/unlock's for each knote to test.  Also, marker 	 * would be needed to keep iteration position, since filters 	 * or other threads could remove events. 	 */
+name|SLIST_FOREACH_SAFE
 argument_list|(
 argument|kn
 argument_list|,
 argument|&list->kl_list
 argument_list|,
 argument|kn_selnext
+argument_list|,
+argument|tkn
 argument_list|)
 block|{
 name|kq
@@ -11435,11 +11423,6 @@ parameter_list|)
 block|{
 return|return
 operator|(
-operator|(
-expr|struct
-name|knote
-operator|*
-operator|)
 name|uma_zalloc
 argument_list|(
 name|knote_zone
@@ -11470,12 +11453,6 @@ modifier|*
 name|kn
 parameter_list|)
 block|{
-if|if
-condition|(
-name|kn
-operator|!=
-name|NULL
-condition|)
 name|uma_zfree
 argument_list|(
 name|knote_zone

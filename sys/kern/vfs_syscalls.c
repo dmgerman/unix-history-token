@@ -6870,7 +6870,7 @@ label|:
 name|bwillwrite
 argument_list|()
 expr_stmt|;
-name|NDINIT_AT
+name|NDINIT_ATRIGHTS
 argument_list|(
 operator|&
 name|nd
@@ -6886,6 +6886,14 @@ argument_list|,
 name|path1
 argument_list|,
 name|fd1
+argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
+name|CAP_LINKAT_SOURCE
+argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -6970,7 +6978,7 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
-name|CAP_LINKAT
+name|CAP_LINKAT_TARGET
 argument_list|)
 argument_list|,
 name|td
@@ -17162,7 +17170,7 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
-name|CAP_RENAMEAT
+name|CAP_RENAMEAT_SOURCE
 argument_list|)
 argument_list|,
 name|td
@@ -17194,7 +17202,7 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
-name|CAP_RENAMEAT
+name|CAP_RENAMEAT_SOURCE
 argument_list|)
 argument_list|,
 name|td
@@ -17310,7 +17318,7 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
-name|CAP_LINKAT
+name|CAP_RENAMEAT_TARGET
 argument_list|)
 argument_list|,
 name|td

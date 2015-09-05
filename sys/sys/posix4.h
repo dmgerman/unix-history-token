@@ -94,26 +94,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|p31b_malloc
-parameter_list|(
-name|SIZE
-parameter_list|)
-value|malloc((SIZE), M_P31B, M_WAITOK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|p31b_free
-parameter_list|(
-name|P
-parameter_list|)
-value|free((P), M_P31B)
-end_define
-
 begin_function_decl
 name|int
 name|p31b_proc

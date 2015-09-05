@@ -2154,6 +2154,7 @@ name|struct
 name|ifnet
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -2390,6 +2391,7 @@ name|ifaddr
 modifier|*
 name|ifa_ifwithaddr
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -2401,6 +2403,7 @@ begin_function_decl
 name|int
 name|ifa_ifwithaddr_check
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -2414,6 +2417,7 @@ name|ifaddr
 modifier|*
 name|ifa_ifwithbroadaddr
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -2429,6 +2433,7 @@ name|ifaddr
 modifier|*
 name|ifa_ifwithdstaddr
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -2444,6 +2449,7 @@ name|ifaddr
 modifier|*
 name|ifa_ifwithnet
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -2463,6 +2469,7 @@ name|ifa_ifwithroute
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -2482,6 +2489,7 @@ name|ifaddr
 modifier|*
 name|ifaof_ifpforaddr
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*

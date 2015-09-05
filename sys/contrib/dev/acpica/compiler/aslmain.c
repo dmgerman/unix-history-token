@@ -560,6 +560,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-l"
+argument_list|,
+literal|"Disassemble to mixed ASL and AML code"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-vt"
 argument_list|,
 literal|"Dump binary table data in hex format within output file"
@@ -801,6 +808,10 @@ block|{
 name|UINT32
 name|i
 decl_stmt|;
+name|AcpiGbl_DmOpt_Verbose
+operator|=
+name|FALSE
+expr_stmt|;
 for|for
 control|(
 name|i

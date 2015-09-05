@@ -6419,8 +6419,8 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|c
+init|=
+literal|0
 decl_stmt|;
 name|uint32_t
 modifier|*
@@ -6442,14 +6442,6 @@ name|bp
 argument_list|,
 literal|" dscp"
 argument_list|)
-expr_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
-name|c
-operator|=
-literal|0
 expr_stmt|;
 name|v
 operator|=

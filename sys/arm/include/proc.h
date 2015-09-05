@@ -109,7 +109,7 @@ value|8
 end_define
 
 begin_comment
-comment|/*  * This holds the syscall state for a single system call.  * As some syscall arguments may be 64-bit aligned we need to ensure the  * args value is 64-bit aligned. The ABI will then ensure any 64-bit  * arguments are already correctly aligned, even if they were passed in  * via registers, we just need to make sure we copy them to an algned  * buffer.  */
+comment|/*  * This holds the syscall state for a single system call.  * As some syscall arguments may be 64-bit aligned we need to ensure the  * args value is 64-bit aligned. The ABI will then ensure any 64-bit  * arguments are already correctly aligned, even if they were passed in  * via registers, we just need to make sure we copy them to an aligned  * buffer.  */
 end_comment
 
 begin_struct

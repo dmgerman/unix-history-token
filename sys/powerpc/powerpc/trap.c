@@ -1862,7 +1862,7 @@ name|BOOKE
 argument_list|)
 name|printf
 argument_list|(
-literal|"    mcsr           = 0x%lx\n"
+literal|"   mcsr           = 0x%lx\n"
 argument_list|,
 operator|(
 name|u_long
@@ -3719,7 +3719,7 @@ name|frame
 operator|->
 name|srr1
 operator|&
-literal|0x20000
+name|EXC_PGM_TRAP
 operator|)
 operator|)
 else|#
@@ -3789,7 +3789,7 @@ name|frame
 operator|->
 name|srr1
 operator|&
-literal|0x20000
+name|EXC_PGM_TRAP
 operator|)
 condition|)
 block|{

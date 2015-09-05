@@ -5188,26 +5188,9 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Perform DAD, if needed. 	 * XXX It may be of use, if we can administratively disable DAD. 	 */
+comment|/* Perform DAD, if the address is TENTATIVE. */
 if|if
 condition|(
-name|in6if_do_dad
-argument_list|(
-name|ifp
-argument_list|)
-operator|&&
-operator|(
-operator|(
-name|ifra
-operator|->
-name|ifra_flags
-operator|&
-name|IN6_IFF_NODAD
-operator|)
-operator|==
-literal|0
-operator|)
-operator|&&
 operator|(
 name|ia
 operator|->
@@ -5740,7 +5723,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Notifies other other subsystems about address change/arrival:  * 1) Notifies device handler on first IPv6 address assignment  * 2) Handle routing table changes for P2P links and route  * 3) Handle routing table changes for address host route  */
+comment|/*  * Notifies other subsystems about address change/arrival:  * 1) Notifies device handler on the first IPv6 address assignment  * 2) Handle routing table changes for P2P links and route  * 3) Handle routing table changes for address host route  */
 end_comment
 
 begin_function
@@ -6356,6 +6339,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
+specifier|const
 name|struct
 name|in6_addr
 modifier|*
@@ -8409,7 +8393,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Our DAD routine requires the interface up and running. 	 * However, some interfaces can be up before the RUNNING 	 * status.  Additionaly, users may try to assign addresses 	 * before the interface becomes up (or running). 	 * We simply skip DAD in such a case as a work around. 	 * XXX: we should rather mark "tentative" on such addresses, 	 * and do DAD after the interface becomes ready. 	 */
+comment|/* 	 * Our DAD routine requires the interface up and running. 	 * However, some interfaces can be up before the RUNNING 	 * status.  Additionaly, users may try to assign addresses 	 * before the interface becomes up (or running). 	 * This function returns EAGAIN in that case. 	 * The caller should mark "tentative" on the address instead of 	 * performing DAD immediately. 	 */
 if|if
 condition|(
 operator|!
@@ -8433,7 +8417,7 @@ operator|)
 condition|)
 return|return
 operator|(
-literal|0
+name|EAGAIN
 operator|)
 return|;
 return|return
@@ -9145,19 +9129,11 @@ modifier|*
 name|ifa
 decl_stmt|;
 comment|/* 		 * Create an ND6 cache for an IPv6 neighbor 		 * that is not covered by our own prefix. 		 */
-comment|/* XXX ifaof_ifpforaddr should take a const param */
 name|ifa
 operator|=
 name|ifaof_ifpforaddr
 argument_list|(
-name|__DECONST
-argument_list|(
-expr|struct
-name|sockaddr
-operator|*
-argument_list|,
 name|l3addr
-argument_list|)
 argument_list|,
 name|ifp
 argument_list|)
@@ -9653,7 +9629,7 @@ specifier|static
 name|struct
 name|llentry
 modifier|*
-name|in6_lltable_create
+name|in6_lltable_alloc
 parameter_list|(
 name|struct
 name|lltable
@@ -9698,11 +9674,6 @@ name|llentry
 modifier|*
 name|lle
 decl_stmt|;
-name|IF_AFDATA_WLOCK_ASSERT
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|l3addr
@@ -9720,36 +9691,6 @@ name|sa_family
 operator|)
 argument_list|)
 expr_stmt|;
-name|lle
-operator|=
-name|in6_lltable_find_dst
-argument_list|(
-name|llt
-argument_list|,
-operator|&
-name|sin6
-operator|->
-name|sin6_addr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|lle
-operator|!=
-name|NULL
-condition|)
-block|{
-name|LLE_WLOCK
-argument_list|(
-name|lle
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|lle
-operator|)
-return|;
-block|}
 comment|/* 	 * A route that covers the given address must have 	 * been installed 1st because we are doing a resolution, 	 * verify this. 	 */
 if|if
 condition|(
@@ -9853,17 +9794,23 @@ name|LLE_STATIC
 operator|)
 expr_stmt|;
 block|}
-name|lltable_link_entry
-argument_list|(
-name|llt
-argument_list|,
+if|if
+condition|(
+operator|(
 name|lle
-argument_list|)
-expr_stmt|;
-name|LLE_WLOCK
-argument_list|(
+operator|->
+name|la_flags
+operator|&
+name|LLE_STATIC
+operator|)
+operator|!=
+literal|0
+condition|)
 name|lle
-argument_list|)
+operator|->
+name|ln_state
+operator|=
+name|ND6_LLINFO_REACHABLE
 expr_stmt|;
 return|return
 operator|(
@@ -10062,7 +10009,7 @@ name|ndpc
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* skip invalid entries */
+comment|/* skip deleted entries */
 if|if
 condition|(
 operator|(
@@ -10070,14 +10017,10 @@ name|lle
 operator|->
 name|la_flags
 operator|&
-operator|(
 name|LLE_DELETED
-operator||
-name|LLE_VALID
 operator|)
-operator|)
-operator|!=
-name|LLE_VALID
+operator|==
+name|LLE_DELETED
 condition|)
 return|return
 operator|(
@@ -10393,9 +10336,9 @@ name|in6_lltable_lookup
 expr_stmt|;
 name|llt
 operator|->
-name|llt_create
+name|llt_alloc_entry
 operator|=
-name|in6_lltable_create
+name|in6_lltable_alloc
 expr_stmt|;
 name|llt
 operator|->

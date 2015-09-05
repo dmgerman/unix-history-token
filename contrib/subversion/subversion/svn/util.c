@@ -1231,8 +1231,6 @@ init|=
 block|{
 literal|"PR:"
 block|,
-literal|"Differential Revision:"
-block|,
 literal|"Submitted by:"
 block|,
 literal|"Reviewed by:"
@@ -1250,7 +1248,9 @@ block|,
 literal|"Security:"
 block|,
 literal|"Sponsored by:"
-block|}
+block|,
+literal|"Differential Revision:"
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1576,6 +1576,35 @@ name|message
 init|=
 name|NULL
 decl_stmt|;
+name|svn_config_t
+modifier|*
+name|cfg
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|mfc_after
+decl_stmt|,
+modifier|*
+name|sponsored_by
+decl_stmt|;
+name|cfg
+operator|=
+name|lmb
+operator|->
+name|config
+condition|?
+name|svn_hash_gets
+argument_list|(
+name|lmb
+operator|->
+name|config
+argument_list|,
+name|SVN_CONFIG_CATEGORY_CONFIG
+argument_list|)
+else|:
+name|NULL
+expr_stmt|;
 comment|/* Set default message.  */
 name|default_msg
 operator|=
@@ -1598,14 +1627,6 @@ argument_list|(
 name|default_msg
 argument_list|,
 literal|"PR:\t\t"
-name|APR_EOL_STR
-argument_list|)
-expr_stmt|;
-name|svn_stringbuf_appendcstr
-argument_list|(
-name|default_msg
-argument_list|,
-literal|"Differential Revision:\t"
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
@@ -1646,6 +1667,39 @@ argument_list|(
 name|default_msg
 argument_list|,
 literal|"MFC after:\t"
+argument_list|)
+expr_stmt|;
+name|svn_config_get
+argument_list|(
+name|cfg
+argument_list|,
+operator|&
+name|mfc_after
+argument_list|,
+name|SVN_CONFIG_SECTION_MISCELLANY
+argument_list|,
+literal|"freebsd-mfc-after"
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mfc_after
+operator|!=
+name|NULL
+condition|)
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|default_msg
+argument_list|,
+name|mfc_after
+argument_list|)
+expr_stmt|;
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|default_msg
+argument_list|,
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
@@ -1675,25 +1729,57 @@ argument_list|)
 expr_stmt|;
 name|svn_stringbuf_appendcstr
 argument_list|(
-argument|default_msg
+name|default_msg
 argument_list|,
 literal|"Sponsored by:\t"
+argument_list|)
+expr_stmt|;
+name|svn_config_get
+argument_list|(
+name|cfg
+argument_list|,
+operator|&
+name|sponsored_by
+argument_list|,
+name|SVN_CONFIG_SECTION_MISCELLANY
+argument_list|,
+literal|"freebsd-sponsored-by"
+argument_list|,
 ifdef|#
 directive|ifdef
 name|HAS_ORGANIZATION_NAME
-argument|ORGANIZATION_NAME
+name|ORGANIZATION_NAME
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|NULL
+block|)
+function|;
+end_function
+
+begin_endif
 endif|#
 directive|endif
-argument|APR_EOL_STR
-argument_list|)
-empty_stmt|;
+end_endif
+
+begin_if
+if|if
+condition|(
+name|sponsored_by
+operator|!=
+name|NULL
+condition|)
 name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
-name|EDITOR_EOF_PREFIX
+name|sponsored_by
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
@@ -1701,6 +1787,40 @@ argument_list|,
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|default_msg
+argument_list|,
+literal|"Differential Revision:\t"
+name|APR_EOL_STR
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|default_msg
+argument_list|,
+name|EDITOR_EOF_PREFIX
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|default_msg
+argument_list|,
+name|APR_EOL_STR
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
@@ -1709,22 +1829,20 @@ literal|"> Description of fields to fill in above:                     76 column
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
-literal|"> PR:                       If a Bugzilla PR is affected by the change."
+literal|"> PR:                       If a GNATS PR is affected by the change."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
-name|svn_stringbuf_appendcstr
-argument_list|(
-name|default_msg
-argument_list|,
-literal|"> Differential Revision:    https://reviews.freebsd.org/D### (*full* phabric URL needed)."
-name|APR_EOL_STR
-argument_list|)
-expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
@@ -1733,6 +1851,9 @@ literal|"> Submitted by:             If someone else sent in the change."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
@@ -1741,6 +1862,9 @@ literal|"> Reviewed by:              If someone else reviewed your modification.
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
@@ -1749,6 +1873,9 @@ literal|"> Approved by:              If you needed approval for this commit."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
@@ -1757,6 +1884,9 @@ literal|"> Obtained from:            If the change is from a third party."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
@@ -1765,6 +1895,9 @@ literal|"> MFC after:                N [day[s]|week[s]|month[s]].  Request a rem
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
@@ -1773,6 +1906,9 @@ literal|"> MFH:                      Ports tree branch name.  Request approval f
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
@@ -1781,6 +1917,9 @@ literal|"> Relnotes:                 Set to 'yes' for mention in release notes."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
@@ -1789,6 +1928,9 @@ literal|"> Security:                 Vulnerability reference (one per line) or d
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
@@ -1797,6 +1939,20 @@ literal|"> Sponsored by:             If the change was sponsored by an organizat
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|default_msg
+argument_list|,
+literal|"> Differential Revision:    https://reviews.freebsd.org/D### (*full* phabric URL needed)."
+name|APR_EOL_STR
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
@@ -1805,6 +1961,9 @@ literal|"> Empty fields above will be automatically removed."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
@@ -1812,11 +1971,17 @@ argument_list|,
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|*
 name|tmp_file
 operator|=
 name|NULL
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|lmb
@@ -1940,6 +2105,9 @@ return|return
 name|SVN_NO_ERROR
 return|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -1957,6 +2125,9 @@ return|return
 name|SVN_NO_ERROR
 return|;
 block|}
+end_if
+
+begin_while
 while|while
 condition|(
 operator|!
@@ -2612,6 +2783,9 @@ comment|/* If the user chooses anything else, the loop will                  con
 block|}
 block|}
 block|}
+end_while
+
+begin_expr_stmt
 operator|*
 name|log_msg
 operator|=
@@ -2623,25 +2797,26 @@ name|data
 else|:
 name|NULL
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|SVN_NO_ERROR
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
+unit|}
 comment|/* ### The way our error wrapping currently works, the error returned  * from here will look as though it originates in this source file,  * instead of in the caller's source file.  This can be a bit  * misleading, until one starts debugging.  Ideally, there'd be a way  * to wrap an error while preserving its FILE/LINE info.  */
 end_comment
 
-begin_function
-name|svn_error_t
-modifier|*
+begin_expr_stmt
+unit|svn_error_t
+operator|*
 name|svn_cl__may_need_force
-parameter_list|(
-name|svn_error_t
-modifier|*
-name|err
-parameter_list|)
+argument_list|(
+argument|svn_error_t *err
+argument_list|)
 block|{
 if|if
 condition|(
@@ -2677,35 +2852,32 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_return
 return|return
 name|svn_error_trace
 argument_list|(
 name|err
 argument_list|)
 return|;
-block|}
-end_function
+end_return
 
-begin_function
-name|svn_error_t
-modifier|*
+begin_expr_stmt
+unit|}   svn_error_t
+operator|*
 name|svn_cl__error_checked_fputs
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|string
-parameter_list|,
-name|FILE
-modifier|*
-name|stream
-parameter_list|)
+argument_list|(
+argument|const char *string
+argument_list|,
+argument|FILE* stream
+argument_list|)
 block|{
 comment|/* On POSIX systems, errno will be set on an error in fputs, but this might      not be the case on other platforms.  We reset errno and only      use it if it was set by the below fputs call.  Else, we just return      a generic error. */
 name|errno
 operator|=
 literal|0
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|fputs
@@ -2745,30 +2917,27 @@ name|NULL
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_return
 return|return
 name|SVN_NO_ERROR
 return|;
-block|}
-end_function
+end_return
 
-begin_function
-name|svn_error_t
-modifier|*
+begin_expr_stmt
+unit|}   svn_error_t
+operator|*
 name|svn_cl__try
-parameter_list|(
-name|svn_error_t
-modifier|*
-name|err
-parameter_list|,
-name|apr_array_header_t
-modifier|*
-name|errors_seen
-parameter_list|,
-name|svn_boolean_t
-name|quiet
-parameter_list|,
-modifier|...
-parameter_list|)
+argument_list|(
+argument|svn_error_t *err
+argument_list|,
+argument|apr_array_header_t *errors_seen
+argument_list|,
+argument|svn_boolean_t quiet
+argument_list|,
+argument|...
+argument_list|)
 block|{
 if|if
 condition|(
@@ -2856,11 +3025,13 @@ name|FALSE
 expr_stmt|;
 break|break;
 block|}
-block|}
-if|if
-condition|(
+end_expr_stmt
+
+begin_expr_stmt
+unit|}               if
+operator|(
 name|add
-condition|)
+operator|)
 name|APR_ARRAY_PUSH
 argument_list|(
 name|errors_seen
@@ -2872,15 +3043,17 @@ name|err
 operator|->
 name|apr_err
 expr_stmt|;
-block|}
-if|if
-condition|(
+end_expr_stmt
+
+begin_expr_stmt
+unit|}           if
+operator|(
 name|err
 operator|->
 name|apr_err
 operator|==
 name|apr_err
-condition|)
+operator|)
 block|{
 if|if
 condition|(
@@ -2901,49 +3074,47 @@ argument_list|(
 name|err
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|SVN_NO_ERROR
 return|;
-block|}
-block|}
+end_return
+
+begin_expr_stmt
+unit|}         }
 name|va_end
 argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-block|}
-return|return
+end_expr_stmt
+
+begin_expr_stmt
+unit|}    return
 name|svn_error_trace
 argument_list|(
 name|err
 argument_list|)
-return|;
-block|}
-end_function
+expr_stmt|;
+end_expr_stmt
 
-begin_function
-name|void
+begin_macro
+unit|}   void
 name|svn_cl__xml_tagged_cdata
-parameter_list|(
-name|svn_stringbuf_t
-modifier|*
-modifier|*
-name|sb
-parameter_list|,
-name|apr_pool_t
-modifier|*
-name|pool
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|tagname
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|string
-parameter_list|)
+argument_list|(
+argument|svn_stringbuf_t **sb
+argument_list|,
+argument|apr_pool_t *pool
+argument_list|,
+argument|const char *tagname
+argument_list|,
+argument|const char *string
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -2983,7 +3154,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 begin_function
 name|void

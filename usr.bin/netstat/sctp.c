@@ -270,6 +270,7 @@ value|0x9
 end_define
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -300,16 +301,14 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
 argument_list|(
 argument|xladdr_list
 argument_list|,
 argument|xladdr_entry
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|xladdr_head
 expr_stmt|;
 end_expr_stmt
@@ -333,16 +332,14 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
 argument_list|(
 argument|xraddr_list
 argument_list|,
 argument|xraddr_entry
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|xraddr_head
 expr_stmt|;
 end_expr_stmt
@@ -2999,7 +2996,31 @@ name|state
 condition|)
 block|{
 case|case
-name|SCTP_STATE_COOKIE_WAIT
+name|SCTP_CLOSED
+case|:
+name|idx
+operator|=
+name|NETSTAT_SCTP_STATES_CLOSED
+expr_stmt|;
+break|break;
+case|case
+name|SCTP_BOUND
+case|:
+name|idx
+operator|=
+name|NETSTAT_SCTP_STATES_BOUND
+expr_stmt|;
+break|break;
+case|case
+name|SCTP_LISTEN
+case|:
+name|idx
+operator|=
+name|NETSTAT_SCTP_STATES_LISTEN
+expr_stmt|;
+break|break;
+case|case
+name|SCTP_COOKIE_WAIT
 case|:
 name|idx
 operator|=
@@ -3007,7 +3028,7 @@ name|NETSTAT_SCTP_STATES_COOKIE_WAIT
 expr_stmt|;
 break|break;
 case|case
-name|SCTP_STATE_COOKIE_ECHOED
+name|SCTP_COOKIE_ECHOED
 case|:
 name|idx
 operator|=
@@ -3015,7 +3036,7 @@ name|NETSTAT_SCTP_STATES_COOKIE_ECHOED
 expr_stmt|;
 break|break;
 case|case
-name|SCTP_STATE_OPEN
+name|SCTP_ESTABLISHED
 case|:
 name|idx
 operator|=
@@ -3023,7 +3044,7 @@ name|NETSTAT_SCTP_STATES_ESTABLISHED
 expr_stmt|;
 break|break;
 case|case
-name|SCTP_STATE_SHUTDOWN_SENT
+name|SCTP_SHUTDOWN_SENT
 case|:
 name|idx
 operator|=
@@ -3031,7 +3052,7 @@ name|NETSTAT_SCTP_STATES_SHUTDOWN_SENT
 expr_stmt|;
 break|break;
 case|case
-name|SCTP_STATE_SHUTDOWN_RECEIVED
+name|SCTP_SHUTDOWN_RECEIVED
 case|:
 name|idx
 operator|=
@@ -3039,7 +3060,7 @@ name|NETSTAT_SCTP_STATES_SHUTDOWN_RECEIVED
 expr_stmt|;
 break|break;
 case|case
-name|SCTP_STATE_SHUTDOWN_ACK_SENT
+name|SCTP_SHUTDOWN_ACK_SENT
 case|:
 name|idx
 operator|=
@@ -3047,7 +3068,7 @@ name|NETSTAT_SCTP_STATES_SHUTDOWN_ACK_SENT
 expr_stmt|;
 break|break;
 case|case
-name|SCTP_STATE_SHUTDOWN_PENDING
+name|SCTP_SHUTDOWN_PENDING
 case|:
 name|idx
 operator|=

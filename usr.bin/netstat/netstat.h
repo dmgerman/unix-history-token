@@ -9,6 +9,36 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|satosin
+parameter_list|(
+name|sa
+parameter_list|)
+value|((struct sockaddr_in *)(sa))
+end_define
+
+begin_define
+define|#
+directive|define
+name|satosin6
+parameter_list|(
+name|sa
+parameter_list|)
+value|((struct sockaddr_in6 *)(sa))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sin6tosa
+parameter_list|(
+name|sin6
+parameter_list|)
+value|((struct sockaddr *)(sin6))
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -263,12 +293,6 @@ begin_comment
 comment|/* true if we are examining a live system */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|nlist
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 name|int
 name|kread
@@ -314,12 +338,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|kresolve_list
+name|void
+name|kset_dpcpu
 parameter_list|(
-name|struct
-name|nlist
-modifier|*
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -820,35 +842,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-modifier|*
-name|routename6
-parameter_list|(
-name|struct
-name|sockaddr_in6
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|netname6
-parameter_list|(
-name|struct
-name|sockaddr_in6
-modifier|*
-parameter_list|,
-name|struct
-name|in6_addr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|inet6print
 parameter_list|(
@@ -925,7 +918,6 @@ name|void
 name|netisr_stats
 parameter_list|(
 name|void
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -956,8 +948,6 @@ begin_function_decl
 name|void
 name|intpr
 parameter_list|(
-name|int
-parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -967,15 +957,6 @@ name|char
 modifier|*
 parameter_list|)
 parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pr_rthdr
-parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
@@ -1013,19 +994,28 @@ name|char
 modifier|*
 name|routename
 parameter_list|(
-name|in_addr_t
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|netname
 parameter_list|(
-name|in_addr_t
+name|struct
+name|sockaddr
+modifier|*
 parameter_list|,
-name|in_addr_t
+name|struct
+name|sockaddr
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

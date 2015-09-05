@@ -423,6 +423,7 @@ name|ieee80211com
 modifier|*
 name|ic
 init|=
+operator|&
 name|sc
 operator|->
 name|sc_ic
@@ -759,6 +760,7 @@ name|__func__
 argument_list|,
 name|ieee80211_chan2ieee
 argument_list|(
+operator|&
 name|sc
 operator|->
 name|sc_ic
@@ -836,6 +838,7 @@ name|__func__
 argument_list|,
 name|ieee80211_chan2ieee
 argument_list|(
+operator|&
 name|sc
 operator|->
 name|sc_ic

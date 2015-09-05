@@ -634,6 +634,12 @@ name|tlb0_entries_per_way
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|uint32_t
+name|tlb1_entries
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -659,7 +665,14 @@ begin_define
 define|#
 directive|define
 name|TLB1_ENTRIES
-value|16
+value|(tlb1_entries)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLB1_MAXENTRIES
+value|64
 end_define
 
 begin_comment
@@ -671,7 +684,7 @@ specifier|static
 name|tlb_entry_t
 name|tlb1
 index|[
-name|TLB1_ENTRIES
+name|TLB1_MAXENTRIES
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -2744,6 +2757,38 @@ block|}
 end_function
 
 begin_comment
+comment|/* Return number of entries in TLB1. */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|tlb1_get_tlbconf
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|uint32_t
+name|tlb1_cfg
+decl_stmt|;
+name|tlb1_cfg
+operator|=
+name|mfspr
+argument_list|(
+name|SPR_TLB1CFG
+argument_list|)
+expr_stmt|;
+name|tlb1_entries
+operator|=
+name|tlb1_cfg
+operator|&
+name|TLBCFG_NENTRY_MASK
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Initialize pool of kva ptbl buffers. */
 end_comment
 
@@ -4723,13 +4768,13 @@ name|pte
 operator|->
 name|rpn
 operator|=
+name|PTE_RPN_FROM_PA
+argument_list|(
 name|VM_PAGE_TO_PHYS
 argument_list|(
 name|m
 argument_list|)
-operator|&
-operator|~
-name|PTE_PA_MASK
+argument_list|)
 expr_stmt|;
 name|pte
 operator|->
@@ -5417,8 +5462,11 @@ argument_list|)
 expr_stmt|;
 name|debugf
 argument_list|(
-literal|" kernload    = 0x%08x\n"
+literal|" kernload    = 0x%09llx\n"
 argument_list|,
+operator|(
+name|uint64_t
+operator|)
 name|kernload
 argument_list|)
 expr_stmt|;
@@ -5881,7 +5929,7 @@ control|)
 block|{
 name|debugf
 argument_list|(
-literal|" region: 0x%08x - 0x%08x (0x%08x)\n"
+literal|" region: 0x%jx - 0x%jx (0x%jx)\n"
 argument_list|,
 name|availmem_regions
 index|[
@@ -6215,7 +6263,7 @@ index|[
 name|i
 index|]
 index|[
-literal|0
+name|TID_KERNEL
 index|]
 operator|=
 name|kernel_pmap
@@ -6338,7 +6386,7 @@ argument_list|)
 expr_stmt|;
 name|debugf
 argument_list|(
-literal|"kstack0_phys at 0x%08x - 0x%08x\n"
+literal|"kstack0_phys at 0x%09llx - 0x%09llx\n"
 argument_list|,
 name|kstack0_phys
 argument_list|,
@@ -7111,10 +7159,10 @@ name|pte
 operator|->
 name|rpn
 operator|=
+name|PTE_RPN_FROM_PA
+argument_list|(
 name|pa
-operator|&
-operator|~
-name|PTE_PA_MASK
+argument_list|)
 expr_stmt|;
 name|pte
 operator|->
@@ -11742,6 +11790,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|vm_offset_t
+operator|)
 name|pa
 expr_stmt|;
 return|return;
@@ -12474,7 +12525,10 @@ index|]
 operator|.
 name|virt
 operator|+
-operator|(
+call|(
+name|vm_offset_t
+call|)
+argument_list|(
 name|pa
 operator|-
 name|tlb1
@@ -12483,7 +12537,7 @@ name|i
 index|]
 operator|.
 name|phys
-operator|)
+argument_list|)
 operator|)
 return|;
 block|}
@@ -12559,11 +12613,37 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|va
+operator|%
+name|sz
+operator|!=
+literal|0
+condition|)
+block|{
+do|do
+block|{
+name|sz
+operator|>>=
+literal|2
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|va
+operator|%
+name|sz
+operator|!=
+literal|0
+condition|)
+do|;
+block|}
+if|if
+condition|(
 name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Wiring VA=%x to PA=%x (size=%x), "
+literal|"Wiring VA=%x to PA=%llx (size=%x), "
 literal|"using TLB1[%d]\n"
 argument_list|,
 name|va
@@ -13422,15 +13502,8 @@ parameter_list|)
 block|{
 name|uint32_t
 name|mas0
-decl_stmt|,
-name|mas7
 decl_stmt|;
 comment|//debugf("tlb1_write_entry: s\n");
-comment|/* Clear high order RPN bits */
-name|mas7
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Select entry */
 name|mas0
 operator|=
@@ -13492,14 +13565,54 @@ name|mas3
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("isync");
+switch|switch
+condition|(
+operator|(
+name|mfpvr
+argument_list|()
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xFFFF
+condition|)
+block|{
+case|case
+name|FSL_E500mc
+case|:
+case|case
+name|FSL_E5500
+case|:
+name|mtspr
+argument_list|(
+name|SPR_MAS8
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("isync");
+comment|/* FALLTHROUGH */
+case|case
+name|FSL_E500v2
+case|:
 name|mtspr
 argument_list|(
 name|SPR_MAS7
 argument_list|,
+name|tlb1
+index|[
+name|idx
+index|]
+operator|.
 name|mas7
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("isync; tlbwe; isync; msync");
+asm|__asm __volatile("isync");
+break|break;
+default|default:
+break|break;
+block|}
+asm|__asm __volatile("tlbwe; isync; msync");
 comment|//debugf("tlb1_write_entry: e\n");
 block|}
 end_function
@@ -13780,6 +13893,21 @@ name|MAS3_SW
 operator||
 name|MAS3_SX
 expr_stmt|;
+name|tlb1
+index|[
+name|index
+index|]
+operator|.
+name|mas7
+operator|=
+operator|(
+name|pa
+operator|>>
+literal|32
+operator|)
+operator|&
+name|MAS7_RPN
+expr_stmt|;
 name|tlb1_write_entry
 argument_list|(
 name|index
@@ -14037,7 +14165,7 @@ index|]
 expr_stmt|;
 name|debugf
 argument_list|(
-literal|"%u: %x -> %x, size=%x\n"
+literal|"%u: %llx -> %x, size=%x\n"
 argument_list|,
 name|idx
 argument_list|,
@@ -14112,63 +14240,22 @@ decl_stmt|,
 name|mas2
 decl_stmt|,
 name|mas3
+decl_stmt|,
+name|mas7
 decl_stmt|;
 name|uint32_t
 name|tsz
 decl_stmt|;
-name|u_int
+name|int
 name|i
 decl_stmt|;
-if|if
-condition|(
-name|bootinfo
-operator|!=
-name|NULL
-operator|&&
-name|bootinfo
-index|[
-literal|0
-index|]
-operator|!=
-literal|1
-condition|)
-block|{
-name|tlb1_idx
-operator|=
-operator|*
-operator|(
-operator|(
-name|uint16_t
-operator|*
-operator|)
-operator|(
-name|bootinfo
-operator|+
-literal|8
-operator|)
-operator|)
-expr_stmt|;
-block|}
-else|else
 name|tlb1_idx
 operator|=
 literal|1
 expr_stmt|;
-comment|/* The first entry/entries are used to map the kernel. */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|tlb1_idx
-condition|;
-name|i
-operator|++
-control|)
-block|{
+name|tlb1_get_tlbconf
+argument_list|()
+expr_stmt|;
 name|mas0
 operator|=
 name|MAS0_TLBSEL
@@ -14178,7 +14265,7 @@ argument_list|)
 operator||
 name|MAS0_ESEL
 argument_list|(
-name|i
+literal|0
 argument_list|)
 expr_stmt|;
 name|mtspr
@@ -14196,17 +14283,6 @@ argument_list|(
 name|SPR_MAS1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|mas1
-operator|&
-name|MAS1_VALID
-operator|)
-operator|==
-literal|0
-condition|)
-continue|continue;
 name|mas2
 operator|=
 name|mfspr
@@ -14221,9 +14297,16 @@ argument_list|(
 name|SPR_MAS3
 argument_list|)
 expr_stmt|;
+name|mas7
+operator|=
+name|mfspr
+argument_list|(
+name|SPR_MAS7
+argument_list|)
+expr_stmt|;
 name|tlb1
 index|[
-name|i
+literal|0
 index|]
 operator|.
 name|mas1
@@ -14232,7 +14315,7 @@ name|mas1
 expr_stmt|;
 name|tlb1
 index|[
-name|i
+literal|0
 index|]
 operator|.
 name|mas2
@@ -14244,7 +14327,7 @@ argument_list|)
 expr_stmt|;
 name|tlb1
 index|[
-name|i
+literal|0
 index|]
 operator|.
 name|mas3
@@ -14253,7 +14336,16 @@ name|mas3
 expr_stmt|;
 name|tlb1
 index|[
-name|i
+literal|0
+index|]
+operator|.
+name|mas7
+operator|=
+name|mas7
+expr_stmt|;
+name|tlb1
+index|[
+literal|0
 index|]
 operator|.
 name|virt
@@ -14264,26 +14356,35 @@ name|MAS2_EPN_MASK
 expr_stmt|;
 name|tlb1
 index|[
-name|i
+literal|0
 index|]
 operator|.
 name|phys
 operator|=
+operator|(
+call|(
+name|vm_paddr_t
+call|)
+argument_list|(
+name|mas7
+operator|&
+name|MAS7_RPN
+argument_list|)
+operator|<<
+literal|32
+operator|)
+operator||
+operator|(
 name|mas3
 operator|&
 name|MAS3_RPN
+operator|)
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|==
-literal|0
-condition|)
 name|kernload
 operator|=
 name|tlb1
 index|[
-name|i
+literal|0
 index|]
 operator|.
 name|phys
@@ -14300,7 +14401,7 @@ name|MAS1_TSIZE_SHIFT
 expr_stmt|;
 name|tlb1
 index|[
-name|i
+literal|0
 index|]
 operator|.
 name|size
@@ -14322,12 +14423,11 @@ name|kernsize
 operator|+=
 name|tlb1
 index|[
-name|i
+literal|0
 index|]
 operator|.
 name|size
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|SMP
@@ -14810,7 +14910,12 @@ index|]
 operator|.
 name|mas3
 argument_list|,
-literal|0
+name|tlb1
+index|[
+name|i
+index|]
+operator|.
+name|mas7
 argument_list|)
 expr_stmt|;
 block|}
@@ -14980,6 +15085,25 @@ argument_list|)
 expr_stmt|;
 name|pa_start
 operator|=
+operator|(
+operator|(
+operator|(
+name|vm_paddr_t
+operator|)
+name|tlb1
+index|[
+name|i
+index|]
+operator|.
+name|mas7
+operator|&
+name|MAS7_RPN
+operator|)
+operator|<<
+literal|32
+operator|)
+operator||
+operator|(
 name|tlb1
 index|[
 name|i
@@ -14988,14 +15112,13 @@ operator|.
 name|mas3
 operator|&
 name|MAS3_RPN
+operator|)
 expr_stmt|;
 name|pa_end
 operator|=
 name|pa_start
 operator|+
 name|entry_size
-operator|-
-literal|1
 expr_stmt|;
 if|if
 condition|(

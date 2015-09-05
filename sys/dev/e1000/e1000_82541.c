@@ -537,7 +537,7 @@ define|#
 directive|define
 name|IGP01E1000_AGC_LENGTH_TABLE_SIZE
 define|\
-value|(sizeof(e1000_igp_cable_length_table) / \                  sizeof(e1000_igp_cable_length_table[0]))
+value|(sizeof(e1000_igp_cable_length_table) / \ 		 sizeof(e1000_igp_cable_length_table[0]))
 end_define
 
 begin_comment
@@ -567,8 +567,6 @@ name|phy
 decl_stmt|;
 name|s32
 name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -1433,8 +1431,6 @@ name|ledctl
 decl_stmt|,
 name|ctrl
 decl_stmt|,
-name|icr
-decl_stmt|,
 name|manc
 decl_stmt|;
 name|DEBUGFUNC
@@ -1529,6 +1525,11 @@ name|ctrl
 operator||
 name|E1000_CTRL_PHY_RST
 operator|)
+argument_list|)
+expr_stmt|;
+name|E1000_WRITE_FLUSH
+argument_list|(
+name|hw
 argument_list|)
 expr_stmt|;
 name|msec_delay
@@ -1690,8 +1691,6 @@ literal|0xFFFFFFFF
 argument_list|)
 expr_stmt|;
 comment|/* Clear any pending interrupt events. */
-name|icr
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2597,13 +2596,11 @@ if|if
 condition|(
 name|ret_val
 condition|)
-block|{
 name|DEBUGOUT
 argument_list|(
 literal|"Error configuring flow control\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|out
 label|:
 return|return

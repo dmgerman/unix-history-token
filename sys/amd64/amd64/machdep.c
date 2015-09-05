@@ -7912,10 +7912,6 @@ expr_stmt|;
 comment|/* 	 * Use vt(4) by default for UEFI boot (during the sc(4)/vt(4) 	 * transition). 	 */
 if|if
 condition|(
-name|kmdp
-operator|!=
-name|NULL
-operator|&&
 name|preload_search_info
 argument_list|(
 name|kmdp

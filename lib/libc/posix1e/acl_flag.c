@@ -160,7 +160,7 @@ return|;
 block|}
 operator|*
 name|flagset_d
-operator||=
+operator|=
 literal|0
 expr_stmt|;
 return|return

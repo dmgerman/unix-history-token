@@ -6055,7 +6055,6 @@ condition|)
 return|return
 name|ret_val
 return|;
-block|}
 name|DEBUGOUT1
 argument_list|(
 literal|"M88E1000 PSCR: %X\n"
@@ -6063,6 +6062,7 @@ argument_list|,
 name|phy_data
 argument_list|)
 expr_stmt|;
+block|}
 name|ret_val
 operator|=
 name|phy
@@ -10915,7 +10915,7 @@ name|data
 argument_list|,
 name|FALSE
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -11467,7 +11467,7 @@ name|data
 argument_list|,
 name|FALSE
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -12446,7 +12446,7 @@ name|data
 argument_list|,
 name|FALSE
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 return|;
 block|}
@@ -12896,7 +12896,7 @@ name|data
 argument_list|,
 name|FALSE
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 return|;
 block|}

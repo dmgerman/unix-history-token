@@ -1830,7 +1830,7 @@ begin_function_decl
 name|struct
 name|llentry
 modifier|*
-name|nd6_create
+name|nd6_alloc
 parameter_list|(
 name|struct
 name|in6_addr
@@ -2197,8 +2197,9 @@ name|struct
 name|in6_addr
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
-name|llentry
+name|in6_addr
 modifier|*
 parameter_list|,
 name|uint8_t

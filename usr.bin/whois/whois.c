@@ -2085,7 +2085,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"-T dn,ace -C US-ASCII %s\r\n"
+literal|"-T dn,ace -C ISO-8859-1 %s\r\n"
 argument_list|,
 name|query
 argument_list|)

@@ -33,12 +33,6 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|CPU_SPINWAIT
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|JEMALLOC_TLS_MODEL
 end_undef
 
@@ -83,13 +77,6 @@ define|#
 directive|define
 name|LG_SIZEOF_PTR
 value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_SPINWAIT
-value|__asm__ volatile("pause")
 end_define
 
 begin_define
@@ -158,13 +145,6 @@ define|#
 directive|define
 name|LG_SIZEOF_PTR
 value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_SPINWAIT
-value|__asm__ volatile("pause")
 end_define
 
 begin_define
@@ -339,6 +319,31 @@ name|LG_SIZEOF_INTMAX_T
 value|3
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|CPU_SPINWAIT
+end_undef
+
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|CPU_SPINWAIT
+value|cpu_spinwait()
+end_define
+
 begin_comment
 comment|/* Disable lazy-lock machinery, mangle isthreaded, and adjust its type. */
 end_comment
@@ -395,6 +400,12 @@ begin_undef
 undef|#
 directive|undef
 name|je_posix_memalign
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|je_aligned_alloc
 end_undef
 
 begin_undef
@@ -502,6 +513,13 @@ define|#
 directive|define
 name|je_posix_memalign
 value|__posix_memalign
+end_define
+
+begin_define
+define|#
+directive|define
+name|je_aligned_alloc
+value|__aligned_alloc
 end_define
 
 begin_define
@@ -686,6 +704,16 @@ argument_list|(
 name|__posix_memalign
 argument_list|,
 name|posix_memalign
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__aligned_alloc
+argument_list|,
+name|aligned_alloc
 argument_list|)
 expr_stmt|;
 end_expr_stmt
