@@ -213,6 +213,8 @@ name|phy
 decl_stmt|;
 name|s32
 name|ret_val
+init|=
+name|E1000_SUCCESS
 decl_stmt|;
 name|phy
 operator|->
@@ -1193,6 +1195,8 @@ name|ctrl_ext
 decl_stmt|;
 name|s32
 name|ret_val
+init|=
+name|E1000_SUCCESS
 decl_stmt|;
 name|u16
 name|i
@@ -1443,6 +1447,8 @@ name|ctrl
 decl_stmt|;
 name|s32
 name|ret_val
+init|=
+name|E1000_SUCCESS
 decl_stmt|;
 name|u16
 name|data
@@ -1724,6 +1730,8 @@ parameter_list|)
 block|{
 name|s32
 name|ret_val
+init|=
+name|E1000_SUCCESS
 decl_stmt|;
 name|u16
 name|nvm_data
@@ -1822,6 +1830,8 @@ parameter_list|)
 block|{
 name|s32
 name|ret_val
+init|=
+name|E1000_SUCCESS
 decl_stmt|;
 name|u16
 name|default_page

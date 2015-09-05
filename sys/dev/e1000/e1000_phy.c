@@ -6055,6 +6055,7 @@ condition|)
 return|return
 name|ret_val
 return|;
+block|}
 name|DEBUGOUT1
 argument_list|(
 literal|"M88E1000 PSCR: %X\n"
@@ -6062,7 +6063,6 @@ argument_list|,
 name|phy_data
 argument_list|)
 expr_stmt|;
-block|}
 name|ret_val
 operator|=
 name|phy
