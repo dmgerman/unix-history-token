@@ -62333,8 +62333,6 @@ argument_list|,
 operator|&
 name|mp
 argument_list|,
-name|V_MNTREF
-operator||
 name|V_WAIT
 argument_list|)
 expr_stmt|;
