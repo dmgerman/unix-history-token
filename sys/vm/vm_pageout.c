@@ -4494,7 +4494,7 @@ goto|goto
 name|drop_page
 goto|;
 block|}
-comment|/* 		 * We bump the activation count if the page has been 		 * referenced while in the inactive queue.  This makes 		 * it less likely that the page will be added back to the 		 * inactive queue prematurely again.  Here we check the  		 * page tables (or emulated bits, if any), given the upper  		 * level VM system not knowing anything about existing  		 * references. 		 */
+comment|/* 		 * If the page has been referenced and the object is not dead, 		 * reactivate or requeue the page depending on whether the 		 * object is mapped. 		 */
 if|if
 condition|(
 operator|(
@@ -4560,7 +4560,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * If the upper level VM system knows about any page  		 * references, we reactivate the page or requeue it. 		 */
 if|if
 condition|(
 name|act_delta
@@ -4582,6 +4581,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+comment|/* 				 * Increase the activation count if the page 				 * was referenced while in the inactive queue. 				 * This makes it less likely that the page will 				 * be returned prematurely to the inactive 				 * queue.  				 */
 name|m
 operator|->
 name|act_count
@@ -4590,8 +4590,23 @@ name|act_delta
 operator|+
 name|ACT_ADVANCE
 expr_stmt|;
+goto|goto
+name|drop_page
+goto|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|(
+name|object
+operator|->
+name|flags
+operator|&
+name|OBJ_DEAD
+operator|)
+operator|==
+literal|0
+condition|)
 block|{
 name|vm_pagequeue_lock
 argument_list|(
@@ -4607,10 +4622,10 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 goto|goto
 name|drop_page
 goto|;
+block|}
 block|}
 comment|/* 		 * If the page appears to be clean at the machine-independent 		 * layer, then remove all of its mappings from the pmap in 		 * anticipation of placing it onto the cache queue.  If, 		 * however, any of the page's mappings allow write access, 		 * then the page may still be modified until the last of those 		 * mappings are removed. 		 */
 if|if
@@ -4665,6 +4680,25 @@ argument_list|)
 expr_stmt|;
 operator|--
 name|page_shortage
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|object
+operator|->
+name|flags
+operator|&
+name|OBJ_DEAD
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * Leave dirty pages from dead objects at the front of 			 * the queue.  They are being paged out and freed by 			 * the thread that destroyed the object.  They will 			 * leave the queue shortly after the scan finishes, so  			 * they should be discounted from the inactive count. 			 */
+name|addl_page_shortage
+operator|++
 expr_stmt|;
 block|}
 elseif|else
@@ -4758,36 +4792,15 @@ name|pageout_ok
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* 			 * We don't bother paging objects that are "dead".   			 * Those objects are in a "rundown" state. 			 */
 if|if
 condition|(
 operator|!
 name|pageout_ok
-operator|||
-operator|(
-name|object
-operator|->
-name|flags
-operator|&
-name|OBJ_DEAD
-operator|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|vm_pagequeue_lock
 argument_list|(
 name|pq
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|VM_OBJECT_WUNLOCK
-argument_list|(
-name|object
 argument_list|)
 expr_stmt|;
 name|queues_locked
@@ -4800,7 +4813,7 @@ name|m
 argument_list|)
 expr_stmt|;
 goto|goto
-name|relock_queues
+name|drop_page
 goto|;
 block|}
 name|error
