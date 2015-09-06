@@ -277,6 +277,12 @@ operator|::
 name|string
 name|ModuleUserBuildPath
 block|;
+comment|/// The module/pch container format.
+name|std
+operator|::
+name|string
+name|ModuleFormat
+block|;
 comment|/// \brief Whether we should disable the use of the hash string within the
 comment|/// module cache.
 comment|///
@@ -410,6 +416,11 @@ operator|:
 name|Sysroot
 argument_list|(
 name|_Sysroot
+argument_list|)
+block|,
+name|ModuleFormat
+argument_list|(
+literal|"raw"
 argument_list|)
 block|,
 name|DisableModuleHash

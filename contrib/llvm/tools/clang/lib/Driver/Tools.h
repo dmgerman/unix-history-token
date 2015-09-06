@@ -992,21 +992,11 @@ operator|::
 name|string
 name|getARMTargetCPU
 argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|opt
-operator|::
-name|ArgList
-operator|&
-name|Args
+argument|StringRef CPU
 argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|Triple
-operator|&
-name|Triple
+argument|StringRef Arch
+argument_list|,
+argument|const llvm::Triple&Triple
 argument_list|)
 expr_stmt|;
 specifier|const
@@ -1015,21 +1005,9 @@ operator|::
 name|string
 name|getARMArch
 argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|opt
-operator|::
-name|ArgList
-operator|&
-name|Args
+argument|StringRef Arch
 argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|Triple
-operator|&
-name|Triple
+argument|const llvm::Triple&Triple
 argument_list|)
 expr_stmt|;
 specifier|const
@@ -1037,14 +1015,8 @@ name|char
 modifier|*
 name|getARMCPUForMArch
 argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|opt
-operator|::
-name|ArgList
-operator|&
-name|Args
+name|StringRef
+name|Arch
 argument_list|,
 specifier|const
 name|llvm

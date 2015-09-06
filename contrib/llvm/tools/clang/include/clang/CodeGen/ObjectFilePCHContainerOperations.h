@@ -53,15 +53,25 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/// \brief A PCHContainerOperations implementation that uses LLVM to
+comment|/// A PCHContainerWriter implementation that uses LLVM to
 comment|/// wraps Clang modules inside a COFF, ELF, or Mach-O container.
 name|class
-name|ObjectFilePCHContainerOperations
+name|ObjectFilePCHContainerWriter
 range|:
 name|public
-name|PCHContainerOperations
+name|PCHContainerWriter
 block|{
-comment|/// \brief Return an ASTConsumer that can be chained with a
+name|StringRef
+name|getFormat
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+literal|"obj"
+return|;
+block|}
+comment|/// Return an ASTConsumer that can be chained with a
 comment|/// PCHGenerator that produces a wrapper file format
 comment|/// that also contains full debug info for the module.
 name|std
@@ -92,8 +102,27 @@ argument|std::shared_ptr<PCHBuffer> Buffer
 argument_list|)
 specifier|const
 name|override
-block|;
-comment|/// \brief Initialize an llvm::BitstreamReader with the serialized
+block|; }
+decl_stmt|;
+comment|/// A PCHContainerReader implementation that uses LLVM to
+comment|/// wraps Clang modules inside a COFF, ELF, or Mach-O container.
+name|class
+name|ObjectFilePCHContainerReader
+range|:
+name|public
+name|PCHContainerReader
+block|{
+name|StringRef
+name|getFormat
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+literal|"obj"
+return|;
+block|}
+comment|/// Initialize an llvm::BitstreamReader with the serialized
 comment|/// AST inside the PCH container Buffer.
 name|void
 name|ExtractPCH
@@ -104,7 +133,7 @@ argument|llvm::BitstreamReader&StreamFile
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

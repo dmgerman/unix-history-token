@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/MemoryBuffer.h"
 end_include
 
@@ -73,6 +79,14 @@ name|BitstreamReader
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_expr_stmt
+name|using
+name|llvm
+operator|::
+name|StringRef
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|namespace
@@ -117,20 +131,30 @@ name|Data
 expr_stmt|;
 block|}
 struct|;
-comment|/// \brief This abstract interface provides operations for creating
-comment|/// and unwrapping containers for serialized ASTs (precompiled headers
-comment|/// and clang modules).
+comment|/// This abstract interface provides operations for creating
+comment|/// containers for serialized ASTs (precompiled headers and clang
+comment|/// modules).
 name|class
-name|PCHContainerOperations
+name|PCHContainerWriter
 block|{
 name|public
 label|:
 name|virtual
 operator|~
-name|PCHContainerOperations
+name|PCHContainerWriter
 argument_list|()
+operator|=
+literal|0
 expr_stmt|;
-comment|/// \brief Return an ASTConsumer that can be chained with a
+name|virtual
+name|StringRef
+name|getFormat
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+comment|/// Return an ASTConsumer that can be chained with a
 comment|/// PCHGenerator that produces a wrapper file format containing a
 comment|/// serialized AST bitstream.
 name|virtual
@@ -164,7 +188,33 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|/// \brief Initialize an llvm::BitstreamReader with the serialized AST inside
+block|}
+empty_stmt|;
+comment|/// This abstract interface provides operations for unwrapping
+comment|/// containers for serialized ASTs (precompiled headers and clang
+comment|/// modules).
+name|class
+name|PCHContainerReader
+block|{
+name|public
+label|:
+name|virtual
+operator|~
+name|PCHContainerReader
+argument_list|()
+operator|=
+literal|0
+expr_stmt|;
+comment|/// Equivalent to the format passed to -fmodule-format=
+name|virtual
+name|StringRef
+name|getFormat
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+comment|/// Initialize an llvm::BitstreamReader with the serialized AST inside
 comment|/// the PCH container Buffer.
 name|virtual
 name|void
@@ -187,14 +237,24 @@ literal|0
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|/// \brief Implements a raw pass-through PCH container.
+comment|/// Implements write operations for a raw pass-through PCH container.
 name|class
-name|RawPCHContainerOperations
+name|RawPCHContainerWriter
 range|:
 name|public
-name|PCHContainerOperations
+name|PCHContainerWriter
 block|{
-comment|/// \brief Return an ASTConsumer that can be chained with a
+name|StringRef
+name|getFormat
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+literal|"raw"
+return|;
+block|}
+comment|/// Return an ASTConsumer that can be chained with a
 comment|/// PCHGenerator that writes the module to a flat file.
 name|std
 operator|::
@@ -224,8 +284,26 @@ argument|std::shared_ptr<PCHBuffer> Buffer
 argument_list|)
 specifier|const
 name|override
-block|;
-comment|/// \brief Initialize an llvm::BitstreamReader with Buffer.
+block|; }
+decl_stmt|;
+comment|/// Implements read operations for a raw pass-through PCH container.
+name|class
+name|RawPCHContainerReader
+range|:
+name|public
+name|PCHContainerReader
+block|{
+name|StringRef
+name|getFormat
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+literal|"raw"
+return|;
+block|}
+comment|/// Initialize an llvm::BitstreamReader with Buffer.
 name|void
 name|ExtractPCH
 argument_list|(
@@ -237,6 +315,151 @@ specifier|const
 name|override
 block|; }
 decl_stmt|;
+comment|/// A registry of PCHContainerWriter and -Reader objects for different formats.
+name|class
+name|PCHContainerOperations
+block|{
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PCHContainerWriter
+operator|>>
+name|Writers
+expr_stmt|;
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PCHContainerReader
+operator|>>
+name|Readers
+expr_stmt|;
+name|public
+label|:
+comment|/// Automatically registers a RawPCHContainerWriter and
+comment|/// RawPCHContainerReader.
+name|PCHContainerOperations
+argument_list|()
+expr_stmt|;
+name|void
+name|registerWriter
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PCHContainerWriter
+operator|>
+name|Writer
+argument_list|)
+block|{
+name|Writers
+index|[
+name|Writer
+operator|->
+name|getFormat
+argument_list|()
+index|]
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|Writer
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|registerReader
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PCHContainerReader
+operator|>
+name|Reader
+argument_list|)
+block|{
+name|Readers
+index|[
+name|Reader
+operator|->
+name|getFormat
+argument_list|()
+index|]
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|Reader
+argument_list|)
+expr_stmt|;
+block|}
+specifier|const
+name|PCHContainerWriter
+modifier|*
+name|getWriterOrNull
+parameter_list|(
+name|StringRef
+name|Format
+parameter_list|)
+block|{
+return|return
+name|Writers
+index|[
+name|Format
+index|]
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+specifier|const
+name|PCHContainerReader
+modifier|*
+name|getReaderOrNull
+parameter_list|(
+name|StringRef
+name|Format
+parameter_list|)
+block|{
+return|return
+name|Readers
+index|[
+name|Format
+index|]
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+specifier|const
+name|PCHContainerReader
+modifier|&
+name|getRawReader
+parameter_list|()
+block|{
+return|return
+operator|*
+name|getReaderOrNull
+argument_list|(
+literal|"raw"
+argument_list|)
+return|;
+block|}
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
 

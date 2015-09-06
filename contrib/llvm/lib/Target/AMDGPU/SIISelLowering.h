@@ -320,6 +320,13 @@ argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
 block|;
+name|bool
+name|isLegalFlatAddressingMode
+argument_list|(
+argument|const AddrMode&AM
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|SITargetLowering

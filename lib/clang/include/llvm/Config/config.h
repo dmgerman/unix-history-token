@@ -508,14 +508,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `imagehlp' library (-limagehlp). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBIMAGEHLP */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the `m' library (-lm). */
 end_comment
 
@@ -1693,7 +1685,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_STRING
-value|"3.7.0svn"
+value|"3.7.0"
 end_define
 
 begin_comment
@@ -1745,7 +1737,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.7.0svn"
+value|"LLVM 3.7.0"
 end_define
 
 begin_comment
@@ -1767,7 +1759,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.7.0svn"
+value|"3.7.0"
 end_define
 
 begin_comment

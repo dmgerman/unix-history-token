@@ -327,6 +327,25 @@ argument_list|(
 argument|uint32_t wp_index
 argument_list|)
 block|;
+comment|// MIPS Linux kernel returns a masked address (last 3bits are masked)
+comment|// when a HW watchpoint is hit. However user may not have set a watchpoint
+comment|// on this address. This function emulates the instruction at PC and
+comment|// finds the base address used in the load/store instruction. This gives the
+comment|// exact address used to read/write the variable being watched.
+comment|// For example:
+comment|// 'n' is at 0x120010d00 and 'm' is 0x120010d04. When a watchpoint is set at 'm',
+comment|// then watch exception is generated even when 'n' is read/written. This function
+comment|// returns address of 'n' so that client can check whether a watchpoint is set
+comment|// on this address or not.
+name|virtual
+name|lldb
+operator|::
+name|addr_t
+name|GetWatchpointHitAddress
+argument_list|(
+argument|uint32_t wp_index
+argument_list|)
+block|;
 name|virtual
 name|bool
 name|HardwareSingleStep

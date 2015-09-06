@@ -423,6 +423,8 @@ argument_list|)
 operator|)
 return|;
 block|}
+comment|/// Deprecated in 3.7, will be removed in 3.8. Use createDataLayout() instead.
+comment|///
 comment|/// This method returns a pointer to the DataLayout for the target. It should
 comment|/// be unchanging for every subtarget.
 specifier|const
@@ -434,6 +436,17 @@ specifier|const
 block|{
 return|return
 operator|&
+name|DL
+return|;
+block|}
+comment|/// Create a DataLayout.
+specifier|const
+name|DataLayout
+name|createDataLayout
+argument_list|()
+specifier|const
+block|{
+return|return
 name|DL
 return|;
 block|}

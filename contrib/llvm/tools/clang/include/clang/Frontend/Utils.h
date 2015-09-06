@@ -162,7 +162,7 @@ name|class
 name|LangOptions
 decl_stmt|;
 name|class
-name|PCHContainerOperations
+name|PCHContainerReader
 decl_stmt|;
 name|class
 name|Preprocessor
@@ -226,9 +226,9 @@ modifier|&
 name|PPOpts
 parameter_list|,
 specifier|const
-name|PCHContainerOperations
+name|PCHContainerReader
 modifier|&
-name|PCHContainerOps
+name|PCHContainerRdr
 parameter_list|,
 specifier|const
 name|FrontendOptions

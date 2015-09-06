@@ -396,6 +396,8 @@ argument_list|(
 argument|Thread&thread
 argument_list|,
 argument|lldb::break_id_t watch_id
+argument_list|,
+argument|lldb::addr_t watch_hit_addr = LLDB_INVALID_ADDRESS
 argument_list|)
 expr_stmt|;
 specifier|static

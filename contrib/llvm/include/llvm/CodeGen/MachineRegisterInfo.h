@@ -332,8 +332,21 @@ operator|.
 name|Next
 return|;
 block|}
+comment|/// UsedRegUnits - This is a bit vector that is computed and set by the
+comment|/// register allocator, and must be kept up to date by passes that run after
+comment|/// register allocation (though most don't modify this).  This is used
+comment|/// so that the code generator knows which callee save registers to save and
+comment|/// for other target specific uses.
+comment|/// This vector has bits set for register units that are modified in the
+comment|/// current function. It doesn't include registers clobbered by function
+comment|/// calls with register mask operands.
+name|BitVector
+name|UsedRegUnits
+decl_stmt|;
 comment|/// UsedPhysRegMask - Additional used physregs including aliases.
 comment|/// This bit vector represents all the registers clobbered by function calls.
+comment|/// It can model things that UsedRegUnits can't, such as function calls that
+comment|/// clobber ymm7 but preserve the low half in xmm7.
 name|BitVector
 name|UsedPhysRegMask
 decl_stmt|;
@@ -2415,6 +2428,124 @@ name|PhysReg
 argument_list|)
 decl|const
 decl_stmt|;
+comment|//===--------------------------------------------------------------------===//
+comment|// Physical Register Use Info
+comment|//===--------------------------------------------------------------------===//
+comment|/// isPhysRegUsed - Return true if the specified register is used in this
+comment|/// function. Also check for clobbered aliases and registers clobbered by
+comment|/// function calls with register mask operands.
+comment|///
+comment|/// This only works after register allocation.
+name|bool
+name|isPhysRegUsed
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|UsedPhysRegMask
+operator|.
+name|test
+argument_list|(
+name|Reg
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+for|for
+control|(
+name|MCRegUnitIterator
+name|Units
+argument_list|(
+name|Reg
+argument_list|,
+name|getTargetRegisterInfo
+argument_list|()
+argument_list|)
+init|;
+name|Units
+operator|.
+name|isValid
+argument_list|()
+condition|;
+operator|++
+name|Units
+control|)
+if|if
+condition|(
+name|UsedRegUnits
+operator|.
+name|test
+argument_list|(
+operator|*
+name|Units
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
+comment|/// Mark the specified register unit as used in this function.
+comment|/// This should only be called during and after register allocation.
+name|void
+name|setRegUnitUsed
+parameter_list|(
+name|unsigned
+name|RegUnit
+parameter_list|)
+block|{
+name|UsedRegUnits
+operator|.
+name|set
+argument_list|(
+name|RegUnit
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// setPhysRegUsed - Mark the specified register used in this function.
+comment|/// This should only be called during and after register allocation.
+name|void
+name|setPhysRegUsed
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+block|{
+for|for
+control|(
+name|MCRegUnitIterator
+name|Units
+argument_list|(
+name|Reg
+argument_list|,
+name|getTargetRegisterInfo
+argument_list|()
+argument_list|)
+init|;
+name|Units
+operator|.
+name|isValid
+argument_list|()
+condition|;
+operator|++
+name|Units
+control|)
+name|UsedRegUnits
+operator|.
+name|set
+argument_list|(
+operator|*
+name|Units
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// addPhysRegsUsedFromRegMask - Mark any registers not in RegMask as used.
 comment|/// This corresponds to the bit mask attached to register mask operands.
 name|void
@@ -2431,6 +2562,50 @@ operator|.
 name|setBitsNotInMask
 argument_list|(
 name|RegMask
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// setPhysRegUnused - Mark the specified register unused in this function.
+comment|/// This should only be called during and after register allocation.
+name|void
+name|setPhysRegUnused
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+block|{
+name|UsedPhysRegMask
+operator|.
+name|reset
+argument_list|(
+name|Reg
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|MCRegUnitIterator
+name|Units
+argument_list|(
+name|Reg
+argument_list|,
+name|getTargetRegisterInfo
+argument_list|()
+argument_list|)
+init|;
+name|Units
+operator|.
+name|isValid
+argument_list|()
+condition|;
+operator|++
+name|Units
+control|)
+name|UsedRegUnits
+operator|.
+name|reset
+argument_list|(
+operator|*
+name|Units
 argument_list|)
 expr_stmt|;
 block|}
