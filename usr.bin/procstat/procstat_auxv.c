@@ -751,7 +751,7 @@ name|prefix
 argument_list|,
 literal|"AT_STACKPROT"
 argument_list|,
-literal|"NONEXECUTABLE"
+literal|"EXECUTABLE"
 argument_list|)
 expr_stmt|;
 else|else
@@ -764,7 +764,7 @@ name|prefix
 argument_list|,
 literal|"AT_STACKPROT"
 argument_list|,
-literal|"EXECUTABLE"
+literal|"NONEXECUTABLE"
 argument_list|)
 expr_stmt|;
 break|break;
