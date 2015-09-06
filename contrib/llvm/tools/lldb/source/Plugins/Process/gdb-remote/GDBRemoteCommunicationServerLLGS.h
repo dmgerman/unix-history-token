@@ -85,6 +85,12 @@ directive|include
 file|"lldb/Host/common/NativeProcessProtocol.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Host/MainLoop.h"
+end_include
+
 begin_comment
 comment|// Project includes
 end_comment
@@ -135,6 +141,10 @@ operator|::
 name|PlatformSP
 operator|&
 name|platform_sp
+argument_list|,
+name|MainLoop
+operator|&
+name|mainloop
 argument_list|)
 expr_stmt|;
 name|virtual
@@ -257,6 +267,19 @@ name|process
 argument_list|)
 name|override
 decl_stmt|;
+name|Error
+name|InitializeConnection
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Connection
+operator|>
+operator|&&
+name|connection
+argument_list|)
+decl_stmt|;
 name|protected
 label|:
 name|lldb
@@ -264,10 +287,14 @@ operator|::
 name|PlatformSP
 name|m_platform_sp
 expr_stmt|;
-name|lldb
+name|MainLoop
+modifier|&
+name|m_mainloop
+decl_stmt|;
+name|MainLoop
 operator|::
-name|thread_t
-name|m_async_thread
+name|ReadHandleUP
+name|m_read_handle_up
 expr_stmt|;
 name|lldb
 operator|::
@@ -315,6 +342,11 @@ name|m_saved_registers_map
 expr_stmt|;
 name|uint32_t
 name|m_next_saved_registers_id
+decl_stmt|;
+name|bool
+name|m_handshake_completed
+range|:
+literal|1
 decl_stmt|;
 name|PacketResult
 name|SendONotification
@@ -782,6 +814,10 @@ parameter_list|()
 function_decl|;
 name|void
 name|RegisterPacketHandlers
+parameter_list|()
+function_decl|;
+name|void
+name|DataAvailableCallback
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------

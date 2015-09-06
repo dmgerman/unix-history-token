@@ -190,11 +190,7 @@ comment|// After connecting, do a little handshake with the client to make sure
 comment|// we are at least communicating
 name|bool
 name|HandshakeWithClient
-argument_list|(
-name|Error
-operator|*
-name|error_ptr
-argument_list|)
+argument_list|()
 block|;
 name|protected
 operator|:

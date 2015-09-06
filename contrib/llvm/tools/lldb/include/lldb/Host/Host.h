@@ -998,7 +998,7 @@ end_comment
 begin_expr_stmt
 specifier|static
 specifier|const
-name|lldb_private
+name|lldb
 operator|::
 name|UnixSignalsSP
 operator|&

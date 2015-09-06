@@ -171,12 +171,12 @@ name|public
 operator|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmnMIValueConst
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Methods:
 name|private

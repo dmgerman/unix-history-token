@@ -1624,6 +1624,17 @@ specifier|const
 name|char
 operator|*
 name|expr
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|SBValue
+name|EvaluateExpression
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|expr
 argument_list|,
 specifier|const
 name|SBExpressionOptions

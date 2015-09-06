@@ -288,7 +288,7 @@ name|IDS_LLDBDEBUGGER_ERR_CLIENTNOTREGISTERED
 block|,
 name|IDS_LLDBDEBUGGER_ERR_STOPLISTENER
 block|,
-name|IDS_LLDBDEBUGGER_ERR_BROARDCASTER_NAME
+name|IDS_LLDBDEBUGGER_ERR_BROADCASTER_NAME
 block|,
 name|IDS_LLDBDEBUGGER_WRN_UNKNOWN_EVENT
 block|,
@@ -598,16 +598,18 @@ name|public
 label|:
 name|bool
 name|Initialize
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|Shutdown
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|CMIUtilString
 name|GetString
 argument_list|(
@@ -732,12 +734,12 @@ name|private
 label|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmnResources
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 expr_stmt|;
 comment|// Attributes:
 name|private

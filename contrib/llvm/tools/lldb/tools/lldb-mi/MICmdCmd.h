@@ -197,28 +197,28 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdEnablePrettyPrinting
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -283,28 +283,28 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdSource
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 end_decl_stmt

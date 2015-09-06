@@ -225,14 +225,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|__int64
-name|PointerToInteger_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|__int64
 name|MIint
 typedef|;
@@ -267,14 +259,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
-name|PointerToInteger_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|int
 name|MIint
 typedef|;
@@ -292,18 +276,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|//       typedef     long unsigned int size_t; // size_t already defined
-end_comment
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|PointerToInteger_t
-typedef|;
-end_typedef
 
 begin_typedef
 typedef|typedef
@@ -356,20 +328,6 @@ end_comment
 begin_comment
 comment|// Fundamentals:
 end_comment
-
-begin_typedef
-typedef|typedef
-name|float
-name|MIflt
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|double
-name|MIdbl
-typedef|;
-end_typedef
 
 begin_typedef
 typedef|typedef

@@ -187,16 +187,18 @@ name|public
 label|:
 name|bool
 name|Initialize
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|Shutdown
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|SetDriver
 parameter_list|(
@@ -323,7 +325,6 @@ comment|// Overridden:
 name|public
 label|:
 comment|// From CMIUtilThreadActiveObjBase
-name|virtual
 specifier|const
 name|CMIUtilString
 modifier|&
@@ -332,27 +333,28 @@ argument_list|(
 name|void
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|// Overridden:
 name|protected
 label|:
 comment|// From CMIUtilThreadActiveObjBase
-name|virtual
 name|bool
 name|ThreadRun
-parameter_list|(
+argument_list|(
 name|bool
-modifier|&
+operator|&
 name|vrIsAlive
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|ThreadFinish
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|// Typedefs:
 name|private
 label|:
@@ -553,12 +555,12 @@ name|private
 label|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmnLLDBDebugger
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 expr_stmt|;
 comment|// Attributes:
 name|private

@@ -178,12 +178,12 @@ name|public
 operator|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMIUtilFileStd
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private

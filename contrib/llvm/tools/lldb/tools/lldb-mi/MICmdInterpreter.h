@@ -140,16 +140,18 @@ name|public
 label|:
 name|bool
 name|Initialize
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|Shutdown
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|ValidateIsMi
 parameter_list|(
@@ -255,12 +257,12 @@ name|private
 label|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdInterpreter
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 expr_stmt|;
 comment|// Attributes:
 name|private

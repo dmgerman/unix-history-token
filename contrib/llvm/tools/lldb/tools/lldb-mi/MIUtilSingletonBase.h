@@ -51,8 +51,8 @@ comment|//
 comment|//   // Overridden:
 comment|//   public:
 comment|//       // From MI::ISingleton
-comment|//       virtual bool Initialize( void );
-comment|//       virtual bool Shutdown( void );
+comment|//       bool Initialize(void) override;
+comment|//       bool Shutdown(void) override;
 comment|//   };
 comment|//++ ============================================================================
 comment|// Details: Base class for the singleton pattern.

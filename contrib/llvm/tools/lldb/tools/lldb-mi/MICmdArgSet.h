@@ -110,7 +110,7 @@ comment|//          objects on the heap.
 end_comment
 
 begin_comment
-comment|//          It is assummed the arguments to be parsed are read from left to right in
+comment|//          It is assumed the arguments to be parsed are read from left to right in
 end_comment
 
 begin_comment

@@ -473,6 +473,11 @@ name|uint32_t
 name|file_permissions
 parameter_list|)
 function_decl|;
+name|SBUnixSignals
+name|GetUnixSignals
+argument_list|()
+specifier|const
+expr_stmt|;
 name|protected
 label|:
 name|friend

@@ -215,35 +215,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataEvaluateExpression
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Methods:
 name|private
@@ -366,35 +366,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataDisassemble
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -488,35 +488,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataReadMemoryBytes
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -617,28 +617,28 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataReadMemory
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -703,35 +703,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataListRegisterNames
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Methods:
 name|private
@@ -824,35 +824,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataListRegisterValues
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Methods:
 name|private
@@ -963,28 +963,28 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataListRegisterChanged
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -1049,35 +1049,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataWriteMemoryBytes
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -1169,35 +1169,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataWriteMemory
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -1301,35 +1301,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataInfoLine
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private

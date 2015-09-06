@@ -193,28 +193,28 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdExecRun
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -287,28 +287,28 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdExecContinue
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -381,35 +381,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdExecNext
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -493,35 +493,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdExecStep
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -605,35 +605,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdExecNextInstruction
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -717,35 +717,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdExecStepInstruction
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -829,35 +829,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdExecFinish
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -949,28 +949,28 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdExecInterrupt
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -1043,35 +1043,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdExecArguments
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -1131,28 +1131,28 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdExecAbort
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 end_decl_stmt

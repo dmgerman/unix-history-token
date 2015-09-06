@@ -69,16 +69,11 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
-name|namespace
-name|process_linux
-block|{
 comment|/// Linux specific set of Unix signals.
 name|class
 name|MipsLinuxSignals
 range|:
 name|public
-name|lldb_private
-operator|::
 name|UnixSignals
 block|{
 name|public
@@ -91,21 +86,24 @@ operator|:
 name|void
 name|Reset
 argument_list|()
-block|;     }
+name|override
+block|; }
 decl_stmt|;
-block|}
-comment|// namespace lldb_private
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace process_linux
+comment|// namespace lldb_private
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// liblldb_MipsLinuxSignals_H_
+end_comment
 
 end_unit
 

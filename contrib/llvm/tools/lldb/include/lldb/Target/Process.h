@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/StructuredData.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/UserSettingsController.h"
 end_include
 
@@ -2757,6 +2763,8 @@ operator|&
 name|listener
 argument_list|,
 specifier|const
+name|lldb
+operator|::
 name|UnixSignalsSP
 operator|&
 name|unix_signals_sp
@@ -3419,18 +3427,23 @@ parameter_list|)
 function_decl|;
 name|void
 name|SetUnixSignals
-parameter_list|(
+argument_list|(
 specifier|const
+name|lldb
+operator|::
 name|UnixSignalsSP
-modifier|&
+operator|&
 name|signals_sp
-parameter_list|)
-function_decl|;
-name|UnixSignals
-modifier|&
+argument_list|)
+decl_stmt|;
+specifier|const
+name|lldb
+operator|::
+name|UnixSignalsSP
+operator|&
 name|GetUnixSignals
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 comment|//==================================================================
 comment|// Plug-in Process Control Overrides
 comment|//==================================================================
@@ -4241,6 +4254,50 @@ modifier|&
 name|module_list
 parameter_list|)
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Retrieve the list of shared libraries that are loaded for this process
+comment|///
+comment|/// For certain platforms, the time it takes for the DynamicLoader plugin to
+comment|/// read all of the shared libraries out of memory over a slow communication
+comment|/// channel may be too long.  In that instance, the gdb-remote stub may be
+comment|/// able to retrieve the necessary information about the solibs out of memory
+comment|/// and return a concise summary sufficient for the DynamicLoader plugin.
+comment|///
+comment|/// @param [in] image_list_address
+comment|///     The address where the table of shared libraries is stored in memory,
+comment|///     if that is appropriate for this platform.  Else this may be
+comment|///     passed as LLDB_INVALID_ADDRESS.
+comment|///
+comment|/// @param [in] image_count
+comment|///     The number of shared libraries that are present in this process, if
+comment|///     that is appropriate for this platofrm  Else this may be passed as
+comment|///     LLDB_INVALID_ADDRESS.
+comment|///
+comment|/// @return
+comment|///     A StructureDataSP object which, if non-empty, will contain the
+comment|///     information the DynamicLoader needs to get the initial scan of
+comment|///     solibs resolved.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb_private
+operator|::
+name|StructuredData
+operator|::
+name|ObjectSP
+name|GetLoadedDynamicLibrariesInfos
+argument_list|(
+argument|lldb::addr_t image_list_address
+argument_list|,
+argument|lldb::addr_t image_count
+argument_list|)
+block|{
+return|return
+name|StructuredData
+operator|::
+name|ObjectSP
+argument_list|()
+return|;
+block|}
 name|protected
 label|:
 name|void
@@ -5201,6 +5258,54 @@ name|SetCanJIT
 parameter_list|(
 name|bool
 name|can_jit
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Determines whether executing function calls using the interpreter
+comment|/// is possible for this process.
+comment|///
+comment|/// @return
+comment|///     True if possible; false otherwise.
+comment|//------------------------------------------------------------------
+name|bool
+name|CanInterpretFunctionCalls
+parameter_list|()
+block|{
+return|return
+name|m_can_interpret_function_calls
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Sets whether executing function calls using the interpreter
+comment|/// is possible for this process.
+comment|///
+comment|/// @param[in] can_interpret_function_calls
+comment|///     True if possible; false otherwise.
+comment|//------------------------------------------------------------------
+name|void
+name|SetCanInterpretFunctionCalls
+parameter_list|(
+name|bool
+name|can_interpret_function_calls
+parameter_list|)
+block|{
+name|m_can_interpret_function_calls
+operator|=
+name|can_interpret_function_calls
+expr_stmt|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Sets whether executing code in this process is possible.
+comment|/// This could be either through JIT or interpreting.
+comment|///
+comment|/// @param[in] can_run_code
+comment|///     True if execution of code is possible; false otherwise.
+comment|//------------------------------------------------------------------
+name|void
+name|SetCanRunCode
+parameter_list|(
+name|bool
+name|can_run_code
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -6846,9 +6951,11 @@ operator|::
 name|SystemRuntimeUP
 name|m_system_runtime_ap
 expr_stmt|;
+name|lldb
+operator|::
 name|UnixSignalsSP
 name|m_unix_signals_sp
-decl_stmt|;
+expr_stmt|;
 comment|/// This is the current signal set for this process.
 name|lldb
 operator|::
@@ -6993,6 +7100,10 @@ expr_stmt|;
 name|bool
 name|m_destroy_in_process
 decl_stmt|;
+name|bool
+name|m_can_interpret_function_calls
+decl_stmt|;
+comment|// Some targets, e.g the OSX kernel, don't support the ability to modify the stack.
 enum|enum
 block|{
 name|eCanJITDontKnow

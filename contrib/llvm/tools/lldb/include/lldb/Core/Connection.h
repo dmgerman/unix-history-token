@@ -339,6 +339,31 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Returns the underlying IOObject used by the Connection.
+comment|///
+comment|/// The IOObject can be used to wait for data to become available
+comment|/// on the connection. If the Connection does not use IOObjects (and
+comment|/// hence does not support waiting) this function should return a
+comment|/// null pointer.
+comment|///
+comment|/// @return
+comment|///     The underlying IOObject used for reading.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb
+operator|::
+name|IOObjectSP
+name|GetReadObject
+argument_list|()
+block|{
+return|return
+name|lldb
+operator|::
+name|IOObjectSP
+argument_list|()
+return|;
+block|}
 name|private
 label|:
 comment|//------------------------------------------------------------------

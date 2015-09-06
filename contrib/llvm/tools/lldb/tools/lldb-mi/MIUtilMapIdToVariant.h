@@ -84,7 +84,7 @@ comment|// Details: MI common code utility class. Map type container that hold g
 end_comment
 
 begin_comment
-comment|//          object types (by being wrappin an variant wrapper)
+comment|//          object types (by being a variant wrapper)
 end_comment
 
 begin_comment
@@ -192,14 +192,14 @@ name|public
 operator|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMIUtilMapIdToVariant
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-comment|// Typdefs:
+comment|// Typedefs:
 name|private
 operator|:
 typedef|typedef
@@ -295,11 +295,11 @@ comment|//          vData   - (R) The general data object to be stored of some t
 end_comment
 
 begin_comment
-comment|// Return:  MIstatus::success - Functional succeeded.
+comment|// Return:  MIstatus::success - Function succeeded.
 end_comment
 
 begin_comment
-comment|//          MIstatus::failure - Functional failed.
+comment|//          MIstatus::failure - Function failed.
 end_comment
 
 begin_comment
@@ -452,11 +452,11 @@ comment|//          vrwbFound   - (W) True = data found, false = data not found.
 end_comment
 
 begin_comment
-comment|// Return:  MIstatus::success - Functional succeeded.
+comment|// Return:  MIstatus::success - Function succeeded.
 end_comment
 
 begin_comment
-comment|//          MIstatus::failure - Functional failed.
+comment|//          MIstatus::failure - Function failed.
 end_comment
 
 begin_comment

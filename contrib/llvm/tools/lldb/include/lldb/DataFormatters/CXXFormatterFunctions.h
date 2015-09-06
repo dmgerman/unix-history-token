@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/DataFormatters/VectorType.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Target/ExecutionContext.h"
 end_include
 

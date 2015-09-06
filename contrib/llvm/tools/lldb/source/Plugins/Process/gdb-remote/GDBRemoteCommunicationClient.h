@@ -1178,6 +1178,10 @@ name|GetThreadExtendedInfoSupported
 argument_list|()
 block|;
 name|bool
+name|GetLoadedDynamicLibrariesInfosSupported
+argument_list|()
+block|;
+name|bool
 name|GetModuleInfo
 argument_list|(
 specifier|const
@@ -1347,6 +1351,9 @@ name|m_supports_augmented_libraries_svr4_read
 block|;
 name|LazyBool
 name|m_supports_jThreadExtendedInfo
+block|;
+name|LazyBool
+name|m_supports_jLoadedDynamicLibrariesInfos
 block|;
 name|bool
 name|m_supports_qProcessInfoPID

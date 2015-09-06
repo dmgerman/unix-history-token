@@ -112,7 +112,7 @@ comment|//          The Command Factory creates command objects and passes them 
 end_comment
 
 begin_comment
-comment|//          Command Invoker. The Invoker takes ownersip of any commands created
+comment|//          Command Invoker. The Invoker takes ownership of any commands created
 end_comment
 
 begin_comment

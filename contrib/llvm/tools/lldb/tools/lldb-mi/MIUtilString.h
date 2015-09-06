@@ -106,7 +106,7 @@ name|std
 operator|::
 name|string
 block|{
-comment|// Typdefs:
+comment|// Typedefs:
 name|public
 operator|:
 typedef|typedef

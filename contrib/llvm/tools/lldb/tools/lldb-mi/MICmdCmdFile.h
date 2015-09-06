@@ -116,7 +116,7 @@ comment|//          This command does not follow the MI documentation exactly.
 end_comment
 
 begin_comment
-comment|// Gotchas: This command has additonal flags that were not available in GDB MI.
+comment|// Gotchas: This command has additional flags that were not available in GDB MI.
 end_comment
 
 begin_comment
@@ -167,43 +167,43 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdFileExecAndSymbols
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|GetExitAppOnCommandFailure
 argument_list|(
 argument|void
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Attributes:
 name|private

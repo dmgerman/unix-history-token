@@ -125,6 +125,13 @@ expr_stmt|;
 specifier|const
 name|char
 operator|*
+name|GetDisplayName
+argument_list|()
+specifier|const
+expr_stmt|;
+specifier|const
+name|char
+operator|*
 name|GetMangledName
 argument_list|()
 specifier|const

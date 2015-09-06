@@ -550,7 +550,7 @@ name|ms_eDefaultFormat
 decl_stmt|;
 comment|// overrides "natural" format
 comment|//
-comment|// *** Upate the copy move constructors and assignment operator ***
+comment|// *** Update the copy move constructors and assignment operator ***
 name|varFormat_e
 name|m_eVarFormat
 decl_stmt|;
@@ -574,7 +574,7 @@ decl_stmt|;
 name|CMIUtilString
 name|m_strVarObjParentName
 decl_stmt|;
-comment|// *** Upate the copy move constructors and assignment operator ***
+comment|// *** Update the copy move constructors and assignment operator ***
 block|}
 end_decl_stmt
 
