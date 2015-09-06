@@ -410,7 +410,7 @@ name|std
 operator|::
 name|make_shared
 operator|<
-name|RawPCHContainerOperations
+name|PCHContainerOperations
 operator|>
 operator|(
 operator|)

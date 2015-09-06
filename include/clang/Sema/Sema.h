@@ -2251,10 +2251,6 @@ name|ObjCInterfaceDecl
 modifier|*
 name|NSArrayDecl
 decl_stmt|;
-comment|/// \brief Pointer to NSMutableArray type (NSMutableArray *).
-name|QualType
-name|NSMutableArrayPointer
-decl_stmt|;
 comment|/// \brief The declaration of the arrayWithObjects:count: method.
 name|ObjCMethodDecl
 modifier|*
@@ -2264,22 +2260,6 @@ comment|/// \brief The declaration of the Objective-C NSDictionary class.
 name|ObjCInterfaceDecl
 modifier|*
 name|NSDictionaryDecl
-decl_stmt|;
-comment|/// \brief Pointer to NSMutableDictionary type (NSMutableDictionary *).
-name|QualType
-name|NSMutableDictionaryPointer
-decl_stmt|;
-comment|/// \brief Pointer to NSMutableSet type (NSMutableSet *).
-name|QualType
-name|NSMutableSetPointer
-decl_stmt|;
-comment|/// \brief Pointer to NSCountedSet type (NSCountedSet *).
-name|QualType
-name|NSCountedSetPointer
-decl_stmt|;
-comment|/// \brief Pointer to NSMutableOrderedSet type (NSMutableOrderedSet *).
-name|QualType
-name|NSMutableOrderedSetPointer
 decl_stmt|;
 comment|/// \brief The declaration of the dictionaryWithObjects:forKeys:count: method.
 name|ObjCMethodDecl
@@ -39293,6 +39273,12 @@ name|Loc
 parameter_list|,
 name|bool
 name|IsCompAssign
+parameter_list|,
+name|bool
+name|AllowBothBool
+parameter_list|,
+name|bool
+name|AllowBoolConversion
 parameter_list|)
 function_decl|;
 end_function_decl

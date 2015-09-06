@@ -1118,7 +1118,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-error{{redeclaration of 'redecl4' cannot add 'dllimport' attribute}}
+comment|// expected-warning{{redeclaration of 'redecl4' should not add 'dllimport' attribute}}
 end_comment
 
 begin_comment

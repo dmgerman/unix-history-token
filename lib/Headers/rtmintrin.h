@@ -99,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
-value|__attribute__((__always_inline__, __nodebug__, __target__("rtm")))
+value|__attribute__((__always_inline__, __nodebug__))
 end_define
 
 begin_function

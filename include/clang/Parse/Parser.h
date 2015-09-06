@@ -338,20 +338,21 @@ name|IdentifierInfo
 operator|*
 name|Ident_super
 block|;
-comment|/// Ident_vector, Ident_pixel, Ident_bool - cached IdentifierInfo's
-comment|/// for "vector", "pixel", and "bool" fast comparison.  Only present
-comment|/// if AltiVec enabled.
+comment|/// Ident_vector, Ident_bool - cached IdentifierInfos for "vector" and
+comment|/// "bool" fast comparison.  Only present if AltiVec or ZVector are enabled.
 name|IdentifierInfo
 operator|*
 name|Ident_vector
 block|;
 name|IdentifierInfo
 operator|*
-name|Ident_pixel
+name|Ident_bool
 block|;
+comment|/// Ident_pixel - cached IdentifierInfos for "pixel" fast comparison.
+comment|/// Only present if AltiVec enabled.
 name|IdentifierInfo
 operator|*
-name|Ident_bool
+name|Ident_pixel
 block|;
 comment|/// Objective-C contextual keywords.
 name|mutable
@@ -2065,8 +2066,18 @@ name|getLangOpts
 argument_list|()
 operator|.
 name|AltiVec
-operator|||
-operator|(
+operator|&&
+operator|!
+name|getLangOpts
+argument_list|()
+operator|.
+name|ZVector
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
 name|Tok
 operator|.
 name|getIdentifierInfo
@@ -2079,14 +2090,21 @@ operator|.
 name|getIdentifierInfo
 argument_list|()
 operator|!=
-name|Ident_pixel
+name|Ident_bool
 operator|&&
+operator|(
+operator|!
+name|getLangOpts
+argument_list|()
+operator|.
+name|AltiVec
+operator|||
 name|Tok
 operator|.
 name|getIdentifierInfo
 argument_list|()
 operator|!=
-name|Ident_bool
+name|Ident_pixel
 operator|)
 condition|)
 return|return
@@ -2116,11 +2134,19 @@ parameter_list|()
 block|{
 if|if
 condition|(
+operator|(
 operator|!
 name|getLangOpts
 argument_list|()
 operator|.
 name|AltiVec
+operator|&&
+operator|!
+name|getLangOpts
+argument_list|()
+operator|.
+name|ZVector
+operator|)
 operator|||
 name|Tok
 operator|.

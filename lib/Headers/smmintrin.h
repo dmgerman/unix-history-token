@@ -15,6 +15,23 @@ directive|define
 name|_SMMINTRIN_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__SSE4_1__
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"SSE4.1 instruction set not enabled"
+end_error
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -29,7 +46,7 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
-value|__attribute__((__always_inline__, __nodebug__, __target__("sse4.1")))
+value|__attribute__((__always_inline__, __nodebug__))
 end_define
 
 begin_comment
@@ -1623,25 +1640,14 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handle the sse4.2 definitions here. */
-end_comment
-
-begin_comment
 comment|/* These definitions are normally in nmmintrin.h, but gcc puts them in here    so we'll do the same.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|__DEFAULT_FN_ATTRS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|__DEFAULT_FN_ATTRS
-value|__attribute__((__always_inline__, __nodebug__, __target__("sse4.2")))
-end_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__SSE4_2__
+end_ifdef
 
 begin_comment
 comment|/* These specify the type of data that we're comparing.  */
@@ -2212,6 +2218,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __SSE4_2__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __SSE4_1__ */
+end_comment
 
 begin_endif
 endif|#

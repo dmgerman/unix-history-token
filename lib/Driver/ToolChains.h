@@ -123,7 +123,7 @@ range|:
 name|public
 name|ToolChain
 block|{
-name|protected
+name|public
 operator|:
 comment|/// \brief Struct to store and manipulate GCC versions.
 comment|///
@@ -542,6 +542,8 @@ argument|bool NeedsBiarchSuffix = false
 argument_list|)
 block|;   }
 block|;
+name|protected
+operator|:
 name|GCCInstallationDetector
 name|GCCInstallation
 block|;
@@ -2124,6 +2126,10 @@ operator|::
 name|Compiler
 operator|>
 name|Compiler
+block|;
+name|void
+name|findGccLibDir
+argument_list|()
 block|; }
 decl_stmt|;
 name|class

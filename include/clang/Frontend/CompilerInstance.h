@@ -584,7 +584,7 @@ operator|:
 name|explicit
 name|CompilerInstance
 argument_list|(
-argument|std::shared_ptr<PCHContainerOperations> PCHContainerOps =           std::make_shared<RawPCHContainerOperations>()
+argument|std::shared_ptr<PCHContainerOperations> PCHContainerOps =           std::make_shared<PCHContainerOperations>()
 argument_list|,
 argument|bool BuildingModule = false
 argument_list|)
@@ -1541,6 +1541,144 @@ return|return
 name|ThePCHContainerOperations
 return|;
 block|}
+comment|/// Return the appropriate PCHContainerWriter depending on the
+comment|/// current CodeGenOptions.
+specifier|const
+name|PCHContainerWriter
+operator|&
+name|getPCHContainerWriter
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Invocation
+operator|&&
+literal|"cannot determine module format without invocation"
+argument_list|)
+block|;
+name|StringRef
+name|Format
+operator|=
+name|getHeaderSearchOpts
+argument_list|()
+operator|.
+name|ModuleFormat
+block|;
+name|auto
+operator|*
+name|Writer
+operator|=
+name|ThePCHContainerOperations
+operator|->
+name|getWriterOrNull
+argument_list|(
+name|Format
+argument_list|)
+block|;
+if|if
+condition|(
+operator|!
+name|Writer
+condition|)
+block|{
+if|if
+condition|(
+name|Diagnostics
+condition|)
+name|Diagnostics
+operator|->
+name|Report
+argument_list|(
+name|diag
+operator|::
+name|err_module_format_unhandled
+argument_list|)
+operator|<<
+name|Format
+expr_stmt|;
+name|llvm
+operator|::
+name|report_fatal_error
+argument_list|(
+literal|"unknown module format"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|*
+name|Writer
+return|;
+block|}
+comment|/// Return the appropriate PCHContainerReader depending on the
+comment|/// current CodeGenOptions.
+specifier|const
+name|PCHContainerReader
+operator|&
+name|getPCHContainerReader
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Invocation
+operator|&&
+literal|"cannot determine module format without invocation"
+argument_list|)
+block|;
+name|StringRef
+name|Format
+operator|=
+name|getHeaderSearchOpts
+argument_list|()
+operator|.
+name|ModuleFormat
+block|;
+name|auto
+operator|*
+name|Reader
+operator|=
+name|ThePCHContainerOperations
+operator|->
+name|getReaderOrNull
+argument_list|(
+name|Format
+argument_list|)
+block|;
+if|if
+condition|(
+operator|!
+name|Reader
+condition|)
+block|{
+if|if
+condition|(
+name|Diagnostics
+condition|)
+name|Diagnostics
+operator|->
+name|Report
+argument_list|(
+name|diag
+operator|::
+name|err_module_format_unhandled
+argument_list|)
+operator|<<
+name|Format
+expr_stmt|;
+name|llvm
+operator|::
+name|report_fatal_error
+argument_list|(
+literal|"unknown module format"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|*
+name|Reader
+return|;
+block|}
 comment|/// }
 comment|/// @name Code Completion
 comment|/// {
@@ -1771,7 +1909,7 @@ argument|Preprocessor&PP
 argument_list|,
 argument|ASTContext&Context
 argument_list|,
-argument|const PCHContainerOperations&PCHContainerOps
+argument|const PCHContainerReader&PCHContainerRdr
 argument_list|,
 argument|void *DeserializationListener
 argument_list|,

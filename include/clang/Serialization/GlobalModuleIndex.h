@@ -507,9 +507,9 @@ modifier|&
 name|FileMgr
 parameter_list|,
 specifier|const
-name|PCHContainerOperations
+name|PCHContainerReader
 modifier|&
-name|PCHContainerOps
+name|PCHContainerRdr
 parameter_list|,
 name|StringRef
 name|Path

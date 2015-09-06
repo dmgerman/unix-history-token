@@ -41,5 +41,37 @@ comment|// expected-error {{expected an OpenMP directive}}
 block|}
 end_function
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|S
+block|{
+pragma|#
+directive|pragma
+name|omp
+name|parallel
+name|for
+name|private
+name|(
+name|j
+name|)
+name|schedule
+name|(
+name|static
+name|)
+name|if
+name|(
+name|tree1
+name|->
+name|totleaf
+name|>
+name|1024
+name|)
+comment|// expected-error {{unexpected OpenMP directive '#pragma omp parallel for'}}
+block|}
+name|St
+typedef|;
+end_typedef
+
 end_unit
 

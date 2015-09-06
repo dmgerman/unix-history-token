@@ -267,5 +267,39 @@ comment|// expected-error {{use of undeclared identifier 'errij'}}
 block|}
 end_function
 
+begin_function_decl
+specifier|extern
+name|long
+name|afunction
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-note {{'afunction' declared here}}
+end_comment
+
+begin_function
+name|void
+name|fn2
+parameter_list|()
+block|{
+name|f
+argument_list|(
+name|THIS_IS_AN_ERROR
+argument_list|,
+comment|// expected-error {{use of undeclared identifier 'THIS_IS_AN_ERROR'}}
+name|afunction
+argument_list|(
+name|afunction_
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{use of undeclared identifier 'afunction_'; did you mean 'afunction'?}}
+block|}
+end_function
+
 end_unit
 

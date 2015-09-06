@@ -6975,5 +6975,41 @@ begin_comment
 comment|// CHECK_SYSTEMZ_HTM: #define __HTM__ 1
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fzvector -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target s390x-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SYSTEMZ_ZVECTOR
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mzvector -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target s390x-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SYSTEMZ_ZVECTOR
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK_SYSTEMZ_ZVECTOR: #define __VEC__ 10301
+end_comment
+
 end_unit
 

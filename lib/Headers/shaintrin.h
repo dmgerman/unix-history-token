@@ -32,6 +32,27 @@ directive|define
 name|__SHAINTRIN_H
 end_define
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__SHA__
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"SHA instructions not enabled"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Define the default attributes for the functions in this file. */
 end_comment
@@ -40,7 +61,7 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
-value|__attribute__((__always_inline__, __nodebug__, __target__("sha")))
+value|__attribute__((__always_inline__, __nodebug__))
 end_define
 
 begin_define

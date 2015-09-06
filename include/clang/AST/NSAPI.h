@@ -69,6 +69,9 @@ name|class
 name|ASTContext
 decl_stmt|;
 name|class
+name|ObjCInterfaceDecl
+decl_stmt|;
+name|class
 name|QualType
 decl_stmt|;
 name|class
@@ -117,8 +120,6 @@ name|ClassId_NSNumber
 block|,
 name|ClassId_NSMutableSet
 block|,
-name|ClassId_NSCountedSet
-block|,
 name|ClassId_NSMutableOrderedSet
 block|,
 name|ClassId_NSValue
@@ -129,7 +130,7 @@ specifier|const
 name|unsigned
 name|NumClassIds
 init|=
-literal|11
+literal|10
 decl_stmt|;
 enum|enum
 name|NSStringMethodKind
@@ -642,6 +643,19 @@ name|isMacroDefined
 argument_list|(
 name|StringRef
 name|Id
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Returns \c true if \p InterfaceDecl is subclass of \p NSClassKind
+name|bool
+name|isSubclassOfNSClass
+argument_list|(
+name|ObjCInterfaceDecl
+operator|*
+name|InterfaceDecl
+argument_list|,
+name|NSClassIdKindKind
+name|NSClassKind
 argument_list|)
 decl|const
 decl_stmt|;

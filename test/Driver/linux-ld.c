@@ -2480,6 +2480,34 @@ comment|// RUN: %clang %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
+comment|// RUN:     --target=arm-linux-gnueabi -mfloat-abi=hard \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ARM-ABIHF %s
+end_comment
+
+begin_comment
+comment|// CHECK-ARM-ABIHF: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-ARM-ABIHF: "-m" "armelf_linux_eabi"
+end_comment
+
+begin_comment
+comment|// CHECK-ARM-ABIHF: "-dynamic-linker" "{{.*}}/lib/ld-linux-armhf.so.3"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
 comment|// RUN:     --target=arm-linux-gnueabihf \
 end_comment
 

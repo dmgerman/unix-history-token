@@ -29,6 +29,27 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__F16C__
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"F16C instruction is not enabled"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __F16C__ */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__F16CINTRIN_H
 end_ifndef
 
@@ -66,7 +87,7 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
-value|__attribute__((__always_inline__, __nodebug__, __target__("f16c")))
+value|__attribute__((__always_inline__, __nodebug__))
 end_define
 
 begin_define

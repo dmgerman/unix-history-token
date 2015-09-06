@@ -1224,9 +1224,9 @@ modifier|&
 name|FileMgr
 decl_stmt|;
 specifier|const
-name|PCHContainerOperations
+name|PCHContainerReader
 modifier|&
-name|PCHContainerOps
+name|PCHContainerRdr
 decl_stmt|;
 name|DiagnosticsEngine
 modifier|&
@@ -4282,7 +4282,7 @@ argument|Preprocessor&PP
 argument_list|,
 argument|ASTContext&Context
 argument_list|,
-argument|const PCHContainerOperations&PCHContainerOps
+argument|const PCHContainerReader&PCHContainerRdr
 argument_list|,
 argument|StringRef isysroot =
 literal|""
@@ -5090,9 +5090,9 @@ operator|&
 name|FileMgr
 argument_list|,
 specifier|const
-name|PCHContainerOperations
+name|PCHContainerReader
 operator|&
-name|PCHContainerOps
+name|PCHContainerRdr
 argument_list|,
 name|DiagnosticsEngine
 operator|&
@@ -5126,9 +5126,9 @@ modifier|&
 name|FileMgr
 parameter_list|,
 specifier|const
-name|PCHContainerOperations
+name|PCHContainerReader
 modifier|&
-name|PCHContainerOps
+name|PCHContainerRdr
 parameter_list|,
 name|ASTReaderListener
 modifier|&
@@ -5158,9 +5158,9 @@ operator|&
 name|FileMgr
 argument_list|,
 specifier|const
-name|PCHContainerOperations
+name|PCHContainerReader
 operator|&
-name|PCHContainerOps
+name|PCHContainerRdr
 argument_list|,
 specifier|const
 name|LangOptions

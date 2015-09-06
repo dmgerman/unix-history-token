@@ -257,6 +257,9 @@ name|class
 name|PCHContainerOperations
 decl_stmt|;
 name|class
+name|PCHContainerReader
+decl_stmt|;
+name|class
 name|SourceManager
 decl_stmt|;
 name|class
@@ -3163,7 +3166,7 @@ name|LoadFromASTFile
 argument_list|(
 argument|const std::string&Filename
 argument_list|,
-argument|std::shared_ptr<PCHContainerOperations> PCHContainerOps
+argument|const PCHContainerReader&PCHContainerRdr
 argument_list|,
 argument|IntrusiveRefCntPtr<DiagnosticsEngine> Diags
 argument_list|,

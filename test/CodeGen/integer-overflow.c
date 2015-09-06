@@ -131,6 +131,18 @@ comment|// CATCH_UB: add i8 {{.*}}, 1
 operator|++
 name|PR9350
 expr_stmt|;
+comment|// PR24256: don't instrument __builtin_frame_address.
+name|__builtin_frame_address
+argument_list|(
+literal|0
+operator|+
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// DEFAULT:  call i8* @llvm.frameaddress(i32 0)
+comment|// WRAPV:    call i8* @llvm.frameaddress(i32 0)
+comment|// TRAPV:    call i8* @llvm.frameaddress(i32 0)
+comment|// CATCH_UB: call i8* @llvm.frameaddress(i32 0)
 block|}
 end_function
 

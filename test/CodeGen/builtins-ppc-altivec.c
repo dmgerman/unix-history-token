@@ -8867,7 +8867,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
@@ -8880,7 +8888,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
@@ -8893,7 +8909,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
@@ -8906,7 +8930,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
@@ -8919,9 +8951,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
 comment|// CHECK: [[T1:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
 comment|// CHECK: [[T2:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
 comment|// CHECK: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> [[T1]],<4 x i32> [[T2]],<16 x i8>
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: xor<16 x i8>
 comment|// CHECK-LE: [[T1:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
 comment|// CHECK-LE: [[T2:%.+]] = bitcast<8 x i16> {{.+}} to<4 x i32>
@@ -8937,7 +8977,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
@@ -8950,7 +8998,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
@@ -8963,7 +9019,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbi
 operator|=
@@ -8976,7 +9040,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
 comment|// CHECK: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{.+}},<4 x i32> {{.+}},<16 x i8>
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: xor<16 x i8>
 comment|// CHECK-LE: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{.+}},<4 x i32> {{.+}},<16 x i8>
 name|res_vf
@@ -8990,7 +9062,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vsc
 operator|=
@@ -9003,7 +9083,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
@@ -9016,7 +9104,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
@@ -9029,7 +9125,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
@@ -9042,7 +9146,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vp
 operator|=
@@ -9055,7 +9167,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
@@ -9068,7 +9188,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
@@ -9081,7 +9209,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vf
 operator|=
@@ -9094,7 +9230,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 comment|/* vec_sll */
 name|res_vsc

@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple le32-unknown-nacl %s -fsyntax-only -verify
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple aarch64 %s -fsyntax-only -verify
+end_comment
+
 begin_decl_stmt
 name|void
 name|__attribute__

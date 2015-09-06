@@ -35,7 +35,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: palignr
+comment|// CHECK: palignr $15, %xmm1, %xmm0
 end_comment
 
 begin_function
@@ -99,7 +99,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: psrldq
+comment|// CHECK: psrldq $1, %xmm0
 end_comment
 
 begin_function
