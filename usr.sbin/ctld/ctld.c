@@ -9688,26 +9688,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|newlun
-operator|->
-name|l_size
-operator|!=
-name|oldlun
-operator|->
-name|l_size
-operator|||
-name|newlun
-operator|->
-name|l_size
-operator|==
-literal|0
-condition|)
-block|{
 name|log_debugx
 argument_list|(
-literal|"resizing lun \"%s\", CTL lun %d"
+literal|"modifying lun \"%s\", CTL lun %d"
 argument_list|,
 name|newlun
 operator|->
@@ -9720,7 +9703,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kernel_lun_resize
+name|kernel_lun_modify
 argument_list|(
 name|newlun
 argument_list|)
@@ -9735,7 +9718,7 @@ block|{
 name|log_warnx
 argument_list|(
 literal|"failed to "
-literal|"resize lun \"%s\", CTL lun %d"
+literal|"modify lun \"%s\", CTL lun %d"
 argument_list|,
 name|newlun
 operator|->
@@ -9749,7 +9732,6 @@ expr_stmt|;
 name|cumulated_error
 operator|++
 expr_stmt|;
-block|}
 block|}
 continue|continue;
 block|}

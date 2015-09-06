@@ -807,6 +807,25 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ctl_update_opts
+parameter_list|(
+name|ctl_options_t
+modifier|*
+name|opts
+parameter_list|,
+name|int
+name|num_args
+parameter_list|,
+name|struct
+name|ctl_be_arg
+modifier|*
+name|args
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ctl_free_opts
 parameter_list|(
 name|ctl_options_t
