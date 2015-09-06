@@ -784,7 +784,7 @@ case|:
 operator|*
 name|prio
 operator|=
-name|RTP_PRIO_MAX
+name|P1B_PRIO_MAX
 expr_stmt|;
 break|break;
 case|case
