@@ -162,11 +162,11 @@ comment|//          result records. Information/data is set by one or many comma
 end_comment
 
 begin_comment
-comment|//          retrieved by the same or other sebsequent commands.
+comment|//          retrieved by the same or other subsequent commands.
 end_comment
 
 begin_comment
-comment|//          It primarily to hold LLDB type objects.
+comment|//          It primarily holds LLDB type objects.
 end_comment
 
 begin_comment
@@ -475,16 +475,18 @@ name|public
 label|:
 name|bool
 name|Initialize
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|Shutdown
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|// Variant type data which can be assigned and retrieved across all command instances
 name|template
 operator|<
@@ -979,12 +981,12 @@ name|private
 label|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmnLLDBDebugSessionInfo
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 expr_stmt|;
 comment|// Attributes:
 name|private

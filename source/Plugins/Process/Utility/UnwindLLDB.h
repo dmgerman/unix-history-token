@@ -196,6 +196,11 @@ operator|.
 name|clear
 argument_list|()
 block|;
+name|m_candidate_frame
+operator|.
+name|reset
+argument_list|()
+block|;
 name|m_unwind_complete
 operator|=
 name|false
@@ -366,6 +371,9 @@ name|CursorSP
 operator|>
 name|m_frames
 expr_stmt|;
+name|CursorSP
+name|m_candidate_frame
+decl_stmt|;
 name|bool
 name|m_unwind_complete
 decl_stmt|;
@@ -380,6 +388,14 @@ name|ConstString
 operator|>
 name|m_user_supplied_trap_handler_functions
 expr_stmt|;
+name|CursorSP
+name|GetOneMoreFrame
+parameter_list|(
+name|ABI
+modifier|*
+name|abi
+parameter_list|)
+function_decl|;
 name|bool
 name|AddOneMoreFrame
 parameter_list|(

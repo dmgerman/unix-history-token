@@ -64,7 +64,7 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details: MI derived class from LLDB SBBroardcaster API.
+comment|// Details: MI derived class from LLDB SBBroadcaster API.
 end_comment
 
 begin_comment
@@ -136,16 +136,18 @@ name|public
 label|:
 name|bool
 name|Initialize
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|Shutdown
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|// Methods:
 name|private
 label|:
@@ -177,12 +179,12 @@ name|private
 label|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmnLLDBBroadcaster
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 expr_stmt|;
 block|}
 end_decl_stmt

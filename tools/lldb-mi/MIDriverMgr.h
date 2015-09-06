@@ -134,7 +134,7 @@ comment|//          MI code base. It is also the first thing to interpret the co
 end_comment
 
 begin_comment
-comment|//          line arguments passed to the executeable. Bases on options it
+comment|//          line arguments passed to the executable. Bases on options it
 end_comment
 
 begin_comment
@@ -351,16 +351,18 @@ label|:
 comment|// MI system
 name|bool
 name|Initialize
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|Shutdown
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|//
 name|CMIUtilString
 name|GetAppVersion
@@ -597,12 +599,12 @@ name|private
 label|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMIDriverMgr
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 expr_stmt|;
 comment|// Attributes:
 name|private

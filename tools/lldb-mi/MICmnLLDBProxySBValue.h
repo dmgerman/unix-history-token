@@ -58,7 +58,7 @@ file|"MIDataTypes.h"
 end_include
 
 begin_comment
-comment|// Declerations:
+comment|// Declarations:
 end_comment
 
 begin_decl_stmt
@@ -76,7 +76,7 @@ comment|// Details: MI proxy wrapper class to lldb::SBValue. The class provides 
 end_comment
 
 begin_comment
-comment|//          to assist in the use of SBValue's parculiar function usage.
+comment|//          to assist in the use of SBValue's particular function usage.
 end_comment
 
 begin_comment

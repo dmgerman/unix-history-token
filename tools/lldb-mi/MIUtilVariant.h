@@ -397,28 +397,28 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CDataObjectBase
-name|virtual
 operator|~
 name|CDataObject
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|CDataObjectBase
 operator|*
 name|CreateCopyOfSelf
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|GetIsDerivedClass
 argument_list|(
 argument|void
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Overrideable:
 name|private
@@ -437,12 +437,12 @@ comment|// Overridden:
 name|private
 operator|:
 comment|// From CDataObjectBase
-name|virtual
 name|void
 name|Destroy
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private

@@ -201,6 +201,14 @@ modifier|&
 name|packet
 parameter_list|)
 function_decl|;
+name|PacketResult
+name|Handle_jSignalsInfo
+parameter_list|(
+name|StringExtractorGDBRemote
+modifier|&
+name|packet
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|bool

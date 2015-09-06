@@ -77,6 +77,12 @@ directive|include
 file|"../../Process/gdb-remote/GDBRemoteCommunicationClient.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"Plugins/Process/Utility/GDBRemoteSignals.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -516,6 +522,15 @@ name|CalculateTrapHandlerSymbolNames
 argument_list|()
 name|override
 block|;
+specifier|const
+name|lldb
+operator|::
+name|UnixSignalsSP
+operator|&
+name|GetRemoteUnixSignals
+argument_list|()
+name|override
+block|;
 name|protected
 operator|:
 name|process_gdb_remote
@@ -538,6 +553,11 @@ name|std
 operator|::
 name|string
 name|m_platform_hostname
+block|;
+name|lldb
+operator|::
+name|UnixSignalsSP
+name|m_remote_signals_sp
 block|;
 comment|// Launch the lldb-gdbserver on the remote host and return the port it is listening on or 0 on
 comment|// failure. Subclasses should override this method if they want to do extra actions before or

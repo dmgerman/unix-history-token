@@ -68,7 +68,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"Utility/StringExtractor.h"
+file|"lldb/Utility/StringExtractor.h"
 end_include
 
 begin_decl_stmt
@@ -272,6 +272,8 @@ block|,
 name|eServerPacketType_qWatchpointSupportInfoSupported
 block|,
 name|eServerPacketType_qXfer_auxv_read
+block|,
+name|eServerPacketType_jSignalsInfo
 block|,
 name|eServerPacketType_vAttach
 block|,

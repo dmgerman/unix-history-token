@@ -119,7 +119,7 @@ name|Listener
 operator|&
 name|listener
 argument_list|,
-name|lldb_private
+name|lldb
 operator|::
 name|UnixSignalsSP
 operator|&

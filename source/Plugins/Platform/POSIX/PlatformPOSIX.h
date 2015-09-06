@@ -287,6 +287,15 @@ name|GetRemoteSystemArchitecture
 argument_list|()
 name|override
 block|;
+specifier|const
+name|lldb
+operator|::
+name|UnixSignalsSP
+operator|&
+name|GetRemoteUnixSignals
+argument_list|()
+name|override
+block|;
 name|size_t
 name|GetEnvironment
 argument_list|(

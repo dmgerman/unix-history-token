@@ -299,11 +299,32 @@ comment|///     A const reference to the demangled name string object.
 comment|//----------------------------------------------------------------------
 specifier|const
 name|ConstString
-operator|&
+modifier|&
 name|GetDemangledName
-argument_list|()
-specifier|const
-expr_stmt|;
+argument_list|(
+name|lldb
+operator|::
+name|LanguageType
+name|language
+argument_list|)
+decl|const
+decl_stmt|;
+comment|//----------------------------------------------------------------------
+comment|/// Display demangled name get accessor.
+comment|///
+comment|/// @return
+comment|///     A const reference to the display demangled name string object.
+comment|//----------------------------------------------------------------------
+name|ConstString
+name|GetDisplayDemangledName
+argument_list|(
+name|lldb
+operator|::
+name|LanguageType
+name|language
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|SetDemangledName
 parameter_list|(
@@ -375,11 +396,14 @@ comment|///     A const reference to the preferred name string object if this
 comment|///     object has a valid name of that kind, else a const reference to the
 comment|///     other name is returned.
 comment|//----------------------------------------------------------------------
-specifier|const
 name|ConstString
-modifier|&
 name|GetName
 argument_list|(
+name|lldb
+operator|::
+name|LanguageType
+name|language
+argument_list|,
 name|NamePreference
 name|preference
 operator|=
@@ -403,6 +427,11 @@ specifier|const
 name|ConstString
 operator|&
 name|name
+argument_list|,
+name|lldb
+operator|::
+name|LanguageType
+name|language
 argument_list|)
 decl|const
 block|{
@@ -417,7 +446,9 @@ name|true
 return|;
 return|return
 name|GetDemangledName
-argument_list|()
+argument_list|(
+name|language
+argument_list|)
 operator|==
 name|name
 return|;
@@ -429,6 +460,11 @@ specifier|const
 name|RegularExpression
 operator|&
 name|regex
+argument_list|,
+name|lldb
+operator|::
+name|LanguageType
+name|language
 argument_list|)
 decl|const
 decl_stmt|;

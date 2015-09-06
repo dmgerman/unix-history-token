@@ -163,22 +163,20 @@ name|public
 operator|:
 comment|// From CMICmdArgValBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdArgValString
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmdArgSet::IArg
-name|virtual
 name|bool
 name|Validate
 argument_list|(
-name|CMICmdArgContext
-operator|&
-name|vrwArgContext
+argument|CMICmdArgContext&vrwArgContext
 argument_list|)
+name|override
 block|;
 comment|// Methods:
 name|private

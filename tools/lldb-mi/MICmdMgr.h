@@ -116,7 +116,7 @@ comment|//          production and the running of commands.
 end_comment
 
 begin_comment
-comment|//          Command Invoker, Command Factory and Command Monitor while independant
+comment|//          Command Invoker, Command Factory and Command Monitor while independent
 end_comment
 
 begin_comment
@@ -172,16 +172,18 @@ name|public
 label|:
 name|bool
 name|Initialize
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|Shutdown
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|CmdInterpret
 parameter_list|(
@@ -270,12 +272,12 @@ name|public
 label|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdMgr
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 expr_stmt|;
 comment|// Attributes:
 name|private

@@ -230,6 +230,13 @@ modifier|*
 name|GetFunctionName
 parameter_list|()
 function_decl|;
+comment|// Get an appropriate function name for this frame that is suitable for display to a user
+specifier|const
+name|char
+modifier|*
+name|GetDisplayFunctionName
+parameter_list|()
+function_decl|;
 specifier|const
 name|char
 operator|*

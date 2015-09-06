@@ -365,12 +365,12 @@ comment|/* dtor */
 end_comment
 
 begin_expr_stmt
-name|virtual
 operator|~
 name|CMICmnMIOutOfBandRecord
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 expr_stmt|;
 end_expr_stmt
 

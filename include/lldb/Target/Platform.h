@@ -1832,6 +1832,23 @@ return|return
 literal|1
 return|;
 block|}
+name|virtual
+specifier|const
+name|lldb
+operator|::
+name|UnixSignalsSP
+operator|&
+name|GetRemoteUnixSignals
+argument_list|()
+block|;
+specifier|const
+name|lldb
+operator|::
+name|UnixSignalsSP
+operator|&
+name|GetUnixSignals
+argument_list|()
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Locate a queue name given a thread's qaddr
 comment|///
@@ -1934,86 +1951,6 @@ operator|>
 operator|&
 name|GetTrapHandlerSymbolNames
 argument_list|()
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Launch a process for debugging.
-comment|///
-comment|/// This differs from Launch in that it returns a NativeProcessProtocol.
-comment|/// Currently used by lldb-gdbserver.
-comment|///
-comment|/// @param[in] launch_info
-comment|///     Information required to launch the process.
-comment|///
-comment|/// @param[in] native_delegate
-comment|///     The delegate that will receive messages regarding the
-comment|///     inferior.  Must outlive the NativeProcessProtocol
-comment|///     instance.
-comment|///
-comment|/// @param[out] process_sp
-comment|///     On successful return from the method, this parameter
-comment|///     contains the shared pointer to the
-comment|///     NativeProcessProtocol that can be used to manipulate
-comment|///     the native process.
-comment|///
-comment|/// @return
-comment|///     An error object indicating if the operation succeeded,
-comment|///     and if not, what error occurred.
-comment|//------------------------------------------------------------------
-name|virtual
-name|Error
-name|LaunchNativeProcess
-argument_list|(
-name|ProcessLaunchInfo
-operator|&
-name|launch_info
-argument_list|,
-name|lldb_private
-operator|::
-name|NativeProcessProtocol
-operator|::
-name|NativeDelegate
-operator|&
-name|native_delegate
-argument_list|,
-name|NativeProcessProtocolSP
-operator|&
-name|process_sp
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Attach to an existing process on the given platform.
-comment|///
-comment|/// This method differs from Attach() in that it returns a
-comment|/// NativeProcessProtocol.  Currently this is used by lldb-gdbserver.
-comment|///
-comment|/// @param[in] pid
-comment|///     pid of the process locatable by the platform.
-comment|///
-comment|/// @param[in] native_delegate
-comment|///     The delegate that will receive messages regarding the
-comment|///     inferior.  Must outlive the NativeProcessProtocol
-comment|///     instance.
-comment|///
-comment|/// @param[out] process_sp
-comment|///     On successful return from the method, this parameter
-comment|///     contains the shared pointer to the
-comment|///     NativeProcessProtocol that can be used to manipulate
-comment|///     the native process.
-comment|///
-comment|/// @return
-comment|///     An error object indicating if the operation succeeded,
-comment|///     and if not, what error occurred.
-comment|//------------------------------------------------------------------
-name|virtual
-name|Error
-name|AttachNativeProcess
-argument_list|(
-argument|lldb::pid_t pid
-argument_list|,
-argument|lldb_private::NativeProcessProtocol::NativeDelegate&native_delegate
-argument_list|,
-argument|NativeProcessProtocolSP&process_sp
-argument_list|)
 block|;
 name|protected
 operator|:

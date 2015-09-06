@@ -65,7 +65,7 @@ comment|// Details: Short cut helper function to simplify repeated initialisatio
 comment|//          MI components (singletons) required by a client module.
 comment|// Type:    Template method.
 comment|// Args:    vErrorResrcId   - (R)  The string resource ID error message identifier to place in errMsg.
-comment|//          vwrbOk          - (RW) On input True = Try to initalise MI driver module.
+comment|//          vwrbOk          - (RW) On input True = Try to initialize MI driver module.
 comment|//                                 On output True = MI driver module initialise successfully.
 comment|//          vwrErrMsg       - (W)  MI driver module initialise error description on failure.
 comment|// Return:  MIstatus::success - Functional succeeded.
@@ -137,7 +137,7 @@ name|vwrbOk
 return|;
 block|}
 comment|//++ ============================================================================
-comment|// Details: Short cut helper function to simplify repeated shutodown of
+comment|// Details: Short cut helper function to simplify repeated shutdown of
 comment|//          MI components (singletons) required by a client module.
 comment|// Type:    Template method.
 comment|// Args:    vErrorResrcId   - (R)  The string resource ID error message identifier

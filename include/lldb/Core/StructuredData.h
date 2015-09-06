@@ -695,7 +695,7 @@ operator|~
 name|Array
 argument_list|()
 block|{         }
-name|void
+name|bool
 name|ForEach
 argument_list|(
 argument|std::function<bool(Object* object)> const&foreach_callback
@@ -724,8 +724,13 @@ argument_list|)
 operator|==
 name|false
 condition|)
-break|break;
+return|return
+name|false
+return|;
 block|}
+return|return
+name|true
+return|;
 block|}
 name|size_t
 name|GetSize

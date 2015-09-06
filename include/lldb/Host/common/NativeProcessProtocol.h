@@ -121,14 +121,6 @@ name|SoftwareBreakpoint
 block|;
 name|public
 operator|:
-specifier|static
-name|NativeProcessProtocol
-operator|*
-name|CreateInstance
-argument_list|(
-argument|lldb::pid_t pid
-argument_list|)
-block|;
 comment|// lldb_private::Host calls should be used to launch a process for debugging, and
 comment|// then the process should be attached to. When attaching to a process
 comment|// lldb_private::Host calls should be used to locate the process to attach to,
@@ -138,8 +130,6 @@ argument_list|(
 argument|lldb::pid_t pid
 argument_list|)
 block|;
-name|public
-operator|:
 name|virtual
 operator|~
 name|NativeProcessProtocol
@@ -702,6 +692,80 @@ name|load_addr
 argument_list|)
 operator|=
 literal|0
+block|;
+comment|//------------------------------------------------------------------
+comment|/// Launch a process for debugging. This method will create an concrete
+comment|/// instance of NativeProcessProtocol, based on the host platform.
+comment|/// (e.g. NativeProcessLinux on linux, etc.)
+comment|///
+comment|/// @param[in] launch_info
+comment|///     Information required to launch the process.
+comment|///
+comment|/// @param[in] native_delegate
+comment|///     The delegate that will receive messages regarding the
+comment|///     inferior.  Must outlive the NativeProcessProtocol
+comment|///     instance.
+comment|///
+comment|/// @param[out] process_sp
+comment|///     On successful return from the method, this parameter
+comment|///     contains the shared pointer to the
+comment|///     NativeProcessProtocol that can be used to manipulate
+comment|///     the native process.
+comment|///
+comment|/// @return
+comment|///     An error object indicating if the operation succeeded,
+comment|///     and if not, what error occurred.
+comment|//------------------------------------------------------------------
+specifier|static
+name|Error
+name|Launch
+argument_list|(
+name|ProcessLaunchInfo
+operator|&
+name|launch_info
+argument_list|,
+name|NativeDelegate
+operator|&
+name|native_delegate
+argument_list|,
+name|NativeProcessProtocolSP
+operator|&
+name|process_sp
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
+comment|/// Attach to an existing process. This method will create an concrete
+comment|/// instance of NativeProcessProtocol, based on the host platform.
+comment|/// (e.g. NativeProcessLinux on linux, etc.)
+comment|///
+comment|/// @param[in] pid
+comment|///     pid of the process locatable
+comment|///
+comment|/// @param[in] native_delegate
+comment|///     The delegate that will receive messages regarding the
+comment|///     inferior.  Must outlive the NativeProcessProtocol
+comment|///     instance.
+comment|///
+comment|/// @param[out] process_sp
+comment|///     On successful return from the method, this parameter
+comment|///     contains the shared pointer to the
+comment|///     NativeProcessProtocol that can be used to manipulate
+comment|///     the native process.
+comment|///
+comment|/// @return
+comment|///     An error object indicating if the operation succeeded,
+comment|///     and if not, what error occurred.
+comment|//------------------------------------------------------------------
+specifier|static
+name|Error
+name|Attach
+argument_list|(
+argument|lldb::pid_t pid
+argument_list|,
+argument|NativeDelegate&native_delegate
+argument_list|,
+argument|NativeProcessProtocolSP&process_sp
+argument_list|)
 block|;
 name|protected
 operator|:

@@ -503,6 +503,19 @@ name|commands_help
 parameter_list|)
 block|{     }
 name|void
+name|FormatLongHelpText
+parameter_list|(
+name|Stream
+modifier|&
+name|output_strm
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|long_help
+parameter_list|)
+function_decl|;
+name|void
 name|GenerateHelpText
 parameter_list|(
 name|CommandReturnObject

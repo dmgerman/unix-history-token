@@ -176,6 +176,26 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
+name|double
+name|ToDouble
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|double
+name|fail_value
+init|=
+literal|0.0
+parameter_list|,
+name|bool
+modifier|*
+name|success_ptr
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
 block|}
 comment|// namespace StringConvert
 block|}

@@ -220,22 +220,21 @@ name|public
 label|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmnLogMediumFile
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 expr_stmt|;
 comment|// From CMICmnLog::IMedium
-name|virtual
 name|bool
 name|Initialize
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 specifier|const
 name|CMIUtilString
 modifier|&
@@ -244,8 +243,8 @@ argument_list|(
 name|void
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|Write
 argument_list|(
@@ -260,8 +259,8 @@ operator|::
 name|ELogVerbosity
 name|veType
 argument_list|)
+name|override
 decl_stmt|;
-name|virtual
 specifier|const
 name|CMIUtilString
 modifier|&
@@ -270,14 +269,15 @@ argument_list|(
 name|void
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|Shutdown
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|// Methods:
 name|private
 label|:

@@ -64,7 +64,7 @@ file|"MICmnMIValueTuple.h"
 end_include
 
 begin_comment
-comment|// Declerations:
+comment|// Declarations:
 end_comment
 
 begin_decl_stmt

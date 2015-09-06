@@ -172,32 +172,32 @@ name|public
 operator|:
 comment|// From CMICmdArgValBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdArgValOptionShort
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Overridden:
 name|private
 operator|:
 comment|// From CMICmdArgValOptionLong
-name|virtual
 name|bool
 name|IsArgOptionCorrect
 argument_list|(
 argument|const CMIUtilString&vrTxt
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|ArgNameMatch
 argument_list|(
 argument|const CMIUtilString&vrTxt
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 end_decl_stmt

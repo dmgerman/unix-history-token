@@ -130,6 +130,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Utility/StringExtractor.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Target/Process.h"
 end_include
 
@@ -143,12 +149,6 @@ begin_include
 include|#
 directive|include
 file|"GDBRemoteCommunicationClient.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"Utility/StringExtractor.h"
 end_include
 
 begin_include
@@ -622,6 +622,17 @@ name|void
 name|ModulesDidLoad
 argument_list|(
 argument|ModuleList&module_list
+argument_list|)
+name|override
+block|;
+name|StructuredData
+operator|::
+name|ObjectSP
+name|GetLoadedDynamicLibrariesInfos
+argument_list|(
+argument|lldb::addr_t image_list_address
+argument_list|,
+argument|lldb::addr_t image_count
 argument_list|)
 name|override
 block|;
