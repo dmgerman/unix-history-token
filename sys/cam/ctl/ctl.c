@@ -45424,7 +45424,7 @@ name|lun
 argument_list|,
 name|initidx
 argument_list|,
-name|CTL_UA_RES_RELEASE
+name|CTL_UA_LUN_CHANGE
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
