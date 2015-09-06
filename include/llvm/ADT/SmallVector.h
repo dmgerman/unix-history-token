@@ -1673,7 +1673,14 @@ argument_list|)
 block|{
 comment|// Use memcpy for PODs iterated by pointers (which includes SmallVector
 comment|// iterators): std::uninitialized_copy optimizes to memmove, but we can
-comment|// use memcpy here.
+comment|// use memcpy here. Note that I and E are iterators and thus might be
+comment|// invalid for memcpy if they are equal.
+if|if
+condition|(
+name|I
+operator|!=
+name|E
+condition|)
 name|memcpy
 argument_list|(
 name|Dest
@@ -1691,15 +1698,27 @@ argument_list|(
 name|T
 argument_list|)
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Double the size of the allocated memory, guaranteeing space for at
+end_comment
+
+begin_comment
 comment|/// least one more element or MinSize if specified.
+end_comment
+
+begin_function
 name|void
 name|grow
-argument_list|(
-argument|size_t MinSize =
+parameter_list|(
+name|size_t
+name|MinSize
+init|=
 literal|0
-argument_list|)
+parameter_list|)
 block|{
 name|this
 operator|->
@@ -1717,14 +1736,24 @@ argument_list|(
 name|T
 argument_list|)
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_label
 name|public
-operator|:
+label|:
+end_label
+
+begin_function
 name|void
 name|push_back
-argument_list|(
-argument|const T&Elt
-argument_list|)
+parameter_list|(
+specifier|const
+name|T
+modifier|&
+name|Elt
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1760,9 +1789,6 @@ name|T
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|this
 operator|->
 name|setEnd
@@ -1775,15 +1801,13 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
-begin_macro
-unit|}    void
+begin_function
+name|void
 name|pop_back
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|this
 operator|->
@@ -1798,7 +1822,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 unit|};
