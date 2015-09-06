@@ -74,6 +74,7 @@ comment|// Effects: aborts if a + b overflows
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|ti_int
 name|__addvti3
 parameter_list|(

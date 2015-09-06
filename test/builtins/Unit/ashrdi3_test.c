@@ -68,6 +68,7 @@ comment|// Precondition:  0<= b< bits_in_dword
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|di_int
 name|__ashrdi3
 parameter_list|(

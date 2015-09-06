@@ -65,6 +65,7 @@ end_comment
 
 begin_function_decl
 specifier|extern
+name|COMPILER_RT_ABI
 name|su_int
 name|__udivmodsi4
 parameter_list|(

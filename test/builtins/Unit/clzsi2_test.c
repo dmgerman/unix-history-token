@@ -68,6 +68,7 @@ comment|// Precondition: a != 0
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|si_int
 name|__clzsi2
 parameter_list|(

@@ -80,6 +80,7 @@ comment|// seee eeee emmm mmmm mmmm mmmm mmmm mmmm
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|di_int
 name|__fixsfdi
 parameter_list|(

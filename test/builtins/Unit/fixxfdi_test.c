@@ -90,8 +90,9 @@ comment|// 1mmm mmmm mmmm mmmm mmmm mmmm mmmm mmmm | mmmm mmmm mmmm mmmm mmmm mm
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|di_int
-name|__fixxfdi
+name|__sfixxfdi
 parameter_list|(
 name|long
 name|double

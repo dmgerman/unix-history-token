@@ -64,6 +64,7 @@ comment|// Returns: a % b
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|du_int
 name|__umoddi3
 parameter_list|(

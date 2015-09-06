@@ -9,6 +9,12 @@ directive|include
 file|"int_lib.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -29,10 +35,17 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__Bitrig__
+argument_list|)
+operator|)
 operator|&&
 name|defined
 argument_list|(
@@ -101,6 +114,12 @@ begin_include
 include|#
 directive|include
 file|<sys/syscall.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_if
@@ -243,6 +262,11 @@ operator|||
 name|defined
 argument_list|(
 name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__Bitrig__
 argument_list|)
 name|struct
 name|arm_sync_icache_args
@@ -480,6 +504,9 @@ name|uintptr_t
 operator|)
 name|end
 decl_stmt|;
+name|uint64_t
+name|addr
+decl_stmt|;
 comment|// Get Cache Type Info
 name|uint64_t
 name|ctr_el0
@@ -504,9 +531,8 @@ operator|)
 decl_stmt|;
 for|for
 control|(
-name|uint64_t
 name|addr
-init|=
+operator|=
 name|xstart
 init|;
 name|addr
@@ -537,9 +563,8 @@ operator|)
 decl_stmt|;
 for|for
 control|(
-name|uint64_t
 name|addr
-init|=
+operator|=
 name|xstart
 init|;
 name|addr

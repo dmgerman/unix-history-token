@@ -78,6 +78,7 @@ comment|//           if (a>  b) returns 2
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|si_int
 name|__cmpti2
 parameter_list|(

@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_dfsan -m64 %s -fsanitize-blacklist=%S/Inputs/flags_abilist.txt -mllvm -dfsan-debug-nonzero-labels -o %t&& %run %t 2>&1 | FileCheck %s
+comment|// RUN: %clang_dfsan %s -fsanitize-blacklist=%S/Inputs/flags_abilist.txt -mllvm -dfsan-debug-nonzero-labels -o %t&& %run %t 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_dfsan -m64 %s -fsanitize-blacklist=%S/Inputs/flags_abilist.txt -mllvm -dfsan-debug-nonzero-labels -o %t&& DFSAN_OPTIONS=warn_unimplemented=0 %run %t 2>&1 | count 0
+comment|// RUN: %clang_dfsan %s -fsanitize-blacklist=%S/Inputs/flags_abilist.txt -mllvm -dfsan-debug-nonzero-labels -o %t&& DFSAN_OPTIONS=warn_unimplemented=0 %run %t 2>&1 | count 0
 end_comment
 
 begin_comment
-comment|// RUN: %clang_dfsan -m64 %s -fsanitize-blacklist=%S/Inputs/flags_abilist.txt -mllvm -dfsan-debug-nonzero-labels -o %t&& DFSAN_OPTIONS=warn_nonzero_labels=1 %run %t 2>&1 | FileCheck --check-prefix=CHECK-NONZERO %s
+comment|// RUN: %clang_dfsan %s -fsanitize-blacklist=%S/Inputs/flags_abilist.txt -mllvm -dfsan-debug-nonzero-labels -o %t&& DFSAN_OPTIONS=warn_nonzero_labels=1 %run %t 2>&1 | FileCheck --check-prefix=CHECK-NONZERO %s
 end_comment
 
 begin_comment

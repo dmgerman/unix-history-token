@@ -83,6 +83,7 @@ comment|// Returns: the product of a + ib and c + id
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|long
 name|double
 specifier|_Complex

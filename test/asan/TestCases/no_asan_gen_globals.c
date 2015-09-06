@@ -8,6 +8,14 @@ comment|// XFAIL: android
 end_comment
 
 begin_comment
+comment|// FIXME: http://llvm.org/bugs/show_bug.cgi?id=22682
+end_comment
+
+begin_comment
+comment|// REQUIRES: asan-64-bits
+end_comment
+
+begin_comment
 comment|//
 end_comment
 

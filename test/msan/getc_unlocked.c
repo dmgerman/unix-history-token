@@ -1,34 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clangxx_msan -DGETC -m64 -O0 -g -xc++ %s -o %t&& %run %t
+comment|// RUN: %clangxx_msan -DGETC -O0 -g -xc++ %s -o %t&& %run %t
 end_comment
 
 begin_comment
-comment|// RUN: %clangxx_msan -DGETC -m64 -O3 -g -xc++ %s -o %t&& %run %t
+comment|// RUN: %clangxx_msan -DGETC -O3 -g -xc++ %s -o %t&& %run %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_msan -DGETC -m64 -O0 -g %s -o %t&& %run %t
+comment|// RUN: %clang_msan -DGETC -O0 -g %s -o %t&& %run %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_msan -DGETC -m64 -O3 -g %s -o %t&& %run %t
+comment|// RUN: %clang_msan -DGETC -O3 -g %s -o %t&& %run %t
 end_comment
 
 begin_comment
-comment|// RUN: %clangxx_msan -DGETCHAR -m64 -O0 -g -xc++ %s -o %t&& %run %t
+comment|// RUN: %clangxx_msan -DGETCHAR -O0 -g -xc++ %s -o %t&& %run %t
 end_comment
 
 begin_comment
-comment|// RUN: %clangxx_msan -DGETCHAR -m64 -O3 -g -xc++ %s -o %t&& %run %t
+comment|// RUN: %clangxx_msan -DGETCHAR -O3 -g -xc++ %s -o %t&& %run %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_msan -DGETCHAR -m64 -O0 -g %s -o %t&& %run %t
+comment|// RUN: %clang_msan -DGETCHAR -O0 -g %s -o %t&& %run %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_msan -DGETCHAR -m64 -O3 -g %s -o %t&& %run %t
+comment|// RUN: %clang_msan -DGETCHAR -O3 -g %s -o %t&& %run %t
 end_comment
 
 begin_include

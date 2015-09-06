@@ -206,6 +206,51 @@ directive|endif
 block|}
 end_function
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+name|SRC_HALF
+end_elif
+
+begin_typedef
+typedef|typedef
+name|uint16_t
+name|src_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint16_t
+name|src_rep_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SRC_REP_C
+value|UINT16_C
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|int
+name|srcSigBits
+init|=
+literal|10
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|src_rep_t_clz
+value|__builtin_clz
+end_define
+
 begin_else
 else|#
 directive|else
@@ -214,7 +259,7 @@ end_else
 begin_error
 error|#
 directive|error
-error|Source should be single precision or double precision!
+error|Source should be half, single, or double precision!
 end_error
 
 begin_endif
@@ -230,8 +275,46 @@ begin_if
 if|#
 directive|if
 name|defined
-name|DST_DOUBLE
+name|DST_SINGLE
 end_if
+
+begin_typedef
+typedef|typedef
+name|float
+name|dst_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|dst_rep_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|DST_REP_C
+value|UINT32_C
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|int
+name|dstSigBits
+init|=
+literal|23
+decl_stmt|;
+end_decl_stmt
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+name|DST_DOUBLE
+end_elif
 
 begin_typedef
 typedef|typedef
@@ -311,7 +394,7 @@ end_else
 begin_error
 error|#
 directive|error
-error|Destination should be double precision or quad precision!
+error|Destination should be single, double, or quad precision!
 end_error
 
 begin_endif

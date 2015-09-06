@@ -70,6 +70,7 @@ comment|// Returns: count of 1 bits
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|si_int
 name|__popcountsi2
 parameter_list|(

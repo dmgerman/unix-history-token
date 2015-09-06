@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_msan -m64 -O0 %s -o %t&& %run %t>%t.out 2>&1
+comment|// RUN: %clang_msan -O0 %s -o %t&& %run %t>%t.out 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: %clang_msan -m64 -O1 %s -o %t&& %run %t>%t.out 2>&1
+comment|// RUN: %clang_msan -O1 %s -o %t&& %run %t>%t.out 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: %clang_msan -m64 -O2 %s -o %t&& %run %t>%t.out 2>&1
+comment|// RUN: %clang_msan -O2 %s -o %t&& %run %t>%t.out 2>&1
 end_comment
 
 begin_comment
-comment|// RUN: %clang_msan -m64 -O3 %s -o %t&& %run %t>%t.out 2>&1
+comment|// RUN: %clang_msan -O3 %s -o %t&& %run %t>%t.out 2>&1
 end_comment
 
 begin_comment

@@ -50,6 +50,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"int_lib.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -69,6 +75,7 @@ end_include
 
 begin_function_decl
 name|long
+name|COMPILER_RT_ABI
 name|double
 name|__floatsitf
 parameter_list|(

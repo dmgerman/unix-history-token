@@ -61,6 +61,7 @@ end_include
 
 begin_function_decl
 specifier|extern
+name|COMPILER_RT_ABI
 name|di_int
 name|__mulodi4
 parameter_list|(

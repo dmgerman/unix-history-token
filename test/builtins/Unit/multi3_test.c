@@ -66,6 +66,7 @@ name|CRT_HAS_128BIT
 end_ifdef
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|ti_int
 name|__multi3
 parameter_list|(

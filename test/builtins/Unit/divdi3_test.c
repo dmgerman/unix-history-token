@@ -64,6 +64,7 @@ comment|// Returns: a / b
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|di_int
 name|__divdi3
 parameter_list|(

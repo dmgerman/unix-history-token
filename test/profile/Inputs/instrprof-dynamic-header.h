@@ -7,13 +7,19 @@ name|T
 operator|>
 name|void
 name|bar
-argument_list|()
+argument_list|(
+argument|int X
+argument_list|)
 block|{
 if|if
 condition|(
-name|true
+name|X
 condition|)
 block|{
+name|X
+operator|*=
+literal|4
+expr_stmt|;
 block|}
 end_expr_stmt
 

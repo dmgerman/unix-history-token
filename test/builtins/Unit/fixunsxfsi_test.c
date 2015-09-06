@@ -98,6 +98,7 @@ comment|// 1mmm mmmm mmmm mmmm mmmm mmmm mmmm mmmm | mmmm mmmm mmmm mmmm mmmm mm
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|su_int
 name|__fixunsxfsi
 parameter_list|(

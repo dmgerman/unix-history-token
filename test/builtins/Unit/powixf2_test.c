@@ -77,6 +77,7 @@ comment|// Returns: a ^ b
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|long
 name|double
 name|__powixf2

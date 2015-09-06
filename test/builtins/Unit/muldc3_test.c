@@ -76,6 +76,7 @@ comment|// Returns: the product of a + ib and c + id
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|double
 specifier|_Complex
 name|__muldc3

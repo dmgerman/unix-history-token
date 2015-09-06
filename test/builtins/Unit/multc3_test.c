@@ -47,6 +47,12 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -71,17 +77,12 @@ directive|include
 file|<complex.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
 begin_comment
 comment|// Returns: the product of a + ib and c + id
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|long
 name|double
 specifier|_Complex

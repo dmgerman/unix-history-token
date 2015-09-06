@@ -76,6 +76,7 @@ comment|// Returns: 1 if number of bits is odd else returns 0
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|si_int
 name|__parityti2
 parameter_list|(

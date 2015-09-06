@@ -68,6 +68,7 @@ comment|// Effects: aborts if -a overflows
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|di_int
 name|__negvdi2
 parameter_list|(

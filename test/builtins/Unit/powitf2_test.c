@@ -47,6 +47,12 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -62,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<math.h>
 end_include
 
@@ -76,6 +76,7 @@ comment|// Returns: a ^ b
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|long
 name|double
 name|__powitf2

@@ -73,6 +73,7 @@ end_if
 
 begin_function_decl
 specifier|extern
+name|COMPILER_RT_ABI
 name|double
 name|__subdf3vfp
 parameter_list|(

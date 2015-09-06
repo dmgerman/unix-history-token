@@ -64,6 +64,7 @@ comment|// Returns: -a
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|di_int
 name|__negdi2
 parameter_list|(

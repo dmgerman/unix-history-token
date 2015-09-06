@@ -50,6 +50,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"int_lib.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -68,6 +74,7 @@ file|"fp_test.h"
 end_include
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|double
 name|__trunctfdf2
 parameter_list|(

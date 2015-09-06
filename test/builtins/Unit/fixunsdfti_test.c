@@ -94,6 +94,7 @@ name|CRT_HAS_128BIT
 end_ifdef
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|tu_int
 name|__fixunsdfti
 parameter_list|(

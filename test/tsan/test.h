@@ -69,6 +69,32 @@ name|unsigned
 name|count
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+specifier|static
+specifier|const
+name|char
+name|libpthread_name
+index|[]
+init|=
+literal|"libpthread.so"
+decl_stmt|;
+else|#
+directive|else
+specifier|static
+specifier|const
+name|char
+name|libpthread_name
+index|[]
+init|=
+literal|"libpthread.so.0"
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|barrier_wait
@@ -82,7 +108,7 @@ name|h
 init|=
 name|dlopen
 argument_list|(
-literal|"libpthread.so.0"
+name|libpthread_name
 argument_list|,
 name|RTLD_LAZY
 argument_list|)
@@ -98,7 +124,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"failed to dlopen libpthread.so.0, exiting\n"
+literal|"failed to dlopen %s, exiting\n"
+argument_list|,
+name|libpthread_name
 argument_list|)
 expr_stmt|;
 name|exit

@@ -87,6 +87,7 @@ end_comment
 
 begin_function_decl
 name|long
+name|COMPILER_RT_ABI
 name|double
 name|__floatdixf
 parameter_list|(

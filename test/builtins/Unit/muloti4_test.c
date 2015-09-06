@@ -74,6 +74,7 @@ comment|// Effects: sets overflow if a * b overflows
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|ti_int
 name|__muloti4
 parameter_list|(

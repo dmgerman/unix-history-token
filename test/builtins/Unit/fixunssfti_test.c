@@ -94,6 +94,7 @@ comment|// seee eeee emmm mmmm mmmm mmmm mmmm mmmm
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|tu_int
 name|__fixunssfti
 parameter_list|(

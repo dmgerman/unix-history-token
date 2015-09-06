@@ -20,7 +20,7 @@ comment|/* Returns: convert a to a signed long long, rounding toward zero. */
 end_comment
 
 begin_comment
-comment|/* Assumption: long double is an intel 80 bit floating point type padded with 6 bytes  *             su_int is a 32 bit integral type  *             value in long double is representable in ti_int (no range checking performed)  */
+comment|/* Assumption: long double is an intel 80 bit floating point type padded with 6 bytes  *             ti_int is a 128 bit integral type  *             value in long double is representable in ti_int  */
 end_comment
 
 begin_comment
@@ -37,6 +37,34 @@ name|double
 name|a
 parameter_list|)
 block|{
+specifier|const
+name|ti_int
+name|ti_max
+init|=
+call|(
+name|ti_int
+call|)
+argument_list|(
+operator|(
+operator|~
+operator|(
+name|tu_int
+operator|)
+literal|0
+operator|)
+operator|/
+literal|2
+argument_list|)
+decl_stmt|;
+specifier|const
+name|ti_int
+name|ti_min
+init|=
+operator|-
+name|ti_max
+operator|-
+literal|1
+decl_stmt|;
 name|long_double_bits
 name|fb
 decl_stmt|;
@@ -110,6 +138,29 @@ name|low
 operator|.
 name|all
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|unsigned
+operator|)
+name|e
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|ti_int
+argument_list|)
+operator|*
+name|CHAR_BIT
+condition|)
+return|return
+name|a
+operator|>
+literal|0
+condition|?
+name|ti_max
+else|:
+name|ti_min
+return|;
 if|if
 condition|(
 name|e

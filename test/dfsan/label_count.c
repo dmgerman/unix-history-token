@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_dfsan -DLIB -m64 -c %s -o %t.lib.o&& \
+comment|// RUN: %clang_dfsan -DLIB -c %s -o %t.lib.o&& \
 end_comment
 
 begin_comment
-comment|// RUN: %clang_dfsan       -m64 -c %s -o %t.o&& \
+comment|// RUN: %clang_dfsan       -c %s -o %t.o&& \
 end_comment
 
 begin_comment
-comment|// RUN: %clang_dfsan -m64 %t.lib.o %t.o -o %t.bin&& \
+comment|// RUN: %clang_dfsan %t.lib.o %t.o -o %t.bin&& \
 end_comment
 
 begin_comment
@@ -16,15 +16,15 @@ comment|// RUN: %run %t.bin
 end_comment
 
 begin_comment
-comment|// RUN: %clang_dfsan -mllvm -dfsan-args-abi -m64 -DLIB -c %s -o %t.lib.o&& \
+comment|// RUN: %clang_dfsan -mllvm -dfsan-args-abi -DLIB -c %s -o %t.lib.o&& \
 end_comment
 
 begin_comment
-comment|// RUN: %clang_dfsan -mllvm -dfsan-args-abi -m64 -c %s -o %t.o&& \
+comment|// RUN: %clang_dfsan -mllvm -dfsan-args-abi -c %s -o %t.o&& \
 end_comment
 
 begin_comment
-comment|// RUN: %clang_dfsan -mllvm -dfsan-args-abi -m64 %t.o %t.lib.o -o %t.bin&& \
+comment|// RUN: %clang_dfsan -mllvm -dfsan-args-abi %t.o %t.lib.o -o %t.bin&& \
 end_comment
 
 begin_comment

@@ -70,6 +70,7 @@ comment|// Returns: a ^ b
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|float
 name|__powisf2
 parameter_list|(

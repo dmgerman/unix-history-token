@@ -12,6 +12,7 @@ file|<stdio.h>
 end_include
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|long
 name|double
 name|__floatditf

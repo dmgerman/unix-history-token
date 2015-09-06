@@ -136,14 +136,27 @@ name|size_t
 name|size
 parameter_list|)
 function_decl|;
-comment|// Calling this function makes LSan enter the leak checking phase immediately.
-comment|// Use this if normal end-of-process leak checking happens too late (e.g. if
-comment|// you have intentional memory leaks in your shutdown code). Calling this
-comment|// function overrides end-of-process leak checking; it must be called at
-comment|// most once per process. This function will terminate the process if there
-comment|// are memory leaks and the exit_code flag is non-zero.
+comment|// Check for leaks now. This function behaves identically to the default
+comment|// end-of-process leak check. In particular, it will terminate the process if
+comment|// leaks are found and the exit_code flag is non-zero.
+comment|// Subsequent calls to this function will have no effect and end-of-process
+comment|// leak check will not run. Effectively, end-of-process leak check is moved to
+comment|// the time of first invocation of this function.
+comment|// By calling this function early during process shutdown, you can instruct
+comment|// LSan to ignore shutdown-only leaks which happen later on.
 name|void
 name|__lsan_do_leak_check
+parameter_list|()
+function_decl|;
+comment|// Check for leaks now. Returns zero if no leaks have been found or if leak
+comment|// detection is disabled, non-zero otherwise.
+comment|// This function may be called repeatedly, e.g. to periodically check a
+comment|// long-running process. It prints a leak report if appropriate, but does not
+comment|// terminate the process. It does not affect the behavior of
+comment|// __lsan_do_leak_check() or the end-of-process leak check, and is not
+comment|// affected by them.
+name|int
+name|__lsan_do_recoverable_leak_check
 parameter_list|()
 function_decl|;
 comment|// The user may optionally provide this function to disallow leak checking

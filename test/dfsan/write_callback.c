@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_dfsan                         -m64 %s -o %t&& %run %t | FileCheck %s
+comment|// RUN: %clang_dfsan                         %s -o %t&& %run %t | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_dfsan  -mllvm -dfsan-args-abi -m64 %s -o %t&& %run %t | FileCheck %s
+comment|// RUN: %clang_dfsan  -mllvm -dfsan-args-abi %s -o %t&& %run %t | FileCheck %s
 end_comment
 
 begin_comment

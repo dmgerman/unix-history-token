@@ -100,11 +100,67 @@ comment|// RUN: echo __asan_report_store_n>> %t.interface
 end_comment
 
 begin_comment
+comment|// RUN: echo __asan_report_exp_load1>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_exp_load2>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_exp_load4>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_exp_load8>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_exp_load16>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_exp_store1>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_exp_store2>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_exp_store4>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_exp_store8>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_exp_store16>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_exp_load_n>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_report_exp_store_n>> %t.interface
+end_comment
+
+begin_comment
 comment|// RUN: echo __asan_get_current_fake_stack>> %t.interface
 end_comment
 
 begin_comment
 comment|// RUN: echo __asan_addr_is_in_fake_stack>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_alloca_poison>> %t.interface
+end_comment
+
+begin_comment
+comment|// RUN: echo __asan_allocas_unpoison>> %t.interface
 end_comment
 
 begin_comment

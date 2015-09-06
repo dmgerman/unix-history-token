@@ -74,6 +74,7 @@ comment|// the value zero if a is zero. The least significant bit is index one.
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|si_int
 name|__ffsti2
 parameter_list|(

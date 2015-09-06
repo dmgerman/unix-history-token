@@ -67,6 +67,7 @@ end_include
 
 begin_function_decl
 specifier|extern
+name|COMPILER_RT_ABI
 name|double
 name|__negdf2vfp
 parameter_list|(

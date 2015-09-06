@@ -74,6 +74,7 @@ comment|// Precondition:  0<= b< bits_in_tword
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|ti_int
 name|__ashlti3
 parameter_list|(

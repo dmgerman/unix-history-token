@@ -76,6 +76,7 @@ comment|// Returns: the quotient of (a + ib) / (c + id)
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|double
 specifier|_Complex
 name|__divdc3

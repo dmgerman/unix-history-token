@@ -47,6 +47,12 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -57,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|"int_lib.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
 end_include
 
 begin_comment
@@ -90,6 +90,7 @@ comment|//                 (no range checking performed)
 end_comment
 
 begin_function_decl
+name|COMPILER_RT_ABI
 name|du_int
 name|__fixunstfdi
 parameter_list|(
