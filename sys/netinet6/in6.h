@@ -2009,6 +2009,28 @@ begin_comment
 comment|/* int; RSS bucket ID of given socket */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPV6_RECVFLOWID
+value|70
+end_define
+
+begin_comment
+comment|/* bool; receive IP6 flowid/flowtype w/ datagram */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_RECVRSSBUCKETID
+value|71
+end_define
+
+begin_comment
+comment|/* bool; receive IP6 RSS bucket id w/ datagram */
+end_comment
+
 begin_comment
 comment|/*  * The following option is private; do not use it from user applications.  * It is deliberately defined to the same value as IP_MSFILTER.  */
 end_comment
