@@ -15,6 +15,17 @@ directive|define
 name|_INTEL_RINGBUFFER_H_
 end_define
 
+begin_comment
+comment|/*  * Gen2 BSpec "1. Programming Environment" / 1.4.4.6 "Ring Buffer Use"  * Gen3 BSpec "vol1c Memory Interface Functions" / 2.3.4.5 "Ring Buffer Use"  * Gen4+ BSpec "vol1c Memory Interface and Command Stream" / 5.3.4.5 "Ring Buffer Use"  *  * "If the Ring Buffer Head Pointer and the Tail Pointer are on the same  * cacheline, the Head Pointer must not be greater than the Tail  * Pointer."  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I915_RING_FREE_SPACE
+value|64
+end_define
+
 begin_struct
 struct|struct
 name|intel_hw_status_page
@@ -245,6 +256,7 @@ decl_stmt|;
 name|u32
 name|irq_refcount
 decl_stmt|;
+comment|/* protected by dev_priv->irq_lock */
 name|u32
 name|irq_enable_mask
 decl_stmt|;
@@ -375,6 +387,14 @@ name|uint32_t
 name|length
 parameter_list|)
 function_decl|;
+define|#
+directive|define
+name|I915_DISPATCH_SECURE
+value|0x1
+define|#
+directive|define
+name|I915_DISPATCH_PINNED
+value|0x2
 name|void
 function_decl|(
 modifier|*
@@ -559,7 +579,7 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|uint32_t
+name|u32
 name|intel_read_status_page
 parameter_list|(
 name|struct
@@ -674,7 +694,7 @@ name|intel_ring_buffer
 modifier|*
 name|ring
 parameter_list|,
-name|uint32_t
+name|u32
 name|data
 parameter_list|)
 block|{

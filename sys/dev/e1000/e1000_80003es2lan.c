@@ -3014,8 +3014,6 @@ name|hw
 argument_list|)
 expr_stmt|;
 comment|/* Disable IBIST slave mode (far-end loopback) */
-name|ret_val
-operator|=
 name|e1000_read_kmrn_reg_80003es2lan
 argument_list|(
 name|hw
@@ -3026,18 +3024,10 @@ operator|&
 name|kum_reg_data
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ret_val
-condition|)
-block|{
 name|kum_reg_data
 operator||=
 name|E1000_KMRNCTRLSTA_IBIST_DISABLE
 expr_stmt|;
-name|ret_val
-operator|=
 name|e1000_write_kmrn_reg_80003es2lan
 argument_list|(
 name|hw
@@ -3045,22 +3035,6 @@ argument_list|,
 name|E1000_KMRNCTRLSTA_INBAND_PARAM
 argument_list|,
 name|kum_reg_data
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret_val
-condition|)
-name|DEBUGOUT
-argument_list|(
-literal|"Error disabling far-end loopback\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|DEBUGOUT
-argument_list|(
-literal|"Error disabling far-end loopback\n"
 argument_list|)
 expr_stmt|;
 name|ret_val
@@ -3250,8 +3224,6 @@ return|return
 name|ret_val
 return|;
 comment|/* Disable IBIST slave mode (far-end loopback) */
-name|ret_val
-operator|=
 name|e1000_read_kmrn_reg_80003es2lan
 argument_list|(
 name|hw
@@ -3262,18 +3234,10 @@ operator|&
 name|kum_reg_data
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ret_val
-condition|)
-block|{
 name|kum_reg_data
 operator||=
 name|E1000_KMRNCTRLSTA_IBIST_DISABLE
 expr_stmt|;
-name|ret_val
-operator|=
 name|e1000_write_kmrn_reg_80003es2lan
 argument_list|(
 name|hw
@@ -3281,22 +3245,6 @@ argument_list|,
 name|E1000_KMRNCTRLSTA_INBAND_PARAM
 argument_list|,
 name|kum_reg_data
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret_val
-condition|)
-name|DEBUGOUT
-argument_list|(
-literal|"Error disabling far-end loopback\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|DEBUGOUT
-argument_list|(
-literal|"Error disabling far-end loopback\n"
 argument_list|)
 expr_stmt|;
 comment|/* Set the transmit descriptor write-back policy */

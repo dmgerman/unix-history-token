@@ -74,11 +74,25 @@ name|CTL_LUN_FLAG_OFFLINE
 init|=
 literal|0x100
 block|,
-name|CTL_LUN_FLAG_SERSEQ_READ
+name|CTL_LUN_FLAG_READONLY
 init|=
 literal|0x200
 block|}
 name|ctl_backend_lun_flags
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CTL_LUN_SERSEQ_OFF
+block|,
+name|CTL_LUN_SERSEQ_READ
+block|,
+name|CTL_LUN_SERSEQ_ON
+block|}
+name|ctl_lun_serseq
 typedef|;
 end_typedef
 
@@ -160,6 +174,10 @@ decl_stmt|;
 comment|/* passed to CTL */
 name|ctl_backend_lun_flags
 name|flags
+decl_stmt|;
+comment|/* passed to CTL */
+name|ctl_lun_serseq
+name|serseq
 decl_stmt|;
 comment|/* passed to CTL */
 name|void

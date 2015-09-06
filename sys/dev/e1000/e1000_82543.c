@@ -3018,6 +3018,8 @@ parameter_list|)
 block|{
 name|u32
 name|ctrl
+decl_stmt|,
+name|icr
 decl_stmt|;
 name|s32
 name|ret_val
@@ -3158,6 +3160,8 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
+name|icr
+operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
