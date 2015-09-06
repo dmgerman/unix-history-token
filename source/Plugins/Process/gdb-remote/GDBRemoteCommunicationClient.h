@@ -554,6 +554,11 @@ argument_list|,
 name|bool
 operator|&
 name|after
+argument_list|,
+specifier|const
+name|ArchSpec
+operator|&
+name|arch
 argument_list|)
 block|;
 name|Error
@@ -562,6 +567,11 @@ argument_list|(
 name|bool
 operator|&
 name|after
+argument_list|,
+specifier|const
+name|ArchSpec
+operator|&
+name|arch
 argument_list|)
 block|;
 specifier|const

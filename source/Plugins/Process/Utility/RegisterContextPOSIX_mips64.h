@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"RegisterContext_mips64.h"
+file|"RegisterContext_mips.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb-mips64-register-enums.h"
+file|"lldb-mips-freebsd-register-enums.h"
 end_include
 
 begin_decl_stmt

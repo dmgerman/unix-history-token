@@ -121,6 +121,80 @@ block|,
 name|eMIPSSubType_mips64r6el
 block|,     }
 enum|;
+comment|// Masks for the ases word of an ABI flags structure.
+enum|enum
+name|MIPSASE
+block|{
+name|eMIPSAse_dsp
+init|=
+literal|0x00000001
+block|,
+comment|// DSP ASE
+name|eMIPSAse_dspr2
+init|=
+literal|0x00000002
+block|,
+comment|// DSP R2 ASE
+name|eMIPSAse_eva
+init|=
+literal|0x00000004
+block|,
+comment|// Enhanced VA Scheme
+name|eMIPSAse_mcu
+init|=
+literal|0x00000008
+block|,
+comment|// MCU (MicroController) ASE
+name|eMIPSAse_mdmx
+init|=
+literal|0x00000010
+block|,
+comment|// MDMX ASE
+name|eMIPSAse_mips3d
+init|=
+literal|0x00000020
+block|,
+comment|// MIPS-3D ASE
+name|eMIPSAse_mt
+init|=
+literal|0x00000040
+block|,
+comment|// MT ASE
+name|eMIPSAse_smartmips
+init|=
+literal|0x00000080
+block|,
+comment|// SmartMIPS ASE
+name|eMIPSAse_virt
+init|=
+literal|0x00000100
+block|,
+comment|// VZ ASE
+name|eMIPSAse_msa
+init|=
+literal|0x00000200
+block|,
+comment|// MSA ASE
+name|eMIPSAse_mips16
+init|=
+literal|0x00000400
+block|,
+comment|// MIPS16 ASE
+name|eMIPSAse_micromips
+init|=
+literal|0x00000800
+block|,
+comment|// MICROMIPS ASE
+name|eMIPSAse_xpa
+init|=
+literal|0x00001000
+block|,
+comment|// XPA ASE
+name|eMIPSAse_mask
+init|=
+literal|0x00001fff
+block|}
+enum|;
 enum|enum
 name|Core
 block|{
@@ -980,6 +1054,27 @@ name|GetStopInfoOverrideCallback
 argument_list|()
 specifier|const
 expr_stmt|;
+name|uint32_t
+name|GetFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_flags
+return|;
+block|}
+name|void
+name|SetFlags
+parameter_list|(
+name|uint32_t
+name|flags
+parameter_list|)
+block|{
+name|m_flags
+operator|=
+name|flags
+expr_stmt|;
+block|}
 name|protected
 label|:
 name|bool
@@ -1008,6 +1103,12 @@ operator|::
 name|ByteOrder
 name|m_byte_order
 expr_stmt|;
+comment|// Additional arch flags which we cannot get from triple and core
+comment|// For MIPS these are application specific extensions like
+comment|// micromips, mips16 etc.
+name|uint32_t
+name|m_flags
+decl_stmt|;
 name|ConstString
 name|m_distribution_id
 decl_stmt|;
