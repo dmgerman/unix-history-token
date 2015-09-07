@@ -2555,7 +2555,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_BLACKHOLE_DESC
-value|"Enable SCTP blackholing"
+value|"Enable SCTP blackholing. See blackhole(4) man page for more details."
 end_define
 
 begin_define
