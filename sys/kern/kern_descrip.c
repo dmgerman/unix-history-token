@@ -12351,13 +12351,6 @@ return|;
 ifdef|#
 directive|ifdef
 name|CAPABILITIES
-if|if
-condition|(
-name|needrightsp
-operator|!=
-name|NULL
-condition|)
-block|{
 name|error
 operator|=
 name|cap_check
@@ -12383,7 +12376,6 @@ operator|(
 name|error
 operator|)
 return|;
-block|}
 endif|#
 directive|endif
 if|if
