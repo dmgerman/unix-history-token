@@ -10184,36 +10184,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-name|int
-name|pack_fileinfo
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_kern
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|coredump_pack_fileinfo
-argument_list|,
-name|CTLFLAG_RWTUN
-argument_list|,
-operator|&
-name|pack_fileinfo
-argument_list|,
-literal|0
-argument_list|,
-literal|"Enable file path packing in 'procstat -f' coredump notes"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 specifier|static
 name|void
@@ -10257,7 +10227,7 @@ name|filedesc_flags
 decl_stmt|;
 if|if
 condition|(
-name|pack_fileinfo
+name|coredump_pack_fileinfo
 condition|)
 name|filedesc_flags
 operator|=
