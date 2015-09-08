@@ -82,9 +82,11 @@ block|{
 name|pthread_once_t
 modifier|*
 name|once_control
-init|=
-name|arg
 decl_stmt|;
+name|once_control
+operator|=
+name|arg
+expr_stmt|;
 if|if
 condition|(
 name|atomic_cmpset_rel_int
@@ -348,7 +350,9 @@ end_function
 begin_function
 name|void
 name|_thr_once_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{ }
 end_function
 
