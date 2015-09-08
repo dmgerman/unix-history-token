@@ -289,6 +289,16 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|RUN_NODE
+parameter_list|(
+name|ni
+parameter_list|)
+value|((struct run_node *)(ni))
+end_define
+
 begin_struct
 struct|struct
 name|run_cmdq
