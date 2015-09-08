@@ -172,11 +172,16 @@ name|state
 operator|==
 name|ONCE_DONE
 condition|)
+block|{
+name|atomic_thread_fence_acq
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|state
@@ -186,7 +191,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|atomic_cmpset_acq_int
+name|atomic_cmpset_int
 argument_list|(
 operator|&
 name|once_control
@@ -210,7 +215,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|atomic_cmpset_acq_int
+name|atomic_cmpset_int
 argument_list|(
 operator|&
 name|once_control
