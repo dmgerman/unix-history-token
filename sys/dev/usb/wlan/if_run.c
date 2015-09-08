@@ -13709,6 +13709,15 @@ name|ieee80211_node
 modifier|*
 name|ni
 decl_stmt|;
+name|u_int
+name|cipher
+init|=
+name|k
+operator|->
+name|wk_cipher
+operator|->
+name|ic_cipher
+decl_stmt|;
 name|uint32_t
 name|attr
 decl_stmt|;
@@ -13782,11 +13791,7 @@ expr_stmt|;
 comment|/* map net80211 cipher to RT2860 security mode */
 switch|switch
 condition|(
-name|k
-operator|->
-name|wk_cipher
-operator|->
-name|ic_cipher
+name|cipher
 condition|)
 block|{
 case|case
@@ -13945,11 +13950,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|k
-operator|->
-name|wk_cipher
-operator|->
-name|ic_cipher
+name|cipher
 operator|==
 name|IEEE80211_CIPHER_TKIP
 condition|)
@@ -14073,9 +14074,7 @@ block|{
 comment|/* set initial packet number in IV+EIV */
 if|if
 condition|(
-name|k
-operator|->
-name|wk_cipher
+name|cipher
 operator|==
 name|IEEE80211_CIPHER_WEP
 condition|)
@@ -14106,11 +14105,7 @@ else|else
 block|{
 if|if
 condition|(
-name|k
-operator|->
-name|wk_cipher
-operator|->
-name|ic_cipher
+name|cipher
 operator|==
 name|IEEE80211_CIPHER_TKIP
 condition|)
