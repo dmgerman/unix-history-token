@@ -3748,7 +3748,20 @@ break|break;
 case|case
 name|PT_DETACH
 case|:
-comment|/* reset process parent */
+comment|/* 			 * Reset the process parent. 			 * 			 * NB: This clears P_TRACED before reparenting 			 * a detached process back to its original 			 * parent.  Otherwise the debugee will be set 			 * as an orphan of the debugger. 			 */
+name|p
+operator|->
+name|p_flag
+operator|&=
+operator|~
+operator|(
+name|P_TRACED
+operator||
+name|P_WAITED
+operator||
+name|P_FOLLOWFORK
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -3842,19 +3855,6 @@ operator|->
 name|p_oppid
 operator|=
 literal|0
-expr_stmt|;
-name|p
-operator|->
-name|p_flag
-operator|&=
-operator|~
-operator|(
-name|P_TRACED
-operator||
-name|P_WAITED
-operator||
-name|P_FOLLOWFORK
-operator|)
 expr_stmt|;
 comment|/* should we send SIGCHLD? */
 comment|/* childproc_continued(p); */
