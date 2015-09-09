@@ -280,7 +280,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * The MPU interface current has init() uninit() inqsize(( outqsize()  * callback() : fiddle with the tx|rx status.  */
+comment|/*  * The MPU interface current has init() uninit() inqsize() outqsize()  * callback() : fiddle with the tx|rx status.  */
 end_comment
 
 begin_include
@@ -569,7 +569,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Module Exports& Interface  *  * struct midi_chan *midi_init(MPU_CLASS cls, int unit, int chan) int  * midi_uninit(struct snd_midi *) 0 == no error EBUSY or other error int  * Midi_in(struct midi_chan *, char *buf, int count) int Midi_out(struct  * midi_chan *, char *buf, int count)  *  * midi_{in,out} return actual size transfered  *  */
+comment|/*  * Module Exports& Interface  *  * struct midi_chan *midi_init(MPU_CLASS cls, int unit, int chan,  *     void *cookie)  * int midi_uninit(struct snd_midi *)  *  * 0 == no error  * EBUSY or other error  *  * int midi_in(struct snd_midi *, char *buf, int count)  * int midi_out(struct snd_midi *, char *buf, int count)  *  * midi_{in,out} return actual size transfered  *  */
 end_comment
 
 begin_comment
@@ -1665,7 +1665,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * midi_uninit does not call MIDI_UNINIT, as since this is the implementors  * entry point. midi_unint if fact, does not send any methods. A call to  * midi_uninit is a defacto promise that you won't manipulate ch anymore  *  */
+comment|/*  * midi_uninit does not call MIDI_UNINIT, as since this is the implementors  * entry point. midi_uninit if fact, does not send any methods. A call to  * midi_uninit is a defacto promise that you won't manipulate ch anymore  *  */
 end_comment
 
 begin_function
