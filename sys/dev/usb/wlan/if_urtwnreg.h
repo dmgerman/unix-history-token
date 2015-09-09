@@ -2740,7 +2740,7 @@ begin_define
 define|#
 directive|define
 name|R92C_TDECTRL_BLK_DESC_NUM_M
-value|0x0000000f
+value|0x000000f0
 end_define
 
 begin_define
