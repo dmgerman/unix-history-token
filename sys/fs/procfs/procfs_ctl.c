@@ -548,6 +548,16 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX ? */
+name|p
+operator|->
+name|p_oppid
+operator|=
+name|p
+operator|->
+name|p_pptr
+operator|->
+name|p_pid
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -559,16 +569,6 @@ operator|->
 name|td_proc
 condition|)
 block|{
-name|p
-operator|->
-name|p_oppid
-operator|=
-name|p
-operator|->
-name|p_pptr
-operator|->
-name|p_pid
-expr_stmt|;
 name|proc_reparent
 argument_list|(
 name|p
