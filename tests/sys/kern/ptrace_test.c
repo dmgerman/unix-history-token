@@ -2338,7 +2338,7 @@ block|{
 name|pid_t
 name|children
 index|[
-literal|0
+literal|2
 index|]
 decl_stmt|,
 name|fpid
@@ -2665,7 +2665,7 @@ block|{
 name|pid_t
 name|children
 index|[
-literal|0
+literal|2
 index|]
 decl_stmt|,
 name|fpid
@@ -2956,7 +2956,7 @@ block|{
 name|pid_t
 name|children
 index|[
-literal|0
+literal|2
 index|]
 decl_stmt|,
 name|fpid
@@ -3386,7 +3386,7 @@ block|{
 name|pid_t
 name|children
 index|[
-literal|0
+literal|2
 index|]
 decl_stmt|,
 name|fpid
@@ -3777,7 +3777,7 @@ block|{
 name|pid_t
 name|children
 index|[
-literal|0
+literal|2
 index|]
 decl_stmt|,
 name|fpid
@@ -4132,7 +4132,7 @@ block|{
 name|pid_t
 name|children
 index|[
-literal|0
+literal|2
 index|]
 decl_stmt|,
 name|fpid
