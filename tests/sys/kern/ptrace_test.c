@@ -431,7 +431,7 @@ comment|/* Child process. */
 name|trace_me
 argument_list|()
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 literal|1
 argument_list|)
@@ -666,7 +666,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 literal|1
 argument_list|)
@@ -896,7 +896,7 @@ name|c
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 literal|1
 argument_list|)
@@ -1107,7 +1107,7 @@ operator|==
 literal|1
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -1426,7 +1426,7 @@ name|c
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 literal|1
 argument_list|)
@@ -1491,7 +1491,7 @@ name|fpid
 operator|!=
 literal|0
 condition|)
-name|exit
+name|_exit
 argument_list|(
 literal|2
 argument_list|)
@@ -1666,7 +1666,7 @@ operator|==
 literal|1
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -1980,7 +1980,7 @@ operator|==
 literal|0
 condition|)
 comment|/* Child */
-name|exit
+name|_exit
 argument_list|(
 literal|2
 argument_list|)
@@ -2022,7 +2022,7 @@ operator|==
 literal|2
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 literal|1
 argument_list|)
@@ -3300,7 +3300,7 @@ name|fpid
 operator|!=
 literal|0
 condition|)
-name|exit
+name|_exit
 argument_list|(
 literal|3
 argument_list|)
