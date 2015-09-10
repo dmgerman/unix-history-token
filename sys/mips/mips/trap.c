@@ -2939,22 +2939,6 @@ goto|goto
 name|nogo
 goto|;
 block|}
-comment|/* 			 * Keep swapout from messing with us during this 			 * critical time. 			 */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-operator|++
-name|p
-operator|->
-name|p_lock
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|rv
 operator|=
 name|vm_fault
@@ -2966,21 +2950,6 @@ argument_list|,
 name|ftype
 argument_list|,
 name|VM_FAULT_NORMAL
-argument_list|)
-expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-operator|--
-name|p
-operator|->
-name|p_lock
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 comment|/* 			 * XXXDTRACE: add dtrace_doubletrap_func here? 			 */
