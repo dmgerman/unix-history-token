@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -401,6 +395,7 @@ comment|/* login_protect - protect one device entry */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|login_protect
 parameter_list|(
