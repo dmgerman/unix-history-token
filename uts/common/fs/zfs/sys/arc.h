@@ -148,68 +148,82 @@ operator|<<
 literal|6
 block|,
 comment|/* compress in L2ARC */
+name|ARC_FLAG_PREDICTIVE_PREFETCH
+init|=
+literal|1
+operator|<<
+literal|7
+block|,
+comment|/* I/O from zfetch */
 comment|/* 	 * Private ARC flags.  These flags are private ARC only flags that 	 * will show up in b_flags in the arc_hdr_buf_t. These flags should 	 * only be set by ARC code. 	 */
 name|ARC_FLAG_IN_HASH_TABLE
 init|=
 literal|1
 operator|<<
-literal|7
+literal|8
 block|,
 comment|/* buffer is hashed */
 name|ARC_FLAG_IO_IN_PROGRESS
 init|=
 literal|1
 operator|<<
-literal|8
+literal|9
 block|,
 comment|/* I/O in progress */
 name|ARC_FLAG_IO_ERROR
 init|=
 literal|1
 operator|<<
-literal|9
+literal|10
 block|,
 comment|/* I/O failed for buf */
 name|ARC_FLAG_FREED_IN_READ
 init|=
 literal|1
 operator|<<
-literal|10
+literal|11
 block|,
 comment|/* freed during read */
 name|ARC_FLAG_BUF_AVAILABLE
 init|=
 literal|1
 operator|<<
-literal|11
+literal|12
 block|,
 comment|/* block not in use */
 name|ARC_FLAG_INDIRECT
 init|=
 literal|1
 operator|<<
-literal|12
+literal|13
 block|,
 comment|/* indirect block */
+comment|/* Indicates that block was read with ASYNC priority. */
+name|ARC_FLAG_PRIO_ASYNC_READ
+init|=
+literal|1
+operator|<<
+literal|14
+block|,
 name|ARC_FLAG_L2_WRITING
 init|=
 literal|1
 operator|<<
-literal|13
+literal|15
 block|,
 comment|/* write in progress */
 name|ARC_FLAG_L2_EVICTED
 init|=
 literal|1
 operator|<<
-literal|14
+literal|16
 block|,
 comment|/* evicted during I/O */
 name|ARC_FLAG_L2_WRITE_HEAD
 init|=
 literal|1
 operator|<<
-literal|15
+literal|17
 block|,
 comment|/* head of write list */
 comment|/* indicates that the buffer contains metadata (otherwise, data) */
@@ -217,20 +231,20 @@ name|ARC_FLAG_BUFC_METADATA
 init|=
 literal|1
 operator|<<
-literal|16
+literal|18
 block|,
 comment|/* Flags specifying whether optional hdr struct fields are defined */
 name|ARC_FLAG_HAS_L1HDR
 init|=
 literal|1
 operator|<<
-literal|17
+literal|19
 block|,
 name|ARC_FLAG_HAS_L2HDR
 init|=
 literal|1
 operator|<<
-literal|18
+literal|20
 block|,
 comment|/* 	 * The arc buffer's compression mode is stored in the top 7 bits of the 	 * flags field, so these dummy flags are included so that MDB can 	 * interpret the enum properly. 	 */
 name|ARC_FLAG_COMPRESS_0

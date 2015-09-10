@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1892,7 +1892,7 @@ parameter_list|,
 name|uint64_t
 name|length
 parameter_list|,
-name|int
+name|boolean_t
 name|read
 parameter_list|,
 name|void
@@ -1942,6 +1942,7 @@ operator|<=
 name|DMU_MAX_ACCESS
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Note: We directly notify the prefetch code of this read, so that 	 * we can tell it about the multi-block read.  dbuf_read() only knows 	 * about the one block it is accessing. 	 */
 name|dbuf_flags
 operator|=
 name|DB_RF_CANFAIL
@@ -1949,19 +1950,7 @@ operator||
 name|DB_RF_NEVERWAIT
 operator||
 name|DB_RF_HAVESTRUCT
-expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-name|DMU_READ_NO_PREFETCH
-operator|||
-name|length
-operator|>
-name|zfetch_array_rd_sz
-condition|)
-name|dbuf_flags
-operator||=
+operator||
 name|DB_RF_NOPREFETCH
 expr_stmt|;
 name|rw_enter
@@ -2203,7 +2192,6 @@ if|if
 condition|(
 name|read
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -2216,7 +2204,6 @@ argument_list|,
 name|dbuf_flags
 argument_list|)
 expr_stmt|;
-block|}
 name|dbp
 index|[
 name|i
@@ -2226,6 +2213,36 @@ operator|&
 name|db
 operator|->
 name|db
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|DMU_READ_NO_PREFETCH
+operator|)
+operator|==
+literal|0
+operator|&&
+name|read
+operator|&&
+name|length
+operator|<
+name|zfetch_array_rd_sz
+condition|)
+block|{
+name|dmu_zfetch
+argument_list|(
+operator|&
+name|dn
+operator|->
+name|dn_zfetch
+argument_list|,
+name|blkid
+argument_list|,
+name|nblks
+argument_list|)
 expr_stmt|;
 block|}
 name|rw_exit
@@ -2511,7 +2528,7 @@ parameter_list|,
 name|uint64_t
 name|length
 parameter_list|,
-name|int
+name|boolean_t
 name|read
 parameter_list|,
 name|void
@@ -2719,11 +2736,6 @@ name|nblks
 decl_stmt|,
 name|err
 decl_stmt|;
-if|if
-condition|(
-name|zfs_prefetch_disable
-condition|)
-return|return;
 if|if
 condition|(
 name|len
