@@ -71,6 +71,12 @@ directive|if
 name|SANITIZER_MAC
 end_if
 
+begin_include
+include|#
+directive|include
+file|"sanitizer_posix.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|__sanitizer
@@ -101,6 +107,12 @@ block|}
 enum|;
 name|MacosVersion
 name|GetMacosVersion
+parameter_list|()
+function_decl|;
+name|char
+modifier|*
+modifier|*
+name|GetEnviron
 parameter_list|()
 function_decl|;
 block|}

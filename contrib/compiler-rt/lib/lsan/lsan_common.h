@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"sanitizer_common/sanitizer_stoptheworld.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sanitizer_common/sanitizer_symbolizer.h"
 end_include
 
@@ -400,6 +406,18 @@ parameter_list|(
 name|Frontier
 modifier|*
 name|frontier
+parameter_list|)
+function_decl|;
+comment|// Run stoptheworld while holding any platform-specific locks.
+name|void
+name|DoStopTheWorld
+parameter_list|(
+name|StopTheWorldCallback
+name|callback
+parameter_list|,
+name|void
+modifier|*
+name|argument
 parameter_list|)
 function_decl|;
 name|void

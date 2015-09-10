@@ -169,13 +169,13 @@ name|DTV
 operator|*
 name|DTLS_on_tls_get_addr
 argument_list|(
-name|void
-operator|*
-name|arg
+argument|void *arg
 argument_list|,
-name|void
-operator|*
-name|res
+argument|void *res
+argument_list|,
+argument|uptr static_tls_begin
+argument_list|,
+argument|uptr static_tls_end
 argument_list|)
 expr_stmt|;
 name|void

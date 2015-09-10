@@ -227,7 +227,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*!  * \brief Write instrumentation data to the current file.  *  * Writes to the file with the last name given to \a __llvm_profile_set_filename(),  * or if it hasn't been called, the \c LLVM_PROFILE_FILE environment variable,  * or if that's not set, \c "default.profdata".  */
+comment|/*!  * \brief Write instrumentation data to the current file.  *  * Writes to the file with the last name given to \a __llvm_profile_set_filename(),  * or if it hasn't been called, the \c LLVM_PROFILE_FILE environment variable,  * or if that's not set, the last name given to  * \a __llvm_profile_override_default_filename(), or if that's not set,  * \c "default.profraw".  */
 end_comment
 
 begin_function_decl
@@ -246,6 +246,22 @@ end_comment
 begin_function_decl
 name|void
 name|__llvm_profile_set_filename
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*!  * \brief Set the filename for writing instrumentation data, unless the  * \c LLVM_PROFILE_FILE environment variable was set.  *  * Unless overridden, sets the filename to be used for subsequent calls to  * \a __llvm_profile_write_file().  *  * \c Name is not copied, so it must remain valid.  Passing NULL resets the  * filename logic to the default behaviour (unless the \c LLVM_PROFILE_FILE  * was set in which case it has no effect).  */
+end_comment
+
+begin_function_decl
+name|void
+name|__llvm_profile_override_default_filename
 parameter_list|(
 specifier|const
 name|char
