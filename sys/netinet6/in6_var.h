@@ -1611,17 +1611,6 @@ begin_comment
 comment|/* preferred address for SAS */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IN6_IFF_NOPFX
-value|0x8000
-end_define
-
-begin_comment
-comment|/* skip kernel prefix management. 					 * XXX: this should be temporary. 					 */
-end_comment
-
 begin_comment
 comment|/* do not input/output */
 end_comment
