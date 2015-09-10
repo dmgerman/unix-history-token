@@ -1295,6 +1295,14 @@ operator|)
 operator|*
 literal|9
 expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.maxfilesperproc"
+argument_list|,
+operator|&
+name|maxfilesperproc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Cannot be changed after boot. 	 */
 name|nbuf
 operator|=
