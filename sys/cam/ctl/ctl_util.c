@@ -3478,8 +3478,7 @@ name|ctl_io
 modifier|*
 name|ctl_scsi_alloc_io
 parameter_list|(
-name|struct
-name|ctl_id
+name|uint32_t
 name|initid
 parameter_list|)
 block|{

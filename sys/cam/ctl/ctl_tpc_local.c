@@ -1503,8 +1503,6 @@ operator|.
 name|nexus
 operator|.
 name|initid
-operator|.
-name|id
 operator|=
 literal|0
 expr_stmt|;
@@ -1521,18 +1519,6 @@ operator|->
 name|port
 operator|.
 name|targ_port
-expr_stmt|;
-name|io
-operator|->
-name|io_hdr
-operator|.
-name|nexus
-operator|.
-name|targ_target
-operator|.
-name|id
-operator|=
-literal|0
 expr_stmt|;
 name|io
 operator|->

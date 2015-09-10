@@ -555,23 +555,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|ctl_id
-block|{
-name|uint32_t
-name|id
-decl_stmt|;
-name|uint64_t
-name|wwid
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_typedef
 typedef|typedef
 enum|enum
@@ -590,8 +573,7 @@ begin_struct
 struct|struct
 name|ctl_nexus
 block|{
-name|struct
-name|ctl_id
+name|uint32_t
 name|initid
 decl_stmt|;
 comment|/* Initiator ID */
@@ -599,11 +581,6 @@ name|uint32_t
 name|targ_port
 decl_stmt|;
 comment|/* Target port, filled in by PORT */
-name|struct
-name|ctl_id
-name|targ_target
-decl_stmt|;
-comment|/* Destination target */
 name|uint32_t
 name|targ_lun
 decl_stmt|;

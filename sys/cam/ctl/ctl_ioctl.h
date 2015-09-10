@@ -143,10 +143,6 @@ struct|struct
 name|ctl_ooa_info
 block|{
 name|uint32_t
-name|target_id
-decl_stmt|;
-comment|/* Passed in to CTL */
-name|uint32_t
 name|lun_id
 decl_stmt|;
 comment|/* Passed in to CTL */
@@ -215,9 +211,6 @@ struct|struct
 name|ctl_io_delay_info
 block|{
 name|uint32_t
-name|target_id
-decl_stmt|;
-name|uint32_t
 name|lun_id
 decl_stmt|;
 name|ctl_delay_type
@@ -258,10 +251,6 @@ begin_struct
 struct|struct
 name|ctl_sync_info
 block|{
-name|uint32_t
-name|target_id
-decl_stmt|;
-comment|/* passed to kernel */
 name|uint32_t
 name|lun_id
 decl_stmt|;
@@ -573,17 +562,13 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Error injection descriptor.  *  * target_id:	   Target ID to act on.  * lun_id	   LUN to act on.  * lun_error:	   The type of error to inject.  See above for descriptions.  * error_pattern:  What kind of command to act on.  See above.  * cmd_desc:	   For CTL_LUN_PAT_CMD only.  * lba_range:	   For CTL_LUN_PAT_RANGE only.  * custom_sense:   Specify sense.  For CTL_LUN_INJ_CUSTOM only.  * serial:	   Serial number returned by the kernel.  Use for deletion.  * links:	   Kernel use only.  */
+comment|/*  * Error injection descriptor.  *  * lun_id	   LUN to act on.  * lun_error:	   The type of error to inject.  See above for descriptions.  * error_pattern:  What kind of command to act on.  See above.  * cmd_desc:	   For CTL_LUN_PAT_CMD only.  * lba_range:	   For CTL_LUN_PAT_RANGE only.  * custom_sense:   Specify sense.  For CTL_LUN_INJ_CUSTOM only.  * serial:	   Serial number returned by the kernel.  Use for deletion.  * links:	   Kernel use only.  */
 end_comment
 
 begin_struct
 struct|struct
 name|ctl_error_desc
 block|{
-name|uint32_t
-name|target_id
-decl_stmt|;
-comment|/* To kernel */
 name|uint32_t
 name|lun_id
 decl_stmt|;
