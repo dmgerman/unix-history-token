@@ -2095,7 +2095,7 @@ name|HUAWEI
 argument_list|,
 name|ME909U
 argument_list|,
-name|U3GINIT_HUAWEI
+name|U3GINIT_HUAWEISCSI2
 argument_list|)
 block|,
 name|U3G_DEV
