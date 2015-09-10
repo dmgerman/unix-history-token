@@ -108,21 +108,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Uncomment these next two lines to enable the CTL I/O delay feature.  You  * can delay I/O at two different points -- datamove and done.  This is  * useful for diagnosing abort conditions (for hosts that send an abort on a  * timeout), and for determining how long a host's timeout is.  */
+comment|/*  * Uncomment this next line to enable the CTL I/O delay feature.  You  * can delay I/O at two different points -- datamove and done.  This is  * useful for diagnosing abort conditions (for hosts that send an abort on a  * timeout), and for determining how long a host's timeout is.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CTL_IO_DELAY
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_TIMER_BYTES
-value|sizeof(struct callout)
-end_define
+begin_comment
+comment|//#define	CTL_IO_DELAY
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -711,13 +702,10 @@ comment|/* retry count */
 ifdef|#
 directive|ifdef
 name|CTL_IO_DELAY
-name|uint8_t
-name|timer_bytes
-index|[
-name|CTL_TIMER_BYTES
-index|]
+name|struct
+name|callout
+name|delay_callout
 decl_stmt|;
-comment|/* timer kludge */
 endif|#
 directive|endif
 comment|/* CTL_IO_DELAY */
