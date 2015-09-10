@@ -378,7 +378,7 @@ name|YMAX
 parameter_list|(
 name|w
 parameter_list|)
-value|((w)->_maxy-1)
+value|(getmaxy(w)-2)
 end_define
 
 begin_function
