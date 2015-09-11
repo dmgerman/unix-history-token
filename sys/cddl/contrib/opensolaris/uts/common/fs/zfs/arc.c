@@ -8077,9 +8077,9 @@ name|l2hdr
 operator|->
 name|b_daddr
 argument_list|,
-name|hdr
+name|l2hdr
 operator|->
-name|b_size
+name|b_asize
 argument_list|,
 literal|0
 argument_list|)
@@ -16788,9 +16788,9 @@ name|l2hdr
 operator|->
 name|b_daddr
 argument_list|,
-name|hdr
+name|l2hdr
 operator|->
-name|b_size
+name|b_asize
 argument_list|,
 literal|0
 argument_list|)
@@ -20379,9 +20379,9 @@ name|abl2
 operator|->
 name|b_daddr
 argument_list|,
-name|ab
+name|abl2
 operator|->
-name|b_size
+name|b_asize
 argument_list|,
 literal|0
 argument_list|)
