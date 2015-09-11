@@ -12036,15 +12036,6 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"vm_cnt.v_cache_min: %d\n"
-argument_list|,
-name|vm_cnt
-operator|.
-name|v_cache_min
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
 literal|"vm_cnt.v_inactive_target: %d\n"
 argument_list|,
 name|vm_cnt
