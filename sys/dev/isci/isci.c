@@ -651,6 +651,11 @@ name|device
 operator|=
 name|device
 expr_stmt|;
+name|pci_enable_busmaster
+argument_list|(
+name|device
+argument_list|)
+expr_stmt|;
 name|isci_allocate_pci_memory
 argument_list|(
 name|isci
@@ -1175,6 +1180,11 @@ name|device
 argument_list|)
 expr_stmt|;
 block|}
+name|pci_disable_busmaster
+argument_list|(
+name|device
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

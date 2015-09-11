@@ -27,12 +27,6 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_random.h"
-end_include
-
 begin_if
 if|#
 directive|if

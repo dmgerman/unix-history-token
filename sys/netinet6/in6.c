@@ -1224,12 +1224,6 @@ case|case
 name|SIOCGIFINFO_IN6
 case|:
 case|case
-name|SIOCGDRLST_IN6
-case|:
-case|case
-name|SIOCGPRLST_IN6
-case|:
-case|case
 name|SIOCGNBRINFO_IN6
 case|:
 case|case
@@ -4994,24 +4988,18 @@ operator|~
 name|IN6_IFF_DUPLICATED
 expr_stmt|;
 comment|/* safety */
+comment|/* 	 * DAD should be performed for an new address or addresses on 	 * an interface with ND6_IFF_IFDISABLED. 	 */
 if|if
 condition|(
-name|hostIsNew
-operator|&&
 name|in6if_do_dad
 argument_list|(
 name|ifp
 argument_list|)
-condition|)
-name|ia
-operator|->
-name|ia6_flags
-operator||=
-name|IN6_IFF_TENTATIVE
-expr_stmt|;
-comment|/* DAD should be performed after ND6_IFF_IFDISABLED is cleared. */
-if|if
-condition|(
+operator|&&
+operator|(
+name|hostIsNew
+operator|||
+operator|(
 name|ND_IFINFO
 argument_list|(
 name|ifp
@@ -5020,6 +5008,8 @@ operator|->
 name|flags
 operator|&
 name|ND6_IFF_IFDISABLED
+operator|)
+operator|)
 condition|)
 name|ia
 operator|->

@@ -680,13 +680,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|GIF_ACCEPT_REVETHIP
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
 name|GIF_IGNORE_SOURCE
 value|0x0002
 end_define
@@ -694,15 +687,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|GIF_SEND_REVETHIP
-value|0x0010
-end_define
-
-begin_define
-define|#
-directive|define
 name|GIF_OPTMASK
-value|(GIF_ACCEPT_REVETHIP|GIF_SEND_REVETHIP| \     GIF_IGNORE_SOURCE)
+value|(GIF_IGNORE_SOURCE)
 end_define
 
 begin_endif

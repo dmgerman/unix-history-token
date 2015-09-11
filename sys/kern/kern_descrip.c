@@ -4301,6 +4301,8 @@ operator|&
 name|newfde
 operator|->
 name|fde_caps
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 if|if
@@ -6472,11 +6474,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy filecaps structure allocating memory for ioctls array if needed.  */
+comment|/*  * Copy filecaps structure allocating memory for ioctls array if needed.  *  * The last parameter indicates whether the fdtable is locked. If it is not and  * ioctls are encountered, copying fails and the caller must lock the table.  *  * Note that if the table was not locked, the caller has to check the relevant  * sequence counter to determine whether the operation was successful.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|filecaps_copy
 parameter_list|(
 specifier|const
@@ -6489,6 +6491,9 @@ name|struct
 name|filecaps
 modifier|*
 name|dst
+parameter_list|,
+name|bool
+name|locked
 parameter_list|)
 block|{
 name|size_t
@@ -6505,10 +6510,24 @@ condition|(
 name|src
 operator|->
 name|fc_ioctls
-operator|!=
+operator|==
 name|NULL
 condition|)
-block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+operator|!
+name|locked
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|KASSERT
 argument_list|(
 name|src
@@ -6568,7 +6587,11 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -8822,6 +8845,8 @@ operator|&
 name|nfde
 operator|->
 name|fde_caps
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|fhold
@@ -9096,6 +9121,8 @@ operator|&
 name|nfde
 operator|->
 name|fde_caps
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|fhold
@@ -12324,13 +12351,6 @@ return|;
 ifdef|#
 directive|ifdef
 name|CAPABILITIES
-if|if
-condition|(
-name|needrightsp
-operator|!=
-name|NULL
-condition|)
-block|{
 name|error
 operator|=
 name|cap_check
@@ -12356,7 +12376,6 @@ operator|(
 name|error
 operator|)
 return|;
-block|}
 endif|#
 directive|endif
 if|if
@@ -12398,6 +12417,8 @@ operator|.
 name|fde_caps
 argument_list|,
 name|havecaps
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 return|return
@@ -13357,6 +13378,8 @@ operator|&
 name|newfde
 operator|->
 name|fde_caps
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 ifdef|#

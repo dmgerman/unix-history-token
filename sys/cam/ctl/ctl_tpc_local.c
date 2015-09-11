@@ -383,6 +383,13 @@ literal|0
 expr_stmt|;
 name|port
 operator|->
+name|targ_port
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|port
+operator|->
 name|max_initiators
 operator|=
 literal|1
@@ -399,7 +406,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: tpc frontend registration failed\n"
+literal|"%s: ctl_port_register() failed with error\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -1269,10 +1276,7 @@ name|softc
 operator|->
 name|ctl_ports
 index|[
-name|ctl_port_idx
-argument_list|(
 name|init_port
-argument_list|)
 index|]
 expr_stmt|;
 else|else
@@ -1503,8 +1507,6 @@ operator|.
 name|nexus
 operator|.
 name|initid
-operator|.
-name|id
 operator|=
 literal|0
 expr_stmt|;
@@ -1521,18 +1523,6 @@ operator|->
 name|port
 operator|.
 name|targ_port
-expr_stmt|;
-name|io
-operator|->
-name|io_hdr
-operator|.
-name|nexus
-operator|.
-name|targ_target
-operator|.
-name|id
-operator|=
-literal|0
 expr_stmt|;
 name|io
 operator|->

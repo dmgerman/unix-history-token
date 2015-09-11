@@ -1761,10 +1761,8 @@ modifier|*
 name|tf
 parameter_list|)
 block|{
-name|struct
-name|vmspace
-modifier|*
-name|vm
+name|vm_map_t
+name|map
 decl_stmt|;
 name|struct
 name|proc
@@ -1998,61 +1996,15 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 		 * This is a fault on non-kernel virtual memory. 		 */
-name|vm
+comment|/* This is a fault on non-kernel virtual memory. */
+name|map
 operator|=
+operator|&
 name|p
 operator|->
 name|p_vmspace
-expr_stmt|;
-comment|/* 		 * Keep swapout from messing with us during this 		 * critical time. 		 */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-operator|++
-name|p
-operator|->
-name|p_lock
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-comment|/* Fault in the user page. */
-name|rv
-operator|=
-name|vm_fault
-argument_list|(
-operator|&
-name|vm
 operator|->
 name|vm_map
-argument_list|,
-name|va
-argument_list|,
-name|prot
-argument_list|,
-name|VM_FAULT_NORMAL
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Now the process can be swapped again. 		 */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-operator|--
-name|p
-operator|->
-name|p_lock
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -2156,12 +2108,17 @@ name|kernel_map
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * We don't have to worry about process locking or stacks in 		 * the kernel. 		 */
+name|map
+operator|=
+name|kernel_map
+expr_stmt|;
+block|}
+comment|/* Fault in the page. */
 name|rv
 operator|=
 name|vm_fault
 argument_list|(
-name|kernel_map
+name|map
 argument_list|,
 name|va
 argument_list|,
@@ -2170,7 +2127,6 @@ argument_list|,
 name|VM_FAULT_NORMAL
 argument_list|)
 expr_stmt|;
-block|}
 name|CTR3
 argument_list|(
 name|KTR_TRAP

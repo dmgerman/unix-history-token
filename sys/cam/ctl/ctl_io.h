@@ -108,21 +108,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Uncomment these next two lines to enable the CTL I/O delay feature.  You  * can delay I/O at two different points -- datamove and done.  This is  * useful for diagnosing abort conditions (for hosts that send an abort on a  * timeout), and for determining how long a host's timeout is.  */
+comment|/*  * Uncomment this next line to enable the CTL I/O delay feature.  You  * can delay I/O at two different points -- datamove and done.  This is  * useful for diagnosing abort conditions (for hosts that send an abort on a  * timeout), and for determining how long a host's timeout is.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CTL_IO_DELAY
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_TIMER_BYTES
-value|sizeof(struct callout)
-end_define
+begin_comment
+comment|//#define	CTL_IO_DELAY
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -215,11 +206,6 @@ init|=
 literal|0x00000040
 block|,
 comment|/* request came from userland */
-name|CTL_FLAG_CONTROL_DEV
-init|=
-literal|0x00000080
-block|,
-comment|/* processor device */
 name|CTL_FLAG_ALLOCATED
 init|=
 literal|0x00000100
@@ -245,11 +231,6 @@ init|=
 literal|0x00001000
 block|,
 comment|/* DMA in progress */
-name|CTL_FLAG_NO_DATASYNC
-init|=
-literal|0x00002000
-block|,
-comment|/* don't cache flush data */
 name|CTL_FLAG_DELAY_DONE
 init|=
 literal|0x00004000
@@ -283,11 +264,6 @@ init|=
 literal|0x00100000
 block|,
 comment|/* Continue I/O instead of 						   completing */
-name|CTL_FLAG_AUTO_MIRROR
-init|=
-literal|0x00200000
-block|,
-comment|/* Automatically use memory 						   from the RC cache mirrored 						   address area. */
 if|#
 directive|if
 literal|0
@@ -309,11 +285,6 @@ init|=
 literal|0x01000000
 block|,
 comment|/* Status queued but not sent*/
-name|CTL_FLAG_REDIR_DONE
-init|=
-literal|0x02000000
-block|,
-comment|/* Redirection has already 						   been done. */
 name|CTL_FLAG_FAILOVER
 init|=
 literal|0x04000000
@@ -324,17 +295,6 @@ init|=
 literal|0x08000000
 block|,
 comment|/* I/O active on this SC */
-name|CTL_FLAG_RDMA_MASK
-init|=
-name|CTL_FLAG_NO_DATASYNC
-operator||
-name|CTL_FLAG_BUS_ADDR
-operator||
-name|CTL_FLAG_AUTO_MIRROR
-operator||
-name|CTL_FLAG_REDIR_DONE
-block|,
-comment|/* Flags we care about for 						   remote DMA */
 name|CTL_FLAG_STATUS_SENT
 init|=
 literal|0x10000000
@@ -564,23 +524,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|ctl_id
-block|{
-name|uint32_t
-name|id
-decl_stmt|;
-name|uint64_t
-name|wwid
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_typedef
 typedef|typedef
 enum|enum
@@ -599,8 +542,7 @@ begin_struct
 struct|struct
 name|ctl_nexus
 block|{
-name|struct
-name|ctl_id
+name|uint32_t
 name|initid
 decl_stmt|;
 comment|/* Initiator ID */
@@ -608,11 +550,6 @@ name|uint32_t
 name|targ_port
 decl_stmt|;
 comment|/* Target port, filled in by PORT */
-name|struct
-name|ctl_id
-name|targ_target
-decl_stmt|;
-comment|/* Destination target */
 name|uint32_t
 name|targ_lun
 decl_stmt|;
@@ -641,11 +578,21 @@ name|CTL_MSG_MANAGE_TASKS
 block|,
 name|CTL_MSG_PERS_ACTION
 block|,
-name|CTL_MSG_SYNC_FE
-block|,
 name|CTL_MSG_DATAMOVE
 block|,
 name|CTL_MSG_DATAMOVE_DONE
+block|,
+name|CTL_MSG_UA
+block|,
+comment|/* Set/clear UA on secondary. */
+name|CTL_MSG_PORT_SYNC
+block|,
+comment|/* Information about port. */
+name|CTL_MSG_LUN_SYNC
+block|,
+comment|/* Information about LUN. */
+name|CTL_MSG_FAILOVER
+comment|/* Fake, never sent though the wire */
 block|}
 name|ctl_msg_type
 typedef|;
@@ -656,13 +603,6 @@ struct_decl|struct
 name|ctl_scsiio
 struct_decl|;
 end_struct_decl
-
-begin_define
-define|#
-directive|define
-name|CTL_NUM_SG_ENTRIES
-value|9
-end_define
 
 begin_struct
 struct|struct
@@ -711,13 +651,10 @@ comment|/* retry count */
 ifdef|#
 directive|ifdef
 name|CTL_IO_DELAY
-name|uint8_t
-name|timer_bytes
-index|[
-name|CTL_TIMER_BYTES
-index|]
+name|struct
+name|callout
+name|delay_callout
 decl_stmt|;
-comment|/* timer kludge */
 endif|#
 directive|endif
 comment|/* CTL_IO_DELAY */
@@ -775,31 +712,13 @@ decl_stmt|;
 comment|/* CTL private area */
 name|struct
 name|ctl_sg_entry
+modifier|*
 name|remote_sglist
-index|[
-name|CTL_NUM_SG_ENTRIES
-index|]
 decl_stmt|;
 name|struct
 name|ctl_sg_entry
-name|remote_dma_sglist
-index|[
-name|CTL_NUM_SG_ENTRIES
-index|]
-decl_stmt|;
-name|struct
-name|ctl_sg_entry
+modifier|*
 name|local_sglist
-index|[
-name|CTL_NUM_SG_ENTRIES
-index|]
-decl_stmt|;
-name|struct
-name|ctl_sg_entry
-name|local_dma_sglist
-index|[
-name|CTL_NUM_SG_ENTRIES
-index|]
 decl_stmt|;
 name|STAILQ_ENTRY
 argument_list|(
@@ -1108,12 +1027,6 @@ name|uint32_t
 name|status
 decl_stmt|;
 comment|/* transaction status */
-name|TAILQ_ENTRY
-argument_list|(
-argument|ctl_ha_msg_hdr
-argument_list|)
-name|links
-expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -1123,6 +1036,13 @@ define|#
 directive|define
 name|CTL_HA_MAX_SG_ENTRIES
 value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTL_HA_DATAMOVE_SEGMENT
+value|131072
 end_define
 
 begin_comment
@@ -1140,6 +1060,31 @@ decl_stmt|;
 name|struct
 name|ctl_pr_info
 name|pr_info
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Used for CTL_MSG_UA.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ctl_ha_msg_ua
+block|{
+name|struct
+name|ctl_ha_msg_hdr
+name|hdr
+decl_stmt|;
+name|int
+name|ua_all
+decl_stmt|;
+name|int
+name|ua_set
+decl_stmt|;
+name|int
+name|ua_type
 decl_stmt|;
 block|}
 struct|;
@@ -1220,13 +1165,6 @@ name|struct
 name|ctl_ha_msg_hdr
 name|hdr
 decl_stmt|;
-name|uint8_t
-name|cdb
-index|[
-name|CTL_MAX_CDBLEN
-index|]
-decl_stmt|;
-comment|/* CDB */
 name|uint32_t
 name|tag_num
 decl_stmt|;
@@ -1236,14 +1174,20 @@ name|tag_type
 decl_stmt|;
 comment|/* simple, ordered, etc. */
 name|uint8_t
+name|cdb
+index|[
+name|CTL_MAX_CDBLEN
+index|]
+decl_stmt|;
+comment|/* CDB */
+name|uint8_t
+name|cdb_len
+decl_stmt|;
+comment|/* CDB length */
+name|uint8_t
 name|scsi_status
 decl_stmt|;
 comment|/* SCSI status byte */
-name|struct
-name|scsi_sense_data
-name|sense_data
-decl_stmt|;
-comment|/* sense data */
 name|uint8_t
 name|sense_len
 decl_stmt|;
@@ -1265,6 +1209,11 @@ name|ctl_lba_len
 name|lbalen
 decl_stmt|;
 comment|/* used for stats */
+name|struct
+name|scsi_sense_data
+name|sense_data
+decl_stmt|;
+comment|/* sense data */
 block|}
 struct|;
 end_struct
@@ -1297,6 +1246,103 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Used for CTL_MSG_PORT_SYNC.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ctl_ha_msg_port
+block|{
+name|struct
+name|ctl_ha_msg_hdr
+name|hdr
+decl_stmt|;
+name|int
+name|port_type
+decl_stmt|;
+name|int
+name|physical_port
+decl_stmt|;
+name|int
+name|virtual_port
+decl_stmt|;
+name|int
+name|status
+decl_stmt|;
+name|int
+name|name_len
+decl_stmt|;
+name|int
+name|lun_map_len
+decl_stmt|;
+name|int
+name|port_devid_len
+decl_stmt|;
+name|int
+name|target_devid_len
+decl_stmt|;
+name|uint8_t
+name|data
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Used for CTL_MSG_LUN_SYNC.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ctl_ha_msg_lun
+block|{
+name|struct
+name|ctl_ha_msg_hdr
+name|hdr
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+name|unsigned
+name|int
+name|pr_generation
+decl_stmt|;
+name|uint32_t
+name|pr_res_idx
+decl_stmt|;
+name|uint8_t
+name|pr_res_type
+decl_stmt|;
+name|int
+name|lun_devid_len
+decl_stmt|;
+name|int
+name|pr_key_count
+decl_stmt|;
+name|uint8_t
+name|data
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ctl_ha_msg_lun_pr_key
+block|{
+name|uint32_t
+name|pr_iid
+decl_stmt|;
+name|uint64_t
+name|pr_key
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_union
 union|union
 name|ctl_ha_msg
@@ -1320,6 +1366,18 @@ decl_stmt|;
 name|struct
 name|ctl_ha_msg_pr
 name|pr
+decl_stmt|;
+name|struct
+name|ctl_ha_msg_ua
+name|ua
+decl_stmt|;
+name|struct
+name|ctl_ha_msg_port
+name|port
+decl_stmt|;
+name|struct
+name|ctl_ha_msg_lun
+name|lun
 decl_stmt|;
 block|}
 union|;
