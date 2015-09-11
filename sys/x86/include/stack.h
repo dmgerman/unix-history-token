@@ -97,6 +97,28 @@ begin_comment
 comment|/* __amd64__ */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_function_decl
+name|int
+name|stack_nmi_handler
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

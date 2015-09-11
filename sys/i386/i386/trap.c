@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_stack.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_trap.h"
 end_include
 
@@ -312,6 +318,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<machine/stack.h>
+end_include
 
 begin_include
 include|#
@@ -867,17 +879,22 @@ goto|goto
 name|out
 goto|;
 block|}
-ifdef|#
-directive|ifdef
-name|HWPMC_HOOKS
-comment|/* 	 * CPU PMCs interrupt using an NMI so we check for that first. 	 * If the HWPMC module is active, 'pmc_hook' will point to 	 * the function to be called.  A return value of '1' from the 	 * hook means that the NMI was handled by it and that we can 	 * return immediately. 	 */
 if|if
 condition|(
 name|type
 operator|==
 name|T_NMI
-operator|&&
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+comment|/* 		 * CPU PMCs interrupt using an NMI so we check for that first. 		 * If the HWPMC module is active, 'pmc_hook' will point to 		 * the function to be called.  A non-zero return value from the 		 * hook means that the NMI was consumed by it and that we can 		 * return immediately. 		 */
+if|if
+condition|(
 name|pmc_intr
+operator|!=
+name|NULL
 operator|&&
 call|(
 modifier|*
@@ -891,12 +908,32 @@ argument_list|)
 argument_list|,
 name|frame
 argument_list|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
 goto|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|STACK
+if|if
+condition|(
+name|stack_nmi_handler
+argument_list|(
+name|frame
+argument_list|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
+endif|#
+directive|endif
+block|}
 if|if
 condition|(
 name|type
