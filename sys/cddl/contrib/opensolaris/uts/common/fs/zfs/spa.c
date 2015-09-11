@@ -18812,6 +18812,17 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|mutex_exit
+argument_list|(
+operator|&
+name|spa_namespace_lock
+argument_list|)
+expr_stmt|;
+name|nvlist_free
+argument_list|(
+name|config
+argument_list|)
+expr_stmt|;
 name|cmn_err
 argument_list|(
 name|CE_NOTE
