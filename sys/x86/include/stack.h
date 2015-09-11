@@ -67,9 +67,6 @@ decl_stmt|;
 name|u_long
 name|f_retaddr
 decl_stmt|;
-name|u_long
-name|f_arg0
-decl_stmt|;
 block|}
 struct|;
 end_struct

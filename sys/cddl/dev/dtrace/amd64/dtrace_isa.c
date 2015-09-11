@@ -1589,9 +1589,11 @@ operator|(
 name|uintptr_t
 operator|*
 operator|)
+operator|&
 name|fp
-operator|+
-literal|2
+index|[
+literal|1
+index|]
 expr_stmt|;
 name|load
 label|:
