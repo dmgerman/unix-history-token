@@ -5858,6 +5858,10 @@ name|luidt_pdt
 decl_stmt|;
 define|#
 directive|define
+name|EC_NUL
+value|0x20
+define|#
+directive|define
 name|EC_LUIDT_MASK
 value|0xc0
 define|#
