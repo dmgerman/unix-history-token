@@ -1241,6 +1241,16 @@ operator|->
 name|type_code
 operator|!=
 name|EC_CSCD_ID
+operator|||
+operator|(
+name|cscd
+operator|->
+name|luidt_pdt
+operator|&
+name|EC_LUIDT_MASK
+operator|)
+operator|!=
+name|EC_LUIDT_LUN
 condition|)
 return|return
 operator|(
