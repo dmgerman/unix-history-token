@@ -235,6 +235,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|tmpfs_susp_clean
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -1272,8 +1284,6 @@ operator|->
 name|mnt_kern_flag
 operator||=
 name|MNTK_LOOKUP_SHARED
-operator||
-name|MNTK_SUSPENDABLE
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
@@ -2191,6 +2201,24 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * The presence of a susp_clean method tells the VFS to track writes.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|tmpfs_susp_clean
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+name|__unused
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
 comment|/*  * tmpfs vfs operations.  */
 end_comment
 
@@ -2229,6 +2257,11 @@ operator|.
 name|vfs_sync
 operator|=
 name|tmpfs_sync
+block|,
+operator|.
+name|vfs_susp_clean
+operator|=
+name|tmpfs_susp_clean
 block|, }
 decl_stmt|;
 end_decl_stmt

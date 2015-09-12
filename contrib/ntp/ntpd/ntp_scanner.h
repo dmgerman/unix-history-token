@@ -136,51 +136,74 @@ name|scan_state
 typedef|;
 end_typedef
 
+begin_struct
+struct|struct
+name|LCPOS
+block|{
+name|int
+name|nline
+decl_stmt|;
+name|int
+name|ncol
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
-comment|/* Structure to hold a filename, file pointer and positional info */
+comment|/* Structure to hold a filename, file pointer and positional info.  * Instances are dynamically allocated, and the file name is copied by  * value into a dynamic extension of the 'fname' array. (Which *must* be  * the last field for that reason!)  */
 end_comment
 
 begin_struct
 struct|struct
 name|FILE_INFO
 block|{
-specifier|const
-name|char
+name|struct
+name|FILE_INFO
 modifier|*
-name|fname
+name|st_next
 decl_stmt|;
-comment|/* Path to the file */
+comment|/* next on stack */
 name|FILE
 modifier|*
-name|fd
+name|fpi
 decl_stmt|;
 comment|/* File Descriptor */
 name|int
-name|line_no
+name|force_eof
 decl_stmt|;
-comment|/* Line Number */
+comment|/* locked or not */
 name|int
-name|col_no
+name|backch
 decl_stmt|;
-comment|/* Column Number */
-name|int
-name|prev_line_col_no
+comment|/* ungetch buffer */
+name|struct
+name|LCPOS
+name|curpos
 decl_stmt|;
-comment|/* Col No on the  						   previous line when a 						   '\n' was seen */
-name|int
-name|prev_token_line_no
+comment|/* current scan position */
+name|struct
+name|LCPOS
+name|bakpos
 decl_stmt|;
-comment|/* Line at start of 						   token */
-name|int
-name|prev_token_col_no
+comment|/* last line end for ungetc */
+name|struct
+name|LCPOS
+name|tokpos
 decl_stmt|;
-comment|/* Col No at start of 						   token */
-name|int
-name|err_line_no
+comment|/* current token position */
+name|struct
+name|LCPOS
+name|errpos
 decl_stmt|;
-name|int
-name|err_col_no
+comment|/* error position */
+name|char
+name|fname
+index|[
+literal|1
+index|]
 decl_stmt|;
+comment|/* (formal only) buffered name */
 block|}
 struct|;
 end_struct
@@ -200,17 +223,6 @@ begin_comment
 comment|/* Parser output stored here */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|curr_include_level
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The current include level */
-end_comment
-
 begin_comment
 comment|/* VARIOUS EXTERNAL DECLARATIONS  * -----------------------------  */
 end_comment
@@ -219,23 +231,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|old_config_style
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|input_from_file
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|FILE_INFO
-modifier|*
-name|fp
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -273,18 +268,20 @@ begin_function_decl
 name|int
 name|yylex
 parameter_list|(
-name|struct
-name|FILE_INFO
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* managing the input source stack itself */
+end_comment
+
 begin_function_decl
-name|struct
-name|FILE_INFO
-modifier|*
-name|F_OPEN
+specifier|extern
+name|int
+comment|/*BOOL*/
+name|lex_init_stack
 parameter_list|(
 specifier|const
 name|char
@@ -300,40 +297,93 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|FGETC
+specifier|extern
+name|void
+name|lex_drop_stack
 parameter_list|(
-name|struct
-name|FILE_INFO
-modifier|*
-name|stream
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|int
-name|UNGETC
+comment|/*BOOL*/
+name|lex_flush_stack
 parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* add/remove a nested input source */
+end_comment
+
+begin_function_decl
+specifier|extern
 name|int
-name|ch
+comment|/*BOOL*/
+name|lex_push_file
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
 parameter_list|,
-name|struct
-name|FILE_INFO
+specifier|const
+name|char
 modifier|*
-name|stream
+name|mode
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|int
-name|FCLOSE
+comment|/*BOOL*/
+name|lex_pop_file
 parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* input stack state query functions */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|size_t
+name|lex_level
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+comment|/*BOOL*/
+name|lex_from_file
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|struct
 name|FILE_INFO
 modifier|*
-name|stream
+name|lex_current
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

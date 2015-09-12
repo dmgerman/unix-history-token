@@ -1609,6 +1609,22 @@ directive|include
 file|<dev/netmap/if_re_netmap.h>
 end_include
 
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|re
+argument_list|,
+name|netmap
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif

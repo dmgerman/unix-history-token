@@ -1488,6 +1488,9 @@ modifier|*
 name|lflag
 decl_stmt|,
 modifier|*
+name|Tflag
+decl_stmt|,
+modifier|*
 name|sflag
 decl_stmt|;
 name|char
@@ -1531,6 +1534,8 @@ operator|=
 name|eflag
 operator|=
 name|lflag
+operator|=
+name|Tflag
 operator|=
 literal|""
 expr_stmt|;
@@ -1830,6 +1835,28 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
+name|p
+operator|=
+name|strstr
+argument_list|(
+name|token
+argument_list|,
+literal|"notrim"
+argument_list|)
+operator|)
+operator|==
+name|token
+condition|)
+block|{
+name|Tflag
+operator|=
+literal|" -T "
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|token
@@ -1924,7 +1951,7 @@ argument_list|(
 operator|&
 name|args
 argument_list|,
-literal|"%s%s%s%s%s%s%s%s -d"
+literal|"%s%s%s%s%s%s%s%s%s -d"
 argument_list|,
 name|aflag
 argument_list|,
@@ -1937,6 +1964,8 @@ argument_list|,
 name|lflag
 argument_list|,
 name|keylen_str
+argument_list|,
+name|Tflag
 argument_list|,
 name|sflag
 argument_list|,

@@ -2112,7 +2112,7 @@ condition|)
 block|{
 name|Sign
 operator|=
-name|NEGATIVE
+name|ACPI_SIGN_NEGATIVE
 expr_stmt|;
 operator|++
 name|String
@@ -2132,14 +2132,14 @@ name|String
 expr_stmt|;
 name|Sign
 operator|=
-name|POSITIVE
+name|ACPI_SIGN_POSITIVE
 expr_stmt|;
 block|}
 else|else
 block|{
 name|Sign
 operator|=
-name|POSITIVE
+name|ACPI_SIGN_POSITIVE
 expr_stmt|;
 block|}
 comment|/*      * If the input parameter Base is zero, then we need to      * determine if it is octal, decimal, or hexadecimal:      */
@@ -2378,7 +2378,7 @@ if|if
 condition|(
 name|Sign
 operator|==
-name|NEGATIVE
+name|ACPI_SIGN_NEGATIVE
 condition|)
 block|{
 name|ReturnValue

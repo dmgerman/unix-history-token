@@ -934,11 +934,6 @@ condition|(
 name|macros
 operator|==
 name|NULL
-operator|||
-operator|*
-name|macros
-operator|==
-literal|'\0'
 condition|)
 return|return
 name|MI_FAILURE

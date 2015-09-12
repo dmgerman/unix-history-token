@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2013 Mark R V Murray  * Copyright (c) 2013 David E. O'Brien<obrien@NUXI.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (c) 2013-2015 Mark R V Murray  * Copyright (c) 2013 David E. O'Brien<obrien@NUXI.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -95,24 +95,6 @@ directive|include
 file|<dev/random/randomdev.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/random/randomdev_soft.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/random/random_adaptors.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/random/live_entropy_sources.h>
-end_include
-
 begin_function_decl
 specifier|static
 name|void
@@ -149,31 +131,27 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|struct
-name|live_entropy_source
+name|random_source
 name|random_nehemiah
 init|=
 block|{
 operator|.
-name|les_ident
+name|rs_ident
 operator|=
 literal|"VIA Nehemiah Padlock RNG"
 block|,
 operator|.
-name|les_source
+name|rs_source
 operator|=
 name|RANDOM_PURE_NEHEMIAH
 block|,
 operator|.
-name|les_read
+name|rs_read
 operator|=
 name|random_nehemiah_read
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX: FIX? Now that the Davies-Meyer hash is gone and we only use  * the 'xstore' instruction, do we still need to preserve the  * FPU state with fpu_kern_(enter|leave)() ?  */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -453,7 +431,7 @@ operator|&
 name|VIA_HAS_RNG
 condition|)
 block|{
-name|live_entropy_source_register
+name|random_source_register
 argument_list|(
 operator|&
 name|random_nehemiah
@@ -461,11 +439,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"random: live provider: \"%s\"\n"
+literal|"random: fast provider: \"%s\"\n"
 argument_list|,
 name|random_nehemiah
 operator|.
-name|les_ident
+name|rs_ident
 argument_list|)
 expr_stmt|;
 name|random_nehemiah_init
@@ -485,7 +463,7 @@ condition|)
 name|random_nehemiah_deinit
 argument_list|()
 expr_stmt|;
-name|live_entropy_source_deregister
+name|random_source_deregister
 argument_list|(
 operator|&
 name|random_nehemiah

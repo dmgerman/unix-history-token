@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/nv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<assert.h>
 end_include
 
@@ -87,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|"libcapsicum_impl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"nv.h"
 end_include
 
 begin_comment

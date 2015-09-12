@@ -1559,13 +1559,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MNTK_SUSPENDABLE
+name|MNTK_UNUSED1
 value|0x20000000
 end_define
-
-begin_comment
-comment|/* writes can be suspended */
-end_comment
 
 begin_define
 define|#

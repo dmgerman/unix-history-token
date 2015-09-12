@@ -26,6 +26,24 @@ end_include
 begin_define
 define|#
 directive|define
+name|_WANT_MSG_PROTOTYPES
+end_define
+
+begin_define
+define|#
+directive|define
+name|_WANT_SEM_PROTOTYPES
+end_define
+
+begin_define
+define|#
+directive|define
+name|_WANT_SHM_PROTOTYPES
+end_define
+
+begin_define
+define|#
+directive|define
 name|_KERNEL
 end_define
 
@@ -102,18 +120,21 @@ file|"ipc.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|signaled
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|errflg
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rmverbose
 init|=
@@ -121,58 +142,8 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|usage
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|msgrm
-parameter_list|(
-name|key_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|shmrm
-parameter_list|(
-name|key_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|semrm
-parameter_list|(
-name|key_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|not_configured
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -197,6 +168,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msgrm
 parameter_list|(
@@ -415,6 +387,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|shmrm
 parameter_list|(
@@ -637,6 +610,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|semrm
 parameter_list|(
@@ -772,6 +746,8 @@ name|semctl
 argument_list|(
 name|id
 argument_list|,
+literal|0
+argument_list|,
 name|IPC_RMID
 argument_list|,
 name|NULL
@@ -869,6 +845,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|not_configured
 parameter_list|(

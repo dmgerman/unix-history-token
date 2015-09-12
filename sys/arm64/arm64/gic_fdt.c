@@ -129,6 +129,12 @@ name|true
 block|}
 block|,
 block|{
+literal|"qcom,msm-qgic2"
+block|,
+name|true
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|false

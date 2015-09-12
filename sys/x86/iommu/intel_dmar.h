@@ -85,7 +85,7 @@ argument|dmar_map_entry
 argument_list|)
 name|rb_entry
 expr_stmt|;
-comment|/* Links for ctx entries */
+comment|/* Links for domain entries */
 name|TAILQ_ENTRY
 argument_list|(
 argument|dmar_map_entry
@@ -94,9 +94,9 @@ name|unroll_link
 expr_stmt|;
 comment|/* Link for unroll after 						    dmamap_load failure */
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 decl_stmt|;
 name|struct
 name|dmar_qi_genseq
@@ -229,96 +229,98 @@ begin_comment
 comment|/* Transient */
 end_comment
 
+begin_comment
+comment|/*  * Locking annotations:  * (u) - Protected by dmar unit lock  * (d) - Protected by domain lock  * (c) - Immutable after initialization  */
+end_comment
+
+begin_comment
+comment|/*  * The domain abstraction.  Most non-constant members of the domain  * are locked by the owning dmar unit lock, not by the domain lock.  * Most important, dmar lock protects the contexts list.  *  * The domain lock protects the address map for the domain, and list  * of unload entries delayed.  *  * Page tables pages and pages content is protected by the vm object  * lock pgtbl_obj, which contains the page tables pages.  */
+end_comment
+
 begin_struct
 struct|struct
-name|dmar_ctx
+name|dmar_domain
 block|{
-name|uint16_t
-name|rid
-decl_stmt|;
-comment|/* pci RID */
 name|int
 name|domain
 decl_stmt|;
-comment|/* DID */
+comment|/* (c) DID, written in context entry */
 name|int
 name|mgaw
 decl_stmt|;
-comment|/* Real max address width */
+comment|/* (c) Real max address width */
 name|int
 name|agaw
 decl_stmt|;
-comment|/* Adjusted guest address width */
+comment|/* (c) Adjusted guest address width */
 name|int
 name|pglvl
 decl_stmt|;
-comment|/* The pagelevel */
+comment|/* (c) The pagelevel */
 name|int
 name|awlvl
 decl_stmt|;
-comment|/* The pagelevel as the bitmask, to set in 			   context entry */
+comment|/* (c) The pagelevel as the bitmask, 					   to set in context entry */
 name|dmar_gaddr_t
 name|end
 decl_stmt|;
-comment|/* Highest address + 1 in the guest AS */
+comment|/* (c) Highest address + 1 in 					   the guest AS */
+name|u_int
+name|ctx_cnt
+decl_stmt|;
+comment|/* (u) Number of contexts owned */
 name|u_int
 name|refs
 decl_stmt|;
-comment|/* References to the context, from tags */
+comment|/* (u) Refs, including ctx */
 name|struct
 name|dmar_unit
 modifier|*
 name|dmar
 decl_stmt|;
-name|struct
-name|bus_dma_tag_dmar
-name|ctx_tag
-decl_stmt|;
-comment|/* Root tag */
+comment|/* (c) */
 name|struct
 name|mtx
 name|lock
 decl_stmt|;
+comment|/* (c) */
 name|LIST_ENTRY
 argument_list|(
-argument|dmar_ctx
+argument|dmar_domain
 argument_list|)
 name|link
 expr_stmt|;
-comment|/* Member in the dmar list */
+comment|/* (u) Member in the dmar list */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|dmar_ctx
+argument_list|)
+name|contexts
+expr_stmt|;
+comment|/* (u) */
 name|vm_object_t
 name|pgtbl_obj
 decl_stmt|;
-comment|/* Page table pages */
+comment|/* (c) Page table pages */
 name|u_int
 name|flags
 decl_stmt|;
-comment|/* Protected by dmar lock */
-name|uint64_t
-name|last_fault_rec
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* Last fault reported */
+comment|/* (u) */
 name|u_int
 name|entries_cnt
 decl_stmt|;
-name|u_long
-name|loads
-decl_stmt|;
-name|u_long
-name|unloads
-decl_stmt|;
+comment|/* (d) */
 name|struct
 name|dmar_gas_entries_tree
 name|rb_root
 decl_stmt|;
+comment|/* (d) */
 name|struct
 name|dmar_map_entries_tailq
 name|unload_entries
 decl_stmt|;
-comment|/* Entries to unload */
+comment|/* (d) Entries to 							 unload */
 name|struct
 name|dmar_map_entry
 modifier|*
@@ -327,13 +329,104 @@ decl_stmt|,
 modifier|*
 name|last_place
 decl_stmt|;
+comment|/* (d) */
 name|struct
 name|task
 name|unload_task
 decl_stmt|;
+comment|/* (c) */
 block|}
 struct|;
 end_struct
+
+begin_struct
+struct|struct
+name|dmar_ctx
+block|{
+name|struct
+name|bus_dma_tag_dmar
+name|ctx_tag
+decl_stmt|;
+comment|/* (c) Root tag */
+name|uint16_t
+name|rid
+decl_stmt|;
+comment|/* (c) pci RID */
+name|uint64_t
+name|last_fault_rec
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Last fault reported */
+name|struct
+name|dmar_domain
+modifier|*
+name|domain
+decl_stmt|;
+comment|/* (c) */
+name|LIST_ENTRY
+argument_list|(
+argument|dmar_ctx
+argument_list|)
+name|link
+expr_stmt|;
+comment|/* (u) Member in the domain list */
+name|u_int
+name|refs
+decl_stmt|;
+comment|/* (u) References from tags */
+name|u_int
+name|flags
+decl_stmt|;
+comment|/* (u) */
+name|u_long
+name|loads
+decl_stmt|;
+comment|/* atomic updates, for stat only */
+name|u_long
+name|unloads
+decl_stmt|;
+comment|/* same */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|DMAR_DOMAIN_GAS_INITED
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_DOMAIN_PGTBL_INITED
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_DOMAIN_IDMAP
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Domain uses identity 						   page table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_DOMAIN_RMRR
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Domain contains RMRR entry, 						   cannot be turned off */
+end_comment
 
 begin_comment
 comment|/* struct dmar_ctx flags */
@@ -353,30 +446,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DMAR_CTX_IDMAP
-value|0x0002
-end_define
-
-begin_comment
-comment|/* Context uses identity page table */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMAR_CTX_RMRR
-value|0x0004
-end_define
-
-begin_comment
-comment|/* Context contains RMRR entry, 					   cannot be turned off */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DMAR_CTX_DISABLED
-value|0x0008
+value|0x0002
 end_define
 
 begin_comment
@@ -386,72 +457,72 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DMAR_CTX_PGLOCK
+name|DMAR_DOMAIN_PGLOCK
 parameter_list|(
-name|ctx
+name|dom
 parameter_list|)
-value|VM_OBJECT_WLOCK((ctx)->pgtbl_obj)
+value|VM_OBJECT_WLOCK((dom)->pgtbl_obj)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DMAR_CTX_PGTRYLOCK
+name|DMAR_DOMAIN_PGTRYLOCK
 parameter_list|(
-name|ctx
+name|dom
 parameter_list|)
-value|VM_OBJECT_TRYWLOCK((ctx)->pgtbl_obj)
+value|VM_OBJECT_TRYWLOCK((dom)->pgtbl_obj)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DMAR_CTX_PGUNLOCK
+name|DMAR_DOMAIN_PGUNLOCK
 parameter_list|(
-name|ctx
+name|dom
 parameter_list|)
-value|VM_OBJECT_WUNLOCK((ctx)->pgtbl_obj)
+value|VM_OBJECT_WUNLOCK((dom)->pgtbl_obj)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DMAR_CTX_ASSERT_PGLOCKED
+name|DMAR_DOMAIN_ASSERT_PGLOCKED
 parameter_list|(
-name|ctx
+name|dom
 parameter_list|)
 define|\
-value|VM_OBJECT_ASSERT_WLOCKED((ctx)->pgtbl_obj)
+value|VM_OBJECT_ASSERT_WLOCKED((dom)->pgtbl_obj)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DMAR_CTX_LOCK
+name|DMAR_DOMAIN_LOCK
 parameter_list|(
-name|ctx
+name|dom
 parameter_list|)
-value|mtx_lock(&(ctx)->lock)
+value|mtx_lock(&(dom)->lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DMAR_CTX_UNLOCK
+name|DMAR_DOMAIN_UNLOCK
 parameter_list|(
-name|ctx
+name|dom
 parameter_list|)
-value|mtx_unlock(&(ctx)->lock)
+value|mtx_unlock(&(dom)->lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DMAR_CTX_ASSERT_LOCKED
+name|DMAR_DOMAIN_ASSERT_LOCKED
 parameter_list|(
-name|ctx
+name|dom
 parameter_list|)
-value|mtx_assert(&(ctx)->lock, MA_OWNED)
+value|mtx_assert(&(dom)->lock, MA_OWNED)
 end_define
 
 begin_struct
@@ -597,9 +668,9 @@ decl_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|dmar_ctx
+argument|dmar_domain
 argument_list|)
-name|contexts
+name|domains
 expr_stmt|;
 name|struct
 name|unrhdr
@@ -915,12 +986,12 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ctx_set_agaw
+name|domain_set_agaw
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|int
 name|mgaw
@@ -958,12 +1029,12 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ctx_is_sp_lvl
+name|domain_is_sp_lvl
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|int
 name|lvl
@@ -986,12 +1057,12 @@ end_function_decl
 
 begin_function_decl
 name|dmar_gaddr_t
-name|ctx_page_size
+name|domain_page_size
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|int
 name|lvl
@@ -1399,9 +1470,9 @@ name|void
 name|dmar_qi_invalidate_locked
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|start
@@ -1473,12 +1544,12 @@ end_function_decl
 
 begin_function_decl
 name|vm_object_t
-name|ctx_get_idmap_pgtbl
+name|domain_get_idmap_pgtbl
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|maxaddr
@@ -1498,12 +1569,12 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ctx_map_buf
+name|domain_map_buf
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|base
@@ -1526,12 +1597,12 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ctx_unmap_buf
+name|domain_unmap_buf
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|base
@@ -1547,12 +1618,12 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ctx_flush_iotlb_sync
+name|domain_flush_iotlb_sync
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|base
@@ -1565,24 +1636,24 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ctx_alloc_pgtbl
+name|domain_alloc_pgtbl
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|ctx_free_pgtbl
+name|domain_free_pgtbl
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1611,7 +1682,7 @@ begin_function_decl
 name|struct
 name|dmar_ctx
 modifier|*
-name|dmar_get_ctx
+name|dmar_get_ctx_for_dev
 parameter_list|(
 name|struct
 name|dmar_unit
@@ -1629,6 +1700,23 @@ name|id_mapped
 parameter_list|,
 name|bool
 name|rmrr_init
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|dmar_move_ctx_to_domain
+parameter_list|(
+name|struct
+name|dmar_domain
+modifier|*
+name|domain
+parameter_list|,
+name|struct
+name|dmar_ctx
+modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1681,7 +1769,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|dmar_ctx_unload_entry
+name|dmar_domain_unload_entry
 parameter_list|(
 name|struct
 name|dmar_map_entry
@@ -1696,12 +1784,12 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|dmar_ctx_unload
+name|dmar_domain_unload
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|struct
 name|dmar_map_entries_tailq
@@ -1716,7 +1804,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|dmar_ctx_free_entry
+name|dmar_domain_free_entry
 parameter_list|(
 name|struct
 name|dmar_map_entry
@@ -1769,24 +1857,24 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|dmar_gas_init_ctx
+name|dmar_gas_init_domain
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|dmar_gas_fini_ctx
+name|dmar_gas_fini_domain
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1798,9 +1886,9 @@ modifier|*
 name|dmar_gas_alloc_entry
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|u_int
 name|flags
@@ -1813,9 +1901,9 @@ name|void
 name|dmar_gas_free_entry
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|struct
 name|dmar_map_entry
@@ -1830,9 +1918,9 @@ name|void
 name|dmar_gas_free_space
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|struct
 name|dmar_map_entry
@@ -1847,9 +1935,9 @@ name|int
 name|dmar_gas_map
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 specifier|const
 name|struct
@@ -1887,9 +1975,9 @@ name|void
 name|dmar_gas_free_region
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|struct
 name|dmar_map_entry
@@ -1904,9 +1992,9 @@ name|int
 name|dmar_gas_map_region
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|struct
 name|dmar_map_entry
@@ -1931,9 +2019,9 @@ name|int
 name|dmar_gas_reserve_region
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|start
@@ -1946,12 +2034,12 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|dmar_ctx_parse_rmrr
+name|dmar_dev_parse_rmrr
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|device_t
 name|dev

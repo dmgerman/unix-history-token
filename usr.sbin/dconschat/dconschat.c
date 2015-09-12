@@ -1044,7 +1044,7 @@ literal|"-c"
 argument_list|,
 name|com
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|snprintf

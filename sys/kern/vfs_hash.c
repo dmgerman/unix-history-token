@@ -330,7 +330,7 @@ name|arg
 argument_list|)
 condition|)
 continue|continue;
-name|VI_LOCK
+name|vhold
 argument_list|(
 name|vp
 argument_list|)
@@ -349,7 +349,7 @@ name|vp
 argument_list|,
 name|flags
 operator||
-name|LK_INTERLOCK
+name|LK_VNHELD
 argument_list|,
 name|td
 argument_list|)
@@ -551,7 +551,7 @@ name|arg
 argument_list|)
 condition|)
 continue|continue;
-name|VI_LOCK
+name|vhold
 argument_list|(
 name|vp2
 argument_list|)
@@ -570,7 +570,7 @@ name|vp2
 argument_list|,
 name|flags
 operator||
-name|LK_INTERLOCK
+name|LK_VNHELD
 argument_list|,
 name|td
 argument_list|)

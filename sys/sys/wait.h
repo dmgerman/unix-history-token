@@ -442,6 +442,45 @@ begin_comment
 comment|/* __BSD_VISIBLE */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WANT_KW_EXITCODE
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * Clamp the return code to the low 8 bits from full 32 bit value.  * Should be used in kernel to construct the wait(2)-compatible process  * status to usermode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KW_EXITCODE
+parameter_list|(
+name|ret
+parameter_list|,
+name|sig
+parameter_list|)
+value|W_EXITCODE((ret)& 0xff, (sig))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL || _WANT_KW_EXITCODE */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef

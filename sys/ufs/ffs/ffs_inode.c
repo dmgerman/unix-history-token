@@ -38,18 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bio.h>
 end_include
 
@@ -62,13 +50,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/random.h>
 end_include
 
 begin_include
@@ -86,13 +86,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vmmeter.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -494,6 +500,7 @@ name|um_fstype
 operator|==
 name|UFS1
 condition|)
+block|{
 operator|*
 operator|(
 operator|(
@@ -520,7 +527,31 @@ name|ip
 operator|->
 name|i_din1
 expr_stmt|;
+comment|/* XXX: FIX? The entropy here is desirable, but the harvesting may be expensive */
+name|random_harvest_queue
+argument_list|(
+operator|&
+operator|(
+name|ip
+operator|->
+name|i_din1
+operator|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ip
+operator|->
+name|i_din1
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|RANDOM_FS_ATIME
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 operator|*
 operator|(
 operator|(
@@ -547,6 +578,29 @@ name|ip
 operator|->
 name|i_din2
 expr_stmt|;
+comment|/* XXX: FIX? The entropy here is desirable, but the harvesting may be expensive */
+name|random_harvest_queue
+argument_list|(
+operator|&
+operator|(
+name|ip
+operator|->
+name|i_din2
+operator|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ip
+operator|->
+name|i_din2
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|RANDOM_FS_ATIME
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|waitfor

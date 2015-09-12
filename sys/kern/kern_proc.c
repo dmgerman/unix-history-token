@@ -68,7 +68,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/exec.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/jail.h>
 end_include
 
 begin_include
@@ -230,19 +242,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/jail.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/eventhandler.h>
+file|<sys/wait.h>
 end_include
 
 begin_ifdef
@@ -4723,9 +4729,16 @@ name|kp
 operator|->
 name|ki_xstat
 operator|=
+name|KW_EXITCODE
+argument_list|(
 name|p
 operator|->
-name|p_xstat
+name|p_xexit
+argument_list|,
+name|p
+operator|->
+name|p_xsig
+argument_list|)
 expr_stmt|;
 name|kp
 operator|->

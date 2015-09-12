@@ -256,10 +256,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|refcount_release
+argument_list|(
+operator|&
 name|vp
 operator|->
 name|v_usecount
-operator|--
+argument_list|)
 expr_stmt|;
 name|vdropl
 argument_list|(

@@ -405,8 +405,6 @@ name|sin
 decl_stmt|;
 name|int
 name|ifIndex
-decl_stmt|,
-name|ifMTU
 decl_stmt|;
 name|mib
 index|[
@@ -634,14 +632,6 @@ operator|=
 name|ifm
 operator|->
 name|ifm_index
-expr_stmt|;
-name|ifMTU
-operator|=
-name|ifm
-operator|->
-name|ifm_data
-operator|.
-name|ifi_mtu
 expr_stmt|;
 break|break;
 block|}
@@ -2920,8 +2910,6 @@ name|i
 decl_stmt|,
 name|cnt
 decl_stmt|,
-name|flag
-decl_stmt|,
 name|off
 decl_stmt|;
 name|struct
@@ -2948,10 +2936,6 @@ operator|(
 name|caddr_t
 operator|)
 name|n
-expr_stmt|;
-name|flag
-operator|=
-literal|1
 expr_stmt|;
 name|off
 operator|=

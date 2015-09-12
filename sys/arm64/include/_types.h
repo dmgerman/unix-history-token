@@ -403,7 +403,7 @@ begin_define
 define|#
 directive|define
 name|__WCHAR_MIN
-value|__UINT_MIN
+value|0
 end_define
 
 begin_comment

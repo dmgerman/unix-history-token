@@ -7303,9 +7303,11 @@ argument_list|,
 name|DDR_CTL_CONFIG_OFFSET
 argument_list|)
 expr_stmt|;
-name|ath_hal_printf
+name|HALDEBUG
 argument_list|(
 name|ah
+argument_list|,
+name|HAL_DEBUG_RESET
 argument_list|,
 literal|"check DDR Activity - HIGH\n"
 argument_list|)
@@ -7323,9 +7325,11 @@ argument_list|)
 condition|)
 block|{
 comment|//      AVE_DEBUG(0,"DDR Activity - HIGH\n");
-name|ath_hal_printf
+name|HALDEBUG
 argument_list|(
 name|ah
+argument_list|,
+name|HAL_DEBUG_RESET
 argument_list|,
 literal|"DDR Activity - HIGH\n"
 argument_list|)
@@ -7434,9 +7438,11 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-name|ath_hal_printf
+name|HALDEBUG
 argument_list|(
 name|ah
+argument_list|,
+name|HAL_DEBUG_RESET
 argument_list|,
 literal|"%s: Scorpion SoC RTC reset done.\n"
 argument_list|,

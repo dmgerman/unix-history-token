@@ -1691,6 +1691,37 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+end_ifdef
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|ix
+argument_list|,
+name|netmap
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEV_NETMAP */
+end_comment
+
 begin_comment
 comment|/* ** TUNEABLE PARAMETERS: */
 end_comment
@@ -1796,17 +1827,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.ixgbe.rx_process_limit"
-argument_list|,
-operator|&
-name|ixgbe_rx_process_limit
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_ix
@@ -1840,17 +1860,6 @@ init|=
 literal|256
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.ixgbe.tx_process_limit"
-argument_list|,
-operator|&
-name|ixgbe_tx_process_limit
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -2385,6 +2394,23 @@ name|adapter
 operator|->
 name|hw
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+name|adapter
+operator|->
+name|init_locked
+operator|=
+name|ixgbe_init_locked
+expr_stmt|;
+name|adapter
+operator|->
+name|stop_locked
+operator|=
+name|ixgbe_stop
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Core Lock Init*/
 name|IXGBE_CORE_LOCK_INIT
 argument_list|(
@@ -24716,7 +24742,7 @@ switch|switch
 condition|(
 name|msg
 index|[
-literal|0
+literal|1
 index|]
 condition|)
 block|{
@@ -24732,7 +24758,7 @@ name|api_ver
 operator|=
 name|msg
 index|[
-literal|0
+literal|1
 index|]
 expr_stmt|;
 name|ixgbe_send_vf_ack

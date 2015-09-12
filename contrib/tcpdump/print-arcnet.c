@@ -667,6 +667,10 @@ condition|(
 name|caplen
 operator|<
 name|ARC_HDRLEN
+operator|||
+name|length
+operator|<
+name|ARC_HDRLEN
 condition|)
 block|{
 name|ND_PRINT
@@ -740,6 +744,10 @@ condition|(
 name|caplen
 operator|<
 name|ARC_HDRNEWLEN
+operator|||
+name|length
+operator|<
+name|ARC_HDRNEWLEN
 condition|)
 block|{
 name|arcnet_print
@@ -784,6 +792,10 @@ block|{
 if|if
 condition|(
 name|caplen
+operator|<
+name|ARC_HDRNEWLEN_EXC
+operator|||
+name|length
 operator|<
 name|ARC_HDRNEWLEN_EXC
 condition|)
@@ -1007,6 +1019,10 @@ condition|(
 name|caplen
 operator|<
 name|ARC_LINUX_HDRLEN
+operator|||
+name|length
+operator|<
+name|ARC_LINUX_HDRLEN
 condition|)
 block|{
 name|ND_PRINT
@@ -1053,6 +1069,10 @@ expr_stmt|;
 if|if
 condition|(
 name|caplen
+operator|<
+name|ARC_LINUX_HDRNEWLEN
+operator|||
+name|length
 operator|<
 name|ARC_LINUX_HDRNEWLEN
 condition|)
@@ -1206,9 +1226,6 @@ operator|(
 literal|1
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|ARCTYPE_INET6
 case|:
@@ -1226,9 +1243,6 @@ operator|(
 literal|1
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/*INET6*/
 case|case
 name|ARCTYPE_ARP_OLD
 case|:

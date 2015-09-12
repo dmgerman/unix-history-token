@@ -567,7 +567,7 @@ comment|/* seconds offset from gmt to local time */
 end_comment
 
 begin_comment
-comment|/*  * True if  "l" bytes of "var" were captured.  *  * The "snapend - (l)<= snapend" checks to make sure "l" isn't so large  * that "snapend - (l)" underflows.  *  * The check is for<= rather than< because "l" might be 0.  */
+comment|/*  * True if  "l" bytes of "var" were captured.  *  * The "snapend - (l)<= snapend" checks to make sure "l" isn't so large  * that "snapend - (l)" underflows.  *  * The check is for<= rather than< because "l" might be 0.  *  * We cast the pointers to uintptr_t to make sure that the compiler  * doesn't optimize away any of these tests (which it is allowed to  * do, as adding an integer to, or subtracting an integer from, a  * pointer assumes that the pointer is a pointer to an element of an  * array and that the result of the addition or subtraction yields a  * pointer to another member of the array, so that, for example, if  * you subtract a positive integer from a pointer, the result is  * guaranteed to be less than the original pointer value). See  *  *	http://www.kb.cert.org/vuls/id/162289  */
 end_comment
 
 begin_define
@@ -579,7 +579,8 @@ name|var
 parameter_list|,
 name|l
 parameter_list|)
-value|(snapend - (l)<= snapend&& \ 			(const u_char *)&(var)<= snapend - (l))
+define|\
+value|((uintptr_t)snapend - (l)<= (uintptr_t)snapend&& \ 	   (uintptr_t)&(var)<= (uintptr_t)snapend - (l))
 end_define
 
 begin_comment
@@ -859,19 +860,6 @@ include|#
 directive|include
 file|<pcap.h>
 end_include
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|q922_string
-parameter_list|(
-specifier|const
-name|u_char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern

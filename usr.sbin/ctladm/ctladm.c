@@ -17610,6 +17610,10 @@ goto|goto
 name|bailout
 goto|;
 block|}
+name|retval
+operator|=
+literal|0
+expr_stmt|;
 name|XML_ParserFree
 argument_list|(
 name|parser
@@ -19904,6 +19908,10 @@ goto|goto
 name|bailout
 goto|;
 block|}
+name|retval
+operator|=
+literal|0
+expr_stmt|;
 name|XML_ParserFree
 argument_list|(
 name|parser
@@ -21583,6 +21591,10 @@ goto|goto
 name|bailout
 goto|;
 block|}
+name|retval
+operator|=
+literal|0
+expr_stmt|;
 name|XML_ParserFree
 argument_list|(
 name|parser

@@ -304,9 +304,6 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|BSD_AFNUM_INET6_BSD
 case|:
@@ -326,8 +323,6 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|BSD_AFNUM_ISO
 case|:

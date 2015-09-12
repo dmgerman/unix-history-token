@@ -163,6 +163,18 @@ block|{
 name|int
 name|retval
 decl_stmt|;
+name|size_t
+name|orig_oldlen
+decl_stmt|;
+name|orig_oldlen
+operator|=
+name|oldlenp
+condition|?
+operator|*
+name|oldlenp
+else|:
+literal|0
+expr_stmt|;
 name|retval
 operator|=
 name|__sysctl
@@ -180,16 +192,10 @@ argument_list|,
 name|newlen
 argument_list|)
 expr_stmt|;
+comment|/* 	 * All valid names under CTL_USER have a dummy entry in the sysctl 	 * tree (to support name lookups and enumerations) with an 	 * empty/zero value, and the true value is supplied by this routine. 	 * For all such names, __sysctl() is used solely to validate the 	 * name. 	 * 	 * Return here unless there was a successful lookup for a CTL_USER 	 * name. 	 */
 if|if
 condition|(
 name|retval
-operator|!=
-operator|-
-literal|1
-operator|||
-name|errno
-operator|!=
-name|ENOENT
 operator|||
 name|name
 index|[
@@ -254,8 +260,7 @@ if|if
 condition|(
 name|oldp
 operator|&&
-operator|*
-name|oldlenp
+name|orig_oldlen
 operator|<
 sizeof|sizeof
 argument_list|(

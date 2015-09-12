@@ -8282,6 +8282,65 @@ name|fini
 operator|=
 name|fini
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+comment|/* 	 * If a zone is being created with an empty constructor and 	 * destructor, pass UMA constructor/destructor which checks for 	 * memory use after free. 	 */
+if|if
+condition|(
+operator|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|UMA_ZONE_ZINIT
+operator|)
+operator|)
+operator|&&
+name|ctor
+operator|==
+name|NULL
+operator|&&
+name|dtor
+operator|==
+name|NULL
+operator|&&
+name|uminit
+operator|==
+name|NULL
+operator|&&
+name|fini
+operator|==
+name|NULL
+condition|)
+block|{
+name|args
+operator|.
+name|ctor
+operator|=
+name|trash_ctor
+expr_stmt|;
+name|args
+operator|.
+name|dtor
+operator|=
+name|trash_dtor
+expr_stmt|;
+name|args
+operator|.
+name|uminit
+operator|=
+name|trash_init
+expr_stmt|;
+name|args
+operator|.
+name|fini
+operator|=
+name|trash_fini
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|args
 operator|.
 name|align
@@ -9064,14 +9123,22 @@ decl_stmt|;
 name|int
 name|cpu
 decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX: FIX!! Do not enable this in CURRENT!! MarkM */
-comment|/* The entropy here is desirable, but the harvesting is expensive */
-block|random_harvest(&(zone->uz_name), sizeof(void *), 1, RANDOM_UMA_ALLOC);
-endif|#
-directive|endif
+comment|/* XXX: FIX? The entropy here is desirable, but the harvesting may be expensive */
+name|random_harvest_fast
+argument_list|(
+operator|&
+name|zone
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|zone
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|RANDOM_FAST
+argument_list|)
+expr_stmt|;
 comment|/* This is the fast path allocation */
 ifdef|#
 directive|ifdef
@@ -9240,14 +9307,6 @@ name|NULL
 operator|)
 return|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* XXX: FIX!! Do not enable this in CURRENT!! MarkM */
-comment|/* The entropy here is desirable, but the harvesting is expensive */
-block|random_harvest(&item, sizeof(void *), 1, RANDOM_UMA_ALLOC);
-endif|#
-directive|endif
 return|return
 operator|(
 name|item
@@ -9428,14 +9487,6 @@ argument_list|,
 name|zone
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX: FIX!! Do not enable this in CURRENT!! MarkM */
-comment|/* The entropy here is desirable, but the harvesting is expensive */
-block|random_harvest(&item, sizeof(void *), 1, RANDOM_UMA_ALLOC);
-endif|#
-directive|endif
 return|return
 operator|(
 name|item
@@ -9814,14 +9865,6 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX: FIX!! Do not enable this in CURRENT!! MarkM */
-comment|/* The entropy here is desirable, but the harvesting is expensive */
-block|random_harvest(&item, sizeof(void *), 1, RANDOM_UMA_ALLOC);
-endif|#
-directive|endif
 return|return
 operator|(
 name|item
@@ -11235,14 +11278,22 @@ decl_stmt|;
 name|int
 name|cpu
 decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX: FIX!! Do not enable this in CURRENT!! MarkM */
-comment|/* The entropy here is desirable, but the harvesting is expensive */
-block|struct entropy { 		const void *uz_name; 		const void *item; 	} entropy;  	entropy.uz_name = zone->uz_name; 	entropy.item = item; 	random_harvest(&entropy, sizeof(struct entropy), 2, RANDOM_UMA_ALLOC);
-endif|#
-directive|endif
+comment|/* XXX: FIX? The entropy here is desirable, but the harvesting may be expensive */
+name|random_harvest_fast
+argument_list|(
+operator|&
+name|zone
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|zone
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|RANDOM_FAST
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UMA_DEBUG_ALLOC_1

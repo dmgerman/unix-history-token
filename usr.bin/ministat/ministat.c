@@ -3799,11 +3799,11 @@ name|p
 operator|!=
 literal|'\0'
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"Invalid data on line %d in %s\n"
+literal|"Invalid data on line %d in %s"
 argument_list|,
 name|line
 argument_list|,

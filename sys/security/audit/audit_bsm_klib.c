@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capsicum.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -1659,6 +1665,9 @@ name|struct
 name|sbuf
 name|sbf
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -1771,7 +1780,11 @@ name|td
 argument_list|,
 name|dirfd
 argument_list|,
-name|NULL
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|)
 argument_list|,
 operator|&
 name|cvnp

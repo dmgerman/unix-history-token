@@ -2993,8 +2993,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_MAXSYSCALL
+name|FREEBSD32_SYS_numa_getaffinity
 value|548
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_SYS_numa_setaffinity
+value|549
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_SYS_MAXSYSCALL
+value|550
 end_define
 
 end_unit

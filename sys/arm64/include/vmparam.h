@@ -314,7 +314,7 @@ value|(0xffffff8800000000UL)
 end_define
 
 begin_comment
-comment|/* Direct Map for 64 GiB of PA: 0x0 - 0xfffffffff */
+comment|/* Direct Map for 128 GiB of PA: 0x0 - 0x1fffffffff */
 end_comment
 
 begin_define
@@ -328,7 +328,7 @@ begin_define
 define|#
 directive|define
 name|DMAP_MAX_ADDRESS
-value|(0xffffffcfffffffffUL)
+value|(0xffffffdfffffffffUL)
 end_define
 
 begin_define

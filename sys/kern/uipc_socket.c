@@ -1657,7 +1657,7 @@ argument_list|,
 name|RLIM_INFINITY
 argument_list|)
 expr_stmt|;
-comment|/* remove acccept filter if one is present. */
+comment|/* remove accept filter if one is present. */
 if|if
 condition|(
 name|so
@@ -3486,10 +3486,6 @@ name|dom_dispose
 call|)
 argument_list|(
 name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_mb
 argument_list|)
 expr_stmt|;
 if|if
@@ -10917,8 +10913,8 @@ operator|->
 name|so_proto
 decl_stmt|;
 name|struct
-name|sockbuf
-name|asb
+name|socket
+name|aso
 decl_stmt|;
 name|VNET_SO_ASSERT
 argument_list|(
@@ -10952,16 +10948,21 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
-name|asb
+name|aso
 argument_list|,
-name|offsetof
+sizeof|sizeof
 argument_list|(
-expr|struct
-name|sockbuf
-argument_list|,
-name|sb_startzero
+name|aso
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|aso
+operator|.
+name|so_pcb
+operator|=
+name|so
+operator|->
+name|so_pcb
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -10971,7 +10972,9 @@ operator|->
 name|sb_startzero
 argument_list|,
 operator|&
-name|asb
+name|aso
+operator|.
+name|so_rcv
 operator|.
 name|sb_startzero
 argument_list|,
@@ -11022,7 +11025,7 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Dispose of special rights and flush the socket buffer.  Don't call 	 * any unsafe routines (that rely on locks being initialized) on asb. 	 */
+comment|/* 	 * Dispose of special rights and flush the copied socket.  Don't call 	 * any unsafe routines (that rely on locks being initialized) on aso. 	 */
 if|if
 condition|(
 name|pr
@@ -11048,15 +11051,16 @@ operator|->
 name|dom_dispose
 call|)
 argument_list|(
-name|asb
-operator|.
-name|sb_mb
+operator|&
+name|aso
 argument_list|)
 expr_stmt|;
 name|sbrelease_internal
 argument_list|(
 operator|&
-name|asb
+name|aso
+operator|.
+name|so_rcv
 argument_list|,
 name|so
 argument_list|)

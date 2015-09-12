@@ -582,6 +582,12 @@ name|RACCT
 if|if
 condition|(
 name|racct_enable
+operator|&&
+name|p
+operator|->
+name|p_throttled
+operator|==
+literal|1
 condition|)
 block|{
 name|PROC_LOCK

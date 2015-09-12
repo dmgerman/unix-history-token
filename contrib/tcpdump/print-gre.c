@@ -904,9 +904,6 @@ name|len
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|ETHERTYPE_IPV6
 case|:
@@ -920,8 +917,6 @@ name|len
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|ETHERTYPE_MPLS
 case|:

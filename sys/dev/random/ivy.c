@@ -83,24 +83,6 @@ directive|include
 file|<dev/random/randomdev.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/random/randomdev_soft.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/random/random_adaptors.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/random/live_entropy_sources.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -124,22 +106,22 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|struct
-name|live_entropy_source
+name|random_source
 name|random_ivy
 init|=
 block|{
 operator|.
-name|les_ident
+name|rs_ident
 operator|=
 literal|"Intel Secure Key RNG"
 block|,
 operator|.
-name|les_source
+name|rs_source
 operator|=
 name|RANDOM_PURE_RDRAND
 block|,
 operator|.
-name|les_read
+name|rs_read
 operator|=
 name|random_ivy_read
 block|}
@@ -369,7 +351,7 @@ operator|&
 name|CPUID2_RDRAND
 condition|)
 block|{
-name|live_entropy_source_register
+name|random_source_register
 argument_list|(
 operator|&
 name|random_ivy
@@ -377,11 +359,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"random: live provider: \"%s\"\n"
+literal|"random: fast provider: \"%s\"\n"
 argument_list|,
 name|random_ivy
 operator|.
-name|les_ident
+name|rs_ident
 argument_list|)
 expr_stmt|;
 block|}
@@ -395,7 +377,7 @@ name|cpu_feature2
 operator|&
 name|CPUID2_RDRAND
 condition|)
-name|live_entropy_source_deregister
+name|random_source_deregister
 argument_list|(
 operator|&
 name|random_ivy

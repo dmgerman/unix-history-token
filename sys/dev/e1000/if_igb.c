@@ -2183,6 +2183,37 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+end_ifdef
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|igb
+argument_list|,
+name|netmap
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEV_NETMAP */
+end_comment
+
 begin_comment
 comment|/*********************************************************************  *  Tunable default values.  *********************************************************************/
 end_comment

@@ -3016,9 +3016,11 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Flush DDR FIFO for IP2 */
-name|ar71xx_device_ddr_flush_ip2
-argument_list|()
+comment|/* Flush DDR FIFO for PCI/PCIe */
+name|ar71xx_device_flush_ddr
+argument_list|(
+name|AR71XX_CPU_DDR_FLUSH_PCIE
+argument_list|)
 expr_stmt|;
 comment|/* TODO: frame instead of NULL? */
 name|intr_event_handle

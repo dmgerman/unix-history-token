@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -537,7 +543,8 @@ parameter_list|(
 name|int
 name|fd
 parameter_list|,
-name|int
+name|unsigned
+name|long
 name|flag
 parameter_list|,
 specifier|const

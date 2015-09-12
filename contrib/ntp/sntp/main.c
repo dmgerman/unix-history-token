@@ -4834,6 +4834,7 @@ name|char
 modifier|*
 name|ts_str
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|leaptxt

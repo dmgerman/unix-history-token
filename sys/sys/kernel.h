@@ -231,16 +231,16 @@ init|=
 literal|0x2110000
 block|,
 comment|/* resource accounting */
-name|SI_SUB_RANDOM
-init|=
-literal|0x2120000
-block|,
-comment|/* random number generator */
 name|SI_SUB_KDTRACE
 init|=
 literal|0x2140000
 block|,
 comment|/* Kernel dtrace hooks */
+name|SI_SUB_RANDOM
+init|=
+literal|0x2160000
+block|,
+comment|/* random number generator */
 name|SI_SUB_MAC
 init|=
 literal|0x2180000

@@ -4,7 +4,7 @@ comment|/**  * \file nested.c  *  *  Handle options with arguments that contain 
 end_comment
 
 begin_comment
-comment|/*  *   Automated Options Nested Values module.  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
+comment|/*  *   Automated Options Nested Values module.  *  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2015 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
 end_comment
 
 begin_typedef
@@ -2545,18 +2545,14 @@ operator|(
 name|tOptionValue
 operator|*
 operator|)
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|intptr_t
-operator|)
+name|VOIDP
+argument_list|(
 operator|*
 operator|(
 name|pnew_val
 operator|++
 operator|)
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -2583,10 +2579,6 @@ expr_stmt|;
 block|}
 name|AGFREE
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|arg_list
 argument_list|)
 expr_stmt|;
@@ -2640,13 +2632,6 @@ argument_list|)
 expr_stmt|;
 name|AGFREE
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|intptr_t
-operator|)
 name|opt_val
 argument_list|)
 expr_stmt|;
@@ -2707,9 +2692,6 @@ argument_list|(
 name|tOptionValue
 operator|*
 argument_list|,
-operator|(
-name|intptr_t
-operator|)
 name|arg_list
 operator|->
 name|apzArgs
@@ -2727,9 +2709,6 @@ argument_list|(
 name|tOptionValue
 operator|*
 argument_list|,
-operator|(
-name|intptr_t
-operator|)
 name|arg_list
 operator|->
 name|apzArgs
@@ -2764,11 +2743,10 @@ operator|+
 literal|1
 index|]
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
+name|VOIDP
+argument_list|(
 name|old_v
+argument_list|)
 expr_stmt|;
 name|old_v
 operator|=
@@ -2776,13 +2754,7 @@ operator|(
 name|tOptionValue
 operator|*
 operator|)
-operator|(
-name|void
-operator|*
-operator|)
-call|(
-name|intptr_t
-call|)
+name|VOIDP
 argument_list|(
 name|arg_list
 operator|->
@@ -2811,18 +2783,17 @@ operator|+
 literal|1
 index|]
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
+name|VOIDP
+argument_list|(
 name|new_v
+argument_list|)
 expr_stmt|;
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*=  * private:  *  * what:  parse a hierarchical option argument  * arg:   + char const * + pzTxt  + the text to scan      +  * arg:   + char const * + pzName + the name for the text +  * arg:   + size_t       + nm_len + the length of "name"  +  *  * ret_type:  tOptionValue*  * ret_desc:  An allocated, compound value structure  *  * doc:  *  A block of text represents a series of values.  It may be an  *  entire configuration file, or it may be an argument to an  *  option that takes a hierarchical value.  *  *  If NULL is returned, errno will be set:  *  @itemize @bullet  *  @item  *  @code{EINVAL} the input text was NULL.  *  @item  *  @code{ENOMEM} the storage structures could not be allocated  *  @item  *  @code{ENOMSG} no configuration values were found  *  @end itemize =*/
+comment|/*=  * private:  *  * what:  parse a hierarchical option argument  * arg:   + char const * + pzTxt  + the text to scan      +  * arg:   + char const * + pzName + the name for the text +  * arg:   + size_t       + nm_len + the length of "name"  +  *  * ret_type:  tOptionValue *  * ret_desc:  An allocated, compound value structure  *  * doc:  *  A block of text represents a series of values.  It may be an  *  entire configuration file, or it may be an argument to an  *  option that takes a hierarchical value.  *  *  If NULL is returned, errno will be set:  *  @itemize @bullet  *  @item  *  @code{EINVAL} the input text was NULL.  *  @item  *  @code{ENOMEM} the storage structures could not be allocated  *  @item  *  @code{ENOMSG} no configuration values were found  *  @end itemize =*/
 end_comment
 
 begin_function
@@ -3151,7 +3122,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func  optionNestedVal  * private:  *  * what:  parse a hierarchical option argument  * arg:   + tOptions* + opts + program options descriptor +  * arg:   + tOptDesc* + od   + the descriptor for this arg +  *  * doc:  *  Nested value was found on the command line =*/
+comment|/*=export_func  optionNestedVal  * private:  *  * what:  parse a hierarchical option argument  * arg:   + tOptions * + opts + program options descriptor +  * arg:   + tOptDesc * + od   + the descriptor for this arg +  *  * doc:  *  Nested value was found on the command line =*/
 end_comment
 
 begin_function
@@ -3231,18 +3202,14 @@ name|void
 modifier|*
 name|p
 init|=
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|intptr_t
-operator|)
+name|VOIDP
+argument_list|(
 operator|*
 operator|(
 name|av
 operator|++
 operator|)
+argument_list|)
 decl_stmt|;
 name|optionUnloadNested
 argument_list|(
@@ -3304,11 +3271,10 @@ operator|->
 name|optCookie
 operator|)
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
+name|VOIDP
+argument_list|(
 name|opt_val
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3401,9 +3367,6 @@ operator|(
 name|char
 operator|*
 operator|*
-operator|)
-operator|(
-name|intptr_t
 operator|)
 operator|&
 name|pz

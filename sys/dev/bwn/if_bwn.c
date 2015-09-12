@@ -69367,7 +69367,7 @@ name|mac
 operator|->
 name|mac_phy
 operator|.
-name|rf_rev
+name|rev
 operator|>=
 literal|3
 operator|||

@@ -2634,9 +2634,6 @@ name|irq
 decl_stmt|,
 name|mask
 decl_stmt|;
-name|ar71xx_device_ddr_flush_ip2
-argument_list|()
-expr_stmt|;
 name|reg
 operator|=
 name|ATH_READ_REG
@@ -2703,6 +2700,12 @@ name|FILTER_STRAY
 operator|)
 return|;
 block|}
+comment|/* Flush pending memory transactions */
+name|ar71xx_device_flush_ddr
+argument_list|(
+name|AR71XX_CPU_DDR_FLUSH_PCIE
+argument_list|)
+expr_stmt|;
 comment|/* TODO: frame instead of NULL? */
 name|intr_event_handle
 argument_list|(

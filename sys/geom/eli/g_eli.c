@@ -2985,6 +2985,8 @@ condition|)
 goto|goto
 name|end
 goto|;
+name|error
+operator|=
 name|eli_metadata_decode
 argument_list|(
 name|buf
@@ -2992,6 +2994,16 @@ argument_list|,
 name|md
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|end
+goto|;
+comment|/* Metadata was read and decoded successfully. */
 name|end
 label|:
 if|if
@@ -3453,12 +3465,12 @@ name|start
 operator|=
 name|g_eli_start
 expr_stmt|;
-comment|/* 	 * Spoiling cannot happen actually, because we keep provider open for 	 * writing all the time or provider is read-only. 	 */
+comment|/* 	 * Spoiling can happen even though we have the provider open 	 * exclusively, e.g. through media change events. 	 */
 name|gp
 operator|->
 name|spoiled
 operator|=
-name|g_eli_orphan_spoil_assert
+name|g_eli_orphan
 expr_stmt|;
 name|gp
 operator|->
@@ -4933,6 +4945,40 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|keyfile
+operator|==
+name|NULL
+operator|&&
+name|i
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 			 * If there is only one keyfile, allow simpler name. 			 */
+name|snprintf
+argument_list|(
+name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
+argument_list|,
+literal|"%s:geli_keyfile"
+argument_list|,
+name|provider
+argument_list|)
+expr_stmt|;
+name|keyfile
+operator|=
+name|preload_search_by_type
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|keyfile

@@ -4248,9 +4248,6 @@ decl_stmt|;
 name|uint8_t
 name|status
 decl_stmt|;
-name|uint8_t
-name|flags
-decl_stmt|;
 name|status
 operator|=
 name|libusb20_tr_get_status
@@ -4338,12 +4335,6 @@ operator|->
 name|num_iso_packets
 operator|=
 name|iso_packets
-expr_stmt|;
-name|flags
-operator|=
-name|uxfer
-operator|->
-name|flags
 expr_stmt|;
 switch|switch
 condition|(

@@ -8397,9 +8397,6 @@ decl_stmt|;
 name|uint64_t
 name|vmcb_pa
 decl_stmt|;
-name|u_int
-name|thiscpu
-decl_stmt|;
 name|int
 name|handled
 decl_stmt|;
@@ -8458,11 +8455,6 @@ argument_list|,
 name|vcpu
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Stash 'curcpu' on the stack as 'thiscpu'. 	 * 	 * The per-cpu data area is not accessible until MSR_GSBASE is restored 	 * after the #VMEXIT. Since VMRUN is executed inside a critical section 	 * 'curcpu' and 'thiscpu' are guaranteed to identical. 	 */
-name|thiscpu
-operator|=
-name|curcpu
-expr_stmt|;
 name|gctx
 operator|=
 name|svm_get_guest_regctx
@@ -8489,7 +8481,7 @@ name|vcpustate
 operator|->
 name|lastcpu
 operator|!=
-name|thiscpu
+name|curcpu
 condition|)
 block|{
 comment|/* 		 * Force new ASID allocation by invalidating the generation. 		 */
@@ -8516,7 +8508,7 @@ name|vcpustate
 operator|->
 name|lastcpu
 operator|=
-name|thiscpu
+name|curcpu
 expr_stmt|;
 name|vmm_stat_incr
 argument_list|(
@@ -8658,10 +8650,10 @@ argument_list|,
 name|vlapic
 argument_list|)
 expr_stmt|;
-comment|/* Activate the nested pmap on 'thiscpu' */
+comment|/* Activate the nested pmap on 'curcpu' */
 name|CPU_SET_ATOMIC_ACQ
 argument_list|(
-name|thiscpu
+name|curcpu
 argument_list|,
 operator|&
 name|pmap
@@ -8678,7 +8670,7 @@ name|vcpu
 argument_list|,
 name|pmap
 argument_list|,
-name|thiscpu
+name|curcpu
 argument_list|)
 expr_stmt|;
 name|ctrl
@@ -8730,46 +8722,22 @@ argument_list|(
 name|vmcb_pa
 argument_list|,
 name|gctx
+argument_list|,
+operator|&
+name|__pcpu
+index|[
+name|curcpu
+index|]
 argument_list|)
 expr_stmt|;
 name|CPU_CLR_ATOMIC
 argument_list|(
-name|thiscpu
+name|curcpu
 argument_list|,
 operator|&
 name|pmap
 operator|->
 name|pm_active
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Restore MSR_GSBASE to point to the pcpu data area. 		 * 		 * Note that accesses done via PCPU_GET/PCPU_SET will work 		 * only after MSR_GSBASE is restored. 		 * 		 * Also note that we don't bother restoring MSR_KGSBASE 		 * since it is not used in the kernel and will be restored 		 * when the VMRUN ioctl returns to userspace. 		 */
-name|wrmsr
-argument_list|(
-name|MSR_GSBASE
-argument_list|,
-operator|(
-name|uint64_t
-operator|)
-operator|&
-name|__pcpu
-index|[
-name|thiscpu
-index|]
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|curcpu
-operator|==
-name|thiscpu
-argument_list|,
-operator|(
-literal|"thiscpu/curcpu (%u/%u) mismatch"
-operator|,
-name|thiscpu
-operator|,
-name|curcpu
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * The host GDTR and IDTR is saved by VMRUN and restored 		 * automatically on #VMEXIT. However, the host TSS needs 		 * to be restored explicitly. 		 */

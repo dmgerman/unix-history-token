@@ -880,7 +880,7 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|int
-name|ldp_msg_print
+name|ldp_pdu_print
 parameter_list|(
 name|netdissect_options
 modifier|*
@@ -922,6 +922,9 @@ specifier|const
 name|u_char
 modifier|*
 name|tptr
+parameter_list|,
+name|u_short
+name|msg_tlen
 parameter_list|)
 block|{
 struct|struct
@@ -991,6 +994,12 @@ operator|*
 operator|)
 name|tptr
 expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|ldp_tlv_header
+argument_list|)
+expr_stmt|;
 name|tlv_len
 operator|=
 name|EXTRACT_16BITS
@@ -1000,6 +1009,28 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tlv_len
+operator|+
+literal|4
+operator|>
+name|msg_tlen
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"\n\t\t TLV contents go past end of message"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|tlv_tlen
 operator|=
 name|tlv_len
@@ -1839,10 +1870,26 @@ name|vc_info_len
 operator|<
 literal|4
 condition|)
-goto|goto
-name|trunc
-goto|;
+block|{
 comment|/* minimum 4, for the VC ID */
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" (invalid,< 4"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|tlv_len
+operator|+
+literal|4
+operator|)
+return|;
+comment|/* Type& Length fields not included */
+block|}
 name|vc_info_len
 operator|-=
 literal|4
@@ -2456,7 +2503,7 @@ condition|)
 block|{
 name|processed
 operator|=
-name|ldp_msg_print
+name|ldp_pdu_print
 argument_list|(
 name|ndo
 argument_list|,
@@ -2485,7 +2532,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ldp_msg_print
+name|ldp_pdu_print
 parameter_list|(
 name|netdissect_options
 modifier|*
@@ -2535,10 +2582,6 @@ name|hexdump
 decl_stmt|,
 name|processed
 decl_stmt|;
-name|tptr
-operator|=
-name|pptr
-expr_stmt|;
 name|ldp_com_header
 operator|=
 operator|(
@@ -2602,7 +2645,6 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* print the LSR-ID, label-space& length */
 name|pdu_len
 operator|=
 name|EXTRACT_16BITS
@@ -2613,6 +2655,63 @@ operator|->
 name|pdu_length
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pdu_len
+operator|<
+sizeof|sizeof
+argument_list|(
+specifier|const
+expr|struct
+name|ldp_common_header
+argument_list|)
+operator|-
+literal|4
+condition|)
+block|{
+comment|/* length too short */
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%sLDP, pdu-length: %u (too short,< %u)"
+operator|,
+operator|(
+name|ndo
+operator|->
+name|ndo_vflag
+operator|<
+literal|1
+operator|)
+condition|?
+literal|""
+else|:
+literal|"\n\t"
+operator|,
+name|pdu_len
+operator|,
+call|(
+name|u_int
+call|)
+argument_list|(
+sizeof|sizeof
+argument_list|(
+specifier|const
+expr|struct
+name|ldp_common_header
+argument_list|)
+operator|-
+literal|4
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+comment|/* print the LSR-ID, label-space& length */
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -2667,12 +2766,10 @@ return|return
 literal|0
 return|;
 comment|/* ok they seem to want to know everything - lets fully decode it */
-name|tlen
-operator|=
-name|pdu_len
-expr_stmt|;
 name|tptr
-operator|+=
+operator|=
+name|pptr
+operator|+
 sizeof|sizeof
 argument_list|(
 specifier|const
@@ -2681,7 +2778,10 @@ name|ldp_common_header
 argument_list|)
 expr_stmt|;
 name|tlen
-operator|-=
+operator|=
+name|pdu_len
+operator|-
+operator|(
 sizeof|sizeof
 argument_list|(
 specifier|const
@@ -2690,6 +2790,7 @@ name|ldp_common_header
 argument_list|)
 operator|-
 literal|4
+operator|)
 expr_stmt|;
 comment|/* Type& Length fields not included */
 while|while
@@ -2743,6 +2844,60 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|msg_len
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ldp_msg_header
+argument_list|)
+operator|-
+literal|4
+condition|)
+block|{
+comment|/* length too short */
+comment|/* FIXME vendor private / experimental check */
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"\n\t  %s Message (0x%04x), length: %u (too short,< %u)"
+operator|,
+name|tok2str
+argument_list|(
+name|ldp_msg_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
+name|msg_type
+argument_list|)
+operator|,
+name|msg_type
+operator|,
+name|msg_len
+operator|,
+call|(
+name|u_int
+call|)
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ldp_msg_header
+argument_list|)
+operator|-
+literal|4
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 comment|/* FIXME vendor private / experimental check */
 name|ND_PRINT
 argument_list|(
@@ -2789,16 +2944,6 @@ literal|"ignore"
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|msg_len
-operator|==
-literal|0
-condition|)
-comment|/* infinite loop protection */
-return|return
-literal|0
-return|;
 name|msg_tptr
 operator|=
 name|tptr
@@ -2813,13 +2958,15 @@ name|msg_tlen
 operator|=
 name|msg_len
 operator|-
+operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ldp_msg_header
 argument_list|)
-operator|+
+operator|-
 literal|4
+operator|)
 expr_stmt|;
 comment|/* Type& Length fields not included */
 comment|/* did we capture enough for fully decoding the message ? */
@@ -2878,6 +3025,8 @@ argument_list|(
 name|ndo
 argument_list|,
 name|msg_tptr
+argument_list|,
+name|msg_tlen
 argument_list|)
 expr_stmt|;
 if|if

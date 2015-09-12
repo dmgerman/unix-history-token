@@ -15,12 +15,25 @@ directive|define
 name|_A10_GPIO_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|A10_GPIO_FUNC_MII
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|A10_GPIO_FUNC_RGMII
+value|5
+end_define
+
 begin_function_decl
 name|int
-name|a10_emac_gpio_config
+name|a10_gpio_ethernet_activate
 parameter_list|(
 name|uint32_t
-name|pin
 parameter_list|)
 function_decl|;
 end_function_decl

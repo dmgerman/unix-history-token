@@ -110,16 +110,6 @@ name|kernbase
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|INKERNEL
-parameter_list|(
-name|va
-parameter_list|)
-value|(((vm_offset_t)(va))>= USRSTACK&& \ 	 ((vm_offset_t)(va))< VM_MAX_KERNEL_ADDRESS)
-end_define
-
 begin_function_decl
 name|uint8_t
 name|dtrace_fuword8_nocheck
@@ -338,12 +328,13 @@ name|frame
 operator|->
 name|f_frame
 operator|>=
-operator|(
-name|vm_offset_t
-operator|)
-name|ebp
+name|curthread
+operator|->
+name|td_kstack
 operator|+
-name|KSTACK_PAGES
+name|curthread
+operator|->
+name|td_kstack_pages
 operator|*
 name|PAGE_SIZE
 condition|)
@@ -1986,12 +1977,13 @@ name|frame
 operator|->
 name|f_frame
 operator|>=
-operator|(
-name|vm_offset_t
-operator|)
-name|ebp
+name|curthread
+operator|->
+name|td_kstack
 operator|+
-name|KSTACK_PAGES
+name|curthread
+operator|->
+name|td_kstack_pages
 operator|*
 name|PAGE_SIZE
 condition|)

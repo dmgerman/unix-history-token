@@ -183,7 +183,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_CDDL
+name|HAVE_ZFS
 end_ifdef
 
 begin_function_decl

@@ -301,9 +301,9 @@ modifier|*
 name|dmar_gas_alloc_entry
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|u_int
 name|flags
@@ -366,14 +366,14 @@ condition|)
 block|{
 name|res
 operator|->
-name|ctx
+name|domain
 operator|=
-name|ctx
+name|domain
 expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
-name|ctx
+name|domain
 operator|->
 name|entries_cnt
 argument_list|,
@@ -394,9 +394,9 @@ name|void
 name|dmar_gas_free_entry
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|struct
 name|dmar_map_entry
@@ -406,29 +406,29 @@ parameter_list|)
 block|{
 name|KASSERT
 argument_list|(
-name|ctx
+name|domain
 operator|==
 name|entry
 operator|->
-name|ctx
+name|domain
 argument_list|,
 operator|(
-literal|"mismatched free ctx %p entry %p entry->ctx %p"
+literal|"mismatched free domain %p entry %p entry->domain %p"
 operator|,
-name|ctx
+name|domain
 operator|,
 name|entry
 operator|,
 name|entry
 operator|->
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|ctx
+name|domain
 operator|->
 name|entries_cnt
 argument_list|,
@@ -820,9 +820,9 @@ name|void
 name|dmar_gas_fix_free
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|struct
 name|dmar_map_entry
@@ -842,7 +842,7 @@ argument_list|(
 name|dmar_gas_entries_tree
 argument_list|,
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -862,7 +862,7 @@ name|next
 operator|->
 name|start
 else|:
-name|ctx
+name|domain
 operator|->
 name|end
 operator|)
@@ -891,9 +891,9 @@ name|void
 name|dmar_gas_check_free
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|)
 block|{
 name|struct
@@ -919,27 +919,27 @@ argument|entry
 argument_list|,
 argument|dmar_gas_entries_tree
 argument_list|,
-argument|&ctx->rb_root
+argument|&domain->rb_root
 argument_list|)
 block|{
 name|KASSERT
 argument_list|(
-name|ctx
+name|domain
 operator|==
 name|entry
 operator|->
-name|ctx
+name|domain
 argument_list|,
 operator|(
-literal|"mismatched free ctx %p entry %p entry->ctx %p"
+literal|"mismatched free domain %p entry %p entry->domain %p"
 operator|,
-name|ctx
+name|domain
 operator|,
 name|entry
 operator|,
 name|entry
 operator|->
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
@@ -950,7 +950,7 @@ argument_list|(
 name|dmar_gas_entries_tree
 argument_list|,
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -970,7 +970,7 @@ name|entry
 operator|->
 name|free_after
 operator|==
-name|ctx
+name|domain
 operator|->
 name|end
 operator|-
@@ -1161,9 +1161,9 @@ name|bool
 name|dmar_gas_rb_insert
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|struct
 name|dmar_map_entry
@@ -1186,7 +1186,7 @@ argument_list|(
 name|dmar_gas_entries_tree
 argument_list|,
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -1195,7 +1195,7 @@ argument_list|)
 expr_stmt|;
 name|dmar_gas_fix_free
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|entry
 argument_list|)
@@ -1207,7 +1207,7 @@ argument_list|(
 name|dmar_gas_entries_tree
 argument_list|,
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -1222,7 +1222,7 @@ name|NULL
 condition|)
 name|dmar_gas_fix_free
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|prev
 argument_list|)
@@ -1243,9 +1243,9 @@ name|void
 name|dmar_gas_rb_remove
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|struct
 name|dmar_map_entry
@@ -1265,7 +1265,7 @@ argument_list|(
 name|dmar_gas_entries_tree
 argument_list|,
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -1277,7 +1277,7 @@ argument_list|(
 name|dmar_gas_entries_tree
 argument_list|,
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -1292,7 +1292,7 @@ name|NULL
 condition|)
 name|dmar_gas_fix_free
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|prev
 argument_list|)
@@ -1302,12 +1302,12 @@ end_function
 
 begin_function
 name|void
-name|dmar_gas_init_ctx
+name|dmar_gas_init_domain
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|)
 block|{
 name|struct
@@ -1322,7 +1322,7 @@ name|begin
 operator|=
 name|dmar_gas_alloc_entry
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|DMAR_PGF_WAITOK
 argument_list|)
@@ -1331,28 +1331,28 @@ name|end
 operator|=
 name|dmar_gas_alloc_entry
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|DMAR_PGF_WAITOK
 argument_list|)
 expr_stmt|;
-name|DMAR_CTX_LOCK
+name|DMAR_DOMAIN_LOCK
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|entries_cnt
 operator|==
 literal|2
 argument_list|,
 operator|(
-literal|"dirty ctx %p"
+literal|"dirty domain %p"
 operator|,
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1361,7 +1361,7 @@ argument_list|(
 name|RB_EMPTY
 argument_list|(
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|)
@@ -1369,7 +1369,7 @@ argument_list|,
 operator|(
 literal|"non-empty entries %p"
 operator|,
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1389,7 +1389,7 @@ name|begin
 operator|->
 name|free_after
 operator|=
-name|ctx
+name|domain
 operator|->
 name|end
 operator|-
@@ -1407,7 +1407,7 @@ name|DMAR_MAP_ENTRY_UNMAPPED
 expr_stmt|;
 name|dmar_gas_rb_insert
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|begin
 argument_list|)
@@ -1416,7 +1416,7 @@ name|end
 operator|->
 name|start
 operator|=
-name|ctx
+name|domain
 operator|->
 name|end
 expr_stmt|;
@@ -1424,7 +1424,7 @@ name|end
 operator|->
 name|end
 operator|=
-name|ctx
+name|domain
 operator|->
 name|end
 expr_stmt|;
@@ -1444,26 +1444,32 @@ name|DMAR_MAP_ENTRY_UNMAPPED
 expr_stmt|;
 name|dmar_gas_rb_insert
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|end
 argument_list|)
 expr_stmt|;
-name|ctx
+name|domain
 operator|->
 name|first_place
 operator|=
 name|begin
 expr_stmt|;
-name|ctx
+name|domain
 operator|->
 name|last_place
 operator|=
 name|end
 expr_stmt|;
-name|DMAR_CTX_UNLOCK
+name|domain
+operator|->
+name|flags
+operator||=
+name|DMAR_DOMAIN_GAS_INITED
+expr_stmt|;
+name|DMAR_DOMAIN_UNLOCK
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 block|}
@@ -1471,12 +1477,12 @@ end_function
 
 begin_function
 name|void
-name|dmar_gas_fini_ctx
+name|dmar_gas_fini_domain
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|)
 block|{
 name|struct
@@ -1487,23 +1493,23 @@ decl_stmt|,
 modifier|*
 name|entry1
 decl_stmt|;
-name|DMAR_CTX_ASSERT_LOCKED
+name|DMAR_DOMAIN_ASSERT_LOCKED
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|ctx
+name|domain
 operator|->
 name|entries_cnt
 operator|==
 literal|2
 argument_list|,
 operator|(
-literal|"ctx still in use %p"
+literal|"domain still in use %p"
 operator|,
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1514,7 +1520,7 @@ argument_list|(
 name|dmar_gas_entries_tree
 argument_list|,
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|)
@@ -1530,7 +1536,7 @@ argument_list|,
 operator|(
 literal|"start entry start %p"
 operator|,
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1545,7 +1551,7 @@ argument_list|,
 operator|(
 literal|"start entry end %p"
 operator|,
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1560,7 +1566,7 @@ argument_list|,
 operator|(
 literal|"start entry flags %p"
 operator|,
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1569,7 +1575,7 @@ argument_list|(
 name|dmar_gas_entries_tree
 argument_list|,
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -1578,7 +1584,7 @@ argument_list|)
 expr_stmt|;
 name|dmar_gas_free_entry
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|entry
 argument_list|)
@@ -1590,7 +1596,7 @@ argument_list|(
 name|dmar_gas_entries_tree
 argument_list|,
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|)
@@ -1601,14 +1607,14 @@ name|entry
 operator|->
 name|start
 operator|==
-name|ctx
+name|domain
 operator|->
 name|end
 argument_list|,
 operator|(
 literal|"end entry start %p"
 operator|,
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1618,14 +1624,14 @@ name|entry
 operator|->
 name|end
 operator|==
-name|ctx
+name|domain
 operator|->
 name|end
 argument_list|,
 operator|(
 literal|"end entry end %p"
 operator|,
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1638,9 +1644,9 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"end entry free_after%p"
+literal|"end entry free_after %p"
 operator|,
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1655,7 +1661,7 @@ argument_list|,
 operator|(
 literal|"end entry flags %p"
 operator|,
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1664,7 +1670,7 @@ argument_list|(
 name|dmar_gas_entries_tree
 argument_list|,
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -1673,7 +1679,7 @@ argument_list|)
 expr_stmt|;
 name|dmar_gas_free_entry
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|entry
 argument_list|)
@@ -1684,7 +1690,7 @@ argument|entry
 argument_list|,
 argument|dmar_gas_entries_tree
 argument_list|,
-argument|&ctx->rb_root
+argument|&domain->rb_root
 argument_list|,
 argument|entry1
 argument_list|)
@@ -1704,7 +1710,7 @@ argument_list|,
 operator|(
 literal|"non-RMRR entry left %p"
 operator|,
-name|ctx
+name|domain
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1713,7 +1719,7 @@ argument_list|(
 name|dmar_gas_entries_tree
 argument_list|,
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -1722,7 +1728,7 @@ argument_list|)
 expr_stmt|;
 name|dmar_gas_free_entry
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|entry
 argument_list|)
@@ -1736,9 +1742,9 @@ struct|struct
 name|dmar_gas_match_args
 block|{
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 decl_stmt|;
 name|dmar_gaddr_t
 name|size
@@ -2086,7 +2092,7 @@ argument_list|,
 operator|&
 name|a
 operator|->
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -2135,7 +2141,7 @@ literal|"free_after %jx next (%jx, %jx) entry (%jx, %jx)"
 operator|,
 name|a
 operator|->
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -2228,7 +2234,7 @@ name|dmar_gas_rb_insert
 argument_list|(
 name|a
 operator|->
-name|ctx
+name|domain
 argument_list|,
 name|a
 operator|->
@@ -2244,7 +2250,7 @@ literal|"found dup %p start %jx size %jx"
 operator|,
 name|a
 operator|->
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -2281,7 +2287,7 @@ argument_list|,
 operator|&
 name|a
 operator|->
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -2308,7 +2314,7 @@ argument_list|,
 operator|&
 name|a
 operator|->
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -2328,7 +2334,7 @@ argument_list|,
 operator|&
 name|a
 operator|->
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -2355,7 +2361,7 @@ argument_list|,
 operator|&
 name|a
 operator|->
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -2588,7 +2594,7 @@ argument_list|,
 operator|&
 name|a
 operator|->
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -2616,7 +2622,7 @@ argument_list|,
 operator|&
 name|a
 operator|->
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -2634,7 +2640,7 @@ literal|"no prev %p %jx"
 operator|,
 name|a
 operator|->
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -2720,7 +2726,7 @@ name|prev
 argument_list|,
 name|a
 operator|->
-name|ctx
+name|domain
 operator|->
 name|end
 argument_list|)
@@ -2753,7 +2759,7 @@ argument_list|,
 operator|&
 name|a
 operator|->
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -2771,7 +2777,7 @@ literal|"no next %p %jx"
 operator|,
 name|a
 operator|->
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -2790,7 +2796,7 @@ name|end
 operator|>=
 name|a
 operator|->
-name|ctx
+name|domain
 operator|->
 name|end
 condition|)
@@ -2809,9 +2815,9 @@ name|int
 name|dmar_gas_find_space
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 specifier|const
 name|struct
@@ -2841,9 +2847,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|DMAR_CTX_ASSERT_LOCKED
+name|DMAR_DOMAIN_ASSERT_LOCKED
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -2857,7 +2863,7 @@ argument_list|,
 operator|(
 literal|"dirty entry %p %p"
 operator|,
-name|ctx
+name|domain
 operator|,
 name|entry
 operator|)
@@ -2885,9 +2891,9 @@ argument_list|)
 expr_stmt|;
 name|a
 operator|.
-name|ctx
+name|domain
 operator|=
-name|ctx
+name|domain
 expr_stmt|;
 name|a
 operator|.
@@ -2939,7 +2945,7 @@ argument_list|,
 name|RB_ROOT
 argument_list|(
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|)
@@ -2977,7 +2983,7 @@ name|common
 operator|->
 name|highaddr
 operator|>=
-name|ctx
+name|domain
 operator|->
 name|end
 condition|)
@@ -3021,9 +3027,9 @@ name|int
 name|dmar_gas_alloc_region
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|struct
 name|dmar_map_entry
@@ -3045,9 +3051,9 @@ decl_stmt|;
 name|bool
 name|found
 decl_stmt|;
-name|DMAR_CTX_ASSERT_LOCKED
+name|DMAR_DOMAIN_ASSERT_LOCKED
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 if|if
@@ -3098,7 +3104,7 @@ name|entry
 operator|->
 name|end
 operator|>=
-name|ctx
+name|domain
 operator|->
 name|end
 condition|)
@@ -3114,7 +3120,7 @@ argument_list|(
 name|dmar_gas_entries_tree
 argument_list|,
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -3130,7 +3136,7 @@ argument_list|,
 operator|(
 literal|"next must be non-null %p %jx"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -3148,7 +3154,7 @@ argument_list|(
 name|dmar_gas_entries_tree
 argument_list|,
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -3292,7 +3298,7 @@ block|{
 comment|/* This assumes that prev is the placeholder entry. */
 name|dmar_gas_rb_remove
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|prev
 argument_list|)
@@ -3319,7 +3325,7 @@ condition|)
 block|{
 name|dmar_gas_rb_remove
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|next
 argument_list|)
@@ -3333,7 +3339,7 @@ name|found
 operator|=
 name|dmar_gas_rb_insert
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|entry
 argument_list|)
@@ -3345,7 +3351,7 @@ argument_list|,
 operator|(
 literal|"found RMRR dup %p start %jx end %jx"
 operator|,
-name|ctx
+name|domain
 operator|,
 operator|(
 name|uintmax_t
@@ -3387,7 +3393,7 @@ argument_list|(
 name|dmar_gas_entries_tree
 argument_list|,
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -3401,7 +3407,7 @@ argument_list|(
 name|dmar_gas_entries_tree
 argument_list|,
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -3561,9 +3567,9 @@ name|void
 name|dmar_gas_free_space
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|struct
 name|dmar_map_entry
@@ -3571,9 +3577,9 @@ modifier|*
 name|entry
 parameter_list|)
 block|{
-name|DMAR_CTX_ASSERT_LOCKED
+name|DMAR_DOMAIN_ASSERT_LOCKED
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -3597,7 +3603,7 @@ argument_list|,
 operator|(
 literal|"permanent entry %p %p"
 operator|,
-name|ctx
+name|domain
 operator|,
 name|entry
 operator|)
@@ -3605,7 +3611,7 @@ argument_list|)
 expr_stmt|;
 name|dmar_gas_rb_remove
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|entry
 argument_list|)
@@ -3626,7 +3632,7 @@ name|dmar_check_free
 condition|)
 name|dmar_gas_check_free
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3639,9 +3645,9 @@ name|void
 name|dmar_gas_free_region
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|struct
 name|dmar_map_entry
@@ -3657,9 +3663,9 @@ decl_stmt|,
 modifier|*
 name|prev
 decl_stmt|;
-name|DMAR_CTX_ASSERT_LOCKED
+name|DMAR_DOMAIN_ASSERT_LOCKED
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -3683,7 +3689,7 @@ argument_list|,
 operator|(
 literal|"non-RMRR entry %p %p"
 operator|,
-name|ctx
+name|domain
 operator|,
 name|entry
 operator|)
@@ -3696,7 +3702,7 @@ argument_list|(
 name|dmar_gas_entries_tree
 argument_list|,
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -3710,7 +3716,7 @@ argument_list|(
 name|dmar_gas_entries_tree
 argument_list|,
 operator|&
-name|ctx
+name|domain
 operator|->
 name|rb_root
 argument_list|,
@@ -3719,7 +3725,7 @@ argument_list|)
 expr_stmt|;
 name|dmar_gas_rb_remove
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|entry
 argument_list|)
@@ -3739,9 +3745,9 @@ name|NULL
 condition|)
 name|dmar_gas_rb_insert
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
-name|ctx
+name|domain
 operator|->
 name|first_place
 argument_list|)
@@ -3754,9 +3760,9 @@ name|NULL
 condition|)
 name|dmar_gas_rb_insert
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
-name|ctx
+name|domain
 operator|->
 name|last_place
 argument_list|)
@@ -3769,9 +3775,9 @@ name|int
 name|dmar_gas_map
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 specifier|const
 name|struct
@@ -3836,7 +3842,7 @@ name|entry
 operator|=
 name|dmar_gas_alloc_entry
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 operator|(
 name|flags
@@ -3862,16 +3868,16 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|DMAR_CTX_LOCK
+name|DMAR_DOMAIN_LOCK
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 name|error
 operator|=
 name|dmar_gas_find_space
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|common
 argument_list|,
@@ -3891,14 +3897,14 @@ operator|==
 name|ENOMEM
 condition|)
 block|{
-name|DMAR_CTX_UNLOCK
+name|DMAR_DOMAIN_UNLOCK
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 name|dmar_gas_free_entry
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|entry
 argument_list|)
@@ -3918,7 +3924,7 @@ name|dmar_check_free
 condition|)
 name|dmar_gas_check_free
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3942,7 +3948,7 @@ name|entry
 operator|->
 name|end
 operator|<
-name|ctx
+name|domain
 operator|->
 name|end
 argument_list|,
@@ -3959,7 +3965,7 @@ operator|,
 operator|(
 name|uintmax_t
 operator|)
-name|ctx
+name|domain
 operator|->
 name|end
 operator|)
@@ -3971,16 +3977,16 @@ name|flags
 operator||=
 name|eflags
 expr_stmt|;
-name|DMAR_CTX_UNLOCK
+name|DMAR_DOMAIN_UNLOCK
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ctx_map_buf
+name|domain_map_buf
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|entry
 operator|->
@@ -4072,7 +4078,7 @@ operator|==
 name|ENOMEM
 condition|)
 block|{
-name|dmar_ctx_unload_entry
+name|dmar_domain_unload_entry
 argument_list|(
 name|entry
 argument_list|,
@@ -4092,7 +4098,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"unexpected error %d from ctx_map_buf"
+literal|"unexpected error %d from domain_map_buf"
 operator|,
 name|error
 operator|)
@@ -4116,9 +4122,9 @@ name|int
 name|dmar_gas_map_region
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|struct
 name|dmar_map_entry
@@ -4153,7 +4159,7 @@ argument_list|,
 operator|(
 literal|"used RMRR entry %p %p %x"
 operator|,
-name|ctx
+name|domain
 operator|,
 name|entry
 operator|,
@@ -4189,16 +4195,16 @@ name|entry
 operator|->
 name|start
 expr_stmt|;
-name|DMAR_CTX_LOCK
+name|DMAR_DOMAIN_LOCK
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 name|error
 operator|=
 name|dmar_gas_alloc_region
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|entry
 argument_list|,
@@ -4212,9 +4218,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DMAR_CTX_UNLOCK
+name|DMAR_DOMAIN_UNLOCK
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 return|return
@@ -4229,9 +4235,9 @@ name|flags
 operator||=
 name|eflags
 expr_stmt|;
-name|DMAR_CTX_UNLOCK
+name|DMAR_DOMAIN_UNLOCK
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 if|if
@@ -4251,9 +4257,9 @@ operator|)
 return|;
 name|error
 operator|=
-name|ctx_map_buf
+name|domain_map_buf
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|entry
 operator|->
@@ -4354,7 +4360,7 @@ operator|==
 name|ENOMEM
 condition|)
 block|{
-name|dmar_ctx_unload_entry
+name|dmar_domain_unload_entry
 argument_list|(
 name|entry
 argument_list|,
@@ -4374,7 +4380,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"unexpected error %d from ctx_map_buf"
+literal|"unexpected error %d from domain_map_buf"
 operator|,
 name|error
 operator|)
@@ -4393,9 +4399,9 @@ name|int
 name|dmar_gas_reserve_region
 parameter_list|(
 name|struct
-name|dmar_ctx
+name|dmar_domain
 modifier|*
-name|ctx
+name|domain
 parameter_list|,
 name|dmar_gaddr_t
 name|start
@@ -4416,7 +4422,7 @@ name|entry
 operator|=
 name|dmar_gas_alloc_entry
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|DMAR_PGF_WAITOK
 argument_list|)
@@ -4433,16 +4439,16 @@ name|end
 operator|=
 name|end
 expr_stmt|;
-name|DMAR_CTX_LOCK
+name|DMAR_DOMAIN_LOCK
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 name|error
 operator|=
 name|dmar_gas_alloc_region
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|entry
 argument_list|,
@@ -4461,9 +4467,9 @@ name|flags
 operator||=
 name|DMAR_MAP_ENTRY_UNMAPPED
 expr_stmt|;
-name|DMAR_CTX_UNLOCK
+name|DMAR_DOMAIN_UNLOCK
 argument_list|(
-name|ctx
+name|domain
 argument_list|)
 expr_stmt|;
 if|if
@@ -4474,7 +4480,7 @@ literal|0
 condition|)
 name|dmar_gas_free_entry
 argument_list|(
-name|ctx
+name|domain
 argument_list|,
 name|entry
 argument_list|)

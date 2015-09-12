@@ -534,8 +534,8 @@ name|niface
 operator|)
 expr_stmt|;
 comment|/* 	 * Make a copy of the config descriptor, so that the caller can free 	 * the inital config descriptor pointer! 	 */
-name|ptr
-operator|=
+name|memcpy
+argument_list|(
 operator|(
 name|void
 operator|*
@@ -545,15 +545,6 @@ name|lub_endpoint
 operator|+
 name|nendpoint
 operator|)
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|LIBUSB20_ADD_BYTES
-argument_list|(
-name|ptr
-argument_list|,
-literal|0
-argument_list|)
 argument_list|,
 name|config_desc
 argument_list|,
@@ -562,18 +553,22 @@ operator|.
 name|len
 argument_list|)
 expr_stmt|;
+name|ptr
+operator|=
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+operator|(
+name|lub_endpoint
+operator|+
+name|nendpoint
+operator|)
+expr_stmt|;
 name|pcdesc
 operator|.
 name|ptr
-operator|=
-name|LIBUSB20_ADD_BYTES
-argument_list|(
-name|ptr
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|config_desc
 operator|=
 name|LIBUSB20_ADD_BYTES
 argument_list|(
@@ -583,10 +578,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* init config structure */
-name|ptr
-operator|=
-name|config_desc
-expr_stmt|;
 name|LIBUSB20_INIT
 argument_list|(
 name|LIBUSB20_CONFIG_DESC
@@ -2228,11 +2219,9 @@ name|LIBUSB20_ME_IS_DECODED
 condition|)
 block|{
 comment|/* 						 * Repeat encode 						 * procedure - we have 						 * room for the 						 * complete structure: 						 */
-name|uint16_t
-name|dummy
-decl_stmt|;
-name|dummy
-operator|=
+operator|(
+name|void
+operator|)
 name|libusb20_me_encode
 argument_list|(
 name|buf
@@ -2881,9 +2870,6 @@ block|{
 name|uint16_t
 name|temp
 decl_stmt|;
-name|uint16_t
-name|dummy
-decl_stmt|;
 name|struct
 name|libusb20_me_struct
 modifier|*
@@ -3171,8 +3157,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 						 * Recursivly decode 						 * the next structure 						 */
-name|dummy
-operator|=
+operator|(
+name|void
+operator|)
 name|libusb20_me_decode
 argument_list|(
 name|buf

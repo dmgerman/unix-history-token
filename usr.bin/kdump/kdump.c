@@ -191,6 +191,23 @@ directive|include
 file|<sys/wait.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIBCAPSICUM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/nv.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -285,23 +302,6 @@ include|#
 directive|include
 file|<nl_types.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_LIBCAPSICUM
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<nv.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

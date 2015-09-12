@@ -4813,7 +4813,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_IOVTCL
+name|E1000_IOVCTL
 value|0x05BBC
 end_define
 

@@ -3919,7 +3919,7 @@ name|sc
 argument_list|,
 name|TDA_VIP_CNTRL_1
 argument_list|,
-literal|0x45
+literal|0x01
 argument_list|)
 expr_stmt|;
 name|tda19988_reg_write
@@ -3928,7 +3928,7 @@ name|sc
 argument_list|,
 name|TDA_VIP_CNTRL_2
 argument_list|,
-literal|0x01
+literal|0x45
 argument_list|)
 expr_stmt|;
 name|done

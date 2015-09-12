@@ -84,6 +84,12 @@ name|int
 name|fd
 decl_stmt|;
 comment|/* file descriptor of the executable */
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+decl_stmt|;
+comment|/* new file descriptor table */
 block|}
 struct|;
 end_struct
@@ -371,6 +377,33 @@ parameter_list|,
 name|char
 modifier|*
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|exec_copyin_data_fds
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|image_args
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|int
+modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl

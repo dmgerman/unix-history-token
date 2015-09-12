@@ -6859,7 +6859,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"WARNING: Packet is continued in later TCP segments\n"
+literal|" WARNING: Packet is continued in later TCP segments\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6869,7 +6869,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"WARNING: Short packet. Try increasing the snap length by %d\n"
+literal|" WARNING: Short packet. Try increasing the snap length by %d\n"
 operator|,
 name|smb_len
 operator|-
@@ -6878,6 +6878,16 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" "
+operator|)
+argument_list|)
+expr_stmt|;
 name|print_smb
 argument_list|(
 name|ndo
@@ -6904,7 +6914,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"SMB-over-TCP packet:(raw data or continuation?)\n"
+literal|" SMB-over-TCP packet:(raw data or continuation?)\n"
 operator|)
 argument_list|)
 expr_stmt|;

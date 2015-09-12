@@ -101,6 +101,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_RID_DOMAIN_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_RID_BUS_SHIFT
 value|8
 end_define

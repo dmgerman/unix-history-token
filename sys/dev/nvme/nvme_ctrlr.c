@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2012-2014 Intel Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (C) 2012-2015 Intel Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -778,6 +778,9 @@ name|struct
 name|nvme_controller
 modifier|*
 name|ctrlr
+parameter_list|,
+name|int
+name|desired_val
 parameter_list|)
 block|{
 name|int
@@ -815,21 +818,31 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|cc
 operator|.
 name|bits
 operator|.
 name|en
+operator|!=
+name|desired_val
 condition|)
 block|{
 name|nvme_printf
 argument_list|(
 name|ctrlr
 argument_list|,
-literal|"%s called with cc.en = 0\n"
+literal|"%s called with desired_val = %d "
+literal|"but cc.en = %d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|desired_val
+argument_list|,
+name|cc
+operator|.
+name|bits
+operator|.
+name|en
 argument_list|)
 expr_stmt|;
 return|return
@@ -844,12 +857,13 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
-operator|!
 name|csts
 operator|.
 name|bits
 operator|.
 name|rdy
+operator|!=
+name|desired_val
 condition|)
 block|{
 name|DELAY
@@ -871,8 +885,10 @@ name|nvme_printf
 argument_list|(
 name|ctrlr
 argument_list|,
-literal|"controller did not become ready "
+literal|"controller ready did not become %d "
 literal|"within %d ms\n"
+argument_list|,
+name|desired_val
 argument_list|,
 name|ctrlr
 operator|->
@@ -967,6 +983,8 @@ condition|)
 name|nvme_ctrlr_wait_for_ready
 argument_list|(
 name|ctrlr
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|cc
@@ -991,6 +1009,13 @@ expr_stmt|;
 name|DELAY
 argument_list|(
 literal|5000
+argument_list|)
+expr_stmt|;
+name|nvme_ctrlr_wait_for_ready
+argument_list|(
+name|ctrlr
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1073,6 +1098,8 @@ operator|(
 name|nvme_ctrlr_wait_for_ready
 argument_list|(
 name|ctrlr
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 return|;
@@ -1248,6 +1275,8 @@ operator|(
 name|nvme_ctrlr_wait_for_ready
 argument_list|(
 name|ctrlr
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 return|;
@@ -3520,14 +3549,6 @@ argument_list|)
 expr_stmt|;
 name|buf
 operator|->
-name|b_saveaddr
-operator|=
-name|buf
-operator|->
-name|b_data
-expr_stmt|;
-name|buf
-operator|->
 name|b_data
 operator|=
 name|pt
@@ -3984,11 +4005,14 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|num_vectors
-decl_stmt|,
 name|per_cpu_io_queues
 decl_stmt|,
 name|rid
+decl_stmt|;
+name|int
+name|num_vectors_requested
+decl_stmt|,
+name|num_vectors_allocated
 decl_stmt|;
 name|int
 name|status
@@ -4245,7 +4269,7 @@ name|intx
 goto|;
 block|}
 comment|/* One vector per IO queue, plus one vector for admin queue. */
-name|num_vectors
+name|num_vectors_requested
 operator|=
 name|ctrlr
 operator|->
@@ -4282,7 +4306,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|<
-name|num_vectors
+name|num_vectors_requested
 condition|)
 block|{
 name|ctrlr
@@ -4297,12 +4321,16 @@ name|num_io_queues
 operator|=
 literal|1
 expr_stmt|;
-name|num_vectors
+name|num_vectors_requested
 operator|=
 literal|2
 expr_stmt|;
 comment|/* one for admin, one for I/O */
 block|}
+name|num_vectors_allocated
+operator|=
+name|num_vectors_requested
+expr_stmt|;
 if|if
 condition|(
 name|pci_alloc_msix
@@ -4310,7 +4338,7 @@ argument_list|(
 name|dev
 argument_list|,
 operator|&
-name|num_vectors
+name|num_vectors_allocated
 argument_list|)
 operator|!=
 literal|0
@@ -4326,6 +4354,90 @@ goto|goto
 name|intx
 goto|;
 block|}
+elseif|else
+if|if
+condition|(
+name|num_vectors_allocated
+operator|<
+name|num_vectors_requested
+condition|)
+block|{
+if|if
+condition|(
+name|num_vectors_allocated
+operator|<
+literal|2
+condition|)
+block|{
+name|pci_release_msi
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|ctrlr
+operator|->
+name|msix_enabled
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|intx
+goto|;
+block|}
+else|else
+block|{
+name|ctrlr
+operator|->
+name|per_cpu_io_queues
+operator|=
+name|FALSE
+expr_stmt|;
+name|ctrlr
+operator|->
+name|num_io_queues
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 			 * Release whatever vectors were allocated, and just 			 *  reallocate the two needed for the admin and single 			 *  I/O qpair. 			 */
+name|num_vectors_allocated
+operator|=
+literal|2
+expr_stmt|;
+name|pci_release_msi
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pci_alloc_msix
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|num_vectors_allocated
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"could not reallocate any vectors\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|num_vectors_allocated
+operator|!=
+literal|2
+condition|)
+name|panic
+argument_list|(
+literal|"could not reallocate 2 vectors\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* 	 * On earlier FreeBSD releases, there are reports that 	 *  pci_alloc_msix() can return successfully with all vectors 	 *  requested, but a subsequent bus_alloc_resource_any() 	 *  for one of those vectors fails.  This issue occurs more 	 *  readily with multiple devices using per-CPU vectors. 	 * To workaround this issue, try to allocate the resources now, 	 *  and fall back to INTx if we cannot allocate all of them. 	 *  This issue cannot be reproduced on more recent versions of 	 *  FreeBSD which have increased the maximum number of MSI-X 	 *  vectors, but adding the workaround makes it easier for 	 *  vendors wishing to import this driver into kernels based on 	 *  older versions of FreeBSD. 	 */
 for|for
 control|(
@@ -4335,7 +4447,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|num_vectors
+name|num_vectors_allocated
 condition|;
 name|i
 operator|++

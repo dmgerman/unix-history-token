@@ -88,6 +88,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * The xl driver by default strips CRCs and we do not override it.  */
+end_comment
+
 begin_decl_stmt
 name|int
 name|ixl_rx_miss
@@ -95,29 +99,22 @@ decl_stmt|,
 name|ixl_rx_miss_bufs
 decl_stmt|,
 name|ixl_crcstrip
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_dev_netmap
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|ixl_crcstrip
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|ixl_crcstrip
-argument_list|,
+begin_if
+if|#
+directive|if
 literal|0
-argument_list|,
-literal|"strip CRC on rx frames"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_if
+
+begin_endif
+unit|SYSCTL_INT(_dev_netmap, OID_AUTO, ixl_crcstrip,     CTLFLAG_RW,&ixl_crcstrip, 1, "strip CRC on rx frames");
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -951,11 +948,6 @@ name|lim
 argument_list|)
 expr_stmt|;
 block|}
-name|nm_txsync_finalize
-argument_list|(
-name|kring
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1031,10 +1023,9 @@ name|u_int
 specifier|const
 name|head
 init|=
-name|nm_rxsync_prologue
-argument_list|(
 name|kring
-argument_list|)
+operator|->
+name|rhead
 decl_stmt|;
 name|int
 name|force_update
@@ -1575,12 +1566,6 @@ name|nic_i
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* tell userspace that there might be new packets */
-name|nm_rxsync_finalize
-argument_list|(
-name|kring
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;

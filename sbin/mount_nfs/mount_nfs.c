@@ -2583,9 +2583,18 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s, %s"
+literal|"nmount: %s%s%s"
 argument_list|,
 name|mntpath
+argument_list|,
+name|errmsg
+index|[
+literal|0
+index|]
+condition|?
+literal|", "
+else|:
+literal|""
 argument_list|,
 name|errmsg
 argument_list|)
@@ -3236,10 +3245,6 @@ if|if
 condition|(
 name|got_principal
 operator|==
-literal|0
-operator|&&
-name|secflavor
-operator|>=
 literal|0
 operator|&&
 name|secflavor

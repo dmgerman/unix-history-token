@@ -169,14 +169,48 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|atomic_thread_fence_acq
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|atomic_thread_fence_acq_rel
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|atomic_thread_fence_rel
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|atomic_thread_fence_seq_cst
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
 name|ATOMIC_LOAD
 parameter_list|(
 name|TYPE
-parameter_list|,
-name|LOP
 parameter_list|)
 define|\
 value|u_##TYPE	atomic_load_acq_##TYPE(volatile u_##TYPE *p)
@@ -603,8 +637,146 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * We assume that a = b will do atomic loads and stores.  Due to the  * IA32 memory model, a simple store guarantees release semantics.  *  * However, loads may pass stores, so for atomic_load_acq we have to  * ensure a Store/Load barrier to do the load in SMP kernels.  We use  * "lock cmpxchg" as recommended by the AMD Software Optimization  * Guide, and not mfence.  For UP kernels, however, the cache of the  * single processor is always consistent, so we only need to take care  * of the compiler.  */
+comment|/*  * We assume that a = b will do atomic loads and stores.  Due to the  * IA32 memory model, a simple store guarantees release semantics.  *  * However, a load may pass a store if they are performed on distinct  * addresses, so for atomic_load_acq we introduce a Store/Load barrier  * before the load in SMP kernels.  We use "lock addl $0,mem", as  * recommended by the AMD Software Optimization Guide, and not mfence.  * In the kernel, we use a private per-cpu cache line as the target  * for the locked addition, to avoid introducing false data  * dependencies.  In userspace, a word at the top of the stack is  * utilized.  *  * For UP kernels, however, the memory of the single processor is  * always consistent, so we only need to stop the compiler from  * reordering accesses in a way that violates the semantics of acquire  * and release.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * OFFSETOF_MONITORBUF == __pcpu_offset(pc_monitorbuf).  *  * The open-coded number is used instead of the symbolic expression to  * avoid a dependency on sys/pcpu.h in machine/atomic.h consumers.  * An assertion in i386/vm_machdep.c ensures that the value is correct.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OFFSETOF_MONITORBUF
+value|0x180
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
+end_if
+
+begin_function
+unit|static
+name|__inline
+name|void
+name|__storeload_barrier
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("lock; addl $0,%%fs:%0"
+block|:
+literal|"+m"
+operator|(
+operator|*
+operator|(
+name|u_int
+operator|*
+operator|)
+name|OFFSETOF_MONITORBUF
+operator|)
+operator|:
+operator|:
+literal|"memory"
+operator|,
+literal|"cc"
+block|)
+function|;
+end_function
+
+begin_else
+unit|}
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _KERNEL&& UP */
+end_comment
+
+begin_function
+unit|static
+name|__inline
+name|void
+name|__storeload_barrier
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|__compiler_membar
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMP */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|__storeload_barrier
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("lock; addl $0,(%%esp)" : : : "memory", "cc");
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL*/
+end_comment
+
+begin_comment
+comment|/*  * C11-standard acq/rel semantics only apply when the variable in the  * call is the same for acq as it is for rel.  However, our previous  * (x86) implementations provided much stronger ordering than required  * (essentially what is called seq_cst order in C11).  This  * implementation provides the historical strong ordering since some  * callers depend on it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_LOAD
+parameter_list|(
+name|TYPE
+parameter_list|)
+define|\
+value|static __inline u_##TYPE					\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)			\ {								\ 	u_##TYPE res;						\ 								\ 	__storeload_barrier();					\ 	res = *p;						\ 	__compiler_membar();					\ 	return (res);						\ }								\ struct __hack
+end_define
 
 begin_define
 define|#
@@ -614,71 +786,68 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__compiler_membar();				\ 	*p = v;						\ }							\ struct __hack
+value|static __inline void						\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)	\ {								\ 								\ 	__compiler_membar();					\ 	*p = v;							\ }								\ struct __hack
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ATOMIC_LOAD
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_thread_fence_acq
 parameter_list|(
-name|TYPE
-parameter_list|,
-name|LOP
+name|void
 parameter_list|)
-define|\
-value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	u_##TYPE tmp;					\ 							\ 	tmp = *p;					\ 	__compiler_membar();				\ 	return (tmp);					\ }							\ struct __hack
-end_define
+block|{
+name|__compiler_membar
+argument_list|()
+expr_stmt|;
+block|}
+end_function
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !(_KERNEL&& !SMP) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATOMIC_LOAD
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_thread_fence_rel
 parameter_list|(
-name|TYPE
-parameter_list|,
-name|LOP
+name|void
 parameter_list|)
-define|\
-value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	u_##TYPE res;					\ 							\ 	__asm __volatile(MPLOCKED LOP			\ 	: "=a" (res),
-comment|/* 0 */
-value|\ 	  "+m" (*p)
-comment|/* 1 */
-value|\ 	: : "memory", "cc");				\ 	return (res);					\ }							\ struct __hack
-end_define
+block|{
+name|__compiler_membar
+argument_list|()
+expr_stmt|;
+block|}
+end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_thread_fence_acq_rel
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|__compiler_membar
+argument_list|()
+expr_stmt|;
+block|}
+end_function
 
-begin_comment
-comment|/* _KERNEL&& !SMP */
-end_comment
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_thread_fence_seq_cst
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|__storeload_barrier
+argument_list|()
+expr_stmt|;
+block|}
+end_function
 
 begin_ifdef
 ifdef|#
@@ -692,20 +861,20 @@ directive|ifdef
 name|WANT_FUNCTIONS
 end_ifdef
 
-begin_expr_stmt
-unit|int
+begin_function_decl
+name|int
 name|atomic_cmpset_64_i386
-argument_list|(
+parameter_list|(
 specifier|volatile
 name|uint64_t
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|uint64_t
-argument_list|,
+parameter_list|,
 name|uint64_t
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -1871,48 +2040,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|ATOMIC_LOAD
-argument_list|(
-name|char
-argument_list|,
-literal|"cmpxchgb %b0,%1"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_define
+define|#
+directive|define
+name|ATOMIC_LOADSTORE
+parameter_list|(
+name|TYPE
+parameter_list|)
+define|\
+value|ATOMIC_LOAD(TYPE);				\ 	ATOMIC_STORE(TYPE)
+end_define
 
 begin_expr_stmt
-name|ATOMIC_LOAD
-argument_list|(
-name|short
-argument_list|,
-literal|"cmpxchgw %w0,%1"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ATOMIC_LOAD
-argument_list|(
-name|int
-argument_list|,
-literal|"cmpxchgl %0,%1"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ATOMIC_LOAD
-argument_list|(
-name|long
-argument_list|,
-literal|"cmpxchgl %0,%1"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ATOMIC_STORE
+name|ATOMIC_LOADSTORE
 argument_list|(
 name|char
 argument_list|)
@@ -1920,7 +2060,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|ATOMIC_STORE
+name|ATOMIC_LOADSTORE
 argument_list|(
 name|short
 argument_list|)
@@ -1928,7 +2068,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|ATOMIC_STORE
+name|ATOMIC_LOADSTORE
 argument_list|(
 name|int
 argument_list|)
@@ -1936,7 +2076,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|ATOMIC_STORE
+name|ATOMIC_LOADSTORE
 argument_list|(
 name|long
 argument_list|)
@@ -1959,6 +2099,12 @@ begin_undef
 undef|#
 directive|undef
 name|ATOMIC_STORE
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|ATOMIC_LOADSTORE
 end_undef
 
 begin_ifndef

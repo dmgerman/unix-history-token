@@ -668,6 +668,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Free inactive ROD tokens with expired timeout. */
+name|mtx_lock
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|tpc_lock
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|token
@@ -727,6 +735,14 @@ name|M_CTL
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|tpc_lock
+argument_list|)
+expr_stmt|;
 name|callout_schedule
 argument_list|(
 operator|&
@@ -750,6 +766,20 @@ modifier|*
 name|softc
 parameter_list|)
 block|{
+name|mtx_init
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|tpc_lock
+argument_list|,
+literal|"CTL TPC mutex"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -819,7 +849,7 @@ argument_list|(
 operator|&
 name|softc
 operator|->
-name|ctl_lock
+name|tpc_lock
 argument_list|)
 expr_stmt|;
 while|while
@@ -873,7 +903,15 @@ argument_list|(
 operator|&
 name|softc
 operator|->
-name|ctl_lock
+name|tpc_lock
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|tpc_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -984,14 +1022,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Free ROD tokens for this LUN. */
-name|mtx_assert
+name|mtx_lock
 argument_list|(
 operator|&
 name|softc
 operator|->
-name|ctl_lock
-argument_list|,
-name|MA_OWNED
+name|tpc_lock
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH_SAFE
@@ -1049,6 +1085,14 @@ name|M_CTL
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|tpc_lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -8395,7 +8439,7 @@ argument_list|(
 operator|&
 name|softc
 operator|->
-name|ctl_lock
+name|tpc_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -8422,7 +8466,7 @@ argument_list|(
 operator|&
 name|softc
 operator|->
-name|ctl_lock
+name|tpc_lock
 argument_list|)
 expr_stmt|;
 name|list
@@ -12032,7 +12076,7 @@ argument_list|(
 operator|&
 name|softc
 operator|->
-name|ctl_lock
+name|tpc_lock
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -12052,7 +12096,7 @@ argument_list|(
 operator|&
 name|softc
 operator|->
-name|ctl_lock
+name|tpc_lock
 argument_list|)
 expr_stmt|;
 name|ctl_set_success
@@ -12702,7 +12746,7 @@ argument_list|(
 operator|&
 name|softc
 operator|->
-name|ctl_lock
+name|tpc_lock
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -12776,7 +12820,7 @@ argument_list|(
 operator|&
 name|softc
 operator|->
-name|ctl_lock
+name|tpc_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -13617,7 +13661,7 @@ argument_list|(
 operator|&
 name|softc
 operator|->
-name|ctl_lock
+name|tpc_lock
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -13636,7 +13680,7 @@ argument_list|(
 operator|&
 name|softc
 operator|->
-name|ctl_lock
+name|tpc_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -13772,7 +13816,7 @@ argument_list|(
 operator|&
 name|softc
 operator|->
-name|ctl_lock
+name|tpc_lock
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -13819,7 +13863,7 @@ argument_list|(
 operator|&
 name|softc
 operator|->
-name|ctl_lock
+name|tpc_lock
 argument_list|)
 expr_stmt|;
 name|scsi_ulto4b

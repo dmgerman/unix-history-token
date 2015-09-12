@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<assert.h>
 end_include
 
@@ -56,16 +62,6 @@ include|#
 directive|include
 file|"test-utils.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|N
-parameter_list|(
-name|i
-parameter_list|)
-value|(sizeof(i) / sizeof((i)[0]))
-end_define
 
 begin_comment
 comment|/*  * This is a test hook that can point to csqrtl(), _csqrt(), or to _csqrtf().  * The latter two convert to float or double, respectively, and test csqrtf()  * and csqrt() with the same arguments.  */
@@ -417,7 +413,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|tests
 argument_list|)
@@ -435,7 +431,7 @@ literal|0
 init|;
 name|j
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|mults
 argument_list|)
@@ -676,7 +672,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|vals
 argument_list|)

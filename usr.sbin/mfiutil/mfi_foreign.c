@@ -411,7 +411,7 @@ decl_stmt|;
 name|char
 name|prefix
 index|[
-literal|26
+literal|64
 index|]
 decl_stmt|;
 name|int

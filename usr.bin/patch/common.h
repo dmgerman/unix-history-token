@@ -77,48 +77,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCCSPREFIX
-value|"s."
-end_define
-
-begin_define
-define|#
-directive|define
-name|GET
-value|"get -e %s"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCCSDIFF
-value|"get -p %s | diff - %s>/dev/null"
-end_define
-
-begin_define
-define|#
-directive|define
-name|RCSSUFFIX
-value|",v"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHECKOUT
-value|"co -l %s"
-end_define
-
-begin_define
-define|#
-directive|define
-name|RCSDIFF
-value|"rcsdiff %s> /dev/null"
-end_define
-
-begin_define
-define|#
-directive|define
 name|ORIGEXT
 value|".orig"
 end_define

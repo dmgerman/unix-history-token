@@ -192,6 +192,12 @@ name|ALIAS_MBR
 block|}
 block|,
 block|{
+literal|"ntfs"
+block|,
+name|ALIAS_NTFS
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|ALIAS_NONE

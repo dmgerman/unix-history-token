@@ -157,6 +157,27 @@ name|ofw_gpiobus_devinfo
 modifier|*
 name|dinfo
 decl_stmt|;
+comment|/* 	 * Check to see if we already have a child for @p child, and if so 	 * return it. 	 */
+name|childdev
+operator|=
+name|ofw_bus_find_child_device_by_phandle
+argument_list|(
+name|bus
+argument_list|,
+name|child
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|childdev
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|childdev
+operator|)
+return|;
 comment|/* 	 * Set up the GPIO child and OFW bus layer devinfo and add it to bus. 	 */
 name|childdev
 operator|=

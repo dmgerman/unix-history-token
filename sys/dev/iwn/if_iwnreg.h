@@ -2778,6 +2778,7 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(x<< 23)
+comment|/* 0=legacy, 1=pure40, 2=mixed */
 define|#
 directive|define
 name|IWN_RXON_HT_MODEPURE40

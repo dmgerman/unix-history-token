@@ -350,6 +350,30 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|ath_ahb_intr
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+comment|/* XXX TODO: check if its ours! */
+name|ar71xx_device_flush_ddr
+argument_list|(
+name|AR71XX_CPU_DDR_FLUSH_WMAC
+argument_list|)
+expr_stmt|;
+name|ath_intr
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|ath_ahb_attach
 parameter_list|(
@@ -771,7 +795,7 @@ name|INTR_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
-name|ath_intr
+name|ath_ahb_intr
 argument_list|,
 name|sc
 argument_list|,

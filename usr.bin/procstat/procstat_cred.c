@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007-2008 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2007-2008 Robert N. M. Watson  * Copyright (c) 2015 Allan Jude<allanjude@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -107,9 +107,9 @@ condition|(
 operator|!
 name|hflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5s %-16s %5s %5s %5s %5s %5s %5s %5s %5s %-15s\n"
+literal|"{T:/%5s %-16s %5s %5s %5s %5s %5s %5s %5s %5s %-15s}\n"
 argument_list|,
 literal|"PID"
 argument_list|,
@@ -134,54 +134,54 @@ argument_list|,
 literal|"GROUPS"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5d "
+literal|"{k:process_id/%5d/%d} "
 argument_list|,
 name|kipp
 operator|->
 name|ki_pid
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-16s "
+literal|"{:command/%-16s/%s} "
 argument_list|,
 name|kipp
 operator|->
 name|ki_comm
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5d "
+literal|"{:uid/%5d} "
 argument_list|,
 name|kipp
 operator|->
 name|ki_uid
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5d "
+literal|"{:ruid/%5d} "
 argument_list|,
 name|kipp
 operator|->
 name|ki_ruid
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5d "
+literal|"{:svuid/%5d} "
 argument_list|,
 name|kipp
 operator|->
 name|ki_svuid
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5d "
+literal|"{:group/%5d} "
 argument_list|,
 name|kipp
 operator|->
@@ -191,27 +191,27 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5d "
+literal|"{:rgid/%5d} "
 argument_list|,
 name|kipp
 operator|->
 name|ki_rgid
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5d "
+literal|"{:svgid/%5d} "
 argument_list|,
 name|kipp
 operator|->
 name|ki_svgid
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5s "
+literal|"{:umask/%5s} "
 argument_list|,
 name|get_umask
 argument_list|(
@@ -221,9 +221,9 @@ name|kipp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s"
+literal|"{:cr_flags/%s}"
 argument_list|,
 name|kipp
 operator|->
@@ -236,9 +236,9 @@ else|:
 literal|"-"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"     "
+literal|"{P:     }"
 argument_list|)
 expr_stmt|;
 name|groups
@@ -286,6 +286,11 @@ operator|->
 name|ki_groups
 expr_stmt|;
 block|}
+name|xo_open_list
+argument_list|(
+literal|"groups"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -299,9 +304,9 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s%d"
+literal|"{D:/%s}{l:groups/%d}"
 argument_list|,
 operator|(
 name|i
@@ -334,7 +339,12 @@ argument_list|,
 name|groups
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_close_list
+argument_list|(
+literal|"groups"
+argument_list|)
+expr_stmt|;
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)

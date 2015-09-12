@@ -63,10 +63,6 @@ name|NT_GLOBAL_LOGOUT
 block|,
 name|NT_CHANGED
 block|,
-name|NT_ARRIVED
-block|,
-name|NT_DEPARTED
-block|,
 name|NT_HBA_RESET
 block|}
 name|isp_ncode_t

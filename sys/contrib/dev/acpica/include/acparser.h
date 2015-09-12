@@ -740,7 +740,9 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|AcpiPsCreateScopeOp
 parameter_list|(
-name|void
+name|UINT8
+modifier|*
+name|Aml
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -765,7 +767,11 @@ modifier|*
 name|AcpiPsAllocOp
 parameter_list|(
 name|UINT16
-name|opcode
+name|Opcode
+parameter_list|,
+name|UINT8
+modifier|*
+name|Aml
 parameter_list|)
 function_decl|;
 end_function_decl

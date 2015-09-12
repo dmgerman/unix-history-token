@@ -448,6 +448,45 @@ parameter_list|)
 value|sx_assert(&(fdp)->fd_sx, SX_UNLOCKED)
 end_define
 
+begin_comment
+comment|/* Operation types for kern_dup(). */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|FDDUP_NORMAL
+block|,
+comment|/* dup() behavior. */
+name|FDDUP_FCNTL
+block|,
+comment|/* fcntl()-style errors. */
+name|FDDUP_FIXED
+block|,
+comment|/* Force fixed allocation. */
+name|FDDUP_MUSTREPLACE
+block|,
+comment|/* Target must exist. */
+name|FDDUP_LASTMODE
+block|, }
+enum|;
+end_enum
+
+begin_comment
+comment|/* Flags for kern_dup(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDUP_FLAG_CLOEXEC
+value|0x1
+end_define
+
+begin_comment
+comment|/* Atomically set UF_EXCLOSE. */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|thread
@@ -772,6 +811,49 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|fdcopy_remapped
+parameter_list|(
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+parameter_list|,
+specifier|const
+name|int
+modifier|*
+name|fds
+parameter_list|,
+name|size_t
+name|nfds
+parameter_list|,
+name|struct
+name|filedesc
+modifier|*
+modifier|*
+name|newfdp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|fdinstall_remapped
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|fdunshare
 parameter_list|(
@@ -791,6 +873,18 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|fdescfree_remapped
+parameter_list|(
+name|struct
+name|filedesc
+modifier|*
+name|fdp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1019,6 +1113,53 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* cdir/rdir/jdir manipulation functions. */
+end_comment
+
+begin_function_decl
+name|void
+name|pwd_chdir
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pwd_chroot
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pwd_ensure_dirs
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

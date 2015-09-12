@@ -253,22 +253,26 @@ name|long
 name|b_bufsize
 decl_stmt|;
 comment|/* Allocated buffer size. */
-name|long
+name|int
 name|b_runningbufspace
 decl_stmt|;
 comment|/* when I/O is running, pipelining */
-name|caddr_t
-name|b_kvabase
-decl_stmt|;
-comment|/* base kva for buffer */
-name|caddr_t
-name|b_kvaalloc
-decl_stmt|;
-comment|/* allocated kva for B_KVAALLOC */
 name|int
 name|b_kvasize
 decl_stmt|;
 comment|/* size of kva for buffer */
+name|int
+name|b_dirtyoff
+decl_stmt|;
+comment|/* Offset in buffer of dirty region. */
+name|int
+name|b_dirtyend
+decl_stmt|;
+comment|/* Offset of end of dirty region. */
+name|caddr_t
+name|b_kvabase
+decl_stmt|;
+comment|/* base kva for buffer */
 name|daddr_t
 name|b_lblkno
 decl_stmt|;
@@ -279,14 +283,6 @@ modifier|*
 name|b_vp
 decl_stmt|;
 comment|/* Device vnode. */
-name|int
-name|b_dirtyoff
-decl_stmt|;
-comment|/* Offset in buffer of dirty region. */
-name|int
-name|b_dirtyend
-decl_stmt|;
-comment|/* Offset of end of dirty region. */
 name|struct
 name|ucred
 modifier|*
@@ -299,11 +295,6 @@ modifier|*
 name|b_wcred
 decl_stmt|;
 comment|/* Write credentials reference. */
-name|void
-modifier|*
-name|b_saveaddr
-decl_stmt|;
-comment|/* Original b_addr for physio. */
 union|union
 block|{
 name|TAILQ_ENTRY
@@ -542,23 +533,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_UNMAPPED
+name|B_00000800
 value|0x00000800
 end_define
 
 begin_comment
-comment|/* KVA is not mapped. */
+comment|/* Available flag. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|B_KVAALLOC
+name|B_00001000
 value|0x00001000
 end_define
 
 begin_comment
-comment|/* But allocated. */
+comment|/* Available flag. */
 end_comment
 
 begin_define
@@ -774,7 +765,7 @@ begin_define
 define|#
 directive|define
 name|PRINT_BUF_FLAGS
-value|"\20\40remfree\37cluster\36vmio\35ram\34managed" \ 	"\33paging\32infreecnt\31nocopy\30b23\27relbuf\26dirty\25b20" \ 	"\24b19\23b18\22clusterok\21malloc\20nocache\17b14\16inval" \ 	"\15kvaalloc\14unmapped\13eintr\12done\11persist\10delwri" \ 	"\7validsuspwrt\6cache\5deferred\4direct\3async\2needcommit\1age"
+value|"\20\40remfree\37cluster\36vmio\35ram\34managed" \ 	"\33paging\32infreecnt\31nocopy\30b23\27relbuf\26dirty\25b20" \ 	"\24b19\23b18\22clusterok\21malloc\20nocache\17b14\16inval" \ 	"\15b12\14b11\13eintr\12done\11persist\10delwri" \ 	"\7validsuspwrt\6cache\5deferred\4direct\3async\2needcommit\1age"
 end_define
 
 begin_comment
@@ -894,8 +885,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BV_BKGRDERR
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Error from background write */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PRINT_BUF_VFLAGS
-value|"\20\3bkgrdwait\2bkgrdinprog\1scanned"
+value|"\20\4bkgrderr\3bkgrdwait\2bkgrdinprog\1scanned"
 end_define
 
 begin_ifdef
@@ -1305,7 +1307,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This structure describes a clustered I/O.  It is stored in the b_saveaddr  * field of the buffer on which I/O is done.  At I/O completion, cluster  * callback uses the structure to parcel I/O's to individual buffers, and  * then free's this structure.  */
+comment|/*  * This structure describes a clustered I/O.   */
 end_comment
 
 begin_struct
@@ -1320,11 +1322,6 @@ name|long
 name|bs_bufsize
 decl_stmt|;
 comment|/* Saved b_bufsize. */
-name|void
-modifier|*
-name|bs_saveaddr
-decl_stmt|;
-comment|/* Saved b_addr. */
 name|int
 name|bs_nchildren
 decl_stmt|;
@@ -1876,6 +1873,34 @@ name|caddr_t
 name|unmapped_buf
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Data address for unmapped buffers. */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|buf_mapped
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+name|bp
+parameter_list|)
+block|{
+return|return
+operator|(
+name|bp
+operator|->
+name|b_data
+operator|!=
+name|unmapped_buf
+operator|)
+return|;
+block|}
+end_function
 
 begin_function_decl
 name|void

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2000 Alfredo Andres Omella.  All rights reserved.  *
 end_comment
 
 begin_comment
-comment|/*  * Radius printer routines as specified on:  *  * RFC 2865:  *      "Remote Authentication Dial In User Service (RADIUS)"  *  * RFC 2866:  *      "RADIUS Accounting"  *  * RFC 2867:  *      "RADIUS Accounting Modifications for Tunnel Protocol Support"  *  * RFC 2868:  *      "RADIUS Attributes for Tunnel Protocol Support"  *  * RFC 2869:  *      "RADIUS Extensions"  *  * Alfredo Andres Omella (aandres@s21sec.com) v0.1 2000/09/15  *  * TODO: Among other things to print ok MacIntosh and Vendor values  */
+comment|/*  * Radius printer routines as specified on:  *  * RFC 2865:  *      "Remote Authentication Dial In User Service (RADIUS)"  *  * RFC 2866:  *      "RADIUS Accounting"  *  * RFC 2867:  *      "RADIUS Accounting Modifications for Tunnel Protocol Support"  *  * RFC 2868:  *      "RADIUS Attributes for Tunnel Protocol Support"  *  * RFC 2869:  *      "RADIUS Extensions"  *  * RFC 4675:  *      "RADIUS Attributes for Virtual LAN and Priority Support"  *  * RFC 5176:  *      "Dynamic Authorization Extensions to RADIUS"  *  * Alfredo Andres Omella (aandres@s21sec.com) v0.1 2000/09/15  *  * TODO: Among other things to print ok MacIntosh and Vendor values  */
 end_comment
 
 begin_define
@@ -195,6 +195,72 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RADCMD_DISCON_REQ
+value|40
+end_define
+
+begin_comment
+comment|/* Disconnect-Request  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADCMD_DISCON_ACK
+value|41
+end_define
+
+begin_comment
+comment|/* Disconnect-ACK      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADCMD_DISCON_NAK
+value|42
+end_define
+
+begin_comment
+comment|/* Disconnect-NAK      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADCMD_COA_REQ
+value|43
+end_define
+
+begin_comment
+comment|/* CoA-Request         */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADCMD_COA_ACK
+value|44
+end_define
+
+begin_comment
+comment|/* CoA-ACK             */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADCMD_COA_NAK
+value|45
+end_define
+
+begin_comment
+comment|/* CoA-NAK             */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RADCMD_RESERVED
 value|255
 end_define
@@ -215,49 +281,85 @@ block|{
 block|{
 name|RADCMD_ACCESS_REQ
 block|,
-literal|"Access Request"
+literal|"Access-Request"
 block|}
 block|,
 block|{
 name|RADCMD_ACCESS_ACC
 block|,
-literal|"Access Accept"
+literal|"Access-Accept"
 block|}
 block|,
 block|{
 name|RADCMD_ACCESS_REJ
 block|,
-literal|"Access Reject"
+literal|"Access-Reject"
 block|}
 block|,
 block|{
 name|RADCMD_ACCOUN_REQ
 block|,
-literal|"Accounting Request"
+literal|"Accounting-Request"
 block|}
 block|,
 block|{
 name|RADCMD_ACCOUN_RES
 block|,
-literal|"Accounting Response"
+literal|"Accounting-Response"
 block|}
 block|,
 block|{
 name|RADCMD_ACCESS_CHA
 block|,
-literal|"Access Challenge"
+literal|"Access-Challenge"
 block|}
 block|,
 block|{
 name|RADCMD_STATUS_SER
 block|,
-literal|"Status Server"
+literal|"Status-Server"
 block|}
 block|,
 block|{
 name|RADCMD_STATUS_CLI
 block|,
-literal|"Status Client"
+literal|"Status-Client"
+block|}
+block|,
+block|{
+name|RADCMD_DISCON_REQ
+block|,
+literal|"Disconnect-Request"
+block|}
+block|,
+block|{
+name|RADCMD_DISCON_ACK
+block|,
+literal|"Disconnect-ACK"
+block|}
+block|,
+block|{
+name|RADCMD_DISCON_NAK
+block|,
+literal|"Disconnect-NAK"
+block|}
+block|,
+block|{
+name|RADCMD_COA_REQ
+block|,
+literal|"CoA-Request"
+block|}
+block|,
+block|{
+name|RADCMD_COA_ACK
+block|,
+literal|"CoA-ACK"
+block|}
+block|,
+block|{
+name|RADCMD_COA_NAK
+block|,
+literal|"CoA-NAK"
 block|}
 block|,
 block|{
@@ -362,6 +464,20 @@ define|#
 directive|define
 name|ACCT_SESSION_TIME
 value|46
+end_define
+
+begin_define
+define|#
+directive|define
+name|EGRESS_VLAN_ID
+value|56
+end_define
+
+begin_define
+define|#
+directive|define
+name|EGRESS_VLAN_NAME
+value|58
 end_define
 
 begin_define
@@ -473,6 +589,50 @@ end_comment
 begin_comment
 comment|/********************************/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RFC4675_TAGGED
+value|0x31
+end_define
+
+begin_define
+define|#
+directive|define
+name|RFC4675_UNTAGGED
+value|0x32
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|tok
+name|rfc4675_tagged
+index|[]
+init|=
+block|{
+block|{
+name|RFC4675_TAGGED
+block|,
+literal|"Tagged"
+block|}
+block|,
+block|{
+name|RFC4675_UNTAGGED
+block|,
+literal|"Untagged"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -807,6 +967,28 @@ literal|"Default"
 block|,
 literal|"RADIUS-Request"
 block|,                                  }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Ingress-Filters Attribute standard values */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ingress_filters
+index|[]
+init|=
+block|{
+name|NULL
+block|,
+literal|"Enabled"
+block|,
+literal|"Disabled"
+block|,                                      }
 decl_stmt|;
 end_decl_stmt
 
@@ -1185,7 +1367,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"Username"
+literal|"User-Name"
 block|,
 name|NULL
 block|,
@@ -1197,7 +1379,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Password"
+literal|"User-Password"
 block|,
 name|NULL
 block|,
@@ -1209,7 +1391,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"CHAP Password"
+literal|"CHAP-Password"
 block|,
 name|NULL
 block|,
@@ -1221,7 +1403,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"NAS IP Address"
+literal|"NAS-IP-Address"
 block|,
 name|NULL
 block|,
@@ -1233,7 +1415,7 @@ name|print_attr_address
 block|}
 block|,
 block|{
-literal|"NAS Port"
+literal|"NAS-Port"
 block|,
 name|NULL
 block|,
@@ -1245,7 +1427,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Service Type"
+literal|"Service-Type"
 block|,
 name|serv_type
 block|,
@@ -1262,7 +1444,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Framed Protocol"
+literal|"Framed-Protocol"
 block|,
 name|frm_proto
 block|,
@@ -1279,7 +1461,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Framed IP Address"
+literal|"Framed-IP-Address"
 block|,
 name|NULL
 block|,
@@ -1291,7 +1473,7 @@ name|print_attr_address
 block|}
 block|,
 block|{
-literal|"Framed IP Network"
+literal|"Framed-IP-Netmask"
 block|,
 name|NULL
 block|,
@@ -1303,7 +1485,7 @@ name|print_attr_address
 block|}
 block|,
 block|{
-literal|"Framed Routing"
+literal|"Framed-Routing"
 block|,
 name|frm_routing
 block|,
@@ -1318,7 +1500,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Filter ID"
+literal|"Filter-Id"
 block|,
 name|NULL
 block|,
@@ -1330,7 +1512,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Framed MTU"
+literal|"Framed-MTU"
 block|,
 name|NULL
 block|,
@@ -1342,7 +1524,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Framed Compression"
+literal|"Framed-Compression"
 block|,
 name|frm_comp
 block|,
@@ -1357,7 +1539,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Login IP Host"
+literal|"Login-IP-Host"
 block|,
 name|NULL
 block|,
@@ -1369,7 +1551,7 @@ name|print_attr_address
 block|}
 block|,
 block|{
-literal|"Login Service"
+literal|"Login-Service"
 block|,
 name|login_serv
 block|,
@@ -1384,7 +1566,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Login TCP Port"
+literal|"Login-TCP-Port"
 block|,
 name|NULL
 block|,
@@ -1409,7 +1591,7 @@ block|}
 block|,
 comment|/*17*/
 block|{
-literal|"Reply"
+literal|"Reply-Message"
 block|,
 name|NULL
 block|,
@@ -1421,7 +1603,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Callback-number"
+literal|"Callback-Number"
 block|,
 name|NULL
 block|,
@@ -1433,7 +1615,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Callback-ID"
+literal|"Callback-Id"
 block|,
 name|NULL
 block|,
@@ -1458,7 +1640,7 @@ block|}
 block|,
 comment|/*21*/
 block|{
-literal|"Framed Route"
+literal|"Framed-Route"
 block|,
 name|NULL
 block|,
@@ -1470,7 +1652,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Framed IPX Network"
+literal|"Framed-IPX-Network"
 block|,
 name|NULL
 block|,
@@ -1506,7 +1688,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Vendor Specific"
+literal|"Vendor-Specific"
 block|,
 name|NULL
 block|,
@@ -1518,7 +1700,7 @@ name|print_vendor_attr
 block|}
 block|,
 block|{
-literal|"Session Timeout"
+literal|"Session-Timeout"
 block|,
 name|NULL
 block|,
@@ -1530,7 +1712,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Idle Timeout"
+literal|"Idle-Timeout"
 block|,
 name|NULL
 block|,
@@ -1542,7 +1724,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Termination Action"
+literal|"Termination-Action"
 block|,
 name|term_action
 block|,
@@ -1557,7 +1739,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Called Station"
+literal|"Called-Station-Id"
 block|,
 name|NULL
 block|,
@@ -1569,7 +1751,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Calling Station"
+literal|"Calling-Station-Id"
 block|,
 name|NULL
 block|,
@@ -1581,7 +1763,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"NAS ID"
+literal|"NAS-Identifier"
 block|,
 name|NULL
 block|,
@@ -1593,7 +1775,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Proxy State"
+literal|"Proxy-State"
 block|,
 name|NULL
 block|,
@@ -1605,7 +1787,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Login LAT Service"
+literal|"Login-LAT-Service"
 block|,
 name|NULL
 block|,
@@ -1617,7 +1799,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Login LAT Node"
+literal|"Login-LAT-Node"
 block|,
 name|NULL
 block|,
@@ -1629,7 +1811,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Login LAT Group"
+literal|"Login-LAT-Group"
 block|,
 name|NULL
 block|,
@@ -1641,7 +1823,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Framed Appletalk Link"
+literal|"Framed-AppleTalk-Link"
 block|,
 name|NULL
 block|,
@@ -1653,7 +1835,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Framed Appltalk Net"
+literal|"Framed-AppleTalk-Network"
 block|,
 name|NULL
 block|,
@@ -1665,7 +1847,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Framed Appletalk Zone"
+literal|"Framed-AppleTalk-Zone"
 block|,
 name|NULL
 block|,
@@ -1677,7 +1859,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Accounting Status"
+literal|"Acct-Status-Type"
 block|,
 name|acct_status
 block|,
@@ -1694,7 +1876,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Accounting Delay"
+literal|"Acct-Delay-Time"
 block|,
 name|NULL
 block|,
@@ -1706,7 +1888,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Accounting Input Octets"
+literal|"Acct-Input-Octets"
 block|,
 name|NULL
 block|,
@@ -1718,7 +1900,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Accounting Output Octets"
+literal|"Acct-Output-Octets"
 block|,
 name|NULL
 block|,
@@ -1730,7 +1912,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Accounting Session ID"
+literal|"Acct-Session-Id"
 block|,
 name|NULL
 block|,
@@ -1742,7 +1924,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Accounting Authentication"
+literal|"Acct-Authentic"
 block|,
 name|acct_auth
 block|,
@@ -1759,7 +1941,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Accounting Session Time"
+literal|"Acct-Session-Time"
 block|,
 name|NULL
 block|,
@@ -1771,7 +1953,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Accounting Input Packets"
+literal|"Acct-Input-Packets"
 block|,
 name|NULL
 block|,
@@ -1783,7 +1965,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Accounting Output Packets"
+literal|"Acct-Output-Packets"
 block|,
 name|NULL
 block|,
@@ -1795,7 +1977,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Accounting Termination Cause"
+literal|"Acct-Terminate-Cause"
 block|,
 name|acct_term
 block|,
@@ -1812,7 +1994,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Accounting Multilink Session ID"
+literal|"Acct-Multi-Session-Id"
 block|,
 name|NULL
 block|,
@@ -1824,7 +2006,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Accounting Link Count"
+literal|"Acct-Link-Count"
 block|,
 name|NULL
 block|,
@@ -1836,7 +2018,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Accounting Input Giga"
+literal|"Acct-Input-Gigawords"
 block|,
 name|NULL
 block|,
@@ -1848,7 +2030,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Accounting Output Giga"
+literal|"Acct-Output-Gigawords"
 block|,
 name|NULL
 block|,
@@ -1873,7 +2055,7 @@ block|}
 block|,
 comment|/*54*/
 block|{
-literal|"Event Timestamp"
+literal|"Event-Timestamp"
 block|,
 name|NULL
 block|,
@@ -1885,7 +2067,7 @@ name|print_attr_time
 block|}
 block|,
 block|{
-literal|"Unassigned"
+literal|"Egress-VLANID"
 block|,
 name|NULL
 block|,
@@ -1893,51 +2075,28 @@ literal|0
 block|,
 literal|0
 block|,
-name|NULL
+name|print_attr_num
 block|}
 block|,
-comment|/*56*/
 block|{
-literal|"Unassigned"
+literal|"Ingress-Filters"
 block|,
-name|NULL
+name|ingress_filters
 block|,
-literal|0
+name|TAM_SIZE
+argument_list|(
+name|ingress_filters
+argument_list|)
+operator|-
+literal|1
 block|,
-literal|0
+literal|1
 block|,
-name|NULL
+name|print_attr_num
 block|}
 block|,
-comment|/*57*/
 block|{
-literal|"Unassigned"
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-comment|/*58*/
-block|{
-literal|"Unassigned"
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-comment|/*59*/
-block|{
-literal|"CHAP challenge"
+literal|"Egress-VLAN-Name"
 block|,
 name|NULL
 block|,
@@ -1949,7 +2108,31 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"NAS Port Type"
+literal|"User-Priority-Table"
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"CHAP-Challenge"
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|print_attr_string
+block|}
+block|,
+block|{
+literal|"NAS-Port-Type"
 block|,
 name|nas_port_type
 block|,
@@ -1964,7 +2147,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Port Limit"
+literal|"Port-Limit"
 block|,
 name|NULL
 block|,
@@ -1976,7 +2159,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Login LAT Port"
+literal|"Login-LAT-Port"
 block|,
 name|NULL
 block|,
@@ -1989,7 +2172,7 @@ block|}
 block|,
 comment|/*63*/
 block|{
-literal|"Tunnel Type"
+literal|"Tunnel-Type"
 block|,
 name|tunnel_type
 block|,
@@ -2006,7 +2189,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Tunnel Medium"
+literal|"Tunnel-Medium-Type"
 block|,
 name|tunnel_medium
 block|,
@@ -2023,7 +2206,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Tunnel Client End"
+literal|"Tunnel-Client-Endpoint"
 block|,
 name|NULL
 block|,
@@ -2035,7 +2218,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Tunnel Server End"
+literal|"Tunnel-Server-Endpoint"
 block|,
 name|NULL
 block|,
@@ -2047,7 +2230,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Accounting Tunnel connect"
+literal|"Acct-Tunnel-Connection"
 block|,
 name|NULL
 block|,
@@ -2059,7 +2242,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Tunnel Password"
+literal|"Tunnel-Password"
 block|,
 name|NULL
 block|,
@@ -2071,7 +2254,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"ARAP Password"
+literal|"ARAP-Password"
 block|,
 name|NULL
 block|,
@@ -2083,7 +2266,7 @@ name|print_attr_strange
 block|}
 block|,
 block|{
-literal|"ARAP Feature"
+literal|"ARAP-Features"
 block|,
 name|NULL
 block|,
@@ -2095,7 +2278,7 @@ name|print_attr_strange
 block|}
 block|,
 block|{
-literal|"ARAP Zone Acces"
+literal|"ARAP-Zone-Access"
 block|,
 name|arap_zone
 block|,
@@ -2113,7 +2296,7 @@ block|}
 block|,
 comment|/*72*/
 block|{
-literal|"ARAP Security"
+literal|"ARAP-Security"
 block|,
 name|NULL
 block|,
@@ -2125,7 +2308,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"ARAP Security Data"
+literal|"ARAP-Security-Data"
 block|,
 name|NULL
 block|,
@@ -2137,7 +2320,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Password Retry"
+literal|"Password-Retry"
 block|,
 name|NULL
 block|,
@@ -2164,7 +2347,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Connect Info"
+literal|"Connect-Info"
 block|,
 name|NULL
 block|,
@@ -2176,7 +2359,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Config Token"
+literal|"Configuration-Token"
 block|,
 name|NULL
 block|,
@@ -2188,7 +2371,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"EAP Message"
+literal|"EAP-Message"
 block|,
 name|NULL
 block|,
@@ -2200,7 +2383,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Message Authentication"
+literal|"Message-Authenticator"
 block|,
 name|NULL
 block|,
@@ -2213,7 +2396,7 @@ block|}
 block|,
 comment|/*80*/
 block|{
-literal|"Tunnel Private Group"
+literal|"Tunnel-Private-Group-ID"
 block|,
 name|NULL
 block|,
@@ -2225,7 +2408,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Tunnel Assigned ID"
+literal|"Tunnel-Assignment-ID"
 block|,
 name|NULL
 block|,
@@ -2237,7 +2420,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Tunnel Preference"
+literal|"Tunnel-Preference"
 block|,
 name|NULL
 block|,
@@ -2249,7 +2432,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"ARAP Challenge Response"
+literal|"ARAP-Challenge-Response"
 block|,
 name|NULL
 block|,
@@ -2261,7 +2444,7 @@ name|print_attr_strange
 block|}
 block|,
 block|{
-literal|"Accounting Interim Interval"
+literal|"Acct-Interim-Interval"
 block|,
 name|NULL
 block|,
@@ -2273,7 +2456,7 @@ name|print_attr_num
 block|}
 block|,
 block|{
-literal|"Accounting Tunnel packets lost"
+literal|"Acct-Tunnel-Packets-Lost"
 block|,
 name|NULL
 block|,
@@ -2286,7 +2469,7 @@ block|}
 block|,
 comment|/*86*/
 block|{
-literal|"NAS Port ID"
+literal|"NAS-Port-Id"
 block|,
 name|NULL
 block|,
@@ -2298,7 +2481,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Framed Pool"
+literal|"Framed-Pool"
 block|,
 name|NULL
 block|,
@@ -2310,7 +2493,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Chargeable User Identity"
+literal|"CUI"
 block|,
 name|NULL
 block|,
@@ -2322,7 +2505,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Tunnel Client Authentication ID"
+literal|"Tunnel-Client-Auth-ID"
 block|,
 name|NULL
 block|,
@@ -2334,7 +2517,7 @@ name|print_attr_string
 block|}
 block|,
 block|{
-literal|"Tunnel Server Authentication ID"
+literal|"Tunnel-Server-Auth-ID"
 block|,
 name|NULL
 block|,
@@ -2482,10 +2665,20 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"Tag %u, "
+literal|"Tag[%u] "
 operator|,
 operator|*
 name|data
+operator|)
+argument_list|)
+expr_stmt|;
+else|else
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"Tag[Unused] "
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2564,12 +2757,60 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+operator|*
+name|data
+condition|)
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"Tag %u"
+literal|"Tag[%u] "
+operator|,
+operator|*
+name|data
+operator|)
+argument_list|)
+expr_stmt|;
+else|else
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"Tag[Unused] "
+operator|)
+argument_list|)
+expr_stmt|;
+name|data
+operator|++
+expr_stmt|;
+name|length
+operator|--
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|EGRESS_VLAN_NAME
+case|:
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%s (0x%02x) "
+operator|,
+name|tok2str
+argument_list|(
+name|rfc4675_tagged
+argument_list|,
+literal|"Unknown tag"
+argument_list|,
+operator|*
+name|data
+argument_list|)
 operator|,
 operator|*
 name|data
@@ -2582,7 +2823,6 @@ expr_stmt|;
 name|length
 operator|--
 expr_stmt|;
-block|}
 break|break;
 block|}
 for|for
@@ -2958,9 +3198,6 @@ name|u_short
 name|attr_code
 parameter_list|)
 block|{
-name|uint8_t
-name|tag
-decl_stmt|;
 name|uint32_t
 name|timeout
 decl_stmt|;
@@ -3050,7 +3287,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"Tag[Unused]"
+literal|"Tag[Unused] "
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3060,7 +3297,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"Tag[%d]"
+literal|"Tag[%d] "
 operator|,
 operator|*
 name|data
@@ -3359,31 +3596,20 @@ break|break;
 case|case
 name|TUNNEL_PREFERENCE
 case|:
-name|tag
-operator|=
-operator|*
-name|data
-expr_stmt|;
-name|data
-operator|++
-expr_stmt|;
 if|if
 condition|(
-name|tag
-operator|==
-literal|0
+operator|*
+name|data
 condition|)
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"Tag (Unused) %d"
+literal|"Tag[%d] "
 operator|,
-name|EXTRACT_24BITS
-argument_list|(
+operator|*
 name|data
-argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3393,9 +3619,62 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"Tag (%d) %d"
+literal|"Tag[Unused] "
+operator|)
+argument_list|)
+expr_stmt|;
+name|data
+operator|++
+expr_stmt|;
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
 operator|,
-name|tag
+literal|"%d"
+operator|,
+name|EXTRACT_24BITS
+argument_list|(
+name|data
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EGRESS_VLAN_ID
+case|:
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%s (0x%02x) "
+operator|,
+name|tok2str
+argument_list|(
+name|rfc4675_tagged
+argument_list|,
+literal|"Unknown tag"
+argument_list|,
+operator|*
+name|data
+argument_list|)
+operator|,
+operator|*
+name|data
+operator|)
+argument_list|)
+expr_stmt|;
+name|data
+operator|++
+expr_stmt|;
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%d"
 operator|,
 name|EXTRACT_24BITS
 argument_list|(

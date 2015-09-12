@@ -15,6 +15,12 @@ directive|define
 name|_SVM_H_
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|pcpu
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Guest register state that is saved outside the VMCB.  */
 end_comment
@@ -79,6 +85,12 @@ parameter_list|,
 name|struct
 name|svm_regctx
 modifier|*
+name|gctx
+parameter_list|,
+name|struct
+name|pcpu
+modifier|*
+name|pcpu
 parameter_list|)
 function_decl|;
 end_function_decl

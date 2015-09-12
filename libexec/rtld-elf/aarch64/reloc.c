@@ -1504,6 +1504,10 @@ operator|+
 name|def
 operator|->
 name|st_value
+operator|+
+name|rela
+operator|->
+name|r_addend
 expr_stmt|;
 break|break;
 case|case

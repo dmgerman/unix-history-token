@@ -861,6 +861,13 @@ name|LK_NODDLKTREAT
 value|0x002000
 end_define
 
+begin_define
+define|#
+directive|define
+name|LK_VNHELD
+value|0x004000
+end_define
+
 begin_comment
 comment|/*  * Operations for lockmgr().  */
 end_comment

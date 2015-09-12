@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007-2011 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2007-2011 Robert N. M. Watson  * Copyright (c) 2015 Allan Jude<allanjude@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -426,45 +426,6 @@ block|}
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|print_address
-parameter_list|(
-name|struct
-name|sockaddr_storage
-modifier|*
-name|ss
-parameter_list|)
-block|{
-name|char
-name|addr
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-name|addr_to_string
-argument_list|(
-name|ss
-argument_list|,
-name|addr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|addr
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|addr
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_struct
 specifier|static
 struct|struct
@@ -600,9 +561,15 @@ literal|"fu"
 block|}
 block|,
 block|{
-name|CAP_LINKAT
+name|CAP_LINKAT_SOURCE
 block|,
-literal|"li"
+literal|"ls"
+block|}
+block|,
+block|{
+name|CAP_LINKAT_TARGET
+block|,
+literal|"lt"
 block|}
 block|,
 block|{
@@ -624,9 +591,15 @@ literal|"mn"
 block|}
 block|,
 block|{
-name|CAP_RENAMEAT
+name|CAP_RENAMEAT_SOURCE
 block|,
-literal|"rn"
+literal|"rs"
+block|}
+block|,
+block|{
+name|CAP_RENAMEAT_TARGET
+block|,
+literal|"rt"
 block|}
 block|,
 block|{
@@ -1095,18 +1068,23 @@ name|i
 operator|!=
 literal|0
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|" "
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
 literal|"-"
 argument_list|)
 expr_stmt|;
 block|}
+name|xo_open_list
+argument_list|(
+literal|"capabilities"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1136,9 +1114,9 @@ name|cd_right
 argument_list|)
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s%s"
+literal|"{D:/%s}{l:capabilities/%s}"
 argument_list|,
 name|count
 condition|?
@@ -1178,6 +1156,11 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+name|xo_close_list
+argument_list|(
+literal|"capabilities"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1226,6 +1209,18 @@ name|width
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|char
+name|src_addr
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
+name|char
+name|dst_addr
+index|[
+name|PATH_MAX
+index|]
 decl_stmt|;
 comment|/* 	 * To print the header in capability mode, we need to know the width 	 * of the widest capability string.  Even if we get no processes 	 * back, we will print the header, so we defer aborting due to a lack 	 * of processes until after the header logic. 	 */
 name|capwidth
@@ -1309,10 +1304,10 @@ if|if
 condition|(
 name|Cflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5s %-16s %5s %1s %-8s %-*s "
-literal|"%-3s %-12s\n"
+literal|"{T:/%5s %-16s %5s %1s %-8s %-*s "
+literal|"%-3s %-12s}\n"
 argument_list|,
 literal|"PID"
 argument_list|,
@@ -1334,10 +1329,10 @@ literal|"NAME"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5s %-16s %5s %1s %1s %-8s "
-literal|"%3s %7s %-3s %-12s\n"
+literal|"{T:/%5s %-16s %5s %1s %1s %-8s "
+literal|"%3s %7s %-3s %-12s}\n"
 argument_list|,
 literal|"PID"
 argument_list|,
@@ -1368,6 +1363,29 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|xo_emit
+argument_list|(
+literal|"{ek:process_id/%5d/%d}"
+argument_list|,
+name|kipp
+operator|->
+name|ki_pid
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{e:command/%-16s/%s}"
+argument_list|,
+name|kipp
+operator|->
+name|ki_comm
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"files"
+argument_list|)
+expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
 argument|fst
@@ -1377,18 +1395,23 @@ argument_list|,
 argument|next
 argument_list|)
 block|{
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"%5d "
+literal|"files"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{dk:process_id/%5d/%d} "
 argument_list|,
 name|kipp
 operator|->
 name|ki_pid
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-16s "
+literal|"{d:command/%-16s/%s} "
 argument_list|,
 name|kipp
 operator|->
@@ -1403,9 +1426,11 @@ name|fs_uflags
 operator|&
 name|PS_FST_UFLAG_CTTY
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" ctty "
+literal|"{P: }{:fd/%s} "
+argument_list|,
+literal|"ctty"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1417,9 +1442,11 @@ name|fs_uflags
 operator|&
 name|PS_FST_UFLAG_CDIR
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"  cwd "
+literal|"{P:  }{:fd/%s} "
+argument_list|,
+literal|"cwd"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1431,9 +1458,11 @@ name|fs_uflags
 operator|&
 name|PS_FST_UFLAG_JAIL
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" jail "
+literal|"{P: }{:fd/%s} "
+argument_list|,
+literal|"jail"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1445,9 +1474,11 @@ name|fs_uflags
 operator|&
 name|PS_FST_UFLAG_RDIR
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" root "
+literal|"{P: }{:fd/%s} "
+argument_list|,
+literal|"root"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1459,9 +1490,11 @@ name|fs_uflags
 operator|&
 name|PS_FST_UFLAG_TEXT
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" text "
+literal|"{P: }{:fd/%s} "
+argument_list|,
+literal|"text"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1473,15 +1506,17 @@ name|fs_uflags
 operator|&
 name|PS_FST_UFLAG_TRACE
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"trace "
+literal|"{:fd/%s} "
+argument_list|,
+literal|"trace"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5d "
+literal|"{:fd/%5d} "
 argument_list|,
 name|fst
 operator|->
@@ -1502,6 +1537,11 @@ name|str
 operator|=
 literal|"v"
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:fd_type/vnode}"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|PS_FST_TYPE_SOCKET
@@ -1509,6 +1549,11 @@ case|:
 name|str
 operator|=
 literal|"s"
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:fd_type/socket}"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1518,6 +1563,11 @@ name|str
 operator|=
 literal|"p"
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:fd_type/pipe}"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|PS_FST_TYPE_FIFO
@@ -1525,6 +1575,11 @@ case|:
 name|str
 operator|=
 literal|"f"
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:fd_type/fifo}"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1534,6 +1589,11 @@ name|str
 operator|=
 literal|"k"
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:fd_type/kqueue}"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|PS_FST_TYPE_CRYPTO
@@ -1541,6 +1601,11 @@ case|:
 name|str
 operator|=
 literal|"c"
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:fd_type/crypto}"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1550,6 +1615,11 @@ name|str
 operator|=
 literal|"m"
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:fd_type/mqueue}"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|PS_FST_TYPE_SHM
@@ -1557,6 +1627,11 @@ case|:
 name|str
 operator|=
 literal|"h"
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:fd_type/shm}"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1566,6 +1641,11 @@ name|str
 operator|=
 literal|"t"
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:fd_type/pts}"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|PS_FST_TYPE_SEM
@@ -1574,10 +1654,25 @@ name|str
 operator|=
 literal|"e"
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:fd_type/sem}"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|PS_FST_TYPE_NONE
 case|:
+name|str
+operator|=
+literal|"?"
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:fd_type/none}"
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|PS_FST_TYPE_UNKNOWN
 case|:
@@ -1586,11 +1681,16 @@ name|str
 operator|=
 literal|"?"
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:fd_type/unknown}"
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%1s "
+literal|"{d:fd_type/%1s/%s} "
 argument_list|,
 name|str
 argument_list|)
@@ -1642,6 +1742,11 @@ name|str
 operator|=
 literal|"r"
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:vode_type/regular}"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|PS_FST_VTYPE_VDIR
@@ -1649,6 +1754,11 @@ case|:
 name|str
 operator|=
 literal|"d"
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:vode_type/directory}"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1658,6 +1768,11 @@ name|str
 operator|=
 literal|"b"
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:vode_type/block}"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|PS_FST_VTYPE_VCHR
@@ -1665,6 +1780,11 @@ case|:
 name|str
 operator|=
 literal|"c"
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:vode_type/character}"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1674,6 +1794,11 @@ name|str
 operator|=
 literal|"l"
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:vode_type/link}"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|PS_FST_VTYPE_VSOCK
@@ -1681,6 +1806,11 @@ case|:
 name|str
 operator|=
 literal|"s"
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:vode_type/socket}"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1690,6 +1820,11 @@ name|str
 operator|=
 literal|"f"
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:vode_type/fifo}"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|PS_FST_VTYPE_VBAD
@@ -1698,10 +1833,25 @@ name|str
 operator|=
 literal|"x"
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:vode_type/revoked_device}"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|PS_FST_VTYPE_VNON
 case|:
+name|str
+operator|=
+literal|"?"
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:vode_type/non}"
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|PS_FST_VTYPE_UNKNOWN
 case|:
@@ -1710,20 +1860,25 @@ name|str
 operator|=
 literal|"?"
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{eq:vode_type/unknown}"
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%1s "
+literal|"{d:vnode_type/%1s/%s} "
 argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s"
+literal|"{d:/%s}"
 argument_list|,
 name|fst
 operator|->
@@ -1736,9 +1891,9 @@ else|:
 literal|"-"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s"
+literal|"{d:/%s}"
 argument_list|,
 name|fst
 operator|->
@@ -1751,9 +1906,9 @@ else|:
 literal|"-"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s"
+literal|"{d:/%s}"
 argument_list|,
 name|fst
 operator|->
@@ -1766,9 +1921,9 @@ else|:
 literal|"-"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s"
+literal|"{d:/%s}"
 argument_list|,
 name|fst
 operator|->
@@ -1781,9 +1936,9 @@ else|:
 literal|"-"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s"
+literal|"{d:/%s}"
 argument_list|,
 name|fst
 operator|->
@@ -1796,9 +1951,9 @@ else|:
 literal|"-"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s"
+literal|"{d:/%s}"
 argument_list|,
 name|fst
 operator|->
@@ -1811,9 +1966,9 @@ else|:
 literal|"-"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s"
+literal|"{d:/%s}"
 argument_list|,
 name|fst
 operator|->
@@ -1826,9 +1981,9 @@ else|:
 literal|"-"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s"
+literal|"{d:/%s}"
 argument_list|,
 name|fst
 operator|->
@@ -1841,9 +1996,123 @@ else|:
 literal|"-"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
 literal|" "
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"fd_flags"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fst
+operator|->
+name|fs_fflags
+operator|&
+name|PS_FST_FFLAG_READ
+condition|)
+name|xo_emit
+argument_list|(
+literal|"{elq:fd_flags/read}"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fst
+operator|->
+name|fs_fflags
+operator|&
+name|PS_FST_FFLAG_WRITE
+condition|)
+name|xo_emit
+argument_list|(
+literal|"{elq:fd_flags/write}"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fst
+operator|->
+name|fs_fflags
+operator|&
+name|PS_FST_FFLAG_APPEND
+condition|)
+name|xo_emit
+argument_list|(
+literal|"{elq:fd_flags/append}"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fst
+operator|->
+name|fs_fflags
+operator|&
+name|PS_FST_FFLAG_ASYNC
+condition|)
+name|xo_emit
+argument_list|(
+literal|"{elq:fd_flags/async}"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fst
+operator|->
+name|fs_fflags
+operator|&
+name|PS_FST_FFLAG_SYNC
+condition|)
+name|xo_emit
+argument_list|(
+literal|"{elq:fd_flags/fsync}"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fst
+operator|->
+name|fs_fflags
+operator|&
+name|PS_FST_FFLAG_NONBLOCK
+condition|)
+name|xo_emit
+argument_list|(
+literal|"{elq:fd_flags/nonblocking}"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fst
+operator|->
+name|fs_fflags
+operator|&
+name|PS_FST_FFLAG_DIRECT
+condition|)
+name|xo_emit
+argument_list|(
+literal|"{elq:fd_flags/direct_io}"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fst
+operator|->
+name|fs_fflags
+operator|&
+name|PS_FST_FFLAG_HASLOCK
+condition|)
+name|xo_emit
+argument_list|(
+literal|"{elq:fd_flags/lock_held}"
+argument_list|)
+expr_stmt|;
+name|xo_close_list
+argument_list|(
+literal|"fd_flags"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1861,9 +2130,9 @@ operator|>
 operator|-
 literal|1
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%3d "
+literal|"{:ref_count/%3d/%d} "
 argument_list|,
 name|fst
 operator|->
@@ -1871,9 +2140,9 @@ name|fs_ref_count
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%3c "
+literal|"{q:ref_count/%3c/%c} "
 argument_list|,
 literal|'-'
 argument_list|)
@@ -1887,9 +2156,9 @@ operator|>
 operator|-
 literal|1
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%7jd "
+literal|"{:offset/%7jd/%jd} "
 argument_list|,
 operator|(
 name|intmax_t
@@ -1900,9 +2169,9 @@ name|fs_offset
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%7c "
+literal|"{q:offset/%7c/%c} "
 argument_list|,
 literal|'-'
 argument_list|)
@@ -1923,7 +2192,7 @@ argument_list|,
 name|capwidth
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
 literal|" "
 argument_list|)
@@ -1960,9 +2229,9 @@ operator|!=
 literal|0
 condition|)
 break|break;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-3s "
+literal|"{:protocol/%-3s/%s} "
 argument_list|,
 name|protocol_to_string
 argument_list|(
@@ -2016,60 +2285,99 @@ index|]
 operator|!=
 literal|0
 condition|)
-name|print_address
+name|addr_to_string
 argument_list|(
 operator|&
 name|sock
 operator|.
 name|sa_local
+argument_list|,
+name|src_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|src_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|print_address
+name|addr_to_string
 argument_list|(
 operator|&
 name|sock
 operator|.
 name|sa_peer
+argument_list|,
+name|src_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|src_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:path/%s}"
+argument_list|,
+name|src_addr
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|print_address
+name|addr_to_string
 argument_list|(
 operator|&
 name|sock
 operator|.
 name|sa_local
-argument_list|)
-expr_stmt|;
-name|printf
+argument_list|,
+name|src_addr
+argument_list|,
+sizeof|sizeof
 argument_list|(
-literal|" "
+name|src_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|print_address
+name|addr_to_string
 argument_list|(
 operator|&
 name|sock
 operator|.
 name|sa_peer
+argument_list|,
+name|dst_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dst_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:path/%s %s}"
+argument_list|,
+name|src_addr
+argument_list|,
+name|dst_addr
 argument_list|)
 expr_stmt|;
 block|}
 break|break;
 default|default:
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-3s "
+literal|"{:protocol/%-3s/%s} "
 argument_list|,
 literal|"-"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-18s"
+literal|"{:path/%-18s/%s}"
 argument_list|,
 name|fst
 operator|->
@@ -2085,12 +2393,22 @@ literal|"-"
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"files"
+argument_list|)
+expr_stmt|;
 block|}
+name|xo_close_list
+argument_list|(
+literal|"files"
+argument_list|)
+expr_stmt|;
 name|procstat_freefiles
 argument_list|(
 name|procstat

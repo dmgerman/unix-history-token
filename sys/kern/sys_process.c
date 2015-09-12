@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/priv.h>
 end_include
 
@@ -3858,7 +3864,7 @@ expr_stmt|;
 block|}
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 operator|=
 name|data
 expr_stmt|;
@@ -5508,9 +5514,15 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
+if|if
+condition|(
+name|event
+operator|!=
+name|S_EXIT
+condition|)
 name|p
 operator|->
-name|p_xstat
+name|p_xsig
 operator|=
 name|val
 expr_stmt|;

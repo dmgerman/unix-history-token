@@ -184,6 +184,25 @@ operator|!=
 name|uma_junk
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|panic
+argument_list|(
+literal|"Memory modified after free %p(%d) val=%x @ %p\n"
+argument_list|,
+name|mem
+argument_list|,
+name|size
+argument_list|,
+operator|*
+name|p
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|printf
 argument_list|(
 literal|"Memory modified after free %p(%d) val=%x @ %p\n"
@@ -198,6 +217,8 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0

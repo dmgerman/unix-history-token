@@ -609,10 +609,10 @@ condition|)
 block|{
 name|chunk
 operator|=
-name|emalloc
+name|eallocarray
 argument_list|(
 name|entries
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*

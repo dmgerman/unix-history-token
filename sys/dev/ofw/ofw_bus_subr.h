@@ -421,6 +421,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Helper routine to find a device_t child matchig a given phandle_t */
+end_comment
+
+begin_function_decl
+name|device_t
+name|ofw_bus_find_child_device_by_phandle
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|phandle_t
+name|node
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

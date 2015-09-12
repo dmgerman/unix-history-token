@@ -4,7 +4,7 @@ comment|/**  * \file configfile.c  *  *  configuration/rc/ini file handling.  * 
 end_comment
 
 begin_comment
-comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2014 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
+comment|/*  *  This file is part of AutoOpts, a companion to AutoGen.  *  AutoOpts is free software.  *  AutoOpts is Copyright (C) 1992-2015 by Bruce Korb - all rights reserved  *  *  AutoOpts is available under any one of two licenses.  The license  *  in use must be one of these two and the choice is under the control  *  of the user of the license.  *  *   The GNU Lesser General Public License, version 3 or later  *      See the files "COPYING.lgplv3" and "COPYING.gplv3"  *  *   The Modified Berkeley Software Distribution License  *      See the file "COPYING.mbsd"  *  *  These files have the following sha256 sums:  *  *  8584710e9b04216a394078dc156b781d0b47e1729104d666658aecef8ee32e95  COPYING.gplv3  *  4379e7444a0e2ce2b12dd6f5a52a27a4d02d39d247901d3285c88cf0d37f477b  COPYING.lgplv3  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd  */
 end_comment
 
 begin_comment
@@ -316,7 +316,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func  configFileLoad  *  * what:  parse a configuration file  * arg:   + char const*     + fname + the file to load +  *  * ret_type:  const tOptionValue*  * ret_desc:  An allocated, compound value structure  *  * doc:  *  This routine will load a named configuration file and parse the  *  text as a hierarchically valued option.  The option descriptor  *  created from an option definition file is not used via this interface.  *  The returned value is "named" with the input file name and is of  *  type "@code{OPARG_TYPE_HIERARCHY}".  It may be used in calls to  *  @code{optionGetValue()}, @code{optionNextValue()} and  *  @code{optionUnloadNested()}.  *  * err:  *  If the file cannot be loaded or processed, @code{NULL} is returned and  *  @var{errno} is set.  It may be set by a call to either @code{open(2)}  *  @code{mmap(2)} or other file system calls, or it may be:  *  @itemize @bullet  *  @item  *  @code{ENOENT} - the file was not found.  *  @item  *  @code{ENOMSG} - the file was empty.  *  @item  *  @code{EINVAL} - the file contents are invalid -- not properly formed.  *  @item  *  @code{ENOMEM} - not enough memory to allocate the needed structures.  *  @end itemize =*/
+comment|/*=export_func  configFileLoad  *  * what:  parse a configuration file  * arg:   + char const * + fname + the file to load +  *  * ret_type:  const tOptionValue *  * ret_desc:  An allocated, compound value structure  *  * doc:  *  This routine will load a named configuration file and parse the  *  text as a hierarchically valued option.  The option descriptor  *  created from an option definition file is not used via this interface.  *  The returned value is "named" with the input file name and is of  *  type "@code{OPARG_TYPE_HIERARCHY}".  It may be used in calls to  *  @code{optionGetValue()}, @code{optionNextValue()} and  *  @code{optionUnloadNested()}.  *  * err:  *  If the file cannot be loaded or processed, @code{NULL} is returned and  *  @var{errno} is set.  It may be set by a call to either @code{open(2)}  *  @code{mmap(2)} or other file system calls, or it may be:  *  @itemize @bullet  *  @item  *  @code{ENOENT} - the file was not found.  *  @item  *  @code{ENOMSG} - the file was empty.  *  @item  *  @code{EINVAL} - the file contents are invalid -- not properly formed.  *  @item  *  @code{ENOMEM} - not enough memory to allocate the needed structures.  *  @end itemize =*/
 end_comment
 
 begin_function
@@ -431,7 +431,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func  optionFindValue  *  * what:  find a hierarcicaly valued option instance  * arg:   + const tOptDesc* + odesc + an option with a nested arg type +  * arg:   + char const*     + name  + name of value to find +  * arg:   + char const*     + val   + the matching value    +  *  * ret_type:  const tOptionValue*  * ret_desc:  a compound value structure  *  * doc:  *  This routine will find an entry in a nested value option or configurable.  *  It will search through the list and return a matching entry.  *  * err:  *  The returned result is NULL and errno is set:  *  @itemize @bullet  *  @item  *  @code{EINVAL} - the @code{pOptValue} does not point to a valid  *  hierarchical option value.  *  @item  *  @code{ENOENT} - no entry matched the given name.  *  @end itemize =*/
+comment|/*=export_func  optionFindValue  *  * what:  find a hierarcicaly valued option instance  * arg:   + const tOptDesc * + odesc + an option with a nested arg type +  * arg:   + char const *     + name  + name of value to find +  * arg:   + char const *     + val   + the matching value    +  *  * ret_type:  const tOptionValue *  * ret_desc:  a compound value structure  *  * doc:  *  This routine will find an entry in a nested value option or configurable.  *  It will search through the list and return a matching entry.  *  * err:  *  The returned result is NULL and errno is set:  *  @itemize @bullet  *  @item  *  @code{EINVAL} - the @code{pOptValue} does not point to a valid  *  hierarchical option value.  *  @item  *  @code{ENOENT} - no entry matched the given name.  *  @end itemize =*/
 end_comment
 
 begin_function
@@ -531,14 +531,11 @@ name|void
 operator|*
 operator|*
 operator|)
-call|(
-name|intptr_t
-call|)
-argument_list|(
+operator|(
 name|argl
 operator|->
 name|apzArgs
-argument_list|)
+operator|)
 decl_stmt|;
 if|if
 condition|(
@@ -646,7 +643,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func  optionFindNextValue  *  * FIXME: the handling of 'pzName' and 'pzVal' is just wrong.  *  * what:  find a hierarcicaly valued option instance  * arg:   + const tOptDesc* + odesc + an option with a nested arg type +  * arg:   + const tOptionValue* + pPrevVal + the last entry +  * arg:   + char const*     + name     + name of value to find +  * arg:   + char const*     + value    + the matching value    +  *  * ret_type:  const tOptionValue*  * ret_desc:  a compound value structure  *  * doc:  *  This routine will find the next entry in a nested value option or  *  configurable.  It will search through the list and return the next entry  *  that matches the criteria.  *  * err:  *  The returned result is NULL and errno is set:  *  @itemize @bullet  *  @item  *  @code{EINVAL} - the @code{pOptValue} does not point to a valid  *  hierarchical option value.  *  @item  *  @code{ENOENT} - no entry matched the given name.  *  @end itemize =*/
+comment|/*=export_func  optionFindNextValue  *  * FIXME: the handling of 'pzName' and 'pzVal' is just wrong.  *  * what:  find a hierarcicaly valued option instance  * arg:   + const tOptDesc * + odesc + an option with a nested arg type +  * arg:   + const tOptionValue * + pPrevVal + the last entry +  * arg:   + char const *     + name     + name of value to find +  * arg:   + char const *     + value    + the matching value    +  *  * ret_type:  const tOptionValue *  * ret_desc:  a compound value structure  *  * doc:  *  This routine will find the next entry in a nested value option or  *  configurable.  It will search through the list and return the next entry  *  that matches the criteria.  *  * err:  *  The returned result is NULL and errno is set:  *  @itemize @bullet  *  @item  *  @code{EINVAL} - the @code{pOptValue} does not point to a valid  *  hierarchical option value.  *  @item  *  @code{ENOENT} - no entry matched the given name.  *  @end itemize =*/
 end_comment
 
 begin_function
@@ -765,9 +762,6 @@ name|void
 operator|*
 operator|*
 operator|)
-operator|(
-name|intptr_t
-operator|)
 name|argl
 operator|->
 name|apzArgs
@@ -835,7 +829,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func  optionGetValue  *  * what:  get a specific value from a hierarcical list  * arg:   + const tOptionValue* + pOptValue + a hierarchcal value +  * arg:   + char const*   + valueName + name of value to get +  *  * ret_type:  const tOptionValue*  * ret_desc:  a compound value structure  *  * doc:  *  This routine will find an entry in a nested value option or configurable.  *  If "valueName" is NULL, then the first entry is returned.  Otherwise,  *  the first entry with a name that exactly matches the argument will be  *  returned.  If there is no matching value, NULL is returned and errno is  *  set to ENOENT. If the provided option value is not a hierarchical value,  *  NULL is also returned and errno is set to EINVAL.  *  * err:  *  The returned result is NULL and errno is set:  *  @itemize @bullet  *  @item  *  @code{EINVAL} - the @code{pOptValue} does not point to a valid  *  hierarchical option value.  *  @item  *  @code{ENOENT} - no entry matched the given name.  *  @end itemize =*/
+comment|/*=export_func  optionGetValue  *  * what:  get a specific value from a hierarcical list  * arg:   + const tOptionValue * + pOptValue + a hierarchcal value +  * arg:   + char const *         + valueName + name of value to get +  *  * ret_type:  const tOptionValue *  * ret_desc:  a compound value structure  *  * doc:  *  This routine will find an entry in a nested value option or configurable.  *  If "valueName" is NULL, then the first entry is returned.  Otherwise,  *  the first entry with a name that exactly matches the argument will be  *  returned.  If there is no matching value, NULL is returned and errno is  *  set to ENOENT. If the provided option value is not a hierarchical value,  *  NULL is also returned and errno is set to EINVAL.  *  * err:  *  The returned result is NULL and errno is set:  *  @itemize @bullet  *  @item  *  @code{EINVAL} - the @code{pOptValue} does not point to a valid  *  hierarchical option value.  *  @item  *  @code{ENOENT} - no entry matched the given name.  *  @end itemize =*/
 end_comment
 
 begin_function
@@ -924,14 +918,11 @@ name|void
 operator|*
 operator|*
 operator|)
-call|(
-name|intptr_t
-call|)
-argument_list|(
+operator|(
 name|arg_list
 operator|->
 name|apzArgs
-argument_list|)
+operator|)
 decl_stmt|;
 if|if
 condition|(
@@ -1010,7 +1001,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func  optionNextValue  *  * what:  get the next value from a hierarchical list  * arg:   + const tOptionValue* + pOptValue + a hierarchcal list value +  * arg:   + const tOptionValue* + pOldValue + a value from this list   +  *  * ret_type:  const tOptionValue*  * ret_desc:  a compound value structure  *  * doc:  *  This routine will return the next entry after the entry passed in.  At the  *  end of the list, NULL will be returned.  If the entry is not found on the  *  list, NULL will be returned and "@var{errno}" will be set to EINVAL.  *  The "@var{pOldValue}" must have been gotten from a prior call to this  *  routine or to "@code{opitonGetValue()}".  *  * err:  *  The returned result is NULL and errno is set:  *  @itemize @bullet  *  @item  *  @code{EINVAL} - the @code{pOptValue} does not point to a valid  *  hierarchical option value or @code{pOldValue} does not point to a  *  member of that option value.  *  @item  *  @code{ENOENT} - the supplied @code{pOldValue} pointed to the last entry.  *  @end itemize =*/
+comment|/*=export_func  optionNextValue  *  * what:  get the next value from a hierarchical list  * arg:   + const tOptionValue * + pOptValue + a hierarchcal list value +  * arg:   + const tOptionValue * + pOldValue + a value from this list   +  *  * ret_type:  const tOptionValue *  * ret_desc:  a compound value structure  *  * doc:  *  This routine will return the next entry after the entry passed in.  At the  *  end of the list, NULL will be returned.  If the entry is not found on the  *  list, NULL will be returned and "@var{errno}" will be set to EINVAL.  *  The "@var{pOldValue}" must have been gotten from a prior call to this  *  routine or to "@code{opitonGetValue()}".  *  * err:  *  The returned result is NULL and errno is set:  *  @itemize @bullet  *  @item  *  @code{EINVAL} - the @code{pOptValue} does not point to a valid  *  hierarchical option value or @code{pOldValue} does not point to a  *  member of that option value.  *  @item  *  @code{ENOENT} - the supplied @code{pOldValue} pointed to the last entry.  *  @end itemize =*/
 end_comment
 
 begin_function
@@ -1096,14 +1087,11 @@ name|void
 operator|*
 operator|*
 operator|)
-call|(
-name|intptr_t
-call|)
-argument_list|(
+operator|(
 name|arg_list
 operator|->
 name|apzArgs
-argument_list|)
+operator|)
 decl_stmt|;
 while|while
 condition|(
@@ -3218,13 +3206,8 @@ literal|'\t'
 case|:
 name|txt
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|intptr_t
-operator|)
+name|VOIDP
+argument_list|(
 name|parse_attrs
 argument_list|(
 name|opts
@@ -3239,6 +3222,7 @@ name|mode
 argument_list|,
 operator|&
 name|valu
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3742,7 +3726,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func optionFileLoad  *  * what: Load the locatable config files, in order  *  * arg:  + tOptions*   + opts + program options descriptor +  * arg:  + char const* + prog + program name +  *  * ret_type:  int  * ret_desc:  0 -> SUCCESS, -1 -> FAILURE  *  * doc:  *  * This function looks in all the specified directories for a configuration  * file ("rc" file or "ini" file) and processes any found twice.  The first  * time through, they are processed in reverse order (last file first).  At  * that time, only "immediate action" configurables are processed.  For  * example, if the last named file specifies not processing any more  * configuration files, then no more configuration files will be processed.  * Such an option in the @strong{first} named directory will have no effect.  *  * Once the immediate action configurables have been handled, then the  * directories are handled in normal, forward order.  In that way, later  * config files can override the settings of earlier config files.  *  * See the AutoOpts documentation for a thorough discussion of the  * config file format.  *  * Configuration files not found or not decipherable are simply ignored.  *  * err:  Returns the value, "-1" if the program options descriptor  *       is out of date or indecipherable.  Otherwise, the value "0" will  *       always be returned. =*/
+comment|/*=export_func optionFileLoad  *  * what: Load the locatable config files, in order  *  * arg:  + tOptions *   + opts + program options descriptor +  * arg:  + char const * + prog + program name +  *  * ret_type:  int  * ret_desc:  0 -> SUCCESS, -1 -> FAILURE  *  * doc:  *  * This function looks in all the specified directories for a configuration  * file ("rc" file or "ini" file) and processes any found twice.  The first  * time through, they are processed in reverse order (last file first).  At  * that time, only "immediate action" configurables are processed.  For  * example, if the last named file specifies not processing any more  * configuration files, then no more configuration files will be processed.  * Such an option in the @strong{first} named directory will have no effect.  *  * Once the immediate action configurables have been handled, then the  * directories are handled in normal, forward order.  In that way, later  * config files can override the settings of earlier config files.  *  * See the AutoOpts documentation for a thorough discussion of the  * config file format.  *  * Configuration files not found or not decipherable are simply ignored.  *  * err:  Returns the value, "-1" if the program options descriptor  *       is out of date or indecipherable.  Otherwise, the value "0" will  *       always be returned. =*/
 end_comment
 
 begin_function
@@ -3784,25 +3768,15 @@ modifier|*
 modifier|*
 name|pp
 init|=
-operator|(
-name|char
-specifier|const
-operator|*
-operator|*
-operator|)
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|intptr_t
-operator|)
+name|VOIDP
+argument_list|(
 operator|&
 operator|(
 name|opts
 operator|->
 name|pzProgName
 operator|)
+argument_list|)
 decl_stmt|;
 operator|*
 name|pp
@@ -3822,7 +3796,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*=export_func  optionLoadOpt  * private:  *  * what:  Load an option rc/ini file  * arg:   + tOptions* + opts  + program options descriptor +  * arg:   + tOptDesc* + odesc + the descriptor for this arg +  *  * doc:  *  Processes the options found in the file named with  *  odesc->optArg.argString. =*/
+comment|/*=export_func  optionLoadOpt  * private:  *  * what:  Load an option rc/ini file  * arg:   + tOptions * + opts  + program options descriptor +  * arg:   + tOptDesc * + odesc + the descriptor for this arg +  *  * doc:  *  Processes the options found in the file named with  *  odesc->optArg.argString. =*/
 end_comment
 
 begin_function

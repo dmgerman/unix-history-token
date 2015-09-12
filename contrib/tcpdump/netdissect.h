@@ -391,7 +391,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -411,7 +411,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -431,7 +431,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -544,6 +544,10 @@ name|int
 name|ndo_pflag
 decl_stmt|;
 comment|/* don't go promiscuous */
+name|int
+name|ndo_immediate
+decl_stmt|;
+comment|/* use immediate mode */
 name|int
 name|ndo_Cflag
 decl_stmt|;
@@ -674,6 +678,7 @@ name|u_int
 name|length
 parameter_list|)
 function_decl|;
+comment|/* pointer to function to print ^T output */
 name|void
 function_decl|(
 modifier|*
@@ -687,6 +692,7 @@ name|int
 name|verbose
 parameter_list|)
 function_decl|;
+comment|/* pointer to function to do regular output */
 name|int
 function_decl|(
 modifier|*
@@ -727,6 +733,10 @@ end_endif
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/* pointer to function to output errors */
+end_comment
 
 begin_function_decl
 name|void
@@ -788,6 +798,10 @@ directive|endif
 comment|/* __ATTRIBUTE___FORMAT_OK_FOR_FUNCTION_POINTERS */
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* pointer to function to output warnings */
+end_comment
 
 begin_function_decl
 name|void
@@ -1147,8 +1161,18 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * True if "l" bytes of "var" were captured.  *  * The "ndo->ndo_snapend - (l)<= ndo->ndo_snapend" checks to make sure  * "l" isn't so large that "ndo->ndo_snapend - (l)" underflows.  *  * The check is for<= rather than< because "l" might be 0.  */
+comment|/*  * True if "l" bytes of "var" were captured.  *  * The "ndo->ndo_snapend - (l)<= ndo->ndo_snapend" checks to make sure  * "l" isn't so large that "ndo->ndo_snapend - (l)" underflows.  *  * The check is for<= rather than< because "l" might be 0.  *  * We cast the pointers to uintptr_t to make sure that the compiler  * doesn't optimize away any of these tests (which it is allowed to  * do, as adding an integer to, or subtracting an integer from, a  * pointer assumes that the pointer is a pointer to an element of an  * array and that the result of the addition or subtraction yields a  * pointer to another member of the array, so that, for example, if  * you subtract a positive integer from a pointer, the result is  * guaranteed to be less than the original pointer value). See  *  *	http://www.kb.cert.org/vuls/id/162289  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_NOT_NEGATIVE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)> 0) || ((x) == 0))
+end_define
 
 begin_define
 define|#
@@ -1159,7 +1183,8 @@ name|var
 parameter_list|,
 name|l
 parameter_list|)
-value|(ndo->ndo_snapend - (l)<= ndo->ndo_snapend&& \ 			(const u_char *)&(var)<= ndo->ndo_snapend - (l))
+define|\
+value|(IS_NOT_NEGATIVE(l)&& \ 	((uintptr_t)ndo->ndo_snapend - (l)<= (uintptr_t)ndo->ndo_snapend&& \          (uintptr_t)&(var)<= (uintptr_t)ndo->ndo_snapend - (l)))
 end_define
 
 begin_comment
@@ -1318,23 +1343,45 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Flags for txtproto_print().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RESP_CODE_SECOND_TOKEN
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* response code is second token in response line */
+end_comment
+
 begin_function_decl
 specifier|extern
-specifier|const
-name|char
-modifier|*
-name|tok2str
+name|void
+name|txtproto_print
 parameter_list|(
-specifier|const
-name|struct
-name|tok
+name|netdissect_options
 modifier|*
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+parameter_list|,
+name|u_int
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|int
+specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1578,6 +1625,25 @@ include|#
 directive|include
 file|<pcap.h>
 end_include
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|q922_string
+parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_typedef
 typedef|typedef
@@ -3684,10 +3750,6 @@ parameter_list|,
 specifier|const
 name|u_char
 modifier|*
-parameter_list|,
-specifier|const
-name|u_char
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5064,6 +5126,91 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|ftp_print
+parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|http_print
+parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|rtsp_print
+parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|smtp_print
+parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|geneve_print
+parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|pfsync_ip_print
 parameter_list|(
 name|netdissect_options
@@ -5274,12 +5421,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_function_decl
 specifier|extern
 name|void
@@ -5296,6 +5437,12 @@ name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
 
 begin_function_decl
 specifier|extern

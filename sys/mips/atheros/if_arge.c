@@ -1363,7 +1363,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Flushes all  */
+comment|/*  * Flushes all  *  * XXX this needs to be done at interrupt time! Grr!  */
 end_comment
 
 begin_function
@@ -1377,13 +1377,49 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|ar71xx_device_flush_ddr_ge
+switch|switch
+condition|(
+name|sc
+operator|->
+name|arge_mac_unit
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|ar71xx_device_flush_ddr
 argument_list|(
+name|AR71XX_CPU_DDR_FLUSH_GE0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|ar71xx_device_flush_ddr
+argument_list|(
+name|AR71XX_CPU_DDR_FLUSH_GE1
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|arge_dev
+argument_list|,
+literal|"%s: unknown unit (%d)\n"
+argument_list|,
+name|__func__
+argument_list|,
 name|sc
 operator|->
 name|arge_mac_unit
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 block|}
 end_function
 
@@ -10555,6 +10591,11 @@ expr_stmt|;
 return|return;
 block|}
 name|ARGE_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|arge_flush_ddr
 argument_list|(
 name|sc
 argument_list|)
