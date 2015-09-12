@@ -162,6 +162,12 @@ define|\
 value|"\020"			\ 	"\001ACTIVITY"		\ 	"\002TIMEOUT"		\ 	"\003AGGREGATION"	\ 	"\004SYNC"		\ 	"\005COLLECTING"	\ 	"\006DISTRIBUTING"	\ 	"\007DEFAULTED"		\ 	"\010EXPIRED"
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * IEEE802.3 slow protocols  *  * protocol (on-wire) definitions.  *  * XXX should be elsewhere.  */
 end_comment
@@ -940,7 +946,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|lacp_attach
 parameter_list|(
 name|struct
@@ -954,8 +960,7 @@ begin_function_decl
 name|int
 name|lacp_detach
 parameter_list|(
-name|struct
-name|lagg_softc
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1262,6 +1267,15 @@ end_define
 
 begin_comment
 comment|/* XXX */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
 end_comment
 
 end_unit
