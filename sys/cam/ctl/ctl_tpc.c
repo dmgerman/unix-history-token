@@ -2224,7 +2224,7 @@ argument_list|)
 expr_stmt|;
 name|scsi_u64to8b
 argument_list|(
-name|TPC_MAX_IOCHUNK_SIZE
+name|UINT64_MAX
 argument_list|,
 name|rtfb_ptr
 operator|->
