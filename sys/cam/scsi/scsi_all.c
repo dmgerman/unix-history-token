@@ -2524,7 +2524,15 @@ comment|/* 98 */
 comment|/* 99 */
 comment|/* 9A */
 comment|/* 9B */
-comment|/* 9C */
+comment|/* 9C  O              WRITE ATOMIC(16) */
+block|{
+literal|0x9C
+block|,
+name|D
+block|,
+literal|"WRITE ATOMIC(16)"
+block|}
+block|,
 comment|/* 9D */
 comment|/* XXX KDM ALL for this?  op-num.txt defines it for none.. */
 comment|/* 9E                  SERVICE ACTION IN(16) */
