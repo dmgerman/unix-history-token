@@ -3702,14 +3702,6 @@ if|if
 condition|(
 name|reg
 condition|)
-block|{
-name|mii_mediachg
-argument_list|(
-name|sc
-operator|->
-name|mii_softc
-argument_list|)
-expr_stmt|;
 name|READ4
 argument_list|(
 name|sc
@@ -3717,7 +3709,6 @@ argument_list|,
 name|SGMII_RGMII_SMII_CTRL_STATUS
 argument_list|)
 expr_stmt|;
-block|}
 name|reg
 operator|=
 name|READ4
