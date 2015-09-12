@@ -4659,7 +4659,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Enable TSO and specify the size of the segments. 	 * The TCP pseudo header checksum is always provided. 	 * XXX: Fixme: This is currently not the case for IPv6. 	 */
+comment|/* 	 * Enable TSO and specify the size of the segments. 	 * The TCP pseudo header checksum is always provided. 	 */
 if|if
 condition|(
 name|tso

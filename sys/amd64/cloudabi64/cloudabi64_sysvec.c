@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysent.h>
 end_include
 
@@ -264,6 +270,11 @@ name|Elf64_Auxargs
 modifier|*
 name|args
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|void
 modifier|*
 name|argdata
@@ -277,6 +288,19 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * CloudABI executables do not store the FreeBSD OS release 	 * number in their header. Set the OS release number to the 	 * latest version of FreeBSD, so that system calls behave as if 	 * called natively. 	 */
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_osrel
+operator|=
+name|__FreeBSD_version
+expr_stmt|;
 comment|/* Store canary for stack smashing protection. */
 name|argdata
 operator|=
@@ -468,7 +492,7 @@ name|VAL
 argument_list|(
 name|CLOUDABI_AT_TID
 argument_list|,
-name|curthread
+name|td
 operator|->
 name|td_tid
 argument_list|)
@@ -990,6 +1014,8 @@ operator|.
 name|sv_flags
 operator|=
 name|SV_ABI_CLOUDABI
+operator||
+name|SV_CAPSICUM
 block|,
 operator|.
 name|sv_set_syscall_retval
@@ -1200,6 +1226,16 @@ argument_list|,
 literal|1
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|cloudabi64
+argument_list|,
+literal|"CloudABI 64bit support"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

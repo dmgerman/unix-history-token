@@ -183,7 +183,7 @@ specifier|static
 name|uint16_t
 name|last_portal_group_tag
 init|=
-literal|0
+literal|0xff
 decl_stmt|;
 end_decl_stmt
 
@@ -6264,6 +6264,14 @@ name|p_portal_group
 operator|=
 name|pg
 expr_stmt|;
+name|port
+operator|->
+name|p_foreign
+operator|=
+name|pg
+operator|->
+name|pg_foreign
+expr_stmt|;
 return|return
 operator|(
 name|port
@@ -8612,6 +8620,15 @@ name|PG_FILTER_NONE
 expr_stmt|;
 if|if
 condition|(
+name|pg
+operator|->
+name|pg_redirection
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|TAILQ_EMPTY
 argument_list|(
@@ -8620,15 +8637,6 @@ name|pg
 operator|->
 name|pg_ports
 argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|pg
-operator|->
-name|pg_redirection
-operator|!=
-name|NULL
 condition|)
 block|{
 name|log_debugx
@@ -8643,6 +8651,26 @@ name|pg_name
 argument_list|)
 expr_stmt|;
 block|}
+name|pg
+operator|->
+name|pg_unassigned
+operator|=
+name|false
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|pg
+operator|->
+name|pg_ports
+argument_list|)
+condition|)
+block|{
 name|pg
 operator|->
 name|pg_unassigned
@@ -9143,6 +9171,15 @@ argument_list|,
 argument|pg_next
 argument_list|)
 block|{
+if|if
+condition|(
+name|newpg
+operator|->
+name|pg_tag
+operator|!=
+literal|0
+condition|)
+continue|continue;
 name|oldpg
 operator|=
 name|portal_group_find
@@ -9238,6 +9275,13 @@ argument_list|,
 argument|tmpport
 argument_list|)
 block|{
+if|if
+condition|(
+name|oldport
+operator|->
+name|p_foreign
+condition|)
+continue|continue;
 name|newport
 operator|=
 name|port_find
@@ -9254,6 +9298,11 @@ condition|(
 name|newport
 operator|!=
 name|NULL
+operator|&&
+operator|!
+name|newport
+operator|->
+name|p_foreign
 condition|)
 continue|continue;
 name|log_debugx
@@ -9688,26 +9737,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|newlun
-operator|->
-name|l_size
-operator|!=
-name|oldlun
-operator|->
-name|l_size
-operator|||
-name|newlun
-operator|->
-name|l_size
-operator|==
-literal|0
-condition|)
-block|{
 name|log_debugx
 argument_list|(
-literal|"resizing lun \"%s\", CTL lun %d"
+literal|"modifying lun \"%s\", CTL lun %d"
 argument_list|,
 name|newlun
 operator|->
@@ -9720,7 +9752,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kernel_lun_resize
+name|kernel_lun_modify
 argument_list|(
 name|newlun
 argument_list|)
@@ -9735,7 +9767,7 @@ block|{
 name|log_warnx
 argument_list|(
 literal|"failed to "
-literal|"resize lun \"%s\", CTL lun %d"
+literal|"modify lun \"%s\", CTL lun %d"
 argument_list|,
 name|newlun
 operator|->
@@ -9749,7 +9781,6 @@ expr_stmt|;
 name|cumulated_error
 operator|++
 expr_stmt|;
-block|}
 block|}
 continue|continue;
 block|}
@@ -9805,6 +9836,13 @@ argument_list|,
 argument|p_next
 argument_list|)
 block|{
+if|if
+condition|(
+name|newport
+operator|->
+name|p_foreign
+condition|)
+continue|continue;
 name|oldport
 operator|=
 name|port_find
@@ -9821,6 +9859,10 @@ condition|(
 name|oldport
 operator|==
 name|NULL
+operator|||
+name|oldport
+operator|->
+name|p_foreign
 condition|)
 block|{
 name|log_debugx
@@ -9906,6 +9948,13 @@ argument_list|,
 argument|pg_next
 argument_list|)
 block|{
+if|if
+condition|(
+name|newpg
+operator|->
+name|pg_foreign
+condition|)
+continue|continue;
 if|if
 condition|(
 name|newpg

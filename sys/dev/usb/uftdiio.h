@@ -56,12 +56,14 @@ block|,
 name|UFTDI_BITMODE_NONE
 init|=
 literal|0xff
-block|, }
+block|,
+comment|/* aka UART mode. */
+block|}
 enum|;
 end_enum
 
 begin_comment
-comment|/*  * For UFTDIIOC_SET_BITMODE:  *   mode   = One of the uftdi_bitmodes enum values.  *   iomask = Mask of bits enabled for bitbang output.  *  * For UFTDIIOC_GET_BITMODE:  *   mode   = Unused.  *   iomask = Returned snapshot of bitbang pin states at time of call.  */
+comment|/*  * For UFTDIIOC_SET_BITMODE:  *   mode   = One of the uftdi_bitmodes enum values.  *   iomask = Mask of bits enabled for bitbang output.  *  * For UFTDIIOC_GET_BITMODE:  *   mode   = Mode most recently set using UFTDIIOC_SET_BITMODE.  *   iomask = Returned snapshot of DBUS0..DBUS7 pin states at time of call.  *            Pin states can be read in any mode, not just bitbang modes.  */
 end_comment
 
 begin_struct
@@ -77,6 +79,41 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * For UFTDIIOC_READ_EEPROM, UFTDIIOC_WRITE_EEPROM:  *  * IO is done in 16-bit words at the chip level; offset and length are in bytes,  * but must each be evenly divisible by two.  *  * It is not necessary to erase before writing.  For the FT232R device (only)  * you must set the latency timer to 0x77 before doing a series of eeprom writes  * (and restore it to the prior value when done).  */
+end_comment
+
+begin_struct
+struct|struct
+name|uftdi_eeio
+block|{
+name|uint16_t
+name|offset
+decl_stmt|;
+name|uint16_t
+name|length
+decl_stmt|;
+name|uint16_t
+name|data
+index|[
+literal|64
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Pass this value to confirm that eeprom erase request is not accidental. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UFTDI_CONFIRM_ERASE
+value|0x26139108
+end_define
 
 begin_define
 define|#
@@ -170,6 +207,27 @@ define|#
 directive|define
 name|UFTDIIOC_GET_HWREV
 value|_IOR('c', 9, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFTDIIOC_READ_EEPROM
+value|_IOWR('c', 10, struct uftdi_eeio)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFTDIIOC_WRITE_EEPROM
+value|_IOW('c', 11, struct uftdi_eeio)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFTDIIOC_ERASE_EEPROM
+value|_IOW('c', 12, int)
 end_define
 
 begin_endif

@@ -133,8 +133,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_AFF0_MASK
+value|0xffUL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_AFF1_MASK
+value|0xff00UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_AFF2_MASK
+value|0xff0000UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_AFF3_MASK
+value|0xff00000000UL
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_AFF_MASK
-value|0xff00ffffffUL
+value|(CPU_AFF0_MASK | CPU_AFF1_MASK | \     CPU_AFF2_MASK| CPU_AFF3_MASK)
 end_define
 
 begin_comment
@@ -250,6 +278,20 @@ define|#
 directive|define
 name|CPU_PART_CORTEX_A57
 value|0xD07
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_REV_THUNDER_1_0
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_REV_THUNDER_1_1
+value|0x01
 end_define
 
 begin_define
@@ -408,6 +450,45 @@ parameter_list|)
 define|\
 value|(((mask)& PCPU_GET(midr)) == ((mask)& (devid)))
 end_define
+
+begin_comment
+comment|/*  * Chip-specific errata. This defines are intended to be  * booleans used within if statements. When an appropriate  * kernel option is disabled, these defines must be defined  * as 0 to allow the compiler to remove a dead code thus  * produce better optimized kernel image.  */
+end_comment
+
+begin_comment
+comment|/*  * Vendor:	Cavium  * Chip:	ThunderX  * Revision(s):	Pass 1.0, Pass 1.1  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|THUNDERX_PASS_1_1_ERRATA
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CPU_MATCH_ERRATA_CAVIUM_THUNDER_1_1
+define|\
+value|(CPU_MATCH(CPU_IMPL_MASK | CPU_PART_MASK | CPU_REV_MASK,		\     CPU_IMPL_CAVIUM, CPU_PART_THUNDER, 0, CPU_REV_THUNDER_1_0) ||	\     CPU_MATCH(CPU_IMPL_MASK | CPU_PART_MASK | CPU_REV_MASK,		\     CPU_IMPL_CAVIUM, CPU_PART_THUNDER, 0, CPU_REV_THUNDER_1_1))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CPU_MATCH_ERRATA_CAVIUM_THUNDER_1_1
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern

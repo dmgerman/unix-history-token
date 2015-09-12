@@ -93,17 +93,6 @@ name|DWC_OTG_SLOT_IDLE_MIN
 value|2
 end_define
 
-begin_define
-define|#
-directive|define
-name|DWC_OTG_NAK_MAX
-value|16
-end_define
-
-begin_comment
-comment|/* 16 NAKs = 2 ms */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -238,10 +227,6 @@ name|uint8_t
 name|tmr_val
 decl_stmt|;
 name|uint8_t
-name|did_nak
-decl_stmt|;
-comment|/* NAK counter */
-name|uint8_t
 name|ep_no
 decl_stmt|;
 name|uint8_t
@@ -249,6 +234,9 @@ name|ep_type
 decl_stmt|;
 name|uint8_t
 name|channel
+index|[
+literal|3
+index|]
 decl_stmt|;
 name|uint8_t
 name|tt_index
@@ -291,12 +279,8 @@ name|DWC_CHAN_ST_WAIT_C_PKT
 value|4
 define|#
 directive|define
-name|DWC_CHAN_ST_TX_PKT_ISOC
-value|5
-define|#
-directive|define
 name|DWC_CHAN_ST_TX_WAIT_ISOC
-value|6
+value|5
 name|uint8_t
 name|error_any
 range|:
@@ -339,6 +323,11 @@ literal|1
 decl_stmt|;
 name|uint8_t
 name|tt_scheduled
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|did_nak
 range|:
 literal|1
 decl_stmt|;

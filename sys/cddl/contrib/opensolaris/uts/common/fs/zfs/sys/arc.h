@@ -46,6 +46,11 @@ file|<sys/dmu.h>
 include|#
 directive|include
 file|<sys/spa.h>
+comment|/*  * Used by arc_flush() to inform arc_evict_state() that it should evict  * all available buffers from the arc state being passed in.  */
+define|#
+directive|define
+name|ARC_EVICT_ALL
+value|-1ULL
 typedef|typedef
 name|struct
 name|arc_buf_hdr
@@ -143,78 +148,104 @@ operator|<<
 literal|6
 block|,
 comment|/* compress in L2ARC */
+name|ARC_FLAG_PREDICTIVE_PREFETCH
+init|=
+literal|1
+operator|<<
+literal|7
+block|,
+comment|/* I/O from zfetch */
 comment|/* 	 * Private ARC flags.  These flags are private ARC only flags that 	 * will show up in b_flags in the arc_hdr_buf_t. These flags should 	 * only be set by ARC code. 	 */
 name|ARC_FLAG_IN_HASH_TABLE
 init|=
 literal|1
 operator|<<
-literal|7
+literal|8
 block|,
 comment|/* buffer is hashed */
 name|ARC_FLAG_IO_IN_PROGRESS
 init|=
 literal|1
 operator|<<
-literal|8
+literal|9
 block|,
 comment|/* I/O in progress */
 name|ARC_FLAG_IO_ERROR
 init|=
 literal|1
 operator|<<
-literal|9
+literal|10
 block|,
 comment|/* I/O failed for buf */
 name|ARC_FLAG_FREED_IN_READ
 init|=
 literal|1
 operator|<<
-literal|10
+literal|11
 block|,
 comment|/* freed during read */
 name|ARC_FLAG_BUF_AVAILABLE
 init|=
 literal|1
 operator|<<
-literal|11
+literal|12
 block|,
 comment|/* block not in use */
 name|ARC_FLAG_INDIRECT
 init|=
 literal|1
 operator|<<
-literal|12
-block|,
-comment|/* indirect block */
-name|ARC_FLAG_FREE_IN_PROGRESS
-init|=
-literal|1
-operator|<<
 literal|13
 block|,
-comment|/*  about to be freed */
-name|ARC_FLAG_L2_WRITING
+comment|/* indirect block */
+comment|/* Indicates that block was read with ASYNC priority. */
+name|ARC_FLAG_PRIO_ASYNC_READ
 init|=
 literal|1
 operator|<<
 literal|14
+block|,
+name|ARC_FLAG_L2_WRITING
+init|=
+literal|1
+operator|<<
+literal|15
 block|,
 comment|/* write in progress */
 name|ARC_FLAG_L2_EVICTED
 init|=
 literal|1
 operator|<<
-literal|15
+literal|16
 block|,
 comment|/* evicted during I/O */
 name|ARC_FLAG_L2_WRITE_HEAD
 init|=
 literal|1
 operator|<<
-literal|16
+literal|17
 block|,
 comment|/* head of write list */
-block|}
+comment|/* indicates that the buffer contains metadata (otherwise, data) */
+name|ARC_FLAG_BUFC_METADATA
+init|=
+literal|1
+operator|<<
+literal|18
+block|,
+comment|/* Flags specifying whether optional hdr struct fields are defined */
+name|ARC_FLAG_HAS_L1HDR
+init|=
+literal|1
+operator|<<
+literal|19
+block|,
+name|ARC_FLAG_HAS_L2HDR
+init|=
+literal|1
+operator|<<
+literal|20
+block|, }
 name|arc_flags_t
 typedef|;
 struct|struct
@@ -265,6 +296,8 @@ enum|enum
 name|arc_space_type
 block|{
 name|ARC_SPACE_DATA
+block|,
+name|ARC_SPACE_META
 block|,
 name|ARC_SPACE_HDRS
 block|,
@@ -585,6 +618,9 @@ parameter_list|(
 name|spa_t
 modifier|*
 name|spa
+parameter_list|,
+name|boolean_t
+name|retry
 parameter_list|)
 function_decl|;
 name|void

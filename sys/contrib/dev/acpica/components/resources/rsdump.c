@@ -43,15 +43,6 @@ begin_comment
 comment|/*  * All functions in this module are used by the AML Debugger only  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ACPI_DEBUGGER
-argument_list|)
-end_if
-
 begin_comment
 comment|/* Local prototypes */
 end_comment
@@ -1473,11 +1464,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

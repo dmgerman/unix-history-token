@@ -677,6 +677,26 @@ block|,
 block|{
 literal|0x14e4
 block|,
+literal|0x160a
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Broadcom TruManage UART"
+block|,
+literal|0x10
+block|,
+literal|128
+operator|*
+name|DEFAULT_RCLK
+block|,
+literal|2
+block|}
+block|,
+block|{
+literal|0x14e4
+block|,
 literal|0x4344
 block|,
 literal|0xffff

@@ -1079,7 +1079,15 @@ argument_list|)
 expr_stmt|;
 name|usb_proc_free
 argument_list|(
-name|USB_BUS_NON_GIANT_PROC
+name|USB_BUS_NON_GIANT_ISOC_PROC
+argument_list|(
+name|bus
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|usb_proc_free
+argument_list|(
+name|USB_BUS_NON_GIANT_BULK_PROC
 argument_list|(
 name|bus
 argument_list|)
@@ -1717,7 +1725,15 @@ argument_list|)
 expr_stmt|;
 name|usb_proc_rewakeup
 argument_list|(
-name|USB_BUS_NON_GIANT_PROC
+name|USB_BUS_NON_GIANT_ISOC_PROC
+argument_list|(
+name|bus
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|usb_proc_rewakeup
+argument_list|(
+name|USB_BUS_NON_GIANT_BULK_PROC
 argument_list|(
 name|bus
 argument_list|)
@@ -3607,7 +3623,40 @@ if|if
 condition|(
 name|usb_proc_create
 argument_list|(
-name|USB_BUS_NON_GIANT_PROC
+name|USB_BUS_NON_GIANT_ISOC_PROC
+argument_list|(
+name|bus
+argument_list|)
+argument_list|,
+operator|&
+name|bus
+operator|->
+name|bus_mtx
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|USB_PRI_HIGHEST
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"WARNING: Creation of USB non-Giant ISOC "
+literal|"callback process failed.\n"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|usb_proc_create
+argument_list|(
+name|USB_BUS_NON_GIANT_BULK_PROC
 argument_list|(
 name|bus
 argument_list|)
@@ -3630,7 +3679,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"WARNING: Creation of USB non-Giant "
+literal|"WARNING: Creation of USB non-Giant BULK "
 literal|"callback process failed.\n"
 argument_list|)
 expr_stmt|;

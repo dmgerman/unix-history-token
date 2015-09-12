@@ -216,17 +216,6 @@ value|4
 end_define
 
 begin_comment
-comment|/* Maximum number of While() loop iterations before forced abort */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MAX_LOOP_ITERATIONS
-value|0xFFFF
-end_define
-
-begin_comment
 comment|/* Maximum sleep allowed via Sleep() operator */
 end_comment
 

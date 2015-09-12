@@ -3158,7 +3158,7 @@ name|TI_UNLOCKED
 value|1
 define|#
 directive|define
-name|TI_WLOCKED
+name|TI_RLOCKED
 value|2
 ifdef|#
 directive|ifdef
@@ -4050,7 +4050,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4058,7 +4058,7 @@ argument_list|)
 expr_stmt|;
 name|ti_locked
 operator|=
-name|TI_WLOCKED
+name|TI_RLOCKED
 expr_stmt|;
 block|}
 else|else
@@ -4145,10 +4145,10 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
 block|{
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4778,7 +4778,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|INP_INFO_TRY_WLOCK
+name|INP_INFO_TRY_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4797,7 +4797,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4805,7 +4805,7 @@ argument_list|)
 expr_stmt|;
 name|ti_locked
 operator|=
-name|TI_WLOCKED
+name|TI_RLOCKED
 expr_stmt|;
 name|INP_WLOCK
 argument_list|(
@@ -4832,10 +4832,10 @@ block|}
 else|else
 name|ti_locked
 operator|=
-name|TI_WLOCKED
+name|TI_RLOCKED
 expr_stmt|;
 block|}
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4879,7 +4879,7 @@ condition|)
 goto|goto
 name|findpcb
 goto|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4968,7 +4968,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5021,7 +5021,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|INP_INFO_TRY_WLOCK
+name|INP_INFO_TRY_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5040,7 +5040,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5048,7 +5048,7 @@ argument_list|)
 expr_stmt|;
 name|ti_locked
 operator|=
-name|TI_WLOCKED
+name|TI_RLOCKED
 expr_stmt|;
 name|INP_WLOCK
 argument_list|(
@@ -5078,10 +5078,10 @@ block|}
 else|else
 name|ti_locked
 operator|=
-name|TI_WLOCKED
+name|TI_RLOCKED
 expr_stmt|;
 block|}
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5345,7 +5345,7 @@ operator|==
 name|TH_ACK
 condition|)
 block|{
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5471,12 +5471,12 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|INP_WLOCK
+comment|/* 			 * New connection inpcb is already locked by 			 * syncache_expand(). 			 */
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* new connection */
 name|tp
 operator|=
 name|intotcpcb
@@ -6354,10 +6354,10 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6562,10 +6562,10 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6688,10 +6688,10 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6932,7 +6932,7 @@ name|KASSERT
 argument_list|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 argument_list|,
 operator|(
 literal|"%s ti_locked %d for "
@@ -6944,7 +6944,7 @@ name|ti_locked
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6960,9 +6960,9 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -7574,11 +7574,13 @@ operator|==
 literal|0
 operator|)
 operator|&&
+name|LIST_EMPTY
+argument_list|(
+operator|&
 name|tp
 operator|->
 name|t_segq
-operator|==
-name|NULL
+argument_list|)
 operator|&&
 operator|(
 operator|(
@@ -7708,9 +7710,9 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -8140,9 +8142,9 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -8987,7 +8989,7 @@ name|KASSERT
 argument_list|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 argument_list|,
 operator|(
 literal|"%s: trimthenstep6: "
@@ -8999,7 +9001,7 @@ name|ti_locked
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -9164,7 +9166,7 @@ name|th_seq
 operator|)
 condition|)
 block|{
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -9174,7 +9176,7 @@ name|KASSERT
 argument_list|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 argument_list|,
 operator|(
 literal|"%s: TH_RST ti_locked %d, th %p tp %p"
@@ -9357,7 +9359,7 @@ name|KASSERT
 argument_list|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 argument_list|,
 operator|(
 literal|"tcp_do_segment: TH_SYN ti_locked %d"
@@ -9366,7 +9368,7 @@ name|ti_locked
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -9771,7 +9773,7 @@ name|KASSERT
 argument_list|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 argument_list|,
 operator|(
 literal|"%s: SS_NOFDEREF&& "
@@ -9783,7 +9785,7 @@ name|ti_locked
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -11745,7 +11747,7 @@ condition|(
 name|ourfinisacked
 condition|)
 block|{
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -11756,7 +11758,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -11779,7 +11781,7 @@ condition|(
 name|ourfinisacked
 condition|)
 block|{
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -12233,11 +12235,13 @@ name|tp
 operator|->
 name|rcv_nxt
 operator|&&
+name|LIST_EMPTY
+argument_list|(
+operator|&
 name|tp
 operator|->
 name|t_segq
-operator|==
-name|NULL
+argument_list|)
 operator|&&
 name|TCPS_HAVEESTABLISHED
 argument_list|(
@@ -12511,7 +12515,7 @@ comment|/* 		 * In FIN_WAIT_2 state enter the TIME_WAIT state, 		 * starting the
 case|case
 name|TCPS_FIN_WAIT_2
 case|:
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -12521,7 +12525,7 @@ name|KASSERT
 argument_list|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 argument_list|,
 operator|(
 literal|"%s: dodata "
@@ -12538,7 +12542,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -12551,9 +12555,9 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -12768,9 +12772,9 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -12813,9 +12817,9 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -12874,10 +12878,10 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo

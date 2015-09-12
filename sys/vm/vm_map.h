@@ -1224,12 +1224,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VM_FAULT_CHANGE_WIRING
+name|VM_FAULT_WIRE
 value|1
 end_define
 
 begin_comment
-comment|/* Change the wiring as appropriate */
+comment|/* Wire the mapped page */
 end_comment
 
 begin_define

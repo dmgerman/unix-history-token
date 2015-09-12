@@ -694,6 +694,9 @@ name|struct
 name|its_col
 modifier|*
 name|its_cols
+index|[
+name|MAXCPU
+index|]
 decl_stmt|;
 comment|/* Per-CPU collections */
 name|uint64_t
@@ -732,6 +735,19 @@ typedef|typedef
 name|uint32_t
 function_decl|(
 modifier|*
+name|its_devbits_func_t
+function_decl|)
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+function_decl|(
+modifier|*
 name|its_devid_func_t
 function_decl|)
 parameter_list|(
@@ -752,6 +768,9 @@ name|cpuid_mask
 decl_stmt|;
 name|its_devid_func_t
 name|devid_func
+decl_stmt|;
+name|its_devbits_func_t
+name|devbits_func
 decl_stmt|;
 block|}
 struct|;
@@ -817,6 +836,17 @@ name|uint64_t
 modifier|*
 parameter_list|,
 name|uint32_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|its_init_cpu
+parameter_list|(
+name|struct
+name|gic_v3_its_softc
 modifier|*
 parameter_list|)
 function_decl|;

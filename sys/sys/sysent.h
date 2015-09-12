@@ -591,12 +591,20 @@ name|SV_ILP32
 value|0x000100
 end_define
 
+begin_comment
+comment|/* 32-bit executable. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SV_LP64
 value|0x000200
 end_define
+
+begin_comment
+comment|/* 64-bit executable. */
+end_comment
 
 begin_define
 define|#
@@ -605,6 +613,10 @@ name|SV_IA32
 value|0x004000
 end_define
 
+begin_comment
+comment|/* Intel 32-bit executable. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -612,12 +624,31 @@ name|SV_AOUT
 value|0x008000
 end_define
 
+begin_comment
+comment|/* a.out executable. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SV_SHP
 value|0x010000
 end_define
+
+begin_comment
+comment|/* Shared page. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SV_CAPSICUM
+value|0x020000
+end_define
+
+begin_comment
+comment|/* Force cap_enter() on startup. */
+end_comment
 
 begin_define
 define|#

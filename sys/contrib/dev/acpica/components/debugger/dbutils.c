@@ -31,12 +31,6 @@ directive|include
 file|<contrib/dev/acpica/include/acdebug.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUGGER
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -91,7 +85,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|Converter
+name|Gbl_HexToAscii
 init|=
 literal|"0123456789ABCDEF"
 decl_stmt|;
@@ -805,7 +799,7 @@ index|[
 name|i
 index|]
 operator|=
-name|Converter
+name|Gbl_HexToAscii
 index|[
 name|Value
 operator|&
@@ -1144,15 +1138,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_DEBUGGER */
-end_comment
 
 end_unit
 

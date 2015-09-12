@@ -18,7 +18,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: funcs.c,v 1.82 2015/06/03 18:01:20 christos Exp $"
+literal|"@(#)$File: funcs.c,v 1.83 2015/06/16 14:17:37 christos Exp $"
 argument_list|)
 end_macro
 
@@ -433,12 +433,34 @@ name|ms
 argument_list|,
 literal|"line %"
 name|SIZE_T_FORMAT
-literal|"u: "
+literal|"u:"
 argument_list|,
 name|lineno
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ms
+operator|->
+name|o
+operator|.
+name|buf
+operator|&&
+operator|*
+name|ms
+operator|->
+name|o
+operator|.
+name|buf
+condition|)
+name|file_printf
+argument_list|(
+name|ms
+argument_list|,
+literal|" "
+argument_list|)
+expr_stmt|;
 name|file_vprintf
 argument_list|(
 name|ms

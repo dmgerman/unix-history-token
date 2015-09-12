@@ -9249,7 +9249,7 @@ name|sk
 operator|->
 name|port
 index|[
-literal|0
+literal|1
 index|]
 expr_stmt|;
 name|dstport
@@ -9299,7 +9299,7 @@ name|sk
 operator|->
 name|port
 index|[
-literal|0
+literal|1
 index|]
 expr_stmt|;
 block|}
@@ -14976,15 +14976,9 @@ break|break;
 block|}
 name|totlen
 operator|=
-operator|(
 name|io
 operator|->
 name|pfrio_size
-operator|+
-name|io
-operator|->
-name|pfrio_size2
-operator|)
 operator|*
 sizeof|sizeof
 argument_list|(

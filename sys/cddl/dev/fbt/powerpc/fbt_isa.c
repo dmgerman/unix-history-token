@@ -195,11 +195,6 @@ operator|==
 name|addr
 condition|)
 block|{
-name|fbt
-operator|->
-name|fbtp_invop_cnt
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|fbt

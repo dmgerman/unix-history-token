@@ -90,6 +90,21 @@ name|bus_roothold
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* convenience macros */
+define|#
+directive|define
+name|USB_BUS_TT_PROC
+parameter_list|(
+name|bus
+parameter_list|)
+value|USB_BUS_NON_GIANT_ISOC_PROC(bus)
+define|#
+directive|define
+name|USB_BUS_CS_PROC
+parameter_list|(
+name|bus
+parameter_list|)
+value|USB_BUS_NON_GIANT_ISOC_PROC(bus)
 if|#
 directive|if
 name|USB_HAVE_PER_BUS_PROCESS
@@ -102,11 +117,18 @@ parameter_list|)
 value|(&(bus)->giant_callback_proc)
 define|#
 directive|define
-name|USB_BUS_NON_GIANT_PROC
+name|USB_BUS_NON_GIANT_ISOC_PROC
 parameter_list|(
 name|bus
 parameter_list|)
-value|(&(bus)->non_giant_callback_proc)
+value|(&(bus)->non_giant_isoc_callback_proc)
+define|#
+directive|define
+name|USB_BUS_NON_GIANT_BULK_PROC
+parameter_list|(
+name|bus
+parameter_list|)
+value|(&(bus)->non_giant_bulk_callback_proc)
 define|#
 directive|define
 name|USB_BUS_EXPLORE_PROC
@@ -121,14 +143,18 @@ parameter_list|(
 name|bus
 parameter_list|)
 value|(&(bus)->control_xfer_proc)
-comment|/* 	 * There are two callback processes. One for Giant locked 	 * callbacks. One for non-Giant locked callbacks. This should 	 * avoid congestion and reduce response time in most cases. 	 */
+comment|/* 	 * There are three callback processes. One for Giant locked 	 * callbacks. One for non-Giant locked non-periodic callbacks 	 * and one for non-Giant locked periodic callbacks. This 	 * should avoid congestion and reduce response time in most 	 * cases. 	 */
 name|struct
 name|usb_process
 name|giant_callback_proc
 decl_stmt|;
 name|struct
 name|usb_process
-name|non_giant_callback_proc
+name|non_giant_isoc_callback_proc
+decl_stmt|;
+name|struct
+name|usb_process
+name|non_giant_bulk_callback_proc
 decl_stmt|;
 comment|/* Explore process */
 name|struct

@@ -544,6 +544,12 @@ name|int
 name|pl_child_pid
 decl_stmt|;
 comment|/* New child pid */
+name|u_int
+name|pl_syscall_code
+decl_stmt|;
+name|u_int
+name|pl_syscall_narg
+decl_stmt|;
 block|}
 struct|;
 end_struct

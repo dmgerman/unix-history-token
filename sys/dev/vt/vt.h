@@ -517,6 +517,10 @@ name|vt_axis_t
 name|vd_height
 decl_stmt|;
 comment|/* (?) Screen height. */
+name|size_t
+name|vd_transpose
+decl_stmt|;
+comment|/* (?) Screen offset in FB */
 name|struct
 name|mtx
 name|vd_lock
@@ -1883,6 +1887,14 @@ end_struct
 begin_comment
 comment|/*  * Console device madness.  *  * Utility macro to make early vt(4) instances work.  */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vt_device
+name|vt_consdev
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

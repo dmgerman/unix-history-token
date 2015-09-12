@@ -451,8 +451,7 @@ name|FORMAT_MESSAGE_FROM_SYSTEM
 argument_list|,
 name|NULL
 argument_list|,
-name|GetLastError
-argument_list|()
+name|err
 argument_list|,
 literal|0
 argument_list|,
@@ -473,6 +472,11 @@ operator|)
 return|;
 elif|#
 directive|elif
+name|defined
+argument_list|(
+name|__GLIBC__
+argument_list|)
+operator|&&
 name|defined
 argument_list|(
 name|_GNU_SOURCE
@@ -565,7 +569,7 @@ name|ret
 decl_stmt|,
 name|digit
 decl_stmt|;
-name|int
+name|unsigned
 name|b
 decl_stmt|;
 name|bool
@@ -1359,9 +1363,8 @@ literal|'-'
 case|:
 if|if
 condition|(
+operator|!
 name|neg
-operator|==
-name|false
 condition|)
 break|break;
 comment|/* Fall through. */
@@ -1606,7 +1609,7 @@ name|left_justify
 parameter_list|)
 value|do {		\
 comment|/* Left padding. */
-value|\ 	size_t pad_len = (width == -1) ? 0 : ((slen< (size_t)width) ?	\ 	    (size_t)width - slen : 0);					\ 	if (left_justify == false&& pad_len != 0) {			\ 		size_t j;						\ 		for (j = 0; j< pad_len; j++)				\ 			APPEND_C(' ');					\ 	}								\
+value|\ 	size_t pad_len = (width == -1) ? 0 : ((slen< (size_t)width) ?	\ 	    (size_t)width - slen : 0);					\ 	if (!left_justify&& pad_len != 0) {				\ 		size_t j;						\ 		for (j = 0; j< pad_len; j++)				\ 			APPEND_C(' ');					\ 	}								\
 comment|/* Value. */
 value|\ 	APPEND_S(s, slen);						\
 comment|/* Right padding. */
@@ -1621,7 +1624,7 @@ name|len
 parameter_list|)
 value|do {					\ 	switch (len) {							\ 	case '?':							\ 		val = va_arg(ap, int);					\ 		break;							\ 	case '?' | 0x80:						\ 		val = va_arg(ap, unsigned int);				\ 		break;							\ 	case 'l':							\ 		val = va_arg(ap, long);					\ 		break;							\ 	case 'l' | 0x80:						\ 		val = va_arg(ap, unsigned long);			\ 		break;							\ 	case 'q':							\ 		val = va_arg(ap, long long);				\ 		break;							\ 	case 'q' | 0x80:						\ 		val = va_arg(ap, unsigned long long);			\ 		break;							\ 	case 'j':							\ 		val = va_arg(ap, intmax_t);				\ 		break;							\ 	case 'j' | 0x80:						\ 		val = va_arg(ap, uintmax_t);				\ 		break;							\ 	case 't':							\ 		val = va_arg(ap, ptrdiff_t);				\ 		break;							\ 	case 'z':							\ 		val = va_arg(ap, ssize_t);				\ 		break;							\ 	case 'z' | 0x80:						\ 		val = va_arg(ap, size_t);				\ 		break;							\ 	case 'p':
 comment|/* Synthetic; used for %p. */
-value|\ 		val = va_arg(ap, uintptr_t);				\ 		break;							\ 	default: not_reached();						\ 	}								\ } while (0)
+value|\ 		val = va_arg(ap, uintptr_t);				\ 		break;							\ 	default:							\ 		not_reached();						\ 		val = 0;						\ 	}								\ } while (0)
 name|i
 operator|=
 literal|0
@@ -1709,9 +1712,8 @@ literal|'#'
 case|:
 name|assert
 argument_list|(
+operator|!
 name|alt_form
-operator|==
-name|false
 argument_list|)
 expr_stmt|;
 name|alt_form
@@ -1724,9 +1726,8 @@ literal|'-'
 case|:
 name|assert
 argument_list|(
+operator|!
 name|left_justify
-operator|==
-name|false
 argument_list|)
 expr_stmt|;
 name|left_justify
@@ -1739,9 +1740,8 @@ literal|' '
 case|:
 name|assert
 argument_list|(
+operator|!
 name|plus_space
-operator|==
-name|false
 argument_list|)
 expr_stmt|;
 name|plus_space
@@ -1754,9 +1754,8 @@ literal|'+'
 case|:
 name|assert
 argument_list|(
+operator|!
 name|plus_plus
-operator|==
-name|false
 argument_list|)
 expr_stmt|;
 name|plus_plus
@@ -2464,6 +2463,9 @@ argument_list|(
 name|s
 argument_list|)
 else|:
+operator|(
+name|size_t
+operator|)
 name|prec
 expr_stmt|;
 name|APPEND_PADDED_S
@@ -2605,13 +2607,11 @@ block|}
 end_function
 
 begin_macro
-name|JEMALLOC_ATTR
+name|JEMALLOC_FORMAT_PRINTF
 argument_list|(
-argument|format(printf,
 literal|3
-argument|,
+argument_list|,
 literal|4
-argument|)
 argument_list|)
 end_macro
 
@@ -2764,13 +2764,11 @@ comment|/*  * Print to a callback function in such a way as to (hopefully) avoid
 end_comment
 
 begin_macro
-name|JEMALLOC_ATTR
+name|JEMALLOC_FORMAT_PRINTF
 argument_list|(
-argument|format(printf,
 literal|3
-argument|,
+argument_list|,
 literal|4
-argument|)
 argument_list|)
 end_macro
 
@@ -2838,13 +2836,11 @@ comment|/* Print to stderr in such a way as to avoid memory allocation. */
 end_comment
 
 begin_macro
-name|JEMALLOC_ATTR
+name|JEMALLOC_FORMAT_PRINTF
 argument_list|(
-argument|format(printf,
 literal|1
-argument|,
+argument_list|,
 literal|2
-argument|)
 argument_list|)
 end_macro
 

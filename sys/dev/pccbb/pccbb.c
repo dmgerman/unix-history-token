@@ -1259,7 +1259,7 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Wait for the thread to die.  kproc_exit will do a wakeup 	 * on the event thread's struct thread * so that we know it is 	 * safe to proceed.  IF the thread is running, set the please 	 * die flag and wait for it to comply.  Since the wakeup on 	 * the event thread happens only in kproc_exit, we don't 	 * need to loop here. 	 */
+comment|/* 	 * Wait for the thread to die.  kproc_exit will do a wakeup 	 * on the event thread's struct proc * so that we know it is 	 * safe to proceed.  IF the thread is running, set the please 	 * die flag and wait for it to comply.  Since the wakeup on 	 * the event thread happens only in kproc_exit, we don't 	 * need to loop here. 	 */
 name|bus_teardown_intr
 argument_list|(
 name|brdev

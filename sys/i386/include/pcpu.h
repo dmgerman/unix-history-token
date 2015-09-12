@@ -65,7 +65,9 @@ value|\ 	u_int	pc_cmci_mask;
 comment|/* MCx banks for CMCI */
 value|\ 	u_int	pc_vcpu_id;
 comment|/* Xen vCPU ID */
-value|\ 	char	__pad[233]
+value|\ 	vm_offset_t pc_qmap_addr;
+comment|/* KVA for temporary mappings */
+value|\ 	char	__pad[229]
 end_define
 
 begin_ifdef

@@ -6708,7 +6708,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the core of the interactivity algorithm.  Determines a score based  * on past behavior.  It is the ratio of sleep time to run time scaled to  * a [0, 100] integer.  This is the voluntary sleep time of a process, which  * differs from the cpu usage because it does not account for time spent  * waiting on a run-queue.  Would be prettier if we had floating point.  */
+comment|/*  * This is the core of the interactivity algorithm.  Determines a score based  * on past behavior.  It is the ratio of sleep time to run time scaled to  * a [0, 100] integer.  This is the voluntary sleep time of a process, which  * differs from the cpu usage because it does not account for time spent  * waiting on a run-queue.  Would be prettier if we had floating point.  *  * When a thread's sleep time is greater than its run time the  * calculation is:  *  *                           scaling factor   * interactivity score =  ---------------------  *                        sleep time / run time  *  *  * When a thread's run time is greater than its sleep time the  * calculation is:  *  *                           scaling factor   * interactivity score =  ---------------------    + scaling factor  *                        run time / sleep time  */
 end_comment
 
 begin_function
@@ -9187,6 +9187,18 @@ name|td_sched
 expr_stmt|;
 name|child
 operator|->
+name|td_oncpu
+operator|=
+name|NOCPU
+expr_stmt|;
+name|child
+operator|->
+name|td_lastcpu
+operator|=
+name|NOCPU
+expr_stmt|;
+name|child
+operator|->
 name|td_lock
 operator|=
 name|TDQ_LOCKPTR
@@ -11623,6 +11635,20 @@ argument_list|)
 operator|->
 name|lock_object
 argument_list|)
+expr_stmt|;
+name|td
+operator|->
+name|td_lastcpu
+operator|=
+name|td
+operator|->
+name|td_oncpu
+expr_stmt|;
+name|td
+operator|->
+name|td_oncpu
+operator|=
+name|NOCPU
 expr_stmt|;
 block|}
 name|KASSERT

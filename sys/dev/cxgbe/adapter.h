@@ -2967,6 +2967,9 @@ name|void
 modifier|*
 name|last_op_thr
 decl_stmt|;
+name|int
+name|last_op_flags
+decl_stmt|;
 endif|#
 directive|endif
 name|int

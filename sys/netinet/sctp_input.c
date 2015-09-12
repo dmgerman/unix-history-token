@@ -4431,6 +4431,9 @@ decl_stmt|;
 name|int
 name|some_on_streamwheel
 decl_stmt|;
+name|int
+name|old_state
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -4514,8 +4517,13 @@ block|{
 comment|/* Shutdown NOT the expected size */
 return|return;
 block|}
-else|else
-block|{
+name|old_state
+operator|=
+name|SCTP_GET_STATE
+argument_list|(
+name|asoc
+argument_list|)
+expr_stmt|;
 name|sctp_update_acked
 argument_list|(
 name|stcb
@@ -4532,7 +4540,6 @@ name|abort_flag
 condition|)
 block|{
 return|return;
-block|}
 block|}
 if|if
 condition|(
@@ -4871,18 +4878,28 @@ name|sctps_currestab
 argument_list|)
 expr_stmt|;
 block|}
-name|SCTP_SET_STATE
-argument_list|(
-name|asoc
-argument_list|,
-name|SCTP_STATE_SHUTDOWN_ACK_SENT
-argument_list|)
-expr_stmt|;
 name|SCTP_CLEAR_SUBSTATE
 argument_list|(
 name|asoc
 argument_list|,
 name|SCTP_STATE_SHUTDOWN_PENDING
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SCTP_GET_STATE
+argument_list|(
+name|asoc
+argument_list|)
+operator|!=
+name|SCTP_STATE_SHUTDOWN_ACK_SENT
+condition|)
+block|{
+name|SCTP_SET_STATE
+argument_list|(
+name|asoc
+argument_list|,
+name|SCTP_STATE_SHUTDOWN_ACK_SENT
 argument_list|)
 expr_stmt|;
 name|sctp_stop_timers_for_shutdown
@@ -4910,6 +4927,23 @@ argument_list|,
 name|net
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|old_state
+operator|==
+name|SCTP_STATE_SHUTDOWN_ACK_SENT
+condition|)
+block|{
+name|sctp_send_shutdown_ack
+argument_list|(
+name|stcb
+argument_list|,
+name|net
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -23528,7 +23562,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"OOTB, %s:%d at %s\n"
+literal|"OOTB, %s:%d at %s"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -23755,7 +23789,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"OOTB, %s:%d at %s\n"
+literal|"OOTB, %s:%d at %s"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -24432,50 +24466,23 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|op_err
-operator|=
-name|sctp_generate_cause
-argument_list|(
-name|SCTP_BASE_SYSCTL
-argument_list|(
-name|sctp_diag_info_code
-argument_list|)
-argument_list|,
-literal|"INIT not the only chunk"
-argument_list|)
-expr_stmt|;
-name|sctp_abort_association
-argument_list|(
-name|inp
-argument_list|,
-name|stcb
-argument_list|,
-name|m
-argument_list|,
-name|iphlen
-argument_list|,
-name|src
-argument_list|,
-name|dst
-argument_list|,
-name|sh
-argument_list|,
-name|op_err
-argument_list|,
-name|mflowtype
-argument_list|,
-name|mflowid
-argument_list|,
-name|vrf_id
-argument_list|,
-name|port
-argument_list|)
-expr_stmt|;
+comment|/* RFC 4960 requires that no ABORT is sent */
 operator|*
 name|offset
 operator|=
 name|length
 expr_stmt|;
+if|if
+condition|(
+name|locked_tcb
+condition|)
+block|{
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|locked_tcb
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -28382,36 +28389,6 @@ name|mm
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|sctp_pad_lastmbuf
-argument_list|(
-name|SCTP_BUF_NEXT
-argument_list|(
-name|mm
-argument_list|)
-argument_list|,
-name|SCTP_SIZE32
-argument_list|(
-name|len
-argument_list|)
-operator|-
-name|len
-argument_list|,
-name|NULL
-argument_list|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|sctp_m_freem
-argument_list|(
-name|mm
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 ifdef|#
 directive|ifdef
 name|SCTP_MBUF_LOGGING
@@ -28445,7 +28422,6 @@ argument_list|,
 name|mm
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -29610,7 +29586,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"OOTB, %s:%d at %s\n"
+literal|"OOTB, %s:%d at %s"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -29850,7 +29826,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"OOTB, %s:%d at %s\n"
+literal|"OOTB, %s:%d at %s"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -30096,7 +30072,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"OOTB, %s:%d at %s\n"
+literal|"OOTB, %s:%d at %s"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -30196,12 +30172,6 @@ name|offset
 argument_list|,
 name|length
 argument_list|,
-name|src
-argument_list|,
-name|dst
-argument_list|,
-name|sh
-argument_list|,
 name|inp
 argument_list|,
 name|stcb
@@ -30210,14 +30180,6 @@ name|net
 argument_list|,
 operator|&
 name|high_tsn
-argument_list|,
-name|mflowtype
-argument_list|,
-name|mflowid
-argument_list|,
-name|vrf_id
-argument_list|,
-name|port
 argument_list|)
 expr_stmt|;
 if|if

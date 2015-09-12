@@ -1887,12 +1887,6 @@ argument_list|(
 literal|"elf kernel"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|modptr
-operator|!=
-name|NULL
-condition|)
 name|modname
 operator|=
 operator|(

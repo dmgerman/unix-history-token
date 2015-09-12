@@ -1247,35 +1247,6 @@ name|SIOCGIFAFLAG_IN6
 value|_IOWR('i', 73, struct in6_ifreq)
 end_define
 
-begin_define
-define|#
-directive|define
-name|SIOCGDRLST_IN6
-value|_IOWR('i', 74, struct in6_drlist)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/* XXX: SIOCGPRLST_IN6 is exposed in KAME but in6_oprlist is not. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCGPRLST_IN6
-value|_IOWR('i', 75, struct in6_oprlist)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1575,7 +1546,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* don't perform DAD on this address 					 * (used only at first SIOC* call) 					 */
+comment|/* don't perform DAD on this address 					 * (obsolete) 					 */
 end_comment
 
 begin_define
@@ -1609,17 +1580,6 @@ end_define
 
 begin_comment
 comment|/* preferred address for SAS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN6_IFF_NOPFX
-value|0x8000
-end_define
-
-begin_comment
-comment|/* skip kernel prefix management. 					 * XXX: this should be temporary. 					 */
 end_comment
 
 begin_comment
@@ -1831,7 +1791,7 @@ end_function
 begin_decl_stmt
 specifier|extern
 name|struct
-name|rwlock
+name|rmlock
 name|in6_ifaddr_lock
 decl_stmt|;
 end_decl_stmt
@@ -1840,16 +1800,18 @@ begin_define
 define|#
 directive|define
 name|IN6_IFADDR_LOCK_ASSERT
-parameter_list|(	)
-value|rw_assert(&in6_ifaddr_lock, RA_LOCKED)
+parameter_list|()
+value|rm_assert(&in6_ifaddr_lock, RA_LOCKED)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IN6_IFADDR_RLOCK
-parameter_list|()
-value|rw_rlock(&in6_ifaddr_lock)
+parameter_list|(
+name|t
+parameter_list|)
+value|rm_rlock(&in6_ifaddr_lock, (t))
 end_define
 
 begin_define
@@ -1857,15 +1819,17 @@ define|#
 directive|define
 name|IN6_IFADDR_RLOCK_ASSERT
 parameter_list|()
-value|rw_assert(&in6_ifaddr_lock, RA_RLOCKED)
+value|rm_assert(&in6_ifaddr_lock, RA_RLOCKED)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IN6_IFADDR_RUNLOCK
-parameter_list|()
-value|rw_runlock(&in6_ifaddr_lock)
+parameter_list|(
+name|t
+parameter_list|)
+value|rm_runlock(&in6_ifaddr_lock, (t))
 end_define
 
 begin_define
@@ -1873,7 +1837,7 @@ define|#
 directive|define
 name|IN6_IFADDR_WLOCK
 parameter_list|()
-value|rw_wlock(&in6_ifaddr_lock)
+value|rm_wlock(&in6_ifaddr_lock)
 end_define
 
 begin_define
@@ -1881,7 +1845,7 @@ define|#
 directive|define
 name|IN6_IFADDR_WLOCK_ASSERT
 parameter_list|()
-value|rw_assert(&in6_ifaddr_lock, RA_WLOCKED)
+value|rm_assert(&in6_ifaddr_lock, RA_WLOCKED)
 end_define
 
 begin_define
@@ -1889,7 +1853,7 @@ define|#
 directive|define
 name|IN6_IFADDR_WUNLOCK
 parameter_list|()
-value|rw_wunlock(&in6_ifaddr_lock)
+value|rm_wunlock(&in6_ifaddr_lock)
 end_define
 
 begin_define
@@ -3081,6 +3045,7 @@ name|struct
 name|ifnet
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|in6_addr
 modifier|*

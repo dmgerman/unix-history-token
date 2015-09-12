@@ -186,8 +186,13 @@ name|g_bio_run_task
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Pace is a hint that we've had some trouble recently allocating  * bios, so we should back off trying to send I/O down the stack  * a bit to let the problem resolve. When pacing, we also turn  * off direct dispatch to also reduce memory pressure from I/Os  * there, at the expxense of some added latency while the memory  * pressures exist. See g_io_schedule_down() for more details  * and limitations.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|volatile
 name|u_int
 name|pace
 decl_stmt|;
@@ -2332,6 +2337,8 @@ name|flags
 operator|&
 name|G_CF_DIRECT_SEND
 operator|)
+operator|!=
+literal|0
 operator|&&
 operator|(
 name|pp
@@ -2340,6 +2347,8 @@ name|flags
 operator|&
 name|G_PF_DIRECT_RECEIVE
 operator|)
+operator|!=
+literal|0
 operator|&&
 operator|!
 name|g_is_geom_thread
@@ -2349,16 +2358,15 @@ argument_list|)
 operator|&&
 operator|(
 operator|(
-operator|(
 name|pp
 operator|->
 name|flags
 operator|&
 name|G_PF_ACCEPT_UNMAPPED
 operator|)
-operator|==
+operator|!=
 literal|0
-operator|&&
+operator|||
 operator|(
 name|bp
 operator|->
@@ -2366,13 +2374,16 @@ name|bio_flags
 operator|&
 name|BIO_UNMAPPED
 operator|)
-operator|!=
+operator|==
 literal|0
-operator|)
 operator|||
 name|THREAD_CAN_SLEEP
 argument_list|()
 operator|)
+operator|&&
+name|pace
+operator|==
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3241,7 +3252,8 @@ name|cp
 argument_list|)
 expr_stmt|;
 name|pace
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 return|return;
 block|}
@@ -3723,30 +3735,35 @@ expr_stmt|;
 if|if
 condition|(
 name|pace
-operator|>
+operator|!=
 literal|0
 condition|)
 block|{
-name|CTR1
+comment|/* 			 * There has been at least one memory allocation 			 * failure since the last I/O completed. Pause 1ms to 			 * give the system a chance to free up memory. We only 			 * do this once because a large number of allocations 			 * can fail in the direct dispatch case and there's no 			 * relationship between the number of these failures and 			 * the length of the outage. If there's still an outage, 			 * we'll pause again and again until it's 			 * resolved. Older versions paused longer and once per 			 * allocation failure. This was OK for a single threaded 			 * g_down, but with direct dispatch would lead to max of 			 * 10 IOPs for minutes at a time when transient memory 			 * issues prevented allocation for a batch of requests 			 * from the upper layers. 			 * 			 * XXX This pacing is really lame. It needs to be solved 			 * by other methods. This is OK only because the worst 			 * case scenario is so rare. In the worst case scenario 			 * all memory is tied up waiting for I/O to complete 			 * which can never happen since we can't allocate bios 			 * for that I/O. 			 */
+name|CTR0
 argument_list|(
 name|KTR_GEOM
 argument_list|,
-literal|"g_down pacing self (pace %d)"
-argument_list|,
-name|pace
+literal|"g_down pacing self"
 argument_list|)
 expr_stmt|;
 name|pause
 argument_list|(
 literal|"g_down"
 argument_list|,
+name|min
+argument_list|(
 name|hz
 operator|/
-literal|10
+literal|1000
+argument_list|,
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|pace
-operator|--
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|CTR2

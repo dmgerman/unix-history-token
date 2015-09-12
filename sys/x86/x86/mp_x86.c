@@ -536,7 +536,7 @@ begin_decl_stmt
 specifier|static
 specifier|volatile
 name|cpuset_t
-name|ipi_nmi_pending
+name|ipi_stop_nmi_pending
 decl_stmt|;
 end_decl_stmt
 
@@ -2246,7 +2246,11 @@ expr_stmt|;
 comment|/* Wait until all the AP's are up. */
 while|while
 condition|(
+name|atomic_load_acq_int
+argument_list|(
+operator|&
 name|smp_started
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -3433,7 +3437,7 @@ condition|)
 name|CPU_OR_ATOMIC
 argument_list|(
 operator|&
-name|ipi_nmi_pending
+name|ipi_stop_nmi_pending
 argument_list|,
 operator|&
 name|cpus
@@ -3516,7 +3520,7 @@ argument_list|(
 name|cpu
 argument_list|,
 operator|&
-name|ipi_nmi_pending
+name|ipi_stop_nmi_pending
 argument_list|)
 expr_stmt|;
 name|CTR3
@@ -3599,7 +3603,7 @@ condition|)
 name|CPU_OR_ATOMIC
 argument_list|(
 operator|&
-name|ipi_nmi_pending
+name|ipi_stop_nmi_pending
 argument_list|,
 operator|&
 name|other_cpus
@@ -3650,7 +3654,7 @@ argument_list|(
 name|cpuid
 argument_list|,
 operator|&
-name|ipi_nmi_pending
+name|ipi_stop_nmi_pending
 argument_list|)
 condition|)
 return|return
@@ -3663,7 +3667,7 @@ argument_list|(
 name|cpuid
 argument_list|,
 operator|&
-name|ipi_nmi_pending
+name|ipi_stop_nmi_pending
 argument_list|)
 expr_stmt|;
 name|cpustop_handler

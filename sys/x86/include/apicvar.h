@@ -276,7 +276,7 @@ begin_define
 define|#
 directive|define
 name|IPI_DYN_LAST
-value|(254)
+value|(253)
 end_define
 
 begin_comment
@@ -285,6 +285,24 @@ end_comment
 
 begin_comment
 comment|/*  * IPI_STOP_HARD does not need to occupy a slot in the IPI vector space since  * it is delivered using an NMI anyways.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_NMI_FIRST
+value|254
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_TRACE
+value|254
+end_define
+
+begin_comment
+comment|/* Interrupt for tracing. */
 end_comment
 
 begin_define

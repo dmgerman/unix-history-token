@@ -597,14 +597,6 @@ operator|=
 name|FALSE
 expr_stmt|;
 break|break;
-case|case
-literal|'v'
-case|:
-name|AcpiGbl_DbOpt_Verbose
-operator|=
-name|TRUE
-expr_stmt|;
-break|break;
 default|default:
 name|printf
 argument_list|(
@@ -962,6 +954,10 @@ literal|'^'
 case|:
 comment|/* Produce listing file (Mixed source/aml) */
 name|Gbl_ListingFlag
+operator|=
+name|TRUE
+expr_stmt|;
+name|AcpiGbl_DmOpt_Listing
 operator|=
 name|TRUE
 expr_stmt|;

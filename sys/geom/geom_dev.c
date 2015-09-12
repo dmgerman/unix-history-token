@@ -1856,6 +1856,22 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * This happens on attempt to open a device node with O_EXEC. 	 */
+if|if
+condition|(
+name|r
+operator|+
+name|w
+operator|+
+name|e
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 if|if
 condition|(
 name|w
@@ -2093,6 +2109,22 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * The vgonel(9) - caused by eg. forced unmount of devfs - calls 	 * VOP_CLOSE(9) on devfs vnode without any FREAD or FWRITE flags, 	 * which would result in zero deltas, which in turn would cause 	 * panic in g_access(9). 	 * 	 * Note that we cannot zero the counters (ie. do "r = cp->acr" 	 * etc) instead, because the consumer might be opened in another 	 * devfs instance. 	 */
+if|if
+condition|(
+name|r
+operator|+
+name|w
+operator|+
+name|e
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|sc
 operator|=
 name|cp

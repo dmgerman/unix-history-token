@@ -143,10 +143,6 @@ struct|struct
 name|ctl_ooa_info
 block|{
 name|uint32_t
-name|target_id
-decl_stmt|;
-comment|/* Passed in to CTL */
-name|uint32_t
 name|lun_id
 decl_stmt|;
 comment|/* Passed in to CTL */
@@ -156,63 +152,6 @@ decl_stmt|;
 comment|/* Returned from CTL */
 name|ctl_ooa_status
 name|status
-decl_stmt|;
-comment|/* Returned from CTL */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ctl_hard_startstop_info
-block|{
-name|cfi_mt_status
-name|status
-decl_stmt|;
-name|int
-name|total_luns
-decl_stmt|;
-name|int
-name|luns_complete
-decl_stmt|;
-name|int
-name|luns_failed
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ctl_bbrread_info
-block|{
-name|int
-name|lun_num
-decl_stmt|;
-comment|/* Passed in to CTL */
-name|uint64_t
-name|lba
-decl_stmt|;
-comment|/* Passed in to CTL */
-name|int
-name|len
-decl_stmt|;
-comment|/* Passed in to CTL */
-name|cfi_mt_status
-name|status
-decl_stmt|;
-comment|/* Returned from CTL */
-name|cfi_bbrread_status
-name|bbr_status
-decl_stmt|;
-comment|/* Returned from CTL */
-name|uint8_t
-name|scsi_status
-decl_stmt|;
-comment|/* Returned from CTL */
-name|struct
-name|scsi_sense_data
-name|sense_data
 decl_stmt|;
 comment|/* Returned from CTL */
 block|}
@@ -272,9 +211,6 @@ struct|struct
 name|ctl_io_delay_info
 block|{
 name|uint32_t
-name|target_id
-decl_stmt|;
-name|uint32_t
 name|lun_id
 decl_stmt|;
 name|ctl_delay_type
@@ -315,10 +251,6 @@ begin_struct
 struct|struct
 name|ctl_sync_info
 block|{
-name|uint32_t
-name|target_id
-decl_stmt|;
-comment|/* passed to kernel */
 name|uint32_t
 name|lun_id
 decl_stmt|;
@@ -630,17 +562,13 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Error injection descriptor.  *  * target_id:	   Target ID to act on.  * lun_id	   LUN to act on.  * lun_error:	   The type of error to inject.  See above for descriptions.  * error_pattern:  What kind of command to act on.  See above.  * cmd_desc:	   For CTL_LUN_PAT_CMD only.  * lba_range:	   For CTL_LUN_PAT_RANGE only.  * custom_sense:   Specify sense.  For CTL_LUN_INJ_CUSTOM only.  * serial:	   Serial number returned by the kernel.  Use for deletion.  * links:	   Kernel use only.  */
+comment|/*  * Error injection descriptor.  *  * lun_id	   LUN to act on.  * lun_error:	   The type of error to inject.  See above for descriptions.  * error_pattern:  What kind of command to act on.  See above.  * cmd_desc:	   For CTL_LUN_PAT_CMD only.  * lba_range:	   For CTL_LUN_PAT_RANGE only.  * custom_sense:   Specify sense.  For CTL_LUN_INJ_CUSTOM only.  * serial:	   Serial number returned by the kernel.  Use for deletion.  * links:	   Kernel use only.  */
 end_comment
 
 begin_struct
 struct|struct
 name|ctl_error_desc
 block|{
-name|uint32_t
-name|target_id
-decl_stmt|;
-comment|/* To kernel */
 name|uint32_t
 name|lun_id
 decl_stmt|;
@@ -1866,20 +1794,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CTL_HARD_STOP
-value|_IOR(CTL_MINOR, 0x08, \ 				     struct ctl_hard_startstop_info)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_HARD_START
-value|_IOR(CTL_MINOR, 0x09, \ 				     struct ctl_hard_startstop_info)
-end_define
-
-begin_define
-define|#
-directive|define
 name|CTL_DELAY_IO
 value|_IOWR(CTL_MINOR, 0x10, struct ctl_io_delay_info)
 end_define
@@ -1924,13 +1838,6 @@ define|#
 directive|define
 name|CTL_ERROR_INJECT
 value|_IOWR(CTL_MINOR, 0x16, struct ctl_error_desc)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_BBRREAD
-value|_IOWR(CTL_MINOR, 0x17, struct ctl_bbrread_info)
 end_define
 
 begin_define

@@ -134,12 +134,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cam/ctl/ctl_frontend_internal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cam/ctl/ctl_util.h>
 end_include
 
@@ -3070,7 +3064,7 @@ name|lun
 argument_list|,
 name|list_id
 argument_list|,
-name|ctl_get_resindex
+name|ctl_get_initindex
 argument_list|(
 operator|&
 name|ctsio
@@ -3539,7 +3533,7 @@ name|lun
 argument_list|,
 name|list_id
 argument_list|,
-name|ctl_get_resindex
+name|ctl_get_initindex
 argument_list|(
 operator|&
 name|ctsio
@@ -3979,7 +3973,7 @@ name|lun
 argument_list|,
 name|list_id
 argument_list|,
-name|ctl_get_resindex
+name|ctl_get_initindex
 argument_list|(
 operator|&
 name|ctsio
@@ -4482,7 +4476,7 @@ name|lun
 argument_list|,
 name|list_id
 argument_list|,
-name|ctl_get_resindex
+name|ctl_get_initindex
 argument_list|(
 operator|&
 name|ctsio
@@ -4784,9 +4778,6 @@ decl_stmt|;
 name|struct
 name|runl
 name|run
-decl_stmt|,
-modifier|*
-name|prun
 decl_stmt|;
 name|uint64_t
 name|sl
@@ -5296,16 +5287,11 @@ operator|&
 name|run
 argument_list|)
 expr_stmt|;
-name|prun
-operator|=
-operator|&
-name|run
-expr_stmt|;
 name|list
 operator|->
 name|tbdio
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -5630,19 +5616,18 @@ argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
-name|prun
+operator|&
+name|run
 argument_list|,
 name|tior
 argument_list|,
 name|rlinks
 argument_list|)
 expr_stmt|;
-name|prun
-operator|=
-operator|&
-name|tior
+name|list
 operator|->
-name|run
+name|tbdio
+operator|++
 expr_stmt|;
 name|donebytes
 operator|+=
@@ -9613,7 +9598,7 @@ name|list
 operator|->
 name|init_idx
 operator|=
-name|ctl_get_resindex
+name|ctl_get_initindex
 argument_list|(
 operator|&
 name|ctsio
@@ -10463,7 +10448,7 @@ name|list
 operator|->
 name|init_idx
 operator|=
-name|ctl_get_resindex
+name|ctl_get_initindex
 argument_list|(
 operator|&
 name|ctsio
@@ -11345,8 +11330,6 @@ name|softc
 operator|->
 name|ctl_ports
 index|[
-name|ctl_port_idx
-argument_list|(
 name|ctsio
 operator|->
 name|io_hdr
@@ -11354,7 +11337,6 @@ operator|.
 name|nexus
 operator|.
 name|targ_port
-argument_list|)
 index|]
 expr_stmt|;
 name|cdb
@@ -11660,7 +11642,7 @@ name|list
 operator|->
 name|init_idx
 operator|=
-name|ctl_get_resindex
+name|ctl_get_initindex
 argument_list|(
 operator|&
 name|ctsio
@@ -12507,7 +12489,7 @@ name|list
 operator|->
 name|init_idx
 operator|=
-name|ctl_get_resindex
+name|ctl_get_initindex
 argument_list|(
 operator|&
 name|ctsio
@@ -13064,7 +13046,7 @@ name|lun
 argument_list|,
 name|list_id
 argument_list|,
-name|ctl_get_resindex
+name|ctl_get_initindex
 argument_list|(
 operator|&
 name|ctsio

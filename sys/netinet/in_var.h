@@ -378,7 +378,7 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|struct
-name|rwlock
+name|rmlock
 name|in_ifaddr_lock
 decl_stmt|;
 end_decl_stmt
@@ -388,15 +388,17 @@ define|#
 directive|define
 name|IN_IFADDR_LOCK_ASSERT
 parameter_list|()
-value|rw_assert(&in_ifaddr_lock, RA_LOCKED)
+value|rm_assert(&in_ifaddr_lock, RA_LOCKED)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IN_IFADDR_RLOCK
-parameter_list|()
-value|rw_rlock(&in_ifaddr_lock)
+parameter_list|(
+name|t
+parameter_list|)
+value|rm_rlock(&in_ifaddr_lock, (t))
 end_define
 
 begin_define
@@ -404,15 +406,17 @@ define|#
 directive|define
 name|IN_IFADDR_RLOCK_ASSERT
 parameter_list|()
-value|rw_assert(&in_ifaddr_lock, RA_RLOCKED)
+value|rm_assert(&in_ifaddr_lock, RA_RLOCKED)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IN_IFADDR_RUNLOCK
-parameter_list|()
-value|rw_runlock(&in_ifaddr_lock)
+parameter_list|(
+name|t
+parameter_list|)
+value|rm_runlock(&in_ifaddr_lock, (t))
 end_define
 
 begin_define
@@ -420,7 +424,7 @@ define|#
 directive|define
 name|IN_IFADDR_WLOCK
 parameter_list|()
-value|rw_wlock(&in_ifaddr_lock)
+value|rm_wlock(&in_ifaddr_lock)
 end_define
 
 begin_define
@@ -428,7 +432,7 @@ define|#
 directive|define
 name|IN_IFADDR_WLOCK_ASSERT
 parameter_list|()
-value|rw_assert(&in_ifaddr_lock, RA_WLOCKED)
+value|rm_assert(&in_ifaddr_lock, RA_WLOCKED)
 end_define
 
 begin_define
@@ -436,7 +440,7 @@ define|#
 directive|define
 name|IN_IFADDR_WUNLOCK
 parameter_list|()
-value|rw_wunlock(&in_ifaddr_lock)
+value|rm_wunlock(&in_ifaddr_lock)
 end_define
 
 begin_comment
@@ -493,13 +497,17 @@ parameter_list|(
 name|ifp
 parameter_list|,
 name|ia
+parameter_list|,
+name|t
 parameter_list|)
 define|\
 comment|/* struct ifnet *ifp; */
 define|\
 comment|/* struct in_ifaddr *ia; */
 define|\
-value|do {									\ 	IN_IFADDR_RLOCK();						\ 	for ((ia) = TAILQ_FIRST(&V_in_ifaddrhead);			\ 	    (ia) != NULL&& (ia)->ia_ifp != (ifp);			\ 	    (ia) = TAILQ_NEXT((ia), ia_link))				\ 		continue;						\ 	if ((ia) != NULL)						\ 		ifa_ref(&(ia)->ia_ifa);					\ 	IN_IFADDR_RUNLOCK();						\ } while (0)
+comment|/* struct rm_priotracker *t; */
+define|\
+value|do {									\ 	IN_IFADDR_RLOCK((t));						\ 	for ((ia) = TAILQ_FIRST(&V_in_ifaddrhead);			\ 	    (ia) != NULL&& (ia)->ia_ifp != (ifp);			\ 	    (ia) = TAILQ_NEXT((ia), ia_link))				\ 		continue;						\ 	if ((ia) != NULL)						\ 		ifa_ref(&(ia)->ia_ifa);					\ 	IN_IFADDR_RUNLOCK((t));						\ } while (0)
 end_define
 
 begin_comment

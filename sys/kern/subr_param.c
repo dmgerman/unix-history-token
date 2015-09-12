@@ -803,18 +803,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * These have to be allocated somewhere; allocating  * them here forces loader errors if this file is omitted  * (if they've been externed everywhere else; hah!).  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|buf
-modifier|*
-name|swbuf
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * The elements of this array are ordered based upon the values of the  * corresponding enum VM_GUEST members.  */
 end_comment
 
@@ -869,6 +857,35 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__arm64__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.kstack_pages"
+argument_list|,
+operator|&
+name|kstack_pages
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|hz
 operator|=
 operator|-
@@ -1277,6 +1294,14 @@ literal|10
 operator|)
 operator|*
 literal|9
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.maxfilesperproc"
+argument_list|,
+operator|&
+name|maxfilesperproc
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Cannot be changed after boot. 	 */
 name|nbuf

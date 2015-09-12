@@ -190,14 +190,6 @@ name|v_cache_count
 decl_stmt|;
 comment|/* (f) pages on cache queue */
 name|u_int
-name|v_cache_min
-decl_stmt|;
-comment|/* (c) min pages desired on cache queue */
-name|u_int
-name|v_cache_max
-decl_stmt|;
-comment|/* (c) max pages in cached obj (unused) */
-name|u_int
 name|v_pageout_free_min
 decl_stmt|;
 comment|/* (c) min pages reserved for kernel */
@@ -242,6 +234,12 @@ name|u_int
 name|v_kthreadpages
 decl_stmt|;
 comment|/* (p) VM pages affected by fork() by kernel */
+name|u_int
+name|v_spare
+index|[
+literal|2
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

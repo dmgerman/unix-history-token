@@ -40,6 +40,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Returns the N from "hwmodN" in the ti,hwmods property; 0 on failure. */
+end_comment
+
+begin_function_decl
+name|int
+name|ti_hwmods_get_unit
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|hwmod
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

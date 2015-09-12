@@ -2647,8 +2647,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 operator|!
 name|is_on
+operator|)
 operator|!=
 name|ani_state
 operator|->
@@ -3288,8 +3290,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 operator|!
 name|is_on
+operator|)
 operator|!=
 name|ani_state
 operator|->

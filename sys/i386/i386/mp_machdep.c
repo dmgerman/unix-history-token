@@ -978,6 +978,9 @@ name|pc_curthread
 operator|=
 literal|0
 expr_stmt|;
+name|intel_fix_cpuid
+argument_list|()
+expr_stmt|;
 name|gdt_segs
 index|[
 name|GPRIV_SEL
@@ -1255,8 +1258,13 @@ expr_stmt|;
 comment|/* Spin until the BSP releases the AP's. */
 while|while
 condition|(
-operator|!
+name|atomic_load_acq_int
+argument_list|(
+operator|&
 name|aps_ready
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|ia32_pause
 argument_list|()
@@ -1472,7 +1480,7 @@ name|kmem_malloc
 argument_list|(
 name|kernel_arena
 argument_list|,
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|PAGE_SIZE
 argument_list|,
@@ -1558,7 +1566,7 @@ index|[
 name|cpu
 index|]
 operator|+
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|PAGE_SIZE
 operator|-
@@ -2236,13 +2244,9 @@ name|smp_tlb_addr2
 operator|=
 name|addr2
 expr_stmt|;
-name|atomic_store_rel_int
-argument_list|(
-operator|&
 name|smp_tlb_wait
-argument_list|,
+operator|=
 literal|0
-argument_list|)
 expr_stmt|;
 name|ipi_all_but_self
 argument_list|(

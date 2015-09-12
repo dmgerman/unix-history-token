@@ -580,6 +580,10 @@ name|pbase
 decl_stmt|,
 name|psize
 decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 name|int
 name|err
 decl_stmt|;
@@ -629,7 +633,22 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* 	 * Retrieve /chosen/std{in,out}. 	 */
+comment|/* Has the user forced a specific device node? */
+name|cp
+operator|=
+name|kern_getenv
+argument_list|(
+literal|"hw.fdt.console"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 		 * Retrieve /chosen/std{in,out}. 		 */
 name|node
 operator|=
 operator|-
@@ -703,6 +722,17 @@ literal|"serial0"
 argument_list|)
 expr_stmt|;
 comment|/* Last ditch */
+block|}
+else|else
+block|{
+name|node
+operator|=
+name|OF_finddevice
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|node

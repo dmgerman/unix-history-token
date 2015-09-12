@@ -3362,6 +3362,8 @@ name|struct
 name|hv_kvp_ipaddr_value
 modifier|*
 name|ip_buffer
+init|=
+name|NULL
 decl_stmt|;
 name|char
 name|cidr_mask

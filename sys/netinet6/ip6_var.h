@@ -1413,6 +1413,7 @@ name|char
 modifier|*
 name|ip6_get_prevhdr
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -1426,6 +1427,7 @@ begin_function_decl
 name|int
 name|ip6_nexthdr
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -1444,6 +1446,7 @@ begin_function_decl
 name|int
 name|ip6_lasthdr
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -1610,12 +1613,9 @@ name|struct
 name|ifnet
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr_in6
 modifier|*
 parameter_list|)
 function_decl|;

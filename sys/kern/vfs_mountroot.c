@@ -219,6 +219,18 @@ name|rootvnode
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Mount of the system's /dev.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|mount
+modifier|*
+name|rootdevmp
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -852,6 +864,10 @@ argument_list|)
 expr_stmt|;
 operator|*
 name|mpp
+operator|=
+name|mp
+expr_stmt|;
+name|rootdevmp
 operator|=
 name|mp
 expr_stmt|;
@@ -3656,6 +3672,25 @@ operator|&
 name|conf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"mountroot: invalid file system "
+literal|"specification.\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+block|}
 break|break;
 block|}
 if|if

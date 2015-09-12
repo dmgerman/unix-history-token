@@ -35,6 +35,20 @@ name|KSTAT_FLAG_VIRTUAL
 value|0x01
 end_define
 
+begin_define
+define|#
+directive|define
+name|KSTAT_READ
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|KSTAT_WRITE
+value|1
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -61,6 +75,25 @@ name|ks_sysctl_root
 decl_stmt|;
 endif|#
 directive|endif
+name|int
+function_decl|(
+modifier|*
+name|ks_update
+function_decl|)
+parameter_list|(
+name|struct
+name|kstat
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+comment|/* dynamic update */
+name|void
+modifier|*
+name|ks_private
+decl_stmt|;
+comment|/* arbitrary provider-private data */
 block|}
 name|kstat_t
 typedef|;

@@ -338,6 +338,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|xform_ah_authsize
+parameter_list|(
+name|struct
+name|auth_hash
+modifier|*
+name|esph
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct_decl
 struct_decl|struct
 name|cryptoini

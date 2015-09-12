@@ -420,6 +420,13 @@ name|parser_temp
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|NOEOFMARK
+value|((const char *)&heredoclist)
+end_define
+
 begin_function_decl
 specifier|static
 name|union
@@ -4599,6 +4606,31 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|'\n'
+operator|&&
+operator|*
+name|eofmark
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|c
+operator|=
+name|PEOF
+expr_stmt|;
+name|plinno
+operator|++
+expr_stmt|;
+name|needprompt
+operator|=
+name|doprompt
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|c
@@ -5574,11 +5606,15 @@ block|{
 name|int
 name|c
 decl_stmt|,
-name|v
+name|vc
 decl_stmt|,
 name|i
 decl_stmt|,
 name|n
+decl_stmt|;
+name|unsigned
+name|int
+name|v
 decl_stmt|;
 name|c
 operator|=
@@ -6285,7 +6321,7 @@ literal|"Bad escape sequence"
 argument_list|)
 expr_stmt|;
 block|}
-name|v
+name|vc
 operator|=
 operator|(
 name|char
@@ -6295,7 +6331,7 @@ expr_stmt|;
 comment|/* 	 * We can't handle NUL bytes. 	 * POSIX says we should skip till the closing quote. 	 */
 if|if
 condition|(
-name|v
+name|vc
 operator|==
 literal|'\0'
 condition|)
@@ -6372,7 +6408,7 @@ if|if
 condition|(
 name|SQSYNTAX
 index|[
-name|v
+name|vc
 index|]
 operator|==
 name|CCTL
@@ -6386,7 +6422,7 @@ argument_list|)
 expr_stmt|;
 name|USTPUTC
 argument_list|(
-name|v
+name|vc
 argument_list|,
 name|out
 argument_list|)
@@ -6551,6 +6587,10 @@ comment|/* for each line, until end of word */
 if|if
 condition|(
 name|eofmark
+operator|&&
+name|eofmark
+operator|!=
+name|NOEOFMARK
 condition|)
 comment|/* set c to PEOF if at end of here document */
 name|c
@@ -8025,7 +8065,16 @@ argument_list|(
 literal|"Unexpected end of line in substitution"
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|BASESYNTAX
+index|[
+name|c
+index|]
+operator|!=
+name|CCTL
+condition|)
 name|USTPUTC
 argument_list|(
 name|c
@@ -8104,6 +8153,15 @@ argument_list|,
 name|out
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|BASESYNTAX
+index|[
+name|c
+index|]
+operator|!=
+name|CCTL
+condition|)
 name|STPUTC
 argument_list|(
 name|c
@@ -9540,7 +9598,7 @@ argument_list|()
 argument_list|,
 name|DQSYNTAX
 argument_list|,
-literal|""
+name|NOEOFMARK
 argument_list|,
 literal|0
 argument_list|)

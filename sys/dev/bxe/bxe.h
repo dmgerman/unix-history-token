@@ -2547,6 +2547,13 @@ parameter_list|)
 value|mtx_assert(&fp->tx_mtx, MA_OWNED)
 define|#
 directive|define
+name|BXE_FP_TX_TRYLOCK
+parameter_list|(
+name|fp
+parameter_list|)
+value|mtx_trylock(&fp->tx_mtx)
+define|#
+directive|define
 name|BXE_FP_RX_LOCK
 parameter_list|(
 name|fp

@@ -2491,11 +2491,13 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|LOCK_DEBUG
-end_ifdef
+operator|>
+literal|0
+end_if
 
 begin_function
 name|void
@@ -2633,10 +2635,10 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+name|TD_LOCKS_INC
+argument_list|(
 name|curthread
-operator|->
-name|td_locks
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2730,10 +2732,10 @@ argument_list|(
 name|rm
 argument_list|)
 expr_stmt|;
+name|TD_LOCKS_DEC
+argument_list|(
 name|curthread
-operator|->
-name|td_locks
-operator|--
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2993,10 +2995,10 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+name|TD_LOCKS_INC
+argument_list|(
 name|curthread
-operator|->
-name|td_locks
-operator|++
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -3131,10 +3133,10 @@ argument_list|,
 name|tracker
 argument_list|)
 expr_stmt|;
+name|TD_LOCKS_DEC
+argument_list|(
 name|curthread
-operator|->
-name|td_locks
-operator|--
+argument_list|)
 expr_stmt|;
 block|}
 end_function

@@ -275,8 +275,7 @@ name|sc
 parameter_list|,
 name|m
 parameter_list|)
-define|\
-value|((sc->sc_debug& (m)) || \ 	    (sc->sc_ifp->if_flags& (IFF_DEBUG|IFF_LINK2)) == (IFF_DEBUG|IFF_LINK2))
+value|(sc->sc_debug& (m))
 end_define
 
 begin_define
@@ -428,8 +427,7 @@ name|sc
 parameter_list|,
 name|m
 parameter_list|)
-define|\
-value|((sc->sc_ifp->if_flags& (IFF_DEBUG|IFF_LINK2)) == (IFF_DEBUG|IFF_LINK2))
+value|(0)
 end_define
 
 begin_define

@@ -38109,7 +38109,7 @@ literal|0x0e
 block|,
 name|T4FW_VERSION_MICRO
 init|=
-literal|0x02
+literal|0x04
 block|,
 name|T4FW_VERSION_BUILD
 init|=
@@ -38125,7 +38125,7 @@ literal|0x0e
 block|,
 name|T5FW_VERSION_MICRO
 init|=
-literal|0x02
+literal|0x04
 block|,
 name|T5FW_VERSION_BUILD
 init|=

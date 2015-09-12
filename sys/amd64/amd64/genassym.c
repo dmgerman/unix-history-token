@@ -501,16 +501,6 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|KSTACK_PAGES
-argument_list|,
-name|KSTACK_PAGES
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ASSYM
-argument_list|(
 name|PAGE_SIZE
 argument_list|,
 name|PAGE_SIZE

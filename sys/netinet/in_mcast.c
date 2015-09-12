@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -55,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rmlock.h>
 end_include
 
 begin_include
@@ -7824,6 +7836,10 @@ name|sopt
 parameter_list|)
 block|{
 name|struct
+name|rm_priotracker
+name|in_ifa_tracker
+decl_stmt|;
+name|struct
 name|ip_mreqn
 name|mreqn
 decl_stmt|;
@@ -8032,6 +8048,9 @@ argument_list|(
 name|ifp
 argument_list|,
 name|ia
+argument_list|,
+operator|&
+name|in_ifa_tracker
 argument_list|)
 expr_stmt|;
 if|if
@@ -8352,6 +8371,10 @@ name|ina
 parameter_list|)
 block|{
 name|struct
+name|rm_priotracker
+name|in_ifa_tracker
+decl_stmt|;
+name|struct
 name|ifnet
 modifier|*
 name|ifp
@@ -8514,7 +8537,10 @@ operator|=
 name|NULL
 expr_stmt|;
 name|IN_IFADDR_RLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -8559,7 +8585,10 @@ break|break;
 block|}
 block|}
 name|IN_IFADDR_RUNLOCK
-argument_list|()
+argument_list|(
+operator|&
+name|in_ifa_tracker
+argument_list|)
 expr_stmt|;
 block|}
 block|}

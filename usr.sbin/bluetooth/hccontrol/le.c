@@ -453,7 +453,7 @@ name|strcmp
 argument_list|(
 name|argv
 index|[
-literal|0
+literal|3
 index|]
 argument_list|,
 literal|"random"

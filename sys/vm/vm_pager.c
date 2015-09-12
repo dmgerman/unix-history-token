@@ -130,6 +130,14 @@ begin_comment
 comment|/* unlimited to begin with */
 end_comment
 
+begin_decl_stmt
+name|struct
+name|buf
+modifier|*
+name|swbuf
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int

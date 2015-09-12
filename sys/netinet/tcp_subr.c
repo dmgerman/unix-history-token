@@ -1144,6 +1144,20 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|tcp_mtudisc
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|tcp_log_addr
@@ -1722,6 +1736,9 @@ name|curvnet
 argument_list|)
 condition|)
 return|return;
+name|tcp_reass_global_init
+argument_list|()
+expr_stmt|;
 comment|/* XXX virtualize those bellow? */
 name|tcp_delacktime
 operator|=
@@ -3980,7 +3997,7 @@ argument_list|(
 name|vnet_iter
 argument_list|)
 expr_stmt|;
-name|INP_INFO_RLOCK
+name|INP_INFO_WLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4077,7 +4094,7 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_RUNLOCK
+name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4128,7 +4145,7 @@ name|t_inpcb
 operator|->
 name|inp_socket
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_LOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4758,7 +4775,7 @@ operator|->
 name|t_vnet
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4878,7 +4895,7 @@ name|inp
 argument_list|)
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4895,7 +4912,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4937,7 +4954,7 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_LOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5110,7 +5127,7 @@ modifier|*
 name|tcpb
 decl_stmt|;
 comment|/* 	 * Walk the tcpbs, if existing, and flush the reassembly queue, 	 * if there is one... 	 * XXX: The "Net/3" implementation doesn't imply that the TCP 	 *      reassembly queue should be flushed, but in a situation 	 *	where we're really low on mbufs, this is potentially 	 *	useful. 	 */
-name|INP_INFO_RLOCK
+name|INP_INFO_WLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5170,7 +5187,7 @@ name|inpb
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_RUNLOCK
+name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5211,7 +5228,7 @@ name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_LOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5467,7 +5484,7 @@ name|EPERM
 operator|)
 return|;
 comment|/* 	 * OK, now we're committed to doing something. 	 */
-name|INP_INFO_RLOCK
+name|INP_LIST_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5485,7 +5502,7 @@ name|V_tcbinfo
 operator|.
 name|ipi_count
 expr_stmt|;
-name|INP_INFO_RUNLOCK
+name|INP_LIST_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5629,7 +5646,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|INP_INFO_RLOCK
+name|INP_INFO_WLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5768,7 +5785,7 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_RUNLOCK
+name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6048,7 +6065,7 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6094,7 +6111,7 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6107,7 +6124,7 @@ name|error
 condition|)
 block|{
 comment|/* 		 * Give the user an updated idea of our state. 		 * If the generation differs from what we told 		 * her before, she knows that something happened 		 * while we were processing this request, and it 		 * might be necessary to retry. 		 */
-name|INP_INFO_RLOCK
+name|INP_LIST_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6137,7 +6154,7 @@ name|ipi_count
 operator|+
 name|pcb_count
 expr_stmt|;
-name|INP_INFO_RUNLOCK
+name|INP_LIST_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -7103,7 +7120,7 @@ literal|2
 operator|)
 operator|)
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -7406,7 +7423,7 @@ name|th
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -7793,7 +7810,7 @@ name|inc_flags
 operator||=
 name|INC_ISIPV6
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -7808,7 +7825,7 @@ operator|&
 name|th
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -8363,7 +8380,7 @@ name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -8466,8 +8483,6 @@ name|int
 name|error
 parameter_list|)
 block|{
-return|return
-operator|(
 name|tcp_mtudisc
 argument_list|(
 name|inp
@@ -8475,15 +8490,18 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|inp
 operator|)
 return|;
 block|}
 end_function
 
 begin_function
-name|struct
-name|inpcb
-modifier|*
+specifier|static
+name|void
 name|tcp_mtudisc
 parameter_list|(
 name|struct
@@ -8528,11 +8546,7 @@ operator|&
 name|INP_DROPPED
 operator|)
 condition|)
-return|return
-operator|(
-name|inp
-operator|)
-return|;
+return|return;
 name|tp
 operator|=
 name|intotcpcb
@@ -8662,11 +8676,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|inp
-operator|)
-return|;
 block|}
 end_function
 
@@ -11120,7 +11129,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -11321,7 +11330,7 @@ name|error
 operator|=
 name|ESRCH
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo

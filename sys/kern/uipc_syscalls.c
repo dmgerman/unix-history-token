@@ -7137,6 +7137,25 @@ operator|->
 name|how
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Previous versions did not return ENOTCONN, but 0 in 		 * case the socket was not connected. Some important 		 * programs like syslogd up to r279016, 2015-02-19, 		 * still depend on this behavior. 		 */
+if|if
+condition|(
+name|error
+operator|==
+name|ENOTCONN
+operator|&&
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_osrel
+operator|<
+name|P_OSREL_SHUTDOWN_ENOTCONN
+condition|)
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|fdrop
 argument_list|(
 name|fp

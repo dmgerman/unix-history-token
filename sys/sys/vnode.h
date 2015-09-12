@@ -1700,6 +1700,19 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|mount
+modifier|*
+name|rootdevmp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* "/dev" mount */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|async_io_version
 decl_stmt|;
@@ -2622,6 +2635,16 @@ end_typedef
 begin_comment
 comment|/* cache_* may belong in namei.h. */
 end_comment
+
+begin_function_decl
+name|void
+name|cache_changesize
+parameter_list|(
+name|int
+name|newhashsize
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -5056,14 +5079,6 @@ name|default_vnodeops
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|vop_vector
-name|devfs_specops
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -5148,6 +5163,16 @@ name|arg
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_function_decl
+name|void
+name|vfs_hash_changesize
+parameter_list|(
+name|int
+name|newhashsize
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

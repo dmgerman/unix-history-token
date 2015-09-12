@@ -188,6 +188,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
 begin_function_decl
 specifier|extern
 name|int
@@ -815,7 +821,7 @@ argument_list|,
 name|SIGURG
 argument_list|)
 expr_stmt|;
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,
@@ -921,7 +927,7 @@ argument_list|(
 name|res
 argument_list|)
 expr_stmt|;
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -1041,7 +1047,7 @@ argument_list|(
 name|res
 argument_list|)
 expr_stmt|;
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -1795,7 +1801,7 @@ goto|goto
 name|bad2
 goto|;
 block|}
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -1845,7 +1851,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,

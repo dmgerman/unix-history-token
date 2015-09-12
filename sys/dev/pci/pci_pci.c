@@ -4980,7 +4980,11 @@ break|break;
 block|}
 endif|#
 directive|endif
-comment|/*      * The i82380FB mobile docking controller is a PCI-PCI bridge,      * and it is a subtractive bridge.  However, the ProgIf is wrong      * so the normal setting of PCIB_SUBTRACTIVE bit doesn't      * happen.  There's also a Toshiba bridge that behaves this      * way.      */
+comment|/*      * The i82380FB mobile docking controller is a PCI-PCI bridge,      * and it is a subtractive bridge.  However, the ProgIf is wrong      * so the normal setting of PCIB_SUBTRACTIVE bit doesn't      * happen.  There are also Toshiba and Cavium ThunderX bridges      * that behave this way.      */
+case|case
+literal|0xa002177d
+case|:
+comment|/* Cavium ThunderX */
 case|case
 literal|0x124b8086
 case|:

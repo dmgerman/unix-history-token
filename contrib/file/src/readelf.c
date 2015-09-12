@@ -18,7 +18,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: readelf.c,v 1.119 2015/04/09 20:01:41 christos Exp $"
+literal|"@(#)$File: readelf.c,v 1.120 2015/06/16 14:18:07 christos Exp $"
 argument_list|)
 end_macro
 
@@ -4886,6 +4886,57 @@ block|{
 case|case
 name|SHT_NOTE
 case|:
+if|if
+condition|(
+name|xsh_size
+operator|+
+operator|(
+name|uintmax_t
+operator|)
+name|xsh_offset
+operator|>
+operator|(
+name|uintmax_t
+operator|)
+name|fsize
+condition|)
+block|{
+if|if
+condition|(
+name|file_printf
+argument_list|(
+name|ms
+argument_list|,
+literal|", note offset/size 0x%jx+0x%jx exceeds"
+literal|" file size 0x%jx"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|xsh_offset
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|xsh_size
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|fsize
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 operator|(

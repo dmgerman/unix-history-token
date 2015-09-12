@@ -16,13 +16,13 @@ name|SVN_VERSION_H
 end_define
 
 begin_comment
-comment|/* Hack to prevent the resource compiler from including    apr_general.h.  It doesn't resolve the include paths    correctly and blows up without this.  */
+comment|/* Hack to prevent the resource compiler from including    apr and other headers. */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|APR_STRINGIFY
+name|SVN_WIN32_RESOURCE_COMPILATION
 end_ifndef
 
 begin_include
@@ -30,11 +30,6 @@ include|#
 directive|include
 file|<apr_general.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -47,6 +42,11 @@ include|#
 directive|include
 file|"svn_types.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -77,7 +77,7 @@ comment|/**  * Patch number.  *  * Modify for every released patch.  *  * @since
 define|#
 directive|define
 name|SVN_VER_PATCH
-value|10
+value|14
 comment|/** @deprecated Provided for backward compatibility with the 1.0 API. */
 define|#
 directive|define
@@ -92,7 +92,7 @@ comment|/** Version tag: a string describing the version.  *  * This tag remains
 define|#
 directive|define
 name|SVN_VER_TAG
-value|" (r1615264)"
+value|" (r1692801)"
 comment|/** Number tag: a string describing the version.  *  * This tag is used to generate a version number string to identify  * the client and server in HTTP requests, for example. It must not  * contain any spaces. This value remains "-dev" in the repository.  *  * When rolling a tarball, we automatically replace this text with ""  * for final releases; in prereleases, it becomes "-alpha1, "-beta1",  * etc., as appropriate.  *  * Always change this at the same time as SVN_VER_TAG.  */
 define|#
 directive|define
@@ -102,7 +102,7 @@ comment|/** Revision number: The repository revision number of this release.  * 
 define|#
 directive|define
 name|SVN_VER_REVISION
-value|1615264
+value|1692801
 comment|/* Version strings composed from the above definitions. */
 comment|/** Version number */
 define|#

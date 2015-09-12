@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2015, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -8064,7 +8064,7 @@ operator|(
 name|dvar
 operator|)
 return|;
-comment|/* 	 * The cas has failed.  Either another CPU is adding an element to 	 * this hash chain, or another CPU is deleting an element from this 	 * hash chain.  The simplest way to deal with both of these cases 	 * (though not necessarily the most efficient) is to free our 	 * allocated block and tail-call ourselves.  Note that the free is 	 * to the dirty list and _not_ to the free list.  This is to prevent 	 * races with allocators, above. 	 */
+comment|/* 	 * The cas has failed.  Either another CPU is adding an element to 	 * this hash chain, or another CPU is deleting an element from this 	 * hash chain.  The simplest way to deal with both of these cases 	 * (though not necessarily the most efficient) is to free our 	 * allocated block and re-attempt it all.  Note that the free is 	 * to the dirty list and _not_ to the free list.  This is to prevent 	 * races with allocators, above. 	 */
 name|dvar
 operator|->
 name|dtdv_hashval
@@ -8106,26 +8106,9 @@ operator|!=
 name|free
 condition|)
 do|;
-return|return
-operator|(
-name|dtrace_dynvar
-argument_list|(
-name|dstate
-argument_list|,
-name|nkeys
-argument_list|,
-name|key
-argument_list|,
-name|dsize
-argument_list|,
-name|op
-argument_list|,
-name|mstate
-argument_list|,
-name|vstate
-argument_list|)
-operator|)
-return|;
+goto|goto
+name|top
+goto|;
 block|}
 end_function
 
@@ -13305,8 +13288,6 @@ operator|->
 name|cr_uid
 operator|)
 return|;
-endif|#
-directive|endif
 comment|/* 		 * It is always safe to dereference one's own t_procp pointer: 		 * it always points to a valid, allocated proc structure. 		 * (This is true because threads don't clean up their own 		 * state -- they leave that task to whomever reaps them.) 		 * 		 * Additionally, it is safe to dereference one's own process 		 * credential, since this is never NULL after process birth. 		 */
 return|return
 operator|(
@@ -13322,6 +13303,22 @@ operator|->
 name|cr_uid
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+operator|(
+name|uint64_t
+operator|)
+name|curthread
+operator|->
+name|td_ucred
+operator|->
+name|cr_uid
+operator|)
+return|;
+endif|#
+directive|endif
 case|case
 name|DIF_VAR_GID
 case|:
@@ -13368,8 +13365,6 @@ operator|->
 name|cr_gid
 operator|)
 return|;
-endif|#
-directive|endif
 comment|/* 		 * It is always safe to dereference one's own t_procp pointer: 		 * it always points to a valid, allocated proc structure. 		 * (This is true because threads don't clean up their own 		 * state -- they leave that task to whomever reaps them.) 		 * 		 * Additionally, it is safe to dereference one's own process 		 * credential, since this is never NULL after process birth. 		 */
 return|return
 operator|(
@@ -13385,6 +13380,22 @@ operator|->
 name|cr_gid
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+operator|(
+name|uint64_t
+operator|)
+name|curthread
+operator|->
+name|td_ucred
+operator|->
+name|cr_gid
+operator|)
+return|;
+endif|#
+directive|endif
 case|case
 name|DIF_VAR_ERRNO
 case|:

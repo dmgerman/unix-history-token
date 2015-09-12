@@ -12643,16 +12643,18 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* 			 * I think passing the state is fine since 			 * sctp_constants.h will be available to the user 			 * land. 			 */
 name|sstat
 operator|->
 name|sstat_state
 operator|=
+name|sctp_map_assoc_state
+argument_list|(
 name|stcb
 operator|->
 name|asoc
 operator|.
 name|state
+argument_list|)
 expr_stmt|;
 name|sstat
 operator|->

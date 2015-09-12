@@ -602,12 +602,35 @@ name|__vm_offset_t
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BOOKE
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|__uint64_t
+name|__vm_paddr_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_typedef
 typedef|typedef
 name|__uint32_t
 name|__vm_paddr_t
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef

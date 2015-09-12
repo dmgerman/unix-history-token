@@ -101,12 +101,6 @@ directive|include
 file|<xen/xenstore/xenstorevar.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/xen/xenvar.h>
-end_include
-
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE

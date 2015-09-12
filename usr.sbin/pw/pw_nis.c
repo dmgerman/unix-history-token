@@ -99,6 +99,13 @@ name|old_pw
 init|=
 name|NULL
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"===> %s\n"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pwd

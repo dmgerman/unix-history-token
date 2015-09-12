@@ -25,12 +25,6 @@ directive|include
 file|<contrib/dev/acpica/include/acdisasm.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DISASSEMBLER
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -1978,11 +1972,6 @@ operator|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

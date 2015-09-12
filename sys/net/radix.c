@@ -2562,7 +2562,7 @@ argument_list|,
 literal|"rn_addmask: mask impossibly already in tree"
 argument_list|)
 expr_stmt|;
-name|Free
+name|R_Free
 argument_list|(
 name|saved_x
 argument_list|)
@@ -4225,7 +4225,7 @@ name|m
 operator|->
 name|rm_mklist
 expr_stmt|;
-name|Free
+name|R_Free
 argument_list|(
 name|m
 argument_list|)
@@ -4700,7 +4700,7 @@ operator|)
 operator|<
 literal|0
 condition|)
-name|Free
+name|R_Free
 argument_list|(
 name|m
 argument_list|)
@@ -5652,7 +5652,7 @@ operator|*
 name|head
 expr_stmt|;
 comment|/* Free<left,root,right> nodes. */
-name|Free
+name|R_Free
 argument_list|(
 name|rnh
 argument_list|)
@@ -5814,7 +5814,7 @@ name|x
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|R_Free
 argument_list|(
 name|x
 argument_list|)
