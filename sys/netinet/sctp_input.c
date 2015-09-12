@@ -2640,11 +2640,15 @@ operator|-
 literal|3
 condition|)
 block|{
-name|size_t
+name|uint16_t
 name|len
 decl_stmt|;
 name|len
 operator|=
+call|(
+name|uint16_t
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -2654,6 +2658,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|uint16_t
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* We abort with an error of missing mandatory param */
