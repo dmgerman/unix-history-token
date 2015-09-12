@@ -411,9 +411,12 @@ begin_comment
 comment|/* DCF77 raw time code */
 end_comment
 
-begin_comment
-comment|/* #undef CLOCK_RAWDCF */
-end_comment
+begin_define
+define|#
+directive|define
+name|CLOCK_RAWDCF
+value|1
+end_define
 
 begin_comment
 comment|/* RCC 8000 clock */
