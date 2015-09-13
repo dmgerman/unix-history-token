@@ -6618,7 +6618,7 @@ argument_list|,
 name|RSU_DEBUG_SCAN
 argument_list|,
 literal|"%s: found BSS %s: len=%d chan=%d inframode=%d "
-literal|"networktype=%d privacy=%d\n"
+literal|"networktype=%d privacy=%d, RSSI=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6664,6 +6664,13 @@ argument_list|(
 name|bss
 operator|->
 name|privacy
+argument_list|)
+argument_list|,
+name|le32toh
+argument_list|(
+name|bss
+operator|->
+name|rssi
 argument_list|)
 argument_list|)
 expr_stmt|;
