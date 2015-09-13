@@ -13433,7 +13433,7 @@ operator||
 name|R92S_USB_HRPWM_PS_ALL_ON
 argument_list|)
 expr_stmt|;
-comment|/* XXX non-configurable psmode? */
+comment|/* Set PS mode fully active */
 name|memset
 argument_list|(
 operator|&
