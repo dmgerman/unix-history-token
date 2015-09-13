@@ -4939,6 +4939,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|RSU_DEBUG_TX
+operator||
+name|RSU_DEBUG_FWCMD
 argument_list|,
 literal|"%s: Tx cmd code=0x%x len=0x%x\n"
 argument_list|,
@@ -7000,9 +7002,17 @@ operator|->
 name|join_res
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"Rx join BSS event len=%d res=%d\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_STATE
+operator||
+name|RSU_DEBUG_FWCMD
+argument_list|,
+literal|"%s: Rx join BSS event len=%d res=%d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|len
 argument_list|,
@@ -7066,9 +7076,17 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"associated with %s associd=%d\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_STATE
+operator||
+name|RSU_DEBUG_FWCMD
+argument_list|,
+literal|"%s: associated with %s associd=%d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -7082,6 +7100,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
+comment|/* XXX is this required? What's the top two bits for again? */
 name|ni
 operator|->
 name|ni_associd
@@ -7161,6 +7180,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|RSU_DEBUG_RX
+operator||
+name|RSU_DEBUG_FWCMD
 argument_list|,
 literal|"%s: Rx event code=%d len=%d\n"
 argument_list|,
@@ -7307,12 +7328,69 @@ name|len
 argument_list|)
 expr_stmt|;
 break|break;
-if|#
-directive|if
-literal|0
-block|XXX This event is occurring regularly, possibly due to some power saving event XXX and disrupts the WLAN traffic. Disable for now. 	case R92S_EVT_DEL_STA: 		DPRINTF("disassociated from %s\n", ether_sprintf(buf)); 		if (vap->iv_state == IEEE80211_S_RUN&& 		    IEEE80211_ADDR_EQ(vap->iv_bss->ni_bssid, buf)) { 			RSU_UNLOCK(sc); 			ieee80211_new_state(vap, IEEE80211_S_SCAN, -1); 			RSU_LOCK(sc); 		} 		break;
-endif|#
-directive|endif
+case|case
+name|R92S_EVT_DEL_STA
+case|:
+name|RSU_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_DEBUG_FWCMD
+operator||
+name|RSU_DEBUG_STATE
+argument_list|,
+literal|"%s: disassociated from %s\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|ether_sprintf
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_state
+operator|==
+name|IEEE80211_S_RUN
+operator|&&
+name|IEEE80211_ADDR_EQ
+argument_list|(
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_bssid
+argument_list|,
+name|buf
+argument_list|)
+condition|)
+block|{
+name|RSU_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ieee80211_new_state
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_S_SCAN
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|RSU_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
 case|case
 name|R92S_EVT_WPS_PBC
 case|:
