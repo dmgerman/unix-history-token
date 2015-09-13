@@ -4925,7 +4925,7 @@ argument_list|(
 literal|"e1000_check_for_link_media_swap"
 argument_list|)
 expr_stmt|;
-comment|/* Check the copper medium. */
+comment|/* Check for copper. */
 name|ret_val
 operator|=
 name|phy
@@ -4981,7 +4981,7 @@ name|port
 operator|=
 name|E1000_MEDIA_PORT_COPPER
 expr_stmt|;
-comment|/* Check the other medium. */
+comment|/* Check for other. */
 name|ret_val
 operator|=
 name|phy
@@ -5018,29 +5018,6 @@ name|E1000_M88E1112_STATUS
 argument_list|,
 operator|&
 name|data
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret_val
-condition|)
-return|return
-name|ret_val
-return|;
-comment|/* reset page to 0 */
-name|ret_val
-operator|=
-name|phy
-operator|->
-name|ops
-operator|.
-name|write_reg
-argument_list|(
-name|hw
-argument_list|,
-name|E1000_M88E1112_PAGE_ADDR
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -5099,15 +5076,72 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-else|else
+if|if
+condition|(
+name|port
+operator|==
+name|E1000_MEDIA_PORT_COPPER
+condition|)
 block|{
+comment|/* reset page to 0 */
 name|ret_val
 operator|=
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_M88E1112_PAGE_ADDR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+return|return
+name|ret_val
+return|;
 name|e1000_check_for_link_82575
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|e1000_check_for_link_82575
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+comment|/* reset page to 0 */
+name|ret_val
+operator|=
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_M88E1112_PAGE_ADDR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+return|return
+name|ret_val
+return|;
 block|}
 return|return
 name|E1000_SUCCESS
@@ -8066,7 +8100,30 @@ name|ms_wait
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
-literal|"e1000_rx_fifo_workaround_82575"
+literal|"e1000_rx_fifo_flush_82575"
+argument_list|)
+expr_stmt|;
+comment|/* disable IPv6 options as per hardware errata */
+name|rfctl
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_RFCTL
+argument_list|)
+expr_stmt|;
+name|rfctl
+operator||=
+name|E1000_RFCTL_IPV6_EX_DIS
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_RFCTL
+argument_list|,
+name|rfctl
 argument_list|)
 expr_stmt|;
 if|if
@@ -8213,15 +8270,6 @@ literal|"Queue disable timed out after 10ms\n"
 argument_list|)
 expr_stmt|;
 comment|/* Clear RLPML, RCTL.SBP, RFCTL.LEF, and set RCTL.LPE so that all 	 * incoming packets are rejected.  Set enable and wait 2ms so that 	 * any packet that was coming in as RCTL.EN was set is flushed 	 */
-name|rfctl
-operator|=
-name|E1000_READ_REG
-argument_list|(
-name|hw
-argument_list|,
-name|E1000_RFCTL
-argument_list|)
-expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -10718,7 +10766,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_eee_i350 - Enable/disable EEE support  *  @hw: pointer to the HW structure  *  *  Enable/disable EEE based on setting in dev_spec structure.  *  **/
+comment|/**  *  e1000_set_eee_i350 - Enable/disable EEE support  *  @hw: pointer to the HW structure  *  @adv1g: boolean flag enabling 1G EEE advertisement  *  @adv100m: boolean flag enabling 100M EEE advertisement  *  *  Enable/disable EEE based on setting in dev_spec structure.  *  **/
 end_comment
 
 begin_function
@@ -10729,6 +10777,12 @@ name|struct
 name|e1000_hw
 modifier|*
 name|hw
+parameter_list|,
+name|bool
+name|adv1G
+parameter_list|,
+name|bool
+name|adv100M
 parameter_list|)
 block|{
 name|u32
@@ -10809,13 +10863,33 @@ argument_list|,
 name|E1000_EEE_SU
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|adv100M
+condition|)
 name|ipcnfg
 operator||=
-operator|(
-name|E1000_IPCNFG_EEE_1G_AN
-operator||
 name|E1000_IPCNFG_EEE_100M_AN
-operator|)
+expr_stmt|;
+else|else
+name|ipcnfg
+operator|&=
+operator|~
+name|E1000_IPCNFG_EEE_100M_AN
+expr_stmt|;
+if|if
+condition|(
+name|adv1G
+condition|)
+name|ipcnfg
+operator||=
+name|E1000_IPCNFG_EEE_1G_AN
+expr_stmt|;
+else|else
+name|ipcnfg
+operator|&=
+operator|~
+name|E1000_IPCNFG_EEE_1G_AN
 expr_stmt|;
 name|eeer
 operator||=
@@ -10904,7 +10978,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_eee_i354 - Enable/disable EEE support  *  @hw: pointer to the HW structure  *  *  Enable/disable EEE legacy mode based on setting in dev_spec structure.  *  **/
+comment|/**  *  e1000_set_eee_i354 - Enable/disable EEE support  *  @hw: pointer to the HW structure  *  @adv1g: boolean flag enabling 1G EEE advertisement  *  @adv100m: boolean flag enabling 100M EEE advertisement  *  *  Enable/disable EEE legacy mode based on setting in dev_spec structure.  *  **/
 end_comment
 
 begin_function
@@ -10915,6 +10989,12 @@ name|struct
 name|e1000_hw
 modifier|*
 name|hw
+parameter_list|,
+name|bool
+name|adv1G
+parameter_list|,
+name|bool
+name|adv100M
 parameter_list|)
 block|{
 name|struct
@@ -11102,10 +11182,32 @@ condition|)
 goto|goto
 name|out
 goto|;
+if|if
+condition|(
+name|adv100M
+condition|)
 name|phy_data
 operator||=
 name|E1000_EEE_ADV_100_SUPPORTED
-operator||
+expr_stmt|;
+else|else
+name|phy_data
+operator|&=
+operator|~
+name|E1000_EEE_ADV_100_SUPPORTED
+expr_stmt|;
+if|if
+condition|(
+name|adv1G
+condition|)
+name|phy_data
+operator||=
+name|E1000_EEE_ADV_1000_SUPPORTED
+expr_stmt|;
+else|else
+name|phy_data
+operator|&=
+operator|~
 name|E1000_EEE_ADV_1000_SUPPORTED
 expr_stmt|;
 name|ret_val

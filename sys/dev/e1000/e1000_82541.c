@@ -567,8 +567,6 @@ name|phy
 decl_stmt|;
 name|s32
 name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -1433,8 +1431,6 @@ name|ledctl
 decl_stmt|,
 name|ctrl
 decl_stmt|,
-name|icr
-decl_stmt|,
 name|manc
 decl_stmt|;
 name|DEBUGFUNC
@@ -1529,6 +1525,11 @@ name|ctrl
 operator||
 name|E1000_CTRL_PHY_RST
 operator|)
+argument_list|)
+expr_stmt|;
+name|E1000_WRITE_FLUSH
+argument_list|(
+name|hw
 argument_list|)
 expr_stmt|;
 name|msec_delay
@@ -1690,8 +1691,6 @@ literal|0xFFFFFFFF
 argument_list|)
 expr_stmt|;
 comment|/* Clear any pending interrupt events. */
-name|icr
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
