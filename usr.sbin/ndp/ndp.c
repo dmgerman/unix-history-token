@@ -295,19 +295,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-name|ntop_buf
-index|[
-name|INET6_ADDRSTRLEN
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* inet_ntop() */
-end_comment
-
-begin_decl_stmt
+specifier|static
 name|char
 name|host_buf
 index|[
@@ -321,6 +309,7 @@ comment|/* getnameinfo() */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|ifix_buf
 index|[
@@ -334,19 +323,6 @@ comment|/* if_indextoname() */
 end_comment
 
 begin_function_decl
-name|int
-name|main
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|int
 name|file
@@ -358,6 +334,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|getsocket
 parameter_list|(
@@ -367,6 +344,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|set
 parameter_list|(
@@ -380,6 +358,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|get
 parameter_list|(
@@ -390,6 +369,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|delete
 parameter_list|(
@@ -400,11 +380,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|dump
 parameter_list|(
 name|struct
-name|in6_addr
+name|sockaddr_in6
 modifier|*
 parameter_list|,
 name|int
@@ -444,6 +425,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ndp_ether_aton
 parameter_list|(
@@ -457,6 +439,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -466,6 +449,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|rtmsg
 parameter_list|(
@@ -475,6 +459,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ifinfo
 parameter_list|(
@@ -491,6 +476,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|rtrlist
 parameter_list|(
@@ -500,6 +486,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|plist
 parameter_list|(
@@ -509,6 +496,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pfx_flush
 parameter_list|(
@@ -518,6 +506,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|rtr_flush
 parameter_list|(
@@ -527,6 +516,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|harmonize_rtr
 parameter_list|(
@@ -618,42 +608,31 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function
 name|int
+name|main
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+block|{
+name|int
+name|ch
+decl_stmt|,
 name|mode
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|arg
 init|=
 name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|int
-name|main
-parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
-name|int
-name|argc
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|argv
-decl_stmt|;
-block|{
-name|int
-name|ch
 decl_stmt|;
 name|pid
 operator|=
@@ -1156,12 +1135,10 @@ specifier|static
 name|int
 name|file
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -1441,6 +1418,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|getsocket
 parameter_list|()
@@ -1484,64 +1462,99 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_in6
 name|so_mask
 init|=
 block|{
+operator|.
+name|sin6_len
+operator|=
 sizeof|sizeof
 argument_list|(
 name|so_mask
 argument_list|)
 block|,
+operator|.
+name|sin6_family
+operator|=
 name|AF_INET6
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_in6
 name|blank_sin
 init|=
 block|{
+operator|.
+name|sin6_len
+operator|=
 sizeof|sizeof
 argument_list|(
 name|blank_sin
 argument_list|)
 block|,
+operator|.
+name|sin6_family
+operator|=
 name|AF_INET6
 block|}
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|sockaddr_in6
 name|sin_m
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_dl
 name|blank_sdl
 init|=
 block|{
+operator|.
+name|sdl_len
+operator|=
 sizeof|sizeof
 argument_list|(
 name|blank_sdl
 argument_list|)
 block|,
+operator|.
+name|sdl_family
+operator|=
 name|AF_LINK
 block|}
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|sockaddr_dl
 name|sdl_m
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|time_t
 name|expire_time
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|flags
 decl_stmt|,
@@ -1550,6 +1563,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_struct
+specifier|static
 struct|struct
 block|{
 name|struct
@@ -1572,21 +1586,18 @@ comment|/*  * Set an individual neighbor cache entry  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|set
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -2053,15 +2064,14 @@ comment|/*  * Display an individual neighbor cache entry  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|get
 parameter_list|(
-name|host
-parameter_list|)
 name|char
 modifier|*
 name|host
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sockaddr_in6
@@ -2155,12 +2165,26 @@ operator|)
 operator|->
 name|sin6_addr
 expr_stmt|;
-name|dump
-argument_list|(
-operator|&
 name|sin
 operator|->
-name|sin6_addr
+name|sin6_scope_id
+operator|=
+operator|(
+operator|(
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|)
+name|res
+operator|->
+name|ai_addr
+operator|)
+operator|->
+name|sin6_scope_id
+expr_stmt|;
+name|dump
+argument_list|(
+name|sin
 argument_list|,
 literal|0
 argument_list|)
@@ -2228,15 +2252,14 @@ comment|/*  * Delete a neighbor cache entry  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|delete
 parameter_list|(
-name|host
-parameter_list|)
 name|char
 modifier|*
 name|host
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sockaddr_in6
@@ -2605,21 +2628,18 @@ comment|/*  * Dump the entire neighbor cache  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|dump
 parameter_list|(
-name|addr
-parameter_list|,
-name|cflag
-parameter_list|)
 name|struct
-name|in6_addr
+name|sockaddr_in6
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|,
 name|int
 name|cflag
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|mib
@@ -2980,16 +3000,28 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|IN6_ARE_ADDR_EQUAL
 argument_list|(
+operator|&
 name|addr
+operator|->
+name|sin6_addr
 argument_list|,
 operator|&
 name|sin
 operator|->
 name|sin6_addr
 argument_list|)
+operator|==
+literal|0
+operator|||
+name|addr
+operator|->
+name|sin6_scope_id
+operator|!=
+name|sin
+operator|->
+name|sin6_scope_id
 condition|)
 continue|continue;
 name|found_entry
@@ -3630,23 +3662,17 @@ name|in6_nbrinfo
 modifier|*
 name|getnbrinfo
 parameter_list|(
-name|addr
-parameter_list|,
-name|ifindex
-parameter_list|,
-name|warning
-parameter_list|)
 name|struct
 name|in6_addr
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|,
 name|int
 name|ifindex
-decl_stmt|;
+parameter_list|,
 name|int
 name|warning
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|struct
@@ -3778,10 +3804,6 @@ index|[
 name|NI_MAXHOST
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 if|if
 condition|(
 name|sdl
@@ -3882,21 +3904,18 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ndp_ether_aton
 parameter_list|(
-name|a
-parameter_list|,
-name|n
-parameter_list|)
 name|char
 modifier|*
 name|a
-decl_stmt|;
+parameter_list|,
 name|u_char
 modifier|*
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -4005,6 +4024,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -4063,14 +4083,13 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|rtmsg
 parameter_list|(
-name|cmd
-parameter_list|)
 name|int
 name|cmd
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -4392,27 +4411,22 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ifinfo
 parameter_list|(
-name|ifname
-parameter_list|,
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|char
 modifier|*
 name|ifname
-decl_stmt|;
+parameter_list|,
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|in6_ndireq
@@ -5122,6 +5136,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|void
 name|rtrlist
 parameter_list|()
@@ -5474,6 +5489,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|plist
 parameter_list|()
@@ -6148,6 +6164,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pfx_flush
 parameter_list|()
@@ -6228,6 +6245,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|rtr_flush
 parameter_list|()
@@ -6313,6 +6331,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|harmonize_rtr
 parameter_list|()
@@ -6412,12 +6431,10 @@ specifier|static
 name|void
 name|setdefif
 parameter_list|(
-name|ifname
-parameter_list|)
 name|char
 modifier|*
 name|ifname
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|in6_ndifreq
@@ -6710,11 +6727,9 @@ name|char
 modifier|*
 name|sec2str
 parameter_list|(
-name|total
-parameter_list|)
 name|time_t
 name|total
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -6961,14 +6976,12 @@ specifier|static
 name|void
 name|ts_print
 parameter_list|(
-name|tvp
-parameter_list|)
 specifier|const
 name|struct
 name|timeval
 modifier|*
 name|tvp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|s
