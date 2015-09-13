@@ -2327,6 +2327,11 @@ name|struct
 name|port
 modifier|*
 name|port
+parameter_list|,
+name|struct
+name|port
+modifier|*
+name|old
 parameter_list|)
 function_decl|;
 end_function_decl
