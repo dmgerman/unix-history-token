@@ -1240,11 +1240,6 @@ name|fetd_status
 decl_stmt|;
 comment|/* trans status, set by FETD, 						0 = good*/
 name|struct
-name|ctl_lba_len
-name|lbalen
-decl_stmt|;
-comment|/* used for stats */
-name|struct
 name|scsi_sense_data
 name|sense_data
 decl_stmt|;
