@@ -445,6 +445,18 @@ end_expr_stmt
 begin_expr_stmt
 name|VT_SYSCTL_INT
 argument_list|(
+name|enable_bell
+argument_list|,
+literal|1
+argument_list|,
+literal|"Enable bell"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VT_SYSCTL_INT
+argument_list|(
 name|debug
 argument_list|,
 literal|0
@@ -4626,6 +4638,12 @@ name|vw_device
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|vt_enable_bell
+condition|)
+return|return;
+if|if
+condition|(
 name|vd
 operator|->
 name|vd_flags
@@ -4664,6 +4682,12 @@ name|freq
 decl_stmt|,
 name|period
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|vt_enable_bell
+condition|)
+return|return;
 if|if
 condition|(
 operator|(
