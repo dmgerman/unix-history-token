@@ -63,7 +63,7 @@ value|32
 end_define
 
 begin_comment
-comment|/**  * The maximum number of outstanding requests blocks (request headers plus  * additional segment blocks) we will allow in a negotiated block-front/back  * communication channel.  */
+comment|/**  * The maximum number of outstanding requests we will allow in a negotiated  * block-front/back communication channel.  */
 end_comment
 
 begin_define
@@ -84,18 +84,6 @@ directive|define
 name|XBD_MAX_REQUEST_SIZE
 define|\
 value|MIN(MAXPHYS, XBD_SEGS_TO_SIZE(BLKIF_MAX_SEGMENTS_PER_REQUEST))
-end_define
-
-begin_comment
-comment|/**  * The maximum number of segments (within a request header and accompanying  * segment blocks) per request we will allow in a negotiated block-front/back  * communication channel.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XBD_MAX_SEGMENTS_PER_REQUEST
-define|\
-value|(MIN(BLKIF_MAX_SEGMENTS_PER_REQUEST,				\ 	     XBD_SIZE_TO_SEGS(XBD_MAX_REQUEST_SIZE)))
 end_define
 
 begin_typedef
