@@ -8733,7 +8733,9 @@ name|int
 name|rv
 decl_stmt|,
 name|e
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|i
 decl_stmt|;
 for|for
@@ -9208,7 +9210,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|do {	 				\ 	int i;							\ 								\ 	for (i = 0; i< (sizeof(x)/sizeof(x[0])) - 1; i++)	\ 		x[i].mdata = (void *)y;				\ } while (0)
+value|do {	 				\ 	unsigned int i;						\ 								\ 	for (i = 0; i< (sizeof(x)/sizeof(x[0])) - 1; i++)	\ 		x[i].mdata = (void *)y;				\ } while (0)
 name|rv
 operator|=
 name|compat_getstate

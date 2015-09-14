@@ -443,7 +443,7 @@ decl_stmt|;
 name|u_long
 name|setflags
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 if|if
