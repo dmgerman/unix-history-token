@@ -1335,11 +1335,11 @@ operator|&
 name|maxwidths
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|exit
+argument_list|(
 name|rv
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
