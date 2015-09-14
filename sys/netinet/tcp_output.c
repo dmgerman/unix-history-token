@@ -2990,6 +2990,8 @@ operator|(
 name|if_hw_tsomax
 operator|-
 name|hdrlen
+operator|-
+name|max_linkhdr
 operator|)
 expr_stmt|;
 if|if
@@ -3034,6 +3036,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* 				 * Subtract one segment for the LINK 				 * and TCP/IP headers mbuf that will 				 * be prepended to this mbuf chain 				 * after the code in this section 				 * limits the number of mbufs in the 				 * chain to if_hw_tsomaxsegcount. 				 */
+name|if_hw_tsomaxsegcount
+operator|-=
+literal|1
+expr_stmt|;
 name|max_len
 operator|=
 literal|0
