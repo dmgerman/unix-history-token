@@ -9171,6 +9171,10 @@ name|pw_dir
 operator|=
 name|homedir
 expr_stmt|;
+name|edited
+operator|=
+name|true
+expr_stmt|;
 if|if
 condition|(
 name|fstatat
