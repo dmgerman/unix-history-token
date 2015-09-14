@@ -829,6 +829,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LLE_REDIRECT
+value|0x0010
+end_define
+
+begin_comment
+comment|/* installed by redirect; has host rtentry */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LLE_PUB
 value|0x0020
 end_define
