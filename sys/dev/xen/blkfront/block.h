@@ -75,15 +75,42 @@ value|__CONST_RING_SIZE(blkif, PAGE_SIZE * XBD_MAX_RING_PAGES)
 end_define
 
 begin_comment
-comment|/**  * The maximum mapped region size per request we will allow in a negotiated  * block-front/back communication channel.  */
+comment|/**  * The maximum number of blkif segments which can be provided per indirect  * page in an indirect request.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|XBD_MAX_REQUEST_SIZE
+name|XBD_MAX_SEGMENTS_PER_PAGE
 define|\
-value|MIN(MAXPHYS, XBD_SEGS_TO_SIZE(BLKIF_MAX_SEGMENTS_PER_REQUEST))
+value|(PAGE_SIZE / sizeof(struct blkif_request_segment))
+end_define
+
+begin_comment
+comment|/**  * The maximum number of blkif segments which can be provided in an indirect  * request.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XBD_MAX_INDIRECT_SEGMENTS
+define|\
+value|(BLKIF_MAX_INDIRECT_PAGES_PER_REQUEST * XBD_MAX_SEGMENTS_PER_PAGE)
+end_define
+
+begin_comment
+comment|/**  * Compute the number of indirect segment pages required for an I/O with the  * specified number of indirect segments.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XBD_INDIRECT_SEGS_TO_PAGES
+parameter_list|(
+name|segs
+parameter_list|)
+define|\
+value|((segs + XBD_MAX_SEGMENTS_PER_PAGE - 1) / XBD_MAX_SEGMENTS_PER_PAGE)
 end_define
 
 begin_typedef
@@ -199,6 +226,16 @@ decl_stmt|;
 name|xbd_cbcf_t
 modifier|*
 name|cm_complete
+decl_stmt|;
+name|void
+modifier|*
+name|cm_indirectionpages
+decl_stmt|;
+name|grant_ref_t
+name|cm_indirectionrefs
+index|[
+name|BLKIF_MAX_INDIRECT_PAGES_PER_REQUEST
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -374,6 +411,9 @@ name|xbd_max_request_segments
 decl_stmt|;
 name|uint32_t
 name|xbd_max_request_size
+decl_stmt|;
+name|uint32_t
+name|xbd_max_request_indirectpages
 decl_stmt|;
 name|grant_ref_t
 name|xbd_ring_ref
