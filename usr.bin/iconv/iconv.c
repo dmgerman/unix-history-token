@@ -766,6 +766,7 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|opt_f
@@ -793,10 +794,7 @@ name|opt_f
 operator|=
 name|opt_t
 operator|=
-name|strdup
-argument_list|(
 literal|""
-argument_list|)
 expr_stmt|;
 name|setlocale
 argument_list|(
@@ -919,10 +917,7 @@ name|NULL
 condition|)
 name|opt_f
 operator|=
-name|strdup
-argument_list|(
 name|optarg
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -937,10 +932,7 @@ name|NULL
 condition|)
 name|opt_t
 operator|=
-name|strdup
-argument_list|(
 name|optarg
-argument_list|)
 expr_stmt|;
 break|break;
 default|default:
