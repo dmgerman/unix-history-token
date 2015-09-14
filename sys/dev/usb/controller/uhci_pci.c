@@ -693,7 +693,7 @@ literal|"Intel 82372FB/82468GX USB controller"
 operator|)
 return|;
 case|case
-literal|0x3309103c
+literal|0x3300103c
 case|:
 return|return
 operator|(
