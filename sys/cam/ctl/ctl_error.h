@@ -178,6 +178,25 @@ end_function_decl
 
 begin_function_decl
 name|ctl_ua_type
+name|ctl_build_qae
+parameter_list|(
+name|struct
+name|ctl_lun
+modifier|*
+name|lun
+parameter_list|,
+name|uint32_t
+name|initidx
+parameter_list|,
+name|uint8_t
+modifier|*
+name|resp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ctl_ua_type
 name|ctl_build_ua
 parameter_list|(
 name|struct
