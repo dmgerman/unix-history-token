@@ -8461,7 +8461,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Removes ALL lle records for interface address prefix.  * XXXME: That's probably not we really want to do, we need  * to remove address record only and keep other records  * until we determine if given prefix is really going   * to be removed.  */
+comment|/*  * Removes either all lle entries for given @ia, or lle  * corresponding to @ia address.  */
 end_comment
 
 begin_function
@@ -8472,6 +8472,9 @@ name|struct
 name|in6_ifaddr
 modifier|*
 name|ia
+parameter_list|,
+name|int
+name|all
 parameter_list|)
 block|{
 name|struct
@@ -8479,6 +8482,14 @@ name|sockaddr_in6
 name|mask
 decl_stmt|,
 name|addr
+decl_stmt|;
+name|struct
+name|sockaddr
+modifier|*
+name|saddr
+decl_stmt|,
+modifier|*
+name|smask
 decl_stmt|;
 name|struct
 name|ifnet
@@ -8529,10 +8540,8 @@ name|ia_prefixmask
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|lltable_prefix_free
-argument_list|(
-name|AF_INET6
-argument_list|,
+name|saddr
+operator|=
 operator|(
 expr|struct
 name|sockaddr
@@ -8540,7 +8549,9 @@ operator|*
 operator|)
 operator|&
 name|addr
-argument_list|,
+expr_stmt|;
+name|smask
+operator|=
 operator|(
 expr|struct
 name|sockaddr
@@ -8548,8 +8559,35 @@ operator|*
 operator|)
 operator|&
 name|mask
+expr_stmt|;
+if|if
+condition|(
+name|all
+operator|!=
+literal|0
+condition|)
+name|lltable_prefix_free
+argument_list|(
+name|AF_INET6
+argument_list|,
+name|saddr
+argument_list|,
+name|smask
 argument_list|,
 name|LLE_STATIC
+argument_list|)
+expr_stmt|;
+else|else
+name|lltable_delete_addr
+argument_list|(
+name|LLTABLE6
+argument_list|(
+name|ifp
+argument_list|)
+argument_list|,
+name|LLE_IFADDR
+argument_list|,
+name|saddr
 argument_list|)
 expr_stmt|;
 block|}
