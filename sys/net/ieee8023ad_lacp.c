@@ -2976,7 +2976,7 @@ name|fast
 init|=
 name|FALSE
 decl_stmt|;
-comment|/* XXX should be configurable */
+comment|/* Configurable via ioctl */
 name|bzero
 argument_list|(
 operator|(
