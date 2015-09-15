@@ -7880,10 +7880,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* FALLTHROUGH */
-case|case
-name|TCPS_CLOSED
-case|:
 name|tcp_state_change
 argument_list|(
 name|tp
@@ -7891,6 +7887,10 @@ argument_list|,
 name|TCPS_CLOSED
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|TCPS_CLOSED
+case|:
 name|tp
 operator|=
 name|tcp_close
