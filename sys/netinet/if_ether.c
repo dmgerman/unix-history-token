@@ -204,15 +204,29 @@ parameter_list|)
 value|((const struct sockaddr_in *)(s))
 end_define
 
-begin_define
-define|#
-directive|define
-name|SDL
-parameter_list|(
-name|s
-parameter_list|)
-value|((struct sockaddr_dl *)s)
-end_define
+begin_decl_stmt
+specifier|static
+name|struct
+name|timeval
+name|arp_lastlog
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|arp_curpps
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|arp_maxpps
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -570,6 +584,40 @@ literal|"Number of packets to hold per ARP entry"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_link_ether_inet
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|max_log_per_second
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|arp_maxpps
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum number of remotely triggered ARP messages that can be "
+literal|"logged per second"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|ARP_LOG
+parameter_list|(
+name|pri
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {					\ 	if (ppsratecheck(&arp_lastlog,&arp_curpps, arp_maxpps))	\ 		log((pri), "arp: " __VA_ARGS__);			\ } while (0)
+end_define
 
 begin_function_decl
 specifier|static
@@ -2350,6 +2398,11 @@ name|arphdr
 modifier|*
 name|ar
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
 name|char
 modifier|*
 name|layer
@@ -2357,6 +2410,14 @@ decl_stmt|;
 name|int
 name|hlen
 decl_stmt|;
+name|ifp
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -2389,11 +2450,16 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|log
+name|ARP_LOG
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"arp: runt packet -- m_pullup failed\n"
+literal|"packet with short header received on %s\n"
+argument_list|,
+name|if_name
+argument_list|(
+name|ifp
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2429,11 +2495,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|ARP_LOG
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"arp: short header received\n"
+literal|"short packet received on %s\n"
+argument_list|,
+name|if_name
+argument_list|(
+name|ifp
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2547,17 +2618,22 @@ literal|16
 expr_stmt|;
 break|break;
 default|default:
-name|log
+name|ARP_LOG
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"arp: unknown hardware address format (0x%2d)\n"
+literal|"packet with unknown harware format 0x%02d received on %s\n"
 argument_list|,
-name|htons
+name|ntohs
 argument_list|(
 name|ar
 operator|->
 name|ar_hrd
+argument_list|)
+argument_list|,
+name|if_name
+argument_list|(
+name|ifp
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2581,17 +2657,22 @@ operator|->
 name|ar_hln
 condition|)
 block|{
-name|log
+name|ARP_LOG
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"arp: bad %s header length: %d\n"
+literal|"packet with invalid %s address length %d received on %s\n"
 argument_list|,
 name|layer
 argument_list|,
 name|ar
 operator|->
 name|ar_hln
+argument_list|,
+name|if_name
+argument_list|(
+name|ifp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -2685,30 +2766,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|timeval
-name|arp_lastlog
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|arp_curpps
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|arp_maxpps
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -2793,40 +2850,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_net_link_ether_inet
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|max_log_per_second
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|arp_maxpps
-argument_list|,
-literal|0
-argument_list|,
-literal|"Maximum number of remotely triggered ARP messages that can be "
-literal|"logged per second"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|ARP_LOG
-parameter_list|(
-name|pri
-parameter_list|,
-modifier|...
-parameter_list|)
-value|do {					\ 	if (ppsratecheck(&arp_lastlog,&arp_curpps, arp_maxpps))	\ 		log((pri), "arp: " __VA_ARGS__);			\ } while (0)
-end_define
-
 begin_function
 specifier|static
 name|void
@@ -2905,9 +2928,6 @@ name|int
 name|op
 decl_stmt|;
 name|int
-name|req_len
-decl_stmt|;
-name|int
 name|bridged
 init|=
 literal|0
@@ -2974,52 +2994,7 @@ name|is_bridge
 operator|=
 literal|1
 expr_stmt|;
-name|req_len
-operator|=
-name|arphdr_len2
-argument_list|(
-name|ifp
-operator|->
-name|if_addrlen
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|in_addr
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|m_len
-operator|<
-name|req_len
-operator|&&
-operator|(
-name|m
-operator|=
-name|m_pullup
-argument_list|(
-name|m
-argument_list|,
-name|req_len
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|ARP_LOG
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"runt packet -- m_pullup failed\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
+comment|/* 	 * We already have checked that mbuf contains enough contiguous data 	 * to hold entire arp message according to the arp header. 	 */
 name|ah
 operator|=
 name|mtod
