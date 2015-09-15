@@ -2541,7 +2541,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"la %s"
+literal|"%s"
 argument_list|,
 name|ERR_error_string
 argument_list|(
@@ -2575,7 +2575,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"ici: %s"
+literal|"%s"
 argument_list|,
 name|ERR_error_string
 argument_list|(
@@ -2606,7 +2606,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"merde %s"
+literal|"%s"
 argument_list|,
 name|ERR_error_string
 argument_list|(
