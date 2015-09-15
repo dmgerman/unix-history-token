@@ -1962,9 +1962,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|llentry
-modifier|*
+name|void
 name|nd6_cache_lladdr
 parameter_list|(
 name|struct
