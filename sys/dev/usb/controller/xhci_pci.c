@@ -439,6 +439,14 @@ operator|(
 literal|"Intel Wildcat Point USB 3.0 controller"
 operator|)
 return|;
+case|case
+literal|0xa01b177d
+case|:
+return|return
+operator|(
+literal|"Cavium ThunderX USB 3.0 controller"
+operator|)
+return|;
 default|default:
 break|break;
 block|}
