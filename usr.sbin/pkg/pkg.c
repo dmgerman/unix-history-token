@@ -2254,7 +2254,6 @@ name|RSA
 modifier|*
 name|load_rsa_public_key_buf
 parameter_list|(
-specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2359,7 +2358,6 @@ name|char
 modifier|*
 name|sigfile
 parameter_list|,
-specifier|const
 name|unsigned
 name|char
 modifier|*
