@@ -658,9 +658,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|struct
-name|llentry
-modifier|*
+name|void
 name|nd6_free
 parameter_list|(
 name|struct
@@ -2657,9 +2655,6 @@ operator|&
 name|LLE_DELETED
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|nd6_free
 argument_list|(
 name|ln
@@ -2764,9 +2759,6 @@ argument_list|,
 name|LLENTRY_TIMEDOUT
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|nd6_free
 argument_list|(
 name|ln
@@ -2853,9 +2845,6 @@ argument_list|,
 name|LLENTRY_EXPIRED
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|nd6_free
 argument_list|(
 name|ln
@@ -2961,9 +2950,6 @@ argument_list|,
 name|LLENTRY_EXPIRED
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|nd6_free
 argument_list|(
 name|ln
@@ -4419,9 +4405,7 @@ end_comment
 
 begin_function
 specifier|static
-name|struct
-name|llentry
-modifier|*
+name|void
 name|nd6_free
 parameter_list|(
 name|struct
@@ -4433,11 +4417,6 @@ name|int
 name|gc
 parameter_list|)
 block|{
-name|struct
-name|llentry
-modifier|*
-name|next
-decl_stmt|;
 name|struct
 name|nd_defrouter
 modifier|*
@@ -4553,15 +4532,6 @@ operator|*
 name|hz
 argument_list|)
 expr_stmt|;
-name|next
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|ln
-argument_list|,
-name|lle_next
-argument_list|)
-expr_stmt|;
 name|LLE_REMREF
 argument_list|(
 name|ln
@@ -4572,11 +4542,7 @@ argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|next
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -4663,16 +4629,6 @@ name|ln
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Before deleting the entry, remember the next entry as the 	 * return value.  We need this because pfxlist_onlink_check() above 	 * might have freed other entries (particularly the old next entry) as 	 * a side effect (XXX). 	 */
-name|next
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|ln
-argument_list|,
-name|lle_next
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Save to unlock. We still hold an extra reference and will not 	 * free(9) in llentry_free() if someone else holds one as well. 	 */
 name|LLE_WUNLOCK
 argument_list|(
@@ -4699,9 +4655,25 @@ operator|&
 name|LLE_LINKED
 condition|)
 block|{
+comment|/* Remove callout reference */
 name|LLE_REMREF
 argument_list|(
 name|ln
+argument_list|)
+expr_stmt|;
+name|lltable_unlink_entry
+argument_list|(
+name|ln
+operator|->
+name|lle_tbl
+argument_list|,
+name|ln
+argument_list|)
+expr_stmt|;
+block|}
+name|IF_AFDATA_UNLOCK
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 name|llentry_free
@@ -4709,23 +4681,6 @@ argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-name|LLE_FREE_LOCKED
-argument_list|(
-name|ln
-argument_list|)
-expr_stmt|;
-name|IF_AFDATA_UNLOCK
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|next
-operator|)
-return|;
 block|}
 end_function
 
