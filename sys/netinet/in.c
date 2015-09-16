@@ -3665,6 +3665,7 @@ name|in_ifaddr
 modifier|*
 name|eia
 decl_stmt|;
+comment|/* 		 * XXXME: add fib-aware in_localip. 		 * We definitely don't want to switch between 		 * prefixes in different fibs. 		 */
 name|eia
 operator|=
 name|in_localip_more
@@ -3679,15 +3680,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|int
-name|fibnum
-init|=
-name|target
-operator|->
-name|ia_ifp
-operator|->
-name|if_fib
-decl_stmt|;
 name|error
 operator|=
 name|ifa_switch_loopback_route
@@ -3708,8 +3700,6 @@ operator|&
 name|target
 operator|->
 name|ia_addr
-argument_list|,
-name|fibnum
 argument_list|)
 expr_stmt|;
 name|ifa_free
