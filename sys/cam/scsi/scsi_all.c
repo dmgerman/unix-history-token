@@ -2524,7 +2524,15 @@ comment|/* 98 */
 comment|/* 99 */
 comment|/* 9A */
 comment|/* 9B */
-comment|/* 9C */
+comment|/* 9C  O              WRITE ATOMIC(16) */
+block|{
+literal|0x9C
+block|,
+name|D
+block|,
+literal|"WRITE ATOMIC(16)"
+block|}
+block|,
 comment|/* 9D */
 comment|/* XXX KDM ALL for this?  op-num.txt defines it for none.. */
 comment|/* 9E                  SERVICE ACTION IN(16) */
@@ -5518,7 +5526,7 @@ literal|0x04
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_TUR | SSQ_MANY | SSQ_DECREMENT_COUNT | EBUSY
+argument|SS_WAIT | EBUSY
 argument_list|,
 literal|"Logical unit is in process of becoming ready"
 argument_list|)
@@ -5645,7 +5653,7 @@ literal|0x04
 argument_list|,
 literal|0x0A
 argument_list|,
-argument|SS_TUR | SSQ_MANY | SSQ_DECREMENT_COUNT | ENXIO
+argument|SS_WAIT | ENXIO
 argument_list|,
 literal|"Logical unit not accessible, asymmetric access state transition"
 argument_list|)
@@ -5717,7 +5725,7 @@ literal|0x04
 argument_list|,
 literal|0x11
 argument_list|,
-argument|SS_TUR | SSQ_MANY | SSQ_DECREMENT_COUNT | EBUSY
+argument|SS_WAIT | EBUSY
 argument_list|,
 literal|"Logical unit not ready, notify (enable spinup) required"
 argument_list|)
@@ -17922,19 +17930,6 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
-name|len_to_copy
-operator|=
-name|MIN
-argument_list|(
-name|sense_len
-argument_list|,
-name|SSD_EXTRA_MAX
-operator|-
-name|sense
-operator|->
-name|extra_len
-argument_list|)
-expr_stmt|;
 name|data
 operator|=
 operator|(
@@ -18004,6 +17999,7 @@ name|elem_type
 operator|==
 name|SSD_ELEM_COMMAND
 condition|)
+block|{
 name|data_dest
 operator|=
 operator|&
@@ -18014,6 +18010,21 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|len_to_copy
+operator|=
+name|MIN
+argument_list|(
+name|sense_len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sense
+operator|->
+name|cmd_spec_info
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|data_dest
@@ -18025,6 +18036,20 @@ name|info
 index|[
 literal|0
 index|]
+expr_stmt|;
+name|len_to_copy
+operator|=
+name|MIN
+argument_list|(
+name|sense_len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sense
+operator|->
+name|info
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* 					 * We're setting the info field, so 					 * set the valid bit. 					 */
 name|sense

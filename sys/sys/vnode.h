@@ -4786,6 +4786,20 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vop_reclaim_post
+parameter_list|(
+name|void
+modifier|*
+name|a
+parameter_list|,
+name|int
+name|rc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vop_remove_post
 parameter_list|(
 name|void

@@ -101,6 +101,26 @@ name|G_TYPE_NUMBER
 block|}
 block|,
 block|{
+literal|'p'
+block|,
+literal|"stripesize"
+block|,
+literal|"0"
+block|,
+name|G_TYPE_NUMBER
+block|}
+block|,
+block|{
+literal|'P'
+block|,
+literal|"stripeoffset"
+block|,
+literal|"0"
+block|,
+name|G_TYPE_NUMBER
+block|}
+block|,
+block|{
 literal|'r'
 block|,
 literal|"rfailprob"
@@ -143,8 +163,8 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"[-v] [-e error] [-o offset] [-r rfailprob] [-s size] "
-literal|"[-S secsize] [-w wfailprob] dev ..."
+literal|"[-v] [-e error] [-o offset] [-p stripesize] [-P stripeoffset] "
+literal|"[-r rfailprob] [-s size] [-S secsize] [-w wfailprob] dev ..."
 block|}
 block|,
 block|{

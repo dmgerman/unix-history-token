@@ -7172,6 +7172,13 @@ argument_list|,
 name|l_next
 argument_list|)
 expr_stmt|;
+name|lun
+operator|->
+name|l_ctl_lun
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|lun
@@ -9906,6 +9913,8 @@ operator|=
 name|kernel_port_update
 argument_list|(
 name|newport
+argument_list|,
+name|oldport
 argument_list|)
 expr_stmt|;
 block|}

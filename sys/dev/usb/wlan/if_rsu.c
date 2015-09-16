@@ -290,10 +290,120 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|RSU_DPRINTF
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_flg
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|do								\ 		if (((_flg) == (RSU_DEBUG_ANY)) || (rsu_debug& (_flg))) \ 			device_printf((_sc)->sc_dev, __VA_ARGS__);	\ 	while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|RSU_DPRINTF
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_flg
+parameter_list|,
+modifier|...
+parameter_list|)
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|RSU_DEBUG_ANY
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSU_DEBUG_TX
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSU_DEBUG_RX
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSU_DEBUG_RESET
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSU_DEBUG_CALIB
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSU_DEBUG_STATE
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSU_DEBUG_SCAN
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSU_DEBUG_FWCMD
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSU_DEBUG_TXDONE
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSU_DEBUG_FW
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSU_DEBUG_FWDBG
+value|0x00000200
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -1879,6 +1989,31 @@ end_function
 begin_function
 specifier|static
 name|int
+name|rsu_send_mgmt
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|int
+name|arg
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ENOTSUP
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|rsu_attach
 parameter_list|(
 name|device_t
@@ -2236,9 +2371,13 @@ operator|=
 name|IEEE80211_C_STA
 operator||
 comment|/* station mode */
-name|IEEE80211_C_BGSCAN
-operator||
+if|#
+directive|if
+literal|0
+expr|IEEE80211_C_BGSCAN |
 comment|/* Background scan. */
+endif|#
+directive|endif
 name|IEEE80211_C_SHPREAMBLE
 operator||
 comment|/* Short preamble supported. */
@@ -2348,6 +2487,12 @@ operator|->
 name|ic_transmit
 operator|=
 name|rsu_transmit
+expr_stmt|;
+name|ic
+operator|->
+name|ic_send_mgmt
+operator|=
+name|rsu_send_mgmt
 expr_stmt|;
 name|ieee80211_radiotap_attach
 argument_list|(
@@ -4820,11 +4965,17 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|DPRINTFN
+name|RSU_DPRINTF
 argument_list|(
-literal|2
+name|sc
 argument_list|,
-literal|"Tx cmd code=0x%x len=0x%x\n"
+name|RSU_DEBUG_TX
+operator||
+name|RSU_DEBUG_FWCMD
+argument_list|,
+literal|"%s: Tx cmd code=0x%x len=0x%x\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|code
 argument_list|,
@@ -4898,11 +5049,15 @@ decl_stmt|;
 name|uint32_t
 name|reg
 decl_stmt|;
-name|DPRINTFN
+name|RSU_DPRINTF
 argument_list|(
-literal|6
+name|sc
 argument_list|,
-literal|"running calibration task\n"
+name|RSU_DEBUG_CALIB
+argument_list|,
+literal|"%s: running calibration task\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|RSU_LOCK
@@ -4999,11 +5154,15 @@ argument_list|,
 name|R92S_IOCMD_DATA
 argument_list|)
 expr_stmt|;
-name|DPRINTFN
+name|RSU_DPRINTF
 argument_list|(
-literal|8
+name|sc
 argument_list|,
-literal|"RSSI=%d%%\n"
+name|RSU_DEBUG_CALIB
+argument_list|,
+literal|"%s: RSSI=%d%%\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|reg
 operator|>>
@@ -5110,9 +5269,15 @@ name|vap
 operator|->
 name|iv_state
 expr_stmt|;
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"%s -> %s\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_STATE
+argument_list|,
+literal|"%s: %s -> %s\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|ieee80211_state_name
 index|[
@@ -5808,9 +5973,15 @@ name|opmode
 operator|=
 name|NDIS802_11AUTOUNKNOWN
 expr_stmt|;
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"setting operating mode to %d\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_RESET
+argument_list|,
+literal|"%s: setting operating mode to %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|opmode
 argument_list|)
@@ -5891,9 +6062,15 @@ name|mode
 operator|=
 name|R92S_AUTHMODE_OPEN
 expr_stmt|;
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"setting auth mode to %d\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_RESET
+argument_list|,
+literal|"%s: setting auth mode to %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|auth
 operator|.
@@ -6105,6 +6282,7 @@ argument_list|(
 name|NDIS802_11INFRASTRUCTURE
 argument_list|)
 expr_stmt|;
+comment|/* XXX verify how this is supposed to look! */
 name|memcpy
 argument_list|(
 name|bss
@@ -6268,9 +6446,17 @@ operator|~
 literal|3
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"sending join bss command to %s chan %d\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_RESET
+operator||
+name|RSU_DEBUG_FWCMD
+argument_list|,
+literal|"%s: sending join bss command to %s chan %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -6327,9 +6513,17 @@ literal|0
 decl_stmt|;
 comment|/* :-) */
 comment|/* Disassociate from our current BSS. */
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"sending disconnect command\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_STATE
+operator||
+name|RSU_DEBUG_FWCMD
+argument_list|,
+literal|"%s: sending disconnect command\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -6387,14 +6581,13 @@ modifier|*
 name|wh
 decl_stmt|;
 name|struct
-name|ieee80211_channel
-modifier|*
-name|c
-decl_stmt|;
-name|struct
 name|ndis_wlan_bssid_ex
 modifier|*
 name|bss
+decl_stmt|;
+name|struct
+name|ieee80211_rx_stats
+name|rxs
 decl_stmt|;
 name|struct
 name|mbuf
@@ -6448,12 +6641,16 @@ argument_list|)
 argument_list|)
 condition|)
 return|return;
-name|DPRINTFN
+name|RSU_DPRINTF
 argument_list|(
-literal|2
+name|sc
 argument_list|,
-literal|"found BSS %s: len=%d chan=%d inframode=%d "
-literal|"networktype=%d privacy=%d\n"
+name|RSU_DEBUG_SCAN
+argument_list|,
+literal|"%s: found BSS %s: len=%d chan=%d inframode=%d "
+literal|"networktype=%d privacy=%d, RSSI=%d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -6498,9 +6695,17 @@ name|bss
 operator|->
 name|privacy
 argument_list|)
+argument_list|,
+name|le32toh
+argument_list|(
+name|bss
+operator|->
+name|rssi
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Build a fake beacon frame to let net80211 do all the parsing. */
+comment|/* XXX TODO: just call the new scan API methods! */
 name|pktlen
 operator|=
 sizeof|sizeof
@@ -6672,13 +6877,38 @@ name|m_len
 operator|=
 name|pktlen
 expr_stmt|;
-comment|/* Fix the channel. */
-name|c
-operator|=
-name|ieee80211_find_channel_byieee
+comment|/* Set channel flags for input path */
+name|bzero
 argument_list|(
-name|ic
+operator|&
+name|rxs
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rxs
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|rxs
+operator|.
+name|r_flags
+operator||=
+name|IEEE80211_R_IEEE
+operator||
+name|IEEE80211_R_FREQ
+expr_stmt|;
+name|rxs
+operator|.
+name|r_flags
+operator||=
+name|IEEE80211_R_NF
+operator||
+name|IEEE80211_R_RSSI
+expr_stmt|;
+name|rxs
+operator|.
+name|c_ieee
+operator|=
 name|le32toh
 argument_list|(
 name|bss
@@ -6687,47 +6917,52 @@ name|config
 operator|.
 name|dsconfig
 argument_list|)
-argument_list|,
-name|IEEE80211_CHAN_G
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|c
-condition|)
-block|{
-name|ic
-operator|->
-name|ic_curchan
+name|rxs
+operator|.
+name|c_freq
 operator|=
-name|c
-expr_stmt|;
-name|ieee80211_radiotap_chan_change
+name|ieee80211_ieee2mhz
 argument_list|(
-name|ic
+name|rxs
+operator|.
+name|c_ieee
+argument_list|,
+name|IEEE80211_CHAN_2GHZ
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* XXX avoid a LOR */
-name|RSU_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|ieee80211_input_all
-argument_list|(
-name|ic
-argument_list|,
-name|m
-argument_list|,
+name|rxs
+operator|.
+name|rssi
+operator|=
 name|le32toh
 argument_list|(
 name|bss
 operator|->
 name|rssi
 argument_list|)
-argument_list|,
+expr_stmt|;
+name|rxs
+operator|.
+name|nf
+operator|=
 literal|0
+expr_stmt|;
+comment|/* XXX */
+comment|/* XXX avoid a LOR */
+name|RSU_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ieee80211_input_mimo_all
+argument_list|(
+name|ic
+argument_list|,
+name|m
+argument_list|,
+operator|&
+name|rxs
 argument_list|)
 expr_stmt|;
 name|RSU_LOCK
@@ -6834,9 +7069,17 @@ operator|->
 name|join_res
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"Rx join BSS event len=%d res=%d\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_STATE
+operator||
+name|RSU_DEBUG_FWCMD
+argument_list|,
+literal|"%s: Rx join BSS event len=%d res=%d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|len
 argument_list|,
@@ -6900,9 +7143,17 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"associated with %s associd=%d\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_STATE
+operator||
+name|RSU_DEBUG_FWCMD
+argument_list|,
+literal|"%s: associated with %s associd=%d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -6916,6 +7167,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
+comment|/* XXX is this required? What's the top two bits for again? */
 name|ni
 operator|->
 name|ni_associd
@@ -6990,11 +7242,17 @@ operator|->
 name|ic_vaps
 argument_list|)
 decl_stmt|;
-name|DPRINTFN
+name|RSU_DPRINTF
 argument_list|(
-literal|4
+name|sc
 argument_list|,
-literal|"Rx event code=%d len=%d\n"
+name|RSU_DEBUG_RX
+operator||
+name|RSU_DEBUG_FWCMD
+argument_list|,
+literal|"%s: Rx event code=%d len=%d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|code
 argument_list|,
@@ -7030,9 +7288,15 @@ break|break;
 case|case
 name|R92S_EVT_SURVEY_DONE
 case|:
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"site survey pass %d done, found %d BSS\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_SCAN
+argument_list|,
+literal|"%s: site survey pass %d done, found %d BSS\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|sc
 operator|->
@@ -7131,35 +7395,89 @@ name|len
 argument_list|)
 expr_stmt|;
 break|break;
-if|#
-directive|if
-literal|0
-block|XXX This event is occurring regularly, possibly due to some power saving event XXX and disrupts the WLAN traffic. Disable for now. 	case R92S_EVT_DEL_STA: 		DPRINTF("disassociated from %s\n", ether_sprintf(buf)); 		if (vap->iv_state == IEEE80211_S_RUN&& 		    IEEE80211_ADDR_EQ(vap->iv_bss->ni_bssid, buf)) { 			RSU_UNLOCK(sc); 			ieee80211_new_state(vap, IEEE80211_S_SCAN, -1); 			RSU_LOCK(sc); 		} 		break;
-endif|#
-directive|endif
+case|case
+name|R92S_EVT_DEL_STA
+case|:
+name|RSU_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_DEBUG_FWCMD
+operator||
+name|RSU_DEBUG_STATE
+argument_list|,
+literal|"%s: disassociated from %s\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|ether_sprintf
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_state
+operator|==
+name|IEEE80211_S_RUN
+operator|&&
+name|IEEE80211_ADDR_EQ
+argument_list|(
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_bssid
+argument_list|,
+name|buf
+argument_list|)
+condition|)
+block|{
+name|RSU_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ieee80211_new_state
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_S_SCAN
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|RSU_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
 case|case
 name|R92S_EVT_WPS_PBC
 case|:
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"WPS PBC pushed.\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_RX
+operator||
+name|RSU_DEBUG_FWCMD
+argument_list|,
+literal|"%s: WPS PBC pushed.\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|R92S_EVT_FWDBG
 case|:
-if|if
-condition|(
-name|vap
-operator|->
-name|iv_ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_DEBUG
-condition|)
-block|{
 name|buf
 index|[
 literal|60
@@ -7167,8 +7485,12 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|printf
+name|RSU_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RSU_DEBUG_FWDBG
+argument_list|,
 literal|"FWDBG: %s\n"
 argument_list|,
 operator|(
@@ -7178,9 +7500,21 @@ operator|)
 name|buf
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 default|default:
+name|RSU_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_DEBUG_ANY
+argument_list|,
+literal|"%s: unhandled code (%d)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -7212,11 +7546,15 @@ decl_stmt|;
 name|int
 name|cmdsz
 decl_stmt|;
-name|DPRINTFN
+name|RSU_DPRINTF
 argument_list|(
-literal|6
+name|sc
 argument_list|,
-literal|"Rx events len=%d\n"
+name|RSU_DEBUG_RX
+argument_list|,
+literal|"%s: Rx events len=%d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|len
 argument_list|)
@@ -7682,11 +8020,15 @@ name|rssi
 operator|=
 literal|0
 expr_stmt|;
-name|DPRINTFN
+name|RSU_DPRINTF
 argument_list|(
-literal|5
+name|sc
 argument_list|,
-literal|"Rx frame len=%d rate=%d infosz=%d rssi=%d\n"
+name|RSU_DEBUG_RX
+argument_list|,
+literal|"%s: Rx frame len=%d rate=%d infosz=%d rssi=%d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|pktlen
 argument_list|,
@@ -8117,11 +8459,15 @@ argument_list|,
 name|R92S_RXDW2_PKTCNT
 argument_list|)
 expr_stmt|;
-name|DPRINTFN
+name|RSU_DPRINTF
 argument_list|(
-literal|6
+name|sc
 argument_list|,
-literal|"Rx %d frames in one chunk\n"
+name|RSU_DEBUG_RX
+argument_list|,
+literal|"%s: Rx %d frames in one chunk\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|npkts
 argument_list|)
@@ -8864,6 +9210,34 @@ modifier|*
 name|data
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
+name|struct
+name|rsu_softc
+modifier|*
+name|sc
+init|=
+name|usbd_xfer_softc
+argument_list|(
+name|xfer
+argument_list|)
+decl_stmt|;
+endif|#
+directive|endif
+name|RSU_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_DEBUG_TXDONE
+argument_list|,
+literal|"%s: called; data=%p\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|data
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|data
@@ -8981,9 +9355,15 @@ condition|)
 goto|goto
 name|tr_setup
 goto|;
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"transfer done %p\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_TXDONE
+argument_list|,
+literal|"%s: transfer done %p\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|data
 argument_list|)
@@ -9046,9 +9426,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"empty pending queue sc %p\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_TXDONE
+argument_list|,
+literal|"%s: empty pending queue sc %p\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|sc
 argument_list|)
@@ -9098,9 +9484,15 @@ operator|->
 name|buflen
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"submitting transfer %p\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_TXDONE
+argument_list|,
+literal|"%s: submitting transfer %p\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|data
 argument_list|)
@@ -9352,6 +9744,21 @@ literal|0
 index|]
 operator|&
 name|IEEE80211_FC0_TYPE_MASK
+expr_stmt|;
+name|RSU_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_DEBUG_TX
+argument_list|,
+literal|"%s: data=%p, m=%p\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|data
+argument_list|,
+name|m0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -11163,9 +11570,17 @@ operator|==
 literal|20
 condition|)
 block|{
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"TxDMA is not ready\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_RESET
+operator||
+name|RSU_DEBUG_TX
+argument_list|,
+literal|"%s: TxDMA is not ready\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* Reset TxDMA. */
@@ -11544,9 +11959,19 @@ argument_list|)
 operator|+
 name|mlen
 expr_stmt|;
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"starting transfer %p\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_TX
+operator||
+name|RSU_DEBUG_FW
+operator||
+name|RSU_DEBUG_RESET
+argument_list|,
+literal|"%s: starting transfer %p\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|data
 argument_list|)
@@ -11657,9 +12082,17 @@ operator|&
 name|R92S_TCR_FWRDY
 condition|)
 block|{
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"Firmware already loaded\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_FW
+operator||
+name|RSU_DEBUG_RESET
+argument_list|,
+literal|"%s: Firmware already loaded\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -13007,9 +13440,15 @@ operator|/
 literal|2
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"setting MAC address to %s\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_RESET
+argument_list|,
+literal|"%s: setting MAC address to %s\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -13061,6 +13500,7 @@ operator||
 name|R92S_USB_HRPWM_PS_ALL_ON
 argument_list|)
 expr_stmt|;
+comment|/* Set PS mode fully active */
 name|memset
 argument_list|(
 operator|&
@@ -13080,9 +13520,15 @@ name|mode
 operator|=
 name|R92S_PS_MODE_ACTIVE
 expr_stmt|;
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-literal|"setting ps mode to %d\n"
+name|sc
+argument_list|,
+name|RSU_DEBUG_RESET
+argument_list|,
+literal|"%s: setting ps mode to %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|cmd
 operator|.

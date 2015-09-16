@@ -3873,7 +3873,7 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|nd6_output
+name|nd6_output_ifp
 argument_list|(
 name|ifp
 argument_list|,
@@ -3882,10 +3882,6 @@ argument_list|,
 name|m
 argument_list|,
 name|dst
-argument_list|,
-name|ro
-operator|->
-name|ro_rt
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4317,7 +4313,7 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|nd6_output
+name|nd6_output_ifp
 argument_list|(
 name|ifp
 argument_list|,
@@ -4326,10 +4322,6 @@ argument_list|,
 name|m
 argument_list|,
 name|dst
-argument_list|,
-name|ro
-operator|->
-name|ro_rt
 argument_list|)
 expr_stmt|;
 block|}

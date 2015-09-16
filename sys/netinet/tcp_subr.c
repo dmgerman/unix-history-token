@@ -3394,6 +3394,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|TCP_PROBE3
+argument_list|(
+name|debug__input
+argument_list|,
+name|tp
+argument_list|,
+name|th
+argument_list|,
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -7072,10 +7090,27 @@ return|return;
 if|if
 condition|(
 name|ip
-operator|!=
+operator|==
 name|NULL
 condition|)
 block|{
+name|in_pcbnotifyall
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|,
+name|faddr
+argument_list|,
+name|inetctlerrmap
+index|[
+name|cmd
+index|]
+argument_list|,
+name|notify
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|icp
 operator|=
 operator|(
@@ -7233,7 +7268,7 @@ operator|==
 name|PRC_MSGSIZE
 condition|)
 block|{
-comment|/* 					     * MTU discovery: 					     * If we got a needfrag set the MTU 					     * in the route to the suggested new 					     * value (if given) and then notify. 					     */
+comment|/* 					 * MTU discovery: 					 * If we got a needfrag set the MTU 					 * in the route to the suggested new 					 * value (if given) and then notify. 					 */
 name|bzero
 argument_list|(
 operator|&
@@ -7270,7 +7305,7 @@ operator|->
 name|icmp_nextmtu
 argument_list|)
 expr_stmt|;
-comment|/* 					     * If no alternative MTU was 					     * proposed, try the next smaller 					     * one. 					     */
+comment|/* 					 * If no alternative MTU was 					 * proposed, try the next smaller 					 * one. 					 */
 if|if
 condition|(
 operator|!
@@ -7312,7 +7347,7 @@ expr|struct
 name|tcpiphdr
 argument_list|)
 expr_stmt|;
-comment|/* 					     * Only cache the MTU if it 					     * is smaller than the interface 					     * or route MTU.  tcp_mtudisc() 					     * will do right thing by itself. 					     */
+comment|/* 					 * Only cache the MTU if it 					 * is smaller than the interface 					 * or route MTU.  tcp_mtudisc() 					 * will do right thing by itself. 					 */
 if|if
 condition|(
 name|mtu
@@ -7427,23 +7462,6 @@ name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|in_pcbnotifyall
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|,
-name|faddr
-argument_list|,
-name|inetctlerrmap
-index|[
-name|cmd
-index|]
-argument_list|,
-name|notify
 argument_list|)
 expr_stmt|;
 block|}

@@ -4262,7 +4262,7 @@ name|true
 expr_stmt|;
 break|break;
 case|case
-literal|7
+literal|'7'
 case|:
 name|v7
 operator|=
@@ -9170,6 +9170,10 @@ operator|->
 name|pw_dir
 operator|=
 name|homedir
+expr_stmt|;
+name|edited
+operator|=
+name|true
 expr_stmt|;
 if|if
 condition|(

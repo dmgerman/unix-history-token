@@ -75,6 +75,57 @@ end_define
 begin_define
 define|#
 directive|define
+name|TCP_PROBE2
+parameter_list|(
+name|probe
+parameter_list|,
+name|arg0
+parameter_list|,
+name|arg1
+parameter_list|)
+define|\
+value|SDT_PROBE2(tcp, , , probe, arg0, arg1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCP_PROBE3
+parameter_list|(
+name|probe
+parameter_list|,
+name|arg0
+parameter_list|,
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|)
+define|\
+value|SDT_PROBE3(tcp, , , probe, arg0, arg1, arg2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCP_PROBE4
+parameter_list|(
+name|probe
+parameter_list|,
+name|arg0
+parameter_list|,
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|,
+name|arg3
+parameter_list|)
+define|\
+value|SDT_PROBE4(tcp, , , probe, arg0, arg1, arg2, arg3)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TCP_PROBE5
 parameter_list|(
 name|probe
@@ -246,6 +297,46 @@ argument_list|(
 name|tcp
 argument_list|, , ,
 name|state__change
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DECLARE
+argument_list|(
+name|tcp
+argument_list|, , ,
+name|debug__input
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DECLARE
+argument_list|(
+name|tcp
+argument_list|, , ,
+name|debug__output
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DECLARE
+argument_list|(
+name|tcp
+argument_list|, , ,
+name|debug__user
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DECLARE
+argument_list|(
+name|tcp
+argument_list|, , ,
+name|debug__drop
 argument_list|)
 expr_stmt|;
 end_expr_stmt

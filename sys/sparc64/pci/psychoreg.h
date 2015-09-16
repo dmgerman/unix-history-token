@@ -30,13 +30,6 @@ name|PSYCHO_NINTR
 value|6
 end_define
 
-begin_define
-define|#
-directive|define
-name|PSYCHO_NRANGE
-value|4
-end_define
-
 begin_comment
 comment|/*  * Psycho register offsets  *  * NB: FFB0 and FFB1 intr map regs also appear at 0x6000 and 0x8000  * respectively.  */
 end_comment
@@ -482,7 +475,7 @@ comment|/* FFB1 graphics interrupt map reg */
 end_comment
 
 begin_comment
-comment|/* Note: clear interrupt 0 registers are not really used */
+comment|/* Note: Clear interrupt 0 registers are not really used. */
 end_comment
 
 begin_define
@@ -959,7 +952,7 @@ comment|/* Streaming buffer diag regs */
 end_comment
 
 begin_comment
-comment|/*  * Here is the rest of the map, which we're not specifying:  *  * 1fe.0100.0000 - 1fe.01ff.ffff	PCI configuration space  * 1fe.0100.0000 - 1fe.0100.00ff	PCI B configuration header  * 1fe.0101.0000 - 1fe.0101.00ff	PCI A configuration header  * 1fe.0200.0000 - 1fe.0200.ffff	PCI A I/O space  * 1fe.0201.0000 - 1fe.0201.ffff	PCI B I/O space  * 1ff.0000.0000 - 1ff.7fff.ffff	PCI A memory space  * 1ff.8000.0000 - 1ff.ffff.ffff	PCI B memory space  *  * NB: config and I/O space can use 1-4 byte accesses, not 8 byte  * accesses.  Memory space can use any sized accesses.  *  * Note that the SUNW,sabre/SUNW,simba combinations found on the  * Ultra5 and Ultra10 machines uses slightly differrent addresses  * than the above.  This is mostly due to the fact that the APB is  * a multi-function PCI device with two PCI bridges, and the U2P is  * two separate PCI bridges.  It uses the same PCI configuration  * space, though the configuration header for each PCI bus is  * located differently due to the SUNW,simba PCI busses being  * function 0 and function 1 of the APB, whereas the Psycho's are  * each their own PCI device.  The I/O and memory spaces are each  * split into 8 equally sized areas (8x2MB blocks for I/O space,  * and 8x512MB blocks for memory space).  These are allocated in to  * either PCI A or PCI B, or neither in the APB's `I/O Address Map  * Register A/B' (0xde) and `Memory Address Map Register A/B' (0xdf)  * registers of each Simba.  We must ensure that both of the  * following are correct (the prom should do this for us):  *  *    (PCI A Memory Address Map)& (PCI B Memory Address Map) == 0  *  *    (PCI A I/O Address Map)& (PCI B I/O Address Map) == 0  *  * 1fe.0100.0000 - 1fe.01ff.ffff	PCI configuration space  * 1fe.0100.0800 - 1fe.0100.08ff	PCI B configuration header  * 1fe.0100.0900 - 1fe.0100.09ff	PCI A configuration header  * 1fe.0200.0000 - 1fe.02ff.ffff	PCI I/O space (divided)  * 1ff.0000.0000 - 1ff.ffff.ffff	PCI memory space (divided)  */
+comment|/*  * Here is the rest of the map, which we're not specifying:  *  * 1fe.0100.0000 - 1fe.01ff.ffff	PCI configuration space  * 1fe.0100.0000 - 1fe.0100.00ff	PCI B configuration header  * 1fe.0101.0000 - 1fe.0101.00ff	PCI A configuration header  * 1fe.0200.0000 - 1fe.0200.ffff	PCI A I/O space  * 1fe.0201.0000 - 1fe.0201.ffff	PCI B I/O space  * 1ff.0000.0000 - 1ff.7fff.ffff	PCI A memory space  * 1ff.8000.0000 - 1ff.ffff.ffff	PCI B memory space  *  * NB: Config and I/O space can use 1-4 byte accesses, not 8 byte  * accesses.  Memory space can use any sized accesses.  *  * Note that the SUNW,sabre/SUNW,simba combinations found on the  * Ultra5 and Ultra10 machines uses slightly differrent addresses  * than the above.  This is mostly due to the fact that the APB is  * a multi-function PCI device with two PCI bridges, and the U2P is  * two separate PCI bridges.  It uses the same PCI configuration  * space, though the configuration header for each PCI bus is  * located differently due to the SUNW,simba PCI busses being  * function 0 and function 1 of the APB, whereas the Psycho's are  * each their own PCI device.  The I/O and memory spaces are each  * split into 8 equally sized areas (8x2MB blocks for I/O space,  * and 8x512MB blocks for memory space).  These are allocated in to  * either PCI A or PCI B, or neither in the APB's `I/O Address Map  * Register A/B' (0xde) and `Memory Address Map Register A/B' (0xdf)  * registers of each Simba.  We must ensure that both of the  * following are correct (the prom should do this for us):  *  *    (PCI A Memory Address Map)& (PCI B Memory Address Map) == 0  *  *    (PCI A I/O Address Map)& (PCI B I/O Address Map) == 0  *  * 1fe.0100.0000 - 1fe.01ff.ffff	PCI configuration space  * 1fe.0100.0800 - 1fe.0100.08ff	PCI B configuration header  * 1fe.0100.0900 - 1fe.0100.09ff	PCI A configuration header  * 1fe.0200.0000 - 1fe.02ff.ffff	PCI I/O space (divided)  * 1ff.0000.0000 - 1ff.ffff.ffff	PCI memory space (divided)  */
 end_comment
 
 begin_comment

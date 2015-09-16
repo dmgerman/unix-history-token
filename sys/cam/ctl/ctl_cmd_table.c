@@ -1990,7 +1990,7 @@ block|,
 literal|12
 block|,
 block|{
-literal|0x0a
+literal|0xea
 block|,
 literal|0
 block|,
@@ -3179,7 +3179,7 @@ name|CTL_CMD_FLAG_OK_ON_SLUN
 operator||
 name|CTL_FLAG_DATA_NONE
 block|,
-name|CTL_LUN_PAT_NONE
+name|CTL_LUN_PAT_WRITE
 block|,
 literal|10
 block|,
@@ -4723,7 +4723,7 @@ name|CTL_CMD_FLAG_OK_ON_SLUN
 operator||
 name|CTL_FLAG_DATA_NONE
 block|,
-name|CTL_LUN_PAT_NONE
+name|CTL_LUN_PAT_WRITE
 block|,
 literal|16
 block|,

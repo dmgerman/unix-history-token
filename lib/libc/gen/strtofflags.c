@@ -423,11 +423,9 @@ name|char
 modifier|*
 name|fflagstostr
 parameter_list|(
-name|flags
-parameter_list|)
 name|u_long
 name|flags
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -445,7 +443,7 @@ decl_stmt|;
 name|u_long
 name|setflags
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 if|if
@@ -594,27 +592,19 @@ begin_function
 name|int
 name|strtofflags
 parameter_list|(
-name|stringp
-parameter_list|,
-name|setp
-parameter_list|,
-name|clrp
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|stringp
-decl_stmt|;
+parameter_list|,
 name|u_long
 modifier|*
 name|setp
-decl_stmt|,
-decl|*
+parameter_list|,
+name|u_long
+modifier|*
 name|clrp
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -833,7 +823,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
