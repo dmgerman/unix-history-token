@@ -786,6 +786,36 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX ARM64TODO: Avoid configuration of more than one ITS 	 * device. To be removed when multi-PIC support is added 	 * to FreeBSD (or at least multi-ITS is implemented). Limit 	 * supported ITS sockets to '0' only. 	 */
+if|if
+condition|(
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Only single instance of ITS is supported, exitting...\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+name|sc
+operator|->
+name|its_socket
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Initialize sleep& spin mutex for ITS 	 */
 comment|/* Protects ITS device list and assigned LPIs bitmaps. */
 name|mtx_init
@@ -2363,6 +2393,20 @@ name|its_sc
 expr_stmt|;
 block|}
 else|else
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* Skip if running secondary init on a wrong socket */
+if|if
+condition|(
+name|sc
+operator|->
+name|its_socket
+operator|!=
+name|CPU_CURRENT_SOCKET
+condition|)
 return|return
 operator|(
 name|ENXIO
