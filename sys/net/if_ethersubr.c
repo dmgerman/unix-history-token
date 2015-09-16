@@ -2374,11 +2374,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
