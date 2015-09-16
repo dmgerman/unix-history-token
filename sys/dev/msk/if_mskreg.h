@@ -15955,22 +15955,18 @@ parameter_list|)
 value|((uint64_t) (x)>> 32)
 end_define
 
-begin_comment
-comment|/*  * At first I guessed 8 bytes, the size of a single descriptor, would be  * required alignment constraints. But, it seems that Yukon II have 4096  * bytes boundary alignment constraints.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|MSK_RING_ALIGN
-value|4096
+value|32768
 end_define
 
 begin_define
 define|#
 directive|define
 name|MSK_STAT_ALIGN
-value|4096
+value|32768
 end_define
 
 begin_comment
