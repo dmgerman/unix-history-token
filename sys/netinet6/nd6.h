@@ -1756,6 +1756,7 @@ begin_function_decl
 name|int
 name|nd6_is_addr_neighbor
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr_in6
 modifier|*
@@ -1813,6 +1814,7 @@ name|llentry
 modifier|*
 name|nd6_lookup
 parameter_list|(
+specifier|const
 name|struct
 name|in6_addr
 modifier|*
@@ -1832,6 +1834,7 @@ name|llentry
 modifier|*
 name|nd6_alloc
 parameter_list|(
+specifier|const
 name|struct
 name|in6_addr
 modifier|*
