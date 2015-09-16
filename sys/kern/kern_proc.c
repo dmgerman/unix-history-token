@@ -3373,6 +3373,8 @@ name|P_SHOULDSTOP
 argument_list|(
 name|p
 argument_list|)
+operator|==
+name|P_STOPPED_SIG
 condition|)
 block|{
 name|PROC_UNLOCK
