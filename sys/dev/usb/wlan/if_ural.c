@@ -3459,11 +3459,6 @@ name|NULL
 return|;
 name|uvp
 operator|=
-operator|(
-expr|struct
-name|ural_vap
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -3479,15 +3474,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|uvp
-operator|==
-name|NULL
-condition|)
-return|return
-name|NULL
-return|;
 name|vap
 operator|=
 operator|&
