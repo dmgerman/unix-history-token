@@ -10641,12 +10641,12 @@ argument_list|(
 literal|"EEPROM rev=%d, FAE=%d\n"
 argument_list|,
 name|val
-operator|&
-literal|0xff
-argument_list|,
-name|val
 operator|>>
 literal|8
+argument_list|,
+name|val
+operator|&
+literal|0xff
 argument_list|)
 expr_stmt|;
 comment|/* read MAC address */

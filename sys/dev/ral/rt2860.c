@@ -18604,12 +18604,12 @@ operator|(
 literal|"EEPROM rev=%d, FAE=%d\n"
 operator|,
 name|val
-operator|&
-literal|0xff
-operator|,
-name|val
 operator|>>
 literal|8
+operator|,
+name|val
+operator|&
+literal|0xff
 operator|)
 argument_list|)
 expr_stmt|;
