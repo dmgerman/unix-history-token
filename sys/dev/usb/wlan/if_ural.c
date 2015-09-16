@@ -3469,7 +3469,7 @@ argument_list|)
 argument_list|,
 name|M_80211_VAP
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
