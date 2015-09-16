@@ -134,6 +134,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -701,7 +707,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,
@@ -733,7 +739,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,

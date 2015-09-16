@@ -94,16 +94,12 @@ begin_function
 name|sig_t
 name|signal
 parameter_list|(
-name|s
-parameter_list|,
-name|a
-parameter_list|)
 name|int
 name|s
-decl_stmt|;
+parameter_list|,
 name|sig_t
 name|a
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sigaction
@@ -150,7 +146,7 @@ name|SA_RESTART
 expr_stmt|;
 if|if
 condition|(
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|s
 argument_list|,

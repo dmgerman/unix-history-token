@@ -141,7 +141,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -185,7 +185,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGABRT
 argument_list|,
@@ -208,7 +208,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
