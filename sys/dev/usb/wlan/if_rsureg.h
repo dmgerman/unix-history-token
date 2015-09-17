@@ -2507,7 +2507,7 @@ begin_define
 define|#
 directive|define
 name|RSU_RX_LIST_COUNT
-value|1
+value|100
 end_define
 
 begin_define
