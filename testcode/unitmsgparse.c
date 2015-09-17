@@ -88,19 +88,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/sbuffer.h"
+file|"sldns/sbuffer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/str2wire.h"
+file|"sldns/str2wire.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/wire2str.h"
+file|"sldns/wire2str.h"
 end_include
 
 begin_comment
@@ -2706,6 +2706,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|time_t
+name|origttl
+init|=
+name|MAX_NEG_TTL
+decl_stmt|;
 name|sldns_buffer
 modifier|*
 name|pkt
@@ -2730,6 +2735,10 @@ name|super_a
 decl_stmt|,
 name|alloc
 decl_stmt|;
+name|MAX_NEG_TTL
+operator|=
+literal|86400
+expr_stmt|;
 comment|/* init */
 name|alloc_init
 argument_list|(
@@ -2940,6 +2949,10 @@ name|sldns_buffer_free
 argument_list|(
 name|out
 argument_list|)
+expr_stmt|;
+name|MAX_NEG_TTL
+operator|=
+name|origttl
 expr_stmt|;
 block|}
 end_function

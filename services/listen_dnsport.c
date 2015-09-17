@@ -75,7 +75,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/sbuffer.h"
+file|"sldns/sbuffer.h"
 end_include
 
 begin_ifdef
@@ -363,6 +363,9 @@ parameter_list|,
 name|int
 modifier|*
 name|reuseport
+parameter_list|,
+name|int
+name|transparent
 parameter_list|)
 block|{
 name|int
@@ -383,6 +386,11 @@ operator|||
 name|defined
 argument_list|(
 name|IPV6_USE_MIN_MTU
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IP_TRANSPARENT
 argument_list|)
 name|int
 name|on
@@ -448,6 +456,16 @@ operator|(
 name|void
 operator|)
 name|v6only
+expr_stmt|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|IP_TRANSPARENT
+operator|(
+name|void
+operator|)
+name|transparent
 expr_stmt|;
 endif|#
 directive|endif
@@ -752,6 +770,54 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(SO_REUSEPORT) */
+ifdef|#
+directive|ifdef
+name|IP_TRANSPARENT
+if|if
+condition|(
+name|transparent
+operator|&&
+name|setsockopt
+argument_list|(
+name|s
+argument_list|,
+name|IPPROTO_IP
+argument_list|,
+name|IP_TRANSPARENT
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|on
+argument_list|,
+operator|(
+name|socklen_t
+operator|)
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|log_warn
+argument_list|(
+literal|"setsockopt(.. IP_TRANSPARENT ..) failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* IP_TRANSPARENT */
 block|}
 if|if
 condition|(
@@ -2080,6 +2146,9 @@ parameter_list|,
 name|int
 modifier|*
 name|reuseport
+parameter_list|,
+name|int
+name|transparent
 parameter_list|)
 block|{
 name|int
@@ -2101,6 +2170,11 @@ name|defined
 argument_list|(
 name|IPV6_V6ONLY
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IP_TRANSPARENT
+argument_list|)
 name|int
 name|on
 init|=
@@ -2108,7 +2182,16 @@ literal|1
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* SO_REUSEADDR || IPV6_V6ONLY */
+ifndef|#
+directive|ifndef
+name|IP_TRANSPARENT
+operator|(
+name|void
+operator|)
+name|transparent
+expr_stmt|;
+endif|#
+directive|endif
 name|verbose_print_addr
 argument_list|(
 name|addr
@@ -2477,6 +2560,54 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* IPV6_V6ONLY */
+ifdef|#
+directive|ifdef
+name|IP_TRANSPARENT
+if|if
+condition|(
+name|transparent
+operator|&&
+name|setsockopt
+argument_list|(
+name|s
+argument_list|,
+name|IPPROTO_IP
+argument_list|,
+name|IP_TRANSPARENT
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|on
+argument_list|,
+operator|(
+name|socklen_t
+operator|)
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|log_warn
+argument_list|(
+literal|"setsockopt(.. IP_TRANSPARENT ..) failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* IP_TRANSPARENT */
 if|if
 condition|(
 name|bind
@@ -2991,6 +3122,9 @@ parameter_list|,
 name|int
 modifier|*
 name|reuseport
+parameter_list|,
+name|int
+name|transparent
 parameter_list|)
 block|{
 name|struct
@@ -3177,6 +3311,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|reuseport
+argument_list|,
+name|transparent
 argument_list|)
 expr_stmt|;
 if|if
@@ -3233,6 +3369,8 @@ operator|&
 name|noproto
 argument_list|,
 name|reuseport
+argument_list|,
+name|transparent
 argument_list|)
 expr_stmt|;
 if|if
@@ -3312,6 +3450,9 @@ parameter_list|,
 name|int
 modifier|*
 name|reuseport
+parameter_list|,
+name|int
+name|transparent
 parameter_list|)
 block|{
 name|char
@@ -3482,6 +3623,8 @@ argument_list|,
 name|snd
 argument_list|,
 name|reuseport
+argument_list|,
+name|transparent
 argument_list|)
 return|;
 block|}
@@ -3505,6 +3648,8 @@ argument_list|,
 name|snd
 argument_list|,
 name|reuseport
+argument_list|,
+name|transparent
 argument_list|)
 return|;
 block|}
@@ -3895,7 +4040,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Helper for ports_open. Creates one interface (or NULL for default).  * @param ifname: The interface ip address.  * @param do_auto: use automatic interface detection.  * 	If enabled, then ifname must be the wildcard name.  * @param do_udp: if udp should be used.  * @param do_tcp: if udp should be used.  * @param hints: for getaddrinfo. family and flags have to be set by caller.  * @param port: Port number to use (as string).  * @param list: list of open ports, appended to, changed to point to list head.  * @param rcv: receive buffer size for UDP  * @param snd: send buffer size for UDP  * @param ssl_port: ssl service port number  * @param reuseport: try to set SO_REUSEPORT if nonNULL and true.  * 	set to false on exit if reuseport failed due to no kernel support.  * @return: returns false on error.  */
+comment|/**  * Helper for ports_open. Creates one interface (or NULL for default).  * @param ifname: The interface ip address.  * @param do_auto: use automatic interface detection.  * 	If enabled, then ifname must be the wildcard name.  * @param do_udp: if udp should be used.  * @param do_tcp: if udp should be used.  * @param hints: for getaddrinfo. family and flags have to be set by caller.  * @param port: Port number to use (as string).  * @param list: list of open ports, appended to, changed to point to list head.  * @param rcv: receive buffer size for UDP  * @param snd: send buffer size for UDP  * @param ssl_port: ssl service port number  * @param reuseport: try to set SO_REUSEPORT if nonNULL and true.  * 	set to false on exit if reuseport failed due to no kernel support.  * @param transparent: set IP_TRANSPARENT socket option.  * @return: returns false on error.  */
 end_comment
 
 begin_function
@@ -3945,6 +4090,9 @@ parameter_list|,
 name|int
 modifier|*
 name|reuseport
+parameter_list|,
+name|int
+name|transparent
 parameter_list|)
 block|{
 name|int
@@ -3995,6 +4143,8 @@ argument_list|,
 name|snd
 argument_list|,
 name|reuseport
+argument_list|,
+name|transparent
 argument_list|)
 operator|)
 operator|==
@@ -4122,6 +4272,8 @@ argument_list|,
 name|snd
 argument_list|,
 name|reuseport
+argument_list|,
+name|transparent
 argument_list|)
 operator|)
 operator|==
@@ -4257,6 +4409,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|reuseport
+argument_list|,
+name|transparent
 argument_list|)
 operator|)
 operator|==
@@ -5051,6 +5205,10 @@ operator|->
 name|ssl_port
 argument_list|,
 name|reuseport
+argument_list|,
+name|cfg
+operator|->
+name|ip_transparent
 argument_list|)
 condition|)
 block|{
@@ -5115,6 +5273,10 @@ operator|->
 name|ssl_port
 argument_list|,
 name|reuseport
+argument_list|,
+name|cfg
+operator|->
+name|ip_transparent
 argument_list|)
 condition|)
 block|{
@@ -5212,6 +5374,10 @@ operator|->
 name|ssl_port
 argument_list|,
 name|reuseport
+argument_list|,
+name|cfg
+operator|->
+name|ip_transparent
 argument_list|)
 condition|)
 block|{
@@ -5280,6 +5446,10 @@ operator|->
 name|ssl_port
 argument_list|,
 name|reuseport
+argument_list|,
+name|cfg
+operator|->
+name|ip_transparent
 argument_list|)
 condition|)
 block|{

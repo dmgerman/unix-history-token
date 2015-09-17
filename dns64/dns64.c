@@ -2224,6 +2224,23 @@ decl_stmt|;
 comment|/* 	 * Create synthesized AAAA RR set data. We need to allocated extra memory 	 * for the RRs themselves. Each RR has a length, TTL, pointer to wireformat 	 * data, 2 bytes of data length, and 16 bytes of IPv6 address. 	 */
 if|if
 condition|(
+name|fd
+operator|->
+name|count
+operator|>
+name|RR_COUNT_MAX
+condition|)
+block|{
+operator|*
+name|dd_out
+operator|=
+name|NULL
+expr_stmt|;
+return|return;
+comment|/* integer overflow protection in alloc */
+block|}
+if|if
+condition|(
 operator|!
 operator|(
 name|dd
@@ -3012,6 +3029,12 @@ argument_list|,
 name|dns64_env
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dd
+condition|)
+return|return;
 comment|/* Delete negative AAAA record from cache stored by 			 * the iterator module */
 name|rrset_cache_remove
 argument_list|(

@@ -112,19 +112,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/sbuffer.h"
+file|"sldns/sbuffer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/wire2str.h"
+file|"sldns/wire2str.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/str2wire.h"
+file|"sldns/str2wire.h"
 end_include
 
 begin_comment
@@ -1198,6 +1198,18 @@ name|e
 operator|->
 name|data
 decl_stmt|;
+if|if
+condition|(
+name|rep
+operator|->
+name|rrset_count
+operator|>
+name|RR_COUNT_MAX
+condition|)
+return|return
+literal|0
+return|;
+comment|/* to protect against integer overflow */
 operator|*
 name|d
 operator|=
@@ -2930,6 +2942,26 @@ return|return
 literal|0
 return|;
 block|}
+if|if
+condition|(
+name|rr_count
+operator|>
+name|RR_COUNT_MAX
+operator|||
+name|rrsig_count
+operator|>
+name|RR_COUNT_MAX
+condition|)
+block|{
+name|log_warn
+argument_list|(
+literal|"bad rrset with too many rrs"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|d
 operator|->
 name|count
@@ -4033,6 +4065,31 @@ name|sec_status
 operator|)
 name|security
 expr_stmt|;
+if|if
+condition|(
+name|an
+operator|>
+name|RR_COUNT_MAX
+operator|||
+name|ns
+operator|>
+name|RR_COUNT_MAX
+operator|||
+name|ar
+operator|>
+name|RR_COUNT_MAX
+condition|)
+block|{
+name|log_warn
+argument_list|(
+literal|"error too many rrsets"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+comment|/* protect against integer overflow in alloc */
+block|}
 name|rep
 operator|.
 name|an_numrrsets
