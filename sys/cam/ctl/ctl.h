@@ -821,6 +821,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ctl_isc_announce_iid
+parameter_list|(
+name|struct
+name|ctl_port
+modifier|*
+name|port
+parameter_list|,
+name|int
+name|iid
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * KPI to manipulate LUN/port options  */
 end_comment
