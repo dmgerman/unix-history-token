@@ -13088,6 +13088,12 @@ name|turbo_mode
 operator|=
 literal|0
 expr_stmt|;
+name|dmem
+operator|->
+name|qos_en
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Load DMEM section. */
 name|error
 operator|=
