@@ -1652,7 +1652,7 @@ name|err
 decl_stmt|;
 name|err
 operator|=
-name|ENXIO
+name|EBUSY
 expr_stmt|;
 name|mtx_lock
 argument_list|(
