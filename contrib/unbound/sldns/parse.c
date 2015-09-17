@@ -12,19 +12,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/parse.h"
+file|"sldns/parse.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/parseutil.h"
+file|"sldns/parseutil.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/sbuffer.h"
+file|"sldns/sbuffer.h"
 end_include
 
 begin_include

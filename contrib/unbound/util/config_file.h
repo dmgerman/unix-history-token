@@ -215,6 +215,10 @@ comment|/** SO_REUSEPORT requested on port 53 sockets */
 name|int
 name|so_reuseport
 decl_stmt|;
+comment|/** IP_TRANSPARENT socket option requested on port 53 sockets */
+name|int
+name|ip_transparent
+decl_stmt|;
 comment|/** number of interfaces to open. If 0 default all interfaces. */
 name|int
 name|num_ifs
@@ -293,9 +297,19 @@ comment|/** harden the referral path, query for NS,A,AAAA and validate */
 name|int
 name|harden_referral_path
 decl_stmt|;
+comment|/** harden against algorithm downgrade */
+name|int
+name|harden_algo_downgrade
+decl_stmt|;
 comment|/** use 0x20 bits in query as random ID bits */
 name|int
 name|use_caps_bits_for_id
+decl_stmt|;
+comment|/** 0x20 whitelist, domains that do not use capsforid */
+name|struct
+name|config_strlist
+modifier|*
+name|caps_whitelist
 decl_stmt|;
 comment|/** strip away these private addrs from answers, no DNS Rebinding */
 name|struct
@@ -320,6 +334,10 @@ decl_stmt|;
 comment|/** the number of seconds minimum TTL used for RRsets and messages */
 name|int
 name|min_ttl
+decl_stmt|;
+comment|/** the number of seconds maximal negative TTL for SOA in auth */
+name|int
+name|max_negative_ttl
 decl_stmt|;
 comment|/** if prefetching of messages should be performed. */
 name|int
@@ -638,6 +656,34 @@ decl_stmt|;
 comment|/** true to log dnstap FORWARDER_RESPONSE message events */
 name|int
 name|dnstap_log_forwarder_response_messages
+decl_stmt|;
+comment|/** ratelimit 0 is off, otherwise qps (unless overridden) */
+name|int
+name|ratelimit
+decl_stmt|;
+comment|/** number of slabs for ratelimit cache */
+name|size_t
+name|ratelimit_slabs
+decl_stmt|;
+comment|/** memory size in bytes for ratelimit cache */
+name|size_t
+name|ratelimit_size
+decl_stmt|;
+comment|/** ratelimits for domain (exact match) */
+name|struct
+name|config_str2list
+modifier|*
+name|ratelimit_for_domain
+decl_stmt|;
+comment|/** ratelimits below domain */
+name|struct
+name|config_str2list
+modifier|*
+name|ratelimit_below_domain
+decl_stmt|;
+comment|/** ratelimit factor, 0 blocks all, 10 allows 1/10 of traffic */
+name|int
+name|ratelimit_factor
 decl_stmt|;
 block|}
 struct|;
