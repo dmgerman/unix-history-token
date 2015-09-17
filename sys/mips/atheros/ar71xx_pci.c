@@ -1777,11 +1777,6 @@ name|dev
 parameter_list|)
 block|{
 name|int
-name|busno
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|rid
 init|=
 literal|0
