@@ -2582,6 +2582,9 @@ directive|endif
 name|IEEE80211_C_SHPREAMBLE
 operator||
 comment|/* Short preamble supported. */
+name|IEEE80211_C_WME
+operator||
+comment|/* WME/QoS */
 name|IEEE80211_C_SHSLOT
 operator||
 comment|/* Short slot time supported. */
@@ -9951,8 +9954,8 @@ decl_stmt|;
 name|uint8_t
 name|type
 decl_stmt|;
-name|uint8_t
-name|tid
+name|int
+name|prio
 init|=
 literal|0
 decl_stmt|;
@@ -9964,6 +9967,9 @@ name|hasqos
 decl_stmt|;
 name|int
 name|xferlen
+decl_stmt|;
+name|int
+name|qid
 decl_stmt|;
 name|RSU_ASSERT_LOCKED
 argument_list|(
@@ -10068,42 +10074,69 @@ operator|*
 argument_list|)
 expr_stmt|;
 block|}
-switch|switch
+comment|/* If we have QoS then use it */
+comment|/* XXX TODO: mbuf WME/PRI versus TID? */
+if|if
 condition|(
-name|type
+name|IEEE80211_QOS_HAS_SEQ
+argument_list|(
+name|wh
+argument_list|)
 condition|)
 block|{
-case|case
-name|IEEE80211_FC0_TYPE_CTL
-case|:
-case|case
-name|IEEE80211_FC0_TYPE_MGT
-case|:
-name|which
+comment|/* Has QoS */
+name|prio
 operator|=
-name|rsu_wme_ac_xfer_map
-index|[
-name|WME_AC_VO
-index|]
-expr_stmt|;
-break|break;
-default|default:
-name|which
-operator|=
-name|rsu_wme_ac_xfer_map
-index|[
 name|M_WME_GETAC
 argument_list|(
 name|m0
 argument_list|)
+expr_stmt|;
+name|which
+operator|=
+name|rsu_wme_ac_xfer_map
+index|[
+name|prio
 index|]
 expr_stmt|;
-break|break;
+name|hasqos
+operator|=
+literal|1
+expr_stmt|;
 block|}
+else|else
+block|{
+comment|/* Non-QoS TID */
+comment|/* XXX TODO: tid=0 for non-qos TID? */
+name|which
+operator|=
+name|rsu_wme_ac_xfer_map
+index|[
+name|WME_AC_BE
+index|]
+expr_stmt|;
 name|hasqos
 operator|=
 literal|0
 expr_stmt|;
+name|prio
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|qid
+operator|=
+name|rsu_ac2qid
+index|[
+name|prio
+index|]
+expr_stmt|;
+if|#
+directive|if
+literal|0
+block|switch (type) { 	case IEEE80211_FC0_TYPE_CTL: 	case IEEE80211_FC0_TYPE_MGT: 		which = rsu_wme_ac_xfer_map[WME_AC_VO]; 		break; 	default: 		which = rsu_wme_ac_xfer_map[M_WME_GETAC(m0)]; 		break; 	} 	hasqos = 0;
+endif|#
+directive|endif
 comment|/* Fill Tx descriptor. */
 name|txd
 operator|=
@@ -10181,7 +10214,7 @@ name|SM
 argument_list|(
 name|R92S_TXDW1_QSEL
 argument_list|,
-name|R92S_TXDW1_QSEL_BE
+name|qid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10301,7 +10334,7 @@ argument_list|(
 name|R92S_TXDW2_BMCAST
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Firmware will use and increment the sequence number for the 	 * specified TID. 	 */
+comment|/* 	 * Firmware will use and increment the sequence number for the 	 * specified priority. 	 */
 name|txd
 operator|->
 name|txdw3
@@ -10312,7 +10345,7 @@ name|SM
 argument_list|(
 name|R92S_TXDW3_SEQ
 argument_list|,
-name|tid
+name|prio
 argument_list|)
 argument_list|)
 expr_stmt|;
