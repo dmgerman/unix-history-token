@@ -3137,6 +3137,12 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
+name|int
+name|sc_ht
+decl_stmt|;
+name|int
+name|sc_nendpoints
+decl_stmt|;
 name|u_int
 name|sc_running
 range|:
