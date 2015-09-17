@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -193,6 +199,24 @@ argument_list|,
 literal|"PUC"
 argument_list|,
 literal|"PUC driver"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|puc
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"puc(9) driver configuration"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1739,12 +1763,6 @@ name|dev
 argument_list|,
 literal|"using interrupt latch register\n"
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_irid
-operator|=
-literal|0
 expr_stmt|;
 name|sc
 operator|->

@@ -150,6 +150,11 @@ range|:
 literal|1
 decl_stmt|;
 name|int
+name|sc_msi
+range|:
+literal|1
+decl_stmt|;
+name|int
 name|sc_ilr
 decl_stmt|;
 comment|/* 	 * Bitmask of ports that use the serdev I/F. This allows for 	 * 32 ports on ILP32 machines and 64 ports on LP64 machines. 	 */
@@ -381,6 +386,14 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_puc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
