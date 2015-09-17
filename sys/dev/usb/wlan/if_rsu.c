@@ -1564,6 +1564,8 @@ parameter_list|(
 name|struct
 name|rsu_softc
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2764,16 +2766,11 @@ name|err
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usb_pause_mtx
+name|rsu_ms_delay
 argument_list|(
-operator|&
 name|sc
-operator|->
-name|sc_mtx
 argument_list|,
-name|hz
-operator|/
-literal|100
+literal|10
 argument_list|)
 expr_stmt|;
 block|}
@@ -4254,6 +4251,8 @@ expr_stmt|;
 name|rsu_ms_delay
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 for|for
@@ -4289,6 +4288,8 @@ return|;
 name|rsu_ms_delay
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4397,6 +4398,8 @@ return|;
 name|rsu_ms_delay
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4511,6 +4514,8 @@ expr_stmt|;
 name|rsu_ms_delay
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|rsu_write_1
@@ -10639,16 +10644,11 @@ operator||
 name|R92S_SPS1_LDEN
 argument_list|)
 expr_stmt|;
-name|usb_pause_mtx
+name|rsu_ms_delay
 argument_list|(
-operator|&
 name|sc
-operator|->
-name|sc_mtx
 argument_list|,
-literal|2
-operator|*
-name|hz
+literal|2000
 argument_list|)
 expr_stmt|;
 comment|/* Enable switch regulator block. */
@@ -11005,16 +11005,11 @@ argument_list|,
 literal|0xb0
 argument_list|)
 expr_stmt|;
-name|usb_pause_mtx
+name|rsu_ms_delay
 argument_list|(
-operator|&
 name|sc
-operator|->
-name|sc_mtx
 argument_list|,
-name|hz
-operator|/
-literal|100
+literal|10
 argument_list|)
 expr_stmt|;
 name|rsu_write_1
@@ -11084,6 +11079,8 @@ expr_stmt|;
 name|rsu_ms_delay
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|rsu_write_1
@@ -11284,6 +11281,8 @@ expr_stmt|;
 name|rsu_ms_delay
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|rsu_write_1
@@ -11300,6 +11299,8 @@ expr_stmt|;
 name|rsu_ms_delay
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|rsu_write_1
@@ -11316,6 +11317,8 @@ expr_stmt|;
 name|rsu_ms_delay
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Attach AFE PLL to MACTOP/BB. */
@@ -11560,6 +11563,8 @@ break|break;
 name|rsu_ms_delay
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -11608,6 +11613,8 @@ expr_stmt|;
 name|rsu_ms_delay
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|rsu_write_1
@@ -11646,16 +11653,11 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-name|usb_pause_mtx
+name|rsu_ms_delay
 argument_list|(
-operator|&
 name|sc
-operator|->
-name|sc_mtx
 argument_list|,
-name|hz
-operator|/
-literal|200
+literal|5
 argument_list|)
 expr_stmt|;
 comment|/* Turn MAC off. */
@@ -12421,16 +12423,11 @@ name|ntries
 operator|++
 control|)
 block|{
-name|usb_pause_mtx
+name|rsu_ms_delay
 argument_list|(
-operator|&
 name|sc
-operator|->
-name|sc_mtx
 argument_list|,
-name|hz
-operator|/
-literal|100
+literal|10
 argument_list|)
 expr_stmt|;
 name|reg
@@ -12523,16 +12520,11 @@ name|ntries
 operator|++
 control|)
 block|{
-name|usb_pause_mtx
+name|rsu_ms_delay
 argument_list|(
-operator|&
 name|sc
-operator|->
-name|sc_mtx
 argument_list|,
-name|hz
-operator|/
-literal|100
+literal|10
 argument_list|)
 expr_stmt|;
 name|reg
@@ -12703,6 +12695,8 @@ break|break;
 name|rsu_ms_delay
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -12888,6 +12882,8 @@ break|break;
 name|rsu_ms_delay
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -12950,6 +12946,8 @@ break|break;
 name|rsu_ms_delay
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -13424,20 +13422,11 @@ name|IEEE80211_ADDR_LEN
 argument_list|)
 expr_stmt|;
 comment|/* It really takes 1.5 seconds for the firmware to boot: */
-name|usb_pause_mtx
+name|rsu_ms_delay
 argument_list|(
-operator|&
 name|sc
-operator|->
-name|sc_mtx
 argument_list|,
-operator|(
-literal|3
-operator|*
-name|hz
-operator|)
-operator|/
-literal|2
+literal|2000
 argument_list|)
 expr_stmt|;
 name|RSU_DPRINTF
@@ -13705,6 +13694,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Note: usb_pause_mtx() actually releases the mutex before calling pause(),  * which breaks any kind of driver serialisation.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -13714,17 +13707,16 @@ name|struct
 name|rsu_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|ms
 parameter_list|)
 block|{
-name|usb_pause_mtx
+comment|//usb_pause_mtx(&sc->sc_mtx, hz / 1000);
+name|DELAY
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|,
-name|hz
-operator|/
+name|ms
+operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
