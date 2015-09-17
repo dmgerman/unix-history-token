@@ -2970,6 +2970,9 @@ comment|/* = WME_AC_BE/BK */
 name|RSU_BULK_TX_VI_VO
 block|,
 comment|/* = WME_AC_VI/VO */
+name|RSU_BULK_TX_H2C
+block|,
+comment|/* H2C */
 name|RSU_N_TRANSFER
 block|, }
 enum|;
