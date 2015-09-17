@@ -2509,21 +2509,14 @@ name|struct
 name|ctl_scsiio
 modifier|*
 name|ctsio
+parameter_list|,
+name|int
+name|read
 parameter_list|)
 block|{
 if|if
 condition|(
-operator|(
-name|ctsio
-operator|->
-name|io_hdr
-operator|.
-name|flags
-operator|&
-name|CTL_FLAG_DATA_MASK
-operator|)
-operator|==
-name|CTL_FLAG_DATA_IN
+name|read
 condition|)
 block|{
 comment|/* "Unrecovered read error" */
