@@ -2253,6 +2253,31 @@ name|idesc
 operator|->
 name|bNumEndpoints
 expr_stmt|;
+comment|/* Endpoints are hard-coded for now, so enforce 4-endpoint only */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_nendpoints
+operator|!=
+literal|4
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"the driver currently only supports 4-endpoint devices\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 name|mtx_init
 argument_list|(
 operator|&
@@ -12981,15 +13006,18 @@ name|dmem
 operator|->
 name|nendpoints
 operator|=
-literal|0
+name|sc
+operator|->
+name|sc_nendpoints
 expr_stmt|;
+comment|/* XXX TODO: rf_config should come from ROM */
 name|dmem
 operator|->
 name|rf_config
 operator|=
-literal|0x12
+literal|0x11
 expr_stmt|;
-comment|/* 1T2R */
+comment|/* 1T1R */
 name|dmem
 operator|->
 name|vcs_type
@@ -13025,7 +13053,7 @@ name|dmem
 operator|->
 name|turbo_mode
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 comment|/* Load DMEM section. */
 name|error
