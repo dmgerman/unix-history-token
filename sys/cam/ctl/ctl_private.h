@@ -1321,6 +1321,12 @@ index|[
 name|CTL_MAX_PORTS
 index|]
 decl_stmt|;
+name|uint8_t
+name|ua_tpt_info
+index|[
+literal|8
+index|]
+decl_stmt|;
 name|time_t
 name|lasttpt
 decl_stmt|;
