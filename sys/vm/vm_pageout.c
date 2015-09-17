@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -590,8 +596,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|lowmem_ticks
+name|time_t
+name|lowmem_uptime
 decl_stmt|;
 end_decl_stmt
 
@@ -3712,12 +3718,10 @@ operator|>
 literal|0
 operator|&&
 operator|(
-name|ticks
+name|time_uptime
 operator|-
-name|lowmem_ticks
+name|lowmem_uptime
 operator|)
-operator|/
-name|hz
 operator|>=
 name|lowmem_period
 condition|)
@@ -3741,9 +3745,9 @@ comment|/* 		 * We do this explicitly after the caches have been 		 * drained ab
 name|uma_reclaim
 argument_list|()
 expr_stmt|;
-name|lowmem_ticks
+name|lowmem_uptime
 operator|=
-name|ticks
+name|time_uptime
 expr_stmt|;
 block|}
 comment|/* 	 * The addl_page_shortage is the number of temporarily 	 * stuck pages in the inactive queue.  In other words, the 	 * number of pages from the inactive count that should be 	 * discounted in setting the target for the active queue scan. 	 */
