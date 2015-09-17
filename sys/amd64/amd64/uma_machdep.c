@@ -97,7 +97,7 @@ parameter_list|(
 name|uma_zone_t
 name|zone
 parameter_list|,
-name|int
+name|vm_size_t
 name|bytes
 parameter_list|,
 name|u_int8_t
@@ -250,7 +250,7 @@ name|void
 modifier|*
 name|mem
 parameter_list|,
-name|int
+name|vm_size_t
 name|size
 parameter_list|,
 name|u_int8_t

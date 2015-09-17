@@ -813,7 +813,7 @@ parameter_list|(
 name|uma_zone_t
 name|zone
 parameter_list|,
-name|int
+name|vm_size_t
 name|size
 parameter_list|,
 name|uint8_t
@@ -842,7 +842,7 @@ name|void
 modifier|*
 name|item
 parameter_list|,
-name|int
+name|vm_size_t
 name|size
 parameter_list|,
 name|uint8_t
