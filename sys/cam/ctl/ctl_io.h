@@ -1318,6 +1318,9 @@ decl_stmt|;
 name|int
 name|target_devid_len
 decl_stmt|;
+name|int
+name|init_devid_len
+decl_stmt|;
 name|uint8_t
 name|data
 index|[]
