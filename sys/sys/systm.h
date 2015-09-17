@@ -327,7 +327,7 @@ name|exp
 parameter_list|,
 name|msg
 parameter_list|)
-value|do {						\ 	if (__predict_false(!(exp)))					\ 		kassert_panic msg;						\ } while (0)
+value|do {						\ 	if (__predict_false(!(exp)))					\ 		kassert_panic msg;					\ } while (0)
 end_define
 
 begin_define
@@ -341,7 +341,7 @@ name|vp
 parameter_list|,
 name|msg
 parameter_list|)
-value|do {					\ 	if (__predict_false(!(exp))) {					\ 		vn_printf(vp, "VNASSERT failed\n");			\ 		kassert_panic msg;						\ 	}								\ } while (0)
+value|do {					\ 	if (__predict_false(!(exp))) {					\ 		vn_printf(vp, "VNASSERT failed\n");			\ 		kassert_panic msg;					\ 	}								\ } while (0)
 end_define
 
 begin_else
