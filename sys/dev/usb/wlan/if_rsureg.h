@@ -2499,6 +2499,26 @@ argument_list|)
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|r92s_add_ba_event
+block|{
+name|uint8_t
+name|mac_addr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint16_t
+name|ssn
+decl_stmt|;
+name|uint8_t
+name|tid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Driver definitions.  */
 end_comment
