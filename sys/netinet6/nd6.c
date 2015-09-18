@@ -6199,7 +6199,7 @@ name|int
 name|ln_router
 parameter_list|)
 block|{
-comment|/* 	 * ICMP6 type dependent behavior. 	 * 	 * NS: clear IsRouter if new entry 	 * RS: clear IsRouter 	 * RA: set IsRouter if there's lladdr 	 * redir: clear IsRouter if new entry 	 * 	 * RA case, (1): 	 * The spec says that we must set IsRouter in the following cases: 	 * - If lladdr exist, set IsRouter.  This means (1-5). 	 * - If it is old entry (!newentry), set IsRouter.  This means (7). 	 * So, based on the spec, in (1-5) and (7) cases we must set IsRouter. 	 * A quetion arises for (1) case.  (1) case has no lladdr in the 	 * neighbor cache, this is similar to (6). 	 * This case is rare but we figured that we MUST NOT set IsRouter. 	 * 	 * newentry olladdr  lladdr  llchange	    NS  RS  RA	redir 	 *							D R 	 *	0	n	n	--	(1)	c   ?     s 	 *	0	y	n	--	(2)	c   s     s 	 *	0	n	y	--	(3)	c   s     s 	 *	0	y	y	n	(4)	c   s     s 	 *	0	y	y	y	(5)	c   s     s 	 *	1	--	n	--	(6) c	c	c s 	 *	1	--	y	--	(7) c	c   s	c s 	 * 	 *					(c=clear s=set) 	 */
+comment|/* 	 * ICMP6 type dependent behavior. 	 * 	 * NS: clear IsRouter if new entry 	 * RS: clear IsRouter 	 * RA: set IsRouter if there's lladdr 	 * redir: clear IsRouter if new entry 	 * 	 * RA case, (1): 	 * The spec says that we must set IsRouter in the following cases: 	 * - If lladdr exist, set IsRouter.  This means (1-5). 	 * - If it is old entry (!newentry), set IsRouter.  This means (7). 	 * So, based on the spec, in (1-5) and (7) cases we must set IsRouter. 	 * A quetion arises for (1) case.  (1) case has no lladdr in the 	 * neighbor cache, this is similar to (6). 	 * This case is rare but we figured that we MUST NOT set IsRouter. 	 * 	 *   is_new  old_addr new_addr 	    NS  RS  RA	redir 	 *							D R 	 *	0	n	n	(1)	c   ?     s 	 *	0	y	n	(2)	c   s     s 	 *	0	n	y	(3)	c   s     s 	 *	0	y	y	(4)	c   s     s 	 *	0	y	y	(5)	c   s     s 	 *	1	--	n	(6) c	c	c s 	 *	1	--	y	(7) c	c   s	c s 	 * 	 *					(c=clear s=set) 	 */
 switch|switch
 condition|(
 name|type
@@ -6624,12 +6624,24 @@ name|if_addrlen
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|olladdr
+operator|&&
+name|lladdr
+condition|)
+name|llchange
+operator|=
+literal|1
+expr_stmt|;
 else|else
 name|llchange
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * newentry olladdr  lladdr  llchange	(*=record) 	 *	0	n	n	--	(1) 	 *	0	y	n	--	(2) 	 *	0	n	y	--	(3) * STALE 	 *	0	y	y	n	(4) * 	 *	0	y	y	y	(5) * STALE 	 *	1	--	n	--	(6)   NOSTATE(= PASSIVE) 	 *	1	--	y	--	(7) * STALE 	 */
+comment|/* 	 * newentry olladdr  lladdr  llchange	(*=record) 	 *	0	n	n	--	(1) 	 *	0	y	n	--	(2) 	 *	0	n	y	y	(3) * STALE 	 *	0	y	y	n	(4) * 	 *	0	y	y	y	(5) * STALE 	 *	1	--	n	--	(6)   NOSTATE(= PASSIVE) 	 *	1	--	y	--	(7) * STALE 	 */
 if|if
 condition|(
 name|lladdr
@@ -6675,28 +6687,12 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-operator|!
-name|olladdr
-operator|&&
-name|lladdr
-operator|!=
-name|NULL
-operator|)
-operator|||
-comment|/* (3) */
-operator|(
-name|olladdr
-operator|&&
-name|lladdr
-operator|!=
-name|NULL
-operator|&&
 name|llchange
-operator|)
+operator|!=
+literal|0
 condition|)
 block|{
-comment|/* (5) */
+comment|/* (3,5) */
 name|do_update
 operator|=
 literal|1
