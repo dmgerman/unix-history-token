@@ -2713,6 +2713,7 @@ name|beio_cont
 operator|==
 name|NULL
 condition|)
+block|{
 name|ctl_set_success
 argument_list|(
 operator|&
@@ -2721,6 +2722,12 @@ operator|->
 name|scsiio
 argument_list|)
 expr_stmt|;
+name|ctl_serseq_done
+argument_list|(
+name|io
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|CTL_TIME_IO
@@ -3855,6 +3862,7 @@ name|beio_cont
 operator|==
 name|NULL
 condition|)
+block|{
 name|ctl_set_success
 argument_list|(
 operator|&
@@ -3863,6 +3871,12 @@ operator|->
 name|scsiio
 argument_list|)
 expr_stmt|;
+name|ctl_serseq_done
+argument_list|(
+name|io
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|CTL_TIME_IO
@@ -4942,6 +4956,7 @@ name|beio_cont
 operator|==
 name|NULL
 condition|)
+block|{
 name|ctl_set_success
 argument_list|(
 operator|&
@@ -4950,6 +4965,12 @@ operator|->
 name|scsiio
 argument_list|)
 expr_stmt|;
+name|ctl_serseq_done
+argument_list|(
+name|io
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|CTL_TIME_IO

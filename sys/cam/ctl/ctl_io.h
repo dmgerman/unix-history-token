@@ -298,7 +298,12 @@ comment|/* I/O active on this SC */
 name|CTL_FLAG_STATUS_SENT
 init|=
 literal|0x10000000
+block|,
 comment|/* Status sent by datamove */
+name|CTL_FLAG_SERSEQ_DONE
+init|=
+literal|0x20000000
+comment|/* All storage I/O started */
 block|}
 name|ctl_io_flags
 typedef|;
