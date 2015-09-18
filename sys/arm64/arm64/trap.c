@@ -666,6 +666,10 @@ name|sig
 decl_stmt|,
 name|ucode
 decl_stmt|;
+comment|/* 	 * According to the ARMv8-A rev. A.g, B2.10.5 "Load-Exclusive 	 * and Store-Exclusive instruction usage restrictions", state 	 * of the exclusive monitors after data abort exception is unknown. 	 */
+name|clrex
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KDB
