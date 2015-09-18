@@ -685,7 +685,7 @@ index|[]
 init|=
 block|{
 comment|/* 	 * From: http://www.t10.org/lists/op-num.txt 	 * Modifications by Kenneth Merry (ken@FreeBSD.ORG) 	 *              and Jung-uk Kim (jkim@FreeBSD.org) 	 * 	 * Note:  order is important in this table, scsi_op_desc() currently 	 * depends on the opcodes in the table being in order to save 	 * search time. 	 * Note:  scanner and comm. devices are carried over from the previous 	 * version because they were removed in the latest spec. 	 */
-comment|/* File: OP-NUM.TXT 	 * 	 * SCSI Operation Codes 	 * Numeric Sorted Listing 	 * as of  3/11/08 	 * 	 *     D - DIRECT ACCESS DEVICE (SBC-2)                device column key 	 *     .T - SEQUENTIAL ACCESS DEVICE (SSC-2)           ----------------- 	 *     . L - PRINTER DEVICE (SSC)                      M = Mandatory 	 *     .  P - PROCESSOR DEVICE (SPC)                   O = Optional 	 *     .  .W - WRITE ONCE READ MULTIPLE DEVICE (SBC-2) V = Vendor spec. 	 *     .  . R - CD/DVE DEVICE (MMC-3)                  Z = Obsolete 	 *     .  .  O - OPTICAL MEMORY DEVICE (SBC-2) 	 *     .  .  .M - MEDIA CHANGER DEVICE (SMC-2) 	 *     .  .  . A - STORAGE ARRAY DEVICE (SCC-2) 	 *     .  .  . .E - ENCLOSURE SERVICES DEVICE (SES) 	 *     .  .  .  .B - SIMPLIFIED DIRECT-ACCESS DEVICE (RBC) 	 *     .  .  .  . K - OPTICAL CARD READER/WRITER DEVICE (OCRW) 	 *     .  .  .  .  V - AUTOMATION/DRIVE INTERFACE (ADC) 	 *     .  .  .  .  .F - OBJECT-BASED STORAGE (OSD) 	 * OP  DTLPWROMAEBKVF  Description 	 * --  --------------  ---------------------------------------------- */
+comment|/* File: OP-NUM.TXT 	 * 	 * SCSI Operation Codes 	 * Numeric Sorted Listing 	 * as of  5/26/15 	 * 	 *     D - DIRECT ACCESS DEVICE (SBC-2)                device column key 	 *     .T - SEQUENTIAL ACCESS DEVICE (SSC-2)           ----------------- 	 *     . L - PRINTER DEVICE (SSC)                      M = Mandatory 	 *     .  P - PROCESSOR DEVICE (SPC)                   O = Optional 	 *     .  .W - WRITE ONCE READ MULTIPLE DEVICE (SBC-2) V = Vendor spec. 	 *     .  . R - CD/DVE DEVICE (MMC-3)                  Z = Obsolete 	 *     .  .  O - OPTICAL MEMORY DEVICE (SBC-2) 	 *     .  .  .M - MEDIA CHANGER DEVICE (SMC-2) 	 *     .  .  . A - STORAGE ARRAY DEVICE (SCC-2) 	 *     .  .  . .E - ENCLOSURE SERVICES DEVICE (SES) 	 *     .  .  .  .B - SIMPLIFIED DIRECT-ACCESS DEVICE (RBC) 	 *     .  .  .  . K - OPTICAL CARD READER/WRITER DEVICE (OCRW) 	 *     .  .  .  .  V - AUTOMATION/DRIVE INTERFACE (ADC) 	 *     .  .  .  .  .F - OBJECT-BASED STORAGE (OSD) 	 * OP  DTLPWROMAEBKVF  Description 	 * --  --------------  ---------------------------------------------- */
 comment|/* 00  MMMMMMMMMMMMMM  TEST UNIT READY */
 block|{
 literal|0x00
@@ -2516,14 +2516,51 @@ block|,
 literal|"ERASE(16)"
 block|}
 block|,
-comment|/* 94 [usage proposed by SCSI Socket Services project] */
-comment|/* 95 [usage proposed by SCSI Socket Services project] */
-comment|/* 96 [usage proposed by SCSI Socket Services project] */
-comment|/* 97 [usage proposed by SCSI Socket Services project] */
+comment|/* 94  O               ZBC OUT */
+block|{
+literal|0x94
+block|,
+name|D
+block|,
+literal|"ZBC OUT"
+block|}
+block|,
+comment|/* 95  O               ZBC OUT */
+block|{
+literal|0x95
+block|,
+name|D
+block|,
+literal|"ZBC OUT"
+block|}
+block|,
+comment|/* 96 */
+comment|/* 97 */
 comment|/* 98 */
 comment|/* 99 */
-comment|/* 9A */
-comment|/* 9B */
+comment|/* 9A  O               WRITE STREAM(16) */
+block|{
+literal|0x9A
+block|,
+name|D
+block|,
+literal|"WRITE STREAM(16)"
+block|}
+block|,
+comment|/* 9B  OOOOOOOOOO OOO  READ BUFFER(16) */
+block|{
+literal|0x9B
+block|,
+name|ALL
+operator|&
+operator|~
+operator|(
+name|B
+operator|)
+block|,
+literal|"READ BUFFER(16)"
+block|}
+block|,
 comment|/* 9C  O              WRITE ATOMIC(16) */
 block|{
 literal|0x9C
@@ -2533,7 +2570,15 @@ block|,
 literal|"WRITE ATOMIC(16)"
 block|}
 block|,
-comment|/* 9D */
+comment|/* 9D                  SERVICE ACTION BIDIRECTIONAL */
+block|{
+literal|0x9D
+block|,
+name|ALL
+block|,
+literal|"SERVICE ACTION BIDIRECTIONAL"
+block|}
+block|,
 comment|/* XXX KDM ALL for this?  op-num.txt defines it for none.. */
 comment|/* 9E                  SERVICE ACTION IN(16) */
 block|{
