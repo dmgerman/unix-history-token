@@ -1588,6 +1588,10 @@ name|uint16_t
 name|tbl
 decl_stmt|;
 comment|/* table number			*/
+name|uint16_t
+name|flags
+decl_stmt|;
+comment|/* record flags			*/
 name|uint32_t
 name|value
 decl_stmt|;
@@ -1614,6 +1618,17 @@ block|}
 name|ipfw_table_xentry
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|IPFW_TCF_INET
+value|0x01
+end_define
+
+begin_comment
+comment|/* CIDR flags: IPv4 record	*/
+end_comment
 
 begin_typedef
 typedef|typedef

@@ -3648,6 +3648,12 @@ name|s_addr
 expr_stmt|;
 name|xent
 operator|->
+name|flags
+operator|=
+name|IPFW_TCF_INET
+expr_stmt|;
+name|xent
+operator|->
 name|value
 operator|=
 name|n
