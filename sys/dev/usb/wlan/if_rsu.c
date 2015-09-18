@@ -3231,6 +3231,19 @@ name|iv_newstate
 operator|=
 name|rsu_newstate
 expr_stmt|;
+comment|/* Limits from the r92su driver */
+name|vap
+operator|->
+name|iv_ampdu_density
+operator|=
+name|IEEE80211_HTCAP_MPDUDENSITY_16
+expr_stmt|;
+name|vap
+operator|->
+name|iv_ampdu_rxmax
+operator|=
+name|IEEE80211_HTCAP_MAXRXAMPDU_32K
+expr_stmt|;
 comment|/* complete setup */
 name|ieee80211_vap_attach
 argument_list|(
