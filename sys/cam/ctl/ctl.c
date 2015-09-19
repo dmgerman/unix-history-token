@@ -55988,6 +55988,16 @@ name|CTL_LUN_PEER_SC_PRIMARY
 operator|)
 operator|!=
 literal|0
+operator|&&
+operator|(
+name|entry
+operator|->
+name|flags
+operator|&
+name|CTL_CMD_FLAG_RUN_HERE
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|union
