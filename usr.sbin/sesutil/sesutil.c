@@ -472,7 +472,7 @@ name|bool
 name|onoff
 parameter_list|,
 name|bool
-name|fault
+name|setfault
 parameter_list|)
 block|{
 name|encioc_elm_status_t
@@ -537,7 +537,7 @@ literal|2
 index|]
 operator||=
 operator|(
-name|fault
+name|setfault
 condition|?
 literal|0x20
 else|:
@@ -555,7 +555,7 @@ literal|2
 index|]
 operator|&=
 operator|(
-name|fault
+name|setfault
 condition|?
 literal|0xdf
 else|:
@@ -690,7 +690,7 @@ modifier|*
 name|argv
 parameter_list|,
 name|bool
-name|fault
+name|setfault
 parameter_list|)
 block|{
 name|encioc_elm_devnames_t
@@ -759,7 +759,7 @@ argument_list|(
 name|stderr
 argument_list|,
 operator|(
-name|fault
+name|setfault
 condition|?
 literal|"fault"
 else|:
@@ -823,7 +823,7 @@ argument_list|(
 name|stderr
 argument_list|,
 operator|(
-name|fault
+name|setfault
 condition|?
 literal|"fault"
 else|:
@@ -885,7 +885,7 @@ argument_list|(
 name|stderr
 argument_list|,
 operator|(
-name|fault
+name|setfault
 condition|?
 literal|"fault"
 else|:
@@ -1193,7 +1193,7 @@ name|sesid
 argument_list|,
 name|onoff
 argument_list|,
-name|fault
+name|setfault
 argument_list|)
 expr_stmt|;
 name|ndisks
@@ -1330,7 +1330,7 @@ name|elm_idx
 argument_list|,
 name|onoff
 argument_list|,
-name|fault
+name|setfault
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1359,7 +1359,7 @@ name|elm_idx
 argument_list|,
 name|onoff
 argument_list|,
-name|fault
+name|setfault
 argument_list|)
 expr_stmt|;
 name|ndisks
