@@ -22,17 +22,13 @@ name|__unvis_44bsd
 parameter_list|(
 name|char
 modifier|*
-name|cp
 parameter_list|,
 name|int
-name|c
 parameter_list|,
 name|int
 modifier|*
-name|astate
 parameter_list|,
 name|int
-name|flag
 parameter_list|)
 function_decl|;
 end_function_decl

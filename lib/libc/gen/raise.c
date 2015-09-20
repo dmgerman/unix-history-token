@@ -94,7 +94,6 @@ name|int
 name|__raise
 parameter_list|(
 name|int
-name|s
 parameter_list|)
 function_decl|;
 end_function_decl
