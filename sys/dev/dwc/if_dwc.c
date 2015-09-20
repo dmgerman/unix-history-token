@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/module.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -60,31 +60,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/endian.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
 end_include
 
 begin_include
@@ -97,36 +91,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sockio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ofw/openfirm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ofw/ofw_bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ofw/ofw_bus_subr.h>
 end_include
 
 begin_include
@@ -174,19 +138,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_vlan_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/fdt.h>
+file|<dev/dwc/if_dwc.h>
 end_include
 
 begin_include
@@ -199,6 +157,18 @@ begin_include
 include|#
 directive|include
 file|<dev/mii/miivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/ofw_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/ofw_bus_subr.h>
 end_include
 
 begin_include
@@ -262,12 +232,6 @@ directive|define
 name|MII_CLK_VAL
 value|2
 end_define
-
-begin_include
-include|#
-directive|include
-file|<dev/dwc/if_dwc.h>
-end_include
 
 begin_define
 define|#
