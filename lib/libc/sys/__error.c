@@ -17,6 +17,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|int
