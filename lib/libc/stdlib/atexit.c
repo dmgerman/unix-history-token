@@ -297,7 +297,6 @@ name|int
 name|atexit_b
 parameter_list|(
 name|atexit_block
-name|func
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -309,7 +308,6 @@ parameter_list|(
 name|void
 function_decl|(
 modifier|*
-name|func
 function_decl|)
 parameter_list|(
 name|void
@@ -318,11 +316,9 @@ parameter_list|)
 parameter_list|,
 name|void
 modifier|*
-name|arg
 parameter_list|,
 name|void
 modifier|*
-name|dso
 parameter_list|)
 function_decl|;
 end_function_decl
