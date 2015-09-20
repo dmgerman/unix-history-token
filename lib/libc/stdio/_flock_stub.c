@@ -113,14 +113,11 @@ name|_flockfile_debug_stub
 parameter_list|(
 name|FILE
 modifier|*
-name|fp
 parameter_list|,
 name|char
 modifier|*
-name|fname
 parameter_list|,
 name|int
-name|lineno
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -131,7 +128,6 @@ name|_ftrylockfile
 parameter_list|(
 name|FILE
 modifier|*
-name|fp
 parameter_list|)
 function_decl|;
 end_function_decl
