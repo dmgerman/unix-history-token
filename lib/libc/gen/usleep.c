@@ -81,6 +81,16 @@ directive|include
 file|"libc_private.h"
 end_include
 
+begin_function_decl
+name|int
+name|__usleep
+parameter_list|(
+name|useconds_t
+name|useconds
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|__usleep

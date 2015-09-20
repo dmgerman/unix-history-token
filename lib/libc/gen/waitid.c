@@ -71,6 +71,26 @@ directive|include
 file|"libc_private.h"
 end_include
 
+begin_function_decl
+name|int
+name|__waitid
+parameter_list|(
+name|idtype_t
+name|idtype
+parameter_list|,
+name|id_t
+name|id
+parameter_list|,
+name|siginfo_t
+modifier|*
+name|info
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|__waitid
