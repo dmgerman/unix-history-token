@@ -52,13 +52,10 @@ name|int
 name|__dup3
 parameter_list|(
 name|int
-name|oldfd
 parameter_list|,
 name|int
-name|newfd
 parameter_list|,
 name|int
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

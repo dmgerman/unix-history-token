@@ -86,7 +86,6 @@ name|int
 name|__usleep
 parameter_list|(
 name|useconds_t
-name|useconds
 parameter_list|)
 function_decl|;
 end_function_decl

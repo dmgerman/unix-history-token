@@ -85,7 +85,6 @@ name|_rtld_thread_init
 parameter_list|(
 name|void
 modifier|*
-name|li
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -96,7 +95,6 @@ name|_rtld_atfork_pre
 parameter_list|(
 name|int
 modifier|*
-name|locks
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -107,7 +105,6 @@ name|_rtld_atfork_post
 parameter_list|(
 name|int
 modifier|*
-name|locks
 parameter_list|)
 function_decl|;
 end_function_decl

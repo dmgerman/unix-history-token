@@ -99,15 +99,12 @@ name|__wait3
 parameter_list|(
 name|int
 modifier|*
-name|istat
 parameter_list|,
 name|int
-name|options
 parameter_list|,
 name|struct
 name|rusage
 modifier|*
-name|rup
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -100,7 +100,6 @@ name|__sleep
 parameter_list|(
 name|unsigned
 name|int
-name|seconds
 parameter_list|)
 function_decl|;
 end_function_decl

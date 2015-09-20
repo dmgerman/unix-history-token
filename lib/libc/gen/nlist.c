@@ -218,7 +218,6 @@ name|__elf_is_okay__
 parameter_list|(
 name|Elf_Ehdr
 modifier|*
-name|ehdr
 parameter_list|)
 function_decl|;
 end_function_decl

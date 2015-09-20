@@ -46,11 +46,9 @@ parameter_list|(
 name|struct
 name|dl_phdr_info
 modifier|*
-name|phdr_info
 parameter_list|,
 name|void
 modifier|*
-name|addr
 parameter_list|)
 function_decl|;
 end_function_decl

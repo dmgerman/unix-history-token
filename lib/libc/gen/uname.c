@@ -95,7 +95,6 @@ parameter_list|(
 name|struct
 name|utsname
 modifier|*
-name|name
 parameter_list|)
 function_decl|;
 end_function_decl
