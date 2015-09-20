@@ -67,14 +67,11 @@ parameter_list|(
 name|FILE
 modifier|*
 name|__restrict
-name|fp
 parameter_list|,
 name|size_t
 modifier|*
-name|lenp
 parameter_list|,
 name|locale_t
-name|locale
 parameter_list|)
 function_decl|;
 end_function_decl
