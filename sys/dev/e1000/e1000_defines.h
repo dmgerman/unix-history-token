@@ -1229,20 +1229,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_RCTL_RDMTS_HEX
-value|0x00010000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RCTL_RDMTS1_HEX
-value|E1000_RCTL_RDMTS_HEX
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_RCTL_MO_SHIFT
 value|12
 end_define
@@ -3880,6 +3866,28 @@ begin_comment
 comment|/* Malicious Driver Detect */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_ITR_MASK
+value|0x000FFFFF
+end_define
+
+begin_comment
+comment|/* ITR value bitfield */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ITR_MULT
+value|256
+end_define
+
+begin_comment
+comment|/* ITR mulitplier in nsec */
+end_comment
+
 begin_comment
 comment|/* PBA ECC Register */
 end_comment
@@ -5196,54 +5204,6 @@ end_define
 
 begin_comment
 comment|/* enable Tx timestamping */
-end_comment
-
-begin_comment
-comment|/* HH Time Sync */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TSYNCTXCTL_MAX_ALLOWED_DLY_MASK
-value|0x0000F000
-end_define
-
-begin_comment
-comment|/* max delay */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TSYNCTXCTL_SYNC_COMP_ERR
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* sync err */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TSYNCTXCTL_SYNC_COMP
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* sync complete */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TSYNCTXCTL_START_SYNC
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* initiate sync */
 end_comment
 
 begin_define
@@ -7377,6 +7337,12 @@ begin_comment
 comment|/* NVM Type (1-SPI, 0-Microwire) */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|E1000_NVM_GRANT_ATTEMPTS
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -7387,6 +7353,11 @@ end_define
 begin_comment
 comment|/* NVM # attempts to gain grant */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -7684,13 +7655,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NVM_VERSION
-value|0x0005
-end_define
-
-begin_define
-define|#
-directive|define
 name|NVM_SERDES_AMPLITUDE
 value|0x0006
 end_define
@@ -7725,188 +7689,6 @@ define|#
 directive|define
 name|NVM_FUTURE_INIT_WORD1
 value|0x0019
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_ETRACK_WORD
-value|0x0042
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_ETRACK_HIWORD
-value|0x0043
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_COMB_VER_OFF
-value|0x0083
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_COMB_VER_PTR
-value|0x003d
-end_define
-
-begin_comment
-comment|/* NVM version defines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NVM_MAJOR_MASK
-value|0xF000
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_MINOR_MASK
-value|0x0FF0
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_IMAGE_ID_MASK
-value|0x000F
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_COMB_VER_MASK
-value|0x00FF
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_MAJOR_SHIFT
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_MINOR_SHIFT
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_COMB_VER_SHFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_VER_INVALID
-value|0xFFFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_ETRACK_SHIFT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_ETRACK_VALID
-value|0x8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_NEW_DEC_MASK
-value|0x0F00
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_HEX_CONV
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVM_HEX_TENS
-value|10
-end_define
-
-begin_comment
-comment|/* FW version defines */
-end_comment
-
-begin_comment
-comment|/* Offset of "Loader patch ptr" in Firmware Header */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_I350_NVM_FW_LOADER_PATCH_PTR_OFFSET
-value|0x01
-end_define
-
-begin_comment
-comment|/* Patch generation hour& minutes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_I350_NVM_FW_VER_WORD1_OFFSET
-value|0x04
-end_define
-
-begin_comment
-comment|/* Patch generation month& day */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_I350_NVM_FW_VER_WORD2_OFFSET
-value|0x05
-end_define
-
-begin_comment
-comment|/* Patch generation year */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_I350_NVM_FW_VER_WORD3_OFFSET
-value|0x06
-end_define
-
-begin_comment
-comment|/* Patch major& minor numbers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_I350_NVM_FW_VER_WORD4_OFFSET
-value|0x07
 end_define
 
 begin_define
@@ -10076,6 +9858,28 @@ end_define
 
 begin_comment
 comment|/* TXPBSIZE default */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DOBFFCTL_OBFFTHR_MASK
+value|0x000000FF
+end_define
+
+begin_comment
+comment|/* OBFF threshold */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DOBFFCTL_EXIT_ACT_MASK
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Exit active CB */
 end_comment
 
 begin_comment

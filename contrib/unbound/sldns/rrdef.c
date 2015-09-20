@@ -16,13 +16,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/rrdef.h"
+file|"sldns/rrdef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/parseutil.h"
+file|"sldns/parseutil.h"
 end_include
 
 begin_comment
@@ -1054,12 +1054,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DRAFT_RRTYPES
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -1076,11 +1070,6 @@ name|LDNS_RDF_TYPE_LONG_STR
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -5840,9 +5829,6 @@ block|,
 literal|0
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|DRAFT_RRTYPES
 comment|/* 256 */
 block|{
 name|LDNS_RR_TYPE_URI
@@ -5862,28 +5848,6 @@ block|,
 literal|0
 block|}
 block|,
-else|#
-directive|else
-block|{
-name|LDNS_RR_TYPE_NULL
-block|,
-literal|"TYPE256"
-block|,
-literal|1
-block|,
-literal|1
-block|,
-name|type_0_wireformat
-block|,
-name|LDNS_RDF_TYPE_NONE
-block|,
-name|LDNS_RR_NO_COMPRESS
-block|,
-literal|0
-block|}
-block|,
-endif|#
-directive|endif
 comment|/* 257 */
 block|{
 name|LDNS_RR_TYPE_CAA

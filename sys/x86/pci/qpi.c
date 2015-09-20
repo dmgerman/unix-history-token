@@ -801,10 +801,8 @@ name|dev
 argument_list|,
 literal|"pci"
 argument_list|,
-name|pcib_get_bus
-argument_list|(
-name|dev
-argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return

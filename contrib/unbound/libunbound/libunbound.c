@@ -128,7 +128,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/sbuffer.h"
+file|"sldns/sbuffer.h"
 end_include
 
 begin_ifdef
@@ -5320,11 +5320,6 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-name|free
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
 return|return
 name|retval
 return|;
@@ -5456,6 +5451,16 @@ condition|(
 operator|*
 name|parse
 operator|==
+literal|'\r'
+condition|)
+name|parse
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|parse
+operator|==
 literal|'\n'
 operator|||
 operator|*
@@ -5530,6 +5535,11 @@ operator|*
 name|parse
 operator|==
 literal|'\n'
+operator|||
+operator|*
+name|parse
+operator|==
+literal|'\r'
 condition|)
 name|parse
 operator|++

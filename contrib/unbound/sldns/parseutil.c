@@ -16,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/parseutil.h"
+file|"sldns/parseutil.h"
 end_include
 
 begin_include

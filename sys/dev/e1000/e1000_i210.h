@@ -113,23 +113,6 @@ end_function_decl
 
 begin_function_decl
 name|s32
-name|e1000_read_invm_version
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|,
-name|struct
-name|e1000_fw_version
-modifier|*
-name|invm_ver
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|s32
 name|e1000_acquire_swfw_sync_i210
 parameter_list|(
 name|struct

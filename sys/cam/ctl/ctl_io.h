@@ -186,16 +186,6 @@ name|CTL_FLAG_DATA_MASK
 init|=
 literal|0x00000003
 block|,
-name|CTL_FLAG_KDPTR_SGLIST
-init|=
-literal|0x00000008
-block|,
-comment|/* kern_data_ptr is S/G list*/
-name|CTL_FLAG_EDPTR_SGLIST
-init|=
-literal|0x00000010
-block|,
-comment|/* ext_data_ptr is S/G list */
 name|CTL_FLAG_DO_AUTOSENSE
 init|=
 literal|0x00000020
@@ -298,7 +288,12 @@ comment|/* I/O active on this SC */
 name|CTL_FLAG_STATUS_SENT
 init|=
 literal|0x10000000
+block|,
 comment|/* Status sent by datamove */
+name|CTL_FLAG_SERSEQ_DONE
+init|=
+literal|0x20000000
+comment|/* All storage I/O started */
 block|}
 name|ctl_io_flags
 typedef|;
@@ -591,6 +586,9 @@ comment|/* Information about port. */
 name|CTL_MSG_LUN_SYNC
 block|,
 comment|/* Information about LUN. */
+name|CTL_MSG_IID_SYNC
+block|,
+comment|/* Information about initiator. */
 name|CTL_MSG_FAILOVER
 comment|/* Fake, never sent though the wire */
 block|}
@@ -1043,6 +1041,10 @@ block|{
 name|ctl_msg_type
 name|msg_type
 decl_stmt|;
+name|uint32_t
+name|status
+decl_stmt|;
+comment|/* transaction status */
 name|union
 name|ctl_io
 modifier|*
@@ -1058,10 +1060,6 @@ name|ctl_nexus
 name|nexus
 decl_stmt|;
 comment|/* Initiator, port, target, lun */
-name|uint32_t
-name|status
-decl_stmt|;
-comment|/* transaction status */
 block|}
 struct|;
 end_struct
@@ -1120,6 +1118,12 @@ name|ua_set
 decl_stmt|;
 name|int
 name|ua_type
+decl_stmt|;
+name|uint8_t
+name|ua_info
+index|[
+literal|8
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -1312,6 +1316,9 @@ decl_stmt|;
 name|int
 name|target_devid_len
 decl_stmt|;
+name|int
+name|init_devid_len
+decl_stmt|;
 name|uint8_t
 name|data
 index|[]
@@ -1373,6 +1380,35 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Used for CTL_MSG_IID_SYNC.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ctl_ha_msg_iid
+block|{
+name|struct
+name|ctl_ha_msg_hdr
+name|hdr
+decl_stmt|;
+name|int
+name|in_use
+decl_stmt|;
+name|int
+name|name_len
+decl_stmt|;
+name|uint64_t
+name|wwpn
+decl_stmt|;
+name|uint8_t
+name|data
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_union
 union|union
 name|ctl_ha_msg
@@ -1408,6 +1444,10 @@ decl_stmt|;
 name|struct
 name|ctl_ha_msg_lun
 name|lun
+decl_stmt|;
+name|struct
+name|ctl_ha_msg_iid
+name|iid
 decl_stmt|;
 block|}
 union|;

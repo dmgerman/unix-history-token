@@ -532,11 +532,11 @@ name|LDNS_RR_TYPE_ANY
 init|=
 literal|255
 block|,
-comment|/** draft-faltstrom-uri-06 */
 name|LDNS_RR_TYPE_URI
 init|=
 literal|256
 block|,
+comment|/* RFC 7553 */
 name|LDNS_RR_TYPE_CAA
 init|=
 literal|257

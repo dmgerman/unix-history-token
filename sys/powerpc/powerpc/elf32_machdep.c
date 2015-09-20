@@ -783,6 +783,9 @@ name|Elf_Rela
 modifier|*
 name|rela
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -890,7 +893,7 @@ case|case
 name|R_PPC_ADDR32
 case|:
 comment|/* word32 S + A */
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -899,12 +902,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return
@@ -928,7 +934,7 @@ case|case
 name|R_PPC_ADDR16_LO
 case|:
 comment|/* #lo(S) */
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -937,12 +943,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return
@@ -991,7 +1000,7 @@ case|case
 name|R_PPC_ADDR16_HA
 case|:
 comment|/* #ha(S) */
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -1000,12 +1009,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return

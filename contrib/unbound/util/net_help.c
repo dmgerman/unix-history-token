@@ -46,13 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/parseutil.h"
+file|"sldns/parseutil.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/wire2str.h"
+file|"sldns/wire2str.h"
 end_include
 
 begin_include
@@ -4785,7 +4785,7 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|ub_thread_self
+name|log_thread_get
 argument_list|()
 return|;
 block|}
@@ -4893,15 +4893,20 @@ operator|(
 name|lock_basic_t
 operator|*
 operator|)
-name|malloc
+name|reallocarray
 argument_list|(
+name|NULL
+argument_list|,
+operator|(
+name|size_t
+operator|)
+name|CRYPTO_num_locks
+argument_list|()
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|lock_basic_t
 argument_list|)
-operator|*
-name|CRYPTO_num_locks
-argument_list|()
 argument_list|)
 expr_stmt|;
 if|if

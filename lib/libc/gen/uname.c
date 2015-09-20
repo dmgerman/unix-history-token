@@ -88,6 +88,17 @@ directive|undef
 name|uname
 end_undef
 
+begin_function_decl
+name|int
+name|uname
+parameter_list|(
+name|struct
+name|utsname
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|uname

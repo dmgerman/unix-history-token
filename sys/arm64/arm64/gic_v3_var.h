@@ -722,6 +722,10 @@ name|struct
 name|mtx
 name|its_spin_mtx
 decl_stmt|;
+name|uint32_t
+name|its_socket
+decl_stmt|;
+comment|/* Socket number ITS is attached to */
 block|}
 struct|;
 end_struct

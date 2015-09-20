@@ -1571,14 +1571,6 @@ operator|.
 name|len
 expr_stmt|;
 block|}
-name|io
-operator|->
-name|io_hdr
-operator|.
-name|flags
-operator||=
-name|CTL_FLAG_KDPTR_SGLIST
-expr_stmt|;
 block|}
 else|else
 block|{

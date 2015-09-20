@@ -4057,16 +4057,13 @@ argument_list|(
 name|far_el1
 argument_list|)
 block|;
-name|PRINT_REG
-argument_list|(
-name|fpcr
-argument_list|)
-block|;
-name|PRINT_REG
-argument_list|(
-name|fpsr
-argument_list|)
-block|;
+if|#
+directive|if
+literal|0
+comment|/* ARM64TODO: Enable VFP before reading floating-point registers */
+block|PRINT_REG(fpcr); 	PRINT_REG(fpsr);
+endif|#
+directive|endif
 name|PRINT_REG
 argument_list|(
 name|id_aa64afr0_el1

@@ -202,7 +202,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/sbuffer.h"
+file|"sldns/sbuffer.h"
 end_include
 
 begin_ifdef
@@ -275,6 +275,21 @@ end_define
 
 begin_comment
 comment|/* bytes */
+end_comment
+
+begin_comment
+comment|/** ratelimit for error responses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ERROR_RATELIMIT
+value|100
+end_define
+
+begin_comment
+comment|/* qps */
 end_comment
 
 begin_comment
@@ -1670,6 +1685,80 @@ block|}
 end_function
 
 begin_comment
+comment|/** ratelimit error replies  * @param worker: the worker struct with ratelimit counter  * @param err: error code that would be wanted.  * @return value of err if okay, or -1 if it should be discarded instead.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|worker_err_ratelimit
+parameter_list|(
+name|struct
+name|worker
+modifier|*
+name|worker
+parameter_list|,
+name|int
+name|err
+parameter_list|)
+block|{
+if|if
+condition|(
+name|worker
+operator|->
+name|err_limit_time
+operator|==
+operator|*
+name|worker
+operator|->
+name|env
+operator|.
+name|now
+condition|)
+block|{
+comment|/* see if limit is exceeded for this second */
+if|if
+condition|(
+name|worker
+operator|->
+name|err_limit_count
+operator|++
+operator|>
+name|ERROR_RATELIMIT
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+block|}
+else|else
+block|{
+comment|/* new second, new limits */
+name|worker
+operator|->
+name|err_limit_time
+operator|=
+operator|*
+name|worker
+operator|->
+name|env
+operator|.
+name|now
+expr_stmt|;
+name|worker
+operator|->
+name|err_limit_count
+operator|=
+literal|1
+expr_stmt|;
+block|}
+return|return
+name|err
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/** check request sanity.  * @param pkt: the wire packet to examine for sanity.  * @param worker: parameters for checking.  * @return error code, 0 OK, or -1 discard. */
 end_comment
 
@@ -1790,7 +1879,12 @@ literal|"request bad, has TC bit on"
 argument_list|)
 expr_stmt|;
 return|return
+name|worker_err_ratelimit
+argument_list|(
+name|worker
+argument_list|,
 name|LDNS_RCODE_FORMERR
+argument_list|)
 return|;
 block|}
 if|if
@@ -1822,7 +1916,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+name|worker_err_ratelimit
+argument_list|(
+name|worker
+argument_list|,
 name|LDNS_RCODE_NOTIMPL
+argument_list|)
 return|;
 block|}
 if|if
@@ -1854,7 +1953,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+name|worker_err_ratelimit
+argument_list|(
+name|worker
+argument_list|,
 name|LDNS_RCODE_FORMERR
+argument_list|)
 return|;
 block|}
 if|if
@@ -1886,7 +1990,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+name|worker_err_ratelimit
+argument_list|(
+name|worker
+argument_list|,
 name|LDNS_RCODE_FORMERR
+argument_list|)
 return|;
 block|}
 if|if
@@ -1918,7 +2027,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+name|worker_err_ratelimit
+argument_list|(
+name|worker
+argument_list|,
 name|LDNS_RCODE_FORMERR
+argument_list|)
 return|;
 block|}
 if|if
@@ -1950,7 +2064,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+name|worker_err_ratelimit
+argument_list|(
+name|worker
+argument_list|,
 name|LDNS_RCODE_FORMERR
+argument_list|)
 return|;
 block|}
 return|return
@@ -3067,6 +3186,8 @@ condition|(
 operator|!
 name|reply_check_cname_chain
 argument_list|(
+name|qinfo
+argument_list|,
 name|rep
 argument_list|)
 condition|)
@@ -4689,6 +4810,28 @@ operator|->
 name|addrlen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|worker_err_ratelimit
+argument_list|(
+name|worker
+argument_list|,
+name|LDNS_RCODE_FORMERR
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|comm_point_drop_reply
+argument_list|(
+name|repinfo
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|sldns_buffer_rewind
 argument_list|(
 name|c

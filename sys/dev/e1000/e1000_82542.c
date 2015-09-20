@@ -1101,6 +1101,8 @@ name|mac
 decl_stmt|;
 name|s32
 name|ret_val
+init|=
+name|E1000_SUCCESS
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -1893,6 +1895,7 @@ comment|/**  *  e1000_read_mac_addr_82542 - Read device MAC address  *  @hw: poi
 end_comment
 
 begin_function
+specifier|static
 name|s32
 name|e1000_read_mac_addr_82542
 parameter_list|(

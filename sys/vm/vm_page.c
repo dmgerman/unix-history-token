@@ -11359,6 +11359,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|object
+operator|->
+name|ref_count
+operator|!=
+literal|0
+operator|&&
 name|m
 operator|->
 name|valid

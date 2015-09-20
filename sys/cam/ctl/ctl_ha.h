@@ -183,8 +183,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ctl_ha_status
+name|void
 name|ctl_ha_msg_shutdown
+parameter_list|(
+name|struct
+name|ctl_softc
+modifier|*
+name|softc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ctl_ha_status
+name|ctl_ha_msg_destroy
 parameter_list|(
 name|struct
 name|ctl_softc

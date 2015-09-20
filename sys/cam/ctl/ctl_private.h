@@ -161,7 +161,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * WARNING:  Keep the bottom nibble here free, we OR in the data direction  * flags for each command.  *  * Note:  "OK_ON_ALL_LUNS" == we don't have to have a lun configured  *        "OK_ON_BOTH"     == we have to have a lun configured  *        "SA5"            == command has 5-bit service action at byte 1  */
+comment|/*  * WARNING:  Keep the bottom nibble here free, we OR in the data direction  * flags for each command.  *  * Note:  "OK_ON_NO_LUN"   == we don't have to have a lun configured  *        "OK_ON_BOTH"     == we have to have a lun configured  *        "SA5"            == command has 5-bit service action at byte 1  */
 end_comment
 
 begin_typedef
@@ -176,7 +176,7 @@ name|CTL_CMD_FLAG_NO_SENSE
 init|=
 literal|0x0010
 block|,
-name|CTL_CMD_FLAG_OK_ON_ALL_LUNS
+name|CTL_CMD_FLAG_OK_ON_NO_LUN
 init|=
 literal|0x0020
 block|,
@@ -223,6 +223,10 @@ block|,
 name|CTL_CMD_FLAG_SA5
 init|=
 literal|0x8000
+block|,
+name|CTL_CMD_FLAG_RUN_HERE
+init|=
+literal|0x10000
 block|}
 name|ctl_cmd_flags
 typedef|;
@@ -1319,6 +1323,12 @@ modifier|*
 name|pending_ua
 index|[
 name|CTL_MAX_PORTS
+index|]
+decl_stmt|;
+name|uint8_t
+name|ua_tpt_info
+index|[
+literal|8
 index|]
 decl_stmt|;
 name|time_t

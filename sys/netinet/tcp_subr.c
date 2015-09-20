@@ -7226,7 +7226,7 @@ condition|)
 block|{
 name|icmp_tcp_seq
 operator|=
-name|htonl
+name|ntohl
 argument_list|(
 name|th
 operator|->
