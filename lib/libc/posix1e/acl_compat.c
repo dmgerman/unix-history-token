@@ -28,10 +28,8 @@ name|int
 name|__oldacl_get_perm_np
 parameter_list|(
 name|acl_permset_t
-name|permset_d
 parameter_list|,
 name|oldacl_perm_t
-name|perm
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -41,10 +39,8 @@ name|int
 name|__oldacl_add_perm
 parameter_list|(
 name|acl_permset_t
-name|permset_d
 parameter_list|,
 name|oldacl_perm_t
-name|perm
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -54,10 +50,8 @@ name|int
 name|__oldacl_delete_perm
 parameter_list|(
 name|acl_permset_t
-name|permset_d
 parameter_list|,
 name|oldacl_perm_t
-name|perm
 parameter_list|)
 function_decl|;
 end_function_decl

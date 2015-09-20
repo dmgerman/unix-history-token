@@ -171,11 +171,9 @@ name|int
 name|_nfs4_acl_entry_from_text
 parameter_list|(
 name|acl_t
-name|aclp
 parameter_list|,
 name|char
 modifier|*
-name|str
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -187,14 +185,11 @@ name|_nfs4_acl_to_text_np
 parameter_list|(
 specifier|const
 name|acl_t
-name|aclp
 parameter_list|,
 name|ssize_t
 modifier|*
-name|len_p
 parameter_list|,
 name|int
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
