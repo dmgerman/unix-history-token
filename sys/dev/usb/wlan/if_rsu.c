@@ -2665,12 +2665,13 @@ name|IEEE80211_HTCAP_MAXAMSDU_3839
 operator||
 name|IEEE80211_HTCAP_SMPS_OFF
 expr_stmt|;
-name|ic
-operator|->
-name|ic_htcaps
-operator||=
-name|IEEE80211_HTCAP_CHWIDTH40
-expr_stmt|;
+comment|/* 		 * XXX HT40 isn't working in this driver yet - there's 		 * something missing.  Disable it for now. 		 */
+if|#
+directive|if
+literal|0
+block|ic->ic_htcaps |= IEEE80211_HTCAP_CHWIDTH40;
+endif|#
+directive|endif
 comment|/* set number of spatial streams */
 name|ic
 operator|->
