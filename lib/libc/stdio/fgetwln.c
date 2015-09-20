@@ -59,6 +59,26 @@ directive|include
 file|"xlocale_private.h"
 end_include
 
+begin_function_decl
+name|wchar_t
+modifier|*
+name|fgetwln_l
+parameter_list|(
+name|FILE
+modifier|*
+name|__restrict
+name|fp
+parameter_list|,
+name|size_t
+modifier|*
+name|lenp
+parameter_list|,
+name|locale_t
+name|locale
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|wchar_t
 modifier|*

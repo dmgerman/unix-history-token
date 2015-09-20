@@ -731,6 +731,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function_decl
+name|void
+name|f_prealloc_void
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|f_prealloc
