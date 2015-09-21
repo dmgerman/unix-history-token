@@ -206,7 +206,7 @@ name|char
 modifier|*
 name|ctlstat_opts
 init|=
-literal|"Cc:Ddhjl:n:tw:"
+literal|"Cc:Ddhjl:n:p:tw:"
 decl_stmt|;
 end_decl_stmt
 
@@ -304,6 +304,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|CTLSTAT_FLAG_LUN_MASK
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTLSTAT_FLAG_PORT_MASK
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
 name|F_CPU
 parameter_list|(
 name|ctx
@@ -359,6 +373,26 @@ parameter_list|(
 name|ctx
 parameter_list|)
 value|((ctx)->flags& CTLSTAT_FLAG_LUN_TIME_VALID)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_LUNMASK
+parameter_list|(
+name|ctx
+parameter_list|)
+value|((ctx)->flags& CTLSTAT_FLAG_LUN_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_PORTMASK
+parameter_list|(
+name|ctx
+parameter_list|)
+value|((ctx)->flags& CTLSTAT_FLAG_PORT_MASK)
 end_define
 
 begin_struct
@@ -422,6 +456,14 @@ parameter_list|(
 name|lun_mask
 parameter_list|,
 name|CTL_STAT_LUN_BITS
+parameter_list|)
+function_decl|;
+name|bitstr_t
+name|bit_decl
+parameter_list|(
+name|port_mask
+parameter_list|,
+name|CTL_MAX_PORTS
 parameter_list|)
 function_decl|;
 name|int
@@ -519,6 +561,11 @@ specifier|static
 name|void
 name|compute_stats
 parameter_list|(
+name|struct
+name|ctlstat_context
+modifier|*
+name|ctx
+parameter_list|,
 name|struct
 name|ctl_lun_io_stats
 modifier|*
@@ -1000,6 +1047,11 @@ name|void
 name|compute_stats
 parameter_list|(
 name|struct
+name|ctlstat_context
+modifier|*
+name|ctx
+parameter_list|,
+name|struct
 name|ctl_lun_io_stats
 modifier|*
 name|cur_stats
@@ -1133,6 +1185,25 @@ name|port
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|F_PORTMASK
+argument_list|(
+name|ctx
+argument_list|)
+operator|&&
+name|bit_test
+argument_list|(
+name|ctx
+operator|->
+name|port_mask
+argument_list|,
+name|port
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 for|for
 control|(
 name|i
@@ -1589,6 +1660,25 @@ name|lun
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|F_LUNMASK
+argument_list|(
+name|ctx
+argument_list|)
+operator|&&
+name|bit_test
+argument_list|(
+name|ctx
+operator|->
+name|lun_mask
+argument_list|,
+name|lun
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|printf
 argument_list|(
 literal|"lun %d\n"
@@ -1610,6 +1700,25 @@ name|port
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|F_PORTMASK
+argument_list|(
+name|ctx
+argument_list|)
+operator|&&
+name|bit_test
+argument_list|(
+name|ctx
+operator|->
+name|port_mask
+argument_list|,
+name|port
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|printf
 argument_list|(
 literal|" port %d\n"
@@ -1829,6 +1938,25 @@ name|lun
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|F_LUNMASK
+argument_list|(
+name|ctx
+argument_list|)
+operator|&&
+name|bit_test
+argument_list|(
+name|ctx
+operator|->
+name|lun_mask
+argument_list|,
+name|lun
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|printf
 argument_list|(
 literal|"{\"ports\":["
@@ -1848,6 +1976,25 @@ name|port
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|F_PORTMASK
+argument_list|(
+name|ctx
+argument_list|)
+operator|&&
+name|bit_test
+argument_list|(
+name|ctx
+operator|->
+name|port_mask
+argument_list|,
+name|port
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|printf
 argument_list|(
 literal|"{\"num\":%d,\"io\":["
@@ -2310,6 +2457,20 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|F_CPU
+argument_list|(
+name|ctx
+argument_list|)
+condition|)
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|" CPU"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|F_TOTALS
 argument_list|(
 name|ctx
@@ -2320,8 +2481,8 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%s     System Read     %s"
-literal|"System Write     %sSystem Total%s\n"
+literal|"%s     Read       %s"
+literal|"    Write       %s    Total\n"
 argument_list|,
 operator|(
 name|F_LUNVAL
@@ -2332,7 +2493,7 @@ operator|!=
 literal|0
 operator|)
 condition|?
-literal|"     "
+literal|"      "
 else|:
 literal|""
 argument_list|,
@@ -2345,7 +2506,7 @@ operator|!=
 literal|0
 operator|)
 condition|?
-literal|"     "
+literal|"      "
 else|:
 literal|""
 argument_list|,
@@ -2358,18 +2519,7 @@ operator|!=
 literal|0
 operator|)
 condition|?
-literal|"     "
-else|:
-literal|""
-argument_list|,
-operator|(
-name|F_CPU
-argument_list|(
-name|ctx
-argument_list|)
-operator|)
-condition|?
-literal|"    CPU"
+literal|"      "
 else|:
 literal|""
 argument_list|)
@@ -2381,20 +2531,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|F_CPU
-argument_list|(
-name|ctx
-argument_list|)
-condition|)
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"  CPU  "
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -2436,6 +2572,11 @@ name|lun_number
 expr_stmt|;
 if|if
 condition|(
+name|F_LUNMASK
+argument_list|(
+name|ctx
+argument_list|)
+operator|&&
 name|bit_test
 argument_list|(
 name|ctx
@@ -2484,6 +2625,20 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|F_CPU
+argument_list|(
+name|ctx
+argument_list|)
+condition|)
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"    "
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2501,37 +2656,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%s  %sKB/t %s  MB/s "
-argument_list|,
-operator|(
-operator|(
-name|F_CPU
-argument_list|(
-name|ctx
-argument_list|)
-operator|!=
-literal|0
-operator|)
-operator|&&
-operator|(
-name|i
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|F_TOTALS
-argument_list|(
-name|ctx
-argument_list|)
-operator|==
-literal|0
-operator|)
-operator|)
-condition|?
-literal|"       "
-else|:
-literal|""
+literal|"%s KB/t   %s MB/s"
 argument_list|,
 operator|(
 name|F_LUNVAL
@@ -2542,7 +2667,7 @@ operator|!=
 literal|0
 operator|)
 condition|?
-literal|" ms  "
+literal|"    ms"
 else|:
 literal|""
 argument_list|,
@@ -2575,6 +2700,22 @@ literal|20
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|F_CPU
+argument_list|(
+name|ctx
+argument_list|)
+condition|)
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"%3.0Lf%%"
+argument_list|,
+name|cpu_percentage
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|F_TOTALS
@@ -2758,6 +2899,35 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|F_LUNMASK
+argument_list|(
+name|ctx
+argument_list|)
+operator|&&
+name|bit_test
+argument_list|(
+name|ctx
+operator|->
+name|lun_mask
+argument_list|,
+operator|(
+name|int
+operator|)
+name|ctx
+operator|->
+name|cur_lun_stats
+index|[
+name|i
+index|]
+operator|.
+name|lun_number
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 for|for
 control|(
 name|port
@@ -2772,6 +2942,25 @@ name|port
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|F_PORTMASK
+argument_list|(
+name|ctx
+argument_list|)
+operator|&&
+name|bit_test
+argument_list|(
+name|ctx
+operator|->
+name|port_mask
+argument_list|,
+name|port
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 for|for
 control|(
 name|j
@@ -2970,6 +3159,8 @@ control|)
 block|{
 name|compute_stats
 argument_list|(
+name|ctx
+argument_list|,
 operator|&
 name|ctx
 operator|->
@@ -3045,7 +3236,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|" %2.2Lf"
+literal|" %5.1Lf"
 argument_list|,
 name|ms_per_dma
 index|[
@@ -3067,7 +3258,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|" %2.2Lf"
+literal|" %5.1Lf"
 argument_list|,
 name|ms_per_transfer
 index|[
@@ -3079,7 +3270,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|" %5.2Lf %3.0Lf %5.2Lf "
+literal|" %4.0Lf %5.0Lf %4.0Lf"
 argument_list|,
 name|kb_per_transfer
 index|[
@@ -3112,41 +3303,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|F_CPU
-argument_list|(
-name|ctx
-argument_list|)
-condition|)
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|" %5.1Lf%%"
-argument_list|,
-name|cpu_percentage
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|F_CPU
-argument_list|(
-name|ctx
-argument_list|)
-condition|)
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"%5.1Lf%% "
-argument_list|,
-name|cpu_percentage
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -3192,6 +3351,11 @@ name|dmas_per_sec
 decl_stmt|;
 if|if
 condition|(
+name|F_LUNMASK
+argument_list|(
+name|ctx
+argument_list|)
+operator|&&
 name|bit_test
 argument_list|(
 name|ctx
@@ -3216,6 +3380,8 @@ condition|)
 continue|continue;
 name|compute_stats
 argument_list|(
+name|ctx
+argument_list|,
 operator|&
 name|ctx
 operator|->
@@ -3271,7 +3437,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|" %2.2Lf"
+literal|" %5.1Lf"
 argument_list|,
 name|ms_per_dma
 argument_list|)
@@ -3290,7 +3456,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|" %2.2Lf"
+literal|" %5.1Lf"
 argument_list|,
 name|ms_per_transfer
 argument_list|)
@@ -3299,7 +3465,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|" %5.2Lf %3.0Lf %5.2Lf "
+literal|" %4.0Lf %5.0Lf %4.0Lf"
 argument_list|,
 name|kb_per_transfer
 argument_list|,
@@ -3344,9 +3510,6 @@ name|int
 name|count
 decl_stmt|,
 name|waittime
-decl_stmt|;
-name|int
-name|set_lun
 decl_stmt|;
 name|int
 name|fd
@@ -3538,24 +3701,14 @@ argument_list|,
 name|cur_lun
 argument_list|)
 expr_stmt|;
-name|bit_ffs
-argument_list|(
-name|ctx
-operator|.
-name|lun_mask
-argument_list|,
-name|CTL_STAT_LUN_BITS
-argument_list|,
-operator|&
-name|set_lun
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|set_lun
-operator|==
-operator|-
-literal|1
+operator|!
+name|F_LUNMASK
+argument_list|(
+operator|&
+name|ctx
+argument_list|)
 condition|)
 name|ctx
 operator|.
@@ -3578,6 +3731,12 @@ argument_list|,
 name|cur_lun
 argument_list|)
 expr_stmt|;
+name|ctx
+operator|.
+name|flags
+operator||=
+name|CTLSTAT_FLAG_LUN_MASK
+expr_stmt|;
 break|break;
 block|}
 case|case
@@ -3594,6 +3753,52 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'p'
+case|:
+block|{
+name|int
+name|cur_port
+decl_stmt|;
+name|cur_port
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cur_port
+operator|>
+name|CTL_MAX_PORTS
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Invalid LUN number %d"
+argument_list|,
+name|cur_port
+argument_list|)
+expr_stmt|;
+name|bit_set
+argument_list|(
+name|ctx
+operator|.
+name|port_mask
+argument_list|,
+name|cur_port
+argument_list|)
+expr_stmt|;
+name|ctx
+operator|.
+name|flags
+operator||=
+name|CTLSTAT_FLAG_PORT_MASK
+expr_stmt|;
+break|break;
+block|}
+case|case
 literal|'t'
 case|:
 name|ctx
@@ -3601,12 +3806,6 @@ operator|.
 name|flags
 operator||=
 name|CTLSTAT_FLAG_TOTALS
-expr_stmt|;
-name|ctx
-operator|.
-name|numdevs
-operator|=
-literal|3
 expr_stmt|;
 break|break;
 case|case
@@ -3638,52 +3837,21 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|bit_ffs
-argument_list|(
-name|ctx
-operator|.
-name|lun_mask
-argument_list|,
-name|CTL_STAT_LUN_BITS
-argument_list|,
-operator|&
-name|set_lun
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-operator|(
+operator|!
 name|F_TOTALS
 argument_list|(
 operator|&
 name|ctx
 argument_list|)
-operator|)
 operator|&&
-operator|(
-name|set_lun
-operator|!=
-operator|-
-literal|1
-operator|)
-condition|)
-block|{
-name|errx
+operator|!
+name|F_LUNMASK
 argument_list|(
-literal|1
-argument_list|,
-literal|"Total Mode (-t) is incompatible with individual "
-literal|"LUN mode (-l)"
+operator|&
+name|ctx
 argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|set_lun
-operator|==
-operator|-
-literal|1
 condition|)
 block|{
 comment|/* 		 * Note that this just selects the first N LUNs to display, 		 * but at this point we have no knoweledge of which LUN 		 * numbers actually exist.  So we may select LUNs that 		 * aren't there. 		 */
@@ -3708,6 +3876,12 @@ operator|-
 literal|1
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|ctx
+operator|.
+name|flags
+operator||=
+name|CTLSTAT_FLAG_LUN_MASK
 expr_stmt|;
 block|}
 if|if
