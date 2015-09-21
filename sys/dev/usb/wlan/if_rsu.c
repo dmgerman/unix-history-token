@@ -22,7 +22,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Driver for Realtek RTL8188SU/RTL8191SU/RTL8192SU.  *  * TODO:  *   o 11n support  *   o h/w crypto  *   o hostap / ibss / mesh  */
+comment|/*  * Driver for Realtek RTL8188SU/RTL8191SU/RTL8192SU.  *  * TODO:  *   o 11n HT40 support  *   o h/w crypto  *   o hostap / ibss / mesh  *   o sensible RSSI levels  *   o power-save operation  */
 end_comment
 
 begin_include
@@ -333,7 +333,7 @@ specifier|static
 name|int
 name|rsu_enable_11n
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
