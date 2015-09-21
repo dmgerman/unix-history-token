@@ -3151,6 +3151,10 @@ name|struct
 name|timeout_task
 name|calib_task
 decl_stmt|;
+name|struct
+name|task
+name|tx_task
+decl_stmt|;
 specifier|const
 name|uint8_t
 modifier|*
