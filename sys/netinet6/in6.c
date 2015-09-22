@@ -10698,7 +10698,7 @@ literal|0
 operator|)
 return|;
 default|default:
-comment|/* 		 * Our DAD routine requires the interface up and running. 		 * However, some interfaces can be up before the RUNNING 		 * status.  Additionaly, users may try to assign addresses 		 * before the interface becomes up (or running). 	 	 * This function returns EAGAIN in that case. 		 * The caller should mark "tentative" on the address instead of 		 * performing DAD immediately. 		 */
+comment|/* 		 * Our DAD routine requires the interface up and running. 		 * However, some interfaces can be up before the RUNNING 		 * status.  Additionaly, users may try to assign addresses 		 * before the interface becomes up (or running). 		 * This function returns EAGAIN in that case. 		 * The caller should mark "tentative" on the address instead of 		 * performing DAD immediately. 		 */
 if|if
 condition|(
 operator|!
