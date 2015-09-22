@@ -127,13 +127,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|bootAP
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|void
 modifier|*
 name|dpcpu
