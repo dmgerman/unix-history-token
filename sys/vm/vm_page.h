@@ -1968,7 +1968,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|boolean_t
 name|vm_page_unwire
 parameter_list|(
 name|vm_page_t

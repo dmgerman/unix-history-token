@@ -9224,11 +9224,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_page_unwire:  *  * Release one wiring of the specified page, potentially enabling it to be  * paged again.  If paging is enabled, then the value of the parameter  * "queue" determines the queue to which the page is added.  *  * However, unless the page belongs to an object, it is not enqueued because  * it cannot be paged out.  *  * If a page is fictitious, then its wire count must always be one.  *  * A managed page must be locked.  */
+comment|/*  * vm_page_unwire:  *  * Release one wiring of the specified page, potentially allowing it to be  * paged out.  Returns TRUE if the number of wirings transitions to zero and  * FALSE otherwise.  *  * Only managed pages belonging to an object can be paged out.  If the number  * of wirings transitions to zero and the page is eligible for page out, then  * the page is added to the specified paging queue (unless PQ_NONE is  * specified).  *  * If a page is fictitious, then its wire count must always be one.  *  * A managed page must be locked.  */
 end_comment
 
 begin_function
-name|void
+name|boolean_t
 name|vm_page_unwire
 parameter_list|(
 name|vm_page_t
@@ -9243,6 +9243,10 @@ argument_list|(
 name|queue
 operator|<
 name|PQ_COUNT
+operator|||
+name|queue
+operator|==
+name|PQ_NONE
 argument_list|,
 operator|(
 literal|"vm_page_unwire: invalid queue %u request for page %p"
@@ -9265,11 +9269,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|vm_page_lock_assert
+name|vm_page_assert_locked
 argument_list|(
 name|m
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -9300,7 +9302,11 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -9344,16 +9350,20 @@ name|oflags
 operator|&
 name|VPO_UNMANAGED
 operator|)
-operator|!=
+operator|==
 literal|0
-operator|||
+operator|&&
 name|m
 operator|->
 name|object
-operator|==
+operator|!=
 name|NULL
+operator|&&
+name|queue
+operator|!=
+name|PQ_NONE
 condition|)
-return|return;
+block|{
 if|if
 condition|(
 name|queue
@@ -9375,6 +9385,18 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+else|else
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 block|}
 else|else
 name|panic
