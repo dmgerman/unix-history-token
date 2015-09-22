@@ -425,6 +425,13 @@ name|RSU_DEBUG_FWDBG
 value|0x00000200
 end_define
 
+begin_define
+define|#
+directive|define
+name|RSU_DEBUG_AMPDU
+value|0x00000400
+end_define
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -2161,6 +2168,10 @@ parameter_list|)
 block|{  }
 end_function
 
+begin_comment
+comment|/*  * notification from net80211 that it'd like to do A-MPDU on the given TID.  *  * Note: this actually hangs traffic at the present moment, so don't use it.  * The firmware debug does indiciate it's sending and establishing a TX AMPDU  * session, but then no traffic flows.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -2177,7 +2188,25 @@ modifier|*
 name|tap
 parameter_list|)
 block|{
-comment|/* Firmware handles this; not our problem */
+if|#
+directive|if
+literal|0
+block|struct rsu_softc *sc = ni->ni_ic->ic_softc; 	struct r92s_add_ba_req req;
+comment|/* Don't enable if it's requested or running */
+block|if (IEEE80211_AMPDU_REQUESTED(tap)) 		return (0); 	if (IEEE80211_AMPDU_RUNNING(tap)) 		return (0);
+comment|/* We've decided to send addba; so send it */
+block|req.tid = htole32(tap->txa_tid);
+comment|/* Attempt net80211 state */
+block|if (ieee80211_ampdu_tx_request_ext(ni, tap->txa_tid) != 1) 		return (0);
+comment|/* Send the firmware command */
+block|RSU_DPRINTF(sc, RSU_DEBUG_AMPDU, "%s: establishing AMPDU TX for TID %d\n", 	    __func__, 	    tap->txa_tid);  	RSU_LOCK(sc); 	if (rsu_fw_cmd(sc, R92S_CMD_ADDBA_REQ,&req, sizeof(req)) != 1) { 		RSU_UNLOCK(sc);
+comment|/* Mark failure */
+block|(void) ieee80211_ampdu_tx_request_active_ext(ni, tap->txa_tid, 0); 		return (0); 	} 	RSU_UNLOCK(sc);
+comment|/* Mark success; we don't get any further notifications */
+block|(void) ieee80211_ampdu_tx_request_active_ext(ni, tap->txa_tid, 1);
+endif|#
+directive|endif
+comment|/* Return 0, we're driving this ourselves */
 return|return
 operator|(
 literal|0
@@ -3394,6 +3423,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* XXX TODO: force awake if in in network-sleep? */
 name|error
 operator|=
 name|rsu_site_survey
@@ -5200,7 +5230,20 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+comment|/* Blank the entire payload, just to be safe */
+name|memset
+argument_list|(
+name|data
+operator|->
+name|buf
+argument_list|,
+literal|'\0'
+argument_list|,
+name|RSU_TXBUFSZ
+argument_list|)
+expr_stmt|;
 comment|/* Round-up command length to a multiple of 8 bytes. */
+comment|/* XXX TODO: is this required? */
 name|cmdsz
 operator|=
 operator|(
@@ -5650,6 +5693,203 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|RSU_PWR_ACTIVE
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSU_PWR_OFF
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSU_PWR_SLEEP
+value|0x3
+end_define
+
+begin_comment
+comment|/*  * Set the current power state.  *  * The rtlwifi code doesn't do this so aggressively; it  * waits for an idle period after association with  * no traffic before doing this.  *  * For now - it's on in all states except RUN, and  * in RUN it'll transition to allow sleep.  */
+end_comment
+
+begin_struct
+struct|struct
+name|r92s_pwr_cmd
+block|{
+name|uint8_t
+name|mode
+decl_stmt|;
+name|uint8_t
+name|smart_ps
+decl_stmt|;
+name|uint8_t
+name|bcn_pass_time
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+specifier|static
+name|int
+name|rsu_set_fw_power_state
+parameter_list|(
+name|struct
+name|rsu_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|state
+parameter_list|)
+block|{
+name|struct
+name|r92s_set_pwr_mode
+name|cmd
+decl_stmt|;
+comment|//struct r92s_pwr_cmd cmd;
+name|int
+name|error
+decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|cmd
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmd
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX TODO: only change state if required */
+name|RSU_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|state
+condition|)
+block|{
+case|case
+name|RSU_PWR_ACTIVE
+case|:
+comment|/* Force the hardware awake */
+name|rsu_write_1
+argument_list|(
+name|sc
+argument_list|,
+name|R92S_USB_HRPWM
+argument_list|,
+name|R92S_USB_HRPWM_PS_ST_ACTIVE
+operator||
+name|R92S_USB_HRPWM_PS_ALL_ON
+argument_list|)
+expr_stmt|;
+name|cmd
+operator|.
+name|mode
+operator|=
+name|R92S_PS_MODE_ACTIVE
+expr_stmt|;
+break|break;
+case|case
+name|RSU_PWR_SLEEP
+case|:
+name|cmd
+operator|.
+name|mode
+operator|=
+name|R92S_PS_MODE_DTIM
+expr_stmt|;
+comment|/* XXX configurable? */
+name|cmd
+operator|.
+name|smart_ps
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX 2 if doing p2p */
+name|cmd
+operator|.
+name|bcn_pass_time
+operator|=
+literal|5
+expr_stmt|;
+comment|/* in 100mS usb.c, linux/rtlwifi */
+break|break;
+default|default:
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: unknown ps mode (%d)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|state
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+name|RSU_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_DEBUG_RESET
+argument_list|,
+literal|"%s: setting ps mode to %d (mode %d)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|state
+argument_list|,
+name|cmd
+operator|.
+name|mode
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|rsu_fw_cmd
+argument_list|(
+name|sc
+argument_list|,
+name|R92S_CMD_SET_PWR_MODE
+argument_list|,
+operator|&
+name|cmd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmd
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|int
@@ -5819,6 +6059,16 @@ block|{
 case|case
 name|IEEE80211_S_INIT
 case|:
+operator|(
+name|void
+operator|)
+name|rsu_set_fw_power_state
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_PWR_ACTIVE
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|IEEE80211_S_AUTH
@@ -5830,6 +6080,16 @@ argument_list|(
 name|vap
 operator|->
 name|iv_bss
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|rsu_set_fw_power_state
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_PWR_ACTIVE
 argument_list|)
 expr_stmt|;
 name|error
@@ -5898,6 +6158,16 @@ name|rs_nrates
 operator|-
 literal|1
 index|]
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|rsu_set_fw_power_state
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_PWR_SLEEP
+argument_list|)
 expr_stmt|;
 name|ieee80211_free_node
 argument_list|(
@@ -8266,11 +8536,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|RSU_DPRINTF
+name|device_printf
 argument_list|(
 name|sc
-argument_list|,
-name|RSU_DEBUG_ANY
+operator|->
+name|sc_dev
 argument_list|,
 literal|"%s: unhandled code (%d)\n"
 argument_list|,
@@ -13116,9 +13386,7 @@ name|RSU_DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|RSU_DEBUG_FW
-operator||
-name|RSU_DEBUG_RESET
+name|RSU_DEBUG_ANY
 argument_list|,
 literal|"%s: Firmware already loaded\n"
 argument_list|,
@@ -13796,6 +14064,14 @@ name|sc
 operator|->
 name|sc_nendpoints
 expr_stmt|;
+name|dmem
+operator|->
+name|chip_version
+operator|=
+name|sc
+operator|->
+name|cut
+expr_stmt|;
 comment|/* XXX TODO: rf_config should come from ROM */
 name|dmem
 operator|->
@@ -13878,6 +14154,19 @@ name|qos_en
 operator|=
 literal|1
 expr_stmt|;
+name|dmem
+operator|->
+name|ps_offload
+operator|=
+literal|1
+expr_stmt|;
+name|dmem
+operator|->
+name|lowpower_mode
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX TODO: configurable? */
 comment|/* Load DMEM section. */
 name|error
 operator|=
@@ -14262,10 +14551,6 @@ index|[
 name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
-name|struct
-name|r92s_set_pwr_mode
-name|cmd
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -14303,6 +14588,16 @@ operator|.
 name|queued
 operator|=
 literal|0
+expr_stmt|;
+comment|/* Reset power management state. */
+name|rsu_write_1
+argument_list|(
+name|sc
+argument_list|,
+name|R92S_USB_HRPWM
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* Power on adapter. */
 if|if
@@ -14547,67 +14842,14 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|rsu_write_1
-argument_list|(
-name|sc
-argument_list|,
-name|R92S_USB_HRPWM
-argument_list|,
-name|R92S_USB_HRPWM_PS_ST_ACTIVE
-operator||
-name|R92S_USB_HRPWM_PS_ALL_ON
-argument_list|)
-expr_stmt|;
 comment|/* Set PS mode fully active */
-name|memset
-argument_list|(
-operator|&
-name|cmd
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|cmd
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|cmd
-operator|.
-name|mode
-operator|=
-name|R92S_PS_MODE_ACTIVE
-expr_stmt|;
-name|RSU_DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|RSU_DEBUG_RESET
-argument_list|,
-literal|"%s: setting ps mode to %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|cmd
-operator|.
-name|mode
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
-name|rsu_fw_cmd
+name|rsu_set_fw_power_state
 argument_list|(
 name|sc
 argument_list|,
-name|R92S_CMD_SET_PWR_MODE
-argument_list|,
-operator|&
-name|cmd
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|cmd
-argument_list|)
+name|RSU_PWR_ACTIVE
 argument_list|)
 expr_stmt|;
 if|if

@@ -2519,6 +2519,17 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|r92s_add_ba_req
+block|{
+name|uint32_t
+name|tid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Driver definitions.  */
 end_comment
