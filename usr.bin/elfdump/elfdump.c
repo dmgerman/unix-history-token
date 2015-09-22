@@ -2199,6 +2199,12 @@ case|:
 return|return
 literal|"SHT_MIPS_OPTIONS"
 return|;
+case|case
+name|SHT_MIPS_ABIFLAGS
+case|:
+return|return
+literal|"SHT_MIPS_ABIFLAGS"
+return|;
 block|}
 break|break;
 block|}
