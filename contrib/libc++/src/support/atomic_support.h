@@ -93,16 +93,6 @@ name|defined
 argument_list|(
 name|__ATOMIC_SEQ_CST
 argument_list|)
-expr|\
-operator|&&
-name|defined
-argument_list|(
-name|__ARM_ARCH
-argument_list|)
-operator|&&
-name|__ARM_ARCH
-operator|>=
-literal|6
 end_if
 
 begin_define
