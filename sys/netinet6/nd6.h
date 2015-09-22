@@ -266,13 +266,6 @@ name|ND6_IFF_NO_DAD
 value|0x100
 end_define
 
-begin_define
-define|#
-directive|define
-name|ND6_EXCLUSIVE
-value|LLE_EXCLUSIVE
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef

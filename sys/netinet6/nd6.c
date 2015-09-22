@@ -3905,9 +3905,6 @@ name|llentry
 modifier|*
 name|ln
 decl_stmt|;
-name|int
-name|llflags
-decl_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -3947,18 +3944,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|llflags
-operator|=
-operator|(
-name|flags
-operator|&
-name|ND6_EXCLUSIVE
-operator|)
-condition|?
-name|LLE_EXCLUSIVE
-else|:
-literal|0
-expr_stmt|;
 name|ln
 operator|=
 name|lla_lookup
@@ -3968,7 +3953,7 @@ argument_list|(
 name|ifp
 argument_list|)
 argument_list|,
-name|llflags
+name|flags
 argument_list|,
 operator|(
 expr|struct
@@ -5014,7 +4999,7 @@ name|nd6_lookup
 argument_list|(
 name|dst6
 argument_list|,
-name|ND6_EXCLUSIVE
+name|LLE_EXCLUSIVE
 argument_list|,
 name|NULL
 argument_list|)
@@ -6516,7 +6501,7 @@ name|flags
 operator|=
 name|lladdr
 condition|?
-name|ND6_EXCLUSIVE
+name|LLE_EXCLUSIVE
 else|:
 literal|0
 expr_stmt|;
@@ -6554,7 +6539,7 @@ condition|)
 block|{
 name|flags
 operator||=
-name|ND6_EXCLUSIVE
+name|LLE_EXCLUSIVE
 expr_stmt|;
 name|ln
 operator|=
@@ -6620,7 +6605,7 @@ name|nd6_lookup
 argument_list|(
 name|from
 argument_list|,
-name|ND6_EXCLUSIVE
+name|LLE_EXCLUSIVE
 argument_list|,
 name|ifp
 argument_list|)
@@ -6704,7 +6689,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|ND6_EXCLUSIVE
+name|LLE_EXCLUSIVE
 condition|)
 name|LLE_WUNLOCK
 argument_list|(
@@ -6919,7 +6904,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|ND6_EXCLUSIVE
+name|LLE_EXCLUSIVE
 condition|)
 name|LLE_WUNLOCK
 argument_list|(
@@ -7674,7 +7659,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Do L2 address resolution for @sa_dst address. Stores found  * address in @desten buffer. Copy of lle ln_flags can be also  * saved in @pflags if @pflags is non-NULL.  *  * Heavy version.  * Function assume that destination LLE does not exist,  * is invalid or stale, so ND6_EXCLUSIVE lock needs to be acquired.  */
+comment|/*  * Do L2 address resolution for @sa_dst address. Stores found  * address in @desten buffer. Copy of lle ln_flags can be also  * saved in @pflags if @pflags is non-NULL.  *  * Heavy version.  * Function assume that destination LLE does not exist,  * is invalid or stale, so LLE_EXCLUSIVE lock needs to be acquired.  */
 end_comment
 
 begin_function
@@ -7749,7 +7734,7 @@ name|dst
 operator|->
 name|sin6_addr
 argument_list|,
-name|ND6_EXCLUSIVE
+name|LLE_EXCLUSIVE
 argument_list|,
 name|ifp
 argument_list|)
@@ -7854,7 +7839,7 @@ name|dst
 operator|->
 name|sin6_addr
 argument_list|,
-name|ND6_EXCLUSIVE
+name|LLE_EXCLUSIVE
 argument_list|,
 name|ifp
 argument_list|)
