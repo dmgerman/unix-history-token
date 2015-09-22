@@ -575,7 +575,7 @@ end_comment
 begin_typedef
 typedef|typedef
 name|unsigned
-name|index_t
+name|szind_t
 typedef|;
 end_typedef
 
@@ -762,11 +762,21 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|__sparc64__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparcv9
+argument_list|)
+operator|)
+end_if
 
 begin_define
 define|#
@@ -1999,7 +2009,7 @@ name|JEMALLOC_ENABLE_INLINE
 end_ifndef
 
 begin_function_decl
-name|index_t
+name|szind_t
 name|size2index_compute
 parameter_list|(
 name|size_t
@@ -2009,7 +2019,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|index_t
+name|szind_t
 name|size2index_lookup
 parameter_list|(
 name|size_t
@@ -2019,7 +2029,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|index_t
+name|szind_t
 name|size2index
 parameter_list|(
 name|size_t
@@ -2032,7 +2042,7 @@ begin_function_decl
 name|size_t
 name|index2size_compute
 parameter_list|(
-name|index_t
+name|szind_t
 name|index
 parameter_list|)
 function_decl|;
@@ -2042,7 +2052,7 @@ begin_function_decl
 name|size_t
 name|index2size_lookup
 parameter_list|(
-name|index_t
+name|szind_t
 name|index
 parameter_list|)
 function_decl|;
@@ -2052,7 +2062,7 @@ begin_function_decl
 name|size_t
 name|index2size
 parameter_list|(
-name|index_t
+name|szind_t
 name|index
 parameter_list|)
 function_decl|;
@@ -2161,7 +2171,7 @@ end_if
 
 begin_function
 name|JEMALLOC_INLINE
-name|index_t
+name|szind_t
 name|size2index_compute
 parameter_list|(
 name|size_t
@@ -2400,7 +2410,7 @@ end_function
 
 begin_function
 name|JEMALLOC_ALWAYS_INLINE
-name|index_t
+name|szind_t
 name|size2index_lookup
 parameter_list|(
 name|size_t
@@ -2457,7 +2467,7 @@ end_function
 
 begin_function
 name|JEMALLOC_ALWAYS_INLINE
-name|index_t
+name|szind_t
 name|size2index
 parameter_list|(
 name|size_t
@@ -2504,7 +2514,7 @@ name|JEMALLOC_INLINE
 name|size_t
 name|index2size_compute
 parameter_list|(
-name|index_t
+name|szind_t
 name|index
 parameter_list|)
 block|{
@@ -2670,7 +2680,7 @@ name|JEMALLOC_ALWAYS_INLINE
 name|size_t
 name|index2size_lookup
 parameter_list|(
-name|index_t
+name|szind_t
 name|index
 parameter_list|)
 block|{
@@ -2708,7 +2718,7 @@ name|JEMALLOC_ALWAYS_INLINE
 name|size_t
 name|index2size
 parameter_list|(
-name|index_t
+name|szind_t
 name|index
 parameter_list|)
 block|{
@@ -3098,7 +3108,7 @@ name|likely
 argument_list|(
 name|size
 operator|<=
-name|arena_maxclass
+name|large_maxclass
 argument_list|)
 operator|&&
 name|likely
@@ -4677,7 +4687,7 @@ operator|<=
 name|SMALL_MAXCLASS
 condition|)
 block|{
-name|index_t
+name|szind_t
 name|binind
 init|=
 name|size2index
@@ -5312,8 +5322,6 @@ argument_list|,
 name|oldsize
 argument_list|,
 name|size
-argument_list|,
-literal|0
 argument_list|,
 name|alignment
 argument_list|,
