@@ -14599,13 +14599,6 @@ name|uint8_t
 name|rate
 parameter_list|)
 block|{
-define|#
-directive|define
-name|RV
-parameter_list|(
-name|v
-parameter_list|)
-value|((v)& IEEE80211_RATE_VAL)
 name|struct
 name|ieee80211com
 modifier|*
@@ -14634,7 +14627,7 @@ block|{
 comment|/* 		 * Set the initial PLCP value to be between 0->31 for 		 * MCS 0 -> MCS 31, then set the "I'm an MCS rate!" 		 * flag. 		 */
 name|plcp
 operator|=
-name|RV
+name|IEEE80211_RV
 argument_list|(
 name|rate
 argument_list|)
@@ -14808,9 +14801,6 @@ name|plcp
 argument_list|)
 operator|)
 return|;
-undef|#
-directive|undef
-name|RV
 block|}
 end_function
 
@@ -26960,13 +26950,6 @@ modifier|*
 name|ni
 parameter_list|)
 block|{
-define|#
-directive|define
-name|RV
-parameter_list|(
-name|v
-parameter_list|)
-value|((v)& IEEE80211_RATE_VAL)
 name|struct
 name|iwn_node
 modifier|*
@@ -27216,7 +27199,7 @@ expr_stmt|;
 else|else
 name|rate
 operator|=
-name|RV
+name|IEEE80211_RV
 argument_list|(
 name|rs
 operator|->
@@ -27281,7 +27264,7 @@ operator|&
 name|IWN_RFLAG_MCS
 operator|)
 operator|&&
-name|RV
+name|IEEE80211_RV
 argument_list|(
 name|le32toh
 argument_list|(
@@ -27367,9 +27350,6 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-undef|#
-directive|undef
-name|RV
 block|}
 end_function
 

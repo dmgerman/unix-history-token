@@ -7459,13 +7459,6 @@ literal|0
 return|;
 block|}
 comment|/* 	 * Test whether the revision of this MAC is supported 	 */
-define|#
-directive|define
-name|N
-parameter_list|(
-name|arr
-parameter_list|)
-value|(int)(sizeof(arr) / sizeof(arr[0]))
 for|for
 control|(
 name|i
@@ -7474,7 +7467,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|bwi_sup_macrev
 argument_list|)
@@ -7498,7 +7491,7 @@ if|if
 condition|(
 name|i
 operator|==
-name|N
+name|nitems
 argument_list|(
 name|bwi_sup_macrev
 argument_list|)
@@ -7520,9 +7513,6 @@ return|return
 name|ENXIO
 return|;
 block|}
-undef|#
-directive|undef
-name|N
 name|BWI_CREATE_MAC
 argument_list|(
 name|mac

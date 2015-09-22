@@ -12214,13 +12214,6 @@ modifier|*
 name|rs
 parameter_list|)
 block|{
-define|#
-directive|define
-name|RV
-parameter_list|(
-name|r
-parameter_list|)
-value|((r)& IEEE80211_RATE_VAL)
 name|struct
 name|ieee80211com
 modifier|*
@@ -12287,7 +12280,7 @@ name|ic
 operator|->
 name|ic_rt
 argument_list|,
-name|RV
+name|IEEE80211_RV
 argument_list|(
 name|rate
 argument_list|)
@@ -12303,9 +12296,6 @@ argument_list|,
 name|mask
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|RV
 block|}
 end_function
 

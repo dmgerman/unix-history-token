@@ -4274,13 +4274,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|arr
-parameter_list|)
-value|(int)(sizeof(arr) / sizeof(arr[0]))
 name|uint16_t
 name|bbp_id
 decl_stmt|,
@@ -4408,7 +4401,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|bwi_bbpid_map
 argument_list|)
@@ -4534,7 +4527,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|bwi_regwin_count
 argument_list|)
@@ -4895,9 +4888,6 @@ return|;
 return|return
 literal|0
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -18533,13 +18523,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-define|#
-directive|define
-name|N
-parameter_list|(
-name|arr
-parameter_list|)
-value|(int)(sizeof(arr) / sizeof(arr[0]))
 for|for
 control|(
 name|i
@@ -18548,7 +18531,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|bwi_vendor_led_act
 argument_list|)
@@ -18593,9 +18576,6 @@ name|led_act
 operator|=
 name|bwi_default_led_act
 expr_stmt|;
-undef|#
-directive|undef
-name|N
 name|gpio
 operator|=
 name|bwi_read_sprom
