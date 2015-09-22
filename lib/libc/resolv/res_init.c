@@ -3910,13 +3910,11 @@ specifier|static
 name|u_int32_t
 name|net_mask
 parameter_list|(
-name|in
-parameter_list|)
-comment|/*!< XXX - should really use system's version of this  */
 name|struct
 name|in_addr
 name|in
-decl_stmt|;
+parameter_list|)
+comment|/*!< XXX - should really use system's version of this  */
 block|{
 name|u_int32_t
 name|i

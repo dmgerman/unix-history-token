@@ -27,6 +27,15 @@ directive|include
 file|<dev/drm2/drmP.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+end_if
+
 begin_function_decl
 specifier|static
 name|int
@@ -38,6 +47,11 @@ name|priv
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1063,6 +1077,15 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+end_if
+
 begin_comment
 comment|/**  * If we get here, it means that the process has called DRM_IOCTL_LOCK  * without calling DRM_IOCTL_UNLOCK.  *  * If the lock is not held, then let the signal proceed as usual.  If the lock  * is held, then set the contended flag and keep the signal blocked.  *  * \param priv pointer to a drm_sigdata structure.  * \return one if the signal should be delivered normally, or zero if the  * signal should be blocked.  */
 end_comment
@@ -1177,6 +1200,11 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**  * This function returns immediately and takes the hw lock  * with the kernel context if it is free, otherwise it gets the highest priority when and if  * it is eventually released.  *  * This guarantees that the kernel will _eventually_ have the lock _unless_ it is held  * by a blocked process. (In the latter case an explicit wait for the hardware lock would cause  * a deadlock, which is why the "idlelock" was invented).  *  * This should be sufficient to wait for GPU idle without  * having to worry about starvation.  */

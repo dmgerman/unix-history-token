@@ -913,12 +913,21 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
 comment|/* max slots per bus acc. to standard */
+block|return (PCI_SLOTMAX);
+else|#
+directive|else
+comment|/* 	 * ARM64TODO Workaround - otherwise an em(4) interface appears to be 	 * present on every PCI function on the bus to which it is connected 	 */
 return|return
 operator|(
-name|PCI_SLOTMAX
+literal|0
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
