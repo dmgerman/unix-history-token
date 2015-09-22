@@ -11596,7 +11596,7 @@ index|]
 operator|=
 name|htonl
 argument_list|(
-literal|0
+literal|0U
 argument_list|)
 expr_stmt|;
 comment|/* mask */
@@ -11625,7 +11625,7 @@ operator|=
 name|htonl
 argument_list|(
 operator|~
-literal|0
+literal|0U
 operator|<<
 operator|(
 literal|32
@@ -11647,7 +11647,7 @@ operator|=
 name|htonl
 argument_list|(
 operator|~
-literal|0
+literal|0U
 operator|<<
 operator|(
 literal|32
@@ -11691,7 +11691,7 @@ operator|=
 name|htonl
 argument_list|(
 operator|~
-literal|0
+literal|0U
 argument_list|)
 expr_stmt|;
 comment|/* force /32 */
