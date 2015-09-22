@@ -3181,6 +3181,9 @@ decl_stmt|;
 name|int
 name|sc_nendpoints
 decl_stmt|;
+name|int
+name|sc_curpwrstate
+decl_stmt|;
 name|u_int
 name|sc_running
 range|:

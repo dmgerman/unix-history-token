@@ -5696,6 +5696,13 @@ end_function
 begin_define
 define|#
 directive|define
+name|RSU_PWR_UNKNOWN
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
 name|RSU_PWR_ACTIVE
 value|0x1
 end_define
@@ -5757,6 +5764,25 @@ comment|//struct r92s_pwr_cmd cmd;
 name|int
 name|error
 decl_stmt|;
+name|RSU_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* only change state if required */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_curpwrstate
+operator|==
+name|state
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|memset
 argument_list|(
 operator|&
@@ -5768,12 +5794,6 @@ sizeof|sizeof
 argument_list|(
 name|cmd
 argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* XXX TODO: only change state if required */
-name|RSU_ASSERT_LOCKED
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -5828,6 +5848,16 @@ literal|5
 expr_stmt|;
 comment|/* in 100mS usb.c, linux/rtlwifi */
 break|break;
+case|case
+name|RSU_PWR_OFF
+case|:
+name|cmd
+operator|.
+name|mode
+operator|=
+name|R92S_PS_MODE_RADIOOFF
+expr_stmt|;
+break|break;
 default|default:
 name|device_printf
 argument_list|(
@@ -5881,6 +5911,18 @@ argument_list|(
 name|cmd
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|sc
+operator|->
+name|sc_curpwrstate
+operator|=
+name|state
 expr_stmt|;
 return|return
 operator|(
@@ -13078,6 +13120,17 @@ argument_list|,
 literal|0x43
 argument_list|)
 expr_stmt|;
+comment|/* Firmware - tell it to switch things off */
+operator|(
+name|void
+operator|)
+name|rsu_set_fw_power_state
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_PWR_OFF
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -15004,6 +15057,11 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|RSU_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_running
