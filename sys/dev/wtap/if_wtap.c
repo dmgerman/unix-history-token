@@ -721,12 +721,9 @@ modifier|*
 name|bo
 init|=
 operator|&
-name|WTAP_VAP
-argument_list|(
 name|vap
-argument_list|)
 operator|->
-name|av_boff
+name|iv_bcn_off
 decl_stmt|;
 name|DWTAP_PRINTF
 argument_list|(
@@ -810,9 +807,9 @@ argument_list|(
 name|ni
 argument_list|,
 operator|&
-name|avp
+name|vap
 operator|->
-name|av_boff
+name|iv_bcn_off
 argument_list|)
 expr_stmt|;
 if|if
@@ -966,9 +963,9 @@ operator|->
 name|bf_node
 argument_list|,
 operator|&
-name|avp
+name|vap
 operator|->
-name|av_boff
+name|iv_bcn_off
 argument_list|,
 name|m
 argument_list|,

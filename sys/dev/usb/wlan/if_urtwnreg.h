@@ -5966,10 +5966,6 @@ name|struct
 name|ieee80211vap
 name|vap
 decl_stmt|;
-name|struct
-name|ieee80211_beacon_offsets
-name|bo
-decl_stmt|;
 name|int
 function_decl|(
 modifier|*

@@ -347,10 +347,6 @@ name|wpi_buf
 name|wv_bcbuf
 decl_stmt|;
 name|struct
-name|ieee80211_beacon_offsets
-name|wv_boff
-decl_stmt|;
-name|struct
 name|mtx
 name|wv_mtx
 decl_stmt|;

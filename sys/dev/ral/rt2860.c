@@ -24422,7 +24422,13 @@ name|iv_ic
 decl_stmt|;
 name|struct
 name|ieee80211_beacon_offsets
+modifier|*
 name|bo
+init|=
+operator|&
+name|vap
+operator|->
+name|iv_bcn_off
 decl_stmt|;
 name|struct
 name|rt2860_txwi
@@ -24447,7 +24453,6 @@ name|vap
 operator|->
 name|iv_bss
 argument_list|,
-operator|&
 name|bo
 argument_list|)
 operator|)

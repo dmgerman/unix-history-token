@@ -4206,9 +4206,9 @@ argument_list|(
 name|ni
 argument_list|,
 operator|&
-name|uvp
+name|vap
 operator|->
-name|bo
+name|iv_bcn_off
 argument_list|)
 expr_stmt|;
 if|if
