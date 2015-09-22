@@ -241,23 +241,6 @@ value|_callout_stop_safe(c, 1)
 end_define
 
 begin_function_decl
-name|int
-name|callout_drain_async
-parameter_list|(
-name|struct
-name|callout
-modifier|*
-parameter_list|,
-name|callout_func_t
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|callout_init
 parameter_list|(
