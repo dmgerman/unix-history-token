@@ -2374,13 +2374,6 @@ name|int
 name|flags
 parameter_list|)
 block|{
-define|#
-directive|define
-name|RV
-parameter_list|(
-name|v
-parameter_list|)
-value|((v)& IEEE80211_RATE_VAL)
 name|struct
 name|ieee80211vap
 modifier|*
@@ -2591,7 +2584,7 @@ control|)
 block|{
 if|if
 condition|(
-name|RV
+name|IEEE80211_RV
 argument_list|(
 name|nrs
 operator|->
@@ -2601,7 +2594,7 @@ name|i
 index|]
 argument_list|)
 operator|>
-name|RV
+name|IEEE80211_RV
 argument_list|(
 name|nrs
 operator|->
@@ -2887,14 +2880,11 @@ return|;
 block|}
 else|else
 return|return
-name|RV
+name|IEEE80211_RV
 argument_list|(
 name|okrate
 argument_list|)
 return|;
-undef|#
-directive|undef
-name|RV
 block|}
 end_function
 
