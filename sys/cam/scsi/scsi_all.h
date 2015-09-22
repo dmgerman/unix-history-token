@@ -2383,6 +2383,56 @@ end_struct
 
 begin_struct
 struct|struct
+name|scsi_control_ext_page
+block|{
+name|uint8_t
+name|page_code
+decl_stmt|;
+name|uint8_t
+name|subpage_code
+decl_stmt|;
+name|uint8_t
+name|page_length
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|SCEP_TCMOS
+value|0x04
+comment|/* Timestamp Changeable by */
+define|#
+directive|define
+name|SCEP_SCSIP
+value|0x02
+comment|/* SCSI Precedence (clock) */
+define|#
+directive|define
+name|SCEP_IALUAE
+value|0x01
+comment|/* Implicit ALUA Enabled */
+name|uint8_t
+name|prio
+decl_stmt|;
+name|uint8_t
+name|max_sense
+decl_stmt|;
+name|uint8_t
+name|reserve
+index|[
+literal|25
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|scsi_cache_page
 block|{
 name|u_int8_t
