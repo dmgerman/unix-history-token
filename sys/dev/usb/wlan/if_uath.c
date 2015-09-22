@@ -225,6 +225,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net80211/ieee80211_input.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net80211/ieee80211_regdomain.h>
 end_include
 
@@ -527,32 +533,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* unaligned little endian access */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LE_READ_2
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|((u_int16_t)							\ 	 ((((u_int8_t *)(p))[0]      ) | (((u_int8_t *)(p))[1]<<  8)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|LE_READ_4
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|((u_int32_t)							\ 	 ((((u_int8_t *)(p))[0]      ) | (((u_int8_t *)(p))[1]<<  8) |	\ 	  (((u_int8_t *)(p))[2]<< 16) | (((u_int8_t *)(p))[3]<< 24)))
-end_define
 
 begin_comment
 comment|/* recognized device vendors/products */
@@ -3103,13 +3083,6 @@ name|int
 name|code
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 specifier|static
 specifier|const
 name|char
@@ -3250,7 +3223,7 @@ if|if
 condition|(
 name|code
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|names
 argument_list|)
@@ -3287,9 +3260,6 @@ expr_stmt|;
 return|return
 name|buf
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -7632,7 +7602,7 @@ name|bursttime
 operator|=
 name|htobe32
 argument_list|(
-name|UATH_TXOP_TO_US
+name|IEEE80211_TXOP_TO_US
 argument_list|(
 name|uath_wme_11g
 index|[

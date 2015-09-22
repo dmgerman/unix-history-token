@@ -8445,13 +8445,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|uint8_t
 name|data8
 decl_stmt|;
@@ -8948,9 +8941,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -12776,13 +12766,6 @@ name|uint32_t
 name|rate
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|i
 decl_stmt|;
@@ -12794,7 +12777,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|urtw_ratetable
 argument_list|)
@@ -12828,9 +12811,6 @@ operator|(
 literal|3
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -12843,13 +12823,6 @@ name|uint32_t
 name|rate
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|i
 decl_stmt|;
@@ -12861,7 +12834,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|urtw_ratetable
 argument_list|)
@@ -12895,9 +12868,6 @@ operator|(
 literal|0
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -15857,13 +15827,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|i
 decl_stmt|;
@@ -16014,7 +15977,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|urtw_8225_rf_part1
 argument_list|)
@@ -16240,7 +16203,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|urtw_8225_rf_part2
 argument_list|)
@@ -16303,7 +16266,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|urtw_8225_rf_part3
 argument_list|)
@@ -16447,9 +16410,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -17954,13 +17914,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|i
 decl_stmt|;
@@ -18114,7 +18067,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|urtw_8225v2_rf_part1
 argument_list|)
@@ -18464,7 +18417,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|urtw_8225v2_rf_part2
 argument_list|)
@@ -18517,7 +18470,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|urtw_8225v2_rf_part3
 argument_list|)
@@ -18631,9 +18584,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -20911,9 +20861,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

@@ -226,6 +226,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net80211/ieee80211_input.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net80211/ieee80211_regdomain.h>
 end_include
 
@@ -354,8 +360,7 @@ name|IEEE80211_HAS_ADDR4
 parameter_list|(
 name|wh
 parameter_list|)
-define|\
-value|(((wh)->i_fc[1]& IEEE80211_FC1_DIR_MASK) == IEEE80211_FC1_DIR_DSTODS)
+value|IEEE80211_IS_DSTODS(wh)
 end_define
 
 begin_comment
