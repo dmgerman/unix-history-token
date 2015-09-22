@@ -791,10 +791,10 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Move everything from the old hash table to the new table. 	 * None of the vnodes in the table can be recycled because to 	 * do so, they have to be removed from the hash table. 	 */
-name|rw_wlock
+name|mtx_lock
 argument_list|(
 operator|&
-name|vfs_hash_lock
+name|vfs_hash_mtx
 argument_list|)
 expr_stmt|;
 name|vfs_hash_oldtbl
@@ -872,10 +872,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|rw_wunlock
+name|mtx_unlock
 argument_list|(
 operator|&
-name|vfs_hash_lock
+name|vfs_hash_mtx
 argument_list|)
 expr_stmt|;
 name|free
