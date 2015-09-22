@@ -947,7 +947,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vfs_mountroot_shuffle
 parameter_list|(
 name|struct
@@ -1552,11 +1552,6 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -4541,8 +4536,6 @@ operator|!
 name|error
 condition|)
 block|{
-name|error
-operator|=
 name|vfs_mountroot_shuffle
 argument_list|(
 name|td
@@ -4550,12 +4543,6 @@ argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|error
-condition|)
-block|{
 name|sbuf_clear
 argument_list|(
 name|sb
@@ -4575,7 +4562,6 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 name|sbuf_delete
