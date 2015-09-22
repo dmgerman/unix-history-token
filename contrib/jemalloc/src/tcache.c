@@ -135,7 +135,7 @@ modifier|*
 name|tcache
 parameter_list|)
 block|{
-name|index_t
+name|szind_t
 name|binind
 init|=
 name|tcache
@@ -346,7 +346,7 @@ name|tcache_bin_t
 modifier|*
 name|tbin
 parameter_list|,
-name|index_t
+name|szind_t
 name|binind
 parameter_list|)
 block|{
@@ -412,7 +412,7 @@ name|tcache_bin_t
 modifier|*
 name|tbin
 parameter_list|,
-name|index_t
+name|szind_t
 name|binind
 parameter_list|,
 name|unsigned
@@ -876,7 +876,7 @@ name|tcache_bin_t
 modifier|*
 name|tbin
 parameter_list|,
-name|index_t
+name|szind_t
 name|binind
 parameter_list|,
 name|unsigned
@@ -2568,7 +2568,7 @@ block|{
 name|unsigned
 name|i
 decl_stmt|;
-comment|/* 	 * If necessary, clamp opt_lg_tcache_max, now that arena_maxclass is 	 * known. 	 */
+comment|/* 	 * If necessary, clamp opt_lg_tcache_max, now that large_maxclass is 	 * known. 	 */
 if|if
 condition|(
 name|opt_lg_tcache_max
@@ -2596,11 +2596,11 @@ operator|<<
 name|opt_lg_tcache_max
 operator|)
 operator|>
-name|arena_maxclass
+name|large_maxclass
 condition|)
 name|tcache_maxclass
 operator|=
-name|arena_maxclass
+name|large_maxclass
 expr_stmt|;
 else|else
 name|tcache_maxclass

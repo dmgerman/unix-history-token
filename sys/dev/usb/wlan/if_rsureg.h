@@ -2519,6 +2519,17 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|r92s_add_ba_req
+block|{
+name|uint32_t
+name|tid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Driver definitions.  */
 end_comment
@@ -3042,10 +3053,6 @@ name|struct
 name|ieee80211vap
 name|vap
 decl_stmt|;
-name|struct
-name|ieee80211_beacon_offsets
-name|bo
-decl_stmt|;
 name|int
 function_decl|(
 modifier|*
@@ -3151,6 +3158,10 @@ name|struct
 name|timeout_task
 name|calib_task
 decl_stmt|;
+name|struct
+name|task
+name|tx_task
+decl_stmt|;
 specifier|const
 name|uint8_t
 modifier|*
@@ -3165,6 +3176,9 @@ name|sc_ht
 decl_stmt|;
 name|int
 name|sc_nendpoints
+decl_stmt|;
+name|int
+name|sc_curpwrstate
 decl_stmt|;
 name|u_int
 name|sc_running

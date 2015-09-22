@@ -18298,13 +18298,6 @@ name|int
 name|event
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 comment|/* NB: on/off times from the Atheros NDIS driver, w/ permission */
 specifier|static
 specifier|const
@@ -18477,7 +18470,7 @@ name|IWI_LED_POLL
 case|:
 name|j
 operator|=
-name|N
+name|nitems
 argument_list|(
 name|blinkrates
 argument_list|)
@@ -18520,7 +18513,7 @@ literal|0
 init|;
 name|j
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|blinkrates
 argument_list|)
@@ -18584,7 +18577,7 @@ literal|0
 init|;
 name|j
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|blinkrates
 argument_list|)
@@ -18656,9 +18649,6 @@ operator|/
 literal|1000
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

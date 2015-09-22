@@ -1520,11 +1520,6 @@ name|av_bcbuf
 decl_stmt|;
 comment|/* beacon buffer */
 name|struct
-name|ieee80211_beacon_offsets
-name|av_boff
-decl_stmt|;
-comment|/* dynamic update state */
-name|struct
 name|ath_txq
 name|av_mcastq
 decl_stmt|;

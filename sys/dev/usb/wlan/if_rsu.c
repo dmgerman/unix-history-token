@@ -22,7 +22,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Driver for Realtek RTL8188SU/RTL8191SU/RTL8192SU.  *  * TODO:  *   o 11n support  *   o h/w crypto  *   o hostap / ibss / mesh  */
+comment|/*  * Driver for Realtek RTL8188SU/RTL8191SU/RTL8192SU.  *  * TODO:  *   o 11n HT40 support  *   o h/w crypto  *   o hostap / ibss / mesh  *   o sensible RSSI levels  *   o power-save operation  */
 end_comment
 
 begin_include
@@ -333,7 +333,7 @@ specifier|static
 name|int
 name|rsu_enable_11n
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -423,6 +423,13 @@ define|#
 directive|define
 name|RSU_DEBUG_FWDBG
 value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSU_DEBUG_AMPDU
+value|0x00000400
 end_define
 
 begin_decl_stmt
@@ -1218,6 +1225,19 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|rsu_tx_task
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|rsu_newstate
 parameter_list|(
@@ -1567,6 +1587,18 @@ begin_function_decl
 specifier|static
 name|void
 name|rsu_start
+parameter_list|(
+name|struct
+name|rsu_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|_rsu_start
 parameter_list|(
 name|struct
 name|rsu_softc
@@ -2136,6 +2168,10 @@ parameter_list|)
 block|{  }
 end_function
 
+begin_comment
+comment|/*  * notification from net80211 that it'd like to do A-MPDU on the given TID.  *  * Note: this actually hangs traffic at the present moment, so don't use it.  * The firmware debug does indiciate it's sending and establishing a TX AMPDU  * session, but then no traffic flows.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -2152,7 +2188,25 @@ modifier|*
 name|tap
 parameter_list|)
 block|{
-comment|/* Firmware handles this; not our problem */
+if|#
+directive|if
+literal|0
+block|struct rsu_softc *sc = ni->ni_ic->ic_softc; 	struct r92s_add_ba_req req;
+comment|/* Don't enable if it's requested or running */
+block|if (IEEE80211_AMPDU_REQUESTED(tap)) 		return (0); 	if (IEEE80211_AMPDU_RUNNING(tap)) 		return (0);
+comment|/* We've decided to send addba; so send it */
+block|req.tid = htole32(tap->txa_tid);
+comment|/* Attempt net80211 state */
+block|if (ieee80211_ampdu_tx_request_ext(ni, tap->txa_tid) != 1) 		return (0);
+comment|/* Send the firmware command */
+block|RSU_DPRINTF(sc, RSU_DEBUG_AMPDU, "%s: establishing AMPDU TX for TID %d\n", 	    __func__, 	    tap->txa_tid);  	RSU_LOCK(sc); 	if (rsu_fw_cmd(sc, R92S_CMD_ADDBA_REQ,&req, sizeof(req)) != 1) { 		RSU_UNLOCK(sc);
+comment|/* Mark failure */
+block|(void) ieee80211_ampdu_tx_request_active_ext(ni, tap->txa_tid, 0); 		return (0); 	} 	RSU_UNLOCK(sc);
+comment|/* Mark success; we don't get any further notifications */
+block|(void) ieee80211_ampdu_tx_request_active_ext(ni, tap->txa_tid, 1);
+endif|#
+directive|endif
+comment|/* Return 0, we're driving this ourselves */
 return|return
 operator|(
 literal|0
@@ -2347,6 +2401,20 @@ argument_list|,
 literal|0
 argument_list|,
 name|rsu_calib_task
+argument_list|,
+name|sc
+argument_list|)
+expr_stmt|;
+name|TASK_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|tx_task
+argument_list|,
+literal|0
+argument_list|,
+name|rsu_tx_task
 argument_list|,
 name|sc
 argument_list|)
@@ -2665,12 +2733,13 @@ name|IEEE80211_HTCAP_MAXAMSDU_3839
 operator||
 name|IEEE80211_HTCAP_SMPS_OFF
 expr_stmt|;
-name|ic
-operator|->
-name|ic_htcaps
-operator||=
-name|IEEE80211_HTCAP_CHWIDTH40
-expr_stmt|;
+comment|/* 		 * XXX HT40 isn't working in this driver yet - there's 		 * something missing.  Disable it for now. 		 */
+if|#
+directive|if
+literal|0
+block|ic->ic_htcaps |= IEEE80211_HTCAP_CHWIDTH40;
+endif|#
+directive|endif
 comment|/* set number of spatial streams */
 name|ic
 operator|->
@@ -2948,6 +3017,7 @@ argument_list|,
 name|RSU_N_TRANSFER
 argument_list|)
 expr_stmt|;
+comment|/* Frames are freed; detach from net80211 */
 name|ieee80211_ifdetach
 argument_list|(
 name|ic
@@ -2963,6 +3033,16 @@ operator|->
 name|calib_task
 argument_list|)
 expr_stmt|;
+name|taskqueue_drain
+argument_list|(
+name|taskqueue_thread
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|tx_task
+argument_list|)
+expr_stmt|;
 comment|/* Free Tx/Rx buffers. */
 name|rsu_free_tx_list
 argument_list|(
@@ -2972,14 +3052,6 @@ expr_stmt|;
 name|rsu_free_rx_list
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|mbufq_drain
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_snd
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
@@ -3351,6 +3423,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* XXX TODO: force awake if in in network-sleep? */
 name|error
 operator|=
 name|rsu_site_survey
@@ -4096,6 +4169,25 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bf
+operator|==
+name|NULL
+condition|)
+block|{
+name|RSU_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_DEBUG_TX
+argument_list|,
+literal|"%s: no buffers\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|bf
@@ -5138,7 +5230,20 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+comment|/* Blank the entire payload, just to be safe */
+name|memset
+argument_list|(
+name|data
+operator|->
+name|buf
+argument_list|,
+literal|'\0'
+argument_list|,
+name|RSU_TXBUFSZ
+argument_list|)
+expr_stmt|;
 comment|/* Round-up command length to a multiple of 8 bytes. */
+comment|/* XXX TODO: is this required? */
 name|cmdsz
 operator|=
 operator|(
@@ -5551,6 +5656,284 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|rsu_tx_task
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|pending
+name|__unused
+parameter_list|)
+block|{
+name|struct
+name|rsu_softc
+modifier|*
+name|sc
+init|=
+name|arg
+decl_stmt|;
+name|RSU_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|_rsu_start
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|RSU_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|RSU_PWR_UNKNOWN
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSU_PWR_ACTIVE
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSU_PWR_OFF
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSU_PWR_SLEEP
+value|0x3
+end_define
+
+begin_comment
+comment|/*  * Set the current power state.  *  * The rtlwifi code doesn't do this so aggressively; it  * waits for an idle period after association with  * no traffic before doing this.  *  * For now - it's on in all states except RUN, and  * in RUN it'll transition to allow sleep.  */
+end_comment
+
+begin_struct
+struct|struct
+name|r92s_pwr_cmd
+block|{
+name|uint8_t
+name|mode
+decl_stmt|;
+name|uint8_t
+name|smart_ps
+decl_stmt|;
+name|uint8_t
+name|bcn_pass_time
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+specifier|static
+name|int
+name|rsu_set_fw_power_state
+parameter_list|(
+name|struct
+name|rsu_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|state
+parameter_list|)
+block|{
+name|struct
+name|r92s_set_pwr_mode
+name|cmd
+decl_stmt|;
+comment|//struct r92s_pwr_cmd cmd;
+name|int
+name|error
+decl_stmt|;
+name|RSU_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* only change state if required */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_curpwrstate
+operator|==
+name|state
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|memset
+argument_list|(
+operator|&
+name|cmd
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmd
+argument_list|)
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|state
+condition|)
+block|{
+case|case
+name|RSU_PWR_ACTIVE
+case|:
+comment|/* Force the hardware awake */
+name|rsu_write_1
+argument_list|(
+name|sc
+argument_list|,
+name|R92S_USB_HRPWM
+argument_list|,
+name|R92S_USB_HRPWM_PS_ST_ACTIVE
+operator||
+name|R92S_USB_HRPWM_PS_ALL_ON
+argument_list|)
+expr_stmt|;
+name|cmd
+operator|.
+name|mode
+operator|=
+name|R92S_PS_MODE_ACTIVE
+expr_stmt|;
+break|break;
+case|case
+name|RSU_PWR_SLEEP
+case|:
+name|cmd
+operator|.
+name|mode
+operator|=
+name|R92S_PS_MODE_DTIM
+expr_stmt|;
+comment|/* XXX configurable? */
+name|cmd
+operator|.
+name|smart_ps
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX 2 if doing p2p */
+name|cmd
+operator|.
+name|bcn_pass_time
+operator|=
+literal|5
+expr_stmt|;
+comment|/* in 100mS usb.c, linux/rtlwifi */
+break|break;
+case|case
+name|RSU_PWR_OFF
+case|:
+name|cmd
+operator|.
+name|mode
+operator|=
+name|R92S_PS_MODE_RADIOOFF
+expr_stmt|;
+break|break;
+default|default:
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: unknown ps mode (%d)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|state
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+name|RSU_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_DEBUG_RESET
+argument_list|,
+literal|"%s: setting ps mode to %d (mode %d)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|state
+argument_list|,
+name|cmd
+operator|.
+name|mode
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|rsu_fw_cmd
+argument_list|(
+name|sc
+argument_list|,
+name|R92S_CMD_SET_PWR_MODE
+argument_list|,
+operator|&
+name|cmd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmd
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|sc
+operator|->
+name|sc_curpwrstate
+operator|=
+name|state
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|rsu_newstate
 parameter_list|(
@@ -5682,6 +6065,16 @@ operator|->
 name|calib_task
 argument_list|)
 expr_stmt|;
+name|taskqueue_drain
+argument_list|(
+name|taskqueue_thread
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|tx_task
+argument_list|)
+expr_stmt|;
 comment|/* Disassociate from our current BSS. */
 name|RSU_LOCK
 argument_list|(
@@ -5708,6 +6101,16 @@ block|{
 case|case
 name|IEEE80211_S_INIT
 case|:
+operator|(
+name|void
+operator|)
+name|rsu_set_fw_power_state
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_PWR_ACTIVE
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|IEEE80211_S_AUTH
@@ -5719,6 +6122,16 @@ argument_list|(
 name|vap
 operator|->
 name|iv_bss
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|rsu_set_fw_power_state
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_PWR_ACTIVE
 argument_list|)
 expr_stmt|;
 name|error
@@ -5787,6 +6200,16 @@ name|rs_nrates
 operator|-
 literal|1
 index|]
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|rsu_set_fw_power_state
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_PWR_SLEEP
+argument_list|)
 expr_stmt|;
 name|ieee80211_free_node
 argument_list|(
@@ -8155,11 +8578,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|RSU_DPRINTF
+name|device_printf
 argument_list|(
 name|sc
-argument_list|,
-name|RSU_DEBUG_ANY
+operator|->
+name|sc_dev
 argument_list|,
 literal|"%s: unhandled code (%d)\n"
 argument_list|,
@@ -10258,6 +10681,16 @@ name|usb_error_t
 name|error
 parameter_list|)
 block|{
+name|struct
+name|rsu_softc
+modifier|*
+name|sc
+init|=
+name|usbd_xfer_softc
+argument_list|(
+name|xfer
+argument_list|)
+decl_stmt|;
 name|rsu_bulk_tx_callback_sub
 argument_list|(
 name|xfer
@@ -10265,6 +10698,12 @@ argument_list|,
 name|error
 argument_list|,
 name|RSU_BULK_TX_BE_BK
+argument_list|)
+expr_stmt|;
+comment|/* This kicks the TX taskqueue */
+name|rsu_start
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -10284,6 +10723,16 @@ name|usb_error_t
 name|error
 parameter_list|)
 block|{
+name|struct
+name|rsu_softc
+modifier|*
+name|sc
+init|=
+name|usbd_xfer_softc
+argument_list|(
+name|xfer
+argument_list|)
+decl_stmt|;
 name|rsu_bulk_tx_callback_sub
 argument_list|(
 name|xfer
@@ -10291,6 +10740,12 @@ argument_list|,
 name|error
 argument_list|,
 name|RSU_BULK_TX_VI_VO
+argument_list|)
+expr_stmt|;
+comment|/* This kicks the TX taskqueue */
+name|rsu_start
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -10310,6 +10765,16 @@ name|usb_error_t
 name|error
 parameter_list|)
 block|{
+name|struct
+name|rsu_softc
+modifier|*
+name|sc
+init|=
+name|usbd_xfer_softc
+argument_list|(
+name|xfer
+argument_list|)
+decl_stmt|;
 name|rsu_bulk_tx_callback_sub
 argument_list|(
 name|xfer
@@ -10317,6 +10782,12 @@ argument_list|,
 name|error
 argument_list|,
 name|RSU_BULK_TX_H2C
+argument_list|)
+expr_stmt|;
+comment|/* This kicks the TX taskqueue */
+name|rsu_start
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -11015,6 +11486,19 @@ condition|(
 name|error
 condition|)
 block|{
+name|RSU_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_DEBUG_TX
+argument_list|,
+literal|"%s: mbufq_enable: failed (%d)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 name|RSU_UNLOCK
 argument_list|(
 name|sc
@@ -11026,12 +11510,13 @@ name|error
 operator|)
 return|;
 block|}
-name|rsu_start
+name|RSU_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|RSU_UNLOCK
+comment|/* This kicks the TX taskqueue */
+name|rsu_start
 argument_list|(
 name|sc
 argument_list|)
@@ -11047,7 +11532,85 @@ end_function
 begin_function
 specifier|static
 name|void
-name|rsu_start
+name|rsu_drain_mbufq
+parameter_list|(
+name|struct
+name|rsu_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+decl_stmt|;
+name|RSU_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|m
+operator|=
+name|mbufq_dequeue
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_snd
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|ni
+operator|=
+operator|(
+expr|struct
+name|ieee80211_node
+operator|*
+operator|)
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+name|NULL
+expr_stmt|;
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|_rsu_start
 parameter_list|(
 name|struct
 name|rsu_softc
@@ -11106,6 +11669,17 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|RSU_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_DEBUG_TX
+argument_list|,
+literal|"%s: failed to get buffer\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|mbufq_prepend
 argument_list|(
 operator|&
@@ -11155,6 +11729,17 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|RSU_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_DEBUG_TX
+argument_list|,
+literal|"%s: failed to transmit\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|if_inc_counter
 argument_list|(
 name|ni
@@ -11183,6 +11768,30 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|rsu_start
+parameter_list|(
+name|struct
+name|rsu_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|taskqueue_enqueue
+argument_list|(
+name|taskqueue_thread
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|tx_task
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -12511,6 +13120,17 @@ argument_list|,
 literal|0x43
 argument_list|)
 expr_stmt|;
+comment|/* Firmware - tell it to switch things off */
+operator|(
+name|void
+operator|)
+name|rsu_set_fw_power_state
+argument_list|(
+name|sc
+argument_list|,
+name|RSU_PWR_OFF
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -12819,9 +13439,7 @@ name|RSU_DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|RSU_DEBUG_FW
-operator||
-name|RSU_DEBUG_RESET
+name|RSU_DEBUG_ANY
 argument_list|,
 literal|"%s: Firmware already loaded\n"
 argument_list|,
@@ -13499,6 +14117,14 @@ name|sc
 operator|->
 name|sc_nendpoints
 expr_stmt|;
+name|dmem
+operator|->
+name|chip_version
+operator|=
+name|sc
+operator|->
+name|cut
+expr_stmt|;
 comment|/* XXX TODO: rf_config should come from ROM */
 name|dmem
 operator|->
@@ -13581,6 +14207,19 @@ name|qos_en
 operator|=
 literal|1
 expr_stmt|;
+name|dmem
+operator|->
+name|ps_offload
+operator|=
+literal|1
+expr_stmt|;
+name|dmem
+operator|->
+name|lowpower_mode
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX TODO: configurable? */
 comment|/* Load DMEM section. */
 name|error
 operator|=
@@ -13965,10 +14604,6 @@ index|[
 name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
-name|struct
-name|r92s_set_pwr_mode
-name|cmd
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -13976,6 +14611,12 @@ name|int
 name|i
 decl_stmt|;
 name|RSU_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Ensure the mbuf queue is drained */
+name|rsu_drain_mbufq
 argument_list|(
 name|sc
 argument_list|)
@@ -14000,6 +14641,16 @@ operator|.
 name|queued
 operator|=
 literal|0
+expr_stmt|;
+comment|/* Reset power management state. */
+name|rsu_write_1
+argument_list|(
+name|sc
+argument_list|,
+name|R92S_USB_HRPWM
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* Power on adapter. */
 if|if
@@ -14244,67 +14895,14 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|rsu_write_1
-argument_list|(
-name|sc
-argument_list|,
-name|R92S_USB_HRPWM
-argument_list|,
-name|R92S_USB_HRPWM_PS_ST_ACTIVE
-operator||
-name|R92S_USB_HRPWM_PS_ALL_ON
-argument_list|)
-expr_stmt|;
 comment|/* Set PS mode fully active */
-name|memset
-argument_list|(
-operator|&
-name|cmd
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|cmd
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|cmd
-operator|.
-name|mode
-operator|=
-name|R92S_PS_MODE_ACTIVE
-expr_stmt|;
-name|RSU_DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|RSU_DEBUG_RESET
-argument_list|,
-literal|"%s: setting ps mode to %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|cmd
-operator|.
-name|mode
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
-name|rsu_fw_cmd
+name|rsu_set_fw_power_state
 argument_list|(
 name|sc
 argument_list|,
-name|R92S_CMD_SET_PWR_MODE
-argument_list|,
-operator|&
-name|cmd
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|cmd
-argument_list|)
+name|RSU_PWR_ACTIVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -14459,6 +15057,11 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|RSU_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_running
@@ -14479,6 +15082,18 @@ operator|&
 name|sc
 operator|->
 name|calib_task
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|taskqueue_cancel
+argument_list|(
+name|taskqueue_thread
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|tx_task
 argument_list|,
 name|NULL
 argument_list|)
@@ -14510,6 +15125,12 @@ name|sc_xfer
 index|[
 name|i
 index|]
+argument_list|)
+expr_stmt|;
+comment|/* Ensure the mbuf queue is drained */
+name|rsu_drain_mbufq
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}

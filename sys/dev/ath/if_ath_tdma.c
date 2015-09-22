@@ -2132,12 +2132,9 @@ directive|endif
 comment|/* 	 * Copy sender's timetstamp into tdma ie so they can 	 * calculate roundtrip time.  We submit a beacon frame 	 * below after any timer adjustment.  The frame goes out 	 * at the next TBTT so the sender can calculate the 	 * roundtrip by inspecting the tdma ie in our beacon frame. 	 * 	 * NB: This tstamp is subtlely preserved when 	 *     IEEE80211_BEACON_TDMA is marked (e.g. when the 	 *     slot position changes) because ieee80211_add_tdma 	 *     skips over the data. 	 */
 name|memcpy
 argument_list|(
-name|ATH_VAP
-argument_list|(
 name|vap
-argument_list|)
 operator|->
-name|av_boff
+name|iv_bcn_off
 operator|.
 name|bo_tdma
 operator|+

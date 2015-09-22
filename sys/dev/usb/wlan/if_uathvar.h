@@ -298,13 +298,6 @@ decl_stmt|;
 name|uint16_t
 name|txop
 decl_stmt|;
-define|#
-directive|define
-name|UATH_TXOP_TO_US
-parameter_list|(
-name|txop
-parameter_list|)
-value|((txop)<< 5)
 name|uint8_t
 name|acm
 decl_stmt|;

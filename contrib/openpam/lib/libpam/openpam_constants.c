@@ -310,6 +310,13 @@ directive|ifdef
 name|OPENPAM_MODULES_DIRECTORY
 name|OPENPAM_MODULES_DIRECTORY
 block|,
+elif|#
+directive|elif
+name|COMPAT_32BIT
+literal|"/usr/lib32"
+block|,
+literal|"/usr/local/lib32"
+block|,
 else|#
 directive|else
 literal|"/usr/lib"

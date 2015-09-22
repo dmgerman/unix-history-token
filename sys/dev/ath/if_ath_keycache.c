@@ -904,13 +904,6 @@ modifier|*
 name|bss
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 specifier|static
 specifier|const
 name|u_int8_t
@@ -1014,7 +1007,7 @@ name|cip
 operator|->
 name|ic_cipher
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|ciphermap
 argument_list|)
@@ -1239,9 +1232,6 @@ operator|(
 name|ret
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -1268,13 +1258,6 @@ modifier|*
 name|rxkeyix
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 name|u_int
 name|i
 decl_stmt|,
@@ -1300,7 +1283,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|sc
 operator|->
@@ -1517,9 +1500,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -1546,13 +1526,6 @@ modifier|*
 name|rxkeyix
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 name|u_int
 name|i
 decl_stmt|,
@@ -1579,7 +1552,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|sc
 operator|->
@@ -1733,9 +1706,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -1762,13 +1732,6 @@ modifier|*
 name|rxkeyix
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 name|u_int
 name|i
 decl_stmt|,
@@ -1807,7 +1770,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|sc
 operator|->
@@ -1904,9 +1867,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

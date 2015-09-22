@@ -57,17 +57,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_typedef
-typedef|typedef
-name|void
-name|callout_func_t
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_struct
 struct|struct
 name|callout

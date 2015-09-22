@@ -4351,9 +4351,9 @@ argument_list|(
 name|ni
 argument_list|,
 operator|&
-name|rvp
+name|vap
 operator|->
-name|ral_bo
+name|iv_bcn_off
 argument_list|)
 expr_stmt|;
 if|if
@@ -6882,24 +6882,14 @@ name|item
 parameter_list|)
 block|{
 name|struct
-name|rt2560_vap
-modifier|*
-name|rvp
-init|=
-name|RT2560_VAP
-argument_list|(
-name|vap
-argument_list|)
-decl_stmt|;
-name|struct
 name|ieee80211_beacon_offsets
 modifier|*
 name|bo
 init|=
 operator|&
-name|rvp
+name|vap
 operator|->
-name|ral_bo
+name|iv_bcn_off
 decl_stmt|;
 name|setbit
 argument_list|(
@@ -6949,16 +6939,6 @@ operator|&
 name|ic
 operator|->
 name|ic_vaps
-argument_list|)
-decl_stmt|;
-name|struct
-name|rt2560_vap
-modifier|*
-name|rvp
-init|=
-name|RT2560_VAP
-argument_list|(
-name|vap
 argument_list|)
 decl_stmt|;
 name|struct
@@ -7049,9 +7029,9 @@ operator|->
 name|ni
 argument_list|,
 operator|&
-name|rvp
+name|vap
 operator|->
-name|ral_bo
+name|iv_bcn_off
 argument_list|,
 name|data
 operator|->
@@ -12307,13 +12287,6 @@ modifier|*
 name|rs
 parameter_list|)
 block|{
-define|#
-directive|define
-name|RV
-parameter_list|(
-name|r
-parameter_list|)
-value|((r)& IEEE80211_RATE_VAL)
 name|struct
 name|ieee80211com
 modifier|*
@@ -12380,7 +12353,7 @@ name|ic
 operator|->
 name|ic_rt
 argument_list|,
-name|RV
+name|IEEE80211_RV
 argument_list|(
 name|rate
 argument_list|)
@@ -12405,9 +12378,6 @@ argument_list|,
 name|mask
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|RV
 block|}
 end_function
 
@@ -13301,13 +13271,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof (a) / sizeof ((a)[0]))
 name|int
 name|i
 decl_stmt|,
@@ -13375,7 +13338,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rt2560_def_bbp
 argument_list|)
@@ -13481,9 +13444,6 @@ comment|/* XXX restore bbp17 */
 return|return
 literal|0
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -13718,13 +13678,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof (a) / sizeof ((a)[0]))
 name|struct
 name|ieee80211com
 modifier|*
@@ -13883,7 +13836,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rt2560_def_mac
 argument_list|)
@@ -14134,9 +14087,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

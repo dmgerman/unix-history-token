@@ -9850,13 +9850,6 @@ modifier|*
 name|rs
 parameter_list|)
 block|{
-define|#
-directive|define
-name|RV
-parameter_list|(
-name|r
-parameter_list|)
-value|((r)& IEEE80211_RATE_VAL)
 name|struct
 name|ieee80211com
 modifier|*
@@ -9923,7 +9916,7 @@ name|ic
 operator|->
 name|ic_rt
 argument_list|,
-name|RV
+name|IEEE80211_RV
 argument_list|(
 name|rate
 argument_list|)
@@ -9948,9 +9941,6 @@ argument_list|,
 name|mask
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|RV
 block|}
 end_function
 
@@ -11965,13 +11955,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof (a) / sizeof ((a)[0]))
 name|int
 name|i
 decl_stmt|,
@@ -12050,7 +12033,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rt2661_def_bbp
 argument_list|)
@@ -12135,9 +12118,6 @@ block|}
 return|return
 literal|0
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -12152,13 +12132,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof (a) / sizeof ((a)[0]))
 name|struct
 name|ieee80211com
 modifier|*
@@ -12446,7 +12419,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rt2661_def_mac
 argument_list|)
@@ -12692,7 +12665,7 @@ name|RT2661_STA_CSR0
 argument_list|,
 name|sta
 argument_list|,
-name|N
+name|nitems
 argument_list|(
 name|sta
 argument_list|)
@@ -12767,9 +12740,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -14005,7 +13975,13 @@ name|iv_ic
 decl_stmt|;
 name|struct
 name|ieee80211_beacon_offsets
+modifier|*
 name|bo
+init|=
+operator|&
+name|vap
+operator|->
+name|iv_bcn_off
 decl_stmt|;
 name|struct
 name|rt2661_tx_desc
@@ -14027,7 +14003,6 @@ name|vap
 operator|->
 name|iv_bss
 argument_list|,
-operator|&
 name|bo
 argument_list|)
 expr_stmt|;

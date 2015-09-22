@@ -1821,6 +1821,10 @@ index|[
 name|WME_NUM_AC
 index|]
 decl_stmt|;
+name|struct
+name|ieee80211_beacon_offsets
+name|iv_bcn_off
+decl_stmt|;
 name|uint32_t
 modifier|*
 name|iv_aid_bitmap

@@ -3661,21 +3661,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* unaligned little endian access */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LE_READ_2
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|((uint16_t)					\ 	 ((((const uint8_t *)(p))[0]      ) |		\ 	  (((const uint8_t *)(p))[1]<<  8)))
-end_define
-
-begin_comment
 comment|/*  * Demote any supplied 11g channel to 11b.  There should  * always be an 11b channel but we check anyway...  */
 end_comment
 
@@ -4289,13 +4274,6 @@ modifier|*
 name|se
 parameter_list|)
 block|{
-define|#
-directive|define
-name|RV
-parameter_list|(
-name|v
-parameter_list|)
-value|((v)& IEEE80211_RATE_VAL)
 specifier|const
 name|struct
 name|ieee80211_rateset
@@ -4395,7 +4373,7 @@ control|)
 block|{
 name|r
 operator|=
-name|RV
+name|IEEE80211_RV
 argument_list|(
 name|rs
 index|[
@@ -4438,7 +4416,7 @@ if|if
 condition|(
 name|r
 operator|==
-name|RV
+name|IEEE80211_RV
 argument_list|(
 name|srs
 operator|->
@@ -4542,14 +4520,11 @@ name|IEEE80211_RATE_BASIC
 return|;
 else|else
 return|return
-name|RV
+name|IEEE80211_RV
 argument_list|(
 name|okrate
 argument_list|)
 return|;
-undef|#
-directive|undef
-name|RV
 block|}
 end_function
 

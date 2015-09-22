@@ -366,6 +366,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|arena_mapbits_size_decode
+value|JEMALLOC_N(arena_mapbits_size_decode)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arena_mapbits_size_encode
+value|JEMALLOC_N(arena_mapbits_size_encode)
+end_define
+
+begin_define
+define|#
+directive|define
 name|arena_mapbits_small_runind_get
 value|JEMALLOC_N(arena_mapbits_small_runind_get)
 end_define
@@ -403,13 +417,6 @@ define|#
 directive|define
 name|arena_mapbits_unzeroed_get
 value|JEMALLOC_N(arena_mapbits_unzeroed_get)
-end_define
-
-begin_define
-define|#
-directive|define
-name|arena_maxclass
-value|JEMALLOC_N(arena_maxclass)
 end_define
 
 begin_define
@@ -564,6 +571,13 @@ define|#
 directive|define
 name|arena_prof_tctx_get
 value|JEMALLOC_N(arena_prof_tctx_get)
+end_define
+
+begin_define
+define|#
+directive|define
+name|arena_prof_tctx_reset
+value|JEMALLOC_N(arena_prof_tctx_reset)
 end_define
 
 begin_define
@@ -1759,6 +1773,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|huge_prof_tctx_reset
+value|JEMALLOC_N(huge_prof_tctx_reset)
+end_define
+
+begin_define
+define|#
+directive|define
 name|huge_prof_tctx_set
 value|JEMALLOC_N(huge_prof_tctx_set)
 end_define
@@ -1985,6 +2006,13 @@ define|#
 directive|define
 name|jemalloc_prefork
 value|JEMALLOC_N(jemalloc_prefork)
+end_define
+
+begin_define
+define|#
+directive|define
+name|large_maxclass
+value|JEMALLOC_N(large_maxclass)
 end_define
 
 begin_define
@@ -2643,6 +2671,13 @@ define|#
 directive|define
 name|prof_tctx_get
 value|JEMALLOC_N(prof_tctx_get)
+end_define
+
+begin_define
+define|#
+directive|define
+name|prof_tctx_reset
+value|JEMALLOC_N(prof_tctx_reset)
 end_define
 
 begin_define

@@ -1861,6 +1861,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|nd6_llinfo_setstate
+parameter_list|(
+name|struct
+name|llentry
+modifier|*
+name|lle
+parameter_list|,
+name|int
+name|newstate
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|nd6_llinfo_settimer
 parameter_list|(
 name|struct

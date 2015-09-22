@@ -128,10 +128,6 @@ name|struct
 name|ieee80211vap
 name|wv_vap
 decl_stmt|;
-name|struct
-name|ieee80211_beacon_offsets
-name|wv_bo
-decl_stmt|;
 name|void
 function_decl|(
 modifier|*
