@@ -3937,6 +3937,16 @@ name|IEEE80211_RATE_VAL
 value|0x7f
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_RV
+parameter_list|(
+name|v
+parameter_list|)
+value|((v)& IEEE80211_RATE_VAL)
+end_define
+
 begin_comment
 comment|/* ERP information element flags */
 end_comment
