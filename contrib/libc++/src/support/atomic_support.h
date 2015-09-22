@@ -93,6 +93,16 @@ name|defined
 argument_list|(
 name|__ATOMIC_SEQ_CST
 argument_list|)
+expr|\
+operator|&&
+name|defined
+argument_list|(
+name|__ARM_ARCH
+argument_list|)
+operator|&&
+name|__ARM_ARCH
+operator|>=
+literal|6
 end_if
 
 begin_define
@@ -421,6 +431,29 @@ argument|_FromType __val
 argument_list|,
 argument|int =
 literal|0
+argument_list|)
+block|{
+operator|*
+name|__dest
+operator|=
+name|__val
+block|; }
+name|template
+operator|<
+name|class
+name|_ValueType
+operator|,
+name|class
+name|_FromType
+operator|>
+specifier|inline
+name|_LIBCPP_INLINE_VISIBILITY
+name|void
+name|__libcpp_relaxed_store
+argument_list|(
+argument|_ValueType* __dest
+argument_list|,
+argument|_FromType __val
 argument_list|)
 block|{
 operator|*
