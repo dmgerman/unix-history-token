@@ -848,6 +848,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ctl_isc_announce_mode
+parameter_list|(
+name|struct
+name|ctl_lun
+modifier|*
+name|lun
+parameter_list|,
+name|uint32_t
+name|initidx
+parameter_list|,
+name|uint8_t
+name|page
+parameter_list|,
+name|uint8_t
+name|subpage
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * KPI to manipulate LUN/port options  */
 end_comment
