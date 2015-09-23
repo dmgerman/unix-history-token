@@ -2194,6 +2194,12 @@ name|sht
 condition|)
 block|{
 case|case
+name|SHT_MIPS_REGINFO
+case|:
+return|return
+literal|"SHT_MIPS_REGINFO"
+return|;
+case|case
 name|SHT_MIPS_OPTIONS
 case|:
 return|return
