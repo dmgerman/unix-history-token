@@ -617,8 +617,6 @@ decl_stmt|,
 name|longidle
 decl_stmt|,
 name|longattime
-decl_stmt|,
-name|dropgid
 decl_stmt|;
 specifier|const
 name|char
@@ -724,10 +722,6 @@ operator|=
 literal|"dhiflM:N:nsuw"
 expr_stmt|;
 block|}
-name|dropgid
-operator|=
-literal|0
-expr_stmt|;
 name|memf
 operator|=
 name|_PATH_DEVNULL
@@ -794,10 +788,6 @@ name|memf
 operator|=
 name|optarg
 expr_stmt|;
-name|dropgid
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 literal|'N'
@@ -805,10 +795,6 @@ case|:
 name|nlistf
 operator|=
 name|optarg
-expr_stmt|;
-name|dropgid
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -886,17 +872,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* only try once.. */
-comment|/* 	 * Discard setgid privileges if not the running kernel so that bad 	 * guys can't print interesting stuff from kernel memory. 	 */
-if|if
-condition|(
-name|dropgid
-condition|)
-name|setgid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
