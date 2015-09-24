@@ -3315,7 +3315,7 @@ case|case
 name|ELFOSABI_HPUX
 case|:
 return|return
-literal|"HPUS"
+literal|"HPUX"
 return|;
 case|case
 name|ELFOSABI_NETBSD
