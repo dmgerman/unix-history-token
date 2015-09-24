@@ -22661,11 +22661,6 @@ name|tap
 argument_list|)
 condition|)
 block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 return|return
 name|EINVAL
 return|;
@@ -22923,11 +22918,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 return|return
 name|ENOBUFS
 return|;
@@ -23608,11 +23598,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 return|return
 name|error
 return|;
@@ -23647,11 +23632,6 @@ argument_list|,
 literal|"%s: could not defrag mbuf\n"
 argument_list|,
 name|__func__
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 return|return
@@ -23702,11 +23682,6 @@ argument_list|,
 name|__func__
 argument_list|,
 name|error
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 return|return
@@ -24746,11 +24721,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 return|return
 name|error
 return|;
@@ -24785,11 +24755,6 @@ argument_list|,
 literal|"%s: could not defrag mbuf\n"
 argument_list|,
 name|__func__
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 return|return
@@ -24840,11 +24805,6 @@ argument_list|,
 name|__func__
 argument_list|,
 name|error
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 return|return
@@ -25379,6 +25339,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * raw frame xmit - free node/reference if failed.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -25630,6 +25594,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * transmit - don't free mbuf if failed; don't free node ref if failed.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -25663,6 +25631,19 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|ni
+operator|=
+operator|(
+expr|struct
+name|ieee80211_node
+operator|*
+operator|)
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+expr_stmt|;
 name|IWN_LOCK
 argument_list|(
 name|sc
@@ -25714,19 +25695,6 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-name|ni
-operator|=
-operator|(
-expr|struct
-name|ieee80211_node
-operator|*
-operator|)
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-expr_stmt|;
 name|error
 operator|=
 name|iwn_tx_data
@@ -25754,11 +25722,6 @@ argument_list|,
 name|IFCOUNTER_OERRORS
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|ieee80211_free_node
-argument_list|(
-name|ni
 argument_list|)
 expr_stmt|;
 block|}
