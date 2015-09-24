@@ -685,16 +685,6 @@ name|hy
 operator|<
 literal|0
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|__i386__
-comment|/* XXX: Work around llvm PR 24343: */
-name|__compiler_membar
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|z
 operator|=
 name|one
@@ -702,7 +692,6 @@ operator|/
 name|z
 expr_stmt|;
 comment|/* z = (1/|x|) */
-block|}
 if|if
 condition|(
 name|hx
