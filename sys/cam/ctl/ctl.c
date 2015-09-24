@@ -29968,7 +29968,7 @@ return|;
 break|break;
 comment|/* NOTREACHED */
 block|}
-comment|/* NDOB and ANCHOR flags can be used only together with UNMAP */
+comment|/* ANCHOR flag can be used only together with UNMAP */
 if|if
 condition|(
 operator|(
@@ -29982,11 +29982,7 @@ operator|&&
 operator|(
 name|byte2
 operator|&
-operator|(
-name|SWS_NDOB
-operator||
 name|SWS_ANCHOR
-operator|)
 operator|)
 operator|!=
 literal|0
