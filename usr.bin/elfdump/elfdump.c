@@ -1590,6 +1590,12 @@ return|return
 literal|"EM_88K"
 return|;
 case|case
+name|EM_IAMCU
+case|:
+return|return
+literal|"EM_IAMCU"
+return|;
+case|case
 name|EM_860
 case|:
 return|return
