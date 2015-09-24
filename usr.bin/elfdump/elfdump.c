@@ -1649,6 +1649,12 @@ case|:
 return|return
 literal|"EM_AARCH64"
 return|;
+case|case
+name|EM_RISCV
+case|:
+return|return
+literal|"EM_RISCV"
+return|;
 block|}
 name|snprintf
 argument_list|(
