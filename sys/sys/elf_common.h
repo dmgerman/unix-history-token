@@ -3985,6 +3985,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NT_PPC_VMX
+value|0x100
+end_define
+
+begin_comment
+comment|/* PowerPC Altivec/VMX registers */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NT_X86_XSTATE
 value|0x202
 end_define
