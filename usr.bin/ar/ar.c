@@ -420,9 +420,8 @@ name|options
 operator||=
 name|AR_S
 expr_stmt|;
-for|for
-control|(
-init|;
+while|while
+condition|(
 operator|(
 name|bsdar
 operator|->
@@ -434,8 +433,7 @@ operator|++
 operator|)
 operator|!=
 name|NULL
-condition|;
-control|)
+condition|)
 name|ar_mode_s
 argument_list|(
 name|bsdar
