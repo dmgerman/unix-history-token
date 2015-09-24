@@ -3306,10 +3306,10 @@ name|abi
 condition|)
 block|{
 case|case
-name|ELFOSABI_SYSV
+name|ELFOSABI_NONE
 case|:
 return|return
-literal|"SYSV"
+literal|"NONE"
 return|;
 case|case
 name|ELFOSABI_HPUX

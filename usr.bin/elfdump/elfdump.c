@@ -1769,7 +1769,7 @@ literal|256
 index|]
 init|=
 block|{
-literal|"ELFOSABI_SYSV"
+literal|"ELFOSABI_NONE"
 block|,
 literal|"ELFOSABI_HPUX"
 block|,
