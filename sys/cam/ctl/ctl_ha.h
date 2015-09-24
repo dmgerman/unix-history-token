@@ -324,6 +324,16 @@ end_function_decl
 
 begin_function_decl
 name|ctl_ha_status
+name|ctl_ha_msg_abort
+parameter_list|(
+name|ctl_ha_channel
+name|channel
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ctl_ha_status
 name|ctl_ha_msg_deregister
 parameter_list|(
 name|ctl_ha_channel

@@ -1769,7 +1769,7 @@ literal|256
 index|]
 init|=
 block|{
-literal|"ELFOSABI_SYSV"
+literal|"ELFOSABI_NONE"
 block|,
 literal|"ELFOSABI_HPUX"
 block|,
@@ -2193,6 +2193,12 @@ condition|(
 name|sht
 condition|)
 block|{
+case|case
+name|SHT_MIPS_REGINFO
+case|:
+return|return
+literal|"SHT_MIPS_REGINFO"
+return|;
 case|case
 name|SHT_MIPS_OPTIONS
 case|:

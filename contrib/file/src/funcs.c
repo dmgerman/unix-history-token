@@ -18,7 +18,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: funcs.c,v 1.83 2015/06/16 14:17:37 christos Exp $"
+literal|"@(#)$File: funcs.c,v 1.84 2015/09/10 13:32:19 christos Exp $"
 argument_list|)
 end_macro
 
@@ -963,8 +963,8 @@ operator|&&
 name|inname
 condition|)
 block|{
-switch|switch
-condition|(
+name|m
+operator|=
 name|file_os2_apptype
 argument_list|(
 name|ms
@@ -975,6 +975,34 @@ name|buf
 argument_list|,
 name|nb
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ms
+operator|->
+name|flags
+operator|&
+name|MAGIC_DEBUG
+operator|)
+operator|!=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"[try os2_apptype %d]\n"
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|m
 condition|)
 block|{
 case|case
@@ -1013,9 +1041,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-if|if
-condition|(
-operator|(
+block|{
 name|m
 operator|=
 name|file_zmagic
@@ -1030,11 +1056,7 @@ name|ubuf
 argument_list|,
 name|nb
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1054,14 +1076,20 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"zmagic %d\n"
+literal|"[try zmagic %d]\n"
 argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+condition|)
+block|{
 goto|goto
 name|done_encoding
 goto|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -1078,9 +1106,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-if|if
-condition|(
-operator|(
+block|{
 name|m
 operator|=
 name|file_is_tar
@@ -1091,11 +1117,7 @@ name|ubuf
 argument_list|,
 name|nb
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1115,11 +1137,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar %d\n"
+literal|"[try tar %d]\n"
 argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+condition|)
+block|{
 if|if
 condition|(
 name|checkdone
@@ -1133,6 +1160,7 @@ condition|)
 goto|goto
 name|done
 goto|;
+block|}
 block|}
 comment|/* Check if we have a CDF file */
 if|if
@@ -1147,9 +1175,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-if|if
-condition|(
-operator|(
+block|{
 name|m
 operator|=
 name|file_trycdf
@@ -1162,11 +1188,7 @@ name|ubuf
 argument_list|,
 name|nb
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1186,11 +1208,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cdf %d\n"
+literal|"[try cdf %d]\n"
 argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+condition|)
+block|{
 if|if
 condition|(
 name|checkdone
@@ -1205,6 +1232,7 @@ goto|goto
 name|done
 goto|;
 block|}
+block|}
 comment|/* try soft magic tests */
 if|if
 condition|(
@@ -1218,9 +1246,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-if|if
-condition|(
-operator|(
 name|m
 operator|=
 name|file_softmagic
@@ -1239,11 +1264,7 @@ name|BINTEST
 argument_list|,
 name|looks_text
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1263,11 +1284,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"softmagic %d\n"
+literal|"[try softmagic %d]\n"
 argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|BUILTIN_ELF
@@ -1298,9 +1324,6 @@ literal|1
 condition|)
 block|{
 comment|/* 				 * We matched something in the file, so this 				 * *might* be an ELF file, and the file is at 				 * least 5 bytes long, so if it's an ELF file 				 * it has at least one byte past the ELF magic 				 * number - try extracting information from the 				 * ELF headers that cannot easily * be 				 * extracted with rules in the magic file. 				 */
-if|if
-condition|(
-operator|(
 name|m
 operator|=
 name|file_tryelf
@@ -1313,10 +1336,7 @@ name|ubuf
 argument_list|,
 name|nb
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1336,7 +1356,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"elf %d\n"
+literal|"[try elf %d]\n"
 argument_list|,
 name|m
 argument_list|)
@@ -1372,9 +1392,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-operator|(
 name|m
 operator|=
 name|file_ascmagic
@@ -1387,11 +1404,7 @@ name|nb
 argument_list|,
 name|looks_text
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1411,11 +1424,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ascmagic %d\n"
+literal|"[try ascmagic %d]\n"
 argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+condition|)
+block|{
 if|if
 condition|(
 name|checkdone
