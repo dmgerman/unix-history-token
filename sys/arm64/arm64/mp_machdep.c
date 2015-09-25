@@ -752,7 +752,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"AP's not started\n"
+literal|"APs not started\n"
 argument_list|)
 expr_stmt|;
 block|}
