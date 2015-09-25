@@ -625,15 +625,6 @@ name|ha_softc
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ctl_softc
-modifier|*
-name|control_softc
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
