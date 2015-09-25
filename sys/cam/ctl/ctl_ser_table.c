@@ -145,6 +145,7 @@ comment|/* Sequential extent check */
 end_comment
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|ctl_serialize_action
 name|ctl_serialize_table
