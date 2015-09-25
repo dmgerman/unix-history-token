@@ -525,10 +525,6 @@ decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
-name|retval
-operator|=
-literal|0
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|softc

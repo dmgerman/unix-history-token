@@ -1969,6 +1969,7 @@ index|[
 literal|3
 index|]
 expr_stmt|;
+break|break;
 default|default:
 name|CFISCSI_WARN
 argument_list|(
@@ -6054,17 +6055,10 @@ name|cfiscsi_softc
 modifier|*
 name|softc
 decl_stmt|;
-name|int
-name|retval
-decl_stmt|;
 name|softc
 operator|=
 operator|&
 name|cfiscsi_softc
-expr_stmt|;
-name|retval
-operator|=
-literal|0
 expr_stmt|;
 name|bzero
 argument_list|(

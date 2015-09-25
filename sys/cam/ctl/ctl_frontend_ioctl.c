@@ -1307,10 +1307,6 @@ name|done
 decl_stmt|,
 name|retval
 decl_stmt|;
-name|retval
-operator|=
-literal|0
-expr_stmt|;
 name|bzero
 argument_list|(
 operator|&

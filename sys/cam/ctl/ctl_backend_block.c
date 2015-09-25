@@ -5277,11 +5277,6 @@ name|bio
 modifier|*
 name|bio
 decl_stmt|;
-name|union
-name|ctl_io
-modifier|*
-name|io
-decl_stmt|;
 name|struct
 name|cdevsw
 modifier|*
@@ -5295,12 +5290,6 @@ decl_stmt|;
 name|int
 name|ref
 decl_stmt|;
-name|io
-operator|=
-name|beio
-operator|->
-name|io
-expr_stmt|;
 name|DPRINTF
 argument_list|(
 literal|"entered\n"
@@ -9578,10 +9567,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|cbe_lun
 operator|=
 operator|&

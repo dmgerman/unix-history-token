@@ -497,10 +497,6 @@ operator|=
 operator|&
 name|cfcs_softc
 expr_stmt|;
-name|retval
-operator|=
-literal|0
-expr_stmt|;
 name|bzero
 argument_list|(
 name|softc
