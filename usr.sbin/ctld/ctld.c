@@ -5803,7 +5803,7 @@ block|{
 name|log_warnx
 argument_list|(
 literal|"invalid target name \"%s\"; should start with "
-literal|"either \".iqn\", \"eui.\", or \"naa.\""
+literal|"either \"iqn.\", \"eui.\", or \"naa.\""
 argument_list|,
 name|name
 argument_list|)
