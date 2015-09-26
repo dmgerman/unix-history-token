@@ -22,7 +22,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Driver for Realtek RTL8188SU/RTL8191SU/RTL8192SU.  *  * TODO:  *   o 11n HT40 support  *   o h/w crypto  *   o hostap / ibss / mesh  *   o sensible RSSI levels  *   o power-save operation  */
+comment|/*  * Driver for Realtek RTL8188SU/RTL8191SU/RTL8192SU.  *  * TODO:  *   o h/w crypto  *   o hostap / ibss / mesh  *   o sensible RSSI levels  *   o power-save operation  */
 end_comment
 
 begin_include
@@ -2733,13 +2733,12 @@ name|IEEE80211_HTCAP_MAXAMSDU_3839
 operator||
 name|IEEE80211_HTCAP_SMPS_OFF
 expr_stmt|;
-comment|/* 		 * XXX HT40 isn't working in this driver yet - there's 		 * something missing.  Disable it for now. 		 */
-if|#
-directive|if
-literal|0
-block|ic->ic_htcaps |= IEEE80211_HTCAP_CHWIDTH40;
-endif|#
-directive|endif
+name|ic
+operator|->
+name|ic_htcaps
+operator||=
+name|IEEE80211_HTCAP_CHWIDTH40
+expr_stmt|;
 comment|/* set number of spatial streams */
 name|ic
 operator|->
@@ -7301,6 +7300,7 @@ name|ni_flags
 operator|&
 name|IEEE80211_NODE_HT
 condition|)
+block|{
 name|frm
 operator|=
 name|ieee80211_add_htcap
@@ -7310,6 +7310,16 @@ argument_list|,
 name|ni
 argument_list|)
 expr_stmt|;
+name|frm
+operator|=
+name|ieee80211_add_htinfo
+argument_list|(
+name|frm
+argument_list|,
+name|ni
+argument_list|)
+expr_stmt|;
+block|}
 name|bss
 operator|->
 name|ieslen
@@ -10022,6 +10032,7 @@ name|USB_ST_SETUP
 case|:
 name|tr_setup
 label|:
+comment|/* 		 * XXX TODO: if we have an mbuf list, but then 		 * we hit data == NULL, what now? 		 */
 name|data
 operator|=
 name|STAILQ_FIRST
@@ -10793,6 +10804,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Transmit the given frame.  *  * This doesn't free the node or mbuf upon failure.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -10955,11 +10970,6 @@ literal|"ieee80211_crypto_encap returns NULL.\n"
 argument_list|)
 expr_stmt|;
 comment|/* XXX we don't expect the fragmented frames */
-name|m_freem
-argument_list|(
-name|m0
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENOBUFS
@@ -11469,6 +11479,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
+comment|/* 	 * XXX TODO: ensure that we treat 'm' as a list of frames 	 * to transmit! 	 */
 name|error
 operator|=
 name|mbufq_enqueue
@@ -11763,6 +11774,11 @@ expr_stmt|;
 name|ieee80211_free_node
 argument_list|(
 name|ni
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 break|break;
@@ -14533,6 +14549,11 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|rsu_freebuf
 argument_list|(
 name|sc
@@ -14924,65 +14945,6 @@ expr_stmt|;
 goto|goto
 name|fail
 goto|;
-block|}
-if|if
-condition|(
-name|ic
-operator|->
-name|ic_htcaps
-operator|&
-name|IEEE80211_HTCAP_CHWIDTH40
-condition|)
-block|{
-comment|/* Enable 40MHz mode. */
-name|error
-operator|=
-name|rsu_fw_iocmd
-argument_list|(
-name|sc
-argument_list|,
-name|SM
-argument_list|(
-name|R92S_IOCMD_CLASS
-argument_list|,
-literal|0xf4
-argument_list|)
-operator||
-name|SM
-argument_list|(
-name|R92S_IOCMD_INDEX
-argument_list|,
-literal|0x00
-argument_list|)
-operator||
-name|SM
-argument_list|(
-name|R92S_IOCMD_VALUE
-argument_list|,
-literal|0x0007
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"could not enable 40MHz mode\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|fail
-goto|;
-block|}
 block|}
 name|sc
 operator|->
