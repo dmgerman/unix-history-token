@@ -3016,6 +3016,28 @@ argument_list|,
 name|RSU_N_TRANSFER
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Free buffers /before/ we detach from net80211, else node 	 * references to destroyed vaps will lead to a panic. 	 */
+comment|/* Free Tx/Rx buffers. */
+name|RSU_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|rsu_free_tx_list
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|rsu_free_rx_list
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|RSU_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Frames are freed; detach from net80211 */
 name|ieee80211_ifdetach
 argument_list|(
@@ -3040,17 +3062,6 @@ operator|&
 name|sc
 operator|->
 name|tx_task
-argument_list|)
-expr_stmt|;
-comment|/* Free Tx/Rx buffers. */
-name|rsu_free_tx_list
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|rsu_free_rx_list
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
