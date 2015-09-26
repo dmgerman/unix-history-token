@@ -1006,7 +1006,7 @@ literal|0
 block|,
 name|NULL
 block|,
-name|CTL_PAGE_FLAG_NONE
+name|CTL_PAGE_FLAG_DISK_ONLY
 block|,
 name|ctl_lbp_log_sense_handler
 block|,

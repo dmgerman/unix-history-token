@@ -3607,7 +3607,13 @@ name|ctl_log_sense
 block|,
 name|CTL_SERIDX_LOG_SNS
 block|,
-name|CTL_CMD_FLAG_OK_ON_SLUN
+name|CTL_CMD_FLAG_OK_ON_BOTH
+operator||
+name|CTL_CMD_FLAG_OK_ON_STOPPED
+operator||
+name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+operator||
+name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
 name|CTL_FLAG_DATA_IN
 operator||
