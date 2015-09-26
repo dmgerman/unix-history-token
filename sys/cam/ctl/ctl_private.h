@@ -1457,12 +1457,6 @@ modifier|*
 name|dev
 decl_stmt|;
 name|int
-name|open_count
-decl_stmt|;
-name|int
-name|num_disks
-decl_stmt|;
-name|int
 name|num_luns
 decl_stmt|;
 name|ctl_gen_flags
@@ -1512,9 +1506,6 @@ name|struct
 name|proc
 modifier|*
 name|ctl_proc
-decl_stmt|;
-name|int
-name|targ_online
 decl_stmt|;
 name|uint32_t
 name|ctl_lun_mask
