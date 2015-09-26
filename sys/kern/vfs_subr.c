@@ -13789,7 +13789,7 @@ name|vp
 operator|->
 name|v_bufobj
 operator|.
-name|bo_dirty
+name|bo_clean
 operator|.
 name|bv_cnt
 argument_list|,
@@ -13797,7 +13797,7 @@ name|vp
 operator|->
 name|v_bufobj
 operator|.
-name|bo_clean
+name|bo_dirty
 operator|.
 name|bv_cnt
 argument_list|)
