@@ -6118,6 +6118,9 @@ modifier|*
 name|odata
 decl_stmt|;
 name|uint16_t
+name|odatalen
+decl_stmt|;
+name|uint16_t
 name|token
 decl_stmt|;
 name|STAILQ_ENTRY
