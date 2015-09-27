@@ -501,6 +501,9 @@ name|int
 name|vmd_pass
 decl_stmt|;
 comment|/* local pagedaemon pass */
+name|int
+name|vmd_last_active_scan
+decl_stmt|;
 name|struct
 name|vm_page
 name|vmd_marker
