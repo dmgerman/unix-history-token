@@ -524,7 +524,7 @@ end_function
 
 begin_function
 specifier|static
-name|Elf_Addr
+name|int
 name|lookup_fdesc
 parameter_list|(
 name|linker_file_t
@@ -535,6 +535,10 @@ name|symidx
 parameter_list|,
 name|elf_lookup_fn
 name|lookup
+parameter_list|,
+name|Elf_Addr
+modifier|*
+name|addr1
 parameter_list|)
 block|{
 name|linker_file_t
@@ -550,6 +554,8 @@ name|symname
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|error
 decl_stmt|;
 specifier|static
 name|int
@@ -557,7 +563,7 @@ name|eot
 init|=
 literal|0
 decl_stmt|;
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -566,12 +572,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 block|{
@@ -643,7 +652,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+name|EINVAL
 operator|)
 return|;
 block|}
@@ -653,7 +662,7 @@ name|eot
 condition|)
 return|return
 operator|(
-literal|0
+name|EINVAL
 operator|)
 return|;
 comment|/* 	 * Lookup and/or construct OPD 	 */
@@ -681,7 +690,10 @@ index|]
 operator|==
 name|addr
 condition|)
-return|return
+block|{
+operator|*
+name|addr1
+operator|=
 call|(
 name|Elf_Addr
 call|)
@@ -690,7 +702,13 @@ name|fptr_storage
 operator|+
 name|i
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
 return|;
+block|}
 if|if
 condition|(
 name|fptr_storage
@@ -720,7 +738,9 @@ argument_list|(
 name|lf
 argument_list|)
 expr_stmt|;
-return|return
+operator|*
+name|addr1
+operator|=
 call|(
 name|Elf_Addr
 call|)
@@ -729,6 +749,11 @@ name|fptr_storage
 operator|+
 name|i
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -745,7 +770,7 @@ literal|1
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|EINVAL
 operator|)
 return|;
 block|}
@@ -804,6 +829,9 @@ specifier|const
 name|Elf_Rela
 modifier|*
 name|rela
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 switch|switch
 condition|(
@@ -986,7 +1014,7 @@ case|case
 name|R_IA_64_DIR64LSB
 case|:
 comment|/* word64 LSB	S + A */
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -995,12 +1023,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return
@@ -1036,7 +1067,7 @@ name|__func__
 argument_list|)
 expr_stmt|;
 block|}
-name|addr
+name|error
 operator|=
 name|lookup_fdesc
 argument_list|(
@@ -1045,12 +1076,15 @@ argument_list|,
 name|symidx
 argument_list|,
 name|lookup
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return
@@ -1073,7 +1107,7 @@ break|break;
 case|case
 name|R_IA_64_IPLTLSB
 case|:
-name|addr
+name|error
 operator|=
 name|lookup_fdesc
 argument_list|(
@@ -1082,12 +1116,15 @@ argument_list|,
 name|symidx
 argument_list|,
 name|lookup
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return

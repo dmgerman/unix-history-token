@@ -2179,6 +2179,9 @@ decl_stmt|;
 name|Elf_Addr
 name|addr
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|type
@@ -2329,7 +2332,7 @@ name|rtype
 argument_list|)
 condition|)
 block|{
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -2338,12 +2341,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return

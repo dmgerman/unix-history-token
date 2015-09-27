@@ -767,6 +767,9 @@ name|Elf_Rela
 modifier|*
 name|rela
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -939,7 +942,7 @@ case|case
 name|R_386_32
 case|:
 comment|/* S + A */
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -948,12 +951,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return
@@ -981,7 +987,7 @@ case|case
 name|R_386_PC32
 case|:
 comment|/* S + A - P */
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -990,12 +996,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return
@@ -1043,7 +1052,7 @@ case|case
 name|R_386_GLOB_DAT
 case|:
 comment|/* S */
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -1052,12 +1061,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return

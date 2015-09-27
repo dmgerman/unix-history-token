@@ -1137,7 +1137,7 @@ end_endif
 
 begin_typedef
 typedef|typedef
-name|Elf_Addr
+name|int
 name|elf_lookup_fn
 parameter_list|(
 name|linker_file_t
@@ -1145,6 +1145,9 @@ parameter_list|,
 name|Elf_Size
 parameter_list|,
 name|int
+parameter_list|,
+name|Elf_Addr
+modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
