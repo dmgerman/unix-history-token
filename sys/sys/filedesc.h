@@ -527,7 +527,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|filecaps_copy
 parameter_list|(
 specifier|const
@@ -540,6 +540,9 @@ name|struct
 name|filecaps
 modifier|*
 name|dst
+parameter_list|,
+name|bool
+name|locked
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -556,14 +562,13 @@ name|int
 name|sig
 parameter_list|)
 block|{
+specifier|static
 name|char
-modifier|*
-name|ret
+name|tmp
+index|[
+literal|64
+index|]
 decl_stmt|;
-name|ret
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|sig
@@ -575,10 +580,14 @@ operator|<
 name|NSIG
 condition|)
 block|{
-name|asprintf
+name|snprintf
 argument_list|(
-operator|&
-name|ret
+name|tmp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmp
+argument_list|)
 argument_list|,
 literal|"SIG%s"
 argument_list|,
@@ -588,21 +597,15 @@ name|sig
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|==
-name|NULL
-condition|)
 return|return
 operator|(
-name|NULL
+name|tmp
 operator|)
 return|;
 block|}
 return|return
 operator|(
-name|ret
+name|NULL
 operator|)
 return|;
 block|}
@@ -1302,10 +1305,10 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"%ld.%09ld "
+literal|"%jd.%09ld "
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|timediff
 operator|.
@@ -1352,10 +1355,10 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"%ld.%09ld "
+literal|"%jd.%09ld "
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|timediff
 operator|.
@@ -1394,11 +1397,6 @@ name|NULL
 condition|?
 literal|"?"
 else|:
-name|signame
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
 name|signame
 argument_list|)
 expr_stmt|;
@@ -1469,10 +1467,10 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"%ld.%09ld "
+literal|"%jd.%09ld "
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|timediff
 operator|.
@@ -1519,10 +1517,10 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"%ld.%09ld "
+literal|"%jd.%09ld "
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|timediff
 operator|.

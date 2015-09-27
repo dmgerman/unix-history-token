@@ -199,7 +199,14 @@ begin_function_decl
 specifier|extern
 name|bool_t
 name|xdr_opaque_auth
-parameter_list|()
+parameter_list|(
+name|XDR
+modifier|*
+parameter_list|,
+name|struct
+name|opaque_auth
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -209,7 +216,9 @@ name|struct
 name|auth_ops
 modifier|*
 name|authnone_ops
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -240,7 +249,9 @@ begin_function
 name|AUTH
 modifier|*
 name|authnone_create
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|authnone_private
@@ -612,7 +623,9 @@ name|struct
 name|auth_ops
 modifier|*
 name|authnone_ops
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|struct

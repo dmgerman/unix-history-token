@@ -3278,6 +3278,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SHT_MIPS_ABIFLAGS
+value|0x7000002a
+end_define
+
+begin_define
+define|#
+directive|define
 name|SHT_SPARC_GOTDATA
 value|0x70000000
 end_define

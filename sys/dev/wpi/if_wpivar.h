@@ -164,6 +164,10 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|data_dmat
 decl_stmt|;
+name|struct
+name|mbufq
+name|snd
+decl_stmt|;
 name|int
 name|qid
 decl_stmt|;
@@ -341,10 +345,6 @@ decl_stmt|;
 name|struct
 name|wpi_buf
 name|wv_bcbuf
-decl_stmt|;
-name|struct
-name|ieee80211_beacon_offsets
-name|wv_boff
 decl_stmt|;
 name|struct
 name|mtx
@@ -526,11 +526,6 @@ block|{
 name|device_t
 name|sc_dev
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
-decl_stmt|;
 name|int
 name|sc_debug
 decl_stmt|;
@@ -541,9 +536,16 @@ define|#
 directive|define
 name|WPI_PS_PATH
 value|(1<< 0)
+name|int
+name|sc_running
+decl_stmt|;
 name|struct
 name|mtx
 name|sc_mtx
+decl_stmt|;
+name|struct
+name|ieee80211com
+name|sc_ic
 decl_stmt|;
 name|struct
 name|mtx
@@ -573,9 +575,6 @@ decl_stmt|;
 name|struct
 name|mtx
 name|txq_state_mtx
-decl_stmt|;
-name|uint32_t
-name|txq_active
 decl_stmt|;
 name|struct
 name|wpi_rx_ring

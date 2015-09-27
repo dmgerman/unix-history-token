@@ -1162,6 +1162,16 @@ operator|&
 name|dp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|EINVAL
+condition|)
+name|error
+operator|=
+name|ENOTDIR
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CAPABILITIES

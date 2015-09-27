@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/atomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpufunc.h>
 end_include
 
@@ -128,27 +134,6 @@ elif|#
 directive|elif
 name|__ARM_ARCH
 operator|>=
-literal|7
-end_elif
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|do_sync
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-asm|__asm volatile ("dmb" : : : "memory");
-block|}
-end_function
-
-begin_elif
-elif|#
-directive|elif
-name|__ARM_ARCH
-operator|>=
 literal|6
 end_elif
 
@@ -161,7 +146,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-asm|__asm volatile ("mcr p15, 0, %0, c7, c10, 5" : : "r" (0) : "memory");
+name|dmb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -484,9 +471,11 @@ parameter_list|,
 name|name
 parameter_list|,
 name|op
+parameter_list|,
+name|ret
 parameter_list|)
 define|\
-value|uintN_t									\ __atomic_##name##_##N(uintN_t *mem, uintN_t val, int model __unused)	\ {									\ 	uint32_t old, temp, ras_start;					\ 									\ 	ras_start = ARM_RAS_START;					\ 	__asm volatile (						\
+value|uintN_t									\ __atomic_##name##_##N(uintN_t *mem, uintN_t val, int model __unused)	\ {									\ 	uint32_t old, new, ras_start;					\ 									\ 	ras_start = ARM_RAS_START;					\ 	__asm volatile (						\
 comment|/* Set up Restartable Atomic Sequence. */
 value|\ 		"1:"							\ 		"\tadr   %2, 1b\n"					\ 		"\tstr   %2, [%5]\n"					\ 		"\tadr   %2, 2f\n"					\ 		"\tstr   %2, [%5, #4]\n"				\ 									\ 		"\t"ldr" %0, %4\n"
 comment|/* Load old value. */
@@ -496,7 +485,7 @@ value|\ 		"\t"str" %2, %1\n"
 comment|/* Store new value. */
 value|\ 									\
 comment|/* Tear down Restartable Atomic Sequence. */
-value|\ 		"2:"							\ 		"\tmov   %2, #0x00000000\n"				\ 		"\tstr   %2, [%5]\n"					\ 		"\tmov   %2, #0xffffffff\n"				\ 		"\tstr   %2, [%5, #4]\n"				\ 		: "=&r" (old), "=m" (*mem), "=&r" (temp)		\ 		: "r" (val), "m" (*mem), "r" (ras_start));		\ 	return (old);							\ }
+value|\ 		"2:"							\ 		"\tmov   %2, #0x00000000\n"				\ 		"\tstr   %2, [%5]\n"					\ 		"\tmov   %2, #0xffffffff\n"				\ 		"\tstr   %2, [%5, #4]\n"				\ 		: "=&r" (old), "=m" (*mem), "=&r" (new)			\ 		: "r" (val), "m" (*mem), "r" (ras_start));		\ 	return (ret);							\ }
 end_define
 
 begin_define
@@ -515,7 +504,7 @@ parameter_list|,
 name|streq
 parameter_list|)
 define|\
-value|EMIT_LOAD_N(N, uintN_t)							\ EMIT_STORE_N(N, uintN_t)						\ EMIT_EXCHANGE_N(N, uintN_t, ldr, str)					\ EMIT_COMPARE_EXCHANGE_N(N, uintN_t, ldr, streq)				\ EMIT_FETCH_OP_N(N, uintN_t, ldr, str, fetch_add, "add")			\ EMIT_FETCH_OP_N(N, uintN_t, ldr, str, fetch_and, "and")			\ EMIT_FETCH_OP_N(N, uintN_t, ldr, str, fetch_or, "orr")			\ EMIT_FETCH_OP_N(N, uintN_t, ldr, str, fetch_sub, "sub")			\ EMIT_FETCH_OP_N(N, uintN_t, ldr, str, fetch_xor, "eor")
+value|EMIT_LOAD_N(N, uintN_t)							\ EMIT_STORE_N(N, uintN_t)						\ EMIT_EXCHANGE_N(N, uintN_t, ldr, str)					\ EMIT_COMPARE_EXCHANGE_N(N, uintN_t, ldr, streq)				\ EMIT_FETCH_OP_N(N, uintN_t, ldr, str, fetch_add, "add", old)		\ EMIT_FETCH_OP_N(N, uintN_t, ldr, str, fetch_and, "and", old)		\ EMIT_FETCH_OP_N(N, uintN_t, ldr, str, fetch_or,  "orr", old)		\ EMIT_FETCH_OP_N(N, uintN_t, ldr, str, fetch_sub, "sub", old)		\ EMIT_FETCH_OP_N(N, uintN_t, ldr, str, fetch_xor, "eor", old)		\ EMIT_FETCH_OP_N(N, uintN_t, ldr, str, add_fetch, "add", new)		\ EMIT_FETCH_OP_N(N, uintN_t, ldr, str, and_fetch, "and", new)		\ EMIT_FETCH_OP_N(N, uintN_t, ldr, str, or_fetch,  "orr", new)		\ EMIT_FETCH_OP_N(N, uintN_t, ldr, str, sub_fetch, "sub", new)		\ EMIT_FETCH_OP_N(N, uintN_t, ldr, str, xor_fetch, "eor", new)
 end_define
 
 begin_macro

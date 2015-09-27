@@ -45,6 +45,12 @@ directive|include
 file|<sys/fs/zfs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/zio_priority.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -597,6 +603,10 @@ define|#
 directive|define
 name|DS_FIND_CHILDREN
 value|(1<<1)
+define|#
+directive|define
+name|DS_FIND_SERIALIZE
+value|(1<<2)
 comment|/*  * The maximum number of bytes that can be accessed as part of one  * operation, including metadata.  */
 define|#
 directive|define
@@ -1477,7 +1487,7 @@ parameter_list|,
 name|uint64_t
 name|length
 parameter_list|,
-name|int
+name|boolean_t
 name|read
 parameter_list|,
 name|void
@@ -2332,7 +2342,7 @@ name|xuio_stat_wbuf_nocopy
 parameter_list|()
 function_decl|;
 specifier|extern
-name|int
+name|boolean_t
 name|zfs_prefetch_disable
 decl_stmt|;
 specifier|extern
@@ -2350,11 +2360,18 @@ parameter_list|,
 name|uint64_t
 name|object
 parameter_list|,
+name|int64_t
+name|level
+parameter_list|,
 name|uint64_t
 name|offset
 parameter_list|,
 name|uint64_t
 name|len
+parameter_list|,
+name|enum
+name|zio_priority
+name|pri
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -2954,6 +2971,18 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|off
+parameter_list|)
+function_decl|;
+comment|/*  * Check if a DMU object has any dirty blocks. If so, sync out  * all pending transaction groups. Otherwise, this function  * does not alter DMU state. This could be improved to only sync  * out the necessary transaction groups for this particular  * object.  */
+name|int
+name|dmu_object_wait_synced
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|uint64_t
+name|object
 parameter_list|)
 function_decl|;
 comment|/*  * Initial setup and final teardown.  */

@@ -1520,11 +1520,6 @@ name|av_bcbuf
 decl_stmt|;
 comment|/* beacon buffer */
 name|struct
-name|ieee80211_beacon_offsets
-name|av_boff
-decl_stmt|;
-comment|/* dynamic update state */
-name|struct
 name|ath_txq
 name|av_mcastq
 decl_stmt|;
@@ -1977,16 +1972,14 @@ struct|struct
 name|ath_softc
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
+name|ieee80211com
+name|sc_ic
 decl_stmt|;
-comment|/* interface common */
 name|struct
 name|ath_stats
 name|sc_stats
 decl_stmt|;
-comment|/* interface statistics */
+comment|/* device statistics */
 name|struct
 name|ath_tx_aggr_stats
 name|sc_aggr_stats
@@ -2377,6 +2370,11 @@ decl_stmt|;
 comment|/* supports mybeacon */
 comment|/* 	 * Second set of flags. 	 */
 name|u_int32_t
+name|sc_running
+range|:
+literal|1
+decl_stmt|,
+comment|/* initialized */
 name|sc_use_ent
 range|:
 literal|1

@@ -61,11 +61,9 @@ begin_function
 name|int
 name|abs
 parameter_list|(
-name|j
-parameter_list|)
 name|int
 name|j
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(

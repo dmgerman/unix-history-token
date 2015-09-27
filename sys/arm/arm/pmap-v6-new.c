@@ -3887,7 +3887,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_init_qpages: unable to allocate KVA"
+literal|"%s: unable to allocate KVA"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -11047,7 +11049,7 @@ name|vm_page_unwire
 argument_list|(
 name|m
 argument_list|,
-name|PQ_INACTIVE
+name|PQ_NONE
 argument_list|)
 expr_stmt|;
 name|vm_page_free
@@ -23692,7 +23694,7 @@ parameter_list|)
 block|{
 name|pt2_entry_t
 modifier|*
-name|pte
+name|pte2p
 decl_stmt|;
 name|vm_offset_t
 name|qmap_addr
@@ -23707,7 +23709,7 @@ argument_list|(
 name|qmap_addr
 argument_list|)
 expr_stmt|;
-name|pte
+name|pte2p
 operator|=
 name|pt2map_entry
 argument_list|(
@@ -23716,19 +23718,23 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-operator|*
-name|pte
+name|pte2_load
+argument_list|(
+name|pte2p
+argument_list|)
 operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"pmap_quick_enter_page: PTE busy"
+literal|"%s: PTE2 busy"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
 name|pte2_store
 argument_list|(
-name|pte
+name|pte2p
 argument_list|,
 name|PTE2_KERN_NG
 argument_list|(
@@ -23769,7 +23775,7 @@ parameter_list|)
 block|{
 name|pt2_entry_t
 modifier|*
-name|pte
+name|pte2p
 decl_stmt|;
 name|vm_offset_t
 name|qmap_addr
@@ -23781,7 +23787,7 @@ argument_list|(
 name|qmap_addr
 argument_list|)
 expr_stmt|;
-name|pte
+name|pte2p
 operator|=
 name|pt2map_entry
 argument_list|(
@@ -23795,25 +23801,31 @@ operator|==
 name|qmap_addr
 argument_list|,
 operator|(
-literal|"pmap_quick_remove_page: invalid address"
+literal|"%s: invalid address"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-operator|*
-name|pte
+name|pte2_load
+argument_list|(
+name|pte2p
+argument_list|)
 operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"pmap_quick_remove_page: PTE not in use"
+literal|"%s: PTE2 not in use"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
 name|pte2_clear
 argument_list|(
-name|pte
+name|pte2p
 argument_list|)
 expr_stmt|;
 name|critical_exit

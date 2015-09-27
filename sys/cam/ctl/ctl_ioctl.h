@@ -130,99 +130,6 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|CTL_OOA_INVALID_LUN
-block|,
-name|CTL_OOA_SUCCESS
-block|}
-name|ctl_ooa_status
-typedef|;
-end_typedef
-
-begin_struct
-struct|struct
-name|ctl_ooa_info
-block|{
-name|uint32_t
-name|target_id
-decl_stmt|;
-comment|/* Passed in to CTL */
-name|uint32_t
-name|lun_id
-decl_stmt|;
-comment|/* Passed in to CTL */
-name|uint32_t
-name|num_entries
-decl_stmt|;
-comment|/* Returned from CTL */
-name|ctl_ooa_status
-name|status
-decl_stmt|;
-comment|/* Returned from CTL */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ctl_hard_startstop_info
-block|{
-name|cfi_mt_status
-name|status
-decl_stmt|;
-name|int
-name|total_luns
-decl_stmt|;
-name|int
-name|luns_complete
-decl_stmt|;
-name|int
-name|luns_failed
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ctl_bbrread_info
-block|{
-name|int
-name|lun_num
-decl_stmt|;
-comment|/* Passed in to CTL */
-name|uint64_t
-name|lba
-decl_stmt|;
-comment|/* Passed in to CTL */
-name|int
-name|len
-decl_stmt|;
-comment|/* Passed in to CTL */
-name|cfi_mt_status
-name|status
-decl_stmt|;
-comment|/* Returned from CTL */
-name|cfi_bbrread_status
-name|bbr_status
-decl_stmt|;
-comment|/* Returned from CTL */
-name|uint8_t
-name|scsi_status
-decl_stmt|;
-comment|/* Returned from CTL */
-name|struct
-name|scsi_sense_data
-name|sense_data
-decl_stmt|;
-comment|/* Returned from CTL */
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
 name|CTL_DELAY_TYPE_NONE
 block|,
 name|CTL_DELAY_TYPE_CONT
@@ -272,9 +179,6 @@ struct|struct
 name|ctl_io_delay_info
 block|{
 name|uint32_t
-name|target_id
-decl_stmt|;
-name|uint32_t
 name|lun_id
 decl_stmt|;
 name|ctl_delay_type
@@ -289,48 +193,6 @@ decl_stmt|;
 name|ctl_delay_status
 name|status
 decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|CTL_GS_SYNC_NONE
-block|,
-name|CTL_GS_SYNC_OK
-block|,
-name|CTL_GS_SYNC_NO_LUN
-block|}
-name|ctl_gs_sync_status
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * The target and LUN id specify which device to modify.  The sync interval  * means that we will let through every N SYNCHRONIZE CACHE commands.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ctl_sync_info
-block|{
-name|uint32_t
-name|target_id
-decl_stmt|;
-comment|/* passed to kernel */
-name|uint32_t
-name|lun_id
-decl_stmt|;
-comment|/* passed to kernel */
-name|int
-name|sync_interval
-decl_stmt|;
-comment|/* depends on whether get/set */
-name|ctl_gs_sync_status
-name|status
-decl_stmt|;
-comment|/* passed from kernel */
 block|}
 struct|;
 end_struct
@@ -630,17 +492,13 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Error injection descriptor.  *  * target_id:	   Target ID to act on.  * lun_id	   LUN to act on.  * lun_error:	   The type of error to inject.  See above for descriptions.  * error_pattern:  What kind of command to act on.  See above.  * cmd_desc:	   For CTL_LUN_PAT_CMD only.  * lba_range:	   For CTL_LUN_PAT_RANGE only.  * custom_sense:   Specify sense.  For CTL_LUN_INJ_CUSTOM only.  * serial:	   Serial number returned by the kernel.  Use for deletion.  * links:	   Kernel use only.  */
+comment|/*  * Error injection descriptor.  *  * lun_id	   LUN to act on.  * lun_error:	   The type of error to inject.  See above for descriptions.  * error_pattern:  What kind of command to act on.  See above.  * cmd_desc:	   For CTL_LUN_PAT_CMD only.  * lba_range:	   For CTL_LUN_PAT_RANGE only.  * custom_sense:   Specify sense.  For CTL_LUN_INJ_CUSTOM only.  * serial:	   Serial number returned by the kernel.  Use for deletion.  * links:	   Kernel use only.  */
 end_comment
 
 begin_struct
 struct|struct
 name|ctl_error_desc
 block|{
-name|uint32_t
-name|target_id
-decl_stmt|;
-comment|/* To kernel */
 name|uint32_t
 name|lun_id
 decl_stmt|;
@@ -819,60 +677,6 @@ name|cur_bt
 decl_stmt|;
 comment|/* passed to userland */
 name|ctl_get_ooa_status
-name|status
-decl_stmt|;
-comment|/* passed to userland */
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|CTL_PORT_LIST_NONE
-block|,
-name|CTL_PORT_LIST_OK
-block|,
-name|CTL_PORT_LIST_NEED_MORE_SPACE
-block|,
-name|CTL_PORT_LIST_ERROR
-block|}
-name|ctl_port_list_status
-typedef|;
-end_typedef
-
-begin_struct
-struct|struct
-name|ctl_port_list
-block|{
-name|uint32_t
-name|alloc_len
-decl_stmt|;
-comment|/* passed to kernel */
-name|uint32_t
-name|alloc_num
-decl_stmt|;
-comment|/* passed to kernel */
-name|struct
-name|ctl_port_entry
-modifier|*
-name|entries
-decl_stmt|;
-comment|/* filled in kernel */
-name|uint32_t
-name|fill_len
-decl_stmt|;
-comment|/* passed to userland */
-name|uint32_t
-name|fill_num
-decl_stmt|;
-comment|/* passed to userland */
-name|uint32_t
-name|dropped_num
-decl_stmt|;
-comment|/* passed to userland */
-name|ctl_port_list_status
 name|status
 decl_stmt|;
 comment|/* passed to userland */
@@ -1852,64 +1656,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|CTL_DUMP_OOA
-value|_IO(CTL_MINOR, 0x06)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_CHECK_OOA
-value|_IOWR(CTL_MINOR, 0x07, struct ctl_ooa_info)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_HARD_STOP
-value|_IOR(CTL_MINOR, 0x08, \ 				     struct ctl_hard_startstop_info)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_HARD_START
-value|_IOR(CTL_MINOR, 0x09, \ 				     struct ctl_hard_startstop_info)
-end_define
-
-begin_define
-define|#
-directive|define
 name|CTL_DELAY_IO
 value|_IOWR(CTL_MINOR, 0x10, struct ctl_io_delay_info)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_REALSYNC_GET
-value|_IOR(CTL_MINOR, 0x11, int)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_REALSYNC_SET
-value|_IOW(CTL_MINOR, 0x12, int)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_SETSYNC
-value|_IOWR(CTL_MINOR, 0x13, struct ctl_sync_info)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_GETSYNC
-value|_IOWR(CTL_MINOR, 0x14, struct ctl_sync_info)
 end_define
 
 begin_define
@@ -1929,13 +1677,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CTL_BBRREAD
-value|_IOWR(CTL_MINOR, 0x17, struct ctl_bbrread_info)
-end_define
-
-begin_define
-define|#
-directive|define
 name|CTL_GET_OOA
 value|_IOWR(CTL_MINOR, 0x18, struct ctl_ooa)
 end_define
@@ -1945,13 +1686,6 @@ define|#
 directive|define
 name|CTL_DUMP_STRUCTS
 value|_IO(CTL_MINOR, 0x19)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_GET_PORT_LIST
-value|_IOWR(CTL_MINOR, 0x20, struct ctl_port_list)
 end_define
 
 begin_define

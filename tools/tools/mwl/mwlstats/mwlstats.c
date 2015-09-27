@@ -10,13 +10,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -34,12 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -52,7 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -64,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -77,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
 end_include
 
 begin_include
@@ -3292,13 +3292,6 @@ modifier|*
 name|fmtstring
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
 name|struct
 name|mwlstatfoo_p
 modifier|*
@@ -3337,7 +3330,7 @@ literal|"mwlstats"
 argument_list|,
 name|mwlstats
 argument_list|,
-name|N
+name|nitems
 argument_list|(
 name|mwlstats
 argument_list|)
@@ -3486,9 +3479,6 @@ name|wf
 operator|->
 name|base
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

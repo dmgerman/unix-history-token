@@ -706,7 +706,7 @@ name|struct
 name|mtuex_arg
 name|arg
 decl_stmt|;
-name|rt_foreach_fib
+name|rt_foreach_fib_walk
 argument_list|(
 name|AF_INET6
 argument_list|,

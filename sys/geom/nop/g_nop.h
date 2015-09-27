@@ -93,6 +93,12 @@ decl_stmt|;
 name|off_t
 name|sc_explicitsize
 decl_stmt|;
+name|off_t
+name|sc_stripesize
+decl_stmt|;
+name|off_t
+name|sc_stripeoffset
+decl_stmt|;
 name|u_int
 name|sc_rfailprob
 decl_stmt|;

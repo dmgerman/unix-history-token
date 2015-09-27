@@ -369,9 +369,6 @@ parameter_list|,
 name|int
 name|power_conditions
 parameter_list|,
-name|int
-name|onoffline
-parameter_list|,
 name|ctl_tag_type
 name|tag_type
 parameter_list|,
@@ -519,8 +516,7 @@ name|ctl_io
 modifier|*
 name|ctl_scsi_alloc_io
 parameter_list|(
-name|struct
-name|ctl_id
+name|uint32_t
 name|initid
 parameter_list|)
 function_decl|;

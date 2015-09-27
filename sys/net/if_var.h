@@ -828,7 +828,7 @@ name|IFCOUNTERS
 index|]
 decl_stmt|;
 comment|/* Stuff that's only temporary and doesn't belong here. */
-comment|/* 	 * Network adapter TSO limits: 	 * =========================== 	 * 	 * If the "if_hw_tsomax" field is zero the maximum segment 	 * length limit does not apply. If the "if_hw_tsomaxsegcount" 	 * or the "if_hw_tsomaxsegsize" field is zero the TSO segment 	 * count limit does not apply. If all three fields are zero, 	 * there is no TSO limit. 	 * 	 * NOTE: The TSO limits only apply to the data payload part of 	 * a TCP/IP packet. That means there is no need to subtract 	 * space for ethernet-, vlan-, IP- or TCP- headers from the 	 * TSO limits unless the hardware driver in question requires 	 * so. 	 */
+comment|/* 	 * Network adapter TSO limits: 	 * =========================== 	 * 	 * If the "if_hw_tsomax" field is zero the maximum segment 	 * length limit does not apply. If the "if_hw_tsomaxsegcount" 	 * or the "if_hw_tsomaxsegsize" field is zero the TSO segment 	 * count limit does not apply. If all three fields are zero, 	 * there is no TSO limit. 	 * 	 * NOTE: The TSO limits should reflect the values used in the 	 * BUSDMA tag a network adapter is using to load a mbuf chain 	 * for transmission. The TCP/IP network stack will subtract 	 * space for all linklevel and protocol level headers and 	 * ensure that the full mbuf chain passed to the network 	 * adapter fits within the given limits. 	 */
 name|u_int
 name|if_hw_tsomax
 decl_stmt|;
@@ -2154,6 +2154,7 @@ name|struct
 name|ifnet
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -2377,9 +2378,6 @@ parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
-parameter_list|,
-name|int
-name|fib
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2390,6 +2388,7 @@ name|ifaddr
 modifier|*
 name|ifa_ifwithaddr
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -2401,6 +2400,7 @@ begin_function_decl
 name|int
 name|ifa_ifwithaddr_check
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -2414,6 +2414,7 @@ name|ifaddr
 modifier|*
 name|ifa_ifwithbroadaddr
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -2429,6 +2430,7 @@ name|ifaddr
 modifier|*
 name|ifa_ifwithdstaddr
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -2444,6 +2446,7 @@ name|ifaddr
 modifier|*
 name|ifa_ifwithnet
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -2463,6 +2466,7 @@ name|ifa_ifwithroute
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -2482,6 +2486,7 @@ name|ifaddr
 modifier|*
 name|ifaof_ifpforaddr
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr
 modifier|*

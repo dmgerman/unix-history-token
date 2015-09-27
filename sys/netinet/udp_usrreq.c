@@ -2327,7 +2327,7 @@ block|}
 block|}
 name|pcbinfo
 operator|=
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 name|proto
 argument_list|)
@@ -2378,7 +2378,7 @@ argument_list|)
 expr_stmt|;
 name|pcblist
 operator|=
-name|get_pcblist
+name|udp_get_pcblist
 argument_list|(
 name|proto
 argument_list|)
@@ -5757,7 +5757,7 @@ name|pr_protocol
 expr_stmt|;
 name|pcbinfo
 operator|=
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 name|pr
 argument_list|)
@@ -7639,7 +7639,7 @@ name|pcbinfo
 decl_stmt|;
 name|pcbinfo
 operator|=
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 name|so
 operator|->
@@ -7753,7 +7753,7 @@ name|error
 decl_stmt|;
 name|pcbinfo
 operator|=
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 name|so
 operator|->
@@ -8066,7 +8066,7 @@ name|error
 decl_stmt|;
 name|pcbinfo
 operator|=
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 name|so
 operator|->
@@ -8157,7 +8157,7 @@ name|pcbinfo
 decl_stmt|;
 name|pcbinfo
 operator|=
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 name|so
 operator|->
@@ -8278,7 +8278,7 @@ name|error
 decl_stmt|;
 name|pcbinfo
 operator|=
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 name|so
 operator|->
@@ -8448,7 +8448,7 @@ name|up
 decl_stmt|;
 name|pcbinfo
 operator|=
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 name|so
 operator|->
@@ -8572,7 +8572,7 @@ name|pcbinfo
 decl_stmt|;
 name|pcbinfo
 operator|=
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 name|so
 operator|->

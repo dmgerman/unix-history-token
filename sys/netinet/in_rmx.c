@@ -703,7 +703,7 @@ name|del
 operator|=
 name|delete
 expr_stmt|;
-name|rt_foreach_fib
+name|rt_foreach_fib_walk
 argument_list|(
 name|AF_INET
 argument_list|,

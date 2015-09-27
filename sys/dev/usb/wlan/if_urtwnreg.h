@@ -2740,7 +2740,7 @@ begin_define
 define|#
 directive|define
 name|R92C_TDECTRL_BLK_DESC_NUM_M
-value|0x0000000f
+value|0x000000f0
 end_define
 
 begin_define
@@ -4763,30 +4763,6 @@ value|6
 end_define
 
 begin_comment
-comment|/* Macros to access unaligned little-endian memory. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LE_READ_2
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)[0] | (x)[1]<< 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LE_READ_4
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)[0] | (x)[1]<< 8 | (x)[2]<< 16 | (x)[3]<< 24)
-end_define
-
-begin_comment
 comment|/*  * Macros to access subfields in registers.  */
 end_comment
 
@@ -5990,10 +5966,6 @@ name|struct
 name|ieee80211vap
 name|vap
 decl_stmt|;
-name|struct
-name|ieee80211_beacon_offsets
-name|bo
-decl_stmt|;
 name|int
 function_decl|(
 modifier|*
@@ -6118,9 +6090,12 @@ struct|struct
 name|urtwn_softc
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
+name|ieee80211com
+name|sc_ic
+decl_stmt|;
+name|struct
+name|mbufq
+name|sc_snd
 decl_stmt|;
 name|device_t
 name|sc_dev
@@ -6147,6 +6122,10 @@ define|#
 directive|define
 name|URTWN_DETACHED
 value|0x02
+define|#
+directive|define
+name|URTWN_RUNNING
+value|0x04
 name|u_int
 name|chip
 decl_stmt|;
@@ -6317,12 +6296,6 @@ name|bw20_tx_pwr_diff
 decl_stmt|;
 name|int8_t
 name|ofdm_tx_pwr_diff
-decl_stmt|;
-name|uint8_t
-name|sc_bssid
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
 decl_stmt|;
 name|struct
 name|callout

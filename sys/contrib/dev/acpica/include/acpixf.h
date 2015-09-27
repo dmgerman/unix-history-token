@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20150717
+value|0x20150818
 end_define
 
 begin_include
@@ -1836,6 +1836,24 @@ literal|1
 argument|) void ACPI_INTERNAL_VAR_XFACE AcpiLogError (     const char              *Format,     ...)
 argument_list|)
 end_macro
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiInitializeDebugger
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiTerminateDebugger
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -1945,12 +1945,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__amd64__
+name|__aarch64__
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__i386__
+name|__amd64__
 argument_list|)
 operator|||
 name|defined
@@ -1959,6 +1959,11 @@ name|__arm__
 argument_list|)
 operator|||
 expr|\
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|__mips__
@@ -2290,6 +2295,11 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__aarch64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__amd64__
 argument_list|)
 operator|||
@@ -2297,7 +2307,7 @@ name|defined
 argument_list|(
 name|__mips__
 argument_list|)
-comment|/* 	 * pmap_map on amd64 and mips can come out of the direct-map, not kvm 	 * like i386, so the pages must be tracked for a crashdump to include 	 * this data.  This includes the vm_page_array and the early UMA 	 * bootstrap pages. 	 */
+comment|/* 	 * pmap_map on arm64, amd64, and mips can come out of the direct-map, 	 * not kvm like i386, so the pages must be tracked for a crashdump to 	 * include this data.  This includes the vm_page_array and the early 	 * UMA bootstrap pages. 	 */
 for|for
 control|(
 name|pa
@@ -9214,11 +9224,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_page_unwire:  *  * Release one wiring of the specified page, potentially enabling it to be  * paged again.  If paging is enabled, then the value of the parameter  * "queue" determines the queue to which the page is added.  *  * However, unless the page belongs to an object, it is not enqueued because  * it cannot be paged out.  *  * If a page is fictitious, then its wire count must always be one.  *  * A managed page must be locked.  */
+comment|/*  * vm_page_unwire:  *  * Release one wiring of the specified page, potentially allowing it to be  * paged out.  Returns TRUE if the number of wirings transitions to zero and  * FALSE otherwise.  *  * Only managed pages belonging to an object can be paged out.  If the number  * of wirings transitions to zero and the page is eligible for page out, then  * the page is added to the specified paging queue (unless PQ_NONE is  * specified).  *  * If a page is fictitious, then its wire count must always be one.  *  * A managed page must be locked.  */
 end_comment
 
 begin_function
-name|void
+name|boolean_t
 name|vm_page_unwire
 parameter_list|(
 name|vm_page_t
@@ -9233,6 +9243,10 @@ argument_list|(
 name|queue
 operator|<
 name|PQ_COUNT
+operator|||
+name|queue
+operator|==
+name|PQ_NONE
 argument_list|,
 operator|(
 literal|"vm_page_unwire: invalid queue %u request for page %p"
@@ -9255,11 +9269,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|vm_page_lock_assert
+name|vm_page_assert_locked
 argument_list|(
 name|m
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -9290,7 +9302,11 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -9334,16 +9350,20 @@ name|oflags
 operator|&
 name|VPO_UNMANAGED
 operator|)
-operator|!=
+operator|==
 literal|0
-operator|||
+operator|&&
 name|m
 operator|->
 name|object
-operator|==
+operator|!=
 name|NULL
+operator|&&
+name|queue
+operator|!=
+name|PQ_NONE
 condition|)
-return|return;
+block|{
 if|if
 condition|(
 name|queue
@@ -9365,6 +9385,18 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+else|else
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 block|}
 else|else
 name|panic
@@ -9402,14 +9434,12 @@ decl_stmt|;
 name|int
 name|queue
 decl_stmt|;
-name|vm_page_lock_assert
+name|vm_page_assert_locked
 argument_list|(
 name|m
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Ignore if already inactive. 	 */
+comment|/* 	 * Ignore if the page is already inactive, unless it is unlikely to be 	 * reactivated. 	 */
 if|if
 condition|(
 operator|(
@@ -9421,6 +9451,9 @@ name|queue
 operator|)
 operator|==
 name|PQ_INACTIVE
+operator|&&
+operator|!
+name|athead
 condition|)
 return|return;
 if|if
@@ -9442,6 +9475,40 @@ operator|==
 literal|0
 condition|)
 block|{
+name|pq
+operator|=
+operator|&
+name|vm_phys_domain
+argument_list|(
+name|m
+argument_list|)
+operator|->
+name|vmd_pagequeues
+index|[
+name|PQ_INACTIVE
+index|]
+expr_stmt|;
+comment|/* Avoid multiple acquisitions of the inactive queue lock. */
+if|if
+condition|(
+name|queue
+operator|==
+name|PQ_INACTIVE
+condition|)
+block|{
+name|vm_pagequeue_lock
+argument_list|(
+name|pq
+argument_list|)
+expr_stmt|;
+name|vm_page_dequeue_locked
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|queue
@@ -9460,24 +9527,12 @@ operator|&=
 operator|~
 name|PG_WINATCFLS
 expr_stmt|;
-name|pq
-operator|=
-operator|&
-name|vm_phys_domain
-argument_list|(
-name|m
-argument_list|)
-operator|->
-name|vmd_pagequeues
-index|[
-name|PQ_INACTIVE
-index|]
-expr_stmt|;
 name|vm_pagequeue_lock
 argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
+block|}
 name|m
 operator|->
 name|queue
@@ -10143,7 +10198,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*  * vm_page_advise  *  *	Cache, deactivate, or do nothing as appropriate.  This routine  *	is used by madvise().  *  *	Generally speaking we want to move the page into the cache so  *	it gets reused quickly.  However, this can result in a silly syndrome  *	due to the page recycling too quickly.  Small objects will not be  *	fully cached.  On the other hand, if we move the page to the inactive  *	queue we wind up with a problem whereby very large objects  *	unnecessarily blow away our inactive and cache queues.  *  *	The solution is to move the pages based on a fixed weighting.  We  *	either leave them alone, deactivate them, or move them to the cache,  *	where moving them to the cache has the highest weighting.  *	By forcing some pages into other queues we eventually force the  *	system to balance the queues, potentially recovering other unrelated  *	space from active.  The idea is to not force this to happen too  *	often.  *  *	The object and page must be locked.  */
+comment|/*  * vm_page_advise  *  * 	Deactivate or do nothing, as appropriate.  This routine is used  * 	by madvise() and vop_stdadvise().  *  *	The object and page must be locked.  */
 name|void
 name|vm_page_advise
 parameter_list|(
@@ -10154,11 +10209,6 @@ name|int
 name|advice
 parameter_list|)
 block|{
-name|int
-name|dnw
-decl_stmt|,
-name|head
-decl_stmt|;
 name|vm_page_assert_locked
 argument_list|(
 name|m
@@ -10177,21 +10227,13 @@ name|advice
 operator|==
 name|MADV_FREE
 condition|)
-block|{
-comment|/* 		 * Mark the page clean.  This will allow the page to be freed 		 * up by the system.  However, such pages are often reused 		 * quickly by malloc() so we do not do anything that would 		 * cause a page fault if we can help it. 		 * 		 * Specifically, we do not try to actually free the page now 		 * nor do we try to put it in the cache (which would cause a 		 * page fault on reuse). 		 * 		 * But we do make the page is freeable as we can without 		 * actually taking the step of unmapping it. 		 */
+comment|/* 		 * Mark the page clean.  This will allow the page to be freed 		 * up by the system.  However, such pages are often reused 		 * quickly by malloc() so we do not do anything that would 		 * cause a page fault if we can help it. 		 * 		 * Specifically, we do not try to actually free the page now 		 * nor do we try to put it in the cache (which would cause a 		 * page fault on reuse). 		 * 		 * But we do make the page as freeable as we can without 		 * actually taking the step of unmapping it. 		 */
 name|m
 operator|->
 name|dirty
 operator|=
 literal|0
 expr_stmt|;
-name|m
-operator|->
-name|act_count
-operator|=
-literal|0
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -10200,51 +10242,6 @@ operator|!=
 name|MADV_DONTNEED
 condition|)
 return|return;
-name|dnw
-operator|=
-name|PCPU_GET
-argument_list|(
-name|dnweight
-argument_list|)
-expr_stmt|;
-name|PCPU_INC
-argument_list|(
-name|dnweight
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Occasionally leave the page alone. 	 */
-if|if
-condition|(
-operator|(
-name|dnw
-operator|&
-literal|0x01F0
-operator|)
-operator|==
-literal|0
-operator|||
-name|m
-operator|->
-name|queue
-operator|==
-name|PQ_INACTIVE
-condition|)
-block|{
-if|if
-condition|(
-name|m
-operator|->
-name|act_count
-operator|>=
-name|ACT_INIT
-condition|)
-operator|--
-name|m
-operator|->
-name|act_count
-expr_stmt|;
-return|return;
-block|}
 comment|/* 	 * Clear any references to the page.  Otherwise, the page daemon will 	 * immediately reactivate the page. 	 */
 name|vm_page_aflag_clear
 argument_list|(
@@ -10275,40 +10272,16 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|dirty
-operator|||
-operator|(
-name|dnw
-operator|&
-literal|0x0070
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 		 * Deactivate the page 3 times out of 32. 		 */
-name|head
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 		 * Cache the page 28 times out of every 32.  Note that 		 * the page is deactivated instead of cached, but placed 		 * at the head of the queue instead of the tail. 		 */
-name|head
-operator|=
-literal|1
-expr_stmt|;
-block|}
+comment|/* 	 * Place clean pages at the head of the inactive queue rather than the 	 * tail, thus defeating the queue's LRU operation and ensuring that the 	 * page will be reused quickly. 	 */
 name|_vm_page_deactivate
 argument_list|(
 name|m
 argument_list|,
-name|head
+name|m
+operator|->
+name|dirty
+operator|==
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -11408,6 +11381,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|object
+operator|->
+name|ref_count
+operator|!=
+literal|0
+operator|&&
 name|m
 operator|->
 name|valid
@@ -12081,15 +12060,6 @@ argument_list|,
 name|vm_cnt
 operator|.
 name|v_free_target
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"vm_cnt.v_cache_min: %d\n"
-argument_list|,
-name|vm_cnt
-operator|.
-name|v_cache_min
 argument_list|)
 expr_stmt|;
 name|db_printf

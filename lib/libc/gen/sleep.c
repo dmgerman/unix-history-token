@@ -93,6 +93,17 @@ directive|include
 file|"libc_private.h"
 end_include
 
+begin_function_decl
+name|unsigned
+name|int
+name|__sleep
+parameter_list|(
+name|unsigned
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|unsigned
 name|int

@@ -28,13 +28,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/pkthdr.h"
+file|"sldns/pkthdr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/rrdef.h"
+file|"sldns/rrdef.h"
 end_include
 
 begin_struct_decl
@@ -91,6 +91,17 @@ begin_decl_stmt
 specifier|extern
 name|time_t
 name|MIN_TTL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/** Maximum Negative TTL that is allowed */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|time_t
+name|MAX_NEG_TTL
 decl_stmt|;
 end_decl_stmt
 

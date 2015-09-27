@@ -2193,7 +2193,7 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|AcpiDbInitialize
+name|AcpiInitializeDebugger
 argument_list|()
 expr_stmt|;
 name|AcpiGbl_DebuggerConfiguration

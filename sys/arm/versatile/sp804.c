@@ -1064,7 +1064,7 @@ name|tc
 operator|.
 name|tc_name
 operator|=
-literal|"SP804 Time Counter"
+literal|"SP804-1"
 expr_stmt|;
 name|sc
 operator|->
@@ -1166,32 +1166,7 @@ name|et
 operator|.
 name|et_name
 operator|=
-name|malloc
-argument_list|(
-literal|64
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|sc
-operator|->
-name|et
-operator|.
-name|et_name
-argument_list|,
-literal|"SP804 Event Timer %d"
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
+literal|"SP804-2"
 expr_stmt|;
 name|sc
 operator|->

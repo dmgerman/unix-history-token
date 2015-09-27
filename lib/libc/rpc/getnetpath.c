@@ -195,7 +195,9 @@ begin_function
 name|void
 modifier|*
 name|setnetpath
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|netpath_vars
@@ -406,12 +408,10 @@ name|netconfig
 modifier|*
 name|getnetpath
 parameter_list|(
-name|handlep
-parameter_list|)
 name|void
 modifier|*
 name|handlep
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|netpath_vars
@@ -682,12 +682,10 @@ begin_function
 name|int
 name|endnetpath
 parameter_list|(
-name|handlep
-parameter_list|)
 name|void
 modifier|*
 name|handlep
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|netpath_vars
@@ -839,7 +837,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns pointer to the rest-of-the-string after the current token.  * The token itself starts at arg, and we null terminate it.  We return NULL  * if either the arg is empty, or if this is the last token.  */
+comment|/*  * Returns pointer to the rest-of-the-string after the current token.  * The token itself starts at arg, and we null terminate it.  We return NULL  * if either the arg is empty, or if this is the last token.  *  * npp   - string  * token - char to parse string for  */
 end_comment
 
 begin_function
@@ -847,19 +845,13 @@ name|char
 modifier|*
 name|_get_next_token
 parameter_list|(
-name|npp
-parameter_list|,
-name|token
-parameter_list|)
 name|char
 modifier|*
 name|npp
-decl_stmt|;
-comment|/* string */
+parameter_list|,
 name|int
 name|token
-decl_stmt|;
-comment|/* char to parse string for */
+parameter_list|)
 block|{
 name|char
 modifier|*

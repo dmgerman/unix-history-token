@@ -2177,7 +2177,6 @@ index|]
 operator|.
 name|intr_vector
 operator|||
-operator|!
 name|hldev
 operator|->
 name|config

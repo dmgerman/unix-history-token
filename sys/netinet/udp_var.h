@@ -598,7 +598,7 @@ name|__inline
 expr|struct
 name|inpcbinfo
 operator|*
-name|get_inpcbinfo
+name|udp_get_inpcbinfo
 argument_list|(
 argument|int protocol
 argument_list|)
@@ -625,7 +625,7 @@ name|__inline
 expr|struct
 name|inpcbhead
 operator|*
-name|get_pcblist
+name|udp_get_pcblist
 argument_list|(
 argument|int protocol
 argument_list|)

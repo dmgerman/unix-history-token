@@ -100,6 +100,9 @@ name|struct
 name|ieee80211_radiotap_header
 name|wr_ihdr
 decl_stmt|;
+name|uint64_t
+name|wr_tsf
+decl_stmt|;
 name|uint8_t
 name|wr_flags
 decl_stmt|;
@@ -135,7 +138,7 @@ define|#
 directive|define
 name|RUN_RX_RADIOTAP_PRESENT
 define|\
-value|(1<< IEEE80211_RADIOTAP_FLAGS |		\ 	 1<< IEEE80211_RADIOTAP_RATE |			\ 	 1<< IEEE80211_RADIOTAP_CHANNEL |		\ 	 1<< IEEE80211_RADIOTAP_DBM_ANTSIGNAL |	\ 	 1<< IEEE80211_RADIOTAP_ANTENNA |		\ 	 1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL)
+value|(1<< IEEE80211_RADIOTAP_TSFT |			\ 	 1<< IEEE80211_RADIOTAP_FLAGS |		\ 	 1<< IEEE80211_RADIOTAP_RATE |			\ 	 1<< IEEE80211_RADIOTAP_CHANNEL |		\ 	 1<< IEEE80211_RADIOTAP_DBM_ANTSIGNAL |	\ 	 1<< IEEE80211_RADIOTAP_ANTENNA |		\ 	 1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL)
 end_define
 
 begin_struct
@@ -145,6 +148,9 @@ block|{
 name|struct
 name|ieee80211_radiotap_header
 name|wt_ihdr
+decl_stmt|;
+name|uint64_t
+name|wt_tsf
 decl_stmt|;
 name|uint8_t
 name|wt_flags
@@ -182,7 +188,7 @@ define|#
 directive|define
 name|RUN_TX_RADIOTAP_PRESENT
 define|\
-value|(1<< IEEE80211_RADIOTAP_FLAGS |		\ 	 1<< IEEE80211_RADIOTAP_RATE |			\ 	 1<< IEEE80211_RADIOTAP_CHANNEL |		\ 	 1<< IEEE80211_RADIOTAP_HWQUEUE)
+value|(1<< IEEE80211_RADIOTAP_TSFT |			\ 	 1<< IEEE80211_RADIOTAP_FLAGS |		\ 	 1<< IEEE80211_RADIOTAP_RATE |			\ 	 1<< IEEE80211_RADIOTAP_CHANNEL |		\ 	 1<< IEEE80211_RADIOTAP_HWQUEUE)
 end_define
 
 begin_struct_decl
@@ -289,6 +295,16 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|RUN_NODE
+parameter_list|(
+name|ni
+parameter_list|)
+value|((struct run_node *)(ni))
+end_define
+
 begin_struct
 struct|struct
 name|run_cmdq
@@ -340,10 +356,6 @@ block|{
 name|struct
 name|ieee80211vap
 name|vap
-decl_stmt|;
-name|struct
-name|ieee80211_beacon_offsets
-name|bo
 decl_stmt|;
 name|struct
 name|mbuf
@@ -450,6 +462,18 @@ begin_struct
 struct|struct
 name|run_softc
 block|{
+name|struct
+name|mtx
+name|sc_mtx
+decl_stmt|;
+name|struct
+name|ieee80211com
+name|sc_ic
+decl_stmt|;
+name|struct
+name|mbufq
+name|sc_snd
+decl_stmt|;
 name|device_t
 name|sc_dev
 decl_stmt|;
@@ -457,11 +481,6 @@ name|struct
 name|usb_device
 modifier|*
 name|sc_udev
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
 decl_stmt|;
 name|int
 name|sc_need_fwload
@@ -473,6 +492,10 @@ define|#
 directive|define
 name|RUN_FLAG_FWLOAD_NEEDED
 value|0x01
+define|#
+directive|define
+name|RUN_RUNNING
+value|0x02
 name|uint16_t
 name|wcid_stats
 index|[
@@ -647,16 +670,6 @@ name|txpow40mhz_5ghz
 index|[
 literal|5
 index|]
-decl_stmt|;
-name|uint8_t
-name|sc_bssid
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|struct
-name|mtx
-name|sc_mtx
 decl_stmt|;
 name|struct
 name|run_endpoint_queue

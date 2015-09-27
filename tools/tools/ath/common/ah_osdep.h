@@ -25,6 +25,12 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
 begin_comment
 comment|/*  * Bus i/o type definitions.  */
 end_comment

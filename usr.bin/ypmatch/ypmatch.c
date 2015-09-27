@@ -203,17 +203,6 @@ argument_list|,
 literal|"       ypmatch -x"
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"where\n"
-literal|"\tmapname may be either a mapname or a nickname for a map.\n"
-literal|"\t-k prints keys as well as values.\n"
-literal|"\t-t inhibits map nickname translation.\n"
-literal|"\t-x dumps the map nickname translation table.\n"
-argument_list|)
-expr_stmt|;
 name|exit
 argument_list|(
 literal|1
@@ -309,14 +298,10 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
+argument_list|(
 name|ypaliases
-operator|/
-sizeof|sizeof
-name|ypaliases
-index|[
-literal|0
-index|]
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -376,11 +361,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
 name|argc
 operator|-
 name|optind
-operator|)
 operator|<
 literal|2
 condition|)
@@ -393,14 +376,12 @@ name|domainname
 operator|==
 name|NULL
 condition|)
-block|{
 name|yp_get_default_domain
 argument_list|(
 operator|&
 name|domainname
 argument_list|)
 expr_stmt|;
-block|}
 name|inmap
 operator|=
 name|argv
@@ -425,14 +406,10 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
+argument_list|(
 name|ypaliases
-operator|/
-sizeof|sizeof
-name|ypaliases
-index|[
-literal|0
-index|]
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -555,7 +532,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"can't match key %s in map %s. Reason: %s"
+literal|"can't match key %s in map %s. reason: %s"
 argument_list|,
 name|inkey
 argument_list|,

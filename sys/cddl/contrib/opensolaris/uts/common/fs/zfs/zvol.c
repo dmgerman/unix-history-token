@@ -1529,6 +1529,10 @@ name|zv_volblocksize
 decl_stmt|;
 if|if
 condition|(
+name|bp
+operator|==
+name|NULL
+operator|||
 name|BP_IS_HOLE
 argument_list|(
 name|bp

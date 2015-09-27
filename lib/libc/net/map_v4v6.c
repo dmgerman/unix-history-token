@@ -123,6 +123,12 @@ directive|include
 file|<syslog.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"netdb_private.h"
+end_include
+
 begin_typedef
 typedef|typedef
 union|union

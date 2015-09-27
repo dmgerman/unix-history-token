@@ -173,6 +173,9 @@ name|char
 modifier|*
 name|dss
 decl_stmt|;
+name|ssize_t
+name|lg_dirty_mult
+decl_stmt|;
 name|size_t
 name|pactive
 decl_stmt|;
@@ -206,6 +209,11 @@ modifier|*
 name|lstats
 decl_stmt|;
 comment|/* nlclasses elements. */
+name|malloc_huge_stats_t
+modifier|*
+name|hstats
+decl_stmt|;
+comment|/* nhclasses elements. */
 block|}
 struct|;
 end_struct
@@ -221,42 +229,14 @@ name|size_t
 name|active
 decl_stmt|;
 name|size_t
+name|metadata
+decl_stmt|;
+name|size_t
+name|resident
+decl_stmt|;
+name|size_t
 name|mapped
 decl_stmt|;
-struct|struct
-block|{
-name|size_t
-name|current
-decl_stmt|;
-comment|/* stats_chunks.curchunks */
-name|uint64_t
-name|total
-decl_stmt|;
-comment|/* stats_chunks.nchunks */
-name|size_t
-name|high
-decl_stmt|;
-comment|/* stats_chunks.highchunks */
-block|}
-name|chunks
-struct|;
-struct|struct
-block|{
-name|size_t
-name|allocated
-decl_stmt|;
-comment|/* huge_allocated */
-name|uint64_t
-name|nmalloc
-decl_stmt|;
-comment|/* huge_nmalloc */
-name|uint64_t
-name|ndalloc
-decl_stmt|;
-comment|/* huge_ndalloc */
-block|}
-name|huge
-struct|;
 name|unsigned
 name|narenas
 decl_stmt|;

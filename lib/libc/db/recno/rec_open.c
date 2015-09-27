@@ -193,6 +193,8 @@ argument_list|(
 name|fname
 argument_list|,
 name|flags
+operator||
+name|O_CLOEXEC
 argument_list|,
 name|mode
 argument_list|)

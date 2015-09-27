@@ -536,7 +536,7 @@ begin_decl_stmt
 specifier|static
 specifier|volatile
 name|cpuset_t
-name|ipi_nmi_pending
+name|ipi_stop_nmi_pending
 decl_stmt|;
 end_decl_stmt
 
@@ -3437,7 +3437,7 @@ condition|)
 name|CPU_OR_ATOMIC
 argument_list|(
 operator|&
-name|ipi_nmi_pending
+name|ipi_stop_nmi_pending
 argument_list|,
 operator|&
 name|cpus
@@ -3520,7 +3520,7 @@ argument_list|(
 name|cpu
 argument_list|,
 operator|&
-name|ipi_nmi_pending
+name|ipi_stop_nmi_pending
 argument_list|)
 expr_stmt|;
 name|CTR3
@@ -3603,7 +3603,7 @@ condition|)
 name|CPU_OR_ATOMIC
 argument_list|(
 operator|&
-name|ipi_nmi_pending
+name|ipi_stop_nmi_pending
 argument_list|,
 operator|&
 name|other_cpus
@@ -3654,7 +3654,7 @@ argument_list|(
 name|cpuid
 argument_list|,
 operator|&
-name|ipi_nmi_pending
+name|ipi_stop_nmi_pending
 argument_list|)
 condition|)
 return|return
@@ -3667,7 +3667,7 @@ argument_list|(
 name|cpuid
 argument_list|,
 operator|&
-name|ipi_nmi_pending
+name|ipi_stop_nmi_pending
 argument_list|)
 expr_stmt|;
 name|cpustop_handler

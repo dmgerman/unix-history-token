@@ -76,45 +76,25 @@ file|<search.h>
 end_include
 
 begin_comment
-comment|/* find a node, or return 0 */
+comment|/*   * find a node, or return 0  *  * vkey   - key to be found   * vrootp - address of the tree root   */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 modifier|*
 name|tfind
-argument_list|(
-name|vkey
-argument_list|,
-name|vrootp
-argument_list|,
-name|compar
-argument_list|)
-decl|const
+parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|vkey
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* key to be found */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|void
 modifier|*
 specifier|const
 modifier|*
 name|vrootp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* address of the tree root */
-end_comment
-
-begin_function_decl
+parameter_list|,
 name|int
 function_decl|(
 modifier|*
@@ -129,10 +109,7 @@ specifier|const
 name|void
 modifier|*
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_block
+parameter_list|)
 block|{
 name|node_t
 modifier|*
@@ -227,7 +204,7 @@ return|return
 name|NULL
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

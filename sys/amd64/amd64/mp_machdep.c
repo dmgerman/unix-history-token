@@ -1374,8 +1374,13 @@ expr_stmt|;
 comment|/* Spin until the BSP releases the AP's. */
 while|while
 condition|(
-operator|!
+name|atomic_load_acq_int
+argument_list|(
+operator|&
 name|aps_ready
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|ia32_pause
 argument_list|()
@@ -2075,13 +2080,9 @@ name|smp_tlb_pmap
 operator|=
 name|pmap
 expr_stmt|;
-name|atomic_store_rel_int
-argument_list|(
-operator|&
 name|smp_tlb_wait
-argument_list|,
+operator|=
 literal|0
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

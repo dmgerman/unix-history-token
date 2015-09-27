@@ -1114,9 +1114,12 @@ name|ss
 operator|.
 name|ss_error
 operator|=
+name|cloudabi_convert_errno
+argument_list|(
 name|so
 operator|->
 name|so_error
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

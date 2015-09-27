@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if_llc.h>
 end_include
 
@@ -1647,13 +1641,6 @@ parameter_list|)
 block|{
 define|#
 directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
-define|#
-directive|define
 name|WLAN_CTRL_FRAME_SIZE
 define|\
 value|(sizeof(struct ieee80211_frame_ack) + IEEE80211_CRC_LEN)
@@ -1668,7 +1655,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rt
 operator|->
@@ -1819,9 +1806,6 @@ block|}
 undef|#
 directive|undef
 name|WLAN_CTRL_FRAME_SIZE
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -1837,13 +1821,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|arr
-parameter_list|)
-value|(int)(sizeof(arr) / sizeof(arr[0]))
 specifier|static
 name|struct
 name|ieee80211_rate_table
@@ -1884,6 +1861,7 @@ operator|&
 name|ieee80211_11b_table
 block|}
 decl_stmt|;
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -1895,7 +1873,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|ratetables
 argument_list|)
@@ -1911,9 +1889,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

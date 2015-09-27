@@ -768,6 +768,9 @@ name|rela
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* 	 * Stash R_MIPS_HI16 info so we can use it when processing R_MIPS_LO16 	 */
 specifier|static
 name|Elf_Addr
@@ -928,7 +931,7 @@ case|case
 name|R_MIPS_32
 case|:
 comment|/* S + A */
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -937,12 +940,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return
@@ -975,7 +981,7 @@ case|case
 name|R_MIPS_26
 case|:
 comment|/* ((A<< 2) | (P& 0xf0000000) + S)>> 2 */
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -984,12 +990,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return
@@ -1048,7 +1057,7 @@ case|case
 name|R_MIPS_64
 case|:
 comment|/* S + A */
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -1057,12 +1066,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return
@@ -1107,7 +1119,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -1116,12 +1128,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return
@@ -1186,7 +1201,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -1195,12 +1210,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return
@@ -1235,7 +1253,7 @@ name|int16_t
 operator|)
 name|addend
 expr_stmt|;
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -1244,12 +1262,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return
@@ -1319,7 +1340,7 @@ case|case
 name|R_MIPS_HIGHER
 case|:
 comment|/* %higher(A+S) */
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -1328,12 +1349,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return
@@ -1375,7 +1399,7 @@ case|case
 name|R_MIPS_HIGHEST
 case|:
 comment|/* %highest(A+S) */
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -1384,12 +1408,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return

@@ -996,6 +996,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FSL_E6500
+value|0x8040
+end_define
+
+begin_define
+define|#
+directive|define
 name|SPR_IBAT0U
 value|0x210
 end_define

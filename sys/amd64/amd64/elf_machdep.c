@@ -736,6 +736,9 @@ name|Elf_Rela
 modifier|*
 name|rela
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -890,7 +893,7 @@ case|case
 name|R_X86_64_64
 case|:
 comment|/* S + A */
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -899,6 +902,9 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 name|val
@@ -909,8 +915,8 @@ name|addend
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return
@@ -934,7 +940,7 @@ case|case
 name|R_X86_64_PC32
 case|:
 comment|/* S + A - P */
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -943,6 +949,9 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 name|where32
@@ -971,8 +980,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return
@@ -996,7 +1005,7 @@ case|case
 name|R_X86_64_32S
 case|:
 comment|/* S + A sign extend */
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -1005,6 +1014,9 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 name|val32
@@ -1028,8 +1040,8 @@ name|where
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return
@@ -1072,7 +1084,7 @@ case|case
 name|R_X86_64_JMP_SLOT
 case|:
 comment|/* XXX need addend + offset */
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -1081,12 +1093,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return

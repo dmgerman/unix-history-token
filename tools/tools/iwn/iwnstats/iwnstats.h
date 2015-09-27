@@ -23,10 +23,6 @@ name|int
 name|s
 decl_stmt|;
 name|struct
-name|ifreq
-name|ifr
-decl_stmt|;
-name|struct
 name|iwn_stats
 name|st
 decl_stmt|;

@@ -95,6 +95,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|freebsd7_semctl
+parameter_list|(
+name|int
+name|semid
+parameter_list|,
+name|int
+name|semnum
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|semctl

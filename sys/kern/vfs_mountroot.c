@@ -219,6 +219,18 @@ name|rootvnode
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Mount of the system's /dev.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|mount
+modifier|*
+name|rootdevmp
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -729,6 +741,42 @@ name|mpp
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|rootdevmp
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 		 * Already have /dev; this happens during rerooting. 		 */
+name|error
+operator|=
+name|vfs_busy
+argument_list|(
+name|rootdevmp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+operator|*
+name|mpp
+operator|=
+name|rootdevmp
+expr_stmt|;
+block|}
+else|else
+block|{
 name|vfsp
 operator|=
 name|vfs_byname
@@ -855,6 +903,11 @@ name|mpp
 operator|=
 name|mp
 expr_stmt|;
+name|rootdevmp
+operator|=
+name|mp
+expr_stmt|;
+block|}
 name|set_rootvnode
 argument_list|()
 expr_stmt|;
@@ -894,7 +947,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vfs_mountroot_shuffle
 parameter_list|(
 name|struct
@@ -1499,11 +1552,6 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -3656,6 +3704,25 @@ operator|&
 name|conf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"mountroot: invalid file system "
+literal|"specification.\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+block|}
 break|break;
 block|}
 if|if
@@ -4469,8 +4536,6 @@ operator|!
 name|error
 condition|)
 block|{
-name|error
-operator|=
 name|vfs_mountroot_shuffle
 argument_list|(
 name|td
@@ -4478,12 +4543,6 @@ argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|error
-condition|)
-block|{
 name|sbuf_clear
 argument_list|(
 name|sb
@@ -4503,7 +4562,6 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 name|sbuf_delete

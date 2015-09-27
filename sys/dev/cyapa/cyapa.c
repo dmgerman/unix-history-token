@@ -273,9 +273,6 @@ name|count
 decl_stmt|;
 comment|/*>0 if device opened */
 name|int
-name|unit
-decl_stmt|;
-name|int
 name|addr
 decl_stmt|;
 name|struct
@@ -1938,9 +1935,6 @@ name|cyapa_cap
 name|cap
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|;
-name|int
 name|addr
 decl_stmt|;
 name|int
@@ -1965,13 +1959,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|init_device
@@ -2058,18 +2045,10 @@ argument_list|)
 expr_stmt|;
 name|addr
 operator|=
-operator|*
-operator|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|device_get_ivars
+name|smbus_get_addr
 argument_list|(
 name|dev
 argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -2109,12 +2088,6 @@ operator|->
 name|dev
 operator|=
 name|dev
-expr_stmt|;
-name|sc
-operator|->
-name|unit
-operator|=
-name|unit
 expr_stmt|;
 name|sc
 operator|->

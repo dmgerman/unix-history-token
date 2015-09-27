@@ -55,6 +55,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_PRI_HIGHEST
+value|PI_SWI(SWI_TTY)
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_PRI_HIGH
 value|PI_SWI(SWI_NET)
 end_define

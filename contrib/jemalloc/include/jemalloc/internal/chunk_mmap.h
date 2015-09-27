@@ -48,20 +48,6 @@ name|JEMALLOC_H_EXTERNS
 end_ifdef
 
 begin_function_decl
-name|bool
-name|pages_purge
-parameter_list|(
-name|void
-modifier|*
-name|addr
-parameter_list|,
-name|size_t
-name|length
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|chunk_alloc_mmap
@@ -75,13 +61,17 @@ parameter_list|,
 name|bool
 modifier|*
 name|zero
+parameter_list|,
+name|bool
+modifier|*
+name|commit
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|bool
-name|chunk_dealloc_mmap
+name|chunk_dalloc_mmap
 parameter_list|(
 name|void
 modifier|*

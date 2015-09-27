@@ -1247,35 +1247,6 @@ name|SIOCGIFAFLAG_IN6
 value|_IOWR('i', 73, struct in6_ifreq)
 end_define
 
-begin_define
-define|#
-directive|define
-name|SIOCGDRLST_IN6
-value|_IOWR('i', 74, struct in6_drlist)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/* XXX: SIOCGPRLST_IN6 is exposed in KAME but in6_oprlist is not. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCGPRLST_IN6
-value|_IOWR('i', 75, struct in6_oprlist)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1575,7 +1546,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* don't perform DAD on this address 					 * (used only at first SIOC* call) 					 */
+comment|/* don't perform DAD on this address 					 * (obsolete) 					 */
 end_comment
 
 begin_define
@@ -1609,17 +1580,6 @@ end_define
 
 begin_comment
 comment|/* preferred address for SAS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN6_IFF_NOPFX
-value|0x8000
-end_define
-
-begin_comment
-comment|/* skip kernel prefix management. 					 * XXX: this should be temporary. 					 */
 end_comment
 
 begin_comment
@@ -3085,6 +3045,7 @@ name|struct
 name|ifnet
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|in6_addr
 modifier|*

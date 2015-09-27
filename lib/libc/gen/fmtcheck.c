@@ -49,6 +49,23 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|__fmtcheck
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_enum
 enum|enum
 name|__e_fmtcheck_types

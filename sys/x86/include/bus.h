@@ -185,13 +185,11 @@ comment|/*  * Map a region of device bus space into CPU virtual address space.  
 end_comment
 
 begin_function_decl
-specifier|static
-name|__inline
 name|int
 name|bus_space_map
 parameter_list|(
 name|bus_space_tag_t
-name|t
+name|tag
 parameter_list|,
 name|bus_addr_t
 name|addr
@@ -208,58 +206,17 @@ name|bshp
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function
-specifier|static
-name|__inline
-name|int
-name|bus_space_map
-parameter_list|(
-name|bus_space_tag_t
-name|t
-name|__unused
-parameter_list|,
-name|bus_addr_t
-name|addr
-parameter_list|,
-name|bus_size_t
-name|size
-name|__unused
-parameter_list|,
-name|int
-name|flags
-name|__unused
-parameter_list|,
-name|bus_space_handle_t
-modifier|*
-name|bshp
-parameter_list|)
-block|{
-operator|*
-name|bshp
-operator|=
-name|addr
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Unmap a region of device bus space.  */
 end_comment
 
 begin_function_decl
-specifier|static
-name|__inline
 name|void
 name|bus_space_unmap
 parameter_list|(
 name|bus_space_tag_t
-name|t
+name|tag
 parameter_list|,
 name|bus_space_handle_t
 name|bsh
@@ -269,27 +226,6 @@ name|size
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|bus_space_unmap
-parameter_list|(
-name|bus_space_tag_t
-name|t
-name|__unused
-parameter_list|,
-name|bus_space_handle_t
-name|bsh
-name|__unused
-parameter_list|,
-name|bus_size_t
-name|size
-name|__unused
-parameter_list|)
-block|{ }
-end_function
 
 begin_comment
 comment|/*  * Get a new handle for a subregion of an already-mapped area of bus space.  */

@@ -40674,6 +40674,9 @@ expr_stmt|;
 if|if
 condition|(
 name|newtab
+index|[
+literal|0
+index|]
 operator|==
 name|NULL
 condition|)
@@ -40709,6 +40712,9 @@ expr_stmt|;
 if|if
 condition|(
 name|newtab
+index|[
+literal|1
+index|]
 operator|==
 name|NULL
 condition|)

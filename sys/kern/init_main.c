@@ -439,6 +439,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|invariants
+argument_list|,
+literal|"Kernel compiled with INVARIANTS, may affect performance"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * This ensures that there is at least one entry so that the sysinit_set  * symbol is not undefined.  A sybsystem ID of SI_SUB_DUMMY is never  * executed.  */
 end_comment

@@ -4202,6 +4202,26 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|idx
+operator|==
+name|W_MAX
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"too many words; try bumping W_MAX in inf.h\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|w
 operator|&&
 name|strlen

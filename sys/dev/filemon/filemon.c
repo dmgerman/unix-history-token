@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2011, David E. O'Brien.  * Copyright (c) 2009-2011, Juniper Networks, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JUNIPER NETWORKS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL JUNIPER NETWORKS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2011, David E. O'Brien.  * Copyright (c) 2009-2011, Juniper Networks, Inc.  * Copyright (c) 2015, EMC Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JUNIPER NETWORKS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL JUNIPER NETWORKS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -111,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
 end_include
 
 begin_include
@@ -331,27 +343,16 @@ name|link
 expr_stmt|;
 comment|/* Link into the in-use list. */
 name|struct
-name|mtx
-name|mtx
+name|sx
+name|lock
 decl_stmt|;
 comment|/* Lock mutex for this filemon. */
-name|struct
-name|cv
-name|cv
-decl_stmt|;
-comment|/* Lock condition variable for this 					   filemon. */
 name|struct
 name|file
 modifier|*
 name|fp
 decl_stmt|;
 comment|/* Output file pointer. */
-name|struct
-name|thread
-modifier|*
-name|locker
-decl_stmt|;
-comment|/* Ptr to the thread locking this 					   filemon. */
 name|pid_t
 name|pid
 decl_stmt|;
@@ -415,48 +416,9 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|n_readers
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
-name|mtx
-name|access_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|cv
-name|access_cv
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|thread
-modifier|*
-name|access_owner
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|thread
-modifier|*
-name|access_requester
-init|=
-name|NULL
+name|sx
+name|access_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -846,26 +808,12 @@ name|fp
 operator|=
 name|NULL
 expr_stmt|;
-name|mtx_init
+name|sx_init
 argument_list|(
 operator|&
 name|filemon
 operator|->
-name|mtx
-argument_list|,
-literal|"filemon"
-argument_list|,
-literal|"filemon"
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-name|cv_init
-argument_list|(
-operator|&
-name|filemon
-operator|->
-name|cv
+name|lock
 argument_list|,
 literal|"filemon"
 argument_list|)
@@ -958,24 +906,12 @@ name|dummy
 name|__unused
 parameter_list|)
 block|{
-name|mtx_init
+name|sx_init
 argument_list|(
 operator|&
-name|access_mtx
+name|access_lock
 argument_list|,
-literal|"filemon"
-argument_list|,
-literal|"filemon"
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-name|cv_init
-argument_list|(
-operator|&
-name|access_cv
-argument_list|,
-literal|"filemon"
+literal|"filemons_inuse"
 argument_list|)
 expr_stmt|;
 comment|/* Install the syscall wrappers. */
@@ -1091,20 +1027,12 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-name|mtx_destroy
+name|sx_destroy
 argument_list|(
 operator|&
 name|filemon
 operator|->
-name|mtx
-argument_list|)
-expr_stmt|;
-name|cv_destroy
-argument_list|(
-operator|&
-name|filemon
-operator|->
-name|cv
+name|lock
 argument_list|)
 expr_stmt|;
 name|free
@@ -1118,16 +1046,10 @@ block|}
 name|filemon_unlock_write
 argument_list|()
 expr_stmt|;
-name|mtx_destroy
+name|sx_destroy
 argument_list|(
 operator|&
-name|access_mtx
-argument_list|)
-expr_stmt|;
-name|cv_destroy
-argument_list|(
-operator|&
-name|access_cv
+name|access_lock
 argument_list|)
 expr_stmt|;
 block|}

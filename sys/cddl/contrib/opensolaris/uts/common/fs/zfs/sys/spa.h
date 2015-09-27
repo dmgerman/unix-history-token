@@ -828,6 +828,22 @@ define|\
 value|(0 == (((zc1).zc_word[0] - (zc2).zc_word[0]) | \ 	((zc1).zc_word[1] - (zc2).zc_word[1]) | \ 	((zc1).zc_word[2] - (zc2).zc_word[2]) | \ 	((zc1).zc_word[3] - (zc2).zc_word[3])))
 define|#
 directive|define
+name|ZIO_CHECKSUM_IS_ZERO
+parameter_list|(
+name|zc
+parameter_list|)
+define|\
+value|(0 == ((zc)->zc_word[0] | (zc)->zc_word[1] | \ 	(zc)->zc_word[2] | (zc)->zc_word[3]))
+define|#
+directive|define
+name|ZIO_CHECKSUM_BSWAP
+parameter_list|(
+name|zcp
+parameter_list|)
+define|\
+value|{								\ 	(zcp)->zc_word[0] = BSWAP_64((zcp)->zc_word[0]);	\ 	(zcp)->zc_word[1] = BSWAP_64((zcp)->zc_word[1]);	\ 	(zcp)->zc_word[2] = BSWAP_64((zcp)->zc_word[2]);	\ 	(zcp)->zc_word[3] = BSWAP_64((zcp)->zc_word[3]);	\ }
+define|#
+directive|define
 name|DVA_IS_VALID
 parameter_list|(
 name|dva
@@ -945,7 +961,7 @@ parameter_list|,
 name|compress
 parameter_list|)
 define|\
-value|{									\ 	static const char *copyname[] =					\ 	    { "zero", "single", "double", "triple" };			\ 	int len = 0;							\ 	int copies = 0;							\ 									\ 	if (bp == NULL) {						\ 		len += func(buf + len, size - len, "<NULL>");		\ 	} else if (BP_IS_HOLE(bp)) {					\ 		len += func(buf + len, size - len, "<hole>");		\ 		if (bp->blk_birth> 0) {				\ 			len += func(buf + len, size - len,		\ 			    " birth=%lluL",				\ 			    (u_longlong_t)bp->blk_birth);		\ 		}							\ 	} else if (BP_IS_EMBEDDED(bp)) {				\ 		len = func(buf + len, size - len,			\ 		    "EMBEDDED [L%llu %s] et=%u %s "			\ 		    "size=%llxL/%llxP birth=%lluL",			\ 		    (u_longlong_t)BP_GET_LEVEL(bp),			\ 		    type,						\ 		    (int)BPE_GET_ETYPE(bp),				\ 		    compress,						\ 		    (u_longlong_t)BPE_GET_LSIZE(bp),			\ 		    (u_longlong_t)BPE_GET_PSIZE(bp),			\ 		    (u_longlong_t)bp->blk_birth);			\ 	} else {							\ 		for (int d = 0; d< BP_GET_NDVAS(bp); d++) {		\ 			const dva_t *dva =&bp->blk_dva[d];		\ 			if (DVA_IS_VALID(dva))				\ 				copies++;				\ 			len += func(buf + len, size - len,		\ 			    "DVA[%d]=<%llu:%llx:%llx>%c", d,		\ 			    (u_longlong_t)DVA_GET_VDEV(dva),		\ 			    (u_longlong_t)DVA_GET_OFFSET(dva),		\ 			    (u_longlong_t)DVA_GET_ASIZE(dva),		\ 			    ws);					\ 		}							\ 		if (BP_IS_GANG(bp)&&					\ 		    DVA_GET_ASIZE(&bp->blk_dva[2])<=			\ 		    DVA_GET_ASIZE(&bp->blk_dva[1]) / 2)			\ 			copies--;					\ 		len += func(buf + len, size - len,			\ 		    "[L%llu %s] %s %s %s %s %s %s%c"			\ 		    "size=%llxL/%llxP birth=%lluL/%lluP fill=%llu%c"	\ 		    "cksum=%llx:%llx:%llx:%llx",			\ 		    (u_longlong_t)BP_GET_LEVEL(bp),			\ 		    type,						\ 		    checksum,						\ 		    compress,						\ 		    BP_GET_BYTEORDER(bp) == 0 ? "BE" : "LE",		\ 		    BP_IS_GANG(bp) ? "gang" : "contiguous",		\ 		    BP_GET_DEDUP(bp) ? "dedup" : "unique",		\ 		    copyname[copies],					\ 		    ws,							\ 		    (u_longlong_t)BP_GET_LSIZE(bp),			\ 		    (u_longlong_t)BP_GET_PSIZE(bp),			\ 		    (u_longlong_t)bp->blk_birth,			\ 		    (u_longlong_t)BP_PHYSICAL_BIRTH(bp),		\ 		    (u_longlong_t)BP_GET_FILL(bp),			\ 		    ws,							\ 		    (u_longlong_t)bp->blk_cksum.zc_word[0],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[1],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[2],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[3]);		\ 	}								\ 	ASSERT(len< size);						\ }
+value|{									\ 	static const char *copyname[] =					\ 	    { "zero", "single", "double", "triple" };			\ 	int len = 0;							\ 	int copies = 0;							\ 									\ 	if (bp == NULL) {						\ 		len += func(buf + len, size - len, "<NULL>");		\ 	} else if (BP_IS_HOLE(bp)) {					\ 		len += func(buf + len, size - len,			\ 		    "HOLE [L%llu %s] "					\ 		    "size=%llxL birth=%lluL",				\ 		    (u_longlong_t)BP_GET_LEVEL(bp),			\ 		    type,						\ 		    (u_longlong_t)BP_GET_LSIZE(bp),			\ 		    (u_longlong_t)bp->blk_birth);			\ 	} else if (BP_IS_EMBEDDED(bp)) {				\ 		len = func(buf + len, size - len,			\ 		    "EMBEDDED [L%llu %s] et=%u %s "			\ 		    "size=%llxL/%llxP birth=%lluL",			\ 		    (u_longlong_t)BP_GET_LEVEL(bp),			\ 		    type,						\ 		    (int)BPE_GET_ETYPE(bp),				\ 		    compress,						\ 		    (u_longlong_t)BPE_GET_LSIZE(bp),			\ 		    (u_longlong_t)BPE_GET_PSIZE(bp),			\ 		    (u_longlong_t)bp->blk_birth);			\ 	} else {							\ 		for (int d = 0; d< BP_GET_NDVAS(bp); d++) {		\ 			const dva_t *dva =&bp->blk_dva[d];		\ 			if (DVA_IS_VALID(dva))				\ 				copies++;				\ 			len += func(buf + len, size - len,		\ 			    "DVA[%d]=<%llu:%llx:%llx>%c", d,		\ 			    (u_longlong_t)DVA_GET_VDEV(dva),		\ 			    (u_longlong_t)DVA_GET_OFFSET(dva),		\ 			    (u_longlong_t)DVA_GET_ASIZE(dva),		\ 			    ws);					\ 		}							\ 		if (BP_IS_GANG(bp)&&					\ 		    DVA_GET_ASIZE(&bp->blk_dva[2])<=			\ 		    DVA_GET_ASIZE(&bp->blk_dva[1]) / 2)			\ 			copies--;					\ 		len += func(buf + len, size - len,			\ 		    "[L%llu %s] %s %s %s %s %s %s%c"			\ 		    "size=%llxL/%llxP birth=%lluL/%lluP fill=%llu%c"	\ 		    "cksum=%llx:%llx:%llx:%llx",			\ 		    (u_longlong_t)BP_GET_LEVEL(bp),			\ 		    type,						\ 		    checksum,						\ 		    compress,						\ 		    BP_GET_BYTEORDER(bp) == 0 ? "BE" : "LE",		\ 		    BP_IS_GANG(bp) ? "gang" : "contiguous",		\ 		    BP_GET_DEDUP(bp) ? "dedup" : "unique",		\ 		    copyname[copies],					\ 		    ws,							\ 		    (u_longlong_t)BP_GET_LSIZE(bp),			\ 		    (u_longlong_t)BP_GET_PSIZE(bp),			\ 		    (u_longlong_t)bp->blk_birth,			\ 		    (u_longlong_t)BP_PHYSICAL_BIRTH(bp),		\ 		    (u_longlong_t)BP_GET_FILL(bp),			\ 		    ws,							\ 		    (u_longlong_t)bp->blk_cksum.zc_word[0],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[1],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[2],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[3]);		\ 	}								\ 	ASSERT(len< size);						\ }
 include|#
 directive|include
 file|<sys/dmu.h>

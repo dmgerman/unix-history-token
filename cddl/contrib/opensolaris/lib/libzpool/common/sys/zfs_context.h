@@ -334,7 +334,7 @@ specifier|extern
 name|int
 name|aok
 decl_stmt|;
-comment|/*  * DTrace SDT probes have different signatures in userland than they do in  * kernel.  If they're being used in kernel code, re-define them out of  * existence for their counterparts in libzpool.  */
+comment|/*  * DTrace SDT probes have different signatures in userland than they do in  * the kernel.  If they're being used in kernel code, re-define them out of  * existence for their counterparts in libzpool.  *  * Here's an example of how to use the set-error probes in userland:  * zfs$target:::set-error /arg0 == EBUSY/ {stack();}  *  * Here's an example of how to use DTRACE_PROBE probes in userland:  * If there is a probe declared as follows:  * DTRACE_PROBE2(zfs__probe_name, uint64_t, blkid, dnode_t *, dn);  * Then you can use it as follows:  * zfs$target:::probe2 /copyinstr(arg0) == "zfs__probe_name"/  *     {printf("%u %p\n", arg1, arg2);}  */
 ifdef|#
 directive|ifdef
 name|DTRACE_PROBE
@@ -2616,23 +2616,6 @@ name|void
 parameter_list|)
 function_decl|;
 comment|/* Random compatibility stuff. */
-define|#
-directive|define
-name|lbolt
-value|(gethrtime()>> 23)
-define|#
-directive|define
-name|lbolt64
-value|(gethrtime()>> 23)
-specifier|extern
-name|uint64_t
-name|physmem
-decl_stmt|;
-define|#
-directive|define
-name|gethrestime_sec
-parameter_list|()
-value|time(NULL)
 define|#
 directive|define
 name|pwrite64

@@ -2401,20 +2401,6 @@ name|ia6t_pltime
 operator|=
 name|ND6_INFINITE_LIFETIME
 expr_stmt|;
-comment|/* we don't need to perform DAD on loopback interfaces. */
-name|ifra
-operator|.
-name|ifra_flags
-operator||=
-name|IN6_IFF_NODAD
-expr_stmt|;
-comment|/* skip registration to the prefix list. XXX should be temporary. */
-name|ifra
-operator|.
-name|ifra_flags
-operator||=
-name|IN6_IFF_NOPFX
-expr_stmt|;
 comment|/* 	 * We are sure that this is a newly assigned address, so we can set 	 * NULL to the 3rd arg. 	 */
 if|if
 condition|(

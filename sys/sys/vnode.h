@@ -1700,6 +1700,19 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|mount
+modifier|*
+name|rootdevmp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* "/dev" mount */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|async_io_version
 decl_stmt|;
@@ -2622,6 +2635,16 @@ end_typedef
 begin_comment
 comment|/* cache_* may belong in namei.h. */
 end_comment
+
+begin_function_decl
+name|void
+name|cache_changesize
+parameter_list|(
+name|int
+name|newhashsize
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -4763,6 +4786,20 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vop_reclaim_post
+parameter_list|(
+name|void
+modifier|*
+name|a
+parameter_list|,
+name|int
+name|rc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vop_remove_post
 parameter_list|(
 name|void
@@ -4912,7 +4949,7 @@ parameter_list|(
 name|ap
 parameter_list|)
 define|\
-value|struct vattr va;						\ 	int error, osize, ooffset, noffset;				\ 									\ 	osize = ooffset = noffset = 0;					\ 	if (!VN_KNLIST_EMPTY((ap)->a_vp)) {				\ 		error = VOP_GETATTR((ap)->a_vp,&va, (ap)->a_cred);	\ 		if (error)						\ 			return (error);					\ 		ooffset = (ap)->a_uio->uio_offset;			\ 		osize = va.va_size;					\ 	}
+value|struct vattr va;						\ 	int error;							\ 	off_t osize, ooffset, noffset;					\ 									\ 	osize = ooffset = noffset = 0;					\ 	if (!VN_KNLIST_EMPTY((ap)->a_vp)) {				\ 		error = VOP_GETATTR((ap)->a_vp,&va, (ap)->a_cred);	\ 		if (error)						\ 			return (error);					\ 		ooffset = (ap)->a_uio->uio_offset;			\ 		osize = (off_t)va.va_size;				\ 	}
 end_define
 
 begin_define
@@ -5056,14 +5093,6 @@ name|default_vnodeops
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|vop_vector
-name|devfs_specops
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -5148,6 +5177,16 @@ name|arg
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_function_decl
+name|void
+name|vfs_hash_changesize
+parameter_list|(
+name|int
+name|newhashsize
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

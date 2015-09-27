@@ -93,6 +93,22 @@ directive|include
 file|"libc_private.h"
 end_include
 
+begin_function_decl
+name|pid_t
+name|__wait3
+parameter_list|(
+name|int
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|rusage
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|pid_t
 name|__wait3

@@ -721,6 +721,7 @@ name|ieee80211com
 modifier|*
 name|ic
 init|=
+operator|&
 name|sc
 operator|->
 name|sc_ic
@@ -1572,7 +1573,9 @@ name|data
 argument_list|,
 name|sc
 operator|->
-name|sc_bssid
+name|sc_ic
+operator|.
+name|ic_macaddr
 argument_list|,
 name|n_ssids
 argument_list|,

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
+comment|/*  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1315,7 +1315,7 @@ literal|"zhack enable feature"
 argument_list|,
 name|tx
 argument_list|,
-literal|"name=%s can_readonly=%u"
+literal|"guid=%s flags=%x"
 argument_list|,
 name|feature
 operator|->
@@ -1323,7 +1323,7 @@ name|fi_guid
 argument_list|,
 name|feature
 operator|->
-name|fi_can_readonly
+name|fi_flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -1385,21 +1385,9 @@ literal|"zhack"
 expr_stmt|;
 name|feature
 operator|.
-name|fi_mos
+name|fi_flags
 operator|=
-name|B_FALSE
-expr_stmt|;
-name|feature
-operator|.
-name|fi_can_readonly
-operator|=
-name|B_FALSE
-expr_stmt|;
-name|feature
-operator|.
-name|fi_activate_on_enable
-operator|=
-name|B_FALSE
+literal|0
 expr_stmt|;
 name|feature
 operator|.
@@ -1446,9 +1434,9 @@ literal|'r'
 case|:
 name|feature
 operator|.
-name|fi_can_readonly
-operator|=
-name|B_TRUE
+name|fi_flags
+operator||=
+name|ZFEATURE_FLAG_READONLY_COMPAT
 expr_stmt|;
 break|break;
 case|case
@@ -1869,9 +1857,9 @@ literal|"zhack"
 expr_stmt|;
 name|feature
 operator|.
-name|fi_mos
+name|fi_flags
 operator|=
-name|B_FALSE
+literal|0
 expr_stmt|;
 name|feature
 operator|.
@@ -1924,9 +1912,9 @@ literal|'m'
 case|:
 name|feature
 operator|.
-name|fi_mos
-operator|=
-name|B_TRUE
+name|fi_flags
+operator||=
+name|ZFEATURE_FLAG_MOS
 expr_stmt|;
 break|break;
 case|case
@@ -2070,9 +2058,10 @@ condition|)
 block|{
 name|feature
 operator|.
-name|fi_can_readonly
-operator|=
-name|B_FALSE
+name|fi_flags
+operator|&=
+operator|~
+name|ZFEATURE_FLAG_READONLY_COMPAT
 expr_stmt|;
 block|}
 elseif|else
@@ -2096,9 +2085,9 @@ condition|)
 block|{
 name|feature
 operator|.
-name|fi_can_readonly
-operator|=
-name|B_TRUE
+name|fi_flags
+operator||=
+name|ZFEATURE_FLAG_READONLY_COMPAT
 expr_stmt|;
 block|}
 else|else

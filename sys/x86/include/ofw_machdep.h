@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<x86/bus.h>
+file|<machine/bus.h>
 end_include
 
 begin_include
