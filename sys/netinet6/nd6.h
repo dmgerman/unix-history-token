@@ -1915,23 +1915,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|nd6_nud_hint
-parameter_list|(
-name|struct
-name|rtentry
-modifier|*
-parameter_list|,
-name|struct
-name|in6_addr
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|nd6_resolve
 parameter_list|(
