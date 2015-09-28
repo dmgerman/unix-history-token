@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003, 2004, 2005, 2008 Silicon Graphics International Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_private.h#7 $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003, 2004, 2005, 2008 Silicon Graphics International Corp.  * Copyright (c) 2014-2015 Alexander Motin<mav@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_private.h#7 $  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -150,11 +150,11 @@ name|CTL_CMD_FLAG_NO_SENSE
 init|=
 literal|0x0010
 block|,
-name|CTL_CMD_FLAG_OK_ON_NO_LUN
+name|CTL_CMD_FLAG_ALLOW_ON_RESV
 init|=
 literal|0x0020
 block|,
-name|CTL_CMD_FLAG_ALLOW_ON_RESV
+name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 init|=
 literal|0x0040
 block|,
@@ -178,19 +178,19 @@ name|CTL_CMD_FLAG_OK_ON_BOTH
 init|=
 literal|0x0700
 block|,
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_LUN
 init|=
 literal|0x0800
 block|,
-name|CTL_CMD_FLAG_OK_ON_STANDBY
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 init|=
 literal|0x1000
 block|,
-name|CTL_CMD_FLAG_OK_ON_UNAVAIL
+name|CTL_CMD_FLAG_OK_ON_STANDBY
 init|=
 literal|0x2000
 block|,
-name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
+name|CTL_CMD_FLAG_OK_ON_UNAVAIL
 init|=
 literal|0x4000
 block|,
@@ -201,10 +201,6 @@ block|,
 name|CTL_CMD_FLAG_RUN_HERE
 init|=
 literal|0x10000
-block|,
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-init|=
-literal|0x20000
 block|}
 name|ctl_cmd_flags
 typedef|;
@@ -333,11 +329,11 @@ name|CTL_LUN_STOPPED
 init|=
 literal|0x020
 block|,
-name|CTL_LUN_INOPERABLE
+name|CTL_LUN_NO_MEDIA
 init|=
 literal|0x040
 block|,
-name|CTL_LUN_OFFLINE
+name|CTL_LUN_EJECTED
 init|=
 literal|0x080
 block|,

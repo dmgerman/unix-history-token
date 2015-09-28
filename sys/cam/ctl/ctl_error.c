@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2009 Silicon Graphics International Corp.  * Copyright (c) 2011 Spectra Logic Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_error.c#2 $  */
+comment|/*-  * Copyright (c) 2003-2009 Silicon Graphics International Corp.  * Copyright (c) 2011 Spectra Logic Corporation  * Copyright (c) 2014-2015 Alexander Motin<mav@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_error.c#2 $  */
 end_comment
 
 begin_comment
@@ -1529,7 +1529,7 @@ literal|0x06
 expr_stmt|;
 break|break;
 case|case
-name|CTL_UA_CAPACITY_CHANGED
+name|CTL_UA_CAPACITY_CHANGE
 case|:
 comment|/* 2Ah/09h  CAPACITY DATA HAS CHANGED */
 operator|*
@@ -1563,6 +1563,21 @@ operator|=
 name|lun
 operator|->
 name|ua_tpt_info
+expr_stmt|;
+break|break;
+case|case
+name|CTL_UA_MEDIUM_CHANGE
+case|:
+comment|/* 28h/00h  NOT READY TO READY CHANGE, MEDIUM MAY HAVE CHANGED */
+operator|*
+name|asc
+operator|=
+literal|0x28
+expr_stmt|;
+operator|*
+name|ascq
+operator|=
+literal|0x00
 expr_stmt|;
 break|break;
 default|default:
@@ -2712,7 +2727,7 @@ end_function
 
 begin_function
 name|void
-name|ctl_set_lun_not_ready
+name|ctl_set_lun_int_reqd
 parameter_list|(
 name|struct
 name|ctl_scsiio
@@ -2736,6 +2751,72 @@ literal|0x04
 argument_list|,
 comment|/*ascq*/
 literal|0x03
+argument_list|,
+name|SSD_ELEM_NONE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ctl_set_lun_ejected
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|)
+block|{
+comment|/* "Medium not present - tray open" */
+name|ctl_set_sense
+argument_list|(
+name|ctsio
+argument_list|,
+comment|/*current_error*/
+literal|1
+argument_list|,
+comment|/*sense_key*/
+name|SSD_KEY_NOT_READY
+argument_list|,
+comment|/*asc*/
+literal|0x3A
+argument_list|,
+comment|/*ascq*/
+literal|0x02
+argument_list|,
+name|SSD_ELEM_NONE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ctl_set_lun_no_media
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|)
+block|{
+comment|/* "Medium not present - tray closed" */
+name|ctl_set_sense
+argument_list|(
+name|ctsio
+argument_list|,
+comment|/*current_error*/
+literal|1
+argument_list|,
+comment|/*sense_key*/
+name|SSD_KEY_NOT_READY
+argument_list|,
+comment|/*asc*/
+literal|0x3A
+argument_list|,
+comment|/*ascq*/
+literal|0x01
 argument_list|,
 name|SSD_ELEM_NONE
 argument_list|)
