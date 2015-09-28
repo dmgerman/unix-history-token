@@ -6499,6 +6499,13 @@ index|[
 name|OTUS_NUM_CHAINS
 index|]
 decl_stmt|;
+comment|/* How many pending, active transmit frames */
+name|int
+name|sc_tx_n_pending
+decl_stmt|;
+name|int
+name|sc_tx_n_active
+decl_stmt|;
 specifier|const
 name|uint32_t
 modifier|*
