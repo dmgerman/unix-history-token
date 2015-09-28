@@ -423,7 +423,7 @@ name|h
 parameter_list|,
 name|i
 parameter_list|)
-value|SDT_PROBE(a, b, c, d, \     e, f, g, h, i)
+value|SDT_PROBE5(a, b, c, d, \     e, f, g, h, i)
 end_define
 
 begin_define
