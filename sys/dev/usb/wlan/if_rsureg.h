@@ -717,6 +717,48 @@ value|(((var)& ~field##_M) | SM(field, val))
 end_define
 
 begin_comment
+comment|/*  * ROM field with RF config.  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|RTL8712_RFCONFIG_1T
+init|=
+literal|0x10
+block|,
+name|RTL8712_RFCONFIG_2T
+init|=
+literal|0x20
+block|,
+name|RTL8712_RFCONFIG_1R
+init|=
+literal|0x01
+block|,
+name|RTL8712_RFCONFIG_2R
+init|=
+literal|0x02
+block|,
+name|RTL8712_RFCONFIG_1T1R
+init|=
+literal|0x11
+block|,
+name|RTL8712_RFCONFIG_1T2R
+init|=
+literal|0x12
+block|,
+name|RTL8712_RFCONFIG_TURBO
+init|=
+literal|0x92
+block|,
+name|RTL8712_RFCONFIG_2T2R
+init|=
+literal|0x22
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/*  * Firmware image header.  */
 end_comment
 
@@ -760,6 +802,7 @@ decl_stmt|;
 name|uint8_t
 name|rf_config
 decl_stmt|;
+comment|//0x11:  1T1R, 0x12: 1T2R, 0x92: 1T2R turbo, 0x22: 2T2R
 name|uint8_t
 name|nendpoints
 decl_stmt|;
@@ -3199,6 +3242,15 @@ literal|1
 decl_stmt|;
 name|u_int
 name|cut
+decl_stmt|;
+name|uint8_t
+name|sc_rftype
+decl_stmt|;
+name|int8_t
+name|sc_nrxstream
+decl_stmt|;
+name|int8_t
+name|sc_ntxstream
 decl_stmt|;
 name|struct
 name|rsu_host_cmd_ring
