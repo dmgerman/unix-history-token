@@ -5518,7 +5518,7 @@ literal|0x04
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_TUR | SSQ_MANY | SSQ_DECREMENT_COUNT | EBUSY
+argument|SS_WAIT | EBUSY
 argument_list|,
 literal|"Logical unit is in process of becoming ready"
 argument_list|)
@@ -5645,7 +5645,7 @@ literal|0x04
 argument_list|,
 literal|0x0A
 argument_list|,
-argument|SS_TUR | SSQ_MANY | SSQ_DECREMENT_COUNT | ENXIO
+argument|SS_WAIT | ENXIO
 argument_list|,
 literal|"Logical unit not accessible, asymmetric access state transition"
 argument_list|)
@@ -5717,7 +5717,7 @@ literal|0x04
 argument_list|,
 literal|0x11
 argument_list|,
-argument|SS_TUR | SSQ_MANY | SSQ_DECREMENT_COUNT | EBUSY
+argument|SS_WAIT | EBUSY
 argument_list|,
 literal|"Logical unit not ready, notify (enable spinup) required"
 argument_list|)
