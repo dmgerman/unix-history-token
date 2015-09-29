@@ -285,6 +285,17 @@ value|SS_RETRY|SSQ_DECREMENT_COUNT|SSQ_PRINT_SENSE
 end_define
 
 begin_comment
+comment|/* Wait for transient error status to change */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SS_WAIT
+value|SS_TUR|SSQ_MANY|SSQ_DECREMENT_COUNT|SSQ_PRINT_SENSE
+end_define
+
+begin_comment
 comment|/* Fatal error action, with table specified error code */
 end_comment
 
