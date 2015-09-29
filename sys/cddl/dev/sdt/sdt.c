@@ -380,12 +380,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|eventhandler_tag
 name|sdt_kld_load_tag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|eventhandler_tag
 name|sdt_kld_unload_try_tag
 decl_stmt|;
