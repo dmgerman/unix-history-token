@@ -101,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:b|c|d^D:e:f^gh^i|I:l^m:no|p:P^r:s|t|T+G^v^w|x:z"
+value|"@:a:b|c|d^D:e:f^gh^i|I:l^m:no|p:P^r:s|t|T+G^v^w|x:z"
 end_define
 
 begin_comment
@@ -350,6 +350,42 @@ name|AcpiGbl_Optarg
 argument_list|)
 condition|)
 block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+break|break;
+case|case
+literal|'a'
+case|:
+comment|/* Debug options */
+switch|switch
+condition|(
+name|AcpiGbl_Optarg
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|'r'
+case|:
+name|Gbl_EnableReferenceTypechecking
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Unknown option: -a%s\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -1093,6 +1129,15 @@ name|FALSE
 expr_stmt|;
 break|break;
 case|case
+literal|'c'
+case|:
+comment|/* Display compile time(s) */
+name|Gbl_CompileTimesFlag
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'f'
 case|:
 comment|/* Disable folding on "normal" expressions */
@@ -1122,10 +1167,10 @@ break|break;
 case|case
 literal|'t'
 case|:
-comment|/* Display compile time(s) */
-name|Gbl_CompileTimesFlag
+comment|/* Disable heavy typechecking */
+name|Gbl_DoTypechecking
 operator|=
-name|TRUE
+name|FALSE
 expr_stmt|;
 break|break;
 default|default:

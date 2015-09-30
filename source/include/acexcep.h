@@ -827,8 +827,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_AML_TARGET_TYPE
+value|EXCEP_AML (0x0023)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_AML_MAX
-value|0x0022
+value|0x0023
 end_define
 
 begin_comment
@@ -1553,6 +1560,13 @@ argument_list|(
 literal|"AE_AML_UNINITIALIZED_NODE"
 argument_list|,
 literal|"A namespace node is uninitialized or unresolved"
+argument_list|)
+block|,
+name|EXCEP_TXT
+argument_list|(
+literal|"AE_AML_TARGET_TYPE"
+argument_list|,
+literal|"A target operand of an incorrect type was encountered"
 argument_list|)
 block|}
 decl_stmt|;

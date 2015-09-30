@@ -709,6 +709,11 @@ argument_list|,
 literal|"\nSemantic analysis - Operand type checking\n\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_DoTypechecking
+condition|)
+block|{
 name|TrWalkParseTree
 argument_list|(
 name|RootNode
@@ -723,6 +728,7 @@ operator|&
 name|AnalysisWalkInfo
 argument_list|)
 expr_stmt|;
+block|}
 name|UtEndEvent
 argument_list|(
 name|Event

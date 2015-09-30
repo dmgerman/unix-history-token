@@ -387,10 +387,10 @@ decl_stmt|;
 name|char
 name|TypeBuffer
 index|[
-literal|48
+literal|96
 index|]
 decl_stmt|;
-comment|/* Room for 5 types */
+comment|/* Room for 10 types */
 comment|/* A Namespace node should not get here, but make sure */
 if|if
 condition|(

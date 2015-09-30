@@ -197,9 +197,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_TABLE_FILE_SUFFIX
+name|FILE_SUFFIX_BINARY_TABLE
 value|".dat"
 end_define
+
+begin_comment
+comment|/* Needs the dot */
+end_comment
 
 begin_comment
 comment|/*  * getopt  */

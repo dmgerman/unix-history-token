@@ -449,11 +449,6 @@ name|ObjDesc
 condition|)
 block|{
 comment|/*                      * Valid object descriptor, copy pointer to return value                      * (i.e., dereference the package index)                      * Delete the ref object, increment the returned object                      */
-name|AcpiUtRemoveReference
-argument_list|(
-name|StackDesc
-argument_list|)
-expr_stmt|;
 name|AcpiUtAddReference
 argument_list|(
 name|ObjDesc

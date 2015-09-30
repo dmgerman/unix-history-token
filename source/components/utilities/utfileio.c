@@ -31,6 +31,12 @@ directive|include
 file|"acapps.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"errno.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -781,6 +787,19 @@ argument_list|(
 literal|"Could not open input file"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
+block|{
+return|return
+operator|(
+name|AE_NOT_EXIST
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|Status

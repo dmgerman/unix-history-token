@@ -537,20 +537,83 @@ modifier|*
 name|ObjDesc
 parameter_list|)
 block|{
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|UtGetObjectTypeName
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|ObjDesc
 condition|)
 block|{
-return|return
+name|ACPI_DEBUG_PRINT
+argument_list|(
 operator|(
-literal|"[NULL Object Descriptor]"
+name|ACPI_DB_EXEC
+operator|,
+literal|"Null Object Descriptor\n"
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
+name|return_PTR
+argument_list|(
+literal|"[NULL Object Descriptor]"
+argument_list|)
+expr_stmt|;
 block|}
-return|return
+comment|/* These descriptor types share a common area */
+if|if
+condition|(
 operator|(
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
+name|ObjDesc
+argument_list|)
+operator|!=
+name|ACPI_DESC_TYPE_OPERAND
+operator|)
+operator|&&
+operator|(
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
+name|ObjDesc
+argument_list|)
+operator|!=
+name|ACPI_DESC_TYPE_NAMED
+operator|)
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_EXEC
+operator|,
+literal|"Invalid object descriptor type: 0x%2.2X [%s] (%p)\n"
+operator|,
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
+name|ObjDesc
+argument_list|)
+operator|,
+name|AcpiUtGetDescriptorName
+argument_list|(
+name|ObjDesc
+argument_list|)
+operator|,
+name|ObjDesc
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_PTR
+argument_list|(
+literal|"Invalid object"
+argument_list|)
+expr_stmt|;
+block|}
+name|return_PTR
+argument_list|(
 name|AcpiUtGetTypeName
 argument_list|(
 name|ObjDesc
@@ -559,8 +622,8 @@ name|Common
 operator|.
 name|Type
 argument_list|)
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -964,11 +1027,7 @@ block|,
 literal|"ACPI_MTX_Caches"
 block|,
 literal|"ACPI_MTX_Memory"
-block|,
-literal|"ACPI_MTX_CommandComplete"
-block|,
-literal|"ACPI_MTX_CommandReady"
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

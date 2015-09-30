@@ -952,7 +952,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[AcpiExec] Exception override, new status %s\n"
+literal|"[AcpiExec] Exception override, new status %s\n\n"
 argument_list|,
 name|AcpiFormatException
 argument_list|(

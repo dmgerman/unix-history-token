@@ -1046,7 +1046,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_BANK_FIELD_OP
-value|ARGI_INVALID_OPCODE
+value|ARGI_LIST1 (ARGI_INTEGER)
 end_define
 
 begin_define
@@ -1718,7 +1718,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_STORE_OP
-value|ARGI_LIST2 (ARGI_DATAREFOBJ, ARGI_TARGETREF)
+value|ARGI_LIST2 (ARGI_DATAREFOBJ, ARGI_STORE_TARGET)
 end_define
 
 begin_define

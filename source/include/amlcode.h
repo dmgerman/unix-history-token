@@ -1423,6 +1423,17 @@ begin_comment
 comment|/* Name, Local, Arg -- no implicit conversion */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ARGI_STORE_TARGET
+value|0x12
+end_define
+
+begin_comment
+comment|/* Target for store is TARGETREF + package objects */
+end_comment
+
 begin_comment
 comment|/* Multiple/complex types */
 end_comment
@@ -1431,7 +1442,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_DATAOBJECT
-value|0x12
+value|0x13
 end_define
 
 begin_comment
@@ -1442,7 +1453,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_COMPLEXOBJ
-value|0x13
+value|0x14
 end_define
 
 begin_comment
@@ -1453,7 +1464,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_REF_OR_STRING
-value|0x14
+value|0x15
 end_define
 
 begin_comment
@@ -1464,7 +1475,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_REGION_OR_BUFFER
-value|0x15
+value|0x16
 end_define
 
 begin_comment
@@ -1475,7 +1486,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_DATAREFOBJ
-value|0x16
+value|0x17
 end_define
 
 begin_comment

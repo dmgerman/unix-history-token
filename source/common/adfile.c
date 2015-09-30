@@ -201,7 +201,7 @@ name|strcat
 argument_list|(
 name|FilenameBuf
 argument_list|,
-name|ACPI_TABLE_FILE_SUFFIX
+name|FILE_SUFFIX_BINARY_TABLE
 argument_list|)
 expr_stmt|;
 return|return

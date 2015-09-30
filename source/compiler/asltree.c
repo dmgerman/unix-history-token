@@ -983,6 +983,9 @@ case|case
 name|PARSEOP_DIVIDE
 case|:
 case|case
+name|PARSEOP_INDEX
+case|:
+case|case
 name|PARSEOP_MOD
 case|:
 case|case

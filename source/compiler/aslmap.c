@@ -131,6 +131,7 @@ index|[]
 init|=
 block|{
 comment|/*! [Begin] no source code translation (keep the table structure) */
+comment|/*  AML Opcode                  Value                           Flags               Btype */
 comment|/* ACCESSAS */
 name|OP_TABLE_ENTRY
 argument_list|(
@@ -1546,7 +1547,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|ACPI_BTYPE_REFERENCE
+name|ACPI_BTYPE_REFERENCE_OBJECT
 argument_list|)
 block|,
 comment|/* INDEXFIELD */
@@ -2940,7 +2941,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|ACPI_BTYPE_REFERENCE
+name|ACPI_BTYPE_REFERENCE_OBJECT
 argument_list|)
 block|,
 comment|/* REGIONSPACE_CMOS */

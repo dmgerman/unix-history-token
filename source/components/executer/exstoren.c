@@ -219,7 +219,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Cannot assign type %s to %s (must be type Int/Str/Buf)"
+literal|"Cannot assign type [%s] to [%s] (must be type Int/Str/Buf)"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
@@ -497,7 +497,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Store into type %s not implemented"
+literal|"Store into type [%s] not implemented"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(

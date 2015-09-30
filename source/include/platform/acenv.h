@@ -985,17 +985,26 @@ directive|ifndef
 name|DEBUGGER_THREADING
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|ACPI_APPLICATION
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ACPI_EXEC_APP
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
 name|DEBUGGER_THREADING
-value|DEBUGGER_SINGLE_THREADED
+value|DEBUGGER_MULTI_THREADED
 end_define
 
 begin_else
@@ -1007,7 +1016,7 @@ begin_define
 define|#
 directive|define
 name|DEBUGGER_THREADING
-value|DEBUGGER_MULTI_THREADED
+value|DEBUGGER_SINGLE_THREADED
 end_define
 
 begin_endif

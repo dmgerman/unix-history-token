@@ -154,30 +154,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_MTX_DEBUG_CMD_COMPLETE
-value|6
-end_define
-
-begin_comment
-comment|/* AML debugger */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MTX_DEBUG_CMD_READY
-value|7
-end_define
-
-begin_comment
-comment|/* AML debugger */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ACPI_MAX_MUTEX
-value|7
+value|5
 end_define
 
 begin_define
@@ -943,9 +921,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_BTYPE_REFERENCE
+name|ACPI_BTYPE_REFERENCE_OBJECT
 value|0x00010000
 end_define
+
+begin_comment
+comment|/* From Index(), RefOf(), etc (Type6Opcodes) */
+end_comment
 
 begin_define
 define|#
@@ -953,6 +935,17 @@ directive|define
 name|ACPI_BTYPE_RESOURCE
 value|0x00020000
 end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_NAMED_REFERENCE
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Generic unresolved Name or Namepath */
+end_comment
 
 begin_define
 define|#
@@ -968,11 +961,15 @@ name|ACPI_BTYPE_DATA
 value|(ACPI_BTYPE_COMPUTE_DATA  | ACPI_BTYPE_PACKAGE)
 end_define
 
+begin_comment
+comment|/* Used by Copy, DeRefOf, Store, Printf, Fprintf */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_BTYPE_DATA_REFERENCE
-value|(ACPI_BTYPE_DATA | ACPI_BTYPE_REFERENCE | ACPI_BTYPE_DDB_HANDLE)
+value|(ACPI_BTYPE_DATA | ACPI_BTYPE_REFERENCE_OBJECT | ACPI_BTYPE_DDB_HANDLE)
 end_define
 
 begin_define
@@ -2896,7 +2893,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_PARSEOP_SPECIAL
+name|ACPI_PARSEOP_CLOSING_PAREN
 value|0x10
 end_define
 

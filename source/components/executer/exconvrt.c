@@ -1394,6 +1394,9 @@ break|break;
 case|case
 name|ARGI_TARGETREF
 case|:
+case|case
+name|ARGI_STORE_TARGET
+case|:
 switch|switch
 condition|(
 name|DestinationType

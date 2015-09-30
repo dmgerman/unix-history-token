@@ -404,7 +404,7 @@ block|,
 comment|/* .h   */
 name|ASL_FILE_C_OFFSET_OUTPUT
 block|,
-comment|/* offset.h */
+comment|/* .offset.h */
 name|ASL_FILE_MAP_OUTPUT
 comment|/* .map */
 block|}
@@ -427,21 +427,14 @@ value|(ASL_MAX_FILE_TYPE + 1)
 end_define
 
 begin_comment
-comment|/* filename suffixes for output files */
+comment|/* Name suffixes used to create filenames for output files */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FILE_SUFFIX_PREPROC_USER
-value|"i  "
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_SUFFIX_PREPROCESSOR
-value|"pre"
+name|FILE_SUFFIX_ASL_CODE
+value|"asl"
 end_define
 
 begin_define
@@ -454,8 +447,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|FILE_SUFFIX_MAP
-value|"map"
+name|FILE_SUFFIX_SOURCE
+value|"src"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_PREPROCESSOR
+value|"pre"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_PREPROC_USER
+value|"i"
 end_define
 
 begin_define
@@ -475,22 +482,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|FILE_SUFFIX_DEBUG
-value|"txt"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_SUFFIX_SOURCE
-value|"src"
-end_define
-
-begin_define
-define|#
-directive|define
 name|FILE_SUFFIX_NAMESPACE
 value|"nsp"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_DEBUG
+value|"txt"
 end_define
 
 begin_define
@@ -510,13 +510,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|FILE_SUFFIX_DISASSEMBLY
-value|"dsl"
-end_define
-
-begin_define
-define|#
-directive|define
 name|FILE_SUFFIX_ASM_INCLUDE
 value|"inc"
 end_define
@@ -531,15 +524,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|FILE_SUFFIX_ASL_CODE
-value|"asl"
+name|FILE_SUFFIX_C_OFFSET
+value|"offset.h"
 end_define
 
 begin_define
 define|#
 directive|define
-name|FILE_SUFFIX_C_OFFSET
-value|"offset.h"
+name|FILE_SUFFIX_MAP
+value|"map"
 end_define
 
 begin_comment

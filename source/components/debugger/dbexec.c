@@ -987,6 +987,24 @@ decl_stmt|;
 name|UINT32
 name|Allocations
 decl_stmt|;
+endif|#
+directive|endif
+comment|/*      * Allow one execution to be performed by debugger or single step      * execution will be dead locked by the interpreter mutexes.      */
+if|if
+condition|(
+name|AcpiGbl_MethodExecuting
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Only one debugger execution is allowed.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG_OUTPUT
 comment|/* Memory allocation tracking */
 name|PreviousAllocations
 operator|=

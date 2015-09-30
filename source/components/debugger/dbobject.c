@@ -937,6 +937,11 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
+name|BOOLEAN
+name|DisplayLocals
+init|=
+name|FALSE
+decl_stmt|;
 name|ObjDesc
 operator|=
 name|WalkState
@@ -978,9 +983,53 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Are any locals actually set? */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ACPI_METHOD_NUM_LOCALS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|ObjDesc
+operator|=
+name|WalkState
+operator|->
+name|LocalVariables
+index|[
+name|i
+index|]
+operator|.
+name|Object
+expr_stmt|;
+if|if
+condition|(
+name|ObjDesc
+condition|)
+block|{
+name|DisplayLocals
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+block|}
+block|}
+comment|/* If any are set, only display the ones that are set */
+if|if
+condition|(
+name|DisplayLocals
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Local Variables for method [%4.4s]:\n"
+literal|"\nInitialized Local Variables for method [%4.4s]:\n"
 argument_list|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -1013,6 +1062,11 @@ index|]
 operator|.
 name|Object
 expr_stmt|;
+if|if
+condition|(
+name|ObjDesc
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"    Local%X: "
@@ -1025,6 +1079,21 @@ argument_list|(
 name|ObjDesc
 argument_list|,
 name|WalkState
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"No Local Variables are initialized for method [%4.4s]\n"
+argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
+name|Node
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1055,17 +1124,22 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
-name|ObjDesc
-operator|=
-name|WalkState
-operator|->
-name|MethodDesc
-expr_stmt|;
+name|BOOLEAN
+name|DisplayArgs
+init|=
+name|FALSE
+decl_stmt|;
 name|Node
 operator|=
 name|WalkState
 operator|->
 name|MethodNode
+expr_stmt|;
+name|ObjDesc
+operator|=
+name|WalkState
+operator|->
+name|MethodDesc
 expr_stmt|;
 if|if
 condition|(
@@ -1096,10 +1170,54 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Are any arguments actually set? */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ACPI_METHOD_NUM_ARGS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|ObjDesc
+operator|=
+name|WalkState
+operator|->
+name|Arguments
+index|[
+name|i
+index|]
+operator|.
+name|Object
+expr_stmt|;
+if|if
+condition|(
+name|ObjDesc
+condition|)
+block|{
+name|DisplayArgs
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+block|}
+block|}
+comment|/* If any are set, only display the ones that are set */
+if|if
+condition|(
+name|DisplayArgs
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Arguments for Method [%4.4s]:  "
-literal|"(%X arguments defined, max concurrency = %X)\n"
+literal|"Initialized Arguments for Method [%4.4s]:  "
+literal|"(%X arguments defined for method invocation)\n"
 argument_list|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -1111,12 +1229,6 @@ operator|->
 name|Method
 operator|.
 name|ParamCount
-argument_list|,
-name|ObjDesc
-operator|->
-name|Method
-operator|.
-name|SyncLevel
 argument_list|)
 expr_stmt|;
 for|for
@@ -1144,6 +1256,11 @@ index|]
 operator|.
 name|Object
 expr_stmt|;
+if|if
+condition|(
+name|ObjDesc
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"    Arg%u:   "
@@ -1156,6 +1273,21 @@ argument_list|(
 name|ObjDesc
 argument_list|,
 name|WalkState
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"No Arguments are initialized for method [%4.4s]\n"
+argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
+name|Node
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

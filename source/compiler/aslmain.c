@@ -372,6 +372,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-ot"
+argument_list|,
+literal|"Disable typechecking"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-cr"
 argument_list|,
 literal|"Disable Resource Descriptor error checking"
@@ -628,7 +635,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-ot"
+literal|"-oc"
 argument_list|,
 literal|"Display compile times and statistics"
 argument_list|)

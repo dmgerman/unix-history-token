@@ -107,12 +107,12 @@ return|;
 case|case
 name|ARGI_DDBHANDLE
 case|:
-comment|/*          * DDBHandleObject := SuperName          * ACPI_BTYPE_REFERENCE: Index reference as parameter of Load/Unload          */
+comment|/*          * DDBHandleObject := SuperName          * ACPI_BTYPE_REFERENCE_OBJECT:          *      Index reference as parameter of Load/Unload          */
 return|return
 operator|(
 name|ACPI_BTYPE_DDB_HANDLE
 operator||
-name|ACPI_BTYPE_REFERENCE
+name|ACPI_BTYPE_REFERENCE_OBJECT
 operator|)
 return|;
 comment|/* Interchangeable types */
@@ -167,12 +167,36 @@ name|ARGI_REFERENCE
 case|:
 return|return
 operator|(
-name|ACPI_BTYPE_REFERENCE
+name|ACPI_BTYPE_NAMED_REFERENCE
 operator|)
 return|;
+comment|/* Name or Namestring */
 case|case
 name|ARGI_TARGETREF
 case|:
+comment|/*          * Target operand for most math and logic operators.          * Package objects not allowed as target.          */
+return|return
+operator|(
+name|ACPI_BTYPE_COMPUTE_DATA
+operator||
+name|ACPI_BTYPE_DEBUG_OBJECT
+operator||
+name|ACPI_BTYPE_REFERENCE_OBJECT
+operator|)
+return|;
+case|case
+name|ARGI_STORE_TARGET
+case|:
+comment|/* Special target for Store(), includes packages */
+return|return
+operator|(
+name|ACPI_BTYPE_DATA
+operator||
+name|ACPI_BTYPE_DEBUG_OBJECT
+operator||
+name|ACPI_BTYPE_REFERENCE_OBJECT
+operator|)
+return|;
 case|case
 name|ARGI_FIXED_TARGET
 case|:
@@ -197,7 +221,7 @@ name|ACPI_BTYPE_BUFFER
 operator||
 name|ACPI_BTYPE_PACKAGE
 operator||
-name|ACPI_BTYPE_REFERENCE
+name|ACPI_BTYPE_REFERENCE_OBJECT
 operator|)
 return|;
 case|case
@@ -216,11 +240,12 @@ return|;
 case|case
 name|ARGI_REF_OR_STRING
 case|:
+comment|/* Used by DeRefOf operator only */
 return|return
 operator|(
 name|ACPI_BTYPE_STRING
 operator||
-name|ACPI_BTYPE_REFERENCE
+name|ACPI_BTYPE_REFERENCE_OBJECT
 operator|)
 return|;
 case|case
@@ -239,19 +264,12 @@ return|;
 case|case
 name|ARGI_DATAREFOBJ
 case|:
+comment|/* Used by Store() only, as the source operand */
 return|return
 operator|(
-name|ACPI_BTYPE_INTEGER
+name|ACPI_BTYPE_DATA_REFERENCE
 operator||
-name|ACPI_BTYPE_STRING
-operator||
-name|ACPI_BTYPE_BUFFER
-operator||
-name|ACPI_BTYPE_PACKAGE
-operator||
-name|ACPI_BTYPE_REFERENCE
-operator||
-name|ACPI_BTYPE_DDB_HANDLE
+name|ACPI_BTYPE_REFERENCE_OBJECT
 operator|)
 return|;
 default|default:
@@ -426,7 +444,7 @@ name|ACPI_TYPE_LOCAL_RESOURCE_FIELD
 case|:
 return|return
 operator|(
-name|ACPI_BTYPE_REFERENCE
+name|ACPI_BTYPE_REFERENCE_OBJECT
 operator|)
 return|;
 default|default:
@@ -767,11 +785,6 @@ literal|"could not map type"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Since it was a named reference, enable the          * reference bit also          */
-name|ThisNodeBtype
-operator||=
-name|ACPI_BTYPE_REFERENCE
-expr_stmt|;
 if|if
 condition|(
 name|Op

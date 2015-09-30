@@ -369,7 +369,7 @@ name|strcat
 argument_list|(
 name|Filename
 argument_list|,
-name|ACPI_TABLE_FILE_SUFFIX
+name|FILE_SUFFIX_BINARY_TABLE
 argument_list|)
 expr_stmt|;
 if|if

@@ -3092,12 +3092,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_NFIT_MEM_ARMED
+name|ACPI_NFIT_MEM_NOT_ARMED
 value|(1<<3)
 end_define
 
 begin_comment
-comment|/* 03: Memory Device observed to be not armed */
+comment|/* 03: Memory Device is not armed */
 end_comment
 
 begin_define

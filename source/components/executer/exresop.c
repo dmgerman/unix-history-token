@@ -666,6 +666,9 @@ case|case
 name|ARGI_SIMPLE_TARGET
 case|:
 comment|/* Name, Local, or Arg - no implicit conversion  */
+case|case
+name|ARGI_STORE_TARGET
+case|:
 comment|/*              * Need an operand of type ACPI_TYPE_LOCAL_REFERENCE              * A Namespace Node is OK as-is              */
 if|if
 condition|(
