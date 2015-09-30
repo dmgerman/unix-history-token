@@ -6738,12 +6738,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_object_page_cache:  *  *	For the given object, attempt to move the specified clean  *	pages to the cache queue.  If a page is wired for any reason,  *	then it will not be changed.  Pages are specified by the given  *	range ["start", "end").  As a special case, if "end" is zero,  *	then the range extends from "start" to the end of the object.  *	Any mappings to the specified pages are removed before the  *	pages are moved to the cache queue.  *  *	This operation should only be performed on objects that  *	contain non-fictitious, managed pages.  *  *	The object must be locked.  */
+comment|/*  *	vm_object_page_noreuse:  *  *	For the given object, attempt to move the specified pages to  *	the head of the inactive queue.  This bypasses regular LRU  *	operation and allows the pages to be reused quickly under memory  *	pressure.  If a page is wired for any reason, then it will not  *	be queued.  Pages are specified by the range ["start", "end").  *	As a special case, if "end" is zero, then the range extends from  *	"start" to the end of the object.  *  *	This operation should only be performed on objects that  *	contain non-fictitious, managed pages.  *  *	The object must be locked.  */
 end_comment
 
 begin_function
 name|void
-name|vm_object_page_cache
+name|vm_object_page_noreuse
 parameter_list|(
 name|vm_object_t
 name|object
@@ -6790,7 +6790,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"vm_object_page_cache: illegal object %p"
+literal|"vm_object_page_noreuse: illegal object %p"
 operator|,
 name|object
 operator|)
@@ -6888,7 +6888,7 @@ name|mtx
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_try_to_cache
+name|vm_page_deactivate_noreuse
 argument_list|(
 name|p
 argument_list|)
