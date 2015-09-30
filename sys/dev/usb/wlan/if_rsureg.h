@@ -3223,6 +3223,9 @@ decl_stmt|;
 name|int
 name|sc_curpwrstate
 decl_stmt|;
+name|int
+name|sc_currssi
+decl_stmt|;
 name|u_int
 name|sc_running
 range|:
