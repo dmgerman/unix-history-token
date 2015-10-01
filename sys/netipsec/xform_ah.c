@@ -4934,6 +4934,13 @@ operator|)
 name|tc
 expr_stmt|;
 comment|/* These are passed as-is to the callback. */
+name|key_addref
+argument_list|(
+name|isr
+operator|->
+name|sp
+argument_list|)
+expr_stmt|;
 name|tc
 operator|->
 name|tc_isr

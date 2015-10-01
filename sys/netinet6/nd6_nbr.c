@@ -3645,7 +3645,6 @@ if|if
 condition|(
 name|is_solicited
 condition|)
-block|{
 name|nd6_llinfo_setstate
 argument_list|(
 name|ln
@@ -3653,13 +3652,6 @@ argument_list|,
 name|ND6_LLINFO_REACHABLE
 argument_list|)
 expr_stmt|;
-name|ln
-operator|->
-name|ln_byhint
-operator|=
-literal|0
-expr_stmt|;
-block|}
 else|else
 name|nd6_llinfo_setstate
 argument_list|(
@@ -3853,13 +3845,6 @@ if|if
 condition|(
 name|is_solicited
 condition|)
-block|{
-name|ln
-operator|->
-name|ln_byhint
-operator|=
-literal|0
-expr_stmt|;
 name|nd6_llinfo_setstate
 argument_list|(
 name|ln
@@ -3867,7 +3852,6 @@ argument_list|,
 name|ND6_LLINFO_REACHABLE
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 if|if

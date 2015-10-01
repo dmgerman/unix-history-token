@@ -2968,15 +2968,6 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|" ln_byhint=%u\n"
-argument_list|,
-name|lle
-operator|->
-name|ln_byhint
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
 literal|" ln_state=%d\n"
 argument_list|,
 name|lle

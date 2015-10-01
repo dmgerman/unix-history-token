@@ -898,15 +898,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|ctl_softc
-modifier|*
-name|control_softc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|struct
 name|ctl_frontend
@@ -1978,6 +1969,7 @@ index|[
 literal|3
 index|]
 expr_stmt|;
+break|break;
 default|default:
 name|CFISCSI_WARN
 argument_list|(
@@ -6063,17 +6055,10 @@ name|cfiscsi_softc
 modifier|*
 name|softc
 decl_stmt|;
-name|int
-name|retval
-decl_stmt|;
 name|softc
 operator|=
 operator|&
 name|cfiscsi_softc
-expr_stmt|;
-name|retval
-operator|=
-literal|0
 expr_stmt|;
 name|bzero
 argument_list|(

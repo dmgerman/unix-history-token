@@ -6157,32 +6157,6 @@ name|bo
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|->
-name|b_bufobj
-operator|!=
-name|bo
-condition|)
-block|{
-comment|/* XXX: necessary ? */
-name|BUF_UNLOCK
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-name|BO_LOCK
-argument_list|(
-name|bo
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EAGAIN
-operator|)
-return|;
-block|}
 comment|/* 		 * XXX Since there are no node locks for NFS, I 		 * believe there is a slight chance that a delayed 		 * write will occur while sleeping just above, so 		 * check for it. 		 */
 if|if
 condition|(
@@ -13789,7 +13763,7 @@ name|vp
 operator|->
 name|v_bufobj
 operator|.
-name|bo_dirty
+name|bo_clean
 operator|.
 name|bv_cnt
 argument_list|,
@@ -13797,7 +13771,7 @@ name|vp
 operator|->
 name|v_bufobj
 operator|.
-name|bo_clean
+name|bo_dirty
 operator|.
 name|bv_cnt
 argument_list|)

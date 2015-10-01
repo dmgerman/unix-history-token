@@ -778,6 +778,54 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * These load the old table data and store the new value.  * They need to be atomic as the System MMU may write to the table at  * the same time as the CPU.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|pmap_load_store
+parameter_list|(
+name|table
+parameter_list|,
+name|entry
+parameter_list|)
+value|atomic_swap_64(table, entry)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pmap_set
+parameter_list|(
+name|table
+parameter_list|,
+name|mask
+parameter_list|)
+value|atomic_set_64(table, mask)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pmap_load_clear
+parameter_list|(
+name|table
+parameter_list|)
+value|atomic_swap_64(table, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pmap_load
+parameter_list|(
+name|table
+parameter_list|)
+value|(*table)
+end_define
+
+begin_comment
 comment|/********************/
 end_comment
 
@@ -925,8 +973,10 @@ operator|*
 operator|)
 name|PHYS_TO_DMAP
 argument_list|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l1
+argument_list|)
 operator|&
 operator|~
 name|ATTR_MASK
@@ -977,8 +1027,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l1
+argument_list|)
 operator|&
 name|ATTR_DESCR_MASK
 operator|)
@@ -1030,8 +1082,10 @@ operator|*
 operator|)
 name|PHYS_TO_DMAP
 argument_list|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l2
+argument_list|)
 operator|&
 operator|~
 name|ATTR_MASK
@@ -1086,8 +1140,10 @@ operator|==
 name|NULL
 operator|||
 operator|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l2
+argument_list|)
 operator|&
 name|ATTR_DESCR_MASK
 operator|)
@@ -1175,8 +1231,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l1p
+argument_list|)
 operator|&
 name|ATTR_DESCR_MASK
 operator|)
@@ -1203,8 +1261,10 @@ block|}
 if|if
 condition|(
 operator|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l1p
+argument_list|)
 operator|&
 name|ATTR_DESCR_MASK
 operator|)
@@ -1233,8 +1293,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l2p
+argument_list|)
 operator|&
 name|ATTR_DESCR_MASK
 operator|)
@@ -1270,54 +1332,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * These load the old table data and store the new value.  * They need to be atomic as the System MMU may write to the table at  * the same time as the CPU.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|pmap_load_store
-parameter_list|(
-name|table
-parameter_list|,
-name|entry
-parameter_list|)
-value|atomic_swap_64(table, entry)
-end_define
-
-begin_define
-define|#
-directive|define
-name|pmap_set
-parameter_list|(
-name|table
-parameter_list|,
-name|mask
-parameter_list|)
-value|atomic_set_64(table, mask)
-end_define
-
-begin_define
-define|#
-directive|define
-name|pmap_load_clear
-parameter_list|(
-name|table
-parameter_list|)
-value|atomic_swap_64(table, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|pmap_load
-parameter_list|(
-name|table
-parameter_list|)
-value|(*table)
-end_define
 
 begin_function
 specifier|static
@@ -3170,8 +3184,10 @@ condition|)
 block|{
 name|l2
 operator|=
-operator|*
+name|pmap_load
+argument_list|(
 name|l2p
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3202,8 +3218,10 @@ condition|)
 block|{
 name|l3
 operator|=
-operator|*
+name|pmap_load
+argument_list|(
 name|l3p
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3433,6 +3451,8 @@ parameter_list|)
 block|{
 name|pd_entry_t
 modifier|*
+name|l2p
+decl_stmt|,
 name|l2
 decl_stmt|;
 name|pt_entry_t
@@ -3463,7 +3483,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|l2
+name|l2p
 operator|=
 name|pmap_l2
 argument_list|(
@@ -3474,7 +3494,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|l2
+name|l2p
 operator|==
 name|NULL
 condition|)
@@ -3483,10 +3503,16 @@ argument_list|(
 literal|"pmap_kextract: No l2"
 argument_list|)
 expr_stmt|;
+name|l2
+operator|=
+name|pmap_load
+argument_list|(
+name|l2p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
 name|l2
 operator|&
 name|ATTR_DESCR_MASK
@@ -3497,7 +3523,6 @@ condition|)
 return|return
 operator|(
 operator|(
-operator|*
 name|l2
 operator|&
 operator|~
@@ -3515,7 +3540,7 @@ name|l3
 operator|=
 name|pmap_l2_to_l3
 argument_list|(
-name|l2
+name|l2p
 argument_list|,
 name|va
 argument_list|)
@@ -3534,8 +3559,10 @@ expr_stmt|;
 name|pa
 operator|=
 operator|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l3
+argument_list|)
 operator|&
 operator|~
 name|ATTR_MASK
@@ -4980,8 +5007,10 @@ name|pdpg
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l1
+argument_list|)
 operator|&
 operator|~
 name|ATTR_MASK
@@ -5001,8 +5030,10 @@ operator|*
 operator|)
 name|PHYS_TO_DMAP
 argument_list|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l1
+argument_list|)
 operator|&
 operator|~
 name|ATTR_MASK
@@ -6068,7 +6099,7 @@ name|vm_page_unwire
 argument_list|(
 name|m
 argument_list|,
-name|PQ_INACTIVE
+name|PQ_NONE
 argument_list|)
 expr_stmt|;
 name|vm_page_free
@@ -7165,8 +7196,10 @@ condition|)
 continue|continue;
 name|l3_paddr
 operator|=
-operator|*
+name|pmap_load
+argument_list|(
 name|l2
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Weed out invalid mappings. 		 */
 if|if
@@ -7382,6 +7415,8 @@ decl_stmt|;
 name|pd_entry_t
 modifier|*
 name|l2
+decl_stmt|,
+name|tl2
 decl_stmt|;
 name|struct
 name|spglist
@@ -7469,9 +7504,26 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-operator|(
-operator|*
 name|l2
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"pmap_remove_all: no l2 table found"
+operator|)
+argument_list|)
+expr_stmt|;
+name|tl2
+operator|=
+name|pmap_load
+argument_list|(
+name|l2
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|tl2
 operator|&
 name|ATTR_DESCR_MASK
 operator|)
@@ -7593,8 +7645,7 @@ name|pv
 operator|->
 name|pv_va
 argument_list|,
-operator|*
-name|l2
+name|tl2
 argument_list|,
 operator|&
 name|free
@@ -7824,8 +7875,10 @@ operator|==
 name|NULL
 operator|||
 operator|(
-operator|*
+name|pmap_load
+argument_list|(
 name|l2
+argument_list|)
 operator|&
 name|ATTR_DESCR_MASK
 operator|)
@@ -9899,8 +9952,10 @@ argument_list|,
 operator|(
 name|uintmax_t
 operator|)
-operator|*
+name|pmap_load
+argument_list|(
 name|l3
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 			 * PG_W must be cleared atomically.  Although the pmap 			 * lock synchronizes access to PG_W, another processor 			 * could be setting PG_M and/or PG_A concurrently. 			 */
@@ -11876,8 +11931,10 @@ name|retry
 label|:
 name|oldl3
 operator|=
-operator|*
+name|pmap_load
+argument_list|(
 name|l3
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -12020,6 +12077,8 @@ name|lock
 decl_stmt|;
 name|pd_entry_t
 modifier|*
+name|l2p
+decl_stmt|,
 name|l2
 decl_stmt|;
 name|pt_entry_t
@@ -12197,7 +12256,7 @@ name|retry
 goto|;
 block|}
 block|}
-name|l2
+name|l2p
 operator|=
 name|pmap_l2
 argument_list|(
@@ -12210,8 +12269,25 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+name|l2p
+operator|!=
+name|NULL
+argument_list|,
 operator|(
-operator|*
+literal|"pmap_ts_referenced: no l2 table found"
+operator|)
+argument_list|)
+expr_stmt|;
+name|l2
+operator|=
+name|pmap_load
+argument_list|(
+name|l2p
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
 name|l2
 operator|&
 name|ATTR_DESCR_MASK
@@ -12228,7 +12304,7 @@ name|l3
 operator|=
 name|pmap_l2_to_l3
 argument_list|(
-name|l2
+name|l2p
 argument_list|,
 name|pv
 operator|->
@@ -12255,8 +12331,10 @@ name|safe_to_clear_referenced
 argument_list|(
 name|pmap
 argument_list|,
-operator|*
+name|pmap_load
+argument_list|(
 name|l3
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -12293,7 +12371,6 @@ name|pv
 operator|->
 name|pv_va
 argument_list|,
-operator|*
 name|l2
 argument_list|,
 operator|&

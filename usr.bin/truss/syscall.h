@@ -118,6 +118,10 @@ block|,
 name|ExecArgs
 block|,
 name|ExecEnv
+block|,
+name|PipeFds
+block|,
+name|QuadHex
 block|}
 enum|;
 end_enum
@@ -168,11 +172,11 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|int
+name|u_int
 name|ret_type
 decl_stmt|;
 comment|/* 0, 1, or 2 return values */
-name|int
+name|u_int
 name|nargs
 decl_stmt|;
 comment|/* actual number of meaningful arguments */
@@ -228,6 +232,7 @@ name|long
 modifier|*
 parameter_list|,
 name|long
+modifier|*
 parameter_list|,
 name|struct
 name|trussinfo
@@ -533,6 +538,7 @@ parameter_list|,
 name|int
 parameter_list|,
 name|long
+modifier|*
 parameter_list|,
 name|struct
 name|syscall

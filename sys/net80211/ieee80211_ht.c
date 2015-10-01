@@ -5365,11 +5365,10 @@ name|txa_ni
 operator|=
 name|ni
 expr_stmt|;
+name|ieee80211_txampdu_init_pps
+argument_list|(
 name|tap
-operator|->
-name|txa_lastsample
-operator|=
-name|ticks
+argument_list|)
 expr_stmt|;
 comment|/* NB: further initialization deferred */
 block|}
@@ -6135,11 +6134,10 @@ name|txa_tid
 operator|=
 name|tid
 expr_stmt|;
+name|ieee80211_txampdu_init_pps
+argument_list|(
 name|tap
-operator|->
-name|txa_lastsample
-operator|=
-name|ticks
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* NB: AMPDU tx/rx governed by IEEE80211_FHT_AMPDU_{TX,RX} */
@@ -8241,17 +8239,10 @@ name|tap
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Reset packet estimate. 	 */
+name|ieee80211_txampdu_init_pps
+argument_list|(
 name|tap
-operator|->
-name|txa_lastsample
-operator|=
-name|ticks
-expr_stmt|;
-name|tap
-operator|->
-name|txa_avgpps
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 comment|/* NB: clearing NAK means we may re-send ADDBA */
 name|tap

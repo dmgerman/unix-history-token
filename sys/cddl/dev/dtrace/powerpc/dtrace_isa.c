@@ -1973,11 +1973,6 @@ operator|(
 name|val
 operator|)
 return|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 name|int
 name|dtrace_getstackdepth

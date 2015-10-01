@@ -2572,46 +2572,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Neighbor Discovery, Neighbor Unreachability Detection Upper layer hint. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ND6_HINT
-parameter_list|(
-name|tp
-parameter_list|)
-define|\
-value|do { \ 	if ((tp)&& (tp)->t_inpcb&& \ 	    ((tp)->t_inpcb->inp_vflag& INP_IPV6) != 0) \ 		nd6_nud_hint(NULL, NULL, 0); \ } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ND6_HINT
-parameter_list|(
-name|tp
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Indicate whether this ack should be delayed.  We can delay the ack if  * following conditions are met:  *	- There is no delayed ack timer in progress.  *	- Our last ack wasn't a 0-sized window. We never want to delay  *	  the ack that opens up a 0-sized window.  *	- LRO wasn't used for this segment. We make sure by checking that the  *	  segment size is not larger than the MSS.  *	- Delayed acks are enabled or this is a half-synchronized T/TCP  *	  connection.  */
 end_comment
 
@@ -8018,12 +7978,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|ND6_HINT
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-comment|/* Some progress has been made. */
 comment|/* 				 * If all outstanding data are acked, stop 				 * retransmit timer, otherwise restart timer 				 * using current (possibly backed-off) value. 				 * If process is waiting for space, 				 * wakeup/selwakeup/signal.  If data 				 * are ready to send, let tcp_output 				 * decide between more output or persist. 				 */
 ifdef|#
 directive|ifdef
@@ -8251,12 +8205,6 @@ argument_list|,
 name|tlen
 argument_list|)
 expr_stmt|;
-name|ND6_HINT
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-comment|/* Some progress has been made */
 ifdef|#
 directive|ifdef
 name|TCPDEBUG
@@ -12351,11 +12299,6 @@ argument_list|(
 name|tcps_rcvbyte
 argument_list|,
 name|tlen
-argument_list|)
-expr_stmt|;
-name|ND6_HINT
-argument_list|(
-name|tp
 argument_list|)
 expr_stmt|;
 name|SOCKBUF_LOCK

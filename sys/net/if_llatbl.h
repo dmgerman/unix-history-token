@@ -225,9 +225,6 @@ decl_stmt|;
 name|uint16_t
 name|la_preempt
 decl_stmt|;
-name|uint16_t
-name|ln_byhint
-decl_stmt|;
 name|int16_t
 name|ln_state
 decl_stmt|;

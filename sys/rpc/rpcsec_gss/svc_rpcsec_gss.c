@@ -321,24 +321,6 @@ name|SVC_RPC_GSS_SEQWINDOW
 value|128
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RPCAUTH_UNIXGIDS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|RPCAUTH_UNIXGIDS
-value|16
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 struct|struct
 name|svc_rpc_gss_clientid
@@ -446,7 +428,7 @@ comment|/* user cookie from callback */
 name|gid_t
 name|cl_gid_storage
 index|[
-name|RPCAUTH_UNIXGIDS
+name|NGROUPS
 index|]
 decl_stmt|;
 name|gss_OID
@@ -3501,7 +3483,7 @@ name|cl_gid_storage
 expr_stmt|;
 name|numgroups
 operator|=
-name|RPCAUTH_UNIXGIDS
+name|NGROUPS
 expr_stmt|;
 name|maj_stat
 operator|=

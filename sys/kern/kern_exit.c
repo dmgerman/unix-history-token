@@ -2045,7 +2045,7 @@ name|reason
 operator|=
 name|CLD_KILLED
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE1
 argument_list|(
 name|proc
 argument_list|,
@@ -2054,14 +2054,6 @@ argument_list|, ,
 name|exit
 argument_list|,
 name|reason
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 endif|#

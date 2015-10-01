@@ -196,9 +196,9 @@ name|kmutex_t
 name|dd_lock
 decl_stmt|;
 name|list_t
-name|dd_prop_cbs
+name|dd_props
 decl_stmt|;
-comment|/* list of dsl_prop_cb_record_t's */
+comment|/* list of dsl_prop_record_t's */
 name|timestruc_t
 name|dd_snap_cmtime
 decl_stmt|;

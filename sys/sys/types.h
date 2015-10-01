@@ -1328,18 +1328,6 @@ begin_comment
 comment|/*  * The following are all things that really shouldn't exist in this header,  * since its purpose is to provide typedefs, not miscellaneous doodads.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__BSD_VISIBLE
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/select.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1765,6 +1753,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/select.h>
+end_include
 
 begin_comment
 comment|/*  * minor() gives a cookie instead of an index since we don't want to  * change the meanings of bits 0-15 or waste time and space shifting  * bits 16-31 for devices that don't use them.  */
