@@ -438,6 +438,19 @@ end_function_decl
 
 begin_function_decl
 name|struct
+name|kinfo_vmobject
+modifier|*
+name|kinfo_getvmobject
+parameter_list|(
+name|int
+modifier|*
+name|_cntp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
 name|kinfo_proc
 modifier|*
 name|kinfo_getallproc
