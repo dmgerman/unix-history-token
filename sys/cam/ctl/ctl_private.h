@@ -1366,9 +1366,8 @@ decl_stmt|;
 name|uint32_t
 name|res_idx
 decl_stmt|;
-name|unsigned
-name|int
-name|PRGeneration
+name|uint32_t
+name|pr_generation
 decl_stmt|;
 name|uint64_t
 modifier|*
@@ -1384,7 +1383,7 @@ name|uint32_t
 name|pr_res_idx
 decl_stmt|;
 name|uint8_t
-name|res_type
+name|pr_res_type
 decl_stmt|;
 name|int
 name|prevent_count
