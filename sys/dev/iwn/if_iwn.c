@@ -14599,13 +14599,6 @@ name|uint8_t
 name|rate
 parameter_list|)
 block|{
-define|#
-directive|define
-name|RV
-parameter_list|(
-name|v
-parameter_list|)
-value|((v)& IEEE80211_RATE_VAL)
 name|struct
 name|ieee80211com
 modifier|*
@@ -14634,7 +14627,7 @@ block|{
 comment|/* 		 * Set the initial PLCP value to be between 0->31 for 		 * MCS 0 -> MCS 31, then set the "I'm an MCS rate!" 		 * flag. 		 */
 name|plcp
 operator|=
-name|RV
+name|IEEE80211_RV
 argument_list|(
 name|rate
 argument_list|)
@@ -14808,9 +14801,6 @@ name|plcp
 argument_list|)
 operator|)
 return|;
-undef|#
-directive|undef
-name|RV
 block|}
 end_function
 
@@ -22671,11 +22661,6 @@ name|tap
 argument_list|)
 condition|)
 block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 return|return
 name|EINVAL
 return|;
@@ -22933,11 +22918,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 return|return
 name|ENOBUFS
 return|;
@@ -23618,11 +23598,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 return|return
 name|error
 return|;
@@ -23657,11 +23632,6 @@ argument_list|,
 literal|"%s: could not defrag mbuf\n"
 argument_list|,
 name|__func__
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 return|return
@@ -23712,11 +23682,6 @@ argument_list|,
 name|__func__
 argument_list|,
 name|error
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 return|return
@@ -24756,11 +24721,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 return|return
 name|error
 return|;
@@ -24795,11 +24755,6 @@ argument_list|,
 literal|"%s: could not defrag mbuf\n"
 argument_list|,
 name|__func__
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 return|return
@@ -24850,11 +24805,6 @@ argument_list|,
 name|__func__
 argument_list|,
 name|error
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 return|return
@@ -25389,6 +25339,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * raw frame xmit - free node/reference if failed.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -25640,6 +25594,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * transmit - don't free mbuf if failed; don't free node ref if failed.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -25673,6 +25631,19 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|ni
+operator|=
+operator|(
+expr|struct
+name|ieee80211_node
+operator|*
+operator|)
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+expr_stmt|;
 name|IWN_LOCK
 argument_list|(
 name|sc
@@ -25724,19 +25695,6 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-name|ni
-operator|=
-operator|(
-expr|struct
-name|ieee80211_node
-operator|*
-operator|)
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-expr_stmt|;
 name|error
 operator|=
 name|iwn_tx_data
@@ -25764,11 +25722,6 @@ argument_list|,
 name|IFCOUNTER_OERRORS
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|ieee80211_free_node
-argument_list|(
-name|ni
 argument_list|)
 expr_stmt|;
 block|}
@@ -26960,13 +26913,6 @@ modifier|*
 name|ni
 parameter_list|)
 block|{
-define|#
-directive|define
-name|RV
-parameter_list|(
-name|v
-parameter_list|)
-value|((v)& IEEE80211_RATE_VAL)
 name|struct
 name|iwn_node
 modifier|*
@@ -27216,7 +27162,7 @@ expr_stmt|;
 else|else
 name|rate
 operator|=
-name|RV
+name|IEEE80211_RV
 argument_list|(
 name|rs
 operator|->
@@ -27281,7 +27227,7 @@ operator|&
 name|IWN_RFLAG_MCS
 operator|)
 operator|&&
-name|RV
+name|IEEE80211_RV
 argument_list|(
 name|le32toh
 argument_list|(
@@ -27367,9 +27313,6 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-undef|#
-directive|undef
-name|RV
 block|}
 end_function
 
@@ -27760,6 +27703,11 @@ argument_list|(
 name|IWN_EDCA_UPDATE
 argument_list|)
 expr_stmt|;
+name|IEEE80211_LOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|aci
@@ -27894,11 +27842,6 @@ expr_stmt|;
 name|IWN_UNLOCK
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|IEEE80211_LOCK
-argument_list|(
-name|ic
 argument_list|)
 expr_stmt|;
 name|DPRINTF

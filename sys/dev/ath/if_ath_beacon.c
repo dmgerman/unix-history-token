@@ -760,9 +760,9 @@ argument_list|(
 name|ni
 argument_list|,
 operator|&
-name|avp
+name|vap
 operator|->
-name|av_boff
+name|iv_bcn_off
 argument_list|)
 expr_stmt|;
 if|if
@@ -1596,12 +1596,9 @@ modifier|*
 name|bo
 init|=
 operator|&
-name|ATH_VAP
-argument_list|(
 name|vap
-argument_list|)
 operator|->
-name|av_boff
+name|iv_bcn_off
 decl_stmt|;
 name|setbit
 argument_list|(
@@ -2843,9 +2840,9 @@ operator|->
 name|bf_node
 argument_list|,
 operator|&
-name|avp
+name|vap
 operator|->
-name|av_boff
+name|iv_bcn_off
 argument_list|,
 name|m
 argument_list|,
@@ -2919,9 +2916,9 @@ block|}
 if|if
 condition|(
 operator|(
-name|avp
+name|vap
 operator|->
-name|av_boff
+name|iv_bcn_off
 operator|.
 name|bo_tim
 index|[
@@ -3008,9 +3005,9 @@ expr_stmt|;
 comment|/* 	 * Enable the CAB queue before the beacon queue to 	 * insure cab frames are triggered by this beacon. 	 */
 if|if
 condition|(
-name|avp
+name|vap
 operator|->
-name|av_boff
+name|iv_bcn_off
 operator|.
 name|bo_tim
 index|[
@@ -3215,9 +3212,9 @@ operator|->
 name|bf_node
 argument_list|,
 operator|&
-name|avp
+name|vap
 operator|->
-name|av_boff
+name|iv_bcn_off
 argument_list|,
 name|m
 argument_list|,

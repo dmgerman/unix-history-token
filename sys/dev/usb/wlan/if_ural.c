@@ -3459,11 +3459,6 @@ name|NULL
 return|;
 name|uvp
 operator|=
-operator|(
-expr|struct
-name|ural_vap
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -3474,20 +3469,11 @@ argument_list|)
 argument_list|,
 name|M_80211_VAP
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|uvp
-operator|==
-name|NULL
-condition|)
-return|return
-name|NULL
-return|;
 name|vap
 operator|=
 operator|&
@@ -4220,9 +4206,9 @@ argument_list|(
 name|ni
 argument_list|,
 operator|&
-name|uvp
+name|vap
 operator|->
-name|bo
+name|iv_bcn_off
 argument_list|)
 expr_stmt|;
 if|if
@@ -10632,13 +10618,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof (a) / sizeof ((a)[0])))
 name|int
 name|i
 decl_stmt|,
@@ -10713,7 +10692,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|ural_def_bbp
 argument_list|)
@@ -10750,9 +10729,6 @@ directive|endif
 return|return
 literal|0
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -11004,13 +10980,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof (a) / sizeof ((a)[0])))
 name|struct
 name|ieee80211com
 modifier|*
@@ -11078,7 +11047,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|ural_def_mac
 argument_list|)
@@ -11368,9 +11337,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

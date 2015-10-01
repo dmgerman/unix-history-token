@@ -12214,13 +12214,6 @@ modifier|*
 name|rs
 parameter_list|)
 block|{
-define|#
-directive|define
-name|RV
-parameter_list|(
-name|r
-parameter_list|)
-value|((r)& IEEE80211_RATE_VAL)
 name|struct
 name|ieee80211com
 modifier|*
@@ -12287,7 +12280,7 @@ name|ic
 operator|->
 name|ic_rt
 argument_list|,
-name|RV
+name|IEEE80211_RV
 argument_list|(
 name|rate
 argument_list|)
@@ -12303,9 +12296,6 @@ argument_list|,
 name|mask
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|RV
 block|}
 end_function
 
@@ -18604,12 +18594,12 @@ operator|(
 literal|"EEPROM rev=%d, FAE=%d\n"
 operator|,
 name|val
-operator|&
-literal|0xff
-operator|,
-name|val
 operator|>>
 literal|8
+operator|,
+name|val
+operator|&
+literal|0xff
 operator|)
 argument_list|)
 expr_stmt|;
@@ -24432,7 +24422,13 @@ name|iv_ic
 decl_stmt|;
 name|struct
 name|ieee80211_beacon_offsets
+modifier|*
 name|bo
+init|=
+operator|&
+name|vap
+operator|->
+name|iv_bcn_off
 decl_stmt|;
 name|struct
 name|rt2860_txwi
@@ -24457,7 +24453,6 @@ name|vap
 operator|->
 name|iv_bss
 argument_list|,
-operator|&
 name|bo
 argument_list|)
 operator|)

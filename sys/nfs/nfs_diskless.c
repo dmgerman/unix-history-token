@@ -125,6 +125,17 @@ directive|include
 file|<nfs/nfsdiskless.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|NFS_IFACE_TIMEOUT_SECS
+value|10
+end_define
+
+begin_comment
+comment|/* Timeout for interface to appear. */
+end_comment
+
 begin_function_decl
 specifier|static
 name|int
@@ -719,6 +730,9 @@ decl_stmt|;
 name|uint32_t
 name|len
 decl_stmt|;
+name|time_t
+name|timeout_at
+decl_stmt|;
 if|if
 condition|(
 name|nfs_diskless_valid
@@ -1029,6 +1043,14 @@ name|ifa
 operator|=
 name|NULL
 expr_stmt|;
+name|timeout_at
+operator|=
+name|time_uptime
+operator|+
+name|NFS_IFACE_TIMEOUT_SECS
+expr_stmt|;
+name|retry
+label|:
 name|CURVNET_SET
 argument_list|(
 name|TD_TO_VNET
@@ -1141,6 +1163,26 @@ expr_stmt|;
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|time_uptime
+operator|<
+name|timeout_at
+condition|)
+block|{
+name|pause
+argument_list|(
+literal|"nfssdl"
+argument_list|,
+name|hz
+operator|/
+literal|5
+argument_list|)
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
 name|printf
 argument_list|(
 literal|"nfs_diskless: no interface\n"

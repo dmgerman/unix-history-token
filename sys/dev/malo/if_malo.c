@@ -4622,13 +4622,6 @@ name|int
 name|rix
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|x
-parameter_list|)
-value|(sizeof(x)/sizeof(x[0]))
 specifier|static
 specifier|const
 name|int
@@ -4665,7 +4658,7 @@ if|if
 condition|(
 name|rix
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|ieeerates
 argument_list|)
@@ -4679,9 +4672,6 @@ index|[
 name|rix
 index|]
 expr_stmt|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -4694,13 +4684,6 @@ name|int
 name|fix_rate
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|x
-parameter_list|)
-value|(sizeof(x)/sizeof(x[0]))
 specifier|static
 specifier|const
 name|int
@@ -4735,7 +4718,7 @@ return|return
 operator|(
 name|fix_rate
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rates
 argument_list|)
@@ -4748,9 +4731,6 @@ else|:
 literal|0
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -5367,14 +5347,6 @@ parameter_list|)
 block|{
 define|#
 directive|define
-name|IEEE80211_DIR_DSTODS
-parameter_list|(
-name|wh
-parameter_list|)
-define|\
-value|((wh->i_fc[1]& IEEE80211_FC1_DIR_MASK) == IEEE80211_FC1_DIR_DSTODS)
-define|#
-directive|define
 name|IS_DATA_FRAME
 parameter_list|(
 name|wh
@@ -5495,7 +5467,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|IEEE80211_DIR_DSTODS
+name|IEEE80211_IS_DSTODS
 argument_list|(
 name|wh
 argument_list|)
@@ -6152,9 +6124,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-undef|#
-directive|undef
-name|IEEE80211_DIR_DSTODS
 block|}
 end_function
 
@@ -9270,14 +9239,6 @@ name|int
 name|npending
 parameter_list|)
 block|{
-define|#
-directive|define
-name|IEEE80211_DIR_DSTODS
-parameter_list|(
-name|wh
-parameter_list|)
-define|\
-value|((((const struct ieee80211_frame *)wh)->i_fc[1]&		\ 	    IEEE80211_FC1_DIR_MASK) == IEEE80211_FC1_DIR_DSTODS)
 name|struct
 name|malo_softc
 modifier|*
@@ -9789,7 +9750,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|IEEE80211_DIR_DSTODS
+name|IEEE80211_IS_DSTODS
 argument_list|(
 name|wh
 argument_list|)
@@ -10038,9 +9999,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|IEEE80211_DIR_DSTODS
 block|}
 end_function
 

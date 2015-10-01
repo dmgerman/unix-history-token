@@ -5307,13 +5307,6 @@ modifier|*
 name|rf
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -5354,7 +5347,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phyini
 argument_list|)
@@ -5392,7 +5385,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rfini
 argument_list|)
@@ -5432,9 +5425,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -5616,13 +5606,6 @@ modifier|*
 name|rf
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -5721,7 +5704,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phyini
 argument_list|)
@@ -5771,7 +5754,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phy2230s
 argument_list|)
@@ -5808,7 +5791,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rfini1
 argument_list|)
@@ -5889,7 +5872,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rfini2
 argument_list|)
@@ -5928,7 +5911,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phypll
 argument_list|)
@@ -5963,7 +5946,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rfini3
 argument_list|)
@@ -6001,9 +5984,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -6018,13 +5998,6 @@ modifier|*
 name|rf
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|error
 decl_stmt|,
@@ -6056,7 +6029,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phy
 argument_list|)
@@ -6116,9 +6089,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -6133,13 +6103,6 @@ modifier|*
 name|rf
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -6242,7 +6205,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phy1
 argument_list|)
@@ -6278,7 +6241,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phyini
 argument_list|)
@@ -6328,7 +6291,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phy2230s
 argument_list|)
@@ -6405,7 +6368,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rfini_part1
 argument_list|)
@@ -6488,7 +6451,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rfini_part2
 argument_list|)
@@ -6529,7 +6492,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phy2
 argument_list|)
@@ -6564,7 +6527,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rfini_part3
 argument_list|)
@@ -6605,7 +6568,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phy3
 argument_list|)
@@ -6646,9 +6609,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -6742,13 +6702,6 @@ name|uint8_t
 name|chan
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|error
 decl_stmt|,
@@ -6884,7 +6837,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phy1
 argument_list|)
@@ -6918,9 +6871,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -6938,13 +6888,6 @@ name|uint8_t
 name|chan
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|error
 decl_stmt|,
@@ -6993,7 +6936,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phy1
 argument_list|)
@@ -7109,9 +7052,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -7139,13 +7079,6 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|error
 init|=
@@ -7216,7 +7149,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|r
 argument_list|)
@@ -7250,9 +7183,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -7271,13 +7201,6 @@ modifier|*
 name|rf
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -7345,7 +7268,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phyini_1
 argument_list|)
@@ -7381,7 +7304,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rfini_1
 argument_list|)
@@ -7423,7 +7346,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phyini_2
 argument_list|)
@@ -7459,7 +7382,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rfini_2
 argument_list|)
@@ -7501,7 +7424,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phyini_3
 argument_list|)
@@ -7535,9 +7458,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -7617,13 +7537,6 @@ name|uint8_t
 name|chan
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -7687,7 +7600,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rfsc
 argument_list|)
@@ -7867,9 +7780,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -7888,13 +7798,6 @@ modifier|*
 name|rf
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -7947,7 +7850,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phyini
 argument_list|)
@@ -7983,7 +7886,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rfini
 argument_list|)
@@ -8101,9 +8004,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -8307,13 +8207,6 @@ define|#
 directive|define
 name|ZYD_GCT_INTR_REG
 value|0x85c1
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -8375,7 +8268,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phyini
 argument_list|)
@@ -8411,7 +8304,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rfini
 argument_list|)
@@ -8474,7 +8367,7 @@ call|(
 name|int
 call|)
 argument_list|(
-name|N
+name|nitems
 argument_list|(
 name|vco
 argument_list|)
@@ -8638,9 +8531,6 @@ operator|)
 return|;
 undef|#
 directive|undef
-name|N
-undef|#
-directive|undef
 name|ZYD_GCT_INTR_REG
 block|}
 end_function
@@ -8656,13 +8546,6 @@ modifier|*
 name|rf
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -8701,7 +8584,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|mode
 argument_list|)
@@ -8735,9 +8618,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -8995,13 +8875,6 @@ name|uint8_t
 name|chan
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|error
 decl_stmt|,
@@ -9165,7 +9038,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|cmd
 argument_list|)
@@ -9228,9 +9101,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -9248,13 +9118,6 @@ name|uint8_t
 name|chan
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
 name|struct
 name|zyd_softc
 modifier|*
@@ -9287,7 +9150,7 @@ if|if
 condition|(
 name|idx
 operator|>=
-name|N
+name|nitems
 argument_list|(
 name|txgain
 argument_list|)
@@ -9323,9 +9186,6 @@ name|idx
 index|]
 argument_list|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -9344,13 +9204,6 @@ modifier|*
 name|rf
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -9394,7 +9247,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phyini
 argument_list|)
@@ -9456,7 +9309,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rfini
 argument_list|)
@@ -9521,9 +9374,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -9564,13 +9414,6 @@ name|uint8_t
 name|chan
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -9630,7 +9473,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|phyini
 argument_list|)
@@ -9743,7 +9586,7 @@ literal|2
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rfini
 argument_list|)
@@ -9808,9 +9651,6 @@ operator|(
 name|error
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

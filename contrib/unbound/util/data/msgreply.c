@@ -76,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/sbuffer.h"
+file|"sldns/sbuffer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/wire2str.h"
+file|"sldns/wire2str.h"
 end_include
 
 begin_comment
@@ -116,6 +116,22 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/** MAX Negative TTL, for SOA records in authority section */
+end_comment
+
+begin_decl_stmt
+name|time_t
+name|MAX_NEG_TTL
+init|=
+literal|3600
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* one hour */
+end_comment
 
 begin_comment
 comment|/** allocate qinfo, return 0 on error */
@@ -325,6 +341,16 @@ argument_list|)
 operator|*
 name|total
 decl_stmt|;
+if|if
+condition|(
+name|total
+operator|>=
+name|RR_COUNT_MAX
+condition|)
+return|return
+name|NULL
+return|;
+comment|/* sanity check on numRRS*/
 if|if
 condition|(
 name|region
@@ -777,6 +803,65 @@ block|}
 end_function
 
 begin_comment
+comment|/** find the minimumttl in the rdata of SOA record */
+end_comment
+
+begin_function
+specifier|static
+name|time_t
+name|soa_find_minttl
+parameter_list|(
+name|struct
+name|rr_parse
+modifier|*
+name|rr
+parameter_list|)
+block|{
+name|uint16_t
+name|rlen
+init|=
+name|sldns_read_uint16
+argument_list|(
+name|rr
+operator|->
+name|ttl_data
+operator|+
+literal|4
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|rlen
+operator|<
+literal|20
+condition|)
+return|return
+literal|0
+return|;
+comment|/* rdata too small for SOA (dname, dname, 5*32bit) */
+comment|/* minimum TTL is the last 32bit value in the rdata of the record */
+comment|/* at position ttl_data + 4(ttl) + 2(rdatalen) + rdatalen - 4(timeval)*/
+return|return
+operator|(
+name|time_t
+operator|)
+name|sldns_read_uint32
+argument_list|(
+name|rr
+operator|->
+name|ttl_data
+operator|+
+literal|6
+operator|+
+name|rlen
+operator|-
+literal|4
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/** do the rdata copy */
 end_comment
 
@@ -809,6 +894,9 @@ name|rr_ttl
 parameter_list|,
 name|uint16_t
 name|type
+parameter_list|,
+name|sldns_pkt_section
+name|section
 parameter_list|)
 block|{
 name|uint16_t
@@ -842,6 +930,49 @@ name|rr_ttl
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|LDNS_RR_TYPE_SOA
+operator|&&
+name|section
+operator|==
+name|LDNS_SECTION_AUTHORITY
+condition|)
+block|{
+comment|/* negative response. see if TTL of SOA record larger than the 		 * minimum-ttl in the rdata of the SOA record */
+if|if
+condition|(
+operator|*
+name|rr_ttl
+operator|>
+name|soa_find_minttl
+argument_list|(
+name|rr
+argument_list|)
+condition|)
+operator|*
+name|rr_ttl
+operator|=
+name|soa_find_minttl
+argument_list|(
+name|rr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|rr_ttl
+operator|>
+name|MAX_NEG_TTL
+condition|)
+operator|*
+name|rr_ttl
+operator|=
+name|MAX_NEG_TTL
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
@@ -1419,6 +1550,10 @@ argument_list|,
 name|pset
 operator|->
 name|type
+argument_list|,
+name|pset
+operator|->
+name|section
 argument_list|)
 condition|)
 return|return
@@ -1507,6 +1642,10 @@ name|i
 index|]
 argument_list|,
 name|LDNS_RR_TYPE_RRSIG
+argument_list|,
+name|pset
+operator|->
+name|section
 argument_list|)
 condition|)
 return|return
@@ -1558,7 +1697,33 @@ block|{
 comment|/* allocate */
 name|size_t
 name|s
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|pset
+operator|->
+name|rr_count
+operator|>
+name|RR_COUNT_MAX
+operator|||
+name|pset
+operator|->
+name|rrsig_count
+operator|>
+name|RR_COUNT_MAX
+operator|||
+name|pset
+operator|->
+name|size
+operator|>
+name|RR_COUNT_MAX
+condition|)
+return|return
+literal|0
+return|;
+comment|/* protect against integer overflow */
+name|s
+operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1596,7 +1761,7 @@ operator|+
 name|pset
 operator|->
 name|size
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|region
@@ -4885,6 +5050,11 @@ name|int
 name|reply_check_cname_chain
 parameter_list|(
 name|struct
+name|query_info
+modifier|*
+name|qinfo
+parameter_list|,
+name|struct
 name|reply_info
 modifier|*
 name|rep
@@ -4898,30 +5068,16 @@ name|uint8_t
 modifier|*
 name|sname
 init|=
-name|rep
+name|qinfo
 operator|->
-name|rrsets
-index|[
-literal|0
-index|]
-operator|->
-name|rk
-operator|.
-name|dname
+name|qname
 decl_stmt|;
 name|size_t
 name|snamelen
 init|=
-name|rep
+name|qinfo
 operator|->
-name|rrsets
-index|[
-literal|0
-index|]
-operator|->
-name|rk
-operator|.
-name|dname_len
+name|qname_len
 decl_stmt|;
 for|for
 control|(

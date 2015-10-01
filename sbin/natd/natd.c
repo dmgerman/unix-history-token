@@ -668,7 +668,6 @@ specifier|static
 name|int
 name|StrToAddrAndPortRange
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|str
@@ -7357,6 +7356,7 @@ modifier|*
 name|portRange
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|sep
@@ -7557,6 +7557,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|StrToProto
 parameter_list|(
@@ -7605,10 +7606,10 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|StrToAddrAndPortRange
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|str

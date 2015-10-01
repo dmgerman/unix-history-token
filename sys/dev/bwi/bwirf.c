@@ -6043,13 +6043,6 @@ parameter_list|(
 name|p
 parameter_list|)
 value|((p) != 0&& (p) != -1)
-define|#
-directive|define
-name|N
-parameter_list|(
-name|arr
-parameter_list|)
-value|(int)(sizeof(arr) / sizeof(arr[0]))
 comment|/* 	 * Extract PA parameters 	 */
 if|if
 condition|(
@@ -6076,7 +6069,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|pa_params
 argument_list|)
@@ -6113,7 +6106,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|pa_params
 argument_list|)
@@ -6240,9 +6233,6 @@ name|back
 goto|;
 block|}
 block|}
-undef|#
-directive|undef
-name|N
 comment|/* 	 * All of the PA parameters from SPROM are valid. 	 */
 comment|/* 	 * Extract idle TSSI from SPROM. 	 */
 name|val

@@ -1782,6 +1782,8 @@ name|ccb
 argument_list|,
 operator|&
 name|mapinfo
+argument_list|,
+name|MAXPHYS
 argument_list|)
 expr_stmt|;
 name|dm

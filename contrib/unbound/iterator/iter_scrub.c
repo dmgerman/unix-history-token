@@ -94,7 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/sbuffer.h"
+file|"sldns/sbuffer.h"
 end_include
 
 begin_comment
@@ -1941,7 +1941,7 @@ condition|(
 operator|!
 name|parse_get_cname_target
 argument_list|(
-name|rrset
+name|nx
 argument_list|,
 operator|&
 name|t

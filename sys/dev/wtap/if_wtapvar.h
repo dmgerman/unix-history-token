@@ -444,11 +444,6 @@ name|bf_node
 decl_stmt|;
 comment|/* pointer to the node */
 name|struct
-name|ieee80211_beacon_offsets
-name|av_boff
-decl_stmt|;
-comment|/* dynamic update state */
-name|struct
 name|callout
 name|av_swba
 decl_stmt|;

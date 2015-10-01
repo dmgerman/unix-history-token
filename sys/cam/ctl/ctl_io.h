@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003 Silicon Graphics International Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_io.h#5 $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003 Silicon Graphics International Corp.  * Copyright (c) 2014-2015 Alexander Motin<mav@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_io.h#5 $  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -186,16 +186,6 @@ name|CTL_FLAG_DATA_MASK
 init|=
 literal|0x00000003
 block|,
-name|CTL_FLAG_KDPTR_SGLIST
-init|=
-literal|0x00000008
-block|,
-comment|/* kern_data_ptr is S/G list*/
-name|CTL_FLAG_EDPTR_SGLIST
-init|=
-literal|0x00000010
-block|,
-comment|/* ext_data_ptr is S/G list */
 name|CTL_FLAG_DO_AUTOSENSE
 init|=
 literal|0x00000020
@@ -298,7 +288,12 @@ comment|/* I/O active on this SC */
 name|CTL_FLAG_STATUS_SENT
 init|=
 literal|0x10000000
+block|,
 comment|/* Status sent by datamove */
+name|CTL_FLAG_SERSEQ_DONE
+init|=
+literal|0x20000000
+comment|/* All storage I/O started */
 block|}
 name|ctl_io_flags
 typedef|;
@@ -591,6 +586,15 @@ comment|/* Information about port. */
 name|CTL_MSG_LUN_SYNC
 block|,
 comment|/* Information about LUN. */
+name|CTL_MSG_IID_SYNC
+block|,
+comment|/* Information about initiator. */
+name|CTL_MSG_LOGIN
+block|,
+comment|/* Information about HA peer. */
+name|CTL_MSG_MODE_SYNC
+block|,
+comment|/* Mode page current content. */
 name|CTL_MSG_FAILOVER
 comment|/* Fake, never sent though the wire */
 block|}
@@ -680,13 +684,13 @@ name|bintime
 name|dma_bt
 decl_stmt|;
 comment|/* DMA total ticks */
+endif|#
+directive|endif
+comment|/* CTL_TIME_IO */
 name|uint32_t
 name|num_dmas
 decl_stmt|;
 comment|/* Number of DMAs */
-endif|#
-directive|endif
-comment|/* CTL_TIME_IO */
 name|union
 name|ctl_io
 modifier|*
@@ -920,8 +924,32 @@ block|,
 name|CTL_TASK_PORT_LOGIN
 block|,
 name|CTL_TASK_PORT_LOGOUT
+block|,
+name|CTL_TASK_QUERY_TASK
+block|,
+name|CTL_TASK_QUERY_TASK_SET
+block|,
+name|CTL_TASK_QUERY_ASYNC_EVENT
 block|}
 name|ctl_task_type
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CTL_TASK_FUNCTION_COMPLETE
+block|,
+name|CTL_TASK_FUNCTION_SUCCEEDED
+block|,
+name|CTL_TASK_FUNCTION_REJECTED
+block|,
+name|CTL_TASK_LUN_DOES_NOT_EXIST
+block|,
+name|CTL_TASK_FUNCTION_NOT_SUPPORTED
+block|}
+name|ctl_task_status
 typedef|;
 end_typedef
 
@@ -950,6 +978,61 @@ name|ctl_tag_type
 name|tag_type
 decl_stmt|;
 comment|/* simple, ordered, etc. */
+name|uint8_t
+name|task_status
+decl_stmt|;
+comment|/* Complete, Succeeded, etc. */
+name|uint8_t
+name|task_resp
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Response information */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * HA link messages.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_HA_VERSION
+value|1
+end_define
+
+begin_comment
+comment|/*  * Used for CTL_MSG_LOGIN.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ctl_ha_msg_login
+block|{
+name|ctl_msg_type
+name|msg_type
+decl_stmt|;
+name|int
+name|version
+decl_stmt|;
+name|int
+name|ha_mode
+decl_stmt|;
+name|int
+name|ha_id
+decl_stmt|;
+name|int
+name|max_luns
+decl_stmt|;
+name|int
+name|max_ports
+decl_stmt|;
+name|int
+name|max_init_per_port
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1008,6 +1091,10 @@ block|{
 name|ctl_msg_type
 name|msg_type
 decl_stmt|;
+name|uint32_t
+name|status
+decl_stmt|;
+comment|/* transaction status */
 name|union
 name|ctl_io
 modifier|*
@@ -1023,10 +1110,6 @@ name|ctl_nexus
 name|nexus
 decl_stmt|;
 comment|/* Initiator, port, target, lun */
-name|uint32_t
-name|status
-decl_stmt|;
-comment|/* transaction status */
 block|}
 struct|;
 end_struct
@@ -1085,6 +1168,12 @@ name|ua_set
 decl_stmt|;
 name|int
 name|ua_type
+decl_stmt|;
+name|uint8_t
+name|ua_info
+index|[
+literal|8
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -1205,11 +1294,6 @@ name|fetd_status
 decl_stmt|;
 comment|/* trans status, set by FETD, 						0 = good*/
 name|struct
-name|ctl_lba_len
-name|lbalen
-decl_stmt|;
-comment|/* used for stats */
-name|struct
 name|scsi_sense_data
 name|sense_data
 decl_stmt|;
@@ -1282,6 +1366,9 @@ decl_stmt|;
 name|int
 name|target_devid_len
 decl_stmt|;
+name|int
+name|init_devid_len
+decl_stmt|;
 name|uint8_t
 name|data
 index|[]
@@ -1343,6 +1430,64 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Used for CTL_MSG_IID_SYNC.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ctl_ha_msg_iid
+block|{
+name|struct
+name|ctl_ha_msg_hdr
+name|hdr
+decl_stmt|;
+name|int
+name|in_use
+decl_stmt|;
+name|int
+name|name_len
+decl_stmt|;
+name|uint64_t
+name|wwpn
+decl_stmt|;
+name|uint8_t
+name|data
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Used for CTL_MSG_MODE_SYNC.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ctl_ha_msg_mode
+block|{
+name|struct
+name|ctl_ha_msg_hdr
+name|hdr
+decl_stmt|;
+name|uint8_t
+name|page_code
+decl_stmt|;
+name|uint8_t
+name|subpage
+decl_stmt|;
+name|uint16_t
+name|page_len
+decl_stmt|;
+name|uint8_t
+name|data
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_union
 union|union
 name|ctl_ha_msg
@@ -1378,6 +1523,18 @@ decl_stmt|;
 name|struct
 name|ctl_ha_msg_lun
 name|lun
+decl_stmt|;
+name|struct
+name|ctl_ha_msg_iid
+name|iid
+decl_stmt|;
+name|struct
+name|ctl_ha_msg_login
+name|login
+decl_stmt|;
+name|struct
+name|ctl_ha_msg_mode
+name|mode
 decl_stmt|;
 block|}
 union|;
@@ -1479,23 +1636,6 @@ name|union
 name|ctl_io
 modifier|*
 name|io
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ctl_copy_io
-parameter_list|(
-name|union
-name|ctl_io
-modifier|*
-name|src
-parameter_list|,
-name|union
-name|ctl_io
-modifier|*
-name|dest
 parameter_list|)
 function_decl|;
 end_function_decl

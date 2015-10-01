@@ -230,10 +230,6 @@ name|struct
 name|ieee80211vap
 name|ral_vap
 decl_stmt|;
-name|struct
-name|ieee80211_beacon_offsets
-name|ral_bo
-decl_stmt|;
 name|int
 function_decl|(
 modifier|*

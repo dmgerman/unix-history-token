@@ -204,6 +204,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net80211/ieee80211_input.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net80211/ieee80211_regdomain.h>
 end_include
 
@@ -8292,32 +8298,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* unaligned little endian access */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LE_READ_2
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|((uint16_t)				\ 	 ((((const uint8_t *)(p))[0]      ) |	\ 	  (((const uint8_t *)(p))[1]<<  8)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|LE_READ_4
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|((uint32_t)				\ 	 ((((const uint8_t *)(p))[0]      ) |	\ 	  (((const uint8_t *)(p))[1]<<  8) |	\ 	  (((const uint8_t *)(p))[2]<< 16) |	\ 	  (((const uint8_t *)(p))[3]<< 24)))
-end_define
-
-begin_comment
 comment|/*  * Set the multicast filter contents into the hardware.  * XXX f/w has no support; just defer to the os.  */
 end_comment
 
@@ -8664,7 +8644,13 @@ name|iv_bss
 decl_stmt|;
 name|struct
 name|ieee80211_beacon_offsets
+modifier|*
 name|bo
+init|=
+operator|&
+name|vap
+operator|->
+name|iv_bcn_off
 decl_stmt|;
 name|struct
 name|mbuf
@@ -8677,7 +8663,6 @@ name|ieee80211_beacon_alloc
 argument_list|(
 name|ni
 argument_list|,
-operator|&
 name|bo
 argument_list|)
 expr_stmt|;
@@ -12238,14 +12223,6 @@ name|int
 name|npending
 parameter_list|)
 block|{
-define|#
-directive|define
-name|IEEE80211_DIR_DSTODS
-parameter_list|(
-name|wh
-parameter_list|)
-define|\
-value|((((const struct ieee80211_frame *)wh)->i_fc[1]& IEEE80211_FC1_DIR_MASK) == IEEE80211_FC1_DIR_DSTODS)
 name|struct
 name|mwl_softc
 modifier|*
@@ -12814,7 +12791,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|IEEE80211_DIR_DSTODS
+name|IEEE80211_IS_DSTODS
 argument_list|(
 name|wh
 argument_list|)
@@ -13178,9 +13155,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-undef|#
-directive|undef
-name|IEEE80211_DIR_DSTODS
 block|}
 end_function
 
@@ -13333,13 +13307,6 @@ name|int
 name|mvtype
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 name|struct
 name|mwl_txq
 modifier|*
@@ -13349,7 +13316,7 @@ if|if
 condition|(
 name|ac
 operator|>=
-name|N
+name|nitems
 argument_list|(
 name|sc
 operator|->
@@ -13367,7 +13334,7 @@ literal|"AC %u out of range, max %zu!\n"
 argument_list|,
 name|ac
 argument_list|,
-name|N
+name|nitems
 argument_list|(
 name|sc
 operator|->
@@ -13434,9 +13401,6 @@ expr_stmt|;
 return|return
 literal|1
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -14326,14 +14290,6 @@ modifier|*
 name|m0
 parameter_list|)
 block|{
-define|#
-directive|define
-name|IEEE80211_DIR_DSTODS
-parameter_list|(
-name|wh
-parameter_list|)
-define|\
-value|((wh->i_fc[1]& IEEE80211_FC1_DIR_MASK) == IEEE80211_FC1_DIR_DSTODS)
 name|struct
 name|ieee80211com
 modifier|*
@@ -14465,7 +14421,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|IEEE80211_DIR_DSTODS
+name|IEEE80211_IS_DSTODS
 argument_list|(
 name|wh
 argument_list|)
@@ -15504,9 +15460,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-undef|#
-directive|undef
-name|IEEE80211_DIR_DSTODS
 block|}
 end_function
 
@@ -15520,13 +15473,6 @@ name|int
 name|rix
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|x
-parameter_list|)
-value|(sizeof(x)/sizeof(x[0]))
 specifier|static
 specifier|const
 name|int
@@ -15565,7 +15511,7 @@ return|return
 operator|(
 name|rix
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|ieeerates
 argument_list|)
@@ -15578,9 +15524,6 @@ else|:
 literal|0
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

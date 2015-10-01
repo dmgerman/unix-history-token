@@ -551,6 +551,11 @@ name|task
 name|ic_chw_task
 decl_stmt|;
 comment|/* deferred HT CHW update */
+name|struct
+name|task
+name|ic_wme_task
+decl_stmt|;
+comment|/* deferred WME update */
 name|counter_u64_t
 name|ic_ierrors
 decl_stmt|;
@@ -1820,6 +1825,10 @@ name|iv_ampdu_mintraffic
 index|[
 name|WME_NUM_AC
 index|]
+decl_stmt|;
+name|struct
+name|ieee80211_beacon_offsets
+name|iv_bcn_off
 decl_stmt|;
 name|uint32_t
 modifier|*

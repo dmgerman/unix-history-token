@@ -705,14 +705,6 @@ operator|->
 name|req
 argument_list|)
 expr_stmt|;
-comment|/* Release SP if an error occured */
-if|if
-condition|(
-operator|*
-name|error
-operator|!=
-literal|0
-condition|)
 name|KEY_FREESP
 argument_list|(
 operator|&

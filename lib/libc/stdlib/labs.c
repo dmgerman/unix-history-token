@@ -61,11 +61,9 @@ begin_function
 name|long
 name|labs
 parameter_list|(
-name|j
-parameter_list|)
 name|long
 name|j
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(

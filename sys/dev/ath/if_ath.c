@@ -15925,13 +15925,6 @@ name|int
 name|subtype
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 name|struct
 name|ath_hal
 modifier|*
@@ -16037,7 +16030,7 @@ if|if
 condition|(
 name|qnum
 operator|>=
-name|N
+name|nitems
 argument_list|(
 name|sc
 operator|->
@@ -16055,7 +16048,7 @@ literal|"hal qnum %u out of range, max %zu!\n"
 argument_list|,
 name|qnum
 argument_list|,
-name|N
+name|nitems
 argument_list|(
 name|sc
 operator|->
@@ -16118,9 +16111,6 @@ index|[
 name|qnum
 index|]
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -16145,13 +16135,6 @@ name|int
 name|haltype
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 name|struct
 name|ath_txq
 modifier|*
@@ -16161,7 +16144,7 @@ if|if
 condition|(
 name|ac
 operator|>=
-name|N
+name|nitems
 argument_list|(
 name|sc
 operator|->
@@ -16179,7 +16162,7 @@ literal|"AC %u out of range, max %zu!\n"
 argument_list|,
 name|ac
 argument_list|,
-name|N
+name|nitems
 argument_list|(
 name|sc
 operator|->
@@ -16232,9 +16215,6 @@ else|else
 return|return
 literal|0
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -16263,13 +16243,6 @@ parameter_list|(
 name|v
 parameter_list|)
 value|((1<<v)-1)
-define|#
-directive|define
-name|ATH_TXOP_TO_US
-parameter_list|(
-name|v
-parameter_list|)
-value|(v<<5)
 name|struct
 name|ieee80211com
 modifier|*
@@ -16445,7 +16418,7 @@ name|qi
 operator|.
 name|tqi_burstTime
 operator|=
-name|ATH_TXOP_TO_US
+name|IEEE80211_TXOP_TO_US
 argument_list|(
 name|wmep
 operator|->
@@ -16544,9 +16517,6 @@ return|return
 literal|1
 return|;
 block|}
-undef|#
-directive|undef
-name|ATH_TXOP_TO_US
 undef|#
 directive|undef
 name|ATH_EXPONENT_TO_VALUE
@@ -24484,13 +24454,6 @@ name|ieee80211_phymode
 name|mode
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 comment|/* NB: on/off times from the Atheros NDIS driver, w/ permission */
 specifier|static
 specifier|const
@@ -24765,7 +24728,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|sc
 operator|->
@@ -24935,7 +24898,7 @@ literal|0
 init|;
 name|j
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|blinkrates
 argument_list|)
@@ -25058,9 +25021,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* NB: caller is responsible for resetting rate control state */
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

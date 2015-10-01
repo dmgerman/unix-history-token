@@ -14,7 +14,7 @@ name|JEMALLOC_H_TYPES
 end_ifdef
 
 begin_comment
-comment|/*  * This header requires LG_SIZEOF_PTR, LG_TINY_MIN, LG_QUANTUM, and LG_PAGE to  * be defined prior to inclusion, and it in turn defines:  *  *   LG_SIZE_CLASS_GROUP: Lg of size class count for each size doubling.  *   SIZE_CLASSES: Complete table of  *                 SC(index, lg_grp, lg_delta, ndelta, bin, lg_delta_lookup)  *                 tuples.  *     index: Size class index.  *     lg_grp: Lg group base size (no deltas added).  *     lg_delta: Lg delta to previous size class.  *     ndelta: Delta multiplier.  size == 1<<lg_grp + ndelta<<lg_delta  *     bin: 'yes' if a small bin size class, 'no' otherwise.  *     lg_delta_lookup: Same as lg_delta if a lookup table size class, 'no'  *                      otherwise.  *   NTBINS: Number of tiny bins.  *   NLBINS: Number of bins supported by the lookup table.  *   NBINS: Number of small size class bins.  *   NSIZES: Number of size classes.  *   LG_TINY_MAXCLASS: Lg of maximum tiny size class.  *   LOOKUP_MAXCLASS: Maximum size class included in lookup table.  *   SMALL_MAXCLASS: Maximum small size class.  *   LG_LARGE_MINCLASS: Lg of minimum large size class.  */
+comment|/*  * This header requires LG_SIZEOF_PTR, LG_TINY_MIN, LG_QUANTUM, and LG_PAGE to  * be defined prior to inclusion, and it in turn defines:  *  *   LG_SIZE_CLASS_GROUP: Lg of size class count for each size doubling.  *   SIZE_CLASSES: Complete table of  *                 SC(index, lg_grp, lg_delta, ndelta, bin, lg_delta_lookup)  *                 tuples.  *     index: Size class index.  *     lg_grp: Lg group base size (no deltas added).  *     lg_delta: Lg delta to previous size class.  *     ndelta: Delta multiplier.  size == 1<<lg_grp + ndelta<<lg_delta  *     bin: 'yes' if a small bin size class, 'no' otherwise.  *     lg_delta_lookup: Same as lg_delta if a lookup table size class, 'no'  *                      otherwise.  *   NTBINS: Number of tiny bins.  *   NLBINS: Number of bins supported by the lookup table.  *   NBINS: Number of small size class bins.  *   NSIZES: Number of size classes.  *   LG_TINY_MAXCLASS: Lg of maximum tiny size class.  *   LOOKUP_MAXCLASS: Maximum size class included in lookup table.  *   SMALL_MAXCLASS: Maximum small size class.  *   LG_LARGE_MINCLASS: Lg of minimum large size class.  *   HUGE_MAXCLASS: Maximum (huge) size class.  */
 end_comment
 
 begin_define
@@ -112,6 +112,13 @@ name|LG_LARGE_MINCLASS
 value|14
 end_define
 
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 31) + (((size_t)3)<< 29))
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -203,6 +210,13 @@ define|#
 directive|define
 name|LG_LARGE_MINCLASS
 value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 31) + (((size_t)3)<< 29))
 end_define
 
 begin_endif
@@ -298,6 +312,13 @@ name|LG_LARGE_MINCLASS
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 31) + (((size_t)3)<< 29))
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -389,6 +410,13 @@ define|#
 directive|define
 name|LG_LARGE_MINCLASS
 value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 31) + (((size_t)3)<< 29))
 end_define
 
 begin_endif
@@ -484,6 +512,13 @@ name|LG_LARGE_MINCLASS
 value|14
 end_define
 
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 31) + (((size_t)3)<< 29))
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -575,6 +610,13 @@ define|#
 directive|define
 name|LG_LARGE_MINCLASS
 value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 31) + (((size_t)3)<< 29))
 end_define
 
 begin_endif
@@ -670,6 +712,13 @@ name|LG_LARGE_MINCLASS
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 31) + (((size_t)3)<< 29))
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -761,6 +810,13 @@ define|#
 directive|define
 name|LG_LARGE_MINCLASS
 value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 31) + (((size_t)3)<< 29))
 end_define
 
 begin_endif
@@ -856,6 +912,13 @@ name|LG_LARGE_MINCLASS
 value|14
 end_define
 
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 31) + (((size_t)3)<< 29))
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -947,6 +1010,13 @@ define|#
 directive|define
 name|LG_LARGE_MINCLASS
 value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 31) + (((size_t)3)<< 29))
 end_define
 
 begin_endif
@@ -1042,6 +1112,13 @@ name|LG_LARGE_MINCLASS
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 31) + (((size_t)3)<< 29))
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1133,6 +1210,13 @@ define|#
 directive|define
 name|LG_LARGE_MINCLASS
 value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 31) + (((size_t)3)<< 29))
 end_define
 
 begin_endif
@@ -1228,6 +1312,13 @@ name|LG_LARGE_MINCLASS
 value|14
 end_define
 
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 63) + (((size_t)3)<< 61))
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1319,6 +1410,13 @@ define|#
 directive|define
 name|LG_LARGE_MINCLASS
 value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 63) + (((size_t)3)<< 61))
 end_define
 
 begin_endif
@@ -1414,6 +1512,13 @@ name|LG_LARGE_MINCLASS
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 63) + (((size_t)3)<< 61))
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1505,6 +1610,13 @@ define|#
 directive|define
 name|LG_LARGE_MINCLASS
 value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 63) + (((size_t)3)<< 61))
 end_define
 
 begin_endif
@@ -1600,6 +1712,13 @@ name|LG_LARGE_MINCLASS
 value|14
 end_define
 
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 63) + (((size_t)3)<< 61))
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1691,6 +1810,13 @@ define|#
 directive|define
 name|LG_LARGE_MINCLASS
 value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 63) + (((size_t)3)<< 61))
 end_define
 
 begin_endif
@@ -1786,6 +1912,13 @@ name|LG_LARGE_MINCLASS
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 63) + (((size_t)3)<< 61))
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1877,6 +2010,13 @@ define|#
 directive|define
 name|LG_LARGE_MINCLASS
 value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 63) + (((size_t)3)<< 61))
 end_define
 
 begin_endif
@@ -1972,6 +2112,13 @@ name|LG_LARGE_MINCLASS
 value|14
 end_define
 
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 63) + (((size_t)3)<< 61))
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -2063,6 +2210,13 @@ define|#
 directive|define
 name|LG_LARGE_MINCLASS
 value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 63) + (((size_t)3)<< 61))
 end_define
 
 begin_endif
@@ -2158,6 +2312,13 @@ name|LG_LARGE_MINCLASS
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 63) + (((size_t)3)<< 61))
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -2249,6 +2410,13 @@ define|#
 directive|define
 name|LG_LARGE_MINCLASS
 value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|HUGE_MAXCLASS
+value|((((size_t)1)<< 63) + (((size_t)3)<< 61))
 end_define
 
 begin_endif

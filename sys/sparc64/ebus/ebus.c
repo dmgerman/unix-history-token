@@ -1146,11 +1146,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: could not get ranges property\n"
+name|dev
 argument_list|,
-name|__func__
+literal|"could not get ranges property\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1197,6 +1197,11 @@ name|struct
 name|resource
 modifier|*
 name|res
+decl_stmt|;
+name|struct
+name|isa_ranges
+modifier|*
+name|range
 decl_stmt|;
 name|phandle_t
 name|node
@@ -1310,11 +1315,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: could not get ranges property\n"
+name|dev
 argument_list|,
-name|__func__
+literal|"could not get ranges property\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1375,12 +1380,8 @@ index|[
 name|rnum
 index|]
 expr_stmt|;
-name|eri
-operator|->
-name|eri_rtype
+name|range
 operator|=
-name|ofw_isa_range_restype
-argument_list|(
 operator|&
 operator|(
 operator|(
@@ -1395,6 +1396,14 @@ operator|)
 index|[
 name|rnum
 index|]
+expr_stmt|;
+name|eri
+operator|->
+name|eri_rtype
+operator|=
+name|ofw_isa_range_restype
+argument_list|(
+name|range
 argument_list|)
 expr_stmt|;
 name|rid
@@ -1427,11 +1436,83 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: failed to allocate range resource!\n"
+name|dev
 argument_list|,
-name|__func__
+literal|"could not allocate range resource %d\n"
+argument_list|,
+name|rnum
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+if|if
+condition|(
+name|rman_get_start
+argument_list|(
+name|res
+argument_list|)
+operator|!=
+name|ISA_RANGE_PHYS
+argument_list|(
+name|range
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"mismatch in start of range %d (0x%lx/0x%lx)\n"
+argument_list|,
+name|rnum
+argument_list|,
+name|rman_get_start
+argument_list|(
+name|res
+argument_list|)
+argument_list|,
+name|ISA_RANGE_PHYS
+argument_list|(
+name|range
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+if|if
+condition|(
+name|rman_get_size
+argument_list|(
+name|res
+argument_list|)
+operator|!=
+name|range
+operator|->
+name|size
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"mismatch in size of range %d (0x%lx/0x%x)\n"
+argument_list|,
+name|rnum
+argument_list|,
+name|rman_get_size
+argument_list|(
+name|res
+argument_list|)
+argument_list|,
+name|range
+operator|->
+name|size
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1475,11 +1556,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: failed to initialize rman!"
+name|dev
 argument_list|,
-name|__func__
+literal|"could not initialize rman for range %d"
+argument_list|,
+name|rnum
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2069,9 +2152,8 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Map EBus ranges to PCI ranges.  This may include 			 * changing the allocation type. 			 */
-operator|(
-name|void
-operator|)
+name|type
+operator|=
 name|ofw_isa_range_map
 argument_list|(
 name|sc
@@ -2429,8 +2511,8 @@ operator|!=
 literal|0
 operator|&&
 name|type
-operator|==
-name|SYS_RES_MEMORY
+operator|!=
+name|SYS_RES_IRQ
 condition|)
 block|{
 for|for
@@ -2700,8 +2782,8 @@ operator|!=
 literal|0
 operator|&&
 name|type
-operator|==
-name|SYS_RES_MEMORY
+operator|!=
+name|SYS_RES_IRQ
 condition|)
 block|{
 if|if

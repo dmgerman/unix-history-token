@@ -163,7 +163,7 @@ file|<strings.h>
 define|#
 directive|define
 name|JEMALLOC_VERSION
-value|"4.0.0-0-g6e98caf8f064482b9ab292ef3638dea67420bbc2"
+value|"4.0.2-0-g486d249fb4715fd3de679b6c2a04f7e657883111"
 define|#
 directive|define
 name|JEMALLOC_VERSION_MAJOR
@@ -175,7 +175,7 @@ value|0
 define|#
 directive|define
 name|JEMALLOC_VERSION_BUGFIX
-value|0
+value|2
 define|#
 directive|define
 name|JEMALLOC_VERSION_NREV
@@ -183,7 +183,7 @@ value|0
 define|#
 directive|define
 name|JEMALLOC_VERSION_GID
-value|"6e98caf8f064482b9ab292ef3638dea67420bbc2"
+value|"486d249fb4715fd3de679b6c2a04f7e657883111"
 define|#
 directive|define
 name|MALLOCX_LG_ALIGN
@@ -993,7 +993,7 @@ directive|ifdef
 name|JEMALLOC_OVERRIDE_MEMALIGN
 end_ifdef
 
-begin_function_decl
+begin_decl_stmt
 name|JEMALLOC_EXPORT
 name|JEMALLOC_ALLOCATOR
 name|JEMALLOC_RESTRICT_RETURN
@@ -1001,19 +1001,20 @@ name|void
 name|JEMALLOC_NOTHROW
 modifier|*
 name|je_memalign
-parameter_list|(
+argument_list|(
 name|size_t
 name|alignment
-parameter_list|,
+argument_list|,
 name|size_t
 name|size
-parameter_list|)
-function_decl|JEMALLOC_ATTR
-parameter_list|(
+argument_list|)
+name|JEMALLOC_CXX_THROW
+name|JEMALLOC_ATTR
+argument_list|(
 name|malloc
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

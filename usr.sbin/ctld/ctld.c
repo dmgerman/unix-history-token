@@ -5803,7 +5803,7 @@ block|{
 name|log_warnx
 argument_list|(
 literal|"invalid target name \"%s\"; should start with "
-literal|"either \".iqn\", \"eui.\", or \"naa.\""
+literal|"either \"iqn.\", \"eui.\", or \"naa.\""
 argument_list|,
 name|name
 argument_list|)
@@ -7172,6 +7172,13 @@ argument_list|,
 name|l_next
 argument_list|)
 expr_stmt|;
+name|lun
+operator|->
+name|l_ctl_lun
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|lun
@@ -7439,6 +7446,28 @@ block|{
 name|lun
 operator|->
 name|l_blocksize
+operator|=
+name|value
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|lun_set_device_type
+parameter_list|(
+name|struct
+name|lun
+modifier|*
+name|lun
+parameter_list|,
+name|uint8_t
+name|value
+parameter_list|)
+block|{
+name|lun
+operator|->
+name|l_device_type
 operator|=
 name|value
 expr_stmt|;
@@ -9906,6 +9935,8 @@ operator|=
 name|kernel_port_update
 argument_list|(
 name|newport
+argument_list|,
+name|oldport
 argument_list|)
 expr_stmt|;
 block|}

@@ -168,11 +168,9 @@ begin_function
 name|long
 name|sysconf
 parameter_list|(
-name|name
-parameter_list|)
 name|int
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|rlimit

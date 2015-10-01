@@ -2128,6 +2128,13 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|key_addref
+argument_list|(
+name|isr
+operator|->
+name|sp
+argument_list|)
+expr_stmt|;
 name|tc
 operator|->
 name|tc_isr

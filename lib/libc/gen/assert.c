@@ -73,39 +73,24 @@ begin_function
 name|void
 name|__assert
 parameter_list|(
-name|func
-parameter_list|,
-name|file
-parameter_list|,
-name|line
-parameter_list|,
-name|failedexpr
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|func
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|file
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|line
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|failedexpr
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -153,7 +138,7 @@ argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 end_unit
 

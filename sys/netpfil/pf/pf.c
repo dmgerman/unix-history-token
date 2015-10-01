@@ -34491,7 +34491,7 @@ name|ifp
 operator|->
 name|if_mtu
 condition|)
-name|nd6_output
+name|nd6_output_ifp
 argument_list|(
 name|ifp
 argument_list|,
@@ -34501,8 +34501,6 @@ name|m0
 argument_list|,
 operator|&
 name|dst
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 else|else

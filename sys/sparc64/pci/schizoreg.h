@@ -29,13 +29,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|STX_NRANGE
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCZ_NREG
 value|3
 end_define
@@ -1572,7 +1565,7 @@ value|0x00000000000001ffULL
 end_define
 
 begin_comment
-comment|/*  * Safari/JBus performance control register  * NB: for Tomatillo only events 0x00 through 0x08 are documented as  * implemented.  */
+comment|/*  * Safari/JBus performance control register  * NB: For Tomatillo only events 0x00 through 0x08 are documented as  * implemented.  */
 end_comment
 
 begin_define
@@ -1979,7 +1972,7 @@ comment|/* Non-Standard registers in the configration space */
 end_comment
 
 begin_comment
-comment|/*  * NB: for Tomatillo the secondary and subordinate bus number registers  * apparently are read-only although documented otherwise; writing to  * them just triggers a PCI bus error interrupt or has no effect at best.  */
+comment|/*  * NB: For Tomatillo the secondary and subordinate bus number registers  * apparently are read-only although documented otherwise; writing to  * them just triggers a PCI bus error interrupt or has no effect at best.  */
 end_comment
 
 begin_define

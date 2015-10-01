@@ -1073,7 +1073,7 @@ name|hipc
 condition|)
 continue|continue;
 block|}
-if|if
+switch|switch
 condition|(
 name|dwarf_srclines
 argument_list|(
@@ -1088,10 +1088,18 @@ argument_list|,
 operator|&
 name|de
 argument_list|)
-operator|!=
-name|DW_DLV_OK
 condition|)
 block|{
+case|case
+name|DW_DLV_OK
+case|:
+break|break;
+case|case
+name|DW_DLV_NO_ENTRY
+case|:
+comment|/* If one CU lacks debug info, just skip it. */
+continue|continue;
+default|default:
 name|warnx
 argument_list|(
 literal|"dwarf_srclines: %s"

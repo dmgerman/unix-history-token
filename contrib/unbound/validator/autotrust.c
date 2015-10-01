@@ -112,31 +112,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/sbuffer.h"
+file|"sldns/sbuffer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/wire2str.h"
+file|"sldns/wire2str.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/str2wire.h"
+file|"sldns/str2wire.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/keyraw.h"
+file|"sldns/keyraw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/rrdef.h"
+file|"sldns/rrdef.h"
 end_include
 
 begin_include
@@ -6481,7 +6481,7 @@ operator|!
 name|out
 condition|)
 block|{
-name|log_err
+name|fatal_exit
 argument_list|(
 literal|"could not open autotrust file for writing, %s: %s"
 argument_list|,
@@ -6519,7 +6519,7 @@ argument_list|(
 name|tempf
 argument_list|)
 expr_stmt|;
-name|log_err
+name|fatal_exit
 argument_list|(
 literal|"could not completely write: %s"
 argument_list|,
@@ -6538,7 +6538,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log_err
+name|fatal_exit
 argument_list|(
 literal|"could not complete write: %s: %s"
 argument_list|,
@@ -6593,7 +6593,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log_err
+name|fatal_exit
 argument_list|(
 literal|"rename(%s to %s): %s"
 argument_list|,

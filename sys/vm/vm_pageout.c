@@ -6007,7 +6007,7 @@ condition|(
 name|vm_pages_needed
 condition|)
 block|{
-comment|/* 			 * Still not done, take a second pass without waiting 			 * (unlimited dirty cleaning), otherwise sleep a bit 			 * and try again. 			 */
+comment|/* 			 * We're still not done.  Either vm_pages_needed was 			 * set by another thread during the previous scan 			 * (typically, this happens during a level 0 scan) or 			 * vm_pages_needed was already set and the scan failed 			 * to free enough pages.  If we haven't yet performed 			 * a level>= 2 scan (unlimited dirty cleaning), then 			 * upgrade the level and scan again now.  Otherwise, 			 * sleep a bit and try again later.  While sleeping, 			 * vm_pages_needed can be cleared. 			 */
 if|if
 condition|(
 name|domain
@@ -6037,12 +6037,6 @@ block|}
 else|else
 block|{
 comment|/* 			 * Good enough, sleep until required to refresh 			 * stats. 			 */
-name|domain
-operator|->
-name|vmd_pass
-operator|=
-literal|0
-expr_stmt|;
 name|msleep
 argument_list|(
 operator|&
@@ -6075,6 +6069,13 @@ name|vmd_pass
 operator|++
 expr_stmt|;
 block|}
+else|else
+name|domain
+operator|->
+name|vmd_pass
+operator|=
+literal|0
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&

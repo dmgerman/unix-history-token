@@ -76,25 +76,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/keyraw.h"
+file|"sldns/keyraw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/sbuffer.h"
+file|"sldns/sbuffer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/parseutil.h"
+file|"sldns/parseutil.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/wire2str.h"
+file|"sldns/wire2str.h"
 end_include
 
 begin_include
@@ -5210,6 +5210,24 @@ operator|&
 name|canonical_tree_compare
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|d1
+operator|->
+name|count
+operator|>
+name|RR_COUNT_MAX
+operator|||
+name|d2
+operator|->
+name|count
+operator|>
+name|RR_COUNT_MAX
+condition|)
+return|return
+literal|1
+return|;
+comment|/* protection against integer overflow */
 name|rrs1
 operator|=
 name|regional_alloc
@@ -5560,6 +5578,18 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|d
+operator|->
+name|count
+operator|>
+name|RR_COUNT_MAX
+condition|)
+return|return
+literal|0
+return|;
+comment|/* integer overflow protection */
 name|rrs
 operator|=
 name|regional_alloc
