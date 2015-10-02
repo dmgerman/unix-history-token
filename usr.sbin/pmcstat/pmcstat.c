@@ -3983,7 +3983,7 @@ literal|"ERROR: options -T and -l are mutually "
 literal|"exclusive."
 argument_list|)
 expr_stmt|;
-comment|/* -m option is allowed with -R only. */
+comment|/* -m requires -R */
 if|if
 condition|(
 name|args
