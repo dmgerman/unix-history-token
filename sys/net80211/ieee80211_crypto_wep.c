@@ -768,7 +768,7 @@ index|]
 operator|=
 name|keyid
 expr_stmt|;
-comment|/* 	 * Finally, do software encrypt if neeed. 	 */
+comment|/* 	 * Finally, do software encrypt if needed. 	 */
 if|if
 condition|(
 operator|(
