@@ -152,9 +152,6 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-parameter_list|,
-name|uint8_t
-name|keyid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -548,9 +545,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|uint8_t
-name|keyid
 parameter_list|)
 block|{
 name|struct
@@ -561,6 +555,15 @@ init|=
 name|k
 operator|->
 name|wk_private
+decl_stmt|;
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+init|=
+name|ctx
+operator|->
+name|wc_vap
 decl_stmt|;
 name|struct
 name|ieee80211com
@@ -577,6 +580,9 @@ decl_stmt|;
 name|uint8_t
 modifier|*
 name|ivp
+decl_stmt|;
+name|uint8_t
+name|keyid
 decl_stmt|;
 name|int
 name|hdrlen
@@ -643,6 +649,17 @@ expr_stmt|;
 name|ivp
 operator|+=
 name|hdrlen
+expr_stmt|;
+name|keyid
+operator|=
+name|ieee80211_crypto_get_keyid
+argument_list|(
+name|vap
+argument_list|,
+name|k
+argument_list|)
+operator|<<
+literal|6
 expr_stmt|;
 comment|/* 	 * XXX 	 * IV must not duplicate during the lifetime of the key. 	 * But no mechanism to renew keys is defined in IEEE 802.11 	 * for WEP.  And the IV may be duplicated at other stations 	 * because the session key itself is shared.  So we use a 	 * pseudo random IV for now, though it is not the right way. 	 * 	 * NB: Rather than use a strictly random IV we select a 	 * random one to start and then increment the value for 	 * each frame.  This is an explicit tradeoff between 	 * overhead and security.  Given the basic insecurity of 	 * WEP this seems worthwhile. 	 */
 comment|/* 	 * Skip 'bad' IVs from Fluhrer/Mantin/Shamir: 	 * (B, 255, N) with 3<= B< 16 and 0<= N<= 255 	 */

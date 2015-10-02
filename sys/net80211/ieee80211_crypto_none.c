@@ -140,8 +140,6 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-parameter_list|,
-name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -349,9 +347,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|uint8_t
-name|keyid
 parameter_list|)
 block|{
 name|struct
@@ -382,6 +377,18 @@ argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
+name|uint8_t
+name|keyid
+decl_stmt|;
+name|keyid
+operator|=
+name|ieee80211_crypto_get_keyid
+argument_list|(
+name|vap
+argument_list|,
+name|k
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The specified key is not setup; this can 	 * happen, at least, when changing keys. 	 */
 name|IEEE80211_NOTE_MAC
 argument_list|(
@@ -396,8 +403,6 @@ argument_list|,
 literal|"key id %u is not set (encap)"
 argument_list|,
 name|keyid
-operator|>>
-literal|6
 argument_list|)
 expr_stmt|;
 name|vap
