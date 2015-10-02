@@ -1358,6 +1358,8 @@ condition|?
 name|TOLOG
 else|:
 name|TOCONS
+operator||
+name|TOLOG
 argument_list|,
 name|fmt
 argument_list|,
