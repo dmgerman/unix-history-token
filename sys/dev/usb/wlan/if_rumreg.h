@@ -651,35 +651,59 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RT2573_TSF_TICKING
+name|RT2573_TSF_TIMER_EN
 value|(1<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RT2573_TSF_MODE
+name|RT2573_TSF_SYNC_MODE
 parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x3)<< 17)
 end_define
 
-begin_comment
-comment|/* TBTT stands for Target Beacon Transmission Time */
-end_comment
+begin_define
+define|#
+directive|define
+name|RT2573_TSF_SYNC_MODE_DIS
+value|0
+end_define
 
 begin_define
 define|#
 directive|define
-name|RT2573_ENABLE_TBTT
+name|RT2573_TSF_SYNC_MODE_STA
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_TSF_SYNC_MODE_IBSS
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_TSF_SYNC_MODE_HOSTAP
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_TBTT_TIMER_EN
 value|(1<< 19)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RT2573_GENERATE_BEACON
+name|RT2573_BCN_TX_EN
 value|(1<< 20)
 end_define
 
