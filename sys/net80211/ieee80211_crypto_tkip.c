@@ -940,7 +940,7 @@ operator|>>
 literal|40
 expr_stmt|;
 comment|/* TSC5 */
-comment|/* 	 * Finally, do software encrypt if neeed. 	 */
+comment|/* 	 * Finally, do software encrypt if needed. 	 */
 if|if
 condition|(
 name|k

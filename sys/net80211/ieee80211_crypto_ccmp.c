@@ -800,7 +800,7 @@ operator|>>
 literal|40
 expr_stmt|;
 comment|/* PN5 */
-comment|/* 	 * Finally, do software encrypt if neeed. 	 */
+comment|/* 	 * Finally, do software encrypt if needed. 	 */
 if|if
 condition|(
 operator|(

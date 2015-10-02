@@ -3109,24 +3109,6 @@ name|m
 return|;
 block|}
 comment|/* 	 * If there is no frame to combine with and the pps is 	 * too low; then do not attempt to aggregate this frame. 	 */
-name|IEEE80211_DPRINTF
-argument_list|(
-name|vap
-argument_list|,
-name|IEEE80211_MSG_SUPERG
-argument_list|,
-literal|"%s: staged: %p; pps: %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|mstaged
-argument_list|,
-name|ieee80211_txampdu_getpps
-argument_list|(
-name|tap
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mstaged

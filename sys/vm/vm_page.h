@@ -1643,6 +1643,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vm_page_deactivate_noreuse
+parameter_list|(
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vm_page_dequeue
 parameter_list|(
 name|vm_page_t

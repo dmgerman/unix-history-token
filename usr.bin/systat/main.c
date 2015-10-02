@@ -866,11 +866,11 @@ name|kd
 operator|=
 name|kvm_openfiles
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 name|O_RDONLY
 argument_list|,

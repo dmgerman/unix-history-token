@@ -27703,6 +27703,11 @@ argument_list|(
 name|IWN_EDCA_UPDATE
 argument_list|)
 expr_stmt|;
+name|IEEE80211_LOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|aci
@@ -27837,11 +27842,6 @@ expr_stmt|;
 name|IWN_UNLOCK
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|IEEE80211_LOCK
-argument_list|(
-name|ic
 argument_list|)
 expr_stmt|;
 name|DPRINTF

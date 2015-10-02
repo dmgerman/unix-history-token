@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003, 2004, 2005, 2009 Silicon Graphics International Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_cmd_table.c#4 $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003, 2004, 2005, 2009 Silicon Graphics International Corp.  * Copyright (c) 2014-2015 Alexander Motin<mav@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_cmd_table.c#4 $  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -143,9 +143,7 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -188,9 +186,7 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -233,9 +229,7 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -278,9 +272,7 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -342,9 +334,7 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -387,9 +377,7 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -432,9 +420,7 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -477,9 +463,7 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -522,9 +506,7 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -567,9 +549,7 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -612,9 +592,7 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -685,6 +663,8 @@ name|CTL_SERIDX_RD_CAP
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
+operator||
 name|CTL_FLAG_DATA_OUT
 block|,
 name|CTL_LUN_PAT_NONE
@@ -731,6 +711,8 @@ block|,
 name|CTL_SERIDX_RD_CAP
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
+operator||
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_FLAG_DATA_OUT
 block|,
@@ -1139,6 +1121,8 @@ name|CTL_SERIDX_RD_CAP
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
+operator||
 name|CTL_FLAG_DATA_NONE
 block|,
 name|CTL_LUN_PAT_NONE
@@ -1202,6 +1186,8 @@ block|,
 name|CTL_SERIDX_RD_CAP
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
+operator||
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_FLAG_DATA_IN
 operator||
@@ -1274,9 +1260,7 @@ name|CTL_SERIDX_RD_CAP
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -1329,6 +1313,8 @@ name|CTL_SERIDX_RD_CAP
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
+operator||
 name|CTL_FLAG_DATA_IN
 operator||
 name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
@@ -1377,6 +1363,8 @@ block|,
 name|CTL_SERIDX_RD_CAP
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
+operator||
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_FLAG_DATA_IN
 operator||
@@ -1438,6 +1426,8 @@ name|CTL_SERIDX_RD_CAP
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
+operator||
 name|CTL_FLAG_DATA_IN
 operator||
 name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
@@ -1486,6 +1476,8 @@ block|,
 name|CTL_SERIDX_RD_CAP
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
+operator||
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_FLAG_DATA_IN
 operator||
@@ -1729,10 +1721,6 @@ name|CTL_SERIDX_RD_CAP
 block|,
 name|CTL_CMD_FLAG_OK_ON_DIRECT
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
-operator||
 name|CTL_FLAG_DATA_IN
 operator||
 name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
@@ -1973,9 +1961,7 @@ name|CTL_SERIDX_INQ
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -2033,9 +2019,7 @@ name|CTL_SERIDX_INQ
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -2082,9 +2066,7 @@ name|CTL_SERIDX_INQ
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -2142,9 +2124,7 @@ name|CTL_SERIDX_INQ
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -2265,9 +2245,7 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
 name|CTL_CMD_FLAG_NO_SENSE
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -2301,8 +2279,6 @@ block|,
 name|CTL_SERIDX_FORMAT
 block|,
 name|CTL_CMD_FLAG_OK_ON_DIRECT
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
 operator||
 name|CTL_FLAG_DATA_OUT
 block|,
@@ -2518,9 +2494,7 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
 name|CTL_CMD_FLAG_NO_SENSE
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -2577,9 +2551,7 @@ name|CTL_SERIDX_MD_SEL
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -2612,9 +2584,7 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -2647,9 +2617,7 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -2702,9 +2670,7 @@ name|CTL_SERIDX_MD_SNS
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -2739,9 +2705,7 @@ name|CTL_CMD_FLAG_OK_ON_DIRECT
 operator||
 name|CTL_CMD_FLAG_OK_ON_CDROM
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_FLAG_DATA_NONE
 operator||
@@ -2756,9 +2720,9 @@ literal|0x01
 block|,
 literal|0
 block|,
-literal|0
+literal|0x0f
 block|,
-literal|0x03
+literal|0xf7
 block|,
 literal|0x07
 block|}
@@ -2796,9 +2760,7 @@ name|CTL_CMD_FLAG_OK_ON_DIRECT
 operator||
 name|CTL_CMD_FLAG_OK_ON_CDROM
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_FLAG_DATA_NONE
 block|,
@@ -2894,10 +2856,6 @@ block|,
 name|CTL_CMD_FLAG_OK_ON_DIRECT
 operator||
 name|CTL_CMD_FLAG_OK_ON_CDROM
-operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
 operator||
 name|CTL_FLAG_DATA_IN
 operator||
@@ -3218,7 +3176,7 @@ block|,
 literal|10
 block|,
 block|{
-literal|0x02
+literal|0x06
 block|,
 literal|0xff
 block|,
@@ -3327,9 +3285,7 @@ name|CTL_SERIDX_MD_SEL
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -3368,9 +3324,7 @@ name|CTL_SERIDX_MD_SNS
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -3586,7 +3540,7 @@ name|CTL_SERIDX_INQ
 block|,
 name|CTL_CMD_FLAG_OK_ON_CDROM
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 operator||
@@ -3658,9 +3612,7 @@ name|CTL_SERIDX_RD_CAP
 block|,
 name|CTL_CMD_FLAG_OK_ON_CDROM
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 operator||
@@ -3721,9 +3673,7 @@ name|CTL_SERIDX_LOG_SNS
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -3841,9 +3791,7 @@ name|CTL_SERIDX_MD_SEL
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -3884,9 +3832,7 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -3927,9 +3873,7 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -3990,9 +3934,7 @@ name|CTL_SERIDX_MD_SNS
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -4852,7 +4794,7 @@ block|,
 literal|16
 block|,
 block|{
-literal|0x02
+literal|0x06
 block|,
 literal|0xff
 block|,
@@ -5029,9 +4971,7 @@ name|CTL_SERIDX_MD_SNS
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -5180,9 +5120,7 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
 name|CTL_CMD_FLAG_NO_SENSE
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_OK_ON_STANDBY
 operator||
@@ -5699,9 +5637,7 @@ name|CTL_SERIDX_RD_CAP
 block|,
 name|CTL_CMD_FLAG_OK_ON_CDROM
 operator||
-name|CTL_CMD_FLAG_OK_ON_STOPPED
-operator||
-name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+name|CTL_CMD_FLAG_OK_ON_NO_MEDIA
 operator||
 name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 operator||

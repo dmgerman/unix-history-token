@@ -9609,6 +9609,28 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Move the specified page to the inactive queue with the expectation  * that it is unlikely to be reused.  *  * The page must be locked.  */
+end_comment
+
+begin_function
+name|void
+name|vm_page_deactivate_noreuse
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+name|_vm_page_deactivate
+argument_list|(
+name|m
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * vm_page_try_to_cache:  *  * Returns 0 on failure, 1 on success  */
 end_comment
 
@@ -10198,7 +10220,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*  * vm_page_advise  *  * 	Deactivate or do nothing, as appropriate.  This routine is used  * 	by madvise() and vop_stdadvise().  *  *	The object and page must be locked.  */
+comment|/*  * vm_page_advise  *  * 	Deactivate or do nothing, as appropriate.  *  *	The object and page must be locked.  */
 name|void
 name|vm_page_advise
 parameter_list|(
