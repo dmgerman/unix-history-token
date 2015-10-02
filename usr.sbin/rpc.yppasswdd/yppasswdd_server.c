@@ -969,6 +969,9 @@ comment|/* 	 * Don't allow the user to shoot himself in the foot, 	 * even on pu
 if|if
 condition|(
 operator|!
+name|no_chsh
+operator|&&
+operator|!
 name|ok_shell
 argument_list|(
 name|npw
@@ -994,6 +997,9 @@ return|;
 block|}
 if|if
 condition|(
+operator|!
+name|no_chsh
+operator|&&
 name|validchars
 argument_list|(
 name|npw
