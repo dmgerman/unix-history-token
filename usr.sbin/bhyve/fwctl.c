@@ -2041,7 +2041,7 @@ name|fwctl_rreg
 argument_list|,
 name|FWCTL_IN
 argument_list|,
-name|IOPORT_F_OUT
+name|IOPORT_F_IN
 argument_list|,
 name|fwctl_handler
 argument_list|)
