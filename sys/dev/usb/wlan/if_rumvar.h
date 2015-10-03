@@ -174,6 +174,13 @@ name|struct
 name|ieee80211_key
 name|key
 decl_stmt|;
+name|struct
+name|wmeParams
+name|wme_params
+index|[
+name|WME_NUM_AC
+index|]
+decl_stmt|;
 name|uint8_t
 name|macaddr
 index|[
@@ -402,6 +409,13 @@ name|uint8_t
 name|sc_bssid
 index|[
 name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|struct
+name|wmeParams
+name|wme_params
+index|[
+name|WME_NUM_AC
 index|]
 decl_stmt|;
 name|uint8_t
