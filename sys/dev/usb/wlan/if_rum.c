@@ -5097,9 +5097,9 @@ argument_list|)
 expr_stmt|;
 name|IEEE80211_ADDR_COPY
 argument_list|(
-name|ic
+name|sc
 operator|->
-name|ic_macaddr
+name|sc_bssid
 argument_list|,
 name|ni
 operator|->
@@ -5110,9 +5110,9 @@ name|rum_set_bssid
 argument_list|(
 name|sc
 argument_list|,
-name|ic
+name|sc
 operator|->
-name|ic_macaddr
+name|sc_bssid
 argument_list|)
 expr_stmt|;
 block|}
@@ -13303,9 +13303,9 @@ name|rum_set_bssid
 argument_list|(
 name|sc
 argument_list|,
-name|ic
+name|sc
 operator|->
-name|ic_macaddr
+name|sc_bssid
 argument_list|)
 expr_stmt|;
 name|RUM_UNLOCK
