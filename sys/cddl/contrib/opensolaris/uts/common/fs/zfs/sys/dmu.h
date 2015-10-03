@@ -1583,6 +1583,7 @@ function_decl|;
 else|#
 directive|else
 comment|/* __lint */
+specifier|static
 specifier|inline
 name|void
 name|dmu_buf_init_user

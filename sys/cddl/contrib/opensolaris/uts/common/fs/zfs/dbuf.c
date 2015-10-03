@@ -167,43 +167,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__lint
-end_ifndef
-
-begin_function_decl
-specifier|extern
-specifier|inline
-name|void
-name|dmu_buf_init_user
-parameter_list|(
-name|dmu_buf_user_t
-modifier|*
-name|dbu
-parameter_list|,
-name|dmu_buf_evict_func_t
-modifier|*
-name|evict_func
-parameter_list|,
-name|dmu_buf_t
-modifier|*
-modifier|*
-name|clear_on_evict_dbufp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! __lint */
-end_comment
-
 begin_comment
 comment|/*  * Global data structures and functions for the dbuf cache.  */
 end_comment
