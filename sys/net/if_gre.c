@@ -3040,9 +3040,7 @@ name|sc
 operator|->
 name|gre_family
 operator|!=
-name|src
-operator|->
-name|sa_family
+literal|0
 condition|)
 name|gre_detach
 argument_list|(
