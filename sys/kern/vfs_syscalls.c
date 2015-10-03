@@ -23297,13 +23297,8 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
-name|td
-operator|->
-name|td_retval
-index|[
-literal|0
-index|]
-operator|=
+return|return
+operator|(
 name|kern_posix_fadvise
 argument_list|(
 name|td
@@ -23324,10 +23319,6 @@ name|uap
 operator|->
 name|advice
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
