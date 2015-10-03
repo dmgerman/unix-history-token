@@ -4184,11 +4184,6 @@ operator|=
 name|ieee80211_beacon_alloc
 argument_list|(
 name|ni
-argument_list|,
-operator|&
-name|vap
-operator|->
-name|iv_bcn_off
 argument_list|)
 expr_stmt|;
 if|if

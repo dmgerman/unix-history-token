@@ -8694,16 +8694,6 @@ operator|->
 name|iv_bss
 decl_stmt|;
 name|struct
-name|ieee80211_beacon_offsets
-modifier|*
-name|bo
-init|=
-operator|&
-name|vap
-operator|->
-name|iv_bcn_off
-decl_stmt|;
-name|struct
 name|mbuf
 modifier|*
 name|m
@@ -8713,8 +8703,6 @@ operator|=
 name|ieee80211_beacon_alloc
 argument_list|(
 name|ni
-argument_list|,
-name|bo
 argument_list|)
 expr_stmt|;
 if|if

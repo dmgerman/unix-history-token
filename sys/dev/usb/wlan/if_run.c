@@ -28516,8 +28516,6 @@ operator|=
 name|ieee80211_beacon_alloc
 argument_list|(
 name|ni
-argument_list|,
-name|bo
 argument_list|)
 expr_stmt|;
 if|if
@@ -28533,8 +28531,6 @@ block|}
 name|ieee80211_beacon_update
 argument_list|(
 name|ni
-argument_list|,
-name|bo
 argument_list|,
 name|rvp
 operator|->
@@ -28700,11 +28696,6 @@ operator|=
 name|ieee80211_beacon_alloc
 argument_list|(
 name|ni
-argument_list|,
-operator|&
-name|vap
-operator|->
-name|iv_bcn_off
 argument_list|)
 expr_stmt|;
 if|if

@@ -22981,16 +22981,6 @@ operator|->
 name|ni_vap
 decl_stmt|;
 name|struct
-name|ieee80211_beacon_offsets
-modifier|*
-name|bo
-init|=
-operator|&
-name|vap
-operator|->
-name|iv_bcn_off
-decl_stmt|;
-name|struct
 name|wpi_vap
 modifier|*
 name|wvp
@@ -23045,8 +23035,6 @@ operator|=
 name|ieee80211_beacon_alloc
 argument_list|(
 name|ni
-argument_list|,
-name|bo
 argument_list|)
 expr_stmt|;
 if|if
@@ -23216,8 +23204,6 @@ operator|=
 name|ieee80211_beacon_alloc
 argument_list|(
 name|ni
-argument_list|,
-name|bo
 argument_list|)
 expr_stmt|;
 if|if
@@ -23287,8 +23273,6 @@ expr_stmt|;
 name|ieee80211_beacon_update
 argument_list|(
 name|ni
-argument_list|,
-name|bo
 argument_list|,
 name|bcn
 operator|->
