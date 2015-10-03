@@ -3576,6 +3576,9 @@ operator||
 name|IEEE80211_C_HOSTAP
 comment|/* HostAp mode supported */
 operator||
+name|IEEE80211_C_AHDEMO
+comment|/* adhoc demo mode */
+operator||
 name|IEEE80211_C_TXPMGT
 comment|/* tx power management */
 operator||
@@ -5157,6 +5160,12 @@ operator|->
 name|iv_opmode
 operator|!=
 name|IEEE80211_M_MONITOR
+operator|&&
+name|vap
+operator|->
+name|iv_opmode
+operator|!=
+name|IEEE80211_M_AHDEMO
 condition|)
 block|{
 if|if
@@ -13264,7 +13273,21 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_opmode
+operator|!=
+name|IEEE80211_M_AHDEMO
+condition|)
 name|rum_enable_tsf_sync
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+else|else
+name|rum_enable_tsf
 argument_list|(
 name|sc
 argument_list|)
