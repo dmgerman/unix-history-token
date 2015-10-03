@@ -609,6 +609,11 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 while|while
 condition|(
 operator|(
