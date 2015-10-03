@@ -92,7 +92,7 @@ value|0x0a
 end_define
 
 begin_comment
-comment|/*  * Control and status registers.  */
+comment|/*  * WME registers.  */
 end_comment
 
 begin_define
@@ -123,6 +123,67 @@ name|RT2573_MCU_CODE_BASE
 value|0x0800
 end_define
 
+begin_comment
+comment|/*  * H/w encryption/decryption support  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEY_SIZE
+value|(IEEE80211_KEYBUF_SIZE + IEEE80211_MICBUF_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_ADDR_MAX
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_SKEY_MAX
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_SKEY
+parameter_list|(
+name|vap
+parameter_list|,
+name|kidx
+parameter_list|)
+value|(0x1000 + ((vap) * RT2573_SKEY_MAX + \ 	(kidx)) * KEY_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_PKEY
+parameter_list|(
+name|id
+parameter_list|)
+value|(0x1200 + (id) * KEY_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_ADDR_ENTRY
+parameter_list|(
+name|id
+parameter_list|)
+value|(0x1a00 + (id) * 8)
+end_define
+
+begin_comment
+comment|/*  * Shared memory area  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -132,6 +193,10 @@ name|id
 parameter_list|)
 value|(0x2400 + (id) * 0x100)
 end_define
+
+begin_comment
+comment|/*  * Control and status registers.  */
+end_comment
 
 begin_define
 define|#
@@ -495,6 +560,66 @@ define|#
 directive|define
 name|RT2573_STA_CSR5
 value|0x30d4
+end_define
+
+begin_comment
+comment|/* possible values for register RT2573_ADDR_MODE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT2573_MODE_MASK
+value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_MODE_NOSEC
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_MODE_WEP40
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_MODE_WEP104
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_MODE_TKIP
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_MODE_AES_CCMP
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_MODE_CKIP40
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_MODE_CKIP104
+value|6
 end_define
 
 begin_comment
@@ -916,6 +1041,28 @@ define|#
 directive|define
 name|RT2573_TX_LONG_RETRY
 value|(1<< 7)
+define|#
+directive|define
+name|RT2573_TX_TKIPMIC
+value|(1<< 8)
+define|#
+directive|define
+name|RT2573_TX_KEY_PAIR
+value|(1<< 9)
+define|#
+directive|define
+name|RT2573_TX_KEY_ID
+parameter_list|(
+name|id
+parameter_list|)
+value|(((id)& 0x3f)<< 10)
+define|#
+directive|define
+name|RT2573_TX_CIP_MODE
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)<< 29)
 name|uint16_t
 name|wme
 decl_stmt|;
@@ -947,13 +1094,16 @@ parameter_list|(
 name|v
 parameter_list|)
 value|((v)<< 12)
-name|uint16_t
+name|uint8_t
+name|hdrlen
+decl_stmt|;
+name|uint8_t
 name|xflags
 decl_stmt|;
 define|#
 directive|define
 name|RT2573_TX_HWSEQ
-value|(1<< 12)
+value|(1<< 4)
 name|uint8_t
 name|plcp_signal
 decl_stmt|;
@@ -1014,12 +1164,63 @@ name|RT2573_RX_DROP
 value|(1<< 1)
 define|#
 directive|define
+name|RT2573_RX_UC2ME
+value|(1<< 2)
+define|#
+directive|define
+name|RT2573_RX_MC
+value|(1<< 3)
+define|#
+directive|define
+name|RT2573_RX_BC
+value|(1<< 4)
+define|#
+directive|define
+name|RT2573_RX_MYBSS
+value|(1<< 5)
+define|#
+directive|define
 name|RT2573_RX_CRC_ERROR
 value|(1<< 6)
 define|#
 directive|define
 name|RT2573_RX_OFDM
 value|(1<< 7)
+define|#
+directive|define
+name|RT2573_RX_DEC_MASK
+value|(3<< 8)
+define|#
+directive|define
+name|RT2573_RX_DEC_OK
+value|(0<< 8)
+define|#
+directive|define
+name|RT2573_RX_IV_ERROR
+value|(1<< 8)
+define|#
+directive|define
+name|RT2573_RX_MIC_ERROR
+value|(2<< 8)
+define|#
+directive|define
+name|RT2573_RX_KEY_ERROR
+value|(3<< 8)
+define|#
+directive|define
+name|RT2573_RX_KEY_PAIR
+value|(1<< 28)
+define|#
+directive|define
+name|RT2573_RX_CIP_MASK
+value|(7<< 29)
+define|#
+directive|define
+name|RT2573_RX_CIP_MODE
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)<< 29)
 name|uint8_t
 name|rate
 decl_stmt|;
