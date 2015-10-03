@@ -579,6 +579,14 @@ name|dp
 parameter_list|)
 function_decl|;
 name|boolean_t
+name|dsl_pool_config_held_writer
+parameter_list|(
+name|dsl_pool_t
+modifier|*
+name|dp
+parameter_list|)
+function_decl|;
+name|boolean_t
 name|dsl_pool_need_dirty_delay
 parameter_list|(
 name|dsl_pool_t

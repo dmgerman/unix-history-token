@@ -3017,10 +3017,13 @@ begin_function
 name|int
 name|zil_claim
 parameter_list|(
-specifier|const
-name|char
+name|dsl_pool_t
 modifier|*
-name|osname
+name|dp
+parameter_list|,
+name|dsl_dataset_t
+modifier|*
+name|ds
 parameter_list|,
 name|void
 modifier|*
@@ -3058,9 +3061,13 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|dmu_objset_own
+name|dmu_objset_own_obj
 argument_list|(
-name|osname
+name|dp
+argument_list|,
+name|ds
+operator|->
+name|ds_object
 argument_list|,
 name|DMU_OST_ANY
 argument_list|,
@@ -3091,9 +3098,16 @@ name|cmn_err
 argument_list|(
 name|CE_WARN
 argument_list|,
-literal|"can't open objset for %s, error %u"
+literal|"can't open objset for %llu, error %u"
 argument_list|,
-name|osname
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
+name|ds
+operator|->
+name|ds_object
 argument_list|,
 name|error
 argument_list|)
@@ -3327,14 +3341,21 @@ begin_comment
 comment|/*  * Check the log by walking the log chain.  * Checksum errors are ok as they indicate the end of the chain.  * Any other error (no device or read failure) returns an error.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|int
 name|zil_check_log_chain
 parameter_list|(
-specifier|const
-name|char
+name|dsl_pool_t
 modifier|*
-name|osname
+name|dp
+parameter_list|,
+name|dsl_dataset_t
+modifier|*
+name|ds
 parameter_list|,
 name|void
 modifier|*
@@ -3365,11 +3386,9 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|dmu_objset_hold
+name|dmu_objset_from_ds
 argument_list|(
-name|osname
-argument_list|,
-name|FTAG
+name|ds
 argument_list|,
 operator|&
 name|os
@@ -3386,9 +3405,18 @@ name|cmn_err
 argument_list|(
 name|CE_WARN
 argument_list|,
-literal|"can't open objset for %s"
+literal|"can't open objset %llu, error %d"
 argument_list|,
-name|osname
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
+name|ds
+operator|->
+name|ds_object
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return
@@ -3503,20 +3531,11 @@ condition|(
 operator|!
 name|valid
 condition|)
-block|{
-name|dmu_objset_rele
-argument_list|(
-name|os
-argument_list|,
-name|FTAG
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 comment|/* 	 * Because tx == NULL, zil_claim_log_block() will not actually claim 	 * any blocks, but just determine whether it is possible to do so. 	 * In addition to checking the log chain, zil_claim_log_block() 	 * will invoke zio_claim() with a done func of spa_claim_notify(), 	 * which will update spa_max_claim_txg.  See spa_load() for details. 	 */
 name|error
@@ -3546,13 +3565,6 @@ name|os
 operator|->
 name|os_spa
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|dmu_objset_rele
-argument_list|(
-name|os
-argument_list|,
-name|FTAG
 argument_list|)
 expr_stmt|;
 return|return
