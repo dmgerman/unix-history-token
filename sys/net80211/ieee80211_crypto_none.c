@@ -130,6 +130,21 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|none_setiv
+parameter_list|(
+name|struct
+name|ieee80211_key
+modifier|*
+parameter_list|,
+name|uint8_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|none_encap
 parameter_list|(
@@ -246,6 +261,11 @@ operator|=
 name|none_setkey
 block|,
 operator|.
+name|ic_setiv
+operator|=
+name|none_setiv
+block|,
+operator|.
 name|ic_encap
 operator|=
 name|none_encap
@@ -331,6 +351,23 @@ return|return
 literal|1
 return|;
 block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|none_setiv
+parameter_list|(
+name|struct
+name|ieee80211_key
+modifier|*
+name|k
+parameter_list|,
+name|uint8_t
+modifier|*
+name|ivp
+parameter_list|)
+block|{ }
 end_function
 
 begin_function
