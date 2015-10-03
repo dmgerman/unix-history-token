@@ -1376,10 +1376,6 @@ specifier|const
 name|struct
 name|ieee80211_key
 modifier|*
-parameter_list|,
-specifier|const
-name|u_int8_t
-index|[]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -14692,13 +14688,6 @@ name|struct
 name|ieee80211_key
 modifier|*
 name|key
-parameter_list|,
-specifier|const
-name|uint8_t
-name|mac
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
 parameter_list|)
 block|{
 name|struct

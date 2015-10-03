@@ -265,13 +265,6 @@ name|struct
 name|ieee80211_key
 modifier|*
 name|k
-parameter_list|,
-specifier|const
-name|uint8_t
-name|mac
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
 parameter_list|)
 block|{
 return|return
@@ -457,10 +450,6 @@ argument_list|(
 name|vap
 argument_list|,
 name|key
-argument_list|,
-name|key
-operator|->
-name|wk_macaddr
 argument_list|)
 return|;
 block|}
