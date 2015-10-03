@@ -25300,7 +25300,15 @@ argument_list|,
 operator|(
 name|size_t
 operator|)
-name|SPA_MINBLOCKSIZE
+literal|1
+operator|<<
+name|l2hdr
+operator|->
+name|b_dev
+operator|->
+name|l2ad_vdev
+operator|->
+name|vdev_ashift
 argument_list|)
 expr_stmt|;
 if|if
