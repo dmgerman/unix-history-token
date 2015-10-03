@@ -12364,12 +12364,9 @@ operator|->
 name|iv_bss
 argument_list|,
 operator|&
-name|RUM_VAP
-argument_list|(
 name|vap
-argument_list|)
 operator|->
-name|bo
+name|iv_bcn_off
 argument_list|)
 expr_stmt|;
 if|if
