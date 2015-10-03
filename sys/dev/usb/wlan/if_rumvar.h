@@ -232,6 +232,11 @@ name|ieee80211vap
 name|vap
 decl_stmt|;
 name|struct
+name|mbuf
+modifier|*
+name|bcn_mbuf
+decl_stmt|;
+name|struct
 name|usb_callout
 name|ratectl_ch
 decl_stmt|;

@@ -126,8 +126,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|RT2573_HW_BEACON_BASE0
-value|0x2400
+name|RT2573_HW_BCN_BASE
+parameter_list|(
+name|id
+parameter_list|)
+value|(0x2400 + (id) * 0x100)
 end_define
 
 begin_define
