@@ -350,6 +350,8 @@ name|dadq
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -401,10 +403,6 @@ name|nd6_dad_ns_output
 parameter_list|(
 name|struct
 name|dadq
-modifier|*
-parameter_list|,
-name|struct
-name|ifaddr
 modifier|*
 parameter_list|)
 function_decl|;
@@ -5455,8 +5453,22 @@ name|dp
 parameter_list|,
 name|int
 name|ticks
+parameter_list|,
+name|int
+name|send_ns
 parameter_list|)
 block|{
+if|if
+condition|(
+name|send_ns
+operator|!=
+literal|0
+condition|)
+name|nd6_dad_ns_output
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
@@ -5613,6 +5625,9 @@ name|ip6buf
 index|[
 name|INET6_ADDRSTRLEN
 index|]
+decl_stmt|;
+name|int
+name|send_ns
 decl_stmt|;
 comment|/* 	 * If we don't need DAD, don't do it. 	 * There are several cases: 	 * - DAD is disabled (ip6_dad_count == 0) 	 * - the interface address is anycast 	 */
 if|if
@@ -5793,12 +5808,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* DAD already in progress */
-name|nd6_dad_rele
-argument_list|(
-name|dp
-argument_list|)
-expr_stmt|;
+comment|/* 		 * DAD already in progress.  Let the existing entry 		 * to finish it. 		 */
 return|return;
 block|}
 name|dp
@@ -5974,6 +5984,10 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
+name|send_ns
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|delay
@@ -5981,17 +5995,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|nd6_dad_ns_output
-argument_list|(
-name|dp
-argument_list|,
-name|ifa
-argument_list|)
+name|send_ns
+operator|=
+literal|1
 expr_stmt|;
-name|nd6_dad_starttimer
-argument_list|(
-name|dp
-argument_list|,
+name|delay
+operator|=
 operator|(
 name|long
 operator|)
@@ -6007,19 +6016,17 @@ operator|*
 name|hz
 operator|/
 literal|1000
-argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|nd6_dad_starttimer
 argument_list|(
 name|dp
 argument_list|,
 name|delay
+argument_list|,
+name|send_ns
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -6339,7 +6346,8 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"%s: could not run DAD, driver problem?\n"
+literal|"%s: could not run DAD "
+literal|"because the interface was down or not running.\n"
 operator|,
 name|if_name
 argument_list|(
@@ -6367,13 +6375,6 @@ name|dad_count
 condition|)
 block|{
 comment|/* 		 * We have more NS to go.  Send NS packet for DAD. 		 */
-name|nd6_dad_ns_output
-argument_list|(
-name|dp
-argument_list|,
-name|ifa
-argument_list|)
-expr_stmt|;
 name|nd6_dad_starttimer
 argument_list|(
 name|dp
@@ -6393,6 +6394,8 @@ operator|*
 name|hz
 operator|/
 literal|1000
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6482,13 +6485,6 @@ operator|->
 name|dad_ns_lcount
 expr_stmt|;
 comment|/* 			 * Send an NS immediately and increase dad_count by 			 * V_nd6_mmaxtries - 1. 			 */
-name|nd6_dad_ns_output
-argument_list|(
-name|dp
-argument_list|,
-name|ifa
-argument_list|)
-expr_stmt|;
 name|dp
 operator|->
 name|dad_count
@@ -6520,6 +6516,8 @@ operator|*
 name|hz
 operator|/
 literal|1000
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6883,11 +6881,6 @@ name|struct
 name|dadq
 modifier|*
 name|dp
-parameter_list|,
-name|struct
-name|ifaddr
-modifier|*
-name|ifa
 parameter_list|)
 block|{
 name|struct
@@ -6900,14 +6893,18 @@ expr|struct
 name|in6_ifaddr
 operator|*
 operator|)
-name|ifa
+name|dp
+operator|->
+name|dad_ifa
 decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 init|=
-name|ifa
+name|dp
+operator|->
+name|dad_ifa
 operator|->
 name|ifa_ifp
 decl_stmt|;
