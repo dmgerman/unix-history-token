@@ -193,7 +193,7 @@ begin_define
 define|#
 directive|define
 name|CMD_FUNC_PROTO
-value|void (*func)(struct rum_softc *, \ 					    union sec_param *, uint8_t, \ 					    uint8_t)
+value|void (*func)(struct rum_softc *, \ 					    union sec_param *, uint8_t)
 end_define
 
 begin_struct
@@ -203,9 +203,6 @@ block|{
 name|union
 name|sec_param
 name|data
-decl_stmt|;
-name|uint8_t
-name|rn_id
 decl_stmt|;
 name|uint8_t
 name|rvp_id

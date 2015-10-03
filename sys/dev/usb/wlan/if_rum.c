@@ -882,8 +882,6 @@ name|size_t
 parameter_list|,
 name|uint8_t
 parameter_list|,
-name|uint8_t
-parameter_list|,
 name|CMD_FUNC_PROTO
 parameter_list|)
 function_decl|;
@@ -1456,8 +1454,6 @@ name|sec_param
 modifier|*
 parameter_list|,
 name|uint8_t
-parameter_list|,
-name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1690,8 +1686,6 @@ name|sec_param
 modifier|*
 parameter_list|,
 name|uint8_t
-parameter_list|,
-name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1742,8 +1736,6 @@ name|sec_param
 modifier|*
 parameter_list|,
 name|uint8_t
-parameter_list|,
-name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1760,8 +1752,6 @@ parameter_list|,
 name|union
 name|sec_param
 modifier|*
-parameter_list|,
-name|uint8_t
 parameter_list|,
 name|uint8_t
 parameter_list|)
@@ -1782,8 +1772,6 @@ name|sec_param
 modifier|*
 parameter_list|,
 name|uint8_t
-parameter_list|,
-name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1800,8 +1788,6 @@ parameter_list|,
 name|union
 name|sec_param
 modifier|*
-parameter_list|,
-name|uint8_t
 parameter_list|,
 name|uint8_t
 parameter_list|)
@@ -4726,10 +4712,6 @@ name|data
 argument_list|,
 name|rc
 operator|->
-name|rn_id
-argument_list|,
-name|rc
-operator|->
 name|rvp_id
 argument_list|)
 expr_stmt|;
@@ -4796,9 +4778,6 @@ name|ptr
 parameter_list|,
 name|size_t
 name|len
-parameter_list|,
-name|uint8_t
-name|rn_id
 parameter_list|,
 name|uint8_t
 name|rvp_id
@@ -4896,19 +4875,6 @@ name|ptr
 argument_list|,
 name|len
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|cmdq
-index|[
-name|sc
-operator|->
-name|cmdq_last
-index|]
-operator|.
-name|rn_id
-operator|=
-name|rn_id
 expr_stmt|;
 name|sc
 operator|->
@@ -5424,8 +5390,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|NULL
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -11530,9 +11494,6 @@ modifier|*
 name|data
 parameter_list|,
 name|uint8_t
-name|rv_id
-parameter_list|,
-name|uint8_t
 name|rvp_id
 parameter_list|)
 block|{
@@ -11602,8 +11563,6 @@ operator|->
 name|ic_softc
 argument_list|,
 name|NULL
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -13770,9 +13729,6 @@ modifier|*
 name|data
 parameter_list|,
 name|uint8_t
-name|rn_id
-parameter_list|,
-name|uint8_t
 name|rvp_id
 parameter_list|)
 block|{
@@ -13988,8 +13944,6 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|0
-argument_list|,
 name|rum_update_beacon_cb
 argument_list|)
 expr_stmt|;
@@ -14109,9 +14063,6 @@ name|union
 name|sec_param
 modifier|*
 name|data
-parameter_list|,
-name|uint8_t
-name|rn_id
 parameter_list|,
 name|uint8_t
 name|rvp_id
@@ -14356,9 +14307,6 @@ modifier|*
 name|data
 parameter_list|,
 name|uint8_t
-name|rn_id
-parameter_list|,
-name|uint8_t
 name|rvp_id
 parameter_list|)
 block|{
@@ -14444,9 +14392,6 @@ name|union
 name|sec_param
 modifier|*
 name|data
-parameter_list|,
-name|uint8_t
-name|rn_id
 parameter_list|,
 name|uint8_t
 name|rvp_id
@@ -14703,9 +14648,6 @@ name|union
 name|sec_param
 modifier|*
 name|data
-parameter_list|,
-name|uint8_t
-name|rn_id
 parameter_list|,
 name|uint8_t
 name|rvp_id
@@ -15075,8 +15017,6 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|0
-argument_list|,
 name|group
 condition|?
 name|rum_group_key_set_cb
@@ -15167,8 +15107,6 @@ argument_list|(
 operator|*
 name|k
 argument_list|)
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
