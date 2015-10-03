@@ -349,16 +349,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|((int)(sizeof (a) / sizeof ((a)[0])))
-end_define
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -3747,6 +3737,16 @@ argument_list|(
 name|self
 argument_list|)
 decl_stmt|;
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+operator|&
+name|sc
+operator|->
+name|sc_ic
+decl_stmt|;
 comment|/* Prevent further ioctls */
 name|RUM_LOCK
 argument_list|(
@@ -3792,20 +3792,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sc
+name|ic
 operator|->
-name|sc_ic
-operator|.
 name|ic_softc
 operator|==
 name|sc
 condition|)
 name|ieee80211_ifdetach
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_ic
+name|ic
 argument_list|)
 expr_stmt|;
 name|mbufq_drain
@@ -6196,8 +6191,6 @@ decl_stmt|;
 name|int
 name|protrate
 decl_stmt|,
-name|ackrate
-decl_stmt|,
 name|pktlen
 decl_stmt|,
 name|flags
@@ -6210,8 +6203,6 @@ decl_stmt|;
 name|RUM_LOCK_ASSERT
 argument_list|(
 name|sc
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -6256,17 +6247,6 @@ expr_stmt|;
 name|protrate
 operator|=
 name|ieee80211_ctl_rate
-argument_list|(
-name|ic
-operator|->
-name|ic_rt
-argument_list|,
-name|rate
-argument_list|)
-expr_stmt|;
-name|ackrate
-operator|=
-name|ieee80211_ack_rate
 argument_list|(
 name|ic
 operator|->
@@ -6560,8 +6540,6 @@ decl_stmt|;
 name|RUM_LOCK_ASSERT
 argument_list|(
 name|sc
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|data
@@ -6884,8 +6862,6 @@ decl_stmt|;
 name|RUM_LOCK_ASSERT
 argument_list|(
 name|sc
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -7196,8 +7172,6 @@ decl_stmt|;
 name|RUM_LOCK_ASSERT
 argument_list|(
 name|sc
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|wh
@@ -7706,8 +7680,6 @@ decl_stmt|;
 name|RUM_LOCK_ASSERT
 argument_list|(
 name|sc
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -10506,31 +10478,7 @@ modifier|*
 name|ic
 parameter_list|)
 block|{
-specifier|static
-name|int
-name|warning_printed
-decl_stmt|;
-if|if
-condition|(
-name|warning_printed
-operator|==
-literal|0
-condition|)
-block|{
-name|ic_printf
-argument_list|(
-name|ic
-argument_list|,
-literal|"need to implement %s\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|warning_printed
-operator|=
-literal|1
-expr_stmt|;
-block|}
+comment|/* Ignore. */
 block|}
 end_function
 
@@ -11224,7 +11172,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rum_def_bbp
 argument_list|)
@@ -11369,8 +11317,6 @@ decl_stmt|;
 name|RUM_LOCK_ASSERT
 argument_list|(
 name|sc
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|rum_stop
@@ -11387,7 +11333,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rum_def_mac
 argument_list|)
@@ -11421,7 +11367,9 @@ name|sc
 argument_list|,
 name|RT2573_MAC_CSR1
 argument_list|,
-literal|3
+name|RT2573_RESET_ASIC
+operator||
+name|RT2573_RESET_BBP
 argument_list|)
 expr_stmt|;
 name|rum_write
@@ -11582,7 +11530,7 @@ name|sc
 argument_list|,
 name|RT2573_MAC_CSR1
 argument_list|,
-literal|4
+name|RT2573_HOST_READY
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate Tx and Rx xfer queues. 	 */
@@ -11714,8 +11662,6 @@ block|{
 name|RUM_LOCK_ASSERT
 argument_list|(
 name|sc
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|sc
@@ -11777,7 +11723,9 @@ name|sc
 argument_list|,
 name|RT2573_MAC_CSR1
 argument_list|,
-literal|3
+name|RT2573_RESET_ASIC
+operator||
+name|RT2573_RESET_BBP
 argument_list|)
 expr_stmt|;
 name|rum_write
