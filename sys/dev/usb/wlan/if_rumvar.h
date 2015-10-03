@@ -241,6 +241,9 @@ name|struct
 name|task
 name|ratectl_task
 decl_stmt|;
+name|uint8_t
+name|maxretry
+decl_stmt|;
 name|int
 function_decl|(
 modifier|*

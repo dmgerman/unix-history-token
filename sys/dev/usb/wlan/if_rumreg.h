@@ -775,6 +775,40 @@ name|RT2573_MRR_CCK_FALLBACK
 value|(1<< 22)
 end_define
 
+begin_define
+define|#
+directive|define
+name|RT2573_LONG_RETRY
+parameter_list|(
+name|max
+parameter_list|)
+value|((max)<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_LONG_RETRY_MASK
+value|(0xf<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_SHORT_RETRY
+parameter_list|(
+name|max
+parameter_list|)
+value|((max)<< 28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2573_SHORT_RETRY_MASK
+value|(0xf<< 28)
+end_define
+
 begin_comment
 comment|/* possible flags for register TXRX_CSR9 */
 end_comment
