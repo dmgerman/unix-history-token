@@ -73,7 +73,7 @@ name|int
 name|ci_eck
 decl_stmt|;
 comment|/* uses zio embedded checksum? */
-name|int
+name|boolean_t
 name|ci_dedup
 decl_stmt|;
 comment|/* strong enough for dedup? */

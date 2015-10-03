@@ -614,6 +614,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return (in *objectp) the next object which is allocated (or a hole)  * after *object, taking into account only objects that may have been modified  * after the specified txg.  */
+end_comment
+
 begin_function
 name|int
 name|dmu_object_next

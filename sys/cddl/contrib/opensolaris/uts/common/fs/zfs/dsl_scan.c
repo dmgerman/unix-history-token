@@ -3055,7 +3055,7 @@ block|{
 comment|/* 		 * If we already visited this bp& everything below (in 		 * a prior txg sync), don't bother doing it again. 		 */
 if|if
 condition|(
-name|zbookmark_is_before
+name|zbookmark_subtree_completed
 argument_list|(
 name|dnp
 argument_list|,

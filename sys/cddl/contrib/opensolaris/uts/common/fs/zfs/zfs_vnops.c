@@ -11027,6 +11027,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|ZIO_PRIORITY_SYNC_READ
 argument_list|)
 expr_stmt|;
 name|skip_entry
