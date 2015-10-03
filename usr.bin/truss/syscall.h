@@ -120,6 +120,8 @@ block|,
 name|ExecEnv
 block|,
 name|PipeFds
+block|,
+name|QuadHex
 block|}
 enum|;
 end_enum
