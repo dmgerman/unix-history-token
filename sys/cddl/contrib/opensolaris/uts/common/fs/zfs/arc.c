@@ -13608,6 +13608,7 @@ argument_list|)
 operator|>>
 literal|2
 operator|)
+expr_stmt|;
 if|if
 condition|(
 name|n
