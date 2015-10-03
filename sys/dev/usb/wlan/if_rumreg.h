@@ -526,8 +526,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RT2573_ONE_BSSID
-value|3
+name|RT2573_NUM_BSSID_MSK
+parameter_list|(
+name|n
+parameter_list|)
+value|(((n * 3)& 3)<< 16)
 end_define
 
 begin_comment
