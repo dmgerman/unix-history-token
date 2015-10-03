@@ -385,6 +385,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* Is the page daemon waiting for free pages? */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|vm_pageout_pages_needed
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|static
 name|uma_zone_t
