@@ -1487,7 +1487,7 @@ parameter_list|,
 name|uint64_t
 name|length
 parameter_list|,
-name|int
+name|boolean_t
 name|read
 parameter_list|,
 name|void
@@ -2343,7 +2343,7 @@ name|xuio_stat_wbuf_nocopy
 parameter_list|()
 function_decl|;
 specifier|extern
-name|int
+name|boolean_t
 name|zfs_prefetch_disable
 decl_stmt|;
 specifier|extern
