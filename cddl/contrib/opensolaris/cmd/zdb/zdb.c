@@ -6682,7 +6682,15 @@ argument_list|(
 name|blkbuf
 argument_list|)
 argument_list|,
-literal|"B=%llu"
+literal|"%llxL B=%llu"
+argument_list|,
+operator|(
+name|u_longlong_t
+operator|)
+name|BP_GET_LSIZE
+argument_list|(
+name|bp
+argument_list|)
 argument_list|,
 operator|(
 name|u_longlong_t
