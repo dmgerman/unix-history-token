@@ -7726,6 +7726,9 @@ operator|=
 name|new_state
 expr_stmt|;
 comment|/* 	 * L2 headers should never be on the L2 state list since they don't 	 * have L1 headers allocated. 	 */
+ifdef|#
+directive|ifdef
+name|illumos
 name|ASSERT
 argument_list|(
 name|list_is_empty
@@ -7751,6 +7754,8 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
