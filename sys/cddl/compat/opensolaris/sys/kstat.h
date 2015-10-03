@@ -73,6 +73,8 @@ name|sysctl_oid
 modifier|*
 name|ks_sysctl_root
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 function_decl|(
 modifier|*
@@ -92,8 +94,6 @@ modifier|*
 name|ks_private
 decl_stmt|;
 comment|/* arbitrary provider-private data */
-endif|#
-directive|endif
 block|}
 name|kstat_t
 typedef|;
