@@ -8885,10 +8885,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/*  * Free up buf->b_data and if 'remove' is set, then pull the  * arc_buf_t off of the the arc_buf_hdr_t's list and free it.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -9045,6 +9041,10 @@ name|NULL
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Free up buf->b_data and if 'remove' is set, then pull the  * arc_buf_t off of the the arc_buf_hdr_t's list and free it.  */
+end_comment
 
 begin_function
 specifier|static
