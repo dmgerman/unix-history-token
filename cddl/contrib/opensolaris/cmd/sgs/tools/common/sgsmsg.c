@@ -342,6 +342,12 @@ name|msg_tail
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|aok
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * message_append() is responsible for both inserting strings into  * the master Str_tbl as well as maintaining a list of the  * DEFINITIONS associated with each string.  *  * The list of strings is traversed at the end once the full  * Str_tbl has been constructed - and string offsets can be  * assigned.  */
 end_comment
