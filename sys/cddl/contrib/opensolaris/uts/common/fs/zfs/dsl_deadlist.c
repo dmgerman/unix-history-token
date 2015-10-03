@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_include
@@ -454,6 +454,12 @@ name|dsl_deadlist_entry_t
 modifier|*
 name|dle
 decl_stmt|;
+name|dl
+operator|->
+name|dl_os
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|dl

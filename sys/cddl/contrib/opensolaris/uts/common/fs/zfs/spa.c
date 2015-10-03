@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013, 2014, Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013, 2014, Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_comment
@@ -5178,6 +5178,26 @@ argument_list|(
 operator|&
 name|spa
 operator|->
+name|spa_evicting_os_list
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|objset_t
+argument_list|)
+argument_list|,
+name|offsetof
+argument_list|(
+name|objset_t
+argument_list|,
+name|os_evicting_node
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|list_create
+argument_list|(
+operator|&
+name|spa
+operator|->
 name|spa_state_dirty_list
 argument_list|,
 sizeof|sizeof
@@ -5321,6 +5341,11 @@ argument_list|(
 name|spa
 argument_list|)
 expr_stmt|;
+name|spa_evicting_os_wait
+argument_list|(
+name|spa
+argument_list|)
+expr_stmt|;
 name|txg_list_destroy
 argument_list|(
 operator|&
@@ -5335,6 +5360,14 @@ operator|&
 name|spa
 operator|->
 name|spa_config_dirty_list
+argument_list|)
+expr_stmt|;
+name|list_destroy
+argument_list|(
+operator|&
+name|spa
+operator|->
+name|spa_evicting_os_list
 argument_list|)
 expr_stmt|;
 name|list_destroy
@@ -9961,6 +9994,12 @@ name|ereport
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Don't count references from objsets that are already closed 	 * and are making their way through the eviction process. 	 */
+name|spa_evicting_os_wait
+argument_list|(
+name|spa
+argument_list|)
+expr_stmt|;
 name|spa
 operator|->
 name|spa_minref
@@ -17037,6 +17076,12 @@ argument_list|,
 literal|"create"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Don't count references from objsets that are already closed 	 * and are making their way through the eviction process. 	 */
+name|spa_evicting_os_wait
+argument_list|(
+name|spa
+argument_list|)
+expr_stmt|;
 name|spa
 operator|->
 name|spa_minref
@@ -20389,6 +20434,11 @@ operator|->
 name|spa_dsl_pool
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|spa_evicting_os_wait
+argument_list|(
+name|spa
 argument_list|)
 expr_stmt|;
 comment|/* 		 * A pool cannot be exported or destroyed if there are active 		 * references.  If we are resetting a pool, allow references by 		 * fault injection handlers. 		 */
