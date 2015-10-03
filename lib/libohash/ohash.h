@@ -19,6 +19,12 @@ directive|define
 name|OHASH_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
 begin_comment
 comment|/* Open hashing support.   * Open hashing was chosen because it is much lighter than other hash  * techniques, and more efficient in most cases.  */
 end_comment
