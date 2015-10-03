@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2012, 2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
-end_comment
-
-begin_comment
-comment|/* $Id: resolver.h,v 1.72 2011/12/05 17:10:51 each Exp $ */
+comment|/*  * Copyright (C) 2004-2012, 2014, 2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifndef
@@ -38,6 +34,12 @@ begin_include
 include|#
 directive|include
 file|<isc/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/stats.h>
 end_include
 
 begin_include
@@ -112,6 +114,24 @@ name|vresult
 decl_stmt|;
 block|}
 name|dns_fetchevent_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*%  * The two quota types (fetches-per-zone and fetches-per-server)  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|dns_quotatype_zone
+init|=
+literal|0
+block|,
+name|dns_quotatype_server
+block|}
+name|dns_quotatype_t
 typedef|;
 end_typedef
 
@@ -1087,6 +1107,20 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|dns_resolver_setfetchesperzone
+parameter_list|(
+name|dns_resolver_t
+modifier|*
+name|resolver
+parameter_list|,
+name|isc_uint32_t
+name|clients
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|dns_resolver_getclientsperquery
 parameter_list|(
 name|dns_resolver_t
@@ -1295,6 +1329,56 @@ end_function_decl
 
 begin_comment
 comment|/*%  * Get and set how many iterative queries will be allowed before  * terminating a recursive query.  *  * Requires:  * \li	resolver to be valid.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_resolver_dumpfetches
+parameter_list|(
+name|dns_resolver_t
+modifier|*
+name|resolver
+parameter_list|,
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dns_resolver_setquotaresponse
+parameter_list|(
+name|dns_resolver_t
+modifier|*
+name|resolver
+parameter_list|,
+name|dns_quotatype_t
+name|which
+parameter_list|,
+name|isc_result_t
+name|resp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|dns_resolver_getquotaresponse
+parameter_list|(
+name|dns_resolver_t
+modifier|*
+name|resolver
+parameter_list|,
+name|dns_quotatype_t
+name|which
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Get and set the result code that will be used when quotas  * are exceeded. If 'which' is set to quotatype "zone", then the  * result specified in 'resp' will be used when the fetches-per-zone  * quota is exceeded by a fetch.  If 'which' is set to quotatype "server",  * then the reuslt specified in 'resp' will be used when the  * fetches-per-server quota has been exceeded for all the  * authoritative servers for a zone.  Valid choices are  * DNS_R_DROP or DNS_R_SERVFAIL.  *  * Requires:  * \li	'resolver' to be valid.  * \li	'which' to be dns_quotatype_zone or dns_quotatype_server  * \li	'resp' to be DNS_R_DROP or DNS_R_SERVFAIL.  */
 end_comment
 
 begin_macro

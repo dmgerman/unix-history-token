@@ -16,6 +16,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isc/base64.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/print.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<isc/result.h>
 end_include
 
@@ -29,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|<isc/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<isc/base64.h>
 end_include
 
 begin_include
@@ -1261,7 +1267,7 @@ name|dns_rdata_nsec3param_t
 name|nsec3param
 decl_stmt|;
 name|isc_boolean_t
-name|remove
+name|delete
 decl_stmt|,
 name|init
 decl_stmt|,
@@ -1307,7 +1313,7 @@ name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|remove
+name|delete
 operator|=
 name|ISC_TF
 argument_list|(
@@ -1381,7 +1387,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|remove
+name|delete
 condition|)
 name|isc_buffer_putstr
 argument_list|(
@@ -1451,7 +1457,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|remove
+name|delete
 operator|&&
 operator|!
 name|nonsec
@@ -1518,7 +1524,7 @@ name|DNS_SECALG_FORMATSIZE
 index|]
 decl_stmt|;
 name|isc_boolean_t
-name|remove
+name|delete
 init|=
 name|ISC_TF
 argument_list|(
@@ -1549,7 +1555,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|remove
+name|delete
 operator|&&
 name|complete
 condition|)
@@ -1563,7 +1569,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|remove
+name|delete
 condition|)
 name|isc_buffer_putstr
 argument_list|(

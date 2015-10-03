@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
-end_comment
-
-begin_comment
-comment|/* $Id$ */
+comment|/*  * Copyright (C) 2004-2012, 2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifndef
@@ -151,8 +147,32 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*%  * Define ISC_MEM_CHECKOVERRUN=1 to turn on checks for using memory outside  * the requested space.  This will increase the size of each allocation.  */
+comment|/*%  * Define ISC_MEM_CHECKOVERRUN=1 to turn on checks for using memory outside  * the requested space.  This will increase the size of each allocation.  *  * If we are performing a Coverity static analysis then ISC_MEM_CHECKOVERRUN  * can hide bugs that would otherwise discovered so force to zero.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__COVERITY__
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|ISC_MEM_CHECKOVERRUN
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ISC_MEM_CHECKOVERRUN
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -173,8 +193,32 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*%  * Define ISC_MEM_FILL=1 to fill each block of memory returned to the system  * with the byte string '0xbe'.  This helps track down uninitialized pointers  * and the like.  On freeing memory, the space is filled with '0xde' for  * the same reasons.  */
+comment|/*%  * Define ISC_MEM_FILL=1 to fill each block of memory returned to the system  * with the byte string '0xbe'.  This helps track down uninitialized pointers  * and the like.  On freeing memory, the space is filled with '0xde' for  * the same reasons.  *  * If we are performing a Coverity static analysis then ISC_MEM_FILL  * can hide bugs that would otherwise discovered so force to zero.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__COVERITY__
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|ISC_MEM_FILL
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ISC_MEM_FILL
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -222,6 +266,15 @@ specifier|extern
 name|unsigned
 name|int
 name|isc_mem_debugging
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|LIBISC_EXTERNAL_DATA
+specifier|extern
+name|unsigned
+name|int
+name|isc_mem_defaultflags
 decl_stmt|;
 end_decl_stmt
 

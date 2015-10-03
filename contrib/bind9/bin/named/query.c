@@ -4,10 +4,6 @@ comment|/*  * Copyright (C) 2004-2015  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id$ */
-end_comment
-
-begin_comment
 comment|/*! \file */
 end_comment
 
@@ -33,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<isc/mem.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/print.h>
 end_include
 
 begin_include
@@ -453,30 +455,22 @@ parameter_list|)
 value|(((r)->attributes& \ 				  DNS_RDATASETATTR_NOQNAME) != 0)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WANT_QUERYTRACE
+end_ifdef
 
 begin_define
 define|#
 directive|define
 name|CTRACE
 parameter_list|(
+name|l
+parameter_list|,
 name|m
 parameter_list|)
-value|isc_log_write(ns_g_lctx, \ 				      NS_LOGCATEGORY_CLIENT, \ 				      NS_LOGMODULE_QUERY, \ 				      ISC_LOG_DEBUG(3), \ 				      "client %p: %s", client, (m))
-end_define
-
-begin_define
-define|#
-directive|define
-name|QTRACE
-parameter_list|(
-name|m
-parameter_list|)
-value|isc_log_write(ns_g_lctx, \ 				      NS_LOGCATEGORY_GENERAL, \ 				      NS_LOGMODULE_QUERY, \ 				      ISC_LOG_DEBUG(3), \ 				      "query %p: %s", query, (m))
+value|do {						\ 	if (client != NULL&& client->query.qname != NULL) {		\ 		if (isc_log_wouldlog(ns_g_lctx, l)) {			\ 			char qbuf[DNS_NAME_FORMATSIZE];			\ 			dns_name_format(client->query.qname,		\ 					qbuf, sizeof(qbuf));		\ 			isc_log_write(ns_g_lctx,			\ 				      NS_LOGCATEGORY_CLIENT,		\ 				      NS_LOGMODULE_QUERY,		\ 				      l, "client %p (%s): %s",		\ 				      client, qbuf, (m));		\ 		}							\ 	 } else {							\ 		isc_log_write(ns_g_lctx,				\ 			      NS_LOGCATEGORY_CLIENT,			\ 			      NS_LOGMODULE_QUERY,			\ 			      l, "client %p (<unknown-name>): %s",	\ 			      client, (m));				\ 	}								\ } while(0)
 end_define
 
 begin_else
@@ -489,16 +483,8 @@ define|#
 directive|define
 name|CTRACE
 parameter_list|(
-name|m
-parameter_list|)
-value|((void)m)
-end_define
-
-begin_define
-define|#
-directive|define
-name|QTRACE
-parameter_list|(
+name|l
+parameter_list|,
 name|m
 parameter_list|)
 value|((void)m)
@@ -508,6 +494,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* WANT_QUERYTRACE */
+end_comment
 
 begin_define
 define|#
@@ -1314,6 +1304,11 @@ name|rdatasetp
 decl_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_putrdataset"
 argument_list|)
 expr_stmt|;
@@ -1348,6 +1343,11 @@ expr_stmt|;
 block|}
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_putrdataset: done"
 argument_list|)
 expr_stmt|;
@@ -1915,6 +1915,11 @@ name|result
 decl_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_newnamebuf"
 argument_list|)
 expr_stmt|;
@@ -1946,6 +1951,11 @@ condition|)
 block|{
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_newnamebuf: isc_buffer_allocate failed: done"
 argument_list|)
 expr_stmt|;
@@ -1970,6 +1980,11 @@ argument_list|)
 expr_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_newnamebuf: done"
 argument_list|)
 expr_stmt|;
@@ -2005,6 +2020,11 @@ name|r
 decl_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_getnamebuf"
 argument_list|)
 expr_stmt|;
@@ -2037,6 +2057,11 @@ condition|)
 block|{
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_getnamebuf: query_newnamebuf failed: done"
 argument_list|)
 expr_stmt|;
@@ -2098,6 +2123,11 @@ condition|)
 block|{
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_getnamebuf: query_newnamebuf failed: done"
 argument_list|)
 expr_stmt|;
@@ -2138,6 +2168,11 @@ expr_stmt|;
 block|}
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_getnamebuf: done"
 argument_list|)
 expr_stmt|;
@@ -2173,6 +2208,11 @@ name|r
 decl_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_keepname"
 argument_list|)
 expr_stmt|;
@@ -2254,6 +2294,11 @@ decl_stmt|;
 comment|/*% 	 * 'name' is no longer needed.  Return it to our pool of temporary 	 * names.  If it is using a name buffer, relinquish its exclusive 	 * rights on the buffer. 	 */
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_releasename"
 argument_list|)
 expr_stmt|;
@@ -2301,6 +2346,11 @@ argument_list|)
 expr_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_releasename: done"
 argument_list|)
 expr_stmt|;
@@ -2354,6 +2404,11 @@ argument_list|)
 expr_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_newname"
 argument_list|)
 expr_stmt|;
@@ -2382,6 +2437,11 @@ condition|)
 block|{
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_newname: dns_message_gettempname failed: done"
 argument_list|)
 expr_stmt|;
@@ -2436,6 +2496,11 @@ name|NS_QUERYATTR_NAMEBUFUSED
 expr_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_newname: done"
 argument_list|)
 expr_stmt|;
@@ -2468,6 +2533,11 @@ name|result
 decl_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_newrdataset"
 argument_list|)
 expr_stmt|;
@@ -2496,6 +2566,11 @@ condition|)
 block|{
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_newrdataset: "
 literal|"dns_message_gettemprdataset failed: done"
 argument_list|)
@@ -2513,6 +2588,11 @@ argument_list|)
 expr_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_newrdataset: done"
 argument_list|)
 expr_stmt|;
@@ -3246,11 +3326,20 @@ name|dbversion
 operator|==
 name|NULL
 condition|)
+block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"unable to get db version"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|DNS_R_SERVFAIL
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -5053,6 +5142,11 @@ name|result
 decl_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_isduplicate"
 argument_list|)
 expr_stmt|;
@@ -5102,6 +5196,11 @@ block|{
 comment|/* 			 * We've already got this RRset in the response. 			 */
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_isduplicate: true: done"
 argument_list|)
 expr_stmt|;
@@ -5154,6 +5253,11 @@ name|mname
 expr_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_isduplicate: false: done"
 argument_list|)
 expr_stmt|;
@@ -5282,6 +5386,11 @@ operator|)
 return|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addadditional"
 argument_list|)
 expr_stmt|;
@@ -5470,6 +5579,11 @@ name|try_cache
 goto|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addadditional: db_find"
 argument_list|)
 expr_stmt|;
@@ -6616,6 +6730,11 @@ name|addname
 label|:
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addadditional: addname"
 argument_list|)
 expr_stmt|;
@@ -6677,6 +6796,11 @@ name|cleanup
 label|:
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addadditional: cleanup"
 argument_list|)
 expr_stmt|;
@@ -6756,6 +6880,11 @@ argument_list|)
 expr_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addadditional: done"
 argument_list|)
 expr_stmt|;
@@ -7318,6 +7447,11 @@ argument_list|)
 expr_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addadditional2"
 argument_list|)
 expr_stmt|;
@@ -7433,6 +7567,11 @@ condition|)
 block|{
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addadditional2: auth zone not found"
 argument_list|)
 expr_stmt|;
@@ -7463,6 +7602,11 @@ condition|)
 block|{
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addadditional2: old auth additional cache"
 argument_list|)
 expr_stmt|;
@@ -7506,6 +7650,11 @@ block|{
 comment|/* 		 * We have a negative cache.  We don't have to check the zone 		 * ACL, since the result (not using this zone) would be same 		 * regardless of the result. 		 */
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addadditional2: negative auth additional cache"
 argument_list|)
 expr_stmt|;
@@ -7594,6 +7743,11 @@ block|}
 comment|/* We've got an active cache. */
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addadditional2: auth additional cache"
 argument_list|)
 expr_stmt|;
@@ -7702,6 +7856,11 @@ goto|;
 block|}
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addadditional2: db_find"
 argument_list|)
 expr_stmt|;
@@ -8030,6 +8189,11 @@ condition|)
 block|{
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addadditional2: old glue additional cache"
 argument_list|)
 expr_stmt|;
@@ -8073,6 +8237,11 @@ block|{
 comment|/* We have a negative cache. */
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addadditional2: negative glue additional cache"
 argument_list|)
 expr_stmt|;
@@ -8099,6 +8268,11 @@ block|}
 comment|/* Cache hit. */
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addadditional2: glue additional cache"
 argument_list|)
 expr_stmt|;
@@ -8934,6 +9108,11 @@ block|}
 block|}
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addadditional2: addname"
 argument_list|)
 expr_stmt|;
@@ -8970,6 +9149,11 @@ name|cleanup
 label|:
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addadditional2: cleanup"
 argument_list|)
 expr_stmt|;
@@ -9091,6 +9275,11 @@ argument_list|)
 expr_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addadditional2: done"
 argument_list|)
 expr_stmt|;
@@ -9127,6 +9316,11 @@ decl_stmt|;
 comment|/* 	 * Add 'rdataset' and any pertinent additional data to 	 * 'fname', a name in the response message for 'client'. 	 */
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addrdataset"
 argument_list|)
 expr_stmt|;
@@ -9216,6 +9410,11 @@ argument_list|)
 expr_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addrdataset: done"
 argument_list|)
 expr_stmt|;
@@ -9314,6 +9513,11 @@ decl_stmt|;
 comment|/*% 	 * To the current response for 'client', add the answer RRset 	 * '*rdatasetp' and an optional signature set '*sigrdatasetp', with 	 * owner name '*namep', to section 'section', unless they are 	 * already there.  Also add any pertinent additional data. 	 * 	 * If 'dbuf' is not NULL, then '*namep' is the name whose data is 	 * stored in 'dbuf'.  In this case, query_addrrset() guarantees that 	 * when it returns the name will either have been kept or released. 	 */
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_dns64"
 argument_list|)
 expr_stmt|;
@@ -9381,6 +9585,11 @@ block|{
 comment|/* 		 * We've already got an RRset of the given name and type. 		 * There's nothing else to do; 		 */
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_dns64: dns_message_findname succeeded: done"
 argument_list|)
 expr_stmt|;
@@ -10070,6 +10279,11 @@ expr_stmt|;
 block|}
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_dns64: done"
 argument_list|)
 expr_stmt|;
@@ -10147,6 +10361,11 @@ name|i
 decl_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_filter64"
 argument_list|)
 expr_stmt|;
@@ -10235,6 +10454,11 @@ block|{
 comment|/* 		 * We've already got an RRset of the given name and type. 		 * There's nothing else to do; 		 */
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_filter64: dns_message_findname succeeded: done"
 argument_list|)
 expr_stmt|;
@@ -10806,6 +11030,11 @@ argument_list|)
 expr_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_filter64: done"
 argument_list|)
 expr_stmt|;
@@ -10867,6 +11096,11 @@ decl_stmt|;
 comment|/*% 	 * To the current response for 'client', add the answer RRset 	 * '*rdatasetp' and an optional signature set '*sigrdatasetp', with 	 * owner name '*namep', to section 'section', unless they are 	 * already there.  Also add any pertinent additional data. 	 * 	 * If 'dbuf' is not NULL, then '*namep' is the name whose data is 	 * stored in 'dbuf'.  In this case, query_addrrset() guarantees that 	 * when it returns the name will either have been kept or released. 	 */
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addrrset"
 argument_list|)
 expr_stmt|;
@@ -10941,6 +11175,11 @@ block|{
 comment|/* 		 * We've already got an RRset of the given name and type. 		 */
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addrrset: dns_message_findname succeeded: done"
 argument_list|)
 expr_stmt|;
@@ -11119,6 +11358,11 @@ expr_stmt|;
 block|}
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addrrset: done"
 argument_list|)
 expr_stmt|;
@@ -11193,6 +11437,11 @@ name|ci
 decl_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addsoa"
 argument_list|)
 expr_stmt|;
@@ -11305,6 +11554,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"unable to allocate rdataset"
+argument_list|)
+expr_stmt|;
 name|eresult
 operator|=
 name|DNS_R_SERVFAIL
@@ -11340,6 +11596,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"unable to allocate sigrdataset"
+argument_list|)
+expr_stmt|;
 name|eresult
 operator|=
 name|DNS_R_SERVFAIL
@@ -11459,6 +11722,13 @@ name|ISC_R_SUCCESS
 condition|)
 block|{
 comment|/* 		 * This is bad.  We tried to get the SOA RR at the zone top 		 * and it didn't work! 		 */
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"unable to find SOA RR at zone apex"
+argument_list|)
+expr_stmt|;
 name|eresult
 operator|=
 name|DNS_R_SERVFAIL
@@ -11762,6 +12032,11 @@ name|ci
 decl_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addns"
 argument_list|)
 expr_stmt|;
@@ -11834,6 +12109,11 @@ condition|)
 block|{
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addns: dns_message_gettempname failed: done"
 argument_list|)
 expr_stmt|;
@@ -11876,6 +12156,8 @@ condition|)
 block|{
 name|CTRACE
 argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
 literal|"query_addns: query_newrdataset failed"
 argument_list|)
 expr_stmt|;
@@ -11916,6 +12198,8 @@ condition|)
 block|{
 name|CTRACE
 argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
 literal|"query_addns: query_newrdataset failed"
 argument_list|)
 expr_stmt|;
@@ -11974,6 +12258,11 @@ else|else
 block|{
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addns: calling dns_db_find"
 argument_list|)
 expr_stmt|;
@@ -12015,6 +12304,11 @@ argument_list|)
 expr_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addns: dns_db_find complete"
 argument_list|)
 expr_stmt|;
@@ -12028,6 +12322,8 @@ condition|)
 block|{
 name|CTRACE
 argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
 literal|"query_addns: "
 literal|"dns_db_findrdataset or dns_db_find failed"
 argument_list|)
@@ -12078,6 +12374,11 @@ name|cleanup
 label|:
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addns: cleanup"
 argument_list|)
 expr_stmt|;
@@ -12133,6 +12434,11 @@ argument_list|)
 expr_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addns: done"
 argument_list|)
 expr_stmt|;
@@ -12411,12 +12717,6 @@ operator|->
 name|type
 operator|=
 name|dns_rdatatype_cname
-expr_stmt|;
-name|rdatalist
-operator|->
-name|covers
-operator|=
-literal|0
 expr_stmt|;
 name|rdatalist
 operator|->
@@ -13549,6 +13849,11 @@ name|ci
 decl_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addbestns"
 argument_list|)
 expr_stmt|;
@@ -14521,6 +14826,11 @@ name|count
 decl_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addds"
 argument_list|)
 expr_stmt|;
@@ -15162,6 +15472,11 @@ name|ci
 decl_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addwildcardproof"
 argument_list|)
 expr_stmt|;
@@ -16770,6 +17085,14 @@ if|if
 condition|(
 name|fetch_canceled
 condition|)
+block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"fetch cancelled"
+argument_list|)
+expr_stmt|;
 name|query_error
 argument_list|(
 name|client
@@ -16779,6 +17102,7 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|query_next
 argument_list|(
@@ -17656,11 +17980,20 @@ name|rdatasetp
 operator|==
 name|NULL
 condition|)
+block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"rpz_ready: query_newrdataset failed"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|DNS_R_SERVFAIL
 operator|)
 return|;
+block|}
 block|}
 return|return
 operator|(
@@ -18085,6 +18418,13 @@ operator|==
 name|DNS_R_DELEGATION
 condition|)
 block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"RPZ recursing"
+argument_list|)
+expr_stmt|;
 name|rpz_log_fail
 argument_list|(
 name|client
@@ -19529,6 +19869,13 @@ argument_list|,
 name|result
 argument_list|)
 expr_stmt|;
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"rpz_find_p: allrdatasets failed"
+argument_list|)
+expr_stmt|;
 operator|*
 name|policyp
 operator|=
@@ -19630,6 +19977,14 @@ argument_list|,
 literal|"rdatasetiter "
 argument_list|,
 name|result
+argument_list|)
+expr_stmt|;
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"rpz_find_p: rdatasetiter_destroy "
+literal|"failed"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -19876,6 +20231,13 @@ argument_list|,
 literal|""
 argument_list|,
 name|result
+argument_list|)
+expr_stmt|;
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"rpz_find_p: unexpected result"
 argument_list|)
 expr_stmt|;
 return|return
@@ -21959,6 +22321,13 @@ operator|==
 name|DNS_RPZ_POLICY_ERROR
 condition|)
 block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"SERVFAIL due to RPZ policy"
+argument_list|)
+expr_stmt|;
 name|st
 operator|->
 name|m
@@ -22925,6 +23294,11 @@ name|ISC_R_NOMEMORY
 decl_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_addnoqnameproof"
 argument_list|)
 expr_stmt|;
@@ -25306,6 +25680,11 @@ name|dbversion
 decl_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"redirect"
 argument_list|)
 expr_stmt|;
@@ -25732,6 +26111,11 @@ return|;
 block|}
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"redirect: found data: done"
 argument_list|)
 expr_stmt|;
@@ -26044,6 +26428,12 @@ decl_stmt|;
 name|dns_clientinfo_t
 name|ci
 decl_stmt|;
+name|char
+name|errmsg
+index|[
+literal|256
+index|]
+decl_stmt|;
 name|isc_boolean_t
 name|associated
 decl_stmt|;
@@ -26055,6 +26445,11 @@ name|ttl
 decl_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_find"
 argument_list|)
 expr_stmt|;
@@ -26474,6 +26869,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"query_find: query_getnamebuf failed (1)"
+argument_list|)
+expr_stmt|;
 name|QUERY_ERROR
 argument_list|(
 name|DNS_R_SERVFAIL
@@ -26502,6 +26904,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"query_find: query_newname failed (1)"
+argument_list|)
+expr_stmt|;
 name|QUERY_ERROR
 argument_list|(
 name|DNS_R_SERVFAIL
@@ -26566,6 +26975,13 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"query_find: dns_name_copy failed"
+argument_list|)
+expr_stmt|;
 name|QUERY_ERROR
 argument_list|(
 name|DNS_R_SERVFAIL
@@ -26662,6 +27078,11 @@ name|restart
 label|:
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_find: restart"
 argument_list|)
 expr_stmt|;
@@ -27079,11 +27500,20 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"query_find: query_getdb failed"
+argument_list|)
+expr_stmt|;
 name|QUERY_ERROR
 argument_list|(
 name|DNS_R_SERVFAIL
 argument_list|)
 expr_stmt|;
+block|}
 goto|goto
 name|cleanup
 goto|;
@@ -27186,6 +27616,11 @@ name|db_find
 label|:
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_find: db_find"
 argument_list|)
 expr_stmt|;
@@ -27204,6 +27639,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"query_find: query_getnamebuf failed (2)"
+argument_list|)
+expr_stmt|;
 name|QUERY_ERROR
 argument_list|(
 name|DNS_R_SERVFAIL
@@ -27243,6 +27685,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"query_find: query_newname failed (2)"
+argument_list|)
+expr_stmt|;
 name|QUERY_ERROR
 argument_list|(
 name|DNS_R_SERVFAIL
@@ -27284,6 +27733,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"query_find: query_newrdataset failed (2)"
+argument_list|)
+expr_stmt|;
 name|QUERY_ERROR
 argument_list|(
 name|DNS_R_SERVFAIL
@@ -27341,6 +27797,11 @@ name|resume
 label|:
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_find: resume"
 argument_list|)
 expr_stmt|;
@@ -28825,6 +29286,13 @@ block|}
 else|else
 block|{
 comment|/* Unable to give root server referral. */
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"unable to give root server referral"
+argument_list|)
+expr_stmt|;
 name|QUERY_ERROR
 argument_list|(
 name|DNS_R_SERVFAIL
@@ -29752,6 +30220,14 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"query_find: "
+literal|"query_getnamebuf failed (3)"
+argument_list|)
+expr_stmt|;
 name|QUERY_ERROR
 argument_list|(
 name|DNS_R_SERVFAIL
@@ -29780,6 +30256,14 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"query_find: "
+literal|"query_newname failed (3)"
+argument_list|)
+expr_stmt|;
 name|QUERY_ERROR
 argument_list|(
 name|DNS_R_SERVFAIL
@@ -30196,6 +30680,15 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"query_find: "
+literal|"failure getting "
+literal|"closest encloser"
+argument_list|)
+expr_stmt|;
 name|QUERY_ERROR
 argument_list|(
 name|DNS_R_SERVFAIL
@@ -30898,6 +31391,14 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"query_find: "
+literal|"query_getnamebuf failed (4)"
+argument_list|)
+expr_stmt|;
 name|QUERY_ERROR
 argument_list|(
 name|DNS_R_SERVFAIL
@@ -30926,6 +31427,14 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"query_find: "
+literal|"query_newname failed (4)"
+argument_list|)
+expr_stmt|;
 name|QUERY_ERROR
 argument_list|(
 name|DNS_R_SERVFAIL
@@ -31966,6 +32475,32 @@ name|addauth
 goto|;
 default|default:
 comment|/* 		 * Something has gone wrong. 		 */
+name|snprintf
+argument_list|(
+name|errmsg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errmsg
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|"query_find: unexpected error after resuming: %s"
+argument_list|,
+name|isc_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+name|errmsg
+argument_list|)
+expr_stmt|;
 name|QUERY_ERROR
 argument_list|(
 name|DNS_R_SERVFAIL
@@ -32136,6 +32671,13 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"query_find: type any; allrdatasets failed"
+argument_list|)
+expr_stmt|;
 name|QUERY_ERROR
 argument_list|(
 name|DNS_R_SERVFAIL
@@ -32628,10 +33170,20 @@ name|nxrrset_rrsig
 goto|;
 block|}
 else|else
+block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"query_find: no matching rdatasets "
+literal|"in cache"
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
 name|DNS_R_SERVFAIL
 expr_stmt|;
+block|}
 block|}
 name|dns_rdatasetiter_destroy
 argument_list|(
@@ -32646,6 +33198,13 @@ operator|!=
 name|ISC_R_NOMORE
 condition|)
 block|{
+name|CTRACE
+argument_list|(
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"query_find: dns_rdatasetiter_destroy failed"
+argument_list|)
+expr_stmt|;
 name|QUERY_ERROR
 argument_list|(
 name|DNS_R_SERVFAIL
@@ -33332,6 +33891,11 @@ name|addauth
 label|:
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_find: addauth"
 argument_list|)
 expr_stmt|;
@@ -33457,6 +34021,11 @@ name|cleanup
 label|:
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_find: cleanup"
 argument_list|)
 expr_stmt|;
@@ -33921,6 +34490,11 @@ expr_stmt|;
 block|}
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"query_find: done"
 argument_list|)
 expr_stmt|;
@@ -34443,6 +35017,11 @@ name|flags
 decl_stmt|;
 name|CTRACE
 argument_list|(
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
 literal|"ns_query_start"
 argument_list|)
 expr_stmt|;

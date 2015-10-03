@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2012, 2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2012, 2014, 2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<isc/platform.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/print.h>
 end_include
 
 begin_include
@@ -530,6 +536,10 @@ name|exclusive_requested
 decl_stmt|;
 name|isc_boolean_t
 name|exiting
+decl_stmt|;
+comment|/* 	 * Multiple threads can read/write 'excl' at the same time, so we need 	 * to protect the access.  We can't use 'lock' since isc_task_detach() 	 * will try to acquire it. 	 */
+name|isc_mutex_t
+name|excl_lock
 decl_stmt|;
 name|isc__task_t
 modifier|*
@@ -4940,6 +4950,14 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+name|DESTROYLOCK
+argument_list|(
+operator|&
+name|manager
+operator|->
+name|excl_lock
+argument_list|)
+expr_stmt|;
 name|manager
 operator|->
 name|common
@@ -5193,6 +5211,35 @@ condition|)
 goto|goto
 name|cleanup_mgr
 goto|;
+name|result
+operator|=
+name|isc_mutex_init
+argument_list|(
+operator|&
+name|manager
+operator|->
+name|excl_lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+block|{
+name|DESTROYLOCK
+argument_list|(
+operator|&
+name|manager
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+goto|goto
+name|cleanup_mgr
+goto|;
+block|}
 ifdef|#
 directive|ifdef
 name|USE_WORKER_THREADS
@@ -5727,6 +5774,14 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Only one non-worker thread may ever call this routine. 	 * If a worker thread wants to initiate shutdown of the 	 * task manager, it should ask some non-worker thread to call 	 * isc_taskmgr_destroy(), e.g. by signalling a condition variable 	 * that the startup thread is sleeping on. 	 */
 comment|/* 	 * Detach the exclusive task before acquiring the manager lock 	 */
+name|LOCK
+argument_list|(
+operator|&
+name|manager
+operator|->
+name|excl_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|manager
@@ -5746,6 +5801,14 @@ operator|&
 name|manager
 operator|->
 name|excl
+argument_list|)
+expr_stmt|;
+name|UNLOCK
+argument_list|(
+operator|&
+name|manager
+operator|->
+name|excl_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Unlike elsewhere, we're going to hold this lock a long time. 	 * We need to do so, because otherwise the list of tasks could 	 * change while we were traversing it. 	 * 	 * This is also the only function where we will hold both the 	 * task manager lock and a task lock at the same time. 	 */
@@ -6415,6 +6478,14 @@ name|task
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|LOCK
+argument_list|(
+operator|&
+name|mgr
+operator|->
+name|excl_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mgr
@@ -6451,6 +6522,14 @@ operator|->
 name|excl
 argument_list|)
 expr_stmt|;
+name|UNLOCK
+argument_list|(
+operator|&
+name|mgr
+operator|->
+name|excl_lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6479,6 +6558,11 @@ operator|*
 operator|)
 name|mgr0
 decl_stmt|;
+name|isc_result_t
+name|result
+init|=
+name|ISC_R_SUCCESS
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|VALID_MANAGER
@@ -6499,19 +6583,22 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
+name|LOCK
+argument_list|(
+operator|&
+name|mgr
+operator|->
+name|excl_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mgr
 operator|->
 name|excl
-operator|==
+operator|!=
 name|NULL
 condition|)
-return|return
-operator|(
-name|ISC_R_NOTFOUND
-operator|)
-return|;
 name|isc__task_attach
 argument_list|(
 operator|(
@@ -6525,9 +6612,22 @@ argument_list|,
 name|taskp
 argument_list|)
 expr_stmt|;
+else|else
+name|result
+operator|=
+name|ISC_R_NOTFOUND
+expr_stmt|;
+name|UNLOCK
+argument_list|(
+operator|&
+name|mgr
+operator|->
+name|excl_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|ISC_R_SUCCESS
+name|result
 operator|)
 return|;
 block|}

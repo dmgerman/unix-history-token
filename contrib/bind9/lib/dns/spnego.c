@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2006-2014  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
-end_comment
-
-begin_comment
-comment|/* $Id$ */
+comment|/*  * Copyright (C) 2006-2015  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -87,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<isc/random.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/safe.h>
 end_include
 
 begin_include
@@ -1182,7 +1184,7 @@ name|gss_buffer_t
 name|token
 parameter_list|,
 name|gss_OID
-name|oid
+name|gssoid
 parameter_list|)
 block|{
 name|unsigned
@@ -1284,7 +1286,7 @@ name|p
 operator|++
 operator|)
 operator|!=
-name|oid
+name|gssoid
 operator|->
 name|length
 condition|)
@@ -1295,15 +1297,15 @@ operator|)
 return|;
 return|return
 operator|(
-name|memcmp
+name|isc_safe_memcompare
 argument_list|(
 name|p
 argument_list|,
-name|oid
+name|gssoid
 operator|->
 name|elements
 argument_list|,
-name|oid
+name|gssoid
 operator|->
 name|length
 argument_list|)
@@ -2375,7 +2377,7 @@ name|GSS_KRB5_MECH
 operator|->
 name|length
 operator|&&
-name|memcmp
+name|isc_safe_memequal
 argument_list|(
 name|GSS_KRB5_MECH
 operator|->
@@ -2392,8 +2394,6 @@ name|mech_len
 argument_list|,
 name|mech_len
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|found
@@ -2410,7 +2410,7 @@ name|GSS_MSKRB5_MECH
 operator|->
 name|length
 operator|&&
-name|memcmp
+name|isc_safe_memequal
 argument_list|(
 name|GSS_MSKRB5_MECH
 operator|->
@@ -2427,8 +2427,6 @@ name|mech_len
 argument_list|,
 name|mech_len
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|found
@@ -2780,7 +2778,8 @@ operator|)
 return|;
 if|if
 condition|(
-name|memcmp
+operator|!
+name|isc_safe_memequal
 argument_list|(
 name|p
 argument_list|,
@@ -2792,8 +2791,6 @@ name|mech
 operator|->
 name|length
 argument_list|)
-operator|!=
-literal|0
 condition|)
 return|return
 operator|(
@@ -7295,7 +7292,7 @@ name|GSS_KRB5_MECH
 operator|->
 name|length
 operator|&&
-name|memcmp
+name|isc_safe_memequal
 argument_list|(
 name|GSS_KRB5_MECH
 operator|->
@@ -7305,8 +7302,6 @@ name|p
 argument_list|,
 name|mech_len
 argument_list|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
@@ -7352,7 +7347,7 @@ name|GSS_SPNEGO_MECH
 operator|->
 name|length
 operator|&&
-name|memcmp
+name|isc_safe_memequal
 argument_list|(
 name|GSS_SPNEGO_MECH
 operator|->
@@ -7362,8 +7357,6 @@ name|p
 argument_list|,
 name|mech_len
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|ret
@@ -7552,7 +7545,8 @@ name|GSS_KRB5_MECH
 operator|->
 name|length
 operator|||
-name|memcmp
+operator|!
+name|isc_safe_memequal
 argument_list|(
 name|oidbuf
 operator|+
@@ -7569,8 +7563,6 @@ name|elements
 argument_list|,
 name|oidlen
 argument_list|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|free_NegTokenResp

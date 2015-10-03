@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -688,7 +688,7 @@ name|requestmgr
 decl_stmt|;
 name|isc_socket_t
 modifier|*
-name|socket
+name|sock
 decl_stmt|;
 name|isc_result_t
 name|result
@@ -752,7 +752,7 @@ argument_list|)
 expr_stmt|;
 name|UNUSED
 argument_list|(
-name|socket
+name|sock
 argument_list|)
 expr_stmt|;
 if|if
@@ -2143,7 +2143,7 @@ name|r
 decl_stmt|;
 name|isc_socket_t
 modifier|*
-name|socket
+name|sock
 decl_stmt|;
 name|isc_result_t
 name|result
@@ -2168,7 +2168,7 @@ name|request
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|socket
+name|sock
 operator|=
 name|req_getsocket
 argument_list|(
@@ -2190,7 +2190,7 @@ name|result
 operator|=
 name|isc_socket_sendto
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 operator|&
 name|r
@@ -2575,7 +2575,7 @@ name|result
 decl_stmt|;
 name|isc_socket_t
 modifier|*
-name|socket
+name|sock
 init|=
 name|NULL
 decl_stmt|;
@@ -2605,7 +2605,7 @@ argument_list|,
 name|isc_sockettype_tcp
 argument_list|,
 operator|&
-name|socket
+name|sock
 argument_list|)
 expr_stmt|;
 if|if
@@ -2644,7 +2644,7 @@ name|result
 operator|=
 name|isc_socket_bind
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 operator|&
 name|bind_any
@@ -2672,7 +2672,7 @@ name|result
 operator|=
 name|isc_socket_bind
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 operator|&
 name|src
@@ -2734,7 +2734,7 @@ name|requestmgr
 operator|->
 name|dispatchmgr
 argument_list|,
-name|socket
+name|sock
 argument_list|,
 name|requestmgr
 operator|->
@@ -2760,7 +2760,7 @@ label|:
 name|isc_socket_detach
 argument_list|(
 operator|&
-name|socket
+name|sock
 argument_list|)
 expr_stmt|;
 return|return
@@ -3385,7 +3385,7 @@ name|NULL
 decl_stmt|;
 name|isc_socket_t
 modifier|*
-name|socket
+name|sock
 init|=
 name|NULL
 decl_stmt|;
@@ -3847,7 +3847,7 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
-name|socket
+name|sock
 operator|=
 name|req_getsocket
 argument_list|(
@@ -3856,7 +3856,7 @@ argument_list|)
 expr_stmt|;
 name|INSIST
 argument_list|(
-name|socket
+name|sock
 operator|!=
 name|NULL
 argument_list|)
@@ -4093,7 +4093,7 @@ name|result
 operator|=
 name|isc_socket_connect
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|destaddr
 argument_list|,
@@ -4579,7 +4579,7 @@ name|NULL
 decl_stmt|;
 name|isc_socket_t
 modifier|*
-name|socket
+name|sock
 init|=
 name|NULL
 decl_stmt|;
@@ -4597,7 +4597,7 @@ name|isc_boolean_t
 name|tcp
 decl_stmt|;
 name|isc_boolean_t
-name|setkey
+name|settsigkey
 init|=
 name|ISC_TRUE
 decl_stmt|;
@@ -4979,7 +4979,7 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
-name|socket
+name|sock
 operator|=
 name|req_getsocket
 argument_list|(
@@ -4988,7 +4988,7 @@ argument_list|)
 expr_stmt|;
 name|INSIST
 argument_list|(
-name|socket
+name|sock
 operator|!=
 name|NULL
 argument_list|)
@@ -5001,7 +5001,7 @@ name|id
 expr_stmt|;
 if|if
 condition|(
-name|setkey
+name|settsigkey
 condition|)
 block|{
 name|result
@@ -5080,7 +5080,7 @@ operator|->
 name|dispatch
 argument_list|)
 expr_stmt|;
-name|socket
+name|sock
 operator|=
 name|NULL
 expr_stmt|;
@@ -5088,7 +5088,7 @@ name|options
 operator||=
 name|DNS_REQUESTOPT_TCP
 expr_stmt|;
-name|setkey
+name|settsigkey
 operator|=
 name|ISC_FALSE
 expr_stmt|;
@@ -5239,7 +5239,7 @@ name|result
 operator|=
 name|isc_socket_connect
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|destaddr
 argument_list|,
@@ -6466,7 +6466,7 @@ name|dispattr
 decl_stmt|;
 name|isc_socket_t
 modifier|*
-name|socket
+name|sock
 decl_stmt|;
 name|dispattr
 operator|=
@@ -6497,7 +6497,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|socket
+name|sock
 operator|=
 name|dns_dispatch_getentrysocket
 argument_list|(
@@ -6508,7 +6508,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|socket
+name|sock
 operator|=
 name|dns_dispatch_getsocket
 argument_list|(
@@ -6519,7 +6519,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|socket
+name|sock
 operator|)
 return|;
 block|}
@@ -7609,7 +7609,7 @@ parameter_list|)
 block|{
 name|isc_socket_t
 modifier|*
-name|socket
+name|sock
 decl_stmt|;
 name|unsigned
 name|int
@@ -7667,7 +7667,7 @@ operator|->
 name|dispatch
 argument_list|)
 expr_stmt|;
-name|socket
+name|sock
 operator|=
 name|NULL
 expr_stmt|;
@@ -7704,7 +7704,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|socket
+name|sock
 operator|=
 name|dns_dispatch_getentrysocket
 argument_list|(
@@ -7716,7 +7716,7 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|socket
+name|sock
 operator|=
 name|dns_dispatch_getsocket
 argument_list|(
@@ -7732,13 +7732,13 @@ argument_list|(
 name|request
 argument_list|)
 operator|&&
-name|socket
+name|sock
 operator|!=
 name|NULL
 condition|)
 name|isc_socket_cancel
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|NULL
 argument_list|,
@@ -7752,13 +7752,13 @@ argument_list|(
 name|request
 argument_list|)
 operator|&&
-name|socket
+name|sock
 operator|!=
 name|NULL
 condition|)
 name|isc_socket_cancel
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|NULL
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2009-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009-2012, 2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -1158,7 +1158,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *  * Split 'name' into two pieces on a label boundary.  *  * Notes:  * \li     'name' is split such that 'suffix' holds the most significant  *      'suffixlabels' labels.  All other labels are stored in 'prefix'.  *  *\li	Copying name data is avoided as much as possible, so 'prefix'  *	and 'suffix' will end up pointing at the data for 'name'.  *  *\li	It is legitimate to pass a 'prefix' or 'suffix' that has  *	its name data stored someplace other than the dedicated buffer.  *	This is useful to avoid name copying in the calling function.  *  *\li	It is also legitimate to pass a 'prefix' or 'suffix' that is  *	the same dns_name_t as 'name'.  *  * Requires:  *\li	'name' is a valid name.  *  *\li	'suffixlabels' cannot exceed the number of labels in 'name'.  *  * \li	'prefix' is a valid name or NULL, and cannot be read-only.  *  *\li	'suffix' is a valid name or NULL, and cannot be read-only.  *  *\li	If non-NULL, 'prefix' and 'suffix' must have dedicated buffers.  *  *\li	'prefix' and 'suffix' cannot point to the same buffer.  *  * Ensures:  *  *\li	On success:  *		If 'prefix' is not NULL it will contain the least significant  *		labels.  *		If 'suffix' is not NULL it will contain the most significant  *		labels.  dns_name_countlabels(suffix) will be equal to  *		suffixlabels.  *  *\li	On failure:  *		Either 'prefix' or 'suffix' is invalidated (depending  *		on which one the problem was encountered with).  *  * Returns:  *\li	#ISC_R_SUCCESS	No worries.  (This function should always success).  */
+comment|/*%<  *  * Split 'name' into two pieces on a label boundary.  *  * Notes:  * \li     'name' is split such that 'suffix' holds the most significant  *      'suffixlabels' labels.  All other labels are stored in 'prefix'.  *  *\li	Copying name data is avoided as much as possible, so 'prefix'  *	and 'suffix' will end up pointing at the data for 'name'.  *  *\li	It is legitimate to pass a 'prefix' or 'suffix' that has  *	its name data stored someplace other than the dedicated buffer.  *	This is useful to avoid name copying in the calling function.  *  *\li	It is also legitimate to pass a 'prefix' or 'suffix' that is  *	the same dns_name_t as 'name'.  *  * Requires:  *\li	'name' is a valid name.  *  *\li	'suffixlabels' cannot exceed the number of labels in 'name'.  *  * \li	'prefix' is a valid name or NULL, and cannot be read-only.  *  *\li	'suffix' is a valid name or NULL, and cannot be read-only.  *  * Ensures:  *  *\li	On success:  *		If 'prefix' is not NULL it will contain the least significant  *		labels.  *		If 'suffix' is not NULL it will contain the most significant  *		labels.  dns_name_countlabels(suffix) will be equal to  *		suffixlabels.  *  *\li	On failure:  *		Either 'prefix' or 'suffix' is invalidated (depending  *		on which one the problem was encountered with).  *  * Returns:  *\li	#ISC_R_SUCCESS	No worries.  (This function should always success).  */
 end_comment
 
 begin_function_decl
@@ -1327,7 +1327,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Convert 'name' to string format, allocating sufficient memory to  * hold it (free with isc_mem_free()).  *  * Differs from dns_name_format in that it allocates its own memory.  *  * Requires:  *  *\li	'name' is a valid name.  *\li	'target' is not NULL.  *\li	'*target' is NULL.  *  * Returns:  *  *\li	ISC_R_SUCCESS  *  *\li	Any error that dns_name_totext() can return.  */
+comment|/*%<  * Convert 'name' to string format, allocating sufficient memory to  * hold it (free with isc_mem_free()).  *  * Differs from dns_name_format in that it allocates its own memory.  *  * Requires:  *  *\li	'name' is a valid name.  *\li	'target' is not NULL.  *\li	'*target' is NULL.  *  * Returns:  *  *\li	ISC_R_SUCCESS  *\li	ISC_R_NOMEMORY  *  *\li	Any error that dns_name_totext() can return.  */
 end_comment
 
 begin_function_decl
@@ -1497,6 +1497,22 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Cleanup dns_name_settotextfilter() / dns_name_totext() state.  *  * This should be called as part of the final cleanup process.  *  * Note: dns_name_settotextfilter(NULL); should be called for all  * threads which have called dns_name_settotextfilter() with a  * non-NULL argument prior to calling dns_name_destroy();  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|dns_name_isdnssd
+parameter_list|(
+specifier|const
+name|dns_name_t
+modifier|*
+name|owner
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Determine if the 'owner' is a DNS-SD prefix.  */
 end_comment
 
 begin_macro

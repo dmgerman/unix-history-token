@@ -522,6 +522,14 @@ comment|/* #undef DNS_RDATASET_FIXED */
 end_comment
 
 begin_comment
+comment|/* Define to enable the "fetches-per-server" and "fetches-per-zone" options.    */
+end_comment
+
+begin_comment
+comment|/* #undef ENABLE_FETCHLIMIT */
+end_comment
+
+begin_comment
 comment|/* Define to enable rpz-nsdname rules. */
 end_comment
 
@@ -1478,6 +1486,14 @@ end_comment
 
 begin_comment
 comment|/* #undef USE_RRL */
+end_comment
+
+begin_comment
+comment|/* Define to enable very verbose query trace logging. */
+end_comment
+
+begin_comment
+comment|/* #undef WANT_QUERYTRACE */
 end_comment
 
 begin_comment

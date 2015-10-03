@@ -3,10 +3,6 @@ begin_comment
 comment|/*  * Copyright (C) 2004-2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
-begin_comment
-comment|/* $Id$ */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -47,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<isc/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/random.h>
 end_include
 
 begin_include
@@ -1108,7 +1110,7 @@ condition|)
 block|{
 name|isc_socket_t
 modifier|*
-name|socket
+name|sock
 decl_stmt|;
 if|if
 condition|(
@@ -1117,14 +1119,14 @@ argument_list|(
 name|client
 argument_list|)
 condition|)
-name|socket
+name|sock
 operator|=
 name|client
 operator|->
 name|tcpsocket
 expr_stmt|;
 else|else
-name|socket
+name|sock
 operator|=
 name|client
 operator|->
@@ -1132,7 +1134,7 @@ name|udpsocket
 expr_stmt|;
 name|isc_socket_cancel
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|client
 operator|->
@@ -3256,7 +3258,7 @@ name|address
 decl_stmt|;
 name|isc_socket_t
 modifier|*
-name|socket
+name|sock
 decl_stmt|;
 name|isc_netaddr_t
 name|netaddr
@@ -3278,7 +3280,7 @@ name|client
 argument_list|)
 condition|)
 block|{
-name|socket
+name|sock
 operator|=
 name|client
 operator|->
@@ -3291,7 +3293,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|socket
+name|sock
 operator|=
 name|client
 operator|->
@@ -3412,7 +3414,7 @@ name|result
 operator|=
 name|isc_socket_sendto2
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 operator|&
 name|r
@@ -4803,6 +4805,9 @@ decl_stmt|;
 name|dns_rrl_result_t
 name|rrl_result
 decl_stmt|;
+name|int
+name|loglevel
+decl_stmt|;
 name|INSIST
 argument_list|(
 name|rcode
@@ -4814,13 +4819,31 @@ operator|!=
 name|dns_rcode_nxdomain
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ns_g_server
+operator|->
+name|log_queries
+condition|)
+name|loglevel
+operator|=
+name|DNS_RRL_LOG_DROP
+expr_stmt|;
+else|else
+name|loglevel
+operator|=
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|wouldlog
 operator|=
 name|isc_log_wouldlog
 argument_list|(
 name|ns_g_lctx
 argument_list|,
-name|DNS_RRL_LOG_DROP
+name|loglevel
 argument_list|)
 expr_stmt|;
 name|rrl_result
@@ -4884,7 +4907,7 @@ name|NS_LOGCATEGORY_QUERY_EERRORS
 argument_list|,
 name|NS_LOGMODULE_CLIENT
 argument_list|,
-name|DNS_RRL_LOG_DROP
+name|loglevel
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -6784,7 +6807,7 @@ name|ns_g_server
 operator|->
 name|nsstats
 argument_list|,
-name|dns_nsstatscounter_tcp
+name|dns_nsstatscounter_requesttcp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * It's a request.  Parse it. 	 */
@@ -6809,6 +6832,38 @@ name|ISC_R_SUCCESS
 condition|)
 block|{
 comment|/* 		 * Parsing the request failed.  Send a response 		 * (typically FORMERR or SERVFAIL). 		 */
+if|if
+condition|(
+name|result
+operator|==
+name|DNS_R_OPTERR
+condition|)
+operator|(
+name|void
+operator|)
+name|client_addopt
+argument_list|(
+name|client
+argument_list|)
+expr_stmt|;
+name|ns_client_log
+argument_list|(
+name|client
+argument_list|,
+name|NS_LOGCATEGORY_CLIENT
+argument_list|,
+name|NS_LOGMODULE_CLIENT
+argument_list|,
+name|ISC_LOG_WARNING
+argument_list|,
+literal|"message parsing failed: %s"
+argument_list|,
+name|isc_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ns_client_error
 argument_list|(
 name|client
@@ -11741,7 +11796,7 @@ block|{
 name|char
 name|msgbuf
 index|[
-literal|2048
+literal|4096
 index|]
 decl_stmt|;
 name|char

@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isc/print.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<isc/rwlock.h>
 end_include
 

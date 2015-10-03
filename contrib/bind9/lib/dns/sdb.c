@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2012, 2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -1380,6 +1380,11 @@ operator|(
 name|ISC_R_NOMEMORY
 operator|)
 return|;
+name|dns_rdatalist_init
+argument_list|(
+name|rdatalist
+argument_list|)
+expr_stmt|;
 name|rdatalist
 operator|->
 name|rdclass
@@ -1400,29 +1405,9 @@ name|typeval
 expr_stmt|;
 name|rdatalist
 operator|->
-name|covers
-operator|=
-literal|0
-expr_stmt|;
-name|rdatalist
-operator|->
 name|ttl
 operator|=
 name|ttl
-expr_stmt|;
-name|ISC_LIST_INIT
-argument_list|(
-name|rdatalist
-operator|->
-name|rdata
-argument_list|)
-expr_stmt|;
-name|ISC_LINK_INIT
-argument_list|(
-name|rdatalist
-argument_list|,
-name|link
-argument_list|)
 expr_stmt|;
 name|ISC_LIST_APPEND
 argument_list|(
@@ -6268,7 +6253,7 @@ modifier|*
 name|db
 parameter_list|,
 name|isc_boolean_t
-name|overmem
+name|over
 parameter_list|)
 block|{
 name|UNUSED
@@ -6278,7 +6263,7 @@ argument_list|)
 expr_stmt|;
 name|UNUSED
 argument_list|(
-name|overmem
+name|over
 argument_list|)
 expr_stmt|;
 block|}

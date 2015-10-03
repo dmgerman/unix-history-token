@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isc/safe.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dst/dst.h>
 end_include
 
@@ -9360,7 +9366,7 @@ return|;
 comment|/* 	 * Work out what this NSEC3 covers. 	 * Inside (<0) or outside (>=0). 	 */
 name|scope
 operator|=
-name|memcmp
+name|isc_safe_memcompare
 argument_list|(
 name|owner
 argument_list|,
@@ -9485,7 +9491,7 @@ return|;
 block|}
 name|order
 operator|=
-name|memcmp
+name|isc_safe_memcompare
 argument_list|(
 name|hash
 argument_list|,

@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isc/print.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<isc/region.h>
 end_include
 
@@ -1044,7 +1050,7 @@ name|activate
 init|=
 literal|0
 decl_stmt|,
-name|revoke
+name|revokekey
 init|=
 literal|0
 decl_stmt|;
@@ -1855,7 +1861,7 @@ argument_list|(
 literal|"-R specified more than once"
 argument_list|)
 expr_stmt|;
-name|revoke
+name|revokekey
 operator|=
 name|strtotime
 argument_list|(
@@ -4438,7 +4444,7 @@ name|key
 argument_list|,
 name|DST_TIME_REVOKE
 argument_list|,
-name|revoke
+name|revokekey
 argument_list|)
 expr_stmt|;
 block|}

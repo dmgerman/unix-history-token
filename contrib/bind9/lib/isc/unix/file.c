@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007, 2009, 2011-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2009, 2011-2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -379,7 +379,7 @@ name|file
 parameter_list|,
 name|isc_time_t
 modifier|*
-name|time
+name|modtime
 parameter_list|)
 block|{
 name|isc_result_t
@@ -398,7 +398,7 @@ argument_list|)
 expr_stmt|;
 name|REQUIRE
 argument_list|(
-name|time
+name|modtime
 operator|!=
 name|NULL
 argument_list|)
@@ -422,7 +422,7 @@ condition|)
 comment|/* 		 * XXXDCL some operating systems provide nanoseconds, too, 		 * such as BSD/OS via st_mtimespec. 		 */
 name|isc_time_set
 argument_list|(
-name|time
+name|modtime
 argument_list|,
 name|stats
 operator|.
@@ -450,7 +450,7 @@ name|file
 parameter_list|,
 name|isc_time_t
 modifier|*
-name|time
+name|when
 parameter_list|)
 block|{
 name|struct
@@ -466,7 +466,7 @@ name|file
 operator|!=
 name|NULL
 operator|&&
-name|time
+name|when
 operator|!=
 name|NULL
 argument_list|)
@@ -491,7 +491,7 @@ name|long
 operator|)
 name|isc_time_seconds
 argument_list|(
-name|time
+name|when
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Here is the real check for the high bit being set. 	 */
@@ -554,7 +554,7 @@ call|)
 argument_list|(
 name|isc_time_nanoseconds
 argument_list|(
-name|time
+name|when
 argument_list|)
 operator|/
 literal|1000

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008, 2011, 2013, 2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008, 2011, 2013-2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -325,6 +325,17 @@ define|#
 directive|define
 name|DNS_ADBFIND_LAMEPRUNED
 value|0x00000200
+end_define
+
+begin_comment
+comment|/*%  *      The server's fetch quota is exceeded; it will be treated as  *      lame for this query.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_ADBFIND_OVERQUOTA
+value|0x00000400
 end_define
 
 begin_comment
@@ -812,6 +823,44 @@ comment|/*%  * Change Flags.  *  * Set the flags as given by:  *  *\li	newflags 
 end_comment
 
 begin_function_decl
+name|void
+name|dns_adb_plainresponse
+parameter_list|(
+name|dns_adb_t
+modifier|*
+name|adb
+parameter_list|,
+name|dns_adbaddrinfo_t
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Record a successful DNS response.  *  * Requires:  *  *\li  adb be valid.  *  *\li  addr be valid.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_adb_timeout
+parameter_list|(
+name|dns_adb_t
+modifier|*
+name|adb
+parameter_list|,
+name|dns_adbaddrinfo_t
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Record a DNS UDP query failed.  *  * Requires:  *  *\li  adb be valid.  *  *\li  addr be valid.  */
+end_comment
+
+begin_function_decl
 name|isc_result_t
 name|dns_adb_findaddrinfo
 parameter_list|(
@@ -908,6 +957,85 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Flush 'name' from the adb cache.  *  * Requires:  *\li	'adb' is valid.  *\li	'name' is valid.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_adb_setquota
+parameter_list|(
+name|dns_adb_t
+modifier|*
+name|adb
+parameter_list|,
+name|isc_uint32_t
+name|quota
+parameter_list|,
+name|isc_uint32_t
+name|freq
+parameter_list|,
+name|double
+name|low
+parameter_list|,
+name|double
+name|high
+parameter_list|,
+name|double
+name|discount
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set the baseline ADB quota, and configure parameters for the  * quota adjustment algorithm.  *  * If the number of fetches currently waiting for responses from this  * address exceeds the current quota, then additional fetches are spilled.  *  * 'quota' is the highest permissible quota; it will adjust itself  * downward in response to detected congestion.  *  * After every 'freq' fetches have either completed or timed out, an  * exponentially weighted moving average of the ratio of timeouts  * to responses is calculated.  If the EWMA goes above a 'high'  * threshold, then the quota is adjusted down one step; if it drops  * below a 'low' threshold, then the quota is adjusted back up one  * step.  *  * The quota adjustment is based on the function (1 / 1 + (n/10)^(3/2)),  * for values of n from 0 to 99.  It starts at 100% of the baseline  * quota, and descends after 100 steps to 2%.  *  * 'discount' represents the discount rate of the moving average. Higher  * values cause older values to be discounted sooner, providing a faster  * response to changes in the timeout ratio.  *  * Requires:  *\li	'adb' is valid.  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|dns_adbentry_overquota
+parameter_list|(
+name|dns_adbentry_t
+modifier|*
+name|entry
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Returns true if the specified ADB has too many active fetches.  *  * Requires:  *\li	'entry' is valid.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_adb_beginudpfetch
+parameter_list|(
+name|dns_adb_t
+modifier|*
+name|adb
+parameter_list|,
+name|dns_adbaddrinfo_t
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dns_adb_endudpfetch
+parameter_list|(
+name|dns_adb_t
+modifier|*
+name|adb
+parameter_list|,
+name|dns_adbaddrinfo_t
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Begin/end a UDP fetch on a particular address.  *  * These functions increment or decrement the fetch counter for  * the ADB entry so that the fetch quota can be enforced.  *  * Requires:  *  *\li	adb be valid.  *  *\li	addr be valid.  */
 end_comment
 
 begin_macro

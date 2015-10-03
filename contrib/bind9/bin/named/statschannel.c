@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2008-2014  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
-end_comment
-
-begin_comment
-comment|/* $Id: statschannel.c,v 1.28 2011/03/12 04:59:46 tbox Exp $ */
+comment|/*  * Copyright (C) 2008-2015  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -555,6 +551,29 @@ operator|<
 name|maxcounter
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fdescs
+index|[
+name|counter
+index|]
+operator|!=
+name|NULL
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"fdescs[%d] == %s\n"
+argument_list|,
+name|counter
+argument_list|,
+name|fdescs
+index|[
+name|counter
+index|]
+argument_list|)
+expr_stmt|;
 name|REQUIRE
 argument_list|(
 name|fdescs
@@ -752,7 +771,7 @@ argument_list|)
 expr_stmt|;
 name|SET_NSSTATDESC
 argument_list|(
-name|tcp
+name|requesttcp
 argument_list|,
 literal|"TCP requests received"
 argument_list|,
@@ -1013,16 +1032,22 @@ argument_list|)
 expr_stmt|;
 name|SET_NSSTATDESC
 argument_list|(
-name|rpz_rewrites
+name|recursclients
 argument_list|,
-literal|"response policy zone rewrites"
+literal|"recursing clients"
 argument_list|,
-literal|"RPZRewrites"
+literal|"RecursClients"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_RRL
+name|SET_NSSTATDESC
+argument_list|(
+name|dns64
+argument_list|,
+literal|"queries answered by DNS64"
+argument_list|,
+literal|"DNS64"
+argument_list|)
+expr_stmt|;
 name|SET_NSSTATDESC
 argument_list|(
 name|ratedropped
@@ -1041,9 +1066,123 @@ argument_list|,
 literal|"RateSlipped"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* USE_RRL */
+name|SET_NSSTATDESC
+argument_list|(
+name|rpz_rewrites
+argument_list|,
+literal|"response policy zone rewrites"
+argument_list|,
+literal|"RPZRewrites"
+argument_list|)
+expr_stmt|;
+name|SET_NSSTATDESC
+argument_list|(
+name|udp
+argument_list|,
+literal|"UDP queries received"
+argument_list|,
+literal|"QryUDP"
+argument_list|)
+expr_stmt|;
+name|SET_NSSTATDESC
+argument_list|(
+name|tcp
+argument_list|,
+literal|"TCP queries received"
+argument_list|,
+literal|"QryTCP"
+argument_list|)
+expr_stmt|;
+name|SET_NSSTATDESC
+argument_list|(
+name|nsidopt
+argument_list|,
+literal|"NSID option received"
+argument_list|,
+literal|"NSIDOpt"
+argument_list|)
+expr_stmt|;
+name|SET_NSSTATDESC
+argument_list|(
+name|expireopt
+argument_list|,
+literal|"Expire option received"
+argument_list|,
+literal|"ExpireOpt"
+argument_list|)
+expr_stmt|;
+name|SET_NSSTATDESC
+argument_list|(
+name|otheropt
+argument_list|,
+literal|"Other EDNS option received"
+argument_list|,
+literal|"OtherOpt"
+argument_list|)
+expr_stmt|;
+name|SET_NSSTATDESC
+argument_list|(
+name|sitopt
+argument_list|,
+literal|"source identity token option received"
+argument_list|,
+literal|"SitOpt"
+argument_list|)
+expr_stmt|;
+name|SET_NSSTATDESC
+argument_list|(
+name|sitnew
+argument_list|,
+literal|"new source identity token requested"
+argument_list|,
+literal|"SitNew"
+argument_list|)
+expr_stmt|;
+name|SET_NSSTATDESC
+argument_list|(
+name|sitbadsize
+argument_list|,
+literal|"source identity token - bad size"
+argument_list|,
+literal|"SitBadSize"
+argument_list|)
+expr_stmt|;
+name|SET_NSSTATDESC
+argument_list|(
+name|sitbadtime
+argument_list|,
+literal|"source identity token - bad time"
+argument_list|,
+literal|"SitBadTime"
+argument_list|)
+expr_stmt|;
+name|SET_NSSTATDESC
+argument_list|(
+name|sitnomatch
+argument_list|,
+literal|"source identity token - no match"
+argument_list|,
+literal|"SitNoMatch"
+argument_list|)
+expr_stmt|;
+name|SET_NSSTATDESC
+argument_list|(
+name|sitmatch
+argument_list|,
+literal|"source identity token - match"
+argument_list|,
+literal|"SitMatch"
+argument_list|)
+expr_stmt|;
+name|SET_NSSTATDESC
+argument_list|(
+name|ecsopt
+argument_list|,
+literal|"EDNS client subnet option recieved"
+argument_list|,
+literal|"ECSOpt"
+argument_list|)
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|i
@@ -1408,6 +1547,24 @@ argument_list|,
 literal|"QryRTT"
 name|DNS_RESOLVER_QRYRTTCLASS4STR
 literal|"+"
+argument_list|)
+expr_stmt|;
+name|SET_RESSTATDESC
+argument_list|(
+name|zonequota
+argument_list|,
+literal|"spilled due to zone quota"
+argument_list|,
+literal|"ZoneQuota"
+argument_list|)
+expr_stmt|;
+name|SET_RESSTATDESC
+argument_list|(
+name|serverquota
+argument_list|,
+literal|"spilled due to server quota"
+argument_list|,
+literal|"ServerQuota"
 argument_list|)
 expr_stmt|;
 name|INSIST
@@ -2578,7 +2735,7 @@ block|{
 name|int
 name|i
 decl_stmt|,
-name|index
+name|idx
 decl_stmt|;
 name|isc_uint64_t
 name|value
@@ -2678,7 +2835,7 @@ name|i
 operator|++
 control|)
 block|{
-name|index
+name|idx
 operator|=
 name|indices
 index|[
@@ -2689,7 +2846,7 @@ name|value
 operator|=
 name|values
 index|[
-name|index
+name|idx
 index|]
 expr_stmt|;
 if|if
@@ -2733,7 +2890,7 @@ name|value
 argument_list|,
 name|desc
 index|[
-name|index
+name|idx
 index|]
 argument_list|)
 expr_stmt|;
@@ -2787,7 +2944,7 @@ name|xmlTextWriterWriteString
 argument_list|(
 argument|writer
 argument_list|,
-argument|ISC_XMLCHAR 						      desc[index]
+argument|ISC_XMLCHAR 						      desc[i]
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2867,7 +3024,7 @@ argument_list|,
 argument|ISC_XMLCHAR
 literal|"name"
 argument_list|,
-argument|ISC_XMLCHAR 							 desc[index]
+argument|ISC_XMLCHAR 							 desc[i]
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2936,7 +3093,7 @@ name|xmlTextWriterWriteString
 argument_list|(
 argument|writer
 argument_list|,
-argument|ISC_XMLCHAR 							      desc[index]
+argument|ISC_XMLCHAR 							      desc[idx]
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2969,7 +3126,7 @@ name|xmlTextWriterStartElement
 argument_list|(
 argument|writer
 argument_list|,
-argument|ISC_XMLCHAR 							       desc[index]
+argument|ISC_XMLCHAR 							       desc[idx]
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4327,12 +4484,6 @@ literal|32
 index|]
 decl_stmt|;
 comment|/* sufficiently large for zone name and class */
-name|char
-modifier|*
-name|zone_name_only
-init|=
-name|NULL
-decl_stmt|;
 name|dns_rdataclass_t
 name|rdclass
 decl_stmt|;
@@ -4408,7 +4559,7 @@ literal|"zone"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|dns_zone_name
+name|dns_zone_nameonly
 argument_list|(
 name|zone
 argument_list|,
@@ -4420,25 +4571,6 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|zone_name_only
-operator|=
-name|strtok
-argument_list|(
-name|buf
-argument_list|,
-literal|"/"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|zone_name_only
-operator|==
-name|NULL
-condition|)
-name|zone_name_only
-operator|=
-name|buf
-expr_stmt|;
 name|TRY0
 argument_list|(
 name|xmlTextWriterWriteAttribute
@@ -4448,7 +4580,7 @@ argument_list|,
 argument|ISC_XMLCHAR
 literal|"name"
 argument_list|,
-argument|ISC_XMLCHAR zone_name_only
+argument|ISC_XMLCHAR buf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4835,7 +4967,7 @@ literal|"zone"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|dns_zone_name
+name|dns_zone_nameonly
 argument_list|(
 name|zone
 argument_list|,
@@ -5266,7 +5398,7 @@ name|ISC_XMLCHAR
 literal|"version"
 argument_list|,
 name|ISC_XMLCHAR
-literal|"3.3"
+literal|"3.6"
 argument_list|)
 argument_list|)
 expr_stmt|;

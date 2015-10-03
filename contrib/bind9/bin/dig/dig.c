@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -590,65 +590,69 @@ literal|"        q-class  is one of (in,hs,ch,...) [default: in]\n"
 literal|"        q-type   is one of (a,any,mx,ns,soa,hinfo,axfr,txt,...) [default:a]\n"
 literal|"                 (Use ixfr=version for type ixfr)\n"
 literal|"        q-opt    is one of:\n"
-literal|"                 -x dot-notation     (shortcut for reverse lookups)\n"
-literal|"                 -i                  (use IP6.INT for IPv6 reverse lookups)\n"
-literal|"                 -f filename         (batch mode)\n"
+literal|"                 -4                  (use IPv4 query transport only)\n"
+literal|"                 -6                  (use IPv6 query transport only)\n"
 literal|"                 -b address[#port]   (bind to source address/port)\n"
+literal|"                 -c class            (specify query class)\n"
+literal|"                 -f filename         (batch mode)\n"
+literal|"                 -i                  (use IP6.INT for IPv6 reverse lookups)\n"
+literal|"                 -k keyfile          (specify tsig key file)\n"
+literal|"                 -m                  (enable memory usage debugging)\n"
 literal|"                 -p port             (specify port number)\n"
 literal|"                 -q name             (specify query name)\n"
 literal|"                 -t type             (specify query type)\n"
-literal|"                 -c class            (specify query class)\n"
-literal|"                 -k keyfile          (specify tsig key file)\n"
+literal|"                 -x dot-notation     (shortcut for reverse lookups)\n"
 literal|"                 -y [hmac:]name:key  (specify named base64 tsig key)\n"
-literal|"                 -4                  (use IPv4 query transport only)\n"
-literal|"                 -6                  (use IPv6 query transport only)\n"
-literal|"                 -m                  (enable memory usage debugging)\n"
 literal|"        d-opt    is of the form +keyword[=value], where keyword is:\n"
-literal|"                 +[no]vc             (TCP mode)\n"
-literal|"                 +[no]tcp            (TCP mode, alternate syntax)\n"
-literal|"                 +time=###           (Set query timeout) [5]\n"
-literal|"                 +tries=###          (Set number of UDP attempts) [3]\n"
-literal|"                 +retry=###          (Set number of UDP retries) [2]\n"
-literal|"                 +domain=###         (Set default domainname)\n"
-literal|"                 +bufsize=###        (Set EDNS0 Max UDP packet size)\n"
-literal|"                 +ndots=###          (Set NDOTS value)\n"
-literal|"                 +[no]edns[=###]     (Set EDNS version) [0]\n"
-literal|"                 +[no]search         (Set whether to use searchlist)\n"
-literal|"                 +[no]showsearch     (Search with intermediate results)\n"
-literal|"                 +[no]defname        (Ditto)\n"
-literal|"                 +[no]recurse        (Recursive mode)\n"
-literal|"                 +[no]ignore         (Don't revert to TCP for TC responses.)"
-literal|"\n"
-literal|"                 +[no]fail           (Don't try next server on SERVFAIL)\n"
-literal|"                 +[no]besteffort     (Try to parse even illegal messages)\n"
 literal|"                 +[no]aaonly         (Set AA flag in query (+[no]aaflag))\n"
-literal|"                 +[no]adflag         (Set AD flag in query)\n"
-literal|"                 +[no]cdflag         (Set CD flag in query)\n"
+literal|"                 +[no]additional     (Control display of additional section)\n"
+literal|"                 +[no]adflag         (Set AD flag in query (default on))\n"
+literal|"                 +[no]all            (Set or clear all display flags)\n"
+literal|"                 +[no]answer         (Control display of answer section)\n"
+literal|"                 +[no]authority      (Control display of authority section)\n"
+literal|"                 +[no]besteffort     (Try to parse even illegal messages)\n"
+literal|"                 +bufsize=###        (Set EDNS0 Max UDP packet size)\n"
+literal|"                 +[no]cdflag         (Set checking disabled flag in query)\n"
 literal|"                 +[no]cl             (Control display of class in records)\n"
 literal|"                 +[no]cmd            (Control display of command line)\n"
 literal|"                 +[no]comments       (Control display of comment lines)\n"
+literal|"                 +[no]defname        (Use search list (+[no]search))\n"
+literal|"                 +[no]dnssec         (Request DNSSEC records)\n"
+literal|"                 +domain=###         (Set default domainname)\n"
+literal|"                 +[no]edns[=###]     (Set EDNS version) [0]\n"
+literal|"                 +[no]fail           (Don't try next server on SERVFAIL)\n"
+literal|"                 +[no]identify       (ID responders in short answers)\n"
+literal|"                 +[no]ignore         (Don't revert to TCP for TC responses.)"
+literal|"\n"
+literal|"                 +[no]keepopen       (Keep the TCP socket open between queries)\n"
+literal|"                 +[no]multiline      (Print records in an expanded format)\n"
+literal|"                 +ndots=###          (Set search NDOTS value)\n"
+literal|"                 +[no]nsid           (Request Name Server ID)\n"
+literal|"                 +[no]nssearch       (Search all authoritative nameservers)\n"
+literal|"                 +[no]onesoa         (AXFR prints only one soa record)\n"
+literal|"                 +[no]qr             (Print question before sending)\n"
+literal|"                 +[no]question       (Control display of question section)\n"
+literal|"                 +[no]recurse        (Recursive mode)\n"
+literal|"                 +retry=###          (Set number of UDP retries) [2]\n"
 literal|"                 +[no]rrcomments     (Control display of per-record "
 literal|"comments)\n"
-literal|"                 +[no]question       (Control display of question)\n"
-literal|"                 +[no]answer         (Control display of answer)\n"
-literal|"                 +[no]authority      (Control display of authority)\n"
-literal|"                 +[no]additional     (Control display of additional)\n"
-literal|"                 +[no]stats          (Control display of statistics)\n"
-literal|"                 +[no]short          (Disable everything except short\n"
+literal|"                 +[no]search         (Set whether to use searchlist)\n"
+literal|"                 +[no]short          (Display nothing except short\n"
 literal|"                                      form of answer)\n"
-literal|"                 +[no]ttlid          (Control display of ttls in records)\n"
-literal|"                 +[no]all            (Set or clear all display flags)\n"
-literal|"                 +[no]qr             (Print question before sending)\n"
-literal|"                 +[no]nssearch       (Search all authoritative nameservers)\n"
-literal|"                 +[no]identify       (ID responders in short answers)\n"
-literal|"                 +[no]trace          (Trace delegation down from root [+dnssec])\n"
-literal|"                 +[no]dnssec         (Request DNSSEC records)\n"
-literal|"                 +[no]nsid           (Request Name Server ID)\n"
+literal|"                 +[no]showsearch     (Search with intermediate results)\n"
 ifdef|#
 directive|ifdef
 name|DIG_SIGCHASE
 literal|"                 +[no]sigchase       (Chase DNSSEC signatures)\n"
-literal|"                 +trusted-key=####   (Trusted Key when chasing DNSSEC sigs)\n"
+endif|#
+directive|endif
+literal|"                 +[no]split=##       (Split hex/base64 fields into chunks)\n"
+literal|"                 +[no]stats          (Control display of statistics)\n"
+literal|"                 +[no]tcp            (TCP mode (+[no]vc))\n"
+literal|"                 +time=###           (Set query timeout) [5]\n"
+ifdef|#
+directive|ifdef
+name|DIG_SIGCHASE
 if|#
 directive|if
 name|DIG_SIGCHASE_TD
@@ -657,10 +661,16 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-literal|"                 +[no]split=##       (Split hex/base64 fields into chunks)\n"
-literal|"                 +[no]multiline      (Print records in an expanded format)\n"
-literal|"                 +[no]onesoa         (AXFR prints only one soa record)\n"
-literal|"                 +[no]keepopen       (Keep the TCP socket open between queries)\n"
+literal|"                 +[no]trace          (Trace delegation down from root [+dnssec])\n"
+literal|"                 +tries=###          (Set number of UDP attempts) [3]\n"
+ifdef|#
+directive|ifdef
+name|DIG_SIGCHASE
+literal|"                 +trusted-key=####   (Trusted Key when chasing DNSSEC sigs)\n"
+endif|#
+directive|endif
+literal|"                 +[no]ttlid          (Control display of ttls in records)\n"
+literal|"                 +[no]vc             (TCP mode (+[no]tcp))\n"
 literal|"        global d-opts and servers (before host name) affect all queries.\n"
 literal|"        local d-opts and servers (after host name) affect only that lookup.\n"
 literal|"        -h                           (print help and exit)\n"
@@ -1042,6 +1052,12 @@ literal|"12345678901234567890"
 argument_list|)
 index|]
 decl_stmt|;
+name|unsigned
+name|int
+name|styleflags
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|query
@@ -1087,13 +1103,29 @@ literal|" "
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|rrcomments
+condition|)
+name|styleflags
+operator||=
+name|DNS_STYLEFLAG_RRCOMMENT
+expr_stmt|;
 name|result
 operator|=
-name|dns_rdata_totext
+name|dns_rdata_tofmttext
 argument_list|(
 name|rdata
 argument_list|,
 name|NULL
+argument_list|,
+name|styleflags
+argument_list|,
+literal|0
+argument_list|,
+name|splitwidth
+argument_list|,
+literal|" "
 argument_list|,
 name|buf
 argument_list|)
@@ -3695,10 +3727,13 @@ break|break;
 case|case
 literal|'l'
 case|:
-comment|/* cl */
-name|FULLCHECK
+comment|/* class */
+comment|/* keep +cl for backwards compatibility */
+name|FULLCHECK2
 argument_list|(
 literal|"cl"
+argument_list|,
+literal|"class"
 argument_list|)
 expr_stmt|;
 name|noclass
@@ -4333,6 +4368,22 @@ literal|1
 index|]
 condition|)
 block|{
+case|case
+literal|'d'
+case|:
+comment|/* rdflag */
+name|FULLCHECK
+argument_list|(
+literal|"rdflag"
+argument_list|)
+expr_stmt|;
+name|lookup
+operator|->
+name|recurse
+operator|=
+name|state
+expr_stmt|;
+break|break;
 case|case
 literal|'e'
 case|:

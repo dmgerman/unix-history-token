@@ -474,7 +474,7 @@ begin_define
 define|#
 directive|define
 name|MAXCMD
-value|(4 * 1024)
+value|(128 * 1024)
 end_define
 
 begin_define
@@ -7088,11 +7088,6 @@ argument_list|,
 literal|"dns_message_gettemprdataset"
 argument_list|)
 expr_stmt|;
-name|dns_rdatalist_init
-argument_list|(
-name|rdatalist
-argument_list|)
-expr_stmt|;
 name|rdatalist
 operator|->
 name|type
@@ -7135,18 +7130,6 @@ name|rdclass
 operator|=
 name|dns_rdataclass_none
 expr_stmt|;
-name|rdatalist
-operator|->
-name|covers
-operator|=
-literal|0
-expr_stmt|;
-name|rdatalist
-operator|->
-name|ttl
-operator|=
-literal|0
-expr_stmt|;
 name|rdata
 operator|->
 name|rdclass
@@ -7160,13 +7143,6 @@ operator|->
 name|type
 operator|=
 name|rdatatype
-expr_stmt|;
-name|ISC_LIST_INIT
-argument_list|(
-name|rdatalist
-operator|->
-name|rdata
-argument_list|)
 expr_stmt|;
 name|ISC_LIST_APPEND
 argument_list|(
@@ -9695,11 +9671,6 @@ argument_list|,
 literal|"dns_message_gettemprdataset"
 argument_list|)
 expr_stmt|;
-name|dns_rdatalist_init
-argument_list|(
-name|rdatalist
-argument_list|)
-expr_stmt|;
 name|rdatalist
 operator|->
 name|type
@@ -9726,13 +9697,6 @@ operator|(
 name|dns_ttl_t
 operator|)
 name|ttl
-expr_stmt|;
-name|ISC_LIST_INIT
-argument_list|(
-name|rdatalist
-operator|->
-name|rdata
-argument_list|)
 expr_stmt|;
 name|ISC_LIST_APPEND
 argument_list|(
@@ -11655,6 +11619,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* XXX MPA fix zonename is freed already */
 name|send_update
 argument_list|(
 name|zname
@@ -13093,6 +13058,7 @@ operator|&
 name|master
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXXMPA 	 */
 if|if
 condition|(
 name|userzone

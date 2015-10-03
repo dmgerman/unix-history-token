@@ -328,6 +328,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isc/safe.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<isc/serial.h>
 end_include
 
@@ -935,9 +941,7 @@ begin_function_decl
 name|isc_result_t
 name|get_trusted_key
 parameter_list|(
-name|isc_mem_t
-modifier|*
-name|mctx
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1034,10 +1038,6 @@ parameter_list|,
 name|dns_rdataset_t
 modifier|*
 name|sigrdataset
-parameter_list|,
-name|isc_mem_t
-modifier|*
-name|mctx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1061,10 +1061,6 @@ parameter_list|,
 name|dns_rdataset_t
 modifier|*
 name|sigrdataset
-parameter_list|,
-name|isc_mem_t
-modifier|*
-name|mctx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1084,10 +1080,6 @@ parameter_list|,
 name|dns_rdataset_t
 modifier|*
 name|dsrdataset
-parameter_list|,
-name|isc_mem_t
-modifier|*
-name|mctx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1129,10 +1121,6 @@ parameter_list|,
 name|dns_rdataset_t
 modifier|*
 name|rdataset
-parameter_list|,
-name|isc_mem_t
-modifier|*
-name|mctx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1148,10 +1136,6 @@ parameter_list|,
 name|dns_name_t
 modifier|*
 name|target
-parameter_list|,
-name|isc_mem_t
-modifier|*
-name|mctx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1163,10 +1147,6 @@ parameter_list|(
 name|dns_name_t
 modifier|*
 name|name
-parameter_list|,
-name|isc_mem_t
-modifier|*
-name|mctx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1227,10 +1207,6 @@ parameter_list|,
 name|dns_rdataset_t
 modifier|*
 name|sigrdataset
-parameter_list|,
-name|isc_mem_t
-modifier|*
-name|mctx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1384,10 +1360,6 @@ begin_function_decl
 name|isc_result_t
 name|removetmpkey
 parameter_list|(
-name|isc_mem_t
-modifier|*
-name|mctx
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -8276,7 +8248,7 @@ condition|)
 block|{
 name|dst_key_t
 modifier|*
-name|trustedkey
+name|dstkey
 init|=
 name|NULL
 decl_stmt|;
@@ -8305,9 +8277,7 @@ decl_stmt|;
 name|result
 operator|=
 name|get_trusted_key
-argument_list|(
-name|mctx
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -8390,7 +8360,7 @@ argument_list|)
 operator|==
 name|ISC_TRUE
 condition|)
-name|trustedkey
+name|dstkey
 operator|=
 name|tk_list
 operator|.
@@ -8403,7 +8373,7 @@ comment|/* 				 * Verify temp is really the lowest 				 * WARNING 				 */
 block|}
 if|if
 condition|(
-name|trustedkey
+name|dstkey
 operator|==
 name|NULL
 condition|)
@@ -8437,8 +8407,6 @@ name|free_name
 argument_list|(
 operator|&
 name|query_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8449,8 +8417,6 @@ name|free_name
 argument_list|(
 operator|&
 name|query_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|current_lookup
@@ -8555,7 +8521,7 @@ name|dns_name_totext
 argument_list|(
 name|dst_key_name
 argument_list|(
-name|trustedkey
+name|dstkey
 argument_list|)
 argument_list|,
 name|ISC_FALSE
@@ -10067,25 +10033,6 @@ operator|=
 name|lookup
 operator|->
 name|rdclass
-expr_stmt|;
-name|rdatalist
-operator|->
-name|covers
-operator|=
-literal|0
-expr_stmt|;
-name|rdatalist
-operator|->
-name|ttl
-operator|=
-literal|0
-expr_stmt|;
-name|ISC_LIST_INIT
-argument_list|(
-name|rdatalist
-operator|->
-name|rdata
-argument_list|)
 expr_stmt|;
 name|ISC_LIST_APPEND
 argument_list|(
@@ -18348,6 +18295,18 @@ decl_stmt|;
 name|isc_result_t
 name|result
 decl_stmt|;
+name|isc_boolean_t
+name|is_running
+decl_stmt|;
+name|is_running
+operator|=
+name|isc_app_isrunning
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|is_running
+condition|)
 name|isc_app_block
 argument_list|()
 expr_stmt|;
@@ -18367,6 +18326,10 @@ operator|&
 name|count
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|is_running
+condition|)
 name|isc_app_unblock
 argument_list|()
 expr_stmt|;
@@ -19358,8 +19321,6 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 if|#
@@ -19377,8 +19338,6 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_current_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -19393,8 +19352,6 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_authority_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 endif|#
@@ -19414,8 +19371,6 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_signame
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 endif|#
@@ -20113,8 +20068,6 @@ argument_list|(
 name|msg_name
 argument_list|,
 name|rdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|printf
@@ -21059,7 +21012,7 @@ name|result
 decl_stmt|;
 name|dst_key_t
 modifier|*
-name|key
+name|dstkey
 decl_stmt|;
 name|UNUSED
 argument_list|(
@@ -21157,7 +21110,7 @@ operator|(
 name|ISC_R_SUCCESS
 operator|)
 return|;
-name|key
+name|dstkey
 operator|=
 name|NULL
 expr_stmt|;
@@ -21177,7 +21130,7 @@ argument_list|,
 name|mctx
 argument_list|,
 operator|&
-name|key
+name|dstkey
 argument_list|)
 expr_stmt|;
 if|if
@@ -21197,7 +21150,7 @@ name|nb_tk
 operator|++
 index|]
 operator|=
-name|key
+name|dstkey
 expr_stmt|;
 block|}
 return|return
@@ -21291,10 +21244,6 @@ begin_function
 name|isc_result_t
 name|removetmpkey
 parameter_list|(
-name|isc_mem_t
-modifier|*
-name|mctx
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -21396,9 +21345,7 @@ begin_function
 name|isc_result_t
 name|get_trusted_key
 parameter_list|(
-name|isc_mem_t
-modifier|*
-name|mctx
+name|void
 parameter_list|)
 block|{
 name|isc_result_t
@@ -21640,8 +21587,6 @@ condition|)
 name|free_name
 argument_list|(
 name|p_ret
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|result
@@ -21876,9 +21821,6 @@ modifier|*
 name|b
 init|=
 name|NULL
-decl_stmt|;
-name|isc_result_t
-name|result
 decl_stmt|;
 name|isc_region_t
 name|r
@@ -22386,8 +22328,6 @@ argument_list|(
 name|name
 argument_list|,
 name|chase_nsrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 return|return
@@ -22745,8 +22685,6 @@ name|name
 argument_list|,
 operator|&
 name|chase_current_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 return|return
@@ -22773,10 +22711,6 @@ parameter_list|,
 name|dns_rdataset_t
 modifier|*
 name|rdataset
-parameter_list|,
-name|isc_mem_t
-modifier|*
-name|mctx
 parameter_list|)
 block|{
 name|isc_buffer_t
@@ -22867,10 +22801,6 @@ parameter_list|,
 name|dns_name_t
 modifier|*
 name|target
-parameter_list|,
-name|isc_mem_t
-modifier|*
-name|mctx
 parameter_list|)
 block|{
 name|isc_result_t
@@ -22886,8 +22816,6 @@ condition|)
 name|free_name
 argument_list|(
 name|target
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|result
@@ -22918,10 +22846,6 @@ parameter_list|(
 name|dns_name_t
 modifier|*
 name|name
-parameter_list|,
-name|isc_mem_t
-modifier|*
-name|mctx
 parameter_list|)
 block|{
 name|dns_name_free
@@ -22960,10 +22884,6 @@ parameter_list|,
 name|dns_rdataset_t
 modifier|*
 name|sigrdataset
-parameter_list|,
-name|isc_mem_t
-modifier|*
-name|mctx
 parameter_list|)
 block|{
 name|dns_rdataset_t
@@ -23133,8 +23053,6 @@ argument_list|,
 name|dnsseckey
 argument_list|,
 name|sigrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -23166,6 +23084,10 @@ operator|==
 name|ISC_R_SUCCESS
 condition|)
 do|;
+name|result
+operator|=
+name|ISC_R_NOTFOUND
+expr_stmt|;
 name|cleanup
 label|:
 if|if
@@ -23188,7 +23110,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ISC_R_NOTFOUND
+name|result
 operator|)
 return|;
 block|}
@@ -23213,10 +23135,6 @@ parameter_list|,
 name|dns_rdataset_t
 modifier|*
 name|sigrdataset
-parameter_list|,
-name|isc_mem_t
-modifier|*
-name|mctx
 parameter_list|)
 block|{
 name|dns_rdataset_t
@@ -23318,8 +23236,6 @@ argument_list|,
 name|dnsseckey
 argument_list|,
 name|sigrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -23400,10 +23316,6 @@ parameter_list|,
 name|dns_rdataset_t
 modifier|*
 name|sigrdataset
-parameter_list|,
-name|isc_mem_t
-modifier|*
-name|mctx
 parameter_list|)
 block|{
 name|dns_rdata_sig_t
@@ -23646,10 +23558,6 @@ parameter_list|,
 name|dns_rdataset_t
 modifier|*
 name|dsrdataset
-parameter_list|,
-name|isc_mem_t
-modifier|*
-name|mctx
 parameter_list|)
 block|{
 name|dns_rdata_ds_t
@@ -23916,8 +23824,6 @@ argument_list|,
 name|dnsseckey
 argument_list|,
 name|chase_sigkeyrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -24337,8 +24243,6 @@ name|name
 argument_list|,
 operator|&
 name|chase_authority_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -24414,8 +24318,6 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|clean_trustedkey
@@ -24518,8 +24420,6 @@ operator|&
 name|chase_current_name
 argument_list|,
 name|chase_keyrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|result
@@ -24582,8 +24482,6 @@ operator|&
 name|chase_current_name
 argument_list|,
 name|chase_sigkeyrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -24611,8 +24509,6 @@ argument_list|,
 name|chase_keyrdataset
 argument_list|,
 name|chase_sigkeyrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 block|}
@@ -24642,8 +24538,6 @@ argument_list|,
 name|chase_keyrdataset
 argument_list|,
 name|chase_dsrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 block|}
@@ -24849,8 +24743,6 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_authority_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|dup_name
@@ -24860,8 +24752,6 @@ name|tmp_name
 argument_list|,
 operator|&
 name|chase_authority_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|printf
@@ -25024,8 +24914,6 @@ operator|&
 name|chase_authority_name
 argument_list|,
 name|chase_dsrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|result
@@ -25074,8 +24962,6 @@ operator|&
 name|chase_authority_name
 argument_list|,
 name|chase_sigdsrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|INSIST
@@ -25097,8 +24983,6 @@ argument_list|,
 name|chase_keyrdataset
 argument_list|,
 name|chase_sigdsrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -25155,16 +25039,12 @@ name|chase_authority_name
 argument_list|,
 operator|&
 name|chase_current_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|free_name
 argument_list|(
 operator|&
 name|chase_authority_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 return|return;
@@ -25269,8 +25149,6 @@ argument_list|,
 name|chase_keyrdataset
 argument_list|,
 name|sigrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -25284,8 +25162,6 @@ name|free_name
 argument_list|(
 operator|&
 name|rdata_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|printf
@@ -25302,8 +25178,6 @@ name|free_name
 argument_list|(
 operator|&
 name|rdata_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -25355,8 +25229,6 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_current_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -25371,8 +25243,6 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_authority_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|clean_trustedkey
@@ -25430,8 +25300,6 @@ argument_list|,
 name|chase_keyrdataset
 argument_list|,
 name|chase_sigrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -25446,7 +25314,7 @@ argument_list|(
 literal|"\n;; Impossible to verify the RRset : FAILED\n\n"
 argument_list|)
 expr_stmt|;
-comment|/* 		  printf("RRset:\n"); 		  print_rdataset(&chase_name , chase_rdataset, mctx); 		  printf("DNSKEYset:\n"); 		  print_rdataset(&chase_name , chase_keyrdataset, mctx); 		  printf("RRSIG of RRset:\n"); 		  print_rdataset(&chase_name , chase_sigrdataset, mctx); 		  printf("\n"); 		*/
+comment|/* 		  printf("RRset:\n"); 		  print_rdataset(&chase_name , chase_rdataset); 		  printf("DNSKEYset:\n"); 		  print_rdataset(&chase_name , chase_keyrdataset); 		  printf("RRSIG of RRset:\n"); 		  print_rdataset(&chase_name , chase_sigrdataset); 		  printf("\n"); 		*/
 goto|goto
 name|cleanandgo
 goto|;
@@ -25464,8 +25332,6 @@ operator|&
 name|chase_name
 argument_list|,
 name|chase_rdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|printf
@@ -25625,8 +25491,6 @@ name|name
 argument_list|,
 operator|&
 name|chase_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|printf
@@ -25640,8 +25504,6 @@ operator|&
 name|chase_name
 argument_list|,
 name|chase_rdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 block|}
@@ -25703,8 +25565,6 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 return|return
@@ -25737,8 +25597,6 @@ operator|&
 name|chase_name
 argument_list|,
 name|chase_sigrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 block|}
@@ -25801,8 +25659,6 @@ name|signer
 argument_list|,
 operator|&
 name|chase_signame
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|dns_rdata_freestruct
@@ -25860,8 +25716,6 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_signame
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -25876,8 +25730,6 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 return|return
@@ -25897,8 +25749,6 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_signame
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 return|return
@@ -25918,8 +25768,6 @@ operator|&
 name|chase_signame
 argument_list|,
 name|chase_keyrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 block|}
@@ -25972,8 +25820,6 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_signame
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -25988,8 +25834,6 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 return|return
@@ -26009,8 +25853,6 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_signame
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 return|return
@@ -26031,8 +25873,6 @@ operator|&
 name|chase_signame
 argument_list|,
 name|chase_sigkeyrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 block|}
@@ -26105,8 +25945,6 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_signame
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 return|return
@@ -26133,8 +25971,6 @@ operator|&
 name|chase_signame
 argument_list|,
 name|chase_dsrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 block|}
@@ -26197,8 +26033,6 @@ operator|&
 name|chase_signame
 argument_list|,
 name|chase_sigdsrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 block|}
@@ -26238,9 +26072,7 @@ block|{
 name|result
 operator|=
 name|get_trusted_key
-argument_list|(
-name|mctx
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -26350,8 +26182,6 @@ name|free_name
 argument_list|(
 operator|&
 name|query_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -26416,16 +26246,12 @@ name|rdata_name
 argument_list|,
 operator|&
 name|chase_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|free_name
 argument_list|(
 operator|&
 name|rdata_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|chase_rdataset
@@ -26495,8 +26321,6 @@ argument_list|,
 name|chase_keyrdataset
 argument_list|,
 name|chase_sigrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -26510,16 +26334,12 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|free_name
 argument_list|(
 operator|&
 name|chase_signame
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|printf
@@ -26548,8 +26368,6 @@ argument_list|,
 name|chase_keyrdataset
 argument_list|,
 name|chase_sigkeyrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -26563,16 +26381,12 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|free_name
 argument_list|(
 operator|&
 name|chase_signame
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|printf
@@ -26602,16 +26416,12 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|free_name
 argument_list|(
 operator|&
 name|chase_signame
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|printf
@@ -26635,8 +26445,6 @@ argument_list|,
 name|chase_keyrdataset
 argument_list|,
 name|chase_dsrdataset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -26650,16 +26458,12 @@ name|free_name
 argument_list|(
 operator|&
 name|chase_signame
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|free_name
 argument_list|(
 operator|&
 name|chase_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|printf
@@ -26695,16 +26499,12 @@ name|chase_signame
 argument_list|,
 operator|&
 name|chase_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|free_name
 argument_list|(
 operator|&
 name|chase_signame
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 name|chase_rdataset
@@ -27132,8 +26932,6 @@ argument_list|(
 name|nsecname
 argument_list|,
 name|nsecset
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 for|for
@@ -27293,8 +27091,6 @@ argument_list|(
 name|nsecname
 argument_list|,
 name|rdata_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 return|return
@@ -27490,8 +27286,6 @@ argument_list|(
 name|name
 argument_list|,
 name|rdata_name
-argument_list|,
-name|mctx
 argument_list|)
 expr_stmt|;
 operator|*

@@ -78,7 +78,7 @@ name|REQUIRE
 argument_list|(
 name|type
 operator|==
-literal|24
+name|dns_rdatatype_sig
 argument_list|)
 expr_stmt|;
 name|UNUSED
@@ -578,7 +578,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|24
+name|dns_rdatatype_sig
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -1121,7 +1121,7 @@ name|REQUIRE
 argument_list|(
 name|type
 operator|==
-literal|24
+name|dns_rdatatype_sig
 argument_list|)
 expr_stmt|;
 name|UNUSED
@@ -1271,7 +1271,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|24
+name|dns_rdatatype_sig
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -1436,7 +1436,7 @@ name|rdata1
 operator|->
 name|type
 operator|==
-literal|24
+name|dns_rdatatype_sig
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -1671,7 +1671,7 @@ name|REQUIRE
 argument_list|(
 name|type
 operator|==
-literal|24
+name|dns_rdatatype_sig
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -1880,7 +1880,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|24
+name|dns_rdatatype_sig
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -2235,7 +2235,7 @@ name|common
 operator|.
 name|rdtype
 operator|==
-literal|24
+name|dns_rdatatype_sig
 argument_list|)
 expr_stmt|;
 if|if
@@ -2302,7 +2302,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|24
+name|dns_rdatatype_sig
 argument_list|)
 expr_stmt|;
 name|UNUSED
@@ -2343,7 +2343,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|24
+name|dns_rdatatype_sig
 argument_list|)
 expr_stmt|;
 name|UNUSED
@@ -2392,7 +2392,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|24
+name|dns_rdatatype_sig
 argument_list|)
 expr_stmt|;
 name|dns_rdata_toregion
@@ -2432,7 +2432,7 @@ name|REQUIRE
 argument_list|(
 name|type
 operator|==
-literal|24
+name|dns_rdatatype_sig
 argument_list|)
 expr_stmt|;
 name|UNUSED
@@ -2478,7 +2478,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|24
+name|dns_rdatatype_sig
 argument_list|)
 expr_stmt|;
 name|UNUSED

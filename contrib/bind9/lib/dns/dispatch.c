@@ -5175,7 +5175,7 @@ name|disp
 parameter_list|,
 name|isc_socket_t
 modifier|*
-name|socket
+name|sock
 parameter_list|,
 name|isc_eventtype_t
 name|type
@@ -5244,7 +5244,7 @@ name|action
 argument_list|,
 name|deconst_arg
 argument_list|,
-name|socket
+name|sock
 argument_list|,
 name|free_sevent
 argument_list|,
@@ -7620,7 +7620,7 @@ name|region
 decl_stmt|;
 name|isc_socket_t
 modifier|*
-name|socket
+name|sock
 decl_stmt|;
 if|if
 condition|(
@@ -7715,14 +7715,14 @@ name|dispsock
 operator|!=
 name|NULL
 condition|)
-name|socket
+name|sock
 operator|=
 name|dispsock
 operator|->
 name|socket
 expr_stmt|;
 else|else
-name|socket
+name|sock
 operator|=
 name|disp
 operator|->
@@ -7730,7 +7730,7 @@ name|socket
 expr_stmt|;
 name|INSIST
 argument_list|(
-name|socket
+name|sock
 operator|!=
 name|NULL
 argument_list|)
@@ -7801,7 +7801,7 @@ name|allocate_sevent
 argument_list|(
 name|disp
 argument_list|,
-name|socket
+name|sock
 argument_list|,
 name|ISC_SOCKEVENT_RECVDONE
 argument_list|,
@@ -7840,7 +7840,7 @@ name|res
 operator|=
 name|isc_socket_recv2
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 operator|&
 name|region
@@ -7902,7 +7902,7 @@ name|allocate_sevent
 argument_list|(
 name|disp
 argument_list|,
-name|socket
+name|sock
 argument_list|,
 name|ISC_SOCKEVENT_RECVDONE
 argument_list|,
@@ -7941,7 +7941,7 @@ name|res
 operator|=
 name|isc_socket_recv2
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 operator|&
 name|region

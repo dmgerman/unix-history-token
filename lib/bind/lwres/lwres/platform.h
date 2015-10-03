@@ -142,12 +142,6 @@ begin_comment
 comment|/*  * If this system need a modern sprintf() that returns (int) not (char*).  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|LWRES_PLATFORM_NEEDSPRINTF
-end_undef
-
 begin_comment
 comment|/*  * The printf format string modifier to use with lwres_uint64_t values.  */
 end_comment

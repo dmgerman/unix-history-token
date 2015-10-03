@@ -76,7 +76,7 @@ name|REQUIRE
 argument_list|(
 name|type
 operator|==
-literal|65533
+name|dns_rdatatype_keydata
 argument_list|)
 expr_stmt|;
 name|UNUSED
@@ -457,7 +457,7 @@ name|refresh
 decl_stmt|,
 name|add
 decl_stmt|,
-name|remove
+name|delete
 decl_stmt|;
 name|char
 name|algbuf
@@ -476,7 +476,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|65533
+name|dns_rdatatype_keydata
 argument_list|)
 expr_stmt|;
 if|if
@@ -592,7 +592,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* remove hold-down */
-name|remove
+name|delete
 operator|=
 name|uint32_fromregion
 argument_list|(
@@ -612,7 +612,7 @@ name|RETERR
 argument_list|(
 name|dns_time32_totext
 argument_list|(
-name|remove
+name|delete
 argument_list|,
 name|target
 argument_list|)
@@ -1177,7 +1177,7 @@ if|if
 condition|(
 name|add
 operator|==
-literal|0
+literal|0U
 condition|)
 block|{
 name|RETERR
@@ -1284,9 +1284,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|remove
+name|delete
 operator|!=
-literal|0
+literal|0U
 condition|)
 block|{
 name|RETERR
@@ -1316,7 +1316,7 @@ argument_list|(
 operator|&
 name|t
 argument_list|,
-name|remove
+name|delete
 argument_list|,
 literal|0
 argument_list|)
@@ -1371,7 +1371,7 @@ name|REQUIRE
 argument_list|(
 name|type
 operator|==
-literal|65533
+name|dns_rdatatype_keydata
 argument_list|)
 expr_stmt|;
 name|UNUSED
@@ -1448,7 +1448,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|65533
+name|dns_rdatatype_keydata
 argument_list|)
 expr_stmt|;
 name|UNUSED
@@ -1526,7 +1526,7 @@ name|rdata1
 operator|->
 name|type
 operator|==
-literal|65533
+name|dns_rdatatype_keydata
 argument_list|)
 expr_stmt|;
 name|dns_rdata_toregion
@@ -1579,7 +1579,7 @@ name|REQUIRE
 argument_list|(
 name|type
 operator|==
-literal|65533
+name|dns_rdatatype_keydata
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -1743,7 +1743,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|65533
+name|dns_rdatatype_keydata
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -2070,7 +2070,7 @@ name|common
 operator|.
 name|rdtype
 operator|==
-literal|65533
+name|dns_rdatatype_keydata
 argument_list|)
 expr_stmt|;
 if|if
@@ -2125,7 +2125,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|65533
+name|dns_rdatatype_keydata
 argument_list|)
 expr_stmt|;
 name|UNUSED
@@ -2169,7 +2169,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|65533
+name|dns_rdatatype_keydata
 argument_list|)
 expr_stmt|;
 name|dns_rdata_toregion
@@ -2209,7 +2209,7 @@ name|REQUIRE
 argument_list|(
 name|type
 operator|==
-literal|65533
+name|dns_rdatatype_keydata
 argument_list|)
 expr_stmt|;
 name|UNUSED
@@ -2255,7 +2255,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|65533
+name|dns_rdatatype_keydata
 argument_list|)
 expr_stmt|;
 name|UNUSED

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -872,7 +872,7 @@ name|krb5_ctx
 decl_stmt|;
 name|char
 modifier|*
-name|krb5_realm
+name|krb5_realm_name
 init|=
 name|NULL
 decl_stmt|;
@@ -929,7 +929,7 @@ argument_list|(
 name|krb5_ctx
 argument_list|,
 operator|&
-name|krb5_realm
+name|krb5_realm_name
 argument_list|)
 operator|!=
 literal|0
@@ -990,7 +990,7 @@ name|p
 operator|+
 literal|1
 argument_list|,
-name|krb5_realm
+name|krb5_realm_name
 argument_list|)
 operator|!=
 literal|0
@@ -1003,7 +1003,7 @@ argument_list|,
 literal|"default realm from krb5.conf (%s) "
 literal|"does not match tkey-gssapi-credential (%s)"
 argument_list|,
-name|krb5_realm
+name|krb5_realm_name
 argument_list|,
 name|gss_name
 argument_list|)
@@ -2597,18 +2597,6 @@ name|r
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|gss_release_buffer
-argument_list|(
-operator|&
-name|minor
-argument_list|,
-operator|&
-name|gouttoken
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2627,6 +2615,26 @@ name|DNS_R_CONTINUE
 expr_stmt|;
 name|out
 label|:
+if|if
+condition|(
+name|gouttoken
+operator|.
+name|length
+operator|!=
+literal|0U
+condition|)
+operator|(
+name|void
+operator|)
+name|gss_release_buffer
+argument_list|(
+operator|&
+name|minor
+argument_list|,
+operator|&
+name|gouttoken
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)

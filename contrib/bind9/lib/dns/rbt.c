@@ -5582,12 +5582,6 @@ argument_list|)
 operator|=
 name|node
 expr_stmt|;
-if|if
-condition|(
-name|child
-operator|!=
-name|NULL
-condition|)
 name|PARENT
 argument_list|(
 name|child
@@ -5755,12 +5749,6 @@ argument_list|)
 operator|=
 name|node
 expr_stmt|;
-if|if
-condition|(
-name|child
-operator|!=
-name|NULL
-condition|)
 name|PARENT
 argument_list|(
 name|child

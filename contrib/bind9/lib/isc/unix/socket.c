@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -27899,7 +27899,7 @@ parameter_list|)
 block|{
 name|isc__socket_t
 modifier|*
-name|socket
+name|sock
 init|=
 operator|(
 name|isc__socket_t
@@ -27907,26 +27907,26 @@ operator|*
 operator|)
 name|socket0
 decl_stmt|;
-comment|/* 	 * Name 'socket'. 	 */
+comment|/* 	 * Name 'sock'. 	 */
 name|REQUIRE
 argument_list|(
 name|VALID_SOCKET
 argument_list|(
-name|socket
+name|sock
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|LOCK
 argument_list|(
 operator|&
-name|socket
+name|sock
 operator|->
 name|lock
 argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(
-name|socket
+name|sock
 operator|->
 name|name
 argument_list|,
@@ -27934,7 +27934,7 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|socket
+name|sock
 operator|->
 name|name
 argument_list|)
@@ -27942,7 +27942,7 @@ argument_list|)
 expr_stmt|;
 name|strncpy
 argument_list|(
-name|socket
+name|sock
 operator|->
 name|name
 argument_list|,
@@ -27950,7 +27950,7 @@ name|name
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|socket
+name|sock
 operator|->
 name|name
 argument_list|)
@@ -27958,7 +27958,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|socket
+name|sock
 operator|->
 name|tag
 operator|=
@@ -27967,7 +27967,7 @@ expr_stmt|;
 name|UNLOCK
 argument_list|(
 operator|&
-name|socket
+name|sock
 operator|->
 name|lock
 argument_list|)
@@ -27989,7 +27989,7 @@ parameter_list|)
 block|{
 name|isc__socket_t
 modifier|*
-name|socket
+name|sock
 init|=
 operator|(
 name|isc__socket_t
@@ -27999,7 +27999,7 @@ name|socket0
 decl_stmt|;
 return|return
 operator|(
-name|socket
+name|sock
 operator|->
 name|name
 operator|)
@@ -28019,7 +28019,7 @@ parameter_list|)
 block|{
 name|isc__socket_t
 modifier|*
-name|socket
+name|sock
 init|=
 operator|(
 name|isc__socket_t
@@ -28029,7 +28029,7 @@ name|socket0
 decl_stmt|;
 return|return
 operator|(
-name|socket
+name|sock
 operator|->
 name|tag
 operator|)
@@ -28087,7 +28087,7 @@ parameter_list|)
 block|{
 name|isc__socket_t
 modifier|*
-name|socket
+name|sock
 init|=
 operator|(
 name|isc__socket_t
@@ -28100,7 +28100,7 @@ operator|(
 operator|(
 name|short
 operator|)
-name|socket
+name|sock
 operator|->
 name|fd
 operator|)

@@ -802,7 +802,7 @@ define|#
 directive|define
 name|EXPECTEOL
 define|\
-value|do { \ 		GETTOKEN(lctx->lex, 0,&token, ISC_TRUE); \ 		if (token.type != isc_tokentype_eol) { \ 			isc_lex_ungettoken(lctx->lex,&token); \ 			result = DNS_R_EXTRATOKEN; \ 			if (MANYERRS(lctx, result)) { \ 				SETRESULT(lctx, result); \ 				LOGIT(result); \ 				read_till_eol = ISC_TRUE; \ 				continue; \ 			} else if (result != ISC_R_SUCCESS) \ 				goto log_and_cleanup; \ 		} \ 	} while (0)
+value|do { \ 		GETTOKEN(lctx->lex, 0,&token, ISC_TRUE); \ 		if (token.type != isc_tokentype_eol) { \ 			isc_lex_ungettoken(lctx->lex,&token); \ 			result = DNS_R_EXTRATOKEN; \ 			if (MANYERRS(lctx, result)) { \ 				SETRESULT(lctx, result); \ 				LOGIT(result); \ 				read_till_eol = ISC_TRUE; \ 				break; \ 			} else if (result != ISC_R_SUCCESS) \ 				goto log_and_cleanup; \ 		} \ 	} while (0)
 end_define
 
 begin_define
@@ -3822,21 +3822,6 @@ goto|goto
 name|insist_cleanup
 goto|;
 block|}
-name|ISC_LIST_INIT
-argument_list|(
-name|rdatalist
-operator|.
-name|rdata
-argument_list|)
-expr_stmt|;
-name|ISC_LINK_INIT
-argument_list|(
-operator|&
-name|rdatalist
-argument_list|,
-name|link
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -4161,17 +4146,17 @@ condition|)
 goto|goto
 name|error_cleanup
 goto|;
+name|dns_rdatalist_init
+argument_list|(
+operator|&
 name|rdatalist
-operator|.
-name|type
-operator|=
-name|type
+argument_list|)
 expr_stmt|;
 name|rdatalist
 operator|.
-name|covers
+name|type
 operator|=
-literal|0
+name|type
 expr_stmt|;
 name|rdatalist
 operator|.
@@ -8508,6 +8493,12 @@ name|type
 operator|==
 name|dns_rdatatype_ptr
 operator|&&
+operator|!
+name|dns_name_isdnssd
+argument_list|(
+name|name
+argument_list|)
+operator|&&
 operator|(
 name|dns_name_issubdomain
 argument_list|(
@@ -9282,6 +9273,11 @@ name|rdlcount
 operator|++
 index|]
 expr_stmt|;
+name|dns_rdatalist_init
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 name|this
 operator|->
 name|type
@@ -9309,13 +9305,6 @@ operator|=
 name|lctx
 operator|->
 name|ttl
-expr_stmt|;
-name|ISC_LIST_INIT
-argument_list|(
-name|this
-operator|->
-name|rdata
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -10682,12 +10671,6 @@ argument_list|(
 name|dummy
 argument_list|)
 expr_stmt|;
-name|dns_rdatalist_init
-argument_list|(
-operator|&
-name|rdatalist
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Allocate target_size of buffer space.  This is greater than twice 	 * the maximum individual RR data size. 	 */
 name|target_mem
 operator|=
@@ -11008,6 +10991,12 @@ name|readlen
 argument_list|)
 expr_stmt|;
 comment|/* Construct RRset headers */
+name|dns_rdatalist_init
+argument_list|(
+operator|&
+name|rdatalist
+argument_list|)
+expr_stmt|;
 name|rdatalist
 operator|.
 name|rdclass

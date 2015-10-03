@@ -15402,6 +15402,10 @@ decl_stmt|;
 name|isc_symvalue_t
 name|symvalue
 decl_stmt|;
+name|unsigned
+name|int
+name|symtype
+decl_stmt|;
 name|tresult
 operator|=
 name|ISC_R_SUCCESS
@@ -15478,6 +15482,12 @@ name|base
 argument_list|)
 expr_stmt|;
 block|}
+name|symtype
+operator|=
+name|vclass
+operator|+
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|tresult
@@ -15503,7 +15513,7 @@ name|symtab
 argument_list|,
 name|key
 argument_list|,
-name|vclass
+name|symtype
 argument_list|,
 name|symvalue
 argument_list|,
@@ -15534,7 +15544,7 @@ name|symtab
 argument_list|,
 name|key
 argument_list|,
-name|vclass
+name|symtype
 argument_list|,
 operator|&
 name|symvalue

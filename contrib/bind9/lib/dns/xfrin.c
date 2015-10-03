@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008, 2011-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008, 2011-2013, 2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -284,6 +284,9 @@ decl_stmt|;
 comment|/*%< Receive in progress */
 name|isc_boolean_t
 name|shuttingdown
+decl_stmt|;
+name|isc_result_t
+name|shutdown_result
 decl_stmt|;
 name|dns_name_t
 name|name
@@ -2880,6 +2883,14 @@ name|done
 operator|=
 name|done
 expr_stmt|;
+if|if
+condition|(
+name|xfr
+operator|->
+name|done
+operator|!=
+name|NULL
+condition|)
 name|xfr
 operator|->
 name|refcount
@@ -3437,6 +3448,12 @@ name|shuttingdown
 operator|=
 name|ISC_TRUE
 expr_stmt|;
+name|xfr
+operator|->
+name|shutdown_result
+operator|=
+name|result
+expr_stmt|;
 name|maybe_free
 argument_list|(
 name|xfr
@@ -3633,6 +3650,12 @@ operator|->
 name|shuttingdown
 operator|=
 name|ISC_FALSE
+expr_stmt|;
+name|xfr
+operator|->
+name|shutdown_result
+operator|=
+name|ISC_R_UNSET
 expr_stmt|;
 name|dns_name_init
 argument_list|(
@@ -6521,6 +6544,12 @@ name|shuttingdown
 operator|=
 name|ISC_TRUE
 expr_stmt|;
+name|xfr
+operator|->
+name|shutdown_result
+operator|=
+name|ISC_R_SUCCESS
+expr_stmt|;
 name|maybe_free
 argument_list|(
 name|xfr
@@ -6661,6 +6690,11 @@ decl_stmt|;
 name|isc_uint64_t
 name|persec
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|result_str
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|VALID_XFRIN
@@ -6701,6 +6735,49 @@ operator|!=
 literal|0
 condition|)
 return|return;
+name|INSIST
+argument_list|(
+operator|!
+name|xfr
+operator|->
+name|shuttingdown
+operator|||
+name|xfr
+operator|->
+name|shutdown_result
+operator|!=
+name|ISC_R_UNSET
+argument_list|)
+expr_stmt|;
+comment|/* If we're called through dns_xfrin_detach() and are not 	 * shutting down, we can't know what the transfer status is as 	 * we are only called when the last reference is lost. 	 */
+name|result_str
+operator|=
+operator|(
+name|xfr
+operator|->
+name|shuttingdown
+condition|?
+name|isc_result_totext
+argument_list|(
+name|xfr
+operator|->
+name|shutdown_result
+argument_list|)
+else|:
+literal|"unknown"
+operator|)
+expr_stmt|;
+name|xfrin_log
+argument_list|(
+name|xfr
+argument_list|,
+name|ISC_LOG_INFO
+argument_list|,
+literal|"Transfer status: %s"
+argument_list|,
+name|result_str
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Calculate the length of time the transfer took, 	 * and print a log message with the bytes and rate. 	 */
 name|isc_time_now
 argument_list|(

@@ -1240,6 +1240,9 @@ name|char
 modifier|*
 name|lookaside
 parameter_list|,
+name|isc_boolean_t
+name|cds
+parameter_list|,
 name|dns_rdata_t
 modifier|*
 name|rdata
@@ -1625,11 +1628,23 @@ name|lookaside
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|cds
+condition|)
+name|printf
+argument_list|(
+literal|" CDS "
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|" DS "
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|printf
 argument_list|(
@@ -1791,6 +1806,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"    -C: print CDS record\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"    -l: add lookaside zone and print DLV records\n"
 argument_list|)
 expr_stmt|;
@@ -1904,6 +1926,11 @@ init|=
 name|DNS_DSDIGEST_SHA1
 decl_stmt|;
 name|isc_boolean_t
+name|cds
+init|=
+name|ISC_FALSE
+decl_stmt|;
+name|isc_boolean_t
 name|both
 init|=
 name|ISC_TRUE
@@ -1984,6 +2011,10 @@ name|isc_commandline_errprint
 operator|=
 name|ISC_FALSE
 expr_stmt|;
+define|#
+directive|define
+name|OPTIONS
+value|"12Aa:Cc:d:Ff:K:l:sT:v:hV"
 while|while
 condition|(
 operator|(
@@ -1995,7 +2026,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"12Aa:c:d:Ff:K:l:sT:v:hV"
+name|OPTIONS
 argument_list|)
 operator|)
 operator|!=
@@ -2053,6 +2084,26 @@ name|ISC_FALSE
 expr_stmt|;
 break|break;
 case|case
+literal|'C'
+case|:
+if|if
+condition|(
+name|lookaside
+operator|!=
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"lookaside and CDS are mutually"
+literal|" exclusive"
+argument_list|)
+expr_stmt|;
+name|cds
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'c'
 case|:
 name|classname
@@ -2107,6 +2158,16 @@ break|break;
 case|case
 literal|'l'
 case|:
+if|if
+condition|(
+name|cds
+condition|)
+name|fatal
+argument_list|(
+literal|"lookaside and CDS are mutually"
+literal|" exclusive"
+argument_list|)
+expr_stmt|;
 name|lookaside
 operator|=
 name|isc_commandline_argument
@@ -2656,6 +2717,8 @@ name|showall
 argument_list|,
 name|lookaside
 argument_list|,
+name|cds
+argument_list|,
 operator|&
 name|rdata
 argument_list|)
@@ -2667,6 +2730,8 @@ argument_list|,
 name|showall
 argument_list|,
 name|lookaside
+argument_list|,
+name|cds
 argument_list|,
 operator|&
 name|rdata
@@ -2681,6 +2746,8 @@ argument_list|,
 name|showall
 argument_list|,
 name|lookaside
+argument_list|,
+name|cds
 argument_list|,
 operator|&
 name|rdata
@@ -2725,6 +2792,8 @@ name|showall
 argument_list|,
 name|lookaside
 argument_list|,
+name|cds
+argument_list|,
 operator|&
 name|rdata
 argument_list|)
@@ -2736,6 +2805,8 @@ argument_list|,
 name|showall
 argument_list|,
 name|lookaside
+argument_list|,
+name|cds
 argument_list|,
 operator|&
 name|rdata
@@ -2750,6 +2821,8 @@ argument_list|,
 name|showall
 argument_list|,
 name|lookaside
+argument_list|,
+name|cds
 argument_list|,
 operator|&
 name|rdata

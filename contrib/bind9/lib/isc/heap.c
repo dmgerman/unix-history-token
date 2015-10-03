@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2010-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2010-2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -176,7 +176,7 @@ name|isc_heapcompare_t
 name|compare
 parameter_list|,
 name|isc_heapindex_t
-name|index
+name|idx
 parameter_list|,
 name|unsigned
 name|int
@@ -304,7 +304,7 @@ name|heap
 operator|->
 name|index
 operator|=
-name|index
+name|idx
 expr_stmt|;
 operator|*
 name|heapp
@@ -971,7 +971,7 @@ name|heap
 parameter_list|,
 name|unsigned
 name|int
-name|index
+name|idx
 parameter_list|)
 block|{
 name|void
@@ -991,11 +991,11 @@ argument_list|)
 expr_stmt|;
 name|REQUIRE
 argument_list|(
-name|index
+name|idx
 operator|>=
 literal|1
 operator|&&
-name|index
+name|idx
 operator|<=
 name|heap
 operator|->
@@ -1004,7 +1004,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|idx
 operator|==
 name|heap
 operator|->
@@ -1069,7 +1069,7 @@ name|heap
 operator|->
 name|array
 index|[
-name|index
+name|idx
 index|]
 argument_list|)
 expr_stmt|;
@@ -1077,7 +1077,7 @@ name|heap
 operator|->
 name|array
 index|[
-name|index
+name|idx
 index|]
 operator|=
 name|elt
@@ -1090,13 +1090,13 @@ name|float_up
 argument_list|(
 name|heap
 argument_list|,
-name|index
+name|idx
 argument_list|,
 name|heap
 operator|->
 name|array
 index|[
-name|index
+name|idx
 index|]
 argument_list|)
 expr_stmt|;
@@ -1105,13 +1105,13 @@ name|sink_down
 argument_list|(
 name|heap
 argument_list|,
-name|index
+name|idx
 argument_list|,
 name|heap
 operator|->
 name|array
 index|[
-name|index
+name|idx
 index|]
 argument_list|)
 expr_stmt|;
@@ -1129,7 +1129,7 @@ name|heap
 parameter_list|,
 name|unsigned
 name|int
-name|index
+name|idx
 parameter_list|)
 block|{
 name|REQUIRE
@@ -1142,11 +1142,11 @@ argument_list|)
 expr_stmt|;
 name|REQUIRE
 argument_list|(
-name|index
+name|idx
 operator|>=
 literal|1
 operator|&&
-name|index
+name|idx
 operator|<=
 name|heap
 operator|->
@@ -1157,13 +1157,13 @@ name|float_up
 argument_list|(
 name|heap
 argument_list|,
-name|index
+name|idx
 argument_list|,
 name|heap
 operator|->
 name|array
 index|[
-name|index
+name|idx
 index|]
 argument_list|)
 expr_stmt|;
@@ -1180,7 +1180,7 @@ name|heap
 parameter_list|,
 name|unsigned
 name|int
-name|index
+name|idx
 parameter_list|)
 block|{
 name|REQUIRE
@@ -1193,11 +1193,11 @@ argument_list|)
 expr_stmt|;
 name|REQUIRE
 argument_list|(
-name|index
+name|idx
 operator|>=
 literal|1
 operator|&&
-name|index
+name|idx
 operator|<=
 name|heap
 operator|->
@@ -1208,13 +1208,13 @@ name|sink_down
 argument_list|(
 name|heap
 argument_list|,
-name|index
+name|idx
 argument_list|,
 name|heap
 operator|->
 name|array
 index|[
-name|index
+name|idx
 index|]
 argument_list|)
 expr_stmt|;
@@ -1232,7 +1232,7 @@ name|heap
 parameter_list|,
 name|unsigned
 name|int
-name|index
+name|idx
 parameter_list|)
 block|{
 name|REQUIRE
@@ -1245,14 +1245,14 @@ argument_list|)
 expr_stmt|;
 name|REQUIRE
 argument_list|(
-name|index
+name|idx
 operator|>=
 literal|1
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|idx
 operator|<=
 name|heap
 operator|->
@@ -1264,7 +1264,7 @@ name|heap
 operator|->
 name|array
 index|[
-name|index
+name|idx
 index|]
 operator|)
 return|;

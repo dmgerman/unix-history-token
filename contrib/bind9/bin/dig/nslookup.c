@@ -2759,7 +2759,7 @@ name|opt
 argument_list|,
 literal|"all"
 argument_list|,
-literal|4
+literal|3
 argument_list|)
 operator|==
 literal|0

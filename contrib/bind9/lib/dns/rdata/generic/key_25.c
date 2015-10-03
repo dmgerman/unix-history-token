@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007, 2009, 2011-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2009, 2011-2013, 2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ name|REQUIRE
 argument_list|(
 name|type
 operator|==
-literal|25
+name|dns_rdatatype_key
 argument_list|)
 expr_stmt|;
 name|UNUSED
@@ -335,7 +335,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|25
+name|dns_rdatatype_key
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -834,7 +834,7 @@ name|REQUIRE
 argument_list|(
 name|type
 operator|==
-literal|25
+name|dns_rdatatype_key
 argument_list|)
 expr_stmt|;
 name|UNUSED
@@ -1031,7 +1031,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|25
+name|dns_rdatatype_key
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -1118,7 +1118,7 @@ name|rdata1
 operator|->
 name|type
 operator|==
-literal|25
+name|dns_rdatatype_key
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -1189,7 +1189,7 @@ name|REQUIRE
 argument_list|(
 name|type
 operator|==
-literal|25
+name|dns_rdatatype_key
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -1314,7 +1314,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|25
+name|dns_rdatatype_key
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -1554,7 +1554,7 @@ name|common
 operator|.
 name|rdtype
 operator|==
-literal|25
+name|dns_rdatatype_key
 argument_list|)
 expr_stmt|;
 if|if
@@ -1609,7 +1609,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|25
+name|dns_rdatatype_key
 argument_list|)
 expr_stmt|;
 name|UNUSED
@@ -1653,7 +1653,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|25
+name|dns_rdatatype_key
 argument_list|)
 expr_stmt|;
 name|dns_rdata_toregion
@@ -1693,7 +1693,7 @@ name|REQUIRE
 argument_list|(
 name|type
 operator|==
-literal|25
+name|dns_rdatatype_key
 argument_list|)
 expr_stmt|;
 name|UNUSED
@@ -1739,7 +1739,7 @@ name|rdata
 operator|->
 name|type
 operator|==
-literal|25
+name|dns_rdatatype_key
 argument_list|)
 expr_stmt|;
 name|UNUSED

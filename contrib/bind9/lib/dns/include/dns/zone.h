@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2013, 2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -1015,7 +1015,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Cause the database to be loaded from its backing store asynchronously.  * Other zone maintenance functions are suspended until this is complete.  * When finished, 'done' is called to inform the caller, with 'arg' as  * its first argument and 'zone' as its second.  (Normally, 'arg' is  * expected to point to the zone table but is left undefined for testing  * purposes.)  */
+comment|/*%<  * Cause the database to be loaded from its backing store asynchronously.  * Other zone maintenance functions are suspended until this is complete.  * When finished, 'done' is called to inform the caller, with 'arg' as  * its first argument and 'zone' as its second.  (Normally, 'arg' is  * expected to point to the zone table but is left undefined for testing  * purposes.)  *  * Require:  *\li	'zone' to be a valid zone.  *  * Returns:  *\li	#ISC_R_ALREADYRUNNING  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_FAILURE  *\li	#ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl
@@ -3572,6 +3572,28 @@ comment|/*%<  * Return the name of the zone with class and view.  *  * Requires:
 end_comment
 
 begin_function_decl
+name|void
+name|dns_zone_nameonly
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Return the name of the zone only.  *  * Requires:  *\li	'zone' to be valid.  *\li	'buf' to be non NULL.  */
+end_comment
+
+begin_function_decl
 name|isc_result_t
 name|dns_zone_checknames
 parameter_list|(
@@ -3759,6 +3781,21 @@ comment|/*%<  * Set the number of signatures that will be generated per quantum.
 end_comment
 
 begin_function_decl
+name|isc_uint32_t
+name|dns_zone_getsignatures
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get the number of signatures that will be generated per quantum.  */
+end_comment
+
+begin_function_decl
 name|isc_result_t
 name|dns_zone_signwithkey
 parameter_list|(
@@ -3874,6 +3911,29 @@ end_function_decl
 
 begin_comment
 comment|/*%  * Check if the name servers for the zone are sane (have address, don't  * refer to CNAMEs/DNAMEs.  The number of constiancy errors detected in  * returned in '*errors'  *  * Requires:  * \li	'zone' to be valid.  * \li	'db' to be valid.  * \li	'version' to be valid or NULL.  * \li	'errors' to be non NULL.  *  * Returns:  * 	ISC_R_SUCCESS if there were no errors examining the zone contents.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_zone_cdscheck
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|version
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Check if CSD, CDNSKEY and DNSKEY are consistent.  *  * Requires:  * \li	'zone' to be valid.  * \li	'db' to be valid.  * \li	'version' to be valid or NULL.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#DNS_R_BADCDS  *\li	#DNS_R_BADCDNSKEY  *	Others  */
 end_comment
 
 begin_function_decl

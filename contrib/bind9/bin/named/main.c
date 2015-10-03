@@ -1605,6 +1605,12 @@ index|[]
 init|=
 block|{
 block|{
+literal|"none"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"trace"
 block|,
 name|ISC_MEM_DEBUGTRACE
@@ -1664,6 +1670,11 @@ modifier|*
 name|ret
 parameter_list|)
 block|{
+name|isc_boolean_t
+name|clear
+init|=
+name|ISC_FALSE
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -1761,6 +1772,18 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|def
+operator|->
+name|value
+operator|==
+literal|0
+condition|)
+name|clear
+operator|=
+name|ISC_TRUE
+expr_stmt|;
 operator|*
 name|ret
 operator||=
@@ -1786,10 +1809,14 @@ name|found
 label|:
 if|if
 condition|(
+name|clear
+operator|||
+operator|(
 operator|*
 name|end
 operator|==
 literal|'\0'
+operator|)
 condition|)
 break|break;
 name|arg
@@ -1799,6 +1826,15 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|clear
+condition|)
+operator|*
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -1834,11 +1870,7 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-comment|/* PLEASE keep options synchronized when main is hooked! */
-define|#
-directive|define
-name|CMDLINE_FLAGS
-value|"46c:C:d:E:fFgi:lm:n:N:p:P:sS:t:T:U:u:vVx:"
+comment|/* 	 * NS_MAIN_ARGS is defined in main.h, so that it can be used 	 * both by named and by ntservice hooks. 	 */
 name|isc_commandline_errprint
 operator|=
 name|ISC_FALSE
@@ -1854,7 +1886,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-name|CMDLINE_FLAGS
+name|NS_MAIN_ARGS
 argument_list|)
 operator|)
 operator|!=
@@ -2033,6 +2065,25 @@ case|:
 name|ns_g_lwresdonly
 operator|=
 name|ISC_TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'M'
+case|:
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|isc_commandline_argument
+argument_list|,
+literal|"external"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|isc_mem_defaultflags
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -2541,30 +2592,26 @@ literal|'v'
 case|:
 name|printf
 argument_list|(
-literal|"%s %s"
+literal|"%s %s%s%s<id:%s>\n"
 argument_list|,
 name|ns_g_product
 argument_list|,
 name|ns_g_version
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+operator|(
 operator|*
 name|ns_g_description
 operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|" %s"
+literal|'\0'
+operator|)
+condition|?
+literal|" "
+else|:
+literal|""
 argument_list|,
 name|ns_g_description
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
+argument_list|,
+name|ns_g_srcid
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2577,32 +2624,31 @@ literal|'V'
 case|:
 name|printf
 argument_list|(
-literal|"%s %s"
+literal|"%s %s%s%s<id:%s>\n"
 argument_list|,
 name|ns_g_product
 argument_list|,
 name|ns_g_version
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+operator|(
 operator|*
 name|ns_g_description
 operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|" %s"
+literal|'\0'
+operator|)
+condition|?
+literal|" "
+else|:
+literal|""
 argument_list|,
 name|ns_g_description
+argument_list|,
+name|ns_g_srcid
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"<id:%s> built by %s with %s\n"
-argument_list|,
-name|ns_g_srcid
+literal|"built by %s with %s\n"
 argument_list|,
 name|ns_g_builder
 argument_list|,
@@ -2691,9 +2737,6 @@ argument_list|,
 name|OPENSSL_VERSION_TEXT
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|WIN32
 name|printf
 argument_list|(
 literal|"linked to OpenSSL version: %s\n"
@@ -2706,8 +2749,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|HAVE_LIBXML2
@@ -2718,9 +2759,6 @@ argument_list|,
 name|LIBXML_DOTTED_VERSION
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|WIN32
 name|printf
 argument_list|(
 literal|"linked to libxml2 version: %s\n"
@@ -2728,8 +2766,6 @@ argument_list|,
 name|xmlParserVersion
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 name|exit
@@ -2763,7 +2799,7 @@ name|p
 operator|=
 name|strchr
 argument_list|(
-name|CMDLINE_FLAGS
+name|NS_MAIN_ARGS
 argument_list|,
 name|isc_commandline_option
 argument_list|)
@@ -3239,24 +3275,6 @@ block|{
 name|ns_lwresd_shutdown
 argument_list|()
 expr_stmt|;
-name|isc_entropy_detach
-argument_list|(
-operator|&
-name|ns_g_entropy
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ns_g_fallbackentropy
-operator|!=
-name|NULL
-condition|)
-name|isc_entropy_detach
-argument_list|(
-operator|&
-name|ns_g_fallbackentropy
-argument_list|)
-expr_stmt|;
 comment|/* 	 * isc_taskmgr_destroy() will block until all tasks have exited, 	 */
 name|isc_taskmgr_destroy
 argument_list|(
@@ -3668,11 +3686,22 @@ name|NS_LOGMODULE_MAIN
 argument_list|,
 name|ISC_LOG_NOTICE
 argument_list|,
-literal|"starting %s %s%s"
+literal|"starting %s %s%s%s<id:%s>%s"
 argument_list|,
 name|ns_g_product
 argument_list|,
 name|ns_g_version
+argument_list|,
+operator|*
+name|ns_g_description
+condition|?
+literal|" "
+else|:
+literal|""
+argument_list|,
+name|ns_g_description
+argument_list|,
+name|ns_g_srcid
 argument_list|,
 name|saved_command_line
 argument_list|)
@@ -4047,6 +4076,24 @@ name|ns_server_destroy
 argument_list|(
 operator|&
 name|ns_g_server
+argument_list|)
+expr_stmt|;
+name|isc_entropy_detach
+argument_list|(
+operator|&
+name|ns_g_entropy
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ns_g_fallbackentropy
+operator|!=
+name|NULL
+condition|)
+name|isc_entropy_detach
+argument_list|(
+operator|&
+name|ns_g_fallbackentropy
 argument_list|)
 expr_stmt|;
 name|ns_builtin_deinit
