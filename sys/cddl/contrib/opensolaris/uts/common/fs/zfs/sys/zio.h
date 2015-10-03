@@ -232,11 +232,15 @@ define|#
 directive|define
 name|ZIO_COMPRESS_LEGACY_FUNCTIONS
 value|ZIO_COMPRESS_LZ4
-comment|/* N.B. when altering this value, also change BOOTFS_COMPRESS_VALID below */
+comment|/*  * The meaning of "compress = on" selected by the compression features enabled  * on a given pool.  */
 define|#
 directive|define
-name|ZIO_COMPRESS_ON_VALUE
+name|ZIO_COMPRESS_LEGACY_ON_VALUE
 value|ZIO_COMPRESS_LZJB
+define|#
+directive|define
+name|ZIO_COMPRESS_LZ4_ON_VALUE
+value|ZIO_COMPRESS_LZ4
 define|#
 directive|define
 name|ZIO_COMPRESS_DEFAULT
@@ -248,7 +252,7 @@ parameter_list|(
 name|compress
 parameter_list|)
 define|\
-value|((compress) == ZIO_COMPRESS_LZJB ||		\ 	(compress) == ZIO_COMPRESS_LZ4 ||		\ 	((compress) == ZIO_COMPRESS_ON&&		\ 	ZIO_COMPRESS_ON_VALUE == ZIO_COMPRESS_LZJB) ||	\ 	(compress) == ZIO_COMPRESS_OFF)
+value|((compress) == ZIO_COMPRESS_LZJB ||		\ 	(compress) == ZIO_COMPRESS_LZ4 ||		\ 	(compress) == ZIO_COMPRESS_ON ||		\ 	(compress) == ZIO_COMPRESS_OFF)
 define|#
 directive|define
 name|ZIO_FAILURE_MODE_WAIT
@@ -2031,6 +2035,10 @@ name|enum
 name|zio_compress
 name|zio_compress_select
 parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
 name|enum
 name|zio_compress
 name|child
