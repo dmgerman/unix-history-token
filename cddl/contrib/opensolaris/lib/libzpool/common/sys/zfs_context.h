@@ -2618,23 +2618,6 @@ function_decl|;
 comment|/* Random compatibility stuff. */
 define|#
 directive|define
-name|lbolt
-value|(gethrtime()>> 23)
-define|#
-directive|define
-name|lbolt64
-value|(gethrtime()>> 23)
-specifier|extern
-name|uint64_t
-name|physmem
-decl_stmt|;
-define|#
-directive|define
-name|gethrestime_sec
-parameter_list|()
-value|time(NULL)
-define|#
-directive|define
 name|pwrite64
 parameter_list|(
 name|d
