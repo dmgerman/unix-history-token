@@ -1178,7 +1178,9 @@ operator|)
 operator|)
 argument_list|,
 operator|(
-literal|"Invalid instruction length in exception"
+literal|"Invalid instruction length in exception, esr %lx"
+operator|,
+name|esr
 operator|)
 argument_list|)
 expr_stmt|;
