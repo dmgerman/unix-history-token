@@ -6600,7 +6600,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* No existing lle, mark as new entry */
+comment|/* No existing lle, mark as new entry (6,7) */
 name|is_newentry
 operator|=
 literal|1
@@ -6612,6 +6612,13 @@ argument_list|,
 name|ND6_LLINFO_STALE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lladdr
+operator|!=
+name|NULL
+condition|)
+comment|/* (7) */
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|lle_event
