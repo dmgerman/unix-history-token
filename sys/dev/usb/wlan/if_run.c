@@ -13259,15 +13259,9 @@ decl_stmt|;
 specifier|const
 name|struct
 name|wmeParams
-argument_list|(
-operator|*
+modifier|*
 name|ac
-argument_list|)
-decl|[
-name|WME_NUM_AC
-decl|]
 init|=
-operator|&
 name|ic
 operator|->
 name|ic_wme
@@ -13320,7 +13314,7 @@ name|ac
 index|[
 name|aci
 index|]
-operator|->
+operator|.
 name|wmep_logcwmax
 operator|<<
 literal|16
@@ -13329,7 +13323,7 @@ name|ac
 index|[
 name|aci
 index|]
-operator|->
+operator|.
 name|wmep_logcwmin
 operator|<<
 literal|12
@@ -13338,7 +13332,7 @@ name|ac
 index|[
 name|aci
 index|]
-operator|->
+operator|.
 name|wmep_aifsn
 operator|<<
 literal|8
@@ -13347,7 +13341,7 @@ name|ac
 index|[
 name|aci
 index|]
-operator|->
+operator|.
 name|wmep_txopLimit
 argument_list|)
 expr_stmt|;
@@ -13372,7 +13366,7 @@ name|ac
 index|[
 name|WME_AC_VO
 index|]
-operator|->
+operator|.
 name|wmep_aifsn
 operator|<<
 literal|12
@@ -13381,7 +13375,7 @@ name|ac
 index|[
 name|WME_AC_VI
 index|]
-operator|->
+operator|.
 name|wmep_aifsn
 operator|<<
 literal|8
@@ -13390,7 +13384,7 @@ name|ac
 index|[
 name|WME_AC_BK
 index|]
-operator|->
+operator|.
 name|wmep_aifsn
 operator|<<
 literal|4
@@ -13399,7 +13393,7 @@ name|ac
 index|[
 name|WME_AC_BE
 index|]
-operator|->
+operator|.
 name|wmep_aifsn
 argument_list|)
 expr_stmt|;
@@ -13422,7 +13416,7 @@ name|ac
 index|[
 name|WME_AC_VO
 index|]
-operator|->
+operator|.
 name|wmep_logcwmin
 operator|<<
 literal|12
@@ -13431,7 +13425,7 @@ name|ac
 index|[
 name|WME_AC_VI
 index|]
-operator|->
+operator|.
 name|wmep_logcwmin
 operator|<<
 literal|8
@@ -13440,7 +13434,7 @@ name|ac
 index|[
 name|WME_AC_BK
 index|]
-operator|->
+operator|.
 name|wmep_logcwmin
 operator|<<
 literal|4
@@ -13449,7 +13443,7 @@ name|ac
 index|[
 name|WME_AC_BE
 index|]
-operator|->
+operator|.
 name|wmep_logcwmin
 argument_list|)
 expr_stmt|;
@@ -13472,7 +13466,7 @@ name|ac
 index|[
 name|WME_AC_VO
 index|]
-operator|->
+operator|.
 name|wmep_logcwmax
 operator|<<
 literal|12
@@ -13481,7 +13475,7 @@ name|ac
 index|[
 name|WME_AC_VI
 index|]
-operator|->
+operator|.
 name|wmep_logcwmax
 operator|<<
 literal|8
@@ -13490,7 +13484,7 @@ name|ac
 index|[
 name|WME_AC_BK
 index|]
-operator|->
+operator|.
 name|wmep_logcwmax
 operator|<<
 literal|4
@@ -13499,7 +13493,7 @@ name|ac
 index|[
 name|WME_AC_BE
 index|]
-operator|->
+operator|.
 name|wmep_logcwmax
 argument_list|)
 expr_stmt|;
@@ -13522,7 +13516,7 @@ name|ac
 index|[
 name|WME_AC_BK
 index|]
-operator|->
+operator|.
 name|wmep_txopLimit
 operator|<<
 literal|16
@@ -13531,7 +13525,7 @@ name|ac
 index|[
 name|WME_AC_BE
 index|]
-operator|->
+operator|.
 name|wmep_txopLimit
 argument_list|)
 expr_stmt|;
@@ -13554,7 +13548,7 @@ name|ac
 index|[
 name|WME_AC_VO
 index|]
-operator|->
+operator|.
 name|wmep_txopLimit
 operator|<<
 literal|16
@@ -13563,7 +13557,7 @@ name|ac
 index|[
 name|WME_AC_VI
 index|]
-operator|->
+operator|.
 name|wmep_txopLimit
 argument_list|)
 expr_stmt|;
