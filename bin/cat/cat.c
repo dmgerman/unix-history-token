@@ -1376,7 +1376,11 @@ index|]
 decl_stmt|;
 name|int
 name|fd
-decl_stmt|,
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|int
 name|error
 decl_stmt|;
 comment|/* 	 * Construct the unix domain socket address and attempt to connect. 	 */
