@@ -2367,7 +2367,7 @@ sizeof|sizeof
 argument_list|(
 name|hdr
 argument_list|)
-operator|<
+operator|>
 name|m
 operator|->
 name|m_len
@@ -6773,6 +6773,13 @@ name|la_flags
 operator||=
 name|LLE_VALID
 expr_stmt|;
+if|if
+condition|(
+name|do_update
+operator|!=
+literal|0
+condition|)
+comment|/* 3,5,7 */
 name|nd6_llinfo_setstate
 argument_list|(
 name|ln
