@@ -6612,6 +6612,15 @@ argument_list|,
 name|ND6_LLINFO_STALE
 argument_list|)
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|lle_event
+argument_list|,
+name|ln
+argument_list|,
+name|LLENTRY_RESOLVED
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -6728,24 +6737,20 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|is_newentry
+operator|==
+literal|0
 operator|&&
 name|llchange
 operator|!=
 literal|0
 condition|)
+block|{
 name|do_update
 operator|=
 literal|1
 expr_stmt|;
 comment|/* (3,5) */
-if|if
-condition|(
-name|lladdr
-condition|)
-block|{
-comment|/* (3-5) and (7) */
 comment|/* 		 * Record source link-layer address 		 * XXX is it dependent to ifp->if_type? 		 */
 name|bcopy
 argument_list|(
@@ -6767,13 +6772,6 @@ name|la_flags
 operator||=
 name|LLE_VALID
 expr_stmt|;
-if|if
-condition|(
-name|do_update
-operator|!=
-literal|0
-condition|)
-comment|/* 3,5,7 */
 name|nd6_llinfo_setstate
 argument_list|(
 name|ln
@@ -6790,11 +6788,6 @@ argument_list|,
 name|LLENTRY_RESOLVED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|do_update
-condition|)
-block|{
 if|if
 condition|(
 name|ln
@@ -6814,7 +6807,6 @@ operator|&
 name|sin6
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* Calculates new router status */
 name|router
