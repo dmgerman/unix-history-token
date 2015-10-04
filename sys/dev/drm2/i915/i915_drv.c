@@ -4634,6 +4634,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|3
+case|:
+case|case
 literal|2
 case|:
 name|ret
