@@ -2311,36 +2311,29 @@ block|}
 end_function
 
 begin_comment
-comment|/* * Gets source address of the first packet in hold queue * and stores it in @src. * Returns pointer to @src (if hold queue is not empty) or NULL. * */
+comment|/*  * Gets source address of the first packet in hold queue  * and stores it in @src.  * Returns pointer to @src (if hold queue is not empty) or NULL.  *  * Set noinline to be dtrace-friendly  */
 end_comment
 
-begin_function
+begin_expr_stmt
 specifier|static
-name|struct
+name|__noinline
+expr|struct
 name|in6_addr
-modifier|*
+operator|*
 name|nd6_llinfo_get_holdsrc
-parameter_list|(
-name|struct
-name|llentry
-modifier|*
-name|ln
-parameter_list|,
-name|struct
-name|in6_addr
-modifier|*
-name|src
-parameter_list|)
-block|{
-name|struct
+argument_list|(
+argument|struct llentry *ln
+argument_list|,
+argument|struct in6_addr *src
+argument_list|)
+block|{ 	struct
 name|ip6_hdr
 name|hdr
-decl_stmt|;
-name|struct
+block|; 	struct
 name|mbuf
-modifier|*
+operator|*
 name|m
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|ln
@@ -2361,6 +2354,9 @@ name|ln
 operator|->
 name|la_hold
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 sizeof|sizeof
@@ -2377,6 +2373,9 @@ operator|(
 name|NULL
 operator|)
 return|;
+end_if
+
+begin_expr_stmt
 name|m_copydata
 argument_list|(
 name|m
@@ -2395,6 +2394,9 @@ operator|&
 name|hdr
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|*
 name|src
 operator|=
@@ -2402,19 +2404,23 @@ name|hdr
 operator|.
 name|ip6_src
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|src
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
-comment|/*  * Switch @lle state to new state optionally arming timers.  */
+unit|}
+comment|/*  * Switch @lle state to new state optionally arming timers.  *  * Set noinline to be dtrace-friendly  */
 end_comment
 
 begin_function
+unit|__noinline
 name|void
 name|nd6_llinfo_setstate
 parameter_list|(
@@ -2596,8 +2602,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Timer-dependent part of nd state machine.  *  * Set noinline to be dtrace-friendly  */
+end_comment
+
 begin_function
 specifier|static
+name|__noinline
 name|void
 name|nd6_llinfo_timer
 parameter_list|(
@@ -4609,11 +4620,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free an nd6 llinfo entry.  * Since the function would cause significant changes in the kernel, DO NOT  * make it global, unless you have a strong reason for the change, and are sure  * that the change is safe.  */
+comment|/*  * Free an nd6 llinfo entry.  * Since the function would cause significant changes in the kernel, DO NOT  * make it global, unless you have a strong reason for the change, and are sure  * that the change is safe.  *  * Set noinline to be dtrace-friendly  */
 end_comment
 
 begin_function
 specifier|static
+name|__noinline
 name|void
 name|nd6_free
 parameter_list|(
@@ -7634,11 +7646,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Do L2 address resolution for @sa_dst address. Stores found  * address in @desten buffer. Copy of lle ln_flags can be also  * saved in @pflags if @pflags is non-NULL.  *  * Heavy version.  * Function assume that destination LLE does not exist,  * is invalid or stale, so LLE_EXCLUSIVE lock needs to be acquired.  */
+comment|/*  * Do L2 address resolution for @sa_dst address. Stores found  * address in @desten buffer. Copy of lle ln_flags can be also  * saved in @pflags if @pflags is non-NULL.  *  * Heavy version.  * Function assume that destination LLE does not exist,  * is invalid or stale, so LLE_EXCLUSIVE lock needs to be acquired.  *  * Set noinline to be dtrace-friendly  */
 end_comment
 
 begin_function
 specifier|static
+name|__noinline
 name|int
 name|nd6_resolve_slow
 parameter_list|(
