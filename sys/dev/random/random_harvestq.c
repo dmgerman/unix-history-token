@@ -716,7 +716,7 @@ argument_list|)
 operator|)
 argument_list|,
 operator|(
-literal|"%s: rs_read returned too much data (%d> %d) in %s"
+literal|"%s: rs_read returned too much data (%u> %zu)"
 operator|,
 name|__func__
 operator|,
