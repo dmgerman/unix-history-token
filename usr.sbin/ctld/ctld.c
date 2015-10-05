@@ -7106,6 +7106,13 @@ argument_list|,
 name|l_next
 argument_list|)
 expr_stmt|;
+name|lun
+operator|->
+name|l_ctl_lun
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|lun
