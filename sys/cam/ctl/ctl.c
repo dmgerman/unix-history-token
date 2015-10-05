@@ -14862,6 +14862,12 @@ operator|->
 name|status
 operator|&
 name|CTL_PORT_STATUS_ONLINE
+operator|&&
+name|port
+operator|->
+name|lun_disable
+operator|!=
+name|NULL
 condition|)
 block|{
 name|STAILQ_FOREACH
@@ -14951,6 +14957,12 @@ operator|->
 name|status
 operator|&
 name|CTL_PORT_STATUS_ONLINE
+operator|&&
+name|port
+operator|->
+name|lun_enable
+operator|!=
+name|NULL
 condition|)
 block|{
 name|STAILQ_FOREACH
@@ -15064,6 +15076,12 @@ operator|&&
 name|old
 operator|>=
 name|CTL_MAX_LUNS
+operator|&&
+name|port
+operator|->
+name|lun_enable
+operator|!=
+name|NULL
 condition|)
 name|port
 operator|->
@@ -15144,6 +15162,12 @@ operator|&&
 name|old
 operator|<
 name|CTL_MAX_LUNS
+operator|&&
+name|port
+operator|->
+name|lun_disable
+operator|!=
+name|NULL
 condition|)
 name|port
 operator|->
@@ -21063,6 +21087,12 @@ operator|->
 name|lun_map
 operator|!=
 name|NULL
+operator|||
+name|port
+operator|->
+name|lun_enable
+operator|==
+name|NULL
 condition|)
 continue|continue;
 comment|/* 		 * Drop the lock while we call the FETD's enable routine. 		 * This can lead to a callback into CTL (at least in the 		 * case of the internal initiator frontend. 		 */
@@ -21279,8 +21309,15 @@ operator|->
 name|lun_map
 operator|!=
 name|NULL
+operator|||
+name|port
+operator|->
+name|lun_disable
+operator|==
+name|NULL
 condition|)
 continue|continue;
+comment|/* 		 * Drop the lock before we call the frontend's disable 		 * routine, to avoid lock order reversals. 		 * 		 * XXX KDM what happens if the frontend list changes while 		 * we're traversing it?  It's unlikely, but should be handled. 		 */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -21289,7 +21326,6 @@ operator|->
 name|ctl_lock
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Drop the lock before we call the frontend's disable 		 * routine, to avoid lock order reversals. 		 * 		 * XXX KDM what happens if the frontend list changes while 		 * we're traversing it?  It's unlikely, but should be handled. 		 */
 name|retval
 operator|=
 name|port
