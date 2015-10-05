@@ -2355,16 +2355,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|taskqueue_drain
+name|taskqueue_drain_all
 argument_list|(
 name|be_lun
 operator|->
 name|io_taskqueue
-argument_list|,
-operator|&
-name|be_lun
-operator|->
-name|io_task
 argument_list|)
 expr_stmt|;
 name|taskqueue_free
