@@ -382,6 +382,9 @@ name|struct
 name|ctl_scsiio
 modifier|*
 name|ctsio
+parameter_list|,
+name|int
+name|read
 parameter_list|)
 function_decl|;
 end_function_decl
