@@ -2227,7 +2227,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kernel_lun_resize
+name|kernel_lun_modify
 parameter_list|(
 name|struct
 name|lun
