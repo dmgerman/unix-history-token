@@ -10265,15 +10265,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Why isn't LUN defined? The other side wouldn't 		 * send a cmd if the LUN is undefined. 		 */
-name|printf
-argument_list|(
-literal|"%s: Bad JUJU!, LUN is NULL!\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|ctl_set_unsupported_lun
+comment|/* 		 * The other node would not send this request to us unless 		 * received announce that we are primary node for this LUN. 		 * If this LUN does not exist now, it is probably result of 		 * a race, so respond to initiator in the most opaque way. 		 */
+name|ctl_set_busy
 argument_list|(
 name|ctsio
 argument_list|)
