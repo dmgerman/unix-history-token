@@ -2725,6 +2725,8 @@ name|inccb
 argument_list|,
 operator|&
 name|mapinfo
+argument_list|,
+name|MAXPHYS
 argument_list|)
 expr_stmt|;
 if|if

@@ -3094,6 +3094,9 @@ name|struct
 name|cam_periph_map_info
 modifier|*
 name|mapinfo
+parameter_list|,
+name|u_int
+name|maxmap
 parameter_list|)
 block|{
 name|int
@@ -3129,12 +3132,29 @@ index|[
 name|CAM_PERIPH_MAXMAPS
 index|]
 decl_stmt|;
-comment|/* Some controllers may not be able to handle more data. */
-name|size_t
+if|if
+condition|(
 name|maxmap
-init|=
+operator|==
+literal|0
+condition|)
+name|maxmap
+operator|=
 name|DFLTPHYS
-decl_stmt|;
+expr_stmt|;
+comment|/* traditional default */
+elseif|else
+if|if
+condition|(
+name|maxmap
+operator|>
+name|MAXPHYS
+condition|)
+name|maxmap
+operator|=
+name|MAXPHYS
+expr_stmt|;
+comment|/* for safety */
 switch|switch
 condition|(
 name|ccb
