@@ -269,6 +269,9 @@ operator|->
 name|proclist
 argument_list|)
 expr_stmt|;
+name|init_syscalls
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 operator|(

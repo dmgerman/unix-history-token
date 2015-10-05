@@ -169,6 +169,12 @@ begin_struct
 struct|struct
 name|syscall
 block|{
+name|STAILQ_ENTRY
+argument_list|(
+argument|syscall
+argument_list|)
+name|entries
+expr_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -216,6 +222,9 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
+name|nargs
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -497,6 +506,15 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+name|void
+name|init_syscalls
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
