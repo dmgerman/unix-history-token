@@ -1121,6 +1121,12 @@ decl_stmt|;
 name|int
 name|ua_type
 decl_stmt|;
+name|uint8_t
+name|ua_info
+index|[
+literal|8
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
