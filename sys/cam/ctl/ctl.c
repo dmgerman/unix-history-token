@@ -9834,6 +9834,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|ctl_ha_msg_shutdown
+argument_list|(
+name|softc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ctl_ha_msg_deregister
@@ -9843,29 +9848,29 @@ argument_list|)
 operator|!=
 name|CTL_HA_STATUS_SUCCESS
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"ctl_shutdown: ctl_ha_msg_deregister failed.\n"
+literal|"%s: ctl_ha_msg_deregister failed.\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
-name|ctl_ha_msg_shutdown
+name|ctl_ha_msg_destroy
 argument_list|(
 name|softc
 argument_list|)
 operator|!=
 name|CTL_HA_STATUS_SUCCESS
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"ctl_shutdown: ctl_ha_msg_shutdown failed.\n"
+literal|"%s: ctl_ha_msg_destroy failed.\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
-block|}
 name|ctl_frontend_deregister
 argument_list|(
 operator|&
