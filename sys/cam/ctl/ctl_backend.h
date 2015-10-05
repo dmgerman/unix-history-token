@@ -667,6 +667,34 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Called on LUN HA role change.  */
+end_comment
+
+begin_function_decl
+name|int
+name|ctl_lun_primary
+parameter_list|(
+name|struct
+name|ctl_be_lun
+modifier|*
+name|be_lun
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ctl_lun_secondary
+parameter_list|(
+name|struct
+name|ctl_be_lun
+modifier|*
+name|be_lun
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Let the backend notify the initiator about changed capacity.  */
 end_comment
 

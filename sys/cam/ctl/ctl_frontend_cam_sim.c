@@ -621,6 +621,13 @@ name|max_target_id
 operator|=
 literal|15
 expr_stmt|;
+name|port
+operator|->
+name|targ_port
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|retval
 operator|=
 name|ctl_port_register

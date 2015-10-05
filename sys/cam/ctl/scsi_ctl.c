@@ -1577,6 +1577,13 @@ name|cpi
 operator|->
 name|max_target
 expr_stmt|;
+name|port
+operator|->
+name|targ_port
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 comment|/* 		 * XXX KDM need to figure out whether we're the master or 		 * slave. 		 */
 ifdef|#
 directive|ifdef

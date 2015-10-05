@@ -3064,7 +3064,7 @@ name|lun
 argument_list|,
 name|list_id
 argument_list|,
-name|ctl_get_resindex
+name|ctl_get_initindex
 argument_list|(
 operator|&
 name|ctsio
@@ -3533,7 +3533,7 @@ name|lun
 argument_list|,
 name|list_id
 argument_list|,
-name|ctl_get_resindex
+name|ctl_get_initindex
 argument_list|(
 operator|&
 name|ctsio
@@ -3973,7 +3973,7 @@ name|lun
 argument_list|,
 name|list_id
 argument_list|,
-name|ctl_get_resindex
+name|ctl_get_initindex
 argument_list|(
 operator|&
 name|ctsio
@@ -4476,7 +4476,7 @@ name|lun
 argument_list|,
 name|list_id
 argument_list|,
-name|ctl_get_resindex
+name|ctl_get_initindex
 argument_list|(
 operator|&
 name|ctsio
@@ -9598,7 +9598,7 @@ name|list
 operator|->
 name|init_idx
 operator|=
-name|ctl_get_resindex
+name|ctl_get_initindex
 argument_list|(
 operator|&
 name|ctsio
@@ -10448,7 +10448,7 @@ name|list
 operator|->
 name|init_idx
 operator|=
-name|ctl_get_resindex
+name|ctl_get_initindex
 argument_list|(
 operator|&
 name|ctsio
@@ -11330,8 +11330,6 @@ name|softc
 operator|->
 name|ctl_ports
 index|[
-name|ctl_port_idx
-argument_list|(
 name|ctsio
 operator|->
 name|io_hdr
@@ -11339,7 +11337,6 @@ operator|.
 name|nexus
 operator|.
 name|targ_port
-argument_list|)
 index|]
 expr_stmt|;
 name|cdb
@@ -11645,7 +11642,7 @@ name|list
 operator|->
 name|init_idx
 operator|=
-name|ctl_get_resindex
+name|ctl_get_initindex
 argument_list|(
 operator|&
 name|ctsio
@@ -12492,7 +12489,7 @@ name|list
 operator|->
 name|init_idx
 operator|=
-name|ctl_get_resindex
+name|ctl_get_initindex
 argument_list|(
 operator|&
 name|ctsio
@@ -13049,7 +13046,7 @@ name|lun
 argument_list|,
 name|list_id
 argument_list|,
-name|ctl_get_resindex
+name|ctl_get_initindex
 argument_list|(
 operator|&
 name|ctsio
