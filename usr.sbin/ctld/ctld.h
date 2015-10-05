@@ -80,6 +80,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEFAULT_CD_BLOCKSIZE
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAX_LUNS
 value|1024
 end_define
