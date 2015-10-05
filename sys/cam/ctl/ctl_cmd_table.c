@@ -2257,7 +2257,9 @@ name|CTL_SERIDX_RQ_SNS
 block|,
 name|CTL_FLAG_DATA_IN
 operator||
-name|CTL_CMD_FLAG_OK_ON_ALL_LUNS
+name|CTL_CMD_FLAG_OK_ON_NO_LUN
+operator||
+name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
 name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
@@ -2506,7 +2508,9 @@ name|ctl_inquiry
 block|,
 name|CTL_SERIDX_INQ
 block|,
-name|CTL_CMD_FLAG_OK_ON_ALL_LUNS
+name|CTL_CMD_FLAG_OK_ON_NO_LUN
+operator||
+name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
 name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
@@ -5002,7 +5006,9 @@ name|ctl_report_luns
 block|,
 name|CTL_SERIDX_INQ
 block|,
-name|CTL_CMD_FLAG_OK_ON_ALL_LUNS
+name|CTL_CMD_FLAG_OK_ON_NO_LUN
+operator||
+name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
 name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
