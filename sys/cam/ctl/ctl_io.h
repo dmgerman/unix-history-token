@@ -186,16 +186,6 @@ name|CTL_FLAG_DATA_MASK
 init|=
 literal|0x00000003
 block|,
-name|CTL_FLAG_KDPTR_SGLIST
-init|=
-literal|0x00000008
-block|,
-comment|/* kern_data_ptr is S/G list*/
-name|CTL_FLAG_EDPTR_SGLIST
-init|=
-literal|0x00000010
-block|,
-comment|/* ext_data_ptr is S/G list */
 name|CTL_FLAG_DO_AUTOSENSE
 init|=
 literal|0x00000020

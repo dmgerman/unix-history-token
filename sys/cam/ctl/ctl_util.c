@@ -4484,11 +4484,11 @@ if|if
 condition|(
 name|io
 operator|->
-name|io_hdr
+name|scsiio
 operator|.
-name|flags
-operator|&
-name|CTL_FLAG_EDPTR_SGLIST
+name|ext_sg_entries
+operator|>
+literal|0
 condition|)
 comment|/* XXX: Implement */
 return|return;

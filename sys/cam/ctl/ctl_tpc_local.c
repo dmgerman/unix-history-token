@@ -662,11 +662,9 @@ if|if
 condition|(
 name|ctsio
 operator|->
-name|io_hdr
-operator|.
-name|flags
-operator|&
-name|CTL_FLAG_EDPTR_SGLIST
+name|ext_sg_entries
+operator|>
+literal|0
 condition|)
 block|{
 name|int

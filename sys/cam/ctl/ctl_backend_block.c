@@ -8727,8 +8727,6 @@ operator|.
 name|flags
 operator||=
 name|CTL_FLAG_ALLOCATED
-operator||
-name|CTL_FLAG_KDPTR_SGLIST
 expr_stmt|;
 comment|/* 	 * For the read case, we need to read the data into our buffers and 	 * then we can send it back to the user.  For the write case, we 	 * need to get the data from the user first. 	 */
 if|if
