@@ -6722,9 +6722,7 @@ name|snscb_reserved1
 decl_stmt|;
 name|uint16_t
 name|snscb_data
-index|[
-literal|1
-index|]
+index|[]
 decl_stmt|;
 comment|/* variable data */
 block|}
@@ -6962,9 +6960,7 @@ index|]
 decl_stmt|;
 name|uint16_t
 name|snscb_data
-index|[
-literal|1
-index|]
+index|[]
 decl_stmt|;
 comment|/* variable data */
 block|}
