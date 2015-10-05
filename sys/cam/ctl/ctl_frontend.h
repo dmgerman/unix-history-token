@@ -187,6 +187,11 @@ struct|struct
 name|ctl_port
 block|{
 name|struct
+name|ctl_softc
+modifier|*
+name|ctl_softc
+decl_stmt|;
+name|struct
 name|ctl_frontend
 modifier|*
 name|frontend

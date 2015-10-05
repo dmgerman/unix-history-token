@@ -540,6 +540,12 @@ literal|"CTL is not initialized"
 operator|)
 argument_list|)
 expr_stmt|;
+name|port
+operator|->
+name|ctl_softc
+operator|=
+name|softc
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -920,7 +926,9 @@ name|ctl_softc
 modifier|*
 name|softc
 init|=
-name|control_softc
+name|port
+operator|->
+name|ctl_softc
 decl_stmt|;
 name|struct
 name|ctl_io_pool
@@ -1451,7 +1459,9 @@ name|ctl_softc
 modifier|*
 name|softc
 init|=
-name|control_softc
+name|port
+operator|->
+name|ctl_softc
 decl_stmt|;
 name|struct
 name|ctl_lun
@@ -1653,7 +1663,9 @@ name|ctl_softc
 modifier|*
 name|softc
 init|=
-name|control_softc
+name|port
+operator|->
+name|ctl_softc
 decl_stmt|;
 name|struct
 name|ctl_lun
