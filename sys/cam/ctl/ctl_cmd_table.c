@@ -2720,9 +2720,9 @@ literal|0x01
 block|,
 literal|0
 block|,
-literal|0
+literal|0x0f
 block|,
-literal|0x03
+literal|0xf7
 block|,
 literal|0x07
 block|}
