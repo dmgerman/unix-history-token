@@ -100,12 +100,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cam/ctl/ctl_frontend_internal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cam/ctl/ctl_ioctl.h>
 end_include
 

@@ -162,63 +162,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|ctl_hard_startstop_info
-block|{
-name|cfi_mt_status
-name|status
-decl_stmt|;
-name|int
-name|total_luns
-decl_stmt|;
-name|int
-name|luns_complete
-decl_stmt|;
-name|int
-name|luns_failed
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ctl_bbrread_info
-block|{
-name|int
-name|lun_num
-decl_stmt|;
-comment|/* Passed in to CTL */
-name|uint64_t
-name|lba
-decl_stmt|;
-comment|/* Passed in to CTL */
-name|int
-name|len
-decl_stmt|;
-comment|/* Passed in to CTL */
-name|cfi_mt_status
-name|status
-decl_stmt|;
-comment|/* Returned from CTL */
-name|cfi_bbrread_status
-name|bbr_status
-decl_stmt|;
-comment|/* Returned from CTL */
-name|uint8_t
-name|scsi_status
-decl_stmt|;
-comment|/* Returned from CTL */
-name|struct
-name|scsi_sense_data
-name|sense_data
-decl_stmt|;
-comment|/* Returned from CTL */
-block|}
-struct|;
-end_struct
-
 begin_typedef
 typedef|typedef
 enum|enum
@@ -1818,20 +1761,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CTL_HARD_STOP
-value|_IOR(CTL_MINOR, 0x08, \ 				     struct ctl_hard_startstop_info)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_HARD_START
-value|_IOR(CTL_MINOR, 0x09, \ 				     struct ctl_hard_startstop_info)
-end_define
-
-begin_define
-define|#
-directive|define
 name|CTL_DELAY_IO
 value|_IOWR(CTL_MINOR, 0x10, struct ctl_io_delay_info)
 end_define
@@ -1876,13 +1805,6 @@ define|#
 directive|define
 name|CTL_ERROR_INJECT
 value|_IOWR(CTL_MINOR, 0x16, struct ctl_error_desc)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_BBRREAD
-value|_IOWR(CTL_MINOR, 0x17, struct ctl_bbrread_info)
 end_define
 
 begin_define
