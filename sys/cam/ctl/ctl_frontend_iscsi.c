@@ -7088,6 +7088,45 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|cs
+operator|->
+name|cs_initiator_addr
+argument_list|,
+name|cs2
+operator|->
+name|cs_initiator_addr
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs2
+argument_list|,
+literal|"session reinstatement from "
+literal|"different address %s"
+argument_list|,
+name|cs
+operator|->
+name|cs_initiator_addr
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|CFISCSI_SESSION_DEBUG
+argument_list|(
+name|cs2
+argument_list|,
+literal|"session reinstatement"
+argument_list|)
+expr_stmt|;
+block|}
 name|cfiscsi_session_terminate
 argument_list|(
 name|cs2
