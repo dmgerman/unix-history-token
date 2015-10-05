@@ -2299,7 +2299,6 @@ operator|->
 name|queue_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX KDM make sure that links is okay to use at this point. 	 * Otherwise, we either need to add another field to ctl_io_hdr, 	 * or deal with resource allocation here. 	 */
 name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -8063,7 +8062,6 @@ operator|->
 name|queue_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX KDM make sure that links is okay to use at this point. 	 * Otherwise, we either need to add another field to ctl_io_hdr, 	 * or deal with resource allocation here. 	 */
 name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -9338,7 +9336,6 @@ operator|->
 name|queue_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX KDM make sure that links is okay to use at this point. 	 * Otherwise, we either need to add another field to ctl_io_hdr, 	 * or deal with resource allocation here. 	 */
 name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -12654,7 +12651,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 	 * XXX This searching loop might be refactored to be combined with 	 * the loop above, 	 */
 name|value
 operator|=
 name|ctl_get_opt
@@ -14740,10 +14736,6 @@ decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
-name|retval
-operator|=
-literal|0
-expr_stmt|;
 name|DPRINTF
 argument_list|(
 literal|"entered\n"
@@ -14777,6 +14769,10 @@ operator|)
 name|cbe_lun
 operator|->
 name|be_lun
+expr_stmt|;
+name|retval
+operator|=
+literal|0
 expr_stmt|;
 switch|switch
 condition|(
@@ -15229,10 +15225,6 @@ name|ctl_be_block_lun
 operator|*
 operator|)
 name|be_lun
-expr_stmt|;
-name|retval
-operator|=
-literal|0
 expr_stmt|;
 name|retval
 operator|=
