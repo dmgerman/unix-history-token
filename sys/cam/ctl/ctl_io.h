@@ -592,6 +592,9 @@ comment|/* Information about initiator. */
 name|CTL_MSG_LOGIN
 block|,
 comment|/* Information about HA peer. */
+name|CTL_MSG_MODE_SYNC
+block|,
+comment|/* Mode page current content. */
 name|CTL_MSG_FAILOVER
 comment|/* Fake, never sent though the wire */
 block|}
@@ -1456,6 +1459,35 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Used for CTL_MSG_MODE_SYNC.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ctl_ha_msg_mode
+block|{
+name|struct
+name|ctl_ha_msg_hdr
+name|hdr
+decl_stmt|;
+name|uint8_t
+name|page_code
+decl_stmt|;
+name|uint8_t
+name|subpage
+decl_stmt|;
+name|uint16_t
+name|page_len
+decl_stmt|;
+name|uint8_t
+name|data
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_union
 union|union
 name|ctl_ha_msg
@@ -1499,6 +1531,10 @@ decl_stmt|;
 name|struct
 name|ctl_ha_msg_login
 name|login
+decl_stmt|;
+name|struct
+name|ctl_ha_msg_mode
+name|mode
 decl_stmt|;
 block|}
 union|;
