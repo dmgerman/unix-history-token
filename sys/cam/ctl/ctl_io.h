@@ -920,8 +920,32 @@ block|,
 name|CTL_TASK_PORT_LOGIN
 block|,
 name|CTL_TASK_PORT_LOGOUT
+block|,
+name|CTL_TASK_QUERY_TASK
+block|,
+name|CTL_TASK_QUERY_TASK_SET
+block|,
+name|CTL_TASK_QUERY_ASYNC_EVENT
 block|}
 name|ctl_task_type
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CTL_TASK_FUNCTION_COMPLETE
+block|,
+name|CTL_TASK_FUNCTION_SUCCEEDED
+block|,
+name|CTL_TASK_FUNCTION_REJECTED
+block|,
+name|CTL_TASK_LUN_DOES_NOT_EXIST
+block|,
+name|CTL_TASK_FUNCTION_NOT_SUPPORTED
+block|}
+name|ctl_task_status
 typedef|;
 end_typedef
 
@@ -950,6 +974,17 @@ name|ctl_tag_type
 name|tag_type
 decl_stmt|;
 comment|/* simple, ordered, etc. */
+name|uint8_t
+name|task_status
+decl_stmt|;
+comment|/* Complete, Succeeded, etc. */
+name|uint8_t
+name|task_resp
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Response information */
 block|}
 struct|;
 end_struct

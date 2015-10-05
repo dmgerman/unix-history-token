@@ -305,6 +305,24 @@ name|CTL_TASK_PORT_LOGOUT
 block|,
 literal|"Port Logout"
 block|}
+block|,
+block|{
+name|CTL_TASK_QUERY_TASK
+block|,
+literal|"Query Task"
+block|}
+block|,
+block|{
+name|CTL_TASK_QUERY_TASK_SET
+block|,
+literal|"Query Task Set"
+block|}
+block|,
+block|{
+name|CTL_TASK_QUERY_ASYNC_EVENT
+block|,
+literal|"Query Async Event"
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
