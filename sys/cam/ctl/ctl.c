@@ -10975,12 +10975,6 @@ argument_list|)
 expr_stmt|;
 name|softc
 operator|->
-name|open_count
-operator|=
-literal|0
-expr_stmt|;
-name|softc
-operator|->
 name|flags
 operator|=
 literal|0
