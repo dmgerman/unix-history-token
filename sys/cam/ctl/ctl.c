@@ -54685,6 +54685,7 @@ decl_stmt|,
 modifier|*
 name|ooa_entry
 decl_stmt|;
+specifier|const
 name|ctl_serialize_action
 modifier|*
 name|serialize_row
