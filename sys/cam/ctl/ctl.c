@@ -7079,9 +7079,9 @@ name|dt
 operator|.
 name|kern_sg_entries
 operator|+
-name|io
+name|msg
 operator|->
-name|scsiio
+name|dt
 operator|.
 name|kern_data_len
 operator|/
@@ -7330,7 +7330,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("%s: L: %p,%d -> %p,%d j=%d, i=%d\n", 				       __func__, 				       msg->dt.sg_list[j].addr, 				       msg->dt.sg_list[j].len, 				       sgl[i].addr, sgl[i].len, j, i);
+block|printf("%s: DATAMOVE: %p,%lu j=%d, i=%d\n", 				    __func__, sgl[i].addr, sgl[i].len, j, i);
 endif|#
 directive|endif
 block|}
@@ -61822,10 +61822,6 @@ name|retval
 decl_stmt|;
 name|retval
 operator|=
-literal|0
-expr_stmt|;
-name|retval
-operator|=
 name|ctl_datamove_remote_xfer
 argument_list|(
 name|io
@@ -61927,7 +61923,6 @@ argument_list|(
 name|io
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -62172,9 +62167,6 @@ name|struct
 name|ctl_sg_entry
 modifier|*
 name|local_sglist
-decl_stmt|,
-modifier|*
-name|remote_sglist
 decl_stmt|;
 name|struct
 name|ctl_softc
@@ -62205,14 +62197,6 @@ operator|->
 name|io_hdr
 operator|.
 name|local_sglist
-expr_stmt|;
-name|remote_sglist
-operator|=
-name|io
-operator|->
-name|io_hdr
-operator|.
-name|remote_sglist
 expr_stmt|;
 name|len_to_go
 operator|=
@@ -62294,7 +62278,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("%s: kern_sg_entries = %d\n", __func__, 	       io->scsiio.kern_sg_entries); 	for (i = 0; i< io->scsiio.kern_sg_entries; i++) 		printf("%s: sg[%d] = %p, %d\n", __func__, i, 		       local_sglist[i].addr, local_sglist[i].len);
+block|printf("%s: kern_sg_entries = %d\n", __func__, 	       io->scsiio.kern_sg_entries); 	for (i = 0; i< io->scsiio.kern_sg_entries; i++) 		printf("%s: sg[%d] = %p, %lu\n", __func__, i, 		       local_sglist[i].addr, local_sglist[i].len);
 endif|#
 directive|endif
 return|return
@@ -62705,7 +62689,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("%s: %s: local %#x remote %#x size %d\n", __func__, 		       (command == CTL_HA_DT_CMD_WRITE) ? "WRITE" : "READ", 		       rq->local, rq->remote, rq->size);
+block|printf("%s: %s: local %p remote %p size %d\n", __func__, 		       (command == CTL_HA_DT_CMD_WRITE) ? "WRITE" : "READ", 		       rq->local, rq->remote, rq->size);
 endif|#
 directive|endif
 name|isc_ret
@@ -62862,7 +62846,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
