@@ -224,7 +224,7 @@ begin_define
 define|#
 directive|define
 name|MAXFILES
-value|(maxproc * 2)
+value|(40 + 32 * maxusers)
 end_define
 
 begin_endif
@@ -1231,6 +1231,16 @@ operator|=
 name|physpages
 operator|/
 literal|12
+expr_stmt|;
+if|if
+condition|(
+name|maxproc
+operator|>
+name|pid_max
+condition|)
+name|maxproc
+operator|=
+name|pid_max
 expr_stmt|;
 name|maxprocperuid
 operator|=
