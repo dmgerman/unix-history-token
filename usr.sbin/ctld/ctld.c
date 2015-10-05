@@ -9840,6 +9840,8 @@ operator|=
 name|kernel_port_update
 argument_list|(
 name|newport
+argument_list|,
+name|oldport
 argument_list|)
 expr_stmt|;
 block|}
