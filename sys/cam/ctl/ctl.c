@@ -3322,7 +3322,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * Attempt to catch the situation where an I/O has 	 * been freed, and we're using it again. 	 */
-block|if (ctsio->io_hdr.io_type == 0xff) { 		union ctl_io *tmp_io; 		tmp_io = (union ctl_io *)ctsio; 		printf("%s: %p use after free!\n", __func__, 		       ctsio); 		printf("%s: type %d msg %d cdb %x iptl: " 		       "%d:%d:%d:%d tag 0x%04x " 		       "flag %#x status %x\n", 			__func__, 			tmp_io->io_hdr.io_type, 			tmp_io->io_hdr.msg_type, 			tmp_io->scsiio.cdb[0], 			tmp_io->io_hdr.nexus.initid.id, 			tmp_io->io_hdr.nexus.targ_port, 			tmp_io->io_hdr.nexus.targ_target.id, 			tmp_io->io_hdr.nexus.targ_lun, 			(tmp_io->io_hdr.io_type == 			CTL_IO_TASK) ? 			tmp_io->taskio.tag_num : 			tmp_io->scsiio.tag_num, 		        tmp_io->io_hdr.flags, 			tmp_io->io_hdr.status); 	}
+block|if (ctsio->io_hdr.io_type == 0xff) { 		union ctl_io *tmp_io; 		tmp_io = (union ctl_io *)ctsio; 		printf("%s: %p use after free!\n", __func__, 		       ctsio); 		printf("%s: type %d msg %d cdb %x iptl: " 		       "%u:%u:%u tag 0x%04x " 		       "flag %#x status %x\n", 			__func__, 			tmp_io->io_hdr.io_type, 			tmp_io->io_hdr.msg_type, 			tmp_io->scsiio.cdb[0], 			tmp_io->io_hdr.nexus.initid, 			tmp_io->io_hdr.nexus.targ_port, 			tmp_io->io_hdr.nexus.targ_lun, 			(tmp_io->io_hdr.io_type == 			CTL_IO_TASK) ? 			tmp_io->taskio.tag_num : 			tmp_io->scsiio.tag_num, 		        tmp_io->io_hdr.flags, 			tmp_io->io_hdr.status); 	}
 endif|#
 directive|endif
 name|ctsio
@@ -3628,7 +3628,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("targ %d, port %d, iid %d, lun %d\n", 			       io->io_hdr.nexus.targ_target.id, 			       io->io_hdr.nexus.targ_port, 			       io->io_hdr.nexus.initid.id, 			       io->io_hdr.nexus.targ_lun);
+block|printf("port %u, iid %u, lun %u\n", 			       io->io_hdr.nexus.targ_port, 			       io->io_hdr.nexus.initid, 			       io->io_hdr.nexus.targ_lun);
 endif|#
 directive|endif
 name|io
@@ -14706,8 +14706,6 @@ operator|(
 name|nexus
 operator|->
 name|initid
-operator|.
-name|id
 operator|+
 operator|(
 name|nexus
@@ -14724,8 +14722,6 @@ operator|(
 name|nexus
 operator|->
 name|initid
-operator|.
-name|id
 operator|+
 operator|(
 operator|(
@@ -14758,8 +14754,6 @@ operator|(
 name|nexus
 operator|->
 name|initid
-operator|.
-name|id
 operator|+
 operator|(
 name|nexus
@@ -50014,8 +50008,6 @@ operator|.
 name|nexus
 operator|.
 name|initid
-operator|.
-name|id
 operator|==
 name|ooa_io
 operator|->
@@ -50024,8 +50016,6 @@ operator|.
 name|nexus
 operator|.
 name|initid
-operator|.
-name|id
 operator|)
 operator|)
 operator|&&
@@ -50116,8 +50106,6 @@ operator|.
 name|nexus
 operator|.
 name|initid
-operator|.
-name|id
 operator|==
 name|ooa_io
 operator|->
@@ -50126,8 +50114,6 @@ operator|.
 name|nexus
 operator|.
 name|initid
-operator|.
-name|id
 operator|)
 operator|)
 operator|&&
@@ -54476,8 +54462,6 @@ operator|.
 name|nexus
 operator|.
 name|initid
-operator|.
-name|id
 operator|)
 condition|)
 block|{
@@ -54502,8 +54486,6 @@ operator|.
 name|nexus
 operator|.
 name|initid
-operator|.
-name|id
 condition|)
 name|xio
 operator|->
@@ -54768,8 +54750,6 @@ operator|.
 name|nexus
 operator|.
 name|initid
-operator|.
-name|id
 argument_list|,
 operator|(
 name|io
@@ -54922,8 +54902,6 @@ operator|.
 name|nexus
 operator|.
 name|initid
-operator|.
-name|id
 argument_list|,
 operator|(
 name|io
@@ -55216,8 +55194,6 @@ operator|.
 name|nexus
 operator|.
 name|initid
-operator|.
-name|id
 operator|!=
 name|io
 operator|->
@@ -55226,8 +55202,6 @@ operator|.
 name|nexus
 operator|.
 name|initid
-operator|.
-name|id
 operator|)
 operator|||
 operator|(
@@ -55438,7 +55412,7 @@ comment|/* 		 * This isn't really an error.  It's entirely possible for 		 * the
 if|#
 directive|if
 literal|0
-block|printf("ctl_abort_task: ABORT sent for nonexistent I/O: " 		       "%d:%d:%d:%d tag %d type %d\n", 		       io->io_hdr.nexus.initid.id, 		       io->io_hdr.nexus.targ_port, 		       io->io_hdr.nexus.targ_target.id, 		       io->io_hdr.nexus.targ_lun, io->taskio.tag_num, 		       io->taskio.tag_type);
+block|printf("ctl_abort_task: ABORT sent for nonexistent I/O: " 		       "%u:%u:%u tag %d type %d\n", 		       io->io_hdr.nexus.initid, 		       io->io_hdr.nexus.targ_port, 		       io->io_hdr.nexus.targ_lun, io->taskio.tag_num, 		       io->taskio.tag_type);
 endif|#
 directive|endif
 block|}
@@ -57173,7 +57147,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ctl_datamove: tag 0x%04x on (%ju:%d:%ju:%d) aborted\n"
+literal|"ctl_datamove: tag 0x%04x on (%u:%u:%u) aborted\n"
 argument_list|,
 name|io
 operator|->
@@ -57181,9 +57155,6 @@ name|scsiio
 operator|.
 name|tag_num
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
 name|io
 operator|->
 name|io_hdr
@@ -57191,8 +57162,6 @@ operator|.
 name|nexus
 operator|.
 name|initid
-operator|.
-name|id
 argument_list|,
 name|io
 operator|->
@@ -57201,19 +57170,6 @@ operator|.
 name|nexus
 operator|.
 name|targ_port
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|io
-operator|->
-name|io_hdr
-operator|.
-name|nexus
-operator|.
-name|targ_target
-operator|.
-name|id
 argument_list|,
 name|io
 operator|->
@@ -59955,7 +59911,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: tag 0x%04x on (%d:%d:%d:%d) aborted\n"
+literal|"%s: tag 0x%04x on (%u:%u:%u) aborted\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -59972,8 +59928,6 @@ operator|.
 name|nexus
 operator|.
 name|initid
-operator|.
-name|id
 argument_list|,
 name|io
 operator|->
@@ -59982,16 +59936,6 @@ operator|.
 name|nexus
 operator|.
 name|targ_port
-argument_list|,
-name|io
-operator|->
-name|io_hdr
-operator|.
-name|nexus
-operator|.
-name|targ_target
-operator|.
-name|id
 argument_list|,
 name|io
 operator|->
@@ -61799,7 +61743,7 @@ comment|/* 	 * Enable this to catch duplicate completion issues. 	 */
 if|#
 directive|if
 literal|0
-block|if (io->io_hdr.flags& CTL_FLAG_ALREADY_DONE) { 		printf("%s: type %d msg %d cdb %x iptl: " 		       "%d:%d:%d:%d tag 0x%04x " 		       "flag %#x status %x\n", 			__func__, 			io->io_hdr.io_type, 			io->io_hdr.msg_type, 			io->scsiio.cdb[0], 			io->io_hdr.nexus.initid.id, 			io->io_hdr.nexus.targ_port, 			io->io_hdr.nexus.targ_target.id, 			io->io_hdr.nexus.targ_lun, 			(io->io_hdr.io_type == 			CTL_IO_TASK) ? 			io->taskio.tag_num : 			io->scsiio.tag_num, 		        io->io_hdr.flags, 			io->io_hdr.status); 	} else 		io->io_hdr.flags |= CTL_FLAG_ALREADY_DONE;
+block|if (io->io_hdr.flags& CTL_FLAG_ALREADY_DONE) { 		printf("%s: type %d msg %d cdb %x iptl: " 		       "%u:%u:%u tag 0x%04x " 		       "flag %#x status %x\n", 			__func__, 			io->io_hdr.io_type, 			io->io_hdr.msg_type, 			io->scsiio.cdb[0], 			io->io_hdr.nexus.initid, 			io->io_hdr.nexus.targ_port, 			io->io_hdr.nexus.targ_lun, 			(io->io_hdr.io_type == 			CTL_IO_TASK) ? 			io->taskio.tag_num : 			io->scsiio.tag_num, 		        io->io_hdr.flags, 			io->io_hdr.status); 	} else 		io->io_hdr.flags |= CTL_FLAG_ALREADY_DONE;
 endif|#
 directive|endif
 comment|/* 	 * This is an internal copy of an I/O, and should not go through 	 * the normal done processing logic. 	 */
@@ -63056,8 +63000,6 @@ operator|.
 name|nexus
 operator|.
 name|initid
-operator|.
-name|id
 operator|)
 operator|%
 name|worker_threads

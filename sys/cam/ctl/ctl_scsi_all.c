@@ -401,8 +401,6 @@ operator|.
 name|nexus
 operator|.
 name|initid
-operator|.
-name|id
 argument_list|,
 name|io
 operator|->
