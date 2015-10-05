@@ -708,10 +708,6 @@ name|KASSERT
 argument_list|(
 operator|(
 name|n
-operator|>
-literal|0
-operator|&&
-name|n
 operator|<=
 sizeof|sizeof
 argument_list|(
@@ -720,14 +716,42 @@ argument_list|)
 operator|)
 argument_list|,
 operator|(
-literal|"very bad return from rs_read (= %d) in %s"
+literal|"%s: rs_read returned too much data (%d> %d) in %s"
+operator|,
+name|__func__
 operator|,
 name|n
 operator|,
-name|__func__
+sizeof|sizeof
+argument_list|(
+name|entropy
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* It would appear that in some circumstances (e.g. virtualisation), 			 * the underlying hardware entropy source might not always return 			 * random numbers. Accept this but make a noise. If too much happens, 			 * can that source be trusted? 			 */
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: rs_read for hardware device '%s' returned no entropy.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|rrs
+operator|->
+name|rrs_source
+operator|->
+name|rs_ident
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|random_harvest_direct
 argument_list|(
 name|entropy
