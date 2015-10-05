@@ -1525,7 +1525,7 @@ parameter_list|,
 name|bt
 parameter_list|)
 define|\
-value|printf("%s %jd s %ju frac\n", prefix, (intmax_t)(bt).sec, \ 	       (uintmax_t)(bt).frac)
+value|printf("%s %jd.%06ju\n", prefix, (intmax_t)(bt).sec, \ 	       (uintmax_t)(((bt).frac>> 32) * 1000000>> 32))
 end_define
 
 begin_decl_stmt
@@ -1778,7 +1778,7 @@ parameter_list|,
 name|bt
 parameter_list|)
 define|\
-value|printf("\"%s\":{\"sec\":%jd,\"frac\":%ju},", \ 	    prefix, (intmax_t)(bt).sec, (uintmax_t)(bt).frac)
+value|printf("\"%s\":%jd.%06ju,", prefix, (intmax_t)(bt).sec, \ 	    (uintmax_t)(((bt).frac>> 32) * 1000000>> 32))
 end_define
 
 begin_function
