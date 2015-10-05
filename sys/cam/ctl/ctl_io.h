@@ -684,13 +684,13 @@ name|bintime
 name|dma_bt
 decl_stmt|;
 comment|/* DMA total ticks */
+endif|#
+directive|endif
+comment|/* CTL_TIME_IO */
 name|uint32_t
 name|num_dmas
 decl_stmt|;
 comment|/* Number of DMAs */
-endif|#
-directive|endif
-comment|/* CTL_TIME_IO */
 name|union
 name|ctl_io
 modifier|*

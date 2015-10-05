@@ -8652,7 +8652,7 @@ name|start_time
 operator|=
 name|time_uptime
 expr_stmt|;
-name|getbintime
+name|getbinuptime
 argument_list|(
 operator|&
 name|io
@@ -8854,7 +8854,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|CTL_TIME_IO
-name|getbintime
+name|getbinuptime
 argument_list|(
 operator|&
 name|io
@@ -9600,7 +9600,7 @@ name|start_time
 operator|=
 name|time_uptime
 expr_stmt|;
-name|getbintime
+name|getbinuptime
 argument_list|(
 operator|&
 name|taskio
@@ -16128,7 +16128,7 @@ name|fill_len
 argument_list|)
 expr_stmt|;
 block|}
-name|getbintime
+name|getbinuptime
 argument_list|(
 operator|&
 name|ooa_hdr
@@ -62908,7 +62908,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CTL_TIME_IO
-name|getbintime
+name|getbinuptime
 argument_list|(
 operator|&
 name|cur_bt
@@ -62940,6 +62940,8 @@ operator|&
 name|cur_bt
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|io
 operator|->
 name|io_hdr
@@ -62947,8 +62949,6 @@ operator|.
 name|num_dmas
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -64907,27 +64907,7 @@ operator|.
 name|dma_bt
 argument_list|)
 expr_stmt|;
-name|lun
-operator|->
-name|stats
-operator|.
-name|ports
-index|[
-name|targ_port
-index|]
-operator|.
-name|num_dmas
-index|[
-name|type
-index|]
-operator|+=
-name|io
-operator|->
-name|io_hdr
-operator|.
-name|num_dmas
-expr_stmt|;
-name|getbintime
+name|getbinuptime
 argument_list|(
 operator|&
 name|cur_bt
@@ -64969,6 +64949,26 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|lun
+operator|->
+name|stats
+operator|.
+name|ports
+index|[
+name|targ_port
+index|]
+operator|.
+name|num_dmas
+index|[
+name|type
+index|]
+operator|+=
+name|io
+operator|->
+name|io_hdr
+operator|.
+name|num_dmas
+expr_stmt|;
 block|}
 comment|/* 	 * Remove this from the OOA queue. 	 */
 name|TAILQ_REMOVE
@@ -65525,7 +65525,7 @@ name|start_time
 operator|=
 name|time_uptime
 expr_stmt|;
-name|getbintime
+name|getbinuptime
 argument_list|(
 operator|&
 name|io

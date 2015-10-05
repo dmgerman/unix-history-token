@@ -2039,7 +2039,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CTL_TIME_IO
-name|getbintime
+name|getbinuptime
 argument_list|(
 operator|&
 name|cur_bt
@@ -2071,6 +2071,8 @@ operator|&
 name|cur_bt
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|io
 operator|->
 name|io_hdr
@@ -2078,8 +2080,6 @@ operator|.
 name|num_dmas
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 name|io
 operator|->
 name|scsiio
@@ -2712,7 +2712,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|CTL_TIME_IO
-name|getbintime
+name|getbinuptime
 argument_list|(
 operator|&
 name|io
@@ -3861,7 +3861,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|CTL_TIME_IO
-name|getbintime
+name|getbinuptime
 argument_list|(
 operator|&
 name|io
@@ -4955,7 +4955,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|CTL_TIME_IO
-name|getbintime
+name|getbinuptime
 argument_list|(
 operator|&
 name|io
@@ -8783,7 +8783,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CTL_TIME_IO
-name|getbintime
+name|getbinuptime
 argument_list|(
 operator|&
 name|io
