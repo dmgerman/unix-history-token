@@ -698,6 +698,20 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|nd6_llinfo_settimer_locked
+parameter_list|(
+name|struct
+name|llentry
+modifier|*
+parameter_list|,
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|clear_llinfo_pqueue
 parameter_list|(
 name|struct
@@ -2173,6 +2187,7 @@ comment|/*  * ND6 timer routine to handle ND6 entries  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|nd6_llinfo_settimer_locked
 parameter_list|(
@@ -2311,36 +2326,29 @@ block|}
 end_function
 
 begin_comment
-comment|/* * Gets source address of the first packet in hold queue * and stores it in @src. * Returns pointer to @src (if hold queue is not empty) or NULL. * */
+comment|/*  * Gets source address of the first packet in hold queue  * and stores it in @src.  * Returns pointer to @src (if hold queue is not empty) or NULL.  *  * Set noinline to be dtrace-friendly  */
 end_comment
 
-begin_function
+begin_expr_stmt
 specifier|static
-name|struct
+name|__noinline
+expr|struct
 name|in6_addr
-modifier|*
+operator|*
 name|nd6_llinfo_get_holdsrc
-parameter_list|(
-name|struct
-name|llentry
-modifier|*
-name|ln
-parameter_list|,
-name|struct
-name|in6_addr
-modifier|*
-name|src
-parameter_list|)
-block|{
-name|struct
+argument_list|(
+argument|struct llentry *ln
+argument_list|,
+argument|struct in6_addr *src
+argument_list|)
+block|{ 	struct
 name|ip6_hdr
 name|hdr
-decl_stmt|;
-name|struct
+block|; 	struct
 name|mbuf
-modifier|*
+operator|*
 name|m
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|ln
@@ -2361,13 +2369,16 @@ name|ln
 operator|->
 name|la_hold
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 sizeof|sizeof
 argument_list|(
 name|hdr
 argument_list|)
-operator|<
+operator|>
 name|m
 operator|->
 name|m_len
@@ -2377,6 +2388,9 @@ operator|(
 name|NULL
 operator|)
 return|;
+end_if
+
+begin_expr_stmt
 name|m_copydata
 argument_list|(
 name|m
@@ -2395,6 +2409,9 @@ operator|&
 name|hdr
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|*
 name|src
 operator|=
@@ -2402,19 +2419,23 @@ name|hdr
 operator|.
 name|ip6_src
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|src
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
-comment|/*  * Switch @lle state to new state optionally arming timers.  */
+unit|}
+comment|/*  * Switch @lle state to new state optionally arming timers.  *  * Set noinline to be dtrace-friendly  */
 end_comment
 
 begin_function
+unit|__noinline
 name|void
 name|nd6_llinfo_setstate
 parameter_list|(
@@ -2563,41 +2584,13 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
-name|nd6_llinfo_settimer
-parameter_list|(
-name|struct
-name|llentry
-modifier|*
-name|ln
-parameter_list|,
-name|long
-name|tick
-parameter_list|)
-block|{
-name|LLE_WLOCK
-argument_list|(
-name|ln
-argument_list|)
-expr_stmt|;
-name|nd6_llinfo_settimer_locked
-argument_list|(
-name|ln
-argument_list|,
-name|tick
-argument_list|)
-expr_stmt|;
-name|LLE_WUNLOCK
-argument_list|(
-name|ln
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_comment
+comment|/*  * Timer-dependent part of nd state machine.  *  * Set noinline to be dtrace-friendly  */
+end_comment
 
 begin_function
 specifier|static
+name|__noinline
 name|void
 name|nd6_llinfo_timer
 parameter_list|(
@@ -3400,8 +3393,107 @@ goto|;
 block|}
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|ia6
+operator|->
+name|ia6_flags
+operator|&
+name|IN6_IFF_TENTATIVE
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * Schedule DAD for a tentative address.  This happens 			 * if the interface was down or not running 			 * when the address was configured. 			 */
+name|int
+name|delay
+decl_stmt|;
+name|delay
+operator|=
+name|arc4random
+argument_list|()
+operator|%
+operator|(
+name|MAX_RTR_SOLICITATION_DELAY
+operator|*
+name|hz
+operator|)
+expr_stmt|;
+name|nd6_dad_start
+argument_list|(
+operator|(
+expr|struct
+name|ifaddr
+operator|*
+operator|)
+name|ia6
+argument_list|,
+name|delay
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
+comment|/* 			 * Check status of the interface.  If it is down, 			 * mark the address as tentative for future DAD. 			 */
+if|if
+condition|(
+operator|(
+name|ia6
+operator|->
+name|ia_ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_UP
+operator|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|ia6
+operator|->
+name|ia_ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|ND_IFINFO
+argument_list|(
+name|ia6
+operator|->
+name|ia_ifp
+argument_list|)
+operator|->
+name|flags
+operator|&
+name|ND6_IFF_IFDISABLED
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|ia6
+operator|->
+name|ia6_flags
+operator|&=
+operator|~
+name|IN6_IFF_DUPLICATED
+expr_stmt|;
+name|ia6
+operator|->
+name|ia6_flags
+operator||=
+name|IN6_IFF_TENTATIVE
+expr_stmt|;
+block|}
 comment|/* 			 * A new RA might have made a deprecated address 			 * preferred. 			 */
 name|ia6
 operator|->
@@ -4510,11 +4602,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free an nd6 llinfo entry.  * Since the function would cause significant changes in the kernel, DO NOT  * make it global, unless you have a strong reason for the change, and are sure  * that the change is safe.  */
+comment|/*  * Free an nd6 llinfo entry.  * Since the function would cause significant changes in the kernel, DO NOT  * make it global, unless you have a strong reason for the change, and are sure  * that the change is safe.  *  * Set noinline to be dtrace-friendly  */
 end_comment
 
 begin_function
 specifier|static
+name|__noinline
 name|void
 name|nd6_free
 parameter_list|(
@@ -5596,6 +5689,10 @@ name|ND6_IFF_IFDISABLED
 expr_stmt|;
 if|if
 condition|(
+name|V_ip6_dad_count
+operator|>
+literal|0
+operator|&&
 operator|(
 name|ND_IFINFO
 argument_list|(
@@ -6503,7 +6600,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* No existing lle, mark as new entry */
+comment|/* No existing lle, mark as new entry (6,7) */
 name|is_newentry
 operator|=
 literal|1
@@ -6513,6 +6610,22 @@ argument_list|(
 name|ln
 argument_list|,
 name|ND6_LLINFO_STALE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lladdr
+operator|!=
+name|NULL
+condition|)
+comment|/* (7) */
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|lle_event
+argument_list|,
+name|ln
+argument_list|,
+name|LLENTRY_RESOLVED
 argument_list|)
 expr_stmt|;
 block|}
@@ -6631,24 +6744,20 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|is_newentry
+operator|==
+literal|0
 operator|&&
 name|llchange
 operator|!=
 literal|0
 condition|)
+block|{
 name|do_update
 operator|=
 literal|1
 expr_stmt|;
 comment|/* (3,5) */
-if|if
-condition|(
-name|lladdr
-condition|)
-block|{
-comment|/* (3-5) and (7) */
 comment|/* 		 * Record source link-layer address 		 * XXX is it dependent to ifp->if_type? 		 */
 name|bcopy
 argument_list|(
@@ -6688,11 +6797,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|do_update
-condition|)
-block|{
-if|if
-condition|(
 name|ln
 operator|->
 name|la_hold
@@ -6710,7 +6814,6 @@ operator|&
 name|sin6
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* Calculates new router status */
 name|router
@@ -7524,11 +7627,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Do L2 address resolution for @sa_dst address. Stores found  * address in @desten buffer. Copy of lle ln_flags can be also  * saved in @pflags if @pflags is non-NULL.  *  * Heavy version.  * Function assume that destination LLE does not exist,  * is invalid or stale, so LLE_EXCLUSIVE lock needs to be acquired.  */
+comment|/*  * Do L2 address resolution for @sa_dst address. Stores found  * address in @desten buffer. Copy of lle ln_flags can be also  * saved in @pflags if @pflags is non-NULL.  *  * Heavy version.  * Function assume that destination LLE does not exist,  * is invalid or stale, so LLE_EXCLUSIVE lock needs to be acquired.  *  * Set noinline to be dtrace-friendly  */
 end_comment
 
 begin_function
 specifier|static
+name|__noinline
 name|int
 name|nd6_resolve_slow
 parameter_list|(

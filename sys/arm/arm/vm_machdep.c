@@ -480,8 +480,6 @@ operator|.
 name|fpscr
 operator|=
 name|VFPSCR_DN
-operator||
-name|VFPSCR_FZ
 expr_stmt|;
 name|tf
 operator|=

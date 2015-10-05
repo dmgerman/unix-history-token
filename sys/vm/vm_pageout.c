@@ -493,16 +493,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|vm_pageout_pages_needed
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* flag saying that the pageout daemon needs pages */
-end_comment
-
-begin_decl_stmt
-name|int
 name|vm_pageout_wakeup_thresh
 decl_stmt|;
 end_decl_stmt

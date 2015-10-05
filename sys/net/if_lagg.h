@@ -213,9 +213,6 @@ comment|/* loadbalance */
 name|LAGG_PROTO_LACP
 block|,
 comment|/* 802.3ad lacp */
-name|LAGG_PROTO_ETHERCHANNEL
-block|,
-comment|/* Cisco FEC */
 name|LAGG_PROTO_BROADCAST
 block|,
 comment|/* broadcast */
@@ -252,7 +249,7 @@ begin_define
 define|#
 directive|define
 name|LAGG_PROTOS
-value|{						\ 	{ "failover",		LAGG_PROTO_FAILOVER },		\ 	{ "fec",		LAGG_PROTO_ETHERCHANNEL },		\ 	{ "lacp",		LAGG_PROTO_LACP },			\ 	{ "loadbalance",	LAGG_PROTO_LOADBALANCE },		\ 	{ "roundrobin",	LAGG_PROTO_ROUNDROBIN },		\ 	{ "broadcast",	LAGG_PROTO_BROADCAST },		\ 	{ "none",		LAGG_PROTO_NONE },			\ 	{ "default",		LAGG_PROTO_DEFAULT }			\ }
+value|{						\ 	{ "failover",		LAGG_PROTO_FAILOVER },		\ 	{ "lacp",		LAGG_PROTO_LACP },			\ 	{ "loadbalance",	LAGG_PROTO_LOADBALANCE },		\ 	{ "roundrobin",	LAGG_PROTO_ROUNDROBIN },		\ 	{ "broadcast",	LAGG_PROTO_BROADCAST },		\ 	{ "none",		LAGG_PROTO_NONE },			\ 	{ "default",		LAGG_PROTO_DEFAULT }			\ }
 end_define
 
 begin_comment

@@ -44,13 +44,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|vm_pageout_pages_needed
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|vm_pageout_deficit
 decl_stmt|;
 end_decl_stmt

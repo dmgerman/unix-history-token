@@ -2335,13 +2335,6 @@ name|struct
 name|ieee80211_key
 modifier|*
 name|k
-parameter_list|,
-specifier|const
-name|u_int8_t
-name|mac
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
 parameter_list|)
 block|{
 name|struct
