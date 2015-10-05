@@ -2552,7 +2552,7 @@ name|list
 operator|.
 name|status
 operator|==
-name|CTL_PORT_LIST_ERROR
+name|CTL_LUN_LIST_ERROR
 condition|)
 block|{
 name|log_warnx

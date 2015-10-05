@@ -130,38 +130,6 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|CTL_OOA_INVALID_LUN
-block|,
-name|CTL_OOA_SUCCESS
-block|}
-name|ctl_ooa_status
-typedef|;
-end_typedef
-
-begin_struct
-struct|struct
-name|ctl_ooa_info
-block|{
-name|uint32_t
-name|lun_id
-decl_stmt|;
-comment|/* Passed in to CTL */
-name|uint32_t
-name|num_entries
-decl_stmt|;
-comment|/* Returned from CTL */
-name|ctl_ooa_status
-name|status
-decl_stmt|;
-comment|/* Returned from CTL */
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
 name|CTL_DELAY_TYPE_NONE
 block|,
 name|CTL_DELAY_TYPE_CONT
@@ -225,44 +193,6 @@ decl_stmt|;
 name|ctl_delay_status
 name|status
 decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|CTL_GS_SYNC_NONE
-block|,
-name|CTL_GS_SYNC_OK
-block|,
-name|CTL_GS_SYNC_NO_LUN
-block|}
-name|ctl_gs_sync_status
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * The target and LUN id specify which device to modify.  The sync interval  * means that we will let through every N SYNCHRONIZE CACHE commands.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ctl_sync_info
-block|{
-name|uint32_t
-name|lun_id
-decl_stmt|;
-comment|/* passed to kernel */
-name|int
-name|sync_interval
-decl_stmt|;
-comment|/* depends on whether get/set */
-name|ctl_gs_sync_status
-name|status
-decl_stmt|;
-comment|/* passed from kernel */
 block|}
 struct|;
 end_struct
@@ -747,60 +677,6 @@ name|cur_bt
 decl_stmt|;
 comment|/* passed to userland */
 name|ctl_get_ooa_status
-name|status
-decl_stmt|;
-comment|/* passed to userland */
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|CTL_PORT_LIST_NONE
-block|,
-name|CTL_PORT_LIST_OK
-block|,
-name|CTL_PORT_LIST_NEED_MORE_SPACE
-block|,
-name|CTL_PORT_LIST_ERROR
-block|}
-name|ctl_port_list_status
-typedef|;
-end_typedef
-
-begin_struct
-struct|struct
-name|ctl_port_list
-block|{
-name|uint32_t
-name|alloc_len
-decl_stmt|;
-comment|/* passed to kernel */
-name|uint32_t
-name|alloc_num
-decl_stmt|;
-comment|/* passed to kernel */
-name|struct
-name|ctl_port_entry
-modifier|*
-name|entries
-decl_stmt|;
-comment|/* filled in kernel */
-name|uint32_t
-name|fill_len
-decl_stmt|;
-comment|/* passed to userland */
-name|uint32_t
-name|fill_num
-decl_stmt|;
-comment|/* passed to userland */
-name|uint32_t
-name|dropped_num
-decl_stmt|;
-comment|/* passed to userland */
-name|ctl_port_list_status
 name|status
 decl_stmt|;
 comment|/* passed to userland */
@@ -1732,50 +1608,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|CTL_DUMP_OOA
-value|_IO(CTL_MINOR, 0x06)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_CHECK_OOA
-value|_IOWR(CTL_MINOR, 0x07, struct ctl_ooa_info)
-end_define
-
-begin_define
-define|#
-directive|define
 name|CTL_DELAY_IO
 value|_IOWR(CTL_MINOR, 0x10, struct ctl_io_delay_info)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_REALSYNC_GET
-value|_IOR(CTL_MINOR, 0x11, int)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_REALSYNC_SET
-value|_IOW(CTL_MINOR, 0x12, int)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_SETSYNC
-value|_IOWR(CTL_MINOR, 0x13, struct ctl_sync_info)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_GETSYNC
-value|_IOWR(CTL_MINOR, 0x14, struct ctl_sync_info)
 end_define
 
 begin_define
@@ -1804,13 +1638,6 @@ define|#
 directive|define
 name|CTL_DUMP_STRUCTS
 value|_IO(CTL_MINOR, 0x19)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_GET_PORT_LIST
-value|_IOWR(CTL_MINOR, 0x20, struct ctl_port_list)
 end_define
 
 begin_define

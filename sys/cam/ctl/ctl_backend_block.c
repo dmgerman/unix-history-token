@@ -14869,7 +14869,6 @@ name|cbe_lun
 argument_list|)
 expr_stmt|;
 else|else
-block|{
 name|retval
 operator|=
 name|ctl_stop_lun
@@ -14877,36 +14876,6 @@ argument_list|(
 name|cbe_lun
 argument_list|)
 expr_stmt|;
-comment|/* 			 * XXX KDM Copan-specific offline behavior. 			 * Figure out a reasonable way to port this? 			 */
-ifdef|#
-directive|ifdef
-name|NEEDTOPORT
-if|if
-condition|(
-operator|(
-name|retval
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|cdb
-operator|->
-name|byte2
-operator|&
-name|SSS_ONOFFLINE
-operator|)
-condition|)
-name|retval
-operator|=
-name|ctl_lun_offline
-argument_list|(
-name|cbe_lun
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
 comment|/* 		 * In general, the above routines should not fail.  They 		 * just set state for the LUN.  So we've got something 		 * pretty wrong here if we can't start or stop the LUN. 		 */
 if|if
 condition|(
