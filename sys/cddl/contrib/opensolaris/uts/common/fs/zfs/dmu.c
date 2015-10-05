@@ -2270,7 +2270,7 @@ operator|&&
 name|read
 operator|&&
 name|length
-operator|<
+operator|<=
 name|zfetch_array_rd_sz
 condition|)
 block|{

@@ -10133,8 +10133,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|hasqos
-decl_stmt|,
 name|xferlen
 decl_stmt|;
 name|struct
@@ -10313,10 +10311,6 @@ index|]
 expr_stmt|;
 break|break;
 block|}
-name|hasqos
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Fill Tx descriptor. */
 name|txd
 operator|=
@@ -10672,7 +10666,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|hasqos
+name|IEEE80211_QOS_HAS_SEQ
+argument_list|(
+name|wh
+argument_list|)
 condition|)
 block|{
 comment|/* Use HW sequence numbering for non-QoS frames. */
