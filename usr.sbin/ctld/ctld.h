@@ -398,6 +398,9 @@ decl_stmt|;
 name|int
 name|pg_discovery_filter
 decl_stmt|;
+name|int
+name|pg_foreign
+decl_stmt|;
 name|bool
 name|pg_unassigned
 decl_stmt|;
@@ -515,6 +518,9 @@ name|struct
 name|target
 modifier|*
 name|p_target
+decl_stmt|;
+name|int
+name|p_foreign
 decl_stmt|;
 name|uint32_t
 name|p_ctl_port
