@@ -15329,6 +15329,12 @@ name|ISP_CAP_MULTI_ID
 argument_list|(
 name|isp
 argument_list|)
+operator|&&
+name|isp
+operator|->
+name|isp_nchan
+operator|>
+literal|1
 condition|)
 block|{
 comment|/* 		 * Find the right channel based upon D_ID 		 */
