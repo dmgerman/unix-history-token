@@ -1051,6 +1051,10 @@ block|{
 name|ctl_msg_type
 name|msg_type
 decl_stmt|;
+name|uint32_t
+name|status
+decl_stmt|;
+comment|/* transaction status */
 name|union
 name|ctl_io
 modifier|*
@@ -1066,10 +1070,6 @@ name|ctl_nexus
 name|nexus
 decl_stmt|;
 comment|/* Initiator, port, target, lun */
-name|uint32_t
-name|status
-decl_stmt|;
-comment|/* transaction status */
 block|}
 struct|;
 end_struct
