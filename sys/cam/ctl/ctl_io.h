@@ -589,6 +589,9 @@ comment|/* Information about LUN. */
 name|CTL_MSG_IID_SYNC
 block|,
 comment|/* Information about initiator. */
+name|CTL_MSG_LOGIN
+block|,
+comment|/* Information about HA peer. */
 name|CTL_MSG_FAILOVER
 comment|/* Fake, never sent though the wire */
 block|}
@@ -983,6 +986,50 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* Response information */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * HA link messages.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_HA_VERSION
+value|1
+end_define
+
+begin_comment
+comment|/*  * Used for CTL_MSG_LOGIN.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ctl_ha_msg_login
+block|{
+name|ctl_msg_type
+name|msg_type
+decl_stmt|;
+name|int
+name|version
+decl_stmt|;
+name|int
+name|ha_mode
+decl_stmt|;
+name|int
+name|ha_id
+decl_stmt|;
+name|int
+name|max_luns
+decl_stmt|;
+name|int
+name|max_ports
+decl_stmt|;
+name|int
+name|max_init_per_port
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1448,6 +1495,10 @@ decl_stmt|;
 name|struct
 name|ctl_ha_msg_iid
 name|iid
+decl_stmt|;
+name|struct
+name|ctl_ha_msg_login
+name|login
 decl_stmt|;
 block|}
 union|;
