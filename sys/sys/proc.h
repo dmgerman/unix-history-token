@@ -865,14 +865,6 @@ modifier|*
 name|td_su
 decl_stmt|;
 comment|/* (k) FFS SU private */
-name|u_int
-name|td_dbg_sc_code
-decl_stmt|;
-comment|/* (c) Syscall code to debugger. */
-name|u_int
-name|td_dbg_sc_narg
-decl_stmt|;
-comment|/* (c) Syscall arg count to debugger.*/
 define|#
 directive|define
 name|td_endzero
@@ -910,6 +902,14 @@ name|u_char
 name|td_base_user_pri
 decl_stmt|;
 comment|/* (t) Base user pri */
+name|u_int
+name|td_dbg_sc_code
+decl_stmt|;
+comment|/* (c) Syscall code to debugger. */
+name|u_int
+name|td_dbg_sc_narg
+decl_stmt|;
+comment|/* (c) Syscall arg count to debugger.*/
 define|#
 directive|define
 name|td_endcopy

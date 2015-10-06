@@ -301,12 +301,6 @@ operator|->
 name|p_flag
 operator|&
 name|P_TRACED
-operator|&&
-name|p
-operator|->
-name|p_stops
-operator|&
-name|S_PT_SCE
 condition|)
 block|{
 name|PROC_LOCK
@@ -330,6 +324,14 @@ name|sa
 operator|->
 name|narg
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|p_stops
+operator|&
+name|S_PT_SCE
+condition|)
 name|ptracestop
 argument_list|(
 operator|(
