@@ -5951,7 +5951,7 @@ decl_stmt|,
 name|wpid
 decl_stmt|;
 name|lwpid_t
-decl|main
+name|mainpid
 decl_stmt|;
 name|int
 name|status
@@ -6079,7 +6079,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-expr|main
+name|mainpid
 operator|=
 name|pl
 operator|.
@@ -6202,7 +6202,7 @@ name|pl
 operator|.
 name|pl_lwpid
 operator|!=
-expr|main
+name|mainpid
 condition|)
 comment|/* New thread seen. */
 break|break;
