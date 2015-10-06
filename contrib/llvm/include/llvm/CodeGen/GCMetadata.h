@@ -144,7 +144,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/GCStrategy.h"
 end_include
 
 begin_include
@@ -173,36 +185,11 @@ name|class
 name|AsmPrinter
 decl_stmt|;
 name|class
-name|GCStrategy
-decl_stmt|;
-name|class
 name|Constant
 decl_stmt|;
 name|class
 name|MCSymbol
 decl_stmt|;
-name|namespace
-name|GC
-block|{
-comment|/// PointKind - The type of a collector-safe point.
-comment|///
-enum|enum
-name|PointKind
-block|{
-name|Loop
-block|,
-comment|///< Instr is a loop (backwards branch).
-name|Return
-block|,
-comment|///< Instr is a return instruction.
-name|PreCall
-block|,
-comment|///< Instr is a call instruction.
-name|PostCall
-comment|///< Instr is the return address of a call.
-block|}
-enum|;
-block|}
 comment|/// GCPoint - Metadata for a collector-safe point in machine code.
 comment|///
 struct|struct
@@ -480,16 +467,13 @@ argument_list|)
 block|{
 name|SafePoints
 operator|.
-name|push_back
-argument_list|(
-name|GCPoint
+name|emplace_back
 argument_list|(
 name|Kind
 argument_list|,
 name|Label
 argument_list|,
 name|DL
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -644,52 +628,40 @@ range|:
 name|public
 name|ImmutablePass
 block|{
-typedef|typedef
-name|StringMap
-operator|<
-name|GCStrategy
-operator|*
-operator|>
-name|strategy_map_type
-expr_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|vector
+comment|/// An owning list of all GCStrategies which have been created
+name|SmallVector
 operator|<
 name|std
 operator|::
 name|unique_ptr
 operator|<
 name|GCStrategy
-operator|>>
-name|list_type
-expr_stmt|;
-name|strategy_map_type
-name|StrategyMap
-decl_stmt|;
-name|list_type
-name|StrategyList
-decl_stmt|;
+operator|>
+block|,
+literal|1
+operator|>
+name|GCStrategyList
+block|;
+comment|/// A helper map to speedup lookups into the above list
+name|StringMap
+operator|<
 name|GCStrategy
-modifier|*
-name|getOrCreateStrategy
-argument_list|(
-specifier|const
-name|Module
 operator|*
-name|M
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
-argument_list|)
-decl_stmt|;
+operator|>
+name|GCStrategyMap
+block|;
 name|public
-label|:
+operator|:
+comment|/// Lookup the GCStrategy object associated with the given gc name.
+comment|/// Objects are owned internally; No caller should attempt to delete the
+comment|/// returned objects.
+name|GCStrategy
+operator|*
+name|getGCStrategy
+argument_list|(
+argument|const StringRef Name
+argument_list|)
+block|;
 comment|/// List of per function info objects.  In theory, Each of these
 comment|/// may be associated with a different GC.
 typedef|typedef
@@ -732,7 +704,7 @@ argument_list|()
 return|;
 block|}
 name|private
-label|:
+operator|:
 comment|/// Owning list of all GCFunctionInfos associated with this Module
 name|FuncInfoVec
 name|Functions
@@ -757,7 +729,17 @@ decl_stmt|;
 name|public
 label|:
 typedef|typedef
-name|list_type
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|GCStrategy
+operator|>
+operator|,
+literal|1
+operator|>
 operator|::
 name|const_iterator
 name|iterator
@@ -784,7 +766,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|StrategyList
+name|GCStrategyList
 operator|.
 name|begin
 argument_list|()
@@ -796,7 +778,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|StrategyList
+name|GCStrategyList
 operator|.
 name|end
 argument_list|()

@@ -298,6 +298,19 @@ name|clear
 argument_list|()
 expr_stmt|;
 block|}
+name|virtual
+name|bool
+name|IsValidForOperatingSystemThread
+parameter_list|(
+name|Thread
+modifier|&
+name|thread
+parameter_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|// Sometimes the thread plan logic will know that it wants a given stop to stop or not,
 comment|// regardless of what the ordinary logic for that StopInfo would dictate.  The main example
 comment|// of this is the ThreadPlanCallFunction, which for instance knows - based on how that particular
@@ -383,6 +396,8 @@ argument_list|(
 argument|Thread&thread
 argument_list|,
 argument|lldb::break_id_t watch_id
+argument_list|,
+argument|lldb::addr_t watch_hit_addr = LLDB_INVALID_ADDRESS
 argument_list|)
 expr_stmt|;
 specifier|static
@@ -394,6 +409,8 @@ argument_list|(
 argument|Thread&thread
 argument_list|,
 argument|int signo
+argument_list|,
+argument|const char *description = nullptr
 argument_list|)
 expr_stmt|;
 specifier|static

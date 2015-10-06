@@ -135,116 +135,29 @@ argument_list|)
 block|{}
 block|}
 struct|;
-name|class
-name|Job
-block|{
-name|public
-label|:
-enum|enum
-name|JobClass
-block|{
-name|CommandClass
-block|,
-name|FallbackCommandClass
-block|,
-name|JobListClass
-block|}
-enum|;
-name|private
-label|:
-name|JobClass
-name|Kind
-decl_stmt|;
-name|protected
-label|:
-name|Job
-argument_list|(
-argument|JobClass _Kind
-argument_list|)
-block|:
-name|Kind
-argument_list|(
-argument|_Kind
-argument_list|)
-block|{}
-name|public
-label|:
-name|virtual
-operator|~
-name|Job
-argument_list|()
-expr_stmt|;
-name|JobClass
-name|getKind
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Kind
-return|;
-block|}
-comment|/// Print - Print this Job in -### format.
-comment|///
-comment|/// \param OS - The stream to print on.
-comment|/// \param Terminator - A string to print at the end of the line.
-comment|/// \param Quote - Should separate arguments be quoted.
-comment|/// \param CrashInfo - Details for inclusion in a crash report.
-name|virtual
-name|void
-name|Print
-argument_list|(
-name|llvm
-operator|::
-name|raw_ostream
-operator|&
-name|OS
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|Terminator
-argument_list|,
-name|bool
-name|Quote
-argument_list|,
-name|CrashReportInfo
-operator|*
-name|CrashInfo
-operator|=
-name|nullptr
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-block|}
-empty_stmt|;
 comment|/// Command - An executable path/name and argument vector to
 comment|/// execute.
 name|class
 name|Command
-range|:
-name|public
-name|Job
 block|{
 comment|/// Source - The action which caused the creation of this job.
 specifier|const
 name|Action
-operator|&
+modifier|&
 name|Source
-block|;
+decl_stmt|;
 comment|/// Tool - The tool which caused the creation of this job.
 specifier|const
 name|Tool
-operator|&
+modifier|&
 name|Creator
-block|;
+decl_stmt|;
 comment|/// The executable to run.
 specifier|const
 name|char
-operator|*
+modifier|*
 name|Executable
-block|;
+decl_stmt|;
 comment|/// The list of program arguments (not including the implicit first
 comment|/// argument, which will be the executable).
 name|llvm
@@ -253,14 +166,14 @@ name|opt
 operator|::
 name|ArgStringList
 name|Arguments
-block|;
+expr_stmt|;
 comment|/// Response file name, if this command is set to use one, or nullptr
 comment|/// otherwise
 specifier|const
 name|char
-operator|*
+modifier|*
 name|ResponseFile
-block|;
+decl_stmt|;
 comment|/// The input file list in case we need to emit a file list instead of a
 comment|/// proper response file
 name|llvm
@@ -269,14 +182,14 @@ name|opt
 operator|::
 name|ArgStringList
 name|InputFileList
-block|;
+expr_stmt|;
 comment|/// String storage if we need to create a new argument to specify a response
 comment|/// file
 name|std
 operator|::
 name|string
 name|ResponseFileFlag
-block|;
+expr_stmt|;
 comment|/// When a response file is needed, we try to put most arguments in an
 comment|/// exclusive file, while others remains as regular command line arguments.
 comment|/// This functions fills a vector with the regular command line arguments,
@@ -284,10 +197,19 @@ comment|/// argv, excluding the ones passed in a response file.
 name|void
 name|buildArgvForResponseFile
 argument_list|(
-argument|llvm::SmallVectorImpl<const char *>&Out
-argument_list|)
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
 specifier|const
-block|;
+name|char
+operator|*
+operator|>
+operator|&
+name|Out
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Encodes an array of C strings into a single string separated by whitespace.
 comment|/// This function will also put in quotes arguments that have whitespaces and
 comment|/// will escape the regular backslashes (used in Windows paths) and quotes.
@@ -295,28 +217,30 @@ comment|/// The results are the contents of a response file, written into a raw_
 name|void
 name|writeResponseFile
 argument_list|(
-argument|raw_ostream&OS
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|public
-operator|:
+label|:
 name|Command
 argument_list|(
 specifier|const
 name|Action
 operator|&
-name|_Source
+name|Source
 argument_list|,
 specifier|const
 name|Tool
 operator|&
-name|_Creator
+name|Creator
 argument_list|,
 specifier|const
 name|char
 operator|*
-name|_Executable
+name|Executable
 argument_list|,
 specifier|const
 name|llvm
@@ -325,9 +249,15 @@ name|opt
 operator|::
 name|ArgStringList
 operator|&
-name|_Arguments
+name|Arguments
 argument_list|)
-block|;
+expr_stmt|;
+name|virtual
+operator|~
+name|Command
+argument_list|()
+block|{}
+name|virtual
 name|void
 name|Print
 argument_list|(
@@ -340,20 +270,29 @@ argument_list|,
 argument|CrashReportInfo *CrashInfo = nullptr
 argument_list|)
 specifier|const
-name|override
-block|;
+expr_stmt|;
 name|virtual
 name|int
 name|Execute
 argument_list|(
-argument|const StringRef **Redirects
-argument_list|,
-argument|std::string *ErrMsg
-argument_list|,
-argument|bool *ExecutionFailed
-argument_list|)
 specifier|const
-block|;
+name|StringRef
+operator|*
+operator|*
+name|Redirects
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|ErrMsg
+argument_list|,
+name|bool
+operator|*
+name|ExecutionFailed
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getSource - Return the Action which caused the creation of this job.
 specifier|const
 name|Action
@@ -381,19 +320,24 @@ block|}
 comment|/// Set to pass arguments via a response file when launching the command
 name|void
 name|setResponseFile
-argument_list|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|FileName
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// Set an input file list, necessary if we need to use a response file but
 comment|/// the tool being called only supports input files lists.
 name|void
 name|setInputFileList
 argument_list|(
-argument|llvm::opt::ArgStringList List
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgStringList
+name|List
 argument_list|)
 block|{
 name|InputFileList
@@ -404,7 +348,8 @@ name|move
 argument_list|(
 name|List
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 specifier|const
 name|char
 operator|*
@@ -431,36 +376,33 @@ return|return
 name|Arguments
 return|;
 block|}
+comment|/// Print a command argument, and optionally quote it.
 specifier|static
-name|bool
-name|classof
+name|void
+name|printArg
 argument_list|(
-argument|const Job *J
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Arg
+argument_list|,
+name|bool
+name|Quote
 argument_list|)
-block|{
-return|return
-name|J
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|CommandClass
-operator|||
-name|J
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|FallbackCommandClass
-return|;
+decl_stmt|;
 block|}
-expr|}
-block|;
+empty_stmt|;
 comment|/// Like Command, but with a fallback which is executed in case
 comment|/// the primary command crashes.
 name|class
 name|FallbackCommand
-operator|:
+range|:
 name|public
 name|Command
 block|{
@@ -523,22 +465,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Job *J
-argument_list|)
-block|{
-return|return
-name|J
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|FallbackCommandClass
-return|;
-block|}
 name|private
 operator|:
 name|std
@@ -549,16 +475,13 @@ name|Command
 operator|>
 name|Fallback
 block|; }
-block|;
+decl_stmt|;
 comment|/// JobList - A sequence of jobs to perform.
 name|class
 name|JobList
-operator|:
-name|public
-name|Job
 block|{
 name|public
-operator|:
+label|:
 typedef|typedef
 name|SmallVector
 operator|<
@@ -566,7 +489,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|Job
+name|Command
 operator|>
 operator|,
 literal|4
@@ -608,28 +531,31 @@ name|Jobs
 decl_stmt|;
 name|public
 label|:
-name|JobList
-argument_list|()
-expr_stmt|;
-name|virtual
-operator|~
-name|JobList
-argument_list|()
-block|{}
 name|void
 name|Print
 argument_list|(
-argument|llvm::raw_ostream&OS
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
 argument_list|,
-argument|const char *Terminator
-argument_list|,
-argument|bool Quote
-argument_list|,
-argument|CrashReportInfo *CrashInfo = nullptr
-argument_list|)
 specifier|const
-name|override
-expr_stmt|;
+name|char
+operator|*
+name|Terminator
+argument_list|,
+name|bool
+name|Quote
+argument_list|,
+name|CrashReportInfo
+operator|*
+name|CrashInfo
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Add a job to the list (taking ownership).
 name|void
 name|addJob
@@ -638,7 +564,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|Job
+name|Command
 operator|>
 name|J
 argument_list|)
@@ -730,36 +656,14 @@ name|end
 argument_list|()
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|Job
-modifier|*
-name|J
-parameter_list|)
-block|{
-return|return
-name|J
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|JobListClass
-return|;
-block|}
 block|}
 empty_stmt|;
+block|}
+comment|// end namespace driver
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace driver
-end_comment
-
-begin_comment
-unit|}
 comment|// end namespace clang
 end_comment
 

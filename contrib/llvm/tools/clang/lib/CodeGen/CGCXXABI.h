@@ -88,6 +88,9 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
+name|class
+name|CallInst
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -612,7 +615,7 @@ name|llvm
 operator|::
 name|Constant
 operator|*
-name|EmitMemberPointer
+name|EmitMemberFunctionPointer
 argument_list|(
 specifier|const
 name|CXXMethodDecl
@@ -768,6 +771,70 @@ init|=
 literal|0
 function_decl|;
 name|virtual
+name|void
+name|emitThrow
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|CXXThrowExpr
+modifier|*
+name|E
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|getThrowInfo
+argument_list|(
+argument|QualType T
+argument_list|)
+block|{
+return|return
+name|nullptr
+return|;
+block|}
+name|virtual
+name|void
+name|emitBeginCatch
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|CXXCatchStmt
+modifier|*
+name|C
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|llvm
+operator|::
+name|CallInst
+operator|*
+name|emitTerminateForUnexpectedException
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Exn
+argument_list|)
+expr_stmt|;
+name|virtual
 name|llvm
 operator|::
 name|Constant
@@ -775,6 +842,20 @@ operator|*
 name|getAddrOfRTTIDescriptor
 argument_list|(
 argument|QualType Ty
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getAddrOfCXXCatchHandlerType
+argument_list|(
+argument|QualType Ty
+argument_list|,
+argument|QualType CatchHandlerType
 argument_list|)
 operator|=
 literal|0
@@ -1288,6 +1369,8 @@ argument_list|,
 argument|llvm::Value *This
 argument_list|,
 argument|llvm::Type *Ty
+argument_list|,
+argument|SourceLocation Loc
 argument_list|)
 operator|=
 literal|0

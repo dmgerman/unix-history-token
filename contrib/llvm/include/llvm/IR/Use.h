@@ -266,9 +266,13 @@ name|private
 label|:
 name|Use
 argument_list|(
-argument|const Use&U
+specifier|const
+name|Use
+operator|&
+name|U
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 comment|/// Destructor - Only for zap()
 operator|~

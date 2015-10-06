@@ -124,51 +124,6 @@ block|{
 name|class
 name|InstrProfReader
 decl_stmt|;
-comment|/// Profiling information for a single function.
-struct|struct
-name|InstrProfRecord
-block|{
-name|InstrProfRecord
-argument_list|()
-block|{}
-name|InstrProfRecord
-argument_list|(
-argument|StringRef Name
-argument_list|,
-argument|uint64_t Hash
-argument_list|,
-argument|ArrayRef<uint64_t> Counts
-argument_list|)
-block|:
-name|Name
-argument_list|(
-name|Name
-argument_list|)
-operator|,
-name|Hash
-argument_list|(
-name|Hash
-argument_list|)
-operator|,
-name|Counts
-argument_list|(
-argument|Counts
-argument_list|)
-block|{}
-name|StringRef
-name|Name
-expr_stmt|;
-name|uint64_t
-name|Hash
-decl_stmt|;
-name|ArrayRef
-operator|<
-name|uint64_t
-operator|>
-name|Counts
-expr_stmt|;
-block|}
-struct|;
 comment|/// A file format agnostic iterator over profiling data.
 name|class
 name|InstrProfIterator
@@ -468,6 +423,26 @@ argument_list|(
 argument|std::string Path
 argument_list|)
 expr_stmt|;
+specifier|static
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|InstrProfReader
+operator|>>
+name|create
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MemoryBuffer
+operator|>
+name|Buffer
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -529,20 +504,14 @@ comment|/// Iterator over the profile data.
 name|line_iterator
 name|Line
 block|;
-comment|/// The current set of counter values.
-name|std
-operator|::
-name|vector
-operator|<
-name|uint64_t
-operator|>
-name|Counts
-block|;
 name|TextInstrProfReader
 argument_list|(
-argument|const TextInstrProfReader&
+specifier|const
+name|TextInstrProfReader
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|TextInstrProfReader
 operator|&
@@ -553,7 +522,8 @@ specifier|const
 name|TextInstrProfReader
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -663,15 +633,6 @@ operator|<
 name|MemoryBuffer
 operator|>
 name|DataBuffer
-block|;
-comment|/// The current set of counter values.
-name|std
-operator|::
-name|vector
-operator|<
-name|uint64_t
-operator|>
-name|Counts
 block|;   struct
 name|ProfileData
 block|{
@@ -763,9 +724,12 @@ name|ProfileEnd
 block|;
 name|RawInstrProfReader
 argument_list|(
-argument|const RawInstrProfReader&
+specifier|const
+name|RawInstrProfReader
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|RawInstrProfReader
 operator|&
@@ -776,7 +740,8 @@ specifier|const
 name|RawInstrProfReader
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -991,7 +956,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|uint64_t
+name|InstrProfRecord
 operator|>
 name|DataBuffer
 expr_stmt|;
@@ -1000,49 +965,35 @@ operator|::
 name|HashT
 name|HashType
 expr_stmt|;
+name|unsigned
+name|FormatVersion
+decl_stmt|;
 name|public
 label|:
 name|InstrProfLookupTrait
 argument_list|(
 argument|IndexedInstrProf::HashT HashType
+argument_list|,
+argument|unsigned FormatVersion
 argument_list|)
 block|:
 name|HashType
 argument_list|(
-argument|HashType
-argument_list|)
-block|{}
-struct|struct
-name|data_type
-block|{
-name|data_type
-argument_list|(
-argument|StringRef Name
-argument_list|,
-argument|ArrayRef<uint64_t> Data
-argument_list|)
-block|:
-name|Name
-argument_list|(
-name|Name
+name|HashType
 argument_list|)
 operator|,
-name|Data
+name|FormatVersion
 argument_list|(
-argument|Data
+argument|FormatVersion
 argument_list|)
 block|{}
-name|StringRef
-name|Name
-expr_stmt|;
+typedef|typedef
 name|ArrayRef
 operator|<
-name|uint64_t
+name|InstrProfRecord
 operator|>
-name|Data
+name|data_type
 expr_stmt|;
-block|}
-struct|;
 typedef|typedef
 name|StringRef
 name|internal_key_type
@@ -1200,95 +1151,7 @@ parameter_list|,
 name|offset_type
 name|N
 parameter_list|)
-block|{
-name|DataBuffer
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|N
-operator|%
-sizeof|sizeof
-argument_list|(
-name|uint64_t
-argument_list|)
-condition|)
-comment|// The data is corrupt, don't try to read it.
-return|return
-name|data_type
-argument_list|(
-literal|""
-argument_list|,
-name|DataBuffer
-argument_list|)
-return|;
-name|using
-name|namespace
-name|support
-decl_stmt|;
-comment|// We just treat the data as opaque here. It's simpler to handle in
-comment|// IndexedInstrProfReader.
-name|unsigned
-name|NumEntries
-init|=
-name|N
-operator|/
-sizeof|sizeof
-argument_list|(
-name|uint64_t
-argument_list|)
-decl_stmt|;
-name|DataBuffer
-operator|.
-name|reserve
-argument_list|(
-name|NumEntries
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|unsigned
-name|I
-init|=
-literal|0
-init|;
-name|I
-operator|<
-name|NumEntries
-condition|;
-operator|++
-name|I
-control|)
-name|DataBuffer
-operator|.
-name|push_back
-argument_list|(
-name|endian
-operator|::
-name|readNext
-operator|<
-name|uint64_t
-argument_list|,
-name|little
-argument_list|,
-name|unaligned
-operator|>
-operator|(
-name|D
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-name|data_type
-argument_list|(
-name|K
-argument_list|,
-name|DataBuffer
-argument_list|)
-return|;
-block|}
+function_decl|;
 block|}
 end_decl_stmt
 
@@ -1343,10 +1206,6 @@ operator|::
 name|data_iterator
 name|RecordIterator
 block|;
-comment|/// Offset into our current data set.
-name|size_t
-name|CurrentOffset
-block|;
 comment|/// The file format version of the profile data.
 name|uint64_t
 name|FormatVersion
@@ -1357,9 +1216,12 @@ name|MaxFunctionCount
 block|;
 name|IndexedInstrProfReader
 argument_list|(
-argument|const IndexedInstrProfReader&
+specifier|const
+name|IndexedInstrProfReader
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|IndexedInstrProfReader
 operator|&
@@ -1370,7 +1232,8 @@ specifier|const
 name|IndexedInstrProfReader
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -1397,12 +1260,7 @@ argument_list|)
 block|,
 name|Index
 argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|CurrentOffset
-argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|/// Return true if the given buffer is in an indexed instrprof format.
@@ -1458,14 +1316,37 @@ return|;
 block|}
 comment|/// Factory method to create an indexed reader.
 specifier|static
+name|ErrorOr
+operator|<
 name|std
 operator|::
-name|error_code
+name|unique_ptr
+operator|<
+name|IndexedInstrProfReader
+operator|>>
 name|create
 argument_list|(
 argument|std::string Path
-argument_list|,
-argument|std::unique_ptr<IndexedInstrProfReader>&Result
+argument_list|)
+block|;
+specifier|static
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|IndexedInstrProfReader
+operator|>>
+name|create
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MemoryBuffer
+operator|>
+name|Buffer
 argument_list|)
 block|; }
 decl_stmt|;

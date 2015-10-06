@@ -93,6 +93,12 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<bitset>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -103,33 +109,125 @@ decl_stmt|;
 name|class
 name|StringRef
 decl_stmt|;
+comment|// A container class for subtarget features.
+comment|// This is convenient because std::bitset does not have a constructor
+comment|// with an initializer list of set bits.
+specifier|const
+name|unsigned
+name|MAX_SUBTARGET_FEATURES
+init|=
+literal|64
+decl_stmt|;
+name|class
+name|FeatureBitset
+range|:
+name|public
+name|std
+operator|::
+name|bitset
+operator|<
+name|MAX_SUBTARGET_FEATURES
+operator|>
+block|{
+name|public
+operator|:
+comment|// Cannot inherit constructors because it's not supported by VC++..
+name|FeatureBitset
+argument_list|()
+operator|:
+name|bitset
+argument_list|()
+block|{}
+name|FeatureBitset
+argument_list|(
+specifier|const
+name|bitset
+operator|<
+name|MAX_SUBTARGET_FEATURES
+operator|>
+operator|&
+name|B
+argument_list|)
+operator|:
+name|bitset
+argument_list|(
+argument|B
+argument_list|)
+block|{}
+name|FeatureBitset
+argument_list|(
+name|std
+operator|::
+name|initializer_list
+operator|<
+name|unsigned
+operator|>
+name|Init
+argument_list|)
+operator|:
+name|bitset
+argument_list|()
+block|{
+for|for
+control|(
+name|auto
+name|I
+init|=
+name|Init
+operator|.
+name|begin
+argument_list|()
+init|,
+name|E
+init|=
+name|Init
+operator|.
+name|end
+argument_list|()
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+operator|++
+name|I
+control|)
+name|set
+argument_list|(
+operator|*
+name|I
+argument_list|)
+expr_stmt|;
+block|}
+expr|}
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|///
 comment|/// SubtargetFeatureKV - Used to provide key value pairs for feature and
 comment|/// CPU bit flags.
 comment|//
-struct|struct
+block|struct
 name|SubtargetFeatureKV
 block|{
 specifier|const
 name|char
-modifier|*
+operator|*
 name|Key
-decl_stmt|;
+block|;
 comment|// K-V key string
 specifier|const
 name|char
-modifier|*
+operator|*
 name|Desc
-decl_stmt|;
+block|;
 comment|// Help descriptor
-name|uint64_t
+name|FeatureBitset
 name|Value
-decl_stmt|;
+block|;
 comment|// K-V integer value
-name|uint64_t
+name|FeatureBitset
 name|Implies
-decl_stmt|;
+block|;
 comment|// K-V bit mask
 comment|// Compare routine for std::lower_bound
 name|bool
@@ -150,27 +248,27 @@ operator|<
 name|S
 return|;
 block|}
-block|}
-struct|;
+expr|}
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|///
 comment|/// SubtargetInfoKV - Used to provide key value pairs for CPU and arbitrary
 comment|/// pointers.
 comment|//
-struct|struct
+block|struct
 name|SubtargetInfoKV
 block|{
 specifier|const
 name|char
-modifier|*
+operator|*
 name|Key
-decl_stmt|;
+block|;
 comment|// K-V key string
 specifier|const
 name|void
-modifier|*
+operator|*
 name|Value
-decl_stmt|;
+block|;
 comment|// K-V pointer value
 comment|// Compare routine for std::lower_bound
 name|bool
@@ -191,8 +289,8 @@ operator|<
 name|S
 return|;
 block|}
-block|}
-struct|;
+expr|}
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|///
 comment|/// SubtargetFeatures - Manages the enabling and disabling of subtarget
@@ -215,19 +313,17 @@ operator|::
 name|string
 operator|>
 name|Features
-expr_stmt|;
+block|;
 comment|// Subtarget features as a vector
 name|public
-label|:
+operator|:
 name|explicit
 name|SubtargetFeatures
-parameter_list|(
-name|StringRef
-name|Initial
-init|=
+argument_list|(
+argument|StringRef Initial =
 literal|""
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// Features string accessors.
 name|std
 operator|::
@@ -235,82 +331,75 @@ name|string
 name|getString
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// Adding Features.
 name|void
 name|AddFeature
-parameter_list|(
-name|StringRef
-name|String
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|StringRef String
+argument_list|,
+argument|bool Enable = true
+argument_list|)
+block|;
 comment|/// ToggleFeature - Toggle a feature and returns the newly updated feature
 comment|/// bits.
-name|uint64_t
+name|FeatureBitset
 name|ToggleFeature
 argument_list|(
-name|uint64_t
-name|Bits
+argument|FeatureBitset Bits
 argument_list|,
-name|StringRef
-name|String
+argument|StringRef String
 argument_list|,
-name|ArrayRef
-operator|<
-name|SubtargetFeatureKV
-operator|>
-name|FeatureTable
+argument|ArrayRef<SubtargetFeatureKV> FeatureTable
 argument_list|)
-decl_stmt|;
+block|;
+comment|/// Apply the feature flag and return the newly updated feature bits.
+name|FeatureBitset
+name|ApplyFeatureFlag
+argument_list|(
+argument|FeatureBitset Bits
+argument_list|,
+argument|StringRef Feature
+argument_list|,
+argument|ArrayRef<SubtargetFeatureKV> FeatureTable
+argument_list|)
+block|;
 comment|/// Get feature bits of a CPU.
-name|uint64_t
+name|FeatureBitset
 name|getFeatureBits
 argument_list|(
-name|StringRef
-name|CPU
+argument|StringRef CPU
 argument_list|,
-name|ArrayRef
-operator|<
-name|SubtargetFeatureKV
-operator|>
-name|CPUTable
+argument|ArrayRef<SubtargetFeatureKV> CPUTable
 argument_list|,
-name|ArrayRef
-operator|<
-name|SubtargetFeatureKV
-operator|>
-name|FeatureTable
+argument|ArrayRef<SubtargetFeatureKV> FeatureTable
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// Print feature string.
 name|void
 name|print
 argument_list|(
-name|raw_ostream
-operator|&
-name|OS
+argument|raw_ostream&OS
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|// Dump feature info.
 name|void
 name|dump
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// Adds the default features for the specified target triple.
 name|void
 name|getDefaultSubtargetFeatures
-parameter_list|(
+argument_list|(
 specifier|const
 name|Triple
-modifier|&
+operator|&
 name|Triple
-parameter_list|)
-function_decl|;
-block|}
-empty_stmt|;
-block|}
+argument_list|)
+block|; }
+block|;  }
 end_decl_stmt
 
 begin_comment

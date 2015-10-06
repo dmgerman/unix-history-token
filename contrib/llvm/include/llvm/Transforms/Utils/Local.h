@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Dominators.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/GetElementPtrTypeIterator.h"
 end_include
 
@@ -117,9 +123,6 @@ name|LoadInst
 decl_stmt|;
 name|class
 name|Value
-decl_stmt|;
-name|class
-name|Pass
 decl_stmt|;
 name|class
 name|PHINode
@@ -262,13 +265,6 @@ modifier|*
 name|BB
 parameter_list|,
 specifier|const
-name|DataLayout
-modifier|*
-name|TD
-init|=
-name|nullptr
-parameter_list|,
-specifier|const
 name|TargetLibraryInfo
 modifier|*
 name|TLI
@@ -300,12 +296,6 @@ parameter_list|,
 name|BasicBlock
 modifier|*
 name|Pred
-parameter_list|,
-name|DataLayout
-modifier|*
-name|TD
-init|=
-name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// MergeBasicBlockIntoOnlyPred - BB is a block with one predecessor and its
@@ -320,9 +310,9 @@ name|BasicBlock
 modifier|*
 name|BB
 parameter_list|,
-name|Pass
+name|DominatorTree
 modifier|*
-name|P
+name|DT
 init|=
 name|nullptr
 parameter_list|)
@@ -374,13 +364,6 @@ parameter_list|,
 name|unsigned
 name|BonusInstThreshold
 parameter_list|,
-specifier|const
-name|DataLayout
-modifier|*
-name|TD
-init|=
-name|nullptr
-parameter_list|,
 name|AssumptionCache
 modifier|*
 name|AC
@@ -416,13 +399,6 @@ parameter_list|(
 name|BranchInst
 modifier|*
 name|BI
-parameter_list|,
-specifier|const
-name|DataLayout
-modifier|*
-name|DL
-init|=
-name|nullptr
 parameter_list|,
 name|unsigned
 name|BonusInstThreshold
@@ -490,21 +466,19 @@ name|PrefAlign
 parameter_list|,
 specifier|const
 name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+specifier|const
+name|Instruction
 modifier|*
-name|TD
+name|CxtI
 init|=
 name|nullptr
 parameter_list|,
 name|AssumptionCache
 modifier|*
 name|AC
-init|=
-name|nullptr
-parameter_list|,
-specifier|const
-name|Instruction
-modifier|*
-name|CxtI
 init|=
 name|nullptr
 parameter_list|,
@@ -528,21 +502,19 @@ name|V
 parameter_list|,
 specifier|const
 name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+specifier|const
+name|Instruction
 modifier|*
-name|TD
+name|CxtI
 init|=
 name|nullptr
 parameter_list|,
 name|AssumptionCache
 modifier|*
 name|AC
-init|=
-name|nullptr
-parameter_list|,
-specifier|const
-name|Instruction
-modifier|*
-name|CxtI
 init|=
 name|nullptr
 parameter_list|,
@@ -561,11 +533,11 @@ name|V
 argument_list|,
 literal|0
 argument_list|,
-name|TD
-argument_list|,
-name|AC
+name|DL
 argument_list|,
 name|CxtI
+argument_list|,
+name|AC
 argument_list|,
 name|DT
 argument_list|)
@@ -587,7 +559,7 @@ name|EmitGEPOffset
 argument_list|(
 argument|IRBuilderTy *Builder
 argument_list|,
-argument|const DataLayout&TD
+argument|const DataLayout&DL
 argument_list|,
 argument|User *GEP
 argument_list|,
@@ -610,7 +582,7 @@ name|Type
 operator|*
 name|IntPtrTy
 operator|=
-name|TD
+name|DL
 operator|.
 name|getIntPtrType
 argument_list|(
@@ -718,7 +690,7 @@ decl_stmt|;
 name|uint64_t
 name|Size
 init|=
-name|TD
+name|DL
 operator|.
 name|getTypeAllocSize
 argument_list|(
@@ -803,7 +775,7 @@ argument_list|()
 decl_stmt|;
 name|Size
 operator|=
-name|TD
+name|DL
 operator|.
 name|getStructLayout
 argument_list|(
@@ -1061,8 +1033,9 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
-comment|/// replaceDbgDeclareForAlloca - Replaces llvm.dbg.declare instruction when
-comment|/// alloca is replaced with a new value.
+comment|/// \brief Replaces llvm.dbg.declare instruction when an alloca is replaced with
+comment|/// a new value.  If Deref is true, tan additional DW_OP_deref is prepended to
+comment|/// the expression.
 name|bool
 name|replaceDbgDeclareForAlloca
 parameter_list|(
@@ -1077,6 +1050,9 @@ parameter_list|,
 name|DIBuilder
 modifier|&
 name|Builder
+parameter_list|,
+name|bool
+name|Deref
 parameter_list|)
 function_decl|;
 comment|/// \brief Remove all blocks that can not be reached from the function's entry.
@@ -1112,6 +1088,29 @@ operator|>
 name|KnownIDs
 argument_list|)
 decl_stmt|;
+comment|/// \brief Replace each use of 'From' with 'To' if that use is dominated by
+comment|/// the given edge.  Returns the number of replacements made.
+name|unsigned
+name|replaceDominatedUsesWith
+parameter_list|(
+name|Value
+modifier|*
+name|From
+parameter_list|,
+name|Value
+modifier|*
+name|To
+parameter_list|,
+name|DominatorTree
+modifier|&
+name|DT
+parameter_list|,
+specifier|const
+name|BasicBlockEdge
+modifier|&
+name|Edge
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

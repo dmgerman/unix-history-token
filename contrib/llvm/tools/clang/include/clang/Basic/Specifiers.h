@@ -67,6 +67,18 @@ directive|define
 name|LLVM_CLANG_BASIC_SPECIFIERS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -432,11 +444,14 @@ comment|// __attribute__((pcs("aapcs")))
 name|CC_AAPCS_VFP
 block|,
 comment|// __attribute__((pcs("aapcs-vfp")))
-name|CC_PnaclCall
-block|,
-comment|// __attribute__((pnaclcall))
 name|CC_IntelOclBicc
+block|,
 comment|// __attribute__((intel_ocl_bicc))
+name|CC_SpirFunction
+block|,
+comment|// default for OpenCL functions on SPIR target
+name|CC_SpirKernel
+comment|// inferred for OpenCL kernels on SPIR target
 block|}
 enum|;
 comment|/// \brief Checks whether the given calling convention supports variadic
@@ -469,6 +484,12 @@ case|:
 case|case
 name|CC_X86VectorCall
 case|:
+case|case
+name|CC_SpirFunction
+case|:
+case|case
+name|CC_SpirKernel
+case|:
 return|return
 name|false
 return|;
@@ -498,6 +519,39 @@ name|SD_Dynamic
 comment|///< Dynamic storage duration.
 block|}
 enum|;
+comment|/// Describes the nullability of a particular type.
+name|enum
+name|class
+name|NullabilityKind
+range|:
+name|uint8_t
+block|{
+comment|/// Values of this type can never be null.
+name|NonNull
+operator|=
+literal|0
+block|,
+comment|/// Values of this type can be null.
+name|Nullable
+block|,
+comment|/// Whether values of this type can be null is (explicitly)
+comment|/// unspecified. This captures a (fairly rare) case where we
+comment|/// can't conclude anything about the nullability of the type even
+comment|/// though it has been considered.
+name|Unspecified
+block|}
+decl_stmt|;
+comment|/// Retrieve the spelling of the given nullability kind.
+name|llvm
+operator|::
+name|StringRef
+name|getNullabilitySpelling
+argument_list|(
+argument|NullabilityKind kind
+argument_list|,
+argument|bool isContextSensitive = false
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

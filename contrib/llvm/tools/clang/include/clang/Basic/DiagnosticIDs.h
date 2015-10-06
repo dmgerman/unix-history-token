@@ -142,7 +142,7 @@ name|DIAG_START_COMMENT
 init|=
 name|DIAG_START_AST
 operator|+
-literal|100
+literal|110
 block|,
 name|DIAG_START_SEMA
 init|=

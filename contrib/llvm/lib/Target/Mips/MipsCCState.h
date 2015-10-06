@@ -315,7 +315,8 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|CCAssignFn Fn
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|AnalyzeCallOperands
@@ -326,7 +327,8 @@ argument|SmallVectorImpl<ISD::ArgFlagsTy>&Flags
 argument_list|,
 argument|CCAssignFn Fn
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|AnalyzeFormalArguments

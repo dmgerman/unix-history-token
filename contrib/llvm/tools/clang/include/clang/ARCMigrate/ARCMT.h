@@ -71,6 +71,9 @@ decl_stmt|;
 name|class
 name|DiagnosticConsumer
 decl_stmt|;
+name|class
+name|PCHContainerOperations
+decl_stmt|;
 name|namespace
 name|arcmt
 block|{
@@ -95,53 +98,69 @@ comment|///
 comment|/// \returns false if no error is produced, true otherwise.
 name|bool
 name|checkForManualIssues
-parameter_list|(
+argument_list|(
 name|CompilerInvocation
-modifier|&
+operator|&
 name|CI
-parameter_list|,
+argument_list|,
 specifier|const
 name|FrontendInputFile
-modifier|&
+operator|&
 name|Input
-parameter_list|,
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+argument_list|,
 name|DiagnosticConsumer
-modifier|*
+operator|*
 name|DiagClient
-parameter_list|,
+argument_list|,
 name|bool
 name|emitPremigrationARCErrors
-init|=
+operator|=
 name|false
-parameter_list|,
+argument_list|,
 name|StringRef
 name|plistOut
-init|=
+operator|=
 name|StringRef
 argument_list|()
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// \brief Works similar to checkForManualIssues but instead of checking, it
 comment|/// applies automatic modifications to source files to conform to ARC.
 comment|///
 comment|/// \returns false if no error is produced, true otherwise.
 name|bool
 name|applyTransformations
-parameter_list|(
+argument_list|(
 name|CompilerInvocation
-modifier|&
+operator|&
 name|origCI
-parameter_list|,
+argument_list|,
 specifier|const
 name|FrontendInputFile
-modifier|&
+operator|&
 name|Input
-parameter_list|,
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+argument_list|,
 name|DiagnosticConsumer
-modifier|*
+operator|*
 name|DiagClient
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// \brief Applies automatic modifications and produces temporary files
 comment|/// and metadata into the \p outputDir path.
 comment|///
@@ -155,30 +174,38 @@ comment|///
 comment|/// \returns false if no error is produced, true otherwise.
 name|bool
 name|migrateWithTemporaryFiles
-parameter_list|(
+argument_list|(
 name|CompilerInvocation
-modifier|&
+operator|&
 name|origCI
-parameter_list|,
+argument_list|,
 specifier|const
 name|FrontendInputFile
-modifier|&
+operator|&
 name|Input
-parameter_list|,
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+argument_list|,
 name|DiagnosticConsumer
-modifier|*
+operator|*
 name|DiagClient
-parameter_list|,
+argument_list|,
 name|StringRef
 name|outputDir
-parameter_list|,
+argument_list|,
 name|bool
 name|emitPremigrationARCErrors
-parameter_list|,
+argument_list|,
 name|StringRef
 name|plistOut
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// \brief Get the set of file remappings from the \p outputDir path that
 comment|/// migrateWithTemporaryFiles produced.
 comment|///
@@ -283,6 +310,14 @@ block|{
 name|CompilerInvocation
 name|OrigCI
 decl_stmt|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+expr_stmt|;
 name|DiagnosticConsumer
 modifier|*
 name|DiagClient
@@ -298,6 +333,8 @@ decl_stmt|;
 name|MigrationProcess
 argument_list|(
 argument|const CompilerInvocation&CI
+argument_list|,
+argument|std::shared_ptr<PCHContainerOperations> PCHContainerOps
 argument_list|,
 argument|DiagnosticConsumer *diagClient
 argument_list|,

@@ -1627,7 +1627,7 @@ operator|<
 name|uptr
 operator|>
 operator|(
-name|Mprotect
+name|MmapNoAccess
 argument_list|(
 name|kSpaceBeg
 argument_list|,

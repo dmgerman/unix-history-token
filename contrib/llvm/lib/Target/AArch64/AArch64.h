@@ -174,17 +174,6 @@ modifier|*
 name|createAArch64A53Fix835769
 parameter_list|()
 function_decl|;
-comment|/// \brief Creates an ARM-specific Target Transformation Info pass.
-name|ImmutablePass
-modifier|*
-name|createAArch64TargetTransformInfoPass
-parameter_list|(
-specifier|const
-name|AArch64TargetMachine
-modifier|*
-name|TM
-parameter_list|)
-function_decl|;
 name|FunctionPass
 modifier|*
 name|createAArch64CleanupLocalDynamicTLSPass

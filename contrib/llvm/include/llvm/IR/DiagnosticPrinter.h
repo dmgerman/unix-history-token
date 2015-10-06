@@ -85,6 +85,9 @@ name|class
 name|raw_ostream
 decl_stmt|;
 name|class
+name|SMDiagnostic
+decl_stmt|;
+name|class
 name|StringRef
 decl_stmt|;
 name|class
@@ -331,6 +334,21 @@ operator|)
 operator|=
 literal|0
 expr_stmt|;
+comment|// Other types.
+name|virtual
+name|DiagnosticPrinter
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|SMDiagnostic
+operator|&
+name|Diag
+operator|)
+operator|=
+literal|0
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief Basic diagnostic printer that uses an underlying raw_ostream.
@@ -551,6 +569,19 @@ specifier|const
 name|Module
 operator|&
 name|M
+operator|)
+name|override
+block|;
+comment|// Other types.
+name|DiagnosticPrinter
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|SMDiagnostic
+operator|&
+name|Diag
 operator|)
 name|override
 block|; }

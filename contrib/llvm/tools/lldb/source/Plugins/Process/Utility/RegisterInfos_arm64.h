@@ -537,7 +537,7 @@ name|arm64_dwarf
 operator|::
 name|x0
 block|,
-name|LLDB_INVALID_REGNUM
+name|LLDB_REGNUM_GENERIC_ARG1
 block|,
 name|arm64_gcc
 operator|::
@@ -580,7 +580,7 @@ name|arm64_dwarf
 operator|::
 name|x1
 block|,
-name|LLDB_INVALID_REGNUM
+name|LLDB_REGNUM_GENERIC_ARG2
 block|,
 name|arm64_gcc
 operator|::
@@ -623,7 +623,7 @@ name|arm64_dwarf
 operator|::
 name|x2
 block|,
-name|LLDB_INVALID_REGNUM
+name|LLDB_REGNUM_GENERIC_ARG3
 block|,
 name|arm64_gcc
 operator|::
@@ -666,7 +666,7 @@ name|arm64_dwarf
 operator|::
 name|x3
 block|,
-name|LLDB_INVALID_REGNUM
+name|LLDB_REGNUM_GENERIC_ARG4
 block|,
 name|arm64_gcc
 operator|::
@@ -709,7 +709,7 @@ name|arm64_dwarf
 operator|::
 name|x4
 block|,
-name|LLDB_INVALID_REGNUM
+name|LLDB_REGNUM_GENERIC_ARG5
 block|,
 name|arm64_gcc
 operator|::
@@ -752,7 +752,7 @@ name|arm64_dwarf
 operator|::
 name|x5
 block|,
-name|LLDB_INVALID_REGNUM
+name|LLDB_REGNUM_GENERIC_ARG6
 block|,
 name|arm64_gcc
 operator|::
@@ -795,7 +795,7 @@ name|arm64_dwarf
 operator|::
 name|x6
 block|,
-name|LLDB_INVALID_REGNUM
+name|LLDB_REGNUM_GENERIC_ARG7
 block|,
 name|arm64_gcc
 operator|::
@@ -838,7 +838,7 @@ name|arm64_dwarf
 operator|::
 name|x7
 block|,
-name|LLDB_INVALID_REGNUM
+name|LLDB_REGNUM_GENERIC_ARG8
 block|,
 name|arm64_gcc
 operator|::

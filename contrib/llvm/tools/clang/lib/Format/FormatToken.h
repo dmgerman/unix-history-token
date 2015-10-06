@@ -104,106 +104,38 @@ block|{
 name|namespace
 name|format
 block|{
+define|#
+directive|define
+name|LIST_TOKEN_TYPES
+define|\
+value|TYPE(ArrayInitializerLSquare) \   TYPE(ArraySubscriptLSquare) \   TYPE(AttributeParen) \   TYPE(BinaryOperator) \   TYPE(BitFieldColon) \   TYPE(BlockComment) \   TYPE(CastRParen) \   TYPE(ConditionalExpr) \   TYPE(ConflictAlternative) \   TYPE(ConflictEnd) \   TYPE(ConflictStart) \   TYPE(CtorInitializerColon) \   TYPE(CtorInitializerComma) \   TYPE(DesignatedInitializerPeriod) \   TYPE(DictLiteral) \   TYPE(ForEachMacro) \   TYPE(FunctionAnnotationRParen) \   TYPE(FunctionDeclarationName) \   TYPE(FunctionLBrace) \   TYPE(FunctionTypeLParen) \   TYPE(ImplicitStringLiteral) \   TYPE(InheritanceColon) \   TYPE(InlineASMBrace) \   TYPE(InlineASMColon) \   TYPE(JavaAnnotation) \   TYPE(JsComputedPropertyName) \   TYPE(JsFatArrow) \   TYPE(JsTypeColon) \   TYPE(JsTypeOptionalQuestion) \   TYPE(LambdaArrow) \   TYPE(LambdaLSquare) \   TYPE(LeadingJavaAnnotation) \   TYPE(LineComment) \   TYPE(MacroBlockBegin) \   TYPE(MacroBlockEnd) \   TYPE(ObjCBlockLBrace) \   TYPE(ObjCBlockLParen) \   TYPE(ObjCDecl) \   TYPE(ObjCForIn) \   TYPE(ObjCMethodExpr) \   TYPE(ObjCMethodSpecifier) \   TYPE(ObjCProperty) \   TYPE(ObjCStringLiteral) \   TYPE(OverloadedOperator) \   TYPE(OverloadedOperatorLParen) \   TYPE(PointerOrReference) \   TYPE(PureVirtualSpecifier) \   TYPE(RangeBasedForLoopColon) \   TYPE(RegexLiteral) \   TYPE(SelectorName) \   TYPE(StartOfName) \   TYPE(TemplateCloser) \   TYPE(TemplateOpener) \   TYPE(TemplateString) \   TYPE(TrailingAnnotation) \   TYPE(TrailingReturnArrow) \   TYPE(TrailingUnaryOperator) \   TYPE(UnaryOperator) \   TYPE(Unknown)
 enum|enum
 name|TokenType
 block|{
-name|TT_ArrayInitializerLSquare
-block|,
-name|TT_ArraySubscriptLSquare
-block|,
-name|TT_AttributeParen
-block|,
-name|TT_BinaryOperator
-block|,
-name|TT_BitFieldColon
-block|,
-name|TT_BlockComment
-block|,
-name|TT_CastRParen
-block|,
-name|TT_ConditionalExpr
-block|,
-name|TT_ConflictAlternative
-block|,
-name|TT_ConflictEnd
-block|,
-name|TT_ConflictStart
-block|,
-name|TT_CtorInitializerColon
-block|,
-name|TT_CtorInitializerComma
-block|,
-name|TT_DesignatedInitializerPeriod
-block|,
-name|TT_DictLiteral
-block|,
-name|TT_FunctionDeclarationName
-block|,
-name|TT_FunctionLBrace
-block|,
-name|TT_FunctionTypeLParen
-block|,
-name|TT_ImplicitStringLiteral
-block|,
-name|TT_InheritanceColon
-block|,
-name|TT_InlineASMColon
-block|,
-name|TT_JavaAnnotation
-block|,
-name|TT_LambdaArrow
-block|,
-name|TT_LambdaLSquare
-block|,
-name|TT_LeadingJavaAnnotation
-block|,
-name|TT_LineComment
-block|,
-name|TT_ObjCBlockLBrace
-block|,
-name|TT_ObjCBlockLParen
-block|,
-name|TT_ObjCDecl
-block|,
-name|TT_ObjCForIn
-block|,
-name|TT_ObjCMethodExpr
-block|,
-name|TT_ObjCMethodSpecifier
-block|,
-name|TT_ObjCProperty
-block|,
-name|TT_OverloadedOperator
-block|,
-name|TT_OverloadedOperatorLParen
-block|,
-name|TT_PointerOrReference
-block|,
-name|TT_PureVirtualSpecifier
-block|,
-name|TT_RangeBasedForLoopColon
-block|,
-name|TT_RegexLiteral
-block|,
-name|TT_SelectorName
-block|,
-name|TT_StartOfName
-block|,
-name|TT_TemplateCloser
-block|,
-name|TT_TemplateOpener
-block|,
-name|TT_TrailingAnnotation
-block|,
-name|TT_TrailingReturnArrow
-block|,
-name|TT_TrailingUnaryOperator
-block|,
-name|TT_UnaryOperator
-block|,
-name|TT_Unknown
+define|#
+directive|define
+name|TYPE
+parameter_list|(
+name|X
+parameter_list|)
+value|TT_##X,
+name|LIST_TOKEN_TYPES
+undef|#
+directive|undef
+name|TYPE
+name|NUM_TOKEN_TYPES
 block|}
 enum|;
+comment|/// \brief Determines the name of a token type.
+specifier|const
+name|char
+modifier|*
+name|getTokenTypeName
+parameter_list|(
+name|TokenType
+name|Type
+parameter_list|)
+function_decl|;
 comment|// Represents what type of block a set of braces open.
 enum|enum
 name|BraceBlockKind
@@ -249,197 +181,26 @@ name|FormatToken
 block|{
 name|FormatToken
 argument_list|()
-operator|:
-name|NewlinesBefore
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|HasUnescapedNewline
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|LastNewlineOffset
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|ColumnWidth
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|LastLineColumnWidth
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|IsMultiline
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|IsFirst
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|MustBreakBefore
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|IsUnterminatedLiteral
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|BlockKind
-argument_list|(
-name|BK_Unknown
-argument_list|)
-operator|,
-name|Type
-argument_list|(
-name|TT_Unknown
-argument_list|)
-operator|,
-name|SpacesRequiredBefore
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|CanBreakBefore
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|ClosesTemplateDeclaration
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|ParameterCount
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|BlockParameterCount
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|PackingKind
-argument_list|(
-name|PPK_Inconclusive
-argument_list|)
-operator|,
-name|TotalLength
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|UnbreakableTailLength
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|BindingStrength
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NestingLevel
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|SplitPenalty
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|LongestObjCSelectorName
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|FakeRParens
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|StartsBinaryExpression
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|EndsBinaryExpression
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|OperatorIndex
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|LastOperator
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|PartOfMultiVariableDeclStmt
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|IsForEachMacro
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|MatchingParen
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|Previous
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|Next
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|Decision
-argument_list|(
-name|FD_Unformatted
-argument_list|)
-operator|,
-name|Finalized
-argument_list|(
-argument|false
-argument_list|)
 block|{}
 comment|/// \brief The \c Token.
 name|Token
 name|Tok
-expr_stmt|;
+decl_stmt|;
 comment|/// \brief The number of newlines immediately before the \c Token.
 comment|///
 comment|/// This can be used to determine what the user wrote in the original code
 comment|/// and thereby e.g. leave an empty line between two function definitions.
 name|unsigned
 name|NewlinesBefore
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief Whether there is at least one unescaped newline before the \c
 comment|/// Token.
 name|bool
 name|HasUnescapedNewline
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief The range of the whitespace immediately preceding the \c Token.
 name|SourceRange
@@ -449,25 +210,35 @@ comment|/// \brief The offset just past the last '\n' in this token's leading
 comment|/// whitespace (relative to \c WhiteSpaceStart). 0 if there is no '\n'.
 name|unsigned
 name|LastNewlineOffset
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The width of the non-whitespace parts of the token (or its first
 comment|/// line for multi-line tokens) in columns.
 comment|/// We need this to correctly measure number of columns a token spans.
 name|unsigned
 name|ColumnWidth
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief Contains the width in columns of the last line of a multi-line
 comment|/// token.
 name|unsigned
 name|LastLineColumnWidth
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief Whether the token text contains newlines (escaped or not).
 name|bool
 name|IsMultiline
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief Indicates that this is the first token.
 name|bool
 name|IsFirst
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief Whether there must be a line break before this token.
 comment|///
@@ -475,24 +246,9 @@ comment|/// This happens for example when a preprocessor directive ended directl
 comment|/// before the token.
 name|bool
 name|MustBreakBefore
+init|=
+name|false
 decl_stmt|;
-comment|/// \brief Returns actual token start location without leading escaped
-comment|/// newlines and whitespace.
-comment|///
-comment|/// This can be different to Tok.getLocation(), which includes leading escaped
-comment|/// newlines.
-name|SourceLocation
-name|getStartOfNonWhitespace
-argument_list|()
-specifier|const
-block|{
-return|return
-name|WhitespaceRange
-operator|.
-name|getEnd
-argument_list|()
-return|;
-block|}
 comment|/// \brief The raw text of the token.
 comment|///
 comment|/// Contains the raw token text without leading whitespace and without leading
@@ -503,24 +259,37 @@ decl_stmt|;
 comment|/// \brief Set to \c true if this token is an unterminated literal.
 name|bool
 name|IsUnterminatedLiteral
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief Contains the kind of block if this token is a brace.
 name|BraceBlockKind
 name|BlockKind
+init|=
+name|BK_Unknown
 decl_stmt|;
 name|TokenType
 name|Type
+init|=
+name|TT_Unknown
 decl_stmt|;
 comment|/// \brief The number of spaces that should be inserted before this token.
 name|unsigned
 name|SpacesRequiredBefore
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief \c true if it is allowed to break before this token.
 name|bool
 name|CanBreakBefore
+init|=
+name|false
 decl_stmt|;
+comment|/// \brief \c true if this is the ">" of "template<..>".
 name|bool
 name|ClosesTemplateDeclaration
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief Number of parameters, if this is "(", "[" or "<".
 comment|///
@@ -529,12 +298,27 @@ comment|/// 0 parameters from functions with 1 parameter. Thus, we can simply co
 comment|/// the number of commas.
 name|unsigned
 name|ParameterCount
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief Number of parameters that are nested blocks,
 comment|/// if this is "(", "[" or "<".
 name|unsigned
 name|BlockParameterCount
+init|=
+literal|0
 decl_stmt|;
+comment|/// \brief If this is a bracket ("<", "(", "[" or "{"), contains the kind of
+comment|/// the surrounding bracket.
+name|tok
+operator|::
+name|TokenKind
+name|ParentBracket
+operator|=
+name|tok
+operator|::
+name|unknown
+expr_stmt|;
 comment|/// \brief A token can have a special role that can carry extra information
 comment|/// about the token's formatting.
 name|std
@@ -548,36 +332,50 @@ expr_stmt|;
 comment|/// \brief If this is an opening parenthesis, how are the parameters packed?
 name|ParameterPackingKind
 name|PackingKind
+init|=
+name|PPK_Inconclusive
 decl_stmt|;
 comment|/// \brief The total length of the unwrapped line up to and including this
 comment|/// token.
 name|unsigned
 name|TotalLength
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The original 0-based column of this token, including expanded tabs.
 comment|/// The configured TabWidth is used as tab width.
 name|unsigned
 name|OriginalColumn
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The length of following tokens until the next natural split point,
 comment|/// or the next token that can be broken.
 name|unsigned
 name|UnbreakableTailLength
+init|=
+literal|0
 decl_stmt|;
 comment|// FIXME: Come up with a 'cleaner' concept.
 comment|/// \brief The binding strength of a token. This is a combined value of
 comment|/// operator precedence, parenthesis nesting, etc.
 name|unsigned
 name|BindingStrength
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The nesting level of this token, i.e. the number of surrounding (),
 comment|/// [], {} or<>.
 name|unsigned
 name|NestingLevel
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief Penalty for inserting a line break before this token.
 name|unsigned
 name|SplitPenalty
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief If this is the first ObjC selector name in an ObjC method
 comment|/// definition or call, this contains the length of the longest name.
@@ -586,6 +384,8 @@ comment|/// This being set to 0 means that the selectors should not be colon-ali
 comment|/// e.g. because several of them are block-type.
 name|unsigned
 name|LongestObjCSelectorName
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief Stores the number of required fake parentheses and the
 comment|/// corresponding operator precedence.
@@ -605,35 +405,89 @@ expr_stmt|;
 comment|/// \brief Insert this many fake ) after this token for correct indentation.
 name|unsigned
 name|FakeRParens
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief \c true if this token starts a binary expression, i.e. has at least
 comment|/// one fake l_paren with a precedence greater than prec::Unknown.
 name|bool
 name|StartsBinaryExpression
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief \c true if this token ends a binary expression.
 name|bool
 name|EndsBinaryExpression
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief Is this is an operator (or "."/"->") in a sequence of operators
 comment|/// with the same precedence, contains the 0-based operator index.
 name|unsigned
 name|OperatorIndex
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief Is this the last operator (or "."/"->") in a sequence of operators
 comment|/// with the same precedence?
 name|bool
 name|LastOperator
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief Is this token part of a \c DeclStmt defining multiple variables?
 comment|///
 comment|/// Only set if \c Type == \c TT_StartOfName.
 name|bool
 name|PartOfMultiVariableDeclStmt
+init|=
+name|false
 decl_stmt|;
-comment|/// \brief Is this a foreach macro?
+comment|/// \brief If this is a bracket, this points to the matching one.
+name|FormatToken
+modifier|*
+name|MatchingParen
+init|=
+name|nullptr
+decl_stmt|;
+comment|/// \brief The previous token in the unwrapped line.
+name|FormatToken
+modifier|*
+name|Previous
+init|=
+name|nullptr
+decl_stmt|;
+comment|/// \brief The next token in the unwrapped line.
+name|FormatToken
+modifier|*
+name|Next
+init|=
+name|nullptr
+decl_stmt|;
+comment|/// \brief If this token starts a block, this contains all the unwrapped lines
+comment|/// in it.
+name|SmallVector
+operator|<
+name|AnnotatedLine
+operator|*
+operator|,
+literal|1
+operator|>
+name|Children
+expr_stmt|;
+comment|/// \brief Stores the formatting decision for the token once it was made.
+name|FormatDecision
+name|Decision
+init|=
+name|FD_Unformatted
+decl_stmt|;
+comment|/// \brief If \c true, this token has been fully formatted (indented and
+comment|/// potentially re-formatted inside), and we do not allow further formatting
+comment|/// changes.
 name|bool
-name|IsForEachMacro
+name|Finalized
+init|=
+name|false
 decl_stmt|;
 name|bool
 name|is
@@ -727,7 +581,8 @@ name|typename
 name|B
 operator|,
 name|typename
-name|C
+operator|...
+name|Ts
 operator|>
 name|bool
 name|isOneOf
@@ -736,7 +591,7 @@ argument|A K1
 argument_list|,
 argument|B K2
 argument_list|,
-argument|C K3
+argument|Ts... Ks
 argument_list|)
 specifier|const
 block|{
@@ -746,218 +601,12 @@ argument_list|(
 name|K1
 argument_list|)
 operator|||
-name|is
-argument_list|(
-name|K2
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|K3
-argument_list|)
-return|;
-block|}
-name|template
-operator|<
-name|typename
-name|A
-operator|,
-name|typename
-name|B
-operator|,
-name|typename
-name|C
-operator|,
-name|typename
-name|D
-operator|>
-name|bool
 name|isOneOf
 argument_list|(
-argument|A K1
-argument_list|,
-argument|B K2
-argument_list|,
-argument|C K3
-argument_list|,
-argument|D K4
-argument_list|)
-specifier|const
-block|{
-return|return
-name|is
-argument_list|(
-name|K1
-argument_list|)
-operator|||
-name|is
-argument_list|(
 name|K2
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|K3
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|K4
-argument_list|)
-return|;
-block|}
-name|template
-operator|<
-name|typename
-name|A
-operator|,
-name|typename
-name|B
-operator|,
-name|typename
-name|C
-operator|,
-name|typename
-name|D
-operator|,
-name|typename
-name|E
-operator|>
-name|bool
-name|isOneOf
-argument_list|(
-argument|A K1
 argument_list|,
-argument|B K2
-argument_list|,
-argument|C K3
-argument_list|,
-argument|D K4
-argument_list|,
-argument|E K5
-argument_list|)
-specifier|const
-block|{
-return|return
-name|is
-argument_list|(
-name|K1
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|K2
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|K3
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|K4
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|K5
-argument_list|)
-return|;
-block|}
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|bool
-name|isOneOf
-argument_list|(
-argument|T K1
-argument_list|,
-argument|T K2
-argument_list|,
-argument|T K3
-argument_list|,
-argument|T K4
-argument_list|,
-argument|T K5
-argument_list|,
-argument|T K6
-argument_list|,
-argument|T K7 = tok::NUM_TOKENS
-argument_list|,
-argument|T K8 = tok::NUM_TOKENS
-argument_list|,
-argument|T K9 = tok::NUM_TOKENS
-argument_list|,
-argument|T K10 = tok::NUM_TOKENS
-argument_list|,
-argument|T K11 = tok::NUM_TOKENS
-argument_list|,
-argument|T K12 = tok::NUM_TOKENS
-argument_list|)
-specifier|const
-block|{
-return|return
-name|is
-argument_list|(
-name|K1
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|K2
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|K3
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|K4
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|K5
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|K6
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|K7
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|K8
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|K9
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|K10
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|K11
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|K12
+name|Ks
+operator|...
 argument_list|)
 return|;
 block|}
@@ -1200,6 +849,8 @@ argument_list|(
 name|TT_DesignatedInitializerPeriod
 argument_list|,
 name|TT_TrailingReturnArrow
+argument_list|,
+name|TT_LambdaArrow
 argument_list|)
 return|;
 block|}
@@ -1384,6 +1035,23 @@ name|false
 return|;
 block|}
 block|}
+comment|/// \brief Returns actual token start location without leading escaped
+comment|/// newlines and whitespace.
+comment|///
+comment|/// This can be different to Tok.getLocation(), which includes leading escaped
+comment|/// newlines.
+name|SourceLocation
+name|getStartOfNonWhitespace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|WhitespaceRange
+operator|.
+name|getEnd
+argument_list|()
+return|;
+block|}
 name|prec
 operator|::
 name|Level
@@ -1551,46 +1219,18 @@ name|Style
 argument_list|)
 return|;
 block|}
-name|FormatToken
-modifier|*
-name|MatchingParen
-struct|;
-name|FormatToken
-modifier|*
-name|Previous
-decl_stmt|;
-name|FormatToken
-modifier|*
-name|Next
-decl_stmt|;
-name|SmallVector
-operator|<
-name|AnnotatedLine
-operator|*
-operator|,
-literal|1
-operator|>
-name|Children
-expr_stmt|;
-comment|/// \brief Stores the formatting decision for the token once it was made.
-name|FormatDecision
-name|Decision
-decl_stmt|;
-comment|/// \brief If \c true, this token has been fully formatted (indented and
-comment|/// potentially re-formatted inside), and we do not allow further formatting
-comment|/// changes.
-name|bool
-name|Finalized
-decl_stmt|;
 name|private
-label|:
+range|:
 comment|// Disallow copying.
 name|FormatToken
 argument_list|(
-argument|const FormatToken&
+specifier|const
+name|FormatToken
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
-expr_stmt|;
+operator|=
+name|delete
+struct|;
 name|void
 name|operator
 init|=
@@ -1599,7 +1239,8 @@ specifier|const
 name|FormatToken
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -1936,6 +1577,16 @@ argument_list|(
 literal|"function"
 argument_list|)
 expr_stmt|;
+name|kw_import
+operator|=
+operator|&
+name|IdentTable
+operator|.
+name|get
+argument_list|(
+literal|"import"
+argument_list|)
+expr_stmt|;
 name|kw_var
 operator|=
 operator|&
@@ -2046,6 +1697,26 @@ argument_list|(
 literal|"throws"
 argument_list|)
 expr_stmt|;
+name|kw___except
+operator|=
+operator|&
+name|IdentTable
+operator|.
+name|get
+argument_list|(
+literal|"__except"
+argument_list|)
+expr_stmt|;
+name|kw_mark
+operator|=
+operator|&
+name|IdentTable
+operator|.
+name|get
+argument_list|(
+literal|"mark"
+argument_list|)
+expr_stmt|;
 name|kw_option
 operator|=
 operator|&
@@ -2096,8 +1767,38 @@ argument_list|(
 literal|"returns"
 argument_list|)
 expr_stmt|;
+name|kw_signals
+operator|=
+operator|&
+name|IdentTable
+operator|.
+name|get
+argument_list|(
+literal|"signals"
+argument_list|)
+expr_stmt|;
+name|kw_slots
+operator|=
+operator|&
+name|IdentTable
+operator|.
+name|get
+argument_list|(
+literal|"slots"
+argument_list|)
+expr_stmt|;
+name|kw_qslots
+operator|=
+operator|&
+name|IdentTable
+operator|.
+name|get
+argument_list|(
+literal|"Q_SLOTS"
+argument_list|)
+expr_stmt|;
 block|}
-comment|// ObjC context sensitive keywords.
+comment|// Context sensitive keywords.
 name|IdentifierInfo
 modifier|*
 name|kw_in
@@ -2118,6 +1819,10 @@ name|IdentifierInfo
 modifier|*
 name|kw_NS_OPTIONS
 decl_stmt|;
+name|IdentifierInfo
+modifier|*
+name|kw___except
+decl_stmt|;
 comment|// JavaScript keywords.
 name|IdentifierInfo
 modifier|*
@@ -2126,6 +1831,10 @@ decl_stmt|;
 name|IdentifierInfo
 modifier|*
 name|kw_function
+decl_stmt|;
+name|IdentifierInfo
+modifier|*
+name|kw_import
 decl_stmt|;
 name|IdentifierInfo
 modifier|*
@@ -2172,6 +1881,11 @@ name|IdentifierInfo
 modifier|*
 name|kw_throws
 decl_stmt|;
+comment|// Pragma keywords.
+name|IdentifierInfo
+modifier|*
+name|kw_mark
+decl_stmt|;
 comment|// Proto keywords.
 name|IdentifierInfo
 modifier|*
@@ -2192,6 +1906,19 @@ decl_stmt|;
 name|IdentifierInfo
 modifier|*
 name|kw_returns
+decl_stmt|;
+comment|// QT keywords.
+name|IdentifierInfo
+modifier|*
+name|kw_signals
+decl_stmt|;
+name|IdentifierInfo
+modifier|*
+name|kw_slots
+decl_stmt|;
+name|IdentifierInfo
+modifier|*
+name|kw_qslots
 decl_stmt|;
 block|}
 struct|;

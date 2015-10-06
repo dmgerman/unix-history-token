@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MIDriver.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMIDriver interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -213,11 +169,6 @@ name|public
 name|CMIDriverBase
 decl_stmt|,
 name|public
-name|CMICmnStreamStdin
-decl|::
-name|IStreamStdin
-decl_stmt|,
-name|public
 name|MI
 decl|::
 name|ISingleton
@@ -238,7 +189,7 @@ comment|// Enumerations:
 name|public
 label|:
 comment|//++ ----------------------------------------------------------------------
-comment|// Details: The MI Driver has a running state which is used to help determin
+comment|// Details: The MI Driver has a running state which is used to help determine
 comment|//          which specific action(s) it should take or not allow.
 comment|//          The driver when operational and not shutting down alternates
 comment|//          between eDriverState_RunningNotDebugging and
@@ -277,16 +228,18 @@ label|:
 comment|// MI system
 name|bool
 name|Initialize
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|Shutdown
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|// MI state
 name|bool
 name|GetExitApplicationFlag
@@ -381,15 +334,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|bool
-name|InjectMICommand
-parameter_list|(
-specifier|const
-name|CMIUtilString
-modifier|&
-name|vMICmd
-parameter_list|)
-function_decl|;
-name|bool
 name|HaveExecutableFileNamePathOnCmdLine
 argument_list|(
 name|void
@@ -409,37 +353,27 @@ comment|// Overridden:
 name|public
 label|:
 comment|// From CMIDriverMgr::IDriver
-name|virtual
 name|bool
 name|DoInitialize
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|DoShutdown
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|DoMainLoop
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-name|virtual
-name|void
-name|DoResizeWindow
-parameter_list|(
-specifier|const
-name|uint32_t
-name|vWindowSizeWsCol
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|lldb
 operator|::
 name|SBError
@@ -453,16 +387,16 @@ argument|FILE *vpStdOut
 argument_list|,
 argument|bool&vwbExiting
 argument_list|)
+name|override
 expr_stmt|;
-name|virtual
 name|CMIUtilString
 name|GetError
 argument_list|(
 name|void
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 specifier|const
 name|CMIUtilString
 modifier|&
@@ -471,36 +405,36 @@ argument_list|(
 name|void
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|lldb
 operator|::
 name|SBDebugger
 operator|&
 name|GetTheDebugger
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 expr_stmt|;
-name|virtual
 name|bool
 name|GetDriverIsGDBMICompatibleDriver
 argument_list|(
 name|void
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|SetId
-parameter_list|(
+argument_list|(
 specifier|const
 name|CMIUtilString
-modifier|&
+operator|&
 name|vId
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 specifier|const
 name|CMIUtilString
 modifier|&
@@ -509,42 +443,42 @@ argument_list|(
 name|void
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|// From CMIDriverBase
-name|virtual
 name|void
 name|SetExitApplicationFlag
-parameter_list|(
+argument_list|(
 specifier|const
 name|bool
 name|vbForceExit
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|DoFallThruToAnotherDriver
-parameter_list|(
+argument_list|(
 specifier|const
 name|CMIUtilString
-modifier|&
+operator|&
 name|vCmd
-parameter_list|,
+argument_list|,
 name|CMIUtilString
-modifier|&
+operator|&
 name|vwErrMsg
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|SetDriverToFallThruTo
-parameter_list|(
+argument_list|(
 specifier|const
 name|CMIDriverBase
-modifier|&
+operator|&
 name|vrOtherDriver
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|FILE
 modifier|*
 name|GetStdin
@@ -552,8 +486,8 @@ argument_list|(
 name|void
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|FILE
 modifier|*
 name|GetStdout
@@ -561,8 +495,8 @@ argument_list|(
 name|void
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|FILE
 modifier|*
 name|GetStderr
@@ -570,8 +504,8 @@ argument_list|(
 name|void
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 specifier|const
 name|CMIUtilString
 modifier|&
@@ -580,8 +514,8 @@ argument_list|(
 name|void
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 specifier|const
 name|CMIUtilString
 modifier|&
@@ -590,22 +524,16 @@ argument_list|(
 name|void
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-comment|// From CMICmnStreamStdin
-name|virtual
-name|bool
-name|ReadLine
-parameter_list|(
-specifier|const
-name|CMIUtilString
-modifier|&
-name|vStdInBuffer
-parameter_list|,
-name|bool
-modifier|&
-name|vrbYesExit
-parameter_list|)
-function_decl|;
+name|void
+name|DeliverSignal
+argument_list|(
+name|int
+name|signal
+argument_list|)
+name|override
+decl_stmt|;
 comment|// Typedefs:
 name|private
 label|:
@@ -659,12 +587,6 @@ argument|bool&vwbExiting
 argument_list|)
 expr_stmt|;
 name|bool
-name|ReadStdinLineQueue
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-name|bool
 name|DoAppQuit
 parameter_list|(
 name|void
@@ -692,6 +614,16 @@ modifier|&
 name|vwbCmdYesValid
 parameter_list|)
 function_decl|;
+name|CMIUtilString
+name|WrapCLICommandIntoMICommand
+argument_list|(
+specifier|const
+name|CMIUtilString
+operator|&
+name|vTextLine
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|InterpretCommandFallThruDriver
 parameter_list|(
@@ -741,18 +673,17 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|bool
-name|QueueMICommand
+name|LocalDebugSessionStartupExecuteCommands
 parameter_list|(
-specifier|const
-name|CMIUtilString
-modifier|&
-name|vMICmd
+name|void
 parameter_list|)
 function_decl|;
 name|bool
-name|LocalDebugSessionStartupInjectCommands
+name|ExecuteCommandFile
 parameter_list|(
-name|void
+specifier|const
+name|bool
+name|vbAsyncMode
 parameter_list|)
 function_decl|;
 comment|// Overridden:
@@ -760,12 +691,12 @@ name|private
 label|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMIDriver
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 expr_stmt|;
 comment|// Attributes:
 name|private
@@ -793,10 +724,6 @@ comment|// True = yes fall through, false = do not pass on command
 name|CMIUtilThreadMutex
 name|m_threadMutex
 decl_stmt|;
-name|QueueStdinLine_t
-name|m_queueStdinLine
-decl_stmt|;
-comment|// Producer = stdin monitor, consumer = *this driver
 name|bool
 name|m_bDriverIsExiting
 decl_stmt|;
@@ -824,15 +751,22 @@ decl_stmt|;
 name|bool
 name|m_bHaveExecutableFileNamePathOnCmdLine
 decl_stmt|;
-comment|// True = Yes executable given as one of the parameters to the MI Driver, false = not found
+comment|// True = yes, executable given as one of the parameters to the MI Driver, false = not found
 name|CMIUtilString
 name|m_strCmdLineArgExecuteableFileNamePath
 decl_stmt|;
 name|bool
 name|m_bDriverDebuggingArgExecutable
 decl_stmt|;
-comment|// True = The MI Driver (MI mode) is debugging executable passed as argument, false = running via
-comment|// a client i.e Eclipse
+comment|// True = the MI Driver (MI mode) is debugging executable passed as argument,
+comment|// false = running via a client (e.g. Eclipse)
+name|bool
+name|m_bHaveCommandFileNamePathOnCmdLine
+decl_stmt|;
+comment|// True = file with initial commands given as one of the parameters to the MI Driver, false = not found
+name|CMIUtilString
+name|m_strCmdLineArgCommandFileNamePath
+decl_stmt|;
 block|}
 end_decl_stmt
 

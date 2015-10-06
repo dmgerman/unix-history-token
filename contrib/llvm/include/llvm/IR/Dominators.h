@@ -158,33 +158,31 @@ expr_stmt|;
 name|class
 name|PreservedAnalyses
 decl_stmt|;
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class DomTreeNodeBase<BasicBlock>
-argument_list|)
+extern|extern template class DomTreeNodeBase<BasicBlock>;
+extern|extern template class DominatorTreeBase<BasicBlock>;
+extern|extern template void Calculate<Function
+operator|,
+extern|BasicBlock *>(     DominatorTreeBase<GraphTraits<BasicBlock *>::NodeType>&DT
+operator|,
+extern|Function&F
+block|)
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern template void Calculate<Function
+operator|,
+extern|Inverse<BasicBlock *>>(     DominatorTreeBase<GraphTraits<Inverse<BasicBlock *>>::NodeType>&DT
+operator|,
+extern|Function&F
+end_extern
+
+begin_empty_stmt
+unit|)
 empty_stmt|;
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class DominatorTreeBase<BasicBlock>
-argument_list|)
-empty_stmt|;
-define|#
-directive|define
-name|LLVM_COMMA
-value|,
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|void Calculate<Function LLVM_COMMA BasicBlock *>(     DominatorTreeBase<GraphTraits<BasicBlock *>::NodeType>&DT LLVM_COMMA         Function&F)
-argument_list|)
-empty_stmt|;
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|void Calculate<Function LLVM_COMMA Inverse<BasicBlock *>>(         DominatorTreeBase<GraphTraits<Inverse<BasicBlock *>>::NodeType>&DT             LLVM_COMMA Function&F)
-argument_list|)
-empty_stmt|;
-undef|#
-directive|undef
-name|LLVM_COMMA
+end_empty_stmt
+
+begin_typedef
 typedef|typedef
 name|DomTreeNodeBase
 operator|<
@@ -192,6 +190,9 @@ name|BasicBlock
 operator|>
 name|DomTreeNode
 expr_stmt|;
+end_typedef
+
+begin_decl_stmt
 name|class
 name|BasicBlockEdge
 block|{
@@ -258,9 +259,21 @@ argument_list|()
 specifier|const
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Concrete subclass of DominatorTreeBase that is used to compute a
+end_comment
+
+begin_comment
 comment|/// normal dominator tree.
+end_comment
+
+begin_decl_stmt
 name|class
 name|DominatorTree
 range|:
@@ -337,8 +350,17 @@ operator|*
 name|this
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Returns *false* if the other dominator tree matches this dominator
+end_comment
+
+begin_comment
 comment|/// tree.
+end_comment
+
+begin_decl_stmt
 specifier|inline
 name|bool
 name|compare
@@ -405,16 +427,37 @@ return|return
 name|false
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|// Ensure base-class overloads are visible.
+end_comment
+
+begin_expr_stmt
 name|using
 name|Base
 operator|::
 name|dominates
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Return true if Def dominates a use in User.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This performs the special checks necessary if Def and User are in the same
+end_comment
+
+begin_comment
 comment|/// basic block. Note that Def doesn't dominate a use in Def itself!
+end_comment
+
+begin_decl_stmt
 name|bool
 name|dominates
 argument_list|(
@@ -430,6 +473,9 @@ name|U
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|dominates
 argument_list|(
@@ -445,6 +491,9 @@ name|User
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|dominates
 argument_list|(
@@ -460,6 +509,9 @@ name|BB
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|dominates
 argument_list|(
@@ -475,6 +527,9 @@ name|U
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|dominates
 argument_list|(
@@ -490,13 +545,25 @@ name|BB
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Ensure base class overloads are visible.
+end_comment
+
+begin_expr_stmt
 name|using
 name|Base
 operator|::
 name|isReachableFromEntry
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Provide an overload for a Use.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isReachableFromEntry
 argument_list|(
@@ -507,23 +574,34 @@ name|U
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Verify the correctness of the domtree by re-computing it.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This should only be used for debugging as it aborts the program if the
+end_comment
+
+begin_comment
 comment|/// verification fails.
+end_comment
+
+begin_expr_stmt
 name|void
 name|verifyDomTree
 argument_list|()
 specifier|const
 expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_comment
+unit|};
 comment|//===-------------------------------------
 end_comment
 

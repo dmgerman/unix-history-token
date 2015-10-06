@@ -154,6 +154,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/LibCallSemantics.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/DebugLoc.h"
 end_include
 
@@ -212,6 +218,9 @@ name|class
 name|GlobalVariable
 decl_stmt|;
 name|class
+name|BlockAddress
+decl_stmt|;
+name|class
 name|MDNode
 decl_stmt|;
 name|class
@@ -232,6 +241,26 @@ decl_stmt|;
 name|class
 name|StructType
 decl_stmt|;
+struct_decl|struct
+name|WinEHFuncInfo
+struct_decl|;
+struct|struct
+name|SEHHandler
+block|{
+comment|// Filter or finally function. Null indicates a catch-all.
+specifier|const
+name|Function
+modifier|*
+name|FilterOrFinally
+decl_stmt|;
+comment|// Address of block to recover at. Null for a finally handler.
+specifier|const
+name|BlockAddress
+modifier|*
+name|RecoverBA
+decl_stmt|;
+block|}
+struct|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// LandingPadInfo - This structure is used to retain landing pad info for
 comment|/// the current function.
@@ -264,6 +293,15 @@ operator|>
 name|EndLabels
 expr_stmt|;
 comment|// Labels after invoke.
+name|SmallVector
+operator|<
+name|SEHHandler
+operator|,
+literal|1
+operator|>
+name|SEHHandlers
+expr_stmt|;
+comment|// SEH handlers active at this lpad.
 name|MCSymbol
 modifier|*
 name|LandingPadLabel
@@ -283,7 +321,11 @@ name|int
 operator|>
 name|TypeIds
 expr_stmt|;
-comment|// List of type ids (filters negative)
+comment|// List of type ids (filters negative).
+name|int
+name|WinEHState
+decl_stmt|;
+comment|// WinEH specific state number.
 name|explicit
 name|LandingPadInfo
 argument_list|(
@@ -304,7 +346,13 @@ argument_list|)
 operator|,
 name|Personality
 argument_list|(
-argument|nullptr
+name|nullptr
+argument_list|)
+operator|,
+name|WinEHState
+argument_list|(
+argument|-
+literal|1
 argument_list|)
 block|{}
 block|}
@@ -356,11 +404,12 @@ name|SymbolListTy
 expr_stmt|;
 name|protected
 label|:
+comment|/// Return the entries from a DenseMap in a deterministic sorted orer.
+comment|/// Clears the map.
 specifier|static
 name|SymbolListTy
-name|GetSortedStubs
+name|getSortedStubs
 argument_list|(
-specifier|const
 name|DenseMap
 operator|<
 name|MCSymbol
@@ -495,19 +544,6 @@ operator|*
 operator|>
 name|Personalities
 block|;
-comment|/// UsedFunctions - The functions in the @llvm.used list in a more easily
-comment|/// searchable format.  This does not include the functions in
-comment|/// llvm.compiler.used.
-name|SmallPtrSet
-operator|<
-specifier|const
-name|Function
-operator|*
-block|,
-literal|32
-operator|>
-name|UsedFunctions
-block|;
 comment|/// AddrLabelSymbols - This map keeps track of which symbol is being used for
 comment|/// the specified basic block's address of label.
 name|MMIAddrLabelMap
@@ -539,6 +575,23 @@ comment|/// details.
 name|bool
 name|UsesMorestackAddr
 block|;
+name|EHPersonality
+name|PersonalityTypeCache
+block|;
+name|DenseMap
+operator|<
+specifier|const
+name|Function
+operator|*
+block|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|WinEHFuncInfo
+operator|>>
+name|FuncInfoMap
+block|;
 name|public
 operator|:
 specifier|static
@@ -549,27 +602,33 @@ comment|// Pass identification, replacement for typeid
 block|struct
 name|VariableDbgInfo
 block|{
-name|TrackingMDNodeRef
+specifier|const
+name|DILocalVariable
+operator|*
 name|Var
 block|;
-name|TrackingMDNodeRef
+specifier|const
+name|DIExpression
+operator|*
 name|Expr
 block|;
 name|unsigned
 name|Slot
 block|;
-name|DebugLoc
+specifier|const
+name|DILocation
+operator|*
 name|Loc
 block|;
 name|VariableDbgInfo
 argument_list|(
-argument|MDNode *Var
+argument|const DILocalVariable *Var
 argument_list|,
-argument|MDNode *Expr
+argument|const DIExpression *Expr
 argument_list|,
 argument|unsigned Slot
 argument_list|,
-argument|DebugLoc Loc
+argument|const DILocation *Loc
 argument_list|)
 operator|:
 name|Var
@@ -632,6 +691,7 @@ expr_stmt|;
 operator|~
 name|MachineModuleInfo
 argument_list|()
+name|override
 expr_stmt|;
 comment|// Initialization and Finalization
 name|bool
@@ -699,6 +759,52 @@ specifier|const
 block|{
 return|return
 name|TheModule
+return|;
+block|}
+specifier|const
+name|Function
+modifier|*
+name|getWinEHParent
+argument_list|(
+specifier|const
+name|Function
+operator|*
+name|F
+argument_list|)
+decl|const
+decl_stmt|;
+name|WinEHFuncInfo
+modifier|&
+name|getWinEHFuncInfo
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|F
+parameter_list|)
+function_decl|;
+name|bool
+name|hasWinEHFuncInfo
+argument_list|(
+specifier|const
+name|Function
+operator|*
+name|F
+argument_list|)
+decl|const
+block|{
+return|return
+name|FuncInfoMap
+operator|.
+name|count
+argument_list|(
+name|getWinEHParent
+argument_list|(
+name|F
+argument_list|)
+argument_list|)
+operator|>
+literal|0
 return|;
 block|}
 comment|/// getInfo - Keep track of various per-function pieces of information for
@@ -775,26 +881,6 @@ operator|)
 return|;
 block|}
 end_expr_stmt
-
-begin_comment
-comment|/// AnalyzeModule - Scan the module for global debug information.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_function_decl
-name|void
-name|AnalyzeModule
-parameter_list|(
-specifier|const
-name|Module
-modifier|&
-name|M
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/// hasDebugInfo - Returns true if valid debug info is present.
@@ -1011,7 +1097,7 @@ begin_comment
 comment|/// because the block may be accessed outside its containing function.
 end_comment
 
-begin_function_decl
+begin_function
 name|MCSymbol
 modifier|*
 name|getAddrLabelSymbol
@@ -1021,8 +1107,18 @@ name|BasicBlock
 modifier|*
 name|BB
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+return|return
+name|getAddrLabelSymbolToEmit
+argument_list|(
+name|BB
+argument_list|)
+operator|.
+name|front
+argument_list|()
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/// getAddrLabelSymbolToEmit - Return the symbol to be used for the specified
@@ -1037,9 +1133,7 @@ comment|/// this one, we may have to emit them as well, return the whole set.
 end_comment
 
 begin_expr_stmt
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|MCSymbol
 operator|*
@@ -1187,6 +1281,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|addPersonality
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|Personality
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|addWinEHState
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|LandingPad
+parameter_list|,
+name|int
+name|State
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/// getPersonalityIndex - Get index of the current personality function inside
 end_comment
@@ -1227,40 +1347,6 @@ name|Personalities
 return|;
 block|}
 end_expr_stmt
-
-begin_comment
-comment|/// isUsedFunction - Return true if the functions in the llvm.used list.  This
-end_comment
-
-begin_comment
-comment|/// does not return true for things in llvm.compiler.used unless they are also
-end_comment
-
-begin_comment
-comment|/// in llvm.used.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|isUsedFunction
-argument_list|(
-specifier|const
-name|Function
-operator|*
-name|F
-argument_list|)
-decl|const
-block|{
-return|return
-name|UsedFunctions
-operator|.
-name|count
-argument_list|(
-name|F
-argument_list|)
-return|;
-block|}
-end_decl_stmt
 
 begin_comment
 comment|/// addCatchTypeInfo - Provide the catch typeinfo for a landing pad.
@@ -1331,6 +1417,43 @@ parameter_list|(
 name|MachineBasicBlock
 modifier|*
 name|LandingPad
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|addSEHCatchHandler
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|LandingPad
+parameter_list|,
+specifier|const
+name|Function
+modifier|*
+name|Filter
+parameter_list|,
+specifier|const
+name|BlockAddress
+modifier|*
+name|RecoverLabel
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|addSEHCleanupHandler
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|LandingPad
+parameter_list|,
+specifier|const
+name|Function
+modifier|*
+name|Cleanup
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1725,6 +1848,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// Classify the personality function amongst known EH styles.
+end_comment
+
+begin_function_decl
+name|EHPersonality
+name|getPersonalityType
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// setVariableDbgInfo - Collect information used to emit debugging
 end_comment
 
@@ -1736,18 +1870,22 @@ begin_function
 name|void
 name|setVariableDbgInfo
 parameter_list|(
-name|MDNode
+specifier|const
+name|DILocalVariable
 modifier|*
 name|Var
 parameter_list|,
-name|MDNode
+specifier|const
+name|DIExpression
 modifier|*
 name|Expr
 parameter_list|,
 name|unsigned
 name|Slot
 parameter_list|,
-name|DebugLoc
+specifier|const
+name|DILocation
+modifier|*
 name|Loc
 parameter_list|)
 block|{

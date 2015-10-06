@@ -104,6 +104,9 @@ block|{
 name|namespace
 name|threadSafety
 block|{
+name|class
+name|BeforeSet
+decl_stmt|;
 comment|/// This enum distinguishes between different kinds of operations that may
 comment|/// need to be protected by locks. We use this enum in error handling.
 enum|enum
@@ -453,6 +456,36 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 block|{}
+comment|/// Warn that L1 cannot be acquired before L2.
+name|virtual
+name|void
+name|handleLockAcquiredBefore
+parameter_list|(
+name|StringRef
+name|Kind
+parameter_list|,
+name|Name
+name|L1Name
+parameter_list|,
+name|Name
+name|L2Name
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+block|{}
+comment|/// Warn that there is a cycle in acquired_before/after dependencies.
+name|virtual
+name|void
+name|handleBeforeAfterCycle
+parameter_list|(
+name|Name
+name|L1Name
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+block|{}
 comment|/// Called by the analysis when starting analysis of a function.
 comment|/// Used to issue suggestions for changes to annotations.
 name|virtual
@@ -518,6 +551,19 @@ parameter_list|,
 name|ThreadSafetyHandler
 modifier|&
 name|Handler
+parameter_list|,
+name|BeforeSet
+modifier|*
+modifier|*
+name|Bset
+parameter_list|)
+function_decl|;
+name|void
+name|threadSafetyCleanup
+parameter_list|(
+name|BeforeSet
+modifier|*
+name|Cache
 parameter_list|)
 function_decl|;
 comment|/// \brief Helper function that returns a LockKind required for the given level

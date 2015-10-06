@@ -714,6 +714,14 @@ operator|*
 name|p
 argument_list|)
 expr_stmt|;
+name|void
+name|reset
+argument_list|(
+name|std
+operator|::
+name|nullptr_t
+argument_list|)
+decl_stmt|;
 name|element_type
 operator|*
 name|get
@@ -1468,6 +1476,26 @@ argument_list|(
 operator|*
 name|this
 argument_list|)
+block|; }
+name|template
+operator|<
+name|class
+name|T
+operator|>
+specifier|inline
+name|void
+name|SharingPtr
+operator|<
+name|T
+operator|>
+operator|::
+name|reset
+argument_list|(
+argument|std::nullptr_t p
+argument_list|)
+block|{
+name|reset
+argument_list|()
 block|; }
 name|template
 operator|<
@@ -2979,7 +3007,7 @@ expr_stmt|;
 end_if
 
 begin_macro
-unit|}      void
+unit|}          void
 name|SetCallback
 argument_list|(
 argument|Callback cb

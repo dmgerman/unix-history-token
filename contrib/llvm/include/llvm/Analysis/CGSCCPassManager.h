@@ -914,10 +914,6 @@ argument|CGSCCPassT Pass
 argument_list|)
 block|{
 return|return
-name|std
-operator|::
-name|move
-argument_list|(
 name|ModuleToPostOrderCGSCCPassAdaptor
 operator|<
 name|CGSCCPassT
@@ -930,7 +926,6 @@ argument_list|(
 name|Pass
 argument_list|)
 operator|)
-argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -1836,10 +1831,6 @@ argument|FunctionPassT Pass
 argument_list|)
 block|{
 return|return
-name|std
-operator|::
-name|move
-argument_list|(
 name|CGSCCToFunctionPassAdaptor
 operator|<
 name|FunctionPassT
@@ -1852,7 +1843,6 @@ argument_list|(
 name|Pass
 argument_list|)
 operator|)
-argument_list|)
 return|;
 block|}
 end_expr_stmt

@@ -54,7 +54,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -110,7 +122,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/UserSettingsController.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Interpreter/Options.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/FileSpec.h"
 end_include
 
 begin_include
@@ -130,13 +154,79 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../../../source/Host/common/NativeProcessProtocol.h"
+file|"lldb/Host/common/NativeProcessProtocol.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
+name|class
+name|ModuleCache
+decl_stmt|;
+enum|enum
+name|MmapFlags
+block|{
+name|eMmapFlagsPrivate
+init|=
+literal|1
+block|,
+name|eMmapFlagsAnon
+init|=
+literal|2
+block|}
+enum|;
+name|class
+name|PlatformProperties
+range|:
+name|public
+name|Properties
+block|{
+name|public
+operator|:
+specifier|static
+name|ConstString
+name|GetSettingName
+argument_list|()
+block|;
+name|PlatformProperties
+argument_list|()
+block|;
+name|bool
+name|GetUseModuleCache
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|SetUseModuleCache
+argument_list|(
+argument|bool use_module_cache
+argument_list|)
+block|;
+name|FileSpec
+name|GetModuleCacheDirectory
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|SetModuleCacheDirectory
+argument_list|(
+specifier|const
+name|FileSpec
+operator|&
+name|dir_spec
+argument_list|)
+block|;     }
+decl_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PlatformProperties
+operator|>
+name|PlatformPropertiesSP
+expr_stmt|;
 comment|//----------------------------------------------------------------------
 comment|/// @class Platform Platform.h "lldb/Target/Platform.h"
 comment|/// @brief A plug-in interface definition class for debug platform that
@@ -158,6 +248,23 @@ name|PluginInterface
 block|{
 name|public
 operator|:
+specifier|static
+name|void
+name|Initialize
+argument_list|()
+block|;
+specifier|static
+name|void
+name|Terminate
+argument_list|()
+block|;
+specifier|static
+specifier|const
+name|PlatformPropertiesSP
+operator|&
+name|GetGlobalPlatformProperties
+argument_list|()
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Get the native host platform plug-in.
 comment|///
@@ -578,7 +685,7 @@ return|;
 comment|// Return an invalid architecture
 block|}
 name|virtual
-name|ConstString
+name|FileSpec
 name|GetRemoteWorkingDirectory
 argument_list|()
 block|{
@@ -591,9 +698,9 @@ name|bool
 name|SetRemoteWorkingDirectory
 argument_list|(
 specifier|const
-name|ConstString
+name|FileSpec
 operator|&
-name|path
+name|working_dir
 argument_list|)
 block|;
 name|virtual
@@ -693,6 +800,10 @@ name|ModuleSpec
 operator|&
 name|module_spec
 argument_list|,
+name|Process
+operator|*
+name|process
+argument_list|,
 name|lldb
 operator|::
 name|ModuleSP
@@ -713,6 +824,25 @@ argument_list|,
 name|bool
 operator|*
 name|did_create_ptr
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|GetModuleSpec
+argument_list|(
+specifier|const
+name|FileSpec
+operator|&
+name|module_file_spec
+argument_list|,
+specifier|const
+name|ArchSpec
+operator|&
+name|arch
+argument_list|,
+name|ModuleSpec
+operator|&
+name|module_spec
 argument_list|)
 block|;
 name|virtual
@@ -781,6 +911,32 @@ argument_list|(
 name|ProcessLaunchInfo
 operator|&
 name|launch_info
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
+comment|/// Perform expansion of the command-line for this launch info
+comment|/// This can potentially involve wildcard expansion
+comment|//  environment variable replacement, and whatever other
+comment|//  argument magic the platform defines as part of its typical
+comment|//  user experience
+comment|//------------------------------------------------------------------
+name|virtual
+name|Error
+name|ShellExpandArguments
+argument_list|(
+name|ProcessLaunchInfo
+operator|&
+name|launch_info
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
+comment|/// Kill process on a platform.
+comment|//------------------------------------------------------------------
+name|virtual
+name|Error
+name|KillProcess
+argument_list|(
+argument|const lldb::pid_t pid
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -1125,6 +1281,10 @@ name|virtual
 name|void
 name|AddClangModuleCompilationOptions
 argument_list|(
+name|Target
+operator|*
+name|target
+argument_list|,
 name|std
 operator|::
 name|vector
@@ -1137,7 +1297,7 @@ operator|&
 name|options
 argument_list|)
 block|;
-name|ConstString
+name|FileSpec
 name|GetWorkingDirectory
 argument_list|()
 block|;
@@ -1145,9 +1305,9 @@ name|bool
 name|SetWorkingDirectory
 argument_list|(
 specifier|const
-name|ConstString
+name|FileSpec
 operator|&
-name|path
+name|working_dir
 argument_list|)
 block|;
 comment|// There may be modules that we don't want to find by default for operations like "setting breakpoint by name".
@@ -1169,7 +1329,7 @@ name|virtual
 name|Error
 name|MakeDirectory
 argument_list|(
-argument|const char *path
+argument|const FileSpec&file_spec
 argument_list|,
 argument|uint32_t permissions
 argument_list|)
@@ -1179,9 +1339,9 @@ name|Error
 name|GetFilePermissions
 argument_list|(
 specifier|const
-name|char
-operator|*
-name|path
+name|FileSpec
+operator|&
+name|file_spec
 argument_list|,
 name|uint32_t
 operator|&
@@ -1192,7 +1352,7 @@ name|virtual
 name|Error
 name|SetFilePermissions
 argument_list|(
-argument|const char *path
+argument|const FileSpec&file_spec
 argument_list|,
 argument|uint32_t file_permissions
 argument_list|)
@@ -1341,14 +1501,14 @@ name|Error
 name|CreateSymlink
 argument_list|(
 specifier|const
-name|char
-operator|*
+name|FileSpec
+operator|&
 name|src
 argument_list|,
 comment|// The name of the link is in src
 specifier|const
-name|char
-operator|*
+name|FileSpec
+operator|&
 name|dst
 argument_list|)
 block|;
@@ -1418,9 +1578,18 @@ name|Error
 name|Unlink
 argument_list|(
 specifier|const
-name|char
-operator|*
-name|path
+name|FileSpec
+operator|&
+name|file_spec
+argument_list|)
+block|;
+name|virtual
+name|uint64_t
+name|ConvertMmapFlagsToPlatform
+argument_list|(
+argument|const ArchSpec&arch
+argument_list|,
+argument|unsigned flags
 argument_list|)
 block|;
 name|virtual
@@ -1590,9 +1759,9 @@ argument_list|(
 argument|const char *command
 argument_list|,
 comment|// Shouldn't be NULL
-argument|const char *working_dir
+argument|const FileSpec&working_dir
 argument_list|,
-comment|// Pass NULL to use the current working directory
+comment|// Pass empty FileSpec to use the current working directory
 argument|int *status_ptr
 argument_list|,
 comment|// Pass NULL if you don't want the process exit status
@@ -1663,6 +1832,23 @@ return|return
 literal|1
 return|;
 block|}
+name|virtual
+specifier|const
+name|lldb
+operator|::
+name|UnixSignalsSP
+operator|&
+name|GetRemoteUnixSignals
+argument_list|()
+block|;
+specifier|const
+name|lldb
+operator|::
+name|UnixSignalsSP
+operator|&
+name|GetUnixSignals
+argument_list|()
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Locate a queue name given a thread's qaddr
 comment|///
@@ -1766,86 +1952,6 @@ operator|&
 name|GetTrapHandlerSymbolNames
 argument_list|()
 block|;
-comment|//------------------------------------------------------------------
-comment|/// Launch a process for debugging.
-comment|///
-comment|/// This differs from Launch in that it returns a NativeProcessProtocol.
-comment|/// Currently used by lldb-gdbserver.
-comment|///
-comment|/// @param[in] launch_info
-comment|///     Information required to launch the process.
-comment|///
-comment|/// @param[in] native_delegate
-comment|///     The delegate that will receive messages regarding the
-comment|///     inferior.  Must outlive the NativeProcessProtocol
-comment|///     instance.
-comment|///
-comment|/// @param[out] process_sp
-comment|///     On successful return from the method, this parameter
-comment|///     contains the shared pointer to the
-comment|///     NativeProcessProtocol that can be used to manipulate
-comment|///     the native process.
-comment|///
-comment|/// @return
-comment|///     An error object indicating if the operation succeeded,
-comment|///     and if not, what error occurred.
-comment|//------------------------------------------------------------------
-name|virtual
-name|Error
-name|LaunchNativeProcess
-argument_list|(
-name|ProcessLaunchInfo
-operator|&
-name|launch_info
-argument_list|,
-name|lldb_private
-operator|::
-name|NativeProcessProtocol
-operator|::
-name|NativeDelegate
-operator|&
-name|native_delegate
-argument_list|,
-name|NativeProcessProtocolSP
-operator|&
-name|process_sp
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|/// Attach to an existing process on the given platform.
-comment|///
-comment|/// This method differs from Attach() in that it returns a
-comment|/// NativeProcessProtocol.  Currently this is used by lldb-gdbserver.
-comment|///
-comment|/// @param[in] pid
-comment|///     pid of the process locatable by the platform.
-comment|///
-comment|/// @param[in] native_delegate
-comment|///     The delegate that will receive messages regarding the
-comment|///     inferior.  Must outlive the NativeProcessProtocol
-comment|///     instance.
-comment|///
-comment|/// @param[out] process_sp
-comment|///     On successful return from the method, this parameter
-comment|///     contains the shared pointer to the
-comment|///     NativeProcessProtocol that can be used to manipulate
-comment|///     the native process.
-comment|///
-comment|/// @return
-comment|///     An error object indicating if the operation succeeded,
-comment|///     and if not, what error occurred.
-comment|//------------------------------------------------------------------
-name|virtual
-name|Error
-name|AttachNativeProcess
-argument_list|(
-argument|lldb::pid_t pid
-argument_list|,
-argument|lldb_private::NativeProcessProtocol::NativeDelegate&native_delegate
-argument_list|,
-argument|NativeProcessProtocolSP&process_sp
-argument_list|)
-block|;
 name|protected
 operator|:
 name|bool
@@ -1869,7 +1975,7 @@ comment|// the root location of where the SDK files are all located
 name|ConstString
 name|m_sdk_build
 block|;
-name|ConstString
+name|FileSpec
 name|m_working_dir
 block|;
 comment|// The working directory which is used when installing modules that have no install path set
@@ -1908,11 +2014,9 @@ operator|>
 name|IDToNameMap
 expr_stmt|;
 name|Mutex
-name|m_uid_map_mutex
+name|m_mutex
 decl_stmt|;
-name|Mutex
-name|m_gid_map_mutex
-decl_stmt|;
+comment|// Mutex for modifying Platform data structures that should only be used for non-reentrant code
 name|IDToNameMap
 name|m_uid_map
 decl_stmt|;
@@ -1965,9 +2069,15 @@ expr_stmt|;
 name|bool
 name|m_calculated_trap_handlers
 decl_stmt|;
-name|Mutex
-name|m_trap_handler_mutex
-decl_stmt|;
+specifier|const
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ModuleCache
+operator|>
+name|m_module_cache
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Ask the Platform subclass to fill in the list of trap handler names
 comment|///
@@ -2002,7 +2112,7 @@ operator|::
 name|Locker
 name|locker
 argument_list|(
-name|m_uid_map_mutex
+name|m_mutex
 argument_list|)
 expr_stmt|;
 name|IDToNameMap
@@ -2068,7 +2178,7 @@ operator|::
 name|Locker
 name|locker
 argument_list|(
-name|m_uid_map_mutex
+name|m_mutex
 argument_list|)
 expr_stmt|;
 name|ConstString
@@ -2114,7 +2224,7 @@ operator|::
 name|Locker
 name|locker
 argument_list|(
-name|m_uid_map_mutex
+name|m_mutex
 argument_list|)
 expr_stmt|;
 name|m_uid_map
@@ -2135,7 +2245,7 @@ operator|::
 name|Locker
 name|locker
 argument_list|(
-name|m_uid_map_mutex
+name|m_mutex
 argument_list|)
 expr_stmt|;
 name|m_uid_map
@@ -2158,7 +2268,7 @@ operator|::
 name|Locker
 name|locker
 argument_list|(
-name|m_gid_map_mutex
+name|m_mutex
 argument_list|)
 expr_stmt|;
 name|IDToNameMap
@@ -2224,7 +2334,7 @@ operator|::
 name|Locker
 name|locker
 argument_list|(
-name|m_gid_map_mutex
+name|m_mutex
 argument_list|)
 expr_stmt|;
 name|ConstString
@@ -2270,7 +2380,7 @@ operator|::
 name|Locker
 name|locker
 argument_list|(
-name|m_gid_map_mutex
+name|m_mutex
 argument_list|)
 expr_stmt|;
 name|m_gid_map
@@ -2291,7 +2401,7 @@ operator|::
 name|Locker
 name|locker
 argument_list|(
-name|m_gid_map_mutex
+name|m_mutex
 argument_list|)
 expr_stmt|;
 name|m_gid_map
@@ -2300,8 +2410,150 @@ name|clear
 argument_list|()
 expr_stmt|;
 block|}
+name|Error
+name|GetCachedExecutable
+argument_list|(
+name|ModuleSpec
+operator|&
+name|module_spec
+argument_list|,
+name|lldb
+operator|::
+name|ModuleSP
+operator|&
+name|module_sp
+argument_list|,
+specifier|const
+name|FileSpecList
+operator|*
+name|module_search_paths_ptr
+argument_list|,
+name|Platform
+operator|&
+name|remote_platform
+argument_list|)
+decl_stmt|;
+name|virtual
+name|Error
+name|DownloadModuleSlice
+parameter_list|(
+specifier|const
+name|FileSpec
+modifier|&
+name|src_file_spec
+parameter_list|,
+specifier|const
+name|uint64_t
+name|src_offset
+parameter_list|,
+specifier|const
+name|uint64_t
+name|src_size
+parameter_list|,
+specifier|const
+name|FileSpec
+modifier|&
+name|dst_file_spec
+parameter_list|)
+function_decl|;
+name|virtual
+specifier|const
+name|char
+modifier|*
+name|GetCacheHostname
+parameter_list|()
+function_decl|;
 name|private
 label|:
+typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
+name|Error
+argument_list|(
+specifier|const
+name|ModuleSpec
+operator|&
+argument_list|)
+operator|>
+name|ModuleResolver
+expr_stmt|;
+name|Error
+name|GetRemoteSharedModule
+argument_list|(
+specifier|const
+name|ModuleSpec
+operator|&
+name|module_spec
+argument_list|,
+name|Process
+operator|*
+name|process
+argument_list|,
+name|lldb
+operator|::
+name|ModuleSP
+operator|&
+name|module_sp
+argument_list|,
+specifier|const
+name|ModuleResolver
+operator|&
+name|module_resolver
+argument_list|,
+name|bool
+operator|*
+name|did_create_ptr
+argument_list|)
+decl_stmt|;
+name|bool
+name|GetCachedSharedModule
+argument_list|(
+specifier|const
+name|ModuleSpec
+operator|&
+name|module_spec
+argument_list|,
+name|lldb
+operator|::
+name|ModuleSP
+operator|&
+name|module_sp
+argument_list|,
+name|bool
+operator|*
+name|did_create_ptr
+argument_list|)
+decl_stmt|;
+name|Error
+name|LoadCachedExecutable
+argument_list|(
+specifier|const
+name|ModuleSpec
+operator|&
+name|module_spec
+argument_list|,
+name|lldb
+operator|::
+name|ModuleSP
+operator|&
+name|module_sp
+argument_list|,
+specifier|const
+name|FileSpecList
+operator|*
+name|module_search_paths_ptr
+argument_list|,
+name|Platform
+operator|&
+name|remote_platform
+argument_list|)
+decl_stmt|;
+name|FileSpec
+name|GetModuleCacheRoot
+parameter_list|()
+function_decl|;
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|Platform

@@ -91,53 +91,50 @@ parameter_list|)
 value|(((x)>> 24)& 0xFF)
 end_define
 
-begin_decl_stmt
+begin_comment
+comment|/* Define the default attributes for the functions in this file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__DEFAULT_FN_ATTRS
+value|__attribute__((__always_inline__, __nodebug__))
+end_define
+
+begin_function
 specifier|static
 name|__inline__
 name|unsigned
 name|int
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
+name|__DEFAULT_FN_ATTRS
 name|_xbegin
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|__builtin_ia32_xbegin
 argument_list|()
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|__inline__
 name|void
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
+name|__DEFAULT_FN_ATTRS
 name|_xend
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
+parameter_list|)
 block|{
 name|__builtin_ia32_xend
 argument_list|()
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_define
 define|#
@@ -148,6 +145,12 @@ name|imm
 parameter_list|)
 value|__builtin_ia32_xabort((imm))
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|__DEFAULT_FN_ATTRS
+end_undef
 
 begin_endif
 endif|#

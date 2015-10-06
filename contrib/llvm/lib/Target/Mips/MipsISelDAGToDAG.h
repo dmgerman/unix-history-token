@@ -247,6 +247,18 @@ argument|SDValue&Offset
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|bool
+name|selectIntAddrLSL2MM
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+block|;
 comment|/// Match addr+simm10 and addr
 name|virtual
 name|bool
@@ -283,6 +295,8 @@ argument_list|(
 argument|SDNode *N
 argument_list|,
 argument|APInt&Imm
+argument_list|,
+argument|unsigned MinSizeInBits
 argument_list|)
 specifier|const
 block|;
@@ -465,6 +479,11 @@ name|getTargetConstant
 argument_list|(
 name|Imm
 argument_list|,
+name|SDLoc
+argument_list|(
+name|Node
+argument_list|)
+argument_list|,
 name|Node
 operator|->
 name|getValueType
@@ -490,24 +509,13 @@ name|SelectInlineAsmMemoryOperand
 argument_list|(
 argument|const SDValue&Op
 argument_list|,
-argument|char ConstraintCode
+argument|unsigned ConstraintID
 argument_list|,
 argument|std::vector<SDValue>&OutOps
 argument_list|)
 name|override
 block|; }
 decl_stmt|;
-comment|/// createMipsISelDag - This pass converts a legalized DAG into a
-comment|/// MIPS-specific DAG, ready for instruction scheduling.
-name|FunctionPass
-modifier|*
-name|createMipsISelDag
-parameter_list|(
-name|MipsTargetMachine
-modifier|&
-name|TM
-parameter_list|)
-function_decl|;
 block|}
 end_decl_stmt
 

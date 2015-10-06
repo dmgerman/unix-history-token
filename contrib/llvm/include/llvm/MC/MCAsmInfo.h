@@ -82,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MachineLocation.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cassert>
 end_include
 
@@ -141,6 +135,9 @@ comment|/// Windows CE ARM, PowerPC, SH3, SH4
 name|Itanium
 operator|,
 comment|/// Windows x64, Windows Itanium (IA-64)
+name|X86
+operator|,
+comment|/// Windows x86, uses no CFI, just EH tables
 name|MIPS
 operator|=
 name|Alpha
@@ -164,12 +161,9 @@ comment|/// setjmp/longjmp based exceptions
 name|ARM
 operator|,
 comment|/// ARM EHABI
-name|ItaniumWinEH
+name|WinEH
 operator|,
-comment|/// Itanium EH built on Windows unwind info (.pdata and .xdata)
-name|MSVC
-operator|,
-comment|/// MSVC compatible exception handling
+comment|/// Windows Exception Handling
 block|}
 empty_stmt|;
 name|namespace
@@ -274,6 +268,10 @@ comment|// Print the EH begin symbol with an assignment. Defaults to false.
 name|bool
 name|UseAssignmentForEHBegin
 decl_stmt|;
+comment|// Do we need to create a local symbol for .size?
+name|bool
+name|NeedsLocalForSize
+decl_stmt|;
 comment|/// This prefix is used for globals like constant pool entries that are
 comment|/// completely private to the .s file and should not have names in the .o
 comment|/// file.  Defaults to "L"
@@ -336,6 +334,11 @@ comment|/// This is true if the assembler allows @ characters in symbol names.
 comment|/// Defaults to false.
 name|bool
 name|AllowAtInName
+decl_stmt|;
+comment|/// If this is true, symbol names with invalid characters will be printed in
+comment|/// quotes.
+name|bool
+name|SupportsQuotedNames
 decl_stmt|;
 comment|/// This is true if data region markers should be printed as
 comment|/// ".data_region/.end_data_region" directives. If false, use "$d/$a" labels
@@ -446,7 +449,7 @@ name|GlobalDirective
 decl_stmt|;
 comment|/// True if the expression
 comment|///   .long f - g
-comment|/// uses an relocation but it can be supressed by writting
+comment|/// uses a relocation but it can be suppressed by writing
 comment|///   a = f - g
 comment|///   .long a
 name|bool
@@ -480,6 +483,11 @@ operator|::
 name|LCOMMType
 name|LCOMMDirectiveAlignmentType
 expr_stmt|;
+comment|// True if the target allows .align directives on functions. This is true for
+comment|// most targets, so defaults to true.
+name|bool
+name|HasFunctionAlignment
+decl_stmt|;
 comment|/// True if the target has .type and .size directives, this is true for most
 comment|/// ELF targets.  Defaults to true.
 name|bool
@@ -588,7 +596,7 @@ name|MCCFIInstruction
 operator|>
 name|InitialFrameState
 expr_stmt|;
-comment|//===--- Integrated Assembler State ----------------------------------===//
+comment|//===--- Integrated Assembler Information ----------------------------===//
 comment|/// Should we use the integrated assembler?
 comment|/// The integrated assembler should be enabled by default (by the
 comment|/// constructors) when failing to parse a valid piece of assembly (inline
@@ -600,6 +608,11 @@ decl_stmt|;
 comment|/// Compress DWARF debug sections. Defaults to false.
 name|bool
 name|CompressDebugSections
+decl_stmt|;
+comment|/// True if the integrated assembler should interpret 'a>> b' constant
+comment|/// expressions as logical rather than arithmetic.
+name|bool
+name|UseLogicalShr
 decl_stmt|;
 name|public
 label|:
@@ -733,7 +746,6 @@ comment|/// Targets can implement this method to specify a section to switch to 
 comment|/// translation unit doesn't have any trampolines that require an executable
 comment|/// stack.
 name|virtual
-specifier|const
 name|MCSection
 modifier|*
 name|getNonexecutableStackSection
@@ -800,6 +812,17 @@ argument_list|,
 name|MCStreamer
 operator|&
 name|Streamer
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Return true if the identifier \p Name does not need quotes to be
+comment|/// syntactically correct.
+name|virtual
+name|bool
+name|isValidUnquotedName
+argument_list|(
+name|StringRef
+name|Name
 argument_list|)
 decl|const
 decl_stmt|;
@@ -938,6 +961,15 @@ return|return
 name|UseAssignmentForEHBegin
 return|;
 block|}
+name|bool
+name|needsLocalForSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NeedsLocalForSize
+return|;
+block|}
 specifier|const
 name|char
 operator|*
@@ -1068,6 +1100,15 @@ name|AllowAtInName
 return|;
 block|}
 name|bool
+name|supportsNameQuoting
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SupportsQuotedNames
+return|;
+block|}
+name|bool
 name|doesSupportDataRegionDirectives
 argument_list|()
 specifier|const
@@ -1174,6 +1215,15 @@ specifier|const
 block|{
 return|return
 name|LCOMMDirectiveAlignmentType
+return|;
+block|}
+name|bool
+name|hasFunctionAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFunctionAlignment
 return|;
 block|}
 name|bool
@@ -1330,10 +1380,10 @@ return|return
 name|WinEHEncodingType
 return|;
 block|}
-comment|/// Return true if the exception handling type uses the language-specific data
-comment|/// area (LSDA) format specified by the Itanium C++ ABI.
+comment|/// Returns true if the exception handling method for the platform uses call
+comment|/// frame information to unwind.
 name|bool
-name|usesItaniumLSDAForExceptions
+name|usesCFIForEH
 argument_list|()
 specifier|const
 block|{
@@ -1351,12 +1401,8 @@ name|ExceptionHandling
 operator|::
 name|ARM
 operator|||
-comment|// This Windows EH type uses the Itanium LSDA encoding.
-name|ExceptionsType
-operator|==
-name|ExceptionHandling
-operator|::
-name|ItaniumWinEH
+name|usesWindowsCFI
+argument_list|()
 operator|)
 return|;
 block|}
@@ -1370,13 +1416,25 @@ name|ExceptionsType
 operator|==
 name|ExceptionHandling
 operator|::
-name|ItaniumWinEH
-operator|||
-name|ExceptionsType
-operator|==
-name|ExceptionHandling
+name|WinEH
+operator|&&
+operator|(
+name|WinEHEncodingType
+operator|!=
+name|WinEH
 operator|::
-name|MSVC
+name|EncodingType
+operator|::
+name|Invalid
+operator|&&
+name|WinEHEncodingType
+operator|!=
+name|WinEH
+operator|::
+name|EncodingType
+operator|::
+name|X86
+operator|)
 return|;
 block|}
 name|bool
@@ -1494,6 +1552,15 @@ name|CompressDebugSections
 operator|=
 name|CompressDebugSections
 expr_stmt|;
+block|}
+name|bool
+name|shouldUseLogicalShr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseLogicalShr
+return|;
 block|}
 block|}
 end_decl_stmt

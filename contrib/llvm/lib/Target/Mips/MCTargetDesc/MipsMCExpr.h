@@ -131,7 +131,7 @@ specifier|static
 specifier|const
 name|MipsMCExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 argument|MCSymbolRefExpr::VariantKind VK
 argument_list|,
@@ -163,15 +163,17 @@ name|Expr
 return|;
 block|}
 name|void
-name|PrintImpl
+name|printImpl
 argument_list|(
 argument|raw_ostream&OS
+argument_list|,
+argument|const MCAsmInfo *MAI
 argument_list|)
 specifier|const
 name|override
 block|;
 name|bool
-name|EvaluateAsRelocatableImpl
+name|evaluateAsRelocatableImpl
 argument_list|(
 argument|MCValue&Res
 argument_list|,
@@ -190,10 +192,9 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|const
 name|MCSection
 operator|*
-name|FindAssociatedSection
+name|findAssociatedSection
 argument_list|()
 specifier|const
 name|override
@@ -202,7 +203,7 @@ return|return
 name|getSubExpr
 argument_list|()
 operator|->
-name|FindAssociatedSection
+name|findAssociatedSection
 argument_list|()
 return|;
 block|}

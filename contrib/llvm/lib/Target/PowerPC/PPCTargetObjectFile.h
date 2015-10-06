@@ -82,7 +82,6 @@ argument|const TargetMachine&TM
 argument_list|)
 name|override
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|SelectSectionForGlobal

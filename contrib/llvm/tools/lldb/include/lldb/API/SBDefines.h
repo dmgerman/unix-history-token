@@ -224,6 +224,14 @@ name|SBInstructionList
 decl_stmt|;
 name|class
 name|LLDB_API
+name|SBLanguageRuntime
+decl_stmt|;
+name|class
+name|LLDB_API
+name|SBLaunchInfo
+decl_stmt|;
+name|class
+name|LLDB_API
 name|SBLineEntry
 decl_stmt|;
 name|class
@@ -358,6 +366,10 @@ decl_stmt|;
 name|class
 name|LLDB_API
 name|SBValueList
+decl_stmt|;
+name|class
+name|LLDB_API
+name|SBVariablesOptions
 decl_stmt|;
 name|class
 name|LLDB_API

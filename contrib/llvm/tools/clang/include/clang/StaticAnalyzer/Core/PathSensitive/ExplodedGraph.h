@@ -392,10 +392,6 @@ operator|==
 name|IsSink
 argument_list|)
 block|;   }
-operator|~
-name|ExplodedNode
-argument_list|()
-block|{}
 comment|/// getLocation - Returns the edge associated with the given node.
 name|ProgramPoint
 name|getLocation

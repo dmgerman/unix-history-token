@@ -81,7 +81,7 @@ name|MCAsmBackend
 modifier|&
 name|TAB
 parameter_list|,
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
 parameter_list|,

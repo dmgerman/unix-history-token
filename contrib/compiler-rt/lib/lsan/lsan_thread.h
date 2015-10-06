@@ -90,14 +90,14 @@ block|;
 name|void
 name|OnStarted
 argument_list|(
-name|void
-operator|*
-name|arg
+argument|void *arg
 argument_list|)
+name|override
 block|;
 name|void
 name|OnFinished
 argument_list|()
+name|override
 block|;
 name|uptr
 name|stack_begin

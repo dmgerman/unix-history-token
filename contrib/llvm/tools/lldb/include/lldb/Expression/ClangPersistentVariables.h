@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Expression/ClangModulesDeclVendor.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -154,6 +160,31 @@ operator|&
 name|name
 argument_list|)
 block|;
+name|void
+name|AddHandLoadedClangModule
+argument_list|(
+argument|ClangModulesDeclVendor::ModuleID module
+argument_list|)
+block|{
+name|m_hand_loaded_clang_modules
+operator|.
+name|push_back
+argument_list|(
+name|module
+argument_list|)
+block|;     }
+specifier|const
+name|ClangModulesDeclVendor
+operator|::
+name|ModuleVector
+operator|&
+name|GetHandLoadedClangModules
+argument_list|()
+block|{
+return|return
+name|m_hand_loaded_clang_modules
+return|;
+block|}
 name|private
 operator|:
 name|uint32_t
@@ -180,6 +211,13 @@ name|PersistentTypeMap
 name|m_persistent_types
 decl_stmt|;
 comment|///< The persistent types declared by the user.
+name|ClangModulesDeclVendor
+operator|::
+name|ModuleVector
+name|m_hand_loaded_clang_modules
+expr_stmt|;
+comment|///< These are Clang modules we hand-loaded; these are the highest-
+comment|///< priority source for macros.
 block|}
 end_decl_stmt
 

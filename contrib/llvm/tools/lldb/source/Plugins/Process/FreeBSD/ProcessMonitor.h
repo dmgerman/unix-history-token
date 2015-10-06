@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Host/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/HostThread.h"
 end_include
 
@@ -198,23 +204,31 @@ name|envp
 index|[]
 argument_list|,
 specifier|const
-name|char
-operator|*
-name|stdin_path
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|stdin_file_spec
 argument_list|,
 specifier|const
-name|char
-operator|*
-name|stdout_path
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|stdout_file_spec
 argument_list|,
 specifier|const
-name|char
-operator|*
-name|stderr_path
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|stderr_file_spec
 argument_list|,
 specifier|const
-name|char
-operator|*
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
 name|working_dir
 argument_list|,
 specifier|const
@@ -273,7 +287,8 @@ comment|///
 comment|/// Reads from this file descriptor yield both the standard output and
 comment|/// standard error of this debugee.  Even if stderr and stdout were
 comment|/// redirected on launch it may still happen that data is available on this
-comment|/// descriptor (if the inferior process opens /dev/tty, for example).
+comment|/// descriptor (if the inferior process opens /dev/tty, for example). This descriptor is
+comment|/// closed after a call to StopMonitor().
 comment|///
 comment|/// If this monitor was attached to an existing process this method returns
 comment|/// -1.
@@ -812,23 +827,31 @@ operator|*
 name|envp
 argument_list|,
 specifier|const
-name|char
-operator|*
-name|stdin_path
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|stdin_file_spec
 argument_list|,
 specifier|const
-name|char
-operator|*
-name|stdout_path
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|stdout_file_spec
 argument_list|,
 specifier|const
-name|char
-operator|*
-name|stderr_path
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|stderr_file_spec
 argument_list|,
 specifier|const
-name|char
-operator|*
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
 name|working_dir
 argument_list|)
 block|;
@@ -858,29 +881,33 @@ name|m_envp
 block|;
 comment|// Process environment.
 specifier|const
-name|char
-operator|*
-name|m_stdin_path
+name|lldb_private
+operator|::
+name|FileSpec
+name|m_stdin_file_spec
 block|;
-comment|// Redirect stdin or NULL.
+comment|// Redirect stdin or empty.
 specifier|const
-name|char
-operator|*
-name|m_stdout_path
+name|lldb_private
+operator|::
+name|FileSpec
+name|m_stdout_file_spec
 block|;
-comment|// Redirect stdout or NULL.
+comment|// Redirect stdout or empty.
 specifier|const
-name|char
-operator|*
-name|m_stderr_path
+name|lldb_private
+operator|::
+name|FileSpec
+name|m_stderr_file_spec
 block|;
-comment|// Redirect stderr or NULL.
+comment|// Redirect stderr or empty.
 specifier|const
-name|char
-operator|*
+name|lldb_private
+operator|::
+name|FileSpec
 name|m_working_dir
 block|;
-comment|// Working directory or NULL.
+comment|// Working directory or empty.
 block|}
 decl_stmt|;
 name|void
@@ -985,19 +1012,21 @@ function_decl|;
 specifier|static
 name|bool
 name|DupDescriptor
-parameter_list|(
+argument_list|(
 specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|file_spec
+argument_list|,
 name|int
 name|fd
-parameter_list|,
+argument_list|,
 name|int
 name|flags
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|static
 name|bool
 name|MonitorCallback
@@ -1059,54 +1088,6 @@ name|pid_t
 name|pid
 argument_list|)
 decl_stmt|;
-specifier|static
-name|ProcessMessage
-operator|::
-name|CrashReason
-name|GetCrashReasonForSIGSEGV
-argument_list|(
-specifier|const
-name|siginfo_t
-operator|*
-name|info
-argument_list|)
-expr_stmt|;
-specifier|static
-name|ProcessMessage
-operator|::
-name|CrashReason
-name|GetCrashReasonForSIGILL
-argument_list|(
-specifier|const
-name|siginfo_t
-operator|*
-name|info
-argument_list|)
-expr_stmt|;
-specifier|static
-name|ProcessMessage
-operator|::
-name|CrashReason
-name|GetCrashReasonForSIGFPE
-argument_list|(
-specifier|const
-name|siginfo_t
-operator|*
-name|info
-argument_list|)
-expr_stmt|;
-specifier|static
-name|ProcessMessage
-operator|::
-name|CrashReason
-name|GetCrashReasonForSIGBUS
-argument_list|(
-specifier|const
-name|siginfo_t
-operator|*
-name|info
-argument_list|)
-expr_stmt|;
 name|void
 name|DoOperation
 parameter_list|(

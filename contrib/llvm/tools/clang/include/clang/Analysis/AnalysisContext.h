@@ -547,12 +547,10 @@ specifier|const
 modifier|*
 name|referenced_decls_iterator
 typedef|;
-name|std
+name|llvm
 operator|::
-name|pair
+name|iterator_range
 operator|<
-name|referenced_decls_iterator
-operator|,
 name|referenced_decls_iterator
 operator|>
 name|getReferencedBlockVars
@@ -1011,6 +1009,7 @@ operator|:
 operator|~
 name|StackFrameContext
 argument_list|()
+name|override
 block|{}
 specifier|const
 name|Stmt
@@ -1177,6 +1176,7 @@ operator|:
 operator|~
 name|ScopeContext
 argument_list|()
+name|override
 block|{}
 name|void
 name|Profile
@@ -1296,6 +1296,7 @@ operator|:
 operator|~
 name|BlockInvocationContext
 argument_list|()
+name|override
 block|{}
 specifier|const
 name|BlockDecl

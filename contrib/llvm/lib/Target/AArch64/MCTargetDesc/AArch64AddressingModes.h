@@ -1053,7 +1053,7 @@ argument_list|)
 expr_stmt|;
 name|CTO
 operator|=
-name|CountTrailingOnes_64
+name|countTrailingOnes
 argument_list|(
 name|Imm
 operator|>>
@@ -1083,7 +1083,7 @@ return|;
 name|unsigned
 name|CLO
 init|=
-name|CountLeadingOnes_64
+name|countLeadingOnes
 argument_list|(
 name|Imm
 argument_list|)
@@ -1098,7 +1098,7 @@ name|CTO
 operator|=
 name|CLO
 operator|+
-name|CountTrailingOnes_64
+name|countTrailingOnes
 argument_list|(
 name|Imm
 argument_list|)

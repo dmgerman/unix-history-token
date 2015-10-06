@@ -213,10 +213,10 @@ argument_list|,
 argument|CodeGenOpt::Level OL = CodeGenOpt::Default
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|SelectionDAGISel
 argument_list|()
+name|override
 block|;
 specifier|const
 name|TargetLowering
@@ -277,7 +277,7 @@ operator|=
 literal|0
 block|;
 comment|/// SelectInlineAsmMemoryOperand - Select the specified address as a target
-comment|/// addressing mode, according to the specified constraint code.  If this does
+comment|/// addressing mode, according to the specified constraint.  If this does
 comment|/// not match or is not implemented, return true.  The resultant operands
 comment|/// (which will appear in the machine instruction) should be added to the
 comment|/// OutOps vector.
@@ -287,7 +287,7 @@ name|SelectInlineAsmMemoryOperand
 argument_list|(
 argument|const SDValue&Op
 argument_list|,
-argument|char ConstraintCode
+argument|unsigned ConstraintID
 argument_list|,
 argument|std::vector<SDValue>&OutOps
 argument_list|)
@@ -628,14 +628,9 @@ comment|/// by tblgen.  Others should not call it.
 name|void
 name|SelectInlineAsmMemoryOperands
 argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|SDValue
-operator|>
-operator|&
-name|Ops
+argument|std::vector<SDValue>&Ops
+argument_list|,
+argument|SDLoc DL
 argument_list|)
 block|;
 name|public
@@ -826,7 +821,10 @@ argument_list|,
 argument|unsigned EmitNodeInfo
 argument_list|)
 block|;
-name|void
+comment|/// Prepares the landing pad to take incoming values or do other EH
+comment|/// personality specific tasks. Returns true if the block should be
+comment|/// instruction selected, false if no code should be emitted for it.
+name|bool
 name|PrepareEHLandingPad
 argument_list|()
 block|;

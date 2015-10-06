@@ -206,6 +206,25 @@ name|support_files
 parameter_list|)
 function_decl|;
 name|virtual
+name|bool
+name|ParseImportedModules
+argument_list|(
+specifier|const
+name|SymbolContext
+operator|&
+name|sc
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|ConstString
+operator|>
+operator|&
+name|imported_modules
+argument_list|)
+decl_stmt|;
+name|virtual
 name|size_t
 name|ParseFunctionBlocks
 parameter_list|(
@@ -506,6 +525,11 @@ name|get
 argument_list|()
 return|;
 block|}
+name|FileSpec
+name|GetMainFileSpec
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// Get module unified section list symbol table.
 name|virtual
 name|Symtab

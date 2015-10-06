@@ -132,7 +132,7 @@ decl_stmt|;
 name|class
 name|TargetMachine
 decl_stmt|;
-comment|/// PICStyles - The X86 backend supports a number of different styles of PIC.
+comment|/// The X86 backend supports a number of different styles of PIC.
 comment|///
 name|namespace
 name|PICStyles
@@ -210,138 +210,126 @@ block|,
 name|IntelSLM
 block|}
 block|;
-comment|/// X86ProcFamily - X86 processor family: Intel Atom, and others
+comment|/// X86 processor family: Intel Atom, and others
 name|X86ProcFamilyEnum
 name|X86ProcFamily
 block|;
-comment|/// PICStyle - Which PIC style to use
-comment|///
+comment|/// Which PIC style to use
 name|PICStyles
 operator|::
 name|Style
 name|PICStyle
 block|;
-comment|/// X86SSELevel - MMX, SSE1, SSE2, SSE3, SSSE3, SSE41, SSE42, or
-comment|/// none supported.
+comment|/// MMX, SSE1, SSE2, SSE3, SSSE3, SSE41, SSE42, or none supported.
 name|X86SSEEnum
 name|X86SSELevel
 block|;
-comment|/// X863DNowLevel - 3DNow or 3DNow Athlon, or none supported.
-comment|///
+comment|/// 3DNow, 3DNow Athlon, or none supported.
 name|X863DNowEnum
 name|X863DNowLevel
 block|;
-comment|/// HasCMov - True if this processor has conditional move instructions
+comment|/// True if this processor has conditional move instructions
 comment|/// (generally pentium pro+).
 name|bool
 name|HasCMov
 block|;
-comment|/// HasX86_64 - True if the processor supports X86-64 instructions.
-comment|///
+comment|/// True if the processor supports X86-64 instructions.
 name|bool
 name|HasX86_64
 block|;
-comment|/// HasPOPCNT - True if the processor supports POPCNT.
+comment|/// True if the processor supports POPCNT.
 name|bool
 name|HasPOPCNT
 block|;
-comment|/// HasSSE4A - True if the processor supports SSE4A instructions.
+comment|/// True if the processor supports SSE4A instructions.
 name|bool
 name|HasSSE4A
 block|;
-comment|/// HasAES - Target has AES instructions
+comment|/// Target has AES instructions
 name|bool
 name|HasAES
 block|;
-comment|/// HasPCLMUL - Target has carry-less multiplication
+comment|/// Target has carry-less multiplication
 name|bool
 name|HasPCLMUL
 block|;
-comment|/// HasFMA - Target has 3-operand fused multiply-add
+comment|/// Target has 3-operand fused multiply-add
 name|bool
 name|HasFMA
 block|;
-comment|/// HasFMA4 - Target has 4-operand fused multiply-add
+comment|/// Target has 4-operand fused multiply-add
 name|bool
 name|HasFMA4
 block|;
-comment|/// HasXOP - Target has XOP instructions
+comment|/// Target has XOP instructions
 name|bool
 name|HasXOP
 block|;
-comment|/// HasTBM - Target has TBM instructions.
+comment|/// Target has TBM instructions.
 name|bool
 name|HasTBM
 block|;
-comment|/// HasMOVBE - True if the processor has the MOVBE instruction.
+comment|/// True if the processor has the MOVBE instruction.
 name|bool
 name|HasMOVBE
 block|;
-comment|/// HasRDRAND - True if the processor has the RDRAND instruction.
+comment|/// True if the processor has the RDRAND instruction.
 name|bool
 name|HasRDRAND
 block|;
-comment|/// HasF16C - Processor has 16-bit floating point conversion instructions.
+comment|/// Processor has 16-bit floating point conversion instructions.
 name|bool
 name|HasF16C
 block|;
-comment|/// HasFSGSBase - Processor has FS/GS base insturctions.
+comment|/// Processor has FS/GS base insturctions.
 name|bool
 name|HasFSGSBase
 block|;
-comment|/// HasLZCNT - Processor has LZCNT instruction.
+comment|/// Processor has LZCNT instruction.
 name|bool
 name|HasLZCNT
 block|;
-comment|/// HasBMI - Processor has BMI1 instructions.
+comment|/// Processor has BMI1 instructions.
 name|bool
 name|HasBMI
 block|;
-comment|/// HasBMI2 - Processor has BMI2 instructions.
+comment|/// Processor has BMI2 instructions.
 name|bool
 name|HasBMI2
 block|;
-comment|/// HasRTM - Processor has RTM instructions.
+comment|/// Processor has RTM instructions.
 name|bool
 name|HasRTM
 block|;
-comment|/// HasHLE - Processor has HLE.
+comment|/// Processor has HLE.
 name|bool
 name|HasHLE
 block|;
-comment|/// HasADX - Processor has ADX instructions.
+comment|/// Processor has ADX instructions.
 name|bool
 name|HasADX
 block|;
-comment|/// HasSHA - Processor has SHA instructions.
+comment|/// Processor has SHA instructions.
 name|bool
 name|HasSHA
 block|;
-comment|/// HasSGX - Processor has SGX instructions.
-name|bool
-name|HasSGX
-block|;
-comment|/// HasPRFCHW - Processor has PRFCHW instructions.
+comment|/// Processor has PRFCHW instructions.
 name|bool
 name|HasPRFCHW
 block|;
-comment|/// HasRDSEED - Processor has RDSEED instructions.
+comment|/// Processor has RDSEED instructions.
 name|bool
 name|HasRDSEED
 block|;
-comment|/// HasSMAP - Processor has SMAP instructions.
-name|bool
-name|HasSMAP
-block|;
-comment|/// IsBTMemSlow - True if BT (bit test) of memory instructions are slow.
+comment|/// True if BT (bit test) of memory instructions are slow.
 name|bool
 name|IsBTMemSlow
 block|;
-comment|/// IsSHLDSlow - True if SHLD instructions are slow.
+comment|/// True if SHLD instructions are slow.
 name|bool
 name|IsSHLDSlow
 block|;
-comment|/// IsUAMemFast - True if unaligned memory access is fast.
+comment|/// True if unaligned memory access is fast.
 name|bool
 name|IsUAMemFast
 block|;
@@ -354,60 +342,48 @@ comment|/// This may require setting a configuration bit in the processor.
 name|bool
 name|HasSSEUnalignedMem
 block|;
-comment|/// HasCmpxchg16b - True if this processor has the CMPXCHG16B instruction;
+comment|/// True if this processor has the CMPXCHG16B instruction;
 comment|/// this is true for most x86-64 chips, but not the first AMD chips.
 name|bool
 name|HasCmpxchg16b
 block|;
-comment|/// UseLeaForSP - True if the LEA instruction should be used for adjusting
+comment|/// True if the LEA instruction should be used for adjusting
 comment|/// the stack pointer. This is an optimization for Intel Atom processors.
 name|bool
 name|UseLeaForSP
 block|;
-comment|/// HasSlowDivide32 - True if 8-bit divisions are significantly faster than
+comment|/// True if 8-bit divisions are significantly faster than
 comment|/// 32-bit divisions and should be used when possible.
 name|bool
 name|HasSlowDivide32
 block|;
-comment|/// HasSlowDivide64 - True if 16-bit divides are significantly faster than
+comment|/// True if 16-bit divides are significantly faster than
 comment|/// 64-bit divisions and should be used when possible.
 name|bool
 name|HasSlowDivide64
 block|;
-comment|/// PadShortFunctions - True if the short functions should be padded to prevent
+comment|/// True if the short functions should be padded to prevent
 comment|/// a stall when returning too early.
 name|bool
 name|PadShortFunctions
 block|;
-comment|/// CallRegIndirect - True if the Calls with memory reference should be converted
+comment|/// True if the Calls with memory reference should be converted
 comment|/// to a register-based indirect call.
 name|bool
 name|CallRegIndirect
 block|;
-comment|/// LEAUsesAG - True if the LEA instruction inputs have to be ready at
-comment|///             address generation (AG) time.
+comment|/// True if the LEA instruction inputs have to be ready at address generation
+comment|/// (AG) time.
 name|bool
 name|LEAUsesAG
 block|;
-comment|/// SlowLEA - True if the LEA instruction with certain arguments is slow
+comment|/// True if the LEA instruction with certain arguments is slow
 name|bool
 name|SlowLEA
 block|;
-comment|/// SlowIncDec - True if INC and DEC instructions are slow when writing to flags
+comment|/// True if INC and DEC instructions are slow when writing to flags
 name|bool
 name|SlowIncDec
-block|;
-comment|/// Use the RSQRT* instructions to optimize square root calculations.
-comment|/// For this to be profitable, the cost of FSQRT and FDIV must be
-comment|/// substantially higher than normal FP ops like FADD and FMUL.
-name|bool
-name|UseSqrtEst
-block|;
-comment|/// Use the RCP* instructions to optimize FP division calculations.
-comment|/// For this to be profitable, the cost of FDIV must be
-comment|/// substantially higher than normal FP ops like FADD and FMUL.
-name|bool
-name|UseReciprocalEst
 block|;
 comment|/// Processor has AVX-512 PreFetch Instructions
 name|bool
@@ -433,7 +409,15 @@ comment|/// Processor has AVX-512 Vector Length eXtenstions
 name|bool
 name|HasVLX
 block|;
-comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
+comment|/// Processot supports MPX - Memory Protection Extensions
+name|bool
+name|HasMPX
+block|;
+comment|/// Use software floating point for code generation.
+name|bool
+name|UseSoftFloat
+block|;
+comment|/// The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
 name|unsigned
 name|stackAlignment
@@ -443,7 +427,7 @@ comment|///
 name|unsigned
 name|MaxInlineSizeThreshold
 block|;
-comment|/// TargetTriple - What processor and OS we're targeting.
+comment|/// What processor and OS we're targeting.
 name|Triple
 name|TargetTriple
 block|;
@@ -453,24 +437,19 @@ name|InstrItins
 block|;
 name|private
 operator|:
-comment|// Calculates type size& alignment
-specifier|const
-name|DataLayout
-name|DL
-block|;
-comment|/// StackAlignOverride - Override the stack alignment.
+comment|/// Override the stack alignment.
 name|unsigned
 name|StackAlignOverride
 block|;
-comment|/// In64BitMode - True if compiling for 64-bit, false for 16-bit or 32-bit.
+comment|/// True if compiling for 64-bit, false for 16-bit or 32-bit.
 name|bool
 name|In64BitMode
 block|;
-comment|/// In32BitMode - True if compiling for 32-bit, false for 16-bit or 64-bit.
+comment|/// True if compiling for 32-bit, false for 16-bit or 64-bit.
 name|bool
 name|In32BitMode
 block|;
-comment|/// In16BitMode - True if compiling for 16-bit, false for 32-bit or 64-bit.
+comment|/// True if compiling for 16-bit, false for 32-bit or 64-bit.
 name|bool
 name|In16BitMode
 block|;
@@ -495,7 +474,7 @@ comment|/// of the specified triple.
 comment|///
 name|X86Subtarget
 argument_list|(
-argument|const std::string&TT
+argument|const Triple&TT
 argument_list|,
 argument|const std::string&CPU
 argument_list|,
@@ -530,19 +509,6 @@ block|{
 return|return
 operator|&
 name|InstrInfo
-return|;
-block|}
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-operator|&
-name|DL
 return|;
 block|}
 specifier|const
@@ -588,7 +554,7 @@ name|getRegisterInfo
 argument_list|()
 return|;
 block|}
-comment|/// getStackAlignment - Returns the minimum alignment known to hold of the
+comment|/// Returns the minimum alignment known to hold of the
 comment|/// stack frame on entry to the function and which must be maintained by every
 comment|/// function for this subtarget.
 name|unsigned
@@ -600,7 +566,7 @@ return|return
 name|stackAlignment
 return|;
 block|}
-comment|/// getMaxInlineSizeThreshold - Returns the maximum memset / memcpy size
+comment|/// Returns the maximum memset / memcpy size
 comment|/// that still makes it profitable to inline the call.
 name|unsigned
 name|getMaxInlineSizeThreshold
@@ -623,7 +589,7 @@ argument_list|)
 block|;
 name|private
 operator|:
-comment|/// \brief Initialize the full set of dependencies so we can use an initializer
+comment|/// Initialize the full set of dependencies so we can use an initializer
 comment|/// list for X86Subtarget.
 name|X86Subtarget
 operator|&
@@ -1087,15 +1053,6 @@ name|HasSHA
 return|;
 block|}
 name|bool
-name|hasSGX
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasSGX
-return|;
-block|}
-name|bool
 name|hasPRFCHW
 argument_list|()
 specifier|const
@@ -1111,15 +1068,6 @@ specifier|const
 block|{
 return|return
 name|HasRDSEED
-return|;
-block|}
-name|bool
-name|hasSMAP
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasSMAP
 return|;
 block|}
 name|bool
@@ -1249,24 +1197,6 @@ name|SlowIncDec
 return|;
 block|}
 name|bool
-name|useSqrtEst
-argument_list|()
-specifier|const
-block|{
-return|return
-name|UseSqrtEst
-return|;
-block|}
-name|bool
-name|useReciprocalEst
-argument_list|()
-specifier|const
-block|{
-return|return
-name|UseReciprocalEst
-return|;
-block|}
-name|bool
 name|hasCDI
 argument_list|()
 specifier|const
@@ -1321,6 +1251,15 @@ name|HasVLX
 return|;
 block|}
 name|bool
+name|hasMPX
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMPX
+return|;
+block|}
+name|bool
 name|isAtom
 argument_list|()
 specifier|const
@@ -1340,6 +1279,15 @@ return|return
 name|X86ProcFamily
 operator|==
 name|IntelSLM
+return|;
+block|}
+name|bool
+name|useSoftFloat
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseSoftFloat
 return|;
 block|}
 specifier|const
@@ -1398,6 +1346,18 @@ return|return
 name|TargetTriple
 operator|.
 name|isOSSolaris
+argument_list|()
+return|;
+block|}
+name|bool
+name|isTargetPS4
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isPS4
 argument_list|()
 return|;
 block|}
@@ -1695,24 +1655,75 @@ argument|CallingConv::ID CC
 argument_list|)
 specifier|const
 block|{
-return|return
-operator|(
-name|isTargetWin64
-argument_list|()
-operator|&&
+switch|switch
+condition|(
 name|CC
-operator|!=
+condition|)
+block|{
+comment|// On Win64, all these conventions just use the default convention.
+case|case
 name|CallingConv
 operator|::
-name|X86_64_SysV
-operator|)
-operator|||
-name|CC
-operator|==
+name|C
+case|:
+case|case
+name|CallingConv
+operator|::
+name|Fast
+case|:
+case|case
+name|CallingConv
+operator|::
+name|X86_FastCall
+case|:
+case|case
+name|CallingConv
+operator|::
+name|X86_StdCall
+case|:
+case|case
+name|CallingConv
+operator|::
+name|X86_ThisCall
+case|:
+case|case
+name|CallingConv
+operator|::
+name|X86_VectorCall
+case|:
+case|case
+name|CallingConv
+operator|::
+name|Intel_OCL_BI
+case|:
+return|return
+name|isTargetWin64
+argument_list|()
+return|;
+comment|// This convention allows using the Win64 convention on other targets.
+case|case
 name|CallingConv
 operator|::
 name|X86_64_Win64
+case|:
+return|return
+name|true
 return|;
+comment|// This convention allows using the SysV convention on Windows targets.
+case|case
+name|CallingConv
+operator|::
+name|X86_64_SysV
+case|:
+return|return
+name|false
+return|;
+comment|// Otherwise, who knows what this is.
+default|default:
+return|return
+name|false
+return|;
+block|}
 block|}
 comment|/// ClassifyGlobalReference - Classify a global variable reference for the
 comment|/// current subtarget according to how we should reference it in a non-pcrel
@@ -1727,17 +1738,15 @@ argument|const TargetMachine&TM
 argument_list|)
 specifier|const
 block|;
-comment|/// ClassifyBlockAddressReference - Classify a blockaddress reference for the
-comment|/// current subtarget according to how we should reference it in a non-pcrel
-comment|/// context.
+comment|/// Classify a blockaddress reference for the current subtarget according to
+comment|/// how we should reference it in a non-pcrel context.
 name|unsigned
 name|char
 name|ClassifyBlockAddressReference
 argument_list|()
 specifier|const
 block|;
-comment|/// IsLegalToCallImmediateAddr - Return true if the subtarget allows calls
-comment|/// to immediate address.
+comment|/// Return true if the subtarget allows calls to immediate address.
 name|bool
 name|IsLegalToCallImmediateAddr
 argument_list|(
@@ -1781,8 +1790,7 @@ argument_list|()
 specifier|const
 name|override
 block|;
-comment|/// getInstrItins = Return the instruction itineraries based on the
-comment|/// subtarget selection.
+comment|/// Return the instruction itineraries based on the subtarget selection.
 specifier|const
 name|InstrItineraryData
 operator|*

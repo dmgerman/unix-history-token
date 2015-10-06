@@ -296,9 +296,12 @@ name|TargetLoweringBase
 block|{
 name|TargetLoweringBase
 argument_list|(
-argument|const TargetLoweringBase&
+specifier|const
+name|TargetLoweringBase
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -308,7 +311,8 @@ specifier|const
 name|TargetLoweringBase
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:
@@ -357,7 +361,10 @@ name|TypeSplitVector
 block|,
 comment|// Split this vector into two of half the size.
 name|TypeWidenVector
+block|,
 comment|// This vector should be widened into a larger vector.
+name|TypePromoteFloat
+comment|// Replace this float with a larger one.
 block|}
 enum|;
 comment|/// LegalizeKind holds the legalization kind that needs to happen to EVT
@@ -403,6 +410,27 @@ comment|// The target supports vector selects with a vector
 comment|// mask (ex: x86 blends).
 block|}
 enum|;
+comment|/// Enum that specifies what a AtomicRMWInst is expanded to, if at all. Exists
+comment|/// because different targets have different levels of support for these
+comment|/// atomic RMW instructions, and also have different options w.r.t. what they
+comment|/// should expand to.
+name|enum
+name|class
+name|AtomicRMWExpansionKind
+block|{
+name|None
+operator|,
+comment|// Don't expand the instruction.
+name|LLSC
+operator|,
+comment|// Expand the instruction into loadlinked/storeconditional; used
+comment|// by ARM/AArch64. Implies `hasLoadLinkedStoreConditional`
+comment|// returns true.
+name|CmpXChg
+operator|,
+comment|// Expand the instruction into cmpxchg; used by at least X86.
+block|}
+empty_stmt|;
 specifier|static
 name|ISD
 operator|::
@@ -486,90 +514,59 @@ return|return
 name|TM
 return|;
 block|}
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DL
-return|;
-block|}
-specifier|const
-name|TargetLoweringObjectFile
-operator|&
-name|getObjFileLowering
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|*
-name|TM
-operator|.
-name|getObjFileLowering
-argument_list|()
-return|;
-block|}
+name|virtual
 name|bool
-name|isBigEndian
+name|useSoftFloat
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-name|IsLittleEndian
-return|;
-block|}
-name|bool
-name|isLittleEndian
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsLittleEndian
+name|false
 return|;
 block|}
 comment|/// Return the pointer type for the given address space, defaults to
 comment|/// the pointer type from the data layout.
 comment|/// FIXME: The default needs to be removed once all the code is updated.
-name|virtual
 name|MVT
 name|getPointerTy
 argument_list|(
-name|uint32_t
-comment|/*AS*/
-operator|=
-literal|0
-argument_list|)
-decl|const
-decl_stmt|;
-name|unsigned
-name|getPointerSizeInBits
-argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
 name|uint32_t
 name|AS
 operator|=
 literal|0
 argument_list|)
 decl|const
-decl_stmt|;
-name|unsigned
-name|getPointerTypeSizeInBits
+block|{
+return|return
+name|MVT
+operator|::
+name|getIntegerVT
 argument_list|(
-name|Type
-operator|*
-name|Ty
+name|DL
+operator|.
+name|getPointerSizeInBits
+argument_list|(
+name|AS
 argument_list|)
-decl|const
-decl_stmt|;
+argument_list|)
+return|;
+block|}
+comment|/// EVT is not used in-tree, but is used by out-of-tree target.
+comment|/// A documentation for this function would be nice...
 name|virtual
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+argument_list|,
 name|EVT
-name|LHSTy
 argument_list|)
 decl|const
 decl_stmt|;
@@ -578,6 +575,11 @@ name|getShiftAmountTy
 argument_list|(
 name|EVT
 name|LHSTy
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
 argument_list|)
 decl|const
 decl_stmt|;
@@ -587,12 +589,19 @@ comment|/// ISD::INSERT_SUBVECTOR, and ISD::EXTRACT_SUBVECTOR
 name|virtual
 name|MVT
 name|getVectorIdxTy
-argument_list|()
+argument_list|(
 specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl|const
 block|{
 return|return
 name|getPointerTy
-argument_list|()
+argument_list|(
+name|DL
+argument_list|)
 return|;
 block|}
 comment|/// Return true if the select operation is expensive for this target.
@@ -784,9 +793,9 @@ block|}
 comment|/// isLoadBitCastBeneficial() - Return true if the following transform
 comment|/// is beneficial.
 comment|/// fold (conv (load x)) -> (load (conv*)x)
-comment|/// On architectures that don't natively support some vector loads efficiently,
-comment|/// casting the load to a smaller vector of larger types and loading
-comment|/// is more efficient, however, this can be undone by optimizations in
+comment|/// On architectures that don't natively support some vector loads
+comment|/// efficiently, casting the load to a smaller vector of larger types and
+comment|/// loading is more efficient, however, this can be undone by optimizations in
 comment|/// dag combiner.
 name|virtual
 name|bool
@@ -802,6 +811,28 @@ decl|const
 block|{
 return|return
 name|true
+return|;
+block|}
+comment|/// Return true if it is expected to be cheaper to do a store of a non-zero
+comment|/// vector constant with the given size and type for the address space than to
+comment|/// store the individual scalar element constants.
+name|virtual
+name|bool
+name|storeOfVectorConstantIsCheap
+argument_list|(
+name|EVT
+name|MemVT
+argument_list|,
+name|unsigned
+name|NumElem
+argument_list|,
+name|unsigned
+name|AddrSpace
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
 return|;
 block|}
 comment|/// \brief Return true if it is cheap to speculate a call to intrinsic cttz.
@@ -914,6 +945,11 @@ name|virtual
 name|EVT
 name|getSetCCResultType
 argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
 name|LLVMContext
 operator|&
 name|Context
@@ -2008,6 +2044,58 @@ operator|==
 name|Legal
 return|;
 block|}
+comment|/// Return true if the specified load with extension is legal or custom
+comment|/// on this target.
+name|bool
+name|isLoadExtLegalOrCustom
+argument_list|(
+name|unsigned
+name|ExtType
+argument_list|,
+name|EVT
+name|ValVT
+argument_list|,
+name|EVT
+name|MemVT
+argument_list|)
+decl|const
+block|{
+return|return
+name|ValVT
+operator|.
+name|isSimple
+argument_list|()
+operator|&&
+name|MemVT
+operator|.
+name|isSimple
+argument_list|()
+operator|&&
+operator|(
+name|getLoadExtAction
+argument_list|(
+name|ExtType
+argument_list|,
+name|ValVT
+argument_list|,
+name|MemVT
+argument_list|)
+operator|==
+name|Legal
+operator|||
+name|getLoadExtAction
+argument_list|(
+name|ExtType
+argument_list|,
+name|ValVT
+argument_list|,
+name|MemVT
+argument_list|)
+operator|==
+name|Custom
+operator|)
+return|;
+block|}
 comment|/// Return how this store with truncation should be treated: either it is
 comment|/// legal, needs to be promoted to a larger size, needs to be expanded to some
 comment|/// other code sequence, or the target has a custom expander for it.
@@ -2654,6 +2742,11 @@ comment|/// otherwise it will assert.
 name|EVT
 name|getValueType
 argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
 name|Type
 operator|*
 name|Ty
@@ -2683,6 +2776,8 @@ condition|)
 return|return
 name|getPointerTy
 argument_list|(
+name|DL
+argument_list|,
 name|PTy
 operator|->
 name|getAddressSpace
@@ -2739,6 +2834,8 @@ name|PointerTy
 argument_list|(
 name|getPointerTy
 argument_list|(
+name|DL
+argument_list|,
 name|PT
 operator|->
 name|getAddressSpace
@@ -2800,6 +2897,11 @@ comment|/// Return the MVT corresponding to this LLVM type. See getValueType.
 name|MVT
 name|getSimpleValueType
 argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
 name|Type
 operator|*
 name|Ty
@@ -2814,6 +2916,8 @@ block|{
 return|return
 name|getValueType
 argument_list|(
+name|DL
+argument_list|,
 name|Ty
 argument_list|,
 name|AllowUnknown
@@ -2833,6 +2937,11 @@ argument_list|(
 name|Type
 operator|*
 name|Ty
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
 argument_list|)
 decl|const
 decl_stmt|;
@@ -3171,10 +3280,17 @@ name|hasBigEndianPartOrdering
 argument_list|(
 name|EVT
 name|VT
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
 argument_list|)
 decl|const
 block|{
 return|return
+name|DL
+operator|.
 name|isBigEndian
 argument_list|()
 operator|||
@@ -3564,18 +3680,6 @@ return|return
 name|false
 return|;
 block|}
-comment|/// Returns the maximal possible offset which can be used for loads / stores
-comment|/// from the global.
-name|virtual
-name|unsigned
-name|getMaximalGlobalOffset
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|0
-return|;
-block|}
 comment|/// Returns true if a cast between SrcAS and DestAS is a noop.
 name|virtual
 name|bool
@@ -3586,6 +3690,32 @@ name|SrcAS
 argument_list|,
 name|unsigned
 name|DestAS
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Return true if the pointer arguments to CI should be aligned by aligning
+comment|/// the object whose address is being passed. If so then MinSize is set to the
+comment|/// minimum size the object must be to be aligned and PrefAlign is set to the
+comment|/// preferred alignment.
+name|virtual
+name|bool
+name|shouldAlignPointerArgs
+argument_list|(
+name|CallInst
+operator|*
+comment|/*CI*/
+argument_list|,
+name|unsigned
+operator|&
+comment|/*MinSize*/
+argument_list|,
+name|unsigned
+operator|&
+comment|/*PrefAlign*/
 argument_list|)
 decl|const
 block|{
@@ -3616,6 +3746,8 @@ name|MVT
 operator|>
 name|getTypeLegalizationCost
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|Type *Ty
 argument_list|)
 specifier|const
@@ -3849,6 +3981,23 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Returns true if arguments should be sign-extended in lib calls.
+name|virtual
+name|bool
+name|shouldSignExtendTypeInLibCall
+argument_list|(
+name|EVT
+name|Type
+argument_list|,
+name|bool
+name|IsSigned
+argument_list|)
+decl|const
+block|{
+return|return
+name|IsSigned
+return|;
+block|}
 comment|/// Returns true if the given (atomic) load should be expanded by the
 comment|/// IR-level AtomicExpand pass into a load-linked instruction
 comment|/// (through emitLoadLinked()).
@@ -3866,20 +4015,21 @@ return|return
 name|false
 return|;
 block|}
-comment|/// Returns true if the given AtomicRMW should be expanded by the
-comment|/// IR-level AtomicExpand pass into a loop using LoadLinked/StoreConditional.
+comment|/// Returns how the IR-level AtomicExpand pass should expand the given
+comment|/// AtomicRMW, if at all. Default is to never expand.
 name|virtual
-name|bool
+name|AtomicRMWExpansionKind
 name|shouldExpandAtomicRMWInIR
 argument_list|(
 name|AtomicRMWInst
 operator|*
-name|RMWI
 argument_list|)
 decl|const
 block|{
 return|return
-name|false
+name|AtomicRMWExpansionKind
+operator|::
+name|None
 return|;
 block|}
 comment|/// On some platforms, an AtomicRMW that never actually modifies the value
@@ -3908,16 +4058,64 @@ return|return
 name|nullptr
 return|;
 block|}
+comment|/// Returns true if we should normalize
+comment|/// select(N0&N1, X, Y) => select(N0, select(N1, X, Y), Y) and
+comment|/// select(N0|N1, X, Y) => select(N0, select(N1, X, Y, Y)) if it is likely
+comment|/// that it saves us from materializing N0 and N1 in an integer register.
+comment|/// Targets that are able to perform and/or on flags should return false here.
+name|virtual
+name|bool
+name|shouldNormalizeToSelectSequence
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+comment|// If a target has multiple condition registers, then it likely has logical
+comment|// operations on those registers.
+if|if
+condition|(
+name|hasMultipleConditionRegisters
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+comment|// Only do the transform if the value won't be split into multiple
+comment|// registers.
+name|LegalizeTypeAction
+name|Action
+init|=
+name|getTypeAction
+argument_list|(
+name|Context
+argument_list|,
+name|VT
+argument_list|)
+decl_stmt|;
+return|return
+name|Action
+operator|!=
+name|TypeExpandInteger
+operator|&&
+name|Action
+operator|!=
+name|TypeExpandFloat
+operator|&&
+name|Action
+operator|!=
+name|TypeSplitVector
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// TargetLowering Configuration Methods - These methods should be invoked by
 comment|// the derived class constructor to configure this object for the target.
 comment|//
-comment|/// \brief Reset the operation actions based on target options.
-name|virtual
-name|void
-name|resetOperationActions
-parameter_list|()
-block|{}
 name|protected
 label|:
 comment|/// Specify how the target extends the result of integer and floating point
@@ -4125,8 +4323,9 @@ operator|=
 name|hasExtractInsn
 expr_stmt|;
 block|}
-comment|/// Tells the code generator not to expand sequence of operations into a
-comment|/// separate sequences that increases the amount of flow control.
+comment|/// Tells the code generator not to expand logic operations on comparison
+comment|/// predicates into separate sequences that increase the amount of flow
+comment|/// control.
 name|void
 name|setJumpIsExpensive
 parameter_list|(
@@ -4135,12 +4334,7 @@ name|isExpensive
 init|=
 name|true
 parameter_list|)
-block|{
-name|JumpIsExpensive
-operator|=
-name|isExpensive
-expr_stmt|;
-block|}
+function_decl|;
 comment|/// Tells the code generator that integer divide is expensive, and if
 comment|/// possible, should be replaced by an alternate sequence of instructions not
 comment|/// containing an integer divide.
@@ -4329,6 +4523,8 @@ name|uint8_t
 operator|>
 name|findRepresentativeClass
 argument_list|(
+argument|const TargetRegisterInfo *TRI
+argument_list|,
 argument|MVT VT
 argument_list|)
 specifier|const
@@ -4337,7 +4533,12 @@ comment|/// Once all of the register classes are added, this allows us to comput
 comment|/// derived properties we expose.
 name|void
 name|computeRegisterProperties
-parameter_list|()
+parameter_list|(
+specifier|const
+name|TargetRegisterInfo
+modifier|*
+name|TRI
+parameter_list|)
 function_decl|;
 comment|/// Indicate that the specified operation does not work with the specified
 comment|/// type and indicate what to do about it.
@@ -4958,6 +5159,11 @@ name|Type
 operator|*
 operator|&
 comment|/*AccessTy*/
+argument_list|,
+name|unsigned
+name|AddrSpace
+operator|=
+literal|0
 argument_list|)
 decl|const
 block|{
@@ -5019,10 +5225,19 @@ comment|///
 comment|/// The type may be VoidTy, in which case only return true if the addressing
 comment|/// mode is legal for a load/store of any legal type.  TODO: Handle
 comment|/// pre/postinc as well.
+comment|///
+comment|/// If the address space cannot be determined, it will be -1.
+comment|///
+comment|/// TODO: Remove default argument
 name|virtual
 name|bool
 name|isLegalAddressingMode
 argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
 specifier|const
 name|AddrMode
 operator|&
@@ -5031,6 +5246,9 @@ argument_list|,
 name|Type
 operator|*
 name|Ty
+argument_list|,
+name|unsigned
+name|AddrSpace
 argument_list|)
 decl|const
 decl_stmt|;
@@ -5040,10 +5258,16 @@ comment|///
 comment|/// If the AM is supported, the return value must be>= 0.
 comment|/// If the AM is not supported, it returns a negative value.
 comment|/// TODO: Handle pre/postinc as well.
+comment|/// TODO: Remove default argument
 name|virtual
 name|int
 name|getScalingFactorCost
 argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
 specifier|const
 name|AddrMode
 operator|&
@@ -5052,6 +5276,11 @@ argument_list|,
 name|Type
 operator|*
 name|Ty
+argument_list|,
+name|unsigned
+name|AS
+operator|=
+literal|0
 argument_list|)
 decl|const
 block|{
@@ -5060,9 +5289,13 @@ if|if
 condition|(
 name|isLegalAddressingMode
 argument_list|(
+name|DL
+argument_list|,
 name|AM
 argument_list|,
 name|Ty
+argument_list|,
+name|AS
 argument_list|)
 condition|)
 return|return
@@ -5181,6 +5414,120 @@ return|return
 name|false
 return|;
 block|}
+name|virtual
+name|bool
+name|isProfitableToHoist
+argument_list|(
+name|Instruction
+operator|*
+name|I
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// Return true if the extension represented by \p I is free.
+comment|/// Unlikely the is[Z|FP]ExtFree family which is based on types,
+comment|/// this method can use the context provided by \p I to decide
+comment|/// whether or not \p I is free.
+comment|/// This method extends the behavior of the is[Z|FP]ExtFree family.
+comment|/// In other words, if is[Z|FP]Free returns true, then this method
+comment|/// returns true as well. The converse is not true.
+comment|/// The target can perform the adequate checks by overriding isExtFreeImpl.
+comment|/// \pre \p I must be a sign, zero, or fp extension.
+name|bool
+name|isExtFree
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|I
+argument_list|)
+decl|const
+block|{
+switch|switch
+condition|(
+name|I
+operator|->
+name|getOpcode
+argument_list|()
+condition|)
+block|{
+case|case
+name|Instruction
+operator|::
+name|FPExt
+case|:
+if|if
+condition|(
+name|isFPExtFree
+argument_list|(
+name|EVT
+operator|::
+name|getEVT
+argument_list|(
+name|I
+operator|->
+name|getType
+argument_list|()
+argument_list|)
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+break|break;
+case|case
+name|Instruction
+operator|::
+name|ZExt
+case|:
+if|if
+condition|(
+name|isZExtFree
+argument_list|(
+name|I
+operator|->
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+argument_list|,
+name|I
+operator|->
+name|getType
+argument_list|()
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+break|break;
+case|case
+name|Instruction
+operator|::
+name|SExt
+case|:
+break|break;
+default|default:
+name|llvm_unreachable
+argument_list|(
+literal|"Instruction is not an extension"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|isExtFreeImpl
+argument_list|(
+name|I
+argument_list|)
+return|;
+block|}
 comment|/// Return true if any actual instruction that defines a value of type Ty1
 comment|/// implicitly zero-extends the value to Ty2 in the result register.
 comment|///
@@ -5279,6 +5626,82 @@ return|return
 name|false
 return|;
 block|}
+comment|/// \brief Get the maximum supported factor for interleaved memory accesses.
+comment|/// Default to be the minimum interleave factor: 2.
+name|virtual
+name|unsigned
+name|getMaxSupportedInterleaveFactor
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|2
+return|;
+block|}
+comment|/// \brief Lower an interleaved load to target specific intrinsics. Return
+comment|/// true on success.
+comment|///
+comment|/// \p LI is the vector load instruction.
+comment|/// \p Shuffles is the shufflevector list to DE-interleave the loaded vector.
+comment|/// \p Indices is the corresponding indices for each shufflevector.
+comment|/// \p Factor is the interleave factor.
+name|virtual
+name|bool
+name|lowerInterleavedLoad
+argument_list|(
+name|LoadInst
+operator|*
+name|LI
+argument_list|,
+name|ArrayRef
+operator|<
+name|ShuffleVectorInst
+operator|*
+operator|>
+name|Shuffles
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Indices
+argument_list|,
+name|unsigned
+name|Factor
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief Lower an interleaved store to target specific intrinsics. Return
+comment|/// true on success.
+comment|///
+comment|/// \p SI is the vector store instruction.
+comment|/// \p SVI is the shufflevector to RE-interleave the stored vector.
+comment|/// \p Factor is the interleave factor.
+name|virtual
+name|bool
+name|lowerInterleavedStore
+argument_list|(
+name|StoreInst
+operator|*
+name|SI
+argument_list|,
+name|ShuffleVectorInst
+operator|*
+name|SVI
+argument_list|,
+name|unsigned
+name|Factor
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Return true if zero-extending the specific node Val to type VT2 is free
 comment|/// (either because it's implicitly zero-extended such as ARM ldrb / ldrh or
 comment|/// because it's folded such as X86 zero-extending loads).
@@ -5326,6 +5749,21 @@ name|isFloatingPoint
 argument_list|()
 argument_list|)
 expr_stmt|;
+return|return
+name|false
+return|;
+block|}
+comment|/// Return true if folding a vector load into ExtVal (a sign, zero, or any
+comment|/// extend node) is profitable.
+name|virtual
+name|bool
+name|isVectorLoadExtDesirable
+argument_list|(
+name|SDValue
+name|ExtVal
+argument_list|)
+decl|const
+block|{
 return|return
 name|false
 return|;
@@ -5593,15 +6031,6 @@ specifier|const
 name|TargetMachine
 modifier|&
 name|TM
-decl_stmt|;
-specifier|const
-name|DataLayout
-modifier|*
-name|DL
-decl_stmt|;
-comment|/// True if this is a little endian target.
-name|bool
-name|IsLittleEndian
 decl_stmt|;
 comment|/// Tells the code generator not to expand operations into sequences that use
 comment|/// the select operations if possible.
@@ -5919,7 +6348,7 @@ decl_stmt|;
 name|ValueTypeActionImpl
 name|ValueTypeActions
 decl_stmt|;
-name|public
+name|private
 label|:
 name|LegalizeKind
 name|getTypeConversion
@@ -5932,621 +6361,7 @@ name|EVT
 name|VT
 argument_list|)
 decl|const
-block|{
-comment|// If this is a simple type, use the ComputeRegisterProp mechanism.
-if|if
-condition|(
-name|VT
-operator|.
-name|isSimple
-argument_list|()
-condition|)
-block|{
-name|MVT
-name|SVT
-init|=
-name|VT
-operator|.
-name|getSimpleVT
-argument_list|()
 decl_stmt|;
-name|assert
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|SVT
-operator|.
-name|SimpleTy
-operator|<
-name|array_lengthof
-argument_list|(
-name|TransformToType
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|MVT
-name|NVT
-init|=
-name|TransformToType
-index|[
-name|SVT
-operator|.
-name|SimpleTy
-index|]
-decl_stmt|;
-name|LegalizeTypeAction
-name|LA
-init|=
-name|ValueTypeActions
-operator|.
-name|getTypeAction
-argument_list|(
-name|SVT
-argument_list|)
-decl_stmt|;
-name|assert
-argument_list|(
-operator|(
-name|LA
-operator|==
-name|TypeLegal
-operator|||
-name|LA
-operator|==
-name|TypeSoftenFloat
-operator|||
-name|ValueTypeActions
-operator|.
-name|getTypeAction
-argument_list|(
-name|NVT
-argument_list|)
-operator|!=
-name|TypePromoteInteger
-operator|)
-operator|&&
-literal|"Promote may not follow Expand or Promote"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|LA
-operator|==
-name|TypeSplitVector
-condition|)
-return|return
-name|LegalizeKind
-argument_list|(
-name|LA
-argument_list|,
-name|EVT
-operator|::
-name|getVectorVT
-argument_list|(
-name|Context
-argument_list|,
-name|SVT
-operator|.
-name|getVectorElementType
-argument_list|()
-argument_list|,
-name|SVT
-operator|.
-name|getVectorNumElements
-argument_list|()
-operator|/
-literal|2
-argument_list|)
-argument_list|)
-return|;
-if|if
-condition|(
-name|LA
-operator|==
-name|TypeScalarizeVector
-condition|)
-return|return
-name|LegalizeKind
-argument_list|(
-name|LA
-argument_list|,
-name|SVT
-operator|.
-name|getVectorElementType
-argument_list|()
-argument_list|)
-return|;
-return|return
-name|LegalizeKind
-argument_list|(
-name|LA
-argument_list|,
-name|NVT
-argument_list|)
-return|;
-block|}
-comment|// Handle Extended Scalar Types.
-if|if
-condition|(
-operator|!
-name|VT
-operator|.
-name|isVector
-argument_list|()
-condition|)
-block|{
-name|assert
-argument_list|(
-name|VT
-operator|.
-name|isInteger
-argument_list|()
-operator|&&
-literal|"Float types must be simple"
-argument_list|)
-expr_stmt|;
-name|unsigned
-name|BitSize
-init|=
-name|VT
-operator|.
-name|getSizeInBits
-argument_list|()
-decl_stmt|;
-comment|// First promote to a power-of-two size, then expand if necessary.
-if|if
-condition|(
-name|BitSize
-operator|<
-literal|8
-operator|||
-operator|!
-name|isPowerOf2_32
-argument_list|(
-name|BitSize
-argument_list|)
-condition|)
-block|{
-name|EVT
-name|NVT
-init|=
-name|VT
-operator|.
-name|getRoundIntegerType
-argument_list|(
-name|Context
-argument_list|)
-decl_stmt|;
-name|assert
-argument_list|(
-name|NVT
-operator|!=
-name|VT
-operator|&&
-literal|"Unable to round integer VT"
-argument_list|)
-expr_stmt|;
-name|LegalizeKind
-name|NextStep
-init|=
-name|getTypeConversion
-argument_list|(
-name|Context
-argument_list|,
-name|NVT
-argument_list|)
-decl_stmt|;
-comment|// Avoid multi-step promotion.
-if|if
-condition|(
-name|NextStep
-operator|.
-name|first
-operator|==
-name|TypePromoteInteger
-condition|)
-return|return
-name|NextStep
-return|;
-comment|// Return rounded integer type.
-return|return
-name|LegalizeKind
-argument_list|(
-name|TypePromoteInteger
-argument_list|,
-name|NVT
-argument_list|)
-return|;
-block|}
-return|return
-name|LegalizeKind
-argument_list|(
-name|TypeExpandInteger
-argument_list|,
-name|EVT
-operator|::
-name|getIntegerVT
-argument_list|(
-name|Context
-argument_list|,
-name|VT
-operator|.
-name|getSizeInBits
-argument_list|()
-operator|/
-literal|2
-argument_list|)
-argument_list|)
-return|;
-block|}
-comment|// Handle vector types.
-name|unsigned
-name|NumElts
-init|=
-name|VT
-operator|.
-name|getVectorNumElements
-argument_list|()
-decl_stmt|;
-name|EVT
-name|EltVT
-init|=
-name|VT
-operator|.
-name|getVectorElementType
-argument_list|()
-decl_stmt|;
-comment|// Vectors with only one element are always scalarized.
-if|if
-condition|(
-name|NumElts
-operator|==
-literal|1
-condition|)
-return|return
-name|LegalizeKind
-argument_list|(
-name|TypeScalarizeVector
-argument_list|,
-name|EltVT
-argument_list|)
-return|;
-comment|// Try to widen vector elements until the element type is a power of two and
-comment|// promote it to a legal type later on, for example:
-comment|//<3 x i8> -><4 x i8> -><4 x i32>
-if|if
-condition|(
-name|EltVT
-operator|.
-name|isInteger
-argument_list|()
-condition|)
-block|{
-comment|// Vectors with a number of elements that is not a power of two are always
-comment|// widened, for example<3 x i8> -><4 x i8>.
-if|if
-condition|(
-operator|!
-name|VT
-operator|.
-name|isPow2VectorType
-argument_list|()
-condition|)
-block|{
-name|NumElts
-operator|=
-operator|(
-name|unsigned
-operator|)
-name|NextPowerOf2
-argument_list|(
-name|NumElts
-argument_list|)
-expr_stmt|;
-name|EVT
-name|NVT
-init|=
-name|EVT
-operator|::
-name|getVectorVT
-argument_list|(
-name|Context
-argument_list|,
-name|EltVT
-argument_list|,
-name|NumElts
-argument_list|)
-decl_stmt|;
-return|return
-name|LegalizeKind
-argument_list|(
-name|TypeWidenVector
-argument_list|,
-name|NVT
-argument_list|)
-return|;
-block|}
-comment|// Examine the element type.
-name|LegalizeKind
-name|LK
-init|=
-name|getTypeConversion
-argument_list|(
-name|Context
-argument_list|,
-name|EltVT
-argument_list|)
-decl_stmt|;
-comment|// If type is to be expanded, split the vector.
-comment|//<4 x i140> -><2 x i140>
-if|if
-condition|(
-name|LK
-operator|.
-name|first
-operator|==
-name|TypeExpandInteger
-condition|)
-return|return
-name|LegalizeKind
-argument_list|(
-name|TypeSplitVector
-argument_list|,
-name|EVT
-operator|::
-name|getVectorVT
-argument_list|(
-name|Context
-argument_list|,
-name|EltVT
-argument_list|,
-name|NumElts
-operator|/
-literal|2
-argument_list|)
-argument_list|)
-return|;
-comment|// Promote the integer element types until a legal vector type is found
-comment|// or until the element integer type is too big. If a legal type was not
-comment|// found, fallback to the usual mechanism of widening/splitting the
-comment|// vector.
-name|EVT
-name|OldEltVT
-init|=
-name|EltVT
-decl_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
-block|{
-comment|// Increase the bitwidth of the element to the next pow-of-two
-comment|// (which is greater than 8 bits).
-name|EltVT
-operator|=
-name|EVT
-operator|::
-name|getIntegerVT
-argument_list|(
-name|Context
-argument_list|,
-literal|1
-operator|+
-name|EltVT
-operator|.
-name|getSizeInBits
-argument_list|()
-argument_list|)
-operator|.
-name|getRoundIntegerType
-argument_list|(
-name|Context
-argument_list|)
-expr_stmt|;
-comment|// Stop trying when getting a non-simple element type.
-comment|// Note that vector elements may be greater than legal vector element
-comment|// types. Example: X86 XMM registers hold 64bit element on 32bit
-comment|// systems.
-if|if
-condition|(
-operator|!
-name|EltVT
-operator|.
-name|isSimple
-argument_list|()
-condition|)
-break|break;
-comment|// Build a new vector type and check if it is legal.
-name|MVT
-name|NVT
-init|=
-name|MVT
-operator|::
-name|getVectorVT
-argument_list|(
-name|EltVT
-operator|.
-name|getSimpleVT
-argument_list|()
-argument_list|,
-name|NumElts
-argument_list|)
-decl_stmt|;
-comment|// Found a legal promoted vector type.
-if|if
-condition|(
-name|NVT
-operator|!=
-name|MVT
-argument_list|()
-operator|&&
-name|ValueTypeActions
-operator|.
-name|getTypeAction
-argument_list|(
-name|NVT
-argument_list|)
-operator|==
-name|TypeLegal
-condition|)
-return|return
-name|LegalizeKind
-argument_list|(
-name|TypePromoteInteger
-argument_list|,
-name|EVT
-operator|::
-name|getVectorVT
-argument_list|(
-name|Context
-argument_list|,
-name|EltVT
-argument_list|,
-name|NumElts
-argument_list|)
-argument_list|)
-return|;
-block|}
-comment|// Reset the type to the unexpanded type if we did not find a legal vector
-comment|// type with a promoted vector element type.
-name|EltVT
-operator|=
-name|OldEltVT
-expr_stmt|;
-block|}
-comment|// Try to widen the vector until a legal type is found.
-comment|// If there is no wider legal type, split the vector.
-while|while
-condition|(
-literal|1
-condition|)
-block|{
-comment|// Round up to the next power of 2.
-name|NumElts
-operator|=
-operator|(
-name|unsigned
-operator|)
-name|NextPowerOf2
-argument_list|(
-name|NumElts
-argument_list|)
-expr_stmt|;
-comment|// If there is no simple vector type with this many elements then there
-comment|// cannot be a larger legal vector type.  Note that this assumes that
-comment|// there are no skipped intermediate vector types in the simple types.
-if|if
-condition|(
-operator|!
-name|EltVT
-operator|.
-name|isSimple
-argument_list|()
-condition|)
-break|break;
-name|MVT
-name|LargerVector
-init|=
-name|MVT
-operator|::
-name|getVectorVT
-argument_list|(
-name|EltVT
-operator|.
-name|getSimpleVT
-argument_list|()
-argument_list|,
-name|NumElts
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|LargerVector
-operator|==
-name|MVT
-argument_list|()
-condition|)
-break|break;
-comment|// If this type is legal then widen the vector.
-if|if
-condition|(
-name|ValueTypeActions
-operator|.
-name|getTypeAction
-argument_list|(
-name|LargerVector
-argument_list|)
-operator|==
-name|TypeLegal
-condition|)
-return|return
-name|LegalizeKind
-argument_list|(
-name|TypeWidenVector
-argument_list|,
-name|LargerVector
-argument_list|)
-return|;
-block|}
-comment|// Widen odd vectors to next power of two.
-if|if
-condition|(
-operator|!
-name|VT
-operator|.
-name|isPow2VectorType
-argument_list|()
-condition|)
-block|{
-name|EVT
-name|NVT
-init|=
-name|VT
-operator|.
-name|getPow2VectorType
-argument_list|(
-name|Context
-argument_list|)
-decl_stmt|;
-return|return
-name|LegalizeKind
-argument_list|(
-name|TypeWidenVector
-argument_list|,
-name|NVT
-argument_list|)
-return|;
-block|}
-comment|// Vectors with illegal element types are expanded.
-name|EVT
-name|NVT
-init|=
-name|EVT
-operator|::
-name|getVectorVT
-argument_list|(
-name|Context
-argument_list|,
-name|EltVT
-argument_list|,
-name|VT
-operator|.
-name|getVectorNumElements
-argument_list|()
-operator|/
-literal|2
-argument_list|)
-decl_stmt|;
-return|return
-name|LegalizeKind
-argument_list|(
-name|TypeSplitVector
-argument_list|,
-name|NVT
-argument_list|)
-return|;
-block|}
 name|private
 label|:
 name|std
@@ -6649,6 +6464,24 @@ index|]
 expr_stmt|;
 name|protected
 label|:
+comment|/// Return true if the extension represented by \p I is free.
+comment|/// \pre \p I is a sign, zero, or fp extension and
+comment|///      is[Z|FP]ExtFree of the related types is not true.
+name|virtual
+name|bool
+name|isExtFreeImpl
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|I
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// \brief Specify maximum number of store instructions per memset call.
 comment|///
 comment|/// When lowering \@llvm.memset this field specifies the maximum number of
@@ -6784,9 +6617,12 @@ name|TargetLoweringBase
 block|{
 name|TargetLowering
 argument_list|(
-argument|const TargetLowering&
+specifier|const
+name|TargetLowering
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -6796,7 +6632,8 @@ specifier|const
 name|TargetLowering
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -6968,6 +6805,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// Returns a pair of (return value, chain).
+comment|/// It is an error to pass RTLIB::UNKNOWN_LIBCALL as \p LC.
 name|std
 operator|::
 name|pair
@@ -7294,7 +7132,7 @@ name|CombineTo
 argument_list|(
 argument|SDNode *N
 argument_list|,
-argument|const std::vector<SDValue>&To
+argument|ArrayRef<SDValue> To
 argument_list|,
 argument|bool AddTo = true
 argument_list|)
@@ -8200,7 +8038,7 @@ argument|CallLoweringInfo&CLI
 argument_list|)
 specifier|const
 block|;
-comment|/// This hook must be implemented to lower calls into the the specified
+comment|/// This hook must be implemented to lower calls into the specified
 comment|/// DAG. The outgoing arguments to the call are described by the Outs array,
 comment|/// and the values to be returned by the call are described by the Ins
 comment|/// array. The implementation should fill in the InVals array with legal-type
@@ -8358,6 +8196,8 @@ argument_list|(
 argument|const char* RegName
 argument_list|,
 argument|EVT VT
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|{
@@ -8771,6 +8611,10 @@ name|virtual
 name|AsmOperandInfoVector
 name|ParseConstraints
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|,
 argument|ImmutableCallSite CS
 argument_list|)
 specifier|const
@@ -8874,11 +8718,7 @@ name|virtual
 name|ConstraintType
 name|getConstraintType
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|Constraint
 argument_list|)
 decl|const
@@ -8918,7 +8758,7 @@ comment|/// This should only be used for C_Register constraints.  On error, this
 end_comment
 
 begin_comment
-comment|/// returns a register number of 0 and a null register class pointer..
+comment|/// returns a register number of 0 and a null register class pointer.
 end_comment
 
 begin_expr_stmt
@@ -8935,13 +8775,56 @@ operator|*
 operator|>
 name|getRegForInlineAsmConstraint
 argument_list|(
-argument|const std::string&Constraint
+argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|StringRef Constraint
 argument_list|,
 argument|MVT VT
 argument_list|)
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|virtual
+name|unsigned
+name|getInlineAsmMemConstraint
+argument_list|(
+name|StringRef
+name|ConstraintCode
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|ConstraintCode
+operator|==
+literal|"i"
+condition|)
+return|return
+name|InlineAsm
+operator|::
+name|Constraint_i
+return|;
+elseif|else
+if|if
+condition|(
+name|ConstraintCode
+operator|==
+literal|"m"
+condition|)
+return|return
+name|InlineAsm
+operator|::
+name|Constraint_m
+return|;
+return|return
+name|InlineAsm
+operator|::
+name|Constraint_Unknown
+return|;
+block|}
+end_decl_stmt
 
 begin_comment
 comment|/// Try to replace an X constraint, which matches anything, with another that
@@ -9019,27 +8902,6 @@ end_comment
 begin_comment
 comment|//
 end_comment
-
-begin_decl_stmt
-name|SDValue
-name|BuildExactSDIV
-argument_list|(
-name|SDValue
-name|Op1
-argument_list|,
-name|SDValue
-name|Op2
-argument_list|,
-name|SDLoc
-name|dl
-argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|SDValue
@@ -9475,6 +9337,14 @@ begin_comment
 comment|/// creating new basic blocks and control flow.
 end_comment
 
+begin_comment
+comment|/// As long as the returned basic block is different (i.e., we created a new
+end_comment
+
+begin_comment
+comment|/// one), the custom inserter is free to modify the rest of \p MBB.
+end_comment
+
 begin_decl_stmt
 name|virtual
 name|MachineBasicBlock
@@ -9548,29 +9418,6 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// Returns true if arguments should be sign-extended in lib calls.
-end_comment
-
-begin_decl_stmt
-name|virtual
-name|bool
-name|shouldSignExtendTypeInLibCall
-argument_list|(
-name|EVT
-name|Type
-argument_list|,
-name|bool
-name|IsSigned
-argument_list|)
-decl|const
-block|{
-return|return
-name|IsSigned
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
 unit|};
 comment|/// Given an LLVM IR type and return type attributes, compute the return value
 end_comment
@@ -9607,6 +9454,11 @@ specifier|const
 name|TargetLowering
 operator|&
 name|TLI
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
 argument_list|)
 decl_stmt|;
 end_decl_stmt

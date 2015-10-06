@@ -617,10 +617,10 @@ argument_list|,
 argument|DiagOpts
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|DiagnosticNoteRenderer
 argument_list|()
+name|override
 block|;
 name|void
 name|emitIncludeLocation

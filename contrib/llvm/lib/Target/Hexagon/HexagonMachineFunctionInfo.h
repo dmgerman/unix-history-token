@@ -90,6 +90,9 @@ comment|// holds the virtual register into which the sret argument is passed.
 name|unsigned
 name|SRetReturnReg
 block|;
+name|unsigned
+name|StackAlignBaseReg
+block|;
 name|std
 operator|::
 name|vector
@@ -135,6 +138,11 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
+name|StackAlignBaseReg
+argument_list|(
+literal|0
+argument_list|)
+block|,
 name|HasClobberLR
 argument_list|(
 literal|0
@@ -153,6 +161,11 @@ name|MF
 argument_list|)
 operator|:
 name|SRetReturnReg
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|StackAlignBaseReg
 argument_list|(
 literal|0
 argument_list|)
@@ -368,9 +381,28 @@ name|HasEHReturn
 operator|=
 name|H
 block|; }
+block|;
+name|void
+name|setStackAlignBaseVReg
+argument_list|(
+argument|unsigned R
+argument_list|)
+block|{
+name|StackAlignBaseReg
+operator|=
+name|R
 block|; }
-decl_stmt|;
+name|unsigned
+name|getStackAlignBaseVReg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StackAlignBaseReg
+return|;
 block|}
+expr|}
+block|; }
 end_decl_stmt
 
 begin_comment

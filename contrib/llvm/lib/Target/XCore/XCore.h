@@ -126,16 +126,6 @@ modifier|*
 name|createXCoreLowerThreadLocalPass
 parameter_list|()
 function_decl|;
-name|ImmutablePass
-modifier|*
-name|createXCoreTargetTransformInfoPass
-parameter_list|(
-specifier|const
-name|XCoreTargetMachine
-modifier|*
-name|TM
-parameter_list|)
-function_decl|;
 block|}
 end_decl_stmt
 

@@ -112,9 +112,12 @@ name|HeaderMap
 block|{
 name|HeaderMap
 argument_list|(
-argument|const HeaderMap&
+specifier|const
+name|HeaderMap
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -124,7 +127,8 @@ specifier|const
 name|HeaderMap
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|std
 operator|::

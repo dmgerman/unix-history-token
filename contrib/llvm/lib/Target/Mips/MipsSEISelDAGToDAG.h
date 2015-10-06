@@ -242,6 +242,17 @@ specifier|const
 name|override
 block|;
 name|bool
+name|selectAddrRegImm9
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+block|;
+name|bool
 name|selectAddrRegImm10
 argument_list|(
 argument|SDValue Addr
@@ -264,7 +275,30 @@ argument_list|)
 specifier|const
 block|;
 name|bool
+name|selectAddrRegImm16
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+block|;
+name|bool
 name|selectIntAddrMM
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|selectIntAddrLSL2MM
 argument_list|(
 argument|SDValue Addr
 argument_list|,
@@ -294,6 +328,8 @@ argument_list|(
 argument|SDNode *N
 argument_list|,
 argument|APInt&Imm
+argument_list|,
+argument|unsigned MinSizeInBits
 argument_list|)
 specifier|const
 name|override
@@ -478,6 +514,17 @@ name|MachineFunction
 operator|&
 name|MF
 argument_list|)
+block|;
+name|bool
+name|SelectInlineAsmMemoryOperand
+argument_list|(
+argument|const SDValue&Op
+argument_list|,
+argument|unsigned ConstraintID
+argument_list|,
+argument|std::vector<SDValue>&OutOps
+argument_list|)
+name|override
 block|; }
 decl_stmt|;
 name|FunctionPass

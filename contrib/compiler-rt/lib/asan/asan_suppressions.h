@@ -105,6 +105,15 @@ modifier|*
 name|stack
 parameter_list|)
 function_decl|;
+name|bool
+name|IsODRViolationSuppressed
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|global_var_name
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

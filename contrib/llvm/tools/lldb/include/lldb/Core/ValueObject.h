@@ -70,6 +70,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -117,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/ClangASTType.h"
 end_include
 
 begin_include
@@ -374,7 +386,19 @@ literal|0xFFFF
 block|}
 block|;          struct
 name|GetValueForExpressionPathOptions
+block|{         enum
+name|class
+name|SyntheticChildrenTraversal
 block|{
+name|None
+block|,
+name|ToSynthetic
+block|,
+name|FromSynthetic
+block|,
+name|Both
+block|}
+block|;
 name|bool
 name|m_check_dot_vs_arrow_syntax
 block|;
@@ -384,8 +408,8 @@ block|;
 name|bool
 name|m_allow_bitfields_syntax
 block|;
-name|bool
-name|m_no_synthetic_children
+name|SyntheticChildrenTraversal
+name|m_synthetic_children_traversal
 block|;
 name|GetValueForExpressionPathOptions
 argument_list|(
@@ -395,7 +419,7 @@ argument|bool no_ivar = false
 argument_list|,
 argument|bool bitfield = true
 argument_list|,
-argument|bool no_synth = false
+argument|SyntheticChildrenTraversal synth_traverse = SyntheticChildrenTraversal::ToSynthetic
 argument_list|)
 operator|:
 name|m_check_dot_vs_arrow_syntax
@@ -413,9 +437,9 @@ argument_list|(
 name|bitfield
 argument_list|)
 block|,
-name|m_no_synthetic_children
+name|m_synthetic_children_traversal
 argument_list|(
-argument|no_synth
+argument|synth_traverse
 argument_list|)
 block|{         }
 name|GetValueForExpressionPathOptions
@@ -504,26 +528,14 @@ return|;
 block|}
 name|GetValueForExpressionPathOptions
 operator|&
-name|DoAllowSyntheticChildren
-argument_list|()
+name|SetSyntheticChildrenTraversal
+argument_list|(
+argument|SyntheticChildrenTraversal traverse
+argument_list|)
 block|{
-name|m_no_synthetic_children
+name|m_synthetic_children_traversal
 operator|=
-name|false
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|GetValueForExpressionPathOptions
-operator|&
-name|DontAllowSyntheticChildren
-argument_list|()
-block|{
-name|m_no_synthetic_children
-operator|=
-name|true
+name|traverse
 block|;
 return|return
 operator|*
@@ -648,10 +660,14 @@ argument_list|()
 block|;
 name|bool
 name|NeedsUpdating
-argument_list|()
+argument_list|(
+argument|bool accept_invalid_exe_ctx
+argument_list|)
 block|{
 name|SyncWithProcessState
-argument_list|()
+argument_list|(
+name|accept_invalid_exe_ctx
+argument_list|)
 block|;
 return|return
 name|m_needs_update
@@ -661,6 +677,12 @@ name|bool
 name|IsValid
 argument_list|()
 block|{
+specifier|const
+name|bool
+name|accept_invalid_exe_ctx
+operator|=
+name|false
+block|;
 if|if
 condition|(
 operator|!
@@ -676,7 +698,9 @@ elseif|else
 if|if
 condition|(
 name|SyncWithProcessState
-argument_list|()
+argument_list|(
+name|accept_invalid_exe_ctx
+argument_list|)
 condition|)
 block|{
 if|if
@@ -715,7 +739,9 @@ name|private
 operator|:
 name|bool
 name|SyncWithProcessState
-argument_list|()
+argument_list|(
+argument|bool accept_invalid_exe_ctx
+argument_list|)
 block|;
 name|ProcessModID
 name|m_mod_id
@@ -1234,11 +1260,28 @@ name|ModuleSP
 name|GetModule
 argument_list|()
 block|;
-name|virtual
 name|ValueObject
 operator|*
 name|GetRoot
 argument_list|()
+block|;
+comment|// Given a ValueObject, loop over itself and its parent, and its parent's parent, ..
+comment|// until either the given callback returns false, or you end up at a null pointer
+name|ValueObject
+operator|*
+name|FollowParentChain
+argument_list|(
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+name|ValueObject
+operator|*
+argument_list|)
+operator|>
+argument_list|)
 block|;
 name|virtual
 name|bool
@@ -1650,6 +1693,7 @@ name|GetValueIsValid
 argument_list|()
 specifier|const
 block|;
+comment|// If you call this on a newly created ValueObject, it will always return false.
 name|bool
 name|GetValueDidChange
 argument_list|()
@@ -1724,26 +1768,6 @@ name|lldb
 operator|::
 name|ValueObjectSP
 name|GetSyntheticArrayMember
-argument_list|(
-argument|size_t index
-argument_list|,
-argument|bool can_create
-argument_list|)
-block|;
-name|lldb
-operator|::
-name|ValueObjectSP
-name|GetSyntheticArrayMemberFromPointer
-argument_list|(
-argument|size_t index
-argument_list|,
-argument|bool can_create
-argument_list|)
-block|;
-name|lldb
-operator|::
-name|ValueObjectSP
-name|GetSyntheticArrayMemberFromArray
 argument_list|(
 argument|size_t index
 argument_list|,
@@ -2211,6 +2235,7 @@ operator|&
 name|error
 argument_list|)
 block|;
+name|virtual
 name|bool
 name|GetIsConstant
 argument_list|()
@@ -2221,6 +2246,26 @@ name|m_update_point
 operator|.
 name|IsConstant
 argument_list|()
+return|;
+block|}
+name|bool
+name|NeedsUpdating
+argument_list|()
+block|{
+specifier|const
+name|bool
+name|accept_invalid_exe_ctx
+operator|=
+name|CanUpdateWithInvalidExecutionContext
+argument_list|()
+block|;
+return|return
+name|m_update_point
+operator|.
+name|NeedsUpdating
+argument_list|(
+name|accept_invalid_exe_ctx
+argument_list|)
 return|;
 block|}
 name|void
@@ -2239,6 +2284,7 @@ name|GetFormat
 argument_list|()
 specifier|const
 block|;
+name|virtual
 name|void
 name|SetFormat
 argument_list|(
@@ -2266,6 +2312,14 @@ operator|::
 name|LanguageType
 name|GetPreferredDisplayLanguage
 argument_list|()
+block|;
+name|void
+name|SetPreferredDisplayLanguage
+argument_list|(
+name|lldb
+operator|::
+name|LanguageType
+argument_list|)
 block|;
 name|lldb
 operator|::
@@ -2466,6 +2520,11 @@ comment|//------------------------------------------------------------------
 name|virtual
 name|bool
 name|MightHaveChildren
+parameter_list|()
+function_decl|;
+name|virtual
+name|bool
+name|IsRuntimeSupportValue
 parameter_list|()
 function_decl|;
 name|protected
@@ -2887,6 +2946,11 @@ literal|16
 operator|>
 name|m_value_checksum
 expr_stmt|;
+name|lldb
+operator|::
+name|LanguageType
+name|m_preferred_display_language
+expr_stmt|;
 name|bool
 name|m_value_is_valid
 range|:
@@ -2934,6 +2998,10 @@ literal|1
 decl_stmt|;
 name|friend
 name|class
+name|ValueObjectChild
+decl_stmt|;
+name|friend
+name|class
 name|ClangExpressionDeclMap
 decl_stmt|;
 comment|// For GetValue
@@ -2951,6 +3019,11 @@ name|friend
 name|class
 name|ValueObjectConstResultImpl
 decl_stmt|;
+name|friend
+name|class
+name|ValueObjectSynthetic
+decl_stmt|;
+comment|// For ClearUserVisibleData
 comment|//------------------------------------------------------------------
 comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------
@@ -2992,6 +3065,15 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+name|virtual
+name|bool
+name|CanUpdateWithInvalidExecutionContext
+parameter_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
 name|virtual
 name|void
 name|CalculateDynamicValue

@@ -66,6 +66,7 @@ name|namespace
 name|lldb
 block|{
 name|class
+name|LLDB_API
 name|SBInputReader
 block|{
 name|public
@@ -143,6 +144,7 @@ expr_stmt|;
 block|}
 empty_stmt|;
 name|class
+name|LLDB_API
 name|SBDebugger
 block|{
 name|public

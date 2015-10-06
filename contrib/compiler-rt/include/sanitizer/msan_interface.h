@@ -109,6 +109,17 @@ modifier|*
 name|a
 parameter_list|)
 function_decl|;
+comment|/* Test that this_id is a descendant of prev_id (or they are simply equal).    * "descendant" here means they are part of the same chain, created with    * __msan_chain_origin. */
+name|int
+name|__msan_origin_is_descendant_or_same
+parameter_list|(
+name|uint32_t
+name|this_id
+parameter_list|,
+name|uint32_t
+name|prev_id
+parameter_list|)
+function_decl|;
 comment|/* Returns non-zero if tracking origins. */
 name|int
 name|__msan_get_track_origins

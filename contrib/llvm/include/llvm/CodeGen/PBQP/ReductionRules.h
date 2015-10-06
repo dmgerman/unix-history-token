@@ -870,7 +870,7 @@ condition|)
 block|{
 name|G
 operator|.
-name|setEdgeCosts
+name|updateEdgeCosts
 argument_list|(
 name|YZEId
 argument_list|,
@@ -884,7 +884,7 @@ else|else
 block|{
 name|G
 operator|.
-name|setEdgeCosts
+name|updateEdgeCosts
 argument_list|(
 name|YZEId
 argument_list|,
@@ -919,6 +919,107 @@ expr_stmt|;
 comment|// TODO: Try to normalize newly added/modified edge.
 block|}
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NDEBUG
+end_ifndef
+
+begin_comment
+comment|// Does this Cost vector have any register options ?
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|VectorT
+operator|>
+name|bool
+name|hasRegisterOptions
+argument_list|(
+argument|const VectorT&V
+argument_list|)
+block|{
+name|unsigned
+name|VL
+operator|=
+name|V
+operator|.
+name|getLength
+argument_list|()
+block|;
+comment|// An empty or spill only cost vector does not provide any register option.
+if|if
+condition|(
+name|VL
+operator|<=
+literal|1
+condition|)
+return|return
+name|false
+return|;
+end_expr_stmt
+
+begin_comment
+comment|// If there are registers in the cost vector, but all of them have infinite
+end_comment
+
+begin_comment
+comment|// costs, then ... there is no available register.
+end_comment
+
+begin_for
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|1
+init|;
+name|i
+operator|<
+name|VL
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|V
+index|[
+name|i
+index|]
+operator|!=
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|PBQP
+operator|::
+name|PBQPNum
+operator|>
+operator|::
+name|infinity
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+end_for
+
+begin_return
+return|return
+name|false
+return|;
+end_return
+
+begin_endif
+unit|}
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// \brief Find a solution to a fully reduced graph by backpropagation.
@@ -965,7 +1066,7 @@ comment|//        state.
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|typename
 name|GraphT
@@ -1048,6 +1149,37 @@ argument_list|(
 name|NId
 argument_list|)
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NDEBUG
+comment|// Although a conservatively allocatable node can be allocated to a register,
+comment|// spilling it may provide a lower cost solution. Assert here that spilling
+comment|// is done by choice, not because there were no register available.
+if|if
+condition|(
+name|G
+operator|.
+name|getNodeMetadata
+argument_list|(
+name|NId
+argument_list|)
+operator|.
+name|wasConservativelyAllocatable
+argument_list|()
+condition|)
+name|assert
+argument_list|(
+name|hasRegisterOptions
+argument_list|(
+name|v
+argument_list|)
+operator|&&
+literal|"A conservatively allocatable node "
+literal|"must have available register options"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|auto

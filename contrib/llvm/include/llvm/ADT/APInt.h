@@ -114,13 +114,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Deserializer
-decl_stmt|;
-name|class
 name|FoldingSetNodeID
-decl_stmt|;
-name|class
-name|Serializer
 decl_stmt|;
 name|class
 name|StringRef
@@ -357,7 +351,7 @@ return|;
 block|}
 comment|/// \brief Clear unused high order bits
 comment|///
-comment|/// This method is used internally to clear the to "N" bits in the high order
+comment|/// This method is used internally to clear the top "N" bits in the high order
 comment|/// word that are not used by the APInt. This is needed after the most
 comment|/// significant word is assigned a value to ensure that those bits are
 comment|/// zero'd out.
@@ -1017,14 +1011,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|BitWidth
-operator|==
-literal|1
-operator|?
-name|VAL
-operator|==
-literal|0
-operator|:
 operator|!
 name|isNegative
 argument_list|()
@@ -1092,14 +1078,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|BitWidth
-operator|==
-literal|1
-operator|?
-name|VAL
-operator|==
-literal|1
-operator|:
 name|isNegative
 argument_list|()
 operator|&&
@@ -1302,6 +1280,37 @@ name|getZExtValue
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Check if the APInt consists of a repeated bit pattern.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// e.g. 0x01010101 satisfies isSplat(8).
+end_comment
+
+begin_comment
+comment|/// \param SplatSizeInBits The size of the pattern in bits. Must divide bit
+end_comment
+
+begin_comment
+comment|/// width without remainder.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isSplat
+argument_list|(
+name|unsigned
+name|SplatSizeInBits
+argument_list|)
+decl|const
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
@@ -3224,7 +3233,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Performs a bitwise or on *this and RHS. This is implemented bny simply
+comment|/// Performs a bitwise or on *this and RHS. This is implemented by simply
 end_comment
 
 begin_comment
@@ -4672,16 +4681,17 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|ult
-argument_list|(
-name|APInt
-argument_list|(
-name|getBitWidth
+name|getActiveBits
 argument_list|()
-argument_list|,
+operator|>
+literal|64
+condition|?
+name|false
+else|:
+name|getZExtValue
+argument_list|()
+operator|<
 name|RHS
-argument_list|)
-argument_list|)
 return|;
 block|}
 end_decl_stmt
@@ -4751,22 +4761,24 @@ begin_decl_stmt
 name|bool
 name|slt
 argument_list|(
-name|uint64_t
+name|int64_t
 name|RHS
 argument_list|)
 decl|const
 block|{
 return|return
-name|slt
-argument_list|(
-name|APInt
-argument_list|(
-name|getBitWidth
+name|getMinSignedBits
 argument_list|()
-argument_list|,
+operator|>
+literal|64
+condition|?
+name|isNegative
+argument_list|()
+else|:
+name|getSExtValue
+argument_list|()
+operator|<
 name|RHS
-argument_list|)
-argument_list|)
 return|;
 block|}
 end_decl_stmt
@@ -4854,15 +4866,10 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|ule
+operator|!
+name|ugt
 argument_list|(
-name|APInt
-argument_list|(
-name|getBitWidth
-argument_list|()
-argument_list|,
 name|RHS
-argument_list|)
 argument_list|)
 return|;
 block|}
@@ -4951,15 +4958,10 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|sle
+operator|!
+name|sgt
 argument_list|(
-name|APInt
-argument_list|(
-name|getBitWidth
-argument_list|()
-argument_list|,
 name|RHS
-argument_list|)
 argument_list|)
 return|;
 block|}
@@ -5050,16 +5052,17 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|ugt
-argument_list|(
-name|APInt
-argument_list|(
-name|getBitWidth
+name|getActiveBits
 argument_list|()
-argument_list|,
+operator|>
+literal|64
+condition|?
+name|true
+else|:
+name|getZExtValue
+argument_list|()
+operator|>
 name|RHS
-argument_list|)
-argument_list|)
 return|;
 block|}
 end_decl_stmt
@@ -5143,22 +5146,25 @@ begin_decl_stmt
 name|bool
 name|sgt
 argument_list|(
-name|uint64_t
+name|int64_t
 name|RHS
 argument_list|)
 decl|const
 block|{
 return|return
-name|sgt
-argument_list|(
-name|APInt
-argument_list|(
-name|getBitWidth
+name|getMinSignedBits
 argument_list|()
-argument_list|,
+operator|>
+literal|64
+condition|?
+operator|!
+name|isNegative
+argument_list|()
+else|:
+name|getSExtValue
+argument_list|()
+operator|>
 name|RHS
-argument_list|)
-argument_list|)
 return|;
 block|}
 end_decl_stmt
@@ -5242,15 +5248,10 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|uge
+operator|!
+name|ult
 argument_list|(
-name|APInt
-argument_list|(
-name|getBitWidth
-argument_list|()
-argument_list|,
 name|RHS
-argument_list|)
 argument_list|)
 return|;
 block|}
@@ -5329,21 +5330,16 @@ begin_decl_stmt
 name|bool
 name|sge
 argument_list|(
-name|uint64_t
+name|int64_t
 name|RHS
 argument_list|)
 decl|const
 block|{
 return|return
-name|sge
+operator|!
+name|slt
 argument_list|(
-name|APInt
-argument_list|(
-name|getBitWidth
-argument_list|()
-argument_list|,
 name|RHS
-argument_list|)
 argument_list|)
 return|;
 block|}
@@ -6320,7 +6316,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This function is an APInt version of the countLeadingOnes_{32,64}
+comment|/// This function is an APInt version of the countLeadingOnes
 end_comment
 
 begin_comment
@@ -6390,7 +6386,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This function is an APInt version of the countTrailingZeros_{32,64}
+comment|/// This function is an APInt version of the countTrailingZeros
 end_comment
 
 begin_comment
@@ -6430,7 +6426,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This function is an APInt version of the countTrailingOnes_{32,64}
+comment|/// This function is an APInt version of the countTrailingOnes
 end_comment
 
 begin_comment
@@ -6465,7 +6461,9 @@ name|isSingleWord
 argument_list|()
 condition|)
 return|return
-name|CountTrailingOnes_64
+name|llvm
+operator|::
+name|countTrailingOnes
 argument_list|(
 name|VAL
 argument_list|)
@@ -6489,7 +6487,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This function is an APInt version of the countPopulation_{32,64} functions
+comment|/// This function is an APInt version of the countPopulation functions
 end_comment
 
 begin_comment
@@ -6519,7 +6517,9 @@ name|isSingleWord
 argument_list|()
 condition|)
 return|return
-name|CountPopulation_64
+name|llvm
+operator|::
+name|countPopulation
 argument_list|(
 name|VAL
 argument_list|)

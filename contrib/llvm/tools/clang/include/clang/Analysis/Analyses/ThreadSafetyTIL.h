@@ -1091,12 +1091,13 @@ comment|// with REQUIRES_EH=1.
 name|void
 name|operator
 name|delete
-argument_list|(
+parameter_list|(
 name|void
-operator|*
-argument_list|)
-name|LLVM_DELETED_FUNCTION
-decl_stmt|;
+modifier|*
+parameter_list|)
+init|=
+name|delete
+function_decl|;
 comment|/// Returns the instruction ID for this expression.
 comment|/// All basic block instructions have a unique ID (i.e. virtual register).
 name|unsigned
@@ -1234,18 +1235,20 @@ name|private
 label|:
 name|SExpr
 argument_list|()
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 comment|/// SExpr objects must be created in an arena.
 name|void
 modifier|*
 name|operator
 name|new
-argument_list|(
+parameter_list|(
 name|size_t
-argument_list|)
-name|LLVM_DELETED_FUNCTION
-decl_stmt|;
+parameter_list|)
+init|=
+name|delete
+function_decl|;
 block|}
 empty_stmt|;
 comment|// Contains various helper functions for SExprs.
@@ -1718,7 +1721,8 @@ name|virtual
 operator|~
 name|Future
 argument_list|()
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:

@@ -260,9 +260,12 @@ return|;
 block|}
 name|SourceMgr
 argument_list|(
-argument|const SourceMgr&
+specifier|const
+name|SourceMgr
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -272,7 +275,8 @@ specifier|const
 name|SourceMgr
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:
@@ -1255,6 +1259,11 @@ name|S
 argument_list|,
 name|bool
 name|ShowColors
+operator|=
+name|true
+argument_list|,
+name|bool
+name|ShowKindLabel
 operator|=
 name|true
 argument_list|)

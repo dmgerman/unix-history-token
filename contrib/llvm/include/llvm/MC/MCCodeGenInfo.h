@@ -100,7 +100,7 @@ expr_stmt|;
 name|public
 label|:
 name|void
-name|InitMCCodeGenInfo
+name|initMCCodeGenInfo
 argument_list|(
 name|Reloc
 operator|::

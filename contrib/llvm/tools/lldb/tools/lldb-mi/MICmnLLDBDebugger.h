@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmnLLDBDebugger.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMICmnLLDBDebugger interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -88,7 +44,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<queue>
+file|<condition_variable>
 end_include
 
 begin_include
@@ -100,19 +56,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBDebugger.h>
+file|<mutex>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBListener.h>
+file|"lldb/API/SBDebugger.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBEvent.h>
+file|"lldb/API/SBListener.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/API/SBEvent.h"
 end_include
 
 begin_comment
@@ -225,16 +187,18 @@ name|public
 label|:
 name|bool
 name|Initialize
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|Shutdown
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|SetDriver
 parameter_list|(
@@ -270,6 +234,24 @@ argument_list|(
 name|void
 argument_list|)
 expr_stmt|;
+name|void
+name|WaitForHandleEvent
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|bool
+name|CheckIfNeedToRebroadcastStopEvent
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|void
+name|RebroadcastStopEvent
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 comment|// MI Commands can use these functions to listen for events they require
 name|bool
 name|RegisterForEvent
@@ -343,7 +325,6 @@ comment|// Overridden:
 name|public
 label|:
 comment|// From CMIUtilThreadActiveObjBase
-name|virtual
 specifier|const
 name|CMIUtilString
 modifier|&
@@ -352,27 +333,28 @@ argument_list|(
 name|void
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|// Overridden:
 name|protected
 label|:
 comment|// From CMIUtilThreadActiveObjBase
-name|virtual
 name|bool
 name|ThreadRun
-parameter_list|(
+argument_list|(
 name|bool
-modifier|&
+operator|&
 name|vrIsAlive
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|ThreadFinish
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|// Typedefs:
 name|private
 label|:
@@ -573,12 +555,12 @@ name|private
 label|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmnLLDBDebugger
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 expr_stmt|;
 comment|// Attributes:
 name|private
@@ -609,6 +591,19 @@ name|m_mapBroadcastClassNameToEventMask
 decl_stmt|;
 name|MapIdToEventMask_t
 name|m_mapIdToEventMask
+decl_stmt|;
+name|std
+operator|::
+name|mutex
+name|m_mutexEventQueue
+expr_stmt|;
+name|std
+operator|::
+name|condition_variable
+name|m_conditionEventQueueEmpty
+expr_stmt|;
+name|uint32_t
+name|m_nLastStopId
 decl_stmt|;
 block|}
 end_decl_stmt

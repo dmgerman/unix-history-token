@@ -95,9 +95,13 @@ label|:
 comment|// Noncopyable.
 name|Watchdog
 argument_list|(
-argument|const Watchdog&other
+specifier|const
+name|Watchdog
+operator|&
+name|other
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|Watchdog
 modifier|&
@@ -109,7 +113,8 @@ name|Watchdog
 operator|&
 name|other
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 block|}
 empty_stmt|;

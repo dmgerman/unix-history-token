@@ -123,6 +123,10 @@ literal|0
 block|,
 name|BindArchClass
 block|,
+name|CudaDeviceClass
+block|,
+name|CudaHostClass
+block|,
 name|PreprocessJobClass
 block|,
 name|PrecompileJobClass
@@ -189,19 +193,19 @@ name|protected
 label|:
 name|Action
 argument_list|(
-argument|ActionClass _Kind
+argument|ActionClass Kind
 argument_list|,
-argument|types::ID _Type
+argument|types::ID Type
 argument_list|)
 block|:
 name|Kind
 argument_list|(
-name|_Kind
+name|Kind
 argument_list|)
 operator|,
 name|Type
 argument_list|(
-name|_Type
+name|Type
 argument_list|)
 operator|,
 name|OwnsInputs
@@ -211,21 +215,21 @@ argument_list|)
 block|{}
 name|Action
 argument_list|(
-argument|ActionClass _Kind
+argument|ActionClass Kind
 argument_list|,
 argument|std::unique_ptr<Action> Input
 argument_list|,
-argument|types::ID _Type
+argument|types::ID Type
 argument_list|)
 operator|:
 name|Kind
 argument_list|(
-name|_Kind
+name|Kind
 argument_list|)
 operator|,
 name|Type
 argument_list|(
-name|_Type
+name|Type
 argument_list|)
 operator|,
 name|Inputs
@@ -245,14 +249,14 @@ argument_list|)
 block|{   }
 name|Action
 argument_list|(
-argument|ActionClass _Kind
+argument|ActionClass Kind
 argument_list|,
 argument|std::unique_ptr<Action> Input
 argument_list|)
 operator|:
 name|Kind
 argument_list|(
-name|_Kind
+name|Kind
 argument_list|)
 operator|,
 name|Type
@@ -280,26 +284,26 @@ argument_list|)
 block|{}
 name|Action
 argument_list|(
-argument|ActionClass _Kind
+argument|ActionClass Kind
 argument_list|,
-argument|const ActionList&_Inputs
+argument|const ActionList&Inputs
 argument_list|,
-argument|types::ID _Type
+argument|types::ID Type
 argument_list|)
 operator|:
 name|Kind
 argument_list|(
-name|_Kind
+name|Kind
 argument_list|)
 operator|,
 name|Type
 argument_list|(
-name|_Type
+name|Type
 argument_list|)
 operator|,
 name|Inputs
 argument_list|(
-name|_Inputs
+name|Inputs
 argument_list|)
 operator|,
 name|OwnsInputs
@@ -475,9 +479,9 @@ name|public
 operator|:
 name|InputAction
 argument_list|(
-argument|const llvm::opt::Arg&_Input
+argument|const llvm::opt::Arg&Input
 argument_list|,
-argument|types::ID _Type
+argument|types::ID Type
 argument_list|)
 block|;
 specifier|const
@@ -546,7 +550,7 @@ argument_list|,
 specifier|const
 name|char
 operator|*
-name|_ArchName
+name|ArchName
 argument_list|)
 block|;
 specifier|const
@@ -574,6 +578,152 @@ name|getKind
 argument_list|()
 operator|==
 name|BindArchClass
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|CudaDeviceAction
+operator|:
+name|public
+name|Action
+block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+comment|/// GPU architecture to bind -- e.g 'sm_35'.
+specifier|const
+name|char
+operator|*
+name|GpuArchName
+block|;
+comment|/// True when action results are not consumed by the host action (e.g when
+comment|/// -fsyntax-only or --cuda-device-only options are used).
+name|bool
+name|AtTopLevel
+block|;
+name|public
+operator|:
+name|CudaDeviceAction
+argument_list|(
+argument|std::unique_ptr<Action> Input
+argument_list|,
+argument|const char *ArchName
+argument_list|,
+argument|bool AtTopLevel
+argument_list|)
+block|;
+specifier|const
+name|char
+operator|*
+name|getGpuArchName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GpuArchName
+return|;
+block|}
+name|bool
+name|isAtTopLevel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AtTopLevel
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Action *A
+argument_list|)
+block|{
+return|return
+name|A
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|CudaDeviceClass
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|CudaHostAction
+operator|:
+name|public
+name|Action
+block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|ActionList
+name|DeviceActions
+block|;
+name|public
+operator|:
+name|CudaHostAction
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Action
+operator|>
+name|Input
+argument_list|,
+specifier|const
+name|ActionList
+operator|&
+name|DeviceActions
+argument_list|)
+block|;
+operator|~
+name|CudaHostAction
+argument_list|()
+name|override
+block|;
+name|ActionList
+operator|&
+name|getDeviceActions
+argument_list|()
+block|{
+return|return
+name|DeviceActions
+return|;
+block|}
+specifier|const
+name|ActionList
+operator|&
+name|getDeviceActions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DeviceActions
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Action *A
+argument_list|)
+block|{
+return|return
+name|A
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|CudaHostClass
 return|;
 block|}
 expr|}

@@ -597,7 +597,7 @@ argument_list|()
 return|;
 block|}
 comment|/// Return true for a valid index.
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()

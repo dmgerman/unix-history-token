@@ -43,6 +43,114 @@ directive|define
 name|LLDB_lldb_enumerations_h_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SWIG
+end_ifndef
+
+begin_comment
+comment|// With MSVC, the default type of an enum is always signed, even if one of the
+end_comment
+
+begin_comment
+comment|// enumerator values is too large to fit into a signed integer but would
+end_comment
+
+begin_comment
+comment|// otherwise fit into an unsigned integer.  As a result of this, all of LLDB's
+end_comment
+
+begin_comment
+comment|// flag-style enumerations that specify something like eValueFoo = 1u<< 31
+end_comment
+
+begin_comment
+comment|// result in negative values.  This usually just results in a benign warning,
+end_comment
+
+begin_comment
+comment|// but in a few places we actually do comparisons on the enum values, which
+end_comment
+
+begin_comment
+comment|// would cause a real bug.  Furthermore, there's no way to silence only this
+end_comment
+
+begin_comment
+comment|// warning, as it's part of -Wmicrosoft which also catches a whole slew of
+end_comment
+
+begin_comment
+comment|// other useful issues.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// To make matters worse, early versions of SWIG don't recognize the syntax
+end_comment
+
+begin_comment
+comment|// of specifying the underlying type of an enum (and Python doesn't care anyway)
+end_comment
+
+begin_comment
+comment|// so we need a way to specify the underlying type when the enum is being used
+end_comment
+
+begin_comment
+comment|// from C++ code, but just use a regular enum when swig is pre-processing.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLAGS_ENUM
+parameter_list|(
+name|Name
+parameter_list|)
+value|enum Name : unsigned
+end_define
+
+begin_define
+define|#
+directive|define
+name|FLAGS_ANONYMOUS_ENUM
+parameter_list|()
+value|enum : unsigned
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FLAGS_ENUM
+parameter_list|(
+name|Name
+parameter_list|)
+value|enum Name
+end_define
+
+begin_define
+define|#
+directive|define
+name|FLAGS_ANONYMOUS_ENUM
+parameter_list|()
+value|enum
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|namespace
 name|lldb
@@ -50,7 +158,6 @@ block|{
 comment|//----------------------------------------------------------------------
 comment|// Process and Thread States
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|StateType
 block|{
@@ -93,117 +200,134 @@ comment|///< Process or thread is in a suspended state as far
 comment|///< as the debugger is concerned while other processes
 comment|///< or threads get the chance to run.
 block|}
-name|StateType
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Launch Flags
 comment|//----------------------------------------------------------------------
-typedef|typedef
-enum|enum
-name|LaunchFlags
+name|FLAGS_ENUM
+argument_list|(
+argument|LaunchFlags
+argument_list|)
 block|{
 name|eLaunchFlagNone
-init|=
+operator|=
 literal|0u
-block|,
+operator|,
 name|eLaunchFlagExec
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|0
 operator|)
-block|,
+operator|,
 comment|///< Exec when launching and turn the calling process into a new process
 name|eLaunchFlagDebug
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|1
 operator|)
-block|,
+operator|,
 comment|///< Stop as soon as the process launches to allow the process to be debugged
 name|eLaunchFlagStopAtEntry
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|2
 operator|)
-block|,
+operator|,
 comment|///< Stop at the program entry point instead of auto-continuing when launching or attaching at entry point
 name|eLaunchFlagDisableASLR
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|3
 operator|)
-block|,
+operator|,
 comment|///< Disable Address Space Layout Randomization
 name|eLaunchFlagDisableSTDIO
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|4
 operator|)
-block|,
+operator|,
 comment|///< Disable stdio for inferior process (e.g. for a GUI app)
 name|eLaunchFlagLaunchInTTY
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|5
 operator|)
-block|,
+operator|,
 comment|///< Launch the process in a new TTY if supported by the host
 name|eLaunchFlagLaunchInShell
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|6
 operator|)
-block|,
+operator|,
 comment|///< Launch the process inside a shell to get shell expansion
 name|eLaunchFlagLaunchInSeparateProcessGroup
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|7
 operator|)
-block|,
+operator|,
 comment|///< Launch the process in a separate process group
 name|eLaunchFlagDontSetExitStatus
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|8
 operator|)
-block|,
+operator|,
 comment|///< If you are going to hand the process off (e.g. to debugserver)
 comment|///< set this flag so lldb& the handee don't race to set its exit status.
 name|eLaunchFlagDetachOnError
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|9
 operator|)
+operator|,
 comment|///< If set, then the client stub should detach rather than killing the debugee
 comment|///< if it loses connection with lldb.
+name|eLaunchFlagShellExpandArguments
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|10
+operator|)
+operator|,
+comment|///< Perform shell-style argument expansion
+name|eLaunchFlagCloseTTYOnExit
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|11
+operator|)
+operator|,
+comment|///< Close the open TTY on exit
 block|}
-name|LaunchFlags
-typedef|;
+empty_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Thread Run Modes
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|RunMode
 block|{
@@ -213,12 +337,10 @@ name|eAllThreads
 block|,
 name|eOnlyDuringStepping
 block|}
-name|RunMode
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Byte ordering definitions
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|ByteOrder
 block|{
@@ -238,12 +360,10 @@ name|eByteOrderLittle
 init|=
 literal|4
 block|}
-name|ByteOrder
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Register encoding definitions
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|Encoding
 block|{
@@ -263,12 +383,10 @@ comment|// float
 name|eEncodingVector
 comment|// vector registers
 block|}
-name|Encoding
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Display format definitions
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|Format
 block|{
@@ -370,12 +488,10 @@ block|,
 comment|// Do not print this
 name|kNumFormats
 block|}
-name|Format
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Description levels for "void GetDescription(Stream *, DescriptionLevel)" calls
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|DescriptionLevel
 block|{
@@ -391,12 +507,10 @@ name|eDescriptionLevelInitial
 block|,
 name|kNumDescriptionLevels
 block|}
-name|DescriptionLevel
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Script interpreter types
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|ScriptLanguage
 block|{
@@ -408,15 +522,13 @@ name|eScriptLanguageDefault
 init|=
 name|eScriptLanguagePython
 block|}
-name|ScriptLanguage
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Register numbering types
 comment|// See RegisterContext::ConvertRegisterKindToRegisterNumber to convert
 comment|// any of these to the lldb internal register numbering scheme
 comment|// (eRegisterKindLLDB).
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|RegisterKind
 block|{
@@ -439,12 +551,10 @@ block|,
 comment|// lldb's internal register numbers
 name|kNumRegisterKinds
 block|}
-name|RegisterKind
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Thread stop reasons
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|StopReason
 block|{
@@ -473,12 +583,10 @@ name|eStopReasonThreadExiting
 block|,
 name|eStopReasonInstrumentation
 block|}
-name|StopReason
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Command Return Status Types
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|ReturnStatus
 block|{
@@ -498,12 +606,10 @@ name|eReturnStatusFailed
 block|,
 name|eReturnStatusQuit
 block|}
-name|ReturnStatus
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// The results of expression evaluation:
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|ExpressionResults
 block|{
@@ -527,12 +633,10 @@ name|eExpressionResultUnavailable
 block|,
 name|eExpressionStoppedForDebug
 block|}
-name|ExpressionResults
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Connection Status Types
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|ConnectionStatus
 block|{
@@ -557,9 +661,7 @@ comment|// Lost connection while connected to a valid connection
 name|eConnectionStatusInterrupted
 comment|// Interrupted read
 block|}
-name|ConnectionStatus
-typedef|;
-typedef|typedef
+enum|;
 enum|enum
 name|ErrorType
 block|{
@@ -580,9 +682,7 @@ comment|///< These are from the ExpressionResults enum.
 name|eErrorTypeWin32
 comment|///< Standard Win32 error codes.
 block|}
-name|ErrorType
-typedef|;
-typedef|typedef
+enum|;
 enum|enum
 name|ValueType
 block|{
@@ -625,12 +725,10 @@ init|=
 literal|7
 comment|// constant result variables
 block|}
-name|ValueType
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Token size/granularities for Input Readers
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|InputReaderGranularity
 block|{
@@ -646,8 +744,7 @@ name|eInputReaderGranularityLine
 block|,
 name|eInputReaderGranularityAll
 block|}
-name|InputReaderGranularity
-typedef|;
+enum|;
 comment|//------------------------------------------------------------------
 comment|/// These mask bits allow a common interface for queries that can
 comment|/// limit the amount of information that gets parsed to only the
@@ -658,75 +755,76 @@ comment|/// Each definition corresponds to a one of the member variables
 comment|/// in this class, and requests that that item be resolved, or
 comment|/// indicates that the member did get resolved.
 comment|//------------------------------------------------------------------
-typedef|typedef
-enum|enum
-name|SymbolContextItem
+name|FLAGS_ENUM
+argument_list|(
+argument|SymbolContextItem
+argument_list|)
 block|{
 name|eSymbolContextTarget
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|0
 operator|)
-block|,
+operator|,
 comment|///< Set when \a target is requested from a query, or was located in query results
 name|eSymbolContextModule
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|1
 operator|)
-block|,
+operator|,
 comment|///< Set when \a module is requested from a query, or was located in query results
 name|eSymbolContextCompUnit
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|2
 operator|)
-block|,
+operator|,
 comment|///< Set when \a comp_unit is requested from a query, or was located in query results
 name|eSymbolContextFunction
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|3
 operator|)
-block|,
+operator|,
 comment|///< Set when \a function is requested from a query, or was located in query results
 name|eSymbolContextBlock
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|4
 operator|)
-block|,
+operator|,
 comment|///< Set when the deepest \a block is requested from a query, or was located in query results
 name|eSymbolContextLineEntry
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|5
 operator|)
-block|,
+operator|,
 comment|///< Set when \a line_entry is requested from a query, or was located in query results
 name|eSymbolContextSymbol
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|6
 operator|)
-block|,
+operator|,
 comment|///< Set when \a symbol is requested from a query, or was located in query results
 name|eSymbolContextEverything
-init|=
+operator|=
 operator|(
 operator|(
 name|eSymbolContextSymbol
@@ -736,41 +834,51 @@ operator|)
 operator|-
 literal|1u
 operator|)
-comment|///< Indicates to try and lookup everything up during a query.
+operator|,
+comment|///< Indicates to try and lookup everything up during a routine symbol context query.
+name|eSymbolContextVariable
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|7
+operator|)
+comment|///< Set when \a global or static variable is requested from a query, or was located in query results.
+comment|///< eSymbolContextVariable is potentially expensive to lookup so it isn't included in
+comment|///< eSymbolContextEverything which stops it from being used during frame PC lookups and
+comment|///< many other potential address to symbol context lookups.
 block|}
-name|SymbolContextItem
-typedef|;
-typedef|typedef
-enum|enum
-name|Permissions
+empty_stmt|;
+name|FLAGS_ENUM
+argument_list|(
+argument|Permissions
+argument_list|)
 block|{
 name|ePermissionsWritable
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|0
 operator|)
-block|,
+operator|,
 name|ePermissionsReadable
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|1
 operator|)
-block|,
+operator|,
 name|ePermissionsExecutable
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|2
 operator|)
 block|}
-name|Permissions
-typedef|;
-typedef|typedef
+empty_stmt|;
 enum|enum
 name|InputReaderAction
 block|{
@@ -798,197 +906,196 @@ comment|// reader received an EOF char (probably from a control-d)
 name|eInputReaderDone
 comment|// reader was just popped off the stack and is done
 block|}
-name|InputReaderAction
-typedef|;
-typedef|typedef
-enum|enum
-name|BreakpointEventType
+enum|;
+name|FLAGS_ENUM
+argument_list|(
+argument|BreakpointEventType
+argument_list|)
 block|{
 name|eBreakpointEventTypeInvalidType
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|0
 operator|)
-block|,
+operator|,
 name|eBreakpointEventTypeAdded
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|1
 operator|)
-block|,
+operator|,
 name|eBreakpointEventTypeRemoved
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|2
 operator|)
-block|,
+operator|,
 name|eBreakpointEventTypeLocationsAdded
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|3
 operator|)
-block|,
+operator|,
 comment|// Locations added doesn't get sent when the breakpoint is created
 name|eBreakpointEventTypeLocationsRemoved
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|4
 operator|)
-block|,
+operator|,
 name|eBreakpointEventTypeLocationsResolved
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|5
 operator|)
-block|,
+operator|,
 name|eBreakpointEventTypeEnabled
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|6
 operator|)
-block|,
+operator|,
 name|eBreakpointEventTypeDisabled
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|7
 operator|)
-block|,
+operator|,
 name|eBreakpointEventTypeCommandChanged
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|8
 operator|)
-block|,
+operator|,
 name|eBreakpointEventTypeConditionChanged
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|9
 operator|)
-block|,
+operator|,
 name|eBreakpointEventTypeIgnoreChanged
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|10
 operator|)
-block|,
+operator|,
 name|eBreakpointEventTypeThreadChanged
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|11
 operator|)
 block|}
-name|BreakpointEventType
-typedef|;
-typedef|typedef
-enum|enum
-name|WatchpointEventType
+empty_stmt|;
+name|FLAGS_ENUM
+argument_list|(
+argument|WatchpointEventType
+argument_list|)
 block|{
 name|eWatchpointEventTypeInvalidType
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|0
 operator|)
-block|,
+operator|,
 name|eWatchpointEventTypeAdded
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|1
 operator|)
-block|,
+operator|,
 name|eWatchpointEventTypeRemoved
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|2
 operator|)
-block|,
+operator|,
 name|eWatchpointEventTypeEnabled
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|6
 operator|)
-block|,
+operator|,
 name|eWatchpointEventTypeDisabled
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|7
 operator|)
-block|,
+operator|,
 name|eWatchpointEventTypeCommandChanged
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|8
 operator|)
-block|,
+operator|,
 name|eWatchpointEventTypeConditionChanged
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|9
 operator|)
-block|,
+operator|,
 name|eWatchpointEventTypeIgnoreChanged
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|10
 operator|)
-block|,
+operator|,
 name|eWatchpointEventTypeThreadChanged
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|11
 operator|)
-block|,
+operator|,
 name|eWatchpointEventTypeTypeChanged
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|12
 operator|)
 block|}
-name|WatchpointEventType
-typedef|;
+empty_stmt|;
 comment|//----------------------------------------------------------------------
 comment|/// Programming language type.
 comment|///
@@ -997,7 +1104,6 @@ comment|/// specification for ease of use and consistency.
 comment|/// The enum -> string code is in LanguageRuntime.cpp, don't change this
 comment|/// table without updating that code as well.
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|LanguageType
 block|{
@@ -1106,6 +1212,8 @@ init|=
 literal|0x0014
 block|,
 comment|///< Python.
+comment|// NOTE: The below are DWARF5 constants, subject to change upon
+comment|// completion of the DWARF5 specification
 name|eLanguageTypeOpenCL
 init|=
 literal|0x0015
@@ -1166,11 +1274,39 @@ init|=
 literal|0x0020
 block|,
 comment|///< Dylan.
+name|eLanguageTypeC_plus_plus_14
+init|=
+literal|0x0021
+block|,
+comment|///< ISO C++:2014.
+name|eLanguageTypeFortran03
+init|=
+literal|0x0022
+block|,
+comment|///< ISO Fortran 2003.
+name|eLanguageTypeFortran08
+init|=
+literal|0x0023
+block|,
+comment|///< ISO Fortran 2008.
+comment|// Vendor Extensions
+comment|// Note: LanguageRuntime::GetNameForLanguageType
+comment|// assumes these can be used as indexes into array language_names, and
+comment|// Language::SetLanguageFromCString and Language::AsCString
+comment|// assume these can be used as indexes into array g_languages.
+name|eLanguageTypeMipsAssembler
+init|=
+literal|0x0024
+block|,
+comment|///< Mips_Assembler.
+name|eLanguageTypeExtRenderScript
+init|=
+literal|0x0025
+block|,
+comment|///< RenderScript.
 name|eNumLanguageTypes
 block|}
-name|LanguageType
-typedef|;
-typedef|typedef
+enum|;
 enum|enum
 name|InstrumentationRuntimeType
 block|{
@@ -1180,9 +1316,7 @@ literal|0x0000
 block|,
 name|eNumInstrumentationRuntimeTypes
 block|}
-name|InstrumentationRuntimeType
-typedef|;
-typedef|typedef
+enum|;
 enum|enum
 name|DynamicValueType
 block|{
@@ -1198,9 +1332,7 @@ name|eDynamicDontRunTarget
 init|=
 literal|2
 block|}
-name|DynamicValueType
-typedef|;
-typedef|typedef
+enum|;
 enum|enum
 name|AccessType
 block|{
@@ -1214,9 +1346,7 @@ name|eAccessProtected
 block|,
 name|eAccessPackage
 block|}
-name|AccessType
-typedef|;
-typedef|typedef
+enum|;
 enum|enum
 name|CommandArgumentType
 block|{
@@ -1366,6 +1496,8 @@ name|eArgTypeThreadIndex
 block|,
 name|eArgTypeThreadName
 block|,
+name|eArgTypeTypeName
+block|,
 name|eArgTypeUnsignedInteger
 block|,
 name|eArgTypeUnixSignal
@@ -1389,12 +1521,10 @@ block|,
 name|eArgTypeLastArg
 comment|// Always keep this entry as the last entry in this enumeration!!
 block|}
-name|CommandArgumentType
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Symbol types
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|SymbolType
 block|{
@@ -1463,9 +1593,7 @@ name|eSymbolTypeObjCIVar
 block|,
 name|eSymbolTypeReExported
 block|}
-name|SymbolType
-typedef|;
-typedef|typedef
+enum|;
 enum|enum
 name|SectionType
 block|{
@@ -1554,106 +1682,104 @@ block|,
 comment|// compact unwind section in Mach-O, __TEXT,__unwind_info
 name|eSectionTypeOther
 block|}
-name|SectionType
-typedef|;
-typedef|typedef
-enum|enum
-name|EmulateInstructionOptions
+enum|;
+name|FLAGS_ENUM
+argument_list|(
+argument|EmulateInstructionOptions
+argument_list|)
 block|{
 name|eEmulateInstructionOptionNone
-init|=
+operator|=
 operator|(
 literal|0u
 operator|)
-block|,
+operator|,
 name|eEmulateInstructionOptionAutoAdvancePC
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|0
 operator|)
-block|,
+operator|,
 name|eEmulateInstructionOptionIgnoreConditions
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|1
 operator|)
 block|}
-name|EmulateInstructionOptions
-typedef|;
-typedef|typedef
-enum|enum
-name|FunctionNameType
+empty_stmt|;
+name|FLAGS_ENUM
+argument_list|(
+argument|FunctionNameType
+argument_list|)
 block|{
 name|eFunctionNameTypeNone
-init|=
+operator|=
 literal|0u
-block|,
+operator|,
 name|eFunctionNameTypeAuto
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|1
 operator|)
-block|,
+operator|,
 comment|// Automatically figure out which FunctionNameType
 comment|// bits to set based on the function name.
 name|eFunctionNameTypeFull
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|2
 operator|)
-block|,
+operator|,
 comment|// The function name.
 comment|// For C this is the same as just the name of the function
 comment|// For C++ this is the mangled or demangled version of the mangled name.
 comment|// For ObjC this is the full function signature with the + or
 comment|// - and the square brackets and the class and selector
 name|eFunctionNameTypeBase
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|3
 operator|)
-block|,
+operator|,
 comment|// The function name only, no namespaces or arguments and no class
 comment|// methods or selectors will be searched.
 name|eFunctionNameTypeMethod
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|4
 operator|)
-block|,
+operator|,
 comment|// Find function by method name (C++) with no namespace or arguments
 name|eFunctionNameTypeSelector
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|5
 operator|)
-block|,
+operator|,
 comment|// Find function by selector name (ObjC) names
 name|eFunctionNameTypeAny
-init|=
+operator|=
 name|eFunctionNameTypeAuto
 comment|// DEPRECATED: use eFunctionNameTypeAuto
 block|}
-name|FunctionNameType
-typedef|;
+empty_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Basic types enumeration for the public API SBType::GetBasicType()
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|BasicType
 block|{
@@ -1727,181 +1853,179 @@ name|eBasicTypeNullPtr
 block|,
 name|eBasicTypeOther
 block|}
-name|BasicType
-typedef|;
-typedef|typedef
-enum|enum
-name|TypeClass
+enum|;
+name|FLAGS_ENUM
+argument_list|(
+argument|TypeClass
+argument_list|)
 block|{
 name|eTypeClassInvalid
-init|=
+operator|=
 operator|(
 literal|0u
 operator|)
-block|,
+operator|,
 name|eTypeClassArray
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|0
 operator|)
-block|,
+operator|,
 name|eTypeClassBlockPointer
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|1
 operator|)
-block|,
+operator|,
 name|eTypeClassBuiltin
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|2
 operator|)
-block|,
+operator|,
 name|eTypeClassClass
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|3
 operator|)
-block|,
+operator|,
 name|eTypeClassComplexFloat
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|4
 operator|)
-block|,
+operator|,
 name|eTypeClassComplexInteger
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|5
 operator|)
-block|,
+operator|,
 name|eTypeClassEnumeration
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|6
 operator|)
-block|,
+operator|,
 name|eTypeClassFunction
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|7
 operator|)
-block|,
+operator|,
 name|eTypeClassMemberPointer
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|8
 operator|)
-block|,
+operator|,
 name|eTypeClassObjCObject
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|9
 operator|)
-block|,
+operator|,
 name|eTypeClassObjCInterface
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|10
 operator|)
-block|,
+operator|,
 name|eTypeClassObjCObjectPointer
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|11
 operator|)
-block|,
+operator|,
 name|eTypeClassPointer
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|12
 operator|)
-block|,
+operator|,
 name|eTypeClassReference
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|13
 operator|)
-block|,
+operator|,
 name|eTypeClassStruct
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|14
 operator|)
-block|,
+operator|,
 name|eTypeClassTypedef
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|15
 operator|)
-block|,
+operator|,
 name|eTypeClassUnion
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|16
 operator|)
-block|,
+operator|,
 name|eTypeClassVector
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|17
 operator|)
-block|,
+operator|,
 comment|// Define the last type class as the MSBit of a 32 bit value
 name|eTypeClassOther
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|31
 operator|)
-block|,
+operator|,
 comment|// Define a mask that can be used for any type when finding types
 name|eTypeClassAny
-init|=
+operator|=
 operator|(
 literal|0xffffffffu
 operator|)
 block|}
-name|TypeClass
-typedef|;
-typedef|typedef
+empty_stmt|;
 enum|enum
 name|TemplateArgumentKind
 block|{
@@ -1923,80 +2047,87 @@ name|eTemplateArgumentKindExpression
 block|,
 name|eTemplateArgumentKindPack
 block|}
-name|TemplateArgumentKind
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Options that can be set for a formatter to alter its behavior
 comment|// Not all of these are applicable to all formatter types
 comment|//----------------------------------------------------------------------
-typedef|typedef
-enum|enum
-name|TypeOptions
+name|FLAGS_ENUM
+argument_list|(
+argument|TypeOptions
+argument_list|)
 block|{
 name|eTypeOptionNone
-init|=
+operator|=
 operator|(
 literal|0u
 operator|)
-block|,
+operator|,
 name|eTypeOptionCascade
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|0
 operator|)
-block|,
+operator|,
 name|eTypeOptionSkipPointers
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|1
 operator|)
-block|,
+operator|,
 name|eTypeOptionSkipReferences
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|2
 operator|)
-block|,
+operator|,
 name|eTypeOptionHideChildren
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|3
 operator|)
-block|,
+operator|,
 name|eTypeOptionHideValue
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|4
 operator|)
-block|,
+operator|,
 name|eTypeOptionShowOneLiner
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|5
 operator|)
-block|,
+operator|,
 name|eTypeOptionHideNames
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|6
 operator|)
+operator|,
+name|eTypeOptionNonCacheable
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|7
+operator|)
 block|}
-name|TypeOptions
-typedef|;
+empty_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// This is the return value for frame comparisons.  If you are comparing frame A to frame B
 comment|// the following cases arise:
@@ -2008,7 +2139,6 @@ comment|//    SameParent.
 comment|// 5) If the two frames are on different threads or processes the comparision is Invalid
 comment|// 6) If for some reason we can't figure out what went on, we return Unknown.
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|FrameComparison
 block|{
@@ -2024,8 +2154,7 @@ name|eFrameCompareYounger
 block|,
 name|eFrameCompareOlder
 block|}
-name|FrameComparison
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Address Class
 comment|//
@@ -2036,7 +2165,6 @@ comment|// above and beyond just looking at the section types. For example, code
 comment|// might contain PC relative data and the object file might be able to
 comment|// tell us that an address in code is data.
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|AddressClass
 block|{
@@ -2054,8 +2182,7 @@ name|eAddressClassDebug
 block|,
 name|eAddressClassRuntime
 block|}
-name|AddressClass
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// File Permissions
 comment|//
@@ -2063,84 +2190,85 @@ comment|// Designed to mimic the unix file permission bits so they can be
 comment|// used with functions that set 'mode_t' to certain values for
 comment|// permissions.
 comment|//----------------------------------------------------------------------
-typedef|typedef
-enum|enum
-name|FilePermissions
+name|FLAGS_ENUM
+argument_list|(
+argument|FilePermissions
+argument_list|)
 block|{
 name|eFilePermissionsUserRead
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|8
 operator|)
-block|,
+operator|,
 name|eFilePermissionsUserWrite
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|7
 operator|)
-block|,
+operator|,
 name|eFilePermissionsUserExecute
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|6
 operator|)
-block|,
+operator|,
 name|eFilePermissionsGroupRead
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|5
 operator|)
-block|,
+operator|,
 name|eFilePermissionsGroupWrite
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|4
 operator|)
-block|,
+operator|,
 name|eFilePermissionsGroupExecute
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|3
 operator|)
-block|,
+operator|,
 name|eFilePermissionsWorldRead
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|2
 operator|)
-block|,
+operator|,
 name|eFilePermissionsWorldWrite
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|1
 operator|)
-block|,
+operator|,
 name|eFilePermissionsWorldExecute
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|0
 operator|)
-block|,
+operator|,
 name|eFilePermissionsUserRW
-init|=
+operator|=
 operator|(
 name|eFilePermissionsUserRead
 operator||
@@ -2148,9 +2276,9 @@ name|eFilePermissionsUserWrite
 operator||
 literal|0
 operator|)
-block|,
+operator|,
 name|eFileFilePermissionsUserRX
-init|=
+operator|=
 operator|(
 name|eFilePermissionsUserRead
 operator||
@@ -2158,9 +2286,9 @@ literal|0
 operator||
 name|eFilePermissionsUserExecute
 operator|)
-block|,
+operator|,
 name|eFilePermissionsUserRWX
-init|=
+operator|=
 operator|(
 name|eFilePermissionsUserRead
 operator||
@@ -2168,9 +2296,9 @@ name|eFilePermissionsUserWrite
 operator||
 name|eFilePermissionsUserExecute
 operator|)
-block|,
+operator|,
 name|eFilePermissionsGroupRW
-init|=
+operator|=
 operator|(
 name|eFilePermissionsGroupRead
 operator||
@@ -2178,9 +2306,9 @@ name|eFilePermissionsGroupWrite
 operator||
 literal|0
 operator|)
-block|,
+operator|,
 name|eFilePermissionsGroupRX
-init|=
+operator|=
 operator|(
 name|eFilePermissionsGroupRead
 operator||
@@ -2188,9 +2316,9 @@ literal|0
 operator||
 name|eFilePermissionsGroupExecute
 operator|)
-block|,
+operator|,
 name|eFilePermissionsGroupRWX
-init|=
+operator|=
 operator|(
 name|eFilePermissionsGroupRead
 operator||
@@ -2198,9 +2326,9 @@ name|eFilePermissionsGroupWrite
 operator||
 name|eFilePermissionsGroupExecute
 operator|)
-block|,
+operator|,
 name|eFilePermissionsWorldRW
-init|=
+operator|=
 operator|(
 name|eFilePermissionsWorldRead
 operator||
@@ -2208,9 +2336,9 @@ name|eFilePermissionsWorldWrite
 operator||
 literal|0
 operator|)
-block|,
+operator|,
 name|eFilePermissionsWorldRX
-init|=
+operator|=
 operator|(
 name|eFilePermissionsWorldRead
 operator||
@@ -2218,9 +2346,9 @@ literal|0
 operator||
 name|eFilePermissionsWorldExecute
 operator|)
-block|,
+operator|,
 name|eFilePermissionsWorldRWX
-init|=
+operator|=
 operator|(
 name|eFilePermissionsWorldRead
 operator||
@@ -2228,9 +2356,9 @@ name|eFilePermissionsWorldWrite
 operator||
 name|eFilePermissionsWorldExecute
 operator|)
-block|,
+operator|,
 name|eFilePermissionsEveryoneR
-init|=
+operator|=
 operator|(
 name|eFilePermissionsUserRead
 operator||
@@ -2238,9 +2366,9 @@ name|eFilePermissionsGroupRead
 operator||
 name|eFilePermissionsWorldRead
 operator|)
-block|,
+operator|,
 name|eFilePermissionsEveryoneW
-init|=
+operator|=
 operator|(
 name|eFilePermissionsUserWrite
 operator||
@@ -2248,9 +2376,9 @@ name|eFilePermissionsGroupWrite
 operator||
 name|eFilePermissionsWorldWrite
 operator|)
-block|,
+operator|,
 name|eFilePermissionsEveryoneX
-init|=
+operator|=
 operator|(
 name|eFilePermissionsUserExecute
 operator||
@@ -2258,9 +2386,9 @@ name|eFilePermissionsGroupExecute
 operator||
 name|eFilePermissionsWorldExecute
 operator|)
-block|,
+operator|,
 name|eFilePermissionsEveryoneRW
-init|=
+operator|=
 operator|(
 name|eFilePermissionsEveryoneR
 operator||
@@ -2268,9 +2396,9 @@ name|eFilePermissionsEveryoneW
 operator||
 literal|0
 operator|)
-block|,
+operator|,
 name|eFilePermissionsEveryoneRX
-init|=
+operator|=
 operator|(
 name|eFilePermissionsEveryoneR
 operator||
@@ -2278,9 +2406,9 @@ literal|0
 operator||
 name|eFilePermissionsEveryoneX
 operator|)
-block|,
+operator|,
 name|eFilePermissionsEveryoneRWX
-init|=
+operator|=
 operator|(
 name|eFilePermissionsEveryoneR
 operator||
@@ -2288,24 +2416,23 @@ name|eFilePermissionsEveryoneW
 operator||
 name|eFilePermissionsEveryoneX
 operator|)
-block|,
+operator|,
 name|eFilePermissionsFileDefault
-init|=
+operator|=
 name|eFilePermissionsUserRW
-block|,
+operator|,
 name|eFilePermissionsDirectoryDefault
-init|=
+operator|=
 name|eFilePermissionsUserRWX
-block|,     }
-name|FilePermissions
-typedef|;
+operator|,
+block|}
+empty_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Queue work item types
 comment|//
 comment|// The different types of work that can be enqueued on a libdispatch
 comment|// aka Grand Central Dispatch (GCD) queue.
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|QueueItemKind
 block|{
@@ -2317,14 +2444,12 @@ name|eQueueItemKindFunction
 block|,
 name|eQueueItemKindBlock
 block|}
-name|QueueItemKind
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Queue type
 comment|// libdispatch aka Grand Central Dispatch (GCD) queues can be either serial
 comment|// (executing on one thread) or concurrent (executing on multiple threads).
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|QueueKind
 block|{
@@ -2336,15 +2461,13 @@ name|eQueueKindSerial
 block|,
 name|eQueueKindConcurrent
 block|}
-name|QueueKind
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Expression Evaluation Stages
 comment|// These are the cancellable stages of expression evaluation, passed to the
 comment|// expression evaluation callback, so that you can interrupt expression
 comment|// evaluation at the various points in its lifecycle.
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|ExpressionEvaluationPhase
 block|{
@@ -2358,36 +2481,34 @@ name|eExpressionEvaluationExecution
 block|,
 name|eExpressionEvaluationComplete
 block|}
-name|ExpressionEvaluationPhase
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Watchpoint Kind
 comment|// Indicates what types of events cause the watchpoint to fire.
 comment|// Used by Native*Protocol-related classes.
 comment|//----------------------------------------------------------------------
-typedef|typedef
-enum|enum
-name|WatchpointKind
+name|FLAGS_ENUM
+argument_list|(
+argument|WatchpointKind
+argument_list|)
 block|{
 name|eWatchpointKindRead
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|0
 operator|)
-block|,
+operator|,
 name|eWatchpointKindWrite
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|1
 operator|)
 block|}
-name|WatchpointKind
-typedef|;
-typedef|typedef
+empty_stmt|;
 enum|enum
 name|GdbSignal
 block|{
@@ -2415,14 +2536,12 @@ name|eGdbSignalBreakpoint
 init|=
 literal|0x96
 block|}
-name|GdbRemoteSignal
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Used with SBHost::GetPath (lldb::PathType) to find files that are
 comment|// related to LLDB on the current host machine. Most files are relative
 comment|// to LLDB or are in known locations.
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|PathType
 block|{
@@ -2447,16 +2566,17 @@ comment|// User plug-ins directory
 name|ePathTypeLLDBTempSystemDir
 block|,
 comment|// The LLDB temp directory for this system that will be cleaned up on exit
+name|ePathTypeGlobalLLDBTempSystemDir
+block|,
+comment|// The LLDB temp directory for this system, NOT cleaned up on a process exit.
 name|ePathTypeClangDir
 comment|// Find path to Clang builtin headers
 block|}
-name|PathType
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Kind of member function
 comment|// Used by the type system
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|MemberFunctionKind
 block|{
@@ -2477,12 +2597,10 @@ comment|// A function that applies to a specific instance
 name|eMemberFunctionKindStaticMethod
 comment|// A function that applies to a type rather than any instance
 block|}
-name|MemberFunctionKind
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// String matching algorithm used by SBTarget
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|MatchType
 block|{
@@ -2492,197 +2610,336 @@ name|eMatchTypeRegex
 block|,
 name|eMatchTypeStartsWith
 block|}
-name|MatchType
-typedef|;
+enum|;
 comment|//----------------------------------------------------------------------
 comment|// Bitmask that describes details about a type
 comment|//----------------------------------------------------------------------
-typedef|typedef
-enum|enum
-name|TypeFlags
+name|FLAGS_ENUM
+argument_list|(
+argument|TypeFlags
+argument_list|)
 block|{
 name|eTypeHasChildren
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|0
 operator|)
-block|,
+operator|,
 name|eTypeHasValue
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|1
 operator|)
-block|,
+operator|,
 name|eTypeIsArray
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|2
 operator|)
-block|,
+operator|,
 name|eTypeIsBlock
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|3
 operator|)
-block|,
+operator|,
 name|eTypeIsBuiltIn
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|4
 operator|)
-block|,
+operator|,
 name|eTypeIsClass
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|5
 operator|)
-block|,
+operator|,
 name|eTypeIsCPlusPlus
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|6
 operator|)
-block|,
+operator|,
 name|eTypeIsEnumeration
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|7
 operator|)
-block|,
+operator|,
 name|eTypeIsFuncPrototype
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|8
 operator|)
-block|,
+operator|,
 name|eTypeIsMember
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|9
 operator|)
-block|,
+operator|,
 name|eTypeIsObjC
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|10
 operator|)
-block|,
+operator|,
 name|eTypeIsPointer
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|11
 operator|)
-block|,
+operator|,
 name|eTypeIsReference
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|12
 operator|)
-block|,
+operator|,
 name|eTypeIsStructUnion
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|13
 operator|)
-block|,
+operator|,
 name|eTypeIsTemplate
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|14
 operator|)
-block|,
+operator|,
 name|eTypeIsTypedef
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|15
 operator|)
-block|,
+operator|,
 name|eTypeIsVector
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|16
 operator|)
-block|,
+operator|,
 name|eTypeIsScalar
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|17
 operator|)
-block|,
+operator|,
 name|eTypeIsInteger
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|18
 operator|)
-block|,
+operator|,
 name|eTypeIsFloat
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|19
 operator|)
-block|,
+operator|,
 name|eTypeIsComplex
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|20
 operator|)
-block|,
+operator|,
 name|eTypeIsSigned
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|21
 operator|)
 block|}
-name|TypeFlags
-typedef|;
+empty_stmt|;
+name|FLAGS_ENUM
+argument_list|(
+argument|CommandFlags
+argument_list|)
+block|{
+comment|//----------------------------------------------------------------------
+comment|// eCommandRequiresTarget
+comment|//
+comment|// Ensures a valid target is contained in m_exe_ctx prior to executing
+comment|// the command. If a target doesn't exist or is invalid, the command
+comment|// will fail and CommandObject::GetInvalidTargetDescription() will be
+comment|// returned as the error. CommandObject subclasses can override the
+comment|// virtual function for GetInvalidTargetDescription() to provide custom
+comment|// strings when needed.
+comment|//----------------------------------------------------------------------
+name|eCommandRequiresTarget
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|0
+operator|)
+operator|,
+comment|//----------------------------------------------------------------------
+comment|// eCommandRequiresProcess
+comment|//
+comment|// Ensures a valid process is contained in m_exe_ctx prior to executing
+comment|// the command. If a process doesn't exist or is invalid, the command
+comment|// will fail and CommandObject::GetInvalidProcessDescription() will be
+comment|// returned as the error. CommandObject subclasses can override the
+comment|// virtual function for GetInvalidProcessDescription() to provide custom
+comment|// strings when needed.
+comment|//----------------------------------------------------------------------
+name|eCommandRequiresProcess
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|1
+operator|)
+operator|,
+comment|//----------------------------------------------------------------------
+comment|// eCommandRequiresThread
+comment|//
+comment|// Ensures a valid thread is contained in m_exe_ctx prior to executing
+comment|// the command. If a thread doesn't exist or is invalid, the command
+comment|// will fail and CommandObject::GetInvalidThreadDescription() will be
+comment|// returned as the error. CommandObject subclasses can override the
+comment|// virtual function for GetInvalidThreadDescription() to provide custom
+comment|// strings when needed.
+comment|//----------------------------------------------------------------------
+name|eCommandRequiresThread
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|2
+operator|)
+operator|,
+comment|//----------------------------------------------------------------------
+comment|// eCommandRequiresFrame
+comment|//
+comment|// Ensures a valid frame is contained in m_exe_ctx prior to executing
+comment|// the command. If a frame doesn't exist or is invalid, the command
+comment|// will fail and CommandObject::GetInvalidFrameDescription() will be
+comment|// returned as the error. CommandObject subclasses can override the
+comment|// virtual function for GetInvalidFrameDescription() to provide custom
+comment|// strings when needed.
+comment|//----------------------------------------------------------------------
+name|eCommandRequiresFrame
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|3
+operator|)
+operator|,
+comment|//----------------------------------------------------------------------
+comment|// eCommandRequiresRegContext
+comment|//
+comment|// Ensures a valid register context (from the selected frame if there
+comment|// is a frame in m_exe_ctx, or from the selected thread from m_exe_ctx)
+comment|// is available from m_exe_ctx prior to executing the command. If a
+comment|// target doesn't exist or is invalid, the command will fail and
+comment|// CommandObject::GetInvalidRegContextDescription() will be returned as
+comment|// the error. CommandObject subclasses can override the virtual function
+comment|// for GetInvalidRegContextDescription() to provide custom strings when
+comment|// needed.
+comment|//----------------------------------------------------------------------
+name|eCommandRequiresRegContext
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|4
+operator|)
+operator|,
+comment|//----------------------------------------------------------------------
+comment|// eCommandTryTargetAPILock
+comment|//
+comment|// Attempts to acquire the target lock if a target is selected in the
+comment|// command interpreter. If the command object fails to acquire the API
+comment|// lock, the command will fail with an appropriate error message.
+comment|//----------------------------------------------------------------------
+name|eCommandTryTargetAPILock
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|5
+operator|)
+operator|,
+comment|//----------------------------------------------------------------------
+comment|// eCommandProcessMustBeLaunched
+comment|//
+comment|// Verifies that there is a launched process in m_exe_ctx, if there
+comment|// isn't, the command will fail with an appropriate error message.
+comment|//----------------------------------------------------------------------
+name|eCommandProcessMustBeLaunched
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|6
+operator|)
+operator|,
+comment|//----------------------------------------------------------------------
+comment|// eCommandProcessMustBePaused
+comment|//
+comment|// Verifies that there is a paused process in m_exe_ctx, if there
+comment|// isn't, the command will fail with an appropriate error message.
+comment|//----------------------------------------------------------------------
+name|eCommandProcessMustBePaused
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|7
+operator|)
+block|}
+empty_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Whether a summary should cap how much data it returns to users or not
 comment|//----------------------------------------------------------------------
-typedef|typedef
 enum|enum
 name|TypeSummaryCapping
 block|{
@@ -2694,8 +2951,7 @@ name|eTypeSummaryUncapped
 init|=
 name|false
 block|}
-name|TypeSummaryCapping
-typedef|;
+enum|;
 block|}
 end_decl_stmt
 

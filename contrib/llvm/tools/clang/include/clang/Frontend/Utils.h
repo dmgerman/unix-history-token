@@ -162,6 +162,9 @@ name|class
 name|LangOptions
 decl_stmt|;
 name|class
+name|PCHContainerReader
+decl_stmt|;
+name|class
 name|Preprocessor
 decl_stmt|;
 name|class
@@ -221,6 +224,11 @@ specifier|const
 name|PreprocessorOptions
 modifier|&
 name|PPOpts
+parameter_list|,
+specifier|const
+name|PCHContainerReader
+modifier|&
+name|PCHContainerRdr
 parameter_list|,
 specifier|const
 name|FrontendOptions
@@ -605,22 +613,19 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// CacheTokens - Cache tokens for use with PCH. Note that this requires
-comment|/// a seekable stream.
+comment|/// Cache tokens for use with PCH. Note that this requires a seekable stream.
 name|void
 name|CacheTokens
-argument_list|(
+parameter_list|(
 name|Preprocessor
-operator|&
+modifier|&
 name|PP
-argument_list|,
-name|llvm
-operator|::
-name|raw_fd_ostream
-operator|*
+parameter_list|,
+name|raw_pwrite_stream
+modifier|*
 name|OS
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// The ChainedIncludesSource class converts headers to chained PCHs in
 comment|/// memory, mainly for testing.
 name|IntrusiveRefCntPtr

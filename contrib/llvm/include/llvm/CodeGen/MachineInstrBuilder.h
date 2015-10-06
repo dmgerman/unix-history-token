@@ -937,18 +937,21 @@ operator|->
 name|isDebugValue
 argument_list|()
 condition|?
+name|static_cast
+operator|<
+name|bool
+operator|>
+operator|(
 name|MI
 operator|->
 name|getDebugVariable
 argument_list|()
-operator|.
-name|Verify
-argument_list|()
+operator|)
 else|:
 name|true
 operator|)
 operator|&&
-literal|"first MDNode argument of a DBG_VALUE not a DIVariable"
+literal|"first MDNode argument of a DBG_VALUE not a variable"
 argument_list|)
 expr_stmt|;
 return|return
@@ -994,6 +997,12 @@ argument_list|(
 name|MCSymbol
 operator|*
 name|Sym
+argument_list|,
+name|unsigned
+name|char
+name|TargetFlags
+operator|=
+literal|0
 argument_list|)
 decl|const
 block|{
@@ -1009,6 +1018,8 @@ operator|::
 name|CreateMCSymbol
 argument_list|(
 name|Sym
+argument_list|,
+name|TargetFlags
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1954,28 +1965,49 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
-name|DIVariable
-argument_list|(
+name|isa
+operator|<
+name|DILocalVariable
+operator|>
+operator|(
 name|Variable
-argument_list|)
-operator|.
-name|Verify
-argument_list|()
+operator|)
 operator|&&
-literal|"not a DIVariable"
+literal|"not a variable"
 argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
+name|cast
+operator|<
 name|DIExpression
-argument_list|(
+operator|>
+operator|(
 name|Expr
-argument_list|)
-operator|.
-name|Verify
+operator|)
+operator|->
+name|isValid
 argument_list|()
 operator|&&
-literal|"not a DIExpression"
+literal|"not an expression"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|cast
+operator|<
+name|DILocalVariable
+operator|>
+operator|(
+name|Variable
+operator|)
+operator|->
+name|isValidLocationForIntrinsic
+argument_list|(
+name|DL
+argument_list|)
+operator|&&
+literal|"Expected inlined-at fields to agree"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2129,28 +2161,31 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
-name|DIVariable
-argument_list|(
+name|isa
+operator|<
+name|DILocalVariable
+operator|>
+operator|(
 name|Variable
-argument_list|)
-operator|.
-name|Verify
-argument_list|()
+operator|)
 operator|&&
-literal|"not a DIVariable"
+literal|"not a variable"
 argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
+name|cast
+operator|<
 name|DIExpression
-argument_list|(
+operator|>
+operator|(
 name|Expr
-argument_list|)
-operator|.
-name|Verify
+operator|)
+operator|->
+name|isValid
 argument_list|()
 operator|&&
-literal|"not a DIExpression"
+literal|"not an expression"
 argument_list|)
 expr_stmt|;
 name|MachineFunction

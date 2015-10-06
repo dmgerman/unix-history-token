@@ -233,6 +233,7 @@ name|clang
 operator|::
 name|ParsedSourceLocation
 operator|>
+name|final
 operator|:
 name|public
 name|basic_parser

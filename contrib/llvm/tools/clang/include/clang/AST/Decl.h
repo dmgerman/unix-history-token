@@ -169,6 +169,9 @@ name|class
 name|NestedNameSpecifier
 decl_stmt|;
 name|class
+name|ParmVarDecl
+decl_stmt|;
+name|class
 name|Stmt
 decl_stmt|;
 name|class
@@ -283,39 +286,14 @@ name|AnonymousNamespace
 decl_stmt|;
 name|explicit
 name|TranslationUnitDecl
-argument_list|(
+parameter_list|(
 name|ASTContext
-operator|&
+modifier|&
 name|ctx
-argument_list|)
-operator|:
-name|Decl
-argument_list|(
-name|TranslationUnit
-argument_list|,
-name|nullptr
-argument_list|,
-name|SourceLocation
-argument_list|()
-argument_list|)
-operator|,
-name|DeclContext
-argument_list|(
-name|TranslationUnit
-argument_list|)
-operator|,
-name|Ctx
-argument_list|(
-name|ctx
-argument_list|)
-operator|,
-name|AnonymousNamespace
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+parameter_list|)
+function_decl|;
 name|public
-operator|:
+label|:
 name|ASTContext
 operator|&
 name|getASTContext
@@ -438,6 +416,172 @@ return|return
 name|static_cast
 operator|<
 name|TranslationUnitDecl
+operator|*
+operator|>
+operator|(
+name|const_cast
+operator|<
+name|DeclContext
+operator|*
+operator|>
+operator|(
+name|DC
+operator|)
+operator|)
+return|;
+block|}
+block|}
+empty_stmt|;
+comment|/// \brief Declaration context for names declared as extern "C" in C++. This
+comment|/// is neither the semantic nor lexical context for such declarations, but is
+comment|/// used to check for conflicts with other extern "C" declarations. Example:
+comment|///
+comment|/// \code
+comment|///   namespace N { extern "C" void f(); } // #1
+comment|///   void N::f() {}                       // #2
+comment|///   namespace M { extern "C" void f(); } // #3
+comment|/// \endcode
+comment|///
+comment|/// The semantic context of #1 is namespace N and its lexical context is the
+comment|/// LinkageSpecDecl; the semantic context of #2 is namespace N and its lexical
+comment|/// context is the TU. However, both declarations are also visible in the
+comment|/// extern "C" context.
+comment|///
+comment|/// The declaration at #3 finds it is a redeclaration of \c N::f through
+comment|/// lookup in the extern "C" context.
+name|class
+name|ExternCContextDecl
+range|:
+name|public
+name|Decl
+decl_stmt|,
+name|public
+name|DeclContext
+block|{
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
+name|explicit
+name|ExternCContextDecl
+argument_list|(
+name|TranslationUnitDecl
+operator|*
+name|TU
+argument_list|)
+operator|:
+name|Decl
+argument_list|(
+name|ExternCContext
+argument_list|,
+name|TU
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|)
+operator|,
+name|DeclContext
+argument_list|(
+argument|ExternCContext
+argument_list|)
+block|{}
+name|public
+operator|:
+specifier|static
+name|ExternCContextDecl
+operator|*
+name|Create
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|TranslationUnitDecl
+operator|*
+name|TU
+argument_list|)
+expr_stmt|;
+comment|// Implement isa/cast/dyncast/etc.
+specifier|static
+name|bool
+name|classof
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+block|{
+return|return
+name|classofKind
+argument_list|(
+name|D
+operator|->
+name|getKind
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classofKind
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
+block|{
+return|return
+name|K
+operator|==
+name|ExternCContext
+return|;
+block|}
+specifier|static
+name|DeclContext
+modifier|*
+name|castToDeclContext
+parameter_list|(
+specifier|const
+name|ExternCContextDecl
+modifier|*
+name|D
+parameter_list|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|DeclContext
+operator|*
+operator|>
+operator|(
+name|const_cast
+operator|<
+name|ExternCContextDecl
+operator|*
+operator|>
+operator|(
+name|D
+operator|)
+operator|)
+return|;
+block|}
+specifier|static
+name|ExternCContextDecl
+modifier|*
+name|castFromDeclContext
+parameter_list|(
+specifier|const
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|ExternCContextDecl
 operator|*
 operator|>
 operator|(
@@ -664,17 +808,22 @@ argument|bool Qualified
 argument_list|)
 specifier|const
 block|;
-comment|/// declarationReplaces - Determine whether this declaration, if
+comment|/// \brief Determine whether this declaration, if
 comment|/// known to be well-formed within its context, will replace the
 comment|/// declaration OldD if introduced into scope. A declaration will
 comment|/// replace another declaration if, for example, it is a
 comment|/// redeclaration of the same variable or function, but not if it is
 comment|/// a declaration of a different kind (function vs. class) or an
 comment|/// overloaded function.
+comment|///
+comment|/// \param IsKnownNewer \c true if this declaration is known to be newer
+comment|/// than \p OldD (for instance, if this declaration is newly-created).
 name|bool
 name|declarationReplaces
 argument_list|(
 argument|NamedDecl *OldD
+argument_list|,
+argument|bool IsKnownNewer = true
 argument_list|)
 specifier|const
 block|;
@@ -711,10 +860,26 @@ argument_list|(
 argument|bool Hide
 argument_list|)
 block|{
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|Hide
+operator|||
+name|isFromASTFile
+argument_list|()
+operator|||
+name|hasLocalOwningModuleStorage
+argument_list|()
+operator|)
+operator|&&
+literal|"declaration with no owning module can't be hidden"
+argument_list|)
+block|;
 name|Hidden
 operator|=
 name|Hide
-block|; }
+block|;   }
 comment|/// \brief Determine whether this declaration is a C++ class member.
 name|bool
 name|isCXXClassMember
@@ -2151,9 +2316,12 @@ operator|:
 comment|// Copy constructor and copy assignment are disabled.
 name|QualifierInfo
 argument_list|(
-argument|const QualifierInfo&
+specifier|const
+name|QualifierInfo
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|QualifierInfo
 operator|&
@@ -2164,7 +2332,8 @@ specifier|const
 name|QualifierInfo
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|; }
 block|;
 comment|/// \brief Represents a ValueDecl that came out of a declarator.
@@ -2747,62 +2916,12 @@ name|unsigned
 name|InitStyle
 operator|:
 literal|2
-block|;
-comment|/// \brief Whether this variable is the exception variable in a C++ catch
-comment|/// or an Objective-C @catch statement.
-name|unsigned
-name|ExceptionVar
-operator|:
-literal|1
-block|;
-comment|/// \brief Whether this local variable could be allocated in the return
-comment|/// slot of its function, enabling the named return value optimization
-comment|/// (NRVO).
-name|unsigned
-name|NRVOVariable
-operator|:
-literal|1
-block|;
-comment|/// \brief Whether this variable is the for-range-declaration in a C++0x
-comment|/// for-range statement.
-name|unsigned
-name|CXXForRangeDecl
-operator|:
-literal|1
-block|;
-comment|/// \brief Whether this variable is an ARC pseudo-__strong
-comment|/// variable;  see isARCPseudoStrong() for details.
-name|unsigned
-name|ARCPseudoStrong
-operator|:
-literal|1
-block|;
-comment|/// \brief Whether this variable is (C++0x) constexpr.
-name|unsigned
-name|IsConstexpr
-operator|:
-literal|1
-block|;
-comment|/// \brief Whether this variable is the implicit variable for a lambda
-comment|/// init-capture.
-name|unsigned
-name|IsInitCapture
-operator|:
-literal|1
-block|;
-comment|/// \brief Whether this local extern variable's previous declaration was
-comment|/// declared in the same block scope. This controls whether we should merge
-comment|/// the type of this declaration with its previous declaration.
-name|unsigned
-name|PreviousDeclInSameBlockScope
-operator|:
-literal|1
 block|;   }
 block|;   enum
 block|{
 name|NumVarDeclBits
 operator|=
-literal|14
+literal|7
 block|}
 block|;
 name|friend
@@ -2877,6 +2996,72 @@ operator|:
 name|NumParameterIndexBits
 block|;   }
 block|;
+name|class
+name|NonParmVarDeclBitfields
+block|{
+name|friend
+name|class
+name|VarDecl
+block|;
+name|friend
+name|class
+name|ASTDeclReader
+block|;
+name|unsigned
+operator|:
+name|NumVarDeclBits
+block|;
+comment|/// \brief Whether this variable is the exception variable in a C++ catch
+comment|/// or an Objective-C @catch statement.
+name|unsigned
+name|ExceptionVar
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether this local variable could be allocated in the return
+comment|/// slot of its function, enabling the named return value optimization
+comment|/// (NRVO).
+name|unsigned
+name|NRVOVariable
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether this variable is the for-range-declaration in a C++0x
+comment|/// for-range statement.
+name|unsigned
+name|CXXForRangeDecl
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether this variable is an ARC pseudo-__strong
+comment|/// variable;  see isARCPseudoStrong() for details.
+name|unsigned
+name|ARCPseudoStrong
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether this variable is (C++0x) constexpr.
+name|unsigned
+name|IsConstexpr
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether this variable is the implicit variable for a lambda
+comment|/// init-capture.
+name|unsigned
+name|IsInitCapture
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether this local extern variable's previous declaration was
+comment|/// declared in the same block scope. This controls whether we should merge
+comment|/// the type of this declaration with its previous declaration.
+name|unsigned
+name|PreviousDeclInSameBlockScope
+operator|:
+literal|1
+block|;   }
+block|;
 expr|union
 block|{
 name|unsigned
@@ -2887,6 +3072,9 @@ name|VarDeclBits
 block|;
 name|ParmVarDeclBitfields
 name|ParmVarDeclBits
+block|;
+name|NonParmVarDeclBitfields
+name|NonParmVarDeclBits
 block|;   }
 block|;
 name|VarDecl
@@ -3221,7 +3409,7 @@ operator|==
 name|SC_Register
 operator|&&
 operator|!
-name|isLocalVarDecl
+name|isLocalVarDeclOrParm
 argument_list|()
 condition|)
 return|return
@@ -4679,7 +4867,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|VarDeclBits
+name|isa
+operator|<
+name|ParmVarDecl
+operator|>
+operator|(
+name|this
+operator|)
+operator|?
+name|false
+operator|:
+name|NonParmVarDeclBits
 operator|.
 name|ExceptionVar
 return|;
@@ -4694,7 +4892,19 @@ name|bool
 name|EV
 parameter_list|)
 block|{
-name|VarDeclBits
+name|assert
+argument_list|(
+operator|!
+name|isa
+operator|<
+name|ParmVarDecl
+operator|>
+operator|(
+name|this
+operator|)
+argument_list|)
+expr_stmt|;
+name|NonParmVarDeclBits
 operator|.
 name|ExceptionVar
 operator|=
@@ -4750,7 +4960,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|VarDeclBits
+name|isa
+operator|<
+name|ParmVarDecl
+operator|>
+operator|(
+name|this
+operator|)
+operator|?
+name|false
+operator|:
+name|NonParmVarDeclBits
 operator|.
 name|NRVOVariable
 return|;
@@ -4765,7 +4985,19 @@ name|bool
 name|NRVO
 parameter_list|)
 block|{
-name|VarDeclBits
+name|assert
+argument_list|(
+operator|!
+name|isa
+operator|<
+name|ParmVarDecl
+operator|>
+operator|(
+name|this
+operator|)
+argument_list|)
+expr_stmt|;
+name|NonParmVarDeclBits
 operator|.
 name|NRVOVariable
 operator|=
@@ -4789,7 +5021,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|VarDeclBits
+name|isa
+operator|<
+name|ParmVarDecl
+operator|>
+operator|(
+name|this
+operator|)
+operator|?
+name|false
+operator|:
+name|NonParmVarDeclBits
 operator|.
 name|CXXForRangeDecl
 return|;
@@ -4804,7 +5046,19 @@ name|bool
 name|FRD
 parameter_list|)
 block|{
-name|VarDeclBits
+name|assert
+argument_list|(
+operator|!
+name|isa
+operator|<
+name|ParmVarDecl
+operator|>
+operator|(
+name|this
+operator|)
+argument_list|)
+expr_stmt|;
+name|NonParmVarDeclBits
 operator|.
 name|CXXForRangeDecl
 operator|=
@@ -4836,7 +5090,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|VarDeclBits
+name|isa
+operator|<
+name|ParmVarDecl
+operator|>
+operator|(
+name|this
+operator|)
+operator|?
+name|false
+operator|:
+name|NonParmVarDeclBits
 operator|.
 name|ARCPseudoStrong
 return|;
@@ -4851,7 +5115,19 @@ name|bool
 name|ps
 parameter_list|)
 block|{
-name|VarDeclBits
+name|assert
+argument_list|(
+operator|!
+name|isa
+operator|<
+name|ParmVarDecl
+operator|>
+operator|(
+name|this
+operator|)
+argument_list|)
+expr_stmt|;
+name|NonParmVarDeclBits
 operator|.
 name|ARCPseudoStrong
 operator|=
@@ -4871,7 +5147,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|VarDeclBits
+name|isa
+operator|<
+name|ParmVarDecl
+operator|>
+operator|(
+name|this
+operator|)
+operator|?
+name|false
+operator|:
+name|NonParmVarDeclBits
 operator|.
 name|IsConstexpr
 return|;
@@ -4886,7 +5172,19 @@ name|bool
 name|IC
 parameter_list|)
 block|{
-name|VarDeclBits
+name|assert
+argument_list|(
+operator|!
+name|isa
+operator|<
+name|ParmVarDecl
+operator|>
+operator|(
+name|this
+operator|)
+argument_list|)
+expr_stmt|;
+name|NonParmVarDeclBits
 operator|.
 name|IsConstexpr
 operator|=
@@ -4906,7 +5204,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|VarDeclBits
+name|isa
+operator|<
+name|ParmVarDecl
+operator|>
+operator|(
+name|this
+operator|)
+operator|?
+name|false
+operator|:
+name|NonParmVarDeclBits
 operator|.
 name|IsInitCapture
 return|;
@@ -4921,7 +5229,19 @@ name|bool
 name|IC
 parameter_list|)
 block|{
-name|VarDeclBits
+name|assert
+argument_list|(
+operator|!
+name|isa
+operator|<
+name|ParmVarDecl
+operator|>
+operator|(
+name|this
+operator|)
+argument_list|)
+expr_stmt|;
+name|NonParmVarDeclBits
 operator|.
 name|IsInitCapture
 operator|=
@@ -4945,7 +5265,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|VarDeclBits
+name|isa
+operator|<
+name|ParmVarDecl
+operator|>
+operator|(
+name|this
+operator|)
+operator|?
+name|false
+operator|:
+name|NonParmVarDeclBits
 operator|.
 name|PreviousDeclInSameBlockScope
 return|;
@@ -4960,7 +5290,19 @@ name|bool
 name|Same
 parameter_list|)
 block|{
-name|VarDeclBits
+name|assert
+argument_list|(
+operator|!
+name|isa
+operator|<
+name|ParmVarDecl
+operator|>
+operator|(
+name|this
+operator|)
+argument_list|)
+expr_stmt|;
+name|NonParmVarDeclBits
 operator|.
 name|PreviousDeclInSameBlockScope
 operator|=
@@ -6379,6 +6721,12 @@ name|IsConstexpr
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Indicates if the function uses __try.
+name|bool
+name|UsesSEHTry
+range|:
+literal|1
+decl_stmt|;
 comment|/// \brief Indicates if the function was a definition but its body was
 comment|/// skipped.
 name|unsigned
@@ -6650,6 +6998,11 @@ operator|,
 name|IsConstexpr
 argument_list|(
 name|isConstexprSpecified
+argument_list|)
+operator|,
+name|UsesSEHTry
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|HasSkippedBody
@@ -7357,6 +7710,28 @@ operator|=
 name|IC
 expr_stmt|;
 block|}
+comment|/// Whether this is a (C++11) constexpr function or constexpr constructor.
+name|bool
+name|usesSEHTry
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UsesSEHTry
+return|;
+block|}
+name|void
+name|setUsesSEHTry
+parameter_list|(
+name|bool
+name|UST
+parameter_list|)
+block|{
+name|UsesSEHTry
+operator|=
+name|UST
+expr_stmt|;
+block|}
 comment|/// \brief Whether this function has been deleted.
 comment|///
 comment|/// A function that is "deleted" (via the C++0x "= delete" syntax)
@@ -7466,15 +7841,6 @@ name|isReplaceableGlobalAllocationFunction
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief Determine whether this function is a sized global deallocation
-comment|/// function in C++1y. If so, find and return the corresponding unsized
-comment|/// deallocation function.
-name|FunctionDecl
-operator|*
-name|getCorrespondingUnsizedGlobalDeallocationFunction
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// Compute the language linkage.
 name|LanguageLinkage
 name|getLanguageLinkage
@@ -7547,20 +7913,33 @@ modifier|*
 name|PrevDecl
 parameter_list|)
 function_decl|;
-name|virtual
-specifier|const
-name|FunctionDecl
-operator|*
-name|getCanonicalDecl
-argument_list|()
-specifier|const
-expr_stmt|;
 name|FunctionDecl
 operator|*
 name|getCanonicalDecl
 argument_list|()
 name|override
 expr_stmt|;
+specifier|const
+name|FunctionDecl
+operator|*
+name|getCanonicalDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|FunctionDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getCanonicalDecl
+argument_list|()
+return|;
+block|}
 name|unsigned
 name|getBuiltinID
 argument_list|()
@@ -7879,6 +8258,16 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// \brief Returns true if this function or its return type has the
+comment|/// warn_unused_result attribute. If the return type has the attribute and
+comment|/// this function is a method of the return type's class, then false will be
+comment|/// returned to avoid spurious warnings on member methods such as assignment
+comment|/// operators.
+name|bool
+name|hasUnusedResultAttr
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Returns the storage class as written in the source. For the
 comment|/// computed linkage of symbol, see getLinkage.
 name|StorageClass
@@ -10281,6 +10670,40 @@ argument_list|()
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// Retrieves the tag declaration for which this is the typedef name for
+end_comment
+
+begin_comment
+comment|/// linkage purposes, if any.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param AnyRedecl Look for the tag declaration in any redeclaration of
+end_comment
+
+begin_comment
+comment|/// this typedef declaration.
+end_comment
+
+begin_decl_stmt
+name|TagDecl
+modifier|*
+name|getAnonDeclWithTypedefName
+argument_list|(
+name|bool
+name|AnyRedecl
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|// Implement isa/cast/dyncast/etc.
@@ -15858,10 +16281,6 @@ argument_list|()
 operator|&&
 literal|"setPreviousDecl on a decl already in a redeclaration chain"
 argument_list|)
-block|;
-name|decl_type
-operator|*
-name|First
 block|;
 if|if
 condition|(

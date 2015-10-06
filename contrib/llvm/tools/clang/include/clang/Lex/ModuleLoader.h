@@ -302,9 +302,6 @@ name|Visibility
 argument_list|,
 name|SourceLocation
 name|ImportLoc
-argument_list|,
-name|bool
-name|Complain
 argument_list|)
 init|=
 literal|0

@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"DWARFDebugInfoEntry.h"
 end_include
 
@@ -646,6 +652,21 @@ name|uint32_t
 name|GetProducerVersionUpdate
 parameter_list|()
 function_decl|;
+specifier|static
+name|lldb
+operator|::
+name|LanguageType
+name|LanguageTypeFromDWARF
+argument_list|(
+argument|uint64_t val
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|LanguageType
+name|GetLanguageType
+argument_list|()
+expr_stmt|;
 name|bool
 name|IsDWARF64
 argument_list|()
@@ -708,6 +729,11 @@ decl_stmt|;
 name|uint32_t
 name|m_producer_version_update
 decl_stmt|;
+name|lldb
+operator|::
+name|LanguageType
+name|m_language_type
+expr_stmt|;
 name|bool
 name|m_is_dwarf64
 decl_stmt|;

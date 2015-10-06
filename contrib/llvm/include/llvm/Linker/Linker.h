@@ -246,6 +246,14 @@ name|Ty
 parameter_list|)
 function_decl|;
 name|void
+name|switchToNonOpaque
+parameter_list|(
+name|StructType
+modifier|*
+name|Ty
+parameter_list|)
+function_decl|;
+name|void
 name|addOpaque
 parameter_list|(
 name|StructType
@@ -311,6 +319,8 @@ name|deleteModule
 parameter_list|()
 function_decl|;
 comment|/// \brief Link \p Src into the composite. The source is destroyed.
+comment|/// Passing OverrideSymbols as true will have symbols from Src
+comment|/// shadow those in the Dest.
 comment|/// Returns true on error.
 name|bool
 name|linkInModule
@@ -318,6 +328,20 @@ parameter_list|(
 name|Module
 modifier|*
 name|Src
+parameter_list|,
+name|bool
+name|OverrideSymbols
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// \brief Set the composite to the passed-in module.
+name|void
+name|setModule
+parameter_list|(
+name|Module
+modifier|*
+name|Dst
 parameter_list|)
 function_decl|;
 specifier|static

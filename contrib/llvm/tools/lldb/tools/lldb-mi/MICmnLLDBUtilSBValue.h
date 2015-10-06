@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmnLLDBUtilSBValue.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMICmnLLDBUtilSBValue interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -88,7 +44,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBValue.h>
+file|"lldb/API/SBValue.h"
 end_include
 
 begin_comment
@@ -101,8 +57,14 @@ directive|include
 file|"MIDataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"MICmnMIValueTuple.h"
+end_include
+
 begin_comment
-comment|// Declerations:
+comment|// Declarations:
 end_comment
 
 begin_decl_stmt
@@ -152,6 +114,8 @@ argument_list|(
 argument|const lldb::SBValue&vrValue
 argument_list|,
 argument|const bool vbHandleCharType = false
+argument_list|,
+argument|const bool vbHandleArrayType = true
 argument_list|)
 empty_stmt|;
 comment|/* dtor */
@@ -172,21 +136,11 @@ decl_stmt|;
 name|CMIUtilString
 name|GetValue
 argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-name|CMIUtilString
-name|GetValueCString
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-name|CMIUtilString
-name|GetChildValueCString
-argument_list|(
-name|void
+specifier|const
+name|bool
+name|vbExpandAggregates
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -212,7 +166,28 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|bool
-name|IsChildCharType
+name|IsFirstChildCharType
+argument_list|(
+name|void
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|IsIntegerType
+argument_list|(
+name|void
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|IsPointerType
+argument_list|(
+name|void
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|IsArrayType
 argument_list|(
 name|void
 argument_list|)
@@ -256,15 +231,70 @@ decl_stmt|;
 comment|// Methods:
 name|private
 label|:
+name|template
+operator|<
+name|typename
+name|charT
+operator|>
 name|CMIUtilString
 name|ReadCStringFromHostMemory
 argument_list|(
+argument|lldb::SBValue&vrValue
+argument_list|,
+argument|const MIuint vnMaxLen = UINT32_MAX
+argument_list|)
 specifier|const
-name|lldb
-operator|::
-name|SBValue
+expr_stmt|;
+name|bool
+name|GetSimpleValue
+argument_list|(
+specifier|const
+name|bool
+name|vbHandleArrayType
+argument_list|,
+name|CMIUtilString
 operator|&
-name|vrValueObj
+name|vrValue
+argument_list|)
+decl|const
+decl_stmt|;
+name|CMIUtilString
+name|GetSimpleValueChar
+argument_list|(
+name|void
+argument_list|)
+decl|const
+decl_stmt|;
+name|CMIUtilString
+name|GetSimpleValueCStringPointer
+argument_list|(
+name|void
+argument_list|)
+decl|const
+decl_stmt|;
+name|CMIUtilString
+name|GetSimpleValueCStringArray
+argument_list|(
+name|void
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|GetCompositeValue
+argument_list|(
+specifier|const
+name|bool
+name|vbPrintFieldNames
+argument_list|,
+name|CMICmnMIValueTuple
+operator|&
+name|vwrMiValueTuple
+argument_list|,
+specifier|const
+name|MIuint
+name|vnDepth
+operator|=
+literal|1
 argument_list|)
 decl|const
 decl_stmt|;
@@ -278,9 +308,14 @@ operator|&
 name|m_rValue
 expr_stmt|;
 specifier|const
-name|MIchar
+name|char
 modifier|*
 name|m_pUnkwn
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|m_pComposite
 decl_stmt|;
 name|bool
 name|m_bValidSBValue
@@ -290,6 +325,10 @@ name|bool
 name|m_bHandleCharType
 decl_stmt|;
 comment|// True = Yes return text molding to char type, false = just return data.
+name|bool
+name|m_bHandleArrayType
+decl_stmt|;
+comment|// True = Yes return special stub for array type, false = just return data.
 block|}
 end_decl_stmt
 

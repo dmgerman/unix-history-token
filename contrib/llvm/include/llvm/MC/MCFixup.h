@@ -80,7 +80,7 @@ block|{
 name|class
 name|MCExpr
 decl_stmt|;
-comment|/// MCFixupKind - Extensible enumeration to represent the type of a fixup.
+comment|/// \brief Extensible enumeration to represent the type of a fixup.
 enum|enum
 name|MCFixupKind
 block|{
@@ -149,7 +149,7 @@ literal|8
 operator|)
 block|}
 enum|;
-comment|/// MCFixup - Encode information on a single operation to perform on a byte
+comment|/// \brief Encode information on a single operation to perform on a byte
 comment|/// sequence (e.g., an encoded instruction) which requires assemble- or run-
 comment|/// time patching.
 comment|///
@@ -191,7 +191,7 @@ name|public
 label|:
 specifier|static
 name|MCFixup
-name|Create
+name|create
 parameter_list|(
 name|uint32_t
 name|Offset
@@ -301,8 +301,8 @@ return|return
 name|Value
 return|;
 block|}
-comment|/// getKindForSize - Return the generic fixup kind for a value with the given
-comment|/// size. It is an error to pass an unsupported size.
+comment|/// \brief Return the generic fixup kind for a value with the given size. It
+comment|/// is an error to pass an unsupported size.
 specifier|static
 name|MCFixupKind
 name|getKindForSize

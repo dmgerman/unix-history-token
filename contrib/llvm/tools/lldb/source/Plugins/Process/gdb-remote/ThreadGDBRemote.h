@@ -74,25 +74,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|namespace
+name|process_gdb_remote
+block|{
 name|class
 name|ProcessGDBRemote
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|class
 name|ThreadGDBRemote
 range|:
 name|public
-name|lldb_private
-operator|::
 name|Thread
 block|{
 name|public
 operator|:
 name|ThreadGDBRemote
 argument_list|(
-argument|lldb_private::Process&process
+argument|Process&process
 argument_list|,
 argument|lldb::tid_t tid
 argument_list|)
@@ -102,76 +103,73 @@ operator|~
 name|ThreadGDBRemote
 argument_list|()
 block|;
-name|virtual
 name|void
 name|WillResume
 argument_list|(
 argument|lldb::StateType resume_state
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|RefreshStateAfterStop
 argument_list|()
+name|override
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
 name|GetName
 argument_list|()
+name|override
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
 name|GetQueueName
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|queue_id_t
 name|GetQueueID
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|QueueSP
 name|GetQueue
 argument_list|()
+name|override
 block|;
 name|lldb
 operator|::
 name|addr_t
 name|GetQueueLibdispatchQueueAddress
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|RegisterContextSP
 name|GetRegisterContext
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|RegisterContextSP
 name|CreateRegisterContextForFrame
 argument_list|(
-name|lldb_private
-operator|::
-name|StackFrame
-operator|*
-name|frame
+argument|StackFrame *frame
 argument_list|)
+name|override
 block|;
 name|void
 name|Dump
 argument_list|(
-argument|lldb_private::Log *log
+argument|Log *log
 argument_list|,
 argument|uint32_t index
 argument_list|)
@@ -202,6 +200,7 @@ name|SetName
 argument_list|(
 argument|const char *name
 argument_list|)
+name|override
 block|{
 if|if
 condition|(
@@ -246,13 +245,26 @@ name|m_thread_dispatch_qaddr
 operator|=
 name|thread_dispatch_qaddr
 block|;     }
-name|lldb_private
-operator|::
+name|void
+name|ClearQueueInfo
+argument_list|()
+block|;
+name|void
+name|SetQueueInfo
+argument_list|(
+argument|std::string&&queue_name
+argument_list|,
+argument|lldb::QueueKind queue_kind
+argument_list|,
+argument|uint64_t queue_serial
+argument_list|)
+block|;
 name|StructuredData
 operator|::
 name|ObjectSP
 name|FetchThreadExtendedInfo
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
@@ -268,6 +280,19 @@ argument_list|,
 argument|StringExtractor&response
 argument_list|)
 block|;
+name|bool
+name|CachedQueueInfoIsValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_queue_kind
+operator|!=
+name|lldb
+operator|::
+name|eQueueKindUnknown
+return|;
+block|}
 comment|//------------------------------------------------------------------
 comment|// Member variables.
 comment|//------------------------------------------------------------------
@@ -286,6 +311,16 @@ operator|::
 name|addr_t
 name|m_thread_dispatch_qaddr
 block|;
+name|lldb
+operator|::
+name|QueueKind
+name|m_queue_kind
+block|;
+comment|// Queue info from stop reply/stop info for thread
+name|uint64_t
+name|m_queue_serial
+block|;
+comment|// Queue info from stop reply/stop info for thread
 comment|//------------------------------------------------------------------
 comment|// Member variables.
 comment|//------------------------------------------------------------------
@@ -297,13 +332,20 @@ argument_list|,
 argument|uint32_t stop_id
 argument_list|)
 block|;
-name|virtual
 name|bool
 name|CalculateStopInfo
 argument_list|()
-block|;   }
+name|override
+block|; }
 decl_stmt|;
+block|}
+comment|// namespace process_gdb_remote
+block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace lldb_private
+end_comment
 
 begin_endif
 endif|#

@@ -369,9 +369,11 @@ label|:
 operator|~
 name|MatcherOps
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|private
-operator|:
+label|:
 name|ast_type_traits
 operator|::
 name|ASTNodeKind
@@ -390,10 +392,10 @@ name|RefCountedBaseVPTR
 block|{
 name|public
 operator|:
-name|virtual
 operator|~
 name|Payload
 argument_list|()
+name|override
 block|;
 name|virtual
 name|llvm
@@ -787,7 +789,7 @@ comment|/// copy/assignment.
 comment|///
 comment|/// Supported types:
 comment|///  - \c unsigned
-comment|///  - \c std::string
+comment|///  - \c llvm::StringRef
 comment|///  - \c VariantMatcher (\c DynTypedMatcher / \c Matcher<T>)
 name|class
 name|VariantValue
@@ -833,14 +835,9 @@ argument_list|)
 empty_stmt|;
 name|VariantValue
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|String
+argument|StringRef String
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|VariantValue
 argument_list|(
 specifier|const
@@ -850,7 +847,7 @@ name|Matchers
 argument_list|)
 expr_stmt|;
 comment|/// \brief Returns true iff this is not an empty value.
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -907,15 +904,11 @@ specifier|const
 expr_stmt|;
 name|void
 name|setString
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|(
+name|StringRef
 name|String
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Matcher value functions.
 name|bool
 name|isMatcher

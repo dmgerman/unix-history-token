@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MIUtilFileStd.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMIUtilFileStd interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -132,7 +88,7 @@ comment|// Static:
 name|public
 operator|:
 specifier|static
-name|MIchar
+name|char
 name|GetSlash
 argument_list|(
 name|void
@@ -173,7 +129,7 @@ block|;
 name|bool
 name|Write
 argument_list|(
-argument|const MIchar *vpData
+argument|const char *vpData
 argument_list|,
 argument|const MIuint vCharCnt
 argument_list|)
@@ -207,24 +163,27 @@ argument|void
 argument_list|)
 specifier|const
 block|;
+specifier|static
 name|CMIUtilString
 name|StripOffFileName
 argument_list|(
-argument|const CMIUtilString&vDirectoryPath
-argument_list|)
 specifier|const
+name|CMIUtilString
+operator|&
+name|vDirectoryPath
+argument_list|)
 block|;
 comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMIUtilFileStd
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private

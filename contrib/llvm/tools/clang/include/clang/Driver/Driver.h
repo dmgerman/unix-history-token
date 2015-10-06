@@ -175,7 +175,7 @@ name|class
 name|InputInfo
 decl_stmt|;
 name|class
-name|Job
+name|JobList
 decl_stmt|;
 name|class
 name|JobAction
@@ -215,6 +215,17 @@ block|,
 name|CLMode
 block|}
 name|Mode
+enum|;
+enum|enum
+name|SaveTempsMode
+block|{
+name|SaveTempsNone
+block|,
+name|SaveTempsCwd
+block|,
+name|SaveTempsObj
+block|}
+name|SaveTemps
 enum|;
 name|public
 label|:
@@ -270,7 +281,7 @@ operator|::
 name|string
 name|ResourceDir
 expr_stmt|;
-comment|/// A prefix directory used to emulated a limited subset of GCC's '-Bprefix'
+comment|/// A prefix directory used to emulate a limited subset of GCC's '-Bprefix'
 comment|/// functionality.
 comment|/// FIXME: This type of customization should be removed in favor of the
 comment|/// universal driver when it is ready.
@@ -544,9 +555,9 @@ name|Compilation
 modifier|&
 name|C
 parameter_list|,
-name|Job
+name|Command
 modifier|&
-name|J
+name|Cmd
 parameter_list|)
 function_decl|;
 name|void
@@ -734,6 +745,28 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+name|bool
+name|isSaveTempsEnabled
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SaveTemps
+operator|!=
+name|SaveTempsNone
+return|;
+block|}
+name|bool
+name|isSaveTempsObj
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SaveTemps
+operator|==
+name|SaveTempsObj
+return|;
+block|}
 comment|/// @}
 comment|/// @name Primary Functionality
 comment|/// @{
@@ -779,7 +812,6 @@ operator|::
 name|opt
 operator|::
 name|InputArgList
-operator|*
 name|ParseArgStrings
 argument_list|(
 name|ArrayRef
@@ -1044,6 +1076,8 @@ name|Action
 operator|>
 name|ConstructPhaseAction
 argument_list|(
+argument|const ToolChain&TC
+argument_list|,
 argument|const llvm::opt::ArgList&Args
 argument_list|,
 argument|phases::ID Phase
@@ -1187,7 +1221,7 @@ decl|const
 decl_stmt|;
 name|private
 label|:
-comment|/// \brief Retrieves a ToolChain for a particular target triple.
+comment|/// \brief Retrieves a ToolChain for a particular \p Target triple.
 comment|///
 comment|/// Will cache ToolChains for the life of the driver object, and create them
 comment|/// on-demand.
@@ -1205,10 +1239,12 @@ name|ArgList
 operator|&
 name|Args
 argument_list|,
-name|StringRef
-name|DarwinArchName
-operator|=
-literal|""
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Target
 argument_list|)
 decl|const
 decl_stmt|;

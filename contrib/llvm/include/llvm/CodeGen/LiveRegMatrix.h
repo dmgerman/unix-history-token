@@ -301,6 +301,14 @@ operator|&
 name|VirtReg
 argument_list|)
 block|;
+comment|/// Returns true if the given \p PhysReg has any live intervals assigned.
+name|bool
+name|isPhysRegUsed
+argument_list|(
+argument|unsigned PhysReg
+argument_list|)
+specifier|const
+block|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Low-level interface.
 comment|//===--------------------------------------------------------------------===//
