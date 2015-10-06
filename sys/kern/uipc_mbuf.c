@@ -4839,12 +4839,6 @@ begin_comment
 comment|/*  * Like m_pullup(), except a new mbuf is always allocated, and we allow  * the amount of empty space before the data in the new mbuf to be specified  * (in the event that the caller expects to prepend later).  */
 end_comment
 
-begin_decl_stmt
-name|int
-name|MSFail
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|struct
 name|mbuf
@@ -5082,9 +5076,6 @@ name|m_freem
 argument_list|(
 name|n
 argument_list|)
-expr_stmt|;
-name|MSFail
-operator|++
 expr_stmt|;
 return|return
 operator|(
