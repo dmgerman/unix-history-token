@@ -10369,6 +10369,15 @@ name|uintptr_t
 operator|)
 name|bp
 expr_stmt|;
+if|if
+condition|(
+name|kv
+operator|->
+name|kve_structsize
+operator|==
+literal|0
+condition|)
+break|break;
 name|bp
 operator|+=
 name|kv
@@ -10444,6 +10453,15 @@ name|uintptr_t
 operator|)
 name|bp
 expr_stmt|;
+if|if
+condition|(
+name|kv
+operator|->
+name|kve_structsize
+operator|==
+literal|0
+condition|)
+break|break;
 comment|/* Copy/expand into pre-zeroed buffer */
 name|memcpy
 argument_list|(

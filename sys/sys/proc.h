@@ -643,14 +643,6 @@ modifier|*
 name|td_wmesg
 decl_stmt|;
 comment|/* (t) Reason for sleep. */
-name|int
-name|td_lastcpu
-decl_stmt|;
-comment|/* (t) Last cpu we were on. */
-name|int
-name|td_oncpu
-decl_stmt|;
-comment|/* (t) Which cpu we are on. */
 specifier|volatile
 name|u_char
 name|td_owepreempt
@@ -865,14 +857,6 @@ modifier|*
 name|td_su
 decl_stmt|;
 comment|/* (k) FFS SU private */
-name|u_int
-name|td_dbg_sc_code
-decl_stmt|;
-comment|/* (c) Syscall code to debugger. */
-name|u_int
-name|td_dbg_sc_narg
-decl_stmt|;
-comment|/* (c) Syscall arg count to debugger.*/
 define|#
 directive|define
 name|td_endzero
@@ -910,6 +894,14 @@ name|u_char
 name|td_base_user_pri
 decl_stmt|;
 comment|/* (t) Base user pri */
+name|u_int
+name|td_dbg_sc_code
+decl_stmt|;
+comment|/* (c) Syscall code to debugger. */
+name|u_int
+name|td_dbg_sc_narg
+decl_stmt|;
+comment|/* (c) Syscall arg count to debugger.*/
 define|#
 directive|define
 name|td_endcopy
@@ -1066,6 +1058,14 @@ modifier|*
 name|td_emuldata
 decl_stmt|;
 comment|/* Emulator state data */
+name|int
+name|td_lastcpu
+decl_stmt|;
+comment|/* (t) Last cpu we were on. */
+name|int
+name|td_oncpu
+decl_stmt|;
+comment|/* (t) Which cpu we are on. */
 block|}
 struct|;
 end_struct
