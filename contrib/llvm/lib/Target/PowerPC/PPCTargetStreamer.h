@@ -68,10 +68,10 @@ operator|&
 name|S
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|PPCTargetStreamer
 argument_list|()
+name|override
 block|;
 name|virtual
 name|void
@@ -107,7 +107,7 @@ name|virtual
 name|void
 name|emitLocalEntry
 argument_list|(
-name|MCSymbol
+name|MCSymbolELF
 operator|*
 name|S
 argument_list|,

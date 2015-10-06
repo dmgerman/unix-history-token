@@ -106,6 +106,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ANDROID_NDK__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<android/api-level.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -124,60 +141,33 @@ comment|/// \brief The returned value is numeric_limits<T>::digits
 name|ZB_Width
 block|}
 enum|;
-comment|/// \brief Count number of 0's from the least significant bit to the most
-comment|///   stopping at the first 1.
-comment|///
-comment|/// Only unsigned integral types are allowed.
-comment|///
-comment|/// \param ZB the behavior on an input of 0. Only ZB_Width and ZB_Undefined are
-comment|///   valid arguments.
+name|namespace
+name|detail
+block|{
 name|template
 operator|<
 name|typename
 name|T
-operator|>
-name|typename
-name|std
-operator|::
-name|enable_if
-operator|<
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|T
-operator|>
-operator|::
-name|is_integer
-operator|&&
-operator|!
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|T
-operator|>
-operator|::
-name|is_signed
 operator|,
 name|std
 operator|::
 name|size_t
+name|SizeOfT
 operator|>
+expr|struct
+name|TrailingZerosCounter
+block|{
+specifier|static
+name|std
 operator|::
-name|type
-name|countTrailingZeros
+name|size_t
+name|count
 argument_list|(
 argument|T Val
 argument_list|,
-argument|ZeroBehavior ZB = ZB_Width
+argument|ZeroBehavior
 argument_list|)
 block|{
-operator|(
-name|void
-operator|)
-name|ZB
-block|;
 if|if
 condition|(
 operator|!
@@ -277,56 +267,12 @@ return|return
 name|ZeroBits
 return|;
 block|}
+block|}
 end_decl_stmt
 
-begin_comment
-comment|// Disable signed.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|typename
-name|std
-operator|::
-name|enable_if
-operator|<
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|T
-operator|>
-operator|::
-name|is_integer
-operator|&&
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|T
-operator|>
-operator|::
-name|is_signed
-operator|,
-name|std
-operator|::
-name|size_t
-operator|>
-operator|::
-name|type
-name|countTrailingZeros
-argument_list|(
-argument|T
-argument_list|,
-argument|ZeroBehavior = ZB_Width
-argument_list|)
-name|LLVM_DELETED_FUNCTION
-expr_stmt|;
-end_expr_stmt
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_if
 if|#
@@ -341,22 +287,27 @@ end_if
 begin_expr_stmt
 name|template
 operator|<
+name|typename
+name|T
 operator|>
-specifier|inline
+expr|struct
+name|TrailingZerosCounter
+operator|<
+name|T
+operator|,
+literal|4
+operator|>
+block|{
+specifier|static
 name|std
 operator|::
 name|size_t
-name|countTrailingZeros
-operator|<
-name|uint32_t
-operator|>
-operator|(
-name|uint32_t
-name|Val
-operator|,
-name|ZeroBehavior
-name|ZB
-operator|)
+name|count
+argument_list|(
+argument|T Val
+argument_list|,
+argument|ZeroBehavior ZB
+argument_list|)
 block|{
 if|if
 condition|(
@@ -371,9 +322,6 @@ condition|)
 return|return
 literal|32
 return|;
-end_expr_stmt
-
-begin_if
 if|#
 directive|if
 name|__has_builtin
@@ -389,29 +337,20 @@ literal|0
 operator|,
 literal|0
 argument_list|)
-end_if
-
-begin_return
 return|return
 name|__builtin_ctz
 argument_list|(
 name|Val
 argument_list|)
 return|;
-end_return
-
-begin_elif
 elif|#
 directive|elif
 name|_MSC_VER
-end_elif
-
-begin_decl_stmt
 name|unsigned
 name|long
 name|Index
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|_BitScanForward
@@ -435,8 +374,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_empty_stmt
+unit|} }
+empty_stmt|;
+end_empty_stmt
+
 begin_if
-unit|}
 if|#
 directive|if
 operator|!
@@ -452,24 +395,29 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-unit|template
+name|template
 operator|<
+name|typename
+name|T
 operator|>
-specifier|inline
+expr|struct
+name|TrailingZerosCounter
+operator|<
+name|T
+operator|,
+literal|8
+operator|>
+block|{
+specifier|static
 name|std
 operator|::
 name|size_t
-name|countTrailingZeros
-operator|<
-name|uint64_t
-operator|>
-operator|(
-name|uint64_t
-name|Val
-operator|,
-name|ZeroBehavior
-name|ZB
-operator|)
+name|count
+argument_list|(
+argument|T Val
+argument_list|,
+argument|ZeroBehavior ZB
+argument_list|)
 block|{
 if|if
 condition|(
@@ -484,9 +432,6 @@ condition|)
 return|return
 literal|64
 return|;
-end_expr_stmt
-
-begin_if
 if|#
 directive|if
 name|__has_builtin
@@ -502,29 +447,20 @@ literal|0
 operator|,
 literal|0
 argument_list|)
-end_if
-
-begin_return
 return|return
 name|__builtin_ctzll
 argument_list|(
 name|Val
 argument_list|)
 return|;
-end_return
-
-begin_elif
 elif|#
 directive|elif
 name|_MSC_VER
-end_elif
-
-begin_decl_stmt
 name|unsigned
 name|long
 name|Index
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|_BitScanForward64
@@ -548,8 +484,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_empty_stmt
+unit|} }
+empty_stmt|;
+end_empty_stmt
+
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
@@ -560,7 +500,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/// \brief Count number of 0's from the most significant bit to the least
+unit|}
+comment|// namespace detail
+end_comment
+
+begin_comment
+comment|/// \brief Count number of 0's from the least significant bit to the most
 end_comment
 
 begin_comment
@@ -593,11 +538,18 @@ operator|<
 name|typename
 name|T
 operator|>
-name|typename
 name|std
 operator|::
-name|enable_if
-operator|<
+name|size_t
+name|countTrailingZeros
+argument_list|(
+argument|T Val
+argument_list|,
+argument|ZeroBehavior ZB = ZB_Width
+argument_list|)
+block|{
+name|static_assert
+argument_list|(
 name|std
 operator|::
 name|numeric_limits
@@ -616,25 +568,61 @@ name|T
 operator|>
 operator|::
 name|is_signed
+argument_list|,
+literal|"Only unsigned integral types are allowed."
+argument_list|)
+block|;
+return|return
+name|detail
+operator|::
+name|TrailingZerosCounter
+operator|<
+name|T
+operator|,
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+operator|>
+operator|::
+name|count
+argument_list|(
+name|Val
+argument_list|,
+name|ZB
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
+name|namespace
+name|detail
+block|{
+name|template
+operator|<
+name|typename
+name|T
 operator|,
 name|std
 operator|::
 name|size_t
+name|SizeOfT
 operator|>
+expr|struct
+name|LeadingZerosCounter
+block|{
+specifier|static
+name|std
 operator|::
-name|type
-name|countLeadingZeros
+name|size_t
+name|count
 argument_list|(
 argument|T Val
 argument_list|,
-argument|ZeroBehavior ZB = ZB_Width
+argument|ZeroBehavior
 argument_list|)
 block|{
-operator|(
-name|void
-operator|)
-name|ZB
-block|;
 if|if
 condition|(
 operator|!
@@ -657,10 +645,7 @@ name|size_t
 name|ZeroBits
 operator|=
 literal|0
-expr_stmt|;
-end_expr_stmt
-
-begin_for
+block|;
 for|for
 control|(
 name|T
@@ -705,63 +690,16 @@ operator||=
 name|Shift
 expr_stmt|;
 block|}
-end_for
-
-begin_return
 return|return
 name|ZeroBits
 return|;
-end_return
+block|}
+block|}
+end_decl_stmt
 
-begin_comment
-unit|}
-comment|// Disable signed.
-end_comment
-
-begin_expr_stmt
-unit|template
-operator|<
-name|typename
-name|T
-operator|>
-name|typename
-name|std
-operator|::
-name|enable_if
-operator|<
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|T
-operator|>
-operator|::
-name|is_integer
-operator|&&
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|T
-operator|>
-operator|::
-name|is_signed
-operator|,
-name|std
-operator|::
-name|size_t
-operator|>
-operator|::
-name|type
-name|countLeadingZeros
-argument_list|(
-argument|T
-argument_list|,
-argument|ZeroBehavior = ZB_Width
-argument_list|)
-name|LLVM_DELETED_FUNCTION
-expr_stmt|;
-end_expr_stmt
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_if
 if|#
@@ -776,22 +714,27 @@ end_if
 begin_expr_stmt
 name|template
 operator|<
+name|typename
+name|T
 operator|>
-specifier|inline
+expr|struct
+name|LeadingZerosCounter
+operator|<
+name|T
+operator|,
+literal|4
+operator|>
+block|{
+specifier|static
 name|std
 operator|::
 name|size_t
-name|countLeadingZeros
-operator|<
-name|uint32_t
-operator|>
-operator|(
-name|uint32_t
-name|Val
-operator|,
-name|ZeroBehavior
-name|ZB
-operator|)
+name|count
+argument_list|(
+argument|T Val
+argument_list|,
+argument|ZeroBehavior ZB
+argument_list|)
 block|{
 if|if
 condition|(
@@ -806,9 +749,6 @@ condition|)
 return|return
 literal|32
 return|;
-end_expr_stmt
-
-begin_if
 if|#
 directive|if
 name|__has_builtin
@@ -824,29 +764,20 @@ literal|0
 operator|,
 literal|0
 argument_list|)
-end_if
-
-begin_return
 return|return
 name|__builtin_clz
 argument_list|(
 name|Val
 argument_list|)
 return|;
-end_return
-
-begin_elif
 elif|#
 directive|elif
 name|_MSC_VER
-end_elif
-
-begin_decl_stmt
 name|unsigned
 name|long
 name|Index
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|_BitScanReverse
@@ -872,8 +803,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_empty_stmt
+unit|} }
+empty_stmt|;
+end_empty_stmt
+
 begin_if
-unit|}
 if|#
 directive|if
 operator|!
@@ -889,24 +824,29 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-unit|template
+name|template
 operator|<
+name|typename
+name|T
 operator|>
-specifier|inline
+expr|struct
+name|LeadingZerosCounter
+operator|<
+name|T
+operator|,
+literal|8
+operator|>
+block|{
+specifier|static
 name|std
 operator|::
 name|size_t
-name|countLeadingZeros
-operator|<
-name|uint64_t
-operator|>
-operator|(
-name|uint64_t
-name|Val
-operator|,
-name|ZeroBehavior
-name|ZB
-operator|)
+name|count
+argument_list|(
+argument|T Val
+argument_list|,
+argument|ZeroBehavior ZB
+argument_list|)
 block|{
 if|if
 condition|(
@@ -921,9 +861,6 @@ condition|)
 return|return
 literal|64
 return|;
-end_expr_stmt
-
-begin_if
 if|#
 directive|if
 name|__has_builtin
@@ -939,29 +876,20 @@ literal|0
 operator|,
 literal|0
 argument_list|)
-end_if
-
-begin_return
 return|return
 name|__builtin_clzll
 argument_list|(
 name|Val
 argument_list|)
 return|;
-end_return
-
-begin_elif
 elif|#
 directive|elif
 name|_MSC_VER
-end_elif
-
-begin_decl_stmt
 name|unsigned
 name|long
 name|Index
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|_BitScanReverse64
@@ -987,8 +915,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_empty_stmt
+unit|} }
+empty_stmt|;
+end_empty_stmt
+
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
@@ -997,6 +929,102 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+unit|}
+comment|// namespace detail
+end_comment
+
+begin_comment
+comment|/// \brief Count number of 0's from the most significant bit to the least
+end_comment
+
+begin_comment
+comment|///   stopping at the first 1.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Only unsigned integral types are allowed.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ZB the behavior on an input of 0. Only ZB_Width and ZB_Undefined are
+end_comment
+
+begin_comment
+comment|///   valid arguments.
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|T
+operator|>
+name|std
+operator|::
+name|size_t
+name|countLeadingZeros
+argument_list|(
+argument|T Val
+argument_list|,
+argument|ZeroBehavior ZB = ZB_Width
+argument_list|)
+block|{
+name|static_assert
+argument_list|(
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|T
+operator|>
+operator|::
+name|is_integer
+operator|&&
+operator|!
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|T
+operator|>
+operator|::
+name|is_signed
+argument_list|,
+literal|"Only unsigned integral types are allowed."
+argument_list|)
+block|;
+return|return
+name|detail
+operator|::
+name|LeadingZerosCounter
+operator|<
+name|T
+operator|,
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+operator|>
+operator|::
+name|count
+argument_list|(
+name|Val
+argument_list|,
+name|ZB
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Get the index of the first set bit starting from the least
@@ -1027,39 +1055,12 @@ comment|///   valid arguments.
 end_comment
 
 begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|T
 operator|>
-name|typename
-name|std
-operator|::
-name|enable_if
-operator|<
-name|std
-operator|::
-name|numeric_limits
-operator|<
 name|T
-operator|>
-operator|::
-name|is_integer
-operator|&&
-operator|!
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|T
-operator|>
-operator|::
-name|is_signed
-operator|,
-name|T
-operator|>
-operator|::
-name|type
 name|findFirstSet
 argument_list|(
 argument|T Val
@@ -1103,53 +1104,6 @@ end_return
 
 begin_comment
 unit|}
-comment|// Disable signed.
-end_comment
-
-begin_expr_stmt
-unit|template
-operator|<
-name|typename
-name|T
-operator|>
-name|typename
-name|std
-operator|::
-name|enable_if
-operator|<
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|T
-operator|>
-operator|::
-name|is_integer
-operator|&&
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|T
-operator|>
-operator|::
-name|is_signed
-operator|,
-name|T
-operator|>
-operator|::
-name|type
-name|findFirstSet
-argument_list|(
-argument|T
-argument_list|,
-argument|ZeroBehavior = ZB_Max
-argument_list|)
-name|LLVM_DELETED_FUNCTION
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Get the index of the last set bit starting from the least
 end_comment
 
@@ -1178,39 +1132,12 @@ comment|///   valid arguments.
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|typename
 name|T
 operator|>
-name|typename
-name|std
-operator|::
-name|enable_if
-operator|<
-name|std
-operator|::
-name|numeric_limits
-operator|<
 name|T
-operator|>
-operator|::
-name|is_integer
-operator|&&
-operator|!
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|T
-operator|>
-operator|::
-name|is_signed
-operator|,
-name|T
-operator|>
-operator|::
-name|type
 name|findLastSet
 argument_list|(
 argument|T Val
@@ -1275,53 +1202,6 @@ end_return
 
 begin_comment
 unit|}
-comment|// Disable signed.
-end_comment
-
-begin_expr_stmt
-unit|template
-operator|<
-name|typename
-name|T
-operator|>
-name|typename
-name|std
-operator|::
-name|enable_if
-operator|<
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|T
-operator|>
-operator|::
-name|is_integer
-operator|&&
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|T
-operator|>
-operator|::
-name|is_signed
-operator|,
-name|T
-operator|>
-operator|::
-name|type
-name|findLastSet
-argument_list|(
-argument|T
-argument_list|,
-argument|ZeroBehavior = ZB_Max
-argument_list|)
-name|LLVM_DELETED_FUNCTION
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Macro compressed bit reversal table for 256 bits.
 end_comment
 
@@ -1334,7 +1214,7 @@ comment|/// http://graphics.stanford.edu/~seander/bithacks.html#BitReverseTable
 end_comment
 
 begin_decl_stmt
-specifier|static
+unit|static
 specifier|const
 name|unsigned
 name|char
@@ -2094,15 +1974,15 @@ block|}
 end_function
 
 begin_comment
-comment|/// isMask_32 - This function returns true if the argument is a sequence of ones
+comment|/// isMask_32 - This function returns true if the argument is a non-empty
 end_comment
 
 begin_comment
-comment|/// starting at the least significant bit with the remainder zero (32 bit
+comment|/// sequence of ones starting at the least significant bit with the remainder
 end_comment
 
 begin_comment
-comment|/// version).   Ex. isMask_32(0x0000FFFFU) == true.
+comment|/// zero (32 bit version).  Ex. isMask_32(0x0000FFFFU) == true.
 end_comment
 
 begin_function
@@ -2133,15 +2013,15 @@ block|}
 end_function
 
 begin_comment
-comment|/// isMask_64 - This function returns true if the argument is a sequence of ones
+comment|/// isMask_64 - This function returns true if the argument is a non-empty
 end_comment
 
 begin_comment
-comment|/// starting at the least significant bit with the remainder zero (64 bit
+comment|/// sequence of ones starting at the least significant bit with the remainder
 end_comment
 
 begin_comment
-comment|/// version).
+comment|/// zero (64 bit version).
 end_comment
 
 begin_function
@@ -2176,7 +2056,7 @@ comment|/// isShiftedMask_32 - This function returns true if the argument contai
 end_comment
 
 begin_comment
-comment|/// sequence of ones with the remainder zero (32 bit version.)
+comment|/// non-empty sequence of ones with the remainder zero (32 bit version.)
 end_comment
 
 begin_comment
@@ -2193,6 +2073,8 @@ name|Value
 parameter_list|)
 block|{
 return|return
+name|Value
+operator|&&
 name|isMask_32
 argument_list|(
 operator|(
@@ -2212,7 +2094,7 @@ comment|/// isShiftedMask_64 - This function returns true if the argument contai
 end_comment
 
 begin_comment
-comment|/// sequence of ones with the remainder zero (64 bit version.)
+comment|/// non-empty sequence of ones with the remainder zero (64 bit version.)
 end_comment
 
 begin_function
@@ -2225,6 +2107,8 @@ name|Value
 parameter_list|)
 block|{
 return|return
+name|Value
+operator|&&
 name|isMask_64
 argument_list|(
 operator|(
@@ -2395,166 +2279,207 @@ block|}
 end_function
 
 begin_comment
-comment|/// CountLeadingOnes_32 - this function performs the operation of
+comment|/// \brief Count the number of ones from the most significant bit to the first
 end_comment
 
 begin_comment
-comment|/// counting the number of ones from the most significant bit to the first zero
+comment|/// zero bit.
 end_comment
 
 begin_comment
-comment|/// bit.  Ex. CountLeadingOnes_32(0xFF0FFF00) == 8.
+comment|///
 end_comment
 
 begin_comment
-comment|/// Returns 32 if the word is all ones.
+comment|/// Ex. CountLeadingOnes(0xFF0FFF00) == 8.
 end_comment
 
-begin_function
-specifier|inline
-name|unsigned
-name|CountLeadingOnes_32
-parameter_list|(
-name|uint32_t
-name|Value
-parameter_list|)
+begin_comment
+comment|/// Only unsigned integral types are allowed.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ZB the behavior on an input of all ones. Only ZB_Width and
+end_comment
+
+begin_comment
+comment|/// ZB_Undefined are valid arguments.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|std
+operator|::
+name|size_t
+name|countLeadingOnes
+argument_list|(
+argument|T Value
+argument_list|,
+argument|ZeroBehavior ZB = ZB_Width
+argument_list|)
 block|{
+name|static_assert
+argument_list|(
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|T
+operator|>
+operator|::
+name|is_integer
+operator|&&
+operator|!
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|T
+operator|>
+operator|::
+name|is_signed
+argument_list|,
+literal|"Only unsigned integral types are allowed."
+argument_list|)
+block|;
 return|return
 name|countLeadingZeros
 argument_list|(
 operator|~
 name|Value
+argument_list|,
+name|ZB
 argument_list|)
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_comment
-comment|/// CountLeadingOnes_64 - This function performs the operation
+comment|/// \brief Count the number of ones from the least significant bit to the first
 end_comment
 
 begin_comment
-comment|/// of counting the number of ones from the most significant bit to the first
+comment|/// zero bit.
 end_comment
 
 begin_comment
-comment|/// zero bit (64 bit edition.)
+comment|///
 end_comment
 
 begin_comment
-comment|/// Returns 64 if the word is all ones.
+comment|/// Ex. countTrailingOnes(0x00FF00FF) == 8.
 end_comment
 
-begin_function
-specifier|inline
-name|unsigned
-name|CountLeadingOnes_64
-parameter_list|(
-name|uint64_t
-name|Value
-parameter_list|)
-block|{
-return|return
-name|countLeadingZeros
+begin_comment
+comment|/// Only unsigned integral types are allowed.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ZB the behavior on an input of all ones. Only ZB_Width and
+end_comment
+
+begin_comment
+comment|/// ZB_Undefined are valid arguments.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|std
+operator|::
+name|size_t
+name|countTrailingOnes
 argument_list|(
-operator|~
-name|Value
+argument|T Value
+argument_list|,
+argument|ZeroBehavior ZB = ZB_Width
 argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// CountTrailingOnes_32 - this function performs the operation of
-end_comment
-
-begin_comment
-comment|/// counting the number of ones from the least significant bit to the first zero
-end_comment
-
-begin_comment
-comment|/// bit.  Ex. CountTrailingOnes_32(0x00FF00FF) == 8.
-end_comment
-
-begin_comment
-comment|/// Returns 32 if the word is all ones.
-end_comment
-
-begin_function
-specifier|inline
-name|unsigned
-name|CountTrailingOnes_32
-parameter_list|(
-name|uint32_t
-name|Value
-parameter_list|)
 block|{
-return|return
-name|countTrailingZeros
+name|static_assert
 argument_list|(
-operator|~
-name|Value
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|T
+operator|>
+operator|::
+name|is_integer
+operator|&&
+operator|!
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|T
+operator|>
+operator|::
+name|is_signed
+argument_list|,
+literal|"Only unsigned integral types are allowed."
 argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// CountTrailingOnes_64 - This function performs the operation
-end_comment
-
-begin_comment
-comment|/// of counting the number of ones from the least significant bit to the first
-end_comment
-
-begin_comment
-comment|/// zero bit (64 bit edition.)
-end_comment
-
-begin_comment
-comment|/// Returns 64 if the word is all ones.
-end_comment
-
-begin_function
-specifier|inline
-name|unsigned
-name|CountTrailingOnes_64
-parameter_list|(
-name|uint64_t
-name|Value
-parameter_list|)
-block|{
+block|;
 return|return
 name|countTrailingZeros
 argument_list|(
 operator|~
 name|Value
+argument_list|,
+name|ZB
 argument_list|)
 return|;
 block|}
-end_function
+end_expr_stmt
 
-begin_comment
-comment|/// CountPopulation_32 - this function counts the number of set bits in a value.
-end_comment
-
-begin_comment
-comment|/// Ex. CountPopulation(0xF000F000) = 8
-end_comment
-
-begin_comment
-comment|/// Returns 0 if the word is zero.
-end_comment
-
-begin_function
-specifier|inline
-name|unsigned
-name|CountPopulation_32
-parameter_list|(
-name|uint32_t
-name|Value
-parameter_list|)
+begin_decl_stmt
+name|namespace
+name|detail
 block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|std
+operator|::
+name|size_t
+name|SizeOfT
+operator|>
+expr|struct
+name|PopulationCounter
+block|{
+specifier|static
+name|unsigned
+name|count
+argument_list|(
+argument|T Value
+argument_list|)
+block|{
+comment|// Generic version, forward to 32 bits.
+name|static_assert
+argument_list|(
+name|SizeOfT
+operator|<=
+literal|4
+argument_list|,
+literal|"Not implemented!"
+argument_list|)
+block|;
 if|#
 directive|if
 name|__GNUC__
@@ -2570,19 +2495,23 @@ else|#
 directive|else
 name|uint32_t
 name|v
-init|=
+operator|=
 name|Value
+block|;
+name|v
+operator|=
+name|v
 operator|-
 operator|(
 operator|(
-name|Value
+name|v
 operator|>>
 literal|1
 operator|)
 operator|&
 literal|0x55555555
 operator|)
-decl_stmt|;
+block|;
 name|v
 operator|=
 operator|(
@@ -2600,7 +2529,7 @@ operator|)
 operator|&
 literal|0x33333333
 operator|)
-expr_stmt|;
+block|;
 return|return
 operator|(
 operator|(
@@ -2623,24 +2552,33 @@ return|;
 endif|#
 directive|endif
 block|}
-end_function
+block|}
+end_decl_stmt
 
-begin_comment
-comment|/// CountPopulation_64 - this function counts the number of set bits in a value,
-end_comment
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
-begin_comment
-comment|/// (64 bit edition.)
-end_comment
-
-begin_function
-specifier|inline
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|PopulationCounter
+operator|<
+name|T
+operator|,
+literal|8
+operator|>
+block|{
+specifier|static
 name|unsigned
-name|CountPopulation_64
-parameter_list|(
-name|uint64_t
-name|Value
-parameter_list|)
+name|count
+argument_list|(
+argument|T Value
+argument_list|)
 block|{
 if|#
 directive|if
@@ -2657,19 +2595,23 @@ else|#
 directive|else
 name|uint64_t
 name|v
-init|=
+operator|=
 name|Value
+block|;
+name|v
+operator|=
+name|v
 operator|-
 operator|(
 operator|(
-name|Value
+name|v
 operator|>>
 literal|1
 operator|)
 operator|&
 literal|0x5555555555555555ULL
 operator|)
-decl_stmt|;
+block|;
 name|v
 operator|=
 operator|(
@@ -2687,7 +2629,7 @@ operator|)
 operator|&
 literal|0x3333333333333333ULL
 operator|)
-expr_stmt|;
+block|;
 name|v
 operator|=
 operator|(
@@ -2701,7 +2643,7 @@ operator|)
 operator|)
 operator|&
 literal|0x0F0F0F0F0F0F0F0FULL
-expr_stmt|;
+block|;
 return|return
 name|unsigned
 argument_list|(
@@ -2715,6 +2657,128 @@ literal|0x0101010101010101ULL
 argument_list|)
 operator|>>
 literal|56
+argument_list|)
+return|;
+endif|#
+directive|endif
+block|}
+end_expr_stmt
+
+begin_comment
+unit|}; }
+comment|// namespace detail
+end_comment
+
+begin_comment
+comment|/// \brief Count the number of set bits in a value.
+end_comment
+
+begin_comment
+comment|/// Ex. countPopulation(0xF000F000) = 8
+end_comment
+
+begin_comment
+comment|/// Returns 0 if the word is zero.
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|inline
+name|unsigned
+name|countPopulation
+argument_list|(
+argument|T Value
+argument_list|)
+block|{
+name|static_assert
+argument_list|(
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|T
+operator|>
+operator|::
+name|is_integer
+operator|&&
+operator|!
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|T
+operator|>
+operator|::
+name|is_signed
+argument_list|,
+literal|"Only unsigned integral types are allowed."
+argument_list|)
+block|;
+return|return
+name|detail
+operator|::
+name|PopulationCounter
+operator|<
+name|T
+operator|,
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+operator|>
+operator|::
+name|count
+argument_list|(
+name|Value
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Log2 - This function returns the log base 2 of the specified value
+end_comment
+
+begin_function
+specifier|inline
+name|double
+name|Log2
+parameter_list|(
+name|double
+name|Value
+parameter_list|)
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ANDROID_API__
+argument_list|)
+operator|&&
+name|__ANDROID_API__
+operator|<
+literal|18
+return|return
+name|__builtin_log
+argument_list|(
+name|Value
+argument_list|)
+operator|/
+name|__builtin_log
+argument_list|(
+literal|2.0
+argument_list|)
+return|;
+else|#
+directive|else
+return|return
+name|log2
+argument_list|(
+name|Value
 argument_list|)
 return|;
 endif|#
@@ -3078,54 +3142,6 @@ block|}
 end_function
 
 begin_comment
-comment|/// Platform-independent wrappers for the C99 isnan() function.
-end_comment
-
-begin_function_decl
-name|int
-name|IsNAN
-parameter_list|(
-name|float
-name|f
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|IsNAN
-parameter_list|(
-name|double
-name|d
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// Platform-independent wrappers for the C99 isinf() function.
-end_comment
-
-begin_function_decl
-name|int
-name|IsInf
-parameter_list|(
-name|float
-name|f
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|IsInf
-parameter_list|(
-name|double
-name|d
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// MinAlign - A and B are either alignments or offsets.  Return the minimum
 end_comment
 
@@ -3192,6 +3208,7 @@ specifier|inline
 name|uintptr_t
 name|alignAddr
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|Addr
@@ -3272,6 +3289,7 @@ specifier|inline
 name|size_t
 name|alignmentAdjustment
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|Ptr
@@ -3512,42 +3530,6 @@ name|Align
 argument_list|)
 operator|-
 name|Value
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// abs64 - absolute value of a 64-bit int.  Not all environments support
-end_comment
-
-begin_comment
-comment|/// "abs" on whatever their name for the 64-bit int type is.  The absolute
-end_comment
-
-begin_comment
-comment|/// value of the largest negative number is undefined, as with "abs".
-end_comment
-
-begin_function
-specifier|inline
-name|int64_t
-name|abs64
-parameter_list|(
-name|int64_t
-name|x
-parameter_list|)
-block|{
-return|return
-operator|(
-name|x
-operator|<
-literal|0
-operator|)
-condition|?
-operator|-
-name|x
-else|:
-name|x
 return|;
 block|}
 end_function

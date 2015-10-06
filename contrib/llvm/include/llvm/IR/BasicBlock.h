@@ -114,60 +114,41 @@ decl_stmt|;
 name|class
 name|BlockAddress
 decl_stmt|;
+name|class
+name|Function
+decl_stmt|;
+comment|// Traits for intrusive list of basic blocks...
 name|template
 operator|<
 operator|>
 expr|struct
 name|ilist_traits
 operator|<
-name|Instruction
+name|BasicBlock
 operator|>
 operator|:
 name|public
 name|SymbolTableListTraits
 operator|<
-name|Instruction
-operator|,
 name|BasicBlock
+operator|,
+name|Function
 operator|>
 block|{
-comment|/// \brief Return a node that marks the end of a list.
-comment|///
-comment|/// The sentinel is relative to this instance, so we use a non-static
-comment|/// method.
-name|Instruction
+name|BasicBlock
 operator|*
 name|createSentinel
 argument_list|()
 specifier|const
-block|{
-comment|// Since i(p)lists always publicly derive from their corresponding traits,
-comment|// placing a data member in this class will augment the i(p)list.  But since
-comment|// the NodeTy is expected to be publicly derive from ilist_node<NodeTy>,
-comment|// there is a legal viable downcast from it to NodeTy. We use this trick to
-comment|// superimpose an i(p)list with a "ghostly" NodeTy, which becomes the
-comment|// sentinel. Dereferencing the sentinel is forbidden (save the
-comment|// ilist_node<NodeTy>), so no one will ever notice the superposition.
-return|return
-name|static_cast
-operator|<
-name|Instruction
-operator|*
-operator|>
-operator|(
-operator|&
-name|Sentinel
-operator|)
-return|;
-block|}
+block|;
 specifier|static
 name|void
 name|destroySentinel
 argument_list|(
-argument|Instruction*
+argument|BasicBlock*
 argument_list|)
 block|{}
-name|Instruction
+name|BasicBlock
 operator|*
 name|provideInitialHead
 argument_list|()
@@ -178,11 +159,11 @@ name|createSentinel
 argument_list|()
 return|;
 block|}
-name|Instruction
+name|BasicBlock
 operator|*
 name|ensureHead
 argument_list|(
-argument|Instruction*
+argument|BasicBlock*
 argument_list|)
 specifier|const
 block|{
@@ -195,17 +176,27 @@ specifier|static
 name|void
 name|noteHead
 argument_list|(
-argument|Instruction*
+argument|BasicBlock*
 argument_list|,
-argument|Instruction*
+argument|BasicBlock*
 argument_list|)
 block|{}
+specifier|static
+name|ValueSymbolTable
+operator|*
+name|getSymTab
+argument_list|(
+name|Function
+operator|*
+name|ItemParent
+argument_list|)
+block|;
 name|private
 operator|:
 name|mutable
 name|ilist_half_node
 operator|<
-name|Instruction
+name|BasicBlock
 operator|>
 name|Sentinel
 block|; }
@@ -279,9 +270,12 @@ operator|>
 expr_stmt|;
 name|BasicBlock
 argument_list|(
-argument|const BasicBlock&
+specifier|const
+name|BasicBlock
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -291,7 +285,8 @@ specifier|const
 name|BasicBlock
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 comment|/// \brief Constructor.
 comment|///
@@ -410,6 +405,7 @@ block|}
 operator|~
 name|BasicBlock
 argument_list|()
+name|override
 expr_stmt|;
 comment|/// \brief Return the enclosing method, or null if none.
 specifier|const
@@ -432,13 +428,22 @@ return|return
 name|Parent
 return|;
 block|}
+comment|/// \brief Return the module owning the function this basic block belongs to,
+comment|/// or nullptr it the function does not have a module.
+comment|///
+comment|/// Note: this is undefined behavior if the block does not have a parent.
 specifier|const
-name|DataLayout
+name|Module
 operator|*
-name|getDataLayout
+name|getModule
 argument_list|()
 specifier|const
 expr_stmt|;
+name|Module
+modifier|*
+name|getModule
+parameter_list|()
+function_decl|;
 comment|/// \brief Returns the terminator instruction if the block is well formed or
 comment|/// null if the block is not well formed.
 name|TerminatorInst
@@ -603,10 +608,17 @@ name|removeFromParent
 parameter_list|()
 function_decl|;
 comment|/// \brief Unlink 'this' from the containing function and delete it.
-name|void
+comment|///
+comment|// \returns an iterator pointing to the element after the erased one.
+name|iplist
+operator|<
+name|BasicBlock
+operator|>
+operator|::
+name|iterator
 name|eraseFromParent
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 comment|/// \brief Unlink this basic block from its current function and insert it
 comment|/// into the function that \p MovePos lives in, right before \p MovePos.
 name|void
@@ -704,6 +716,66 @@ name|this
 operator|)
 operator|->
 name|getUniquePredecessor
+argument_list|()
+return|;
+block|}
+comment|/// \brief Return the successor of this block if it has a single successor.
+comment|/// Otherwise return a null pointer.
+comment|///
+comment|/// This method is analogous to getSinglePredecessor above.
+name|BasicBlock
+modifier|*
+name|getSingleSuccessor
+parameter_list|()
+function_decl|;
+specifier|const
+name|BasicBlock
+operator|*
+name|getSingleSuccessor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getSingleSuccessor
+argument_list|()
+return|;
+block|}
+comment|/// \brief Return the successor of this block if it has a unique successor.
+comment|/// Otherwise return a null pointer.
+comment|///
+comment|/// This method is analogous to getUniquePredecessor above.
+name|BasicBlock
+modifier|*
+name|getUniqueSuccessor
+parameter_list|()
+function_decl|;
+specifier|const
+name|BasicBlock
+operator|*
+name|getUniqueSuccessor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getUniqueSuccessor
 argument_list|()
 return|;
 block|}
@@ -1134,6 +1206,32 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
+comment|// createSentinel is used to get hold of the node that marks the end of the
+comment|// list... (same trick used here as in ilist_traits<Instruction>)
+specifier|inline
+name|BasicBlock
+operator|*
+name|ilist_traits
+operator|<
+name|BasicBlock
+operator|>
+operator|::
+name|createSentinel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+operator|&
+name|Sentinel
+operator|)
+return|;
+block|}
 comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
 name|DEFINE_SIMPLE_CONVERSION_FUNCTIONS
 argument_list|(

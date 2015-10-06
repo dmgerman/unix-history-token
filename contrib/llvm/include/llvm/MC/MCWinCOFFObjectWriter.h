@@ -48,6 +48,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MCAsmBackend
+decl_stmt|;
+name|class
 name|MCFixup
 decl_stmt|;
 name|class
@@ -58,6 +61,9 @@ name|MCValue
 decl_stmt|;
 name|class
 name|raw_ostream
+decl_stmt|;
+name|class
+name|raw_pwrite_stream
 decl_stmt|;
 name|class
 name|MCWinCOFFObjectTargetWriter
@@ -110,6 +116,11 @@ name|Fixup
 argument_list|,
 name|bool
 name|IsCrossSection
+argument_list|,
+specifier|const
+name|MCAsmBackend
+operator|&
+name|MAB
 argument_list|)
 decl|const
 init|=
@@ -144,7 +155,7 @@ name|MCWinCOFFObjectTargetWriter
 modifier|*
 name|MOTW
 parameter_list|,
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
 parameter_list|)

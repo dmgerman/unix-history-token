@@ -414,6 +414,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/AlignOf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -1752,7 +1758,7 @@ name|NodeRef
 argument_list|()
 block|{}
 comment|/// operator bool - Detect a null ref.
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -4427,34 +4433,6 @@ block|}
 struct|;
 end_struct
 
-begin_enum
-enum|enum
-block|{
-name|RootDataSize
-init|=
-sizeof|sizeof
-argument_list|(
-name|RootBranchData
-argument_list|)
-operator|>
-sizeof|sizeof
-argument_list|(
-name|RootLeaf
-argument_list|)
-condition|?
-sizeof|sizeof
-argument_list|(
-name|RootBranchData
-argument_list|)
-else|:
-expr|sizeof
-operator|(
-name|RootLeaf
-operator|)
-block|}
-enum|;
-end_enum
-
 begin_label
 name|public
 label|:
@@ -4500,38 +4478,16 @@ begin_comment
 comment|// The root data is either a RootLeaf or a RootBranchData instance.
 end_comment
 
-begin_comment
-comment|// We can't put them in a union since C++03 doesn't allow non-trivial
-end_comment
-
-begin_comment
-comment|// constructors in unions.
-end_comment
-
-begin_comment
-comment|// Instead, we use a char array with pointer alignment. The alignment is
-end_comment
-
-begin_comment
-comment|// ensured by the allocator member in the class, but still verified in the
-end_comment
-
-begin_comment
-comment|// constructor. We don't support keys or values that are more aligned than a
-end_comment
-
-begin_comment
-comment|// pointer.
-end_comment
-
-begin_decl_stmt
-name|char
+begin_expr_stmt
+name|AlignedCharArrayUnion
+operator|<
+name|RootLeaf
+operator|,
+name|RootBranchData
+operator|>
 name|data
-index|[
-name|RootDataSize
-index|]
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|// Tree height.
@@ -4610,6 +4566,8 @@ operator|.
 name|d
 operator|=
 name|data
+operator|.
+name|buffer
 block|;
 return|return
 operator|*
@@ -5005,6 +4963,8 @@ operator|(
 name|uintptr_t
 argument_list|(
 name|data
+operator|.
+name|buffer
 argument_list|)
 operator|&
 operator|(

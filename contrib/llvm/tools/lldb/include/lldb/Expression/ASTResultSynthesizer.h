@@ -198,9 +198,11 @@ comment|//----------------------------------------------------------------------
 name|void
 name|HandleVTable
 argument_list|(
-argument|clang::CXXRecordDecl *RD
-argument_list|,
-argument|bool DefinitionRequired
+name|clang
+operator|::
+name|CXXRecordDecl
+operator|*
+name|RD
 argument_list|)
 block|;
 comment|//----------------------------------------------------------------------

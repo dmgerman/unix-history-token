@@ -443,7 +443,8 @@ specifier|const
 name|CallEvent
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|protected
 operator|:

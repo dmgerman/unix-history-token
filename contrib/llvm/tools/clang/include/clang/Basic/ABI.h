@@ -73,6 +73,12 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cstring>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -88,7 +94,14 @@ name|Ctor_Base
 block|,
 comment|///< Base object ctor
 name|Ctor_Comdat
+block|,
 comment|///< The COMDAT used for ctors
+name|Ctor_CopyingClosure
+block|,
+comment|///< Copying closure variant of a ctor
+name|Ctor_DefaultClosure
+block|,
+comment|///< Default closure variant of a ctor
 block|}
 enum|;
 comment|/// \brief C++ destructor types.

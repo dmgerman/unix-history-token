@@ -140,6 +140,10 @@ name|LLVMCDisassembler
 argument_list|(
 argument|const char *triple
 argument_list|,
+argument|const char *cpu
+argument_list|,
+argument|const char *features_str
+argument_list|,
 argument|unsigned flavor
 argument_list|,
 argument|DisassemblerLLVMC&owner

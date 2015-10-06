@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<set>
 end_include
 
@@ -456,7 +462,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-specifier|inline
 name|po_iterator
 argument_list|(
 argument|NodeType *BB
@@ -474,7 +479,7 @@ name|nullptr
 argument_list|,
 name|BB
 argument_list|)
-block|;
+expr_stmt|;
 name|VisitStack
 operator|.
 name|push_back
@@ -493,16 +498,15 @@ name|BB
 argument_list|)
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 name|traverseChild
 argument_list|()
-block|;   }
-specifier|inline
+expr_stmt|;
+block|}
 name|po_iterator
 argument_list|()
 block|{}
 comment|// End is when stack is empty.
-specifier|inline
 name|po_iterator
 argument_list|(
 name|NodeType
@@ -564,7 +568,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-specifier|inline
 name|po_iterator
 argument_list|(
 name|SetType
@@ -592,23 +595,9 @@ operator|::
 name|pointer
 name|pointer
 expr_stmt|;
-typedef|typedef
-name|po_iterator
-operator|<
-name|GraphT
-operator|,
-name|SetType
-operator|,
-name|ExtStorage
-operator|,
-name|GT
-operator|>
-name|_Self
-expr_stmt|;
 comment|// Provide static "constructors"...
 specifier|static
-specifier|inline
-name|_Self
+name|po_iterator
 name|begin
 parameter_list|(
 name|GraphT
@@ -616,7 +605,7 @@ name|G
 parameter_list|)
 block|{
 return|return
-name|_Self
+name|po_iterator
 argument_list|(
 name|GT
 operator|::
@@ -628,8 +617,7 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
-name|_Self
+name|po_iterator
 name|end
 parameter_list|(
 name|GraphT
@@ -637,13 +625,12 @@ name|G
 parameter_list|)
 block|{
 return|return
-name|_Self
+name|po_iterator
 argument_list|()
 return|;
 block|}
 specifier|static
-specifier|inline
-name|_Self
+name|po_iterator
 name|begin
 parameter_list|(
 name|GraphT
@@ -655,7 +642,7 @@ name|S
 parameter_list|)
 block|{
 return|return
-name|_Self
+name|po_iterator
 argument_list|(
 name|GT
 operator|::
@@ -669,8 +656,7 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
-name|_Self
+name|po_iterator
 name|end
 parameter_list|(
 name|GraphT
@@ -682,19 +668,18 @@ name|S
 parameter_list|)
 block|{
 return|return
-name|_Self
+name|po_iterator
 argument_list|(
 name|S
 argument_list|)
 return|;
 block|}
-specifier|inline
 name|bool
 name|operator
 operator|==
 operator|(
 specifier|const
-name|_Self
+name|po_iterator
 operator|&
 name|x
 operator|)
@@ -708,13 +693,12 @@ operator|.
 name|VisitStack
 return|;
 block|}
-specifier|inline
 name|bool
 name|operator
 operator|!=
 operator|(
 specifier|const
-name|_Self
+name|po_iterator
 operator|&
 name|x
 operator|)
@@ -722,14 +706,14 @@ specifier|const
 block|{
 return|return
 operator|!
-name|operator
-operator|==
 operator|(
+operator|*
+name|this
+operator|==
 name|x
 operator|)
 return|;
 block|}
-specifier|inline
 name|pointer
 name|operator
 operator|*
@@ -750,7 +734,6 @@ comment|// This is a nonstandard operator-> that dereferences the pointer an ext
 comment|// time... so that you can actually call methods ON the BasicBlock, because
 comment|// the contained type is a pointer.  This allows BBIt->getTerminator() f.e.
 comment|//
-specifier|inline
 name|NodeType
 operator|*
 name|operator
@@ -760,17 +743,15 @@ block|)
 decl|const
 block|{
 return|return
-name|operator
 operator|*
-operator|(
-operator|)
+operator|*
+name|this
 return|;
 block|}
 end_decl_stmt
 
 begin_expr_stmt
-specifier|inline
-name|_Self
+name|po_iterator
 operator|&
 name|operator
 operator|++
@@ -816,8 +797,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}    inline
-name|_Self
+unit|}    po_iterator
 name|operator
 operator|++
 operator|(
@@ -825,7 +805,7 @@ name|int
 operator|)
 block|{
 comment|// Postincrement
-name|_Self
+name|po_iterator
 name|tmp
 operator|=
 operator|*
@@ -862,7 +842,7 @@ name|T
 operator|>
 name|po_begin
 argument_list|(
-argument|T G
+argument|const T&G
 argument_list|)
 block|{
 return|return
@@ -891,7 +871,7 @@ name|T
 operator|>
 name|po_end
 argument_list|(
-argument|T G
+argument|const T&G
 argument_list|)
 block|{
 return|return
@@ -903,6 +883,40 @@ operator|::
 name|end
 argument_list|(
 name|G
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|iterator_range
+operator|<
+name|po_iterator
+operator|<
+name|T
+operator|>>
+name|post_order
+argument_list|(
+argument|const T&G
+argument_list|)
+block|{
+return|return
+name|make_range
+argument_list|(
+name|po_begin
+argument_list|(
+name|G
+argument_list|)
+argument_list|,
+name|po_end
+argument_list|(
+name|G
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -1058,6 +1072,51 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|T
+operator|,
+name|class
+name|SetType
+operator|>
+name|iterator_range
+operator|<
+name|po_ext_iterator
+operator|<
+name|T
+operator|,
+name|SetType
+operator|>>
+name|post_order_ext
+argument_list|(
+argument|const T&G
+argument_list|,
+argument|SetType&S
+argument_list|)
+block|{
+return|return
+name|make_range
+argument_list|(
+name|po_ext_begin
+argument_list|(
+name|G
+argument_list|,
+name|S
+argument_list|)
+argument_list|,
+name|po_ext_end
+argument_list|(
+name|G
+argument_list|,
+name|S
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|// Provide global definitions of inverse post order iterators...
 end_comment
@@ -1155,7 +1214,7 @@ name|T
 operator|>
 name|ipo_begin
 argument_list|(
-argument|T G
+argument|const T&G
 argument_list|,
 argument|bool Reverse = false
 argument_list|)
@@ -1188,7 +1247,7 @@ name|T
 operator|>
 name|ipo_end
 argument_list|(
-argument|T G
+argument|const T&G
 argument_list|)
 block|{
 return|return
@@ -1200,6 +1259,44 @@ operator|::
 name|end
 argument_list|(
 name|G
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|iterator_range
+operator|<
+name|ipo_iterator
+operator|<
+name|T
+operator|>>
+name|inverse_post_order
+argument_list|(
+argument|const T&G
+argument_list|,
+argument|bool Reverse = false
+argument_list|)
+block|{
+return|return
+name|make_range
+argument_list|(
+name|ipo_begin
+argument_list|(
+name|G
+argument_list|,
+name|Reverse
+argument_list|)
+argument_list|,
+name|ipo_end
+argument_list|(
+name|G
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -1322,7 +1419,7 @@ name|SetType
 operator|>
 name|ipo_ext_begin
 argument_list|(
-argument|T G
+argument|const T&G
 argument_list|,
 argument|SetType&S
 argument_list|)
@@ -1362,7 +1459,7 @@ name|SetType
 operator|>
 name|ipo_ext_end
 argument_list|(
-argument|T G
+argument|const T&G
 argument_list|,
 argument|SetType&S
 argument_list|)
@@ -1380,6 +1477,51 @@ argument_list|(
 name|G
 argument_list|,
 name|S
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|T
+operator|,
+name|class
+name|SetType
+operator|>
+name|iterator_range
+operator|<
+name|ipo_ext_iterator
+operator|<
+name|T
+operator|,
+name|SetType
+operator|>>
+name|inverse_post_order_ext
+argument_list|(
+argument|const T&G
+argument_list|,
+argument|SetType&S
+argument_list|)
+block|{
+return|return
+name|make_range
+argument_list|(
+name|ipo_ext_begin
+argument_list|(
+name|G
+argument_list|,
+name|S
+argument_list|)
+argument_list|,
+name|ipo_ext_end
+argument_list|(
+name|G
+argument_list|,
+name|S
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -1513,7 +1655,6 @@ comment|// Block list in normal PO order
 end_comment
 
 begin_function
-specifier|inline
 name|void
 name|Initialize
 parameter_list|(
@@ -1568,12 +1709,14 @@ name|rpo_iterator
 expr_stmt|;
 end_typedef
 
-begin_expr_stmt
-specifier|inline
+begin_macro
 name|ReversePostOrderTraversal
 argument_list|(
 argument|GraphT G
 argument_list|)
+end_macro
+
+begin_block
 block|{
 name|Initialize
 argument_list|(
@@ -1584,12 +1727,18 @@ argument_list|(
 name|G
 argument_list|)
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
 comment|// Because we want a reverse post order, use reverse iterators from the vector
-specifier|inline
+end_comment
+
+begin_function
 name|rpo_iterator
 name|begin
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Blocks
@@ -1598,10 +1747,9 @@ name|rbegin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_function
-specifier|inline
 name|rpo_iterator
 name|end
 parameter_list|()

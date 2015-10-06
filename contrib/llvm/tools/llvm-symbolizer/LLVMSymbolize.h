@@ -141,13 +141,13 @@ label|:
 struct|struct
 name|Options
 block|{
+name|FunctionNameKind
+name|PrintFunctions
+decl_stmt|;
 name|bool
 name|UseSymbolTable
 range|:
 literal|1
-decl_stmt|;
-name|FunctionNameKind
-name|PrintFunctions
 decl_stmt|;
 name|bool
 name|PrintInlining
@@ -156,6 +156,11 @@ literal|1
 decl_stmt|;
 name|bool
 name|Demangle
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|RelativeAddresses
 range|:
 literal|1
 decl_stmt|;
@@ -176,26 +181,28 @@ name|DsymHints
 expr_stmt|;
 name|Options
 argument_list|(
-argument|bool UseSymbolTable = true
-argument_list|,
 argument|FunctionNameKind PrintFunctions = FunctionNameKind::LinkageName
+argument_list|,
+argument|bool UseSymbolTable = true
 argument_list|,
 argument|bool PrintInlining = true
 argument_list|,
 argument|bool Demangle = true
 argument_list|,
+argument|bool RelativeAddresses = false
+argument_list|,
 argument|std::string DefaultArch =
 literal|""
 argument_list|)
 block|:
-name|UseSymbolTable
+name|PrintFunctions
 argument_list|(
-name|UseSymbolTable
+name|PrintFunctions
 argument_list|)
 operator|,
-name|PrintFunctions
+name|UseSymbolTable
 argument_list|(
-name|PrintFunctions
+name|UseSymbolTable
 argument_list|)
 operator|,
 name|PrintInlining
@@ -206,6 +213,11 @@ operator|,
 name|Demangle
 argument_list|(
 name|Demangle
+argument_list|)
+operator|,
+name|RelativeAddresses
+argument_list|(
+name|RelativeAddresses
 argument_list|)
 operator|,
 name|DefaultArch
@@ -640,6 +652,9 @@ specifier|const
 name|SymbolRef
 modifier|&
 name|Symbol
+parameter_list|,
+name|uint64_t
+name|SymbolSize
 parameter_list|,
 name|DataExtractor
 modifier|*

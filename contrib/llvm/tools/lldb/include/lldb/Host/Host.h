@@ -405,14 +405,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|WillTerminate
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_typedef
 typedef|typedef
 name|void
@@ -907,6 +899,22 @@ name|__NetBSD__
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__ANDROID__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__ANDROID_NDK__
+argument_list|)
+end_if
+
 begin_function_decl
 specifier|static
 name|short
@@ -974,10 +982,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// !defined(__ANDROID__)&& !defined(__ANDROID_NDK__)
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// defined (__APPLE__) || defined (__linux__) || defined (__FreeBSD__) || defined (__GLIBC__) || defined(__NetBSD__)
+end_comment
+
 begin_expr_stmt
 specifier|static
 specifier|const
-name|lldb_private
+name|lldb
 operator|::
 name|UnixSignalsSP
 operator|&
@@ -986,25 +1007,50 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-specifier|static
-name|lldb
-operator|::
-name|pid_t
-name|LaunchApplication
-argument_list|(
-specifier|const
-name|FileSpec
-operator|&
-name|app_file_spec
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function_decl
 specifier|static
 name|Error
 name|LaunchProcess
+parameter_list|(
+name|ProcessLaunchInfo
+modifier|&
+name|launch_info
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
+comment|/// Perform expansion of the command-line for this launch info
+end_comment
+
+begin_comment
+comment|/// This can potentially involve wildcard expansion
+end_comment
+
+begin_comment
+comment|//  environment variable replacement, and whatever other
+end_comment
+
+begin_comment
+comment|//  argument magic the platform defines as part of its typical
+end_comment
+
+begin_comment
+comment|//  user experience
+end_comment
+
+begin_comment
+comment|//------------------------------------------------------------------
+end_comment
+
+begin_function_decl
+specifier|static
+name|Error
+name|ShellExpandArguments
 parameter_list|(
 name|ProcessLaunchInfo
 modifier|&
@@ -1025,11 +1071,55 @@ name|command
 argument_list|,
 comment|// Shouldn't be NULL
 specifier|const
-name|char
-operator|*
+name|FileSpec
+operator|&
 name|working_dir
 argument_list|,
-comment|// Pass NULL to use the current working directory
+comment|// Pass empty FileSpec to use the current working directory
+name|int
+operator|*
+name|status_ptr
+argument_list|,
+comment|// Pass NULL if you don't want the process exit status
+name|int
+operator|*
+name|signo_ptr
+argument_list|,
+comment|// Pass NULL if you don't want the signal that caused the process to exit
+name|std
+operator|::
+name|string
+operator|*
+name|command_output
+argument_list|,
+comment|// Pass NULL if you don't want the command output
+name|uint32_t
+name|timeout_sec
+argument_list|,
+name|bool
+name|run_in_default_shell
+operator|=
+name|true
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|Error
+name|RunShellCommand
+argument_list|(
+specifier|const
+name|Args
+operator|&
+name|args
+argument_list|,
+specifier|const
+name|FileSpec
+operator|&
+name|working_dir
+argument_list|,
+comment|// Pass empty FileSpec to use the current working directory
 name|int
 operator|*
 name|status_ptr
@@ -1098,21 +1188,6 @@ name|file_spec
 parameter_list|,
 name|uint32_t
 name|line_no
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|Backtrace
-parameter_list|(
-name|Stream
-modifier|&
-name|strm
-parameter_list|,
-name|uint32_t
-name|max_frames
 parameter_list|)
 function_decl|;
 end_function_decl

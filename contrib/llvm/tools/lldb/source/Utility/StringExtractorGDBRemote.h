@@ -68,7 +68,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"Utility/StringExtractor.h"
+file|"lldb/Utility/StringExtractor.h"
 end_include
 
 begin_decl_stmt
@@ -142,6 +142,8 @@ name|eServerPacketType_qsProcessInfo
 block|,
 name|eServerPacketType_qC
 block|,
+name|eServerPacketType_qEcho
+block|,
 name|eServerPacketType_qGroupName
 block|,
 name|eServerPacketType_qHostInfo
@@ -152,6 +154,8 @@ name|eServerPacketType_qKillSpawnedProcess
 block|,
 name|eServerPacketType_qLaunchSuccess
 block|,
+name|eServerPacketType_qModuleInfo
+block|,
 name|eServerPacketType_qProcessInfoPID
 block|,
 name|eServerPacketType_qSpeedTest
@@ -159,6 +163,8 @@ block|,
 name|eServerPacketType_qUserName
 block|,
 name|eServerPacketType_qGetWorkingDir
+block|,
+name|eServerPacketType_qFileLoadAddress
 block|,
 name|eServerPacketType_QEnvironment
 block|,
@@ -267,6 +273,8 @@ name|eServerPacketType_qWatchpointSupportInfoSupported
 block|,
 name|eServerPacketType_qXfer_auxv_read
 block|,
+name|eServerPacketType_jSignalsInfo
+block|,
 name|eServerPacketType_vAttach
 block|,
 name|eServerPacketType_vAttachWait
@@ -295,6 +303,9 @@ name|eServerPacketType_G
 block|,
 name|eServerPacketType_H
 block|,
+name|eServerPacketType_I
+block|,
+comment|// stdin notification
 name|eServerPacketType_k
 block|,
 name|eServerPacketType_m
@@ -318,7 +329,11 @@ block|,
 name|eServerPacketType__M
 block|,
 name|eServerPacketType__m
-block|,     }
+block|,
+name|eServerPacketType_notify
+block|,
+comment|// '%' notification
+block|}
 block|;
 name|ServerPacketType
 name|GetServerPacketType

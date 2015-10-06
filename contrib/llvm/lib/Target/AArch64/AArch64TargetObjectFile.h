@@ -88,6 +88,9 @@ name|TargetLoweringObjectFileMachO
 block|{
 name|public
 operator|:
+name|AArch64_MachoTargetObjectFile
+argument_list|()
+block|;
 specifier|const
 name|MCExpr
 operator|*
@@ -119,6 +122,24 @@ argument_list|,
 argument|const TargetMachine&TM
 argument_list|,
 argument|MachineModuleInfo *MMI
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|MCExpr
+operator|*
+name|getIndirectSymViaGOTPCRel
+argument_list|(
+argument|const MCSymbol *Sym
+argument_list|,
+argument|const MCValue&MV
+argument_list|,
+argument|int64_t Offset
+argument_list|,
+argument|MachineModuleInfo *MMI
+argument_list|,
+argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
 name|override

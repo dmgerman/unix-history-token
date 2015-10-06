@@ -146,25 +146,12 @@ name|namespace
 name|llvm
 block|{
 comment|// Implementation in LoopInfoImpl.h
-ifdef|#
-directive|ifdef
-name|__GNUC__
 name|class
 name|MachineLoop
 decl_stmt|;
-name|__extension__
-specifier|extern
-name|template
-name|class
-name|LoopBase
-operator|<
-name|MachineBasicBlock
+extern|extern template class LoopBase<MachineBasicBlock
 operator|,
-name|MachineLoop
-operator|>
-expr_stmt|;
-endif|#
-directive|endif
+extern|MachineLoop>;
 name|class
 name|MachineLoop
 range|:
@@ -234,22 +221,9 @@ block|{}
 block|}
 empty_stmt|;
 comment|// Implementation in LoopInfoImpl.h
-ifdef|#
-directive|ifdef
-name|__GNUC__
-name|__extension__
-specifier|extern
-name|template
-name|class
-name|LoopInfoBase
-operator|<
-name|MachineBasicBlock
+extern|extern template class LoopInfoBase<MachineBasicBlock
 operator|,
-name|MachineLoop
-operator|>
-expr_stmt|;
-endif|#
-directive|endif
+extern|MachineLoop>;
 name|class
 name|MachineLoopInfo
 range|:
@@ -281,13 +255,17 @@ specifier|const
 name|MachineLoopInfo
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|MachineLoopInfo
 argument_list|(
-argument|const MachineLoopInfo&
+specifier|const
+name|MachineLoopInfo
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -449,7 +427,7 @@ specifier|inline
 name|bool
 name|isLoopHeader
 argument_list|(
-argument|MachineBasicBlock *BB
+argument|const MachineBasicBlock *BB
 argument_list|)
 specifier|const
 block|{

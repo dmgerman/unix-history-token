@@ -1835,7 +1835,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|virtual
 specifier|const
 name|CXXRecordDecl
 operator|*
@@ -1844,16 +1843,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|cast
+name|const_cast
 operator|<
 name|CXXRecordDecl
+operator|*
 operator|>
 operator|(
-name|RecordDecl
-operator|::
+name|this
+operator|)
+operator|->
 name|getCanonicalDecl
 argument_list|()
-operator|)
 return|;
 block|}
 name|CXXRecordDecl
@@ -3396,12 +3396,10 @@ parameter_list|)
 function_decl|;
 comment|/// \brief Get all conversion functions visible in current class,
 comment|/// including conversion function templates.
-name|std
+name|llvm
 operator|::
-name|pair
+name|iterator_range
 operator|<
-name|conversion_iterator
-operator|,
 name|conversion_iterator
 operator|>
 name|getVisibleConversionFunctions
@@ -4180,6 +4178,13 @@ name|getDestructor
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Returns true if the class destructor, or any implicitly invoked
+comment|/// destructors are marked noreturn.
+name|bool
+name|isAnyDestructorNoReturn
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief If the class is a local class [class.local], returns
 comment|/// the enclosing function declaration.
 specifier|const
@@ -4385,7 +4390,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \todo add a separate paramaeter to configure IsDerivedFrom, rather than
+comment|/// \todo add a separate parameter to configure IsDerivedFrom, rather than
 end_comment
 
 begin_comment
@@ -6000,7 +6005,6 @@ operator|*
 name|getCanonicalDecl
 argument_list|()
 specifier|const
-name|override
 block|{
 return|return
 name|const_cast
@@ -7226,7 +7230,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This assumes that the initialzier was written in the source code, and
+comment|/// This assumes that the initializer was written in the source code, and
 end_comment
 
 begin_comment
@@ -7592,9 +7596,7 @@ block|;
 comment|/// \name Support for base and member initializers.
 comment|/// \{
 comment|/// \brief The arguments used to initialize the base or member.
-name|CXXCtorInitializer
-operator|*
-operator|*
+name|LazyCXXCtorInitializersPtr
 name|CtorInitializers
 block|;
 name|unsigned
@@ -7832,8 +7834,24 @@ name|init_iterator
 name|init_begin
 parameter_list|()
 block|{
+specifier|const
+specifier|auto
+modifier|*
+name|ConstThis
+init|=
+name|this
+decl_stmt|;
 return|return
-name|CtorInitializers
+name|const_cast
+operator|<
+name|init_iterator
+operator|>
+operator|(
+name|ConstThis
+operator|->
+name|init_begin
+argument_list|()
+operator|)
 return|;
 block|}
 end_function
@@ -7847,11 +7865,7 @@ name|init_const_iterator
 name|init_begin
 argument_list|()
 specifier|const
-block|{
-return|return
-name|CtorInitializers
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -7864,7 +7878,8 @@ name|init_end
 parameter_list|()
 block|{
 return|return
-name|CtorInitializers
+name|init_begin
+argument_list|()
 operator|+
 name|NumCtorInitializers
 return|;
@@ -7882,7 +7897,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|CtorInitializers
+name|init_begin
+argument_list|()
 operator|+
 name|NumCtorInitializers
 return|;
@@ -8017,12 +8033,12 @@ parameter_list|(
 name|CXXCtorInitializer
 modifier|*
 modifier|*
-name|initializers
+name|Initializers
 parameter_list|)
 block|{
 name|CtorInitializers
 operator|=
-name|initializers
+name|Initializers
 expr_stmt|;
 block|}
 end_function
@@ -8045,7 +8061,8 @@ operator|==
 literal|1
 operator|)
 operator|&&
-name|CtorInitializers
+name|init_begin
+argument_list|()
 index|[
 literal|0
 index|]
@@ -8368,30 +8385,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-specifier|const
-name|CXXConstructorDecl
-operator|*
-name|getCanonicalDecl
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|cast
-operator|<
-name|CXXConstructorDecl
-operator|>
-operator|(
-name|FunctionDecl
-operator|::
-name|getCanonicalDecl
-argument_list|()
-operator|)
-return|;
-block|}
-end_expr_stmt
-
 begin_function
 name|CXXConstructorDecl
 modifier|*
@@ -8413,6 +8406,30 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+specifier|const
+name|CXXConstructorDecl
+operator|*
+name|getCanonicalDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|CXXConstructorDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getCanonicalDecl
+argument_list|()
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|// Implement isa/cast/dyncast/etc.
@@ -8622,22 +8639,11 @@ block|;
 name|void
 name|setOperatorDelete
 argument_list|(
-argument|FunctionDecl *OD
-argument_list|)
-block|{
-name|cast
-operator|<
-name|CXXDestructorDecl
-operator|>
-operator|(
-name|getFirstDecl
-argument_list|()
-operator|)
-operator|->
-name|OperatorDelete
-operator|=
+name|FunctionDecl
+operator|*
 name|OD
-block|;   }
+argument_list|)
+block|;
 specifier|const
 name|FunctionDecl
 operator|*

@@ -538,10 +538,13 @@ block|;
 comment|/// MipsCallEntry maps.
 name|StringMap
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 specifier|const
 name|MipsCallEntry
-operator|*
-operator|>
+operator|>>
 name|ExternalCallEntries
 block|;
 name|ValueMap
@@ -550,10 +553,13 @@ specifier|const
 name|GlobalValue
 operator|*
 block|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 specifier|const
 name|MipsCallEntry
-operator|*
-operator|>
+operator|>>
 name|GlobalCallEntries
 block|; }
 decl_stmt|;

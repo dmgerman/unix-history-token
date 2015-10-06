@@ -119,6 +119,7 @@ name|class
 name|VirtRegMap
 decl_stmt|;
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|LiveDebugVariables
 range|:
 name|public
@@ -135,6 +136,7 @@ name|Function
 operator|*
 block|,
 name|DISubprogram
+operator|*
 operator|>
 name|FunctionDIs
 block|;
@@ -151,6 +153,7 @@ block|;
 operator|~
 name|LiveDebugVariables
 argument_list|()
+name|override
 block|;
 comment|/// renameRegister - Move any user variables in OldReg to NewReg:SubIdx.
 comment|/// @param OldReg Old virtual register that is going away.

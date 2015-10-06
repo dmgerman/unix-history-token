@@ -261,6 +261,12 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|DiagnosticsEngine
+decl_stmt|;
+name|class
+name|AnalyzerOptions
+decl_stmt|;
 name|namespace
 name|ento
 block|{
@@ -420,6 +426,21 @@ argument|SmallVectorImpl<CheckerOptInfo>&opts
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/// Check if every option corresponds to a specific checker or package.
+name|void
+name|validateCheckerOptions
+argument_list|(
+specifier|const
+name|AnalyzerOptions
+operator|&
+name|opts
+argument_list|,
+name|DiagnosticsEngine
+operator|&
+name|diags
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Prints the name and description of all checkers in this registry.
 comment|/// This output is not intended to be machine-parseable.
 name|void

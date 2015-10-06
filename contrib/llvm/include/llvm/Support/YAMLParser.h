@@ -158,12 +158,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallString.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -171,12 +165,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Allocator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/MemoryBuffer.h"
 end_include
 
 begin_include
@@ -208,13 +196,16 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MemoryBufferRef
+decl_stmt|;
+name|class
 name|SourceMgr
 decl_stmt|;
 name|class
-name|raw_ostream
+name|Twine
 decl_stmt|;
 name|class
-name|Twine
+name|raw_ostream
 decl_stmt|;
 name|namespace
 name|yaml
@@ -278,6 +269,8 @@ argument_list|(
 argument|StringRef Input
 argument_list|,
 argument|SourceMgr&
+argument_list|,
+argument|bool ShowColors = true
 argument_list|)
 empty_stmt|;
 name|Stream
@@ -285,6 +278,8 @@ argument_list|(
 argument|MemoryBufferRef InputBuffer
 argument_list|,
 argument|SourceMgr&
+argument_list|,
+argument|bool ShowColors = true
 argument_list|)
 empty_stmt|;
 operator|~
@@ -374,6 +369,8 @@ block|{
 name|NK_Null
 block|,
 name|NK_Scalar
+block|,
+name|NK_BlockScalar
 block|,
 name|NK_KeyValue
 block|,
@@ -584,17 +581,18 @@ parameter_list|)
 function|throw
 parameter_list|()
 block|{}
-name|virtual
 operator|~
 name|Node
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|private
-operator|:
+label|:
 name|unsigned
 name|int
 name|TypeID
-expr_stmt|;
+decl_stmt|;
 name|StringRef
 name|Anchor
 decl_stmt|;
@@ -610,6 +608,7 @@ comment|/// Example:
 comment|///   !!null null
 name|class
 name|NullNode
+name|final
 range|:
 name|public
 name|Node
@@ -670,6 +669,7 @@ comment|/// Example:
 comment|///   Adena
 name|class
 name|ScalarNode
+name|final
 operator|:
 name|public
 name|Node
@@ -801,6 +801,124 @@ argument_list|)
 specifier|const
 block|; }
 block|;
+comment|/// \brief A block scalar node is an opaque datum that can be presented as a
+comment|///        series of zero or more Unicode scalar values.
+comment|///
+comment|/// Example:
+comment|///   |
+comment|///     Hello
+comment|///     World
+name|class
+name|BlockScalarNode
+name|final
+operator|:
+name|public
+name|Node
+block|{
+name|void
+name|anchor
+argument_list|()
+name|override
+block|;
+name|public
+operator|:
+name|BlockScalarNode
+argument_list|(
+argument|std::unique_ptr<Document>&D
+argument_list|,
+argument|StringRef Anchor
+argument_list|,
+argument|StringRef Tag
+argument_list|,
+argument|StringRef Value
+argument_list|,
+argument|StringRef RawVal
+argument_list|)
+operator|:
+name|Node
+argument_list|(
+name|NK_BlockScalar
+argument_list|,
+name|D
+argument_list|,
+name|Anchor
+argument_list|,
+name|Tag
+argument_list|)
+block|,
+name|Value
+argument_list|(
+argument|Value
+argument_list|)
+block|{
+name|SMLoc
+name|Start
+operator|=
+name|SMLoc
+operator|::
+name|getFromPointer
+argument_list|(
+name|RawVal
+operator|.
+name|begin
+argument_list|()
+argument_list|)
+block|;
+name|SMLoc
+name|End
+operator|=
+name|SMLoc
+operator|::
+name|getFromPointer
+argument_list|(
+name|RawVal
+operator|.
+name|end
+argument_list|()
+argument_list|)
+block|;
+name|SourceRange
+operator|=
+name|SMRange
+argument_list|(
+name|Start
+argument_list|,
+name|End
+argument_list|)
+block|;   }
+comment|/// \brief Gets the value of this node as a StringRef.
+name|StringRef
+name|getValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Value
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const Node *N
+argument_list|)
+block|{
+return|return
+name|N
+operator|->
+name|getType
+argument_list|()
+operator|==
+name|NK_BlockScalar
+return|;
+block|}
+name|private
+operator|:
+name|StringRef
+name|Value
+block|; }
+block|;
 comment|/// \brief A key and value pair. While not technically a Node under the YAML
 comment|///        representation graph, it is easier to treat them this way.
 comment|///
@@ -810,6 +928,7 @@ comment|/// Example:
 comment|///   Section: .text
 name|class
 name|KeyValueNode
+name|final
 operator|:
 name|public
 name|Node
@@ -887,12 +1006,21 @@ operator|->
 name|skip
 argument_list|()
 block|;
+if|if
+condition|(
+name|Node
+modifier|*
+name|Val
+init|=
 name|getValue
 argument_list|()
+condition|)
+name|Val
 operator|->
 name|skip
 argument_list|()
-block|;   }
+expr_stmt|;
+block|}
 specifier|static
 specifier|inline
 name|bool
@@ -1290,6 +1418,7 @@ end_comment
 begin_decl_stmt
 name|class
 name|MappingNode
+name|final
 range|:
 name|public
 name|Node
@@ -1552,6 +1681,7 @@ end_comment
 begin_decl_stmt
 name|class
 name|SequenceNode
+name|final
 range|:
 name|public
 name|Node
@@ -1816,6 +1946,7 @@ end_comment
 begin_decl_stmt
 name|class
 name|AliasNode
+name|final
 range|:
 name|public
 name|Node

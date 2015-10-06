@@ -124,12 +124,26 @@ block|{
 name|bool
 name|UseInitArray
 block|;
+name|mutable
+name|unsigned
+name|NextUniqueID
+operator|=
+literal|0
+block|;
 name|public
 operator|:
-name|virtual
+name|TargetLoweringObjectFileELF
+argument_list|()
+operator|:
+name|UseInitArray
+argument_list|(
+argument|false
+argument_list|)
+block|{}
 operator|~
 name|TargetLoweringObjectFileELF
 argument_list|()
+name|override
 block|{}
 name|void
 name|emitPersonalityValue
@@ -145,7 +159,6 @@ name|override
 block|;
 comment|/// Given a constant with the SectionKind, return a section that it should be
 comment|/// placed in.
-specifier|const
 name|MCSection
 operator|*
 name|getSectionForConstant
@@ -157,7 +170,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|getExplicitSectionGlobal
@@ -173,7 +185,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|SelectSectionForGlobal
@@ -185,6 +196,29 @@ argument_list|,
 argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+name|override
+block|;
+name|MCSection
+operator|*
+name|getSectionForJumpTable
+argument_list|(
+argument|const Function&F
+argument_list|,
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|shouldPutJumpTableInFunctionSection
+argument_list|(
+argument|bool UsesLabelDifference
+argument_list|,
+argument|const Function&F
 argument_list|)
 specifier|const
 name|override
@@ -233,7 +267,6 @@ argument_list|(
 argument|bool UseInitArray_
 argument_list|)
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|getStaticCtorSection
@@ -245,7 +278,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|getStaticDtorSection
@@ -266,20 +298,13 @@ name|TargetLoweringObjectFile
 block|{
 name|public
 operator|:
-name|virtual
 operator|~
 name|TargetLoweringObjectFileMachO
 argument_list|()
-block|{}
-comment|/// Extract the dependent library name from a linker option string. Returns
-comment|/// StringRef() if the option does not specify a library.
-name|StringRef
-name|getDepLibFromLinkerOpt
-argument_list|(
-argument|StringRef LinkerOption
-argument_list|)
-specifier|const
 name|override
+block|{}
+name|TargetLoweringObjectFileMachO
+argument_list|()
 block|;
 comment|/// Emit the module flags that specify the garbage collection information.
 name|void
@@ -296,7 +321,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|SelectSectionForGlobal
@@ -312,7 +336,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|getExplicitSectionGlobal
@@ -328,7 +351,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|getSectionForConstant
@@ -376,6 +398,25 @@ argument|MachineModuleInfo *MMI
 argument_list|)
 specifier|const
 name|override
+block|;
+comment|/// Get MachO PC relative GOT entry relocation
+specifier|const
+name|MCExpr
+operator|*
+name|getIndirectSymViaGOTPCRel
+argument_list|(
+argument|const MCSymbol *Sym
+argument_list|,
+argument|const MCValue&MV
+argument_list|,
+argument|int64_t Offset
+argument_list|,
+argument|MachineModuleInfo *MMI
+argument_list|,
+argument|MCStreamer&Streamer
+argument_list|)
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 name|class
@@ -386,12 +427,11 @@ name|TargetLoweringObjectFile
 block|{
 name|public
 operator|:
-name|virtual
 operator|~
 name|TargetLoweringObjectFileCOFF
 argument_list|()
+name|override
 block|{}
-specifier|const
 name|MCSection
 operator|*
 name|getExplicitSectionGlobal
@@ -407,7 +447,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|SelectSectionForGlobal
@@ -423,12 +462,31 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// Extract the dependent library name from a linker option string. Returns
-comment|/// StringRef() if the option does not specify a library.
-name|StringRef
-name|getDepLibFromLinkerOpt
+name|void
+name|getNameWithPrefix
 argument_list|(
-argument|StringRef LinkerOption
+argument|SmallVectorImpl<char>&OutName
+argument_list|,
+argument|const GlobalValue *GV
+argument_list|,
+argument|bool CannotUsePrivateLabel
+argument_list|,
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+name|override
+block|;
+name|MCSection
+operator|*
+name|getSectionForJumpTable
+argument_list|(
+argument|const Function&F
+argument_list|,
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
 argument_list|)
 specifier|const
 name|override
@@ -449,7 +507,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|getStaticCtorSection
@@ -461,7 +518,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|getStaticDtorSection
@@ -469,6 +525,18 @@ argument_list|(
 argument|unsigned Priority
 argument_list|,
 argument|const MCSymbol *KeySym
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|emitLinkerFlagsForGlobal
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|const GlobalValue *GV
+argument_list|,
+argument|const Mangler&Mang
 argument_list|)
 specifier|const
 name|override

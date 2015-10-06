@@ -158,7 +158,11 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
 name|SANITIZER_LINUX
+operator|||
+name|SANITIZER_WINDOWS
+operator|)
 operator|&&
 operator|!
 name|defined
@@ -395,10 +399,32 @@ name|long
 name|s64
 typedef|;
 comment|// NOLINT
+if|#
+directive|if
+name|SANITIZER_WINDOWS
+comment|// On Windows, files are HANDLE, which is a synonim of void*.
+comment|// Use void* to avoid including<windows.h> everywhere.
+typedef|typedef
+name|void
+modifier|*
+name|fd_t
+typedef|;
+typedef|typedef
+name|unsigned
+name|error_t
+typedef|;
+else|#
+directive|else
 typedef|typedef
 name|int
 name|fd_t
 typedef|;
+typedef|typedef
+name|int
+name|error_t
+typedef|;
+endif|#
+directive|endif
 comment|// WARNING: OFF_T may be different from OS type off_t, depending on the value of
 comment|// _FILE_OFFSET_BITS. This definition of OFF_T matches the ABI of system calls
 comment|// like pread and mmap, as opposed to pread64 and mmap64.
@@ -1675,7 +1701,7 @@ define|#
 directive|define
 name|ENABLE_FRAME_POINTER
 define|\
-value|do {                                                             \     volatile uptr enable_fp;                                       \     enable_fp = GET_CURRENT_FRAME();                               \   } while (0)
+value|do {                                                             \     volatile uptr enable_fp;                                       \     enable_fp = GET_CURRENT_FRAME();                               \     (void)enable_fp;                                               \   } while (0)
 end_define
 
 begin_endif

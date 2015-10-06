@@ -113,18 +113,15 @@ name|DwarfUnit
 block|{
 comment|/// The attribute index of DW_AT_stmt_list in the compile unit DIE, avoiding
 comment|/// the need to search for it in applyStmtList.
-name|unsigned
-name|stmtListIndex
+name|DIE
+operator|::
+name|value_iterator
+name|StmtListValue
 block|;
 comment|/// Skeleton unit associated with this unit.
 name|DwarfCompileUnit
 operator|*
 name|Skeleton
-block|;
-comment|/// A label at the start of the non-dwo section related to this unit.
-name|MCSymbol
-operator|*
-name|SectionSym
 block|;
 comment|/// The start of the unit within its section.
 name|MCSymbol
@@ -177,12 +174,8 @@ name|BaseAddress
 block|;
 comment|/// \brief Construct a DIE for the given DbgVariable without initializing the
 comment|/// DbgVariable's DIE reference.
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|DIE
-operator|>
+operator|*
 name|constructVariableDIEImpl
 argument_list|(
 argument|const DbgVariable&DV
@@ -207,7 +200,7 @@ name|DwarfCompileUnit
 argument_list|(
 argument|unsigned UID
 argument_list|,
-argument|DICompileUnit Node
+argument|const DICompileUnit *Node
 argument_list|,
 argument|AsmPrinter *A
 argument_list|,
@@ -228,11 +221,7 @@ return|;
 block|}
 name|void
 name|initStmtList
-argument_list|(
-name|MCSymbol
-operator|*
-name|DwarfLineSectionSym
-argument_list|)
+argument_list|()
 block|;
 comment|/// Apply the DW_AT_stmt_list from this compile unit to the specified DIE.
 name|void
@@ -248,7 +237,10 @@ name|DIE
 operator|*
 name|getOrCreateGlobalVariableDIE
 argument_list|(
-argument|DIGlobalVariable GV
+specifier|const
+name|DIGlobalVariable
+operator|*
+name|GV
 argument_list|)
 block|;
 comment|/// addLabelAddress - Add a dwarf label attribute data and value using
@@ -276,7 +268,9 @@ argument|const MCSymbol *Label
 argument_list|)
 block|;
 comment|/// addSectionDelta - Add a label delta attribute data and value.
-name|void
+name|DIE
+operator|::
+name|value_iterator
 name|addSectionDelta
 argument_list|(
 argument|DIE&Die
@@ -335,7 +329,9 @@ argument_list|)
 block|;
 comment|/// addSectionLabel - Add a Dwarf section label attribute data and value.
 comment|///
-name|void
+name|DIE
+operator|::
+name|value_iterator
 name|addSectionLabel
 argument_list|(
 argument|DIE&Die
@@ -355,7 +351,10 @@ name|DIE
 operator|&
 name|updateSubprogramScopeDIE
 argument_list|(
-argument|DISubprogram SP
+specifier|const
+name|DISubprogram
+operator|*
+name|SP
 argument_list|)
 block|;
 name|void
@@ -367,12 +366,9 @@ name|Scope
 argument_list|,
 name|SmallVectorImpl
 operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|DIE
-operator|>>
+operator|*
+operator|>
 operator|&
 name|FinalChildren
 argument_list|)
@@ -429,12 +425,8 @@ argument_list|)
 block|;
 comment|/// \brief This scope represents inlined body of a function. Construct
 comment|/// DIE to represent this concrete inlined copy of the function.
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|DIE
-operator|>
+operator|*
 name|constructInlinedScopeDIE
 argument_list|(
 name|LexicalScope
@@ -444,12 +436,8 @@ argument_list|)
 block|;
 comment|/// \brief Construct new DW_TAG_lexical_block for this scope and
 comment|/// attach DW_AT_low_pc/DW_AT_high_pc labels.
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|DIE
-operator|>
+operator|*
 name|constructLexicalScopeDIE
 argument_list|(
 name|LexicalScope
@@ -458,12 +446,8 @@ name|Scope
 argument_list|)
 block|;
 comment|/// constructVariableDIE - Construct a DIE for the given DbgVariable.
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|DIE
-operator|>
+operator|*
 name|constructVariableDIE
 argument_list|(
 argument|DbgVariable&DV
@@ -471,12 +455,8 @@ argument_list|,
 argument|bool Abstract = false
 argument_list|)
 block|;
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|DIE
-operator|>
+operator|*
 name|constructVariableDIE
 argument_list|(
 name|DbgVariable
@@ -505,12 +485,9 @@ name|Scope
 argument_list|,
 name|SmallVectorImpl
 operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|DIE
-operator|>>
+operator|*
+operator|>
 operator|&
 name|Children
 argument_list|,
@@ -552,30 +529,32 @@ name|Scope
 argument_list|)
 block|;
 comment|/// \brief Construct import_module DIE.
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|DIE
-operator|>
+operator|*
 name|constructImportedEntityDIE
 argument_list|(
 specifier|const
 name|DIImportedEntity
-operator|&
+operator|*
 name|Module
 argument_list|)
 block|;
 name|void
 name|finishSubprogramDefinition
 argument_list|(
-argument|DISubprogram SP
+specifier|const
+name|DISubprogram
+operator|*
+name|SP
 argument_list|)
 block|;
 name|void
 name|collectDeadVariables
 argument_list|(
-argument|DISubprogram SP
+specifier|const
+name|DISubprogram
+operator|*
+name|SP
 argument_list|)
 block|;
 comment|/// Set the skeleton unit associated with this unit.
@@ -590,6 +569,7 @@ operator|=
 operator|&
 name|Skel
 block|; }
+specifier|const
 name|MCSymbol
 operator|*
 name|getSectionSym
@@ -602,54 +582,11 @@ name|Section
 argument_list|)
 block|;
 return|return
-name|SectionSym
+name|Section
+operator|->
+name|getBeginSymbol
+argument_list|()
 return|;
-block|}
-comment|/// Pass in the SectionSym even though we could recreate it in every compile
-comment|/// unit (type units will have actually distinct symbols once they're in
-comment|/// comdat sections).
-name|void
-name|initSection
-argument_list|(
-argument|const MCSection *Section
-argument_list|,
-argument|MCSymbol *SectionSym
-argument_list|)
-block|{
-name|DwarfUnit
-operator|::
-name|initSection
-argument_list|(
-name|Section
-argument_list|)
-block|;
-name|this
-operator|->
-name|SectionSym
-operator|=
-name|SectionSym
-block|;
-comment|// Don't bother labeling the .dwo unit, as its offset isn't used.
-if|if
-condition|(
-operator|!
-name|Skeleton
-condition|)
-name|LabelBegin
-operator|=
-name|Asm
-operator|->
-name|GetTempSymbol
-argument_list|(
-name|Section
-operator|->
-name|getLabelBeginName
-argument_list|()
-argument_list|,
-name|getUniqueID
-argument_list|()
-argument_list|)
-expr_stmt|;
 block|}
 name|unsigned
 name|getLength
@@ -674,9 +611,8 @@ block|}
 name|void
 name|emitHeader
 argument_list|(
-argument|const MCSymbol *ASectionSym
+argument|bool UseOffsets
 argument_list|)
-specifier|const
 name|override
 block|;
 name|MCSymbol
@@ -702,7 +638,7 @@ argument|StringRef Name
 argument_list|,
 argument|DIE&Die
 argument_list|,
-argument|DIScope Context
+argument|const DIScope *Context
 argument_list|)
 name|override
 block|;
@@ -710,11 +646,11 @@ comment|/// Add a new global type to the compile unit.
 name|void
 name|addGlobalType
 argument_list|(
-argument|DIType Ty
+argument|const DIType *Ty
 argument_list|,
 argument|const DIE&Die
 argument_list|,
-argument|DIScope Context
+argument|const DIScope *Context
 argument_list|)
 name|override
 block|;
@@ -771,8 +707,6 @@ argument_list|,
 argument|dwarf::Attribute Attribute
 argument_list|,
 argument|const MachineLocation&Location
-argument_list|,
-argument|bool Indirect = false
 argument_list|)
 block|;
 comment|/// Start with the address based on the location provided, and generate the
@@ -829,9 +763,14 @@ block|;
 name|void
 name|applySubprogramAttributesToDefinition
 argument_list|(
-argument|DISubprogram SP
+specifier|const
+name|DISubprogram
+operator|*
+name|SP
 argument_list|,
-argument|DIE&SPDie
+name|DIE
+operator|&
+name|SPDie
 argument_list|)
 block|;
 comment|/// getRangeLists - Get the vector of range lists.

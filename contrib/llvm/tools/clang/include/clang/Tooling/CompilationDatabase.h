@@ -461,7 +461,7 @@ name|loadFromCommandLine
 argument_list|(
 argument|int&Argc
 argument_list|,
-argument|const char **Argv
+argument|const char *const *Argv
 argument_list|,
 argument|Twine Directory =
 literal|"."

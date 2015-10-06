@@ -91,10 +91,12 @@ name|public
 operator|:
 name|OptionValueRegex
 argument_list|(
-argument|const char *value = NULL
-argument_list|,
-argument|uint32_t regex_flags =
-literal|0
+specifier|const
+name|char
+operator|*
+name|value
+operator|=
+name|NULL
 argument_list|)
 operator|:
 name|OptionValue
@@ -103,8 +105,6 @@ block|,
 name|m_regex
 argument_list|(
 argument|value
-argument_list|,
-argument|regex_flags
 argument_list|)
 block|{     }
 name|virtual
@@ -140,9 +140,9 @@ argument_list|)
 block|;
 name|virtual
 name|Error
-name|SetValueFromCString
+name|SetValueFromString
 argument_list|(
-argument|const char *value
+argument|llvm::StringRef value
 argument_list|,
 argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
@@ -205,9 +205,6 @@ specifier|const
 name|char
 modifier|*
 name|value
-parameter_list|,
-name|uint32_t
-name|regex_flags
 parameter_list|)
 block|{
 if|if
@@ -224,8 +221,6 @@ operator|.
 name|Compile
 argument_list|(
 name|value
-argument_list|,
-name|regex_flags
 argument_list|)
 expr_stmt|;
 else|else

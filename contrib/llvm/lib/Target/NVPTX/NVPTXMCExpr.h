@@ -96,19 +96,19 @@ block|;
 name|explicit
 name|NVPTXFloatMCExpr
 argument_list|(
-argument|VariantKind _Kind
+argument|VariantKind Kind
 argument_list|,
-argument|APFloat _Flt
+argument|APFloat Flt
 argument_list|)
 operator|:
 name|Kind
 argument_list|(
-name|_Kind
+name|Kind
 argument_list|)
 block|,
 name|Flt
 argument_list|(
-argument|_Flt
+argument|Flt
 argument_list|)
 block|{}
 name|public
@@ -119,7 +119,7 @@ specifier|static
 specifier|const
 name|NVPTXFloatMCExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 argument|VariantKind Kind
 argument_list|,
@@ -132,7 +132,7 @@ specifier|static
 specifier|const
 name|NVPTXFloatMCExpr
 operator|*
-name|CreateConstantFPSingle
+name|createConstantFPSingle
 argument_list|(
 argument|APFloat Flt
 argument_list|,
@@ -140,7 +140,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|VK_NVPTX_SINGLE_PREC_FLOAT
 argument_list|,
@@ -154,7 +154,7 @@ specifier|static
 specifier|const
 name|NVPTXFloatMCExpr
 operator|*
-name|CreateConstantFPDouble
+name|createConstantFPDouble
 argument_list|(
 argument|APFloat Flt
 argument_list|,
@@ -162,7 +162,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|VK_NVPTX_DOUBLE_PREC_FLOAT
 argument_list|,
@@ -197,15 +197,17 @@ return|;
 block|}
 comment|/// @}
 name|void
-name|PrintImpl
+name|printImpl
 argument_list|(
 argument|raw_ostream&OS
+argument_list|,
+argument|const MCAsmInfo *MAI
 argument_list|)
 specifier|const
 name|override
 block|;
 name|bool
-name|EvaluateAsRelocatableImpl
+name|evaluateAsRelocatableImpl
 argument_list|(
 argument|MCValue&Res
 argument_list|,
@@ -229,10 +231,149 @@ specifier|const
 name|override
 block|{}
 block|;
-specifier|const
 name|MCSection
 operator|*
-name|FindAssociatedSection
+name|findAssociatedSection
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|nullptr
+return|;
+block|}
+comment|// There are no TLS NVPTXMCExprs at the moment.
+name|void
+name|fixELFSymbolsInTLSFixups
+argument_list|(
+argument|MCAssembler&Asm
+argument_list|)
+specifier|const
+name|override
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MCExpr *E
+argument_list|)
+block|{
+return|return
+name|E
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|MCExpr
+operator|::
+name|Target
+return|;
+block|}
+expr|}
+block|;
+comment|/// A wrapper for MCSymbolRefExpr that tells the assembly printer that the
+comment|/// symbol should be enclosed by generic().
+name|class
+name|NVPTXGenericMCSymbolRefExpr
+operator|:
+name|public
+name|MCTargetExpr
+block|{
+name|private
+operator|:
+specifier|const
+name|MCSymbolRefExpr
+operator|*
+name|SymExpr
+block|;
+name|explicit
+name|NVPTXGenericMCSymbolRefExpr
+argument_list|(
+specifier|const
+name|MCSymbolRefExpr
+operator|*
+name|_SymExpr
+argument_list|)
+operator|:
+name|SymExpr
+argument_list|(
+argument|_SymExpr
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// @name Construction
+comment|/// @{
+specifier|static
+specifier|const
+name|NVPTXGenericMCSymbolRefExpr
+operator|*
+name|create
+argument_list|(
+specifier|const
+name|MCSymbolRefExpr
+operator|*
+name|SymExpr
+argument_list|,
+name|MCContext
+operator|&
+name|Ctx
+argument_list|)
+block|;
+comment|/// @}
+comment|/// @name Accessors
+comment|/// @{
+comment|/// getOpcode - Get the kind of this expression.
+specifier|const
+name|MCSymbolRefExpr
+operator|*
+name|getSymbolExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SymExpr
+return|;
+block|}
+comment|/// @}
+name|void
+name|printImpl
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|const MCAsmInfo *MAI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|evaluateAsRelocatableImpl
+argument_list|(
+argument|MCValue&Res
+argument_list|,
+argument|const MCAsmLayout *Layout
+argument_list|,
+argument|const MCFixup *Fixup
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|void
+name|visitUsedExpr
+argument_list|(
+argument|MCStreamer&Streamer
+argument_list|)
+specifier|const
+name|override
+block|{}
+block|;
+name|MCSection
+operator|*
+name|findAssociatedSection
 argument_list|()
 specifier|const
 name|override

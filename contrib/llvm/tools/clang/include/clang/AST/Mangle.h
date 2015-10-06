@@ -751,6 +751,38 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+name|virtual
+name|void
+name|mangleSEHFilterExpression
+parameter_list|(
+specifier|const
+name|NamedDecl
+modifier|*
+name|EnclosingDecl
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|Out
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|void
+name|mangleSEHFinallyBlock
+parameter_list|(
+specifier|const
+name|NamedDecl
+modifier|*
+name|EnclosingDecl
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|Out
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// Generates a unique string for an externally visible type for use with TBAA
 comment|/// or type uniquing.
 comment|/// TODO: Extend this to internal types by generating names that are unique
@@ -761,6 +793,21 @@ name|mangleTypeName
 parameter_list|(
 name|QualType
 name|T
+parameter_list|,
+name|raw_ostream
+modifier|&
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|void
+name|mangleCXXVTableBitSet
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
 parameter_list|,
 name|raw_ostream
 modifier|&
@@ -1021,6 +1068,19 @@ literal|0
 block|;
 name|virtual
 name|void
+name|mangleThreadSafeStaticGuardVariable
+argument_list|(
+argument|const VarDecl *VD
+argument_list|,
+argument|unsigned GuardNum
+argument_list|,
+argument|raw_ostream&Out
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
 name|mangleVirtualMemPtrThunk
 argument_list|(
 specifier|const
@@ -1030,6 +1090,93 @@ name|MD
 argument_list|,
 name|raw_ostream
 operator|&
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|mangleCXXVirtualDisplacementMap
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|SrcRD
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|DstRD
+argument_list|,
+name|raw_ostream
+operator|&
+name|Out
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|mangleCXXThrowInfo
+argument_list|(
+argument|QualType T
+argument_list|,
+argument|bool IsConst
+argument_list|,
+argument|bool IsVolatile
+argument_list|,
+argument|uint32_t NumEntries
+argument_list|,
+argument|raw_ostream&Out
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|mangleCXXCatchableTypeArray
+argument_list|(
+argument|QualType T
+argument_list|,
+argument|uint32_t NumEntries
+argument_list|,
+argument|raw_ostream&Out
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|mangleCXXCatchableType
+argument_list|(
+argument|QualType T
+argument_list|,
+argument|const CXXConstructorDecl *CD
+argument_list|,
+argument|CXXCtorType CT
+argument_list|,
+argument|uint32_t Size
+argument_list|,
+argument|uint32_t NVOffset
+argument_list|,
+argument|int32_t VBPtrOffset
+argument_list|,
+argument|uint32_t VBIndex
+argument_list|,
+argument|raw_ostream&Out
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|mangleCXXCatchHandlerType
+argument_list|(
+argument|QualType T
+argument_list|,
+argument|uint32_t Flags
+argument_list|,
+argument|raw_ostream&Out
 argument_list|)
 operator|=
 literal|0

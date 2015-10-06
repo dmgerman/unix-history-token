@@ -281,7 +281,8 @@ comment|/// create the PCHGenerator instance returned by CreateASTConsumer.
 comment|///
 comment|/// \returns true if an error occurred, false otherwise.
 specifier|static
-name|bool
+name|raw_pwrite_stream
+operator|*
 name|ComputeASTConsumerArguments
 argument_list|(
 argument|CompilerInstance&CI
@@ -291,8 +292,6 @@ argument_list|,
 argument|std::string&Sysroot
 argument_list|,
 argument|std::string&OutputFile
-argument_list|,
-argument|raw_ostream *&OS
 argument_list|)
 block|; }
 block|;
@@ -386,7 +385,8 @@ comment|/// \brief Compute the AST consumer arguments that will be used to
 comment|/// create the PCHGenerator instance returned by CreateASTConsumer.
 comment|///
 comment|/// \returns true if an error occurred, false otherwise.
-name|bool
+name|raw_pwrite_stream
+operator|*
 name|ComputeASTConsumerArguments
 argument_list|(
 argument|CompilerInstance&CI
@@ -396,8 +396,6 @@ argument_list|,
 argument|std::string&Sysroot
 argument_list|,
 argument|std::string&OutputFile
-argument_list|,
-argument|raw_ostream *&OS
 argument_list|)
 block|; }
 block|;
@@ -626,10 +624,10 @@ operator|>
 name|ASTFiles
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ASTMergeAction
 argument_list|()
+name|override
 block|;
 name|bool
 name|usesPreprocessorOnly

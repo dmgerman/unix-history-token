@@ -223,9 +223,7 @@ name|StubsNeeded
 block|;
 name|void
 name|emitInlineAsmStart
-argument_list|(
-argument|const MCSubtargetInfo&StartInfo
-argument_list|)
+argument_list|()
 specifier|const
 name|override
 block|;
@@ -242,6 +240,11 @@ block|;
 name|void
 name|EmitJal
 argument_list|(
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
+argument_list|,
 name|MCSymbol
 operator|*
 name|Symbol
@@ -250,6 +253,8 @@ block|;
 name|void
 name|EmitInstrReg
 argument_list|(
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|unsigned Opcode
 argument_list|,
 argument|unsigned Reg
@@ -258,6 +263,8 @@ block|;
 name|void
 name|EmitInstrRegReg
 argument_list|(
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|unsigned Opcode
 argument_list|,
 argument|unsigned Reg1
@@ -268,6 +275,8 @@ block|;
 name|void
 name|EmitInstrRegRegReg
 argument_list|(
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|unsigned Opcode
 argument_list|,
 argument|unsigned Reg1
@@ -280,6 +289,8 @@ block|;
 name|void
 name|EmitMovFPIntPair
 argument_list|(
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|unsigned MovOpc
 argument_list|,
 argument|unsigned Reg1
@@ -296,6 +307,8 @@ block|;
 name|void
 name|EmitSwapFPIntParams
 argument_list|(
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|Mips16HardFloatInfo::FPParamVariant
 argument_list|,
 argument|bool LE
@@ -306,6 +319,8 @@ block|;
 name|void
 name|EmitSwapFPIntRetval
 argument_list|(
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|Mips16HardFloatInfo::FPReturnVariant
 argument_list|,
 argument|bool LE
@@ -355,11 +370,6 @@ block|;
 name|MipsMCInstLower
 name|MCInstLowering
 block|;
-comment|// We initialize the subtarget here and in runOnMachineFunction
-comment|// since there are certain target specific flags (ABI) that could
-comment|// reside on the TargetMachine, but are on the subtarget currently
-comment|// and we need them for the beginning of file output before we've
-comment|// seen a single function.
 name|explicit
 name|MipsAsmPrinter
 argument_list|(
@@ -367,8 +377,12 @@ name|TargetMachine
 operator|&
 name|TM
 argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MCStreamer
-operator|&
+operator|>
 name|Streamer
 argument_list|)
 operator|:
@@ -376,7 +390,12 @@ name|AsmPrinter
 argument_list|(
 name|TM
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|Streamer
+argument_list|)
 argument_list|)
 block|,
 name|MCP
@@ -387,19 +406,6 @@ block|,
 name|InConstantPool
 argument_list|(
 name|false
-argument_list|)
-block|,
-name|Subtarget
-argument_list|(
-operator|&
-name|TM
-operator|.
-name|getSubtarget
-operator|<
-name|MipsSubtarget
-operator|>
-operator|(
-operator|)
 argument_list|)
 block|,
 name|MCInstLowering
@@ -493,6 +499,13 @@ block|;
 name|void
 name|EmitFunctionBodyEnd
 argument_list|()
+name|override
+block|;
+name|void
+name|EmitBasicBlockEnd
+argument_list|(
+argument|const MachineBasicBlock&MBB
+argument_list|)
 name|override
 block|;
 name|bool

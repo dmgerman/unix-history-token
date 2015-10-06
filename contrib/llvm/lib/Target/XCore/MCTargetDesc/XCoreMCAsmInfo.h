@@ -70,10 +70,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|StringRef
-decl_stmt|;
-name|class
-name|Target
+name|Triple
 decl_stmt|;
 name|class
 name|XCoreMCAsmInfo
@@ -91,9 +88,12 @@ operator|:
 name|explicit
 name|XCoreMCAsmInfo
 argument_list|(
-argument|StringRef TT
+specifier|const
+name|Triple
+operator|&
+name|TT
 argument_list|)
-block|;   }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

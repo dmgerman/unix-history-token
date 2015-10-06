@@ -84,9 +84,6 @@ name|class
 name|MCSection
 decl_stmt|;
 name|class
-name|MCSectionData
-decl_stmt|;
-name|class
 name|MCStreamer
 decl_stmt|;
 name|class
@@ -105,14 +102,14 @@ typedef|typedef
 name|DenseMap
 operator|<
 specifier|const
-name|MCSectionData
+name|MCSection
 operator|*
 operator|,
 name|uint64_t
 operator|>
 name|SectionAddrMap
 expr_stmt|;
-comment|/// MCExpr - Base class for the full range of assembler expressions which are
+comment|/// \brief Base class for the full range of assembler expressions which are
 comment|/// needed for parsing.
 name|class
 name|MCExpr
@@ -145,9 +142,12 @@ name|Kind
 decl_stmt|;
 name|MCExpr
 argument_list|(
-argument|const MCExpr&
+specifier|const
+name|MCExpr
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -157,10 +157,11 @@ specifier|const
 name|MCExpr
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|bool
-name|EvaluateAsAbsolute
+name|evaluateAsAbsolute
 argument_list|(
 name|int64_t
 operator|&
@@ -215,16 +216,16 @@ label|:
 name|explicit
 name|MCExpr
 argument_list|(
-argument|ExprKind _Kind
+argument|ExprKind Kind
 argument_list|)
 block|:
 name|Kind
 argument_list|(
-argument|_Kind
+argument|Kind
 argument_list|)
 block|{}
 name|bool
-name|EvaluateAsRelocatableImpl
+name|evaluateAsRelocatableImpl
 argument_list|(
 name|MCValue
 operator|&
@@ -252,15 +253,12 @@ name|Addrs
 argument_list|,
 name|bool
 name|InSet
-argument_list|,
-name|bool
-name|ForceVarExpansion
 argument_list|)
 decl|const
 decl_stmt|;
 name|public
 label|:
-comment|/// @name Accessors
+comment|/// \name Accessors
 comment|/// @{
 name|ExprKind
 name|getKind
@@ -272,7 +270,7 @@ name|Kind
 return|;
 block|}
 comment|/// @}
-comment|/// @name Utility Methods
+comment|/// \name Utility Methods
 comment|/// @{
 name|void
 name|print
@@ -280,6 +278,11 @@ argument_list|(
 name|raw_ostream
 operator|&
 name|OS
+argument_list|,
+specifier|const
+name|MCAsmInfo
+operator|*
+name|MAI
 argument_list|)
 decl|const
 decl_stmt|;
@@ -289,17 +292,17 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// @}
-comment|/// @name Expression Evaluation
+comment|/// \name Expression Evaluation
 comment|/// @{
-comment|/// EvaluateAsAbsolute - Try to evaluate the expression to an absolute value.
+comment|/// \brief Try to evaluate the expression to an absolute value.
 comment|///
-comment|/// @param Res - The absolute value, if evaluation succeeds.
-comment|/// @param Layout - The assembler layout object to use for evaluating symbol
+comment|/// \param Res - The absolute value, if evaluation succeeds.
+comment|/// \param Layout - The assembler layout object to use for evaluating symbol
 comment|/// values. If not given, then only non-symbolic expressions will be
 comment|/// evaluated.
-comment|/// @result - True on success.
+comment|/// \return - True on success.
 name|bool
-name|EvaluateAsAbsolute
+name|evaluateAsAbsolute
 argument_list|(
 name|int64_t
 operator|&
@@ -318,7 +321,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|bool
-name|EvaluateAsAbsolute
+name|evaluateAsAbsolute
 argument_list|(
 name|int64_t
 operator|&
@@ -327,7 +330,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|bool
-name|EvaluateAsAbsolute
+name|evaluateAsAbsolute
 argument_list|(
 name|int64_t
 operator|&
@@ -341,7 +344,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|bool
-name|EvaluateAsAbsolute
+name|evaluateAsAbsolute
 argument_list|(
 name|int64_t
 operator|&
@@ -354,9 +357,13 @@ name|Layout
 argument_list|)
 decl|const
 decl_stmt|;
-name|int64_t
+name|bool
 name|evaluateKnownAbsolute
 argument_list|(
+name|int64_t
+operator|&
+name|Res
+argument_list|,
 specifier|const
 name|MCAsmLayout
 operator|&
@@ -364,15 +371,15 @@ name|Layout
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// EvaluateAsRelocatable - Try to evaluate the expression to a relocatable
-comment|/// value, i.e. an expression of the fixed form (a - b + constant).
+comment|/// \brief Try to evaluate the expression to a relocatable value, i.e. an
+comment|/// expression of the fixed form (a - b + constant).
 comment|///
-comment|/// @param Res - The relocatable value, if evaluation succeeds.
-comment|/// @param Layout - The assembler layout object to use for evaluating values.
-comment|/// @param Fixup - The Fixup object if available.
-comment|/// @result - True on success.
+comment|/// \param Res - The relocatable value, if evaluation succeeds.
+comment|/// \param Layout - The assembler layout object to use for evaluating values.
+comment|/// \param Fixup - The Fixup object if available.
+comment|/// \return - True on success.
 name|bool
-name|EvaluateAsRelocatable
+name|evaluateAsRelocatable
 argument_list|(
 name|MCValue
 operator|&
@@ -393,11 +400,10 @@ decl_stmt|;
 comment|/// \brief Try to evaluate the expression to the form (a - b + constant) where
 comment|/// neither a nor b are variables.
 comment|///
-comment|/// This is a more aggressive variant of EvaluateAsRelocatable. The intended
-comment|/// use is for when relocations are not available, like the symbol value in
-comment|/// the symbol table.
+comment|/// This is a more aggressive variant of evaluateAsRelocatable. The intended
+comment|/// use is for when relocations are not available, like the .size directive.
 name|bool
-name|EvaluateAsValue
+name|evaluateAsValue
 argument_list|(
 name|MCValue
 operator|&
@@ -405,24 +411,18 @@ name|Res
 argument_list|,
 specifier|const
 name|MCAsmLayout
-operator|*
+operator|&
 name|Layout
-argument_list|,
-specifier|const
-name|MCFixup
-operator|*
-name|Fixup
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// FindAssociatedSection - Find the "associated section" for this expression,
-comment|/// which is currently defined as the absolute section for constants, or
+comment|/// \brief Find the "associated section" for this expression, which is
+comment|/// currently defined as the absolute section for constants, or
 comment|/// otherwise the section associated with the first defined symbol in the
 comment|/// expression.
-specifier|const
 name|MCSection
 operator|*
-name|FindAssociatedSection
+name|findAssociatedSection
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -450,13 +450,15 @@ operator|.
 name|print
 argument_list|(
 name|OS
+argument_list|,
+name|nullptr
 argument_list|)
 block|;
 return|return
 name|OS
 return|;
 block|}
-comment|//// MCConstantExpr - Represent a constant integer expression.
+comment|//// \brief  Represent a constant integer expression.
 name|class
 name|MCConstantExpr
 range|:
@@ -469,7 +471,7 @@ block|;
 name|explicit
 name|MCConstantExpr
 argument_list|(
-argument|int64_t _Value
+argument|int64_t Value
 argument_list|)
 operator|:
 name|MCExpr
@@ -481,18 +483,18 @@ argument_list|)
 block|,
 name|Value
 argument_list|(
-argument|_Value
+argument|Value
 argument_list|)
 block|{}
 name|public
 operator|:
-comment|/// @name Construction
+comment|/// \name Construction
 comment|/// @{
 specifier|static
 specifier|const
 name|MCConstantExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 argument|int64_t Value
 argument_list|,
@@ -500,7 +502,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|;
 comment|/// @}
-comment|/// @name Accessors
+comment|/// \name Accessors
 comment|/// @{
 name|int64_t
 name|getValue
@@ -532,8 +534,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// MCSymbolRefExpr - Represent a reference to a symbol from inside an
-comment|/// expression.
+comment|/// \brief  Represent a reference to a symbol from inside an expression.
 comment|///
 comment|/// A symbol reference in an expression may be a use of a label, a use of an
 comment|/// assembler variable (defined constant), or constitute an implicit definition
@@ -548,6 +549,8 @@ name|public
 operator|:
 expr|enum
 name|VariantKind
+operator|:
+name|uint16_t
 block|{
 name|VK_None
 block|,
@@ -596,6 +599,9 @@ name|VK_GOTPAGEOFF
 block|,
 name|VK_SECREL
 block|,
+name|VK_SIZE
+block|,
+comment|// symbol@SIZE
 name|VK_WEAKREF
 block|,
 comment|// The link between the symbols in .weakref foo, bar
@@ -830,17 +836,39 @@ block|,
 name|VK_Mips_PCREL_LO16
 block|,
 name|VK_COFF_IMGREL32
+block|,
 comment|// symbol@imgrel (image-relative)
+name|VK_Hexagon_PCREL
+block|,
+name|VK_Hexagon_LO16
+block|,
+name|VK_Hexagon_HI16
+block|,
+name|VK_Hexagon_GPREL
+block|,
+name|VK_Hexagon_GD_GOT
+block|,
+name|VK_Hexagon_LD_GOT
+block|,
+name|VK_Hexagon_GD_PLT
+block|,
+name|VK_Hexagon_LD_PLT
+block|,
+name|VK_Hexagon_IE
+block|,
+name|VK_Hexagon_IE_GOT
+block|,
+name|VK_TPREL
+block|,
+name|VK_DTPREL
 block|}
 block|;
 name|private
 operator|:
 comment|/// The symbol reference modifier.
 specifier|const
-name|unsigned
+name|VariantKind
 name|Kind
-operator|:
-literal|16
 block|;
 comment|/// Specifies how the variant kind should be printed.
 specifier|const
@@ -874,13 +902,13 @@ argument_list|)
 block|;
 name|public
 operator|:
-comment|/// @name Construction
+comment|/// \name Construction
 comment|/// @{
 specifier|static
 specifier|const
 name|MCSymbolRefExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 argument|const MCSymbol *Symbol
 argument_list|,
@@ -890,7 +918,7 @@ block|{
 return|return
 name|MCSymbolRefExpr
 operator|::
-name|Create
+name|create
 argument_list|(
 name|Symbol
 argument_list|,
@@ -904,7 +932,7 @@ specifier|static
 specifier|const
 name|MCSymbolRefExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 argument|const MCSymbol *Symbol
 argument_list|,
@@ -917,7 +945,7 @@ specifier|static
 specifier|const
 name|MCSymbolRefExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 argument|StringRef Name
 argument_list|,
@@ -927,7 +955,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|;
 comment|/// @}
-comment|/// @name Accessors
+comment|/// \name Accessors
 comment|/// @{
 specifier|const
 name|MCSymbol
@@ -947,13 +975,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|static_cast
-operator|<
-name|VariantKind
-operator|>
-operator|(
 name|Kind
-operator|)
 return|;
 block|}
 name|void
@@ -973,7 +995,7 @@ name|HasSubsectionsViaSymbols
 return|;
 block|}
 comment|/// @}
-comment|/// @name Static Utility Functions
+comment|/// \name Static Utility Functions
 comment|/// @{
 specifier|static
 name|StringRef
@@ -1010,7 +1032,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// MCUnaryExpr - Unary assembler expressions.
+comment|/// \brief Unary assembler expressions.
 name|class
 name|MCUnaryExpr
 operator|:
@@ -1047,9 +1069,9 @@ name|Expr
 block|;
 name|MCUnaryExpr
 argument_list|(
-argument|Opcode _Op
+argument|Opcode Op
 argument_list|,
-argument|const MCExpr *_Expr
+argument|const MCExpr *Expr
 argument_list|)
 operator|:
 name|MCExpr
@@ -1061,23 +1083,23 @@ argument_list|)
 block|,
 name|Op
 argument_list|(
-name|_Op
+name|Op
 argument_list|)
 block|,
 name|Expr
 argument_list|(
-argument|_Expr
+argument|Expr
 argument_list|)
 block|{}
 name|public
 operator|:
-comment|/// @name Construction
+comment|/// \name Construction
 comment|/// @{
 specifier|static
 specifier|const
 name|MCUnaryExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 argument|Opcode Op
 argument_list|,
@@ -1090,7 +1112,7 @@ specifier|static
 specifier|const
 name|MCUnaryExpr
 operator|*
-name|CreateLNot
+name|createLNot
 argument_list|(
 argument|const MCExpr *Expr
 argument_list|,
@@ -1098,7 +1120,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|LNot
 argument_list|,
@@ -1112,7 +1134,7 @@ specifier|static
 specifier|const
 name|MCUnaryExpr
 operator|*
-name|CreateMinus
+name|createMinus
 argument_list|(
 argument|const MCExpr *Expr
 argument_list|,
@@ -1120,7 +1142,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Minus
 argument_list|,
@@ -1134,7 +1156,7 @@ specifier|static
 specifier|const
 name|MCUnaryExpr
 operator|*
-name|CreateNot
+name|createNot
 argument_list|(
 argument|const MCExpr *Expr
 argument_list|,
@@ -1142,7 +1164,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Not
 argument_list|,
@@ -1156,7 +1178,7 @@ specifier|static
 specifier|const
 name|MCUnaryExpr
 operator|*
-name|CreatePlus
+name|createPlus
 argument_list|(
 argument|const MCExpr *Expr
 argument_list|,
@@ -1164,7 +1186,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Plus
 argument_list|,
@@ -1175,9 +1197,9 @@ argument_list|)
 return|;
 block|}
 comment|/// @}
-comment|/// @name Accessors
+comment|/// \name Accessors
 comment|/// @{
-comment|/// getOpcode - Get the kind of this unary expression.
+comment|/// \brief Get the kind of this unary expression.
 name|Opcode
 name|getOpcode
 argument_list|()
@@ -1187,7 +1209,7 @@ return|return
 name|Op
 return|;
 block|}
-comment|/// getSubExpr - Get the child of this unary expression.
+comment|/// \brief Get the child of this unary expression.
 specifier|const
 name|MCExpr
 operator|*
@@ -1220,7 +1242,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// MCBinaryExpr - Binary assembler expressions.
+comment|/// \brief Binary assembler expressions.
 name|class
 name|MCBinaryExpr
 operator|:
@@ -1281,9 +1303,12 @@ comment|///< Bitwise or.
 name|Shl
 block|,
 comment|///< Shift left.
-name|Shr
+name|AShr
 block|,
-comment|///< Shift right (arithmetic or logical, depending on target)
+comment|///< Arithmetic shift right.
+name|LShr
+block|,
+comment|///< Logical shift right.
 name|Sub
 block|,
 comment|///< Subtraction.
@@ -1306,11 +1331,11 @@ name|RHS
 block|;
 name|MCBinaryExpr
 argument_list|(
-argument|Opcode _Op
+argument|Opcode Op
 argument_list|,
-argument|const MCExpr *_LHS
+argument|const MCExpr *LHS
 argument_list|,
-argument|const MCExpr *_RHS
+argument|const MCExpr *RHS
 argument_list|)
 operator|:
 name|MCExpr
@@ -1322,28 +1347,28 @@ argument_list|)
 block|,
 name|Op
 argument_list|(
-name|_Op
+name|Op
 argument_list|)
 block|,
 name|LHS
 argument_list|(
-name|_LHS
+name|LHS
 argument_list|)
 block|,
 name|RHS
 argument_list|(
-argument|_RHS
+argument|RHS
 argument_list|)
 block|{}
 name|public
 operator|:
-comment|/// @name Construction
+comment|/// \name Construction
 comment|/// @{
 specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 argument|Opcode Op
 argument_list|,
@@ -1358,7 +1383,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateAdd
+name|createAdd
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1368,7 +1393,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Add
 argument_list|,
@@ -1384,7 +1409,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateAnd
+name|createAnd
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1394,7 +1419,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|And
 argument_list|,
@@ -1410,7 +1435,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateDiv
+name|createDiv
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1420,7 +1445,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Div
 argument_list|,
@@ -1436,7 +1461,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateEQ
+name|createEQ
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1446,7 +1471,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|EQ
 argument_list|,
@@ -1462,7 +1487,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateGT
+name|createGT
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1472,7 +1497,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|GT
 argument_list|,
@@ -1488,7 +1513,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateGTE
+name|createGTE
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1498,7 +1523,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|GTE
 argument_list|,
@@ -1514,7 +1539,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateLAnd
+name|createLAnd
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1524,7 +1549,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|LAnd
 argument_list|,
@@ -1540,7 +1565,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateLOr
+name|createLOr
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1550,7 +1575,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|LOr
 argument_list|,
@@ -1566,7 +1591,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateLT
+name|createLT
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1576,7 +1601,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|LT
 argument_list|,
@@ -1592,7 +1617,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateLTE
+name|createLTE
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1602,7 +1627,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|LTE
 argument_list|,
@@ -1618,7 +1643,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateMod
+name|createMod
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1628,7 +1653,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Mod
 argument_list|,
@@ -1644,7 +1669,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateMul
+name|createMul
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1654,7 +1679,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Mul
 argument_list|,
@@ -1670,7 +1695,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateNE
+name|createNE
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1680,7 +1705,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|NE
 argument_list|,
@@ -1696,7 +1721,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateOr
+name|createOr
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1706,7 +1731,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Or
 argument_list|,
@@ -1722,7 +1747,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateShl
+name|createShl
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1732,7 +1757,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Shl
 argument_list|,
@@ -1748,7 +1773,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateShr
+name|createAShr
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1758,9 +1783,9 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
-name|Shr
+name|AShr
 argument_list|,
 name|LHS
 argument_list|,
@@ -1774,7 +1799,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateSub
+name|createLShr
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1784,7 +1809,33 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
+argument_list|(
+name|LShr
+argument_list|,
+name|LHS
+argument_list|,
+name|RHS
+argument_list|,
+name|Ctx
+argument_list|)
+return|;
+block|}
+specifier|static
+specifier|const
+name|MCBinaryExpr
+operator|*
+name|createSub
+argument_list|(
+argument|const MCExpr *LHS
+argument_list|,
+argument|const MCExpr *RHS
+argument_list|,
+argument|MCContext&Ctx
+argument_list|)
+block|{
+return|return
+name|create
 argument_list|(
 name|Sub
 argument_list|,
@@ -1800,7 +1851,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateXor
+name|createXor
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1810,7 +1861,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Xor
 argument_list|,
@@ -1823,9 +1874,9 @@ argument_list|)
 return|;
 block|}
 comment|/// @}
-comment|/// @name Accessors
+comment|/// \name Accessors
 comment|/// @{
-comment|/// getOpcode - Get the kind of this binary expression.
+comment|/// \brief Get the kind of this binary expression.
 name|Opcode
 name|getOpcode
 argument_list|()
@@ -1835,7 +1886,7 @@ return|return
 name|Op
 return|;
 block|}
-comment|/// getLHS - Get the left-hand side expression of the binary operator.
+comment|/// \brief Get the left-hand side expression of the binary operator.
 specifier|const
 name|MCExpr
 operator|*
@@ -1847,7 +1898,7 @@ return|return
 name|LHS
 return|;
 block|}
-comment|/// getRHS - Get the right-hand side expression of the binary operator.
+comment|/// \brief Get the right-hand side expression of the binary operator.
 specifier|const
 name|MCExpr
 operator|*
@@ -1880,8 +1931,8 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// MCTargetExpr - This is an extension point for target-specific MCExpr
-comment|/// subclasses to implement.
+comment|/// \brief This is an extension point for target-specific MCExpr subclasses to
+comment|/// implement.
 comment|///
 comment|/// NOTE: All subclasses are required to have trivial destructors because
 comment|/// MCExprs are bump pointer allocated and not destructed.
@@ -1915,9 +1966,11 @@ name|public
 operator|:
 name|virtual
 name|void
-name|PrintImpl
+name|printImpl
 argument_list|(
 argument|raw_ostream&OS
+argument_list|,
+argument|const MCAsmInfo *MAI
 argument_list|)
 specifier|const
 operator|=
@@ -1925,7 +1978,7 @@ literal|0
 block|;
 name|virtual
 name|bool
-name|EvaluateAsRelocatableImpl
+name|evaluateAsRelocatableImpl
 argument_list|(
 argument|MCValue&Res
 argument_list|,
@@ -1948,10 +2001,9 @@ operator|=
 literal|0
 block|;
 name|virtual
-specifier|const
 name|MCSection
 operator|*
-name|FindAssociatedSection
+name|findAssociatedSection
 argument_list|()
 specifier|const
 operator|=

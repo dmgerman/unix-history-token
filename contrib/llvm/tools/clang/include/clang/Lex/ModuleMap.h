@@ -209,6 +209,10 @@ operator|*
 operator|>
 name|Modules
 expr_stmt|;
+comment|/// \brief The number of modules we have created in total.
+name|unsigned
+name|NumCreatedModules
+decl_stmt|;
 name|public
 label|:
 comment|/// \brief Flags describing the role of a module header.
@@ -326,7 +330,7 @@ return|;
 block|}
 comment|// \brief Whether this known header is valid (i.e., it has an
 comment|// associated module).
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -671,9 +675,6 @@ name|Module
 modifier|*
 name|inferFrameworkModule
 parameter_list|(
-name|StringRef
-name|ModuleName
-parameter_list|,
 specifier|const
 name|DirectoryEntry
 modifier|*
@@ -761,14 +762,6 @@ comment|/// \brief Retrieve the module that owns the given header file, if any.
 comment|///
 comment|/// \param File The header file that is likely to be included.
 comment|///
-comment|/// \param RequestingModule Specifies the module the header is intended to be
-comment|/// used from.  Used to disambiguate if a header is present in multiple
-comment|/// modules.
-comment|///
-comment|/// \param IncludeTextualHeaders If \c true, also find textual headers. By
-comment|/// default, these are treated like excluded headers and result in no known
-comment|/// header being found.
-comment|///
 comment|/// \returns The module KnownHeader, which provides the module that owns the
 comment|/// given header file.  The KnownHeader is default constructed to indicate
 comment|/// that no module owns this header file.
@@ -779,17 +772,6 @@ specifier|const
 name|FileEntry
 modifier|*
 name|File
-parameter_list|,
-name|Module
-modifier|*
-name|RequestingModule
-init|=
-name|nullptr
-parameter_list|,
-name|bool
-name|IncludeTextualHeaders
-init|=
-name|false
 parameter_list|)
 function_decl|;
 comment|/// \brief Reports errors if a module must not include a specific file.
@@ -947,9 +929,6 @@ name|Module
 modifier|*
 name|inferFrameworkModule
 parameter_list|(
-name|StringRef
-name|ModuleName
-parameter_list|,
 specifier|const
 name|DirectoryEntry
 modifier|*
@@ -1170,6 +1149,9 @@ specifier|const
 name|FileEntry
 modifier|*
 name|UmbrellaHeader
+parameter_list|,
+name|Twine
+name|NameAsWritten
 parameter_list|)
 function_decl|;
 comment|/// \brief Sets the umbrella directory of the given module to the given
@@ -1185,6 +1167,9 @@ specifier|const
 name|DirectoryEntry
 modifier|*
 name|UmbrellaDir
+parameter_list|,
+name|Twine
+name|NameAsWritten
 parameter_list|)
 function_decl|;
 comment|/// \brief Adds this header to the given module.
@@ -1230,6 +1215,9 @@ comment|///
 comment|/// \param HomeDir The directory in which relative paths within this module
 comment|///        map file will be resolved.
 comment|///
+comment|/// \param ExternModuleLoc The location of the "extern module" declaration
+comment|///        that caused us to load this module map file, if any.
+comment|///
 comment|/// \returns true if an error occurred, false otherwise.
 name|bool
 name|parseModuleMapFile
@@ -1246,6 +1234,12 @@ specifier|const
 name|DirectoryEntry
 modifier|*
 name|HomeDir
+parameter_list|,
+name|SourceLocation
+name|ExternModuleLoc
+init|=
+name|SourceLocation
+argument_list|()
 parameter_list|)
 function_decl|;
 comment|/// \brief Dump the contents of the module map, for debugging purposes.

@@ -273,7 +273,7 @@ init|=
 literal|1
 operator|<<
 literal|31
-comment|/* FIXME: These attributes are currently not included in the C API as        a temporary measure until the API/ABI impact to the C API is understood        and the path forward agreed upon.     LLVMAddressSafety = 1ULL<< 32,     LLVMStackProtectStrongAttribute = 1ULL<<33,     LLVMCold = 1ULL<< 34,     LLVMOptimizeNone = 1ULL<< 35,     LLVMInAllocaAttribute = 1ULL<< 36,     LLVMNonNullAttribute = 1ULL<< 37,     LLVMJumpTableAttribute = 1ULL<< 38,     LLVMDereferenceableAttribute = 1ULL<< 39,     */
+comment|/* FIXME: These attributes are currently not included in the C API as        a temporary measure until the API/ABI impact to the C API is understood        and the path forward agreed upon.     LLVMSanitizeAddressAttribute = 1ULL<< 32,     LLVMStackProtectStrongAttribute = 1ULL<<35,     LLVMColdAttribute = 1ULL<< 40,     LLVMOptimizeNoneAttribute = 1ULL<< 42,     LLVMInAllocaAttribute = 1ULL<< 43,     LLVMNonNullAttribute = 1ULL<< 44,     LLVMJumpTableAttribute = 1ULL<< 45,     LLVMConvergentAttribute = 1ULL<< 46,     LLVMSafeStackAttribute = 1ULL<< 47,     */
 block|}
 name|LLVMAttribute
 typedef|;
@@ -1737,6 +1737,17 @@ parameter_list|,
 name|LLVMTypeRef
 modifier|*
 name|Dest
+parameter_list|)
+function_decl|;
+comment|/**  * Get the type of the element at a given index in the structure.  *  * @see llvm::StructType::getTypeAtIndex()  */
+name|LLVMTypeRef
+name|LLVMStructGetTypeAtIndex
+parameter_list|(
+name|LLVMTypeRef
+name|StructTy
+parameter_list|,
+name|unsigned
+name|i
 parameter_list|)
 function_decl|;
 comment|/**  * Determine whether a structure is packed.  *  * @see llvm::StructType::isPacked()  */
@@ -3378,6 +3389,25 @@ name|LLVMValueRef
 name|Fn
 parameter_list|)
 function_decl|;
+comment|/**  * Obtain the personality function attached to the function.  *  * @see llvm::Function::getPersonalityFn()  */
+name|LLVMValueRef
+name|LLVMGetPersonalityFn
+parameter_list|(
+name|LLVMValueRef
+name|Fn
+parameter_list|)
+function_decl|;
+comment|/**  * Set the personality function attached to the function.  *  * @see llvm::Function::setPersonalityFn()  */
+name|void
+name|LLVMSetPersonalityFn
+parameter_list|(
+name|LLVMValueRef
+name|Fn
+parameter_list|,
+name|LLVMValueRef
+name|PersonalityFn
+parameter_list|)
+function_decl|;
 comment|/**  * Obtain the ID number from a function instance.  *  * @see llvm::Function::getIntrinsicID()  */
 name|unsigned
 name|LLVMGetIntrinsicID
@@ -4434,9 +4464,6 @@ name|B
 parameter_list|,
 name|LLVMTypeRef
 name|Ty
-parameter_list|,
-name|LLVMValueRef
-name|PersFn
 parameter_list|,
 name|unsigned
 name|NumClauses

@@ -551,7 +551,8 @@ specifier|const
 name|RopePieceBTree
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:

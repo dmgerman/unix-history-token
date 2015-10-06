@@ -175,7 +175,7 @@ comment|// are for builtins.
 name|unsigned
 name|ObjCOrBuiltinID
 range|:
-literal|11
+literal|13
 decl_stmt|;
 name|bool
 name|HasMacro
@@ -196,11 +196,12 @@ literal|1
 decl_stmt|;
 comment|// True if identifier is a lang extension.
 name|bool
-name|IsCXX11CompatKeyword
+name|IsFutureCompatKeyword
 range|:
 literal|1
 decl_stmt|;
-comment|// True if identifier is a keyword in C++11.
+comment|// True if identifier is a keyword in a
+comment|// newer Standard or proposed Standard.
 name|bool
 name|IsPoisoned
 range|:
@@ -255,7 +256,7 @@ literal|1
 decl_stmt|;
 comment|// True if this is the 'import' contextual
 comment|// keyword.
-comment|// 32-bit word is filled.
+comment|// 30 bit left in 64-bit word.
 name|void
 modifier|*
 name|FETokenInfo
@@ -273,9 +274,12 @@ name|Entry
 expr_stmt|;
 name|IdentifierInfo
 argument_list|(
-argument|const IdentifierInfo&
+specifier|const
+name|IdentifierInfo
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -285,7 +289,8 @@ specifier|const
 name|IdentifierInfo
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|friend
 name|class
@@ -496,6 +501,10 @@ end_expr_stmt
 
 begin_comment
 comment|/// \brief Return true if this identifier is \#defined to some other value.
+end_comment
+
+begin_comment
+comment|/// \note The current definition may be in a module and not currently visible.
 end_comment
 
 begin_expr_stmt
@@ -918,42 +927,46 @@ block|}
 end_function
 
 begin_comment
-comment|/// is/setIsCXX11CompatKeyword - Initialize information about whether or not
+comment|/// is/setIsFutureCompatKeyword - Initialize information about whether or not
 end_comment
 
 begin_comment
-comment|/// this language token is a keyword in C++11. This controls compatibility
+comment|/// this language token is a keyword in a newer or proposed Standard. This
 end_comment
 
 begin_comment
-comment|/// warnings, and is only true when not parsing C++11. Once a compatibility
+comment|/// controls compatibility warnings, and is only true when not parsing the
 end_comment
 
 begin_comment
-comment|/// problem has been diagnosed with this keyword, the flag will be cleared.
+comment|/// corresponding Standard. Once a compatibility problem has been diagnosed
+end_comment
+
+begin_comment
+comment|/// with this keyword, the flag will be cleared.
 end_comment
 
 begin_expr_stmt
 name|bool
-name|isCXX11CompatKeyword
+name|isFutureCompatKeyword
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IsCXX11CompatKeyword
+name|IsFutureCompatKeyword
 return|;
 block|}
 end_expr_stmt
 
 begin_function
 name|void
-name|setIsCXX11CompatKeyword
+name|setIsFutureCompatKeyword
 parameter_list|(
 name|bool
 name|Val
 parameter_list|)
 block|{
-name|IsCXX11CompatKeyword
+name|IsFutureCompatKeyword
 operator|=
 name|Val
 expr_stmt|;
@@ -1345,6 +1358,34 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Provide less than operator for lexicographical sorting.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|IdentifierInfo
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+name|getName
+argument_list|()
+operator|<
+name|RHS
+operator|.
+name|getName
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
 begin_label
 name|private
 label|:
@@ -1394,7 +1435,7 @@ operator||
 name|isExtensionToken
 argument_list|()
 operator||
-name|isCXX11CompatKeyword
+name|isFutureCompatKeyword
 argument_list|()
 operator|||
 name|isOutOfDate
@@ -1539,9 +1580,12 @@ name|private
 label|:
 name|IdentifierIterator
 argument_list|(
-argument|const IdentifierIterator&
+specifier|const
+name|IdentifierIterator
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -1551,7 +1595,8 @@ specifier|const
 name|IdentifierIterator
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|protected
 label|:
@@ -1630,50 +1675,6 @@ name|IdentifierIterator
 modifier|*
 name|getIdentifiers
 parameter_list|()
-function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/// \brief An abstract class used to resolve numerical identifier
-end_comment
-
-begin_comment
-comment|/// references (meaningful only to some external source) into
-end_comment
-
-begin_comment
-comment|/// IdentifierInfo pointers.
-end_comment
-
-begin_decl_stmt
-name|class
-name|ExternalIdentifierLookup
-block|{
-name|public
-label|:
-name|virtual
-operator|~
-name|ExternalIdentifierLookup
-argument_list|()
-expr_stmt|;
-comment|/// \brief Return the identifier associated with the given ID number.
-comment|///
-comment|/// The ID 0 is associated with the NULL identifier.
-name|virtual
-name|IdentifierInfo
-modifier|*
-name|GetIdentifier
-parameter_list|(
-name|unsigned
-name|ID
-parameter_list|)
-init|=
-literal|0
 function_decl|;
 block|}
 end_decl_stmt
@@ -2974,9 +2975,12 @@ decl_stmt|;
 comment|// Actually a SelectorTableImpl
 name|SelectorTable
 argument_list|(
-argument|const SelectorTable&
+specifier|const
+name|SelectorTable
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -2986,7 +2990,8 @@ specifier|const
 name|SelectorTable
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:

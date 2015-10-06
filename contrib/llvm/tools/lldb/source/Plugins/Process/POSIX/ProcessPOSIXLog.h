@@ -216,6 +216,19 @@ name|m_pluginname
 decl_stmt|;
 name|public
 label|:
+comment|// ---------------------------------------------------------------------
+comment|// Public Static Methods
+comment|// ---------------------------------------------------------------------
+specifier|static
+name|void
+name|Initialize
+argument_list|(
+name|lldb_private
+operator|::
+name|ConstString
+name|name
+argument_list|)
+decl_stmt|;
 specifier|static
 name|void
 name|RegisterPluginName

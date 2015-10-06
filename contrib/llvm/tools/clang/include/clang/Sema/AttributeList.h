@@ -245,6 +245,9 @@ block|,
 comment|/// __ptr16, alignas(...), etc.
 name|AS_Keyword
 block|,
+comment|/// Context-sensitive version of a keyword attribute.
+name|AS_ContextSensitiveKeyword
+block|,
 comment|/// #pragma ...
 name|AS_Pragma
 block|}
@@ -652,9 +655,12 @@ return|;
 block|}
 name|AttributeList
 argument_list|(
-argument|const AttributeList&
+specifier|const
+name|AttributeList
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -664,21 +670,24 @@ specifier|const
 name|AttributeList
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|void
 name|operator
 name|delete
-argument_list|(
+parameter_list|(
 name|void
-operator|*
-argument_list|)
-name|LLVM_DELETED_FUNCTION
-decl_stmt|;
+modifier|*
+parameter_list|)
+init|=
+name|delete
+function_decl|;
 operator|~
 name|AttributeList
 argument_list|()
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|size_t
 name|allocated_size
@@ -1634,9 +1643,8 @@ argument_list|()
 operator|==
 name|AT_Aligned
 operator|&&
-name|SyntaxUsed
-operator|==
-name|AS_Keyword
+name|isKeywordAttribute
+argument_list|()
 return|;
 block|}
 name|bool
@@ -1673,6 +1681,21 @@ return|return
 name|SyntaxUsed
 operator|==
 name|AS_Keyword
+operator|||
+name|SyntaxUsed
+operator|==
+name|AS_ContextSensitiveKeyword
+return|;
+block|}
+name|bool
+name|isContextSensitiveKeywordAttribute
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SyntaxUsed
+operator|==
+name|AS_ContextSensitiveKeyword
 return|;
 block|}
 name|bool
@@ -3211,9 +3234,12 @@ argument_list|)
 block|{   }
 name|ParsedAttributes
 argument_list|(
-argument|const ParsedAttributes&
+specifier|const
+name|ParsedAttributes
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|AttributePool
 operator|&
@@ -3900,6 +3926,8 @@ name|ExpectedFunctionMethodOrParameter
 block|,
 name|ExpectedClass
 block|,
+name|ExpectedEnum
+block|,
 name|ExpectedVariable
 block|,
 name|ExpectedMethod
@@ -3939,6 +3967,8 @@ block|,
 name|ExpectedObjectiveCProtocol
 block|,
 name|ExpectedFunctionGlobalVarMethodOrProperty
+block|,
+name|ExpectedStructOrUnionOrTypedef
 block|,
 name|ExpectedStructOrTypedef
 block|,

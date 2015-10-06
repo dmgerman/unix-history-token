@@ -780,6 +780,7 @@ argument_list|,
 argument|Diagnostics *Error
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Marshaller
@@ -800,6 +801,7 @@ name|bool
 name|isVariadic
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
@@ -809,6 +811,7 @@ name|unsigned
 name|getNumArgs
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|ArgKinds
@@ -827,6 +830,7 @@ argument_list|,
 argument|std::vector<ArgKind>&Kinds
 argument_list|)
 specifier|const
+name|override
 block|{
 name|Kinds
 operator|.
@@ -848,6 +852,7 @@ argument_list|,
 argument|ast_type_traits::ASTNodeKind *LeastDerivedKind
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|isRetKindConvertibleTo
@@ -1555,6 +1560,7 @@ argument_list|,
 argument|Diagnostics *Error
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Func
@@ -1573,6 +1579,7 @@ name|bool
 name|isVariadic
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -1582,6 +1589,7 @@ name|unsigned
 name|getNumArgs
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|0
@@ -1597,6 +1605,7 @@ argument_list|,
 argument|std::vector<ArgKind>&Kinds
 argument_list|)
 specifier|const
+name|override
 block|{
 name|Kinds
 operator|.
@@ -1615,6 +1624,7 @@ argument_list|,
 argument|ast_type_traits::ASTNodeKind *LeastDerivedKind
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|isRetKindConvertibleTo
@@ -2155,12 +2165,11 @@ argument_list|,
 argument|Callbacks.end()
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|OverloadedMatcherDescriptor
 argument_list|()
+name|override
 block|{}
-name|virtual
 name|VariantMatcher
 name|create
 argument_list|(
@@ -2171,6 +2180,7 @@ argument_list|,
 argument|Diagnostics *Error
 argument_list|)
 specifier|const
+name|override
 block|{
 name|std
 operator|::
@@ -2286,6 +2296,7 @@ name|bool
 name|isVariadic
 argument_list|()
 specifier|const
+name|override
 block|{
 name|bool
 name|Overload0Variadic
@@ -2332,6 +2343,7 @@ name|unsigned
 name|getNumArgs
 argument_list|()
 specifier|const
+name|override
 block|{
 name|unsigned
 name|Overload0NumArgs
@@ -2395,6 +2407,7 @@ operator|&
 name|Kinds
 argument_list|)
 decl|const
+name|override
 block|{
 for|for
 control|(
@@ -2447,6 +2460,7 @@ operator|*
 name|LeastDerivedKind
 argument_list|)
 decl|const
+name|override
 block|{
 for|for
 control|(
@@ -2550,7 +2564,6 @@ argument_list|(
 argument|MatcherName
 argument_list|)
 block|{}
-name|virtual
 name|VariantMatcher
 name|create
 argument_list|(

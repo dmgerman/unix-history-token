@@ -177,6 +177,7 @@ block|;
 operator|~
 name|AnalysisManager
 argument_list|()
+name|override
 block|;
 name|void
 name|ClearContexts

@@ -747,6 +747,10 @@ name|Constant
 modifier|*
 name|CreateGetElementPtr
 argument_list|(
+name|Type
+operator|*
+name|Ty
+argument_list|,
 name|Constant
 operator|*
 name|C
@@ -765,6 +769,8 @@ name|ConstantExpr
 operator|::
 name|getGetElementPtr
 argument_list|(
+name|Ty
+argument_list|,
 name|C
 argument_list|,
 name|IdxList
@@ -775,6 +781,10 @@ name|Constant
 modifier|*
 name|CreateGetElementPtr
 argument_list|(
+name|Type
+operator|*
+name|Ty
+argument_list|,
 name|Constant
 operator|*
 name|C
@@ -793,6 +803,8 @@ name|ConstantExpr
 operator|::
 name|getGetElementPtr
 argument_list|(
+name|Ty
+argument_list|,
 name|C
 argument_list|,
 name|Idx
@@ -803,6 +815,10 @@ name|Constant
 modifier|*
 name|CreateGetElementPtr
 argument_list|(
+name|Type
+operator|*
+name|Ty
+argument_list|,
 name|Constant
 operator|*
 name|C
@@ -821,6 +837,8 @@ name|ConstantExpr
 operator|::
 name|getGetElementPtr
 argument_list|(
+name|Ty
+argument_list|,
 name|C
 argument_list|,
 name|IdxList
@@ -831,6 +849,10 @@ name|Constant
 modifier|*
 name|CreateInBoundsGetElementPtr
 argument_list|(
+name|Type
+operator|*
+name|Ty
+argument_list|,
 name|Constant
 operator|*
 name|C
@@ -849,6 +871,8 @@ name|ConstantExpr
 operator|::
 name|getInBoundsGetElementPtr
 argument_list|(
+name|Ty
+argument_list|,
 name|C
 argument_list|,
 name|IdxList
@@ -859,6 +883,10 @@ name|Constant
 modifier|*
 name|CreateInBoundsGetElementPtr
 argument_list|(
+name|Type
+operator|*
+name|Ty
+argument_list|,
 name|Constant
 operator|*
 name|C
@@ -877,6 +905,8 @@ name|ConstantExpr
 operator|::
 name|getInBoundsGetElementPtr
 argument_list|(
+name|Ty
+argument_list|,
 name|C
 argument_list|,
 name|Idx
@@ -887,6 +917,10 @@ name|Constant
 modifier|*
 name|CreateInBoundsGetElementPtr
 argument_list|(
+name|Type
+operator|*
+name|Ty
+argument_list|,
 name|Constant
 operator|*
 name|C
@@ -905,6 +939,8 @@ name|ConstantExpr
 operator|::
 name|getInBoundsGetElementPtr
 argument_list|(
+name|Ty
+argument_list|,
 name|C
 argument_list|,
 name|IdxList

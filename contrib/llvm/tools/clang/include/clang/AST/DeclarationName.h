@@ -621,7 +621,7 @@ comment|// non-empty.
 end_comment
 
 begin_expr_stmt
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -1439,9 +1439,12 @@ decl_stmt|;
 comment|// Actually a CXXOperatorIdName*
 name|DeclarationNameTable
 argument_list|(
-argument|const DeclarationNameTable&
+specifier|const
+name|DeclarationNameTable
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -1451,7 +1454,8 @@ specifier|const
 name|DeclarationNameTable
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:

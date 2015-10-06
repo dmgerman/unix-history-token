@@ -475,32 +475,6 @@ comment|//------------------------------------------------------------------
 name|RegularExpression
 argument_list|()
 expr_stmt|;
-comment|//------------------------------------------------------------------
-comment|/// Constructor that takes a regular expression with flags.
-comment|///
-comment|/// Constructor that compiles \a re using \a flags and stores the
-comment|/// resulting compiled regular expression into this object.
-comment|///
-comment|/// @param[in] re
-comment|///     A c string that represents the regular expression to
-comment|///     compile.
-comment|///
-comment|/// @param[in] flags
-comment|///     Flags that are passed to the \c regcomp() function.
-comment|//------------------------------------------------------------------
-name|explicit
-name|RegularExpression
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|re
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-comment|// This one uses flags = REG_EXTENDED.
 name|explicit
 name|RegularExpression
 parameter_list|(
@@ -544,7 +518,7 @@ comment|//------------------------------------------------------------------
 comment|/// Compile a regular expression.
 comment|///
 comment|/// Compile a regular expression using the supplied regular
-comment|/// expression text and flags. The compiled regular expression lives
+comment|/// expression text. The compiled regular expression lives
 comment|/// in this object so that it can be readily used for regular
 comment|/// expression matches. Execute() can be called after the regular
 comment|/// expression is compiled. Any previously compiled regular
@@ -553,9 +527,6 @@ comment|///
 comment|/// @param[in] re
 comment|///     A NULL terminated C string that represents the regular
 comment|///     expression to compile.
-comment|///
-comment|/// @param[in] flags
-comment|///     Flags that are passed to the \c regcomp() function.
 comment|///
 comment|/// @return
 comment|///     \b true if the regular expression compiles successfully,
@@ -570,18 +541,6 @@ modifier|*
 name|re
 parameter_list|)
 function_decl|;
-name|bool
-name|Compile
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|re
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Executes a regular expression.
 comment|///
@@ -589,8 +548,7 @@ comment|/// Execute a regular expression match using the compiled regular
 comment|/// expression that is already in this object against the match
 comment|/// string \a s. If any parens are used for regular expression
 comment|/// matches \a match_count should indicate the number of regmatch_t
-comment|/// values that are present in \a match_ptr. The regular expression
-comment|/// will be executed using the \a execute_flags
+comment|/// values that are present in \a match_ptr.
 comment|///
 comment|/// @param[in] string
 comment|///     The string to match against the compile regular expression.
@@ -599,9 +557,6 @@ comment|/// @param[in] match
 comment|///     A pointer to a RegularExpression::Match structure that was
 comment|///     properly initialized with the desired number of maximum
 comment|///     matches, or NULL if no parenthesized matching is needed.
-comment|///
-comment|/// @param[in] execute_flags
-comment|///     Flags to pass to the \c regexec() function.
 comment|///
 comment|/// @return
 comment|///     \b true if \a string matches the compiled regular
@@ -620,11 +575,6 @@ operator|*
 name|match
 operator|=
 name|NULL
-argument_list|,
-name|int
-name|execute_flags
-operator|=
-literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -667,15 +617,6 @@ name|GetText
 argument_list|()
 specifier|const
 expr_stmt|;
-name|int
-name|GetCompileFlags
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_compile_flags
-return|;
-block|}
 comment|//------------------------------------------------------------------
 comment|/// Test if valid.
 comment|///
@@ -701,10 +642,6 @@ name|m_re
 operator|.
 name|clear
 argument_list|()
-expr_stmt|;
-name|m_compile_flags
-operator|=
-literal|0
 expr_stmt|;
 name|m_comp_err
 operator|=
@@ -750,10 +687,6 @@ name|regex_t
 name|m_preg
 decl_stmt|;
 comment|///< The compiled regular expression
-name|int
-name|m_compile_flags
-decl_stmt|;
-comment|///< Stores the flags from the last compile.
 block|}
 empty_stmt|;
 block|}

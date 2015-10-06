@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StringList.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/UserID.h"
 end_include
 
@@ -99,18 +93,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/Mutex.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/Process.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Expression/ClangUserExpression.h"
 end_include
 
 begin_decl_stmt
@@ -665,6 +647,10 @@ name|friend
 name|class
 name|Process
 decl_stmt|;
+name|friend
+name|class
+name|StopInfoBreakpoint
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Set the breakpoint site for this location to \a bp_site_sp.
 comment|///
@@ -706,6 +692,10 @@ argument_list|)
 decl_stmt|;
 name|void
 name|BumpHitCount
+parameter_list|()
+function_decl|;
+name|void
+name|UndoBumpHitCount
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -784,7 +774,7 @@ name|BreakpointSiteSP
 name|m_bp_site_sp
 expr_stmt|;
 comment|///< Our breakpoint site (it may be shared by more than one location.)
-name|ClangUserExpression
+name|lldb
 operator|::
 name|ClangUserExpressionSP
 name|m_user_expression_sp

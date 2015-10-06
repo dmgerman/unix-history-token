@@ -135,6 +135,7 @@ name|class
 name|TargetRegisterInfo
 decl_stmt|;
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|CriticalAntiDepBreaker
 range|:
 name|public
@@ -252,6 +253,7 @@ expr_stmt|;
 operator|~
 name|CriticalAntiDepBreaker
 argument_list|()
+name|override
 expr_stmt|;
 comment|/// Initialize anti-dep breaking for a new basic block.
 name|void

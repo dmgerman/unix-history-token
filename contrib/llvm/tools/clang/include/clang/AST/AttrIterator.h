@@ -107,7 +107,7 @@ argument_list|,
 name|size_t
 name|Alignment
 operator|=
-literal|16
+literal|8
 argument_list|)
 decl_stmt|;
 end_decl_stmt

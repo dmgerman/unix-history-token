@@ -112,7 +112,8 @@ extern|extern llvm::cl::opt<bool> Symbols;
 extern|extern llvm::cl::opt<bool> DynamicSymbols;
 extern|extern llvm::cl::opt<bool> UnwindInfo;
 extern|extern llvm::cl::opt<bool> ExpandRelocs;
-extern|extern llvm::cl::opt<bool> CodeViewLineTables;
+extern|extern llvm::cl::opt<bool> CodeView;
+extern|extern llvm::cl::opt<bool> CodeViewSubsectionBytes;
 extern|extern llvm::cl::opt<bool> ARMAttributes;
 extern|extern llvm::cl::opt<bool> MipsPLTGOT;
 block|}

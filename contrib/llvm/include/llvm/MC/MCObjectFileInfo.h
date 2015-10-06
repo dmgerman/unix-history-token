@@ -82,32 +82,26 @@ name|class
 name|MCSection
 decl_stmt|;
 name|class
-name|StringRef
-decl_stmt|;
-name|class
 name|MCObjectFileInfo
 block|{
 name|protected
 label|:
-comment|/// CommDirectiveSupportsAlignment - True if .comm supports alignment.  This
-comment|/// is a hack for as long as we support 10.4 Tiger, whose assembler doesn't
-comment|/// support alignment on comm.
+comment|/// True if .comm supports alignment.  This is a hack for as long as we
+comment|/// support 10.4 Tiger, whose assembler doesn't support alignment on comm.
 name|bool
 name|CommDirectiveSupportsAlignment
 decl_stmt|;
-comment|/// SupportsWeakEmptyEHFrame - True if target object file supports a
-comment|/// weak_definition of constant 0 for an omitted EH frame.
+comment|/// True if target object file supports a weak_definition of constant 0 for an
+comment|/// omitted EH frame.
 name|bool
 name|SupportsWeakOmittedEHFrame
 decl_stmt|;
-comment|/// SupportsCompactUnwindWithoutEHFrame - True if the target object file
-comment|/// supports emitting a compact unwind section without an associated EH frame
-comment|/// section.
+comment|/// True if the target object file supports emitting a compact unwind section
+comment|/// without an associated EH frame section.
 name|bool
 name|SupportsCompactUnwindWithoutEHFrame
 decl_stmt|;
-comment|/// PersonalityEncoding, LSDAEncoding, TTypeEncoding - Some encoding values
-comment|/// for EH.
+comment|/// Some encoding values for EH.
 name|unsigned
 name|PersonalityEncoding
 decl_stmt|;
@@ -127,92 +121,74 @@ decl_stmt|;
 name|unsigned
 name|EHSectionFlags
 decl_stmt|;
-comment|/// CompactUnwindDwarfEHFrameOnly - Compact unwind encoding indicating that we
-comment|/// should emit only an EH frame.
+comment|/// Compact unwind encoding indicating that we should emit only an EH frame.
 name|unsigned
 name|CompactUnwindDwarfEHFrameOnly
 decl_stmt|;
-comment|/// TextSection - Section directive for standard text.
-comment|///
-specifier|const
+comment|/// Section directive for standard text.
 name|MCSection
 modifier|*
 name|TextSection
 decl_stmt|;
-comment|/// DataSection - Section directive for standard data.
-comment|///
-specifier|const
+comment|/// Section directive for standard data.
 name|MCSection
 modifier|*
 name|DataSection
 decl_stmt|;
-comment|/// BSSSection - Section that is default initialized to zero.
-specifier|const
+comment|/// Section that is default initialized to zero.
 name|MCSection
 modifier|*
 name|BSSSection
 decl_stmt|;
-comment|/// ReadOnlySection - Section that is readonly and can contain arbitrary
-comment|/// initialized data.  Targets are not required to have a readonly section.
-comment|/// If they don't, various bits of code will fall back to using the data
-comment|/// section for constants.
-specifier|const
+comment|/// Section that is readonly and can contain arbitrary initialized data.
+comment|/// Targets are not required to have a readonly section. If they don't,
+comment|/// various bits of code will fall back to using the data section for
+comment|/// constants.
 name|MCSection
 modifier|*
 name|ReadOnlySection
 decl_stmt|;
-comment|/// StaticCtorSection - This section contains the static constructor pointer
-comment|/// list.
-specifier|const
+comment|/// This section contains the static constructor pointer list.
 name|MCSection
 modifier|*
 name|StaticCtorSection
 decl_stmt|;
-comment|/// StaticDtorSection - This section contains the static destructor pointer
-comment|/// list.
-specifier|const
+comment|/// This section contains the static destructor pointer list.
 name|MCSection
 modifier|*
 name|StaticDtorSection
 decl_stmt|;
-comment|/// LSDASection - If exception handling is supported by the target, this is
-comment|/// the section the Language Specific Data Area information is emitted to.
-specifier|const
+comment|/// If exception handling is supported by the target, this is the section the
+comment|/// Language Specific Data Area information is emitted to.
 name|MCSection
 modifier|*
 name|LSDASection
 decl_stmt|;
-comment|/// CompactUnwindSection - If exception handling is supported by the target
-comment|/// and the target can support a compact representation of the CIE and FDE,
-comment|/// this is the section to emit them into.
-specifier|const
+comment|/// If exception handling is supported by the target and the target can
+comment|/// support a compact representation of the CIE and FDE, this is the section
+comment|/// to emit them into.
 name|MCSection
 modifier|*
 name|CompactUnwindSection
 decl_stmt|;
 comment|// Dwarf sections for debug info.  If a target supports debug info, these must
 comment|// be set.
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfAbbrevSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfInfoSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfLineSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfFrameSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfPubTypesSection
@@ -222,160 +198,136 @@ name|MCSection
 modifier|*
 name|DwarfDebugInlineSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfStrSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfLocSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfARangesSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfRangesSection
 decl_stmt|;
-specifier|const
-name|MCSection
-modifier|*
-name|DwarfMacroInfoSection
-decl_stmt|;
 comment|// The pubnames section is no longer generated by default.  The generation
 comment|// can be enabled by a compiler flag.
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfPubNamesSection
 decl_stmt|;
-comment|// DWARF5 Experimental Debug Info Sections
+comment|/// DWARF5 Experimental Debug Info Sections
 comment|/// DwarfAccelNamesSection, DwarfAccelObjCSection,
 comment|/// DwarfAccelNamespaceSection, DwarfAccelTypesSection -
 comment|/// If we use the DWARF accelerated hash tables then we want to emit these
 comment|/// sections.
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfAccelNamesSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfAccelObjCSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfAccelNamespaceSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfAccelTypesSection
 decl_stmt|;
-comment|/// These are used for the Fission separate debug information files.
-specifier|const
+comment|// These are used for the Fission separate debug information files.
 name|MCSection
 modifier|*
 name|DwarfInfoDWOSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfTypesDWOSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfAbbrevDWOSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfStrDWOSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfLineDWOSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfLocDWOSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfStrOffDWOSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DwarfAddrSection
 decl_stmt|;
-comment|/// Sections for newer gnu pubnames and pubtypes.
-specifier|const
+comment|/// Section for newer gnu pubnames.
 name|MCSection
 modifier|*
 name|DwarfGnuPubNamesSection
 decl_stmt|;
-specifier|const
+comment|/// Section for newer gnu pubtypes.
 name|MCSection
 modifier|*
 name|DwarfGnuPubTypesSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|COFFDebugSymbolsSection
 decl_stmt|;
-comment|// Extra TLS Variable Data section.  If the target needs to put additional
-comment|// information for a TLS variable, it'll go here.
-specifier|const
+comment|/// Extra TLS Variable Data section.
+comment|///
+comment|/// If the target needs to put additional information for a TLS variable,
+comment|/// it'll go here.
 name|MCSection
 modifier|*
 name|TLSExtraDataSection
 decl_stmt|;
-comment|/// TLSDataSection - Section directive for Thread Local data.
-comment|/// ELF, MachO and COFF.
-specifier|const
+comment|/// Section directive for Thread Local data. ELF, MachO and COFF.
 name|MCSection
 modifier|*
 name|TLSDataSection
 decl_stmt|;
 comment|// Defaults to ".tdata".
-comment|/// TLSBSSSection - Section directive for Thread Local uninitialized data.
-comment|/// Null if this target doesn't support a BSS section.
-comment|/// ELF and MachO only.
-specifier|const
+comment|/// Section directive for Thread Local uninitialized data.
+comment|///
+comment|/// Null if this target doesn't support a BSS section. ELF and MachO only.
 name|MCSection
 modifier|*
 name|TLSBSSSection
 decl_stmt|;
 comment|// Defaults to ".tbss".
 comment|/// StackMap section.
-specifier|const
 name|MCSection
 modifier|*
 name|StackMapSection
 decl_stmt|;
-comment|/// EHFrameSection - EH frame section. It is initialized on demand so it
-comment|/// can be overwritten (with uniquing).
-specifier|const
+comment|/// FaultMap section.
+name|MCSection
+modifier|*
+name|FaultMapSection
+decl_stmt|;
+comment|/// EH frame section.
+comment|///
+comment|/// It is initialized on demand so it can be overwritten (with uniquing).
 name|MCSection
 modifier|*
 name|EHFrameSection
 decl_stmt|;
-comment|/// ELF specific sections.
-comment|///
-specifier|const
+comment|// ELF specific sections.
 name|MCSection
 modifier|*
 name|DataRelSection
@@ -385,138 +337,120 @@ name|MCSection
 modifier|*
 name|DataRelLocalSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DataRelROSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DataRelROLocalSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|MergeableConst4Section
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|MergeableConst8Section
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|MergeableConst16Section
 decl_stmt|;
-comment|/// MachO specific sections.
+comment|// MachO specific sections.
+comment|/// Section for thread local structure information.
 comment|///
-comment|/// TLSTLVSection - Section for thread local structure information.
-comment|/// Contains the source code name of the variable, visibility and a pointer
-comment|/// to the initial value (.tdata or .tbss).
-specifier|const
+comment|/// Contains the source code name of the variable, visibility and a pointer to
+comment|/// the initial value (.tdata or .tbss).
 name|MCSection
 modifier|*
 name|TLSTLVSection
 decl_stmt|;
 comment|// Defaults to ".tlv".
-comment|/// TLSThreadInitSection - Section for thread local data initialization
-comment|/// functions.
+comment|/// Section for thread local data initialization functions.
 specifier|const
 name|MCSection
 modifier|*
 name|TLSThreadInitSection
 decl_stmt|;
 comment|// Defaults to ".thread_init_func".
-specifier|const
 name|MCSection
 modifier|*
 name|CStringSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|UStringSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|TextCoalSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|ConstTextCoalSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|ConstDataSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DataCoalSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DataCommonSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|DataBSSSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|FourByteConstantSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|EightByteConstantSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|SixteenByteConstantSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|LazySymbolPointerSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|NonLazySymbolPointerSection
 decl_stmt|;
 comment|/// COFF specific sections.
-comment|///
-specifier|const
 name|MCSection
 modifier|*
 name|DrectveSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|PDataSection
 decl_stmt|;
-specifier|const
 name|MCSection
 modifier|*
 name|XDataSection
+decl_stmt|;
+name|MCSection
+modifier|*
+name|SXDataSection
 decl_stmt|;
 name|public
 label|:
 name|void
 name|InitMCObjectFileInfo
 argument_list|(
-name|StringRef
+specifier|const
+name|Triple
+operator|&
 name|TT
 argument_list|,
 name|Reloc
@@ -534,6 +468,13 @@ operator|&
 name|ctx
 argument_list|)
 decl_stmt|;
+name|LLVM_ATTRIBUTE_DEPRECATED
+argument_list|(
+argument|void InitMCObjectFileInfo(StringRef TT, Reloc::Model RM,                                 CodeModel::Model CM, MCContext&ctx)
+argument_list|,
+literal|"StringRef GNU Triple argument replaced by a llvm::Triple object"
+argument_list|)
+empty_stmt|;
 name|bool
 name|getSupportsWeakOmittedEHFrame
 argument_list|()
@@ -606,7 +547,6 @@ return|return
 name|CompactUnwindDwarfEHFrameOnly
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getTextSection
@@ -617,7 +557,6 @@ return|return
 name|TextSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDataSection
@@ -628,7 +567,6 @@ return|return
 name|DataSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getBSSSection
@@ -639,7 +577,6 @@ return|return
 name|BSSSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getLSDASection
@@ -650,7 +587,6 @@ return|return
 name|LSDASection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getCompactUnwindSection
@@ -661,7 +597,6 @@ return|return
 name|CompactUnwindSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfAbbrevSection
@@ -672,7 +607,6 @@ return|return
 name|DwarfAbbrevSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfInfoSection
@@ -683,7 +617,6 @@ return|return
 name|DwarfInfoSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfLineSection
@@ -694,7 +627,6 @@ return|return
 name|DwarfLineSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfFrameSection
@@ -705,7 +637,6 @@ return|return
 name|DwarfFrameSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfPubNamesSection
@@ -716,7 +647,6 @@ return|return
 name|DwarfPubNamesSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfPubTypesSection
@@ -727,7 +657,6 @@ return|return
 name|DwarfPubTypesSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfGnuPubNamesSection
@@ -738,7 +667,6 @@ return|return
 name|DwarfGnuPubNamesSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfGnuPubTypesSection
@@ -760,7 +688,6 @@ return|return
 name|DwarfDebugInlineSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfStrSection
@@ -771,7 +698,6 @@ return|return
 name|DwarfStrSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfLocSection
@@ -782,7 +708,6 @@ return|return
 name|DwarfLocSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfARangesSection
@@ -793,7 +718,6 @@ return|return
 name|DwarfARangesSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfRangesSection
@@ -804,19 +728,7 @@ return|return
 name|DwarfRangesSection
 return|;
 block|}
-specifier|const
-name|MCSection
-operator|*
-name|getDwarfMacroInfoSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfMacroInfoSection
-return|;
-block|}
 comment|// DWARF5 Experimental Debug Info Sections
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfAccelNamesSection
@@ -827,7 +739,6 @@ return|return
 name|DwarfAccelNamesSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfAccelObjCSection
@@ -838,7 +749,6 @@ return|return
 name|DwarfAccelObjCSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfAccelNamespaceSection
@@ -849,7 +759,6 @@ return|return
 name|DwarfAccelNamespaceSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfAccelTypesSection
@@ -860,7 +769,6 @@ return|return
 name|DwarfAccelTypesSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfInfoDWOSection
@@ -871,7 +779,6 @@ return|return
 name|DwarfInfoDWOSection
 return|;
 block|}
-specifier|const
 name|MCSection
 modifier|*
 name|getDwarfTypesSection
@@ -881,7 +788,6 @@ name|Hash
 argument_list|)
 decl|const
 decl_stmt|;
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfTypesDWOSection
@@ -892,7 +798,6 @@ return|return
 name|DwarfTypesDWOSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfAbbrevDWOSection
@@ -903,7 +808,6 @@ return|return
 name|DwarfAbbrevDWOSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfStrDWOSection
@@ -914,7 +818,6 @@ return|return
 name|DwarfStrDWOSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfLineDWOSection
@@ -925,7 +828,6 @@ return|return
 name|DwarfLineDWOSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfLocDWOSection
@@ -936,7 +838,6 @@ return|return
 name|DwarfLocDWOSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfStrOffDWOSection
@@ -947,7 +848,6 @@ return|return
 name|DwarfStrOffDWOSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDwarfAddrSection
@@ -958,7 +858,6 @@ return|return
 name|DwarfAddrSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getCOFFDebugSymbolsSection
@@ -969,7 +868,6 @@ return|return
 name|COFFDebugSymbolsSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getTLSExtraDataSection
@@ -991,7 +889,6 @@ return|return
 name|TLSDataSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getTLSBSSSection
@@ -1002,7 +899,6 @@ return|return
 name|TLSBSSSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getStackMapSection
@@ -1013,9 +909,17 @@ return|return
 name|StackMapSection
 return|;
 block|}
-comment|/// ELF specific sections.
-comment|///
+name|MCSection
+operator|*
+name|getFaultMapSection
+argument_list|()
 specifier|const
+block|{
+return|return
+name|FaultMapSection
+return|;
+block|}
+comment|// ELF specific sections.
 name|MCSection
 operator|*
 name|getDataRelSection
@@ -1037,7 +941,6 @@ return|return
 name|DataRelLocalSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDataRelROSection
@@ -1048,7 +951,6 @@ return|return
 name|DataRelROSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDataRelROLocalSection
@@ -1092,8 +994,7 @@ return|return
 name|MergeableConst16Section
 return|;
 block|}
-comment|/// MachO specific sections.
-comment|///
+comment|// MachO specific sections.
 specifier|const
 name|MCSection
 operator|*
@@ -1138,7 +1039,6 @@ return|return
 name|UStringSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getTextCoalSection
@@ -1193,7 +1093,6 @@ return|return
 name|DataCommonSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getDataBSSSection
@@ -1237,7 +1136,6 @@ return|return
 name|SixteenByteConstantSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getLazySymbolPointerSection
@@ -1248,7 +1146,6 @@ return|return
 name|LazySymbolPointerSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getNonLazySymbolPointerSection
@@ -1259,9 +1156,7 @@ return|return
 name|NonLazySymbolPointerSection
 return|;
 block|}
-comment|/// COFF specific sections.
-comment|///
-specifier|const
+comment|// COFF specific sections.
 name|MCSection
 operator|*
 name|getDrectveSection
@@ -1272,7 +1167,6 @@ return|return
 name|DrectveSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getPDataSection
@@ -1283,7 +1177,6 @@ return|return
 name|PDataSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getXDataSection
@@ -1294,7 +1187,16 @@ return|return
 name|XDataSection
 return|;
 block|}
+name|MCSection
+operator|*
+name|getSXDataSection
+argument_list|()
 specifier|const
+block|{
+return|return
+name|SXDataSection
+return|;
+block|}
 name|MCSection
 modifier|*
 name|getEHFrameSection
@@ -1365,28 +1267,27 @@ name|Triple
 name|TT
 decl_stmt|;
 name|void
-name|InitMachOMCObjectFileInfo
+name|initMachOMCObjectFileInfo
 parameter_list|(
 name|Triple
 name|T
 parameter_list|)
 function_decl|;
 name|void
-name|InitELFMCObjectFileInfo
+name|initELFMCObjectFileInfo
 parameter_list|(
 name|Triple
 name|T
 parameter_list|)
 function_decl|;
 name|void
-name|InitCOFFMCObjectFileInfo
+name|initCOFFMCObjectFileInfo
 parameter_list|(
 name|Triple
 name|T
 parameter_list|)
 function_decl|;
-comment|/// InitEHFrameSection - Initialize EHFrameSection on demand.
-comment|///
+comment|/// Initialize EHFrameSection on demand.
 name|void
 name|InitEHFrameSection
 parameter_list|()

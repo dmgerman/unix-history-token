@@ -96,6 +96,17 @@ comment|/* #undef LLVM_DOCSDIR */
 end_comment
 
 begin_comment
+comment|/* Define to enable checks that alter the LLVM C++ ABI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_ENABLE_ABI_BREAKING_CHECKS
+value|1
+end_define
+
+begin_comment
 comment|/* Define if threads enabled */
 end_comment
 
@@ -103,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_ENABLE_THREADS
-value|0
+value|1
 end_define
 
 begin_comment
@@ -122,7 +133,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_HAS_ATOMICS
-value|0
+value|1
 end_define
 
 begin_comment
@@ -305,7 +316,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MINOR
-value|6
+value|7
 end_define
 
 begin_comment
@@ -316,7 +327,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_PATCH
-value|1
+value|0
 end_define
 
 begin_comment
@@ -327,7 +338,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_STRING
-value|"3.6.1"
+value|"3.7.0"
 end_define
 
 begin_endif

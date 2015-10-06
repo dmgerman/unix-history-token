@@ -98,6 +98,8 @@ comment|/// 5 arguments here, but to use this class with your own types,
 comment|/// you'll need to specialize it.  For example, say you want to call a
 comment|/// function defined externally as:
 comment|///
+comment|/// \code{.cpp}
+comment|///
 comment|///   struct MyType {
 comment|///     int32 a;
 comment|///     int32 *b;
@@ -105,11 +107,15 @@ comment|///     void *array[1];  // Intended as a flexible array.
 comment|///   };
 comment|///   int8 AFunction(struct MyType *value);
 comment|///
+comment|/// \endcode
+comment|///
 comment|/// You'll want to use
 comment|///   Function::Create(TypeBuilder<types::i<8>(MyType*), true>::get(), ...)
 comment|/// to declare the function, but when you first try this, your compiler will
 comment|/// complain that TypeBuilder<MyType, true>::get() doesn't exist. To fix this,
 comment|/// write:
+comment|///
+comment|/// \code{.cpp}
 comment|///
 comment|///   namespace llvm {
 comment|///   template<bool xcompile> class TypeBuilder<MyType, xcompile> {
@@ -121,7 +127,7 @@ comment|///       return StructType::get(
 comment|///         TypeBuilder<types::i<32>, xcompile>::get(Context),
 comment|///         TypeBuilder<types::i<32>*, xcompile>::get(Context),
 comment|///         TypeBuilder<types::i<8>*[], xcompile>::get(Context),
-comment|///         NULL);
+comment|///         nullptr);
 comment|///     }
 comment|///
 comment|///     // You may find this a convenient place to put some constants
@@ -134,6 +140,8 @@ comment|///       FIELD_ARRAY
 comment|///     };
 comment|///   }
 comment|///   }  // namespace llvm
+comment|///
+comment|/// \endcode
 comment|///
 comment|/// TypeBuilder cannot handle recursive types or types you only know at runtime.
 comment|/// If you try to give it a recursive type, it will deadlock, infinitely

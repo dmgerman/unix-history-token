@@ -194,13 +194,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_GCSTRATEGY_H
+name|LLVM_IR_GCSTRATEGY_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_GCSTRATEGY_H
+name|LLVM_IR_GCSTRATEGY_H
 end_define
 
 begin_include
@@ -212,13 +212,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/GCMetadata.h"
+file|"llvm/IR/Function.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunction.h"
+file|"llvm/IR/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
@@ -237,11 +249,29 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|GC
+block|{
+comment|/// PointKind - Used to indicate whether the address of the call instruction
+comment|/// or the address after the call instruction is listed in the stackmap.  For
+comment|/// most runtimes, PostCall safepoints are appropriate.
+comment|///
+enum|enum
+name|PointKind
+block|{
+name|PreCall
+block|,
+comment|///< Instr is a call instruction.
+name|PostCall
+comment|///< Instr is the return address of a call.
+block|}
+enum|;
+block|}
 comment|/// GCStrategy describes a garbage collector algorithm's code generation
 comment|/// requirements, and provides overridable hooks for those needs which cannot
-comment|/// be abstractly described.  GCStrategy objects currently must be looked up
-comment|/// through the GCModuleInfo analysis pass.  They are owned by the analysis
-comment|/// pass and recreated every time that pass is invalidated.
+comment|/// be abstractly described.  GCStrategy objects must be looked up through
+comment|/// the Function.  The objects themselves are owned by the Context and must
+comment|/// be immutable.
 name|class
 name|GCStrategy
 block|{
@@ -281,11 +311,6 @@ name|CustomRoots
 decl_stmt|;
 comment|///< Default is to pass through to backend.
 name|bool
-name|CustomSafePoints
-decl_stmt|;
-comment|///< Default is to use NeededSafePoints
-comment|///< to find safe points.
-name|bool
 name|InitRoots
 decl_stmt|;
 comment|///< If set, roots are nulled during lowering.
@@ -319,8 +344,8 @@ name|Name
 return|;
 block|}
 comment|/// By default, write barriers are replaced with simple store
-comment|/// instructions. If true, then performCustomLowering must instead lower
-comment|/// them.
+comment|/// instructions. If true, you must provide a custom pass to lower
+comment|/// calls to @llvm.gcwrite.
 name|bool
 name|customWriteBarrier
 argument_list|()
@@ -331,8 +356,8 @@ name|CustomWriteBarriers
 return|;
 block|}
 comment|/// By default, read barriers are replaced with simple load
-comment|/// instructions. If true, then performCustomLowering must instead lower
-comment|/// them.
+comment|/// instructions. If true, you must provide a custom pass to lower
+comment|/// calls to @llvm.gcread.
 name|bool
 name|customReadBarrier
 argument_list|()
@@ -375,7 +400,7 @@ name|None
 return|;
 block|}
 comment|///@}
-comment|/** @name GCRoot Specific Properties      * These properties and overrides only apply to collector strategies using      * GCRoot.       */
+comment|/** @name GCRoot Specific Properties    * These properties and overrides only apply to collector strategies using    * GCRoot.    */
 comment|///@{
 comment|/// True if safe points of any kind are required. By default, none are
 comment|/// recorded.
@@ -385,8 +410,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|CustomSafePoints
-operator|||
 name|NeededSafePoints
 operator|!=
 literal|0
@@ -417,7 +440,8 @@ literal|0
 return|;
 block|}
 comment|/// By default, roots are left for the code generator so it can generate a
-comment|/// stack map. If true, then performCustomLowering must delete them.
+comment|/// stack map. If true, you must provide a custom pass to lower
+comment|/// calls to @llvm.gcroot.
 name|bool
 name|customRoots
 argument_list|()
@@ -425,17 +449,6 @@ specifier|const
 block|{
 return|return
 name|CustomRoots
-return|;
-block|}
-comment|/// By default, the GC analysis will find safe points according to
-comment|/// NeededSafePoints. If true, then findCustomSafePoints must create them.
-name|bool
-name|customSafePoints
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CustomSafePoints
 return|;
 block|}
 comment|/// If set, gcroot intrinsics should initialize their allocas to null
@@ -464,68 +477,6 @@ name|UsesMetadata
 return|;
 block|}
 comment|///@}
-comment|/// initializeCustomLowering/performCustomLowering - If any of the actions
-comment|/// are set to custom, performCustomLowering must be overriden to transform
-comment|/// the corresponding actions to LLVM IR. initializeCustomLowering is
-comment|/// optional to override. These are the only GCStrategy methods through
-comment|/// which the LLVM IR can be modified.  These methods apply mostly to
-comment|/// gc.root based implementations, but can be overriden to provide custom
-comment|/// barrier lowerings with gc.statepoint as well.
-comment|///@{
-name|virtual
-name|bool
-name|initializeCustomLowering
-parameter_list|(
-name|Module
-modifier|&
-name|F
-parameter_list|)
-block|{
-comment|// No changes made
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|performCustomLowering
-parameter_list|(
-name|Function
-modifier|&
-name|F
-parameter_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"GCStrategy subclass specified a configuration which"
-literal|"requires a custom lowering without providing one"
-argument_list|)
-expr_stmt|;
-block|}
-comment|///@}
-comment|/// Called if customSafepoints returns true, used only by gc.root
-comment|/// implementations.
-name|virtual
-name|bool
-name|findCustomSafePoints
-parameter_list|(
-name|GCFunctionInfo
-modifier|&
-name|FI
-parameter_list|,
-name|MachineFunction
-modifier|&
-name|MF
-parameter_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"GCStrategy subclass specified a configuration which"
-literal|"requests custom safepoint identification without"
-literal|"providing an implementation for such"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 empty_stmt|;
 comment|/// Subclasses of GCStrategy are made available for use during compilation by

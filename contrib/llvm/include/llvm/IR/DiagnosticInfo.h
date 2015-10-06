@@ -93,6 +93,12 @@ directive|include
 file|"llvm/Support/Casting.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -118,6 +124,9 @@ name|Value
 decl_stmt|;
 name|class
 name|DebugLoc
+decl_stmt|;
+name|class
+name|SMDiagnostic
 decl_stmt|;
 comment|/// \brief Defines the different supported severity of a diagnostic.
 enum|enum
@@ -158,6 +167,8 @@ block|,
 name|DK_OptimizationRemarkAnalysis
 block|,
 name|DK_OptimizationFailure
+block|,
+name|DK_MIRParser
 block|,
 name|DK_FirstPluginKind
 block|}
@@ -1245,6 +1256,76 @@ argument_list|()
 specifier|const
 name|override
 block|; }
+block|;
+comment|/// Diagnostic information for machine IR parser.
+name|class
+name|DiagnosticInfoMIRParser
+operator|:
+name|public
+name|DiagnosticInfo
+block|{
+specifier|const
+name|SMDiagnostic
+operator|&
+name|Diagnostic
+block|;
+name|public
+operator|:
+name|DiagnosticInfoMIRParser
+argument_list|(
+argument|DiagnosticSeverity Severity
+argument_list|,
+argument|const SMDiagnostic&Diagnostic
+argument_list|)
+operator|:
+name|DiagnosticInfo
+argument_list|(
+name|DK_MIRParser
+argument_list|,
+name|Severity
+argument_list|)
+block|,
+name|Diagnostic
+argument_list|(
+argument|Diagnostic
+argument_list|)
+block|{}
+specifier|const
+name|SMDiagnostic
+operator|&
+name|getDiagnostic
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Diagnostic
+return|;
+block|}
+name|void
+name|print
+argument_list|(
+argument|DiagnosticPrinter&DP
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const DiagnosticInfo *DI
+argument_list|)
+block|{
+return|return
+name|DI
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|DK_MIRParser
+return|;
+block|}
+expr|}
 block|;
 comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
 name|DEFINE_SIMPLE_CONVERSION_FUNCTIONS

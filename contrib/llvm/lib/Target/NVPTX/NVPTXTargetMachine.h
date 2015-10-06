@@ -101,6 +101,9 @@ range|:
 name|public
 name|LLVMTargetMachine
 block|{
+name|bool
+name|is64bit
+block|;
 name|std
 operator|::
 name|unique_ptr
@@ -108,6 +111,11 @@ operator|<
 name|TargetLoweringObjectFile
 operator|>
 name|TLOF
+block|;
+name|NVPTX
+operator|::
+name|DrvInterface
+name|drvInterface
 block|;
 name|NVPTXSubtarget
 name|Subtarget
@@ -122,7 +130,7 @@ name|NVPTXTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -148,13 +156,47 @@ specifier|const
 name|NVPTXSubtarget
 operator|*
 name|getSubtargetImpl
-argument_list|()
+argument_list|(
+argument|const Function&
+argument_list|)
 specifier|const
 name|override
 block|{
 return|return
 operator|&
 name|Subtarget
+return|;
+block|}
+specifier|const
+name|NVPTXSubtarget
+operator|*
+name|getSubtargetImpl
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|Subtarget
+return|;
+block|}
+name|bool
+name|is64Bit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|is64bit
+return|;
+block|}
+name|NVPTX
+operator|::
+name|DrvInterface
+name|getDrvInterface
+argument_list|()
+specifier|const
+block|{
+return|return
+name|drvInterface
 return|;
 block|}
 name|ManagedStringPool
@@ -191,7 +233,7 @@ argument|PassManagerBase&
 argument_list|,
 argument|MCContext *&
 argument_list|,
-argument|raw_ostream&
+argument|raw_pwrite_stream&
 argument_list|,
 argument|bool = true
 argument_list|)
@@ -215,12 +257,9 @@ name|get
 argument_list|()
 return|;
 block|}
-comment|/// \brief Register NVPTX analysis passes with a pass manager.
-name|void
-name|addAnalysisPasses
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|)
+name|TargetIRAnalysis
+name|getTargetIRAnalysis
+argument_list|()
 name|override
 block|;  }
 decl_stmt|;
@@ -242,7 +281,7 @@ name|NVPTXTargetMachine32
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -275,7 +314,7 @@ name|NVPTXTargetMachine64
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,

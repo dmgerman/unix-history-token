@@ -103,13 +103,18 @@ name|private
 label|:
 name|Binary
 argument_list|()
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|Binary
 argument_list|(
-argument|const Binary&other
+specifier|const
+name|Binary
+operator|&
+name|other
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|unsigned
 name|int

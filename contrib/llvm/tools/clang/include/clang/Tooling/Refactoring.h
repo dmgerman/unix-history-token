@@ -135,6 +135,23 @@ operator|::
 name|string
 operator|>
 name|SourcePaths
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+operator|=
+name|std
+operator|::
+name|make_shared
+operator|<
+name|PCHContainerOperations
+operator|>
+operator|(
+operator|)
 argument_list|)
 block|;
 comment|/// \brief Returns the set of replacements to which replacements should

@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -523,9 +517,12 @@ name|T
 decl_stmt|;
 name|TimeRegion
 argument_list|(
-argument|const TimeRegion&
+specifier|const
+name|TimeRegion
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|public
 label|:
@@ -662,9 +659,13 @@ decl_stmt|;
 comment|// Doubly linked list of TimerGroup's.
 name|TimerGroup
 argument_list|(
-argument|const TimerGroup&TG
+specifier|const
+name|TimerGroup
+operator|&
+name|TG
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -675,7 +676,8 @@ name|TimerGroup
 operator|&
 name|TG
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:

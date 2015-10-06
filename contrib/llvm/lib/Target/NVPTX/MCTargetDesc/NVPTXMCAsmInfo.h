@@ -73,7 +73,7 @@ name|class
 name|Target
 decl_stmt|;
 name|class
-name|StringRef
+name|Triple
 decl_stmt|;
 name|class
 name|NVPTXMCAsmInfo
@@ -91,7 +91,10 @@ operator|:
 name|explicit
 name|NVPTXMCAsmInfo
 argument_list|(
-argument|StringRef TT
+specifier|const
+name|Triple
+operator|&
+name|TheTriple
 argument_list|)
 block|; }
 decl_stmt|;

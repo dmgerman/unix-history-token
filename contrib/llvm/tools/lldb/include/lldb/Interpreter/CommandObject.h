@@ -327,6 +327,7 @@ return|return
 name|m_interpreter
 return|;
 block|}
+name|virtual
 specifier|const
 name|char
 modifier|*
@@ -361,6 +362,15 @@ modifier|*
 name|str
 parameter_list|)
 function_decl|;
+name|void
+name|SetHelp
+argument_list|(
+name|std
+operator|::
+name|string
+name|str
+argument_list|)
+decl_stmt|;
 name|void
 name|SetHelpLong
 parameter_list|(
@@ -493,6 +503,19 @@ name|commands_help
 parameter_list|)
 block|{     }
 name|void
+name|FormatLongHelpText
+parameter_list|(
+name|Stream
+modifier|&
+name|output_strm
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|long_help
+parameter_list|)
+function_decl|;
+name|void
 name|GenerateHelpText
 parameter_list|(
 name|CommandReturnObject
@@ -581,6 +604,7 @@ name|arg_name
 argument_list|)
 expr_stmt|;
 specifier|static
+specifier|const
 name|ArgumentTableEntry
 modifier|*
 name|FindArgumentDataByType
@@ -658,144 +682,6 @@ name|ArgumentRepetitionType
 name|arg_repeat_type
 parameter_list|)
 function_decl|;
-enum|enum
-block|{
-comment|//----------------------------------------------------------------------
-comment|// eFlagRequiresTarget
-comment|//
-comment|// Ensures a valid target is contained in m_exe_ctx prior to executing
-comment|// the command. If a target doesn't exist or is invalid, the command
-comment|// will fail and CommandObject::GetInvalidTargetDescription() will be
-comment|// returned as the error. CommandObject subclasses can override the
-comment|// virtual function for GetInvalidTargetDescription() to provide custom
-comment|// strings when needed.
-comment|//----------------------------------------------------------------------
-name|eFlagRequiresTarget
-init|=
-operator|(
-literal|1u
-operator|<<
-literal|0
-operator|)
-block|,
-comment|//----------------------------------------------------------------------
-comment|// eFlagRequiresProcess
-comment|//
-comment|// Ensures a valid process is contained in m_exe_ctx prior to executing
-comment|// the command. If a process doesn't exist or is invalid, the command
-comment|// will fail and CommandObject::GetInvalidProcessDescription() will be
-comment|// returned as the error. CommandObject subclasses can override the
-comment|// virtual function for GetInvalidProcessDescription() to provide custom
-comment|// strings when needed.
-comment|//----------------------------------------------------------------------
-name|eFlagRequiresProcess
-init|=
-operator|(
-literal|1u
-operator|<<
-literal|1
-operator|)
-block|,
-comment|//----------------------------------------------------------------------
-comment|// eFlagRequiresThread
-comment|//
-comment|// Ensures a valid thread is contained in m_exe_ctx prior to executing
-comment|// the command. If a thread doesn't exist or is invalid, the command
-comment|// will fail and CommandObject::GetInvalidThreadDescription() will be
-comment|// returned as the error. CommandObject subclasses can override the
-comment|// virtual function for GetInvalidThreadDescription() to provide custom
-comment|// strings when needed.
-comment|//----------------------------------------------------------------------
-name|eFlagRequiresThread
-init|=
-operator|(
-literal|1u
-operator|<<
-literal|2
-operator|)
-block|,
-comment|//----------------------------------------------------------------------
-comment|// eFlagRequiresFrame
-comment|//
-comment|// Ensures a valid frame is contained in m_exe_ctx prior to executing
-comment|// the command. If a frame doesn't exist or is invalid, the command
-comment|// will fail and CommandObject::GetInvalidFrameDescription() will be
-comment|// returned as the error. CommandObject subclasses can override the
-comment|// virtual function for GetInvalidFrameDescription() to provide custom
-comment|// strings when needed.
-comment|//----------------------------------------------------------------------
-name|eFlagRequiresFrame
-init|=
-operator|(
-literal|1u
-operator|<<
-literal|3
-operator|)
-block|,
-comment|//----------------------------------------------------------------------
-comment|// eFlagRequiresRegContext
-comment|//
-comment|// Ensures a valid register context (from the selected frame if there
-comment|// is a frame in m_exe_ctx, or from the selected thread from m_exe_ctx)
-comment|// is available from m_exe_ctx prior to executing the command. If a
-comment|// target doesn't exist or is invalid, the command will fail and
-comment|// CommandObject::GetInvalidRegContextDescription() will be returned as
-comment|// the error. CommandObject subclasses can override the virtual function
-comment|// for GetInvalidRegContextDescription() to provide custom strings when
-comment|// needed.
-comment|//----------------------------------------------------------------------
-name|eFlagRequiresRegContext
-init|=
-operator|(
-literal|1u
-operator|<<
-literal|4
-operator|)
-block|,
-comment|//----------------------------------------------------------------------
-comment|// eFlagTryTargetAPILock
-comment|//
-comment|// Attempts to acquire the target lock if a target is selected in the
-comment|// command interpreter. If the command object fails to acquire the API
-comment|// lock, the command will fail with an appropriate error message.
-comment|//----------------------------------------------------------------------
-name|eFlagTryTargetAPILock
-init|=
-operator|(
-literal|1u
-operator|<<
-literal|5
-operator|)
-block|,
-comment|//----------------------------------------------------------------------
-comment|// eFlagProcessMustBeLaunched
-comment|//
-comment|// Verifies that there is a launched process in m_exe_ctx, if there
-comment|// isn't, the command will fail with an appropriate error message.
-comment|//----------------------------------------------------------------------
-name|eFlagProcessMustBeLaunched
-init|=
-operator|(
-literal|1u
-operator|<<
-literal|6
-operator|)
-block|,
-comment|//----------------------------------------------------------------------
-comment|// eFlagProcessMustBePaused
-comment|//
-comment|// Verifies that there is a paused process in m_exe_ctx, if there
-comment|// isn't, the command will fail with an appropriate error message.
-comment|//----------------------------------------------------------------------
-name|eFlagProcessMustBePaused
-init|=
-operator|(
-literal|1u
-operator|<<
-literal|7
-operator|)
-block|}
-enum|;
 name|bool
 name|ParseOptions
 parameter_list|(

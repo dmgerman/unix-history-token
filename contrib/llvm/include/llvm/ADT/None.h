@@ -73,12 +73,19 @@ name|llvm
 block|{
 comment|/// \brief A simple null object to allow implicit construction of Optional<T>
 comment|/// and similar types without having to spell out the specialization's name.
-enum|enum
+name|enum
+name|class
 name|NoneType
 block|{
 name|None
 block|}
-enum|;
+empty_stmt|;
+specifier|const
+name|NoneType
+name|None
+init|=
+name|None
+decl_stmt|;
 block|}
 end_decl_stmt
 

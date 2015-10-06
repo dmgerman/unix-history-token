@@ -86,6 +86,9 @@ name|namespace
 name|SPISD
 block|{
 enum|enum
+name|NodeType
+enum|:
+name|unsigned
 block|{
 name|FIRST_NUMBER
 init|=
@@ -173,6 +176,11 @@ argument_list|(
 name|TargetMachine
 operator|&
 name|TM
+argument_list|,
+specifier|const
+name|SparcSubtarget
+operator|&
+name|STI
 argument_list|)
 block|;
 name|SDValue
@@ -229,7 +237,7 @@ block|;
 name|ConstraintType
 name|getConstraintType
 argument_list|(
-argument|const std::string&Constraint
+argument|StringRef Constraint
 argument_list|)
 specifier|const
 name|override
@@ -270,7 +278,9 @@ operator|*
 operator|>
 name|getRegForInlineAsmConstraint
 argument_list|(
-argument|const std::string&Constraint
+argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|StringRef Constraint
 argument_list|,
 argument|MVT VT
 argument_list|)
@@ -288,7 +298,9 @@ block|;
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
-argument|EVT LHSTy
+argument|const DataLayout&
+argument_list|,
+argument|EVT
 argument_list|)
 specifier|const
 name|override
@@ -303,6 +315,8 @@ comment|/// getSetCCResultType - Return the ISD::SETCC ValueType
 name|EVT
 name|getSetCCResultType
 argument_list|(
+argument|const DataLayout&DL
+argument_list|,
 argument|LLVMContext&Context
 argument_list|,
 argument|EVT VT

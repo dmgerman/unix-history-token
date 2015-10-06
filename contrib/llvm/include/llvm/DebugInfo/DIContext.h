@@ -419,27 +419,6 @@ block|,
 name|DIDT_AppleObjC
 block|}
 enum|;
-comment|// In place of applying the relocations to the data we've read from disk we use
-comment|// a separate mapping table to the side and checking that at locations in the
-comment|// dwarf where we expect relocated values. This adds a bit of complexity to the
-comment|// dwarf parsing/extraction at the benefit of not allocating memory for the
-comment|// entire size of the debug info sections.
-typedef|typedef
-name|DenseMap
-operator|<
-name|uint64_t
-operator|,
-name|std
-operator|::
-name|pair
-operator|<
-name|uint8_t
-operator|,
-name|int64_t
-operator|>
-expr|>
-name|RelocAddrMap
-expr_stmt|;
 name|class
 name|DIContext
 block|{
@@ -449,6 +428,8 @@ enum|enum
 name|DIContextKind
 block|{
 name|CK_DWARF
+block|,
+name|CK_PDB
 block|}
 enum|;
 name|DIContextKind
@@ -474,37 +455,18 @@ name|virtual
 operator|~
 name|DIContext
 argument_list|()
-expr_stmt|;
-comment|/// getDWARFContext - get a context for binary DWARF data.
-specifier|static
-name|DIContext
-modifier|*
-name|getDWARFContext
-argument_list|(
-specifier|const
-name|object
-operator|::
-name|ObjectFile
-operator|&
-name|Obj
-argument_list|)
-decl_stmt|;
+block|{}
 name|virtual
 name|void
 name|dump
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|,
-name|DIDumpType
-name|DumpType
-init|=
-name|DIDT_All
-parameter_list|)
-init|=
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|DIDumpType DumpType = DIDT_All
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+expr_stmt|;
 name|virtual
 name|DILineInfo
 name|getLineInfoForAddress
@@ -562,6 +524,84 @@ specifier|const
 name|DIContextKind
 name|Kind
 decl_stmt|;
+block|}
+empty_stmt|;
+comment|/// An inferface for inquiring the load address of a loaded object file
+comment|/// to be used by the DIContext implementations when applying relocations
+comment|/// on the fly.
+name|class
+name|LoadedObjectInfo
+block|{
+name|public
+label|:
+name|virtual
+operator|~
+name|LoadedObjectInfo
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+comment|/// Obtain the Load Address of a section by Name.
+comment|///
+comment|/// Calculate the address of the section identified by the passed in Name.
+comment|/// The section need not be present in the local address space. The addresses
+comment|/// need to be consistent with the addresses used to query the DIContext and
+comment|/// the output of this function should be deterministic, i.e. repeated calls with
+comment|/// the same Name should give the same address.
+name|virtual
+name|uint64_t
+name|getSectionLoadAddress
+argument_list|(
+name|StringRef
+name|Name
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+comment|/// If conveniently available, return the content of the given Section.
+comment|///
+comment|/// When the section is available in the local address space, in relocated (loaded)
+comment|/// form, e.g. because it was relocated by a JIT for execution, this function
+comment|/// should provide the contents of said section in `Data`. If the loaded section
+comment|/// is not available, or the cost of retrieving it would be prohibitive, this
+comment|/// function should return false. In that case, relocations will be read from the
+comment|/// local (unrelocated) object file and applied on the fly. Note that this method
+comment|/// is used purely for optimzation purposes in the common case of JITting in the
+comment|/// local address space, so returning false should always be correct.
+name|virtual
+name|bool
+name|getLoadedSectionContents
+argument_list|(
+name|StringRef
+name|Name
+argument_list|,
+name|StringRef
+operator|&
+name|Data
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Obtain a copy of this LoadedObjectInfo.
+comment|///
+comment|/// The caller is responsible for deallocation once the copy is no longer required.
+name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|LoadedObjectInfo
+operator|>
+name|clone
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

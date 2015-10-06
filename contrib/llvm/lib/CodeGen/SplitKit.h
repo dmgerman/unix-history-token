@@ -139,6 +139,7 @@ decl_stmt|;
 comment|/// SplitAnalysis - Analyze a LiveInterval, looking for live range splitting
 comment|/// opportunities.
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|SplitAnalysis
 block|{
 name|public
@@ -590,6 +591,7 @@ comment|/// - Finish the current interval with closeIntv and repeat from 2.
 comment|/// - Rewrite instructions with finish().
 comment|///
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|SplitEditor
 block|{
 name|SplitAnalysis
@@ -1071,7 +1073,7 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
-comment|/// dump - print the current interval maping to dbgs().
+comment|/// dump - print the current interval mapping to dbgs().
 name|void
 name|dump
 argument_list|()
