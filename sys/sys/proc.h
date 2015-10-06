@@ -643,14 +643,6 @@ modifier|*
 name|td_wmesg
 decl_stmt|;
 comment|/* (t) Reason for sleep. */
-name|int
-name|td_lastcpu
-decl_stmt|;
-comment|/* (t) Last cpu we were on. */
-name|int
-name|td_oncpu
-decl_stmt|;
-comment|/* (t) Which cpu we are on. */
 specifier|volatile
 name|u_char
 name|td_owepreempt
@@ -1066,6 +1058,14 @@ modifier|*
 name|td_emuldata
 decl_stmt|;
 comment|/* Emulator state data */
+name|int
+name|td_lastcpu
+decl_stmt|;
+comment|/* (t) Last cpu we were on. */
+name|int
+name|td_oncpu
+decl_stmt|;
+comment|/* (t) Which cpu we are on. */
 block|}
 struct|;
 end_struct
