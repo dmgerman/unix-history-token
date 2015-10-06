@@ -54,11 +54,23 @@ directive|include
 file|"grant_table.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"hvm/save.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"memory.h"
+end_include
+
 begin_define
 define|#
 directive|define
 name|XEN_DOMCTL_INTERFACE_VERSION
-value|0x00000008
+value|0x0000000b
 end_define
 
 begin_comment
@@ -80,7 +92,7 @@ decl_stmt|;
 name|xen_domain_handle_t
 name|handle
 decl_stmt|;
-comment|/* Is this an HVM guest (as opposed to a PV guest)? */
+comment|/* Is this an HVM guest (as opposed to a PVH or PV guest)? */
 define|#
 directive|define
 name|_XEN_DOMCTL_CDF_hvm_guest
@@ -116,8 +128,21 @@ define|#
 directive|define
 name|XEN_DOMCTL_CDF_oos_off
 value|(1U<<_XEN_DOMCTL_CDF_oos_off)
+comment|/* Is this a PVH guest (as opposed to an HVM or PV guest)? */
+define|#
+directive|define
+name|_XEN_DOMCTL_CDF_pvh_guest
+value|4
+define|#
+directive|define
+name|XEN_DOMCTL_CDF_pvh_guest
+value|(1U<<_XEN_DOMCTL_CDF_pvh_guest)
 name|uint32_t
 name|flags
+decl_stmt|;
+name|struct
+name|xen_arch_domainconfig
+name|config
 decl_stmt|;
 block|}
 struct|;
@@ -215,6 +240,15 @@ define|#
 directive|define
 name|XEN_DOMINF_debugged
 value|(1U<<_XEN_DOMINF_debugged)
+comment|/* domain is PVH */
+define|#
+directive|define
+name|_XEN_DOMINF_pvh_guest
+value|7
+define|#
+directive|define
+name|XEN_DOMINF_pvh_guest
+value|(1U<<_XEN_DOMINF_pvh_guest)
 comment|/* XEN_DOMINF_shutdown guest-supplied code.  */
 define|#
 directive|define
@@ -235,6 +269,9 @@ name|uint64_aligned_t
 name|max_pages
 decl_stmt|;
 name|uint64_aligned_t
+name|outstanding_pages
+decl_stmt|;
+name|uint64_aligned_t
 name|shr_pages
 decl_stmt|;
 name|uint64_aligned_t
@@ -251,6 +288,11 @@ name|uint32_t
 name|nr_online_vcpus
 decl_stmt|;
 comment|/* Number of VCPUs currently online. */
+define|#
+directive|define
+name|XEN_INVALID_MAX_VCPU_ID
+value|(~0U)
+comment|/* Domain has no vcpus? */
 name|uint32_t
 name|max_vcpu_id
 decl_stmt|;
@@ -416,9 +458,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XEN_DOMCTL_PFINFO_PAGEDTAB
-value|(0x8U<<28)
+name|XEN_DOMCTL_PFINFO_BROKEN
+value|(0xdU<<28)
 end_define
+
+begin_comment
+comment|/* broken page */
+end_comment
 
 begin_define
 define|#
@@ -426,80 +472,6 @@ directive|define
 name|XEN_DOMCTL_PFINFO_LTAB_MASK
 value|(0xfU<<28)
 end_define
-
-begin_struct
-struct|struct
-name|xen_domctl_getpageframeinfo
-block|{
-comment|/* IN variables. */
-name|uint64_aligned_t
-name|gmfn
-decl_stmt|;
-comment|/* GMFN to query */
-comment|/* OUT variables. */
-comment|/* Is the page PINNED to a type? */
-name|uint32_t
-name|type
-decl_stmt|;
-comment|/* see above type defs */
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|xen_domctl_getpageframeinfo
-name|xen_domctl_getpageframeinfo_t
-typedef|;
-end_typedef
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|xen_domctl_getpageframeinfo_t
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* XEN_DOMCTL_getpageframeinfo2 */
-end_comment
-
-begin_struct
-struct|struct
-name|xen_domctl_getpageframeinfo2
-block|{
-comment|/* IN variables. */
-name|uint64_aligned_t
-name|num
-decl_stmt|;
-comment|/* IN/OUT variables. */
-name|XEN_GUEST_HANDLE_64
-argument_list|(
-argument|uint32
-argument_list|)
-name|array
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|xen_domctl_getpageframeinfo2
-name|xen_domctl_getpageframeinfo2_t
-typedef|;
-end_typedef
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|xen_domctl_getpageframeinfo2_t
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* XEN_DOMCTL_getpageframeinfo3 */
@@ -896,6 +868,47 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Get/set the NUMA node(s) with which the guest has affinity with. */
+end_comment
+
+begin_comment
+comment|/* XEN_DOMCTL_setnodeaffinity */
+end_comment
+
+begin_comment
+comment|/* XEN_DOMCTL_getnodeaffinity */
+end_comment
+
+begin_struct
+struct|struct
+name|xen_domctl_nodeaffinity
+block|{
+name|struct
+name|xenctl_bitmap
+name|nodemap
+decl_stmt|;
+comment|/* IN */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_domctl_nodeaffinity
+name|xen_domctl_nodeaffinity_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_domctl_nodeaffinity_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Get/set which physical cpus a vcpu can execute on. */
 end_comment
 
@@ -911,15 +924,40 @@ begin_struct
 struct|struct
 name|xen_domctl_vcpuaffinity
 block|{
+comment|/* IN variables. */
 name|uint32_t
 name|vcpu
 decl_stmt|;
-comment|/* IN */
-name|struct
-name|xenctl_cpumap
-name|cpumap
+comment|/* Set/get the hard affinity for vcpu */
+define|#
+directive|define
+name|_XEN_VCPUAFFINITY_HARD
+value|0
+define|#
+directive|define
+name|XEN_VCPUAFFINITY_HARD
+value|(1U<<_XEN_VCPUAFFINITY_HARD)
+comment|/* Set/get the soft affinity for vcpu */
+define|#
+directive|define
+name|_XEN_VCPUAFFINITY_SOFT
+value|1
+define|#
+directive|define
+name|XEN_VCPUAFFINITY_SOFT
+value|(1U<<_XEN_VCPUAFFINITY_SOFT)
+name|uint32_t
+name|flags
 decl_stmt|;
-comment|/* IN/OUT */
+comment|/*      * IN/OUT variables.      *      * Both are IN/OUT for XEN_DOMCTL_setvcpuaffinity, in which case they      * contain effective hard or/and soft affinity. That is, upon successful      * return, cpumap_soft, contains the intersection of the soft affinity,      * hard affinity and the cpupool's online CPUs for the domain (if      * XEN_VCPUAFFINITY_SOFT was set in flags). cpumap_hard contains the      * intersection between hard affinity and the cpupool's online CPUs (if      * XEN_VCPUAFFINITY_HARD was set in flags).      *      * Both are OUT-only for XEN_DOMCTL_getvcpuaffinity, in which case they      * contain the plain hard and/or soft affinity masks that were set during      * previous successful calls to XEN_DOMCTL_setvcpuaffinity (or the      * default values), without intersecting or altering them in any way.      */
+name|struct
+name|xenctl_bitmap
+name|cpumap_hard
+decl_stmt|;
+name|struct
+name|xenctl_bitmap
+name|cpumap_soft
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -980,12 +1018,9 @@ begin_comment
 comment|/* Scheduler types. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|XEN_SCHEDULER_SEDF
-value|4
-end_define
+begin_comment
+comment|/* #define XEN_SCHEDULER_SEDF  4 (Removed) */
+end_comment
 
 begin_define
 define|#
@@ -1006,6 +1041,13 @@ define|#
 directive|define
 name|XEN_SCHEDULER_ARINC653
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_SCHEDULER_RTDS
+value|8
 end_define
 
 begin_comment
@@ -1041,27 +1083,6 @@ comment|/* XEN_DOMCTL_SCHEDOP_* */
 union|union
 block|{
 struct|struct
-name|xen_domctl_sched_sedf
-block|{
-name|uint64_aligned_t
-name|period
-decl_stmt|;
-name|uint64_aligned_t
-name|slice
-decl_stmt|;
-name|uint64_aligned_t
-name|latency
-decl_stmt|;
-name|uint32_t
-name|extratime
-decl_stmt|;
-name|uint32_t
-name|weight
-decl_stmt|;
-block|}
-name|sedf
-struct|;
-struct|struct
 name|xen_domctl_sched_credit
 block|{
 name|uint16_t
@@ -1081,6 +1102,18 @@ name|weight
 decl_stmt|;
 block|}
 name|credit2
+struct|;
+struct|struct
+name|xen_domctl_sched_rtds
+block|{
+name|uint32_t
+name|period
+decl_stmt|;
+name|uint32_t
+name|budget
+decl_stmt|;
+block|}
+name|rtds
 struct|;
 block|}
 name|u
@@ -1315,103 +1348,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* XEN_DOMCTL_arch_setup */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_XEN_DOMAINSETUP_hvm_guest
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|XEN_DOMAINSETUP_hvm_guest
-value|(1UL<<_XEN_DOMAINSETUP_hvm_guest)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_XEN_DOMAINSETUP_query
-value|1
-end_define
-
-begin_comment
-comment|/* Get parameters (for save)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XEN_DOMAINSETUP_query
-value|(1UL<<_XEN_DOMAINSETUP_query)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_XEN_DOMAINSETUP_sioemu_guest
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|XEN_DOMAINSETUP_sioemu_guest
-value|(1UL<<_XEN_DOMAINSETUP_sioemu_guest)
-end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|xen_domctl_arch_setup
-block|{
-name|uint64_aligned_t
-name|flags
-decl_stmt|;
-comment|/* XEN_DOMAINSETUP_* */
-ifdef|#
-directive|ifdef
-name|__ia64__
-name|uint64_aligned_t
-name|bp
-decl_stmt|;
-comment|/* mpaddr of boot param area */
-name|uint64_aligned_t
-name|maxmem
-decl_stmt|;
-comment|/* Highest memory address for MDT.  */
-name|uint64_aligned_t
-name|xsi_va
-decl_stmt|;
-comment|/* Xen shared_info area virtual address.  */
-name|uint32_t
-name|hypercall_imm
-decl_stmt|;
-comment|/* Break imm for Xen hypercalls.  */
-name|int8_t
-name|vhpt_size_log2
-decl_stmt|;
-comment|/* Log2 of VHPT size. */
-endif|#
-directive|endif
-block|}
-name|xen_domctl_arch_setup_t
-typedef|;
-end_typedef
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|xen_domctl_arch_setup_t
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* XEN_DOMCTL_settimeoffset */
 end_comment
 
@@ -1419,7 +1355,7 @@ begin_struct
 struct|struct
 name|xen_domctl_settimeoffset
 block|{
-name|int32_t
+name|int64_aligned_t
 name|time_offset_seconds
 decl_stmt|;
 comment|/* applied to domain wallclock time */
@@ -1510,38 +1446,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* XEN_DOMCTL_real_mode_area */
-end_comment
-
-begin_struct
-struct|struct
-name|xen_domctl_real_mode_area
-block|{
-name|uint32_t
-name|log
-decl_stmt|;
-comment|/* log2 of Real Mode Area size */
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|xen_domctl_real_mode_area
-name|xen_domctl_real_mode_area_t
-typedef|;
-end_typedef
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|xen_domctl_real_mode_area_t
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* XEN_DOMCTL_sendtrigger */
 end_comment
 
@@ -1613,7 +1517,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Assign PCI device to HVM guest. Sets up IOMMU structures. */
+comment|/* Assign a device to a guest. Sets up IOMMU structures. */
 end_comment
 
 begin_comment
@@ -1625,17 +1529,70 @@ comment|/* XEN_DOMCTL_test_assign_device */
 end_comment
 
 begin_comment
-comment|/* XEN_DOMCTL_deassign_device */
+comment|/*  * XEN_DOMCTL_deassign_device: The behavior of this DOMCTL differs  * between the different type of device:  *  - PCI device (XEN_DOMCTL_DEV_PCI) will be reassigned to DOM0  *  - DT device (XEN_DOMCTL_DT_PCI) will left unassigned. DOM0  *  will have to call XEN_DOMCTL_assign_device in order to use the  *  device.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_DOMCTL_DEV_PCI
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_DOMCTL_DEV_DT
+value|1
+end_define
 
 begin_struct
 struct|struct
 name|xen_domctl_assign_device
 block|{
 name|uint32_t
+name|dev
+decl_stmt|;
+comment|/* XEN_DOMCTL_DEV_* */
+union|union
+block|{
+struct|struct
+block|{
+name|uint32_t
 name|machine_sbdf
 decl_stmt|;
 comment|/* machine PCI ID of assigned device */
+block|}
+name|pci
+struct|;
+struct|struct
+block|{
+name|uint32_t
+name|size
+decl_stmt|;
+comment|/* Length of the path */
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|char
+argument_list|)
+name|path
+expr_stmt|;
+comment|/* path to the device tree node */
+block|}
+name|dt
+struct|;
+block|}
+name|u
+union|;
+comment|/* IN */
+define|#
+directive|define
+name|XEN_DOMCTL_DEV_RDM_RELAXED
+value|1
+name|uint32_t
+name|flag
+decl_stmt|;
+comment|/* flag of assigned device */
 block|}
 struct|;
 end_struct
@@ -1731,7 +1688,11 @@ block|,
 name|PT_IRQ_TYPE_MSI
 block|,
 name|PT_IRQ_TYPE_MSI_TRANSLATE
-block|, }
+block|,
+name|PT_IRQ_TYPE_SPI
+block|,
+comment|/* ARM: valid range 32-1019 */
+block|}
 name|pt_irq_type_t
 typedef|;
 end_typedef
@@ -1787,6 +1748,14 @@ decl_stmt|;
 block|}
 name|msi
 struct|;
+struct|struct
+block|{
+name|uint16_t
+name|spi
+decl_stmt|;
+block|}
+name|spi
+struct|;
 block|}
 name|u
 union|;
@@ -1812,6 +1781,10 @@ end_expr_stmt
 
 begin_comment
 comment|/* Bind machine I/O address range -> HVM address range. */
+end_comment
+
+begin_comment
+comment|/* If this returns -E2BIG lower nr_mfns value. */
 end_comment
 
 begin_comment
@@ -1978,6 +1951,13 @@ name|XEN_DOMCTL_MEM_CACHEATTR_UCM
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|XEN_DOMCTL_DELETE_MEM_CACHEATTR
+value|(~(uint32_t)0)
+end_define
+
 begin_struct
 struct|struct
 name|xen_domctl_pin_mem_cacheattr
@@ -2062,9 +2042,31 @@ decl_stmt|;
 name|uint8_t
 name|sysenter_disables_events
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+union|union
+block|{
 name|uint64_aligned_t
 name|mcg_cap
 decl_stmt|;
+name|struct
+name|hvm_vmce_vcpu
+name|vmce
+decl_stmt|;
+block|}
+union|;
+else|#
+directive|else
+name|struct
+name|hvm_vmce_vcpu
+name|vmce
+decl_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
@@ -2083,56 +2085,6 @@ begin_expr_stmt
 name|DEFINE_XEN_GUEST_HANDLE
 argument_list|(
 name|xen_domctl_ext_vcpucontext_t
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/*  * Set optimizaton features for a domain  */
-end_comment
-
-begin_comment
-comment|/* XEN_DOMCTL_set_opt_feature */
-end_comment
-
-begin_struct
-struct|struct
-name|xen_domctl_set_opt_feature
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-name|struct
-name|xen_ia64_opt_feature
-name|optf
-decl_stmt|;
-else|#
-directive|else
-comment|/* Make struct non-empty: do not depend on this field name! */
-name|uint64_t
-name|dummy
-decl_stmt|;
-endif|#
-directive|endif
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|xen_domctl_set_opt_feature
-name|xen_domctl_set_opt_feature_t
-typedef|;
-end_typedef
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|xen_domctl_set_opt_feature_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2243,6 +2195,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Arranges that if the domain suspends (specifically, if it shuts  * down with code SHUTDOWN_suspend), this event channel will be  * notified.  *  * This is _instead of_ the usual notification to the global  * VIRQ_DOM_EXC.  (In most systems that pirq is owned by xenstored.)  *  * Only one subscription per domain is possible.  Last subscriber  * wins; others are silently displaced.  *  * NB that contrary to the rather general name, it only applies to  * domain shutdown with code suspend.  Shutdown for other reasons  * (including crash), and domain death, are notified to VIRQ_DOM_EXC  * regardless.  */
+end_comment
 
 begin_comment
 comment|/* XEN_DOMCTL_subscribe */
@@ -2413,10 +2369,12 @@ begin_comment
 comment|/* XEN_DOMCTL_settscinfo */
 end_comment
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|xen_guest_tsc_info
+name|xen_domctl_tsc_info
 block|{
+comment|/* IN/OUT */
 name|uint32_t
 name|tsc_mode
 decl_stmt|;
@@ -2432,42 +2390,6 @@ decl_stmt|;
 name|uint64_aligned_t
 name|elapsed_nsec
 decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|xen_guest_tsc_info
-name|xen_guest_tsc_info_t
-typedef|;
-end_typedef
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|xen_guest_tsc_info_t
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|xen_domctl_tsc_info
-block|{
-name|XEN_GUEST_HANDLE_64
-argument_list|(
-argument|xen_guest_tsc_info_t
-argument_list|)
-name|out_info
-expr_stmt|;
-comment|/* OUT */
-name|xen_guest_tsc_info_t
-name|info
-decl_stmt|;
-comment|/* IN */
 block|}
 name|xen_domctl_tsc_info_t
 typedef|;
@@ -2558,61 +2480,58 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Memory event operations  */
+comment|/*  * VM event operations  */
 end_comment
 
 begin_comment
-comment|/* XEN_DOMCTL_mem_event_op */
+comment|/* XEN_DOMCTL_vm_event_op */
 end_comment
 
 begin_comment
-comment|/*  * Domain memory paging  * Page memory in and out.  * Domctl interface to set up and tear down the   * pager<->hypervisor interface. Use XENMEM_paging_op*  * to perform per-page operations.  *  * The XEN_DOMCTL_MEM_EVENT_OP_PAGING_ENABLE domctl returns several  * non-standard error codes to indicate why paging could not be enabled:  * ENODEV - host lacks HAP support (EPT/NPT) or HAP is disabled in guest  * EMLINK - guest has iommu passthrough enabled  * EXDEV  - guest has PoD enabled  * EBUSY  - guest has or had paging enabled, ring buffer still active  */
+comment|/*  * There are currently three rings available for VM events:  * sharing, monitor and paging. This hypercall allows one to  * control these rings (enable/disable), as well as to signal  * to the hypervisor to pull responses (resume) from the given  * ring.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|XEN_DOMCTL_MEM_EVENT_OP_PAGING
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|XEN_DOMCTL_MEM_EVENT_OP_PAGING_ENABLE
+name|XEN_VM_EVENT_ENABLE
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|XEN_DOMCTL_MEM_EVENT_OP_PAGING_DISABLE
+name|XEN_VM_EVENT_DISABLE
 value|1
 end_define
-
-begin_comment
-comment|/*  * Access permissions.  *  * As with paging, use the domctl for teardown/setup of the  * helper<->hypervisor interface.  *  * There are HVM hypercalls to set the per-page access permissions of every  * page in a domain.  When one of these permissions--independent, read,   * write, and execute--is violated, the VCPU is paused and a memory event   * is sent with what happened.  (See public/mem_event.h) .  *  * The memory event handler can then resume the VCPU and redo the access   * with a XENMEM_access_op_resume hypercall.  *  * The XEN_DOMCTL_MEM_EVENT_OP_ACCESS_ENABLE domctl returns several  * non-standard error codes to indicate why access could not be enabled:  * ENODEV - host lacks HAP support (EPT/NPT) or HAP is disabled in guest  * EBUSY  - guest has or had access enabled, ring buffer still active  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|XEN_DOMCTL_MEM_EVENT_OP_ACCESS
+name|XEN_VM_EVENT_RESUME
 value|2
 end_define
 
-begin_define
-define|#
-directive|define
-name|XEN_DOMCTL_MEM_EVENT_OP_ACCESS_ENABLE
-value|0
-end_define
+begin_comment
+comment|/*  * Domain memory paging  * Page memory in and out.  * Domctl interface to set up and tear down the   * pager<->hypervisor interface. Use XENMEM_paging_op*  * to perform per-page operations.  *  * The XEN_VM_EVENT_PAGING_ENABLE domctl returns several  * non-standard error codes to indicate why paging could not be enabled:  * ENODEV - host lacks HAP support (EPT/NPT) or HAP is disabled in guest  * EMLINK - guest has iommu passthrough enabled  * EXDEV  - guest has PoD enabled  * EBUSY  - guest has or had paging enabled, ring buffer still active  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|XEN_DOMCTL_MEM_EVENT_OP_ACCESS_DISABLE
+name|XEN_DOMCTL_VM_EVENT_OP_PAGING
 value|1
+end_define
+
+begin_comment
+comment|/*  * Monitor helper.  *  * As with paging, use the domctl for teardown/setup of the  * helper<->hypervisor interface.  *  * The monitor interface can be used to register for various VM events. For  * example, there are HVM hypercalls to set the per-page access permissions  * of every page in a domain.  When one of these permissions--independent,  * read, write, and execute--is violated, the VCPU is paused and a memory event  * is sent with what happened. The memory event handler can then resume the  * VCPU and redo the access with a XEN_VM_EVENT_RESUME option.  *  * See public/vm_event.h for the list of available events that can be  * subscribed to via the monitor interface.  *  * The XEN_VM_EVENT_MONITOR_* domctls returns  * non-standard error codes to indicate why access could not be enabled:  * ENODEV - host lacks HAP support (EPT/NPT) or HAP is disabled in guest  * EBUSY  - guest has or had access enabled, ring buffer still active  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_DOMCTL_VM_EVENT_OP_MONITOR
+value|2
 end_define
 
 begin_comment
@@ -2622,22 +2541,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XEN_DOMCTL_MEM_EVENT_OP_SHARING
+name|XEN_DOMCTL_VM_EVENT_OP_SHARING
 value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|XEN_DOMCTL_MEM_EVENT_OP_SHARING_ENABLE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|XEN_DOMCTL_MEM_EVENT_OP_SHARING_DISABLE
-value|1
 end_define
 
 begin_comment
@@ -2646,16 +2551,16 @@ end_comment
 
 begin_struct
 struct|struct
-name|xen_domctl_mem_event_op
+name|xen_domctl_vm_event_op
 block|{
 name|uint32_t
 name|op
 decl_stmt|;
-comment|/* XEN_DOMCTL_MEM_EVENT_OP_*_* */
+comment|/* XEN_VM_EVENT_* */
 name|uint32_t
 name|mode
 decl_stmt|;
-comment|/* XEN_DOMCTL_MEM_EVENT_OP_* */
+comment|/* XEN_DOMCTL_VM_EVENT_OP_* */
 name|uint32_t
 name|port
 decl_stmt|;
@@ -2667,15 +2572,15 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|xen_domctl_mem_event_op
-name|xen_domctl_mem_event_op_t
+name|xen_domctl_vm_event_op
+name|xen_domctl_vm_event_op_t
 typedef|;
 end_typedef
 
 begin_expr_stmt
 name|DEFINE_XEN_GUEST_HANDLE
 argument_list|(
-name|xen_domctl_mem_event_op_t
+name|xen_domctl_vm_event_op_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2824,7 +2729,7 @@ comment|/* IN: VCPU that this call applies to. */
 name|uint32_t
 name|vcpu
 decl_stmt|;
-comment|/*      * SET: xfeature support mask of struct (IN)      * GET: xfeature support mask of struct (IN/OUT)      * xfeature mask is served as identifications of the saving format      * so that compatible CPUs can have a check on format to decide      * whether it can restore.      */
+comment|/*      * SET: Ignored.      * GET: xfeature support mask of struct (IN/OUT)      * xfeature mask is served as identifications of the saving format      * so that compatible CPUs can have a check on format to decide      * whether it can restore.      */
 name|uint64_aligned_t
 name|xfeature_mask
 decl_stmt|;
@@ -2896,6 +2801,484 @@ end_expr_stmt
 
 begin_struct
 struct|struct
+name|xen_domctl_set_broken_page_p2m
+block|{
+name|uint64_aligned_t
+name|pfn
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_domctl_set_broken_page_p2m
+name|xen_domctl_set_broken_page_p2m_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_domctl_set_broken_page_p2m_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * XEN_DOMCTL_set_max_evtchn: sets the maximum event channel port  * number the guest may use.  Use this limit the amount of resources  * (global mapping space, xenheap) a guest may use for event channels.  */
+end_comment
+
+begin_struct
+struct|struct
+name|xen_domctl_set_max_evtchn
+block|{
+name|uint32_t
+name|max_port
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_domctl_set_max_evtchn
+name|xen_domctl_set_max_evtchn_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_domctl_set_max_evtchn_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * ARM: Clean and invalidate caches associated with given region of  * guest memory.  */
+end_comment
+
+begin_struct
+struct|struct
+name|xen_domctl_cacheflush
+block|{
+comment|/* IN: page range to flush. */
+name|xen_pfn_t
+name|start_pfn
+decl_stmt|,
+name|nr_pfns
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_domctl_cacheflush
+name|xen_domctl_cacheflush_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_domctl_cacheflush_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+end_if
+
+begin_struct
+struct|struct
+name|xen_domctl_vcpu_msr
+block|{
+name|uint32_t
+name|index
+decl_stmt|;
+name|uint32_t
+name|reserved
+decl_stmt|;
+name|uint64_aligned_t
+name|value
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_domctl_vcpu_msr
+name|xen_domctl_vcpu_msr_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_domctl_vcpu_msr_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * XEN_DOMCTL_set_vcpu_msrs / XEN_DOMCTL_get_vcpu_msrs.  *  * Input:  * - A NULL 'msrs' guest handle is a request for the maximum 'msr_count'.  * - Otherwise, 'msr_count' is the number of entries in 'msrs'.  *  * Output for get:  * - If 'msr_count' is less than the number Xen needs to write, -ENOBUFS shall  *   be returned and 'msr_count' updated to reflect the intended number.  * - On success, 'msr_count' shall indicate the number of MSRs written, which  *   may be less than the maximum if some are not currently used by the vcpu.  *  * Output for set:  * - If Xen encounters an error with a specific MSR, -EINVAL shall be returned  *   and 'msr_count' shall be set to the offending index, to aid debugging.  */
+end_comment
+
+begin_struct
+struct|struct
+name|xen_domctl_vcpu_msrs
+block|{
+name|uint32_t
+name|vcpu
+decl_stmt|;
+comment|/* IN     */
+name|uint32_t
+name|msr_count
+decl_stmt|;
+comment|/* IN/OUT */
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|xen_domctl_vcpu_msr_t
+argument_list|)
+name|msrs
+expr_stmt|;
+comment|/* IN/OUT */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_domctl_vcpu_msrs
+name|xen_domctl_vcpu_msrs_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_domctl_vcpu_msrs_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* XEN_DOMCTL_setvnumainfo: specifies a virtual NUMA topology for the guest */
+end_comment
+
+begin_struct
+struct|struct
+name|xen_domctl_vnuma
+block|{
+comment|/* IN: number of vNUMA nodes to setup. Shall be greater than 0 */
+name|uint32_t
+name|nr_vnodes
+decl_stmt|;
+comment|/* IN: number of memory ranges to setup */
+name|uint32_t
+name|nr_vmemranges
+decl_stmt|;
+comment|/*      * IN: number of vCPUs of the domain (used as size of the vcpu_to_vnode      * array declared below). Shall be equal to the domain's max_vcpus.      */
+name|uint32_t
+name|nr_vcpus
+decl_stmt|;
+name|uint32_t
+name|pad
+decl_stmt|;
+comment|/* must be zero */
+comment|/*      * IN: array for specifying the distances of the vNUMA nodes      * between each others. Shall have nr_vnodes*nr_vnodes elements.      */
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|uint
+argument_list|)
+name|vdistance
+expr_stmt|;
+comment|/*      * IN: array for specifying to what vNUMA node each vCPU belongs.      * Shall have nr_vcpus elements.      */
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|uint
+argument_list|)
+name|vcpu_to_vnode
+expr_stmt|;
+comment|/*      * IN: array for specifying on what physical NUMA node each vNUMA      * node is placed. Shall have nr_vnodes elements.      */
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|uint
+argument_list|)
+name|vnode_to_pnode
+expr_stmt|;
+comment|/*      * IN: array for specifying the memory ranges. Shall have      * nr_vmemranges elements.      */
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|xen_vmemrange_t
+argument_list|)
+name|vmemrange
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_domctl_vnuma
+name|xen_domctl_vnuma_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_domctl_vnuma_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|xen_domctl_psr_cmt_op
+block|{
+define|#
+directive|define
+name|XEN_DOMCTL_PSR_CMT_OP_DETACH
+value|0
+define|#
+directive|define
+name|XEN_DOMCTL_PSR_CMT_OP_ATTACH
+value|1
+define|#
+directive|define
+name|XEN_DOMCTL_PSR_CMT_OP_QUERY_RMID
+value|2
+name|uint32_t
+name|cmd
+decl_stmt|;
+name|uint32_t
+name|data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_domctl_psr_cmt_op
+name|xen_domctl_psr_cmt_op_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_domctl_psr_cmt_op_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  XEN_DOMCTL_MONITOR_*  *  * Enable/disable monitoring various VM events.  * This domctl configures what events will be reported to helper apps  * via the ring buffer "MONITOR". The ring has to be first enabled  * with the domctl XEN_DOMCTL_VM_EVENT_OP_MONITOR.  *  * GET_CAPABILITIES can be used to determine which of these features is  * available on a given platform.  *  * NOTICE: mem_access events are also delivered via the "MONITOR" ring buffer;  * however, enabling/disabling those events is performed with the use of  * memory_op hypercalls!  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_DOMCTL_MONITOR_OP_ENABLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_DOMCTL_MONITOR_OP_DISABLE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_DOMCTL_MONITOR_OP_GET_CAPABILITIES
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_DOMCTL_MONITOR_EVENT_WRITE_CTRLREG
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_DOMCTL_MONITOR_EVENT_MOV_TO_MSR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_DOMCTL_MONITOR_EVENT_SINGLESTEP
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_DOMCTL_MONITOR_EVENT_SOFTWARE_BREAKPOINT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_DOMCTL_MONITOR_EVENT_GUEST_REQUEST
+value|4
+end_define
+
+begin_struct
+struct|struct
+name|xen_domctl_monitor_op
+block|{
+name|uint32_t
+name|op
+decl_stmt|;
+comment|/* XEN_DOMCTL_MONITOR_OP_* */
+comment|/*      * When used with ENABLE/DISABLE this has to be set to      * the requested XEN_DOMCTL_MONITOR_EVENT_* value.      * With GET_CAPABILITIES this field returns a bitmap of      * events supported by the platform, in the format      * (1<< XEN_DOMCTL_MONITOR_EVENT_*).      */
+name|uint32_t
+name|event
+decl_stmt|;
+comment|/*      * Further options when issuing XEN_DOMCTL_MONITOR_OP_ENABLE.      */
+union|union
+block|{
+struct|struct
+block|{
+comment|/* Which control register */
+name|uint8_t
+name|index
+decl_stmt|;
+comment|/* Pause vCPU until response */
+name|uint8_t
+name|sync
+decl_stmt|;
+comment|/* Send event only on a change of value */
+name|uint8_t
+name|onchangeonly
+decl_stmt|;
+block|}
+name|mov_to_cr
+struct|;
+struct|struct
+block|{
+comment|/* Enable the capture of an extended set of MSRs */
+name|uint8_t
+name|extended_capture
+decl_stmt|;
+block|}
+name|mov_to_msr
+struct|;
+struct|struct
+block|{
+comment|/* Pause vCPU until response */
+name|uint8_t
+name|sync
+decl_stmt|;
+block|}
+name|guest_request
+struct|;
+block|}
+name|u
+union|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_domctl_monitor_op
+name|xen_domctl_monitor_op_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_domctl_monitor_op_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|xen_domctl_psr_cat_op
+block|{
+define|#
+directive|define
+name|XEN_DOMCTL_PSR_CAT_OP_SET_L3_CBM
+value|0
+define|#
+directive|define
+name|XEN_DOMCTL_PSR_CAT_OP_GET_L3_CBM
+value|1
+name|uint32_t
+name|cmd
+decl_stmt|;
+comment|/* IN: XEN_DOMCTL_PSR_CAT_OP_* */
+name|uint32_t
+name|target
+decl_stmt|;
+comment|/* IN */
+name|uint64_t
+name|data
+decl_stmt|;
+comment|/* IN/OUT */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_domctl_psr_cat_op
+name|xen_domctl_psr_cat_op_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_domctl_psr_cat_op_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
 name|xen_domctl
 block|{
 name|uint32_t
@@ -2925,14 +3308,8 @@ define|#
 directive|define
 name|XEN_DOMCTL_getmemlist
 value|6
-define|#
-directive|define
-name|XEN_DOMCTL_getpageframeinfo
-value|7
-define|#
-directive|define
-name|XEN_DOMCTL_getpageframeinfo2
-value|8
+comment|/* #define XEN_DOMCTL_getpageframeinfo            7 Obsolete - use getpageframeinfo3 */
+comment|/* #define XEN_DOMCTL_getpageframeinfo2           8 Obsolete - use getpageframeinfo3 */
 define|#
 directive|define
 name|XEN_DOMCTL_setvcpuaffinity
@@ -2993,6 +3370,7 @@ define|#
 directive|define
 name|XEN_DOMCTL_arch_setup
 value|23
+comment|/* Obsolete IA64 only */
 define|#
 directive|define
 name|XEN_DOMCTL_settimeoffset
@@ -3005,6 +3383,7 @@ define|#
 directive|define
 name|XEN_DOMCTL_real_mode_area
 value|26
+comment|/* Obsolete PPC only */
 define|#
 directive|define
 name|XEN_DOMCTL_resumedomain
@@ -3065,6 +3444,7 @@ define|#
 directive|define
 name|XEN_DOMCTL_set_opt_feature
 value|44
+comment|/* Obsolete IA64 only */
 define|#
 directive|define
 name|XEN_DOMCTL_test_assign_device
@@ -3111,7 +3491,7 @@ name|XEN_DOMCTL_gethvmcontext_partial
 value|55
 define|#
 directive|define
-name|XEN_DOMCTL_mem_event_op
+name|XEN_DOMCTL_vm_event_op
 value|56
 define|#
 directive|define
@@ -3155,6 +3535,50 @@ name|XEN_DOMCTL_set_virq_handler
 value|66
 define|#
 directive|define
+name|XEN_DOMCTL_set_broken_page_p2m
+value|67
+define|#
+directive|define
+name|XEN_DOMCTL_setnodeaffinity
+value|68
+define|#
+directive|define
+name|XEN_DOMCTL_getnodeaffinity
+value|69
+define|#
+directive|define
+name|XEN_DOMCTL_set_max_evtchn
+value|70
+define|#
+directive|define
+name|XEN_DOMCTL_cacheflush
+value|71
+define|#
+directive|define
+name|XEN_DOMCTL_get_vcpu_msrs
+value|72
+define|#
+directive|define
+name|XEN_DOMCTL_set_vcpu_msrs
+value|73
+define|#
+directive|define
+name|XEN_DOMCTL_setvnumainfo
+value|74
+define|#
+directive|define
+name|XEN_DOMCTL_psr_cmt_op
+value|75
+define|#
+directive|define
+name|XEN_DOMCTL_monitor_op
+value|77
+define|#
+directive|define
+name|XEN_DOMCTL_psr_cat_op
+value|78
+define|#
+directive|define
 name|XEN_DOMCTL_gdbsx_guestmemio
 value|1000
 define|#
@@ -3191,16 +3615,12 @@ name|xen_domctl_getmemlist
 name|getmemlist
 decl_stmt|;
 name|struct
-name|xen_domctl_getpageframeinfo
-name|getpageframeinfo
-decl_stmt|;
-name|struct
-name|xen_domctl_getpageframeinfo2
-name|getpageframeinfo2
-decl_stmt|;
-name|struct
 name|xen_domctl_getpageframeinfo3
 name|getpageframeinfo3
+decl_stmt|;
+name|struct
+name|xen_domctl_nodeaffinity
+name|nodeaffinity
 decl_stmt|;
 name|struct
 name|xen_domctl_vcpuaffinity
@@ -3255,10 +3675,6 @@ name|xen_domctl_hypercall_init
 name|hypercall_init
 decl_stmt|;
 name|struct
-name|xen_domctl_arch_setup
-name|arch_setup
-decl_stmt|;
-name|struct
 name|xen_domctl_settimeoffset
 name|settimeoffset
 decl_stmt|;
@@ -3269,10 +3685,6 @@ decl_stmt|;
 name|struct
 name|xen_domctl_tsc_info
 name|tsc_info
-decl_stmt|;
-name|struct
-name|xen_domctl_real_mode_area
-name|real_mode_area
 decl_stmt|;
 name|struct
 name|xen_domctl_hvmcontext
@@ -3319,10 +3731,6 @@ name|xen_domctl_ext_vcpucontext
 name|ext_vcpucontext
 decl_stmt|;
 name|struct
-name|xen_domctl_set_opt_feature
-name|set_opt_feature
-decl_stmt|;
-name|struct
 name|xen_domctl_set_target
 name|set_target
 decl_stmt|;
@@ -3335,8 +3743,8 @@ name|xen_domctl_debug_op
 name|debug_op
 decl_stmt|;
 name|struct
-name|xen_domctl_mem_event_op
-name|mem_event_op
+name|xen_domctl_vm_event_op
+name|vm_event_op
 decl_stmt|;
 name|struct
 name|xen_domctl_mem_sharing_op
@@ -3361,6 +3769,10 @@ name|struct
 name|xen_domctl_vcpuextstate
 name|vcpuextstate
 decl_stmt|;
+name|struct
+name|xen_domctl_vcpu_msrs
+name|vcpu_msrs
+decl_stmt|;
 endif|#
 directive|endif
 name|struct
@@ -3376,8 +3788,20 @@ name|xen_domctl_set_virq_handler
 name|set_virq_handler
 decl_stmt|;
 name|struct
+name|xen_domctl_set_max_evtchn
+name|set_max_evtchn
+decl_stmt|;
+name|struct
 name|xen_domctl_gdbsx_memio
 name|gdbsx_guest_memio
+decl_stmt|;
+name|struct
+name|xen_domctl_set_broken_page_p2m
+name|set_broken_page_p2m
+decl_stmt|;
+name|struct
+name|xen_domctl_cacheflush
+name|cacheflush
 decl_stmt|;
 name|struct
 name|xen_domctl_gdbsx_pauseunp_vcpu
@@ -3386,6 +3810,22 @@ decl_stmt|;
 name|struct
 name|xen_domctl_gdbsx_domstatus
 name|gdbsx_domstatus
+decl_stmt|;
+name|struct
+name|xen_domctl_vnuma
+name|vnuma
+decl_stmt|;
+name|struct
+name|xen_domctl_psr_cmt_op
+name|psr_cmt_op
+decl_stmt|;
+name|struct
+name|xen_domctl_monitor_op
+name|monitor_op
+decl_stmt|;
+name|struct
+name|xen_domctl_psr_cat_op
+name|psr_cat_op
 decl_stmt|;
 name|uint8_t
 name|pad
@@ -3426,7 +3866,7 @@ comment|/* __XEN_PUBLIC_DOMCTL_H__ */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit

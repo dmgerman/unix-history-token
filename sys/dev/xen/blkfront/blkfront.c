@@ -673,7 +673,8 @@ name|grant_ref_t
 modifier|*
 name|sg_ref
 parameter_list|,
-name|blkif_request_segment_t
+name|struct
+name|blkif_request_segment
 modifier|*
 name|sg
 parameter_list|)
