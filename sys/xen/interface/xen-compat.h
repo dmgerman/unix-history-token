@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|__XEN_LATEST_INTERFACE_VERSION__
-value|0x00040200
+value|0x00040600
 end_define
 
 begin_if
@@ -58,15 +58,14 @@ argument_list|)
 end_elif
 
 begin_comment
-comment|/* Guests which do not specify a version get the legacy interface. */
+comment|/*  * The interface version is not set if and only if xen/xen-os.h is not  * included.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|__XEN_INTERFACE_VERSION__
-value|0x00000000
-end_define
+begin_error
+error|#
+directive|error
+literal|"Please include xen/xen-os.h"
+end_error
 
 begin_endif
 endif|#

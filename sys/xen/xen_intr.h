@@ -15,38 +15,11 @@ directive|define
 name|_XEN_INTR_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__XEN_EVTCHN_PORT_DEFINED__
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|uint32_t
-name|evtchn_port_t
-typedef|;
-end_typedef
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|evtchn_port_t
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|__XEN_EVTCHN_PORT_DEFINED__
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<xen/interface/event_channel.h>
+end_include
 
 begin_comment
 comment|/** Registered Xen interrupt callback handle. */

@@ -26,7 +26,7 @@ comment|/*  * Prototype for this hypercall is:  *   long callback_op(int cmd, vo
 end_comment
 
 begin_comment
-comment|/* ia64, x86: Callback for event delivery. */
+comment|/* x86: Callback for event delivery. */
 end_comment
 
 begin_define
@@ -241,7 +241,7 @@ comment|/* __XEN_PUBLIC_CALLBACK_H__ */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit

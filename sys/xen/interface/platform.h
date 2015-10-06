@@ -35,13 +35,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XENPF_settime
+name|XENPF_settime32
 value|17
 end_define
 
 begin_struct
 struct|struct
-name|xenpf_settime
+name|xenpf_settime32
 block|{
 comment|/* IN variables. */
 name|uint32_t
@@ -56,6 +56,80 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|XENPF_settime64
+value|62
+end_define
+
+begin_struct
+struct|struct
+name|xenpf_settime64
+block|{
+comment|/* IN variables. */
+name|uint64_t
+name|secs
+decl_stmt|;
+name|uint32_t
+name|nsecs
+decl_stmt|;
+name|uint32_t
+name|mbz
+decl_stmt|;
+name|uint64_t
+name|system_time
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_if
+if|#
+directive|if
+name|__XEN_INTERFACE_VERSION__
+operator|<
+literal|0x00040600
+end_if
+
+begin_define
+define|#
+directive|define
+name|XENPF_settime
+value|XENPF_settime32
+end_define
+
+begin_define
+define|#
+directive|define
+name|xenpf_settime
+value|xenpf_settime32
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|XENPF_settime
+value|XENPF_settime64
+end_define
+
+begin_define
+define|#
+directive|define
+name|xenpf_settime
+value|xenpf_settime64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -413,28 +487,6 @@ end_define
 
 begin_struct
 struct|struct
-name|xenpf_efi_runtime_call
-block|{
-name|uint32_t
-name|function
-decl_stmt|;
-comment|/*      * This field is generally used for per sub-function flags (defined      * below), except for the XEN_EFI_get_next_high_monotonic_count case,      * where it holds the single returned value.      */
-name|uint32_t
-name|misc
-decl_stmt|;
-name|unsigned
-name|long
-name|status
-decl_stmt|;
-union|union
-block|{
-define|#
-directive|define
-name|XEN_EFI_GET_TIME_SET_CLEARS_NS
-value|0x00000001
-struct|struct
-block|{
-struct|struct
 name|xenpf_efi_time
 block|{
 name|uint16_t
@@ -465,8 +517,58 @@ name|uint8_t
 name|daylight
 decl_stmt|;
 block|}
-name|time
 struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|xenpf_efi_guid
+block|{
+name|uint32_t
+name|data1
+decl_stmt|;
+name|uint16_t
+name|data2
+decl_stmt|;
+name|uint16_t
+name|data3
+decl_stmt|;
+name|uint8_t
+name|data4
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|xenpf_efi_runtime_call
+block|{
+name|uint32_t
+name|function
+decl_stmt|;
+comment|/*      * This field is generally used for per sub-function flags (defined      * below), except for the XEN_EFI_get_next_high_monotonic_count case,      * where it holds the single returned value.      */
+name|uint32_t
+name|misc
+decl_stmt|;
+name|xen_ulong_t
+name|status
+decl_stmt|;
+union|union
+block|{
+define|#
+directive|define
+name|XEN_EFI_GET_TIME_SET_CLEARS_NS
+value|0x00000001
+struct|struct
+block|{
+name|struct
+name|xenpf_efi_time
+name|time
+decl_stmt|;
 name|uint32_t
 name|resolution
 decl_stmt|;
@@ -525,8 +627,7 @@ argument_list|)
 name|name
 expr_stmt|;
 comment|/* UCS-2/UTF-16 string */
-name|unsigned
-name|long
+name|xen_ulong_t
 name|size
 decl_stmt|;
 name|XEN_GUEST_HANDLE
@@ -535,27 +636,10 @@ argument|void
 argument_list|)
 name|data
 expr_stmt|;
-struct|struct
+name|struct
 name|xenpf_efi_guid
-block|{
-name|uint32_t
-name|data1
-decl_stmt|;
-name|uint16_t
-name|data2
-decl_stmt|;
-name|uint16_t
-name|data3
-decl_stmt|;
-name|uint8_t
-name|data4
-index|[
-literal|8
-index|]
-decl_stmt|;
-block|}
 name|vendor_guid
-struct|;
+decl_stmt|;
 block|}
 name|get_variable
 struct|,
@@ -563,8 +647,7 @@ name|set_variable
 struct|;
 struct|struct
 block|{
-name|unsigned
-name|long
+name|xen_ulong_t
 name|size
 decl_stmt|;
 name|XEN_GUEST_HANDLE
@@ -581,6 +664,10 @@ decl_stmt|;
 block|}
 name|get_next_variable_name
 struct|;
+define|#
+directive|define
+name|XEN_EFI_VARINFO_BOOT_SNAPSHOT
+value|0x00000001
 struct|struct
 block|{
 name|uint32_t
@@ -606,15 +693,13 @@ argument|void
 argument_list|)
 name|capsule_header_array
 expr_stmt|;
-name|unsigned
-name|long
+name|xen_ulong_t
 name|capsule_count
 decl_stmt|;
 name|uint64_t
 name|max_capsule_size
 decl_stmt|;
-name|unsigned
-name|int
+name|uint32_t
 name|reset_type
 decl_stmt|;
 block|}
@@ -628,8 +713,7 @@ argument|void
 argument_list|)
 name|capsule_header_array
 expr_stmt|;
-name|unsigned
-name|long
+name|xen_ulong_t
 name|capsule_count
 decl_stmt|;
 name|uint64_t
@@ -746,6 +830,20 @@ define|#
 directive|define
 name|XEN_FW_EFI_RT_VERSION
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_FW_EFI_PCI_ROM
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_FW_KBD_SHIFT_FLAGS
+value|5
 end_define
 
 begin_struct
@@ -890,10 +988,43 @@ decl_stmt|;
 block|}
 name|mem
 struct|;
+struct|struct
+block|{
+comment|/* IN variables */
+name|uint16_t
+name|segment
+decl_stmt|;
+name|uint8_t
+name|bus
+decl_stmt|;
+name|uint8_t
+name|devfn
+decl_stmt|;
+name|uint16_t
+name|vendor
+decl_stmt|;
+name|uint16_t
+name|devid
+decl_stmt|;
+comment|/* OUT variables */
+name|uint64_t
+name|address
+decl_stmt|;
+name|xen_ulong_t
+name|size
+decl_stmt|;
+block|}
+name|pci_rom
+struct|;
 block|}
 name|efi_info
 union|;
 comment|/* XEN_FW_EFI_INFO */
+comment|/* Int16, Fn02: Get keyboard shift flags. */
+name|uint8_t
+name|kbd_shift_flags
+decl_stmt|;
+comment|/* XEN_FW_KBD_SHIFT_FLAGS */
 block|}
 name|u
 union|;
@@ -929,6 +1060,11 @@ struct|struct
 name|xenpf_enter_acpi_sleep
 block|{
 comment|/* IN variables */
+if|#
+directive|if
+name|__XEN_INTERFACE_VERSION__
+operator|<
+literal|0x00040300
 name|uint16_t
 name|pm1a_cnt_val
 decl_stmt|;
@@ -937,14 +1073,30 @@ name|uint16_t
 name|pm1b_cnt_val
 decl_stmt|;
 comment|/* PM1b control value. */
+else|#
+directive|else
+name|uint16_t
+name|val_a
+decl_stmt|;
+comment|/* PM1a control / sleep type A. */
+name|uint16_t
+name|val_b
+decl_stmt|;
+comment|/* PM1b control / sleep type B. */
+endif|#
+directive|endif
 name|uint32_t
 name|sleep_state
 decl_stmt|;
 comment|/* Which state to enter (Sn). */
+define|#
+directive|define
+name|XENPF_ACPI_SLEEP_EXTENDED
+value|0x00000001
 name|uint32_t
 name|flags
 decl_stmt|;
-comment|/* Must be zero. */
+comment|/* XENPF_ACPI_SLEEP_*. */
 block|}
 struct|;
 end_struct
@@ -1806,6 +1958,179 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Access generic platform resources(e.g., accessing MSR, port I/O, etc)  * in unified way. Batch resource operations in one call are supported and  * they are always non-preemptible and executed in their original order.  * The batch itself returns a negative integer for general errors, or a  * non-negative integer for the number of successful operations. For the latter  * case, the @ret in the failed entry (if any) indicates the exact error.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENPF_resource_op
+value|61
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_RESOURCE_OP_MSR_READ
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_RESOURCE_OP_MSR_WRITE
+value|1
+end_define
+
+begin_comment
+comment|/*  * Specially handled MSRs:  * - MSR_IA32_TSC  * READ: Returns the scaled system time(ns) instead of raw timestamp. In  *       multiple entry case, if other MSR read is followed by a MSR_IA32_TSC  *       read, then both reads are guaranteed to be performed atomically (with  *       IRQ disabled). The return time indicates the point of reading that MSR.  * WRITE: Not supported.  */
+end_comment
+
+begin_struct
+struct|struct
+name|xenpf_resource_entry
+block|{
+union|union
+block|{
+name|uint32_t
+name|cmd
+decl_stmt|;
+comment|/* IN: XEN_RESOURCE_OP_* */
+name|int32_t
+name|ret
+decl_stmt|;
+comment|/* OUT: return value for failed entry */
+block|}
+name|u
+union|;
+name|uint32_t
+name|rsvd
+decl_stmt|;
+comment|/* IN: padding and must be zero */
+name|uint64_t
+name|idx
+decl_stmt|;
+comment|/* IN: resource address to access */
+name|uint64_t
+name|val
+decl_stmt|;
+comment|/* IN/OUT: resource value to set/get */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xenpf_resource_entry
+name|xenpf_resource_entry_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xenpf_resource_entry_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|xenpf_resource_op
+block|{
+name|uint32_t
+name|nr_entries
+decl_stmt|;
+comment|/* number of resource entry */
+name|uint32_t
+name|cpu
+decl_stmt|;
+comment|/* which cpu to run */
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|xenpf_resource_entry_t
+argument_list|)
+name|entries
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xenpf_resource_op
+name|xenpf_resource_op_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xenpf_resource_op_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|XENPF_get_symbol
+value|63
+end_define
+
+begin_struct
+struct|struct
+name|xenpf_symdata
+block|{
+comment|/* IN/OUT variables */
+name|uint32_t
+name|namelen
+decl_stmt|;
+comment|/* IN:  size of name buffer                       */
+comment|/* OUT: strlen(name) of hypervisor symbol (may be */
+comment|/*      larger than what's been copied to guest)  */
+name|uint32_t
+name|symnum
+decl_stmt|;
+comment|/* IN:  Symbol to read                            */
+comment|/* OUT: Next available symbol. If same as IN then */
+comment|/*      we reached the end                        */
+comment|/* OUT variables */
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|char
+argument_list|)
+name|name
+expr_stmt|;
+name|uint64_t
+name|address
+decl_stmt|;
+name|char
+name|type
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xenpf_symdata
+name|xenpf_symdata_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xenpf_symdata_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * ` enum neg_errnoval  * ` HYPERVISOR_platform_op(const struct xen_platform_op*);  */
 end_comment
 
@@ -1825,6 +2150,14 @@ block|{
 name|struct
 name|xenpf_settime
 name|settime
+decl_stmt|;
+name|struct
+name|xenpf_settime32
+name|settime32
+decl_stmt|;
+name|struct
+name|xenpf_settime64
+name|settime64
 decl_stmt|;
 name|struct
 name|xenpf_add_memtype
@@ -1894,6 +2227,14 @@ name|struct
 name|xenpf_core_parking
 name|core_parking
 decl_stmt|;
+name|struct
+name|xenpf_resource_op
+name|resource_op
+decl_stmt|;
+name|struct
+name|xenpf_symdata
+name|symdata
+decl_stmt|;
 name|uint8_t
 name|pad
 index|[
@@ -1933,7 +2274,7 @@ comment|/* __XEN_PUBLIC_PLATFORM_H__ */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit

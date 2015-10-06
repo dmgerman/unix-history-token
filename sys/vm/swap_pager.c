@@ -1209,23 +1209,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function_decl
-specifier|static
-name|void
-name|swapdev_strategy
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-parameter_list|,
-name|struct
-name|swdevt
-modifier|*
-name|sw
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -4580,6 +4563,7 @@ comment|/*  *	swap_pager_putpages:  *  *	Assign swap (if necessary) and initiate
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|swap_pager_putpages
 parameter_list|(

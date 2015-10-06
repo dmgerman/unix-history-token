@@ -1164,7 +1164,7 @@ name|uint32_t
 name|flags
 decl_stmt|;
 name|struct
-name|xenctl_cpumap
+name|xenctl_bitmap
 name|cpumap
 decl_stmt|;
 block|}

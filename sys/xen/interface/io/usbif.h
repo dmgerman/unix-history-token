@@ -27,6 +27,10 @@ directive|include
 file|"../grant_table.h"
 end_include
 
+begin_comment
+comment|/*  * Feature and Parameter Negotiation  * =================================  * The two halves of a Xen pvUSB driver utilize nodes within the XenStore to  * communicate capabilities and to negotiate operating parameters. This  * section enumerates these nodes which reside in the respective front and  * backend portions of the XenStore, following the XenBus convention.  *  * Any specified default value is in effect if the corresponding XenBus node  * is not present in the XenStore.  *  * XenStore nodes in sections marked "PRIVATE" are solely for use by the  * driver side whose XenBus tree contains them.  *  *****************************************************************************  *                            Backend XenBus Nodes  *****************************************************************************  *  *------------------ Backend Device Identification (PRIVATE) ------------------  *  * num-ports  *      Values:         unsigned [1...31]  *  *      Number of ports for this (virtual) USB host connector.  *  * usb-ver  *      Values:         unsigned [1...2]  *  *      USB version of this host connector: 1 = USB 1.1, 2 = USB 2.0.  *  * port/[1...31]  *      Values:         string  *  *      Physical USB device connected to the given port, e.g. "3-1.5".  *  *****************************************************************************  *                            Frontend XenBus Nodes  *****************************************************************************  *  *----------------------- Request Transport Parameters -----------------------  *  * event-channel  *      Values:         unsigned  *  *      The identifier of the Xen event channel used to signal activity  *      in the ring buffer.  *  * urb-ring-ref  *      Values:         unsigned  *  *      The Xen grant reference granting permission for the backend to map  *      the sole page in a single page sized ring buffer. This is the ring  *      buffer for urb requests.  *  * conn-ring-ref  *      Values:         unsigned  *  *      The Xen grant reference granting permission for the backend to map  *      the sole page in a single page sized ring buffer. This is the ring  *      buffer for connection/disconnection requests.  *  * protocol  *      Values:         string (XEN_IO_PROTO_ABI_*)  *      Default Value:  XEN_IO_PROTO_ABI_NATIVE  *  *      The machine ABI rules governing the format of all ring request and  *      response structures.  *  */
+end_comment
+
 begin_enum
 enum|enum
 name|usb_spec_version
@@ -47,8 +51,99 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  *  USB pipe in usbif_request  *  *  bits 0-5 are specific bits for virtual USB driver.  *  bits 7-31 are standard urb pipe.  *  *  - port number(NEW):	bits 0-4  *  				(USB_MAXCHILDREN is 31)  *  *  - operation flag(NEW):	bit 5  *  				(0 = submit urb,  *  				 1 = unlink urb)  *  *  - direction:		bit 7  *  				(0 = Host-to-Device [Out]  *                           1 = Device-to-Host [In])  *  *  - device address:	bits 8-14  *  *  - endpoint:		bits 15-18  *  *  - pipe type:		bits 30-31  *  				(00 = isochronous, 01 = interrupt,  *                           10 = control, 11 = bulk)  */
+comment|/*  *  USB pipe in usbif_request  *  *  - port number:	bits 0-4  *				(USB_MAXCHILDREN is 31)  *  *  - operation flag:	bit 5  *				(0 = submit urb,  *				 1 = unlink urb)  *  *  - direction:		bit 7  *				(0 = Host-to-Device [Out]  *				 1 = Device-to-Host [In])  *  *  - device address:	bits 8-14  *  *  - endpoint:		bits 15-18  *  *  - pipe type:	bits 30-31  *				(00 = isochronous, 01 = interrupt,  *				 10 = control, 11 = bulk)  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|USBIF_PIPE_PORT_MASK
+value|0x0000001f
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBIF_PIPE_UNLINK
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBIF_PIPE_DIR
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBIF_PIPE_DEV_MASK
+value|0x0000007f
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBIF_PIPE_DEV_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBIF_PIPE_EP_MASK
+value|0x0000000f
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBIF_PIPE_EP_SHIFT
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBIF_PIPE_TYPE_MASK
+value|0x00000003
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBIF_PIPE_TYPE_SHIFT
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBIF_PIPE_TYPE_ISOC
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBIF_PIPE_TYPE_INT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBIF_PIPE_TYPE_CTRL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBIF_PIPE_TYPE_BULK
+value|3
+end_define
 
 begin_define
 define|#
@@ -57,7 +152,7 @@ name|usbif_pipeportnum
 parameter_list|(
 name|pipe
 parameter_list|)
-value|((pipe)& 0x1f)
+value|((pipe)& USBIF_PIPE_PORT_MASK)
 end_define
 
 begin_define
@@ -69,8 +164,7 @@ name|pipe
 parameter_list|,
 name|portnum
 parameter_list|)
-define|\
-value|((pipe)|(portnum))
+value|((pipe) | (portnum))
 end_define
 
 begin_define
@@ -80,7 +174,7 @@ name|usbif_pipeunlink
 parameter_list|(
 name|pipe
 parameter_list|)
-value|((pipe)& 0x20)
+value|((pipe)& USBIF_PIPE_UNLINK)
 end_define
 
 begin_define
@@ -100,14 +194,100 @@ name|usbif_setunlink_pipe
 parameter_list|(
 name|pipe
 parameter_list|)
-value|((pipe)|(0x20))
+value|((pipe) | USBIF_PIPE_UNLINK)
 end_define
 
 begin_define
 define|#
 directive|define
-name|USBIF_BACK_MAX_PENDING_REQS
-value|(128)
+name|usbif_pipein
+parameter_list|(
+name|pipe
+parameter_list|)
+value|((pipe)& USBIF_PIPE_DIR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|usbif_pipeout
+parameter_list|(
+name|pipe
+parameter_list|)
+value|(!usbif_pipein(pipe))
+end_define
+
+begin_define
+define|#
+directive|define
+name|usbif_pipedevice
+parameter_list|(
+name|pipe
+parameter_list|)
+define|\
+value|(((pipe)>> USBIF_PIPE_DEV_SHIFT)& USBIF_PIPE_DEV_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|usbif_pipeendpoint
+parameter_list|(
+name|pipe
+parameter_list|)
+define|\
+value|(((pipe)>> USBIF_PIPE_EP_SHIFT)& USBIF_PIPE_EP_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|usbif_pipetype
+parameter_list|(
+name|pipe
+parameter_list|)
+define|\
+value|(((pipe)>> USBIF_PIPE_TYPE_SHIFT)& USBIF_PIPE_TYPE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|usbif_pipeisoc
+parameter_list|(
+name|pipe
+parameter_list|)
+value|(usbif_pipetype(pipe) == USBIF_PIPE_TYPE_ISOC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|usbif_pipeint
+parameter_list|(
+name|pipe
+parameter_list|)
+value|(usbif_pipetype(pipe) == USBIF_PIPE_TYPE_INT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|usbif_pipectrl
+parameter_list|(
+name|pipe
+parameter_list|)
+value|(usbif_pipetype(pipe) == USBIF_PIPE_TYPE_CTRL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|usbif_pipebulk
+parameter_list|(
+name|pipe
+parameter_list|)
+value|(usbif_pipetype(pipe) == USBIF_PIPE_TYPE_BULK)
 end_define
 
 begin_define
@@ -115,6 +295,13 @@ define|#
 directive|define
 name|USBIF_MAX_SEGMENTS_PER_REQUEST
 value|(16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBIF_MAX_PORTNR
+value|31
 end_define
 
 begin_comment
@@ -339,6 +526,22 @@ name|uint8_t
 name|speed
 decl_stmt|;
 comment|/* usb_device_speed */
+define|#
+directive|define
+name|USBIF_SPEED_NONE
+value|0
+define|#
+directive|define
+name|USBIF_SPEED_LOW
+value|1
+define|#
+directive|define
+name|USBIF_SPEED_FULL
+value|2
+define|#
+directive|define
+name|USBIF_SPEED_HIGH
+value|3
 block|}
 struct|;
 end_struct

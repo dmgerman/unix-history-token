@@ -16,6 +16,10 @@ name|__XEN_PUBLIC_FEATURES_H__
 end_define
 
 begin_comment
+comment|/*  * `incontents 200 elfnotes_features XEN_ELFNOTE_FEATURES  *  * The list of all the features the guest supports. They are set by  * parsing the XEN_ELFNOTE_FEATURES and XEN_ELFNOTE_SUPPORTED_FEATURES  * string. The format is the  feature names (as given here without the  * "XENFEAT_" prefix) separated by '|' characters.  * If a feature is required for the kernel to function then the feature name  * must be preceded by a '!' character.  *  * Note that if XEN_ELFNOTE_SUPPORTED_FEATURES is used, then in the  * XENFEAT_dom0 MUST be set if the guest is to be booted as dom0,  */
+end_comment
+
+begin_comment
 comment|/*  * If set, the guest does not need to write-protect its pagetables, and can  * update them via direct writes.  */
 end_comment
 
@@ -147,6 +151,21 @@ name|XENFEAT_dom0
 value|11
 end_define
 
+begin_comment
+comment|/* Xen also maps grant references at pfn = mfn.  * This feature flag is deprecated and should not be used. #define XENFEAT_grant_map_identity        12  */
+end_comment
+
+begin_comment
+comment|/* Guest can use XENMEMF_vnode to specify virtual node for memory op. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENFEAT_memory_op_vnode_supported
+value|13
+end_define
+
 begin_define
 define|#
 directive|define
@@ -164,7 +183,7 @@ comment|/* __XEN_PUBLIC_FEATURES_H__ */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit
