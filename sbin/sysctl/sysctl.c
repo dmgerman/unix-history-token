@@ -1205,6 +1205,25 @@ operator|)
 return|;
 else|else
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"unknown oid '%s'%s"
+argument_list|,
+name|bufp
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|warn
 argument_list|(
 literal|"unknown oid '%s'%s"
@@ -1214,6 +1233,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|1
