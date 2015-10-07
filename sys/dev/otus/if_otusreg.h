@@ -6114,7 +6114,6 @@ name|buflen
 decl_stmt|;
 name|void
 modifier|*
-modifier|*
 name|odata
 decl_stmt|;
 name|uint16_t
