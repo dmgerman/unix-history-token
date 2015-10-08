@@ -1434,6 +1434,13 @@ argument_list|)
 block|,
 name|RUN_DEV
 argument_list|(
+name|NETGEAR
+argument_list|,
+name|WNDA4100
+argument_list|)
+block|,
+name|RUN_DEV
+argument_list|(
 name|OVISLINK
 argument_list|,
 name|RT3072
