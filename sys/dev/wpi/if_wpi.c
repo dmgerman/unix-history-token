@@ -14651,6 +14651,10 @@ operator|->
 name|i_addr1
 argument_list|)
 expr_stmt|;
+name|swcrypt
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Select EDCA Access Category and TX ring for this frame. */
 if|if
 condition|(
@@ -15193,10 +15197,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|k
-operator|!=
-name|NULL
-operator|&&
 operator|!
 name|swcrypt
 condition|)
@@ -15466,6 +15466,10 @@ literal|0
 index|]
 operator|&
 name|IEEE80211_FC0_TYPE_MASK
+expr_stmt|;
+name|swcrypt
+operator|=
+literal|1
 expr_stmt|;
 name|ac
 operator|=
@@ -15744,10 +15748,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|k
-operator|!=
-name|NULL
-operator|&&
 operator|!
 name|swcrypt
 condition|)
