@@ -164,10 +164,6 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|data_dmat
 decl_stmt|;
-name|struct
-name|mbufq
-name|snd
-decl_stmt|;
 name|int
 name|qid
 decl_stmt|;
@@ -588,9 +584,6 @@ name|struct
 name|callout
 name|calib_to
 decl_stmt|;
-name|int
-name|calib_cnt
-decl_stmt|;
 name|struct
 name|callout
 name|scan_timeout
@@ -649,9 +642,6 @@ name|rxon_mtx
 decl_stmt|;
 name|int
 name|temp
-decl_stmt|;
-name|uint32_t
-name|qfullmsk
 decl_stmt|;
 name|uint32_t
 name|nodesmsk
@@ -729,10 +719,6 @@ decl_stmt|;
 name|struct
 name|task
 name|sc_radioon_task
-decl_stmt|;
-name|struct
-name|task
-name|sc_start_task
 decl_stmt|;
 comment|/* Taskqueue */
 name|struct
