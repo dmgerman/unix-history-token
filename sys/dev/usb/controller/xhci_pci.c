@@ -857,6 +857,10 @@ case|case
 literal|0x01941033
 case|:
 comment|/* NEC uPD720200 USB 3.0 controller */
+case|case
+literal|0x00141912
+case|:
+comment|/* NEC uPD720201 USB 3.0 controller */
 comment|/* Don't use 64-bit DMA on these controllers. */
 name|usedma32
 operator|=
