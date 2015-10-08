@@ -526,13 +526,6 @@ name|int
 name|sc_debug
 decl_stmt|;
 name|int
-name|sc_flags
-decl_stmt|;
-define|#
-directive|define
-name|WPI_PS_PATH
-value|(1<< 0)
-name|int
 name|sc_running
 decl_stmt|;
 name|struct
