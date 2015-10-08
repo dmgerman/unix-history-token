@@ -612,6 +612,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|suspend_blocked
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|suspend_blocked
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|suspend_blocked
+argument_list|,
+literal|0
+argument_list|,
+literal|"Block suspend due to a pending shutdown"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Variable panicstr contains argument to first call to panic; used as flag  * to indicate that the kernel has already called panic.  */
 end_comment

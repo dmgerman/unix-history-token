@@ -69,6 +69,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|suspend_blocked
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* block suspend due to pending shutdown */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|rebooting
 decl_stmt|;
 end_decl_stmt
