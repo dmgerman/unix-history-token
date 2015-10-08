@@ -527,6 +527,19 @@ argument_list|,
 name|UQ_CFG_INDEX_1
 argument_list|)
 block|,
+name|USB_QUIRK
+argument_list|(
+name|CISCOLINKSYS
+argument_list|,
+name|USB3GIGV1
+argument_list|,
+literal|0x0000
+argument_list|,
+literal|0xffff
+argument_list|,
+name|UQ_CFG_INDEX_1
+argument_list|)
+block|,
 comment|/* Quirks for printer devices */
 name|USB_QUIRK
 argument_list|(
