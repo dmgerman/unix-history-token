@@ -10290,11 +10290,14 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|stat
 operator|->
 name|len
 operator|>
 name|WPI_STAT_MAXLEN
+argument_list|)
 condition|)
 block|{
 name|device_printf
@@ -10506,9 +10509,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|m1
 operator|==
 name|NULL
+argument_list|)
 condition|)
 block|{
 name|DPRINTF
@@ -10569,6 +10575,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|error
 operator|!=
 literal|0
@@ -10576,6 +10584,7 @@ operator|&&
 name|error
 operator|!=
 name|EFBIG
+argument_list|)
 condition|)
 block|{
 name|device_printf
@@ -11944,11 +11953,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|sc
 operator|->
 name|sc_running
 operator|==
 literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* wpi_stop() was called. */
@@ -13470,6 +13482,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|r1
 operator|==
 literal|0xffffffff
@@ -13481,6 +13495,7 @@ literal|0xfffffff0
 operator|)
 operator|==
 literal|0xa5a5a5a0
+argument_list|)
 condition|)
 goto|goto
 name|end
@@ -13545,6 +13560,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|r1
 operator|&
 operator|(
@@ -13552,6 +13569,7 @@ name|WPI_INT_SW_ERR
 operator||
 name|WPI_INT_HW_ERR
 operator|)
+argument_list|)
 condition|)
 block|{
 name|device_printf
@@ -13664,9 +13682,12 @@ label|:
 comment|/* Re-enable interrupts. */
 if|if
 condition|(
+name|__predict_true
+argument_list|(
 name|sc
 operator|->
 name|sc_running
+argument_list|)
 condition|)
 name|WPI_WRITE
 argument_list|(
@@ -13791,11 +13812,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|sc
 operator|->
 name|sc_running
 operator|==
 literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* wpi_stop() was called */
@@ -14119,9 +14143,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|error
 operator|!=
 literal|0
+argument_list|)
 condition|)
 block|{
 name|device_printf
@@ -16205,11 +16232,14 @@ expr_stmt|;
 comment|/* Check if interface is up& running. */
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|sc
 operator|->
 name|sc_running
 operator|==
 literal|0
+argument_list|)
 condition|)
 block|{
 name|error
@@ -16668,11 +16698,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|sc
 operator|->
 name|sc_running
 operator|==
 literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* wpi_stop() was called */
