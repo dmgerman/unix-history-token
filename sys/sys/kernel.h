@@ -166,16 +166,6 @@ init|=
 literal|0x0800001
 block|,
 comment|/* first use of console*/
-name|SI_SUB_SETTINGS
-init|=
-literal|0x0880000
-block|,
-comment|/* check and recheck settings */
-name|SI_SUB_MTX_POOL_STATIC
-init|=
-literal|0x0900000
-block|,
-comment|/* static mutex pool */
 name|SI_SUB_VM
 init|=
 literal|0x1000000
@@ -291,11 +281,6 @@ init|=
 literal|0x2490000
 block|,
 comment|/* OpenSolaris compatibility */
-name|SI_SUB_CYCLIC
-init|=
-literal|0x24A0000
-block|,
-comment|/* Cyclic timers */
 name|SI_SUB_AUDIT
 init|=
 literal|0x24C0000
@@ -326,11 +311,6 @@ init|=
 literal|0x2800001
 block|,
 comment|/* start soft interrupt thread */
-name|SI_SUB_ACL
-init|=
-literal|0x2900000
-block|,
-comment|/* start for filesystem ACLs */
 name|SI_SUB_DEVFS
 init|=
 literal|0x2F00000
@@ -461,21 +441,6 @@ init|=
 literal|0xb000000
 block|,
 comment|/* Find root devices */
-name|SI_SUB_DUMP_CONF
-init|=
-literal|0xb200000
-block|,
-comment|/* Find dump devices */
-name|SI_SUB_RAID
-init|=
-literal|0xb380000
-block|,
-comment|/* Configure GEOM classes */
-name|SI_SUB_SWAP
-init|=
-literal|0xc000000
-block|,
-comment|/* swap */
 name|SI_SUB_INTRINSIC_POST
 init|=
 literal|0xd000000
