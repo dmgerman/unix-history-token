@@ -365,6 +365,10 @@ begin_comment
 comment|/* resources (memory, whatever) unavailable */
 end_comment
 
+begin_comment
+comment|/*  * Note that all iicbus functions return IIC_Exxxxx status values,  * except iic2errno() (obviously) and iicbus_started() (returns bool).  */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|int

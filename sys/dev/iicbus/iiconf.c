@@ -684,10 +684,10 @@ name|started
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|IIC_ESTATUS
 operator|)
 return|;
-comment|/* bus already started */
+comment|/* protocol error, bus already started */
 if|if
 condition|(
 operator|!
@@ -775,10 +775,10 @@ name|started
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|IIC_ESTATUS
 operator|)
 return|;
-comment|/* bus should have been already started */
+comment|/* protocol error, bus not started */
 if|if
 condition|(
 operator|!
@@ -860,10 +860,10 @@ name|started
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|IIC_ESTATUS
 operator|)
 return|;
-comment|/* bus not started */
+comment|/* protocol error, bus not started */
 name|error
 operator|=
 name|IICBUS_STOP
@@ -960,7 +960,7 @@ operator|)
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|IIC_ESTATUS
 operator|)
 return|;
 return|return
@@ -1058,7 +1058,7 @@ operator|)
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|IIC_ESTATUS
 operator|)
 return|;
 return|return
@@ -1103,6 +1103,16 @@ name|int
 name|timeout
 parameter_list|)
 block|{
+name|struct
+name|iicbus_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|bus
+argument_list|)
+decl_stmt|;
 name|char
 name|data
 init|=
@@ -1111,6 +1121,38 @@ decl_stmt|;
 name|int
 name|sent
 decl_stmt|;
+comment|/* a slave must have been started for writing */
+if|if
+condition|(
+name|sc
+operator|->
+name|started
+operator|==
+literal|0
+operator|||
+operator|(
+name|sc
+operator|->
+name|strict
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|sc
+operator|->
+name|started
+operator|&
+name|LSB
+operator|)
+operator|!=
+literal|0
+operator|)
+condition|)
+return|return
+operator|(
+name|IIC_ESTATUS
+operator|)
+return|;
 return|return
 operator|(
 name|iicbus_write
@@ -1151,9 +1193,51 @@ name|int
 name|timeout
 parameter_list|)
 block|{
+name|struct
+name|iicbus_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|bus
+argument_list|)
+decl_stmt|;
 name|int
 name|read
 decl_stmt|;
+comment|/* a slave must have been started for reading */
+if|if
+condition|(
+name|sc
+operator|->
+name|started
+operator|==
+literal|0
+operator|||
+operator|(
+name|sc
+operator|->
+name|strict
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|sc
+operator|->
+name|started
+operator|&
+name|LSB
+operator|)
+operator|==
+literal|0
+operator|)
+condition|)
+return|return
+operator|(
+name|IIC_ESTATUS
+operator|)
+return|;
 return|return
 operator|(
 name|iicbus_read
@@ -1450,7 +1534,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|error
+name|IIC_ERESOURCE
 operator|)
 return|;
 if|if
@@ -1469,7 +1553,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EIO
+name|IIC_ENOTSUPP
 operator|)
 return|;
 block|}
