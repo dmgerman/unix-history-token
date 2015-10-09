@@ -354,6 +354,27 @@ begin_comment
 comment|/* no address assigned to the interface */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IIC_ERESOURCE
+value|0xa
+end_define
+
+begin_comment
+comment|/* resources (memory, whatever) unavailable */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|iic2errno
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 specifier|extern
 name|int
