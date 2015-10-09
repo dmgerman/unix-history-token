@@ -1003,6 +1003,10 @@ name|file
 operator|=
 name|unknown
 expr_stmt|;
+name|die
+operator|=
+name|NULL
+expr_stmt|;
 name|lbuf
 operator|=
 name|NULL
