@@ -3433,15 +3433,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|root_mount_wait
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|root_mounted
 parameter_list|(
