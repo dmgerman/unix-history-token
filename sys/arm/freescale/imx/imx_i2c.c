@@ -1309,7 +1309,7 @@ name|I2CSR_MAL
 condition|)
 return|return
 operator|(
-name|IIC_EBUSBSY
+name|IIC_EBUSERR
 operator|)
 return|;
 elseif|else
@@ -1764,7 +1764,7 @@ name|i2c_error_handler
 argument_list|(
 name|sc
 argument_list|,
-name|IIC_EBUSBSY
+name|IIC_EBUSERR
 argument_list|)
 operator|)
 return|;

@@ -263,7 +263,7 @@ value|0x1
 end_define
 
 begin_comment
-comment|/* bus error */
+comment|/* bus error (hardware not in expected state) */
 end_comment
 
 begin_define
@@ -296,7 +296,7 @@ value|0x4
 end_define
 
 begin_comment
-comment|/* bus busy */
+comment|/* bus busy (reserved by another client) */
 end_comment
 
 begin_define
