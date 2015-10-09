@@ -76,9 +76,12 @@ name|MCAsmParserExtension
 block|{
 name|MCAsmParserExtension
 argument_list|(
-argument|const MCAsmParserExtension&
+specifier|const
+name|MCAsmParserExtension
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -88,7 +91,8 @@ specifier|const
 name|MCAsmParserExtension
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|MCAsmParser
 modifier|*
@@ -177,7 +181,7 @@ modifier|&
 name|Parser
 parameter_list|)
 function_decl|;
-comment|/// @name MCAsmParser Proxy Interfaces
+comment|/// \name MCAsmParser Proxy Interfaces
 comment|/// @{
 name|MCContext
 modifier|&

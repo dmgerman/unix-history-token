@@ -154,9 +154,12 @@ name|ScratchBuf
 expr_stmt|;
 name|TokenRewriter
 argument_list|(
-argument|const TokenRewriter&
+specifier|const
+name|TokenRewriter
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -166,7 +169,8 @@ specifier|const
 name|TokenRewriter
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:

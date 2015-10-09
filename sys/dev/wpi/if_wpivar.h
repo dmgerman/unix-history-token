@@ -164,10 +164,6 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|data_dmat
 decl_stmt|;
-name|struct
-name|mbufq
-name|snd
-decl_stmt|;
 name|int
 name|qid
 decl_stmt|;
@@ -530,13 +526,6 @@ name|int
 name|sc_debug
 decl_stmt|;
 name|int
-name|sc_flags
-decl_stmt|;
-define|#
-directive|define
-name|WPI_PS_PATH
-value|(1<< 0)
-name|int
 name|sc_running
 decl_stmt|;
 name|struct
@@ -587,9 +576,6 @@ comment|/* TX Thermal Callibration. */
 name|struct
 name|callout
 name|calib_to
-decl_stmt|;
-name|int
-name|calib_cnt
 decl_stmt|;
 name|struct
 name|callout
@@ -649,9 +635,6 @@ name|rxon_mtx
 decl_stmt|;
 name|int
 name|temp
-decl_stmt|;
-name|uint32_t
-name|qfullmsk
 decl_stmt|;
 name|uint32_t
 name|nodesmsk
@@ -729,10 +712,6 @@ decl_stmt|;
 name|struct
 name|task
 name|sc_radioon_task
-decl_stmt|;
-name|struct
-name|task
-name|sc_start_task
 decl_stmt|;
 comment|/* Taskqueue */
 name|struct

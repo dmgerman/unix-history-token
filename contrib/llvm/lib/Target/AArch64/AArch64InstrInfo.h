@@ -286,7 +286,7 @@ argument_list|)
 specifier|const
 block|;
 name|bool
-name|getLdStBaseRegImmOfs
+name|getMemOpBaseRegImmOfs
 argument_list|(
 argument|MachineInstr *LdSt
 argument_list|,
@@ -300,7 +300,7 @@ specifier|const
 name|override
 block|;
 name|bool
-name|getLdStBaseRegImmOfsWidth
+name|getMemOpBaseRegImmOfsWidth
 argument_list|(
 argument|MachineInstr *LdSt
 argument_list|,
@@ -454,7 +454,9 @@ argument|MachineFunction&MF
 argument_list|,
 argument|MachineInstr *MI
 argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
+argument|ArrayRef<unsigned> Ops
+argument_list|,
+argument|MachineBasicBlock::iterator InsertPt
 argument_list|,
 argument|int FrameIndex
 argument_list|)
@@ -494,7 +496,7 @@ argument|MachineBasicBlock *TBB
 argument_list|,
 argument|MachineBasicBlock *FBB
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Cond
+argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|DebugLoc DL
 argument_list|)
@@ -514,7 +516,7 @@ name|canInsertSelect
 argument_list|(
 argument|const MachineBasicBlock&
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Cond
+argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|unsigned
 argument_list|,
@@ -540,7 +542,7 @@ argument|DebugLoc DL
 argument_list|,
 argument|unsigned DstReg
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Cond
+argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|unsigned TrueReg
 argument_list|,
@@ -604,29 +606,27 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// hasPattern - return true when there is potentially a faster code sequence
+comment|/// Return true when there is potentially a faster code sequence
 comment|/// for an instruction chain ending in<Root>. All potential patterns are
-comment|/// listed
-comment|/// in the<Pattern> array.
+comment|/// listed in the<Patterns> array.
 name|bool
-name|hasPattern
+name|getMachineCombinerPatterns
 argument_list|(
 argument|MachineInstr&Root
 argument_list|,
-argument|SmallVectorImpl<MachineCombinerPattern::MC_PATTERN>&Pattern
+argument|SmallVectorImpl<MachineCombinerPattern::MC_PATTERN>&Patterns
 argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// genAlternativeCodeSequence - when hasPattern() finds a pattern
-comment|/// this function generates the instructions that could replace the
-comment|/// original code sequence
+comment|/// When getMachineCombinerPatterns() finds patterns, this function generates
+comment|/// the instructions that could replace the original code sequence
 name|void
 name|genAlternativeCodeSequence
 argument_list|(
 argument|MachineInstr&Root
 argument_list|,
-argument|MachineCombinerPattern::MC_PATTERN P
+argument|MachineCombinerPattern::MC_PATTERN Pattern
 argument_list|,
 argument|SmallVectorImpl<MachineInstr *>&InsInstrs
 argument_list|,
@@ -665,7 +665,7 @@ argument|DebugLoc DL
 argument_list|,
 argument|MachineBasicBlock *TBB
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Cond
+argument|ArrayRef<MachineOperand> Cond
 argument_list|)
 specifier|const
 block|; }

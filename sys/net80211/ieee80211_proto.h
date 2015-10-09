@@ -2169,10 +2169,6 @@ parameter_list|(
 name|struct
 name|ieee80211_node
 modifier|*
-parameter_list|,
-name|struct
-name|ieee80211_beacon_offsets
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2248,10 +2244,6 @@ name|ieee80211_beacon_update
 parameter_list|(
 name|struct
 name|ieee80211_node
-modifier|*
-parameter_list|,
-name|struct
-name|ieee80211_beacon_offsets
 modifier|*
 parameter_list|,
 name|struct

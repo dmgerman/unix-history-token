@@ -110,7 +110,7 @@ decl_stmt|;
 name|class
 name|MCInst
 decl_stmt|;
-comment|/// MCOperand - Instances of this class represent operands of the MCInst class.
+comment|/// \brief Instances of this class represent operands of the MCInst class.
 comment|/// This is a simple discriminated union.
 name|class
 name|MCOperand
@@ -247,7 +247,7 @@ operator|==
 name|kInst
 return|;
 block|}
-comment|/// getReg - Returns the register number.
+comment|/// \brief Returns the register number.
 name|unsigned
 name|getReg
 argument_list|()
@@ -265,7 +265,7 @@ return|return
 name|RegVal
 return|;
 block|}
-comment|/// setReg - Set the register number.
+comment|/// \brief Set the register number.
 name|void
 name|setReg
 parameter_list|(
@@ -444,7 +444,7 @@ expr_stmt|;
 block|}
 specifier|static
 name|MCOperand
-name|CreateReg
+name|createReg
 parameter_list|(
 name|unsigned
 name|Reg
@@ -471,7 +471,7 @@ return|;
 block|}
 specifier|static
 name|MCOperand
-name|CreateImm
+name|createImm
 parameter_list|(
 name|int64_t
 name|Val
@@ -498,7 +498,7 @@ return|;
 block|}
 specifier|static
 name|MCOperand
-name|CreateFPImm
+name|createFPImm
 parameter_list|(
 name|double
 name|Val
@@ -525,7 +525,7 @@ return|;
 block|}
 specifier|static
 name|MCOperand
-name|CreateExpr
+name|createExpr
 parameter_list|(
 specifier|const
 name|MCExpr
@@ -554,7 +554,7 @@ return|;
 block|}
 specifier|static
 name|MCOperand
-name|CreateInst
+name|createInst
 parameter_list|(
 specifier|const
 name|MCInst
@@ -587,11 +587,6 @@ argument_list|(
 name|raw_ostream
 operator|&
 name|OS
-argument_list|,
-specifier|const
-name|MCAsmInfo
-operator|*
-name|MAI
 argument_list|)
 decl|const
 decl_stmt|;
@@ -619,7 +614,7 @@ operator|=
 name|true
 block|; }
 expr_stmt|;
-comment|/// MCInst - Instances of this class represent a single low-level machine
+comment|/// \brief Instances of this class represent a single low-level machine
 comment|/// instruction.
 name|class
 name|MCInst
@@ -749,6 +744,24 @@ name|Op
 argument_list|)
 expr_stmt|;
 block|}
+typedef|typedef
+name|SmallVectorImpl
+operator|<
+name|MCOperand
+operator|>
+operator|::
+name|iterator
+name|iterator
+expr_stmt|;
+typedef|typedef
+name|SmallVectorImpl
+operator|<
+name|MCOperand
+operator|>
+operator|::
+name|const_iterator
+name|const_iterator
+expr_stmt|;
 name|void
 name|clear
 parameter_list|()
@@ -759,9 +772,25 @@ name|clear
 argument_list|()
 expr_stmt|;
 block|}
+name|void
+name|erase
+parameter_list|(
+name|iterator
+name|I
+parameter_list|)
+block|{
+name|Operands
+operator|.
+name|erase
+argument_list|(
+name|I
+argument_list|)
+expr_stmt|;
+block|}
 name|size_t
 name|size
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|Operands
@@ -770,24 +799,6 @@ name|size
 argument_list|()
 return|;
 block|}
-typedef|typedef
-name|SmallVectorImpl
-operator|<
-name|MCOperand
-operator|>
-operator|::
-name|iterator
-name|iterator
-expr_stmt|;
-typedef|typedef
-name|SmallVectorImpl
-operator|<
-name|MCOperand
-operator|>
-operator|::
-name|const_iterator
-name|const_iterator
-expr_stmt|;
 name|iterator
 name|begin
 parameter_list|()
@@ -863,11 +874,6 @@ argument_list|(
 name|raw_ostream
 operator|&
 name|OS
-argument_list|,
-specifier|const
-name|MCAsmInfo
-operator|*
-name|MAI
 argument_list|)
 decl|const
 decl_stmt|;
@@ -885,13 +891,6 @@ argument_list|(
 name|raw_ostream
 operator|&
 name|OS
-argument_list|,
-specifier|const
-name|MCAsmInfo
-operator|*
-name|MAI
-operator|=
-name|nullptr
 argument_list|,
 specifier|const
 name|MCInstPrinter
@@ -930,8 +929,6 @@ operator|.
 name|print
 argument_list|(
 name|OS
-argument_list|,
-name|nullptr
 argument_list|)
 block|;
 return|return
@@ -959,8 +956,6 @@ operator|.
 name|print
 argument_list|(
 name|OS
-argument_list|,
-name|nullptr
 argument_list|)
 block|;
 return|return

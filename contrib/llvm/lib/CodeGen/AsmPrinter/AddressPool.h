@@ -140,7 +140,6 @@ name|AsmPrinter
 modifier|&
 name|Asm
 parameter_list|,
-specifier|const
 name|MCSection
 modifier|*
 name|AddrSection

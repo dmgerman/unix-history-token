@@ -84,13 +84,6 @@ block|{
 name|class
 name|formatted_raw_ostream
 decl_stmt|;
-name|class
-name|CPPSubtarget
-range|:
-name|public
-name|TargetSubtargetInfo
-block|{ }
-decl_stmt|;
 name|struct
 name|CPPTargetMachine
 range|:
@@ -101,7 +94,7 @@ name|CPPTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -118,54 +111,39 @@ argument_list|)
 operator|:
 name|TargetMachine
 argument_list|(
-name|T
+argument|T
 argument_list|,
-name|TT
+literal|""
 argument_list|,
-name|CPU
+argument|TT
 argument_list|,
-name|FS
+argument|CPU
 argument_list|,
-name|Options
+argument|FS
+argument_list|,
+argument|Options
 argument_list|)
-block|,
-name|Subtarget
-argument_list|()
 block|{}
-name|private
-operator|:
-name|CPPSubtarget
-name|Subtarget
-block|;
 name|public
 operator|:
-specifier|const
-name|CPPSubtarget
-operator|*
-name|getSubtargetImpl
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-operator|&
-name|Subtarget
-return|;
-block|}
 name|bool
 name|addPassesToEmitFile
 argument_list|(
 argument|PassManagerBase&PM
 argument_list|,
-argument|formatted_raw_ostream&Out
+argument|raw_pwrite_stream&Out
 argument_list|,
 argument|CodeGenFileType FileType
 argument_list|,
 argument|bool DisableVerify
 argument_list|,
+argument|AnalysisID StartBefore
+argument_list|,
 argument|AnalysisID StartAfter
 argument_list|,
 argument|AnalysisID StopAfter
+argument_list|,
+argument|MachineFunctionInitializer *MFInitializer
 argument_list|)
 name|override
 block|; }

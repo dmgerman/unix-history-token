@@ -104,107 +104,131 @@ name|namespace
 name|HexagonISD
 block|{
 enum|enum
+name|NodeType
+enum|:
+name|unsigned
 block|{
-name|FIRST_NUMBER
+name|OP_BEGIN
 init|=
 name|ISD
 operator|::
 name|BUILTIN_OP_END
 block|,
 name|CONST32
+init|=
+name|OP_BEGIN
 block|,
 name|CONST32_GP
 block|,
 comment|// For marking data present in GP.
-name|CONST32_Int_Real
-block|,
 name|FCONST32
 block|,
-name|SETCC
-block|,
-name|ADJDYNALLOC
+name|ALLOCA
 block|,
 name|ARGEXTEND
 block|,
-name|CMPICC
+name|PIC_ADD
 block|,
-comment|// Compare two GPR operands, set icc.
-name|CMPFCC
+name|AT_GOT
 block|,
-comment|// Compare two FP operands, set fcc.
-name|BRICC
+name|AT_PCREL
 block|,
-comment|// Branch to dest on icc condition
-name|BRFCC
+name|CALLv3
 block|,
-comment|// Branch to dest on fcc condition
-name|SELECT_ICC
+comment|// A V3+ call instruction.
+name|CALLv3nr
 block|,
-comment|// Select between two values using the current ICC flags.
-name|SELECT_FCC
+comment|// A V3+ call instruction that doesn't return.
+name|CALLR
 block|,
-comment|// Select between two values using the current FCC flags.
-name|Hi
-block|,
-name|Lo
-block|,
-comment|// Hi/Lo operations, typically on a global address.
-name|FTOI
-block|,
-comment|// FP to Int within a FP register.
-name|ITOF
-block|,
-comment|// Int to FP within a FP register.
-name|CALL
-block|,
-comment|// A call instruction.
 name|RET_FLAG
 block|,
 comment|// Return with a flag operand.
 name|BR_JT
 block|,
-comment|// Jump table.
+comment|// Branch through jump table.
 name|BARRIER
 block|,
-comment|// Memory barrier
+comment|// Memory barrier.
+name|JT
+block|,
+comment|// Jump table.
+name|CP
+block|,
+comment|// Constant pool.
 name|POPCOUNT
 block|,
 name|COMBINE
 block|,
-name|WrapperJT
+name|PACKHL
 block|,
-name|WrapperCP
+name|VSPLATB
 block|,
-name|WrapperCombineII
+name|VSPLATH
 block|,
-name|WrapperCombineRR
+name|SHUFFEB
 block|,
-name|WrapperCombineRI_V4
+name|SHUFFEH
 block|,
-name|WrapperCombineIR_V4
+name|SHUFFOB
 block|,
-name|WrapperPackhl
+name|SHUFFOH
 block|,
-name|WrapperSplatB
+name|VSXTBH
 block|,
-name|WrapperSplatH
+name|VSXTBW
 block|,
-name|WrapperShuffEB
+name|VSRAW
 block|,
-name|WrapperShuffEH
+name|VSRAH
 block|,
-name|WrapperShuffOB
+name|VSRLW
 block|,
-name|WrapperShuffOH
+name|VSRLH
+block|,
+name|VSHLW
+block|,
+name|VSHLH
+block|,
+name|VCMPBEQ
+block|,
+name|VCMPBGT
+block|,
+name|VCMPBGTU
+block|,
+name|VCMPHEQ
+block|,
+name|VCMPHGT
+block|,
+name|VCMPHGTU
+block|,
+name|VCMPWEQ
+block|,
+name|VCMPWGT
+block|,
+name|VCMPWGTU
+block|,
+name|INSERT
+block|,
+name|INSERTRP
+block|,
+name|EXTRACTU
+block|,
+name|EXTRACTURP
 block|,
 name|TC_RETURN
 block|,
 name|EH_RETURN
 block|,
 name|DCFETCH
+block|,
+name|OP_END
 block|}
 enum|;
 block|}
+name|class
+name|HexagonSubtarget
+decl_stmt|;
 name|class
 name|HexagonTargetLowering
 range|:
@@ -224,20 +248,38 @@ argument|unsigned& RetSize
 argument_list|)
 specifier|const
 block|;
+name|void
+name|promoteLdStType
+argument_list|(
+argument|EVT VT
+argument_list|,
+argument|EVT PromotedLdStVT
+argument_list|)
+block|;
+specifier|const
+name|HexagonTargetMachine
+operator|&
+name|HTM
+block|;
+specifier|const
+name|HexagonSubtarget
+operator|&
+name|Subtarget
+block|;
 name|public
 operator|:
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
-block|;
 name|explicit
 name|HexagonTargetLowering
 argument_list|(
 specifier|const
 name|TargetMachine
 operator|&
-name|targetmachine
+name|TM
+argument_list|,
+specifier|const
+name|HexagonSubtarget
+operator|&
+name|ST
 argument_list|)
 block|;
 comment|/// IsEligibleForTailCallOptimization - Check whether the call is eligible
@@ -256,7 +298,7 @@ argument|bool isCalleeStructRet
 argument_list|,
 argument|bool isCallerStructRet
 argument_list|,
-argument|const                                       SmallVectorImpl<ISD::OutputArg>&Outs
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
@@ -296,6 +338,17 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|// Should we expand the build vector with shuffles?
+name|bool
+name|shouldExpandBuildVectorWithShuffles
+argument_list|(
+argument|EVT VT
+argument_list|,
+argument|unsigned DefinedValues
+argument_list|)
+specifier|const
+name|override
+block|;
 name|SDValue
 name|LowerOperation
 argument_list|(
@@ -315,6 +368,42 @@ argument|unsigned Opcode
 argument_list|)
 specifier|const
 name|override
+block|;
+name|SDValue
+name|LowerCONCAT_VECTORS
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerEXTRACT_VECTOR
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerINSERT_VECTOR
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerBUILD_VECTOR
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerBR_JT
@@ -435,6 +524,33 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerSETCC
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerVSELECT
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerCTPOP
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerFRAMEADDR
 argument_list|(
 argument|SDValue Op
@@ -462,6 +578,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerLOAD
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerReturn
 argument_list|(
 argument|SDValue Chain
@@ -477,6 +602,14 @@ argument_list|,
 argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|mayBeEmittedAsTailCall
+argument_list|(
+argument|CallInst *CI
 argument_list|)
 specifier|const
 name|override
@@ -513,6 +646,8 @@ block|;
 name|EVT
 name|getSetCCResultType
 argument_list|(
+argument|const DataLayout&
+argument_list|,
 argument|LLVMContext&C
 argument_list|,
 argument|EVT VT
@@ -582,23 +717,68 @@ operator|*
 operator|>
 name|getRegForInlineAsmConstraint
 argument_list|(
-argument|const std::string&Constraint
+argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|StringRef Constraint
 argument_list|,
 argument|MVT VT
 argument_list|)
 specifier|const
 name|override
 block|;
+name|unsigned
+name|getInlineAsmMemConstraint
+argument_list|(
+argument|StringRef ConstraintCode
+argument_list|)
+specifier|const
+name|override
+block|{
+if|if
+condition|(
+name|ConstraintCode
+operator|==
+literal|"o"
+condition|)
+return|return
+name|InlineAsm
+operator|::
+name|Constraint_o
+return|;
+elseif|else
+if|if
+condition|(
+name|ConstraintCode
+operator|==
+literal|"v"
+condition|)
+return|return
+name|InlineAsm
+operator|::
+name|Constraint_v
+return|;
+return|return
+name|TargetLowering
+operator|::
+name|getInlineAsmMemConstraint
+argument_list|(
+name|ConstraintCode
+argument_list|)
+return|;
+block|}
 comment|// Intrinsics
 name|SDValue
 name|LowerINTRINSIC_WO_CHAIN
 argument_list|(
-argument|SDValue Op
+name|SDValue
+name|Op
 argument_list|,
-argument|SelectionDAG&DAG
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// isLegalAddressingMode - Return true if the addressing mode represented
 comment|/// by AM is legal for this target, for a load/store of the specified type.
 comment|/// The type may be VoidTy, in which case only return true if the addressing
@@ -607,23 +787,40 @@ comment|/// TODO: Handle pre/postinc as well.
 name|bool
 name|isLegalAddressingMode
 argument_list|(
-argument|const AddrMode&AM
-argument_list|,
-argument|Type *Ty
-argument_list|)
 specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+specifier|const
+name|AddrMode
+operator|&
+name|AM
+argument_list|,
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|unsigned
+name|AS
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|bool
 name|isFPImmLegal
 argument_list|(
-argument|const APFloat&Imm
-argument_list|,
-argument|EVT VT
-argument_list|)
 specifier|const
+name|APFloat
+operator|&
+name|Imm
+argument_list|,
+name|EVT
+name|VT
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|/// isLegalICmpImmediate - Return true if the specified immediate is legal
 comment|/// icmp immediate, that is the target has icmp instructions which can
 comment|/// compare a register against the immediate without having to materialize
@@ -631,16 +828,112 @@ comment|/// the immediate into a register.
 name|bool
 name|isLegalICmpImmediate
 argument_list|(
-argument|int64_t Imm
+name|int64_t
+name|Imm
 argument_list|)
+decl|const
+name|override
+decl_stmt|;
+comment|// Handling of atomic RMW instructions.
+name|bool
+name|hasLoadLinkedStoreConditional
+argument_list|()
 specifier|const
 name|override
-block|;   }
+block|{
+return|return
+name|true
+return|;
+block|}
+name|Value
+modifier|*
+name|emitLoadLinked
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|Builder
+argument_list|,
+name|Value
+operator|*
+name|Addr
+argument_list|,
+name|AtomicOrdering
+name|Ord
+argument_list|)
+decl|const
+name|override
 decl_stmt|;
+name|Value
+modifier|*
+name|emitStoreConditional
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|Builder
+argument_list|,
+name|Value
+operator|*
+name|Val
+argument_list|,
+name|Value
+operator|*
+name|Addr
+argument_list|,
+name|AtomicOrdering
+name|Ord
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|bool
+name|shouldExpandAtomicLoadInIR
+argument_list|(
+name|LoadInst
+operator|*
+name|LI
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|bool
+name|shouldExpandAtomicStoreInIR
+argument_list|(
+name|StoreInst
+operator|*
+name|SI
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|AtomicRMWExpansionKind
+name|shouldExpandAtomicRMWInIR
+argument_list|(
+name|AtomicRMWInst
+operator|*
+name|AI
+argument_list|)
+decl|const
+name|override
+block|{
+return|return
+name|AtomicRMWExpansionKind
+operator|::
+name|LLSC
+return|;
+block|}
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end namespace llvm
 end_comment
 

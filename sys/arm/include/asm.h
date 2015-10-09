@@ -102,6 +102,16 @@ name|_FNEND
 value|.fnend
 end_define
 
+begin_define
+define|#
+directive|define
+name|_SAVE
+parameter_list|(
+modifier|...
+parameter_list|)
+value|.save __VA_ARGS__
+end_define
+
 begin_else
 else|#
 directive|else
@@ -123,6 +133,15 @@ begin_define
 define|#
 directive|define
 name|_FNEND
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SAVE
+parameter_list|(
+modifier|...
+parameter_list|)
 end_define
 
 begin_endif

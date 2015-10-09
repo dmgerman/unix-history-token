@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/EpochTracker.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/AlignOf.h"
 end_include
 
@@ -306,6 +312,9 @@ name|BucketT
 operator|>
 name|class
 name|DenseMapBase
+operator|:
+name|public
+name|DebugEpochBase
 block|{
 name|public
 operator|:
@@ -373,6 +382,9 @@ argument_list|()
 argument_list|,
 name|getBucketsEnd
 argument_list|()
+argument_list|,
+operator|*
+name|this
 argument_list|)
 return|;
 block|}
@@ -389,6 +401,9 @@ argument_list|()
 argument_list|,
 name|getBucketsEnd
 argument_list|()
+argument_list|,
+operator|*
+name|this
 argument_list|,
 name|true
 argument_list|)
@@ -414,6 +429,9 @@ argument_list|()
 argument_list|,
 name|getBucketsEnd
 argument_list|()
+argument_list|,
+operator|*
+name|this
 argument_list|)
 return|;
 block|}
@@ -431,6 +449,9 @@ argument_list|()
 argument_list|,
 name|getBucketsEnd
 argument_list|()
+argument_list|,
+operator|*
+name|this
 argument_list|,
 name|true
 argument_list|)
@@ -467,6 +488,9 @@ name|size_type
 name|Size
 parameter_list|)
 block|{
+name|incrementEpoch
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|Size
@@ -484,6 +508,9 @@ name|void
 name|clear
 parameter_list|()
 block|{
+name|incrementEpoch
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|getNumEntries
@@ -530,6 +557,12 @@ decl_stmt|,
 name|TombstoneKey
 init|=
 name|getTombstoneKey
+argument_list|()
+decl_stmt|;
+name|unsigned
+name|NumEntries
+init|=
+name|getNumEntries
 argument_list|()
 decl_stmt|;
 for|for
@@ -596,8 +629,8 @@ operator|~
 name|ValueT
 argument_list|()
 expr_stmt|;
-name|decrementNumEntries
-argument_list|()
+operator|--
+name|NumEntries
 expr_stmt|;
 block|}
 name|P
@@ -611,12 +644,16 @@ block|}
 block|}
 name|assert
 argument_list|(
-name|getNumEntries
-argument_list|()
+name|NumEntries
 operator|==
 literal|0
 operator|&&
 literal|"Node count imbalance!"
+argument_list|)
+expr_stmt|;
+name|setNumEntries
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 name|setNumTombstones
@@ -684,6 +721,9 @@ argument_list|,
 name|getBucketsEnd
 argument_list|()
 argument_list|,
+operator|*
+name|this
+argument_list|,
 name|true
 argument_list|)
 return|;
@@ -723,6 +763,9 @@ name|TheBucket
 argument_list|,
 name|getBucketsEnd
 argument_list|()
+argument_list|,
+operator|*
+name|this
 argument_list|,
 name|true
 argument_list|)
@@ -769,6 +812,9 @@ argument_list|,
 name|getBucketsEnd
 argument_list|()
 argument_list|,
+operator|*
+name|this
+argument_list|,
 name|true
 argument_list|)
 return|;
@@ -810,6 +856,9 @@ name|TheBucket
 argument_list|,
 name|getBucketsEnd
 argument_list|()
+argument_list|,
+operator|*
+name|this
 argument_list|,
 name|true
 argument_list|)
@@ -922,6 +971,9 @@ argument_list|,
 name|getBucketsEnd
 argument_list|()
 argument_list|,
+operator|*
+name|this
+argument_list|,
 name|true
 argument_list|)
 argument_list|,
@@ -959,6 +1011,9 @@ name|TheBucket
 argument_list|,
 name|getBucketsEnd
 argument_list|()
+argument_list|,
+operator|*
+name|this
 argument_list|,
 name|true
 argument_list|)
@@ -1024,6 +1079,9 @@ argument_list|,
 name|getBucketsEnd
 argument_list|()
 argument_list|,
+operator|*
+name|this
+argument_list|,
 name|true
 argument_list|)
 argument_list|,
@@ -1071,6 +1129,9 @@ name|TheBucket
 argument_list|,
 name|getBucketsEnd
 argument_list|()
+argument_list|,
+operator|*
+name|this
 argument_list|,
 name|true
 argument_list|)
@@ -1426,14 +1487,13 @@ name|protected
 label|:
 end_label
 
-begin_macro
+begin_expr_stmt
 name|DenseMapBase
 argument_list|()
-end_macro
-
-begin_block
-block|{}
-end_block
+operator|=
+expr|default
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void
@@ -1531,31 +1591,6 @@ name|KeyT
 argument_list|()
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|memset
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|getBuckets
-argument_list|()
-argument_list|,
-literal|0x5a
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|BucketT
-argument_list|)
-operator|*
-name|getNumBuckets
-argument_list|()
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1803,39 +1838,6 @@ name|KeyT
 argument_list|()
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|NDEBUG
-if|if
-condition|(
-name|OldBucketsBegin
-operator|!=
-name|OldBucketsEnd
-condition|)
-name|memset
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|OldBucketsBegin
-argument_list|,
-literal|0x5a
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|BucketT
-argument_list|)
-operator|*
-operator|(
-name|OldBucketsEnd
-operator|-
-name|OldBucketsBegin
-operator|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2023,47 +2025,8 @@ expr_stmt|;
 block|}
 end_expr_stmt
 
-begin_macro
-unit|}    void
-name|swap
-argument_list|(
-argument|DenseMapBase& RHS
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|std
-operator|::
-name|swap
-argument_list|(
-name|getNumEntries
-argument_list|()
-argument_list|,
-name|RHS
-operator|.
-name|getNumEntries
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|std
-operator|::
-name|swap
-argument_list|(
-name|getNumTombstones
-argument_list|()
-argument_list|,
-name|RHS
-operator|.
-name|getNumTombstones
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
 begin_function
-specifier|static
+unit|}    static
 name|unsigned
 name|getHashValue
 parameter_list|(
@@ -2634,6 +2597,9 @@ modifier|*
 name|TheBucket
 parameter_list|)
 block|{
+name|incrementEpoch
+argument_list|()
+expr_stmt|;
 comment|// If the load of the hash table is more than 3/4, or if fewer than 1/8 of
 comment|// the buckets are empty (meaning that many are filled with tombstones),
 comment|// grow the table.
@@ -2659,6 +2625,8 @@ argument_list|()
 decl_stmt|;
 if|if
 condition|(
+name|LLVM_UNLIKELY
+argument_list|(
 name|NewNumEntries
 operator|*
 literal|4
@@ -2666,6 +2634,7 @@ operator|>=
 name|NumBuckets
 operator|*
 literal|3
+argument_list|)
 condition|)
 block|{
 name|this
@@ -2693,6 +2662,8 @@ block|}
 elseif|else
 if|if
 condition|(
+name|LLVM_UNLIKELY
+argument_list|(
 name|NumBuckets
 operator|-
 operator|(
@@ -2705,6 +2676,7 @@ operator|<=
 name|NumBuckets
 operator|/
 literal|8
+argument_list|)
 condition|)
 block|{
 name|this
@@ -2926,6 +2898,8 @@ decl_stmt|;
 comment|// Found Val's bucket?  If so, return it.
 if|if
 condition|(
+name|LLVM_LIKELY
+argument_list|(
 name|KeyInfoT
 operator|::
 name|isEqual
@@ -2936,6 +2910,7 @@ name|ThisBucket
 operator|->
 name|getFirst
 argument_list|()
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -2951,6 +2926,8 @@ comment|// If we found an empty bucket, the key doesn't exist in the set.
 comment|// Insert it and return the default value.
 if|if
 condition|(
+name|LLVM_LIKELY
+argument_list|(
 name|KeyInfoT
 operator|::
 name|isEqual
@@ -2961,6 +2938,7 @@ name|getFirst
 argument_list|()
 argument_list|,
 name|EmptyKey
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -3351,6 +3329,16 @@ argument_list|(
 argument|DenseMap& RHS
 argument_list|)
 block|{
+name|this
+operator|->
+name|incrementEpoch
+argument_list|()
+block|;
+name|RHS
+operator|.
+name|incrementEpoch
+argument_list|()
+block|;
 name|std
 operator|::
 name|swap
@@ -5673,6 +5661,10 @@ name|IsConst
 operator|>
 name|class
 name|DenseMapIterator
+operator|:
+name|DebugEpochBase
+operator|::
+name|HandleBase
 block|{
 typedef|typedef
 name|DenseMapIterator
@@ -5702,6 +5694,24 @@ operator|,
 name|Bucket
 operator|,
 name|true
+operator|>
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|friend
+name|class
+name|DenseMapIterator
+operator|<
+name|KeyT
+operator|,
+name|ValueT
+operator|,
+name|KeyInfoT
+operator|,
+name|Bucket
+operator|,
+name|false
 operator|>
 expr_stmt|;
 end_expr_stmt
@@ -5801,9 +5811,19 @@ argument|pointer Pos
 argument_list|,
 argument|pointer E
 argument_list|,
+argument|const DebugEpochBase&Epoch
+argument_list|,
 argument|bool NoAdvance = false
 argument_list|)
 operator|:
+name|DebugEpochBase
+operator|::
+name|HandleBase
+argument_list|(
+operator|&
+name|Epoch
+argument_list|)
+operator|,
 name|Ptr
 argument_list|(
 name|Pos
@@ -5814,6 +5834,14 @@ argument_list|(
 argument|E
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|isHandleInSync
+argument_list|()
+operator|&&
+literal|"invalid construction!"
+argument_list|)
+block|;
 if|if
 condition|(
 operator|!
@@ -5826,18 +5854,38 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// If IsConst is true this is a converting constructor from iterator to
+comment|// Converting ctor from non-const iterators to const iterators. SFINAE'd out
 end_comment
 
 begin_comment
-comment|// const_iterator and the default copy constructor is used.
+comment|// for const iterator destinations so it doesn't end up as a user defined copy
 end_comment
 
 begin_comment
-comment|// Otherwise this is a copy constructor for iterator.
+comment|// constructor.
 end_comment
 
 begin_expr_stmt
+name|template
+operator|<
+name|bool
+name|IsConstSrc
+operator|,
+name|typename
+operator|=
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+operator|!
+name|IsConstSrc
+operator|&&
+name|IsConst
+operator|>
+operator|::
+name|type
+operator|>
 name|DenseMapIterator
 argument_list|(
 specifier|const
@@ -5851,12 +5899,19 @@ name|KeyInfoT
 argument_list|,
 name|Bucket
 argument_list|,
-name|false
+name|IsConstSrc
 operator|>
 operator|&
 name|I
 argument_list|)
 operator|:
+name|DebugEpochBase
+operator|::
+name|HandleBase
+argument_list|(
+name|I
+argument_list|)
+operator|,
 name|Ptr
 argument_list|(
 name|I
@@ -5876,6 +5931,14 @@ operator|(
 operator|)
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|isHandleInSync
+argument_list|()
+operator|&&
+literal|"invalid iterator access!"
+argument_list|)
+block|;
 return|return
 operator|*
 name|Ptr
@@ -5894,6 +5957,14 @@ begin_expr_stmt
 unit|)
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|isHandleInSync
+argument_list|()
+operator|&&
+literal|"invalid iterator access!"
+argument_list|)
+block|;
 return|return
 name|Ptr
 return|;
@@ -5912,20 +5983,61 @@ name|RHS
 operator|)
 specifier|const
 block|{
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|Ptr
+operator|||
+name|isHandleInSync
+argument_list|()
+operator|)
+operator|&&
+literal|"handle not in sync!"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|RHS
+operator|.
+name|Ptr
+operator|||
+name|RHS
+operator|.
+name|isHandleInSync
+argument_list|()
+operator|)
+operator|&&
+literal|"handle not in sync!"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|getEpochAddress
+argument_list|()
+operator|==
+name|RHS
+operator|.
+name|getEpochAddress
+argument_list|()
+operator|&&
+literal|"comparing incomparable iterators!"
+argument_list|)
+block|;
 return|return
 name|Ptr
 operator|==
 name|RHS
 operator|.
-name|operator
-operator|->
-expr|(
-block|)
-expr_stmt|;
+name|Ptr
+return|;
+block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}   bool
+name|bool
 name|operator
 operator|!=
 operator|(
@@ -5936,20 +6048,61 @@ name|RHS
 operator|)
 specifier|const
 block|{
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|Ptr
+operator|||
+name|isHandleInSync
+argument_list|()
+operator|)
+operator|&&
+literal|"handle not in sync!"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|RHS
+operator|.
+name|Ptr
+operator|||
+name|RHS
+operator|.
+name|isHandleInSync
+argument_list|()
+operator|)
+operator|&&
+literal|"handle not in sync!"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|getEpochAddress
+argument_list|()
+operator|==
+name|RHS
+operator|.
+name|getEpochAddress
+argument_list|()
+operator|&&
+literal|"comparing incomparable iterators!"
+argument_list|)
+block|;
 return|return
 name|Ptr
 operator|!=
 name|RHS
 operator|.
-name|operator
-operator|->
-expr|(
-block|)
-expr_stmt|;
+name|Ptr
+return|;
+block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}    inline
+specifier|inline
 name|DenseMapIterator
 operator|&
 name|operator
@@ -5958,6 +6111,14 @@ operator|(
 operator|)
 block|{
 comment|// Preincrement
+name|assert
+argument_list|(
+name|isHandleInSync
+argument_list|()
+operator|&&
+literal|"invalid iterator access!"
+argument_list|)
+block|;
 operator|++
 name|Ptr
 block|;
@@ -5980,6 +6141,14 @@ name|int
 operator|)
 block|{
 comment|// Postincrement
+name|assert
+argument_list|(
+name|isHandleInSync
+argument_list|()
+operator|&&
+literal|"invalid iterator access!"
+argument_list|)
+block|;
 name|DenseMapIterator
 name|tmp
 operator|=

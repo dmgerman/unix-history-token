@@ -9,11 +9,22 @@ directive|include
 file|"int_lib.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WIN32
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/mman.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* #include "config.h"  * FIXME: CMake - include when cmake system is ready.  * Remove #define HAVE_SYSCONF 1 line.  */
@@ -25,6 +36,29 @@ directive|define
 name|HAVE_SYSCONF
 value|1
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<windef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<winbase.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_ifndef
 ifndef|#
@@ -45,6 +79,15 @@ end_endif
 
 begin_comment
 comment|/* __APPLE__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _WIN32 */
 end_comment
 
 begin_if
@@ -91,6 +134,50 @@ modifier|*
 name|addr
 parameter_list|)
 block|{
+if|#
+directive|if
+name|_WIN32
+name|MEMORY_BASIC_INFORMATION
+name|mbi
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|VirtualQuery
+argument_list|(
+name|addr
+argument_list|,
+operator|&
+name|mbi
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mbi
+argument_list|)
+argument_list|)
+condition|)
+return|return;
+comment|/* We should probably assert here because there is no return value */
+name|VirtualProtect
+argument_list|(
+name|mbi
+operator|.
+name|BaseAddress
+argument_list|,
+name|mbi
+operator|.
+name|RegionSize
+argument_list|,
+name|PAGE_EXECUTE_READWRITE
+argument_list|,
+operator|&
+name|mbi
+operator|.
+name|Protect
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|#
 directive|if
 name|__APPLE__
@@ -209,6 +296,8 @@ operator||
 name|PROT_EXEC
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

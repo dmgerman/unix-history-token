@@ -102,6 +102,7 @@ comment|///                | '(' symbol '-' number ')'
 comment|///
 comment|/// ident_expr = 'decode_operand' '(' symbol ',' operand-index ')'
 comment|///            | 'next_pc'        '(' symbol ')'
+comment|///            | 'stub_addr' '(' file-name ',' section-name ',' symbol ')'
 comment|///            | symbol
 comment|///
 comment|/// binary_expr = expr '+' expr
@@ -181,8 +182,8 @@ decl_stmt|;
 comment|/// \brief Returns the address of the requested section (or an error message
 comment|///        in the second element of the pair if the address cannot be found).
 comment|///
-comment|/// if 'LinkerAddress' is true, this returns the address of the section
-comment|/// within the linker's memory. If 'LinkerAddress' is false it returns the
+comment|/// if 'LocalAddress' is true, this returns the address of the section
+comment|/// within the linker's memory. If 'LocalAddress' is false it returns the
 comment|/// address within the target process (i.e. the load address).
 name|std
 operator|::
@@ -200,7 +201,7 @@ argument|StringRef FileName
 argument_list|,
 argument|StringRef SectionName
 argument_list|,
-argument|bool LinkerAddress
+argument|bool LocalAddress
 argument_list|)
 expr_stmt|;
 name|private

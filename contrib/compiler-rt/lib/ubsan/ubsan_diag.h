@@ -529,12 +529,12 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// \brief A mangled C++ name. Really just a strong typedef for 'const char*'.
+comment|/// \brief A C++ type name. Really just a strong typedef for 'const char*'.
 end_comment
 
 begin_decl_stmt
 name|class
-name|MangledName
+name|TypeName
 block|{
 specifier|const
 name|char
@@ -543,7 +543,7 @@ name|Name
 decl_stmt|;
 name|public
 label|:
-name|MangledName
+name|TypeName
 argument_list|(
 specifier|const
 name|char
@@ -622,9 +622,9 @@ block|{
 name|AK_String
 block|,
 comment|///< A string argument, displayed as-is.
-name|AK_Mangled
+name|AK_TypeName
 block|,
-comment|///< A C++ mangled name, demangled before display.
+comment|///< A C++ type name, possibly demangled before display.
 name|AK_UInt
 block|,
 comment|///< An unsigned integer argument.
@@ -665,17 +665,17 @@ argument_list|)
 block|{}
 name|Arg
 argument_list|(
-argument|MangledName MN
+argument|TypeName TN
 argument_list|)
 operator|:
 name|Kind
 argument_list|(
-name|AK_Mangled
+name|AK_TypeName
 argument_list|)
 operator|,
 name|String
 argument_list|(
-argument|MN.getName()
+argument|TN.getName()
 argument_list|)
 block|{}
 name|Arg
@@ -943,14 +943,14 @@ operator|&
 name|operator
 operator|<<
 operator|(
-name|MangledName
-name|MN
+name|TypeName
+name|TN
 operator|)
 block|{
 return|return
 name|AddArg
 argument_list|(
-name|MN
+name|TN
 argument_list|)
 return|;
 block|}

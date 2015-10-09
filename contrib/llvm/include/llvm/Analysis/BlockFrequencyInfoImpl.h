@@ -906,8 +906,8 @@ block|}
 struct|;
 comment|/// \brief Data about a loop.
 comment|///
-comment|/// Contains the data necessary to represent represent a loop as a
-comment|/// pseudo-node once it's packaged.
+comment|/// Contains the data necessary to represent a loop as a pseudo-node once it's
+comment|/// packaged.
 struct|struct
 name|LoopData
 block|{
@@ -936,6 +936,15 @@ literal|4
 operator|>
 name|NodeList
 expr_stmt|;
+typedef|typedef
+name|SmallVector
+operator|<
+name|BlockMass
+operator|,
+literal|1
+operator|>
+name|HeaderMassList
+expr_stmt|;
 name|LoopData
 modifier|*
 name|Parent
@@ -957,10 +966,10 @@ name|NodeList
 name|Nodes
 decl_stmt|;
 comment|///< Header and the members of the loop.
-name|BlockMass
+name|HeaderMassList
 name|BackedgeMass
 decl_stmt|;
-comment|///< Mass returned to loop header.
+comment|///< Mass returned to each loop header.
 name|BlockMass
 name|Mass
 decl_stmt|;
@@ -998,7 +1007,12 @@ name|Nodes
 argument_list|(
 literal|1
 argument_list|,
-argument|Header
+name|Header
+argument_list|)
+operator|,
+name|BackedgeMass
+argument_list|(
+literal|1
 argument_list|)
 block|{}
 name|template
@@ -1058,6 +1072,13 @@ argument_list|,
 name|FirstOther
 argument_list|,
 name|LastOther
+argument_list|)
+block|;
+name|BackedgeMass
+operator|.
+name|resize
+argument_list|(
+name|NumHeaders
 argument_list|)
 block|;     }
 name|bool
@@ -1122,6 +1143,61 @@ return|return
 name|NumHeaders
 operator|>
 literal|1
+return|;
+block|}
+name|HeaderMassList
+decl|::
+name|difference_type
+name|getHeaderIndex
+argument_list|(
+specifier|const
+name|BlockNode
+operator|&
+name|B
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|isHeader
+argument_list|(
+name|B
+argument_list|)
+operator|&&
+literal|"this is only valid on loop header blocks"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isIrreducible
+argument_list|()
+condition|)
+return|return
+name|std
+operator|::
+name|lower_bound
+argument_list|(
+name|Nodes
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Nodes
+operator|.
+name|begin
+argument_list|()
+operator|+
+name|NumHeaders
+argument_list|,
+name|B
+argument_list|)
+operator|-
+name|Nodes
+operator|.
+name|begin
+argument_list|()
+return|;
+return|return
+literal|0
 return|;
 block|}
 name|NodeList
@@ -2075,6 +2151,49 @@ end_comment
 begin_function_decl
 name|void
 name|computeLoopScale
+parameter_list|(
+name|LoopData
+modifier|&
+name|Loop
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Adjust the mass of all headers in an irreducible loop.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Initially, irreducible loops are assumed to distribute their mass
+end_comment
+
+begin_comment
+comment|/// equally among its headers. This can lead to wrong frequency estimates
+end_comment
+
+begin_comment
+comment|/// since some headers may be executed more frequently than others.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This adjusts header mass distribution so it matches the weights of
+end_comment
+
+begin_comment
+comment|/// the backedges going into each of the loop headers.
+end_comment
+
+begin_function_decl
+name|void
+name|adjustLoopHeaderMass
 parameter_list|(
 name|LoopData
 modifier|&
@@ -3437,6 +3556,50 @@ comment|///
 end_comment
 
 begin_comment
+comment|///     In the case of irreducible loops, instead of a single loop header,
+end_comment
+
+begin_comment
+comment|///     there will be several. The computation of backedge masses is similar
+end_comment
+
+begin_comment
+comment|///     but instead of having a single backedge mass, there will be one
+end_comment
+
+begin_comment
+comment|///     backedge per loop header. In these cases, each backedge will carry
+end_comment
+
+begin_comment
+comment|///     a mass proportional to the edge weights along the corresponding
+end_comment
+
+begin_comment
+comment|///     path.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///     At the end of propagation, the full mass assigned to the loop will be
+end_comment
+
+begin_comment
+comment|///     distributed among the loop headers proportionally according to the
+end_comment
+
+begin_comment
+comment|///     mass flowing through their backedges.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|///     Finally, calculate the loop scale from the accumulated backedge mass.
 end_comment
 
@@ -3529,18 +3692,6 @@ comment|///
 end_comment
 
 begin_comment
-comment|///   - Loop scale is limited to 4096 per loop (2^12) to avoid exhausting
-end_comment
-
-begin_comment
-comment|///     BlockFrequency's 64-bit integer precision.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
 comment|///   - The model of irreducible control flow is a rough approximation.
 end_comment
 
@@ -3602,26 +3753,6 @@ end_comment
 
 begin_comment
 comment|///         blocks into the headers of the main irreducible SCC.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|///       - Backedge frequencies are assumed to be evenly split between the
-end_comment
-
-begin_comment
-comment|///         headers of a given irreducible SCC.  Instead, we could track the
-end_comment
-
-begin_comment
-comment|///         backedge mass separately for each header, and adjust their relative
-end_comment
-
-begin_comment
-comment|///         frequencies.
 end_comment
 
 begin_comment
@@ -4237,7 +4368,7 @@ comment|/// OuterLoop.
 end_comment
 
 begin_comment
-comment|/// \pre \c Insert points at the the last loop successfully processed by \a
+comment|/// \pre \c Insert points at the last loop successfully processed by \a
 end_comment
 
 begin_comment
@@ -4687,7 +4818,7 @@ block|;
 name|initializeLoops
 argument_list|()
 block|;
-comment|// Visit loops in post-order to find thelocal mass distribution, and then do
+comment|// Visit loops in post-order to find the local mass distribution, and then do
 comment|// the full function.
 name|computeMassInLoops
 argument_list|()
@@ -5512,6 +5643,14 @@ literal|"unhandled irreducible control flow"
 argument_list|)
 expr_stmt|;
 end_for
+
+begin_expr_stmt
+name|adjustLoopHeaderMass
+argument_list|(
+name|Loop
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 unit|} else

@@ -2478,7 +2478,16 @@ expr_stmt|;
 comment|/* Check if length is sufficient */
 if|if
 condition|(
-operator|(
+name|m
+operator|->
+name|m_len
+operator|<
+name|arphdr_len
+argument_list|(
+name|ar
+argument_list|)
+condition|)
+block|{
 name|m
 operator|=
 name|m_pullup
@@ -2490,7 +2499,10 @@ argument_list|(
 name|ar
 argument_list|)
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|m
 operator|==
 name|NULL
 condition|)
@@ -2520,6 +2532,7 @@ name|arphdr
 operator|*
 argument_list|)
 expr_stmt|;
+block|}
 name|hlen
 operator|=
 literal|0

@@ -42,6 +42,14 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
+comment|/** See llvm::createBitTrackingDCEPass function. */
+name|void
+name|LLVMAddBitTrackingDCEPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
 comment|/** See llvm::createAlignmentFromAssumptionsPass function. */
 name|void
 name|LLVMAddAlignmentFromAssumptionsPass

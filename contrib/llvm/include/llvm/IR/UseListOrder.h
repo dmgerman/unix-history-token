@@ -221,9 +221,13 @@ name|private
 label|:
 name|UseListOrder
 argument_list|(
-argument|const UseListOrder&X
+specifier|const
+name|UseListOrder
+operator|&
+name|X
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|UseListOrder
 modifier|&
@@ -235,7 +239,8 @@ name|UseListOrder
 operator|&
 name|X
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 block|}
 struct|;
@@ -248,29 +253,6 @@ name|UseListOrder
 operator|>
 name|UseListOrderStack
 expr_stmt|;
-comment|/// \brief Whether to preserve use-list ordering.
-name|bool
-name|shouldPreserveBitcodeUseListOrder
-parameter_list|()
-function_decl|;
-name|bool
-name|shouldPreserveAssemblyUseListOrder
-parameter_list|()
-function_decl|;
-name|void
-name|setPreserveBitcodeUseListOrder
-parameter_list|(
-name|bool
-name|ShouldPreserve
-parameter_list|)
-function_decl|;
-name|void
-name|setPreserveAssemblyUseListOrder
-parameter_list|(
-name|bool
-name|ShouldPreserve
-parameter_list|)
-function_decl|;
 block|}
 end_decl_stmt
 

@@ -56,7 +56,7 @@ comment|/// fully shared by structural equivalence.  This means that two structu
 end_comment
 
 begin_comment
-comment|/// equivalent constants will always have the same address.  Constant's are
+comment|/// equivalent constants will always have the same address.  Constants are
 end_comment
 
 begin_comment
@@ -176,17 +176,21 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|ConstantInt
 argument_list|(
-argument|const ConstantInt&
+specifier|const
+name|ConstantInt
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|ConstantInt
 argument_list|(
@@ -202,6 +206,31 @@ argument_list|)
 block|;
 name|APInt
 name|Val
+block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -710,21 +739,50 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|ConstantFP
 argument_list|(
-argument|const ConstantFP&
+specifier|const
+name|ConstantFP
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|friend
 name|class
 name|LLVMContextImpl
+block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -815,6 +873,19 @@ specifier|const
 name|APFloat
 operator|&
 name|V
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getNaN
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|bool Negative = false
+argument_list|,
+argument|unsigned type =
+literal|0
 argument_list|)
 block|;
 specifier|static
@@ -1002,17 +1073,46 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|ConstantAggregateZero
 argument_list|(
-argument|const ConstantAggregateZero&
+specifier|const
+name|ConstantAggregateZero
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
+block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -1069,11 +1169,6 @@ name|Type
 operator|*
 name|Ty
 argument_list|)
-block|;
-name|void
-name|destroyConstant
-argument_list|()
-name|override
 block|;
 comment|/// getSequentialElement - If this CAZ has array or vector type, return a zero
 comment|/// with the right element type.
@@ -1157,9 +1252,37 @@ operator|>
 block|;
 name|ConstantArray
 argument_list|(
-argument|const ConstantArray&
+specifier|const
+name|ConstantArray
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
+block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -1247,22 +1370,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|void
-name|destroyConstant
-argument_list|()
-name|override
-block|;
-name|void
-name|replaceUsesOfWithOnConstant
-argument_list|(
-argument|Value *From
-argument_list|,
-argument|Value *To
-argument_list|,
-argument|Use *U
-argument_list|)
-name|override
-block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 name|bool
@@ -1322,9 +1429,37 @@ operator|>
 block|;
 name|ConstantStruct
 argument_list|(
-argument|const ConstantStruct&
+specifier|const
+name|ConstantStruct
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
+block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -1481,22 +1616,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|void
-name|destroyConstant
-argument_list|()
-name|override
-block|;
-name|void
-name|replaceUsesOfWithOnConstant
-argument_list|(
-argument|Value *From
-argument_list|,
-argument|Value *To
-argument_list|,
-argument|Use *U
-argument_list|)
-name|override
-block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 name|bool
@@ -1556,9 +1675,37 @@ operator|>
 block|;
 name|ConstantVector
 argument_list|(
-argument|const ConstantVector&
+specifier|const
+name|ConstantVector
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
+block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -1658,22 +1805,6 @@ name|getSplatValue
 argument_list|()
 specifier|const
 block|;
-name|void
-name|destroyConstant
-argument_list|()
-name|override
-block|;
-name|void
-name|replaceUsesOfWithOnConstant
-argument_list|(
-argument|Value *From
-argument_list|,
-argument|Value *To
-argument_list|,
-argument|Use *U
-argument_list|)
-name|override
-block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 name|bool
@@ -1729,17 +1860,46 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|ConstantPointerNull
 argument_list|(
-argument|const ConstantPointerNull&
+specifier|const
+name|ConstantPointerNull
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
+block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -1797,11 +1957,6 @@ name|PointerType
 operator|*
 name|T
 argument_list|)
-block|;
-name|void
-name|destroyConstant
-argument_list|()
-name|override
 block|;
 comment|/// getType - Specialize the getType() method to always return an PointerType,
 comment|/// which reduces the amount of casting needed in parts of the compiler.
@@ -1884,17 +2039,46 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|ConstantDataSequential
 argument_list|(
-argument|const ConstantDataSequential&
+specifier|const
+name|ConstantDataSequential
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
+block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -1932,6 +2116,7 @@ block|{}
 operator|~
 name|ConstantDataSequential
 argument_list|()
+name|override
 block|{
 name|delete
 name|Next
@@ -2157,11 +2342,6 @@ name|getRawDataValues
 argument_list|()
 specifier|const
 block|;
-name|void
-name|destroyConstant
-argument_list|()
-name|override
-block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 comment|///
 specifier|static
@@ -2216,17 +2396,21 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|ConstantDataArray
 argument_list|(
-argument|const ConstantDataArray&
+specifier|const
+name|ConstantDataArray
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|anchor
@@ -2383,6 +2567,59 @@ operator|>
 name|Elts
 argument_list|)
 block|;
+comment|/// getFP() constructors - Return a constant with array type with an element
+comment|/// count and element type of float with precision matching the number of
+comment|/// bits in the ArrayRef passed in. (i.e. half for 16bits, float for 32bits,
+comment|/// double for 64bits) Note that this can return a ConstantAggregateZero
+comment|/// object.
+specifier|static
+name|Constant
+operator|*
+name|getFP
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|uint16_t
+operator|>
+name|Elts
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getFP
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|uint32_t
+operator|>
+name|Elts
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getFP
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|uint64_t
+operator|>
+name|Elts
+argument_list|)
+block|;
 comment|/// getString - This method constructs a CDS and initializes it with a text
 comment|/// string. The default behavior (AddNull==true) causes a null terminator to
 comment|/// be placed at the end of the array (increasing the length of the string by
@@ -2460,17 +2697,21 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|ConstantDataVector
 argument_list|(
-argument|const ConstantDataVector&
+specifier|const
+name|ConstantDataVector
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|anchor
@@ -2627,6 +2868,59 @@ operator|>
 name|Elts
 argument_list|)
 block|;
+comment|/// getFP() constructors - Return a constant with vector type with an element
+comment|/// count and element type of float with the precision matching the number of
+comment|/// bits in the ArrayRef passed in.  (i.e. half for 16bits, float for 32bits,
+comment|/// double for 64bits) Note that this can return a ConstantAggregateZero
+comment|/// object.
+specifier|static
+name|Constant
+operator|*
+name|getFP
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|uint16_t
+operator|>
+name|Elts
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getFP
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|uint32_t
+operator|>
+name|Elts
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getFP
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|uint64_t
+operator|>
+name|Elts
+argument_list|)
+block|;
 comment|/// getSplat - Return a ConstantVector with the specified constant in each
 comment|/// element.  The specified constant has to be a of a compatible type (i8/i16/
 comment|/// i32/i64/float/double) and must be a ConstantFP or ConstantInt.
@@ -2704,11 +2998,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 operator|*
@@ -2739,6 +3034,31 @@ argument_list|,
 name|BasicBlock
 operator|*
 name|BB
+argument_list|)
+block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
 argument_list|)
 block|;
 name|public
@@ -2835,22 +3155,6 @@ name|get
 argument_list|()
 return|;
 block|}
-name|void
-name|destroyConstant
-argument_list|()
-name|override
-block|;
-name|void
-name|replaceUsesOfWithOnConstant
-argument_list|(
-argument|Value *From
-argument_list|,
-argument|Value *To
-argument_list|,
-argument|Use *U
-argument_list|)
-name|override
-block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -2911,6 +3215,31 @@ block|{
 name|friend
 expr|struct
 name|ConstantExprKeyType
+block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -4041,7 +4370,7 @@ argument|bool OnlyIfReduced = false
 argument_list|)
 block|;
 comment|/// Getelementptr form.  Value* is only accepted for convenience;
-comment|/// all elements must be Constant's.
+comment|/// all elements must be Constants.
 comment|///
 comment|/// \param OnlyIfReducedTy see \a getWithOperands() docs.
 specifier|static
@@ -4049,6 +4378,8 @@ name|Constant
 operator|*
 name|getGetElementPtr
 argument_list|(
+argument|Type *Ty
+argument_list|,
 argument|Constant *C
 argument_list|,
 argument|ArrayRef<Constant *> IdxList
@@ -4061,6 +4392,8 @@ block|{
 return|return
 name|getGetElementPtr
 argument_list|(
+name|Ty
+argument_list|,
 name|C
 argument_list|,
 name|makeArrayRef
@@ -4093,6 +4426,8 @@ name|Constant
 operator|*
 name|getGetElementPtr
 argument_list|(
+argument|Type *Ty
+argument_list|,
 argument|Constant *C
 argument_list|,
 argument|Constant *Idx
@@ -4108,6 +4443,8 @@ comment|// ArrayRef<Value *>.
 return|return
 name|getGetElementPtr
 argument_list|(
+name|Ty
+argument_list|,
 name|C
 argument_list|,
 name|cast
@@ -4129,6 +4466,8 @@ name|Constant
 operator|*
 name|getGetElementPtr
 argument_list|(
+argument|Type *Ty
+argument_list|,
 argument|Constant *C
 argument_list|,
 argument|ArrayRef<Value *> IdxList
@@ -4145,6 +4484,8 @@ name|Constant
 operator|*
 name|getInBoundsGetElementPtr
 argument_list|(
+argument|Type *Ty
+argument_list|,
 argument|Constant *C
 argument_list|,
 argument|ArrayRef<Constant *> IdxList
@@ -4153,6 +4494,8 @@ block|{
 return|return
 name|getGetElementPtr
 argument_list|(
+name|Ty
+argument_list|,
 name|C
 argument_list|,
 name|IdxList
@@ -4166,6 +4509,8 @@ name|Constant
 operator|*
 name|getInBoundsGetElementPtr
 argument_list|(
+argument|Type *Ty
+argument_list|,
 argument|Constant *C
 argument_list|,
 argument|Constant *Idx
@@ -4177,6 +4522,8 @@ comment|// ArrayRef<Value *>.
 return|return
 name|getGetElementPtr
 argument_list|(
+name|Ty
+argument_list|,
 name|C
 argument_list|,
 name|Idx
@@ -4190,6 +4537,8 @@ name|Constant
 operator|*
 name|getInBoundsGetElementPtr
 argument_list|(
+argument|Type *Ty
+argument_list|,
 argument|Constant *C
 argument_list|,
 argument|ArrayRef<Value *> IdxList
@@ -4198,6 +4547,8 @@ block|{
 return|return
 name|getGetElementPtr
 argument_list|(
+name|Ty
+argument_list|,
 name|C
 argument_list|,
 name|IdxList
@@ -4412,8 +4763,9 @@ argument|bool OnlyIfReduced = false
 argument_list|)
 specifier|const
 block|;
-comment|/// getAsInstruction - Returns an Instruction which implements the same operation
-comment|/// as this ConstantExpr. The instruction is not linked to any basic block.
+comment|/// getAsInstruction - Returns an Instruction which implements the same
+comment|/// operation as this ConstantExpr. The instruction is not linked to any basic
+comment|/// block.
 comment|///
 comment|/// A better approach to this could be to have a constructor for Instruction
 comment|/// which would take a ConstantExpr parameter, but that would have spread
@@ -4423,22 +4775,6 @@ name|Instruction
 operator|*
 name|getAsInstruction
 argument_list|()
-block|;
-name|void
-name|destroyConstant
-argument_list|()
-name|override
-block|;
-name|void
-name|replaceUsesOfWithOnConstant
-argument_list|(
-argument|Value *From
-argument_list|,
-argument|Value *To
-argument_list|,
-argument|Use *U
-argument_list|)
-name|override
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -4522,17 +4858,46 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|UndefValue
 argument_list|(
-argument|const UndefValue&
+specifier|const
+name|UndefValue
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
+block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|void
+name|destroyConstantImpl
+argument_list|()
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -4636,11 +5001,6 @@ name|unsigned
 name|getNumElements
 argument_list|()
 specifier|const
-block|;
-name|void
-name|destroyConstant
-argument_list|()
-name|override
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static

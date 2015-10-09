@@ -112,14 +112,58 @@ operator|>
 expr|struct
 name|isPodLike
 block|{
+comment|// std::is_trivially_copyable is available in libc++ with clang, libstdc++
+comment|// that comes with GCC 5.
 if|#
 directive|if
+operator|(
 name|__has_feature
 argument_list|(
 name|is_trivially_copyable
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_LIBCPP_VERSION
+argument_list|)
+operator|)
+operator|||
+expr|\
+operator|(
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|__GNUC__
+operator|>=
+literal|5
+operator|)
 comment|// If the compiler supports the is_trivially_copyable trait use it, as it
 comment|// matches the definition of isPodLike closely.
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|std
+operator|::
+name|is_trivially_copyable
+operator|<
+name|T
+operator|>
+operator|::
+name|value
+block|;
+elif|#
+directive|elif
+name|__has_feature
+argument_list|(
+name|is_trivially_copyable
+argument_list|)
+comment|// Use the internal name if the compiler supports is_trivially_copyable but we
+comment|// don't know if the standard library does. This is the case for clang in
+comment|// conjunction with libstdc++ from GCC 4.x.
 specifier|static
 specifier|const
 name|bool

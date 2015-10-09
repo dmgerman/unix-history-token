@@ -412,9 +412,8 @@ specifier|const
 block|{
 if|if
 condition|(
-name|m_string
-operator|==
-name|NULL
+name|IsEmpty
+argument_list|()
 condition|)
 return|return
 name|value_if_empty

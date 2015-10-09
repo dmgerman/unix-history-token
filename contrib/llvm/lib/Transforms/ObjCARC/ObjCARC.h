@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/AliasAnalysis.h"
 end_include
 
@@ -153,6 +159,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Transforms/Utils/Local.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ARCInstKind.h"
 end_include
 
 begin_decl_stmt
@@ -318,460 +330,6 @@ literal|"clang.arc.use"
 argument_list|)
 return|;
 block|}
-comment|/// \enum InstructionClass
-comment|/// \brief A simple classification for instructions.
-enum|enum
-name|InstructionClass
-block|{
-name|IC_Retain
-block|,
-comment|///< objc_retain
-name|IC_RetainRV
-block|,
-comment|///< objc_retainAutoreleasedReturnValue
-name|IC_RetainBlock
-block|,
-comment|///< objc_retainBlock
-name|IC_Release
-block|,
-comment|///< objc_release
-name|IC_Autorelease
-block|,
-comment|///< objc_autorelease
-name|IC_AutoreleaseRV
-block|,
-comment|///< objc_autoreleaseReturnValue
-name|IC_AutoreleasepoolPush
-block|,
-comment|///< objc_autoreleasePoolPush
-name|IC_AutoreleasepoolPop
-block|,
-comment|///< objc_autoreleasePoolPop
-name|IC_NoopCast
-block|,
-comment|///< objc_retainedObject, etc.
-name|IC_FusedRetainAutorelease
-block|,
-comment|///< objc_retainAutorelease
-name|IC_FusedRetainAutoreleaseRV
-block|,
-comment|///< objc_retainAutoreleaseReturnValue
-name|IC_LoadWeakRetained
-block|,
-comment|///< objc_loadWeakRetained (primitive)
-name|IC_StoreWeak
-block|,
-comment|///< objc_storeWeak (primitive)
-name|IC_InitWeak
-block|,
-comment|///< objc_initWeak (derived)
-name|IC_LoadWeak
-block|,
-comment|///< objc_loadWeak (derived)
-name|IC_MoveWeak
-block|,
-comment|///< objc_moveWeak (derived)
-name|IC_CopyWeak
-block|,
-comment|///< objc_copyWeak (derived)
-name|IC_DestroyWeak
-block|,
-comment|///< objc_destroyWeak (derived)
-name|IC_StoreStrong
-block|,
-comment|///< objc_storeStrong (derived)
-name|IC_IntrinsicUser
-block|,
-comment|///< clang.arc.use
-name|IC_CallOrUser
-block|,
-comment|///< could call objc_release and/or "use" pointers
-name|IC_Call
-block|,
-comment|///< could call objc_release
-name|IC_User
-block|,
-comment|///< could "use" a pointer
-name|IC_None
-comment|///< anything else
-block|}
-enum|;
-name|raw_ostream
-operator|&
-name|operator
-operator|<<
-operator|(
-name|raw_ostream
-operator|&
-name|OS
-operator|,
-specifier|const
-name|InstructionClass
-name|Class
-operator|)
-expr_stmt|;
-comment|/// \brief Test if the given class is a kind of user.
-specifier|inline
-specifier|static
-name|bool
-name|IsUser
-parameter_list|(
-name|InstructionClass
-name|Class
-parameter_list|)
-block|{
-return|return
-name|Class
-operator|==
-name|IC_User
-operator|||
-name|Class
-operator|==
-name|IC_CallOrUser
-operator|||
-name|Class
-operator|==
-name|IC_IntrinsicUser
-return|;
-block|}
-comment|/// \brief Test if the given class is objc_retain or equivalent.
-specifier|static
-specifier|inline
-name|bool
-name|IsRetain
-parameter_list|(
-name|InstructionClass
-name|Class
-parameter_list|)
-block|{
-return|return
-name|Class
-operator|==
-name|IC_Retain
-operator|||
-name|Class
-operator|==
-name|IC_RetainRV
-return|;
-block|}
-comment|/// \brief Test if the given class is objc_autorelease or equivalent.
-specifier|static
-specifier|inline
-name|bool
-name|IsAutorelease
-parameter_list|(
-name|InstructionClass
-name|Class
-parameter_list|)
-block|{
-return|return
-name|Class
-operator|==
-name|IC_Autorelease
-operator|||
-name|Class
-operator|==
-name|IC_AutoreleaseRV
-return|;
-block|}
-comment|/// \brief Test if the given class represents instructions which return their
-comment|/// argument verbatim.
-specifier|static
-specifier|inline
-name|bool
-name|IsForwarding
-parameter_list|(
-name|InstructionClass
-name|Class
-parameter_list|)
-block|{
-return|return
-name|Class
-operator|==
-name|IC_Retain
-operator|||
-name|Class
-operator|==
-name|IC_RetainRV
-operator|||
-name|Class
-operator|==
-name|IC_Autorelease
-operator|||
-name|Class
-operator|==
-name|IC_AutoreleaseRV
-operator|||
-name|Class
-operator|==
-name|IC_NoopCast
-return|;
-block|}
-comment|/// \brief Test if the given class represents instructions which do nothing if
-comment|/// passed a null pointer.
-specifier|static
-specifier|inline
-name|bool
-name|IsNoopOnNull
-parameter_list|(
-name|InstructionClass
-name|Class
-parameter_list|)
-block|{
-return|return
-name|Class
-operator|==
-name|IC_Retain
-operator|||
-name|Class
-operator|==
-name|IC_RetainRV
-operator|||
-name|Class
-operator|==
-name|IC_Release
-operator|||
-name|Class
-operator|==
-name|IC_Autorelease
-operator|||
-name|Class
-operator|==
-name|IC_AutoreleaseRV
-operator|||
-name|Class
-operator|==
-name|IC_RetainBlock
-return|;
-block|}
-comment|/// \brief Test if the given class represents instructions which are always safe
-comment|/// to mark with the "tail" keyword.
-specifier|static
-specifier|inline
-name|bool
-name|IsAlwaysTail
-parameter_list|(
-name|InstructionClass
-name|Class
-parameter_list|)
-block|{
-comment|// IC_RetainBlock may be given a stack argument.
-return|return
-name|Class
-operator|==
-name|IC_Retain
-operator|||
-name|Class
-operator|==
-name|IC_RetainRV
-operator|||
-name|Class
-operator|==
-name|IC_AutoreleaseRV
-return|;
-block|}
-comment|/// \brief Test if the given class represents instructions which are never safe
-comment|/// to mark with the "tail" keyword.
-specifier|static
-specifier|inline
-name|bool
-name|IsNeverTail
-parameter_list|(
-name|InstructionClass
-name|Class
-parameter_list|)
-block|{
-comment|/// It is never safe to tail call objc_autorelease since by tail calling
-comment|/// objc_autorelease, we also tail call -[NSObject autorelease] which supports
-comment|/// fast autoreleasing causing our object to be potentially reclaimed from the
-comment|/// autorelease pool which violates the semantics of __autoreleasing types in
-comment|/// ARC.
-return|return
-name|Class
-operator|==
-name|IC_Autorelease
-return|;
-block|}
-comment|/// \brief Test if the given class represents instructions which are always safe
-comment|/// to mark with the nounwind attribute.
-specifier|static
-specifier|inline
-name|bool
-name|IsNoThrow
-parameter_list|(
-name|InstructionClass
-name|Class
-parameter_list|)
-block|{
-comment|// objc_retainBlock is not nounwind because it calls user copy constructors
-comment|// which could theoretically throw.
-return|return
-name|Class
-operator|==
-name|IC_Retain
-operator|||
-name|Class
-operator|==
-name|IC_RetainRV
-operator|||
-name|Class
-operator|==
-name|IC_Release
-operator|||
-name|Class
-operator|==
-name|IC_Autorelease
-operator|||
-name|Class
-operator|==
-name|IC_AutoreleaseRV
-operator|||
-name|Class
-operator|==
-name|IC_AutoreleasepoolPush
-operator|||
-name|Class
-operator|==
-name|IC_AutoreleasepoolPop
-return|;
-block|}
-comment|/// Test whether the given instruction can autorelease any pointer or cause an
-comment|/// autoreleasepool pop.
-specifier|static
-specifier|inline
-name|bool
-name|CanInterruptRV
-parameter_list|(
-name|InstructionClass
-name|Class
-parameter_list|)
-block|{
-switch|switch
-condition|(
-name|Class
-condition|)
-block|{
-case|case
-name|IC_AutoreleasepoolPop
-case|:
-case|case
-name|IC_CallOrUser
-case|:
-case|case
-name|IC_Call
-case|:
-case|case
-name|IC_Autorelease
-case|:
-case|case
-name|IC_AutoreleaseRV
-case|:
-case|case
-name|IC_FusedRetainAutorelease
-case|:
-case|case
-name|IC_FusedRetainAutoreleaseRV
-case|:
-return|return
-name|true
-return|;
-default|default:
-return|return
-name|false
-return|;
-block|}
-block|}
-comment|/// \brief Determine if F is one of the special known Functions.  If it isn't,
-comment|/// return IC_CallOrUser.
-name|InstructionClass
-name|GetFunctionClass
-parameter_list|(
-specifier|const
-name|Function
-modifier|*
-name|F
-parameter_list|)
-function_decl|;
-comment|/// \brief Determine which objc runtime call instruction class V belongs to.
-comment|///
-comment|/// This is similar to GetInstructionClass except that it only detects objc
-comment|/// runtime calls. This allows it to be faster.
-comment|///
-specifier|static
-specifier|inline
-name|InstructionClass
-name|GetBasicInstructionClass
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|)
-block|{
-if|if
-condition|(
-specifier|const
-name|CallInst
-modifier|*
-name|CI
-init|=
-name|dyn_cast
-operator|<
-name|CallInst
-operator|>
-operator|(
-name|V
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-specifier|const
-name|Function
-modifier|*
-name|F
-init|=
-name|CI
-operator|->
-name|getCalledFunction
-argument_list|()
-condition|)
-return|return
-name|GetFunctionClass
-argument_list|(
-name|F
-argument_list|)
-return|;
-comment|// Otherwise, be conservative.
-return|return
-name|IC_CallOrUser
-return|;
-block|}
-comment|// Otherwise, be conservative.
-return|return
-name|isa
-operator|<
-name|InvokeInst
-operator|>
-operator|(
-name|V
-operator|)
-condition|?
-name|IC_CallOrUser
-else|:
-name|IC_User
-return|;
-block|}
-comment|/// \brief Determine what kind of construct V is.
-name|InstructionClass
-name|GetInstructionClass
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|)
-function_decl|;
 comment|/// \brief This is a wrapper around getUnderlyingObject which also knows how to
 comment|/// look through objc_retain and objc_autorelease calls, which we know to return
 comment|/// their argument verbatim.
@@ -786,6 +344,11 @@ specifier|const
 name|Value
 modifier|*
 name|V
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
 parameter_list|)
 block|{
 for|for
@@ -799,6 +362,8 @@ operator|=
 name|GetUnderlyingObject
 argument_list|(
 name|V
+argument_list|,
+name|DL
 argument_list|)
 expr_stmt|;
 if|if
@@ -806,7 +371,7 @@ condition|(
 operator|!
 name|IsForwarding
 argument_list|(
-name|GetBasicInstructionClass
+name|GetBasicARCInstKind
 argument_list|(
 name|V
 argument_list|)
@@ -833,15 +398,27 @@ return|return
 name|V
 return|;
 block|}
-comment|/// \brief This is a wrapper around Value::stripPointerCasts which also knows
-comment|/// how to look through objc_retain and objc_autorelease calls, which we know to
-comment|/// return their argument verbatim.
+comment|/// The RCIdentity root of a value \p V is a dominating value U for which
+comment|/// retaining or releasing U is equivalent to retaining or releasing V. In other
+comment|/// words, ARC operations on \p V are equivalent to ARC operations on \p U.
+comment|///
+comment|/// We use this in the ARC optimizer to make it easier to match up ARC
+comment|/// operations by always mapping ARC operations to RCIdentityRoots instead of
+comment|/// pointers themselves.
+comment|///
+comment|/// The two ways that we see RCIdentical values in ObjC are via:
+comment|///
+comment|///   1. PointerCasts
+comment|///   2. Forwarding Calls that return their argument verbatim.
+comment|///
+comment|/// Thus this function strips off pointer casts and forwarding calls. *NOTE*
+comment|/// This implies that two RCIdentical values must alias.
 specifier|static
 specifier|inline
 specifier|const
 name|Value
 modifier|*
-name|StripPointerCastsAndObjCCalls
+name|GetRCIdentityRoot
 parameter_list|(
 specifier|const
 name|Value
@@ -867,7 +444,7 @@ condition|(
 operator|!
 name|IsForwarding
 argument_list|(
-name|GetBasicInstructionClass
+name|GetBasicARCInstKind
 argument_list|(
 name|V
 argument_list|)
@@ -894,73 +471,48 @@ return|return
 name|V
 return|;
 block|}
-comment|/// \brief This is a wrapper around Value::stripPointerCasts which also knows
-comment|/// how to look through objc_retain and objc_autorelease calls, which we know to
-comment|/// return their argument verbatim.
+comment|/// Helper which calls const Value *GetRCIdentityRoot(const Value *V) and just
+comment|/// casts away the const of the result. For documentation about what an
+comment|/// RCIdentityRoot (and by extension GetRCIdentityRoot is) look at that
+comment|/// function.
 specifier|static
 specifier|inline
 name|Value
 modifier|*
-name|StripPointerCastsAndObjCCalls
+name|GetRCIdentityRoot
 parameter_list|(
 name|Value
 modifier|*
 name|V
 parameter_list|)
 block|{
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|V
-operator|=
-name|V
-operator|->
-name|stripPointerCasts
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|IsForwarding
-argument_list|(
-name|GetBasicInstructionClass
-argument_list|(
-name|V
-argument_list|)
-argument_list|)
-condition|)
-break|break;
-name|V
-operator|=
-name|cast
+return|return
+name|const_cast
 operator|<
-name|CallInst
+name|Value
+operator|*
 operator|>
 operator|(
-name|V
-operator|)
-operator|->
-name|getArgOperand
+name|GetRCIdentityRoot
 argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-return|return
+operator|(
+specifier|const
+name|Value
+operator|*
+operator|)
 name|V
+argument_list|)
+operator|)
 return|;
 block|}
 comment|/// \brief Assuming the given instruction is one of the special calls such as
-comment|/// objc_retain or objc_release, return the argument value, stripped of no-op
-comment|/// casts and forwarding calls.
+comment|/// objc_retain or objc_release, return the RCIdentity root of the argument of
+comment|/// the call.
 specifier|static
 specifier|inline
 name|Value
 modifier|*
-name|GetObjCArg
+name|GetArgRCIdentityRoot
 parameter_list|(
 name|Value
 modifier|*
@@ -968,7 +520,7 @@ name|Inst
 parameter_list|)
 block|{
 return|return
-name|StripPointerCastsAndObjCCalls
+name|GetRCIdentityRoot
 argument_list|(
 name|cast
 operator|<
@@ -1109,7 +661,7 @@ argument_list|(
 operator|(
 name|IsForwarding
 argument_list|(
-name|GetBasicInstructionClass
+name|GetBasicARCInstKind
 argument_list|(
 name|CI
 argument_list|)
@@ -1118,7 +670,7 @@ operator|||
 operator|(
 name|IsNoopOnNull
 argument_list|(
-name|GetBasicInstructionClass
+name|GetBasicARCInstKind
 argument_list|(
 name|CI
 argument_list|)
@@ -1346,11 +898,11 @@ return|return
 name|true
 return|;
 block|}
-comment|/// \brief Helper for GetInstructionClass. Determines what kind of construct CS
+comment|/// \brief Helper for GetARCInstKind. Determines what kind of construct CS
 comment|/// is.
 specifier|static
 specifier|inline
-name|InstructionClass
+name|ARCInstKind
 name|GetCallSiteClass
 parameter_list|(
 name|ImmutableCallSite
@@ -1397,9 +949,13 @@ operator|.
 name|onlyReadsMemory
 argument_list|()
 condition|?
-name|IC_User
+name|ARCInstKind
+operator|::
+name|User
 else|:
-name|IC_CallOrUser
+name|ARCInstKind
+operator|::
+name|CallOrUser
 return|;
 return|return
 name|CS
@@ -1407,9 +963,13 @@ operator|.
 name|onlyReadsMemory
 argument_list|()
 condition|?
-name|IC_None
+name|ARCInstKind
+operator|::
+name|None
 else|:
-name|IC_Call
+name|ARCInstKind
+operator|::
+name|Call
 return|;
 block|}
 comment|/// \brief Return true if this value refers to a distinct and identifiable
@@ -1497,7 +1057,7 @@ name|Value
 modifier|*
 name|Pointer
 init|=
-name|StripPointerCastsAndObjCCalls
+name|GetRCIdentityRoot
 argument_list|(
 name|LI
 operator|->
@@ -1629,6 +1189,185 @@ return|return
 name|false
 return|;
 block|}
+name|enum
+name|class
+name|ARCMDKindID
+block|{
+name|ImpreciseRelease
+operator|,
+name|CopyOnEscape
+operator|,
+name|NoObjCARCExceptions
+operator|,
+block|}
+empty_stmt|;
+comment|/// A cache of MDKinds used by various ARC optimizations.
+name|class
+name|ARCMDKindCache
+block|{
+name|Module
+modifier|*
+name|M
+decl_stmt|;
+comment|/// The Metadata Kind for clang.imprecise_release metadata.
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|ImpreciseReleaseMDKind
+expr_stmt|;
+comment|/// The Metadata Kind for clang.arc.copy_on_escape metadata.
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|CopyOnEscapeMDKind
+expr_stmt|;
+comment|/// The Metadata Kind for clang.arc.no_objc_arc_exceptions metadata.
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|NoObjCARCExceptionsMDKind
+expr_stmt|;
+name|public
+label|:
+name|void
+name|init
+parameter_list|(
+name|Module
+modifier|*
+name|Mod
+parameter_list|)
+block|{
+name|M
+operator|=
+name|Mod
+expr_stmt|;
+name|ImpreciseReleaseMDKind
+operator|=
+name|NoneType
+operator|::
+name|None
+expr_stmt|;
+name|CopyOnEscapeMDKind
+operator|=
+name|NoneType
+operator|::
+name|None
+expr_stmt|;
+name|NoObjCARCExceptionsMDKind
+operator|=
+name|NoneType
+operator|::
+name|None
+expr_stmt|;
+block|}
+name|unsigned
+name|get
+parameter_list|(
+name|ARCMDKindID
+name|ID
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|ID
+condition|)
+block|{
+case|case
+name|ARCMDKindID
+operator|::
+name|ImpreciseRelease
+case|:
+if|if
+condition|(
+operator|!
+name|ImpreciseReleaseMDKind
+condition|)
+name|ImpreciseReleaseMDKind
+operator|=
+name|M
+operator|->
+name|getContext
+argument_list|()
+operator|.
+name|getMDKindID
+argument_list|(
+literal|"clang.imprecise_release"
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|ImpreciseReleaseMDKind
+return|;
+case|case
+name|ARCMDKindID
+operator|::
+name|CopyOnEscape
+case|:
+if|if
+condition|(
+operator|!
+name|CopyOnEscapeMDKind
+condition|)
+name|CopyOnEscapeMDKind
+operator|=
+name|M
+operator|->
+name|getContext
+argument_list|()
+operator|.
+name|getMDKindID
+argument_list|(
+literal|"clang.arc.copy_on_escape"
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|CopyOnEscapeMDKind
+return|;
+case|case
+name|ARCMDKindID
+operator|::
+name|NoObjCARCExceptions
+case|:
+if|if
+condition|(
+operator|!
+name|NoObjCARCExceptionsMDKind
+condition|)
+name|NoObjCARCExceptionsMDKind
+operator|=
+name|M
+operator|->
+name|getContext
+argument_list|()
+operator|.
+name|getMDKindID
+argument_list|(
+literal|"clang.arc.no_objc_arc_exceptions"
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|NoObjCARCExceptionsMDKind
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Covered switch isn't covered?!"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+empty_stmt|;
 block|}
 comment|// end namespace objcarc
 block|}

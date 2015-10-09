@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Endian.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorOr.h"
 end_include
 
@@ -112,13 +118,17 @@ name|class
 name|raw_ostream
 decl_stmt|;
 comment|/// Read the header of the specified bitcode buffer and prepare for lazy
-comment|/// deserialization of function bodies.  If successful, this moves Buffer. On
+comment|/// deserialization of function bodies. If ShouldLazyLoadMetadata is true,
+comment|/// lazily load metadata as well. If successful, this moves Buffer. On
 comment|/// error, this *does not* move Buffer.
 name|ErrorOr
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-operator|*
-operator|>
+operator|>>
 name|getLazyBitcodeModule
 argument_list|(
 argument|std::unique_ptr<MemoryBuffer>&&Buffer
@@ -126,6 +136,8 @@ argument_list|,
 argument|LLVMContext&Context
 argument_list|,
 argument|DiagnosticHandlerFunction DiagnosticHandler = nullptr
+argument_list|,
+argument|bool ShouldLazyLoadMetadata = false
 argument_list|)
 expr_stmt|;
 comment|/// Read the header of the specified stream and prepare for lazy
@@ -142,7 +154,7 @@ name|getStreamedBitcodeModule
 argument_list|(
 argument|StringRef Name
 argument_list|,
-argument|DataStreamer *Streamer
+argument|std::unique_ptr<DataStreamer> Streamer
 argument_list|,
 argument|LLVMContext&Context
 argument_list|,
@@ -167,9 +179,12 @@ expr_stmt|;
 comment|/// Read the specified bitcode file, returning the module.
 name|ErrorOr
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-operator|*
-operator|>
+operator|>>
 name|parseBitcodeFile
 argument_list|(
 argument|MemoryBufferRef Buffer
@@ -179,9 +194,14 @@ argument_list|,
 argument|DiagnosticHandlerFunction DiagnosticHandler = nullptr
 argument_list|)
 expr_stmt|;
-comment|/// WriteBitcodeToFile - Write the specified module to the specified
-comment|/// raw output stream.  For streams where it matters, the given stream
-comment|/// should be in "binary" mode.
+comment|/// \brief Write the specified module to the specified raw output stream.
+comment|///
+comment|/// For streams where it matters, the given stream should be in "binary"
+comment|/// mode.
+comment|///
+comment|/// If \c ShouldPreserveUseListOrder, encode the use-list order for each \a
+comment|/// Value in \c M.  These will be reconstructed exactly when \a M is
+comment|/// deserialized.
 name|void
 name|WriteBitcodeToFile
 parameter_list|(
@@ -193,6 +213,11 @@ parameter_list|,
 name|raw_ostream
 modifier|&
 name|Out
+parameter_list|,
+name|bool
+name|ShouldPreserveUseListOrder
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// isBitcodeWrapper - Return true if the given bytes are the magic bytes
@@ -420,88 +445,34 @@ return|;
 name|unsigned
 name|Offset
 init|=
-operator|(
+name|support
+operator|::
+name|endian
+operator|::
+name|read32le
+argument_list|(
+operator|&
 name|BufPtr
 index|[
 name|OffsetField
 index|]
-operator||
-operator|(
-name|BufPtr
-index|[
-name|OffsetField
-operator|+
-literal|1
-index|]
-operator|<<
-literal|8
-operator|)
-operator||
-operator|(
-name|BufPtr
-index|[
-name|OffsetField
-operator|+
-literal|2
-index|]
-operator|<<
-literal|16
-operator|)
-operator||
-operator|(
-name|BufPtr
-index|[
-name|OffsetField
-operator|+
-literal|3
-index|]
-operator|<<
-literal|24
-operator|)
-operator|)
+argument_list|)
 decl_stmt|;
 name|unsigned
 name|Size
 init|=
-operator|(
+name|support
+operator|::
+name|endian
+operator|::
+name|read32le
+argument_list|(
+operator|&
 name|BufPtr
 index|[
 name|SizeField
 index|]
-operator||
-operator|(
-name|BufPtr
-index|[
-name|SizeField
-operator|+
-literal|1
-index|]
-operator|<<
-literal|8
-operator|)
-operator||
-operator|(
-name|BufPtr
-index|[
-name|SizeField
-operator|+
-literal|2
-index|]
-operator|<<
-literal|16
-operator|)
-operator||
-operator|(
-name|BufPtr
-index|[
-name|SizeField
-operator|+
-literal|3
-index|]
-operator|<<
-literal|24
-operator|)
-operator|)
+argument_list|)
 decl_stmt|;
 comment|// Verify that Offset+Size fits in the file.
 if|if
@@ -549,6 +520,8 @@ name|class
 name|BitcodeError
 block|{
 name|InvalidBitcodeSignature
+operator|=
+literal|1
 operator|,
 name|CorruptedBitcode
 block|}

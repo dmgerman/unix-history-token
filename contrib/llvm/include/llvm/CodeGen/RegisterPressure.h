@@ -127,49 +127,6 @@ literal|8
 operator|>
 name|LiveOutRegs
 expr_stmt|;
-comment|/// Increase register pressure for each pressure set impacted by this register
-comment|/// class. Normally called by RegPressureTracker, but may be called manually
-comment|/// to account for live through (global liveness).
-comment|///
-comment|/// \param Reg is either a virtual register number or register unit number.
-name|void
-name|increase
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|,
-specifier|const
-name|TargetRegisterInfo
-modifier|*
-name|TRI
-parameter_list|,
-specifier|const
-name|MachineRegisterInfo
-modifier|*
-name|MRI
-parameter_list|)
-function_decl|;
-comment|/// Decrease register pressure for each pressure set impacted by this register
-comment|/// class. This is only useful to account for spilling or rematerialization.
-comment|///
-comment|/// \param Reg is either a virtual register number or register unit number.
-name|void
-name|decrease
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|,
-specifier|const
-name|TargetRegisterInfo
-modifier|*
-name|TRI
-parameter_list|,
-specifier|const
-name|MachineRegisterInfo
-modifier|*
-name|MRI
-parameter_list|)
-function_decl|;
 name|void
 name|dump
 argument_list|(
@@ -528,6 +485,17 @@ modifier|*
 name|MRI
 parameter_list|)
 function_decl|;
+name|LLVM_DUMP_METHOD
+name|void
+name|dump
+argument_list|(
+specifier|const
+name|TargetRegisterInfo
+operator|&
+name|TRI
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// Array of PressureDiffs.

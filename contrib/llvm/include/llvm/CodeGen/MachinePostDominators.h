@@ -110,6 +110,7 @@ block|;
 operator|~
 name|MachinePostDominatorTree
 argument_list|()
+name|override
 block|;
 name|FunctionPass
 operator|*

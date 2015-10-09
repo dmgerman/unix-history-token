@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/MemoryBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/raw_ostream.h"
 end_include
 
@@ -167,7 +173,7 @@ argument_list|,
 argument|ArrayRef<uint64_t> Counters
 argument_list|)
 expr_stmt|;
-comment|/// Ensure that all data is written to disk.
+comment|/// Write the profile to \c OS
 name|void
 name|write
 parameter_list|(
@@ -176,6 +182,33 @@ modifier|&
 name|OS
 parameter_list|)
 function_decl|;
+comment|/// Write the profile, returning the raw data. For testing.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MemoryBuffer
+operator|>
+name|writeBuffer
+argument_list|()
+expr_stmt|;
+name|private
+label|:
+name|std
+operator|::
+name|pair
+operator|<
+name|uint64_t
+operator|,
+name|uint64_t
+operator|>
+name|writeImpl
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

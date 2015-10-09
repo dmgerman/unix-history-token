@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmdArgContext.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMICmdArgContext interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -229,14 +185,6 @@ name|private
 label|:
 name|CMIUtilString
 name|m_strCmdArgsAndOptions
-decl_stmt|;
-specifier|const
-name|MIchar
-name|m_constCharSpace
-decl_stmt|;
-specifier|const
-name|CMIUtilString
-name|m_constStrSpace
 decl_stmt|;
 block|}
 end_decl_stmt

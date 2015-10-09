@@ -95,7 +95,7 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/// \brief Represents a version number in the form major[.minor[.subminor]].
+comment|/// \brief Represents a version number in the form major[.minor[.subminor[.build]]].
 name|class
 name|VersionTuple
 block|{
@@ -115,12 +115,22 @@ range|:
 literal|31
 decl_stmt|;
 name|unsigned
+name|Build
+range|:
+literal|31
+decl_stmt|;
+name|unsigned
 name|HasMinor
 range|:
 literal|1
 decl_stmt|;
 name|unsigned
 name|HasSubminor
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|HasBuild
 range|:
 literal|1
 decl_stmt|;
@@ -149,6 +159,11 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|Build
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|HasMinor
 argument_list|(
 name|false
@@ -159,11 +174,16 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|HasBuild
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|UsesUnderscores
 argument_list|(
 argument|false
 argument_list|)
-block|{ }
+block|{}
 name|explicit
 name|VersionTuple
 argument_list|(
@@ -185,6 +205,11 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|Build
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|HasMinor
 argument_list|(
 name|false
@@ -195,11 +220,16 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|HasBuild
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|UsesUnderscores
 argument_list|(
 argument|false
 argument_list|)
-block|{ }
+block|{}
 name|explicit
 name|VersionTuple
 argument_list|(
@@ -225,6 +255,11 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|Build
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|HasMinor
 argument_list|(
 name|true
@@ -235,11 +270,16 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|HasBuild
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|UsesUnderscores
 argument_list|(
 argument|UsesUnderscores
 argument_list|)
-block|{ }
+block|{}
 name|explicit
 name|VersionTuple
 argument_list|(
@@ -267,6 +307,11 @@ argument_list|(
 name|Subminor
 argument_list|)
 operator|,
+name|Build
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|HasMinor
 argument_list|(
 name|true
@@ -277,11 +322,70 @@ argument_list|(
 name|true
 argument_list|)
 operator|,
+name|HasBuild
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|UsesUnderscores
 argument_list|(
 argument|UsesUnderscores
 argument_list|)
-block|{ }
+block|{}
+name|explicit
+name|VersionTuple
+argument_list|(
+argument|unsigned Major
+argument_list|,
+argument|unsigned Minor
+argument_list|,
+argument|unsigned Subminor
+argument_list|,
+argument|unsigned Build
+argument_list|,
+argument|bool UsesUnderscores = false
+argument_list|)
+operator|:
+name|Major
+argument_list|(
+name|Major
+argument_list|)
+operator|,
+name|Minor
+argument_list|(
+name|Minor
+argument_list|)
+operator|,
+name|Subminor
+argument_list|(
+name|Subminor
+argument_list|)
+operator|,
+name|Build
+argument_list|(
+name|Build
+argument_list|)
+operator|,
+name|HasMinor
+argument_list|(
+name|true
+argument_list|)
+operator|,
+name|HasSubminor
+argument_list|(
+name|true
+argument_list|)
+operator|,
+name|HasBuild
+argument_list|(
+name|true
+argument_list|)
+operator|,
+name|UsesUnderscores
+argument_list|(
+argument|UsesUnderscores
+argument_list|)
+block|{}
 comment|/// \brief Determine whether this version information is empty
 comment|/// (e.g., all version components are zero).
 name|bool
@@ -299,6 +403,10 @@ operator|==
 literal|0
 operator|&&
 name|Subminor
+operator|==
+literal|0
+operator|&&
+name|Build
 operator|==
 literal|0
 return|;
@@ -357,10 +465,42 @@ return|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/// \brief Retrieve the build version number, if provided.
+end_comment
+
 begin_expr_stmt
-name|bool
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|getBuild
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|HasBuild
+condition|)
+return|return
+name|None
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|Build
+return|;
+end_return
+
+begin_macro
+unit|}    bool
 name|usesUnderscores
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -430,6 +570,14 @@ operator|==
 name|Y
 operator|.
 name|Subminor
+operator|&&
+name|X
+operator|.
+name|Build
+operator|==
+name|Y
+operator|.
+name|Build
 return|;
 block|}
 end_expr_stmt
@@ -527,6 +675,10 @@ argument_list|,
 name|X
 operator|.
 name|Subminor
+argument_list|,
+name|X
+operator|.
+name|Build
 argument_list|)
 operator|<
 name|std
@@ -544,6 +696,10 @@ argument_list|,
 name|Y
 operator|.
 name|Subminor
+argument_list|,
+name|Y
+operator|.
+name|Build
 argument_list|)
 return|;
 block|}
@@ -709,7 +865,7 @@ comment|/// \returns \c true if the string does not match the regular expression
 end_comment
 
 begin_comment
-comment|///   [0-9]+(\.[0-9]+(\.[0-9]+))
+comment|///   [0-9]+(\.[0-9]+){0,3}
 end_comment
 
 begin_function_decl

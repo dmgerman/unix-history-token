@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"SparcSelectionDAGInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/DataLayout.h"
 end_include
 
@@ -93,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetFrameLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetSelectionDAGInfo.h"
 end_include
 
 begin_include
@@ -159,18 +159,13 @@ block|;
 name|bool
 name|UsePopc
 block|;
-specifier|const
-name|DataLayout
-name|DL
-block|;
-comment|// Calculates type size& alignment
 name|SparcInstrInfo
 name|InstrInfo
 block|;
 name|SparcTargetLowering
 name|TLInfo
 block|;
-name|SparcSelectionDAGInfo
+name|TargetSelectionDAGInfo
 name|TSInfo
 block|;
 name|SparcFrameLowering
@@ -180,7 +175,7 @@ name|public
 operator|:
 name|SparcSubtarget
 argument_list|(
-argument|const std::string&TT
+argument|const Triple&TT
 argument_list|,
 argument|const std::string&CPU
 argument_list|,
@@ -247,7 +242,7 @@ name|TLInfo
 return|;
 block|}
 specifier|const
-name|SparcSelectionDAGInfo
+name|TargetSelectionDAGInfo
 operator|*
 name|getSelectionDAGInfo
 argument_list|()
@@ -257,19 +252,6 @@ block|{
 return|return
 operator|&
 name|TSInfo
-return|;
-block|}
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-operator|&
-name|DL
 return|;
 block|}
 name|bool

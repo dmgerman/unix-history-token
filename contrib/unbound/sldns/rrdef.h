@@ -733,7 +733,7 @@ block|,
 comment|/** A non-zero sequence of US-ASCII letters and numbers in lower case.          *  For CAA.          */
 name|LDNS_RDF_TYPE_TAG
 block|,
-comment|/** A<character-string> encoding of the value field as specified           * [RFC1035], Section 5.1., encoded as remaining rdata.          * For CAA.          */
+comment|/** A<character-string> encoding of the value field as specified           * [RFC1035], Section 5.1., encoded as remaining rdata.          * For CAA, URI.          */
 name|LDNS_RDF_TYPE_LONG_STR
 block|,
 comment|/* Aliases */

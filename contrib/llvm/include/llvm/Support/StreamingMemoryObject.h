@@ -70,12 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cassert>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<memory>
 end_include
 
@@ -102,9 +96,13 @@ name|public
 operator|:
 name|StreamingMemoryObject
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|DataStreamer
-operator|*
-name|streamer
+operator|>
+name|Streamer
 argument_list|)
 block|;
 name|uint64_t
@@ -137,11 +135,12 @@ argument_list|)
 specifier|const
 name|override
 block|{
-comment|// This could be fixed by ensuring the bytes are fetched and making a copy,
-comment|// requiring that the bitcode size be known, or otherwise ensuring that
-comment|// the memory doesn't go away/get reallocated, but it's
-comment|// not currently necessary. Users that need the pointer don't stream.
-name|llvm_unreachable
+comment|// FIXME: This could be fixed by ensuring the bytes are fetched and
+comment|// making a copy, requiring that the bitcode size be known, or
+comment|// otherwise ensuring that the memory doesn't go away/get reallocated,
+comment|// but it's not currently necessary. Users that need the pointer (any
+comment|// that need Blobs) don't stream.
+name|report_fatal_error
 argument_list|(
 literal|"getPointer in streaming memory objects not allowed"
 argument_list|)
@@ -224,11 +223,12 @@ name|mutable
 name|bool
 name|EOFReached
 block|;
-comment|// Fetch enough bytes such that Pos can be read or EOF is reached
-comment|// (i.e. BytesRead> Pos). Return true if Pos can be read.
-comment|// Unlike most of the functions in BitcodeReader, returns true on success.
-comment|// Most of the requests will be small, but we fetch at kChunkSize bytes
-comment|// at a time to avoid making too many potentially expensive GetBytes calls
+comment|// Fetch enough bytes such that Pos can be read (i.e. BytesRead>
+comment|// Pos). Returns true if Pos can be read.  Unlike most of the
+comment|// functions in BitcodeReader, returns true on success.  Most of the
+comment|// requests will be small, but we fetch at kChunkSize bytes at a
+comment|// time to avoid making too many potentially expensive GetBytes
+comment|// calls.
 name|bool
 name|fetchToPos
 argument_list|(
@@ -236,15 +236,6 @@ argument|size_t Pos
 argument_list|)
 specifier|const
 block|{
-if|if
-condition|(
-name|EOFReached
-condition|)
-return|return
-name|Pos
-operator|<
-name|ObjectSize
-return|;
 while|while
 condition|(
 name|Pos
@@ -252,6 +243,13 @@ operator|>=
 name|BytesRead
 condition|)
 block|{
+if|if
+condition|(
+name|EOFReached
+condition|)
+return|return
+name|false
+return|;
 name|Bytes
 operator|.
 name|resize
@@ -288,11 +286,17 @@ expr_stmt|;
 if|if
 condition|(
 name|bytes
-operator|!=
-name|kChunkSize
+operator|==
+literal|0
 condition|)
 block|{
 comment|// reached EOF/ran out of bytes
+if|if
+condition|(
+name|ObjectSize
+operator|==
+literal|0
+condition|)
 name|ObjectSize
 operator|=
 name|BytesRead
@@ -301,39 +305,38 @@ name|EOFReached
 operator|=
 name|true
 expr_stmt|;
-break|break;
 block|}
 block|}
 return|return
+operator|!
+name|ObjectSize
+operator|||
 name|Pos
 operator|<
-name|BytesRead
+name|ObjectSize
 return|;
 block|}
 name|StreamingMemoryObject
 argument_list|(
-argument|const StreamingMemoryObject&
+specifier|const
+name|StreamingMemoryObject
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
-expr_stmt|;
+operator|=
+name|delete
+block|;
 name|void
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|StreamingMemoryObject
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
+block|; }
 decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
 name|MemoryObject
 modifier|*
 name|getNonStreamedMemoryObject
@@ -351,10 +354,10 @@ modifier|*
 name|End
 parameter_list|)
 function_decl|;
-end_function_decl
+block|}
+end_decl_stmt
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif

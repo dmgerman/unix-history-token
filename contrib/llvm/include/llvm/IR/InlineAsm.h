@@ -140,9 +140,12 @@ operator|>
 block|;
 name|InlineAsm
 argument_list|(
-argument|const InlineAsm&
+specifier|const
+name|InlineAsm
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -152,7 +155,8 @@ specifier|const
 name|InlineAsm
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|std
 operator|::
@@ -185,10 +189,10 @@ argument_list|,
 argument|AsmDialect asmDialect
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|InlineAsm
 argument_list|()
+name|override
 block|;
 comment|/// When the ConstantUniqueMap merges two types and makes two InlineAsms
 comment|/// identical, it destroys one of them with this method.
@@ -532,6 +536,20 @@ return|;
 block|}
 comment|// These are helper methods for dealing with flags in the INLINEASM SDNode
 comment|// in the backend.
+comment|//
+comment|// The encoding of the flag word is currently:
+comment|//   Bits 2-0 - A Kind_* value indicating the kind of the operand.
+comment|//   Bits 15-3 - The number of SDNode operands associated with this inline
+comment|//               assembly operand.
+comment|//   If bit 31 is set:
+comment|//     Bit 30-16 - The operand number that this operand must match.
+comment|//                 When bits 2-0 are Kind_Mem, the Constraint_* value must be
+comment|//                 obtained from the flags for this operand number.
+comment|//   Else if bits 2-0 are Kind_Mem:
+comment|//     Bit 30-16 - A Constraint_* value indicating the original constraint
+comment|//                 code.
+comment|//   Else:
+comment|//     Bit 30-16 - The register class ID to use for the operand.
 enum_decl|enum :
 name|uint32_t
 block|{
@@ -625,6 +643,62 @@ init|=
 literal|6
 block|,
 comment|// Memory operand, "m".
+comment|// Memory constraint codes.
+comment|// These could be tablegenerated but there's little need to do that since
+comment|// there's plenty of space in the encoding to support the union of all
+comment|// constraint codes for all targets.
+name|Constraint_Unknown
+init|=
+literal|0
+block|,
+name|Constraint_es
+block|,
+name|Constraint_i
+block|,
+name|Constraint_m
+block|,
+name|Constraint_o
+block|,
+name|Constraint_v
+block|,
+name|Constraint_Q
+block|,
+name|Constraint_R
+block|,
+name|Constraint_S
+block|,
+name|Constraint_T
+block|,
+name|Constraint_Um
+block|,
+name|Constraint_Un
+block|,
+name|Constraint_Uq
+block|,
+name|Constraint_Us
+block|,
+name|Constraint_Ut
+block|,
+name|Constraint_Uv
+block|,
+name|Constraint_Uy
+block|,
+name|Constraint_X
+block|,
+name|Constraint_Z
+block|,
+name|Constraint_ZC
+block|,
+name|Constraint_Zy
+block|,
+name|Constraints_Max
+init|=
+name|Constraint_Zy
+block|,
+name|Constraints_ShiftAmount
+init|=
+literal|16
+block|,
 name|Flag_MatchingOperand
 init|=
 literal|0x80000000
@@ -784,6 +858,88 @@ literal|16
 operator|)
 return|;
 block|}
+comment|/// Augment an existing flag word returned by getFlagWord with the constraint
+comment|/// code for a memory constraint.
+specifier|static
+name|unsigned
+name|getFlagWordForMem
+parameter_list|(
+name|unsigned
+name|InputFlag
+parameter_list|,
+name|unsigned
+name|Constraint
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|Constraint
+operator|<=
+literal|0x7fff
+operator|&&
+literal|"Too large a memory constraint ID"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|Constraint
+operator|<=
+name|Constraints_Max
+operator|&&
+literal|"Unknown constraint ID"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|InputFlag
+operator|&
+operator|~
+literal|0xffff
+operator|)
+operator|==
+literal|0
+operator|&&
+literal|"High bits already contain data"
+argument_list|)
+expr_stmt|;
+return|return
+name|InputFlag
+operator||
+operator|(
+name|Constraint
+operator|<<
+name|Constraints_ShiftAmount
+operator|)
+return|;
+block|}
+specifier|static
+name|unsigned
+name|convertMemFlagWordToMatchingFlagWord
+parameter_list|(
+name|unsigned
+name|InputFlag
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isMemKind
+argument_list|(
+name|InputFlag
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|InputFlag
+operator|&
+operator|~
+operator|(
+literal|0x7fff
+operator|<<
+name|Constraints_ShiftAmount
+operator|)
+return|;
+block|}
 specifier|static
 name|unsigned
 name|getKind
@@ -881,6 +1037,32 @@ name|Flag
 argument_list|)
 operator|==
 name|Kind_Clobber
+return|;
+block|}
+specifier|static
+name|unsigned
+name|getMemoryConstraintID
+parameter_list|(
+name|unsigned
+name|Flag
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isMemKind
+argument_list|(
+name|Flag
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Flag
+operator|>>
+name|Constraints_ShiftAmount
+operator|)
+operator|&
+literal|0x7fff
 return|;
 block|}
 comment|/// getNumOperandRegisters - Extract the number of registers field from the

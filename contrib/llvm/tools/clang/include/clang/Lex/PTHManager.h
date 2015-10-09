@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -287,9 +293,12 @@ argument_list|)
 empty_stmt|;
 name|PTHManager
 argument_list|(
-argument|const PTHManager&
+specifier|const
+name|PTHManager
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -299,7 +308,8 @@ specifier|const
 name|PTHManager
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 comment|/// getSpellingAtPTHOffset - Used by PTHLexer classes to get the cached
 comment|///  spelling for a token.
@@ -370,6 +380,7 @@ enum|;
 operator|~
 name|PTHManager
 argument_list|()
+name|override
 expr_stmt|;
 comment|/// getOriginalSourceFile - Return the full path to the original header
 comment|///  file name that was used to generate the PTH cache.
@@ -403,19 +414,15 @@ specifier|static
 name|PTHManager
 modifier|*
 name|Create
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|(
+name|StringRef
 name|file
-argument_list|,
+parameter_list|,
 name|DiagnosticsEngine
-operator|&
+modifier|&
 name|Diags
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|void
 name|setPreprocessor
 parameter_list|(

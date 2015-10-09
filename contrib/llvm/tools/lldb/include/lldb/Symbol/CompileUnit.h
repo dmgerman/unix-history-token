@@ -451,6 +451,26 @@ name|GetSupportFiles
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
+comment|/// Get the compile unit's imported module list.
+comment|///
+comment|/// This reports all the imports that the compile unit made,
+comment|/// including the current module.
+comment|///
+comment|/// @return
+comment|///     A list of imported module names.
+comment|//------------------------------------------------------------------
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|ConstString
+operator|>
+operator|&
+name|GetImportedModules
+argument_list|()
+expr_stmt|;
+comment|//------------------------------------------------------------------
 comment|/// Get the SymbolFile plug-in user data.
 comment|///
 comment|/// SymbolFile plug-ins can store user data to internal state or
@@ -657,6 +677,16 @@ name|m_functions
 expr_stmt|;
 comment|///< The sparsely populated list of shared pointers to functions
 comment|///< that gets populated as functions get partially parsed.
+name|std
+operator|::
+name|vector
+operator|<
+name|ConstString
+operator|>
+name|m_imported_modules
+expr_stmt|;
+comment|///< All modules, including the current module, imported by this
+comment|///< compile unit.
 name|FileSpecList
 name|m_support_files
 decl_stmt|;
@@ -723,7 +753,16 @@ literal|1u
 operator|<<
 literal|4
 operator|)
+block|,
 comment|///< Have we parsed the line table already?
+name|flagsParsedImportedModules
+init|=
+operator|(
+literal|1u
+operator|<<
+literal|5
+operator|)
+comment|///< Have we parsed the imported modules already?
 block|}
 enum|;
 name|DISALLOW_COPY_AND_ASSIGN

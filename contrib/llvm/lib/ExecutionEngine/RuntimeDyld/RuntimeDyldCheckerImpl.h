@@ -74,6 +74,10 @@ name|friend
 name|class
 name|RuntimeDyldCheckerExprEval
 decl_stmt|;
+name|friend
+name|class
+name|RuntimeDyldELF
+decl_stmt|;
 name|public
 label|:
 name|RuntimeDyldCheckerImpl
@@ -192,7 +196,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|uint64_t
-name|getSymbolLinkerAddr
+name|getSymbolLocalAddr
 argument_list|(
 name|StringRef
 name|Symbol

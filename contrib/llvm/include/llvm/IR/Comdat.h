@@ -188,9 +188,12 @@ argument_list|)
 empty_stmt|;
 name|Comdat
 argument_list|(
-argument|const Comdat&
+specifier|const
+name|Comdat
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 comment|// Points to the map in Module.
 name|StringMapEntry

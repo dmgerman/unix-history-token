@@ -303,6 +303,40 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__AVX512CD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<avx512cdintrin.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__AVX512DQ__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<avx512dqintrin.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -321,6 +355,31 @@ begin_include
 include|#
 directive|include
 file|<avx512vlbwintrin.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__AVX512VL__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__AVX512DQ__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<avx512vldqintrin.h>
 end_include
 
 begin_endif
@@ -718,42 +777,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* FIXME: check __HLE__ as well when HLE is supported. */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__RTM__
-argument_list|)
-end_if
+end_ifdef
 
-begin_decl_stmt
-specifier|static
-name|__inline__
-name|int
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
-name|_xtest
-argument_list|(
-name|void
-argument_list|)
-block|{
-return|return
-name|__builtin_ia32_xtest
-argument_list|()
-return|;
-block|}
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<xtestintrin.h>
+end_include
 
 begin_endif
 endif|#
@@ -777,8 +811,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<fxsrintrin.h>
+end_include
+
 begin_comment
-comment|/* Some intrinsics inside adxintrin.h are available only if __ADX__ defined,  * whereas others are also available if __ADX__ undefined */
+comment|/* Some intrinsics inside adxintrin.h are available only on processors with ADX,  * whereas others are also available at all times. */
 end_comment
 
 begin_include

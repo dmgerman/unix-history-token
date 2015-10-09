@@ -91,7 +91,7 @@ comment|/* The domain being granted foreign privileges. [GST] */
 name|domid_t
 name|domid
 decl_stmt|;
-comment|/*      * GTF_permit_access: Frame that @domid is allowed to map and access. [GST]      * GTF_accept_transfer: Frame whose ownership transferred by @domid. [XEN]      */
+comment|/*      * GTF_permit_access: GFN that @domid is allowed to map and access. [GST]      * GTF_accept_transfer: GFN that @domid is allowed to transfer into. [GST]      * GTF_transfer_completed: MFN whose ownership transferred by @domid      *                         (non-translated guests only). [XEN]      */
 name|uint32_t
 name|frame
 decl_stmt|;
@@ -544,6 +544,13 @@ name|GNTTABOP_swap_grant_ref
 value|11
 end_define
 
+begin_define
+define|#
+directive|define
+name|GNTTABOP_cache_flush
+value|12
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -569,7 +576,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * GNTTABOP_map_grant_ref: Map the grant entry (<dom>,<ref>) for access  * by devices and/or host CPUs. If successful,<handle> is a tracking number  * that must be presented later to destroy the mapping(s). On error,<handle>  * is a negative status code.  * NOTES:  *  1. If GNTMAP_device_map is specified then<dev_bus_addr> is the address  *     via which I/O devices may access the granted frame.  *  2. If GNTMAP_host_map is specified then a mapping will be added at  *     either a host virtual address in the current address space, or at  *     a PTE at the specified machine address.  The type of mapping to  *     perform is selected through the GNTMAP_contains_pte flag, and the  *     address is specified in<host_addr>.  *  3. Mappings should only be destroyed via GNTTABOP_unmap_grant_ref. If a  *     host mapping is destroyed by other means then it is *NOT* guaranteed  *     to be accounted to the correct grant reference!  */
+comment|/*  * GNTTABOP_map_grant_ref: Map the grant entry (<dom>,<ref>) for access  * by devices and/or host CPUs. If successful,<handle> is a tracking number  * that must be presented later to destroy the mapping(s). On error,<status>  * is a negative status code.  * NOTES:  *  1. If GNTMAP_device_map is specified then<dev_bus_addr> is the address  *     via which I/O devices may access the granted frame.  *  2. If GNTMAP_host_map is specified then a mapping will be added at  *     either a host virtual address in the current address space, or at  *     a PTE at the specified machine address.  The type of mapping to  *     perform is selected through the GNTMAP_contains_pte flag, and the  *     address is specified in<host_addr>.  *  3. Mappings should only be destroyed via GNTTABOP_unmap_grant_ref. If a  *     host mapping is destroyed by other means then it is *NOT* guaranteed  *     to be accounted to the correct grant reference!  */
 end_comment
 
 begin_struct
@@ -684,12 +691,27 @@ name|int16_t
 name|status
 decl_stmt|;
 comment|/* => enum grant_status */
+if|#
+directive|if
+name|__XEN_INTERFACE_VERSION__
+operator|<
+literal|0x00040300
 name|XEN_GUEST_HANDLE
 argument_list|(
 argument|ulong
 argument_list|)
 name|frame_list
 expr_stmt|;
+else|#
+directive|else
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|xen_pfn_t
+argument_list|)
+name|frame_list
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -821,26 +843,13 @@ name|GNTCOPY_dest_gref
 value|(1<<_GNTCOPY_dest_gref)
 end_define
 
-begin_define
-define|#
-directive|define
-name|_GNTCOPY_can_fail
-value|(2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GNTCOPY_can_fail
-value|(1<<_GNTCOPY_can_fail)
-end_define
-
 begin_struct
 struct|struct
 name|gnttab_copy
 block|{
 comment|/* IN parameters. */
 struct|struct
+name|gnttab_copy_ptr
 block|{
 union|union
 block|{
@@ -1142,6 +1151,68 @@ begin_expr_stmt
 name|DEFINE_XEN_GUEST_HANDLE
 argument_list|(
 name|gnttab_swap_grant_ref_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Issue one or more cache maintenance operations on a portion of a  * page granted to the calling domain by a foreign domain.  */
+end_comment
+
+begin_struct
+struct|struct
+name|gnttab_cache_flush
+block|{
+union|union
+block|{
+name|uint64_t
+name|dev_bus_addr
+decl_stmt|;
+name|grant_ref_t
+name|ref
+decl_stmt|;
+block|}
+name|a
+union|;
+name|uint16_t
+name|offset
+decl_stmt|;
+comment|/* offset from start of grant */
+name|uint16_t
+name|length
+decl_stmt|;
+comment|/* size within the grant */
+define|#
+directive|define
+name|GNTTAB_CACHE_CLEAN
+value|(1<<0)
+define|#
+directive|define
+name|GNTTAB_CACHE_INVAL
+value|(1<<1)
+define|#
+directive|define
+name|GNTTAB_CACHE_SOURCE_GREF
+value|(1<<31)
+name|uint32_t
+name|op
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|gnttab_cache_flush
+name|gnttab_cache_flush_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|gnttab_cache_flush_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1453,7 +1524,7 @@ comment|/* __XEN_PUBLIC_GRANT_TABLE_H__ */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit

@@ -263,7 +263,7 @@ comment|///     An pointer to an error that can describe any errors that
 comment|///     occur. This can be NULL if no error status is desired.
 comment|///
 comment|/// @return
-comment|///     @li \b true when the a master files descriptor is
+comment|///     @li \b true when the master files descriptor is
 comment|///         successfully opened.
 comment|///     @li \b false if anything goes wrong.
 comment|///
@@ -306,7 +306,7 @@ comment|///     An pointer to an error that can describe any errors that
 comment|///     occur. This can be NULL if no error status is desired.
 comment|///
 comment|/// @return
-comment|///     @li \b true when the a master files descriptor is
+comment|///     @li \b true when the master files descriptor is
 comment|///         successfully opened.
 comment|///     @li \b false if anything goes wrong.
 comment|///

@@ -149,6 +149,10 @@ name|TypeNV
 init|=
 literal|10
 block|,
+name|TypeDUPLEX
+init|=
+literal|11
+block|,
 name|TypePREFIX
 init|=
 literal|30
@@ -243,35 +247,36 @@ literal|6
 comment|// Post increment addressing mode
 block|}
 enum|;
-enum|enum
+name|enum
+name|class
 name|MemAccessSize
 block|{
 name|NoMemAccess
-init|=
+operator|=
 literal|0
-block|,
+operator|,
 comment|// Not a memory acces instruction.
 name|ByteAccess
-init|=
+operator|=
 literal|1
-block|,
+operator|,
 comment|// Byte access instruction (memb).
 name|HalfWordAccess
-init|=
+operator|=
 literal|2
-block|,
+operator|,
 comment|// Half word access instruction (memh).
 name|WordAccess
-init|=
+operator|=
 literal|3
-block|,
+operator|,
 comment|// Word access instruction (memw).
 name|DoubleWordAccess
-init|=
+operator|=
 literal|4
 comment|// Double word access instruction (memd)
 block|}
-enum|;
+empty_stmt|;
 comment|// MCInstrDesc TSFlags
 comment|// *** Must match HexagonInstrFormat*.td ***
 enum|enum
@@ -537,37 +542,70 @@ comment|// Offset from the base of the SDA.
 name|MO_GPREL
 block|}
 enum|;
-name|enum
-name|class
+comment|// Hexagon Sub-instruction classes.
+enum|enum
+name|SubInstructionGroup
+block|{
+name|HSIG_None
+init|=
+literal|0
+block|,
+name|HSIG_L1
+block|,
+name|HSIG_L2
+block|,
+name|HSIG_S1
+block|,
+name|HSIG_S2
+block|,
+name|HSIG_A
+block|,
+name|HSIG_Compound
+block|}
+enum|;
+comment|// Hexagon Compound classes.
+enum|enum
+name|CompoundGroup
+block|{
+name|HCG_None
+init|=
+literal|0
+block|,
+name|HCG_A
+block|,
+name|HCG_B
+block|,
+name|HCG_C
+block|}
+enum|;
+enum|enum
 name|InstParseBits
-range|:
-name|uint32_t
 block|{
 name|INST_PARSE_MASK
-operator|=
+init|=
 literal|0x0000c000
 block|,
 name|INST_PARSE_PACKET_END
-operator|=
+init|=
 literal|0x0000c000
 block|,
 name|INST_PARSE_LOOP_END
-operator|=
+init|=
 literal|0x00008000
 block|,
 name|INST_PARSE_NOT_END
-operator|=
+init|=
 literal|0x00004000
 block|,
 name|INST_PARSE_DUPLEX
-operator|=
+init|=
 literal|0x00000000
 block|,
 name|INST_PARSE_EXTENDER
-operator|=
+init|=
 literal|0x00000000
 block|}
-decl_stmt|;
+enum|;
 block|}
 comment|// End namespace HexagonII.
 block|}

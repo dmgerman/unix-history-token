@@ -90,6 +90,9 @@ name|class
 name|raw_ostream
 decl_stmt|;
 name|class
+name|raw_pwrite_stream
+decl_stmt|;
+name|class
 name|MCWinCOFFStreamer
 range|:
 name|public
@@ -111,7 +114,7 @@ name|MCCodeEmitter
 operator|&
 name|CE
 argument_list|,
-name|raw_ostream
+name|raw_pwrite_stream
 operator|&
 name|OS
 argument_list|)
@@ -206,6 +209,13 @@ argument_list|()
 name|override
 block|;
 name|void
+name|EmitCOFFSafeSEH
+argument_list|(
+argument|MCSymbol const *Symbol
+argument_list|)
+name|override
+block|;
+name|void
 name|EmitCOFFSectionIndex
 argument_list|(
 argument|MCSymbol const *Symbol
@@ -216,15 +226,6 @@ name|void
 name|EmitCOFFSecRel32
 argument_list|(
 argument|MCSymbol const *Symbol
-argument_list|)
-name|override
-block|;
-name|void
-name|EmitELFSize
-argument_list|(
-argument|MCSymbol *Symbol
-argument_list|,
-argument|const MCExpr *Value
 argument_list|)
 name|override
 block|;
@@ -253,7 +254,7 @@ block|;
 name|void
 name|EmitZerofill
 argument_list|(
-argument|const MCSection *Section
+argument|MCSection *Section
 argument_list|,
 argument|MCSymbol *Symbol
 argument_list|,
@@ -266,7 +267,7 @@ block|;
 name|void
 name|EmitTBSSSymbol
 argument_list|(
-argument|const MCSection *Section
+argument|MCSection *Section
 argument_list|,
 argument|MCSymbol *Symbol
 argument_list|,

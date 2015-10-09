@@ -193,6 +193,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/** for debug allow small timeout values for fast rollovers */
+end_comment
+
+begin_decl_stmt
+name|int
+name|autr_permit_small_holddown
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/** global config during parsing */
 end_comment
 
@@ -850,7 +862,7 @@ name|cfg
 operator|->
 name|harden_algo_downgrade
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|cfg
 operator|->
@@ -1029,6 +1041,12 @@ operator|*
 literal|3600
 expr_stmt|;
 comment|/* one year plus a little leeway */
+name|cfg
+operator|->
+name|permit_small_holddown
+operator|=
+literal|0
+expr_stmt|;
 name|cfg
 operator|->
 name|key_cache_size
@@ -2753,6 +2771,43 @@ literal|"keep-missing:"
 argument_list|,
 argument|keep_missing
 argument_list|)
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|opt
+argument_list|,
+literal|"permit-small-holddown:"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|IS_YES_OR_NO
+expr_stmt|;
+name|cfg
+operator|->
+name|permit_small_holddown
+operator|=
+operator|(
+name|strcmp
+argument_list|(
+name|val
+argument_list|,
+literal|"yes"
+argument_list|)
+operator|==
+literal|0
+operator|)
+expr_stmt|;
+name|autr_permit_small_holddown
+operator|=
+name|cfg
+operator|->
+name|permit_small_holddown
+expr_stmt|;
+block|}
 else|else
 name|S_MEMSIZE
 argument_list|(
@@ -4518,6 +4573,15 @@ argument_list|,
 literal|"keep-missing"
 argument_list|,
 argument|keep_missing
+argument_list|)
+else|else
+name|O_YNO
+argument_list|(
+argument|opt
+argument_list|,
+literal|"permit-small-holddown"
+argument_list|,
+argument|permit_small_holddown
 argument_list|)
 else|else
 name|O_MEM
@@ -7694,6 +7758,12 @@ name|config
 operator|->
 name|log_time_ascii
 argument_list|)
+expr_stmt|;
+name|autr_permit_small_holddown
+operator|=
+name|config
+operator|->
+name|permit_small_holddown
 expr_stmt|;
 block|}
 end_function

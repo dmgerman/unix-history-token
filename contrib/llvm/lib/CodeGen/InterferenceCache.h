@@ -77,6 +77,7 @@ name|class
 name|LiveIntervals
 decl_stmt|;
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|InterferenceCache
 block|{
 specifier|const
@@ -549,11 +550,13 @@ name|Entry
 modifier|*
 name|CacheEntry
 decl_stmt|;
+specifier|const
 name|BlockInterference
 modifier|*
 name|Current
 decl_stmt|;
 specifier|static
+specifier|const
 name|BlockInterference
 name|NoInterference
 decl_stmt|;

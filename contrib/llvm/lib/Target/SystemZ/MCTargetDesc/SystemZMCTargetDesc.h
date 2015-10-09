@@ -81,6 +81,12 @@ name|class
 name|Target
 decl_stmt|;
 name|class
+name|Triple
+decl_stmt|;
+name|class
+name|raw_pwrite_stream
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 specifier|extern
@@ -167,6 +173,30 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+specifier|extern
+specifier|const
+name|unsigned
+name|VR32Regs
+index|[
+literal|32
+index|]
+decl_stmt|;
+specifier|extern
+specifier|const
+name|unsigned
+name|VR64Regs
+index|[
+literal|32
+index|]
+decl_stmt|;
+specifier|extern
+specifier|const
+name|unsigned
+name|VR128Regs
+index|[
+literal|32
+index|]
+decl_stmt|;
 comment|// Return the 0-based number of the first architectural register that
 comment|// contains the given LLVM register.   E.g. R1D -> 1.
 name|unsigned
@@ -233,6 +263,25 @@ argument_list|)
 index|]
 return|;
 block|}
+comment|// Return the given register as a VR128.
+specifier|inline
+name|unsigned
+name|getRegAsVR128
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+block|{
+return|return
+name|VR128Regs
+index|[
+name|getFirstReg
+argument_list|(
+name|Reg
+argument_list|)
+index|]
+return|;
+block|}
 block|}
 comment|// end namespace SystemZMC
 name|MCCodeEmitter
@@ -248,11 +297,6 @@ specifier|const
 name|MCRegisterInfo
 modifier|&
 name|MRI
-parameter_list|,
-specifier|const
-name|MCSubtargetInfo
-modifier|&
-name|STI
 parameter_list|,
 name|MCContext
 modifier|&
@@ -273,7 +317,9 @@ name|MCRegisterInfo
 modifier|&
 name|MRI
 parameter_list|,
-name|StringRef
+specifier|const
+name|Triple
+modifier|&
 name|TT
 parameter_list|,
 name|StringRef
@@ -284,7 +330,7 @@ name|MCObjectWriter
 modifier|*
 name|createSystemZObjectWriter
 parameter_list|(
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
 parameter_list|,

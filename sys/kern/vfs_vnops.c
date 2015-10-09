@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_hwpmc_hooks.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -244,6 +250,23 @@ include|#
 directive|include
 file|<vm/vnode_pager.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/pmckern.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -11813,6 +11836,7 @@ operator|=
 operator|(
 name|uintptr_t
 operator|)
+operator|*
 name|addr
 expr_stmt|;
 name|PMC_CALL_HOOK

@@ -71,6 +71,11 @@ name|GCMetadataPrinter
 decl_stmt|;
 comment|/// FIXME: Collector instances are not useful on their own. These no longer
 comment|///        serve any purpose except to link in the plugins.
+comment|/// Creates a CoreCLR-compatible garbage collector.
+name|void
+name|linkCoreCLRGC
+parameter_list|()
+function_decl|;
 comment|/// Creates an ocaml-compatible garbage collector.
 name|void
 name|linkOcamlGC

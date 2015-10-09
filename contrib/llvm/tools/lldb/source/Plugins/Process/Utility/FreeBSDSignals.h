@@ -53,17 +53,15 @@ directive|include
 file|"lldb/Target/UnixSignals.h"
 end_include
 
-begin_comment
-comment|/// FreeBSD specific set of Unix signals.
-end_comment
-
 begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+comment|/// FreeBSD specific set of Unix signals.
 name|class
 name|FreeBSDSignals
 range|:
 name|public
-name|lldb_private
-operator|::
 name|UnixSignals
 block|{
 name|public
@@ -76,9 +74,15 @@ operator|:
 name|void
 name|Reset
 argument_list|()
+name|override
 block|; }
 decl_stmt|;
+block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace lldb_private
+end_comment
 
 begin_endif
 endif|#

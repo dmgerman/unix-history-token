@@ -1563,33 +1563,6 @@ block|{
 operator|.
 name|pr_num
 operator|=
-name|LAGG_PROTO_ETHERCHANNEL
-block|,
-operator|.
-name|pr_attach
-operator|=
-name|lagg_lb_attach
-block|,
-operator|.
-name|pr_detach
-operator|=
-name|lagg_lb_detach
-block|,
-operator|.
-name|pr_start
-operator|=
-name|lagg_lb_start
-block|,
-operator|.
-name|pr_input
-operator|=
-name|lagg_lb_input
-block|,     }
-block|,
-block|{
-operator|.
-name|pr_num
-operator|=
 name|LAGG_PROTO_BROADCAST
 block|,
 operator|.
@@ -3688,6 +3661,12 @@ operator|->
 name|llq_ifp
 operator|==
 name|ifp
+operator|&&
+name|llq
+operator|->
+name|llq_primary
+operator|==
+name|primary
 condition|)
 block|{
 name|pending
@@ -4658,6 +4637,9 @@ name|struct
 name|lagg_port
 modifier|*
 name|lp_ptr
+decl_stmt|,
+modifier|*
+name|lp0
 decl_stmt|;
 name|struct
 name|lagg_llq
@@ -4853,7 +4835,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|lp_ptr
+name|lp0
 operator|=
 name|SLIST_FIRST
 argument_list|(
@@ -4880,7 +4862,7 @@ else|else
 block|{
 name|bcopy
 argument_list|(
-name|lp_ptr
+name|lp0
 operator|->
 name|lp_lladdr
 argument_list|,
@@ -4897,13 +4879,7 @@ argument_list|,
 name|lladdr
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sc_primary
-operator|=
-name|lp_ptr
-expr_stmt|;
-comment|/* Update link layer address for each port */
+comment|/* 		 * Update link layer address for each port.  No port is 		 * marked as primary at this moment. 		 */
 name|SLIST_FOREACH
 argument_list|(
 argument|lp_ptr
@@ -4915,6 +4891,20 @@ argument_list|)
 name|lagg_port_lladdr
 argument_list|(
 name|lp_ptr
+argument_list|,
+name|lladdr
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Mark lp0 as the new primary.  This invokes an 		 * iflladdr_event. 		 */
+name|sc
+operator|->
+name|sc_primary
+operator|=
+name|lp0
+expr_stmt|;
+name|lagg_port_lladdr
+argument_list|(
+name|lp0
 argument_list|,
 name|lladdr
 argument_list|)
@@ -5774,9 +5764,6 @@ name|LAGG_PROTO_ROUNDROBIN
 case|:
 case|case
 name|LAGG_PROTO_LOADBALANCE
-case|:
-case|case
-name|LAGG_PROTO_ETHERCHANNEL
 case|:
 case|case
 name|LAGG_PROTO_BROADCAST
@@ -8737,9 +8724,6 @@ name|LAGG_PROTO_ROUNDROBIN
 case|:
 case|case
 name|LAGG_PROTO_LOADBALANCE
-case|:
-case|case
-name|LAGG_PROTO_ETHERCHANNEL
 case|:
 case|case
 name|LAGG_PROTO_BROADCAST

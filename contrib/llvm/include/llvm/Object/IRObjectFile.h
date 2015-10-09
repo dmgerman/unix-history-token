@@ -134,6 +134,7 @@ block|;
 operator|~
 name|IRObjectFile
 argument_list|()
+name|override
 block|;
 name|void
 name|moveSymbolNext

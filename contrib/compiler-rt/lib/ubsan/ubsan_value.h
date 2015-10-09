@@ -63,47 +63,6 @@ directive|define
 name|UBSAN_VALUE_H
 end_define
 
-begin_comment
-comment|// For now, only support Linux, FreeBSD and Darwin. Other platforms should
-end_comment
-
-begin_comment
-comment|// be easy to add, and probably work as-is.
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__APPLE__
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"UBSan not supported for this platform!"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include

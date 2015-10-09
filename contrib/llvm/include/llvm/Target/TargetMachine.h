@@ -68,6 +68,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DataLayout.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Pass.h"
 end_include
 
@@ -109,6 +121,9 @@ name|class
 name|Mangler
 decl_stmt|;
 name|class
+name|MachineFunctionInitializer
+decl_stmt|;
+name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
@@ -116,6 +131,15 @@ name|MCCodeGenInfo
 decl_stmt|;
 name|class
 name|MCContext
+decl_stmt|;
+name|class
+name|MCInstrInfo
+decl_stmt|;
+name|class
+name|MCRegisterInfo
+decl_stmt|;
+name|class
+name|MCSubtargetInfo
 decl_stmt|;
 name|class
 name|MCSymbol
@@ -131,6 +155,9 @@ name|TargetLibraryInfo
 decl_stmt|;
 name|class
 name|TargetFrameLowering
+decl_stmt|;
+name|class
+name|TargetIRAnalysis
 decl_stmt|;
 name|class
 name|TargetIntrinsicInfo
@@ -151,16 +178,16 @@ name|class
 name|TargetSubtargetInfo
 decl_stmt|;
 name|class
-name|ScalarTargetTransformInfo
-decl_stmt|;
-name|class
-name|VectorTargetTransformInfo
+name|TargetTransformInfo
 decl_stmt|;
 name|class
 name|formatted_raw_ostream
 decl_stmt|;
 name|class
 name|raw_ostream
+decl_stmt|;
+name|class
+name|raw_pwrite_stream
 decl_stmt|;
 name|class
 name|TargetLoweringObjectFile
@@ -180,18 +207,21 @@ name|PassManagerBase
 expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|///
-comment|/// TargetMachine - Primary interface to the complete machine description for
-comment|/// the target machine.  All target-specific information should be accessible
-comment|/// through this interface.
+comment|/// Primary interface to the complete machine description for the target
+comment|/// machine.  All target-specific information should be accessible through this
+comment|/// interface.
 comment|///
 name|class
 name|TargetMachine
 block|{
 name|TargetMachine
 argument_list|(
-argument|const TargetMachine&
+specifier|const
+name|TargetMachine
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -201,7 +231,8 @@ specifier|const
 name|TargetMachine
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|protected
 label|:
@@ -210,7 +241,9 @@ name|TargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TargetTriple
+argument|StringRef DataLayoutString
+argument_list|,
+argument|const Triple&TargetTriple
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -219,19 +252,22 @@ argument_list|,
 argument|const TargetOptions&Options
 argument_list|)
 empty_stmt|;
-comment|/// TheTarget - The Target that this machine was created for.
+comment|/// The Target that this machine was created for.
 specifier|const
 name|Target
 modifier|&
 name|TheTarget
 decl_stmt|;
-comment|/// TargetTriple, TargetCPU, TargetFS - Triple string, CPU name, and target
-comment|/// feature strings the TargetMachine instance is created with.
-name|std
-operator|::
-name|string
+comment|/// For ABI type size and alignment.
+specifier|const
+name|DataLayout
+name|DL
+decl_stmt|;
+comment|/// Triple string, CPU name, and target feature strings the TargetMachine
+comment|/// instance is created with.
+name|Triple
 name|TargetTriple
-expr_stmt|;
+decl_stmt|;
 name|std
 operator|::
 name|string
@@ -242,18 +278,32 @@ operator|::
 name|string
 name|TargetFS
 expr_stmt|;
-comment|/// CodeGenInfo - Low level target information such as relocation model.
-comment|/// Non-const to allow resetting optimization level per-function.
+comment|/// Low level target information such as relocation model. Non-const to
+comment|/// allow resetting optimization level per-function.
 name|MCCodeGenInfo
 modifier|*
 name|CodeGenInfo
 decl_stmt|;
-comment|/// AsmInfo - Contains target specific asm information.
-comment|///
+comment|/// Contains target specific asm information.
 specifier|const
 name|MCAsmInfo
 modifier|*
 name|AsmInfo
+decl_stmt|;
+specifier|const
+name|MCRegisterInfo
+modifier|*
+name|MRI
+decl_stmt|;
+specifier|const
+name|MCInstrInfo
+modifier|*
+name|MII
+decl_stmt|;
+specifier|const
+name|MCSubtargetInfo
+modifier|*
+name|STI
 decl_stmt|;
 name|unsigned
 name|RequireStructuredCFG
@@ -282,7 +332,9 @@ return|return
 name|TheTarget
 return|;
 block|}
-name|StringRef
+specifier|const
+name|Triple
+operator|&
 name|getTargetTriple
 argument_list|()
 specifier|const
@@ -309,20 +361,8 @@ return|return
 name|TargetFS
 return|;
 block|}
-comment|/// getSubtargetImpl - virtual method implemented by subclasses that returns
-comment|/// a reference to that target's TargetSubtargetInfo-derived member variable.
-name|virtual
-specifier|const
-name|TargetSubtargetInfo
-operator|*
-name|getSubtargetImpl
-argument_list|()
-specifier|const
-block|{
-return|return
-name|nullptr
-return|;
-block|}
+comment|/// Virtual method implemented by subclasses that returns a reference to that
+comment|/// target's TargetSubtargetInfo-derived member variable.
 name|virtual
 specifier|const
 name|TargetSubtargetInfo
@@ -336,8 +376,7 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|getSubtargetImpl
-argument_list|()
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -351,7 +390,7 @@ return|return
 name|nullptr
 return|;
 block|}
-comment|/// getSubtarget - This method returns a pointer to the specified type of
+comment|/// This method returns a pointer to the specified type of
 comment|/// TargetSubtargetInfo.  In debug builds, it verifies that the object being
 comment|/// returned is of the correct type.
 name|template
@@ -363,34 +402,8 @@ specifier|const
 name|STC
 operator|&
 name|getSubtarget
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|*
-name|static_cast
-operator|<
-specifier|const
-name|STC
-operator|*
-operator|>
-operator|(
-name|getSubtargetImpl
-argument_list|()
-operator|)
-return|;
-block|}
-name|template
-operator|<
-name|typename
-name|STC
-operator|>
-specifier|const
-name|STC
-operator|&
-name|getSubtarget
 argument_list|(
-argument|const Function *
+argument|const Function&F
 argument_list|)
 specifier|const
 block|{
@@ -404,8 +417,37 @@ operator|*
 operator|>
 operator|(
 name|getSubtargetImpl
-argument_list|()
+argument_list|(
+name|F
+argument_list|)
 operator|)
+return|;
+block|}
+comment|/// Deprecated in 3.7, will be removed in 3.8. Use createDataLayout() instead.
+comment|///
+comment|/// This method returns a pointer to the DataLayout for the target. It should
+comment|/// be unchanging for every subtarget.
+specifier|const
+name|DataLayout
+operator|*
+name|getDataLayout
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|DL
+return|;
+block|}
+comment|/// Create a DataLayout.
+specifier|const
+name|DataLayout
+name|createDataLayout
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DL
 return|;
 block|}
 comment|/// \brief Reset the target options based on the function's attributes.
@@ -421,8 +463,7 @@ name|F
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getMCAsmInfo - Return target specific asm information.
-comment|///
+comment|/// Return target specific asm information.
 specifier|const
 name|MCAsmInfo
 operator|*
@@ -434,9 +475,40 @@ return|return
 name|AsmInfo
 return|;
 block|}
-comment|/// getIntrinsicInfo - If intrinsic information is available, return it.  If
-comment|/// not, return null.
-comment|///
+specifier|const
+name|MCRegisterInfo
+operator|*
+name|getMCRegisterInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MRI
+return|;
+block|}
+specifier|const
+name|MCInstrInfo
+operator|*
+name|getMCInstrInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MII
+return|;
+block|}
+specifier|const
+name|MCSubtargetInfo
+operator|*
+name|getMCSubtargetInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|STI
+return|;
+block|}
+comment|/// If intrinsic information is available, return it.  If not, return null.
 name|virtual
 specifier|const
 name|TargetIntrinsicInfo
@@ -470,8 +542,8 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
-comment|/// getRelocationModel - Returns the code generation relocation model. The
-comment|/// choices are static, PIC, and dynamic-no-pic, and target default.
+comment|/// Returns the code generation relocation model. The choices are static, PIC,
+comment|/// and dynamic-no-pic, and target default.
 name|Reloc
 operator|::
 name|Model
@@ -479,8 +551,8 @@ name|getRelocationModel
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getCodeModel - Returns the code model. The choices are small, kernel,
-comment|/// medium, large, and target default.
+comment|/// Returns the code model. The choices are small, kernel, medium, large, and
+comment|/// target default.
 name|CodeModel
 operator|::
 name|Model
@@ -488,8 +560,7 @@ name|getCodeModel
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getTLSModel - Returns the TLS model which should be used for the given
-comment|/// global variable.
+comment|/// Returns the TLS model which should be used for the given global variable.
 name|TLSModel
 operator|::
 name|Model
@@ -499,8 +570,7 @@ argument|const GlobalValue *GV
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// getOptLevel - Returns the optimization level: None, Less,
-comment|/// Default, or Aggressive.
+comment|/// Returns the optimization level: None, Less, Default, or Aggressive.
 name|CodeGenOpt
 operator|::
 name|Level
@@ -544,62 +614,71 @@ operator|.
 name|PrintMachineCode
 return|;
 block|}
-comment|/// getAsmVerbosityDefault - Returns the default value of asm verbosity.
+comment|/// Returns the default value of asm verbosity.
 comment|///
 name|bool
 name|getAsmVerbosityDefault
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// setAsmVerbosityDefault - Set the default value of asm verbosity. Default
-comment|/// is false.
-name|void
-name|setAsmVerbosityDefault
-parameter_list|(
+block|{
+return|return
+name|Options
+operator|.
+name|MCOptions
+operator|.
+name|AsmVerbose
+return|;
+block|}
 name|bool
-parameter_list|)
-function_decl|;
-comment|/// getDataSections - Return true if data objects should be emitted into their
-comment|/// own section, corresponds to -fdata-sections.
+name|getUniqueSectionNames
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Options
+operator|.
+name|UniqueSectionNames
+return|;
+block|}
+comment|/// Return true if data objects should be emitted into their own section,
+comment|/// corresponds to -fdata-sections.
 name|bool
 name|getDataSections
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// getFunctionSections - Return true if functions should be emitted into
-comment|/// their own section, corresponding to -ffunction-sections.
+block|{
+return|return
+name|Options
+operator|.
+name|DataSections
+return|;
+block|}
+comment|/// Return true if functions should be emitted into their own section,
+comment|/// corresponding to -ffunction-sections.
 name|bool
 name|getFunctionSections
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// setDataSections - Set if the data are emit into separate sections.
-name|void
-name|setDataSections
-parameter_list|(
-name|bool
-parameter_list|)
-function_decl|;
-comment|/// setFunctionSections - Set if the functions are emit into separate
-comment|/// sections.
-name|void
-name|setFunctionSections
-parameter_list|(
-name|bool
-parameter_list|)
-function_decl|;
-comment|/// \brief Register analysis passes for this target with a pass manager.
+block|{
+return|return
+name|Options
+operator|.
+name|FunctionSections
+return|;
+block|}
+comment|/// \brief Get a \c TargetIRAnalysis appropriate for the target.
+comment|///
+comment|/// This is used to construct the new pass manager's target IR analysis pass,
+comment|/// set up appropriately for this target machine. Even the old pass manager
+comment|/// uses this to answer queries about the IR.
 name|virtual
-name|void
-name|addAnalysisPasses
-parameter_list|(
-name|PassManagerBase
-modifier|&
-parameter_list|)
-block|{}
-comment|/// CodeGenFileType - These enums are meant to be passed into
-comment|/// addPassesToEmitFile to indicate what type of file to emit, and returned by
-comment|/// it to indicate what type of file could actually be made.
+name|TargetIRAnalysis
+name|getTargetIRAnalysis
+parameter_list|()
+function_decl|;
+comment|/// These enums are meant to be passed into addPassesToEmitFile to indicate
+comment|/// what type of file to emit, and returned by it to indicate what type of
+comment|/// file could actually be made.
 enum|enum
 name|CodeGenFileType
 block|{
@@ -611,10 +690,10 @@ name|CGFT_Null
 comment|// Do not emit any output.
 block|}
 enum|;
-comment|/// addPassesToEmitFile - Add passes to the specified pass manager to get the
-comment|/// specified file emitted.  Typically this will involve several steps of code
-comment|/// generation.  This method should return true if emission of this file type
-comment|/// is not supported, or false on success.
+comment|/// Add passes to the specified pass manager to get the specified file
+comment|/// emitted.  Typically this will involve several steps of code generation.
+comment|/// This method should return true if emission of this file type is not
+comment|/// supported, or false on success.
 name|virtual
 name|bool
 name|addPassesToEmitFile
@@ -622,7 +701,7 @@ parameter_list|(
 name|PassManagerBase
 modifier|&
 parameter_list|,
-name|formatted_raw_ostream
+name|raw_pwrite_stream
 modifier|&
 parameter_list|,
 name|CodeGenFileType
@@ -633,6 +712,11 @@ init|=
 name|true
 parameter_list|,
 name|AnalysisID
+comment|/*StartBefore*/
+init|=
+name|nullptr
+parameter_list|,
+name|AnalysisID
 comment|/*StartAfter*/
 init|=
 name|nullptr
@@ -641,16 +725,22 @@ name|AnalysisID
 comment|/*StopAfter*/
 init|=
 name|nullptr
+parameter_list|,
+name|MachineFunctionInitializer
+modifier|*
+comment|/*MFInitializer*/
+init|=
+name|nullptr
 parameter_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-comment|/// addPassesToEmitMC - Add passes to the specified pass manager to get
-comment|/// machine code emitted with the MCJIT. This method returns true if machine
-comment|/// code is not supported. It fills the MCContext Ctx pointer which can be
-comment|/// used to build custom MCStreamer.
+comment|/// Add passes to the specified pass manager to get machine code emitted with
+comment|/// the MCJIT. This method returns true if machine code is not supported. It
+comment|/// fills the MCContext Ctx pointer which can be used to build custom
+comment|/// MCStreamer.
 comment|///
 name|virtual
 name|bool
@@ -663,7 +753,7 @@ name|MCContext
 modifier|*
 modifier|&
 parameter_list|,
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 parameter_list|,
 name|bool
@@ -719,8 +809,8 @@ decl|const
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|/// LLVMTargetMachine - This class describes a target machine that is
-comment|/// implemented with the LLVM target-independent code generator.
+comment|/// This class describes a target machine that is implemented with the LLVM
+comment|/// target-independent code generator.
 comment|///
 name|class
 name|LLVMTargetMachine
@@ -735,7 +825,9 @@ name|LLVMTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TargetTriple
+argument|StringRef DataLayoutString
+argument_list|,
+argument|const Triple&TargetTriple
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -756,18 +848,17 @@ argument_list|()
 block|;
 name|public
 operator|:
-comment|/// \brief Register analysis passes for this target with a pass manager.
+comment|/// \brief Get a TargetIRAnalysis implementation for the target.
 comment|///
-comment|/// This registers target independent analysis passes.
-name|void
-name|addAnalysisPasses
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|)
+comment|/// This analysis will produce a TTI result which uses the common code
+comment|/// generator to answer queries about the IR.
+name|TargetIRAnalysis
+name|getTargetIRAnalysis
+argument_list|()
 name|override
 block|;
-comment|/// createPassConfig - Create a pass configuration object to be used by
-comment|/// addPassToEmitX methods for generating a pipeline of CodeGen passes.
+comment|/// Create a pass configuration object to be used by addPassToEmitX methods
+comment|/// for generating a pipeline of CodeGen passes.
 name|virtual
 name|TargetPassConfig
 operator|*
@@ -778,31 +869,33 @@ operator|&
 name|PM
 argument_list|)
 block|;
-comment|/// addPassesToEmitFile - Add passes to the specified pass manager to get the
-comment|/// specified file emitted.  Typically this will involve several steps of code
-comment|/// generation.
+comment|/// Add passes to the specified pass manager to get the specified file
+comment|/// emitted.  Typically this will involve several steps of code generation.
 name|bool
 name|addPassesToEmitFile
 argument_list|(
 argument|PassManagerBase&PM
 argument_list|,
-argument|formatted_raw_ostream&Out
+argument|raw_pwrite_stream&Out
 argument_list|,
 argument|CodeGenFileType FileType
 argument_list|,
 argument|bool DisableVerify = true
 argument_list|,
+argument|AnalysisID StartBefore = nullptr
+argument_list|,
 argument|AnalysisID StartAfter = nullptr
 argument_list|,
 argument|AnalysisID StopAfter = nullptr
+argument_list|,
+argument|MachineFunctionInitializer *MFInitializer = nullptr
 argument_list|)
 name|override
 block|;
-comment|/// addPassesToEmitMC - Add passes to the specified pass manager to get
-comment|/// machine code emitted with the MCJIT. This method returns true if machine
-comment|/// code is not supported. It fills the MCContext Ctx pointer which can be
-comment|/// used to build custom MCStreamer.
-comment|///
+comment|/// Add passes to the specified pass manager to get machine code emitted with
+comment|/// the MCJIT. This method returns true if machine code is not supported. It
+comment|/// fills the MCContext Ctx pointer which can be used to build custom
+comment|/// MCStreamer.
 name|bool
 name|addPassesToEmitMC
 argument_list|(
@@ -810,7 +903,7 @@ argument|PassManagerBase&PM
 argument_list|,
 argument|MCContext *&Ctx
 argument_list|,
-argument|raw_ostream&OS
+argument|raw_pwrite_stream&OS
 argument_list|,
 argument|bool DisableVerify = true
 argument_list|)

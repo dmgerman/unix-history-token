@@ -106,6 +106,8 @@ comment|/// that FP eliminatation is turned off. For example, Cygwin main functi
 comment|/// contains stack pointer re-alignment code which requires FP.
 name|bool
 name|ForceFramePointer
+operator|=
+name|false
 block|;
 comment|/// RestoreBasePointerOffset - Non-zero if the function has base pointer
 comment|/// and makes call to llvm.eh.sjlj.setjmp. When non-zero, the value is a
@@ -114,68 +116,116 @@ comment|/// is stashed.
 name|signed
 name|char
 name|RestoreBasePointerOffset
+operator|=
+literal|0
 block|;
 comment|/// CalleeSavedFrameSize - Size of the callee-saved register portion of the
 comment|/// stack frame in bytes.
 name|unsigned
 name|CalleeSavedFrameSize
+operator|=
+literal|0
 block|;
 comment|/// BytesToPopOnReturn - Number of bytes function pops on return (in addition
 comment|/// to the space used by the return address).
 comment|/// Used on windows platform for stdcall& fastcall name decoration
 name|unsigned
 name|BytesToPopOnReturn
+operator|=
+literal|0
 block|;
 comment|/// ReturnAddrIndex - FrameIndex for return slot.
 name|int
 name|ReturnAddrIndex
+operator|=
+literal|0
+block|;
+comment|/// \brief FrameIndex for return slot.
+name|int
+name|FrameAddrIndex
+operator|=
+literal|0
 block|;
 comment|/// TailCallReturnAddrDelta - The number of bytes by which return address
 comment|/// stack slot is moved as the result of tail call optimization.
 name|int
 name|TailCallReturnAddrDelta
+operator|=
+literal|0
 block|;
 comment|/// SRetReturnReg - Some subtargets require that sret lowering includes
 comment|/// returning the value of the returned struct in a register. This field
 comment|/// holds the virtual register into which the sret argument is passed.
 name|unsigned
 name|SRetReturnReg
+operator|=
+literal|0
 block|;
 comment|/// GlobalBaseReg - keeps track of the virtual register initialized for
 comment|/// use as the global base register. This is used for PIC in some PIC
 comment|/// relocation models.
 name|unsigned
 name|GlobalBaseReg
+operator|=
+literal|0
 block|;
 comment|/// VarArgsFrameIndex - FrameIndex for start of varargs area.
 name|int
 name|VarArgsFrameIndex
+operator|=
+literal|0
 block|;
 comment|/// RegSaveFrameIndex - X86-64 vararg func register save area.
 name|int
 name|RegSaveFrameIndex
+operator|=
+literal|0
 block|;
 comment|/// VarArgsGPOffset - X86-64 vararg func int reg offset.
 name|unsigned
 name|VarArgsGPOffset
+operator|=
+literal|0
 block|;
 comment|/// VarArgsFPOffset - X86-64 vararg func fp reg offset.
 name|unsigned
 name|VarArgsFPOffset
+operator|=
+literal|0
 block|;
 comment|/// ArgumentStackSize - The number of bytes on stack consumed by the arguments
 comment|/// being passed on the stack.
 name|unsigned
 name|ArgumentStackSize
+operator|=
+literal|0
 block|;
 comment|/// NumLocalDynamics - Number of local-dynamic TLS accesses.
 name|unsigned
 name|NumLocalDynamics
+operator|=
+literal|0
 block|;
 comment|/// HasPushSequences - Keeps track of whether this function uses sequences
 comment|/// of pushes to pass function parameters.
 name|bool
 name|HasPushSequences
+operator|=
+name|false
+block|;
+comment|/// True if the function uses llvm.x86.seh.restoreframe, and it needed a spill
+comment|/// slot for the frame pointer.
+name|bool
+name|HasSEHFramePtrSave
+operator|=
+name|false
+block|;
+comment|/// The frame index of a stack object containing the original frame pointer
+comment|/// used to address arguments in a function using a base pointer.
+name|int
+name|SEHFramePtrSaveIndex
+operator|=
+literal|0
 block|;
 name|private
 operator|:
@@ -193,165 +243,16 @@ name|public
 operator|:
 name|X86MachineFunctionInfo
 argument_list|()
-operator|:
-name|ForceFramePointer
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|RestoreBasePointerOffset
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|CalleeSavedFrameSize
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|BytesToPopOnReturn
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|ReturnAddrIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|TailCallReturnAddrDelta
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|SRetReturnReg
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|GlobalBaseReg
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsFrameIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|RegSaveFrameIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsGPOffset
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsFPOffset
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|ArgumentStackSize
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|NumLocalDynamics
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|HasPushSequences
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|explicit
 name|X86MachineFunctionInfo
 argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-operator|:
-name|ForceFramePointer
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|RestoreBasePointerOffset
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|CalleeSavedFrameSize
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|BytesToPopOnReturn
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|ReturnAddrIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|TailCallReturnAddrDelta
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|SRetReturnReg
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|GlobalBaseReg
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsFrameIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|RegSaveFrameIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsGPOffset
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsFPOffset
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|ArgumentStackSize
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|NumLocalDynamics
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|HasPushSequences
-argument_list|(
-argument|false
+argument|MachineFunction&MF
 argument_list|)
 block|{}
+block|;
 name|bool
 name|getForceFramePointer
 argument_list|()
@@ -473,6 +374,25 @@ argument|int Index
 argument_list|)
 block|{
 name|ReturnAddrIndex
+operator|=
+name|Index
+block|; }
+name|int
+name|getFAIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FrameAddrIndex
+return|;
+block|}
+name|void
+name|setFAIndex
+argument_list|(
+argument|int Index
+argument_list|)
+block|{
+name|FrameAddrIndex
 operator|=
 name|Index
 block|; }
@@ -643,6 +563,44 @@ argument_list|()
 block|{
 operator|++
 name|NumLocalDynamics
+block|; }
+name|bool
+name|getHasSEHFramePtrSave
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSEHFramePtrSave
+return|;
+block|}
+name|void
+name|setHasSEHFramePtrSave
+argument_list|(
+argument|bool V
+argument_list|)
+block|{
+name|HasSEHFramePtrSave
+operator|=
+name|V
+block|; }
+name|int
+name|getSEHFramePtrSaveIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SEHFramePtrSaveIndex
+return|;
+block|}
+name|void
+name|setSEHFramePtrSaveIndex
+argument_list|(
+argument|int Index
+argument_list|)
+block|{
+name|SEHFramePtrSaveIndex
+operator|=
+name|Index
 block|; }
 name|SmallVectorImpl
 operator|<

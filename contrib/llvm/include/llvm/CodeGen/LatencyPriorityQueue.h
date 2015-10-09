@@ -343,14 +343,6 @@ argument|SUnit *SU
 argument_list|)
 name|override
 block|;
-name|void
-name|dump
-argument_list|(
-argument|ScheduleDAG* DAG
-argument_list|)
-specifier|const
-name|override
-block|;
 comment|// scheduledNode - As nodes are scheduled, we look to see if there are any
 comment|// successor nodes that have a single unscheduled predecessor.  If so, that
 comment|// single predecessor has a higher priority, since scheduling it will make

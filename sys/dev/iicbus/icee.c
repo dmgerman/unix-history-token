@@ -325,7 +325,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-comment|/* XXX really probe? -- not until we know the size... */
 name|device_set_desc
 argument_list|(
 name|dev
@@ -552,7 +551,6 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-empty_stmt|;
 return|return
 operator|(
 name|err
@@ -1330,8 +1328,7 @@ condition|(
 name|error
 condition|)
 break|break;
-comment|// Now wait for the write to be done by trying to read
-comment|// the part.
+comment|/* Read after write to wait for write-done. */
 name|waitlimit
 operator|=
 literal|10000
@@ -1377,16 +1374,7 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"waiting for write failed %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 break|break;
-block|}
 block|}
 name|ICEE_UNLOCK
 argument_list|(

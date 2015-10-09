@@ -588,6 +588,21 @@ operator|&
 name|Out
 argument_list|)
 decl_stmt|;
+comment|/**  * Converts a UTF-8 string into a UTF-16 string with native endianness.  *  * \returns true on success  */
+name|bool
+name|convertUTF8ToUTF16String
+argument_list|(
+name|StringRef
+name|SrcUTF8
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|UTF16
+operator|>
+operator|&
+name|DstUTF16
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

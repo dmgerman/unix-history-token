@@ -115,6 +115,8 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|,
 argument|StringRef Annot
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|)
 name|override
 block|;

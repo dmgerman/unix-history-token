@@ -362,6 +362,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|int64_aligned_t
+value|int64_t __attribute__((aligned(8)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|uint64_aligned_t
 value|uint64_t __attribute__((aligned(8)))
 end_define
@@ -589,7 +596,7 @@ comment|/* __XEN_PUBLIC_ARCH_X86_XEN_X86_32_H__ */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit

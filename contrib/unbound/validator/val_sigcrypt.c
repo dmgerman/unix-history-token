@@ -3817,7 +3817,6 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* in case rdata-len is to be compared for canonical order 	c = memcmp(d->rr_data[i], d->rr_data[j], 2); 	if(c != 0) 		return c; */
 switch|switch
 condition|(
 name|type

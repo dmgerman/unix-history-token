@@ -97,6 +97,9 @@ decl_stmt|;
 name|class
 name|ModuleMap
 decl_stmt|;
+name|class
+name|PCHContainerReader
+decl_stmt|;
 name|namespace
 name|serialization
 block|{
@@ -115,6 +118,17 @@ literal|2
 operator|>
 name|Chain
 expr_stmt|;
+comment|// \brief The roots of the dependency DAG of AST files. This is used
+comment|// to implement short-circuiting logic when running DFS over the dependencies.
+name|SmallVector
+operator|<
+name|ModuleFile
+operator|*
+operator|,
+literal|2
+operator|>
+name|Roots
+expr_stmt|;
 comment|/// \brief All loaded modules, indexed by name.
 name|llvm
 operator|::
@@ -129,11 +143,33 @@ operator|*
 operator|>
 name|Modules
 expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|SetVector
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|>
+name|AdditionalKnownModuleFileSet
+expr_stmt|;
+comment|/// \brief Additional module files that are known but not loaded. Tracked
+comment|/// here so that we can re-export them if necessary.
+name|AdditionalKnownModuleFileSet
+name|AdditionalKnownModuleFiles
+decl_stmt|;
 comment|/// \brief FileManager that handles translating between filenames and
 comment|/// FileEntry *.
 name|FileManager
 modifier|&
 name|FileMgr
+decl_stmt|;
+comment|/// \brief Knows how to unwrap module containers.
+specifier|const
+name|PCHContainerReader
+modifier|&
+name|PCHContainerRdr
 decl_stmt|;
 comment|/// \brief A lookup of in-memory (virtual file) buffers
 name|llvm
@@ -330,6 +366,11 @@ parameter_list|(
 name|FileManager
 modifier|&
 name|FileMgr
+parameter_list|,
+specifier|const
+name|PCHContainerReader
+modifier|&
+name|PCHContainerRdr
 parameter_list|)
 function_decl|;
 operator|~
@@ -527,6 +568,19 @@ comment|/// \brief The module file is out-of-date.
 name|OutOfDate
 block|}
 enum|;
+typedef|typedef
+name|ASTFileSignature
+argument_list|(
+operator|*
+name|ASTFileSignatureReader
+argument_list|)
+argument_list|(
+name|llvm
+operator|::
+name|BitstreamReader
+operator|&
+argument_list|)
+expr_stmt|;
 comment|/// \brief Attempts to create a new module and add it to the list of known
 comment|/// modules.
 comment|///
@@ -589,18 +643,7 @@ argument_list|,
 name|ASTFileSignature
 name|ExpectedSignature
 argument_list|,
-name|std
-operator|::
-name|function
-operator|<
-name|ASTFileSignature
-argument_list|(
-name|llvm
-operator|::
-name|BitstreamReader
-operator|&
-argument_list|)
-operator|>
+name|ASTFileSignatureReader
 name|ReadSignature
 argument_list|,
 name|ModuleFile
@@ -677,6 +720,46 @@ modifier|*
 name|MF
 parameter_list|)
 function_decl|;
+comment|/// \brief Notification from the frontend that the given module file is
+comment|/// part of this compilation (even if not imported) and, if this compilation
+comment|/// is exported, should be made available to importers of it.
+name|bool
+name|addKnownModuleFile
+parameter_list|(
+name|StringRef
+name|FileName
+parameter_list|)
+function_decl|;
+comment|/// \brief Get a list of additional module files that are not currently
+comment|/// loaded but are considered to be part of the current compilation.
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|AdditionalKnownModuleFileSet
+operator|::
+name|const_iterator
+operator|>
+name|getAdditionalKnownModuleFiles
+argument_list|()
+block|{
+return|return
+name|llvm
+operator|::
+name|make_range
+argument_list|(
+name|AdditionalKnownModuleFiles
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|AdditionalKnownModuleFiles
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// \brief Visit each of the modules.
 comment|///
 comment|/// This routine visits each of the modules, starting with the
@@ -735,37 +818,66 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
+comment|/// \brief Control DFS behavior during preorder visitation.
+enum|enum
+name|DFSPreorderControl
+block|{
+name|Continue
+block|,
+comment|/// Continue visiting all nodes.
+name|Abort
+block|,
+comment|/// Stop the visitation immediately.
+name|SkipImports
+block|,
+comment|/// Do not visit imports of the current node.
+block|}
+enum|;
 comment|/// \brief Visit each of the modules with a depth-first traversal.
 comment|///
 comment|/// This routine visits each of the modules known to the module
 comment|/// manager using a depth-first search, starting with the first
-comment|/// loaded module. The traversal invokes the callback both before
-comment|/// traversing the children (preorder traversal) and after
-comment|/// traversing the children (postorder traversal).
+comment|/// loaded module. The traversal invokes one callback before
+comment|/// traversing the imports (preorder traversal) and one after
+comment|/// traversing the imports (postorder traversal).
 comment|///
-comment|/// \param Visitor A visitor function that will be invoked with each
-comment|/// module and given a \c Preorder flag that indicates whether we're
-comment|/// visiting the module before or after visiting its children.  The
-comment|/// visitor may return true at any time to abort the depth-first
-comment|/// visitation.
+comment|/// \param PreorderVisitor A visitor function that will be invoked with each
+comment|/// module before visiting its imports. The visitor can control how to
+comment|/// continue the visitation through its return value.
+comment|///
+comment|/// \param PostorderVisitor A visitor function taht will be invoked with each
+comment|/// module after visiting its imports. The visitor may return true at any time
+comment|/// to abort the depth-first visitation.
 comment|///
 comment|/// \param UserData User data ssociated with the visitor object,
 comment|/// which will be passed along to the user.
 name|void
 name|visitDepthFirst
 parameter_list|(
-name|bool
+name|DFSPreorderControl
 function_decl|(
 modifier|*
-name|Visitor
+name|PreorderVisitor
 function_decl|)
 parameter_list|(
 name|ModuleFile
 modifier|&
 name|M
 parameter_list|,
+name|void
+modifier|*
+name|UserData
+parameter_list|)
+parameter_list|,
 name|bool
-name|Preorder
+function_decl|(
+modifier|*
+name|PostorderVisitor
+function_decl|)
+parameter_list|(
+name|ModuleFile
+modifier|&
+name|M
 parameter_list|,
 name|void
 modifier|*

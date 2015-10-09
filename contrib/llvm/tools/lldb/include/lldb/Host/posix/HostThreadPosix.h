@@ -79,21 +79,17 @@ operator|~
 name|HostThreadPosix
 argument_list|()
 block|;
-name|virtual
 name|Error
 name|Join
 argument_list|(
-name|lldb
-operator|::
-name|thread_result_t
-operator|*
-name|result
+argument|lldb::thread_result_t *result
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Error
 name|Cancel
 argument_list|()
+name|override
 block|;
 name|Error
 name|Detach

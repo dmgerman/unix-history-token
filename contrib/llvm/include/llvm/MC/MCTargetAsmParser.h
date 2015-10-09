@@ -312,10 +312,6 @@ argument_list|(
 argument|rewrites
 argument_list|)
 block|{}
-operator|~
-name|ParseInstructionInfo
-argument_list|()
-block|{}
 block|}
 struct|;
 comment|/// MCTargetAsmParser - Generic interface to target specific assembly parsers.
@@ -345,9 +341,12 @@ name|private
 operator|:
 name|MCTargetAsmParser
 argument_list|(
-argument|const MCTargetAsmParser&
+specifier|const
+name|MCTargetAsmParser
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -357,7 +356,8 @@ specifier|const
 name|MCTargetAsmParser
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|protected
 operator|:
@@ -385,10 +385,10 @@ name|MCOptions
 block|;
 name|public
 operator|:
-name|virtual
 operator|~
 name|MCTargetAsmParser
 argument_list|()
+name|override
 block|;
 name|uint64_t
 name|getAvailableFeatures

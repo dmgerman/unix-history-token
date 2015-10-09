@@ -115,14 +115,56 @@ range|:
 name|public
 name|MCCodeEmitter
 block|{
-name|MCSubtargetInfo
-specifier|const
-operator|&
-name|MST
-block|;
 name|MCContext
 operator|&
 name|MCT
+block|;
+name|MCInstrInfo
+specifier|const
+operator|&
+name|MCII
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|unsigned
+operator|>
+name|Addend
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|bool
+operator|>
+name|Extended
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MCInst
+specifier|const
+operator|*
+operator|>
+name|CurrentBundle
+block|;
+comment|// helper routine for getMachineOpValue()
+name|unsigned
+name|getExprOpValue
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|const MCOperand&MO
+argument_list|,
+argument|const MCExpr *ME
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
 block|;
 name|public
 operator|:
@@ -133,25 +175,27 @@ specifier|const
 operator|&
 name|aMII
 argument_list|,
-name|MCSubtargetInfo
-specifier|const
-operator|&
-name|aMST
-argument_list|,
 name|MCContext
 operator|&
 name|aMCT
 argument_list|)
 block|;
-name|MCSubtargetInfo
-specifier|const
-operator|&
-name|getSubtargetInfo
-argument_list|()
+comment|// Return parse bits for instruction `MCI' inside bundle `MCB'
+name|uint32_t
+name|parseBits
+argument_list|(
+argument|size_t Instruction
+argument_list|,
+argument|size_t Last
+argument_list|,
+argument|MCInst const&MCB
+argument_list|,
+argument|MCInst const&MCI
+argument_list|)
 specifier|const
 block|;
 name|void
-name|EncodeInstruction
+name|encodeInstruction
 argument_list|(
 argument|MCInst const&MI
 argument_list|,
@@ -163,6 +207,23 @@ argument|MCSubtargetInfo const&STI
 argument_list|)
 specifier|const
 name|override
+block|;
+name|void
+name|EncodeSingleInstruction
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|raw_ostream&OS
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|uint32_t Parse
+argument_list|,
+argument|size_t Index
+argument_list|)
+specifier|const
 block|;
 comment|// \brief TableGen'erated function for getting the
 comment|// binary encoding for an instruction.
@@ -190,24 +251,6 @@ argument_list|,
 argument|MCSubtargetInfo const&STI
 argument_list|)
 specifier|const
-block|;
-name|private
-operator|:
-name|HexagonMCCodeEmitter
-argument_list|(
-argument|HexagonMCCodeEmitter const&
-argument_list|)
-name|LLVM_DELETED_FUNCTION
-block|;
-name|void
-name|operator
-operator|=
-operator|(
-name|HexagonMCCodeEmitter
-specifier|const
-operator|&
-operator|)
-name|LLVM_DELETED_FUNCTION
 block|; }
 decl_stmt|;
 comment|// class HexagonMCCodeEmitter

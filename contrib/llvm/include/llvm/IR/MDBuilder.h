@@ -191,6 +191,15 @@ operator|>
 name|Weights
 argument_list|)
 decl_stmt|;
+comment|/// Return metadata containing the entry count for a function.
+name|MDNode
+modifier|*
+name|createFunctionEntryCount
+parameter_list|(
+name|uint64_t
+name|Count
+parameter_list|)
+function_decl|;
 comment|//===------------------------------------------------------------------===//
 comment|// Range metadata.
 comment|//===------------------------------------------------------------------===//
@@ -207,6 +216,20 @@ parameter_list|,
 specifier|const
 name|APInt
 modifier|&
+name|Hi
+parameter_list|)
+function_decl|;
+comment|/// \brief Return metadata describing the range [Lo, Hi).
+name|MDNode
+modifier|*
+name|createRange
+parameter_list|(
+name|Constant
+modifier|*
+name|Lo
+parameter_list|,
+name|Constant
+modifier|*
 name|Hi
 parameter_list|)
 function_decl|;
@@ -464,6 +487,11 @@ name|AccessType
 parameter_list|,
 name|uint64_t
 name|Offset
+parameter_list|,
+name|bool
+name|IsConstant
+init|=
+name|false
 parameter_list|)
 function_decl|;
 block|}

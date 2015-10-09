@@ -32,18 +32,6 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmdCmdTarget.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// Overview:    CMICmdCmdTargetSelect           interface.
 end_comment
 
@@ -81,34 +69,6 @@ end_comment
 
 begin_comment
 comment|//              command class as an example.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
 end_comment
 
 begin_pragma
@@ -203,35 +163,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdTargetSelect
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -243,6 +203,191 @@ block|;
 specifier|const
 name|CMIUtilString
 name|m_constStrArgNamedParameters
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|//++ ============================================================================
+end_comment
+
+begin_comment
+comment|// Details: MI command class. MI commands derived from the command base class.
+end_comment
+
+begin_comment
+comment|//          *this class implements MI command "target-attach".
+end_comment
+
+begin_comment
+comment|//          http://sourceware.org/gdb/onlinedocs/gdb/GDB_002fMI-Target-Manipulation.html#GDB_002fMI-Target-Manipulation
+end_comment
+
+begin_comment
+comment|//--
+end_comment
+
+begin_decl_stmt
+name|class
+name|CMICmdCmdTargetAttach
+range|:
+name|public
+name|CMICmdBase
+block|{
+comment|// Statics:
+name|public
+operator|:
+comment|// Required by the CMICmdFactory when registering *this command
+specifier|static
+name|CMICmdBase
+operator|*
+name|CreateSelf
+argument_list|(
+name|void
+argument_list|)
+block|;
+comment|// Methods:
+name|public
+operator|:
+comment|/* ctor */
+name|CMICmdCmdTargetAttach
+argument_list|(
+name|void
+argument_list|)
+block|;
+comment|// Overridden:
+name|public
+operator|:
+comment|// From CMICmdInvoker::ICmd
+name|bool
+name|Execute
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+name|bool
+name|Acknowledge
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+name|bool
+name|ParseArgs
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+comment|// From CMICmnBase
+comment|/* dtor */
+operator|~
+name|CMICmdCmdTargetAttach
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+comment|// Attributes:
+name|private
+operator|:
+specifier|const
+name|CMIUtilString
+name|m_constStrArgPid
+block|;
+specifier|const
+name|CMIUtilString
+name|m_constStrArgNamedFile
+block|;
+specifier|const
+name|CMIUtilString
+name|m_constStrArgWaitFor
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|//++ ============================================================================
+end_comment
+
+begin_comment
+comment|// Details: MI command class. MI commands derived from the command base class.
+end_comment
+
+begin_comment
+comment|//          *this class implements MI command "target-attach".
+end_comment
+
+begin_comment
+comment|//          http://sourceware.org/gdb/onlinedocs/gdb/GDB_002fMI-Target-Manipulation.html#GDB_002fMI-Target-Manipulation
+end_comment
+
+begin_comment
+comment|//--
+end_comment
+
+begin_decl_stmt
+name|class
+name|CMICmdCmdTargetDetach
+range|:
+name|public
+name|CMICmdBase
+block|{
+comment|// Statics:
+name|public
+operator|:
+comment|// Required by the CMICmdFactory when registering *this command
+specifier|static
+name|CMICmdBase
+operator|*
+name|CreateSelf
+argument_list|(
+name|void
+argument_list|)
+block|;
+comment|// Methods:
+name|public
+operator|:
+comment|/* ctor */
+name|CMICmdCmdTargetDetach
+argument_list|(
+name|void
+argument_list|)
+block|;
+comment|// Overridden:
+name|public
+operator|:
+comment|// From CMICmdInvoker::ICmd
+name|bool
+name|Execute
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+name|bool
+name|Acknowledge
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+name|bool
+name|ParseArgs
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+comment|// From CMICmnBase
+comment|/* dtor */
+operator|~
+name|CMICmdCmdTargetDetach
+argument_list|(
+argument|void
+argument_list|)
+name|override
 block|; }
 decl_stmt|;
 end_decl_stmt

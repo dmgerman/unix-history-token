@@ -60,6 +60,7 @@ name|namespace
 name|lldb
 block|{
 name|class
+name|LLDB_API
 name|SBSection
 block|{
 name|public

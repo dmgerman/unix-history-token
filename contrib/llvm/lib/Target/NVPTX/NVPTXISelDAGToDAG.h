@@ -121,6 +121,11 @@ range|:
 name|public
 name|SelectionDAGISel
 block|{
+specifier|const
+name|NVPTXTargetMachine
+operator|&
+name|TM
+block|;
 comment|// If true, generate mul.wide from sext and mul
 name|bool
 name|doMulWide
@@ -168,9 +173,16 @@ return|return
 literal|"NVPTX DAG->DAG Pattern Instruction Selection"
 return|;
 block|}
+name|bool
+name|runOnMachineFunction
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+name|override
+block|;
 specifier|const
 name|NVPTXSubtarget
-operator|&
+operator|*
 name|Subtarget
 block|;
 name|bool
@@ -178,7 +190,7 @@ name|SelectInlineAsmMemoryOperand
 argument_list|(
 argument|const SDValue&Op
 argument_list|,
-argument|char ConstraintCode
+argument|unsigned ConstraintID
 argument_list|,
 argument|std::vector<SDValue>&OutOps
 argument_list|)
@@ -338,6 +350,8 @@ name|SDValue
 name|getI32Imm
 argument_list|(
 argument|unsigned Imm
+argument_list|,
+argument|SDLoc DL
 argument_list|)
 block|{
 return|return
@@ -346,6 +360,8 @@ operator|->
 name|getTargetConstant
 argument_list|(
 name|Imm
+argument_list|,
+name|DL
 argument_list|,
 name|MVT
 operator|::

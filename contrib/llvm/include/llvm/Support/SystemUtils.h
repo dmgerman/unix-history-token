@@ -63,12 +63,6 @@ directive|define
 name|LLVM_SUPPORT_SYSTEMUTILS_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm

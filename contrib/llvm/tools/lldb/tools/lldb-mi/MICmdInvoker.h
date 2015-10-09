@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmdInvoker.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMICmdInvoker interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -180,7 +136,7 @@ comment|//          The work by the Invoker is carried out in the main thread.
 end_comment
 
 begin_comment
-comment|//          The Invoker takes ownersip of any commands created which means it
+comment|//          The Invoker takes ownership of any commands created which means it
 end_comment
 
 begin_comment
@@ -370,16 +326,18 @@ name|public
 label|:
 name|bool
 name|Initialize
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|Shutdown
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|CmdExecute
 parameter_list|(
@@ -503,23 +461,23 @@ name|private
 label|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdInvoker
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 expr_stmt|;
 comment|// From CMICmdMgrSetCmdDeleteCallback::ICallback
-name|virtual
 name|void
 name|Delete
-parameter_list|(
+argument_list|(
 name|SMICmdData
-modifier|&
+operator|&
 name|vCmd
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|// Attributes:
 name|private
 label|:

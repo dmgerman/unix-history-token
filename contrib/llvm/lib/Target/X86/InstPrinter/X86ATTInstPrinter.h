@@ -103,11 +103,6 @@ specifier|const
 name|MCRegisterInfo
 operator|&
 name|MRI
-argument_list|,
-specifier|const
-name|MCSubtargetInfo
-operator|&
-name|STI
 argument_list|)
 operator|:
 name|MCInstPrinter
@@ -118,16 +113,7 @@ argument|MII
 argument_list|,
 argument|MRI
 argument_list|)
-block|{
-comment|// Initialize the set of available features.
-name|setAvailableFeatures
-argument_list|(
-name|STI
-operator|.
-name|getFeatureBits
-argument_list|()
-argument_list|)
-block|;   }
+block|{}
 name|void
 name|printRegName
 argument_list|(
@@ -146,6 +132,8 @@ argument_list|,
 argument|raw_ostream&OS
 argument_list|,
 argument|StringRef Annot
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|)
 name|override
 block|;
@@ -220,7 +208,7 @@ argument|raw_ostream&OS
 argument_list|)
 block|;
 name|void
-name|printSSECC
+name|printSSEAVXCC
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
@@ -230,7 +218,7 @@ argument|raw_ostream&OS
 argument_list|)
 block|;
 name|void
-name|printAVXCC
+name|printXOPCC
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
@@ -281,6 +269,16 @@ argument_list|)
 block|;
 name|void
 name|printRoundingControl
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned Op
+argument_list|,
+argument|raw_ostream&OS
+argument_list|)
+block|;
+name|void
+name|printU8Imm
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

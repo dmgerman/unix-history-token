@@ -6037,11 +6037,6 @@ name|ic_opmode
 decl_stmt|;
 name|avp
 operator|=
-operator|(
-expr|struct
-name|ath_vap
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof

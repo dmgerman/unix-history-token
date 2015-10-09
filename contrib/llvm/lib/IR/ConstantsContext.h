@@ -152,11 +152,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -236,11 +237,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -336,11 +338,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -446,11 +449,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -543,11 +547,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -653,11 +658,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -763,11 +769,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -880,11 +887,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -999,6 +1007,10 @@ range|:
 name|public
 name|ConstantExpr
 block|{
+name|Type
+operator|*
+name|SrcElementTy
+block|;
 name|void
 name|anchor
 argument_list|()
@@ -1006,6 +1018,10 @@ name|override
 block|;
 name|GetElementPtrConstantExpr
 argument_list|(
+name|Type
+operator|*
+name|SrcElementTy
+argument_list|,
 name|Constant
 operator|*
 name|C
@@ -1038,6 +1054,52 @@ argument_list|,
 argument|unsigned Flags
 argument_list|)
 block|{
+return|return
+name|Create
+argument_list|(
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|C
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|getScalarType
+argument_list|()
+operator|)
+operator|->
+name|getElementType
+argument_list|()
+argument_list|,
+name|C
+argument_list|,
+name|IdxList
+argument_list|,
+name|DestTy
+argument_list|,
+name|Flags
+argument_list|)
+return|;
+block|}
+specifier|static
+name|GetElementPtrConstantExpr
+operator|*
+name|Create
+argument_list|(
+argument|Type *SrcElementTy
+argument_list|,
+argument|Constant *C
+argument_list|,
+argument|ArrayRef<Constant *> IdxList
+argument_list|,
+argument|Type *DestTy
+argument_list|,
+argument|unsigned Flags
+argument_list|)
+block|{
 name|GetElementPtrConstantExpr
 operator|*
 name|Result
@@ -1049,6 +1111,8 @@ literal|1
 argument_list|)
 name|GetElementPtrConstantExpr
 argument_list|(
+name|SrcElementTy
+argument_list|,
 name|C
 argument_list|,
 name|IdxList
@@ -1066,6 +1130,12 @@ return|return
 name|Result
 return|;
 block|}
+name|Type
+operator|*
+name|getSourceElementType
+argument_list|()
+specifier|const
+block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -1092,11 +1162,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -1201,7 +1272,7 @@ name|UnaryConstantExpr
 operator|,
 literal|1
 operator|>
-block|{ }
+block|{}
 expr_stmt|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -1225,7 +1296,7 @@ name|BinaryConstantExpr
 operator|,
 literal|2
 operator|>
-block|{ }
+block|{}
 expr_stmt|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -1249,7 +1320,7 @@ name|SelectConstantExpr
 operator|,
 literal|3
 operator|>
-block|{ }
+block|{}
 expr_stmt|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -1273,7 +1344,7 @@ name|ExtractElementConstantExpr
 operator|,
 literal|2
 operator|>
-block|{ }
+block|{}
 expr_stmt|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -1297,7 +1368,7 @@ name|InsertElementConstantExpr
 operator|,
 literal|3
 operator|>
-block|{ }
+block|{}
 expr_stmt|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -1321,7 +1392,7 @@ name|ShuffleVectorConstantExpr
 operator|,
 literal|3
 operator|>
-block|{ }
+block|{}
 expr_stmt|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -1345,7 +1416,7 @@ name|ExtractValueConstantExpr
 operator|,
 literal|1
 operator|>
-block|{ }
+block|{}
 expr_stmt|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -1369,7 +1440,7 @@ name|InsertValueConstantExpr
 operator|,
 literal|2
 operator|>
-block|{ }
+block|{}
 expr_stmt|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -1393,7 +1464,7 @@ name|GetElementPtrConstantExpr
 operator|,
 literal|1
 operator|>
-block|{ }
+block|{}
 expr_stmt|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -1417,7 +1488,7 @@ name|CompareConstantExpr
 operator|,
 literal|2
 operator|>
-block|{ }
+block|{}
 expr_stmt|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -2132,6 +2203,10 @@ name|unsigned
 operator|>
 name|Indexes
 expr_stmt|;
+name|Type
+modifier|*
+name|ExplicitTy
+decl_stmt|;
 name|ConstantExprKeyType
 argument_list|(
 argument|unsigned Opcode
@@ -2145,6 +2220,8 @@ argument|unsigned short SubclassOptionalData =
 literal|0
 argument_list|,
 argument|ArrayRef<unsigned> Indexes = None
+argument_list|,
+argument|Type *ExplicitTy = nullptr
 argument_list|)
 block|:
 name|Opcode
@@ -2169,7 +2246,12 @@ argument_list|)
 operator|,
 name|Indexes
 argument_list|(
-argument|Indexes
+name|Indexes
+argument_list|)
+operator|,
+name|ExplicitTy
+argument_list|(
+argument|ExplicitTy
 argument_list|)
 block|{}
 name|ConstantExprKeyType
@@ -2790,6 +2872,30 @@ name|GetElementPtrConstantExpr
 operator|::
 name|Create
 argument_list|(
+name|ExplicitTy
+condition|?
+name|ExplicitTy
+else|:
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|Ops
+index|[
+literal|0
+index|]
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|getScalarType
+argument_list|()
+operator|)
+operator|->
+name|getElementType
+argument_list|()
+argument_list|,
 name|Ops
 index|[
 literal|0

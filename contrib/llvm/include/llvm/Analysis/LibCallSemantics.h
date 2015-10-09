@@ -73,6 +73,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|InvokeInst
+decl_stmt|;
 comment|/// LibCallLocationInfo - This struct describes a set of memory locations that
 comment|/// are accessed by libcalls.  Identification of a location is doing with a
 comment|/// simple callback function.
@@ -110,21 +113,20 @@ name|Unknown
 block|}
 enum|;
 name|LocResult
-argument_list|(
-argument|*isLocation
-argument_list|)
-operator|(
+function_decl|(
+modifier|*
+name|isLocation
+function_decl|)
+parameter_list|(
 name|ImmutableCallSite
 name|CS
-operator|,
+parameter_list|,
 specifier|const
-name|AliasAnalysis
-operator|::
-name|Location
-operator|&
+name|MemoryLocation
+modifier|&
 name|Loc
-operator|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 comment|/// LibCallFunctionInfo - Each record in the array of FunctionInfo structs
@@ -328,6 +330,170 @@ literal|0
 expr_stmt|;
 block|}
 empty_stmt|;
+name|enum
+name|class
+name|EHPersonality
+block|{
+name|Unknown
+operator|,
+name|GNU_Ada
+operator|,
+name|GNU_C
+operator|,
+name|GNU_CXX
+operator|,
+name|GNU_ObjC
+operator|,
+name|MSVC_X86SEH
+operator|,
+name|MSVC_Win64SEH
+operator|,
+name|MSVC_CXX
+operator|,
+block|}
+empty_stmt|;
+comment|/// \brief See if the given exception handling personality function is one
+comment|/// that we understand.  If so, return a description of it; otherwise return
+comment|/// Unknown.
+name|EHPersonality
+name|classifyEHPersonality
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|Pers
+parameter_list|)
+function_decl|;
+comment|/// \brief Returns true if this personality function catches asynchronous
+comment|/// exceptions.
+specifier|inline
+name|bool
+name|isAsynchronousEHPersonality
+parameter_list|(
+name|EHPersonality
+name|Pers
+parameter_list|)
+block|{
+comment|// The two SEH personality functions can catch asynch exceptions. We assume
+comment|// unknown personalities don't catch asynch exceptions.
+switch|switch
+condition|(
+name|Pers
+condition|)
+block|{
+case|case
+name|EHPersonality
+operator|::
+name|MSVC_X86SEH
+case|:
+case|case
+name|EHPersonality
+operator|::
+name|MSVC_Win64SEH
+case|:
+return|return
+name|true
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"invalid enum"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Returns true if this is an MSVC personality function.
+specifier|inline
+name|bool
+name|isMSVCEHPersonality
+parameter_list|(
+name|EHPersonality
+name|Pers
+parameter_list|)
+block|{
+comment|// The two SEH personality functions can catch asynch exceptions. We assume
+comment|// unknown personalities don't catch asynch exceptions.
+switch|switch
+condition|(
+name|Pers
+condition|)
+block|{
+case|case
+name|EHPersonality
+operator|::
+name|MSVC_CXX
+case|:
+case|case
+name|EHPersonality
+operator|::
+name|MSVC_X86SEH
+case|:
+case|case
+name|EHPersonality
+operator|::
+name|MSVC_Win64SEH
+case|:
+return|return
+name|true
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"invalid enum"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Return true if this personality may be safely removed if there
+comment|/// are no invoke instructions remaining in the current function.
+specifier|inline
+name|bool
+name|isNoOpWithoutInvoke
+parameter_list|(
+name|EHPersonality
+name|Pers
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|Pers
+condition|)
+block|{
+case|case
+name|EHPersonality
+operator|::
+name|Unknown
+case|:
+return|return
+name|false
+return|;
+comment|// All known personalities currently have this behavior
+default|default:
+return|return
+name|true
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"invalid enum"
+argument_list|)
+expr_stmt|;
+block|}
+name|bool
+name|canSimplifyInvokeNoUnwind
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|F
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

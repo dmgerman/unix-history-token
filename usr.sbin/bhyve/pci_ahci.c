@@ -5047,7 +5047,7 @@ index|[
 literal|48
 index|]
 operator|=
-literal|0x1
+literal|0
 expr_stmt|;
 name|buf
 index|[
@@ -9819,6 +9819,12 @@ name|cfis
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|ATA_SECURITY_FREEZE_LOCK
+case|:
+case|case
+name|ATA_SMART_CMD
+case|:
 case|case
 name|ATA_NOP
 case|:

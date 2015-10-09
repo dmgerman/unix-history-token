@@ -52,7 +52,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallString.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Option/Arg.h"
 end_include
 
 begin_include
@@ -98,9 +116,6 @@ block|{
 name|namespace
 name|opt
 block|{
-name|class
-name|Arg
-decl_stmt|;
 name|class
 name|ArgList
 decl_stmt|;
@@ -183,17 +198,17 @@ name|difference_type
 expr_stmt|;
 name|arg_iterator
 argument_list|(
-argument|SmallVectorImpl<Arg*>::const_iterator it
+argument|SmallVectorImpl<Arg *>::const_iterator it
 argument_list|,
-argument|const ArgList&_Args
+argument|const ArgList&Args
 argument_list|,
-argument|OptSpecifier _Id0 =
+argument|OptSpecifier Id0 =
 literal|0U
 argument_list|,
-argument|OptSpecifier _Id1 =
+argument|OptSpecifier Id1 =
 literal|0U
 argument_list|,
-argument|OptSpecifier _Id2 =
+argument|OptSpecifier Id2 =
 literal|0U
 argument_list|)
 block|:
@@ -204,22 +219,22 @@ argument_list|)
 operator|,
 name|Args
 argument_list|(
-name|_Args
+name|Args
 argument_list|)
 operator|,
 name|Id0
 argument_list|(
-name|_Id0
+name|Id0
 argument_list|)
 operator|,
 name|Id1
 argument_list|(
-name|_Id1
+name|Id1
 argument_list|)
 operator|,
 name|Id2
 argument_list|(
-argument|_Id2
+argument|Id2
 argument_list|)
 block|{
 name|SkipToNextArg
@@ -356,24 +371,6 @@ comment|/// and to iterate over groups of arguments.
 name|class
 name|ArgList
 block|{
-name|private
-label|:
-name|ArgList
-argument_list|(
-argument|const ArgList&
-argument_list|)
-name|LLVM_DELETED_FUNCTION
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|ArgList
-operator|&
-operator|)
-name|LLVM_DELETED_FUNCTION
-decl_stmt|;
 name|public
 label|:
 typedef|typedef
@@ -418,17 +415,77 @@ name|Args
 decl_stmt|;
 name|protected
 label|:
-comment|// Default ctor provided explicitly as it is not provided implicitly due to
-comment|// the presence of the (deleted) copy ctor above.
+comment|// Make the default special members protected so they won't be used to slice
+comment|// derived objects, but can still be used by derived objects to implement
+comment|// their own special members.
 name|ArgList
 argument_list|()
-block|{ }
-comment|// Virtual to provide a vtable anchor and because -Wnon-virtua-dtor warns, not
-comment|// because this type is ever actually destroyed polymorphically.
-name|virtual
+operator|=
+expr|default
+expr_stmt|;
+comment|// Explicit move operations to ensure the container is cleared post-move
+comment|// otherwise it could lead to a double-delete in the case of moving of an
+comment|// InputArgList which deletes the contents of the container. If we could fix
+comment|// up the ownership here (delegate storage/ownership to the derived class so
+comment|// it can be a container of unique_ptr) this would be simpler.
+name|ArgList
+argument_list|(
+name|ArgList
+operator|&&
+name|RHS
+argument_list|)
+operator|:
+name|Args
+argument_list|(
+argument|std::move(RHS.Args)
+argument_list|)
+block|{
+name|RHS
+operator|.
+name|Args
+operator|.
+name|clear
+argument_list|()
+block|; }
+name|ArgList
+operator|&
+name|operator
+operator|=
+operator|(
+name|ArgList
+operator|&&
+name|RHS
+operator|)
+block|{
+name|Args
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+operator|.
+name|Args
+argument_list|)
+block|;
+name|RHS
+operator|.
+name|Args
+operator|.
+name|clear
+argument_list|()
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|// Protect the dtor to ensure this type is never destroyed polymorphically.
 operator|~
 name|ArgList
 argument_list|()
+operator|=
+expr|default
 expr_stmt|;
 name|public
 label|:
@@ -782,6 +839,39 @@ name|Id0
 argument_list|,
 name|OptSpecifier
 name|Id1
+argument_list|)
+decl|const
+decl_stmt|;
+name|Arg
+modifier|*
+name|getLastArgNoClaim
+argument_list|(
+name|OptSpecifier
+name|Id0
+argument_list|,
+name|OptSpecifier
+name|Id1
+argument_list|,
+name|OptSpecifier
+name|Id2
+argument_list|)
+decl|const
+decl_stmt|;
+name|Arg
+modifier|*
+name|getLastArgNoClaim
+argument_list|(
+name|OptSpecifier
+name|Id0
+argument_list|,
+name|OptSpecifier
+name|Id1
+argument_list|,
+name|OptSpecifier
+name|Id2
+argument_list|,
+name|OptSpecifier
+name|Id3
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1168,13 +1258,13 @@ expr_stmt|;
 comment|/// @}
 comment|/// @name Arg Synthesis
 comment|/// @{
-comment|/// MakeArgString - Construct a constant string pointer whose
+comment|/// Construct a constant string pointer whose
 comment|/// lifetime will match that of the ArgList.
 name|virtual
 specifier|const
 name|char
 modifier|*
-name|MakeArgString
+name|MakeArgStringRef
 argument_list|(
 name|StringRef
 name|Str
@@ -1189,56 +1279,30 @@ modifier|*
 name|MakeArgString
 argument_list|(
 specifier|const
-name|char
-operator|*
-name|Str
-argument_list|)
-decl|const
-block|{
-return|return
-name|MakeArgString
-argument_list|(
-name|StringRef
-argument_list|(
-name|Str
-argument_list|)
-argument_list|)
-return|;
-block|}
-specifier|const
-name|char
-modifier|*
-name|MakeArgString
-argument_list|(
-name|std
-operator|::
-name|string
-name|Str
-argument_list|)
-decl|const
-block|{
-return|return
-name|MakeArgString
-argument_list|(
-name|StringRef
-argument_list|(
-name|Str
-argument_list|)
-argument_list|)
-return|;
-block|}
-specifier|const
-name|char
-modifier|*
-name|MakeArgString
-argument_list|(
-specifier|const
 name|Twine
 operator|&
 name|Str
 argument_list|)
 decl|const
-decl_stmt|;
+block|{
+name|SmallString
+operator|<
+literal|256
+operator|>
+name|Buf
+expr_stmt|;
+return|return
+name|MakeArgStringRef
+argument_list|(
+name|Str
+operator|.
+name|toStringRef
+argument_list|(
+name|Buf
+argument_list|)
+argument_list|)
+return|;
+block|}
 comment|/// \brief Create an arg string for (\p LHS + \p RHS), reusing the
 comment|/// string at \p Index if possible.
 specifier|const
@@ -1262,6 +1326,7 @@ block|}
 empty_stmt|;
 name|class
 name|InputArgList
+name|final
 range|:
 name|public
 name|ArgList
@@ -1297,6 +1362,11 @@ comment|/// The number of original input argument strings.
 name|unsigned
 name|NumInputArgStrings
 block|;
+comment|/// Release allocated arguments.
+name|void
+name|releaseMemory
+argument_list|()
+block|;
 name|public
 operator|:
 name|InputArgList
@@ -1316,10 +1386,118 @@ operator|*
 name|ArgEnd
 argument_list|)
 block|;
+name|InputArgList
+argument_list|(
+name|InputArgList
+operator|&&
+name|RHS
+argument_list|)
+operator|:
+name|ArgList
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+argument_list|)
+argument_list|)
+block|,
+name|ArgStrings
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+operator|.
+name|ArgStrings
+argument_list|)
+argument_list|)
+block|,
+name|SynthesizedStrings
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+operator|.
+name|SynthesizedStrings
+argument_list|)
+argument_list|)
+block|,
+name|NumInputArgStrings
+argument_list|(
+argument|RHS.NumInputArgStrings
+argument_list|)
+block|{}
+name|InputArgList
+operator|&
+name|operator
+operator|=
+operator|(
+name|InputArgList
+operator|&&
+name|RHS
+operator|)
+block|{
+name|releaseMemory
+argument_list|()
+block|;
+name|ArgList
+operator|::
+name|operator
+operator|=
+operator|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+argument_list|)
+operator|)
+block|;
+name|ArgStrings
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+operator|.
+name|ArgStrings
+argument_list|)
+block|;
+name|SynthesizedStrings
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+operator|.
+name|SynthesizedStrings
+argument_list|)
+block|;
+name|NumInputArgStrings
+operator|=
+name|RHS
+operator|.
+name|NumInputArgStrings
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
 operator|~
 name|InputArgList
 argument_list|()
-block|;
+block|{
+name|releaseMemory
+argument_list|()
+block|; }
 specifier|const
 name|char
 operator|*
@@ -1376,7 +1554,7 @@ block|;
 specifier|const
 name|char
 operator|*
-name|MakeArgString
+name|MakeArgStringRef
 argument_list|(
 argument|StringRef Str
 argument_list|)
@@ -1390,6 +1568,7 @@ comment|/// DerivedArgList - An ordered collection of driver arguments,
 comment|/// whose storage may be in another argument list.
 name|class
 name|DerivedArgList
+name|final
 range|:
 name|public
 name|ArgList
@@ -1424,10 +1603,6 @@ name|InputArgList
 operator|&
 name|BaseArgs
 argument_list|)
-block|;
-operator|~
-name|DerivedArgList
-argument_list|()
 block|;
 specifier|const
 name|char
@@ -1492,7 +1667,7 @@ block|;
 specifier|const
 name|char
 operator|*
-name|MakeArgString
+name|MakeArgStringRef
 argument_list|(
 argument|StringRef Str
 argument_list|)

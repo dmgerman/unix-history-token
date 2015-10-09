@@ -72,7 +72,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This API identifies memory regions with the Location class. The pointer
+comment|// This API identifies memory regions with the MemoryLocation class. The pointer
 end_comment
 
 begin_comment
@@ -80,15 +80,19 @@ comment|// component specifies the base memory address of the region. The Size s
 end_comment
 
 begin_comment
-comment|// the maximum size (in address units) of the memory region, or UnknownSize if
+comment|// the maximum size (in address units) of the memory region, or
 end_comment
 
 begin_comment
-comment|// the size is not known. The TBAA tag identifies the "type" of the memory
+comment|// MemoryLocation::UnknownSize if the size is not known. The TBAA tag
 end_comment
 
 begin_comment
-comment|// reference; see the TypeBasedAliasAnalysis class for details.
+comment|// identifies the "type" of the memory reference; see the
+end_comment
+
+begin_comment
+comment|// TypeBasedAliasAnalysis class for details.
 end_comment
 
 begin_comment
@@ -169,6 +173,12 @@ directive|include
 file|"llvm/IR/Metadata.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/MemoryLocation.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -203,6 +213,41 @@ decl_stmt|;
 name|class
 name|DominatorTree
 decl_stmt|;
+comment|/// The possible results of an alias query.
+comment|///
+comment|/// These results are always computed between two MemoryLocation objects as
+comment|/// a query to some alias analysis.
+comment|///
+comment|/// Note that these are unscoped enumerations because we would like to support
+comment|/// implicitly testing a result for the existence of any possible aliasing with
+comment|/// a conversion to bool, but an "enum class" doesn't support this. The
+comment|/// canonical names from the literature are suffixed and unique anyways, and so
+comment|/// they serve as global constants in LLVM for these results.
+comment|///
+comment|/// See docs/AliasAnalysis.html for more information on the specific meanings
+comment|/// of these values.
+enum|enum
+name|AliasResult
+block|{
+comment|/// The two locations do not alias at all.
+comment|///
+comment|/// This value is arranged to convert to false, while all other values
+comment|/// convert to true. This allows a boolean context to convert the result to
+comment|/// a binary flag indicating whether there is the possibility of aliasing.
+name|NoAlias
+init|=
+literal|0
+block|,
+comment|/// The two locations may or may not alias. This is the least precise result.
+name|MayAlias
+block|,
+comment|/// The two locations alias, but only due to a partial overlap.
+name|PartialAlias
+block|,
+comment|/// The two locations precisely alias each other.
+name|MustAlias
+block|, }
+enum|;
 name|class
 name|AliasAnalysis
 block|{
@@ -238,6 +283,11 @@ parameter_list|(
 name|Pass
 modifier|*
 name|P
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|*
+name|DL
 parameter_list|)
 function_decl|;
 comment|/// getAnalysisUsage - All alias analysis implementations should invoke this
@@ -283,34 +333,6 @@ name|AliasAnalysis
 argument_list|()
 expr_stmt|;
 comment|// We want to be subclassed
-comment|/// UnknownSize - This is a special value which can be used with the
-comment|/// size arguments in alias queries to indicate that the caller does not
-comment|/// know the sizes of the potential memory references.
-specifier|static
-name|uint64_t
-specifier|const
-name|UnknownSize
-init|=
-operator|~
-name|UINT64_C
-argument_list|(
-literal|0
-argument_list|)
-decl_stmt|;
-comment|/// getDataLayout - Return a pointer to the current DataLayout object, or
-comment|/// null if no DataLayout object is available.
-comment|///
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DL
-return|;
-block|}
 comment|/// getTargetLibraryInfo - Return a pointer to the current TargetLibraryInfo
 comment|/// object, or null if no TargetLibraryInfo object is available.
 comment|///
@@ -339,223 +361,6 @@ function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// Alias Queries...
 comment|///
-comment|/// Location - A description of a memory location.
-struct|struct
-name|Location
-block|{
-comment|/// Ptr - The address of the start of the location.
-specifier|const
-name|Value
-modifier|*
-name|Ptr
-decl_stmt|;
-comment|/// Size - The maximum size of the location, in address-units, or
-comment|/// UnknownSize if the size is not known.  Note that an unknown size does
-comment|/// not mean the pointer aliases the entire virtual address space, because
-comment|/// there are restrictions on stepping out of one object and into another.
-comment|/// See http://llvm.org/docs/LangRef.html#pointeraliasing
-name|uint64_t
-name|Size
-decl_stmt|;
-comment|/// AATags - The metadata nodes which describes the aliasing of the
-comment|/// location (each member is null if that kind of information is
-comment|/// unavailable)..
-name|AAMDNodes
-name|AATags
-decl_stmt|;
-name|explicit
-name|Location
-argument_list|(
-argument|const Value *P = nullptr
-argument_list|,
-argument|uint64_t S = UnknownSize
-argument_list|,
-argument|const AAMDNodes&N = AAMDNodes()
-argument_list|)
-block|:
-name|Ptr
-argument_list|(
-name|P
-argument_list|)
-operator|,
-name|Size
-argument_list|(
-name|S
-argument_list|)
-operator|,
-name|AATags
-argument_list|(
-argument|N
-argument_list|)
-block|{}
-name|Location
-name|getWithNewPtr
-argument_list|(
-argument|const Value *NewPtr
-argument_list|)
-specifier|const
-block|{
-name|Location
-name|Copy
-argument_list|(
-operator|*
-name|this
-argument_list|)
-block|;
-name|Copy
-operator|.
-name|Ptr
-operator|=
-name|NewPtr
-block|;
-return|return
-name|Copy
-return|;
-block|}
-name|Location
-name|getWithNewSize
-argument_list|(
-name|uint64_t
-name|NewSize
-argument_list|)
-decl|const
-block|{
-name|Location
-name|Copy
-argument_list|(
-operator|*
-name|this
-argument_list|)
-decl_stmt|;
-name|Copy
-operator|.
-name|Size
-operator|=
-name|NewSize
-expr_stmt|;
-return|return
-name|Copy
-return|;
-block|}
-name|Location
-name|getWithoutAATags
-argument_list|()
-specifier|const
-block|{
-name|Location
-name|Copy
-argument_list|(
-operator|*
-name|this
-argument_list|)
-block|;
-name|Copy
-operator|.
-name|AATags
-operator|=
-name|AAMDNodes
-argument_list|()
-block|;
-return|return
-name|Copy
-return|;
-block|}
-block|}
-struct|;
-comment|/// getLocation - Fill in Loc with information about the memory reference by
-comment|/// the given instruction.
-name|Location
-name|getLocation
-parameter_list|(
-specifier|const
-name|LoadInst
-modifier|*
-name|LI
-parameter_list|)
-function_decl|;
-name|Location
-name|getLocation
-parameter_list|(
-specifier|const
-name|StoreInst
-modifier|*
-name|SI
-parameter_list|)
-function_decl|;
-name|Location
-name|getLocation
-parameter_list|(
-specifier|const
-name|VAArgInst
-modifier|*
-name|VI
-parameter_list|)
-function_decl|;
-name|Location
-name|getLocation
-parameter_list|(
-specifier|const
-name|AtomicCmpXchgInst
-modifier|*
-name|CXI
-parameter_list|)
-function_decl|;
-name|Location
-name|getLocation
-parameter_list|(
-specifier|const
-name|AtomicRMWInst
-modifier|*
-name|RMWI
-parameter_list|)
-function_decl|;
-specifier|static
-name|Location
-name|getLocationForSource
-parameter_list|(
-specifier|const
-name|MemTransferInst
-modifier|*
-name|MTI
-parameter_list|)
-function_decl|;
-specifier|static
-name|Location
-name|getLocationForDest
-parameter_list|(
-specifier|const
-name|MemIntrinsic
-modifier|*
-name|MI
-parameter_list|)
-function_decl|;
-comment|/// Alias analysis result - Either we know for sure that it does not alias, we
-comment|/// know for sure it must alias, or we don't know anything: The two pointers
-comment|/// _might_ alias.  This enum is designed so you can do things like:
-comment|///     if (AA.alias(P1, P2)) { ... }
-comment|/// to check to see if two pointers might alias.
-comment|///
-comment|/// See docs/AliasAnalysis.html for more information on the specific meanings
-comment|/// of these values.
-comment|///
-enum|enum
-name|AliasResult
-block|{
-name|NoAlias
-init|=
-literal|0
-block|,
-comment|///< No dependencies.
-name|MayAlias
-block|,
-comment|///< Anything goes.
-name|PartialAlias
-block|,
-comment|///< Pointers differ, but pointees overlap.
-name|MustAlias
-comment|///< Pointers are equal.
-block|}
-enum|;
 comment|/// alias - The main low level interface to the alias analysis implementation.
 comment|/// Returns an AliasResult indicating whether the two pointers are aliased to
 comment|/// each other.  This is the interface that must be implemented by specific
@@ -565,12 +370,12 @@ name|AliasResult
 name|alias
 parameter_list|(
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|LocA
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|LocB
 parameter_list|)
@@ -599,14 +404,14 @@ block|{
 return|return
 name|alias
 argument_list|(
-name|Location
+name|MemoryLocation
 argument_list|(
 name|V1
 argument_list|,
 name|V1Size
 argument_list|)
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|V2
 argument_list|,
@@ -635,10 +440,14 @@ name|alias
 argument_list|(
 name|V1
 argument_list|,
+name|MemoryLocation
+operator|::
 name|UnknownSize
 argument_list|,
 name|V2
 argument_list|,
+name|MemoryLocation
+operator|::
 name|UnknownSize
 argument_list|)
 return|;
@@ -649,12 +458,12 @@ name|bool
 name|isNoAlias
 parameter_list|(
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|LocA
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|LocB
 parameter_list|)
@@ -694,14 +503,14 @@ block|{
 return|return
 name|isNoAlias
 argument_list|(
-name|Location
+name|MemoryLocation
 argument_list|(
 name|V1
 argument_list|,
 name|V1Size
 argument_list|)
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|V2
 argument_list|,
@@ -728,12 +537,12 @@ block|{
 return|return
 name|isNoAlias
 argument_list|(
-name|Location
+name|MemoryLocation
 argument_list|(
 name|V1
 argument_list|)
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|V2
 argument_list|)
@@ -745,12 +554,12 @@ name|bool
 name|isMustAlias
 parameter_list|(
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|LocA
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|LocB
 parameter_list|)
@@ -805,7 +614,7 @@ name|bool
 name|pointsToConstantMemory
 parameter_list|(
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|,
@@ -833,7 +642,7 @@ block|{
 return|return
 name|pointsToConstantMemory
 argument_list|(
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|)
@@ -910,6 +719,8 @@ comment|/// OnlyReadsArgumentPointees - The only memory references in this funct
 comment|/// (if it has any) are non-volatile loads from objects pointed to by its
 comment|/// pointer-typed arguments, with arbitrary offsets.
 comment|///
+comment|/// This property corresponds to the LLVM IR 'argmemonly' attribute combined
+comment|/// with 'readonly' attribute.
 comment|/// This property corresponds to the IntrReadArgMem LLVM intrinsic flag.
 name|OnlyReadsArgumentPointees
 init|=
@@ -921,6 +732,7 @@ comment|/// OnlyAccessesArgumentPointees - The only memory references in this
 comment|/// function (if it has any) are non-volatile loads and stores from objects
 comment|/// pointed to by its pointer-typed arguments, with arbitrary offsets.
 comment|///
+comment|/// This property corresponds to the LLVM IR 'argmemonly' attribute.
 comment|/// This property corresponds to the IntrReadWriteArgMem LLVM intrinsic flag.
 name|OnlyAccessesArgumentPointees
 init|=
@@ -949,24 +761,20 @@ operator||
 name|ModRef
 block|}
 enum|;
-comment|/// Get the location associated with a pointer argument of a callsite.
-comment|/// The mask bits are set to indicate the allowed aliasing ModRef kinds.
-comment|/// Note that these mask bits do not necessarily account for the overall
-comment|/// behavior of the function, but rather only provide additional
-comment|/// per-argument information.
+comment|/// Get the ModRef info associated with a pointer argument of a callsite. The
+comment|/// result's bits are set to indicate the allowed aliasing ModRef kinds. Note
+comment|/// that these bits do not necessarily account for the overall behavior of
+comment|/// the function, but rather only provide additional per-argument
+comment|/// information.
 name|virtual
-name|Location
-name|getArgLocation
+name|ModRefResult
+name|getArgModRefInfo
 parameter_list|(
 name|ImmutableCallSite
 name|CS
 parameter_list|,
 name|unsigned
 name|ArgIdx
-parameter_list|,
-name|ModRefResult
-modifier|&
-name|Mask
 parameter_list|)
 function_decl|;
 comment|/// getModRefBehavior - Return the behavior when calling the given call site.
@@ -1157,6 +965,80 @@ name|ArgumentPointees
 operator|)
 return|;
 block|}
+comment|/// getModRefInfo - Return information about whether or not an
+comment|/// instruction may read or write memory (without regard to a
+comment|/// specific location)
+name|ModRefResult
+name|getModRefInfo
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|)
+block|{
+if|if
+condition|(
+name|auto
+name|CS
+init|=
+name|ImmutableCallSite
+argument_list|(
+name|I
+argument_list|)
+condition|)
+block|{
+name|auto
+name|MRB
+init|=
+name|getModRefBehavior
+argument_list|(
+name|CS
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|MRB
+operator|&
+name|ModRef
+condition|)
+return|return
+name|ModRef
+return|;
+elseif|else
+if|if
+condition|(
+name|MRB
+operator|&
+name|Ref
+condition|)
+return|return
+name|Ref
+return|;
+elseif|else
+if|if
+condition|(
+name|MRB
+operator|&
+name|Mod
+condition|)
+return|return
+name|Mod
+return|;
+return|return
+name|NoModRef
+return|;
+block|}
+return|return
+name|getModRefInfo
+argument_list|(
+name|I
+argument_list|,
+name|MemoryLocation
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// getModRefInfo - Return information about whether or not an instruction may
 comment|/// read or write the specified memory location.  An instruction
 comment|/// that doesn't read or write memory may be trivially LICM'd for example.
@@ -1169,7 +1051,7 @@ modifier|*
 name|I
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1355,7 +1237,7 @@ name|getModRefInfo
 argument_list|(
 name|I
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1374,7 +1256,7 @@ name|ImmutableCallSite
 name|CS
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1400,7 +1282,7 @@ name|getModRefInfo
 argument_list|(
 name|CS
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1420,7 +1302,7 @@ modifier|*
 name|C
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1460,7 +1342,7 @@ name|getModRefInfo
 argument_list|(
 name|C
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1480,7 +1362,7 @@ modifier|*
 name|I
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1520,7 +1402,7 @@ name|getModRefInfo
 argument_list|(
 name|I
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1540,7 +1422,7 @@ modifier|*
 name|L
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1568,7 +1450,7 @@ name|getModRefInfo
 argument_list|(
 name|L
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1588,7 +1470,7 @@ modifier|*
 name|S
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1616,7 +1498,7 @@ name|getModRefInfo
 argument_list|(
 name|S
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1636,7 +1518,7 @@ modifier|*
 name|S
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1670,7 +1552,7 @@ name|getModRefInfo
 argument_list|(
 name|S
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1690,7 +1572,7 @@ modifier|*
 name|CX
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1718,7 +1600,7 @@ name|getModRefInfo
 argument_list|(
 name|CX
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1738,7 +1620,7 @@ modifier|*
 name|RMW
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1766,7 +1648,7 @@ name|getModRefInfo
 argument_list|(
 name|RMW
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1786,7 +1668,7 @@ modifier|*
 name|I
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1814,7 +1696,7 @@ name|getModRefInfo
 argument_list|(
 name|I
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1823,6 +1705,19 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+comment|/// getModRefInfo - Return information about whether a call and an instruction
+comment|/// may refer to the same memory locations.
+name|ModRefResult
+name|getModRefInfo
+parameter_list|(
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+name|ImmutableCallSite
+name|Call
+parameter_list|)
+function_decl|;
 comment|/// getModRefInfo - Return information about whether two call sites may refer
 comment|/// to the same set of memory locations.  See
 comment|///   http://llvm.org/docs/AliasAnalysis.html#ModRefInfo
@@ -1842,24 +1737,22 @@ comment|/// callCapturesBefore - Return information about whether a particular c
 comment|/// site modifies or reads the specified memory location.
 name|ModRefResult
 name|callCapturesBefore
-argument_list|(
+parameter_list|(
 specifier|const
 name|Instruction
-operator|*
+modifier|*
 name|I
-argument_list|,
+parameter_list|,
 specifier|const
-name|AliasAnalysis
-operator|::
-name|Location
-operator|&
+name|MemoryLocation
+modifier|&
 name|MemLoc
-argument_list|,
+parameter_list|,
 name|DominatorTree
-operator|*
+modifier|*
 name|DT
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// callCapturesBefore - A convenience wrapper.
 name|ModRefResult
 name|callCapturesBefore
@@ -1887,7 +1780,7 @@ name|callCapturesBefore
 argument_list|(
 name|I
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1912,7 +1805,7 @@ modifier|&
 name|BB
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
@@ -1940,7 +1833,7 @@ name|canBasicBlockModify
 argument_list|(
 name|BB
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|P
 argument_list|,
@@ -1968,7 +1861,7 @@ modifier|&
 name|I2
 parameter_list|,
 specifier|const
-name|Location
+name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|,
@@ -2011,7 +1904,7 @@ name|I1
 argument_list|,
 name|I2
 argument_list|,
-name|Location
+name|MemoryLocation
 argument_list|(
 name|Ptr
 argument_list|,
@@ -2039,25 +1932,6 @@ parameter_list|(
 name|Value
 modifier|*
 name|V
-parameter_list|)
-function_decl|;
-comment|/// copyValue - This method should be used whenever a preexisting value in the
-comment|/// program is copied or cloned, introducing a new value.  Note that analysis
-comment|/// implementations should tolerate clients that use this method to introduce
-comment|/// the same value multiple times: if the analysis already knows about a
-comment|/// value, it should ignore the request.
-comment|///
-name|virtual
-name|void
-name|copyValue
-parameter_list|(
-name|Value
-modifier|*
-name|From
-parameter_list|,
-name|Value
-modifier|*
-name|To
 parameter_list|)
 function_decl|;
 comment|/// addEscapingUse - This method should be used whenever an escaping use is
@@ -2093,13 +1967,6 @@ modifier|*
 name|New
 parameter_list|)
 block|{
-name|copyValue
-argument_list|(
-name|Old
-argument_list|,
-name|New
-argument_list|)
-expr_stmt|;
 name|deleteValue
 argument_list|(
 name|Old
@@ -2108,178 +1975,28 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
-comment|// Specialize DenseMapInfo for Location.
-name|template
-operator|<
-operator|>
-expr|struct
-name|DenseMapInfo
-operator|<
-name|AliasAnalysis
-operator|::
-name|Location
-operator|>
-block|{
-specifier|static
-specifier|inline
-name|AliasAnalysis
-operator|::
-name|Location
-name|getEmptyKey
-argument_list|()
-block|{
-return|return
-name|AliasAnalysis
-operator|::
-name|Location
-argument_list|(
-name|DenseMapInfo
-operator|<
-specifier|const
-name|Value
-operator|*
-operator|>
-operator|::
-name|getEmptyKey
-argument_list|()
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
-specifier|static
-specifier|inline
-name|AliasAnalysis
-operator|::
-name|Location
-name|getTombstoneKey
-argument_list|()
-block|{
-return|return
-name|AliasAnalysis
-operator|::
-name|Location
-argument_list|(
-name|DenseMapInfo
-operator|<
-specifier|const
-name|Value
-operator|*
-operator|>
-operator|::
-name|getTombstoneKey
-argument_list|()
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
-specifier|static
-name|unsigned
-name|getHashValue
-argument_list|(
-argument|const AliasAnalysis::Location&Val
-argument_list|)
-block|{
-return|return
-name|DenseMapInfo
-operator|<
-specifier|const
-name|Value
-operator|*
-operator|>
-operator|::
-name|getHashValue
-argument_list|(
-name|Val
-operator|.
-name|Ptr
-argument_list|)
-operator|^
-name|DenseMapInfo
-operator|<
-name|uint64_t
-operator|>
-operator|::
-name|getHashValue
-argument_list|(
-name|Val
-operator|.
-name|Size
-argument_list|)
-operator|^
-name|DenseMapInfo
-operator|<
-name|AAMDNodes
-operator|>
-operator|::
-name|getHashValue
-argument_list|(
-name|Val
-operator|.
-name|AATags
-argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|isEqual
-argument_list|(
-argument|const AliasAnalysis::Location&LHS
-argument_list|,
-argument|const AliasAnalysis::Location&RHS
-argument_list|)
-block|{
-return|return
-name|LHS
-operator|.
-name|Ptr
-operator|==
-name|RHS
-operator|.
-name|Ptr
-operator|&&
-name|LHS
-operator|.
-name|Size
-operator|==
-name|RHS
-operator|.
-name|Size
-operator|&&
-name|LHS
-operator|.
-name|AATags
-operator|==
-name|RHS
-operator|.
-name|AATags
-return|;
-block|}
-expr|}
-block|;
 comment|/// isNoAliasCall - Return true if this pointer is returned by a noalias
 comment|/// function.
 name|bool
 name|isNoAliasCall
-argument_list|(
+parameter_list|(
 specifier|const
 name|Value
-operator|*
+modifier|*
 name|V
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// isNoAliasArgument - Return true if this is an argument with the noalias
 comment|/// attribute.
 name|bool
 name|isNoAliasArgument
-argument_list|(
+parameter_list|(
 specifier|const
 name|Value
-operator|*
+modifier|*
 name|V
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// isIdentifiedObject - Return true if this pointer refers to a distinct and
 comment|/// identifiable object.  This returns true for:
 comment|///    Global Variables and Functions (but not Global Aliases)
@@ -2289,13 +2006,13 @@ comment|///    NoAlias returns (e.g. calls to malloc)
 comment|///
 name|bool
 name|isIdentifiedObject
-argument_list|(
+parameter_list|(
 specifier|const
 name|Value
-operator|*
+modifier|*
 name|V
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// isIdentifiedFunctionLocal - Return true if V is umabigously identified
 comment|/// at the function-level. Different IdentifiedFunctionLocals can't alias.
 comment|/// Further, an IdentifiedFunctionLocal can not alias with any function
@@ -2303,13 +2020,14 @@ comment|/// arguments other than itself, which is not necessarily true for
 comment|/// IdentifiedObjects.
 name|bool
 name|isIdentifiedFunctionLocal
-argument_list|(
+parameter_list|(
 specifier|const
 name|Value
-operator|*
+modifier|*
 name|V
-argument_list|)
-block|;  }
+parameter_list|)
+function_decl|;
+block|}
 end_decl_stmt
 
 begin_comment

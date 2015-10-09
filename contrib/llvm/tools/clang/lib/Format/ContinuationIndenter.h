@@ -458,19 +458,9 @@ argument_list|(
 name|Indent
 argument_list|)
 operator|,
-name|FirstLessLess
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|BreakBeforeClosingBrace
 argument_list|(
 name|false
-argument_list|)
-operator|,
-name|QuestionColumn
-argument_list|(
-literal|0
 argument_list|)
 operator|,
 name|AvoidBinPacking
@@ -493,36 +483,6 @@ argument_list|(
 name|true
 argument_list|)
 operator|,
-name|ColonPos
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|StartOfFunctionCall
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|StartOfArraySubscripts
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NestedNameSpecifierContinuation
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|CallContinuation
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|VariablePos
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|ContainsLineBreak
 argument_list|(
 name|false
@@ -530,7 +490,7 @@ argument_list|)
 operator|,
 name|ContainsUnwrappedBuilder
 argument_list|(
-literal|0
+name|false
 argument_list|)
 operator|,
 name|AlignColons
@@ -581,6 +541,55 @@ comment|/// Used to align "<<" operators. 0 if no such operator has been encount
 comment|/// on a level.
 name|unsigned
 name|FirstLessLess
+init|=
+literal|0
+decl_stmt|;
+comment|/// \brief The column of a \c ? in a conditional expression;
+name|unsigned
+name|QuestionColumn
+init|=
+literal|0
+decl_stmt|;
+comment|/// \brief The position of the colon in an ObjC method declaration/call.
+name|unsigned
+name|ColonPos
+init|=
+literal|0
+decl_stmt|;
+comment|/// \brief The start of the most recent function in a builder-type call.
+name|unsigned
+name|StartOfFunctionCall
+init|=
+literal|0
+decl_stmt|;
+comment|/// \brief Contains the start of array subscript expressions, so that they
+comment|/// can be aligned.
+name|unsigned
+name|StartOfArraySubscripts
+init|=
+literal|0
+decl_stmt|;
+comment|/// \brief If a nested name specifier was broken over multiple lines, this
+comment|/// contains the start column of the second line. Otherwise 0.
+name|unsigned
+name|NestedNameSpecifierContinuation
+init|=
+literal|0
+decl_stmt|;
+comment|/// \brief If a call expression was broken over multiple lines, this
+comment|/// contains the start column of the second line. Otherwise 0.
+name|unsigned
+name|CallContinuation
+init|=
+literal|0
+decl_stmt|;
+comment|/// \brief The column of the first variable name in a variable declaration.
+comment|///
+comment|/// Used to align further variables if necessary.
+name|unsigned
+name|VariablePos
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief Whether a newline needs to be inserted before the block's closing
 comment|/// brace.
@@ -589,58 +598,35 @@ comment|/// We only want to insert a newline before the closing brace if there a
 comment|/// was a newline after the beginning left brace.
 name|bool
 name|BreakBeforeClosingBrace
-decl_stmt|;
-comment|/// \brief The column of a \c ? in a conditional expression;
-name|unsigned
-name|QuestionColumn
+range|:
+literal|1
 decl_stmt|;
 comment|/// \brief Avoid bin packing, i.e. multiple parameters/elements on multiple
 comment|/// lines, in this context.
 name|bool
 name|AvoidBinPacking
+range|:
+literal|1
 decl_stmt|;
 comment|/// \brief Break after the next comma (or all the commas in this context if
 comment|/// \c AvoidBinPacking is \c true).
 name|bool
 name|BreakBeforeParameter
+range|:
+literal|1
 decl_stmt|;
 comment|/// \brief Line breaking in this context would break a formatting rule.
 name|bool
 name|NoLineBreak
+range|:
+literal|1
 decl_stmt|;
 comment|/// \brief True if the last binary operator on this level was wrapped to the
 comment|/// next line.
 name|bool
 name|LastOperatorWrapped
-decl_stmt|;
-comment|/// \brief The position of the colon in an ObjC method declaration/call.
-name|unsigned
-name|ColonPos
-decl_stmt|;
-comment|/// \brief The start of the most recent function in a builder-type call.
-name|unsigned
-name|StartOfFunctionCall
-decl_stmt|;
-comment|/// \brief Contains the start of array subscript expressions, so that they
-comment|/// can be aligned.
-name|unsigned
-name|StartOfArraySubscripts
-decl_stmt|;
-comment|/// \brief If a nested name specifier was broken over multiple lines, this
-comment|/// contains the start column of the second line. Otherwise 0.
-name|unsigned
-name|NestedNameSpecifierContinuation
-decl_stmt|;
-comment|/// \brief If a call expression was broken over multiple lines, this
-comment|/// contains the start column of the second line. Otherwise 0.
-name|unsigned
-name|CallContinuation
-decl_stmt|;
-comment|/// \brief The column of the first variable name in a variable declaration.
-comment|///
-comment|/// Used to align further variables if necessary.
-name|unsigned
-name|VariablePos
+range|:
+literal|1
 decl_stmt|;
 comment|/// \brief \c true if this \c ParenState already contains a line-break.
 comment|///
@@ -649,11 +635,15 @@ comment|/// that clang-format prefers similar breaks, i.e. breaks in the same
 comment|/// parenthesis.
 name|bool
 name|ContainsLineBreak
+range|:
+literal|1
 decl_stmt|;
 comment|/// \brief \c true if this \c ParenState contains multiple segments of a
 comment|/// builder-type call on one line.
 name|bool
 name|ContainsUnwrappedBuilder
+range|:
+literal|1
 decl_stmt|;
 comment|/// \brief \c true if the colons of the curren ObjC method expression should
 comment|/// be aligned.
@@ -662,6 +652,8 @@ comment|/// Not considered for memoization as it will always have the same value
 comment|/// the same token.
 name|bool
 name|AlignColons
+range|:
+literal|1
 decl_stmt|;
 comment|/// \brief \c true if at least one selector name was found in the current
 comment|/// ObjC method expression.
@@ -670,6 +662,8 @@ comment|/// Not considered for memoization as it will always have the same value
 comment|/// the same token.
 name|bool
 name|ObjCSelectorNameFound
+range|:
+literal|1
 decl_stmt|;
 comment|/// \brief \c true if there are multiple nested blocks inside these parens.
 comment|///
@@ -677,11 +671,15 @@ comment|/// Not considered for memoization as it will always have the same value
 comment|/// the same token.
 name|bool
 name|HasMultipleNestedBlocks
+range|:
+literal|1
 decl_stmt|;
 comment|// \brief The start of a nested block (e.g. lambda introducer in C++ or
 comment|// "function" in JavaScript) is not wrapped to a new line.
 name|bool
 name|NestedBlockInlined
+range|:
+literal|1
 decl_stmt|;
 name|bool
 name|operator
@@ -909,10 +907,6 @@ name|ContainsLineBreak
 condition|)
 return|return
 name|ContainsLineBreak
-operator|<
-name|Other
-operator|.
-name|ContainsLineBreak
 return|;
 if|if
 condition|(
@@ -924,10 +918,6 @@ name|ContainsUnwrappedBuilder
 condition|)
 return|return
 name|ContainsUnwrappedBuilder
-operator|<
-name|Other
-operator|.
-name|ContainsUnwrappedBuilder
 return|;
 if|if
 condition|(
@@ -938,10 +928,6 @@ operator|.
 name|NestedBlockInlined
 condition|)
 return|return
-name|NestedBlockInlined
-operator|<
-name|Other
-operator|.
 name|NestedBlockInlined
 return|;
 return|return

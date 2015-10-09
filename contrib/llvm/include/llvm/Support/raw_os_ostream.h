@@ -127,6 +127,7 @@ block|{}
 operator|~
 name|raw_os_ostream
 argument_list|()
+name|override
 block|; }
 decl_stmt|;
 block|}

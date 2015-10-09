@@ -274,6 +274,7 @@ block|;
 operator|~
 name|ExprEngine
 argument_list|()
+name|override
 block|;
 comment|/// Returns true if there is still simulation state on the worklist.
 name|bool

@@ -69,6 +69,7 @@ name|class
 name|SBBroadcaster
 decl_stmt|;
 name|class
+name|LLDB_API
 name|SBEvent
 block|{
 name|public
@@ -244,6 +245,10 @@ decl_stmt|;
 name|friend
 name|class
 name|SBProcess
+decl_stmt|;
+name|friend
+name|class
+name|SBTarget
 decl_stmt|;
 name|friend
 name|class

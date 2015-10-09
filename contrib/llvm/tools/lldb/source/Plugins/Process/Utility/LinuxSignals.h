@@ -67,15 +67,13 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|process_linux
+name|lldb_private
 block|{
 comment|/// Linux specific set of Unix signals.
 name|class
 name|LinuxSignals
 range|:
 name|public
-name|lldb_private
-operator|::
 name|UnixSignals
 block|{
 name|public
@@ -88,15 +86,24 @@ operator|:
 name|void
 name|Reset
 argument_list|()
-block|;     }
+name|override
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace lldb_private
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// liblldb_LinuxSignals_H_
+end_comment
 
 end_unit
 

@@ -213,6 +213,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|TARGET_IPHONE_SIMULATOR
+end_if
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_IOSSIM
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_IOSSIM
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
@@ -229,6 +259,13 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_IOS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_IOSSIM
 value|0
 end_define
 
@@ -618,6 +655,74 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// udi16 syscalls can only be used when the following conditions are
+end_comment
+
+begin_comment
+comment|// met:
+end_comment
+
+begin_comment
+comment|// * target is one of arm32, x86-32, sparc32, sh or m68k
+end_comment
+
+begin_comment
+comment|// * libc version is libc5, glibc-2.0, glibc-2.1 or glibc-2.2 to 2.15
+end_comment
+
+begin_comment
+comment|//   built against> linux-2.2 kernel headers
+end_comment
+
+begin_comment
+comment|// Since we don't want to include libc headers here, we check the
+end_comment
+
+begin_comment
+comment|// target only.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|||
+name|SANITIZER_X32
+operator|||
+name|defined
+argument_list|(
+name|__sparc__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_USES_UID16_SYSCALLS
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_USES_UID16_SYSCALLS
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -641,6 +746,45 @@ define|#
 directive|define
 name|SANITIZER_POINTER_FORMAT_LENGTH
 value|FIRST_32_SECOND_64(8, 12)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// Assume obsolete RPC headers are available by default
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_RPC_XDR_H
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_TIRPC_RPC_XDR_H
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_RPC_XDR_H
+value|(SANITIZER_LINUX&& !SANITIZER_ANDROID)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_TIRPC_RPC_XDR_H
+value|0
 end_define
 
 begin_endif

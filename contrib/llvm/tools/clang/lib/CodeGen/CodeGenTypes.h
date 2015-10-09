@@ -298,6 +298,17 @@ argument_list|(
 literal|"not expecting a COMDAT"
 argument_list|)
 expr_stmt|;
+case|case
+name|Ctor_CopyingClosure
+case|:
+case|case
+name|Ctor_DefaultClosure
+case|:
+name|llvm_unreachable
+argument_list|(
+literal|"not expecting a closure"
+argument_list|)
+expr_stmt|;
 block|}
 name|llvm_unreachable
 argument_list|(
@@ -401,8 +412,8 @@ literal|"not a CXXDtorType"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// CodeGenTypes - This class organizes the cross-module state that is used
-comment|/// while lowering AST types to LLVM types.
+comment|/// This class organizes the cross-module state that is used while lowering
+comment|/// AST types to LLVM types.
 name|class
 name|CodeGenTypes
 block|{
@@ -463,8 +474,7 @@ operator|*
 operator|>
 name|InterfaceTypes
 expr_stmt|;
-comment|/// CGRecordLayouts - This maps llvm struct type with corresponding
-comment|/// record layout info.
+comment|/// Maps clang struct type with corresponding record layout info.
 name|llvm
 operator|::
 name|DenseMap
@@ -478,8 +488,7 @@ operator|*
 operator|>
 name|CGRecordLayouts
 expr_stmt|;
-comment|/// RecordDeclTypes - This contains the LLVM IR type for any converted
-comment|/// RecordDecl.
+comment|/// Contains the LLVM IR type for any converted RecordDecl.
 name|llvm
 operator|::
 name|DenseMap
@@ -495,7 +504,7 @@ operator|*
 operator|>
 name|RecordDeclTypes
 expr_stmt|;
-comment|/// FunctionInfos - Hold memoized CGFunctionInfo results.
+comment|/// Hold memoized CGFunctionInfo results.
 name|llvm
 operator|::
 name|FoldingSet
@@ -504,8 +513,8 @@ name|CGFunctionInfo
 operator|>
 name|FunctionInfos
 expr_stmt|;
-comment|/// RecordsBeingLaidOut - This set keeps track of records that we're currently
-comment|/// converting to an IR type.  For example, when converting:
+comment|/// This set keeps track of records that we're currently converting
+comment|/// to an IR type.  For example, when converting:
 comment|/// struct A { struct B { int x; } } when processing 'x', the 'A' and 'B'
 comment|/// types will be in this set.
 name|llvm
@@ -532,7 +541,7 @@ literal|4
 operator|>
 name|FunctionsBeingProcessed
 expr_stmt|;
-comment|/// SkippedLayout - True if we didn't layout a function due to a being inside
+comment|/// True if we didn't layout a function due to a being inside
 comment|/// a recursive struct conversion, set this to true.
 name|bool
 name|SkippedLayout
@@ -549,8 +558,8 @@ name|DeferredRecords
 expr_stmt|;
 name|private
 label|:
-comment|/// TypeCache - This map keeps cache of llvm::Types
-comment|/// and maps clang::Type to corresponding llvm::Type.
+comment|/// This map keeps cache of llvm::Types and maps clang::Type to
+comment|/// corresponding llvm::Type.
 name|llvm
 operator|::
 name|DenseMap
@@ -978,6 +987,20 @@ function_decl|;
 specifier|const
 name|CGFunctionInfo
 modifier|&
+name|arrangeMSCtorClosure
+parameter_list|(
+specifier|const
+name|CXXConstructorDecl
+modifier|*
+name|CD
+parameter_list|,
+name|CXXCtorType
+name|CT
+parameter_list|)
+function_decl|;
+specifier|const
+name|CGFunctionInfo
+modifier|&
 name|arrangeFreeFunctionType
 argument_list|(
 name|CanQual
@@ -1139,7 +1162,7 @@ name|bool
 name|isZeroInitializable
 parameter_list|(
 specifier|const
-name|CXXRecordDecl
+name|RecordDecl
 modifier|*
 name|RD
 parameter_list|)

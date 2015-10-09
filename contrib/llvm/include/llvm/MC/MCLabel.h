@@ -75,13 +75,13 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|/// MCLabel - Instances of this class represent a label name in the MC file,
-comment|/// and MCLabel are created and unique'd by the MCContext class.  MCLabel
+comment|/// \brief Instances of this class represent a label name in the MC file,
+comment|/// and MCLabel are created and uniqued by the MCContext class.  MCLabel
 comment|/// should only be constructed for valid instances in the object file.
 name|class
 name|MCLabel
 block|{
-comment|// Instance - the instance number of this Directional Local Label
+comment|// \brief The instance number of this Directional Local Label.
 name|unsigned
 name|Instance
 decl_stmt|;
@@ -104,9 +104,12 @@ argument_list|)
 block|{}
 name|MCLabel
 argument_list|(
-argument|const MCLabel&
+specifier|const
+name|MCLabel
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -116,11 +119,12 @@ specifier|const
 name|MCLabel
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:
-comment|/// getInstance - Get the current instance of this Directional Local Label.
+comment|/// \brief Get the current instance of this Directional Local Label.
 name|unsigned
 name|getInstance
 argument_list|()
@@ -130,8 +134,7 @@ return|return
 name|Instance
 return|;
 block|}
-comment|/// incInstance - Increment the current instance of this Directional Local
-comment|/// Label.
+comment|/// \brief Increment the current instance of this Directional Local Label.
 name|unsigned
 name|incInstance
 parameter_list|()
@@ -141,7 +144,7 @@ operator|++
 name|Instance
 return|;
 block|}
-comment|/// print - Print the value to the stream \p OS.
+comment|/// \brief Print the value to the stream \p OS.
 name|void
 name|print
 argument_list|(
@@ -151,7 +154,7 @@ name|OS
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// dump - Print the value to stderr.
+comment|/// \brief Print the value to stderr.
 name|void
 name|dump
 argument_list|()

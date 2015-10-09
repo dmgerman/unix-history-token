@@ -212,23 +212,35 @@ argument_list|)
 empty_stmt|;
 name|bool
 name|hadError
+range|:
+literal|1
 decl_stmt|;
 name|bool
 name|isUnsigned
+range|:
+literal|1
 decl_stmt|;
 name|bool
 name|isLong
+range|:
+literal|1
 decl_stmt|;
 comment|// This is *not* set for long long.
 name|bool
 name|isLongLong
+range|:
+literal|1
 decl_stmt|;
 name|bool
 name|isFloat
+range|:
+literal|1
 decl_stmt|;
 comment|// 1.0f
 name|bool
 name|isImaginary
+range|:
+literal|1
 decl_stmt|;
 comment|// 1.0i
 name|uint8_t

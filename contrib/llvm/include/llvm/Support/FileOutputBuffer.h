@@ -210,9 +210,12 @@ name|private
 label|:
 name|FileOutputBuffer
 argument_list|(
-argument|const FileOutputBuffer&
+specifier|const
+name|FileOutputBuffer
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|FileOutputBuffer
 modifier|&
@@ -223,7 +226,8 @@ specifier|const
 name|FileOutputBuffer
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|FileOutputBuffer
 argument_list|(

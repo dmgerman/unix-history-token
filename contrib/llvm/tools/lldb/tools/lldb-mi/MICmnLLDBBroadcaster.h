@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmnLLDBBroadcaster.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMICmnLLDBBroadcaster interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -88,7 +44,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBBroadcaster.h>
+file|"lldb/API/SBBroadcaster.h"
 end_include
 
 begin_include
@@ -108,7 +64,7 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details: MI derived class from LLDB SBBroardcaster API.
+comment|// Details: MI derived class from LLDB SBBroadcaster API.
 end_comment
 
 begin_comment
@@ -180,16 +136,18 @@ name|public
 label|:
 name|bool
 name|Initialize
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|Shutdown
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|// Methods:
 name|private
 label|:
@@ -221,12 +179,12 @@ name|private
 label|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmnLLDBBroadcaster
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 expr_stmt|;
 block|}
 end_decl_stmt

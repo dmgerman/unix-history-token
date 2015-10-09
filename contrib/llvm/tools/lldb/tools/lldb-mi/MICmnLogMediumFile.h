@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmnLogMediumFile.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMICmnLogMediumFile interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -250,27 +206,35 @@ name|void
 argument_list|)
 decl|const
 decl_stmt|;
+name|bool
+name|SetDirectory
+parameter_list|(
+specifier|const
+name|CMIUtilString
+modifier|&
+name|vPath
+parameter_list|)
+function_decl|;
 comment|// Overridden:
 name|public
 label|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmnLogMediumFile
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 expr_stmt|;
 comment|// From CMICmnLog::IMedium
-name|virtual
 name|bool
 name|Initialize
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 specifier|const
 name|CMIUtilString
 modifier|&
@@ -279,8 +243,8 @@ argument_list|(
 name|void
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|Write
 argument_list|(
@@ -295,8 +259,8 @@ operator|::
 name|ELogVerbosity
 name|veType
 argument_list|)
+name|override
 decl_stmt|;
-name|virtual
 specifier|const
 name|CMIUtilString
 modifier|&
@@ -305,14 +269,15 @@ argument_list|(
 name|void
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|Shutdown
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|// Methods:
 name|private
 label|:
@@ -375,7 +340,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-name|MIchar
+name|char
 name|ConvertLogVerbosityTypeToId
 argument_list|(
 specifier|const
@@ -405,9 +370,15 @@ name|m_constThisMediumName
 decl_stmt|;
 specifier|const
 name|CMIUtilString
-name|m_constMediumFileName
+name|m_constMediumFileNameFormat
 decl_stmt|;
 comment|//
+name|CMIUtilString
+name|m_strMediumFileName
+decl_stmt|;
+name|CMIUtilString
+name|m_strMediumFileDirectory
+decl_stmt|;
 name|CMIUtilString
 name|m_fileNamePath
 decl_stmt|;

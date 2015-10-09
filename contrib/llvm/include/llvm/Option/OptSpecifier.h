@@ -70,11 +70,12 @@ name|private
 label|:
 name|explicit
 name|OptSpecifier
-argument_list|(
+parameter_list|(
 name|bool
-argument_list|)
-name|LLVM_DELETED_FUNCTION
-decl_stmt|;
+parameter_list|)
+init|=
+name|delete
+function_decl|;
 name|public
 label|:
 name|OptSpecifier
@@ -88,12 +89,12 @@ block|{}
 comment|/*implicit*/
 name|OptSpecifier
 argument_list|(
-argument|unsigned _ID
+argument|unsigned ID
 argument_list|)
 operator|:
 name|ID
 argument_list|(
-argument|_ID
+argument|ID
 argument_list|)
 block|{}
 comment|/*implicit*/

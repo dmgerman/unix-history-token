@@ -87,16 +87,19 @@ name|class
 name|AliasAnalysis
 decl_stmt|;
 name|class
+name|MemoryDependenceAnalysis
+decl_stmt|;
+name|class
 name|DominatorTree
+decl_stmt|;
+name|class
+name|LoopInfo
 decl_stmt|;
 name|class
 name|Instruction
 decl_stmt|;
 name|class
 name|MDNode
-decl_stmt|;
-name|class
-name|Pass
 decl_stmt|;
 name|class
 name|ReturnInst
@@ -128,9 +131,15 @@ name|BasicBlock
 modifier|*
 name|BB
 parameter_list|,
-name|Pass
+name|AliasAnalysis
 modifier|*
-name|P
+name|AA
+init|=
+name|nullptr
+parameter_list|,
+name|MemoryDependenceAnalysis
+modifier|*
+name|MemDep
 init|=
 name|nullptr
 parameter_list|)
@@ -164,9 +173,27 @@ name|BasicBlock
 modifier|*
 name|BB
 parameter_list|,
-name|Pass
+name|DominatorTree
 modifier|*
-name|P
+name|DT
+init|=
+name|nullptr
+parameter_list|,
+name|LoopInfo
+modifier|*
+name|LI
+init|=
+name|nullptr
+parameter_list|,
+name|AliasAnalysis
+modifier|*
+name|AA
+init|=
+name|nullptr
+parameter_list|,
+name|MemoryDependenceAnalysis
+modifier|*
+name|MemDep
 init|=
 name|nullptr
 parameter_list|)
@@ -195,7 +222,8 @@ name|V
 argument_list|)
 decl_stmt|;
 comment|// ReplaceInstWithInst - Replace the instruction specified by BI with the
-comment|// instruction specified by I.  The original instruction is deleted and BI is
+comment|// instruction specified by I. Copies DebugLoc from BI to I, if I doesn't
+comment|// already have a DebugLoc. The original instruction is deleted and BI is
 comment|// updated to point to the new instruction.
 comment|//
 name|void
@@ -219,7 +247,8 @@ name|I
 argument_list|)
 decl_stmt|;
 comment|// ReplaceInstWithInst - Replace the instruction specified by From with the
-comment|// instruction specified by To.
+comment|// instruction specified by To. Copies DebugLoc from BI to I, if I doesn't
+comment|// already have a DebugLoc.
 comment|//
 name|void
 name|ReplaceInstWithInst
@@ -233,18 +262,216 @@ modifier|*
 name|To
 parameter_list|)
 function_decl|;
-comment|/// SplitCriticalEdge - If this edge is a critical edge, insert a new node to
-comment|/// split the critical edge.  This will update DominatorTree and
-comment|/// DominatorFrontier information if it is available, thus calling this pass
-comment|/// will not invalidate either of them. This returns the new block if the edge
-comment|/// was split, null otherwise.
+comment|/// \brief Option class for critical edge splitting.
 comment|///
-comment|/// If MergeIdenticalEdges is true (not the default), *all* edges from TI to the
-comment|/// specified successor will be merged into the same critical edge block.
-comment|/// This is most commonly interesting with switch instructions, which may
-comment|/// have many edges to any one destination.  This ensures that all edges to that
-comment|/// dest go to one block instead of each going to a different block, but isn't
-comment|/// the standard definition of a "critical edge".
+comment|/// This provides a builder interface for overriding the default options used
+comment|/// during critical edge splitting.
+struct|struct
+name|CriticalEdgeSplittingOptions
+block|{
+name|AliasAnalysis
+modifier|*
+name|AA
+decl_stmt|;
+name|DominatorTree
+modifier|*
+name|DT
+decl_stmt|;
+name|LoopInfo
+modifier|*
+name|LI
+decl_stmt|;
+name|bool
+name|MergeIdenticalEdges
+decl_stmt|;
+name|bool
+name|DontDeleteUselessPHIs
+decl_stmt|;
+name|bool
+name|PreserveLCSSA
+decl_stmt|;
+name|CriticalEdgeSplittingOptions
+argument_list|()
+operator|:
+name|AA
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|DT
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|LI
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|MergeIdenticalEdges
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|DontDeleteUselessPHIs
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|PreserveLCSSA
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+comment|/// \brief Basic case of setting up all the analysis.
+name|CriticalEdgeSplittingOptions
+argument_list|(
+name|AliasAnalysis
+operator|*
+name|AA
+argument_list|,
+name|DominatorTree
+operator|*
+name|DT
+operator|=
+name|nullptr
+argument_list|,
+name|LoopInfo
+operator|*
+name|LI
+operator|=
+name|nullptr
+argument_list|)
+operator|:
+name|AA
+argument_list|(
+name|AA
+argument_list|)
+operator|,
+name|DT
+argument_list|(
+name|DT
+argument_list|)
+operator|,
+name|LI
+argument_list|(
+name|LI
+argument_list|)
+operator|,
+name|MergeIdenticalEdges
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|DontDeleteUselessPHIs
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|PreserveLCSSA
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+comment|/// \brief A common pattern is to preserve the dominator tree and loop
+comment|/// info but not care about AA.
+name|CriticalEdgeSplittingOptions
+argument_list|(
+name|DominatorTree
+operator|*
+name|DT
+argument_list|,
+name|LoopInfo
+operator|*
+name|LI
+argument_list|)
+operator|:
+name|AA
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|DT
+argument_list|(
+name|DT
+argument_list|)
+operator|,
+name|LI
+argument_list|(
+name|LI
+argument_list|)
+operator|,
+name|MergeIdenticalEdges
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|DontDeleteUselessPHIs
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|PreserveLCSSA
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|CriticalEdgeSplittingOptions
+operator|&
+name|setMergeIdenticalEdges
+argument_list|()
+block|{
+name|MergeIdenticalEdges
+operator|=
+name|true
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|CriticalEdgeSplittingOptions
+modifier|&
+name|setDontDeleteUselessPHIs
+parameter_list|()
+block|{
+name|DontDeleteUselessPHIs
+operator|=
+name|true
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|CriticalEdgeSplittingOptions
+modifier|&
+name|setPreserveLCSSA
+parameter_list|()
+block|{
+name|PreserveLCSSA
+operator|=
+name|true
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+block|}
+struct|;
+comment|/// SplitCriticalEdge - If this edge is a critical edge, insert a new node to
+comment|/// split the critical edge.  This will update the analyses passed in through
+comment|/// the option struct. This returns the new block if the edge was split, null
+comment|/// otherwise.
+comment|///
+comment|/// If MergeIdenticalEdges in the options struct is true (not the default),
+comment|/// *all* edges from TI to the specified successor will be merged into the same
+comment|/// critical edge block. This is most commonly interesting with switch
+comment|/// instructions, which may have many edges to any one destination.  This
+comment|/// ensures that all edges to that dest go to one block instead of each going
+comment|/// to a different block, but isn't the standard definition of a "critical
+comment|/// edge".
 comment|///
 comment|/// It is invalid to call this function on a critical edge that starts at an
 comment|/// IndirectBrInst.  Splitting these edges will almost always create an invalid
@@ -262,26 +489,13 @@ parameter_list|,
 name|unsigned
 name|SuccNum
 parameter_list|,
-name|Pass
-modifier|*
-name|P
+specifier|const
+name|CriticalEdgeSplittingOptions
+modifier|&
+name|Options
 init|=
-name|nullptr
-parameter_list|,
-name|bool
-name|MergeIdenticalEdges
-init|=
-name|false
-parameter_list|,
-name|bool
-name|DontDeleteUselessPHIs
-init|=
-name|false
-parameter_list|,
-name|bool
-name|SplitLandingPads
-init|=
-name|false
+name|CriticalEdgeSplittingOptions
+argument_list|()
 parameter_list|)
 function_decl|;
 specifier|inline
@@ -296,11 +510,13 @@ parameter_list|,
 name|succ_iterator
 name|SI
 parameter_list|,
-name|Pass
-modifier|*
-name|P
+specifier|const
+name|CriticalEdgeSplittingOptions
+modifier|&
+name|Options
 init|=
-name|nullptr
+name|CriticalEdgeSplittingOptions
+argument_list|()
 parameter_list|)
 block|{
 return|return
@@ -316,7 +532,7 @@ operator|.
 name|getSuccessorIndex
 argument_list|()
 argument_list|,
-name|P
+name|Options
 argument_list|)
 return|;
 block|}
@@ -336,11 +552,13 @@ parameter_list|,
 name|pred_iterator
 name|PI
 parameter_list|,
-name|Pass
-modifier|*
-name|P
+specifier|const
+name|CriticalEdgeSplittingOptions
+modifier|&
+name|Options
 init|=
-name|nullptr
+name|CriticalEdgeSplittingOptions
+argument_list|()
 parameter_list|)
 block|{
 name|bool
@@ -402,7 +620,7 @@ name|TI
 argument_list|,
 name|i
 argument_list|,
-name|P
+name|Options
 argument_list|)
 expr_stmt|;
 return|return
@@ -411,8 +629,8 @@ return|;
 block|}
 comment|/// SplitCriticalEdge - If an edge from Src to Dst is critical, split the edge
 comment|/// and return true, otherwise return false.  This method requires that there be
-comment|/// an edge between the two blocks.  If P is specified, it updates the analyses
-comment|/// described above.
+comment|/// an edge between the two blocks.  It updates the analyses
+comment|/// passed in the options struct
 specifier|inline
 name|BasicBlock
 modifier|*
@@ -426,21 +644,13 @@ name|BasicBlock
 modifier|*
 name|Dst
 parameter_list|,
-name|Pass
-modifier|*
-name|P
+specifier|const
+name|CriticalEdgeSplittingOptions
+modifier|&
+name|Options
 init|=
-name|nullptr
-parameter_list|,
-name|bool
-name|MergeIdenticalEdges
-init|=
-name|false
-parameter_list|,
-name|bool
-name|DontDeleteUselessPHIs
-init|=
-name|false
+name|CriticalEdgeSplittingOptions
+argument_list|()
 parameter_list|)
 block|{
 name|TerminatorInst
@@ -492,11 +702,7 @@ name|TI
 argument_list|,
 name|i
 argument_list|,
-name|P
-argument_list|,
-name|MergeIdenticalEdges
-argument_list|,
-name|DontDeleteUselessPHIs
+name|Options
 argument_list|)
 return|;
 operator|++
@@ -505,7 +711,7 @@ expr_stmt|;
 block|}
 block|}
 comment|// SplitAllCriticalEdges - Loop over all of the edges in the CFG,
-comment|// breaking critical edges as they are found. Pass P must not be NULL.
+comment|// breaking critical edges as they are found.
 comment|// Returns the number of broken edges.
 name|unsigned
 name|SplitAllCriticalEdges
@@ -514,13 +720,16 @@ name|Function
 modifier|&
 name|F
 parameter_list|,
-name|Pass
-modifier|*
-name|P
+specifier|const
+name|CriticalEdgeSplittingOptions
+modifier|&
+name|Options
+init|=
+name|CriticalEdgeSplittingOptions
+argument_list|()
 parameter_list|)
 function_decl|;
-comment|/// SplitEdge -  Split the edge connecting specified block. Pass P must
-comment|/// not be NULL.
+comment|/// SplitEdge -  Split the edge connecting specified block.
 name|BasicBlock
 modifier|*
 name|SplitEdge
@@ -533,9 +742,17 @@ name|BasicBlock
 modifier|*
 name|To
 parameter_list|,
-name|Pass
+name|DominatorTree
 modifier|*
-name|P
+name|DT
+init|=
+name|nullptr
+parameter_list|,
+name|LoopInfo
+modifier|*
+name|LI
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// SplitBlock - Split the specified block at the specified instruction - every
@@ -555,16 +772,28 @@ name|Instruction
 modifier|*
 name|SplitPt
 parameter_list|,
-name|Pass
+name|DominatorTree
 modifier|*
-name|P
+name|DT
+init|=
+name|nullptr
+parameter_list|,
+name|LoopInfo
+modifier|*
+name|LI
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SplitBlockPredecessors - This method transforms BB by introducing a new
-comment|/// basic block into the function, and moving some of the predecessors of BB to
-comment|/// be predecessors of the new block.  The new predecessors are indicated by the
-comment|/// Preds array, which has NumPreds elements in it.  The new block is given a
-comment|/// suffix of 'Suffix'.  This function returns the new block.
+comment|/// SplitBlockPredecessors - This method introduces at least one new basic block
+comment|/// into the function and moves some of the predecessors of BB to be
+comment|/// predecessors of the new block. The new predecessors are indicated by the
+comment|/// Preds array. The new block is given a suffix of 'Suffix'. Returns new basic
+comment|/// block to which predecessors from Preds are now pointing.
+comment|///
+comment|/// If BB is a landingpad block then additional basicblock might be introduced.
+comment|/// It will have Suffix+".split_lp". See SplitLandingPadPredecessors for more
+comment|/// details on this case.
 comment|///
 comment|/// This currently updates the LLVM IR, AliasAnalysis, DominatorTree,
 comment|/// DominanceFrontier, LoopInfo, and LCCSA but no other analyses.
@@ -592,11 +821,28 @@ name|char
 operator|*
 name|Suffix
 argument_list|,
-name|Pass
+name|AliasAnalysis
 operator|*
-name|P
+name|AA
 operator|=
 name|nullptr
+argument_list|,
+name|DominatorTree
+operator|*
+name|DT
+operator|=
+name|nullptr
+argument_list|,
+name|LoopInfo
+operator|*
+name|LI
+operator|=
+name|nullptr
+argument_list|,
+name|bool
+name|PreserveLCSSA
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 comment|/// SplitLandingPadPredecessors - This method transforms the landing pad,
@@ -636,10 +882,6 @@ name|char
 operator|*
 name|Suffix2
 argument_list|,
-name|Pass
-operator|*
-name|P
-argument_list|,
 name|SmallVectorImpl
 operator|<
 name|BasicBlock
@@ -647,6 +889,29 @@ operator|*
 operator|>
 operator|&
 name|NewBBs
+argument_list|,
+name|AliasAnalysis
+operator|*
+name|AA
+operator|=
+name|nullptr
+argument_list|,
+name|DominatorTree
+operator|*
+name|DT
+operator|=
+name|nullptr
+argument_list|,
+name|LoopInfo
+operator|*
+name|LI
+operator|=
+name|nullptr
+argument_list|,
+name|bool
+name|PreserveLCSSA
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 comment|/// FoldReturnIntoUncondBranch - This method duplicates the specified return

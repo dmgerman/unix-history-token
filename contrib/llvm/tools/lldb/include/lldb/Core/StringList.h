@@ -61,6 +61,12 @@ directive|include
 file|"lldb/lldb-forward.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -135,6 +141,15 @@ name|size_t
 name|str_len
 parameter_list|)
 function_decl|;
+name|void
+name|AppendString
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|str
+argument_list|)
+decl_stmt|;
 name|void
 name|AppendList
 parameter_list|(

@@ -60,6 +60,20 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|namespace
+name|sys
+block|{
+name|class
+name|DynamicLibrary
+decl_stmt|;
+block|}
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|lldb_private
 block|{
 name|class
@@ -68,6 +82,34 @@ decl_stmt|;
 name|class
 name|ExecutionContext
 decl_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|sys
+operator|::
+name|DynamicLibrary
+argument_list|(
+operator|*
+name|LoadPluginCallbackType
+argument_list|)
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|DebuggerSP
+operator|&
+name|debugger_sp
+argument_list|,
+specifier|const
+name|FileSpec
+operator|&
+name|spec
+argument_list|,
+name|Error
+operator|&
+name|error
+argument_list|)
+expr_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Every register is described in detail including its name, alternate
 comment|// name (optional), encoding, size in bytes and the default display

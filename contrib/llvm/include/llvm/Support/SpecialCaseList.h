@@ -201,6 +201,18 @@ directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -219,9 +231,8 @@ name|SpecialCaseList
 block|{
 name|public
 label|:
-comment|/// Parses the special case list from a file. If Path is empty, returns
-comment|/// an empty special case list. On failure, returns 0 and writes an error
-comment|/// message to string.
+comment|/// Parses the special case list entries from files. On failure, returns
+comment|/// 0 and writes an error message to string.
 specifier|static
 name|std
 operator|::
@@ -231,9 +242,23 @@ name|SpecialCaseList
 operator|>
 name|create
 argument_list|(
-argument|StringRef Path
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|Paths
 argument_list|,
-argument|std::string&Error
+name|std
+operator|::
+name|string
+operator|&
+name|Error
 argument_list|)
 expr_stmt|;
 comment|/// Parses the special case list from a memory buffer. On failure, returns
@@ -259,8 +284,8 @@ operator|&
 name|Error
 argument_list|)
 expr_stmt|;
-comment|/// Parses the special case list from a file. On failure, reports a fatal
-comment|/// error.
+comment|/// Parses the special case list entries from files. On failure, reports a
+comment|/// fatal error.
 specifier|static
 name|std
 operator|::
@@ -270,7 +295,17 @@ name|SpecialCaseList
 operator|>
 name|createOrDie
 argument_list|(
-argument|StringRef Path
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|Paths
 argument_list|)
 expr_stmt|;
 operator|~
@@ -303,9 +338,12 @@ name|private
 label|:
 name|SpecialCaseList
 argument_list|(
-argument|SpecialCaseList const&
+name|SpecialCaseList
+specifier|const
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|SpecialCaseList
 modifier|&
@@ -316,7 +354,8 @@ name|SpecialCaseList
 specifier|const
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 struct_decl|struct
 name|Entry
@@ -326,10 +365,22 @@ operator|<
 name|StringMap
 operator|<
 name|Entry
-operator|>
-expr|>
+operator|>>
 name|Entries
 expr_stmt|;
+name|StringMap
+operator|<
+name|StringMap
+operator|<
+name|std
+operator|::
+name|string
+operator|>>
+name|Regexps
+expr_stmt|;
+name|bool
+name|IsCompiled
+decl_stmt|;
 name|SpecialCaseList
 argument_list|()
 expr_stmt|;
@@ -349,6 +400,11 @@ operator|&
 name|Error
 argument_list|)
 decl_stmt|;
+comment|/// compile() should be called once, after parsing all the memory buffers.
+name|void
+name|compile
+parameter_list|()
+function_decl|;
 block|}
 empty_stmt|;
 block|}

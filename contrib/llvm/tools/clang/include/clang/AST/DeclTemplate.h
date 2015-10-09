@@ -563,9 +563,13 @@ name|NumArguments
 decl_stmt|;
 name|TemplateArgumentList
 argument_list|(
-argument|const TemplateArgumentList&Other
+specifier|const
+name|TemplateArgumentList
+operator|&
+name|Other
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -576,7 +580,8 @@ name|TemplateArgumentList
 operator|&
 name|Other
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|TemplateArgumentList
 argument_list|(
@@ -781,14 +786,475 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|//===----------------------------------------------------------------------===//
-comment|// Kinds of Templates
-comment|//===----------------------------------------------------------------------===//
-comment|/// \brief The base class of all kinds of template declarations (e.g.,
-comment|/// class, function, etc.).
+name|void
+modifier|*
+name|allocateDefaultArgStorageChain
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|)
+function_decl|;
+comment|/// Storage for a default argument. This is conceptually either empty, or an
+comment|/// argument value, or a pointer to a previous declaration that had a default
+comment|/// argument.
 comment|///
+comment|/// However, this is complicated by modules: while we require all the default
+comment|/// arguments for a template to be equivalent, there may be more than one, and
+comment|/// we need to track all the originating parameters to determine if the default
+comment|/// argument is visible.
+name|template
+operator|<
+name|typename
+name|ParmDecl
+operator|,
+name|typename
+name|ArgType
+operator|>
+name|class
+name|DefaultArgStorage
+block|{
+comment|/// Storage for both the value *and* another parameter from which we inherit
+comment|/// the default argument. This is used when multiple default arguments for a
+comment|/// parameter are merged together from different modules.
+block|struct
+name|Chain
+block|{
+name|ParmDecl
+operator|*
+name|PrevDeclWithDefaultArg
+block|;
+name|ArgType
+name|Value
+block|;   }
+block|;
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|Chain
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+operator|*
+literal|2
+argument_list|,
+literal|"non-pointer argument type?"
+argument_list|)
+block|;
+name|llvm
+operator|::
+name|PointerUnion3
+operator|<
+name|ArgType
+block|,
+name|ParmDecl
+operator|*
+block|,
+name|Chain
+operator|*
+operator|>
+name|ValueOrInherited
+block|;
+specifier|static
+name|ParmDecl
+operator|*
+name|getParmOwningDefaultArg
+argument_list|(
+argument|ParmDecl *Parm
+argument_list|)
+block|{
+specifier|const
+name|DefaultArgStorage
+operator|&
+name|Storage
+operator|=
+name|Parm
+operator|->
+name|getDefaultArgStorage
+argument_list|()
+block|;
+if|if
+condition|(
+name|auto
+operator|*
+name|Prev
+operator|=
+name|Storage
+operator|.
+name|ValueOrInherited
+operator|.
+name|template
+name|dyn_cast
+operator|<
+name|ParmDecl
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+name|Parm
+operator|=
+name|Prev
+expr_stmt|;
+name|assert
+argument_list|(
+argument|!Parm->getDefaultArgStorage()                 .ValueOrInherited.template is<ParmDecl *>()&&
+literal|"should only be one level of indirection"
+argument_list|)
+block|;
+return|return
+name|Parm
+return|;
+block|}
+name|public
+label|:
+name|DefaultArgStorage
+argument_list|()
+operator|:
+name|ValueOrInherited
+argument_list|(
+argument|ArgType()
+argument_list|)
+block|{}
+comment|/// Determine whether there is a default argument for this parameter.
+name|bool
+name|isSet
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|ValueOrInherited
+operator|.
+name|isNull
+argument_list|()
+return|;
+block|}
+comment|/// Determine whether the default argument for this parameter was inherited
+comment|/// from a previous declaration of the same entity.
+name|bool
+name|isInherited
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ValueOrInherited
+operator|.
+name|template
+name|is
+operator|<
+name|ParmDecl
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+comment|/// Get the default argument's value. This does not consider whether the
+comment|/// default argument is visible.
+name|ArgType
+name|get
+argument_list|()
+specifier|const
+block|{
+specifier|const
+name|DefaultArgStorage
+operator|*
+name|Storage
+operator|=
+name|this
+block|;
+if|if
+condition|(
+name|auto
+operator|*
+name|Prev
+operator|=
+name|ValueOrInherited
+operator|.
+name|template
+name|dyn_cast
+operator|<
+name|ParmDecl
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+name|Storage
+operator|=
+operator|&
+name|Prev
+operator|->
+name|getDefaultArgStorage
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|auto
+operator|*
+name|C
+operator|=
+name|Storage
+operator|->
+name|ValueOrInherited
+operator|.
+name|template
+name|dyn_cast
+operator|<
+name|Chain
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|C
+operator|->
+name|Value
+return|;
+return|return
+name|Storage
+operator|->
+name|ValueOrInherited
+operator|.
+name|template
+name|get
+operator|<
+name|ArgType
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Get the parameter from which we inherit the default argument, if any.
+end_comment
+
+begin_comment
+comment|/// This is the parameter on which the default argument was actually written.
+end_comment
+
+begin_expr_stmt
+specifier|const
+name|ParmDecl
+operator|*
+name|getInheritedFrom
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|auto
+operator|*
+name|D
+operator|=
+name|ValueOrInherited
+operator|.
+name|template
+name|dyn_cast
+operator|<
+name|ParmDecl
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|D
+return|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|auto
+operator|*
+name|C
+operator|=
+name|ValueOrInherited
+operator|.
+name|template
+name|dyn_cast
+operator|<
+name|Chain
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|C
+operator|->
+name|PrevDeclWithDefaultArg
+return|;
+end_if
+
+begin_return
+return|return
+name|nullptr
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// Set the default argument.
+end_comment
+
+begin_macro
+unit|void
+name|set
+argument_list|(
+argument|ArgType Arg
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|assert
+argument_list|(
+operator|!
+name|isSet
+argument_list|()
+operator|&&
+literal|"default argument already set"
+argument_list|)
+expr_stmt|;
+name|ValueOrInherited
+operator|=
+name|Arg
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/// Set that the default argument was inherited from another parameter.
+end_comment
+
+begin_function
+name|void
+name|setInherited
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|ParmDecl
+modifier|*
+name|InheritedFrom
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|isInherited
+argument_list|()
+operator|&&
+literal|"default argument already inherited"
+argument_list|)
+expr_stmt|;
+name|InheritedFrom
+operator|=
+name|getParmOwningDefaultArg
+argument_list|(
+name|InheritedFrom
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isSet
+argument_list|()
+condition|)
+name|ValueOrInherited
+operator|=
+name|InheritedFrom
+expr_stmt|;
+else|else
+name|ValueOrInherited
+operator|=
+name|new
+argument_list|(
+argument|allocateDefaultArgStorageChain(C)
+argument_list|)
+name|Chain
+block|{
+name|InheritedFrom
+block|,
+name|ValueOrInherited
+operator|.
+name|template
+name|get
+operator|<
+name|ArgType
+operator|>
+operator|(
+operator|)
+block|}
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// Remove the default argument, even if it was inherited.
+end_comment
+
+begin_function
+name|void
+name|clear
+parameter_list|()
+block|{
+name|ValueOrInherited
+operator|=
+name|ArgType
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+unit|};
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|// Kinds of Templates
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|/// \brief The base class of all kinds of template declarations (e.g.,
+end_comment
+
+begin_comment
+comment|/// class, function, etc.).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// The TemplateDecl class stores the list of template parameters and a
+end_comment
+
+begin_comment
 comment|/// reference to the templated scoped declaration: the underlying AST node.
+end_comment
+
+begin_decl_stmt
 name|class
 name|TemplateDecl
 range|:
@@ -1040,9 +1506,21 @@ name|templateParams
 block|;   }
 block|}
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Provides information about a function template specialization,
+end_comment
+
+begin_comment
 comment|/// which is a FunctionDecl that has been explicitly specialization or
+end_comment
+
+begin_comment
 comment|/// instantiated from a function template.
+end_comment
+
+begin_decl_stmt
 name|class
 name|FunctionTemplateSpecializationInfo
 range|:
@@ -1126,7 +1604,7 @@ block|;
 comment|/// \brief The function template from which this function template
 comment|/// specialization was generated.
 comment|///
-comment|/// The two bits are contain the top 4 values of TemplateSpecializationKind.
+comment|/// The two bits contain the top 4 values of TemplateSpecializationKind.
 name|llvm
 operator|::
 name|PointerIntPair
@@ -1808,7 +2286,21 @@ typedef|;
 specifier|static
 name|DeclType
 operator|*
-name|getMostRecentDecl
+name|getDecl
+argument_list|(
+argument|EntryType *D
+argument_list|)
+block|{
+return|return
+name|D
+return|;
+block|}
+specifier|static
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|getTemplateArgs
 argument_list|(
 argument|EntryType *D
 argument_list|)
@@ -1816,7 +2308,10 @@ block|{
 return|return
 name|D
 operator|->
-name|getMostRecentDecl
+name|getTemplateArgs
+argument_list|()
+operator|.
+name|asArray
 argument_list|()
 return|;
 block|}
@@ -1828,7 +2323,7 @@ name|typename
 name|EntryType
 block|,
 name|typename
-name|_SETraits
+name|SETraits
 operator|=
 name|SpecEntryTraits
 operator|<
@@ -1836,46 +2331,29 @@ name|EntryType
 operator|>
 block|,
 name|typename
-name|_DeclType
+name|DeclType
 operator|=
 name|typename
-name|_SETraits
+name|SETraits
 operator|::
 name|DeclType
 operator|>
-name|class
+expr|struct
 name|SpecIterator
 operator|:
-name|public
-name|std
+name|llvm
 operator|::
-name|iterator
+name|iterator_adaptor_base
 operator|<
-name|std
-operator|::
-name|forward_iterator_tag
+name|SpecIterator
+operator|<
+name|EntryType
 block|,
-name|_DeclType
-operator|*
-block|,
-name|ptrdiff_t
-block|,
-name|_DeclType
-operator|*
-block|,
-name|_DeclType
-operator|*
-operator|>
-block|{
-typedef|typedef
-name|_SETraits
 name|SETraits
-typedef|;
-typedef|typedef
-name|_DeclType
+block|,
 name|DeclType
-typedef|;
-typedef|typedef
+operator|>
+block|,
 name|typename
 name|llvm
 operator|::
@@ -1885,27 +2363,51 @@ name|EntryType
 operator|>
 operator|::
 name|iterator
-name|SetIteratorType
-expr_stmt|;
-name|SetIteratorType
-name|SetIter
-block|;
-name|public
-operator|:
+block|,
+name|typename
+name|std
+operator|::
+name|iterator_traits
+operator|<
+name|typename
+name|llvm
+operator|::
+name|FoldingSetVector
+operator|<
+name|EntryType
+operator|>
+operator|::
+name|iterator
+operator|>
+operator|::
+name|iterator_category
+block|,
+name|DeclType
+operator|*
+block|,
+name|ptrdiff_t
+block|,
+name|DeclType
+operator|*
+block|,
+name|DeclType
+operator|*
+operator|>
+block|{
 name|SpecIterator
-argument_list|()
-operator|:
-name|SetIter
 argument_list|()
 block|{}
+name|explicit
 name|SpecIterator
 argument_list|(
-argument|SetIteratorType SetIter
+argument|typename llvm::FoldingSetVector<EntryType>::iterator SetIter
 argument_list|)
 operator|:
-name|SetIter
+name|SpecIterator
+operator|::
+name|iterator_adaptor_base
 argument_list|(
-argument|SetIter
+argument|std::move(SetIter)
 argument_list|)
 block|{}
 name|DeclType
@@ -1919,12 +2421,17 @@ block|{
 return|return
 name|SETraits
 operator|::
-name|getMostRecentDecl
+name|getDecl
 argument_list|(
 operator|&
 operator|*
-name|SetIter
+name|this
+operator|->
+name|I
 argument_list|)
+operator|->
+name|getMostRecentDecl
+argument_list|()
 return|;
 block|}
 name|DeclType
@@ -1941,81 +2448,8 @@ operator|*
 name|this
 return|;
 block|}
-name|SpecIterator
-operator|&
-name|operator
-operator|++
-operator|(
-operator|)
-block|{
-operator|++
-name|SetIter
+expr|}
 block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|SpecIterator
-name|operator
-operator|++
-operator|(
-name|int
-operator|)
-block|{
-name|SpecIterator
-name|tmp
-argument_list|(
-operator|*
-name|this
-argument_list|)
-block|;
-operator|++
-operator|(
-operator|*
-name|this
-operator|)
-block|;
-return|return
-name|tmp
-return|;
-block|}
-name|bool
-name|operator
-operator|==
-operator|(
-name|SpecIterator
-name|Other
-operator|)
-specifier|const
-block|{
-return|return
-name|SetIter
-operator|==
-name|Other
-operator|.
-name|SetIter
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-name|SpecIterator
-name|Other
-operator|)
-specifier|const
-block|{
-return|return
-name|SetIter
-operator|!=
-name|Other
-operator|.
-name|SetIter
-return|;
-block|}
-block|}
-empty_stmt|;
 name|template
 operator|<
 name|typename
@@ -2088,8 +2522,36 @@ operator|*
 operator|&
 name|InsertPos
 argument_list|)
-expr_stmt|;
-struct|struct
+block|;
+name|template
+operator|<
+name|class
+name|Derived
+block|,
+name|class
+name|EntryType
+operator|>
+name|void
+name|addSpecializationImpl
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetVector
+operator|<
+name|EntryType
+operator|>
+operator|&
+name|Specs
+argument_list|,
+name|EntryType
+operator|*
+name|Entry
+argument_list|,
+name|void
+operator|*
+name|InsertPos
+argument_list|)
+block|;    struct
 name|CommonBase
 block|{
 name|CommonBase
@@ -2113,22 +2575,21 @@ name|PointerIntPair
 operator|<
 name|RedeclarableTemplateDecl
 operator|*
-operator|,
+block|,
 literal|1
-operator|,
+block|,
 name|bool
 operator|>
 name|InstantiatedFromMember
-expr_stmt|;
-block|}
-struct|;
+block|;   }
+block|;
 comment|/// \brief Pointer to the common data shared by all declarations of this
 comment|/// template.
 name|mutable
 name|CommonBase
-modifier|*
+operator|*
 name|Common
-decl_stmt|;
+block|;
 comment|/// \brief Retrieves the "common" pointer shared by all (re-)declarations of
 comment|/// the same template. Calling this routine may implicitly allocate memory
 comment|/// for the common pointer.
@@ -2137,20 +2598,18 @@ operator|*
 name|getCommonPtr
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|virtual
 name|CommonBase
-modifier|*
+operator|*
 name|newCommon
 argument_list|(
-name|ASTContext
-operator|&
-name|C
+argument|ASTContext&C
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|// Construct a template decl with name, parameters, and templated element.
 name|RedeclarableTemplateDecl
 argument_list|(
@@ -2168,7 +2627,7 @@ argument|TemplateParameterList *Params
 argument_list|,
 argument|NamedDecl *Decl
 argument_list|)
-block|:
+operator|:
 name|TemplateDecl
 argument_list|(
 name|DK
@@ -2183,12 +2642,12 @@ name|Params
 argument_list|,
 name|Decl
 argument_list|)
-operator|,
+block|,
 name|redeclarable_base
 argument_list|(
 name|C
 argument_list|)
-operator|,
+block|,
 name|Common
 argument_list|()
 block|{}
@@ -2202,13 +2661,13 @@ operator|>
 name|friend
 name|class
 name|RedeclarableTemplate
-expr_stmt|;
+block|;
 comment|/// \brief Retrieves the canonical declaration of this template.
 name|RedeclarableTemplateDecl
-modifier|*
+operator|*
 name|getCanonicalDecl
-parameter_list|()
-function|override
+argument_list|()
+name|override
 block|{
 return|return
 name|getFirstDecl
@@ -2263,7 +2722,7 @@ block|}
 comment|/// \brief Note that this member template is a specialization.
 name|void
 name|setMemberSpecialization
-parameter_list|()
+argument_list|()
 block|{
 name|assert
 argument_list|(
@@ -2277,7 +2736,7 @@ argument_list|()
 operator|&&
 literal|"Only member templates can be member template specializations"
 argument_list|)
-expr_stmt|;
+block|;
 name|getCommonPtr
 argument_list|()
 operator|->
@@ -2287,8 +2746,7 @@ name|setInt
 argument_list|(
 name|true
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// \brief Retrieve the member template from which this template was
 comment|/// instantiated, or NULL if this template was not instantiated from a
 comment|/// member template.
@@ -2343,11 +2801,9 @@ return|;
 block|}
 name|void
 name|setInstantiatedFromMemberTemplate
-parameter_list|(
-name|RedeclarableTemplateDecl
-modifier|*
-name|TD
-parameter_list|)
+argument_list|(
+argument|RedeclarableTemplateDecl *TD
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -2360,7 +2816,7 @@ operator|.
 name|getPointer
 argument_list|()
 argument_list|)
-expr_stmt|;
+block|;
 name|getCommonPtr
 argument_list|()
 operator|->
@@ -2370,8 +2826,7 @@ name|setPointer
 argument_list|(
 name|TD
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 typedef|typedef
 name|redeclarable_base
 operator|::
@@ -2388,42 +2843,39 @@ name|using
 name|redeclarable_base
 operator|::
 name|redecls_begin
-expr_stmt|;
+block|;
 name|using
 name|redeclarable_base
 operator|::
 name|redecls_end
-expr_stmt|;
+block|;
 name|using
 name|redeclarable_base
 operator|::
 name|redecls
-expr_stmt|;
+block|;
 name|using
 name|redeclarable_base
 operator|::
 name|getPreviousDecl
-expr_stmt|;
+block|;
 name|using
 name|redeclarable_base
 operator|::
 name|getMostRecentDecl
-expr_stmt|;
+block|;
 name|using
 name|redeclarable_base
 operator|::
 name|isFirstDecl
-expr_stmt|;
+block|;
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Decl
-modifier|*
-name|D
-parameter_list|)
+argument_list|(
+argument|const Decl *D
+argument_list|)
 block|{
 return|return
 name|classofKind
@@ -2438,10 +2890,9 @@ block|}
 specifier|static
 name|bool
 name|classofKind
-parameter_list|(
-name|Kind
-name|K
-parameter_list|)
+argument_list|(
+argument|Kind K
+argument_list|)
 block|{
 return|return
 name|K
@@ -2456,21 +2907,17 @@ block|}
 name|friend
 name|class
 name|ASTReader
-decl_stmt|;
+block|;
 name|friend
 name|class
 name|ASTDeclReader
-decl_stmt|;
+block|;
 name|friend
 name|class
 name|ASTDeclWriter
+block|; }
 decl_stmt|;
-block|}
 end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_expr_stmt
 name|template
@@ -2491,7 +2938,7 @@ typedef|;
 specifier|static
 name|DeclType
 operator|*
-name|getMostRecentDecl
+name|getDecl
 argument_list|(
 argument|FunctionTemplateSpecializationInfo *I
 argument_list|)
@@ -2500,8 +2947,24 @@ return|return
 name|I
 operator|->
 name|Function
+return|;
+block|}
+specifier|static
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|getTemplateArgs
+argument_list|(
+argument|FunctionTemplateSpecializationInfo *I
+argument_list|)
+block|{
+return|return
+name|I
 operator|->
-name|getMostRecentDecl
+name|TemplateArguments
+operator|->
+name|asArray
 argument_list|()
 return|;
 block|}
@@ -2646,12 +3109,6 @@ name|friend
 name|class
 name|FunctionDecl
 block|;
-comment|/// \brief Load any lazily-loaded specializations from the external source.
-name|void
-name|LoadLazySpecializations
-argument_list|()
-specifier|const
-block|;
 comment|/// \brief Retrieve the set of function template specializations of this
 comment|/// function template.
 name|llvm
@@ -2683,6 +3140,12 @@ argument_list|)
 block|;
 name|public
 operator|:
+comment|/// \brief Load any lazily-loaded specializations from the external source.
+name|void
+name|LoadLazySpecializations
+argument_list|()
+specifier|const
+block|;
 comment|/// Get the underlying function declaration of the template.
 name|FunctionDecl
 operator|*
@@ -2828,6 +3291,52 @@ operator|->
 name|getPreviousDecl
 argument_list|()
 operator|)
+return|;
+block|}
+name|FunctionTemplateDecl
+operator|*
+name|getMostRecentDecl
+argument_list|()
+block|{
+return|return
+name|cast
+operator|<
+name|FunctionTemplateDecl
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|RedeclarableTemplateDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getMostRecentDecl
+argument_list|()
+operator|)
+return|;
+block|}
+specifier|const
+name|FunctionTemplateDecl
+operator|*
+name|getMostRecentDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|FunctionTemplateDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getMostRecentDecl
+argument_list|()
 return|;
 block|}
 name|FunctionTemplateDecl
@@ -3130,7 +3639,8 @@ name|TemplateParmPosition
 block|{
 name|TemplateParmPosition
 argument_list|()
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|protected
 label|:
@@ -3262,18 +3772,23 @@ name|Typename
 operator|:
 literal|1
 block|;
-comment|/// \brief Whether this template type parameter inherited its
-comment|/// default argument.
-name|bool
-name|InheritedDefault
-operator|:
-literal|1
-block|;
 comment|/// \brief The default template argument, if any.
+typedef|typedef
+name|DefaultArgStorage
+operator|<
+name|TemplateTypeParmDecl
+operator|,
 name|TypeSourceInfo
 operator|*
+operator|>
+name|DefArgStorage
+expr_stmt|;
+name|DefArgStorage
 name|DefaultArgument
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
 name|TemplateTypeParmDecl
 argument_list|(
 argument|DeclContext *DC
@@ -3286,7 +3801,10 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|bool Typename
 argument_list|)
-operator|:
+end_macro
+
+begin_expr_stmt
+unit|:
 name|TypeDecl
 argument_list|(
 name|TemplateTypeParm
@@ -3299,17 +3817,12 @@ name|Id
 argument_list|,
 name|KeyLoc
 argument_list|)
-block|,
+operator|,
 name|Typename
 argument_list|(
 name|Typename
 argument_list|)
-block|,
-name|InheritedDefault
-argument_list|(
-name|false
-argument_list|)
-block|,
+operator|,
 name|DefaultArgument
 argument_list|()
 block|{ }
@@ -3317,47 +3830,88 @@ comment|/// Sema creates these on the stack during auto type deduction.
 name|friend
 name|class
 name|Sema
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|public
-operator|:
+label|:
+end_label
+
+begin_function_decl
 specifier|static
 name|TemplateTypeParmDecl
-operator|*
+modifier|*
 name|Create
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|DeclContext *DC
-argument_list|,
-argument|SourceLocation KeyLoc
-argument_list|,
-argument|SourceLocation NameLoc
-argument_list|,
-argument|unsigned D
-argument_list|,
-argument|unsigned P
-argument_list|,
-argument|IdentifierInfo *Id
-argument_list|,
-argument|bool Typename
-argument_list|,
-argument|bool ParameterPack
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|,
+name|SourceLocation
+name|KeyLoc
+parameter_list|,
+name|SourceLocation
+name|NameLoc
+parameter_list|,
+name|unsigned
+name|D
+parameter_list|,
+name|unsigned
+name|P
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|Id
+parameter_list|,
+name|bool
+name|Typename
+parameter_list|,
+name|bool
+name|ParameterPack
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|TemplateTypeParmDecl
-operator|*
+modifier|*
 name|CreateDeserialized
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|unsigned ID
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|ID
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Whether this template type parameter was declared with
+end_comment
+
+begin_comment
 comment|/// the 'typename' keyword.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// If not, it was declared with the 'class' keyword.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|wasDeclaredWithTypename
 argument_list|()
@@ -3367,8 +3921,31 @@ return|return
 name|Typename
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|DefArgStorage
+operator|&
+name|getDefaultArgStorage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DefaultArgument
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Determine whether this template parameter has a default
+end_comment
+
+begin_comment
 comment|/// argument.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasDefaultArgument
 argument_list|()
@@ -3376,11 +3953,18 @@ specifier|const
 block|{
 return|return
 name|DefaultArgument
-operator|!=
-name|nullptr
+operator|.
+name|isSet
+argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the default argument, if any.
+end_comment
+
+begin_expr_stmt
 name|QualType
 name|getDefaultArgument
 argument_list|()
@@ -3388,12 +3972,21 @@ specifier|const
 block|{
 return|return
 name|DefaultArgument
+operator|.
+name|get
+argument_list|()
 operator|->
 name|getType
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieves the default argument's source information, if any.
+end_comment
+
+begin_expr_stmt
 name|TypeSourceInfo
 operator|*
 name|getDefaultArgumentInfo
@@ -3402,101 +3995,205 @@ specifier|const
 block|{
 return|return
 name|DefaultArgument
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieves the location of the default argument declaration.
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getDefaultArgumentLoc
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Determines whether the default argument was inherited
+end_comment
+
+begin_comment
 comment|/// from a previous declaration of this template.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|defaultArgumentWasInherited
 argument_list|()
 specifier|const
 block|{
 return|return
-name|InheritedDefault
+name|DefaultArgument
+operator|.
+name|isInherited
+argument_list|()
 return|;
 block|}
-comment|/// \brief Set the default argument for this template parameter, and
-comment|/// whether that default argument was inherited from another
-comment|/// declaration.
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Set the default argument for this template parameter.
+end_comment
+
+begin_function
 name|void
 name|setDefaultArgument
-argument_list|(
-argument|TypeSourceInfo *DefArg
-argument_list|,
-argument|bool Inherited
-argument_list|)
+parameter_list|(
+name|TypeSourceInfo
+modifier|*
+name|DefArg
+parameter_list|)
 block|{
 name|DefaultArgument
-operator|=
+operator|.
+name|set
+argument_list|(
 name|DefArg
-block|;
-name|InheritedDefault
-operator|=
-name|Inherited
-block|;   }
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Set that this default argument was inherited from another
+end_comment
+
+begin_comment
+comment|/// parameter.
+end_comment
+
+begin_function
+name|void
+name|setInheritedDefaultArgument
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|TemplateTypeParmDecl
+modifier|*
+name|Prev
+parameter_list|)
+block|{
+name|DefaultArgument
+operator|.
+name|setInherited
+argument_list|(
+name|C
+argument_list|,
+name|Prev
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// \brief Removes the default argument of this template parameter.
+end_comment
+
+begin_function
 name|void
 name|removeDefaultArgument
-argument_list|()
+parameter_list|()
 block|{
 name|DefaultArgument
-operator|=
-name|nullptr
-block|;
-name|InheritedDefault
-operator|=
-name|false
-block|;   }
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// \brief Set whether this template type parameter was declared with
+end_comment
+
+begin_comment
 comment|/// the 'typename' or 'class' keyword.
+end_comment
+
+begin_function
 name|void
 name|setDeclaredWithTypename
-argument_list|(
-argument|bool withTypename
-argument_list|)
+parameter_list|(
+name|bool
+name|withTypename
+parameter_list|)
 block|{
 name|Typename
 operator|=
 name|withTypename
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// \brief Retrieve the depth of the template parameter.
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|getDepth
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the index of the template parameter.
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|getIndex
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Returns whether this is a parameter pack.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isParameterPack
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
 name|override
 name|LLVM_READONLY
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Implement isa/cast/dyncast/etc.
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Decl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|classofKind
@@ -3508,12 +4205,16 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classofKind
-argument_list|(
-argument|Kind K
-argument_list|)
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
 block|{
 return|return
 name|K
@@ -3521,53 +4222,70 @@ operator|==
 name|TemplateTypeParm
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_comment
+unit|};
 comment|/// NonTypeTemplateParmDecl - Declares a non-type template parameter,
+end_comment
+
+begin_comment
 comment|/// e.g., "Size" in
+end_comment
+
+begin_comment
 comment|/// @code
+end_comment
+
+begin_comment
 comment|/// template<int Size> class array { };
+end_comment
+
+begin_comment
 comment|/// @endcode
+end_comment
+
+begin_decl_stmt
 name|class
 name|NonTypeTemplateParmDecl
-operator|:
+range|:
 name|public
 name|DeclaratorDecl
-block|,
+decl_stmt|,
 name|protected
 name|TemplateParmPosition
 block|{
 comment|/// \brief The default template argument, if any, and whether or not
 comment|/// it was inherited.
-name|llvm
-operator|::
-name|PointerIntPair
+typedef|typedef
+name|DefaultArgStorage
 operator|<
+name|NonTypeTemplateParmDecl
+operator|,
 name|Expr
 operator|*
-block|,
-literal|1
-block|,
-name|bool
 operator|>
-name|DefaultArgumentAndInherited
-block|;
+name|DefArgStorage
+expr_stmt|;
+name|DefArgStorage
+name|DefaultArgument
+decl_stmt|;
 comment|// FIXME: Collapse this into TemplateParamPosition; or, just move depth/index
 comment|// down here to save memory.
 comment|/// \brief Whether this non-type template parameter is a parameter pack.
 name|bool
 name|ParameterPack
-block|;
+decl_stmt|;
 comment|/// \brief Whether this non-type template parameter is an "expanded"
 comment|/// parameter pack, meaning that its type is a pack expansion and we
 comment|/// already know the set of types that expansion expands to.
 name|bool
 name|ExpandedParameterPack
-block|;
+decl_stmt|;
 comment|/// \brief The number of types in an expanded parameter pack.
 name|unsigned
 name|NumExpandedTypes
-block|;
+decl_stmt|;
 name|NonTypeTemplateParmDecl
 argument_list|(
 argument|DeclContext *DC
@@ -3588,7 +4306,7 @@ argument|bool ParameterPack
 argument_list|,
 argument|TypeSourceInfo *TInfo
 argument_list|)
-operator|:
+block|:
 name|DeclaratorDecl
 argument_list|(
 name|NonTypeTemplateParm
@@ -3605,31 +4323,24 @@ name|TInfo
 argument_list|,
 name|StartLoc
 argument_list|)
-block|,
+operator|,
 name|TemplateParmPosition
 argument_list|(
 name|D
 argument_list|,
 name|P
 argument_list|)
-block|,
-name|DefaultArgumentAndInherited
-argument_list|(
-name|nullptr
-argument_list|,
-name|false
-argument_list|)
-block|,
+operator|,
 name|ParameterPack
 argument_list|(
 name|ParameterPack
 argument_list|)
-block|,
+operator|,
 name|ExpandedParameterPack
 argument_list|(
 name|false
 argument_list|)
-block|,
+operator|,
 name|NumExpandedTypes
 argument_list|(
 literal|0
@@ -3659,123 +4370,177 @@ argument|unsigned NumExpandedTypes
 argument_list|,
 argument|TypeSourceInfo **ExpandedTInfos
 argument_list|)
-block|;
+expr_stmt|;
 name|friend
 name|class
 name|ASTDeclReader
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 specifier|static
 name|NonTypeTemplateParmDecl
-operator|*
+modifier|*
 name|Create
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|DeclContext *DC
-argument_list|,
-argument|SourceLocation StartLoc
-argument_list|,
-argument|SourceLocation IdLoc
-argument_list|,
-argument|unsigned D
-argument_list|,
-argument|unsigned P
-argument_list|,
-argument|IdentifierInfo *Id
-argument_list|,
-argument|QualType T
-argument_list|,
-argument|bool ParameterPack
-argument_list|,
-argument|TypeSourceInfo *TInfo
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|,
+name|SourceLocation
+name|StartLoc
+parameter_list|,
+name|SourceLocation
+name|IdLoc
+parameter_list|,
+name|unsigned
+name|D
+parameter_list|,
+name|unsigned
+name|P
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|Id
+parameter_list|,
+name|QualType
+name|T
+parameter_list|,
+name|bool
+name|ParameterPack
+parameter_list|,
+name|TypeSourceInfo
+modifier|*
+name|TInfo
+parameter_list|)
+function_decl|;
 specifier|static
 name|NonTypeTemplateParmDecl
-operator|*
+modifier|*
 name|Create
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|DeclContext *DC
-argument_list|,
-argument|SourceLocation StartLoc
-argument_list|,
-argument|SourceLocation IdLoc
-argument_list|,
-argument|unsigned D
-argument_list|,
-argument|unsigned P
-argument_list|,
-argument|IdentifierInfo *Id
-argument_list|,
-argument|QualType T
-argument_list|,
-argument|TypeSourceInfo *TInfo
-argument_list|,
-argument|const QualType *ExpandedTypes
-argument_list|,
-argument|unsigned NumExpandedTypes
-argument_list|,
-argument|TypeSourceInfo **ExpandedTInfos
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|,
+name|SourceLocation
+name|StartLoc
+parameter_list|,
+name|SourceLocation
+name|IdLoc
+parameter_list|,
+name|unsigned
+name|D
+parameter_list|,
+name|unsigned
+name|P
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|Id
+parameter_list|,
+name|QualType
+name|T
+parameter_list|,
+name|TypeSourceInfo
+modifier|*
+name|TInfo
+parameter_list|,
+specifier|const
+name|QualType
+modifier|*
+name|ExpandedTypes
+parameter_list|,
+name|unsigned
+name|NumExpandedTypes
+parameter_list|,
+name|TypeSourceInfo
+modifier|*
+modifier|*
+name|ExpandedTInfos
+parameter_list|)
+function_decl|;
 specifier|static
 name|NonTypeTemplateParmDecl
-operator|*
+modifier|*
 name|CreateDeserialized
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|unsigned ID
-argument_list|)
-block|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|ID
+parameter_list|)
+function_decl|;
 specifier|static
 name|NonTypeTemplateParmDecl
-operator|*
+modifier|*
 name|CreateDeserialized
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|unsigned ID
-argument_list|,
-argument|unsigned NumExpandedTypes
-argument_list|)
-block|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|ID
+parameter_list|,
+name|unsigned
+name|NumExpandedTypes
+parameter_list|)
+function_decl|;
 name|using
 name|TemplateParmPosition
 operator|::
 name|getDepth
-block|;
+expr_stmt|;
 name|using
 name|TemplateParmPosition
 operator|::
 name|setDepth
-block|;
+expr_stmt|;
 name|using
 name|TemplateParmPosition
 operator|::
 name|getPosition
-block|;
+expr_stmt|;
 name|using
 name|TemplateParmPosition
 operator|::
 name|setPosition
-block|;
+expr_stmt|;
 name|using
 name|TemplateParmPosition
 operator|::
 name|getIndex
-block|;
+expr_stmt|;
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
 name|override
 name|LLVM_READONLY
-block|;
+expr_stmt|;
+specifier|const
+name|DefArgStorage
+operator|&
+name|getDefaultArgStorage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DefaultArgument
+return|;
+block|}
 comment|/// \brief Determine whether this template parameter has a default
 comment|/// argument.
 name|bool
@@ -3784,12 +4549,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|DefaultArgumentAndInherited
+name|DefaultArgument
 operator|.
-name|getPointer
+name|isSet
 argument_list|()
-operator|!=
-name|nullptr
 return|;
 block|}
 comment|/// \brief Retrieve the default argument, if any.
@@ -3800,9 +4563,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|DefaultArgumentAndInherited
+name|DefaultArgument
 operator|.
-name|getPointer
+name|get
 argument_list|()
 return|;
 block|}
@@ -3811,7 +4574,7 @@ name|SourceLocation
 name|getDefaultArgumentLoc
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// \brief Determines whether the default argument was inherited
 comment|/// from a previous declaration of this template.
 name|bool
@@ -3820,9 +4583,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|DefaultArgumentAndInherited
+name|DefaultArgument
 operator|.
-name|getInt
+name|isInherited
 argument_list|()
 return|;
 block|}
@@ -3831,45 +4594,54 @@ comment|/// whether that default argument was inherited from another
 comment|/// declaration.
 name|void
 name|setDefaultArgument
-argument_list|(
-argument|Expr *DefArg
-argument_list|,
-argument|bool Inherited
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|DefArg
+parameter_list|)
 block|{
-name|DefaultArgumentAndInherited
+name|DefaultArgument
 operator|.
-name|setPointer
+name|set
 argument_list|(
 name|DefArg
 argument_list|)
-block|;
-name|DefaultArgumentAndInherited
+expr_stmt|;
+block|}
+name|void
+name|setInheritedDefaultArgument
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|NonTypeTemplateParmDecl
+modifier|*
+name|Parm
+parameter_list|)
+block|{
+name|DefaultArgument
 operator|.
-name|setInt
+name|setInherited
 argument_list|(
-name|Inherited
+name|C
+argument_list|,
+name|Parm
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|/// \brief Removes the default argument of this template parameter.
 name|void
 name|removeDefaultArgument
-argument_list|()
+parameter_list|()
 block|{
-name|DefaultArgumentAndInherited
+name|DefaultArgument
 operator|.
-name|setPointer
-argument_list|(
-name|nullptr
-argument_list|)
-block|;
-name|DefaultArgumentAndInherited
-operator|.
-name|setInt
-argument_list|(
-name|false
-argument_list|)
-block|;   }
+name|clear
+argument_list|()
+expr_stmt|;
+block|}
 comment|/// \brief Whether this parameter is a non-type template parameter pack.
 comment|///
 comment|/// If the parameter is a parameter pack, the type may be a
@@ -3968,9 +4740,10 @@ comment|/// pack.
 name|QualType
 name|getExpansionType
 argument_list|(
-argument|unsigned I
+name|unsigned
+name|I
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -3980,13 +4753,13 @@ name|NumExpandedTypes
 operator|&&
 literal|"Out-of-range expansion type index"
 argument_list|)
-block|;
+expr_stmt|;
 name|void
-operator|*
+modifier|*
 specifier|const
-operator|*
+modifier|*
 name|TypesAndInfos
-operator|=
+init|=
 name|reinterpret_cast
 operator|<
 name|void
@@ -3999,7 +4772,7 @@ name|this
 operator|+
 literal|1
 operator|)
-block|;
+decl_stmt|;
 return|return
 name|QualType
 operator|::
@@ -4017,12 +4790,13 @@ block|}
 comment|/// \brief Retrieve a particular expansion type source info within an
 comment|/// expanded parameter pack.
 name|TypeSourceInfo
-operator|*
+modifier|*
 name|getExpansionTypeSourceInfo
 argument_list|(
-argument|unsigned I
+name|unsigned
+name|I
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -4032,13 +4806,13 @@ name|NumExpandedTypes
 operator|&&
 literal|"Out-of-range expansion type index"
 argument_list|)
-block|;
+expr_stmt|;
 name|void
-operator|*
+modifier|*
 specifier|const
-operator|*
+modifier|*
 name|TypesAndInfos
-operator|=
+init|=
 name|reinterpret_cast
 operator|<
 name|void
@@ -4051,7 +4825,7 @@ name|this
 operator|+
 literal|1
 operator|)
-block|;
+decl_stmt|;
 return|return
 name|static_cast
 operator|<
@@ -4074,9 +4848,12 @@ comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Decl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|classofKind
@@ -4091,9 +4868,10 @@ block|}
 specifier|static
 name|bool
 name|classofKind
-argument_list|(
-argument|Kind K
-argument_list|)
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
 block|{
 return|return
 name|K
@@ -4101,21 +4879,48 @@ operator|==
 name|NonTypeTemplateParm
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// TemplateTemplateParmDecl - Declares a template template parameter,
+end_comment
+
+begin_comment
 comment|/// e.g., "T" in
+end_comment
+
+begin_comment
 comment|/// @code
+end_comment
+
+begin_comment
 comment|/// template<template<typename> class T> class container { };
+end_comment
+
+begin_comment
 comment|/// @endcode
+end_comment
+
+begin_comment
 comment|/// A template template parameter is a TemplateDecl because it defines the
+end_comment
+
+begin_comment
 comment|/// name of a template and the template parameters allowable for substitution.
+end_comment
+
+begin_decl_stmt
 name|class
 name|TemplateTemplateParmDecl
-operator|:
+range|:
 name|public
 name|TemplateDecl
-block|,
+decl_stmt|,
 name|protected
 name|TemplateParmPosition
 block|{
@@ -4123,29 +4928,35 @@ name|void
 name|anchor
 argument_list|()
 name|override
-block|;
-comment|/// DefaultArgument - The default template argument, if any.
+expr_stmt|;
+comment|/// \brief The default template argument, if any.
+typedef|typedef
+name|DefaultArgStorage
+operator|<
+name|TemplateTemplateParmDecl
+operator|,
 name|TemplateArgumentLoc
+operator|*
+operator|>
+name|DefArgStorage
+expr_stmt|;
+name|DefArgStorage
 name|DefaultArgument
-block|;
-comment|/// Whether or not the default argument was inherited.
-name|bool
-name|DefaultArgumentWasInherited
-block|;
+decl_stmt|;
 comment|/// \brief Whether this parameter is a parameter pack.
 name|bool
 name|ParameterPack
-block|;
+decl_stmt|;
 comment|/// \brief Whether this template template parameter is an "expanded"
 comment|/// parameter pack, meaning that it is a pack expansion and we
 comment|/// already know the set of template parameters that expansion expands to.
 name|bool
 name|ExpandedParameterPack
-block|;
+decl_stmt|;
 comment|/// \brief The number of parameters in an expanded parameter pack.
 name|unsigned
 name|NumExpandedParams
-block|;
+decl_stmt|;
 name|TemplateTemplateParmDecl
 argument_list|(
 argument|DeclContext *DC
@@ -4162,7 +4973,7 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|TemplateParameterList *Params
 argument_list|)
-operator|:
+block|:
 name|TemplateDecl
 argument_list|(
 name|TemplateTemplateParm
@@ -4175,32 +4986,24 @@ name|Id
 argument_list|,
 name|Params
 argument_list|)
-block|,
+operator|,
 name|TemplateParmPosition
 argument_list|(
 name|D
 argument_list|,
 name|P
 argument_list|)
-block|,
-name|DefaultArgument
-argument_list|()
-block|,
-name|DefaultArgumentWasInherited
-argument_list|(
-name|false
-argument_list|)
-block|,
+operator|,
 name|ParameterPack
 argument_list|(
 name|ParameterPack
 argument_list|)
-block|,
+operator|,
 name|ExpandedParameterPack
 argument_list|(
 name|false
 argument_list|)
-block|,
+operator|,
 name|NumExpandedParams
 argument_list|(
 literal|0
@@ -4224,90 +5027,127 @@ argument|unsigned NumExpansions
 argument_list|,
 argument|TemplateParameterList * const *Expansions
 argument_list|)
-block|;
+expr_stmt|;
 name|public
-operator|:
+label|:
 specifier|static
 name|TemplateTemplateParmDecl
-operator|*
+modifier|*
+name|Create
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|,
+name|SourceLocation
+name|L
+parameter_list|,
+name|unsigned
+name|D
+parameter_list|,
+name|unsigned
+name|P
+parameter_list|,
+name|bool
+name|ParameterPack
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|Id
+parameter_list|,
+name|TemplateParameterList
+modifier|*
+name|Params
+parameter_list|)
+function_decl|;
+specifier|static
+name|TemplateTemplateParmDecl
+modifier|*
 name|Create
 argument_list|(
-argument|const ASTContext&C
+specifier|const
+name|ASTContext
+operator|&
+name|C
 argument_list|,
-argument|DeclContext *DC
+name|DeclContext
+operator|*
+name|DC
 argument_list|,
-argument|SourceLocation L
+name|SourceLocation
+name|L
 argument_list|,
-argument|unsigned D
+name|unsigned
+name|D
 argument_list|,
-argument|unsigned P
+name|unsigned
+name|P
 argument_list|,
-argument|bool ParameterPack
+name|IdentifierInfo
+operator|*
+name|Id
 argument_list|,
-argument|IdentifierInfo *Id
+name|TemplateParameterList
+operator|*
+name|Params
 argument_list|,
-argument|TemplateParameterList *Params
+name|ArrayRef
+operator|<
+name|TemplateParameterList
+operator|*
+operator|>
+name|Expansions
 argument_list|)
-block|;
+decl_stmt|;
 specifier|static
 name|TemplateTemplateParmDecl
-operator|*
-name|Create
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|DeclContext *DC
-argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|unsigned D
-argument_list|,
-argument|unsigned P
-argument_list|,
-argument|IdentifierInfo *Id
-argument_list|,
-argument|TemplateParameterList *Params
-argument_list|,
-argument|ArrayRef<TemplateParameterList *> Expansions
-argument_list|)
-block|;
-specifier|static
-name|TemplateTemplateParmDecl
-operator|*
+modifier|*
 name|CreateDeserialized
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|unsigned ID
-argument_list|)
-block|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|ID
+parameter_list|)
+function_decl|;
 specifier|static
 name|TemplateTemplateParmDecl
-operator|*
+modifier|*
 name|CreateDeserialized
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|unsigned ID
-argument_list|,
-argument|unsigned NumExpansions
-argument_list|)
-block|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|ID
+parameter_list|,
+name|unsigned
+name|NumExpansions
+parameter_list|)
+function_decl|;
 name|using
 name|TemplateParmPosition
 operator|::
 name|getDepth
-block|;
+expr_stmt|;
 name|using
 name|TemplateParmPosition
 operator|::
 name|getPosition
-block|;
+expr_stmt|;
 name|using
 name|TemplateParmPosition
 operator|::
 name|getIndex
-block|;
+expr_stmt|;
 comment|/// \brief Whether this template template parameter is a template
 comment|/// parameter pack.
 comment|///
@@ -4390,12 +5230,13 @@ block|}
 comment|/// \brief Retrieve a particular expansion type within an expanded parameter
 comment|/// pack.
 name|TemplateParameterList
-operator|*
+modifier|*
 name|getExpansionTemplateParameters
 argument_list|(
-argument|unsigned I
+name|unsigned
+name|I
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -4405,7 +5246,7 @@ name|NumExpandedParams
 operator|&&
 literal|"Out-of-range expansion type index"
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|reinterpret_cast
 operator|<
@@ -4424,6 +5265,17 @@ name|I
 index|]
 return|;
 block|}
+specifier|const
+name|DefArgStorage
+operator|&
+name|getDefaultArgStorage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DefaultArgument
+return|;
+block|}
 comment|/// \brief Determine whether this template parameter has a default
 comment|/// argument.
 name|bool
@@ -4432,13 +5284,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
 name|DefaultArgument
 operator|.
-name|getArgument
-argument_list|()
-operator|.
-name|isNull
+name|isSet
 argument_list|()
 return|;
 block|}
@@ -4450,8 +5298,24 @@ name|getDefaultArgument
 argument_list|()
 specifier|const
 block|{
+specifier|static
+specifier|const
+name|TemplateArgumentLoc
+name|None
+block|;
 return|return
 name|DefaultArgument
+operator|.
+name|isSet
+argument_list|()
+condition|?
+operator|*
+name|DefaultArgument
+operator|.
+name|get
+argument_list|()
+else|:
+name|None
 return|;
 block|}
 comment|/// \brief Retrieve the location of the default argument, if any.
@@ -4459,7 +5323,7 @@ name|SourceLocation
 name|getDefaultArgumentLoc
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// \brief Determines whether the default argument was inherited
 comment|/// from a previous declaration of this template.
 name|bool
@@ -4468,7 +5332,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|DefaultArgumentWasInherited
+name|DefaultArgument
+operator|.
+name|isInherited
+argument_list|()
 return|;
 block|}
 comment|/// \brief Set the default argument for this template parameter, and
@@ -4476,34 +5343,52 @@ comment|/// whether that default argument was inherited from another
 comment|/// declaration.
 name|void
 name|setDefaultArgument
-argument_list|(
-argument|const TemplateArgumentLoc&DefArg
-argument_list|,
-argument|bool Inherited
-argument_list|)
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+specifier|const
+name|TemplateArgumentLoc
+modifier|&
+name|DefArg
+parameter_list|)
+function_decl|;
+name|void
+name|setInheritedDefaultArgument
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|TemplateTemplateParmDecl
+modifier|*
+name|Prev
+parameter_list|)
 block|{
 name|DefaultArgument
-operator|=
-name|DefArg
-block|;
-name|DefaultArgumentWasInherited
-operator|=
-name|Inherited
-block|;   }
+operator|.
+name|setInherited
+argument_list|(
+name|C
+argument_list|,
+name|Prev
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// \brief Removes the default argument of this template parameter.
 name|void
 name|removeDefaultArgument
-argument_list|()
+parameter_list|()
 block|{
 name|DefaultArgument
-operator|=
-name|TemplateArgumentLoc
+operator|.
+name|clear
 argument_list|()
-block|;
-name|DefaultArgumentWasInherited
-operator|=
-name|false
-block|;   }
+expr_stmt|;
+block|}
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -4550,13 +5435,22 @@ name|End
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|// Implement isa/cast/dyncast/etc.
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Decl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|classofKind
@@ -4568,12 +5462,16 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classofKind
-argument_list|(
-argument|Kind K
-argument_list|)
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
 block|{
 return|return
 name|K
@@ -4581,59 +5479,108 @@ operator|==
 name|TemplateTemplateParm
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 name|friend
 name|class
 name|ASTDeclReader
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|friend
 name|class
 name|ASTDeclWriter
-block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+unit|};
 comment|/// \brief Represents a class template specialization, which refers to
+end_comment
+
+begin_comment
 comment|/// a class template with a given set of template arguments.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Class template specializations represent both explicit
+end_comment
+
+begin_comment
 comment|/// specialization of class templates, as in the example below, and
+end_comment
+
+begin_comment
 comment|/// implicit instantiations of class templates.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \code
+end_comment
+
+begin_comment
 comment|/// template<typename T> class array;
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// template<>
+end_comment
+
+begin_comment
 comment|/// class array<bool> { }; // class template specialization array<bool>
+end_comment
+
+begin_comment
 comment|/// \endcode
+end_comment
+
+begin_decl_stmt
 name|class
 name|ClassTemplateSpecializationDecl
-operator|:
+range|:
 name|public
 name|CXXRecordDecl
-block|,
+decl_stmt|,
 name|public
 name|llvm
-operator|::
+decl|::
 name|FoldingSetNode
 block|{
 comment|/// \brief Structure that stores information about a class template
 comment|/// specialization that was instantiated from a class template partial
 comment|/// specialization.
-block|struct
+struct|struct
 name|SpecializedPartialSpecialization
 block|{
 comment|/// \brief The class template partial specialization from which this
 comment|/// class template specialization was instantiated.
 name|ClassTemplatePartialSpecializationDecl
-operator|*
+modifier|*
 name|PartialSpecialization
-block|;
+decl_stmt|;
 comment|/// \brief The template argument list deduced for the class template
 comment|/// partial specialization itself.
 specifier|const
 name|TemplateArgumentList
-operator|*
+modifier|*
 name|TemplateArgs
-block|;   }
-block|;
+decl_stmt|;
+block|}
+struct|;
 comment|/// \brief The template that this specialization specializes
 name|llvm
 operator|::
@@ -4641,29 +5588,29 @@ name|PointerUnion
 operator|<
 name|ClassTemplateDecl
 operator|*
-block|,
+operator|,
 name|SpecializedPartialSpecialization
 operator|*
 operator|>
 name|SpecializedTemplate
-block|;
+expr_stmt|;
 comment|/// \brief Further info for explicit template specialization/instantiation.
-block|struct
+struct|struct
 name|ExplicitSpecializationInfo
 block|{
 comment|/// \brief The type-as-written.
 name|TypeSourceInfo
-operator|*
+modifier|*
 name|TypeAsWritten
-block|;
+decl_stmt|;
 comment|/// \brief The location of the extern keyword.
 name|SourceLocation
 name|ExternLoc
-block|;
+decl_stmt|;
 comment|/// \brief The location of the template keyword.
 name|SourceLocation
 name|TemplateKeywordLoc
-block|;
+decl_stmt|;
 name|ExplicitSpecializationInfo
 argument_list|()
 operator|:
@@ -4671,40 +5618,40 @@ name|TypeAsWritten
 argument_list|(
 name|nullptr
 argument_list|)
-block|,
+operator|,
 name|ExternLoc
 argument_list|()
-block|,
+operator|,
 name|TemplateKeywordLoc
 argument_list|()
 block|{}
 block|}
-block|;
+struct|;
 comment|/// \brief Further info for explicit template specialization/instantiation.
 comment|/// Does not apply to implicit specializations.
 name|ExplicitSpecializationInfo
-operator|*
+modifier|*
 name|ExplicitInfo
-block|;
+decl_stmt|;
 comment|/// \brief The template arguments used to describe this specialization.
 specifier|const
 name|TemplateArgumentList
-operator|*
+modifier|*
 name|TemplateArgs
-block|;
+decl_stmt|;
 comment|/// \brief The point where this template was instantiated (if any)
 name|SourceLocation
 name|PointOfInstantiation
-block|;
+decl_stmt|;
 comment|/// \brief The kind of specialization this declaration refers to.
 comment|/// Really a value of type TemplateSpecializationKind.
 name|unsigned
 name|SpecializationKind
-operator|:
+range|:
 literal|3
-block|;
+decl_stmt|;
 name|protected
-operator|:
+label|:
 name|ClassTemplateSpecializationDecl
 argument_list|(
 argument|ASTContext&Context
@@ -4727,77 +5674,104 @@ argument|unsigned NumArgs
 argument_list|,
 argument|ClassTemplateSpecializationDecl *PrevDecl
 argument_list|)
-block|;
+empty_stmt|;
 name|explicit
 name|ClassTemplateSpecializationDecl
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|Kind DK
-argument_list|)
-block|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|Kind
+name|DK
+parameter_list|)
+function_decl|;
 name|public
-operator|:
+label|:
 specifier|static
 name|ClassTemplateSpecializationDecl
-operator|*
+modifier|*
 name|Create
-argument_list|(
-argument|ASTContext&Context
-argument_list|,
-argument|TagKind TK
-argument_list|,
-argument|DeclContext *DC
-argument_list|,
-argument|SourceLocation StartLoc
-argument_list|,
-argument|SourceLocation IdLoc
-argument_list|,
-argument|ClassTemplateDecl *SpecializedTemplate
-argument_list|,
-argument|const TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
-argument_list|,
-argument|ClassTemplateSpecializationDecl *PrevDecl
-argument_list|)
-block|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|TagKind
+name|TK
+parameter_list|,
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|,
+name|SourceLocation
+name|StartLoc
+parameter_list|,
+name|SourceLocation
+name|IdLoc
+parameter_list|,
+name|ClassTemplateDecl
+modifier|*
+name|SpecializedTemplate
+parameter_list|,
+specifier|const
+name|TemplateArgument
+modifier|*
+name|Args
+parameter_list|,
+name|unsigned
+name|NumArgs
+parameter_list|,
+name|ClassTemplateSpecializationDecl
+modifier|*
+name|PrevDecl
+parameter_list|)
+function_decl|;
 specifier|static
 name|ClassTemplateSpecializationDecl
-operator|*
+modifier|*
 name|CreateDeserialized
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|unsigned ID
-argument_list|)
-block|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|ID
+parameter_list|)
+function_decl|;
 name|void
 name|getNameForDiagnostic
 argument_list|(
-argument|raw_ostream&OS
+name|raw_ostream
+operator|&
+name|OS
 argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|,
-argument|bool Qualified
-argument_list|)
 specifier|const
+name|PrintingPolicy
+operator|&
+name|Policy
+argument_list|,
+name|bool
+name|Qualified
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|// FIXME: This is broken. CXXRecordDecl::getMostRecentDecl() returns a
 comment|// different "most recent" declaration from this function for the same
 comment|// declaration, because we don't override getMostRecentDeclImpl(). But
 comment|// it's not clear that we should override that, because the most recent
 comment|// declaration as a CXXRecordDecl sometimes is the injected-class-name.
 name|ClassTemplateSpecializationDecl
-operator|*
+modifier|*
 name|getMostRecentDecl
-argument_list|()
+parameter_list|()
 block|{
 name|CXXRecordDecl
-operator|*
+modifier|*
 name|Recent
-operator|=
+init|=
 name|static_cast
 operator|<
 name|CXXRecordDecl
@@ -4809,7 +5783,7 @@ operator|)
 operator|->
 name|getMostRecentDecl
 argument_list|()
-block|;
+decl_stmt|;
 while|while
 condition|(
 operator|!
@@ -4860,7 +5834,7 @@ operator|*
 name|getSpecializedTemplate
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// \brief Retrieve the template arguments of the class template
 comment|/// specialization.
 specifier|const
@@ -4968,9 +5942,10 @@ return|;
 block|}
 name|void
 name|setPointOfInstantiation
-argument_list|(
-argument|SourceLocation Loc
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -4981,11 +5956,12 @@ argument_list|()
 operator|&&
 literal|"point of instantiation must be valid!"
 argument_list|)
-block|;
+expr_stmt|;
 name|PointOfInstantiation
 operator|=
 name|Loc
-block|;   }
+expr_stmt|;
+block|}
 comment|/// \brief If this class template specialization is an instantiation of
 comment|/// a template (rather than an explicit specialization), return the
 comment|/// class template or class template partial specialization from which it
@@ -4996,7 +5972,7 @@ name|PointerUnion
 operator|<
 name|ClassTemplateDecl
 operator|*
-block|,
+operator|,
 name|ClassTemplatePartialSpecializationDecl
 operator|*
 operator|>
@@ -5032,15 +6008,24 @@ name|getSpecializedTemplateOrPartial
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Retrieve the class template or class template partial
+end_comment
+
+begin_comment
 comment|/// specialization which was specialized by this.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|PointerUnion
 operator|<
 name|ClassTemplateDecl
 operator|*
-block|,
+operator|,
 name|ClassTemplatePartialSpecializationDecl
 operator|*
 operator|>
@@ -5069,6 +6054,9 @@ name|PartialSpec
 operator|->
 name|PartialSpecialization
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|SpecializedTemplate
 operator|.
@@ -5080,10 +6068,10 @@ operator|>
 operator|(
 operator|)
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// \brief Retrieve the set of template arguments that should be used
 end_comment
 
@@ -5128,7 +6116,7 @@ comment|/// itself.
 end_comment
 
 begin_expr_stmt
-specifier|const
+unit|const
 name|TemplateArgumentList
 operator|&
 name|getTemplateInstantiationArgs
@@ -6105,12 +7093,6 @@ operator|*
 name|LazySpecializations
 block|;   }
 block|;
-comment|/// \brief Load any lazily-loaded specializations from the external source.
-name|void
-name|LoadLazySpecializations
-argument_list|()
-specifier|const
-block|;
 comment|/// \brief Retrieve the set of specializations of this class template.
 name|llvm
 operator|::
@@ -6198,6 +7180,12 @@ return|;
 block|}
 name|public
 operator|:
+comment|/// \brief Load any lazily-loaded specializations from the external source.
+name|void
+name|LoadLazySpecializations
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Get the underlying class declarations of the template.
 name|CXXRecordDecl
 operator|*
@@ -9358,12 +10346,6 @@ operator|*
 name|LazySpecializations
 block|;   }
 block|;
-comment|/// \brief Load any lazily-loaded specializations from the external source.
-name|void
-name|LoadLazySpecializations
-argument_list|()
-specifier|const
-block|;
 comment|/// \brief Retrieve the set of specializations of this variable template.
 name|llvm
 operator|::
@@ -9451,6 +10433,12 @@ return|;
 block|}
 name|public
 operator|:
+comment|/// \brief Load any lazily-loaded specializations from the external source.
+name|void
+name|LoadLazySpecializations
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Get the underlying variable declarations of the template.
 name|VarDecl
 operator|*
@@ -9645,6 +10633,52 @@ operator|->
 name|getPreviousDecl
 argument_list|()
 operator|)
+return|;
+block|}
+name|VarTemplateDecl
+operator|*
+name|getMostRecentDecl
+argument_list|()
+block|{
+return|return
+name|cast
+operator|<
+name|VarTemplateDecl
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|RedeclarableTemplateDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getMostRecentDecl
+argument_list|()
+operator|)
+return|;
+block|}
+specifier|const
+name|VarTemplateDecl
+operator|*
+name|getMostRecentDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|VarTemplateDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getMostRecentDecl
+argument_list|()
 return|;
 block|}
 name|VarTemplateDecl

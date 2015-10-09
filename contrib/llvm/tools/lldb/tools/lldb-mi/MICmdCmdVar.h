@@ -32,18 +32,6 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmdCmdVar.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// Overview:    CMICmdCmdVarCreate              interface.
 end_comment
 
@@ -115,34 +103,6 @@ begin_comment
 comment|//              command class as an example.
 end_comment
 
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -169,6 +129,12 @@ begin_include
 include|#
 directive|include
 file|"MICmnMIValueList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MICmnLLDBDebugSessionInfo.h"
 end_include
 
 begin_include
@@ -247,34 +213,50 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
+comment|// Overridden:
+name|public
+operator|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdVarCreate
 argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+comment|// Methods:
+name|private
+operator|:
 name|void
+name|CompleteSBValue
+argument_list|(
+name|lldb
+operator|::
+name|SBValue
+operator|&
+name|vrwValue
 argument_list|)
 block|;
 comment|// Attribute:
@@ -392,38 +374,38 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdVarUpdate
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Methods:
 name|private
@@ -431,11 +413,15 @@ operator|:
 name|bool
 name|ExamineSBValueForChange
 argument_list|(
-argument|const CMICmnLLDBDebugSessionInfoVarObj&vrVarObj
+name|lldb
+operator|::
+name|SBValue
+operator|&
+name|vrwValue
 argument_list|,
-argument|const bool vbIgnoreVarType
-argument_list|,
-argument|bool&vrwbChanged
+name|bool
+operator|&
+name|vrwbChanged
 argument_list|)
 block|;
 name|bool
@@ -447,9 +433,10 @@ operator|&
 name|vrStrVarName
 argument_list|,
 specifier|const
-name|CMIUtilString
-operator|&
-name|vrStrValue
+name|char
+operator|*
+specifier|const
+name|vpValue
 argument_list|,
 specifier|const
 name|CMIUtilString
@@ -460,28 +447,16 @@ block|;
 comment|// Attribute:
 name|private
 operator|:
-name|CMIUtilString
-name|m_strValueName
-block|;
 specifier|const
 name|CMIUtilString
 name|m_constStrArgPrintValues
 block|;
-comment|// Not handled by *this command
 specifier|const
 name|CMIUtilString
 name|m_constStrArgName
 block|;
 name|bool
-name|m_bValueChangedArrayType
-block|;
-comment|// True = yes value changed, false = no change
-name|bool
-name|m_bValueChangedCompositeType
-block|;
-comment|// True = yes value changed, false = no change
-name|bool
-name|m_bValueChangedNormalType
+name|m_bValueChanged
 block|;
 comment|// True = yes value changed, false = no change
 name|CMICmnMIValueList
@@ -550,35 +525,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdVarDelete
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attribute:
 name|private
@@ -650,35 +625,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdVarAssign
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -761,35 +736,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdVarSetFormat
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -868,92 +843,72 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdVarListChildren
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-comment|// Typedefs:
-name|private
-operator|:
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|CMICmnMIValueResult
-operator|>
-name|VecMIValueResult_t
-expr_stmt|;
 comment|// Attributes:
 name|private
 operator|:
-name|bool
-name|m_bValueValid
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// True = yes SBValue object is valid, false = not valid
-end_comment
-
-begin_decl_stmt
-name|VecMIValueResult_t
-name|m_vecMiValueResult
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|MIuint
-name|m_nChildren
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|const
 name|CMIUtilString
 name|m_constStrArgPrintValues
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Not handled by *this command
-end_comment
-
-begin_decl_stmt
+block|;
 specifier|const
 name|CMIUtilString
 name|m_constStrArgName
+block|;
+specifier|const
+name|CMIUtilString
+name|m_constStrArgFrom
+block|;
+specifier|const
+name|CMIUtilString
+name|m_constStrArgTo
+block|;
+name|bool
+name|m_bValueValid
+block|;
+comment|// True = yes SBValue object is valid, false = not valid
+name|MIuint
+name|m_nChildren
+block|;
+name|CMICmnMIValueList
+name|m_miValueList
+block|;
+name|bool
+name|m_bHasMore
+block|; }
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-unit|};
 comment|//++ ============================================================================
 end_comment
 
@@ -1013,35 +968,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdVarEvaluateExpression
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -1125,35 +1080,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdVarInfoPathExpression
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -1232,35 +1187,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdVarShowAttributes
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
