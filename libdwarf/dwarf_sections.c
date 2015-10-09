@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: dwarf_sections.c 3036 2014-05-05 19:19:31Z kaiwang27 $"
+literal|"$Id: dwarf_sections.c 3226 2015-06-23 13:00:16Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -511,7 +511,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|dwarf_get_section_max_offsets
+name|dwarf_get_section_max_offsets_b
 argument_list|(
 name|dbg
 argument_list|,
@@ -536,6 +536,8 @@ argument_list|,
 name|debug_ranges
 argument_list|,
 name|debug_pubtypes
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 return|;

@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: sections.c 3220 2015-05-24 23:42:39Z kaiwang27 $"
+literal|"$Id: sections.c 3225 2015-06-06 02:35:23Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6887,6 +6887,56 @@ name|ecp
 operator|->
 name|shstrtab
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|os
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* Input object does not contain .shstrtab section */
+if|if
+condition|(
+operator|(
+name|s
+operator|->
+name|os
+operator|=
+name|elf_newscn
+argument_list|(
+name|ecp
+operator|->
+name|eout
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"elf_newscn failed: %s"
+argument_list|,
+name|elf_errmsg
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|insert_to_sec_list
+argument_list|(
+name|ecp
+argument_list|,
+name|s
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|gelf_getshdr
