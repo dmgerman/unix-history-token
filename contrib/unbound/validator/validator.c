@@ -12894,7 +12894,13 @@ return|return;
 block|}
 name|downprot
 operator|=
-literal|1
+name|qstate
+operator|->
+name|env
+operator|->
+name|cfg
+operator|->
+name|harden_algo_downgrade
 expr_stmt|;
 name|vq
 operator|->
