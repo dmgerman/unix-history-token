@@ -1401,11 +1401,6 @@ expr_stmt|;
 name|testbound_selftest
 argument_list|()
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"selftest successful\n"
-argument_list|)
-expr_stmt|;
 name|exit
 argument_list|(
 literal|0

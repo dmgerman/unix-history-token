@@ -653,13 +653,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|SSL_CTX_use_certificate_file
+name|SSL_CTX_use_certificate_chain_file
 argument_list|(
 name|ctx
 argument_list|,
 name|c_cert
-argument_list|,
-name|SSL_FILETYPE_PEM
 argument_list|)
 operator|||
 operator|!

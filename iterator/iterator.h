@@ -87,7 +87,7 @@ begin_define
 define|#
 directive|define
 name|MAX_TARGET_COUNT
-value|32
+value|64
 end_define
 
 begin_comment

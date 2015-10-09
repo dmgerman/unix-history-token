@@ -718,6 +718,10 @@ block|,
 name|VAR_CACHE_MAX_NEGATIVE_TTL
 init|=
 literal|415
+block|,
+name|VAR_PERMIT_SMALL_HOLDDOWN
+init|=
+literal|416
 block|}
 enum|;
 end_enum
@@ -1837,6 +1841,13 @@ name|VAR_CACHE_MAX_NEGATIVE_TTL
 value|415
 end_define
 
+begin_define
+define|#
+directive|define
+name|VAR_PERMIT_SMALL_HOLDDOWN
+value|416
+end_define
+
 begin_if
 if|#
 directive|if
@@ -1866,7 +1877,7 @@ decl_stmt|;
 comment|/* Line 2058 of yacc.c  */
 line|#
 directive|line
-number|382
+number|384
 file|"util/configparser.h"
 block|}
 name|YYSTYPE

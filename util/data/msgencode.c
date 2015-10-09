@@ -930,6 +930,8 @@ name|compress_tree_node
 modifier|*
 modifier|*
 name|insertpt
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(

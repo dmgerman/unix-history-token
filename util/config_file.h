@@ -504,6 +504,10 @@ name|unsigned
 name|int
 name|keep_missing
 decl_stmt|;
+comment|/** permit small holddown values, allowing 5011 rollover very fast */
+name|int
+name|permit_small_holddown
+decl_stmt|;
 comment|/** size of the key cache */
 name|size_t
 name|key_cache_size
@@ -708,6 +712,17 @@ begin_decl_stmt
 specifier|extern
 name|gid_t
 name|cfg_gid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/** debug and enable small timeouts */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|autr_permit_small_holddown
 decl_stmt|;
 end_decl_stmt
 

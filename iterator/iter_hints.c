@@ -530,7 +530,7 @@ name|dp
 argument_list|,
 literal|"H.ROOT-SERVERS.NET."
 argument_list|,
-literal|"128.63.2.53"
+literal|"198.97.190.53"
 argument_list|)
 condition|)
 goto|goto
@@ -701,7 +701,7 @@ name|dp
 argument_list|,
 literal|"H.ROOT-SERVERS.NET."
 argument_list|,
-literal|"2001:500:1::803f:235"
+literal|"2001:500:1::53"
 argument_list|)
 condition|)
 goto|goto

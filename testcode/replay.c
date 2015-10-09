@@ -5192,6 +5192,21 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* testbound assert function for selftest.  counts the number of tests */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|tb_assert
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|do { if(!(x)) fatal_exit("%s:%d: %s: assertion %s failed", \ 		__FILE__, __LINE__, __func__, #x); \ 		num_asserts++; \ 	} while(0);
+end_define
+
 begin_function
 name|void
 name|testbound_selftest
@@ -5214,7 +5229,12 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
-name|log_assert
+name|int
+name|num_asserts
+init|=
+literal|0
+decl_stmt|;
+name|tb_assert
 argument_list|(
 name|store
 argument_list|)
@@ -5228,7 +5248,7 @@ argument_list|,
 literal|"bla"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|strcmp
 argument_list|(
@@ -5254,7 +5274,7 @@ argument_list|,
 literal|"vlerk"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|strcmp
 argument_list|(
@@ -5282,7 +5302,7 @@ argument_list|,
 literal|"waarde1"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|r
 argument_list|)
@@ -5296,7 +5316,7 @@ argument_list|,
 literal|"vlerk"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|strcmp
 argument_list|(
@@ -5322,7 +5342,7 @@ argument_list|,
 literal|"bla"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|strcmp
 argument_list|(
@@ -5350,7 +5370,7 @@ argument_list|,
 literal|"kanteel"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|r
 argument_list|)
@@ -5364,7 +5384,7 @@ argument_list|,
 literal|"bla"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|strcmp
 argument_list|(
@@ -5390,7 +5410,7 @@ argument_list|,
 literal|"vlerk"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|strcmp
 argument_list|(
@@ -5418,7 +5438,7 @@ argument_list|,
 literal|"ww"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|r
 argument_list|)
@@ -5432,7 +5452,7 @@ argument_list|,
 literal|"bla"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|strcmp
 argument_list|(
@@ -5449,7 +5469,7 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|macro_length
 argument_list|(
@@ -5459,7 +5479,7 @@ operator|==
 literal|1
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|macro_length
 argument_list|(
@@ -5469,7 +5489,7 @@ operator|==
 literal|7
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|macro_length
 argument_list|(
@@ -5481,7 +5501,7 @@ operator|+
 literal|8
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|macro_length
 argument_list|(
@@ -5506,7 +5526,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|v
 operator|&&
@@ -5536,7 +5556,7 @@ argument_list|,
 literal|"${}"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|v
 operator|&&
@@ -5566,7 +5586,7 @@ argument_list|,
 literal|"blabla ${} dinges"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|v
 operator|&&
@@ -5596,7 +5616,7 @@ argument_list|,
 literal|"1${$bla}2${$bla}3"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|v
 operator|&&
@@ -5626,7 +5646,7 @@ argument_list|,
 literal|"it is ${ctime 123456}"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|v
 operator|&&
@@ -5656,7 +5676,7 @@ argument_list|,
 literal|"123456"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|r
 argument_list|)
@@ -5672,7 +5692,7 @@ argument_list|,
 literal|"it is ${ctime ${$t1}}"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|v
 operator|&&
@@ -5702,7 +5722,7 @@ argument_list|,
 literal|"it is ${ctime $t1}"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|v
 operator|&&
@@ -5732,7 +5752,7 @@ argument_list|,
 literal|"1"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|r
 argument_list|)
@@ -5748,7 +5768,7 @@ argument_list|,
 literal|"2"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|r
 argument_list|)
@@ -5764,7 +5784,7 @@ argument_list|,
 literal|"${$x + $x}"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|v
 operator|&&
@@ -5794,7 +5814,7 @@ argument_list|,
 literal|"${$x - $x}"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|v
 operator|&&
@@ -5824,7 +5844,7 @@ argument_list|,
 literal|"${$y * $y}"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|v
 operator|&&
@@ -5854,7 +5874,7 @@ argument_list|,
 literal|"${32 / $y + $x + $y}"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|v
 operator|&&
@@ -5884,7 +5904,7 @@ argument_list|,
 literal|"${32 / ${$y+$y} + ${${100*3}/3}}"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|v
 operator|&&
@@ -5914,7 +5934,7 @@ argument_list|,
 literal|"${1 2 33 2 1}"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|v
 operator|&&
@@ -5944,7 +5964,7 @@ argument_list|,
 literal|"${123 3 + 5}"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|v
 operator|&&
@@ -5974,7 +5994,7 @@ argument_list|,
 literal|"${123 glug 3 + 5}"
 argument_list|)
 expr_stmt|;
-name|log_assert
+name|tb_assert
 argument_list|(
 name|v
 operator|&&
@@ -5996,6 +6016,13 @@ expr_stmt|;
 name|macro_store_delete
 argument_list|(
 name|store
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"selftest successful (%d checks).\n"
+argument_list|,
+name|num_asserts
 argument_list|)
 expr_stmt|;
 block|}
