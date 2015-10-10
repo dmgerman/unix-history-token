@@ -357,14 +357,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t\t       %%dk (kB), %%dm (MB), %%dg (GB) or\n"
+literal|"\t\t       %%dk (kB), %%dm (MB), %%dg (GB), \n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t\t       %%dt (TB)\n"
+literal|"\t\t       %%dt (TB), or %%dp (PB)\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1208,6 +1208,33 @@ operator|.
 name|md_mediasize
 operator|<<=
 literal|10
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'p'
+operator|||
+operator|*
+name|p
+operator|==
+literal|'P'
+condition|)
+block|{
+name|mdio
+operator|.
+name|md_mediasize
+operator|<<=
+literal|30
+expr_stmt|;
+name|mdio
+operator|.
+name|md_mediasize
+operator|<<=
+literal|20
 expr_stmt|;
 block|}
 else|else

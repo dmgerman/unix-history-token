@@ -10933,7 +10933,7 @@ name|p_cap
 operator|->
 name|halFastFramesSupport
 operator|=
-name|AH_FALSE
+name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
