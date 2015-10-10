@@ -334,6 +334,10 @@ decl_stmt|;
 name|list_t
 name|ds_sendstreams
 decl_stmt|;
+comment|/* Protected by our dsl_dir's dd_lock */
+name|list_t
+name|ds_prop_cbs
+decl_stmt|;
 comment|/* 	 * For ZFEATURE_FLAG_PER_DATASET features, set if this dataset 	 * uses this feature. 	 */
 name|uint8_t
 name|ds_feature_inuse
