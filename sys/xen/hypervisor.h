@@ -239,6 +239,7 @@ specifier|inline
 name|int
 name|HYPERVISOR_console_write
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str

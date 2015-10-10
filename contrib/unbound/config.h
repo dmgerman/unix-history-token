@@ -245,6 +245,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the declaration of `SSL_CTX_set_ecdh_auto', and to    0 if you don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_SSL_CTX_SET_ECDH_AUTO
+value|0
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the declaration of `strlcat', and to 0 if you    don't. */
 end_comment
 
@@ -1611,7 +1622,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"unbound 1.5.4"
+value|"unbound 1.5.5"
 end_define
 
 begin_comment
@@ -1644,7 +1655,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.5.4"
+value|"1.5.5"
 end_define
 
 begin_comment
@@ -1707,7 +1718,7 @@ begin_define
 define|#
 directive|define
 name|RSRC_PACKAGE_VERSION
-value|1,5,4,0
+value|1,5,5,0
 end_define
 
 begin_comment

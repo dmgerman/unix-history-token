@@ -263,7 +263,7 @@ value|0x1
 end_define
 
 begin_comment
-comment|/* bus error */
+comment|/* bus error (hardware not in expected state) */
 end_comment
 
 begin_define
@@ -296,7 +296,7 @@ value|0x4
 end_define
 
 begin_comment
-comment|/* bus busy */
+comment|/* bus busy (reserved by another client) */
 end_comment
 
 begin_define
@@ -353,6 +353,31 @@ end_define
 begin_comment
 comment|/* no address assigned to the interface */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IIC_ERESOURCE
+value|0xa
+end_define
+
+begin_comment
+comment|/* resources (memory, whatever) unavailable */
+end_comment
+
+begin_comment
+comment|/*  * Note that all iicbus functions return IIC_Exxxxx status values,  * except iic2errno() (obviously) and iicbus_started() (returns bool).  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|iic2errno
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern

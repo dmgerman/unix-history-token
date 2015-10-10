@@ -355,7 +355,11 @@ name|trussinfo
 operator|->
 name|flags
 operator||=
+operator|(
 name|COUNTONLY
+operator||
+name|NOSIGS
+operator|)
 expr_stmt|;
 break|break;
 case|case

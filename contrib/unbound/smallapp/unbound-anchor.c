@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"sldns/parseutil.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<expat.h>
 end_include
 
@@ -6305,7 +6311,7 @@ comment|/* but ignore, (lenient) */
 block|}
 name|t
 operator|=
-name|mktime
+name|sldns_mktime_from_utc
 argument_list|(
 operator|&
 name|tm

@@ -88,18 +88,14 @@ begin_function
 name|double
 name|difftime
 parameter_list|(
+specifier|const
+name|time_t
 name|time1
 parameter_list|,
+specifier|const
+name|time_t
 name|time0
 parameter_list|)
-specifier|const
-name|time_t
-name|time1
-decl_stmt|;
-specifier|const
-name|time_t
-name|time0
-decl_stmt|;
 block|{
 comment|/* 	** If (sizeof (double)> sizeof (time_t)) simply convert and subtract 	** (assuming that the larger type has more precision). 	** This is the common real-world case circa 2004. 	*/
 if|if
