@@ -328,7 +328,7 @@ break|break;
 default|default:
 return|return
 operator|(
-name|EWOULDBLOCK
+name|IIC_EBUSBSY
 operator|)
 return|;
 block|}
@@ -538,7 +538,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EACCES
+name|IIC_EBUSBSY
 operator|)
 return|;
 block|}
