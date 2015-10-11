@@ -556,7 +556,7 @@ name|struct
 name|wpi_tx_ring
 name|txq
 index|[
-name|WPI_NTXQUEUES
+name|WPI_DRV_NTXQUEUES
 index|]
 decl_stmt|;
 name|struct

@@ -2866,7 +2866,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|WPI_NTXQUEUES
+name|WPI_DRV_NTXQUEUES
 condition|;
 name|i
 operator|++
@@ -4334,7 +4334,7 @@ literal|0
 init|;
 name|qid
 operator|<
-name|WPI_NTXQUEUES
+name|WPI_DRV_NTXQUEUES
 condition|;
 name|qid
 operator|++
@@ -6652,29 +6652,6 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We only use rings 0 through 4 (4 EDCA + cmd) so there is no need 	 * to allocate commands space for other rings. 	 * XXX Do we really need to allocate descriptors for other rings? 	 */
-if|if
-condition|(
-name|qid
-operator|>
-name|WPI_CMD_QUEUE_NUM
-condition|)
-block|{
-name|DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|WPI_DEBUG_TRACE
-argument_list|,
-name|TRACE_STR_END
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
 name|size
 operator|=
 name|WPI_TX_RING_COUNT
@@ -27925,7 +27902,7 @@ literal|0
 init|;
 name|qid
 operator|<
-name|WPI_NTXQUEUES
+name|WPI_DRV_NTXQUEUES
 condition|;
 name|qid
 operator|++
