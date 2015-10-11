@@ -2409,7 +2409,7 @@ name|errlog
 argument_list|(
 name|EX_SOFTWARE
 argument_list|,
-name|NULL
+literal|"set_from()"
 argument_list|)
 expr_stmt|;
 if|if
