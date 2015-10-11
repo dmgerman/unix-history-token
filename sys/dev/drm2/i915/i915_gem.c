@@ -10649,17 +10649,10 @@ name|obj
 operator|->
 name|pin_count
 condition|)
-block|{
-name|DRM_ERROR
-argument_list|(
-literal|"Attempting to unbind pinned buffer\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|-
 name|EINVAL
 return|;
-block|}
 name|ret
 operator|=
 name|i915_gem_object_finish_gpu
