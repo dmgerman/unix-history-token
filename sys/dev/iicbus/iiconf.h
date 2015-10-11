@@ -77,13 +77,6 @@ name|IIC_INTR
 value|0x2
 end_define
 
-begin_define
-define|#
-directive|define
-name|IIC_INTRWAIT
-value|(IIC_INTR | IIC_WAIT)
-end_define
-
 begin_comment
 comment|/*  * i2c modes  */
 end_comment

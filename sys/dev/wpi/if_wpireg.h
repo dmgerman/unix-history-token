@@ -4302,7 +4302,7 @@ index|[
 literal|5
 index|]
 decl_stmt|;
-name|uint8_t
+name|int
 name|skip_dtim
 decl_stmt|;
 block|}

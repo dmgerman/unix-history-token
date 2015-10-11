@@ -144,7 +144,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_DATAERR
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -280,7 +280,7 @@ condition|)
 block|{
 name|errlog
 argument_list|(
-name|EX_NOINPUT
+literal|1
 argument_list|,
 literal|"can not open auth file `%s'"
 argument_list|,
@@ -362,9 +362,9 @@ name|NULL
 condition|)
 name|errlog
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
-name|NULL
+literal|"calloc failed"
 argument_list|)
 expr_stmt|;
 name|data
@@ -427,7 +427,7 @@ condition|)
 block|{
 name|errlogx
 argument_list|(
-name|EX_CONFIG
+literal|1
 argument_list|,
 literal|"syntax error in authfile %s:%d"
 argument_list|,
@@ -520,7 +520,7 @@ condition|)
 return|return;
 name|errlog
 argument_list|(
-name|EX_NOINPUT
+literal|1
 argument_list|,
 literal|"can not open config `%s'"
 argument_list|,
@@ -1053,7 +1053,7 @@ else|else
 block|{
 name|errlogx
 argument_list|(
-name|EX_CONFIG
+literal|1
 argument_list|,
 literal|"syntax error in %s:%d"
 argument_list|,
@@ -1084,7 +1084,7 @@ condition|)
 block|{
 name|errlogx
 argument_list|(
-name|EX_CONFIG
+literal|1
 argument_list|,
 literal|"%s: NULLCLIENT requires SMARTHOST"
 argument_list|,
