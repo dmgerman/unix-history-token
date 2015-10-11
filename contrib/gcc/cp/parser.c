@@ -31563,6 +31563,15 @@ argument_list|(
 name|parser
 argument_list|)
 decl_stmt|;
+name|trailing_attr
+operator|=
+name|chainon
+argument_list|(
+name|trailing_attr
+argument_list|,
+name|attributes
+argument_list|)
+expr_stmt|;
 name|cplus_decl_attributes
 argument_list|(
 operator|&
