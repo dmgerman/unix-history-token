@@ -5688,6 +5688,35 @@ index|[
 name|num_mw
 index|]
 decl_stmt|;
+comment|/* No need to re-setup */
+if|if
+condition|(
+name|mw
+operator|->
+name|size
+operator|==
+name|size
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|mw
+operator|->
+name|size
+operator|!=
+literal|0
+condition|)
+name|ntb_free_mw
+argument_list|(
+name|nt
+argument_list|,
+name|num_mw
+argument_list|)
+expr_stmt|;
 comment|/* Alloc memory for receiving data.  Must be 4k aligned */
 name|mw
 operator|->
@@ -5729,6 +5758,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|mw
+operator|->
+name|size
+operator|=
+literal|0
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"ntb: Unable to allocate MW buffer of size %d\n"
