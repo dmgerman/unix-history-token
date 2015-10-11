@@ -4226,10 +4226,11 @@ modifier|*
 name|qp
 parameter_list|)
 block|{
+name|uint64_t
+name|i
+decl_stmt|;
 name|int
 name|rc
-decl_stmt|,
-name|i
 decl_stmt|;
 comment|/*  	 * Limit the number of packets processed in a single interrupt to 	 * provide fairness to others 	 */
 name|mtx_lock
@@ -4257,7 +4258,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|NTB_RX_MAX_PKTS
+name|qp
+operator|->
+name|rx_max_entry
 condition|;
 name|i
 operator|++
