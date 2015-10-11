@@ -2826,11 +2826,7 @@ name|qp
 operator|->
 name|rx_info
 operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ntb_rx_info
-argument_list|)
+literal|1
 expr_stmt|;
 name|qp
 operator|->
@@ -5867,11 +5863,7 @@ name|qp
 operator|->
 name|remote_rx_info
 operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ntb_rx_info
-argument_list|)
+literal|1
 expr_stmt|;
 name|qp
 operator|->
