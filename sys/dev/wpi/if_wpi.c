@@ -949,7 +949,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|wpi_recv_mgmt
+name|wpi_ibss_recv_mgmt
 parameter_list|(
 name|struct
 name|ieee80211_node
@@ -3965,6 +3965,13 @@ name|iv_key_delete
 operator|=
 name|wpi_key_delete
 expr_stmt|;
+if|if
+condition|(
+name|opmode
+operator|==
+name|IEEE80211_M_IBSS
+condition|)
+block|{
 name|wvp
 operator|->
 name|wv_recv_mgmt
@@ -3977,8 +3984,9 @@ name|vap
 operator|->
 name|iv_recv_mgmt
 operator|=
-name|wpi_recv_mgmt
+name|wpi_ibss_recv_mgmt
 expr_stmt|;
+block|}
 name|wvp
 operator|->
 name|wv_newstate
@@ -9099,7 +9107,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|wpi_recv_mgmt
+name|wpi_ibss_recv_mgmt
 parameter_list|(
 name|struct
 name|ieee80211_node
@@ -9181,12 +9189,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vap
-operator|->
-name|iv_opmode
-operator|==
-name|IEEE80211_M_IBSS
-operator|&&
 name|vap
 operator|->
 name|iv_state
