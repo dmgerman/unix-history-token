@@ -2823,6 +2823,7 @@ name|rx_info
 operator|+
 literal|1
 expr_stmt|;
+comment|/* Due to house-keeping, there must be at least 2 buffs */
 name|qp
 operator|->
 name|tx_max_frame
@@ -2838,6 +2839,8 @@ name|ntb_payload_header
 argument_list|)
 argument_list|,
 name|tx_size
+operator|/
+literal|2
 argument_list|)
 expr_stmt|;
 name|qp
@@ -6019,6 +6022,7 @@ name|remote_rx_info
 operator|+
 literal|1
 expr_stmt|;
+comment|/* Due to house-keeping, there must be at least 2 buffs */
 name|qp
 operator|->
 name|rx_max_frame
@@ -6034,6 +6038,8 @@ name|ntb_payload_header
 argument_list|)
 argument_list|,
 name|rx_size
+operator|/
+literal|2
 argument_list|)
 expr_stmt|;
 name|qp
@@ -6061,6 +6067,8 @@ operator|=
 name|qp
 operator|->
 name|rx_max_entry
+operator|-
+literal|1
 expr_stmt|;
 comment|/* setup the hdr offsets with 0's */
 for|for
