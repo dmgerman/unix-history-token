@@ -642,6 +642,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|shm_allow_removed
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 

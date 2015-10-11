@@ -581,7 +581,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|connect_request_upcall
 parameter_list|(
 name|struct
@@ -6713,14 +6713,6 @@ argument_list|,
 name|ep
 argument_list|)
 expr_stmt|;
-name|close_complete_upcall
-argument_list|(
-name|ep
-argument_list|,
-operator|-
-name|ECONNRESET
-argument_list|)
-expr_stmt|;
 name|state_set
 argument_list|(
 operator|&
@@ -7372,7 +7364,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|connect_request_upcall
 parameter_list|(
 name|struct
@@ -7384,6 +7376,9 @@ block|{
 name|struct
 name|iw_cm_event
 name|event
+decl_stmt|;
+name|int
+name|ret
 decl_stmt|;
 name|CTR3
 argument_list|(
@@ -7571,6 +7566,8 @@ operator|->
 name|com
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|ep
 operator|->
 name|parent_ep
@@ -7591,6 +7588,18 @@ name|cm_id
 argument_list|,
 operator|&
 name|event
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+name|c4iw_put_ep
+argument_list|(
+operator|&
+name|ep
+operator|->
+name|com
 argument_list|)
 expr_stmt|;
 name|set_bit
@@ -7615,6 +7624,9 @@ operator|->
 name|com
 argument_list|)
 expr_stmt|;
+return|return
+name|ret
+return|;
 block|}
 end_function
 
@@ -9868,11 +9880,22 @@ name|state
 operator|!=
 name|DEAD
 condition|)
+block|{
+if|if
+condition|(
 name|connect_request_upcall
 argument_list|(
 name|ep
 argument_list|)
+condition|)
+block|{
+name|abort_connection
+argument_list|(
+name|ep
+argument_list|)
 expr_stmt|;
+block|}
+block|}
 else|else
 name|abort_connection
 argument_list|(
@@ -11872,7 +11895,7 @@ argument_list|(
 name|ep
 argument_list|,
 operator|-
-name|EIO
+name|ECONNRESET
 argument_list|)
 expr_stmt|;
 name|ep
