@@ -6161,6 +6161,11 @@ block|{
 comment|/* Wait for INT_WAKEUP event. */
 return|return;
 block|}
+name|WPI_TXQ_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|WPI_SETBITS
 argument_list|(
 name|sc
@@ -6217,6 +6222,11 @@ name|WPI_GP_CNTRL_MAC_ACCESS_REQ
 argument_list|)
 expr_stmt|;
 block|}
+name|WPI_TXQ_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
