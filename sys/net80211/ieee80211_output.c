@@ -1702,6 +1702,7 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
 name|if_inc_counter
 argument_list|(
 name|vap
@@ -1713,6 +1714,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|error

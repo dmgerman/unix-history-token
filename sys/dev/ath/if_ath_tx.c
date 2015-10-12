@@ -9152,11 +9152,6 @@ operator|.
 name|ast_tx_raw_fail
 operator|++
 expr_stmt|;
-name|ieee80211_free_node
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
 return|return
 name|error
 return|;

@@ -13768,11 +13768,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ieee80211_free_node
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -13835,20 +13830,6 @@ argument_list|,
 name|ni
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* NB: m is reclaimed on tx failure */
-name|ieee80211_free_node
-argument_list|(
-name|ni
 argument_list|)
 expr_stmt|;
 block|}

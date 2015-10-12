@@ -11480,11 +11480,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|ieee80211_free_node
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
 return|return
 name|ENETDOWN
 return|;
@@ -11506,11 +11501,6 @@ expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
-argument_list|)
-expr_stmt|;
-name|ieee80211_free_node
-argument_list|(
-name|ni
 argument_list|)
 expr_stmt|;
 return|return
@@ -11577,11 +11567,6 @@ label|:
 name|RAL_UNLOCK
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|ieee80211_free_node
-argument_list|(
-name|ni
 argument_list|)
 expr_stmt|;
 return|return
