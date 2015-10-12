@@ -5724,7 +5724,6 @@ name|conn
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|ret
 operator||=
 name|mysql_autocommit
@@ -5746,6 +5745,7 @@ name|trans
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 return|return
 name|ret
 return|;

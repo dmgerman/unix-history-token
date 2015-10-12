@@ -341,14 +341,14 @@ begin_define
 define|#
 directive|define
 name|APU_HAVE_CRYPTO
-value|0
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|APU_HAVE_OPENSSL
-value|0
+value|1
 end_define
 
 begin_define
@@ -358,23 +358,12 @@ name|APU_HAVE_NSS
 value|0
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|APU_HAVE_APR_ICONV
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|APU_HAVE_APR_ICONV
 value|0
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#

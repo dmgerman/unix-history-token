@@ -358,7 +358,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"subversion 1.8.10"
+value|"subversion 1.8.14"
 end_define
 
 begin_comment
@@ -391,7 +391,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.8.10"
+value|"1.8.14"
 end_define
 
 begin_comment
@@ -404,6 +404,14 @@ directive|define
 name|STDC_HEADERS
 value|1
 end_define
+
+begin_comment
+comment|/* Defined to allow building against httpd 2.4 with broken auth */
+end_comment
+
+begin_comment
+comment|/* #undef SVN_ALLOW_BROKEN_HTTPD_AUTH */
+end_comment
 
 begin_comment
 comment|/* Define to the Python/C API format character suitable for apr_int64_t */
@@ -443,7 +451,7 @@ begin_define
 define|#
 directive|define
 name|SVN_BUILD_HOST
-value|"bikeshed-malachite-topaz-amber-freebsd"
+value|"bikeshed-rgb-freebsd"
 end_define
 
 begin_comment
@@ -454,7 +462,7 @@ begin_define
 define|#
 directive|define
 name|SVN_BUILD_TARGET
-value|"bikeshed-malachite-topaz-amber-freebsd"
+value|"bikeshed-rgb-freebsd"
 end_define
 
 begin_comment
@@ -518,12 +526,9 @@ begin_comment
 comment|/* Define if compiler provides atomic builtins */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SVN_HAS_ATOMIC_BUILTINS
-value|0
-end_define
+begin_comment
+comment|/* #undef SVN_HAS_ATOMIC_BUILTINS */
+end_comment
 
 begin_comment
 comment|/* Is GNOME Keyring support enabled? */
