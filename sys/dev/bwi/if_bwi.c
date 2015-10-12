@@ -7283,11 +7283,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ieee80211_free_node
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -7400,13 +7395,6 @@ operator|=
 literal|5
 expr_stmt|;
 block|}
-else|else
-comment|/* NB: m is reclaimed on encap failure */
-name|ieee80211_free_node
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
 name|BWI_UNLOCK
 argument_list|(
 name|sc

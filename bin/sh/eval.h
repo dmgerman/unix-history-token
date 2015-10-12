@@ -40,7 +40,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|strlist
+name|arglist
 modifier|*
 name|cmdenviron
 decl_stmt|;

@@ -3355,9 +3355,6 @@ define|#
 directive|define
 name|sc_rxtap
 value|sc_rxtapu.th
-name|int
-name|sc_rxtap_len
-decl_stmt|;
 union|union
 block|{
 name|struct
@@ -3377,9 +3374,6 @@ define|#
 directive|define
 name|sc_txtap
 value|sc_txtapu.th
-name|int
-name|sc_txtap_len
-decl_stmt|;
 block|}
 struct|;
 end_struct

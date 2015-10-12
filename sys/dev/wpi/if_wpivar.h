@@ -170,6 +170,9 @@ decl_stmt|;
 name|uint8_t
 name|cur
 decl_stmt|;
+name|uint8_t
+name|pending
+decl_stmt|;
 name|int16_t
 name|queued
 decl_stmt|;

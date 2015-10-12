@@ -5845,6 +5845,11 @@ name|m0
 operator|=
 name|NULL
 expr_stmt|;
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_txnext
@@ -5877,11 +5882,6 @@ condition|)
 name|m_freem
 argument_list|(
 name|m0
-argument_list|)
-expr_stmt|;
-name|ieee80211_free_node
-argument_list|(
-name|ni
 argument_list|)
 expr_stmt|;
 return|return
