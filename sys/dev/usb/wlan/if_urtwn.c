@@ -290,6 +290,12 @@ directive|include
 file|<dev/usb/wlan/if_urtwnreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/usb/wlan/if_urtwnvar.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
