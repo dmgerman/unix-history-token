@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013, 2015 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -106,7 +106,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of bytes in a array_read at which we stop prefetching (1MB) */
+comment|/* max number of bytes in an array_read in which we allow prefetching (1MB) */
 end_comment
 
 begin_decl_stmt
