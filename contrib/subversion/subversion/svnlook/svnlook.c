@@ -180,13 +180,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"private/svn_diff_private.h"
+file|"private/svn_cmdline_private.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"private/svn_cmdline_private.h"
+file|"private/svn_diff_private.h"
 end_include
 
 begin_include
@@ -204,7 +204,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"private/svn_subr_private.h"
+file|"private/svn_sorts_private.h"
 end_include
 
 begin_include
@@ -300,6 +300,8 @@ block|,
 name|svnlook__diff_cmd
 block|,
 name|svnlook__show_inherited_props
+block|,
+name|svnlook__no_newline
 block|}
 enum|;
 end_enum
@@ -460,6 +462,19 @@ argument_list|)
 block|}
 block|,
 block|{
+literal|"no-newline"
+block|,
+name|svnlook__no_newline
+block|,
+literal|0
+block|,
+name|N_
+argument_list|(
+literal|"do not output the trailing newline"
+argument_list|)
+block|}
+block|,
+block|{
 literal|"non-recursive"
 block|,
 literal|'N'
@@ -600,6 +615,8 @@ literal|"                             "
 literal|"  -w, --ignore-all-space: Ignore all white space\n"
 literal|"                             "
 literal|"  --ignore-eol-style: Ignore changes in EOL style\n"
+literal|"                             "
+literal|"  -U ARG, --context ARG: Show ARG lines of context\n"
 literal|"                             "
 literal|"  -p, --show-c-function: Show C function name"
 argument_list|)
@@ -1062,7 +1079,7 @@ literal|"Print the youngest revision number.\n"
 argument_list|)
 block|,
 block|{
-literal|0
+name|svnlook__no_newline
 block|}
 block|}
 block|,
@@ -1199,6 +1216,10 @@ name|svn_boolean_t
 name|show_inherited_props
 decl_stmt|;
 comment|/*  --show-inherited-props */
+name|svn_boolean_t
+name|no_newline
+decl_stmt|;
+comment|/* --no-newline */
 block|}
 struct|;
 end_struct
@@ -3021,6 +3042,14 @@ argument_list|,
 name|FALSE
 comment|/* pretty_print_mergeinfo */
 argument_list|,
+operator|-
+literal|1
+comment|/* context_size */
+argument_list|,
+name|check_cancel
+argument_list|,
+name|NULL
+argument_list|,
 name|pool
 argument_list|)
 argument_list|)
@@ -4198,7 +4227,7 @@ argument_list|)
 expr_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_diff_file_output_unified3
+name|svn_diff_file_output_unified4
 argument_list|(
 name|out_stream
 argument_list|,
@@ -4222,6 +4251,14 @@ argument_list|,
 name|opts
 operator|->
 name|show_c_function
+argument_list|,
+name|opts
+operator|->
+name|context_size
+argument_list|,
+name|check_cancel
+argument_list|,
+name|NULL
 argument_list|,
 name|pool
 argument_list|)
@@ -6616,7 +6653,7 @@ name|phb
 operator|->
 name|limit
 condition|)
-comment|/* Not L10N'd, since this error is supressed by the caller. */
+comment|/* Not L10N'd, since this error is suppressed by the caller. */
 return|return
 name|svn_error_create
 argument_list|(
@@ -6973,6 +7010,15 @@ name|NULL
 condition|)
 block|{
 comment|/* We're operating on a revprop (e.g. c->is_revision). */
+if|if
+condition|(
+name|SVN_IS_VALID_REVNUM
+argument_list|(
+name|c
+operator|->
+name|rev_id
+argument_list|)
+condition|)
 name|err_msg
 operator|=
 name|apr_psprintf
@@ -6989,6 +7035,25 @@ argument_list|,
 name|c
 operator|->
 name|rev_id
+argument_list|)
+expr_stmt|;
+else|else
+name|err_msg
+operator|=
+name|apr_psprintf
+argument_list|(
+name|pool
+argument_list|,
+name|_
+argument_list|(
+literal|"Property '%s' not found on transaction %s"
+argument_list|)
+argument_list|,
+name|propname
+argument_list|,
+name|c
+operator|->
+name|txn_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -7227,7 +7292,7 @@ name|svn_string_t
 modifier|*
 name|propval
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|apr_hash_first
 argument_list|(
@@ -7684,7 +7749,7 @@ name|svn_xml_normal
 argument_list|,
 literal|"properties"
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -7754,7 +7819,7 @@ argument_list|,
 name|pool
 argument_list|)
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|SVN_ERR
@@ -7882,7 +7947,7 @@ literal|"rev"
 argument_list|,
 name|revstr
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -7905,7 +7970,7 @@ name|c
 operator|->
 name|txn_name
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -7928,7 +7993,7 @@ literal|"path"
 argument_list|,
 name|path
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -7982,7 +8047,7 @@ name|char
 modifier|*
 name|pname
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -7991,7 +8056,7 @@ name|svn_string_t
 modifier|*
 name|propval
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -8133,7 +8198,7 @@ literal|"name"
 argument_list|,
 name|pname
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 else|else
@@ -8196,6 +8261,10 @@ argument_list|,
 literal|"properties"
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|fputs
@@ -8212,12 +8281,15 @@ condition|)
 block|{
 if|if
 condition|(
-name|errno
+name|apr_get_os_error
+argument_list|()
 condition|)
+comment|/* is errno on POSIX */
 return|return
 name|svn_error_wrap_apr
 argument_list|(
-name|errno
+name|apr_get_os_error
+argument_list|()
 argument_list|,
 name|_
 argument_list|(
@@ -8529,7 +8601,7 @@ argument_list|)
 decl_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_repos_open2
+name|svn_repos_open3
 argument_list|(
 operator|&
 operator|(
@@ -8543,6 +8615,8 @@ operator|->
 name|repos_path
 argument_list|,
 name|NULL
+argument_list|,
+name|pool
 argument_list|,
 name|pool
 argument_list|)
@@ -9336,11 +9410,12 @@ init|=
 name|_
 argument_list|(
 literal|"general usage: svnlook SUBCOMMAND REPOS_PATH [ARGS& OPTIONS ...]\n"
+literal|"Subversion repository inspection tool.\n"
+literal|"Type 'svnlook help<subcommand>' for help on a specific subcommand.\n"
+literal|"Type 'svnlook --version' to see the program version and FS modules.\n"
 literal|"Note: any subcommand which takes the '--revision' and '--transaction'\n"
 literal|"      options will, if invoked without one of those options, act on\n"
 literal|"      the repository's youngest revision.\n"
-literal|"Type 'svnlook help<subcommand>' for help on a specific subcommand.\n"
-literal|"Type 'svnlook --version' to see the program version and FS modules.\n"
 literal|"\n"
 literal|"Available subcommands:\n"
 argument_list|)
@@ -10404,11 +10479,19 @@ name|svn_cmdline_printf
 argument_list|(
 name|pool
 argument_list|,
-literal|"%ld\n"
+literal|"%ld%s"
 argument_list|,
 name|c
 operator|->
 name|rev_id
+argument_list|,
+name|opt_state
+operator|->
+name|no_newline
+condition|?
+literal|""
+else|:
+literal|"\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10520,10 +10603,20 @@ begin_comment
 comment|/*** Main. ***/
 end_comment
 
+begin_comment
+comment|/*  * On success, leave *EXIT_CODE untouched and return SVN_NO_ERROR. On error,  * either return an error to be displayed, or set *EXIT_CODE to non-zero and  * return SVN_NO_ERROR.  */
+end_comment
+
 begin_function
-name|int
-name|main
+specifier|static
+name|svn_error_t
+modifier|*
+name|sub_main
 parameter_list|(
+name|int
+modifier|*
+name|exit_code
+parameter_list|,
 name|int
 name|argc
 parameter_list|,
@@ -10532,6 +10625,10 @@ name|char
 modifier|*
 name|argv
 index|[]
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
 parameter_list|)
 block|{
 name|svn_error_t
@@ -10540,10 +10637,6 @@ name|err
 decl_stmt|;
 name|apr_status_t
 name|apr_err
-decl_stmt|;
-name|apr_pool_t
-modifier|*
-name|pool
 decl_stmt|;
 specifier|const
 name|svn_opt_subcommand_desc2_t
@@ -10570,32 +10663,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* Initialize the app. */
-if|if
-condition|(
-name|svn_cmdline_init
-argument_list|(
-literal|"svnlook"
-argument_list|,
-name|stderr
-argument_list|)
-operator|!=
-name|EXIT_SUCCESS
-condition|)
-return|return
-name|EXIT_FAILURE
-return|;
-comment|/* Create our top-level pool.  Use a separate mutexless allocator,    * given this application is single threaded.    */
-name|pool
-operator|=
-name|apr_allocator_owner_get
-argument_list|(
-name|svn_pool_create_allocator
-argument_list|(
-name|FALSE
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|received_opts
 operator|=
 name|apr_array_make
@@ -10611,47 +10678,21 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Check library versions */
-name|err
-operator|=
+name|SVN_ERR
+argument_list|(
 name|check_lib_versions
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnlook: "
 argument_list|)
-return|;
+expr_stmt|;
 comment|/* Initialize the FS library. */
-name|err
-operator|=
+name|SVN_ERR
+argument_list|(
 name|svn_fs_initialize
 argument_list|(
 name|pool
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnlook: "
 argument_list|)
-return|;
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -10659,7 +10700,7 @@ operator|<=
 literal|1
 condition|)
 block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|subcommand_help
 argument_list|(
@@ -10671,13 +10712,13 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|svn_pool_destroy
-argument_list|(
-name|pool
-argument_list|)
+operator|*
+name|exit_code
+operator|=
+name|EXIT_FAILURE
 expr_stmt|;
 return|return
-name|EXIT_FAILURE
+name|SVN_NO_ERROR
 return|;
 block|}
 comment|/* Initialize opt_state. */
@@ -10701,8 +10742,8 @@ operator|=
 name|SVN_INVALID_REVNUM
 expr_stmt|;
 comment|/* Parse options. */
-name|err
-operator|=
+name|SVN_ERR
+argument_list|(
 name|svn_cmdline__getopt_init
 argument_list|(
 operator|&
@@ -10714,21 +10755,8 @@ name|argv
 argument_list|,
 name|pool
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnlook: "
 argument_list|)
-return|;
+expr_stmt|;
 name|os
 operator|->
 name|interleave
@@ -10775,7 +10803,7 @@ condition|(
 name|apr_err
 condition|)
 block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|subcommand_help
 argument_list|(
@@ -10787,13 +10815,13 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|svn_pool_destroy
-argument_list|(
-name|pool
-argument_list|)
+operator|*
+name|exit_code
+operator|=
+name|EXIT_FAILURE
 expr_stmt|;
 return|return
-name|EXIT_FAILURE
+name|SVN_NO_ERROR
 return|;
 block|}
 comment|/* Stash the option code in an array before parsing it. */
@@ -10855,8 +10883,7 @@ operator|||
 operator|*
 name|digits_end
 condition|)
-name|SVN_INT_ERR
-argument_list|(
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -10868,8 +10895,7 @@ argument_list|(
 literal|"Invalid revision number supplied"
 argument_list|)
 argument_list|)
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 break|break;
 case|case
@@ -10999,8 +11025,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -11011,16 +11036,6 @@ name|_
 argument_list|(
 literal|"Non-numeric limit argument given"
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnlook: "
 argument_list|)
 return|;
 block|}
@@ -11033,8 +11048,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_INCORRECT_PARAMS
@@ -11045,16 +11059,6 @@ name|_
 argument_list|(
 literal|"Argument to --limit must be positive"
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnlook: "
 argument_list|)
 return|;
 block|}
@@ -11160,8 +11164,18 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
+case|case
+name|svnlook__no_newline
+case|:
+name|opt_state
+operator|.
+name|no_newline
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
 default|default:
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|subcommand_help
 argument_list|(
@@ -11173,13 +11187,13 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|svn_pool_destroy
-argument_list|(
-name|pool
-argument_list|)
+operator|*
+name|exit_code
+operator|=
+name|EXIT_FAILURE
 expr_stmt|;
 return|return
-name|EXIT_FAILURE
+name|SVN_NO_ERROR
 return|;
 block|}
 block|}
@@ -11198,8 +11212,7 @@ name|opt_state
 operator|.
 name|txn
 condition|)
-name|SVN_INT_ERR
-argument_list|(
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_MUTUALLY_EXCLUSIVE_ARGS
@@ -11212,8 +11225,7 @@ literal|"The '--transaction' (-t) and '--revision' (-r) arguments "
 literal|"cannot co-exist"
 argument_list|)
 argument_list|)
-argument_list|)
-expr_stmt|;
+return|;
 comment|/* The --show-inherited-props and --revprop options may not co-exist. */
 if|if
 condition|(
@@ -11225,8 +11237,7 @@ name|opt_state
 operator|.
 name|revprop
 condition|)
-name|SVN_INT_ERR
-argument_list|(
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_MUTUALLY_EXCLUSIVE_ARGS
@@ -11239,8 +11250,7 @@ literal|"Cannot use the '--show-inherited-props' option with the "
 literal|"'--revprop' option"
 argument_list|)
 argument_list|)
-argument_list|)
-expr_stmt|;
+return|;
 comment|/* If the user asked for help, then the rest of the arguments are      the names of subcommands to get help on (if any), or else they're      just typos/mistakes.  Whatever the case, the subcommand to      actually run is subcommand_help(). */
 if|if
 condition|(
@@ -11333,7 +11343,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|subcommand_help
 argument_list|(
@@ -11345,13 +11355,13 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|svn_pool_destroy
-argument_list|(
-name|pool
-argument_list|)
+operator|*
+name|exit_code
+operator|=
+name|EXIT_FAILURE
 expr_stmt|;
 return|return
-name|EXIT_FAILURE
+name|SVN_NO_ERROR
 return|;
 block|}
 block|}
@@ -11393,8 +11403,8 @@ name|char
 modifier|*
 name|first_arg_utf8
 decl_stmt|;
-name|err
-operator|=
+name|SVN_ERR
+argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
 operator|&
@@ -11404,21 +11414,8 @@ name|first_arg
 argument_list|,
 name|pool
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnlook: "
 argument_list|)
-return|;
+expr_stmt|;
 name|svn_error_clear
 argument_list|(
 name|svn_cmdline_fprintf
@@ -11436,7 +11433,7 @@ name|first_arg_utf8
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|subcommand_help
 argument_list|(
@@ -11477,13 +11474,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|svn_pool_destroy
-argument_list|(
-name|pool
-argument_list|)
+operator|*
+name|exit_code
+operator|=
+name|EXIT_FAILURE
 expr_stmt|;
 return|return
-name|EXIT_FAILURE
+name|SVN_NO_ERROR
 return|;
 block|}
 block|}
@@ -11529,7 +11526,7 @@ operator|->
 name|argc
 condition|)
 block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
@@ -11582,7 +11579,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|subcommand_help
 argument_list|(
@@ -11594,13 +11591,13 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|svn_pool_destroy
-argument_list|(
-name|pool
-argument_list|)
+operator|*
+name|exit_code
+operator|=
+name|EXIT_FAILURE
 expr_stmt|;
 return|return
-name|EXIT_FAILURE
+name|SVN_NO_ERROR
 return|;
 block|}
 elseif|else
@@ -11629,13 +11626,13 @@ name|repos_path
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|svn_pool_destroy
-argument_list|(
-name|pool
-argument_list|)
+operator|*
+name|exit_code
+operator|=
+name|EXIT_FAILURE
 expr_stmt|;
 return|return
-name|EXIT_FAILURE
+name|SVN_NO_ERROR
 return|;
 block|}
 name|opt_state
@@ -11656,7 +11653,7 @@ operator|->
 name|argc
 condition|)
 block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
@@ -11705,7 +11702,7 @@ operator|->
 name|argc
 condition|)
 block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
@@ -11840,7 +11837,7 @@ index|]
 operator|==
 literal|'-'
 condition|)
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|subcommand_help
 argument_list|(
@@ -11879,13 +11876,13 @@ name|name
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|svn_pool_destroy
-argument_list|(
-name|pool
-argument_list|)
+operator|*
+name|exit_code
+operator|=
+name|EXIT_FAILURE
 expr_stmt|;
 return|return
-name|EXIT_FAILURE
+name|SVN_NO_ERROR
 return|;
 block|}
 block|}
@@ -12013,36 +12010,122 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
 name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnlook: "
-argument_list|)
 return|;
 block|}
-else|else
+return|return
+name|SVN_NO_ERROR
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|main
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
 block|{
-name|svn_pool_destroy
+name|apr_pool_t
+modifier|*
+name|pool
+decl_stmt|;
+name|int
+name|exit_code
+init|=
+name|EXIT_SUCCESS
+decl_stmt|;
+name|svn_error_t
+modifier|*
+name|err
+decl_stmt|;
+comment|/* Initialize the app. */
+if|if
+condition|(
+name|svn_cmdline_init
 argument_list|(
+literal|"svnlook"
+argument_list|,
+name|stderr
+argument_list|)
+operator|!=
+name|EXIT_SUCCESS
+condition|)
+return|return
+name|EXIT_FAILURE
+return|;
+comment|/* Create our top-level pool.  Use a separate mutexless allocator,    * given this application is single threaded.    */
+name|pool
+operator|=
+name|apr_allocator_owner_get
+argument_list|(
+name|svn_pool_create_allocator
+argument_list|(
+name|FALSE
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|sub_main
+argument_list|(
+operator|&
+name|exit_code
+argument_list|,
+name|argc
+argument_list|,
+name|argv
+argument_list|,
 name|pool
 argument_list|)
 expr_stmt|;
-comment|/* Ensure everything is printed on stdout, so the user sees any          print errors. */
-name|SVN_INT_ERR
+comment|/* Flush stdout and report if it fails. It would be flushed on exit anyway      but this makes sure that output is not silently lost if it fails. */
+name|err
+operator|=
+name|svn_error_compose_create
 argument_list|(
+name|err
+argument_list|,
 name|svn_cmdline_fflush
 argument_list|(
 name|stdout
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-name|EXIT_SUCCESS
-return|;
+if|if
+condition|(
+name|err
+condition|)
+block|{
+name|exit_code
+operator|=
+name|EXIT_FAILURE
+expr_stmt|;
+name|svn_cmdline_handle_exit_error
+argument_list|(
+name|err
+argument_list|,
+name|NULL
+argument_list|,
+literal|"svnlook: "
+argument_list|)
+expr_stmt|;
 block|}
+name|svn_pool_destroy
+argument_list|(
+name|pool
+argument_list|)
+expr_stmt|;
+return|return
+name|exit_code
+return|;
 block|}
 end_function
 

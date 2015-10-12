@@ -316,7 +316,7 @@ name|SVN_ERR_ENTRY_EXISTS
 argument_list|,
 name|SVN_ERR_WC_PATH_NOT_FOUND
 argument_list|,
-name|SVN_NO_ERROR
+literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;

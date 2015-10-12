@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"private/svn_subr_private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"svn_private_config.h"
 end_include
 
@@ -146,11 +140,6 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -179,7 +168,10 @@ name|pool
 argument_list|,
 name|_
 argument_list|(
-literal|"usage: svnversion [OPTIONS] [WC_PATH [TRAIL_URL]]\n\n"
+literal|"usage: svnversion [OPTIONS] [WC_PATH [TRAIL_URL]]\n"
+literal|"Subversion working copy identification tool.\n"
+literal|"Type 'svnversion --version' to see the program version.\n"
+literal|"\n"
 literal|"  Produce a compact version identifier for the working copy path\n"
 literal|"  WC_PATH.  TRAIL_URL is the trailing portion of the URL used to\n"
 literal|"  determine if WC_PATH itself is switched (detection of switches\n"
@@ -266,11 +258,6 @@ literal|"\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -333,13 +320,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Why is this not an svn subcommand?  I have this vague idea that it could  * be run as part of the build process, with the output embedded in the svn  * program.  Obviously we don't want to have to run svn when building svn.  */
+comment|/*  * On success, leave *EXIT_CODE untouched and return SVN_NO_ERROR. On error,  * either return an error to be displayed, or set *EXIT_CODE to non-zero and  * return SVN_NO_ERROR.  *  * Why is this not an svn subcommand?  I have this vague idea that it could  * be run as part of the build process, with the output embedded in the svn  * program.  Obviously we don't want to have to run svn when building svn.  */
 end_comment
 
 begin_function
-name|int
-name|main
+specifier|static
+name|svn_error_t
+modifier|*
+name|sub_main
 parameter_list|(
+name|int
+modifier|*
+name|exit_code
+parameter_list|,
 name|int
 name|argc
 parameter_list|,
@@ -348,6 +341,10 @@ name|char
 modifier|*
 name|argv
 index|[]
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
 parameter_list|)
 block|{
 specifier|const
@@ -362,10 +359,6 @@ specifier|const
 name|char
 modifier|*
 name|local_abspath
-decl_stmt|;
-name|apr_pool_t
-modifier|*
-name|pool
 decl_stmt|;
 name|svn_wc_revision_status_t
 modifier|*
@@ -484,52 +477,13 @@ literal|0
 block|}
 block|}
 decl_stmt|;
-comment|/* Initialize the app. */
-if|if
-condition|(
-name|svn_cmdline_init
-argument_list|(
-literal|"svnversion"
-argument_list|,
-name|stderr
-argument_list|)
-operator|!=
-name|EXIT_SUCCESS
-condition|)
-return|return
-name|EXIT_FAILURE
-return|;
-comment|/* Create our top-level pool.  Use a separate mutexless allocator,    * given this application is single threaded.    */
-name|pool
-operator|=
-name|apr_allocator_owner_get
-argument_list|(
-name|svn_pool_create_allocator
-argument_list|(
-name|FALSE
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Check library versions */
-name|err
-operator|=
+name|SVN_ERR
+argument_list|(
 name|check_lib_versions
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnversion: "
 argument_list|)
-return|;
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -550,34 +504,21 @@ literal|"SVN_ASP_DOT_NET_HACK"
 argument_list|)
 condition|)
 block|{
-name|err
-operator|=
+name|SVN_ERR
+argument_list|(
 name|svn_wc_set_adm_dir
 argument_list|(
 literal|"_svn"
 argument_list|,
 name|pool
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnversion: "
 argument_list|)
-return|;
+expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|err
-operator|=
+name|SVN_ERR
+argument_list|(
 name|svn_cmdline__getopt_init
 argument_list|(
 operator|&
@@ -589,21 +530,8 @@ name|argv
 argument_list|,
 name|pool
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnversion: "
 argument_list|)
-return|;
+expr_stmt|;
 name|os
 operator|->
 name|interleave
@@ -653,12 +581,21 @@ name|status
 operator|!=
 name|APR_SUCCESS
 condition|)
+block|{
+operator|*
+name|exit_code
+operator|=
+name|EXIT_FAILURE
+expr_stmt|;
 name|usage
 argument_list|(
 name|pool
 argument_list|)
 expr_stmt|;
-comment|/* this will exit() */
+return|return
+name|SVN_NO_ERROR
+return|;
+block|}
 switch|switch
 condition|(
 name|opt
@@ -698,7 +635,9 @@ argument_list|,
 name|pool
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+name|SVN_NO_ERROR
+return|;
 case|case
 name|SVNVERSION_OPT_VERSION
 case|:
@@ -708,12 +647,19 @@ name|TRUE
 expr_stmt|;
 break|break;
 default|default:
+operator|*
+name|exit_code
+operator|=
+name|EXIT_FAILURE
+expr_stmt|;
 name|usage
 argument_list|(
 name|pool
 argument_list|)
 expr_stmt|;
-comment|/* this will exit() */
+return|return
+name|SVN_NO_ERROR
+return|;
 block|}
 block|}
 if|if
@@ -721,7 +667,7 @@ condition|(
 name|is_version
 condition|)
 block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|version
 argument_list|(
@@ -731,11 +677,9 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+return|return
+name|SVN_NO_ERROR
+return|;
 block|}
 if|if
 condition|(
@@ -753,13 +697,22 @@ name|argc
 operator|-
 literal|2
 condition|)
+block|{
+operator|*
+name|exit_code
+operator|=
+name|EXIT_FAILURE
+expr_stmt|;
 name|usage
 argument_list|(
 name|pool
 argument_list|)
 expr_stmt|;
-comment|/* this will exit() */
-name|SVN_INT_ERR
+return|return
+name|SVN_NO_ERROR
+return|;
+block|}
+name|SVN_ERR
 argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
@@ -789,7 +742,7 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_opt__arg_canonicalize_path
 argument_list|(
@@ -802,7 +755,7 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_dirent_get_absolute
 argument_list|(
@@ -815,7 +768,7 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_wc_context_create
 argument_list|(
@@ -840,7 +793,7 @@ literal|1
 operator|<
 name|argc
 condition|)
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
@@ -921,7 +874,7 @@ argument_list|(
 name|err
 argument_list|)
 expr_stmt|;
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_io_check_special_path
 argument_list|(
@@ -941,7 +894,7 @@ if|if
 condition|(
 name|special
 condition|)
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_cmdline_printf
 argument_list|(
@@ -967,7 +920,7 @@ name|kind
 operator|==
 name|svn_node_dir
 condition|)
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_cmdline_printf
 argument_list|(
@@ -993,7 +946,7 @@ name|kind
 operator|==
 name|svn_node_file
 condition|)
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_cmdline_printf
 argument_list|(
@@ -1014,7 +967,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_cmdline_fprintf
 argument_list|(
@@ -1045,25 +998,20 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|svn_pool_destroy
-argument_list|(
-name|pool
-argument_list|)
-expr_stmt|;
-return|return
+operator|*
+name|exit_code
+operator|=
 name|EXIT_FAILURE
-return|;
-block|}
-name|svn_pool_destroy
-argument_list|(
-name|pool
-argument_list|)
 expr_stmt|;
 return|return
-name|EXIT_SUCCESS
+name|SVN_NO_ERROR
 return|;
 block|}
-name|SVN_INT_ERR
+return|return
+name|SVN_NO_ERROR
+return|;
+block|}
+name|SVN_ERR
 argument_list|(
 name|err
 argument_list|)
@@ -1080,7 +1028,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* Local uncommitted modifications, no revision info was found. */
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_cmdline_printf
 argument_list|(
@@ -1100,17 +1048,12 @@ literal|"\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|svn_pool_destroy
-argument_list|(
-name|pool
-argument_list|)
-expr_stmt|;
 return|return
-name|EXIT_SUCCESS
+name|SVN_NO_ERROR
 return|;
 block|}
 comment|/* Build compact '123[:456]M?S?' string. */
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_cmdline_printf
 argument_list|(
@@ -1134,7 +1077,7 @@ name|res
 operator|->
 name|max_rev
 condition|)
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_cmdline_printf
 argument_list|(
@@ -1154,7 +1097,7 @@ name|res
 operator|->
 name|modified
 condition|)
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_cmdline_fputs
 argument_list|(
@@ -1172,7 +1115,7 @@ name|res
 operator|->
 name|switched
 condition|)
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_cmdline_fputs
 argument_list|(
@@ -1190,7 +1133,7 @@ name|res
 operator|->
 name|sparse_checkout
 condition|)
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_cmdline_fputs
 argument_list|(
@@ -1207,7 +1150,7 @@ condition|(
 operator|!
 name|no_newline
 condition|)
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_cmdline_fputs
 argument_list|(
@@ -1219,22 +1162,118 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|svn_pool_destroy
+return|return
+name|SVN_NO_ERROR
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|main
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+block|{
+name|apr_pool_t
+modifier|*
+name|pool
+decl_stmt|;
+name|int
+name|exit_code
+init|=
+name|EXIT_SUCCESS
+decl_stmt|;
+name|svn_error_t
+modifier|*
+name|err
+decl_stmt|;
+comment|/* Initialize the app. */
+if|if
+condition|(
+name|svn_cmdline_init
 argument_list|(
+literal|"svnversion"
+argument_list|,
+name|stderr
+argument_list|)
+operator|!=
+name|EXIT_SUCCESS
+condition|)
+return|return
+name|EXIT_FAILURE
+return|;
+comment|/* Create our top-level pool.  Use a separate mutexless allocator,    * given this application is single threaded.    */
+name|pool
+operator|=
+name|apr_allocator_owner_get
+argument_list|(
+name|svn_pool_create_allocator
+argument_list|(
+name|FALSE
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|sub_main
+argument_list|(
+operator|&
+name|exit_code
+argument_list|,
+name|argc
+argument_list|,
+name|argv
+argument_list|,
 name|pool
 argument_list|)
 expr_stmt|;
-comment|/* Flush stdout to make sure that the user will see any printing errors. */
-name|SVN_INT_ERR
+comment|/* Flush stdout and report if it fails. It would be flushed on exit anyway      but this makes sure that output is not silently lost if it fails. */
+name|err
+operator|=
+name|svn_error_compose_create
 argument_list|(
+name|err
+argument_list|,
 name|svn_cmdline_fflush
 argument_list|(
 name|stdout
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+block|{
+name|exit_code
+operator|=
+name|EXIT_FAILURE
+expr_stmt|;
+name|svn_cmdline_handle_exit_error
+argument_list|(
+name|err
+argument_list|,
+name|NULL
+argument_list|,
+literal|"svnversion: "
+argument_list|)
+expr_stmt|;
+block|}
+name|svn_pool_destroy
+argument_list|(
+name|pool
+argument_list|)
+expr_stmt|;
 return|return
-name|EXIT_SUCCESS
+name|exit_code
 return|;
 block|}
 end_function

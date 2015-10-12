@@ -47,7 +47,7 @@ specifier|const
 name|char
 modifier|*
 modifier|*
-name|repos_url
+name|repos_root_url
 parameter_list|,
 specifier|const
 name|char
@@ -134,13 +134,15 @@ return|;
 comment|/* Attempt to open a repository at URL. */
 name|err
 operator|=
-name|svn_repos_open2
+name|svn_repos_open3
 argument_list|(
 name|repos
 argument_list|,
 name|repos_root_dirent
 argument_list|,
 name|NULL
+argument_list|,
+name|pool
 argument_list|,
 name|pool
 argument_list|)
@@ -301,7 +303,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
-name|repos_url
+name|repos_root_url
 operator|=
 name|urlbuf
 operator|->

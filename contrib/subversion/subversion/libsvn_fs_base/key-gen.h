@@ -78,21 +78,6 @@ modifier|*
 name|next
 parameter_list|)
 function_decl|;
-comment|/* Compare two strings A and B as base-36 alphanumeric keys.  *  * Return -1, 0, or 1 if A is less than, equal to, or greater than B,  * respectively.  */
-name|int
-name|svn_fs_base__key_compare
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|a
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|b
-parameter_list|)
-function_decl|;
 comment|/* Compare two strings A and B as base-36 alphanumber keys.  *  * Return TRUE iff both keys are NULL or both keys have the same  * contents.  */
 name|svn_boolean_t
 name|svn_fs_base__same_keys

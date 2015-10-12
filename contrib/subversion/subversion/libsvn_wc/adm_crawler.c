@@ -146,6 +146,13 @@ parameter_list|,
 name|svn_boolean_t
 name|mark_resolved_text_conflict
 parameter_list|,
+name|svn_cancel_func_t
+name|cancel_func
+parameter_list|,
+name|void
+modifier|*
+name|cancel_baton
+parameter_list|,
 name|apr_pool_t
 modifier|*
 name|scratch_pool
@@ -209,11 +216,10 @@ name|db
 argument_list|,
 name|local_abspath
 argument_list|,
-name|NULL
+name|cancel_func
 argument_list|,
-name|NULL
+name|cancel_baton
 argument_list|,
-comment|/* ### nice to have cancel_func/baton */
 name|scratch_pool
 argument_list|)
 argument_list|)
@@ -230,6 +236,10 @@ argument_list|(
 name|db
 argument_list|,
 name|local_abspath
+argument_list|,
+name|cancel_func
+argument_list|,
+name|cancel_baton
 argument_list|,
 name|scratch_pool
 argument_list|)
@@ -263,6 +273,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 block|{
+comment|/* ### If ever revved: Add cancel func. */
 name|svn_wc__db_status_t
 name|status
 decl_stmt|;
@@ -472,6 +483,11 @@ argument_list|,
 name|FALSE
 comment|/*mark_resolved_text_conflict*/
 argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+comment|/* cancel func, baton */
+argument_list|,
 name|scratch_pool
 argument_list|)
 argument_list|)
@@ -496,7 +512,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Try to restore LOCAL_ABSPATH of node type KIND and if successfull,    notify that the node is restored.  Use DB for accessing the working copy.    If USE_COMMIT_TIMES is set, then set working file's timestamp to    last-commit-time.     This function does all temporary allocations in SCRATCH_POOL  */
+comment|/* Try to restore LOCAL_ABSPATH of node type KIND and if successful,    notify that the node is restored.  Use DB for accessing the working copy.    If USE_COMMIT_TIMES is set, then set working file's timestamp to    last-commit-time.     This function does all temporary allocations in SCRATCH_POOL  */
 end_comment
 
 begin_function
@@ -518,7 +534,17 @@ name|svn_node_kind_t
 name|kind
 parameter_list|,
 name|svn_boolean_t
+name|mark_resolved_text_conflict
+parameter_list|,
+name|svn_boolean_t
 name|use_commit_times
+parameter_list|,
+name|svn_cancel_func_t
+name|cancel_func
+parameter_list|,
+name|void
+modifier|*
+name|cancel_baton
 parameter_list|,
 name|svn_wc_notify_func2_t
 name|notify_func
@@ -554,8 +580,11 @@ name|local_abspath
 argument_list|,
 name|use_commit_times
 argument_list|,
-name|TRUE
-comment|/*mark_resolved_text_conflict*/
+name|mark_resolved_text_conflict
+argument_list|,
+name|cancel_func
+argument_list|,
+name|cancel_baton
 argument_list|,
 name|scratch_pool
 argument_list|)
@@ -858,7 +887,7 @@ name|char
 modifier|*
 name|child
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -883,7 +912,7 @@ name|svn_wc__db_base_info_t
 modifier|*
 name|ths
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -1070,6 +1099,9 @@ name|svn_checksum_t
 modifier|*
 name|checksum
 decl_stmt|;
+name|svn_boolean_t
+name|conflicted
+decl_stmt|;
 name|SVN_ERR
 argument_list|(
 name|svn_wc__db_read_info
@@ -1117,7 +1149,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+operator|&
+name|conflicted
 argument_list|,
 name|NULL
 argument_list|,
@@ -1200,7 +1233,13 @@ name|this_abspath
 argument_list|,
 name|wrk_kind
 argument_list|,
+name|conflicted
+argument_list|,
 name|use_commit_times
+argument_list|,
+name|cancel_func
+argument_list|,
+name|cancel_baton
 argument_list|,
 name|notify_func
 argument_list|,
@@ -2301,6 +2340,9 @@ name|svn_checksum_t
 modifier|*
 name|checksum
 decl_stmt|;
+name|svn_boolean_t
+name|conflicted
+decl_stmt|;
 name|err
 operator|=
 name|svn_wc__db_read_info
@@ -2348,7 +2390,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+operator|&
+name|conflicted
 argument_list|,
 name|NULL
 argument_list|,
@@ -2439,7 +2482,13 @@ name|local_abspath
 argument_list|,
 name|wrk_kind
 argument_list|,
+name|conflicted
+argument_list|,
 name|use_commit_times
+argument_list|,
+name|cancel_func
+argument_list|,
+name|cancel_baton
 argument_list|,
 name|notify_func
 argument_list|,
@@ -2890,7 +2939,7 @@ name|baton
 decl_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_stream_read
+name|svn_stream_read_full
 argument_list|(
 name|btn
 operator|->
@@ -3026,9 +3075,12 @@ argument_list|,
 name|pool
 argument_list|)
 expr_stmt|;
-name|svn_stream_set_read
+name|svn_stream_set_read2
 argument_list|(
 name|stream
+argument_list|,
+name|NULL
+comment|/* only full read support */
 argument_list|,
 name|read_handler_copy
 argument_list|)
@@ -3383,14 +3435,19 @@ modifier|*
 name|local_sha1_checksum
 decl_stmt|;
 comment|/* calc'd SHA1 of LOCAL_STREAM */
-specifier|const
-name|char
+name|svn_wc__db_install_data_t
 modifier|*
-name|new_pristine_tmp_abspath
+name|install_data
+init|=
+name|NULL
 decl_stmt|;
 name|svn_error_t
 modifier|*
 name|err
+decl_stmt|;
+name|svn_error_t
+modifier|*
+name|err2
 decl_stmt|;
 name|svn_stream_t
 modifier|*
@@ -3478,18 +3535,18 @@ name|new_pristine_stream
 decl_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_wc__open_writable_base
+name|svn_wc__db_pristine_prepare_install
 argument_list|(
 operator|&
 name|new_pristine_stream
 argument_list|,
 operator|&
-name|new_pristine_tmp_abspath
-argument_list|,
-name|NULL
+name|install_data
 argument_list|,
 operator|&
 name|local_sha1_checksum
+argument_list|,
+name|NULL
 argument_list|,
 name|db
 argument_list|,
@@ -3638,18 +3695,33 @@ name|scratch_pool
 argument_list|)
 expr_stmt|;
 comment|/* Close the two streams to force writing the digest */
+name|err2
+operator|=
+name|svn_stream_close
+argument_list|(
+name|base_stream
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err2
+condition|)
+block|{
+comment|/* Set verify_checksum to NULL if svn_stream_close() returns error          because checksum will be uninitialized in this case. */
+name|verify_checksum
+operator|=
+name|NULL
+expr_stmt|;
 name|err
 operator|=
 name|svn_error_compose_create
 argument_list|(
 name|err
 argument_list|,
-name|svn_stream_close
-argument_list|(
-name|base_stream
-argument_list|)
+name|err2
 argument_list|)
 expr_stmt|;
+block|}
 name|err
 operator|=
 name|svn_error_compose_create
@@ -3785,9 +3857,7 @@ name|SVN_ERR
 argument_list|(
 name|svn_wc__db_pristine_install
 argument_list|(
-name|db
-argument_list|,
-name|new_pristine_tmp_abspath
+name|install_data
 argument_list|,
 name|local_sha1_checksum
 argument_list|,

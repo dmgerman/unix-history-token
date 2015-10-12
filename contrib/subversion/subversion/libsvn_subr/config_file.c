@@ -51,6 +51,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"svn_hash.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"svn_subst.h"
 end_include
 
@@ -82,6 +88,12 @@ begin_include
 include|#
 directive|include
 file|"svn_private_config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"private/svn_subr_private.h"
 end_include
 
 begin_ifdef
@@ -282,7 +294,7 @@ argument_list|)
 expr_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_stream_read
+name|svn_stream_read_full
 argument_list|(
 name|ctx
 operator|->
@@ -590,6 +602,58 @@ name|ch
 operator|!=
 name|EOF
 condition|)
+block|{
+comment|/* This is much faster than checking individual bytes.        * We use this function a lot when skipping comment lines.        *        * This assumes that the ungetc buffer is empty, but that is a        * safe assumption right after reading a character (which would        * clear the buffer. */
+specifier|const
+name|char
+modifier|*
+name|newline
+init|=
+name|memchr
+argument_list|(
+name|ctx
+operator|->
+name|parser_buffer
+operator|+
+name|ctx
+operator|->
+name|buffer_pos
+argument_list|,
+literal|'\n'
+argument_list|,
+name|ctx
+operator|->
+name|buffer_size
+operator|-
+name|ctx
+operator|->
+name|buffer_pos
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|newline
+condition|)
+block|{
+name|ch
+operator|=
+literal|'\n'
+expr_stmt|;
+name|ctx
+operator|->
+name|buffer_pos
+operator|=
+name|newline
+operator|-
+name|ctx
+operator|->
+name|parser_buffer
+operator|+
+literal|1
+expr_stmt|;
+break|break;
+block|}
+comment|/* refill buffer, check for EOF */
 name|SVN_ERR
 argument_list|(
 name|parser_getc_plain
@@ -601,6 +665,7 @@ name|ch
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|c
 operator|=
@@ -1144,7 +1209,10 @@ name|SVN_ERR_MALFORMED_FILE
 argument_list|,
 name|NULL
 argument_list|,
+name|_
+argument_list|(
 literal|"line %d: Option must end with ':' or '='"
+argument_list|)
 argument_list|,
 name|ctx
 operator|->
@@ -1298,7 +1366,10 @@ name|SVN_ERR_MALFORMED_FILE
 argument_list|,
 name|NULL
 argument_list|,
+name|_
+argument_list|(
 literal|"line %d: Section header must end with ']'"
+argument_list|)
 argument_list|,
 name|ctx
 operator|->
@@ -1389,6 +1460,8 @@ argument_list|,
 name|TRUE
 argument_list|,
 name|pool
+argument_list|,
+name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1405,7 +1478,7 @@ name|SVN_CONFIG__SUBDIRECTORY
 argument_list|,
 name|fname
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1462,7 +1535,7 @@ name|SVN_CONFIG__SYS_DIRECTORY
 argument_list|,
 name|fname
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1480,7 +1553,7 @@ name|SVN_CONFIG__SYS_DIRECTORY
 argument_list|,
 name|fname
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1492,12 +1565,321 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Callback for svn_config_enumerate2: Continue to next value. */
+end_comment
+
+begin_function
+specifier|static
+name|svn_boolean_t
+name|expand_value
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|value
+parameter_list|,
+name|void
+modifier|*
+name|baton
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+block|{
+return|return
+name|TRUE
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Callback for svn_config_enumerate_sections2:  * Enumerate and implicitly expand all values in this section.  */
+end_comment
+
+begin_function
+specifier|static
+name|svn_boolean_t
+name|expand_values_in_section
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|void
+modifier|*
+name|baton
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+block|{
+name|svn_config_t
+modifier|*
+name|cfg
+init|=
+name|baton
+decl_stmt|;
+name|svn_config_enumerate2
+argument_list|(
+name|cfg
+argument_list|,
+name|name
+argument_list|,
+name|expand_value
+argument_list|,
+name|NULL
+argument_list|,
+name|pool
+argument_list|)
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+block|}
+end_function
+
 begin_escape
 end_escape
 
 begin_comment
 comment|/*** Exported interfaces. ***/
 end_comment
+
+begin_function
+name|void
+name|svn_config__set_read_only
+parameter_list|(
+name|svn_config_t
+modifier|*
+name|cfg
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+block|{
+comment|/* expand all items such that later calls to getters won't need to    * change internal state */
+name|svn_config_enumerate_sections2
+argument_list|(
+name|cfg
+argument_list|,
+name|expand_values_in_section
+argument_list|,
+name|cfg
+argument_list|,
+name|scratch_pool
+argument_list|)
+expr_stmt|;
+comment|/* now, any modification attempt will be ignored / trigger an assertion    * in debug mode */
+name|cfg
+operator|->
+name|read_only
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|svn_boolean_t
+name|svn_config__is_read_only
+parameter_list|(
+name|svn_config_t
+modifier|*
+name|cfg
+parameter_list|)
+block|{
+return|return
+name|cfg
+operator|->
+name|read_only
+return|;
+block|}
+end_function
+
+begin_function
+name|svn_config_t
+modifier|*
+name|svn_config__shallow_copy
+parameter_list|(
+name|svn_config_t
+modifier|*
+name|src
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+block|{
+name|svn_config_t
+modifier|*
+name|cfg
+init|=
+name|apr_palloc
+argument_list|(
+name|pool
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|cfg
+argument_list|)
+argument_list|)
+decl_stmt|;
+name|cfg
+operator|->
+name|sections
+operator|=
+name|src
+operator|->
+name|sections
+expr_stmt|;
+name|cfg
+operator|->
+name|pool
+operator|=
+name|pool
+expr_stmt|;
+comment|/* r/o configs are fully expanded and don't need the x_pool anymore */
+name|cfg
+operator|->
+name|x_pool
+operator|=
+name|src
+operator|->
+name|read_only
+condition|?
+name|NULL
+else|:
+name|svn_pool_create
+argument_list|(
+name|pool
+argument_list|)
+expr_stmt|;
+name|cfg
+operator|->
+name|x_values
+operator|=
+name|src
+operator|->
+name|x_values
+expr_stmt|;
+name|cfg
+operator|->
+name|tmp_key
+operator|=
+name|svn_stringbuf_create_empty
+argument_list|(
+name|pool
+argument_list|)
+expr_stmt|;
+name|cfg
+operator|->
+name|tmp_value
+operator|=
+name|svn_stringbuf_create_empty
+argument_list|(
+name|pool
+argument_list|)
+expr_stmt|;
+name|cfg
+operator|->
+name|section_names_case_sensitive
+operator|=
+name|src
+operator|->
+name|section_names_case_sensitive
+expr_stmt|;
+name|cfg
+operator|->
+name|option_names_case_sensitive
+operator|=
+name|src
+operator|->
+name|option_names_case_sensitive
+expr_stmt|;
+name|cfg
+operator|->
+name|read_only
+operator|=
+name|src
+operator|->
+name|read_only
+expr_stmt|;
+return|return
+name|cfg
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|svn_config__shallow_replace_section
+parameter_list|(
+name|svn_config_t
+modifier|*
+name|target
+parameter_list|,
+name|svn_config_t
+modifier|*
+name|source
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|section
+parameter_list|)
+block|{
+if|if
+condition|(
+name|target
+operator|->
+name|read_only
+condition|)
+name|target
+operator|->
+name|sections
+operator|=
+name|apr_hash_copy
+argument_list|(
+name|target
+operator|->
+name|pool
+argument_list|,
+name|target
+operator|->
+name|sections
+argument_list|)
+expr_stmt|;
+name|svn_hash_sets
+argument_list|(
+name|target
+operator|->
+name|sections
+argument_list|,
+name|section
+argument_list|,
+name|svn_hash_gets
+argument_list|(
+name|source
+operator|->
+name|sections
+argument_list|,
+name|section
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_escape
 end_escape
@@ -1530,6 +1912,10 @@ name|err
 init|=
 name|SVN_NO_ERROR
 decl_stmt|;
+name|apr_file_t
+modifier|*
+name|apr_file
+decl_stmt|;
 name|svn_stream_t
 modifier|*
 name|stream
@@ -1543,16 +1929,19 @@ argument_list|(
 name|result_pool
 argument_list|)
 decl_stmt|;
+comment|/* Use unbuffered IO since we use our own buffering. */
 name|err
 operator|=
-name|svn_stream_open_readonly
+name|svn_io_file_open
 argument_list|(
 operator|&
-name|stream
+name|apr_file
 argument_list|,
 name|file
 argument_list|,
-name|scratch_pool
+name|APR_READ
+argument_list|,
+name|APR_OS_DEFAULT
 argument_list|,
 name|scratch_pool
 argument_list|)
@@ -1592,6 +1981,17 @@ argument_list|(
 name|err
 argument_list|)
 expr_stmt|;
+name|stream
+operator|=
+name|svn_stream_from_aprfile2
+argument_list|(
+name|apr_file
+argument_list|,
+name|FALSE
+argument_list|,
+name|scratch_pool
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|svn_config__parse_stream
@@ -1623,7 +2023,10 @@ name|apr_err
 argument_list|,
 name|err
 argument_list|,
+name|_
+argument_list|(
 literal|"Error while parsing config file: %s:"
+argument_list|)
 argument_list|,
 name|svn_dirent_local_style
 argument_list|(
@@ -1813,8 +2216,11 @@ name|SVN_ERR_MALFORMED_FILE
 argument_list|,
 name|NULL
 argument_list|,
+name|_
+argument_list|(
 literal|"line %d: Section header"
 literal|" must start in the first column"
+argument_list|)
 argument_list|,
 name|ctx
 operator|->
@@ -1860,8 +2266,11 @@ name|SVN_ERR_MALFORMED_FILE
 argument_list|,
 name|NULL
 argument_list|,
+name|_
+argument_list|(
 literal|"line %d: Comment"
 literal|" must start in the first column"
+argument_list|)
 argument_list|,
 name|ctx
 operator|->
@@ -1903,7 +2312,10 @@ name|SVN_ERR_MALFORMED_FILE
 argument_list|,
 name|NULL
 argument_list|,
+name|_
+argument_list|(
 literal|"line %d: Section header expected"
+argument_list|)
 argument_list|,
 name|ctx
 operator|->
@@ -1924,7 +2336,10 @@ name|SVN_ERR_MALFORMED_FILE
 argument_list|,
 name|NULL
 argument_list|,
+name|_
+argument_list|(
 literal|"line %d: Option expected"
+argument_list|)
 argument_list|,
 name|ctx
 operator|->
@@ -3555,6 +3970,19 @@ literal|"### Automatic properties are defined in the section 'auto-props'."
 name|NL
 literal|"# enable-auto-props = yes"
 name|NL
+ifdef|#
+directive|ifdef
+name|SVN_HAVE_LIBMAGIC
+literal|"### Set enable-magic-file to 'no' to disable magic file detection"
+name|NL
+literal|"### of the file type when automatically setting svn:mime-type. It"
+name|NL
+literal|"### defaults to 'yes' if magic file support is possible."
+name|NL
+literal|"# enable-magic-file = yes"
+name|NL
+endif|#
+directive|endif
 literal|"### Set interactive-conflicts to 'no' to disable interactive"
 name|NL
 literal|"### conflict resolution prompting.  It defaults to 'yes'."
@@ -3570,6 +3998,26 @@ name|NL
 literal|"### of MB used by the cache."
 name|NL
 literal|"# memory-cache-size = 16"
+name|NL
+literal|"### Set diff-ignore-content-type to 'yes' to cause 'svn diff' to"
+name|NL
+literal|"### attempt to show differences of all modified files regardless"
+name|NL
+literal|"### of their MIME content type.  By default, Subversion will only"
+name|NL
+literal|"### attempt to show differences for files believed to have human-"
+name|NL
+literal|"### readable (non-binary) content.  This option is especially"
+name|NL
+literal|"### useful when Subversion is configured (via the 'diff-cmd'"
+name|NL
+literal|"### option) to employ an external differencing tool which is able"
+name|NL
+literal|"### to show meaningful differences for binary file formats.  [New"
+name|NL
+literal|"### in 1.9]"
+name|NL
+literal|"# diff-ignore-content-type = no"
 name|NL
 literal|""
 name|NL
@@ -3642,6 +4090,16 @@ name|NL
 literal|"### to be set for exclusive-locking-clients to work."
 name|NL
 literal|"# exclusive-locking = false"
+name|NL
+literal|"### Set the SQLite busy timeout in milliseconds: the maximum time"
+name|NL
+literal|"### the client waits to get access to the SQLite database before"
+name|NL
+literal|"### returning an error.  The default is 10000, i.e. 10 seconds."
+name|NL
+literal|"### Longer values may be useful when exclusive locking is enabled."
+name|NL
+literal|"# busy-timeout = 10000"
 name|NL
 decl_stmt|;
 name|err
@@ -3762,7 +4220,7 @@ name|config_dir
 argument_list|,
 name|fname
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -3788,9 +4246,19 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|pool
+argument_list|,
+name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|folder
+condition|)
+return|return
+name|SVN_NO_ERROR
+return|;
 operator|*
 name|path
 operator|=
@@ -3804,7 +4272,7 @@ name|SVN_CONFIG__SUBDIRECTORY
 argument_list|,
 name|fname
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -3861,7 +4329,7 @@ name|SVN_CONFIG__USR_DIRECTORY
 argument_list|,
 name|fname
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -3905,7 +4373,7 @@ name|SVN_CONFIG__USR_DIRECTORY
 argument_list|,
 name|fname
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 block|}

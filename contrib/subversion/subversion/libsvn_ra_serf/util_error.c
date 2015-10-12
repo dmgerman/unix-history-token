@@ -246,7 +246,7 @@ literal|": "
 argument_list|,
 name|err_msg
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 block|}

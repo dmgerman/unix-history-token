@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"svn_private_config.h"
+file|<apr.h>
 end_include
 
 begin_include
@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"svn_fs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"svn_repos.h"
 end_include
 
@@ -43,18 +37,6 @@ begin_include
 include|#
 directive|include
 file|"svn_string.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"svn_path.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"svn_props.h"
 end_include
 
 begin_include
@@ -72,43 +54,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"svn_mergeinfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"svn_checksum.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"svn_subst.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"svn_ctype.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<apr_lib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"private/svn_dep_compat.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"private/svn_mergeinfo_private.h"
 end_include
 
 begin_comment
@@ -468,7 +420,7 @@ name|len
 expr_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_stream_read
+name|svn_stream_read_full
 argument_list|(
 name|stream
 argument_list|,
@@ -511,7 +463,7 @@ literal|1
 expr_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_stream_read
+name|svn_stream_read_full
 argument_list|(
 name|stream
 argument_list|,
@@ -1070,7 +1022,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read CONTENT_LENGTH bytes from STREAM, and use    PARSE_FNS->set_fulltext to push those bytes as replace fulltext for    a node.  Use BUFFER/BUFLEN to push the fulltext in "chunks".     Use POOL for all allocations.  */
+comment|/* Read CONTENT_LENGTH bytes from STREAM. If IS_DELTA is true, use    PARSE_FNS->apply_textdelta to push a text delta, otherwise use    PARSE_FNS->set_fulltext to push those bytes as replace fulltext for    a node.  Use BUFFER/BUFLEN to push the fulltext in "chunks".     Use POOL for all allocations.  */
 end_comment
 
 begin_function
@@ -1186,36 +1138,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If there are no contents to read, just write an empty buffer      through our callback. */
-if|if
-condition|(
-name|content_length
-operator|==
-literal|0
-condition|)
-block|{
-name|wlen
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|text_stream
-condition|)
-name|SVN_ERR
-argument_list|(
-name|svn_stream_write
-argument_list|(
-name|text_stream
-argument_list|,
-literal|""
-argument_list|,
-operator|&
-name|wlen
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Regardless of whether or not we have a sink for our data, we      need to read it. */
 while|while
 condition|(
@@ -1249,7 +1171,7 @@ name|rlen
 expr_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_stream_read
+name|svn_stream_read_full
 argument_list|(
 name|stream
 argument_list|,
@@ -2338,7 +2260,7 @@ name|rlen
 expr_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_stream_read
+name|svn_stream_read_full
 argument_list|(
 name|stream
 argument_list|,

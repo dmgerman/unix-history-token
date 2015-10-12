@@ -60,12 +60,6 @@ directive|include
 file|"svn_config.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"svn_private_config.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -88,7 +82,7 @@ name|apr_hash_t
 modifier|*
 name|sections
 decl_stmt|;
-comment|/* Pool for hash tables, table entries and unexpanded values */
+comment|/* Pool for hash tables, table entries and unexpanded values.      Also, parent pool for temporary pools. */
 name|apr_pool_t
 modifier|*
 name|pool
@@ -119,6 +113,10 @@ decl_stmt|;
 comment|/* Specifies whether option names are populated case sensitively. */
 name|svn_boolean_t
 name|option_names_case_sensitive
+decl_stmt|;
+comment|/* When set, all modification attempts will be ignored.    * In debug mode, we will trigger an assertion. */
+name|svn_boolean_t
+name|read_only
 decl_stmt|;
 block|}
 struct|;
@@ -185,12 +183,16 @@ modifier|*
 modifier|*
 name|folder
 parameter_list|,
-name|int
+name|svn_boolean_t
 name|system_path
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/* Read sections and options from the Windows Registry. */

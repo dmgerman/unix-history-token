@@ -114,12 +114,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"private/svn_subr_private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"sync.h"
 end_include
 
@@ -192,6 +186,10 @@ name|svnsync_opt_version
 block|,
 name|svnsync_opt_trust_server_cert
 block|,
+name|svnsync_opt_trust_server_cert_failures_src
+block|,
+name|svnsync_opt_trust_server_cert_failures_dst
+block|,
 name|svnsync_opt_allow_non_empty
 block|,
 name|svnsync_opt_steal_lock
@@ -203,7 +201,7 @@ begin_define
 define|#
 directive|define
 name|SVNSYNC_OPTS_DEFAULT
-value|svnsync_opt_non_interactive, \                              svnsync_opt_force_interactive, \                              svnsync_opt_no_auth_cache, \                              svnsync_opt_auth_username, \                              svnsync_opt_auth_password, \                              svnsync_opt_trust_server_cert, \                              svnsync_opt_source_username, \                              svnsync_opt_source_password, \                              svnsync_opt_sync_username, \                              svnsync_opt_sync_password, \                              svnsync_opt_config_dir, \                              svnsync_opt_config_options
+value|svnsync_opt_non_interactive, \                              svnsync_opt_force_interactive, \                              svnsync_opt_no_auth_cache, \                              svnsync_opt_auth_username, \                              svnsync_opt_auth_password, \                              svnsync_opt_trust_server_cert, \                              svnsync_opt_trust_server_cert_failures_src, \                              svnsync_opt_trust_server_cert_failures_dst, \                              svnsync_opt_source_username, \                              svnsync_opt_source_password, \                              svnsync_opt_sync_username, \                              svnsync_opt_sync_password, \                              svnsync_opt_config_dir, \                              svnsync_opt_config_options
 end_define
 
 begin_decl_stmt
@@ -261,6 +259,8 @@ block|,
 name|svnsync_opt_disable_locking
 block|,
 name|svnsync_opt_steal_lock
+block|,
+literal|'M'
 block|}
 block|}
 block|,
@@ -297,6 +297,8 @@ block|,
 name|svnsync_opt_disable_locking
 block|,
 name|svnsync_opt_steal_lock
+block|,
+literal|'M'
 block|}
 block|}
 block|,
@@ -343,6 +345,8 @@ block|,
 name|svnsync_opt_disable_locking
 block|,
 name|svnsync_opt_steal_lock
+block|,
+literal|'M'
 block|}
 block|}
 block|,
@@ -545,11 +549,59 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"accept SSL server certificates from unknown\n"
+literal|"deprecated; same as\n"
 literal|"                             "
-literal|"certificate authorities without prompting (but only\n"
+literal|"--source-trust-server-cert-failures=unknown-ca\n"
 literal|"                             "
-literal|"with '--non-interactive')"
+literal|"--sync-trust-server-cert-failures=unknown-ca"
+argument_list|)
+block|}
+block|,
+block|{
+literal|"source-trust-server-cert-failures"
+block|,
+name|svnsync_opt_trust_server_cert_failures_src
+block|,
+literal|1
+block|,
+name|N_
+argument_list|(
+literal|"with --non-interactive, accept SSL\n"
+literal|"                             "
+literal|"server certificates with failures.\n"
+literal|"                             "
+literal|"ARG is a comma-separated list of:\n"
+literal|"                             "
+literal|"- 'unknown-ca' (Unknown Authority)\n"
+literal|"                             "
+literal|"- 'cn-mismatch' (Hostname mismatch)\n"
+literal|"                             "
+literal|"- 'expired' (Expired certificate)\n"
+literal|"                             "
+literal|"- 'not-yet-valid' (Not yet valid certificate)\n"
+literal|"                             "
+literal|"- 'other' (all other not separately classified\n"
+literal|"                             "
+literal|"  certificate errors).\n"
+literal|"                             "
+literal|"Applied to the source URL."
+argument_list|)
+block|}
+block|,
+block|{
+literal|"sync-trust-server-cert-failures"
+block|,
+name|svnsync_opt_trust_server_cert_failures_dst
+block|,
+literal|1
+block|,
+name|N_
+argument_list|(
+literal|"Like\n"
+literal|"                             "
+literal|"--source-trust-server-cert-failures,\n"
+literal|"                             "
+literal|"but applied to the destination URL."
 argument_list|)
 block|}
 block|,
@@ -691,6 +743,21 @@ argument_list|)
 block|}
 block|,
 block|{
+literal|"memory-cache-size"
+block|,
+literal|'M'
+block|,
+literal|1
+block|,
+name|N_
+argument_list|(
+literal|"size of the extra in-memory cache in MB used to\n"
+literal|"                             "
+literal|"minimize operations for local 'file' scheme.\n"
+argument_list|)
+block|}
+block|,
+block|{
 literal|"version"
 block|,
 name|svnsync_opt_version
@@ -750,9 +817,28 @@ block|{
 name|svn_boolean_t
 name|non_interactive
 decl_stmt|;
+struct|struct
+block|{
 name|svn_boolean_t
-name|trust_server_cert
+name|trust_server_cert_unknown_ca
 decl_stmt|;
+name|svn_boolean_t
+name|trust_server_cert_cn_mismatch
+decl_stmt|;
+name|svn_boolean_t
+name|trust_server_cert_expired
+decl_stmt|;
+name|svn_boolean_t
+name|trust_server_cert_not_yet_valid
+decl_stmt|;
+name|svn_boolean_t
+name|trust_server_cert_other_failure
+decl_stmt|;
+block|}
+name|src_trust
+struct|,
+name|dst_trust
+struct|;
 name|svn_boolean_t
 name|no_auth_cache
 decl_stmt|;
@@ -1529,7 +1615,7 @@ name|char
 modifier|*
 name|propname
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -1692,7 +1778,7 @@ name|char
 modifier|*
 name|propname
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -1701,7 +1787,7 @@ name|void
 modifier|*
 name|propval
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -1818,7 +1904,7 @@ name|char
 modifier|*
 name|propname
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -1828,7 +1914,7 @@ name|svn_string_t
 modifier|*
 name|propval
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -2380,7 +2466,7 @@ comment|/*** `svnsync init' ***/
 end_comment
 
 begin_comment
-comment|/* Initialize the repository associated with RA session TO_SESSION,  * using information found in BATON, while the repository is  * locked.  Implements `with_locked_func_t' interface.  */
+comment|/* Initialize the repository associated with RA session TO_SESSION,  * using information found in BATON.  *  * Implements `with_locked_func_t' interface.  The caller has  * acquired a lock on the repository if locking is needed.  */
 end_comment
 
 begin_function
@@ -3269,11 +3355,20 @@ condition|(
 operator|!
 name|from_url
 condition|)
+name|SVN_ERR
+argument_list|(
+name|svn_opt__arg_canonicalize_url
+argument_list|(
+operator|&
 name|from_url
-operator|=
+argument_list|,
 name|from_url_str
 operator|->
 name|data
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* Open the session to copy the revision data. */
 name|SVN_ERR
@@ -3408,11 +3503,6 @@ name|svn_ra_session_t
 modifier|*
 name|to_session
 decl_stmt|;
-comment|/* Extra 'backdoor' session for fetching data *from* the target repo. */
-name|svn_ra_session_t
-modifier|*
-name|extra_to_session
-decl_stmt|;
 name|svn_revnum_t
 name|current_revision
 decl_stmt|;
@@ -3422,6 +3512,9 @@ name|sb
 decl_stmt|;
 name|svn_boolean_t
 name|has_commit_revprops_capability
+decl_stmt|;
+name|svn_boolean_t
+name|has_atomic_revprops_capability
 decl_stmt|;
 name|int
 name|normalized_rev_props_count
@@ -3434,6 +3527,16 @@ name|char
 modifier|*
 name|to_root
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_EV2_SHIMS
+comment|/* Extra 'backdoor' session for fetching data *from* the target repo. */
+name|svn_ra_session_t
+modifier|*
+name|extra_to_session
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|replay_baton_t
 typedef|;
@@ -3708,6 +3811,12 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENABLE_EV2_SHIMS
+end_ifdef
 
 begin_function
 specifier|static
@@ -4300,6 +4409,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Callback function for svn_ra_replay_range, invoked when starting to parse  * a replay report.  */
 end_comment
@@ -4480,6 +4594,9 @@ name|normalized_rev_props_count
 operator|+=
 name|normalized_count
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_EV2_SHIMS
 name|SVN_ERR
 argument_list|(
 name|svn_ra__register_editor_shim_callbacks
@@ -4497,6 +4614,8 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|SVN_ERR
 argument_list|(
 name|svn_ra_get_commit_editor3
@@ -4682,6 +4801,11 @@ decl_stmt|;
 name|int
 name|normalized_count
 decl_stmt|;
+specifier|const
+name|svn_string_t
+modifier|*
+name|rev_str
+decl_stmt|;
 name|SVN_ERR
 argument_list|(
 name|editor
@@ -4835,6 +4959,17 @@ argument_list|(
 name|subpool
 argument_list|)
 expr_stmt|;
+name|rev_str
+operator|=
+name|svn_string_createf
+argument_list|(
+name|subpool
+argument_list|,
+literal|"%ld"
+argument_list|,
+name|revision
+argument_list|)
+expr_stmt|;
 comment|/* Ok, we're done, bring the last-merged-rev property up to date. */
 name|SVN_ERR
 argument_list|(
@@ -4850,19 +4985,7 @@ name|SVNSYNC_PROP_LAST_MERGED_REV
 argument_list|,
 name|NULL
 argument_list|,
-name|svn_string_create
-argument_list|(
-name|apr_psprintf
-argument_list|(
-name|pool
-argument_list|,
-literal|"%ld"
-argument_list|,
-name|revision
-argument_list|)
-argument_list|,
-name|subpool
-argument_list|)
+name|rev_str
 argument_list|,
 name|subpool
 argument_list|)
@@ -4881,6 +5004,13 @@ literal|0
 argument_list|,
 name|SVNSYNC_PROP_CURRENTLY_COPYING
 argument_list|,
+name|rb
+operator|->
+name|has_atomic_revprops_capability
+condition|?
+operator|&
+name|rev_str
+else|:
 name|NULL
 argument_list|,
 name|NULL
@@ -4925,7 +5055,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Synchronize the repository associated with RA session TO_SESSION,  * using information found in BATON, while the repository is  * locked.  Implements `with_locked_func_t' interface.  */
+comment|/* Synchronize the repository associated with RA session TO_SESSION,  * using information found in BATON.  *  * Implements `with_locked_func_t' interface.  The caller has  * acquired a lock on the repository if locking is needed.  */
 end_comment
 
 begin_function
@@ -5318,6 +5448,25 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|SVN_ERR
+argument_list|(
+name|svn_ra_has_capability
+argument_list|(
+name|rb
+operator|->
+name|to_session
+argument_list|,
+operator|&
+name|rb
+operator|->
+name|has_atomic_revprops_capability
+argument_list|,
+name|SVN_RA_CAPABILITY_ATOMIC_REVPROPS
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|start_revision
 operator|=
 name|last_merged
@@ -5667,7 +5816,7 @@ comment|/*** `svnsync copy-revprops' ***/
 end_comment
 
 begin_comment
-comment|/* Copy revision properties to the repository associated with RA  * session TO_SESSION, using information found in BATON, while the  * repository is locked.  Implements `with_locked_func_t' interface.  */
+comment|/* Copy revision properties to the repository associated with RA  * session TO_SESSION, using information found in BATON.  *  * Implements `with_locked_func_t' interface.  The caller has  * acquired a lock on the repository if locking is needed.  */
 end_comment
 
 begin_function
@@ -7105,6 +7254,7 @@ init|=
 name|_
 argument_list|(
 literal|"general usage: svnsync SUBCOMMAND DEST_URL  [ARGS& OPTIONS ...]\n"
+literal|"Subversion repository replication tool.\n"
 literal|"Type 'svnsync help<subcommand>' for help on a specific subcommand.\n"
 literal|"Type 'svnsync --version' to see the program version and RA modules.\n"
 literal|"\n"
@@ -7200,10 +7350,20 @@ begin_comment
 comment|/*** Main ***/
 end_comment
 
+begin_comment
+comment|/*  * On success, leave *EXIT_CODE untouched and return SVN_NO_ERROR. On error,  * either return an error to be displayed, or set *EXIT_CODE to non-zero and  * return SVN_NO_ERROR.  */
+end_comment
+
 begin_function
-name|int
-name|main
+specifier|static
+name|svn_error_t
+modifier|*
+name|sub_main
 parameter_list|(
+name|int
+modifier|*
+name|exit_code
+parameter_list|,
 name|int
 name|argc
 parameter_list|,
@@ -7212,6 +7372,10 @@ name|char
 modifier|*
 name|argv
 index|[]
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
 parameter_list|)
 block|{
 specifier|const
@@ -7238,10 +7402,6 @@ decl_stmt|;
 name|apr_getopt_t
 modifier|*
 name|os
-decl_stmt|;
-name|apr_pool_t
-modifier|*
-name|pool
 decl_stmt|;
 name|svn_error_t
 modifier|*
@@ -7304,73 +7464,21 @@ name|force_interactive
 init|=
 name|FALSE
 decl_stmt|;
-if|if
-condition|(
-name|svn_cmdline_init
+comment|/* Check library versions */
+name|SVN_ERR
 argument_list|(
-literal|"svnsync"
-argument_list|,
-name|stderr
-argument_list|)
-operator|!=
-name|EXIT_SUCCESS
-condition|)
-block|{
-return|return
-name|EXIT_FAILURE
-return|;
-block|}
-name|err
-operator|=
 name|check_lib_versions
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|NULL
-argument_list|,
-literal|"svnsync: "
-argument_list|)
-return|;
-comment|/* Create our top-level pool.  Use a separate mutexless allocator,    * given this application is single threaded.    */
-name|pool
-operator|=
-name|apr_allocator_owner_get
-argument_list|(
-name|svn_pool_create_allocator
-argument_list|(
-name|FALSE
-argument_list|)
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
+name|SVN_ERR
+argument_list|(
 name|svn_ra_initialize
 argument_list|(
 name|pool
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnsync: "
 argument_list|)
-return|;
+expr_stmt|;
 comment|/* Initialize the option baton. */
 name|memset
 argument_list|(
@@ -7422,7 +7530,7 @@ operator|<=
 literal|1
 condition|)
 block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|help_cmd
 argument_list|(
@@ -7434,17 +7542,17 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|svn_pool_destroy
-argument_list|(
-name|pool
-argument_list|)
+operator|*
+name|exit_code
+operator|=
+name|EXIT_FAILURE
 expr_stmt|;
 return|return
-name|EXIT_FAILURE
+name|SVN_NO_ERROR
 return|;
 block|}
-name|err
-operator|=
+name|SVN_ERR
+argument_list|(
 name|svn_cmdline__getopt_init
 argument_list|(
 operator|&
@@ -7456,21 +7564,8 @@ name|argv
 argument_list|,
 name|pool
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnsync: "
 argument_list|)
-return|;
+expr_stmt|;
 name|os
 operator|->
 name|interleave
@@ -7523,7 +7618,7 @@ condition|(
 name|apr_err
 condition|)
 block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|help_cmd
 argument_list|(
@@ -7535,13 +7630,13 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|svn_pool_destroy
-argument_list|(
-name|pool
-argument_list|)
+operator|*
+name|exit_code
+operator|=
+name|EXIT_FAILURE
 expr_stmt|;
 return|return
-name|EXIT_FAILURE
+name|SVN_NO_ERROR
 return|;
 block|}
 name|APR_ARRAY_PUSH
@@ -7579,11 +7674,146 @@ break|break;
 case|case
 name|svnsync_opt_trust_server_cert
 case|:
+comment|/* backwards compat */
 name|opt_baton
 operator|.
-name|trust_server_cert
+name|src_trust
+operator|.
+name|trust_server_cert_unknown_ca
 operator|=
 name|TRUE
+expr_stmt|;
+name|opt_baton
+operator|.
+name|dst_trust
+operator|.
+name|trust_server_cert_unknown_ca
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+name|svnsync_opt_trust_server_cert_failures_src
+case|:
+name|SVN_ERR
+argument_list|(
+name|svn_utf_cstring_to_utf8
+argument_list|(
+operator|&
+name|opt_arg
+argument_list|,
+name|opt_arg
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|SVN_ERR
+argument_list|(
+name|svn_cmdline__parse_trust_options
+argument_list|(
+operator|&
+name|opt_baton
+operator|.
+name|src_trust
+operator|.
+name|trust_server_cert_unknown_ca
+argument_list|,
+operator|&
+name|opt_baton
+operator|.
+name|src_trust
+operator|.
+name|trust_server_cert_cn_mismatch
+argument_list|,
+operator|&
+name|opt_baton
+operator|.
+name|src_trust
+operator|.
+name|trust_server_cert_expired
+argument_list|,
+operator|&
+name|opt_baton
+operator|.
+name|src_trust
+operator|.
+name|trust_server_cert_not_yet_valid
+argument_list|,
+operator|&
+name|opt_baton
+operator|.
+name|src_trust
+operator|.
+name|trust_server_cert_other_failure
+argument_list|,
+name|opt_arg
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|svnsync_opt_trust_server_cert_failures_dst
+case|:
+name|SVN_ERR
+argument_list|(
+name|svn_utf_cstring_to_utf8
+argument_list|(
+operator|&
+name|opt_arg
+argument_list|,
+name|opt_arg
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|SVN_ERR
+argument_list|(
+name|svn_cmdline__parse_trust_options
+argument_list|(
+operator|&
+name|opt_baton
+operator|.
+name|dst_trust
+operator|.
+name|trust_server_cert_unknown_ca
+argument_list|,
+operator|&
+name|opt_baton
+operator|.
+name|dst_trust
+operator|.
+name|trust_server_cert_cn_mismatch
+argument_list|,
+operator|&
+name|opt_baton
+operator|.
+name|dst_trust
+operator|.
+name|trust_server_cert_expired
+argument_list|,
+operator|&
+name|opt_baton
+operator|.
+name|dst_trust
+operator|.
+name|trust_server_cert_not_yet_valid
+argument_list|,
+operator|&
+name|opt_baton
+operator|.
+name|dst_trust
+operator|.
+name|trust_server_cert_other_failure
+argument_list|,
+name|opt_arg
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -7754,8 +7984,8 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
+name|SVN_ERR
+argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
 operator|&
@@ -7765,37 +7995,22 @@ name|opt_arg
 argument_list|,
 name|pool
 argument_list|)
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|err
-condition|)
-name|err
-operator|=
+name|SVN_ERR
+argument_list|(
 name|svn_cmdline__parse_config_option
 argument_list|(
 name|config_options
 argument_list|,
 name|opt_arg
 argument_list|,
+literal|"svnsync: "
+argument_list|,
 name|pool
+argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnsync: "
-argument_list|)
-return|;
 break|break;
 case|case
 name|svnsync_opt_source_prop_encoding
@@ -7893,8 +8108,8 @@ name|char
 modifier|*
 name|utf8_opt_arg
 decl_stmt|;
-name|err
-operator|=
+name|SVN_ERR
+argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
 operator|&
@@ -7904,14 +8119,9 @@ name|opt_arg
 argument_list|,
 name|pool
 argument_list|)
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|err
-condition|)
-name|err
-operator|=
+return|return
 name|svn_error_createf
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -7924,16 +8134,6 @@ literal|"Syntax error in revision argument '%s'"
 argument_list|)
 argument_list|,
 name|utf8_opt_arg
-argument_list|)
-expr_stmt|;
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnsync: "
 argument_list|)
 return|;
 block|}
@@ -7995,8 +8195,7 @@ operator|)
 operator|)
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_createf
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -8010,18 +8209,67 @@ argument_list|)
 argument_list|,
 name|opt_arg
 argument_list|)
-expr_stmt|;
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnsync: "
-argument_list|)
 return|;
 block|}
+break|break;
+case|case
+literal|'M'
+case|:
+if|if
+condition|(
+operator|!
+name|config_options
+condition|)
+name|config_options
+operator|=
+name|apr_array_make
+argument_list|(
+name|pool
+argument_list|,
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|svn_cmdline__config_argument_t
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|SVN_ERR
+argument_list|(
+name|svn_utf_cstring_to_utf8
+argument_list|(
+operator|&
+name|opt_arg
+argument_list|,
+name|opt_arg
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|SVN_ERR
+argument_list|(
+name|svn_cmdline__parse_config_option
+argument_list|(
+name|config_options
+argument_list|,
+name|apr_psprintf
+argument_list|(
+name|pool
+argument_list|,
+literal|"config:miscellany:memory-cache-size=%s"
+argument_list|,
+name|opt_arg
+argument_list|)
+argument_list|,
+name|NULL
+comment|/* won't be used */
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'?'
@@ -8038,7 +8286,7 @@ expr_stmt|;
 break|break;
 default|default:
 block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|help_cmd
 argument_list|(
@@ -8050,13 +8298,13 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|svn_pool_destroy
-argument_list|(
-name|pool
-argument_list|)
+operator|*
+name|exit_code
+operator|=
+name|EXIT_FAILURE
 expr_stmt|;
 return|return
-name|EXIT_FAILURE
+name|SVN_NO_ERROR
 return|;
 block|}
 block|}
@@ -8065,14 +8313,7 @@ condition|(
 name|opt_err
 condition|)
 return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
 name|opt_err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnsync: "
-argument_list|)
 return|;
 block|}
 if|if
@@ -8100,8 +8341,7 @@ operator|&&
 name|force_interactive
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -8113,16 +8353,6 @@ argument_list|(
 literal|"--non-interactive and --force-interactive "
 literal|"are mutually exclusive"
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnsync: "
 argument_list|)
 return|;
 block|}
@@ -8161,8 +8391,7 @@ name|sync_password
 operator|)
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -8175,16 +8404,6 @@ literal|"Cannot use --username or --password with any of "
 literal|"--source-username, --source-password, --sync-username, "
 literal|"or --sync-password.\n"
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnsync: "
 argument_list|)
 return|;
 block|}
@@ -8252,8 +8471,7 @@ operator|.
 name|disable_locking
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -8266,33 +8484,80 @@ literal|"--disable-locking and --steal-lock are "
 literal|"mutually exclusive"
 argument_list|)
 argument_list|)
-expr_stmt|;
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnsync: "
-argument_list|)
 return|;
 block|}
-comment|/* --trust-server-cert can only be used with --non-interactive */
+comment|/* --trust-* can only be used with --non-interactive */
 if|if
 condition|(
-name|opt_baton
-operator|.
-name|trust_server_cert
-operator|&&
 operator|!
 name|opt_baton
 operator|.
 name|non_interactive
 condition|)
 block|{
-name|err
-operator|=
+if|if
+condition|(
+name|opt_baton
+operator|.
+name|src_trust
+operator|.
+name|trust_server_cert_unknown_ca
+operator|||
+name|opt_baton
+operator|.
+name|src_trust
+operator|.
+name|trust_server_cert_cn_mismatch
+operator|||
+name|opt_baton
+operator|.
+name|src_trust
+operator|.
+name|trust_server_cert_expired
+operator|||
+name|opt_baton
+operator|.
+name|src_trust
+operator|.
+name|trust_server_cert_not_yet_valid
+operator|||
+name|opt_baton
+operator|.
+name|src_trust
+operator|.
+name|trust_server_cert_other_failure
+operator|||
+name|opt_baton
+operator|.
+name|dst_trust
+operator|.
+name|trust_server_cert_unknown_ca
+operator|||
+name|opt_baton
+operator|.
+name|dst_trust
+operator|.
+name|trust_server_cert_cn_mismatch
+operator|||
+name|opt_baton
+operator|.
+name|dst_trust
+operator|.
+name|trust_server_cert_expired
+operator|||
+name|opt_baton
+operator|.
+name|dst_trust
+operator|.
+name|trust_server_cert_not_yet_valid
+operator|||
+name|opt_baton
+operator|.
+name|dst_trust
+operator|.
+name|trust_server_cert_other_failure
+condition|)
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -8301,24 +8566,16 @@ name|NULL
 argument_list|,
 name|_
 argument_list|(
-literal|"--trust-server-cert requires "
+literal|"--source-trust-server-cert-failures "
+literal|"and "
+literal|"--sync-trust-server-cert-failures require "
 literal|"--non-interactive"
 argument_list|)
 argument_list|)
-expr_stmt|;
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnsync: "
-argument_list|)
 return|;
 block|}
-name|err
-operator|=
+name|SVN_ERR
+argument_list|(
 name|svn_config_ensure
 argument_list|(
 name|opt_baton
@@ -8327,21 +8584,8 @@ name|config_dir
 argument_list|,
 name|pool
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"synsync: "
 argument_list|)
-return|;
+expr_stmt|;
 if|if
 condition|(
 name|subcommand
@@ -8402,7 +8646,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|help_cmd
 argument_list|(
@@ -8414,13 +8658,13 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|svn_pool_destroy
-argument_list|(
-name|pool
-argument_list|)
+operator|*
+name|exit_code
+operator|=
+name|EXIT_FAILURE
 expr_stmt|;
 return|return
-name|EXIT_FAILURE
+name|SVN_NO_ERROR
 return|;
 block|}
 block|}
@@ -8457,7 +8701,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|help_cmd
 argument_list|(
@@ -8469,13 +8713,13 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|svn_pool_destroy
-argument_list|(
-name|pool
-argument_list|)
+operator|*
+name|exit_code
+operator|=
+name|EXIT_FAILURE
 expr_stmt|;
 return|return
-name|EXIT_FAILURE
+name|SVN_NO_ERROR
 return|;
 block|}
 block|}
@@ -8576,7 +8820,7 @@ operator|==
 literal|'-'
 condition|)
 block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|help_cmd
 argument_list|(
@@ -8591,8 +8835,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_createf
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -8615,22 +8858,12 @@ name|subcommand
 operator|->
 name|name
 argument_list|)
-expr_stmt|;
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnsync: "
-argument_list|)
 return|;
 block|}
 block|}
 block|}
-name|err
-operator|=
+name|SVN_ERR
+argument_list|(
 name|svn_config_get_config
 argument_list|(
 operator|&
@@ -8644,21 +8877,8 @@ name|config_dir
 argument_list|,
 name|pool
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-return|return
-name|svn_cmdline_handle_exit_error
-argument_list|(
-name|err
-argument_list|,
-name|pool
-argument_list|,
-literal|"svnsync: "
 argument_list|)
-return|;
+expr_stmt|;
 comment|/* Update the options in the config */
 if|if
 condition|(
@@ -8771,7 +8991,7 @@ endif|#
 directive|endif
 name|err
 operator|=
-name|svn_cmdline_create_auth_baton
+name|svn_cmdline_create_auth_baton2
 argument_list|(
 operator|&
 name|opt_baton
@@ -8800,7 +9020,33 @@ name|no_auth_cache
 argument_list|,
 name|opt_baton
 operator|.
-name|trust_server_cert
+name|src_trust
+operator|.
+name|trust_server_cert_unknown_ca
+argument_list|,
+name|opt_baton
+operator|.
+name|src_trust
+operator|.
+name|trust_server_cert_cn_mismatch
+argument_list|,
+name|opt_baton
+operator|.
+name|src_trust
+operator|.
+name|trust_server_cert_expired
+argument_list|,
+name|opt_baton
+operator|.
+name|src_trust
+operator|.
+name|trust_server_cert_not_yet_valid
+argument_list|,
+name|opt_baton
+operator|.
+name|src_trust
+operator|.
+name|trust_server_cert_other_failure
 argument_list|,
 name|config
 argument_list|,
@@ -8818,7 +9064,7 @@ name|err
 condition|)
 name|err
 operator|=
-name|svn_cmdline_create_auth_baton
+name|svn_cmdline_create_auth_baton2
 argument_list|(
 operator|&
 name|opt_baton
@@ -8847,7 +9093,33 @@ name|no_auth_cache
 argument_list|,
 name|opt_baton
 operator|.
-name|trust_server_cert
+name|dst_trust
+operator|.
+name|trust_server_cert_unknown_ca
+argument_list|,
+name|opt_baton
+operator|.
+name|dst_trust
+operator|.
+name|trust_server_cert_cn_mismatch
+argument_list|,
+name|opt_baton
+operator|.
+name|dst_trust
+operator|.
+name|trust_server_cert_expired
+argument_list|,
+name|opt_baton
+operator|.
+name|dst_trust
+operator|.
+name|trust_server_cert_not_yet_valid
+argument_list|,
+name|opt_baton
+operator|.
+name|dst_trust
+operator|.
+name|trust_server_cert_other_failure
 argument_list|,
 name|config
 argument_list|,
@@ -8915,15 +9187,113 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+name|err
+return|;
+block|}
+return|return
+name|SVN_NO_ERROR
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|main
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+block|{
+name|apr_pool_t
+modifier|*
+name|pool
+decl_stmt|;
+name|int
+name|exit_code
+init|=
+name|EXIT_SUCCESS
+decl_stmt|;
+name|svn_error_t
+modifier|*
+name|err
+decl_stmt|;
+comment|/* Initialize the app. */
+if|if
+condition|(
+name|svn_cmdline_init
+argument_list|(
+literal|"svnsync"
+argument_list|,
+name|stderr
+argument_list|)
+operator|!=
+name|EXIT_SUCCESS
+condition|)
+return|return
+name|EXIT_FAILURE
+return|;
+comment|/* Create our top-level pool.  Use a separate mutexless allocator,    * given this application is single threaded.    */
+name|pool
+operator|=
+name|apr_allocator_owner_get
+argument_list|(
+name|svn_pool_create_allocator
+argument_list|(
+name|FALSE
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|sub_main
+argument_list|(
+operator|&
+name|exit_code
+argument_list|,
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+name|pool
+argument_list|)
+expr_stmt|;
+comment|/* Flush stdout and report if it fails. It would be flushed on exit anyway      but this makes sure that output is not silently lost if it fails. */
+name|err
+operator|=
+name|svn_error_compose_create
+argument_list|(
+name|err
+argument_list|,
+name|svn_cmdline_fflush
+argument_list|(
+name|stdout
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+block|{
+name|exit_code
+operator|=
+name|EXIT_FAILURE
+expr_stmt|;
 name|svn_cmdline_handle_exit_error
 argument_list|(
 name|err
 argument_list|,
-name|pool
+name|NULL
 argument_list|,
 literal|"svnsync: "
 argument_list|)
-return|;
+expr_stmt|;
 block|}
 name|svn_pool_destroy
 argument_list|(
@@ -8931,7 +9301,7 @@ name|pool
 argument_list|)
 expr_stmt|;
 return|return
-name|EXIT_SUCCESS
+name|exit_code
 return|;
 block|}
 end_function
