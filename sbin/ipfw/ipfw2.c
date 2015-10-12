@@ -15677,6 +15677,11 @@ name|CHECK_ACTLEN
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|av
+operator|!=
+name|NULL
+operator|&&
 name|_substrcmp
 argument_list|(
 operator|*
