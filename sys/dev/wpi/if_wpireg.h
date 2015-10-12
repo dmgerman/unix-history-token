@@ -2071,6 +2071,13 @@ decl_stmt|;
 name|uint32_t
 name|fnext
 decl_stmt|;
+define|#
+directive|define
+name|WPI_NEXT_STA_ID
+parameter_list|(
+name|id
+parameter_list|)
+value|((id)<< 8)
 name|uint32_t
 name|lifetime
 decl_stmt|;
