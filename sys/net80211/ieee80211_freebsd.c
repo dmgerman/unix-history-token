@@ -2627,7 +2627,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Transmit a frame to the parent interface.  *  * TODO: if the transmission fails, make sure the parent node is freed  *   (the callers will first need modifying.)  */
+comment|/*  * Transmit a frame to the parent interface.  */
 end_comment
 
 begin_function
@@ -2669,11 +2669,50 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+decl_stmt|;
+name|ni
+operator|=
+operator|(
+expr|struct
+name|ieee80211_node
+operator|*
+operator|)
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+expr_stmt|;
+comment|/* XXX number of fragments */
+name|if_inc_counter
+argument_list|(
+name|ni
+operator|->
+name|ni_vap
+operator|->
+name|iv_ifp
+argument_list|,
+name|IFCOUNTER_OERRORS
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 name|ieee80211_free_mbuf
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|error

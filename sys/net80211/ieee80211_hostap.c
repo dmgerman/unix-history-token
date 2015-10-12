@@ -10151,7 +10151,7 @@ operator||=
 name|M_PWR_SAV
 expr_stmt|;
 comment|/* bypass PS handling */
-comment|/* 	 * Do the right thing; if it's an encap'ed frame then 	 * call ieee80211_parent_xmitpkt() (and free the ref) else 	 * call ieee80211_vap_xmitpkt(). 	 */
+comment|/* 	 * Do the right thing; if it's an encap'ed frame then 	 * call ieee80211_parent_xmitpkt() else 	 * call ieee80211_vap_xmitpkt(). 	 */
 if|if
 condition|(
 name|m
@@ -10161,20 +10161,14 @@ operator|&
 name|M_ENCAP
 condition|)
 block|{
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|ieee80211_parent_xmitpkt
 argument_list|(
 name|ic
 argument_list|,
 name|m
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|ieee80211_free_node
-argument_list|(
-name|ni
 argument_list|)
 expr_stmt|;
 block|}

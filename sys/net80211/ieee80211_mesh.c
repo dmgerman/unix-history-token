@@ -5837,20 +5837,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|err
-operator|!=
-literal|0
 condition|)
-block|{
-comment|/* NB: IFQ_HANDOFF reclaims mbuf */
-name|ieee80211_free_node
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|if_inc_counter
 argument_list|(
 name|ifp
@@ -5860,7 +5849,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
