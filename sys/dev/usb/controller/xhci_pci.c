@@ -389,6 +389,14 @@ literal|"NEC uPD720200 USB 3.0 controller"
 operator|)
 return|;
 case|case
+literal|0x10001b73
+case|:
+return|return
+operator|(
+literal|"Fresco Logic FL1000G USB 3.0 controller"
+operator|)
+return|;
+case|case
 literal|0x10421b21
 case|:
 return|return
@@ -401,7 +409,7 @@ literal|0x0f358086
 case|:
 return|return
 operator|(
-literal|"Intel Intel BayTrail USB 3.0 controller"
+literal|"Intel BayTrail USB 3.0 controller"
 operator|)
 return|;
 case|case
@@ -761,7 +769,14 @@ decl_stmt|,
 name|rid
 decl_stmt|;
 name|uint8_t
+name|usemsi
+init|=
+literal|1
+decl_stmt|;
+name|uint8_t
 name|usedma32
+init|=
+literal|0
 decl_stmt|;
 name|rid
 operator|=
@@ -855,8 +870,12 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-default|default:
-name|usedma32
+case|case
+literal|0x10001b73
+case|:
+comment|/* FL1000G */
+comment|/* Fresco Logic host doesn't support MSI. */
+name|usemsi
 operator|=
 literal|0
 expr_stmt|;
@@ -929,6 +948,8 @@ expr_stmt|;
 if|if
 condition|(
 name|xhci_use_msi
+operator|&&
+name|usemsi
 condition|)
 block|{
 name|count
