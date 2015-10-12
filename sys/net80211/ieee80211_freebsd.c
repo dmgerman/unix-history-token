@@ -2669,7 +2669,7 @@ if|if
 condition|(
 name|error
 condition|)
-name|m_freem
+name|ieee80211_free_mbuf
 argument_list|(
 name|m
 argument_list|)

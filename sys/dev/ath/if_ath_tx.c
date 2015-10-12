@@ -1127,59 +1127,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Reclaim mbuf resources.  For fragmented frames we  * need to claim each frag chained with m_nextpkt.  */
-end_comment
-
-begin_function
-name|void
-name|ath_freetx
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|)
-block|{
-name|struct
-name|mbuf
-modifier|*
-name|next
-decl_stmt|;
-do|do
-block|{
-name|next
-operator|=
-name|m
-operator|->
-name|m_nextpkt
-expr_stmt|;
-name|m
-operator|->
-name|m_nextpkt
-operator|=
-name|NULL
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-block|}
-do|while
-condition|(
-operator|(
-name|m
-operator|=
-name|next
-operator|)
-operator|!=
-name|NULL
-condition|)
-do|;
-block|}
-end_function
-
 begin_function
 specifier|static
 name|int
@@ -1268,7 +1215,7 @@ operator|.
 name|ast_tx_busdma
 operator|++
 expr_stmt|;
-name|ath_freetx
+name|ieee80211_free_mbuf
 argument_list|(
 name|m0
 argument_list|)
@@ -1313,7 +1260,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ath_freetx
+name|ieee80211_free_mbuf
 argument_list|(
 name|m0
 argument_list|)
@@ -1373,7 +1320,7 @@ operator|.
 name|ast_tx_busdma
 operator|++
 expr_stmt|;
-name|ath_freetx
+name|ieee80211_free_mbuf
 argument_list|(
 name|m0
 argument_list|)
@@ -1418,7 +1365,7 @@ operator|.
 name|ast_tx_nodata
 operator|++
 expr_stmt|;
-name|ath_freetx
+name|ieee80211_free_mbuf
 argument_list|(
 name|m0
 argument_list|)
@@ -5722,7 +5669,7 @@ name|keyix
 argument_list|)
 condition|)
 block|{
-name|ath_freetx
+name|ieee80211_free_mbuf
 argument_list|(
 name|m0
 argument_list|)
@@ -6213,7 +6160,7 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX statistic */
 comment|/* XXX free tx dmamap */
-name|ath_freetx
+name|ieee80211_free_mbuf
 argument_list|(
 name|m0
 argument_list|)
@@ -6325,7 +6272,7 @@ name|ast_tdma_ack
 operator|++
 expr_stmt|;
 comment|/* XXX free tx dmamap */
-name|ath_freetx
+name|ieee80211_free_mbuf
 argument_list|(
 name|m0
 argument_list|)
@@ -7696,7 +7643,7 @@ name|keyix
 argument_list|)
 condition|)
 block|{
-name|ath_freetx
+name|ieee80211_free_mbuf
 argument_list|(
 name|m0
 argument_list|)

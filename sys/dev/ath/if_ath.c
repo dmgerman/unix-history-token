@@ -12204,7 +12204,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 		 * XXXGL: is mbuf valid after ath_txfrag_setup? If yes, 		 * we shouldn't free it but return back. 		 */
-name|ath_freetx
+name|ieee80211_free_mbuf
 argument_list|(
 name|m
 argument_list|)
@@ -12422,7 +12422,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* XXX dmamap */
-name|ath_freetx
+name|ieee80211_free_mbuf
 argument_list|(
 name|next
 argument_list|)
