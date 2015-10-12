@@ -144,6 +144,12 @@ directive|include
 file|"private/svn_string_private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"private/svn_eol_private.h"
+end_include
+
 begin_comment
 comment|/**  * The textual elements of a detranslated special file.  One of these  * strings must appear as the first element of any special file as it  * exists in the repository or the text base.  */
 end_comment
@@ -406,7 +412,7 @@ comment|/* Helper function for svn_subst_build_keywords */
 end_comment
 
 begin_comment
-comment|/* Given a printf-like format string, return a string with proper  * information filled in.  *  * Important API note: This function is the core of the implementation of  * svn_subst_build_keywords (all versions), and as such must implement the  * tolerance of NULL and zero inputs that that function's documention  * stipulates.  *  * The format codes:  *  * %a author of this revision  * %b basename of the URL of this file  * %d short format of date of this revision  * %D long format of date of this revision  * %P path relative to root of repos  * %r number of this revision  * %R root url of repository  * %u URL of this file  * %_ a space  * %% a literal %  *  * The following special format codes are also recognized:  *   %H is equivalent to %P%_%r%_%d%_%a  *   %I is equivalent to %b%_%r%_%d%_%a  *  * All memory is allocated out of @a pool.  */
+comment|/* Given a printf-like format string, return a string with proper  * information filled in.  *  * Important API note: This function is the core of the implementation of  * svn_subst_build_keywords (all versions), and as such must implement the  * tolerance of NULL and zero inputs that that function's documentation  * stipulates.  *  * The format codes:  *  * %a author of this revision  * %b basename of the URL of this file  * %d short format of date of this revision  * %D long format of date of this revision  * %P path relative to root of repos  * %r number of this revision  * %R root url of repository  * %u URL of this file  * %_ a space  * %% a literal %  *  * The following special format codes are also recognized:  *   %H is equivalent to %P%_%r%_%d%_%a  *   %I is equivalent to %b%_%r%_%d%_%a  *  * All memory is allocated out of @a pool.  */
 end_comment
 
 begin_function
@@ -452,12 +458,8 @@ name|svn_stringbuf_t
 modifier|*
 name|value
 init|=
-name|svn_stringbuf_ncreate
+name|svn_stringbuf_create_empty
 argument_list|(
-literal|""
-argument_list|,
-literal|0
-argument_list|,
 name|pool
 argument_list|)
 decl_stmt|;
@@ -4313,7 +4315,14 @@ name|b
 operator|->
 name|eol_str_len
 expr_stmt|;
-comment|/* Check 4 bytes at once to allow for efficient pipelining                  and to reduce loop condition overhead. */
+if|if
+condition|(
+name|b
+operator|->
+name|keywords
+condition|)
+block|{
+comment|/* Check 4 bytes at once to allow for efficient pipelining                     and to reduce loop condition overhead. */
 while|while
 condition|(
 operator|(
@@ -4389,7 +4398,7 @@ operator|+=
 literal|4
 expr_stmt|;
 block|}
-comment|/* Found an interesting char or EOF in the next 4 bytes.                   Find its exact position. */
+comment|/* Found an interesting char or EOF in the next 4 bytes.                      Find its exact position. */
 while|while
 condition|(
 operator|(
@@ -4416,6 +4425,51 @@ condition|)
 operator|++
 name|len
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* use our optimized sub-routine to find the next EOL */
+specifier|const
+name|char
+modifier|*
+name|start
+init|=
+name|p
+operator|+
+name|len
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|eol
+init|=
+name|svn_eol__find_eol_start
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|start
+argument_list|,
+name|end
+operator|-
+name|start
+argument_list|)
+decl_stmt|;
+comment|/* EOL will be NULL if we did not find a line ending */
+name|len
+operator|+=
+operator|(
+name|eol
+condition|?
+name|eol
+else|:
+name|end
+operator|)
+operator|-
+name|start
+expr_stmt|;
+block|}
 block|}
 do|while
 condition|(
@@ -4905,7 +4959,7 @@ literal|0
 expr_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_stream_read
+name|svn_stream_read_full
 argument_list|(
 name|b
 operator|->
@@ -6126,9 +6180,12 @@ name|SVN__TRANSLATION_BUF_SIZE
 argument_list|)
 expr_stmt|;
 comment|/* Setup the stream methods */
-name|svn_stream_set_read
+name|svn_stream_set_read2
 argument_list|(
 name|s
+argument_list|,
+name|NULL
+comment|/* only full read support */
 argument_list|,
 name|translated_stream_read
 argument_list|)
@@ -6768,22 +6825,25 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-comment|/* If nothing else worked, write out the internal representation to      a file that can be edited by the user.       ### this only writes the first line!   */
+comment|/* If nothing else worked, write out the internal representation to      a file that can be edited by the user. */
 if|if
 condition|(
 name|create_using_internal_representation
 condition|)
 block|{
-name|apr_file_t
+name|svn_stream_t
 modifier|*
-name|new_file
+name|new_stream
+decl_stmt|;
+name|apr_size_t
+name|len
 decl_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_io_open_unique_file3
+name|svn_stream_open_unique
 argument_list|(
 operator|&
-name|new_file
+name|new_stream
 argument_list|,
 operator|&
 name|dst_tmp
@@ -6803,31 +6863,55 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|eof
+condition|)
+name|svn_stringbuf_appendcstr
+argument_list|(
+name|contents
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|len
+operator|=
+name|contents
+operator|->
+name|len
+expr_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_io_file_write_full
+name|svn_stream_write
 argument_list|(
-name|new_file
+name|new_stream
 argument_list|,
 name|contents
 operator|->
 name|data
 argument_list|,
-name|contents
-operator|->
+operator|&
 name|len
-argument_list|,
-name|NULL
-argument_list|,
-name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_io_file_close
+name|svn_stream_copy3
 argument_list|(
-name|new_file
+name|svn_stream_disown
+argument_list|(
+name|source
+argument_list|,
+name|pool
+argument_list|)
+argument_list|,
+name|new_stream
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|,
 name|pool
 argument_list|)
@@ -6836,6 +6920,8 @@ expr_stmt|;
 block|}
 comment|/* Do the atomic rename from our temporary location. */
 return|return
+name|svn_error_trace
+argument_list|(
 name|svn_io_file_rename
 argument_list|(
 name|dst_tmp
@@ -6843,6 +6929,7 @@ argument_list|,
 name|dst
 argument_list|,
 name|pool
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -6986,8 +7073,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-name|svn_error_trace
+name|SVN_ERR
 argument_list|(
 name|create_special_file_from_stream
 argument_list|(
@@ -6996,6 +7082,15 @@ argument_list|,
 name|dst
 argument_list|,
 name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|svn_error_trace
+argument_list|(
+name|svn_stream_close
+argument_list|(
+name|src_stream
 argument_list|)
 argument_list|)
 return|;
@@ -7283,7 +7378,7 @@ name|read_stream
 condition|)
 comment|/* We actually found a file to read from */
 return|return
-name|svn_stream_read
+name|svn_stream_read_full
 argument_list|(
 name|btn
 operator|->
@@ -7302,7 +7397,10 @@ name|APR_ENOENT
 argument_list|,
 name|NULL
 argument_list|,
+name|_
+argument_list|(
 literal|"Can't read special file: File '%s' not found"
+argument_list|)
 argument_list|,
 name|svn_dirent_local_style
 argument_list|(
@@ -7674,10 +7772,13 @@ argument_list|,
 name|pool
 argument_list|)
 expr_stmt|;
-name|svn_stream_set_read
+name|svn_stream_set_read2
 argument_list|(
 operator|*
 name|stream
+argument_list|,
+name|NULL
+comment|/* only full read support */
 argument_list|,
 name|read_handler_special
 argument_list|)

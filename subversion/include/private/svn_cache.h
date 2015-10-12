@@ -269,6 +269,13 @@ comment|/** Maximum numbers of cache entries.    * May be 0 if that information 
 name|apr_uint64_t
 name|total_entries
 decl_stmt|;
+comment|/** Number of index buckets with the given number of entries.    * Bucket sizes larger than the array will saturate into the    * highest array index.    */
+name|apr_uint64_t
+name|histogram
+index|[
+literal|32
+index|]
+decl_stmt|;
 block|}
 name|svn_cache__info_t
 typedef|;
@@ -343,7 +350,7 @@ modifier|*
 name|result_pool
 parameter_list|)
 function_decl|;
-comment|/**  * Given @a config, returns an APR memcached interface in @a  * *memcache_p allocated in @a result_pool if @a config contains entries in  * the SVN_CACHE_CONFIG_CATEGORY_MEMCACHED_SERVERS section describing  * memcached servers; otherwise, sets @a *memcache_p to NULL.  *  * If Subversion was not built with apr_memcache_support, then raises  * SVN_ERR_NO_APR_MEMCACHE if and only if @a config is configured to  * use memcache.  */
+comment|/**  * Given @a config, returns an APR memcached interface in @a  * *memcache_p allocated in @a result_pool if @a config contains entries in  * the SVN_CACHE_CONFIG_CATEGORY_MEMCACHED_SERVERS section describing  * memcached servers; otherwise, sets @a *memcache_p to NULL.  Use  * @a scratch_pool for temporary allocations.  *  * If Subversion was not built with apr_memcache_support, then raises  * SVN_ERR_NO_APR_MEMCACHE if and only if @a config is configured to  * use memcache.  */
 name|svn_error_t
 modifier|*
 name|svn_cache__make_memcache_from_config
@@ -360,6 +367,10 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/**  * Creates a new membuffer cache object in @a *cache. It will contain  * up to @a total_size bytes of data, using @a directory_size bytes  * for index information and the remainder for serialized objects.  *  * Since each index entry is about 50 bytes long, 1 to 10 percent of  * the @a total_size should be allocated to the @a directory_size,  * depending on the average serialized object size. Higher percentages  * will generally result in higher hit rates and reduced conflict  * resolution overhead.  *  * The cache will be split into @a segment_count segments of equal size.  * A higher number reduces lock contention but also limits the maximum  * cachable item size.  If it is not a power of two, it will be rounded  * down to next lower power of two. Also, there is an implementation  * specific upper limit and the setting will be capped there automatically.  * If the number is 0, a default will be derived from @a total_size.  *  * If access to the resulting cache object is guaranteed to be serialized,  * @a thread_safe may be set to @c FALSE for maximum performance.  *  * There is no limit on the number of threads reading a given cache segment  * concurrently.  Writes, however, need an exclusive lock on the respective  * segment.  @a allow_blocking_writes controls contention is handled here.  * If set to TRUE, writes will wait until the lock becomes available, i.e.  * reads should be short.  If set to FALSE, write attempts will be ignored  * (no data being written to the cache) if some reader or another writer  * currently holds the segment lock.  *  * Allocations will be made in @a result_pool, in particular the data buffers.  */
@@ -392,7 +403,24 @@ modifier|*
 name|result_pool
 parameter_list|)
 function_decl|;
-comment|/**  * Creates a new cache in @a *cache_p, storing the data in a potentially  * shared @a membuffer object.  The elements in the cache will be indexed  * by keys of length @a klen, which may be APR_HASH_KEY_STRING if they  * are strings.  Values will be serialized for the memcache using @a  * serialize_func and deserialized using @a deserialize_func.  Because  * the same memcache object may cache many different kinds of values  * form multiple caches, @a prefix should be specified to differentiate  * this cache from other caches.  @a *cache_p will be allocated in @a result_pool.  *  * If @a deserialize_func is NULL, then the data is returned as an  * svn_stringbuf_t; if @a serialize_func is NULL, then the data is  * assumed to be an svn_stringbuf_t.  *  * If @a thread_safe is true, and APR is compiled with threads, all  * accesses to the cache will be protected with a mutex, if the shared  * @a memcache has also been created with thread_safe flag set.  *  * These caches do not support svn_cache__iter.  */
+comment|/**  * @defgroup Standard priority classes for #svn_cache__create_membuffer_cache.  * @{  */
+comment|/**  * Data in this priority class should not be removed from the cache unless  * absolutely necessary.  Use of this should be very restricted.  */
+define|#
+directive|define
+name|SVN_CACHE__MEMBUFFER_HIGH_PRIORITY
+value|10000
+comment|/**  * Data in this priority class has a good chance to remain in cache unless  * there is more data in this class than the cache's capacity.  Use of this  * as the default for all information that is costly to fetch from disk.  */
+define|#
+directive|define
+name|SVN_CACHE__MEMBUFFER_DEFAULT_PRIORITY
+value|1000
+comment|/**  * Data in this priority class will be removed as soon as the cache starts  * filling up.  Use of this for ephemeral data that can easily be acquired  * again from other sources.  */
+define|#
+directive|define
+name|SVN_CACHE__MEMBUFFER_LOW_PRIORITY
+value|100
+comment|/** @} */
+comment|/**  * Creates a new cache in @a *cache_p, storing the data in a potentially  * shared @a membuffer object.  The elements in the cache will be indexed  * by keys of length @a klen, which may be APR_HASH_KEY_STRING if they  * are strings.  Values will be serialized for the memcache using @a  * serialize_func and deserialized using @a deserialize_func.  Because  * the same memcache object may cache many different kinds of values  * form multiple caches, @a prefix should be specified to differentiate  * this cache from other caches.  All entries written through this cache  * interface will be assigned into the given @a priority class.  @a *cache_p  * will be allocated in @a result_pool.  @a scratch_pool is used for  * temporary allocations.  *  * If @a deserialize_func is NULL, then the data is returned as an  * svn_stringbuf_t; if @a serialize_func is NULL, then the data is  * assumed to be an svn_stringbuf_t.  *  * If @a thread_safe is true, and APR is compiled with threads, all  * accesses to the cache will be protected with a mutex, if the shared  * @a memcache has also been created with thread_safe flag set.  *  * These caches do not support svn_cache__iter.  */
 name|svn_error_t
 modifier|*
 name|svn_cache__create_membuffer_cache
@@ -420,12 +448,19 @@ name|char
 modifier|*
 name|prefix
 parameter_list|,
+name|apr_uint32_t
+name|priority
+parameter_list|,
 name|svn_boolean_t
 name|thread_safe
 parameter_list|,
 name|apr_pool_t
 modifier|*
 name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/**  * Sets @a handler to be @a cache's error handling routine.  If any  * error is returned from a call to svn_cache__get or svn_cache__set, @a  * handler will be called with @a baton and the error, and the  * original function will return whatever error @a handler returns  * instead (possibly SVN_NO_ERROR); @a handler will receive the pool  * passed to the svn_cache_* function.  @a scratch_pool is used for temporary  * allocations.  */
@@ -491,6 +526,29 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|result_pool
+parameter_list|)
+function_decl|;
+comment|/**  * Looks for an entry indexed by @a key in @a cache,  setting @a *found  * to TRUE if an entry has been found and FALSE otherwise.  @a key may be  * NULL in which case @a *found will be FALSE.  Temporary allocations will  * be made from @a scratch_pool.  */
+name|svn_error_t
+modifier|*
+name|svn_cache__has_key
+parameter_list|(
+name|svn_boolean_t
+modifier|*
+name|found
+parameter_list|,
+name|svn_cache__t
+modifier|*
+name|cache
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|key
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/**  * Stores the value @a value under the key @a key in @a cache.  Uses @a  * scratch_pool for temporary allocations.  The cache makes copies of  * @a key and @a value if necessary (that is, @a key and @a value may  * have shorter lifetimes than the cache).  @a key may be NULL in which  * case the cache will remain unchanged.  *  * If there is already a value for @a key, this will replace it.  Bear  * in mind that in some circumstances this may leak memory (that is,  * the cache's copy of the previous value may not be immediately  * cleared); it is only guaranteed to not leak for caches created with  * @a items_per_page equal to 1.  */
@@ -623,7 +681,7 @@ modifier|*
 name|result_pool
 parameter_list|)
 function_decl|;
-comment|/**  * Return the information given in @a info formatted as a multi-line string.  * Allocations take place in @a result_pool.  */
+comment|/**  * Return the information given in @a info formatted as a multi-line string.  * If @a access_only has been set, size and fill-level statistics will be  * omitted.  Allocations take place in @a result_pool.  */
 name|svn_string_t
 modifier|*
 name|svn_cache__format_info
@@ -633,18 +691,41 @@ name|svn_cache__info_t
 modifier|*
 name|info
 parameter_list|,
+name|svn_boolean_t
+name|access_only
+parameter_list|,
 name|apr_pool_t
 modifier|*
 name|result_pool
 parameter_list|)
 function_decl|;
-comment|/* Access the process-global (singleton) membuffer cache. The first call  * will automatically allocate the cache using the current cache config.  * NULL will be returned if the desired cache size is 0.  *  * @since New in 1.7.  */
+comment|/**  * Access the process-global (singleton) membuffer cache. The first call  * will automatically allocate the cache using the current cache config.  * NULL will be returned if the desired cache size is 0.  *  * @since New in 1.7.  */
 name|struct
 name|svn_membuffer_t
 modifier|*
 name|svn_cache__get_global_membuffer_cache
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+comment|/**  * Return total access and size stats over all membuffer caches as they  * share the underlying data buffer.  The result will be allocated in POOL.  */
+name|svn_cache__info_t
+modifier|*
+name|svn_cache__membuffer_get_global_info
+parameter_list|(
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/**  * Remove all current contents from CACHE.  *  * NOTE:  In a multi-threaded environment, new contents may have been put  * into the cache by the time this function returns.  */
+name|svn_error_t
+modifier|*
+name|svn_cache__membuffer_clear
+parameter_list|(
+name|svn_membuffer_t
+modifier|*
+name|cache
 parameter_list|)
 function_decl|;
 comment|/** @} */

@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"private/svn_sorts_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ra_loader.h"
 end_include
 
@@ -1026,6 +1032,10 @@ name|char
 modifier|*
 name|fs_path
 decl_stmt|;
+name|apr_array_header_t
+modifier|*
+name|sorted_location_revisions
+decl_stmt|;
 comment|/* Fetch the absolute FS path associated with PATH. */
 name|SVN_ERR
 argument_list|(
@@ -1102,19 +1112,18 @@ name|SVN_NO_ERROR
 return|;
 block|}
 comment|/* Figure out the youngest and oldest revs (amongst the set of      requested revisions + the peg revision) so we can avoid      unnecessary log parsing. */
-name|qsort
+name|sorted_location_revisions
+operator|=
+name|apr_array_copy
 argument_list|(
-name|location_revisions
-operator|->
-name|elts
+name|pool
 argument_list|,
 name|location_revisions
-operator|->
-name|nelts
-argument_list|,
-name|location_revisions
-operator|->
-name|elt_size
+argument_list|)
+expr_stmt|;
+name|svn_sort__array
+argument_list|(
+name|sorted_location_revisions
 argument_list|,
 name|compare_revisions
 argument_list|)
@@ -1123,7 +1132,7 @@ name|oldest_requested
 operator|=
 name|APR_ARRAY_IDX
 argument_list|(
-name|location_revisions
+name|sorted_location_revisions
 argument_list|,
 literal|0
 argument_list|,
@@ -1134,9 +1143,9 @@ name|youngest_requested
 operator|=
 name|APR_ARRAY_IDX
 argument_list|(
-name|location_revisions
+name|sorted_location_revisions
 argument_list|,
-name|location_revisions
+name|sorted_location_revisions
 operator|->
 name|nelts
 operator|-
@@ -1222,7 +1231,7 @@ name|apr_array_copy
 argument_list|(
 name|pool
 argument_list|,
-name|location_revisions
+name|sorted_location_revisions
 argument_list|)
 expr_stmt|;
 name|lrb
@@ -1354,7 +1363,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|location_revisions
+name|sorted_location_revisions
 operator|->
 name|nelts
 condition|;
@@ -1367,7 +1376,7 @@ name|rev
 init|=
 name|APR_ARRAY_IDX
 argument_list|(
-name|location_revisions
+name|sorted_location_revisions
 argument_list|,
 name|i
 argument_list|,
@@ -3682,7 +3691,7 @@ name|char
 modifier|*
 name|name
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -3690,7 +3699,7 @@ decl_stmt|;
 name|apr_ssize_t
 name|klen
 init|=
-name|svn__apr_hash_index_klen
+name|apr_hash_this_key_len
 argument_list|(
 name|hi
 argument_list|)
@@ -3699,7 +3708,7 @@ name|svn_string_t
 modifier|*
 name|value
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -3789,11 +3798,11 @@ name|final_hash
 expr_stmt|;
 name|svn_sort__array_insert
 argument_list|(
-operator|&
-name|new_iprop
-argument_list|,
 operator|*
 name|inherited_props
+argument_list|,
+operator|&
+name|new_iprop
 argument_list|,
 literal|0
 argument_list|)

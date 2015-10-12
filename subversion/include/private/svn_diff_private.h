@@ -108,7 +108,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Display property changes in pseudo-Unidiff format.  *  * Write to @a outstream the changes described by @a propchanges based on  * original properties @a original_props.  *  * Write all mark-up text (headers and so on) using the character encoding  * @a encoding.  *  *   ### I think the idea is: we want the output to use @a encoding, and  *       we will assume the text of the user's files and the values of any  *       user-defined properties are already using @a encoding, so we don't  *       want to re-code the *whole* output.  *       So, shouldn't we also convert all prop names and all 'svn:*' prop  *       values to @a encoding, since we know those are stored in UTF-8?  *  * @a original_props is a hash mapping (const char *) property names to  * (svn_string_t *) values.  @a propchanges is an array of svn_prop_t  * representing the new values for any of the properties that changed, with  * a NULL value to represent deletion.  *  * If @a pretty_print_mergeinfo is true, then describe 'svn:mergeinfo'  * property changes in a human-readable form that says what changes were  * merged or reverse merged; otherwise (or if the mergeinfo property values  * don't parse correctly) display them just like any other property.  *  * Use @a scratch_pool for temporary allocations.  */
+comment|/* Display property changes in pseudo-Unidiff format.  *  * Write to @a outstream the changes described by @a propchanges based on  * original properties @a original_props.  *  * Write all mark-up text (headers and so on) using the character encoding  * @a encoding.  *  *   ### I think the idea is: we want the output to use @a encoding, and  *       we will assume the text of the user's files and the values of any  *       user-defined properties are already using @a encoding, so we don't  *       want to re-code the *whole* output.  *       So, shouldn't we also convert all prop names and all 'svn:*' prop  *       values to @a encoding, since we know those are stored in UTF-8?  *  * @a original_props is a hash mapping (const char *) property names to  * (svn_string_t *) values.  @a propchanges is an array of svn_prop_t  * representing the new values for any of the properties that changed, with  * a NULL value to represent deletion.  *  * If @a pretty_print_mergeinfo is true, then describe 'svn:mergeinfo'  * property changes in a human-readable form that says what changes were  * merged or reverse merged; otherwise (or if the mergeinfo property values  * don't parse correctly) display them just like any other property.  *  * Pass @a context_size, @a cancel_func and @a cancel_baton to the diff  * output functions.  *  * Use @a scratch_pool for temporary allocations.  */
 name|svn_error_t
 modifier|*
 name|svn_diff__display_prop_diffs
@@ -133,6 +133,16 @@ name|original_props
 parameter_list|,
 name|svn_boolean_t
 name|pretty_print_mergeinfo
+parameter_list|,
+name|int
+name|context_size
+parameter_list|,
+name|svn_cancel_func_t
+name|cancel_func
+parameter_list|,
+name|void
+modifier|*
+name|cancel_baton
 parameter_list|,
 name|apr_pool_t
 modifier|*

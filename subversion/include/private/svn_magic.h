@@ -28,17 +28,22 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* This routine initialises libmagic.  * Upon success a new *MAGIC_COOKIE is allocated in RESULT_POOL.  * On failure *MAGIC_COOKIE is set to NULL.  * All resources used by libmagic are freed by a cleanup handler  * installed on RESULT_POOL, i.e. *MAGIC_COOKIE becomes invalid when  * the pool is cleared! */
+comment|/* This routine initialises libmagic.  CONFIG is a config hash and  * may be NULL.  * Upon success a new *MAGIC_COOKIE is allocated in RESULT_POOL.  * On failure *MAGIC_COOKIE is set to NULL.  * All resources used by libmagic are freed by a cleanup handler  * installed on RESULT_POOL, i.e. *MAGIC_COOKIE becomes invalid when  * the pool is cleared! */
 end_comment
 
 begin_function_decl
-name|void
+name|svn_error_t
+modifier|*
 name|svn_magic__init
 parameter_list|(
 name|svn_magic__cookie_t
 modifier|*
 modifier|*
 name|magic_cookie
+parameter_list|,
+name|apr_hash_t
+modifier|*
+name|config
 parameter_list|,
 name|apr_pool_t
 modifier|*

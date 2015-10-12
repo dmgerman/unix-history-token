@@ -1922,11 +1922,7 @@ literal|":"
 argument_list|,
 name|path
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -4753,7 +4749,7 @@ name|svn_wc_entry_t
 modifier|*
 name|this_entry
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)

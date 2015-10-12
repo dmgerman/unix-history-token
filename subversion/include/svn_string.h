@@ -139,7 +139,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** Create a new string copied from a generic string of bytes, @a bytes, of  * length @a size bytes.  @a bytes is NOT assumed to be null-terminated, but  * the new string will be.  */
+comment|/** Create a new string copied from a generic string of bytes, @a bytes, of  * length @a size bytes.  @a bytes is NOT assumed to be null-terminated, but  * the new string will be.  *  * @since Since 1.9, @a bytes can be NULL if @a size is zero.  */
 name|svn_string_t
 modifier|*
 name|svn_string_ncreate
@@ -259,7 +259,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** Return a duplicate of @a original_string. */
+comment|/** Return a duplicate of @a original_string.  *  * @since Since 1.9, @a original_string can be NULL in which case NULL will  * be returned.  */
 end_comment
 
 begin_function_decl
@@ -368,7 +368,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** Create a new stringbuf copied from the generic string of bytes, @a bytes,  * of length @a size bytes.  @a bytes is NOT assumed to be null-terminated,  * but the new stringbuf will be.  */
+comment|/** Create a new stringbuf copied from the generic string of bytes, @a bytes,  * of length @a size bytes.  @a bytes is NOT assumed to be null-terminated,  * but the new stringbuf will be.  *  * @since Since 1.9, @a bytes can be NULL if @a size is zero.  */
 end_comment
 
 begin_function_decl
@@ -437,6 +437,26 @@ name|svn_stringbuf_create_from_string
 parameter_list|(
 specifier|const
 name|svn_string_t
+modifier|*
+name|str
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** Create a new stringbuf using the given @a str as initial buffer.  * Allocate the result in @a pool.  In contrast to #svn_stringbuf_create,  * the contents of @a str may change when the stringbuf gets modified.  *  * @since New in 1.9  */
+end_comment
+
+begin_function_decl
+name|svn_stringbuf_t
+modifier|*
+name|svn_stringbuf_create_wrap
+parameter_list|(
+name|char
 modifier|*
 name|str
 parameter_list|,
@@ -627,7 +647,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** Append the single character @a byte onto @a targetstr.  *  * This is an optimized version of svn_stringbuf_appendbytes()  * that is much faster to call and execute. Gains vary with the ABI.  * The advantages extend beyond the actual call because the reduced  * register pressure allows for more optimization within the caller.  *  * reallocs if necessary. @a targetstr is affected, nothing else is.  * @since New in 1.7.  */
+comment|/** Append the single character @a byte onto @a targetstr.  *  * This is an optimized version of svn_stringbuf_appendbytes()  * that is much faster to call and execute. Gains vary with the ABI.  * The advantages extend beyond the actual call because the reduced  * register pressure allows for more optimization within the caller.  *  * Reallocs if necessary. @a targetstr is affected, nothing else is.  * @since New in 1.7.  */
 end_comment
 
 begin_function_decl
@@ -645,7 +665,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** Append an array of bytes onto @a targetstr.  *  * reallocs if necessary. @a targetstr is affected, nothing else is.  */
+comment|/** Append the array of bytes @a bytes of length @a count onto @a targetstr.  *  * Reallocs if necessary. @a targetstr is affected, nothing else is.  *  * @since 1.9 @a bytes can be NULL if @a count is zero.  */
 end_comment
 
 begin_function_decl
@@ -668,7 +688,28 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** Append the stringbuf @c appendstr onto @a targetstr.  *  * reallocs if necessary. @a targetstr is affected, nothing else is.  */
+comment|/** Append @a byte @a count times onto @a targetstr.  *  * Reallocs if necessary. @a targetstr is affected, nothing else is.  * @since New in 1.9.  */
+end_comment
+
+begin_function_decl
+name|void
+name|svn_stringbuf_appendfill
+parameter_list|(
+name|svn_stringbuf_t
+modifier|*
+name|targetstr
+parameter_list|,
+name|char
+name|byte
+parameter_list|,
+name|apr_size_t
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** Append the stringbuf @c appendstr onto @a targetstr.  *  * Reallocs if necessary. @a targetstr is affected, nothing else is.  */
 end_comment
 
 begin_function_decl
@@ -688,7 +729,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** Append the C string @a cstr onto @a targetstr.  *  * reallocs if necessary. @a targetstr is affected, nothing else is.  */
+comment|/** Append the C string @a cstr onto @a targetstr.  *  * Reallocs if necessary. @a targetstr is affected, nothing else is.  */
 end_comment
 
 begin_function_decl
@@ -708,7 +749,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** Read @a count bytes from @a bytes and insert them into @a str at  * position @a pos and following.  The resulting string will be  * @c count+str->len bytes long.  If @c pos is larger or equal to the  * number of bytes currently used in @a str,  simply append @a bytes.  *  * Reallocs if necessary. @a str is affected, nothing else is.  *  * @note The inserted string may be a sub-range if @a str.  *  * @since New in 1.8.  */
+comment|/** Insert into @a str at position @a pos an array of bytes @a bytes  * which is @a count bytes long.  *  * The resulting string will be @c count+str->len bytes long.  If  * @a pos is larger than or equal to @c str->len, simply append @a bytes.  *  * Reallocs if necessary. @a str is affected, nothing else is.  *  * @note The inserted string may be a sub-range of @a str.  *  * @since New in 1.8.  *  * @since Since 1.9, @a bytes can be NULL if @a count is zero.  */
 end_comment
 
 begin_function_decl
@@ -734,7 +775,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** Removes @a count bytes from @a str, starting at position @a pos.  * If that range exceeds the current string data,  @a str gets truncated  * at @a pos.  If the latter is larger or equal to @c str->pos, this will  * be a no-op.  Otherwise, the resulting string will be @c str->len-count  * bytes long.  *  * @since New in 1.8.  */
+comment|/** Remove @a count bytes from @a str, starting at position @a pos.  *  * If that range exceeds the current string data, truncate @a str at  * @a pos.  If @a pos is larger than or equal to @c str->len, this will  * be a no-op.  Otherwise, the resulting string will be @c str->len-count  * bytes long.  *  * @since New in 1.8.  */
 end_comment
 
 begin_function_decl
@@ -755,7 +796,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** Replace in @a str the substring which starts at @a pos and is @a  * old_count bytes long with a new substring @a bytes (which is @a  * new_count bytes long).  *  * This is faster but functionally equivalent to the following sequence:  * @code      svn_stringbuf_remove(str, pos, old_count);      svn_stringbuf_insert(str, pos, bytes, new_count);  * @endcode  *  * @since New in 1.8.  */
+comment|/** Replace in @a str the substring which starts at @a pos and is @a  * old_count bytes long with a new substring @a bytes which is @a  * new_count bytes long.  *  * This is faster but functionally equivalent to the following sequence:  * @code      svn_stringbuf_remove(str, pos, old_count);      svn_stringbuf_insert(str, pos, bytes, new_count);  * @endcode  *  * @since New in 1.8.  *  * @since Since 1.9, @a bytes can be NULL if @a new_count is zero.  */
 end_comment
 
 begin_function_decl
@@ -908,7 +949,7 @@ comment|/**  * @defgroup svn_string_cstrings C string functions  * @{  */
 end_comment
 
 begin_comment
-comment|/** Divide @a input into substrings along @a sep_chars boundaries, return an  * array of copies of those substrings (plain const char*), allocating both  * the array and the copies in @a pool.  *  * None of the elements added to the array contain any of the  * characters in @a sep_chars, and none of the new elements are empty  * (thus, it is possible that the returned array will have length  * zero).  *  * If @a chop_whitespace is TRUE, then remove leading and trailing  * whitespace from the returned strings.  */
+comment|/** Divide @a input into substrings, interpreting any char from @a sep  * as a token separator.  *  * Return an array of copies of those substrings (plain const char*),  * allocating both the array and the copies in @a pool.  *  * None of the elements added to the array contain any of the  * characters in @a sep_chars, and none of the new elements are empty  * (thus, it is possible that the returned array will have length  * zero).  *  * If @a chop_whitespace is TRUE, then remove leading and trailing  * whitespace from the returned strings.  */
 end_comment
 
 begin_function_decl
@@ -1096,7 +1137,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Parse the C string @a str into a 64 bit number, and return it in @a *n.  * Assume that the number is represented in base @a base.  * Raise an error if conversion fails (e.g. due to overflow), or if the  * converted number is smaller than @a minval or larger than @a maxval.  *  * @since New in 1.7.  */
+comment|/**  * Parse the C string @a str into a 64 bit number, and return it in @a *n.  * Assume that the number is represented in base @a base.  * Raise an error if conversion fails (e.g. due to overflow), or if the  * converted number is smaller than @a minval or larger than @a maxval.  * Leading whitespace in @a str is skipped in a locale-dependent way.  *  * @since New in 1.7.  */
 end_comment
 
 begin_function_decl
@@ -1126,7 +1167,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Parse the C string @a str into a 64 bit number, and return it in @a *n.  * Assume that the number is represented in base 10.  * Raise an error if conversion fails (e.g. due to overflow).  *  * @since New in 1.7.  */
+comment|/**  * Parse the C string @a str into a 64 bit number, and return it in @a *n.  * Assume that the number is represented in base 10.  * Raise an error if conversion fails (e.g. due to overflow).  * Leading whitespace in @a str is skipped in a locale-dependent way.  *  * @since New in 1.7.  */
 end_comment
 
 begin_function_decl
@@ -1147,7 +1188,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Parse the C string @a str into a 32 bit number, and return it in @a *n.  * Assume that the number is represented in base 10.  * Raise an error if conversion fails (e.g. due to overflow).  *  * @since New in 1.7.  */
+comment|/**  * Parse the C string @a str into a 32 bit number, and return it in @a *n.  * Assume that the number is represented in base 10.  * Raise an error if conversion fails (e.g. due to overflow).  * Leading whitespace in @a str is skipped in a locale-dependent way.  *  * @since New in 1.7.  */
 end_comment
 
 begin_function_decl
@@ -1168,7 +1209,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Parse the C string @a str into an unsigned 64 bit number, and return  * it in @a *n. Assume that the number is represented in base @a base.  * Raise an error if conversion fails (e.g. due to overflow), or if the  * converted number is smaller than @a minval or larger than @a maxval.  *  * @since New in 1.7.  */
+comment|/**  * Parse the C string @a str into an unsigned 64 bit number, and return  * it in @a *n. Assume that the number is represented in base @a base.  * Raise an error if conversion fails (e.g. due to overflow), or if the  * converted number is smaller than @a minval or larger than @a maxval.  * Leading whitespace in @a str is skipped in a locale-dependent way.  *  * @since New in 1.7.  */
 end_comment
 
 begin_function_decl
@@ -1198,7 +1239,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Parse the C string @a str into an unsigned 64 bit number, and return  * it in @a *n. Assume that the number is represented in base 10.  * Raise an error if conversion fails (e.g. due to overflow).  *  * @since New in 1.7.  */
+comment|/**  * Parse the C string @a str into an unsigned 64 bit number, and return  * it in @a *n. Assume that the number is represented in base 10.  * Raise an error if conversion fails (e.g. due to overflow).  * Leading whitespace in @a str is skipped in a locale-dependent way.  *  * @since New in 1.7.  */
 end_comment
 
 begin_function_decl
@@ -1219,7 +1260,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Parse the C string @a str into an unsigned 32 bit number, and return  * it in @a *n. Assume that the number is represented in base 10.  * Raise an error if conversion fails (e.g. due to overflow).  *  * @since New in 1.7.  */
+comment|/**  * Parse the C string @a str into an unsigned 32 bit number, and return  * it in @a *n. Assume that the number is represented in base 10.  * Raise an error if conversion fails (e.g. due to overflow).  * Leading whitespace in @a str is skipped in a locale-dependent way.  *  * @since New in 1.7.  */
 end_comment
 
 begin_function_decl
@@ -1236,6 +1277,29 @@ specifier|const
 name|char
 modifier|*
 name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Skip the common prefix @a prefix from the C string @a str, and return  * a pointer to the next character after the prefix.  * Return @c NULL if @a str does not start with @a prefix.  *  * @since New in 1.9.  */
+end_comment
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|svn_cstring_skip_prefix
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|prefix
 parameter_list|)
 function_decl|;
 end_function_decl

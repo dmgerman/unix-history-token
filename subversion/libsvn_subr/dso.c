@@ -51,6 +51,12 @@ directive|include
 file|"private/svn_atomic.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"private/svn_subr_private.h"
+end_include
+
 begin_comment
 comment|/* A mutex to protect our global pool and cache. */
 end_comment
@@ -387,6 +393,20 @@ argument_list|)
 expr_stmt|;
 return|return
 name|SVN_NO_ERROR
+return|;
+block|}
+end_function
+
+begin_function
+name|apr_pool_t
+modifier|*
+name|svn_dso__pool
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|dso_pool
 return|;
 block|}
 end_function

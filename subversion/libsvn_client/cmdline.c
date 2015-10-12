@@ -221,7 +221,7 @@ name|err
 operator|->
 name|apr_err
 operator|==
-name|SVN_ERR_RA_LOCAL_REPOS_OPEN_FAILED
+name|SVN_ERR_RA_CANNOT_CREATE_SESSION
 operator|)
 operator|||
 operator|(
@@ -613,6 +613,43 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Reject the form "@abc", a peg specifier with no path. */
+if|if
+condition|(
+name|true_target
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+operator|&&
+name|peg_rev
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+return|return
+name|svn_error_createf
+argument_list|(
+name|SVN_ERR_BAD_FILENAME
+argument_list|,
+name|NULL
+argument_list|,
+name|_
+argument_list|(
+literal|"'%s' is just a peg revision. "
+literal|"Maybe try '%s@' instead?"
+argument_list|)
+argument_list|,
+name|utf8_target
+argument_list|,
+name|utf8_target
+argument_list|)
+return|;
+block|}
 comment|/* URLs and wc-paths get treated differently. */
 if|if
 condition|(
@@ -900,11 +937,7 @@ name|true_target
 argument_list|,
 name|peg_rev
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1149,11 +1182,7 @@ name|true_target
 argument_list|,
 name|peg_rev
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 block|}

@@ -68,6 +68,12 @@ name|svn_checksum_md5
 block|,
 comment|/** The checksum is (or should be set to) a SHA1 checksum. */
 name|svn_checksum_sha1
+block|,
+comment|/** The checksum is (or should be set to) a FNV-1a 32 bit checksum,    * in big endian byte order.    * @since New in 1.9. */
+name|svn_checksum_fnv1a_32
+block|,
+comment|/** The checksum is (or should be set to) a modified FNV-1a 32 bit,    * in big endian byte order.    * @since New in 1.9. */
+name|svn_checksum_fnv1a_32x4
 block|}
 name|svn_checksum_kind_t
 typedef|;

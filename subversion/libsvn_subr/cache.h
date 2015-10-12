@@ -69,6 +69,32 @@ modifier|*
 name|result_pool
 parameter_list|)
 function_decl|;
+comment|/* See svn_cache__has_key(). */
+name|svn_error_t
+modifier|*
+function_decl|(
+modifier|*
+name|has_key
+function_decl|)
+parameter_list|(
+name|svn_boolean_t
+modifier|*
+name|found
+parameter_list|,
+name|void
+modifier|*
+name|cache_implementation
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|key
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
 comment|/* See svn_cache__set(). */
 name|svn_error_t
 modifier|*
@@ -268,6 +294,10 @@ decl_stmt|;
 comment|/* Total number of function calls that returned an error. */
 name|apr_uint64_t
 name|failures
+decl_stmt|;
+comment|/* Cause all getters to act as though the cache contains no data.      (Currently this never becomes set except in maintainer builds.) */
+name|svn_boolean_t
+name|pretend_empty
 decl_stmt|;
 block|}
 struct|;

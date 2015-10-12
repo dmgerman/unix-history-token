@@ -177,6 +177,10 @@ parameter_list|,
 name|svn_boolean_t
 name|quiet
 parameter_list|,
+name|apr_hash_t
+modifier|*
+name|skip_revprops
+parameter_list|,
 name|svn_cancel_func_t
 name|cancel_func
 parameter_list|,

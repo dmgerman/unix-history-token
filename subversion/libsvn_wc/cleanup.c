@@ -238,6 +238,15 @@ name|char
 modifier|*
 name|dir_abspath
 parameter_list|,
+name|svn_boolean_t
+name|break_locks
+parameter_list|,
+name|svn_boolean_t
+name|fix_recorded_timestamps
+parameter_list|,
+name|svn_boolean_t
+name|vacuum_pristines
+parameter_list|,
 name|svn_cancel_func_t
 name|cancel_func
 parameter_list|,
@@ -314,7 +323,7 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-name|TRUE
+name|break_locks
 argument_list|,
 name|scratch_pool
 argument_list|)
@@ -379,6 +388,8 @@ comment|/* Perform these operations if we lock the entire working copy.      Not
 if|if
 condition|(
 name|is_wcroot
+operator|&&
+name|vacuum_pristines
 condition|)
 block|{
 comment|/* Cleanup the tmp area of the admin subdir, if running the log has not        removed it!  The logs have been run, so anything left here has no hope        of being useful. */
@@ -408,7 +419,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Instead of implementing a separate repair step here, use the standard      status walker's optimized implementation, which performs repairs when      there is a lock. */
+if|if
+condition|(
+name|fix_recorded_timestamps
+condition|)
+block|{
+comment|/* Instead of implementing a separate repair step here, use the standard          status walker's optimized implementation, which performs repairs when          there is a lock. */
 name|SVN_ERR
 argument_list|(
 name|svn_wc__internal_walk_status
@@ -443,6 +459,7 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* All done, toss the lock */
 name|SVN_ERR
 argument_list|(
@@ -462,14 +479,10 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ### possibly eliminate the WC_CTX parameter? callers really shouldn't    ### be doing anything *but* running a cleanup, and we need a special    ### DB anyway. ... *shrug* ... consider later.  */
-end_comment
-
 begin_function
 name|svn_error_t
 modifier|*
-name|svn_wc_cleanup3
+name|svn_wc_cleanup4
 parameter_list|(
 name|svn_wc_context_t
 modifier|*
@@ -480,12 +493,31 @@ name|char
 modifier|*
 name|local_abspath
 parameter_list|,
+name|svn_boolean_t
+name|break_locks
+parameter_list|,
+name|svn_boolean_t
+name|fix_recorded_timestamps
+parameter_list|,
+name|svn_boolean_t
+name|clear_dav_cache
+parameter_list|,
+name|svn_boolean_t
+name|vacuum_pristines
+parameter_list|,
 name|svn_cancel_func_t
 name|cancel_func
 parameter_list|,
 name|void
 modifier|*
 name|cancel_baton
+parameter_list|,
+name|svn_wc_notify_func2_t
+name|notify_func
+parameter_list|,
+name|void
+modifier|*
+name|notify_baton
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -504,7 +536,34 @@ name|local_abspath
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* We need a DB that allows a non-empty work queue (though it *will*      auto-upgrade). We'll handle everything manually.  */
+name|SVN_ERR_ASSERT
+argument_list|(
+name|wc_ctx
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|break_locks
+condition|)
+block|{
+comment|/* We'll handle everything manually.  */
+comment|/* Close the existing database (if any) to avoid problems with          exclusive database usage */
+name|SVN_ERR
+argument_list|(
+name|svn_wc__db_drop_root
+argument_list|(
+name|wc_ctx
+operator|->
+name|db
+argument_list|,
+name|local_abspath
+argument_list|,
+name|scratch_pool
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|SVN_ERR
 argument_list|(
 name|svn_wc__db_open
@@ -525,6 +584,14 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|db
+operator|=
+name|wc_ctx
+operator|->
+name|db
+expr_stmt|;
 name|SVN_ERR
 argument_list|(
 name|cleanup_internal
@@ -532,6 +599,12 @@ argument_list|(
 name|db
 argument_list|,
 name|local_abspath
+argument_list|,
+name|break_locks
+argument_list|,
+name|fix_recorded_timestamps
+argument_list|,
+name|vacuum_pristines
 argument_list|,
 name|cancel_func
 argument_list|,
@@ -542,6 +615,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* The DAV cache suffers from flakiness from time to time, and the      pre-1.7 prescribed workarounds aren't as user-friendly in WC-NG. */
+if|if
+condition|(
+name|clear_dav_cache
+condition|)
 name|SVN_ERR
 argument_list|(
 name|svn_wc__db_base_clear_dav_cache_recursive
@@ -554,6 +631,10 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vacuum_pristines
+condition|)
 name|SVN_ERR
 argument_list|(
 name|svn_wc__db_vacuum
@@ -567,6 +648,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* We're done with this DB, so proactively close it.  */
+if|if
+condition|(
+name|break_locks
+condition|)
 name|SVN_ERR
 argument_list|(
 name|svn_wc__db_close

@@ -215,7 +215,7 @@ end_function
 begin_function
 name|svn_error_t
 modifier|*
-name|svn_ver__check_list2
+name|svn_ver_check_list2
 parameter_list|(
 specifier|const
 name|svn_version_t

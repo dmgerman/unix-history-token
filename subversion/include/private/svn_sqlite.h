@@ -137,9 +137,9 @@ modifier|*
 name|values
 index|[]
 parameter_list|,
-name|apr_pool_t
+name|void
 modifier|*
-name|scatch_pool
+name|baton
 parameter_list|)
 function_decl|;
 comment|/* Step the given statement; if it returns SQLITE_DONE, reset the statement.    Otherwise, raise an SVN error.  */
@@ -222,7 +222,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Open a connection in *DB to the database at PATH. Validate the schema,    creating/upgrading to LATEST_SCHEMA if needed using the instructions    in UPGRADE_SQL. The resulting DB is allocated in RESULT_POOL, and any    temporary allocations are made in SCRATCH_POOL.     STATEMENTS is an array of strings which may eventually be executed, the    last element of which should be NULL.  These strings and the array itself    are not duplicated internally, and should have a lifetime at least as long    as RESULT_POOL.    STATEMENTS itself may be NULL, in which case it has no impact.    See svn_sqlite__get_statement() for how these strings are used.     The statements will be finalized and the SQLite database will be closed    when RESULT_POOL is cleaned up. */
+comment|/* Open a connection in *DB to the database at PATH. Validate the schema,    creating/upgrading to LATEST_SCHEMA if needed using the instructions    in UPGRADE_SQL. The resulting DB is allocated in RESULT_POOL, and any    temporary allocations are made in SCRATCH_POOL.     STATEMENTS is an array of strings which may eventually be executed, the    last element of which should be NULL.  These strings and the array itself    are not duplicated internally, and should have a lifetime at least as long    as RESULT_POOL.    STATEMENTS itself may be NULL, in which case it has no impact.    See svn_sqlite__get_statement() for how these strings are used.     TIMEOUT defines the SQLite busy timeout, values<= 0 cause a Subversion    default to be used.     The statements will be finalized and the SQLite database will be closed    when RESULT_POOL is cleaned up. */
 name|svn_error_t
 modifier|*
 name|svn_sqlite__open
@@ -235,7 +235,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|repos_path
+name|path
 parameter_list|,
 name|svn_sqlite__mode_t
 name|mode
@@ -257,6 +257,9 @@ specifier|const
 modifier|*
 name|upgrade_sql
 parameter_list|,
+name|apr_int32_t
+name|timeout
+parameter_list|,
 name|apr_pool_t
 modifier|*
 name|result_pool
@@ -276,7 +279,7 @@ modifier|*
 name|db
 parameter_list|)
 function_decl|;
-comment|/* Add a custom function to be used with this database connection.  The data    in BATON should live at least as long as the connection in DB. */
+comment|/* Add a custom function to be used with this database connection.  The data    in BATON should live at least as long as the connection in DB.     Pass TRUE if the result of the function is constant within a statement with    a specific set of argument values and FALSE if not (or when in doubt). When    TRUE newer Sqlite versions use this knowledge for query optimizations. */
 name|svn_error_t
 modifier|*
 name|svn_sqlite__create_scalar_function
@@ -292,6 +295,9 @@ name|func_name
 parameter_list|,
 name|int
 name|argc
+parameter_list|,
+name|svn_boolean_t
+name|deterministic
 parameter_list|,
 name|svn_sqlite__func_t
 name|func
@@ -749,6 +755,13 @@ name|int
 name|column
 parameter_list|)
 function_decl|;
+comment|/* When Subversion is compiled in maintainer mode: enables the sqlite error    logging to SVN_DBG_OUTPUT. */
+name|void
+name|svn_sqlite__dbg_enable_errorlog
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 comment|/* --------------------------------------------------------------------- */
 define|#
 directive|define
@@ -809,6 +822,22 @@ name|sctx
 parameter_list|,
 name|apr_int64_t
 name|val
+parameter_list|)
+function_decl|;
+name|void
+name|svn_sqlite__result_error
+parameter_list|(
+name|svn_sqlite__context_t
+modifier|*
+name|sctx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|msg
+parameter_list|,
+name|int
+name|num
 parameter_list|)
 function_decl|;
 comment|/* --------------------------------------------------------------------- */
@@ -1004,7 +1033,7 @@ name|db
 parameter_list|)
 define|\
 value|do {                                                                        \     svn_sqlite__db_t *svn_sqlite__db = (db);                                  \     svn_error_t *svn_sqlite__err;                                             \                                                                               \     SVN_ERR(svn_sqlite__begin_savepoint(svn_sqlite__db));                     \     svn_sqlite__err = (expr1);                                                \     if (!svn_sqlite__err)                                                     \       svn_sqlite__err = (expr2);                                              \     if (!svn_sqlite__err)                                                     \       svn_sqlite__err = (expr3);                                              \     if (!svn_sqlite__err)                                                     \       svn_sqlite__err = (expr4);                                              \     SVN_ERR(svn_sqlite__finish_savepoint(svn_sqlite__db, svn_sqlite__err));   \   } while (0)
-comment|/* Helper function to handle several SQLite operations inside a shared lock.    This callback is similar to svn_sqlite__with_transaction(), but can be    nested (even with a transaction).     Using this function as a wrapper around a group of operations can give a    *huge* performance boost as the shared-read lock will be shared over    multiple statements, instead of being reobtained every time, which may    require disk and/or network io, depending on SQLite's locking strategy.     SCRATCH_POOL will be passed to the callback (NULL is valid).     ### Since we now require SQLite>= 3.6.18, this function has the effect of        always behaving like a defered transaction.  Can it be combined with        svn_sqlite__with_transaction()?  */
+comment|/* Helper function to handle several SQLite operations inside a shared lock.    This callback is similar to svn_sqlite__with_transaction(), but can be    nested (even with a transaction).     Using this function as a wrapper around a group of operations can give a    *huge* performance boost as the shared-read lock will be shared over    multiple statements, instead of being reobtained every time, which may    require disk and/or network io, depending on SQLite's locking strategy.     SCRATCH_POOL will be passed to the callback (NULL is valid).     ### Since we now require SQLite>= 3.6.18, this function has the effect of        always behaving like a deferred transaction.  Can it be combined with        svn_sqlite__with_transaction()?  */
 name|svn_error_t
 modifier|*
 name|svn_sqlite__with_lock
