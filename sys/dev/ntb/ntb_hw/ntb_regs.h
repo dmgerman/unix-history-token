@@ -71,6 +71,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|XEON_LINK_DB
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
 name|XEON_DB_BITS_PER_VEC
 value|5
 end_define
