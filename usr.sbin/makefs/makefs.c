@@ -447,7 +447,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"B:b:Dd:f:F:M:m:N:o:ps:S:t:xZ"
+literal|"B:b:Dd:f:F:M:m:N:o:pr:s:S:t:xZ"
 argument_list|)
 operator|)
 operator|!=
@@ -851,6 +851,26 @@ operator|.
 name|sparse
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+comment|/* Round image size up to specified block size */
+name|fsoptions
+operator|.
+name|roundup
+operator|=
+name|strsuftoll
+argument_list|(
+literal|"roundup"
+argument_list|,
+name|optarg
+argument_list|,
+literal|0
+argument_list|,
+name|LLONG_MAX
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1607,9 +1627,9 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: %s [-t fs-type] [-o fs-options] [-d debug-mask] [-B endian]\n"
-literal|"\t[-S sector-size] [-M minimum-size] [-m maximum-size] [-s image-size]\n"
-literal|"\t[-b free-blocks] [-f free-files] [-F mtree-specfile] [-xZ]\n"
-literal|"\t[-N userdb-dir] image-file directory | manifest [extra-directory ...]\n"
+literal|"\t[-S sector-size] [-M minimum-size] [-m maximum-size] [-r roundup ]\n"
+literal|"\t[-s image-size] [-b free-blocks] [-f free-files] [-F mtree-specfile]\n"
+literal|"\t[-xZ] [-N userdb-dir] image-file directory | manifest [extra-directory ...]\n"
 argument_list|,
 name|prog
 argument_list|)
