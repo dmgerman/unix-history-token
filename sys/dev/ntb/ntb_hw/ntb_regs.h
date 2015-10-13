@@ -18,20 +18,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NTB_LINK_ENABLE
-value|0x0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|NTB_LINK_DISABLE
-value|0x0002
-end_define
-
-begin_define
-define|#
-directive|define
 name|NTB_LINK_STATUS_ACTIVE
 value|0x2000
 end_define
@@ -115,6 +101,13 @@ define|#
 directive|define
 name|XEON_LINK_STATUS_OFFSET
 value|0x01a2
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_SLINK_STATUS_OFFSET
+value|0x05a2
 end_define
 
 begin_define
@@ -554,6 +547,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|NTB_CNTL_CFG_LOCK
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_CNTL_LINK_DISABLE
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NTB_CNTL_BAR23_SNOOP
 value|(1<< 2)
 end_define
@@ -631,7 +638,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NTB_CONN_CLASSIC
+name|NTB_CONN_TRANSPARENT
 value|0
 end_define
 
