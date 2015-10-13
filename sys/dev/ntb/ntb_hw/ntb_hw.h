@@ -218,7 +218,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|uint8_t
 name|ntb_get_max_spads
 parameter_list|(
 name|struct
@@ -411,6 +411,33 @@ name|struct
 name|ntb_softc
 modifier|*
 name|ntb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|NTB_BAR_SIZE_4K
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_REGS_THRU_MW
+value|(1<< 1)
+end_define
+
+begin_function_decl
+name|bool
+name|ntb_has_feature
+parameter_list|(
+name|struct
+name|ntb_softc
+modifier|*
+parameter_list|,
+name|uint64_t
 parameter_list|)
 function_decl|;
 end_function_decl

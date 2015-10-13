@@ -259,6 +259,10 @@ name|ETHER_CRC_LEN
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * This is an oversimplification to work around Xeon Errata.  The second client  * may be usable for unidirectional traffic.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|unsigned
@@ -5188,12 +5192,34 @@ name|val64
 decl_stmt|;
 name|uint32_t
 name|val
+decl_stmt|,
+name|i
+decl_stmt|,
+name|num_mw
 decl_stmt|;
 name|int
 name|rc
-decl_stmt|,
-name|i
 decl_stmt|;
+if|if
+condition|(
+name|ntb_has_feature
+argument_list|(
+name|ntb
+argument_list|,
+name|NTB_REGS_THRU_MW
+argument_list|)
+condition|)
+name|num_mw
+operator|=
+name|NTB_NUM_MW
+operator|-
+literal|1
+expr_stmt|;
+else|else
+name|num_mw
+operator|=
+name|NTB_NUM_MW
+expr_stmt|;
 comment|/* send the local info, in the opposite order of the way we read it */
 for|for
 control|(
@@ -5203,7 +5229,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NTB_NUM_MW
+name|num_mw
 condition|;
 name|i
 operator|++
@@ -5285,7 +5311,7 @@ name|ntb
 argument_list|,
 name|IF_NTB_NUM_MWS
 argument_list|,
-name|NTB_NUM_MW
+name|num_mw
 argument_list|)
 expr_stmt|;
 if|if
@@ -5427,7 +5453,7 @@ if|if
 condition|(
 name|val
 operator|!=
-name|NTB_NUM_MW
+name|num_mw
 condition|)
 goto|goto
 name|out
@@ -5440,7 +5466,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NTB_NUM_MW
+name|num_mw
 condition|;
 name|i
 operator|++

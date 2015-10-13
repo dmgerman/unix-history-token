@@ -281,8 +281,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|XEON_B2B_XLAT_OFFSET
+name|XEON_B2B_XLAT_OFFSETL
 value|0x0144
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_B2B_XLAT_OFFSETU
+value|0x0148
 end_define
 
 begin_define
@@ -660,70 +667,70 @@ begin_define
 define|#
 directive|define
 name|PBAR2XLAT_USD_ADDR
-value|0x0000004000000000
+value|0x0000004000000000ull
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBAR4XLAT_USD_ADDR
-value|0x0000008000000000
+value|0x0000008000000000ull
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBAR01_USD_ADDR
-value|0x000000210000000c
+value|0x000000210000000cull
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBAR23_USD_ADDR
-value|0x000000410000000c
+value|0x000000410000000cull
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBAR45_USD_ADDR
-value|0x000000810000000c
+value|0x000000810000000cull
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBAR2XLAT_DSD_ADDR
-value|0x0000004100000000
+value|0x0000004100000000ull
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBAR4XLAT_DSD_ADDR
-value|0x0000008100000000
+value|0x0000008100000000ull
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBAR01_DSD_ADDR
-value|0x000000200000000c
+value|0x000000200000000cull
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBAR23_DSD_ADDR
-value|0x000000400000000c
+value|0x000000400000000cull
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBAR45_DSD_ADDR
-value|0x000000800000000c
+value|0x000000800000000cull
 end_define
 
 begin_comment

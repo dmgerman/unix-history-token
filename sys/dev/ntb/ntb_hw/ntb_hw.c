@@ -228,20 +228,6 @@ define|\
 value|((ntb->features& (feature)) != 0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|NTB_BAR_SIZE_4K
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NTB_REGS_THRU_MW
-value|(1<< 1)
-end_define
-
 begin_struct
 struct|struct
 name|ntb_hw_info
@@ -394,13 +380,13 @@ name|db_cb
 decl_stmt|;
 struct|struct
 block|{
-name|uint32_t
+name|uint8_t
 name|max_spads
 decl_stmt|;
-name|uint32_t
+name|uint8_t
 name|max_db_bits
 decl_stmt|;
-name|uint32_t
+name|uint8_t
 name|msix_cnt
 decl_stmt|;
 block|}
@@ -3363,6 +3349,42 @@ name|spci_cmd
 operator|=
 name|XEON_PCICMD_OFFSET
 expr_stmt|;
+comment|/* 	 * There is a Xeon hardware errata related to writes to SDOORBELL or 	 * B2BDOORBELL in conjunction with inbound access to NTB MMIO space, 	 * which may hang the system.  To workaround this use the second memory 	 * window to access the interrupt and scratch pad registers on the 	 * remote system. 	 */
+if|if
+condition|(
+name|HAS_FEATURE
+argument_list|(
+name|NTB_REGS_THRU_MW
+argument_list|)
+condition|)
+comment|/* 		 * Set the Limit register to 4k, the minimum size, to prevent 		 * an illegal access. 		 */
+name|ntb_reg_write
+argument_list|(
+literal|8
+argument_list|,
+name|XEON_PBAR4LMT_OFFSET
+argument_list|,
+name|ntb_get_mw_size
+argument_list|(
+name|ntb
+argument_list|,
+literal|1
+argument_list|)
+operator|+
+literal|0x1000
+argument_list|)
+expr_stmt|;
+else|else
+comment|/* 		 * Disable the limit register, just in case it is set to 		 * something silly. 		 */
+name|ntb_reg_write
+argument_list|(
+literal|8
+argument_list|,
+name|XEON_PBAR4LMT_OFFSET
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ntb
@@ -3954,6 +3976,7 @@ name|MBAR01_DSD_ADDR
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|ntb_reg_write
 argument_list|(
 literal|8
@@ -3963,6 +3986,30 @@ argument_list|,
 name|PBAR4XLAT_USD_ADDR
 argument_list|)
 expr_stmt|;
+comment|/* 			 * B2B_XLAT_OFFSET is a 64-bit register but can only be 			 * written 32 bits at a time. 			 */
+name|ntb_reg_write
+argument_list|(
+literal|4
+argument_list|,
+name|XEON_B2B_XLAT_OFFSETL
+argument_list|,
+name|MBAR01_DSD_ADDR
+operator|&
+literal|0xffffffff
+argument_list|)
+expr_stmt|;
+name|ntb_reg_write
+argument_list|(
+literal|4
+argument_list|,
+name|XEON_B2B_XLAT_OFFSETU
+argument_list|,
+name|MBAR01_DSD_ADDR
+operator|>>
+literal|32
+argument_list|)
+expr_stmt|;
+block|}
 name|ntb_reg_write
 argument_list|(
 literal|8
@@ -4019,6 +4066,7 @@ name|MBAR01_USD_ADDR
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|ntb_reg_write
 argument_list|(
 literal|8
@@ -4028,6 +4076,30 @@ argument_list|,
 name|PBAR4XLAT_DSD_ADDR
 argument_list|)
 expr_stmt|;
+comment|/* 			 * B2B_XLAT_OFFSET is a 64-bit register but can only be 			 * written 32 bits at a time. 			 */
+name|ntb_reg_write
+argument_list|(
+literal|4
+argument_list|,
+name|XEON_B2B_XLAT_OFFSETL
+argument_list|,
+name|MBAR01_USD_ADDR
+operator|&
+literal|0xffffffff
+argument_list|)
+expr_stmt|;
+name|ntb_reg_write
+argument_list|(
+literal|4
+argument_list|,
+name|XEON_B2B_XLAT_OFFSETU
+argument_list|,
+name|MBAR01_USD_ADDR
+operator|>>
+literal|32
+argument_list|)
+expr_stmt|;
+block|}
 name|ntb_reg_write
 argument_list|(
 literal|8
@@ -5263,7 +5335,7 @@ comment|/**  * ntb_get_max_spads() - get the total scratch regs usable  * @ntb: 
 end_comment
 
 begin_function
-name|int
+name|uint8_t
 name|ntb_get_max_spads
 parameter_list|(
 name|struct
@@ -6011,6 +6083,34 @@ operator|(
 name|ntb
 operator|->
 name|device
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Export HW-specific errata information. */
+end_comment
+
+begin_function
+name|bool
+name|ntb_has_feature
+parameter_list|(
+name|struct
+name|ntb_softc
+modifier|*
+name|ntb
+parameter_list|,
+name|uint64_t
+name|feature
+parameter_list|)
+block|{
+return|return
+operator|(
+name|HAS_FEATURE
+argument_list|(
+name|feature
+argument_list|)
 operator|)
 return|;
 block|}
