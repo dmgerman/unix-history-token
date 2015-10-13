@@ -3266,14 +3266,14 @@ name|ntb
 operator|->
 name|dev_type
 operator|=
-name|NTB_DEV_DSD
+name|NTB_DEV_USD
 expr_stmt|;
 else|else
 name|ntb
 operator|->
 name|dev_type
 operator|=
-name|NTB_DEV_USD
+name|NTB_DEV_DSD
 expr_stmt|;
 name|ntb
 operator|->
