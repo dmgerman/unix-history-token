@@ -422,11 +422,29 @@ name|NTB_BAR_SIZE_4K
 value|(1<< 0)
 end_define
 
+begin_comment
+comment|/* REGS_THRU_MW is the equivalent of Linux's NTB_HWERR_SDOORBELL_LOCKUP */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NTB_REGS_THRU_MW
 value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_SB01BASE_LOCKUP
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_B2BDOORBELL_BIT14
+value|(1<< 3)
 end_define
 
 begin_function_decl

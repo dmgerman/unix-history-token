@@ -928,16 +928,6 @@ index|[]
 init|=
 block|{
 block|{
-literal|0x3C0D8086
-block|,
-literal|"Xeon E5/Core i7 Non-Transparent Bridge B2B"
-block|,
-name|NTB_XEON
-block|,
-name|NTB_REGS_THRU_MW
-block|}
-block|,
-block|{
 literal|0x0C4E8086
 block|,
 literal|"Atom Processor S1200 NTB Primary B2B"
@@ -947,16 +937,73 @@ block|,
 literal|0
 block|}
 block|,
+comment|/* XXX: PS/SS IDs left out until they are supported. */
 block|{
-literal|0x0E0D8086
+literal|0x37258086
 block|,
-literal|"Xeon E5 V2 Non-Transparent Bridge B2B"
+literal|"JSF Xeon C35xx/C55xx Non-Transparent Bridge B2B"
 block|,
 name|NTB_XEON
 block|,
 name|NTB_REGS_THRU_MW
 operator||
+name|NTB_B2BDOORBELL_BIT14
+block|}
+block|,
+block|{
+literal|0x3C0D8086
+block|,
+literal|"SNB Xeon E5/Core i7 Non-Transparent Bridge B2B"
+block|,
+name|NTB_XEON
+block|,
+name|NTB_REGS_THRU_MW
+operator||
+name|NTB_B2BDOORBELL_BIT14
+block|}
+block|,
+block|{
+literal|0x0E0D8086
+block|,
+literal|"IVT Xeon E5 V2 Non-Transparent Bridge B2B"
+block|,
+name|NTB_XEON
+block|,
+name|NTB_REGS_THRU_MW
+operator||
+name|NTB_B2BDOORBELL_BIT14
+operator||
+name|NTB_SB01BASE_LOCKUP
+operator||
 name|NTB_BAR_SIZE_4K
+block|}
+block|,
+block|{
+literal|0x2F0D8086
+block|,
+literal|"HSX Xeon E5 V3 Non-Transparent Bridge B2B"
+block|,
+name|NTB_XEON
+block|,
+name|NTB_REGS_THRU_MW
+operator||
+name|NTB_B2BDOORBELL_BIT14
+operator||
+name|NTB_SB01BASE_LOCKUP
+block|}
+block|,
+block|{
+literal|0x6F0D8086
+block|,
+literal|"BDX Xeon E5 V4 Non-Transparent Bridge B2B"
+block|,
+name|NTB_XEON
+block|,
+name|NTB_REGS_THRU_MW
+operator||
+name|NTB_B2BDOORBELL_BIT14
+operator||
+name|NTB_SB01BASE_LOCKUP
 block|}
 block|,
 block|{
