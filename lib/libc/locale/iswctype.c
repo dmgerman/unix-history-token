@@ -45,7 +45,7 @@ name|wc
 argument_list|,
 name|_CTYPE_A
 operator||
-name|_CTYPE_D
+name|_CTYPE_N
 argument_list|)
 operator|)
 return|;
@@ -178,7 +178,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|__isctype
+name|__istype
 argument_list|(
 name|wc
 argument_list|,
@@ -317,7 +317,7 @@ name|__istype
 argument_list|(
 name|wc
 argument_list|,
-name|_CTYPE_D
+name|_CTYPE_N
 argument_list|)
 operator|)
 return|;
@@ -529,7 +529,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|__isctype
+name|__istype
 argument_list|(
 name|wc
 argument_list|,

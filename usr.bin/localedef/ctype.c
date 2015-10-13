@@ -99,6 +99,28 @@ directive|include
 file|"runefile.h"
 end_include
 
+begin_comment
+comment|/* Needed for bootstrapping, _CTYPE_N */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_CTYPE_N
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_CTYPE_N
+value|0x00400000L
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -201,7 +223,7 @@ begin_define
 define|#
 directive|define
 name|_E4
-value|0
+value|_CTYPE_N
 end_define
 
 begin_define

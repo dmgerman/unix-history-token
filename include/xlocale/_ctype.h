@@ -550,7 +550,7 @@ name|XLOCALE_ISCTYPE
 argument_list|(
 argument|alnum
 argument_list|,
-argument|_CTYPE_A|_CTYPE_D
+argument|_CTYPE_A|_CTYPE_D|_CTYPE_N
 argument_list|)
 end_macro
 
@@ -631,7 +631,7 @@ name|XLOCALE_ISCTYPE
 argument_list|(
 argument|number
 argument_list|,
-argument|_CTYPE_D
+argument|_CTYPE_D|_CTYPE_N
 argument_list|)
 end_macro
 

@@ -138,6 +138,8 @@ literal|"special\0"
 comment|/* BSD extension */
 literal|"phonogram\0"
 comment|/* BSD extension */
+literal|"number\0"
+comment|/* BSD extension */
 literal|"rune\0"
 decl_stmt|;
 comment|/* BSD extension */
@@ -150,7 +152,7 @@ init|=
 block|{
 name|_CTYPE_A
 operator||
-name|_CTYPE_D
+name|_CTYPE_N
 block|,
 name|_CTYPE_A
 block|,
@@ -179,6 +181,8 @@ block|,
 name|_CTYPE_T
 block|,
 name|_CTYPE_Q
+block|,
+name|_CTYPE_N
 block|,
 literal|0xFFFFFF00L
 block|}
