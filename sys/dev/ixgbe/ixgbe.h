@@ -1330,9 +1330,6 @@ name|u16
 name|next_to_clean
 decl_stmt|;
 name|u16
-name|process_limit
-decl_stmt|;
-name|u16
 name|num_desc
 decl_stmt|;
 name|u32
@@ -1458,9 +1455,6 @@ name|num_desc
 decl_stmt|;
 name|u16
 name|mbuf_sz
-decl_stmt|;
-name|u16
-name|process_limit
 decl_stmt|;
 name|char
 name|mtx_name
@@ -1828,6 +1822,9 @@ decl_stmt|;
 name|u32
 name|num_tx_desc
 decl_stmt|;
+name|u32
+name|tx_process_limit
+decl_stmt|;
 comment|/* 	 * Receive rings: 	 *	Allocated at run time, an array of rings. 	 */
 name|struct
 name|rx_ring
@@ -1839,6 +1836,9 @@ name|active_queues
 decl_stmt|;
 name|u32
 name|num_rx_desc
+decl_stmt|;
+name|u32
+name|rx_process_limit
 decl_stmt|;
 comment|/* Multicast array memory */
 name|struct
