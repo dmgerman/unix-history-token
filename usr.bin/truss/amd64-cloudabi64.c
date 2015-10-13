@@ -877,11 +877,11 @@ init|=
 block|{
 literal|"CloudABI ELF64"
 block|,
-name|cloudabi64_syscallnames
+name|syscallnames
 block|,
 name|nitems
 argument_list|(
-name|cloudabi64_syscallnames
+name|syscallnames
 argument_list|)
 block|,
 name|amd64_cloudabi64_fetch_args

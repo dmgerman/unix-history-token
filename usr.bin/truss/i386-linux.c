@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"linux_syscalls.h"
+file|"i386-linux_syscalls.h"
 end_include
 
 begin_function
@@ -665,11 +665,11 @@ init|=
 block|{
 literal|"Linux ELF32"
 block|,
-name|linux_syscallnames
+name|syscallnames
 block|,
 name|nitems
 argument_list|(
-name|linux_syscallnames
+name|syscallnames
 argument_list|)
 block|,
 name|i386_linux_fetch_args

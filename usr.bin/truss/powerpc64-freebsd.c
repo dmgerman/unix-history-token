@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1998 Sean Eric Fagan  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Sean Eric Fagan  * 4. Neither the name of the author may be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright 2006 Peter Grehan<grehan@freebsd.org>  * Copyright 2005 Orlando Bassotto<orlando@break.net>  * Copyright 1998 Sean Eric Fagan  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* FreeBSD/mips-specific system call handling. */
+comment|/* FreeBSD/powerpc64-specific system call handling. */
 end_comment
 
 begin_include
@@ -36,13 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
+file|<machine/reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/reg.h>
+file|<machine/frame.h>
 end_include
 
 begin_include
@@ -60,13 +60,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"syscalls.h"
+file|"freebsd_syscalls.h"
 end_include
 
 begin_function
 specifier|static
 name|int
-name|mips_fetch_args
+name|powerpc64_fetch_args
 parameter_list|(
 name|struct
 name|trussinfo
@@ -154,77 +154,30 @@ block|}
 comment|/* 	 * FreeBSD has two special kinds of system call redirections -- 	 * SYS_syscall, and SYS___syscall.  The former is the old syscall() 	 * routine, basically; the latter is for quad-aligned arguments. 	 * 	 * The system call argument count and code from ptrace() already 	 * account for these, but we need to skip over the first argument. 	 */
 name|reg
 operator|=
-name|A0
+literal|0
 expr_stmt|;
 switch|switch
 condition|(
 name|regs
 operator|.
-name|r_regs
+name|fixreg
 index|[
-name|V0
+literal|0
 index|]
 condition|)
 block|{
 case|case
 name|SYS_syscall
 case|:
-name|reg
-operator|=
-name|A1
-expr_stmt|;
-break|break;
 case|case
 name|SYS___syscall
 case|:
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__mips_n32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__mips_n64
-argument_list|)
 name|reg
-operator|=
-name|A1
+operator|+=
+literal|1
 expr_stmt|;
-else|#
-directive|else
-name|reg
-operator|=
-name|A2
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__mips_n32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__mips_n64
-argument_list|)
-define|#
-directive|define
-name|MAXREG
-value|A7
-else|#
-directive|else
-define|#
-directive|define
-name|MAXREG
-value|A3
-endif|#
-directive|endif
 for|for
 control|(
 name|i
@@ -236,8 +189,8 @@ operator|<
 name|narg
 operator|&&
 name|reg
-operator|<=
-name|MAXREG
+operator|<
+name|NARGREG
 condition|;
 name|i
 operator|++
@@ -254,8 +207,10 @@ index|]
 operator|=
 name|regs
 operator|.
-name|r_regs
+name|fixreg
 index|[
+name|FIRSTARG
+operator|+
 name|reg
 index|]
 expr_stmt|;
@@ -281,27 +236,14 @@ name|void
 operator|*
 operator|)
 operator|(
-operator|(
-name|uintptr_t
-operator|)
 name|regs
 operator|.
-name|r_regs
+name|fixreg
 index|[
-name|SP
+literal|1
 index|]
 operator|+
-literal|4
-operator|*
-sizeof|sizeof
-argument_list|(
-name|cs
-operator|->
-name|args
-index|[
-literal|0
-index|]
-argument_list|)
+literal|48
 operator|)
 expr_stmt|;
 name|iorequest
@@ -377,7 +319,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mips_fetch_retval
+name|powerpc64_fetch_retval
 parameter_list|(
 name|struct
 name|trussinfo
@@ -444,7 +386,6 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* XXX: Does not have special handling for __syscall(). */
 name|retval
 index|[
 literal|0
@@ -452,9 +393,9 @@ index|]
 operator|=
 name|regs
 operator|.
-name|r_regs
+name|fixreg
 index|[
-name|V0
+literal|3
 index|]
 expr_stmt|;
 name|retval
@@ -464,9 +405,9 @@ index|]
 operator|=
 name|regs
 operator|.
-name|r_regs
+name|fixreg
 index|[
-name|V1
+literal|4
 index|]
 expr_stmt|;
 operator|*
@@ -474,12 +415,13 @@ name|errorp
 operator|=
 operator|!
 operator|!
+operator|(
 name|regs
 operator|.
-name|r_regs
-index|[
-name|A3
-index|]
+name|cr
+operator|&
+literal|0x10000000
+operator|)
 expr_stmt|;
 return|return
 operator|(
@@ -493,20 +435,11 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|procabi
-name|mips_fbsd
+name|powerpc64_freebsd
 init|=
 block|{
-ifdef|#
-directive|ifdef
-name|__mips_n64
 literal|"FreeBSD ELF64"
 block|,
-else|#
-directive|else
-literal|"FreeBSD ELF32"
-block|,
-endif|#
-directive|endif
 name|syscallnames
 block|,
 name|nitems
@@ -514,9 +447,9 @@ argument_list|(
 name|syscallnames
 argument_list|)
 block|,
-name|mips_fetch_args
+name|powerpc64_fetch_args
 block|,
-name|mips_fetch_retval
+name|powerpc64_fetch_retval
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -524,7 +457,7 @@ end_decl_stmt
 begin_expr_stmt
 name|PROCABI
 argument_list|(
-name|mips_fbsd
+name|powerpc64_freebsd
 argument_list|)
 expr_stmt|;
 end_expr_stmt
