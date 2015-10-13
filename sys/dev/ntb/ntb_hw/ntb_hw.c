@@ -395,19 +395,19 @@ struct|;
 struct|struct
 block|{
 name|uint32_t
-name|pdb
+name|ldb
 decl_stmt|;
 name|uint32_t
-name|pdb_mask
+name|ldb_mask
 decl_stmt|;
 name|uint32_t
-name|sdb
+name|rdb
 decl_stmt|;
 name|uint32_t
-name|sbar2_xlat
+name|bar2_xlat
 decl_stmt|;
 name|uint32_t
-name|sbar4_xlat
+name|bar4_xlat
 decl_stmt|;
 name|uint32_t
 name|spad_remote
@@ -2166,7 +2166,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|pdb_mask
+name|ldb_mask
 argument_list|,
 operator|~
 literal|0
@@ -2181,7 +2181,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|pdb_mask
+name|ldb_mask
 argument_list|,
 operator|~
 operator|(
@@ -2783,7 +2783,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|pdb
+name|ldb
 argument_list|,
 operator|(
 name|uint64_t
@@ -2854,7 +2854,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|pdb
+name|ldb
 argument_list|,
 operator|(
 operator|(
@@ -2958,7 +2958,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|pdb
+name|ldb
 argument_list|,
 literal|1
 operator|<<
@@ -2996,10 +2996,10 @@ init|=
 literal|0
 decl_stmt|;
 name|uint64_t
-name|pdb64
+name|ldb64
 decl_stmt|;
 name|uint16_t
-name|pdb16
+name|ldb16
 decl_stmt|;
 if|if
 condition|(
@@ -3010,7 +3010,7 @@ operator|==
 name|NTB_SOC
 condition|)
 block|{
-name|pdb64
+name|ldb64
 operator|=
 name|ntb_reg_read
 argument_list|(
@@ -3020,24 +3020,24 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|pdb
+name|ldb
 argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|pdb64
+name|ldb64
 condition|)
 block|{
 name|i
 operator|=
 name|ffs
 argument_list|(
-name|pdb64
+name|ldb64
 argument_list|)
 expr_stmt|;
-name|pdb64
+name|ldb64
 operator|&=
-name|pdb64
+name|ldb64
 operator|-
 literal|1
 expr_stmt|;
@@ -3056,7 +3056,7 @@ block|}
 block|}
 else|else
 block|{
-name|pdb16
+name|ldb16
 operator|=
 name|ntb_reg_read
 argument_list|(
@@ -3066,13 +3066,13 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|pdb
+name|ldb
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|pdb16
+name|ldb16
 operator|&
 name|XEON_DB_HW_LINK
 operator|)
@@ -3085,7 +3085,7 @@ argument_list|(
 name|ntb
 argument_list|)
 expr_stmt|;
-name|pdb16
+name|ldb16
 operator|&=
 operator|~
 name|XEON_DB_HW_LINK
@@ -3093,7 +3093,7 @@ expr_stmt|;
 block|}
 while|while
 condition|(
-name|pdb16
+name|ldb16
 operator|!=
 literal|0
 condition|)
@@ -3102,12 +3102,12 @@ name|i
 operator|=
 name|ffs
 argument_list|(
-name|pdb16
+name|ldb16
 argument_list|)
 expr_stmt|;
-name|pdb16
+name|ldb16
 operator|&=
-name|pdb16
+name|ldb16
 operator|-
 literal|1
 expr_stmt|;
@@ -3452,7 +3452,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|pdb
+name|ldb
 operator|=
 name|XEON_PDOORBELL_OFFSET
 expr_stmt|;
@@ -3460,7 +3460,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|pdb_mask
+name|ldb_mask
 operator|=
 name|XEON_PDBMSK_OFFSET
 expr_stmt|;
@@ -3468,7 +3468,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|sbar2_xlat
+name|bar2_xlat
 operator|=
 name|XEON_SBAR2XLAT_OFFSET
 expr_stmt|;
@@ -3476,7 +3476,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|sbar4_xlat
+name|bar4_xlat
 operator|=
 name|XEON_SBAR4XLAT_OFFSET
 expr_stmt|;
@@ -3561,7 +3561,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|sdb
+name|rdb
 operator|=
 name|XEON_B2B_DOORBELL_OFFSET
 expr_stmt|;
@@ -3588,7 +3588,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|sdb
+name|rdb
 operator|=
 name|XEON_SDOORBELL_OFFSET
 expr_stmt|;
@@ -3794,7 +3794,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|pdb
+name|ldb
 operator|=
 name|SOC_PDOORBELL_OFFSET
 expr_stmt|;
@@ -3802,7 +3802,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|pdb_mask
+name|ldb_mask
 operator|=
 name|SOC_PDBMSK_OFFSET
 expr_stmt|;
@@ -3810,7 +3810,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|sbar2_xlat
+name|bar2_xlat
 operator|=
 name|SOC_SBAR2XLAT_OFFSET
 expr_stmt|;
@@ -3818,7 +3818,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|sbar4_xlat
+name|bar4_xlat
 operator|=
 name|SOC_SBAR4XLAT_OFFSET
 expr_stmt|;
@@ -3867,7 +3867,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|sdb
+name|rdb
 operator|=
 name|SOC_B2B_DOORBELL_OFFSET
 expr_stmt|;
@@ -3894,7 +3894,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|sdb
+name|rdb
 operator|=
 name|SOC_PDOORBELL_OFFSET
 expr_stmt|;
@@ -5268,7 +5268,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|pdb_mask
+name|ldb_mask
 argument_list|)
 expr_stmt|;
 name|mask
@@ -5294,7 +5294,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|pdb_mask
+name|ldb_mask
 argument_list|,
 name|mask
 argument_list|)
@@ -5358,7 +5358,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|pdb_mask
+name|ldb_mask
 argument_list|)
 expr_stmt|;
 name|mask
@@ -5381,7 +5381,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|pdb_mask
+name|ldb_mask
 argument_list|,
 name|mask
 argument_list|)
@@ -6037,7 +6037,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|sbar2_xlat
+name|bar2_xlat
 argument_list|,
 name|addr
 argument_list|)
@@ -6054,7 +6054,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|sbar4_xlat
+name|bar4_xlat
 argument_list|,
 name|addr
 argument_list|)
@@ -6065,12 +6065,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ntb_ring_sdb() - Set the doorbell on the secondary/external side  * @ntb: pointer to ntb_softc instance  * @db: doorbell to ring  *  * This function allows triggering of a doorbell on the secondary/external  * side that will initiate an interrupt on the remote host  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
+comment|/**  * ntb_ring_doorbell() - Set the doorbell on the secondary/external side  * @ntb: pointer to ntb_softc instance  * @db: doorbell to ring  *  * This function allows triggering of a doorbell on the secondary/external  * side that will initiate an interrupt on the remote host  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
 end_comment
 
 begin_function
 name|void
-name|ntb_ring_sdb
+name|ntb_ring_doorbell
 parameter_list|(
 name|struct
 name|ntb_softc
@@ -6098,7 +6098,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|sdb
+name|rdb
 argument_list|,
 operator|(
 name|uint64_t
@@ -6153,7 +6153,7 @@ name|ntb
 operator|->
 name|reg_ofs
 operator|.
-name|sdb
+name|rdb
 argument_list|,
 operator|(
 operator|(

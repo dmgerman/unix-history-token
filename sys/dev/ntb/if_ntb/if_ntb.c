@@ -4061,7 +4061,7 @@ name|flags
 operator||
 name|IF_NTB_DESC_DONE_FLAG
 expr_stmt|;
-name|ntb_ring_sdb
+name|ntb_ring_doorbell
 argument_list|(
 name|qp
 operator|->

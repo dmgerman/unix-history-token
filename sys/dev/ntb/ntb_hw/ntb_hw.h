@@ -377,7 +377,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ntb_ring_sdb
+name|ntb_ring_doorbell
 parameter_list|(
 name|struct
 name|ntb_softc
