@@ -5253,6 +5253,9 @@ operator|*
 literal|2
 operator|)
 argument_list|,
+operator|(
+name|uint64_t
+operator|)
 name|ntb_get_mw_size
 argument_list|(
 name|ntb
