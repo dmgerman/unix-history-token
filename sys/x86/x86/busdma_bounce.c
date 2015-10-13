@@ -2338,6 +2338,12 @@ argument_list|(
 name|sgsize
 argument_list|,
 name|PAGE_SIZE
+operator|-
+operator|(
+name|curaddr
+operator|&
+name|PAGE_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 name|map
@@ -3138,6 +3144,12 @@ argument_list|(
 name|sgsize
 argument_list|,
 name|PAGE_SIZE
+operator|-
+operator|(
+name|curaddr
+operator|&
+name|PAGE_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 name|curaddr
@@ -3409,9 +3421,6 @@ operator|=
 name|PAGE_SIZE
 operator|-
 operator|(
-operator|(
-name|vm_offset_t
-operator|)
 name|curaddr
 operator|&
 name|PAGE_MASK
