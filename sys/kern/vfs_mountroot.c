@@ -1965,7 +1965,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"        cd9660:/dev/acd0 ro\n"
+literal|"        cd9660:/dev/cd0 ro\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1975,7 +1975,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"mount -t cd9660 -o ro /dev/acd0 /)\n"
+literal|"mount -t cd9660 -o ro /dev/cd0 /)\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3866,7 +3866,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"cd9660:/dev/acd0 ro\n"
+literal|"cd9660:/dev/cd1 ro\n"
 argument_list|)
 expr_stmt|;
 name|sbuf_printf
