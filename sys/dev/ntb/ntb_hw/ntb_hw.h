@@ -63,6 +63,14 @@ block|, }
 enum|;
 end_enum
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_ntb
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_typedef
 typedef|typedef
 name|void
