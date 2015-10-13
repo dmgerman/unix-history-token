@@ -1388,6 +1388,18 @@ name|ctype
 operator||=
 name|_ISBLANK
 expr_stmt|;
+if|if
+condition|(
+name|wc
+operator|==
+literal|' '
+condition|)
+name|ctn
+operator|->
+name|ctype
+operator||=
+name|_ISPRINT
+expr_stmt|;
 comment|/* 			 * Technically these settings are only 			 * required for the C locale.  However, it 			 * turns out that because of the historical 			 * version of isprint(), we need them for all 			 * locales as well.  Note that these are not 			 * necessarily valid punctation characters in 			 * the current language, but ispunct() needs 			 * to return TRUE for them. 			 */
 if|if
 condition|(
