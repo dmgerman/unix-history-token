@@ -1530,7 +1530,9 @@ begin_function
 specifier|static
 name|int
 name|ntb_setup_interface
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -1771,7 +1773,9 @@ begin_function
 specifier|static
 name|int
 name|ntb_teardown_interface
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(

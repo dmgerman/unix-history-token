@@ -1111,7 +1111,9 @@ name|struct
 name|ntb_hw_info
 modifier|*
 name|p
-init|=
+decl_stmt|;
+name|p
+operator|=
 name|ntb_get_device_info
 argument_list|(
 name|pci_get_devid
@@ -1119,14 +1121,18 @@ argument_list|(
 name|device
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|p
-operator|!=
+operator|==
 name|NULL
 condition|)
-block|{
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|device_set_desc
 argument_list|(
 name|device
@@ -1142,25 +1148,7 @@ literal|0
 operator|)
 return|;
 block|}
-else|else
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|DETACH_ON_ERROR
-parameter_list|(
-name|func
-parameter_list|)
-define|\
-value|error = func;		        \ 	if (error< 0) {		\ 		ntb_detach(device);	\ 		return (error);		\ 	}
-end_define
 
 begin_function
 specifier|static
@@ -1175,17 +1163,24 @@ name|struct
 name|ntb_softc
 modifier|*
 name|ntb
-init|=
-name|DEVICE2SOFTC
-argument_list|(
-name|device
-argument_list|)
 decl_stmt|;
 name|struct
 name|ntb_hw_info
 modifier|*
 name|p
-init|=
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|ntb
+operator|=
+name|DEVICE2SOFTC
+argument_list|(
+name|device
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
 name|ntb_get_device_info
 argument_list|(
 name|pci_get_devid
@@ -1193,10 +1188,7 @@ argument_list|(
 name|device
 argument_list|)
 argument_list|)
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
+expr_stmt|;
 name|ntb
 operator|->
 name|device
@@ -1240,34 +1232,65 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|DETACH_ON_ERROR
-argument_list|(
+name|error
+operator|=
 name|ntb_map_pci_bars
 argument_list|(
 name|ntb
 argument_list|)
-argument_list|)
 expr_stmt|;
-name|DETACH_ON_ERROR
-argument_list|(
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|out
+goto|;
+name|error
+operator|=
 name|ntb_initialize_hw
 argument_list|(
 name|ntb
 argument_list|)
-argument_list|)
 expr_stmt|;
-name|DETACH_ON_ERROR
-argument_list|(
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|out
+goto|;
+name|error
+operator|=
 name|ntb_setup_interrupts
 argument_list|(
 name|ntb
 argument_list|)
-argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|out
+goto|;
 name|pci_enable_busmaster
 argument_list|(
 name|ntb
 operator|->
+name|device
+argument_list|)
+expr_stmt|;
+name|out
+label|:
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|ntb_detach
+argument_list|(
 name|device
 argument_list|)
 expr_stmt|;
@@ -1292,12 +1315,14 @@ name|struct
 name|ntb_softc
 modifier|*
 name|ntb
-init|=
+decl_stmt|;
+name|ntb
+operator|=
 name|DEVICE2SOFTC
 argument_list|(
 name|device
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|callout_drain
 argument_list|(
 operator|&
@@ -1384,7 +1409,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 name|ntb
 operator|->
@@ -1424,7 +1451,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 name|ntb
 operator|->
@@ -1482,18 +1511,9 @@ name|NTB_B2B_BAR_2
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rc
-operator|!=
-literal|0
-condition|)
-return|return
-name|rc
-return|;
 return|return
 operator|(
-literal|0
+name|rc
 operator|)
 return|;
 block|}
@@ -1536,7 +1556,6 @@ name|rc
 operator|!=
 literal|0
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|ntb
@@ -1546,9 +1565,7 @@ argument_list|,
 literal|"unable to allocate pci resource\n"
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|device_printf
 argument_list|(
 name|ntb
@@ -1576,7 +1593,6 @@ name|pbase
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|rc
@@ -1634,8 +1650,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-else|else
-block|{
 name|save_bar_parameters
 argument_list|(
 name|bar
@@ -1646,7 +1660,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -1707,14 +1720,12 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-else|else
-block|{
 name|save_bar_parameters
 argument_list|(
 name|bar
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Ivytown NTB BAR sizes are misreported by the hardware due to 		 * a hardware issue. To work around this, query the size it 		 * should be configured to by the device and modify the resource 		 * to correspond to this new size. The BIOS on systems with this 		 * problem is required to provide enough address space to allow 		 * the driver to make this change safely. 		 * 		 * Ideally I could have just specified the size when I allocated 		 * the resource like: 		 *  bus_alloc_resource(ntb->device, 		 *	SYS_RES_MEMORY,&bar->pci_resource_id, 0ul, ~0ul, 		 *	1ul<< bar_size_bits, RF_ACTIVE); 		 * but the PCI driver does not honor the size in this call, so 		 * we have to modify it after the fact. 		 */
+comment|/* 	 * Ivytown NTB BAR sizes are misreported by the hardware due to a 	 * hardware issue. To work around this, query the size it should be 	 * configured to by the device and modify the resource to correspond to 	 * this new size. The BIOS on systems with this problem is required to 	 * provide enough address space to allow the driver to make this change 	 * safely. 	 * 	 * Ideally I could have just specified the size when I allocated the 	 * resource like: 	 *  bus_alloc_resource(ntb->device, 	 *	SYS_RES_MEMORY,&bar->pci_resource_id, 0ul, ~0ul, 	 *	1ul<< bar_size_bits, RF_ACTIVE); 	 * but the PCI driver does not honor the size in this call, so we have 	 * to modify it after the fact. 	 */
 if|if
 condition|(
 name|HAS_FEATURE
@@ -1814,7 +1825,6 @@ name|rc
 operator|)
 return|;
 block|}
-else|else
 name|save_bar_parameters
 argument_list|(
 name|bar
@@ -1853,8 +1863,7 @@ name|ntb
 operator|->
 name|device
 argument_list|,
-literal|"unable to mark bar as"
-literal|" WRITE_COMBINING\n"
+literal|"unable to mark bar as WRITE_COMBINING\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1862,7 +1871,6 @@ operator|(
 name|rc
 operator|)
 return|;
-block|}
 block|}
 return|return
 operator|(
@@ -1972,7 +1980,7 @@ decl_stmt|;
 name|bool
 name|use_msix
 init|=
-literal|0
+name|false
 decl_stmt|;
 name|uint32_t
 name|num_vectors
@@ -2075,7 +2083,7 @@ literal|4
 condition|)
 name|use_msix
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 name|ntb_create_callbacks
@@ -2089,7 +2097,7 @@ if|if
 condition|(
 name|use_msix
 operator|==
-name|TRUE
+name|true
 condition|)
 block|{
 for|for
@@ -2174,8 +2182,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ENOMEM
 operator|)
 return|;
 block|}
@@ -2389,8 +2396,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ENOMEM
 operator|)
 return|;
 block|}
@@ -2993,8 +2999,10 @@ name|num_vectors
 operator|*
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|ntb_db_cb
+operator|*
+name|ntb
+operator|->
+name|db_cb
 argument_list|)
 argument_list|,
 name|M_NTB
@@ -4157,12 +4165,14 @@ name|status32
 decl_stmt|;
 name|int
 name|rc
-init|=
+decl_stmt|;
+name|rc
+operator|=
 name|ntb_check_link_status
 argument_list|(
 name|ntb
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|rc
@@ -4903,7 +4913,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ntb_register_event_callback() - register event callback  * @ntb: pointer to ntb_softc instance  * @func: callback function to register  *  * This function registers a callback for any HW driver events such as link  * up/down, power management notices and etc.  *  * RETURNS: An appropriate -ERRNO error value on error, or zero for success.  */
+comment|/**  * ntb_register_event_callback() - register event callback  * @ntb: pointer to ntb_softc instance  * @func: callback function to register  *  * This function registers a callback for any HW driver events such as link  * up/down, power management notices and etc.  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
 end_comment
 
 begin_function
@@ -4970,7 +4980,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ntb_register_db_callback() - register a callback for doorbell interrupt  * @ntb: pointer to ntb_softc instance  * @idx: doorbell index to register callback, zero based  * @func: callback function to register  *  * This function registers a callback function for the doorbell interrupt  * on the primary side. The function will unmask the doorbell as well to  * allow interrupt.  *  * RETURNS: An appropriate -ERRNO error value on error, or zero for success.  */
+comment|/**  * ntb_register_db_callback() - register a callback for doorbell interrupt  * @ntb: pointer to ntb_softc instance  * @idx: doorbell index to register callback, zero based  * @func: callback function to register  *  * This function registers a callback function for the doorbell interrupt  * on the primary side. The function will unmask the doorbell as well to  * allow interrupt.  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
 end_comment
 
 begin_function
@@ -5357,7 +5367,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ntb_write_local_spad() - write to the secondary scratchpad register  * @ntb: pointer to ntb_softc instance  * @idx: index to the scratchpad register, 0 based  * @val: the data value to put into the register  *  * This function allows writing of a 32bit value to the indexed scratchpad  * register. The register resides on the secondary (external) side.  *  * RETURNS: An appropriate -ERRNO error value on error, or zero for success.  */
+comment|/**  * ntb_write_local_spad() - write to the secondary scratchpad register  * @ntb: pointer to ntb_softc instance  * @idx: index to the scratchpad register, 0 based  * @val: the data value to put into the register  *  * This function allows writing of a 32bit value to the indexed scratchpad  * register. The register resides on the secondary (external) side.  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
 end_comment
 
 begin_function
@@ -5418,7 +5428,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ntb_read_local_spad() - read from the primary scratchpad register  * @ntb: pointer to ntb_softc instance  * @idx: index to scratchpad register, 0 based  * @val: pointer to 32bit integer for storing the register value  *  * This function allows reading of the 32bit scratchpad register on  * the primary (internal) side.  *  * RETURNS: An appropriate -ERRNO error value on error, or zero for success.  */
+comment|/**  * ntb_read_local_spad() - read from the primary scratchpad register  * @ntb: pointer to ntb_softc instance  * @idx: index to scratchpad register, 0 based  * @val: pointer to 32bit integer for storing the register value  *  * This function allows reading of the 32bit scratchpad register on  * the primary (internal) side.  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
 end_comment
 
 begin_function
@@ -5481,7 +5491,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ntb_write_remote_spad() - write to the secondary scratchpad register  * @ntb: pointer to ntb_softc instance  * @idx: index to the scratchpad register, 0 based  * @val: the data value to put into the register  *  * This function allows writing of a 32bit value to the indexed scratchpad  * register. The register resides on the secondary (external) side.  *  * RETURNS: An appropriate -ERRNO error value on error, or zero for success.  */
+comment|/**  * ntb_write_remote_spad() - write to the secondary scratchpad register  * @ntb: pointer to ntb_softc instance  * @idx: index to the scratchpad register, 0 based  * @val: the data value to put into the register  *  * This function allows writing of a 32bit value to the indexed scratchpad  * register. The register resides on the secondary (external) side.  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
 end_comment
 
 begin_function
@@ -5563,7 +5573,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ntb_read_remote_spad() - read from the primary scratchpad register  * @ntb: pointer to ntb_softc instance  * @idx: index to scratchpad register, 0 based  * @val: pointer to 32bit integer for storing the register value  *  * This function allows reading of the 32bit scratchpad register on  * the primary (internal) side.  *  * RETURNS: An appropriate -ERRNO error value on error, or zero for success.  */
+comment|/**  * ntb_read_remote_spad() - read from the primary scratchpad register  * @ntb: pointer to ntb_softc instance  * @idx: index to scratchpad register, 0 based  * @val: pointer to 32bit integer for storing the register value  *  * This function allows reading of the 32bit scratchpad register on  * the primary (internal) side.  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
 end_comment
 
 begin_function
@@ -5860,7 +5870,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ntb_ring_sdb() - Set the doorbell on the secondary/external side  * @ntb: pointer to ntb_softc instance  * @db: doorbell to ring  *  * This function allows triggering of a doorbell on the secondary/external  * side that will initiate an interrupt on the remote host  *  * RETURNS: An appropriate -ERRNO error value on error, or zero for success.  */
+comment|/**  * ntb_ring_sdb() - Set the doorbell on the secondary/external side  * @ntb: pointer to ntb_softc instance  * @db: doorbell to ring  *  * This function allows triggering of a doorbell on the secondary/external  * side that will initiate an interrupt on the remote host  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
 end_comment
 
 begin_function
@@ -5903,7 +5913,8 @@ operator|<<
 name|db
 argument_list|)
 expr_stmt|;
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|HAS_FEATURE
@@ -5970,6 +5981,7 @@ name|bits_per_vector
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
