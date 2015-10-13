@@ -302,13 +302,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOC_MAX_COMPAT_SPADS
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
 name|SOC_MAX_DB_BITS
 value|34
 end_define
