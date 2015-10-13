@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"linux32_syscalls.h"
+file|"amd64-linux32_syscalls.h"
 end_include
 
 begin_function
@@ -669,11 +669,11 @@ init|=
 block|{
 literal|"Linux ELF32"
 block|,
-name|linux32_syscallnames
+name|syscallnames
 block|,
 name|nitems
 argument_list|(
-name|linux32_syscallnames
+name|syscallnames
 argument_list|)
 block|,
 name|amd64_linux32_fetch_args
