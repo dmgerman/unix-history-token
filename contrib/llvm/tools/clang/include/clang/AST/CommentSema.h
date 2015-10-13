@@ -125,9 +125,12 @@ name|Sema
 block|{
 name|Sema
 argument_list|(
-argument|const Sema&
+specifier|const
+name|Sema
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -137,7 +140,8 @@ specifier|const
 name|Sema
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 comment|/// Allocator for AST nodes.
 name|llvm

@@ -79,6 +79,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"private/svn_repos_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"repos.h"
 end_include
 
@@ -164,7 +170,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Currently this structure is just a wrapper around a    svn_config_t. */
+comment|/* Currently this structure is just a wrapper around a svn_config_t.    Please update authz_pool if you modify this structure. */
 end_comment
 
 begin_struct
@@ -1133,11 +1139,7 @@ literal|":"
 argument_list|,
 name|path
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|svn_config_enumerate2
@@ -1319,11 +1321,7 @@ literal|":"
 argument_list|,
 name|path
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 comment|/* Default to access granted if no rules say otherwise. */
@@ -1569,11 +1567,7 @@ name|repos_name
 argument_list|,
 literal|":/"
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 comment|/* We could have used svn_config_enumerate2 for "repos_name:/".    * However, this requires access for root explicitly (which the user    * may not always have). So we end up enumerating the sections in    * the authz CFG and stop on the first match with some access for    * this user. */
@@ -2564,15 +2558,10 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* Walk the configuration in AUTHZ looking for any errors. */
-end_comment
-
 begin_function
-specifier|static
 name|svn_error_t
 modifier|*
-name|authz_validate
+name|svn_repos__authz_validate
 parameter_list|(
 name|svn_authz_t
 modifier|*
@@ -2634,7 +2623,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Retrieve the file at DIRENT (contained in a repo) then parse it as a config  * file placing the result into CFG_P allocated in POOL.  *  * If DIRENT cannot be parsed as a config file then an error is returned.  The  * contents of CFG_P is then undefined.  If MUST_EXIST is TRUE, a missing  * authz file is also an error.  *  * SCRATCH_POOL will be used for temporary allocations. */
+comment|/* Retrieve the file at DIRENT (contained in a repo) then parse it as a config  * file placing the result into CFG_P allocated in POOL.  *  * If DIRENT cannot be parsed as a config file then an error is returned.  The  * contents of CFG_P is then undefined.  If MUST_EXIST is TRUE, a missing  * authz file is also an error.  The CASE_SENSITIVE controls the lookup  * behavior for section and option names alike.  *  * SCRATCH_POOL will be used for temporary allocations. */
 end_comment
 
 begin_function
@@ -2655,6 +2644,9 @@ name|dirent
 parameter_list|,
 name|svn_boolean_t
 name|must_exist
+parameter_list|,
+name|svn_boolean_t
+name|case_sensitive
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -2731,7 +2723,7 @@ return|;
 comment|/* Attempt to open a repository at repos_root_dirent. */
 name|SVN_ERR
 argument_list|(
-name|svn_repos_open2
+name|svn_repos_open3
 argument_list|(
 operator|&
 name|repos
@@ -2739,6 +2731,8 @@ argument_list|,
 name|repos_root_dirent
 argument_list|,
 name|NULL
+argument_list|,
+name|scratch_pool
 argument_list|,
 name|scratch_pool
 argument_list|)
@@ -2847,9 +2841,9 @@ name|svn_config_create2
 argument_list|(
 name|cfg_p
 argument_list|,
-name|TRUE
+name|case_sensitive
 argument_list|,
-name|TRUE
+name|case_sensitive
 argument_list|,
 name|result_pool
 argument_list|)
@@ -2923,9 +2917,9 @@ name|cfg_p
 argument_list|,
 name|contents
 argument_list|,
-name|TRUE
+name|case_sensitive
 argument_list|,
-name|TRUE
+name|case_sensitive
 argument_list|,
 name|result_pool
 argument_list|)
@@ -2959,15 +2953,10 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* Given a PATH which might be a relative repo URL (^/), an absolute  * local repo URL (file://), an absolute path outside of the repo  * or a location in the Windows registry.  *  * Retrieve the configuration data that PATH points at and parse it into  * CFG_P allocated in POOL.  *  * If PATH cannot be parsed as a config file then an error is returned.  The  * contents of CFG_P is then undefined.  If MUST_EXIST is TRUE, a missing  * authz file is also an error.  *  * REPOS_ROOT points at the root of the repos you are  * going to apply the authz against, can be NULL if you are sure that you  * don't have a repos relative URL in PATH. */
-end_comment
-
 begin_function
-specifier|static
 name|svn_error_t
 modifier|*
-name|authz_retrieve_config
+name|svn_repos__retrieve_config
 parameter_list|(
 name|svn_config_t
 modifier|*
@@ -2981,6 +2970,9 @@ name|path
 parameter_list|,
 name|svn_boolean_t
 name|must_exist
+parameter_list|,
+name|svn_boolean_t
+name|case_sensitive
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -3041,6 +3033,8 @@ name|dirent
 argument_list|,
 name|must_exist
 argument_list|,
+name|case_sensitive
+argument_list|,
 name|pool
 argument_list|,
 name|scratch_pool
@@ -3069,9 +3063,9 @@ name|path
 argument_list|,
 name|must_exist
 argument_list|,
-name|TRUE
+name|case_sensitive
 argument_list|,
-name|TRUE
+name|case_sensitive
 argument_list|,
 name|pool
 argument_list|)
@@ -3257,7 +3251,7 @@ name|accept_urls
 condition|)
 name|SVN_ERR
 argument_list|(
-name|authz_retrieve_config
+name|svn_repos__retrieve_config
 argument_list|(
 operator|&
 name|authz
@@ -3267,6 +3261,8 @@ argument_list|,
 name|path
 argument_list|,
 name|must_exist
+argument_list|,
+name|TRUE
 argument_list|,
 name|pool
 argument_list|)
@@ -3314,7 +3310,7 @@ name|accept_urls
 condition|)
 name|SVN_ERR
 argument_list|(
-name|authz_retrieve_config
+name|svn_repos__retrieve_config
 argument_list|(
 operator|&
 name|groups_cfg
@@ -3322,6 +3318,8 @@ argument_list|,
 name|groups_path
 argument_list|,
 name|must_exist
+argument_list|,
+name|TRUE
 argument_list|,
 name|pool
 argument_list|)
@@ -3387,7 +3385,7 @@ block|}
 comment|/* Make sure there are no errors in the configuration. */
 name|SVN_ERR
 argument_list|(
-name|authz_validate
+name|svn_repos__authz_validate
 argument_list|(
 name|authz
 argument_list|,
@@ -3561,7 +3559,7 @@ block|}
 comment|/* Make sure there are no errors in the configuration. */
 name|SVN_ERR
 argument_list|(
-name|authz_validate
+name|svn_repos__authz_validate
 argument_list|(
 name|authz
 argument_list|,

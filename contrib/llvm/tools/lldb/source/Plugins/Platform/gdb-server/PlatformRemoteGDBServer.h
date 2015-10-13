@@ -77,13 +77,23 @@ directive|include
 file|"../../Process/gdb-remote/GDBRemoteCommunicationClient.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"Plugins/Process/Utility/GDBRemoteSignals.h"
+end_include
+
 begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|namespace
+name|platform_gdb_server
+block|{
 name|class
 name|PlatformRemoteGDBServer
 range|:
 name|public
-name|lldb_private
-operator|::
 name|Platform
 block|{
 name|public
@@ -106,12 +116,10 @@ name|CreateInstance
 argument_list|(
 argument|bool force
 argument_list|,
-argument|const lldb_private::ArchSpec *arch
+argument|const ArchSpec *arch
 argument_list|)
 block|;
 specifier|static
-name|lldb_private
-operator|::
 name|ConstString
 name|GetPluginNameStatic
 argument_list|()
@@ -134,22 +142,20 @@ block|;
 comment|//------------------------------------------------------------
 comment|// lldb_private::PluginInterface functions
 comment|//------------------------------------------------------------
-name|virtual
-name|lldb_private
-operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|{
 return|return
 name|GetPluginNameStatic
 argument_list|()
 return|;
 block|}
-name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
+name|override
 block|{
 return|return
 literal|1
@@ -158,261 +164,174 @@ block|}
 comment|//------------------------------------------------------------
 comment|// lldb_private::Platform functions
 comment|//------------------------------------------------------------
-name|virtual
-name|lldb_private
-operator|::
 name|Error
 name|ResolveExecutable
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|ModuleSpec
-operator|&
-name|module_spec
+argument|const ModuleSpec&module_spec
 argument_list|,
-name|lldb
-operator|::
-name|ModuleSP
-operator|&
-name|module_sp
+argument|lldb::ModuleSP&module_sp
 argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|FileSpecList
-operator|*
-name|module_search_paths_ptr
+argument|const FileSpecList *module_search_paths_ptr
 argument_list|)
+name|override
 block|;
-name|virtual
+name|bool
+name|GetModuleSpec
+argument_list|(
+argument|const FileSpec& module_file_spec
+argument_list|,
+argument|const ArchSpec& arch
+argument_list|,
+argument|ModuleSpec&module_spec
+argument_list|)
+name|override
+block|;
 specifier|const
 name|char
 operator|*
 name|GetDescription
 argument_list|()
+name|override
 block|;
-name|virtual
-name|lldb_private
-operator|::
 name|Error
 name|GetFileWithUUID
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|FileSpec
-operator|&
-name|platform_file
+argument|const FileSpec&platform_file
 argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|UUID
-operator|*
-name|uuid_ptr
+argument|const UUID *uuid_ptr
 argument_list|,
-name|lldb_private
-operator|::
-name|FileSpec
-operator|&
-name|local_file
+argument|FileSpec&local_file
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|GetProcessInfo
 argument_list|(
 argument|lldb::pid_t pid
 argument_list|,
-argument|lldb_private::ProcessInstanceInfo&proc_info
+argument|ProcessInstanceInfo&proc_info
 argument_list|)
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|FindProcesses
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|ProcessInstanceInfoMatch
-operator|&
-name|match_info
+argument|const ProcessInstanceInfoMatch&match_info
 argument_list|,
-name|lldb_private
-operator|::
-name|ProcessInstanceInfoList
-operator|&
-name|process_infos
+argument|ProcessInstanceInfoList&process_infos
 argument_list|)
+name|override
 block|;
-name|virtual
-name|lldb_private
-operator|::
 name|Error
 name|LaunchProcess
 argument_list|(
-name|lldb_private
-operator|::
-name|ProcessLaunchInfo
-operator|&
-name|launch_info
+argument|ProcessLaunchInfo&launch_info
 argument_list|)
+name|override
 block|;
-name|virtual
+name|Error
+name|KillProcess
+argument_list|(
+argument|const lldb::pid_t pid
+argument_list|)
+name|override
+block|;
 name|lldb
 operator|::
 name|ProcessSP
 name|DebugProcess
 argument_list|(
-name|lldb_private
-operator|::
-name|ProcessLaunchInfo
-operator|&
-name|launch_info
+argument|ProcessLaunchInfo&launch_info
 argument_list|,
-name|lldb_private
-operator|::
-name|Debugger
-operator|&
-name|debugger
+argument|Debugger&debugger
 argument_list|,
-name|lldb_private
-operator|::
-name|Target
-operator|*
-name|target
+argument|Target *target
 argument_list|,
 comment|// Can be NULL, if NULL create a new target, else use existing one
-name|lldb_private
-operator|::
-name|Error
-operator|&
-name|error
+argument|Error&error
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|ProcessSP
 name|Attach
 argument_list|(
-name|lldb_private
-operator|::
-name|ProcessAttachInfo
-operator|&
-name|attach_info
+argument|ProcessAttachInfo&attach_info
 argument_list|,
-name|lldb_private
-operator|::
-name|Debugger
-operator|&
-name|debugger
+argument|Debugger&debugger
 argument_list|,
-name|lldb_private
-operator|::
-name|Target
-operator|*
-name|target
+argument|Target *target
 argument_list|,
 comment|// Can be NULL, if NULL create a new target, else use existing one
-name|lldb_private
-operator|::
-name|Error
-operator|&
-name|error
+argument|Error&error
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|GetSupportedArchitectureAtIndex
 argument_list|(
 argument|uint32_t idx
 argument_list|,
-argument|lldb_private::ArchSpec&arch
+argument|ArchSpec&arch
 argument_list|)
+name|override
 block|;
-name|virtual
 name|size_t
 name|GetSoftwareBreakpointTrapOpcode
 argument_list|(
-name|lldb_private
-operator|::
-name|Target
-operator|&
-name|target
+argument|Target&target
 argument_list|,
-name|lldb_private
-operator|::
-name|BreakpointSite
-operator|*
-name|bp_site
+argument|BreakpointSite *bp_site
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|GetRemoteOSVersion
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|GetRemoteOSBuildString
 argument_list|(
-name|std
-operator|::
-name|string
-operator|&
-name|s
+argument|std::string&s
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|GetRemoteOSKernelDescription
 argument_list|(
-name|std
-operator|::
-name|string
-operator|&
-name|s
+argument|std::string&s
 argument_list|)
+name|override
 block|;
 comment|// Remote Platform subclasses need to override this function
-name|virtual
-name|lldb_private
-operator|::
 name|ArchSpec
 name|GetRemoteSystemArchitecture
 argument_list|()
+name|override
 block|;
-name|virtual
-name|lldb_private
-operator|::
-name|ConstString
+name|FileSpec
 name|GetRemoteWorkingDirectory
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|SetRemoteWorkingDirectory
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|ConstString
-operator|&
-name|path
+argument|const FileSpec&working_dir
 argument_list|)
+name|override
 block|;
 comment|// Remote subclasses should override this and return a valid instance
 comment|// name if connected.
-name|virtual
 specifier|const
 name|char
 operator|*
 name|GetHostname
 argument_list|()
+name|override
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -420,8 +339,8 @@ name|GetUserName
 argument_list|(
 argument|uint32_t uid
 argument_list|)
+name|override
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -429,96 +348,77 @@ name|GetGroupName
 argument_list|(
 argument|uint32_t gid
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|IsConnected
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
-name|lldb_private
-operator|::
 name|Error
 name|ConnectRemote
 argument_list|(
-name|lldb_private
-operator|::
-name|Args
-operator|&
-name|args
+argument|Args& args
 argument_list|)
+name|override
 block|;
-name|virtual
-name|lldb_private
-operator|::
 name|Error
 name|DisconnectRemote
 argument_list|()
+name|override
 block|;
-name|virtual
-name|lldb_private
-operator|::
 name|Error
 name|MakeDirectory
 argument_list|(
-argument|const char *path
+argument|const FileSpec&file_spec
 argument_list|,
 argument|uint32_t file_permissions
 argument_list|)
+name|override
 block|;
-name|virtual
-name|lldb_private
-operator|::
 name|Error
 name|GetFilePermissions
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|path
+argument|const FileSpec&file_spec
 argument_list|,
-name|uint32_t
-operator|&
-name|file_permissions
+argument|uint32_t&file_permissions
 argument_list|)
+name|override
 block|;
-name|virtual
-name|lldb_private
-operator|::
 name|Error
 name|SetFilePermissions
 argument_list|(
-argument|const char *path
+argument|const FileSpec&file_spec
 argument_list|,
 argument|uint32_t file_permissions
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|user_id_t
 name|OpenFile
 argument_list|(
-argument|const lldb_private::FileSpec& file_spec
+argument|const FileSpec& file_spec
 argument_list|,
 argument|uint32_t flags
 argument_list|,
 argument|uint32_t mode
 argument_list|,
-argument|lldb_private::Error&error
+argument|Error&error
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|CloseFile
 argument_list|(
 argument|lldb::user_id_t fd
 argument_list|,
-argument|lldb_private::Error&error
+argument|Error&error
 argument_list|)
+name|override
 block|;
-name|virtual
 name|uint64_t
 name|ReadFile
 argument_list|(
@@ -530,10 +430,10 @@ argument|void *data_ptr
 argument_list|,
 argument|uint64_t len
 argument_list|,
-argument|lldb_private::Error&error
+argument|Error&error
 argument_list|)
+name|override
 block|;
-name|virtual
 name|uint64_t
 name|WriteFile
 argument_list|(
@@ -545,91 +445,64 @@ argument|const void* data
 argument_list|,
 argument|uint64_t len
 argument_list|,
-argument|lldb_private::Error&error
+argument|Error&error
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|user_id_t
 name|GetFileSize
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|FileSpec
-operator|&
-name|file_spec
+argument|const FileSpec& file_spec
 argument_list|)
+name|override
 block|;
-name|virtual
-name|lldb_private
-operator|::
 name|Error
 name|PutFile
 argument_list|(
-argument|const lldb_private::FileSpec& source
+argument|const FileSpec& source
 argument_list|,
-argument|const lldb_private::FileSpec& destination
+argument|const FileSpec& destination
 argument_list|,
 argument|uint32_t uid = UINT32_MAX
 argument_list|,
 argument|uint32_t gid = UINT32_MAX
 argument_list|)
+name|override
 block|;
-name|virtual
-name|lldb_private
-operator|::
 name|Error
 name|CreateSymlink
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|src
+argument|const FileSpec&src
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|dst
+argument|const FileSpec&dst
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|GetFileExists
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|FileSpec
-operator|&
-name|file_spec
+argument|const FileSpec& file_spec
 argument_list|)
+name|override
 block|;
-name|virtual
-name|lldb_private
-operator|::
 name|Error
 name|Unlink
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|path
+argument|const FileSpec&path
 argument_list|)
+name|override
 block|;
-name|virtual
-name|lldb_private
-operator|::
 name|Error
 name|RunShellCommand
 argument_list|(
 argument|const char *command
 argument_list|,
 comment|// Shouldn't be NULL
-argument|const char *working_dir
+argument|const FileSpec&working_dir
 argument_list|,
-comment|// Pass NULL to use the current working directory
+comment|// Pass empty FileSpec to use the current working directory
 argument|int *status_ptr
 argument_list|,
 comment|// Pass NULL if you don't want the process exit status
@@ -641,15 +514,27 @@ argument_list|,
 comment|// Pass NULL if you don't want the command output
 argument|uint32_t timeout_sec
 argument_list|)
+name|override
 block|;
 comment|// Timeout in seconds to wait for shell program to finish
-name|virtual
 name|void
 name|CalculateTrapHandlerSymbolNames
 argument_list|()
+name|override
+block|;
+specifier|const
+name|lldb
+operator|::
+name|UnixSignalsSP
+operator|&
+name|GetRemoteUnixSignals
+argument_list|()
+name|override
 block|;
 name|protected
 operator|:
+name|process_gdb_remote
+operator|::
 name|GDBRemoteCommunicationClient
 name|m_gdb_client
 block|;
@@ -659,6 +544,42 @@ name|string
 name|m_platform_description
 block|;
 comment|// After we connect we can get a more complete description of what we are connected to
+name|std
+operator|::
+name|string
+name|m_platform_scheme
+block|;
+name|std
+operator|::
+name|string
+name|m_platform_hostname
+block|;
+name|lldb
+operator|::
+name|UnixSignalsSP
+name|m_remote_signals_sp
+block|;
+comment|// Launch the lldb-gdbserver on the remote host and return the port it is listening on or 0 on
+comment|// failure. Subclasses should override this method if they want to do extra actions before or
+comment|// after launching the lldb-gdbserver.
+name|virtual
+name|uint16_t
+name|LaunchGDBserverAndGetPort
+argument_list|(
+name|lldb
+operator|::
+name|pid_t
+operator|&
+name|pid
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|KillSpawnedProcess
+argument_list|(
+argument|lldb::pid_t pid
+argument_list|)
+block|;
 name|private
 operator|:
 name|DISALLOW_COPY_AND_ASSIGN
@@ -667,7 +588,14 @@ name|PlatformRemoteGDBServer
 argument_list|)
 block|;  }
 decl_stmt|;
+block|}
+comment|// namespace platform_gdb_server
+block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace lldb_private
+end_comment
 
 begin_endif
 endif|#

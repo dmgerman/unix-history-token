@@ -101,6 +101,8 @@ name|void
 name|emitPrologue
 argument_list|(
 argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 name|override
@@ -144,9 +146,11 @@ specifier|const
 name|override
 block|;
 name|void
-name|processFunctionBeforeCalleeSavedScan
+name|determineCalleeSaves
 argument_list|(
 argument|MachineFunction&MF
+argument_list|,
+argument|BitVector&SavedRegs
 argument_list|,
 argument|RegScavenger *RS = nullptr
 argument_list|)

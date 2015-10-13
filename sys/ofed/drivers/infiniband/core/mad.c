@@ -4735,7 +4735,7 @@ name|qp_info
 operator|->
 name|port_priv
 expr_stmt|;
-name|cancel_delayed_work
+name|cancel_delayed_work_sync
 argument_list|(
 operator|&
 name|mad_agent_priv

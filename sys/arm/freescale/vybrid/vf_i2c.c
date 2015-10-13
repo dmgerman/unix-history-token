@@ -1111,7 +1111,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|IIC_EBUSBSY
+name|IIC_EBUSERR
 operator|)
 return|;
 block|}
@@ -1280,7 +1280,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|IIC_EBUSBSY
+name|IIC_EBUSERR
 operator|)
 return|;
 block|}

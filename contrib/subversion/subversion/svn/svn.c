@@ -286,6 +286,7 @@ name|opt_stop_on_copy
 block|,
 name|opt_strict
 block|,
+comment|/* ### DEPRECATED */
 name|opt_targets
 block|,
 name|opt_depth
@@ -314,6 +315,8 @@ name|opt_reintegrate
 block|,
 name|opt_trust_server_cert
 block|,
+name|opt_trust_server_cert_failures
+block|,
 name|opt_strip
 block|,
 name|opt_ignore_keywords
@@ -333,7 +336,21 @@ block|,
 name|opt_search
 block|,
 name|opt_search_and
-block|}
+block|,
+name|opt_mergeinfo_log
+block|,
+name|opt_remove_unversioned
+block|,
+name|opt_remove_ignored
+block|,
+name|opt_no_newline
+block|,
+name|opt_show_passwords
+block|,
+name|opt_pin_externals
+block|,
+name|opt_show_item
+block|, }
 name|svn_cl__longopt_t
 typedef|;
 end_typedef
@@ -599,7 +616,9 @@ literal|1
 block|,
 name|N_
 argument_list|(
-literal|"specify a password ARG"
+literal|"specify a password ARG (caution: on many operating\n"
+literal|"                             "
+literal|"systems, other users will be able to see this)"
 argument_list|)
 block|}
 block|,
@@ -627,6 +646,8 @@ literal|"                             "
 literal|"  -w, --ignore-all-space: Ignore all white space\n"
 literal|"                             "
 literal|"  --ignore-eol-style: Ignore changes in EOL style\n"
+literal|"                             "
+literal|"  -U ARG, --context ARG: Show ARG lines of context\n"
 literal|"                             "
 literal|"  -p, --show-c-function: Show C function name"
 argument_list|)
@@ -697,7 +718,7 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"use strict semantics"
+literal|"DEPRECATED"
 argument_list|)
 block|}
 block|,
@@ -751,11 +772,34 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"accept SSL server certificates from unknown\n"
+literal|"deprecated; same as\n"
 literal|"                             "
-literal|"certificate authorities without prompting (but only\n"
+literal|"--trust-server-cert-failures=unknown-ca"
+argument_list|)
+block|}
+block|,
+block|{
+literal|"trust-server-cert-failures"
+block|,
+name|opt_trust_server_cert_failures
+block|,
+literal|1
+block|,
+name|N_
+argument_list|(
+literal|"with --non-interactive, accept SSL server\n"
 literal|"                             "
-literal|"with '--non-interactive')"
+literal|"certificates with failures; ARG is comma-separated\n"
+literal|"                             "
+literal|"list of 'unknown-ca' (Unknown Authority),\n"
+literal|"                             "
+literal|"'cn-mismatch' (Hostname mismatch), 'expired'\n"
+literal|"                             "
+literal|"(Expired certificate), 'not-yet-valid' (Not yet\n"
+literal|"                             "
+literal|"valid certificate) and 'other' (all other not\n"
+literal|"                             "
+literal|"separately classified certificate errors)."
 argument_list|)
 block|}
 block|,
@@ -1447,11 +1491,9 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"Also commit file and dir externals reached by\n"
+literal|"also operate on externals defined by\n"
 literal|"                             "
-literal|"recursion. This does not include externals with a\n"
-literal|"                             "
-literal|"fixed revision. (See the svn:externals property)"
+literal|"svn:externals properties"
 argument_list|)
 block|}
 block|,
@@ -1464,7 +1506,7 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"retrieve target's inherited properties"
+literal|"retrieve properties set on parents of the target"
 argument_list|)
 block|}
 block|,
@@ -1491,6 +1533,107 @@ block|,
 name|N_
 argument_list|(
 literal|"combine ARG with the previous search pattern"
+argument_list|)
+block|}
+block|,
+block|{
+literal|"log"
+block|,
+name|opt_mergeinfo_log
+block|,
+literal|0
+block|,
+name|N_
+argument_list|(
+literal|"show revision log message, author and date"
+argument_list|)
+block|}
+block|,
+block|{
+literal|"remove-unversioned"
+block|,
+name|opt_remove_unversioned
+block|,
+literal|0
+block|,
+name|N_
+argument_list|(
+literal|"remove unversioned items"
+argument_list|)
+block|}
+block|,
+block|{
+literal|"remove-ignored"
+block|,
+name|opt_remove_ignored
+block|,
+literal|0
+block|,
+name|N_
+argument_list|(
+literal|"remove ignored items"
+argument_list|)
+block|}
+block|,
+block|{
+literal|"no-newline"
+block|,
+name|opt_no_newline
+block|,
+literal|0
+block|,
+name|N_
+argument_list|(
+literal|"do not output the trailing newline"
+argument_list|)
+block|}
+block|,
+block|{
+literal|"show-passwords"
+block|,
+name|opt_show_passwords
+block|,
+literal|0
+block|,
+name|N_
+argument_list|(
+literal|"show cached passwords"
+argument_list|)
+block|}
+block|,
+block|{
+literal|"pin-externals"
+block|,
+name|opt_pin_externals
+block|,
+literal|0
+block|,
+name|N_
+argument_list|(
+literal|"pin externals with no explicit revision to their\n"
+literal|"                             "
+literal|"current revision (recommended when tagging)"
+argument_list|)
+block|}
+block|,
+block|{
+literal|"show-item"
+block|,
+name|opt_show_item
+block|,
+literal|1
+block|,
+name|N_
+argument_list|(
+literal|"print only the item identified by ARG ('kind',\n"
+literal|"                             "
+literal|"'url', 'relative-url', 'repos-root-url',\n"
+literal|"                             "
+literal|"'repos-uuid', 'revision', 'last-changed-revision',\n"
+literal|"                             "
+literal|"'last-changed-date', 'last-changed-author',\n"
+literal|"                             "
+literal|"'wc-root')"
 argument_list|)
 block|}
 block|,
@@ -1551,6 +1694,8 @@ block|,
 name|opt_force_interactive
 block|,
 name|opt_trust_server_cert
+block|,
+name|opt_trust_server_cert_failures
 block|,
 name|opt_config_dir
 block|,
@@ -1628,6 +1773,57 @@ block|}
 block|}
 block|,
 block|{
+literal|"auth"
+block|,
+name|svn_cl__auth
+block|,
+block|{
+literal|0
+block|}
+block|,
+name|N_
+argument_list|(
+literal|"Manage cached authentication credentials.\n"
+literal|"usage: 1. svn auth [PATTERN ...]\n"
+literal|"usage: 2. svn auth --remove PATTERN [PATTERN ...]\n"
+literal|"\n"
+literal|"  With no arguments, list all cached authentication credentials.\n"
+literal|"  Authentication credentials include usernames, passwords,\n"
+literal|"  SSL certificates, and SSL client-certificate passphrases.\n"
+literal|"  If PATTERN is specified, only list credentials with attributes matching one\n"
+literal|"  or more patterns. With the --remove option, remove cached authentication\n"
+literal|"  credentials matching one or more patterns.\n"
+literal|"\n"
+literal|"  If more than one pattern is specified credentials are considered only they\n"
+literal|"  match all specified patterns. Patterns are matched case-sensitively and may\n"
+literal|"  contain glob wildcards:\n"
+literal|"    ?      matches any single character\n"
+literal|"    *      matches a sequence of arbitrary characters\n"
+literal|"    [abc]  matches any of the characters listed inside the brackets\n"
+literal|"  Note that wildcards will usually need to be quoted or escaped on the\n"
+literal|"  command line because many command shells will interfere by trying to\n"
+literal|"  expand them.\n"
+argument_list|)
+block|,
+block|{
+name|opt_remove
+block|,
+name|opt_show_passwords
+block|}
+block|,
+block|{
+block|{
+name|opt_remove
+block|,
+name|N_
+argument_list|(
+literal|"remove matching authentication credentials"
+argument_list|)
+block|}
+block|}
+block|}
+block|,
+block|{
 literal|"blame"
 block|,
 name|svn_cl__blame
@@ -1642,12 +1838,27 @@ block|}
 block|,
 name|N_
 argument_list|(
-literal|"Output the content of specified files or\n"
-literal|"URLs with revision and author information in-line.\n"
-literal|"usage: blame TARGET[@REV]...\n"
+literal|"Show when each line of a file was last (or\n"
+literal|"next) changed.\n"
+literal|"usage: blame [-rM:N] TARGET[@REV]...\n"
+literal|"\n"
+literal|"  Annotate each line of a file with the revision number and author of the\n"
+literal|"  last change (or optionally the next change) to that line.\n"
+literal|"\n"
+literal|"  With no revision range (same as -r0:REV), or with '-r M:N' where M< N,\n"
+literal|"  annotate each line that is present in revision N of the file, with\n"
+literal|"  the last revision at or before rN that changed or added the line,\n"
+literal|"  looking back no further than rM.\n"
+literal|"\n"
+literal|"  With a reverse revision range '-r M:N' where M> N,\n"
+literal|"  annotate each line that is present in revision N of the file, with\n"
+literal|"  the next revision after rN that changed or deleted the line,\n"
+literal|"  looking forward no further than rM.\n"
 literal|"\n"
 literal|"  If specified, REV determines in which revision the target is first\n"
 literal|"  looked up.\n"
+literal|"\n"
+literal|"  Write the annotated result to standard output.\n"
 argument_list|)
 block|,
 block|{
@@ -1687,6 +1898,8 @@ argument_list|)
 block|,
 block|{
 literal|'r'
+block|,
+name|opt_ignore_keywords
 block|}
 block|}
 block|,
@@ -1788,19 +2001,35 @@ literal|"Recursively clean up the working copy, removing write locks, resuming\n
 literal|"unfinished operations, etc.\n"
 literal|"usage: cleanup [WCPATH...]\n"
 literal|"\n"
-literal|"  Finish any unfinished business in the working copy at WCPATH, and remove\n"
-literal|"  write locks (shown as 'L' by the 'svn status' command) from the working\n"
-literal|"  copy. Usually, this is only necessary if a Subversion client has crashed\n"
-literal|"  while using the working copy, leaving it in an unusable state.\n"
+literal|"  By default, finish any unfinished business in the working copy at WCPATH,\n"
+literal|"  and remove write locks (shown as 'L' by the 'svn status' command) from\n"
+literal|"  the working copy. Usually, this is only necessary if a Subversion client\n"
+literal|"  has crashed while using the working copy, leaving it in an unusable state.\n"
 literal|"\n"
 literal|"  WARNING: There is no mechanism that will protect write locks still\n"
 literal|"           being used by other Subversion clients. Running this command\n"
 literal|"           while another client is using the working copy can corrupt\n"
 literal|"           the working copy beyond repair!\n"
+literal|"\n"
+literal|"  If the --remove-unversioned option or the --remove-ignored option\n"
+literal|"  is given, remove any unversioned or ignored items within WCPATH.\n"
+literal|"  To prevent accidental working copy corruption, unversioned or ignored\n"
+literal|"  items can only be removed if the working copy is not already locked\n"
+literal|"  for writing by another Subversion client.\n"
+literal|"  Note that the 'svn status' command shows unversioned items as '?',\n"
+literal|"  and ignored items as 'I' if the --no-ignore option is given to it.\n"
 argument_list|)
 block|,
 block|{
 name|opt_merge_cmd
+block|,
+name|opt_remove_unversioned
+block|,
+name|opt_remove_ignored
+block|,
+name|opt_include_externals
+block|,
+literal|'q'
 block|}
 block|}
 block|,
@@ -1822,6 +2051,10 @@ literal|"  A log message must be provided, but it can be empty.  If it is not\n"
 literal|"  given by a --message or --file option, an editor will be started.\n"
 literal|"  If any targets are (or contain) locked items, those will be\n"
 literal|"  unlocked after a successful commit.\n"
+literal|"\n"
+literal|"  If --include-externals is given, also commit file and directory\n"
+literal|"  externals reached by recursion. Do not commit externals with a\n"
+literal|"  fixed revision.\n"
 argument_list|)
 block|,
 block|{
@@ -1884,6 +2117,8 @@ block|,
 name|opt_parents
 block|,
 name|SVN_CL__LOG_MSG_OPTIONS
+block|,
+name|opt_pin_externals
 block|}
 block|}
 block|,
@@ -2155,6 +2390,21 @@ literal|"\n"
 literal|"  Print information about each TARGET (default: '.').\n"
 literal|"  TARGET may be either a working-copy path or URL.  If specified, REV\n"
 literal|"  determines in which revision the target is first looked up.\n"
+literal|"\n"
+literal|"  With --show-item, print only the value of one item of information\n"
+literal|"  about TARGET. One of the following items can be selected:\n"
+literal|"     kind                  the kind of TARGET\n"
+literal|"     url                   the URL of TARGET in the repository\n"
+literal|"     relative-url          the repository-relative URL\n"
+literal|"     repos-root-url        the repository root URL\n"
+literal|"     repos-uuid            the repository UUID\n"
+literal|"     revision              the revision of TARGET (defaults to BASE\n"
+literal|"                           for working copy paths and HEAD for URLs)\n"
+literal|"     last-changed-revision the most recent revision in which TARGET\n"
+literal|"                           was changed\n"
+literal|"     last-changed-date     the date of the last-changed revision\n"
+literal|"     last-changed-author   the author of the last-changed revision\n"
+literal|"     wc-root               the root of TARGET's working copy\n"
 argument_list|)
 block|,
 block|{
@@ -2171,6 +2421,12 @@ block|,
 name|opt_xml
 block|,
 name|opt_changelist
+block|,
+name|opt_include_externals
+block|,
+name|opt_show_item
+block|,
+name|opt_no_newline
 block|}
 block|}
 block|,
@@ -2220,18 +2476,7 @@ name|opt_xml
 block|,
 name|opt_include_externals
 block|}
-block|,
-block|{
-block|{
-name|opt_include_externals
-block|,
-name|N_
-argument_list|(
-literal|"include externals definitions"
-argument_list|)
-block|}
-block|}
-block|}
+block|, }
 block|,
 block|{
 literal|"lock"
@@ -2385,13 +2630,13 @@ block|,
 block|{
 literal|'r'
 block|,
+literal|'c'
+block|,
 literal|'q'
 block|,
 literal|'v'
 block|,
 literal|'g'
-block|,
-literal|'c'
 block|,
 name|opt_targets
 block|,
@@ -2422,7 +2667,7 @@ block|,
 name|opt_search
 block|,
 name|opt_search_and
-block|, }
+block|}
 block|,
 block|{
 block|{
@@ -2440,6 +2685,24 @@ block|,
 name|N_
 argument_list|(
 literal|"the change made in revision ARG"
+argument_list|)
+block|}
+block|,
+block|{
+literal|'v'
+block|,
+name|N_
+argument_list|(
+literal|"also print all affected paths"
+argument_list|)
+block|}
+block|,
+block|{
+literal|'q'
+block|,
+name|N_
+argument_list|(
+literal|"do not print the log message"
 argument_list|)
 block|}
 block|}
@@ -2817,6 +3080,17 @@ name|opt_allow_mixed_revisions
 block|,
 literal|'v'
 block|}
+block|,
+block|{
+block|{
+name|opt_force
+block|,
+name|N_
+argument_list|(
+literal|"force deletions even if deleted contents don't match"
+argument_list|)
+block|}
+block|}
 block|}
 block|,
 block|{
@@ -2865,9 +3139,17 @@ literal|'r'
 block|,
 literal|'R'
 block|,
+literal|'q'
+block|,
+literal|'v'
+block|,
 name|opt_depth
 block|,
 name|opt_show_revs
+block|,
+name|opt_mergeinfo_log
+block|,
+name|opt_incremental
 block|}
 block|}
 block|,
@@ -3046,6 +3328,8 @@ literal|"\n"
 literal|"  1. Removes versioned props in working copy.\n"
 literal|"  2. Removes unversioned remote prop on repos revision.\n"
 literal|"     TARGET only determines which repository to access.\n"
+literal|"\n"
+literal|"  See 'svn help propset' for descriptions of the svn:* special properties.\n"
 argument_list|)
 block|,
 block|{
@@ -3084,7 +3368,7 @@ literal|"  1. Edits versioned prop in working copy or repository.\n"
 literal|"  2. Edits unversioned remote prop on repos revision.\n"
 literal|"     TARGET only determines which repository to access.\n"
 literal|"\n"
-literal|"  See 'svn help propset' for more on setting properties.\n"
+literal|"  See 'svn help propset' for descriptions of the svn:* special properties.\n"
 argument_list|)
 block|,
 block|{
@@ -3126,9 +3410,11 @@ literal|"  Otherwise, if there is more than one TARGET or a depth other than\n"
 literal|"  'empty', the target path is printed on the same line before each value.\n"
 literal|"\n"
 literal|"  By default, an extra newline is printed after the property value so that\n"
-literal|"  the output looks pretty.  With a single TARGET and depth 'empty', you can\n"
-literal|"  use the --strict option to disable this (useful when redirecting a binary\n"
-literal|"  property value to a file, for example).\n"
+literal|"  the output looks pretty.  With a single TARGET, depth 'empty' and without\n"
+literal|"  --show-inherited-props, you can use the --no-newline option to disable this\n"
+literal|"  (useful when redirecting a binary property value to a file, for example).\n"
+literal|"\n"
+literal|"  See 'svn help propset' for descriptions of the svn:* special properties.\n"
 argument_list|)
 block|,
 block|{
@@ -3143,6 +3429,8 @@ block|,
 name|opt_revprop
 block|,
 name|opt_strict
+block|,
+name|opt_no_newline
 block|,
 name|opt_xml
 block|,
@@ -3166,7 +3454,7 @@ name|opt_strict
 block|,
 name|N_
 argument_list|(
-literal|"don't print an extra newline"
+literal|"(deprecated; use --no-newline)"
 argument_list|)
 block|}
 block|}
@@ -3196,6 +3484,8 @@ literal|"     TARGET only determines which repository to access.\n"
 literal|"\n"
 literal|"  With --verbose, the property values are printed as well, like 'svn propget\n"
 literal|"  --verbose'.  With --quiet, the paths are not printed.\n"
+literal|"\n"
+literal|"  See 'svn help propset' for descriptions of the svn:* special properties.\n"
 argument_list|)
 block|,
 block|{
@@ -3330,6 +3620,7 @@ literal|"        ../  to the parent directory of the extracted external\n"
 literal|"        ^/   to the repository root\n"
 literal|"        /    to the server root\n"
 literal|"        //   to the URL scheme\n"
+literal|"      ^/../  to a sibling repository beneath the same SVNParentPath location\n"
 literal|"      Use of the following format is discouraged but is supported for\n"
 literal|"      interoperability with Subversion 1.4 and earlier clients:\n"
 literal|"        LOCALPATH [-r PEG] URL\n"
@@ -3568,9 +3859,9 @@ literal|"    Third column: Whether the working copy is locked for writing by\n"
 literal|"                  another Subversion client modifying the working copy\n"
 literal|"      ' ' not locked for writing\n"
 literal|"      'L' locked for writing\n"
-literal|"    Fourth column: Scheduled commit will contain addition-with-history\n"
-literal|"      ' ' no history scheduled with commit\n"
-literal|"      '+' history scheduled with commit\n"
+literal|"    Fourth column: Scheduled commit will create a copy (addition-with-history)\n"
+literal|"      ' ' no history scheduled with commit (item was newly added)\n"
+literal|"      '+' history scheduled with commit (item was copied)\n"
 literal|"    Fifth column: Whether the item is switched or a file external\n"
 literal|"      ' ' normal\n"
 literal|"      'S' the item has a Switched URL relative to the parent\n"
@@ -3640,6 +3931,8 @@ block|,
 literal|'N'
 block|,
 name|opt_depth
+block|,
+literal|'r'
 block|,
 literal|'q'
 block|,
@@ -3751,6 +4044,15 @@ argument_list|(
 literal|"allow switching to a node with no common ancestor"
 argument_list|)
 block|}
+block|,
+block|{
+name|opt_force
+block|,
+name|N_
+argument_list|(
+literal|"handle unversioned obstructions as changes"
+argument_list|)
+block|}
 block|}
 block|}
 block|,
@@ -3860,6 +4162,17 @@ block|,
 name|opt_accept
 block|,
 name|opt_parents
+block|}
+block|,
+block|{
+block|{
+name|opt_force
+block|,
+name|N_
+argument_list|(
+literal|"handle unversioned obstructions as changes"
+argument_list|)
+block|}
 block|}
 block|}
 block|,
@@ -4041,6 +4354,14 @@ modifier|*
 name|baton
 parameter_list|)
 block|{
+comment|/* Cancel baton should be always NULL in command line client. */
+name|SVN_ERR_ASSERT
+argument_list|(
+name|baton
+operator|==
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cancelled
@@ -4250,46 +4571,19 @@ comment|/*** Main. ***/
 end_comment
 
 begin_comment
-comment|/* Report and clear the error ERR, and return EXIT_FAILURE. Suppress the  * error message if it is SVN_ERR_IO_PIPE_WRITE_ERROR. */
+comment|/*  * On success, leave *EXIT_CODE untouched and return SVN_NO_ERROR. On error,  * either return an error to be displayed, or set *EXIT_CODE to non-zero and  * return SVN_NO_ERROR.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|EXIT_ERROR
-parameter_list|(
-name|err
-parameter_list|)
-define|\
-value|svn_cmdline_handle_exit_error(err, NULL, "svn: ")
-end_define
-
-begin_comment
-comment|/* A redefinition of the public SVN_INT_ERR macro, that suppresses the  * error message if it is SVN_ERR_IO_PIPE_WRITE_ERROR. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SVN_INT_ERR
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SVN_INT_ERR
-parameter_list|(
-name|expr
-parameter_list|)
-define|\
-value|do {                                                           \     svn_error_t *svn_err__temp = (expr);                         \     if (svn_err__temp)                                           \       return EXIT_ERROR(svn_err__temp);                          \   } while (0)
-end_define
 
 begin_function
 specifier|static
-name|int
+name|svn_error_t
+modifier|*
 name|sub_main
 parameter_list|(
+name|int
+modifier|*
+name|exit_code
+parameter_list|,
 name|int
 name|argc
 parameter_list|,
@@ -4346,11 +4640,6 @@ name|NULL
 decl_stmt|;
 specifier|const
 name|char
-modifier|*
-name|dash_m_arg
-init|=
-name|NULL
-decl_stmt|,
 modifier|*
 name|dash_F_arg
 init|=
@@ -4424,7 +4713,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Check library versions */
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|check_lib_versions
 argument_list|()
@@ -4450,7 +4739,7 @@ literal|"SVN_ASP_DOT_NET_HACK"
 argument_list|)
 condition|)
 block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_wc_set_adm_dir
 argument_list|(
@@ -4464,7 +4753,7 @@ block|}
 endif|#
 directive|endif
 comment|/* Initialize the RA library. */
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_ra_initialize
 argument_list|(
@@ -4546,7 +4835,7 @@ operator|<=
 literal|1
 condition|)
 block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_cl__help
 argument_list|(
@@ -4558,12 +4847,17 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
+operator|*
+name|exit_code
+operator|=
 name|EXIT_FAILURE
+expr_stmt|;
+return|return
+name|SVN_NO_ERROR
 return|;
 block|}
 comment|/* Else, parse options. */
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_cmdline__getopt_init
 argument_list|(
@@ -4630,7 +4924,7 @@ condition|(
 name|apr_err
 condition|)
 block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_cl__help
 argument_list|(
@@ -4642,8 +4936,13 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
+operator|*
+name|exit_code
+operator|=
 name|EXIT_FAILURE
+expr_stmt|;
+return|return
+name|SVN_NO_ERROR
 return|;
 block|}
 comment|/* Stash the option code in an array before parsing it. */
@@ -4665,6 +4964,19 @@ case|case
 literal|'l'
 case|:
 block|{
+name|SVN_ERR
+argument_list|(
+name|svn_utf_cstring_to_utf8
+argument_list|(
+operator|&
+name|utf8_opt_arg
+argument_list|,
+name|opt_arg
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|svn_cstring_atoi
@@ -4674,7 +4986,7 @@ name|opt_state
 operator|.
 name|limit
 argument_list|,
-name|opt_arg
+name|utf8_opt_arg
 argument_list|)
 expr_stmt|;
 if|if
@@ -4682,8 +4994,7 @@ condition|(
 name|err
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -4694,12 +5005,6 @@ name|_
 argument_list|(
 literal|"Non-numeric limit argument given"
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
 argument_list|)
 return|;
 block|}
@@ -4712,8 +5017,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_INCORRECT_PARAMS
@@ -4725,12 +5029,6 @@ argument_list|(
 literal|"Argument to --limit must be positive"
 argument_list|)
 argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
-argument_list|)
 return|;
 block|}
 block|}
@@ -4738,7 +5036,7 @@ break|break;
 case|case
 literal|'m'
 case|:
-comment|/* Note that there's no way here to detect if the log message            contains a zero byte -- if it does, then opt_arg will just            be shorter than the user intended.  Oh well. */
+comment|/* We store the raw message here.  We will convert it to UTF-8          * later, according to the value of the '--encoding' option. */
 name|opt_state
 operator|.
 name|message
@@ -4750,10 +5048,6 @@ argument_list|,
 name|opt_arg
 argument_list|)
 expr_stmt|;
-name|dash_m_arg
-operator|=
-name|opt_arg
-expr_stmt|;
 break|break;
 case|case
 literal|'c'
@@ -4762,10 +5056,25 @@ block|{
 name|apr_array_header_t
 modifier|*
 name|change_revs
-init|=
+decl_stmt|;
+name|SVN_ERR
+argument_list|(
+name|svn_utf_cstring_to_utf8
+argument_list|(
+operator|&
+name|utf8_opt_arg
+argument_list|,
+name|opt_arg
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|change_revs
+operator|=
 name|svn_cstring_split
 argument_list|(
-name|opt_arg
+name|utf8_opt_arg
 argument_list|,
 literal|", \n\r\t\v"
 argument_list|,
@@ -4773,7 +5082,7 @@ name|TRUE
 argument_list|,
 name|pool
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|opt_state
@@ -4781,8 +5090,7 @@ operator|.
 name|old_target
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -4793,12 +5101,6 @@ name|_
 argument_list|(
 literal|"Can't specify -c with --old"
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
 argument_list|)
 return|;
 block|}
@@ -4916,8 +5218,7 @@ operator|||
 name|is_negative
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_createf
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -4931,12 +5232,6 @@ literal|" not supported with -c"
 argument_list|)
 argument_list|,
 name|change_str
-argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
 argument_list|)
 return|;
 block|}
@@ -4981,8 +5276,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_createf
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -4997,12 +5291,6 @@ argument_list|)
 argument_list|,
 name|change_str
 argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
-argument_list|)
 return|;
 block|}
 if|if
@@ -5012,8 +5300,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -5024,12 +5311,6 @@ name|_
 argument_list|(
 literal|"There is no change 0"
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
 argument_list|)
 return|;
 block|}
@@ -5115,23 +5396,7 @@ name|used_revision_arg
 operator|=
 name|TRUE
 expr_stmt|;
-if|if
-condition|(
-name|svn_opt_parse_revision_to_range
-argument_list|(
-name|opt_state
-operator|.
-name|revision_ranges
-argument_list|,
-name|opt_arg
-argument_list|,
-name|pool
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
@@ -5144,8 +5409,23 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
+if|if
+condition|(
+name|svn_opt_parse_revision_to_range
+argument_list|(
+name|opt_state
+operator|.
+name|revision_ranges
+argument_list|,
+name|utf8_opt_arg
+argument_list|,
+name|pool
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+return|return
 name|svn_error_createf
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -5158,12 +5438,6 @@ literal|"Syntax error in revision argument '%s'"
 argument_list|)
 argument_list|,
 name|utf8_opt_arg
-argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
 argument_list|)
 return|;
 block|}
@@ -5224,7 +5498,8 @@ break|break;
 case|case
 literal|'F'
 case|:
-name|SVN_INT_ERR
+comment|/* We read the raw file content here.  We will convert it to UTF-8          * later (if it's a log/lock message or an svn:* prop value),          * according to the value of the '--encoding' option. */
+name|SVN_ERR
 argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
@@ -5237,7 +5512,7 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_stringbuf_from_file2
 argument_list|(
@@ -5269,7 +5544,7 @@ operator|)
 expr_stmt|;
 name|dash_F_arg
 operator|=
-name|opt_arg
+name|utf8_opt_arg
 expr_stmt|;
 break|break;
 case|case
@@ -5283,8 +5558,7 @@ decl_stmt|,
 modifier|*
 name|buffer_utf8
 decl_stmt|;
-comment|/* We need to convert to UTF-8 now, even before we divide              the targets into an array, because otherwise we wouldn't              know what delimiter to use for svn_cstring_split().  */
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
@@ -5297,7 +5571,7 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_stringbuf_from_file2
 argument_list|(
@@ -5310,7 +5584,7 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_utf_stringbuf_to_utf8
 argument_list|(
@@ -5420,8 +5694,6 @@ condition|(
 name|err
 condition|)
 return|return
-name|EXIT_ERROR
-argument_list|(
 name|svn_error_createf
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -5432,7 +5704,6 @@ name|_
 argument_list|(
 literal|"Error converting depth "
 literal|"from locale to UTF-8"
-argument_list|)
 argument_list|)
 argument_list|)
 return|;
@@ -5461,8 +5732,6 @@ name|svn_depth_exclude
 condition|)
 block|{
 return|return
-name|EXIT_ERROR
-argument_list|(
 name|svn_error_createf
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -5477,7 +5746,6 @@ literal|"or 'infinity'"
 argument_list|)
 argument_list|,
 name|utf8_opt_arg
-argument_list|)
 argument_list|)
 return|;
 block|}
@@ -5502,8 +5770,6 @@ condition|(
 name|err
 condition|)
 return|return
-name|EXIT_ERROR
-argument_list|(
 name|svn_error_createf
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -5514,7 +5780,6 @@ name|_
 argument_list|(
 literal|"Error converting depth "
 literal|"from locale to UTF-8"
-argument_list|)
 argument_list|)
 argument_list|)
 return|;
@@ -5538,8 +5803,6 @@ name|svn_depth_unknown
 condition|)
 block|{
 return|return
-name|EXIT_ERROR
-argument_list|(
 name|svn_error_createf
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -5554,7 +5817,6 @@ literal|"'immediates', or 'infinity'"
 argument_list|)
 argument_list|,
 name|utf8_opt_arg
-argument_list|)
 argument_list|)
 return|;
 block|}
@@ -5572,7 +5834,7 @@ break|break;
 case|case
 name|opt_auth_username
 case|:
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
@@ -5591,7 +5853,7 @@ break|break;
 case|case
 name|opt_auth_password
 case|:
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
@@ -5643,16 +5905,6 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
-name|opt_strict
-case|:
-name|opt_state
-operator|.
-name|strict
-operator|=
-name|TRUE
-expr_stmt|;
-break|break;
-case|case
 name|opt_no_ignore
 case|:
 name|opt_state
@@ -5693,11 +5945,64 @@ break|break;
 case|case
 name|opt_trust_server_cert
 case|:
+comment|/* backwards compat to 1.8 */
 name|opt_state
 operator|.
-name|trust_server_cert
+name|trust_server_cert_unknown_ca
 operator|=
 name|TRUE
+expr_stmt|;
+break|break;
+case|case
+name|opt_trust_server_cert_failures
+case|:
+name|SVN_ERR
+argument_list|(
+name|svn_utf_cstring_to_utf8
+argument_list|(
+operator|&
+name|utf8_opt_arg
+argument_list|,
+name|opt_arg
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|SVN_ERR
+argument_list|(
+name|svn_cmdline__parse_trust_options
+argument_list|(
+operator|&
+name|opt_state
+operator|.
+name|trust_server_cert_unknown_ca
+argument_list|,
+operator|&
+name|opt_state
+operator|.
+name|trust_server_cert_cn_mismatch
+argument_list|,
+operator|&
+name|opt_state
+operator|.
+name|trust_server_cert_expired
+argument_list|,
+operator|&
+name|opt_state
+operator|.
+name|trust_server_cert_not_yet_valid
+argument_list|,
+operator|&
+name|opt_state
+operator|.
+name|trust_server_cert_other_failure
+argument_list|,
+name|utf8_opt_arg
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -5793,7 +6098,7 @@ break|break;
 case|case
 literal|'x'
 case|:
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
@@ -5876,8 +6181,7 @@ operator|.
 name|used_change_arg
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -5889,14 +6193,21 @@ argument_list|(
 literal|"Can't specify -c with --old"
 argument_list|)
 argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
-argument_list|)
 return|;
 block|}
+name|SVN_ERR
+argument_list|(
+name|svn_utf_cstring_to_utf8
+argument_list|(
+operator|&
+name|utf8_opt_arg
+argument_list|,
+name|opt_arg
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|opt_state
 operator|.
 name|old_target
@@ -5905,13 +6216,26 @@ name|apr_pstrdup
 argument_list|(
 name|pool
 argument_list|,
-name|opt_arg
+name|utf8_opt_arg
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|opt_new_cmd
 case|:
+name|SVN_ERR
+argument_list|(
+name|svn_utf_cstring_to_utf8
+argument_list|(
+operator|&
+name|utf8_opt_arg
+argument_list|,
+name|opt_arg
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|opt_state
 operator|.
 name|new_target
@@ -5920,25 +6244,19 @@ name|apr_pstrdup
 argument_list|(
 name|pool
 argument_list|,
-name|opt_arg
+name|utf8_opt_arg
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|opt_config_dir
 case|:
-block|{
-specifier|const
-name|char
-modifier|*
-name|path_utf8
-decl_stmt|;
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
 operator|&
-name|path_utf8
+name|utf8_opt_arg
 argument_list|,
 name|opt_arg
 argument_list|,
@@ -5952,12 +6270,11 @@ name|config_dir
 operator|=
 name|svn_dirent_internal_style
 argument_list|(
-name|path_utf8
+name|utf8_opt_arg
 argument_list|,
 name|pool
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|opt_config_options
@@ -5986,12 +6303,12 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
 operator|&
-name|opt_arg
+name|utf8_opt_arg
 argument_list|,
 name|opt_arg
 argument_list|,
@@ -5999,7 +6316,7 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_cmdline__parse_config_option
 argument_list|(
@@ -6007,7 +6324,9 @@ name|opt_state
 operator|.
 name|config_options
 argument_list|,
-name|opt_arg
+name|utf8_opt_arg
+argument_list|,
+literal|"svn: "
 argument_list|,
 name|pool
 argument_list|)
@@ -6037,46 +6356,7 @@ break|break;
 case|case
 name|opt_native_eol
 case|:
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-literal|"LF"
-argument_list|,
-name|opt_arg
-argument_list|)
-operator|||
-operator|!
-name|strcmp
-argument_list|(
-literal|"CR"
-argument_list|,
-name|opt_arg
-argument_list|)
-operator|||
-operator|!
-name|strcmp
-argument_list|(
-literal|"CRLF"
-argument_list|,
-name|opt_arg
-argument_list|)
-condition|)
-name|opt_state
-operator|.
-name|native_eol
-operator|=
-name|apr_pstrdup
-argument_list|(
-name|pool
-argument_list|,
-name|opt_arg
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
@@ -6089,8 +6369,41 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|err
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+literal|"LF"
+argument_list|,
+name|utf8_opt_arg
+argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+literal|"CR"
+argument_list|,
+name|utf8_opt_arg
+argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+literal|"CRLF"
+argument_list|,
+name|utf8_opt_arg
+argument_list|)
+condition|)
+name|opt_state
+operator|.
+name|native_eol
 operator|=
+name|utf8_opt_arg
+expr_stmt|;
+else|else
+block|{
+return|return
 name|svn_error_createf
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -6103,12 +6416,6 @@ literal|"Syntax error in native-eol argument '%s'"
 argument_list|)
 argument_list|,
 name|utf8_opt_arg
-argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
 argument_list|)
 return|;
 block|}
@@ -6148,7 +6455,7 @@ break|break;
 case|case
 name|opt_changelist
 case|:
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
@@ -6161,17 +6468,9 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|opt_state
-operator|.
-name|changelist
-operator|=
-name|utf8_opt_arg
-expr_stmt|;
 if|if
 condition|(
-name|opt_state
-operator|.
-name|changelist
+name|utf8_opt_arg
 index|[
 literal|0
 index|]
@@ -6179,8 +6478,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -6192,21 +6490,13 @@ argument_list|(
 literal|"Changelist names must not be empty"
 argument_list|)
 argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
-argument_list|)
 return|;
 block|}
 name|svn_hash_sets
 argument_list|(
 name|changelists
 argument_list|,
-name|opt_state
-operator|.
-name|changelist
+name|utf8_opt_arg
 argument_list|,
 operator|(
 name|void
@@ -6260,7 +6550,7 @@ break|break;
 case|case
 name|opt_with_revprop
 case|:
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_opt_parse_revprop
 argument_list|(
@@ -6299,13 +6589,26 @@ break|break;
 case|case
 name|opt_accept
 case|:
+name|SVN_ERR
+argument_list|(
+name|svn_utf_cstring_to_utf8
+argument_list|(
+operator|&
+name|utf8_opt_arg
+argument_list|,
+name|opt_arg
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|opt_state
 operator|.
 name|accept_which
 operator|=
 name|svn_cl__accept_from_word
 argument_list|(
-name|opt_arg
+name|utf8_opt_arg
 argument_list|)
 expr_stmt|;
 if|if
@@ -6317,8 +6620,6 @@ operator|==
 name|svn_cl__accept_invalid
 condition|)
 return|return
-name|EXIT_ERROR
-argument_list|(
 name|svn_error_createf
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -6330,21 +6631,33 @@ argument_list|(
 literal|"'%s' is not a valid --accept value"
 argument_list|)
 argument_list|,
-name|opt_arg
-argument_list|)
+name|utf8_opt_arg
 argument_list|)
 return|;
 break|break;
 case|case
 name|opt_show_revs
 case|:
+name|SVN_ERR
+argument_list|(
+name|svn_utf_cstring_to_utf8
+argument_list|(
+operator|&
+name|utf8_opt_arg
+argument_list|,
+name|opt_arg
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|opt_state
 operator|.
 name|show_revs
 operator|=
 name|svn_cl__show_revs_from_word
 argument_list|(
-name|opt_arg
+name|utf8_opt_arg
 argument_list|)
 expr_stmt|;
 if|if
@@ -6356,8 +6669,6 @@ operator|==
 name|svn_cl__show_revs_invalid
 condition|)
 return|return
-name|EXIT_ERROR
-argument_list|(
 name|svn_error_createf
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -6369,10 +6680,19 @@ argument_list|(
 literal|"'%s' is not a valid --show-revs value"
 argument_list|)
 argument_list|,
-name|opt_arg
-argument_list|)
+name|utf8_opt_arg
 argument_list|)
 return|;
+break|break;
+case|case
+name|opt_mergeinfo_log
+case|:
+name|opt_state
+operator|.
+name|mergeinfo_log
+operator|=
+name|TRUE
+expr_stmt|;
 break|break;
 case|case
 name|opt_reintegrate
@@ -6388,6 +6708,19 @@ case|case
 name|opt_strip
 case|:
 block|{
+name|SVN_ERR
+argument_list|(
+name|svn_utf_cstring_to_utf8
+argument_list|(
+operator|&
+name|utf8_opt_arg
+argument_list|,
+name|opt_arg
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|svn_cstring_atoi
@@ -6397,7 +6730,7 @@ name|opt_state
 operator|.
 name|strip
 argument_list|,
-name|opt_arg
+name|utf8_opt_arg
 argument_list|)
 expr_stmt|;
 if|if
@@ -6405,8 +6738,7 @@ condition|(
 name|err
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_createf
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -6418,13 +6750,7 @@ argument_list|(
 literal|"Invalid strip count '%s'"
 argument_list|)
 argument_list|,
-name|opt_arg
-argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
+name|utf8_opt_arg
 argument_list|)
 return|;
 block|}
@@ -6437,8 +6763,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_INCORRECT_PARAMS
@@ -6449,12 +6774,6 @@ name|_
 argument_list|(
 literal|"Argument to --strip must be positive"
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
 argument_list|)
 return|;
 block|}
@@ -6581,12 +6900,25 @@ break|break;
 case|case
 name|opt_search
 case|:
+name|SVN_ERR
+argument_list|(
+name|svn_utf_cstring_to_utf8
+argument_list|(
+operator|&
+name|utf8_opt_arg
+argument_list|,
+name|opt_arg
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|add_search_pattern_group
 argument_list|(
 operator|&
 name|opt_state
 argument_list|,
-name|opt_arg
+name|utf8_opt_arg
 argument_list|,
 name|pool
 argument_list|)
@@ -6595,16 +6927,106 @@ break|break;
 case|case
 name|opt_search_and
 case|:
-name|add_search_pattern_to_latest_group
+name|SVN_ERR
+argument_list|(
+name|svn_utf_cstring_to_utf8
 argument_list|(
 operator|&
-name|opt_state
+name|utf8_opt_arg
 argument_list|,
 name|opt_arg
 argument_list|,
 name|pool
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|add_search_pattern_to_latest_group
+argument_list|(
+operator|&
+name|opt_state
+argument_list|,
+name|utf8_opt_arg
+argument_list|,
+name|pool
+argument_list|)
+expr_stmt|;
+case|case
+name|opt_remove_unversioned
+case|:
+name|opt_state
+operator|.
+name|remove_unversioned
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+name|opt_remove_ignored
+case|:
+name|opt_state
+operator|.
+name|remove_ignored
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+name|opt_no_newline
+case|:
+case|case
+name|opt_strict
+case|:
+comment|/* ### DEPRECATED */
+name|opt_state
+operator|.
+name|no_newline
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+name|opt_show_passwords
+case|:
+name|opt_state
+operator|.
+name|show_passwords
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+name|opt_pin_externals
+case|:
+name|opt_state
+operator|.
+name|pin_externals
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+name|opt_show_item
+case|:
+name|SVN_ERR
+argument_list|(
+name|svn_utf_cstring_to_utf8
+argument_list|(
+operator|&
+name|utf8_opt_arg
+argument_list|,
+name|opt_arg
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|opt_state
+operator|.
+name|show_item
+operator|=
+name|utf8_opt_arg
+expr_stmt|;
+break|break;
 default|default:
 comment|/* Hmmm. Perhaps this would be a good place to squirrel away            opts that commands like svn diff might need. Hmmm indeed. */
 break|break;
@@ -6620,8 +7042,7 @@ operator|&&
 name|force_interactive
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -6633,12 +7054,6 @@ argument_list|(
 literal|"--non-interactive and --force-interactive "
 literal|"are mutually exclusive"
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
 argument_list|)
 return|;
 block|}
@@ -6658,7 +7073,7 @@ name|force_interactive
 argument_list|)
 expr_stmt|;
 comment|/* Turn our hash of changelists into an array of unique ones. */
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_hash_keys
 argument_list|(
@@ -6676,7 +7091,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* ### This really belongs in libsvn_client.  The trouble is,      there's no one place there to run it from, no      svn_client_init().  We'd have to add it to all the public      functions that a client might call.  It's unmaintainable to do      initialization from within libsvn_client itself, but it seems      burdensome to demand that all clients call svn_client_init()      before calling any other libsvn_client function... On the other      hand, the alternative is effectively to demand that they call      svn_config_ensure() instead, so maybe we should have a generic      init function anyway.  Thoughts?  */
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_config_ensure
 argument_list|(
@@ -6797,8 +7212,13 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
+operator|*
+name|exit_code
+operator|=
 name|EXIT_FAILURE
+expr_stmt|;
+return|return
+name|SVN_NO_ERROR
 return|;
 block|}
 block|}
@@ -6840,7 +7260,7 @@ name|char
 modifier|*
 name|first_arg_utf8
 decl_stmt|;
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_utf_cstring_to_utf8
 argument_list|(
@@ -6913,8 +7333,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-return|return
+operator|*
+name|exit_code
+operator|=
 name|EXIT_FAILURE
+expr_stmt|;
+return|return
+name|SVN_NO_ERROR
 return|;
 block|}
 block|}
@@ -7055,8 +7480,13 @@ name|name
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
+operator|*
+name|exit_code
+operator|=
 name|EXIT_FAILURE
+expr_stmt|;
+return|return
+name|SVN_NO_ERROR
 return|;
 block|}
 block|}
@@ -7087,8 +7517,7 @@ operator|>
 literal|1
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -7101,12 +7530,6 @@ literal|"Multiple revision arguments "
 literal|"encountered; can't specify -c twice, "
 literal|"or both -c and -r"
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
 argument_list|)
 return|;
 block|}
@@ -7131,8 +7554,7 @@ name|svn_depth_unknown
 operator|)
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -7144,12 +7566,6 @@ argument_list|(
 literal|"--depth and --set-depth are mutually "
 literal|"exclusive"
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
 argument_list|)
 return|;
 block|}
@@ -7165,8 +7581,7 @@ operator|.
 name|no_revprops
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -7178,12 +7593,6 @@ argument_list|(
 literal|"--with-all-revprops and --with-no-revprops "
 literal|"are mutually exclusive"
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
 argument_list|)
 return|;
 block|}
@@ -7199,8 +7608,7 @@ operator|.
 name|no_revprops
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -7213,14 +7621,69 @@ literal|"--with-revprop and --with-no-revprops "
 literal|"are mutually exclusive"
 argument_list|)
 argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
-argument_list|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|SVN_CL__OPTION_WITH_REVPROP_CAN_SET_PROPERTIES_IN_SVN_NAMESPACE
+comment|/* XXX This is incomplete, since we do not yet check for --force, nor      do all the commands that accept --with-revprop also accept --force. */
+comment|/* Check the spelling of the revision properties given by --with-revprop. */
+if|if
+condition|(
+name|opt_state
+operator|.
+name|revprop_table
+condition|)
+block|{
+name|apr_hash_index_t
+modifier|*
+name|hi
+decl_stmt|;
+for|for
+control|(
+name|hi
+operator|=
+name|apr_hash_first
+argument_list|(
+name|pool
+argument_list|,
+name|opt_state
+operator|.
+name|revprop_table
+argument_list|)
+init|;
+name|hi
+condition|;
+name|hi
+operator|=
+name|apr_hash_next
+argument_list|(
+name|hi
+argument_list|)
+control|)
+block|{
+name|SVN_ERR
+argument_list|(
+name|svn_cl__check_svn_prop_name
+argument_list|(
+name|apr_hash_this_key
+argument_list|(
+name|hi
+argument_list|)
+argument_list|,
+name|TRUE
+argument_list|,
+name|svn_cl__prop_use_use
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* SVN_CL__OPTION_WITH_REVPROP_CAN_SET_PROPERTIES_IN_SVN_NAMESPACE */
 comment|/* Disallow simultaneous use of both -m and -F, when they are      both used to pass a commit message or lock comment.  ('propset'      takes the property value, not a commit message, from -F.)    */
 if|if
 condition|(
@@ -7239,8 +7702,7 @@ operator|!=
 name|svn_cl__propset
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -7253,29 +7715,40 @@ literal|"--message (-m) and --file (-F) "
 literal|"are mutually exclusive"
 argument_list|)
 argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
-argument_list|)
 return|;
 block|}
-comment|/* --trust-server-cert can only be used with --non-interactive */
+comment|/* --trust-* options can only be used with --non-interactive */
 if|if
 condition|(
-name|opt_state
-operator|.
-name|trust_server_cert
-operator|&&
 operator|!
 name|opt_state
 operator|.
 name|non_interactive
 condition|)
 block|{
-name|err
-operator|=
+if|if
+condition|(
+name|opt_state
+operator|.
+name|trust_server_cert_unknown_ca
+operator|||
+name|opt_state
+operator|.
+name|trust_server_cert_cn_mismatch
+operator|||
+name|opt_state
+operator|.
+name|trust_server_cert_expired
+operator|||
+name|opt_state
+operator|.
+name|trust_server_cert_not_yet_valid
+operator|||
+name|opt_state
+operator|.
+name|trust_server_cert_other_failure
+condition|)
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -7284,15 +7757,9 @@ name|NULL
 argument_list|,
 name|_
 argument_list|(
-literal|"--trust-server-cert requires "
+literal|"--trust-server-cert-failures requires "
 literal|"--non-interactive"
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
 argument_list|)
 return|;
 block|}
@@ -7312,8 +7779,7 @@ operator|.
 name|internal_diff
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -7325,12 +7791,6 @@ argument_list|(
 literal|"--diff-cmd and --internal-diff "
 literal|"are mutually exclusive"
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
 argument_list|)
 return|;
 block|}
@@ -7463,10 +7923,6 @@ name|apr_err
 argument_list|)
 condition|)
 block|{
-name|svn_config_t
-modifier|*
-name|empty_cfg
-decl_stmt|;
 name|svn_handle_warning2
 argument_list|(
 name|stderr
@@ -7481,68 +7937,21 @@ argument_list|(
 name|err
 argument_list|)
 expr_stmt|;
-name|cfg_hash
-operator|=
-name|apr_hash_make
+name|SVN_ERR
 argument_list|(
-name|pool
-argument_list|)
-expr_stmt|;
-name|SVN_INT_ERR
-argument_list|(
-name|svn_config_create2
+name|svn_config__get_default_config
 argument_list|(
 operator|&
-name|empty_cfg
-argument_list|,
-name|FALSE
-argument_list|,
-name|FALSE
+name|cfg_hash
 argument_list|,
 name|pool
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|svn_hash_sets
-argument_list|(
-name|cfg_hash
-argument_list|,
-name|SVN_CONFIG_CATEGORY_CONFIG
-argument_list|,
-name|empty_cfg
-argument_list|)
-expr_stmt|;
-name|SVN_INT_ERR
-argument_list|(
-name|svn_config_create2
-argument_list|(
-operator|&
-name|empty_cfg
-argument_list|,
-name|FALSE
-argument_list|,
-name|FALSE
-argument_list|,
-name|pool
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|svn_hash_sets
-argument_list|(
-name|cfg_hash
-argument_list|,
-name|SVN_CONFIG_CATEGORY_SERVERS
-argument_list|,
-name|empty_cfg
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 return|return
-name|EXIT_ERROR
-argument_list|(
 name|err
-argument_list|)
 return|;
 block|}
 comment|/* Relocation is infinite-depth only. */
@@ -7562,8 +7971,7 @@ operator|!=
 name|svn_depth_unknown
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_MUTUALLY_EXCLUSIVE_ARGS
@@ -7576,12 +7984,6 @@ literal|"--relocate and --depth are mutually "
 literal|"exclusive"
 argument_list|)
 argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
-argument_list|)
 return|;
 block|}
 if|if
@@ -7590,8 +7992,7 @@ operator|!
 name|descend
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_MUTUALLY_EXCLUSIVE_ARGS
@@ -7603,12 +8004,6 @@ argument_list|(
 literal|"--relocate and --non-recursive (-N) are mutually "
 literal|"exclusive"
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
 argument_list|)
 return|;
 block|}
@@ -7658,8 +8053,7 @@ operator|!=
 name|svn_opt_revision_unspecified
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CLIENT_REVISION_RANGE
@@ -7667,12 +8061,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
 argument_list|)
 return|;
 block|}
@@ -7740,15 +8128,6 @@ name|svn_depth_files
 expr_stmt|;
 block|}
 block|}
-name|cfg_config
-operator|=
-name|svn_hash_gets
-argument_list|(
-name|cfg_hash
-argument_list|,
-name|SVN_CONFIG_CATEGORY_CONFIG
-argument_list|)
-expr_stmt|;
 comment|/* Update the options in the config */
 if|if
 condition|(
@@ -7774,6 +8153,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|cfg_config
+operator|=
+name|svn_hash_gets
+argument_list|(
+name|cfg_hash
+argument_list|,
+name|SVN_CONFIG_CATEGORY_CONFIG
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 operator|!
@@ -7884,7 +8272,7 @@ operator|=
 operator|&
 name|opt_state
 expr_stmt|;
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_client_create_context2
 argument_list|(
@@ -8051,8 +8439,7 @@ operator|!=
 name|svn_cl__lock
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_LOG_MESSAGE_IS_VERSIONED_FILE
@@ -8065,12 +8452,11 @@ literal|"Log message file is a versioned file; "
 literal|"use '--force-log' to override"
 argument_list|)
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 else|else
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_LOG_MESSAGE_IS_VERSIONED_FILE
@@ -8083,14 +8469,8 @@ literal|"Lock comment file is a versioned file; "
 literal|"use '--force-log' to override"
 argument_list|)
 argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
-argument_list|)
 return|;
+block|}
 block|}
 block|}
 name|svn_error_clear
@@ -8102,7 +8482,9 @@ block|}
 comment|/* If the -m argument is a file at all, that's probably not what          the user intended. */
 if|if
 condition|(
-name|dash_m_arg
+name|opt_state
+operator|.
+name|message
 condition|)
 block|{
 name|apr_finfo_t
@@ -8115,7 +8497,10 @@ argument_list|(
 operator|&
 name|finfo
 argument_list|,
-name|dash_m_arg
+name|opt_state
+operator|.
+name|message
+comment|/* not converted to UTF-8 */
 argument_list|,
 name|APR_FINFO_MIN
 argument_list|,
@@ -8134,8 +8519,7 @@ operator|!=
 name|svn_cl__lock
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_LOG_MESSAGE_IS_PATHNAME
@@ -8148,12 +8532,11 @@ literal|"The log message is a pathname "
 literal|"(was -F intended?); use '--force-log' to override"
 argument_list|)
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 else|else
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_LOG_MESSAGE_IS_PATHNAME
@@ -8166,14 +8549,8 @@ literal|"The lock comment is a pathname "
 literal|"(was -F intended?); use '--force-log' to override"
 argument_list|)
 argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
-argument_list|)
 return|;
+block|}
 block|}
 block|}
 block|}
@@ -8251,8 +8628,7 @@ operator|.
 name|no_autoprops
 condition|)
 block|{
-name|err
-operator|=
+return|return
 name|svn_error_create
 argument_list|(
 name|SVN_ERR_CL_MUTUALLY_EXCLUSIVE_ARGS
@@ -8264,12 +8640,6 @@ argument_list|(
 literal|"--auto-props and --no-auto-props are "
 literal|"mutually exclusive"
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|EXIT_ERROR
-argument_list|(
-name|err
 argument_list|)
 return|;
 block|}
@@ -8316,7 +8686,7 @@ operator|*
 name|mimetypes_file
 condition|)
 block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_io_parse_mimetypes_file
 argument_list|(
@@ -8442,7 +8812,7 @@ condition|(
 name|use_notifier
 condition|)
 block|{
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_cl__get_notifier
 argument_list|(
@@ -8541,9 +8911,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Set up Authentication stuff. */
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
-name|svn_cmdline_create_auth_baton
+name|svn_cmdline_create_auth_baton2
 argument_list|(
 operator|&
 name|ab
@@ -8570,7 +8940,23 @@ name|no_auth_cache
 argument_list|,
 name|opt_state
 operator|.
-name|trust_server_cert
+name|trust_server_cert_unknown_ca
+argument_list|,
+name|opt_state
+operator|.
+name|trust_server_cert_cn_mismatch
+argument_list|,
+name|opt_state
+operator|.
+name|trust_server_cert_expired
+argument_list|,
+name|opt_state
+operator|.
+name|trust_server_cert_not_yet_valid
+argument_list|,
+name|opt_state
+operator|.
+name|trust_server_cert_other_failure
 argument_list|,
 name|cfg_config
 argument_list|,
@@ -8607,9 +8993,8 @@ name|accept_which
 operator|==
 name|svn_cl__accept_edit
 condition|)
+block|{
 return|return
-name|EXIT_ERROR
-argument_list|(
 name|svn_error_createf
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -8624,8 +9009,8 @@ argument_list|)
 argument_list|,
 name|SVN_CL__ACCEPT_EDIT
 argument_list|)
-argument_list|)
 return|;
+block|}
 if|if
 condition|(
 name|opt_state
@@ -8634,9 +9019,8 @@ name|accept_which
 operator|==
 name|svn_cl__accept_launch
 condition|)
+block|{
 return|return
-name|EXIT_ERROR
-argument_list|(
 name|svn_error_createf
 argument_list|(
 name|SVN_ERR_CL_ARG_PARSING_ERROR
@@ -8651,8 +9035,8 @@ argument_list|)
 argument_list|,
 name|SVN_CL__ACCEPT_LAUNCH
 argument_list|)
-argument_list|)
 return|;
+block|}
 comment|/* The default action when we're non-interactive is to postpone        * conflict resolution. */
 if|if
 condition|(
@@ -8670,7 +9054,7 @@ name|svn_cl__accept_postpone
 expr_stmt|;
 block|}
 comment|/* Check whether interactive conflict resolution is disabled by    * the configuration file. If no --accept option was specified    * we postpone all conflicts in this case. */
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_config_get_bool
 argument_list|(
@@ -8748,7 +9132,7 @@ name|conflict_func2
 operator|=
 name|svn_cl__conflict_func_interactive
 expr_stmt|;
-name|SVN_INT_ERR
+name|SVN_ERR
 argument_list|(
 name|svn_cl__get_conflict_func_interactive_baton
 argument_list|(
@@ -8829,13 +9213,9 @@ condition|)
 block|{
 name|err
 operator|=
-name|svn_error_quick_wrap
+name|svn_error_quick_wrapf
 argument_list|(
 name|err
-argument_list|,
-name|apr_psprintf
-argument_list|(
-name|pool
 argument_list|,
 name|_
 argument_list|(
@@ -8845,7 +9225,6 @@ argument_list|,
 name|subcommand
 operator|->
 name|name
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -9007,41 +9386,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Ensure that stdout is flushed, so the user will see any write errors.          This makes sure that output is not silently lost. */
-name|err
-operator|=
-name|svn_error_compose_create
-argument_list|(
-name|err
-argument_list|,
-name|svn_cmdline_fflush
-argument_list|(
-name|stdout
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
-name|EXIT_ERROR
-argument_list|(
 name|err
-argument_list|)
 return|;
 block|}
-else|else
-block|{
-comment|/* Ensure that stdout is flushed, so the user will see any write errors.          This makes sure that output is not silently lost. */
-name|SVN_INT_ERR
-argument_list|(
-name|svn_cmdline_fflush
-argument_list|(
-name|stdout
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
-name|EXIT_SUCCESS
+name|SVN_NO_ERROR
 return|;
-block|}
 block|}
 end_function
 
@@ -9065,6 +9416,12 @@ name|pool
 decl_stmt|;
 name|int
 name|exit_code
+init|=
+name|EXIT_SUCCESS
+decl_stmt|;
+name|svn_error_t
+modifier|*
+name|err
 decl_stmt|;
 comment|/* Initialize the app. */
 if|if
@@ -9092,10 +9449,13 @@ name|FALSE
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit_code
+name|err
 operator|=
 name|sub_main
 argument_list|(
+operator|&
+name|exit_code
+argument_list|,
 name|argc
 argument_list|,
 name|argv
@@ -9103,6 +9463,38 @@ argument_list|,
 name|pool
 argument_list|)
 expr_stmt|;
+comment|/* Flush stdout and report if it fails. It would be flushed on exit anyway      but this makes sure that output is not silently lost if it fails. */
+name|err
+operator|=
+name|svn_error_compose_create
+argument_list|(
+name|err
+argument_list|,
+name|svn_cmdline_fflush
+argument_list|(
+name|stdout
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+block|{
+name|exit_code
+operator|=
+name|EXIT_FAILURE
+expr_stmt|;
+name|svn_cmdline_handle_exit_error
+argument_list|(
+name|err
+argument_list|,
+name|NULL
+argument_list|,
+literal|"svn: "
+argument_list|)
+expr_stmt|;
+block|}
 name|svn_pool_destroy
 argument_list|(
 name|pool

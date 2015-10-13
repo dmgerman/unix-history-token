@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -74,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/SourceMgr.h"
+file|"llvm/Support/SMLoc.h"
 end_include
 
 begin_include
@@ -1075,6 +1081,11 @@ literal|1
 decl_stmt|;
 name|bool
 name|isInsertSubreg
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|isConvergent
 range|:
 literal|1
 decl_stmt|;

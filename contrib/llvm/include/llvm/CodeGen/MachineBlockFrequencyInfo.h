@@ -130,6 +130,7 @@ expr_stmt|;
 operator|~
 name|MachineBlockFrequencyInfo
 argument_list|()
+name|override
 expr_stmt|;
 name|void
 name|getAnalysisUsage

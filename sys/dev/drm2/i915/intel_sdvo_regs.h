@@ -194,6 +194,31 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Note: SDVO detailed timing flags match EDID misc flags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTD_FLAG_HSYNC_POSITIVE
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DTD_FLAG_VSYNC_POSITIVE
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DTD_FLAG_INTERLACE
+value|(1<< 7)
+end_define
+
+begin_comment
 comment|/** This matches the EDID DTD structure, more or less */
 end_comment
 
@@ -3339,6 +3364,20 @@ define|#
 directive|define
 name|SDVO_CMD_SET_HBUF_INDEX
 value|0x93
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDVO_HBUF_INDEX_ELD
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDVO_HBUF_INDEX_AVI_IF
+value|1
 end_define
 
 begin_define

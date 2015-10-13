@@ -60,9 +60,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|StringRef
-decl_stmt|;
-name|class
 name|CrashRecoveryContextCleanup
 decl_stmt|;
 comment|/// \brief Crash recovery helper object.

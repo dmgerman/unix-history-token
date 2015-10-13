@@ -1057,6 +1057,12 @@ begin_comment
 comment|/* Sysctl debug interface */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IXL_DEBUG_SYSCTL
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -1078,6 +1084,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* The MSI/X Interrupt handlers */
@@ -21837,6 +21848,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IXL_DEBUG_SYSCTL
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -22290,6 +22307,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**  * Update VSI-specific ethernet statistics counters.  **/

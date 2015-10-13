@@ -1234,7 +1234,9 @@ end_decl_stmt
 begin_function
 name|void
 name|_init_tls
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifndef|#
 directive|ifndef

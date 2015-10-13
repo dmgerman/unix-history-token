@@ -137,6 +137,12 @@ operator|::
 name|string
 name|MiModifier
 expr_stmt|;
+comment|// PassSubtarget - Pass MCSubtargetInfo to the print method if this is
+comment|// equal to 1.
+comment|// FIXME: Remove after all ports are updated.
+name|unsigned
+name|PassSubtarget
+decl_stmt|;
 comment|// To make VS STL happy
 name|AsmWriterOperand
 argument_list|(
@@ -175,6 +181,8 @@ argument|unsigned _MIOpNo
 argument_list|,
 argument|const std::string&Modifier
 argument_list|,
+argument|unsigned PassSubtarget
+argument_list|,
 argument|OpType op = isMachineInstrOperand
 argument_list|)
 operator|:
@@ -200,7 +208,12 @@ argument_list|)
 operator|,
 name|MiModifier
 argument_list|(
-argument|Modifier
+name|Modifier
+argument_list|)
+operator|,
+name|PassSubtarget
+argument_list|(
+argument|PassSubtarget
 argument_list|)
 block|{}
 name|bool
@@ -313,6 +326,8 @@ argument_list|(
 argument|const CodeGenInstruction&CGI
 argument_list|,
 argument|unsigned Variant
+argument_list|,
+argument|unsigned PassSubtarget
 argument_list|)
 empty_stmt|;
 comment|/// MatchesAllButOneOp - If this instruction is exactly identical to the

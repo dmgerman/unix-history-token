@@ -726,9 +726,9 @@ comment|/// \brief Returns "nil" or "0" if 'nil' macro is not actually defined.
 name|StringRef
 name|getNilString
 parameter_list|(
-name|ASTContext
+name|MigrationPass
 modifier|&
-name|Ctx
+name|Pass
 parameter_list|)
 function_decl|;
 name|template

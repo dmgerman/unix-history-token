@@ -91,6 +91,7 @@ name|dag_node_t
 modifier|*
 name|svn_fs_base__dag_dup
 parameter_list|(
+specifier|const
 name|dag_node_t
 modifier|*
 name|node

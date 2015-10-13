@@ -145,14 +145,6 @@ operator|::
 name|string
 name|TargetName
 block|;
-name|NVPTX
-operator|::
-name|DrvInterface
-name|drvInterface
-block|;
-name|bool
-name|Is64Bit
-block|;
 comment|// PTX version x.y is represented as 10*x+y, e.g. 3.1 == 31
 name|unsigned
 name|PTXVersion
@@ -163,10 +155,10 @@ name|int
 name|SmVersion
 block|;
 specifier|const
-name|DataLayout
-name|DL
+name|NVPTXTargetMachine
+operator|&
+name|TM
 block|;
-comment|// Calculates type size& alignment
 name|NVPTXInstrInfo
 name|InstrInfo
 block|;
@@ -188,15 +180,29 @@ comment|/// of the specified module.
 comment|///
 name|NVPTXSubtarget
 argument_list|(
-argument|const std::string&TT
+specifier|const
+name|Triple
+operator|&
+name|TT
 argument_list|,
-argument|const std::string&CPU
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|CPU
 argument_list|,
-argument|const std::string&FS
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|FS
 argument_list|,
-argument|const TargetMachine&TM
-argument_list|,
-argument|bool is64Bit
+specifier|const
+name|NVPTXTargetMachine
+operator|&
+name|TM
 argument_list|)
 block|;
 specifier|const
@@ -223,19 +229,6 @@ block|{
 return|return
 operator|&
 name|InstrInfo
-return|;
-block|}
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-operator|&
-name|DL
 return|;
 block|}
 specifier|const
@@ -541,39 +534,7 @@ name|bool
 name|hasImageHandles
 argument_list|()
 specifier|const
-block|{
-comment|// Enable handles for Kepler+, where CUDA supports indirect surfaces and
-comment|// textures
-if|if
-condition|(
-name|getDrvInterface
-argument_list|()
-operator|==
-name|NVPTX
-operator|::
-name|CUDA
-condition|)
-return|return
-operator|(
-name|SmVersion
-operator|>=
-literal|30
-operator|)
-return|;
-comment|// Disabled, otherwise
-return|return
-name|false
-return|;
-block|}
-name|bool
-name|is64Bit
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Is64Bit
-return|;
-block|}
+block|;
 name|unsigned
 name|int
 name|getSmVersion
@@ -582,17 +543,6 @@ specifier|const
 block|{
 return|return
 name|SmVersion
-return|;
-block|}
-name|NVPTX
-operator|::
-name|DrvInterface
-name|getDrvInterface
-argument_list|()
-specifier|const
-block|{
-return|return
-name|drvInterface
 return|;
 block|}
 name|std
@@ -616,35 +566,27 @@ name|PTXVersion
 return|;
 block|}
 name|NVPTXSubtarget
-modifier|&
+operator|&
 name|initializeSubtargetDependencies
-parameter_list|(
-name|StringRef
-name|CPU
-parameter_list|,
-name|StringRef
-name|FS
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|)
+block|;
 name|void
 name|ParseSubtargetFeatures
-parameter_list|(
-name|StringRef
-name|CPU
-parameter_list|,
-name|StringRef
-name|FS
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|)
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// End llvm namespace
 end_comment
 

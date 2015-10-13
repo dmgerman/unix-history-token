@@ -1156,11 +1156,10 @@ name|len
 control|)
 if|if
 condition|(
-operator|*
-name|data
-operator|<
-literal|0
-operator|||
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|data
 operator|>=
@@ -1226,11 +1225,10 @@ name|max_len
 control|)
 if|if
 condition|(
-operator|*
-name|data
-operator|<
-literal|0
-operator|||
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|data
 operator|>=
@@ -1285,9 +1283,13 @@ if|if
 condition|(
 operator|*
 name|data
-operator|<=
+operator|==
 literal|0
 operator|||
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|data
 operator|>=
@@ -1300,7 +1302,7 @@ comment|/* Scan the input one machine word at a time. */
 ifndef|#
 directive|ifndef
 name|SVN_UTF_NO_UNINITIALISED_ACCESS
-comment|/* This may read allocated but initialised bytes beyond the      terminating null.  Any such bytes are always readable and this      code operates correctly whatever the uninitialised values happen      to be.  However memory checking tools such as valgrind and GCC      4.8's address santitizer will object so this bit of code can be      disabled at compile time. */
+comment|/* This may read allocated but uninitialised bytes beyond the      terminating null.  Any such bytes are always readable and this      code operates correctly whatever the uninitialised values happen      to be.  However memory checking tools such as valgrind and GCC      4.8's address santitizer will object so this bit of code can be      disabled at compile time. */
 for|for
 control|(
 init|;
@@ -1369,9 +1371,13 @@ if|if
 condition|(
 operator|*
 name|data
-operator|<=
+operator|==
 literal|0
 operator|||
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|data
 operator|>=

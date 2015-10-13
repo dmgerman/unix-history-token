@@ -1589,9 +1589,11 @@ operator|(
 name|uintptr_t
 operator|*
 operator|)
+operator|&
 name|fp
-operator|+
-literal|2
+index|[
+literal|1
+index|]
 expr_stmt|;
 name|load
 label|:
@@ -1615,11 +1617,6 @@ expr_stmt|;
 return|return
 operator|(
 name|val
-operator|)
-return|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}

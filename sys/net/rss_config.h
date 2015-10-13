@@ -256,6 +256,29 @@ value|1
 end_define
 
 begin_comment
+comment|/*  * Rate limited debugging routines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSS_DEBUG
+parameter_list|(
+name|format
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {					\ 	if (rss_debug) {						\ 		static struct timeval lastfail;				\ 		static int curfail;					\ 		if (ppsratecheck(&lastfail,&curfail, 5))		\ 			printf("RSS (%s:%u): " format, __func__, __LINE__,\ 			    ##__VA_ARGS__);				\ 	}								\ } while (0)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rss_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Device driver interfaces to query RSS properties that must be programmed  * into hardware.  */
 end_comment
 

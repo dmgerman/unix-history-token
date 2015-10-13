@@ -374,7 +374,9 @@ end_comment
 begin_function
 name|int
 name|__rpc_dtbsize
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -431,7 +433,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the appropriate buffer size  */
+comment|/*  * Find the appropriate buffer size  *  * size - Size requested  */
 end_comment
 
 begin_function
@@ -439,21 +441,15 @@ name|u_int
 comment|/*ARGSUSED*/
 name|__rpc_get_t_size
 parameter_list|(
+name|int
 name|af
 parameter_list|,
+name|int
 name|proto
 parameter_list|,
+name|int
 name|size
 parameter_list|)
-name|int
-name|af
-decl_stmt|,
-name|proto
-decl_stmt|;
-name|int
-name|size
-decl_stmt|;
-comment|/* Size requested */
 block|{
 name|int
 name|maxsize
@@ -536,11 +532,9 @@ begin_function
 name|u_int
 name|__rpc_get_a_size
 parameter_list|(
-name|af
-parameter_list|)
 name|int
 name|af
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -603,7 +597,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char * strlocase(p) 	char *p; { 	char *t = p;  	for (; *p; p++) 		if (isupper(*p)) 			*p = tolower(*p); 	return (t); }
+unit|static char * strlocase(char *p) { 	char *t = p;  	for (; *p; p++) 		if (isupper(*p)) 			*p = tolower(*p); 	return (t); }
 endif|#
 directive|endif
 end_endif
@@ -617,13 +611,11 @@ specifier|static
 name|int
 name|getnettype
 parameter_list|(
-name|nettype
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|nettype
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -784,13 +776,11 @@ name|netconfig
 modifier|*
 name|__rpc_getconfip
 parameter_list|(
-name|nettype
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|nettype
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1166,13 +1156,11 @@ name|void
 modifier|*
 name|__rpc_setconf
 parameter_list|(
-name|nettype
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|nettype
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|handle
@@ -1333,12 +1321,10 @@ name|netconfig
 modifier|*
 name|__rpc_getconf
 parameter_list|(
-name|vhandle
-parameter_list|)
 name|void
 modifier|*
 name|vhandle
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|handle
@@ -1666,16 +1652,9 @@ begin_macro
 unit|}  void
 name|__rpc_endconf
 argument_list|(
-argument|vhandle
+argument|void *vhandle
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|void
-modifier|*
-name|vhandle
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -1744,12 +1723,10 @@ name|void
 modifier|*
 name|rpc_nullproc
 parameter_list|(
-name|clnt
-parameter_list|)
 name|CLIENT
 modifier|*
 name|clnt
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|timeval
@@ -1817,11 +1794,9 @@ name|netconfig
 modifier|*
 name|__rpcgettp
 parameter_list|(
-name|fd
-parameter_list|)
 name|int
 name|fd
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char

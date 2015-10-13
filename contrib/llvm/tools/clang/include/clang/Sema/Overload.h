@@ -2128,9 +2128,12 @@ name|InlineSpace
 expr_stmt|;
 name|OverloadCandidateSet
 argument_list|(
-argument|const OverloadCandidateSet&
+specifier|const
+name|OverloadCandidateSet
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -2140,7 +2143,8 @@ specifier|const
 name|OverloadCandidateSet
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|void
 name|destroyCandidates

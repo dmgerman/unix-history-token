@@ -786,6 +786,36 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX ARM64TODO: Avoid configuration of more than one ITS 	 * device. To be removed when multi-PIC support is added 	 * to FreeBSD (or at least multi-ITS is implemented). Limit 	 * supported ITS sockets to '0' only. 	 */
+if|if
+condition|(
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Only single instance of ITS is supported, exitting...\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+name|sc
+operator|->
+name|its_socket
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Initialize sleep& spin mutex for ITS 	 */
 comment|/* Protects ITS device list and assigned LPIs bitmaps. */
 name|mtx_init
@@ -2363,6 +2393,20 @@ name|its_sc
 expr_stmt|;
 block|}
 else|else
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* Skip if running secondary init on a wrong socket */
+if|if
+condition|(
+name|sc
+operator|->
+name|its_socket
+operator|!=
+name|CPU_CURRENT_SOCKET
+condition|)
 return|return
 operator|(
 name|ENXIO
@@ -5657,6 +5701,9 @@ name|cmd
 decl_stmt|,
 modifier|*
 name|cmd_sync
+decl_stmt|,
+modifier|*
+name|cmd_write
 decl_stmt|;
 name|struct
 name|its_col
@@ -5686,14 +5733,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|its_spin_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|cmd
@@ -5708,6 +5747,14 @@ operator|->
 name|dev
 argument_list|,
 literal|"could not allocate ITS command\n"
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|its_spin_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -5739,27 +5786,11 @@ operator|!=
 name|ITS_TARGET_NONE
 condition|)
 block|{
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|its_spin_mtx
-argument_list|)
-expr_stmt|;
 name|cmd_sync
 operator|=
 name|its_cmd_alloc_locked
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|its_spin_mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -5811,14 +5842,6 @@ block|}
 name|end
 label|:
 comment|/* Update GITS_CWRITER */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|its_spin_mtx
-argument_list|)
-expr_stmt|;
 name|cwriter
 operator|=
 name|its_cmd_cwriter_offset
@@ -5841,6 +5864,12 @@ argument_list|,
 name|cwriter
 argument_list|)
 expr_stmt|;
+name|cmd_write
+operator|=
+name|sc
+operator|->
+name|its_cmdq_write
+expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -5855,9 +5884,7 @@ name|sc
 argument_list|,
 name|cmd
 argument_list|,
-name|sc
-operator|->
-name|its_cmdq_write
+name|cmd_write
 argument_list|)
 expr_stmt|;
 return|return

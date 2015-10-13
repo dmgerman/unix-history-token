@@ -461,9 +461,12 @@ name|StringMapEntryBase
 block|{
 name|StringMapEntry
 argument_list|(
-argument|StringMapEntry&E
+name|StringMapEntry
+operator|&
+name|E
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -709,6 +712,12 @@ name|getKeyData
 argument_list|()
 operator|)
 block|;
+if|if
+condition|(
+name|KeyLength
+operator|>
+literal|0
+condition|)
 name|memcpy
 argument_list|(
 name|StrBuffer
@@ -720,7 +729,7 @@ argument_list|()
 argument_list|,
 name|KeyLength
 argument_list|)
-block|;
+expr_stmt|;
 name|StrBuffer
 index|[
 name|KeyLength
@@ -800,11 +809,12 @@ return|;
 block|}
 specifier|static
 name|StringMapEntry
-operator|*
+modifier|*
 name|Create
-argument_list|(
-argument|StringRef Key
-argument_list|)
+parameter_list|(
+name|StringRef
+name|Key
+parameter_list|)
 block|{
 return|return
 name|Create
@@ -820,16 +830,19 @@ comment|/// GetStringMapEntryFromKeyData - Given key data that is known to be em
 comment|/// into a StringMapEntry, return the StringMapEntry itself.
 specifier|static
 name|StringMapEntry
-operator|&
+modifier|&
 name|GetStringMapEntryFromKeyData
-argument_list|(
-argument|const char *KeyData
-argument_list|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|KeyData
+parameter_list|)
 block|{
 name|char
-operator|*
+modifier|*
 name|Ptr
-operator|=
+init|=
 name|const_cast
 operator|<
 name|char
@@ -846,7 +859,7 @@ operator|<
 name|ValueTy
 operator|>
 argument_list|)
-block|;
+decl_stmt|;
 return|return
 operator|*
 name|reinterpret_cast
@@ -927,17 +940,35 @@ argument_list|(
 name|A
 argument_list|)
 block|;   }
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// StringMap - This is an unconventional map that is specialized for handling
+end_comment
+
+begin_comment
 comment|/// keys that are "strings", which are basically ranges of bytes. This does some
+end_comment
+
+begin_comment
 comment|/// funky memory allocation and hashing things to make it extremely efficient,
+end_comment
+
+begin_comment
 comment|/// storing the string data *after* the value in the map.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
 name|ValueTy
-block|,
+operator|,
 name|typename
 name|AllocatorTy
 operator|=
@@ -1001,7 +1032,7 @@ name|MapEntryTy
 argument_list|)
 operator|)
 argument_list|)
-block|,
+operator|,
 name|Allocator
 argument_list|(
 argument|A
@@ -1029,7 +1060,7 @@ name|MapEntryTy
 argument_list|)
 operator|)
 argument_list|)
-block|,
+operator|,
 name|Allocator
 argument_list|(
 argument|A
@@ -1051,7 +1082,7 @@ argument_list|(
 name|RHS
 argument_list|)
 argument_list|)
-block|,
+operator|,
 name|Allocator
 argument_list|(
 argument|std::move(RHS.Allocator)
@@ -1089,16 +1120,25 @@ operator|*
 name|this
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// FIXME: Implement copy operations if/when they're needed.
+end_comment
+
+begin_function
 name|AllocatorTy
-operator|&
+modifier|&
 name|getAllocator
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Allocator
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 specifier|const
 name|AllocatorTy
 operator|&
@@ -1110,16 +1150,25 @@ return|return
 name|Allocator
 return|;
 block|}
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 specifier|const
 name|char
 modifier|*
 name|key_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|ValueTy
 name|mapped_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|StringMapEntry
 operator|<
@@ -1127,10 +1176,16 @@ name|ValueTy
 operator|>
 name|value_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|size_t
 name|size_type
 typedef|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|StringMapConstIterator
 operator|<
@@ -1138,6 +1193,9 @@ name|ValueTy
 operator|>
 name|const_iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|StringMapIterator
 operator|<
@@ -1145,6 +1203,9 @@ name|ValueTy
 operator|>
 name|iterator
 expr_stmt|;
+end_typedef
+
+begin_function
 name|iterator
 name|begin
 parameter_list|()
@@ -1160,6 +1221,9 @@ literal|0
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 name|iterator
 name|end
 parameter_list|()
@@ -1175,6 +1239,9 @@ name|true
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|const_iterator
 name|begin
 argument_list|()
@@ -1191,6 +1258,9 @@ literal|0
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|const_iterator
 name|end
 argument_list|()
@@ -1207,6 +1277,9 @@ name|true
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|iterator
 name|find
 parameter_list|(
@@ -1244,6 +1317,9 @@ name|true
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 name|const_iterator
 name|find
 argument_list|(
@@ -1282,8 +1358,17 @@ name|true
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// lookup - Return the entry for the specified key, or a default
+end_comment
+
+begin_comment
 comment|/// constructed value if no such entry exists.
+end_comment
+
+begin_decl_stmt
 name|ValueTy
 name|lookup
 argument_list|(
@@ -1317,6 +1402,9 @@ name|ValueTy
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 name|ValueTy
 modifier|&
 name|operator
@@ -1345,7 +1433,13 @@ operator|->
 name|second
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// count - Return 1 if the element is in the map, 0 otherwise.
+end_comment
+
+begin_decl_stmt
 name|size_type
 name|count
 argument_list|(
@@ -1368,9 +1462,21 @@ else|:
 literal|1
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// insert - Insert the specified key/value pair into the map.  If the key
+end_comment
+
+begin_comment
 comment|/// already exists in the map, return false and ignore the request, otherwise
+end_comment
+
+begin_comment
 comment|/// insert it and return true.
+end_comment
+
+begin_function
 name|bool
 name|insert
 parameter_list|(
@@ -1446,10 +1552,25 @@ return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// insert - Inserts the specified key/value pair into the map if the key
+end_comment
+
+begin_comment
 comment|/// isn't already in the map. The bool component of the returned pair is true
+end_comment
+
+begin_comment
 comment|/// if and only if the insertion takes place, and the iterator component of
+end_comment
+
+begin_comment
 comment|/// the pair points to the element with key equivalent to the key of the pair.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|pair
@@ -1511,7 +1632,13 @@ argument_list|,
 name|false
 argument_list|)
 return|;
+end_expr_stmt
+
+begin_comment
 comment|// Already exists in map.
+end_comment
+
+begin_if
 if|if
 condition|(
 name|Bucket
@@ -1522,6 +1649,9 @@ condition|)
 operator|--
 name|NumTombstones
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|Bucket
 operator|=
 name|MapEntryTy
@@ -1544,9 +1674,15 @@ name|second
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|++
 name|NumItems
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|assert
 argument_list|(
 name|NumItems
@@ -1556,6 +1692,9 @@ operator|<=
 name|NumBuckets
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|BucketNo
 operator|=
 name|RehashTable
@@ -1563,6 +1702,9 @@ argument_list|(
 name|BucketNo
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|std
 operator|::
@@ -1580,17 +1722,20 @@ argument_list|,
 name|true
 argument_list|)
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|// clear - Empties out the StringMap
 end_comment
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|clear
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -1668,7 +1813,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/// remove - Remove the specified key/value pair from the map, but do not

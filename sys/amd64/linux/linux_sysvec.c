@@ -1202,7 +1202,13 @@ name|p_sysent
 operator|->
 name|sv_table
 index|[
-name|LINUX_SYS_MAXSYSCALL
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_size
+operator|-
+literal|1
 index|]
 expr_stmt|;
 else|else

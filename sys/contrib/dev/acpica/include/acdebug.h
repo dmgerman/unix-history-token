@@ -19,6 +19,27 @@ directive|define
 name|__ACDEBUG_H__
 end_define
 
+begin_comment
+comment|/* The debugger is used in conjunction with the disassembler most of time */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DISASSEMBLER
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acdisasm.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -117,26 +138,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DBTEST_OUTPUT_LEVEL
-parameter_list|(
-name|lvl
-parameter_list|)
-value|if (AcpiGbl_DbOpt_Verbose)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VERBOSE_PRINT
-parameter_list|(
-name|fp
-parameter_list|)
-value|DBTEST_OUTPUT_LEVEL(lvl) {\                                             AcpiOsPrintf PARAM_LIST(fp);}
-end_define
-
-begin_define
-define|#
-directive|define
 name|EX_NO_SINGLE_STEP
 value|1
 end_define
@@ -151,24 +152,6 @@ end_define
 begin_comment
 comment|/*  * dbxface - external debugger interfaces  */
 end_comment
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDbInitialize
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|AcpiDbTerminate
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS

@@ -41,6 +41,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_comment
 comment|/*  * Returns true if the named feature is present in the currently  * running kernel.  A feature's presence is indicated by an integer  * sysctl node called kern.feature.<feature> that is non-zero.  */
 end_comment

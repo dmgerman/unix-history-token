@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"RuntimeDyld.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm-c/ExecutionEngine.h"
 end_include
 
@@ -153,6 +159,12 @@ directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -183,6 +195,9 @@ name|JITEventListener
 decl_stmt|;
 name|class
 name|MachineCodeInfo
+decl_stmt|;
+name|class
+name|MCJITMemoryManager
 decl_stmt|;
 name|class
 name|MutexGuard
@@ -216,88 +231,17 @@ name|ExecutionEngineState
 block|{
 name|public
 label|:
-name|struct
-name|AddressMapConfig
-range|:
-name|public
-name|ValueMapConfig
-operator|<
-specifier|const
-name|GlobalValue
-operator|*
-operator|>
-block|{
 typedef|typedef
-name|ExecutionEngineState
-modifier|*
-name|ExtraData
-typedef|;
-specifier|static
-name|sys
-operator|::
-name|Mutex
-operator|*
-name|getMutex
-argument_list|(
-name|ExecutionEngineState
-operator|*
-name|EES
-argument_list|)
-decl_stmt|;
-specifier|static
-name|void
-name|onDelete
-parameter_list|(
-name|ExecutionEngineState
-modifier|*
-name|EES
-parameter_list|,
-specifier|const
-name|GlobalValue
-modifier|*
-name|Old
-parameter_list|)
-function_decl|;
-specifier|static
-name|void
-name|onRAUW
-parameter_list|(
-name|ExecutionEngineState
-modifier|*
-parameter_list|,
-specifier|const
-name|GlobalValue
-modifier|*
-parameter_list|,
-specifier|const
-name|GlobalValue
-modifier|*
-parameter_list|)
-function_decl|;
-block|}
-empty_stmt|;
-typedef|typedef
-name|ValueMap
+name|StringMap
 operator|<
-specifier|const
-name|GlobalValue
-operator|*
-operator|,
-name|void
-operator|*
-operator|,
-name|AddressMapConfig
+name|uint64_t
 operator|>
 name|GlobalAddressMapTy
 expr_stmt|;
 name|private
 label|:
-name|ExecutionEngine
-modifier|&
-name|EE
-decl_stmt|;
-comment|/// GlobalAddressMap - A mapping between LLVM global values and their
-comment|/// actualized version...
+comment|/// GlobalAddressMap - A mapping between LLVM global symbol names values and
+comment|/// their actualized version...
 name|GlobalAddressMapTy
 name|GlobalAddressMap
 decl_stmt|;
@@ -309,26 +253,16 @@ name|std
 operator|::
 name|map
 operator|<
-name|void
-operator|*
+name|uint64_t
 operator|,
-name|AssertingVH
-operator|<
-specifier|const
-name|GlobalValue
+name|std
+operator|::
+name|string
 operator|>
-expr|>
 name|GlobalAddressReverseMap
 expr_stmt|;
 name|public
 label|:
-name|ExecutionEngineState
-argument_list|(
-name|ExecutionEngine
-operator|&
-name|EE
-argument_list|)
-expr_stmt|;
 name|GlobalAddressMapTy
 modifier|&
 name|getGlobalAddressMap
@@ -342,15 +276,12 @@ name|std
 operator|::
 name|map
 operator|<
-name|void
-operator|*
+name|uint64_t
 operator|,
-name|AssertingVH
-operator|<
-specifier|const
-name|GlobalValue
+name|std
+operator|::
+name|string
 operator|>
-expr|>
 operator|&
 name|getGlobalAddressReverseMap
 argument_list|()
@@ -362,36 +293,36 @@ block|}
 comment|/// \brief Erase an entry from the mapping table.
 comment|///
 comment|/// \returns The address that \p ToUnmap was happed to.
-name|void
-modifier|*
+name|uint64_t
 name|RemoveMapping
 parameter_list|(
-specifier|const
-name|GlobalValue
-modifier|*
-name|ToUnmap
+name|StringRef
+name|Name
 parameter_list|)
 function_decl|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
+name|using
+name|FunctionCreator
+init|=
+name|std
+operator|::
+name|function
+operator|<
+name|void
+operator|*
+operator|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+operator|)
+operator|>
+decl_stmt|;
 comment|/// \brief Abstract interface for implementation execution of LLVM modules,
-end_comment
-
-begin_comment
 comment|/// designed to support both interpreter and just-in-time (JIT) compiler
-end_comment
-
-begin_comment
 comment|/// implementations.
-end_comment
-
-begin_decl_stmt
 name|class
 name|ExecutionEngine
 block|{
@@ -498,11 +429,62 @@ name|ErrorStr
 argument_list|,
 name|std
 operator|::
+name|shared_ptr
+operator|<
+name|MCJITMemoryManager
+operator|>
+name|MM
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|RuntimeDyld
+operator|::
+name|SymbolResolver
+operator|>
+name|SR
+argument_list|,
+name|std
+operator|::
 name|unique_ptr
 operator|<
-name|RTDyldMemoryManager
+name|TargetMachine
 operator|>
-name|MCJMM
+name|TM
+argument_list|)
+expr_stmt|;
+specifier|static
+name|ExecutionEngine
+operator|*
+call|(
+modifier|*
+name|OrcMCJITReplacementCtor
+call|)
+argument_list|(
+name|std
+operator|::
+name|string
+operator|*
+name|ErrorStr
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|MCJITMemoryManager
+operator|>
+name|MM
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|RuntimeDyld
+operator|::
+name|SymbolResolver
+operator|>
+name|SR
 argument_list|,
 name|std
 operator|::
@@ -539,29 +521,30 @@ expr_stmt|;
 comment|/// LazyFunctionCreator - If an unknown function is needed, this function
 comment|/// pointer is invoked to create it.  If this returns null, the JIT will
 comment|/// abort.
-name|void
-argument_list|*
-call|(
-modifier|*
+name|FunctionCreator
 name|LazyFunctionCreator
-call|)
-argument_list|(
-specifier|const
+decl_stmt|;
+comment|/// getMangledName - Get mangled name.
 name|std
 operator|::
 name|string
-operator|&
+name|getMangledName
+argument_list|(
+specifier|const
+name|GlobalValue
+operator|*
+name|GV
 argument_list|)
-argument_list|;
+expr_stmt|;
 name|public
-operator|:
+label|:
 comment|/// lock - This lock protects the ExecutionEngine and MCJIT classes. It must
 comment|/// be held while changing the internal state of any of those classes.
 name|sys
 operator|::
 name|Mutex
 name|lock
-argument_list|;
+expr_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|//  ExecutionEngine Startup
 comment|//===--------------------------------------------------------------------===//
@@ -569,13 +552,19 @@ name|virtual
 operator|~
 name|ExecutionEngine
 argument_list|()
-argument_list|;
+expr_stmt|;
 comment|/// Add a Module to the list of modules that we can JIT from.
 name|virtual
 name|void
 name|addModule
 argument_list|(
-argument|std::unique_ptr<Module> M
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Module
+operator|>
+name|M
 argument_list|)
 block|{
 name|Modules
@@ -589,7 +578,8 @@ argument_list|(
 name|M
 argument_list|)
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|/// addObjectFile - Add an ObjectFile to the execution engine.
 comment|///
 comment|/// This method is only supported by MCJIT.  MCJIT will immediately load the
@@ -614,7 +604,7 @@ name|ObjectFile
 operator|>
 name|O
 argument_list|)
-argument_list|;
+decl_stmt|;
 name|virtual
 name|void
 name|addObjectFile
@@ -629,7 +619,7 @@ name|ObjectFile
 operator|>
 name|O
 argument_list|)
-argument_list|;
+decl_stmt|;
 comment|/// addArchive - Add an Archive to the execution engine.
 comment|///
 comment|/// This method is only supported by MCJIT.  MCJIT will use the archive to
@@ -650,7 +640,7 @@ name|Archive
 operator|>
 name|A
 argument_list|)
-argument_list|;
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 specifier|const
 name|DataLayout
@@ -674,7 +664,7 @@ modifier|*
 name|M
 parameter_list|)
 function_decl|;
-comment|/// FindFunctionNamed - Search all of the active modules to find the one that
+comment|/// FindFunctionNamed - Search all of the active modules to find the function that
 comment|/// defines FnName.  This is very slow operation and shouldn't be used for
 comment|/// general code.
 name|virtual
@@ -688,6 +678,25 @@ modifier|*
 name|FnName
 parameter_list|)
 function_decl|;
+comment|/// FindGlobalVariableNamed - Search all of the active modules to find the global variable
+comment|/// that defines Name.  This is very slow operation and shouldn't be used for
+comment|/// general code.
+name|virtual
+name|GlobalVariable
+modifier|*
+name|FindGlobalVariableNamed
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Name
+parameter_list|,
+name|bool
+name|AllowInternal
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|/// runFunction - Execute the specified function with the specified arguments,
 comment|/// and return the result.
 name|virtual
@@ -698,14 +707,10 @@ name|Function
 operator|*
 name|F
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|GenericValue
 operator|>
-operator|&
 name|ArgValues
 argument_list|)
 init|=
@@ -872,6 +877,16 @@ modifier|*
 name|Addr
 parameter_list|)
 function_decl|;
+name|void
+name|addGlobalMapping
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|uint64_t
+name|Addr
+parameter_list|)
+function_decl|;
 comment|/// clearAllGlobalMappings - Clear all global mappings and start over again,
 comment|/// for use in dynamic compilation scenarios to move globals.
 name|void
@@ -892,8 +907,7 @@ comment|/// updateGlobalMapping - Replace an existing mapping for GV with a new
 comment|/// address.  This updates both maps as required.  If "Addr" is null, the
 comment|/// entry for the global is removed from the mappings.  This returns the old
 comment|/// value of the pointer, or null if it was not in the map.
-name|void
-modifier|*
+name|uint64_t
 name|updateGlobalMapping
 parameter_list|(
 specifier|const
@@ -906,12 +920,36 @@ modifier|*
 name|Addr
 parameter_list|)
 function_decl|;
+name|uint64_t
+name|updateGlobalMapping
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|uint64_t
+name|Addr
+parameter_list|)
+function_decl|;
+comment|/// getAddressToGlobalIfAvailable - This returns the address of the specified
+comment|/// global symbol.
+name|uint64_t
+name|getAddressToGlobalIfAvailable
+parameter_list|(
+name|StringRef
+name|S
+parameter_list|)
+function_decl|;
 comment|/// getPointerToGlobalIfAvailable - This returns the address of the specified
 comment|/// global value if it is has already been codegen'd, otherwise it returns
 comment|/// null.
-comment|///
-comment|/// This function is deprecated for the MCJIT execution engine.  It doesn't
-comment|/// seem to be needed in that case, but an equivalent can be added if it is.
+name|void
+modifier|*
+name|getPointerToGlobalIfAvailable
+parameter_list|(
+name|StringRef
+name|S
+parameter_list|)
+function_decl|;
 name|void
 modifier|*
 name|getPointerToGlobalIfAvailable
@@ -1291,29 +1329,21 @@ comment|/// specified function pointer is invoked to create it.  If it returns n
 comment|/// the JIT will abort.
 name|void
 name|InstallLazyFunctionCreator
-argument_list|(
-name|void
-operator|*
-call|(
-modifier|*
-name|P
-call|)
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-argument_list|)
-argument_list|)
+parameter_list|(
+name|FunctionCreator
+name|C
+parameter_list|)
 block|{
 name|LazyFunctionCreator
 operator|=
-name|P
+name|C
 expr_stmt|;
 block|}
 name|protected
 label|:
+name|ExecutionEngine
+argument_list|()
+block|{}
 name|explicit
 name|ExecutionEngine
 argument_list|(
@@ -1365,13 +1395,7 @@ name|Ty
 parameter_list|)
 function_decl|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
 name|namespace
 name|EngineKind
 block|{
@@ -1403,21 +1427,9 @@ name|Interpreter
 argument_list|)
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Builder class for ExecutionEngines. Use this by stack-allocating a builder,
-end_comment
-
-begin_comment
 comment|/// chaining the various set* methods, and terminating it with a .create()
-end_comment
-
-begin_comment
 comment|/// call.
-end_comment
-
-begin_decl_stmt
 name|class
 name|EngineBuilder
 block|{
@@ -1449,11 +1461,21 @@ name|OptLevel
 expr_stmt|;
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
-name|RTDyldMemoryManager
+name|MCJITMemoryManager
 operator|>
-name|MCJMM
+name|MemMgr
+expr_stmt|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|RuntimeDyld
+operator|::
+name|SymbolResolver
+operator|>
+name|Resolver
 expr_stmt|;
 name|TargetOptions
 name|Options
@@ -1491,13 +1513,15 @@ expr_stmt|;
 name|bool
 name|VerifyModules
 decl_stmt|;
-comment|/// InitEngine - Does the common initialization of default options.
-name|void
-name|InitEngine
-parameter_list|()
-function_decl|;
+name|bool
+name|UseOrcMCJITReplacement
+decl_stmt|;
 name|public
 label|:
+comment|/// Default constructor for EngineBuilder.
+name|EngineBuilder
+argument_list|()
+expr_stmt|;
 comment|/// Constructor for EngineBuilder.
 name|EngineBuilder
 argument_list|(
@@ -1553,6 +1577,34 @@ operator|<
 name|RTDyldMemoryManager
 operator|>
 name|mcjmm
+argument_list|)
+decl_stmt|;
+name|EngineBuilder
+modifier|&
+name|setMemoryManager
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MCJITMemoryManager
+operator|>
+name|MM
+argument_list|)
+decl_stmt|;
+name|EngineBuilder
+modifier|&
+name|setSymbolResolver
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|RuntimeDyld
+operator|::
+name|SymbolResolver
+operator|>
+name|SR
 argument_list|)
 decl_stmt|;
 comment|/// setErrorStr - Set the error string to write to on error.  This option
@@ -1777,6 +1829,21 @@ operator|*
 name|this
 return|;
 block|}
+comment|// \brief Use OrcMCJITReplacement instead of MCJIT. Off by default.
+name|void
+name|setUseOrcMCJITReplacement
+parameter_list|(
+name|bool
+name|UseOrcMCJITReplacement
+parameter_list|)
+block|{
+name|this
+operator|->
+name|UseOrcMCJITReplacement
+operator|=
+name|UseOrcMCJITReplacement
+expr_stmt|;
+block|}
 name|TargetMachine
 modifier|*
 name|selectTarget
@@ -1833,27 +1900,18 @@ name|TM
 parameter_list|)
 function_decl|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
-end_comment
-
-begin_macro
 name|DEFINE_SIMPLE_CONVERSION_FUNCTIONS
 argument_list|(
 argument|ExecutionEngine
 argument_list|,
 argument|LLVMExecutionEngineRef
 argument_list|)
-end_macro
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|// End llvm namespace
 end_comment
 

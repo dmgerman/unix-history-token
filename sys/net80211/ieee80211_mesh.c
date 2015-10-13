@@ -2292,16 +2292,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
-end_define
-
 begin_function
 name|int
 name|ieee80211_mesh_register_proto_path
@@ -2329,7 +2319,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|mesh_proto_paths
 argument_list|)
@@ -2449,7 +2439,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|mesh_proto_metrics
 argument_list|)
@@ -2578,7 +2568,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|mesh_proto_paths
 argument_list|)
@@ -2661,7 +2651,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|mesh_proto_metrics
 argument_list|)
@@ -2707,12 +2697,6 @@ name|ENOENT
 return|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|N
-end_undef
 
 begin_function
 specifier|static
@@ -5853,20 +5837,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|err
-operator|!=
-literal|0
 condition|)
-block|{
-comment|/* NB: IFQ_HANDOFF reclaims mbuf */
-name|ieee80211_free_node
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|if_inc_counter
 argument_list|(
 name|ifp
@@ -5876,7 +5849,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

@@ -595,7 +595,7 @@ name|RSS
 operator|.
 name|nh_m2cpuid
 operator|=
-name|rss_soft_m2cpuid
+name|rss_soft_m2cpuid_v4
 block|,
 operator|.
 name|nh_policy
@@ -655,7 +655,7 @@ block|,
 operator|.
 name|nh_m2cpuid
 operator|=
-name|rss_m2cpuid
+name|rss_soft_m2cpuid_v4
 block|,
 operator|.
 name|nh_policy

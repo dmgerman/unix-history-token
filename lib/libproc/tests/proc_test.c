@@ -88,16 +88,6 @@ literal|"a.out"
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__aarch64__
-argument_list|)
-end_if
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -108,11 +98,6 @@ init|=
 literal|"ld-elf.so.1"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -284,16 +269,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__aarch64__
-argument_list|)
-end_if
 
 begin_function
 specifier|static
@@ -673,11 +648,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|ATF_TC
@@ -1168,16 +1138,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__aarch64__
-argument_list|)
-end_if
-
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -1565,11 +1525,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -1766,14 +1721,6 @@ argument_list|,
 name|map_alias_name2sym
 argument_list|)
 expr_stmt|;
-comment|/* On arm64 triggers panic ARM64TODO: pmap_sync_icache (PR202305). */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__aarch64__
-argument_list|)
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -1788,8 +1735,6 @@ argument_list|,
 name|symbol_lookup_fail
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp

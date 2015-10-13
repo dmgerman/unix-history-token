@@ -3130,7 +3130,6 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-comment|/* 	 * The readdirfunc declaration can't be prototyped, because it is 	 * assigned, below, to two functions which are prototyped in glob.h 	 * and dirent.h as taking pointers to differently typed opaque 	 * structures. 	 */
 name|struct
 name|dirent
 modifier|*
@@ -3138,7 +3137,10 @@ argument_list|(
 operator|*
 name|readdirfunc
 argument_list|)
-argument_list|()
+argument_list|(
+name|DIR
+operator|*
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -3236,7 +3238,7 @@ name|err
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Search directory for matching names. */
+comment|/* pglob->gl_readdir takes a void *, fix this manually */
 if|if
 condition|(
 name|pglob
@@ -3247,6 +3249,18 @@ name|GLOB_ALTDIRFUNC
 condition|)
 name|readdirfunc
 operator|=
+operator|(
+expr|struct
+name|dirent
+operator|*
+call|(
+modifier|*
+call|)
+argument_list|(
+name|DIR
+operator|*
+argument_list|)
+operator|)
 name|pglob
 operator|->
 name|gl_readdir
@@ -3256,6 +3270,7 @@ name|readdirfunc
 operator|=
 name|readdir
 expr_stmt|;
+comment|/* Search directory for matching names. */
 while|while
 condition|(
 operator|(
@@ -3269,6 +3284,8 @@ argument_list|(
 name|dirp
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|char

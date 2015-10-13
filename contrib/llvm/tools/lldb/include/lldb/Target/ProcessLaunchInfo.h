@@ -115,13 +115,13 @@ argument_list|()
 block|;
 name|ProcessLaunchInfo
 argument_list|(
-argument|const char *stdin_path
+argument|const FileSpec&stdin_file_spec
 argument_list|,
-argument|const char *stdout_path
+argument|const FileSpec&stdout_file_spec
 argument_list|,
-argument|const char *stderr_path
+argument|const FileSpec&stderr_file_spec
 argument_list|,
-argument|const char *working_directory
+argument|const FileSpec&working_dir
 argument_list|,
 argument|uint32_t launch_flags
 argument_list|)
@@ -158,7 +158,7 @@ name|AppendOpenFileAction
 argument_list|(
 argument|int fd
 argument_list|,
-argument|const char *path
+argument|const FileSpec&file_spec
 argument_list|,
 argument|bool read
 argument_list|,
@@ -234,8 +234,8 @@ name|m_flags
 return|;
 block|}
 specifier|const
-name|char
-operator|*
+name|FileSpec
+operator|&
 name|GetWorkingDirectory
 argument_list|()
 specifier|const
@@ -244,24 +244,11 @@ name|void
 name|SetWorkingDirectory
 argument_list|(
 specifier|const
-name|char
-operator|*
+name|FileSpec
+operator|&
 name|working_dir
 argument_list|)
 block|;
-name|void
-name|SwapWorkingDirectory
-argument_list|(
-argument|std::string&working_dir
-argument_list|)
-block|{
-name|m_working_dir
-operator|.
-name|swap
-argument_list|(
-name|working_dir
-argument_list|)
-block|;         }
 specifier|const
 name|char
 operator|*
@@ -333,6 +320,28 @@ name|void
 name|SetLaunchInSeparateProcessGroup
 argument_list|(
 argument|bool separate
+argument_list|)
+block|;
+name|bool
+name|GetShellExpandArguments
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_flags
+operator|.
+name|Test
+argument_list|(
+name|lldb
+operator|::
+name|eLaunchFlagShellExpandArguments
+argument_list|)
+return|;
+block|}
+name|void
+name|SetShellExpandArguments
+argument_list|(
+argument|bool expand
 argument_list|)
 block|;
 name|void
@@ -516,9 +525,7 @@ return|;
 block|}
 name|protected
 operator|:
-name|std
-operator|::
-name|string
+name|FileSpec
 name|m_working_dir
 block|;
 name|std

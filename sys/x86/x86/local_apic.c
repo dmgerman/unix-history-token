@@ -7725,12 +7725,12 @@ name|APIC_TRIGMOD_EDGE
 operator||
 name|APIC_LEVEL_ASSERT
 expr_stmt|;
-comment|/* 	 * IPI_STOP_HARD is just a "fake" vector used to send a NMI. 	 * Use special rules regard NMI if passed, otherwise specify 	 * the vector. 	 */
+comment|/* 	 * NMI IPIs are just fake vectors used to send a NMI.  Use special rules 	 * regarding NMIs if passed, otherwise specify the vector. 	 */
 if|if
 condition|(
 name|vector
-operator|==
-name|IPI_STOP_HARD
+operator|>=
+name|IPI_NMI_FIRST
 condition|)
 name|icrlo
 operator||=

@@ -102,27 +102,49 @@ comment|/// \brief Given a potentially-evaluated expression, this visitor visits
 comment|/// of its potentially-evaluated subexpressions, recursively.
 name|template
 operator|<
+name|template
+operator|<
+name|typename
+operator|>
+name|class
+name|Ptr
+operator|,
 name|typename
 name|ImplClass
 operator|>
 name|class
-name|EvaluatedExprVisitor
+name|EvaluatedExprVisitorBase
 operator|:
 name|public
-name|StmtVisitor
+name|StmtVisitorBase
 operator|<
+name|Ptr
+operator|,
 name|ImplClass
+operator|,
+name|void
 operator|>
 block|{
+name|protected
+operator|:
+specifier|const
 name|ASTContext
 operator|&
 name|Context
 block|;
 name|public
 operator|:
+define|#
+directive|define
+name|PTR
+parameter_list|(
+name|CLASS
+parameter_list|)
+value|typename Ptr<CLASS>::type
 name|explicit
-name|EvaluatedExprVisitor
+name|EvaluatedExprVisitorBase
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -138,49 +160,49 @@ comment|// other sub-expressions).
 name|void
 name|VisitDeclRefExpr
 argument_list|(
-argument|DeclRefExpr *E
+argument|PTR(DeclRefExpr) E
 argument_list|)
 block|{ }
 name|void
 name|VisitOffsetOfExpr
 argument_list|(
-argument|OffsetOfExpr *E
+argument|PTR(OffsetOfExpr) E
 argument_list|)
 block|{ }
 name|void
 name|VisitUnaryExprOrTypeTraitExpr
 argument_list|(
-argument|UnaryExprOrTypeTraitExpr *E
+argument|PTR(UnaryExprOrTypeTraitExpr) E
 argument_list|)
 block|{ }
 name|void
 name|VisitExpressionTraitExpr
 argument_list|(
-argument|ExpressionTraitExpr *E
+argument|PTR(ExpressionTraitExpr) E
 argument_list|)
 block|{ }
 name|void
 name|VisitBlockExpr
 argument_list|(
-argument|BlockExpr *E
+argument|PTR(BlockExpr) E
 argument_list|)
 block|{ }
 name|void
 name|VisitCXXUuidofExpr
 argument_list|(
-argument|CXXUuidofExpr *E
+argument|PTR(CXXUuidofExpr) E
 argument_list|)
 block|{ }
 name|void
 name|VisitCXXNoexceptExpr
 argument_list|(
-argument|CXXNoexceptExpr *E
+argument|PTR(CXXNoexceptExpr) E
 argument_list|)
 block|{ }
 name|void
 name|VisitMemberExpr
 argument_list|(
-argument|MemberExpr *E
+argument|PTR(MemberExpr) E
 argument_list|)
 block|{
 comment|// Only the base matters.
@@ -199,7 +221,7 @@ block|}
 name|void
 name|VisitChooseExpr
 argument_list|(
-argument|ChooseExpr *E
+argument|PTR(ChooseExpr) E
 argument_list|)
 block|{
 comment|// Don't visit either child expression if the condition is dependent.
@@ -229,11 +251,13 @@ return|;
 block|}
 name|void
 name|VisitGenericSelectionExpr
-parameter_list|(
-name|GenericSelectionExpr
-modifier|*
+argument_list|(
+name|PTR
+argument_list|(
+argument|GenericSelectionExpr
+argument_list|)
 name|E
-parameter_list|)
+argument_list|)
 block|{
 comment|// The controlling expression of a generic selection is not evaluated.
 comment|// Don't visit either child expression if the condition is type-dependent.
@@ -261,11 +285,13 @@ return|;
 block|}
 name|void
 name|VisitDesignatedInitExpr
-parameter_list|(
-name|DesignatedInitExpr
-modifier|*
+argument_list|(
+name|PTR
+argument_list|(
+argument|DesignatedInitExpr
+argument_list|)
 name|E
-parameter_list|)
+argument_list|)
 block|{
 comment|// Only the actual initializer matters; the designators are all constant
 comment|// expressions.
@@ -283,11 +309,13 @@ return|;
 block|}
 name|void
 name|VisitCXXTypeidExpr
-parameter_list|(
-name|CXXTypeidExpr
-modifier|*
+argument_list|(
+name|PTR
+argument_list|(
+argument|CXXTypeidExpr
+argument_list|)
 name|E
-parameter_list|)
+argument_list|)
 block|{
 if|if
 condition|(
@@ -310,11 +338,13 @@ return|;
 block|}
 name|void
 name|VisitCallExpr
-parameter_list|(
-name|CallExpr
-modifier|*
+argument_list|(
+name|PTR
+argument_list|(
+argument|CallExpr
+argument_list|)
 name|CE
-parameter_list|)
+argument_list|)
 block|{
 if|if
 condition|(
@@ -344,11 +374,13 @@ return|;
 block|}
 name|void
 name|VisitLambdaExpr
-parameter_list|(
-name|LambdaExpr
-modifier|*
+argument_list|(
+name|PTR
+argument_list|(
+argument|LambdaExpr
+argument_list|)
 name|LE
-parameter_list|)
+argument_list|)
 block|{
 comment|// Only visit the capture initializers, and not the body.
 for|for
@@ -395,49 +427,138 @@ comment|/// \brief The basis case walks all of the children of the statement or
 comment|/// expression, assuming they are all potentially evaluated.
 name|void
 name|VisitStmt
-parameter_list|(
-name|Stmt
-modifier|*
+argument_list|(
+name|PTR
+argument_list|(
+argument|Stmt
+argument_list|)
 name|S
-parameter_list|)
+argument_list|)
 block|{
 for|for
 control|(
-name|Stmt
-operator|::
-name|child_range
-name|C
-operator|=
+name|auto
+operator|*
+name|SubStmt
+operator|:
 name|S
 operator|->
 name|children
 argument_list|()
-init|;
-name|C
-condition|;
-operator|++
-name|C
 control|)
 if|if
 condition|(
-operator|*
-name|C
+name|SubStmt
 condition|)
 name|this
 operator|->
 name|Visit
 argument_list|(
-operator|*
-name|C
+name|SubStmt
 argument_list|)
 expr_stmt|;
 block|}
+undef|#
+directive|undef
+name|PTR
 block|}
 end_decl_stmt
 
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/// EvaluatedExprVisitor - This class visits 'Expr *'s
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|ImplClass
+operator|>
+name|class
+name|EvaluatedExprVisitor
+operator|:
+name|public
+name|EvaluatedExprVisitorBase
+operator|<
+name|make_ptr
+operator|,
+name|ImplClass
+operator|>
+block|{
+name|public
+operator|:
+name|explicit
+name|EvaluatedExprVisitor
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+operator|:
+name|EvaluatedExprVisitorBase
+operator|<
+name|make_ptr
+block|,
+name|ImplClass
+operator|>
+operator|(
+name|Context
+operator|)
+block|{ }
+block|}
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// ConstEvaluatedExprVisitor - This class visits 'const Expr *'s.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|ImplClass
+operator|>
+name|class
+name|ConstEvaluatedExprVisitor
+operator|:
+name|public
+name|EvaluatedExprVisitorBase
+operator|<
+name|make_const_ptr
+operator|,
+name|ImplClass
+operator|>
+block|{
+name|public
+operator|:
+name|explicit
+name|ConstEvaluatedExprVisitor
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+operator|:
+name|EvaluatedExprVisitorBase
+operator|<
+name|make_const_ptr
+block|,
+name|ImplClass
+operator|>
+operator|(
+name|Context
+operator|)
+block|{ }
+block|}
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 unit|}

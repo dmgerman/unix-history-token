@@ -242,23 +242,6 @@ name|Capture_ByCopy
 operator|)
 return|;
 block|}
-comment|/// \brief Determine whether this is an init-capture.
-name|bool
-name|isInitCapture
-argument_list|()
-specifier|const
-block|{
-return|return
-name|capturesVariable
-argument_list|()
-operator|&&
-name|getCapturedVar
-argument_list|()
-operator|->
-name|isInitCapture
-argument_list|()
-return|;
-block|}
 comment|/// \brief Retrieve the declaration of the local variable being
 comment|/// captured.
 comment|///

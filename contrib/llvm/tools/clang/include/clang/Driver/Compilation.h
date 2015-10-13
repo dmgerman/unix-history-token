@@ -614,12 +614,12 @@ comment|///
 comment|/// \param FailingCommands - For non-zero results, this will be a vector of
 comment|/// failing commands and their associated result code.
 name|void
-name|ExecuteJob
+name|ExecuteJobs
 argument_list|(
 specifier|const
-name|Job
+name|JobList
 operator|&
-name|J
+name|Jobs
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -632,8 +632,7 @@ argument_list|,
 specifier|const
 name|Command
 operator|*
-operator|>
-expr|>
+operator|>>
 operator|&
 name|FailingCommands
 argument_list|)

@@ -89,6 +89,9 @@ name|namespace
 name|MSP430ISD
 block|{
 enum|enum
+name|NodeType
+enum|:
+name|unsigned
 block|{
 name|FIRST_NUMBER
 init|=
@@ -145,6 +148,9 @@ block|}
 enum|;
 block|}
 name|class
+name|MSP430Subtarget
+decl_stmt|;
+name|class
 name|MSP430TargetLowering
 range|:
 name|public
@@ -159,12 +165,19 @@ specifier|const
 name|TargetMachine
 operator|&
 name|TM
+argument_list|,
+specifier|const
+name|MSP430Subtarget
+operator|&
+name|STI
 argument_list|)
 block|;
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
-argument|EVT LHSTy
+argument|const DataLayout&
+argument_list|,
+argument|EVT
 argument_list|)
 specifier|const
 name|override
@@ -318,7 +331,7 @@ operator|::
 name|ConstraintType
 name|getConstraintType
 argument_list|(
-argument|const std::string&Constraint
+argument|StringRef Constraint
 argument_list|)
 specifier|const
 name|override
@@ -335,7 +348,9 @@ operator|*
 operator|>
 name|getRegForInlineAsmConstraint
 argument_list|(
-argument|const std::string&Constraint
+argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|StringRef Constraint
 argument_list|,
 argument|MVT VT
 argument_list|)

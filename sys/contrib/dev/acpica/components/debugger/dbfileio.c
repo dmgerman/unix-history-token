@@ -31,18 +31,6 @@ directive|include
 file|<contrib/dev/acpica/include/actables.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-name|ACPI_DEBUGGER
-operator|||
-name|defined
-name|ACPI_DISASSEMBLER
-operator|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -215,7 +203,6 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-comment|/*    ACPI_TABLE_DESC         TableInfo; */
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|AeLocalLoadTable
@@ -224,6 +211,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
+comment|/*    ACPI_TABLE_DESC         TableInfo; */
 block|if (!Table)     {         return_ACPI_STATUS (AE_BAD_PARAMETER);     }      TableInfo.Pointer = Table;     Status = AcpiTbRecognizeTable (&TableInfo, ACPI_TABLE_ALL);     if (ACPI_FAILURE (Status))     {         return_ACPI_STATUS (Status);     }
 comment|/* Install the new table into the local data structures */
 block|Status = AcpiTbInitTableDescriptor (&TableInfo);     if (ACPI_FAILURE (Status))     {         if (Status == AE_ALREADY_EXISTS)         {
@@ -468,15 +456,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_DEBUGGER */
-end_comment
 
 end_unit
 

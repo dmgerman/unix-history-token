@@ -47,6 +47,19 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_function_decl
+name|int
+name|__dup3
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|__dup3

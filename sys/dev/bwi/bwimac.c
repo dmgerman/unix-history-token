@@ -3767,15 +3767,6 @@ name|bwi_fwhdr
 modifier|*
 name|hdr
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|sc_ifp
-decl_stmt|;
 if|if
 condition|(
 name|fw
@@ -3789,9 +3780,11 @@ name|hdr
 argument_list|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"invalid firmware (%s): invalid size %zu\n"
 argument_list|,
@@ -3848,9 +3841,11 @@ name|hdr
 argument_list|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"invalid firmware (%s): size mismatch, "
 literal|"fw %u, real %zu\n"
@@ -3891,9 +3886,11 @@ operator|!=
 name|fw_type
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"invalid firmware (%s): type mismatch, "
 literal|"fw \'%c\', target \'%c\'\n"
@@ -3922,9 +3919,11 @@ operator|!=
 name|BWI_FW_GEN_1
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"invalid firmware (%s): wrong generation, "
 literal|"fw %d, target %d\n"
@@ -4622,15 +4621,6 @@ name|mac
 operator|->
 name|mac_sc
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|sc_ifp
-decl_stmt|;
 specifier|const
 name|uint32_t
 modifier|*
@@ -4919,9 +4909,11 @@ operator|==
 name|NRETRY
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"firmware (ucode&pcm) loading timed out\n"
 argument_list|)
@@ -4959,9 +4951,11 @@ operator|>
 name|BWI_FW_VERSION3_REVMAX
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"firmware version 4 is not supported yet\n"
 argument_list|)
@@ -4970,9 +4964,11 @@ return|return
 name|ENODEV
 return|;
 block|}
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"firmware rev 0x%04x, patch level 0x%04x\n"
 argument_list|,
@@ -5257,15 +5253,6 @@ name|mac
 operator|->
 name|mac_sc
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|sc_ifp
-decl_stmt|;
 specifier|const
 name|struct
 name|bwi_fwhdr
@@ -5397,9 +5384,11 @@ name|iv_ofs
 argument_list|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"invalid IV image, ofs\n"
 argument_list|)
@@ -5451,9 +5440,11 @@ operator|>=
 literal|0x1000
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"invalid ofs (0x%04x) "
 literal|"for %dth iv\n"
@@ -5491,9 +5482,11 @@ name|val32
 argument_list|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"invalid IV image, val32\n"
 argument_list|)
@@ -5564,9 +5557,11 @@ name|val16
 argument_list|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"invalid IV image, val16\n"
 argument_list|)
@@ -5645,9 +5640,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"invalid IV image, size left %d\n"
 argument_list|,
@@ -5675,16 +5672,14 @@ modifier|*
 name|mac
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
+name|device_t
+name|dev
 init|=
 name|mac
 operator|->
 name|mac_sc
 operator|->
-name|sc_ifp
+name|sc_dev
 decl_stmt|;
 name|int
 name|error
@@ -5705,9 +5700,9 @@ condition|(
 name|error
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|dev
 argument_list|,
 literal|"load IV failed\n"
 argument_list|)
@@ -5740,9 +5735,9 @@ if|if
 condition|(
 name|error
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|dev
 argument_list|,
 literal|"load ExtIV failed\n"
 argument_list|)
@@ -5775,22 +5770,14 @@ operator|->
 name|mac_sc
 decl_stmt|;
 name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|sc_ifp
-decl_stmt|;
-name|struct
 name|ieee80211com
 modifier|*
 name|ic
 init|=
-name|ifp
+operator|&
+name|sc
 operator|->
-name|if_l2com
+name|sc_ic
 decl_stmt|;
 name|uint32_t
 name|mac_status
@@ -5921,11 +5908,9 @@ if|if
 condition|(
 name|ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_PROMISC
+name|ic_promisc
+operator|>
+literal|0
 condition|)
 name|mac_status
 operator||=
@@ -6178,22 +6163,14 @@ operator|->
 name|mac_phy
 decl_stmt|;
 name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|sc_ifp
-decl_stmt|;
-name|struct
 name|ieee80211com
 modifier|*
 name|ic
 init|=
-name|ifp
+operator|&
+name|sc
 operator|->
-name|if_l2com
+name|sc_ic
 decl_stmt|;
 specifier|const
 name|struct
@@ -7482,13 +7459,6 @@ literal|0
 return|;
 block|}
 comment|/* 	 * Test whether the revision of this MAC is supported 	 */
-define|#
-directive|define
-name|N
-parameter_list|(
-name|arr
-parameter_list|)
-value|(int)(sizeof(arr) / sizeof(arr[0]))
 for|for
 control|(
 name|i
@@ -7497,7 +7467,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|bwi_sup_macrev
 argument_list|)
@@ -7521,7 +7491,7 @@ if|if
 condition|(
 name|i
 operator|==
-name|N
+name|nitems
 argument_list|(
 name|bwi_sup_macrev
 argument_list|)
@@ -7543,9 +7513,6 @@ return|return
 name|ENXIO
 return|;
 block|}
-undef|#
-directive|undef
-name|N
 name|BWI_CREATE_MAC
 argument_list|(
 name|mac
@@ -8582,22 +8549,14 @@ operator|->
 name|mac_sc
 decl_stmt|;
 name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|sc_ifp
-decl_stmt|;
-name|struct
 name|ieee80211com
 modifier|*
 name|ic
 init|=
-name|ifp
+operator|&
+name|sc
 operator|->
-name|if_l2com
+name|sc_ic
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -8699,22 +8658,14 @@ operator|->
 name|mac_sc
 decl_stmt|;
 name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|sc_ifp
-decl_stmt|;
-name|struct
 name|ieee80211com
 modifier|*
 name|ic
 init|=
-name|ifp
+operator|&
+name|sc
 operator|->
-name|if_l2com
+name|sc_ic
 decl_stmt|;
 name|KASSERT
 argument_list|(

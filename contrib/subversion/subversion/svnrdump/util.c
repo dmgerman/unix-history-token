@@ -179,7 +179,7 @@ name|char
 modifier|*
 name|key
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -189,7 +189,7 @@ name|svn_string_t
 modifier|*
 name|value
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)

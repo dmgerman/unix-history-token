@@ -14172,13 +14172,6 @@ name|int
 name|maxlen
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
 name|u_int8_t
 name|len
 init|=
@@ -14366,7 +14359,7 @@ if|if
 condition|(
 name|n
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|dev_pass_id
 argument_list|)
@@ -14444,9 +14437,6 @@ literal|">"
 argument_list|)
 expr_stmt|;
 block|}
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -17299,13 +17289,6 @@ name|uint8_t
 name|state
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
 specifier|static
 specifier|const
 name|char
@@ -17355,7 +17338,7 @@ if|if
 condition|(
 name|state
 operator|>=
-name|N
+name|nitems
 argument_list|(
 name|state_names
 argument_list|)
@@ -17393,9 +17376,6 @@ index|[
 name|state
 index|]
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -27993,13 +27973,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
 name|int
 name|i
 decl_stmt|;
@@ -28011,7 +27984,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|ieee80211_cmds
 argument_list|)
@@ -28041,9 +28014,6 @@ argument_list|,
 name|wlan_create
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

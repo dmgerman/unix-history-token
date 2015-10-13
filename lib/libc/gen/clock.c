@@ -86,7 +86,9 @@ end_define
 begin_function
 name|clock_t
 name|clock
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|rusage

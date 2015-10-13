@@ -54,7 +54,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|_WIN32
+name|_MSC_VER
 argument_list|)
 end_if
 

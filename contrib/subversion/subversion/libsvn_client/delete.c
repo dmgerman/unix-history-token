@@ -935,6 +935,42 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+if|if
+condition|(
+name|ctx
+operator|->
+name|notify_func2
+condition|)
+block|{
+name|svn_wc_notify_t
+modifier|*
+name|notify
+decl_stmt|;
+name|notify
+operator|=
+name|svn_wc_create_notify_url
+argument_list|(
+name|base_uri
+argument_list|,
+name|svn_wc_notify_commit_finalizing
+argument_list|,
+name|pool
+argument_list|)
+expr_stmt|;
+name|ctx
+operator|->
+name|notify_func2
+argument_list|(
+name|ctx
+operator|->
+name|notify_baton2
+argument_list|,
+name|notify
+argument_list|,
+name|pool
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Close the edit. */
 return|return
 name|svn_error_trace
@@ -1098,7 +1134,7 @@ name|char
 modifier|*
 name|repos_root
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -1122,7 +1158,7 @@ block|{
 comment|/* Great!  We've found another URI underneath this                  session.  We'll pick out the related RA session for                  use later, store the new target, and move on.  */
 name|repos_deletables
 operator|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -1312,7 +1348,10 @@ name|SVN_ERR_RA_ILLEGAL_URL
 argument_list|,
 name|NULL
 argument_list|,
+name|_
+argument_list|(
 literal|"URL '%s' not within a repository"
+argument_list|)
 argument_list|,
 name|uri
 argument_list|)
@@ -1350,7 +1389,10 @@ name|SVN_ERR_FS_NOT_FOUND
 argument_list|,
 name|NULL
 argument_list|,
+name|_
+argument_list|(
 literal|"URL '%s' does not exist"
+argument_list|)
 argument_list|,
 name|uri
 argument_list|)
@@ -1390,7 +1432,7 @@ name|repos_deletables_t
 modifier|*
 name|repos_deletables
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -2280,7 +2322,7 @@ name|apr_array_header_t
 modifier|*
 name|targets
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)

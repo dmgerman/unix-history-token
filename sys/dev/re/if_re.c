@@ -923,6 +923,16 @@ name|RL_JUMBO_MTU_9K
 block|}
 block|,
 block|{
+name|RL_HWREV_8168H
+block|,
+name|RL_8169
+block|,
+literal|"8168H/8111H"
+block|,
+name|RL_JUMBO_MTU_9K
+block|}
+block|,
+block|{
 name|RL_HWREV_8411
 block|,
 name|RL_8169
@@ -7182,6 +7192,9 @@ name|RL_HWREV_8168EP
 case|:
 case|case
 name|RL_HWREV_8168G
+case|:
+case|case
+name|RL_HWREV_8168H
 case|:
 case|case
 name|RL_HWREV_8411B

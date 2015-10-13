@@ -34491,7 +34491,7 @@ name|ifp
 operator|->
 name|if_mtu
 condition|)
-name|nd6_output
+name|nd6_output_ifp
 argument_list|(
 name|ifp
 argument_list|,
@@ -34501,8 +34501,6 @@ name|m0
 argument_list|,
 operator|&
 name|dst
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 else|else
@@ -37790,6 +37788,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+comment|/* Detect packet forwarding. 	 * If the input interface is different from the output interface we're 	 * forwarding. 	 * We do need to be careful about bridges. If the 	 * net.link.bridge.pfil_bridge sysctl is set we can be filtering on a 	 * bridge, so if the input interface is a bridge member and the output 	 * interface is its bridge we're not actually forwarding but bridging. 	 */
 if|if
 condition|(
 name|dir
@@ -37809,6 +37808,30 @@ operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
+operator|&&
+operator|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|->
+name|if_bridge
+operator|==
+name|NULL
+operator|||
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|->
+name|if_bridge
+operator|!=
+name|ifp
+operator|->
+name|if_softc
+operator|)
 condition|)
 name|fwdir
 operator|=

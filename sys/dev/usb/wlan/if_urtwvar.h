@@ -282,9 +282,12 @@ struct|struct
 name|urtw_softc
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
+name|ieee80211com
+name|sc_ic
+decl_stmt|;
+name|struct
+name|mbufq
+name|sc_snd
 decl_stmt|;
 name|device_t
 name|sc_dev
@@ -304,9 +307,6 @@ name|sc_tx_dma_buf
 decl_stmt|;
 name|int
 name|sc_debug
-decl_stmt|;
-name|int
-name|sc_if_flags
 decl_stmt|;
 name|int
 name|sc_flags
@@ -335,6 +335,10 @@ define|#
 directive|define
 name|URTW_DETACHED
 value|(1<< 6)
+define|#
+directive|define
+name|URTW_RUNNING
+value|(1<< 7)
 name|enum
 name|ieee80211_state
 name|sc_state
@@ -352,12 +356,6 @@ name|URTW_EEPROM_93C56
 value|1
 name|uint8_t
 name|sc_crcmon
-decl_stmt|;
-name|uint8_t
-name|sc_bssid
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
 decl_stmt|;
 name|struct
 name|ieee80211_channel
@@ -599,15 +597,9 @@ name|struct
 name|urtw_rx_radiotap_header
 name|sc_rxtap
 decl_stmt|;
-name|int
-name|sc_rxtap_len
-decl_stmt|;
 name|struct
 name|urtw_tx_radiotap_header
 name|sc_txtap
-decl_stmt|;
-name|int
-name|sc_txtap_len
 decl_stmt|;
 block|}
 struct|;

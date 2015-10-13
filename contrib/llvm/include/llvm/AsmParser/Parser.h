@@ -70,23 +70,28 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|LLVMContext
+decl_stmt|;
+name|class
 name|Module
 decl_stmt|;
+struct_decl|struct
+name|SlotMapping
+struct_decl|;
 name|class
 name|SMDiagnostic
-decl_stmt|;
-name|class
-name|LLVMContext
 decl_stmt|;
 comment|/// This function is the main interface to the LLVM Assembly Parser. It parses
 comment|/// an ASCII file that (presumably) contains LLVM Assembly code. It returns a
 comment|/// Module (intermediate representation) with the corresponding features. Note
 comment|/// that this does not verify that the generated Module is valid, so you should
 comment|/// run the verifier after parsing the file to check that it is okay.
-comment|/// @brief Parse LLVM Assembly from a file
-comment|/// @param Filename The name of the file to parse
-comment|/// @param Error Error result info.
-comment|/// @param Context Context in which to allocate globals info.
+comment|/// \brief Parse LLVM Assembly from a file
+comment|/// \param Filename The name of the file to parse
+comment|/// \param Error Error result info.
+comment|/// \param Context Context in which to allocate globals info.
+comment|/// \param Slots The optional slot mapping that will be initialized during
+comment|///              parsing.
 name|std
 operator|::
 name|unique_ptr
@@ -100,6 +105,8 @@ argument_list|,
 argument|SMDiagnostic&Error
 argument_list|,
 argument|LLVMContext&Context
+argument_list|,
+argument|SlotMapping *Slots = nullptr
 argument_list|)
 expr_stmt|;
 comment|/// The function is a secondary interface to the LLVM Assembly Parser. It parses
@@ -107,10 +114,12 @@ comment|/// an ASCII string that (presumably) contains LLVM Assembly code. It re
 comment|/// Module (intermediate representation) with the corresponding features. Note
 comment|/// that this does not verify that the generated Module is valid, so you should
 comment|/// run the verifier after parsing the file to check that it is okay.
-comment|/// @brief Parse LLVM Assembly from a string
-comment|/// @param AsmString The string containing assembly
-comment|/// @param Error Error result info.
-comment|/// @param Context Context in which to allocate globals info.
+comment|/// \brief Parse LLVM Assembly from a string
+comment|/// \param AsmString The string containing assembly
+comment|/// \param Error Error result info.
+comment|/// \param Context Context in which to allocate globals info.
+comment|/// \param Slots The optional slot mapping that will be initialized during
+comment|///              parsing.
 name|std
 operator|::
 name|unique_ptr
@@ -124,13 +133,16 @@ argument_list|,
 argument|SMDiagnostic&Error
 argument_list|,
 argument|LLVMContext&Context
+argument_list|,
+argument|SlotMapping *Slots = nullptr
 argument_list|)
 expr_stmt|;
 comment|/// parseAssemblyFile and parseAssemblyString are wrappers around this function.
-comment|/// @brief Parse LLVM Assembly from a MemoryBuffer.
-comment|/// @param F The MemoryBuffer containing assembly
-comment|/// @param Err Error result info.
-comment|/// @param Context Context in which to allocate globals info.
+comment|/// \brief Parse LLVM Assembly from a MemoryBuffer.
+comment|/// \param F The MemoryBuffer containing assembly
+comment|/// \param Err Error result info.
+comment|/// \param Slots The optional slot mapping that will be initialized during
+comment|///              parsing.
 name|std
 operator|::
 name|unique_ptr
@@ -144,6 +156,8 @@ argument_list|,
 argument|SMDiagnostic&Err
 argument_list|,
 argument|LLVMContext&Context
+argument_list|,
+argument|SlotMapping *Slots = nullptr
 argument_list|)
 expr_stmt|;
 comment|/// This function is the low-level interface to the LLVM Assembly Parser.
@@ -151,10 +165,12 @@ comment|/// This is kept as an independent function instead of being inlined int
 comment|/// parseAssembly for the convenience of interactive users that want to add
 comment|/// recently parsed bits to an existing module.
 comment|///
-comment|/// @param F The MemoryBuffer containing assembly
-comment|/// @param M The module to add data to.
-comment|/// @param Err Error result info.
-comment|/// @return true on error.
+comment|/// \param F The MemoryBuffer containing assembly
+comment|/// \param M The module to add data to.
+comment|/// \param Err Error result info.
+comment|/// \param Slots The optional slot mapping that will be initialized during
+comment|///              parsing.
+comment|/// \return true on error.
 name|bool
 name|parseAssemblyInto
 parameter_list|(
@@ -168,6 +184,12 @@ parameter_list|,
 name|SMDiagnostic
 modifier|&
 name|Err
+parameter_list|,
+name|SlotMapping
+modifier|*
+name|Slots
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 block|}

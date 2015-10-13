@@ -69,6 +69,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * XEN_GUEST_HANDLE represents a guest pointer, when passed as a field  * in a struct in memory.  * XEN_GUEST_HANDLE_PARAM represent a guest pointer, when passed as an  * hypercall argument.  * XEN_GUEST_HANDLE_PARAM and XEN_GUEST_HANDLE are the same on X86 but  * they might not be on other architectures.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -110,6 +114,16 @@ parameter_list|(
 name|name
 parameter_list|)
 value|__XEN_GUEST_HANDLE(name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_GUEST_HANDLE_PARAM
+parameter_list|(
+name|name
+parameter_list|)
+value|XEN_GUEST_HANDLE(name)
 end_define
 
 begin_define
@@ -220,8 +234,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|XEN_HAVE_PV_GUEST_ENTRY
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_HAVE_PV_UPCALL_MASK
+value|1
+end_define
+
 begin_comment
-comment|/*  * SEGMENT DESCRIPTOR TABLES  */
+comment|/*  * `incontents 200 segdesc Segment Descriptor Tables  */
 end_comment
 
 begin_comment
@@ -229,7 +257,7 @@ comment|/*  * ` enum neg_errnoval  * ` HYPERVISOR_set_gdt(const xen_pfn_t frames
 end_comment
 
 begin_comment
-comment|/*  * A number of GDT entries are reserved by Xen. These are not situated at the  * start of the GDT because some stupid OSes export hard-coded selector values  * in their ABI. These hard-coded values are always near the start of the GDT,  * so Xen places itself out of the way, at the far end of the GDT.  */
+comment|/*  * A number of GDT entries are reserved by Xen. These are not situated at the  * start of the GDT because some stupid OSes export hard-coded selector values  * in their ABI. These hard-coded values are always near the start of the GDT,  * so Xen places itself out of the way, at the far end of the GDT.  *  * NB The LDT is set using the MMUEXT_SET_LDT op of HYPERVISOR_mmuext_op  */
 end_comment
 
 begin_define
@@ -252,6 +280,10 @@ directive|define
 name|FIRST_RESERVED_GDT_ENTRY
 value|(FIRST_RESERVED_GDT_BYTE / 8)
 end_define
+
+begin_comment
+comment|/*  * ` enum neg_errnoval  * ` HYPERVISOR_update_descriptor(u64 pa, u64 desc);  * `  * ` @pa   The machine physical address of the descriptor to  * `       update. Must be either a descriptor page or writable.  * ` @desc The descriptor value to update, in the same format as a  * `       native descriptor table entry.  */
+end_comment
 
 begin_comment
 comment|/* Maximum number of virtual CPUs in legacy multi-processor guests. */
@@ -277,6 +309,13 @@ name|long
 name|xen_ulong_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|PRI_xen_ulong
+value|"lx"
+end_define
 
 begin_comment
 comment|/*  * ` enum neg_errnoval  * ` HYPERVISOR_stack_switch(unsigned long ss, unsigned long esp);  * `  * Sets the stack segment and pointer for the current vcpu.  */
@@ -387,7 +426,7 @@ comment|/* RDTSC timestamp */
 end_comment
 
 begin_comment
-comment|/*  * The following is all CPU context. Note that the fpu_ctxt block is filled   * in by FXSAVE if the CPU has feature FXSR; otherwise FSAVE is used.  */
+comment|/*  * The following is all CPU context. Note that the fpu_ctxt block is filled   * in by FXSAVE if the CPU has feature FXSR; otherwise FSAVE is used.  *  * Also note that when calling DOMCTL_setvcpucontext and VCPU_initialise  * for HVM and PVH guests, not all information in this structure is updated:  *  * - For HVM guests, the structures read include: fpu_ctxt (if  * VGCT_I387_VALID is set), flags, user_regs, debugreg[*]  *  * - PVH guests are the same as HVM guests, but additionally use ctrlreg[3] to  * set cr3. All other fields not used should be set to 0.  */
 end_comment
 
 begin_struct
@@ -624,12 +663,12 @@ begin_struct
 struct|struct
 name|arch_shared_info
 block|{
+comment|/*      * Number of valid entries in the p2m table(s) anchored at      * pfn_to_mfn_frame_list_list and/or p2m_vaddr.      */
 name|unsigned
 name|long
 name|max_pfn
 decl_stmt|;
-comment|/* max pfn that appears in table */
-comment|/* Frame containing list of mfns containing list of mfns containing p2m. */
+comment|/*      * Frame containing list of mfns containing list of mfns containing p2m.      * A value of 0 indicates it has not yet been set up, ~0 indicates it has      * been set to invalid e.g. due to the p2m being too large for the 3-level      * p2m tree. In this case the linear mapper p2m list anchored at p2m_vaddr      * is to be used.      */
 name|xen_pfn_t
 name|pfn_to_mfn_frame_list_list
 decl_stmt|;
@@ -637,12 +676,31 @@ name|unsigned
 name|long
 name|nmi_reason
 decl_stmt|;
-name|uint64_t
-name|pad
-index|[
-literal|32
-index|]
+comment|/*      * Following three fields are valid if p2m_cr3 contains a value different      * from 0.      * p2m_cr3 is the root of the address space where p2m_vaddr is valid.      * p2m_cr3 is in the same format as a cr3 value in the vcpu register state      * and holds the folded machine frame number (via xen_pfn_to_cr3) of a      * L3 or L4 page table.      * p2m_vaddr holds the virtual address of the linear p2m list. All entries      * in the range [0...max_pfn[ are accessible via this pointer.      * p2m_generation will be incremented by the guest before and after each      * change of the mappings of the p2m list. p2m_generation starts at 0 and      * a value with the least significant bit set indicates that a mapping      * update is in progress. This allows guest external software (e.g. in Dom0)      * to verify that read mappings are consistent and whether they have changed      * since the last check.      * Modifying a p2m element in the linear p2m list is allowed via an atomic      * write only.      */
+name|unsigned
+name|long
+name|p2m_cr3
 decl_stmt|;
+comment|/* cr3 value of the p2m address space */
+name|unsigned
+name|long
+name|p2m_vaddr
+decl_stmt|;
+comment|/* virtual address of the p2m list */
+name|unsigned
+name|long
+name|p2m_generation
+decl_stmt|;
+comment|/* generation count of p2m mapping */
+ifdef|#
+directive|ifdef
+name|__i386__
+comment|/* There's no room for this field in the generic structure. */
+name|uint32_t
+name|wc_sec_hi
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -654,6 +712,40 @@ name|arch_shared_info
 name|arch_shared_info_t
 typedef|;
 end_typedef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__XEN__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__XEN_TOOLS__
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * struct xen_arch_domainconfig's ABI is covered by  * XEN_DOMCTL_INTERFACE_VERSION.  */
+end_comment
+
+begin_struct
+struct|struct
+name|xen_arch_domainconfig
+block|{
+name|char
+name|dummy
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -730,7 +822,7 @@ comment|/* __XEN_PUBLIC_ARCH_X86_XEN_H__ */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit

@@ -55,12 +55,6 @@ directive|include
 file|<contrib/dev/acpica/include/acdebug.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUGGER
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -830,7 +824,7 @@ name|AcpiGetName
 argument_list|(
 name|Node
 argument_list|,
-name|ACPI_FULL_PATHNAME
+name|ACPI_FULL_PATHNAME_NO_TRAILING
 argument_list|,
 operator|&
 name|RetBuf
@@ -2142,7 +2136,7 @@ name|GpeBlock
 operator|->
 name|Node
 argument_list|,
-name|ACPI_FULL_PATHNAME
+name|ACPI_FULL_PATHNAME_NO_TRAILING
 argument_list|,
 operator|&
 name|RetBuf
@@ -2307,7 +2301,8 @@ index|]
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"    Reg %u: (GPE %.2X-%.2X)  RunEnable %2.2X WakeEnable %2.2X"
+literal|"    Reg %u: (GPE %.2X-%.2X)  "
+literal|"RunEnable %2.2X WakeEnable %2.2X"
 literal|" Status %8.8X%8.8X Enable %8.8X%8.8X\n"
 argument_list|,
 name|i
@@ -3192,15 +3187,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_DEBUGGER */
-end_comment
 
 end_unit
 

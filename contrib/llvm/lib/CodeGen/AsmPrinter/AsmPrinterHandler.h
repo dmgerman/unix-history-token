@@ -134,6 +134,13 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|// \brief Emit any of function marker (like .cfi_endproc). This is called
+comment|// before endFunction and cannot switch sections.
+name|virtual
+name|void
+name|markFunctionEnd
+parameter_list|()
+function_decl|;
 comment|/// \brief Gather post-function debug information.
 comment|/// Please note that some AsmPrinter implementations may not call
 comment|/// beginFunction at all.

@@ -538,11 +538,11 @@ init|=
 literal|5
 block|,
 comment|// Motorola 88000
-name|EM_486
+name|EM_IAMCU
 init|=
 literal|6
 block|,
-comment|// Intel 486 (deprecated)
+comment|// Intel MCU
 name|EM_860
 init|=
 literal|7
@@ -1384,7 +1384,12 @@ comment|// Nanoradio Optimized RISC
 name|EM_CSR_KALIMBA
 init|=
 literal|219
+block|,
 comment|// CSR Kalimba architecture family
+name|EM_AMDGPU
+init|=
+literal|224
+comment|// AMD GPU architecture
 block|}
 enum|;
 comment|// Object file classes.
@@ -1512,11 +1517,21 @@ init|=
 literal|16
 block|,
 comment|// FenixOS
+name|ELFOSABI_CLOUDABI
+init|=
+literal|17
+block|,
+comment|// Nuxi CloudABI
 name|ELFOSABI_C6000_ELFABI
 init|=
 literal|64
 block|,
 comment|// Bare-metal TMS320C6000
+name|ELFOSABI_AMDGPU_HSA
+init|=
+literal|64
+block|,
+comment|// AMD HSA runtime
 name|ELFOSABI_C6000_LINUX
 init|=
 literal|65
@@ -1786,10 +1801,19 @@ name|EF_MIPS_ABI2
 init|=
 literal|0x00000020
 block|,
+comment|// File uses N32 ABI
 name|EF_MIPS_32BITMODE
 init|=
 literal|0x00000100
 block|,
+comment|// Code compiled for a 64-bit machine
+comment|// in 32-bit mode
+name|EF_MIPS_FP64
+init|=
+literal|0x00000200
+block|,
+comment|// Code compiled for a 32-bit machine
+comment|// but uses 64-bit FP registers
 name|EF_MIPS_NAN2008
 init|=
 literal|0x00000400
@@ -1821,7 +1845,103 @@ init|=
 literal|0x0000f000
 block|,
 comment|// Mask for selecting EF_MIPS_ABI_ variant.
-comment|//ARCH_ASE
+comment|// MIPS machine variant
+name|EF_MIPS_MACH_3900
+init|=
+literal|0x00810000
+block|,
+comment|// Toshiba R3900
+name|EF_MIPS_MACH_4010
+init|=
+literal|0x00820000
+block|,
+comment|// LSI R4010
+name|EF_MIPS_MACH_4100
+init|=
+literal|0x00830000
+block|,
+comment|// NEC VR4100
+name|EF_MIPS_MACH_4650
+init|=
+literal|0x00850000
+block|,
+comment|// MIPS R4650
+name|EF_MIPS_MACH_4120
+init|=
+literal|0x00870000
+block|,
+comment|// NEC VR4120
+name|EF_MIPS_MACH_4111
+init|=
+literal|0x00880000
+block|,
+comment|// NEC VR4111/VR4181
+name|EF_MIPS_MACH_SB1
+init|=
+literal|0x008a0000
+block|,
+comment|// Broadcom SB-1
+name|EF_MIPS_MACH_OCTEON
+init|=
+literal|0x008b0000
+block|,
+comment|// Cavium Networks Octeon
+name|EF_MIPS_MACH_XLR
+init|=
+literal|0x008c0000
+block|,
+comment|// RMI Xlr
+name|EF_MIPS_MACH_OCTEON2
+init|=
+literal|0x008d0000
+block|,
+comment|// Cavium Networks Octeon2
+name|EF_MIPS_MACH_OCTEON3
+init|=
+literal|0x008e0000
+block|,
+comment|// Cavium Networks Octeon3
+name|EF_MIPS_MACH_5400
+init|=
+literal|0x00910000
+block|,
+comment|// NEC VR5400
+name|EF_MIPS_MACH_5900
+init|=
+literal|0x00920000
+block|,
+comment|// MIPS R5900
+name|EF_MIPS_MACH_5500
+init|=
+literal|0x00980000
+block|,
+comment|// NEC VR5500
+name|EF_MIPS_MACH_9000
+init|=
+literal|0x00990000
+block|,
+comment|// Unknown
+name|EF_MIPS_MACH_LS2E
+init|=
+literal|0x00a00000
+block|,
+comment|// ST Microelectronics Loongson 2E
+name|EF_MIPS_MACH_LS2F
+init|=
+literal|0x00a10000
+block|,
+comment|// ST Microelectronics Loongson 2F
+name|EF_MIPS_MACH_LS3A
+init|=
+literal|0x00a20000
+block|,
+comment|// Loongson 3A
+name|EF_MIPS_MACH
+init|=
+literal|0x00ff0000
+block|,
+comment|// EF_MIPS_MACH_xxx selection mask
+comment|// ARCH_ASE
 name|EF_MIPS_MICROMIPS
 init|=
 literal|0x02000000
@@ -1832,7 +1952,17 @@ init|=
 literal|0x04000000
 block|,
 comment|// Has Mips-16 ISA extensions
-comment|//ARCH
+name|EF_MIPS_ARCH_ASE_MDMX
+init|=
+literal|0x08000000
+block|,
+comment|// Has MDMX multimedia extensions
+name|EF_MIPS_ARCH_ASE
+init|=
+literal|0x0f000000
+block|,
+comment|// Mask for EF_MIPS_ARCH_ASE_xxx flags
+comment|// ARCH
 name|EF_MIPS_ARCH_1
 init|=
 literal|0x00000000
@@ -1872,12 +2002,12 @@ name|EF_MIPS_ARCH_32R2
 init|=
 literal|0x70000000
 block|,
-comment|// mips32r2
+comment|// mips32r2, mips32r3, mips32r5
 name|EF_MIPS_ARCH_64R2
 init|=
 literal|0x80000000
 block|,
-comment|// mips64r2
+comment|// mips64r2, mips64r3, mips64r5
 name|EF_MIPS_ARCH_32R6
 init|=
 literal|0x90000000
@@ -1929,6 +2059,70 @@ name|STO_MIPS_MIPS16
 init|=
 literal|0xf0
 comment|// MIPS Specific ISA for Mips16
+block|}
+enum|;
+comment|// .MIPS.options section descriptor kinds
+enum|enum
+block|{
+name|ODK_NULL
+init|=
+literal|0
+block|,
+comment|// Undefined
+name|ODK_REGINFO
+init|=
+literal|1
+block|,
+comment|// Register usage information
+name|ODK_EXCEPTIONS
+init|=
+literal|2
+block|,
+comment|// Exception processing options
+name|ODK_PAD
+init|=
+literal|3
+block|,
+comment|// Section padding options
+name|ODK_HWPATCH
+init|=
+literal|4
+block|,
+comment|// Hardware patches applied
+name|ODK_FILL
+init|=
+literal|5
+block|,
+comment|// Linker fill value
+name|ODK_TAGS
+init|=
+literal|6
+block|,
+comment|// Space for tool identification
+name|ODK_HWAND
+init|=
+literal|7
+block|,
+comment|// Hardware AND patches applied
+name|ODK_HWOR
+init|=
+literal|8
+block|,
+comment|// Hardware OR patches applied
+name|ODK_GP_GROUP
+init|=
+literal|9
+block|,
+comment|// GP group to use for text/data sections
+name|ODK_IDENT
+init|=
+literal|10
+block|,
+comment|// ID information
+name|ODK_PAGESIZE
+init|=
+literal|11
+comment|// Page size information
 block|}
 enum|;
 comment|// Hexagon Specific e_flags
@@ -2802,6 +2996,10 @@ init|=
 literal|2
 block|,
 comment|// Weak symbol, like global but lower-precedence
+name|STB_GNU_UNIQUE
+init|=
+literal|10
+block|,
 name|STB_LOOS
 init|=
 literal|10
@@ -2861,21 +3059,21 @@ init|=
 literal|6
 block|,
 comment|// Thread local data object
-name|STT_LOOS
-init|=
-literal|7
-block|,
-comment|// Lowest operating system-specific symbol type
-name|STT_HIOS
-init|=
-literal|8
-block|,
-comment|// Highest operating system-specific symbol type
 name|STT_GNU_IFUNC
 init|=
 literal|10
 block|,
 comment|// GNU indirect function
+name|STT_LOOS
+init|=
+literal|10
+block|,
+comment|// Lowest operating system-specific symbol type
+name|STT_HIOS
+init|=
+literal|12
+block|,
+comment|// Highest operating system-specific symbol type
 name|STT_LOPROC
 init|=
 literal|13
@@ -2916,6 +3114,30 @@ block|{
 name|STN_UNDEF
 init|=
 literal|0
+block|}
+enum|;
+comment|// Special relocation symbols used in the MIPS64 ELF relocation entries
+enum|enum
+block|{
+name|RSS_UNDEF
+init|=
+literal|0
+block|,
+comment|// None
+name|RSS_GP
+init|=
+literal|1
+block|,
+comment|// Value of gp
+name|RSS_GP0
+init|=
+literal|2
+block|,
+comment|// Value of gp used to create object being relocated
+name|RSS_LOC
+init|=
+literal|3
+comment|// Address of location being relocated
 block|}
 enum|;
 comment|// Relocation entry, without explicit addend.
@@ -4223,7 +4445,48 @@ comment|// Disp reloc applied at build time.
 name|DF_1_DISPRELPND
 init|=
 literal|0x00010000
+block|,
 comment|// Disp reloc applied at run-time.
+name|DF_1_NODIRECT
+init|=
+literal|0x00020000
+block|,
+comment|// Object has no-direct binding.
+name|DF_1_IGNMULDEF
+init|=
+literal|0x00040000
+block|,
+name|DF_1_NOKSYMS
+init|=
+literal|0x00080000
+block|,
+name|DF_1_NOHDR
+init|=
+literal|0x00100000
+block|,
+name|DF_1_EDITED
+init|=
+literal|0x00200000
+block|,
+comment|// Object is modified after built.
+name|DF_1_NORELOC
+init|=
+literal|0x00400000
+block|,
+name|DF_1_SYMINTPOSE
+init|=
+literal|0x00800000
+block|,
+comment|// Object has individual interposers.
+name|DF_1_GLOBAUDIT
+init|=
+literal|0x01000000
+block|,
+comment|// Global auditing required.
+name|DF_1_SINGLETON
+init|=
+literal|0x02000000
+comment|// Singleton symbols are used.
 block|}
 enum|;
 comment|// DT_MIPS_FLAGS values.

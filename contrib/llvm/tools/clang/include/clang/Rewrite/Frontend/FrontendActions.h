@@ -155,6 +155,7 @@ block|;
 operator|~
 name|FixItAction
 argument_list|()
+name|override
 block|; }
 decl_stmt|;
 comment|/// \brief Emits changes to temporary files and uses them for the original

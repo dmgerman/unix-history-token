@@ -82,37 +82,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|namespace
-block|{
-comment|// Helper for extensive error checking in debug builds.
-name|std
-operator|::
-name|error_code
-name|Check
-argument_list|(
-argument|std::error_code Err
-argument_list|)
-block|{
-if|if
-condition|(
-name|Err
-condition|)
-block|{
-name|report_fatal_error
-argument_list|(
-name|Err
-operator|.
-name|message
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|Err
-return|;
-block|}
-block|}
-comment|// end anonymous namespace
 name|class
 name|RuntimeDyldELF
 range|:
@@ -133,6 +102,9 @@ argument_list|,
 argument|int64_t Addend
 argument_list|,
 argument|uint64_t SymOffset =
+literal|0
+argument_list|,
+argument|SID SectionID =
 literal|0
 argument_list|)
 block|;
@@ -236,6 +208,52 @@ argument_list|,
 argument|int64_t Addend
 argument_list|)
 block|;
+name|void
+name|resolveMIPS64Relocation
+argument_list|(
+argument|const SectionEntry&Section
+argument_list|,
+argument|uint64_t Offset
+argument_list|,
+argument|uint64_t Value
+argument_list|,
+argument|uint32_t Type
+argument_list|,
+argument|int64_t Addend
+argument_list|,
+argument|uint64_t SymOffset
+argument_list|,
+argument|SID SectionID
+argument_list|)
+block|;
+name|int64_t
+name|evaluateMIPS64Relocation
+argument_list|(
+argument|const SectionEntry&Section
+argument_list|,
+argument|uint64_t Offset
+argument_list|,
+argument|uint64_t Value
+argument_list|,
+argument|uint32_t Type
+argument_list|,
+argument|int64_t Addend
+argument_list|,
+argument|uint64_t SymOffset
+argument_list|,
+argument|SID SectionID
+argument_list|)
+block|;
+name|void
+name|applyMIPS64Relocation
+argument_list|(
+argument|uint8_t *TargetPtr
+argument_list|,
+argument|int64_t CalculatedValue
+argument_list|,
+argument|uint32_t Type
+argument_list|)
+block|;
 name|unsigned
 name|getMaxStubSize
 argument_list|()
@@ -280,17 +298,7 @@ comment|// 32-bit instruction and 32-bit address
 elseif|else
 if|if
 condition|(
-name|Arch
-operator|==
-name|Triple
-operator|::
-name|mipsel
-operator|||
-name|Arch
-operator|==
-name|Triple
-operator|::
-name|mips
+name|IsMipsO32ABI
 condition|)
 return|return
 literal|16
@@ -365,10 +373,20 @@ literal|1
 return|;
 block|}
 name|void
+name|setMipsABI
+argument_list|(
+specifier|const
+name|ObjectFile
+operator|&
+name|Obj
+argument_list|)
+name|override
+decl_stmt|;
+name|void
 name|findPPC64TOCSection
 parameter_list|(
 specifier|const
-name|ObjectFile
+name|ELFObjectFileBase
 modifier|&
 name|Obj
 parameter_list|,
@@ -385,7 +403,7 @@ name|void
 name|findOPDEntrySection
 parameter_list|(
 specifier|const
-name|ObjectFile
+name|ELFObjectFileBase
 modifier|&
 name|Obj
 parameter_list|,
@@ -398,62 +416,127 @@ modifier|&
 name|Rel
 parameter_list|)
 function_decl|;
-name|uint64_t
-name|findGOTEntry
-parameter_list|(
-name|uint64_t
-name|LoadAddr
-parameter_list|,
-name|uint64_t
-name|Offset
-parameter_list|)
-function_decl|;
 name|size_t
 name|getGOTEntrySize
 parameter_list|()
 function_decl|;
+name|SectionEntry
+modifier|&
+name|getSection
+parameter_list|(
+name|unsigned
+name|SectionID
+parameter_list|)
+block|{
+return|return
+name|Sections
+index|[
+name|SectionID
+index|]
+return|;
+block|}
+comment|// Allocate no GOT entries for use in the given section.
+name|uint64_t
+name|allocateGOTEntries
+parameter_list|(
+name|unsigned
+name|SectionID
+parameter_list|,
+name|unsigned
+name|no
+parameter_list|)
+function_decl|;
+comment|// Resolve the relvative address of GOTOffset in Section ID and place
+comment|// it at the given Offset
 name|void
-name|updateGOTEntries
+name|resolveGOTOffsetRelocation
+parameter_list|(
+name|unsigned
+name|SectionID
+parameter_list|,
+name|uint64_t
+name|Offset
+parameter_list|,
+name|uint64_t
+name|GOTOffset
+parameter_list|)
+function_decl|;
+comment|// For a GOT entry referenced from SectionID, compute a relocation entry
+comment|// that will place the final resolved value in the GOT slot
+name|RelocationEntry
+name|computeGOTOffsetRE
+parameter_list|(
+name|unsigned
+name|SectionID
+parameter_list|,
+name|uint64_t
+name|GOTOffset
+parameter_list|,
+name|uint64_t
+name|SymbolOffset
+parameter_list|,
+name|unsigned
+name|Type
+parameter_list|)
+function_decl|;
+comment|// Compute the address in memory where we can find the placeholder
+name|void
+modifier|*
+name|computePlaceholderAddress
 argument_list|(
-name|StringRef
-name|Name
+name|unsigned
+name|SectionID
 argument_list|,
 name|uint64_t
-name|Addr
+name|Offset
 argument_list|)
-name|override
+decl|const
 decl_stmt|;
-comment|// Relocation entries for symbols whose position-independent offset is
-comment|// updated in a global offset table.
-typedef|typedef
-name|SmallVector
-operator|<
+comment|// Split out common case for createing the RelocationEntry for when the relocation requires
+comment|// no particular advanced processing.
+name|void
+name|processSimpleRelocation
+parameter_list|(
+name|unsigned
+name|SectionID
+parameter_list|,
+name|uint64_t
+name|Offset
+parameter_list|,
+name|unsigned
+name|RelType
+parameter_list|,
 name|RelocationValueRef
-operator|,
-literal|2
-operator|>
-name|GOTRelocations
-expr_stmt|;
-name|GOTRelocations
-name|GOTEntries
+name|Value
+parameter_list|)
+function_decl|;
+comment|// The tentative ID for the GOT section
+name|unsigned
+name|GOTSectionID
 decl_stmt|;
-comment|// List of entries requiring finalization.
-name|SmallVector
-operator|<
-name|std
-operator|::
-name|pair
+comment|// Records the current number of allocated slots in the GOT
+comment|// (This would be equivalent to GOTEntries.size() were it not for relocations
+comment|// that consume more than one slot)
+name|unsigned
+name|CurrentGOTIndex
+decl_stmt|;
+comment|// A map from section to a GOT section that has entries for section's GOT
+comment|// relocations. (Mips64 specific)
+name|DenseMap
 operator|<
 name|SID
 operator|,
-name|GOTRelocations
+name|SID
 operator|>
-operator|,
-literal|8
-operator|>
-name|GOTs
+name|SectionToGOTMap
 expr_stmt|;
-comment|// Allocated tables.
+comment|// A map to avoid duplicate got entries (Mips64 specific)
+name|StringMap
+operator|<
+name|uint64_t
+operator|>
+name|GOTSymbolOffsets
+expr_stmt|;
 comment|// When a module is loaded we save the SectionID of the EH frame section
 comment|// in a table until we receive a request to register all unregistered
 comment|// EH frame sections with the memory manager.
@@ -477,15 +560,23 @@ name|public
 label|:
 name|RuntimeDyldELF
 argument_list|(
-name|RTDyldMemoryManager
-operator|*
-name|mm
+name|RuntimeDyld
+operator|::
+name|MemoryManager
+operator|&
+name|MemMgr
+argument_list|,
+name|RuntimeDyld
+operator|::
+name|SymbolResolver
+operator|&
+name|Resolver
 argument_list|)
 expr_stmt|;
-name|virtual
 operator|~
 name|RuntimeDyldELF
 argument_list|()
+name|override
 expr_stmt|;
 name|std
 operator|::

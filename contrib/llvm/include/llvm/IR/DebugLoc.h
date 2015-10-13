@@ -86,11 +86,15 @@ name|class
 name|raw_ostream
 decl_stmt|;
 name|class
-name|MDNode
+name|DILocation
 decl_stmt|;
-comment|/// DebugLoc - Debug location id.  This is carried by Instruction, SDNode,
-comment|/// and MachineInstr to compactly encode file/line/scope information for an
-comment|/// operation.
+comment|/// \brief A debug info location.
+comment|///
+comment|/// This class is a wrapper around a tracking reference to an \a DILocation
+comment|/// pointer.
+comment|///
+comment|/// To avoid extra includes, \a DebugLoc doubles the \a DILocation API with a
+comment|/// one based on relatively opaque \a MDNode pointers.
 name|class
 name|DebugLoc
 block|{
@@ -175,6 +179,96 @@ operator|*
 name|this
 return|;
 block|}
+comment|/// \brief Construct from an \a DILocation.
+name|DebugLoc
+argument_list|(
+specifier|const
+name|DILocation
+operator|*
+name|L
+argument_list|)
+expr_stmt|;
+comment|/// \brief Construct from an \a MDNode.
+comment|///
+comment|/// Note: if \c N is not an \a DILocation, a verifier check will fail, and
+comment|/// accessors will crash.  However, construction from other nodes is
+comment|/// supported in order to handle forward references when reading textual
+comment|/// IR.
+name|explicit
+name|DebugLoc
+parameter_list|(
+specifier|const
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// \brief Get the underlying \a DILocation.
+comment|///
+comment|/// \pre !*this or \c isa<DILocation>(getAsMDNode()).
+comment|/// @{
+name|DILocation
+operator|*
+name|get
+argument_list|()
+specifier|const
+expr_stmt|;
+name|operator
+name|DILocation
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|get
+argument_list|()
+return|;
+block|}
+name|DILocation
+operator|*
+name|operator
+operator|->
+expr|(
+block|)
+decl|const
+block|{
+return|return
+name|get
+argument_list|()
+return|;
+block|}
+name|DILocation
+operator|&
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+operator|*
+name|get
+argument_list|()
+return|;
+block|}
+comment|/// @}
+comment|/// \brief Check for null.
+comment|///
+comment|/// Check for null in a way that is safe with broken debug info.  Unlike
+comment|/// the conversion to \c DILocation, this doesn't require that \c Loc is of
+comment|/// the right type.  Important for cases like \a llvm::StripDebugInfo() and
+comment|/// \a Instruction::hasMetadata().
+name|explicit
+name|operator
+name|bool
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Loc
+return|;
+block|}
 comment|/// \brief Check whether this has a trivial destructor.
 name|bool
 name|hasTrivialDestructor
@@ -188,8 +282,14 @@ name|hasTrivialDestructor
 argument_list|()
 return|;
 block|}
-comment|/// get - Get a new DebugLoc that corresponds to the specified line/col
-comment|/// scope/inline location.
+comment|/// \brief Create a new DebugLoc.
+comment|///
+comment|/// Create a new DebugLoc at the specified line/col and scope/inline.  This
+comment|/// forwards to \a DILocation::get().
+comment|///
+comment|/// If \c !Scope, returns a default-constructed \a DebugLoc.
+comment|///
+comment|/// FIXME: Remove this.  Users should use DILocation::get().
 specifier|static
 name|DebugLoc
 name|get
@@ -200,10 +300,12 @@ parameter_list|,
 name|unsigned
 name|Col
 parameter_list|,
+specifier|const
 name|MDNode
 modifier|*
 name|Scope
 parameter_list|,
+specifier|const
 name|MDNode
 modifier|*
 name|InlinedAt
@@ -211,37 +313,6 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// getFromDILocation - Translate the DILocation quad into a DebugLoc.
-specifier|static
-name|DebugLoc
-name|getFromDILocation
-parameter_list|(
-name|MDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// getFromDILexicalBlock - Translate the DILexicalBlock into a DebugLoc.
-specifier|static
-name|DebugLoc
-name|getFromDILexicalBlock
-parameter_list|(
-name|MDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// isUnknown - Return true if this is an unknown location.
-name|bool
-name|isUnknown
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|!
-name|Loc
-return|;
-block|}
 name|unsigned
 name|getLine
 argument_list|()
@@ -252,159 +323,48 @@ name|getCol
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getScope - This returns the scope pointer for this DebugLoc, or null if
-comment|/// invalid.
 name|MDNode
 operator|*
 name|getScope
 argument_list|()
 specifier|const
 expr_stmt|;
-name|MDNode
-modifier|*
-name|getScope
-argument_list|(
-specifier|const
-name|LLVMContext
-operator|&
-argument_list|)
-decl|const
-block|{
-return|return
-name|getScope
-argument_list|()
-return|;
-block|}
-comment|/// getInlinedAt - This returns the InlinedAt pointer for this DebugLoc, or
-comment|/// null if invalid or not present.
-name|MDNode
+name|DILocation
 operator|*
 name|getInlinedAt
 argument_list|()
 specifier|const
 expr_stmt|;
-name|MDNode
-modifier|*
-name|getInlinedAt
-argument_list|(
-specifier|const
-name|LLVMContext
-operator|&
-argument_list|)
-decl|const
-block|{
-return|return
-name|getInlinedAt
-argument_list|()
-return|;
-block|}
-comment|/// getScopeAndInlinedAt - Return both the Scope and the InlinedAt values.
-name|void
-name|getScopeAndInlinedAt
-argument_list|(
+comment|/// \brief Get the fully inlined-at scope for a DebugLoc.
+comment|///
+comment|/// Gets the inlined-at scope for a DebugLoc.
 name|MDNode
 operator|*
-operator|&
-name|Scope
-argument_list|,
-name|MDNode
-operator|*
-operator|&
-name|IA
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|getScopeAndInlinedAt
-argument_list|(
-name|MDNode
-operator|*
-operator|&
-name|Scope
-argument_list|,
-name|MDNode
-operator|*
-operator|&
-name|IA
-argument_list|,
-specifier|const
-name|LLVMContext
-operator|&
-argument_list|)
-decl|const
-block|{
-return|return
-name|getScopeAndInlinedAt
-argument_list|(
-name|Scope
-argument_list|,
-name|IA
-argument_list|)
-return|;
-block|}
-comment|/// getScopeNode - Get MDNode for DebugLoc's scope, or null if invalid.
-name|MDNode
-operator|*
-name|getScopeNode
+name|getInlinedAtScope
 argument_list|()
 specifier|const
 expr_stmt|;
-name|MDNode
-modifier|*
-name|getScopeNode
-argument_list|(
-specifier|const
-name|LLVMContext
-operator|&
-argument_list|)
-decl|const
-block|{
-return|return
-name|getScopeNode
-argument_list|()
-return|;
-block|}
-comment|// getFnDebugLoc - Walk up the scope chain of given debug loc and find line
-comment|// number info for the function.
+comment|/// \brief Find the debug info location for the start of the function.
+comment|///
+comment|/// Walk up the scope chain of given debug loc and find line number info
+comment|/// for the function.
+comment|///
+comment|/// FIXME: Remove this.  Users should use DILocation/DILocalScope API to
+comment|/// find the subprogram, and then DILocation::get().
 name|DebugLoc
 name|getFnDebugLoc
 argument_list|()
 specifier|const
 expr_stmt|;
-name|DebugLoc
-name|getFnDebugLoc
-argument_list|(
-specifier|const
-name|LLVMContext
-operator|&
-argument_list|)
-decl|const
-block|{
-return|return
-name|getFnDebugLoc
-argument_list|()
-return|;
-block|}
-comment|/// getAsMDNode - This method converts the compressed DebugLoc node into a
-comment|/// DILocation compatible MDNode.
+comment|/// \brief Return \c this as a bar \a MDNode.
 name|MDNode
 operator|*
 name|getAsMDNode
 argument_list|()
 specifier|const
-expr_stmt|;
-name|MDNode
-modifier|*
-name|getAsMDNode
-argument_list|(
-name|LLVMContext
-operator|&
-argument_list|)
-decl|const
 block|{
 return|return
-name|getAsMDNode
-argument_list|()
+name|Loc
 return|;
 block|}
 name|bool
@@ -438,13 +398,11 @@ operator|)
 specifier|const
 block|{
 return|return
-operator|!
-operator|(
-operator|*
-name|this
-operator|==
+name|Loc
+operator|!=
 name|DL
-operator|)
+operator|.
+name|Loc
 return|;
 block|}
 name|void
@@ -452,19 +410,6 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-name|void
-name|dump
-argument_list|(
-specifier|const
-name|LLVMContext
-operator|&
-argument_list|)
-decl|const
-block|{
-name|dump
-argument_list|()
-expr_stmt|;
-block|}
 comment|/// \brief prints source location /path/to/file.exe:line:col @[inlined at]
 name|void
 name|print
@@ -475,31 +420,15 @@ name|OS
 argument_list|)
 decl|const
 decl_stmt|;
-name|void
-name|print
-argument_list|(
-specifier|const
-name|LLVMContext
-operator|&
-argument_list|,
-name|raw_ostream
-operator|&
-name|OS
-argument_list|)
-decl|const
-block|{
-name|print
-argument_list|(
-name|OS
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end namespace llvm
 end_comment
 

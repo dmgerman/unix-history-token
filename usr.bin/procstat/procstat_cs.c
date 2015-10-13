@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2007 Robert N. M. Watson  * Copyright (c) 2015 Allan Jude<allanjude@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|<sys/cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sbuf.h>
 end_include
 
 begin_include
@@ -95,6 +101,11 @@ name|kinfo_proc
 modifier|*
 name|kip
 decl_stmt|;
+name|struct
+name|sbuf
+modifier|*
+name|cpusetbuf
+decl_stmt|;
 name|unsigned
 name|int
 name|count
@@ -115,9 +126,9 @@ condition|(
 operator|!
 name|hflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5s %6s %-16s %-16s %2s %4s %-7s\n"
+literal|"{T:/%5s %6s %-16s %-16s %2s %4s %-7s}\n"
 argument_list|,
 literal|"PID"
 argument_list|,
@@ -188,27 +199,27 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5d "
+literal|"{k:process_id/%5d/%d} "
 argument_list|,
 name|kipp
 operator|->
 name|ki_pid
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%6d "
+literal|"{:thread_id/%6d/%d} "
 argument_list|,
 name|kipp
 operator|->
 name|ki_tid
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-16s "
+literal|"{:command/%-16s/%s} "
 argument_list|,
 name|strlen
 argument_list|(
@@ -224,9 +235,9 @@ else|:
 literal|"-"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-16s "
+literal|"{:thread_name/%-16s/%s} "
 argument_list|,
 operator|(
 name|strlen
@@ -267,9 +278,9 @@ name|ki_oncpu
 operator|!=
 literal|255
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%3d "
+literal|"{:cpu/%3d/%d} "
 argument_list|,
 name|kipp
 operator|->
@@ -285,9 +296,9 @@ name|ki_lastcpu
 operator|!=
 literal|255
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%3d "
+literal|"{:cpu/%3d/%d} "
 argument_list|,
 name|kipp
 operator|->
@@ -295,9 +306,9 @@ name|ki_lastcpu
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%3s "
+literal|"{:cpu/%3s/%s} "
 argument_list|,
 literal|"-"
 argument_list|)
@@ -326,9 +337,9 @@ operator|=
 name|CPUSET_INVALID
 expr_stmt|;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%4d "
+literal|"{:cpu_set_id/%4d/%d} "
 argument_list|,
 name|cs
 argument_list|)
@@ -378,6 +389,11 @@ name|twice
 operator|=
 literal|0
 expr_stmt|;
+name|cpusetbuf
+operator|=
+name|sbuf_new_auto
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|cpu
@@ -410,8 +426,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|sbuf_printf
 argument_list|(
+name|cpusetbuf
+argument_list|,
 literal|"%d"
 argument_list|,
 name|cpu
@@ -445,8 +463,10 @@ operator|==
 literal|1
 condition|)
 block|{
-name|printf
+name|sbuf_printf
 argument_list|(
+name|cpusetbuf
+argument_list|,
 literal|"-%d,%d"
 argument_list|,
 name|lastcpu
@@ -460,8 +480,10 @@ literal|0
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|sbuf_printf
 argument_list|(
+name|cpusetbuf
+argument_list|,
 literal|",%d"
 argument_list|,
 name|cpu
@@ -479,15 +501,48 @@ name|once
 operator|&&
 name|twice
 condition|)
-name|printf
+name|sbuf_printf
 argument_list|(
+name|cpusetbuf
+argument_list|,
 literal|"-%d"
 argument_list|,
 name|lastcpu
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sbuf_finish
+argument_list|(
+name|cpusetbuf
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|xo_err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Could not generate output"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:cpu_set/%s}"
+argument_list|,
+name|sbuf_data
+argument_list|(
+name|cpusetbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sbuf_delete
+argument_list|(
+name|cpusetbuf
+argument_list|)
+expr_stmt|;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)

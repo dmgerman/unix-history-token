@@ -116,13 +116,6 @@ literal|3
 comment|// Memory block came from operator new [ ]
 block|}
 enum|;
-specifier|static
-specifier|const
-name|uptr
-name|kNumberOfSizeClasses
-init|=
-literal|255
-decl_stmt|;
 struct_decl|struct
 name|AsanChunk
 struct_decl|;
@@ -657,6 +650,15 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|// SANITIZER_CAN_USE_ALLOCATOR64
+specifier|static
+specifier|const
+name|uptr
+name|kNumberOfSizeClasses
+init|=
+name|SizeClassMap
+operator|::
+name|kNumClasses
+decl_stmt|;
 typedef|typedef
 name|SizeClassAllocatorLocalCache
 operator|<

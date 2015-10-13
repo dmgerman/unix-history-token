@@ -1047,12 +1047,10 @@ expr_stmt|;
 block|}
 comment|/// \brief Get the SourceRanges associated with the report.
 name|virtual
-name|std
+name|llvm
 operator|::
-name|pair
+name|iterator_range
 operator|<
-name|ranges_iterator
-operator|,
 name|ranges_iterator
 operator|>
 name|getRanges
@@ -1813,12 +1811,16 @@ comment|/// folded based on the profile value, which is done to coalesce similar
 comment|/// reports.
 name|void
 name|emitReport
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|BugReport
-modifier|*
+operator|>
 name|R
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|EmitBasicReport
 argument_list|(
@@ -1950,10 +1952,10 @@ argument_list|(
 argument|eng
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|GRBugReporter
 argument_list|()
+name|override
 block|;
 comment|/// getEngine - Return the analysis engine used to analyze a given
 comment|///  function or method.

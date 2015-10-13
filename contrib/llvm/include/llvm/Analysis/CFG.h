@@ -242,6 +242,43 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
+comment|/// \brief Determine whether there is at least one path from a block in
+comment|/// 'Worklist' to 'StopBB', returning true if uncertain.
+comment|///
+comment|/// Determine whether there is a path from at least one block in Worklist to
+comment|/// StopBB within a single function. Returns false only if we can prove that
+comment|/// once any block in 'Worklist' has been reached then 'StopBB' can not be
+comment|/// executed. Conservatively returns true.
+name|bool
+name|isPotentiallyReachableFromMany
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|&
+name|Worklist
+argument_list|,
+name|BasicBlock
+operator|*
+name|StopBB
+argument_list|,
+specifier|const
+name|DominatorTree
+operator|*
+name|DT
+operator|=
+name|nullptr
+argument_list|,
+specifier|const
+name|LoopInfo
+operator|*
+name|LI
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

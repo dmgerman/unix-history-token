@@ -66,6 +66,12 @@ directive|include
 file|"svn_private_config.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"private/svn_string_private.h"
+end_include
+
 begin_escape
 end_escape
 
@@ -129,7 +135,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|human_timestamp_format_suffix
+name|HUMAN_TIMESTAMP_FORMAT_SUFFIX
 value|_(" (%a, %d %b %Y)")
 end_define
 
@@ -311,6 +317,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|c
@@ -323,14 +330,12 @@ operator|=
 operator|(
 name|apr_int32_t
 operator|)
-name|strtol
+name|svn__strtoul
 argument_list|(
 name|data
 argument_list|,
 operator|&
 name|c
-argument_list|,
-literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -351,14 +356,12 @@ operator|=
 operator|(
 name|apr_int32_t
 operator|)
-name|strtol
+name|svn__strtoul
 argument_list|(
 name|c
 argument_list|,
 operator|&
 name|c
-argument_list|,
-literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -379,14 +382,12 @@ operator|=
 operator|(
 name|apr_int32_t
 operator|)
-name|strtol
+name|svn__strtoul
 argument_list|(
 name|c
 argument_list|,
 operator|&
 name|c
-argument_list|,
-literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -407,14 +408,12 @@ operator|=
 operator|(
 name|apr_int32_t
 operator|)
-name|strtol
+name|svn__strtoul
 argument_list|(
 name|c
 argument_list|,
 operator|&
 name|c
-argument_list|,
-literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -435,14 +434,12 @@ operator|=
 operator|(
 name|apr_int32_t
 operator|)
-name|strtol
+name|svn__strtoul
 argument_list|(
 name|c
 argument_list|,
 operator|&
 name|c
-argument_list|,
-literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -463,14 +460,12 @@ operator|=
 operator|(
 name|apr_int32_t
 operator|)
-name|strtol
+name|svn__strtoul
 argument_list|(
 name|c
 argument_list|,
 operator|&
 name|c
-argument_list|,
-literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -491,14 +486,12 @@ operator|=
 operator|(
 name|apr_int32_t
 operator|)
-name|strtol
+name|svn__strtoul
 argument_list|(
 name|c
 argument_list|,
 operator|&
 name|c
-argument_list|,
-literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -884,7 +877,7 @@ name|SVN_TIME__MAX_LENGTH
 operator|-
 name|len
 argument_list|,
-name|human_timestamp_format_suffix
+name|HUMAN_TIMESTAMP_FORMAT_SUFFIX
 argument_list|,
 operator|&
 name|exploded_time

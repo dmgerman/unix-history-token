@@ -66,6 +66,7 @@ name|namespace
 name|lldb
 block|{
 name|class
+name|LLDB_API
 name|SBFunction
 block|{
 name|public
@@ -112,6 +113,13 @@ specifier|const
 name|char
 operator|*
 name|GetName
+argument_list|()
+specifier|const
+expr_stmt|;
+specifier|const
+name|char
+operator|*
+name|GetDisplayName
 argument_list|()
 specifier|const
 expr_stmt|;

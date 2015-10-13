@@ -100,7 +100,9 @@ end_undef
 begin_function
 name|int
 name|getchar
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|retval

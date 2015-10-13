@@ -245,7 +245,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* MD Routine. */
+comment|/* MD Routines. */
 end_comment
 
 begin_struct_decl
@@ -268,6 +268,21 @@ end_function_decl
 begin_function_decl
 name|void
 name|stack_save_td
+parameter_list|(
+name|struct
+name|stack
+modifier|*
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|stack_save_td_running
 parameter_list|(
 name|struct
 name|stack

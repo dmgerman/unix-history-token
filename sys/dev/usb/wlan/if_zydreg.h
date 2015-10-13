@@ -4346,9 +4346,12 @@ struct|struct
 name|zyd_softc
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
+name|ieee80211com
+name|sc_ic
+decl_stmt|;
+name|struct
+name|mbufq
+name|sc_snd
 decl_stmt|;
 name|device_t
 name|sc_dev
@@ -4385,6 +4388,10 @@ define|#
 directive|define
 name|ZYD_FLAG_DETACHED
 value|(1<< 3)
+define|#
+directive|define
+name|ZYD_FLAG_RUNNING
+value|(1<< 4)
 name|struct
 name|zyd_rf
 name|sc_rf
@@ -4403,12 +4410,6 @@ argument|zyd_rq
 argument_list|)
 name|sc_rqh
 expr_stmt|;
-name|uint8_t
-name|sc_bssid
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
-decl_stmt|;
 name|uint16_t
 name|sc_fwbase
 decl_stmt|;
@@ -4529,15 +4530,9 @@ name|struct
 name|zyd_rx_radiotap_header
 name|sc_rxtap
 decl_stmt|;
-name|int
-name|sc_rxtap_len
-decl_stmt|;
 name|struct
 name|zyd_tx_radiotap_header
 name|sc_txtap
-decl_stmt|;
-name|int
-name|sc_txtap_len
 decl_stmt|;
 block|}
 struct|;

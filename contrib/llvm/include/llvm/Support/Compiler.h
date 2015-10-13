@@ -276,11 +276,11 @@ comment|/// The common \param version values to check for are:
 end_comment
 
 begin_comment
-comment|///  * 1700: Microsoft Visual Studio 2012 / 11.0
+comment|///  * 1800: Microsoft Visual Studio 2013 / 12.0
 end_comment
 
 begin_comment
-comment|///  * 1800: Microsoft Visual Studio 2013 / 12.0
+comment|///  * 1900: Microsoft Visual Studio 2015 / 14.0
 end_comment
 
 begin_ifdef
@@ -300,7 +300,7 @@ value|(_MSC_VER>= (version))
 end_define
 
 begin_comment
-comment|// We require at least MSVC 2012.
+comment|// We require at least MSVC 2013.
 end_comment
 
 begin_if
@@ -309,14 +309,14 @@ directive|if
 operator|!
 name|LLVM_MSC_PREREQ
 argument_list|(
-literal|1700
+literal|1800
 argument_list|)
 end_if
 
 begin_error
 error|#
 directive|error
-error|LLVM requires at least MSVC 2012.
+error|LLVM requires at least MSVC 2013.
 end_error
 
 begin_endif
@@ -388,7 +388,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/// \brief Does the compiler support r-value reference *this?
+comment|/// \brief Does the compiler support ref-qualifiers for *this?
 end_comment
 
 begin_comment
@@ -396,11 +396,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Sadly, this is separate from just r-value reference support because GCC
+comment|/// Sadly, this is separate from just rvalue reference support because GCC
 end_comment
 
 begin_comment
-comment|/// implemented this later than everything else.
+comment|/// and MSVC implemented this later than everything else.
 end_comment
 
 begin_if
@@ -446,11 +446,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/// \macro LLVM_HAS_VARIADIC_TEMPLATES
-end_comment
-
-begin_comment
-comment|/// \brief Does this compiler support variadic templates.
+comment|/// Expands to '&' if ref-qualifiers for *this are supported.
 end_comment
 
 begin_comment
@@ -458,61 +454,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Implies LLVM_HAS_RVALUE_REFERENCES and the existence of std::forward.
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__has_feature
-argument_list|(
-name|cxx_variadic_templates
-argument_list|)
-operator|||
-name|LLVM_MSC_PREREQ
-argument_list|(
-literal|1800
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|LLVM_HAS_VARIADIC_TEMPLATES
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LLVM_HAS_VARIADIC_TEMPLATES
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/// Expands to '&' if r-value references are supported.
+comment|/// This can be used to provide lvalue/rvalue overrides of member functions.
 end_comment
 
 begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This can be used to provide l-value/r-value overrides of member functions.
-end_comment
-
-begin_comment
-comment|/// The r-value override should be guarded by LLVM_HAS_RVALUE_REFERENCE_THIS
+comment|/// The rvalue override should be guarded by LLVM_HAS_RVALUE_REFERENCE_THIS
 end_comment
 
 begin_if
@@ -537,93 +483,6 @@ begin_define
 define|#
 directive|define
 name|LLVM_LVALUE_FUNCTION
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/// LLVM_DELETED_FUNCTION - Expands to = delete if the compiler supports it.
-end_comment
-
-begin_comment
-comment|/// Use to mark functions as uncallable. Member functions with this should
-end_comment
-
-begin_comment
-comment|/// be declared private so that some behavior is kept in C++03 mode.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// class DontCopy {
-end_comment
-
-begin_comment
-comment|/// private:
-end_comment
-
-begin_comment
-comment|///   DontCopy(const DontCopy&) LLVM_DELETED_FUNCTION;
-end_comment
-
-begin_comment
-comment|///   DontCopy&operator =(const DontCopy&) LLVM_DELETED_FUNCTION;
-end_comment
-
-begin_comment
-comment|/// public:
-end_comment
-
-begin_comment
-comment|///   ...
-end_comment
-
-begin_comment
-comment|/// };
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__has_feature
-argument_list|(
-name|cxx_deleted_functions
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__GXX_EXPERIMENTAL_CXX0X__
-argument_list|)
-operator|||
-name|LLVM_MSC_PREREQ
-argument_list|(
-literal|1800
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|LLVM_DELETED_FUNCTION
-value|= delete
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LLVM_DELETED_FUNCTION
 end_define
 
 begin_endif
@@ -1173,80 +1032,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// C++ doesn't support 'extern template' of template specializations.  GCC does,
-end_comment
-
-begin_comment
-comment|// but requires __extension__ before it.  In the header, use this:
-end_comment
-
-begin_comment
-comment|//   EXTERN_TEMPLATE_INSTANTIATION(class foo<bar>);
-end_comment
-
-begin_comment
-comment|// in the .cpp file, use this:
-end_comment
-
-begin_comment
-comment|//   TEMPLATE_INSTANTIATION(class foo<bar>);
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|EXTERN_TEMPLATE_INSTANTIATION
-parameter_list|(
-name|X
-parameter_list|)
-value|__extension__ extern template X
-end_define
-
-begin_define
-define|#
-directive|define
-name|TEMPLATE_INSTANTIATION
-parameter_list|(
-name|X
-parameter_list|)
-value|template X
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|EXTERN_TEMPLATE_INSTANTIATION
-parameter_list|(
-name|X
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TEMPLATE_INSTANTIATION
-parameter_list|(
-name|X
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/// LLVM_ATTRIBUTE_NOINLINE - On compilers where we have a directive to do so,
 end_comment
 
@@ -1463,6 +1248,59 @@ begin_define
 define|#
 directive|define
 name|LLVM_ATTRIBUTE_RETURNS_NONNULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \macro LLVM_ATTRIBUTE_RETURNS_NOALIAS Used to mark a function as returning a
+end_comment
+
+begin_comment
+comment|/// pointer that does not alias any other valid pointer.
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LLVM_ATTRIBUTE_RETURNS_NOALIAS
+value|__attribute__((__malloc__))
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|LLVM_ATTRIBUTE_RETURNS_NOALIAS
+value|__declspec(restrict)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_ATTRIBUTE_RETURNS_NOALIAS
 end_define
 
 begin_endif
@@ -1691,6 +1529,38 @@ name|LLVM_BUILTIN_TRAP
 value|__builtin_trap()
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_elif
+
+begin_comment
+comment|// The __debugbreak intrinsic is supported by MSVC, does not require forward
+end_comment
+
+begin_comment
+comment|// declarations involving platform-specific typedefs (unlike RaiseException),
+end_comment
+
+begin_comment
+comment|// results in a call to vectored exception handlers, and encodes to a short
+end_comment
+
+begin_comment
+comment|// instruction that still causes the trapping behavior we want.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_BUILTIN_TRAP
+value|__debugbreak()
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1787,6 +1657,195 @@ parameter_list|,
 name|a
 parameter_list|)
 value|(p)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \macro LLVM_ALIGNAS
+end_comment
+
+begin_comment
+comment|/// \brief Used to specify a minimum alignment for a structure or variable. The
+end_comment
+
+begin_comment
+comment|/// alignment must be a constant integer. Use LLVM_PTR_SIZE to compute
+end_comment
+
+begin_comment
+comment|/// alignments in terms of the size of a pointer.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Note that __declspec(align) has special quirks, it's not legal to pass a
+end_comment
+
+begin_comment
+comment|/// structure with __declspec(align) as a formal parameter.
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LLVM_ALIGNAS
+parameter_list|(
+name|x
+parameter_list|)
+value|__declspec(align(x))
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|__GNUC__
+operator|&&
+operator|!
+name|__has_feature
+argument_list|(
+name|cxx_alignas
+argument_list|)
+operator|&&
+operator|!
+name|LLVM_GNUC_PREREQ
+argument_list|(
+literal|4
+operator|,
+literal|8
+operator|,
+literal|0
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|LLVM_ALIGNAS
+parameter_list|(
+name|x
+parameter_list|)
+value|__attribute__((aligned(x)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_ALIGNAS
+parameter_list|(
+name|x
+parameter_list|)
+value|alignas(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \macro LLVM_PTR_SIZE
+end_comment
+
+begin_comment
+comment|/// \brief A constant integer equivalent to the value of sizeof(void*).
+end_comment
+
+begin_comment
+comment|/// Generally used in combination with LLVM_ALIGNAS or when doing computation in
+end_comment
+
+begin_comment
+comment|/// the preprocessor.
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__SIZEOF_POINTER__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LLVM_PTR_SIZE
+value|__SIZEOF_POINTER__
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_WIN64
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|LLVM_PTR_SIZE
+value|8
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|LLVM_PTR_SIZE
+value|4
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_elif
+
+begin_error
+error|#
+directive|error
+literal|"could not determine LLVM_PTR_SIZE as a constant int for MSVC"
+end_error
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_PTR_SIZE
+value|sizeof(void *)
 end_define
 
 begin_endif
@@ -1955,211 +2014,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/// \macro LLVM_IS_UNALIGNED_ACCESS_FAST
-end_comment
-
-begin_comment
-comment|/// \brief Is unaligned memory access fast on the host machine.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Don't specialize on alignment for platforms where unaligned memory accesses
-end_comment
-
-begin_comment
-comment|/// generates the same code as aligned memory accesses for common types.
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_M_AMD64
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_M_IX86
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__x86_64
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__x86_64__
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|_X86_
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__i386
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|LLVM_IS_UNALIGNED_ACCESS_FAST
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LLVM_IS_UNALIGNED_ACCESS_FAST
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/// \macro LLVM_EXPLICIT
-end_comment
-
-begin_comment
-comment|/// \brief Expands to explicit on compilers which support explicit conversion
-end_comment
-
-begin_comment
-comment|/// operators. Otherwise expands to nothing.
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__has_feature
-argument_list|(
-name|cxx_explicit_conversions
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__GXX_EXPERIMENTAL_CXX0X__
-argument_list|)
-operator|||
-name|LLVM_MSC_PREREQ
-argument_list|(
-literal|1800
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|LLVM_EXPLICIT
-value|explicit
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LLVM_EXPLICIT
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/// \brief Does the compiler support generalized initializers (using braced
-end_comment
-
-begin_comment
-comment|/// lists and std::initializer_list).  While clang may claim it supports general
-end_comment
-
-begin_comment
-comment|/// initializers, if we're using MSVC's headers, we might not have a usable
-end_comment
-
-begin_comment
-comment|/// std::initializer list type from the STL.  Disable this for now.
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__has_feature
-argument_list|(
-name|cxx_generalized_initializers
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|LLVM_HAS_INITIALIZER_LISTS
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LLVM_HAS_INITIALIZER_LISTS
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/// \brief Mark debug helper function definitions like dump() that should not be
 end_comment
 
@@ -2203,6 +2057,149 @@ define|#
 directive|define
 name|LLVM_DUMP_METHOD
 value|LLVM_ATTRIBUTE_NOINLINE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \macro LLVM_THREAD_LOCAL
+end_comment
+
+begin_comment
+comment|/// \brief A thread-local storage specifier which can be used with globals,
+end_comment
+
+begin_comment
+comment|/// extern globals, and static globals.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is essentially an extremely restricted analog to C++11's thread_local
+end_comment
+
+begin_comment
+comment|/// support, and uses that when available. However, it falls back on
+end_comment
+
+begin_comment
+comment|/// platform-specific or vendor-provided extensions when necessary. These
+end_comment
+
+begin_comment
+comment|/// extensions don't support many of the C++11 thread_local's features. You
+end_comment
+
+begin_comment
+comment|/// should only use this for PODs that you can statically initialize to
+end_comment
+
+begin_comment
+comment|/// some constant value. In almost all circumstances this is most appropriate
+end_comment
+
+begin_comment
+comment|/// for use with a pointer, integer, or small aggregation of pointers and
+end_comment
+
+begin_comment
+comment|/// integers.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|LLVM_ENABLE_THREADS
+end_if
+
+begin_if
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|cxx_thread_local
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_THREAD_LOCAL
+value|thread_local
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_elif
+
+begin_comment
+comment|// MSVC supports this with a __declspec.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_THREAD_LOCAL
+value|__declspec(thread)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// Clang, GCC, and other compatible compilers used __thread prior to C++11 and
+end_comment
+
+begin_comment
+comment|// we only need the restricted functionality that provides.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_THREAD_LOCAL
+value|__thread
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// !LLVM_ENABLE_THREADS
+end_comment
+
+begin_comment
+comment|// If threading is disabled entirely, this compiles to nothing and you get
+end_comment
+
+begin_comment
+comment|// a normal global variable.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_THREAD_LOCAL
 end_define
 
 begin_endif

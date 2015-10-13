@@ -293,6 +293,10 @@ name|SuitableAlign
 block|;
 name|unsigned
 name|char
+name|DefaultAlignForAttributeAligned
+block|;
+name|unsigned
+name|char
 name|MinGlobalAlign
 block|;
 name|unsigned
@@ -304,6 +308,14 @@ block|;
 name|unsigned
 name|short
 name|MaxVectorAlign
+block|;
+name|unsigned
+name|short
+name|MaxTLSAlign
+block|;
+name|unsigned
+name|short
+name|SimdDefaultAlign
 block|;
 specifier|const
 name|char
@@ -1039,6 +1051,17 @@ return|return
 name|SuitableAlign
 return|;
 block|}
+comment|/// \brief Return the default alignment for __attribute__((aligned)) on
+comment|/// this target, to be used if no alignment value is specified.
+name|unsigned
+name|getDefaultAlignForAttributeAligned
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DefaultAlignForAttributeAligned
+return|;
+block|}
 comment|/// getMinGlobalAlign - Return the minimum alignment of a global variable,
 comment|/// unless its alignment is explicitly reduced via attributes.
 name|unsigned
@@ -1261,6 +1284,18 @@ operator|*
 name|LongDoubleFormat
 return|;
 block|}
+comment|/// \brief Return true if the 'long double' type should be mangled like
+comment|/// __float128.
+name|virtual
+name|bool
+name|useFloat128ManglingForLongDouble
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// \brief Return the value for the C99 FLT_EVAL_METHOD macro.
 name|virtual
 name|unsigned
@@ -1362,6 +1397,18 @@ specifier|const
 block|{
 return|return
 name|MaxVectorAlign
+return|;
+block|}
+comment|/// \brief Return default simd alignment for the given target. Generally, this
+comment|/// value is type-specific, but this alignment can be used for most of the
+comment|/// types for the given target.
+name|unsigned
+name|getSimdDefaultAlign
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SimdDefaultAlign
 return|;
 block|}
 comment|/// \brief Return the size of intmax_t and uintmax_t for this target, in bits.
@@ -2038,6 +2085,19 @@ comment|// Don't copy Name or constraint string.
 block|}
 expr|}
 block|;
+comment|// Validate the contents of the __builtin_cpu_supports(const char*) argument.
+name|virtual
+name|bool
+name|validateCpuSupports
+argument_list|(
+argument|StringRef Name
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|// validateOutputConstraint, validateInputConstraint - Checks that
 comment|// a constraint is valid and provides information about it.
 comment|// FIXME: These should return a real error instead of just true/false.
@@ -2165,6 +2225,18 @@ argument_list|,
 operator|*
 name|Constraint
 argument_list|)
+return|;
+block|}
+comment|/// \brief Returns true if NaN encoding is IEEE 754-2008.
+comment|/// Only MIPS allows a different encoding.
+name|virtual
+name|bool
+name|isNan2008
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
 return|;
 block|}
 comment|/// \brief Returns a string of target-specific clobbers, in LLVM format.
@@ -2534,6 +2606,60 @@ return|return
 name|TLSSupported
 return|;
 block|}
+comment|/// \brief Return the maximum alignment (in bits) of a TLS variable
+comment|///
+comment|/// Gets the maximum alignment (in bits) of a TLS variable on this target.
+comment|/// Returns zero if there is no such constraint.
+name|unsigned
+name|short
+name|getMaxTLSAlign
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MaxTLSAlign
+return|;
+block|}
+comment|/// \brief Whether the target supports SEH __try.
+name|bool
+name|isSEHTrySupported
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTriple
+argument_list|()
+operator|.
+name|isOSWindows
+argument_list|()
+operator|&&
+operator|(
+name|getTriple
+argument_list|()
+operator|.
+name|getArch
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|x86
+operator|||
+name|getTriple
+argument_list|()
+operator|.
+name|getArch
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|x86_64
+operator|)
+return|;
+block|}
 comment|/// \brief Return true if {|} are normal characters in the asm string.
 comment|///
 comment|/// If this returns false (the default), then {abc|xyz} is syntax
@@ -2657,7 +2783,9 @@ block|{
 name|CCCR_OK
 block|,
 name|CCCR_Warning
-block|}
+block|,
+name|CCCR_Ignore
+block|,   }
 enum|;
 comment|/// \brief Determines whether a given calling convention is valid for the
 comment|/// target. A calling convention can either be accepted, produce a warning

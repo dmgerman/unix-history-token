@@ -133,6 +133,14 @@ block|,
 literal|'F'
 block|}
 block|,
+block|{
+name|ACL_ENTRY_INHERITED
+block|,
+literal|"inherited"
+block|,
+literal|'I'
+block|}
+block|,
 comment|/*       * There is no ACE_IDENTIFIER_GROUP here - SunOS does not show it       * in the "flags" field.  There is no ACE_OWNER, ACE_GROUP or       * ACE_EVERYONE either, for obvious reasons.       */
 block|{
 literal|0

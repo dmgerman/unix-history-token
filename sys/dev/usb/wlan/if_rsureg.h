@@ -717,6 +717,48 @@ value|(((var)& ~field##_M) | SM(field, val))
 end_define
 
 begin_comment
+comment|/*  * ROM field with RF config.  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|RTL8712_RFCONFIG_1T
+init|=
+literal|0x10
+block|,
+name|RTL8712_RFCONFIG_2T
+init|=
+literal|0x20
+block|,
+name|RTL8712_RFCONFIG_1R
+init|=
+literal|0x01
+block|,
+name|RTL8712_RFCONFIG_2R
+init|=
+literal|0x02
+block|,
+name|RTL8712_RFCONFIG_1T1R
+init|=
+literal|0x11
+block|,
+name|RTL8712_RFCONFIG_1T2R
+init|=
+literal|0x12
+block|,
+name|RTL8712_RFCONFIG_TURBO
+init|=
+literal|0x92
+block|,
+name|RTL8712_RFCONFIG_2T2R
+init|=
+literal|0x22
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/*  * Firmware image header.  */
 end_comment
 
@@ -760,6 +802,7 @@ decl_stmt|;
 name|uint8_t
 name|rf_config
 decl_stmt|;
+comment|//0x11:  1T1R, 0x12: 1T2R, 0x92: 1T2R turbo, 0x22: 2T2R
 name|uint8_t
 name|nendpoints
 decl_stmt|;
@@ -2499,6 +2542,37 @@ argument_list|)
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|r92s_add_ba_event
+block|{
+name|uint8_t
+name|mac_addr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint16_t
+name|ssn
+decl_stmt|;
+name|uint8_t
+name|tid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|r92s_add_ba_req
+block|{
+name|uint32_t
+name|tid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Driver definitions.  */
 end_comment
@@ -2507,7 +2581,7 @@ begin_define
 define|#
 directive|define
 name|RSU_RX_LIST_COUNT
-value|1
+value|100
 end_define
 
 begin_define
@@ -2970,6 +3044,9 @@ comment|/* = WME_AC_BE/BK */
 name|RSU_BULK_TX_VI_VO
 block|,
 comment|/* = WME_AC_VI/VO */
+name|RSU_BULK_TX_H2C
+block|,
+comment|/* H2C */
 name|RSU_N_TRANSFER
 block|, }
 enum|;
@@ -3018,10 +3095,6 @@ block|{
 name|struct
 name|ieee80211vap
 name|vap
-decl_stmt|;
-name|struct
-name|ieee80211_beacon_offsets
-name|bo
 decl_stmt|;
 name|int
 function_decl|(
@@ -3088,9 +3161,12 @@ struct|struct
 name|rsu_softc
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
+name|ieee80211com
+name|sc_ic
+decl_stmt|;
+name|struct
+name|mbufq
+name|sc_snd
 decl_stmt|;
 name|device_t
 name|sc_dev
@@ -3125,6 +3201,10 @@ name|struct
 name|timeout_task
 name|calib_task
 decl_stmt|;
+name|struct
+name|task
+name|tx_task
+decl_stmt|;
 specifier|const
 name|uint8_t
 modifier|*
@@ -3134,11 +3214,46 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
+name|int
+name|sc_ht
+decl_stmt|;
+name|int
+name|sc_nendpoints
+decl_stmt|;
+name|int
+name|sc_curpwrstate
+decl_stmt|;
+name|int
+name|sc_currssi
+decl_stmt|;
+name|u_int
+name|sc_running
+range|:
+literal|1
+decl_stmt|,
+name|sc_calibrating
+range|:
+literal|1
+decl_stmt|,
+name|sc_scanning
+range|:
+literal|1
+decl_stmt|,
+name|sc_scan_pass
+range|:
+literal|1
+decl_stmt|;
 name|u_int
 name|cut
 decl_stmt|;
-name|int
-name|scan_pass
+name|uint8_t
+name|sc_rftype
+decl_stmt|;
+name|int8_t
+name|sc_nrxstream
+decl_stmt|;
+name|int8_t
+name|sc_ntxstream
 decl_stmt|;
 name|struct
 name|rsu_host_cmd_ring
@@ -3172,12 +3287,6 @@ index|[
 literal|128
 index|]
 decl_stmt|;
-name|uint8_t
-name|sc_bssid
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
-decl_stmt|;
 name|struct
 name|usb_xfer
 modifier|*
@@ -3185,9 +3294,6 @@ name|sc_xfer
 index|[
 name|RSU_N_TRANSFER
 index|]
-decl_stmt|;
-name|uint8_t
-name|sc_calibrating
 decl_stmt|;
 name|STAILQ_HEAD
 argument_list|(
@@ -3249,9 +3355,6 @@ define|#
 directive|define
 name|sc_rxtap
 value|sc_rxtapu.th
-name|int
-name|sc_rxtap_len
-decl_stmt|;
 union|union
 block|{
 name|struct
@@ -3271,9 +3374,6 @@ define|#
 directive|define
 name|sc_txtap
 value|sc_txtapu.th
-name|int
-name|sc_txtap_len
-decl_stmt|;
 block|}
 struct|;
 end_struct

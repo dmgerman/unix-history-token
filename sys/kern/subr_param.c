@@ -224,7 +224,7 @@ begin_define
 define|#
 directive|define
 name|MAXFILES
-value|(maxproc * 2)
+value|(40 + 32 * maxusers)
 end_define
 
 begin_endif
@@ -1239,6 +1239,16 @@ name|physpages
 operator|/
 literal|12
 expr_stmt|;
+if|if
+condition|(
+name|maxproc
+operator|>
+name|pid_max
+condition|)
+name|maxproc
+operator|=
+name|pid_max
+expr_stmt|;
 name|maxprocperuid
 operator|=
 operator|(
@@ -1294,6 +1304,14 @@ literal|10
 operator|)
 operator|*
 literal|9
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.maxfilesperproc"
+argument_list|,
+operator|&
+name|maxfilesperproc
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Cannot be changed after boot. 	 */
 name|nbuf

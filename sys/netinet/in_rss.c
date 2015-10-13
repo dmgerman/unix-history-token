@@ -591,11 +591,9 @@ operator|)
 return|;
 block|}
 comment|/* No configured available hashtypes! */
-name|printf
+name|RSS_DEBUG
 argument_list|(
-literal|"%s: no available hashtypes!\n"
-argument_list|,
-name|__func__
+literal|"no available hashtypes!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -676,11 +674,9 @@ operator|!=
 name|RSS_HASH_PKT_INGRESS
 condition|)
 block|{
-name|printf
+name|RSS_DEBUG
 argument_list|(
-literal|"%s: called on EGRESS packet!\n"
-argument_list|,
-name|__func__
+literal|"called on EGRESS packet!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -708,11 +704,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
+name|RSS_DEBUG
 argument_list|(
-literal|"%s: short mbuf pkthdr\n"
-argument_list|,
-name|__func__
+literal|"short mbuf pkthdr\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -737,11 +731,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
+name|RSS_DEBUG
 argument_list|(
-literal|"%s: short mbuf len\n"
-argument_list|,
-name|__func__
+literal|"short mbuf len\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1013,11 +1005,9 @@ name|tcphdr
 argument_list|)
 condition|)
 block|{
-name|printf
+name|RSS_DEBUG
 argument_list|(
-literal|"%s: short TCP frame?\n"
-argument_list|,
-name|__func__
+literal|"short TCP frame?\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1126,11 +1116,9 @@ name|udphdr
 argument_list|)
 condition|)
 block|{
-name|printf
+name|RSS_DEBUG
 argument_list|(
-literal|"%s: short UDP frame?\n"
-argument_list|,
-name|__func__
+literal|"short UDP frame?\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1205,11 +1193,9 @@ return|;
 block|}
 else|else
 block|{
-name|printf
+name|RSS_DEBUG
 argument_list|(
-literal|"%s: no available hashtypes!\n"
-argument_list|,
-name|__func__
+literal|"no available hashtypes!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1230,7 +1216,7 @@ begin_function
 name|struct
 name|mbuf
 modifier|*
-name|rss_soft_m2cpuid
+name|rss_soft_m2cpuid_v4
 parameter_list|(
 name|struct
 name|mbuf

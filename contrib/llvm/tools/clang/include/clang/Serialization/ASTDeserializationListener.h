@@ -89,7 +89,7 @@ name|class
 name|QualType
 decl_stmt|;
 name|class
-name|MacroDefinition
+name|MacroDefinitionRecord
 decl_stmt|;
 name|class
 name|MacroInfo
@@ -192,7 +192,7 @@ argument_list|,
 name|Selector
 name|Sel
 argument_list|)
-block|{ }
+block|{}
 comment|/// \brief A macro definition was read from the AST file.
 name|virtual
 name|void
@@ -202,11 +202,11 @@ name|serialization
 operator|::
 name|PreprocessedEntityID
 argument_list|,
-name|MacroDefinition
+name|MacroDefinitionRecord
 operator|*
 name|MD
 argument_list|)
-block|{ }
+block|{}
 comment|/// \brief A module definition was read from the AST file.
 name|virtual
 name|void
@@ -221,7 +221,7 @@ name|Module
 operator|*
 name|Mod
 argument_list|)
-block|{ }
+block|{}
 block|}
 empty_stmt|;
 block|}

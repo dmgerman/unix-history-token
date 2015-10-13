@@ -1862,7 +1862,7 @@ name|BOOKE
 argument_list|)
 name|printf
 argument_list|(
-literal|"    mcsr           = 0x%lx\n"
+literal|"   mcsr           = 0x%lx\n"
 argument_list|,
 operator|(
 name|u_long
@@ -3285,19 +3285,6 @@ condition|)
 block|{
 endif|#
 directive|endif
-if|if
-condition|(
-name|p
-operator|->
-name|p_vmspace
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|SIGSEGV
-operator|)
-return|;
 name|map
 operator|=
 operator|&
@@ -3352,30 +3339,7 @@ argument_list|(
 name|eva
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|map
-operator|!=
-name|kernel_map
-condition|)
-block|{
-comment|/* 		 * Keep swapout from messing with us during this 		 *	critical time. 		 */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-operator|++
-name|p
-operator|->
-name|p_lock
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-comment|/* Fault in the user page: */
+comment|/* Fault in the page. */
 name|rv
 operator|=
 name|vm_fault
@@ -3389,40 +3353,7 @@ argument_list|,
 name|VM_FAULT_NORMAL
 argument_list|)
 expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-operator|--
-name|p
-operator|->
-name|p_lock
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-comment|/* 		 * XXXDTRACE: add dtrace_doubletrap_func here? 		 */
-block|}
-else|else
-block|{
-comment|/* 		 * Don't have to worry about process locking or stacks in the 		 * kernel. 		 */
-name|rv
-operator|=
-name|vm_fault
-argument_list|(
-name|map
-argument_list|,
-name|va
-argument_list|,
-name|ftype
-argument_list|,
-name|VM_FAULT_NORMAL
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* 	 * XXXDTRACE: add dtrace_doubletrap_func here? 	 */
 if|if
 condition|(
 name|rv
@@ -3719,7 +3650,7 @@ name|frame
 operator|->
 name|srr1
 operator|&
-literal|0x20000
+name|EXC_PGM_TRAP
 operator|)
 operator|)
 else|#
@@ -3789,7 +3720,7 @@ name|frame
 operator|->
 name|srr1
 operator|&
-literal|0x20000
+name|EXC_PGM_TRAP
 operator|)
 condition|)
 block|{

@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseSet.h"
 end_include
 
@@ -101,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
@@ -229,6 +241,16 @@ operator|*
 operator|>
 name|Umbrella
 expr_stmt|;
+comment|/// \brief The module signature.
+name|uint64_t
+name|Signature
+decl_stmt|;
+comment|/// \brief The name of the umbrella entry, as written in the module map.
+name|std
+operator|::
+name|string
+name|UmbrellaAsWritten
+expr_stmt|;
 name|private
 label|:
 comment|/// \brief The submodules of this module, indexed by name.
@@ -294,6 +316,10 @@ operator|*
 operator|>
 name|VisibleModulesCache
 expr_stmt|;
+comment|/// The ID used when referencing this module within a VisibleModuleSet.
+name|unsigned
+name|VisibilityID
+decl_stmt|;
 name|public
 label|:
 enum|enum
@@ -334,6 +360,41 @@ name|FileEntry
 modifier|*
 name|Entry
 decl_stmt|;
+name|explicit
+name|operator
+name|bool
+parameter_list|()
+block|{
+return|return
+name|Entry
+return|;
+block|}
+block|}
+struct|;
+comment|/// \brief Information about a directory name as found in the module map
+comment|/// file.
+struct|struct
+name|DirectoryName
+block|{
+name|std
+operator|::
+name|string
+name|NameAsWritten
+expr_stmt|;
+specifier|const
+name|DirectoryEntry
+modifier|*
+name|Entry
+decl_stmt|;
+name|explicit
+name|operator
+name|bool
+parameter_list|()
+block|{
+return|return
+name|Entry
+return|;
+block|}
 block|}
 struct|;
 comment|/// \brief The headers that are part of this module.
@@ -496,11 +557,7 @@ enum|enum
 name|NameVisibilityKind
 block|{
 comment|/// \brief All of the names in this module are hidden.
-comment|///
 name|Hidden
-block|,
-comment|/// \brief Only the macro names in this module are visible.
-name|MacrosVisible
 block|,
 comment|/// \brief All of the names in this module are visible.
 name|AllVisible
@@ -510,17 +567,15 @@ comment|/// \brief The visibility of names within this particular module.
 name|NameVisibilityKind
 name|NameVisibility
 decl_stmt|;
-comment|/// \brief The location at which macros within this module became visible.
-name|SourceLocation
-name|MacroVisibilityLoc
-decl_stmt|;
 comment|/// \brief The location of the inferred submodule.
 name|SourceLocation
 name|InferredSubmoduleLoc
 decl_stmt|;
 comment|/// \brief The set of modules imported by this module, and on which this
 comment|/// module depends.
-name|SmallVector
+name|llvm
+operator|::
+name|SmallSetVector
 operator|<
 name|Module
 operator|*
@@ -738,6 +793,8 @@ argument_list|,
 argument|bool IsFramework
 argument_list|,
 argument|bool IsExplicit
+argument_list|,
+argument|unsigned VisibilityID
 argument_list|)
 empty_stmt|;
 operator|~
@@ -986,23 +1043,24 @@ expr_stmt|;
 block|}
 comment|/// \brief Retrieve the directory for which this module serves as the
 comment|/// umbrella.
-specifier|const
-name|DirectoryEntry
-operator|*
+name|DirectoryName
 name|getUmbrellaDir
 argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// \brief Retrieve the header that serves as the umbrella header for this
 comment|/// module.
-specifier|const
-name|FileEntry
-operator|*
+name|Header
 name|getUmbrellaHeader
 argument_list|()
 specifier|const
 block|{
-return|return
+if|if
+condition|(
+name|auto
+operator|*
+name|E
+operator|=
 name|Umbrella
 operator|.
 name|dyn_cast
@@ -1013,10 +1071,31 @@ operator|*
 operator|>
 operator|(
 operator|)
+condition|)
+return|return
+name|Header
+block|{
+name|UmbrellaAsWritten
+block|,
+name|E
+block|}
+return|;
+return|return
+name|Header
+block|{}
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine whether this module has an umbrella directory that is
+end_comment
+
+begin_comment
 comment|/// not based on an umbrella header.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasUmbrellaDir
 argument_list|()
@@ -1037,7 +1116,13 @@ operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Add a top-level header associated with this module.
+end_comment
+
+begin_function
 name|void
 name|addTopHeader
 parameter_list|(
@@ -1060,7 +1145,13 @@ name|File
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Add a top-level header filename associated with this module.
+end_comment
+
+begin_function
 name|void
 name|addTopHeaderFilename
 parameter_list|(
@@ -1076,7 +1167,13 @@ name|Filename
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief The top-level headers associated with this module.
+end_comment
+
+begin_expr_stmt
 name|ArrayRef
 operator|<
 specifier|const
@@ -1090,20 +1187,86 @@ operator|&
 name|FileMgr
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether this module has declared its intention to
+end_comment
+
+begin_comment
+comment|/// directly use another module.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|directlyUses
+argument_list|(
+specifier|const
+name|Module
+operator|*
+name|Requested
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Add the given feature requirement to the list of features
+end_comment
+
+begin_comment
 comment|/// required by this module.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param Feature The feature that is required by this module (and
+end_comment
+
+begin_comment
 comment|/// its submodules).
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param RequiredState The required state of this feature: \c true
+end_comment
+
+begin_comment
 comment|/// if it must be present, \c false if it must be absent.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param LangOpts The set of language options that will be used to
+end_comment
+
+begin_comment
 comment|/// evaluate the availability of this feature.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param Target The target options that will be used to evaluate the
+end_comment
+
+begin_comment
 comment|/// availability of this feature.
+end_comment
+
+begin_function_decl
 name|void
 name|addRequirement
 parameter_list|(
@@ -1124,7 +1287,13 @@ modifier|&
 name|Target
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Mark this module and all of its submodules as unavailable.
+end_comment
+
+begin_function_decl
 name|void
 name|markUnavailable
 parameter_list|(
@@ -1134,9 +1303,21 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Find the submodule with the given name.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \returns The submodule if found, or NULL otherwise.
+end_comment
+
+begin_decl_stmt
 name|Module
 modifier|*
 name|findSubmodule
@@ -1146,12 +1327,33 @@ name|Name
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine whether the specified module would be visible to
+end_comment
+
+begin_comment
 comment|/// a lookup at the end of this module.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// FIXME: This may return incorrect results for (submodules of) the
+end_comment
+
+begin_comment
 comment|/// module currently being built, if it's queried before we see all
+end_comment
+
+begin_comment
 comment|/// of its imports.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isModuleVisible
 argument_list|(
@@ -1181,6 +1383,21 @@ name|M
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
+name|unsigned
+name|getVisibilityID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VisibilityID
+return|;
+block|}
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1193,6 +1410,9 @@ operator|::
 name|iterator
 name|submodule_iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1205,6 +1425,9 @@ operator|::
 name|const_iterator
 name|submodule_const_iterator
 expr_stmt|;
+end_typedef
+
+begin_function
 name|submodule_iterator
 name|submodule_begin
 parameter_list|()
@@ -1216,6 +1439,9 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|submodule_const_iterator
 name|submodule_begin
 argument_list|()
@@ -1228,6 +1454,9 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|submodule_iterator
 name|submodule_end
 parameter_list|()
@@ -1239,6 +1468,9 @@ name|end
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|submodule_const_iterator
 name|submodule_end
 argument_list|()
@@ -1251,10 +1483,25 @@ name|end
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Appends this module's list of exported modules to \p Exported.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This provides a subset of immediately imported modules (the ones that are
+end_comment
+
+begin_comment
 comment|/// directly exported), not the complete set of exported modules.
+end_comment
+
+begin_decl_stmt
 name|void
 name|getExportedModules
 argument_list|(
@@ -1268,6 +1515,9 @@ name|Exported
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_function
 specifier|static
 name|StringRef
 name|getModuleInputBufferName
@@ -1277,8 +1527,17 @@ return|return
 literal|"<module-includes>"
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Print the module map for this module to the given stream.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|void
 name|print
 argument_list|(
@@ -1293,19 +1552,291 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Dump the contents of this module to the given output stream.
+end_comment
+
+begin_expr_stmt
 name|void
 name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_expr_stmt
 name|void
 name|buildVisibleModulesCache
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
+unit|};
+comment|/// \brief A set of visible modules.
+end_comment
+
+begin_decl_stmt
+name|class
+name|VisibleModuleSet
+block|{
+name|public
+label|:
+name|VisibleModuleSet
+argument_list|()
+operator|:
+name|Generation
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|VisibleModuleSet
+argument_list|(
+name|VisibleModuleSet
+operator|&&
+name|O
+argument_list|)
+operator|:
+name|ImportLocs
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|O
+operator|.
+name|ImportLocs
+argument_list|)
+argument_list|)
+operator|,
+name|Generation
+argument_list|(
+argument|O.Generation ?
+literal|1
+argument|:
+literal|0
+argument_list|)
+block|{
+name|O
+operator|.
+name|ImportLocs
+operator|.
+name|clear
+argument_list|()
+block|;
+operator|++
+name|O
+operator|.
+name|Generation
+block|;   }
+comment|/// Move from another visible modules set. Guaranteed to leave the source
+comment|/// empty and bump the generation on both.
+name|VisibleModuleSet
+operator|&
+name|operator
+operator|=
+operator|(
+name|VisibleModuleSet
+operator|&&
+name|O
+operator|)
+block|{
+name|ImportLocs
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|O
+operator|.
+name|ImportLocs
+argument_list|)
+block|;
+name|O
+operator|.
+name|ImportLocs
+operator|.
+name|clear
+argument_list|()
+block|;
+operator|++
+name|O
+operator|.
+name|Generation
+block|;
+operator|++
+name|Generation
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|/// \brief Get the current visibility generation. Incremented each time the
+comment|/// set of visible modules changes in any way.
+name|unsigned
+name|getGeneration
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Generation
+return|;
+block|}
+comment|/// \brief Determine whether a module is visible.
+name|bool
+name|isVisible
+argument_list|(
+specifier|const
+name|Module
+operator|*
+name|M
+argument_list|)
+decl|const
+block|{
+return|return
+name|getImportLoc
+argument_list|(
+name|M
+argument_list|)
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+comment|/// \brief Get the location at which the import of a module was triggered.
+name|SourceLocation
+name|getImportLoc
+argument_list|(
+specifier|const
+name|Module
+operator|*
+name|M
+argument_list|)
+decl|const
+block|{
+return|return
+name|M
+operator|->
+name|getVisibilityID
+argument_list|()
+operator|<
+name|ImportLocs
+operator|.
+name|size
+argument_list|()
+condition|?
+name|ImportLocs
+index|[
+name|M
+operator|->
+name|getVisibilityID
+argument_list|()
+index|]
+else|:
+name|SourceLocation
+argument_list|()
+return|;
+block|}
+comment|/// \brief A callback to call when a module is made visible (directly or
+comment|/// indirectly) by a call to \ref setVisible.
+typedef|typedef
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|void
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|)
+operator|>
+name|VisibleCallback
+expr_stmt|;
+comment|/// \brief A callback to call when a module conflict is found. \p Path
+comment|/// consists of a sequence of modules from the conflicting module to the one
+comment|/// made visible, where each was exported by the next.
+typedef|typedef
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|void
+argument_list|(
+argument|ArrayRef<Module *> Path
+argument_list|,
+argument|Module *Conflict
+argument_list|,
+argument|StringRef Message
+argument_list|)
+operator|>
+name|ConflictCallback
+expr_stmt|;
+comment|/// \brief Make a specific module visible.
+name|void
+name|setVisible
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|,
+name|VisibleCallback
+name|Vis
+operator|=
+index|[]
+operator|(
+name|Module
+operator|*
+operator|)
+block|{}
+argument_list|,
+name|ConflictCallback
+name|Cb
+operator|=
+index|[]
+operator|(
+name|ArrayRef
+operator|<
+name|Module
+operator|*
+operator|>
+operator|,
+name|Module
+operator|*
+operator|,
+name|StringRef
+operator|)
+block|{}
+argument_list|)
+decl_stmt|;
+name|private
+label|:
+comment|/// Import locations for each visible module. Indexed by the module's
+comment|/// VisibilityID.
+name|std
+operator|::
+name|vector
+operator|<
+name|SourceLocation
+operator|>
+name|ImportLocs
+expr_stmt|;
+comment|/// Visibility generation, bumped every time the visibility state changes.
+name|unsigned
+name|Generation
+decl_stmt|;
 block|}
 end_decl_stmt
 

@@ -3377,7 +3377,7 @@ directive|endif
 name|THREAD_NO_SLEEPING
 argument_list|()
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE1
 argument_list|(
 name|callout_execute
 argument_list|,
@@ -3386,14 +3386,6 @@ argument_list|, ,
 name|callout__start
 argument_list|,
 name|c
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|c_func
@@ -3401,7 +3393,7 @@ argument_list|(
 name|c_arg
 argument_list|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE1
 argument_list|(
 name|callout_execute
 argument_list|,
@@ -3410,14 +3402,6 @@ argument_list|, ,
 name|callout__end
 argument_list|,
 name|c
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|THREAD_SLEEPING_OK
@@ -4622,6 +4606,7 @@ name|c_lock
 operator|!=
 name|NULL
 operator|&&
+operator|!
 name|cc_exec_cancel
 argument_list|(
 name|cc
@@ -5185,8 +5170,6 @@ name|use_lock
 decl_stmt|;
 name|int
 name|not_on_a_list
-decl_stmt|,
-name|not_running
 decl_stmt|;
 if|if
 condition|(
@@ -6026,21 +6009,6 @@ argument_list|,
 name|cc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we are asked to stop a callout which is currently in progress 	 * and indeed impossible to stop then return 0. 	 */
-name|not_running
-operator|=
-operator|!
-operator|(
-name|cc_exec_curr
-argument_list|(
-name|cc
-argument_list|,
-name|direct
-argument_list|)
-operator|==
-name|c
-operator|)
-expr_stmt|;
 name|CC_UNLOCK
 argument_list|(
 name|cc
@@ -6048,7 +6016,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|not_running
+literal|1
 operator|)
 return|;
 block|}

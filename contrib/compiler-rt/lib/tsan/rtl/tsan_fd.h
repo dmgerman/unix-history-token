@@ -211,6 +211,11 @@ name|pc
 parameter_list|,
 name|int
 name|fd
+parameter_list|,
+name|bool
+name|write
+init|=
+name|true
 parameter_list|)
 function_decl|;
 name|void
@@ -242,6 +247,9 @@ name|oldfd
 parameter_list|,
 name|int
 name|newfd
+parameter_list|,
+name|bool
+name|write
 parameter_list|)
 function_decl|;
 name|void

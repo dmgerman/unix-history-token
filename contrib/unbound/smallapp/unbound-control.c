@@ -346,6 +346,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"  list_insecure			list domain-insecure zones\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"  list_local_zones		list local-zones in use\n"
 argument_list|)
 expr_stmt|;
@@ -407,6 +412,16 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"				or give list of ip addresses\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  ratelimit_list [+a]		list ratelimited domains\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"		+a		list all, also not ratelimited\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -638,13 +653,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|SSL_CTX_use_certificate_file
+name|SSL_CTX_use_certificate_chain_file
 argument_list|(
 name|ctx
 argument_list|,
 name|c_cert
-argument_list|,
-name|SSL_FILETYPE_PEM
 argument_list|)
 operator|||
 operator|!

@@ -1195,11 +1195,6 @@ condition|)
 block|{
 switch|switch
 condition|(
-operator|(
-name|Intrinsic
-operator|::
-name|ID
-operator|)
 name|F
 operator|->
 name|getIntrinsicID

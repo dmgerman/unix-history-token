@@ -21,6 +21,12 @@ directive|include
 file|"xen.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"physdev.h"
+end_include
+
 begin_comment
 comment|/*  * Increase or decrease the specified domain's memory reservation. Returns the  * number of extents successfully allocated or freed.  * arg == addr of struct xen_memory_reservation.  */
 end_comment
@@ -134,6 +140,17 @@ parameter_list|)
 value|(XENMEMF_node(n) | XENMEMF_exact_node_request)
 end_define
 
+begin_comment
+comment|/* Flag to indicate the node specified is virtual node */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENMEMF_vnode
+value|(1<<18)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -143,7 +160,7 @@ begin_struct
 struct|struct
 name|xen_memory_reservation
 block|{
-comment|/*      * XENMEM_increase_reservation:      *   OUT: MFN (*not* GMFN) bases of extents that were allocated      * XENMEM_decrease_reservation:      *   IN:  GMFN bases of extents to free      * XENMEM_populate_physmap:      *   IN:  GPFN bases of extents to populate with memory      *   OUT: GMFN bases of extents that were allocated      *   (NB. This command also updates the mach_to_phys translation table)      */
+comment|/*      * XENMEM_increase_reservation:      *   OUT: MFN (*not* GMFN) bases of extents that were allocated      * XENMEM_decrease_reservation:      *   IN:  GMFN bases of extents to free      * XENMEM_populate_physmap:      *   IN:  GPFN bases of extents to populate with memory      *   OUT: GMFN bases of extents that were allocated      *   (NB. This command also updates the mach_to_phys translation table)      * XENMEM_claim_pages:      *   IN: must be zero      */
 name|XEN_GUEST_HANDLE
 argument_list|(
 argument|xen_pfn_t
@@ -342,6 +359,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * For a compat caller, this is identical to XENMEM_machphys_mfn_list.  *  * For a non compat caller, this functions similarly to  * XENMEM_machphys_mfn_list, but returns the mfns making up the compatibility  * m2p table.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENMEM_machphys_compat_mfn_list
+value|25
+end_define
+
+begin_comment
 comment|/*  * Returns the location in virtual address space of the machine_to_phys  * mapping table. Architectures which do not have a m2p table, or which do not  * map it by default into guest address space, do not implement this command.  * arg == addr of xen_machphys_mapping_t.  */
 end_comment
 
@@ -385,6 +413,14 @@ name|xen_machphys_mapping_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* Source mapping space. */
+end_comment
+
+begin_comment
+comment|/* ` enum phys_map_space { */
+end_comment
 
 begin_define
 define|#
@@ -438,7 +474,11 @@ value|4
 end_define
 
 begin_comment
-comment|/* GMFN from another dom,                                     * XENMEM_add_to_physmap_range only.                                     */
+comment|/* GMFN from another dom,                                     * XENMEM_add_to_physmap_batch only. */
+end_comment
+
+begin_comment
+comment|/* ` } */
 end_comment
 
 begin_comment
@@ -464,40 +504,20 @@ comment|/* Number of pages to go through for gmfn_range */
 name|uint16_t
 name|size
 decl_stmt|;
-comment|/* Source mapping space. */
-define|#
-directive|define
-name|XENMAPSPACE_shared_info
-value|0
-comment|/* shared info page */
-define|#
-directive|define
-name|XENMAPSPACE_grant_table
-value|1
-comment|/* grant table page */
-define|#
-directive|define
-name|XENMAPSPACE_gmfn
-value|2
-comment|/* GMFN */
-define|#
-directive|define
-name|XENMAPSPACE_gmfn_range
-value|3
-comment|/* GMFN range */
 name|unsigned
 name|int
 name|space
 decl_stmt|;
+comment|/* => enum phys_map_space */
 define|#
 directive|define
 name|XENMAPIDX_grant_table_status
 value|0x80000000
-comment|/* Index into source mapping space. */
+comment|/* Index into space being mapped. */
 name|xen_ulong_t
 name|idx
 decl_stmt|;
-comment|/* GPFN where the source mapping page should appear. */
+comment|/* GPFN in domid where the source mapping page should appear. */
 name|xen_pfn_t
 name|gpfn
 decl_stmt|;
@@ -520,6 +540,123 @@ name|xen_add_to_physmap_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* A batched version of add_to_physmap. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENMEM_add_to_physmap_batch
+value|23
+end_define
+
+begin_struct
+struct|struct
+name|xen_add_to_physmap_batch
+block|{
+comment|/* IN */
+comment|/* Which domain to change the mapping for. */
+name|domid_t
+name|domid
+decl_stmt|;
+name|uint16_t
+name|space
+decl_stmt|;
+comment|/* => enum phys_map_space */
+comment|/* Number of pages to go through */
+name|uint16_t
+name|size
+decl_stmt|;
+name|domid_t
+name|foreign_domid
+decl_stmt|;
+comment|/* IFF gmfn_foreign */
+comment|/* Indexes into space being mapped. */
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|xen_ulong_t
+argument_list|)
+name|idxs
+expr_stmt|;
+comment|/* GPFN in domid where the source mapping page should appear. */
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|xen_pfn_t
+argument_list|)
+name|gpfns
+expr_stmt|;
+comment|/* OUT */
+comment|/* Per index error code. */
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|int
+argument_list|)
+name|errs
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_add_to_physmap_batch
+name|xen_add_to_physmap_batch_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_add_to_physmap_batch_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|#
+directive|if
+name|__XEN_INTERFACE_VERSION__
+operator|<
+literal|0x00040400
+end_if
+
+begin_define
+define|#
+directive|define
+name|XENMEM_add_to_physmap_range
+value|XENMEM_add_to_physmap_batch
+end_define
+
+begin_define
+define|#
+directive|define
+name|xen_add_to_physmap_range
+value|xen_add_to_physmap_batch
+end_define
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_add_to_physmap_batch
+name|xen_add_to_physmap_range_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_add_to_physmap_range_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Unmaps the page appearing at a particular GPFN from the specified guest's  * pseudophysical address space.  * arg == addr of xen_remove_from_physmap_t.  */
@@ -571,76 +708,6 @@ end_comment
 begin_comment
 comment|/*#define XENMEM_translate_gpfn_list  8*/
 end_comment
-
-begin_define
-define|#
-directive|define
-name|XENMEM_add_to_physmap_range
-value|23
-end_define
-
-begin_struct
-struct|struct
-name|xen_add_to_physmap_range
-block|{
-comment|/* IN */
-comment|/* Which domain to change the mapping for. */
-name|domid_t
-name|domid
-decl_stmt|;
-name|uint16_t
-name|space
-decl_stmt|;
-comment|/* => enum phys_map_space */
-comment|/* Number of pages to go through */
-name|uint16_t
-name|size
-decl_stmt|;
-name|domid_t
-name|foreign_domid
-decl_stmt|;
-comment|/* IFF gmfn_foreign */
-comment|/* Indexes into space being mapped. */
-name|XEN_GUEST_HANDLE
-argument_list|(
-argument|xen_ulong_t
-argument_list|)
-name|idxs
-expr_stmt|;
-comment|/* GPFN in domid where the source mapping page should appear. */
-name|XEN_GUEST_HANDLE
-argument_list|(
-argument|xen_pfn_t
-argument_list|)
-name|gpfns
-expr_stmt|;
-comment|/* OUT */
-comment|/* Per index error code. */
-name|XEN_GUEST_HANDLE
-argument_list|(
-argument|int
-argument_list|)
-name|errs
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|xen_add_to_physmap_range
-name|xen_add_to_physmap_range_t
-typedef|;
-end_typedef
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|xen_add_to_physmap_range_t
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * Returns the pseudo-physical memory map as it was when the domain  * was started (specified by XENMEM_set_memory_map).  * arg == addr of xen_memory_map_t.  */
@@ -868,28 +935,14 @@ name|XENMEM_paging_op_prep
 value|2
 end_define
 
-begin_define
-define|#
-directive|define
-name|XENMEM_access_op
-value|21
-end_define
-
-begin_define
-define|#
-directive|define
-name|XENMEM_access_op_resume
-value|0
-end_define
-
 begin_struct
 struct|struct
-name|xen_mem_event_op
+name|xen_mem_paging_op
 block|{
 name|uint8_t
 name|op
 decl_stmt|;
-comment|/* XENMEM_*_op_* */
+comment|/* XENMEM_paging_op_* */
 name|domid_t
 name|domain
 decl_stmt|;
@@ -909,15 +962,126 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|xen_mem_event_op
-name|xen_mem_event_op_t
+name|xen_mem_paging_op
+name|xen_mem_paging_op_t
 typedef|;
 end_typedef
 
 begin_expr_stmt
 name|DEFINE_XEN_GUEST_HANDLE
 argument_list|(
-name|xen_mem_event_op_t
+name|xen_mem_paging_op_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|XENMEM_access_op
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_access_op_set_access
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_access_op_get_access
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_access_op_enable_emulate
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_access_op_disable_emulate
+value|3
+end_define
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|XENMEM_access_n
+block|,
+name|XENMEM_access_r
+block|,
+name|XENMEM_access_w
+block|,
+name|XENMEM_access_rw
+block|,
+name|XENMEM_access_x
+block|,
+name|XENMEM_access_rx
+block|,
+name|XENMEM_access_wx
+block|,
+name|XENMEM_access_rwx
+block|,
+comment|/*      * Page starts off as r-x, but automatically      * change to r-w on a write      */
+name|XENMEM_access_rx2rw
+block|,
+comment|/*      * Log access: starts off as n, automatically      * goes to rwx, generating an event without      * pausing the vcpu      */
+name|XENMEM_access_n2rwx
+block|,
+comment|/* Take the domain default */
+name|XENMEM_access_default
+block|}
+name|xenmem_access_t
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|xen_mem_access_op
+block|{
+comment|/* XENMEM_access_op_* */
+name|uint8_t
+name|op
+decl_stmt|;
+comment|/* xenmem_access_t */
+name|uint8_t
+name|access
+decl_stmt|;
+name|domid_t
+name|domid
+decl_stmt|;
+comment|/*      * Number of pages for set op      * Ignored on setting default access and other ops      */
+name|uint32_t
+name|nr
+decl_stmt|;
+comment|/*      * First pfn for set op      * pfn for get op      * ~0ull is used to set and get the default access for pages      */
+name|uint64_aligned_t
+name|pfn
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_mem_access_op
+name|xen_mem_access_op_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_mem_access_op_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -953,43 +1117,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|XENMEM_sharing_op_resume
+name|XENMEM_sharing_op_debug_gfn
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|XENMEM_sharing_op_debug_gfn
+name|XENMEM_sharing_op_debug_mfn
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|XENMEM_sharing_op_debug_mfn
+name|XENMEM_sharing_op_debug_gref
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|XENMEM_sharing_op_debug_gref
+name|XENMEM_sharing_op_add_physmap
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|XENMEM_sharing_op_add_physmap
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
 name|XENMEM_sharing_op_audit
-value|8
+value|7
 end_define
 
 begin_define
@@ -1163,6 +1320,117 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Attempt to stake a claim for a domain on a quantity of pages  * of system RAM, but _not_ assign specific pageframes.  Only  * arithmetic is performed so the hypercall is very fast and need  * not be preemptible, thus sidestepping time-of-check-time-of-use  * races for memory allocation.  Returns 0 if the hypervisor page  * allocator has atomically and successfully claimed the requested  * number of pages, else non-zero.  *  * Any domain may have only one active claim.  When sufficient memory  * has been allocated to resolve the claim, the claim silently expires.  * Claiming zero pages effectively resets any outstanding claim and  * is always successful.  *  * Note that a valid claim may be staked even after memory has been  * allocated for a domain.  In this case, the claim is not incremental,  * i.e. if the domain's tot_pages is 3, and a claim is staked for 10,  * only 7 additional pages are claimed.  *  * Caller must be privileged or the hypercall fails.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENMEM_claim_pages
+value|24
+end_define
+
+begin_comment
+comment|/*  * XENMEM_claim_pages flags - the are no flags at this time.  * The zero value is appropiate.  */
+end_comment
+
+begin_comment
+comment|/*  * With some legacy devices, certain guest-physical addresses cannot safely  * be used for other purposes, e.g. to map guest RAM.  This hypercall  * enumerates those regions so the toolstack can avoid using them.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENMEM_reserved_device_memory_map
+value|27
+end_define
+
+begin_struct
+struct|struct
+name|xen_reserved_device_memory
+block|{
+name|xen_pfn_t
+name|start_pfn
+decl_stmt|;
+name|xen_ulong_t
+name|nr_pages
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_reserved_device_memory
+name|xen_reserved_device_memory_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_reserved_device_memory_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|xen_reserved_device_memory_map
+block|{
+define|#
+directive|define
+name|XENMEM_RDM_ALL
+value|1
+comment|/* Request all regions (ignore dev union). */
+comment|/* IN */
+name|uint32_t
+name|flags
+decl_stmt|;
+comment|/*      * IN/OUT      *      * Gets set to the required number of entries when too low,      * signaled by error code -ERANGE.      */
+name|unsigned
+name|int
+name|nr_entries
+decl_stmt|;
+comment|/* OUT */
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|xen_reserved_device_memory_t
+argument_list|)
+name|buffer
+expr_stmt|;
+comment|/* IN */
+union|union
+block|{
+name|struct
+name|physdev_pci_device
+name|pci
+decl_stmt|;
+block|}
+name|dev
+union|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_reserved_device_memory_map
+name|xen_reserved_device_memory_map_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_reserved_device_memory_map_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -1170,6 +1438,153 @@ end_endif
 
 begin_comment
 comment|/* defined(__XEN__) || defined(__XEN_TOOLS__) */
+end_comment
+
+begin_comment
+comment|/*  * XENMEM_get_vnumainfo used by guest to get  * vNUMA topology from hypervisor.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENMEM_get_vnumainfo
+value|26
+end_define
+
+begin_comment
+comment|/* vNUMA node memory ranges */
+end_comment
+
+begin_struct
+struct|struct
+name|xen_vmemrange
+block|{
+name|uint64_t
+name|start
+decl_stmt|,
+name|end
+decl_stmt|;
+name|unsigned
+name|int
+name|flags
+decl_stmt|;
+name|unsigned
+name|int
+name|nid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_vmemrange
+name|xen_vmemrange_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_vmemrange_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * vNUMA topology specifies vNUMA node number, distance table,  * memory ranges and vcpu mapping provided for guests.  * XENMEM_get_vnumainfo hypercall expects to see from guest  * nr_vnodes, nr_vmemranges and nr_vcpus to indicate available memory.  * After filling guests structures, nr_vnodes, nr_vmemranges and nr_vcpus  * copied back to guest. Domain returns expected values of nr_vnodes,  * nr_vmemranges and nr_vcpus to guest if the values where incorrect.  */
+end_comment
+
+begin_struct
+struct|struct
+name|xen_vnuma_topology_info
+block|{
+comment|/* IN */
+name|domid_t
+name|domid
+decl_stmt|;
+name|uint16_t
+name|pad
+decl_stmt|;
+comment|/* IN/OUT */
+name|unsigned
+name|int
+name|nr_vnodes
+decl_stmt|;
+name|unsigned
+name|int
+name|nr_vcpus
+decl_stmt|;
+name|unsigned
+name|int
+name|nr_vmemranges
+decl_stmt|;
+comment|/* OUT */
+union|union
+block|{
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|uint
+argument_list|)
+name|h
+expr_stmt|;
+name|uint64_t
+name|pad
+decl_stmt|;
+block|}
+name|vdistance
+union|;
+union|union
+block|{
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|uint
+argument_list|)
+name|h
+expr_stmt|;
+name|uint64_t
+name|pad
+decl_stmt|;
+block|}
+name|vcpu_to_vnode
+union|;
+union|union
+block|{
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|xen_vmemrange_t
+argument_list|)
+name|h
+expr_stmt|;
+name|uint64_t
+name|pad
+decl_stmt|;
+block|}
+name|vmemrange
+union|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_vnuma_topology_info
+name|xen_vnuma_topology_info_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_vnuma_topology_info_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Next available subop number is 28 */
 end_comment
 
 begin_endif
@@ -1182,7 +1597,7 @@ comment|/* __XEN_PUBLIC_MEMORY_H__ */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit

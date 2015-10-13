@@ -78,6 +78,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/FoldingSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/PointerIntPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -97,6 +109,12 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|Module
+decl_stmt|;
+name|class
+name|ModuleMacro
+decl_stmt|;
 name|class
 name|Preprocessor
 decl_stmt|;
@@ -120,8 +138,8 @@ comment|/// \brief The list of arguments for a function-like macro.
 comment|///
 comment|/// ArgumentList points to the first of NumArguments pointers.
 comment|///
-comment|/// This can be empty, for, e.g. "#define X()".  In a C99-style variadic macro, this
-comment|/// includes the \c __VA_ARGS__ identifier on the list.
+comment|/// This can be empty, for, e.g. "#define X()".  In a C99-style variadic
+comment|/// macro, this includes the \c __VA_ARGS__ identifier on the list.
 name|IdentifierInfo
 modifier|*
 modifier|*
@@ -169,8 +187,8 @@ literal|1
 decl_stmt|;
 comment|/// \brief True if this macro is of the form "#define X(a...)".
 comment|///
-comment|/// The "a" identifier in the replacement list will be replaced with all arguments
-comment|/// of the macro starting with the specified one.
+comment|/// The "a" identifier in the replacement list will be replaced with all
+comment|/// arguments of the macro starting with the specified one.
 name|bool
 name|IsGNUVarargs
 range|:
@@ -179,8 +197,8 @@ decl_stmt|;
 comment|/// \brief True if this macro requires processing before expansion.
 comment|///
 comment|/// This is the case for builtin macros such as __LINE__, so long as they have
-comment|/// not been redefined, but not for regular predefined macros from the "<built-in>"
-comment|/// memory buffer (see Preprocessing::getPredefinesFileID).
+comment|/// not been redefined, but not for regular predefined macros from the
+comment|/// "<built-in>" memory buffer (see Preprocessing::getPredefinesFileID).
 name|bool
 name|IsBuiltinMacro
 range|:
@@ -245,9 +263,11 @@ empty_stmt|;
 operator|~
 name|MacroInfo
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|public
-operator|:
+label|:
 comment|/// \brief Return the location that the macro was defined at.
 name|SourceLocation
 name|getDefinitionLoc
@@ -515,11 +535,36 @@ return|return
 name|NumArguments
 return|;
 block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|IdentifierInfo
+operator|*
+operator|>
+name|args
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArrayRef
+operator|<
+specifier|const
+name|IdentifierInfo
+operator|*
+operator|>
+operator|(
+name|ArgumentList
+operator|,
+name|NumArguments
+operator|)
+return|;
+block|}
 comment|/// \brief Return the argument number of the specified identifier,
 comment|/// or -1 if the identifier is not a formal argument identifier.
 name|int
 name|getArgumentNum
 argument_list|(
+specifier|const
 name|IdentifierInfo
 operator|*
 name|Arg
@@ -794,6 +839,18 @@ name|empty
 argument_list|()
 return|;
 block|}
+name|ArrayRef
+operator|<
+name|Token
+operator|>
+name|tokens
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ReplacementTokens
+return|;
+block|}
 comment|/// \brief Add the specified token to the replacement text for the macro.
 name|void
 name|AddTokenToBody
@@ -1009,39 +1066,11 @@ comment|/// history. Usually a macro definition (MacroInfo) is where a macro nam
 end_comment
 
 begin_comment
-comment|/// becomes active (MacroDirective) but modules can have their own macro
+comment|/// becomes active (MacroDirective) but #pragma push_macro / pop_macro can
 end_comment
 
 begin_comment
-comment|/// history, separate from the local (current translation unit) macro history.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// For example, if "@import A;" imports macro FOO, there will be a new local
-end_comment
-
-begin_comment
-comment|/// MacroDirective created to indicate that "FOO" became active at the import
-end_comment
-
-begin_comment
-comment|/// location. Module "A" itself will contain another MacroDirective in its macro
-end_comment
-
-begin_comment
-comment|/// history (at the point of the definition of FOO) and both MacroDirectives
-end_comment
-
-begin_comment
-comment|/// will point to the same MacroInfo object.
-end_comment
-
-begin_comment
-comment|///
+comment|/// create additional DefMacroDirectives for the same MacroInfo.
 end_comment
 
 begin_decl_stmt
@@ -1082,14 +1111,6 @@ name|IsFromPCH
 range|:
 literal|1
 decl_stmt|;
-comment|// Used by DefMacroDirective -----------------------------------------------//
-comment|/// \brief Whether the definition of this macro is ambiguous, due to
-comment|/// multiple definitions coming in from multiple modules.
-name|bool
-name|IsAmbiguous
-range|:
-literal|1
-decl_stmt|;
 comment|// Used by VisibilityMacroDirective ----------------------------------------//
 comment|/// \brief Whether the macro has public visibility (when described in a
 comment|/// module).
@@ -1098,56 +1119,11 @@ name|IsPublic
 range|:
 literal|1
 decl_stmt|;
-comment|// Used by DefMacroDirective and UndefMacroDirective -----------------------//
-comment|/// \brief True if this macro was imported from a module.
-name|bool
-name|IsImported
-range|:
-literal|1
-decl_stmt|;
-comment|/// \brief For an imported directive, the number of modules whose macros are
-comment|/// overridden by this directive. Only used if IsImported.
-name|unsigned
-name|NumOverrides
-range|:
-literal|26
-decl_stmt|;
-name|unsigned
-modifier|*
-name|getModuleDataStart
-parameter_list|()
-function_decl|;
-specifier|const
-name|unsigned
-operator|*
-name|getModuleDataStart
-argument_list|()
-specifier|const
-block|{
-return|return
-name|const_cast
-operator|<
-name|MacroDirective
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getModuleDataStart
-argument_list|()
-return|;
-block|}
 name|MacroDirective
 argument_list|(
 argument|Kind K
 argument_list|,
 argument|SourceLocation Loc
-argument_list|,
-argument|unsigned ImportedFromModuleID =
-literal|0
-argument_list|,
-argument|ArrayRef<unsigned> Overrides = None
 argument_list|)
 block|:
 name|Previous
@@ -1170,87 +1146,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|IsAmbiguous
-argument_list|(
-name|false
-argument_list|)
-operator|,
 name|IsPublic
 argument_list|(
-name|true
+argument|true
 argument_list|)
-operator|,
-name|IsImported
-argument_list|(
-name|ImportedFromModuleID
-argument_list|)
-operator|,
-name|NumOverrides
-argument_list|(
-argument|Overrides.size()
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|NumOverrides
-operator|==
-name|Overrides
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"too many overrides"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-operator|(
-name|IsImported
-operator|||
-operator|!
-name|NumOverrides
-operator|)
-operator|&&
-literal|"overrides for non-module macro"
-argument_list|)
-block|;
-if|if
-condition|(
-name|IsImported
-condition|)
-block|{
-name|unsigned
-modifier|*
-name|Extra
-init|=
-name|getModuleDataStart
-argument_list|()
-decl_stmt|;
-operator|*
-name|Extra
-operator|++
-operator|=
-name|ImportedFromModuleID
-expr_stmt|;
-name|std
-operator|::
-name|copy
-argument_list|(
-name|Overrides
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|Overrides
-operator|.
-name|end
-argument_list|()
-argument_list|,
-name|Extra
-argument_list|)
-expr_stmt|;
-block|}
-block|}
+block|{}
 name|public
 operator|:
 name|Kind
@@ -1329,83 +1229,6 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-comment|/// \brief True if this macro was imported from a module.
-comment|/// Note that this is never the case for a VisibilityMacroDirective.
-name|bool
-name|isImported
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsImported
-return|;
-block|}
-comment|/// \brief If this directive was imported from a module, get the submodule
-comment|/// whose directive this is. Note that this may be different from the module
-comment|/// that owns the MacroInfo for a DefMacroDirective due to #pragma pop_macro
-comment|/// and similar effects.
-name|unsigned
-name|getOwningModuleID
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-name|isImported
-argument_list|()
-condition|)
-return|return
-operator|*
-name|getModuleDataStart
-argument_list|()
-return|;
-return|return
-literal|0
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// \brief Get the module IDs of modules whose macros are overridden by this
-end_comment
-
-begin_comment
-comment|/// directive. Only valid if this is an imported directive.
-end_comment
-
-begin_expr_stmt
-name|ArrayRef
-operator|<
-name|unsigned
-operator|>
-name|getOverriddenModules
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|IsImported
-operator|&&
-literal|"can only get overridden modules for imported macro"
-argument_list|)
-block|;
-return|return
-name|llvm
-operator|::
-name|makeArrayRef
-argument_list|(
-name|getModuleDataStart
-argument_list|()
-operator|+
-literal|1
-argument_list|,
-name|NumOverrides
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_decl_stmt
 name|class
 name|DefInfo
 block|{
@@ -1426,9 +1249,14 @@ argument_list|()
 operator|:
 name|DefDirective
 argument_list|(
-argument|nullptr
+name|nullptr
 argument_list|)
-block|{ }
+operator|,
+name|IsPublic
+argument_list|(
+argument|true
+argument_list|)
+block|{}
 name|DefInfo
 argument_list|(
 argument|DefMacroDirective *DefDirective
@@ -1452,7 +1280,7 @@ name|IsPublic
 argument_list|(
 argument|isPublic
 argument_list|)
-block|{ }
+block|{}
 specifier|const
 name|DefMacroDirective
 operator|*
@@ -1558,7 +1386,7 @@ name|isValid
 argument_list|()
 return|;
 block|}
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -1595,32 +1423,14 @@ argument_list|()
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// \brief Traverses the macro directives history and returns the next
-end_comment
-
-begin_comment
 comment|/// macro definition directive along with info about its undefined location
-end_comment
-
-begin_comment
 comment|/// (if there is one) and if it is public or private.
-end_comment
-
-begin_function_decl
 name|DefInfo
 name|getDefinition
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 specifier|const
 name|DefInfo
 name|getDefinition
@@ -1641,9 +1451,6 @@ name|getDefinition
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|isDefined
 argument_list|()
@@ -1665,16 +1472,14 @@ operator|.
 name|isUndefined
 argument_list|()
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|false
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_expr_stmt
-unit|}    const
+specifier|const
 name|MacroInfo
 operator|*
 name|getMacroInfo
@@ -1773,6 +1578,32 @@ name|Info
 block|;
 name|public
 operator|:
+name|DefMacroDirective
+argument_list|(
+argument|MacroInfo *MI
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
+operator|:
+name|MacroDirective
+argument_list|(
+name|MD_Define
+argument_list|,
+name|Loc
+argument_list|)
+block|,
+name|Info
+argument_list|(
+argument|MI
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|MI
+operator|&&
+literal|"MacroInfo is null"
+argument_list|)
+block|;   }
 name|explicit
 name|DefMacroDirective
 argument_list|(
@@ -1781,63 +1612,13 @@ operator|*
 name|MI
 argument_list|)
 operator|:
-name|MacroDirective
-argument_list|(
-name|MD_Define
-argument_list|,
-name|MI
-operator|->
-name|getDefinitionLoc
-argument_list|()
-argument_list|)
-block|,
-name|Info
-argument_list|(
-argument|MI
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|MI
-operator|&&
-literal|"MacroInfo is null"
-argument_list|)
-block|;   }
 name|DefMacroDirective
 argument_list|(
-argument|MacroInfo *MI
-argument_list|,
-argument|SourceLocation Loc
-argument_list|,
-argument|unsigned ImportedFromModuleID =
-literal|0
-argument_list|,
-argument|ArrayRef<unsigned> Overrides = None
-argument_list|)
-operator|:
-name|MacroDirective
-argument_list|(
-name|MD_Define
-argument_list|,
-name|Loc
-argument_list|,
-name|ImportedFromModuleID
-argument_list|,
-name|Overrides
-argument_list|)
-block|,
-name|Info
-argument_list|(
 argument|MI
+argument_list|,
+argument|MI->getDefinitionLoc()
 argument_list|)
-block|{
-name|assert
-argument_list|(
-name|MI
-operator|&&
-literal|"MacroInfo is null"
-argument_list|)
-block|;   }
+block|{}
 comment|/// \brief The data for the macro definition.
 specifier|const
 name|MacroInfo
@@ -1859,28 +1640,6 @@ return|return
 name|Info
 return|;
 block|}
-comment|/// \brief Determine whether this macro definition is ambiguous with
-comment|/// other macro definitions.
-name|bool
-name|isAmbiguous
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsAmbiguous
-return|;
-block|}
-comment|/// \brief Set whether this macro definition is ambiguous.
-name|void
-name|setAmbiguous
-argument_list|(
-argument|bool Val
-argument_list|)
-block|{
-name|IsAmbiguous
-operator|=
-name|Val
-block|; }
 specifier|static
 name|bool
 name|classof
@@ -1923,11 +1682,6 @@ name|explicit
 name|UndefMacroDirective
 argument_list|(
 argument|SourceLocation UndefLoc
-argument_list|,
-argument|unsigned ImportedFromModuleID =
-literal|0
-argument_list|,
-argument|ArrayRef<unsigned> Overrides = None
 argument_list|)
 operator|:
 name|MacroDirective
@@ -1935,22 +1689,14 @@ argument_list|(
 argument|MD_Undefine
 argument_list|,
 argument|UndefLoc
-argument_list|,
-argument|ImportedFromModuleID
-argument_list|,
-argument|Overrides
 argument_list|)
 block|{
 name|assert
 argument_list|(
-operator|(
 name|UndefLoc
 operator|.
 name|isValid
 argument_list|()
-operator|||
-name|ImportedFromModuleID
-operator|)
 operator|&&
 literal|"Invalid UndefLoc!"
 argument_list|)
@@ -2053,60 +1799,6 @@ block|}
 expr|}
 block|;
 specifier|inline
-name|unsigned
-operator|*
-name|MacroDirective
-operator|::
-name|getModuleDataStart
-argument_list|()
-block|{
-if|if
-condition|(
-name|auto
-operator|*
-name|Def
-operator|=
-name|dyn_cast
-operator|<
-name|DefMacroDirective
-operator|>
-operator|(
-name|this
-operator|)
-condition|)
-return|return
-name|reinterpret_cast
-operator|<
-name|unsigned
-operator|*
-operator|>
-operator|(
-name|Def
-operator|+
-literal|1
-operator|)
-return|;
-else|else
-return|return
-name|reinterpret_cast
-operator|<
-name|unsigned
-operator|*
-operator|>
-operator|(
-name|cast
-operator|<
-name|UndefMacroDirective
-operator|>
-operator|(
-name|this
-operator|)
-operator|+
-literal|1
-operator|)
-return|;
-block|}
-specifier|inline
 name|SourceLocation
 name|MacroDirective
 operator|::
@@ -2195,6 +1887,575 @@ argument_list|()
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Represents a macro directive exported by a module.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// There's an instance of this class for every macro #define or #undef that is
+end_comment
+
+begin_comment
+comment|/// the final directive for a macro name within a module. These entities also
+end_comment
+
+begin_comment
+comment|/// represent the macro override graph.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// These are stored in a FoldingSet in the preprocessor.
+end_comment
+
+begin_decl_stmt
+name|class
+name|ModuleMacro
+range|:
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+comment|/// The name defined by the macro.
+name|IdentifierInfo
+operator|*
+name|II
+block|;
+comment|/// The body of the #define, or nullptr if this is a #undef.
+name|MacroInfo
+operator|*
+name|Macro
+block|;
+comment|/// The module that exports this macro.
+name|Module
+operator|*
+name|OwningModule
+block|;
+comment|/// The number of module macros that override this one.
+name|unsigned
+name|NumOverriddenBy
+block|;
+comment|/// The number of modules whose macros are directly overridden by this one.
+name|unsigned
+name|NumOverrides
+block|;
+comment|// ModuleMacro *OverriddenMacros[NumOverrides];
+name|friend
+name|class
+name|Preprocessor
+block|;
+name|ModuleMacro
+argument_list|(
+name|Module
+operator|*
+name|OwningModule
+argument_list|,
+name|IdentifierInfo
+operator|*
+name|II
+argument_list|,
+name|MacroInfo
+operator|*
+name|Macro
+argument_list|,
+name|ArrayRef
+operator|<
+name|ModuleMacro
+operator|*
+operator|>
+name|Overrides
+argument_list|)
+operator|:
+name|II
+argument_list|(
+name|II
+argument_list|)
+block|,
+name|Macro
+argument_list|(
+name|Macro
+argument_list|)
+block|,
+name|OwningModule
+argument_list|(
+name|OwningModule
+argument_list|)
+block|,
+name|NumOverriddenBy
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|NumOverrides
+argument_list|(
+argument|Overrides.size()
+argument_list|)
+block|{
+name|std
+operator|::
+name|copy
+argument_list|(
+name|Overrides
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Overrides
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|reinterpret_cast
+operator|<
+name|ModuleMacro
+operator|*
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+argument_list|)
+block|;   }
+name|public
+operator|:
+specifier|static
+name|ModuleMacro
+operator|*
+name|create
+argument_list|(
+name|Preprocessor
+operator|&
+name|PP
+argument_list|,
+name|Module
+operator|*
+name|OwningModule
+argument_list|,
+name|IdentifierInfo
+operator|*
+name|II
+argument_list|,
+name|MacroInfo
+operator|*
+name|Macro
+argument_list|,
+name|ArrayRef
+operator|<
+name|ModuleMacro
+operator|*
+operator|>
+name|Overrides
+argument_list|)
+block|;
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|OwningModule
+argument_list|,
+name|II
+argument_list|)
+return|;
+block|}
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|,
+argument|Module *OwningModule
+argument_list|,
+argument|IdentifierInfo *II
+argument_list|)
+block|{
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|OwningModule
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|II
+argument_list|)
+block|;   }
+comment|/// Get the ID of the module that exports this macro.
+name|Module
+operator|*
+name|getOwningModule
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OwningModule
+return|;
+block|}
+comment|/// Get definition for this exported #define, or nullptr if this
+comment|/// represents a #undef.
+name|MacroInfo
+operator|*
+name|getMacroInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Macro
+return|;
+block|}
+comment|/// Iterators over the overridden module IDs.
+comment|/// \{
+typedef|typedef
+name|ModuleMacro
+modifier|*
+specifier|const
+modifier|*
+name|overrides_iterator
+typedef|;
+name|overrides_iterator
+name|overrides_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|overrides_iterator
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+name|overrides_iterator
+name|overrides_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|overrides_begin
+argument_list|()
+operator|+
+name|NumOverrides
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|ModuleMacro
+operator|*
+operator|>
+name|overrides
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|overrides_begin
+argument_list|()
+argument_list|,
+name|overrides_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \}
+comment|/// Get the number of macros that override this one.
+name|unsigned
+name|getNumOverridingMacros
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumOverriddenBy
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// \brief A description of the current definition of a macro.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The definition of a macro comprises a set of (at least one) defining
+end_comment
+
+begin_comment
+comment|/// entities, which are either local MacroDirectives or imported ModuleMacros.
+end_comment
+
+begin_decl_stmt
+name|class
+name|MacroDefinition
+block|{
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+name|DefMacroDirective
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+name|LatestLocalAndAmbiguous
+expr_stmt|;
+name|ArrayRef
+operator|<
+name|ModuleMacro
+operator|*
+operator|>
+name|ModuleMacros
+expr_stmt|;
+name|public
+label|:
+name|MacroDefinition
+argument_list|()
+operator|:
+name|LatestLocalAndAmbiguous
+argument_list|()
+operator|,
+name|ModuleMacros
+argument_list|()
+block|{}
+name|MacroDefinition
+argument_list|(
+argument|DefMacroDirective *MD
+argument_list|,
+argument|ArrayRef<ModuleMacro *> MMs
+argument_list|,
+argument|bool IsAmbiguous
+argument_list|)
+operator|:
+name|LatestLocalAndAmbiguous
+argument_list|(
+name|MD
+argument_list|,
+name|IsAmbiguous
+argument_list|)
+operator|,
+name|ModuleMacros
+argument_list|(
+argument|MMs
+argument_list|)
+block|{}
+comment|/// \brief Determine whether there is a definition of this macro.
+name|explicit
+name|operator
+name|bool
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocalDirective
+argument_list|()
+operator|||
+operator|!
+name|ModuleMacros
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+comment|/// \brief Get the MacroInfo that should be used for this definition.
+name|MacroInfo
+operator|*
+name|getMacroInfo
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|ModuleMacros
+operator|.
+name|empty
+argument_list|()
+condition|)
+return|return
+name|ModuleMacros
+operator|.
+name|back
+argument_list|()
+operator|->
+name|getMacroInfo
+argument_list|()
+return|;
+if|if
+condition|(
+name|auto
+operator|*
+name|MD
+operator|=
+name|getLocalDirective
+argument_list|()
+condition|)
+return|return
+name|MD
+operator|->
+name|getMacroInfo
+argument_list|()
+return|;
+return|return
+name|nullptr
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief \c true if the definition is ambiguous, \c false otherwise.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isAmbiguous
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LatestLocalAndAmbiguous
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Get the latest non-imported, non-\#undef'd macro definition
+end_comment
+
+begin_comment
+comment|/// for this macro.
+end_comment
+
+begin_expr_stmt
+name|DefMacroDirective
+operator|*
+name|getLocalDirective
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LatestLocalAndAmbiguous
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Get the active module macros for this macro.
+end_comment
+
+begin_expr_stmt
+name|ArrayRef
+operator|<
+name|ModuleMacro
+operator|*
+operator|>
+name|getModuleMacros
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ModuleMacros
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Fn
+operator|>
+name|void
+name|forAllDefinitions
+argument_list|(
+argument|Fn F
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|auto
+operator|*
+name|MD
+operator|=
+name|getLocalDirective
+argument_list|()
+condition|)
+name|F
+argument_list|(
+name|MD
+operator|->
+name|getMacroInfo
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_for
+for|for
+control|(
+name|auto
+operator|*
+name|MM
+operator|:
+name|getModuleMacros
+argument_list|()
+control|)
+name|F
+argument_list|(
+name|MM
+operator|->
+name|getMacroInfo
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_for
+
+begin_empty_stmt
+unit|} }
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 unit|}

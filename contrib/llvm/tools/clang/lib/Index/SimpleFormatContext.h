@@ -183,10 +183,6 @@ argument_list|,
 argument|true
 argument_list|)
 block|;   }
-operator|~
-name|SimpleFormatContext
-argument_list|()
-block|{ }
 name|FileID
 name|createInMemoryFile
 argument_list|(

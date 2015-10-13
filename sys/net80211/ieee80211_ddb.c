@@ -3362,17 +3362,11 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"\tifp %p(%s)"
+literal|"\tsoftc %p"
 argument_list|,
 name|ic
 operator|->
-name|ic_ifp
-argument_list|,
-name|ic
-operator|->
-name|ic_ifp
-operator|->
-name|if_xname
+name|ic_softc
 argument_list|)
 expr_stmt|;
 name|db_printf
@@ -3432,16 +3426,6 @@ expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"\n"
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"\tmedia %p"
-argument_list|,
-operator|&
-name|ic
-operator|->
-name|ic_media
 argument_list|)
 expr_stmt|;
 name|db_printf

@@ -573,6 +573,14 @@ parameter_list|)
 value|__cpu_affinity[(cpu)]
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPU_CURRENT_SOCKET
+define|\
+value|(CPU_AFF2(CPU_AFFINITY(PCPU_GET(cpuid))))
+end_define
+
 begin_function
 specifier|static
 name|__inline

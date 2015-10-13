@@ -15,6 +15,12 @@ directive|define
 name|__XEN_PUBLIC_VERSION_H__
 end_define
 
+begin_include
+include|#
+directive|include
+file|"xen.h"
+end_include
+
 begin_comment
 comment|/* NB. All ops return zero on success, except XENVER_{version,pagesize} */
 end_comment
@@ -168,8 +174,7 @@ begin_struct
 struct|struct
 name|xen_platform_parameters
 block|{
-name|unsigned
-name|long
+name|xen_ulong_t
 name|virt_start
 decl_stmt|;
 block|}
@@ -275,7 +280,7 @@ comment|/* __XEN_PUBLIC_VERSION_H__ */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit

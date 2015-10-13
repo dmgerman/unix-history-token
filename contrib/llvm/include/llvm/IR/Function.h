@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Argument.h"
 end_include
 
@@ -114,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/OperandTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -127,104 +139,6 @@ decl_stmt|;
 name|class
 name|LLVMContext
 decl_stmt|;
-comment|// Traits for intrusive list of basic blocks...
-name|template
-operator|<
-operator|>
-expr|struct
-name|ilist_traits
-operator|<
-name|BasicBlock
-operator|>
-operator|:
-name|public
-name|SymbolTableListTraits
-operator|<
-name|BasicBlock
-operator|,
-name|Function
-operator|>
-block|{
-comment|// createSentinel is used to get hold of the node that marks the end of the
-comment|// list... (same trick used here as in ilist_traits<Instruction>)
-name|BasicBlock
-operator|*
-name|createSentinel
-argument_list|()
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-name|BasicBlock
-operator|*
-operator|>
-operator|(
-operator|&
-name|Sentinel
-operator|)
-return|;
-block|}
-specifier|static
-name|void
-name|destroySentinel
-argument_list|(
-argument|BasicBlock*
-argument_list|)
-block|{}
-name|BasicBlock
-operator|*
-name|provideInitialHead
-argument_list|()
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-name|BasicBlock
-operator|*
-name|ensureHead
-argument_list|(
-argument|BasicBlock*
-argument_list|)
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-specifier|static
-name|void
-name|noteHead
-argument_list|(
-argument|BasicBlock*
-argument_list|,
-argument|BasicBlock*
-argument_list|)
-block|{}
-specifier|static
-name|ValueSymbolTable
-operator|*
-name|getSymTab
-argument_list|(
-name|Function
-operator|*
-name|ItemParent
-argument_list|)
-block|;
-name|private
-operator|:
-name|mutable
-name|ilist_half_node
-operator|<
-name|BasicBlock
-operator|>
-name|Sentinel
-block|; }
-expr_stmt|;
 name|template
 operator|<
 operator|>
@@ -394,7 +308,58 @@ name|AttributeSet
 name|AttributeSets
 decl_stmt|;
 comment|///< Parameter attributes
+name|FunctionType
+modifier|*
+name|Ty
+decl_stmt|;
 comment|/*    * Value::SubclassData    *    * bit 0  : HasLazyArguments    * bit 1  : HasPrefixData    * bit 2  : HasPrologueData    * bit 3-6: CallingConvention    */
+comment|/// Bits from GlobalObject::GlobalObjectSubclassData.
+enum|enum
+block|{
+comment|/// Whether this function is materializable.
+name|IsMaterializableBit
+init|=
+literal|1
+operator|<<
+literal|0
+block|,
+name|HasMetadataHashEntryBit
+init|=
+literal|1
+operator|<<
+literal|1
+block|}
+enum|;
+name|void
+name|setGlobalObjectBit
+parameter_list|(
+name|unsigned
+name|Mask
+parameter_list|,
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|setGlobalObjectSubClassData
+argument_list|(
+operator|(
+operator|~
+name|Mask
+operator|&
+name|getGlobalObjectSubClassData
+argument_list|()
+operator|)
+operator||
+operator|(
+name|Value
+condition|?
+name|Mask
+else|:
+literal|0u
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|friend
 name|class
 name|SymbolTableListTraits
@@ -448,14 +413,16 @@ expr_stmt|;
 block|}
 name|void
 name|BuildLazyArguments
-argument_list|()
-specifier|const
-expr_stmt|;
+parameter_list|()
+function_decl|const;
 name|Function
 argument_list|(
-argument|const Function&
+specifier|const
+name|Function
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -465,16 +432,9 @@ specifier|const
 name|Function
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
-comment|/// Do the actual lookup of an intrinsic ID when the query could not be
-comment|/// answered from the cache.
-name|unsigned
-name|lookupIntrinsicID
-argument_list|()
-specifier|const
-name|LLVM_READONLY
-expr_stmt|;
 comment|/// Function ctor - If the (optional) Module argument is specified, the
 comment|/// function is automatically inserted into the end of the function list for
 comment|/// the module.
@@ -522,7 +482,7 @@ block|{
 return|return
 name|new
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 name|Function
 argument_list|(
@@ -539,7 +499,62 @@ block|}
 operator|~
 name|Function
 argument_list|()
+name|override
 expr_stmt|;
+comment|/// \brief Provide fast operand accessors
+name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
+argument_list|(
+name|Value
+argument_list|)
+expr_stmt|;
+comment|/// \brief Get the personality function associated with this function.
+name|bool
+name|hasPersonalityFn
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNumOperands
+argument_list|()
+operator|!=
+literal|0
+return|;
+block|}
+name|Constant
+operator|*
+name|getPersonalityFn
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|hasPersonalityFn
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|cast
+operator|<
+name|Constant
+operator|>
+operator|(
+name|Op
+operator|<
+literal|0
+operator|>
+operator|(
+operator|)
+operator|)
+return|;
+block|}
+name|void
+name|setPersonalityFn
+parameter_list|(
+name|Constant
+modifier|*
+name|C
+parameter_list|)
+function_decl|;
 name|Type
 operator|*
 name|getReturnType
@@ -554,8 +569,8 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|// Return the FunctionType for me
-comment|/// getContext - Return a pointer to the LLVMContext associated with this
-comment|/// function, or NULL if this function is not bound to a context yet.
+comment|/// getContext - Return a reference to the LLVMContext associated with this
+comment|/// function.
 name|LLVMContext
 operator|&
 name|getContext
@@ -586,16 +601,19 @@ comment|/// function, or Intrinsic::not_intrinsic if the function is not an
 comment|/// intrinsic, or if the pointer is null.  This value is always defined to be
 comment|/// zero to allow easy checking for whether a function is intrinsic or not.
 comment|/// The particular intrinsic functions which correspond to this value are
-comment|/// defined in llvm/Intrinsics.h.  Results are cached in the LLVM context,
-comment|/// subsequent requests for the same ID return results much faster from the
-comment|/// cache.
-comment|///
-name|unsigned
+comment|/// defined in llvm/Intrinsics.h.
+name|Intrinsic
+operator|::
+name|ID
 name|getIntrinsicID
 argument_list|()
 specifier|const
 name|LLVM_READONLY
-expr_stmt|;
+block|{
+return|return
+name|IntID
+return|;
+block|}
 name|bool
 name|isIntrinsic
 argument_list|()
@@ -611,6 +629,15 @@ literal|"llvm."
 argument_list|)
 return|;
 block|}
+comment|/// \brief Recalculate the ID for this function if it is an Intrinsic defined
+comment|/// in llvm/Intrinsics.h.  Sets the intrinsic ID to Intrinsic::not_intrinsic
+comment|/// if the name of this function does not match an intrinsic in that header.
+comment|/// Note, this method does not need to be called directly, as it is called
+comment|/// from Value::setName() whenever the name of this function changes.
+name|void
+name|recalculateIntrinsicID
+parameter_list|()
+function_decl|;
 comment|/// getCallingConv()/setCallingConv(CC) - These method get and set the
 comment|/// calling convention of this function.  The enum values for the known
 comment|/// calling conventions are defined in CallingConv.h.
@@ -803,6 +830,23 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// Set the entry count for this function.
+name|void
+name|setEntryCount
+parameter_list|(
+name|uint64_t
+name|Count
+parameter_list|)
+function_decl|;
+comment|/// Get the entry count for this function.
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|getEntryCount
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// @brief Return true if the function has the attribute.
 name|bool
 name|hasFnAttribute
@@ -893,6 +937,23 @@ name|Kind
 argument_list|)
 return|;
 block|}
+comment|/// \brief Return the stack alignment for the function.
+name|unsigned
+name|getFnStackAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AttributeSets
+operator|.
+name|getStackAlignment
+argument_list|(
+name|AttributeSet
+operator|::
+name|FunctionIndex
+argument_list|)
+return|;
+block|}
 comment|/// hasGC/getGC/setGC/clearGC - The name of the garbage collection algorithm
 comment|///                             to use during code generation.
 name|bool
@@ -955,6 +1016,29 @@ name|AttributeSet
 name|attr
 parameter_list|)
 function_decl|;
+comment|/// @brief adds the dereferenceable attribute to the list of attributes.
+name|void
+name|addDereferenceableAttr
+parameter_list|(
+name|unsigned
+name|i
+parameter_list|,
+name|uint64_t
+name|Bytes
+parameter_list|)
+function_decl|;
+comment|/// @brief adds the dereferenceable_or_null attribute to the list of
+comment|/// attributes.
+name|void
+name|addDereferenceableOrNullAttr
+parameter_list|(
+name|unsigned
+name|i
+parameter_list|,
+name|uint64_t
+name|Bytes
+parameter_list|)
+function_decl|;
 comment|/// @brief Extract the alignment for a call or parameter (0=unknown).
 name|unsigned
 name|getParamAlignment
@@ -987,6 +1071,25 @@ return|return
 name|AttributeSets
 operator|.
 name|getDereferenceableBytes
+argument_list|(
+name|i
+argument_list|)
+return|;
+block|}
+comment|/// @brief Extract the number of dereferenceable_or_null bytes for a call or
+comment|/// parameter (0=unknown).
+name|uint64_t
+name|getDereferenceableOrNullBytes
+argument_list|(
+name|unsigned
+name|i
+argument_list|)
+decl|const
+block|{
+return|return
+name|AttributeSets
+operator|.
+name|getDereferenceableOrNullBytes
 argument_list|(
 name|i
 argument_list|)
@@ -1058,6 +1161,40 @@ argument_list|(
 name|Attribute
 operator|::
 name|ReadOnly
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// @brief Determine if the call can access memmory only using pointers based
+comment|/// on its arguments.
+name|bool
+name|onlyAccessesArgMemory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AttributeSets
+operator|.
+name|hasAttribute
+argument_list|(
+name|AttributeSet
+operator|::
+name|FunctionIndex
+argument_list|,
+name|Attribute
+operator|::
+name|ArgMemOnly
+argument_list|)
+return|;
+block|}
+name|void
+name|setOnlyAccessesArgMemory
+parameter_list|()
+block|{
+name|addFnAttr
+argument_list|(
+name|Attribute
+operator|::
+name|ArgMemOnly
 argument_list|)
 expr_stmt|;
 block|}
@@ -1157,6 +1294,39 @@ argument_list|(
 name|Attribute
 operator|::
 name|NoDuplicate
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// @brief Determine if the call is convergent.
+name|bool
+name|isConvergent
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AttributeSets
+operator|.
+name|hasAttribute
+argument_list|(
+name|AttributeSet
+operator|::
+name|FunctionIndex
+argument_list|,
+name|Attribute
+operator|::
+name|Convergent
+argument_list|)
+return|;
+block|}
+name|void
+name|setConvergent
+parameter_list|()
+block|{
+name|addFnAttr
+argument_list|(
+name|Attribute
+operator|::
+name|Convergent
 argument_list|)
 expr_stmt|;
 block|}
@@ -1883,6 +2053,23 @@ modifier|*
 name|PrologueData
 parameter_list|)
 function_decl|;
+comment|/// Print the function to an output stream with an optional
+comment|/// AssemblyAnnotationWriter.
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+name|AssemblyAnnotationWriter
+operator|*
+name|AAW
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// viewCFG - This function is meant for use from the debugger.  You can just
 comment|/// say 'call F->viewCFG()' and a ghostview window should pop up from the
 comment|/// program, displaying the CFG of the current function with the code for each
@@ -1975,6 +2162,101 @@ name|callsFunctionThatReturnsTwice
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Check if this has any metadata.
+name|bool
+name|hasMetadata
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasMetadataHashEntry
+argument_list|()
+return|;
+block|}
+comment|/// \brief Get the current metadata attachment, if any.
+comment|///
+comment|/// Returns \c nullptr if such an attachment is missing.
+comment|/// @{
+name|MDNode
+modifier|*
+name|getMetadata
+argument_list|(
+name|unsigned
+name|KindID
+argument_list|)
+decl|const
+decl_stmt|;
+name|MDNode
+modifier|*
+name|getMetadata
+argument_list|(
+name|StringRef
+name|Kind
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// @}
+comment|/// \brief Set a particular kind of metadata attachment.
+comment|///
+comment|/// Sets the given attachment to \c MD, erasing it if \c MD is \c nullptr or
+comment|/// replacing it if it already exists.
+comment|/// @{
+name|void
+name|setMetadata
+parameter_list|(
+name|unsigned
+name|KindID
+parameter_list|,
+name|MDNode
+modifier|*
+name|MD
+parameter_list|)
+function_decl|;
+name|void
+name|setMetadata
+parameter_list|(
+name|StringRef
+name|Kind
+parameter_list|,
+name|MDNode
+modifier|*
+name|MD
+parameter_list|)
+function_decl|;
+comment|/// @}
+comment|/// \brief Get all current metadata attachments.
+name|void
+name|getAllMetadata
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+argument_list|,
+name|MDNode
+operator|*
+operator|>>
+operator|&
+name|MDs
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Drop metadata not in the given list.
+comment|///
+comment|/// Drop all metadata from \c this not included in \c KnownIDs.
+name|void
+name|dropUnknownMetadata
+argument_list|(
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|KnownIDs
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 comment|// Shadow Value::setValueSubclassData with a private forwarding method so that
@@ -1995,6 +2277,37 @@ name|D
 argument_list|)
 expr_stmt|;
 block|}
+name|bool
+name|hasMetadataHashEntry
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getGlobalObjectSubClassData
+argument_list|()
+operator|&
+name|HasMetadataHashEntryBit
+return|;
+block|}
+name|void
+name|setHasMetadataHashEntry
+parameter_list|(
+name|bool
+name|HasEntry
+parameter_list|)
+block|{
+name|setGlobalObjectBit
+argument_list|(
+name|HasMetadataHashEntryBit
+argument_list|,
+name|HasEntry
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|clearMetadata
+parameter_list|()
+function_decl|;
 block|}
 empty_stmt|;
 specifier|inline
@@ -2047,6 +2360,28 @@ operator|:
 name|nullptr
 return|;
 block|}
+name|template
+operator|<
+operator|>
+expr|struct
+name|OperandTraits
+operator|<
+name|Function
+operator|>
+operator|:
+name|public
+name|OptionalOperandTraits
+operator|<
+name|Function
+operator|>
+block|{}
+expr_stmt|;
+name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
+argument_list|(
+argument|Function
+argument_list|,
+argument|Value
+argument_list|)
 block|}
 end_decl_stmt
 

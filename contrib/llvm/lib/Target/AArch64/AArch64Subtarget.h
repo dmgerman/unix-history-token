@@ -130,6 +130,9 @@ name|class
 name|StringRef
 decl_stmt|;
 name|class
+name|Triple
+decl_stmt|;
+name|class
 name|AArch64Subtarget
 range|:
 name|public
@@ -154,6 +157,9 @@ name|ARMProcFamilyEnum
 name|ARMProcFamily
 block|;
 name|bool
+name|HasV8_1aOps
+block|;
+name|bool
 name|HasFPARMv8
 block|;
 name|bool
@@ -173,6 +179,9 @@ comment|// HasZeroCycleZeroing - Has zero-cycle zeroing instructions.
 name|bool
 name|HasZeroCycleZeroing
 block|;
+name|bool
+name|IsLittle
+block|;
 comment|/// CPUString - String name of used CPU.
 name|std
 operator|::
@@ -182,10 +191,6 @@ block|;
 comment|/// TargetTriple - What processor and OS we're targeting.
 name|Triple
 name|TargetTriple
-block|;
-specifier|const
-name|DataLayout
-name|DL
 block|;
 name|AArch64FrameLowering
 name|FrameLowering
@@ -217,7 +222,7 @@ comment|/// This constructor initializes the data members to match that
 comment|/// of the specified triple.
 name|AArch64Subtarget
 argument_list|(
-argument|const std::string&TT
+argument|const Triple&TT
 argument_list|,
 argument|const std::string&CPU
 argument_list|,
@@ -281,19 +286,6 @@ name|InstrInfo
 return|;
 block|}
 specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-operator|&
-name|DL
-return|;
-block|}
-specifier|const
 name|AArch64RegisterInfo
 operator|*
 name|getRegisterInfo
@@ -310,6 +302,17 @@ name|getRegisterInfo
 argument_list|()
 return|;
 block|}
+specifier|const
+name|Triple
+operator|&
+name|getTargetTriple
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+return|;
+block|}
 name|bool
 name|enableMachineScheduler
 argument_list|()
@@ -321,7 +324,7 @@ name|true
 return|;
 block|}
 name|bool
-name|enablePostMachineScheduler
+name|enablePostRAScheduler
 argument_list|()
 specifier|const
 name|override
@@ -332,6 +335,15 @@ argument_list|()
 operator|||
 name|isCortexA57
 argument_list|()
+return|;
+block|}
+name|bool
+name|hasV8_1aOps
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasV8_1aOps
 return|;
 block|}
 name|bool
@@ -394,10 +406,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|DL
-operator|.
-name|isLittleEndian
-argument_list|()
+name|IsLittle
 return|;
 block|}
 name|bool

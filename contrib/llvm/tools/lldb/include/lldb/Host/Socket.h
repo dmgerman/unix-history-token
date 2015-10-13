@@ -203,6 +203,11 @@ name|uint16_t
 operator|>
 operator|*
 name|predicate
+argument_list|,
+name|int
+name|backlog
+operator|=
+literal|5
 argument_list|)
 block|;
 specifier|static
@@ -329,9 +334,10 @@ name|int
 name|option_value
 parameter_list|)
 function_decl|;
+comment|// returns port number or 0 if error
 specifier|static
 name|uint16_t
-name|GetPortNumber
+name|GetLocalPortNumber
 parameter_list|(
 specifier|const
 name|NativeSocket
@@ -339,8 +345,33 @@ modifier|&
 name|socket
 parameter_list|)
 function_decl|;
+comment|// returns port number or 0 if error
 name|uint16_t
-name|GetPortNumber
+name|GetLocalPortNumber
+argument_list|()
+decl|const
+empty_stmt|;
+comment|// returns ip address string or empty string if error
+name|std
+decl|::
+name|string
+name|GetLocalIPAddress
+argument_list|()
+decl|const
+empty_stmt|;
+comment|// must be connected
+comment|// returns port number or 0 if error
+name|uint16_t
+name|GetRemotePortNumber
+argument_list|()
+decl|const
+empty_stmt|;
+comment|// must be connected
+comment|// returns ip address string or empty string if error
+name|std
+decl|::
+name|string
+name|GetRemoteIPAddress
 argument_list|()
 decl|const
 empty_stmt|;
@@ -416,8 +447,6 @@ name|WaitableHandle
 name|GetWaitableHandle
 argument_list|()
 empty_stmt|;
-name|protected
-label|:
 specifier|static
 name|bool
 name|DecodeHostAndPort
@@ -448,6 +477,8 @@ operator|*
 name|error_ptr
 argument_list|)
 block|;
+name|protected
+label|:
 name|SocketProtocol
 name|m_protocol
 block|;

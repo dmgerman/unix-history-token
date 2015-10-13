@@ -124,6 +124,9 @@ name|AddressInfo
 modifier|&
 name|info
 parameter_list|,
+name|bool
+name|vs_style
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -156,6 +159,9 @@ name|line
 parameter_list|,
 name|int
 name|column
+parameter_list|,
+name|bool
+name|vs_style
 parameter_list|,
 specifier|const
 name|char

@@ -1520,11 +1520,6 @@ name|av_bcbuf
 decl_stmt|;
 comment|/* beacon buffer */
 name|struct
-name|ieee80211_beacon_offsets
-name|av_boff
-decl_stmt|;
-comment|/* dynamic update state */
-name|struct
 name|ath_txq
 name|av_mcastq
 decl_stmt|;
@@ -1977,16 +1972,14 @@ struct|struct
 name|ath_softc
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
+name|ieee80211com
+name|sc_ic
 decl_stmt|;
-comment|/* interface common */
 name|struct
 name|ath_stats
 name|sc_stats
 decl_stmt|;
-comment|/* interface statistics */
+comment|/* device statistics */
 name|struct
 name|ath_tx_aggr_stats
 name|sc_aggr_stats
@@ -2377,6 +2370,11 @@ decl_stmt|;
 comment|/* supports mybeacon */
 comment|/* 	 * Second set of flags. 	 */
 name|u_int32_t
+name|sc_running
+range|:
+literal|1
+decl_stmt|,
+comment|/* initialized */
 name|sc_use_ent
 range|:
 literal|1
@@ -3265,70 +3263,6 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|(mtx_owned(&(_sc)->sc_tx_mtx) != 0&&	\ 					mtx_trylock(&(_sc)->sc_tx_mtx))
-end_define
-
-begin_comment
-comment|/*  * The IC TX lock is non-reentrant and serialises packet queuing from  * the upper layers.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATH_TX_IC_LOCK_INIT
-parameter_list|(
-name|_sc
-parameter_list|)
-value|do {\ 	snprintf((_sc)->sc_tx_ic_mtx_name,				\ 	    sizeof((_sc)->sc_tx_ic_mtx_name),				\ 	    "%s IC TX lock",						\ 	    device_get_nameunit((_sc)->sc_dev));			\ 	mtx_init(&(_sc)->sc_tx_ic_mtx, (_sc)->sc_tx_ic_mtx_name,	\ 		 NULL, MTX_DEF);					\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TX_IC_LOCK_DESTROY
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_destroy(&(_sc)->sc_tx_ic_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TX_IC_LOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_lock(&(_sc)->sc_tx_ic_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TX_IC_UNLOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_unlock(&(_sc)->sc_tx_ic_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TX_IC_LOCK_ASSERT
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_assert(&(_sc)->sc_tx_ic_mtx,	\ 		MA_OWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TX_IC_UNLOCK_ASSERT
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_assert(&(_sc)->sc_tx_ic_mtx,	\ 		MA_NOTOWNED)
 end_define
 
 begin_comment

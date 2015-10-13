@@ -2122,28 +2122,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PFRULE_FRAGCROP
-value|0x0200
-end_define
-
-begin_comment
-comment|/* non-buffering frag cache */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PFRULE_FRAGDROP
-value|0x0400
-end_define
-
-begin_comment
-comment|/* drop funny fragments */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PFRULE_RANDOMID
 value|0x0800
 end_define

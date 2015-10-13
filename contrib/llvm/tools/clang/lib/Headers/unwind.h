@@ -892,7 +892,7 @@ modifier|*
 parameter_list|)
 function_decl|__attribute__
 parameter_list|(
-function_decl|(unavailable
+function_decl|(__unavailable__
 block|)
 end_extern
 
@@ -911,7 +911,7 @@ modifier|*
 parameter_list|)
 function_decl|__attribute__
 parameter_list|(
-function_decl|(unavailable
+function_decl|(__unavailable__
 end_function_decl
 
 begin_empty_stmt
@@ -997,7 +997,7 @@ modifier|*
 parameter_list|)
 function_decl|__attribute__
 parameter_list|(
-function_decl|(unavailable
+function_decl|(__unavailable__
 end_function_decl
 
 begin_empty_stmt
@@ -1018,7 +1018,7 @@ modifier|*
 parameter_list|)
 function_decl|__attribute__
 parameter_list|(
-function_decl|(unavailable
+function_decl|(__unavailable__
 end_function_decl
 
 begin_empty_stmt
@@ -1045,7 +1045,7 @@ modifier|*
 parameter_list|)
 function_decl|__attribute__
 parameter_list|(
-function_decl|(unavailable
+function_decl|(__unavailable__
 end_function_decl
 
 begin_empty_stmt
@@ -1066,7 +1066,7 @@ modifier|*
 parameter_list|)
 function_decl|__attribute__
 parameter_list|(
-function_decl|(unavailable
+function_decl|(__unavailable__
 end_function_decl
 
 begin_empty_stmt
@@ -1084,7 +1084,7 @@ modifier|*
 parameter_list|)
 function_decl|__attribute__
 parameter_list|(
-function_decl|(unavailable
+function_decl|(__unavailable__
 end_function_decl
 
 begin_empty_stmt
@@ -1102,7 +1102,7 @@ modifier|*
 parameter_list|)
 function_decl|__attribute__
 parameter_list|(
-function_decl|(unavailable
+function_decl|(__unavailable__
 end_function_decl
 
 begin_empty_stmt
@@ -1120,7 +1120,7 @@ modifier|*
 parameter_list|)
 function_decl|__attribute__
 parameter_list|(
-function_decl|(unavailable
+function_decl|(__unavailable__
 end_function_decl
 
 begin_empty_stmt

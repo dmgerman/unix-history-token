@@ -9231,6 +9231,8 @@ name|i
 index|]
 operator|->
 name|fde_caps
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|unp_internalize_fp

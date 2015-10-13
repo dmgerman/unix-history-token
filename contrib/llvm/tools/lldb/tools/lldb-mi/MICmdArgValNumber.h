@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmdArgValNumber.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMICmdArgValNumber interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -155,6 +111,46 @@ operator|<
 name|MIint64
 operator|>
 block|{
+comment|// Enums:
+name|public
+operator|:
+comment|//++ ---------------------------------------------------------------------------------
+comment|// Details: CMICmdArgValNumber needs to know what format of argument to look for in
+comment|//          the command options text.
+comment|//--
+expr|enum
+name|ArgValNumberFormat_e
+block|{
+name|eArgValNumberFormat_Decimal
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|0
+operator|)
+block|,
+name|eArgValNumberFormat_Hexadecimal
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|1
+operator|)
+block|,
+name|eArgValNumberFormat_Auto
+operator|=
+operator|(
+operator|(
+name|eArgValNumberFormat_Hexadecimal
+operator|<<
+literal|1
+operator|)
+operator|-
+literal|1u
+operator|)
+comment|///< Indicates to try and lookup everything up during a query.
+block|}
+block|;
 comment|// Methods:
 name|public
 operator|:
@@ -172,6 +168,8 @@ argument_list|,
 argument|const bool vbMandatory
 argument_list|,
 argument|const bool vbHandleByCmd
+argument_list|,
+argument|const MIuint vnNumberFormatMask = eArgValNumberFormat_Decimal
 argument_list|)
 block|;
 comment|//
@@ -187,22 +185,20 @@ name|public
 operator|:
 comment|// From CMICmdArgValBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdArgValNumber
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmdArgSet::IArg
-name|virtual
 name|bool
 name|Validate
 argument_list|(
-name|CMICmdArgContext
-operator|&
-name|vwArgContext
+argument|CMICmdArgContext&vwArgContext
 argument_list|)
+name|override
 block|;
 comment|// Methods:
 name|private
@@ -226,6 +222,9 @@ block|;
 comment|// Attributes:
 name|private
 operator|:
+name|MIuint
+name|m_nNumberFormatMask
+block|;
 name|MIint64
 name|m_nNumber
 block|; }

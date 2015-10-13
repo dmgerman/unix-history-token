@@ -288,7 +288,7 @@ operator|<
 literal|0
 operator|||
 name|offset
-operator|>=
+operator|>
 name|acl_int
 operator|->
 name|acl_cnt

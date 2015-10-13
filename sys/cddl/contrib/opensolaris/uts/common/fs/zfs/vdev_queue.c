@@ -2032,6 +2032,7 @@ end_function
 
 begin_function
 specifier|static
+name|__noinline
 name|int
 name|vdev_queue_max_async_writes
 parameter_list|(

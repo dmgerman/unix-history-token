@@ -1957,7 +1957,7 @@ goto|;
 block|}
 name|error
 operator|=
-name|nd6_output
+name|nd6_output_ifp
 argument_list|(
 name|rt
 operator|->
@@ -1968,8 +1968,6 @@ argument_list|,
 name|m
 argument_list|,
 name|dst
-argument_list|,
-name|rt
 argument_list|)
 expr_stmt|;
 if|if

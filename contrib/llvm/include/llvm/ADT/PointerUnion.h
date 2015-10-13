@@ -435,7 +435,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -960,6 +960,51 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|PT1
+operator|,
+name|typename
+name|PT2
+operator|>
+specifier|static
+name|bool
+name|operator
+operator|<
+operator|(
+name|PointerUnion
+operator|<
+name|PT1
+operator|,
+name|PT2
+operator|>
+name|lhs
+operator|,
+name|PointerUnion
+operator|<
+name|PT1
+operator|,
+name|PT2
+operator|>
+name|rhs
+operator|)
+block|{
+return|return
+name|lhs
+operator|.
+name|getOpaqueValue
+argument_list|()
+operator|<
+name|rhs
+operator|.
+name|getOpaqueValue
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|// Teach SmallPtrSet that PointerUnion is "basically a pointer", that has
 end_comment
@@ -1370,7 +1415,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -2045,7 +2090,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()

@@ -120,6 +120,9 @@ name|class
 name|AliasAnalysis
 decl_stmt|;
 name|class
+name|DataLayout
+decl_stmt|;
+name|class
 name|PHINode
 decl_stmt|;
 name|class
@@ -190,6 +193,11 @@ specifier|const
 name|Value
 modifier|*
 name|B
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
 parameter_list|)
 function_decl|;
 name|bool
@@ -228,13 +236,17 @@ specifier|const
 name|ProvenanceAnalysis
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|ProvenanceAnalysis
 argument_list|(
-argument|const ProvenanceAnalysis&
+specifier|const
+name|ProvenanceAnalysis
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|public
 label|:
@@ -276,6 +288,11 @@ specifier|const
 name|Value
 modifier|*
 name|B
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
 parameter_list|)
 function_decl|;
 name|void

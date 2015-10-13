@@ -62,7 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/MipsABIInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"MipsSubtarget.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/BasicTTIImpl.h"
 end_include
 
 begin_include
@@ -116,6 +128,10 @@ name|TargetLoweringObjectFile
 operator|>
 name|TLOF
 block|;
+comment|// Selected ABI
+name|MipsABIInfo
+name|ABI
+block|;
 name|MipsSubtarget
 operator|*
 name|Subtarget
@@ -146,7 +162,7 @@ name|MipsTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -168,11 +184,9 @@ name|MipsTargetMachine
 argument_list|()
 name|override
 block|;
-name|void
-name|addAnalysisPasses
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|)
+name|TargetIRAnalysis
+name|getTargetIRAnalysis
+argument_list|()
 name|override
 block|;
 specifier|const
@@ -181,7 +195,6 @@ operator|*
 name|getSubtargetImpl
 argument_list|()
 specifier|const
-name|override
 block|{
 if|if
 condition|(
@@ -251,6 +264,17 @@ return|return
 name|isLittle
 return|;
 block|}
+specifier|const
+name|MipsABIInfo
+operator|&
+name|getABI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ABI
+return|;
+block|}
 block|}
 end_decl_stmt
 
@@ -284,7 +308,7 @@ name|MipsebTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -328,7 +352,7 @@ name|MipselTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,

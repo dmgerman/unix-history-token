@@ -75,6 +75,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"sysinfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"win32_crashrpt.h"
 end_include
 
@@ -163,14 +169,14 @@ comment|/*** Code. ***/
 end_comment
 
 begin_comment
-comment|/* Convert a wide-character string to utf-8. This function will create a buffer  * large enough to hold the result string, the caller should free this buffer.  * If the string can't be converted, NULL is returned.  */
+comment|/* Convert a wide-character string to the current windows locale, suitable  * for directly using stdio. This function will create a buffer large  * enough to hold the result string, the caller should free this buffer.  * If the string can't be converted, NULL is returned.  */
 end_comment
 
 begin_function
 specifier|static
 name|char
 modifier|*
-name|convert_wbcs_to_utf8
+name|convert_wbcs_to_ansi
 parameter_list|(
 specifier|const
 name|wchar_t
@@ -552,7 +558,7 @@ name|char
 modifier|*
 name|buf
 init|=
-name|convert_wbcs_to_utf8
+name|convert_wbcs_to_ansi
 argument_list|(
 name|module
 operator|.
@@ -660,7 +666,7 @@ modifier|*
 name|log_file
 parameter_list|)
 block|{
-name|OSVERSIONINFO
+name|OSVERSIONINFOEXW
 name|oi
 decl_stmt|;
 specifier|const
@@ -723,26 +729,19 @@ name|__TIME__
 argument_list|)
 expr_stmt|;
 comment|/* write information about the OS */
-name|oi
-operator|.
-name|dwOSVersionInfoSize
-operator|=
-sizeof|sizeof
-argument_list|(
-name|oi
-argument_list|)
-expr_stmt|;
-name|GetVersionEx
+if|if
+condition|(
+name|svn_sysinfo___fill_windows_version
 argument_list|(
 operator|&
 name|oi
 argument_list|)
-expr_stmt|;
+condition|)
 name|fprintf
 argument_list|(
 name|log_file
 argument_list|,
-literal|"Platform: Windows OS version %d.%d build %d %s\n\n"
+literal|"Platform: Windows OS version %d.%d build %d %S\n\n"
 argument_list|,
 name|oi
 operator|.
@@ -931,7 +930,7 @@ name|fprintf
 argument_list|(
 name|log_file
 argument_list|,
-literal|"R8= %016I64x R9= %016I64x R10= %016I64x R11=%016I64x\n"
+literal|"R8= %016I64x R9= %016I64x R10=%016I64x R11=%016I64x\n"
 argument_list|,
 name|context
 operator|->
@@ -977,11 +976,15 @@ name|fprintf
 argument_list|(
 name|log_file
 argument_list|,
-literal|"cs=%04x  ss=%04x  ds=%04x  es=%04x  fs=%04x  gs=%04x  ss=%04x\n"
+literal|"cs=%04x  ss=%04x  ds=%04x  es=%04x  fs=%04x  gs=%04x\n"
 argument_list|,
 name|context
 operator|->
 name|SegCs
+argument_list|,
+name|context
+operator|->
+name|SegSs
 argument_list|,
 name|context
 operator|->
@@ -998,10 +1001,6 @@ argument_list|,
 name|context
 operator|->
 name|SegGs
-argument_list|,
-name|context
-operator|->
-name|SegSs
 argument_list|)
 expr_stmt|;
 else|#
@@ -1384,7 +1383,7 @@ name|char
 modifier|*
 name|type_name
 init|=
-name|convert_wbcs_to_utf8
+name|convert_wbcs_to_ansi
 argument_list|(
 name|type_name_wbcs
 argument_list|)

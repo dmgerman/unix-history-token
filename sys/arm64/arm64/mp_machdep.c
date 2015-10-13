@@ -752,7 +752,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"AP's not started\n"
+literal|"APs not started\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1407,14 +1407,6 @@ operator|(
 literal|1
 operator|)
 return|;
-name|CPU_SET
-argument_list|(
-name|id
-argument_list|,
-operator|&
-name|all_cpus
-argument_list|)
-expr_stmt|;
 name|pcpup
 operator|=
 operator|&
@@ -1534,11 +1526,70 @@ name|err
 operator|!=
 name|PSCI_RETVAL_SUCCESS
 condition|)
+block|{
+comment|/* Panic here if INVARIANTS are enabled */
+name|KASSERT
+argument_list|(
+literal|0
+argument_list|,
+operator|(
+literal|"Failed to start CPU %u (%lx)\n"
+operator|,
+name|id
+operator|,
+name|target_cpu
+operator|)
+argument_list|)
+expr_stmt|;
+name|pcpu_destroy
+argument_list|(
+name|pcpup
+argument_list|)
+expr_stmt|;
+name|kmem_free
+argument_list|(
+name|kernel_arena
+argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|dpcpu
+index|[
+name|id
+operator|-
+literal|1
+index|]
+argument_list|,
+name|DPCPU_SIZE
+argument_list|)
+expr_stmt|;
+name|dpcpu
+index|[
+name|id
+operator|-
+literal|1
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Notify the user that the CPU failed to start */
 name|printf
 argument_list|(
-literal|"Failed to start CPU %u\n"
+literal|"Failed to start CPU %u (%lx)\n"
 argument_list|,
 name|id
+argument_list|,
+name|target_cpu
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|CPU_SET
+argument_list|(
+name|id
+argument_list|,
+operator|&
+name|all_cpus
 argument_list|)
 expr_stmt|;
 return|return

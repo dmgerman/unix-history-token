@@ -59,6 +59,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|CheckerManager
+decl_stmt|;
 name|namespace
 name|ento
 block|{

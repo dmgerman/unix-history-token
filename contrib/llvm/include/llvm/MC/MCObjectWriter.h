@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/EndianStream.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/raw_ostream.h"
 end_include
 
@@ -90,22 +96,19 @@ name|class
 name|MCFragment
 decl_stmt|;
 name|class
-name|MCSymbolData
-decl_stmt|;
-name|class
 name|MCSymbolRefExpr
 decl_stmt|;
 name|class
 name|MCValue
 decl_stmt|;
-comment|/// MCObjectWriter - Defines the object file and target independent interfaces
-comment|/// used by the assembler backend to write native file format object files.
+comment|/// Defines the object file and target independent interfaces used by the
+comment|/// assembler backend to write native file format object files.
 comment|///
 comment|/// The object writer contains a few callbacks used by the assembler to allow
 comment|/// the object writer to modify the assembler data structures at appropriate
 comment|/// points. Once assembly is complete, the object writer is given the
 comment|/// MCAssembler instance, which contains all the symbol and section data which
-comment|/// should be emitted as part of WriteObject().
+comment|/// should be emitted as part of writeObject().
 comment|///
 comment|/// The object writer also contains a number of helper methods for writing
 comment|/// binary data to the output stream.
@@ -114,9 +117,12 @@ name|MCObjectWriter
 block|{
 name|MCObjectWriter
 argument_list|(
-argument|const MCObjectWriter&
+specifier|const
+name|MCObjectWriter
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -126,11 +132,12 @@ specifier|const
 name|MCObjectWriter
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|protected
 label|:
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
 decl_stmt|;
@@ -144,19 +151,19 @@ label|:
 comment|// Can only create subclasses.
 name|MCObjectWriter
 argument_list|(
-argument|raw_ostream&_OS
+argument|raw_pwrite_stream&OS
 argument_list|,
-argument|bool _IsLittleEndian
+argument|bool IsLittleEndian
 argument_list|)
 block|:
 name|OS
 argument_list|(
-name|_OS
+name|OS
 argument_list|)
 operator|,
 name|IsLittleEndian
 argument_list|(
-argument|_IsLittleEndian
+argument|IsLittleEndian
 argument_list|)
 block|{}
 name|public
@@ -171,7 +178,7 @@ name|virtual
 name|void
 name|reset
 parameter_list|()
-block|{ }
+block|{}
 name|bool
 name|isLittleEndian
 argument_list|()
@@ -190,16 +197,16 @@ return|return
 name|OS
 return|;
 block|}
-comment|/// @name High-Level API
+comment|/// \name High-Level API
 comment|/// @{
-comment|/// \brief Perform any late binding of symbols (for example, to assign symbol
+comment|/// Perform any late binding of symbols (for example, to assign symbol
 comment|/// indices for use when generating relocations).
 comment|///
 comment|/// This routine is called by the assembler after layout and relaxation is
 comment|/// complete.
 name|virtual
 name|void
-name|ExecutePostLayoutBinding
+name|executePostLayoutBinding
 parameter_list|(
 name|MCAssembler
 modifier|&
@@ -213,17 +220,16 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// \brief Record a relocation entry.
+comment|/// Record a relocation entry.
 comment|///
 comment|/// This routine is called by the assembler after layout and relaxation, and
 comment|/// post layout binding. The implementation is responsible for storing
 comment|/// information about the relocation so that it can be emitted during
-comment|/// WriteObject().
+comment|/// writeObject().
 name|virtual
 name|void
-name|RecordRelocation
+name|recordRelocation
 parameter_list|(
-specifier|const
 name|MCAssembler
 modifier|&
 name|Asm
@@ -257,13 +263,13 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// \brief Check whether the difference (A - B) between two symbol
-comment|/// references is fully resolved.
+comment|/// Check whether the difference (A - B) between two symbol references is
+comment|/// fully resolved.
 comment|///
 comment|/// Clients are not required to answer precisely and may conservatively return
 comment|/// false, even when a difference is fully resolved.
 name|bool
-name|IsSymbolRefDifferenceFullyResolved
+name|isSymbolRefDifferenceFullyResolved
 argument_list|(
 specifier|const
 name|MCAssembler
@@ -287,7 +293,7 @@ decl|const
 decl_stmt|;
 name|virtual
 name|bool
-name|IsSymbolRefDifferenceFullyResolvedImpl
+name|isSymbolRefDifferenceFullyResolvedImpl
 argument_list|(
 specifier|const
 name|MCAssembler
@@ -295,9 +301,9 @@ operator|&
 name|Asm
 argument_list|,
 specifier|const
-name|MCSymbolData
+name|MCSymbol
 operator|&
-name|DataA
+name|SymA
 argument_list|,
 specifier|const
 name|MCFragment
@@ -312,14 +318,28 @@ name|IsPCRel
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Write the object file.
+comment|/// True if this symbol (which is a variable) is weak. This is not
+comment|/// just STB_WEAK, but more generally whether or not we can evaluate
+comment|/// past it.
+name|virtual
+name|bool
+name|isWeak
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|&
+name|Sym
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Write the object file.
 comment|///
 comment|/// This routine is called by the assembler after layout and relaxation is
 comment|/// complete, fixups have been evaluated and applied, and relocations
 comment|/// generated.
 name|virtual
 name|void
-name|WriteObject
+name|writeObject
 parameter_list|(
 name|MCAssembler
 modifier|&
@@ -334,10 +354,10 @@ init|=
 literal|0
 function_decl|;
 comment|/// @}
-comment|/// @name Binary Output
+comment|/// \name Binary Output
 comment|/// @{
 name|void
-name|Write8
+name|write8
 parameter_list|(
 name|uint8_t
 name|Value
@@ -352,175 +372,169 @@ argument_list|)
 expr_stmt|;
 block|}
 name|void
-name|WriteLE16
+name|writeLE16
 parameter_list|(
 name|uint16_t
 name|Value
 parameter_list|)
 block|{
-name|Write8
-argument_list|(
-name|uint8_t
+name|support
+operator|::
+name|endian
+operator|::
+name|Writer
+operator|<
+name|support
+operator|::
+name|little
+operator|>
+operator|(
+name|OS
+operator|)
+operator|.
+name|write
 argument_list|(
 name|Value
-operator|>>
-literal|0
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|Write8
-argument_list|(
-name|uint8_t
-argument_list|(
-name|Value
-operator|>>
-literal|8
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 name|void
-name|WriteLE32
+name|writeLE32
 parameter_list|(
 name|uint32_t
 name|Value
 parameter_list|)
 block|{
-name|WriteLE16
-argument_list|(
-name|uint16_t
+name|support
+operator|::
+name|endian
+operator|::
+name|Writer
+operator|<
+name|support
+operator|::
+name|little
+operator|>
+operator|(
+name|OS
+operator|)
+operator|.
+name|write
 argument_list|(
 name|Value
-operator|>>
-literal|0
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|WriteLE16
-argument_list|(
-name|uint16_t
-argument_list|(
-name|Value
-operator|>>
-literal|16
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 name|void
-name|WriteLE64
+name|writeLE64
 parameter_list|(
 name|uint64_t
 name|Value
 parameter_list|)
 block|{
-name|WriteLE32
-argument_list|(
-name|uint32_t
+name|support
+operator|::
+name|endian
+operator|::
+name|Writer
+operator|<
+name|support
+operator|::
+name|little
+operator|>
+operator|(
+name|OS
+operator|)
+operator|.
+name|write
 argument_list|(
 name|Value
-operator|>>
-literal|0
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|WriteLE32
-argument_list|(
-name|uint32_t
-argument_list|(
-name|Value
-operator|>>
-literal|32
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 name|void
-name|WriteBE16
+name|writeBE16
 parameter_list|(
 name|uint16_t
 name|Value
 parameter_list|)
 block|{
-name|Write8
-argument_list|(
-name|uint8_t
+name|support
+operator|::
+name|endian
+operator|::
+name|Writer
+operator|<
+name|support
+operator|::
+name|big
+operator|>
+operator|(
+name|OS
+operator|)
+operator|.
+name|write
 argument_list|(
 name|Value
-operator|>>
-literal|8
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|Write8
-argument_list|(
-name|uint8_t
-argument_list|(
-name|Value
-operator|>>
-literal|0
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 name|void
-name|WriteBE32
+name|writeBE32
 parameter_list|(
 name|uint32_t
 name|Value
 parameter_list|)
 block|{
-name|WriteBE16
-argument_list|(
-name|uint16_t
+name|support
+operator|::
+name|endian
+operator|::
+name|Writer
+operator|<
+name|support
+operator|::
+name|big
+operator|>
+operator|(
+name|OS
+operator|)
+operator|.
+name|write
 argument_list|(
 name|Value
-operator|>>
-literal|16
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|WriteBE16
-argument_list|(
-name|uint16_t
-argument_list|(
-name|Value
-operator|>>
-literal|0
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 name|void
-name|WriteBE64
+name|writeBE64
 parameter_list|(
 name|uint64_t
 name|Value
 parameter_list|)
 block|{
-name|WriteBE32
-argument_list|(
-name|uint32_t
+name|support
+operator|::
+name|endian
+operator|::
+name|Writer
+operator|<
+name|support
+operator|::
+name|big
+operator|>
+operator|(
+name|OS
+operator|)
+operator|.
+name|write
 argument_list|(
 name|Value
-operator|>>
-literal|32
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|WriteBE32
-argument_list|(
-name|uint32_t
-argument_list|(
-name|Value
-operator|>>
-literal|0
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 name|void
-name|Write16
+name|write16
 parameter_list|(
 name|uint16_t
 name|Value
@@ -530,20 +544,20 @@ if|if
 condition|(
 name|IsLittleEndian
 condition|)
-name|WriteLE16
+name|writeLE16
 argument_list|(
 name|Value
 argument_list|)
 expr_stmt|;
 else|else
-name|WriteBE16
+name|writeBE16
 argument_list|(
 name|Value
 argument_list|)
 expr_stmt|;
 block|}
 name|void
-name|Write32
+name|write32
 parameter_list|(
 name|uint32_t
 name|Value
@@ -553,20 +567,20 @@ if|if
 condition|(
 name|IsLittleEndian
 condition|)
-name|WriteLE32
+name|writeLE32
 argument_list|(
 name|Value
 argument_list|)
 expr_stmt|;
 else|else
-name|WriteBE32
+name|writeBE32
 argument_list|(
 name|Value
 argument_list|)
 expr_stmt|;
 block|}
 name|void
-name|Write64
+name|write64
 parameter_list|(
 name|uint64_t
 name|Value
@@ -576,13 +590,13 @@ if|if
 condition|(
 name|IsLittleEndian
 condition|)
-name|WriteLE64
+name|writeLE64
 argument_list|(
 name|Value
 argument_list|)
 expr_stmt|;
 else|else
-name|WriteBE64
+name|writeBE64
 argument_list|(
 name|Value
 argument_list|)
@@ -648,7 +662,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|void
-name|WriteBytes
+name|writeBytes
 argument_list|(
 specifier|const
 name|SmallVectorImpl
@@ -664,7 +678,7 @@ operator|=
 literal|0
 argument_list|)
 block|{
-name|WriteBytes
+name|writeBytes
 argument_list|(
 name|StringRef
 argument_list|(
@@ -684,7 +698,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|void
-name|WriteBytes
+name|writeBytes
 parameter_list|(
 name|StringRef
 name|Str

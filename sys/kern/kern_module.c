@@ -598,11 +598,23 @@ name|MOD_XUNLOCK
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"module_register: module %s already exists!\n"
+literal|"%s: cannot register %s from %s; already loaded from %s\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|data
 operator|->
 name|name
+argument_list|,
+name|container
+operator|->
+name|filename
+argument_list|,
+name|newmod
+operator|->
+name|file
+operator|->
+name|filename
 argument_list|)
 expr_stmt|;
 return|return
@@ -639,21 +651,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|newmod
-operator|==
-name|NULL
-condition|)
-block|{
-name|MOD_XUNLOCK
-expr_stmt|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
 name|newmod
 operator|->
 name|refs

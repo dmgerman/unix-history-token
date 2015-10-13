@@ -613,6 +613,9 @@ name|struct
 name|cam_periph_map_info
 modifier|*
 name|mapinfo
+parameter_list|,
+name|u_int
+name|maxmap
 parameter_list|)
 function_decl|;
 end_function_decl

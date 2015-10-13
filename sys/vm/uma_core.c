@@ -4776,7 +4776,7 @@ name|vm_page_unwire
 argument_list|(
 name|p
 argument_list|,
-name|PQ_INACTIVE
+name|PQ_NONE
 argument_list|)
 expr_stmt|;
 name|vm_page_free
@@ -8293,7 +8293,11 @@ operator|!
 operator|(
 name|flags
 operator|&
+operator|(
 name|UMA_ZONE_ZINIT
+operator||
+name|UMA_ZONE_NOFREE
+operator|)
 operator|)
 operator|)
 operator|&&

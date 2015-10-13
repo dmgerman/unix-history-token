@@ -90,25 +90,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<atomic>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<memory>
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
 end_include
 
 begin_decl_stmt
@@ -622,7 +616,7 @@ return|return
 name|Obj
 return|;
 block|}
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -1073,6 +1067,14 @@ block|}
 comment|//===----------------------------------------------------------------------===//
 comment|// LLVM-style downcasting support for IntrusiveRefCntPtr objects
 comment|//===----------------------------------------------------------------------===//
+name|template
+operator|<
+name|typename
+name|From
+operator|>
+expr|struct
+name|simplify_type
+expr_stmt|;
 name|template
 operator|<
 name|class

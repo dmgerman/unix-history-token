@@ -69,6 +69,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|suspend_blocked
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* block suspend due to pending shutdown */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|rebooting
 decl_stmt|;
 end_decl_stmt
@@ -327,7 +338,7 @@ name|exp
 parameter_list|,
 name|msg
 parameter_list|)
-value|do {						\ 	if (__predict_false(!(exp)))					\ 		kassert_panic msg;						\ } while (0)
+value|do {						\ 	if (__predict_false(!(exp)))					\ 		kassert_panic msg;					\ } while (0)
 end_define
 
 begin_define
@@ -341,7 +352,7 @@ name|vp
 parameter_list|,
 name|msg
 parameter_list|)
-value|do {					\ 	if (__predict_false(!(exp))) {					\ 		vn_printf(vp, "VNASSERT failed\n");			\ 		kassert_panic msg;						\ 	}								\ } while (0)
+value|do {					\ 	if (__predict_false(!(exp))) {					\ 		vn_printf(vp, "VNASSERT failed\n");			\ 		kassert_panic msg;					\ 	}								\ } while (0)
 end_define
 
 begin_else
@@ -3417,15 +3428,6 @@ name|struct
 name|root_hold_token
 modifier|*
 name|h
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|root_mount_wait
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

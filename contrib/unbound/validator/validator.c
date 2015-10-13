@@ -124,13 +124,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/rrdef.h"
+file|"sldns/rrdef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/wire2str.h"
+file|"sldns/wire2str.h"
 end_include
 
 begin_comment
@@ -1258,6 +1258,22 @@ condition|)
 return|return
 name|NULL
 return|;
+if|if
+condition|(
+name|vq
+operator|->
+name|orig_msg
+operator|->
+name|rep
+operator|->
+name|rrset_count
+operator|>
+name|RR_COUNT_MAX
+condition|)
+return|return
+name|NULL
+return|;
+comment|/* protect against integer overflow */
 name|vq
 operator|->
 name|chase_reply
@@ -2435,13 +2451,6 @@ argument_list|,
 name|reason
 argument_list|)
 expr_stmt|;
-name|errinf_rrset
-argument_list|(
-name|qstate
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
 name|errinf_origin
 argument_list|(
 name|qstate
@@ -2449,6 +2458,13 @@ argument_list|,
 name|qstate
 operator|->
 name|reply_origin
+argument_list|)
+expr_stmt|;
+name|errinf_rrset
+argument_list|(
+name|qstate
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 name|chase_reply
@@ -8163,7 +8179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Init DLV check.  * Called when a query is determined by other trust anchors to be insecure  * (or indeterminate).  Then we look if there is a key in the DLV.  * Performs aggressive negative cache check to see if there is no key.  * Otherwise, spawns a DLV query, and changes to the DLV wait state.  *  * @param qstate: query state.  * @param vq: validator query state.  * @param ve: validator shared global environment.  * @param id: module id.  * @return  true if there is no DLV.  * 	false: processing is finished for the validator operate().  * 	This function may exit in three ways:  *         o	no DLV (agressive cache), so insecure. (true)  *         o	error - stop processing (false)  *         o	DLV lookup was started, stop processing (false)  */
+comment|/**  * Init DLV check.  * DLV is going to be decommissioned, but the code is still here for some time.  *  * Called when a query is determined by other trust anchors to be insecure  * (or indeterminate).  Then we look if there is a key in the DLV.  * Performs aggressive negative cache check to see if there is no key.  * Otherwise, spawns a DLV query, and changes to the DLV wait state.  *  * @param qstate: query state.  * @param vq: validator query state.  * @param ve: validator shared global environment.  * @param id: module id.  * @return  true if there is no DLV.  * 	false: processing is finished for the validator operate().  * 	This function may exit in three ways:  *         o	no DLV (agressive cache), so insecure. (true)  *         o	error - stop processing (false)  *         o	DLV lookup was started, stop processing (false)  */
 end_comment
 
 begin_function
@@ -10881,7 +10897,13 @@ decl_stmt|;
 name|int
 name|downprot
 init|=
-literal|1
+name|qstate
+operator|->
+name|env
+operator|->
+name|cfg
+operator|->
+name|harden_algo_downgrade
 decl_stmt|;
 if|if
 condition|(
@@ -12872,7 +12894,13 @@ return|return;
 block|}
 name|downprot
 operator|=
-literal|1
+name|qstate
+operator|->
+name|env
+operator|->
+name|cfg
+operator|->
+name|harden_algo_downgrade
 expr_stmt|;
 name|vq
 operator|->

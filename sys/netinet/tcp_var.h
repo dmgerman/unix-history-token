@@ -212,46 +212,6 @@ comment|/* for KAME src sync over BSD*'s */
 end_comment
 
 begin_comment
-comment|/* Neighbor Discovery, Neighbor Unreachability Detection Upper layer hint. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ND6_HINT
-parameter_list|(
-name|tp
-parameter_list|)
-define|\
-value|do {								\ 	if ((tp)&& (tp)->t_inpcb&&				\ 	    ((tp)->t_inpcb->inp_vflag& INP_IPV6) != 0)		\ 		nd6_nud_hint(NULL, NULL, 0);			\ } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ND6_HINT
-parameter_list|(
-name|tp
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Tcp control block, one per tcp; fields:  * Organized for 16 byte cacheline efficiency.  */
 end_comment
 
@@ -3091,21 +3051,6 @@ name|struct
 name|inpcb
 modifier|*
 name|tcp_drop_syn_sent
-parameter_list|(
-name|struct
-name|inpcb
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|inpcb
-modifier|*
-name|tcp_mtudisc
 parameter_list|(
 name|struct
 name|inpcb

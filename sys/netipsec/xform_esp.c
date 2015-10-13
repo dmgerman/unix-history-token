@@ -4319,6 +4319,13 @@ name|CRD_F_IV_PRESENT
 expr_stmt|;
 block|}
 comment|/* Callback parameters */
+name|key_addref
+argument_list|(
+name|isr
+operator|->
+name|sp
+argument_list|)
+expr_stmt|;
 name|tc
 operator|->
 name|tc_isr

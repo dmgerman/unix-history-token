@@ -14,6 +14,16 @@ begin_comment
 comment|/*** Includes. ***/
 end_comment
 
+begin_comment
+comment|/* We define this here to remove any further warnings about the usage of    deprecated functions in this file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SVN_DEPRECATED
+end_define
+
 begin_include
 include|#
 directive|include

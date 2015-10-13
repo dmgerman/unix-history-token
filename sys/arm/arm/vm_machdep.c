@@ -235,6 +235,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|uint32_t
+name|initial_fpscr
+init|=
+name|VFPSCR_DN
+operator||
+name|VFPSCR_FZ
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Finish a fork operation, with process p2 nearly set up.  * Copy and update the pcb, set up the stack so that the child  * ready to run and return to user mode.  */
 end_comment
@@ -479,9 +489,7 @@ name|pcb_vfpstate
 operator|.
 name|fpscr
 operator|=
-name|VFPSCR_DN
-operator||
-name|VFPSCR_FZ
+name|initial_fpscr
 expr_stmt|;
 name|tf
 operator|=

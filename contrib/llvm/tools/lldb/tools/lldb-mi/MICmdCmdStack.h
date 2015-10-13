@@ -32,19 +32,11 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmdCmdStack.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// Overview:    CMICmdCmdStackInfoDepth         interface.
+end_comment
+
+begin_comment
+comment|//              CMICmdCmdStackInfoFrame         interface.
 end_comment
 
 begin_comment
@@ -57,6 +49,10 @@ end_comment
 
 begin_comment
 comment|//              CMICmdCmdStackListLocals        interface.
+end_comment
+
+begin_comment
+comment|//              CMICmdCmdStackSelectFrame       interface.
 end_comment
 
 begin_comment
@@ -95,34 +91,6 @@ begin_comment
 comment|//              command class as an example.
 end_comment
 
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -143,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|"MICmnMIValueList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MICmnMIValueTuple.h"
 end_include
 
 begin_comment
@@ -205,35 +179,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdStackInfoDepth
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -252,6 +226,93 @@ name|m_constStrArgMaxDepth
 block|;
 comment|// Not handled by *this command
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|//++ ============================================================================
+end_comment
+
+begin_comment
+comment|// Details: MI command class. MI commands derived from the command base class.
+end_comment
+
+begin_comment
+comment|//          *this class implements MI command "stack-info-frame".
+end_comment
+
+begin_comment
+comment|//--
+end_comment
+
+begin_decl_stmt
+name|class
+name|CMICmdCmdStackInfoFrame
+range|:
+name|public
+name|CMICmdBase
+block|{
+comment|// Statics:
+name|public
+operator|:
+comment|// Required by the CMICmdFactory when registering *this command
+specifier|static
+name|CMICmdBase
+operator|*
+name|CreateSelf
+argument_list|(
+name|void
+argument_list|)
+block|;
+comment|// Methods:
+name|public
+operator|:
+comment|/* ctor */
+name|CMICmdCmdStackInfoFrame
+argument_list|(
+name|void
+argument_list|)
+block|;
+comment|// Overridden:
+name|public
+operator|:
+comment|// From CMICmdInvoker::ICmd
+name|bool
+name|Execute
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+name|bool
+name|Acknowledge
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+name|bool
+name|ParseArgs
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+comment|// From CMICmnBase
+comment|/* dtor */
+operator|~
+name|CMICmdCmdStackInfoFrame
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+comment|// Attributes:
+name|private
+operator|:
+name|CMICmnMIValueTuple
+name|m_miValueTuple
+block|; }
 decl_stmt|;
 end_decl_stmt
 
@@ -315,35 +376,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdStackListFrames
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Typedefs:
 name|private
@@ -457,35 +518,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdStackListArguments
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -506,8 +567,14 @@ specifier|const
 name|CMIUtilString
 name|m_constStrArgPrintValues
 block|;
-comment|// Not handled by *this command
-block|}
+specifier|const
+name|CMIUtilString
+name|m_constStrArgFrameLow
+block|;
+specifier|const
+name|CMIUtilString
+name|m_constStrArgFrameHigh
+block|; }
 decl_stmt|;
 end_decl_stmt
 
@@ -571,35 +638,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdStackListLocals
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -624,9 +691,202 @@ comment|// Not specified in MI spec but Eclipse gives this option
 specifier|const
 name|CMIUtilString
 name|m_constStrArgPrintValues
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|//++ ============================================================================
+end_comment
+
+begin_comment
+comment|// Details: MI command class. MI commands derived from the command base class.
+end_comment
+
+begin_comment
+comment|//          *this class implements MI command "stack-list-variables".
+end_comment
+
+begin_comment
+comment|//--
+end_comment
+
+begin_decl_stmt
+name|class
+name|CMICmdCmdStackListVariables
+range|:
+name|public
+name|CMICmdBase
+block|{
+comment|// Statics:
+name|public
+operator|:
+comment|// Required by the CMICmdFactory when registering *this command
+specifier|static
+name|CMICmdBase
+operator|*
+name|CreateSelf
+argument_list|(
+name|void
+argument_list|)
 block|;
-comment|// Not handled by *this command
-block|}
+comment|// Methods:
+name|public
+operator|:
+comment|/* ctor */
+name|CMICmdCmdStackListVariables
+argument_list|(
+name|void
+argument_list|)
+block|;
+comment|// Overridden:
+name|public
+operator|:
+comment|// From CMICmdInvoker::ICmd
+name|bool
+name|Execute
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+name|bool
+name|Acknowledge
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+name|bool
+name|ParseArgs
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+comment|// From CMICmnBase
+comment|/* dtor */
+operator|~
+name|CMICmdCmdStackListVariables
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+comment|// Attributes
+name|private
+operator|:
+name|bool
+name|m_bThreadInvalid
+block|;
+comment|// True = yes invalid thread, false = thread object valid
+name|CMICmnMIValueList
+name|m_miValueList
+block|;
+specifier|const
+name|CMIUtilString
+name|m_constStrArgThread
+block|;
+specifier|const
+name|CMIUtilString
+name|m_constStrArgFrame
+block|;
+specifier|const
+name|CMIUtilString
+name|m_constStrArgPrintValues
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|//++ ============================================================================
+end_comment
+
+begin_comment
+comment|// Details: MI command class. MI commands derived from the command base class.
+end_comment
+
+begin_comment
+comment|//          *this class implements MI command "stack-select-frame".
+end_comment
+
+begin_comment
+comment|//--
+end_comment
+
+begin_decl_stmt
+name|class
+name|CMICmdCmdStackSelectFrame
+range|:
+name|public
+name|CMICmdBase
+block|{
+comment|// Statics:
+name|public
+operator|:
+comment|// Required by the CMICmdFactory when registering *this command
+specifier|static
+name|CMICmdBase
+operator|*
+name|CreateSelf
+argument_list|(
+name|void
+argument_list|)
+block|;
+comment|// Methods:
+name|public
+operator|:
+comment|/* ctor */
+name|CMICmdCmdStackSelectFrame
+argument_list|(
+name|void
+argument_list|)
+block|;
+comment|// Overridden:
+name|public
+operator|:
+comment|// From CMICmdInvoker::ICmd
+name|bool
+name|Execute
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+name|bool
+name|Acknowledge
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+name|bool
+name|ParseArgs
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+comment|// From CMICmnBase
+comment|/* dtor */
+operator|~
+name|CMICmdCmdStackSelectFrame
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+comment|// Attributes:
+name|private
+operator|:
+name|bool
+name|m_bFrameInvalid
+block|;
+comment|// True = yes invalid frame, false = ok
+specifier|const
+name|CMIUtilString
+name|m_constStrArgFrame
+block|; }
 decl_stmt|;
 end_decl_stmt
 

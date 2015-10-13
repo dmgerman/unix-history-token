@@ -93,6 +93,8 @@ argument_list|,
 argument|bool check_inlines
 argument_list|,
 argument|bool skip_prologue
+argument_list|,
+argument|bool exact_match
 argument_list|)
 block|;
 name|virtual
@@ -198,6 +200,9 @@ block|;
 comment|// This determines whether the resolver looks for inlined functions or not.
 name|bool
 name|m_skip_prologue
+block|;
+name|bool
+name|m_exact_match
 block|;
 name|private
 operator|:

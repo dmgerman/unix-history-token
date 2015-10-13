@@ -277,6 +277,12 @@ operator|::
 name|string
 name|ModuleUserBuildPath
 block|;
+comment|/// The module/pch container format.
+name|std
+operator|::
+name|string
+name|ModuleFormat
+block|;
 comment|/// \brief Whether we should disable the use of the hash string within the
 comment|/// module cache.
 comment|///
@@ -286,9 +292,10 @@ name|DisableModuleHash
 operator|:
 literal|1
 block|;
-comment|/// \brief Interpret module maps.  This option is implied by full modules.
+comment|/// \brief Implicit module maps.  This option is enabld by default when
+comment|/// modules is enabled.
 name|unsigned
-name|ModuleMaps
+name|ImplicitModuleMaps
 operator|:
 literal|1
 block|;
@@ -411,12 +418,17 @@ argument_list|(
 name|_Sysroot
 argument_list|)
 block|,
+name|ModuleFormat
+argument_list|(
+literal|"raw"
+argument_list|)
+block|,
 name|DisableModuleHash
 argument_list|(
 literal|0
 argument_list|)
 block|,
-name|ModuleMaps
+name|ImplicitModuleMaps
 argument_list|(
 literal|0
 argument_list|)
@@ -503,9 +515,7 @@ argument_list|)
 block|{
 name|UserEntries
 operator|.
-name|push_back
-argument_list|(
-name|Entry
+name|emplace_back
 argument_list|(
 name|Path
 argument_list|,
@@ -514,7 +524,6 @@ argument_list|,
 name|IsFramework
 argument_list|,
 name|IgnoreSysRoot
-argument_list|)
 argument_list|)
 block|;   }
 comment|/// AddSystemHeaderPrefix - Override whether \#include directives naming a
@@ -530,14 +539,11 @@ argument_list|)
 block|{
 name|SystemHeaderPrefixes
 operator|.
-name|push_back
-argument_list|(
-name|SystemHeaderPrefix
+name|emplace_back
 argument_list|(
 name|Prefix
 argument_list|,
 name|IsSystemHeader
-argument_list|)
 argument_list|)
 block|;   }
 name|void

@@ -2441,9 +2441,8 @@ name|dev
 argument_list|,
 literal|"pci"
 argument_list|,
-name|sc
-operator|->
-name|bus
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return

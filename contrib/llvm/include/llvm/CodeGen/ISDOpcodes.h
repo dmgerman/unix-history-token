@@ -149,10 +149,13 @@ name|FRAMEADDR
 block|,
 name|RETURNADDR
 block|,
-comment|/// FRAME_ALLOC_RECOVER - Represents the llvm.framerecover
-comment|/// intrinsic. Materializes the offset from the frame pointer of another
-comment|/// function to the result of llvm.frameallocate.
-name|FRAME_ALLOC_RECOVER
+comment|/// LOCAL_RECOVER - Represents the llvm.localrecover intrinsic.
+comment|/// Materializes the offset from the local object pointer of another
+comment|/// function to a particular local object passed to llvm.localescape. The
+comment|/// operand is the MCSymbol label used to represent this offset, since
+comment|/// typically the offset is not known until after code generation of the
+comment|/// parent.
+name|LOCAL_RECOVER
 block|,
 comment|/// READ_REGISTER, WRITE_REGISTER - This node represents llvm.register on
 comment|/// the DAG, which implements the named register global variables extension.
@@ -208,6 +211,8 @@ block|,
 name|TargetExternalSymbol
 block|,
 name|TargetBlockAddress
+block|,
+name|MCSymbol
 block|,
 comment|/// TargetIndex - Like a constant pool entry, but with completely
 comment|/// target-dependent semantics. Holds target flags, a 32-bit index, and a
@@ -346,15 +351,20 @@ name|FSUB
 block|,
 name|FMUL
 block|,
-name|FMA
-block|,
 name|FDIV
 block|,
 name|FREM
 block|,
+comment|/// FMA - Perform a * b + c with no intermediate rounding step.
+name|FMA
+block|,
+comment|/// FMAD - Perform a * b + c, while getting the same result as the
+comment|/// separately rounded operations.
+name|FMAD
+block|,
 comment|/// FCOPYSIGN(X, Y) - Return the value of X with the sign of Y.  NOTE: This
-comment|/// DAG node does not require that X and Y have the same type, just that the
-comment|/// are both floating point.  X and the result must have the same type.
+comment|/// DAG node does not require that X and Y have the same type, just that
+comment|/// they are both floating point.  X and the result must have the same type.
 comment|/// FCOPYSIGN(f32, f64) is allowed.
 name|FCOPYSIGN
 block|,
@@ -423,6 +433,16 @@ comment|/// part.
 name|MULHU
 block|,
 name|MULHS
+block|,
+comment|/// [US]{MIN/MAX} - Binary minimum or maximum or signed or unsigned
+comment|/// integers.
+name|SMIN
+block|,
+name|SMAX
+block|,
+name|UMIN
+block|,
+name|UMAX
 block|,
 comment|/// Bitwise operators - logical and, logical or, logical xor.
 name|AND
@@ -881,16 +901,35 @@ name|ATOMIC_LOAD_UMIN
 block|,
 name|ATOMIC_LOAD_UMAX
 block|,
-comment|// Masked load and store
+comment|// Masked load and store - consecutive vector load and store operations
+comment|// with additional mask operand that prevents memory accesses to the
+comment|// masked-off lanes.
 name|MLOAD
 block|,
 name|MSTORE
+block|,
+comment|// Masked gather and scatter - load and store operations for a vector of
+comment|// random addresses with additional mask operand that prevents memory
+comment|// accesses to the masked-off lanes.
+name|MGATHER
+block|,
+name|MSCATTER
 block|,
 comment|/// This corresponds to the llvm.lifetime.* intrinsics. The first operand
 comment|/// is the chain and the second operand is the alloca pointer.
 name|LIFETIME_START
 block|,
 name|LIFETIME_END
+block|,
+comment|/// GC_TRANSITION_START/GC_TRANSITION_END - These operators mark the
+comment|/// beginning and end of GC transition  sequence, and carry arbitrary
+comment|/// information that target might need for lowering.  The first operand is
+comment|/// a chain, the rest are specified by the target and not touched by the DAG
+comment|/// optimizers. GC_TRANSITION_START..GC_TRANSITION_END pairs may not be
+comment|/// nested.
+name|GC_TRANSITION_START
+block|,
+name|GC_TRANSITION_END
 block|,
 comment|/// BUILTIN_OP_END - This must be the last enum value in this list.
 comment|/// The target-specific pre-isel opcode values start here.
@@ -908,7 +947,7 @@ name|FIRST_TARGET_MEMORY_OPCODE
 init|=
 name|BUILTIN_OP_END
 operator|+
-literal|180
+literal|300
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// MemIndexedMode enum - This enum defines the load / store indexed

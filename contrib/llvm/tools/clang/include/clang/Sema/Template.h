@@ -686,9 +686,12 @@ decl_stmt|;
 comment|// This class is non-copyable
 name|LocalInstantiationScope
 argument_list|(
-argument|const LocalInstantiationScope&
+specifier|const
+name|LocalInstantiationScope
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -698,7 +701,8 @@ specifier|const
 name|LocalInstantiationScope
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:
@@ -1412,6 +1416,14 @@ parameter_list|)
 define|#
 directive|define
 name|OBJCMETHOD
+parameter_list|(
+name|DERIVED
+parameter_list|,
+name|BASE
+parameter_list|)
+define|#
+directive|define
+name|OBJCTYPEPARAM
 parameter_list|(
 name|DERIVED
 parameter_list|,

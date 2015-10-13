@@ -156,7 +156,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * NOTE: ipv6 addrs should be 64-bit aligned, per RFC 2553.  in_conninfo has  * some extra padding to accomplish this.  */
+comment|/*  * NOTE: ipv6 addrs should be 64-bit aligned, per RFC 2553.  in_conninfo has  * some extra padding to accomplish this.  * NOTE 2: tcp_syncache.c uses first 5 32-bit words, which identify fport,  * lport, faddr to generate hash, so these fields shouldn't be moved.  */
 end_comment
 
 begin_struct

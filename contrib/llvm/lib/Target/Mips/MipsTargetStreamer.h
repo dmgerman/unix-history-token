@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/MipsABIInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCELFStreamer.h"
 end_include
 
@@ -146,6 +152,13 @@ argument_list|()
 block|;
 name|virtual
 name|void
+name|emitDirectiveSetAtWithArg
+argument_list|(
+argument|unsigned RegNo
+argument_list|)
+block|;
+name|virtual
+name|void
 name|emitDirectiveSetNoAt
 argument_list|()
 block|;
@@ -189,6 +202,11 @@ block|;
 name|virtual
 name|void
 name|emitDirectiveOptionPic2
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveInsn
 argument_list|()
 block|;
 name|virtual
@@ -269,6 +287,16 @@ argument_list|()
 block|;
 name|virtual
 name|void
+name|emitDirectiveSetMips32R3
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetMips32R5
+argument_list|()
+block|;
+name|virtual
+name|void
 name|emitDirectiveSetMips32R6
 argument_list|()
 block|;
@@ -280,6 +308,16 @@ block|;
 name|virtual
 name|void
 name|emitDirectiveSetMips64R2
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetMips64R3
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetMips64R5
 argument_list|()
 block|;
 name|virtual
@@ -307,6 +345,16 @@ name|void
 name|emitDirectiveSetPush
 argument_list|()
 block|;
+name|virtual
+name|void
+name|emitDirectiveSetSoftFloat
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetHardFloat
+argument_list|()
+block|;
 comment|// PIC support
 name|virtual
 name|void
@@ -328,52 +376,26 @@ argument_list|,
 argument|bool IsReg
 argument_list|)
 block|;
-comment|/// Emit a '.module fp=value' directive using the given values.
-comment|/// Updates the .MIPS.abiflags section
+comment|// FP abiflags directives
 name|virtual
 name|void
 name|emitDirectiveModuleFP
-argument_list|(
-argument|MipsABIFlagsSection::FpABIKind Value
-argument_list|,
-argument|bool Is32BitABI
-argument_list|)
-block|{
-name|ABIFlagsSection
-operator|.
-name|setFpABI
-argument_list|(
-name|Value
-argument_list|,
-name|Is32BitABI
-argument_list|)
-block|;   }
-comment|/// Emit a '.module fp=value' directive using the current values of the
-comment|/// .MIPS.abiflags section.
-name|void
-name|emitDirectiveModuleFP
 argument_list|()
-block|{
-name|emitDirectiveModuleFP
-argument_list|(
-name|ABIFlagsSection
-operator|.
-name|getFpABI
-argument_list|()
-argument_list|,
-name|ABIFlagsSection
-operator|.
-name|Is32BitABI
-argument_list|)
-block|;   }
+block|;
 name|virtual
 name|void
 name|emitDirectiveModuleOddSPReg
-argument_list|(
-argument|bool Enabled
-argument_list|,
-argument|bool IsO32ABI
-argument_list|)
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveModuleSoftFloat
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveModuleHardFloat
+argument_list|()
 block|;
 name|virtual
 name|void
@@ -381,13 +403,16 @@ name|emitDirectiveSetFp
 argument_list|(
 argument|MipsABIFlagsSection::FpABIKind Value
 argument_list|)
-block|{}
 block|;
 name|virtual
 name|void
-name|emitMipsAbiFlags
+name|emitDirectiveSetOddSPReg
 argument_list|()
-block|{}
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetNoOddSPReg
+argument_list|()
 block|;
 name|void
 name|forbidModuleDirective
@@ -396,6 +421,14 @@ block|{
 name|ModuleDirectiveAllowed
 operator|=
 name|false
+block|; }
+name|void
+name|reallowModuleDirective
+argument_list|()
+block|{
+name|ModuleDirectiveAllowed
+operator|=
+name|true
 block|; }
 name|bool
 name|isModuleDirectiveAllowed
@@ -418,6 +451,14 @@ argument_list|(
 argument|const PredicateLibrary&P
 argument_list|)
 block|{
+name|ABI
+operator|=
+operator|&
+name|P
+operator|.
+name|getABI
+argument_list|()
+block|;
 name|ABIFlagsSection
 operator|.
 name|setAllFromPredicates
@@ -434,8 +475,32 @@ return|return
 name|ABIFlagsSection
 return|;
 block|}
+specifier|const
+name|MipsABIInfo
+operator|&
+name|getABI
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|ABI
+operator|&&
+literal|"ABI hasn't been set!"
+argument_list|)
+block|;
+return|return
+operator|*
+name|ABI
+return|;
+block|}
 name|protected
 operator|:
+specifier|const
+name|MipsABIInfo
+operator|*
+name|ABI
+block|;
 name|MipsABIFlagsSection
 name|ABIFlagsSection
 block|;
@@ -555,6 +620,13 @@ argument_list|()
 name|override
 block|;
 name|void
+name|emitDirectiveSetAtWithArg
+argument_list|(
+argument|unsigned RegNo
+argument_list|)
+name|override
+block|;
+name|void
 name|emitDirectiveSetNoAt
 argument_list|()
 name|override
@@ -595,6 +667,11 @@ name|override
 block|;
 name|void
 name|emitDirectiveOptionPic2
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveInsn
 argument_list|()
 name|override
 block|;
@@ -675,6 +752,16 @@ argument_list|()
 name|override
 block|;
 name|void
+name|emitDirectiveSetMips32R3
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetMips32R5
+argument_list|()
+name|override
+block|;
+name|void
 name|emitDirectiveSetMips32R6
 argument_list|()
 name|override
@@ -686,6 +773,16 @@ name|override
 block|;
 name|void
 name|emitDirectiveSetMips64R2
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetMips64R3
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetMips64R5
 argument_list|()
 name|override
 block|;
@@ -714,6 +811,16 @@ name|emitDirectiveSetPush
 argument_list|()
 name|override
 block|;
+name|void
+name|emitDirectiveSetSoftFloat
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetHardFloat
+argument_list|()
+name|override
+block|;
 comment|// PIC support
 name|void
 name|emitDirectiveCpLoad
@@ -735,23 +842,25 @@ argument|bool IsReg
 argument_list|)
 name|override
 block|;
-comment|// ABI Flags
+comment|// FP abiflags directives
 name|void
 name|emitDirectiveModuleFP
-argument_list|(
-argument|MipsABIFlagsSection::FpABIKind Value
-argument_list|,
-argument|bool Is32BitABI
-argument_list|)
+argument_list|()
 name|override
 block|;
 name|void
 name|emitDirectiveModuleOddSPReg
-argument_list|(
-argument|bool Enabled
-argument_list|,
-argument|bool IsO32ABI
-argument_list|)
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveModuleSoftFloat
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveModuleHardFloat
+argument_list|()
 name|override
 block|;
 name|void
@@ -762,7 +871,12 @@ argument_list|)
 name|override
 block|;
 name|void
-name|emitMipsAbiFlags
+name|emitDirectiveSetOddSPReg
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetNoOddSPReg
 argument_list|()
 name|override
 block|; }
@@ -894,6 +1008,11 @@ argument_list|()
 name|override
 block|;
 name|void
+name|emitDirectiveInsn
+argument_list|()
+name|override
+block|;
+name|void
 name|emitFrame
 argument_list|(
 argument|unsigned StackReg
@@ -943,73 +1062,12 @@ argument|bool IsReg
 argument_list|)
 name|override
 block|;
-comment|// ABI Flags
-name|void
-name|emitDirectiveModuleOddSPReg
-argument_list|(
-argument|bool Enabled
-argument_list|,
-argument|bool IsO32ABI
-argument_list|)
-name|override
-block|;
 name|void
 name|emitMipsAbiFlags
 argument_list|()
-name|override
-block|;
-name|protected
-operator|:
-name|bool
-name|isO32
-argument_list|()
-specifier|const
-block|{
-return|return
-name|STI
-operator|.
-name|getFeatureBits
-argument_list|()
-operator|&
-name|Mips
-operator|::
-name|FeatureO32
-return|;
-block|}
-name|bool
-name|isN32
-argument_list|()
-specifier|const
-block|{
-return|return
-name|STI
-operator|.
-name|getFeatureBits
-argument_list|()
-operator|&
-name|Mips
-operator|::
-name|FeatureN32
-return|;
-block|}
-name|bool
-name|isN64
-argument_list|()
-specifier|const
-block|{
-return|return
-name|STI
-operator|.
-name|getFeatureBits
-argument_list|()
-operator|&
-name|Mips
-operator|::
-name|FeatureN64
-return|;
-block|}
-expr|}
 block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_endif

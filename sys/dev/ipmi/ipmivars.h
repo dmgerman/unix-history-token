@@ -874,47 +874,6 @@ parameter_list|)
 value|mtx_assert(&(sc)->ipmi_io_lock, MA_OWNED)
 end_define
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|601105
-end_if
-
-begin_define
-define|#
-directive|define
-name|bus_read_1
-parameter_list|(
-name|r
-parameter_list|,
-name|o
-parameter_list|)
-define|\
-value|bus_space_read_1(rman_get_bustag(r), rman_get_bushandle(r), (o))
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_write_1
-parameter_list|(
-name|r
-parameter_list|,
-name|o
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|bus_space_write_1(rman_get_bustag(r), rman_get_bushandle(r), (o), (v))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* I/O to a single I/O resource. */
 end_comment

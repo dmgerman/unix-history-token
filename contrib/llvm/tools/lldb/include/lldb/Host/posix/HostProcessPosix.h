@@ -106,34 +106,33 @@ argument_list|,
 argument|int signo
 argument_list|)
 block|;
-name|virtual
 name|Error
 name|Terminate
 argument_list|()
+name|override
 block|;
-name|virtual
 name|Error
 name|GetMainModule
 argument_list|(
 argument|FileSpec&file_spec
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|pid_t
 name|GetProcessId
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|IsRunning
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|HostThread
 name|StartMonitoring
 argument_list|(
@@ -143,6 +142,7 @@ argument|void *callback_baton
 argument_list|,
 argument|bool monitor_signals
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 block|}

@@ -201,9 +201,12 @@ operator|>
 block|{
 name|RewriteDescriptor
 argument_list|(
-argument|const RewriteDescriptor&
+specifier|const
+name|RewriteDescriptor
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 specifier|const
 name|RewriteDescriptor
@@ -215,7 +218,8 @@ specifier|const
 name|RewriteDescriptor
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -294,13 +298,6 @@ name|RewriteMapParser
 block|{
 name|public
 label|:
-name|RewriteMapParser
-argument_list|()
-block|{}
-operator|~
-name|RewriteMapParser
-argument_list|()
-block|{}
 name|bool
 name|parse
 argument_list|(
@@ -315,7 +312,7 @@ name|RewriteDescriptorList
 operator|*
 name|Descriptors
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|private
 label|:
 name|bool

@@ -2156,6 +2156,8 @@ operator|=
 name|AI_NUMERICHOST
 expr_stmt|;
 comment|/* port is not relevant for this purpose */
+if|if
+condition|(
 name|getaddrinfo
 argument_list|(
 name|host
@@ -2168,6 +2170,12 @@ argument_list|,
 operator|&
 name|res
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|res
+operator|=
+name|NULL
 expr_stmt|;
 name|free
 argument_list|(

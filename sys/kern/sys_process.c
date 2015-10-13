@@ -297,6 +297,12 @@ name|int
 name|pl_child_pid
 decl_stmt|;
 comment|/* New child pid */
+name|u_int
+name|pl_syscall_code
+decl_stmt|;
+name|u_int
+name|pl_syscall_narg
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1815,6 +1821,22 @@ operator|=
 name|pl
 operator|->
 name|pl_child_pid
+expr_stmt|;
+name|pl32
+operator|->
+name|pl_syscall_code
+operator|=
+name|pl
+operator|->
+name|pl_syscall_code
+expr_stmt|;
+name|pl32
+operator|->
+name|pl_syscall_narg
+operator|=
+name|pl
+operator|->
+name|pl_syscall_narg
 expr_stmt|;
 block|}
 end_function
@@ -3638,11 +3660,11 @@ name|p_stops
 operator||=
 name|S_PT_SCE
 expr_stmt|;
-name|CTR2
+name|CTR4
 argument_list|(
 name|KTR_PTRACE
 argument_list|,
-literal|"PT_TO_SCE: pid %d, stops = %#x"
+literal|"PT_TO_SCE: pid %d, stops = %#x, PC = %#lx, sig = %d"
 argument_list|,
 name|p
 operator|->
@@ -3651,6 +3673,16 @@ argument_list|,
 name|p
 operator|->
 name|p_stops
+argument_list|,
+operator|(
+name|u_long
+operator|)
+operator|(
+name|uintfptr_t
+operator|)
+name|addr
+argument_list|,
+name|data
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3663,11 +3695,11 @@ name|p_stops
 operator||=
 name|S_PT_SCX
 expr_stmt|;
-name|CTR2
+name|CTR4
 argument_list|(
 name|KTR_PTRACE
 argument_list|,
-literal|"PT_TO_SCX: pid %d, stops = %#x"
+literal|"PT_TO_SCX: pid %d, stops = %#x, PC = %#lx, sig = %d"
 argument_list|,
 name|p
 operator|->
@@ -3676,6 +3708,16 @@ argument_list|,
 name|p
 operator|->
 name|p_stops
+argument_list|,
+operator|(
+name|u_long
+operator|)
+operator|(
+name|uintfptr_t
+operator|)
+name|addr
+argument_list|,
+name|data
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3690,11 +3732,11 @@ name|S_PT_SCE
 operator||
 name|S_PT_SCX
 expr_stmt|;
-name|CTR2
+name|CTR4
 argument_list|(
 name|KTR_PTRACE
 argument_list|,
-literal|"PT_SYSCALL: pid %d, stops = %#x"
+literal|"PT_SYSCALL: pid %d, stops = %#x, PC = %#lx, sig = %d"
 argument_list|,
 name|p
 operator|->
@@ -3703,21 +3745,41 @@ argument_list|,
 name|p
 operator|->
 name|p_stops
+argument_list|,
+operator|(
+name|u_long
+operator|)
+operator|(
+name|uintfptr_t
+operator|)
+name|addr
+argument_list|,
+name|data
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|PT_CONTINUE
 case|:
-name|CTR1
+name|CTR3
 argument_list|(
 name|KTR_PTRACE
 argument_list|,
-literal|"PT_CONTINUE: pid %d"
+literal|"PT_CONTINUE: pid %d, PC = %#lx, sig = %d"
 argument_list|,
 name|p
 operator|->
 name|p_pid
+argument_list|,
+operator|(
+name|u_long
+operator|)
+operator|(
+name|uintfptr_t
+operator|)
+name|addr
+argument_list|,
+name|data
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3800,11 +3862,11 @@ name|p_sigparent
 operator|=
 name|SIGCHLD
 expr_stmt|;
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_PTRACE
 argument_list|,
-literal|"PT_DETACH: pid %d reparented to pid %d"
+literal|"PT_DETACH: pid %d reparented to pid %d, sig %d"
 argument_list|,
 name|p
 operator|->
@@ -3813,19 +3875,23 @@ argument_list|,
 name|pp
 operator|->
 name|p_pid
+argument_list|,
+name|data
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|CTR1
+name|CTR2
 argument_list|(
 name|KTR_PTRACE
 argument_list|,
-literal|"PT_DETACH: pid %d"
+literal|"PT_DETACH: pid %d, sig %d"
 argument_list|,
 name|p
 operator|->
 name|p_pid
+argument_list|,
+name|data
 argument_list|)
 expr_stmt|;
 name|p
@@ -5067,6 +5133,55 @@ operator|->
 name|td_name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|td2
+operator|->
+name|td_dbgflags
+operator|&
+operator|(
+name|TDB_SCE
+operator||
+name|TDB_SCX
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|pl
+operator|->
+name|pl_syscall_code
+operator|=
+name|td2
+operator|->
+name|td_dbg_sc_code
+expr_stmt|;
+name|pl
+operator|->
+name|pl_syscall_narg
+operator|=
+name|td2
+operator|->
+name|td_dbg_sc_narg
+expr_stmt|;
+block|}
+else|else
+block|{
+name|pl
+operator|->
+name|pl_syscall_code
+operator|=
+literal|0
+expr_stmt|;
+name|pl
+operator|->
+name|pl_syscall_narg
+operator|=
+literal|0
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|COMPAT_FREEBSD32
@@ -5083,11 +5198,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_PTRACE
 argument_list|,
-literal|"PT_LWPINFO: tid %d (pid %d) event %d flags %#x child pid %d"
+literal|"PT_LWPINFO: tid %d (pid %d) event %d flags %#x child pid %d syscall %d"
 argument_list|,
 name|td2
 operator|->
@@ -5108,6 +5223,10 @@ argument_list|,
 name|pl
 operator|->
 name|pl_child_pid
+argument_list|,
+name|pl
+operator|->
+name|pl_syscall_code
 argument_list|)
 expr_stmt|;
 break|break;

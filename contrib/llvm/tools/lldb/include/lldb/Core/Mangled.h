@@ -101,6 +101,18 @@ block|,
 name|ePreferDemangledWithoutArguments
 block|}
 enum|;
+enum|enum
+name|ManglingScheme
+block|{
+name|eManglingSchemeNone
+init|=
+literal|0
+block|,
+name|eManglingSchemeMSVC
+block|,
+name|eManglingSchemeItanium
+block|}
+enum|;
 comment|//----------------------------------------------------------------------
 comment|/// Default constructor.
 comment|///
@@ -287,11 +299,32 @@ comment|///     A const reference to the demangled name string object.
 comment|//----------------------------------------------------------------------
 specifier|const
 name|ConstString
-operator|&
+modifier|&
 name|GetDemangledName
-argument_list|()
-specifier|const
-expr_stmt|;
+argument_list|(
+name|lldb
+operator|::
+name|LanguageType
+name|language
+argument_list|)
+decl|const
+decl_stmt|;
+comment|//----------------------------------------------------------------------
+comment|/// Display demangled name get accessor.
+comment|///
+comment|/// @return
+comment|///     A const reference to the display demangled name string object.
+comment|//----------------------------------------------------------------------
+name|ConstString
+name|GetDisplayDemangledName
+argument_list|(
+name|lldb
+operator|::
+name|LanguageType
+name|language
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|SetDemangledName
 parameter_list|(
@@ -363,11 +396,14 @@ comment|///     A const reference to the preferred name string object if this
 comment|///     object has a valid name of that kind, else a const reference to the
 comment|///     other name is returned.
 comment|//----------------------------------------------------------------------
-specifier|const
 name|ConstString
-modifier|&
 name|GetName
 argument_list|(
+name|lldb
+operator|::
+name|LanguageType
+name|language
+argument_list|,
 name|NamePreference
 name|preference
 operator|=
@@ -391,6 +427,11 @@ specifier|const
 name|ConstString
 operator|&
 name|name
+argument_list|,
+name|lldb
+operator|::
+name|LanguageType
+name|language
 argument_list|)
 decl|const
 block|{
@@ -405,7 +446,9 @@ name|true
 return|;
 return|return
 name|GetDemangledName
-argument_list|()
+argument_list|(
+name|language
+argument_list|)
 operator|==
 name|name
 return|;
@@ -417,6 +460,11 @@ specifier|const
 name|RegularExpression
 operator|&
 name|regex
+argument_list|,
+name|lldb
+operator|::
+name|LanguageType
+name|language
 argument_list|)
 decl|const
 decl_stmt|;
@@ -480,6 +528,29 @@ modifier|&
 name|name
 parameter_list|)
 function_decl|;
+comment|//----------------------------------------------------------------------
+comment|/// Try to guess the language from the mangling.
+comment|///
+comment|/// For a mangled name to have a language it must have both a mangled
+comment|/// and a demangled name and it can be guessed from the mangling what
+comment|/// the language is.  Note: this will return C++ for any language that
+comment|/// uses Itanium ABI mangling.
+comment|///
+comment|/// Standard C function names will return eLanguageTypeUnknown because
+comment|/// they aren't mangled and it isn't clear what language the name
+comment|/// represents (there will be no mangled name).
+comment|///
+comment|/// @return
+comment|///     The language for the mangled/demangled name, eLanguageTypeUnknown
+comment|///     if there is no mangled or demangled counterpart.
+comment|//----------------------------------------------------------------------
+name|lldb
+operator|::
+name|LanguageType
+name|GuessLanguage
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
 comment|//----------------------------------------------------------------------

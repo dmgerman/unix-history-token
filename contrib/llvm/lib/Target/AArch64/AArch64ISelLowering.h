@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Instruction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetLowering.h"
 end_include
 
@@ -95,6 +101,9 @@ name|namespace
 name|AArch64ISD
 block|{
 enum|enum
+name|NodeType
+enum|:
+name|unsigned
 block|{
 name|FIRST_NUMBER
 init|=
@@ -288,6 +297,22 @@ name|FCMLEz
 block|,
 name|FCMLTz
 block|,
+comment|// Vector across-lanes addition
+comment|// Only the lower result lane is defined.
+name|SADDV
+block|,
+name|UADDV
+block|,
+comment|// Vector across-lanes min/max
+comment|// Only the lower result lane is defined.
+name|SMINV
+block|,
+name|UMINV
+block|,
+name|SMAXV
+block|,
+name|UMAXV
+block|,
 comment|// Vector bitwise negation
 name|NOT
 block|,
@@ -403,6 +428,11 @@ specifier|const
 name|TargetMachine
 operator|&
 name|TM
+argument_list|,
+specifier|const
+name|AArch64Subtarget
+operator|&
+name|STI
 argument_list|)
 block|;
 comment|/// Selects the correct CCAssignFn for a given CallingConvention value.
@@ -439,13 +469,15 @@ block|;
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
-argument|EVT LHSTy
+argument|const DataLayout&DL
+argument_list|,
+argument|EVT
 argument_list|)
 specifier|const
 name|override
 block|;
 comment|/// allowsMisalignedMemoryAccesses - Returns true if the target allows
-comment|/// unaligned memory accesses. of the specified type.
+comment|/// unaligned memory accesses of the specified type.
 name|bool
 name|allowsMisalignedMemoryAccesses
 argument_list|(
@@ -552,23 +584,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/// getMaximalGlobalOffset - Returns the maximal possible offset which can
-end_comment
-
-begin_comment
-comment|/// be used for loads / stores from the global.
-end_comment
-
-begin_expr_stmt
-name|unsigned
-name|getMaximalGlobalOffset
-argument_list|()
-specifier|const
-name|override
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/// Returns true if a cast between SrcAS and DestAS is a noop.
@@ -688,6 +703,11 @@ begin_decl_stmt
 name|EVT
 name|getSetCCResultType
 argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
 name|LLVMContext
 operator|&
 name|Context
@@ -805,6 +825,19 @@ end_decl_stmt
 
 begin_decl_stmt
 name|bool
+name|isProfitableToHoist
+argument_list|(
+name|Instruction
+operator|*
+name|I
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
 name|isZExtFree
 argument_list|(
 name|Type
@@ -883,6 +916,68 @@ name|override
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|unsigned
+name|getMaxSupportedInterleaveFactor
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+literal|4
+return|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
+name|bool
+name|lowerInterleavedLoad
+argument_list|(
+name|LoadInst
+operator|*
+name|LI
+argument_list|,
+name|ArrayRef
+operator|<
+name|ShuffleVectorInst
+operator|*
+operator|>
+name|Shuffles
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Indices
+argument_list|,
+name|unsigned
+name|Factor
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|lowerInterleavedStore
+argument_list|(
+name|StoreInst
+operator|*
+name|SI
+argument_list|,
+name|ShuffleVectorInst
+operator|*
+name|SVI
+argument_list|,
+name|unsigned
+name|Factor
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|bool
 name|isLegalAddImmediate
@@ -949,6 +1044,11 @@ name|bool
 name|isLegalAddressingMode
 argument_list|(
 specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+specifier|const
 name|AddrMode
 operator|&
 name|AM
@@ -956,6 +1056,9 @@ argument_list|,
 name|Type
 operator|*
 name|Ty
+argument_list|,
+name|unsigned
+name|AS
 argument_list|)
 decl|const
 name|override
@@ -987,6 +1090,11 @@ name|int
 name|getScalingFactorCost
 argument_list|(
 specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+specifier|const
 name|AddrMode
 operator|&
 name|AM
@@ -994,6 +1102,9 @@ argument_list|,
 name|Type
 operator|*
 name|Ty
+argument_list|,
+name|unsigned
+name|AS
 argument_list|)
 decl|const
 name|override
@@ -1173,18 +1284,18 @@ name|override
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|bool
+begin_expr_stmt
+name|TargetLoweringBase
+operator|::
+name|AtomicRMWExpansionKind
 name|shouldExpandAtomicRMWInIR
 argument_list|(
-name|AtomicRMWInst
-operator|*
-name|AI
+argument|AtomicRMWInst *AI
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|bool
@@ -1212,6 +1323,20 @@ begin_label
 name|private
 label|:
 end_label
+
+begin_decl_stmt
+name|bool
+name|isExtFreeImpl
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|Ext
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Subtarget - Keep a pointer to the AArch64Subtarget around so that we can
@@ -1741,6 +1866,38 @@ end_decl_stmt
 
 begin_decl_stmt
 name|SDValue
+name|LowerSELECT_CC
+argument_list|(
+name|ISD
+operator|::
+name|CondCode
+name|CC
+argument_list|,
+name|SDValue
+name|LHS
+argument_list|,
+name|SDValue
+name|RHS
+argument_list|,
+name|SDValue
+name|TVal
+argument_list|,
+name|SDValue
+name|FVal
+argument_list|,
+name|SDLoc
+name|dl
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|SDValue
 name|LowerJumpTable
 argument_list|(
 name|SDValue
@@ -2257,11 +2414,7 @@ begin_decl_stmt
 name|ConstraintType
 name|getConstraintType
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|Constraint
 argument_list|)
 decl|const
@@ -2280,6 +2433,10 @@ name|RegName
 argument_list|,
 name|EVT
 name|VT
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
 decl|const
 name|override
@@ -2325,7 +2482,9 @@ operator|*
 operator|>
 name|getRegForInlineAsmConstraint
 argument_list|(
-argument|const std::string&Constraint
+argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|StringRef Constraint
 argument_list|,
 argument|MVT VT
 argument_list|)
@@ -2363,6 +2522,41 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|getInlineAsmMemConstraint
+argument_list|(
+name|StringRef
+name|ConstraintCode
+argument_list|)
+decl|const
+name|override
+block|{
+if|if
+condition|(
+name|ConstraintCode
+operator|==
+literal|"Q"
+condition|)
+return|return
+name|InlineAsm
+operator|::
+name|Constraint_Q
+return|;
+comment|// FIXME: clang has code for 'Ump', 'Utf', 'Usa', and 'Ush' but these are
+comment|//        followed by llvm_unreachable so we'll leave them unimplemented in
+comment|//        the backend for now.
+return|return
+name|TargetLowering
+operator|::
+name|getInlineAsmMemConstraint
+argument_list|(
+name|ConstraintCode
+argument_list|)
+return|;
+block|}
 end_decl_stmt
 
 begin_decl_stmt

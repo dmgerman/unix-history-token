@@ -126,9 +126,6 @@ name|class
 name|DIE
 decl_stmt|;
 name|class
-name|DISubprogram
-decl_stmt|;
-name|class
 name|LexicalScope
 decl_stmt|;
 name|class
@@ -141,6 +138,9 @@ name|class
 name|MCSection
 decl_stmt|;
 name|class
+name|MDNode
+decl_stmt|;
+name|class
 name|DwarfFile
 block|{
 comment|// Target of Dwarf emission, used for sizing of abbreviations.
@@ -148,9 +148,8 @@ name|AsmPrinter
 modifier|*
 name|Asm
 decl_stmt|;
-name|DwarfDebug
-modifier|&
-name|DD
+name|BumpPtrAllocator
+name|AbbrevAllocator
 decl_stmt|;
 comment|// Used to uniquely define abbreviations.
 name|FoldingSet
@@ -225,15 +224,13 @@ operator|,
 name|DIE
 operator|*
 operator|>
-name|MDTypeNodeToDieMap
+name|DITypeNodeToDieMap
 expr_stmt|;
 name|public
 label|:
 name|DwarfFile
 argument_list|(
 argument|AsmPrinter *AP
-argument_list|,
-argument|DwarfDebug&DD
 argument_list|,
 argument|StringRef Pref
 argument_list|,
@@ -278,13 +275,17 @@ name|void
 name|computeSizeAndOffsets
 parameter_list|()
 function_decl|;
-comment|/// \brief Define a unique number for the abbreviation.
-name|void
-name|assignAbbrevNumber
-parameter_list|(
+comment|/// Define a unique number for the abbreviation.
+comment|///
+comment|/// Compute the abbreviation for \c Die, look up its unique number, and
+comment|/// return a reference to it in the uniquing table.
 name|DIEAbbrev
 modifier|&
-name|Abbrev
+name|assignAbbrevNumber
+parameter_list|(
+name|DIE
+modifier|&
+name|Die
 parameter_list|)
 function_decl|;
 comment|/// \brief Add a unit to the list of CUs.
@@ -305,17 +306,14 @@ comment|/// abbreviation section.
 name|void
 name|emitUnits
 parameter_list|(
-specifier|const
-name|MCSymbol
-modifier|*
-name|ASectionSym
+name|bool
+name|UseOffsets
 parameter_list|)
 function_decl|;
 comment|/// \brief Emit a set of abbreviations to the specific section.
 name|void
 name|emitAbbrevs
 parameter_list|(
-specifier|const
 name|MCSection
 modifier|*
 parameter_list|)
@@ -324,12 +322,10 @@ comment|/// \brief Emit all of the strings to the section given.
 name|void
 name|emitStrings
 parameter_list|(
-specifier|const
 name|MCSection
 modifier|*
 name|StrSection
 parameter_list|,
-specifier|const
 name|MCSection
 modifier|*
 name|OffsetSection
@@ -347,7 +343,8 @@ return|return
 name|StrPool
 return|;
 block|}
-name|void
+comment|/// \returns false if the variable was merged with a previous one.
+name|bool
 name|addScopeVariable
 parameter_list|(
 name|LexicalScope
@@ -409,7 +406,7 @@ modifier|*
 name|Die
 parameter_list|)
 block|{
-name|MDTypeNodeToDieMap
+name|DITypeNodeToDieMap
 operator|.
 name|insert
 argument_list|(
@@ -435,7 +432,7 @@ name|TypeMD
 parameter_list|)
 block|{
 return|return
-name|MDTypeNodeToDieMap
+name|DITypeNodeToDieMap
 operator|.
 name|lookup
 argument_list|(

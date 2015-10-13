@@ -55,6 +55,12 @@ directive|include
 file|<dlfcn.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -1219,6 +1225,9 @@ operator|=
 operator|(
 name|TPNotify
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|dlsym
 argument_list|(
 name|m_libHandle
@@ -1267,6 +1276,9 @@ name|FUNC_Initialize
 operator|=
 operator|(
 name|TPInitialize
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|dlsym
 argument_list|(

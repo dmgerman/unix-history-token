@@ -1369,11 +1369,6 @@ operator|->
 name|rcv_nxt
 condition|)
 do|;
-name|ND6_HINT
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 name|sorwakeup_locked
 argument_list|(
 name|so

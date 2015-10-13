@@ -200,10 +200,9 @@ comment|/// Accessor methods to return the set of stubs in sorted order.
 name|SymbolListTy
 name|GetFnStubList
 argument_list|()
-specifier|const
 block|{
 return|return
-name|GetSortedStubs
+name|getSortedStubs
 argument_list|(
 name|FnStubs
 argument_list|)
@@ -212,10 +211,9 @@ block|}
 name|SymbolListTy
 name|GetGVStubList
 argument_list|()
-specifier|const
 block|{
 return|return
-name|GetSortedStubs
+name|getSortedStubs
 argument_list|(
 name|GVStubs
 argument_list|)
@@ -224,10 +222,9 @@ block|}
 name|SymbolListTy
 name|GetHiddenGVStubList
 argument_list|()
-specifier|const
 block|{
 return|return
-name|GetSortedStubs
+name|getSortedStubs
 argument_list|(
 name|HiddenGVStubs
 argument_list|)
@@ -292,10 +289,9 @@ comment|/// Accessor methods to return the set of stubs in sorted order.
 name|SymbolListTy
 name|GetGVStubList
 argument_list|()
-specifier|const
 block|{
 return|return
-name|GetSortedStubs
+name|getSortedStubs
 argument_list|(
 name|GVStubs
 argument_list|)

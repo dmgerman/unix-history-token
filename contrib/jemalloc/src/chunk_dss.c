@@ -254,10 +254,6 @@ modifier|*
 name|commit
 parameter_list|)
 block|{
-name|void
-modifier|*
-name|ret
-decl_stmt|;
 name|cassert
 argument_list|(
 name|have_dss
@@ -326,24 +322,27 @@ operator|-
 literal|1
 condition|)
 block|{
-name|size_t
-name|gap_size
-decl_stmt|,
-name|cpad_size
-decl_stmt|;
+comment|/* 		 * The loop is necessary to recover from races with other 		 * threads that are using the DSS for something other than 		 * malloc. 		 */
+do|do
+block|{
 name|void
+modifier|*
+name|ret
+decl_stmt|,
 modifier|*
 name|cpad
 decl_stmt|,
 modifier|*
 name|dss_next
 decl_stmt|;
+name|size_t
+name|gap_size
+decl_stmt|,
+name|cpad_size
+decl_stmt|;
 name|intptr_t
 name|incr
 decl_stmt|;
-comment|/* 		 * The loop is necessary to recover from races with other 		 * threads that are using the DSS for something other than 		 * malloc. 		 */
-do|do
-block|{
 comment|/* Avoid an unnecessary system call. */
 if|if
 condition|(

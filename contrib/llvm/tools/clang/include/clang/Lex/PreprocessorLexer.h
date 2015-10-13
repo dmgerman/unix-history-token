@@ -160,9 +160,12 @@ name|ConditionalStack
 expr_stmt|;
 name|PreprocessorLexer
 argument_list|(
-argument|const PreprocessorLexer&
+specifier|const
+name|PreprocessorLexer
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -172,7 +175,8 @@ specifier|const
 name|PreprocessorLexer
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|friend
 name|class

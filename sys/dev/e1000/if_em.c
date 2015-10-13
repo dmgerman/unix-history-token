@@ -14575,7 +14575,7 @@ name|ifp
 operator|->
 name|if_hw_tsomax
 operator|=
-name|EM_TSO_SIZE
+name|IP_MAXPACKET
 expr_stmt|;
 name|ifp
 operator|->

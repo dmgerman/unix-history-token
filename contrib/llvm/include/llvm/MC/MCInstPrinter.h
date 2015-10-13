@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -75,7 +81,25 @@ name|class
 name|MCRegisterInfo
 decl_stmt|;
 name|class
+name|MCSubtargetInfo
+decl_stmt|;
+name|class
 name|StringRef
+decl_stmt|;
+comment|/// Convert `Bytes' to a hex string and output to `OS'
+name|void
+name|dumpBytes
+argument_list|(
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|Bytes
+argument_list|,
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
 decl_stmt|;
 name|namespace
 name|HexStyle
@@ -91,16 +115,16 @@ comment|///< 0ffh
 block|}
 enum|;
 block|}
-comment|/// MCInstPrinter - This is an instance of a target assembly language printer
-comment|/// that converts an MCInst to valid target assembly syntax.
+comment|/// \brief This is an instance of a target assembly language printer that
+comment|/// converts an MCInst to valid target assembly syntax.
 name|class
 name|MCInstPrinter
 block|{
 name|protected
 label|:
-comment|/// CommentStream - a stream that comments can be emitted to if desired.
-comment|/// Each comment must end with a newline.  This will be null if verbose
-comment|/// assembly emission is disable.
+comment|/// \brief A stream that comments can be emitted to if desired.  Each comment
+comment|/// must end with a newline.  This will be null if verbose assembly emission
+comment|/// is disable.
 name|raw_ostream
 modifier|*
 name|CommentStream
@@ -119,10 +143,6 @@ specifier|const
 name|MCRegisterInfo
 modifier|&
 name|MRI
-decl_stmt|;
-comment|/// The current set of available features.
-name|uint64_t
-name|AvailableFeatures
 decl_stmt|;
 comment|/// True if we are printing marked up assembly.
 name|bool
@@ -190,11 +210,6 @@ argument_list|(
 name|mri
 argument_list|)
 operator|,
-name|AvailableFeatures
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|UseMarkup
 argument_list|(
 literal|0
@@ -215,7 +230,7 @@ operator|~
 name|MCInstPrinter
 argument_list|()
 expr_stmt|;
-comment|/// setCommentStream - Specify a stream to emit comments to.
+comment|/// \brief Specify a stream to emit comments to.
 name|void
 name|setCommentStream
 parameter_list|(
@@ -230,8 +245,7 @@ operator|&
 name|OS
 expr_stmt|;
 block|}
-comment|/// printInst - Print the specified MCInst to the specified raw_ostream.
-comment|///
+comment|/// \brief Print the specified MCInst to the specified raw_ostream.
 name|virtual
 name|void
 name|printInst
@@ -247,12 +261,17 @@ name|OS
 parameter_list|,
 name|StringRef
 name|Annot
+parameter_list|,
+specifier|const
+name|MCSubtargetInfo
+modifier|&
+name|STI
 parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// getOpcodeName - Return the name of the specified opcode enum (e.g.
-comment|/// "MOV32ri") or empty if we can't resolve it.
+comment|/// \brief Return the name of the specified opcode enum (e.g. "MOV32ri") or
+comment|/// empty if we can't resolve it.
 name|StringRef
 name|getOpcodeName
 argument_list|(
@@ -261,7 +280,7 @@ name|Opcode
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// printRegName - Print the assembler register name.
+comment|/// \brief Print the assembler register name.
 name|virtual
 name|void
 name|printRegName
@@ -275,27 +294,6 @@ name|RegNo
 argument_list|)
 decl|const
 decl_stmt|;
-name|uint64_t
-name|getAvailableFeatures
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AvailableFeatures
-return|;
-block|}
-name|void
-name|setAvailableFeatures
-parameter_list|(
-name|uint64_t
-name|Value
-parameter_list|)
-block|{
-name|AvailableFeatures
-operator|=
-name|Value
-expr_stmt|;
-block|}
 name|bool
 name|getUseMarkup
 argument_list|()
@@ -361,7 +359,7 @@ block|}
 name|HexStyle
 operator|::
 name|Style
-name|getPrintHexStyleHex
+name|getPrintHexStyle
 argument_list|()
 specifier|const
 block|{
@@ -370,7 +368,7 @@ name|PrintHexStyle
 return|;
 block|}
 name|void
-name|setPrintImmHex
+name|setPrintHexStyle
 argument_list|(
 name|HexStyle
 operator|::
@@ -384,13 +382,13 @@ name|Value
 expr_stmt|;
 block|}
 comment|/// Utility function to print immediates in decimal or hex.
-name|format_object1
+name|format_object
 operator|<
 name|int64_t
 operator|>
 name|formatImm
 argument_list|(
-argument|const int64_t Value
+argument|int64_t Value
 argument_list|)
 specifier|const
 block|{
@@ -409,33 +407,33 @@ argument_list|)
 return|;
 block|}
 comment|/// Utility functions to print decimal/hexadecimal values.
-name|format_object1
+name|format_object
 operator|<
 name|int64_t
 operator|>
 name|formatDec
 argument_list|(
-argument|const int64_t Value
+argument|int64_t Value
 argument_list|)
 specifier|const
 expr_stmt|;
-name|format_object1
+name|format_object
 operator|<
 name|int64_t
 operator|>
 name|formatHex
 argument_list|(
-argument|const int64_t Value
+argument|int64_t Value
 argument_list|)
 specifier|const
 expr_stmt|;
-name|format_object1
+name|format_object
 operator|<
 name|uint64_t
 operator|>
 name|formatHex
 argument_list|(
-argument|const uint64_t Value
+argument|uint64_t Value
 argument_list|)
 specifier|const
 expr_stmt|;

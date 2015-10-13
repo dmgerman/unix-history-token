@@ -3120,6 +3120,15 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+if|if
+condition|(
+name|rtm
+operator|->
+name|rtm_flags
+operator|&
+name|RTF_PINNED
+condition|)
+continue|continue;
 name|delete
 argument_list|(
 name|host_buf
@@ -3501,30 +3510,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sin
-operator|=
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
-operator|(
-name|sdl
-operator|->
-name|sdl_len
-operator|+
-operator|(
-name|char
-operator|*
-operator|)
-name|sdl
-operator|)
-expr_stmt|;
 if|#
 directive|if
 literal|0
 comment|/* W and P are mystery even for us */
-block|snprintf(flgbuf, sizeof(flgbuf), "%s%s%s%s", 			    isrouter ? "R" : "", 			    !IN6_IS_ADDR_UNSPECIFIED(&sin->sin6_addr) ? "P" : "", 			    (sin->sin6_len != sizeof(struct sockaddr_in6)) ? "W" : "", 			    (rtm->rtm_flags& RTF_ANNOUNCE) ? "p" : "");
+block|sin = (struct sockaddr_in6 *) 			    (sdl->sdl_len + (char *)sdl); 			snprintf(flgbuf, sizeof(flgbuf), "%s%s%s%s", 			    isrouter ? "R" : "", 			    !IN6_IS_ADDR_UNSPECIFIED(&sin->sin6_addr) ? "P" : "", 			    (sin->sin6_len != sizeof(struct sockaddr_in6)) ? "W" : "", 			    (rtm->rtm_flags& RTF_ANNOUNCE) ? "p" : "");
 else|#
 directive|else
 name|snprintf

@@ -106,7 +106,7 @@ name|MSP430TargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -130,7 +130,9 @@ specifier|const
 name|MSP430Subtarget
 operator|*
 name|getSubtargetImpl
-argument_list|()
+argument_list|(
+argument|const Function&F
+argument_list|)
 specifier|const
 name|override
 block|{

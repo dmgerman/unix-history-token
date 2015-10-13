@@ -86,6 +86,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AssumptionCache
+decl_stmt|;
+name|class
 name|DominatorTree
 decl_stmt|;
 name|class
@@ -377,6 +380,10 @@ name|Loop
 operator|*
 name|L
 block|;
+name|AssumptionCache
+operator|*
+name|AC
+block|;
 name|LoopInfo
 operator|*
 name|LI
@@ -388,11 +395,6 @@ block|;
 name|ScalarEvolution
 operator|*
 name|SE
-block|;
-specifier|const
-name|DataLayout
-operator|*
-name|DL
 block|;
 name|SmallPtrSet
 operator|<
@@ -410,6 +412,17 @@ operator|<
 name|IVStrideUse
 operator|>
 name|IVUses
+block|;
+comment|// Ephemeral values used by @llvm.assume in this function.
+name|SmallPtrSet
+operator|<
+specifier|const
+name|Value
+operator|*
+block|,
+literal|32
+operator|>
+name|EphValues
 block|;
 name|void
 name|getAnalysisUsage

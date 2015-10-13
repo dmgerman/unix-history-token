@@ -161,6 +161,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|coredump_pack_fileinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|coredump_pack_vmmapinfo
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * note: name##_mod cannot be const storage because the  * linker_file_sysinit() function modifies _file in the  * moduledata_t.  */
 end_comment

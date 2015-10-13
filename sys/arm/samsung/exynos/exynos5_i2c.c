@@ -1193,12 +1193,12 @@ argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
-literal|"cant i2c start: IIC_EBUSBSY\n"
+literal|"cant i2c start: IIC_EBUSERR\n"
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|IIC_EBUSBSY
+name|IIC_EBUSERR
 operator|)
 return|;
 block|}

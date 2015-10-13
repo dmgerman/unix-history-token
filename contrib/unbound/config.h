@@ -215,6 +215,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the declaration of `reallocarray', and to 0 if you    don't. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DECL_REALLOCARRAY */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the declaration of `sk_SSL_COMP_pop_free', and to 0    if you don't. */
 end_comment
 
@@ -234,6 +242,17 @@ define|#
 directive|define
 name|HAVE_DECL_SSL_COMP_GET_COMPRESSION_METHODS
 value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `SSL_CTX_set_ecdh_auto', and to    0 if you don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_SSL_CTX_SET_ECDH_AUTO
+value|0
 end_define
 
 begin_comment
@@ -864,6 +883,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_RANDOM
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `reallocarray' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_REALLOCARRAY
 value|1
 end_define
 
@@ -1592,7 +1622,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"unbound 1.5.3"
+value|"unbound 1.5.5"
 end_define
 
 begin_comment
@@ -1625,7 +1655,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.5.3"
+value|"1.5.5"
 end_define
 
 begin_comment
@@ -1688,7 +1718,7 @@ begin_define
 define|#
 directive|define
 name|RSRC_PACKAGE_VERSION
-value|1,5,3,0
+value|1,5,5,0
 end_define
 
 begin_comment
@@ -3331,6 +3361,42 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_REALLOCARRAY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|reallocarray
+value|reallocarrayunbound
+end_define
+
+begin_function_decl
+name|void
+modifier|*
+name|reallocarray
+parameter_list|(
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|size_t
+name|nmemb
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -3756,6 +3822,36 @@ name|arc4random_uniform
 parameter_list|(
 name|uint32_t
 name|upper_bound
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_REALLOCARRAY
+end_if
+
+begin_function_decl
+name|void
+modifier|*
+name|reallocarray
+parameter_list|(
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|size_t
+name|nmemb
+parameter_list|,
+name|size_t
+name|size
 parameter_list|)
 function_decl|;
 end_function_decl

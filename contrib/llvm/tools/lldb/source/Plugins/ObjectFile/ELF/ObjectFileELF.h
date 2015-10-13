@@ -295,17 +295,17 @@ block|;
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// ObjectFile Protocol.
@@ -315,12 +315,11 @@ operator|~
 name|ObjectFileELF
 argument_list|()
 block|;
-name|virtual
 name|bool
 name|ParseHeader
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|SetLoadAddress
 argument_list|(
@@ -330,28 +329,28 @@ argument|lldb::addr_t value
 argument_list|,
 argument|bool value_is_offset
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|ByteOrder
 name|GetByteOrder
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|IsExecutable
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetAddressByteSize
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|AddressClass
@@ -359,16 +358,16 @@ name|GetAddressClass
 argument_list|(
 argument|lldb::addr_t file_addr
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Symtab
 operator|*
 name|GetSymtab
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Symbol
@@ -379,107 +378,84 @@ argument|const lldb_private::Address& so_addr
 argument_list|,
 argument|bool verify_unique
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|IsStripped
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|CreateSections
 argument_list|(
-name|lldb_private
-operator|::
-name|SectionList
-operator|&
-name|unified_section_list
+argument|lldb_private::SectionList&unified_section_list
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|Dump
 argument_list|(
-name|lldb_private
-operator|::
-name|Stream
-operator|*
-name|s
+argument|lldb_private::Stream *s
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|GetArchitecture
 argument_list|(
-name|lldb_private
-operator|::
-name|ArchSpec
-operator|&
-name|arch
+argument|lldb_private::ArchSpec&arch
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|GetUUID
 argument_list|(
-name|lldb_private
-operator|::
-name|UUID
-operator|*
-name|uuid
+argument|lldb_private::UUID* uuid
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|FileSpecList
 name|GetDebugSymbolFilePaths
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetDependentModules
 argument_list|(
-name|lldb_private
-operator|::
-name|FileSpecList
-operator|&
-name|files
+argument|lldb_private::FileSpecList& files
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Address
 name|GetImageInfoAddress
 argument_list|(
-name|lldb_private
-operator|::
-name|Target
-operator|*
-name|target
+argument|lldb_private::Target *target
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Address
 name|GetEntryPointAddress
 argument_list|()
+name|override
 block|;
-name|virtual
 name|ObjectFile
 operator|::
 name|Type
 name|CalculateType
 argument_list|()
+name|override
 block|;
-name|virtual
 name|ObjectFile
 operator|::
 name|Strata
 name|CalculateStrata
 argument_list|()
+name|override
 block|;
 comment|// Returns number of program headers found in the ELF file.
 name|size_t
@@ -506,6 +482,16 @@ argument_list|(
 argument|lldb::user_id_t id
 argument_list|)
 block|;
+name|std
+operator|::
+name|string
+name|StripLinkerSymbolAnnotations
+argument_list|(
+argument|llvm::StringRef symbol_name
+argument_list|)
+specifier|const
+name|override
+block|;
 name|private
 operator|:
 name|ObjectFileELF
@@ -527,7 +513,7 @@ name|ObjectFileELF
 argument_list|(
 argument|const lldb::ModuleSP&module_sp
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP& header_data_sp
 argument_list|,
 argument|const lldb::ProcessSP&process_sp
 argument_list|,
@@ -641,6 +627,24 @@ name|DynamicSymbolColl
 operator|::
 name|const_iterator
 name|DynamicSymbolCollConstIter
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|lldb
+operator|::
+name|addr_t
+operator|,
+name|lldb
+operator|::
+name|AddressClass
+operator|>
+name|FileAddressToAddressClassMap
 expr_stmt|;
 end_typedef
 
@@ -783,6 +787,16 @@ name|ArchSpec
 name|m_arch_spec
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// The address class for each symbol in the elf file
+end_comment
+
+begin_decl_stmt
+name|FileAddressToAddressClassMap
+name|m_address_class_map
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Returns a 1 based index of the given section header.

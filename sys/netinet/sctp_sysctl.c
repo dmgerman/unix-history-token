@@ -2271,15 +2271,18 @@ name|xstcb
 operator|.
 name|state
 operator|=
-name|SCTP_GET_STATE
+operator|(
+name|uint32_t
+operator|)
+name|sctp_map_assoc_state
 argument_list|(
-operator|&
 name|stcb
 operator|->
 name|asoc
+operator|.
+name|state
 argument_list|)
 expr_stmt|;
-comment|/* FIXME */
 comment|/* 7.0 does not support these */
 name|xstcb
 operator|.

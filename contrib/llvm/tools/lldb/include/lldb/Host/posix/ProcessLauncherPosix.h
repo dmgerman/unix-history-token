@@ -61,19 +61,14 @@ name|ProcessLauncher
 block|{
 name|public
 operator|:
-name|virtual
 name|HostProcess
 name|LaunchProcess
 argument_list|(
-specifier|const
-name|ProcessLaunchInfo
-operator|&
-name|launch_info
+argument|const ProcessLaunchInfo&launch_info
 argument_list|,
-name|Error
-operator|&
-name|error
+argument|Error&error
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 block|}

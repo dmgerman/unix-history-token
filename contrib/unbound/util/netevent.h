@@ -311,6 +311,10 @@ comment|/** the number of TCP handlers for this tcp-accept socket */
 name|int
 name|max_tcp_count
 decl_stmt|;
+comment|/** current number of tcp handler in-use for this accept socket */
+name|int
+name|cur_tcp_count
+decl_stmt|;
 comment|/** malloced array of tcp handlers for a tcp-accept,  	    of size max_tcp_count. */
 name|struct
 name|comm_point

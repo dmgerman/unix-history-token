@@ -412,6 +412,34 @@ name|void
 name|GetCFIData
 parameter_list|()
 function_decl|;
+comment|// Applies the specified DWARF opcode to the given row. This function handle the commands
+comment|// operates only on a single row (these are the ones what can appear both in CIE and in FDE).
+comment|// Returns true if the opcode is handled and false otherwise.
+name|bool
+name|HandleCommonDwarfOpcode
+argument_list|(
+name|uint8_t
+name|primary_opcode
+argument_list|,
+name|uint8_t
+name|extended_opcode
+argument_list|,
+name|int32_t
+name|data_align
+argument_list|,
+name|lldb
+operator|::
+name|offset_t
+operator|&
+name|offset
+argument_list|,
+name|UnwindPlan
+operator|::
+name|Row
+operator|&
+name|row
+argument_list|)
+decl_stmt|;
 name|ObjectFile
 modifier|&
 name|m_objfile

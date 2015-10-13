@@ -784,6 +784,45 @@ operator|=
 literal|"for a suspected Lenovo SandyBridge BIOS bug"
 expr_stmt|;
 block|}
+comment|/* 			 * Same reason, ASUS SandyBridge. 			 */
+if|if
+condition|(
+name|hw_vendor
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|hw_vendor
+argument_list|,
+literal|"ASUSTeK Computer Inc."
+argument_list|)
+operator|&&
+name|CPUID_TO_FAMILY
+argument_list|(
+name|cpu_id
+argument_list|)
+operator|==
+literal|0x6
+operator|&&
+name|CPUID_TO_MODEL
+argument_list|(
+name|cpu_id
+argument_list|)
+operator|==
+literal|0x2a
+condition|)
+block|{
+name|x2apic_mode
+operator|=
+literal|0
+expr_stmt|;
+name|reason
+operator|=
+literal|"for a suspected ASUS SandyBridge BIOS bug"
+expr_stmt|;
+block|}
 name|freeenv
 argument_list|(
 name|hw_vendor

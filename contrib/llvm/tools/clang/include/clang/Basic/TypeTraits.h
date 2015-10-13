@@ -216,7 +216,9 @@ block|,
 name|UETT_AlignOf
 block|,
 name|UETT_VecStep
-block|}
+block|,
+name|UETT_OpenMPRequiredSimdAlign
+block|,   }
 enum|;
 block|}
 end_decl_stmt

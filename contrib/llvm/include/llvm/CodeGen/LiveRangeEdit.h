@@ -358,6 +358,17 @@ argument|unsigned VReg
 argument_list|)
 name|override
 block|;
+comment|/// \brief Check if MachineOperand \p MO is a last use/kill either in the
+comment|/// main live range of \p LI or in one of the matching subregister ranges.
+name|bool
+name|useIsKill
+argument_list|(
+argument|const LiveInterval&LI
+argument_list|,
+argument|const MachineOperand&MO
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 comment|/// Create a LiveRangeEdit for breaking down parent into smaller pieces.
@@ -469,6 +480,7 @@ block|;   }
 operator|~
 name|LiveRangeEdit
 argument_list|()
+name|override
 block|{
 name|MRI
 operator|.

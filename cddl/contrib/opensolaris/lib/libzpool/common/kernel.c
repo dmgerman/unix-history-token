@@ -107,11 +107,22 @@ begin_comment
 comment|/*  * Emulation of kernel services in userland.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
+
 begin_decl_stmt
 name|int
 name|aok
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|uint64_t

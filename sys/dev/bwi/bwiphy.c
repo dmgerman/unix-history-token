@@ -837,13 +837,6 @@ break|break;
 case|case
 name|BWI_PHYINFO_TYPE_11B
 case|:
-define|#
-directive|define
-name|N
-parameter_list|(
-name|arr
-parameter_list|)
-value|(int)(sizeof(arr) / sizeof(arr[0]))
 for|for
 control|(
 name|i
@@ -852,7 +845,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|bwi_sup_bphy
 argument_list|)
@@ -891,7 +884,7 @@ if|if
 condition|(
 name|i
 operator|==
-name|N
+name|nitems
 argument_list|(
 name|bwi_sup_bphy
 argument_list|)
@@ -913,9 +906,6 @@ return|return
 name|ENXIO
 return|;
 block|}
-undef|#
-directive|undef
-name|N
 name|phy
 operator|->
 name|phy_mode
@@ -2202,13 +2192,13 @@ name|mac
 parameter_list|)
 block|{
 comment|/* TODO:11B */
-name|if_printf
+name|device_printf
 argument_list|(
 name|mac
 operator|->
 name|mac_sc
 operator|->
-name|sc_ifp
+name|sc_dev
 argument_list|,
 literal|"%s is not implemented yet\n"
 argument_list|,
@@ -4087,16 +4077,6 @@ block|}
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|N
-parameter_list|(
-name|arr
-parameter_list|)
-value|(int)(sizeof(arr) / sizeof(arr[0]))
-end_define
-
 begin_function
 specifier|static
 name|void
@@ -4198,7 +4178,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|bwi_phy_freq_11g_rev1
 argument_list|)
@@ -4231,7 +4211,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|bwi_phy_noise_11g_rev1
 argument_list|)
@@ -4264,7 +4244,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|bwi_phy_rotor_11g_rev1
 argument_list|)
@@ -4414,7 +4394,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|bwi_phy_noise_11g
 argument_list|)
@@ -4455,7 +4435,7 @@ name|bwi_phy_noise_scale_11g_rev2
 expr_stmt|;
 name|n
 operator|=
-name|N
+name|nitems
 argument_list|(
 name|bwi_phy_noise_scale_11g_rev2
 argument_list|)
@@ -4488,7 +4468,7 @@ name|bwi_phy_noise_scale_11g_rev7
 expr_stmt|;
 name|n
 operator|=
-name|N
+name|nitems
 argument_list|(
 name|bwi_phy_noise_scale_11g_rev7
 argument_list|)
@@ -4502,7 +4482,7 @@ name|bwi_phy_noise_scale_11g
 expr_stmt|;
 name|n
 operator|=
-name|N
+name|nitems
 argument_list|(
 name|bwi_phy_noise_scale_11g
 argument_list|)
@@ -4551,7 +4531,7 @@ name|bwi_phy_sigma_sq_11g_rev2
 expr_stmt|;
 name|n
 operator|=
-name|N
+name|nitems
 argument_list|(
 name|bwi_phy_sigma_sq_11g_rev2
 argument_list|)
@@ -4579,7 +4559,7 @@ name|bwi_phy_sigma_sq_11g_rev7
 expr_stmt|;
 name|n
 operator|=
-name|N
+name|nitems
 argument_list|(
 name|bwi_phy_sigma_sq_11g_rev7
 argument_list|)
@@ -4641,7 +4621,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|bwi_phy_delay_11g_rev1
 argument_list|)
@@ -4836,12 +4816,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|N
-end_undef
 
 begin_comment
 comment|/*  * Configure Automatic Gain Controller  */

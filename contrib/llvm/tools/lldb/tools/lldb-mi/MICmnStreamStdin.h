@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MIUtilStreamStdin.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMICmnStreamStdin interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -157,9 +113,6 @@ name|public
 name|CMICmnBase
 decl_stmt|,
 name|public
-name|CMIUtilThreadActiveObjBase
-decl_stmt|,
-name|public
 name|MI
 decl|::
 name|ISingleton
@@ -176,113 +129,23 @@ operator|<
 name|CMICmnStreamStdin
 operator|>
 expr_stmt|;
-comment|// Class:
-name|public
-label|:
-comment|//++
-comment|// Description: Visitor pattern. Driver(s) use this interface to get a callback
-comment|//              on each new line of data received from stdin.
-comment|//--
-name|class
-name|IStreamStdin
-block|{
-name|public
-label|:
-name|virtual
-name|bool
-name|ReadLine
-parameter_list|(
-specifier|const
-name|CMIUtilString
-modifier|&
-name|vStdInBuffer
-parameter_list|,
-name|bool
-modifier|&
-name|vrwbYesExit
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|/* dtor */
-name|virtual
-operator|~
-name|IStreamStdin
-argument_list|(
-argument|void
-argument_list|)
-block|{}
-expr_stmt|;
-block|}
-empty_stmt|;
-comment|//++
-comment|// Description: Specific OS stdin handling implementations are created and used by *this
-comment|//              class. Seperates out functionality and enables handler to be set
-comment|//              dynamically depended on the OS detected.
-comment|//--
-name|class
-name|IOSStdinHandler
-block|{
-name|public
-label|:
-name|virtual
-name|bool
-name|InputAvailable
-parameter_list|(
-name|bool
-modifier|&
-name|vwbAvail
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-name|virtual
-specifier|const
-name|MIchar
-modifier|*
-name|ReadLine
-parameter_list|(
-name|CMIUtilString
-modifier|&
-name|vwErrMsg
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-name|virtual
-name|void
-name|InterruptReadLine
-parameter_list|(
-name|void
-parameter_list|)
-block|{}
-empty_stmt|;
-comment|/* dtor */
-name|virtual
-operator|~
-name|IOSStdinHandler
-argument_list|(
-argument|void
-argument_list|)
-block|{}
-expr_stmt|;
-block|}
-empty_stmt|;
 comment|// Methods:
 name|public
 label|:
 name|bool
 name|Initialize
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|Shutdown
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|//
 specifier|const
 name|CMIUtilString
@@ -317,69 +180,16 @@ name|void
 argument_list|)
 decl|const
 decl_stmt|;
-name|void
-name|SetCtrlCHit
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-name|bool
-name|SetVisitor
-parameter_list|(
-name|IStreamStdin
-modifier|&
-name|vrVisitor
-parameter_list|)
-function_decl|;
-name|bool
-name|SetOSStdinHandler
-parameter_list|(
-name|IOSStdinHandler
-modifier|&
-name|vrHandler
-parameter_list|)
-function_decl|;
-name|void
-name|OnExitHandler
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-comment|// Overridden:
-name|public
-label|:
-comment|// From CMIUtilThreadActiveObjBase
-name|virtual
 specifier|const
+name|char
+modifier|*
+name|ReadLine
+parameter_list|(
 name|CMIUtilString
 modifier|&
-name|ThreadGetName
-argument_list|(
-name|void
-argument_list|)
-decl|const
-decl_stmt|;
-comment|// Overridden:
-name|protected
-label|:
-comment|// From CMIUtilThreadActiveObjBase
-name|virtual
-name|bool
-name|ThreadRun
-parameter_list|(
-name|bool
-modifier|&
-name|vrIsAlive
+name|vwErrMsg
 parameter_list|)
 function_decl|;
-name|virtual
-name|bool
-name|ThreadFinish
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-comment|// Let this thread clean up after itself
 comment|// Methods:
 name|private
 label|:
@@ -406,76 +216,39 @@ name|CMICmnStreamStdin
 operator|&
 operator|)
 decl_stmt|;
-name|bool
-name|MonitorStdin
-parameter_list|(
-name|bool
-modifier|&
-name|vrwbYesExit
-parameter_list|)
-function_decl|;
-specifier|const
-name|MIchar
-modifier|*
-name|ReadLine
-parameter_list|(
-name|CMIUtilString
-modifier|&
-name|vwErrMsg
-parameter_list|)
-function_decl|;
-name|bool
-name|InputAvailable
-parameter_list|(
-name|bool
-modifier|&
-name|vbAvail
-parameter_list|)
-function_decl|;
-comment|// Bytes are available on stdin
 comment|// Overridden:
 name|private
 label|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmnStreamStdin
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 expr_stmt|;
 comment|// Attributes:
 name|private
 label|:
-specifier|const
-name|CMIUtilString
-name|m_constStrThisThreadname
-decl_stmt|;
-name|IStreamStdin
-modifier|*
-name|m_pVisitor
-decl_stmt|;
 name|CMIUtilString
 name|m_strPromptCurrent
 decl_stmt|;
 comment|// Command line prompt as shown to the user
-specifier|volatile
-name|bool
-name|m_bKeyCtrlCHit
-decl_stmt|;
-comment|// True = User hit Ctrl-C, false = has not yet
 name|bool
 name|m_bShowPrompt
 decl_stmt|;
 comment|// True = Yes prompt is shown/output to the user (stdout), false = no prompt
-name|bool
-name|m_bRedrawPrompt
+specifier|static
+specifier|const
+name|int
+name|m_constBufferSize
+init|=
+literal|2048
 decl_stmt|;
-comment|// True = Prompt needs to be redrawn
-name|IOSStdinHandler
+name|char
 modifier|*
-name|m_pStdinReadHandler
+name|m_pCmdBuffer
 decl_stmt|;
 block|}
 end_decl_stmt

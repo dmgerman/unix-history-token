@@ -96,9 +96,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCSectionData
-decl_stmt|;
-name|class
 name|MachObjectWriter
 decl_stmt|;
 name|class
@@ -118,14 +115,6 @@ specifier|const
 name|uint32_t
 name|CPUSubtype
 decl_stmt|;
-comment|// FIXME: Remove this, we should just always use it once we no longer care
-comment|// about Darwin 'as' compatibility.
-specifier|const
-name|unsigned
-name|UseAggressiveSymbolFolding
-range|:
-literal|1
-decl_stmt|;
 name|unsigned
 name|LocalDifference_RIT
 decl_stmt|;
@@ -138,8 +127,6 @@ argument_list|,
 argument|uint32_t CPUType_
 argument_list|,
 argument|uint32_t CPUSubtype_
-argument_list|,
-argument|bool UseAggressiveSymbolFolding_ = false
 argument_list|)
 empty_stmt|;
 name|void
@@ -161,16 +148,15 @@ operator|~
 name|MCMachObjectTargetWriter
 argument_list|()
 expr_stmt|;
-comment|/// @name Lifetime Management
+comment|/// \name Lifetime Management
 comment|/// @{
 name|virtual
 name|void
 name|reset
 parameter_list|()
 block|{}
-empty_stmt|;
 comment|/// @}
-comment|/// @name Accessors
+comment|/// \name Accessors
 comment|/// @{
 name|bool
 name|is64Bit
@@ -179,15 +165,6 @@ specifier|const
 block|{
 return|return
 name|Is64Bit
-return|;
-block|}
-name|bool
-name|useAggressiveSymbolFolding
-argument_list|()
-specifier|const
-block|{
-return|return
-name|UseAggressiveSymbolFolding
 return|;
 block|}
 name|uint32_t
@@ -218,17 +195,16 @@ name|LocalDifference_RIT
 return|;
 block|}
 comment|/// @}
-comment|/// @name API
+comment|/// \name API
 comment|/// @{
 name|virtual
 name|void
-name|RecordRelocation
+name|recordRelocation
 parameter_list|(
 name|MachObjectWriter
 modifier|*
 name|Writer
 parameter_list|,
-specifier|const
 name|MCAssembler
 modifier|&
 name|Asm
@@ -267,14 +243,14 @@ range|:
 name|public
 name|MCObjectWriter
 block|{
-comment|/// MachSymbolData - Helper struct for containing some precomputed information
-comment|/// on symbols.
+comment|/// Helper struct for containing some precomputed information on symbols.
 block|struct
 name|MachSymbolData
 block|{
-name|MCSymbolData
+specifier|const
+name|MCSymbol
 operator|*
-name|SymbolData
+name|Symbol
 block|;
 name|uint64_t
 name|StringIndex
@@ -304,25 +280,62 @@ name|MCMachObjectTargetWriter
 operator|>
 name|TargetObjectWriter
 block|;
-comment|/// @name Relocation Data
+comment|/// \name Relocation Data
 comment|/// @{
+block|struct
+name|RelAndSymbol
+block|{
+specifier|const
+name|MCSymbol
+operator|*
+name|Sym
+block|;
+name|MachO
+operator|::
+name|any_relocation_info
+name|MRE
+block|;
+name|RelAndSymbol
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|*
+name|Sym
+argument_list|,
+specifier|const
+name|MachO
+operator|::
+name|any_relocation_info
+operator|&
+name|MRE
+argument_list|)
+operator|:
+name|Sym
+argument_list|(
+name|Sym
+argument_list|)
+block|,
+name|MRE
+argument_list|(
+argument|MRE
+argument_list|)
+block|{}
+block|}
+block|;
 name|llvm
 operator|::
 name|DenseMap
 operator|<
 specifier|const
-name|MCSectionData
+name|MCSection
 operator|*
 block|,
 name|std
 operator|::
 name|vector
 operator|<
-name|MachO
-operator|::
-name|any_relocation_info
-operator|>
-expr|>
+name|RelAndSymbol
+operator|>>
 name|Relocations
 block|;
 name|llvm
@@ -330,15 +343,18 @@ operator|::
 name|DenseMap
 operator|<
 specifier|const
-name|MCSectionData
+name|MCSection
 operator|*
 block|,
 name|unsigned
 operator|>
 name|IndirectSymBase
 block|;
+name|SectionAddrMap
+name|SectionAddress
+block|;
 comment|/// @}
-comment|/// @name Symbol Table Data
+comment|/// \name Symbol Table Data
 comment|/// @{
 name|StringTableBuilder
 name|StringTable
@@ -384,24 +400,33 @@ name|MachObjectWriter
 argument_list|(
 argument|MCMachObjectTargetWriter *MOTW
 argument_list|,
-argument|raw_ostream&_OS
+argument|raw_pwrite_stream&OS
 argument_list|,
-argument|bool _IsLittleEndian
+argument|bool IsLittleEndian
 argument_list|)
 operator|:
 name|MCObjectWriter
 argument_list|(
-name|_OS
+name|OS
 argument_list|,
-name|_IsLittleEndian
+name|IsLittleEndian
 argument_list|)
 block|,
 name|TargetObjectWriter
 argument_list|(
 argument|MOTW
 argument_list|)
-block|{   }
-comment|/// @name Lifetime management Methods
+block|{}
+specifier|const
+name|MCSymbol
+operator|&
+name|findAliasedSymbol
+argument_list|(
+argument|const MCSymbol&Sym
+argument_list|)
+specifier|const
+block|;
+comment|/// \name Lifetime management Methods
 comment|/// @{
 name|void
 name|reset
@@ -409,7 +434,7 @@ argument_list|()
 name|override
 block|;
 comment|/// @}
-comment|/// @name Utility Methods
+comment|/// \name Utility Methods
 comment|/// @{
 name|bool
 name|isFixupKindPCRel
@@ -418,9 +443,6 @@ argument|const MCAssembler&Asm
 argument_list|,
 argument|unsigned Kind
 argument_list|)
-block|;
-name|SectionAddrMap
-name|SectionAddress
 block|;
 name|SectionAddrMap
 operator|&
@@ -434,7 +456,7 @@ block|}
 name|uint64_t
 name|getSectionAddress
 argument_list|(
-argument|const MCSectionData* SD
+argument|const MCSection *Sec
 argument_list|)
 specifier|const
 block|{
@@ -443,14 +465,14 @@ name|SectionAddress
 operator|.
 name|lookup
 argument_list|(
-name|SD
+name|Sec
 argument_list|)
 return|;
 block|}
 name|uint64_t
 name|getSymbolAddress
 argument_list|(
-argument|const MCSymbolData* SD
+argument|const MCSymbol&S
 argument_list|,
 argument|const MCAsmLayout&Layout
 argument_list|)
@@ -468,7 +490,7 @@ block|;
 name|uint64_t
 name|getPaddingSize
 argument_list|(
-argument|const MCSectionData *SD
+argument|const MCSection *SD
 argument_list|,
 argument|const MCAsmLayout&Layout
 argument_list|)
@@ -478,13 +500,13 @@ name|bool
 name|doesSymbolRequireExternRelocation
 argument_list|(
 specifier|const
-name|MCSymbolData
-operator|*
-name|SD
+name|MCSymbol
+operator|&
+name|S
 argument_list|)
 block|;
 comment|/// @}
-comment|/// @name Target Writer Proxy Accessors
+comment|/// \name Target Writer Proxy Accessors
 comment|/// @{
 name|bool
 name|is64Bit
@@ -521,7 +543,7 @@ return|;
 block|}
 comment|/// @}
 name|void
-name|WriteHeader
+name|writeHeader
 argument_list|(
 argument|unsigned NumLoadCommands
 argument_list|,
@@ -530,12 +552,12 @@ argument_list|,
 argument|bool SubsectionsViaSymbols
 argument_list|)
 block|;
-comment|/// WriteSegmentLoadCommand - Write a segment load command.
+comment|/// Write a segment load command.
 comment|///
 comment|/// \param NumSections The number of sections in this segment.
 comment|/// \param SectionDataSize The total size of the sections.
 name|void
-name|WriteSegmentLoadCommand
+name|writeSegmentLoadCommand
 argument_list|(
 argument|unsigned NumSections
 argument_list|,
@@ -547,13 +569,13 @@ argument|uint64_t SectionDataSize
 argument_list|)
 block|;
 name|void
-name|WriteSection
+name|writeSection
 argument_list|(
 argument|const MCAssembler&Asm
 argument_list|,
 argument|const MCAsmLayout&Layout
 argument_list|,
-argument|const MCSectionData&SD
+argument|const MCSection&Sec
 argument_list|,
 argument|uint64_t FileOffset
 argument_list|,
@@ -563,7 +585,7 @@ argument|unsigned NumRelocations
 argument_list|)
 block|;
 name|void
-name|WriteSymtabLoadCommand
+name|writeSymtabLoadCommand
 argument_list|(
 argument|uint32_t SymbolOffset
 argument_list|,
@@ -575,7 +597,7 @@ argument|uint32_t StringTableSize
 argument_list|)
 block|;
 name|void
-name|WriteDysymtabLoadCommand
+name|writeDysymtabLoadCommand
 argument_list|(
 argument|uint32_t FirstLocalSymbol
 argument_list|,
@@ -595,7 +617,7 @@ argument|uint32_t NumIndirectSymbols
 argument_list|)
 block|;
 name|void
-name|WriteNlist
+name|writeNlist
 argument_list|(
 name|MachSymbolData
 operator|&
@@ -608,7 +630,7 @@ name|Layout
 argument_list|)
 block|;
 name|void
-name|WriteLinkeditLoadCommand
+name|writeLinkeditLoadCommand
 argument_list|(
 argument|uint32_t Type
 argument_list|,
@@ -618,7 +640,7 @@ argument|uint32_t DataSize
 argument_list|)
 block|;
 name|void
-name|WriteLinkerOptionsLoadCommand
+name|writeLinkerOptionsLoadCommand
 argument_list|(
 specifier|const
 name|std
@@ -646,26 +668,41 @@ comment|//  - Relaxation issues, where we forget to relax something.
 comment|//
 comment|//  - Input errors, where something cannot be correctly encoded. 'as' allows
 comment|//    these through in many cases.
+comment|// Add a relocation to be output in the object file. At the time this is
+comment|// called, the symbol indexes are not know, so if the relocation refers
+comment|// to a symbol it should be passed as \p RelSymbol so that it can be updated
+comment|// afterwards. If the relocation doesn't refer to a symbol, nullptr should be
+comment|// used.
 name|void
 name|addRelocation
 argument_list|(
-argument|const MCSectionData *SD
+argument|const MCSymbol *RelSymbol
+argument_list|,
+argument|const MCSection *Sec
 argument_list|,
 argument|MachO::any_relocation_info&MRE
 argument_list|)
 block|{
+name|RelAndSymbol
+name|P
+argument_list|(
+name|RelSymbol
+argument_list|,
+name|MRE
+argument_list|)
+block|;
 name|Relocations
 index|[
-name|SD
+name|Sec
 index|]
 operator|.
 name|push_back
 argument_list|(
-name|MRE
+name|P
 argument_list|)
 block|;   }
 name|void
-name|RecordScatteredRelocation
+name|recordScatteredRelocation
 argument_list|(
 argument|const MCAssembler&Asm
 argument_list|,
@@ -683,7 +720,7 @@ argument|uint64_t&FixedValue
 argument_list|)
 block|;
 name|void
-name|RecordTLVPRelocation
+name|recordTLVPRelocation
 argument_list|(
 argument|const MCAssembler&Asm
 argument_list|,
@@ -699,9 +736,9 @@ argument|uint64_t&FixedValue
 argument_list|)
 block|;
 name|void
-name|RecordRelocation
+name|recordRelocation
 argument_list|(
-argument|const MCAssembler&Asm
+argument|MCAssembler&Asm
 argument_list|,
 argument|const MCAsmLayout&Layout
 argument_list|,
@@ -718,17 +755,16 @@ argument_list|)
 name|override
 block|;
 name|void
-name|BindIndirectSymbols
+name|bindIndirectSymbols
 argument_list|(
 name|MCAssembler
 operator|&
 name|Asm
 argument_list|)
 block|;
-comment|/// ComputeSymbolTable - Compute the symbol table data
-comment|///
+comment|/// Compute the symbol table data.
 name|void
-name|ComputeSymbolTable
+name|computeSymbolTable
 argument_list|(
 name|MCAssembler
 operator|&
@@ -777,20 +813,7 @@ name|Layout
 argument_list|)
 block|;
 name|void
-name|markAbsoluteVariableSymbols
-argument_list|(
-name|MCAssembler
-operator|&
-name|Asm
-argument_list|,
-specifier|const
-name|MCAsmLayout
-operator|&
-name|Layout
-argument_list|)
-block|;
-name|void
-name|ExecutePostLayoutBinding
+name|executePostLayoutBinding
 argument_list|(
 argument|MCAssembler&Asm
 argument_list|,
@@ -799,11 +822,11 @@ argument_list|)
 name|override
 block|;
 name|bool
-name|IsSymbolRefDifferenceFullyResolvedImpl
+name|isSymbolRefDifferenceFullyResolvedImpl
 argument_list|(
 argument|const MCAssembler&Asm
 argument_list|,
-argument|const MCSymbolData&DataA
+argument|const MCSymbol&SymA
 argument_list|,
 argument|const MCFragment&FB
 argument_list|,
@@ -815,7 +838,7 @@ specifier|const
 name|override
 block|;
 name|void
-name|WriteObject
+name|writeObject
 argument_list|(
 argument|MCAssembler&Asm
 argument_list|,
@@ -824,7 +847,7 @@ argument_list|)
 name|override
 block|; }
 decl_stmt|;
-comment|/// \brief Construct a new Mach-O writer instance.
+comment|/// Construct a new Mach-O writer instance.
 comment|///
 comment|/// This routine takes ownership of the target writer subclass.
 comment|///
@@ -839,7 +862,7 @@ name|MCMachObjectTargetWriter
 modifier|*
 name|MOTW
 parameter_list|,
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
 parameter_list|,

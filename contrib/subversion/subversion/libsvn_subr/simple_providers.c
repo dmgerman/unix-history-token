@@ -102,31 +102,6 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/* The keys that will be stored on disk.  These serve the same role as    similar constants in other providers. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AUTHN_USERNAME_KEY
-value|"username"
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUTHN_PASSWORD_KEY
-value|"password"
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUTHN_PASSTYPE_KEY
-value|"passtype"
-end_define
-
-begin_comment
 comment|/* Baton type for the simple provider. */
 end_comment
 
@@ -215,7 +190,7 @@ name|svn_hash_gets
 argument_list|(
 name|creds
 argument_list|,
-name|AUTHN_USERNAME_KEY
+name|SVN_CONFIG_AUTHN_USERNAME_KEY
 argument_list|)
 expr_stmt|;
 if|if
@@ -242,7 +217,7 @@ name|svn_hash_gets
 argument_list|(
 name|creds
 argument_list|,
-name|AUTHN_PASSWORD_KEY
+name|SVN_CONFIG_AUTHN_PASSWORD_KEY
 argument_list|)
 expr_stmt|;
 if|if
@@ -322,7 +297,7 @@ name|svn_hash_sets
 argument_list|(
 name|creds
 argument_list|,
-name|AUTHN_PASSWORD_KEY
+name|SVN_CONFIG_AUTHN_PASSWORD_KEY
 argument_list|,
 name|svn_string_create
 argument_list|(
@@ -381,7 +356,7 @@ name|svn_hash_gets
 argument_list|(
 name|creds
 argument_list|,
-name|AUTHN_USERNAME_KEY
+name|SVN_CONFIG_AUTHN_USERNAME_KEY
 argument_list|)
 expr_stmt|;
 if|if
@@ -609,7 +584,7 @@ name|svn_hash_gets
 argument_list|(
 name|creds_hash
 argument_list|,
-name|AUTHN_PASSTYPE_KEY
+name|SVN_CONFIG_AUTHN_PASSTYPE_KEY
 argument_list|)
 expr_stmt|;
 if|if
@@ -1115,7 +1090,7 @@ name|svn_hash_sets
 argument_list|(
 name|creds_hash
 argument_list|,
-name|AUTHN_USERNAME_KEY
+name|SVN_CONFIG_AUTHN_USERNAME_KEY
 argument_list|,
 name|svn_string_create
 argument_list|(
@@ -1473,7 +1448,7 @@ name|svn_hash_sets
 argument_list|(
 name|creds_hash
 argument_list|,
-name|AUTHN_PASSTYPE_KEY
+name|SVN_CONFIG_AUTHN_PASSTYPE_KEY
 argument_list|,
 name|svn_string_create
 argument_list|(
@@ -1959,7 +1934,7 @@ name|svn_hash_gets
 argument_list|(
 name|creds_hash
 argument_list|,
-name|AUTHN_USERNAME_KEY
+name|SVN_CONFIG_AUTHN_USERNAME_KEY
 argument_list|)
 expr_stmt|;
 if|if

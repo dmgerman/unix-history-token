@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm-objdump.h ----------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|//
 end_comment
 
@@ -85,6 +81,7 @@ extern|extern cl::opt<std::string> TripleName;
 extern|extern cl::opt<std::string> ArchName;
 extern|extern cl::opt<std::string> MCPU;
 extern|extern cl::list<std::string> MAttrs;
+extern|extern cl::list<std::string> DumpSections;
 extern|extern cl::opt<bool> Disassemble;
 extern|extern cl::opt<bool> NoShowRawInsn;
 extern|extern cl::opt<bool> PrivateHeaders;
@@ -93,7 +90,24 @@ extern|extern cl::opt<bool> Rebase;
 extern|extern cl::opt<bool> Bind;
 extern|extern cl::opt<bool> LazyBind;
 extern|extern cl::opt<bool> WeakBind;
+extern|extern cl::opt<bool> RawClangAST;
 extern|extern cl::opt<bool> UniversalHeaders;
+extern|extern cl::opt<bool> ArchiveHeaders;
+extern|extern cl::opt<bool> IndirectSymbols;
+extern|extern cl::opt<bool> DataInCode;
+extern|extern cl::opt<bool> LinkOptHints;
+extern|extern cl::opt<bool> InfoPlist;
+extern|extern cl::opt<bool> DylibsUsed;
+extern|extern cl::opt<bool> DylibId;
+extern|extern cl::opt<bool> ObjcMetaData;
+extern|extern cl::opt<std::string> DisSymName;
+extern|extern cl::opt<bool> NonVerbose;
+extern|extern cl::opt<bool> Relocations;
+extern|extern cl::opt<bool> SectionHeaders;
+extern|extern cl::opt<bool> SectionContents;
+extern|extern cl::opt<bool> SymbolTable;
+extern|extern cl::opt<bool> UnwindInfo;
+extern|extern cl::opt<bool> PrintImmHex;
 comment|// Various helper functions.
 name|bool
 name|error
@@ -118,13 +132,6 @@ name|RelocationRef
 name|b
 argument_list|)
 decl_stmt|;
-name|void
-name|DumpBytes
-parameter_list|(
-name|StringRef
-name|bytes
-parameter_list|)
-function_decl|;
 name|void
 name|ParseInputMachO
 parameter_list|(
@@ -288,6 +295,61 @@ argument_list|)
 decl_stmt|;
 name|void
 name|printWeakBindTable
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|ObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
+name|printRawClangAST
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|ObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
+name|PrintRelocations
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|ObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
+name|PrintSectionHeaders
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|ObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
+name|PrintSectionContents
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|ObjectFile
+operator|*
+name|o
+argument_list|)
+decl_stmt|;
+name|void
+name|PrintSymbolTable
 argument_list|(
 specifier|const
 name|object

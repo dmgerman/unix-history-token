@@ -811,6 +811,20 @@ block|,
 block|{
 literal|0x8086
 block|,
+literal|0x1e3d
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Intel Panther Point KT Controller"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
 literal|0x2a07
 block|,
 literal|0xffff

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: socks.c,v 1.20 2012/03/08 09:56:28 espie Exp $	*/
+comment|/*	$OpenBSD: socks.c,v 1.21 2015/03/26 21:19:51 tobias Exp $	*/
 end_comment
 
 begin_comment
@@ -1847,7 +1847,7 @@ comment|/* Terminate headers */
 if|if
 condition|(
 operator|(
-name|r
+name|cnt
 operator|=
 name|atomicio
 argument_list|(
@@ -1867,9 +1867,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"write failed (2/%d)"
+literal|"write failed (%zu/2)"
 argument_list|,
-name|r
+name|cnt
 argument_list|)
 expr_stmt|;
 comment|/* Read status reply */

@@ -244,7 +244,7 @@ name|unsigned
 name|ev_cnt
 decl_stmt|;
 comment|/* Event count since incremental GC. */
-name|index_t
+name|szind_t
 name|next_gc_bin
 decl_stmt|;
 comment|/* Next bin to GC. */
@@ -407,7 +407,7 @@ name|tcache_bin_t
 modifier|*
 name|tbin
 parameter_list|,
-name|index_t
+name|szind_t
 name|binind
 parameter_list|)
 function_decl|;
@@ -429,7 +429,7 @@ name|tcache_bin_t
 modifier|*
 name|tbin
 parameter_list|,
-name|index_t
+name|szind_t
 name|binind
 parameter_list|,
 name|unsigned
@@ -450,7 +450,7 @@ name|tcache_bin_t
 modifier|*
 name|tbin
 parameter_list|,
-name|index_t
+name|szind_t
 name|binind
 parameter_list|,
 name|unsigned
@@ -792,7 +792,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|index_t
+name|szind_t
 name|binind
 parameter_list|)
 function_decl|;
@@ -1260,7 +1260,7 @@ name|void
 modifier|*
 name|ret
 decl_stmt|;
-name|index_t
+name|szind_t
 name|binind
 decl_stmt|;
 name|size_t
@@ -1511,7 +1511,7 @@ name|void
 modifier|*
 name|ret
 decl_stmt|;
-name|index_t
+name|szind_t
 name|binind
 decl_stmt|;
 name|size_t
@@ -1766,7 +1766,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|index_t
+name|szind_t
 name|binind
 parameter_list|)
 block|{
@@ -1918,7 +1918,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|index_t
+name|szind_t
 name|binind
 decl_stmt|;
 name|tcache_bin_t
