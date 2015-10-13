@@ -4235,12 +4235,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IW_CM_MPAV2
-end_ifdef
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -4261,37 +4255,6 @@ literal|"MPA Revision, 0 supports amso1100, 1 is RFC0544 spec compliant, 2 is IE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_hw_iw_cxgbe
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|mpa_rev
-argument_list|,
-name|CTLFLAG_RWTUN
-argument_list|,
-operator|&
-name|mpa_rev
-argument_list|,
-literal|0
-argument_list|,
-literal|"MPA Revision, 0 supports amso1100, 1 is RFC0544 spec compliant (default = 1)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -7459,9 +7422,6 @@ name|tried_with_mpa_v1
 condition|)
 block|{
 comment|/* this means MPA_v2 is used */
-ifdef|#
-directive|ifdef
-name|IW_CM_MPAV2
 name|event
 operator|.
 name|ord
@@ -7478,8 +7438,6 @@ name|ep
 operator|->
 name|ird
 expr_stmt|;
-endif|#
-directive|endif
 name|event
 operator|.
 name|private_data_len
@@ -7518,9 +7476,6 @@ block|}
 else|else
 block|{
 comment|/* this means MPA_v1 is used. Send max supported */
-ifdef|#
-directive|ifdef
-name|IW_CM_MPAV2
 name|event
 operator|.
 name|ord
@@ -7533,8 +7488,6 @@ name|ird
 operator|=
 name|c4iw_max_read_depth
 expr_stmt|;
-endif|#
-directive|endif
 name|event
 operator|.
 name|private_data_len
@@ -7675,9 +7628,6 @@ name|event
 operator|=
 name|IW_CM_EVENT_ESTABLISHED
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IW_CM_MPAV2
 name|event
 operator|.
 name|ird
@@ -7694,8 +7644,6 @@ name|ep
 operator|->
 name|ord
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ep
