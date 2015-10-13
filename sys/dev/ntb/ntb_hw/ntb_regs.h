@@ -68,7 +68,7 @@ begin_define
 define|#
 directive|define
 name|XEON_MAX_COMPAT_SPADS
-value|8
+value|16
 end_define
 
 begin_comment
