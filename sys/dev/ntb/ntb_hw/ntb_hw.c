@@ -5140,7 +5140,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ntb_register_db_callback() - register a callback for doorbell interrupt  * @ntb: pointer to ntb_softc instance  * @idx: doorbell index to register callback, zero based  * @func: callback function to register  *  * This function registers a callback function for the doorbell interrupt  * on the primary side. The function will unmask the doorbell as well to  * allow interrupt.  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
+comment|/**  * ntb_register_db_callback() - register a callback for doorbell interrupt  * @ntb: pointer to ntb_softc instance  * @idx: doorbell index to register callback, zero based  * @data: pointer to be returned to caller with every callback  * @func: callback function to register  *  * This function registers a callback function for the doorbell interrupt  * on the primary side. The function will unmask the doorbell as well to  * allow interrupt.  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
 end_comment
 
 begin_function

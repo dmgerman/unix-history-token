@@ -3549,7 +3549,7 @@ comment|/* Transport Tx */
 end_comment
 
 begin_comment
-comment|/**  * ntb_transport_tx_enqueue - Enqueue a new NTB queue entry  * @qp: NTB transport layer queue the entry is to be enqueued on  * @cb: per buffer pointer for callback function to use  * @data: pointer to data buffer that will be sent  * @len: length of the data buffer  *  * Enqueue a new transmit buffer onto the transport queue from which a NTB  * payload will be transmitted.  This assumes that a lock is behing held to  * serialize access to the qp.  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
+comment|/**  * ntb_transport_tx_enqueue - Enqueue a new NTB queue entry  * @qp: NTB transport layer queue the entry is to be enqueued on  * @cb: per buffer pointer for callback function to use  * @data: pointer to data buffer that will be sent  * @len: length of the data buffer  *  * Enqueue a new transmit buffer onto the transport queue from which a NTB  * payload will be transmitted.  This assumes that a lock is being held to  * serialize access to the qp.  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
 end_comment
 
 begin_function
@@ -6599,7 +6599,7 @@ comment|/* Link commanded down */
 end_comment
 
 begin_comment
-comment|/**  * ntb_transport_link_down - Notify NTB transport to no longer enqueue data  * @qp: NTB transport layer queue to be disabled  *  * Notify NTB transport layer of client's desire to no longer receive data on  * transport queue specified.  It is the client's responsibility to ensure all  * entries on queue are purged or otherwise handled appropraitely.  */
+comment|/**  * ntb_transport_link_down - Notify NTB transport to no longer enqueue data  * @qp: NTB transport layer queue to be disabled  *  * Notify NTB transport layer of client's desire to no longer receive data on  * transport queue specified.  It is the client's responsibility to ensure all  * entries on queue are purged or otherwise handled appropriately.  */
 end_comment
 
 begin_function
