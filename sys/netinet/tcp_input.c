@@ -10358,6 +10358,7 @@ condition|(
 name|V_tcp_do_rfc3042
 condition|)
 block|{
+comment|/* 					 * Process first and second duplicate 					 * ACKs. Each indicates a segment 					 * leaving the network, creating room 					 * for more. Make sure we can send a 					 * packet on reception of each duplicate 					 * ACK by increasing snd_cwnd by one 					 * segment. Restore the original 					 * snd_cwnd after packet transmission. 					 */
 name|cc_ack_received
 argument_list|(
 name|tp
