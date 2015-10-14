@@ -171,6 +171,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|wpas_wps_pbc_overlap
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|wpas_wps_cancel
 parameter_list|(

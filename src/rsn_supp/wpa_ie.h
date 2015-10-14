@@ -177,16 +177,10 @@ name|u8
 modifier|*
 name|ht_capabilities
 decl_stmt|;
-name|size_t
-name|ht_capabilities_len
-decl_stmt|;
 specifier|const
 name|u8
 modifier|*
 name|vht_capabilities
-decl_stmt|;
-name|size_t
-name|vht_capabilities_len
 decl_stmt|;
 specifier|const
 name|u8

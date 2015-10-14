@@ -3833,11 +3833,12 @@ modifier|*
 name|cred
 index|[]
 parameter_list|,
-name|size_t
+name|u16
 name|cred_len
 index|[]
 parameter_list|,
-name|size_t
+name|unsigned
+name|int
 name|num_cred
 parameter_list|,
 name|int
@@ -4002,6 +4003,11 @@ block|{
 name|struct
 name|wps_credential
 name|cred
+decl_stmt|;
+name|int
+name|ret
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -4332,6 +4338,8 @@ argument_list|(
 name|attrs
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|wps
 operator|->
 name|wps
@@ -4350,7 +4358,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-literal|0
+name|ret
 return|;
 block|}
 end_function

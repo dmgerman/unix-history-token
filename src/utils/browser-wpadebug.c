@@ -422,7 +422,7 @@ name|char
 modifier|*
 name|argv
 index|[
-literal|12
+literal|14
 index|]
 decl_stmt|;
 name|argv
@@ -509,6 +509,21 @@ expr_stmt|;
 name|argv
 index|[
 literal|11
+index|]
+operator|=
+literal|"--user"
+expr_stmt|;
+name|argv
+index|[
+literal|12
+index|]
+operator|=
+literal|"-3"
+expr_stmt|;
+comment|/* USER_CURRENT_OR_SELF */
+name|argv
+index|[
+literal|13
 index|]
 operator|=
 name|NULL

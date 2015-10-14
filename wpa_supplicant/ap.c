@@ -594,6 +594,70 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|conf
+operator|->
+name|secondary_channel
+condition|)
+block|{
+name|struct
+name|wpa_supplicant
+modifier|*
+name|iface
+decl_stmt|;
+for|for
+control|(
+name|iface
+operator|=
+name|wpa_s
+operator|->
+name|global
+operator|->
+name|ifaces
+init|;
+name|iface
+condition|;
+name|iface
+operator|=
+name|iface
+operator|->
+name|next
+control|)
+block|{
+if|if
+condition|(
+name|iface
+operator|==
+name|wpa_s
+operator|||
+name|iface
+operator|->
+name|wpa_state
+operator|<
+name|WPA_AUTHENTICATING
+operator|||
+operator|(
+name|int
+operator|)
+name|iface
+operator|->
+name|assoc_freq
+operator|!=
+name|ssid
+operator|->
+name|frequency
+condition|)
+continue|continue;
+comment|/* 			 * Do not allow 40 MHz co-ex PRI/SEC switch to force us 			 * to change our PRI channel since we have an existing, 			 * concurrent connection on that channel and doing 			 * multi-channel concurrency is likely to cause more 			 * harm than using different PRI/SEC selection in 			 * environment with multiple BSSes on these two channels 			 * with mixed 20 MHz or PRI channel selection. 			 */
+name|conf
+operator|->
+name|no_pri_sec_switch
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
 endif|#
 directive|endif
 comment|/* CONFIG_IEEE80211N */
@@ -2741,6 +2805,26 @@ name|wpa_s
 init|=
 name|ctx
 decl_stmt|;
+name|unsigned
+name|int
+name|freq
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|wpa_s
+operator|->
+name|ap_iface
+condition|)
+name|freq
+operator|=
+name|wpa_s
+operator|->
+name|ap_iface
+operator|->
+name|freq
+expr_stmt|;
 return|return
 name|wpas_p2p_probe_req_rx
 argument_list|(
@@ -2755,6 +2839,8 @@ argument_list|,
 name|ie
 argument_list|,
 name|ie_len
+argument_list|,
+name|freq
 argument_list|,
 name|ssi_signal
 argument_list|)
@@ -6306,6 +6392,12 @@ comment|/* NEED_AP_MLME */
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_CTRL_IFACE
+end_ifdef
+
 begin_function
 name|int
 name|ap_ctrl_iface_chanswitch
@@ -6355,6 +6447,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_CTRL_IFACE */
+end_comment
+
 begin_function
 name|void
 name|wpas_ap_ch_switch
@@ -6397,6 +6498,20 @@ name|assoc_freq
 operator|=
 name|freq
 expr_stmt|;
+if|if
+condition|(
+name|wpa_s
+operator|->
+name|current_ssid
+condition|)
+name|wpa_s
+operator|->
+name|current_ssid
+operator|->
+name|frequency
+operator|=
+name|freq
+expr_stmt|;
 name|hostapd_event_ch_switch
 argument_list|(
 name|wpa_s
@@ -6418,7 +6533,7 @@ name|width
 argument_list|,
 name|cf1
 argument_list|,
-name|cf1
+name|cf2
 argument_list|)
 expr_stmt|;
 block|}
@@ -6895,6 +7010,12 @@ begin_comment
 comment|/* CONFIG_WPS_NFC */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_CTRL_IFACE
+end_ifdef
+
 begin_function
 name|int
 name|wpas_ap_stop_ap
@@ -6940,6 +7061,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_CTRL_IFACE */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -7349,6 +7479,32 @@ end_endif
 begin_comment
 comment|/* NEED_AP_MLME */
 end_comment
+
+begin_function
+name|void
+name|ap_periodic
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|)
+block|{
+if|if
+condition|(
+name|wpa_s
+operator|->
+name|ap_iface
+condition|)
+name|hostapd_periodic_iface
+argument_list|(
+name|wpa_s
+operator|->
+name|ap_iface
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

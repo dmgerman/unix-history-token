@@ -120,6 +120,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|hostapd_reset_ap_wps_ie
+parameter_list|(
+name|struct
+name|hostapd_data
+modifier|*
+name|hapd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|hostapd_set_ap_wps_ie
 parameter_list|(
 name|struct

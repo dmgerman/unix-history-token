@@ -2831,6 +2831,25 @@ literal|"EAP-WSC: Failed to receive "
 literal|"message from WPS"
 argument_list|)
 expr_stmt|;
+name|eap_wsc_state
+argument_list|(
+name|data
+argument_list|,
+name|FAIL
+argument_list|)
+expr_stmt|;
+name|ret
+operator|->
+name|methodState
+operator|=
+name|METHOD_DONE
+expr_stmt|;
+name|ret
+operator|->
+name|decision
+operator|=
+name|DECISION_FAIL
+expr_stmt|;
 return|return
 name|NULL
 return|;

@@ -4666,9 +4666,20 @@ name|cert_cb
 operator|==
 name|NULL
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"%s: no cert_cb configured"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 if|if
 condition|(
 literal|0
@@ -5151,7 +5162,9 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"curl_cb_ssl_verify"
+literal|"curl_cb_ssl_verify, preverify_ok: %d"
+argument_list|,
+name|preverify_ok
 argument_list|)
 expr_stmt|;
 name|err
@@ -6570,18 +6583,43 @@ name|CURL
 modifier|*
 name|curl
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|EAP_TLS_OPENSSL
+specifier|const
+name|char
+modifier|*
+name|extra
+init|=
+literal|" tls=openssl"
+decl_stmt|;
+else|#
+directive|else
+comment|/* EAP_TLS_OPENSSL */
+specifier|const
+name|char
+modifier|*
+name|extra
+init|=
+literal|""
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* EAP_TLS_OPENSSL */
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
 literal|"Start HTTP client: address=%s ca_fname=%s "
-literal|"username=%s"
+literal|"username=%s%s"
 argument_list|,
 name|address
 argument_list|,
 name|ca_fname
 argument_list|,
 name|username
+argument_list|,
+name|extra
 argument_list|)
 expr_stmt|;
 name|curl

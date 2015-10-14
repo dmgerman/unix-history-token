@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"common/ieee802_11_defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"wps_defs.h"
 end_include
 
@@ -96,7 +102,7 @@ block|{
 name|u8
 name|ssid
 index|[
-literal|32
+name|SSID_MAX_LEN
 index|]
 decl_stmt|;
 name|size_t
@@ -193,7 +199,7 @@ value|10
 end_define
 
 begin_comment
-comment|/**  * struct wps_device_data - WPS Device Data  * @mac_addr: Device MAC address  * @device_name: Device Name (0..32 octets encoded in UTF-8)  * @manufacturer: Manufacturer (0..64 octets encoded in UTF-8)  * @model_name: Model Name (0..32 octets encoded in UTF-8)  * @model_number: Model Number (0..32 octets encoded in UTF-8)  * @serial_number: Serial Number (0..32 octets encoded in UTF-8)  * @pri_dev_type: Primary Device Type  * @sec_dev_type: Array of secondary device types  * @num_sec_dev_type: Number of secondary device types  * @os_version: OS Version  * @rf_bands: RF bands (WPS_RF_24GHZ, WPS_RF_50GHZ flags)  * @p2p: Whether the device is a P2P device  */
+comment|/**  * struct wps_device_data - WPS Device Data  * @mac_addr: Device MAC address  * @device_name: Device Name (0..32 octets encoded in UTF-8)  * @manufacturer: Manufacturer (0..64 octets encoded in UTF-8)  * @model_name: Model Name (0..32 octets encoded in UTF-8)  * @model_number: Model Number (0..32 octets encoded in UTF-8)  * @serial_number: Serial Number (0..32 octets encoded in UTF-8)  * @pri_dev_type: Primary Device Type  * @sec_dev_type: Array of secondary device types  * @num_sec_dev_type: Number of secondary device types  * @os_version: OS Version  * @rf_bands: RF bands (WPS_RF_24GHZ, WPS_RF_50GHZ, WPS_RF_60GHZ flags)  * @p2p: Whether the device is a P2P device  */
 end_comment
 
 begin_struct
@@ -1239,7 +1245,7 @@ comment|/** 	 * ssid - SSID 	 * 	 * This SSID is used by the Registrar to fill i
 name|u8
 name|ssid
 index|[
-literal|32
+name|SSID_MAX_LEN
 index|]
 decl_stmt|;
 comment|/** 	 * ssid_len - Length of ssid in octets 	 */

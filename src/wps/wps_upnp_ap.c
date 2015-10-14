@@ -138,13 +138,7 @@ name|msg
 argument_list|)
 operator|<
 literal|0
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-if|if
-condition|(
+operator|||
 name|wps_parse_msg
 argument_list|(
 name|msg

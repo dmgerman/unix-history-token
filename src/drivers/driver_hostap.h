@@ -686,7 +686,7 @@ decl_stmt|;
 name|u8
 name|ssid
 index|[
-literal|32
+name|SSID_MAX_LEN
 index|]
 decl_stmt|;
 block|}

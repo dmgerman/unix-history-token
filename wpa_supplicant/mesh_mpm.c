@@ -1114,6 +1114,19 @@ block|}
 endif|#
 directive|endif
 comment|/* CONFIG_IEEE80211N */
+if|if
+condition|(
+name|type
+operator|!=
+name|PLINK_CLOSE
+condition|)
+name|buf_len
+operator|+=
+name|conf
+operator|->
+name|rsn_ie_len
+expr_stmt|;
+comment|/* RSN IE */
 name|buf
 operator|=
 name|wpabuf_alloc
@@ -1214,6 +1227,20 @@ argument_list|,
 name|pos
 operator|-
 name|supp_rates
+argument_list|)
+expr_stmt|;
+comment|/* IE: RSN IE */
+name|wpabuf_put_data
+argument_list|(
+name|buf
+argument_list|,
+name|conf
+operator|->
+name|rsn_ie
+argument_list|,
+name|conf
+operator|->
+name|rsn_ie_len
 argument_list|)
 expr_stmt|;
 comment|/* IE: Mesh ID */
@@ -2628,10 +2655,6 @@ argument_list|,
 name|elems
 operator|->
 name|ht_capabilities
-argument_list|,
-name|elems
-operator|->
-name|ht_capabilities_len
 argument_list|)
 expr_stmt|;
 name|update_ht_state

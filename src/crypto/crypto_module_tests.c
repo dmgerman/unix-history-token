@@ -1142,6 +1142,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|omac1_test_vector
 name|omac1_test_vectors
@@ -1692,6 +1693,7 @@ specifier|static
 name|int
 name|test_omac1_vector
 parameter_list|(
+specifier|const
 name|struct
 name|omac1_test_vector
 modifier|*
@@ -3549,6 +3551,9 @@ block|,
 literal|0xE5
 block|}
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|CONFIG_BORINGSSL
 comment|/* RFC 3394 - Test vector 4.2 */
 name|u8
 name|kek42
@@ -3696,6 +3701,9 @@ block|,
 literal|0x5D
 block|}
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_BORINGSSL */
 comment|/* RFC 3394 - Test vector 4.3 */
 name|u8
 name|kek43
@@ -3859,6 +3867,9 @@ block|,
 literal|0xE7
 block|, 	}
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|CONFIG_BORINGSSL
 comment|/* RFC 3394 - Test vector 4.4 */
 name|u8
 name|kek44
@@ -4038,6 +4049,9 @@ block|,
 literal|0xD2
 block|}
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_BORINGSSL */
 comment|/* RFC 3394 - Test vector 4.5 */
 name|u8
 name|kek45
@@ -4599,6 +4613,9 @@ name|ret
 operator|++
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|CONFIG_BORINGSSL
 name|wpa_printf
 argument_list|(
 name|MSG_INFO
@@ -4732,6 +4749,9 @@ name|ret
 operator|++
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* CONFIG_BORINGSSL */
 name|wpa_printf
 argument_list|(
 name|MSG_INFO
@@ -4865,6 +4885,9 @@ name|ret
 operator|++
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|CONFIG_BORINGSSL
 name|wpa_printf
 argument_list|(
 name|MSG_INFO
@@ -4998,6 +5021,9 @@ name|ret
 operator|++
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* CONFIG_BORINGSSL */
 name|wpa_printf
 argument_list|(
 name|MSG_INFO
@@ -5290,6 +5316,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|CONFIG_FIPS
 struct|struct
 block|{
 name|char
@@ -5636,6 +5665,22 @@ expr_stmt|;
 return|return
 name|errors
 return|;
+else|#
+directive|else
+comment|/* CONFIG_FIPS */
+name|wpa_printf
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"MD5 test cases skipped due to CONFIG_FIPS"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
+comment|/* CONFIG_FIPS */
 block|}
 end_function
 
@@ -5960,6 +6005,9 @@ block|,
 literal|0xA2
 block|}
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|CONFIG_FIPS
 specifier|const
 name|u8
 name|key_block
@@ -6191,6 +6239,9 @@ block|,
 literal|0x71
 block|}
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_FIPS */
 specifier|const
 name|u8
 name|sks
@@ -7009,6 +7060,9 @@ name|errors
 operator|++
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|CONFIG_FIPS
 name|wpa_printf
 argument_list|(
 name|MSG_INFO
@@ -7070,6 +7124,9 @@ name|errors
 operator|++
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* CONFIG_FIPS */
 name|wpa_printf
 argument_list|(
 name|MSG_INFO
@@ -7365,6 +7422,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u8
 name|key0
 index|[]
@@ -7415,6 +7473,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u8
 name|data0
 index|[]
@@ -7425,6 +7484,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u8
 name|prf0
 index|[]
@@ -7563,6 +7623,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u8
 name|key1
 index|[]
@@ -7573,6 +7634,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u8
 name|data1
 index|[]
@@ -7583,6 +7645,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u8
 name|prf1
 index|[]
@@ -7721,6 +7784,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u8
 name|key2
 index|[]
@@ -7771,6 +7835,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u8
 name|data2
 index|[]
@@ -7881,6 +7946,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u8
 name|prf2
 index|[]
@@ -8041,6 +8107,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|passphrase_test
 name|passphrase_tests
@@ -8303,6 +8370,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|rfc6070_test
 name|rfc6070_tests
@@ -8812,6 +8880,7 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+specifier|const
 name|struct
 name|passphrase_test
 modifier|*
@@ -8921,6 +8990,7 @@ index|[
 literal|25
 index|]
 decl_stmt|;
+specifier|const
 name|struct
 name|rfc6070_test
 modifier|*
@@ -9028,6 +9098,7 @@ block|}
 end_function
 
 begin_struct
+specifier|const
 struct|struct
 block|{
 name|char
@@ -9189,6 +9260,7 @@ struct|;
 end_struct
 
 begin_struct
+specifier|const
 struct|struct
 name|hmac_test
 block|{
@@ -11244,6 +11316,7 @@ name|i
 operator|++
 control|)
 block|{
+specifier|const
 name|struct
 name|hmac_test
 modifier|*
@@ -11564,6 +11637,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|CONFIG_FIPS
 comment|/* Test vector from RFC2759 example */
 name|char
 modifier|*
@@ -12220,6 +12296,22 @@ expr_stmt|;
 return|return
 name|errors
 return|;
+else|#
+directive|else
+comment|/* CONFIG_FIPS */
+name|wpa_printf
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"ms_funcs test cases skipped due to CONFIG_FIPS"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
+comment|/* CONFIG_FIPS */
 block|}
 end_function
 

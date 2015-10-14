@@ -94,9 +94,11 @@ file|"drivers/driver.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|wpa_driver_ops
 modifier|*
+specifier|const
 name|wpa_drivers
 index|[]
 init|=

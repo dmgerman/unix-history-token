@@ -49,10 +49,16 @@ name|eap_sake_parse_attr
 modifier|*
 name|attr
 parameter_list|,
+name|u8
+name|attr_id
+parameter_list|,
+name|u8
+name|len
+parameter_list|,
 specifier|const
 name|u8
 modifier|*
-name|pos
+name|data
 parameter_list|)
 block|{
 name|size_t
@@ -60,10 +66,7 @@ name|i
 decl_stmt|;
 switch|switch
 condition|(
-name|pos
-index|[
-literal|0
-index|]
+name|attr_id
 condition|)
 block|{
 case|case
@@ -78,13 +81,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pos
-index|[
-literal|1
-index|]
+name|len
 operator|!=
-literal|2
-operator|+
 name|EAP_SAKE_RAND_LEN
 condition|)
 block|{
@@ -93,12 +91,9 @@ argument_list|(
 name|MSG_DEBUG
 argument_list|,
 literal|"EAP-SAKE: AT_RAND_S with "
-literal|"invalid length %d"
+literal|"invalid payload length %d"
 argument_list|,
-name|pos
-index|[
-literal|1
-index|]
+name|len
 argument_list|)
 expr_stmt|;
 return|return
@@ -110,9 +105,7 @@ name|attr
 operator|->
 name|rand_s
 operator|=
-name|pos
-operator|+
-literal|2
+name|data
 expr_stmt|;
 break|break;
 case|case
@@ -127,13 +120,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pos
-index|[
-literal|1
-index|]
+name|len
 operator|!=
-literal|2
-operator|+
 name|EAP_SAKE_RAND_LEN
 condition|)
 block|{
@@ -142,12 +130,9 @@ argument_list|(
 name|MSG_DEBUG
 argument_list|,
 literal|"EAP-SAKE: AT_RAND_P with "
-literal|"invalid length %d"
+literal|"invalid payload length %d"
 argument_list|,
-name|pos
-index|[
-literal|1
-index|]
+name|len
 argument_list|)
 expr_stmt|;
 return|return
@@ -159,9 +144,7 @@ name|attr
 operator|->
 name|rand_p
 operator|=
-name|pos
-operator|+
-literal|2
+name|data
 expr_stmt|;
 break|break;
 case|case
@@ -176,13 +159,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pos
-index|[
-literal|1
-index|]
+name|len
 operator|!=
-literal|2
-operator|+
 name|EAP_SAKE_MIC_LEN
 condition|)
 block|{
@@ -191,12 +169,9 @@ argument_list|(
 name|MSG_DEBUG
 argument_list|,
 literal|"EAP-SAKE: AT_MIC_S with "
-literal|"invalid length %d"
+literal|"invalid payload length %d"
 argument_list|,
-name|pos
-index|[
-literal|1
-index|]
+name|len
 argument_list|)
 expr_stmt|;
 return|return
@@ -208,9 +183,7 @@ name|attr
 operator|->
 name|mic_s
 operator|=
-name|pos
-operator|+
-literal|2
+name|data
 expr_stmt|;
 break|break;
 case|case
@@ -225,13 +198,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pos
-index|[
-literal|1
-index|]
+name|len
 operator|!=
-literal|2
-operator|+
 name|EAP_SAKE_MIC_LEN
 condition|)
 block|{
@@ -240,12 +208,9 @@ argument_list|(
 name|MSG_DEBUG
 argument_list|,
 literal|"EAP-SAKE: AT_MIC_P with "
-literal|"invalid length %d"
+literal|"invalid payload length %d"
 argument_list|,
-name|pos
-index|[
-literal|1
-index|]
+name|len
 argument_list|)
 expr_stmt|;
 return|return
@@ -257,9 +222,7 @@ name|attr
 operator|->
 name|mic_p
 operator|=
-name|pos
-operator|+
-literal|2
+name|data
 expr_stmt|;
 break|break;
 case|case
@@ -276,20 +239,13 @@ name|attr
 operator|->
 name|serverid
 operator|=
-name|pos
-operator|+
-literal|2
+name|data
 expr_stmt|;
 name|attr
 operator|->
 name|serverid_len
 operator|=
-name|pos
-index|[
-literal|1
-index|]
-operator|-
-literal|2
+name|len
 expr_stmt|;
 break|break;
 case|case
@@ -306,20 +262,13 @@ name|attr
 operator|->
 name|peerid
 operator|=
-name|pos
-operator|+
-literal|2
+name|data
 expr_stmt|;
 name|attr
 operator|->
 name|peerid_len
 operator|=
-name|pos
-index|[
-literal|1
-index|]
-operator|-
-literal|2
+name|len
 expr_stmt|;
 break|break;
 case|case
@@ -336,20 +285,13 @@ name|attr
 operator|->
 name|spi_s
 operator|=
-name|pos
-operator|+
-literal|2
+name|data
 expr_stmt|;
 name|attr
 operator|->
 name|spi_s_len
 operator|=
-name|pos
-index|[
-literal|1
-index|]
-operator|-
-literal|2
+name|len
 expr_stmt|;
 break|break;
 case|case
@@ -366,20 +308,13 @@ name|attr
 operator|->
 name|spi_p
 operator|=
-name|pos
-operator|+
-literal|2
+name|data
 expr_stmt|;
 name|attr
 operator|->
 name|spi_p_len
 operator|=
-name|pos
-index|[
-literal|1
-index|]
-operator|-
-literal|2
+name|len
 expr_stmt|;
 break|break;
 case|case
@@ -394,12 +329,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pos
-index|[
-literal|1
-index|]
+name|len
 operator|!=
-literal|4
+literal|2
 condition|)
 block|{
 name|wpa_printf
@@ -407,12 +339,9 @@ argument_list|(
 name|MSG_DEBUG
 argument_list|,
 literal|"EAP-SAKE: Invalid AT_ANY_ID_REQ"
-literal|" length %d"
+literal|" payload length %d"
 argument_list|,
-name|pos
-index|[
-literal|1
-index|]
+name|len
 argument_list|)
 expr_stmt|;
 return|return
@@ -424,9 +353,7 @@ name|attr
 operator|->
 name|any_id_req
 operator|=
-name|pos
-operator|+
-literal|2
+name|data
 expr_stmt|;
 break|break;
 case|case
@@ -441,12 +368,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pos
-index|[
-literal|1
-index|]
+name|len
 operator|!=
-literal|4
+literal|2
 condition|)
 block|{
 name|wpa_printf
@@ -454,12 +378,9 @@ argument_list|(
 name|MSG_DEBUG
 argument_list|,
 literal|"EAP-SAKE: Invalid "
-literal|"AT_PERM_ID_REQ length %d"
+literal|"AT_PERM_ID_REQ payload length %d"
 argument_list|,
-name|pos
-index|[
-literal|1
-index|]
+name|len
 argument_list|)
 expr_stmt|;
 return|return
@@ -471,9 +392,7 @@ name|attr
 operator|->
 name|perm_id_req
 operator|=
-name|pos
-operator|+
-literal|2
+name|data
 expr_stmt|;
 break|break;
 case|case
@@ -490,20 +409,13 @@ name|attr
 operator|->
 name|encr_data
 operator|=
-name|pos
-operator|+
-literal|2
+name|data
 expr_stmt|;
 name|attr
 operator|->
 name|encr_data_len
 operator|=
-name|pos
-index|[
-literal|1
-index|]
-operator|-
-literal|2
+name|len
 expr_stmt|;
 break|break;
 case|case
@@ -520,20 +432,13 @@ name|attr
 operator|->
 name|iv
 operator|=
-name|pos
-operator|+
-literal|2
+name|data
 expr_stmt|;
 name|attr
 operator|->
 name|iv_len
 operator|=
-name|pos
-index|[
-literal|1
-index|]
-operator|-
-literal|2
+name|len
 expr_stmt|;
 break|break;
 case|case
@@ -550,14 +455,11 @@ for|for
 control|(
 name|i
 operator|=
-literal|2
+literal|0
 init|;
 name|i
 operator|<
-name|pos
-index|[
-literal|1
-index|]
+name|len
 condition|;
 name|i
 operator|++
@@ -565,7 +467,7 @@ control|)
 block|{
 if|if
 condition|(
-name|pos
+name|data
 index|[
 name|i
 index|]
@@ -600,20 +502,13 @@ name|attr
 operator|->
 name|next_tmpid
 operator|=
-name|pos
-operator|+
-literal|2
+name|data
 expr_stmt|;
 name|attr
 operator|->
 name|next_tmpid_len
 operator|=
-name|pos
-index|[
-literal|1
-index|]
-operator|-
-literal|2
+name|len
 expr_stmt|;
 break|break;
 case|case
@@ -628,12 +523,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pos
-index|[
-literal|1
-index|]
+name|len
 operator|!=
-literal|6
+literal|4
 condition|)
 block|{
 name|wpa_printf
@@ -641,12 +533,9 @@ argument_list|(
 name|MSG_DEBUG
 argument_list|,
 literal|"EAP-SAKE: Invalid "
-literal|"AT_MSK_LIFE length %d"
+literal|"AT_MSK_LIFE payload length %d"
 argument_list|,
-name|pos
-index|[
-literal|1
-index|]
+name|len
 argument_list|)
 expr_stmt|;
 return|return
@@ -658,18 +547,13 @@ name|attr
 operator|->
 name|msk_life
 operator|=
-name|pos
-operator|+
-literal|2
+name|data
 expr_stmt|;
 break|break;
 default|default:
 if|if
 condition|(
-name|pos
-index|[
-literal|0
-index|]
+name|attr_id
 operator|<
 literal|128
 condition|)
@@ -681,10 +565,7 @@ argument_list|,
 literal|"EAP-SAKE: Unknown non-skippable"
 literal|" attribute %d"
 argument_list|,
-name|pos
-index|[
-literal|0
-index|]
+name|attr_id
 argument_list|)
 expr_stmt|;
 return|return
@@ -699,10 +580,7 @@ argument_list|,
 literal|"EAP-SAKE: Ignoring unknown skippable "
 literal|"attribute %d"
 argument_list|,
-name|pos
-index|[
-literal|0
-index|]
+name|attr_id
 argument_list|)
 expr_stmt|;
 break|break;
@@ -874,6 +752,20 @@ argument_list|(
 name|attr
 argument_list|,
 name|pos
+index|[
+literal|0
+index|]
+argument_list|,
+name|pos
+index|[
+literal|1
+index|]
+operator|-
+literal|2
+argument_list|,
+name|pos
+operator|+
+literal|2
 argument_list|)
 condition|)
 return|return

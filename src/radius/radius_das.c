@@ -1124,11 +1124,16 @@ name|int
 operator|)
 name|abs
 argument_list|(
+call|(
+name|int
+call|)
+argument_list|(
 name|now
 operator|.
 name|sec
 operator|-
 name|timestamp
+argument_list|)
 argument_list|)
 operator|>
 name|das

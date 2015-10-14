@@ -71,6 +71,17 @@ name|SAE_CONFIRM_MAX_LEN
 value|(2 + SAE_MAX_PRIME_LEN)
 end_define
 
+begin_comment
+comment|/* Special value returned by sae_parse_commit() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAE_SILENTLY_DISCARD
+value|65535
+end_define
+
 begin_struct
 struct|struct
 name|sae_temporary_data

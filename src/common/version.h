@@ -37,7 +37,7 @@ begin_define
 define|#
 directive|define
 name|VERSION_STR
-value|"2.4" VERSION_STR_POSTFIX
+value|"2.5" VERSION_STR_POSTFIX
 end_define
 
 begin_endif

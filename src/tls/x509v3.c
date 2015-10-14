@@ -6836,11 +6836,13 @@ name|length
 argument_list|,
 name|end
 operator|-
+operator|(
 name|pos
 operator|+
 name|hdr
 operator|.
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 name|end

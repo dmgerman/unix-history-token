@@ -205,6 +205,46 @@ directive|include
 file|"linux_ioctl.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_IEEE80211W
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_IEEE80211R
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_HS20
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_WNM
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_WPS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATHEROS_USE_RAW_RECEIVE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|atheros_driver_data
@@ -1878,12 +1918,15 @@ name|u8
 modifier|*
 name|addr
 parameter_list|,
+name|unsigned
 name|int
 name|total_flags
 parameter_list|,
+name|unsigned
 name|int
 name|flags_or
 parameter_list|,
+name|unsigned
 name|int
 name|flags_and
 parameter_list|)
@@ -3989,29 +4032,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CONFIG_WPS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CONFIG_IEEE80211R
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CONFIG_WNM
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CONFIG_HS20
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATHEROS_USE_RAW_RECEIVE
+end_ifdef
 
 begin_function
 specifier|static
@@ -4617,6 +4642,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ATHEROS_USE_RAW_RECEIVE */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -4664,9 +4693,17 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_WPS */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_IEEE80211W
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|CONFIG_IEEE80211R
+argument_list|)
 name|filt
 operator|.
 name|app_filterype
@@ -4681,6 +4718,7 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* CONFIG_IEEE80211R || CONFIG_IEEE80211W */
 ifdef|#
 directive|ifdef
 name|CONFIG_WNM
@@ -5269,11 +5307,19 @@ begin_comment
 comment|/* CONFIG_WPS */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CONFIG_IEEE80211R
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_IEEE80211W
+argument_list|)
+end_if
 
 begin_function
 specifier|static
@@ -5698,7 +5744,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CONFIG_IEEE80211R */
+comment|/* CONFIG_IEEE80211R || CONFIG_IEEE80211W */
 end_comment
 
 begin_function
@@ -6072,6 +6118,11 @@ modifier|*
 name|end
 parameter_list|)
 block|{
+define|#
+directive|define
+name|MGMT_FRAM_TAG_SIZE
+value|30
+comment|/* hardcoded in driver */
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -6423,30 +6474,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* CONFIG_WPS */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CONFIG_WPS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CONFIG_IEEE80211R
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CONFIG_HS20
-argument_list|)
-define|#
-directive|define
-name|MGMT_FRAM_TAG_SIZE
-value|30
-comment|/* hardcoded in driver */
 block|}
 elseif|else
 if|if
@@ -6518,6 +6545,20 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_WPS */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_IEEE80211R
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_IEEE80211W
+argument_list|)
 block|}
 elseif|else
 if|if
@@ -6564,79 +6605,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"Invalid Manage.prob_req/"
-literal|"assoc_req/auth event length %d"
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|atheros_raw_receive
-argument_list|(
-name|drv
-argument_list|,
-name|NULL
-argument_list|,
-operator|(
-name|u8
-operator|*
-operator|)
-name|custom
-operator|+
-name|MGMT_FRAM_TAG_SIZE
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|strncmp
-argument_list|(
-name|custom
-argument_list|,
-literal|"Manage.action "
-argument_list|,
-literal|14
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* Format: "Manage.assoc_req<frame len>" | zero padding | 		 * frame */
-name|int
-name|len
-init|=
-name|atoi
-argument_list|(
-name|custom
-operator|+
-literal|14
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|len
-operator|<
-literal|0
-operator|||
-name|custom
-operator|+
-name|MGMT_FRAM_TAG_SIZE
-operator|+
-name|len
-operator|>
-name|end
-condition|)
-block|{
-name|wpa_printf
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"Invalid Manage.prob_req/"
-literal|"assoc_req/auth event length %d"
+literal|"Invalid Manage.assoc_req event length %d"
 argument_list|,
 name|len
 argument_list|)
@@ -6676,7 +6645,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Format: "Manage.auth<frame len>" | zero padding | frame 		 */
+comment|/* Format: "Manage.auth<frame len>" | zero padding | frame */
 name|int
 name|len
 init|=
@@ -6706,8 +6675,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"Invalid Manage.prob_req/"
-literal|"assoc_req/auth event length %d"
+literal|"Invalid Manage.auth event length %d"
 argument_list|,
 name|len
 argument_list|)
@@ -6733,7 +6701,83 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* CONFIG_WPS or CONFIG_IEEE80211R */
+comment|/* CONFIG_IEEE80211W || CONFIG_IEEE80211R */
+ifdef|#
+directive|ifdef
+name|ATHEROS_USE_RAW_RECEIVE
+block|}
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|custom
+argument_list|,
+literal|"Manage.action "
+argument_list|,
+literal|14
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Format: "Manage.assoc_req<frame len>" | zero padding | frame 		 */
+name|int
+name|len
+init|=
+name|atoi
+argument_list|(
+name|custom
+operator|+
+literal|14
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+literal|0
+operator|||
+name|custom
+operator|+
+name|MGMT_FRAM_TAG_SIZE
+operator|+
+name|len
+operator|>
+name|end
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"Invalid Manage.action event length %d"
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|atheros_raw_receive
+argument_list|(
+name|drv
+argument_list|,
+name|NULL
+argument_list|,
+operator|(
+name|u8
+operator|*
+operator|)
+name|custom
+operator|+
+name|MGMT_FRAM_TAG_SIZE
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ATHEROS_USE_RAW_RECEIVE */
 block|}
 block|}
 end_function
@@ -8876,13 +8920,7 @@ operator|->
 name|ioctl_sock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|drv
-operator|!=
-name|NULL
-condition|)
-name|free
+name|os_free
 argument_list|(
 name|drv
 argument_list|)
@@ -8915,6 +8953,52 @@ argument_list|(
 name|drv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|drv
+operator|->
+name|wpa_ie
+operator|||
+name|drv
+operator|->
+name|wps_beacon_ie
+operator|||
+name|drv
+operator|->
+name|wps_probe_resp_ie
+condition|)
+block|{
+name|wpabuf_free
+argument_list|(
+name|drv
+operator|->
+name|wpa_ie
+argument_list|)
+expr_stmt|;
+name|wpabuf_free
+argument_list|(
+name|drv
+operator|->
+name|wps_beacon_ie
+argument_list|)
+expr_stmt|;
+name|wpabuf_free
+argument_list|(
+name|drv
+operator|->
+name|wps_probe_resp_ie
+argument_list|)
+expr_stmt|;
+name|atheros_set_opt_ie
+argument_list|(
+name|priv
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|netlink_deinit
 argument_list|(
 name|drv
@@ -9004,28 +9088,7 @@ operator|->
 name|sock_raw
 argument_list|)
 expr_stmt|;
-name|wpabuf_free
-argument_list|(
-name|drv
-operator|->
-name|wpa_ie
-argument_list|)
-expr_stmt|;
-name|wpabuf_free
-argument_list|(
-name|drv
-operator|->
-name|wps_beacon_ie
-argument_list|)
-expr_stmt|;
-name|wpabuf_free
-argument_list|(
-name|drv
-operator|->
-name|wps_probe_resp_ie
-argument_list|)
-expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|drv
 argument_list|)
@@ -9696,11 +9759,19 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CONFIG_IEEE80211R
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_IEEE80211W
+argument_list|)
+end_if
 
 begin_function
 specifier|static
@@ -9721,6 +9792,10 @@ name|data_len
 parameter_list|,
 name|int
 name|noack
+parameter_list|,
+name|unsigned
+name|int
+name|freq
 parameter_list|)
 block|{
 name|struct
@@ -9886,6 +9961,21 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_IEEE80211R || CONFIG_IEEE80211W */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_IEEE80211R
+end_ifdef
 
 begin_function
 specifier|static
@@ -11553,9 +11643,17 @@ name|set_ap
 operator|=
 name|atheros_set_ap
 block|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CONFIG_IEEE80211R
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_IEEE80211W
+argument_list|)
 operator|.
 name|sta_assoc
 operator|=
@@ -11571,6 +11669,12 @@ name|send_mlme
 operator|=
 name|atheros_send_mgmt
 block|,
+endif|#
+directive|endif
+comment|/* CONFIG_IEEE80211R || CONFIG_IEEE80211W */
+ifdef|#
+directive|ifdef
+name|CONFIG_IEEE80211R
 operator|.
 name|add_tspec
 operator|=

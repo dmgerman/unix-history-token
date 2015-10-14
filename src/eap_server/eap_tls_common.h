@@ -175,6 +175,9 @@ name|data
 parameter_list|,
 name|int
 name|verify_peer
+parameter_list|,
+name|int
+name|eap_type
 parameter_list|)
 function_decl|;
 end_function_decl

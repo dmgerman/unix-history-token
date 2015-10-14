@@ -173,6 +173,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|linux_master_get
+parameter_list|(
+name|char
+modifier|*
+name|master_ifname
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|ifname
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

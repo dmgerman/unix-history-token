@@ -1798,6 +1798,8 @@ operator|->
 name|ssl
 argument_list|,
 literal|0
+argument_list|,
+name|EAP_TYPE_FAST
 argument_list|)
 condition|)
 block|{
