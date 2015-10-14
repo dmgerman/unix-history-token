@@ -288,7 +288,9 @@ begin_function
 specifier|static
 name|void
 name|tcp_pcap_max_set
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tcp_pcap_clusters_referenced_max
 operator|=
@@ -302,7 +304,9 @@ end_function
 begin_function
 name|void
 name|tcp_pcap_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tcp_pcap_max_set
 argument_list|()
