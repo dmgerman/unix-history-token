@@ -73,7 +73,7 @@ end_expr_stmt
 
 begin_typedef
 typedef|typedef
-name|void
+name|int
 function_decl|(
 modifier|*
 name|ntb_db_callback
