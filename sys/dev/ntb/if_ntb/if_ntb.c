@@ -479,7 +479,8 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|enum
+name|ntb_link_event
 name|status
 parameter_list|)
 function_decl|;
@@ -590,7 +591,8 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|enum
+name|ntb_link_event
 name|status
 parameter_list|)
 function_decl|;
@@ -917,7 +919,8 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|enum
+name|ntb_link_event
 name|status
 parameter_list|)
 function_decl|;
@@ -2290,10 +2293,49 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|enum
+name|ntb_link_event
 name|status
 parameter_list|)
-block|{  }
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|ifp
+operator|=
+name|data
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ifp
+expr_stmt|;
+comment|/* XXX The Linux driver munges with the carrier status here. */
+switch|switch
+condition|(
+name|status
+condition|)
+block|{
+case|case
+name|NTB_LINK_DOWN
+case|:
+break|break;
+case|case
+name|NTB_LINK_UP
+case|:
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"Bogus ntb_link_event %u\n"
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 end_function
 
 begin_comment

@@ -28,19 +28,18 @@ name|NTB_NUM_MW
 value|2
 end_define
 
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+name|ntb_link_event
+block|{
 name|NTB_LINK_DOWN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
+init|=
+literal|0
+block|,
 name|NTB_LINK_UP
-value|1
-end_define
+block|, }
+enum|;
+end_enum
 
 begin_enum
 enum|enum
