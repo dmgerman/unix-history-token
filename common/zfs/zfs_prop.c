@@ -201,6 +201,24 @@ name|ZIO_CHECKSUM_NOPARITY
 block|}
 block|,
 block|{
+literal|"sha512"
+block|,
+name|ZIO_CHECKSUM_SHA512
+block|}
+block|,
+block|{
+literal|"skein"
+block|,
+name|ZIO_CHECKSUM_SKEIN
+block|}
+block|,
+block|{
+literal|"edonr"
+block|,
+name|ZIO_CHECKSUM_EDONR
+block|}
+block|,
+block|{
 name|NULL
 block|}
 block|}
@@ -241,6 +259,42 @@ block|{
 literal|"sha256,verify"
 block|,
 name|ZIO_CHECKSUM_SHA256
+operator||
+name|ZIO_CHECKSUM_VERIFY
+block|}
+block|,
+block|{
+literal|"sha512"
+block|,
+name|ZIO_CHECKSUM_SHA512
+block|}
+block|,
+block|{
+literal|"sha512,verify"
+block|,
+name|ZIO_CHECKSUM_SHA512
+operator||
+name|ZIO_CHECKSUM_VERIFY
+block|}
+block|,
+block|{
+literal|"skein"
+block|,
+name|ZIO_CHECKSUM_SKEIN
+block|}
+block|,
+block|{
+literal|"skein,verify"
+block|,
+name|ZIO_CHECKSUM_SKEIN
+operator||
+name|ZIO_CHECKSUM_VERIFY
+block|}
+block|,
+block|{
+literal|"edonr,verify"
+block|,
+name|ZIO_CHECKSUM_EDONR
 operator||
 name|ZIO_CHECKSUM_VERIFY
 block|}
@@ -818,7 +872,8 @@ name|ZFS_TYPE_FILESYSTEM
 operator||
 name|ZFS_TYPE_VOLUME
 argument_list|,
-literal|"on | off | fletcher2 | fletcher4 | sha256"
+literal|"on | off | fletcher2 | fletcher4 | sha256 | sha512 | "
+literal|"skein | edonr"
 argument_list|,
 literal|"CHECKSUM"
 argument_list|,
@@ -839,7 +894,8 @@ name|ZFS_TYPE_FILESYSTEM
 operator||
 name|ZFS_TYPE_VOLUME
 argument_list|,
-literal|"on | off | verify | sha256[,verify]"
+literal|"on | off | verify | sha256[,verify], sha512[,verify], "
+literal|"skein[,verify], edonr,verify"
 argument_list|,
 literal|"DEDUP"
 argument_list|,

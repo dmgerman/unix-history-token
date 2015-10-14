@@ -155,6 +155,12 @@ name|ZIO_CHECKSUM_ZILOG2
 block|,
 name|ZIO_CHECKSUM_NOPARITY
 block|,
+name|ZIO_CHECKSUM_SHA512
+block|,
+name|ZIO_CHECKSUM_SKEIN
+block|,
+name|ZIO_CHECKSUM_EDONR
+block|,
 name|ZIO_CHECKSUM_FUNCTIONS
 block|}
 enum|;

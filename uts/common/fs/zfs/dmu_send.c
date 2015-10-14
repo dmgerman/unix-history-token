@@ -1143,7 +1143,9 @@ operator|->
 name|drr_checksumtype
 index|]
 operator|.
-name|ci_dedup
+name|ci_flags
+operator|&
+name|ZCHECKSUM_FLAG_DEDUP
 condition|)
 name|drrw
 operator|->

@@ -85,6 +85,12 @@ name|SPA_FEATURE_FS_SS_LIMIT
 block|,
 name|SPA_FEATURE_LARGE_BLOCKS
 block|,
+name|SPA_FEATURE_SHA512
+block|,
+name|SPA_FEATURE_SKEIN
+block|,
+name|SPA_FEATURE_EDONR
+block|,
 name|SPA_FEATURES
 block|}
 name|spa_feature_t
