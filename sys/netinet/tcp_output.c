@@ -253,6 +253,23 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|TCPPCAP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_pcap.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|TCPDEBUG
 end_ifdef
 
@@ -5038,6 +5055,26 @@ argument_list|,
 name|th
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCPPCAP
+comment|/* Save packet, if requested. */
+name|tcp_pcap_add
+argument_list|(
+name|th
+argument_list|,
+name|m
+argument_list|,
+operator|&
+operator|(
+name|tp
+operator|->
+name|t_outpkts
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* TODO: IPv6 IP6TOS_ECT bit on */
 name|error
 operator|=
@@ -5258,6 +5295,26 @@ argument_list|,
 name|th
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCPPCAP
+comment|/* Save packet, if requested. */
+name|tcp_pcap_add
+argument_list|(
+name|th
+argument_list|,
+name|m
+argument_list|,
+operator|&
+operator|(
+name|tp
+operator|->
+name|t_outpkts
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|ip_output

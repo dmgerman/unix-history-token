@@ -1847,7 +1847,6 @@ comment|/*  * Attach the cluster from *m to *n, set up m_ext in *n  * and bump t
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|mb_dupcl
 parameter_list|(

@@ -33,6 +33,12 @@ directive|include
 file|<net/vnet.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/mbuf.h>
+end_include
+
 begin_comment
 comment|/*  * Kernel variables for tcp.  */
 end_comment
@@ -610,13 +616,60 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* 1 TCP_SIGNATURE, 3 TBD */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|TCPPCAP
+argument_list|)
+name|struct
+name|mbufq
+name|t_inpkts
+decl_stmt|;
+comment|/* List of saved input packets. */
+name|struct
+name|mbufq
+name|t_outpkts
+decl_stmt|;
+comment|/* List of saved output packets. */
+ifdef|#
+directive|ifdef
+name|_LP64
+name|uint64_t
+name|_pad
+index|[
+literal|0
+index|]
+decl_stmt|;
+comment|/* all used! */
+else|#
+directive|else
+name|uint64_t
+name|_pad
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* 2 are available */
+endif|#
+directive|endif
+comment|/* _LP64 */
+else|#
+directive|else
 name|uint64_t
 name|_pad
 index|[
 literal|6
 index|]
 decl_stmt|;
-comment|/* 6 TBD (1-2 CC/RTT?) */
+endif|#
+directive|endif
+comment|/* defined(_KERNEL)&& defined(TCPPCAP) */
 block|}
 struct|;
 end_struct

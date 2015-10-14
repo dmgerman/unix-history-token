@@ -598,6 +598,28 @@ begin_comment
 comment|/* L,N number of keepalives before close */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TCP_PCAP_OUT
+value|2048
+end_define
+
+begin_comment
+comment|/* number of output packets to keep */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_PCAP_IN
+value|4096
+end_define
+
+begin_comment
+comment|/* number of input packets to keep */
+end_comment
+
 begin_comment
 comment|/* Start of reserved space for third-party user-settable options. */
 end_comment
