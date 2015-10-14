@@ -223,9 +223,6 @@ decl_stmt|;
 name|boolean_t
 name|os_dedup_verify
 decl_stmt|;
-name|boolean_t
-name|os_evicting
-decl_stmt|;
 name|zfs_logbias_op_t
 name|os_logbias
 decl_stmt|;
