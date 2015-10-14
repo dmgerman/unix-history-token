@@ -561,15 +561,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|NTB_CNTL_BAR23_SNOOP
+name|NTB_CNTL_S2P_BAR23_SNOOP
 value|(1<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NTB_CNTL_BAR45_SNOOP
+name|NTB_CNTL_P2S_BAR23_SNOOP
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_CNTL_S2P_BAR45_SNOOP
 value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_CNTL_P2S_BAR45_SNOOP
+value|(1<< 8)
 end_define
 
 begin_define
