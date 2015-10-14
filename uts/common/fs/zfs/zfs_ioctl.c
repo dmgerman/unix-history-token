@@ -17572,7 +17572,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * inputs:  * zc_name		name of containing filesystem  * zc_nvlist_src{_size}	nvlist of properties to apply  * zc_value		name of snapshot to create  * zc_string		name of clone origin (if DRR_FLAG_CLONE)  * zc_cookie		file descriptor to recv from  * zc_begin_record	the BEGIN record of the stream (not byteswapped)  * zc_guid		force flag  * zc_cleanup_fd	cleanup-on-exit file descriptor  * zc_action_handle	handle for this guid/ds mapping (or zero on first call)  *  * outputs:  * zc_cookie		number of bytes read  * zc_nvlist_dst{_size} error for each unapplied received property  * zc_obj		zprop_errflags_t  * zc_action_handle	handle for this guid/ds mapping  */
+comment|/*  * inputs:  * zc_name		name of containing filesystem  * zc_nvlist_src{_size}	nvlist of properties to apply  * zc_value		name of snapshot to create  * zc_string		name of clone origin (if DRR_FLAG_CLONE)  * zc_cookie		file descriptor to recv from  * zc_begin_record	the BEGIN record of the stream (not byteswapped)  * zc_guid		force flag  * zc_cleanup_fd	cleanup-on-exit file descriptor  * zc_action_handle	handle for this guid/ds mapping (or zero on first call)  * zc_resumable		if data is incomplete assume sender will resume  *  * outputs:  * zc_cookie		number of bytes read  * zc_nvlist_dst{_size} error for each unapplied received property  * zc_obj		zprop_errflags_t  * zc_action_handle	handle for this guid/ds mapping  */
 end_comment
 
 begin_function
@@ -17798,20 +17798,10 @@ argument_list|)
 operator|)
 return|;
 block|}
-name|VERIFY
-argument_list|(
-name|nvlist_alloc
-argument_list|(
-operator|&
 name|errors
-argument_list|,
-name|NV_UNIQUE_NAME
-argument_list|,
-name|KM_SLEEP
-argument_list|)
-operator|==
-literal|0
-argument_list|)
+operator|=
+name|fnvlist_alloc
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -17842,6 +17832,10 @@ operator|->
 name|zc_begin_record
 argument_list|,
 name|force
+argument_list|,
+name|zc
+operator|->
+name|zc_resumable
 argument_list|,
 name|origin
 argument_list|,
@@ -22844,7 +22838,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * innvl: {  *     "fd" -> file descriptor to write stream to (int32)  *     (optional) "fromsnap" -> full snap name to send an incremental from  *     (optional) "largeblockok" -> (value ignored)  *         indicates that blocks> 128KB are permitted  *     (optional) "embedok" -> (value ignored)  *         presence indicates DRR_WRITE_EMBEDDED records are permitted  * }  *  * outnvl is unused  */
+comment|/*  * innvl: {  *     "fd" -> file descriptor to write stream to (int32)  *     (optional) "fromsnap" -> full snap name to send an incremental from  *     (optional) "largeblockok" -> (value ignored)  *         indicates that blocks> 128KB are permitted  *     (optional) "embedok" -> (value ignored)  *         presence indicates DRR_WRITE_EMBEDDED records are permitted  *     (optional) "resume_object" and "resume_offset" -> (uint64)  *         if present, resume send stream from specified object and offset.  * }  *  * outnvl is unused  */
 end_comment
 
 begin_comment
@@ -22890,6 +22884,16 @@ name|largeblockok
 decl_stmt|;
 name|boolean_t
 name|embedok
+decl_stmt|;
+name|uint64_t
+name|resumeobj
+init|=
+literal|0
+decl_stmt|;
+name|uint64_t
+name|resumeoff
+init|=
+literal|0
 decl_stmt|;
 name|error
 operator|=
@@ -22948,6 +22952,32 @@ argument_list|,
 literal|"embedok"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|nvlist_lookup_uint64
+argument_list|(
+name|innvl
+argument_list|,
+literal|"resume_object"
+argument_list|,
+operator|&
+name|resumeobj
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|nvlist_lookup_uint64
+argument_list|(
+name|innvl
+argument_list|,
+literal|"resume_offset"
+argument_list|,
+operator|&
+name|resumeoff
+argument_list|)
+expr_stmt|;
 name|file_t
 modifier|*
 name|fp
@@ -22990,6 +23020,10 @@ argument_list|,
 name|largeblockok
 argument_list|,
 name|fd
+argument_list|,
+name|resumeobj
+argument_list|,
+name|resumeoff
 argument_list|,
 name|fp
 operator|->
