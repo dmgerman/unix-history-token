@@ -8955,6 +8955,23 @@ name|SD_MAX_HS
 expr_stmt|;
 block|}
 block|}
+comment|/* 			 * We deselect then reselect the card here.  Some cards 			 * become unselected and timeout with the above two 			 * commands, although the state tables / diagrams in the 			 * standard suggest they go back to the transfer state. 			 * Other cards don't become deselected, and if we 			 * atttempt to blindly re-select them, we get timeout 			 * errors from some controllers.  So we deselect then 			 * reselect to handle all situations.  The only thing we 			 * use from the sd_status is the erase sector size, but 			 * it is still nice to get that right. 			 */
+name|mmc_select_card
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|mmc_select_card
+argument_list|(
+name|sc
+argument_list|,
+name|ivar
+operator|->
+name|rca
+argument_list|)
+expr_stmt|;
 name|mmc_app_sd_status
 argument_list|(
 name|sc
@@ -9004,13 +9021,6 @@ operator|.
 name|au_size
 expr_stmt|;
 block|}
-name|mmc_select_card
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* Find max supported bus width. */
 if|if
 condition|(
@@ -9117,6 +9127,13 @@ name|ivar
 argument_list|)
 expr_stmt|;
 block|}
+name|mmc_select_card
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|mmc_decode_cid_mmc
@@ -9318,6 +9335,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|mmc_select_card
+argument_list|(
+name|sc
+argument_list|,
+name|ivar
+operator|->
+name|rca
+argument_list|)
+expr_stmt|;
 comment|/* Only MMC>= 4.x cards support EXT_CSD. */
 if|if
 condition|(
@@ -9330,16 +9356,6 @@ operator|>=
 literal|4
 condition|)
 block|{
-comment|/* Card must be selected to fetch EXT_CSD. */
-name|mmc_select_card
-argument_list|(
-name|sc
-argument_list|,
-name|ivar
-operator|->
-name|rca
-argument_list|)
-expr_stmt|;
 name|mmc_send_ext_csd
 argument_list|(
 name|sc
@@ -9479,13 +9495,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|mmc_select_card
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* Handle HC erase sector size. */
 if|if
 condition|(
@@ -9616,6 +9625,13 @@ name|ivar
 argument_list|)
 expr_stmt|;
 block|}
+name|mmc_select_card
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
