@@ -5838,11 +5838,8 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ntb: Unable to allocate MW buffer of size %d\n"
+literal|"ntb: Unable to allocate MW buffer of size %zu\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|mw
 operator|->
 name|size
@@ -5866,6 +5863,52 @@ operator|->
 name|virt_addr
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Ensure that the allocation from contigmalloc is aligned as 	 * requested.  XXX: This may not be needed -- brought in for parity 	 * with the Linux driver. 	 */
+if|if
+condition|(
+name|mw
+operator|->
+name|dma_addr
+operator|%
+name|size
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|ntb_get_device
+argument_list|(
+name|nt
+operator|->
+name|ntb
+argument_list|)
+argument_list|,
+literal|"DMA memory 0x%jx not aligned to BAR size 0x%x\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|mw
+operator|->
+name|dma_addr
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+name|ntb_free_mw
+argument_list|(
+name|nt
+argument_list|,
+name|num_mw
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 comment|/* Notify HW the memory location of the receive buffer */
 name|ntb_set_mw_addr
 argument_list|(
