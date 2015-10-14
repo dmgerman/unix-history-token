@@ -4106,7 +4106,7 @@ operator|->
 name|qp_num
 argument_list|)
 expr_stmt|;
-comment|/*  	 * The entry length can only be zero if the packet is intended to be a 	 * "link down" or similar.  Since no payload is being sent in these 	 * cases, there is nothing to add to the completion queue. 	 */
+comment|/* 	 * The entry length can only be zero if the packet is intended to be a 	 * "link down" or similar.  Since no payload is being sent in these 	 * cases, there is nothing to add to the completion queue. 	 */
 if|if
 condition|(
 name|entry
@@ -4264,7 +4264,7 @@ decl_stmt|;
 name|int
 name|rc
 decl_stmt|;
-comment|/*  	 * Limit the number of packets processed in a single interrupt to 	 * provide fairness to others 	 */
+comment|/* 	 * Limit the number of packets processed in a single interrupt to 	 * provide fairness to others 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -6485,7 +6485,7 @@ name|transport_link
 operator|=
 name|NTB_LINK_DOWN
 expr_stmt|;
-comment|/*  	 * The scratchpad registers keep the values if the remote side 	 * goes down, blast them now to give them a sane value the next 	 * time they are accessed 	 */
+comment|/* 	 * The scratchpad registers keep the values if the remote side 	 * goes down, blast them now to give them a sane value the next 	 * time they are accessed 	 */
 for|for
 control|(
 name|i
