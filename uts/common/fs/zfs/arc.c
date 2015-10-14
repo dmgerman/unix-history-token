@@ -22452,8 +22452,6 @@ decl_stmt|;
 name|uint64_t
 name|write_asize
 decl_stmt|,
-name|write_psize
-decl_stmt|,
 name|write_sz
 decl_stmt|,
 name|headroom
@@ -22515,8 +22513,6 @@ expr_stmt|;
 name|write_sz
 operator|=
 name|write_asize
-operator|=
-name|write_psize
 operator|=
 literal|0
 expr_stmt|;
@@ -22645,6 +22641,9 @@ decl_stmt|;
 name|uint64_t
 name|buf_sz
 decl_stmt|;
+name|uint64_t
+name|buf_a_sz
+decl_stmt|;
 if|if
 condition|(
 name|arc_warm
@@ -22728,14 +22727,30 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
-operator|(
-name|write_sz
-operator|+
+comment|/* 			 * Assume that the buffer is not going to be compressed 			 * and could take more space on disk because of a larger 			 * disk block size. 			 */
+name|buf_sz
+operator|=
 name|hdr
 operator|->
 name|b_size
+expr_stmt|;
+name|buf_a_sz
+operator|=
+name|vdev_psize_to_asize
+argument_list|(
+name|dev
+operator|->
+name|l2ad_vdev
+argument_list|,
+name|buf_sz
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|write_asize
+operator|+
+name|buf_a_sz
 operator|)
 operator|>
 name|target_sz
@@ -22881,12 +22896,6 @@ name|b_daddr
 operator|=
 name|L2ARC_ADDR_UNSET
 expr_stmt|;
-name|buf_sz
-operator|=
-name|hdr
-operator|->
-name|b_size
-expr_stmt|;
 name|hdr
 operator|->
 name|b_flags
@@ -22949,6 +22958,10 @@ name|write_sz
 operator|+=
 name|buf_sz
 expr_stmt|;
+name|write_asize
+operator|+=
+name|buf_a_sz
+expr_stmt|;
 block|}
 name|multilist_sublist_unlock
 argument_list|(
@@ -23005,6 +23018,16 @@ name|dev
 operator|->
 name|l2ad_mtx
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Note that elsewhere in this file arcstat_l2_asize 	 * and the used space on l2ad_vdev are updated using b_asize, 	 * which is not necessarily rounded up to the device block size. 	 * Too keep accounting consistent we do the same here as well: 	 * stats_size accumulates the sum of b_asize of the written buffers, 	 * while write_asize accumulates the sum of b_asize rounded up 	 * to the device block size. 	 * The latter sum is used only to validate the corectness of the code. 	 */
+name|uint64_t
+name|stats_size
+init|=
+literal|0
+decl_stmt|;
+name|write_asize
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * Now start writing the buffers. We're starting at the write head 	 * and work backwards, retracing the course of the buffer selector 	 * loop above. 	 */
 for|for
@@ -23135,7 +23158,7 @@ literal|0
 condition|)
 block|{
 name|uint64_t
-name|buf_p_sz
+name|buf_a_sz
 decl_stmt|;
 name|wzio
 operator|=
@@ -23193,12 +23216,12 @@ argument_list|(
 name|wzio
 argument_list|)
 expr_stmt|;
-name|write_asize
+name|stats_size
 operator|+=
 name|buf_sz
 expr_stmt|;
 comment|/* 			 * Keep the clock hand suitably device-aligned. 			 */
-name|buf_p_sz
+name|buf_a_sz
 operator|=
 name|vdev_psize_to_asize
 argument_list|(
@@ -23209,15 +23232,15 @@ argument_list|,
 name|buf_sz
 argument_list|)
 expr_stmt|;
-name|write_psize
+name|write_asize
 operator|+=
-name|buf_p_sz
+name|buf_a_sz
 expr_stmt|;
 name|dev
 operator|->
 name|l2ad_hand
 operator|+=
-name|buf_p_sz
+name|buf_a_sz
 expr_stmt|;
 block|}
 block|}
@@ -23261,7 +23284,7 @@ name|ARCSTAT_INCR
 argument_list|(
 name|arcstat_l2_asize
 argument_list|,
-name|write_asize
+name|stats_size
 argument_list|)
 expr_stmt|;
 name|vdev_space_update
@@ -23270,7 +23293,7 @@ name|dev
 operator|->
 name|l2ad_vdev
 argument_list|,
-name|write_asize
+name|stats_size
 argument_list|,
 literal|0
 argument_list|,
