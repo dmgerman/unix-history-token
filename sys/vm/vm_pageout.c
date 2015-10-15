@@ -4455,22 +4455,18 @@ name|queues_locked
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* 		 * Invalid pages cannot appear on a queue.  If 		 * vm_pageout_fallback_object_lock() allowed a window 		 * where the page could be invalidated, it should 		 * detect this. 		 */
-name|KASSERT
-argument_list|(
+comment|/* 		 * Invalid pages can be easily freed. They cannot be 		 * mapped, vm_page_free() asserts this. 		 */
+if|if
+condition|(
 name|m
 operator|->
 name|valid
-operator|!=
+operator|==
 literal|0
-argument_list|,
-operator|(
-literal|"Invalid page %p on inact queue"
-operator|,
-name|m
-operator|)
-argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|free_page
+goto|;
 comment|/* 		 * If the page has been referenced and the object is not dead, 		 * reactivate or requeue the page depending on whether the 		 * object is mapped. 		 */
 if|if
 condition|(
@@ -4627,6 +4623,8 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Clean pages can be freed. 			 */
+name|free_page
+label|:
 name|vm_page_free
 argument_list|(
 name|m
