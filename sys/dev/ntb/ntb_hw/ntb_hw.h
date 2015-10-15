@@ -25,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|NTB_MAX_NUM_MW
-value|2
+value|3
 end_define
 
 begin_enum
@@ -438,6 +438,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Hardware owns the low 32 bits of features. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -468,6 +472,17 @@ define|#
 directive|define
 name|NTB_B2BDOORBELL_BIT14
 value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* Software/configuration owns the top 32 bits. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTB_SPLIT_BAR
+value|(1ull<< 32)
 end_define
 
 begin_function_decl

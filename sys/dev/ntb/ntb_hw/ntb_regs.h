@@ -46,6 +46,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|XEON_SNB_MAX_MW
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_HSXSPLIT_MAX_MW
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|XEON_MAX_SPADS
 value|16
 end_define
@@ -134,6 +148,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|XEON_PBAR5LMT_OFFSET
+value|0x000c
+end_define
+
+begin_define
+define|#
+directive|define
 name|XEON_PBAR2XLAT_OFFSET
 value|0x0010
 end_define
@@ -143,6 +164,13 @@ define|#
 directive|define
 name|XEON_PBAR4XLAT_OFFSET
 value|0x0018
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_PBAR5XLAT_OFFSET
+value|0x001c
 end_define
 
 begin_define
@@ -162,6 +190,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|XEON_SBAR5LMT_OFFSET
+value|0x002c
+end_define
+
+begin_define
+define|#
+directive|define
 name|XEON_SBAR2XLAT_OFFSET
 value|0x0030
 end_define
@@ -171,6 +206,13 @@ define|#
 directive|define
 name|XEON_SBAR4XLAT_OFFSET
 value|0x0038
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_SBAR5XLAT_OFFSET
+value|0x003c
 end_define
 
 begin_define
@@ -192,6 +234,13 @@ define|#
 directive|define
 name|XEON_SBAR4BASE_OFFSET
 value|0x0050
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_SBAR5BASE_OFFSET
+value|0x0054
 end_define
 
 begin_define
@@ -297,6 +346,13 @@ define|#
 directive|define
 name|SOC_MSIX_CNT
 value|34
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOC_MAX_MW
+value|2
 end_define
 
 begin_define
@@ -575,15 +631,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|NTB_CNTL_S2P_BAR45_SNOOP
+name|NTB_CNTL_S2P_BAR4_SNOOP
 value|(1<< 6)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NTB_CNTL_P2S_BAR45_SNOOP
+name|NTB_CNTL_P2S_BAR4_SNOOP
 value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_CNTL_S2P_BAR5_SNOOP
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_CNTL_P2S_BAR5_SNOOP
+value|(1<< 14)
 end_define
 
 begin_define
@@ -626,6 +696,13 @@ define|#
 directive|define
 name|XEON_PPD_DEV_TYPE
 value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_PPD_SPLIT_BAR
+value|0x0040
 end_define
 
 begin_define
@@ -684,74 +761,64 @@ name|NTB_DEV_USD
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|PBAR2XLAT_USD_ADDR
-value|0x0000004000000000ull
-end_define
-
-begin_define
-define|#
-directive|define
-name|PBAR4XLAT_USD_ADDR
-value|0x0000008000000000ull
-end_define
+begin_comment
+comment|/* All addresses are in low 32-bit space so 32-bit BARs can function */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|MBAR01_USD_ADDR
-value|0x000000210000000cull
+value|0x2100000cull
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBAR23_USD_ADDR
-value|0x000000410000000cull
+value|0x4100000cull
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBAR45_USD_ADDR
-value|0x000000810000000cull
+name|MBAR4_USD_ADDR
+value|0x8100000cull
 end_define
 
 begin_define
 define|#
 directive|define
-name|PBAR2XLAT_DSD_ADDR
-value|0x0000004100000000ull
-end_define
-
-begin_define
-define|#
-directive|define
-name|PBAR4XLAT_DSD_ADDR
-value|0x0000008100000000ull
+name|MBAR5_USD_ADDR
+value|0xa100000cull
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBAR01_DSD_ADDR
-value|0x000000200000000cull
+value|0x2000000cull
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBAR23_DSD_ADDR
-value|0x000000400000000cull
+value|0x4000000cull
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBAR45_DSD_ADDR
-value|0x000000800000000cull
+name|MBAR4_DSD_ADDR
+value|0x8000000cull
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBAR5_DSD_ADDR
+value|0xa000000cull
 end_define
 
 begin_comment
