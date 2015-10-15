@@ -1440,7 +1440,13 @@ return|;
 block|}
 name|printf
 argument_list|(
-literal|"/dev/mps%d\t%16s %16s        %08x\n"
+literal|"/dev/mp%s%d\t%16s %16s        %08x\n"
+argument_list|,
+name|is_mps
+condition|?
+literal|"s"
+else|:
+literal|"r"
 argument_list|,
 name|unit
 argument_list|,

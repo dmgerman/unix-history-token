@@ -99,6 +99,12 @@ name|mps_unit
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|is_mps
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -125,7 +131,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mpsutil [-u unit]<command> ...\n\n"
+literal|"usage: %s [-u unit]<command> ...\n\n"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -258,9 +267,12 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"mpsutil: version %s"
+literal|"%s: version %s"
 argument_list|,
 name|MPSUTIL_VERSION
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -323,6 +335,17 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
+name|is_mps
+operator|=
+operator|!
+name|strcmp
+argument_list|(
+name|getprogname
+argument_list|()
+argument_list|,
+literal|"mpsutil"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(

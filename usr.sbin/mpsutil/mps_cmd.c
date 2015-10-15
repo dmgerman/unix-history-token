@@ -2348,7 +2348,13 @@ argument_list|(
 name|path
 argument_list|)
 argument_list|,
-literal|"/dev/mps%d"
+literal|"/dev/mp%s%d"
+argument_list|,
+name|is_mps
+condition|?
+literal|"s"
+else|:
+literal|"r"
 argument_list|,
 name|unit
 argument_list|)

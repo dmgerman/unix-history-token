@@ -202,6 +202,13 @@ name|mps_unit
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|is_mps
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
