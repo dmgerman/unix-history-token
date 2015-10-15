@@ -270,12 +270,14 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|V_tcp_pcap_packets
+name|VNET_NAME
+argument_list|(
+name|tcp_pcap_packets
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Default number of packets saved per direction "
-literal|"per TCPCB"
+literal|"Default number of packets saved per direction per TCPCB"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
