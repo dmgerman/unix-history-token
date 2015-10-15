@@ -4907,12 +4907,13 @@ directive|ifdef
 name|NIC_PARAVIRT
 if|if
 condition|(
-name|if_getdrvflags
-argument_list|(
+operator|(
 name|ifp
-argument_list|)
+operator|->
+name|if_drv_flags
 operator|&
 name|IFF_DRV_OACTIVE
+operator|)
 operator|&&
 name|adapter
 operator|->
