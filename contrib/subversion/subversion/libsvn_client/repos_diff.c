@@ -832,7 +832,9 @@ name|svn_checksum_md5
 argument_list|,
 name|TRUE
 argument_list|,
-name|scratch_pool
+name|fb
+operator|->
+name|pool
 argument_list|)
 expr_stmt|;
 comment|/* Retrieve the file and its properties */
@@ -945,6 +947,17 @@ block|{
 name|int
 name|i
 decl_stmt|;
+comment|/* For added nodes, there is nothing to filter. */
+if|if
+condition|(
+name|apr_hash_count
+argument_list|(
+name|pristine_props
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return;
 for|for
 control|(
 name|i
@@ -1794,7 +1807,7 @@ name|char
 modifier|*
 name|name
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -1803,7 +1816,7 @@ name|svn_dirent_t
 modifier|*
 name|dirent
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -4120,8 +4133,6 @@ name|propchange
 operator|->
 name|value
 operator|=
-name|value
-condition|?
 name|svn_string_dup
 argument_list|(
 name|value
@@ -4130,8 +4141,6 @@ name|fb
 operator|->
 name|pool
 argument_list|)
-else|:
-name|NULL
 expr_stmt|;
 return|return
 name|SVN_NO_ERROR
@@ -4247,8 +4256,6 @@ name|propchange
 operator|->
 name|value
 operator|=
-name|value
-condition|?
 name|svn_string_dup
 argument_list|(
 name|value
@@ -4257,8 +4264,6 @@ name|db
 operator|->
 name|pool
 argument_list|)
-else|:
-name|NULL
 expr_stmt|;
 return|return
 name|SVN_NO_ERROR
@@ -4992,6 +4997,12 @@ operator|->
 name|revision
 operator|=
 name|revision
+expr_stmt|;
+name|eb
+operator|->
+name|target_revision
+operator|=
+name|SVN_INVALID_REVNUM
 expr_stmt|;
 name|eb
 operator|->

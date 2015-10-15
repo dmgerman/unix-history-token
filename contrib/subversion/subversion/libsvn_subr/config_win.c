@@ -80,6 +80,18 @@ directive|include
 file|"svn_utf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"private/svn_utf_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"config_impl.h"
+end_include
+
 begin_function
 name|svn_error_t
 modifier|*
@@ -91,12 +103,16 @@ modifier|*
 modifier|*
 name|folder
 parameter_list|,
-name|int
+name|svn_boolean_t
 name|system_path
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 block|{
 comment|/* ### Adding CSIDL_FLAG_CREATE here, because those folders really      must exist.  I'm not too sure about the SHGFP_TYPE_CURRENT      semancics, though; maybe we should use ..._DEFAULT instead? */
@@ -122,17 +138,52 @@ index|[
 name|MAX_PATH
 index|]
 decl_stmt|;
-name|int
-name|inwords
-decl_stmt|,
-name|outbytes
-decl_stmt|,
-name|outlength
-decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|folder_utf8
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|system_path
+condition|)
+block|{
+name|HKEY
+name|hkey_tmp
+decl_stmt|;
+comment|/* Verify if we actually have a *per user* profile to read from */
+if|if
+condition|(
+name|ERROR_SUCCESS
+operator|==
+name|RegOpenCurrentUser
+argument_list|(
+name|KEY_SET_VALUE
+argument_list|,
+operator|&
+name|hkey_tmp
+argument_list|)
+condition|)
+name|RegCloseKey
+argument_list|(
+name|hkey_tmp
+argument_list|)
+expr_stmt|;
+comment|/* We have a profile */
+else|else
+block|{
+comment|/* The user is not properly logged in. (Most likely we are running              in a service process). In this case Windows will return a default              read only 'roaming profile' directory, which we assume to be              writable. We will then spend many seconds trying to create a              configuration and then fail, because we are not allowed to write              there, but the retry loop in io.c doesn't know that.               We just answer that there is no user configuration directory. */
+operator|*
+name|folder
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+name|SVN_NO_ERROR
+return|;
+block|}
+block|}
 if|if
 condition|(
 name|S_OK
@@ -160,89 +211,42 @@ argument_list|,
 operator|(
 name|system_path
 condition|?
+name|_
+argument_list|(
 literal|"Can't determine the system config path"
+argument_list|)
 else|:
+name|_
+argument_list|(
 literal|"Can't determine the user's config path"
+argument_list|)
 operator|)
 argument_list|)
 return|;
-comment|/* ### When mapping from UCS-2 to UTF-8, we need at most 3 bytes          per wide char, plus extra space for the nul terminator. */
-name|inwords
-operator|=
-name|lstrlenW
+name|SVN_ERR
 argument_list|(
-name|folder_ucs2
-argument_list|)
-expr_stmt|;
-name|outbytes
-operator|=
-name|outlength
-operator|=
-literal|3
-operator|*
-operator|(
-name|inwords
-operator|+
-literal|1
-operator|)
-expr_stmt|;
+name|svn_utf__win32_utf16_to_utf8
+argument_list|(
+operator|&
 name|folder_utf8
-operator|=
-name|apr_palloc
-argument_list|(
-name|pool
-argument_list|,
-name|outlength
-argument_list|)
-expr_stmt|;
-name|outbytes
-operator|=
-name|WideCharToMultiByte
-argument_list|(
-name|CP_UTF8
-argument_list|,
-literal|0
 argument_list|,
 name|folder_ucs2
 argument_list|,
-name|inwords
-argument_list|,
-name|folder_utf8
-argument_list|,
-name|outbytes
-argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+name|scratch_pool
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|outbytes
-operator|==
-literal|0
-condition|)
-return|return
-name|svn_error_wrap_apr
-argument_list|(
-name|apr_get_os_error
-argument_list|()
-argument_list|,
-literal|"Can't convert config path to UTF-8"
 argument_list|)
-return|;
-comment|/* Note that WideCharToMultiByte does _not_ terminate the      outgoing buffer. */
-name|folder_utf8
-index|[
-name|outbytes
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 operator|*
 name|folder
 operator|=
+name|svn_dirent_internal_style
+argument_list|(
 name|folder_utf8
+argument_list|,
+name|result_pool
+argument_list|)
 expr_stmt|;
 return|return
 name|SVN_NO_ERROR
@@ -253,14 +257,8 @@ end_function
 begin_escape
 end_escape
 
-begin_include
-include|#
-directive|include
-file|"config_impl.h"
-end_include
-
 begin_comment
-comment|/* ### These constants are insanely large, but (a) we want to avoid    reallocating strings if possible, and (b) the realloc logic might    not actually work -- you never know with Win32 ... */
+comment|/* ### These constants are insanely large, but we want to avoid    reallocating strings if possible. */
 end_comment
 
 begin_define
@@ -276,6 +274,10 @@ directive|define
 name|SVN_REG_DEFAULT_VALUE_SIZE
 value|8192
 end_define
+
+begin_comment
+comment|/* ### This function should be converted to use the unicode functions    ### instead of the ansi functions */
+end_comment
 
 begin_function
 specifier|static
@@ -434,7 +436,10 @@ name|SVN_ERR_MALFORMED_FILE
 argument_list|,
 name|NULL
 argument_list|,
+name|_
+argument_list|(
 literal|"Can't enumerate registry values"
+argument_list|)
 argument_list|)
 return|;
 comment|/* Ignore option names that start with '#', see          http://subversion.tigris.org/issues/show_bug.cgi?id=671 */
@@ -542,7 +547,10 @@ name|SVN_ERR_MALFORMED_FILE
 argument_list|,
 name|NULL
 argument_list|,
+name|_
+argument_list|(
 literal|"Can't read registry value data"
+argument_list|)
 argument_list|)
 return|;
 name|svn_config_set
@@ -684,7 +692,10 @@ name|SVN_ERR_BAD_FILENAME
 argument_list|,
 name|NULL
 argument_list|,
+name|_
+argument_list|(
 literal|"Unrecognised registry path '%s'"
+argument_list|)
 argument_list|,
 name|svn_dirent_local_style
 argument_list|(
@@ -720,20 +731,32 @@ operator|!=
 name|ERROR_SUCCESS
 condition|)
 block|{
-specifier|const
-name|int
-name|is_enoent
+name|apr_status_t
+name|apr_err
 init|=
-name|APR_STATUS_IS_ENOENT
-argument_list|(
 name|APR_FROM_OS_ERROR
 argument_list|(
 name|err
 argument_list|)
+decl_stmt|;
+name|svn_boolean_t
+name|is_enoent
+init|=
+name|APR_STATUS_IS_ENOENT
+argument_list|(
+name|apr_err
 argument_list|)
+operator|||
+operator|(
+name|err
+operator|==
+name|ERROR_INVALID_HANDLE
+operator|)
 decl_stmt|;
 if|if
 condition|(
+name|must_exist
+operator|||
 operator|!
 name|is_enoent
 condition|)
@@ -742,33 +765,21 @@ name|svn_error_createf
 argument_list|(
 name|SVN_ERR_BAD_FILENAME
 argument_list|,
-name|NULL
-argument_list|,
-literal|"Can't open registry key '%s'"
-argument_list|,
-name|svn_dirent_local_style
-argument_list|(
-name|file
-argument_list|,
-name|pool
-argument_list|)
-argument_list|)
-return|;
-elseif|else
-if|if
-condition|(
-name|must_exist
-operator|&&
 name|is_enoent
-condition|)
-return|return
-name|svn_error_createf
+condition|?
+name|NULL
+else|:
+name|svn_error_wrap_apr
 argument_list|(
-name|SVN_ERR_BAD_FILENAME
+name|apr_err
 argument_list|,
 name|NULL
+argument_list|)
 argument_list|,
-literal|"Can't find registry key '%s'"
+name|_
+argument_list|(
+literal|"Can't open registry key '%s'"
+argument_list|)
 argument_list|,
 name|svn_dirent_local_style
 argument_list|(
@@ -951,7 +962,10 @@ name|SVN_ERR_MALFORMED_FILE
 argument_list|,
 name|NULL
 argument_list|,
+name|_
+argument_list|(
 literal|"Can't enumerate registry keys"
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -993,7 +1007,10 @@ name|SVN_ERR_MALFORMED_FILE
 argument_list|,
 name|NULL
 argument_list|,
+name|_
+argument_list|(
 literal|"Can't open existing subkey"
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto

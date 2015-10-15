@@ -463,7 +463,7 @@ end_function_decl
 
 begin_struct_decl
 struct_decl|struct
-name|strlist
+name|arglist
 struct_decl|;
 end_struct_decl
 
@@ -472,7 +472,7 @@ name|void
 name|listsetvar
 parameter_list|(
 name|struct
-name|strlist
+name|arglist
 modifier|*
 parameter_list|,
 name|int

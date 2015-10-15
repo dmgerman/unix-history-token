@@ -325,11 +325,17 @@ name|dmu_buf_user_t
 modifier|*
 name|db_user
 decl_stmt|;
+comment|/* 	 * Evict user data as soon as the dirty and reference 	 * counts are equal. 	 */
 name|uint8_t
-name|db_immediate_evict
+name|db_user_immediate_evict
 decl_stmt|;
+comment|/* 	 * This block was freed while a read or write was 	 * active. 	 */
 name|uint8_t
 name|db_freed_in_flight
+decl_stmt|;
+comment|/* 	 * dnode_evict_dbufs() or dnode_evict_bonus() tried to 	 * evict this dbuf, but couldn't due to outstanding 	 * references.  Evict once the refcount drops to 0. 	 */
+name|uint8_t
+name|db_pending_evict
 decl_stmt|;
 name|uint8_t
 name|db_dirtycnt

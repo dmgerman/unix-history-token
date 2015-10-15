@@ -273,8 +273,10 @@ name|SVN_ERR
 argument_list|(
 name|svn_cl__try
 argument_list|(
-name|svn_client_cat2
+name|svn_client_cat3
 argument_list|(
+name|NULL
+argument_list|,
 name|out
 argument_list|,
 name|truepath
@@ -289,7 +291,14 @@ operator|->
 name|start_revision
 operator|)
 argument_list|,
+operator|!
+name|opt_state
+operator|->
+name|ignore_keywords
+argument_list|,
 name|ctx
+argument_list|,
+name|subpool
 argument_list|,
 name|subpool
 argument_list|)
@@ -308,7 +317,7 @@ name|SVN_ERR_CLIENT_IS_DIRECTORY
 argument_list|,
 name|SVN_ERR_FS_NOT_FOUND
 argument_list|,
-name|SVN_NO_ERROR
+literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;

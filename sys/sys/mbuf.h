@@ -2287,6 +2287,22 @@ end_decl_stmt
 
 begin_function_decl
 name|void
+name|mb_dupcl
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|mb_free_ext
 parameter_list|(
 name|struct

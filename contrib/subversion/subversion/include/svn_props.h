@@ -471,17 +471,17 @@ define|#
 directive|define
 name|SVN_PROP_EXTERNALS
 value|SVN_PROP_PREFIX "externals"
-comment|/** Merge info property used to record a resource's merge history.  *  * The format is a series of lines containing merge paths and revision  * ranges, such as:  *  * @verbatim      /trunk: 1-6,9,37-38      /trunk/foo: 10 @endverbatim  */
+comment|/** Merge info property used to record a resource's merge history.  *  * The format is a series of lines containing merge paths and revision  * ranges, such as:  *  * @verbatim      /trunk: 1-6,9,37-38      /trunk/foo: 10 @endverbatim  * @since New in 1.5.  */
 define|#
 directive|define
 name|SVN_PROP_MERGEINFO
 value|SVN_PROP_PREFIX "mergeinfo"
-comment|/** Property used to record inheritable configuration auto-props. */
+comment|/** Property used to record inheritable configuration auto-props.  *  * @since New in 1.8.  */
 define|#
 directive|define
 name|SVN_PROP_INHERITABLE_AUTO_PROPS
 value|SVN_PROP_PREFIX "auto-props"
-comment|/** Property used to record inheritable configuration ignores. */
+comment|/** Property used to record inheritable configuration ignores.  *  * @since New in 1.8.  */
 define|#
 directive|define
 name|SVN_PROP_INHERITABLE_IGNORES
@@ -627,7 +627,7 @@ define|#
 directive|define
 name|SVN_PROP_TXN_PREFIX
 value|SVN_PROP_PREFIX "txn-"
-comment|/** Identifies the client version compability level.  For clients  * compiled against Subversion libraries, this is @c SVN_VER_NUMBER.  * Third-party implementations are advised to use similar formatting  * for values of this property.  *  * @since New in 1.8.  */
+comment|/** Identifies the client version compatibility level.  For clients  * compiled against Subversion libraries, this is @c SVN_VER_NUMBER.  * Third-party implementations are advised to use similar formatting  * for values of this property.  *  * @since New in 1.8.  */
 define|#
 directive|define
 name|SVN_PROP_TXN_CLIENT_COMPAT_VERSION

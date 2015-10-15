@@ -18,20 +18,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NTB_LINK_ENABLE
-value|0x0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|NTB_LINK_DISABLE
-value|0x0002
-end_define
-
-begin_define
-define|#
-directive|define
 name|NTB_LINK_STATUS_ACTIVE
 value|0x2000
 end_define
@@ -68,7 +54,7 @@ begin_define
 define|#
 directive|define
 name|XEON_MAX_COMPAT_SPADS
-value|8
+value|16
 end_define
 
 begin_comment
@@ -79,6 +65,13 @@ begin_define
 define|#
 directive|define
 name|XEON_MAX_DB_BITS
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_LINK_DB
 value|15
 end_define
 
@@ -115,6 +108,13 @@ define|#
 directive|define
 name|XEON_LINK_STATUS_OFFSET
 value|0x01a2
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_SLINK_STATUS_OFFSET
+value|0x05a2
 end_define
 
 begin_define
@@ -281,8 +281,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|XEON_B2B_XLAT_OFFSET
+name|XEON_B2B_XLAT_OFFSETL
 value|0x0144
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_B2B_XLAT_OFFSETU
+value|0x0148
 end_define
 
 begin_define
@@ -296,13 +303,6 @@ begin_define
 define|#
 directive|define
 name|SOC_MAX_SPADS
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOC_MAX_COMPAT_SPADS
 value|16
 end_define
 
@@ -547,15 +547,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|NTB_CNTL_BAR23_SNOOP
+name|NTB_CNTL_CFG_LOCK
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_CNTL_LINK_DISABLE
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_CNTL_S2P_BAR23_SNOOP
 value|(1<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NTB_CNTL_BAR45_SNOOP
+name|NTB_CNTL_P2S_BAR23_SNOOP
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_CNTL_S2P_BAR45_SNOOP
 value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_CNTL_P2S_BAR45_SNOOP
+value|(1<< 8)
 end_define
 
 begin_define
@@ -624,7 +652,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NTB_CONN_CLASSIC
+name|NTB_CONN_TRANSPARENT
 value|0
 end_define
 
@@ -660,70 +688,70 @@ begin_define
 define|#
 directive|define
 name|PBAR2XLAT_USD_ADDR
-value|0x0000004000000000
+value|0x0000004000000000ull
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBAR4XLAT_USD_ADDR
-value|0x0000008000000000
+value|0x0000008000000000ull
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBAR01_USD_ADDR
-value|0x000000210000000c
+value|0x000000210000000cull
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBAR23_USD_ADDR
-value|0x000000410000000c
+value|0x000000410000000cull
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBAR45_USD_ADDR
-value|0x000000810000000c
+value|0x000000810000000cull
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBAR2XLAT_DSD_ADDR
-value|0x0000004100000000
+value|0x0000004100000000ull
 end_define
 
 begin_define
 define|#
 directive|define
 name|PBAR4XLAT_DSD_ADDR
-value|0x0000008100000000
+value|0x0000008100000000ull
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBAR01_DSD_ADDR
-value|0x000000200000000c
+value|0x000000200000000cull
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBAR23_DSD_ADDR
-value|0x000000400000000c
+value|0x000000400000000cull
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBAR45_DSD_ADDR
-value|0x000000800000000c
+value|0x000000800000000cull
 end_define
 
 begin_comment

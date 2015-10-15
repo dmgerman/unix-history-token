@@ -8542,11 +8542,6 @@ operator|->
 name|malo_invalid
 condition|)
 block|{
-name|ieee80211_free_node
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -8583,11 +8578,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ieee80211_free_node
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -8651,11 +8641,6 @@ expr_stmt|;
 name|MALO_TXQ_UNLOCK
 argument_list|(
 name|txq
-argument_list|)
-expr_stmt|;
-name|ieee80211_free_node
-argument_list|(
-name|ni
 argument_list|)
 expr_stmt|;
 return|return

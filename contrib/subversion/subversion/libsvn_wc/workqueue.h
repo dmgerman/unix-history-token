@@ -60,7 +60,7 @@ parameter_list|(
 name|wi
 parameter_list|)
 value|((wi)->children->is_atom)
-comment|/* Combine WORK_ITEM1 and WORK_ITEM2 into a single, resulting work item.     Each of the WORK_ITEM parameters may have one of three values:       NULL                          no work item      (OPCODE arg1 arg2 ...)        single work item      ((OPCODE ...) (OPCODE ...))   multiple work items     These will be combined as appropriate, and returned in one of the    above three styles.     The resulting list will be ordered: WORK_ITEM1 first, then WORK_ITEM2  */
+comment|/* Combine WORK_ITEM1 and WORK_ITEM2 into a single, resulting work item.     Each of the WORK_ITEM parameters may have one of three values:       NULL                          no work item      (OPCODE arg1 arg2 ...)        single work item      ((OPCODE ...) (OPCODE ...))   multiple work items     These will be combined as appropriate, and returned in one of the    above three styles.     The resulting list will be ordered: WORK_ITEM1 first, then WORK_ITEM2.     The result contains a shallow copy of the inputs.  Allocate any    additional storage needed in RESULT_POOL.  */
 name|svn_skel_t
 modifier|*
 name|svn_wc__wq_merge
@@ -316,7 +316,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Set *WORK_ITEM to a new work item that will install a property reject    file for LOCAL_ABSPATH into the working copy. The property conflicts will    be taken from CONFLICT_SKEL.     ### Caution: Links CONFLICT_SKEL into the *WORK_ITEM, which involves        modifying *CONFLICT_SKEL.     ### TODO: Make CONFLICT_SKEL 'const' and dup it into RESULT_POOL.     ### TODO: If CONFLICT_SKEL is NULL, take property conflicts from wc_db        for the given DB/LOCAL_ABSPATH.  */
+comment|/* Set *WORK_ITEM to a new work item that will install a property reject    file for LOCAL_ABSPATH into the working copy.  */
 name|svn_error_t
 modifier|*
 name|svn_wc__wq_build_prej_install
@@ -334,10 +334,6 @@ specifier|const
 name|char
 modifier|*
 name|local_abspath
-parameter_list|,
-name|svn_skel_t
-modifier|*
-name|conflict_skel
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -400,11 +396,11 @@ name|local_abspath
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|scratch_pool
+name|result_pool
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|result_pool
+name|scratch_pool
 parameter_list|)
 function_decl|;
 name|svn_error_t

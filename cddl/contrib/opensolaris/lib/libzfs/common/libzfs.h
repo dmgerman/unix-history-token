@@ -2705,6 +2705,39 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
+name|zfs_send_resume
+parameter_list|(
+name|libzfs_handle_t
+modifier|*
+parameter_list|,
+name|sendflags_t
+modifier|*
+parameter_list|,
+name|int
+name|outfd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|nvlist_t
+modifier|*
+name|zfs_send_resume_token_to_nvlist
+parameter_list|(
+name|libzfs_handle_t
+modifier|*
+name|hdl
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|token
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
 name|zfs_promote
 parameter_list|(
 name|zfs_handle_t
@@ -2874,6 +2907,10 @@ decl_stmt|;
 comment|/* set "canmount=off" on all modified filesystems */
 name|boolean_t
 name|canmountoff
+decl_stmt|;
+comment|/* 	 * Mark the file systems as "resumable" and do not destroy them if the 	 * receive is interrupted 	 */
+name|boolean_t
+name|resumable
 decl_stmt|;
 comment|/* byteswap flag is used internally; callers need not specify */
 name|boolean_t

@@ -610,15 +610,9 @@ name|struct
 name|rt2860_rx_radiotap_header
 name|sc_rxtap
 decl_stmt|;
-name|int
-name|sc_rxtap_len
-decl_stmt|;
 name|struct
 name|rt2860_tx_radiotap_header
 name|sc_txtap
-decl_stmt|;
-name|int
-name|sc_txtap_len
 decl_stmt|;
 block|}
 struct|;

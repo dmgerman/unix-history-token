@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2008 The DragonFly Project.  All rights reserved.  *  * This code is derived from software contributed to The DragonFly Project  * by Simon 'corecode' Schubert<corecode@fs.ei.tum.de>.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  * 3. Neither the name of The DragonFly Project nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific, prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE  * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2008-2014, Simon Schubert<2@0x2c.org>.  * Copyright (c) 2008 The DragonFly Project.  All rights reserved.  *  * This code is derived from software contributed to The DragonFly Project  * by Simon Schubert<2@0x2c.org>.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  * 3. Neither the name of The DragonFly Project nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific, prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE  * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -1069,7 +1069,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -1151,7 +1151,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1192,7 +1192,7 @@ name|doqueue
 condition|)
 name|exit
 argument_list|(
-literal|0
+name|EX_OK
 argument_list|)
 expr_stmt|;
 name|syslog
@@ -1204,13 +1204,13 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_SOFTWARE
 argument_list|)
 expr_stmt|;
 default|default:
 name|exit
 argument_list|(
-literal|1
+name|EX_SOFTWARE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1240,7 +1240,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_SOFTWARE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1340,7 +1340,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|EX_OK
 argument_list|)
 expr_stmt|;
 case|case
@@ -1374,7 +1374,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_SOFTWARE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1754,7 +1754,7 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_CONFIG
 argument_list|,
 literal|"user '%s' not found"
 argument_list|,
@@ -1764,7 +1764,7 @@ expr_stmt|;
 else|else
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"cannot drop root privileges"
 argument_list|)
@@ -1783,7 +1783,7 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"cannot drop root privileges"
 argument_list|)
@@ -1802,7 +1802,7 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"cannot drop root privileges"
 argument_list|)
@@ -1868,7 +1868,7 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"invalid arguments"
 argument_list|)
@@ -1913,7 +1913,7 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_SOFTWARE
 argument_list|,
 literal|"could not parse aliases file `%s'"
 argument_list|,
@@ -1924,7 +1924,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|EX_OK
 argument_list|)
 expr_stmt|;
 block|}
@@ -2168,7 +2168,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2199,7 +2199,7 @@ operator|)
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"sending mail and queue operations are mutually exclusive"
 argument_list|)
@@ -2214,7 +2214,7 @@ literal|1
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"conflicting queue operations"
 argument_list|)
@@ -2317,7 +2317,7 @@ literal|0
 condition|)
 name|errlog
 argument_list|(
-literal|1
+name|EX_NOINPUT
 argument_list|,
 literal|"can not load queue"
 argument_list|)
@@ -2354,7 +2354,7 @@ literal|0
 condition|)
 name|errlog
 argument_list|(
-literal|1
+name|EX_NOINPUT
 argument_list|,
 literal|"can not load queue"
 argument_list|)
@@ -2380,7 +2380,7 @@ literal|0
 condition|)
 name|errlog
 argument_list|(
-literal|1
+name|EX_SOFTWARE
 argument_list|,
 literal|"could not parse aliases file `%s'"
 argument_list|,
@@ -2407,9 +2407,9 @@ name|NULL
 condition|)
 name|errlog
 argument_list|(
-literal|1
+name|EX_SOFTWARE
 argument_list|,
-literal|"set_from failed"
+literal|"set_from()"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2424,7 +2424,7 @@ literal|0
 condition|)
 name|errlog
 argument_list|(
-literal|1
+name|EX_CANTCREAT
 argument_list|,
 literal|"can not create temp file in `%s'"
 argument_list|,
@@ -2475,7 +2475,7 @@ literal|0
 condition|)
 name|errlogx
 argument_list|(
-literal|1
+name|EX_DATAERR
 argument_list|,
 literal|"invalid recipient `%s'"
 argument_list|,
@@ -2501,7 +2501,7 @@ name|recp_from_header
 condition|)
 name|errlogx
 argument_list|(
-literal|1
+name|EX_NOINPUT
 argument_list|,
 literal|"no recipients"
 argument_list|)
@@ -2522,7 +2522,7 @@ literal|0
 condition|)
 name|errlog
 argument_list|(
-literal|1
+name|EX_NOINPUT
 argument_list|,
 literal|"can not read mail"
 argument_list|)
@@ -2539,7 +2539,7 @@ argument_list|)
 condition|)
 name|errlogx
 argument_list|(
-literal|1
+name|EX_NOINPUT
 argument_list|,
 literal|"no recipients"
 argument_list|)
@@ -2556,7 +2556,7 @@ literal|0
 condition|)
 name|errlog
 argument_list|(
-literal|1
+name|EX_CANTCREAT
 argument_list|,
 literal|"can not create spools"
 argument_list|)

@@ -561,6 +561,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ieee80211_free_mbuf
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ieee80211_send_mgmt
 parameter_list|(

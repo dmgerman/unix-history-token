@@ -347,6 +347,23 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|TCPPCAP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_pcap.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|TCPDEBUG
 end_ifdef
 
@@ -1887,6 +1904,14 @@ argument_list|,
 name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCPPCAP
+name|tcp_pcap_init
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3958,6 +3983,17 @@ name|inp_ppcb
 operator|=
 name|tp
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCPPCAP
+comment|/* 	 * Init the TCP PCAP queues. 	 */
+name|tcp_pcap_tcpcb_init
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|tp
@@ -4549,6 +4585,32 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCPPCAP
+comment|/* Free the TCP PCAP queues. */
+name|tcp_pcap_drain
+argument_list|(
+operator|&
+operator|(
+name|tp
+operator|->
+name|t_inpkts
+operator|)
+argument_list|)
+expr_stmt|;
+name|tcp_pcap_drain
+argument_list|(
+operator|&
+operator|(
+name|tp
+operator|->
+name|t_outpkts
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Allow the CC algorithm to clean up after itself. */
 if|if
 condition|(

@@ -329,6 +329,23 @@ directive|include
 file|<netinet/tcpip.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCPPCAP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_pcap.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -7011,6 +7028,26 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCPPCAP
+comment|/* Save segment, if requested. */
+name|tcp_pcap_add
+argument_list|(
+name|th
+argument_list|,
+name|m
+argument_list|,
+operator|&
+operator|(
+name|tp
+operator|->
+name|t_inpkts
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Segment received on connection. 	 * Reset idle time and keep-alive timer. 	 * XXX: This should be done after segment 	 * validation to ignore broken/spoofed segs. 	 */
 name|tp
 operator|->

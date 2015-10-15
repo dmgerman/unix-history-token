@@ -86,6 +86,20 @@ parameter_list|)
 function_decl|;
 ifdef|#
 directive|ifdef
+name|WIN32
+comment|/* Obtain the Windows version information as OSVERSIONINFOEXW structure.  *  * !!! Unlike other apis the caller is expected to pre-allocate the buffer  * !!! to allow using this api from the crash handler.  */
+name|svn_boolean_t
+name|svn_sysinfo___fill_windows_version
+parameter_list|(
+name|OSVERSIONINFOEXW
+modifier|*
+name|version_info
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|__cplusplus
 block|}
 end_extern

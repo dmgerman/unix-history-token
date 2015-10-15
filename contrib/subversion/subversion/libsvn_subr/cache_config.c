@@ -33,6 +33,12 @@ directive|include
 file|"svn_pools.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"svn_sorts.h"
+end_include
+
 begin_comment
 comment|/* The cache settings as a process-wide singleton.  */
 end_comment
@@ -117,13 +123,25 @@ name|cache
 init|=
 name|NULL
 decl_stmt|;
+comment|/* Limit the cache size to about half the available address space    * (typ. 1G under 32 bits).    */
 name|apr_uint64_t
 name|cache_size
 init|=
+name|MIN
+argument_list|(
 name|cache_settings
 operator|.
 name|cache_size
+argument_list|,
+operator|(
+name|apr_uint64_t
+operator|)
+name|SVN_MAX_OBJECT_SIZE
+operator|/
+literal|2
+argument_list|)
 decl_stmt|;
+comment|/* Create caches at all? */
 if|if
 condition|(
 name|cache_size
@@ -212,7 +230,7 @@ call|)
 argument_list|(
 name|cache_size
 operator|/
-literal|10
+literal|5
 argument_list|)
 argument_list|,
 literal|0

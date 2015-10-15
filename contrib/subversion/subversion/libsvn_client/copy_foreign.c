@@ -580,7 +580,7 @@ operator|->
 name|created
 condition|)
 block|{
-comment|/* We can still store them in the hash for immediate addition          with the svn_wc_add_from_disk2() call */
+comment|/* We can still store them in the hash for immediate addition          with the svn_wc_add_from_disk3() call */
 if|if
 condition|(
 operator|!
@@ -660,7 +660,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|/* Cancelation */
+comment|/* Cancellation */
 name|NULL
 argument_list|,
 name|NULL
@@ -794,7 +794,7 @@ expr_stmt|;
 comment|/* Add the directory with all the already collected properties */
 name|SVN_ERR
 argument_list|(
-name|svn_wc_add_from_disk2
+name|svn_wc_add_from_disk3
 argument_list|(
 name|db
 operator|->
@@ -809,6 +809,9 @@ argument_list|,
 name|db
 operator|->
 name|properties
+argument_list|,
+name|TRUE
+comment|/* skip checks */
 argument_list|,
 name|db
 operator|->
@@ -1153,7 +1156,7 @@ return|return
 name|SVN_NO_ERROR
 return|;
 block|}
-comment|/* We store all properties in the hash for immediate addition       with the svn_wc_add_from_disk2() call */
+comment|/* We store all properties in the hash for immediate addition       with the svn_wc_add_from_disk3() call */
 if|if
 condition|(
 operator|!
@@ -1464,7 +1467,7 @@ return|;
 block|}
 name|SVN_ERR
 argument_list|(
-name|svn_wc_add_from_disk2
+name|svn_wc_add_from_disk3
 argument_list|(
 name|eb
 operator|->
@@ -1477,6 +1480,9 @@ argument_list|,
 name|fb
 operator|->
 name|properties
+argument_list|,
+name|TRUE
+comment|/* skip checks */
 argument_list|,
 name|eb
 operator|->
@@ -2159,7 +2165,7 @@ name|char
 modifier|*
 name|name
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -2201,7 +2207,7 @@ name|already_locked
 condition|)
 name|SVN_WC__CALL_WITH_WRITE_LOCK
 argument_list|(
-name|svn_wc_add_from_disk2
+name|svn_wc_add_from_disk3
 argument_list|(
 name|ctx
 operator|->
@@ -2210,6 +2216,9 @@ argument_list|,
 name|dst_abspath
 argument_list|,
 name|props
+argument_list|,
+name|TRUE
+comment|/* skip checks */
 argument_list|,
 name|ctx
 operator|->
@@ -2236,7 +2245,7 @@ expr_stmt|;
 else|else
 name|SVN_ERR
 argument_list|(
-name|svn_wc_add_from_disk2
+name|svn_wc_add_from_disk3
 argument_list|(
 name|ctx
 operator|->
@@ -2245,6 +2254,9 @@ argument_list|,
 name|dst_abspath
 argument_list|,
 name|props
+argument_list|,
+name|TRUE
+comment|/* skip checks */
 argument_list|,
 name|ctx
 operator|->

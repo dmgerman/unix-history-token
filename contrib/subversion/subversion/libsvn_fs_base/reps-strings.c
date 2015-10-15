@@ -3539,7 +3539,7 @@ name|args
 operator|->
 name|rb
 operator|->
-name|sha1_checksum
+name|md5_checksum
 argument_list|,
 name|trail
 operator|->
@@ -4627,10 +4627,13 @@ argument_list|,
 name|pool
 argument_list|)
 expr_stmt|;
-name|svn_stream_set_read
+name|svn_stream_set_read2
 argument_list|(
 operator|*
 name|rs_p
+argument_list|,
+name|NULL
+comment|/* only full read support */
 argument_list|,
 name|rep_read_contents
 argument_list|)

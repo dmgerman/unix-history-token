@@ -1974,21 +1974,14 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * For encaped frames, we need to free the node 		 * reference upon failure. 		 */
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|ieee80211_parent_xmitpkt
 argument_list|(
 name|ic
 argument_list|,
 name|m
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|ieee80211_free_node
-argument_list|(
-name|ni
 argument_list|)
 expr_stmt|;
 block|}

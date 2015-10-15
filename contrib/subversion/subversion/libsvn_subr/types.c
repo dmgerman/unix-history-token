@@ -51,6 +51,18 @@ directive|include
 file|"svn_private_config.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"private/svn_dep_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"private/svn_string_private.h"
+end_include
+
 begin_function
 name|svn_error_t
 modifier|*
@@ -72,6 +84,7 @@ modifier|*
 name|endptr
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|end
@@ -79,14 +92,15 @@ decl_stmt|;
 name|svn_revnum_t
 name|result
 init|=
-name|strtol
+operator|(
+name|svn_revnum_t
+operator|)
+name|svn__strtoul
 argument_list|(
 name|str
 argument_list|,
 operator|&
 name|end
-argument_list|,
-literal|10
 argument_list|)
 decl_stmt|;
 if|if
@@ -96,7 +110,7 @@ condition|)
 operator|*
 name|endptr
 operator|=
-name|end
+name|str
 expr_stmt|;
 if|if
 condition|(
@@ -111,6 +125,16 @@ name|SVN_ERR_REVNUM_PARSE_FAILURE
 argument_list|,
 name|NULL
 argument_list|,
+operator|*
+name|str
+operator|==
+literal|'-'
+condition|?
+name|_
+argument_list|(
+literal|"Negative revision number found parsing '%s'"
+argument_list|)
+else|:
 name|_
 argument_list|(
 literal|"Invalid revision number found parsing '%s'"
@@ -119,23 +143,25 @@ argument_list|,
 name|str
 argument_list|)
 return|;
+comment|/* a revision number with more than 9 digits is suspicious.      Have a closer look at those. */
 if|if
 condition|(
-name|result
-operator|<
-literal|0
+name|str
+operator|+
+literal|10
+operator|<=
+name|end
 condition|)
 block|{
-comment|/* The end pointer from strtol() is valid, but a negative revision          number is invalid, so move the end pointer back to the          beginning of the string. */
+comment|/* we support 32 bit revision numbers only. check for overflows */
 if|if
 condition|(
-name|endptr
-condition|)
-operator|*
-name|endptr
-operator|=
 name|str
-expr_stmt|;
+operator|+
+literal|10
+operator|<
+name|end
+condition|)
 return|return
 name|svn_error_createf
 argument_list|(
@@ -145,13 +171,52 @@ name|NULL
 argument_list|,
 name|_
 argument_list|(
-literal|"Negative revision number found parsing '%s'"
+literal|"Revision number longer than 10 digits '%s'"
+argument_list|)
+argument_list|,
+name|str
+argument_list|)
+return|;
+comment|/* we support 32 bit revision numbers only. check for overflows */
+if|if
+condition|(
+operator|*
+name|str
+operator|>
+literal|'2'
+operator|||
+operator|(
+name|apr_uint32_t
+operator|)
+name|result
+operator|>
+name|APR_INT32_MAX
+condition|)
+return|return
+name|svn_error_createf
+argument_list|(
+name|SVN_ERR_REVNUM_PARSE_FAILURE
+argument_list|,
+name|NULL
+argument_list|,
+name|_
+argument_list|(
+literal|"Revision number too large '%s'"
 argument_list|)
 argument_list|,
 name|str
 argument_list|)
 return|;
 block|}
+if|if
+condition|(
+name|endptr
+condition|)
+operator|*
+name|endptr
+operator|=
+name|end
+expr_stmt|;
 operator|*
 name|rev
 operator|=

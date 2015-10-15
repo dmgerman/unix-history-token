@@ -111,6 +111,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"auth.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"private/svn_auth_private.h"
 end_include
 
@@ -212,11 +218,11 @@ name|realmstring
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|scratch_pool
+name|result_pool
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|result_pool
+name|scratch_pool
 parameter_list|)
 block|{
 specifier|const
@@ -584,7 +590,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* This implements the method of finding the socket as described in    * the gpg-agent man page under the --use-standard-socket option.    * The manage page misleadingly says the standard socket is     * "named 'S.gpg-agent' located in the home directory."  The standard    * socket path is actually in the .gnupg directory in the home directory,    * i.e. ~/.gnupg/S.gpg-agent */
+comment|/* This implements the method of finding the socket as described in    * the gpg-agent man page under the --use-standard-socket option.    * The manage page misleadingly says the standard socket is    * "named 'S.gpg-agent' located in the home directory."  The standard    * socket path is actually in the .gnupg directory in the home directory,    * i.e. ~/.gnupg/S.gpg-agent */
 name|gpg_agent_info
 operator|=
 name|getenv
@@ -603,7 +609,7 @@ name|apr_array_header_t
 modifier|*
 name|socket_details
 decl_stmt|;
-comment|/* For reference GPG_AGENT_INFO consists of 3 : separated fields.        * The path to the socket, the pid of the gpg-agent process and         * finally the version of the protocol the agent talks. */
+comment|/* For reference GPG_AGENT_INFO consists of 3 : separated fields.        * The path to the socket, the pid of the gpg-agent process and        * finally the version of the protocol the agent talks. */
 name|socket_details
 operator|=
 name|svn_cstring_split
@@ -651,6 +657,15 @@ condition|)
 return|return
 name|SVN_NO_ERROR
 return|;
+name|homedir
+operator|=
+name|svn_dirent_canonicalize
+argument_list|(
+name|homedir
+argument_list|,
+name|pool
+argument_list|)
+expr_stmt|;
 name|socket_name
 operator|=
 name|svn_dirent_join_many
@@ -663,7 +678,7 @@ literal|".gnupg"
 argument_list|,
 literal|"S.gpg-agent"
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2210,7 +2225,7 @@ end_comment
 
 begin_function
 name|void
-name|svn_auth_get_gpg_agent_simple_provider
+name|svn_auth__get_gpg_agent_simple_provider
 parameter_list|(
 name|svn_auth_provider_object_t
 modifier|*

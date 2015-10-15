@@ -6974,11 +6974,6 @@ operator|->
 name|sc_invalid
 condition|)
 block|{
-name|ieee80211_free_node
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -7024,11 +7019,6 @@ operator|.
 name|mst_tx_qstop
 operator|++
 expr_stmt|;
-name|ieee80211_free_node
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -7058,11 +7048,6 @@ argument_list|(
 name|txq
 argument_list|,
 name|bf
-argument_list|)
-expr_stmt|;
-name|ieee80211_free_node
-argument_list|(
-name|ni
 argument_list|)
 expr_stmt|;
 return|return
