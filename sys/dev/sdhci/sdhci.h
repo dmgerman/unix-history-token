@@ -210,6 +210,17 @@ value|(1<<15)
 end_define
 
 begin_comment
+comment|/* Alternate clock source is required when supplying a 400 KHz clock. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_BCM577XX_400KHZ_CLKSRC
+value|(1<<16)
+end_define
+
+begin_comment
 comment|/*  * Controller registers  */
 end_comment
 
