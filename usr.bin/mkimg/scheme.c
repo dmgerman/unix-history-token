@@ -138,6 +138,12 @@ name|ALIAS_EFI
 block|}
 block|,
 block|{
+literal|"fat16b"
+block|,
+name|ALIAS_FAT16B
+block|}
+block|,
+block|{
 literal|"fat32"
 block|,
 name|ALIAS_FAT32
