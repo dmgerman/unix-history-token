@@ -959,6 +959,12 @@ name|MPRIO_MPR_COMMAND
 value|_IOWR('M', 210, struct mpr_usr_command)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MPTIOCTL
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1042,6 +1048,11 @@ directive|define
 name|MPTIOCTL_BTDH_MAPPING
 value|_IOWR(MPTIOCTL, 11,\     struct mpr_btdh_mapping)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
