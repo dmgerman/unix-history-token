@@ -183,6 +183,14 @@ name|zfs_ioctl_version
 condition|)
 block|{
 case|case
+name|ZFS_IOCVER_EDBP
+case|:
+name|cflag
+operator|=
+name|ZFS_CMD_COMPAT_EDBP
+expr_stmt|;
+break|break;
+case|case
 name|ZFS_IOCVER_ZCMD
 case|:
 name|cflag

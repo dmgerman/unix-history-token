@@ -49,6 +49,21 @@ name|avl_tree
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|dmu_replay_record
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|recv_clone_name
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|dmu_send
@@ -69,12 +84,18 @@ parameter_list|,
 name|boolean_t
 name|large_block_ok
 parameter_list|,
-ifdef|#
-directive|ifdef
-name|illumos
 name|int
 name|outfd
 parameter_list|,
+name|uint64_t
+name|resumeobj
+parameter_list|,
+name|uint64_t
+name|resumeoff
+parameter_list|,
+ifdef|#
+directive|ifdef
+name|illumos
 name|struct
 name|vnode
 modifier|*
@@ -93,9 +114,7 @@ directive|else
 end_else
 
 begin_decl_stmt
-name|int
-name|outfd
-decl_stmt|, struct
+name|struct
 name|file
 modifier|*
 name|fp
@@ -225,6 +244,11 @@ modifier|*
 name|drc_ds
 decl_stmt|;
 name|struct
+name|dmu_replay_record
+modifier|*
+name|drc_drr_begin
+decl_stmt|;
+name|struct
 name|drr_begin
 modifier|*
 name|drc_drrb
@@ -247,6 +271,9 @@ name|drc_byteswap
 decl_stmt|;
 name|boolean_t
 name|drc_force
+decl_stmt|;
+name|boolean_t
+name|drc_resumable
 decl_stmt|;
 name|struct
 name|avl_tree
@@ -285,12 +312,15 @@ modifier|*
 name|tosnap
 parameter_list|,
 name|struct
-name|drr_begin
+name|dmu_replay_record
 modifier|*
-name|drrb
+name|drr_begin
 parameter_list|,
 name|boolean_t
 name|force
+parameter_list|,
+name|boolean_t
+name|resumable
 parameter_list|,
 name|char
 modifier|*
