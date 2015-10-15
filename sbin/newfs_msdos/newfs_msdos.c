@@ -279,7 +279,7 @@ begin_define
 define|#
 directive|define
 name|MINCLS16
-value|0x1000U
+value|0xff5U
 end_define
 
 begin_comment
@@ -290,7 +290,7 @@ begin_define
 define|#
 directive|define
 name|MINCLS32
-value|2U
+value|0xfff5U
 end_define
 
 begin_comment
@@ -301,7 +301,7 @@ begin_define
 define|#
 directive|define
 name|MAXCLS12
-value|0xfedU
+value|0xff4U
 end_define
 
 begin_comment
@@ -312,7 +312,7 @@ begin_define
 define|#
 directive|define
 name|MAXCLS16
-value|0xfff5U
+value|0xfff4U
 end_define
 
 begin_comment
@@ -323,7 +323,7 @@ begin_define
 define|#
 directive|define
 name|MAXCLS32
-value|0xffffff5U
+value|0xffffff4U
 end_define
 
 begin_comment
