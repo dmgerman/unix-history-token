@@ -367,7 +367,13 @@ return|;
 block|}
 name|printf
 argument_list|(
-literal|"mps%d Adapter:\n"
+literal|"mp%s%d Adapter:\n"
+argument_list|,
+name|is_mps
+condition|?
+literal|"s"
+else|:
+literal|"r"
 argument_list|,
 name|mps_unit
 argument_list|)
