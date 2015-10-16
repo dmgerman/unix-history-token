@@ -1765,9 +1765,6 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|nchashhead
 modifier|*
@@ -1779,10 +1776,14 @@ modifier|*
 name|ncp
 decl_stmt|;
 name|int
+name|i
+decl_stmt|,
+name|error
+decl_stmt|,
 name|n_nchash
-decl_stmt|;
-name|int
-name|count
+decl_stmt|,
+modifier|*
+name|cntbuf
 decl_stmt|;
 name|retry
 label|:
