@@ -4480,9 +4480,14 @@ else|:
 literal|"NO NAME"
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"FAT%u"
 argument_list|,
