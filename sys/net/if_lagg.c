@@ -4902,6 +4902,12 @@ name|sc_primary
 operator|=
 name|lp0
 expr_stmt|;
+if|if
+condition|(
+name|lp0
+operator|!=
+name|NULL
+condition|)
 name|lagg_port_lladdr
 argument_list|(
 name|lp0
