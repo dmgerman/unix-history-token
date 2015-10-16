@@ -161,6 +161,17 @@ name|ZIO_CHECKSUM_ZILOG2
 block|,
 name|ZIO_CHECKSUM_NOPARITY
 block|,
+ifdef|#
+directive|ifdef
+name|illumos
+name|ZIO_CHECKSUM_SHA512
+block|,
+name|ZIO_CHECKSUM_SKEIN
+block|,
+name|ZIO_CHECKSUM_EDONR
+block|,
+endif|#
+directive|endif
 name|ZIO_CHECKSUM_FUNCTIONS
 block|}
 enum|;

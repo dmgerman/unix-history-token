@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014, 2015 by Delphix. All rights reserved.  * Copyright Saso Kiselkov 2013, All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -25,6 +25,12 @@ directive|include
 file|<sys/zio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<zfeature_common.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -40,43 +46,121 @@ directive|endif
 comment|/*  * Signature for checksum functions.  */
 typedef|typedef
 name|void
-name|zio_checksum_func_t
+name|zio_checksum_t
 parameter_list|(
 specifier|const
 name|void
 modifier|*
+name|data
 parameter_list|,
 name|uint64_t
+name|size
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|ctx_template
 parameter_list|,
 name|zio_cksum_t
 modifier|*
+name|zcp
 parameter_list|)
 function_decl|;
+typedef|typedef
+name|void
+modifier|*
+name|zio_checksum_tmpl_init_t
+parameter_list|(
+specifier|const
+name|zio_cksum_salt_t
+modifier|*
+name|salt
+parameter_list|)
+function_decl|;
+typedef|typedef
+name|void
+name|zio_checksum_tmpl_free_t
+parameter_list|(
+name|void
+modifier|*
+name|ctx_template
+parameter_list|)
+function_decl|;
+typedef|typedef
+enum|enum
+name|zio_checksum_flags
+block|{
+comment|/* Strong enough for metadata? */
+name|ZCHECKSUM_FLAG_METADATA
+init|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,
+comment|/* ZIO embedded checksum */
+name|ZCHECKSUM_FLAG_EMBEDDED
+init|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|,
+comment|/* Strong enough for dedup (without verification)? */
+name|ZCHECKSUM_FLAG_DEDUP
+init|=
+operator|(
+literal|1
+operator|<<
+literal|3
+operator|)
+block|,
+comment|/* Uses salt value */
+name|ZCHECKSUM_FLAG_SALTED
+init|=
+operator|(
+literal|1
+operator|<<
+literal|4
+operator|)
+block|,
+comment|/* Strong enough for nopwrite? */
+name|ZCHECKSUM_FLAG_NOPWRITE
+init|=
+operator|(
+literal|1
+operator|<<
+literal|5
+operator|)
+block|}
+name|zio_checksum_flags_t
+typedef|;
 comment|/*  * Information about each checksum function.  */
 typedef|typedef
 struct|struct
 name|zio_checksum_info
 block|{
-name|zio_checksum_func_t
+comment|/* checksum function for each byteorder */
+name|zio_checksum_t
 modifier|*
 name|ci_func
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* checksum function per byteorder */
-name|int
-name|ci_correctable
+name|zio_checksum_tmpl_init_t
+modifier|*
+name|ci_tmpl_init
 decl_stmt|;
-comment|/* number of correctable bits	*/
-name|int
-name|ci_eck
+name|zio_checksum_tmpl_free_t
+modifier|*
+name|ci_tmpl_free
 decl_stmt|;
-comment|/* uses zio embedded checksum? */
-name|boolean_t
-name|ci_dedup
+name|zio_checksum_flags_t
+name|ci_flags
 decl_stmt|;
-comment|/* strong enough for dedup? */
 name|char
 modifier|*
 name|ci_name
@@ -122,9 +206,56 @@ index|]
 decl_stmt|;
 comment|/*  * Checksum routines.  */
 specifier|extern
-name|zio_checksum_func_t
+name|zio_checksum_t
 name|zio_checksum_SHA256
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
+specifier|extern
+name|zio_checksum_t
+name|zio_checksum_SHA512_native
+decl_stmt|;
+specifier|extern
+name|zio_checksum_t
+name|zio_checksum_SHA512_byteswap
+decl_stmt|;
+comment|/* Skein */
+specifier|extern
+name|zio_checksum_t
+name|zio_checksum_skein_native
+decl_stmt|;
+specifier|extern
+name|zio_checksum_t
+name|zio_checksum_skein_byteswap
+decl_stmt|;
+specifier|extern
+name|zio_checksum_tmpl_init_t
+name|zio_checksum_skein_tmpl_init
+decl_stmt|;
+specifier|extern
+name|zio_checksum_tmpl_free_t
+name|zio_checksum_skein_tmpl_free
+decl_stmt|;
+comment|/* Edon-R */
+specifier|extern
+name|zio_checksum_t
+name|zio_checksum_edonr_native
+decl_stmt|;
+specifier|extern
+name|zio_checksum_t
+name|zio_checksum_edonr_byteswap
+decl_stmt|;
+specifier|extern
+name|zio_checksum_tmpl_init_t
+name|zio_checksum_edonr_tmpl_init
+decl_stmt|;
+specifier|extern
+name|zio_checksum_tmpl_free_t
+name|zio_checksum_edonr_tmpl_free
+decl_stmt|;
+endif|#
+directive|endif
 specifier|extern
 name|void
 name|zio_checksum_compute
@@ -166,6 +297,24 @@ parameter_list|(
 name|spa_t
 modifier|*
 name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|zio_checksum_templates_free
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|spa_feature_t
+name|zio_checksum_to_feature
+parameter_list|(
+name|enum
+name|zio_checksum
+name|cksum
 parameter_list|)
 function_decl|;
 ifdef|#

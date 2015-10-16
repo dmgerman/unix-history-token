@@ -5859,6 +5859,8 @@ name|b_hdr
 operator|->
 name|b_size
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|zc
 argument_list|)
@@ -5937,6 +5939,8 @@ operator|->
 name|b_hdr
 operator|->
 name|b_size
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|zc
@@ -6066,6 +6070,8 @@ operator|->
 name|b_hdr
 operator|->
 name|b_size
+argument_list|,
+name|NULL
 argument_list|,
 name|buf
 operator|->
