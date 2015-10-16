@@ -2564,6 +2564,24 @@ comment|/* COMDAT semantics. */
 end_comment
 
 begin_comment
+comment|/*  * Flags / mask for .gnu.versym sections.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VERSYM_VERSION
+value|0x7fff
+end_define
+
+begin_define
+define|#
+directive|define
+name|VERSYM_HIDDEN
+value|0x8000
+end_define
+
+begin_comment
 comment|/* Values for p_type. */
 end_comment
 
