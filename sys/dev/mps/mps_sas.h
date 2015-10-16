@@ -99,6 +99,13 @@ argument|mpssas_lun
 argument_list|)
 name|luns
 expr_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|mps_command
+argument_list|)
+name|commands
+expr_stmt|;
 name|struct
 name|mps_command
 modifier|*
