@@ -2953,12 +2953,6 @@ name|iscsi_session_state
 modifier|*
 name|state
 decl_stmt|;
-specifier|const
-name|struct
-name|iscsi_session_conf
-modifier|*
-name|conf
-decl_stmt|;
 name|struct
 name|iscsi_session_list
 name|isl
@@ -3118,13 +3112,6 @@ name|states
 index|[
 name|i
 index|]
-expr_stmt|;
-name|conf
-operator|=
-operator|&
-name|state
-operator|->
-name|iss_conf
 expr_stmt|;
 if|if
 condition|(
