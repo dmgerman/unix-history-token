@@ -1852,17 +1852,6 @@ comment|/* Thes are used by old code not yet converted to use multiple FIBS */
 end_comment
 
 begin_function_decl
-name|int
-name|rt_getifa
-parameter_list|(
-name|struct
-name|rt_addrinfo
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|rtalloc_ign
 parameter_list|(
