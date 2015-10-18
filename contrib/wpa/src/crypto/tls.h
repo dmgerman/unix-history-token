@@ -23,17 +23,8 @@ end_struct_decl
 
 begin_struct
 struct|struct
-name|tls_keys
+name|tls_random
 block|{
-specifier|const
-name|u8
-modifier|*
-name|master_key
-decl_stmt|;
-comment|/* TLS master secret */
-name|size_t
-name|master_key_len
-decl_stmt|;
 specifier|const
 name|u8
 modifier|*
@@ -253,6 +244,10 @@ name|char
 modifier|*
 name|openssl_ciphers
 decl_stmt|;
+name|unsigned
+name|int
+name|tls_session_lifetime
+decl_stmt|;
 name|void
 function_decl|(
 modifier|*
@@ -335,6 +330,13 @@ define|#
 directive|define
 name|TLS_CONN_EAP_FAST
 value|BIT(7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLS_CONN_DISABLE_TLSv1_0
+value|BIT(8)
 end_define
 
 begin_comment
@@ -602,6 +604,11 @@ end_function_decl
 begin_enum
 enum|enum
 block|{
+name|TLS_SET_PARAMS_ENGINE_PRV_BAD_PIN
+init|=
+operator|-
+literal|4
+block|,
 name|TLS_SET_PARAMS_ENGINE_PRV_VERIFY_FAILED
 init|=
 operator|-
@@ -616,7 +623,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/**  * tls_connection_set_params - Set TLS connection parameters  * @tls_ctx: TLS context data from tls_init()  * @conn: Connection context data from tls_connection_init()  * @params: Connection parameters  * Returns: 0 on success, -1 on failure,  * TLS_SET_PARAMS_ENGINE_PRV_INIT_FAILED (-2) on possible PIN error causing  * PKCS#11 engine failure, or  * TLS_SET_PARAMS_ENGINE_PRV_VERIFY_FAILED (-3) on failure to verify the  * PKCS#11 engine private key.  */
+comment|/**  * tls_connection_set_params - Set TLS connection parameters  * @tls_ctx: TLS context data from tls_init()  * @conn: Connection context data from tls_connection_init()  * @params: Connection parameters  * Returns: 0 on success, -1 on failure,  * TLS_SET_PARAMS_ENGINE_PRV_INIT_FAILED (-2) on error causing PKCS#11 engine  * failure, or  * TLS_SET_PARAMS_ENGINE_PRV_VERIFY_FAILED (-3) on failure to verify the  * PKCS#11 engine private key, or  * TLS_SET_PARAMS_ENGINE_PRV_BAD_PIN (-4) on PIN error causing PKCS#11 engine  * failure.  */
 end_comment
 
 begin_function_decl
@@ -643,7 +650,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * tls_global_set_params - Set TLS parameters for all TLS connection  * @tls_ctx: TLS context data from tls_init()  * @params: Global TLS parameters  * Returns: 0 on success, -1 on failure,  * TLS_SET_PARAMS_ENGINE_PRV_INIT_FAILED (-2) on possible PIN error causing  * PKCS#11 engine failure, or  * TLS_SET_PARAMS_ENGINE_PRV_VERIFY_FAILED (-3) on failure to verify the  * PKCS#11 engine private key.  */
+comment|/**  * tls_global_set_params - Set TLS parameters for all TLS connection  * @tls_ctx: TLS context data from tls_init()  * @params: Global TLS parameters  * Returns: 0 on success, -1 on failure,  * TLS_SET_PARAMS_ENGINE_PRV_INIT_FAILED (-2) on error causing PKCS#11 engine  * failure, or  * TLS_SET_PARAMS_ENGINE_PRV_VERIFY_FAILED (-3) on failure to verify the  * PKCS#11 engine private key, or  * TLS_SET_PARAMS_ENGINE_PRV_BAD_PIN (-4) on PIN error causing PKCS#11 engine  * failure.  */
 end_comment
 
 begin_function_decl
@@ -684,7 +691,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * tls_connection_set_verify - Set certificate verification options  * @tls_ctx: TLS context data from tls_init()  * @conn: Connection context data from tls_connection_init()  * @verify_peer: 1 = verify peer certificate  * Returns: 0 on success, -1 on failure  */
+comment|/**  * tls_connection_set_verify - Set certificate verification options  * @tls_ctx: TLS context data from tls_init()  * @conn: Connection context data from tls_connection_init()  * @verify_peer: 1 = verify peer certificate  * @flags: Connection flags (TLS_CONN_*)  * @session_ctx: Session caching context or %NULL to use default  * @session_ctx_len: Length of @session_ctx in bytes.  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function_decl
@@ -703,18 +710,30 @@ name|conn
 parameter_list|,
 name|int
 name|verify_peer
+parameter_list|,
+name|unsigned
+name|int
+name|flags
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|session_ctx
+parameter_list|,
+name|size_t
+name|session_ctx_len
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * tls_connection_get_keys - Get master key and random data from TLS connection  * @tls_ctx: TLS context data from tls_init()  * @conn: Connection context data from tls_connection_init()  * @keys: Structure of key/random data (filled on success)  * Returns: 0 on success, -1 on failure  */
+comment|/**  * tls_connection_get_random - Get random data from TLS connection  * @tls_ctx: TLS context data from tls_init()  * @conn: Connection context data from tls_connection_init()  * @data: Structure of client/server random data (filled on success)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function_decl
 name|int
 name|__must_check
-name|tls_connection_get_keys
+name|tls_connection_get_random
 parameter_list|(
 name|void
 modifier|*
@@ -726,15 +745,15 @@ modifier|*
 name|conn
 parameter_list|,
 name|struct
-name|tls_keys
+name|tls_random
 modifier|*
-name|keys
+name|data
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * tls_connection_prf - Use TLS-PRF to derive keying material  * @tls_ctx: TLS context data from tls_init()  * @conn: Connection context data from tls_connection_init()  * @label: Label (e.g., description of the key) for PRF  * @server_random_first: seed is 0 = client_random|server_random,  * 1 = server_random|client_random  * @out: Buffer for output data from TLS-PRF  * @out_len: Length of the output buffer  * Returns: 0 on success, -1 on failure  *  * This function is optional to implement if tls_connection_get_keys() provides  * access to master secret and server/client random values. If these values are  * not exported from the TLS library, tls_connection_prf() is required so that  * further keying material can be derived from the master secret. If not  * implemented, the function will still need to be defined, but it can just  * return -1. Example implementation of this function is in tls_prf_sha1_md5()  * when it is called with seed set to client_random|server_random (or  * server_random|client_random).  */
+comment|/**  * tls_connection_prf - Use TLS-PRF to derive keying material  * @tls_ctx: TLS context data from tls_init()  * @conn: Connection context data from tls_connection_init()  * @label: Label (e.g., description of the key) for PRF  * @server_random_first: seed is 0 = client_random|server_random,  * 1 = server_random|client_random  * @skip_keyblock: Skip TLS key block from the beginning of PRF output  * @out: Buffer for output data from TLS-PRF  * @out_len: Length of the output buffer  * Returns: 0 on success, -1 on failure  *  * tls_connection_prf() is required so that further keying material can be  * derived from the master secret. Example implementation of this function is in  * tls_prf_sha1_md5() when it is called with seed set to  * client_random|server_random (or server_random|client_random). For TLSv1.2 and  * newer, a different PRF is needed, though.  */
 end_comment
 
 begin_function_decl
@@ -758,6 +777,9 @@ name|label
 parameter_list|,
 name|int
 name|server_random_first
+parameter_list|,
+name|int
+name|skip_keyblock
 parameter_list|,
 name|u8
 modifier|*
@@ -1021,6 +1043,34 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * tls_get_version - Get the current TLS version number  * @tls_ctx: TLS context data from tls_init()  * @conn: Connection context data from tls_connection_init()  * @buf: Buffer for returning the TLS version number  * @buflen: buf size  * Returns: 0 on success, -1 on failure  *  * Get the currently used TLS version number.  */
+end_comment
+
+begin_function_decl
+name|int
+name|__must_check
+name|tls_get_version
+parameter_list|(
+name|void
+modifier|*
+name|tls_ctx
+parameter_list|,
+name|struct
+name|tls_connection
+modifier|*
+name|conn
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|buflen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * tls_get_cipher - Get current cipher name  * @tls_ctx: TLS context data from tls_init()  * @conn: Connection context data from tls_connection_init()  * @buf: Buffer for the cipher name  * @buflen: buf size  * Returns: 0 on success, -1 on failure  *  * Get the name of the currently used cipher.  */
 end_comment
 
@@ -1157,42 +1207,6 @@ name|struct
 name|tls_connection
 modifier|*
 name|conn
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * tls_connection_get_keyblock_size - Get TLS key_block size  * @tls_ctx: TLS context data from tls_init()  * @conn: Connection context data from tls_connection_init()  * Returns: Size of the key_block for the negotiated cipher suite or -1 on  * failure  */
-end_comment
-
-begin_function_decl
-name|int
-name|tls_connection_get_keyblock_size
-parameter_list|(
-name|void
-modifier|*
-name|tls_ctx
-parameter_list|,
-name|struct
-name|tls_connection
-modifier|*
-name|conn
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * tls_capabilities - Get supported TLS capabilities  * @tls_ctx: TLS context data from tls_init()  * Returns: Bit field of supported TLS capabilities (TLS_CAPABILITY_*)  */
-end_comment
-
-begin_function_decl
-name|unsigned
-name|int
-name|tls_capabilities
-parameter_list|(
-name|void
-modifier|*
-name|tls_ctx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1371,6 +1385,62 @@ name|buf
 parameter_list|,
 name|size_t
 name|buf_len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tls_connection_set_success_data
+parameter_list|(
+name|struct
+name|tls_connection
+modifier|*
+name|conn
+parameter_list|,
+name|struct
+name|wpabuf
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tls_connection_set_success_data_resumed
+parameter_list|(
+name|struct
+name|tls_connection
+modifier|*
+name|conn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|struct
+name|wpabuf
+modifier|*
+name|tls_connection_get_success_data
+parameter_list|(
+name|struct
+name|tls_connection
+modifier|*
+name|conn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tls_connection_remove_session
+parameter_list|(
+name|struct
+name|tls_connection
+modifier|*
+name|conn
 parameter_list|)
 function_decl|;
 end_function_decl

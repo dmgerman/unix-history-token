@@ -31,6 +31,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"common/ieee802_11_defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"utils/list.h"
 end_include
 
@@ -652,7 +658,7 @@ block|{
 name|u8
 name|ssid
 index|[
-literal|32
+name|SSID_MAX_LEN
 index|]
 decl_stmt|;
 name|size_t
@@ -1697,6 +1703,11 @@ define|#
 directive|define
 name|WPA_DRIVER_FLAGS_VHT_IBSS
 value|0x0000002000000000ULL
+comment|/** Driver supports automatic band selection */
+define|#
+directive|define
+name|WPA_DRIVER_FLAGS_SUPPORT_HW_MODE_ANY
+value|0x0000004000000000ULL
 name|u64
 name|flags
 decl_stmt|;
@@ -1829,6 +1840,21 @@ name|WPA_DRIVER_FLAGS_TX_POWER_INSERTION
 value|0x00000008
 name|u32
 name|rrm_flags
+decl_stmt|;
+comment|/* Driver concurrency capabilities */
+name|unsigned
+name|int
+name|conc_capab
+decl_stmt|;
+comment|/* Maximum number of concurrent channels on 2.4 GHz */
+name|unsigned
+name|int
+name|max_conc_chan_2_4
+decl_stmt|;
+comment|/* Maximum number of concurrent channels on 5 GHz */
+name|unsigned
+name|int
+name|max_conc_chan_5_0
 decl_stmt|;
 block|}
 struct|;
@@ -2048,6 +2074,12 @@ name|WPA_IF_P2P_DEVICE
 block|,
 comment|/* 	 * WPA_IF_MESH - Mesh interface 	 */
 name|WPA_IF_MESH
+block|,
+comment|/* 	 * WPA_IF_TDLS - TDLS offchannel interface (used for pref freq only) 	 */
+name|WPA_IF_TDLS
+block|,
+comment|/* 	 * WPA_IF_IBSS - IBSS interface (used for pref freq only) 	 */
+name|WPA_IF_IBSS
 block|, }
 enum|;
 end_enum
@@ -2280,6 +2312,9 @@ name|int
 name|avg_signal
 decl_stmt|;
 name|int
+name|avg_beacon_signal
+decl_stmt|;
+name|int
 name|current_noise
 decl_stmt|;
 name|int
@@ -2503,6 +2538,8 @@ enum|enum
 name|drv_br_net_param
 block|{
 name|DRV_BR_NET_PARAM_GARP_ACCEPT
+block|,
+name|DRV_BR_MULTICAST_SNOOPING
 block|, }
 enum|;
 end_enum
@@ -2523,6 +2560,29 @@ decl_stmt|;
 comment|/* Indicates whether HT40 is enabled */
 name|int
 name|ht40_enabled
+decl_stmt|;
+comment|/* Indicates whether VHT is enabled */
+name|int
+name|vht_enabled
+decl_stmt|;
+comment|/* Configured ACS channel width */
+name|u16
+name|ch_width
+decl_stmt|;
+comment|/* ACS channel list info */
+name|unsigned
+name|int
+name|ch_list_len
+decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|ch_list
+decl_stmt|;
+specifier|const
+name|int
+modifier|*
+name|freq_list
 decl_stmt|;
 block|}
 struct|;
@@ -2900,7 +2960,7 @@ modifier|*
 name|flags
 parameter_list|)
 function_decl|;
-comment|/** 	 * send_mlme - Send management frame from MLME 	 * @priv: Private driver interface data 	 * @data: IEEE 802.11 management frame with IEEE 802.11 header 	 * @data_len: Size of the management frame 	 * @noack: Do not wait for this frame to be acked (disable retries) 	 * Returns: 0 on success, -1 on failure 	 */
+comment|/** 	 * send_mlme - Send management frame from MLME 	 * @priv: Private driver interface data 	 * @data: IEEE 802.11 management frame with IEEE 802.11 header 	 * @data_len: Size of the management frame 	 * @noack: Do not wait for this frame to be acked (disable retries) 	 * @freq: Frequency (in MHz) to send the frame on, or 0 to let the 	 * driver decide 	 * Returns: 0 on success, -1 on failure 	 */
 name|int
 function_decl|(
 modifier|*
@@ -2921,6 +2981,10 @@ name|data_len
 parameter_list|,
 name|int
 name|noack
+parameter_list|,
+name|unsigned
+name|int
+name|freq
 parameter_list|)
 function_decl|;
 comment|/** 	 * update_ft_ies - Update FT (IEEE 802.11r) IEs 	 * @priv: Private driver interface data 	 * @md: Mobility domain (2 octets) (also included inside ies) 	 * @ies: FT IEs (MDIE, FTIE, ...) or %NULL to remove IEs 	 * @ies_len: Length of FT IEs in bytes 	 * Returns: 0 on success, -1 on failure 	 * 	 * The supplicant uses this callback to let the driver know that keying 	 * material for FT is available and that the driver can use the 	 * provided IEs in the next message in FT authentication sequence. 	 * 	 * This function is only needed for driver that support IEEE 802.11r 	 * (Fast BSS Transition). 	 */
@@ -3539,12 +3603,15 @@ name|u8
 modifier|*
 name|addr
 parameter_list|,
+name|unsigned
 name|int
 name|total_flags
 parameter_list|,
+name|unsigned
 name|int
 name|flags_or
 parameter_list|,
+name|unsigned
 name|int
 name|flags_and
 parameter_list|)
@@ -4027,18 +4094,6 @@ name|data_len
 parameter_list|,
 name|int
 name|encrypt
-parameter_list|)
-function_decl|;
-comment|/** 	 * shared_freq - Get operating frequency of shared interface(s) 	 * @priv: Private driver interface data 	 * Returns: Operating frequency in MHz, 0 if no shared operation in 	 * use, or -1 on failure 	 * 	 * This command can be used to request the current operating frequency 	 * of any virtual interface that shares the same radio to provide 	 * information for channel selection for other virtual interfaces. 	 */
-name|int
-function_decl|(
-modifier|*
-name|shared_freq
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|priv
 parameter_list|)
 function_decl|;
 comment|/** 	 * get_noa - Get current Notice of Absence attribute payload 	 * @priv: Private driver interface data 	 * @buf: Buffer for returning NoA 	 * @buf_len: Buffer length in octets 	 * Returns: Number of octets used in buf, 0 to indicate no NoA is being 	 * advertized, or -1 on failure 	 * 	 * This function is used to fetch the current Notice of Absence 	 * attribute value from GO. 	 */
@@ -5339,6 +5394,64 @@ modifier|*
 name|params
 parameter_list|)
 function_decl|;
+comment|/** 	 * set_band - Notify driver of band selection 	 * @priv: Private driver interface data 	 * @band: The selected band(s) 	 * Returns 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|set_band
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|enum
+name|set_band
+name|band
+parameter_list|)
+function_decl|;
+comment|/** 	 * get_pref_freq_list - Get preferred frequency list for an interface 	 * @priv: Private driver interface data 	 * @if_type: Interface type 	 * @num: Number of channels 	 * @freq_list: Preferred channel frequency list encoded in MHz values 	 * Returns 0 on success, -1 on failure 	 * 	 * This command can be used to query the preferred frequency list from 	 * the driver specific to a particular interface type. 	 */
+name|int
+function_decl|(
+modifier|*
+name|get_pref_freq_list
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|enum
+name|wpa_driver_if_type
+name|if_type
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|num
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|freq_list
+parameter_list|)
+function_decl|;
+comment|/** 	 * set_prob_oper_freq - Indicate probable P2P operating channel 	 * @priv: Private driver interface data 	 * @freq: Channel frequency in MHz 	 * Returns 0 on success, -1 on failure 	 * 	 * This command can be used to inform the driver of the operating 	 * frequency that an ongoing P2P group formation is likely to come up 	 * on. Local device is assuming P2P Client role. 	 */
+name|int
+function_decl|(
+modifier|*
+name|set_prob_oper_freq
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|unsigned
+name|int
+name|freq
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -6478,7 +6591,7 @@ decl_stmt|;
 block|}
 name|mesh_peer
 struct|;
-comment|/** 	 * struct acs_selected_channels - Data for EVENT_ACS_CHANNEL_SELECTED 	 * @pri_channel: Selected primary channel 	 * @sec_channel: Selected secondary channel 	 */
+comment|/** 	 * struct acs_selected_channels - Data for EVENT_ACS_CHANNEL_SELECTED 	 * @pri_channel: Selected primary channel 	 * @sec_channel: Selected secondary channel 	 * @vht_seg0_center_ch: VHT mode Segment0 center channel 	 * @vht_seg1_center_ch: VHT mode Segment1 center channel 	 * @ch_width: Selected Channel width by driver. Driver may choose to 	 *	change hostapd configured ACS channel width due driver internal 	 *	channel restrictions. 	 * hw_mode: Selected band (used with hw_mode=any) 	 */
 struct|struct
 name|acs_selected_channels
 block|{
@@ -6487,6 +6600,19 @@ name|pri_channel
 decl_stmt|;
 name|u8
 name|sec_channel
+decl_stmt|;
+name|u8
+name|vht_seg0_center_ch
+decl_stmt|;
+name|u8
+name|vht_seg1_center_ch
+decl_stmt|;
+name|u16
+name|ch_width
+decl_stmt|;
+name|enum
+name|hostapd_hw_mode
+name|hw_mode
 decl_stmt|;
 block|}
 name|acs_selected_channels
@@ -6846,9 +6972,11 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|wpa_driver_ops
 modifier|*
+specifier|const
 name|wpa_drivers
 index|[]
 decl_stmt|;

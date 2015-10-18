@@ -91,11 +91,6 @@ name|hostapd_data
 modifier|*
 name|hapd
 parameter_list|,
-name|struct
-name|hostapd_ssid
-modifier|*
-name|mssid
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -205,11 +200,6 @@ name|struct
 name|hostapd_data
 modifier|*
 name|hapd
-parameter_list|,
-name|struct
-name|hostapd_ssid
-modifier|*
-name|mssid
 parameter_list|,
 specifier|const
 name|char

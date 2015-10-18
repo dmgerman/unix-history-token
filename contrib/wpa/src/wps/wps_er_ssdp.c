@@ -447,17 +447,7 @@ condition|)
 block|{
 name|start
 operator|+=
-literal|9
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|start
-operator|==
-literal|' '
-condition|)
-name|start
-operator|++
+literal|14
 expr_stmt|;
 name|pos2
 operator|=

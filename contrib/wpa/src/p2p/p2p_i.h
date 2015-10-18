@@ -34,6 +34,17 @@ name|P2P_GO_NEG_CNF_MAX_RETRY_COUNT
 value|1
 end_define
 
+begin_comment
+comment|/*  * A threshold (in seconds) to prefer a direct Probe Response frame from a P2P  * Device over the P2P Client Info received from a GO.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P2P_DEV_GROUP_CLIENT_RESP_THRESHOLD
+value|1
+end_define
+
 begin_enum_decl
 enum_decl|enum
 name|p2p_role_indication
@@ -104,7 +115,7 @@ name|struct
 name|p2p_peer_info
 name|info
 decl_stmt|;
-comment|/* 	 * If the peer was discovered based on an interface address (e.g., GO 	 * from Beacon/Probe Response), the interface address is stored here. 	 * p2p_device_addr must still be set in such a case to the unique 	 * identifier for the P2P Device. 	 */
+comment|/* 	 * If the peer was discovered based on an interface address (e.g., GO 	 * from Beacon/Probe Response), the interface address is stored here. 	 * p2p_device_addr must still be set in such a case to the unique 	 * identifier for the P2P Device. 	 * 	 * This field is also used during P2PS PD to store the intended GO 	 * address of the peer. 	 */
 name|u8
 name|interface_addr
 index|[
@@ -160,7 +171,7 @@ decl_stmt|;
 name|u8
 name|oper_ssid
 index|[
-literal|32
+name|SSID_MAX_LEN
 index|]
 decl_stmt|;
 name|size_t
@@ -254,6 +265,10 @@ define|#
 directive|define
 name|P2P_DEV_PD_PEER_P2PS
 value|BIT(21)
+define|#
+directive|define
+name|P2P_DEV_LAST_SEEN_AS_GROUP_CLIENT
+value|BIT(22)
 name|unsigned
 name|int
 name|flags
@@ -536,7 +551,7 @@ comment|/** 	 * ssid - Selected SSID for GO Negotiation (if local end will be GO
 name|u8
 name|ssid
 index|[
-literal|32
+name|SSID_MAX_LEN
 index|]
 decl_stmt|;
 comment|/** 	 * ssid_len - ssid length in octets 	 */
@@ -674,7 +689,7 @@ decl_stmt|;
 name|u8
 name|inv_ssid
 index|[
-literal|32
+name|SSID_MAX_LEN
 index|]
 decl_stmt|;
 name|size_t
@@ -931,7 +946,10 @@ name|P2PS_HASH_LEN
 index|]
 decl_stmt|;
 name|u8
-name|query_hash
+name|p2ps_seek
+decl_stmt|;
+name|u8
+name|p2ps_seek_hash
 index|[
 name|P2P_MAX_QUERY_HASH
 operator|*
@@ -939,16 +957,7 @@ name|P2PS_HASH_LEN
 index|]
 decl_stmt|;
 name|u8
-name|query_count
-decl_stmt|;
-name|u8
-name|p2ps_seek
-decl_stmt|;
-name|u8
 name|p2ps_seek_count
-decl_stmt|;
-name|u8
-name|p2ps_svc_found
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1019,6 +1028,17 @@ name|wpabuf
 modifier|*
 modifier|*
 name|vendor_elem
+decl_stmt|;
+name|unsigned
+name|int
+name|pref_freq_list
+index|[
+name|P2P_MAX_PREF_CHANNELS
+index|]
+decl_stmt|;
+name|unsigned
+name|int
+name|num_pref_freq
 decl_stmt|;
 block|}
 struct|;
@@ -1177,7 +1197,9 @@ decl_stmt|;
 name|char
 name|device_name
 index|[
-literal|33
+name|WPS_DEV_NAME_MAX_LEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|u16
@@ -1342,6 +1364,14 @@ name|persistent_ssid
 decl_stmt|;
 name|size_t
 name|persistent_ssid_len
+decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|pref_freq_list
+decl_stmt|;
+name|size_t
+name|pref_freq_list_len
 decl_stmt|;
 block|}
 struct|;
@@ -2541,6 +2571,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|p2p_buf_add_pref_channel_list
+parameter_list|(
+name|struct
+name|wpabuf
+modifier|*
+name|buf
+parameter_list|,
+specifier|const
+name|u32
+modifier|*
+name|preferred_freq_list
+parameter_list|,
+name|u32
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* p2p_sd.c */
 end_comment
@@ -2865,6 +2915,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|p2p_check_pref_chan
+parameter_list|(
+name|struct
+name|p2p_data
+modifier|*
+name|p2p
+parameter_list|,
+name|int
+name|go
+parameter_list|,
+name|struct
+name|p2p_device
+modifier|*
+name|dev
+parameter_list|,
+name|struct
+name|p2p_message
+modifier|*
+name|msg
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* p2p_pd.c */
 end_comment
@@ -2948,6 +3023,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|p2p_reset_pending_pd
+parameter_list|(
+name|struct
+name|p2p_data
+modifier|*
+name|p2p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|p2ps_prov_free
 parameter_list|(
 name|struct
 name|p2p_data
@@ -3492,6 +3579,14 @@ name|struct
 name|p2p_data
 modifier|*
 name|p2p
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|query_hash
+parameter_list|,
+name|u8
+name|query_count
 parameter_list|)
 function_decl|;
 end_function_decl

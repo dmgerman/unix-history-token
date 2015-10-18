@@ -2356,6 +2356,22 @@ name|u8
 name|id
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|CONFIG_NO_RC4
+name|wpa_printf
+argument_list|(
+name|MSG_ERROR
+argument_list|,
+literal|"EAP-MSCHAPV2: RC4 not support in the build - cannot change password"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+else|#
+directive|else
+comment|/* CONFIG_NO_RC4 */
 name|struct
 name|wpabuf
 modifier|*
@@ -2922,6 +2938,9 @@ expr_stmt|;
 return|return
 name|NULL
 return|;
+endif|#
+directive|endif
+comment|/* CONFIG_NO_RC4 */
 block|}
 end_function
 

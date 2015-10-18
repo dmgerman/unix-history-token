@@ -2017,8 +2017,9 @@ parameter_list|,
 name|int
 name|level
 parameter_list|,
-name|int
-name|global
+name|enum
+name|wpa_msg_type
+name|type
 parameter_list|,
 specifier|const
 name|char

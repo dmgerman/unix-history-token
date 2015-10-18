@@ -41,6 +41,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|wps_attr_parse_test
 name|wps_attr_parse_test_cases
@@ -1373,6 +1374,7 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
+specifier|const
 name|struct
 name|wps_attr_parse_test
 modifier|*

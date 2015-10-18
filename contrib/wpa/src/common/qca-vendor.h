@@ -207,7 +207,7 @@ name|QCA_NL80211_VENDOR_SUBCMD_APFIND
 init|=
 literal|52
 block|,
-comment|/* 53 - reserved for QCA */
+comment|/* 53 - reserved - was used by QCA, but not in use anymore */
 name|QCA_NL80211_VENDOR_SUBCMD_DO_ACS
 init|=
 literal|54
@@ -240,6 +240,62 @@ comment|/* 61-90 - reserved for QCA */
 name|QCA_NL80211_VENDOR_SUBCMD_DATA_OFFLOAD
 init|=
 literal|91
+block|,
+name|QCA_NL80211_VENDOR_SUBCMD_OCB_SET_CONFIG
+init|=
+literal|92
+block|,
+name|QCA_NL80211_VENDOR_SUBCMD_OCB_SET_UTC_TIME
+init|=
+literal|93
+block|,
+name|QCA_NL80211_VENDOR_SUBCMD_OCB_START_TIMING_ADVERT
+init|=
+literal|94
+block|,
+name|QCA_NL80211_VENDOR_SUBCMD_OCB_STOP_TIMING_ADVERT
+init|=
+literal|95
+block|,
+name|QCA_NL80211_VENDOR_SUBCMD_OCB_GET_TSF_TIMER
+init|=
+literal|96
+block|,
+name|QCA_NL80211_VENDOR_SUBCMD_DCC_GET_STATS
+init|=
+literal|97
+block|,
+name|QCA_NL80211_VENDOR_SUBCMD_DCC_CLEAR_STATS
+init|=
+literal|98
+block|,
+name|QCA_NL80211_VENDOR_SUBCMD_DCC_UPDATE_NDL
+init|=
+literal|99
+block|,
+name|QCA_NL80211_VENDOR_SUBCMD_DCC_STATS_EVENT
+init|=
+literal|100
+block|,
+name|QCA_NL80211_VENDOR_SUBCMD_LINK_PROPERTIES
+init|=
+literal|101
+block|,
+name|QCA_NL80211_VENDOR_SUBCMD_GW_PARAM_CONFIG
+init|=
+literal|102
+block|,
+name|QCA_NL80211_VENDOR_SUBCMD_GET_PREFERRED_FREQ_LIST
+init|=
+literal|103
+block|,
+name|QCA_NL80211_VENDOR_SUBCMD_SET_PROBABLE_OPER_CHANNEL
+init|=
+literal|104
+block|,
+name|QCA_NL80211_VENDOR_SUBCMD_SETBAND
+init|=
+literal|105
 block|, }
 enum|;
 end_enum
@@ -289,6 +345,27 @@ block|,
 name|QCA_WLAN_VENDOR_ATTR_TEST
 init|=
 literal|8
+block|,
+comment|/* used by QCA_NL80211_VENDOR_SUBCMD_GET_FEATURES */
+comment|/* Unsigned 32-bit value. */
+name|QCA_WLAN_VENDOR_ATTR_CONCURRENCY_CAPA
+init|=
+literal|9
+block|,
+comment|/* Unsigned 32-bit value */
+name|QCA_WLAN_VENDOR_ATTR_MAX_CONCURRENT_CHANNELS_2_4_BAND
+init|=
+literal|10
+block|,
+comment|/* Unsigned 32-bit value */
+name|QCA_WLAN_VENDOR_ATTR_MAX_CONCURRENT_CHANNELS_5_0_BAND
+init|=
+literal|11
+block|,
+comment|/* Unsigned 32-bit value from enum qca_set_band. */
+name|QCA_WLAN_VENDOR_ATTR_SETBAND_VALUE
+init|=
+literal|12
 block|,
 comment|/* keep last */
 name|QCA_WLAN_VENDOR_ATTR_AFTER_LAST
@@ -365,6 +442,18 @@ name|QCA_WLAN_VENDOR_ATTR_ACS_HT_ENABLED
 block|,
 name|QCA_WLAN_VENDOR_ATTR_ACS_HT40_ENABLED
 block|,
+name|QCA_WLAN_VENDOR_ATTR_ACS_VHT_ENABLED
+block|,
+name|QCA_WLAN_VENDOR_ATTR_ACS_CHWIDTH
+block|,
+name|QCA_WLAN_VENDOR_ATTR_ACS_CH_LIST
+block|,
+name|QCA_WLAN_VENDOR_ATTR_ACS_VHT_SEG0_CENTER_CHANNEL
+block|,
+name|QCA_WLAN_VENDOR_ATTR_ACS_VHT_SEG1_CENTER_CHANNEL
+block|,
+name|QCA_WLAN_VENDOR_ATTR_ACS_FREQ_LIST
+block|,
 comment|/* keep last */
 name|QCA_WLAN_VENDOR_ATTR_ACS_AFTER_LAST
 block|,
@@ -388,12 +477,14 @@ block|,
 name|QCA_ACS_MODE_IEEE80211A
 block|,
 name|QCA_ACS_MODE_IEEE80211AD
+block|,
+name|QCA_ACS_MODE_IEEE80211ANY
 block|, }
 enum|;
 end_enum
 
 begin_comment
-comment|/**  * enum qca_wlan_vendor_features - Vendor device/driver feature flags  *  * @QCA_WLAN_VENDOR_FEATURE_KEY_MGMT_OFFLOAD: Device supports key  *	management offload, a mechanism where the station's firmware  *	does the exchange with the AP to establish the temporal keys  *	after roaming, rather than having the user space wpa_supplicant do it.  * @NUM_QCA_WLAN_VENDOR_FEATURES: Number of assigned feature bits  */
+comment|/**  * enum qca_wlan_vendor_features - Vendor device/driver feature flags  *  * @QCA_WLAN_VENDOR_FEATURE_KEY_MGMT_OFFLOAD: Device supports key  *	management offload, a mechanism where the station's firmware  *	does the exchange with the AP to establish the temporal keys  *	after roaming, rather than having the user space wpa_supplicant do it.  * @QCA_WLAN_VENDOR_FEATURE_SUPPORT_HW_MODE_ANY: Device supports automatic  *	band selection based on channel selection results.  * @NUM_QCA_WLAN_VENDOR_FEATURES: Number of assigned feature bits  */
 end_comment
 
 begin_enum
@@ -403,6 +494,10 @@ block|{
 name|QCA_WLAN_VENDOR_FEATURE_KEY_MGMT_OFFLOAD
 init|=
 literal|0
+block|,
+name|QCA_WLAN_VENDOR_FEATURE_SUPPORT_HW_MODE_ANY
+init|=
+literal|1
 block|,
 name|NUM_QCA_WLAN_VENDOR_FEATURES
 comment|/* keep last */
@@ -437,6 +532,105 @@ name|QCA_WLAN_VENDOR_ATTR_DATA_OFFLOAD_IND_AFTER_LAST
 operator|-
 literal|1
 block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|qca_vendor_attr_get_preferred_freq_list
+block|{
+name|QCA_WLAN_VENDOR_ATTR_GET_PREFERRED_FREQ_LIST_INVALID
+block|,
+comment|/* A 32-unsigned value; the interface type/mode for which the preferred 	 * frequency list is requested (see enum qca_iface_type for possible 	 * values); used in GET_PREFERRED_FREQ_LIST command from user-space to 	 * kernel and in the kernel response back to user-space. 	 */
+name|QCA_WLAN_VENDOR_ATTR_GET_PREFERRED_FREQ_LIST_IFACE_TYPE
+block|,
+comment|/* An array of 32-unsigned values; values are frequency (MHz); sent 	 * from kernel space to user space. 	 */
+name|QCA_WLAN_VENDOR_ATTR_GET_PREFERRED_FREQ_LIST
+block|,
+comment|/* keep last */
+name|QCA_WLAN_VENDOR_ATTR_GET_PREFERRED_FREQ_LIST_AFTER_LAST
+block|,
+name|QCA_WLAN_VENDOR_ATTR_GET_PREFERRED_FREQ_LIST_MAX
+init|=
+name|QCA_WLAN_VENDOR_ATTR_GET_PREFERRED_FREQ_LIST_AFTER_LAST
+operator|-
+literal|1
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|qca_vendor_attr_probable_oper_channel
+block|{
+name|QCA_WLAN_VENDOR_ATTR_PROBABLE_OPER_CHANNEL_INVALID
+block|,
+comment|/* 32-bit unsigned value; indicates the connection/iface type likely to 	 * come on this channel (see enum qca_iface_type). 	 */
+name|QCA_WLAN_VENDOR_ATTR_PROBABLE_OPER_CHANNEL_IFACE_TYPE
+block|,
+comment|/* 32-bit unsigned value; the frequency (MHz) of the probable channel */
+name|QCA_WLAN_VENDOR_ATTR_PROBABLE_OPER_CHANNEL_FREQ
+block|,
+comment|/* keep last */
+name|QCA_WLAN_VENDOR_ATTR_PROBABLE_OPER_CHANNEL_AFTER_LAST
+block|,
+name|QCA_WLAN_VENDOR_ATTR_PROBABLE_OPER_CHANNEL_MAX
+init|=
+name|QCA_WLAN_VENDOR_ATTR_PROBABLE_OPER_CHANNEL_AFTER_LAST
+operator|-
+literal|1
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|qca_iface_type
+block|{
+name|QCA_IFACE_TYPE_STA
+block|,
+name|QCA_IFACE_TYPE_AP
+block|,
+name|QCA_IFACE_TYPE_P2P_CLIENT
+block|,
+name|QCA_IFACE_TYPE_P2P_GO
+block|,
+name|QCA_IFACE_TYPE_IBSS
+block|,
+name|QCA_IFACE_TYPE_TDLS
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|qca_set_band
+block|{
+name|QCA_SETBAND_AUTO
+block|,
+name|QCA_SETBAND_5G
+block|,
+name|QCA_SETBAND_2G
+block|, }
+enum|;
+end_enum
+
+begin_comment
+comment|/* IEEE 802.11 Vendor Specific elements */
+end_comment
+
+begin_comment
+comment|/**  * enum qca_vendor_element_id - QCA Vendor Specific element types  *  * These values are used to identify QCA Vendor Specific elements. The  * payload of the element starts with the three octet OUI (OUI_QCA) and  * is followed by a single octet type which is defined by this enum.  *  * @QCA_VENDOR_ELEM_P2P_PREF_CHAN_LIST: P2P preferred channel list.  *	This element can be used to specify preference order for supported  *	channels. The channels in this list are in preference order (the first  *	one has the highest preference) and are described as a pair of  *	(global) Operating Class and Channel Number (each one octet) fields.  *  *	This extends the standard P2P functionality by providing option to have  *	more than one preferred operating channel. When this element is present,  *	it replaces the preference indicated in the Operating Channel attribute.  *	For supporting other implementations, the Operating Channel attribute is  *	expected to be used with the highest preference channel. Similarly, all  *	the channels included in this Preferred channel list element are  *	expected to be included in the Channel List attribute.  *  *	This vendor element may be included in GO Negotiation Request, P2P  *	Invitation Request, and Provision Discovery Request frames.  */
+end_comment
+
+begin_enum
+enum|enum
+name|qca_vendor_element_id
+block|{
+name|QCA_VENDOR_ELEM_P2P_PREF_CHAN_LIST
+init|=
+literal|0
+block|, }
 enum|;
 end_enum
 

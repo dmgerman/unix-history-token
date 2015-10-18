@@ -1928,13 +1928,36 @@ name|struct
 name|os_time
 name|now
 decl_stmt|;
-comment|/* Acct-Session-Id should be unique over reboots. If reliable clock is 	 * not available, this could be replaced with reboot counter, etc. */
+comment|/* Acct-Session-Id should be unique over reboots. Using a random number 	 * is preferred. If that is not available, take the current time. Mix 	 * in microseconds to make this more likely to be unique. */
 name|os_get_time
 argument_list|(
 operator|&
 name|now
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|os_get_random
+argument_list|(
+operator|(
+name|u8
+operator|*
+operator|)
+operator|&
+name|hapd
+operator|->
+name|acct_session_id_hi
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hapd
+operator|->
+name|acct_session_id_hi
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
 name|hapd
 operator|->
 name|acct_session_id_hi
@@ -1942,6 +1965,14 @@ operator|=
 name|now
 operator|.
 name|sec
+expr_stmt|;
+name|hapd
+operator|->
+name|acct_session_id_hi
+operator|^=
+name|now
+operator|.
+name|usec
 expr_stmt|;
 if|if
 condition|(
@@ -1976,7 +2007,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * accounting_deinit: Deinitilize accounting  * @hapd: hostapd BSS data  */
+comment|/**  * accounting_deinit: Deinitialize accounting  * @hapd: hostapd BSS data  */
 end_comment
 
 begin_function

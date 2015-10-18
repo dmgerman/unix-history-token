@@ -1471,6 +1471,14 @@ expr_stmt|;
 comment|/* TODO: respond with action frame refused status code */
 return|return;
 block|}
+if|if
+condition|(
+name|left
+operator|<
+literal|0
+condition|)
+return|return;
+comment|/* not a valid WMM Action frame */
 comment|/* extract the tspec info element */
 if|if
 condition|(

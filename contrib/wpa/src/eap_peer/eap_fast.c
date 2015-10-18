@@ -1157,7 +1157,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|eap_fast_derive_key_auth
 parameter_list|(
 name|struct
@@ -1210,7 +1210,10 @@ literal|"EAP-FAST: Failed to derive "
 literal|"session_key_seed"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 comment|/* 	 * RFC 4851, Section 5.2: 	 * S-IMCK[0] = session_key_seed 	 */
 name|wpa_hexdump_key
@@ -1246,12 +1249,15 @@ argument_list|(
 name|sks
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|eap_fast_derive_key_provisioning
 parameter_list|(
 name|struct
@@ -1320,7 +1326,10 @@ argument_list|,
 literal|"EAP-FAST: Failed to derive key block"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 comment|/* 	 * RFC 4851, Section 5.2: 	 * S-IMCK[0] = session_key_seed 	 */
 name|wpa_hexdump_key
@@ -1410,12 +1419,15 @@ name|client_challenge
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|eap_fast_derive_keys
 parameter_list|(
 name|struct
@@ -1429,12 +1441,17 @@ modifier|*
 name|data
 parameter_list|)
 block|{
+name|int
+name|res
+decl_stmt|;
 if|if
 condition|(
 name|data
 operator|->
 name|anon_provisioning
 condition|)
+name|res
+operator|=
 name|eap_fast_derive_key_provisioning
 argument_list|(
 name|sm
@@ -1443,6 +1460,8 @@ name|data
 argument_list|)
 expr_stmt|;
 else|else
+name|res
+operator|=
 name|eap_fast_derive_key_auth
 argument_list|(
 name|sm
@@ -1450,6 +1469,9 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
+return|return
+name|res
+return|;
 block|}
 end_function
 
@@ -5579,11 +5601,8 @@ name|eap_method_ret
 modifier|*
 name|ret
 parameter_list|,
-specifier|const
-name|struct
-name|eap_hdr
-modifier|*
-name|req
+name|u8
+name|identifier
 parameter_list|,
 name|struct
 name|wpabuf
@@ -5647,8 +5666,6 @@ name|data
 argument_list|,
 name|resp
 argument_list|,
-name|req
-operator|->
 name|identifier
 argument_list|,
 name|out_data
@@ -5681,8 +5698,6 @@ name|data
 argument_list|,
 name|resp
 argument_list|,
-name|req
-operator|->
 name|identifier
 argument_list|,
 name|out_data
@@ -5716,8 +5731,6 @@ name|data
 argument_list|,
 name|resp
 argument_list|,
-name|req
-operator|->
 name|identifier
 argument_list|,
 name|out_data
@@ -6149,8 +6162,6 @@ name|data
 argument_list|,
 name|resp
 argument_list|,
-name|req
-operator|->
 name|identifier
 argument_list|,
 name|out_data
@@ -6179,11 +6190,8 @@ name|eap_method_ret
 modifier|*
 name|ret
 parameter_list|,
-specifier|const
-name|struct
-name|eap_hdr
-modifier|*
-name|req
+name|u8
+name|identifier
 parameter_list|,
 specifier|const
 name|struct
@@ -6290,8 +6298,6 @@ name|data
 operator|->
 name|fast_version
 argument_list|,
-name|req
-operator|->
 name|identifier
 argument_list|,
 name|NULL
@@ -6382,7 +6388,7 @@ name|data
 argument_list|,
 name|ret
 argument_list|,
-name|req
+name|identifier
 argument_list|,
 name|in_decrypted
 argument_list|,
@@ -6425,6 +6431,7 @@ name|u8
 modifier|*
 name|a_id
 decl_stmt|;
+specifier|const
 name|struct
 name|pac_tlv_hdr
 modifier|*
@@ -6457,6 +6464,7 @@ decl_stmt|;
 name|hdr
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|pac_tlv_hdr
 operator|*
@@ -6505,6 +6513,7 @@ expr_stmt|;
 name|a_id
 operator|=
 operator|(
+specifier|const
 name|u8
 operator|*
 operator|)
@@ -7305,6 +7314,10 @@ name|data
 init|=
 name|priv
 decl_stmt|;
+name|struct
+name|wpabuf
+name|msg
+decl_stmt|;
 name|pos
 operator|=
 name|eap_peer_tls_process_init
@@ -7384,6 +7397,16 @@ literal|0
 expr_stmt|;
 comment|/* A-ID is not used in further packet processing */
 block|}
+name|wpabuf_set
+argument_list|(
+operator|&
+name|msg
+argument_list|,
+name|pos
+argument_list|,
+name|left
+argument_list|)
+expr_stmt|;
 name|resp
 operator|=
 name|NULL
@@ -7410,20 +7433,6 @@ name|resuming
 condition|)
 block|{
 comment|/* Process tunneled (encrypted) phase 2 data. */
-name|struct
-name|wpabuf
-name|msg
-decl_stmt|;
-name|wpabuf_set
-argument_list|(
-operator|&
-name|msg
-argument_list|,
-name|pos
-argument_list|,
-name|left
-argument_list|)
-expr_stmt|;
 name|res
 operator|=
 name|eap_fast_decrypt
@@ -7434,7 +7443,7 @@ name|data
 argument_list|,
 name|ret
 argument_list|,
-name|req
+name|id
 argument_list|,
 operator|&
 name|msg
@@ -7491,14 +7500,43 @@ name|fast_version
 argument_list|,
 name|id
 argument_list|,
-name|pos
-argument_list|,
-name|left
+operator|&
+name|msg
 argument_list|,
 operator|&
 name|resp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|res
+operator|<
+literal|0
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"EAP-FAST: TLS processing failed"
+argument_list|)
+expr_stmt|;
+name|ret
+operator|->
+name|methodState
+operator|=
+name|METHOD_DONE
+expr_stmt|;
+name|ret
+operator|->
+name|decision
+operator|=
+name|DECISION_FAIL
+expr_stmt|;
+return|return
+name|resp
+return|;
+block|}
 if|if
 condition|(
 name|tls_connection_established
@@ -7611,13 +7649,46 @@ name|resuming
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
 name|eap_fast_derive_keys
 argument_list|(
 name|sm
 argument_list|,
 name|data
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"EAP-FAST: Could not derive keys"
+argument_list|)
 expr_stmt|;
+name|ret
+operator|->
+name|methodState
+operator|=
+name|METHOD_DONE
+expr_stmt|;
+name|ret
+operator|->
+name|decision
+operator|=
+name|DECISION_FAIL
+expr_stmt|;
+name|wpabuf_free
+argument_list|(
+name|resp
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 block|}
 if|if
 condition|(
@@ -7626,10 +7697,6 @@ operator|==
 literal|2
 condition|)
 block|{
-name|struct
-name|wpabuf
-name|msg
-decl_stmt|;
 comment|/* 			 * Application data included in the handshake message. 			 */
 name|wpabuf_free
 argument_list|(
@@ -7648,16 +7715,6 @@ name|resp
 operator|=
 name|NULL
 expr_stmt|;
-name|wpabuf_set
-argument_list|(
-operator|&
-name|msg
-argument_list|,
-name|pos
-argument_list|,
-name|left
-argument_list|)
-expr_stmt|;
 name|res
 operator|=
 name|eap_fast_decrypt
@@ -7668,7 +7725,7 @@ name|data
 argument_list|,
 name|ret
 argument_list|,
-name|req
+name|id
 argument_list|,
 operator|&
 name|msg

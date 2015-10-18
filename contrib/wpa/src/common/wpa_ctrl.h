@@ -54,6 +54,11 @@ define|#
 directive|define
 name|WPA_EVENT_ASSOC_REJECT
 value|"CTRL-EVENT-ASSOC-REJECT "
+comment|/** Authentication rejected during connection attempt */
+define|#
+directive|define
+name|WPA_EVENT_AUTH_REJECT
+value|"CTRL-EVENT-AUTH-REJECT "
 comment|/** wpa_supplicant is exiting */
 define|#
 directive|define
@@ -154,6 +159,11 @@ define|#
 directive|define
 name|WPA_EVENT_BSS_REMOVED
 value|"CTRL-EVENT-BSS-REMOVED "
+comment|/** No suitable network was found */
+define|#
+directive|define
+name|WPA_EVENT_NETWORK_NOT_FOUND
+value|"CTRL-EVENT-NETWORK-NOT-FOUND "
 comment|/** Change in the signal level was reported by the driver */
 define|#
 directive|define
@@ -571,6 +581,10 @@ name|AP_STA_DISCONNECTED
 value|"AP-STA-DISCONNECTED "
 define|#
 directive|define
+name|AP_STA_POSSIBLE_PSK_MISMATCH
+value|"AP-STA-POSSIBLE-PSK-MISMATCH "
+define|#
+directive|define
 name|AP_REJECTED_MAX_STA
 value|"AP-REJECTED-MAX-STA "
 define|#
@@ -723,6 +737,10 @@ define|#
 directive|define
 name|WPA_BSS_MASK_EST_THROUGHPUT
 value|BIT(20)
+define|#
+directive|define
+name|WPA_BSS_MASK_FST
+value|BIT(21)
 comment|/* VENDOR_ELEM_* frame id values */
 enum|enum
 name|wpa_vendor_elem_frame
@@ -797,6 +815,23 @@ specifier|const
 name|char
 modifier|*
 name|ctrl_path
+parameter_list|)
+function_decl|;
+comment|/**  * wpa_ctrl_open2 - Open a control interface to wpa_supplicant/hostapd  * @ctrl_path: Path for UNIX domain sockets; ignored if UDP sockets are used.  * @cli_path: Path for client UNIX domain sockets; ignored if UDP socket  *            is used.  * Returns: Pointer to abstract control interface data or %NULL on failure  *  * This function is used to open a control interface to wpa_supplicant/hostapd  * when the socket path for client need to be specified explicitly. Default  * ctrl_path is usually /var/run/wpa_supplicant or /var/run/hostapd and client  * socket path is /tmp.  */
+name|struct
+name|wpa_ctrl
+modifier|*
+name|wpa_ctrl_open2
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|ctrl_path
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|cli_path
 parameter_list|)
 function_decl|;
 comment|/**  * wpa_ctrl_close - Close a control interface to wpa_supplicant/hostapd  * @ctrl: Control interface data from wpa_ctrl_open()  *  * This function is used to close a control interface.  */

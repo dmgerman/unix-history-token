@@ -64,38 +64,6 @@ begin_comment
 comment|/* increase allocation by this */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* httpread_debug -- set this global variable> 0 e.g. from debugger  * to enable debugs (larger numbers for more debugs)  * Make this a #define of 0 to eliminate the debugging code.  */
-end_comment
-
-begin_else
-unit|int httpread_debug = 99;
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|httpread_debug
-value|0
-end_define
-
-begin_comment
-comment|/* eliminates even the debugging code */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* control instance -- actual definition (opaque to application)  */
 end_comment
@@ -401,17 +369,11 @@ modifier|*
 name|h
 parameter_list|)
 block|{
-if|if
-condition|(
-name|httpread_debug
-operator|>=
-literal|10
-condition|)
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"ENTER httpread_destroy(%p)"
+literal|"httpread_destroy(%p)"
 argument_list|,
 name|h
 argument_list|)
@@ -615,6 +577,39 @@ argument_list|(
 name|hbp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|content_length
+operator|<
+literal|0
+operator|||
+name|h
+operator|->
+name|content_length
+operator|>
+name|h
+operator|->
+name|max_bytes
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"httpread: Unacceptable Content-Length %d"
+argument_list|,
+name|h
+operator|->
+name|content_length
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|h
 operator|->
 name|got_content_length
@@ -1216,17 +1211,6 @@ expr_stmt|;
 comment|/* null terminate */
 while|while
 condition|(
-name|isgraph
-argument_list|(
-operator|*
-name|hbp
-argument_list|)
-condition|)
-name|hbp
-operator|++
-expr_stmt|;
-while|while
-condition|(
 operator|*
 name|hbp
 operator|==
@@ -1554,22 +1538,16 @@ name|HTTPREAD_READBUF_SIZE
 index|]
 decl_stmt|;
 comment|/* temp use to read into */
-if|if
-condition|(
-name|httpread_debug
-operator|>=
-literal|20
-condition|)
+comment|/* read some at a time, then search for the interal 	 * boundaries between header and data and etc. 	 */
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"ENTER httpread_read_handler(%p)"
+literal|"httpread: Trying to read more data(%p)"
 argument_list|,
 name|h
 argument_list|)
 expr_stmt|;
-comment|/* read some at a time, then search for the interal 	 * boundaries between header and data and etc. 	 */
 name|nread
 operator|=
 name|read
@@ -1592,9 +1570,34 @@ name|nread
 operator|<
 literal|0
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"httpread failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
+name|wpa_hexdump_ascii
+argument_list|(
+name|MSG_MSGDUMP
+argument_list|,
+literal|"httpread - read"
+argument_list|,
+name|readbuf
+argument_list|,
+name|nread
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nread
@@ -1659,12 +1662,6 @@ name|bad
 goto|;
 block|}
 comment|/* No explicit length, hopefully we have all the data 		 * although dropped connections can cause false 		 * end 		 */
-if|if
-condition|(
-name|httpread_debug
-operator|>=
-literal|10
-condition|)
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -1732,6 +1729,13 @@ operator|==
 name|HTTPREAD_HEADER_MAX_SIZE
 condition|)
 block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"httpread: Too long header"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
@@ -1839,12 +1843,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|httpread_debug
-operator|>=
-literal|10
-condition|)
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -1871,12 +1869,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|httpread_debug
-operator|>=
-literal|10
-condition|)
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -1951,12 +1943,6 @@ operator|->
 name|got_body
 condition|)
 block|{
-if|if
-condition|(
-name|httpread_debug
-operator|>=
-literal|10
-condition|)
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -2029,9 +2015,26 @@ name|h
 operator|->
 name|max_bytes
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"httpread: body_nbytes=%d>= max_bytes=%d"
+argument_list|,
+name|h
+operator|->
+name|body_nbytes
+argument_list|,
+name|h
+operator|->
+name|max_bytes
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|new_alloc_nbytes
 operator|=
 name|h
@@ -2067,6 +2070,44 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|new_alloc_nbytes
+operator|<
+name|h
+operator|->
+name|body_alloc_nbytes
+operator|||
+name|new_alloc_nbytes
+operator|>
+name|h
+operator|->
+name|max_bytes
+operator|+
+name|HTTPREAD_BODYBUF_DELTA
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"httpread: Unacceptable body length %d (body_alloc_nbytes=%u max_bytes=%u)"
+argument_list|,
+name|new_alloc_nbytes
+argument_list|,
+name|h
+operator|->
+name|body_alloc_nbytes
+argument_list|,
+name|h
+operator|->
+name|max_bytes
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+if|if
+condition|(
 operator|(
 name|new_body
 operator|=
@@ -2082,9 +2123,20 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"httpread: Failed to reallocate buffer (len=%d)"
+argument_list|,
+name|new_alloc_nbytes
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|h
 operator|->
 name|body
@@ -2181,9 +2233,18 @@ operator|*
 name|cbp
 argument_list|)
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"httpread: Unexpected chunk header value (not a hex digit)"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|h
 operator|->
 name|chunk_size
@@ -2197,6 +2258,38 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|chunk_size
+operator|<
+literal|0
+operator|||
+name|h
+operator|->
+name|chunk_size
+operator|>
+name|h
+operator|->
+name|max_bytes
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"httpread: Invalid chunk size %d"
+argument_list|,
+name|h
+operator|->
+name|chunk_size
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 comment|/* throw away chunk header 					 * so we have only real data 					 */
 name|h
 operator|->
@@ -2227,12 +2320,6 @@ name|in_trailer
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|httpread_debug
-operator|>=
-literal|20
-condition|)
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -2305,9 +2392,18 @@ literal|'\r'
 condition|)
 block|{ 					}
 else|else
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"httpread: Invalid chunk end"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|h
 operator|->
 name|body_nbytes
@@ -2363,12 +2459,6 @@ name|got_body
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|httpread_debug
-operator|>=
-literal|10
-condition|)
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -2475,6 +2565,26 @@ name|nread
 expr_stmt|;
 block|}
 comment|/* Note: should never be 0 */
+if|if
+condition|(
+name|ncopy
+operator|<
+literal|0
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"httpread: Invalid ncopy=%d"
+argument_list|,
+name|ncopy
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 if|if
 condition|(
 name|ncopy
@@ -2606,12 +2716,6 @@ name|in_trailer
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|httpread_debug
-operator|>=
-literal|10
-condition|)
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -2714,15 +2818,18 @@ expr_stmt|;
 return|return;
 name|get_more
 label|:
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"httpread: get more (%p)"
+argument_list|,
+name|h
+argument_list|)
+expr_stmt|;
 return|return;
 name|got_file
 label|:
-if|if
-condition|(
-name|httpread_debug
-operator|>=
-literal|10
-condition|)
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -2736,6 +2843,21 @@ argument_list|,
 name|h
 operator|->
 name|hdr_type
+argument_list|)
+expr_stmt|;
+name|wpa_hexdump_ascii
+argument_list|(
+name|MSG_MSGDUMP
+argument_list|,
+literal|"httpread: body"
+argument_list|,
+name|h
+operator|->
+name|body
+argument_list|,
+name|h
+operator|->
+name|body_nbytes
 argument_list|)
 expr_stmt|;
 comment|/* Null terminate for convenience of some applications */

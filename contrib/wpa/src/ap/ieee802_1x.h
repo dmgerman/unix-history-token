@@ -113,23 +113,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ieee802_1x_tx_key
-parameter_list|(
-name|struct
-name|hostapd_data
-modifier|*
-name|hapd
-parameter_list|,
-name|struct
-name|sta_info
-modifier|*
-name|sta
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|ieee802_1x_abort_auth
 parameter_list|(
 name|struct

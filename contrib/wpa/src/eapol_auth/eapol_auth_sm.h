@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IEEE 802.1X-2004 Authenticator - EAPOL state machine  * Copyright (c) 2002-2009, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * IEEE 802.1X-2004 Authenticator - EAPOL state machine  * Copyright (c) 2002-2015, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -91,6 +91,10 @@ name|int
 name|erp
 decl_stmt|;
 comment|/* Whether ERP is enabled on authentication server */
+name|unsigned
+name|int
+name|tls_session_lifetime
+decl_stmt|;
 name|u8
 modifier|*
 name|pac_opaque_encr_key
@@ -572,6 +576,40 @@ parameter_list|,
 name|void
 modifier|*
 name|ctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|eapol_auth_reauthenticate
+parameter_list|(
+name|struct
+name|eapol_state_machine
+modifier|*
+name|sm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|eapol_auth_set_conf
+parameter_list|(
+name|struct
+name|eapol_state_machine
+modifier|*
+name|sm
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|param
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|value
 parameter_list|)
 function_decl|;
 end_function_decl

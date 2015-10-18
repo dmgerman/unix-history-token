@@ -283,6 +283,21 @@ block|}
 end_function
 
 begin_function
+name|int
+name|os_fdatasync
+parameter_list|(
+name|FILE
+modifier|*
+name|stream
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 modifier|*
 name|os_zalloc

@@ -791,6 +791,9 @@ operator|=
 name|host_to_be32
 argument_list|(
 operator|(
+operator|(
+name|u32
+operator|)
 name|flags
 operator|<<
 literal|24
@@ -1203,6 +1206,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CONFIG_FIPS
+end_ifndef
+
 begin_function
 specifier|static
 name|u8
@@ -1240,6 +1249,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_FIPS */
+end_comment
 
 begin_function
 specifier|static
@@ -2130,6 +2148,23 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
+name|CONFIG_FIPS
+name|wpa_printf
+argument_list|(
+name|MSG_ERROR
+argument_list|,
+literal|"EAP-TTLS: MSCHAPV2 not supported in FIPS build"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+else|#
+directive|else
+comment|/* CONFIG_FIPS */
+ifdef|#
+directive|ifdef
 name|EAP_MSCHAPv2
 name|struct
 name|wpabuf
@@ -2530,6 +2565,9 @@ return|;
 endif|#
 directive|endif
 comment|/* EAP_MSCHAPv2 */
+endif|#
+directive|endif
+comment|/* CONFIG_FIPS */
 block|}
 end_function
 
@@ -2560,6 +2598,23 @@ modifier|*
 name|resp
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|CONFIG_FIPS
+name|wpa_printf
+argument_list|(
+name|MSG_ERROR
+argument_list|,
+literal|"EAP-TTLS: MSCHAP not supported in FIPS build"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+else|#
+directive|else
+comment|/* CONFIG_FIPS */
 name|struct
 name|wpabuf
 modifier|*
@@ -2925,6 +2980,9 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+endif|#
+directive|endif
+comment|/* CONFIG_FIPS */
 block|}
 end_function
 
@@ -3214,6 +3272,23 @@ modifier|*
 name|resp
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|CONFIG_FIPS
+name|wpa_printf
+argument_list|(
+name|MSG_ERROR
+argument_list|,
+literal|"EAP-TTLS: CHAP not supported in FIPS build"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+else|#
+directive|else
+comment|/* CONFIG_FIPS */
 name|struct
 name|wpabuf
 modifier|*
@@ -3541,6 +3616,9 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+endif|#
+directive|endif
+comment|/* CONFIG_FIPS */
 block|}
 end_function
 
@@ -6501,12 +6579,10 @@ name|u8
 name|identifier
 parameter_list|,
 specifier|const
-name|u8
+name|struct
+name|wpabuf
 modifier|*
 name|in_data
-parameter_list|,
-name|size_t
-name|in_len
 parameter_list|,
 name|struct
 name|wpabuf
@@ -6539,11 +6615,40 @@ name|identifier
 argument_list|,
 name|in_data
 argument_list|,
-name|in_len
-argument_list|,
 name|out_data
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|res
+operator|<
+literal|0
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"EAP-TTLS: TLS processing failed"
+argument_list|)
+expr_stmt|;
+name|ret
+operator|->
+name|methodState
+operator|=
+name|METHOD_DONE
+expr_stmt|;
+name|ret
+operator|->
+name|decision
+operator|=
+name|DECISION_FAIL
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|tls_connection_established
@@ -6672,10 +6777,6 @@ operator|==
 literal|2
 condition|)
 block|{
-name|struct
-name|wpabuf
-name|msg
-decl_stmt|;
 comment|/* 		 * Application data included in the handshake message. 		 */
 name|wpabuf_free
 argument_list|(
@@ -6696,16 +6797,6 @@ name|out_data
 operator|=
 name|NULL
 expr_stmt|;
-name|wpabuf_set
-argument_list|(
-operator|&
-name|msg
-argument_list|,
-name|in_data
-argument_list|,
-name|in_len
-argument_list|)
-expr_stmt|;
 name|res
 operator|=
 name|eap_ttls_decrypt
@@ -6718,8 +6809,7 @@ name|ret
 argument_list|,
 name|identifier
 argument_list|,
-operator|&
-name|msg
+name|in_data
 argument_list|,
 name|out_data
 argument_list|)
@@ -6929,6 +7019,10 @@ name|data
 init|=
 name|priv
 decl_stmt|;
+name|struct
+name|wpabuf
+name|msg
+decl_stmt|;
 name|pos
 operator|=
 name|eap_peer_tls_process_init
@@ -6998,6 +7092,16 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|wpabuf_set
+argument_list|(
+operator|&
+name|msg
+argument_list|,
+name|pos
+argument_list|,
+name|left
+argument_list|)
+expr_stmt|;
 name|resp
 operator|=
 name|NULL
@@ -7023,20 +7127,6 @@ operator|->
 name|resuming
 condition|)
 block|{
-name|struct
-name|wpabuf
-name|msg
-decl_stmt|;
-name|wpabuf_set
-argument_list|(
-operator|&
-name|msg
-argument_list|,
-name|pos
-argument_list|,
-name|left
-argument_list|)
-expr_stmt|;
 name|res
 operator|=
 name|eap_ttls_decrypt
@@ -7071,9 +7161,8 @@ name|ret
 argument_list|,
 name|id
 argument_list|,
-name|pos
-argument_list|,
-name|left
+operator|&
+name|msg
 argument_list|,
 operator|&
 name|resp
