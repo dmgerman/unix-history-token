@@ -254,7 +254,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ntb_write_local_spad
+name|ntb_spad_write
 parameter_list|(
 name|struct
 name|ntb_softc
@@ -273,7 +273,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ntb_read_local_spad
+name|ntb_spad_read
 parameter_list|(
 name|struct
 name|ntb_softc
@@ -293,7 +293,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ntb_write_remote_spad
+name|ntb_peer_spad_write
 parameter_list|(
 name|struct
 name|ntb_softc
@@ -312,7 +312,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ntb_read_remote_spad
+name|ntb_peer_spad_read
 parameter_list|(
 name|struct
 name|ntb_softc
@@ -400,16 +400,15 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ntb_ring_doorbell
+name|ntb_peer_db_set
 parameter_list|(
 name|struct
 name|ntb_softc
 modifier|*
 name|ntb
 parameter_list|,
-name|unsigned
-name|int
-name|db
+name|uint64_t
+name|bit
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -432,7 +431,7 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|ntb_query_link_status
+name|ntb_link_is_up
 parameter_list|(
 name|struct
 name|ntb_softc

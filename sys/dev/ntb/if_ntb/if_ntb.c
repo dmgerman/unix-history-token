@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2013 Intel Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (C) 2013 Intel Corporation  * Copyright (C) 2015 EMC Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -382,7 +382,7 @@ struct|struct
 name|ntb_transport_qp
 block|{
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|transport
 decl_stmt|;
@@ -399,7 +399,7 @@ name|bool
 name|client_ready
 decl_stmt|;
 name|bool
-name|qp_link
+name|link_is_up
 decl_stmt|;
 name|uint8_t
 name|qp_num
@@ -651,7 +651,7 @@ struct|struct
 name|ntb_transport_mw
 block|{
 name|size_t
-name|size
+name|xlat_size
 decl_stmt|;
 name|void
 modifier|*
@@ -666,7 +666,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 block|{
 name|struct
 name|ntb_softc
@@ -680,7 +680,7 @@ name|ifp
 decl_stmt|;
 name|struct
 name|ntb_transport_mw
-name|mw
+name|mw_vec
 index|[
 name|NTB_MAX_NUM_MW
 index|]
@@ -688,18 +688,21 @@ decl_stmt|;
 name|struct
 name|ntb_transport_qp
 modifier|*
-name|qps
+name|qp_vec
 decl_stmt|;
 name|struct
 name|_qpset
 name|qp_bitmap
 decl_stmt|;
-name|uint8_t
-name|max_qps
+name|unsigned
+name|mw_count
+decl_stmt|;
+name|unsigned
+name|qp_count
 decl_stmt|;
 name|enum
 name|ntb_link_event
-name|transport_link
+name|link_is_up
 decl_stmt|;
 name|struct
 name|callout
@@ -734,7 +737,7 @@ end_struct
 begin_decl_stmt
 specifier|static
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 name|net_softc
 decl_stmt|;
 end_decl_stmt
@@ -807,11 +810,11 @@ define|#
 directive|define
 name|QP_TO_MW
 parameter_list|(
-name|ntb
+name|nt
 parameter_list|,
 name|qp
 parameter_list|)
-value|((qp) % ntb_mw_count(ntb))
+value|((qp) % nt->mw_count)
 end_define
 
 begin_define
@@ -1007,7 +1010,7 @@ name|void
 name|ntb_transport_init_queue
 parameter_list|(
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|nt
 parameter_list|,
@@ -1257,15 +1260,13 @@ name|int
 name|ntb_set_mw
 parameter_list|(
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
-name|nt
 parameter_list|,
 name|int
 name|num_mw
 parameter_list|,
 name|unsigned
-name|int
 name|size
 parameter_list|)
 function_decl|;
@@ -1277,7 +1278,7 @@ name|void
 name|ntb_free_mw
 parameter_list|(
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|nt
 parameter_list|,
@@ -1293,7 +1294,7 @@ name|void
 name|ntb_transport_setup_qp_mw
 parameter_list|(
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|nt
 parameter_list|,
@@ -1322,7 +1323,7 @@ name|void
 name|ntb_transport_link_cleanup
 parameter_list|(
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|nt
 parameter_list|)
@@ -1908,7 +1909,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|ntb_softc
 init|=
@@ -1970,7 +1971,7 @@ name|data
 parameter_list|)
 block|{
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|nt
 init|=
@@ -2077,7 +2078,7 @@ modifier|*
 name|m_head
 decl_stmt|;
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|nt
 init|=
@@ -2404,7 +2405,7 @@ name|ntb
 parameter_list|)
 block|{
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|nt
 init|=
@@ -2417,6 +2418,15 @@ decl_stmt|;
 name|uint8_t
 name|i
 decl_stmt|;
+name|nt
+operator|->
+name|mw_count
+operator|=
+name|ntb_mw_count
+argument_list|(
+name|ntb
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|max_num_clients
@@ -2425,7 +2435,7 @@ literal|0
 condition|)
 name|nt
 operator|->
-name|max_qps
+name|qp_count
 operator|=
 name|MIN
 argument_list|(
@@ -2443,7 +2453,7 @@ expr_stmt|;
 else|else
 name|nt
 operator|->
-name|max_qps
+name|qp_count
 operator|=
 name|MIN
 argument_list|(
@@ -2492,18 +2502,20 @@ argument_list|)
 expr_stmt|;
 name|nt
 operator|->
-name|qps
+name|qp_vec
 operator|=
 name|malloc
 argument_list|(
 name|nt
 operator|->
-name|max_qps
+name|qp_count
 operator|*
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|ntb_transport_qp
+operator|*
+name|nt
+operator|->
+name|qp_vec
 argument_list|)
 argument_list|,
 name|M_NTB_IF
@@ -2517,12 +2529,12 @@ name|KASSERT
 argument_list|(
 name|nt
 operator|->
-name|max_qps
+name|qp_count
 operator|<=
 name|QP_SETSIZE
 argument_list|,
 operator|(
-literal|"invalid max_qps"
+literal|"invalid qp_count"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2536,7 +2548,7 @@ name|i
 operator|<
 name|nt
 operator|->
-name|max_qps
+name|qp_count
 condition|;
 name|i
 operator|++
@@ -2590,7 +2602,7 @@ name|err
 goto|;
 if|if
 condition|(
-name|ntb_query_link_status
+name|ntb_link_is_up
 argument_list|(
 name|ntb
 argument_list|)
@@ -2636,7 +2648,7 @@ name|free
 argument_list|(
 name|nt
 operator|->
-name|qps
+name|qp_vec
 argument_list|,
 name|M_NTB_IF
 argument_list|)
@@ -2665,7 +2677,7 @@ name|transport
 parameter_list|)
 block|{
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|nt
 init|=
@@ -2707,7 +2719,7 @@ name|i
 operator|<
 name|nt
 operator|->
-name|max_qps
+name|qp_count
 condition|;
 name|i
 operator|++
@@ -2730,7 +2742,7 @@ argument_list|(
 operator|&
 name|nt
 operator|->
-name|qps
+name|qp_vec
 index|[
 name|i
 index|]
@@ -2765,7 +2777,7 @@ name|free
 argument_list|(
 name|nt
 operator|->
-name|qps
+name|qp_vec
 argument_list|,
 name|M_NTB_IF
 argument_list|)
@@ -2784,7 +2796,7 @@ name|void
 name|ntb_transport_init_queue
 parameter_list|(
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|nt
 parameter_list|,
@@ -2807,9 +2819,9 @@ decl_stmt|;
 name|uint8_t
 name|mw_num
 decl_stmt|,
-name|mw_max
+name|mw_count
 decl_stmt|;
-name|mw_max
+name|mw_count
 operator|=
 name|ntb_mw_count
 argument_list|(
@@ -2823,8 +2835,6 @@ operator|=
 name|QP_TO_MW
 argument_list|(
 name|nt
-operator|->
-name|ntb
 argument_list|,
 name|qp_num
 argument_list|)
@@ -2834,7 +2844,7 @@ operator|=
 operator|&
 name|nt
 operator|->
-name|qps
+name|qp_vec
 index|[
 name|qp_num
 index|]
@@ -2861,15 +2871,15 @@ name|ntb
 expr_stmt|;
 name|qp
 operator|->
-name|qp_link
+name|link_is_up
 operator|=
-name|NTB_LINK_DOWN
+name|false
 expr_stmt|;
 name|qp
 operator|->
 name|client_ready
 operator|=
-name|NTB_LINK_DOWN
+name|false
 expr_stmt|;
 name|qp
 operator|->
@@ -2881,9 +2891,9 @@ if|if
 condition|(
 name|nt
 operator|->
-name|max_qps
+name|qp_count
 operator|%
-name|mw_max
+name|mw_count
 operator|&&
 name|mw_num
 operator|+
@@ -2891,17 +2901,17 @@ literal|1
 operator|<
 name|nt
 operator|->
-name|max_qps
+name|qp_count
 operator|/
-name|mw_max
+name|mw_count
 condition|)
 name|num_qps_mw
 operator|=
 name|nt
 operator|->
-name|max_qps
+name|qp_count
 operator|/
-name|mw_max
+name|mw_count
 operator|+
 literal|1
 expr_stmt|;
@@ -2910,16 +2920,12 @@ name|num_qps_mw
 operator|=
 name|nt
 operator|->
-name|max_qps
+name|qp_count
 operator|/
-name|mw_max
+name|mw_count
 expr_stmt|;
 name|tx_size
 operator|=
-operator|(
-name|unsigned
-name|int
-operator|)
 name|ntb_get_mw_size
 argument_list|(
 name|qp
@@ -2957,7 +2963,7 @@ operator|+
 operator|(
 name|qp_num
 operator|/
-name|mw_max
+name|mw_count
 operator|*
 name|tx_size
 operator|)
@@ -3299,7 +3305,7 @@ modifier|*
 name|qp
 decl_stmt|;
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|nt
 decl_stmt|;
@@ -3366,7 +3372,7 @@ operator|=
 operator|&
 name|nt
 operator|->
-name|qps
+name|qp_vec
 index|[
 name|free_queue
 index|]
@@ -3644,7 +3650,7 @@ name|qp
 operator|->
 name|client_ready
 operator|=
-name|NTB_LINK_UP
+name|true
 expr_stmt|;
 if|if
 condition|(
@@ -3668,9 +3674,7 @@ name|qp
 operator|->
 name|transport
 operator|->
-name|transport_link
-operator|==
-name|NTB_LINK_UP
+name|link_is_up
 condition|)
 name|callout_reset
 argument_list|(
@@ -3734,11 +3738,10 @@ name|qp
 operator|==
 name|NULL
 operator|||
+operator|!
 name|qp
 operator|->
-name|qp_link
-operator|!=
-name|NTB_LINK_UP
+name|link_is_up
 operator|||
 name|len
 operator|==
@@ -4206,12 +4209,14 @@ name|flags
 operator||
 name|IF_NTB_DESC_DONE_FLAG
 expr_stmt|;
-name|ntb_ring_doorbell
+name|ntb_peer_db_set
 argument_list|(
 name|qp
 operator|->
 name|ntb
 argument_list|,
+literal|1ull
+operator|<<
 name|qp
 operator|->
 name|qp_num
@@ -5091,8 +5096,6 @@ operator|&&
 name|qp
 operator|->
 name|client_ready
-operator|==
-name|NTB_LINK_UP
 condition|)
 name|qp
 operator|->
@@ -5218,7 +5221,7 @@ name|event
 parameter_list|)
 block|{
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|nt
 init|=
@@ -5313,7 +5316,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|nt
 init|=
@@ -5370,7 +5373,7 @@ control|)
 block|{
 name|rc
 operator|=
-name|ntb_write_remote_spad
+name|ntb_peer_spad_write
 argument_list|(
 name|ntb
 argument_list|,
@@ -5406,7 +5409,7 @@ name|out
 goto|;
 name|rc
 operator|=
-name|ntb_write_remote_spad
+name|ntb_peer_spad_write
 argument_list|(
 name|ntb
 argument_list|,
@@ -5441,7 +5444,7 @@ goto|;
 block|}
 name|rc
 operator|=
-name|ntb_write_remote_spad
+name|ntb_peer_spad_write
 argument_list|(
 name|ntb
 argument_list|,
@@ -5461,7 +5464,7 @@ name|out
 goto|;
 name|rc
 operator|=
-name|ntb_write_remote_spad
+name|ntb_peer_spad_write
 argument_list|(
 name|ntb
 argument_list|,
@@ -5469,7 +5472,7 @@ name|IF_NTB_NUM_QPS
 argument_list|,
 name|nt
 operator|->
-name|max_qps
+name|qp_count
 argument_list|)
 expr_stmt|;
 if|if
@@ -5483,7 +5486,7 @@ name|out
 goto|;
 name|rc
 operator|=
-name|ntb_write_remote_spad
+name|ntb_peer_spad_write
 argument_list|(
 name|ntb
 argument_list|,
@@ -5504,7 +5507,7 @@ goto|;
 comment|/* Query the remote side for its info */
 name|rc
 operator|=
-name|ntb_read_local_spad
+name|ntb_spad_read
 argument_list|(
 name|ntb
 argument_list|,
@@ -5534,7 +5537,7 @@ name|out
 goto|;
 name|rc
 operator|=
-name|ntb_read_local_spad
+name|ntb_spad_read
 argument_list|(
 name|ntb
 argument_list|,
@@ -5559,14 +5562,14 @@ name|val
 operator|!=
 name|nt
 operator|->
-name|max_qps
+name|qp_count
 condition|)
 goto|goto
 name|out
 goto|;
 name|rc
 operator|=
-name|ntb_read_local_spad
+name|ntb_spad_read
 argument_list|(
 name|ntb
 argument_list|,
@@ -5610,7 +5613,7 @@ control|)
 block|{
 name|rc
 operator|=
-name|ntb_read_local_spad
+name|ntb_spad_read
 argument_list|(
 name|ntb
 argument_list|,
@@ -5646,7 +5649,7 @@ literal|32
 expr_stmt|;
 name|rc
 operator|=
-name|ntb_read_local_spad
+name|ntb_spad_read
 argument_list|(
 name|ntb
 argument_list|,
@@ -5698,9 +5701,9 @@ goto|;
 block|}
 name|nt
 operator|->
-name|transport_link
+name|link_is_up
 operator|=
-name|NTB_LINK_UP
+name|true
 expr_stmt|;
 if|if
 condition|(
@@ -5726,7 +5729,7 @@ name|i
 operator|<
 name|nt
 operator|->
-name|max_qps
+name|qp_count
 condition|;
 name|i
 operator|++
@@ -5737,7 +5740,7 @@ operator|=
 operator|&
 name|nt
 operator|->
-name|qps
+name|qp_vec
 index|[
 name|i
 index|]
@@ -5754,8 +5757,6 @@ condition|(
 name|qp
 operator|->
 name|client_ready
-operator|==
-name|NTB_LINK_UP
 condition|)
 name|callout_reset
 argument_list|(
@@ -5799,7 +5800,7 @@ name|out
 label|:
 if|if
 condition|(
-name|ntb_query_link_status
+name|ntb_link_is_up
 argument_list|(
 name|ntb
 argument_list|)
@@ -5831,7 +5832,7 @@ name|int
 name|ntb_set_mw
 parameter_list|(
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|nt
 parameter_list|,
@@ -5851,7 +5852,7 @@ init|=
 operator|&
 name|nt
 operator|->
-name|mw
+name|mw_vec
 index|[
 name|num_mw
 index|]
@@ -5861,7 +5862,7 @@ if|if
 condition|(
 name|mw
 operator|->
-name|size
+name|xlat_size
 operator|==
 name|size
 condition|)
@@ -5874,7 +5875,7 @@ if|if
 condition|(
 name|mw
 operator|->
-name|size
+name|xlat_size
 operator|!=
 literal|0
 condition|)
@@ -5888,7 +5889,7 @@ expr_stmt|;
 comment|/* Alloc memory for receiving data.  Must be 4k aligned */
 name|mw
 operator|->
-name|size
+name|xlat_size
 operator|=
 name|size
 expr_stmt|;
@@ -5900,7 +5901,7 @@ name|contigmalloc
 argument_list|(
 name|mw
 operator|->
-name|size
+name|xlat_size
 argument_list|,
 name|M_NTB_IF
 argument_list|,
@@ -5912,7 +5913,7 @@ name|BUS_SPACE_MAXADDR
 argument_list|,
 name|mw
 operator|->
-name|size
+name|xlat_size
 argument_list|,
 literal|0
 argument_list|)
@@ -5928,7 +5929,7 @@ condition|)
 block|{
 name|mw
 operator|->
-name|size
+name|xlat_size
 operator|=
 literal|0
 expr_stmt|;
@@ -5938,7 +5939,7 @@ literal|"ntb: Unable to allocate MW buffer of size %zu\n"
 argument_list|,
 name|mw
 operator|->
-name|size
+name|xlat_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -6033,7 +6034,7 @@ name|void
 name|ntb_free_mw
 parameter_list|(
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|nt
 parameter_list|,
@@ -6049,7 +6050,7 @@ init|=
 operator|&
 name|nt
 operator|->
-name|mw
+name|mw_vec
 index|[
 name|num_mw
 index|]
@@ -6071,7 +6072,7 @@ name|virt_addr
 argument_list|,
 name|mw
 operator|->
-name|size
+name|xlat_size
 argument_list|,
 name|M_NTB_IF
 argument_list|)
@@ -6091,7 +6092,7 @@ name|void
 name|ntb_transport_setup_qp_mw
 parameter_list|(
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|nt
 parameter_list|,
@@ -6108,7 +6109,7 @@ init|=
 operator|&
 name|nt
 operator|->
-name|qps
+name|qp_vec
 index|[
 name|qp_num
 index|]
@@ -6126,13 +6127,13 @@ decl_stmt|;
 name|uint8_t
 name|mw_num
 decl_stmt|,
-name|mw_max
+name|mw_count
 decl_stmt|;
 name|unsigned
 name|int
 name|i
 decl_stmt|;
-name|mw_max
+name|mw_count
 operator|=
 name|ntb_mw_count
 argument_list|(
@@ -6146,8 +6147,6 @@ operator|=
 name|QP_TO_MW
 argument_list|(
 name|nt
-operator|->
-name|ntb
 argument_list|,
 name|qp_num
 argument_list|)
@@ -6156,9 +6155,9 @@ if|if
 condition|(
 name|nt
 operator|->
-name|max_qps
+name|qp_count
 operator|%
-name|mw_max
+name|mw_count
 operator|&&
 name|mw_num
 operator|+
@@ -6166,17 +6165,17 @@ literal|1
 operator|<
 name|nt
 operator|->
-name|max_qps
+name|qp_count
 operator|/
-name|mw_max
+name|mw_count
 condition|)
 name|num_qps_mw
 operator|=
 name|nt
 operator|->
-name|max_qps
+name|qp_count
 operator|/
-name|mw_max
+name|mw_count
 operator|+
 literal|1
 expr_stmt|;
@@ -6185,24 +6184,20 @@ name|num_qps_mw
 operator|=
 name|nt
 operator|->
-name|max_qps
+name|qp_count
 operator|/
-name|mw_max
+name|mw_count
 expr_stmt|;
 name|rx_size
 operator|=
-operator|(
-name|unsigned
-name|int
-operator|)
 name|nt
 operator|->
-name|mw
+name|mw_vec
 index|[
 name|mw_num
 index|]
 operator|.
-name|size
+name|xlat_size
 operator|/
 name|num_qps_mw
 expr_stmt|;
@@ -6221,7 +6216,7 @@ operator|*
 operator|)
 name|nt
 operator|->
-name|mw
+name|mw_vec
 index|[
 name|mw_num
 index|]
@@ -6231,7 +6226,7 @@ operator|+
 operator|(
 name|qp_num
 operator|/
-name|mw_max
+name|mw_count
 operator|*
 name|rx_size
 operator|)
@@ -6414,7 +6409,7 @@ operator|->
 name|ntb
 decl_stmt|;
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|nt
 init|=
@@ -6429,7 +6424,7 @@ name|val
 decl_stmt|;
 name|rc
 operator|=
-name|ntb_read_remote_spad
+name|ntb_peer_spad_read
 argument_list|(
 name|ntb
 argument_list|,
@@ -6448,7 +6443,7 @@ condition|)
 return|return;
 name|rc
 operator|=
-name|ntb_write_remote_spad
+name|ntb_peer_spad_write
 argument_list|(
 name|ntb
 argument_list|,
@@ -6466,7 +6461,7 @@ expr_stmt|;
 comment|/* query remote spad for qp ready bits */
 name|rc
 operator|=
-name|ntb_read_local_spad
+name|ntb_spad_read
 argument_list|(
 name|ntb
 argument_list|,
@@ -6494,9 +6489,9 @@ condition|)
 block|{
 name|qp
 operator|->
-name|qp_link
+name|link_is_up
 operator|=
-name|NTB_LINK_UP
+name|true
 expr_stmt|;
 if|if
 condition|(
@@ -6537,9 +6532,7 @@ if|if
 condition|(
 name|nt
 operator|->
-name|transport_link
-operator|==
-name|NTB_LINK_UP
+name|link_is_up
 condition|)
 block|{
 name|callout_reset
@@ -6574,7 +6567,7 @@ name|void
 name|ntb_transport_link_cleanup
 parameter_list|(
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|nt
 parameter_list|)
@@ -6593,7 +6586,7 @@ name|i
 operator|<
 name|nt
 operator|->
-name|max_qps
+name|qp_count
 condition|;
 name|i
 operator|++
@@ -6616,7 +6609,7 @@ argument_list|(
 operator|&
 name|nt
 operator|->
-name|qps
+name|qp_vec
 index|[
 name|i
 index|]
@@ -6624,11 +6617,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|nt
 operator|->
-name|transport_link
-operator|==
-name|NTB_LINK_DOWN
+name|link_is_up
 condition|)
 name|callout_drain
 argument_list|(
@@ -6641,9 +6633,9 @@ expr_stmt|;
 else|else
 name|nt
 operator|->
-name|transport_link
+name|link_is_up
 operator|=
-name|NTB_LINK_DOWN
+name|false
 expr_stmt|;
 comment|/* 	 * The scratchpad registers keep the values if the remote side 	 * goes down, blast them now to give them a sane value the next 	 * time they are accessed 	 */
 for|for
@@ -6659,7 +6651,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|ntb_write_local_spad
+name|ntb_spad_write
 argument_list|(
 name|nt
 operator|->
@@ -6704,7 +6696,7 @@ name|qp
 parameter_list|)
 block|{
 name|struct
-name|ntb_netdev
+name|ntb_transport_ctx
 modifier|*
 name|nt
 init|=
@@ -6714,11 +6706,10 @@ name|transport
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|qp
 operator|->
-name|qp_link
-operator|==
-name|NTB_LINK_DOWN
+name|link_is_up
 condition|)
 block|{
 name|callout_drain
@@ -6752,17 +6743,15 @@ argument_list|)
 expr_stmt|;
 name|qp
 operator|->
-name|qp_link
+name|link_is_up
 operator|=
-name|NTB_LINK_DOWN
+name|false
 expr_stmt|;
 if|if
 condition|(
 name|nt
 operator|->
-name|transport_link
-operator|==
-name|NTB_LINK_UP
+name|link_is_up
 condition|)
 name|callout_reset
 argument_list|(
@@ -6820,11 +6809,11 @@ name|qp
 operator|->
 name|client_ready
 operator|=
-name|NTB_LINK_DOWN
+name|false
 expr_stmt|;
 name|rc
 operator|=
-name|ntb_read_remote_spad
+name|ntb_peer_spad_read
 argument_list|(
 name|qp
 operator|->
@@ -6845,7 +6834,7 @@ condition|)
 return|return;
 name|rc
 operator|=
-name|ntb_write_remote_spad
+name|ntb_peer_spad_write
 argument_list|(
 name|qp
 operator|->
@@ -6869,9 +6858,7 @@ if|if
 condition|(
 name|qp
 operator|->
-name|qp_link
-operator|==
-name|NTB_LINK_UP
+name|link_is_up
 condition|)
 name|ntb_send_link_down
 argument_list|(
@@ -6913,18 +6900,17 @@ name|rc
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|qp
 operator|->
-name|qp_link
-operator|==
-name|NTB_LINK_DOWN
+name|link_is_up
 condition|)
 return|return;
 name|qp
 operator|->
-name|qp_link
+name|link_is_up
 operator|=
-name|NTB_LINK_DOWN
+name|false
 expr_stmt|;
 for|for
 control|(

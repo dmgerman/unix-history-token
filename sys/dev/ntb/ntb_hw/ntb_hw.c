@@ -8623,12 +8623,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ntb_write_local_spad() - write to the secondary scratchpad register  * @ntb: pointer to ntb_softc instance  * @idx: index to the scratchpad register, 0 based  * @val: the data value to put into the register  *  * This function allows writing of a 32bit value to the indexed scratchpad  * register. The register resides on the secondary (external) side.  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
+comment|/**  * ntb_spad_write() - write to the secondary scratchpad register  * @ntb: pointer to ntb_softc instance  * @idx: index to the scratchpad register, 0 based  * @val: the data value to put into the register  *  * This function allows writing of a 32bit value to the indexed scratchpad  * register. The register resides on the secondary (external) side.  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
 end_comment
 
 begin_function
 name|int
-name|ntb_write_local_spad
+name|ntb_spad_write
 parameter_list|(
 name|struct
 name|ntb_softc
@@ -8682,12 +8682,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ntb_read_local_spad() - read from the primary scratchpad register  * @ntb: pointer to ntb_softc instance  * @idx: index to scratchpad register, 0 based  * @val: pointer to 32bit integer for storing the register value  *  * This function allows reading of the 32bit scratchpad register on  * the primary (internal) side.  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
+comment|/**  * ntb_spad_read() - read from the primary scratchpad register  * @ntb: pointer to ntb_softc instance  * @idx: index to scratchpad register, 0 based  * @val: pointer to 32bit integer for storing the register value  *  * This function allows reading of the 32bit scratchpad register on  * the primary (internal) side.  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
 end_comment
 
 begin_function
 name|int
-name|ntb_read_local_spad
+name|ntb_spad_read
 parameter_list|(
 name|struct
 name|ntb_softc
@@ -8743,12 +8743,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ntb_write_remote_spad() - write to the secondary scratchpad register  * @ntb: pointer to ntb_softc instance  * @idx: index to the scratchpad register, 0 based  * @val: the data value to put into the register  *  * This function allows writing of a 32bit value to the indexed scratchpad  * register. The register resides on the secondary (external) side.  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
+comment|/**  * ntb_peer_spad_write() - write to the secondary scratchpad register  * @ntb: pointer to ntb_softc instance  * @idx: index to the scratchpad register, 0 based  * @val: the data value to put into the register  *  * This function allows writing of a 32bit value to the indexed scratchpad  * register. The register resides on the secondary (external) side.  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
 end_comment
 
 begin_function
 name|int
-name|ntb_write_remote_spad
+name|ntb_peer_spad_write
 parameter_list|(
 name|struct
 name|ntb_softc
@@ -8823,12 +8823,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ntb_read_remote_spad() - read from the primary scratchpad register  * @ntb: pointer to ntb_softc instance  * @idx: index to scratchpad register, 0 based  * @val: pointer to 32bit integer for storing the register value  *  * This function allows reading of the 32bit scratchpad register on  * the primary (internal) side.  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
+comment|/**  * ntb_peer_spad_read() - read from the primary scratchpad register  * @ntb: pointer to ntb_softc instance  * @idx: index to scratchpad register, 0 based  * @val: pointer to 32bit integer for storing the register value  *  * This function allows reading of the 32bit scratchpad register on  * the primary (internal) side.  *  * RETURNS: An appropriate ERRNO error value on error, or zero for success.  */
 end_comment
 
 begin_function
 name|int
-name|ntb_read_remote_spad
+name|ntb_peer_spad_read
 parameter_list|(
 name|struct
 name|ntb_softc
@@ -9187,63 +9187,22 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ntb_ring_doorbell() - Set the doorbell on the secondary/external side  * @ntb: pointer to ntb_softc instance  * @db: doorbell to ring  *  * This function allows triggering of a doorbell on the secondary/external  * side that will initiate an interrupt on the remote host  */
+comment|/**  * ntb_peer_db_set() - Set the doorbell on the secondary/external side  * @ntb: pointer to ntb_softc instance  * @bit: doorbell bits to ring  *  * This function allows triggering of a doorbell on the secondary/external  * side that will initiate an interrupt on the remote host  */
 end_comment
 
 begin_function
 name|void
-name|ntb_ring_doorbell
+name|ntb_peer_db_set
 parameter_list|(
 name|struct
 name|ntb_softc
 modifier|*
 name|ntb
 parameter_list|,
-name|unsigned
-name|int
-name|db
-parameter_list|)
-block|{
 name|uint64_t
 name|bit
-decl_stmt|;
-if|if
-condition|(
-name|ntb
-operator|->
-name|type
-operator|==
-name|NTB_SOC
-condition|)
-name|bit
-operator|=
-literal|1
-operator|<<
-name|db
-expr_stmt|;
-else|else
-name|bit
-operator|=
-operator|(
-operator|(
-literal|1
-operator|<<
-name|ntb
-operator|->
-name|db_vec_shift
-operator|)
-operator|-
-literal|1
-operator|)
-operator|<<
-operator|(
-name|db
-operator|*
-name|ntb
-operator|->
-name|db_vec_shift
-operator|)
-expr_stmt|;
+parameter_list|)
+block|{
 if|if
 condition|(
 name|HAS_FEATURE
@@ -9454,12 +9413,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ntb_query_link_status() - return the hardware link status  * @ndev: pointer to ntb_device instance  *  * Returns true if the hardware is connected to the remote system  *  * RETURNS: true or false based on the hardware link state  */
+comment|/**  * ntb_link_is_up() - return the hardware link status  * @ndev: pointer to ntb_device instance  *  * Returns true if the hardware is connected to the remote system  *  * RETURNS: true or false based on the hardware link state  */
 end_comment
 
 begin_function
 name|bool
-name|ntb_query_link_status
+name|ntb_link_is_up
 parameter_list|(
 name|struct
 name|ntb_softc
