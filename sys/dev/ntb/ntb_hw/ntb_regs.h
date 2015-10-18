@@ -39,6 +39,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|NTB_LNK_STA_WIDTH
+parameter_list|(
+name|sta
+parameter_list|)
+value|(((sta)& NTB_LINK_WIDTH_MASK)>> 4)
+end_define
+
+begin_define
+define|#
+directive|define
 name|XEON_SNB_MW_COUNT
 value|2
 end_define
