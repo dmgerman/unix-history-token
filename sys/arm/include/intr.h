@@ -369,7 +369,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|arm_init_secondary_ic
+name|arm_pic_init_secondary
 parameter_list|(
 name|void
 parameter_list|)
