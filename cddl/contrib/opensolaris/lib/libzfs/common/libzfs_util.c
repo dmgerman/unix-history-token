@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -3565,9 +3565,6 @@ name|zc_nvlist_dst_size
 operator|=
 name|len
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|zc
 operator|->
 name|zc_nvlist_dst
@@ -3586,7 +3583,12 @@ name|zc
 operator|->
 name|zc_nvlist_dst_size
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|zc
+operator|->
+name|zc_nvlist_dst
 operator|==
 literal|0
 condition|)
@@ -3635,9 +3637,6 @@ operator|->
 name|zc_nvlist_dst
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|zc
 operator|->
 name|zc_nvlist_dst
@@ -3656,7 +3655,12 @@ name|zc
 operator|->
 name|zc_nvlist_dst_size
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|zc
+operator|->
+name|zc_nvlist_dst
 operator|==
 literal|0
 condition|)
@@ -3728,6 +3732,24 @@ name|zc
 operator|->
 name|zc_nvlist_dst
 argument_list|)
+expr_stmt|;
+name|zc
+operator|->
+name|zc_nvlist_conf
+operator|=
+name|NULL
+expr_stmt|;
+name|zc
+operator|->
+name|zc_nvlist_src
+operator|=
+name|NULL
+expr_stmt|;
+name|zc
+operator|->
+name|zc_nvlist_dst
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 end_function
