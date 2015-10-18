@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bitset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -183,9 +189,22 @@ begin_comment
 comment|/*  * The Non-Transparent Bridge (NTB) is a device on some Intel processors that  * allows you to connect two systems using a PCI-e link.  *  * This module contains a protocol for sending and receiving messages, and  * exposes that protocol through a simulated ethernet device called ntb.  *  * NOTE: Much of the code in this module is shared with Linux. Any patches may  * be picked up and redistributed in Linux with a dual GPL/BSD license.  */
 end_comment
 
-begin_comment
-comment|/* TODO: These functions should really be part of the kernel */
-end_comment
+begin_define
+define|#
+directive|define
+name|QP_SETSIZE
+value|64
+end_define
+
+begin_expr_stmt
+name|BITSET_DEFINE
+argument_list|(
+name|_qpset
+argument_list|,
+name|QP_SETSIZE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -194,9 +213,9 @@ name|test_bit
 parameter_list|(
 name|pos
 parameter_list|,
-name|bitmap_addr
+name|addr
 parameter_list|)
-value|(*(bitmap_addr)& 1UL<< (pos))
+value|BIT_ISSET(QP_SETSIZE, (pos), (addr))
 end_define
 
 begin_define
@@ -206,9 +225,9 @@ name|set_bit
 parameter_list|(
 name|pos
 parameter_list|,
-name|bitmap_addr
+name|addr
 parameter_list|)
-value|*(bitmap_addr) |= 1UL<< (pos)
+value|BIT_SET(QP_SETSIZE, (pos), (addr))
 end_define
 
 begin_define
@@ -218,9 +237,19 @@ name|clear_bit
 parameter_list|(
 name|pos
 parameter_list|,
-name|bitmap_addr
+name|addr
 parameter_list|)
-value|*(bitmap_addr)&= ~(1UL<< (pos))
+value|BIT_CLR(QP_SETSIZE, (pos), (addr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ffs_bit
+parameter_list|(
+name|addr
+parameter_list|)
+value|BIT_FFS(QP_SETSIZE, (addr))
 end_define
 
 begin_define
@@ -661,13 +690,15 @@ name|ntb_transport_qp
 modifier|*
 name|qps
 decl_stmt|;
-name|uint64_t
-name|max_qps
-decl_stmt|;
-name|uint64_t
+name|struct
+name|_qpset
 name|qp_bitmap
 decl_stmt|;
-name|bool
+name|uint8_t
+name|max_qps
+decl_stmt|;
+name|enum
+name|ntb_link_event
 name|transport_link
 decl_stmt|;
 name|struct
@@ -2382,7 +2413,8 @@ name|net_softc
 decl_stmt|;
 name|int
 name|rc
-decl_stmt|,
+decl_stmt|;
+name|uint8_t
 name|i
 decl_stmt|;
 if|if
@@ -2481,22 +2513,18 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-name|nt
-operator|->
-name|qp_bitmap
-operator|=
-operator|(
-operator|(
-name|uint64_t
-operator|)
-literal|1
-operator|<<
+name|KASSERT
+argument_list|(
 name|nt
 operator|->
 name|max_qps
+operator|<=
+name|QP_SETSIZE
+argument_list|,
+operator|(
+literal|"invalid max_qps"
 operator|)
-operator|-
-literal|1
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -2513,6 +2541,17 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+name|set_bit
+argument_list|(
+name|i
+argument_list|,
+operator|&
+name|nt
+operator|->
+name|qp_bitmap
+argument_list|)
+expr_stmt|;
 name|ntb_transport_init_queue
 argument_list|(
 name|nt
@@ -2520,6 +2559,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+block|}
 name|callout_init
 argument_list|(
 operator|&
@@ -2640,7 +2680,7 @@ name|nt
 operator|->
 name|ntb
 decl_stmt|;
-name|int
+name|uint8_t
 name|i
 decl_stmt|;
 name|ntb_transport_link_cleanup
@@ -3290,8 +3330,9 @@ name|err
 goto|;
 name|free_queue
 operator|=
-name|ffs
+name|ffs_bit
 argument_list|(
+operator|&
 name|nt
 operator|->
 name|qp_bitmap
@@ -6538,7 +6579,7 @@ modifier|*
 name|nt
 parameter_list|)
 block|{
-name|int
+name|uint8_t
 name|i
 decl_stmt|;
 comment|/* Pass along the info to any clients */
