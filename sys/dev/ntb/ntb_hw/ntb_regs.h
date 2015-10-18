@@ -39,13 +39,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|XEON_MSIX_CNT
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
 name|XEON_SNB_MAX_MW
 value|2
 end_define
@@ -57,20 +50,6 @@ name|XEON_HSXSPLIT_MAX_MW
 value|3
 end_define
 
-begin_define
-define|#
-directive|define
-name|XEON_MAX_SPADS
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|XEON_MAX_COMPAT_SPADS
-value|16
-end_define
-
 begin_comment
 comment|/* Reserve the uppermost bit for link interrupt */
 end_comment
@@ -78,29 +57,43 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XEON_MAX_DB_BITS
+name|XEON_DB_COUNT
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|XEON_LINK_DB
+name|XEON_DB_LINK
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|XEON_DB_BITS_PER_VEC
+name|XEON_DB_MSIX_VECTOR_COUNT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_DB_MSIX_VECTOR_SHIFT
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|XEON_DB_HW_LINK
-value|0x8000
+name|XEON_DB_LINK_BIT
+value|(1<< XEON_DB_LINK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_SPAD_COUNT
+value|16
 end_define
 
 begin_define
@@ -344,13 +337,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOC_MSIX_CNT
-value|34
-end_define
-
-begin_define
-define|#
-directive|define
 name|SOC_MAX_MW
 value|2
 end_define
@@ -358,22 +344,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOC_MAX_SPADS
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOC_MAX_DB_BITS
+name|SOC_DB_COUNT
 value|34
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_DB_BITS_PER_VEC
+name|SOC_DB_MSIX_VECTOR_COUNT
+value|34
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOC_DB_MSIX_VECTOR_SHIFT
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOC_SPAD_COUNT
+value|16
 end_define
 
 begin_define
@@ -768,56 +761,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBAR01_USD_ADDR
+name|XEON_B2B_BAR0_USD_ADDR
 value|0x2100000cull
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBAR23_USD_ADDR
+name|XEON_B2B_BAR2_USD_ADDR
 value|0x4100000cull
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBAR4_USD_ADDR
+name|XEON_B2B_BAR4_USD_ADDR
 value|0x8100000cull
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBAR5_USD_ADDR
+name|XEON_B2B_BAR5_USD_ADDR
 value|0xa100000cull
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBAR01_DSD_ADDR
+name|XEON_B2B_BAR0_DSD_ADDR
 value|0x2000000cull
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBAR23_DSD_ADDR
+name|XEON_B2B_BAR2_DSD_ADDR
 value|0x4000000cull
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBAR4_DSD_ADDR
+name|XEON_B2B_BAR4_DSD_ADDR
 value|0x8000000cull
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBAR5_DSD_ADDR
+name|XEON_B2B_BAR5_DSD_ADDR
 value|0xa000000cull
 end_define
 

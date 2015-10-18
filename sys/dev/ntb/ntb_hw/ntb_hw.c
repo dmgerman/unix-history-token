@@ -178,7 +178,7 @@ begin_define
 define|#
 directive|define
 name|MAX_MSIX_INTERRUPTS
-value|MAX(XEON_MAX_DB_BITS, SOC_MAX_DB_BITS)
+value|MAX(XEON_DB_COUNT, SOC_DB_COUNT)
 end_define
 
 begin_define
@@ -1285,7 +1285,7 @@ literal|"JSF Xeon C35xx/C55xx Non-Transparent Bridge B2B"
 block|,
 name|NTB_XEON
 block|,
-name|NTB_REGS_THRU_MW
+name|NTB_SDOORBELL_LOCKUP
 operator||
 name|NTB_B2BDOORBELL_BIT14
 block|}
@@ -1297,7 +1297,7 @@ literal|"SNB Xeon E5/Core i7 Non-Transparent Bridge B2B"
 block|,
 name|NTB_XEON
 block|,
-name|NTB_REGS_THRU_MW
+name|NTB_SDOORBELL_LOCKUP
 operator||
 name|NTB_B2BDOORBELL_BIT14
 block|}
@@ -1309,7 +1309,7 @@ literal|"IVT Xeon E5 V2 Non-Transparent Bridge B2B"
 block|,
 name|NTB_XEON
 block|,
-name|NTB_REGS_THRU_MW
+name|NTB_SDOORBELL_LOCKUP
 operator||
 name|NTB_B2BDOORBELL_BIT14
 operator||
@@ -1325,7 +1325,7 @@ literal|"HSX Xeon E5 V3 Non-Transparent Bridge B2B"
 block|,
 name|NTB_XEON
 block|,
-name|NTB_REGS_THRU_MW
+name|NTB_SDOORBELL_LOCKUP
 operator||
 name|NTB_B2BDOORBELL_BIT14
 operator||
@@ -1339,7 +1339,7 @@ literal|"BDX Xeon E5 V4 Non-Transparent Bridge B2B"
 block|,
 name|NTB_XEON
 block|,
-name|NTB_REGS_THRU_MW
+name|NTB_SDOORBELL_LOCKUP
 operator||
 name|NTB_B2BDOORBELL_BIT14
 operator||
@@ -1930,7 +1930,7 @@ if|if
 condition|(
 name|HAS_FEATURE
 argument_list|(
-name|NTB_REGS_THRU_MW
+name|NTB_SDOORBELL_LOCKUP
 argument_list|)
 operator|&&
 operator|!
@@ -2005,7 +2005,7 @@ if|if
 condition|(
 name|HAS_FEATURE
 argument_list|(
-name|NTB_REGS_THRU_MW
+name|NTB_SDOORBELL_LOCKUP
 argument_list|)
 condition|)
 name|rc
@@ -3176,7 +3176,7 @@ operator|=
 operator|(
 literal|1
 operator|<<
-name|XEON_LINK_DB
+name|XEON_DB_LINK
 operator|)
 expr_stmt|;
 name|db_iowrite
@@ -4174,7 +4174,7 @@ name|ldb
 argument_list|,
 literal|1
 operator|<<
-name|XEON_LINK_DB
+name|XEON_DB_LINK
 argument_list|)
 expr_stmt|;
 block|}
@@ -4228,7 +4228,7 @@ operator|&&
 operator|(
 name|ldb
 operator|&
-name|XEON_DB_HW_LINK
+name|XEON_DB_LINK_BIT
 operator|)
 operator|!=
 literal|0
@@ -4242,7 +4242,7 @@ expr_stmt|;
 name|ldb
 operator|&=
 operator|~
-name|XEON_DB_HW_LINK
+name|XEON_DB_LINK_BIT
 expr_stmt|;
 block|}
 while|while
@@ -4884,7 +4884,7 @@ block|{
 case|case
 name|NTB_CONN_B2B
 case|:
-comment|/* 		 * reg_ofs.rdb and reg_ofs.spad_remote are effectively ignored 		 * with the NTB_REGS_THRU_MW errata mode enabled.  (See 		 * ntb_ring_doorbell() and ntb_read/write_remote_spad().) 		 */
+comment|/* 		 * reg_ofs.rdb and reg_ofs.spad_remote are effectively ignored 		 * with the NTB_SDOORBELL_LOCKUP errata mode enabled.  (See 		 * ntb_ring_doorbell() and ntb_read/write_remote_spad().) 		 */
 name|ntb
 operator|->
 name|reg_ofs
@@ -4907,18 +4907,18 @@ name|limits
 operator|.
 name|max_spads
 operator|=
-name|XEON_MAX_SPADS
+name|XEON_SPAD_COUNT
 expr_stmt|;
 break|break;
 case|case
 name|NTB_CONN_RP
 case|:
-comment|/* 		 * Every Xeon today needs NTB_REGS_THRU_MW, so punt on RP for 		 * now. 		 */
+comment|/* 		 * Every Xeon today needs NTB_SDOORBELL_LOCKUP, so punt on RP for 		 * now. 		 */
 name|KASSERT
 argument_list|(
 name|HAS_FEATURE
 argument_list|(
-name|NTB_REGS_THRU_MW
+name|NTB_SDOORBELL_LOCKUP
 argument_list|)
 argument_list|,
 operator|(
@@ -4968,7 +4968,7 @@ if|if
 condition|(
 name|HAS_FEATURE
 argument_list|(
-name|NTB_REGS_THRU_MW
+name|NTB_SDOORBELL_LOCKUP
 argument_list|)
 condition|)
 block|{
@@ -5039,7 +5039,7 @@ name|limits
 operator|.
 name|max_db_bits
 operator|=
-name|XEON_MAX_DB_BITS
+name|XEON_DB_COUNT
 expr_stmt|;
 name|ntb
 operator|->
@@ -5047,13 +5047,13 @@ name|limits
 operator|.
 name|msix_cnt
 operator|=
-name|XEON_MSIX_CNT
+name|XEON_DB_MSIX_VECTOR_COUNT
 expr_stmt|;
 name|ntb
 operator|->
 name|bits_per_vector
 operator|=
-name|XEON_DB_BITS_PER_VEC
+name|XEON_DB_MSIX_VECTOR_SHIFT
 expr_stmt|;
 comment|/* 	 * HW Errata on bit 14 of b2bdoorbell register.  Writes will not be 	 * mirrored to the remote system.  Shrink the number of bits by one, 	 * since bit 14 is the last bit. 	 * 	 * On REGS_THRU_MW errata mode, we don't use the b2bdoorbell register 	 * anyway.  Nor for non-B2B connection types. 	 */
 if|if
@@ -5066,7 +5066,7 @@ operator|&&
 operator|!
 name|HAS_FEATURE
 argument_list|(
-name|NTB_REGS_THRU_MW
+name|NTB_SDOORBELL_LOCKUP
 argument_list|)
 operator|&&
 name|ntb
@@ -5081,7 +5081,7 @@ name|limits
 operator|.
 name|max_db_bits
 operator|=
-name|XEON_MAX_DB_BITS
+name|XEON_DB_COUNT
 operator|-
 literal|1
 expr_stmt|;
@@ -5260,7 +5260,7 @@ name|limits
 operator|.
 name|max_spads
 operator|=
-name|SOC_MAX_SPADS
+name|SOC_SPAD_COUNT
 expr_stmt|;
 name|ntb
 operator|->
@@ -5268,7 +5268,7 @@ name|limits
 operator|.
 name|max_db_bits
 operator|=
-name|SOC_MAX_DB_BITS
+name|SOC_DB_COUNT
 expr_stmt|;
 name|ntb
 operator|->
@@ -5276,13 +5276,13 @@ name|limits
 operator|.
 name|msix_cnt
 operator|=
-name|SOC_MSIX_CNT
+name|SOC_DB_MSIX_VECTOR_COUNT
 expr_stmt|;
 name|ntb
 operator|->
 name|bits_per_vector
 operator|=
-name|SOC_DB_BITS_PER_VEC
+name|SOC_DB_MSIX_VECTOR_SHIFT
 expr_stmt|;
 comment|/* 	 * FIXME - MSI-X bug on early SOC HW, remove once internal issue is 	 * resolved.  Mask transaction layer internal parity errors. 	 */
 name|pci_write_config
@@ -5367,7 +5367,7 @@ literal|8
 argument_list|,
 name|SOC_PBAR2XLAT_OFFSET
 argument_list|,
-name|MBAR23_DSD_ADDR
+name|XEON_B2B_BAR2_DSD_ADDR
 argument_list|)
 expr_stmt|;
 name|ntb_reg_write
@@ -5376,7 +5376,7 @@ literal|8
 argument_list|,
 name|SOC_PBAR4XLAT_OFFSET
 argument_list|,
-name|MBAR4_DSD_ADDR
+name|XEON_B2B_BAR4_DSD_ADDR
 argument_list|)
 expr_stmt|;
 name|ntb_reg_write
@@ -5385,7 +5385,7 @@ literal|8
 argument_list|,
 name|SOC_MBAR23_OFFSET
 argument_list|,
-name|MBAR23_USD_ADDR
+name|XEON_B2B_BAR2_USD_ADDR
 argument_list|)
 expr_stmt|;
 name|ntb_reg_write
@@ -5394,7 +5394,7 @@ literal|8
 argument_list|,
 name|SOC_MBAR45_OFFSET
 argument_list|,
-name|MBAR4_USD_ADDR
+name|XEON_B2B_BAR4_USD_ADDR
 argument_list|)
 expr_stmt|;
 block|}
@@ -5406,7 +5406,7 @@ literal|8
 argument_list|,
 name|SOC_PBAR2XLAT_OFFSET
 argument_list|,
-name|MBAR23_USD_ADDR
+name|XEON_B2B_BAR2_USD_ADDR
 argument_list|)
 expr_stmt|;
 name|ntb_reg_write
@@ -5415,7 +5415,7 @@ literal|8
 argument_list|,
 name|SOC_PBAR4XLAT_OFFSET
 argument_list|,
-name|MBAR4_USD_ADDR
+name|XEON_B2B_BAR4_USD_ADDR
 argument_list|)
 expr_stmt|;
 name|ntb_reg_write
@@ -5424,7 +5424,7 @@ literal|8
 argument_list|,
 name|SOC_MBAR23_OFFSET
 argument_list|,
-name|MBAR23_DSD_ADDR
+name|XEON_B2B_BAR2_DSD_ADDR
 argument_list|)
 expr_stmt|;
 name|ntb_reg_write
@@ -5433,7 +5433,7 @@ literal|8
 argument_list|,
 name|SOC_MBAR45_OFFSET
 argument_list|,
-name|MBAR4_DSD_ADDR
+name|XEON_B2B_BAR4_DSD_ADDR
 argument_list|)
 expr_stmt|;
 block|}
@@ -5466,14 +5466,14 @@ literal|8
 argument_list|,
 name|XEON_PBAR2XLAT_OFFSET
 argument_list|,
-name|MBAR23_DSD_ADDR
+name|XEON_B2B_BAR2_DSD_ADDR
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|HAS_FEATURE
 argument_list|(
-name|NTB_REGS_THRU_MW
+name|NTB_SDOORBELL_LOCKUP
 argument_list|)
 condition|)
 name|ntb_reg_write
@@ -5482,7 +5482,7 @@ literal|8
 argument_list|,
 name|XEON_PBAR4XLAT_OFFSET
 argument_list|,
-name|MBAR01_DSD_ADDR
+name|XEON_B2B_BAR0_DSD_ADDR
 argument_list|)
 expr_stmt|;
 else|else
@@ -5501,7 +5501,7 @@ literal|4
 argument_list|,
 name|XEON_PBAR4XLAT_OFFSET
 argument_list|,
-name|MBAR4_DSD_ADDR
+name|XEON_B2B_BAR4_DSD_ADDR
 argument_list|)
 expr_stmt|;
 name|ntb_reg_write
@@ -5510,7 +5510,7 @@ literal|4
 argument_list|,
 name|XEON_PBAR5XLAT_OFFSET
 argument_list|,
-name|MBAR5_DSD_ADDR
+name|XEON_B2B_BAR5_DSD_ADDR
 argument_list|)
 expr_stmt|;
 block|}
@@ -5521,7 +5521,7 @@ literal|8
 argument_list|,
 name|XEON_PBAR4XLAT_OFFSET
 argument_list|,
-name|MBAR4_DSD_ADDR
+name|XEON_B2B_BAR4_DSD_ADDR
 argument_list|)
 expr_stmt|;
 comment|/* 			 * B2B_XLAT_OFFSET is a 64-bit register but can only be 			 * written 32 bits at a time. 			 */
@@ -5531,7 +5531,7 @@ literal|4
 argument_list|,
 name|XEON_B2B_XLAT_OFFSETL
 argument_list|,
-name|MBAR01_DSD_ADDR
+name|XEON_B2B_BAR0_DSD_ADDR
 operator|&
 literal|0xffffffff
 argument_list|)
@@ -5542,7 +5542,7 @@ literal|4
 argument_list|,
 name|XEON_B2B_XLAT_OFFSETU
 argument_list|,
-name|MBAR01_DSD_ADDR
+name|XEON_B2B_BAR0_DSD_ADDR
 operator|>>
 literal|32
 argument_list|)
@@ -5554,7 +5554,7 @@ literal|8
 argument_list|,
 name|XEON_SBAR0BASE_OFFSET
 argument_list|,
-name|MBAR01_USD_ADDR
+name|XEON_B2B_BAR0_USD_ADDR
 argument_list|)
 expr_stmt|;
 name|ntb_reg_write
@@ -5563,7 +5563,7 @@ literal|8
 argument_list|,
 name|XEON_SBAR2BASE_OFFSET
 argument_list|,
-name|MBAR23_USD_ADDR
+name|XEON_B2B_BAR2_USD_ADDR
 argument_list|)
 expr_stmt|;
 if|if
@@ -5580,7 +5580,7 @@ literal|4
 argument_list|,
 name|XEON_SBAR4BASE_OFFSET
 argument_list|,
-name|MBAR4_USD_ADDR
+name|XEON_B2B_BAR4_USD_ADDR
 argument_list|)
 expr_stmt|;
 name|ntb_reg_write
@@ -5589,7 +5589,7 @@ literal|4
 argument_list|,
 name|XEON_SBAR5BASE_OFFSET
 argument_list|,
-name|MBAR5_USD_ADDR
+name|XEON_B2B_BAR5_USD_ADDR
 argument_list|)
 expr_stmt|;
 block|}
@@ -5600,7 +5600,7 @@ literal|8
 argument_list|,
 name|XEON_SBAR4BASE_OFFSET
 argument_list|,
-name|MBAR4_USD_ADDR
+name|XEON_B2B_BAR4_USD_ADDR
 argument_list|)
 expr_stmt|;
 block|}
@@ -5612,14 +5612,14 @@ literal|8
 argument_list|,
 name|XEON_PBAR2XLAT_OFFSET
 argument_list|,
-name|MBAR23_USD_ADDR
+name|XEON_B2B_BAR2_USD_ADDR
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|HAS_FEATURE
 argument_list|(
-name|NTB_REGS_THRU_MW
+name|NTB_SDOORBELL_LOCKUP
 argument_list|)
 condition|)
 name|ntb_reg_write
@@ -5628,7 +5628,7 @@ literal|8
 argument_list|,
 name|XEON_PBAR4XLAT_OFFSET
 argument_list|,
-name|MBAR01_USD_ADDR
+name|XEON_B2B_BAR0_USD_ADDR
 argument_list|)
 expr_stmt|;
 else|else
@@ -5647,7 +5647,7 @@ literal|4
 argument_list|,
 name|XEON_PBAR4XLAT_OFFSET
 argument_list|,
-name|MBAR4_USD_ADDR
+name|XEON_B2B_BAR4_USD_ADDR
 argument_list|)
 expr_stmt|;
 name|ntb_reg_write
@@ -5656,7 +5656,7 @@ literal|4
 argument_list|,
 name|XEON_PBAR5XLAT_OFFSET
 argument_list|,
-name|MBAR5_USD_ADDR
+name|XEON_B2B_BAR5_USD_ADDR
 argument_list|)
 expr_stmt|;
 block|}
@@ -5667,7 +5667,7 @@ literal|8
 argument_list|,
 name|XEON_PBAR4XLAT_OFFSET
 argument_list|,
-name|MBAR4_USD_ADDR
+name|XEON_B2B_BAR4_USD_ADDR
 argument_list|)
 expr_stmt|;
 comment|/* 			 * B2B_XLAT_OFFSET is a 64-bit register but can only be 			 * written 32 bits at a time. 			 */
@@ -5677,7 +5677,7 @@ literal|4
 argument_list|,
 name|XEON_B2B_XLAT_OFFSETL
 argument_list|,
-name|MBAR01_USD_ADDR
+name|XEON_B2B_BAR0_USD_ADDR
 operator|&
 literal|0xffffffff
 argument_list|)
@@ -5688,7 +5688,7 @@ literal|4
 argument_list|,
 name|XEON_B2B_XLAT_OFFSETU
 argument_list|,
-name|MBAR01_USD_ADDR
+name|XEON_B2B_BAR0_USD_ADDR
 operator|>>
 literal|32
 argument_list|)
@@ -5700,7 +5700,7 @@ literal|8
 argument_list|,
 name|XEON_SBAR0BASE_OFFSET
 argument_list|,
-name|MBAR01_DSD_ADDR
+name|XEON_B2B_BAR0_DSD_ADDR
 argument_list|)
 expr_stmt|;
 name|ntb_reg_write
@@ -5709,7 +5709,7 @@ literal|8
 argument_list|,
 name|XEON_SBAR2BASE_OFFSET
 argument_list|,
-name|MBAR23_DSD_ADDR
+name|XEON_B2B_BAR2_DSD_ADDR
 argument_list|)
 expr_stmt|;
 if|if
@@ -5726,7 +5726,7 @@ literal|4
 argument_list|,
 name|XEON_SBAR4BASE_OFFSET
 argument_list|,
-name|MBAR4_DSD_ADDR
+name|XEON_B2B_BAR4_DSD_ADDR
 argument_list|)
 expr_stmt|;
 name|ntb_reg_write
@@ -5735,7 +5735,7 @@ literal|4
 argument_list|,
 name|XEON_SBAR5BASE_OFFSET
 argument_list|,
-name|MBAR5_DSD_ADDR
+name|XEON_B2B_BAR5_DSD_ADDR
 argument_list|)
 expr_stmt|;
 block|}
@@ -5746,7 +5746,7 @@ literal|8
 argument_list|,
 name|XEON_SBAR4BASE_OFFSET
 argument_list|,
-name|MBAR4_DSD_ADDR
+name|XEON_B2B_BAR4_DSD_ADDR
 argument_list|)
 expr_stmt|;
 block|}
@@ -7466,7 +7466,7 @@ if|if
 condition|(
 name|HAS_FEATURE
 argument_list|(
-name|NTB_REGS_THRU_MW
+name|NTB_SDOORBELL_LOCKUP
 argument_list|)
 condition|)
 name|ntb_mw_write
@@ -7549,7 +7549,7 @@ if|if
 condition|(
 name|HAS_FEATURE
 argument_list|(
-name|NTB_REGS_THRU_MW
+name|NTB_SDOORBELL_LOCKUP
 argument_list|)
 condition|)
 operator|*
@@ -7917,7 +7917,7 @@ if|if
 condition|(
 name|HAS_FEATURE
 argument_list|(
-name|NTB_REGS_THRU_MW
+name|NTB_SDOORBELL_LOCKUP
 argument_list|)
 condition|)
 block|{
