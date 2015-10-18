@@ -21,6 +21,12 @@ directive|include
 file|<machine/bus.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INTRNG
+end_ifndef
+
 begin_comment
 comment|/* Max interrupt number */
 end_comment
@@ -47,6 +53,11 @@ name|pin
 parameter_list|)
 value|(pin)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Bus space tag. XXX endianess info needs to be derived from the blob.  */
