@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -3345,9 +3345,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|zfs_prop_get
 argument_list|(
 name|zhp
@@ -3370,7 +3369,24 @@ literal|0
 argument_list|,
 name|B_FALSE
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|zfs_close
+argument_list|(
+name|zhp
+argument_list|)
 expr_stmt|;
+name|zhp
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|strncmp
