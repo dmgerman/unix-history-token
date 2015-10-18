@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2013 Intel Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (C) 2013 Intel Corporation  * Copyright (C) 2015 EMC Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -762,56 +762,81 @@ begin_define
 define|#
 directive|define
 name|XEON_B2B_BAR0_USD_ADDR
-value|0x2100000cull
+value|0x1000000000000000ull
 end_define
 
 begin_define
 define|#
 directive|define
-name|XEON_B2B_BAR2_USD_ADDR
-value|0x4100000cull
+name|XEON_B2B_BAR2_USD_ADDR64
+value|0x2000000000000000ull
 end_define
 
 begin_define
 define|#
 directive|define
-name|XEON_B2B_BAR4_USD_ADDR
-value|0x8100000cull
+name|XEON_B2B_BAR4_USD_ADDR64
+value|0x4000000000000000ull
 end_define
 
 begin_define
 define|#
 directive|define
-name|XEON_B2B_BAR5_USD_ADDR
-value|0xa100000cull
+name|XEON_B2B_BAR4_USD_ADDR32
+value|0x20000000ull
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_B2B_BAR5_USD_ADDR32
+value|0x40000000ull
 end_define
 
 begin_define
 define|#
 directive|define
 name|XEON_B2B_BAR0_DSD_ADDR
-value|0x2000000cull
+value|0x9000000000000000ull
 end_define
 
 begin_define
 define|#
 directive|define
-name|XEON_B2B_BAR2_DSD_ADDR
-value|0x4000000cull
+name|XEON_B2B_BAR2_DSD_ADDR64
+value|0xa000000000000000ull
 end_define
 
 begin_define
 define|#
 directive|define
-name|XEON_B2B_BAR4_DSD_ADDR
-value|0x8000000cull
+name|XEON_B2B_BAR4_DSD_ADDR64
+value|0xc000000000000000ull
 end_define
 
 begin_define
 define|#
 directive|define
-name|XEON_B2B_BAR5_DSD_ADDR
-value|0xa000000cull
+name|XEON_B2B_BAR4_DSD_ADDR32
+value|0xa0000000ull
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_B2B_BAR5_DSD_ADDR32
+value|0xc0000000ull
+end_define
+
+begin_comment
+comment|/* The peer ntb secondary config space is 32KB fixed size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEON_B2B_MIN_SIZE
+value|0x8000
 end_define
 
 begin_comment
