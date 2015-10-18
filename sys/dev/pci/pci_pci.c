@@ -9558,7 +9558,7 @@ decl_stmt|;
 name|int
 name|intnum
 decl_stmt|;
-comment|/*	      *      * The PCI standard defines a swizzle of the child-side device/intpin to      * the parent-side intpin as follows.      *      * device = device on child bus      * child_intpin = intpin on child bus slot (0-3)      * parent_intpin = intpin on parent bus slot (0-3)      *      * parent_intpin = (device + child_intpin) % 4      */
+comment|/*      *      * The PCI standard defines a swizzle of the child-side device/intpin to      * the parent-side intpin as follows.      *      * device = device on child bus      * child_intpin = intpin on child bus slot (0-3)      * parent_intpin = intpin on parent bus slot (0-3)      *      * parent_intpin = (device + child_intpin) % 4      */
 name|parent_intpin
 operator|=
 operator|(
