@@ -1267,7 +1267,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* jumbo cluster 4096 bytes */
+comment|/* jumbo cluster page sized */
 end_comment
 
 begin_define
