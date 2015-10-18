@@ -26,6 +26,8 @@ block|,
 name|MD_VNODE
 block|,
 name|MD_SWAP
+block|,
+name|MD_NULL
 block|}
 enum|;
 end_enum

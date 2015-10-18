@@ -737,6 +737,35 @@ operator||
 name|MD_COMPRESS
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"null"
+argument_list|)
+condition|)
+block|{
+name|mdio
+operator|.
+name|md_type
+operator|=
+name|MD_NULL
+expr_stmt|;
+name|mdio
+operator|.
+name|md_options
+operator||=
+name|MD_CLUSTER
+operator||
+name|MD_AUTOUNIT
+operator||
+name|MD_COMPRESS
+expr_stmt|;
+block|}
 else|else
 name|errx
 argument_list|(
@@ -1541,6 +1570,12 @@ operator|.
 name|md_type
 operator|==
 name|MD_SWAP
+operator|||
+name|mdio
+operator|.
+name|md_type
+operator|==
+name|MD_NULL
 operator|)
 operator|&&
 name|sflag
@@ -1551,7 +1586,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"must specify -s for -t malloc or -t swap"
+literal|"must specify -s for -t malloc, -t swap, "
+literal|"or -t null"
 argument_list|)
 expr_stmt|;
 if|if
