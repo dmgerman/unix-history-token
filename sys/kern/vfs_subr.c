@@ -12200,6 +12200,7 @@ comment|/*  * vgone, with the vp interlock held.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|vgonel
 parameter_list|(
