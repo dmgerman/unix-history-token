@@ -5297,6 +5297,8 @@ name|zoned
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|msg
 argument_list|)
 operator|)
@@ -5452,6 +5454,34 @@ argument_list|(
 name|hdl
 argument_list|,
 name|EZFS_BADDEV
+argument_list|,
+name|msg
+argument_list|)
+operator|)
+return|;
+case|case
+name|ERANGE
+case|:
+comment|/* 			 * This happens if the record size is smaller or larger 			 * than the allowed size range, or not a power of 2. 			 * 			 * NOTE: although zfs_valid_proplist is called earlier, 			 * this case may have slipped through since the 			 * pool does not exist yet and it is therefore 			 * impossible to read properties e.g. max blocksize 			 * from the pool. 			 */
+name|zfs_error_aux
+argument_list|(
+name|hdl
+argument_list|,
+name|dgettext
+argument_list|(
+name|TEXT_DOMAIN
+argument_list|,
+literal|"record size invalid"
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|zfs_error
+argument_list|(
+name|hdl
+argument_list|,
+name|EZFS_BADPROP
 argument_list|,
 name|msg
 argument_list|)
