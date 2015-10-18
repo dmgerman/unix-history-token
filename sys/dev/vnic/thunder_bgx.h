@@ -90,21 +90,21 @@ begin_define
 define|#
 directive|define
 name|CMR_PKT_TX_EN
-value|BIT_ULL(13)
+value|(1UL<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CMR_PKT_RX_EN
-value|BIT_ULL(14)
+value|(1UL<< 14)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CMR_EN
-value|BIT_ULL(15)
+value|(1UL<< 15)
 end_define
 
 begin_define
@@ -118,7 +118,7 @@ begin_define
 define|#
 directive|define
 name|CMR_GLOBAL_CFG_FCS_STRIP
-value|BIT_ULL(6)
+value|(1UL<< 6)
 end_define
 
 begin_define
@@ -230,7 +230,7 @@ begin_define
 define|#
 directive|define
 name|RX_DMACX_CAM_EN
-value|BIT_ULL(48)
+value|(1UL<< 48)
 end_define
 
 begin_define
@@ -429,21 +429,21 @@ begin_define
 define|#
 directive|define
 name|SPU_CTL_LOW_POWER
-value|BIT_ULL(11)
+value|(1UL<< 11)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SPU_CTL_LOOPBACK
-value|BIT_ULL(14)
+value|(1UL<< 14)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SPU_CTL_RESET
-value|BIT_ULL(15)
+value|(1UL<< 15)
 end_define
 
 begin_define
@@ -457,7 +457,7 @@ begin_define
 define|#
 directive|define
 name|SPU_STATUS1_RCV_LNK
-value|BIT_ULL(2)
+value|(1UL<< 2)
 end_define
 
 begin_define
@@ -471,7 +471,7 @@ begin_define
 define|#
 directive|define
 name|SPU_STATUS2_RCVFLT
-value|BIT_ULL(10)
+value|(1UL<< 10)
 end_define
 
 begin_define
@@ -485,7 +485,7 @@ begin_define
 define|#
 directive|define
 name|SPU_BX_STATUS_RX_ALIGN
-value|BIT_ULL(12)
+value|(1UL<< 12)
 end_define
 
 begin_define
@@ -499,14 +499,14 @@ begin_define
 define|#
 directive|define
 name|SPU_BR_STATUS_BLK_LOCK
-value|BIT_ULL(0)
+value|(1UL<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SPU_BR_STATUS_RCV_LNK
-value|BIT_ULL(12)
+value|(1UL<< 12)
 end_define
 
 begin_define
@@ -520,7 +520,7 @@ begin_define
 define|#
 directive|define
 name|SPU_PMD_CRTL_TRAIN_EN
-value|BIT_ULL(1)
+value|(1UL<< 1)
 end_define
 
 begin_define
@@ -555,14 +555,14 @@ begin_define
 define|#
 directive|define
 name|SPU_FEC_CTL_FEC_EN
-value|BIT_ULL(0)
+value|(1UL<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SPU_FEC_CTL_ERR_EN
-value|BIT_ULL(1)
+value|(1UL<< 1)
 end_define
 
 begin_define
@@ -576,14 +576,14 @@ begin_define
 define|#
 directive|define
 name|SPU_AN_CTL_AN_EN
-value|BIT_ULL(12)
+value|(1UL<< 12)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SPU_AN_CTL_XNP_EN
-value|BIT_ULL(13)
+value|(1UL<< 13)
 end_define
 
 begin_define
@@ -604,14 +604,14 @@ begin_define
 define|#
 directive|define
 name|SPU_MISC_CTL_INTLV_RDISP
-value|BIT_ULL(10)
+value|(1UL<< 10)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SPU_MISC_CTL_RX_DIS
-value|BIT_ULL(12)
+value|(1UL<< 12)
 end_define
 
 begin_define
@@ -657,14 +657,14 @@ begin_define
 define|#
 directive|define
 name|SPU_DBG_CTL_AN_ARB_LINK_CHK_EN
-value|BIT_ULL(18)
+value|(1UL<< 18)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SPU_DBG_CTL_AN_NONCE_MCT_DIS
-value|BIT_ULL(29)
+value|(1UL<< 29)
 end_define
 
 begin_define
@@ -692,7 +692,7 @@ begin_define
 define|#
 directive|define
 name|SMU_RX_CTL_STATUS
-value|(3ull<< 0)
+value|(3UL<< 0)
 end_define
 
 begin_define
@@ -706,7 +706,7 @@ begin_define
 define|#
 directive|define
 name|SMU_TX_APPEND_FCS_D
-value|BIT_ULL(2)
+value|(1UL<< 2)
 end_define
 
 begin_define
@@ -734,21 +734,21 @@ begin_define
 define|#
 directive|define
 name|SMU_TX_CTL_DIC_EN
-value|BIT_ULL(0)
+value|(1UL<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SMU_TX_CTL_UNI_EN
-value|BIT_ULL(1)
+value|(1UL<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SMU_TX_CTL_LNK_STATUS
-value|(3ull<< 4)
+value|(3UL<< 4)
 end_define
 
 begin_define
@@ -769,14 +769,14 @@ begin_define
 define|#
 directive|define
 name|SMU_CTL_RX_IDLE
-value|BIT_ULL(0)
+value|(1UL<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SMU_CTL_TX_IDLE
-value|BIT_ULL(1)
+value|(1UL<< 1)
 end_define
 
 begin_define
@@ -790,35 +790,35 @@ begin_define
 define|#
 directive|define
 name|PCS_MRX_CTL_RST_AN
-value|BIT_ULL(9)
+value|(1UL<< 9)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCS_MRX_CTL_PWR_DN
-value|BIT_ULL(11)
+value|(1UL<< 11)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCS_MRX_CTL_AN_EN
-value|BIT_ULL(12)
+value|(1UL<< 12)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCS_MRX_CTL_LOOPBACK1
-value|BIT_ULL(14)
+value|(1UL<< 14)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCS_MRX_CTL_RESET
-value|BIT_ULL(15)
+value|(1UL<< 15)
 end_define
 
 begin_define
@@ -832,7 +832,7 @@ begin_define
 define|#
 directive|define
 name|PCS_MRX_STATUS_AN_CPT
-value|BIT_ULL(5)
+value|(1UL<< 5)
 end_define
 
 begin_define
@@ -860,14 +860,14 @@ begin_define
 define|#
 directive|define
 name|PCS_MISC_CTL_GMX_ENO
-value|BIT_ULL(11)
+value|(1UL<< 11)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCS_MISC_CTL_SAMP_PT_MASK
-value|0x7Full
+value|0x7FUL
 end_define
 
 begin_define
@@ -881,28 +881,28 @@ begin_define
 define|#
 directive|define
 name|GMI_PORT_CFG_SPEED
-value|BIT_ULL(1)
+value|(1UL<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|GMI_PORT_CFG_DUPLEX
-value|BIT_ULL(2)
+value|(1UL<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|GMI_PORT_CFG_SLOT_TIME
-value|BIT_ULL(3)
+value|(1UL<< 3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|GMI_PORT_CFG_SPEED_MSB
-value|BIT_ULL(8)
+value|(1UL<< 8)
 end_define
 
 begin_define
@@ -1071,14 +1071,14 @@ begin_define
 define|#
 directive|define
 name|LMAC_INTR_LINK_UP
-value|BIT(0)
+value|(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LMAC_INTR_LINK_DOWN
-value|BIT(1)
+value|(1<< 1)
 end_define
 
 begin_comment
@@ -1127,7 +1127,7 @@ begin_function_decl
 name|void
 name|bgx_add_dmac_addr
 parameter_list|(
-name|u64
+name|uint64_t
 name|dmac
 parameter_list|,
 name|int
@@ -1167,7 +1167,7 @@ end_function_decl
 
 begin_function_decl
 specifier|const
-name|u8
+name|uint8_t
 modifier|*
 name|bgx_get_lmac_mac
 parameter_list|(
@@ -1197,7 +1197,7 @@ name|int
 name|lmacid
 parameter_list|,
 specifier|const
-name|u8
+name|uint8_t
 modifier|*
 name|mac
 parameter_list|)
@@ -1237,14 +1237,14 @@ parameter_list|,
 name|int
 name|lmac_idx
 parameter_list|,
-name|bool
+name|boolean_t
 name|enable
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u64
+name|uint64_t
 name|bgx_get_rx_stats
 parameter_list|(
 name|int
@@ -1263,7 +1263,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u64
+name|uint64_t
 name|bgx_get_tx_stats
 parameter_list|(
 name|int
@@ -1299,13 +1299,13 @@ begin_struct
 struct|struct
 name|bgx_stats
 block|{
-name|u64
+name|uint64_t
 name|rx_stats
 index|[
 name|BGX_RX_STATS_COUNT
 index|]
 decl_stmt|;
-name|u64
+name|uint64_t
 name|tx_stats
 index|[
 name|BGX_TX_STATS_COUNT

@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<linux/netdevice.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"q_struct.h"
 end_include
 
@@ -109,7 +103,7 @@ parameter_list|(
 name|irq
 parameter_list|)
 define|\
-value|for (irq = NICVF_INTR_ID_CQ; irq< NICVF_INTR_ID_SQ; irq++)
+value|for ((irq) = NICVF_INTR_ID_CQ; (irq)< NICVF_INTR_ID_SQ; (irq)++)
 end_define
 
 begin_define
@@ -120,7 +114,7 @@ parameter_list|(
 name|irq
 parameter_list|)
 define|\
-value|for (irq = NICVF_INTR_ID_SQ; irq< NICVF_INTR_ID_RBDR; irq++)
+value|for ((irq) = NICVF_INTR_ID_SQ; (irq)< NICVF_INTR_ID_RBDR; (irq)++)
 end_define
 
 begin_define
@@ -131,14 +125,14 @@ parameter_list|(
 name|irq
 parameter_list|)
 define|\
-value|for (irq = NICVF_INTR_ID_RBDR; irq< NICVF_INTR_ID_MISC; irq++)
+value|for ((irq) = NICVF_INTR_ID_RBDR; (irq)< NICVF_INTR_ID_MISC; (irq)++)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RBDR_SIZE0
-value|0ULL
+value|0UL
 end_define
 
 begin_comment
@@ -149,7 +143,7 @@ begin_define
 define|#
 directive|define
 name|RBDR_SIZE1
-value|1ULL
+value|1UL
 end_define
 
 begin_comment
@@ -160,7 +154,7 @@ begin_define
 define|#
 directive|define
 name|RBDR_SIZE2
-value|2ULL
+value|2UL
 end_define
 
 begin_comment
@@ -171,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|RBDR_SIZE3
-value|3ULL
+value|3UL
 end_define
 
 begin_comment
@@ -182,7 +176,7 @@ begin_define
 define|#
 directive|define
 name|RBDR_SIZE4
-value|4ULL
+value|4UL
 end_define
 
 begin_comment
@@ -193,7 +187,7 @@ begin_define
 define|#
 directive|define
 name|RBDR_SIZE5
-value|5ULL
+value|5UL
 end_define
 
 begin_comment
@@ -204,7 +198,7 @@ begin_define
 define|#
 directive|define
 name|RBDR_SIZE6
-value|6ULL
+value|6UL
 end_define
 
 begin_comment
@@ -215,7 +209,7 @@ begin_define
 define|#
 directive|define
 name|SND_QUEUE_SIZE0
-value|0ULL
+value|0UL
 end_define
 
 begin_comment
@@ -226,7 +220,7 @@ begin_define
 define|#
 directive|define
 name|SND_QUEUE_SIZE1
-value|1ULL
+value|1UL
 end_define
 
 begin_comment
@@ -237,7 +231,7 @@ begin_define
 define|#
 directive|define
 name|SND_QUEUE_SIZE2
-value|2ULL
+value|2UL
 end_define
 
 begin_comment
@@ -248,7 +242,7 @@ begin_define
 define|#
 directive|define
 name|SND_QUEUE_SIZE3
-value|3ULL
+value|3UL
 end_define
 
 begin_comment
@@ -259,7 +253,7 @@ begin_define
 define|#
 directive|define
 name|SND_QUEUE_SIZE4
-value|4ULL
+value|4UL
 end_define
 
 begin_comment
@@ -270,7 +264,7 @@ begin_define
 define|#
 directive|define
 name|SND_QUEUE_SIZE5
-value|5ULL
+value|5UL
 end_define
 
 begin_comment
@@ -281,7 +275,7 @@ begin_define
 define|#
 directive|define
 name|SND_QUEUE_SIZE6
-value|6ULL
+value|6UL
 end_define
 
 begin_comment
@@ -292,7 +286,7 @@ begin_define
 define|#
 directive|define
 name|CMP_QUEUE_SIZE0
-value|0ULL
+value|0UL
 end_define
 
 begin_comment
@@ -303,7 +297,7 @@ begin_define
 define|#
 directive|define
 name|CMP_QUEUE_SIZE1
-value|1ULL
+value|1UL
 end_define
 
 begin_comment
@@ -314,7 +308,7 @@ begin_define
 define|#
 directive|define
 name|CMP_QUEUE_SIZE2
-value|2ULL
+value|2UL
 end_define
 
 begin_comment
@@ -325,7 +319,7 @@ begin_define
 define|#
 directive|define
 name|CMP_QUEUE_SIZE3
-value|3ULL
+value|3UL
 end_define
 
 begin_comment
@@ -336,7 +330,7 @@ begin_define
 define|#
 directive|define
 name|CMP_QUEUE_SIZE4
-value|4ULL
+value|4UL
 end_define
 
 begin_comment
@@ -347,7 +341,7 @@ begin_define
 define|#
 directive|define
 name|CMP_QUEUE_SIZE5
-value|5ULL
+value|5UL
 end_define
 
 begin_comment
@@ -358,7 +352,7 @@ begin_define
 define|#
 directive|define
 name|CMP_QUEUE_SIZE6
-value|6ULL
+value|6UL
 end_define
 
 begin_comment
@@ -412,21 +406,21 @@ begin_define
 define|#
 directive|define
 name|SND_QUEUE_LEN
-value|(1ULL<< (SND_QSIZE + 10))
+value|(1UL<< (SND_QSIZE + 10))
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAX_SND_QUEUE_LEN
-value|(1ULL<< (SND_QUEUE_SIZE6 + 10))
+value|(1UL<< (SND_QUEUE_SIZE6 + 10))
 end_define
 
 begin_define
 define|#
 directive|define
 name|SND_QUEUE_THRESH
-value|2ULL
+value|2UL
 end_define
 
 begin_define
@@ -448,7 +442,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Keep CQ and SQ sizes same, if timestamping  * is enabled this equation will change.  */
+comment|/*  * Keep CQ and SQ sizes same, if timestamping  * is enabled this equation will change.  */
 end_comment
 
 begin_define
@@ -462,7 +456,7 @@ begin_define
 define|#
 directive|define
 name|CMP_QUEUE_LEN
-value|(1ULL<< (CMP_QSIZE + 10))
+value|(1UL<< (CMP_QSIZE + 10))
 end_define
 
 begin_define
@@ -494,14 +488,14 @@ begin_define
 define|#
 directive|define
 name|RCV_BUF_COUNT
-value|(1ULL<< (RBDR_SIZE + 13))
+value|(1UL<< (RBDR_SIZE + 13))
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAX_RCV_BUF_COUNT
-value|(1ULL<< (RBDR_SIZE6 + 13))
+value|(1UL<< (RBDR_SIZE6 + 13))
 end_define
 
 begin_define
@@ -525,22 +519,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RCV_FRAG_LEN
-value|(SKB_DATA_ALIGN(DMA_BUFFER_LEN + NET_SKB_PAD) + \ 			 SKB_DATA_ALIGN(sizeof(struct skb_shared_info)) + \ 			 (NICVF_RCV_BUF_ALIGN_BYTES * 2))
-end_define
-
-begin_define
-define|#
-directive|define
-name|RCV_DATA_OFFSET
-value|NICVF_RCV_BUF_ALIGN_BYTES
-end_define
-
-begin_define
-define|#
-directive|define
 name|MAX_CQES_FOR_TX
-value|((SND_QUEUE_LEN / MIN_SQ_DESC_PER_PKT_XMIT) * \ 				 MAX_CQE_PER_PKT_XMIT)
+define|\
+value|((SND_QUEUE_LEN / MIN_SQ_DESC_PER_PKT_XMIT) * MAX_CQE_PER_PKT_XMIT)
 end_define
 
 begin_comment
@@ -551,7 +532,8 @@ begin_define
 define|#
 directive|define
 name|RQ_CQ_DROP
-value|((256 / (CMP_QUEUE_LEN / \ 				 (CMP_QUEUE_LEN - MAX_CQES_FOR_TX))) + 1)
+define|\
+value|((256 / (CMP_QUEUE_LEN / (CMP_QUEUE_LEN - MAX_CQES_FOR_TX))) + 1)
 end_define
 
 begin_comment
@@ -587,7 +569,7 @@ begin_define
 define|#
 directive|define
 name|NICVF_RCV_BUF_ALIGN_BYTES
-value|(1ULL<< NICVF_RCV_BUF_ALIGN)
+value|(1UL<< NICVF_RCV_BUF_ALIGN)
 end_define
 
 begin_define
@@ -617,11 +599,12 @@ define|#
 directive|define
 name|NICVF_ALIGNED_ADDR
 parameter_list|(
-name|ADDR
+name|addr
 parameter_list|,
-name|ALIGN_BYTES
+name|align_bytes
 parameter_list|)
-value|ALIGN(ADDR, ALIGN_BYTES)
+define|\
+value|roundup2((addr), (align_bytes))
 end_define
 
 begin_define
@@ -629,12 +612,12 @@ define|#
 directive|define
 name|NICVF_ADDR_ALIGN_LEN
 parameter_list|(
-name|ADDR
+name|addr
 parameter_list|,
-name|BYTES
+name|bytes
 parameter_list|)
 define|\
-value|(NICVF_ALIGNED_ADDR(ADDR, BYTES) - BYTES)
+value|(NICVF_ALIGNED_ADDR((addr), (bytes)) - (bytes))
 end_define
 
 begin_define
@@ -642,11 +625,33 @@ define|#
 directive|define
 name|NICVF_RCV_BUF_ALIGN_LEN
 parameter_list|(
-name|X
+name|addr
 parameter_list|)
 define|\
-value|(NICVF_ALIGNED_ADDR(X, NICVF_RCV_BUF_ALIGN_BYTES) - X)
+value|(NICVF_ALIGNED_ADDR((addr), NICVF_RCV_BUF_ALIGN_BYTES) - (addr))
 end_define
+
+begin_define
+define|#
+directive|define
+name|NICVF_TXBUF_MAXSIZE
+value|9212
+end_define
+
+begin_comment
+comment|/* Total max payload without TSO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NICVF_TXBUF_NSEGS
+value|256
+end_define
+
+begin_comment
+comment|/* Single command is at most 256 buffers 					   (hdr + 255 subcmds) */
+end_comment
 
 begin_comment
 comment|/* Queue enable/disable */
@@ -656,7 +661,7 @@ begin_define
 define|#
 directive|define
 name|NICVF_SQ_EN
-value|BIT_ULL(19)
+value|(1UL<< 19)
 end_define
 
 begin_comment
@@ -667,21 +672,21 @@ begin_define
 define|#
 directive|define
 name|NICVF_CQ_RESET
-value|BIT_ULL(41)
+value|(1UL<< 41)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NICVF_SQ_RESET
-value|BIT_ULL(17)
+value|(1UL<< 17)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NICVF_RBDR_RESET
-value|BIT_ULL(43)
+value|(1UL<< 43)
 end_define
 
 begin_enum
@@ -904,53 +909,56 @@ block|{
 struct|struct
 name|tx_stats
 block|{
-name|u64
+name|uint64_t
 name|good
 decl_stmt|;
-name|u64
+name|uint64_t
 name|desc_fault
 decl_stmt|;
-name|u64
+name|uint64_t
 name|hdr_cons_err
 decl_stmt|;
-name|u64
+name|uint64_t
 name|subdesc_err
 decl_stmt|;
-name|u64
+name|uint64_t
 name|imm_size_oflow
 decl_stmt|;
-name|u64
+name|uint64_t
 name|data_seq_err
 decl_stmt|;
-name|u64
+name|uint64_t
 name|mem_seq_err
 decl_stmt|;
-name|u64
+name|uint64_t
 name|lock_viol
 decl_stmt|;
-name|u64
+name|uint64_t
 name|data_fault
 decl_stmt|;
-name|u64
+name|uint64_t
 name|tstmp_conflict
 decl_stmt|;
-name|u64
+name|uint64_t
 name|tstmp_timeout
 decl_stmt|;
-name|u64
+name|uint64_t
 name|mem_fault
 decl_stmt|;
-name|u64
+name|uint64_t
 name|csum_overlap
 decl_stmt|;
-name|u64
+name|uint64_t
 name|csum_overflow
 decl_stmt|;
 block|}
 name|tx
 struct|;
 block|}
-name|____cacheline_aligned_in_smp
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 struct|;
 end_struct
 
@@ -969,14 +977,17 @@ begin_struct
 struct|struct
 name|rx_tx_queue_stats
 block|{
-name|u64
+name|uint64_t
 name|bytes
 decl_stmt|;
-name|u64
+name|uint64_t
 name|pkts
 decl_stmt|;
 block|}
-name|____cacheline_aligned_in_smp
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 struct|;
 end_struct
 
@@ -984,25 +995,24 @@ begin_struct
 struct|struct
 name|q_desc_mem
 block|{
-name|dma_addr_t
-name|dma
+name|bus_dma_tag_t
+name|dmat
 decl_stmt|;
-name|u64
-name|size
-decl_stmt|;
-name|u16
-name|q_len
-decl_stmt|;
-name|dma_addr_t
-name|phys_base
+name|bus_dmamap_t
+name|dmap
 decl_stmt|;
 name|void
 modifier|*
 name|base
 decl_stmt|;
-name|void
-modifier|*
-name|unalign_base
+name|bus_addr_t
+name|phys_base
+decl_stmt|;
+name|uint64_t
+name|size
+decl_stmt|;
+name|uint16_t
+name|q_len
 decl_stmt|;
 block|}
 struct|;
@@ -1012,16 +1022,16 @@ begin_struct
 struct|struct
 name|rbdr
 block|{
-name|bool
+name|boolean_t
 name|enable
 decl_stmt|;
-name|u32
+name|uint32_t
 name|dma_size
 decl_stmt|;
-name|u32
+name|uint32_t
 name|frag_len
 decl_stmt|;
-name|u32
+name|uint32_t
 name|thresh
 decl_stmt|;
 comment|/* Threshold level for interrupt */
@@ -1029,18 +1039,49 @@ name|void
 modifier|*
 name|desc
 decl_stmt|;
-name|u32
+name|uint32_t
 name|head
 decl_stmt|;
-name|u32
+name|uint32_t
 name|tail
 decl_stmt|;
 name|struct
 name|q_desc_mem
 name|dmem
 decl_stmt|;
+name|struct
+name|nicvf
+modifier|*
+name|nic
+decl_stmt|;
+name|int
+name|idx
+decl_stmt|;
+name|struct
+name|task
+name|rbdr_task
+decl_stmt|;
+name|struct
+name|task
+name|rbdr_task_nowait
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|rbdr_taskq
+decl_stmt|;
+name|bus_dma_tag_t
+name|rbdr_buff_dmat
+decl_stmt|;
+name|bus_dmamap_t
+modifier|*
+name|rbdr_buff_dmaps
+decl_stmt|;
 block|}
-name|____cacheline_aligned_in_smp
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 struct|;
 end_struct
 
@@ -1048,7 +1089,7 @@ begin_struct
 struct|struct
 name|rcv_queue
 block|{
-name|bool
+name|boolean_t
 name|enable
 decl_stmt|;
 name|struct
@@ -1061,34 +1102,34 @@ name|rbdr
 modifier|*
 name|rbdr_cont
 decl_stmt|;
-name|bool
+name|boolean_t
 name|en_tcp_reassembly
 decl_stmt|;
-name|u8
+name|uint8_t
 name|cq_qs
 decl_stmt|;
 comment|/* CQ's QS to which this RQ is assigned */
-name|u8
+name|uint8_t
 name|cq_idx
 decl_stmt|;
 comment|/* CQ index (0 to 7) in the QS */
-name|u8
+name|uint8_t
 name|cont_rbdr_qs
 decl_stmt|;
 comment|/* Continue buffer ptrs - QS num */
-name|u8
+name|uint8_t
 name|cont_qs_rbdr_idx
 decl_stmt|;
 comment|/* RBDR idx in the cont QS */
-name|u8
+name|uint8_t
 name|start_rbdr_qs
 decl_stmt|;
 comment|/* First buffer ptrs - QS num */
-name|u8
+name|uint8_t
 name|start_qs_rbdr_idx
 decl_stmt|;
 comment|/* RBDR idx in the above QS */
-name|u8
+name|uint8_t
 name|caching
 decl_stmt|;
 name|struct
@@ -1096,7 +1137,10 @@ name|rx_tx_queue_stats
 name|stats
 decl_stmt|;
 block|}
-name|____cacheline_aligned_in_smp
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 struct|;
 end_struct
 
@@ -1104,16 +1148,47 @@ begin_struct
 struct|struct
 name|cmp_queue
 block|{
-name|bool
+name|boolean_t
 name|enable
 decl_stmt|;
-name|u16
+name|uint16_t
 name|thresh
 decl_stmt|;
-name|spinlock_t
-name|lock
+name|struct
+name|nicvf
+modifier|*
+name|nic
+decl_stmt|;
+name|int
+name|idx
+decl_stmt|;
+comment|/* This queue index */
+name|struct
+name|buf_ring
+modifier|*
+name|rx_br
+decl_stmt|;
+comment|/* Reception buf ring */
+name|struct
+name|mtx
+name|mtx
 decl_stmt|;
 comment|/* lock to serialize processing CQEs */
+name|char
+name|mtx_name
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|struct
+name|task
+name|cmp_task
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|cmp_taskq
+decl_stmt|;
 name|void
 modifier|*
 name|desc
@@ -1130,7 +1205,26 @@ name|int
 name|irq
 decl_stmt|;
 block|}
-name|____cacheline_aligned_in_smp
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|snd_buff
+block|{
+name|bus_dmamap_t
+name|dmap
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|mbuf
+decl_stmt|;
+block|}
 struct|;
 end_struct
 
@@ -1138,36 +1232,79 @@ begin_struct
 struct|struct
 name|snd_queue
 block|{
-name|bool
+name|boolean_t
 name|enable
 decl_stmt|;
-name|u8
+name|uint8_t
 name|cq_qs
 decl_stmt|;
 comment|/* CQ's QS to which this SQ is pointing */
-name|u8
+name|uint8_t
 name|cq_idx
 decl_stmt|;
 comment|/* CQ index (0 to 7) in the above QS */
-name|u16
+name|uint16_t
 name|thresh
 decl_stmt|;
-name|atomic_t
+specifier|volatile
+name|int
 name|free_cnt
 decl_stmt|;
-name|u32
+name|uint32_t
 name|head
 decl_stmt|;
-name|u32
+name|uint32_t
 name|tail
 decl_stmt|;
-name|u64
+name|uint64_t
 modifier|*
 name|skbuff
 decl_stmt|;
 name|void
 modifier|*
 name|desc
+decl_stmt|;
+name|struct
+name|nicvf
+modifier|*
+name|nic
+decl_stmt|;
+name|int
+name|idx
+decl_stmt|;
+comment|/* This queue index */
+name|bus_dma_tag_t
+name|snd_buff_dmat
+decl_stmt|;
+name|struct
+name|snd_buff
+modifier|*
+name|snd_buff
+decl_stmt|;
+name|struct
+name|buf_ring
+modifier|*
+name|br
+decl_stmt|;
+comment|/* Transmission buf ring */
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
+name|char
+name|mtx_name
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|struct
+name|task
+name|snd_task
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|snd_taskq
 decl_stmt|;
 name|struct
 name|q_desc_mem
@@ -1178,7 +1315,10 @@ name|rx_tx_queue_stats
 name|stats
 decl_stmt|;
 block|}
-name|____cacheline_aligned_in_smp
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 struct|;
 end_struct
 
@@ -1186,34 +1326,34 @@ begin_struct
 struct|struct
 name|queue_set
 block|{
-name|bool
+name|boolean_t
 name|enable
 decl_stmt|;
-name|bool
+name|boolean_t
 name|be_en
 decl_stmt|;
-name|u8
+name|uint8_t
 name|vnic_id
 decl_stmt|;
-name|u8
+name|uint8_t
 name|rq_cnt
 decl_stmt|;
-name|u8
+name|uint8_t
 name|cq_cnt
 decl_stmt|;
-name|u64
+name|uint64_t
 name|cq_len
 decl_stmt|;
-name|u8
+name|uint8_t
 name|sq_cnt
 decl_stmt|;
-name|u64
+name|uint64_t
 name|sq_len
 decl_stmt|;
-name|u8
+name|uint8_t
 name|rbdr_cnt
 decl_stmt|;
-name|u64
+name|uint64_t
 name|rbdr_len
 decl_stmt|;
 name|struct
@@ -1244,8 +1384,20 @@ index|[
 name|MAX_RCV_BUF_DESC_RINGS_PER_QS
 index|]
 decl_stmt|;
+name|struct
+name|task
+name|qs_err_task
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|qs_err_taskq
+decl_stmt|;
 block|}
-name|____cacheline_aligned_in_smp
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 struct|;
 end_struct
 
@@ -1259,7 +1411,7 @@ parameter_list|,
 name|idx
 parameter_list|)
 define|\
-value|(&(((struct rbdr_entry_t *)((RING)->desc))[idx]))
+value|(&(((struct rbdr_entry_t *)((RING)->desc))[(idx)]))
 end_define
 
 begin_define
@@ -1272,7 +1424,7 @@ parameter_list|,
 name|idx
 parameter_list|)
 define|\
-value|(&(((struct sq_hdr_subdesc *)((RING)->desc))[idx]))
+value|(&(((struct sq_hdr_subdesc *)((RING)->desc))[(idx)]))
 end_define
 
 begin_define
@@ -1285,7 +1437,7 @@ parameter_list|,
 name|idx
 parameter_list|)
 define|\
-value|(&(((union cq_desc_t *)((RING)->desc))[idx]))
+value|(&(((union cq_desc_t *)((RING)->desc))[(idx)]))
 end_define
 
 begin_comment
@@ -1295,22 +1447,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CQ_WR_FULL
-value|BIT(26)
+name|CQ_WR_FUL
+value|(1UL<< 26)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CQ_WR_DISABLE
-value|BIT(25)
+value|(1UL<< 25)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CQ_WR_FAULT
-value|BIT(24)
+value|(1UL<< 24)
 end_define
 
 begin_define
@@ -1324,23 +1476,68 @@ begin_define
 define|#
 directive|define
 name|CQ_ERR_MASK
-value|(CQ_WR_FULL | CQ_WR_DISABLE | CQ_WR_FAULT)
+value|(CQ_WR_FUL | CQ_WR_DISABLE | CQ_WR_FAULT)
 end_define
 
-begin_function_decl
-name|void
-name|nicvf_config_vlan_stripping
+begin_define
+define|#
+directive|define
+name|NICVF_TX_LOCK
 parameter_list|(
-name|struct
-name|nicvf
-modifier|*
-name|nic
-parameter_list|,
-name|netdev_features_t
-name|features
+name|sq
 parameter_list|)
-function_decl|;
-end_function_decl
+value|mtx_lock(&(sq)->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NICVF_TX_TRYLOCK
+parameter_list|(
+name|sq
+parameter_list|)
+value|mtx_trylock(&(sq)->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NICVF_TX_UNLOCK
+parameter_list|(
+name|sq
+parameter_list|)
+value|mtx_unlock(&(sq)->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NICVF_TX_LOCK_ASSERT
+parameter_list|(
+name|sq
+parameter_list|)
+value|mtx_assert(&(sq)->mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NICVF_CMP_LOCK
+parameter_list|(
+name|cq
+parameter_list|)
+value|mtx_lock(&(cq)->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NICVF_CMP_UNLOCK
+parameter_list|(
+name|cq
+parameter_list|)
+value|mtx_unlock(&(cq)->mtx)
+end_define
 
 begin_function_decl
 name|int
@@ -1349,7 +1546,6 @@ parameter_list|(
 name|struct
 name|nicvf
 modifier|*
-name|nic
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1361,10 +1557,8 @@ parameter_list|(
 name|struct
 name|nicvf
 modifier|*
-name|nic
 parameter_list|,
-name|bool
-name|enable
+name|boolean_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1376,162 +1570,8 @@ parameter_list|(
 name|struct
 name|nicvf
 modifier|*
-name|nic
 parameter_list|,
-name|bool
-name|enable
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|nicvf_cmp_queue_config
-parameter_list|(
-name|struct
-name|nicvf
-modifier|*
-name|nic
-parameter_list|,
-name|struct
-name|queue_set
-modifier|*
-name|qs
-parameter_list|,
-name|int
-name|qidx
-parameter_list|,
-name|bool
-name|enable
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|nicvf_sq_enable
-parameter_list|(
-name|struct
-name|nicvf
-modifier|*
-name|nic
-parameter_list|,
-name|struct
-name|snd_queue
-modifier|*
-name|sq
-parameter_list|,
-name|int
-name|qidx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|nicvf_sq_disable
-parameter_list|(
-name|struct
-name|nicvf
-modifier|*
-name|nic
-parameter_list|,
-name|int
-name|qidx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|nicvf_put_sq_desc
-parameter_list|(
-name|struct
-name|snd_queue
-modifier|*
-name|sq
-parameter_list|,
-name|int
-name|desc_cnt
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|nicvf_sq_free_used_descs
-parameter_list|(
-name|struct
-name|net_device
-modifier|*
-name|netdev
-parameter_list|,
-name|struct
-name|snd_queue
-modifier|*
-name|sq
-parameter_list|,
-name|int
-name|qidx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|nicvf_sq_append_skb
-parameter_list|(
-name|struct
-name|nicvf
-modifier|*
-name|nic
-parameter_list|,
-name|struct
-name|sk_buff
-modifier|*
-name|skb
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|sk_buff
-modifier|*
-name|nicvf_get_rcv_skb
-parameter_list|(
-name|struct
-name|nicvf
-modifier|*
-name|nic
-parameter_list|,
-name|struct
-name|cqe_rx_t
-modifier|*
-name|cqe_rx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|nicvf_rbdr_task
-parameter_list|(
-name|unsigned
-name|long
-name|data
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|nicvf_rbdr_work
-parameter_list|(
-name|struct
-name|work_struct
-modifier|*
-name|work
+name|boolean_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1543,13 +1583,10 @@ parameter_list|(
 name|struct
 name|nicvf
 modifier|*
-name|nic
 parameter_list|,
 name|int
-name|int_type
 parameter_list|,
 name|int
-name|q_idx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1561,13 +1598,10 @@ parameter_list|(
 name|struct
 name|nicvf
 modifier|*
-name|nic
 parameter_list|,
 name|int
-name|int_type
 parameter_list|,
 name|int
-name|q_idx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1579,13 +1613,10 @@ parameter_list|(
 name|struct
 name|nicvf
 modifier|*
-name|nic
 parameter_list|,
 name|int
-name|int_type
 parameter_list|,
 name|int
-name|q_idx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1597,13 +1628,10 @@ parameter_list|(
 name|struct
 name|nicvf
 modifier|*
-name|nic
 parameter_list|,
 name|int
-name|int_type
 parameter_list|,
 name|int
-name|q_idx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1619,28 +1647,23 @@ parameter_list|(
 name|struct
 name|nicvf
 modifier|*
-name|nic
 parameter_list|,
-name|u64
-name|offset
+name|uint64_t
 parameter_list|,
-name|u64
-name|val
+name|uint64_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u64
+name|uint64_t
 name|nicvf_reg_read
 parameter_list|(
 name|struct
 name|nicvf
 modifier|*
-name|nic
 parameter_list|,
-name|u64
-name|offset
+name|uint64_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1652,28 +1675,23 @@ parameter_list|(
 name|struct
 name|nicvf
 modifier|*
-name|nic
 parameter_list|,
-name|u64
-name|offset
+name|uint64_t
 parameter_list|,
-name|u64
-name|val
+name|uint64_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u64
+name|uint64_t
 name|nicvf_qset_reg_read
 parameter_list|(
 name|struct
 name|nicvf
 modifier|*
-name|nic
 parameter_list|,
-name|u64
-name|offset
+name|uint64_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1685,34 +1703,27 @@ parameter_list|(
 name|struct
 name|nicvf
 modifier|*
-name|nic
 parameter_list|,
-name|u64
-name|offset
+name|uint64_t
 parameter_list|,
-name|u64
-name|qidx
+name|uint64_t
 parameter_list|,
-name|u64
-name|val
+name|uint64_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u64
+name|uint64_t
 name|nicvf_queue_reg_read
 parameter_list|(
 name|struct
 name|nicvf
 modifier|*
-name|nic
 parameter_list|,
-name|u64
-name|offset
+name|uint64_t
 parameter_list|,
-name|u64
-name|qidx
+name|uint64_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1728,10 +1739,8 @@ parameter_list|(
 name|struct
 name|nicvf
 modifier|*
-name|nic
 parameter_list|,
 name|int
-name|rq_idx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1743,10 +1752,8 @@ parameter_list|(
 name|struct
 name|nicvf
 modifier|*
-name|nic
 parameter_list|,
 name|int
-name|sq_idx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1758,17 +1765,14 @@ parameter_list|(
 name|struct
 name|nicvf
 modifier|*
-name|nic
 parameter_list|,
 name|struct
 name|cmp_queue
 modifier|*
-name|cq
 parameter_list|,
 name|struct
 name|cqe_rx_t
 modifier|*
-name|cqe_rx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1780,17 +1784,14 @@ parameter_list|(
 name|struct
 name|nicvf
 modifier|*
-name|nic
 parameter_list|,
 name|struct
 name|cmp_queue
 modifier|*
-name|cq
 parameter_list|,
 name|struct
 name|cqe_send_t
 modifier|*
-name|cqe_tx
 parameter_list|)
 function_decl|;
 end_function_decl
