@@ -230,7 +230,7 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|ntb_get_max_mw
+name|ntb_mw_count
 parameter_list|(
 name|struct
 name|ntb_softc

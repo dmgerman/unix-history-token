@@ -39,14 +39,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|XEON_SNB_MAX_MW
+name|XEON_SNB_MW_COUNT
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|XEON_HSXSPLIT_MAX_MW
+name|XEON_HSX_SPLIT_MW_COUNT
 value|3
 end_define
 
@@ -337,7 +337,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOC_MAX_MW
+name|SOC_MW_COUNT
 value|2
 end_define
 

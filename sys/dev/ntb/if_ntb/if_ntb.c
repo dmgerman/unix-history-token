@@ -780,7 +780,7 @@ name|ntb
 parameter_list|,
 name|qp
 parameter_list|)
-value|((qp) % ntb_get_max_mw(ntb))
+value|((qp) % ntb_mw_count(ntb))
 end_define
 
 begin_define
@@ -2402,7 +2402,7 @@ argument_list|(
 name|ntb
 argument_list|)
 argument_list|,
-name|ntb_get_max_mw
+name|ntb_mw_count
 argument_list|(
 name|ntb
 argument_list|)
@@ -2771,7 +2771,7 @@ name|mw_max
 decl_stmt|;
 name|mw_max
 operator|=
-name|ntb_get_max_mw
+name|ntb_mw_count
 argument_list|(
 name|nt
 operator|->
@@ -5307,7 +5307,7 @@ name|rc
 decl_stmt|;
 name|num_mw
 operator|=
-name|ntb_get_max_mw
+name|ntb_mw_count
 argument_list|(
 name|ntb
 argument_list|)
@@ -6093,7 +6093,7 @@ name|i
 decl_stmt|;
 name|mw_max
 operator|=
-name|ntb_get_max_mw
+name|ntb_mw_count
 argument_list|(
 name|nt
 operator|->
