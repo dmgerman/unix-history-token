@@ -3991,6 +3991,8 @@ comment|/* Short slot time supported. */
 name|IEEE80211_C_FF
 operator||
 comment|/* Atheros fast-frames supported. */
+name|IEEE80211_C_MONITOR
+operator||
 name|IEEE80211_C_WPA
 expr_stmt|;
 comment|/* WPA/RSN. */
@@ -10254,6 +10256,27 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_EAPOL
+condition|)
+block|{
+comment|/* Get lowest rate */
+name|rate
+operator|=
+name|otus_rate_to_hw_rate
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 operator|(
@@ -14880,7 +14903,16 @@ directive|endif
 block|case IEEE80211_M_STA: 		otus_write(sc, 0x1c3700, 0x0f000002); 		otus_write(sc, 0x1c3c40, 0x1); 		break; 	default: 		break; 	}
 endif|#
 directive|endif
-comment|/* Expect STA operation */
+switch|switch
+condition|(
+name|ic
+operator|->
+name|ic_opmode
+condition|)
+block|{
+case|case
+name|IEEE80211_M_STA
+case|:
 name|otus_write
 argument_list|(
 name|sc
@@ -14899,6 +14931,23 @@ argument_list|,
 literal|0x1
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_M_MONITOR
+case|:
+name|otus_write
+argument_list|(
+name|sc
+argument_list|,
+literal|0x1c368c
+argument_list|,
+literal|0xffffffff
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 comment|/* XXX ic_opmode? */
 name|otus_write
 argument_list|(
