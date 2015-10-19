@@ -15,6 +15,12 @@ directive|define
 name|_LINUX_UACCESS_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<linux/compiler.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -39,22 +45,26 @@ parameter_list|)
 value|-copyout(&(_x), (_p), sizeof(*(_p)))
 end_define
 
+begin_comment
+comment|/*  * NOTE: The returned value from pagefault_disable() must be stored  * and passed to pagefault_enable(). Else possible recursion on the  * state can be lost.  */
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
-name|void
+name|int
+name|__must_check
 name|pagefault_disable
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|curthread_pflags_set
-argument_list|(
-name|TDP_NOFAULTING
-operator||
-name|TDP_RESETSPUR
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|vm_fault_disable_pagefaults
+argument_list|()
+operator|)
+return|;
 block|}
 end_function
 
@@ -64,17 +74,13 @@ specifier|inline
 name|void
 name|pagefault_enable
 parameter_list|(
-name|void
+name|int
+name|save
 parameter_list|)
 block|{
-name|curthread_pflags_restore
+name|vm_fault_enable_pagefaults
 argument_list|(
-operator|~
-operator|(
-name|TDP_NOFAULTING
-operator||
-name|TDP_RESETSPUR
-operator|)
+name|save
 argument_list|)
 expr_stmt|;
 block|}
