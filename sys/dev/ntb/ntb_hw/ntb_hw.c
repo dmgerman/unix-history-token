@@ -9703,6 +9703,30 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * ntb_db_valid_mask() - get a mask of doorbell bits supported by the ntb  * @ntb:	NTB device context  *  * Hardware may support different number or arrangement of doorbell bits.  *  * Return: A mask of doorbell bits supported by the ntb.  */
+end_comment
+
+begin_function
+name|uint64_t
+name|ntb_db_valid_mask
+parameter_list|(
+name|struct
+name|ntb_softc
+modifier|*
+name|ntb
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ntb
+operator|->
+name|db_valid_mask
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * ntb_link_is_up() - get the current ntb link state  * @ntb:        NTB device context  * @speed:      OUT - The link speed expressed as PCIe generation number  * @width:      OUT - The link width expressed as the number of PCIe lanes  *  * RETURNS: true or false based on the hardware link state  */
 end_comment
 
