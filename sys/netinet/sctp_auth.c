@@ -2296,7 +2296,7 @@ name|SCTP_DEBUG_AUTH2
 argument_list|,
 literal|"%s: stcb %p key %u refcount acquire to %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 operator|(
 name|void
@@ -2378,7 +2378,7 @@ name|SCTP_DEBUG_AUTH2
 argument_list|,
 literal|"%s: stcb %p key %u refcount release to %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 operator|(
 name|void
@@ -2431,7 +2431,7 @@ name|SCTP_DEBUG_AUTH2
 argument_list|,
 literal|"%s: stcb %p key %u no longer used, %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 operator|(
 name|void
