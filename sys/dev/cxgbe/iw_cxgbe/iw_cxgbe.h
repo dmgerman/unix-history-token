@@ -2601,10 +2601,6 @@ name|MPA_V2_IRD_ORD_MASK
 value|0x3FFF
 end_define
 
-begin_comment
-comment|/* Fixme: Use atomic_read for kref.count as same as Linux */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -2612,12 +2608,8 @@ name|c4iw_put_ep
 parameter_list|(
 name|ep
 parameter_list|)
-value|{ \ 	CTR4(KTR_IW_CXGBE, "put_ep (%s:%u) ep %p, refcnt %d", \ 	     __func__, __LINE__, ep, (ep)->kref.count); \ 	WARN_ON((ep)->kref.count< 1); \         kref_put(&((ep)->kref), _c4iw_free_ep); \ }
+value|{ \ 	CTR4(KTR_IW_CXGBE, "put_ep (%s:%u) ep %p, refcnt %d", \ 	     __func__, __LINE__, ep, atomic_read(&(ep)->kref.refcount)); \ 	WARN_ON(atomic_read(&(ep)->kref.refcount)< 1); \         kref_put(&((ep)->kref), _c4iw_free_ep); \ }
 end_define
-
-begin_comment
-comment|/* Fixme: Use atomic_read for kref.count as same as Linux */
-end_comment
 
 begin_define
 define|#
@@ -2626,7 +2618,7 @@ name|c4iw_get_ep
 parameter_list|(
 name|ep
 parameter_list|)
-value|{ \ 	CTR4(KTR_IW_CXGBE, "get_ep (%s:%u) ep %p, refcnt %d", \ 	      __func__, __LINE__, ep, (ep)->kref.count); \         kref_get(&((ep)->kref));  \ }
+value|{ \ 	CTR4(KTR_IW_CXGBE, "get_ep (%s:%u) ep %p, refcnt %d", \ 	      __func__, __LINE__, ep, atomic_read(&(ep)->kref.refcount)); \         kref_get(&((ep)->kref));  \ }
 end_define
 
 begin_function_decl
