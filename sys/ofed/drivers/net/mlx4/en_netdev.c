@@ -1176,11 +1176,6 @@ name|dst_port
 parameter_list|)
 block|{
 name|struct
-name|hlist_node
-modifier|*
-name|elem
-decl_stmt|;
-name|struct
 name|mlx4_en_filter
 modifier|*
 name|filter
@@ -1195,8 +1190,6 @@ decl_stmt|;
 name|hlist_for_each_entry
 argument_list|(
 argument|filter
-argument_list|,
-argument|elem
 argument_list|,
 argument|filter_hash_bucket(priv, src_ip, dst_ip, 						src_port, dst_port)
 argument_list|,

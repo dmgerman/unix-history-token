@@ -238,11 +238,6 @@ name|ib_pool_fmr
 modifier|*
 name|fmr
 decl_stmt|;
-name|struct
-name|hlist_node
-modifier|*
-name|pos
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -268,8 +263,6 @@ expr_stmt|;
 name|hlist_for_each_entry
 argument_list|(
 argument|fmr
-argument_list|,
-argument|pos
 argument_list|,
 argument|bucket
 argument_list|,
