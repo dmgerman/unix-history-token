@@ -1277,6 +1277,8 @@ name|ch
 decl_stmt|;
 name|bool
 name|quiet
+init|=
+name|false
 decl_stmt|;
 while|while
 condition|(
