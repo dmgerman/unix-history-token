@@ -477,7 +477,7 @@ name|DMA_BIT_MASK
 parameter_list|(
 name|n
 parameter_list|)
-value|(((n) == 64) ? ~0ULL : ((1ULL<< (n)) - 1))
+value|((2ULL<< ((n) - 1)) - 1ULL)
 end_define
 
 begin_function
