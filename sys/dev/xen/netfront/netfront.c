@@ -934,7 +934,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|net_device_stats
+name|netfront_stats
 block|{
 name|u_long
 name|rx_packets
@@ -960,68 +960,6 @@ name|u_long
 name|tx_errors
 decl_stmt|;
 comment|/* packet transmit problems	*/
-name|u_long
-name|rx_dropped
-decl_stmt|;
-comment|/* no space in linux buffers	*/
-name|u_long
-name|tx_dropped
-decl_stmt|;
-comment|/* no space available in linux	*/
-name|u_long
-name|multicast
-decl_stmt|;
-comment|/* multicast packets received	*/
-name|u_long
-name|collisions
-decl_stmt|;
-comment|/* detailed rx_errors: */
-name|u_long
-name|rx_length_errors
-decl_stmt|;
-name|u_long
-name|rx_over_errors
-decl_stmt|;
-comment|/* receiver ring buff overflow	*/
-name|u_long
-name|rx_crc_errors
-decl_stmt|;
-comment|/* recved pkt with crc error	*/
-name|u_long
-name|rx_frame_errors
-decl_stmt|;
-comment|/* recv'd frame alignment error */
-name|u_long
-name|rx_fifo_errors
-decl_stmt|;
-comment|/* recv'r fifo overrun		*/
-name|u_long
-name|rx_missed_errors
-decl_stmt|;
-comment|/* receiver missed packet	*/
-comment|/* detailed tx_errors */
-name|u_long
-name|tx_aborted_errors
-decl_stmt|;
-name|u_long
-name|tx_carrier_errors
-decl_stmt|;
-name|u_long
-name|tx_fifo_errors
-decl_stmt|;
-name|u_long
-name|tx_heartbeat_errors
-decl_stmt|;
-name|u_long
-name|tx_window_errors
-decl_stmt|;
-comment|/* for cslip etc */
-name|u_long
-name|rx_compressed
-decl_stmt|;
-name|u_long
-name|tx_compressed
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1047,7 +985,7 @@ decl_stmt|;
 endif|#
 directive|endif
 name|struct
-name|net_device_stats
+name|netfront_stats
 name|stats
 decl_stmt|;
 name|u_int
