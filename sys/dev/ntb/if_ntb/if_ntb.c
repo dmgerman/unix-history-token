@@ -1323,7 +1323,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|uint32_t
 name|vector
 parameter_list|)
 function_decl|;
@@ -5647,7 +5647,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|uint32_t
 name|vector
 parameter_list|)
 block|{

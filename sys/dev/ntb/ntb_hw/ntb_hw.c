@@ -9727,6 +9727,53 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * ntb_db_vector_mask() - get a mask of doorbell bits serviced by a vector  * @ntb:	NTB device context  * @vector:	Doorbell vector number  *  * Each interrupt vector may have a different number or arrangement of bits.  *  * Return: A mask of doorbell bits serviced by a vector.  */
+end_comment
+
+begin_function
+name|uint64_t
+name|ntb_db_vector_mask
+parameter_list|(
+name|struct
+name|ntb_softc
+modifier|*
+name|ntb
+parameter_list|,
+name|uint32_t
+name|vector
+parameter_list|)
+block|{
+if|if
+condition|(
+name|vector
+operator|>
+name|ntb
+operator|->
+name|db_vec_count
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+return|return
+operator|(
+name|ntb
+operator|->
+name|db_valid_mask
+operator|&
+name|ntb_vec_mask
+argument_list|(
+name|ntb
+argument_list|,
+name|vector
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * ntb_link_is_up() - get the current ntb link state  * @ntb:        NTB device context  * @speed:      OUT - The link speed expressed as PCIe generation number  * @width:      OUT - The link width expressed as the number of PCIe lanes  *  * RETURNS: true or false based on the hardware link state  */
 end_comment
 
