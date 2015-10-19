@@ -448,6 +448,14 @@ literal|"Intel Wildcat Point USB 3.0 controller"
 operator|)
 return|;
 case|case
+literal|0x9cb18086
+case|:
+return|return
+operator|(
+literal|"Broadwell Integrated PCH-LP chipset USB 3.0 controller"
+operator|)
+return|;
+case|case
 literal|0xa01b177d
 case|:
 return|return
@@ -912,6 +920,10 @@ case|case
 literal|0x8cb18086
 case|:
 comment|/* Wildcat Point */
+case|case
+literal|0x9cb18086
+case|:
+comment|/* Broadwell Mobile Integrated */
 comment|/* 		 * On Intel chipsets, reroute ports from EHCI to XHCI 		 * controller and use a different IMOD value. 		 */
 name|sc
 operator|->
