@@ -9443,6 +9443,40 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * ntb_mw_clear_trans() - clear the translation of a memory window  * @ntb:	NTB device context  * @idx:	Memory window number  *  * Clear the translation of a memory window.  The peer may no longer access  * local memory through the window.  *  * Return: Zero on success, otherwise an error number.  */
+end_comment
+
+begin_function
+name|int
+name|ntb_mw_clear_trans
+parameter_list|(
+name|struct
+name|ntb_softc
+modifier|*
+name|ntb
+parameter_list|,
+name|unsigned
+name|mw_idx
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ntb_mw_set_trans
+argument_list|(
+name|ntb
+argument_list|,
+name|mw_idx
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * ntb_peer_db_set() - Set the doorbell on the secondary/external side  * @ntb: pointer to ntb_softc instance  * @bit: doorbell bits to ring  *  * This function allows triggering of a doorbell on the secondary/external  * side that will initiate an interrupt on the remote host  */
 end_comment
 
