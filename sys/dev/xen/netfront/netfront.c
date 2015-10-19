@@ -1124,19 +1124,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|XN_LOCK_INIT
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_name
-parameter_list|)
-define|\
-value|mtx_init(&(_sc)->tx_lock, #_name"_tx", "network transmit lock", MTX_DEF); \         mtx_init(&(_sc)->rx_lock, #_name"_rx", "network receive lock", MTX_DEF);  \         mtx_init(&(_sc)->sc_lock, #_name"_sc", "netfront softc lock", MTX_DEF)
-end_define
-
-begin_define
-define|#
-directive|define
 name|XN_RX_LOCK
 parameter_list|(
 name|_sc
@@ -1222,16 +1209,6 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_assert(&(_sc)->tx_lock, MA_OWNED);
-end_define
-
-begin_define
-define|#
-directive|define
-name|XN_LOCK_DESTROY
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_destroy(&(_sc)->rx_lock); \                                mtx_destroy(&(_sc)->tx_lock); \                                mtx_destroy(&(_sc)->sc_lock);
 end_define
 
 begin_struct
@@ -7953,11 +7930,46 @@ name|xbdev
 operator|=
 name|dev
 expr_stmt|;
-name|XN_LOCK_INIT
+name|mtx_init
 argument_list|(
+operator|&
 name|np
+operator|->
+name|tx_lock
 argument_list|,
-name|xennetif
+literal|"xntx"
+argument_list|,
+literal|"network transmit lock"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|np
+operator|->
+name|rx_lock
+argument_list|,
+literal|"xnrx"
+argument_list|,
+literal|"network receive lock"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|np
+operator|->
+name|sc_lock
+argument_list|,
+literal|"xnsc"
+argument_list|,
+literal|"netfront softc lock"
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|ifmedia_init
