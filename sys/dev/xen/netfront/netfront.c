@@ -179,14 +179,6 @@ directive|include
 file|<netinet/if_ether.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
-end_if
-
 begin_include
 include|#
 directive|include
@@ -198,11 +190,6 @@ include|#
 directive|include
 file|<netinet/tcp_lro.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -341,14 +328,6 @@ name|NET_RX_RING_SIZE
 value|__RING_SIZE((netif_rx_sring_t *)0, PAGE_SIZE)
 end_define
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
-end_if
-
 begin_comment
 comment|/*  * Should the driver do LRO on the RX end  *  this can be toggled on the fly, but the  *  interface must be reset (down/up) for it  *  to take effect.  */
 end_comment
@@ -372,30 +351,6 @@ name|xn_enable_lro
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|IFCAP_TSO4
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSUM_TSO
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/**  * \brief The maximum allowed data fragments in a single transmit  *        request.  *  * This limit is imposed by the backend driver.  We assume here that  * we are dealing with a Linux driver domain and have set our limit  * to mirror the Linux MAX_SKB_FRAGS constant.  */
@@ -973,17 +928,10 @@ name|ifnet
 modifier|*
 name|xn_ifp
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
 name|struct
 name|lro_ctrl
 name|xn_lro
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|netfront_stats
 name|stats
@@ -1933,11 +1881,6 @@ name|err
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
 name|SYSCTL_ADD_INT
 argument_list|(
 name|device_get_sysctl_ctx
@@ -1967,8 +1910,6 @@ argument_list|,
 literal|"Large Receive Offload"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -2364,11 +2305,6 @@ goto|goto
 name|abort_transaction
 goto|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
 name|err
 operator|=
 name|xs_printf
@@ -2397,8 +2333,6 @@ goto|goto
 name|abort_transaction
 goto|;
 block|}
-endif|#
-directive|endif
 name|err
 operator|=
 name|xs_transaction_end
@@ -3689,23 +3623,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
-operator|&&
-operator|(
-name|defined
-argument_list|(
-name|INET
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|INET6
-argument_list|)
-operator|)
 name|struct
 name|lro_ctrl
 modifier|*
@@ -3721,8 +3638,6 @@ name|lro_entry
 modifier|*
 name|queued
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|netfront_rx_info
 name|rinfo
@@ -4048,10 +3963,6 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
-operator|&&
 operator|(
 name|defined
 argument_list|(
@@ -4138,10 +4049,6 @@ name|i
 expr_stmt|;
 if|#
 directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
-operator|&&
 operator|(
 name|defined
 argument_list|(
@@ -6028,11 +5935,6 @@ name|NETTXF_data_validated
 operator|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
 if|if
 condition|(
 name|m
@@ -6132,8 +6034,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -6928,11 +6828,6 @@ operator|^=
 name|IFCAP_RXCSUM
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
 if|if
 condition|(
 name|mask
@@ -7015,8 +6910,6 @@ operator|^=
 name|IFCAP_LRO
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|error
 operator|=
 literal|0
@@ -7685,10 +7578,6 @@ name|UINT_MAX
 expr_stmt|;
 if|#
 directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
-operator|&&
 operator|(
 name|defined
 argument_list|(
@@ -7760,10 +7649,6 @@ name|CSUM_TSO
 expr_stmt|;
 if|#
 directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
-operator|&&
 operator|(
 name|defined
 argument_list|(
