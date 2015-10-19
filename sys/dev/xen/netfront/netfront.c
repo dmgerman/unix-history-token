@@ -7824,7 +7824,7 @@ name|tx_lock
 argument_list|,
 literal|"xntx"
 argument_list|,
-literal|"network transmit lock"
+literal|"netfront transmit lock"
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -7838,7 +7838,7 @@ name|rx_lock
 argument_list|,
 literal|"xnrx"
 argument_list|,
-literal|"network receive lock"
+literal|"netfront receive lock"
 argument_list|,
 name|MTX_DEF
 argument_list|)
