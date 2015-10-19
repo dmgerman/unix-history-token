@@ -8044,7 +8044,7 @@ operator|=
 name|ENOMEM
 expr_stmt|;
 goto|goto
-name|exit
+name|error
 goto|;
 block|}
 comment|/* A grant for every rx ring slot */
@@ -8080,7 +8080,7 @@ operator|=
 name|ENOMEM
 expr_stmt|;
 goto|goto
-name|exit
+name|error
 goto|;
 block|}
 name|err
@@ -8098,9 +8098,25 @@ if|if
 condition|(
 name|err
 condition|)
+block|{
+name|gnttab_free_grant_references
+argument_list|(
+name|np
+operator|->
+name|gref_rx_head
+argument_list|)
+expr_stmt|;
+name|gnttab_free_grant_references
+argument_list|(
+name|np
+operator|->
+name|gref_tx_head
+argument_list|)
+expr_stmt|;
 goto|goto
-name|out
+name|error
 goto|;
+block|}
 comment|/* Set up ifnet structure */
 name|ifp
 operator|=
@@ -8245,17 +8261,19 @@ operator|(
 literal|0
 operator|)
 return|;
-name|exit
+name|error
 label|:
-name|gnttab_free_grant_references
+name|KASSERT
 argument_list|(
-name|np
-operator|->
-name|gref_tx_head
+name|err
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"Error path with no error code specified"
+operator|)
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 operator|(
 name|err
