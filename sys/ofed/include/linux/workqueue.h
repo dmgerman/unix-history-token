@@ -528,6 +528,34 @@ define|\
 value|_create_workqueue_common(name, MAXCPU)
 end_define
 
+begin_define
+define|#
+directive|define
+name|alloc_ordered_workqueue
+parameter_list|(
+name|name
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|_create_workqueue_common(name, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|alloc_workqueue
+parameter_list|(
+name|name
+parameter_list|,
+name|flags
+parameter_list|,
+name|max_active
+parameter_list|)
+define|\
+value|_create_workqueue_common(name, max_active)
+end_define
+
 begin_function
 specifier|static
 specifier|inline
