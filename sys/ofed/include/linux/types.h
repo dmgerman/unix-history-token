@@ -51,13 +51,6 @@ directive|include
 file|<asm/types.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|__read_mostly
-value|__attribute__((__section__(".data.read_mostly")))
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
