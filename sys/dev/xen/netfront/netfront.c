@@ -3162,7 +3162,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|int i; 	 	for (i = 0; i< NET_RX_RING_SIZE; i++) { 		if (sc->xn_cdata.rx_mbufs[i] != NULL) { 			m_freem(sc->rx_mbufs[i]); 			sc->rx_mbufs[i] = NULL; 		} 	} 	 	sc->rx.rsp_cons = 0; 	sc->xn_rx_if->req_prod = 0; 	sc->xn_rx_if->event = sc->rx.rsp_cons ;
+block|int i;  	for (i = 0; i< NET_RX_RING_SIZE; i++) { 		if (sc->xn_cdata.rx_mbufs[i] != NULL) { 			m_freem(sc->rx_mbufs[i]); 			sc->rx_mbufs[i] = NULL; 		} 	}  	sc->rx.rsp_cons = 0; 	sc->xn_rx_if->req_prod = 0; 	sc->xn_rx_if->event = sc->rx.rsp_cons ;
 endif|#
 directive|endif
 block|}
@@ -3182,7 +3182,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|int i; 	 	for (i = 0; i< NET_TX_RING_SIZE; i++) { 		if (sc->tx_mbufs[i] != NULL) { 			m_freem(sc->tx_mbufs[i]); 			sc->xn_cdata.xn_tx_chain[i] = NULL; 		} 	} 	 	return;
+block|int i;  	for (i = 0; i< NET_TX_RING_SIZE; i++) { 		if (sc->tx_mbufs[i] != NULL) { 			m_freem(sc->tx_mbufs[i]); 			sc->xn_cdata.xn_tx_chain[i] = NULL; 		} 	}  	return;
 endif|#
 directive|endif
 block|}
@@ -3564,7 +3564,7 @@ name|push
 goto|;
 return|return;
 block|}
-comment|/* 	 * Double floating fill target if we risked having the backend 	 * run out of empty buffers for receive traffic.  We define "running 	 * low" as having less than a fourth of our target buffers free 	 * at the time we refilled the queue.  	 */
+comment|/* 	 * Double floating fill target if we risked having the backend 	 * run out of empty buffers for receive traffic.  We define "running 	 * low" as having less than a fourth of our target buffers free 	 * at the time we refilled the queue. 	 */
 if|if
 condition|(
 operator|(
@@ -4336,7 +4336,7 @@ operator|&
 name|errq
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Process all the mbufs after the remapping is complete. 		 * Break the mbuf chain first though. 		 */
+comment|/* 		 * Process all the mbufs after the remapping is complete. 		 * Break the mbuf chain first though. 		 */
 while|while
 condition|(
 operator|(
@@ -4522,7 +4522,7 @@ directive|if
 literal|0
 comment|/* If we get a callback with very few responses, reduce fill target. */
 comment|/* NB. Note exponential increase, linear decrease. */
-block|if (((np->rx.req_prod_pvt - np->rx.sring->rsp_prod)>  			((3*np->rx_target) / 4))&& (--np->rx_target< np->rx_min_target)) 			np->rx_target = np->rx_min_target;
+block|if (((np->rx.req_prod_pvt - np->rx.sring->rsp_prod)> 			((3*np->rx_target) / 4))&& (--np->rx_target< np->rx_min_target)) 			np->rx_target = np->rx_min_target;
 endif|#
 directive|endif
 name|network_alloc_rx_buffers
@@ -5772,7 +5772,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Note that m can be NULL, if rx->status< 0 or if 		 * rx->offset + rx->status> PAGE_SIZE above.   		 */
+comment|/* 		 * Note that m can be NULL, if rx->status< 0 or if 		 * rx->offset + rx->status> PAGE_SIZE above. 		 */
 name|m_prev
 operator|=
 name|m
@@ -5804,7 +5804,7 @@ operator|+
 name|frags
 argument_list|)
 expr_stmt|;
-comment|/* 		 * m_prev == NULL can happen if rx->status< 0 or if 		 * rx->offset + * rx->status> PAGE_SIZE above.   		 */
+comment|/* 		 * m_prev == NULL can happen if rx->status< 0 or if 		 * rx->offset + * rx->status> PAGE_SIZE above. 		 */
 if|if
 condition|(
 name|m_prev
@@ -5817,7 +5817,7 @@ name|m_next
 operator|=
 name|m
 expr_stmt|;
-comment|/* 		 * m0 can be NULL if rx->status< 0 or if * rx->offset + 		 * rx->status> PAGE_SIZE above.   		 */
+comment|/* 		 * m0 can be NULL if rx->status< 0 or if * rx->offset + 		 * rx->status> PAGE_SIZE above. 		 */
 if|if
 condition|(
 name|m0
@@ -9231,7 +9231,7 @@ argument_list|(
 expr|struct
 name|netfront_info
 argument_list|)
-block|,                       }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
