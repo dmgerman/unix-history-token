@@ -469,6 +469,8 @@ operator||
 name|_ISPRINT
 operator||
 name|_ISXDIGIT
+operator||
+name|_E4
 operator|)
 expr_stmt|;
 break|break;
@@ -543,6 +545,8 @@ operator|(
 name|_ISXDIGIT
 operator||
 name|_ISPRINT
+operator||
+name|_E4
 operator|)
 expr_stmt|;
 break|break;
