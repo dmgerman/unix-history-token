@@ -108,6 +108,16 @@ directive|include
 file|"osu_client.h"
 end_include
 
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|spp_xsd_fname
+init|=
+literal|"spp.xsd"
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|write_result
@@ -2841,6 +2851,11 @@ argument_list|,
 name|uri
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|fqdn
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
@@ -2877,9 +2892,16 @@ name|wpa_printf
 argument_list|(
 name|MSG_INFO
 argument_list|,
-literal|"FQDN '%s' for new PPS MO did not have suffix match with server's dNSName values"
+literal|"FQDN '%s' for new PPS MO did not have suffix match with server's dNSName values, count: %d"
 argument_list|,
 name|fqdn
+argument_list|,
+operator|(
+name|int
+operator|)
+name|ctx
+operator|->
+name|server_dnsname_count
 argument_list|)
 expr_stmt|;
 name|write_result
@@ -11551,6 +11573,14 @@ name|methods
 operator|&
 literal|0x02
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"Calling cmd_prov from osu_connect"
+argument_list|)
+expr_stmt|;
 name|res
 operator|=
 name|cmd_prov
@@ -11560,6 +11590,7 @@ argument_list|,
 name|url
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -11567,6 +11598,14 @@ name|methods
 operator|&
 literal|0x01
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"Calling cmd_oma_dm_prov from osu_connect"
+argument_list|)
+expr_stmt|;
 name|res
 operator|=
 name|cmd_oma_dm_prov
@@ -11576,6 +11615,7 @@ argument_list|,
 name|url
 argument_list|)
 expr_stmt|;
+block|}
 name|wpa_printf
 argument_list|(
 name|MSG_INFO
@@ -11794,7 +11834,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_INFO
 argument_list|,
-literal|"Could not any OSU providers from %s"
+literal|"Could not find any OSU providers from %s"
 argument_list|,
 name|fname
 argument_list|)
@@ -12737,6 +12777,14 @@ name|methods
 operator|&
 literal|0x02
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"Calling cmd_prov from cmd_osu_select"
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|cmd_prov
@@ -12748,6 +12796,7 @@ operator|->
 name|url
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -12757,6 +12806,14 @@ name|methods
 operator|&
 literal|0x01
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"Calling cmd_oma_dm_prov from cmd_osu_select"
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|cmd_oma_dm_prov
@@ -12768,12 +12825,22 @@ operator|->
 name|url
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"No supported OSU provisioning method"
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -14906,6 +14973,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|end
 operator|&&
 name|end2
@@ -14913,6 +14981,14 @@ operator|&&
 name|end2
 operator|<
 name|end
+operator|)
+operator|||
+operator|(
+operator|!
+name|end
+operator|&&
+name|end2
+operator|)
 condition|)
 name|end
 operator|=
@@ -15040,12 +15116,16 @@ name|wpa_printf
 argument_list|(
 name|MSG_INFO
 argument_list|,
-literal|"osu_cert_cb(osu_cert_validation=%d)"
+literal|"osu_cert_cb(osu_cert_validation=%d, url=%s)"
 argument_list|,
 operator|!
 name|ctx
 operator|->
 name|no_osu_cert_validation
+argument_list|,
+name|ctx
+operator|->
+name|server_url
 argument_list|)
 expr_stmt|;
 name|host
@@ -15643,7 +15723,9 @@ name|wpa_printf
 argument_list|(
 name|MSG_INFO
 argument_list|,
-literal|"Looking for icon file name '%s' match"
+literal|"[%i] Looking for icon file name '%s' match"
+argument_list|,
+name|j
 argument_list|,
 name|name
 argument_list|)
@@ -15695,7 +15777,9 @@ name|wpa_printf
 argument_list|(
 name|MSG_INFO
 argument_list|,
-literal|"Comparing to '%s' uri_len=%d name_len=%d"
+literal|"[%i] Comparing to '%s' uri_len=%d name_len=%d"
+argument_list|,
+name|i
 argument_list|,
 name|logo
 operator|->
@@ -15720,7 +15804,16 @@ literal|1
 operator|+
 name|name_len
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"URI Length is too short"
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 name|pos
 operator|=
 operator|&
@@ -15858,7 +15951,27 @@ name|hash_len
 operator|!=
 literal|32
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"[%i][%i] Icon hash length invalid (should be 32): %d"
+argument_list|,
+name|j
+argument_list|,
+name|i
+argument_list|,
+operator|(
+name|int
+operator|)
+name|logo
+operator|->
+name|hash_len
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 if|if
 condition|(
 name|os_memcmp
@@ -15886,6 +15999,46 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"[%u][%u] Icon hash did not match"
+argument_list|,
+name|j
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|wpa_hexdump_ascii
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"logo->hash"
+argument_list|,
+name|logo
+operator|->
+name|hash
+argument_list|,
+literal|32
+argument_list|)
+expr_stmt|;
+name|wpa_hexdump_ascii
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"ctx->icon_hash[j]"
+argument_list|,
+name|ctx
+operator|->
+name|icon_hash
+index|[
+name|j
+index|]
+argument_list|,
+literal|32
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -15897,14 +16050,14 @@ name|wpa_printf
 argument_list|(
 name|MSG_INFO
 argument_list|,
-literal|"No icon hash match found"
+literal|"No icon hash match (by hash) found"
 argument_list|)
 expr_stmt|;
 name|write_result
 argument_list|(
 name|ctx
 argument_list|,
-literal|"No icon hash match found"
+literal|"No icon hash match (by hash) found"
 argument_list|)
 expr_stmt|;
 return|return
@@ -16367,6 +16520,7 @@ literal|"usage: hs20-osu-client [-dddqqKt] [-S<station ifname>] \\\n"
 literal|"    [-w<wpa_supplicant ctrl_iface dir>] "
 literal|"[-r<result file>] [-f<debug file>] \\\n"
 literal|"    [-s<summary file>] \\\n"
+literal|"    [-x<spp.xsd file name>] \\\n"
 literal|"<command> [arguments..]\n"
 literal|"commands:\n"
 literal|"- to_tnds<XML MO><XML MO in TNDS format> [URN]\n"
@@ -16482,7 +16636,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"df:hi:KNO:qr:s:S:tw:"
+literal|"df:hKNO:qr:s:S:tw:x:"
 argument_list|)
 expr_stmt|;
 if|if
@@ -16589,6 +16743,14 @@ case|case
 literal|'w'
 case|:
 name|wpas_ctrl_path
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+name|spp_xsd_fname
 operator|=
 name|optarg
 expr_stmt|;
@@ -17098,6 +17260,13 @@ name|optind
 operator|+
 literal|2
 index|]
+expr_stmt|;
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"Calling cmd_prov from main"
+argument_list|)
 expr_stmt|;
 name|cmd_prov
 argument_list|(

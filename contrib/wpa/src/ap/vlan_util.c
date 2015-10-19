@@ -104,6 +104,8 @@ name|vlan_if_name
 parameter_list|)
 block|{
 name|int
+name|err
+decl_stmt|,
 name|ret
 init|=
 operator|-
@@ -227,14 +229,18 @@ goto|goto
 name|vlan_add_error
 goto|;
 block|}
-if|if
-condition|(
+name|err
+operator|=
 name|nl_connect
 argument_list|(
 name|handle
 argument_list|,
 name|NETLINK_ROUTE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 operator|<
 literal|0
 condition|)
@@ -243,15 +249,20 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"VLAN: failed to connect to netlink"
+literal|"VLAN: failed to connect to netlink: %s"
+argument_list|,
+name|nl_geterror
+argument_list|(
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
 name|vlan_add_error
 goto|;
 block|}
-if|if
-condition|(
+name|err
+operator|=
 name|rtnl_link_alloc_cache
 argument_list|(
 name|handle
@@ -261,6 +272,10 @@ argument_list|,
 operator|&
 name|cache
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 operator|<
 literal|0
 condition|)
@@ -273,7 +288,12 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"VLAN: failed to alloc cache"
+literal|"VLAN: failed to alloc cache: %s"
+argument_list|,
+name|nl_geterror
+argument_list|(
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -372,14 +392,18 @@ goto|goto
 name|vlan_add_error
 goto|;
 block|}
-if|if
-condition|(
+name|err
+operator|=
 name|rtnl_link_set_type
 argument_list|(
 name|rlink
 argument_list|,
 literal|"vlan"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 operator|<
 literal|0
 condition|)
@@ -388,7 +412,12 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"VLAN: failed to set link type"
+literal|"VLAN: failed to set link type: %s"
+argument_list|,
+name|nl_geterror
+argument_list|(
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -409,14 +438,18 @@ argument_list|,
 name|vlan_if_name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|err
+operator|=
 name|rtnl_link_vlan_set_id
 argument_list|(
 name|rlink
 argument_list|,
 name|vid
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 operator|<
 literal|0
 condition|)
@@ -425,15 +458,20 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"VLAN: failed to set link vlan id"
+literal|"VLAN: failed to set link vlan id: %s"
+argument_list|,
+name|nl_geterror
+argument_list|(
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
 name|vlan_add_error
 goto|;
 block|}
-if|if
-condition|(
+name|err
+operator|=
 name|rtnl_link_add
 argument_list|(
 name|handle
@@ -442,6 +480,10 @@ name|rlink
 argument_list|,
 name|NLM_F_CREATE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 operator|<
 literal|0
 condition|)
@@ -451,7 +493,7 @@ argument_list|(
 name|MSG_ERROR
 argument_list|,
 literal|"VLAN: failed to create link %s for "
-literal|"vlan %d on %s (%d)"
+literal|"vlan %d on %s (%d): %s"
 argument_list|,
 name|vlan_if_name
 argument_list|,
@@ -460,6 +502,11 @@ argument_list|,
 name|if_name
 argument_list|,
 name|if_idx
+argument_list|,
+name|nl_geterror
+argument_list|(
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -516,6 +563,8 @@ name|if_name
 parameter_list|)
 block|{
 name|int
+name|err
+decl_stmt|,
 name|ret
 init|=
 operator|-
@@ -573,14 +622,18 @@ goto|goto
 name|vlan_rem_error
 goto|;
 block|}
-if|if
-condition|(
+name|err
+operator|=
 name|nl_connect
 argument_list|(
 name|handle
 argument_list|,
 name|NETLINK_ROUTE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 operator|<
 literal|0
 condition|)
@@ -589,15 +642,20 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"VLAN: failed to connect to netlink"
+literal|"VLAN: failed to connect to netlink: %s"
+argument_list|,
+name|nl_geterror
+argument_list|(
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
 name|vlan_rem_error
 goto|;
 block|}
-if|if
-condition|(
+name|err
+operator|=
 name|rtnl_link_alloc_cache
 argument_list|(
 name|handle
@@ -607,6 +665,10 @@ argument_list|,
 operator|&
 name|cache
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 operator|<
 literal|0
 condition|)
@@ -619,7 +681,12 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"VLAN: failed to alloc cache"
+literal|"VLAN: failed to alloc cache: %s"
+argument_list|,
+name|nl_geterror
+argument_list|(
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -655,14 +722,18 @@ goto|goto
 name|vlan_rem_error
 goto|;
 block|}
-if|if
-condition|(
+name|err
+operator|=
 name|rtnl_link_delete
 argument_list|(
 name|handle
 argument_list|,
 name|rlink
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 operator|<
 literal|0
 condition|)
@@ -671,9 +742,14 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"VLAN: failed to remove link %s"
+literal|"VLAN: failed to remove link %s: %s"
 argument_list|,
 name|if_name
+argument_list|,
+name|nl_geterror
+argument_list|(
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto

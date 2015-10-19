@@ -4251,7 +4251,7 @@ name|mpa_rev
 argument_list|,
 literal|0
 argument_list|,
-literal|"MPA Revision, 0 supports amso1100, 1 is RFC0544 spec compliant, 2 is IETF MPA Peer Connect Draft compliant (default = 1)"
+literal|"MPA Revision, 0 supports amso1100, 1 is RFC5044 spec compliant, 2 is IETF MPA Peer Connect Draft compliant (default = 1)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

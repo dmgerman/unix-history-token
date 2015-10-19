@@ -15,13 +15,6 @@ directive|define
 name|WPA_COMMON_H
 end_define
 
-begin_define
-define|#
-directive|define
-name|WPA_MAX_SSID_LEN
-value|32
-end_define
-
 begin_comment
 comment|/* IEEE 802.11i */
 end_comment
@@ -88,7 +81,7 @@ define|#
 directive|define
 name|WPA_ALLOWED_GROUP_CIPHERS
 define|\
-value|(WPA_CIPHER_CCMP | WPA_CIPHER_GCMP | WPA_CIPHER_TKIP | WPA_CIPHER_WEP104 | \ WPA_CIPHER_WEP40 | WPA_CIPHER_GCMP_256 | WPA_CIPHER_CCMP_256 | \ WPA_CIPHER_GTK_NOT_USED)
+value|(WPA_CIPHER_CCMP | WPA_CIPHER_GCMP | WPA_CIPHER_TKIP | \ WPA_CIPHER_GCMP_256 | WPA_CIPHER_CCMP_256 | \ WPA_CIPHER_GTK_NOT_USED)
 end_define
 
 begin_define
@@ -174,47 +167,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|WPA_CIPHER_SUITE_WEP40
-value|RSN_SELECTOR(0x00, 0x50, 0xf2, 1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|WPA_CIPHER_SUITE_TKIP
 value|RSN_SELECTOR(0x00, 0x50, 0xf2, 2)
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|WPA_CIPHER_SUITE_WRAP
-value|RSN_SELECTOR(0x00, 0x50, 0xf2, 3)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
 directive|define
 name|WPA_CIPHER_SUITE_CCMP
 value|RSN_SELECTOR(0x00, 0x50, 0xf2, 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPA_CIPHER_SUITE_WEP104
-value|RSN_SELECTOR(0x00, 0x50, 0xf2, 5)
 end_define
 
 begin_define
@@ -341,13 +302,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|RSN_CIPHER_SUITE_WEP40
-value|RSN_SELECTOR(0x00, 0x0f, 0xac, 1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|RSN_CIPHER_SUITE_TKIP
 value|RSN_SELECTOR(0x00, 0x0f, 0xac, 2)
 end_define
@@ -375,13 +329,6 @@ define|#
 directive|define
 name|RSN_CIPHER_SUITE_CCMP
 value|RSN_SELECTOR(0x00, 0x0f, 0xac, 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RSN_CIPHER_SUITE_WEP104
-value|RSN_SELECTOR(0x00, 0x0f, 0xac, 5)
 end_define
 
 begin_define
@@ -1354,12 +1301,6 @@ begin_comment
 comment|/* CONFIG_IEEE80211W */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_IEEE80211R
-end_ifdef
-
 begin_struct
 struct|struct
 name|rsn_mdie
@@ -1471,15 +1412,6 @@ block|}
 name|STRUCT_PACKED
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_IEEE80211R */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -2321,6 +2253,16 @@ end_function_decl
 begin_function_decl
 name|int
 name|wpa_cipher_to_alg
+parameter_list|(
+name|int
+name|cipher
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|wpa_cipher_valid_group
 parameter_list|(
 name|int
 name|cipher

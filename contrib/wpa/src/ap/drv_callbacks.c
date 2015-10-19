@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"fst/fst.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"wnm_ap.h"
 end_include
 
@@ -201,9 +207,17 @@ decl_stmt|;
 name|size_t
 name|ielen
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CONFIG_IEEE80211R
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_IEEE80211W
+argument_list|)
 name|u8
 name|buf
 index|[
@@ -224,7 +238,7 @@ name|buf
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* CONFIG_IEEE80211R */
+comment|/* CONFIG_IEEE80211R || CONFIG_IEEE80211W */
 name|u16
 name|reason
 init|=
@@ -254,8 +268,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"hostapd_notif_assoc: Skip event with "
-literal|"no address"
+literal|"hostapd_notif_assoc: Skip event with no address"
 argument_list|)
 expr_stmt|;
 return|return
@@ -442,8 +455,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"STA did not include WPS/RSN/WPA IE in "
-literal|"(Re)AssocReq"
+literal|"STA did not include WPS/RSN/WPA IE in (Re)AssocReq"
 argument_list|)
 expr_stmt|;
 block|}
@@ -590,16 +602,6 @@ name|elems
 operator|.
 name|ht_capabilities
 operator|&&
-name|elems
-operator|.
-name|ht_capabilities_len
-operator|>=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ieee80211_ht_capabilities
-argument_list|)
-operator|&&
 operator|(
 name|hapd
 operator|->
@@ -744,6 +746,46 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_HS20 */
+ifdef|#
+directive|ifdef
+name|CONFIG_FST
+name|wpabuf_free
+argument_list|(
+name|sta
+operator|->
+name|mb_ies
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hapd
+operator|->
+name|iface
+operator|->
+name|fst
+condition|)
+name|sta
+operator|->
+name|mb_ies
+operator|=
+name|mb_ies_by_info
+argument_list|(
+operator|&
+name|elems
+operator|.
+name|mb_ies
+argument_list|)
+expr_stmt|;
+else|else
+name|sta
+operator|->
+name|mb_ies
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_FST */
 if|if
 condition|(
 name|hapd
@@ -780,9 +822,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"STA did not include "
-literal|"WPA/RSN IE in (Re)Association "
-literal|"Request - possible WPS use"
+literal|"STA did not include WPA/RSN IE in (Re)Association Request - possible WPS use"
 argument_list|)
 expr_stmt|;
 name|sta
@@ -888,8 +928,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"WPS: STA "
-literal|"supports WPS 2.0"
+literal|"WPS: STA supports WPS 2.0"
 argument_list|)
 expr_stmt|;
 name|sta
@@ -950,8 +989,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"Failed to initialize WPA state "
-literal|"machine"
+literal|"Failed to initialize WPA state machine"
 argument_list|)
 expr_stmt|;
 return|return
@@ -995,8 +1033,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"WPA/RSN information element "
-literal|"rejected? (res %u)"
+literal|"WPA/RSN information element rejected? (res %u)"
 argument_list|,
 name|res
 argument_list|)
@@ -1188,9 +1225,6 @@ argument_list|,
 name|sta
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CONFIG_IEEE80211R
 name|status
 operator|=
 name|WLAN_STATUS_ASSOC_REJECTED_TEMPORARILY
@@ -1223,9 +1257,6 @@ operator|-
 name|buf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* CONFIG_IEEE80211R */
 return|return
 literal|0
 return|;
@@ -1423,8 +1454,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"WPS: STA supports "
-literal|"WPS 2.0"
+literal|"WPS: STA supports WPS 2.0"
 argument_list|)
 expr_stmt|;
 name|sta
@@ -1537,8 +1567,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_WARNING
 argument_list|,
-literal|"Failed to initialize WPA "
-literal|"state machine"
+literal|"Failed to initialize WPA state machine"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1856,8 +1885,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"hostapd_notif_disassoc: Skip event "
-literal|"with no address"
+literal|"hostapd_notif_disassoc: Skip event with no address"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1895,8 +1923,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"Disassociation notification for "
-literal|"unknown STA "
+literal|"Disassociation notification for unknown STA "
 name|MACSTR
 argument_list|,
 name|MAC2STR
@@ -2011,8 +2038,7 @@ name|HOSTAPD_MODULE_IEEE80211
 argument_list|,
 name|HOSTAPD_LEVEL_INFO
 argument_list|,
-literal|"disconnected due to excessive "
-literal|"missing ACKs"
+literal|"disconnected due to excessive missing ACKs"
 argument_list|)
 expr_stmt|;
 name|hostapd_drv_sta_disassoc
@@ -2149,8 +2175,7 @@ name|HOSTAPD_MODULE_IEEE80211
 argument_list|,
 name|HOSTAPD_LEVEL_WARNING
 argument_list|,
-literal|"driver switched to "
-literal|"bad channel!"
+literal|"driver switched to bad channel!"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2486,18 +2511,16 @@ name|hostapd_data
 modifier|*
 name|hapd
 parameter_list|,
-name|u8
-name|pri_channel
-parameter_list|,
-name|u8
-name|sec_channel
+name|struct
+name|acs_selected_channels
+modifier|*
+name|acs_res
 parameter_list|)
 block|{
 name|int
-name|channel
-decl_stmt|;
-name|int
 name|ret
+decl_stmt|,
+name|i
 decl_stmt|;
 if|if
 condition|(
@@ -2523,6 +2546,97 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+operator|!
+name|hapd
+operator|->
+name|iface
+operator|->
+name|current_mode
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|hapd
+operator|->
+name|iface
+operator|->
+name|num_hw_features
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|struct
+name|hostapd_hw_modes
+modifier|*
+name|mode
+init|=
+operator|&
+name|hapd
+operator|->
+name|iface
+operator|->
+name|hw_features
+index|[
+name|i
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|mode
+operator|->
+name|mode
+operator|==
+name|acs_res
+operator|->
+name|hw_mode
+condition|)
+block|{
+name|hapd
+operator|->
+name|iface
+operator|->
+name|current_mode
+operator|=
+name|mode
+expr_stmt|;
+break|break;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|hapd
+operator|->
+name|iface
+operator|->
+name|current_mode
+condition|)
+block|{
+name|hostapd_logger
+argument_list|(
+name|hapd
+argument_list|,
+name|NULL
+argument_list|,
+name|HOSTAPD_MODULE_IEEE80211
+argument_list|,
+name|HOSTAPD_LEVEL_WARNING
+argument_list|,
+literal|"driver selected to bad hw_mode"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+block|}
 name|hapd
 operator|->
 name|iface
@@ -2533,17 +2647,17 @@ name|hostapd_hw_get_freq
 argument_list|(
 name|hapd
 argument_list|,
+name|acs_res
+operator|->
 name|pri_channel
 argument_list|)
-expr_stmt|;
-name|channel
-operator|=
-name|pri_channel
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|channel
+name|acs_res
+operator|->
+name|pri_channel
 condition|)
 block|{
 name|hostapd_logger
@@ -2567,10 +2681,22 @@ name|iconf
 operator|->
 name|channel
 operator|=
-name|channel
+name|acs_res
+operator|->
+name|pri_channel
+expr_stmt|;
+name|hapd
+operator|->
+name|iconf
+operator|->
+name|acs
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
+name|acs_res
+operator|->
 name|sec_channel
 operator|==
 literal|0
@@ -2586,8 +2712,12 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|acs_res
+operator|->
 name|sec_channel
 operator|<
+name|acs_res
+operator|->
 name|pri_channel
 condition|)
 name|hapd
@@ -2602,8 +2732,12 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|acs_res
+operator|->
 name|sec_channel
 operator|>
+name|acs_res
+operator|->
 name|pri_channel
 condition|)
 name|hapd
@@ -2624,6 +2758,141 @@ literal|"Invalid secondary channel!"
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+if|if
+condition|(
+name|hapd
+operator|->
+name|iface
+operator|->
+name|conf
+operator|->
+name|ieee80211ac
+condition|)
+block|{
+comment|/* set defaults for backwards compatibility */
+name|hapd
+operator|->
+name|iconf
+operator|->
+name|vht_oper_centr_freq_seg1_idx
+operator|=
+literal|0
+expr_stmt|;
+name|hapd
+operator|->
+name|iconf
+operator|->
+name|vht_oper_centr_freq_seg0_idx
+operator|=
+literal|0
+expr_stmt|;
+name|hapd
+operator|->
+name|iconf
+operator|->
+name|vht_oper_chwidth
+operator|=
+name|VHT_CHANWIDTH_USE_HT
+expr_stmt|;
+if|if
+condition|(
+name|acs_res
+operator|->
+name|ch_width
+operator|==
+literal|80
+condition|)
+block|{
+name|hapd
+operator|->
+name|iconf
+operator|->
+name|vht_oper_centr_freq_seg0_idx
+operator|=
+name|acs_res
+operator|->
+name|vht_seg0_center_ch
+expr_stmt|;
+name|hapd
+operator|->
+name|iconf
+operator|->
+name|vht_oper_chwidth
+operator|=
+name|VHT_CHANWIDTH_80MHZ
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|acs_res
+operator|->
+name|ch_width
+operator|==
+literal|160
+condition|)
+block|{
+if|if
+condition|(
+name|acs_res
+operator|->
+name|vht_seg1_center_ch
+operator|==
+literal|0
+condition|)
+block|{
+name|hapd
+operator|->
+name|iconf
+operator|->
+name|vht_oper_centr_freq_seg0_idx
+operator|=
+name|acs_res
+operator|->
+name|vht_seg0_center_ch
+expr_stmt|;
+name|hapd
+operator|->
+name|iconf
+operator|->
+name|vht_oper_chwidth
+operator|=
+name|VHT_CHANWIDTH_160MHZ
+expr_stmt|;
+block|}
+else|else
+block|{
+name|hapd
+operator|->
+name|iconf
+operator|->
+name|vht_oper_centr_freq_seg0_idx
+operator|=
+name|acs_res
+operator|->
+name|vht_seg0_center_ch
+expr_stmt|;
+name|hapd
+operator|->
+name|iconf
+operator|->
+name|vht_oper_centr_freq_seg1_idx
+operator|=
+name|acs_res
+operator|->
+name|vht_seg1_center_ch
+expr_stmt|;
+name|hapd
+operator|->
+name|iconf
+operator|->
+name|vht_oper_chwidth
+operator|=
+name|VHT_CHANWIDTH_80P80MHZ
+expr_stmt|;
+block|}
+block|}
 block|}
 name|ret
 operator|=
@@ -3074,8 +3343,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"FT: Failed to initialize WPA "
-literal|"state machine"
+literal|"FT: Failed to initialize WPA state machine"
 argument_list|)
 expr_stmt|;
 name|status
@@ -3410,6 +3678,48 @@ block|}
 endif|#
 directive|endif
 comment|/* CONFIG_WNM */
+ifdef|#
+directive|ifdef
+name|CONFIG_FST
+if|if
+condition|(
+name|mgmt
+operator|->
+name|u
+operator|.
+name|action
+operator|.
+name|category
+operator|==
+name|WLAN_ACTION_FST
+operator|&&
+name|hapd
+operator|->
+name|iface
+operator|->
+name|fst
+condition|)
+block|{
+name|fst_rx_action
+argument_list|(
+name|hapd
+operator|->
+name|iface
+operator|->
+name|fst
+argument_list|,
+name|mgmt
+argument_list|,
+name|drv_mgmt
+operator|->
+name|frame_len
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
+comment|/* CONFIG_FST */
 block|}
 end_function
 
@@ -3781,16 +4091,14 @@ condition|)
 block|{
 name|u16
 name|fc
-decl_stmt|;
-name|fc
-operator|=
+init|=
 name|le_to_host16
 argument_list|(
 name|hdr
 operator|->
 name|frame_control
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/* 		 * Drop frames to unknown BSSIDs except for Beacon frames which 		 * could be used to update neighbor information. 		 */
 if|if
 condition|(
@@ -4218,9 +4526,6 @@ name|j
 operator|++
 control|)
 block|{
-if|if
-condition|(
-operator|(
 name|sta
 operator|=
 name|ap_get_sta
@@ -4234,11 +4539,11 @@ index|]
 argument_list|,
 name|src
 argument_list|)
-operator|)
-condition|)
-block|{
+expr_stmt|;
 if|if
 condition|(
+name|sta
+operator|&&
 name|sta
 operator|->
 name|flags
@@ -4256,7 +4561,6 @@ name|j
 index|]
 expr_stmt|;
 break|break;
-block|}
 block|}
 block|}
 name|ieee802_1x_receive
@@ -6133,17 +6437,10 @@ name|hostapd_acs_channel_selected
 argument_list|(
 name|hapd
 argument_list|,
+operator|&
 name|data
 operator|->
 name|acs_selected_channels
-operator|.
-name|pri_channel
-argument_list|,
-name|data
-operator|->
-name|acs_selected_channels
-operator|.
-name|sec_channel
 argument_list|)
 expr_stmt|;
 break|break;

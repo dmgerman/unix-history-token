@@ -3560,11 +3560,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|fail2
+goto|;
 block|}
 name|mem_charged
 operator|=

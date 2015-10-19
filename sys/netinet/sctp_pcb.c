@@ -4758,7 +4758,7 @@ name|SCTP_DEBUG_PCB1
 argument_list|,
 literal|"%s: NULL ifa\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -7291,7 +7291,7 @@ name|SCTP_DEBUG_PCB1
 argument_list|,
 literal|"%s: NULL ifa\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -9795,7 +9795,7 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"%s: failed to get asconf lookup addr\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -9904,7 +9904,7 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"%s: failed to get asconf v6 lookup addr\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -10060,7 +10060,7 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"%s: failed to get asconf v4 lookup addr\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -24181,7 +24181,7 @@ name|SCTP_DEBUG_PCB1
 argument_list|,
 literal|"%s: NULL ifa\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -28365,7 +28365,7 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|op_err
@@ -28787,7 +28787,7 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|op_err

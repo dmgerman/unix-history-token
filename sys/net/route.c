@@ -3852,29 +3852,6 @@ name|flags
 value|info->rti_flags
 end_define
 
-begin_function
-name|int
-name|rt_getifa
-parameter_list|(
-name|struct
-name|rt_addrinfo
-modifier|*
-name|info
-parameter_list|)
-block|{
-return|return
-operator|(
-name|rt_getifa_fib
-argument_list|(
-name|info
-argument_list|,
-name|RT_DEFAULT_FIB
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Look up rt_addrinfo for a specific fib.  Note that if rti_ifa is defined,  * it will be referenced so the caller must free it.  */
 end_comment

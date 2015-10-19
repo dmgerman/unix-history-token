@@ -464,6 +464,7 @@ name|void
 modifier|*
 name|eapol_ctx
 parameter_list|,
+specifier|const
 name|struct
 name|eapol_callbacks
 modifier|*

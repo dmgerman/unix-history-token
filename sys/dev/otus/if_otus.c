@@ -1013,14 +1013,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|ieee80211_node
 modifier|*
 name|otus_node_alloc
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
+name|vap
+parameter_list|,
+specifier|const
+name|uint8_t
+name|mac
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3991,6 +4000,8 @@ comment|/* Short slot time supported. */
 name|IEEE80211_C_FF
 operator||
 comment|/* Atheros fast-frames supported. */
+name|IEEE80211_C_MONITOR
+operator||
 name|IEEE80211_C_WPA
 expr_stmt|;
 comment|/* WPA/RSN. */
@@ -4177,6 +4188,12 @@ operator|->
 name|ic_newassoc
 operator|=
 name|otus_newassoc
+expr_stmt|;
+name|ic
+operator|->
+name|ic_node_alloc
+operator|=
+name|otus_node_alloc
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -6777,15 +6794,23 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|ieee80211_node
 modifier|*
 name|otus_node_alloc
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
-name|ic
+name|vap
+parameter_list|,
+specifier|const
+name|uint8_t
+name|mac
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
 parameter_list|)
 block|{
 return|return
@@ -6797,7 +6822,7 @@ expr|struct
 name|otus_node
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_80211_NODE
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -10241,6 +10266,27 @@ name|IEEE80211_FC0_TYPE_MASK
 operator|)
 operator|!=
 name|IEEE80211_FC0_TYPE_DATA
+condition|)
+block|{
+comment|/* Get lowest rate */
+name|rate
+operator|=
+name|otus_rate_to_hw_rate
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_EAPOL
 condition|)
 block|{
 comment|/* Get lowest rate */
@@ -14880,7 +14926,16 @@ directive|endif
 block|case IEEE80211_M_STA: 		otus_write(sc, 0x1c3700, 0x0f000002); 		otus_write(sc, 0x1c3c40, 0x1); 		break; 	default: 		break; 	}
 endif|#
 directive|endif
-comment|/* Expect STA operation */
+switch|switch
+condition|(
+name|ic
+operator|->
+name|ic_opmode
+condition|)
+block|{
+case|case
+name|IEEE80211_M_STA
+case|:
 name|otus_write
 argument_list|(
 name|sc
@@ -14899,6 +14954,23 @@ argument_list|,
 literal|0x1
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_M_MONITOR
+case|:
+name|otus_write
+argument_list|(
+name|sc
+argument_list|,
+literal|0x1c368c
+argument_list|,
+literal|0xffffffff
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 comment|/* XXX ic_opmode? */
 name|otus_write
 argument_list|(

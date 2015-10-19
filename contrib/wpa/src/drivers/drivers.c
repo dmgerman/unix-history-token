@@ -319,9 +319,11 @@ comment|/* CONFIG_DRIVER_NONE */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|wpa_driver_ops
 modifier|*
+specifier|const
 name|wpa_drivers
 index|[]
 init|=

@@ -968,7 +968,7 @@ modifier|*
 name|ic_report
 decl_stmt|;
 name|int
-name|is_ht_allowed
+name|is_ht40_allowed
 init|=
 literal|1
 decl_stmt|;
@@ -1153,7 +1153,7 @@ argument_list|,
 literal|"20 MHz BSS width request bit is set in BSS coexistence information field"
 argument_list|)
 expr_stmt|;
-name|is_ht_allowed
+name|is_ht40_allowed
 operator|=
 literal|0
 expr_stmt|;
@@ -1182,7 +1182,7 @@ argument_list|,
 literal|"40 MHz intolerant bit is set in BSS coexistence information field"
 argument_list|)
 expr_stmt|;
-name|is_ht_allowed
+name|is_ht40_allowed
 operator|=
 literal|0
 expr_stmt|;
@@ -1307,7 +1307,7 @@ argument_list|,
 name|chan
 argument_list|)
 expr_stmt|;
-name|is_ht_allowed
+name|is_ht40_allowed
 operator|=
 literal|0
 expr_stmt|;
@@ -1317,9 +1317,9 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"is_ht_allowed=%d num_sta_ht40_intolerant=%d"
+literal|"is_ht40_allowed=%d num_sta_ht40_intolerant=%d"
 argument_list|,
-name|is_ht_allowed
+name|is_ht40_allowed
 argument_list|,
 name|iface
 operator|->
@@ -1329,7 +1329,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|is_ht_allowed
+name|is_ht40_allowed
 operator|&&
 operator|(
 name|iface
@@ -1464,24 +1464,22 @@ specifier|const
 name|u8
 modifier|*
 name|ht_capab
-parameter_list|,
-name|size_t
-name|ht_capab_len
 parameter_list|)
 block|{
-comment|/* Disable HT caps for STAs associated to no-HT BSSes. */
+comment|/* 	 * Disable HT caps for STAs associated to no-HT BSSes, or for stations 	 * that did not specify a valid WMM IE in the (Re)Association Request 	 * frame. 	 */
 if|if
 condition|(
 operator|!
 name|ht_capab
 operator|||
-name|ht_capab_len
-operator|<
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ieee80211_ht_capabilities
-argument_list|)
+operator|!
+operator|(
+name|sta
+operator|->
+name|flags
+operator|&
+name|WLAN_STA_WMM
+operator|)
 operator|||
 name|hapd
 operator|->

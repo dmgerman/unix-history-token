@@ -988,6 +988,12 @@ operator|->
 name|SUPP_PAE_state
 operator|==
 name|SUPP_PAE_CONNECTING
+operator|||
+name|sm
+operator|->
+name|SUPP_PAE_state
+operator|==
+name|SUPP_PAE_HELD
 decl_stmt|;
 name|SM_ENTRY
 argument_list|(
@@ -2828,6 +2834,9 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|CONFIG_NO_RC4
 name|u8
 name|ekey
 index|[
@@ -2836,6 +2845,9 @@ operator|+
 name|IEEE8021X_ENCR_KEY_LEN
 index|]
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_NO_RC4 */
 name|int
 name|key_len
 decl_stmt|,
@@ -3343,6 +3355,27 @@ operator|==
 name|rx_key_length
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|CONFIG_NO_RC4
+if|if
+condition|(
+name|encr_key_len
+condition|)
+block|{
+comment|/* otherwise unused */
+block|}
+name|wpa_printf
+argument_list|(
+name|MSG_ERROR
+argument_list|,
+literal|"EAPOL: RC4 not supported in the build"
+argument_list|)
+expr_stmt|;
+return|return;
+else|#
+directive|else
+comment|/* CONFIG_NO_RC4 */
 name|os_memcpy
 argument_list|(
 name|ekey
@@ -3404,6 +3437,9 @@ argument_list|,
 name|key_len
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_NO_RC4 */
 block|}
 elseif|else
 if|if
@@ -7946,6 +7982,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|eapol_callbacks
 name|eapol_cb

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 by Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -244,7 +244,47 @@ name|lzc_send_flags
 parameter_list|)
 function_decl|;
 name|int
+name|lzc_send_resume
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|enum
+name|lzc_send_flags
+parameter_list|,
+name|uint64_t
+parameter_list|,
+name|uint64_t
+parameter_list|)
+function_decl|;
+name|int
 name|lzc_receive
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|nvlist_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|boolean_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|int
+name|lzc_receive_resumable
 parameter_list|(
 specifier|const
 name|char

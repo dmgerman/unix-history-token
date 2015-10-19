@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2013 Intel Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (C) 2013 Intel Corporation  * Copyright (C) 2015 EMC Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -39,22 +39,25 @@ end_define
 begin_define
 define|#
 directive|define
-name|XEON_MSIX_CNT
-value|4
+name|NTB_LNK_STA_WIDTH
+parameter_list|(
+name|sta
+parameter_list|)
+value|(((sta)& NTB_LINK_WIDTH_MASK)>> 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XEON_MAX_SPADS
-value|16
+name|XEON_SNB_MW_COUNT
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|XEON_MAX_COMPAT_SPADS
-value|16
+name|XEON_HSX_SPLIT_MW_COUNT
+value|3
 end_define
 
 begin_comment
@@ -64,22 +67,43 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XEON_MAX_DB_BITS
+name|XEON_DB_COUNT
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|XEON_DB_BITS_PER_VEC
+name|XEON_DB_LINK
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_DB_MSIX_VECTOR_COUNT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_DB_MSIX_VECTOR_SHIFT
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|XEON_DB_HW_LINK
-value|0x8000
+name|XEON_DB_LINK_BIT
+value|(1<< XEON_DB_LINK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_SPAD_COUNT
+value|16
 end_define
 
 begin_define
@@ -127,6 +151,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|XEON_PBAR5LMT_OFFSET
+value|0x000c
+end_define
+
+begin_define
+define|#
+directive|define
 name|XEON_PBAR2XLAT_OFFSET
 value|0x0010
 end_define
@@ -136,6 +167,13 @@ define|#
 directive|define
 name|XEON_PBAR4XLAT_OFFSET
 value|0x0018
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_PBAR5XLAT_OFFSET
+value|0x001c
 end_define
 
 begin_define
@@ -155,6 +193,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|XEON_SBAR5LMT_OFFSET
+value|0x002c
+end_define
+
+begin_define
+define|#
+directive|define
 name|XEON_SBAR2XLAT_OFFSET
 value|0x0030
 end_define
@@ -164,6 +209,13 @@ define|#
 directive|define
 name|XEON_SBAR4XLAT_OFFSET
 value|0x0038
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_SBAR5XLAT_OFFSET
+value|0x003c
 end_define
 
 begin_define
@@ -185,6 +237,13 @@ define|#
 directive|define
 name|XEON_SBAR4BASE_OFFSET
 value|0x0050
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_SBAR5BASE_OFFSET
+value|0x0054
 end_define
 
 begin_define
@@ -288,29 +347,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOC_MSIX_CNT
+name|SOC_MW_COUNT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOC_DB_COUNT
 value|34
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_MAX_SPADS
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOC_MAX_DB_BITS
+name|SOC_DB_MSIX_VECTOR_COUNT
 value|34
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_DB_BITS_PER_VEC
+name|SOC_DB_MSIX_VECTOR_SHIFT
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOC_SPAD_COUNT
+value|16
 end_define
 
 begin_define
@@ -554,15 +620,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|NTB_CNTL_BAR23_SNOOP
+name|NTB_CNTL_S2P_BAR23_SNOOP
 value|(1<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NTB_CNTL_BAR45_SNOOP
+name|NTB_CNTL_P2S_BAR23_SNOOP
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_CNTL_S2P_BAR4_SNOOP
 value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_CNTL_P2S_BAR4_SNOOP
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_CNTL_S2P_BAR5_SNOOP
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_CNTL_P2S_BAR5_SNOOP
+value|(1<< 14)
 end_define
 
 begin_define
@@ -589,6 +683,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|XEON_PBAR4SZ_OFFSET
+value|0x00d1
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_PBAR5SZ_OFFSET
+value|0x00d5
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_SBAR23SZ_OFFSET
+value|0x00d2
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_SBAR4SZ_OFFSET
+value|0x00d3
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_SBAR5SZ_OFFSET
+value|0x00d6
+end_define
+
+begin_define
+define|#
+directive|define
 name|NTB_PPD_OFFSET
 value|0x00d4
 end_define
@@ -605,6 +734,13 @@ define|#
 directive|define
 name|XEON_PPD_DEV_TYPE
 value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_PPD_SPLIT_BAR
+value|0x0040
 end_define
 
 begin_define
@@ -663,74 +799,89 @@ name|NTB_DEV_USD
 value|0
 end_define
 
+begin_comment
+comment|/* All addresses are in low 32-bit space so 32-bit BARs can function */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PBAR2XLAT_USD_ADDR
-value|0x0000004000000000ull
+name|XEON_B2B_BAR0_USD_ADDR
+value|0x1000000000000000ull
 end_define
 
 begin_define
 define|#
 directive|define
-name|PBAR4XLAT_USD_ADDR
-value|0x0000008000000000ull
+name|XEON_B2B_BAR2_USD_ADDR64
+value|0x2000000000000000ull
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBAR01_USD_ADDR
-value|0x000000210000000cull
+name|XEON_B2B_BAR4_USD_ADDR64
+value|0x4000000000000000ull
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBAR23_USD_ADDR
-value|0x000000410000000cull
+name|XEON_B2B_BAR4_USD_ADDR32
+value|0x20000000ull
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBAR45_USD_ADDR
-value|0x000000810000000cull
+name|XEON_B2B_BAR5_USD_ADDR32
+value|0x40000000ull
 end_define
 
 begin_define
 define|#
 directive|define
-name|PBAR2XLAT_DSD_ADDR
-value|0x0000004100000000ull
+name|XEON_B2B_BAR0_DSD_ADDR
+value|0x9000000000000000ull
 end_define
 
 begin_define
 define|#
 directive|define
-name|PBAR4XLAT_DSD_ADDR
-value|0x0000008100000000ull
+name|XEON_B2B_BAR2_DSD_ADDR64
+value|0xa000000000000000ull
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBAR01_DSD_ADDR
-value|0x000000200000000cull
+name|XEON_B2B_BAR4_DSD_ADDR64
+value|0xc000000000000000ull
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBAR23_DSD_ADDR
-value|0x000000400000000cull
+name|XEON_B2B_BAR4_DSD_ADDR32
+value|0xa0000000ull
 end_define
 
 begin_define
 define|#
 directive|define
-name|MBAR45_DSD_ADDR
-value|0x000000800000000cull
+name|XEON_B2B_BAR5_DSD_ADDR32
+value|0xc0000000ull
+end_define
+
+begin_comment
+comment|/* The peer ntb secondary config space is 32KB fixed size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEON_B2B_MIN_SIZE
+value|0x8000
 end_define
 
 begin_comment

@@ -49,6 +49,15 @@ name|int
 name|magic
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|aligned
+argument_list|(
+literal|8
+argument_list|)
+operator|)
+argument_list|)
 struct|;
 end_struct
 

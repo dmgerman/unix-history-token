@@ -262,12 +262,10 @@ name|u8
 name|id
 parameter_list|,
 specifier|const
-name|u8
+name|struct
+name|wpabuf
 modifier|*
 name|in_data
-parameter_list|,
-name|size_t
-name|in_len
 parameter_list|,
 name|struct
 name|wpabuf

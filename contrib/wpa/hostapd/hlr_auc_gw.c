@@ -233,6 +233,9 @@ decl_stmt|;
 name|int
 name|set
 decl_stmt|;
+name|size_t
+name|res_len
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -274,6 +277,13 @@ define|#
 directive|define
 name|EAP_AKA_AUTS_LEN
 value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|EAP_AKA_RES_MIN_LEN
+value|4
 end_define
 
 begin_define
@@ -401,7 +411,8 @@ literal|"  imsi INTEGER PRIMARY KEY NOT NULL,"
 literal|"  ki CHAR(32) NOT NULL,"
 literal|"  opc CHAR(32) NOT NULL,"
 literal|"  amf CHAR(4) NOT NULL,"
-literal|"  sqn CHAR(12) NOT NULL"
+literal|"  sqn CHAR(12) NOT NULL,"
+literal|"  res_len INTEGER"
 literal|");"
 decl_stmt|;
 name|printf
@@ -781,6 +792,39 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
+name|os_strcmp
+argument_list|(
+name|col
+index|[
+name|i
+index|]
+argument_list|,
+literal|"res_len"
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|argv
+index|[
+name|i
+index|]
+condition|)
+block|{
+name|m
+operator|->
+name|res_len
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 literal|0
@@ -859,7 +903,7 @@ argument_list|(
 name|cmd
 argument_list|)
 argument_list|,
-literal|"SELECT ki,opc,amf,sqn FROM milenage WHERE imsi=%llu;"
+literal|"SELECT * FROM milenage WHERE imsi=%llu;"
 argument_list|,
 name|imsi
 argument_list|)
@@ -1912,7 +1956,7 @@ block|{
 name|line
 operator|++
 expr_stmt|;
-comment|/* Parse IMSI Ki OPc AMF SQN */
+comment|/* Parse IMSI Ki OPc AMF SQN [RES_len] */
 name|buf
 index|[
 sizeof|sizeof
@@ -2411,12 +2455,66 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|pos2
+condition|)
+block|{
 name|pos
 operator|=
 name|pos2
 operator|+
 literal|1
 expr_stmt|;
+name|m
+operator|->
+name|res_len
+operator|=
+name|atoi
+argument_list|(
+name|pos
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|res_len
+operator|&&
+operator|(
+name|m
+operator|->
+name|res_len
+operator|<
+name|EAP_AKA_RES_MIN_LEN
+operator|||
+name|m
+operator|->
+name|res_len
+operator|>
+name|EAP_AKA_RES_MAX_LEN
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s:%d - Invalid RES_len (%s)\n"
+argument_list|,
+name|fname
+argument_list|,
+name|line
+argument_list|,
+name|pos
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+block|}
+block|}
 name|m
 operator|->
 name|next
@@ -2467,6 +2565,11 @@ modifier|*
 name|f2
 decl_stmt|;
 name|char
+name|name
+index|[
+literal|500
+index|]
+decl_stmt|,
 name|buf
 index|[
 literal|500
@@ -2521,11 +2624,11 @@ return|return;
 block|}
 name|snprintf
 argument_list|(
-name|buf
+name|name
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|buf
+name|name
 argument_list|)
 argument_list|,
 literal|"%s.new"
@@ -2537,7 +2640,7 @@ name|f2
 operator|=
 name|fopen
 argument_list|(
-name|buf
+name|name
 argument_list|,
 literal|"w"
 argument_list|)
@@ -2553,7 +2656,7 @@ name|printf
 argument_list|(
 literal|"Could not write Milenage data file '%s'\n"
 argument_list|,
-name|buf
+name|name
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -2814,11 +2917,11 @@ argument_list|)
 expr_stmt|;
 name|snprintf
 argument_list|(
-name|buf
+name|name
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|buf
+name|name
 argument_list|)
 argument_list|,
 literal|"%s.bak"
@@ -2832,7 +2935,7 @@ name|rename
 argument_list|(
 name|fname
 argument_list|,
-name|buf
+name|name
 argument_list|)
 operator|<
 literal|0
@@ -2847,11 +2950,11 @@ return|return;
 block|}
 name|snprintf
 argument_list|(
-name|buf
+name|name
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|buf
+name|name
 argument_list|)
 argument_list|,
 literal|"%s.new"
@@ -2863,7 +2966,7 @@ if|if
 condition|(
 name|rename
 argument_list|(
-name|buf
+name|name
 argument_list|,
 name|fname
 argument_list|)
@@ -4043,6 +4146,32 @@ argument_list|,
 operator|&
 name|res_len
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|res_len
+operator|>=
+name|EAP_AKA_RES_MIN_LEN
+operator|&&
+name|m
+operator|->
+name|res_len
+operator|<=
+name|EAP_AKA_RES_MAX_LEN
+operator|&&
+name|m
+operator|->
+name|res_len
+operator|<
+name|res_len
+condition|)
+name|res_len
+operator|=
+name|m
+operator|->
+name|res_len
 expr_stmt|;
 block|}
 else|else

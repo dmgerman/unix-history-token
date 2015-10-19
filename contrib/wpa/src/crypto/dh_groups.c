@@ -16709,6 +16709,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|dh_group
 name|dh_groups

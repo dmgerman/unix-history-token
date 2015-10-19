@@ -81,6 +81,17 @@ name|DEFAULT_MESH_MAX_INACTIVITY
 value|300
 end_define
 
+begin_comment
+comment|/*  * The default dot11RSNASAERetransPeriod is defined as 40 ms in the standard,  * but use 1000 ms in practice to avoid issues on low power CPUs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_DOT11_RSNA_SAE_RETRANS_PERIOD
+value|1000
+end_define
+
 begin_define
 define|#
 directive|define
@@ -203,6 +214,12 @@ begin_include
 include|#
 directive|include
 file|"wps/wps.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"common/ieee802_11_defs.h"
 end_include
 
 begin_include
@@ -343,7 +360,7 @@ block|{
 name|u8
 name|ssid
 index|[
-name|MAX_SSID_LEN
+name|SSID_MAX_LEN
 index|]
 decl_stmt|;
 name|size_t
@@ -596,7 +613,7 @@ comment|/** 	 * eapol_version - IEEE 802.1X/EAPOL version number 	 * 	 * wpa_sup
 name|int
 name|eapol_version
 decl_stmt|;
-comment|/** 	 * ap_scan - AP scanning/selection 	 * 	 * By default, wpa_supplicant requests driver to perform AP 	 * scanning and then uses the scan results to select a 	 * suitable AP. Another alternative is to allow the driver to 	 * take care of AP scanning and selection and use 	 * wpa_supplicant just to process EAPOL frames based on IEEE 	 * 802.11 association information from the driver. 	 * 	 * 1: wpa_supplicant initiates scanning and AP selection (default). 	 * 	 * 0: Driver takes care of scanning, AP selection, and IEEE 802.11 	 * association parameters (e.g., WPA IE generation); this mode can 	 * also be used with non-WPA drivers when using IEEE 802.1X mode; 	 * do not try to associate with APs (i.e., external program needs 	 * to control association). This mode must also be used when using 	 * wired Ethernet drivers. 	 * 	 * 2: like 0, but associate with APs using security policy and SSID 	 * (but not BSSID); this can be used, e.g., with ndiswrapper and NDIS 	 * drivers to enable operation with hidden SSIDs and optimized roaming; 	 * in this mode, the network blocks in the configuration are tried 	 * one by one until the driver reports successful association; each 	 * network block should have explicit security policy (i.e., only one 	 * option in the lists) for key_mgmt, pairwise, group, proto variables. 	 */
+comment|/** 	 * ap_scan - AP scanning/selection 	 * 	 * By default, wpa_supplicant requests driver to perform AP 	 * scanning and then uses the scan results to select a 	 * suitable AP. Another alternative is to allow the driver to 	 * take care of AP scanning and selection and use 	 * wpa_supplicant just to process EAPOL frames based on IEEE 	 * 802.11 association information from the driver. 	 * 	 * 1: wpa_supplicant initiates scanning and AP selection (default). 	 * 	 * 0: Driver takes care of scanning, AP selection, and IEEE 802.11 	 * association parameters (e.g., WPA IE generation); this mode can 	 * also be used with non-WPA drivers when using IEEE 802.1X mode; 	 * do not try to associate with APs (i.e., external program needs 	 * to control association). This mode must also be used when using 	 * wired Ethernet drivers. 	 * 	 * 2: like 0, but associate with APs using security policy and SSID 	 * (but not BSSID); this can be used, e.g., with ndiswrapper and NDIS 	 * drivers to enable operation with hidden SSIDs and optimized roaming; 	 * in this mode, the network blocks in the configuration are tried 	 * one by one until the driver reports successful association; each 	 * network block should have explicit security policy (i.e., only one 	 * option in the lists) for key_mgmt, pairwise, group, proto variables. 	 * 	 * Note: ap_scan=2 should not be used with the nl80211 driver interface 	 * (the current Linux interface). ap_scan=1 is optimized work working 	 * with nl80211. For finding networks using hidden SSID, scan_ssid=1 in 	 * the network block can be used with nl80211. 	 */
 name|int
 name|ap_scan
 decl_stmt|;
@@ -835,6 +852,31 @@ comment|/** 	 * p2p_group_idle - Maximum idle time in seconds for P2P group 	 * 
 name|int
 name|p2p_group_idle
 decl_stmt|;
+comment|/** 	 * p2p_go_freq_change_policy - The GO frequency change policy 	 * 	 * This controls the behavior of the GO when there is a change in the 	 * map of the currently used frequencies in case more than one channel 	 * is supported. 	 * 	 * @P2P_GO_FREQ_MOVE_SCM: Prefer working in a single channel mode if 	 * possible. In case the GO is the only interface using its frequency 	 * and there are other station interfaces on other frequencies, the GO 	 * will migrate to one of these frequencies. 	 * 	 * @P2P_GO_FREQ_MOVE_SCM_PEER_SUPPORTS: Same as P2P_GO_FREQ_MOVE_SCM, 	 * but a transition is possible only in case one of the other used 	 * frequencies is one of the frequencies in the intersection of the 	 * frequency list of the local device and the peer device. 	 * 	 * @P2P_GO_FREQ_MOVE_STAY: Prefer to stay on the current frequency. 	 */
+enum|enum
+block|{
+name|P2P_GO_FREQ_MOVE_SCM
+init|=
+literal|0
+block|,
+name|P2P_GO_FREQ_MOVE_SCM_PEER_SUPPORTS
+init|=
+literal|1
+block|,
+name|P2P_GO_FREQ_MOVE_STAY
+init|=
+literal|2
+block|,
+name|P2P_GO_FREQ_MOVE_MAX
+init|=
+name|P2P_GO_FREQ_MOVE_STAY
+block|, 	}
+name|p2p_go_freq_change_policy
+enum|;
+define|#
+directive|define
+name|DEFAULT_P2P_GO_FREQ_MOVE
+value|P2P_GO_FREQ_MOVE_STAY
 comment|/** 	 * p2p_passphrase_len - Passphrase length (8..63) for P2P GO 	 * 	 * This parameter controls the length of the random passphrase that is 	 * generated at the GO. 	 */
 name|unsigned
 name|int
@@ -980,6 +1022,10 @@ comment|/** 	 * p2p_no_group_iface - Whether group interfaces can be used 	 * 	 
 name|int
 name|p2p_no_group_iface
 decl_stmt|;
+comment|/** 	 * p2p_cli_probe - Enable/disable P2P CLI probe request handling 	 * 	 * If this parameter is set to 1, a connected P2P Client will receive 	 * and handle Probe Request frames. Setting this parameter to 0 	 * disables this option. Default value: 0. 	 * 	 * Note: Setting this property at run time takes effect on the following 	 * interface state transition to/from the WPA_COMPLETED state. 	 */
+name|int
+name|p2p_cli_probe
+decl_stmt|;
 comment|/** 	 * okc - Whether to enable opportunistic key caching by default 	 * 	 * By default, OKC is disabled unless enabled by the per-network 	 * proactive_key_caching=1 parameter. okc=1 can be used to change this 	 * default behavior. 	 */
 name|int
 name|okc
@@ -1093,6 +1139,10 @@ comment|/** 	 * mesh_max_inactivity - Timeout in seconds to detect STA inactivit
 name|int
 name|mesh_max_inactivity
 decl_stmt|;
+comment|/** 	 * dot11RSNASAERetransPeriod - Timeout to retransmit SAE Auth frame 	 * 	 * This timeout value is used in mesh STA to retransmit 	 * SAE Authentication frame. 	 * By default: 1000 milliseconds. 	 */
+name|int
+name|dot11RSNASAERetransPeriod
+decl_stmt|;
 comment|/** 	 * passive_scan - Whether to force passive scan for network connection 	 * 	 * This parameter can be used to force only passive scanning to be used 	 * for network connection cases. It should be noted that this will slow 	 * down scan operations and reduce likelihood of finding the AP. In 	 * addition, some use cases will override this due to functional 	 * requirements, e.g., for finding an AP that uses hidden SSID 	 * (scan_ssid=1) or P2P device discovery. 	 */
 name|int
 name|passive_scan
@@ -1100,6 +1150,23 @@ decl_stmt|;
 comment|/** 	 * reassoc_same_bss_optim - Whether to optimize reassoc-to-same-BSS 	 */
 name|int
 name|reassoc_same_bss_optim
+decl_stmt|;
+comment|/** 	 * wps_priority - Priority for the networks added through WPS 	 * 	 * This priority value will be set to each network profile that is added 	 * by executing the WPS protocol. 	 */
+name|int
+name|wps_priority
+decl_stmt|;
+comment|/** 	 * fst_group_id - FST group ID 	 */
+name|char
+modifier|*
+name|fst_group_id
+decl_stmt|;
+comment|/** 	 * fst_priority - priority of the interface within the FST group 	 */
+name|int
+name|fst_priority
+decl_stmt|;
+comment|/** 	 * fst_llt - default FST LLT (Link-Lost Timeout) to be used for the 	 * interface. 	 */
+name|int
+name|fst_llt
 decl_stmt|;
 block|}
 struct|;

@@ -197,6 +197,41 @@ name|WPS_OOB_PUBKEY_HASH_LEN
 value|20
 end_define
 
+begin_define
+define|#
+directive|define
+name|WPS_DEV_NAME_MAX_LEN
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPS_MANUFACTURER_MAX_LEN
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPS_MODEL_NAME_MAX_LEN
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPS_MODEL_NUMBER_MAX_LEN
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPS_SERIAL_NUMBER_MAX_LEN
+value|32
+end_define
+
 begin_comment
 comment|/* Attribute Types */
 end_comment
@@ -948,6 +983,13 @@ define|#
 directive|define
 name|WPS_RF_50GHZ
 value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPS_RF_60GHZ
+value|0x04
 end_define
 
 begin_comment

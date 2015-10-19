@@ -826,16 +826,9 @@ decl_stmt|;
 name|int
 name|spinup_wait_time
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|900030
 name|uint64_t
 name|chain_alloc_fail
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|sysctl_ctx_list
 name|sysctl_ctx
@@ -1507,14 +1500,6 @@ expr_stmt|;
 block|}
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|900030
-end_if
-
 begin_else
 else|else
 name|sc
@@ -1523,11 +1508,6 @@ name|chain_alloc_fail
 operator|++
 expr_stmt|;
 end_else
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_return
 return|return

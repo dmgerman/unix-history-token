@@ -2733,6 +2733,13 @@ condition|(
 name|str
 operator|==
 name|NULL
+operator|||
+name|str
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
 condition|)
 block|{
 comment|/* Default to enabling methods based on build configuration */
@@ -3824,6 +3831,17 @@ condition|)
 name|rf_band
 operator|=
 name|WPS_RF_50GHZ
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|mode
+operator|==
+name|HOSTAPD_MODE_IEEE80211AD
+condition|)
+name|rf_band
+operator|=
+name|WPS_RF_60GHZ
 expr_stmt|;
 else|else
 return|return

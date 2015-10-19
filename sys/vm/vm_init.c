@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/pipe.h>
 end_include
 
@@ -609,7 +615,7 @@ name|firstaddr
 operator|+
 name|size
 expr_stmt|;
-comment|/* 	 * Allocate the buffer arena. 	 */
+comment|/* 	 * Allocate the buffer arena. 	 * 	 * Enable the quantum cache if we have more than 4 cpus.  This 	 * avoids lock contention at the expense of some fragmentation. 	 */
 name|size
 operator|=
 operator|(
@@ -649,6 +655,16 @@ name|size
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
+operator|(
+name|mp_ncpus
+operator|>
+literal|4
+operator|)
+condition|?
+name|BKVASIZE
+operator|*
+literal|8
+else|:
 literal|0
 argument_list|,
 literal|0

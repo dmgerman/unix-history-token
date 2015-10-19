@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014, 2015 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -141,10 +141,7 @@ end_function
 
 begin_function
 name|void
-ifdef|#
-directive|ifdef
-name|ZFS_DEBUG
-name|zrl_add_debug
+name|zrl_add_impl
 parameter_list|(
 name|zrlock_t
 modifier|*
@@ -155,16 +152,6 @@ name|char
 modifier|*
 name|zc
 parameter_list|)
-else|#
-directive|else
-function|zrl_add
-parameter_list|(
-name|zrlock_t
-modifier|*
-name|zrl
-parameter_list|)
-endif|#
-directive|endif
 block|{
 name|uint32_t
 name|n

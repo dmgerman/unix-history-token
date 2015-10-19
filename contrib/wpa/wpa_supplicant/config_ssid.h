@@ -36,13 +36,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|MAX_SSID_LEN
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
 name|DEFAULT_EAP_WORKAROUND
 value|((unsigned int) -1)
 end_define
@@ -79,7 +72,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_GROUP
-value|(WPA_CIPHER_CCMP | WPA_CIPHER_TKIP | \ 		       WPA_CIPHER_WEP104 | WPA_CIPHER_WEP40)
+value|(WPA_CIPHER_CCMP | WPA_CIPHER_TKIP)
 end_define
 
 begin_define
@@ -311,6 +304,10 @@ name|char
 modifier|*
 name|ext_psk
 decl_stmt|;
+comment|/** 	 * mem_only_psk - Whether to keep PSK/passphrase only in memory 	 * 	 * 0 = allow psk/passphrase to be stored to the configuration file 	 * 1 = do not store psk/passphrase to the configuration file 	 */
+name|int
+name|mem_only_psk
+decl_stmt|;
 comment|/** 	 * pairwise_cipher - Bitfield of allowed pairwise ciphers, WPA_CIPHER_* 	 */
 name|int
 name|pairwise_cipher
@@ -335,7 +332,7 @@ comment|/** 	 * auth_alg -  Bitfield of allowed authentication algorithms 	 * 	 
 name|int
 name|auth_alg
 decl_stmt|;
-comment|/** 	 * scan_ssid - Scan this SSID with Probe Requests 	 * 	 * scan_ssid can be used to scan for APs using hidden SSIDs. 	 * Note: Many drivers do not support this. ap_mode=2 can be used with 	 * such drivers to use hidden SSIDs. 	 */
+comment|/** 	 * scan_ssid - Scan this SSID with Probe Requests 	 * 	 * scan_ssid can be used to scan for APs using hidden SSIDs. 	 * Note: Many drivers do not support this. ap_mode=2 can be used with 	 * such drivers to use hidden SSIDs. Note2: Most nl80211-based drivers 	 * do support scan_ssid=1 and that should be used with them instead of 	 * ap_scan=2. 	 */
 name|int
 name|scan_ssid
 decl_stmt|;

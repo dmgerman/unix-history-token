@@ -5859,6 +5859,8 @@ name|b_hdr
 operator|->
 name|b_size
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|zc
 argument_list|)
@@ -5937,6 +5939,8 @@ operator|->
 name|b_hdr
 operator|->
 name|b_size
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|zc
@@ -6066,6 +6070,8 @@ operator|->
 name|b_hdr
 operator|->
 name|b_size
+argument_list|,
+name|NULL
 argument_list|,
 name|buf
 operator|->
@@ -21259,6 +21265,18 @@ argument_list|,
 name|arc_c_max
 argument_list|)
 expr_stmt|;
+comment|/* 	 * In userland, there's only the memory pressure that we artificially 	 * create (see arc_available_memory()).  Don't let arc_c get too 	 * small, because it can cause transactions to be larger than 	 * arc_c, causing arc_tempreserve_space() to fail. 	 */
+ifndef|#
+directive|ifndef
+name|_KERNEL
+name|arc_c_min
+operator|=
+name|arc_c_max
+operator|/
+literal|2
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|_KERNEL

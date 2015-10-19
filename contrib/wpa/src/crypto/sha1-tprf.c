@@ -301,6 +301,15 @@ operator|=
 name|SHA1_MAC_LEN
 expr_stmt|;
 block|}
+name|os_memset
+argument_list|(
+name|hash
+argument_list|,
+literal|0
+argument_list|,
+name|SHA1_MAC_LEN
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;

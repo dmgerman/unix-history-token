@@ -156,27 +156,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|check_20mhz_bss
-parameter_list|(
-name|struct
-name|wpa_scan_res
-modifier|*
-name|bss
-parameter_list|,
-name|int
-name|pri_freq
-parameter_list|,
-name|int
-name|start
-parameter_list|,
-name|int
-name|end
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|check_40mhz_2g4
 parameter_list|(
 name|struct

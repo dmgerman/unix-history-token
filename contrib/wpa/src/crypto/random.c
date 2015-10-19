@@ -924,6 +924,10 @@ ifdef|#
 directive|ifdef
 name|CONFIG_FIPS
 comment|/* Mix in additional entropy from the crypto module */
+name|bytes
+operator|=
+name|buf
+expr_stmt|;
 name|left
 operator|=
 name|len

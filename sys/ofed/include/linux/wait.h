@@ -63,22 +63,23 @@ directive|include
 file|<sys/proc.h>
 end_include
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|__wait_queue_head
+block|{ }
+name|wait_queue_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
 block|{
 name|unsigned
 name|int
 name|wchan
 decl_stmt|;
 block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|__wait_queue_head
 name|wait_queue_head_t
 typedef|;
 end_typedef
@@ -90,6 +91,8 @@ name|init_waitqueue_head
 parameter_list|(
 name|x
 parameter_list|)
+define|\
+value|do { } while (0)
 end_define
 
 begin_function
@@ -98,8 +101,7 @@ specifier|inline
 name|void
 name|__wake_up
 parameter_list|(
-name|struct
-name|__wait_queue_head
+name|wait_queue_head_t
 modifier|*
 name|q
 parameter_list|,
@@ -264,14 +266,71 @@ define|\
 value|({									\ 	void *c =&(q).wchan;						\ 	int _error;							\ 									\ 	_error = 0;							\ 	if (!(cond)) {							\ 		for (; _error == 0;) {					\ 			sleepq_lock(c);					\ 			if (cond) {					\ 				sleepq_release(c);			\ 				break;					\ 			}						\ 			sleepq_add(c, NULL, "completion",		\ 			    SLEEPQ_SLEEP | SLEEPQ_INTERRUPTIBLE, 0);	\ 			if (sleepq_wait_sig(c, 0))			\ 				_error = -ERESTARTSYS;			\ 		}							\ 	}								\ 	-_error;							\ })
 end_define
 
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|waitqueue_active
+parameter_list|(
+name|wait_queue_head_t
+modifier|*
+name|q
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+comment|/* XXX: not really implemented */
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
 name|DEFINE_WAIT
 parameter_list|(
-name|x
+name|name
 parameter_list|)
+define|\
+value|wait_queue_t name = {}
 end_define
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|prepare_to_wait
+parameter_list|(
+name|wait_queue_head_t
+modifier|*
+name|q
+parameter_list|,
+name|wait_queue_t
+modifier|*
+name|wait
+parameter_list|,
+name|int
+name|state
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|finish_wait
+parameter_list|(
+name|wait_queue_head_t
+modifier|*
+name|q
+parameter_list|,
+name|wait_queue_t
+modifier|*
+name|wait
+parameter_list|)
+block|{ }
+end_function
 
 begin_endif
 endif|#
