@@ -7059,8 +7059,10 @@ name|qp
 operator|->
 name|transport
 decl_stmt|;
-name|int
+name|uint32_t
 name|val
+decl_stmt|,
+name|dummy
 decl_stmt|;
 name|ntb_spad_read
 argument_list|(
@@ -7097,7 +7099,7 @@ argument_list|,
 name|IF_NTB_QP_LINKS
 argument_list|,
 operator|&
-name|val
+name|dummy
 argument_list|)
 expr_stmt|;
 comment|/* See if the remote side is up */
