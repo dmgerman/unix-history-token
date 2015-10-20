@@ -4038,14 +4038,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|device_printf
-argument_list|(
-name|ntb_get_device
+name|if_printf
 argument_list|(
 name|qp
 operator|->
-name|ntb
-argument_list|)
+name|transport
+operator|->
+name|ifp
 argument_list|,
 literal|"qp client ready\n"
 argument_list|)
@@ -5872,14 +5871,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|device_printf
-argument_list|(
-name|ntb_get_device
+name|if_printf
 argument_list|(
 name|nt
 operator|->
-name|ntb
-argument_list|)
+name|ifp
 argument_list|,
 literal|"HW link up\n"
 argument_list|)
@@ -5905,14 +5901,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|device_printf
-argument_list|(
-name|ntb_get_device
+name|if_printf
 argument_list|(
 name|nt
 operator|->
-name|ntb
-argument_list|)
+name|ifp
 argument_list|,
 literal|"HW link down\n"
 argument_list|)
@@ -6239,12 +6232,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|device_printf
+name|if_printf
 argument_list|(
-name|ntb_get_device
-argument_list|(
-name|ntb
-argument_list|)
+name|nt
+operator|->
+name|ifp
 argument_list|,
 literal|"transport link up\n"
 argument_list|)
@@ -6551,14 +6543,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|device_printf
-argument_list|(
-name|ntb_get_device
+name|if_printf
 argument_list|(
 name|nt
 operator|->
-name|ntb
-argument_list|)
+name|ifp
 argument_list|,
 literal|"DMA memory 0x%jx not aligned to BAR size 0x%x\n"
 argument_list|,
@@ -6610,14 +6599,11 @@ condition|(
 name|rc
 condition|)
 block|{
-name|device_printf
-argument_list|(
-name|ntb_get_device
+name|if_printf
 argument_list|(
 name|nt
 operator|->
-name|ntb
-argument_list|)
+name|ifp
 argument_list|,
 literal|"Unable to set mw%d translation"
 argument_list|,
@@ -7140,12 +7126,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|device_printf
+name|if_printf
 argument_list|(
-name|ntb_get_device
-argument_list|(
-name|ntb
-argument_list|)
+name|nt
+operator|->
+name|ifp
 argument_list|,
 literal|"qp link up\n"
 argument_list|)
