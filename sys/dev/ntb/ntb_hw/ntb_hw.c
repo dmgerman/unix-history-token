@@ -133,7 +133,7 @@ begin_define
 define|#
 directive|define
 name|MAX_MSIX_INTERRUPTS
-value|MAX(XEON_DB_COUNT, SOC_DB_COUNT)
+value|MAX(XEON_DB_COUNT, ATOM_DB_COUNT)
 end_define
 
 begin_define
@@ -150,7 +150,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SOC_LINK_RECOVERY_TIME
+name|ATOM_LINK_RECOVERY_TIME
 value|500
 end_define
 
@@ -174,7 +174,7 @@ name|ntb_device_type
 block|{
 name|NTB_XEON
 block|,
-name|NTB_SOC
+name|NTB_ATOM
 block|}
 enum|;
 end_enum
@@ -1250,7 +1250,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ntb_detect_soc
+name|ntb_detect_atom
 parameter_list|(
 name|struct
 name|ntb_softc
@@ -1276,7 +1276,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ntb_soc_init_dev
+name|ntb_atom_init_dev
 parameter_list|(
 name|struct
 name|ntb_softc
@@ -1302,7 +1302,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|configure_soc_secondary_side_bars
+name|configure_atom_secondary_side_bars
 parameter_list|(
 name|struct
 name|ntb_softc
@@ -1416,7 +1416,7 @@ begin_function_decl
 specifier|static
 specifier|inline
 name|bool
-name|soc_link_is_err
+name|atom_link_is_err
 parameter_list|(
 name|struct
 name|ntb_softc
@@ -1457,7 +1457,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|soc_link_hb
+name|atom_link_hb
 parameter_list|(
 name|void
 modifier|*
@@ -1485,7 +1485,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|recover_soc_link
+name|recover_atom_link
 parameter_list|(
 name|void
 modifier|*
@@ -1534,7 +1534,7 @@ literal|0x0C4E8086
 block|,
 literal|"BWD Atom Processor S1200 Non-Transparent Bridge B2B"
 block|,
-name|NTB_SOC
+name|NTB_ATOM
 block|,
 literal|0
 block|}
@@ -1612,7 +1612,7 @@ literal|0x00000000
 block|,
 name|NULL
 block|,
-name|NTB_SOC
+name|NTB_ATOM
 block|,
 literal|0
 block|}
@@ -1625,18 +1625,18 @@ specifier|static
 specifier|const
 name|struct
 name|ntb_reg
-name|soc_reg
+name|atom_reg
 init|=
 block|{
 operator|.
 name|ntb_ctl
 operator|=
-name|SOC_NTBCNTL_OFFSET
+name|ATOM_NTBCNTL_OFFSET
 block|,
 operator|.
 name|lnk_sta
 operator|=
-name|SOC_LINK_STATUS_OFFSET
+name|ATOM_LINK_STATUS_OFFSET
 block|,
 operator|.
 name|db_size
@@ -1663,23 +1663,23 @@ specifier|static
 specifier|const
 name|struct
 name|ntb_alt_reg
-name|soc_pri_reg
+name|atom_pri_reg
 init|=
 block|{
 operator|.
 name|db_bell
 operator|=
-name|SOC_PDOORBELL_OFFSET
+name|ATOM_PDOORBELL_OFFSET
 block|,
 operator|.
 name|db_mask
 operator|=
-name|SOC_PDBMSK_OFFSET
+name|ATOM_PDBMSK_OFFSET
 block|,
 operator|.
 name|spad
 operator|=
-name|SOC_SPAD_OFFSET
+name|ATOM_SPAD_OFFSET
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1689,18 +1689,18 @@ specifier|static
 specifier|const
 name|struct
 name|ntb_alt_reg
-name|soc_b2b_reg
+name|atom_b2b_reg
 init|=
 block|{
 operator|.
 name|db_bell
 operator|=
-name|SOC_B2B_DOORBELL_OFFSET
+name|ATOM_B2B_DOORBELL_OFFSET
 block|,
 operator|.
 name|spad
 operator|=
-name|SOC_B2B_SPAD_OFFSET
+name|ATOM_B2B_SPAD_OFFSET
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1710,25 +1710,25 @@ specifier|static
 specifier|const
 name|struct
 name|ntb_xlat_reg
-name|soc_sec_xlat
+name|atom_sec_xlat
 init|=
 block|{
 if|#
 directive|if
 literal|0
 comment|/* "FIXME" says the Linux driver. */
-block|.bar0_base = SOC_SBAR0BASE_OFFSET, 	.bar2_base = SOC_SBAR2BASE_OFFSET, 	.bar4_base = SOC_SBAR4BASE_OFFSET,  	.bar2_limit = SOC_SBAR2LMT_OFFSET, 	.bar4_limit = SOC_SBAR4LMT_OFFSET,
+block|.bar0_base = ATOM_SBAR0BASE_OFFSET, 	.bar2_base = ATOM_SBAR2BASE_OFFSET, 	.bar4_base = ATOM_SBAR4BASE_OFFSET,  	.bar2_limit = ATOM_SBAR2LMT_OFFSET, 	.bar4_limit = ATOM_SBAR4LMT_OFFSET,
 endif|#
 directive|endif
 operator|.
 name|bar2_xlat
 operator|=
-name|SOC_SBAR2XLAT_OFFSET
+name|ATOM_SBAR2XLAT_OFFSET
 block|,
 operator|.
 name|bar4_xlat
 operator|=
-name|SOC_SBAR4XLAT_OFFSET
+name|ATOM_SBAR4XLAT_OFFSET
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -2408,7 +2408,7 @@ name|b2b_mw_idx
 operator|=
 name|B2B_MW_DISABLED
 expr_stmt|;
-comment|/* Heartbeat timer for NTB_SOC since there is no link interrupt */
+comment|/* Heartbeat timer for NTB_ATOM since there is no link interrupt */
 name|callout_init
 argument_list|(
 operator|&
@@ -2463,11 +2463,11 @@ name|ntb
 operator|->
 name|type
 operator|==
-name|NTB_SOC
+name|NTB_ATOM
 condition|)
 name|error
 operator|=
-name|ntb_detect_soc
+name|ntb_detect_atom
 argument_list|(
 name|ntb
 argument_list|)
@@ -2512,11 +2512,11 @@ name|ntb
 operator|->
 name|type
 operator|==
-name|NTB_SOC
+name|NTB_ATOM
 condition|)
 name|error
 operator|=
-name|ntb_soc_init_dev
+name|ntb_atom_init_dev
 argument_list|(
 name|ntb
 argument_list|)
@@ -4826,7 +4826,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Doorbell register and mask are 64-bit on SoC, 16-bit on Xeon.  Abstract it  * out to make code clearer.  */
+comment|/*  * Doorbell register and mask are 64-bit on Atom, 16-bit on Xeon.  Abstract it  * out to make code clearer.  */
 end_comment
 
 begin_function
@@ -4850,7 +4850,7 @@ name|ntb
 operator|->
 name|type
 operator|==
-name|NTB_SOC
+name|NTB_ATOM
 condition|)
 return|return
 operator|(
@@ -4968,7 +4968,7 @@ name|ntb
 operator|->
 name|type
 operator|==
-name|NTB_SOC
+name|NTB_ATOM
 condition|)
 block|{
 name|ntb_reg_write
@@ -5638,14 +5638,14 @@ name|ntb
 operator|->
 name|type
 operator|==
-name|NTB_SOC
+name|NTB_ATOM
 condition|)
 block|{
 name|ntb
 operator|->
 name|mw_count
 operator|=
-name|SOC_MW_COUNT
+name|ATOM_MW_COUNT
 expr_stmt|;
 return|return;
 block|}
@@ -5819,7 +5819,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ntb_detect_soc
+name|ntb_detect_atom
 parameter_list|(
 name|struct
 name|ntb_softc
@@ -5856,7 +5856,7 @@ condition|(
 operator|(
 name|ppd
 operator|&
-name|SOC_PPD_DEV_TYPE
+name|ATOM_PPD_DEV_TYPE
 operator|)
 operator|!=
 literal|0
@@ -5879,7 +5879,7 @@ operator|=
 operator|(
 name|ppd
 operator|&
-name|SOC_PPD_CONN_TYPE
+name|ATOM_PPD_CONN_TYPE
 operator|)
 operator|>>
 literal|8
@@ -6152,7 +6152,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ntb_soc_init_dev
+name|ntb_atom_init_dev
 parameter_list|(
 name|struct
 name|ntb_softc
@@ -6181,25 +6181,25 @@ name|ntb
 operator|->
 name|spad_count
 operator|=
-name|SOC_SPAD_COUNT
+name|ATOM_SPAD_COUNT
 expr_stmt|;
 name|ntb
 operator|->
 name|db_count
 operator|=
-name|SOC_DB_COUNT
+name|ATOM_DB_COUNT
 expr_stmt|;
 name|ntb
 operator|->
 name|db_vec_count
 operator|=
-name|SOC_DB_MSIX_VECTOR_COUNT
+name|ATOM_DB_MSIX_VECTOR_COUNT
 expr_stmt|;
 name|ntb
 operator|->
 name|db_vec_shift
 operator|=
-name|SOC_DB_MSIX_VECTOR_SHIFT
+name|ATOM_DB_MSIX_VECTOR_SHIFT
 expr_stmt|;
 name|ntb
 operator|->
@@ -6220,30 +6220,30 @@ operator|->
 name|reg
 operator|=
 operator|&
-name|soc_reg
+name|atom_reg
 expr_stmt|;
 name|ntb
 operator|->
 name|self_reg
 operator|=
 operator|&
-name|soc_pri_reg
+name|atom_pri_reg
 expr_stmt|;
 name|ntb
 operator|->
 name|peer_reg
 operator|=
 operator|&
-name|soc_b2b_reg
+name|atom_b2b_reg
 expr_stmt|;
 name|ntb
 operator|->
 name|xlat_reg
 operator|=
 operator|&
-name|soc_sec_xlat
+name|atom_sec_xlat
 expr_stmt|;
-comment|/* 	 * FIXME - MSI-X bug on early SOC HW, remove once internal issue is 	 * resolved.  Mask transaction layer internal parity errors. 	 */
+comment|/* 	 * FIXME - MSI-X bug on early Atom HW, remove once internal issue is 	 * resolved.  Mask transaction layer internal parity errors. 	 */
 name|pci_write_config
 argument_list|(
 name|ntb
@@ -6257,7 +6257,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|configure_soc_secondary_side_bars
+name|configure_atom_secondary_side_bars
 argument_list|(
 name|ntb
 argument_list|)
@@ -6267,7 +6267,7 @@ name|ntb_reg_write
 argument_list|(
 literal|2
 argument_list|,
-name|SOC_PCICMD_OFFSET
+name|ATOM_PCICMD_OFFSET
 argument_list|,
 name|PCIM_CMD_MEMEN
 operator||
@@ -6293,7 +6293,7 @@ name|heartbeat_timer
 argument_list|,
 literal|0
 argument_list|,
-name|soc_link_hb
+name|atom_link_hb
 argument_list|,
 name|ntb
 argument_list|)
@@ -6307,13 +6307,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* XXX: Linux driver doesn't seem to do any of this for SoC. */
+comment|/* XXX: Linux driver doesn't seem to do any of this for Atom. */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|configure_soc_secondary_side_bars
+name|configure_atom_secondary_side_bars
 parameter_list|(
 name|struct
 name|ntb_softc
@@ -6334,7 +6334,7 @@ name|ntb_reg_write
 argument_list|(
 literal|8
 argument_list|,
-name|SOC_PBAR2XLAT_OFFSET
+name|ATOM_PBAR2XLAT_OFFSET
 argument_list|,
 name|XEON_B2B_BAR2_DSD_ADDR64
 argument_list|)
@@ -6343,7 +6343,7 @@ name|ntb_reg_write
 argument_list|(
 literal|8
 argument_list|,
-name|SOC_PBAR4XLAT_OFFSET
+name|ATOM_PBAR4XLAT_OFFSET
 argument_list|,
 name|XEON_B2B_BAR4_DSD_ADDR64
 argument_list|)
@@ -6352,7 +6352,7 @@ name|ntb_reg_write
 argument_list|(
 literal|8
 argument_list|,
-name|SOC_MBAR23_OFFSET
+name|ATOM_MBAR23_OFFSET
 argument_list|,
 name|XEON_B2B_BAR2_USD_ADDR64
 argument_list|)
@@ -6361,7 +6361,7 @@ name|ntb_reg_write
 argument_list|(
 literal|8
 argument_list|,
-name|SOC_MBAR45_OFFSET
+name|ATOM_MBAR45_OFFSET
 argument_list|,
 name|XEON_B2B_BAR4_USD_ADDR64
 argument_list|)
@@ -6373,7 +6373,7 @@ name|ntb_reg_write
 argument_list|(
 literal|8
 argument_list|,
-name|SOC_PBAR2XLAT_OFFSET
+name|ATOM_PBAR2XLAT_OFFSET
 argument_list|,
 name|XEON_B2B_BAR2_USD_ADDR64
 argument_list|)
@@ -6382,7 +6382,7 @@ name|ntb_reg_write
 argument_list|(
 literal|8
 argument_list|,
-name|SOC_PBAR4XLAT_OFFSET
+name|ATOM_PBAR4XLAT_OFFSET
 argument_list|,
 name|XEON_B2B_BAR4_USD_ADDR64
 argument_list|)
@@ -6391,7 +6391,7 @@ name|ntb_reg_write
 argument_list|(
 literal|8
 argument_list|,
-name|SOC_MBAR23_OFFSET
+name|ATOM_MBAR23_OFFSET
 argument_list|,
 name|XEON_B2B_BAR2_DSD_ADDR64
 argument_list|)
@@ -6400,7 +6400,7 @@ name|ntb_reg_write
 argument_list|(
 literal|8
 argument_list|,
-name|SOC_MBAR45_OFFSET
+name|ATOM_MBAR45_OFFSET
 argument_list|,
 name|XEON_B2B_BAR4_DSD_ADDR64
 argument_list|)
@@ -7449,7 +7449,7 @@ name|ntb
 operator|->
 name|type
 operator|==
-name|NTB_SOC
+name|NTB_ATOM
 argument_list|,
 operator|(
 literal|"ntb type"
@@ -7463,7 +7463,7 @@ name|ntb
 operator|->
 name|ntb_ctl
 operator|&
-name|SOC_CNTL_LINK_DOWN
+name|ATOM_CNTL_LINK_DOWN
 operator|)
 operator|==
 literal|0
@@ -7476,7 +7476,7 @@ begin_function
 specifier|static
 specifier|inline
 name|bool
-name|soc_link_is_err
+name|atom_link_is_err
 parameter_list|(
 name|struct
 name|ntb_softc
@@ -7493,7 +7493,7 @@ name|ntb
 operator|->
 name|type
 operator|==
-name|NTB_SOC
+name|NTB_ATOM
 argument_list|,
 operator|(
 literal|"ntb type"
@@ -7506,7 +7506,7 @@ name|ntb_reg_read
 argument_list|(
 literal|4
 argument_list|,
-name|SOC_LTSSMSTATEJMP_OFFSET
+name|ATOM_LTSSMSTATEJMP_OFFSET
 argument_list|)
 expr_stmt|;
 if|if
@@ -7514,7 +7514,7 @@ condition|(
 operator|(
 name|status
 operator|&
-name|SOC_LTSSMSTATEJMP_FORCEDETECT
+name|ATOM_LTSSMSTATEJMP_FORCEDETECT
 operator|)
 operator|!=
 literal|0
@@ -7530,7 +7530,7 @@ name|ntb_reg_read
 argument_list|(
 literal|4
 argument_list|,
-name|SOC_IBSTERRRCRVSTS0_OFFSET
+name|ATOM_IBSTERRRCRVSTS0_OFFSET
 argument_list|)
 expr_stmt|;
 return|return
@@ -7538,7 +7538,7 @@ operator|(
 operator|(
 name|status
 operator|&
-name|SOC_IBIST_ERR_OFLOW
+name|ATOM_IBIST_ERR_OFLOW
 operator|)
 operator|!=
 literal|0
@@ -7548,13 +7548,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* SOC does not have link status interrupt, poll on that platform */
+comment|/* Atom does not have link status interrupt, poll on that platform */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|soc_link_hb
+name|atom_link_hb
 parameter_list|(
 name|void
 modifier|*
@@ -7635,7 +7635,7 @@ argument_list|(
 name|ntb
 argument_list|)
 operator|&&
-name|soc_link_is_err
+name|atom_link_is_err
 argument_list|(
 name|ntb
 argument_list|)
@@ -7651,7 +7651,7 @@ name|lr_timer
 argument_list|,
 literal|0
 argument_list|,
-name|recover_soc_link
+name|recover_atom_link
 argument_list|,
 name|ntb
 argument_list|)
@@ -7669,7 +7669,7 @@ name|heartbeat_timer
 argument_list|,
 name|timo
 argument_list|,
-name|soc_link_hb
+name|atom_link_hb
 argument_list|,
 name|ntb
 argument_list|)
@@ -7680,7 +7680,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|soc_perform_link_restart
+name|atom_perform_link_restart
 parameter_list|(
 name|struct
 name|ntb_softc
@@ -7696,7 +7696,7 @@ name|ntb_reg_write
 argument_list|(
 literal|1
 argument_list|,
-name|SOC_MODPHY_PCSREG6
+name|ATOM_MODPHY_PCSREG6
 argument_list|,
 literal|0xe0
 argument_list|)
@@ -7705,7 +7705,7 @@ name|ntb_reg_write
 argument_list|(
 literal|1
 argument_list|,
-name|SOC_MODPHY_PCSREG4
+name|ATOM_MODPHY_PCSREG4
 argument_list|,
 literal|0x40
 argument_list|)
@@ -7714,7 +7714,7 @@ name|ntb_reg_write
 argument_list|(
 literal|1
 argument_list|,
-name|SOC_MODPHY_PCSREG4
+name|ATOM_MODPHY_PCSREG4
 argument_list|,
 literal|0x60
 argument_list|)
@@ -7723,7 +7723,7 @@ name|ntb_reg_write
 argument_list|(
 literal|1
 argument_list|,
-name|SOC_MODPHY_PCSREG6
+name|ATOM_MODPHY_PCSREG6
 argument_list|,
 literal|0x60
 argument_list|)
@@ -7745,7 +7745,7 @@ name|ntb_reg_read
 argument_list|(
 literal|4
 argument_list|,
-name|SOC_ERRCORSTS_OFFSET
+name|ATOM_ERRCORSTS_OFFSET
 argument_list|)
 expr_stmt|;
 name|status
@@ -7756,7 +7756,7 @@ name|ntb_reg_write
 argument_list|(
 literal|4
 argument_list|,
-name|SOC_ERRCORSTS_OFFSET
+name|ATOM_ERRCORSTS_OFFSET
 argument_list|,
 name|status
 argument_list|)
@@ -7768,18 +7768,18 @@ name|ntb_reg_read
 argument_list|(
 literal|4
 argument_list|,
-name|SOC_LTSSMERRSTS0_OFFSET
+name|ATOM_LTSSMERRSTS0_OFFSET
 argument_list|)
 expr_stmt|;
 name|status
 operator||=
-name|SOC_LTSSMERRSTS0_UNEXPECTEDEI
+name|ATOM_LTSSMERRSTS0_UNEXPECTEDEI
 expr_stmt|;
 name|ntb_reg_write
 argument_list|(
 literal|4
 argument_list|,
-name|SOC_LTSSMERRSTS0_OFFSET
+name|ATOM_LTSSMERRSTS0_OFFSET
 argument_list|,
 name|status
 argument_list|)
@@ -7791,18 +7791,18 @@ name|ntb_reg_read
 argument_list|(
 literal|4
 argument_list|,
-name|SOC_DESKEWSTS_OFFSET
+name|ATOM_DESKEWSTS_OFFSET
 argument_list|)
 expr_stmt|;
 name|status
 operator||=
-name|SOC_DESKEWSTS_DBERR
+name|ATOM_DESKEWSTS_DBERR
 expr_stmt|;
 name|ntb_reg_write
 argument_list|(
 literal|4
 argument_list|,
-name|SOC_DESKEWSTS_OFFSET
+name|ATOM_DESKEWSTS_OFFSET
 argument_list|,
 name|status
 argument_list|)
@@ -7813,18 +7813,18 @@ name|ntb_reg_read
 argument_list|(
 literal|4
 argument_list|,
-name|SOC_IBSTERRRCRVSTS0_OFFSET
+name|ATOM_IBSTERRRCRVSTS0_OFFSET
 argument_list|)
 expr_stmt|;
 name|status
 operator|&=
-name|SOC_IBIST_ERR_OFLOW
+name|ATOM_IBIST_ERR_OFLOW
 expr_stmt|;
 name|ntb_reg_write
 argument_list|(
 literal|4
 argument_list|,
-name|SOC_IBSTERRRCRVSTS0_OFFSET
+name|ATOM_IBSTERRRCRVSTS0_OFFSET
 argument_list|,
 name|status
 argument_list|)
@@ -7836,19 +7836,19 @@ name|ntb_reg_read
 argument_list|(
 literal|4
 argument_list|,
-name|SOC_LTSSMSTATEJMP_OFFSET
+name|ATOM_LTSSMSTATEJMP_OFFSET
 argument_list|)
 expr_stmt|;
 name|status
 operator|&=
 operator|~
-name|SOC_LTSSMSTATEJMP_FORCEDETECT
+name|ATOM_LTSSMSTATEJMP_FORCEDETECT
 expr_stmt|;
 name|ntb_reg_write
 argument_list|(
 literal|4
 argument_list|,
-name|SOC_LTSSMSTATEJMP_OFFSET
+name|ATOM_LTSSMSTATEJMP_OFFSET
 argument_list|,
 name|status
 argument_list|)
@@ -8208,7 +8208,7 @@ name|ntb
 operator|->
 name|type
 operator|==
-name|NTB_SOC
+name|NTB_ATOM
 condition|)
 block|{
 name|pci_write_config
@@ -8223,7 +8223,7 @@ name|ntb
 operator|->
 name|ppd
 operator||
-name|SOC_PPD_INIT_LINK
+name|ATOM_PPD_INIT_LINK
 argument_list|,
 literal|4
 argument_list|)
@@ -8436,7 +8436,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|recover_soc_link
+name|recover_atom_link
 parameter_list|(
 name|void
 modifier|*
@@ -8462,7 +8462,7 @@ decl_stmt|;
 name|uint32_t
 name|status32
 decl_stmt|;
-name|soc_perform_link_restart
+name|atom_perform_link_restart
 argument_list|(
 name|ntb
 argument_list|)
@@ -8473,14 +8473,14 @@ operator|=
 name|arc4random
 argument_list|()
 operator|%
-name|SOC_LINK_RECOVERY_TIME
+name|ATOM_LINK_RECOVERY_TIME
 expr_stmt|;
 name|pause
 argument_list|(
 literal|"Link"
 argument_list|,
 operator|(
-name|SOC_LINK_RECOVERY_TIME
+name|ATOM_LINK_RECOVERY_TIME
 operator|+
 name|status32
 operator|)
@@ -8492,7 +8492,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|soc_link_is_err
+name|atom_link_is_err
 argument_list|(
 name|ntb
 argument_list|)
@@ -8518,7 +8518,7 @@ condition|(
 operator|(
 name|status32
 operator|&
-name|SOC_CNTL_LINK_DOWN
+name|ATOM_CNTL_LINK_DOWN
 operator|)
 operator|!=
 literal|0
@@ -8595,7 +8595,7 @@ name|NTB_HB_TIMEOUT
 operator|*
 name|hz
 argument_list|,
-name|soc_link_hb
+name|atom_link_hb
 argument_list|,
 name|ntb
 argument_list|)
@@ -8614,7 +8614,7 @@ name|NTB_HB_TIMEOUT
 operator|*
 name|hz
 argument_list|,
-name|recover_soc_link
+name|recover_atom_link
 argument_list|,
 name|ntb
 argument_list|)
@@ -8649,7 +8649,7 @@ name|ntb
 operator|->
 name|type
 operator|==
-name|NTB_SOC
+name|NTB_ATOM
 condition|)
 block|{
 name|ntb_cntl
