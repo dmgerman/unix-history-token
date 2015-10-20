@@ -179,6 +179,44 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/* ntb_conn_type are hardware numbers, cannot change. */
+end_comment
+
+begin_enum
+enum|enum
+name|ntb_conn_type
+block|{
+name|NTB_CONN_TRANSPARENT
+init|=
+literal|0
+block|,
+name|NTB_CONN_B2B
+init|=
+literal|1
+block|,
+name|NTB_CONN_RP
+init|=
+literal|2
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|ntb_b2b_direction
+block|{
+name|NTB_DEV_USD
+init|=
+literal|0
+block|,
+name|NTB_DEV_DSD
+init|=
+literal|1
+block|, }
+enum|;
+end_enum
+
 begin_enum
 enum|enum
 name|ntb_bar
@@ -499,10 +537,12 @@ decl_stmt|;
 name|uint32_t
 name|ppd
 decl_stmt|;
-name|uint8_t
+name|enum
+name|ntb_conn_type
 name|conn_type
 decl_stmt|;
-name|uint8_t
+name|enum
+name|ntb_b2b_direction
 name|dev_type
 decl_stmt|;
 comment|/* Offset of peer bar0 in B2B BAR */
