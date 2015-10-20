@@ -1372,7 +1372,7 @@ parameter_list|,
 name|int
 name|num_mw
 parameter_list|,
-name|unsigned
+name|size_t
 name|size
 parameter_list|)
 function_decl|;
@@ -6402,7 +6402,7 @@ parameter_list|,
 name|int
 name|num_mw
 parameter_list|,
-name|unsigned
+name|size_t
 name|size
 parameter_list|)
 block|{
@@ -6419,7 +6419,7 @@ index|[
 name|num_mw
 index|]
 decl_stmt|;
-name|unsigned
+name|size_t
 name|xlat_size
 decl_stmt|,
 name|buff_size
@@ -6427,6 +6427,17 @@ decl_stmt|;
 name|int
 name|rc
 decl_stmt|;
+if|if
+condition|(
+name|size
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|xlat_size
 operator|=
 name|roundup
@@ -6584,7 +6595,7 @@ name|nt
 operator|->
 name|ifp
 argument_list|,
-literal|"DMA memory 0x%jx not aligned to BAR size 0x%x\n"
+literal|"DMA memory 0x%jx not aligned to BAR size 0x%zx\n"
 argument_list|,
 operator|(
 name|uintmax_t
