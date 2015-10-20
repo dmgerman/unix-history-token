@@ -1879,7 +1879,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|struct
 name|ntb_b2b_addr
 name|xeon_b2b_usd_addr
@@ -1915,7 +1914,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|struct
 name|ntb_b2b_addr
 name|xeon_b2b_dsd_addr
@@ -1948,6 +1946,218 @@ name|XEON_B2B_BAR5_DSD_ADDR32
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw_ntb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|xeon_b2b
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"B2B MW segment overrides -- MUST be the same on both sides"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UQUAD
+argument_list|(
+name|_hw_ntb_xeon_b2b
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|usd_bar2_addr64
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|xeon_b2b_usd_addr
+operator|.
+name|bar2_addr64
+argument_list|,
+literal|0
+argument_list|,
+literal|"If using B2B topology on Xeon "
+literal|"hardware, use this 64-bit address on the bus between the NTB devices for "
+literal|"the window at BAR2, on the upstream side of the link.  MUST be the same "
+literal|"address on both sides."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UQUAD
+argument_list|(
+name|_hw_ntb_xeon_b2b
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|usd_bar4_addr64
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|xeon_b2b_usd_addr
+operator|.
+name|bar4_addr64
+argument_list|,
+literal|0
+argument_list|,
+literal|"See usd_bar2_addr64, but BAR4."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UQUAD
+argument_list|(
+name|_hw_ntb_xeon_b2b
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|usd_bar4_addr32
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|xeon_b2b_usd_addr
+operator|.
+name|bar4_addr32
+argument_list|,
+literal|0
+argument_list|,
+literal|"See usd_bar2_addr64, but BAR4 "
+literal|"(split-BAR mode)."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UQUAD
+argument_list|(
+name|_hw_ntb_xeon_b2b
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|usd_bar5_addr32
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|xeon_b2b_usd_addr
+operator|.
+name|bar4_addr32
+argument_list|,
+literal|0
+argument_list|,
+literal|"See usd_bar2_addr64, but BAR5 "
+literal|"(split-BAR mode)."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UQUAD
+argument_list|(
+name|_hw_ntb_xeon_b2b
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|dsd_bar2_addr64
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|xeon_b2b_dsd_addr
+operator|.
+name|bar2_addr64
+argument_list|,
+literal|0
+argument_list|,
+literal|"If using B2B topology on Xeon "
+literal|"hardware, use this 64-bit address on the bus between the NTB devices for "
+literal|"the window at BAR2, on the downstream side of the link.  MUST be the same"
+literal|" address on both sides."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UQUAD
+argument_list|(
+name|_hw_ntb_xeon_b2b
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|dsd_bar4_addr64
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|xeon_b2b_dsd_addr
+operator|.
+name|bar4_addr64
+argument_list|,
+literal|0
+argument_list|,
+literal|"See dsd_bar2_addr64, but BAR4."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UQUAD
+argument_list|(
+name|_hw_ntb_xeon_b2b
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|dsd_bar4_addr32
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|xeon_b2b_dsd_addr
+operator|.
+name|bar4_addr32
+argument_list|,
+literal|0
+argument_list|,
+literal|"See dsd_bar2_addr64, but BAR4 "
+literal|"(split-BAR mode)."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UQUAD
+argument_list|(
+name|_hw_ntb_xeon_b2b
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|dsd_bar5_addr32
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|xeon_b2b_dsd_addr
+operator|.
+name|bar4_addr32
+argument_list|,
+literal|0
+argument_list|,
+literal|"See dsd_bar2_addr64, but BAR5 "
+literal|"(split-BAR mode)."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * OS<-> Driver interface structures  */
