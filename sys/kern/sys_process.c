@@ -2995,14 +2995,10 @@ comment|/* Self */
 if|if
 condition|(
 name|p
-operator|->
-name|p_pid
 operator|==
 name|td
 operator|->
 name|td_proc
-operator|->
-name|p_pid
 condition|)
 block|{
 name|error
