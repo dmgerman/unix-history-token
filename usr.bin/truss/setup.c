@@ -792,20 +792,8 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-else|else
-block|{
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"pl_flags %x contains neither PL_FLAG_SCE nor PL_FLAG_SCX"
-argument_list|,
-name|lwpinfo
-operator|.
-name|pl_flags
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* We didn't send the SIGTRAP, just forward it. */
+comment|/* FALLTHROUGH */
 default|default:
 name|info
 operator|->
