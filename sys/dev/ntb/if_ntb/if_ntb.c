@@ -299,7 +299,7 @@ name|unsigned
 name|int
 name|transport_mtu
 init|=
-literal|0x4000
+literal|0x10000
 operator|+
 name|ETHER_HDR_LEN
 operator|+
