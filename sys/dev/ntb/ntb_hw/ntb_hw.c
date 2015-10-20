@@ -1524,17 +1524,17 @@ name|pci_ids
 index|[]
 init|=
 block|{
+comment|/* XXX: PS/SS IDs left out until they are supported. */
 block|{
 literal|0x0C4E8086
 block|,
-literal|"Atom Processor S1200 NTB Primary B2B"
+literal|"BWD Atom Processor S1200 Non-Transparent Bridge B2B"
 block|,
 name|NTB_SOC
 block|,
 literal|0
 block|}
 block|,
-comment|/* XXX: PS/SS IDs left out until they are supported. */
 block|{
 literal|0x37258086
 block|,
