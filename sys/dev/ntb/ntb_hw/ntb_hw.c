@@ -2557,15 +2557,6 @@ operator|->
 name|device
 argument_list|)
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|ntb
-operator|->
-name|device
-argument_list|,
-literal|"NTB device registered\n"
-argument_list|)
-expr_stmt|;
 name|out
 label|:
 if|if
@@ -2684,15 +2675,6 @@ expr_stmt|;
 name|ntb_unmap_pci_bar
 argument_list|(
 name|ntb
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|ntb
-operator|->
-name|device
-argument_list|,
-literal|"NTB device unregistered\n"
 argument_list|)
 expr_stmt|;
 return|return
