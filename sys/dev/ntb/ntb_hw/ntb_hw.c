@@ -2052,7 +2052,7 @@ argument_list|,
 operator|&
 name|xeon_b2b_usd_addr
 operator|.
-name|bar4_addr32
+name|bar5_addr32
 argument_list|,
 literal|0
 argument_list|,
@@ -2149,7 +2149,7 @@ argument_list|,
 operator|&
 name|xeon_b2b_dsd_addr
 operator|.
-name|bar4_addr32
+name|bar5_addr32
 argument_list|,
 literal|0
 argument_list|,
