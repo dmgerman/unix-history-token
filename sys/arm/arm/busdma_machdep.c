@@ -3146,13 +3146,6 @@ name|ba
 operator|=
 name|standard_allocator
 expr_stmt|;
-name|uma_zfree
-argument_list|(
-name|dmamap_zone
-argument_list|,
-name|map
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|map
@@ -3162,7 +3155,13 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-comment|/* Be careful not to access map from here on. */
+name|uma_zfree
+argument_list|(
+name|dmamap_zone
+argument_list|,
+name|map
+argument_list|)
+expr_stmt|;
 name|bufzone
 operator|=
 name|busdma_bufalloc_findzone
