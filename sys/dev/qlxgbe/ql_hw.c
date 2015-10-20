@@ -1968,6 +1968,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|QL_DBG
+name|ha
+operator|->
+name|err_inject
+operator|=
+literal|0
+expr_stmt|;
 name|SYSCTL_ADD_UINT
 argument_list|(
 name|device_get_sysctl_ctx
@@ -15916,7 +15922,7 @@ name|QL_ERR_INJECT
 argument_list|(
 name|ha
 argument_list|,
-name|INJCT_TEMPERATURE_FAILURE
+name|INJCT_HEARTBEAT_FAILURE
 argument_list|)
 operator|)
 operator|)

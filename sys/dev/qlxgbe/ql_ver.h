@@ -37,7 +37,7 @@ begin_define
 define|#
 directive|define
 name|QLA_VERSION_BUILD
-value|24
+value|25
 end_define
 
 begin_endif
