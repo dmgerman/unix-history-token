@@ -1972,6 +1972,13 @@ expr|struct
 name|ether_header
 argument_list|)
 expr_stmt|;
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"if_ntb device setup\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2012,6 +2019,15 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|if_printf
+argument_list|(
+name|net_softc
+operator|.
+name|ifp
+argument_list|,
+literal|"if_ntb device destroyed\n"
+argument_list|)
+expr_stmt|;
 name|ether_ifdetach
 argument_list|(
 name|net_softc
