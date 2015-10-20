@@ -1068,7 +1068,7 @@ block|{
 name|int
 name|error
 init|=
-name|IIC_EBUSBSY
+name|IIC_EBUSERR
 decl_stmt|;
 name|struct
 name|iicoc_softc
