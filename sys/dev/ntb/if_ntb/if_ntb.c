@@ -377,6 +377,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_typedef
+typedef|typedef
+name|unsigned
+name|ntb_q_idx_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|ntb_queue_entry
@@ -413,7 +420,7 @@ name|ntb_payload_header
 modifier|*
 name|x_hdr
 decl_stmt|;
-name|unsigned
+name|ntb_q_idx_t
 name|index
 decl_stmt|;
 block|}
@@ -424,8 +431,7 @@ begin_struct
 struct|struct
 name|ntb_rx_info
 block|{
-name|unsigned
-name|int
+name|ntb_q_idx_t
 name|entry
 decl_stmt|;
 block|}
@@ -508,10 +514,10 @@ decl_stmt|;
 name|bus_addr_t
 name|tx_mw_phys
 decl_stmt|;
-name|uint64_t
+name|ntb_q_idx_t
 name|tx_index
 decl_stmt|;
-name|uint64_t
+name|ntb_q_idx_t
 name|tx_max_entry
 decl_stmt|;
 name|uint64_t
@@ -569,10 +575,10 @@ name|void
 modifier|*
 name|rx_buff
 decl_stmt|;
-name|uint64_t
+name|ntb_q_idx_t
 name|rx_index
 decl_stmt|;
-name|uint64_t
+name|ntb_q_idx_t
 name|rx_max_entry
 decl_stmt|;
 name|uint64_t
@@ -635,6 +641,9 @@ name|tx_pkts
 decl_stmt|;
 name|uint64_t
 name|tx_ring_full
+decl_stmt|;
+name|uint64_t
+name|tx_err_no_buf
 decl_stmt|;
 block|}
 struct|;
@@ -4223,9 +4232,14 @@ argument_list|,
 literal|"TX: could not get entry from tx_free_q"
 argument_list|)
 expr_stmt|;
+name|qp
+operator|->
+name|tx_err_no_buf
+operator|++
+expr_stmt|;
 return|return
 operator|(
-name|ENOMEM
+name|EBUSY
 operator|)
 return|;
 block|}
@@ -4792,7 +4806,7 @@ name|qp
 init|=
 name|arg
 decl_stmt|;
-name|uint64_t
+name|ntb_q_idx_t
 name|i
 decl_stmt|;
 name|int
@@ -6793,7 +6807,7 @@ name|void
 modifier|*
 name|offset
 decl_stmt|;
-name|uint64_t
+name|ntb_q_idx_t
 name|i
 decl_stmt|;
 name|size_t
@@ -7474,6 +7488,12 @@ name|qp
 operator|->
 name|rx_err_no_buf
 operator|=
+name|qp
+operator|->
+name|tx_err_no_buf
+operator|=
+literal|0
+expr_stmt|;
 name|qp
 operator|->
 name|rx_err_oflow
