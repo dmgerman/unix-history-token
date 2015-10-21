@@ -854,7 +854,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'r'
+literal|'R'
 case|:
 comment|/* Round image size up to specified block size */
 name|fsoptions
@@ -863,7 +863,7 @@ name|roundup
 operator|=
 name|strsuftoll
 argument_list|(
-literal|"roundup"
+literal|"roundup-size"
 argument_list|,
 name|optarg
 argument_list|,
@@ -1627,7 +1627,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: %s [-t fs-type] [-o fs-options] [-d debug-mask] [-B endian]\n"
-literal|"\t[-S sector-size] [-M minimum-size] [-m maximum-size] [-r roundup ]\n"
+literal|"\t[-S sector-size] [-M minimum-size] [-m maximum-size] [-R roundup-size]\n"
 literal|"\t[-s image-size] [-b free-blocks] [-f free-files] [-F mtree-specfile]\n"
 literal|"\t[-xZ] [-N userdb-dir] image-file directory | manifest [extra-directory ...]\n"
 argument_list|,

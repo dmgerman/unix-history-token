@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: iso9660_rrip.c,v 1.11 2012/04/29 13:32:21 joerg Exp $	*/
+comment|/*	$NetBSD: iso9660_rrip.c,v 1.14 2014/05/30 13:14:47 martin Exp $	*/
 end_comment
 
 begin_comment
@@ -3109,10 +3109,10 @@ name|inode
 operator|->
 name|st
 operator|.
-name|st_dev
+name|st_rdev
 argument_list|)
 operator|>
-literal|32
+literal|4
 condition|)
 name|cd9660_bothendian_dword
 argument_list|(
@@ -3125,7 +3125,7 @@ name|inode
 operator|->
 name|st
 operator|.
-name|st_dev
+name|st_rdev
 operator|>>
 literal|32
 argument_list|,
@@ -3164,7 +3164,7 @@ name|inode
 operator|->
 name|st
 operator|.
-name|st_dev
+name|st_rdev
 operator|&
 literal|0xffffffff
 argument_list|,
