@@ -846,7 +846,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|buffer
+name|buffer_head
 argument_list|)
 expr_stmt|;
 return|return
