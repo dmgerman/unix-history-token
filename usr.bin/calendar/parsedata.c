@@ -1378,7 +1378,7 @@ literal|0
 argument_list|)
 condition|)
 block|{
-comment|/* Now who wants to be this ambigious? :-( */
+comment|/* Now who wants to be this ambiguous? :-( */
 name|int
 name|m
 decl_stmt|,

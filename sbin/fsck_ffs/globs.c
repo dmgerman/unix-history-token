@@ -390,7 +390,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* actual disk sector size, not overriden */
+comment|/* actual disk sector size, not overridden */
 end_comment
 
 begin_decl_stmt

@@ -2632,7 +2632,7 @@ name|vval
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * Appropriate environment variable set, its value 			 * is valid and not overriden by LC_ALL 			 * 			 * XXX: possible side effect: if both LANG and 			 * overriden environment variable are set into same 			 * value, then it'll be assumed as 'implied' 			 */
+comment|/* 			 * Appropriate environment variable set, its value 			 * is valid and not overridden by LC_ALL 			 * 			 * XXX: possible side effect: if both LANG and 			 * overridden environment variable are set into same 			 * value, then it'll be assumed as 'implied' 			 */
 name|printf
 argument_list|(
 literal|"%s=%s\n"

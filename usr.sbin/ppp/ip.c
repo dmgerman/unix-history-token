@@ -2318,7 +2318,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* Explict match.  Deny this packet */
+comment|/* Explicit match.  Deny this packet */
 block|}
 block|}
 else|else

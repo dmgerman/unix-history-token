@@ -5658,7 +5658,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"filesystem created succesfully\n"
+literal|"filesystem was created successfully\n"
 argument_list|)
 expr_stmt|;
 name|printf

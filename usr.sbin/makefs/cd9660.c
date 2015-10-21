@@ -561,7 +561,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Allocate and initalize a cd9660node  * @returns struct cd9660node * Pointer to new node, or NULL on error  */
+comment|/*  * Allocate and initialize a cd9660node  * @returns struct cd9660node * Pointer to new node, or NULL on error  */
 end_comment
 
 begin_function

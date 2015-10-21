@@ -1931,7 +1931,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a delimited string.  P points to the delimeter of the string; d points  * to a buffer area.  Newline and delimiter escapes are processed; other  * escapes are ignored.  *  * Returns a pointer to the first character after the final delimiter or NULL  * in the case of a non-terminated string.  The character array d is filled  * with the processed string.  */
+comment|/*  * Get a delimited string.  P points to the delimiter of the string; d points  * to a buffer area.  Newline and delimiter escapes are processed; other  * escapes are ignored.  *  * Returns a pointer to the first character after the final delimiter or NULL  * in the case of a non-terminated string.  The character array d is filled  * with the processed string.  */
 end_comment
 
 begin_function

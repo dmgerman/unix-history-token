@@ -90,7 +90,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* Don't propigate failed jails */
+comment|/* Don't propagate failed jails */
 end_comment
 
 begin_define

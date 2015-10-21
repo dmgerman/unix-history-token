@@ -170,7 +170,7 @@ specifier|static
 name|int
 name|delim
 decl_stmt|;
-comment|/* which option delimeter */
+comment|/* which option delimiter */
 name|char
 modifier|*
 name|p

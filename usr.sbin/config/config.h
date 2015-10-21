@@ -94,7 +94,7 @@ name|char
 modifier|*
 name|f_depends
 decl_stmt|;
-comment|/* additional dependancies */
+comment|/* additional dependencies */
 name|char
 modifier|*
 name|f_clean

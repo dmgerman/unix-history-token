@@ -1017,7 +1017,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * below are the functions that deal with creating the lists  * from the filename's given and the dependancies and provisions  * in each of these files.  no ordering or checking is done here.  */
+comment|/*  * below are the functions that deal with creating the lists  * from the filename's given dependencies and provisions  * in each of these files.  no ordering or checking is done here.  */
 end_comment
 
 begin_comment
@@ -2884,7 +2884,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * given a filenode, we ensure we are not a cyclic graph.  if this  * is ok, we loop over the filenodes requirements, calling satisfy_req()  * for each of them.. once we have done this, remove this filenode  * from each provision table, as we are now done.  *  * NOTE: do_file() is called recursively from several places and cannot  * safely free() anything related to items that may be recursed on.  * Circular dependancies will cause problems if we do.  */
+comment|/*  * given a filenode, we ensure we are not a cyclic graph.  if this  * is ok, we loop over the filenodes requirements, calling satisfy_req()  * for each of them.. once we have done this, remove this filenode  * from each provision table, as we are now done.  *  * NOTE: do_file() is called recursively from several places and cannot  * safely free() anything related to items that may be recursed on.  * Circular dependencies will cause problems if we do.  */
 end_comment
 
 begin_function

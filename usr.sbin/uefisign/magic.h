@@ -27,7 +27,7 @@ literal|"b = SEQUENCE:SpcPeImageData\n"
 literal|"\n"
 literal|"[SpcPeImageData]\n"
 literal|"a = FORMAT:HEX,BITSTRING:00\n"
-comment|/*  * Well, there should be some other struct here, "SPCLink", but it doesn't  * appear to be neccessary for UEFI, and I have no idea how to synthesize it,  * as it uses the CHOICE type.  */
+comment|/*  * Well, there should be some other struct here, "SPCLink", but it doesn't  * appear to be necessary for UEFI, and I have no idea how to synthesize it,  * as it uses the CHOICE type.  */
 literal|"\n"
 literal|"[DigestInfo]\n"
 literal|"a = SEQUENCE:AlgorithmIdentifier\n"

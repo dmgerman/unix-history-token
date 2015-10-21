@@ -1364,7 +1364,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The PE checksum algorithm is undocumented; this code is mostly based on  * http://forum.sysinternals.com/optional-header-checksum-calculation_topic24214.html  *  * "Sum the entire image file, excluding the CheckSum field in the optional  * header, as an array of USHORTs, allowing any carry above 16 bits to be added  * back onto the low 16 bits. Then add the file size to get a 32-bit value."  *  * Note that most software does not care about the checksum at all; perhaps  * we could just set it to 0 instead.  *  * XXX: Endianess?  */
+comment|/*  * The PE checksum algorithm is undocumented; this code is mostly based on  * http://forum.sysinternals.com/optional-header-checksum-calculation_topic24214.html  *  * "Sum the entire image file, excluding the CheckSum field in the optional  * header, as an array of USHORTs, allowing any carry above 16 bits to be added  * back onto the low 16 bits. Then add the file size to get a 32-bit value."  *  * Note that most software does not care about the checksum at all; perhaps  * we could just set it to 0 instead.  *  * XXX: Endianness?  */
 end_comment
 
 begin_function

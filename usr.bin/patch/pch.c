@@ -2710,7 +2710,7 @@ comment|/* index of first missing line */
 name|bool
 name|ptrn_spaces_eaten
 decl_stmt|;
-comment|/* ptrn was slightly misformed */
+comment|/* ptrn was slightly malformed */
 name|bool
 name|repl_could_be_missing
 decl_stmt|;
