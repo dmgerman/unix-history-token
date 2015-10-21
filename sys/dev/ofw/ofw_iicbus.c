@@ -583,6 +583,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+comment|/* 		 * OFW uses 7-bit I2C address format (see ePAPR), 		 * but system expect 8-bit. 		 */
 name|dinfo
 operator|->
 name|opd_dinfo
@@ -590,6 +591,8 @@ operator|.
 name|addr
 operator|=
 name|paddr
+operator|<<
+literal|1
 expr_stmt|;
 if|if
 condition|(
