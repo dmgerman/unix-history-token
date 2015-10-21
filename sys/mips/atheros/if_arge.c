@@ -9605,6 +9605,7 @@ decl_stmt|;
 name|int
 name|nsegs
 decl_stmt|;
+comment|/* XXX TODO: should just allocate an explicit 2KiB buffer */
 name|m
 operator|=
 name|m_getcl
@@ -9640,6 +9641,14 @@ operator|=
 name|MCLBYTES
 expr_stmt|;
 comment|/* 	 * Add extra space to "adjust" (copy) the packet back to be aligned 	 * for purposes of IPv4/IPv6 header contents. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|arge_hw_flags
+operator|&
+name|ARGE_HW_FLG_RX_DESC_ALIGN_4BYTE
+condition|)
 name|m_adj
 argument_list|(
 name|m
@@ -9647,6 +9656,26 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|uint64_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * If it's a 1-byte aligned buffer, then just offset it two bytes 	 * and that will give us a hopefully correctly DWORD aligned 	 * L3 payload - and we won't have to undo it afterwards. 	 */
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|arge_hw_flags
+operator|&
+name|ARGE_HW_FLG_RX_DESC_ALIGN_1BYTE
+condition|)
+name|m_adj
+argument_list|(
+name|m
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|uint16_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9737,6 +9766,20 @@ argument_list|,
 name|rxd
 operator|->
 name|rx_dmamap
+argument_list|)
+expr_stmt|;
+comment|/* XXX TODO: free rx_m? */
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|arge_dev
+argument_list|,
+literal|"%s: ring[%d] rx_m wasn't free?\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|idx
 argument_list|)
 expr_stmt|;
 block|}
@@ -9851,6 +9894,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Move the data backwards 16 bits to (hopefully!) ensure the  * IPv4/IPv6 payload is aligned.  *  * This is required for earlier hardware where the RX path  * requires DWORD aligned buffers.  */
+end_comment
 
 begin_function
 specifier|static
@@ -10501,6 +10548,15 @@ name|rxd
 operator|->
 name|rx_m
 expr_stmt|;
+comment|/* 		 * If the MAC requires 4 byte alignment then the RX setup 		 * routine will have pre-offset things; so un-offset it here. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|arge_hw_flags
+operator|&
+name|ARGE_HW_FLG_RX_DESC_ALIGN_4BYTE
+condition|)
 name|arge_fixup_rx
 argument_list|(
 name|m
