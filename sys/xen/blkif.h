@@ -426,7 +426,7 @@ name|src
 operator|->
 name|sector_number
 expr_stmt|;
-name|barrier
+name|__compiler_membar
 argument_list|()
 expr_stmt|;
 if|if
@@ -535,7 +535,7 @@ name|src
 operator|->
 name|sector_number
 expr_stmt|;
-name|barrier
+name|__compiler_membar
 argument_list|()
 expr_stmt|;
 if|if

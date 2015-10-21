@@ -1038,7 +1038,7 @@ name|struct
 name|callout
 name|xn_stat_ch
 decl_stmt|;
-name|u_long
+name|xen_pfn_t
 name|rx_pfn_array
 index|[
 name|NET_RX_RING_SIZE

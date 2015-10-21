@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<xen/xen_intr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcireg.h>
 end_include
 
@@ -112,19 +118,6 @@ include|#
 directive|include
 file|<dev/xen/xenpci/xenpcivar.h>
 end_include
-
-begin_function_decl
-specifier|extern
-name|void
-name|xen_intr_handle_upcall
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-name|trap_frame
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * This is used to find our platform device instance.  */

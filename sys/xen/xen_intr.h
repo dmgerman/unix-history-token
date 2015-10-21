@@ -44,6 +44,18 @@ name|xen_vector_callback_enabled
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|xen_intr_handle_upcall
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+name|trap_frame
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/**  * Associate an already allocated local event channel port an interrupt  * handler.  *  * \param dev         The device making this bind request.  * \param local_port  The event channel to bind.  * \param filter      An interrupt filter handler.  Specify NULL  *                    to always dispatch to the ithread handler.  * \param handler     An interrupt ithread handler.  Optional (can  *                    specify NULL) if all necessary event actions  *                    are performed by filter.  * \param arg         Argument to present to both filter and handler.  * \param irqflags    Interrupt handler flags.  See sys/bus.h.  * \param handlep     Pointer to an opaque handle used to manage this  *                    registration.  *  * \returns  0 on success, otherwise an errno.  */
 end_comment
