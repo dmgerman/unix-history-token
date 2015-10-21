@@ -696,6 +696,14 @@ name|int
 name|mode
 parameter_list|)
 block|{
+name|device_t
+name|parent
+init|=
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|struct
 name|ata_pci_controller
 modifier|*
@@ -703,10 +711,7 @@ name|ctlr
 init|=
 name|device_get_softc
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
+name|parent
 argument_list|)
 decl_stmt|;
 name|mode
@@ -733,7 +738,7 @@ name|ATA_UDMA2
 operator|&&
 name|pci_read_config
 argument_list|(
-name|dev
+name|parent
 argument_list|,
 literal|0x40
 argument_list|,
