@@ -9768,20 +9768,6 @@ operator|->
 name|rx_dmamap
 argument_list|)
 expr_stmt|;
-comment|/* XXX TODO: free rx_m? */
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|arge_dev
-argument_list|,
-literal|"%s: ring[%d] rx_m wasn't free?\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|idx
-argument_list|)
-expr_stmt|;
 block|}
 name|map
 operator|=
