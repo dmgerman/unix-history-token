@@ -4283,12 +4283,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -4380,6 +4374,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
 
 begin_function
 specifier|static
