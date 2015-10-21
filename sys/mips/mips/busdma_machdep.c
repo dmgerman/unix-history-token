@@ -1350,7 +1350,7 @@ name|free
 argument_list|(
 name|slist
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 return|return
@@ -1377,7 +1377,7 @@ name|map
 operator|->
 name|slist
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 name|uma_zfree
@@ -1910,7 +1910,7 @@ name|free
 argument_list|(
 name|newtag
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 return|return
@@ -1993,7 +1993,7 @@ name|free
 argument_list|(
 name|newtag
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 else|else
@@ -2122,14 +2122,14 @@ name|dmat
 operator|->
 name|segments
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|dmat
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Last reference count, so 				 * release our reference 				 * count on our parent. 				 */
@@ -3087,7 +3087,7 @@ name|map
 operator|->
 name|slist
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 name|uma_zfree
@@ -6237,7 +6237,7 @@ name|free
 argument_list|(
 name|bpage
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 break|break;
