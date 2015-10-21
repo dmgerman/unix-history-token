@@ -4227,6 +4227,22 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|flags
+operator|&
+name|BUS_DMA_LOAD_MBUF
+operator|)
+operator|!=
+literal|0
+condition|)
+name|map
+operator|->
+name|flags
+operator||=
+name|DMAMAP_CACHE_ALIGNED
+expr_stmt|;
+if|if
+condition|(
+operator|(
 name|dmat
 operator|->
 name|flags
@@ -4775,7 +4791,7 @@ name|mips_pdcache_linesize
 operator|-
 literal|1
 decl_stmt|;
-comment|/* 	 * dcache invalidation operates on cache line aligned addresses 	 * and could modify areas of memory that share the same cache line 	 * at the beginning and the ending of the buffer. In order to  	 * prevent a data loss we save these chunks in temporary buffer 	 * before invalidation and restore them afer it. 	 * 	 * If the aligned flag is set the buffer came from our allocator caches 	 * which are always sized and aligned to cacheline boundaries, so we can 	 * skip preserving nearby data if a transfer is unaligned (especially 	 * it's likely to not end on a boundary). 	 */
+comment|/* 	 * dcache invalidation operates on cache line aligned addresses 	 * and could modify areas of memory that share the same cache line 	 * at the beginning and the ending of the buffer. In order to  	 * prevent a data loss we save these chunks in temporary buffer 	 * before invalidation and restore them afer it. 	 * 	 * If the aligned flag is set the buffer is either an mbuf or came from 	 * our allocator caches.  In both cases they are always sized and 	 * aligned to cacheline boundaries, so we can skip preserving nearby 	 * data if a transfer appears to overlap cachelines.  An mbuf in 	 * particular will usually appear to be overlapped because of offsetting 	 * within the buffer to align the L3 headers, but we know that the bytes 	 * preceeding that offset are part of the same mbuf memory and are not 	 * unrelated adjacent data (and a rule of mbuf handling is that the cpu 	 * is not allowed to touch the mbuf while dma is in progress, including 	 * header fields). 	 */
 if|if
 condition|(
 name|aligned
