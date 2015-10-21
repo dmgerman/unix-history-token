@@ -7243,6 +7243,7 @@ name|dns_base
 decl_stmt|;
 name|memset
 argument_list|(
+operator|&
 name|a_out
 argument_list|,
 literal|0
@@ -10014,6 +10015,11 @@ name|status
 argument_list|)
 argument_list|)
 decl_stmt|;
+name|tt_assert
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
 name|struct
 name|timeval
 name|tv

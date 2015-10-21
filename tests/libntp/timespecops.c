@@ -20,12 +20,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<math.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"timespecops.h"
 end_include
 
@@ -38,12 +32,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<math.h>
 end_include
 
-begin_comment
-comment|//in unity_helper.h :
-end_comment
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_define
 define|#
@@ -57,10 +53,6 @@ parameter_list|)
 value|{ \     TEST_ASSERT_EQUAL_MESSAGE(a.tv_sec, b.tv_sec, "Field tv_sec"); \     TEST_ASSERT_EQUAL_MESSAGE(a.tv_nsec, b.tv_nsec, "Field tv_nsec");	\ }
 end_define
 
-begin_comment
-comment|//what about l_fp.l_ui  ??? it's a union so it's either l_fp.l_ui or l_fp.l_i?
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -72,10 +64,6 @@ name|b
 parameter_list|)
 value|{ \     TEST_ASSERT_EQUAL_MESSAGE(a.l_i, b.l_i, "Field l_i"); \     TEST_ASSERT_EQUAL_UINT_MESSAGE(a.l_uf, b.l_uf, "Field l_uf");	\ }
 end_define
-
-begin_comment
-comment|//timespec has time_t, long, and time_t is basically long uint, 4 or 8 bytes size, depending on 32/64bit
-end_comment
 
 begin_function_decl
 specifier|static
@@ -117,9 +105,257 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|//******************************************MY CUSTOM FUNCTIONS*******************************
-end_comment
+begin_function_decl
+name|void
+name|test_Helpers1
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_Normalise
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_SignNoFrac
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_SignWithFrac
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_CmpFracEQ
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_CmpFracGT
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_CmpFracLT
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_AddFullNorm
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_AddFullOflow1
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_AddNsecNorm
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_AddNsecOflow1
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_SubFullNorm
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_SubFullOflow
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_SubNsecNorm
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_SubNsecOflow
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_Neg
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_AbsNoFrac
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_AbsWithFrac
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_Helpers2
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_ToLFPbittest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_ToLFPrelPos
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_ToLFPrelNeg
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_ToLFPabs
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_FromLFPbittest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_FromLFPrelPos
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_FromLFPrelNeg
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_LFProundtrip
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_ToString
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_typedef
 typedef|typedef
@@ -128,8 +364,88 @@ name|bool
 typedef|;
 end_typedef
 
+begin_function_decl
+specifier|const
+name|bool
+name|timespec_isValid
+parameter_list|(
+name|struct
+name|timespec
+name|V
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|timespec
+name|timespec_init
+parameter_list|(
+name|time_t
+name|hi
+parameter_list|,
+name|long
+name|lo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|l_fp
+name|l_fp_init
+parameter_list|(
+name|int32
+name|i
+parameter_list|,
+name|u_int32
+name|f
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|AssertFpClose
+parameter_list|(
+specifier|const
+name|l_fp
+name|m
+parameter_list|,
+specifier|const
+name|l_fp
+name|n
+parameter_list|,
+specifier|const
+name|l_fp
+name|limit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|AssertTimespecClose
+parameter_list|(
+specifier|const
+name|struct
+name|timespec
+name|m
+parameter_list|,
+specifier|const
+name|struct
+name|timespec
+name|n
+parameter_list|,
+specifier|const
+name|struct
+name|timespec
+name|limit
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|//TRUE and FALSE are already defined somewhere, so I can't do typedef enum { FALSE, TRUE } boolean;
+comment|//******************************************MY CUSTOM FUNCTIONS*******************************
 end_comment
 
 begin_function
@@ -192,10 +508,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|//taken from lfpfunc.c -> maybe remove this from timevalops.c and lfpfunc. and put in c_timstructs.h ????!!!!!
-end_comment
-
 begin_function
 name|l_fp
 name|l_fp_init
@@ -227,10 +539,6 @@ name|temp
 return|;
 block|}
 end_function
-
-begin_comment
-comment|//also in timelalops.c!!!!!!
-end_comment
 
 begin_function
 name|bool
@@ -312,10 +620,35 @@ return|;
 block|}
 else|else
 block|{
-comment|//<< m_expr<< " which is "<< l_fp_wrap(m)
-comment|//<< "\nand\n"
-comment|//<< n_expr<< " which is "<< l_fp_wrap(n)
-comment|//<< "\nare not close; diff="<< l_fp_wrap(diff);
+name|printf
+argument_list|(
+literal|"m_expr which is %s \nand\nn_expr which is %s\nare not close; diff=%susec\n"
+argument_list|,
+name|lfptoa
+argument_list|(
+operator|&
+name|m
+argument_list|,
+literal|10
+argument_list|)
+argument_list|,
+name|lfptoa
+argument_list|(
+operator|&
+name|n
+argument_list|,
+literal|10
+argument_list|)
+argument_list|,
+name|lfptoa
+argument_list|(
+operator|&
+name|diff
+argument_list|,
+literal|10
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
@@ -375,10 +708,35 @@ name|TRUE
 return|;
 else|else
 block|{
-comment|//<< m_expr<< " which is "<< timespec_wrap(m)
-comment|//<< "\nand\n"
-comment|//<< n_expr<< " which is "<< timespec_wrap(n)
-comment|//<< "\nare not close; diff="<< timespec_wrap(diff);
+name|printf
+argument_list|(
+literal|"m_expr which is %ld.%lu \nand\nn_expr which is %ld.%lu\nare not close; diff=%ld.%lunsec\n"
+argument_list|,
+name|m
+operator|.
+name|tv_sec
+argument_list|,
+name|m
+operator|.
+name|tv_nsec
+argument_list|,
+name|n
+operator|.
+name|tv_sec
+argument_list|,
+name|n
+operator|.
+name|tv_nsec
+argument_list|,
+name|diff
+operator|.
+name|tv_sec
+argument_list|,
+name|diff
+operator|.
+name|tv_nsec
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
@@ -709,7 +1067,9 @@ end_comment
 begin_function
 name|void
 name|test_Helpers1
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|timespec
@@ -812,7 +1172,9 @@ end_comment
 begin_function
 name|void
 name|test_Normalise
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|long
 name|ns
@@ -878,7 +1240,9 @@ end_comment
 begin_function
 name|void
 name|test_SignNoFrac
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|// sign test, no fraction
 name|int
@@ -947,7 +1311,9 @@ end_function
 begin_function
 name|void
 name|test_SignWithFrac
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|// sign test, with fraction
 name|int
@@ -1028,7 +1394,9 @@ end_comment
 begin_function
 name|void
 name|test_CmpFracEQ
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|// fractions are equal
 name|int
@@ -1126,7 +1494,9 @@ end_function
 begin_function
 name|void
 name|test_CmpFracGT
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|// fraction a bigger fraction b
 name|int
@@ -1224,7 +1594,9 @@ end_function
 begin_function
 name|void
 name|test_CmpFracLT
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|// fraction a less fraction b
 name|int
@@ -1334,7 +1706,9 @@ end_comment
 begin_function
 name|void
 name|test_AddFullNorm
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1434,7 +1808,9 @@ end_function
 begin_function
 name|void
 name|test_AddFullOflow1
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1534,7 +1910,9 @@ end_function
 begin_function
 name|void
 name|test_AddNsecNorm
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1605,7 +1983,9 @@ end_function
 begin_function
 name|void
 name|test_AddNsecOflow1
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1690,7 +2070,9 @@ end_comment
 begin_function
 name|void
 name|test_SubFullNorm
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1788,7 +2170,9 @@ end_function
 begin_function
 name|void
 name|test_SubFullOflow
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1888,7 +2272,9 @@ end_function
 begin_function
 name|void
 name|test_SubNsecNorm
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1959,7 +2345,9 @@ end_function
 begin_function
 name|void
 name|test_SubNsecOflow
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2044,7 +2432,9 @@ end_comment
 begin_function
 name|void
 name|test_Neg
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2128,7 +2518,9 @@ end_comment
 begin_function
 name|void
 name|test_AbsNoFrac
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2191,7 +2583,9 @@ end_function
 begin_function
 name|void
 name|test_AbsWithFrac
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2262,7 +2656,9 @@ end_comment
 begin_function
 name|void
 name|test_Helpers2
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|timespec
@@ -2336,8 +2732,8 @@ name|i
 operator|<
 literal|5
 condition|;
-name|i
 operator|++
+name|i
 control|)
 block|{
 name|y
@@ -2374,7 +2770,6 @@ name|limit
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|//ASSERT_PRED_FORMAT2(isClose, x, y);
 block|}
 else|else
 block|{
@@ -2390,24 +2785,11 @@ name|limit
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|//ASSERT_PRED_FORMAT2(!isClose, x, y);
 block|}
 block|}
 block|}
 block|}
 end_function
-
-begin_comment
-comment|// global predicate instances we're using here
-end_comment
-
-begin_comment
-comment|//static l_fp lfpClose =  l_fp_init(0,1); //static AssertFpClose FpClose(0, 1);
-end_comment
-
-begin_comment
-comment|//static struct timespec limit = timespec_init(0,2); //static AssertTimespecClose TimespecClose(0, 2);
-end_comment
 
 begin_comment
 comment|//----------------------------------------------------------------------
@@ -2424,7 +2806,9 @@ end_comment
 begin_function
 name|void
 name|test_ToLFPbittest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|l_fp
 name|lfpClose
@@ -2500,7 +2884,6 @@ name|lfpClose
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|//ASSERT_PRED_FORMAT2(FpClose, E, r);
 block|}
 block|}
 end_function
@@ -2508,7 +2891,9 @@ end_function
 begin_function
 name|void
 name|test_ToLFPrelPos
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2526,8 +2911,8 @@ argument_list|(
 name|fdata
 argument_list|)
 condition|;
-name|i
 operator|++
+name|i
 control|)
 block|{
 name|struct
@@ -2585,7 +2970,9 @@ end_function
 begin_function
 name|void
 name|test_ToLFPrelNeg
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2603,8 +2990,8 @@ argument_list|(
 name|fdata
 argument_list|)
 condition|;
-name|i
 operator|++
+name|i
 control|)
 block|{
 name|struct
@@ -2664,7 +3051,9 @@ end_function
 begin_function
 name|void
 name|test_ToLFPabs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2682,8 +3071,8 @@ argument_list|(
 name|fdata
 argument_list|)
 condition|;
-name|i
 operator|++
+name|i
 control|)
 block|{
 name|struct
@@ -2755,7 +3144,9 @@ end_comment
 begin_function
 name|void
 name|test_FromLFPbittest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|timespec
@@ -2846,7 +3237,6 @@ name|limit
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|//ASSERT_PRED_FORMAT2(TimespecClose, E, r);
 block|}
 block|}
 end_function
@@ -2854,7 +3244,9 @@ end_function
 begin_function
 name|void
 name|test_FromLFPrelPos
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|timespec
@@ -2883,8 +3275,8 @@ argument_list|(
 name|fdata
 argument_list|)
 condition|;
-name|i
 operator|++
+name|i
 control|)
 block|{
 name|l_fp
@@ -2941,7 +3333,6 @@ name|limit
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|//ASSERT_PRED_FORMAT2(TimespecClose, E, r);
 block|}
 block|}
 end_function
@@ -2949,7 +3340,9 @@ end_function
 begin_function
 name|void
 name|test_FromLFPrelNeg
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|timespec
@@ -2978,8 +3371,8 @@ argument_list|(
 name|fdata
 argument_list|)
 condition|;
-name|i
 operator|++
+name|i
 control|)
 block|{
 name|l_fp
@@ -3038,7 +3431,6 @@ name|limit
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|//ASSERT_PRED_FORMAT2(TimespecClose, E, r);
 block|}
 block|}
 end_function
@@ -3050,7 +3442,9 @@ end_comment
 begin_function
 name|void
 name|test_LFProundtrip
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int32_t
 name|t
@@ -3145,7 +3539,9 @@ end_comment
 begin_function
 name|void
 name|test_ToString
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 specifier|const
@@ -3254,8 +3650,8 @@ argument_list|(
 name|data
 argument_list|)
 condition|;
-name|i
 operator|++
+name|i
 control|)
 block|{
 name|struct

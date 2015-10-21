@@ -2015,6 +2015,46 @@ operator|->
 name|keyid
 condition|)
 block|{
+comment|/* TALOS-CAN-0054: make sure we have a new buffer! */
+if|if
+condition|(
+name|NULL
+operator|!=
+name|sk
+operator|->
+name|secret
+condition|)
+block|{
+name|memset
+argument_list|(
+name|sk
+operator|->
+name|secret
+argument_list|,
+literal|0
+argument_list|,
+name|sk
+operator|->
+name|secretsize
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|sk
+operator|->
+name|secret
+argument_list|)
+expr_stmt|;
+block|}
+name|sk
+operator|->
+name|secret
+operator|=
+name|emalloc
+argument_list|(
+name|len
+argument_list|)
+expr_stmt|;
 name|sk
 operator|->
 name|type
@@ -2264,7 +2304,7 @@ block|{
 comment|/* autokey */
 continue|continue;
 block|}
-comment|/* 		 * Don't lose info as to which keys are trusted. 		 */
+comment|/* 		 * Don't lose info as to which keys are trusted. Make 		 * sure there are no dangling pointers! 		 */
 if|if
 condition|(
 name|KEY_TRUSTED
@@ -2289,7 +2329,7 @@ name|sk
 operator|->
 name|secret
 argument_list|,
-literal|'\0'
+literal|0
 argument_list|,
 name|sk
 operator|->
@@ -2303,6 +2343,13 @@ operator|->
 name|secret
 argument_list|)
 expr_stmt|;
+name|sk
+operator|->
+name|secret
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* TALOS-CAN-0054 */
 block|}
 name|sk
 operator|->

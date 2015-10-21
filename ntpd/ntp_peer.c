@@ -2745,7 +2745,7 @@ name|peer
 modifier|*
 name|p
 decl_stmt|;
-comment|/* 	 * this is called when the interface list has changed 	 * give all peers a chance to find a better interface 	 */
+comment|/* 	 * this is called when the interface list has changed 	 * give all peers a chance to find a better interface 	 * but only if either they don't have an address already 	 * or if the one they have hasn't worked for a while. 	 */
 for|for
 control|(
 name|p
@@ -2762,11 +2762,31 @@ name|p
 operator|->
 name|p_link
 control|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|p
+operator|->
+name|dstadr
+operator|&&
+operator|(
+name|p
+operator|->
+name|reach
+operator|&
+literal|0x3
+operator|)
+operator|)
+condition|)
+comment|// Bug 2849 XOR 2043
 name|peer_refresh_interface
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2831,6 +2851,11 @@ decl_stmt|;
 name|u_int
 name|hash
 decl_stmt|;
+name|DEBUG_REQUIRE
+argument_list|(
+name|srcadr
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|AUTOKEY
@@ -2880,7 +2905,7 @@ endif|#
 directive|endif
 comment|/* AUTOKEY */
 comment|/* 	 * For now only pool associations have a hostname. 	 */
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|NULL
 operator|==
@@ -3052,6 +3077,13 @@ argument_list|,
 name|peer_free
 argument_list|,
 name|p_link
+argument_list|)
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|peer
+operator|!=
+name|NULL
 argument_list|)
 expr_stmt|;
 name|peer_free_count

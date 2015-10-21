@@ -203,13 +203,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* set to zero if admin doesn't want memory locked */
+comment|/* set to zero if we're not locking memory */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|do_memlock
+name|cur_memlock
 decl_stmt|;
 end_decl_stmt
 

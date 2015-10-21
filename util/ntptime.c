@@ -315,6 +315,7 @@ end_comment
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -382,6 +383,10 @@ name|times
 index|[
 literal|20
 index|]
+init|=
+block|{
+literal|0
+block|}
 decl_stmt|;
 name|double
 name|ftemp

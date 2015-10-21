@@ -14,12 +14,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_calendar.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntp_fp.h"
 end_include
 
@@ -29,23 +23,23 @@ directive|include
 file|"unity.h"
 end_include
 
-begin_function
+begin_function_decl
 name|void
-name|setUp
+name|test_Address
 parameter_list|(
 name|void
 parameter_list|)
-block|{  }
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
+begin_function_decl
 name|void
-name|tearDown
+name|test_Netmask
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
-end_function
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
@@ -54,6 +48,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|const
 name|u_int32
 name|input
 init|=
@@ -88,6 +83,7 @@ name|void
 parameter_list|)
 block|{
 comment|// 255.255.255.0
+specifier|const
 name|u_int32
 name|hostOrder
 init|=
@@ -109,6 +105,7 @@ literal|255UL
 operator|*
 literal|256UL
 decl_stmt|;
+specifier|const
 name|u_int32
 name|input
 init|=

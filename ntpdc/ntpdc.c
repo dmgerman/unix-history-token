@@ -1700,6 +1700,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -6429,7 +6430,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 sizeof|sizeof
 argument_list|(

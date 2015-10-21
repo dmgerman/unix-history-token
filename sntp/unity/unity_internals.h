@@ -411,6 +411,8 @@ if|#
 directive|if
 operator|(
 name|UINTPTR_MAX
+operator|+
+literal|0
 operator|<=
 literal|0xFFFF
 operator|)
@@ -428,6 +430,8 @@ elif|#
 directive|elif
 operator|(
 name|UINTPTR_MAX
+operator|+
+literal|0
 operator|<=
 literal|0xFFFFFFFF
 operator|)
@@ -445,6 +449,8 @@ elif|#
 directive|elif
 operator|(
 name|UINTPTR_MAX
+operator|+
+literal|0
 operator|<=
 literal|0xFFFFFFFFFFFFFFFF
 operator|)
@@ -489,6 +495,8 @@ if|#
 directive|if
 operator|(
 name|INTPTR_MAX
+operator|+
+literal|0
 operator|<=
 literal|0x7FFF
 operator|)
@@ -506,6 +514,8 @@ elif|#
 directive|elif
 operator|(
 name|INTPTR_MAX
+operator|+
+literal|0
 operator|<=
 literal|0x7FFFFFFF
 operator|)
@@ -523,6 +533,8 @@ elif|#
 directive|elif
 operator|(
 name|INTPTR_MAX
+operator|+
+literal|0
 operator|<=
 literal|0x7FFFFFFFFFFFFFFF
 operator|)

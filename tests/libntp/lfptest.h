@@ -14,48 +14,14 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ntp_fp.h"
+file|"config.h"
 end_include
 
-begin_function
-name|int
-name|IsEqual
-parameter_list|(
-specifier|const
-name|l_fp
-name|expected
-parameter_list|,
-specifier|const
-name|l_fp
-name|actual
-parameter_list|)
-block|{
-if|if
-condition|(
-name|L_ISEQU
-argument_list|(
-operator|&
-name|expected
-argument_list|,
-operator|&
-name|actual
-argument_list|)
-condition|)
-block|{
-return|return
-name|TRUE
-return|;
-block|}
-else|else
-block|{
-comment|//printf(" expected: ...");
-comment|/*<< " expected: "<< lfptoa(&expected, FRACTION_PREC)<< " ("<< expected.l_ui<< "."<< expected.l_uf<< ")"<< " but was: "<< lfptoa(&actual, FRACTION_PREC)<< " ("<< actual.l_ui<< "."<< actual.l_uf<< ")"; 		*/
-return|return
-name|FALSE
-return|;
-block|}
-block|}
-end_function
+begin_include
+include|#
+directive|include
+file|"ntp_fp.h"
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -117,6 +83,21 @@ init|=
 literal|1073742L
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|IsEqual
+parameter_list|(
+specifier|const
+name|l_fp
+name|expected
+parameter_list|,
+specifier|const
+name|l_fp
+name|actual
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

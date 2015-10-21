@@ -1134,7 +1134,7 @@ decl_stmt|;
 name|FT_ULL
 name|ft5
 decl_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|NomPerfCtrFreq
 operator|!=

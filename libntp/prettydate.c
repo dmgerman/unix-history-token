@@ -481,7 +481,7 @@ name|NULL
 return|;
 comment|/* That's truly pathological! */
 comment|/* 'tm' surely not NULL here! */
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|tm
 operator|!=

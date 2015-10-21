@@ -9855,6 +9855,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+comment|// XXX: Does temp have an expected value here?
 comment|/* 	 * Decode the current minute and day. Set leap day if the 	 * timecode leap bit is set on 30 June or 31 December. Set leap 	 * minute if the last minute on leap day, but only if the clock 	 * is syncrhronized. This code fails in 2400 AD. 	 */
 name|minute
 operator|=
@@ -10013,10 +10014,7 @@ operator|!=
 literal|1440
 condition|)
 return|return;
-name|minute
-operator|=
-literal|0
-expr_stmt|;
+comment|// minute = 0;
 while|while
 condition|(
 name|carry
@@ -10111,6 +10109,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
+comment|// XXX: Is there an expected value of temp here?
 comment|/* 	 * Roll the year if this the first day and propagate carries 	 * through the century. 	 */
 if|if
 condition|(
@@ -10125,10 +10124,7 @@ literal|366
 operator|)
 condition|)
 return|return;
-name|day
-operator|=
-literal|1
-expr_stmt|;
+comment|// day = 1;
 while|while
 condition|(
 name|carry

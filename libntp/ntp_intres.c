@@ -774,7 +774,7 @@ decl_stmt|;
 name|time_t
 name|now
 decl_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|NULL
 operator|!=
@@ -788,7 +788,7 @@ operator|!=
 name|hints
 condition|)
 block|{
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 literal|0
 operator|==
@@ -797,7 +797,7 @@ operator|->
 name|ai_addrlen
 argument_list|)
 expr_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|NULL
 operator|==
@@ -806,7 +806,7 @@ operator|->
 name|ai_addr
 argument_list|)
 expr_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|NULL
 operator|==
@@ -815,7 +815,7 @@ operator|->
 name|ai_canonname
 argument_list|)
 expr_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|NULL
 operator|==
@@ -1596,7 +1596,7 @@ operator|!=
 name|ai
 condition|)
 block|{
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|ai
 operator|->
@@ -2281,7 +2281,7 @@ operator|)
 name|canon_start
 expr_stmt|;
 block|}
-name|NTP_ENSURE
+name|ENSURE
 argument_list|(
 operator|(
 name|char
@@ -2589,12 +2589,12 @@ decl_stmt|;
 name|time_t
 name|time_now
 decl_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|hostoctets
 argument_list|)
 expr_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|hostoctets
 operator|+
@@ -2856,7 +2856,7 @@ operator|->
 name|servoctets
 expr_stmt|;
 comment|/* 	 * Some alloca() implementations are fragile regarding 	 * large allocations.  We only need room for the host 	 * and service names. 	 */
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|octets
 operator|<
@@ -3249,7 +3249,7 @@ operator|->
 name|servoctets
 expr_stmt|;
 block|}
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 call|(
 name|size_t
@@ -3267,7 +3267,7 @@ operator|==
 name|resp_octets
 argument_list|)
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|resp_octets
 operator|-

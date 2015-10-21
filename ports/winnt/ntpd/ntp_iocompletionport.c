@@ -1761,7 +1761,7 @@ operator|>=
 name|ActiveWaitHandles
 condition|)
 block|{
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|ActiveWaitHandles
 operator|<
@@ -2168,7 +2168,7 @@ name|lpo
 operator|->
 name|devCtx
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|rio
 operator|==
@@ -2717,7 +2717,7 @@ name|lpo
 operator|->
 name|recv_buf
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 operator|(
 name|ULONG_PTR
@@ -3305,7 +3305,7 @@ name|lpo
 operator|->
 name|recv_buf
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 operator|(
 name|ULONG_PTR
@@ -4466,14 +4466,14 @@ operator|*
 operator|)
 name|key
 decl_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|NULL
 operator|!=
 name|lpo
 argument_list|)
 expr_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|NULL
 operator|!=
@@ -4619,7 +4619,7 @@ operator|->
 name|ignore_packets
 condition|)
 block|{
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|buff
 operator|->

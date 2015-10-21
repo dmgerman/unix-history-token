@@ -36,7 +36,7 @@ file|"unity.h"
 end_include
 
 begin_comment
-comment|// Required for Solaris.
+comment|/* Required for Solaris. */
 end_comment
 
 begin_include
@@ -45,10 +45,48 @@ directive|include
 file|<math.h>
 end_include
 
+begin_function_decl
+name|void
+name|test_ZeroBuffer
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_IntegerAndFractionalBuffer
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_IllegalMicroseconds
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_AlwaysFalseOnWindows
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|test_ZeroBuffer
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
@@ -69,9 +107,11 @@ name|l_fp
 name|expected
 init|=
 block|{
+block|{
 literal|0
 operator|+
 name|JAN_1970
+block|}
 block|,
 literal|0
 block|}
@@ -123,7 +163,9 @@ end_function
 begin_function
 name|void
 name|test_IntegerAndFractionalBuffer
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
@@ -139,18 +181,25 @@ block|,
 literal|500000
 block|}
 decl_stmt|;
-comment|// 5.5
+comment|/* 5.5 */
 specifier|const
 name|l_fp
 name|expected
 init|=
 block|{
+block|{
 literal|5
 operator|+
 name|JAN_1970
+block|}
 block|,
 name|HALF
 block|}
+decl_stmt|;
+name|double
+name|expectedDouble
+decl_stmt|,
+name|actualDouble
 decl_stmt|;
 name|l_fp
 name|actual
@@ -174,7 +223,7 @@ name|actual
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// Compare the fractional part with an absolute error given.
+comment|/* Compare the fractional part with an absolute error given. */
 name|TEST_ASSERT_EQUAL
 argument_list|(
 name|expected
@@ -186,11 +235,6 @@ operator|.
 name|l_ui
 argument_list|)
 expr_stmt|;
-name|double
-name|expectedDouble
-decl_stmt|,
-name|actualDouble
-decl_stmt|;
 name|M_LFPTOD
 argument_list|(
 literal|0
@@ -213,7 +257,7 @@ argument_list|,
 name|actualDouble
 argument_list|)
 expr_stmt|;
-comment|// The error should be less than 0.5 us
+comment|/* The error should be less than 0.5 us */
 name|TEST_ASSERT_DOUBLE_WITHIN
 argument_list|(
 literal|0.0000005
@@ -223,7 +267,6 @@ argument_list|,
 name|actualDouble
 argument_list|)
 expr_stmt|;
-comment|//delta,epected,actual //_EXPECT_NEAR(expectedDouble, actualDouble, 0.0000005);
 else|#
 directive|else
 name|TEST_IGNORE_MESSAGE
@@ -239,7 +282,9 @@ end_function
 begin_function
 name|void
 name|test_IllegalMicroseconds
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
@@ -255,7 +300,7 @@ block|,
 literal|1100000
 block|}
 decl_stmt|;
-comment|//> 999 999 microseconds.
+comment|/*> 999 999 microseconds. */
 name|l_fp
 name|actual
 decl_stmt|;
@@ -293,7 +338,9 @@ end_function
 begin_function
 name|void
 name|test_AlwaysFalseOnWindows
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef

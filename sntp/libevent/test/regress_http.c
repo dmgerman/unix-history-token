@@ -1837,6 +1837,26 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|state
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Unable to allocate memory in http_chunked_cb()\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|memset
 argument_list|(
 name|state

@@ -6457,7 +6457,7 @@ name|CTL_PST_SEL_SELCAND
 case|:
 name|condition
 operator|=
-literal|"outlyer"
+literal|"outlier"
 expr_stmt|;
 break|break;
 case|case
@@ -11615,7 +11615,7 @@ argument_list|,
 name|mru
 argument_list|)
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|unlinked
 operator|==
@@ -12005,7 +12005,7 @@ operator|*
 name|hash_table
 argument_list|)
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|NULL
 operator|==
@@ -12223,7 +12223,7 @@ argument_list|,
 name|mlink
 argument_list|)
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|recent
 operator|!=
@@ -12282,7 +12282,7 @@ argument_list|,
 name|mru
 argument_list|)
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|unlinked
 operator|==
@@ -13385,7 +13385,7 @@ condition|(
 name|list_complete
 condition|)
 block|{
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 literal|0
 operator|==
@@ -14881,7 +14881,7 @@ argument|mlink
 argument_list|,
 argument|mru
 argument_list|)
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|ppentry
 operator|<
@@ -14913,7 +14913,7 @@ argument|mlink
 argument_list|,
 argument|mru
 argument_list|)
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|ppentry
 operator|<

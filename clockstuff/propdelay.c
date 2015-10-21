@@ -434,6 +434,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;

@@ -23,18 +23,6 @@ directive|include
 file|"test-libntp.h"
 end_include
 
-begin_comment
-comment|//const char *progname = "test-libntp";
-end_comment
-
-begin_comment
-comment|// current_time is needed by authkeys. Used only in to calculate lifetime.
-end_comment
-
-begin_comment
-comment|//u_long current_time = 4;
-end_comment
-
 begin_decl_stmt
 name|time_t
 name|nowtime

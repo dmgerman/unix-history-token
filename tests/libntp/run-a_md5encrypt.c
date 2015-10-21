@@ -42,6 +42,24 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
 begin_comment
 comment|//=======External Functions This Runner Calls=====
 end_comment
@@ -70,7 +88,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_Encrypt
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -78,7 +98,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_DecryptValid
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -86,7 +108,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_DecryptInvalid
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -94,7 +118,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_IPv4AddressToRefId
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -102,7 +128,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_IPv6AddressToRefId
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -110,10 +138,21 @@ begin_comment
 comment|//=======Test Reset Option=====
 end_comment
 
+begin_function_decl
+name|void
+name|resetTest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|resetTest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tearDown
 argument_list|()
@@ -126,6 +165,7 @@ end_function
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -155,12 +195,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|Unity
-operator|.
-name|TestFile
-operator|=
-literal|"a_md5encrypt.c"
-expr_stmt|;
 name|UnityBegin
 argument_list|(
 literal|"a_md5encrypt.c"
@@ -170,35 +204,35 @@ name|RUN_TEST
 argument_list|(
 name|test_Encrypt
 argument_list|,
-literal|36
+literal|29
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_DecryptValid
 argument_list|,
-literal|54
+literal|30
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_DecryptInvalid
 argument_list|,
-literal|60
+literal|31
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_IPv4AddressToRefId
 argument_list|,
-literal|68
+literal|32
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_IPv6AddressToRefId
 argument_list|,
-literal|79
+literal|33
 argument_list|)
 expr_stmt|;
 return|return

@@ -74,7 +74,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This is a hack to allow a machine to use its own system clock as a  * reference clock, i.e., to free-run using no outside clock discipline  * source. Note that the clock selection algorithm will not select this  * driver unless all other sources of synchronization have been lost.  * This is useful if you want to use NTP in an isolated environment  * with no radio clock or NIST modem available. Pick a machine that you  * figure has a good clock oscillator and configure it with this  * driver. Set the clock using the best means available, like  * eyeball-and-wristwatch. Then, point all the other machines at this  * one or use broadcast (not multicast) mode to distribute time.  *  * Another application for this driver is if you want to use a  * particular server's clock as the clock of last resort when all other  * normal synchronization sources have gone away. This is especially  * useful if that server has an ovenized oscillator. However, the  * preferred was to do this is using orphan mode. See the documentation.  *  * A third application for this driver is when an external discipline  * source is available, such as the NIST "lockclock" program, which  * synchronizes the local clock via a telephone modem and the NIST  * Automated Computer Time Service (ACTS), or the Digital Time  * Synchronization Service (DTSS), which runs on DCE machines. In this  * case the stratum should be set at zero, indicating a bona fide  * stratum-1 source. Exercise some caution with this, since there is no  * easy way to telegraph via NTP that something might be wrong in the  * discipline source itself. In the case of DTSS, the local clock can  * have a rather large jitter, depending on the interval between  * corrections and the intrinsic frequency error of the clock  * oscillator. In extreme cases, this can cause clients to exceed the  * 128-ms slew window and drop off the NTP subnet.  *  * Fudge Factors  *  * If fudge flag1 is lit, the leap second bit is set in the peer  * status word. It should be set early in the day of a leap second  * event and set dark on the day after the event.  *  * Note the fudge time1 and time2 have been deprecated. The fudge time1  * was intended to apply a bias offset. This can be done using the Unix  * date command. The fudge time2 was intended to apply a bias frequency.  * This can be done using the frequency file and/or the freq  * configuration command.  */
+comment|/*  * This is a hack to allow a machine to use its own system clock as a  * reference clock, i.e., to free-run using no outside clock discipline  * source. Note that the clock selection algorithm will not select this  * driver unless all other sources of synchronization have been lost.  * This is useful if you want to use NTP in an isolated environment  * with no radio clock or NIST modem available. Pick a machine that you  * figure has a good clock oscillator and configure it with this  * driver. Set the clock using the best means available, like  * eyeball-and-wristwatch. Then, point all the other machines at this  * one or use broadcast (not multicast) mode to distribute time.  *  * Another application for this driver is if you want to use a  * particular server's clock as the clock of last resort when all other  * normal synchronization sources have gone away. This is especially  * useful if that server has an ovenized oscillator. However, the  * preferred was to do this is using orphan mode. See the documentation.  *  * A third application for this driver is when an external discipline  * source is available, such as the NIST "lockclock" program, which  * synchronizes the local clock via a telephone modem and the NIST  * Automated Computer Time Service (ACTS), or the Digital Time  * Synchronization Service (DTSS), which runs on DCE machines. In this  * case the stratum should be set at zero, indicating a bona fide  * stratum-1 source. Exercise some caution with this, since there is no  * easy way to telegraph via NTP that something might be wrong in the  * discipline source itself. In the case of DTSS, the local clock can  * have a rather large jitter, depending on the interval between  * corrections and the intrinsic frequency error of the clock  * oscillator. In extreme cases, this can cause clients to exceed the  * 128-ms slew window and drop off the NTP subnet.  *  * Fudge Factors  *  * None currently supported.  */
 end_comment
 
 begin_comment
@@ -416,7 +416,7 @@ operator|->
 name|polls
 operator|++
 expr_stmt|;
-comment|/* 	 * Ramble through the usual filtering and grooming code, which 	 * is essentially a no-op and included mostly for pretty 	 * billboards. We allow a one-time time adjustment using fudge 	 * time1 (s) and a continuous frequency adjustment using fudge 	 * time 2 (ppm). 	 */
+comment|/* 	 * Ramble through the usual filtering and grooming code, which 	 * is essentially a no-op and included mostly for pretty 	 * billboards. 	 */
 name|poll_time
 operator|=
 name|current_time
@@ -551,27 +551,6 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* KERNEL_PLL LOCKCLOCK */
-if|if
-condition|(
-name|pp
-operator|->
-name|sloppyclockflag
-operator|&
-name|CLK_FLAG1
-condition|)
-name|pp
-operator|->
-name|leap
-operator|=
-name|LEAP_ADDSECOND
-expr_stmt|;
-else|else
-name|pp
-operator|->
-name|leap
-operator|=
-name|LEAP_NOWARNING
-expr_stmt|;
 name|pp
 operator|->
 name|disp

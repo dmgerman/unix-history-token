@@ -419,7 +419,7 @@ operator|.
 name|h
 condition|)
 block|{
-name|NTP_ENSURE
+name|INSIST
 argument_list|(
 literal|0
 operator|==

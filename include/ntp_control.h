@@ -625,7 +625,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* - outlyer */
+comment|/* - outlier */
 end_comment
 
 begin_define

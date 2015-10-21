@@ -659,6 +659,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Get the number of leap years since epoch for the number of elapsed  * full years  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int32_t
+name|ntpcal_leapyears_in_years
+parameter_list|(
+name|int32_t
+comment|/* years */
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Convert elapsed years in Era into elapsed days in Era.  */
 end_comment
 
@@ -788,7 +803,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Given the number of elapsed days in the calendar era, split this  * number into the number of elapsed years in 'res.quot' and the  * number of elapsed days of that year in 'res.rem'.  *  * if 'isleapyear' is not NULL, it will receive an integer that is 0  * for regular years and a non-zero value for leap years.  */
+comment|/*  * Given the number of elapsed days in the calendar era, split this  * number into the number of elapsed years in 'res.quot' and the  * number of elapsed days of that year in 'res.rem'.  *  * if 'isleapyear' is not NULL, it will receive an integer that is 0  * for regular years and a non-zero value for leap years.  *  * The input is limited to [-2^30, 2^30-1]. If the days exceed this  * range, errno is set to EDOM and the result is saturated.  */
 end_comment
 
 begin_function_decl
@@ -1156,6 +1171,10 @@ comment|/* years */
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * The input is limited to [-2^30, 2^30-1]. If the weeks exceed this  * range, errno is set to EDOM and the result is saturated.  */
+end_comment
 
 begin_function_decl
 specifier|extern

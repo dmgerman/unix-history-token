@@ -36,14 +36,19 @@ directive|include
 file|<inttypes.h>
 end_include
 
-begin_elif
-elif|#
-directive|elif
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|HAVE_STDINT_H
 argument_list|)
-end_elif
+end_if
 
 begin_include
 include|#

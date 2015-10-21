@@ -14,17 +14,11 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_calendar.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntp.h"
 end_include
 
 begin_comment
-comment|// Needed for MAX_MAC_LEN used in ntp_control.h
+comment|// needed for MAX_MAC_LEN used in ntp_control.h
 end_comment
 
 begin_include
@@ -39,23 +33,41 @@ directive|include
 file|"unity.h"
 end_include
 
-begin_function
+begin_function_decl
 name|void
-name|setUp
+name|test_PeerRestart
 parameter_list|(
 name|void
 parameter_list|)
-block|{  }
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
+begin_function_decl
 name|void
-name|tearDown
+name|test_SysUnspecified
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
-end_function
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_ClockCodeExists
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_ClockCodeUnknown
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|// eventstr()

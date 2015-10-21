@@ -176,6 +176,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;

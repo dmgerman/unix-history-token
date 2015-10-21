@@ -1711,6 +1711,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+comment|/* not used after this, at *this* time. */
 ifndef|#
 directive|ifndef
 name|SYS_WINNT
