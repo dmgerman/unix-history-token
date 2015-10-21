@@ -9242,7 +9242,7 @@ literal|1
 argument_list|,
 name|size
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -9897,7 +9897,7 @@ literal|1
 argument_list|,
 name|IWN_RBUF_SIZE
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -10659,7 +10659,7 @@ literal|1
 argument_list|,
 name|MCLBYTES
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
