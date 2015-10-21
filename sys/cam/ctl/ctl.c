@@ -20744,6 +20744,8 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|page_code
 decl_stmt|;
 name|struct
 name|ctl_page_index
@@ -20864,30 +20866,40 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-switch|switch
-condition|(
+name|page_code
+operator|=
 name|page_index
 operator|->
 name|page_code
 operator|&
 name|SMPH_PC_MASK
+expr_stmt|;
+switch|switch
+condition|(
+name|page_code
 condition|)
 block|{
 case|case
 name|SMS_RW_ERROR_RECOVERY_PAGE
 case|:
 block|{
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|page_index
 operator|->
 name|subpage
-operator|!=
+operator|==
 name|SMS_SUBPAGE_PAGE_0
-condition|)
-name|panic
-argument_list|(
-literal|"subpage is incorrect!"
+argument_list|,
+operator|(
+literal|"subpage %#x for page %#x is incorrect!"
+operator|,
+name|page_index
+operator|->
+name|subpage
+operator|,
+name|page_code
+operator|)
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -20999,17 +21011,23 @@ name|scsi_format_page
 modifier|*
 name|format_page
 decl_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|page_index
 operator|->
 name|subpage
-operator|!=
+operator|==
 name|SMS_SUBPAGE_PAGE_0
-condition|)
-name|panic
-argument_list|(
-literal|"subpage is incorrect!"
+argument_list|,
+operator|(
+literal|"subpage %#x for page %#x is incorrect!"
+operator|,
+name|page_index
+operator|->
+name|subpage
+operator|,
+name|page_code
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Sectors per track are set above.  Bytes per 			 * sector need to be set here on a per-LUN basis. 			 */
@@ -21212,21 +21230,23 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* !__XSCALE__ */
-if|if
-condition|(
-name|page_index
-operator|->
-name|subpage
-operator|!=
-name|SMS_SUBPAGE_PAGE_0
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
-literal|"invalid subpage value %d"
-argument_list|,
 name|page_index
 operator|->
 name|subpage
+operator|==
+name|SMS_SUBPAGE_PAGE_0
+argument_list|,
+operator|(
+literal|"subpage %#x for page %#x is incorrect!"
+operator|,
+name|page_index
+operator|->
+name|subpage
+operator|,
+name|page_code
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Rotation rate and sectors per track are set 			 * above.  We calculate the cylinders here based on 			 * capacity.  Due to the number of heads and 			 * sectors per track we're using, smaller arrays 			 * may turn out to have 0 cylinders.  Linux and 			 * FreeBSD don't pay attention to these mode pages 			 * to figure out capacity, but Solaris does.  It 			 * seems to deal with 0 cylinders just fine, and 			 * works out a fake geometry based on the capacity. 			 */
@@ -21491,21 +21511,23 @@ name|scsi_caching_page
 modifier|*
 name|caching_page
 decl_stmt|;
-if|if
-condition|(
-name|page_index
-operator|->
-name|subpage
-operator|!=
-name|SMS_SUBPAGE_PAGE_0
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
-literal|"invalid subpage value %d"
-argument_list|,
 name|page_index
 operator|->
 name|subpage
+operator|==
+name|SMS_SUBPAGE_PAGE_0
+argument_list|,
+operator|(
+literal|"subpage %#x for page %#x is incorrect!"
+operator|,
+name|page_index
+operator|->
+name|subpage
+operator|,
+name|page_code
+operator|)
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -21990,6 +22012,18 @@ operator|.
 name|control_ext_page
 expr_stmt|;
 break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"subpage %#x for page %#x is incorrect!"
+argument_list|,
+name|page_index
+operator|->
+name|subpage
+argument_list|,
+name|page_code
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 block|}
@@ -22560,7 +22594,20 @@ name|mode_pages
 operator|.
 name|lbp_page
 expr_stmt|;
+break|break;
 block|}
+default|default:
+name|panic
+argument_list|(
+literal|"subpage %#x for page %#x is incorrect!"
+argument_list|,
+name|page_index
+operator|->
+name|subpage
+argument_list|,
+name|page_code
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 block|}
@@ -22568,6 +22615,25 @@ case|case
 name|SMS_CDDVD_CAPS_PAGE
 case|:
 block|{
+name|KASSERT
+argument_list|(
+name|page_index
+operator|->
+name|subpage
+operator|==
+name|SMS_SUBPAGE_PAGE_0
+argument_list|,
+operator|(
+literal|"subpage %#x for page %#x is incorrect!"
+operator|,
+name|page_index
+operator|->
+name|subpage
+operator|,
+name|page_code
+operator|)
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
@@ -22793,30 +22859,26 @@ block|}
 default|default:
 name|panic
 argument_list|(
-literal|"invalid subpage value %d"
+literal|"subpage %#x for page %#x is incorrect!"
 argument_list|,
 name|page_index
 operator|->
 name|subpage
+argument_list|,
+name|page_code
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 break|break;
 block|}
 default|default:
 name|panic
 argument_list|(
-literal|"invalid page value %d"
+literal|"invalid page code value %#x"
 argument_list|,
-name|page_index
-operator|->
 name|page_code
-operator|&
-name|SMPH_PC_MASK
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 block|}
 return|return
@@ -32742,7 +32804,9 @@ block|}
 default|default:
 name|panic
 argument_list|(
-literal|"Invalid CDB type %#x"
+literal|"%s: Invalid CDB type %#x"
+argument_list|,
+name|__func__
 argument_list|,
 name|ctsio
 operator|->
@@ -32752,7 +32816,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 if|if
 condition|(
@@ -33929,7 +33992,9 @@ block|}
 default|default:
 name|panic
 argument_list|(
-literal|"invalid CDB type %#x"
+literal|"%s: Invalid CDB type %#x"
+argument_list|,
+name|__func__
 argument_list|,
 name|ctsio
 operator|->
@@ -33939,8 +34004,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-break|break;
-comment|/* NOTREACHED */
 block|}
 comment|/* 	 * If we've got a disk, use its blocksize in the block 	 * descriptor.  Otherwise, just set it to 0. 	 */
 if|if
@@ -39641,7 +39704,9 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"Invalid PR type %x"
+literal|"%s: Invalid PR type %#x"
+argument_list|,
+name|__func__
 argument_list|,
 name|cdb
 operator|->
@@ -40496,18 +40561,17 @@ expr_stmt|;
 break|break;
 block|}
 default|default:
-comment|/* 		 * This is a bug, because we just checked for this above, 		 * and should have returned an error. 		 */
 name|panic
 argument_list|(
-literal|"Invalid PR type %x"
+literal|"%s: Invalid PR type %#x"
+argument_list|,
+name|__func__
 argument_list|,
 name|cdb
 operator|->
 name|action
 argument_list|)
 expr_stmt|;
-break|break;
-comment|/* NOTREACHED */
 block|}
 name|mtx_unlock
 argument_list|(
@@ -44043,7 +44107,9 @@ block|}
 default|default:
 name|panic
 argument_list|(
-literal|"Invalid PR type %x"
+literal|"%s: Invalid PR type %#x"
+argument_list|,
+name|__func__
 argument_list|,
 name|cdb
 operator|->
@@ -57164,7 +57230,9 @@ return|;
 default|default:
 name|panic
 argument_list|(
-literal|"invalid serialization value %d"
+literal|"%s: Invalid serialization value %d for %d => %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|serialize_row
 index|[
@@ -57172,6 +57240,14 @@ name|pending_entry
 operator|->
 name|seridx
 index|]
+argument_list|,
+name|pending_entry
+operator|->
+name|seridx
+argument_list|,
+name|ooa_entry
+operator|->
+name|seridx
 argument_list|)
 expr_stmt|;
 block|}
@@ -57303,13 +57379,13 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"invalid action %d"
+literal|"%s: Invalid action %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|action
 argument_list|)
 expr_stmt|;
-break|break;
-comment|/* NOTREACHED */
 block|}
 block|}
 return|return
@@ -63758,20 +63834,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
-argument_list|(
-literal|"Invalid CTL I/O type %d\n"
-argument_list|,
-name|io
-operator|->
-name|io_hdr
-operator|.
-name|io_type
-argument_list|)
-expr_stmt|;
 name|panic
 argument_list|(
-literal|"Invalid CTL I/O type %d\n"
+literal|"%s: Invalid CTL I/O type %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|io
 operator|->
@@ -63780,7 +63847,6 @@ operator|.
 name|io_type
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 name|sbuf_cat
 argument_list|(
@@ -65945,20 +66011,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
-argument_list|(
-literal|"Invalid CTL I/O type %d\n"
-argument_list|,
-name|io
-operator|->
-name|io_hdr
-operator|.
-name|io_type
-argument_list|)
-expr_stmt|;
 name|panic
 argument_list|(
-literal|"Invalid CTL I/O type %d\n"
+literal|"%s: Invalid CTL I/O type %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|io
 operator|->
@@ -65967,7 +66024,6 @@ operator|.
 name|io_type
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 name|sbuf_cat
 argument_list|(
@@ -66055,7 +66111,9 @@ return|return;
 default|default:
 name|panic
 argument_list|(
-literal|"ctl_process_done: invalid io type %d\n"
+literal|"%s: Invalid CTL I/O type %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|io
 operator|->
@@ -66064,8 +66122,6 @@ operator|.
 name|io_type
 argument_list|)
 expr_stmt|;
-break|break;
-comment|/* NOTREACHED */
 block|}
 name|lun
 operator|=
