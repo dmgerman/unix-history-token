@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: compat.c,v 1.96 2014/09/07 20:55:34 joerg Exp $	*/
+comment|/*	$NetBSD: compat.c,v 1.101 2015/10/11 04:51:24 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: compat.c,v 1.96 2014/09/07 20:55:34 joerg Exp $"
+literal|"$NetBSD: compat.c,v 1.101 2015/10/11 04:51:24 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: compat.c,v 1.96 2014/09/07 20:55:34 joerg Exp $"
+literal|"$NetBSD: compat.c,v 1.101 2015/10/11 04:51:24 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -173,22 +173,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|"metachar.h"
 end_include
 
-begin_comment
-comment|/*  * The following array is used to make a fast determination of which  * characters are interpreted specially by the shell.  If a command  * contains any of these characters, it is executed by the shell, not  * directly by us.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-name|meta
-index|[
-literal|256
-index|]
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -217,62 +209,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function
-specifier|static
-name|void
-name|Compat_Init
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-specifier|const
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-name|Shell_Init
-argument_list|()
-expr_stmt|;
-comment|/* setup default shell */
-for|for
-control|(
-name|cp
-operator|=
-literal|"~#=|^(){};&<>*?[]:$`\\\n"
-init|;
-operator|*
-name|cp
-operator|!=
-literal|'\0'
-condition|;
-name|cp
-operator|++
-control|)
-block|{
-name|meta
-index|[
-operator|(
-name|unsigned
-name|char
-operator|)
-operator|*
-name|cp
-index|]
-operator|=
-literal|1
-expr_stmt|;
-block|}
-comment|/*      * The null character serves as a sentinel in the string.      */
-name|meta
-index|[
-literal|0
-index|]
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * CompatInterrupt --  *	Interrupt the creation of the current target and remove it if  *	it ain't precious.  *  * Results:  *	None.  *  * Side Effects:  *	The target is removed and the process exits. If .INTERRUPT exists,  *	its commands are run first WITH INTERRUPTS IGNORED..  *  *-----------------------------------------------------------------------  */
@@ -574,6 +510,8 @@ argument_list|,
 name|gn
 argument_list|,
 name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/*      * brk_string will return an argv with a NULL in av[0], thus causing      * execvp to choke and die horribly. Besides, how can we execute a null      * command? In any case, we warn the user that the command expanded to      * nothing (is this the right thing to do?).      */
@@ -729,13 +667,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|meta
-index|[
-literal|0
-index|]
+name|shellName
 condition|)
 comment|/* we came here from jobs */
-name|Compat_Init
+name|Shell_Init
 argument_list|()
 expr_stmt|;
 break|break;
@@ -785,38 +720,15 @@ name|TRUE
 expr_stmt|;
 else|#
 directive|else
-comment|/*      * Search for meta characters in the command. If there are no meta      * characters, there's no need to execute a shell to execute the      * command.      */
-for|for
-control|(
-name|cp
-operator|=
-name|cmd
-init|;
-operator|!
-name|meta
-index|[
-operator|(
-name|unsigned
-name|char
-operator|)
-operator|*
-name|cp
-index|]
-condition|;
-name|cp
-operator|++
-control|)
-block|{
-continue|continue;
-block|}
+comment|/*      * Search for meta characters in the command. If there are no meta      * characters, there's no need to execute a shell to execute the      * command.      *      * Additionally variable assignments and empty commands      * go to the shell. Therefore treat '=' and ':' like shell      * meta characters as documented in make(1).      */
 name|useShell
 operator|=
-operator|(
-operator|*
-name|cp
-operator|!=
-literal|'\0'
-operator|)
+name|needshell
+argument_list|(
+name|cmd
+argument_list|,
+name|FALSE
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -1585,13 +1497,10 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|meta
-index|[
-literal|0
-index|]
+name|shellName
 condition|)
 comment|/* we came here from jobs */
-name|Compat_Init
+name|Shell_Init
 argument_list|()
 expr_stmt|;
 if|if
@@ -2270,7 +2179,12 @@ name|int
 name|errors
 decl_stmt|;
 comment|/* Number of targets not remade due to errors */
-name|Compat_Init
+if|if
+condition|(
+operator|!
+name|shellName
+condition|)
+name|Shell_Init
 argument_list|()
 expr_stmt|;
 if|if

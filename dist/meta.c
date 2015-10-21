@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $NetBSD: meta.c,v 1.38 2015/04/11 05:24:30 sjg Exp $ */
+comment|/*      $NetBSD: meta.c,v 1.40 2015/10/11 04:51:24 sjg Exp $ */
 end_comment
 
 begin_comment
@@ -1379,6 +1379,8 @@ argument_list|,
 name|gn
 argument_list|,
 name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|cmd
@@ -1560,6 +1562,8 @@ operator|->
 name|gn
 argument_list|,
 name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1944,7 +1948,9 @@ literal|"}"
 argument_list|,
 name|gn
 argument_list|,
-literal|0
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2597,7 +2603,9 @@ literal|"${.MAKE.META.BAILIWICK:O:u:tA}"
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-literal|0
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2644,7 +2652,9 @@ literal|":O:u:tA}"
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-literal|0
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3147,7 +3157,9 @@ literal|"}"
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-literal|0
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -5145,37 +5157,6 @@ endif|#
 directive|endif
 break|break;
 block|}
-if|if
-condition|(
-operator|(
-name|cp
-operator|=
-name|strrchr
-argument_list|(
-name|p
-argument_list|,
-literal|'/'
-argument_list|)
-operator|)
-condition|)
-block|{
-name|cp
-operator|++
-expr_stmt|;
-comment|/* 			 * We don't normally expect to see this, 			 * but we do expect it to change. 			 */
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|cp
-argument_list|,
-name|makeDependfile
-argument_list|)
-operator|==
-literal|0
-condition|)
-break|break;
-block|}
 comment|/* 		     * The rest of the record is the file name. 		     * Check if it's not an absolute path. 		     */
 block|{
 name|char
@@ -5755,6 +5736,8 @@ argument_list|,
 name|cmd
 argument_list|,
 name|gn
+argument_list|,
+name|TRUE
 argument_list|,
 name|TRUE
 argument_list|)
