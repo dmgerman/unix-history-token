@@ -548,7 +548,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Hardware owns the low 32 bits of features. */
+comment|/* Hardware owns the low 16 bits of features. */
 end_comment
 
 begin_define
@@ -580,14 +580,22 @@ value|(1<< 3)
 end_define
 
 begin_comment
-comment|/* Software/configuration owns the top 32 bits. */
+comment|/* Software/configuration owns the top 16 bits. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NTB_SPLIT_BAR
-value|(1ull<< 32)
+value|(1ull<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_FEATURES_STR
+define|\
+value|"\20\21SPLIT_BAR4\04B2B_DOORBELL_BIT14\03SB01BASE_LOCKUP" \     "\02SDOORBELL_LOCKUP\01BAR_SIZE_4K"
 end_define
 
 begin_function_decl
@@ -598,7 +606,7 @@ name|struct
 name|ntb_softc
 modifier|*
 parameter_list|,
-name|uint64_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl

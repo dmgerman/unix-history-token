@@ -123,6 +123,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|XEON_DEVSTS_OFFSET
+value|0x059a
+end_define
+
+begin_define
+define|#
+directive|define
 name|XEON_LINK_STATUS_OFFSET
 value|0x01a2
 end_define
@@ -291,7 +298,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|XEON_USMEMMISS
+name|XEON_USMEMMISS_OFFSET
 value|0x0070
 end_define
 
@@ -314,6 +321,20 @@ define|#
 directive|define
 name|XEON_WCCNTRL_OFFSET
 value|0x00e0
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_UNCERRSTS_OFFSET
+value|0x014c
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_CORERRSTS_OFFSET
+value|0x0158
 end_define
 
 begin_define
