@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 2014 Garrett D'Amore<garrett@damore.org>  * Copright 2010 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 1995 Alex Tatmanjants<alex@elvisti.kiev.ua>  *		at Electronni Visti IA, Kiev, Ukraine.  *			All rights reserved.  *  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  * Portions of this software were developed by David Chisnall  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Adapted to xlocale by John Marino<draco@marino.st>  */
+comment|/*-  * Copyright 2014 Garrett D'Amore<garrett@damore.org>  * Copyright 2010 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 1995 Alex Tatmanjants<alex@elvisti.kiev.ua>  *		at Electronni Visti IA, Kiev, Ukraine.  *			All rights reserved.  *  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  * Portions of this software were developed by David Chisnall  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Adapted to xlocale by John Marino<draco@marino.st>  */
 end_comment
 
 begin_include
@@ -39,6 +39,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
 end_include
 
 begin_include
@@ -405,6 +411,12 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+name|table
+operator|->
+name|__collate_load_error
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 'encoding' must be already checked. */
 if|if
 condition|(
@@ -427,12 +439,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|table
-operator|->
-name|__collate_load_error
-operator|=
-literal|1
-expr_stmt|;
 return|return
 operator|(
 name|_LDP_CACHE
@@ -751,11 +757,9 @@ literal|0
 init|;
 name|z
 operator|<
-operator|(
 name|info
 operator|->
 name|directive_count
-operator|)
 condition|;
 name|z
 operator|++
@@ -815,6 +819,12 @@ name|_LDP_ERROR
 operator|)
 return|;
 block|}
+name|table
+operator|->
+name|info
+operator|=
+name|info
+expr_stmt|;
 name|table
 operator|->
 name|char_pri_table
@@ -968,12 +978,6 @@ name|NULL
 expr_stmt|;
 name|table
 operator|->
-name|info
-operator|=
-name|info
-expr_stmt|;
-name|table
-operator|->
 name|__collate_load_error
 operator|=
 literal|0
@@ -986,12 +990,9 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Note: for performance reasons, we have expanded bsearch here.  This avoids  * function call overhead with each comparison.  */
-end_comment
-
 begin_function
 specifier|static
+specifier|const
 name|int32_t
 modifier|*
 name|substsearch
@@ -1009,6 +1010,7 @@ name|int
 name|pass
 parameter_list|)
 block|{
+specifier|const
 name|collate_subst_t
 modifier|*
 name|p
@@ -1081,6 +1083,15 @@ operator|~
 name|COLLATE_SUBST_PRIORITY
 operator|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|p
+operator|->
+name|key
+operator|==
+name|key
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|p
@@ -1090,6 +1101,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Note: for performance reasons, we have expanded bsearch here.  This avoids  * function call overhead with each comparison.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1819,6 +1834,20 @@ name|need
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|ndir
+init|=
+name|table
+operator|->
+name|info
+operator|->
+name|directive_count
+decl_stmt|;
+name|assert
+argument_list|(
+name|src
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|pass
@@ -1827,11 +1856,7 @@ literal|0
 init|;
 name|pass
 operator|<=
-name|table
-operator|->
-name|info
-operator|->
-name|directive_count
+name|ndir
 condition|;
 name|pass
 operator|++
@@ -1873,11 +1898,7 @@ if|if
 condition|(
 name|pass
 operator|==
-name|table
-operator|->
-name|info
-operator|->
-name|directive_count
+name|ndir
 condition|)
 block|{
 name|direc
@@ -1921,10 +1942,6 @@ name|fp
 decl_stmt|,
 name|c
 decl_stmt|;
-if|if
-condition|(
-name|tr
-condition|)
 name|free
 argument_list|(
 name|tr
@@ -2172,10 +2189,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-if|if
-condition|(
-name|tr
-condition|)
 name|free
 argument_list|(
 name|tr
@@ -2188,10 +2201,6 @@ operator|)
 return|;
 name|fail
 label|:
-if|if
-condition|(
-name|tr
-condition|)
 name|free
 argument_list|(
 name|tr
@@ -2409,6 +2418,20 @@ index|[
 name|XFRM_BYTES
 index|]
 decl_stmt|;
+name|int
+name|ndir
+init|=
+name|table
+operator|->
+name|info
+operator|->
+name|directive_count
+decl_stmt|;
+name|assert
+argument_list|(
+name|src
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|pass
@@ -2417,11 +2440,7 @@ literal|0
 init|;
 name|pass
 operator|<=
-name|table
-operator|->
-name|info
-operator|->
-name|directive_count
+name|ndir
 condition|;
 name|pass
 operator|++
@@ -2463,11 +2482,7 @@ if|if
 condition|(
 name|pass
 operator|==
-name|table
-operator|->
-name|info
-operator|->
-name|directive_count
+name|ndir
 condition|)
 block|{
 name|direc
@@ -2511,10 +2526,6 @@ name|fp
 decl_stmt|,
 name|c
 decl_stmt|;
-if|if
-condition|(
-name|tr
-condition|)
 name|free
 argument_list|(
 name|tr
@@ -2826,10 +2837,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-if|if
-condition|(
-name|tr
-condition|)
 name|free
 argument_list|(
 name|tr
@@ -2842,10 +2849,6 @@ operator|)
 return|;
 name|fail
 label|:
-if|if
-condition|(
-name|tr
-condition|)
 name|free
 argument_list|(
 name|tr
