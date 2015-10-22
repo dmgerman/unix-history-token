@@ -2305,12 +2305,6 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * Sending station is known, dispatch directly. 			 */
-if|#
-directive|if
-literal|0
-block|ieee80211_radiotap_rx(ni->ni_vap, m);
-endif|#
-directive|endif
 name|type
 operator|=
 name|ieee80211_input
@@ -2334,12 +2328,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|#
-directive|if
-literal|0
-block|ieee80211_radiotap_rx_all(ic, m);
-endif|#
-directive|endif
 name|type
 operator|=
 name|ieee80211_input_all
