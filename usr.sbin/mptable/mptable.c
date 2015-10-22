@@ -927,6 +927,11 @@ argument_list|,
 literal|"\n MP FPS NOT found,\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|grope
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
