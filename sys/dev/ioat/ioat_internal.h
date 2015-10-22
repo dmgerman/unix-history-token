@@ -1279,6 +1279,24 @@ block|}
 struct|;
 end_struct
 
+begin_function_decl
+name|void
+name|ioat_test_attach
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ioat_test_detach
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 specifier|inline
