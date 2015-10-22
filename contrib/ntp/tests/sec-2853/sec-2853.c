@@ -8,6 +8,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rc_cmdlength.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"unity.h"
 end_include
 
@@ -61,22 +67,6 @@ name|int
 name|trailing_space
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|size_t
-name|remoteconfig_cmdlength
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -14,32 +14,44 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_calendar.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"unity.h"
 end_include
 
-begin_function
+begin_function_decl
 name|void
-name|setUp
+name|test_NonLeapYearFebruary
 parameter_list|(
 name|void
 parameter_list|)
-block|{  }
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
+begin_function_decl
 name|void
-name|tearDown
+name|test_NonLeapYearJune
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
-end_function
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_LeapYearFebruary
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_LeapYearDecember
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void

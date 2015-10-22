@@ -42,6 +42,18 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
 begin_comment
 comment|//=======External Functions This Runner Calls=====
 end_comment
@@ -110,10 +122,21 @@ begin_comment
 comment|//=======Test Reset Option=====
 end_comment
 
+begin_function_decl
+name|void
+name|resetTest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|resetTest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tearDown
 argument_list|()
@@ -126,6 +149,7 @@ end_function
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -155,12 +179,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|Unity
-operator|.
-name|TestFile
-operator|=
-literal|"ymd2yd.c"
-expr_stmt|;
 name|UnityBegin
 argument_list|(
 literal|"ymd2yd.c"
@@ -170,28 +188,28 @@ name|RUN_TEST
 argument_list|(
 name|test_NonLeapYearFebruary
 argument_list|,
-literal|17
+literal|7
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_NonLeapYearJune
 argument_list|,
-literal|21
+literal|8
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_LeapYearFebruary
 argument_list|,
-literal|26
+literal|9
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_LeapYearDecember
 argument_list|,
-literal|30
+literal|10
 argument_list|)
 expr_stmt|;
 return|return

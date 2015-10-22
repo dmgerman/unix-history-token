@@ -114,7 +114,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NTP_STATUS_OUTLYER
+name|NTP_STATUS_OUTLIER
 value|3
 end_define
 

@@ -29,6 +29,68 @@ directive|include
 file|"sockaddrtest.h"
 end_include
 
+begin_function_decl
+name|void
+name|test_IPv4AddressWithPort
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|//#ifdef ISC_PLATFORM_HAVEIPV6
+end_comment
+
+begin_function_decl
+name|void
+name|test_IPv6AddressWithPort
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_IgnoreIPv6Fields
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|//#endif /* ISC_PLATFORM_HAVEIPV6 */
+end_comment
+
+begin_function_decl
+name|void
+name|test_ScopedIPv6AddressWithPort
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_HashEqual
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_HashNotEqual
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|test_IPv4AddressWithPort
@@ -78,6 +140,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_WANTIPV6
 specifier|const
 name|struct
 name|in6_addr
@@ -193,14 +258,18 @@ name|input
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|TEST_IGNORE_MESSAGE
+argument_list|(
+literal|"IPV6 disabled in build, skipping."
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ISC_PLATFORM_HAVEIPV6 */
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISC_PLATFORM_HAVESCOPEID
-end_ifdef
 
 begin_function
 name|void
@@ -209,6 +278,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_HAVESCOPEID
 specifier|const
 name|struct
 name|in6_addr
@@ -332,17 +404,17 @@ name|input
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_endif
+else|#
+directive|else
+name|TEST_IGNORE_MESSAGE
+argument_list|(
+literal|"Skipping because ISC_PLATFORM does not have Scope ID"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-end_endif
-
-begin_comment
-comment|/* ISC_PLATFORM_HAVESCOPEID */
-end_comment
+block|}
+end_function
 
 begin_function
 name|void
@@ -437,8 +509,6 @@ name|input2
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|//TODO : EXPECT_NE(sock_hash(&input1), sock_hash(&input2));
-comment|//Damir's suggestion below:
 name|TEST_ASSERT_FALSE
 argument_list|(
 name|sock_hash
@@ -454,8 +524,6 @@ name|input2
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|//NOTE: sock_hash returns u_short, so you can compare it with ==
-comment|//for complex structures you have to write an additional function like bool compare(a,b)
 block|}
 end_function
 
@@ -466,6 +534,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_WANTIPV6
 specifier|const
 name|struct
 name|in6_addr
@@ -591,6 +662,16 @@ name|input2
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|TEST_IGNORE_MESSAGE
+argument_list|(
+literal|"IPV6 disabled in build, skipping."
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ISC_PLATFORM_HAVEIPV6 */
 block|}
 end_function
 

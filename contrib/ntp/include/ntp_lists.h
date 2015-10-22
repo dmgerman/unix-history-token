@@ -236,7 +236,7 @@ parameter_list|,
 name|entrytype
 parameter_list|)
 define|\
-value|do {								\ 	entrytype *pentry;					\ 								\ 	for (pentry = (listhead);				\ 	     pentry != NULL;					\ 	     pentry = pentry->nextlink){			\ 		NTP_INSIST(pentry != pentry->nextlink);		\ 		NTP_INSIST((listhead) != pentry->nextlink);	\ 	}							\ } while (FALSE)
+value|do {								\ 	entrytype *pentry;					\ 								\ 	for (pentry = (listhead);				\ 	     pentry != NULL;					\ 	     pentry = pentry->nextlink) {			\ 		INSIST(pentry != pentry->nextlink);		\ 		INSIST((listhead) != pentry->nextlink);		\ 	}							\ } while (FALSE)
 end_define
 
 begin_comment

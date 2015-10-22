@@ -759,7 +759,7 @@ name|get_free_recv_buffer
 argument_list|()
 expr_stmt|;
 block|}
-name|NTP_ENSURE
+name|ENSURE
 argument_list|(
 name|buffer
 operator|!=

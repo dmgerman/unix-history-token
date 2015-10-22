@@ -12,7 +12,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"icom.h"
+file|<ntp_stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ntp_tty.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<l_stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<icom.h>
 end_include
 
 begin_include
@@ -37,18 +55,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_tty.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"l_stdlib.h"
 end_include
 
 begin_ifdef
@@ -142,14 +148,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * icom_freq(fd, ident, freq) - load radio frequency  */
+comment|/*  * icom_freq(fd, ident, freq) - load radio frequency  *  * returns:  *  0 (ok)  * -1 (error)  *  1 (short write to device)  */
 end_comment
 
 begin_function
 name|int
 name|icom_freq
 parameter_list|(
-comment|/* returns 0 (ok), EIO (error) */
 name|int
 name|fd
 parameter_list|,
@@ -196,6 +201,9 @@ decl_stmt|;
 name|int
 name|temp
 decl_stmt|;
+name|int
+name|rc
+decl_stmt|;
 name|cmd
 index|[
 literal|3
@@ -236,7 +244,7 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
-name|temp
+name|rc
 operator|=
 name|write
 argument_list|(
@@ -249,10 +257,55 @@ operator|+
 literal|7
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"icom_freq: write() failed: %m"
+argument_list|)
+expr_stmt|;
 return|return
-operator|(
+operator|-
+literal|1
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|rc
+operator|!=
+name|temp
+operator|+
+literal|7
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"icom_freq: only wrote %d of %d bytes."
+argument_list|,
+name|rc
+argument_list|,
+name|temp
+operator|+
+literal|7
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+return|return
 literal|0
-operator|)
 return|;
 block|}
 end_function

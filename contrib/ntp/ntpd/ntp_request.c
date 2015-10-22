@@ -9440,7 +9440,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Looks okay, try it out 	 */
+comment|/* 	 * Looks okay, try it out.  Needs to reload data pointer and 	 * item counter. (Talos-CAN-0052) 	 */
 name|ZERO_SOCK
 argument_list|(
 operator|&
@@ -9451,6 +9451,15 @@ name|ZERO_SOCK
 argument_list|(
 operator|&
 name|matchmask
+argument_list|)
+expr_stmt|;
+name|items
+operator|=
+name|INFO_NITEMS
+argument_list|(
+name|inpkt
+operator|->
+name|err_nitems
 argument_list|)
 expr_stmt|;
 name|datap
@@ -10165,7 +10174,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Now do it in earnest. 	 */
+comment|/* 	 * Now do it in earnest. Needs to reload data pointer and item 	 * counter. (Talos-CAN-0052) 	 */
+name|items
+operator|=
+name|INFO_NITEMS
+argument_list|(
+name|inpkt
+operator|->
+name|err_nitems
+argument_list|)
+expr_stmt|;
 name|datap
 operator|=
 name|inpkt

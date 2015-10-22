@@ -14,12 +14,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_calendar.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntp_fp.h"
 end_include
 
@@ -42,7 +36,7 @@ file|<math.h>
 end_include
 
 begin_comment
-comment|//replaced TEST_ASSERT_EQUAL_MEMORY(&a,&b,sizeof(a)) with TEST_ASSERT_EQUAL_l_fp(a,b). It's safer this way, because structs can be compared even if they aren't initiated with memset (due to padding bytes)
+comment|/* replaced TEST_ASSERT_EQUAL_MEMORY(&a,&b, sizeof(a)) with TEST_ASSERT_EQUAL_l_fp(a, b).    It's safer this way, because structs can be compared even if they aren't initiated    with memset (due to padding bytes). */
 end_comment
 
 begin_define
@@ -59,6 +53,17 @@ end_define
 
 begin_typedef
 typedef|typedef
+name|int
+name|bool
+typedef|;
+end_typedef
+
+begin_comment
+comment|// typedef enum { FALSE, TRUE } boolean; -> can't use this because TRUE and FALSE are already defined
+end_comment
+
+begin_typedef
+typedef|typedef
 struct|struct
 block|{
 name|uint32_t
@@ -70,6 +75,313 @@ block|}
 name|lfp_hl
 typedef|;
 end_typedef
+
+begin_function_decl
+name|int
+name|l_fp_scmp
+parameter_list|(
+specifier|const
+name|l_fp
+name|first
+parameter_list|,
+specifier|const
+name|l_fp
+name|second
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|l_fp_ucmp
+parameter_list|(
+specifier|const
+name|l_fp
+name|first
+parameter_list|,
+name|l_fp
+name|second
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|l_fp
+name|l_fp_init
+parameter_list|(
+name|int32
+name|i
+parameter_list|,
+name|u_int32
+name|f
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|l_fp
+name|l_fp_add
+parameter_list|(
+specifier|const
+name|l_fp
+name|first
+parameter_list|,
+specifier|const
+name|l_fp
+name|second
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|l_fp
+name|l_fp_subtract
+parameter_list|(
+specifier|const
+name|l_fp
+name|first
+parameter_list|,
+specifier|const
+name|l_fp
+name|second
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|l_fp
+name|l_fp_negate
+parameter_list|(
+specifier|const
+name|l_fp
+name|first
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|l_fp
+name|l_fp_abs
+parameter_list|(
+specifier|const
+name|l_fp
+name|first
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|l_fp_signum
+parameter_list|(
+specifier|const
+name|l_fp
+name|first
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|double
+name|l_fp_convert_to_double
+parameter_list|(
+specifier|const
+name|l_fp
+name|first
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|l_fp
+name|l_fp_init_from_double
+parameter_list|(
+name|double
+name|rhs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|l_fp_swap
+parameter_list|(
+name|l_fp
+modifier|*
+name|first
+parameter_list|,
+name|l_fp
+modifier|*
+name|second
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|l_isgt
+parameter_list|(
+specifier|const
+name|l_fp
+name|first
+parameter_list|,
+specifier|const
+name|l_fp
+name|second
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|l_isgtu
+parameter_list|(
+specifier|const
+name|l_fp
+name|first
+parameter_list|,
+specifier|const
+name|l_fp
+name|second
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|l_ishis
+parameter_list|(
+specifier|const
+name|l_fp
+name|first
+parameter_list|,
+specifier|const
+name|l_fp
+name|second
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|l_isgeq
+parameter_list|(
+specifier|const
+name|l_fp
+name|first
+parameter_list|,
+specifier|const
+name|l_fp
+name|second
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|l_isequ
+parameter_list|(
+specifier|const
+name|l_fp
+name|first
+parameter_list|,
+specifier|const
+name|l_fp
+name|second
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|double
+name|eps
+parameter_list|(
+name|double
+name|d
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_AdditionLR
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_AdditionRL
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_SubtractionLR
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_SubtractionRL
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_Negation
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_Absolute
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_FDF_RoundTrip
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_SignedRelOps
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_UnsignedRelOps
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -90,10 +402,6 @@ index|]
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* //---------------------------------------------------------------------- // OO-wrapper for 'l_fp' //----------------------------------------------------------------------   	~LFP(); 	LFP(); 	LFP(const LFP& rhs); 	LFP(int32 i, u_int32 f);  	LFP  operator+ (const LFP&rhs) const; 	LFP& operator+=(const LFP&rhs);  	LFP  operator- (const LFP&rhs) const; 	LFP& operator-=(const LFP&rhs);  	LFP& operator=(const LFP&rhs); 	LFP  operator-() const;  	bool operator==(const LFP&rhs) const;  	LFP  neg() const; 	LFP  abs() const; 	int  signum() const;  	  	int  ucmp(const LFP& rhs) const; 	int  scmp(const LFP& rhs) const; 	 	std::string   toString() const; 	std::ostream& toStream(std::ostream&oo) const; 	 	operator double() const; 	explicit LFP(double); 	  	LFP(const l_fp&rhs);  	static int cmp_work(u_int32 a[3], u_int32 b[3]); 	 	l_fp _v;  	 static std::ostream& operator<<(std::ostream&oo, const LFP& rhs) { 	return rhs.toStream(oo); } */
-end_comment
 
 begin_comment
 comment|//----------------------------------------------------------------------
@@ -155,7 +463,6 @@ name|op2
 init|=
 name|second
 decl_stmt|;
-comment|//const l_fp&op1(_v),&op2(rhs._v);
 name|a
 index|[
 literal|0
@@ -340,7 +647,7 @@ block|}
 end_function
 
 begin_comment
-comment|//maybe rename it to lf_cmp_work ???
+comment|// maybe rename it to lf_cmp_work
 end_comment
 
 begin_function
@@ -515,11 +822,9 @@ parameter_list|)
 block|{
 name|l_fp
 name|temp
-decl_stmt|;
-name|temp
-operator|=
+init|=
 name|first
-expr_stmt|;
+decl_stmt|;
 name|L_ADD
 argument_list|(
 operator|&
@@ -550,11 +855,9 @@ parameter_list|)
 block|{
 name|l_fp
 name|temp
-decl_stmt|;
-name|temp
-operator|=
+init|=
 name|first
-expr_stmt|;
+decl_stmt|;
 name|L_SUB
 argument_list|(
 operator|&
@@ -581,12 +884,9 @@ parameter_list|)
 block|{
 name|l_fp
 name|temp
-decl_stmt|;
-name|temp
-operator|=
+init|=
 name|first
-expr_stmt|;
-comment|//is this line really necessary?
+decl_stmt|;
 name|L_NEG
 argument_list|(
 operator|&
@@ -753,10 +1053,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* LFP::LFP() { 	_v.l_ui = 0; 	_v.l_uf = 0; }    std::string LFP::toString() const { 	std::ostringstream oss; 	toStream(oss); 	return oss.str(); }  std::ostream& LFP::toStream(std::ostream&os) const { 	return os<< mfptoa(_v.l_ui, _v.l_uf, 9)<< " [$"<< std::setw(8)<< std::setfill('0')<< std::hex<< _v.l_ui<<  ':'<< std::setw(8)<< std::setfill('0')<< std::hex<< _v.l_uf<< ']'; }  bool LFP::operator==(const LFP&rhs) const { 	return L_ISEQU(&_v,&rhs._v); }    */
-end_comment
-
-begin_comment
 comment|//----------------------------------------------------------------------
 end_comment
 
@@ -774,17 +1070,6 @@ end_comment
 
 begin_comment
 comment|//----------------------------------------------------------------------
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-name|bool
-typedef|;
-end_typedef
-
-begin_comment
-comment|//typedef enum { FALSE, TRUE } boolean; -> can't use this because TRUE and FALSE are already defined
 end_comment
 
 begin_function
@@ -1255,7 +1540,6 @@ literal|53
 argument_list|)
 argument_list|)
 return|;
-comment|//max<double>
 block|}
 end_function
 
@@ -1274,7 +1558,9 @@ end_comment
 begin_function
 name|void
 name|test_AdditionLR
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|size_t
 name|idx
@@ -1321,7 +1607,6 @@ operator|.
 name|l
 argument_list|)
 decl_stmt|;
-comment|//LFP op1(addsub_tab[idx][0].h, addsub_tab[idx][0].l);
 name|l_fp
 name|op2
 init|=
@@ -1348,7 +1633,6 @@ operator|.
 name|l
 argument_list|)
 decl_stmt|;
-comment|//LFP exp(addsub_tab[idx][2].h, addsub_tab[idx][2].l);
 name|l_fp
 name|exp
 init|=
@@ -1375,7 +1659,6 @@ operator|.
 name|l
 argument_list|)
 decl_stmt|;
-comment|//LFP res(op1 + op2);
 name|l_fp
 name|res
 init|=
@@ -1393,7 +1676,6 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-comment|//TEST_ASSERT_EQUAL_MEMORY(&exp,&res,sizeof(exp));
 block|}
 block|}
 end_function
@@ -1401,7 +1683,9 @@ end_function
 begin_function
 name|void
 name|test_AdditionRL
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|size_t
 name|idx
@@ -1517,7 +1801,6 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-comment|//TEST_ASSERT_EQUAL_MEMORY(&exp,&res,sizeof(exp));
 block|}
 block|}
 end_function
@@ -1537,7 +1820,9 @@ end_comment
 begin_function
 name|void
 name|test_SubtractionLR
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|size_t
 name|idx
@@ -1646,7 +1931,6 @@ argument_list|,
 name|op2
 argument_list|)
 decl_stmt|;
-comment|//LFP res(op1 - op2);
 name|TEST_ASSERT_EQUAL_l_fp
 argument_list|(
 name|exp
@@ -1654,7 +1938,6 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-comment|//TEST_ASSERT_EQUAL_MEMORY(&exp,&res,sizeof(exp));
 block|}
 block|}
 end_function
@@ -1662,7 +1945,9 @@ end_function
 begin_function
 name|void
 name|test_SubtractionRL
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|size_t
 name|idx
@@ -1778,7 +2063,6 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-comment|//TEST_ASSERT_EQUAL_MEMORY(&exp,&res,sizeof(exp));
 block|}
 block|}
 end_function
@@ -1798,7 +2082,9 @@ end_comment
 begin_function
 name|void
 name|test_Negation
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|size_t
 name|idx
@@ -1880,7 +2166,6 @@ argument_list|,
 name|sum
 argument_list|)
 expr_stmt|;
-comment|//TEST_ASSERT_EQUAL_MEMORY(&zero,&sum,sizeof(sum));
 block|}
 block|}
 end_function
@@ -1900,7 +2185,9 @@ end_comment
 begin_function
 name|void
 name|test_Absolute
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|size_t
 name|idx
@@ -1983,7 +2270,6 @@ argument_list|,
 name|op2
 argument_list|)
 expr_stmt|;
-comment|//op1 -= op2;
 else|else
 name|op1
 operator|=
@@ -2011,7 +2297,6 @@ argument_list|,
 name|op1
 argument_list|)
 expr_stmt|;
-comment|//TEST_ASSERT_EQUAL_MEMORY(&zero,&op1,sizeof(op1));
 block|}
 comment|// There is one special case we have to check: the minimum
 comment|// value cannot be negated, or, to be more precise, the
@@ -2052,7 +2337,6 @@ argument_list|,
 name|minAbs
 argument_list|)
 expr_stmt|;
-comment|//TEST_ASSERT_EQUAL_MEMORY(&minVal,&minAbs,sizeof(minAbs));
 block|}
 end_function
 
@@ -2071,7 +2355,9 @@ end_comment
 begin_function
 name|void
 name|test_FDF_RoundTrip
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|// since a l_fp has 64 bits in it's mantissa and a double has
 comment|// only 54 bits available (including the hidden '1') we have to
@@ -2140,8 +2426,6 @@ argument_list|(
 name|op2
 argument_list|)
 decl_stmt|;
-comment|// for manual checks only:
-comment|// std::cout<< std::setprecision(16)<< op2<< std::endl;
 name|l_fp
 name|temp
 init|=
@@ -2175,9 +2459,6 @@ name|d
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|//delta,epected,actual
-comment|//ASSERT_LE(fabs(op1-op3), eps(op2)); //unity has no equivalent of LE!!!
-comment|//you could use TEST_ASSERT_TRUE(IsLE(fabs(op1-op3), eps(op2)));
 block|}
 block|}
 end_function
@@ -2209,9 +2490,10 @@ end_comment
 begin_function
 name|void
 name|test_SignedRelOps
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-comment|//const lfp_hl * tv(&addsub_tab[0][0]);
 specifier|const
 name|lfp_hl
 modifier|*
@@ -2288,7 +2570,6 @@ operator|.
 name|l
 argument_list|)
 decl_stmt|;
-comment|//int cmp(op1.scmp(op2));
 name|int
 name|cmp
 init|=
@@ -2309,7 +2590,6 @@ operator|-
 literal|1
 case|:
 comment|//printf("op1:%d %d, op2:%d %d\n",op1.l_uf,op1.l_ui,op2.l_uf,op2.l_ui);
-comment|//std::swap(op1, op2);
 name|l_fp_swap
 argument_list|(
 operator|&
@@ -2454,7 +2734,6 @@ argument_list|(
 literal|"unexpected UCMP result: "
 argument_list|)
 expr_stmt|;
-comment|//TEST_ASSERT_FAIL()<< "unexpected SCMP result: "<< cmp;
 block|}
 block|}
 block|}
@@ -2463,7 +2742,9 @@ end_function
 begin_function
 name|void
 name|test_UnsignedRelOps
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|lfp_hl
@@ -2665,7 +2946,6 @@ argument_list|(
 literal|"unexpected UCMP result: "
 argument_list|)
 expr_stmt|;
-comment|//FAIL()<< "unexpected UCMP result: "<< cmp;
 block|}
 block|}
 block|}

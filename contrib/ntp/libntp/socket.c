@@ -141,7 +141,7 @@ decl_stmt|;
 name|SOCKET
 name|newfd
 decl_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 operator|(
 name|int
@@ -282,7 +282,7 @@ condition|)
 do|;
 else|#
 directive|else
-name|NTP_REQUIRE
+name|ENSURE
 argument_list|(
 operator|(
 name|int

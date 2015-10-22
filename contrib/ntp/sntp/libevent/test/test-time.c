@@ -353,6 +353,16 @@ name|event
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|ev
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* Initalize one event */
 name|evtimer_set
 argument_list|(

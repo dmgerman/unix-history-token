@@ -2276,7 +2276,7 @@ condition|(
 name|state
 condition|)
 block|{
-comment|/* 		 * In SYNC state we ignore the first outlyer and switch 		 * to SPIK state. 		 */
+comment|/* 		 * In SYNC state we ignore the first outlier and switch 		 * to SPIK state. 		 */
 case|case
 name|EVNT_SYNC
 case|:
@@ -2312,7 +2312,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 		 * In FREQ state we ignore outlyers and inlyers. At the 		 * first outlyer after the stepout threshold, compute 		 * the apparent frequency correction and step the phase. 		 */
+comment|/* 		 * In FREQ state we ignore outliers and inlyers. At the 		 * first outlier after the stepout threshold, compute 		 * the apparent frequency correction and step the phase. 		 */
 case|case
 name|EVNT_FREQ
 case|:
@@ -2335,7 +2335,7 @@ name|fp_offset
 argument_list|)
 expr_stmt|;
 comment|/* fall through to EVNT_SPIK */
-comment|/* 		 * In SPIK state we ignore succeeding outlyers until 		 * either an inlyer is found or the stepout threshold is 		 * exceeded. 		 */
+comment|/* 		 * In SPIK state we ignore succeeding outliers until 		 * either an inlyer is found or the stepout threshold is 		 * exceeded. 		 */
 case|case
 name|EVNT_SPIK
 case|:

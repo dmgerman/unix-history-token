@@ -187,7 +187,7 @@ expr|struct
 name|hostent
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -285,7 +285,7 @@ expr|struct
 name|hostent
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -357,7 +357,7 @@ expr|struct
 name|servent
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(

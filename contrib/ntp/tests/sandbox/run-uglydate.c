@@ -42,6 +42,18 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_fp.h"
+end_include
+
 begin_comment
 comment|//=======External Functions This Runner Calls=====
 end_comment
@@ -80,10 +92,21 @@ begin_comment
 comment|//=======Test Reset Option=====
 end_comment
 
+begin_function_decl
+name|void
+name|resetTest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|resetTest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tearDown
 argument_list|()
@@ -94,6 +117,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+name|char
+specifier|const
+modifier|*
+name|progname
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|//=======MAIN=====
 end_comment
@@ -102,18 +133,25 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|void
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
 parameter_list|)
 block|{
-name|Unity
-operator|.
-name|TestFile
+name|progname
 operator|=
-literal|"uglydate.c"
+name|argv
+index|[
+literal|0
+index|]
 expr_stmt|;
 name|UnityBegin
 argument_list|(
-literal|""
+literal|"uglydate.c"
 argument_list|)
 expr_stmt|;
 name|RUN_TEST

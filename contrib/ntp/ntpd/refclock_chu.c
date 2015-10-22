@@ -4869,11 +4869,7 @@ name|k
 operator|=
 literal|0
 expr_stmt|;
-name|val
-operator|=
-operator|-
-literal|16
-expr_stmt|;
+comment|// val = -16;
 for|for
 control|(
 name|i

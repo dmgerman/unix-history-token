@@ -42,6 +42,18 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp.h"
+end_include
+
 begin_comment
 comment|//=======External Functions This Runner Calls=====
 end_comment
@@ -70,7 +82,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_MD5KeyTypeWithoutDigestLength
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -78,7 +92,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_MD5KeyTypeWithDigestLength
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -86,7 +102,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_SHA1KeyTypeWithDigestLength
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -94,7 +112,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_MD5KeyName
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -102,7 +122,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_SHA1KeyName
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -110,10 +132,21 @@ begin_comment
 comment|//=======Test Reset Option=====
 end_comment
 
+begin_function_decl
+name|void
+name|resetTest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|resetTest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tearDown
 argument_list|()
@@ -126,6 +159,7 @@ end_function
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -155,12 +189,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|Unity
-operator|.
-name|TestFile
-operator|=
-literal|"ssl_init.c"
-expr_stmt|;
 name|UnityBegin
 argument_list|(
 literal|"ssl_init.c"
@@ -170,35 +198,35 @@ name|RUN_TEST
 argument_list|(
 name|test_MD5KeyTypeWithoutDigestLength
 argument_list|,
-literal|19
+literal|17
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_MD5KeyTypeWithDigestLength
 argument_list|,
-literal|23
+literal|18
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_SHA1KeyTypeWithDigestLength
 argument_list|,
-literal|32
+literal|19
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_MD5KeyName
 argument_list|,
-literal|47
+literal|20
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_SHA1KeyName
 argument_list|,
-literal|51
+literal|21
 argument_list|)
 expr_stmt|;
 return|return

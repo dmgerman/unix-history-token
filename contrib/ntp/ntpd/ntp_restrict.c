@@ -525,7 +525,7 @@ name|cb
 operator|)
 expr_stmt|;
 block|}
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|rl
 operator|==
@@ -663,7 +663,7 @@ name|cb
 operator|)
 expr_stmt|;
 block|}
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|rl
 operator|==
@@ -742,7 +742,7 @@ argument_list|,
 name|restrict_u
 argument_list|)
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|unlinked
 operator|==
@@ -1010,7 +1010,7 @@ name|res
 operator|->
 name|link
 expr_stmt|;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|next
 operator|!=
@@ -1570,6 +1570,13 @@ name|srcadr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|INSIST
+argument_list|(
+name|match
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|match
 operator|->
 name|count
@@ -1637,6 +1644,13 @@ name|SRCPORT
 argument_list|(
 name|srcadr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|match
+operator|!=
+name|NULL
 argument_list|)
 expr_stmt|;
 name|match
@@ -1749,14 +1763,14 @@ operator|==
 name|resaddr
 condition|)
 block|{
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|NULL
 operator|==
 name|resmask
 argument_list|)
 expr_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|RESTRICT_FLAGS
 operator|==
@@ -1782,15 +1796,14 @@ argument_list|(
 name|match
 argument_list|)
 expr_stmt|;
-comment|/* silence VC9 potentially uninit warnings */
-name|res
-operator|=
-name|NULL
-expr_stmt|;
-name|v6
-operator|=
+if|#
+directive|if
 literal|0
-expr_stmt|;
+comment|/* silence VC9 potentially uninit warnings */
+comment|// HMS: let's use a compiler-specific "enable" for this.
+block|res = NULL; 	v6 = 0;
+endif|#
+directive|endif
 if|if
 condition|(
 name|IS_IPV4
@@ -1903,7 +1916,7 @@ expr_stmt|;
 block|}
 else|else
 comment|/* not IPv4 nor IPv6 */
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 literal|0
 argument_list|)
@@ -2163,7 +2176,7 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* unknown op */
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 literal|0
 argument_list|)
@@ -2225,7 +2238,7 @@ name|addr
 argument_list|)
 condition|)
 return|return;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|AF_INET
 operator|==
@@ -2314,6 +2327,13 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|INSIST
+argument_list|(
+name|res
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|found_specific
 operator|=
 operator|(
@@ -2349,6 +2369,13 @@ name|SRCPORT
 argument_list|(
 name|addr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|res
+operator|!=
+name|NULL
 argument_list|)
 expr_stmt|;
 name|found_specific

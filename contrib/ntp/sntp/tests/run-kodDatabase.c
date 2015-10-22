@@ -42,6 +42,48 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_types.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sntptest.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sntp-opts.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"kod_management.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_io.h"
+end_include
+
 begin_comment
 comment|//=======External Functions This Runner Calls=====
 end_comment
@@ -70,7 +112,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_SingleEntryHandling
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -78,7 +122,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_MultipleEntryHandling
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -86,7 +132,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_NoMatchInSearch
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -94,7 +142,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_AddDuplicate
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -102,7 +152,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_DeleteEntry
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -110,10 +162,21 @@ begin_comment
 comment|//=======Test Reset Option=====
 end_comment
 
+begin_function_decl
+name|void
+name|resetTest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|resetTest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tearDown
 argument_list|()
@@ -126,6 +189,7 @@ end_function
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -155,12 +219,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|Unity
-operator|.
-name|TestFile
-operator|=
-literal|"kodDatabase.c"
-expr_stmt|;
 name|UnityBegin
 argument_list|(
 literal|"kodDatabase.c"
@@ -170,35 +228,35 @@ name|RUN_TEST
 argument_list|(
 name|test_SingleEntryHandling
 argument_list|,
-literal|22
+literal|13
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_MultipleEntryHandling
 argument_list|,
-literal|35
+literal|14
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_NoMatchInSearch
 argument_list|,
-literal|66
+literal|15
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_AddDuplicate
 argument_list|,
-literal|79
+literal|16
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_DeleteEntry
 argument_list|,
-literal|104
+literal|17
 argument_list|)
 expr_stmt|;
 return|return

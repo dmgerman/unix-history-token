@@ -29,6 +29,60 @@ directive|include
 file|"lfptest.h"
 end_include
 
+begin_function_decl
+name|void
+name|test_PositiveInteger
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_NegativeInteger
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_PositiveFraction
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_NegativeFraction
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_IllegalNumberOfInteger
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_IllegalChar
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|test_PositiveInteger
@@ -50,12 +104,14 @@ name|l_fp
 name|expected
 init|=
 block|{
+block|{
 literal|4096
+block|}
 block|,
 literal|0
 block|}
 decl_stmt|;
-comment|// 16^3, no fraction part.
+comment|/* 16^3, no fraction part. */
 name|TEST_ASSERT_TRUE
 argument_list|(
 name|hextolfp
@@ -94,7 +150,7 @@ name|str
 init|=
 literal|"ffffffff.00000000"
 decl_stmt|;
-comment|// -1 decimal
+comment|/* -1 decimal */
 name|l_fp
 name|actual
 decl_stmt|;
@@ -102,8 +158,10 @@ name|l_fp
 name|expected
 init|=
 block|{
+block|{
 operator|-
 literal|1
+block|}
 block|,
 literal|0
 block|}
@@ -146,7 +204,7 @@ name|str
 init|=
 literal|"00002000.80000000"
 decl_stmt|;
-comment|// 8196.5 decimal
+comment|/* 8196.5 decimal */
 name|l_fp
 name|actual
 decl_stmt|;
@@ -154,7 +212,9 @@ name|l_fp
 name|expected
 init|=
 block|{
+block|{
 literal|8192
+block|}
 block|,
 name|HALF
 block|}
@@ -197,7 +257,7 @@ name|str
 init|=
 literal|"ffffffff.40000000"
 decl_stmt|;
-comment|// -1 + 0.25 decimal
+comment|/* -1 + 0.25 decimal */
 name|l_fp
 name|actual
 decl_stmt|;
@@ -205,13 +265,15 @@ name|l_fp
 name|expected
 init|=
 block|{
+block|{
 operator|-
 literal|1
+block|}
 block|,
 name|QUARTER
 block|}
 decl_stmt|;
-comment|//-1 + 0.25
+comment|/* -1 + 0.25 */
 name|TEST_ASSERT_TRUE
 argument_list|(
 name|hextolfp
@@ -250,7 +312,7 @@ name|str
 init|=
 literal|"1000000.00000000"
 decl_stmt|;
-comment|// Missing one digit in integral part.
+comment|/* Missing one digit in integral part. */
 name|l_fp
 name|actual
 decl_stmt|;
@@ -282,7 +344,7 @@ name|str
 init|=
 literal|"10000000.0000h000"
 decl_stmt|;
-comment|// Illegal character h.
+comment|/* Illegal character h. */
 name|l_fp
 name|actual
 decl_stmt|;

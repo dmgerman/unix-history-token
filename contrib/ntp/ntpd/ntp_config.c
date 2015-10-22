@@ -214,6 +214,30 @@ file|"ntpd-opts.h"
 end_include
 
 begin_comment
+comment|/* Bug 2817 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SYS_MMAN_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/mman.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* list of servers from command line for config_peers() */
 end_comment
 
@@ -232,13 +256,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* set to zero if admin doesn't want memory locked */
+comment|/* Current state of memory locking:  * -1: default  *  0: memory locking disabled  *  1: Memory locking enabled  */
 end_comment
 
 begin_decl_stmt
 name|int
-name|do_memlock
+name|cur_memlock
 init|=
+operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
@@ -5859,14 +5884,14 @@ name|address_node
 modifier|*
 name|my_node
 decl_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|NULL
 operator|!=
 name|addr
 argument_list|)
 expr_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|AF_INET
 operator|==
@@ -5929,7 +5954,7 @@ operator|==
 name|my_node
 condition|)
 return|return;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|NULL
 operator|!=
@@ -7274,7 +7299,7 @@ name|nic_rule_node
 modifier|*
 name|my_node
 decl_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|match_class
 operator|!=
@@ -8256,12 +8281,17 @@ comment|/* Crypto Command */
 ifdef|#
 directive|ifdef
 name|AUTOKEY
+ifdef|#
+directive|ifdef
+name|__GNUC__
 name|item
 operator|=
 operator|-
 literal|1
 expr_stmt|;
 comment|/* quiet warning */
+endif|#
+directive|endif
 name|my_val
 operator|=
 name|HEAD_PFIFO
@@ -8927,12 +8957,17 @@ decl_stmt|;
 name|double
 name|val
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 name|item
 operator|=
 operator|-
 literal|1
 expr_stmt|;
 comment|/* quiet warning */
+endif|#
+directive|endif
 name|tos
 operator|=
 name|HEAD_PFIFO
@@ -11149,6 +11184,7 @@ break|break;
 case|case
 name|T_Memlock
 case|:
+comment|/* What if we HAVE_OPT(SAVECONFIGQUIT) ? */
 if|if
 condition|(
 name|rlimit_av
@@ -11156,7 +11192,59 @@ operator|->
 name|value
 operator|.
 name|i
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_MLOCKALL
+argument_list|)
+if|if
+condition|(
+name|cur_memlock
 operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|-
+literal|1
+operator|==
+name|munlockall
+argument_list|()
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"munlockall() failed: %m"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|cur_memlock
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_MLOCKALL */
+block|}
+elseif|else
+if|if
+condition|(
+name|rlimit_av
+operator|->
+name|value
+operator|.
+name|i
+operator|>=
 literal|0
 condition|)
 block|{
@@ -11166,6 +11254,44 @@ name|defined
 argument_list|(
 name|RLIMIT_MEMLOCK
 argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_MLOCKALL
+argument_list|)
+if|if
+condition|(
+name|cur_memlock
+operator|!=
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+operator|-
+literal|1
+operator|==
+name|mlockall
+argument_list|(
+name|MCL_CURRENT
+operator||
+name|MCL_FUTURE
+argument_list|)
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"mlockall() failed: %m"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* HAVE_MLOCKALL */
 name|ntp_rlimit
 argument_list|(
 name|RLIMIT_MEMLOCK
@@ -11192,6 +11318,10 @@ argument_list|,
 literal|"MB"
 argument_list|)
 expr_stmt|;
+name|cur_memlock
+operator|=
+literal|1
+expr_stmt|;
 else|#
 directive|else
 comment|/* STDERR as well would be fine... */
@@ -11208,9 +11338,18 @@ comment|/* RLIMIT_MEMLOCK */
 block|}
 else|else
 block|{
-name|do_memlock
-operator|=
-literal|0
+name|msyslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"'rlimit memlock' value of %d is unexpected!"
+argument_list|,
+name|rlimit_av
+operator|->
+name|value
+operator|.
+name|i
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
@@ -11324,12 +11463,17 @@ decl_stmt|;
 name|int
 name|item
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 name|item
 operator|=
 operator|-
 literal|1
 expr_stmt|;
 comment|/* quiet warning */
+endif|#
+directive|endif
 name|tinker
 operator|=
 name|HEAD_PFIFO
@@ -11670,11 +11814,16 @@ name|match_class
 condition|)
 block|{
 default|default:
+ifdef|#
+directive|ifdef
+name|__GNUC__
 comment|/* 			 * this assignment quiets a gcc "may be used 			 * uninitialized" warning and is here for no 			 * other reason. 			 */
 name|match_type
 operator|=
 name|MATCH_ALL
 expr_stmt|;
+endif|#
+directive|endif
 name|INSIST
 argument_list|(
 name|FALSE
@@ -11844,11 +11993,16 @@ name|action
 condition|)
 block|{
 default|default:
+ifdef|#
+directive|ifdef
+name|__GNUC__
 comment|/* 			 * this assignment quiets a gcc "may be used 			 * uninitialized" warning and is here for no 			 * other reason. 			 */
 name|action
 operator|=
 name|ACTION_LISTEN
 expr_stmt|;
+endif|#
+directive|endif
 name|INSIST
 argument_list|(
 name|FALSE
@@ -19599,7 +19753,7 @@ name|a_type
 comment|/* ignored */
 parameter_list|)
 block|{
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|AF_UNSPEC
 operator|==

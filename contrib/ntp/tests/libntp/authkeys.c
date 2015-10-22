@@ -78,9 +78,97 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|// old code from google test framework, moved to SetUp() for unity
-end_comment
+begin_function_decl
+name|void
+name|setUp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tearDown
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AddTrustedKey
+parameter_list|(
+name|keyid_t
+name|keyno
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AddUntrustedKey
+parameter_list|(
+name|keyid_t
+name|keyno
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_AddTrustedKeys
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_AddUntrustedKey
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_HaveKeyCorrect
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_HaveKeyIncorrect
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_AddWithAuthUseKey
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_EmptyKey
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
@@ -89,7 +177,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|//	init_lib();
 if|if
 condition|(
 name|counter
@@ -103,7 +190,7 @@ expr_stmt|;
 name|init_auth
 argument_list|()
 expr_stmt|;
-comment|//causes segfault if called more than once
+comment|// causes segfault if called more than once
 block|}
 comment|/* 	 * init_auth() is called by tests_main.cpp earlier.  It 	 * does not initialize global variables like 	 * authnumkeys, so let's reset them to zero here. 	 */
 name|authnumkeys
@@ -140,7 +227,7 @@ name|tearDown
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_decl_stmt
@@ -204,7 +291,9 @@ end_function
 begin_function
 name|void
 name|test_AddTrustedKeys
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|keyid_t
@@ -250,7 +339,9 @@ end_function
 begin_function
 name|void
 name|test_AddUntrustedKey
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|keyid_t
@@ -277,7 +368,9 @@ end_function
 begin_function
 name|void
 name|test_HaveKeyCorrect
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|keyid_t
@@ -312,7 +405,9 @@ end_function
 begin_function
 name|void
 name|test_HaveKeyIncorrect
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|keyid_t
@@ -342,7 +437,9 @@ end_function
 begin_function
 name|void
 name|test_AddWithAuthUseKey
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|keyid_t
@@ -379,7 +476,9 @@ end_function
 begin_function
 name|void
 name|test_EmptyKey
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|keyid_t

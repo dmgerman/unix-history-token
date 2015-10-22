@@ -12,6 +12,7 @@ file|"log.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|progname
@@ -21,6 +22,15 @@ end_decl_stmt
 begin_comment
 comment|/* for msyslog use too */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|counter
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -83,6 +93,11 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+name|counter
+operator|=
+literal|1
+expr_stmt|;
+comment|//counter++;
 name|atexit
 argument_list|(
 name|cleanup_log
@@ -91,6 +106,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|//not sure about this. Are the atexit() functions called by FIFO or LIFO order? The end result is PROBABLY the same
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -98,6 +117,15 @@ name|cleanup_log
 parameter_list|(
 name|void
 parameter_list|)
+block|{
+comment|//counter--;
+comment|//if(counter<= 0){
+if|if
+condition|(
+name|counter
+operator|==
+literal|1
+condition|)
 block|{
 name|syslogit
 operator|=
@@ -117,6 +145,11 @@ name|syslog_file
 operator|=
 name|NULL
 expr_stmt|;
+name|counter
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -42,6 +42,24 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sntptest.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"networking.h"
+end_include
+
 begin_comment
 comment|//=======External Functions This Runner Calls=====
 end_comment
@@ -70,10 +88,21 @@ begin_comment
 comment|//=======Test Reset Option=====
 end_comment
 
+begin_function_decl
+name|void
+name|resetTest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|resetTest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tearDown
 argument_list|()
@@ -86,6 +115,7 @@ end_function
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -114,12 +144,6 @@ name|argv
 index|[
 literal|0
 index|]
-expr_stmt|;
-name|Unity
-operator|.
-name|TestFile
-operator|=
-literal|"networking.c"
 expr_stmt|;
 name|UnityBegin
 argument_list|(

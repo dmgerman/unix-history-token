@@ -23,6 +23,33 @@ directive|include
 file|"unity.h"
 end_include
 
+begin_function_decl
+name|void
+name|test_Seconds
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_MicrosecondsExact
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_MicrosecondsRounding
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|test_Seconds
@@ -35,12 +62,14 @@ name|l_fp
 name|input
 init|=
 block|{
+block|{
 literal|50
+block|}
 block|,
 literal|0
 block|}
 decl_stmt|;
-comment|// 50.0 s
+comment|/* 50.0 s */
 specifier|const
 name|struct
 name|timeval
@@ -108,12 +137,14 @@ name|l_fp
 name|input
 init|=
 block|{
+block|{
 literal|50
+block|}
 block|,
 name|HALF
 block|}
 decl_stmt|;
-comment|// 50.5 s
+comment|/* 50.5 s */
 specifier|const
 name|struct
 name|timeval
@@ -175,12 +206,14 @@ name|l_fp
 name|input
 init|=
 block|{
+block|{
 literal|50
+block|}
 block|,
 literal|3865471UL
 block|}
 decl_stmt|;
-comment|// Should round to 50.0009
+comment|/* Should round to 50.0009 */
 specifier|const
 name|struct
 name|timeval
