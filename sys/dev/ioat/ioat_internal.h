@@ -418,21 +418,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function_decl
-name|void
-name|ioat_log_message
-parameter_list|(
+begin_decl_stmt
+specifier|extern
 name|int
-name|verbosity
-parameter_list|,
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
+name|g_ioat_debug_level
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
