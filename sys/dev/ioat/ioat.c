@@ -1733,11 +1733,6 @@ argument_list|(
 name|ioat
 argument_list|)
 expr_stmt|;
-comment|/* Only bits [4:0] are valid. */
-name|xfercap
-operator|&=
-literal|0x1f
-expr_stmt|;
 name|ioat
 operator|->
 name|max_xfer_size

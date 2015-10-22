@@ -52,7 +52,7 @@ parameter_list|(
 name|ioat
 parameter_list|)
 define|\
-value|ioat_read_1((ioat), IOAT_XFERCAP_OFFSET)
+value|(ioat_read_1((ioat), IOAT_XFERCAP_OFFSET)& IOAT_XFERCAP_VALID_MASK)
 end_define
 
 begin_define

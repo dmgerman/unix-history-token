@@ -44,6 +44,17 @@ name|IOAT_XFERCAP_OFFSET
 value|0x01
 end_define
 
+begin_comment
+comment|/* Only bits [4:0] are valid. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOAT_XFERCAP_VALID_MASK
+value|0x1f
+end_define
+
 begin_define
 define|#
 directive|define
