@@ -9712,7 +9712,6 @@ name|sc_ic
 operator|.
 name|ic_macaddr
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|sc_nvm
