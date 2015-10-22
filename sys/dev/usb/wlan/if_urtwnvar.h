@@ -55,13 +55,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|URTWN_RIDX_COUNT
-value|28
-end_define
-
-begin_define
-define|#
-directive|define
 name|URTWN_TX_TIMEOUT
 value|5000
 end_define
