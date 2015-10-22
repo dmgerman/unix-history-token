@@ -2954,6 +2954,12 @@ name|ar71xx_soc
 condition|)
 block|{
 case|case
+name|AR71XX_SOC_AR9330
+case|:
+case|case
+name|AR71XX_SOC_AR9331
+case|:
+case|case
 name|AR71XX_SOC_QCA9556
 case|:
 case|case
