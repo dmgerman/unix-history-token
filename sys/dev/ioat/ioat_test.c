@@ -305,7 +305,7 @@ name|v
 parameter_list|,
 modifier|...
 parameter_list|)
-value|_ioat_test_log((v), "ioat " __VA_ARGS__)
+value|_ioat_test_log((v), "ioat_test: " __VA_ARGS__)
 end_define
 
 begin_function_decl
