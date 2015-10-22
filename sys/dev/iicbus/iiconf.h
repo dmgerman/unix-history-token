@@ -676,6 +676,27 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|iicbus_transfer_excl
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|struct
+name|iic_msg
+modifier|*
+name|msgs
+parameter_list|,
+name|uint32_t
+name|nmsgs
+parameter_list|,
+name|int
+name|how
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|iicbus_transfer_gen
 parameter_list|(
 name|device_t
