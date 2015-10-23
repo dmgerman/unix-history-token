@@ -136,6 +136,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+specifier|const
+name|EVP_PKEY_METHOD
+name|dhx_pkey_meth
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|EVP_PKEY_METHOD
@@ -181,6 +189,14 @@ name|hmac_pkey_meth
 block|,
 operator|&
 name|cmac_pkey_meth
+block|,
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_DH
+operator|&
+name|dhx_pkey_meth
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt

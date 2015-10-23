@@ -32,6 +32,11 @@ name|defined
 argument_list|(
 name|OPENSSL_SYS_MACOSX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
 end_if
 
 begin_decl_stmt

@@ -811,12 +811,6 @@ name|void
 parameter_list|)
 function_decl|;
 name|void
-name|ENGINE_load_rsax
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-name|void
 name|ENGINE_load_rdrand
 parameter_list|(
 name|void

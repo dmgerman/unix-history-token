@@ -22,12 +22,6 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|OPENSSL_FIPS
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|OPENSSL_NO_SHA
 end_ifndef
 
@@ -711,11 +705,6 @@ end_endif
 begin_comment
 comment|/* ifndef OPENSSL_NO_SHA512 */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

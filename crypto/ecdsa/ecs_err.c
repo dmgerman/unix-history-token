@@ -105,6 +105,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|ECDSA_F_ECDSA_METHOD_NEW
+argument_list|)
+block|,
+literal|"ECDSA_METHOD_new"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|ECDSA_F_ECDSA_SIGN_SETUP
 argument_list|)
 block|,

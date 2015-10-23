@@ -582,6 +582,103 @@ endif|#
 directive|endif
 end_endif
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+end_elif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BYTE_ORDER__
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ORDER_LITTLE_ENDIAN__
+argument_list|)
+operator|&&
+name|__BYTE_ORDER__
+operator|==
+name|__ORDER_LITTLE_ENDIAN__
+end_if
+
+begin_define
+define|#
+directive|define
+name|HOST_c2l
+parameter_list|(
+name|c
+parameter_list|,
+name|l
+parameter_list|)
+value|({ unsigned int r;              \                                    asm ("rev    %w0,%w1"        \                                         :"=r"(r)                \                                         :"r"(*((const unsigned int *)(c))));\                                    (c)+=4; (l)=r;               })
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOST_l2c
+parameter_list|(
+name|l
+parameter_list|,
+name|c
+parameter_list|)
+value|({ unsigned int r;              \                                    asm ("rev    %w0,%w1"        \                                         :"=r"(r)                \                                         :"r"((unsigned int)(l)));\                                    *((unsigned int *)(c))=r; (c)+=4; r; })
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__ORDER_BIG_ENDIAN__
+argument_list|)
+operator|&&
+name|__BYTE_ORDER__
+operator|==
+name|__ORDER_BIG_ENDIAN__
+end_elif
+
+begin_define
+define|#
+directive|define
+name|HOST_c2l
+parameter_list|(
+name|c
+parameter_list|,
+name|l
+parameter_list|)
+value|((l)=*((const unsigned int *)(c)), (c)+=4, (l))
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOST_l2c
+parameter_list|(
+name|l
+parameter_list|,
+name|c
+parameter_list|)
+value|(*((unsigned int *)(c))=(l), (c)+=4, (l))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -634,6 +731,11 @@ name|c
 parameter_list|)
 value|(*((unsigned int *)(c))=(l), (c)+=4, (l))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -769,11 +871,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -831,6 +928,11 @@ name|c
 parameter_list|)
 value|(*((unsigned int *)(c))=(l), (c)+=4, l)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

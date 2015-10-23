@@ -2850,6 +2850,7 @@ name|BIO
 modifier|*
 name|BIO_new_connect
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str

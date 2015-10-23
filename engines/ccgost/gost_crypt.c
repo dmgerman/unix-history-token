@@ -1397,6 +1397,9 @@ literal|16
 operator|)
 operator||
 operator|(
+operator|(
+name|word32
+operator|)
 name|buf1
 index|[
 literal|3
@@ -1507,6 +1510,9 @@ literal|16
 operator|)
 operator||
 operator|(
+operator|(
+name|word32
+operator|)
 name|buf1
 index|[
 literal|7

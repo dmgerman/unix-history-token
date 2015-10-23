@@ -61,6 +61,16 @@ define|\
 value|((_STACK*) (1 ? p : (STACK_OF(type)*)0))
 define|#
 directive|define
+name|CHECKED_SK_COPY_FUNC
+parameter_list|(
+name|type
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|((void *(*)(void *)) ((1 ? p : (type *(*)(const type *))0)))
+define|#
+directive|define
 name|CHECKED_SK_FREE_FUNC
 parameter_list|(
 name|type
@@ -69,16 +79,6 @@ name|p
 parameter_list|)
 define|\
 value|((void (*)(void *)) ((1 ? p : (void (*)(type *))0)))
-define|#
-directive|define
-name|CHECKED_SK_FREE_FUNC2
-parameter_list|(
-name|type
-parameter_list|,
-name|p
-parameter_list|)
-define|\
-value|((void (*)(void *)) ((1 ? p : (void (*)(type))0)))
 define|#
 directive|define
 name|CHECKED_SK_CMP_FUNC
@@ -354,6 +354,20 @@ name|free_func
 parameter_list|)
 define|\
 value|sk_pop_free(CHECKED_STACK_OF(type, st), CHECKED_SK_FREE_FUNC(type, free_func))
+define|#
+directive|define
+name|SKM_sk_deep_copy
+parameter_list|(
+name|type
+parameter_list|,
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+define|\
+value|(STACK_OF(type) *)sk_deep_copy(CHECKED_STACK_OF(type, st), CHECKED_SK_COPY_FUNC(type, copy_func), CHECKED_SK_FREE_FUNC(type, free_func))
 define|#
 directive|define
 name|SKM_sk_shift
@@ -636,6 +650,17 @@ parameter_list|)
 value|SKM_sk_pop_free(ACCESS_DESCRIPTION, (st), (free_func))
 define|#
 directive|define
+name|sk_ACCESS_DESCRIPTION_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(ACCESS_DESCRIPTION, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_ACCESS_DESCRIPTION_shift
 parameter_list|(
 name|st
@@ -805,6 +830,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(ASIdOrRange, (st), (free_func))
+define|#
+directive|define
+name|sk_ASIdOrRange_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(ASIdOrRange, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_ASIdOrRange_shift
@@ -978,6 +1014,17 @@ parameter_list|)
 value|SKM_sk_pop_free(ASN1_GENERALSTRING, (st), (free_func))
 define|#
 directive|define
+name|sk_ASN1_GENERALSTRING_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(ASN1_GENERALSTRING, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_ASN1_GENERALSTRING_shift
 parameter_list|(
 name|st
@@ -1147,6 +1194,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(ASN1_INTEGER, (st), (free_func))
+define|#
+directive|define
+name|sk_ASN1_INTEGER_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(ASN1_INTEGER, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_ASN1_INTEGER_shift
@@ -1320,6 +1378,17 @@ parameter_list|)
 value|SKM_sk_pop_free(ASN1_OBJECT, (st), (free_func))
 define|#
 directive|define
+name|sk_ASN1_OBJECT_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(ASN1_OBJECT, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_ASN1_OBJECT_shift
 parameter_list|(
 name|st
@@ -1489,6 +1558,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(ASN1_STRING_TABLE, (st), (free_func))
+define|#
+directive|define
+name|sk_ASN1_STRING_TABLE_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(ASN1_STRING_TABLE, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_ASN1_STRING_TABLE_shift
@@ -1662,6 +1742,17 @@ parameter_list|)
 value|SKM_sk_pop_free(ASN1_TYPE, (st), (free_func))
 define|#
 directive|define
+name|sk_ASN1_TYPE_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(ASN1_TYPE, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_ASN1_TYPE_shift
 parameter_list|(
 name|st
@@ -1831,6 +1922,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(ASN1_UTF8STRING, (st), (free_func))
+define|#
+directive|define
+name|sk_ASN1_UTF8STRING_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(ASN1_UTF8STRING, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_ASN1_UTF8STRING_shift
@@ -2004,6 +2106,17 @@ parameter_list|)
 value|SKM_sk_pop_free(ASN1_VALUE, (st), (free_func))
 define|#
 directive|define
+name|sk_ASN1_VALUE_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(ASN1_VALUE, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_ASN1_VALUE_shift
 parameter_list|(
 name|st
@@ -2173,6 +2286,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(BIO, (st), (free_func))
+define|#
+directive|define
+name|sk_BIO_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(BIO, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_BIO_shift
@@ -2346,6 +2470,17 @@ parameter_list|)
 value|SKM_sk_pop_free(BY_DIR_ENTRY, (st), (free_func))
 define|#
 directive|define
+name|sk_BY_DIR_ENTRY_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(BY_DIR_ENTRY, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_BY_DIR_ENTRY_shift
 parameter_list|(
 name|st
@@ -2515,6 +2650,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(BY_DIR_HASH, (st), (free_func))
+define|#
+directive|define
+name|sk_BY_DIR_HASH_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(BY_DIR_HASH, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_BY_DIR_HASH_shift
@@ -2688,6 +2834,17 @@ parameter_list|)
 value|SKM_sk_pop_free(CMS_CertificateChoices, (st), (free_func))
 define|#
 directive|define
+name|sk_CMS_CertificateChoices_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(CMS_CertificateChoices, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_CMS_CertificateChoices_shift
 parameter_list|(
 name|st
@@ -2714,6 +2871,188 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_is_sorted(CMS_CertificateChoices, (st))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_new
+parameter_list|(
+name|cmp
+parameter_list|)
+value|SKM_sk_new(CMS_RecipientEncryptedKey, (cmp))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_new_null
+parameter_list|()
+value|SKM_sk_new_null(CMS_RecipientEncryptedKey)
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_free
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_free(CMS_RecipientEncryptedKey, (st))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_num
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_num(CMS_RecipientEncryptedKey, (st))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_value
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_value(CMS_RecipientEncryptedKey, (st), (i))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_set
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_set(CMS_RecipientEncryptedKey, (st), (i), (val))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_zero
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_zero(CMS_RecipientEncryptedKey, (st))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_push
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_push(CMS_RecipientEncryptedKey, (st), (val))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_unshift
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_unshift(CMS_RecipientEncryptedKey, (st), (val))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_find
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find(CMS_RecipientEncryptedKey, (st), (val))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(CMS_RecipientEncryptedKey, (st), (val))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_delete
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_delete(CMS_RecipientEncryptedKey, (st), (i))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_delete_ptr
+parameter_list|(
+name|st
+parameter_list|,
+name|ptr
+parameter_list|)
+value|SKM_sk_delete_ptr(CMS_RecipientEncryptedKey, (st), (ptr))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_insert
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_insert(CMS_RecipientEncryptedKey, (st), (val), (i))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_set_cmp_func
+parameter_list|(
+name|st
+parameter_list|,
+name|cmp
+parameter_list|)
+value|SKM_sk_set_cmp_func(CMS_RecipientEncryptedKey, (st), (cmp))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_dup
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_dup(CMS_RecipientEncryptedKey, st)
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_pop_free
+parameter_list|(
+name|st
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_pop_free(CMS_RecipientEncryptedKey, (st), (free_func))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(CMS_RecipientEncryptedKey, (st), (copy_func), (free_func))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_shift
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_shift(CMS_RecipientEncryptedKey, (st))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_pop
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_pop(CMS_RecipientEncryptedKey, (st))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_sort
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_sort(CMS_RecipientEncryptedKey, (st))
+define|#
+directive|define
+name|sk_CMS_RecipientEncryptedKey_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(CMS_RecipientEncryptedKey, (st))
 define|#
 directive|define
 name|sk_CMS_RecipientInfo_new
@@ -2857,6 +3196,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(CMS_RecipientInfo, (st), (free_func))
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(CMS_RecipientInfo, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_CMS_RecipientInfo_shift
@@ -3030,6 +3380,17 @@ parameter_list|)
 value|SKM_sk_pop_free(CMS_RevocationInfoChoice, (st), (free_func))
 define|#
 directive|define
+name|sk_CMS_RevocationInfoChoice_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(CMS_RevocationInfoChoice, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_CMS_RevocationInfoChoice_shift
 parameter_list|(
 name|st
@@ -3199,6 +3560,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(CMS_SignerInfo, (st), (free_func))
+define|#
+directive|define
+name|sk_CMS_SignerInfo_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(CMS_SignerInfo, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_CMS_SignerInfo_shift
@@ -3372,6 +3744,17 @@ parameter_list|)
 value|SKM_sk_pop_free(CONF_IMODULE, (st), (free_func))
 define|#
 directive|define
+name|sk_CONF_IMODULE_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(CONF_IMODULE, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_CONF_IMODULE_shift
 parameter_list|(
 name|st
@@ -3541,6 +3924,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(CONF_MODULE, (st), (free_func))
+define|#
+directive|define
+name|sk_CONF_MODULE_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(CONF_MODULE, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_CONF_MODULE_shift
@@ -3714,6 +4108,17 @@ parameter_list|)
 value|SKM_sk_pop_free(CONF_VALUE, (st), (free_func))
 define|#
 directive|define
+name|sk_CONF_VALUE_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(CONF_VALUE, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_CONF_VALUE_shift
 parameter_list|(
 name|st
@@ -3883,6 +4288,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(CRYPTO_EX_DATA_FUNCS, (st), (free_func))
+define|#
+directive|define
+name|sk_CRYPTO_EX_DATA_FUNCS_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(CRYPTO_EX_DATA_FUNCS, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_CRYPTO_EX_DATA_FUNCS_shift
@@ -4056,6 +4472,17 @@ parameter_list|)
 value|SKM_sk_pop_free(CRYPTO_dynlock, (st), (free_func))
 define|#
 directive|define
+name|sk_CRYPTO_dynlock_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(CRYPTO_dynlock, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_CRYPTO_dynlock_shift
 parameter_list|(
 name|st
@@ -4225,6 +4652,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(DIST_POINT, (st), (free_func))
+define|#
+directive|define
+name|sk_DIST_POINT_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(DIST_POINT, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_DIST_POINT_shift
@@ -4398,6 +4836,17 @@ parameter_list|)
 value|SKM_sk_pop_free(ENGINE, (st), (free_func))
 define|#
 directive|define
+name|sk_ENGINE_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(ENGINE, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_ENGINE_shift
 parameter_list|(
 name|st
@@ -4567,6 +5016,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(ENGINE_CLEANUP_ITEM, (st), (free_func))
+define|#
+directive|define
+name|sk_ENGINE_CLEANUP_ITEM_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(ENGINE_CLEANUP_ITEM, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_ENGINE_CLEANUP_ITEM_shift
@@ -4740,6 +5200,17 @@ parameter_list|)
 value|SKM_sk_pop_free(ESS_CERT_ID, (st), (free_func))
 define|#
 directive|define
+name|sk_ESS_CERT_ID_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(ESS_CERT_ID, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_ESS_CERT_ID_shift
 parameter_list|(
 name|st
@@ -4909,6 +5380,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(EVP_MD, (st), (free_func))
+define|#
+directive|define
+name|sk_EVP_MD_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(EVP_MD, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_EVP_MD_shift
@@ -5082,6 +5564,17 @@ parameter_list|)
 value|SKM_sk_pop_free(EVP_PBE_CTL, (st), (free_func))
 define|#
 directive|define
+name|sk_EVP_PBE_CTL_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(EVP_PBE_CTL, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_EVP_PBE_CTL_shift
 parameter_list|(
 name|st
@@ -5251,6 +5744,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(EVP_PKEY_ASN1_METHOD, (st), (free_func))
+define|#
+directive|define
+name|sk_EVP_PKEY_ASN1_METHOD_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(EVP_PKEY_ASN1_METHOD, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_EVP_PKEY_ASN1_METHOD_shift
@@ -5424,6 +5928,17 @@ parameter_list|)
 value|SKM_sk_pop_free(EVP_PKEY_METHOD, (st), (free_func))
 define|#
 directive|define
+name|sk_EVP_PKEY_METHOD_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(EVP_PKEY_METHOD, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_EVP_PKEY_METHOD_shift
 parameter_list|(
 name|st
@@ -5593,6 +6108,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(GENERAL_NAME, (st), (free_func))
+define|#
+directive|define
+name|sk_GENERAL_NAME_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(GENERAL_NAME, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_GENERAL_NAME_shift
@@ -5766,6 +6292,17 @@ parameter_list|)
 value|SKM_sk_pop_free(GENERAL_NAMES, (st), (free_func))
 define|#
 directive|define
+name|sk_GENERAL_NAMES_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(GENERAL_NAMES, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_GENERAL_NAMES_shift
 parameter_list|(
 name|st
@@ -5935,6 +6472,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(GENERAL_SUBTREE, (st), (free_func))
+define|#
+directive|define
+name|sk_GENERAL_SUBTREE_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(GENERAL_SUBTREE, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_GENERAL_SUBTREE_shift
@@ -6108,6 +6656,17 @@ parameter_list|)
 value|SKM_sk_pop_free(IPAddressFamily, (st), (free_func))
 define|#
 directive|define
+name|sk_IPAddressFamily_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(IPAddressFamily, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_IPAddressFamily_shift
 parameter_list|(
 name|st
@@ -6277,6 +6836,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(IPAddressOrRange, (st), (free_func))
+define|#
+directive|define
+name|sk_IPAddressOrRange_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(IPAddressOrRange, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_IPAddressOrRange_shift
@@ -6450,6 +7020,17 @@ parameter_list|)
 value|SKM_sk_pop_free(KRB5_APREQBODY, (st), (free_func))
 define|#
 directive|define
+name|sk_KRB5_APREQBODY_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(KRB5_APREQBODY, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_KRB5_APREQBODY_shift
 parameter_list|(
 name|st
@@ -6619,6 +7200,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(KRB5_AUTHDATA, (st), (free_func))
+define|#
+directive|define
+name|sk_KRB5_AUTHDATA_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(KRB5_AUTHDATA, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_KRB5_AUTHDATA_shift
@@ -6792,6 +7384,17 @@ parameter_list|)
 value|SKM_sk_pop_free(KRB5_AUTHENTBODY, (st), (free_func))
 define|#
 directive|define
+name|sk_KRB5_AUTHENTBODY_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(KRB5_AUTHENTBODY, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_KRB5_AUTHENTBODY_shift
 parameter_list|(
 name|st
@@ -6961,6 +7564,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(KRB5_CHECKSUM, (st), (free_func))
+define|#
+directive|define
+name|sk_KRB5_CHECKSUM_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(KRB5_CHECKSUM, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_KRB5_CHECKSUM_shift
@@ -7134,6 +7748,17 @@ parameter_list|)
 value|SKM_sk_pop_free(KRB5_ENCDATA, (st), (free_func))
 define|#
 directive|define
+name|sk_KRB5_ENCDATA_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(KRB5_ENCDATA, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_KRB5_ENCDATA_shift
 parameter_list|(
 name|st
@@ -7303,6 +7928,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(KRB5_ENCKEY, (st), (free_func))
+define|#
+directive|define
+name|sk_KRB5_ENCKEY_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(KRB5_ENCKEY, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_KRB5_ENCKEY_shift
@@ -7476,6 +8112,17 @@ parameter_list|)
 value|SKM_sk_pop_free(KRB5_PRINCNAME, (st), (free_func))
 define|#
 directive|define
+name|sk_KRB5_PRINCNAME_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(KRB5_PRINCNAME, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_KRB5_PRINCNAME_shift
 parameter_list|(
 name|st
@@ -7645,6 +8292,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(KRB5_TKTBODY, (st), (free_func))
+define|#
+directive|define
+name|sk_KRB5_TKTBODY_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(KRB5_TKTBODY, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_KRB5_TKTBODY_shift
@@ -7818,6 +8476,17 @@ parameter_list|)
 value|SKM_sk_pop_free(MEM_OBJECT_DATA, (st), (free_func))
 define|#
 directive|define
+name|sk_MEM_OBJECT_DATA_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(MEM_OBJECT_DATA, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_MEM_OBJECT_DATA_shift
 parameter_list|(
 name|st
@@ -7987,6 +8656,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(MIME_HEADER, (st), (free_func))
+define|#
+directive|define
+name|sk_MIME_HEADER_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(MIME_HEADER, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_MIME_HEADER_shift
@@ -8160,6 +8840,17 @@ parameter_list|)
 value|SKM_sk_pop_free(MIME_PARAM, (st), (free_func))
 define|#
 directive|define
+name|sk_MIME_PARAM_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(MIME_PARAM, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_MIME_PARAM_shift
 parameter_list|(
 name|st
@@ -8329,6 +9020,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(NAME_FUNCS, (st), (free_func))
+define|#
+directive|define
+name|sk_NAME_FUNCS_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(NAME_FUNCS, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_NAME_FUNCS_shift
@@ -8502,6 +9204,17 @@ parameter_list|)
 value|SKM_sk_pop_free(OCSP_CERTID, (st), (free_func))
 define|#
 directive|define
+name|sk_OCSP_CERTID_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(OCSP_CERTID, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_OCSP_CERTID_shift
 parameter_list|(
 name|st
@@ -8671,6 +9384,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(OCSP_ONEREQ, (st), (free_func))
+define|#
+directive|define
+name|sk_OCSP_ONEREQ_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(OCSP_ONEREQ, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_OCSP_ONEREQ_shift
@@ -8844,6 +9568,17 @@ parameter_list|)
 value|SKM_sk_pop_free(OCSP_RESPID, (st), (free_func))
 define|#
 directive|define
+name|sk_OCSP_RESPID_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(OCSP_RESPID, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_OCSP_RESPID_shift
 parameter_list|(
 name|st
@@ -9013,6 +9748,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(OCSP_SINGLERESP, (st), (free_func))
+define|#
+directive|define
+name|sk_OCSP_SINGLERESP_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(OCSP_SINGLERESP, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_OCSP_SINGLERESP_shift
@@ -9186,6 +9932,17 @@ parameter_list|)
 value|SKM_sk_pop_free(PKCS12_SAFEBAG, (st), (free_func))
 define|#
 directive|define
+name|sk_PKCS12_SAFEBAG_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(PKCS12_SAFEBAG, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_PKCS12_SAFEBAG_shift
 parameter_list|(
 name|st
@@ -9355,6 +10112,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(PKCS7, (st), (free_func))
+define|#
+directive|define
+name|sk_PKCS7_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(PKCS7, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_PKCS7_shift
@@ -9528,6 +10296,17 @@ parameter_list|)
 value|SKM_sk_pop_free(PKCS7_RECIP_INFO, (st), (free_func))
 define|#
 directive|define
+name|sk_PKCS7_RECIP_INFO_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(PKCS7_RECIP_INFO, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_PKCS7_RECIP_INFO_shift
 parameter_list|(
 name|st
@@ -9697,6 +10476,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(PKCS7_SIGNER_INFO, (st), (free_func))
+define|#
+directive|define
+name|sk_PKCS7_SIGNER_INFO_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(PKCS7_SIGNER_INFO, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_PKCS7_SIGNER_INFO_shift
@@ -9870,6 +10660,17 @@ parameter_list|)
 value|SKM_sk_pop_free(POLICYINFO, (st), (free_func))
 define|#
 directive|define
+name|sk_POLICYINFO_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(POLICYINFO, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_POLICYINFO_shift
 parameter_list|(
 name|st
@@ -10039,6 +10840,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(POLICYQUALINFO, (st), (free_func))
+define|#
+directive|define
+name|sk_POLICYQUALINFO_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(POLICYQUALINFO, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_POLICYQUALINFO_shift
@@ -10212,6 +11024,17 @@ parameter_list|)
 value|SKM_sk_pop_free(POLICY_MAPPING, (st), (free_func))
 define|#
 directive|define
+name|sk_POLICY_MAPPING_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(POLICY_MAPPING, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_POLICY_MAPPING_shift
 parameter_list|(
 name|st
@@ -10238,6 +11061,188 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_is_sorted(POLICY_MAPPING, (st))
+define|#
+directive|define
+name|sk_SCT_new
+parameter_list|(
+name|cmp
+parameter_list|)
+value|SKM_sk_new(SCT, (cmp))
+define|#
+directive|define
+name|sk_SCT_new_null
+parameter_list|()
+value|SKM_sk_new_null(SCT)
+define|#
+directive|define
+name|sk_SCT_free
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_free(SCT, (st))
+define|#
+directive|define
+name|sk_SCT_num
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_num(SCT, (st))
+define|#
+directive|define
+name|sk_SCT_value
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_value(SCT, (st), (i))
+define|#
+directive|define
+name|sk_SCT_set
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_set(SCT, (st), (i), (val))
+define|#
+directive|define
+name|sk_SCT_zero
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_zero(SCT, (st))
+define|#
+directive|define
+name|sk_SCT_push
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_push(SCT, (st), (val))
+define|#
+directive|define
+name|sk_SCT_unshift
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_unshift(SCT, (st), (val))
+define|#
+directive|define
+name|sk_SCT_find
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find(SCT, (st), (val))
+define|#
+directive|define
+name|sk_SCT_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(SCT, (st), (val))
+define|#
+directive|define
+name|sk_SCT_delete
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_delete(SCT, (st), (i))
+define|#
+directive|define
+name|sk_SCT_delete_ptr
+parameter_list|(
+name|st
+parameter_list|,
+name|ptr
+parameter_list|)
+value|SKM_sk_delete_ptr(SCT, (st), (ptr))
+define|#
+directive|define
+name|sk_SCT_insert
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_insert(SCT, (st), (val), (i))
+define|#
+directive|define
+name|sk_SCT_set_cmp_func
+parameter_list|(
+name|st
+parameter_list|,
+name|cmp
+parameter_list|)
+value|SKM_sk_set_cmp_func(SCT, (st), (cmp))
+define|#
+directive|define
+name|sk_SCT_dup
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_dup(SCT, st)
+define|#
+directive|define
+name|sk_SCT_pop_free
+parameter_list|(
+name|st
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_pop_free(SCT, (st), (free_func))
+define|#
+directive|define
+name|sk_SCT_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(SCT, (st), (copy_func), (free_func))
+define|#
+directive|define
+name|sk_SCT_shift
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_shift(SCT, (st))
+define|#
+directive|define
+name|sk_SCT_pop
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_pop(SCT, (st))
+define|#
+directive|define
+name|sk_SCT_sort
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_sort(SCT, (st))
+define|#
+directive|define
+name|sk_SCT_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(SCT, (st))
 define|#
 directive|define
 name|sk_SRP_gN_new
@@ -10381,6 +11386,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(SRP_gN, (st), (free_func))
+define|#
+directive|define
+name|sk_SRP_gN_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(SRP_gN, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_SRP_gN_shift
@@ -10554,6 +11570,17 @@ parameter_list|)
 value|SKM_sk_pop_free(SRP_gN_cache, (st), (free_func))
 define|#
 directive|define
+name|sk_SRP_gN_cache_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(SRP_gN_cache, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_SRP_gN_cache_shift
 parameter_list|(
 name|st
@@ -10723,6 +11750,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(SRP_user_pwd, (st), (free_func))
+define|#
+directive|define
+name|sk_SRP_user_pwd_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(SRP_user_pwd, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_SRP_user_pwd_shift
@@ -10896,6 +11934,17 @@ parameter_list|)
 value|SKM_sk_pop_free(SRTP_PROTECTION_PROFILE, (st), (free_func))
 define|#
 directive|define
+name|sk_SRTP_PROTECTION_PROFILE_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(SRTP_PROTECTION_PROFILE, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_SRTP_PROTECTION_PROFILE_shift
 parameter_list|(
 name|st
@@ -11065,6 +12114,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(SSL_CIPHER, (st), (free_func))
+define|#
+directive|define
+name|sk_SSL_CIPHER_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(SSL_CIPHER, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_SSL_CIPHER_shift
@@ -11238,6 +12298,17 @@ parameter_list|)
 value|SKM_sk_pop_free(SSL_COMP, (st), (free_func))
 define|#
 directive|define
+name|sk_SSL_COMP_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(SSL_COMP, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_SSL_COMP_shift
 parameter_list|(
 name|st
@@ -11407,6 +12478,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(STACK_OF_X509_NAME_ENTRY, (st), (free_func))
+define|#
+directive|define
+name|sk_STACK_OF_X509_NAME_ENTRY_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(STACK_OF_X509_NAME_ENTRY, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_STACK_OF_X509_NAME_ENTRY_shift
@@ -11580,6 +12662,17 @@ parameter_list|)
 value|SKM_sk_pop_free(STORE_ATTR_INFO, (st), (free_func))
 define|#
 directive|define
+name|sk_STORE_ATTR_INFO_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(STORE_ATTR_INFO, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_STORE_ATTR_INFO_shift
 parameter_list|(
 name|st
@@ -11749,6 +12842,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(STORE_OBJECT, (st), (free_func))
+define|#
+directive|define
+name|sk_STORE_OBJECT_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(STORE_OBJECT, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_STORE_OBJECT_shift
@@ -11922,6 +13026,17 @@ parameter_list|)
 value|SKM_sk_pop_free(SXNETID, (st), (free_func))
 define|#
 directive|define
+name|sk_SXNETID_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(SXNETID, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_SXNETID_shift
 parameter_list|(
 name|st
@@ -12091,6 +13206,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(UI_STRING, (st), (free_func))
+define|#
+directive|define
+name|sk_UI_STRING_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(UI_STRING, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_UI_STRING_shift
@@ -12264,6 +13390,17 @@ parameter_list|)
 value|SKM_sk_pop_free(X509, (st), (free_func))
 define|#
 directive|define
+name|sk_X509_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(X509, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_X509_shift
 parameter_list|(
 name|st
@@ -12433,6 +13570,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(X509V3_EXT_METHOD, (st), (free_func))
+define|#
+directive|define
+name|sk_X509V3_EXT_METHOD_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(X509V3_EXT_METHOD, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_X509V3_EXT_METHOD_shift
@@ -12606,6 +13754,17 @@ parameter_list|)
 value|SKM_sk_pop_free(X509_ALGOR, (st), (free_func))
 define|#
 directive|define
+name|sk_X509_ALGOR_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(X509_ALGOR, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_X509_ALGOR_shift
 parameter_list|(
 name|st
@@ -12775,6 +13934,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(X509_ATTRIBUTE, (st), (free_func))
+define|#
+directive|define
+name|sk_X509_ATTRIBUTE_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(X509_ATTRIBUTE, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_X509_ATTRIBUTE_shift
@@ -12948,6 +14118,17 @@ parameter_list|)
 value|SKM_sk_pop_free(X509_CRL, (st), (free_func))
 define|#
 directive|define
+name|sk_X509_CRL_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(X509_CRL, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_X509_CRL_shift
 parameter_list|(
 name|st
@@ -13117,6 +14298,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(X509_EXTENSION, (st), (free_func))
+define|#
+directive|define
+name|sk_X509_EXTENSION_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(X509_EXTENSION, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_X509_EXTENSION_shift
@@ -13290,6 +14482,17 @@ parameter_list|)
 value|SKM_sk_pop_free(X509_INFO, (st), (free_func))
 define|#
 directive|define
+name|sk_X509_INFO_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(X509_INFO, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_X509_INFO_shift
 parameter_list|(
 name|st
@@ -13459,6 +14662,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(X509_LOOKUP, (st), (free_func))
+define|#
+directive|define
+name|sk_X509_LOOKUP_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(X509_LOOKUP, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_X509_LOOKUP_shift
@@ -13632,6 +14846,17 @@ parameter_list|)
 value|SKM_sk_pop_free(X509_NAME, (st), (free_func))
 define|#
 directive|define
+name|sk_X509_NAME_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(X509_NAME, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_X509_NAME_shift
 parameter_list|(
 name|st
@@ -13801,6 +15026,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(X509_NAME_ENTRY, (st), (free_func))
+define|#
+directive|define
+name|sk_X509_NAME_ENTRY_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(X509_NAME_ENTRY, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_X509_NAME_ENTRY_shift
@@ -13974,6 +15210,17 @@ parameter_list|)
 value|SKM_sk_pop_free(X509_OBJECT, (st), (free_func))
 define|#
 directive|define
+name|sk_X509_OBJECT_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(X509_OBJECT, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_X509_OBJECT_shift
 parameter_list|(
 name|st
@@ -14143,6 +15390,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(X509_POLICY_DATA, (st), (free_func))
+define|#
+directive|define
+name|sk_X509_POLICY_DATA_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(X509_POLICY_DATA, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_X509_POLICY_DATA_shift
@@ -14316,6 +15574,17 @@ parameter_list|)
 value|SKM_sk_pop_free(X509_POLICY_NODE, (st), (free_func))
 define|#
 directive|define
+name|sk_X509_POLICY_NODE_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(X509_POLICY_NODE, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_X509_POLICY_NODE_shift
 parameter_list|(
 name|st
@@ -14485,6 +15754,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(X509_PURPOSE, (st), (free_func))
+define|#
+directive|define
+name|sk_X509_PURPOSE_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(X509_PURPOSE, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_X509_PURPOSE_shift
@@ -14658,6 +15938,17 @@ parameter_list|)
 value|SKM_sk_pop_free(X509_REVOKED, (st), (free_func))
 define|#
 directive|define
+name|sk_X509_REVOKED_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(X509_REVOKED, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_X509_REVOKED_shift
 parameter_list|(
 name|st
@@ -14827,6 +16118,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(X509_TRUST, (st), (free_func))
+define|#
+directive|define
+name|sk_X509_TRUST_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(X509_TRUST, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_X509_TRUST_shift
@@ -15000,6 +16302,17 @@ parameter_list|)
 value|SKM_sk_pop_free(X509_VERIFY_PARAM, (st), (free_func))
 define|#
 directive|define
+name|sk_X509_VERIFY_PARAM_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(X509_VERIFY_PARAM, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_X509_VERIFY_PARAM_shift
 parameter_list|(
 name|st
@@ -15169,6 +16482,17 @@ parameter_list|,
 name|free_func
 parameter_list|)
 value|SKM_sk_pop_free(nid_triple, (st), (free_func))
+define|#
+directive|define
+name|sk_nid_triple_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(nid_triple, (st), (copy_func), (free_func))
 define|#
 directive|define
 name|sk_nid_triple_shift
@@ -15342,6 +16666,17 @@ parameter_list|)
 value|SKM_sk_pop_free(void, (st), (free_func))
 define|#
 directive|define
+name|sk_void_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_deep_copy(void, (st), (copy_func), (free_func))
+define|#
+directive|define
 name|sk_void_shift
 parameter_list|(
 name|st
@@ -15422,7 +16757,18 @@ name|st
 parameter_list|,
 name|free_func
 parameter_list|)
-value|sk_pop_free(CHECKED_STACK_OF(OPENSSL_STRING, st), CHECKED_SK_FREE_FUNC2(OPENSSL_STRING, free_func))
+value|sk_pop_free(CHECKED_STACK_OF(OPENSSL_STRING, st), CHECKED_SK_FREE_FUNC(char, free_func))
+define|#
+directive|define
+name|sk_OPENSSL_STRING_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|((STACK_OF(OPENSSL_STRING) *)sk_deep_copy(CHECKED_STACK_OF(OPENSSL_STRING, st), CHECKED_SK_COPY_FUNC(char, copy_func), CHECKED_SK_FREE_FUNC(char, free_func)))
 define|#
 directive|define
 name|sk_OPENSSL_STRING_insert
@@ -15594,7 +16940,18 @@ name|st
 parameter_list|,
 name|free_func
 parameter_list|)
-value|sk_pop_free(CHECKED_STACK_OF(OPENSSL_BLOCK, st), CHECKED_SK_FREE_FUNC2(OPENSSL_BLOCK, free_func))
+value|sk_pop_free(CHECKED_STACK_OF(OPENSSL_BLOCK, st), CHECKED_SK_FREE_FUNC(void, free_func))
+define|#
+directive|define
+name|sk_OPENSSL_BLOCK_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|((STACK_OF(OPENSSL_BLOCK) *)sk_deep_copy(CHECKED_STACK_OF(OPENSSL_BLOCK, st), CHECKED_SK_COPY_FUNC(void, copy_func), CHECKED_SK_FREE_FUNC(void, free_func)))
 define|#
 directive|define
 name|sk_OPENSSL_BLOCK_insert
@@ -15766,7 +17123,18 @@ name|st
 parameter_list|,
 name|free_func
 parameter_list|)
-value|sk_pop_free(CHECKED_STACK_OF(OPENSSL_PSTRING, st), CHECKED_SK_FREE_FUNC2(OPENSSL_PSTRING, free_func))
+value|sk_pop_free(CHECKED_STACK_OF(OPENSSL_PSTRING, st), CHECKED_SK_FREE_FUNC(OPENSSL_STRING, free_func))
+define|#
+directive|define
+name|sk_OPENSSL_PSTRING_deep_copy
+parameter_list|(
+name|st
+parameter_list|,
+name|copy_func
+parameter_list|,
+name|free_func
+parameter_list|)
+value|((STACK_OF(OPENSSL_PSTRING) *)sk_deep_copy(CHECKED_STACK_OF(OPENSSL_PSTRING, st), CHECKED_SK_COPY_FUNC(OPENSSL_STRING, copy_func), CHECKED_SK_FREE_FUNC(OPENSSL_STRING, free_func)))
 define|#
 directive|define
 name|sk_OPENSSL_PSTRING_insert

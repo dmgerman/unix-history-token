@@ -1804,7 +1804,7 @@ name|OPENSSL_NO_DH
 end_ifndef
 
 begin_macro
-name|IMPLEMENT_PEM_rw_const
+name|IMPLEMENT_PEM_write_const
 argument_list|(
 argument|DHparams
 argument_list|,
@@ -1813,6 +1813,19 @@ argument_list|,
 argument|PEM_STRING_DHPARAMS
 argument_list|,
 argument|DHparams
+argument_list|)
+end_macro
+
+begin_macro
+name|IMPLEMENT_PEM_write_const
+argument_list|(
+argument|DHxparams
+argument_list|,
+argument|DH
+argument_list|,
+argument|PEM_STRING_DHXPARAMS
+argument_list|,
+argument|DHxparams
 argument_list|)
 end_macro
 

@@ -1199,6 +1199,10 @@ name|DSA_F_DSAPARAMS_PRINT_FP
 value|101
 define|#
 directive|define
+name|DSA_F_DSA_BUILTIN_PARAMGEN2
+value|126
+define|#
+directive|define
 name|DSA_F_DSA_DO_SIGN
 value|112
 define|#
@@ -1308,6 +1312,10 @@ name|DSA_R_INVALID_DIGEST_TYPE
 value|106
 define|#
 directive|define
+name|DSA_R_INVALID_PARAMETERS
+value|112
+define|#
+directive|define
 name|DSA_R_MISSING_PARAMETERS
 value|101
 define|#
@@ -1330,6 +1338,10 @@ define|#
 directive|define
 name|DSA_R_PARAMETER_ENCODING_ERROR
 value|105
+define|#
+directive|define
+name|DSA_R_Q_NOT_PRIME
+value|113
 ifdef|#
 directive|ifdef
 name|__cplusplus

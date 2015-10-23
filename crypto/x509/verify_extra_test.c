@@ -410,7 +410,7 @@ argument_list|(
 name|sctx
 argument_list|)
 operator|==
-name|X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT
+name|X509_V_ERR_INVALID_CA
 condition|)
 block|{
 comment|/* This is the result we were expecting: Test passed */

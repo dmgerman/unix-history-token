@@ -154,8 +154,12 @@ name|DTLS1_VERSION
 value|0xFEFF
 define|#
 directive|define
+name|DTLS1_2_VERSION
+value|0xFEFD
+define|#
+directive|define
 name|DTLS_MAX_VERSION
-value|DTLS1_VERSION
+value|DTLS1_2_VERSION
 define|#
 directive|define
 name|DTLS1_VERSION_MAJOR
@@ -164,6 +168,11 @@ define|#
 directive|define
 name|DTLS1_BAD_VER
 value|0x0100
+comment|/* Special value for method supporting multiple versions */
+define|#
+directive|define
+name|DTLS_ANY_VERSION
+value|0x1FFFF
 if|#
 directive|if
 literal|0

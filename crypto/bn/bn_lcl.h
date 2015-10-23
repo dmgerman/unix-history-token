@@ -139,6 +139,47 @@ directive|define
 name|BN_MONT_CTX_SET_SIZE_WORD
 value|(64)
 comment|/* 32 */
+comment|/*  * 2011-02-22 SMS. In various places, a size_t variable or a type cast to  * size_t was used to perform integer-only operations on pointers.  This  * failed on VMS with 64-bit pointers (CC /POINTER_SIZE = 64) because size_t  * is still only 32 bits.  What's needed in these cases is an integer type  * with the same size as a pointer, which size_t is not certain to be. The  * only fix here is VMS-specific.  */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OPENSSL_SYS_VMS
+argument_list|)
+if|#
+directive|if
+name|__INITIAL_POINTER_SIZE
+operator|==
+literal|64
+define|#
+directive|define
+name|PTR_SIZE_INT
+value|long long
+else|#
+directive|else
+comment|/* __INITIAL_POINTER_SIZE == 64 */
+define|#
+directive|define
+name|PTR_SIZE_INT
+value|int
+endif|#
+directive|endif
+comment|/* __INITIAL_POINTER_SIZE == 64 [else] */
+elif|#
+directive|elif
+operator|!
+name|defined
+argument_list|(
+name|PTR_SIZE_INT
+argument_list|)
+comment|/* defined(OPENSSL_SYS_VMS) */
+define|#
+directive|define
+name|PTR_SIZE_INT
+value|size_t
+endif|#
+directive|endif
+comment|/* defined(OPENSSL_SYS_VMS) [else] */
 if|#
 directive|if
 operator|!
@@ -500,6 +541,38 @@ define|\
 value|asm ("dmultu    %2,%3"          \              : "=l"(low),"=h"(high)     \              : "r"(a), "r"(b));
 endif|#
 directive|endif
+endif|#
+directive|endif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SIXTY_FOUR_BIT_LONG
+argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|__GNUC__
+operator|>=
+literal|2
+define|#
+directive|define
+name|BN_UMULT_HIGH
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|({      \         register BN_ULONG ret;          \         asm ("umulh     %0,%1,%2"       \              : "=r"(ret)                \              : "r"(a), "r"(b));         \         ret;                    })
 endif|#
 directive|endif
 endif|#

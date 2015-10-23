@@ -45,6 +45,12 @@ argument_list|(
 name|OPENSSL_SYSNAME_WIN32
 argument_list|)
 operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_SYSNAME_WINCE
+argument_list|)
+operator|&&
 expr|\
 operator|!
 name|defined

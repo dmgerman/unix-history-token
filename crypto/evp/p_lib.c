@@ -1389,6 +1389,12 @@ operator|->
 name|type
 operator|!=
 name|EVP_PKEY_DH
+operator|&&
+name|pkey
+operator|->
+name|type
+operator|!=
+name|EVP_PKEY_DHX
 condition|)
 block|{
 name|EVPerr

@@ -4,7 +4,7 @@ comment|/* crypto/x509/x509_err.c */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2012 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
@@ -199,6 +199,15 @@ name|X509_F_X509_CHECK_PRIVATE_KEY
 argument_list|)
 block|,
 literal|"X509_check_private_key"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|X509_F_X509_CRL_DIFF
+argument_list|)
+block|,
+literal|"X509_CRL_diff"
 block|}
 block|,
 block|{
@@ -490,6 +499,15 @@ block|{
 block|{
 name|ERR_REASON
 argument_list|(
+name|X509_R_AKID_MISMATCH
+argument_list|)
+block|,
+literal|"akid mismatch"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|X509_R_BAD_X509_FILETYPE
 argument_list|)
 block|,
@@ -526,10 +544,37 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|X509_R_CRL_ALREADY_DELTA
+argument_list|)
+block|,
+literal|"crl already delta"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|X509_R_CRL_VERIFY_FAILURE
+argument_list|)
+block|,
+literal|"crl verify failure"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|X509_R_ERR_ASN1_LIB
 argument_list|)
 block|,
 literal|"err asn1 lib"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|X509_R_IDP_MISMATCH
+argument_list|)
+block|,
+literal|"idp mismatch"
 block|}
 block|,
 block|{
@@ -557,6 +602,15 @@ name|X509_R_INVALID_TRUST
 argument_list|)
 block|,
 literal|"invalid trust"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|X509_R_ISSUER_MISMATCH
+argument_list|)
+block|,
+literal|"issuer mismatch"
 block|}
 block|,
 block|{
@@ -607,10 +661,28 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|X509_R_NEWER_CRL_NOT_NEWER
+argument_list|)
+block|,
+literal|"newer crl not newer"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|X509_R_NO_CERT_SET_FOR_US_TO_VERIFY
 argument_list|)
 block|,
 literal|"no cert set for us to verify"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|X509_R_NO_CRL_NUMBER
+argument_list|)
+block|,
+literal|"no crl number"
 block|}
 block|,
 block|{

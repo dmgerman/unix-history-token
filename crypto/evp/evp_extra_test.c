@@ -3822,11 +3822,6 @@ argument_list|(
 operator|&
 name|md_ctx
 argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|kSignature
 argument_list|,
 sizeof|sizeof

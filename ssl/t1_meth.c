@@ -84,6 +84,8 @@ argument_list|,
 argument|ssl3_connect
 argument_list|,
 argument|tls1_get_method
+argument_list|,
+argument|TLSv1_2_enc_data
 argument_list|)
 end_macro
 
@@ -99,6 +101,8 @@ argument_list|,
 argument|ssl3_connect
 argument_list|,
 argument|tls1_get_method
+argument_list|,
+argument|TLSv1_1_enc_data
 argument_list|)
 end_macro
 
@@ -114,6 +118,8 @@ argument_list|,
 argument|ssl3_connect
 argument_list|,
 argument|tls1_get_method
+argument_list|,
+argument|TLSv1_enc_data
 argument_list|)
 end_macro
 

@@ -1661,12 +1661,11 @@ operator|)
 expr_stmt|;
 name|err
 label|:
-comment|/*      * XXX: surely this is wrong - if ret is 0, it just didn't verify; there      * is no error in BN. Test should be ret == -1 (Ben)      */
 if|if
 condition|(
 name|ret
-operator|!=
-literal|1
+operator|<
+literal|0
 condition|)
 name|DSAerr
 argument_list|(

@@ -295,6 +295,10 @@ name|PEM_STRING_DHPARAMS
 value|"DH PARAMETERS"
 define|#
 directive|define
+name|PEM_STRING_DHXPARAMS
+value|"X9.42 DH PARAMETERS"
+define|#
+directive|define
 name|PEM_STRING_SSL_SESSION
 value|"SSL SESSION PARAMETERS"
 define|#
@@ -1150,10 +1154,12 @@ name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|hdr
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1368,14 +1374,17 @@ name|FILE
 modifier|*
 name|fp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|hdr
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1817,6 +1826,12 @@ name|OPENSSL_NO_DH
 name|DECLARE_PEM_rw_const
 argument_list|(
 argument|DHparams
+argument_list|,
+argument|DH
+argument_list|)
+name|DECLARE_PEM_write_const
+argument_list|(
+argument|DHxparams
 argument_list|,
 argument|DH
 argument_list|)
@@ -2386,12 +2401,20 @@ name|PEM_F_PEM_READ_BIO
 value|109
 define|#
 directive|define
+name|PEM_F_PEM_READ_BIO_DHPARAMS
+value|141
+define|#
+directive|define
 name|PEM_F_PEM_READ_BIO_PARAMETERS
 value|140
 define|#
 directive|define
 name|PEM_F_PEM_READ_BIO_PRIVATEKEY
 value|123
+define|#
+directive|define
+name|PEM_F_PEM_READ_DHPARAMS
+value|142
 define|#
 directive|define
 name|PEM_F_PEM_READ_PRIVATEKEY

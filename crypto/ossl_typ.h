@@ -195,6 +195,11 @@ endif|#
 directive|endif
 typedef|typedef
 name|struct
+name|asn1_object_st
+name|ASN1_OBJECT
+typedef|;
+typedef|typedef
+name|struct
 name|ASN1_ITEM_st
 name|ASN1_ITEM
 typedef|;

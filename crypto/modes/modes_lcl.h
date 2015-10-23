@@ -150,6 +150,12 @@ name|STRICT_ALIGNMENT
 value|1
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PEDANTIC
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -193,6 +199,12 @@ operator|||
 expr|\
 name|defined
 argument_list|(
+name|__aarch64__
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
 name|__s390__
 argument_list|)
 operator|||
@@ -207,6 +219,11 @@ undef|#
 directive|undef
 name|STRICT_ALIGNMENT
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -269,7 +286,7 @@ name|BSWAP8
 parameter_list|(
 name|x
 parameter_list|)
-value|({ u64 ret=(x);                    \                         asm ("bswapq %0"                \                         : "+r"(ret));   ret;            })
+value|({ u64 ret_=(x);                   \                         asm ("bswapq %0"                \                         : "+r"(ret_));   ret_;          })
 end_define
 
 begin_define
@@ -279,7 +296,7 @@ name|BSWAP4
 parameter_list|(
 name|x
 parameter_list|)
-value|({ u32 ret=(x);                    \                         asm ("bswapl %0"                \                         : "+r"(ret));   ret;            })
+value|({ u32 ret_=(x);                   \                         asm ("bswapl %0"                \                         : "+r"(ret_));   ret_;          })
 end_define
 
 begin_elif
@@ -311,7 +328,7 @@ name|BSWAP8
 parameter_list|(
 name|x
 parameter_list|)
-value|({ u32 lo=(u64)(x)>>32,hi=(x);     \                         asm ("bswapl %0; bswapl %1"     \                         : "+r"(hi),"+r"(lo));           \                         (u64)hi<<32|lo;                 })
+value|({ u32 lo_=(u64)(x)>>32,hi_=(x);   \                         asm ("bswapl %0; bswapl %1"     \                         : "+r"(hi_),"+r"(lo_));         \                         (u64)hi_<<32|lo_;               })
 end_define
 
 begin_define
@@ -321,7 +338,36 @@ name|BSWAP4
 parameter_list|(
 name|x
 parameter_list|)
-value|({ u32 ret=(x);                    \                         asm ("bswapl %0"                \                         : "+r"(ret));   ret;            })
+value|({ u32 ret_=(x);                   \                         asm ("bswapl %0"                \                         : "+r"(ret_));   ret_;          })
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|BSWAP8
+parameter_list|(
+name|x
+parameter_list|)
+value|({ u64 ret_;                       \                         asm ("rev %0,%1"                \                         : "=r"(ret_) : "r"(x)); ret_;   })
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSWAP4
+parameter_list|(
+name|x
+parameter_list|)
+value|({ u32 ret_;                       \                         asm ("rev %w0,%w1"              \                         : "=r"(ret_) : "r"(x)); ret_;   })
 end_define
 
 begin_elif
@@ -353,7 +399,7 @@ name|BSWAP8
 parameter_list|(
 name|x
 parameter_list|)
-value|({  u32 lo=(u64)(x)>>32,hi=(x);     \                         asm ("rev %0,%0; rev %1,%1"     \                         : "+r"(hi),"+r"(lo));           \                         (u64)hi<<32|lo;                 })
+value|({ u32 lo_=(u64)(x)>>32,hi_=(x);   \                         asm ("rev %0,%0; rev %1,%1"     \                         : "+r"(hi_),"+r"(lo_));         \                         (u64)hi_<<32|lo_;               })
 end_define
 
 begin_define
@@ -363,7 +409,7 @@ name|BSWAP4
 parameter_list|(
 name|x
 parameter_list|)
-value|({ u32 ret;                        \                         asm ("rev %0,%1"                \                         : "=r"(ret) : "r"((u32)(x)));   \                         ret;                            })
+value|({ u32 ret_;                       \                         asm ("rev %0,%1"                \                         : "=r"(ret_) : "r"((u32)(x)));  \                         ret_;                           })
 end_define
 
 begin_endif

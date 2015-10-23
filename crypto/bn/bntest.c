@@ -6343,6 +6343,11 @@ return|return
 literal|0
 return|;
 block|}
+name|BN_MONT_CTX_free
+argument_list|(
+name|mont
+argument_list|)
+expr_stmt|;
 name|BN_free
 argument_list|(
 name|a

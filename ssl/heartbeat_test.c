@@ -1031,7 +1031,11 @@ comment|/* Three-byte pad at the beginning for type and payload length */
 name|unsigned
 name|char
 name|payload_buf
-index|[]
+index|[
+name|MAX_PRINTABLE_CHARACTERS
+operator|+
+literal|4
+index|]
 init|=
 literal|"   Not bleeding, sixteen spaces of padding"
 literal|"                "
@@ -1106,7 +1110,7 @@ name|payload_buf
 index|[
 literal|4
 operator|+
-name|MIN_PADDING_SIZE
+name|MAX_PRINTABLE_CHARACTERS
 index|]
 decl_stmt|;
 name|memset
@@ -1115,20 +1119,16 @@ name|payload_buf
 argument_list|,
 literal|' '
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|payload_buf
-argument_list|)
+name|MIN_PADDING_SIZE
+operator|+
+literal|3
 argument_list|)
 expr_stmt|;
 name|payload_buf
 index|[
-sizeof|sizeof
-argument_list|(
-name|payload_buf
-argument_list|)
-operator|-
-literal|1
+name|MIN_PADDING_SIZE
+operator|+
+literal|3
 index|]
 operator|=
 literal|'\0'
@@ -1195,7 +1195,11 @@ comment|/* Three-byte pad at the beginning for type and payload length */
 name|unsigned
 name|char
 name|payload_buf
-index|[]
+index|[
+literal|4
+operator|+
+name|MAX_PRINTABLE_CHARACTERS
+index|]
 init|=
 literal|"   HEARTBLEED                "
 decl_stmt|;
@@ -1255,9 +1259,9 @@ name|unsigned
 name|char
 name|payload_buf
 index|[
-name|MIN_PADDING_SIZE
+name|MAX_PRINTABLE_CHARACTERS
 operator|+
-literal|3
+literal|4
 index|]
 decl_stmt|;
 name|memset
@@ -1266,20 +1270,16 @@ name|payload_buf
 argument_list|,
 literal|' '
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|payload_buf
-argument_list|)
+name|MIN_PADDING_SIZE
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
 name|payload_buf
 index|[
-sizeof|sizeof
-argument_list|(
-name|payload_buf
-argument_list|)
-operator|-
-literal|1
+name|MIN_PADDING_SIZE
+operator|+
+literal|2
 index|]
 operator|=
 literal|'\0'
@@ -1427,7 +1427,11 @@ comment|/* Three-byte pad at the beginning for type and payload length */
 name|unsigned
 name|char
 name|payload_buf
-index|[]
+index|[
+name|MAX_PRINTABLE_CHARACTERS
+operator|+
+literal|4
+index|]
 init|=
 literal|"   Not bleeding, sixteen spaces of padding"
 literal|"                "
@@ -1502,7 +1506,7 @@ name|payload_buf
 index|[
 literal|4
 operator|+
-name|MIN_PADDING_SIZE
+name|MAX_PRINTABLE_CHARACTERS
 index|]
 decl_stmt|;
 name|memset
@@ -1511,20 +1515,16 @@ name|payload_buf
 argument_list|,
 literal|' '
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|payload_buf
-argument_list|)
+name|MIN_PADDING_SIZE
+operator|+
+literal|3
 argument_list|)
 expr_stmt|;
 name|payload_buf
 index|[
-sizeof|sizeof
-argument_list|(
-name|payload_buf
-argument_list|)
-operator|-
-literal|1
+name|MIN_PADDING_SIZE
+operator|+
+literal|3
 index|]
 operator|=
 literal|'\0'
@@ -1591,7 +1591,11 @@ comment|/* Three-byte pad at the beginning for type and payload length */
 name|unsigned
 name|char
 name|payload_buf
-index|[]
+index|[
+name|MAX_PRINTABLE_CHARACTERS
+operator|+
+literal|4
+index|]
 init|=
 literal|"   HEARTBLEED                "
 decl_stmt|;
@@ -1651,9 +1655,9 @@ name|unsigned
 name|char
 name|payload_buf
 index|[
-name|MIN_PADDING_SIZE
+name|MAX_PRINTABLE_CHARACTERS
 operator|+
-literal|3
+literal|4
 index|]
 decl_stmt|;
 name|memset
@@ -1662,20 +1666,16 @@ name|payload_buf
 argument_list|,
 literal|' '
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|payload_buf
-argument_list|)
+name|MIN_PADDING_SIZE
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
 name|payload_buf
 index|[
-sizeof|sizeof
-argument_list|(
-name|payload_buf
-argument_list|)
-operator|-
-literal|1
+name|MIN_PADDING_SIZE
+operator|+
+literal|2
 index|]
 operator|=
 literal|'\0'

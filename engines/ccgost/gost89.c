@@ -2124,7 +2124,10 @@ index|[
 name|i
 index|]
 operator|=
-operator|(
+call|(
+name|word32
+call|)
+argument_list|(
 name|b
 operator|->
 name|k8
@@ -2144,7 +2147,7 @@ name|i
 operator|&
 literal|15
 index|]
-operator|)
+argument_list|)
 operator|<<
 literal|24
 expr_stmt|;
@@ -2374,6 +2377,9 @@ literal|16
 operator|)
 operator||
 operator|(
+operator|(
+name|word32
+operator|)
 name|in
 index|[
 literal|3
@@ -2408,6 +2414,9 @@ literal|16
 operator|)
 operator||
 operator|(
+operator|(
+name|word32
+operator|)
 name|in
 index|[
 literal|7
@@ -3115,6 +3124,9 @@ literal|16
 operator|)
 operator||
 operator|(
+operator|(
+name|word32
+operator|)
 name|in
 index|[
 literal|3
@@ -3149,6 +3161,9 @@ literal|16
 operator|)
 operator||
 operator|(
+operator|(
+name|word32
+operator|)
 name|in
 index|[
 literal|7
@@ -4338,6 +4353,9 @@ literal|16
 operator|)
 operator||
 operator|(
+operator|(
+name|word32
+operator|)
 name|k
 index|[
 name|j
@@ -4658,6 +4676,9 @@ literal|16
 operator|)
 operator||
 operator|(
+operator|(
+name|word32
+operator|)
 name|buffer
 index|[
 literal|3
@@ -4692,6 +4713,9 @@ literal|16
 operator|)
 operator||
 operator|(
+operator|(
+name|word32
+operator|)
 name|buffer
 index|[
 literal|7

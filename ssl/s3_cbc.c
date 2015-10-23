@@ -225,17 +225,10 @@ decl_stmt|;
 comment|/* Check if version requires explicit IV */
 if|if
 condition|(
+name|SSL_USE_EXPLICIT_IV
+argument_list|(
 name|s
-operator|->
-name|version
-operator|>=
-name|TLS1_1_VERSION
-operator|||
-name|s
-operator|->
-name|version
-operator|==
-name|DTLS1_BAD_VER
+argument_list|)
 condition|)
 block|{
 comment|/*          * These lengths are all public so we can test them in non-constant          * time.          */

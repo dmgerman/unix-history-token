@@ -1598,36 +1598,14 @@ block|}
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|undef
+if|#
+directive|if
+literal|0
 comment|/* very bad */
-name|memset
-argument_list|(
-name|s
-operator|->
-name|session
-operator|->
-name|session_id
-argument_list|,
-literal|0
-argument_list|,
-name|SSL_MAX_SSL_SESSION_ID_LENGTH_IN_BYTES
-argument_list|)
-expr_stmt|;
-name|s
-operator|->
-name|session
-operator|->
-name|session_id_length
-operator|=
-literal|0
-expr_stmt|;
-operator|*
-operator|/
+block|memset(s->session->session_id, 0,                SSL_MAX_SSL_SESSION_ID_LENGTH_IN_BYTES);         s->session->session_id_length = 0;
 endif|#
 directive|endif
-comment|/*              * we need to do this in case we were trying to reuse a client              * session but others are already reusing it. If this was a new              * 'blank' session ID, the session-id length will still be 0              */
+comment|/*          * we need to do this in case we were trying to reuse a client          * session but others are already reusing it. If this was a new          * 'blank' session ID, the session-id length will still be 0          */
 if|if
 condition|(
 name|s

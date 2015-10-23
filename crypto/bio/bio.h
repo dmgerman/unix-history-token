@@ -413,6 +413,10 @@ value|45
 comment|/* Next DTLS handshake timeout                                               * to adjust socket timeouts */
 define|#
 directive|define
+name|BIO_CTRL_DGRAM_SET_DONT_FRAG
+value|48
+define|#
+directive|define
 name|BIO_CTRL_DGRAM_GET_MTU_OVERHEAD
 value|49
 ifndef|#
@@ -3091,6 +3095,28 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
+name|int
+name|BIO_hex_string
+parameter_list|(
+name|BIO
+modifier|*
+name|out
+parameter_list|,
+name|int
+name|indent
+parameter_list|,
+name|int
+name|width
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|datalen
+parameter_list|)
+function_decl|;
 name|struct
 name|hostent
 modifier|*
@@ -3315,6 +3341,7 @@ name|BIO
 modifier|*
 name|BIO_new_connect
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|host_port
@@ -3324,6 +3351,7 @@ name|BIO
 modifier|*
 name|BIO_new_accept
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|host_port

@@ -325,11 +325,6 @@ name|defined
 argument_list|(
 name|_MSC_VER
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ICC
-argument_list|)
 end_if
 
 begin_define
@@ -342,6 +337,27 @@ parameter_list|,
 name|n
 parameter_list|)
 value|_lrotl(a,n)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__ICC
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|ROTATE
+parameter_list|(
+name|a
+parameter_list|,
+name|n
+parameter_list|)
+value|_rotl(a,n)
 end_define
 
 begin_elif

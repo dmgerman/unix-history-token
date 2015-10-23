@@ -98,15 +98,6 @@ modifier|*
 name|profiles
 parameter_list|)
 function_decl|;
-name|SRTP_PROTECTION_PROFILE
-modifier|*
-name|SSL_get_selected_srtp_profile
-parameter_list|(
-name|SSL
-modifier|*
-name|s
-parameter_list|)
-function_decl|;
 name|STACK_OF
 argument_list|(
 name|SRTP_PROTECTION_PROFILE

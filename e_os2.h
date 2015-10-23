@@ -121,12 +121,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__CYGWIN32__
+name|__CYGWIN__
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|OPENSSL_SYSNAME_CYGWIN32
+name|OPENSSL_SYSNAME_CYGWIN
 argument_list|)
 undef|#
 directive|undef

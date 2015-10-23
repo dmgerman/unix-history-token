@@ -584,7 +584,6 @@ directive|define
 name|ASN1_OBJECT_FLAG_DYNAMIC_DATA
 value|0x08
 comment|/* internal use */
-typedef|typedef
 struct|struct
 name|asn1_object_st
 block|{
@@ -614,8 +613,7 @@ name|flags
 decl_stmt|;
 comment|/* Should we free this one */
 block|}
-name|ASN1_OBJECT
-typedef|;
+struct|;
 define|#
 directive|define
 name|ASN1_STRING_FLAG_BITS_LEFT
@@ -2510,6 +2508,7 @@ argument_list|)
 name|int
 name|ASN1_UTCTIME_check
 parameter_list|(
+specifier|const
 name|ASN1_UTCTIME
 modifier|*
 name|a
@@ -2579,6 +2578,7 @@ directive|endif
 name|int
 name|ASN1_GENERALIZEDTIME_check
 parameter_list|(
+specifier|const
 name|ASN1_GENERALIZEDTIME
 modifier|*
 name|a
@@ -2625,6 +2625,28 @@ specifier|const
 name|char
 modifier|*
 name|str
+parameter_list|)
+function_decl|;
+name|int
+name|ASN1_TIME_diff
+parameter_list|(
+name|int
+modifier|*
+name|pday
+parameter_list|,
+name|int
+modifier|*
+name|psec
+parameter_list|,
+specifier|const
+name|ASN1_TIME
+modifier|*
+name|from
+parameter_list|,
+specifier|const
+name|ASN1_TIME
+modifier|*
+name|to
 parameter_list|)
 function_decl|;
 name|DECLARE_ASN1_FUNCTIONS

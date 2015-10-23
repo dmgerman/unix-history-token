@@ -139,12 +139,17 @@ directive|endif
 name|int
 name|flags
 decl_stmt|;
-name|char
+name|void
 modifier|*
 name|app_data
 decl_stmt|;
 block|}
 struct|;
+comment|/* The ECDSA_METHOD was allocated and can be freed */
+define|#
+directive|define
+name|ECDSA_METHOD_FLAG_ALLOCATED
+value|0x2
 comment|/*  * If this flag is set the ECDSA method is FIPS compliant and can be used in  * FIPS mode. This is set in the validated module method. If an application  * sets this flag in its own methods it is its responsibility to ensure the  * result is compliant.  */
 define|#
 directive|define

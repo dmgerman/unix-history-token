@@ -594,6 +594,7 @@ begin_function
 name|int
 name|OCSP_parse_url
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|url

@@ -1282,7 +1282,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* If the current line is> 80 characters, scream alot */
+comment|/* If the current line is> 80 characters, scream a lot */
 if|if
 condition|(
 name|ln

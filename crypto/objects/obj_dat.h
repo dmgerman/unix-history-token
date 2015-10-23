@@ -15,28 +15,28 @@ begin_define
 define|#
 directive|define
 name|NUM_NID
-value|920
+value|958
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_SN
-value|913
+value|951
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_LN
-value|913
+value|951
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_OBJ
-value|857
+value|890
 end_define
 
 begin_decl_stmt
@@ -46,7 +46,7 @@ name|unsigned
 name|char
 name|lvalues
 index|[
-literal|5974
+literal|6255
 index|]
 init|=
 block|{
@@ -12847,6 +12847,601 @@ block|,
 literal|0x07
 block|,
 comment|/* [5964] OBJ_rsaesOaep */
+literal|0x2A
+block|,
+literal|0x86
+block|,
+literal|0x48
+block|,
+literal|0xCE
+block|,
+literal|0x3E
+block|,
+literal|0x02
+block|,
+literal|0x01
+block|,
+comment|/* [5973] OBJ_dhpublicnumber */
+literal|0x2B
+block|,
+literal|0x24
+block|,
+literal|0x03
+block|,
+literal|0x03
+block|,
+literal|0x02
+block|,
+literal|0x08
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+comment|/* [5980] OBJ_brainpoolP160r1 */
+literal|0x2B
+block|,
+literal|0x24
+block|,
+literal|0x03
+block|,
+literal|0x03
+block|,
+literal|0x02
+block|,
+literal|0x08
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x02
+block|,
+comment|/* [5989] OBJ_brainpoolP160t1 */
+literal|0x2B
+block|,
+literal|0x24
+block|,
+literal|0x03
+block|,
+literal|0x03
+block|,
+literal|0x02
+block|,
+literal|0x08
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x03
+block|,
+comment|/* [5998] OBJ_brainpoolP192r1 */
+literal|0x2B
+block|,
+literal|0x24
+block|,
+literal|0x03
+block|,
+literal|0x03
+block|,
+literal|0x02
+block|,
+literal|0x08
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x04
+block|,
+comment|/* [6007] OBJ_brainpoolP192t1 */
+literal|0x2B
+block|,
+literal|0x24
+block|,
+literal|0x03
+block|,
+literal|0x03
+block|,
+literal|0x02
+block|,
+literal|0x08
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x05
+block|,
+comment|/* [6016] OBJ_brainpoolP224r1 */
+literal|0x2B
+block|,
+literal|0x24
+block|,
+literal|0x03
+block|,
+literal|0x03
+block|,
+literal|0x02
+block|,
+literal|0x08
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x06
+block|,
+comment|/* [6025] OBJ_brainpoolP224t1 */
+literal|0x2B
+block|,
+literal|0x24
+block|,
+literal|0x03
+block|,
+literal|0x03
+block|,
+literal|0x02
+block|,
+literal|0x08
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x07
+block|,
+comment|/* [6034] OBJ_brainpoolP256r1 */
+literal|0x2B
+block|,
+literal|0x24
+block|,
+literal|0x03
+block|,
+literal|0x03
+block|,
+literal|0x02
+block|,
+literal|0x08
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x08
+block|,
+comment|/* [6043] OBJ_brainpoolP256t1 */
+literal|0x2B
+block|,
+literal|0x24
+block|,
+literal|0x03
+block|,
+literal|0x03
+block|,
+literal|0x02
+block|,
+literal|0x08
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x09
+block|,
+comment|/* [6052] OBJ_brainpoolP320r1 */
+literal|0x2B
+block|,
+literal|0x24
+block|,
+literal|0x03
+block|,
+literal|0x03
+block|,
+literal|0x02
+block|,
+literal|0x08
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x0A
+block|,
+comment|/* [6061] OBJ_brainpoolP320t1 */
+literal|0x2B
+block|,
+literal|0x24
+block|,
+literal|0x03
+block|,
+literal|0x03
+block|,
+literal|0x02
+block|,
+literal|0x08
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x0B
+block|,
+comment|/* [6070] OBJ_brainpoolP384r1 */
+literal|0x2B
+block|,
+literal|0x24
+block|,
+literal|0x03
+block|,
+literal|0x03
+block|,
+literal|0x02
+block|,
+literal|0x08
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x0C
+block|,
+comment|/* [6079] OBJ_brainpoolP384t1 */
+literal|0x2B
+block|,
+literal|0x24
+block|,
+literal|0x03
+block|,
+literal|0x03
+block|,
+literal|0x02
+block|,
+literal|0x08
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x0D
+block|,
+comment|/* [6088] OBJ_brainpoolP512r1 */
+literal|0x2B
+block|,
+literal|0x24
+block|,
+literal|0x03
+block|,
+literal|0x03
+block|,
+literal|0x02
+block|,
+literal|0x08
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x0E
+block|,
+comment|/* [6097] OBJ_brainpoolP512t1 */
+literal|0x2A
+block|,
+literal|0x86
+block|,
+literal|0x48
+block|,
+literal|0x86
+block|,
+literal|0xF7
+block|,
+literal|0x0D
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|0x09
+block|,
+comment|/* [6106] OBJ_pSpecified */
+literal|0x2B
+block|,
+literal|0x81
+block|,
+literal|0x05
+block|,
+literal|0x10
+block|,
+literal|0x86
+block|,
+literal|0x48
+block|,
+literal|0x3F
+block|,
+literal|0x00
+block|,
+literal|0x02
+block|,
+comment|/* [6115] OBJ_dhSinglePass_stdDH_sha1kdf_scheme */
+literal|0x2B
+block|,
+literal|0x81
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x0B
+block|,
+literal|0x00
+block|,
+comment|/* [6124] OBJ_dhSinglePass_stdDH_sha224kdf_scheme */
+literal|0x2B
+block|,
+literal|0x81
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x0B
+block|,
+literal|0x01
+block|,
+comment|/* [6130] OBJ_dhSinglePass_stdDH_sha256kdf_scheme */
+literal|0x2B
+block|,
+literal|0x81
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x0B
+block|,
+literal|0x02
+block|,
+comment|/* [6136] OBJ_dhSinglePass_stdDH_sha384kdf_scheme */
+literal|0x2B
+block|,
+literal|0x81
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x0B
+block|,
+literal|0x03
+block|,
+comment|/* [6142] OBJ_dhSinglePass_stdDH_sha512kdf_scheme */
+literal|0x2B
+block|,
+literal|0x81
+block|,
+literal|0x05
+block|,
+literal|0x10
+block|,
+literal|0x86
+block|,
+literal|0x48
+block|,
+literal|0x3F
+block|,
+literal|0x00
+block|,
+literal|0x03
+block|,
+comment|/* [6148] OBJ_dhSinglePass_cofactorDH_sha1kdf_scheme */
+literal|0x2B
+block|,
+literal|0x81
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x0E
+block|,
+literal|0x00
+block|,
+comment|/* [6157] OBJ_dhSinglePass_cofactorDH_sha224kdf_scheme */
+literal|0x2B
+block|,
+literal|0x81
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x0E
+block|,
+literal|0x01
+block|,
+comment|/* [6163] OBJ_dhSinglePass_cofactorDH_sha256kdf_scheme */
+literal|0x2B
+block|,
+literal|0x81
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x0E
+block|,
+literal|0x02
+block|,
+comment|/* [6169] OBJ_dhSinglePass_cofactorDH_sha384kdf_scheme */
+literal|0x2B
+block|,
+literal|0x81
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x0E
+block|,
+literal|0x03
+block|,
+comment|/* [6175] OBJ_dhSinglePass_cofactorDH_sha512kdf_scheme */
+literal|0x2B
+block|,
+literal|0x06
+block|,
+literal|0x01
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0xD6
+block|,
+literal|0x79
+block|,
+literal|0x02
+block|,
+literal|0x04
+block|,
+literal|0x02
+block|,
+comment|/* [6181] OBJ_ct_precert_scts */
+literal|0x2B
+block|,
+literal|0x06
+block|,
+literal|0x01
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0xD6
+block|,
+literal|0x79
+block|,
+literal|0x02
+block|,
+literal|0x04
+block|,
+literal|0x03
+block|,
+comment|/* [6191] OBJ_ct_precert_poison */
+literal|0x2B
+block|,
+literal|0x06
+block|,
+literal|0x01
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0xD6
+block|,
+literal|0x79
+block|,
+literal|0x02
+block|,
+literal|0x04
+block|,
+literal|0x04
+block|,
+comment|/* [6201] OBJ_ct_precert_signer */
+literal|0x2B
+block|,
+literal|0x06
+block|,
+literal|0x01
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0xD6
+block|,
+literal|0x79
+block|,
+literal|0x02
+block|,
+literal|0x04
+block|,
+literal|0x05
+block|,
+comment|/* [6211] OBJ_ct_cert_scts */
+literal|0x2B
+block|,
+literal|0x06
+block|,
+literal|0x01
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x82
+block|,
+literal|0x37
+block|,
+literal|0x3C
+block|,
+literal|0x02
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+comment|/* [6221] OBJ_jurisdictionLocalityName */
+literal|0x2B
+block|,
+literal|0x06
+block|,
+literal|0x01
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x82
+block|,
+literal|0x37
+block|,
+literal|0x3C
+block|,
+literal|0x02
+block|,
+literal|0x01
+block|,
+literal|0x02
+block|,
+comment|/* [6232] OBJ_jurisdictionStateOrProvinceName */
+literal|0x2B
+block|,
+literal|0x06
+block|,
+literal|0x01
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x82
+block|,
+literal|0x37
+block|,
+literal|0x3C
+block|,
+literal|0x02
+block|,
+literal|0x01
+block|,
+literal|0x03
+block|,
+comment|/* [6243] OBJ_jurisdictionCountryName */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -30846,6 +31441,736 @@ operator|)
 block|,
 literal|0
 block|}
+block|,
+block|{
+literal|"dhpublicnumber"
+block|,
+literal|"X9.42 DH"
+block|,
+name|NID_dhpublicnumber
+block|,
+literal|7
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5973
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"brainpoolP160r1"
+block|,
+literal|"brainpoolP160r1"
+block|,
+name|NID_brainpoolP160r1
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5980
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"brainpoolP160t1"
+block|,
+literal|"brainpoolP160t1"
+block|,
+name|NID_brainpoolP160t1
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5989
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"brainpoolP192r1"
+block|,
+literal|"brainpoolP192r1"
+block|,
+name|NID_brainpoolP192r1
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|5998
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"brainpoolP192t1"
+block|,
+literal|"brainpoolP192t1"
+block|,
+name|NID_brainpoolP192t1
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6007
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"brainpoolP224r1"
+block|,
+literal|"brainpoolP224r1"
+block|,
+name|NID_brainpoolP224r1
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6016
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"brainpoolP224t1"
+block|,
+literal|"brainpoolP224t1"
+block|,
+name|NID_brainpoolP224t1
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6025
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"brainpoolP256r1"
+block|,
+literal|"brainpoolP256r1"
+block|,
+name|NID_brainpoolP256r1
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6034
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"brainpoolP256t1"
+block|,
+literal|"brainpoolP256t1"
+block|,
+name|NID_brainpoolP256t1
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6043
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"brainpoolP320r1"
+block|,
+literal|"brainpoolP320r1"
+block|,
+name|NID_brainpoolP320r1
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6052
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"brainpoolP320t1"
+block|,
+literal|"brainpoolP320t1"
+block|,
+name|NID_brainpoolP320t1
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6061
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"brainpoolP384r1"
+block|,
+literal|"brainpoolP384r1"
+block|,
+name|NID_brainpoolP384r1
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6070
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"brainpoolP384t1"
+block|,
+literal|"brainpoolP384t1"
+block|,
+name|NID_brainpoolP384t1
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6079
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"brainpoolP512r1"
+block|,
+literal|"brainpoolP512r1"
+block|,
+name|NID_brainpoolP512r1
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6088
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"brainpoolP512t1"
+block|,
+literal|"brainpoolP512t1"
+block|,
+name|NID_brainpoolP512t1
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6097
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"PSPECIFIED"
+block|,
+literal|"pSpecified"
+block|,
+name|NID_pSpecified
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6106
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"dhSinglePass-stdDH-sha1kdf-scheme"
+block|,
+literal|"dhSinglePass-stdDH-sha1kdf-scheme"
+block|,
+name|NID_dhSinglePass_stdDH_sha1kdf_scheme
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6115
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"dhSinglePass-stdDH-sha224kdf-scheme"
+block|,
+literal|"dhSinglePass-stdDH-sha224kdf-scheme"
+block|,
+name|NID_dhSinglePass_stdDH_sha224kdf_scheme
+block|,
+literal|6
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6124
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"dhSinglePass-stdDH-sha256kdf-scheme"
+block|,
+literal|"dhSinglePass-stdDH-sha256kdf-scheme"
+block|,
+name|NID_dhSinglePass_stdDH_sha256kdf_scheme
+block|,
+literal|6
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6130
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"dhSinglePass-stdDH-sha384kdf-scheme"
+block|,
+literal|"dhSinglePass-stdDH-sha384kdf-scheme"
+block|,
+name|NID_dhSinglePass_stdDH_sha384kdf_scheme
+block|,
+literal|6
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6136
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"dhSinglePass-stdDH-sha512kdf-scheme"
+block|,
+literal|"dhSinglePass-stdDH-sha512kdf-scheme"
+block|,
+name|NID_dhSinglePass_stdDH_sha512kdf_scheme
+block|,
+literal|6
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6142
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"dhSinglePass-cofactorDH-sha1kdf-scheme"
+block|,
+literal|"dhSinglePass-cofactorDH-sha1kdf-scheme"
+block|,
+name|NID_dhSinglePass_cofactorDH_sha1kdf_scheme
+block|,
+literal|9
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6148
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"dhSinglePass-cofactorDH-sha224kdf-scheme"
+block|,
+literal|"dhSinglePass-cofactorDH-sha224kdf-scheme"
+block|,
+name|NID_dhSinglePass_cofactorDH_sha224kdf_scheme
+block|,
+literal|6
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6157
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"dhSinglePass-cofactorDH-sha256kdf-scheme"
+block|,
+literal|"dhSinglePass-cofactorDH-sha256kdf-scheme"
+block|,
+name|NID_dhSinglePass_cofactorDH_sha256kdf_scheme
+block|,
+literal|6
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6163
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"dhSinglePass-cofactorDH-sha384kdf-scheme"
+block|,
+literal|"dhSinglePass-cofactorDH-sha384kdf-scheme"
+block|,
+name|NID_dhSinglePass_cofactorDH_sha384kdf_scheme
+block|,
+literal|6
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6169
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"dhSinglePass-cofactorDH-sha512kdf-scheme"
+block|,
+literal|"dhSinglePass-cofactorDH-sha512kdf-scheme"
+block|,
+name|NID_dhSinglePass_cofactorDH_sha512kdf_scheme
+block|,
+literal|6
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6175
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"dh-std-kdf"
+block|,
+literal|"dh-std-kdf"
+block|,
+name|NID_dh_std_kdf
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"dh-cofactor-kdf"
+block|,
+literal|"dh-cofactor-kdf"
+block|,
+name|NID_dh_cofactor_kdf
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"AES-128-CBC-HMAC-SHA256"
+block|,
+literal|"aes-128-cbc-hmac-sha256"
+block|,
+name|NID_aes_128_cbc_hmac_sha256
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"AES-192-CBC-HMAC-SHA256"
+block|,
+literal|"aes-192-cbc-hmac-sha256"
+block|,
+name|NID_aes_192_cbc_hmac_sha256
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"AES-256-CBC-HMAC-SHA256"
+block|,
+literal|"aes-256-cbc-hmac-sha256"
+block|,
+name|NID_aes_256_cbc_hmac_sha256
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"ct_precert_scts"
+block|,
+literal|"CT Precertificate SCTs"
+block|,
+name|NID_ct_precert_scts
+block|,
+literal|10
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6181
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"ct_precert_poison"
+block|,
+literal|"CT Precertificate Poison"
+block|,
+name|NID_ct_precert_poison
+block|,
+literal|10
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6191
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"ct_precert_signer"
+block|,
+literal|"CT Precertificate Signer"
+block|,
+name|NID_ct_precert_signer
+block|,
+literal|10
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6201
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"ct_cert_scts"
+block|,
+literal|"CT Certificate SCTs"
+block|,
+name|NID_ct_cert_scts
+block|,
+literal|10
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6211
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"jurisdictionL"
+block|,
+literal|"jurisdictionLocalityName"
+block|,
+name|NID_jurisdictionLocalityName
+block|,
+literal|11
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6221
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"jurisdictionST"
+block|,
+literal|"jurisdictionStateOrProvinceName"
+block|,
+name|NID_jurisdictionStateOrProvinceName
+block|,
+literal|11
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6232
+index|]
+operator|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"jurisdictionC"
+block|,
+literal|"jurisdictionCountryName"
+block|,
+name|NID_jurisdictionCountryName
+block|,
+literal|11
+block|,
+operator|&
+operator|(
+name|lvalues
+index|[
+literal|6243
+index|]
+operator|)
+block|,
+literal|0
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -30870,6 +32195,9 @@ comment|/* "AES-128-CBC" */
 literal|916
 block|,
 comment|/* "AES-128-CBC-HMAC-SHA1" */
+literal|948
+block|,
+comment|/* "AES-128-CBC-HMAC-SHA256" */
 literal|421
 block|,
 comment|/* "AES-128-CFB" */
@@ -30897,6 +32225,9 @@ comment|/* "AES-192-CBC" */
 literal|917
 block|,
 comment|/* "AES-192-CBC-HMAC-SHA1" */
+literal|949
+block|,
+comment|/* "AES-192-CBC-HMAC-SHA256" */
 literal|425
 block|,
 comment|/* "AES-192-CFB" */
@@ -30921,6 +32252,9 @@ comment|/* "AES-256-CBC" */
 literal|918
 block|,
 comment|/* "AES-256-CBC-HMAC-SHA1" */
+literal|950
+block|,
+comment|/* "AES-256-CBC-HMAC-SHA256" */
 literal|429
 block|,
 comment|/* "AES-256-CFB" */
@@ -31266,6 +32600,9 @@ comment|/* "PBMAC1" */
 literal|127
 block|,
 comment|/* "PKIX" */
+literal|935
+block|,
+comment|/* "PSPECIFIED" */
 literal|98
 block|,
 comment|/* "RC2-40-CBC" */
@@ -31494,6 +32831,48 @@ comment|/* "basicOCSPResponse" */
 literal|285
 block|,
 comment|/* "biometricInfo" */
+literal|921
+block|,
+comment|/* "brainpoolP160r1" */
+literal|922
+block|,
+comment|/* "brainpoolP160t1" */
+literal|923
+block|,
+comment|/* "brainpoolP192r1" */
+literal|924
+block|,
+comment|/* "brainpoolP192t1" */
+literal|925
+block|,
+comment|/* "brainpoolP224r1" */
+literal|926
+block|,
+comment|/* "brainpoolP224t1" */
+literal|927
+block|,
+comment|/* "brainpoolP256r1" */
+literal|928
+block|,
+comment|/* "brainpoolP256t1" */
+literal|929
+block|,
+comment|/* "brainpoolP320r1" */
+literal|930
+block|,
+comment|/* "brainpoolP320t1" */
+literal|931
+block|,
+comment|/* "brainpoolP384r1" */
+literal|932
+block|,
+comment|/* "brainpoolP384t1" */
+literal|933
+block|,
+comment|/* "brainpoolP512r1" */
+literal|934
+block|,
+comment|/* "brainpoolP512t1" */
 literal|494
 block|,
 comment|/* "buildingName" */
@@ -31629,6 +33008,18 @@ comment|/* "cryptocom" */
 literal|805
 block|,
 comment|/* "cryptopro" */
+literal|954
+block|,
+comment|/* "ct_cert_scts" */
+literal|952
+block|,
+comment|/* "ct_precert_poison" */
+literal|951
+block|,
+comment|/* "ct_precert_scts" */
+literal|953
+block|,
+comment|/* "ct_precert_signer" */
 literal|500
 block|,
 comment|/* "dITRedirect" */
@@ -31656,9 +33047,48 @@ comment|/* "description" */
 literal|871
 block|,
 comment|/* "destinationIndicator" */
+literal|947
+block|,
+comment|/* "dh-cofactor-kdf" */
+literal|946
+block|,
+comment|/* "dh-std-kdf" */
 literal|28
 block|,
 comment|/* "dhKeyAgreement" */
+literal|941
+block|,
+comment|/* "dhSinglePass-cofactorDH-sha1kdf-scheme" */
+literal|942
+block|,
+comment|/* "dhSinglePass-cofactorDH-sha224kdf-scheme" */
+literal|943
+block|,
+comment|/* "dhSinglePass-cofactorDH-sha256kdf-scheme" */
+literal|944
+block|,
+comment|/* "dhSinglePass-cofactorDH-sha384kdf-scheme" */
+literal|945
+block|,
+comment|/* "dhSinglePass-cofactorDH-sha512kdf-scheme" */
+literal|936
+block|,
+comment|/* "dhSinglePass-stdDH-sha1kdf-scheme" */
+literal|937
+block|,
+comment|/* "dhSinglePass-stdDH-sha224kdf-scheme" */
+literal|938
+block|,
+comment|/* "dhSinglePass-stdDH-sha256kdf-scheme" */
+literal|939
+block|,
+comment|/* "dhSinglePass-stdDH-sha384kdf-scheme" */
+literal|940
+block|,
+comment|/* "dhSinglePass-stdDH-sha512kdf-scheme" */
+literal|920
+block|,
+comment|/* "dhpublicnumber" */
 literal|382
 block|,
 comment|/* "directory" */
@@ -32589,6 +34019,15 @@ comment|/* "issuingDistributionPoint" */
 literal|492
 block|,
 comment|/* "janetMailbox" */
+literal|957
+block|,
+comment|/* "jurisdictionC" */
+literal|955
+block|,
+comment|/* "jurisdictionL" */
+literal|956
+block|,
+comment|/* "jurisdictionST" */
 literal|150
 block|,
 comment|/* "keyBag" */
@@ -33645,6 +35084,18 @@ comment|/* "CA Issuers" */
 literal|785
 block|,
 comment|/* "CA Repository" */
+literal|954
+block|,
+comment|/* "CT Certificate SCTs" */
+literal|952
+block|,
+comment|/* "CT Precertificate Poison" */
+literal|951
+block|,
+comment|/* "CT Precertificate SCTs" */
+literal|953
+block|,
+comment|/* "CT Precertificate Signer" */
 literal|131
 block|,
 comment|/* "Code Signing" */
@@ -34014,6 +35465,9 @@ comment|/* "X509v3 Subject Directory Attributes" */
 literal|82
 block|,
 comment|/* "X509v3 Subject Key Identifier" */
+literal|920
+block|,
+comment|/* "X9.42 DH" */
 literal|184
 block|,
 comment|/* "X9.57" */
@@ -34050,6 +35504,9 @@ comment|/* "aes-128-cbc" */
 literal|916
 block|,
 comment|/* "aes-128-cbc-hmac-sha1" */
+literal|948
+block|,
+comment|/* "aes-128-cbc-hmac-sha256" */
 literal|896
 block|,
 comment|/* "aes-128-ccm" */
@@ -34083,6 +35540,9 @@ comment|/* "aes-192-cbc" */
 literal|917
 block|,
 comment|/* "aes-192-cbc-hmac-sha1" */
+literal|949
+block|,
+comment|/* "aes-192-cbc-hmac-sha256" */
 literal|899
 block|,
 comment|/* "aes-192-ccm" */
@@ -34113,6 +35573,9 @@ comment|/* "aes-256-cbc" */
 literal|918
 block|,
 comment|/* "aes-256-cbc-hmac-sha1" */
+literal|950
+block|,
+comment|/* "aes-256-cbc-hmac-sha256" */
 literal|902
 block|,
 comment|/* "aes-256-ccm" */
@@ -34167,6 +35630,48 @@ comment|/* "bf-ecb" */
 literal|94
 block|,
 comment|/* "bf-ofb" */
+literal|921
+block|,
+comment|/* "brainpoolP160r1" */
+literal|922
+block|,
+comment|/* "brainpoolP160t1" */
+literal|923
+block|,
+comment|/* "brainpoolP192r1" */
+literal|924
+block|,
+comment|/* "brainpoolP192t1" */
+literal|925
+block|,
+comment|/* "brainpoolP224r1" */
+literal|926
+block|,
+comment|/* "brainpoolP224t1" */
+literal|927
+block|,
+comment|/* "brainpoolP256r1" */
+literal|928
+block|,
+comment|/* "brainpoolP256t1" */
+literal|929
+block|,
+comment|/* "brainpoolP320r1" */
+literal|930
+block|,
+comment|/* "brainpoolP320t1" */
+literal|931
+block|,
+comment|/* "brainpoolP384r1" */
+literal|932
+block|,
+comment|/* "brainpoolP384t1" */
+literal|933
+block|,
+comment|/* "brainpoolP512r1" */
+literal|934
+block|,
+comment|/* "brainpoolP512t1" */
 literal|494
 block|,
 comment|/* "buildingName" */
@@ -34440,9 +35945,45 @@ comment|/* "destinationIndicator" */
 literal|80
 block|,
 comment|/* "desx-cbc" */
+literal|947
+block|,
+comment|/* "dh-cofactor-kdf" */
+literal|946
+block|,
+comment|/* "dh-std-kdf" */
 literal|28
 block|,
 comment|/* "dhKeyAgreement" */
+literal|941
+block|,
+comment|/* "dhSinglePass-cofactorDH-sha1kdf-scheme" */
+literal|942
+block|,
+comment|/* "dhSinglePass-cofactorDH-sha224kdf-scheme" */
+literal|943
+block|,
+comment|/* "dhSinglePass-cofactorDH-sha256kdf-scheme" */
+literal|944
+block|,
+comment|/* "dhSinglePass-cofactorDH-sha384kdf-scheme" */
+literal|945
+block|,
+comment|/* "dhSinglePass-cofactorDH-sha512kdf-scheme" */
+literal|936
+block|,
+comment|/* "dhSinglePass-stdDH-sha1kdf-scheme" */
+literal|937
+block|,
+comment|/* "dhSinglePass-stdDH-sha224kdf-scheme" */
+literal|938
+block|,
+comment|/* "dhSinglePass-stdDH-sha256kdf-scheme" */
+literal|939
+block|,
+comment|/* "dhSinglePass-stdDH-sha384kdf-scheme" */
+literal|940
+block|,
+comment|/* "dhSinglePass-stdDH-sha512kdf-scheme" */
 literal|11
 block|,
 comment|/* "directory services (X.500)" */
@@ -35304,6 +36845,15 @@ comment|/* "janetMailbox" */
 literal|646
 block|,
 comment|/* "joint-iso-itu-t" */
+literal|957
+block|,
+comment|/* "jurisdictionCountryName" */
+literal|955
+block|,
+comment|/* "jurisdictionLocalityName" */
+literal|956
+block|,
+comment|/* "jurisdictionStateOrProvinceName" */
 literal|150
 block|,
 comment|/* "keyBag" */
@@ -35412,6 +36962,9 @@ comment|/* "otherMailbox" */
 literal|876
 block|,
 comment|/* "owner" */
+literal|935
+block|,
+comment|/* "pSpecified" */
 literal|489
 block|,
 comment|/* "pagerTelephoneNumber" */
@@ -37347,6 +38900,30 @@ comment|/* OBJ_mime_mhs_bodies              1 3 6 1 7 1 2 */
 literal|119
 block|,
 comment|/* OBJ_ripemd160WithRSA             1 3 36 3 3 1 2 */
+literal|937
+block|,
+comment|/* OBJ_dhSinglePass_stdDH_sha224kdf_scheme 1 3 132 1 11 0 */
+literal|938
+block|,
+comment|/* OBJ_dhSinglePass_stdDH_sha256kdf_scheme 1 3 132 1 11 1 */
+literal|939
+block|,
+comment|/* OBJ_dhSinglePass_stdDH_sha384kdf_scheme 1 3 132 1 11 2 */
+literal|940
+block|,
+comment|/* OBJ_dhSinglePass_stdDH_sha512kdf_scheme 1 3 132 1 11 3 */
+literal|942
+block|,
+comment|/* OBJ_dhSinglePass_cofactorDH_sha224kdf_scheme 1 3 132 1 14 0 */
+literal|943
+block|,
+comment|/* OBJ_dhSinglePass_cofactorDH_sha256kdf_scheme 1 3 132 1 14 1 */
+literal|944
+block|,
+comment|/* OBJ_dhSinglePass_cofactorDH_sha384kdf_scheme 1 3 132 1 14 2 */
+literal|945
+block|,
+comment|/* OBJ_dhSinglePass_cofactorDH_sha512kdf_scheme 1 3 132 1 14 3 */
 literal|631
 block|,
 comment|/* OBJ_setAttr_GenCryptgrm          2 23 42 3 3 3 1 */
@@ -37491,6 +39068,9 @@ comment|/* OBJ_ecdsa_with_Recommended       1 2 840 10045 4 2 */
 literal|792
 block|,
 comment|/* OBJ_ecdsa_with_Specified         1 2 840 10045 4 3 */
+literal|920
+block|,
+comment|/* OBJ_dhpublicnumber               1 2 840 10046 2 1 */
 literal|258
 block|,
 comment|/* OBJ_id_pkix_mod                  1 3 6 1 5 5 7 0 */
@@ -38142,6 +39722,9 @@ comment|/* OBJ_rsaesOaep                    1 2 840 113549 1 1 7 */
 literal|911
 block|,
 comment|/* OBJ_mgf1                         1 2 840 113549 1 1 8 */
+literal|935
+block|,
+comment|/* OBJ_pSpecified                   1 2 840 113549 1 1 9 */
 literal|912
 block|,
 comment|/* OBJ_rsassaPss                    1 2 840 113549 1 1 10 */
@@ -38325,6 +39908,54 @@ comment|/* OBJ_id_pkix_OCSP_path            1 3 6 1 5 5 7 48 1 10 */
 literal|375
 block|,
 comment|/* OBJ_id_pkix_OCSP_trustRoot       1 3 6 1 5 5 7 48 1 11 */
+literal|921
+block|,
+comment|/* OBJ_brainpoolP160r1              1 3 36 3 3 2 8 1 1 1 */
+literal|922
+block|,
+comment|/* OBJ_brainpoolP160t1              1 3 36 3 3 2 8 1 1 2 */
+literal|923
+block|,
+comment|/* OBJ_brainpoolP192r1              1 3 36 3 3 2 8 1 1 3 */
+literal|924
+block|,
+comment|/* OBJ_brainpoolP192t1              1 3 36 3 3 2 8 1 1 4 */
+literal|925
+block|,
+comment|/* OBJ_brainpoolP224r1              1 3 36 3 3 2 8 1 1 5 */
+literal|926
+block|,
+comment|/* OBJ_brainpoolP224t1              1 3 36 3 3 2 8 1 1 6 */
+literal|927
+block|,
+comment|/* OBJ_brainpoolP256r1              1 3 36 3 3 2 8 1 1 7 */
+literal|928
+block|,
+comment|/* OBJ_brainpoolP256t1              1 3 36 3 3 2 8 1 1 8 */
+literal|929
+block|,
+comment|/* OBJ_brainpoolP320r1              1 3 36 3 3 2 8 1 1 9 */
+literal|930
+block|,
+comment|/* OBJ_brainpoolP320t1              1 3 36 3 3 2 8 1 1 10 */
+literal|931
+block|,
+comment|/* OBJ_brainpoolP384r1              1 3 36 3 3 2 8 1 1 11 */
+literal|932
+block|,
+comment|/* OBJ_brainpoolP384t1              1 3 36 3 3 2 8 1 1 12 */
+literal|933
+block|,
+comment|/* OBJ_brainpoolP512r1              1 3 36 3 3 2 8 1 1 13 */
+literal|934
+block|,
+comment|/* OBJ_brainpoolP512t1              1 3 36 3 3 2 8 1 1 14 */
+literal|936
+block|,
+comment|/* OBJ_dhSinglePass_stdDH_sha1kdf_scheme 1 3 133 16 840 63 0 2 */
+literal|941
+block|,
+comment|/* OBJ_dhSinglePass_cofactorDH_sha1kdf_scheme 1 3 133 16 840 63 0 3 */
 literal|418
 block|,
 comment|/* OBJ_aes_128_ecb                  2 16 840 1 101 3 4 1 1 */
@@ -38706,6 +40337,18 @@ comment|/* OBJ_ms_smartcard_login           1 3 6 1 4 1 311 20 2 2 */
 literal|649
 block|,
 comment|/* OBJ_ms_upn                       1 3 6 1 4 1 311 20 2 3 */
+literal|951
+block|,
+comment|/* OBJ_ct_precert_scts              1 3 6 1 4 1 11129 2 4 2 */
+literal|952
+block|,
+comment|/* OBJ_ct_precert_poison            1 3 6 1 4 1 11129 2 4 3 */
+literal|953
+block|,
+comment|/* OBJ_ct_precert_signer            1 3 6 1 4 1 11129 2 4 4 */
+literal|954
+block|,
+comment|/* OBJ_ct_cert_scts                 1 3 6 1 4 1 11129 2 4 5 */
 literal|751
 block|,
 comment|/* OBJ_camellia_128_cbc             1 2 392 200011 61 1 1 1 2 */
@@ -38940,6 +40583,15 @@ comment|/* OBJ_safeContentsBag              1 2 840 113549 1 12 10 1 6 */
 literal|34
 block|,
 comment|/* OBJ_idea_cbc                     1 3 6 1 4 1 188 7 1 1 2 */
+literal|955
+block|,
+comment|/* OBJ_jurisdictionLocalityName     1 3 6 1 4 1 311 60 2 1 1 */
+literal|956
+block|,
+comment|/* OBJ_jurisdictionStateOrProvinceName 1 3 6 1 4 1 311 60 2 1 2 */
+literal|957
+block|,
+comment|/* OBJ_jurisdictionCountryName      1 3 6 1 4 1 311 60 2 1 3 */
 block|}
 decl_stmt|;
 end_decl_stmt
