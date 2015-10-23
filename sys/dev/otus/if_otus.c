@@ -11452,7 +11452,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3b2c
+name|AR_MAC_REG_TID_CFACK_CFEND_RATE
 argument_list|,
 literal|0x19000000
 argument_list|)
@@ -11462,7 +11462,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3b38
+name|AR_MAC_REG_TXOP_DURATION
 argument_list|,
 literal|0x201
 argument_list|)
@@ -11490,7 +11490,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3b9c
+name|AR_MAC_REG_AMPDU_FACTOR
 argument_list|,
 literal|0x10000a
 argument_list|)
@@ -11500,7 +11500,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c368c
+name|AR_MAC_REG_FRAMETYPE_FILTER
 argument_list|,
 literal|0x0500ffff
 argument_list|)
@@ -11509,7 +11509,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3c40
+name|AR_MAC_REG_RX_CONTROL
 argument_list|,
 literal|0x1
 argument_list|)
@@ -11545,7 +11545,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3694
+name|AR_MAC_REG_ACK_TPC
 argument_list|,
 literal|0x4003c1e
 argument_list|)
@@ -11555,7 +11555,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1d0100
+name|AR_GPIO_REG_PORT_TYPE
 argument_list|,
 literal|0x3
 argument_list|)
@@ -11564,7 +11564,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1d0104
+name|AR_GPIO_REG_PORT_DATA
 argument_list|,
 literal|0x3
 argument_list|)
@@ -11583,7 +11583,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3c50
+name|AR_MAC_REG_AMPDU_RX_THRESH
 argument_list|,
 literal|0xffff
 argument_list|)
@@ -11592,7 +11592,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3680
+name|AR_MAC_REG_MISC_680
 argument_list|,
 literal|0xf00008
 argument_list|)
@@ -11602,7 +11602,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c362c
+name|AR_MAC_REG_RX_TIMEOUT
 argument_list|,
 literal|0
 argument_list|)
@@ -11632,7 +11632,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1d4008
+name|AR_PWR_REG_CLOCK_SEL
 argument_list|,
 literal|0x73
 argument_list|)
@@ -11642,7 +11642,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3d7c
+name|AR_MAC_REG_TXRX_MPI
 argument_list|,
 literal|0x110011
 argument_list|)
@@ -11651,7 +11651,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3bb0
+name|AR_MAC_REG_FCS_SELECT
 argument_list|,
 literal|0x4
 argument_list|)
@@ -11670,7 +11670,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3678
+name|AR_MAC_REG_ENCRYPTION
 argument_list|,
 literal|0x78
 argument_list|)
@@ -12671,7 +12671,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1d4014
+name|AR_PWR_REG_PLL_ADDAC
 argument_list|,
 literal|0x5163
 argument_list|)
@@ -12681,7 +12681,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1d4014
+name|AR_PWR_REG_PLL_ADDAC
 argument_list|,
 literal|0x5143
 argument_list|)
@@ -13336,7 +13336,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1d4004
+name|AR_PWR_REG_RESET
 argument_list|,
 name|sc
 operator|->
@@ -13367,7 +13367,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1d4004
+name|AR_PWR_REG_RESET
 argument_list|,
 literal|0
 argument_list|)
@@ -14850,7 +14850,7 @@ block|else 			state = AR_LED1_ON;
 comment|/* 5GHz=>Blue. */
 block|} else {
 comment|/* Scanning, blink LED. */
-block|state ^= AR_LED0_ON | AR_LED1_ON; 		if (IEEE80211_IS_CHAN_2GHZ(sc->sc_curchan)) 			state&= ~AR_LED1_ON; 		else 			state&= ~AR_LED0_ON; 	} 	if (state != sc->led_state) { 		otus_write(sc, 0x1d0104, state); 		if (otus_write_barrier(sc) == 0) 			sc->led_state = state; 	}
+block|state ^= AR_LED0_ON | AR_LED1_ON; 		if (IEEE80211_IS_CHAN_2GHZ(sc->sc_curchan)) 			state&= ~AR_LED1_ON; 		else 			state&= ~AR_LED0_ON; 	} 	if (state != sc->led_state) { 		otus_write(sc, AR_GPIO_REG_PORT_DATA, state); 		if (otus_write_barrier(sc) == 0) 			sc->led_state = state; 	}
 endif|#
 directive|endif
 block|}
@@ -14952,12 +14952,12 @@ name|notyet
 ifndef|#
 directive|ifndef
 name|IEEE80211_STA_ONLY
-block|case IEEE80211_M_HOSTAP: 		otus_write(sc, 0x1c3700, 0x0f0000a1); 		otus_write(sc, 0x1c3c40, 0x1); 		break; 	case IEEE80211_M_IBSS: 		otus_write(sc, 0x1c3700, 0x0f000000); 		otus_write(sc, 0x1c3c40, 0x1); 		break;
+block|case IEEE80211_M_HOSTAP: 		otus_write(sc, AR_MAC_REG_CAM_MODE, 0x0f0000a1); 		otus_write(sc, AR_MAC_REG_RX_CONTROL, 0x1); 		break; 	case IEEE80211_M_IBSS: 		otus_write(sc, AR_MAC_REG_CAM_MODE, 0x0f000000); 		otus_write(sc, AR_MAC_REG_RX_CONTROL, 0x1); 		break;
 endif|#
 directive|endif
 endif|#
 directive|endif
-block|case IEEE80211_M_STA: 		otus_write(sc, 0x1c3700, 0x0f000002); 		otus_write(sc, 0x1c3c40, 0x1); 		break; 	default: 		break; 	}
+block|case IEEE80211_M_STA: 		otus_write(sc, AR_MAC_REG_CAM_MODE, 0x0f000002); 		otus_write(sc, AR_MAC_REG_RX_CONTROL, 0x1); 		break; 	default: 		break; 	}
 endif|#
 directive|endif
 switch|switch
@@ -14974,7 +14974,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3700
+name|AR_MAC_REG_CAM_MODE
 argument_list|,
 literal|0x0f000002
 argument_list|)
@@ -14983,11 +14983,12 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3c40
+name|AR_MAC_REG_RX_CONTROL
 argument_list|,
 literal|0x1
 argument_list|)
 expr_stmt|;
+comment|/* XXX set frametype filter? */
 break|break;
 case|case
 name|IEEE80211_M_MONITOR
@@ -14996,7 +14997,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c368c
+name|AR_MAC_REG_FRAMETYPE_FILTER
 argument_list|,
 literal|0xffffffff
 argument_list|)
@@ -15085,7 +15086,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3d30
+name|AR_MAC_REG_DMA_TRIGGER
 argument_list|,
 literal|0x100
 argument_list|)
@@ -15214,7 +15215,7 @@ name|otus_write
 argument_list|(
 name|sc
 argument_list|,
-literal|0x1c3d30
+name|AR_MAC_REG_DMA_TRIGGER
 argument_list|,
 literal|0
 argument_list|)
