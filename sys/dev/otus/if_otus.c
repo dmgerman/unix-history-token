@@ -6304,6 +6304,11 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 break|break;
