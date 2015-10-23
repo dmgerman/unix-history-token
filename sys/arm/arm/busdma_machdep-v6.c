@@ -4987,7 +4987,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Utility function to load a linear buffer.  segp contains  * the starting segment on entrace, and the ending segment on exit.  */
+comment|/*  * Utility function to load a linear buffer.  segp contains  * the starting segment on entrance, and the ending segment on exit.  */
 end_comment
 
 begin_function

@@ -251,6 +251,11 @@ name|void
 modifier|*
 name|lockfuncarg
 decl_stmt|;
+name|struct
+name|bounce_zone
+modifier|*
+name|bounce_zone
+decl_stmt|;
 comment|/* 	 * DMA range for this tag.  If the page doesn't fall within 	 * one of these ranges, an error is returned.  The caller 	 * may then decide what to do with the transfer.  If the 	 * range pointer is NULL, it is ignored. 	 */
 name|struct
 name|arm32_dma_range
@@ -259,11 +264,6 @@ name|ranges
 decl_stmt|;
 name|int
 name|_nranges
-decl_stmt|;
-name|struct
-name|bounce_zone
-modifier|*
-name|bounce_zone
 decl_stmt|;
 comment|/* 	 * Most tags need one or two segments, and can use the local tagsegs 	 * array.  For tags with a larger limit, we'll allocate a bigger array 	 * on first use. 	 */
 name|bus_dma_segment_t
@@ -491,20 +491,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|DMAMAP_COHERENT
-value|0x8
-end_define
-
-begin_define
-define|#
-directive|define
-name|DMAMAP_CACHE_ALIGNED
-value|0x10
-end_define
-
 begin_struct
 struct|struct
 name|bus_dmamap
@@ -526,15 +512,6 @@ name|struct
 name|memdesc
 name|mem
 decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-name|STAILQ_ENTRY
-argument_list|(
-argument|bus_dmamap
-argument_list|)
-name|links
-expr_stmt|;
 name|bus_dmamap_callback_t
 modifier|*
 name|callback
@@ -543,6 +520,23 @@ name|void
 modifier|*
 name|callback_arg
 decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|DMAMAP_COHERENT
+value|0x8
+define|#
+directive|define
+name|DMAMAP_CACHE_ALIGNED
+value|0x10
+name|STAILQ_ENTRY
+argument_list|(
+argument|bus_dmamap
+argument_list|)
+name|links
+expr_stmt|;
 name|int
 name|sync_count
 decl_stmt|;
@@ -1812,7 +1806,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/*                          * Short circuit looking at our parent directly                          * since we have encapsulated all of its information                          */
+comment|/* 			 * Short circuit looking at our parent directly 			 * since we have encapsulated all of its information 			 */
 name|newtag
 operator|->
 name|filter
@@ -2159,7 +2153,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-comment|/*                                  * Last reference count, so                                  * release our reference                                  * count on our parent.                                  */
+comment|/* 				 * Last reference count, so 				 * release our reference 				 * count on our parent. 				 */
 name|dmat
 operator|=
 name|parent
@@ -5059,7 +5053,6 @@ name|sync_count
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6449,7 +6442,7 @@ name|total_bounced
 argument_list|,
 literal|0
 argument_list|,
-literal|"Total bounce requests"
+literal|"Total bounce requests (pages bounced)"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_INT
@@ -7310,11 +7303,9 @@ name|map
 operator|->
 name|dmat
 expr_stmt|;
-call|(
 name|dmat
 operator|->
 name|lockfunc
-call|)
 argument_list|(
 name|dmat
 operator|->
@@ -7347,11 +7338,9 @@ argument_list|,
 name|BUS_DMA_WAITOK
 argument_list|)
 expr_stmt|;
-call|(
 name|dmat
 operator|->
 name|lockfunc
-call|)
 argument_list|(
 name|dmat
 operator|->
