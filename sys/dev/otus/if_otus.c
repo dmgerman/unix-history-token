@@ -1125,6 +1125,11 @@ parameter_list|,
 name|struct
 name|otus_data
 modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_bpf_params
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2959,6 +2964,8 @@ argument_list|,
 name|m
 argument_list|,
 name|bf
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 literal|0
@@ -3145,7 +3152,6 @@ goto|goto
 name|error
 goto|;
 block|}
-comment|/* 	 * XXX TODO: support TX bpf params 	 */
 if|if
 condition|(
 name|otus_tx
@@ -3157,6 +3163,8 @@ argument_list|,
 name|m
 argument_list|,
 name|bf
+argument_list|,
+name|params
 argument_list|)
 operator|!=
 literal|0
@@ -9991,7 +9999,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX TODO: support tx bpf parameters for configuration!  */
+comment|/*  * XXX TODO: support tx bpf parameters for configuration!  *  * Relevant pieces:  *  * ac = params->ibp_pri& 3;  * rate = params->ibp_rate0;  * params->ibp_flags& IEEE80211_BPF_NOACK  * params->ibp_flags& IEEE80211_BPF_RTS  * params->ibp_flags& IEEE80211_BPF_CTS  * tx->rts_ntries = params->ibp_try1;  * tx->data_ntries = params->ibp_try0;  */
 end_comment
 
 begin_function
@@ -10018,6 +10026,12 @@ name|struct
 name|otus_data
 modifier|*
 name|data
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_bpf_params
+modifier|*
+name|params
 parameter_list|)
 block|{
 name|struct
@@ -10247,6 +10261,26 @@ block|}
 comment|/* Pickup a rate index. */
 if|if
 condition|(
+name|params
+operator|!=
+name|NULL
+condition|)
+block|{
+name|rate
+operator|=
+name|otus_rate_to_hw_rate
+argument_list|(
+name|sc
+argument_list|,
+name|params
+operator|->
+name|ibp_rate0
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|IEEE80211_IS_MULTICAST
 argument_list|(
 name|wh
@@ -10341,6 +10375,7 @@ argument_list|(
 name|qid
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX TODO: params for NOACK, ACK, RTS, CTS, etc 	 */
 if|if
 condition|(
 name|IEEE80211_IS_MULTICAST
@@ -10608,16 +10643,15 @@ name|m
 argument_list|,
 name|data
 argument_list|,
+name|le16toh
+argument_list|(
 name|head
 operator|->
 name|len
+argument_list|)
 argument_list|,
-name|head
-operator|->
 name|macctl
 argument_list|,
-name|head
-operator|->
 name|phyctl
 argument_list|,
 operator|(
