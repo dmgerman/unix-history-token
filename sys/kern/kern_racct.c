@@ -2308,7 +2308,7 @@ modifier|*
 name|racctp
 parameter_list|)
 block|{
-name|SDT_PROBE
+name|SDT_PROBE1
 argument_list|(
 name|racct
 argument_list|,
@@ -2319,14 +2319,6 @@ argument_list|,
 name|create
 argument_list|,
 name|racctp
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -2376,7 +2368,7 @@ name|racct
 modifier|*
 name|racct
 decl_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE1
 argument_list|(
 name|racct
 argument_list|,
@@ -2387,14 +2379,6 @@ argument_list|,
 name|destroy
 argument_list|,
 name|racctp
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_assert
@@ -2690,7 +2674,7 @@ name|error
 decl_stmt|;
 endif|#
 directive|endif
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|racct
 argument_list|,
@@ -2705,10 +2689,6 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We need proc lock to dereference p->p_ucred. 	 */
@@ -2743,7 +2723,7 @@ name|resource
 argument_list|)
 condition|)
 block|{
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|racct
 argument_list|,
@@ -2758,10 +2738,6 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2878,7 +2854,7 @@ name|prison
 modifier|*
 name|pr
 decl_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|racct
 argument_list|,
@@ -2893,10 +2869,6 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|racct_alloc_resource
@@ -3023,7 +2995,7 @@ name|uint64_t
 name|amount
 parameter_list|)
 block|{
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|racct
 argument_list|,
@@ -3038,10 +3010,6 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We need proc lock to dereference p->p_ucred. 	 */
@@ -3124,7 +3092,7 @@ name|error
 decl_stmt|;
 endif|#
 directive|endif
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|racct
 argument_list|,
@@ -3139,10 +3107,6 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We need proc lock to dereference p->p_ucred. 	 */
@@ -3256,7 +3220,7 @@ name|resource
 argument_list|)
 condition|)
 block|{
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|racct
 argument_list|,
@@ -3271,10 +3235,6 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -3422,7 +3382,7 @@ name|diff_proc
 decl_stmt|,
 name|diff_cred
 decl_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|racct
 argument_list|,
@@ -3437,10 +3397,6 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We need proc lock to dereference p->p_ucred. 	 */
@@ -3730,7 +3686,7 @@ name|uint64_t
 name|amount
 parameter_list|)
 block|{
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|racct
 argument_list|,
@@ -3745,10 +3701,6 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We need proc lock to dereference p->p_ucred. 	 */
@@ -3880,7 +3832,7 @@ name|prison
 modifier|*
 name|pr
 decl_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|racct
 argument_list|,
@@ -3895,10 +3847,6 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 ifdef|#

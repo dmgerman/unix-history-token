@@ -1053,7 +1053,7 @@ operator|*
 operator|)
 name|mem
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE4
 argument_list|(
 name|proc
 argument_list|,
@@ -1070,8 +1070,6 @@ argument_list|,
 name|arg
 argument_list|,
 name|flags
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_INVOKE
@@ -1081,7 +1079,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE4
 argument_list|(
 argument|proc
 argument_list|,
@@ -1098,8 +1096,6 @@ argument_list|,
 argument|arg
 argument_list|,
 argument|flags
-argument_list|,
-literal|0
 argument_list|)
 empty_stmt|;
 return|return
@@ -1158,7 +1154,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE4
 argument_list|(
 name|proc
 argument_list|,
@@ -1175,8 +1171,6 @@ argument_list|,
 name|arg
 argument_list|,
 name|td
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1258,7 +1252,7 @@ literal|"SIGCHLD queue"
 operator|)
 argument_list|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 argument|proc
 argument_list|,
@@ -1273,10 +1267,6 @@ argument_list|,
 argument|size
 argument_list|,
 argument|arg
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 empty_stmt|;
 block|}
@@ -1316,7 +1306,7 @@ operator|*
 operator|)
 name|mem
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|proc
 argument_list|,
@@ -1331,10 +1321,6 @@ argument_list|,
 name|size
 argument_list|,
 name|flags
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|p
@@ -1441,7 +1427,7 @@ operator|=
 name|pstats_alloc
 argument_list|()
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 argument|proc
 argument_list|,
@@ -1456,10 +1442,6 @@ argument_list|,
 argument|size
 argument_list|,
 argument|flags
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 empty_stmt|;
 return|return

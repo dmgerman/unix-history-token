@@ -6554,7 +6554,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|SDT_PROBE
+name|SDT_PROBE2
 argument_list|(
 name|proc
 argument_list|,
@@ -6565,12 +6565,6 @@ argument_list|,
 name|sig
 argument_list|,
 name|ksi
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -10727,7 +10721,7 @@ operator|->
 name|td_sigqueue
 expr_stmt|;
 block|}
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|proc
 argument_list|,
@@ -10740,10 +10734,6 @@ argument_list|,
 name|p
 argument_list|,
 name|sig
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the signal is being ignored, 	 * then we forget about it immediately. 	 * (Note: we don't set SIGCONT in ps_sigignore, 	 * and if it is set to SIG_IGN, 	 * action will be SIG_DFL here.) 	 */
@@ -10767,7 +10757,7 @@ name|sig
 argument_list|)
 condition|)
 block|{
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|proc
 argument_list|,
@@ -10780,10 +10770,6 @@ argument_list|,
 name|p
 argument_list|,
 name|sig
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_unlock

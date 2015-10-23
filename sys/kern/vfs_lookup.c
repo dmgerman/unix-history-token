@@ -1122,7 +1122,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|vfs
 argument_list|,
@@ -1141,10 +1141,6 @@ argument_list|,
 name|cnp
 operator|->
 name|cn_flags
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|vfslocked
@@ -1292,7 +1288,7 @@ argument_list|(
 name|cnp
 argument_list|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE2
 argument_list|(
 argument|vfs
 argument_list|,
@@ -1305,12 +1301,6 @@ argument_list|,
 argument|error
 argument_list|,
 argument|NULL
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 empty_stmt|;
 return|return
@@ -1418,7 +1408,7 @@ name|cn_flags
 operator||=
 name|GIANTHELD
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE2
 argument_list|(
 argument|vfs
 argument_list|,
@@ -1431,12 +1421,6 @@ argument_list|,
 literal|0
 argument_list|,
 argument|ndp->ni_vp
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 empty_stmt|;
 return|return
@@ -1783,7 +1767,7 @@ argument_list|(
 name|vfslocked
 argument_list|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE2
 argument_list|(
 argument|vfs
 argument_list|,
@@ -1796,12 +1780,6 @@ argument_list|,
 argument|error
 argument_list|,
 argument|NULL
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 empty_stmt|;
 return|return
