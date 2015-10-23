@@ -143,12 +143,6 @@ directive|include
 file|"zfeature_common.h"
 end_include
 
-begin_decl_stmt
-name|int
-name|aok
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|libzfs_errno
