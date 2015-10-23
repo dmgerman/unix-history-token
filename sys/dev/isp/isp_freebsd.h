@@ -2970,13 +2970,6 @@ name|isp_quickboot_time
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|isp_autoconfig
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Platform private flags  */
 end_comment
