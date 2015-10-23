@@ -153,7 +153,7 @@ parameter_list|(
 name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|uint32_t
+name|uint16_t
 modifier|*
 parameter_list|,
 name|uint16_t
