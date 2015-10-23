@@ -1146,7 +1146,7 @@ value|((entry)->phys_addr)
 end_define
 
 begin_comment
-comment|/*  * PHYS_TO_VM_PAGE() Returns the vm_page_t object that represents a memory  * page to which the given physical address belongs. The correct vm_page_t  * object is returned for addresses that are not page-aligned.  */
+comment|/*  * PHYS_TO_VM_PAGE() returns the vm_page_t object that represents a memory  * page to which the given physical address belongs. The correct vm_page_t  * object is returned for addresses that are not page-aligned.  */
 end_comment
 
 begin_function_decl
