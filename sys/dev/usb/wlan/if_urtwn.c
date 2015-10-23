@@ -8784,6 +8784,9 @@ name|enum
 name|ieee80211_state
 name|ostate
 decl_stmt|;
+name|uint32_t
+name|reg
+decl_stmt|;
 name|ostate
 operator|=
 name|vap
