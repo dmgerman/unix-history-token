@@ -5377,6 +5377,12 @@ literal|2
 index|]
 decl_stmt|;
 name|uint8_t
+name|chan
+decl_stmt|;
+name|uint8_t
+name|reserved1
+decl_stmt|;
+name|uint8_t
 name|sig_qual
 decl_stmt|;
 name|uint8_t
@@ -5386,7 +5392,7 @@ name|uint8_t
 name|rpt_b
 decl_stmt|;
 name|uint8_t
-name|reserved1
+name|reserved2
 decl_stmt|;
 name|uint8_t
 name|noise_power
@@ -5419,7 +5425,7 @@ name|uint8_t
 name|noise_power_db_lsb
 decl_stmt|;
 name|uint8_t
-name|reserved2
+name|reserved3
 index|[
 literal|3
 index|]
@@ -5438,12 +5444,6 @@ index|]
 decl_stmt|;
 name|uint8_t
 name|sig_evm
-decl_stmt|;
-name|uint8_t
-name|reserved3
-decl_stmt|;
-name|uint8_t
-name|reserved4
 decl_stmt|;
 block|}
 name|__packed

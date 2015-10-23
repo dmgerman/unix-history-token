@@ -358,16 +358,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|URTWN_RSSI
-parameter_list|(
-name|r
-parameter_list|)
-value|(r) - 110
-end_define
-
-begin_define
-define|#
-directive|define
 name|IEEE80211_HAS_ADDR4
 parameter_list|(
 name|wh
@@ -3858,14 +3848,6 @@ argument_list|,
 name|rssi
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Convert the RSSI to a range that will be accepted 		 * by net80211. 		 */
-name|rssi
-operator|=
-name|URTWN_RSSI
-argument_list|(
-name|rssi
-argument_list|)
-expr_stmt|;
 block|}
 name|m
 operator|=
@@ -4674,6 +4656,8 @@ argument_list|,
 name|m
 argument_list|,
 name|rssi
+operator|-
+name|nf
 argument_list|,
 name|nf
 argument_list|)
@@ -4685,6 +4669,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 operator|(
 name|void
 operator|)
@@ -4695,10 +4680,13 @@ argument_list|,
 name|m
 argument_list|,
 name|rssi
+operator|-
+name|nf
 argument_list|,
 name|nf
 argument_list|)
 expr_stmt|;
+block|}
 name|m
 operator|=
 name|next
