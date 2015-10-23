@@ -4021,6 +4021,12 @@ name|rssi
 expr_stmt|;
 name|tap
 operator|->
+name|wr_dbm_antnoise
+operator|=
+name|URTWN_NOISE_FLOOR
+expr_stmt|;
+name|tap
+operator|->
 name|wr_chan_freq
 operator|=
 name|htole16
