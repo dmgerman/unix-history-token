@@ -5084,7 +5084,6 @@ name|datavaddr
 operator|=
 name|vaddr
 expr_stmt|;
-comment|/* PHYS_TO_VM_PAGE() will truncate unaligned addresses. */
 name|bpage
 operator|->
 name|datapage
