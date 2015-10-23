@@ -2876,7 +2876,17 @@ name|syslog
 argument_list|(
 name|LOG_ALERT
 argument_list|,
-literal|"reboot after panic: %s"
+literal|"reboot after panic: %*s"
+argument_list|,
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+name|kdhl
+operator|.
+name|panicstring
+argument_list|)
 argument_list|,
 name|kdhl
 operator|.
@@ -3125,7 +3135,7 @@ name|nerr
 operator|++
 expr_stmt|;
 goto|goto
-name|closefd
+name|closeall
 goto|;
 block|}
 name|xostyle
@@ -3166,7 +3176,7 @@ name|nerr
 operator|++
 expr_stmt|;
 goto|goto
-name|closefd
+name|closeall
 goto|;
 block|}
 name|xo_open_container_h
@@ -3478,6 +3488,8 @@ operator|.
 name|magic
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|lseek
 argument_list|(
 name|fd
@@ -3486,9 +3498,9 @@ name|lasthd
 argument_list|,
 name|SEEK_SET
 argument_list|)
-expr_stmt|;
-name|error
-operator|=
+operator|!=
+name|lasthd
+operator|||
 name|write
 argument_list|(
 name|fd
@@ -3497,15 +3509,15 @@ operator|&
 name|kdhl
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|kdhl
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
+argument_list|)
 operator|!=
 sizeof|sizeof
+argument_list|(
 name|kdhl
+argument_list|)
 condition|)
 name|syslog
 argument_list|(
