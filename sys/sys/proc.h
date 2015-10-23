@@ -414,6 +414,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|syscall_args
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|td_sched
 struct_decl|;
 end_struct_decl
@@ -1008,6 +1014,14 @@ modifier|*
 name|td_su
 decl_stmt|;
 comment|/* (k) FFS SU private */
+name|u_int
+name|td_dbg_sc_code
+decl_stmt|;
+comment|/* (c) Syscall code to debugger. */
+name|u_int
+name|td_dbg_sc_narg
+decl_stmt|;
+comment|/* (c) Syscall arg count to debugger.*/
 block|}
 struct|;
 end_struct
@@ -5369,12 +5383,6 @@ argument_list|)
 name|__dead2
 decl_stmt|;
 end_decl_stmt
-
-begin_struct_decl
-struct_decl|struct
-name|syscall_args
-struct_decl|;
-end_struct_decl
 
 begin_function_decl
 name|int
