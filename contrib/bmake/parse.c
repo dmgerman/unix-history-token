@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: parse.c,v 1.204 2014/09/18 08:06:13 dholland Exp $	*/
+comment|/*	$NetBSD: parse.c,v 1.205 2015/10/11 04:51:24 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: parse.c,v 1.204 2014/09/18 08:06:13 dholland Exp $"
+literal|"$NetBSD: parse.c,v 1.205 2015/10/11 04:51:24 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: parse.c,v 1.204 2014/09/18 08:06:13 dholland Exp $"
+literal|"$NetBSD: parse.c,v 1.205 2015/10/11 04:51:24 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2997,7 +2997,9 @@ name|line
 argument_list|,
 name|VAR_CMD
 argument_list|,
-literal|0
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|Parse_Error
@@ -4084,6 +4086,8 @@ argument_list|(
 name|cp
 argument_list|,
 name|VAR_CMD
+argument_list|,
+name|TRUE
 argument_list|,
 name|TRUE
 argument_list|,
@@ -6270,6 +6274,8 @@ argument_list|,
 name|ctxt
 argument_list|,
 name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|oldVars
@@ -6331,6 +6337,8 @@ argument_list|,
 name|cp
 argument_list|,
 name|VAR_CMD
+argument_list|,
+name|TRUE
 argument_list|,
 name|TRUE
 argument_list|)
@@ -7501,6 +7509,8 @@ argument_list|,
 name|VAR_CMD
 argument_list|,
 name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|Parse_include_file
@@ -8308,6 +8318,8 @@ argument_list|,
 name|VAR_CMD
 argument_list|,
 name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -8530,6 +8542,8 @@ argument_list|,
 name|VAR_CMD
 argument_list|,
 name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|setenv
@@ -10542,6 +10556,8 @@ argument_list|,
 name|line
 argument_list|,
 name|VAR_CMD
+argument_list|,
+name|TRUE
 argument_list|,
 name|TRUE
 argument_list|)

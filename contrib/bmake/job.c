@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: job.c,v 1.180 2015/04/16 13:31:03 joerg Exp $	*/
+comment|/*	$NetBSD: job.c,v 1.181 2015/10/11 04:51:24 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: job.c,v 1.180 2015/04/16 13:31:03 joerg Exp $"
+literal|"$NetBSD: job.c,v 1.181 2015/10/11 04:51:24 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: job.c,v 1.180 2015/04/16 13:31:03 joerg Exp $"
+literal|"$NetBSD: job.c,v 1.181 2015/10/11 04:51:24 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2328,6 +2328,8 @@ operator|->
 name|node
 argument_list|,
 name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|cmdTemplate
@@ -3063,6 +3065,8 @@ operator|)
 name|gn
 argument_list|,
 name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7497,7 +7501,9 @@ literal|"}"
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-literal|0
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
