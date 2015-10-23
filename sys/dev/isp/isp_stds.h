@@ -236,6 +236,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FCP_CMND_TMF_QUERY_ASYNC_EVENT
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
 name|FCP_CMND_TMF_CLEAR_TASK_SET
 value|0x04
 end_define
@@ -245,6 +252,13 @@ define|#
 directive|define
 name|FCP_CMND_TMF_ABORT_TASK_SET
 value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCP_CMND_TMF_QUERY_TASK_SET
+value|0x01
 end_define
 
 begin_comment
