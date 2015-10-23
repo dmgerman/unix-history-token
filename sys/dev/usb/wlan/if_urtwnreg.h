@@ -477,6 +477,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|R92C_MSR
+value|0x102
+end_define
+
+begin_define
+define|#
+directive|define
 name|R92C_PBP
 value|0x104
 end_define
@@ -2275,112 +2282,109 @@ begin_define
 define|#
 directive|define
 name|R92C_CR_HCI_TXDMA_EN
-value|0x00000001
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|R92C_CR_HCI_RXDMA_EN
-value|0x00000002
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|R92C_CR_TXDMA_EN
-value|0x00000004
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
 name|R92C_CR_RXDMA_EN
-value|0x00000008
+value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
 name|R92C_CR_PROTOCOL_EN
-value|0x00000010
+value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
 name|R92C_CR_SCHEDULE_EN
-value|0x00000020
+value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
 name|R92C_CR_MACTXEN
-value|0x00000040
+value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
 name|R92C_CR_MACRXEN
-value|0x00000080
+value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
 name|R92C_CR_ENSEC
-value|0x00000200
+value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
 name|R92C_CR_CALTMR_EN
-value|0x00000400
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Bits for R92C_MSR. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_MSR_NOLINK
+value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|R92C_CR_NETTYPE_S
-value|16
+name|R92C_MSR_ADHOC
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|R92C_CR_NETTYPE_M
-value|0x00030000
+name|R92C_MSR_INFRA
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|R92C_CR_NETTYPE_NOLINK
-value|0
+name|R92C_MSR_AP
+value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
-name|R92C_CR_NETTYPE_ADHOC
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|R92C_CR_NETTYPE_INFRA
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|R92C_CR_NETTYPE_AP
-value|3
+name|R92C_MSR_MASK
+value|(R92C_MSR_AP)
 end_define
 
 begin_comment
