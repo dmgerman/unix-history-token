@@ -3163,7 +3163,7 @@ directive|endif
 name|THREAD_NO_SLEEPING
 argument_list|()
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE1
 argument_list|(
 name|callout_execute
 argument_list|,
@@ -3172,14 +3172,6 @@ argument_list|, ,
 name|callout__start
 argument_list|,
 name|c
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|c_func
@@ -3187,7 +3179,7 @@ argument_list|(
 name|c_arg
 argument_list|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE1
 argument_list|(
 name|callout_execute
 argument_list|,
@@ -3196,14 +3188,6 @@ argument_list|, ,
 name|callout__end
 argument_list|,
 name|c
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|THREAD_SLEEPING_OK

@@ -11221,7 +11221,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|SDT_PROBE
+name|SDT_PROBE2
 argument_list|(
 name|vfs
 argument_list|, ,
@@ -11234,12 +11234,6 @@ argument_list|,
 name|sb
 operator|.
 name|st_mode
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -11251,7 +11245,7 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
-name|SDT_PROBE
+name|SDT_PROBE2
 argument_list|(
 name|vfs
 argument_list|, ,
@@ -11262,12 +11256,6 @@ argument_list|,
 name|path
 argument_list|,
 name|pathseg
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if

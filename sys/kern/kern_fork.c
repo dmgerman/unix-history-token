@@ -3153,7 +3153,7 @@ operator|->
 name|p_pid
 argument_list|)
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|proc
 argument_list|,
@@ -3166,10 +3166,6 @@ argument_list|,
 name|p1
 argument_list|,
 name|flags
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Wait until debugger is attached to child. 	 */
