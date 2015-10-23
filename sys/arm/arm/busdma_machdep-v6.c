@@ -1085,6 +1085,30 @@ begin_comment
 comment|/* Cache of standard buffers */
 end_comment
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_BUSDMA
+argument_list|,
+literal|"busdma"
+argument_list|,
+literal|"busdma metadata"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_BOUNCE
+argument_list|,
+literal|"bounce"
+argument_list|,
+literal|"busdma bounce pages"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|void
@@ -1196,7 +1220,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This init historically used SI_SUB_VM, but now the init code requires  * malloc(9) using M_DEVBUF memory and the pcpu zones for counter(9), which get  * set up by SI_SUB_KMEM and SI_ORDER_LAST, so we'll go right after that by  * using SI_SUB_KMEM+1.  */
+comment|/*  * This init historically used SI_SUB_VM, but now the init code requires  * malloc(9) using M_BUSDMA memory and the pcpu zones for counter(9), which get  * set up by SI_SUB_KMEM and SI_ORDER_LAST, so we'll go right after that by  * using SI_SUB_KMEM+1.  */
 end_comment
 
 begin_expr_stmt
@@ -1937,7 +1961,7 @@ operator|*
 name|newtag
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|,
 name|M_ZERO
 operator||
@@ -2362,7 +2386,7 @@ name|free
 argument_list|(
 name|newtag
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 return|return
@@ -2446,7 +2470,7 @@ name|free
 argument_list|(
 name|newtag
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 block|}
@@ -2592,7 +2616,7 @@ name|free
 argument_list|(
 name|dmat
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Last reference count, so 				 * release our reference 				 * count on our parent. 				 */
@@ -2913,7 +2937,7 @@ name|mapsize
 operator|+
 name|segsize
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|,
 name|mflags
 operator||
@@ -3057,7 +3081,7 @@ name|free
 argument_list|(
 name|map
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 operator|*
@@ -3202,7 +3226,7 @@ name|free
 argument_list|(
 name|map
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 name|dmat
@@ -3544,7 +3568,7 @@ name|free
 argument_list|(
 name|map
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 operator|*
@@ -3760,7 +3784,7 @@ name|free
 argument_list|(
 name|map
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 name|CTR3
@@ -6693,7 +6717,7 @@ operator|*
 name|bz
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -7182,7 +7206,7 @@ operator|*
 name|bpage
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -7207,7 +7231,7 @@ name|contigmalloc
 argument_list|(
 name|PAGE_SIZE
 argument_list|,
-name|M_DEVBUF
+name|M_BOUNCE
 argument_list|,
 name|M_NOWAIT
 argument_list|,
@@ -7235,7 +7259,7 @@ name|free
 argument_list|(
 name|bpage
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 break|break;
