@@ -753,6 +753,30 @@ begin_comment
 comment|/* Cache of standard buffers */
 end_comment
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_BUSDMA
+argument_list|,
+literal|"busdma"
+argument_list|,
+literal|"busdma metadata"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_BOUNCE
+argument_list|,
+literal|"bounce"
+argument_list|,
+literal|"busdma bounce pages"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * This is the ctor function passed to uma_zcreate() for the pool of dma maps.  * It'll need platform-specific changes if this code is copied.  */
 end_comment
@@ -949,7 +973,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This init historically used SI_SUB_VM, but now the init code requires  * malloc(9) using M_DEVBUF memory, which is set up later than SI_SUB_VM, by  * SI_SUB_KMEM and SI_ORDER_THIRD, so we'll go right after that by using  * SI_SUB_KMEM and SI_ORDER_FOURTH.  */
+comment|/*  * This init historically used SI_SUB_VM, but now the init code requires  * malloc(9) using M_BUSDMA memory, which is set up later than SI_SUB_VM, by  * SI_SUB_KMEM and SI_ORDER_THIRD, so we'll go right after that by using  * SI_SUB_KMEM and SI_ORDER_FOURTH.  */
 end_comment
 
 begin_expr_stmt
@@ -1473,7 +1497,7 @@ operator|*
 name|newtag
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1923,7 +1947,7 @@ name|free
 argument_list|(
 name|newtag
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 return|return
@@ -2006,7 +2030,7 @@ name|free
 argument_list|(
 name|newtag
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 else|else
@@ -2143,14 +2167,14 @@ name|dmat
 operator|->
 name|segments
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|dmat
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Last reference count, so 				 * release our reference 				 * count on our parent. 				 */
@@ -2237,7 +2261,7 @@ name|dmat
 operator|->
 name|nsegments
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -2280,7 +2304,7 @@ name|free
 argument_list|(
 name|slist
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 return|return
@@ -2317,7 +2341,7 @@ operator|->
 name|segments
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -2335,7 +2359,7 @@ name|free
 argument_list|(
 name|slist
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 name|uma_zfree
@@ -2403,7 +2427,7 @@ name|free
 argument_list|(
 name|slist
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 name|uma_zfree
@@ -2667,7 +2691,7 @@ name|map
 operator|->
 name|slist
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 name|uma_zfree
@@ -2801,7 +2825,7 @@ operator|->
 name|segments
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|,
 name|mflags
 argument_list|)
@@ -2820,7 +2844,7 @@ name|dmat
 operator|->
 name|nsegments
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -2858,7 +2882,7 @@ name|free
 argument_list|(
 name|slist
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 return|return
@@ -3069,7 +3093,7 @@ name|free
 argument_list|(
 name|slist
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 name|uma_zfree
@@ -3173,7 +3197,7 @@ name|map
 operator|->
 name|slist
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 name|uma_zfree
@@ -6111,7 +6135,7 @@ operator|*
 name|bz
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -6600,7 +6624,7 @@ operator|*
 name|bpage
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -6625,7 +6649,7 @@ name|contigmalloc
 argument_list|(
 name|PAGE_SIZE
 argument_list|,
-name|M_DEVBUF
+name|M_BOUNCE
 argument_list|,
 name|M_NOWAIT
 argument_list|,
@@ -6653,7 +6677,7 @@ name|free
 argument_list|(
 name|bpage
 argument_list|,
-name|M_DEVBUF
+name|M_BUSDMA
 argument_list|)
 expr_stmt|;
 break|break;
