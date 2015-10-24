@@ -143,6 +143,13 @@ directive|include
 file|"ioat_internal.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|IOAT_INTR_TIMO
+value|(hz / 10)
+end_define
+
 begin_function_decl
 specifier|static
 name|int
@@ -1371,6 +1378,11 @@ expr_stmt|;
 name|ioat_test_detach
 argument_list|()
 expr_stmt|;
+name|ioat_teardown_intr
+argument_list|(
+name|ioat
+argument_list|)
+expr_stmt|;
 name|callout_drain
 argument_list|(
 operator|&
@@ -1505,11 +1517,6 @@ argument_list|(
 name|ioat
 operator|->
 name|hw_desc_tag
-argument_list|)
-expr_stmt|;
-name|ioat_teardown_intr
-argument_list|(
-name|ioat
 argument_list|)
 expr_stmt|;
 return|return
@@ -2959,9 +2966,7 @@ name|ioat
 operator|->
 name|timer
 argument_list|,
-literal|5
-operator|*
-name|hz
+name|IOAT_INTR_TIMO
 argument_list|,
 name|ioat_timer_callback
 argument_list|,
@@ -4581,7 +4586,7 @@ name|arg
 expr_stmt|;
 name|ioat_log_message
 argument_list|(
-literal|2
+literal|1
 argument_list|,
 literal|"%s\n"
 argument_list|,
@@ -4755,9 +4760,7 @@ name|ioat
 operator|->
 name|timer
 argument_list|,
-literal|5
-operator|*
-name|hz
+name|IOAT_INTR_TIMO
 argument_list|,
 name|ioat_timer_callback
 argument_list|,
@@ -4814,9 +4817,7 @@ name|ioat
 operator|->
 name|timer
 argument_list|,
-literal|10
-operator|*
-name|hz
+name|IOAT_INTR_TIMO
 argument_list|,
 name|ioat_timer_callback
 argument_list|,
