@@ -29959,31 +29959,51 @@ name|char
 modifier|*
 name|rnames
 index|[
-literal|6
+literal|10
 index|]
 init|=
 block|{
-literal|"Task Management Function Done"
+literal|"Task Management function complete"
 block|,
-literal|"Data Length Differs From Burst Length"
+literal|"FCP_DATA length different than FCP_BURST_LEN"
 block|,
-literal|"Invalid FCP Cmnd"
+literal|"FCP_CMND fields invalid"
 block|,
-literal|"FCP DATA RO mismatch with FCP DATA_XFR_RDY RO"
+literal|"FCP_DATA parameter mismatch with FCP_DATA_RO"
 block|,
-literal|"Task Management Function Rejected"
+literal|"Task Management function rejected"
 block|,
-literal|"Task Management Function Failed"
+literal|"Task Management function failed"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Task Management function succeeded"
+block|,
+literal|"Task Management function incorrect logical unit number"
 block|, 				}
 decl_stmt|;
-if|if
-condition|(
+name|uint8_t
+name|code
+init|=
 name|resp
 index|[
 name|FCP_RSPNS_CODE_OFFSET
 index|]
-operator|>
-literal|5
+decl_stmt|;
+if|if
+condition|(
+name|code
+operator|>=
+literal|10
+operator|||
+name|rnames
+index|[
+name|code
+index|]
+operator|==
+name|NULL
 condition|)
 block|{
 name|ISP_SNPRINTF
@@ -29991,14 +30011,13 @@ argument_list|(
 name|lb
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|lb
+argument_list|)
 argument_list|,
 literal|"Unknown FCP Response Code 0x%x"
 argument_list|,
-name|resp
-index|[
-name|FCP_RSPNS_CODE_OFFSET
-index|]
+name|code
 argument_list|)
 expr_stmt|;
 name|ptr
@@ -30012,10 +30031,7 @@ name|ptr
 operator|=
 name|rnames
 index|[
-name|resp
-index|[
-name|FCP_RSPNS_CODE_OFFSET
-index|]
+name|code
 index|]
 expr_stmt|;
 block|}
@@ -30046,14 +30062,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|resp
-index|[
-name|FCP_RSPNS_CODE_OFFSET
-index|]
+name|code
 operator|!=
 literal|0
+operator|&&
+name|code
+operator|!=
+literal|8
 condition|)
-block|{
 name|XS_SETERR
 argument_list|(
 name|xs
@@ -30061,7 +30077,6 @@ argument_list|,
 name|HBA_BOTCH
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
