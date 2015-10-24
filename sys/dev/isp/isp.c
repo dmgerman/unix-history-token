@@ -7065,8 +7065,9 @@ name|isp
 operator|->
 name|isp_maxluns
 operator|=
-literal|16384
+literal|0
 expr_stmt|;
+comment|/* No limit -- 2/8 bytes */
 block|}
 else|else
 block|{
@@ -23800,7 +23801,7 @@ name|isp
 argument_list|,
 name|ISP_LOG_WARN1
 argument_list|,
-literal|"%d.%d.%d I am not an initiator"
+literal|"%d.%d.%jx I am not an initiator"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -23809,6 +23810,9 @@ argument_list|)
 argument_list|,
 name|target
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|XS_LUN
 argument_list|(
 name|xs
@@ -23916,7 +23920,7 @@ name|isp
 argument_list|,
 name|ISP_LOGDEBUG1
 argument_list|,
-literal|"%d.%d.%d target zombie"
+literal|"%d.%d.%jx target zombie"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -23925,6 +23929,9 @@ argument_list|)
 argument_list|,
 name|target
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|XS_LUN
 argument_list|(
 name|xs
@@ -23952,7 +23959,7 @@ name|isp
 argument_list|,
 name|ISP_LOGDEBUG1
 argument_list|,
-literal|"%d.%d.%d bad db port state 0x%x"
+literal|"%d.%d.%jx bad db port state 0x%x"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -23961,6 +23968,9 @@ argument_list|)
 argument_list|,
 name|target
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|XS_LUN
 argument_list|(
 name|xs
@@ -24020,7 +24030,7 @@ name|isp
 argument_list|,
 name|ISP_LOGDEBUG1
 argument_list|,
-literal|"%d.%d.%d I am not an initiator"
+literal|"%d.%d.%jx I am not an initiator"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -24029,6 +24039,9 @@ argument_list|)
 argument_list|,
 name|target
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|XS_LUN
 argument_list|(
 name|xs
@@ -24770,13 +24783,35 @@ name|xs
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1000700
+name|be64enc
+argument_list|(
+name|t7
+operator|->
+name|req_lun
+argument_list|,
+name|CAM_EXTLUN_BYTE_SWIZZLE
+argument_list|(
+name|XS_LUN
+argument_list|(
+name|xs
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|XS_LUN
 argument_list|(
 name|xs
 argument_list|)
-operator|>
+operator|>=
 literal|256
 condition|)
 block|{
@@ -24816,6 +24851,8 @@ argument_list|(
 name|xs
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|FCPARAM
@@ -24860,7 +24897,7 @@ name|isp
 argument_list|,
 name|ISP_LOG_WARN1
 argument_list|,
-literal|"%d.%d.%d cannot generate next CRN"
+literal|"%d.%d.%jx cannot generate next CRN"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -24869,6 +24906,9 @@ argument_list|)
 argument_list|,
 name|target
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|XS_LUN
 argument_list|(
 name|xs
@@ -24993,7 +25033,7 @@ name|isp
 argument_list|,
 name|ISP_LOG_WARN1
 argument_list|,
-literal|"%d.%d.%d cannot generate next CRN"
+literal|"%d.%d.%jx cannot generate next CRN"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -25002,6 +25042,9 @@ argument_list|)
 argument_list|,
 name|target
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|XS_LUN
 argument_list|(
 name|xs
@@ -25057,6 +25100,28 @@ argument_list|(
 name|xs
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|1000700
+if|if
+condition|(
+name|XS_LUN
+argument_list|(
+name|xs
+argument_list|)
+operator|>=
+literal|256
+condition|)
+name|t2e
+operator|->
+name|req_scclun
+operator||=
+literal|0x4000
+expr_stmt|;
+endif|#
+directive|endif
 name|cdbp
 operator|=
 name|t2e
@@ -25100,6 +25165,28 @@ argument_list|(
 name|xs
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|1000700
+if|if
+condition|(
+name|XS_LUN
+argument_list|(
+name|xs
+argument_list|)
+operator|>=
+literal|256
+condition|)
+name|t2
+operator|->
+name|req_scclun
+operator||=
+literal|0x4000
+expr_stmt|;
+endif|#
+directive|endif
 name|cdbp
 operator|=
 name|t2
@@ -29562,7 +29649,7 @@ name|isp
 argument_list|,
 name|ISP_LOG_WARN1
 argument_list|,
-literal|"%d.%d.%d bus was reset"
+literal|"%d.%d.%jx bus was reset"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -29574,6 +29661,9 @@ argument_list|(
 name|xs
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|XS_LUN
 argument_list|(
 name|xs
@@ -29611,7 +29701,7 @@ name|isp
 argument_list|,
 name|ISP_LOG_WARN1
 argument_list|,
-literal|"%d.%d.%d buddaboom"
+literal|"%d.%d.%jx buddaboom"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -29623,6 +29713,9 @@ argument_list|(
 name|xs
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|XS_LUN
 argument_list|(
 name|xs
@@ -30531,7 +30624,7 @@ name|isp
 argument_list|,
 name|ISP_LOG_WARN1
 argument_list|,
-literal|"%d.%d.%d badness at %s:%u"
+literal|"%d.%d.%jx badness at %s:%u"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -30543,6 +30636,9 @@ argument_list|(
 name|xs
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|XS_LUN
 argument_list|(
 name|xs
@@ -32393,7 +32489,7 @@ name|isp
 argument_list|,
 name|ISP_LOG_WARN1
 argument_list|,
-literal|"%d.%d.%d bus reset set at %s:%u"
+literal|"%d.%d.%jx bus reset set at %s:%u"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -32405,6 +32501,9 @@ argument_list|(
 name|xs
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|XS_LUN
 argument_list|(
 name|xs
@@ -34712,8 +34811,11 @@ name|xs
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"HBA attempted queued transaction to target routine %d"
+literal|"HBA attempted queued transaction to target routine %jx"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|XS_LUN
 argument_list|(
 name|xs
