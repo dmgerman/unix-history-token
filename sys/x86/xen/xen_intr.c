@@ -210,14 +210,15 @@ name|ENABLED_SETSIZE
 value|(sizeof(u_long) * 8)
 end_define
 
-begin_macro
+begin_expr_stmt
 name|BITSET_DEFINE
 argument_list|(
-argument|enabledbits
+name|enabledbits
 argument_list|,
-argument|ENABLED_SETSIZE
+name|ENABLED_SETSIZE
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/**  * Per-cpu event channel processing state.  */
