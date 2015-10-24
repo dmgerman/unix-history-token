@@ -1255,5 +1255,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSTAT_CMD
+argument_list|(
+name|sctp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
