@@ -1141,7 +1141,7 @@ begin_define
 define|#
 directive|define
 name|NPH_IP_BCST
-value|0x7ff
+value|0x7FF
 end_define
 
 begin_comment

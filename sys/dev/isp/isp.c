@@ -17243,7 +17243,7 @@ name|NPH_RESERVED
 operator|&&
 name|handle
 operator|<=
-name|NPH_FL_ID
+name|NPH_IP_BCST
 condition|)
 block|{
 continue|continue;
@@ -23442,12 +23442,12 @@ name|NPH_RESERVED
 operator|&&
 name|handle
 operator|<=
-name|NPH_FL_ID
+name|NPH_IP_BCST
 condition|)
 block|{
 name|handle
 operator|=
-name|NPH_FL_ID
+name|NPH_IP_BCST
 operator|+
 literal|1
 expr_stmt|;
