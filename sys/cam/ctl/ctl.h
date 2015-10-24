@@ -814,6 +814,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint32_t
+name|ctl_decode_lun
+parameter_list|(
+name|uint64_t
+name|encoded
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint64_t
+name|ctl_encode_lun
+parameter_list|(
+name|uint32_t
+name|decoded
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ctl_isc_announce_lun
 parameter_list|(
