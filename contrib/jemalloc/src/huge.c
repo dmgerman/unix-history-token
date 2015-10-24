@@ -664,7 +664,9 @@ init|=
 name|CHUNK_HOOKS_INITIALIZER
 decl_stmt|;
 name|bool
-name|zeroed
+name|pre_zeroed
+decl_stmt|,
+name|post_zeroed
 decl_stmt|;
 comment|/* Increase usize to incorporate extra. */
 for|for
@@ -717,6 +719,13 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
+name|pre_zeroed
+operator|=
+name|extent_node_zeroed_get
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
 comment|/* Fill if necessary (shrinking). */
 if|if
 condition|(
@@ -762,14 +771,14 @@ argument_list|,
 name|sdiff
 argument_list|)
 expr_stmt|;
-name|zeroed
+name|post_zeroed
 operator|=
 name|false
 expr_stmt|;
 block|}
 else|else
 block|{
-name|zeroed
+name|post_zeroed
 operator|=
 operator|!
 name|chunk_purge_wrapper
@@ -794,9 +803,9 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|zeroed
+name|post_zeroed
 operator|=
-name|true
+name|pre_zeroed
 expr_stmt|;
 name|malloc_mutex_lock
 argument_list|(
@@ -824,17 +833,12 @@ argument_list|,
 name|usize
 argument_list|)
 expr_stmt|;
-comment|/* Clear node's zeroed field if zeroing failed above. */
+comment|/* Update zeroed. */
 name|extent_node_zeroed_set
 argument_list|(
 name|node
 argument_list|,
-name|extent_node_zeroed_get
-argument_list|(
-name|node
-argument_list|)
-operator|&&
-name|zeroed
+name|post_zeroed
 argument_list|)
 expr_stmt|;
 name|malloc_mutex_unlock
@@ -881,7 +885,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|zeroed
+name|pre_zeroed
 condition|)
 block|{
 name|memset
@@ -977,7 +981,9 @@ name|size_t
 name|cdiff
 decl_stmt|;
 name|bool
-name|zeroed
+name|pre_zeroed
+decl_stmt|,
+name|post_zeroed
 decl_stmt|;
 name|node
 operator|=
@@ -989,6 +995,13 @@ expr_stmt|;
 name|arena
 operator|=
 name|extent_node_arena_get
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+name|pre_zeroed
+operator|=
+name|extent_node_zeroed_get
 argument_list|(
 name|node
 argument_list|)
@@ -1098,14 +1111,14 @@ argument_list|,
 name|sdiff
 argument_list|)
 expr_stmt|;
-name|zeroed
+name|post_zeroed
 operator|=
 name|false
 expr_stmt|;
 block|}
 else|else
 block|{
-name|zeroed
+name|post_zeroed
 operator|=
 operator|!
 name|chunk_purge_wrapper
@@ -1146,9 +1159,9 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|zeroed
+name|post_zeroed
 operator|=
-name|true
+name|pre_zeroed
 expr_stmt|;
 name|malloc_mutex_lock
 argument_list|(
@@ -1166,17 +1179,12 @@ argument_list|,
 name|usize
 argument_list|)
 expr_stmt|;
-comment|/* Clear node's zeroed field if zeroing failed above. */
+comment|/* Update zeroed. */
 name|extent_node_zeroed_set
 argument_list|(
 name|node
 argument_list|,
-name|extent_node_zeroed_get
-argument_list|(
-name|node
-argument_list|)
-operator|&&
-name|zeroed
+name|post_zeroed
 argument_list|)
 expr_stmt|;
 name|malloc_mutex_unlock

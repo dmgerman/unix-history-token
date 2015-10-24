@@ -295,6 +295,11 @@ name|state
 condition|)
 block|{
 case|case
+name|tsd_state_uninitialized
+case|:
+comment|/* Do nothing. */
+break|break;
+case|case
 name|tsd_state_nominal
 case|:
 define|#

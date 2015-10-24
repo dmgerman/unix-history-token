@@ -163,7 +163,7 @@ file|<strings.h>
 define|#
 directive|define
 name|JEMALLOC_VERSION
-value|"4.0.2-0-g486d249fb4715fd3de679b6c2a04f7e657883111"
+value|"4.0.4-0-g91010a9e2ebfc84b1ac1ed7fdde3bfed4f65f180"
 define|#
 directive|define
 name|JEMALLOC_VERSION_MAJOR
@@ -175,7 +175,7 @@ value|0
 define|#
 directive|define
 name|JEMALLOC_VERSION_BUGFIX
-value|2
+value|4
 define|#
 directive|define
 name|JEMALLOC_VERSION_NREV
@@ -183,7 +183,7 @@ value|0
 define|#
 directive|define
 name|JEMALLOC_VERSION_GID
-value|"486d249fb4715fd3de679b6c2a04f7e657883111"
+value|"91010a9e2ebfc84b1ac1ed7fdde3bfed4f65f180"
 define|#
 directive|define
 name|MALLOCX_LG_ALIGN

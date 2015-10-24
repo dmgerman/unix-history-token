@@ -4676,6 +4676,27 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
+switch|switch
+condition|(
+name|tctx
+operator|->
+name|state
+condition|)
+block|{
+case|case
+name|prof_tctx_state_initializing
+case|:
+case|case
+name|prof_tctx_state_nominal
+case|:
+comment|/* Not captured by this dump. */
+break|break;
+case|case
+name|prof_tctx_state_dumping
+case|:
+case|case
+name|prof_tctx_state_purgatory
+case|:
 if|if
 condition|(
 name|prof_dump_printf
@@ -4690,7 +4711,8 @@ literal|": %"
 name|FMTu64
 literal|" [%"
 name|FMTu64
-literal|": %"
+literal|": "
+literal|"%"
 name|FMTu64
 literal|"]\n"
 argument_list|,
@@ -4728,6 +4750,12 @@ operator|(
 name|tctx
 operator|)
 return|;
+break|break;
+default|default:
+name|not_reached
+argument_list|()
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
