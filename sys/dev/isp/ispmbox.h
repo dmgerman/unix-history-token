@@ -2822,10 +2822,13 @@ decl_stmt|;
 name|uint32_t
 name|abrt_cmd_handle
 decl_stmt|;
+name|uint16_t
+name|abrt_queue_number
+decl_stmt|;
 name|uint8_t
 name|abrt_reserved
 index|[
-literal|32
+literal|30
 index|]
 decl_stmt|;
 name|uint16_t
