@@ -4747,6 +4747,13 @@ condition|(
 literal|0
 condition|)
 do|;
+name|free
+argument_list|(
+name|ip
+argument_list|,
+name|M_REISERFSNODE
+argument_list|)
+expr_stmt|;
 name|pathrelse
 argument_list|(
 operator|&
