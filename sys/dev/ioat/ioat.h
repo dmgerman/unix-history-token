@@ -101,6 +101,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Release the DMA channel */
+end_comment
+
+begin_function_decl
+name|void
+name|ioat_put_dmaengine
+parameter_list|(
+name|bus_dmaengine_t
+name|dmaengine
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Acquire must be called before issuing an operation to perform. Release is  * called after. Multiple operations can be issued within the context of one  * acquire and release  */
 end_comment
 

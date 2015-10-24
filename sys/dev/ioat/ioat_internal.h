@@ -1139,6 +1139,21 @@ block|}
 struct|;
 end_struct
 
+begin_enum
+enum|enum
+name|ioat_ref_kind
+block|{
+name|IOAT_DMAENGINE_REF
+init|=
+literal|0
+block|,
+name|IOAT_ACTIVE_DESCR_REF
+block|,
+name|IOAT_NUM_REF_KINDS
+block|}
+enum|;
+end_enum
+
 begin_comment
 comment|/* One of these per allocated PCI device. */
 end_comment
@@ -1266,6 +1281,22 @@ name|struct
 name|mtx
 name|cleanup_lock
 decl_stmt|;
+specifier|volatile
+name|uint32_t
+name|refcnt
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+specifier|volatile
+name|uint32_t
+name|refkinds
+index|[
+name|IOAT_NUM_REF_KINDS
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

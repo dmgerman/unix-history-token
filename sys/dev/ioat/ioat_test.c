@@ -1565,7 +1565,9 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 name|wmb
 argument_list|()
@@ -1741,6 +1743,13 @@ expr_stmt|;
 name|ioat_test_release_memory
 argument_list|(
 name|test
+argument_list|)
+expr_stmt|;
+name|out
+label|:
+name|ioat_put_dmaengine
+argument_list|(
+name|dmaengine
 argument_list|)
 expr_stmt|;
 block|}
