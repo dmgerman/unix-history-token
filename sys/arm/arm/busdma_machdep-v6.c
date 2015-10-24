@@ -5792,7 +5792,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|dcache_dma_preread
+name|dcache_inv_poc_dma
 argument_list|(
 name|va
 argument_list|,
@@ -6271,7 +6271,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|dcache_dma_preread
+name|dcache_inv_poc_dma
 argument_list|(
 name|bpage
 operator|->
