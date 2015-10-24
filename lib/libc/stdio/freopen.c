@@ -985,6 +985,14 @@ name|oflags
 operator|&
 name|O_APPEND
 condition|)
+block|{
+comment|/* XXX: Reuse __SALC for O_APPEND. */
+name|fp
+operator|->
+name|_flags
+operator||=
+name|__SALC
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1000,6 +1008,7 @@ argument_list|,
 name|SEEK_END
 argument_list|)
 expr_stmt|;
+block|}
 name|FUNLOCKFILE
 argument_list|(
 name|fp

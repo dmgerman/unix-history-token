@@ -466,6 +466,7 @@ operator|>=
 literal|0
 condition|)
 block|{
+comment|/* XXX: Reuse __SALC for O_APPEND. */
 if|if
 condition|(
 operator|(
@@ -473,17 +474,16 @@ name|fp
 operator|->
 name|_flags
 operator|&
-operator|(
-name|__SAPP
-operator||
 name|__SOFF
 operator|)
-operator|)
-operator|==
+operator|&&
+operator|!
 operator|(
-name|__SAPP
-operator||
-name|__SOFF
+name|fp
+operator|->
+name|_flags
+operator|&
+name|__SALC
 operator|)
 operator|&&
 name|fp
