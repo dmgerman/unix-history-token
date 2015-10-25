@@ -4325,7 +4325,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ICBOPT_PREVLOOP
+name|ICBOPT_PREV_ADDRESS
 value|0x0800
 end_define
 
@@ -4671,7 +4671,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICB2400_OPT1_PREVLOOP
+name|ICB2400_OPT1_PREV_ADDRESS
 value|0x00000800
 end_define
 
@@ -5436,7 +5436,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ICB2400_VPOPT_PREVLOOP
+name|ICB2400_VPOPT_PREV_ADDRESS
 value|0x00000002
 end_define
 
