@@ -396,7 +396,7 @@ name|MGE_GLOBAL_LOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|do {						\ 			if ((mtx_owned(&(sc)->transmit_lock) ? 1 : 0) !=	\ 			    (mtx_owned(&(sc)->receive_lock) ? 1 : 0)) {		\ 				panic("mge deadlock possibility detection!");	\ 			}							\ 			mtx_lock(&(sc)->transmit_lock);				\ 			mtx_lock(&(sc)->receive_lock);				\ } while (0)
+value|do {						\ 			mtx_assert(&(sc)->transmit_lock, MA_NOTOWNED);		\ 			mtx_assert(&(sc)->receive_lock, MA_NOTOWNED);		\ 			mtx_lock(&(sc)->transmit_lock);				\ 			mtx_lock(&(sc)->receive_lock);				\ } while (0)
 end_define
 
 begin_define
