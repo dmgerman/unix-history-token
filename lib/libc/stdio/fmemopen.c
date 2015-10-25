@@ -506,6 +506,21 @@ name|NULL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|mode
+index|[
+literal|0
+index|]
+operator|==
+literal|'a'
+condition|)
+name|f
+operator|->
+name|_flags
+operator||=
+name|__SAPP
+expr_stmt|;
 comment|/* 	 * Turn off buffering, so a write past the end of the buffer 	 * correctly returns a short object count. 	 */
 name|setvbuf
 argument_list|(
