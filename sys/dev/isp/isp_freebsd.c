@@ -2342,11 +2342,11 @@ name|isp
 argument_list|,
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"%s: freeze simq (loopdown) chan %d"
-argument_list|,
-name|msg
+literal|"Chan %d %s -- freeze simq (loopdown)"
 argument_list|,
 name|chan
+argument_list|,
+name|msg
 argument_list|)
 expr_stmt|;
 name|fc
@@ -2383,11 +2383,11 @@ name|isp
 argument_list|,
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"%s: mark frozen (loopdown) chan %d"
-argument_list|,
-name|msg
+literal|"Chan %d %s -- mark frozen (loopdown)"
 argument_list|,
 name|chan
+argument_list|,
+name|msg
 argument_list|)
 expr_stmt|;
 name|fc
@@ -29256,7 +29256,7 @@ condition|)
 block|{
 name|msg
 operator|=
-literal|"Chan %d Port Database Changed"
+literal|"Port Database Changed"
 expr_stmt|;
 block|}
 elseif|else
@@ -29269,14 +29269,14 @@ condition|)
 block|{
 name|msg
 operator|=
-literal|"Chan %d Name Server Database Changed"
+literal|"Name Server Database Changed"
 expr_stmt|;
 block|}
 else|else
 block|{
 name|msg
 operator|=
-literal|"Chan %d Other Change Notify"
+literal|"Other Change Notify"
 expr_stmt|;
 block|}
 comment|/* 		 * If the loop down timer is running, cancel it. 		 */
@@ -29327,9 +29327,11 @@ name|isp
 argument_list|,
 name|ISP_LOGINFO
 argument_list|,
-name|msg
+literal|"Chan %d %s"
 argument_list|,
 name|bus
+argument_list|,
+name|msg
 argument_list|)
 expr_stmt|;
 if|if
