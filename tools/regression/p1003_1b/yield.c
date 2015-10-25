@@ -281,8 +281,6 @@ argument_list|,
 name|MAP_ANON
 operator||
 name|MAP_SHARED
-operator||
-name|MAP_INHERIT
 argument_list|,
 operator|-
 literal|1
