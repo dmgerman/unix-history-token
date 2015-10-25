@@ -15,6 +15,12 @@ directive|define
 name|__IF_MGE_H__
 end_define
 
+begin_include
+include|#
+directive|include
+file|<arm/mv/mvvar.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -154,6 +160,10 @@ modifier|*
 name|mii
 decl_stmt|;
 name|struct
+name|ifmedia
+name|mge_ifmedia
+decl_stmt|;
+name|struct
 name|resource
 modifier|*
 name|res
@@ -269,6 +279,12 @@ name|mge_intr_cnt
 decl_stmt|;
 name|uint8_t
 name|mge_hw_csum
+decl_stmt|;
+name|int
+name|phy_attached
+decl_stmt|;
+name|int
+name|switch_attached
 decl_stmt|;
 name|struct
 name|mge_softc
@@ -403,6 +419,30 @@ parameter_list|)
 value|do {						\ 			MGE_TRANSMIT_LOCK_ASSERT(sc);				\ 			MGE_RECEIVE_LOCK_ASSERT(sc); 				\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MGE_SMI_LOCK
+parameter_list|()
+value|do {				\     sx_assert(&sx_smi, SA_UNLOCKED);			\     sx_xlock(&sx_smi);					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MGE_SMI_UNLOCK
+parameter_list|()
+value|sx_unlock(&sx_smi)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MGE_SMI_LOCK_ASSERT
+parameter_list|()
+value|sx_assert(&sx_smi, SA_XLOCKED)
+end_define
+
 begin_comment
 comment|/* SMI-related macros */
 end_comment
@@ -447,6 +487,62 @@ define|#
 directive|define
 name|MGE_SMI_BUSY
 value|(1<< 28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MGE_SMI_MASK
+value|0x1fffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|MGE_SMI_DATA_MASK
+value|0xffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|MGE_SMI_DELAY
+value|1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MGE_SWITCH_PHYDEV
+value|6
+end_define
+
+begin_comment
+comment|/* Internal Switch SMI Command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SW_SMI_READ_CMD
+parameter_list|(
+name|phy
+parameter_list|,
+name|reg
+parameter_list|)
+value|((1<< 15) | (1<< 12) | (1<< 11) | (phy<< 5) | reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_SMI_WRITE_CMD
+parameter_list|(
+name|phy
+parameter_list|,
+name|reg
+parameter_list|)
+value|((1<< 15) | (1<< 12) | (1<< 10) | (phy<< 5) | reg)
 end_define
 
 begin_comment
