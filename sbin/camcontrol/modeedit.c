@@ -1148,7 +1148,7 @@ name|RESOLUTION_MAX
 parameter_list|(
 name|size
 parameter_list|)
-value|((resolution * (size) == 32)? 		\ 	(int)0xffffffff: (1<< (resolution * (size))) - 1)
+value|((resolution * (size) == 32)? 		\ 	INT_MAX: (1<< (resolution * (size))) - 1)
 name|assert
 argument_list|(
 name|newvalue
