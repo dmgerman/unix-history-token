@@ -1939,9 +1939,9 @@ name|int
 name|ret
 decl_stmt|;
 name|device_t
-name|iic
+name|i2c
 decl_stmt|;
-name|iic
+name|i2c
 operator|=
 name|intel_gmbus_get_adapter
 argument_list|(
@@ -1958,7 +1958,7 @@ name|intel_ddc_get_modes
 argument_list|(
 name|connector
 argument_list|,
-name|iic
+name|i2c
 argument_list|)
 expr_stmt|;
 if|if
@@ -1975,7 +1975,7 @@ return|return
 name|ret
 return|;
 comment|/* Try to probe digital port for output in DVI-I -> VGA mode. */
-name|iic
+name|i2c
 operator|=
 name|intel_gmbus_get_adapter
 argument_list|(
@@ -1989,7 +1989,7 @@ name|intel_ddc_get_modes
 argument_list|(
 name|connector
 argument_list|,
-name|iic
+name|i2c
 argument_list|)
 return|;
 block|}
@@ -2057,12 +2057,14 @@ argument_list|(
 name|dev
 argument_list|)
 condition|)
+block|{
 name|crt
 operator|->
 name|force_hotplug_required
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 end_function
 
