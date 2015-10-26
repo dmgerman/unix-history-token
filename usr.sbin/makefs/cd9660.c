@@ -1950,10 +1950,6 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|var
-condition|)
 name|free
 argument_list|(
 name|var
