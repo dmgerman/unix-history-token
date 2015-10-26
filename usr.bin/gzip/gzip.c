@@ -4140,6 +4140,10 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
+name|exit_value
+operator|=
+literal|2
+expr_stmt|;
 goto|goto
 name|stop
 goto|;
