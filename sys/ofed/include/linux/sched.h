@@ -153,7 +153,7 @@ begin_define
 define|#
 directive|define
 name|current
-value|((struct task_struct *)curthread->td_retval[1])
+value|task_struct_get(curthread)
 end_define
 
 begin_define
@@ -163,7 +163,7 @@ name|task_struct_get
 parameter_list|(
 name|x
 parameter_list|)
-value|(struct task_struct *)(x)->td_retval[1]
+value|((struct task_struct *)(uintptr_t)(x)->td_retval[1])
 end_define
 
 begin_define
@@ -175,8 +175,40 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(x)->td_retval[1] = (register_t)(y)
+value|(x)->td_retval[1] = (uintptr_t)(y)
 end_define
+
+begin_comment
+comment|/* ensure the task_struct pointer fits into the td_retval[1] field */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|(
+operator|(
+expr|struct
+name|thread
+operator|*
+operator|)
+literal|0
+operator|)
+operator|->
+name|td_retval
+index|[
+literal|1
+index|]
+argument_list|)
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|uintptr_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
