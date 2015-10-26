@@ -14,6 +14,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ntp_machine.h"
 end_include
 
@@ -26,12 +32,38 @@ argument_list|(
 name|HAVE_MKTIME
 argument_list|)
 operator|||
+operator|(
 operator|!
 name|defined
 argument_list|(
 name|HAVE_TIMEGM
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|WANT_TIMEGM
+argument_list|)
+operator|)
 end_if
+
+begin_if
+if|#
+directive|if
+name|SIZEOF_TIME_T
+operator|>=
+literal|8
+end_if
+
+begin_error
+error|#
+directive|error
+error|libntp supplied mktime()/timegm() do not support 64-bit time_t
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -1133,6 +1165,12 @@ begin_comment
 comment|/* !HAVE_MKTIME */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WANT_TIMEGM
+end_ifdef
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1200,6 +1238,15 @@ end_endif
 
 begin_comment
 comment|/* !HAVE_TIMEGM */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WANT_TIMEGM */
 end_comment
 
 end_unit

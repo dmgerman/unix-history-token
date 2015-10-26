@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -25,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"ntp_string.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_assert.h"
 end_include
 
 begin_comment
@@ -109,6 +121,13 @@ name|digits
 init|=
 literal|"0123456789"
 decl_stmt|;
+name|REQUIRE
+argument_list|(
+name|str
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|isneg
 operator|=
 literal|0
@@ -133,7 +152,8 @@ condition|(
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|cp
@@ -179,7 +199,8 @@ operator|!
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|cp
@@ -248,7 +269,8 @@ operator|!
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|cp
@@ -327,7 +349,8 @@ condition|(
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|cp
@@ -347,7 +370,8 @@ operator|!
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|cp

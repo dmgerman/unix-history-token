@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp4-dev/libparse/clk_schmid.c,v 4.9 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *    * clk_schmid.c,v 4.9 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *  * Schmid clock support  * based on information and testing from Adam W. Feigin et. al (Swisstime iis.ethz.ch)  *  * Copyright (c) 1995-2005 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * /src/NTP/ntp4-dev/libparse/clk_schmid.c,v 4.9 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *  * clk_schmid.c,v 4.9 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *  * Schmid clock support  * based on information and testing from Adam W. Feigin et. al (Swisstime iis.ethz.ch)  *  * Copyright (c) 1995-2015 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_if
@@ -92,22 +92,19 @@ directive|include
 file|"sys/parsestreams.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|void
+name|int
 name|printf
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -115,7 +112,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Description courtesy of Adam W. Feigin et. al (Swisstime iis.ethz.ch)  *  * The command to Schmid's DCF77 clock is a single byte; each bit  * allows the user to select some part of the time string, as follows (the  * output for the lsb is sent first).  *   * Bit 0:	time in MEZ, 4 bytes *binary, not BCD*; hh.mm.ss.tenths  * Bit 1:	date 3 bytes *binary, not BCD: dd.mm.yy  * Bit 2:	week day, 1 byte (unused here)  * Bit 3:	time zone, 1 byte, 0=MET, 1=MEST. (unused here)  * Bit 4:	clock status, 1 byte,	0=time invalid,  *					1=time from crystal backup,  *					3=time from DCF77  * Bit 5:	transmitter status, 1 byte,  *					bit 0: backup antenna  *					bit 1: time zone change within 1h  *					bit 3,2: TZ 01=MEST, 10=MET  *					bit 4: leap second will be  *						added within one hour  *					bits 5-7: Zero  * Bit 6:	time in backup mode, units of 5 minutes (unused here)  *  */
+comment|/*  * Description courtesy of Adam W. Feigin et. al (Swisstime iis.ethz.ch)  *  * The command to Schmid's DCF77 clock is a single byte; each bit  * allows the user to select some part of the time string, as follows (the  * output for the lsb is sent first).  *  * Bit 0:	time in MEZ, 4 bytes *binary, not BCD*; hh.mm.ss.tenths  * Bit 1:	date 3 bytes *binary, not BCD: dd.mm.yy  * Bit 2:	week day, 1 byte (unused here)  * Bit 3:	time zone, 1 byte, 0=MET, 1=MEST. (unused here)  * Bit 4:	clock status, 1 byte,	0=time invalid,  *					1=time from crystal backup,  *					3=time from DCF77  * Bit 5:	transmitter status, 1 byte,  *					bit 0: backup antenna  *					bit 1: time zone change within 1h  *					bit 3,2: TZ 01=MEST, 10=MET  *					bit 4: leap second will be  *						added within one hour  *					bits 5-7: Zero  * Bit 6:	time in backup mode, units of 5 minutes (unused here)  *  */
 end_comment
 
 begin_define
@@ -135,9 +132,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|WS_ALTERNATE
+name|WS_CALLBIT
 value|0x01
 end_define
+
+begin_comment
+comment|/* "call bit" used to signalize irregularities in the control facilities */
+end_comment
 
 begin_define
 define|#
@@ -176,49 +177,15 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|parse_cvt_fnc_t
 name|cvt_schmid
-name|P
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|format
-operator|*
-operator|,
-name|clocktime_t
-operator|*
-operator|,
-name|void
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|long
+name|parse_inp_fnc_t
 name|inp_schmid
-name|P
-argument_list|(
-operator|(
-name|parse_t
-operator|*
-operator|,
-name|unsigned
-name|int
-operator|,
-name|timestamp_t
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -251,6 +218,10 @@ comment|/* no private data (complete messages) */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* parse_cvt_fnc_t */
+end_comment
 
 begin_function
 specifier|static
@@ -573,14 +544,14 @@ index|[
 literal|8
 index|]
 operator|&
-name|WS_ALTERNATE
+name|WS_CALLBIT
 condition|)
 block|{
 name|clock_time
 operator|->
 name|flags
 operator||=
-name|PARSEB_ALTERNATE
+name|PARSEB_CALLBIT
 expr_stmt|;
 block|}
 if|if
@@ -625,7 +596,7 @@ name|flags
 operator||=
 name|PARSEB_S_LEAP
 operator||
-name|PARSEB_S_ANTENNA
+name|PARSEB_S_CALLBIT
 expr_stmt|;
 return|return
 name|CVT_OK
@@ -636,7 +607,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * inp_schmid  *  * grep data from input stream  */
+comment|/*  * parse_inp_fnc_t inp_schmid  *  * grab data from input stream  */
 end_comment
 
 begin_function
@@ -648,8 +619,7 @@ name|parse_t
 modifier|*
 name|parseio
 parameter_list|,
-name|unsigned
-name|int
+name|char
 name|ch
 parameter_list|,
 name|timestamp_t
@@ -679,6 +649,9 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
+operator|(
+name|uint8_t
+operator|)
 name|ch
 condition|)
 block|{
@@ -691,7 +664,7 @@ argument_list|(
 name|DD_PARSE
 argument_list|,
 operator|(
-literal|"mbg_input: ETX seen\n"
+literal|"inp_schmid: 0xFD seen\n"
 operator|)
 argument_list|)
 expr_stmt|;

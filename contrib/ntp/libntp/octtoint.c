@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -77,7 +83,8 @@ operator|!
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|cp
