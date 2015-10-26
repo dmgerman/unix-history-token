@@ -2787,6 +2787,7 @@ name|fd
 operator|>=
 literal|0
 condition|)
+block|{
 name|close
 argument_list|(
 name|dev
@@ -2794,6 +2795,14 @@ operator|->
 name|fd
 argument_list|)
 expr_stmt|;
+name|dev
+operator|->
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 block|}
 end_function
 
