@@ -105,7 +105,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage: %s [-V]<channel #><txns> [<bufsize> "
+literal|"Usage: %s [-fV]<channel #><txns> [<bufsize> "
 literal|"[<chain-len> [duration]]]\n"
 argument_list|,
 name|getprogname
@@ -142,6 +142,9 @@ name|fd
 decl_stmt|,
 name|ch
 decl_stmt|;
+name|bool
+name|fflag
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -153,7 +156,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"V"
+literal|"fV"
 argument_list|)
 operator|)
 operator|!=
@@ -166,6 +169,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'f'
+case|:
+name|fflag
+operator|=
+name|true
+expr_stmt|;
+break|break;
 case|case
 literal|'V'
 case|:
@@ -219,6 +230,22 @@ operator|.
 name|duration
 operator|=
 literal|0
+expr_stmt|;
+name|t
+operator|.
+name|testkind
+operator|=
+name|IOAT_TEST_DMA
+expr_stmt|;
+if|if
+condition|(
+name|fflag
+condition|)
+name|t
+operator|.
+name|testkind
+operator|=
+name|IOAT_TEST_FILL
 expr_stmt|;
 name|t
 operator|.

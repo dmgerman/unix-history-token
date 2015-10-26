@@ -150,6 +150,41 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Issue a blockfill operation.  The 64-bit pattern 'fillpattern' is written to  * 'len' physically contiguous bytes at 'dst'.  */
+end_comment
+
+begin_function_decl
+name|struct
+name|bus_dmadesc
+modifier|*
+name|ioat_blockfill
+parameter_list|(
+name|bus_dmaengine_t
+name|dmaengine
+parameter_list|,
+name|bus_addr_t
+name|dst
+parameter_list|,
+name|uint64_t
+name|fillpattern
+parameter_list|,
+name|bus_size_t
+name|len
+parameter_list|,
+name|bus_dmaengine_callback_t
+name|callback_fn
+parameter_list|,
+name|void
+modifier|*
+name|callback_arg
+parameter_list|,
+name|uint32_t
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Issues the copy data operation */
 end_comment
 

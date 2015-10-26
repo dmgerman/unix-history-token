@@ -37,7 +37,24 @@ name|IOAT_TEST_NO_MEMORY
 block|,
 name|IOAT_TEST_MISCOMPARE
 block|,
+name|IOAT_TEST_INVALID_INPUT
+block|,
 name|IOAT_NUM_RES
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|ioat_test_kind
+block|{
+name|IOAT_TEST_FILL
+init|=
+literal|0
+block|,
+name|IOAT_TEST_DMA
+block|,
+name|IOAT_NUM_TESTKINDS
 block|}
 enum|;
 end_enum
@@ -61,6 +78,10 @@ index|]
 decl_stmt|;
 name|uint32_t
 name|channel_index
+decl_stmt|;
+name|enum
+name|ioat_test_kind
+name|testkind
 decl_stmt|;
 comment|/* HW max of 1MB */
 name|uint32_t
