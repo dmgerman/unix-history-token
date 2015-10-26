@@ -267,6 +267,7 @@ end_define
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 init|=

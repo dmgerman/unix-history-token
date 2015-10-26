@@ -3386,7 +3386,7 @@ operator|==
 name|peer
 condition|)
 return|return;
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|peer
 operator|->

@@ -68,14 +68,14 @@ name|vint64
 name|ntptime
 decl_stmt|;
 comment|/* resulting NTP time	*/
-name|NTP_INSIST
+name|REQUIRE
 argument_list|(
 name|jt
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|jt
 operator|->
@@ -85,7 +85,7 @@ literal|13
 argument_list|)
 expr_stmt|;
 comment|/* permit month 0..13! */
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|jt
 operator|->
@@ -94,7 +94,7 @@ operator|<=
 literal|32
 argument_list|)
 expr_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|jt
 operator|->
@@ -103,7 +103,7 @@ operator|<=
 literal|366
 argument_list|)
 expr_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|jt
 operator|->
@@ -112,7 +112,7 @@ operator|<=
 literal|24
 argument_list|)
 expr_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|jt
 operator|->
@@ -121,7 +121,7 @@ operator|<=
 name|MINSPERHR
 argument_list|)
 expr_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|jt
 operator|->

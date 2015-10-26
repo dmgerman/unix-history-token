@@ -569,7 +569,7 @@ operator|++
 name|ai_cpy
 expr_stmt|;
 block|}
-name|NTP_ENSURE
+name|ENSURE
 argument_list|(
 name|pcanon
 operator|==
