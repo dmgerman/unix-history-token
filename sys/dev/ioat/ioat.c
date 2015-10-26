@@ -1830,14 +1830,19 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"could not start channel: "
-literal|"status = %#jx error = %x\n"
+literal|"status = %#jx error = %b\n"
 argument_list|,
 operator|(
 name|uintmax_t
 operator|)
 name|status
 argument_list|,
+operator|(
+name|int
+operator|)
 name|chanerr
+argument_list|,
+name|IOAT_CHANERR_STR
 argument_list|)
 expr_stmt|;
 return|return
@@ -5518,9 +5523,14 @@ name|ioat_log_message
 argument_list|(
 literal|0
 argument_list|,
-literal|"Channel halted (%x)\n"
+literal|"Channel halted (%b)\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|chanerr
+argument_list|,
+name|IOAT_CHANERR_STR
 argument_list|)
 expr_stmt|;
 if|if
