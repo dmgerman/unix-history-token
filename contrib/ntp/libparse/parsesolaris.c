@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp4-dev/libparse/parsesolaris.c,v 4.11 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *    * parsesolaris.c,v 4.11 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *  * STREAMS module for reference clocks  *  * Copyright (c) 1995-2005 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * /src/NTP/ntp4-dev/libparse/parsesolaris.c,v 4.11 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *  * parsesolaris.c,v 4.11 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *  * STREAMS module for reference clocks  *  * Copyright (c) 1995-2005 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_define
@@ -33,6 +33,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<config.h>
+end_include
 
 begin_include
 include|#
@@ -409,10 +415,7 @@ name|s
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|t
 argument_list|,
@@ -507,93 +510,78 @@ begin_comment
 comment|/*--------------- stream module definition ----------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|parseopen
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|queue_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|dev_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|cred_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|parseclose
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|queue_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|parsewput
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|queue_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|mblk_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|parserput
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|queue_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|mblk_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|parsersvc
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|queue_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -785,36 +773,30 @@ parameter_list|)
 value|do {\ 	(_X_)->tv_usec += (_US_);\ 	if ((_X_)->tv_usec>= 1000000)\ 	{\ 	    (_X_)->tv_sec++;\ 	    (_X_)->tv_usec -= 1000000;\ 	}\      } while (0)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|init_linemon
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|queue_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|close_linemon
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|queue_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|queue_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -869,7 +851,6 @@ parameter_list|(
 name|int
 name|lev
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|form
@@ -897,10 +878,6 @@ name|vcmn_err
 argument_list|(
 name|CE_CONT
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|form
 argument_list|,
 name|ap
@@ -965,8 +942,7 @@ modifier|*
 name|str
 init|=
 operator|(
-expr|struct
-name|stroptions
+name|void
 operator|*
 operator|)
 name|mp
@@ -1764,8 +1740,7 @@ case|:
 name|iocp
 operator|=
 operator|(
-expr|struct
-name|iocblk
+name|void
 operator|*
 operator|)
 name|mp
@@ -1871,10 +1846,15 @@ name|b_cont
 operator|=
 name|datap
 expr_stmt|;
+comment|/* (void *) quiets cast alignment warning */
 operator|*
 operator|(
 expr|struct
 name|ppsclockev
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|datap
@@ -2046,7 +2026,7 @@ modifier|*
 name|dct
 init|=
 operator|(
-name|parsectl_t
+name|void
 operator|*
 operator|)
 name|mp
@@ -2440,7 +2420,7 @@ name|long
 name|ch
 decl_stmt|;
 name|timestamp_t
-name|ctime
+name|c_time
 decl_stmt|;
 name|timespec_t
 name|hres_time
@@ -2452,7 +2432,7 @@ operator|&
 name|hres_time
 argument_list|)
 expr_stmt|;
-name|ctime
+name|c_time
 operator|.
 name|tv
 operator|.
@@ -2462,7 +2442,7 @@ name|hres_time
 operator|.
 name|tv_sec
 expr_stmt|;
-name|ctime
+name|c_time
 operator|.
 name|tv
 operator|.
@@ -2597,7 +2577,7 @@ operator|)
 name|ch
 argument_list|,
 operator|&
-name|ctime
+name|c_time
 argument_list|)
 condition|)
 block|{
@@ -2717,7 +2697,7 @@ operator|)
 literal|0
 argument_list|,
 operator|&
-name|ctime
+name|c_time
 argument_list|)
 condition|)
 block|{
@@ -2848,7 +2828,7 @@ operator|->
 name|q_ptr
 decl_stmt|;
 name|timestamp_t
-name|ctime
+name|c_time
 decl_stmt|;
 name|timespec_t
 name|hres_time
@@ -2876,7 +2856,7 @@ operator|&
 name|hres_time
 argument_list|)
 expr_stmt|;
-name|ctime
+name|c_time
 operator|.
 name|tv
 operator|.
@@ -2886,7 +2866,7 @@ name|hres_time
 operator|.
 name|tv_sec
 expr_stmt|;
-name|ctime
+name|c_time
 operator|.
 name|tv
 operator|.
@@ -2939,7 +2919,7 @@ else|:
 name|SYNC_ZERO
 argument_list|,
 operator|&
-name|ctime
+name|c_time
 argument_list|)
 condition|)
 block|{
@@ -3089,7 +3069,7 @@ name|parse_ppsclockev
 operator|.
 name|tv
 operator|=
-name|ctime
+name|c_time
 operator|.
 name|tv
 expr_stmt|;
@@ -3111,43 +3091,37 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|init_zs_linemon
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|queue_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|queue_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* handle line monitor for "zs" driver */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|close_zs_linemon
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|queue_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|queue_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*-------------------- CD isr status monitor ---------------*/
@@ -3401,20 +3375,17 @@ directive|include
 file|<sys/ser_zscc.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|zs_xsisr
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|zscom
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* zs external status interupt handler */
@@ -3611,15 +3582,12 @@ operator|=
 operator|(
 name|void
 argument_list|(
-argument|*
+operator|*
 argument_list|)
-name|P
 argument_list|(
-operator|(
 expr|struct
 name|zscom
 operator|*
-operator|)
 argument_list|)
 operator|)
 name|zs_xsisr
@@ -3649,7 +3617,7 @@ operator|->
 name|zsops
 expr_stmt|;
 comment|/* hook it up */
-comment|/* 			 * XXX: this is usually done via zsopinit()  			 * - have yet to find a way to call that routine 			 */
+comment|/* 			 * XXX: this is usually done via zsopinit() 			 * - have yet to find a way to call that routine 			 */
 name|zs
 operator|->
 name|zs_xsint
@@ -3657,15 +3625,12 @@ operator|=
 operator|(
 name|void
 argument_list|(
-argument|*
+operator|*
 argument_list|)
-name|P
 argument_list|(
-operator|(
 expr|struct
 name|zscom
 operator|*
-operator|)
 argument_list|)
 operator|)
 name|zs_xsisr
@@ -3693,7 +3658,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * unregister our ISR routine - must call under splhigh() (or   * whatever block ZS status interrupts)  */
+comment|/*  * unregister our ISR routine - must call under splhigh() (or  * whatever block ZS status interrupts)  */
 end_comment
 
 begin_function
@@ -3870,8 +3835,7 @@ modifier|*
 name|za
 init|=
 operator|(
-expr|struct
-name|asyncline
+name|void
 operator|*
 operator|)
 name|zs
@@ -4334,18 +4298,16 @@ condition|)
 block|{
 specifier|register
 name|void
-argument_list|(
-argument|*zsisr
-argument_list|)
-name|P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|zsisr
+function_decl|)
+parameter_list|(
+name|struct
 name|zscom
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* 				 * back home - phew (hopping along stream queues might 				 * prove dangerous to your health) 				 */
 if|if
 condition|(

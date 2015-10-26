@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/ntp4-dev/libparse/clk_rawdcf.c,v 4.18 2006/06/22 18:40:01 kardel RELEASE_20060622_A  *    * clk_rawdcf.c,v 4.18 2006/06/22 18:40:01 kardel RELEASE_20060622_A  *  * Raw DCF77 pulse clock support  *  * Copyright (c) 1995-2006 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/ntp4-dev/libparse/clk_rawdcf.c,v 4.18 2006/06/22 18:40:01 kardel RELEASE_20060622_A  *  * clk_rawdcf.c,v 4.18 2006/06/22 18:40:01 kardel RELEASE_20060622_A  *  * Raw DCF77 pulse clock support  *  * Copyright (c) 1995-2015 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifdef
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"ntp_fp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"timevalops.h"
 end_include
 
 begin_include
@@ -98,72 +104,27 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * DCF77 raw time code  *  * From "Zur Zeit", Physikalisch-Technische Bundesanstalt (PTB), Braunschweig  * und Berlin, Maerz 1989  *  * Timecode transmission:  * AM:  *	time marks are send every second except for the second before the  *	next minute mark  *	time marks consist of a reduction of transmitter power to 25%  *	of the nominal level  *	the falling edge is the time indication (on time)  *	time marks of a 100ms duration constitute a logical 0  *	time marks of a 200ms duration constitute a logical 1  * FM:  *	see the spec. (basically a (non-)inverted psuedo random phase shift)  *  * Encoding:  * Second	Contents  * 0  - 10	AM: free, FM: 0  * 11 - 14	free  * 15		R     - alternate antenna  * 16		A1    - expect zone change (1 hour before)  * 17 - 18	Z1,Z2 - time zone  *		 0  0 illegal  *		 0  1 MEZ  (MET)  *		 1  0 MESZ (MED, MET DST)  *		 1  1 illegal  * 19		A2    - expect leap insertion/deletion (1 hour before)  * 20		S     - start of time code (1)  * 21 - 24	M1    - BCD (lsb first) Minutes  * 25 - 27	M10   - BCD (lsb first) 10 Minutes  * 28		P1    - Minute Parity (even)  * 29 - 32	H1    - BCD (lsb first) Hours  * 33 - 34      H10   - BCD (lsb first) 10 Hours  * 35		P2    - Hour Parity (even)  * 36 - 39	D1    - BCD (lsb first) Days  * 40 - 41	D10   - BCD (lsb first) 10 Days  * 42 - 44	DW    - BCD (lsb first) day of week (1: Monday -> 7: Sunday)  * 45 - 49	MO    - BCD (lsb first) Month  * 50           MO0   - 10 Months  * 51 - 53	Y1    - BCD (lsb first) Years  * 54 - 57	Y10   - BCD (lsb first) 10 Years  * 58 		P3    - Date Parity (even)  * 59		      - usually missing (minute indication), except for leap insertion  */
+comment|/*  * DCF77 raw time code  *  * From "Zur Zeit", Physikalisch-Technische Bundesanstalt (PTB), Braunschweig  * und Berlin, Maerz 1989  *  * Timecode transmission:  * AM:  *	time marks are send every second except for the second before the  *	next minute mark  *	time marks consist of a reduction of transmitter power to 25%  *	of the nominal level  *	the falling edge is the time indication (on time)  *	time marks of a 100ms duration constitute a logical 0  *	time marks of a 200ms duration constitute a logical 1  * FM:  *	see the spec. (basically a (non-)inverted psuedo random phase shift)  *  * Encoding:  * Second	Contents  * 0  - 10	AM: free, FM: 0  * 11 - 14	free  * 15		R     - "call bit" used to signalize irregularities in the control facilities  *		        (until 2003 indicated transmission via alternate antenna)  * 16		A1    - expect zone change (1 hour before)  * 17 - 18	Z1,Z2 - time zone  *		 0  0 illegal  *		 0  1 MEZ  (MET)  *		 1  0 MESZ (MED, MET DST)  *		 1  1 illegal  * 19		A2    - expect leap insertion/deletion (1 hour before)  * 20		S     - start of time code (1)  * 21 - 24	M1    - BCD (lsb first) Minutes  * 25 - 27	M10   - BCD (lsb first) 10 Minutes  * 28		P1    - Minute Parity (even)  * 29 - 32	H1    - BCD (lsb first) Hours  * 33 - 34      H10   - BCD (lsb first) 10 Hours  * 35		P2    - Hour Parity (even)  * 36 - 39	D1    - BCD (lsb first) Days  * 40 - 41	D10   - BCD (lsb first) 10 Days  * 42 - 44	DW    - BCD (lsb first) day of week (1: Monday -> 7: Sunday)  * 45 - 49	MO    - BCD (lsb first) Month  * 50           MO0   - 10 Months  * 51 - 53	Y1    - BCD (lsb first) Years  * 54 - 57	Y10   - BCD (lsb first) 10 Years  * 58 		P3    - Date Parity (even)  * 59		      - usually missing (minute indication), except for leap insertion  */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|parse_pps_fnc_t
 name|pps_rawdcf
-name|P
-argument_list|(
-operator|(
-name|parse_t
-operator|*
-operator|,
-name|int
-operator|,
-name|timestamp_t
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|parse_cvt_fnc_t
 name|cvt_rawdcf
-name|P
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|format
-operator|*
-operator|,
-name|clocktime_t
-operator|*
-operator|,
-name|void
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|parse_inp_fnc_t
 name|inp_rawdcf
-name|P
-argument_list|(
-operator|(
-name|parse_t
-operator|*
-operator|,
-name|unsigned
-name|int
-operator|,
-name|timestamp_t
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -176,6 +137,14 @@ name|time_t
 name|tcode
 decl_stmt|;
 comment|/* last converted time code */
+name|timestamp_t
+name|tminute
+decl_stmt|;
+comment|/* sample time for minute start */
+name|timestamp_t
+name|timeout
+decl_stmt|;
+comment|/* last timeout timestamp */
 block|}
 name|last_tcode_t
 typedef|;
@@ -224,11 +193,13 @@ specifier|static
 struct|struct
 name|dcfparam
 block|{
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|onebits
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -239,6 +210,7 @@ name|dcfparameter
 init|=
 block|{
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -247,6 +219,7 @@ literal|"###############RADMLS1248124P124812P1248121241248112481248P??"
 block|,
 comment|/* 'ONE' representation */
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -579,6 +552,7 @@ parameter_list|,
 name|int
 name|idx
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -665,6 +639,7 @@ parameter_list|,
 name|int
 name|idx
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -760,6 +735,7 @@ name|s
 init|=
 name|buffer
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -769,6 +745,7 @@ name|dcfprm
 operator|->
 name|onebits
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -786,7 +763,9 @@ argument_list|(
 name|DD_RAWDCF
 argument_list|,
 operator|(
-literal|"parse: convert_rawdcf: \"%s\"\n"
+literal|"parse: convert_rawdcf: \"%.*s\"\n"
+operator|,
+name|size
 operator|,
 name|buffer
 operator|)
@@ -806,7 +785,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"parse: convert_rawdcf: INCOMPLETE DATA - time code only has %d bits\n"
+literal|"parse: convert_rawdcf: INCOMPLETE DATA - time code only has %d bits"
 argument_list|,
 name|size
 argument_list|)
@@ -814,7 +793,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-name|CVT_NONE
+name|CVT_FAIL
+operator||
+name|CVT_BADFMT
 return|;
 block|}
 for|for
@@ -864,7 +845,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-name|CVT_NONE
+name|CVT_FAIL
+operator||
+name|CVT_BADFMT
 return|;
 block|}
 if|if
@@ -953,7 +936,7 @@ name|clock_time
 operator|->
 name|flags
 operator|=
-name|PARSEB_S_ANTENNA
+name|PARSEB_S_CALLBIT
 operator||
 name|PARSEB_S_LEAP
 expr_stmt|;
@@ -1282,14 +1265,14 @@ name|clock_time
 operator|->
 name|flags
 operator||=
-name|PARSEB_ALTERNATE
+name|PARSEB_CALLBIT
 expr_stmt|;
 name|parseprintf
 argument_list|(
 name|DD_RAWDCF
 argument_list|,
 operator|(
-literal|"parse: convert_rawdcf: TIME CODE OK: %d:%d, %d.%d.%d, flags 0x%lx\n"
+literal|"parse: convert_rawdcf: TIME CODE OK: %02d:%02d, %02d.%02d.%02d, flags 0x%lx\n"
 operator|,
 operator|(
 name|int
@@ -1349,7 +1332,9 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"parse: convert_rawdcf: parity check FAILED for \"%s\"\n"
+literal|"parse: convert_rawdcf: start bit / parity check FAILED for \"%.*s\""
+argument_list|,
+name|size
 argument_list|,
 name|buffer
 argument_list|)
@@ -1366,7 +1351,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * raw dcf input routine - needs to fix up 50 baud  * characters for 1/0 decision  */
+comment|/*  * parse_cvt_fnc_t cvt_rawdcf  * raw dcf input routine - needs to fix up 50 baud  * characters for 1/0 decision  */
 end_comment
 
 begin_function
@@ -1427,6 +1412,7 @@ name|s
 operator|+
 name|size
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1436,6 +1422,7 @@ name|dcfparameter
 operator|.
 name|onebits
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1559,6 +1546,10 @@ block|}
 operator|*
 name|s
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|i
 expr_stmt|;
 name|histbuf
@@ -1986,6 +1977,11 @@ name|c
 operator|++
 expr_stmt|;
 block|}
+operator|*
+name|s
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|rtc
@@ -2047,11 +2043,20 @@ name|t
 operator|->
 name|tcode
 operator|)
-operator|==
-literal|60
+operator|<=
+literal|600
 condition|)
-comment|/* guard against multi bit errors */
+comment|/* require a successful telegram within last 10 minutes */
 block|{
+name|parseprintf
+argument_list|(
+name|DD_RAWDCF
+argument_list|,
+operator|(
+literal|"parse: cvt_rawdcf: recent timestamp check OK\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|clock_time
 operator|->
 name|utctime
@@ -2061,11 +2066,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|parseprintf
+argument_list|(
+name|DD_RAWDCF
+argument_list|,
+operator|(
+literal|"parse: cvt_rawdcf: recent timestamp check FAIL - ignore timestamp\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|rtc
 operator|=
-name|CVT_FAIL
-operator||
-name|CVT_BADTIME
+name|CVT_SKIP
 expr_stmt|;
 block|}
 name|t
@@ -2084,7 +2096,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pps_rawdcf  *  * currently a very stupid version - should be extended to decode  * also ones and zeros (which is easy)  */
+comment|/*  * parse_pps_fnc_t pps_rawdcf  *  * currently a very stupid version - should be extended to decode  * also ones and zeros (which is easy)  */
 end_comment
 
 begin_comment
@@ -2143,6 +2155,151 @@ end_function
 
 begin_function
 specifier|static
+name|long
+name|calc_usecdiff
+parameter_list|(
+name|timestamp_t
+modifier|*
+name|ref
+parameter_list|,
+name|timestamp_t
+modifier|*
+name|base
+parameter_list|,
+name|long
+name|offset
+parameter_list|)
+block|{
+name|struct
+name|timeval
+name|delta
+decl_stmt|;
+name|long
+name|delta_usec
+init|=
+literal|0
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PARSEKERNEL
+name|delta
+operator|.
+name|tv_sec
+operator|=
+name|ref
+operator|->
+name|tv
+operator|.
+name|tv_sec
+operator|-
+name|offset
+operator|-
+name|base
+operator|->
+name|tv
+operator|.
+name|tv_sec
+expr_stmt|;
+name|delta
+operator|.
+name|tv_usec
+operator|=
+name|ref
+operator|->
+name|tv
+operator|.
+name|tv_usec
+operator|-
+name|base
+operator|->
+name|tv
+operator|.
+name|tv_usec
+expr_stmt|;
+if|if
+condition|(
+name|delta
+operator|.
+name|tv_usec
+operator|<
+literal|0
+condition|)
+block|{
+name|delta
+operator|.
+name|tv_sec
+operator|-=
+literal|1
+expr_stmt|;
+name|delta
+operator|.
+name|tv_usec
+operator|+=
+literal|1000000
+expr_stmt|;
+block|}
+else|#
+directive|else
+name|l_fp
+name|delt
+decl_stmt|;
+name|delt
+operator|=
+name|ref
+operator|->
+name|fp
+expr_stmt|;
+name|delt
+operator|.
+name|l_i
+operator|-=
+name|offset
+expr_stmt|;
+name|L_SUB
+argument_list|(
+operator|&
+name|delt
+argument_list|,
+operator|&
+name|base
+operator|->
+name|fp
+argument_list|)
+expr_stmt|;
+name|TSTOTV
+argument_list|(
+operator|&
+name|delt
+argument_list|,
+operator|&
+name|delta
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|delta_usec
+operator|=
+literal|1000000
+operator|*
+operator|(
+name|int32_t
+operator|)
+name|delta
+operator|.
+name|tv_sec
+operator|+
+name|delta
+operator|.
+name|tv_usec
+expr_stmt|;
+return|return
+name|delta_usec
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|u_long
 name|snt_rawdcf
 parameter_list|(
@@ -2155,8 +2312,92 @@ modifier|*
 name|ptime
 parameter_list|)
 block|{
+comment|/* 	 * only synthesize if all of following conditions are met: 	 * - CVT_OK parse_status (we have a time stamp base) 	 * - ABS(ptime - tminute - (parse_index - 1) sec)< 500ms (spaced by 1 sec +- 500ms) 	 * - minute marker is available (confirms minute raster as base) 	 */
+name|last_tcode_t
+modifier|*
+name|t
+init|=
+operator|(
+name|last_tcode_t
+operator|*
+operator|)
+name|parseio
+operator|->
+name|parse_pdata
+decl_stmt|;
+name|long
+name|delta_usec
+init|=
+operator|-
+literal|1
+decl_stmt|;
 if|if
 condition|(
+name|t
+operator|!=
+name|NULL
+operator|&&
+name|t
+operator|->
+name|tminute
+operator|.
+name|tv
+operator|.
+name|tv_sec
+operator|!=
+literal|0
+condition|)
+block|{
+name|delta_usec
+operator|=
+name|calc_usecdiff
+argument_list|(
+name|ptime
+argument_list|,
+operator|&
+name|t
+operator|->
+name|tminute
+argument_list|,
+name|parseio
+operator|->
+name|parse_index
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|delta_usec
+operator|<
+literal|0
+condition|)
+name|delta_usec
+operator|=
+operator|-
+name|delta_usec
+expr_stmt|;
+block|}
+name|parseprintf
+argument_list|(
+name|DD_RAWDCF
+argument_list|,
+operator|(
+literal|"parse: snt_rawdcf: synth for offset %d seconds - absolute usec error %ld\n"
+operator|,
+name|parseio
+operator|->
+name|parse_index
+operator|-
+literal|1
+operator|,
+name|delta_usec
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
 operator|(
 name|parseio
 operator|->
@@ -2168,7 +2409,19 @@ name|CVT_MASK
 operator|)
 operator|==
 name|CVT_OK
+operator|)
+operator|&&
+operator|(
+name|delta_usec
+operator|<
+literal|500000
+operator|&&
+name|delta_usec
+operator|>=
+literal|0
+operator|)
 condition|)
+comment|/* only if minute marker is available */
 block|{
 name|parseio
 operator|->
@@ -2241,7 +2494,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * inp_rawdcf  *  * grab DCF77 data from input stream  */
+comment|/*  * parse_inp_fnc_t inp_rawdcf  *  * grab DCF77 data from input stream  */
 end_comment
 
 begin_function
@@ -2253,8 +2506,7 @@ name|parse_t
 modifier|*
 name|parseio
 parameter_list|,
-name|unsigned
-name|int
+name|char
 name|ch
 parameter_list|,
 name|timestamp_t
@@ -2313,15 +2565,31 @@ name|timeout
 argument_list|)
 condition|)
 block|{
+name|last_tcode_t
+modifier|*
+name|t
+init|=
+operator|(
+name|last_tcode_t
+operator|*
+operator|)
+name|parseio
+operator|->
+name|parse_pdata
+decl_stmt|;
+name|long
+name|delta_usec
+decl_stmt|;
 name|parseprintf
 argument_list|(
-name|DD_PARSE
+name|DD_RAWDCF
 argument_list|,
 operator|(
 literal|"inp_rawdcf: time out seen\n"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* finish collection */
 operator|(
 name|void
 operator|)
@@ -2330,6 +2598,135 @@ argument_list|(
 name|parseio
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|t
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* remember minute start sample time if timeouts occur in minute raster */
+if|if
+condition|(
+name|t
+operator|->
+name|timeout
+operator|.
+name|tv
+operator|.
+name|tv_sec
+operator|!=
+literal|0
+condition|)
+block|{
+name|delta_usec
+operator|=
+name|calc_usecdiff
+argument_list|(
+name|tstamp
+argument_list|,
+operator|&
+name|t
+operator|->
+name|timeout
+argument_list|,
+literal|60
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|delta_usec
+operator|<
+literal|0
+condition|)
+name|delta_usec
+operator|=
+operator|-
+name|delta_usec
+expr_stmt|;
+block|}
+else|else
+block|{
+name|delta_usec
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|delta_usec
+operator|<
+literal|500000
+operator|&&
+name|delta_usec
+operator|>=
+literal|0
+condition|)
+block|{
+name|parseprintf
+argument_list|(
+name|DD_RAWDCF
+argument_list|,
+operator|(
+literal|"inp_rawdcf: timeout time difference %ld usec - minute marker set\n"
+operator|,
+name|delta_usec
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* collect minute markers only if spaced by 60 seconds */
+name|t
+operator|->
+name|tminute
+operator|=
+operator|*
+name|tstamp
+expr_stmt|;
+block|}
+else|else
+block|{
+name|parseprintf
+argument_list|(
+name|DD_RAWDCF
+argument_list|,
+operator|(
+literal|"inp_rawdcf: timeout time difference %ld usec - minute marker cleared\n"
+operator|,
+name|delta_usec
+operator|)
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|t
+operator|->
+name|tminute
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|t
+operator|->
+name|tminute
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|t
+operator|->
+name|timeout
+operator|=
+operator|*
+name|tstamp
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -2340,6 +2737,7 @@ argument_list|,
 name|ch
 argument_list|)
 expr_stmt|;
+comment|/* pass up to higher layers */
 return|return
 name|PARSE_INP_TIME
 return|;
