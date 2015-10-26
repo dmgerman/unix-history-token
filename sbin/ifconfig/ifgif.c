@@ -399,13 +399,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
 name|size_t
 name|i
 decl_stmt|;
@@ -417,7 +410,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|gif_cmds
 argument_list|)
@@ -440,9 +433,6 @@ operator|&
 name|af_gif
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
