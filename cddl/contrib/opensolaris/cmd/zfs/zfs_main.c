@@ -1532,7 +1532,8 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tholds [-r]<snapshot> ...\n"
+literal|"\tholds [-Hp] [-r|-d depth] "
+literal|"<filesystem|volume|snapshot> ...\n"
 argument_list|)
 operator|)
 return|;
@@ -26187,6 +26188,9 @@ parameter_list|(
 name|boolean_t
 name|scripted
 parameter_list|,
+name|boolean_t
+name|literal
+parameter_list|,
 name|size_t
 name|nwidth
 parameter_list|,
@@ -26408,6 +26412,23 @@ operator|&
 name|val
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|literal
+condition|)
+name|snprintf
+argument_list|(
+name|tsbuf
+argument_list|,
+name|DATETIME_BUF_LEN
+argument_list|,
+literal|"%llu"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|time
 operator|=
 operator|(
@@ -26445,6 +26466,7 @@ operator|&
 name|t
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -26546,6 +26568,12 @@ condition|(
 name|cbp
 operator|->
 name|cb_recursive
+operator|&&
+name|cbp
+operator|->
+name|cb_snapname
+operator|!=
+name|NULL
 condition|)
 block|{
 specifier|const
@@ -26697,7 +26725,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs holds [-r]<snap> ...  *  *	-r	Recursively hold  */
+comment|/*  * zfs holds [-Hp] [-r | -d max]<dataset|snap> ...  *  *	-H	Suppress header output  *	-p	Output literal values  *	-r	Recursively search for holds  *	-d max	Limit depth of recursive search  */
 end_comment
 
 begin_function
@@ -26731,6 +26759,11 @@ init|=
 name|B_FALSE
 decl_stmt|;
 name|boolean_t
+name|literal
+init|=
+name|B_FALSE
+decl_stmt|;
+name|boolean_t
 name|recursive
 init|=
 name|B_FALSE
@@ -26740,7 +26773,7 @@ name|char
 modifier|*
 name|opts
 init|=
-literal|"rH"
+literal|"d:rHp"
 decl_stmt|;
 name|nvlist_t
 modifier|*
@@ -26799,6 +26832,24 @@ name|c
 condition|)
 block|{
 case|case
+literal|'d'
+case|:
+name|limit
+operator|=
+name|parse_depth
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|flags
+argument_list|)
+expr_stmt|;
+name|recursive
+operator|=
+name|B_TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'r'
 case|:
 name|recursive
@@ -26810,6 +26861,14 @@ case|case
 literal|'H'
 case|:
 name|scripted
+operator|=
+name|B_TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|literal
 operator|=
 name|B_TRUE
 expr_stmt|;
@@ -26924,6 +26983,8 @@ specifier|const
 name|char
 modifier|*
 name|snapname
+init|=
+name|NULL
 decl_stmt|;
 name|delim
 operator|=
@@ -26937,30 +26998,10 @@ expr_stmt|;
 if|if
 condition|(
 name|delim
-operator|==
+operator|!=
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|gettext
-argument_list|(
-literal|"'%s' is not a snapshot\n"
-argument_list|)
-argument_list|,
-name|snapshot
-argument_list|)
-expr_stmt|;
-operator|++
-name|errors
-expr_stmt|;
-continue|continue;
-block|}
 name|snapname
 operator|=
 name|delim
@@ -26980,6 +27021,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 name|cb
 operator|.
 name|cb_recursive
@@ -27038,6 +27080,8 @@ comment|/* 	 *  2. print holds data 	 */
 name|print_holds
 argument_list|(
 name|scripted
+argument_list|,
+name|literal
 argument_list|,
 name|cb
 operator|.
