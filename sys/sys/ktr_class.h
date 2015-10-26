@@ -192,7 +192,7 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|/* cxgb, drm2, ntb */
+comment|/* cxgb, drm2, ioat, ntb */
 end_comment
 
 begin_define

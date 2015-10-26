@@ -2898,11 +2898,9 @@ name|comp_update
 operator|&
 name|IOAT_CHANSTS_COMPLETED_DESCRIPTOR_MASK
 expr_stmt|;
-name|ioat_log_message
+name|CTR0
 argument_list|(
-literal|3
-argument_list|,
-literal|"%s\n"
+name|KTR_IOAT
 argument_list|,
 name|__func__
 argument_list|)
@@ -2941,11 +2939,11 @@ name|desc
 operator|->
 name|bus_dmadesc
 expr_stmt|;
-name|ioat_log_message
+name|CTR1
 argument_list|(
-literal|3
+name|KTR_IOAT
 argument_list|,
-literal|"completing desc %d\n"
+literal|"completing desc %d"
 argument_list|,
 name|ioat
 operator|->
@@ -3157,11 +3155,9 @@ operator|->
 name|submit_lock
 argument_list|)
 expr_stmt|;
-name|ioat_log_message
+name|CTR0
 argument_list|(
-literal|3
-argument_list|,
-literal|"%s\n"
+name|KTR_IOAT
 argument_list|,
 name|__func__
 argument_list|)
@@ -3189,11 +3185,9 @@ argument_list|(
 name|dmaengine
 argument_list|)
 expr_stmt|;
-name|ioat_log_message
+name|CTR0
 argument_list|(
-literal|3
-argument_list|,
-literal|"%s\n"
+name|KTR_IOAT
 argument_list|,
 name|__func__
 argument_list|)
@@ -3312,11 +3306,9 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|ioat_log_message
+name|CTR0
 argument_list|(
-literal|3
-argument_list|,
-literal|"%s\n"
+name|KTR_IOAT
 argument_list|,
 name|__func__
 argument_list|)
@@ -3569,11 +3561,9 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|ioat_log_message
+name|CTR0
 argument_list|(
-literal|3
-argument_list|,
-literal|"%s\n"
+name|KTR_IOAT
 argument_list|,
 name|__func__
 argument_list|)

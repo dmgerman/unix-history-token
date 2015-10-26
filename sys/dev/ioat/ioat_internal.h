@@ -36,6 +36,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|KTR_IOAT
+value|KTR_SPARE3
+end_define
+
+begin_define
+define|#
+directive|define
 name|ioat_read_chancnt
 parameter_list|(
 name|ioat
