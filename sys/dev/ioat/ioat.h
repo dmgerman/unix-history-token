@@ -50,11 +50,22 @@ name|DMA_INT_EN
 value|0x1
 end_define
 
+begin_comment
+comment|/*  * Like M_NOWAIT.  Operations will return NULL if they cannot allocate a  * descriptor without blocking.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMA_NO_WAIT
+value|0x2
+end_define
+
 begin_define
 define|#
 directive|define
 name|DMA_ALL_FLAGS
-value|(DMA_INT_EN)
+value|(DMA_INT_EN | DMA_NO_WAIT)
 end_define
 
 begin_typedef

@@ -1261,6 +1261,9 @@ name|uint32_t
 name|tail
 decl_stmt|;
 name|uint32_t
+name|hw_head
+decl_stmt|;
+name|uint32_t
 name|ring_size_order
 decl_stmt|;
 name|bus_addr_t
