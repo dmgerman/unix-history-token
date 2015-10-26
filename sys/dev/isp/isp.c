@@ -6933,11 +6933,39 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"non-MULTIID f/w loaded, only can enable 1 of %d channels"
+literal|"non-MULTIID f/w loaded, "
+literal|"only can enable 1 of %d channels"
 argument_list|,
 name|isp
 operator|->
 name|isp_nchan
+argument_list|)
+expr_stmt|;
+name|isp
+operator|->
+name|isp_nchan
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|ISP_CAP_VP0
+argument_list|(
+name|isp
+argument_list|)
+condition|)
+block|{
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"We can not use MULTIID "
+literal|"feature properly without VP0_Decoupling"
 argument_list|)
 expr_stmt|;
 name|isp
@@ -10628,13 +10656,10 @@ name|isp_nchan
 operator|>
 literal|1
 operator|&&
-operator|(
+name|ISP_CAP_VP0
+argument_list|(
 name|isp
-operator|->
-name|isp_fwattr
-operator|&
-name|ISP2400_FW_ATTR_VP0
-operator|)
+argument_list|)
 condition|)
 block|{
 name|icbp
@@ -11855,11 +11880,10 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|ISP_CAP_VP0
+argument_list|(
 name|isp
-operator|->
-name|isp_fwattr
-operator|&
-name|ISP2400_FW_ATTR_VP0
+argument_list|)
 condition|)
 block|{
 name|vpinfo
@@ -12089,11 +12113,10 @@ name|isp_scratch
 expr_stmt|;
 if|if
 condition|(
+name|ISP_CAP_VP0
+argument_list|(
 name|isp
-operator|->
-name|isp_fwattr
-operator|&
-name|ISP2400_FW_ATTR_VP0
+argument_list|)
 condition|)
 name|off
 operator|+=

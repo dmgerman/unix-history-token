@@ -4096,6 +4096,17 @@ define|\
 value|(ISP_CAP_MULTI_ID(isp) ? tag : 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ISP_CAP_VP0
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|(IS_24XX(isp)? (isp->isp_fwattr& ISP2400_FW_ATTR_VP0) : 0)
+end_define
+
 begin_comment
 comment|/*  * This is true manifestly or is dependent on a f/w attribute  * but may or may not actually be *enabled*. In any case, it  * is enabled on a per-channel basis.  */
 end_comment
@@ -5583,14 +5594,17 @@ decl_stmt|;
 name|uint16_t
 name|vp_ctrl_idmap
 index|[
-literal|8
+literal|16
 index|]
 decl_stmt|;
-name|uint8_t
+name|uint16_t
 name|vp_ctrl_reserved
 index|[
-literal|32
+literal|7
 index|]
+decl_stmt|;
+name|uint16_t
+name|vp_ctrl_fcf_index
 decl_stmt|;
 block|}
 name|vp_ctrl_info_t
@@ -5601,28 +5615,35 @@ begin_define
 define|#
 directive|define
 name|VP_CTRL_CMD_ENABLE_VP
-value|0
+value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
 name|VP_CTRL_CMD_DISABLE_VP
-value|8
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
 name|VP_CTRL_CMD_DISABLE_VP_REINIT_LINK
-value|9
+value|0x09
 end_define
 
 begin_define
 define|#
 directive|define
 name|VP_CTRL_CMD_DISABLE_VP_LOGO
-value|0xA
+value|0x0A
+end_define
+
+begin_define
+define|#
+directive|define
+name|VP_CTRL_CMD_DISABLE_VP_LOGO_ALL
+value|0x0B
 end_define
 
 begin_comment
