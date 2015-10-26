@@ -16,49 +16,21 @@ name|NTP_DEBUG_H
 end_define
 
 begin_comment
-comment|/*  * macros for debugging output - cut down on #ifdef pollution in the code  */
+comment|/*  * macro for debugging output - cut down on #ifdef pollution.  *  * TRACE() is similar to ntpd's DPRINTF() for utilities and libntp.  * Uses mprintf() and so supports %m, replaced by strerror(errno).  *  * The calling convention is not attractive:  *     TRACE(debuglevel, (fmt, ...));  *     TRACE(2, ("this will appear on stdout if debug>= %d\n", 2));  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_define
 define|#
 directive|define
-name|DPRINTF
+name|TRACE
 parameter_list|(
-name|_lvl_
+name|lvl
 parameter_list|,
-name|_arg_
+name|arg
 parameter_list|)
 define|\
-value|do { 						\ 		if (debug>= (_lvl_))			\ 			printf _arg_;			\ 	} while (0)
+value|do { 						\ 		if (debug>= (lvl))			\ 			mprintf arg;			\ 	} while (0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DPRINTF
-parameter_list|(
-name|_lvl_
-parameter_list|,
-name|_arg_
-parameter_list|)
-value|do {} while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -66,7 +38,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * $Log$  */
+comment|/* NTP_DEBUG_H */
 end_comment
 
 end_unit

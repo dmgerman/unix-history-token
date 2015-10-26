@@ -15,6 +15,16 @@ directive|define
 name|NTP_SYSLOG_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<ntp_types.h>
+end_include
+
+begin_comment
+comment|/* u_int32 type */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -25,6 +35,14 @@ begin_function_decl
 specifier|extern
 name|void
 name|msyslog
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|mvsyslog
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -75,9 +93,54 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|msyslog_term
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* duplicate to stdout/err */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|msyslog_term_pid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|msyslog_include_timestamp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|FILE
 modifier|*
 name|syslog_file
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* if syslogit is FALSE, log to  				   this file and not syslog */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|syslog_fname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|syslog_abs_fname
 decl_stmt|;
 end_decl_stmt
 
@@ -490,8 +553,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|long
+name|u_int32
 name|ntp_syslogmask
 decl_stmt|;
 end_decl_stmt
@@ -501,9 +563,24 @@ define|#
 directive|define
 name|NLOG
 parameter_list|(
-name|_X_
+name|bits
 parameter_list|)
-value|if (ntp_syslogmask& (_X_))
+value|if (ntp_syslogmask& (bits))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOGIF
+parameter_list|(
+name|nlog_suffix
+parameter_list|,
+name|msl_args
+parameter_list|)
+define|\
+value|do {								\ 	NLOG(NLOG_##nlog_suffix)
+comment|/* like "if (...) */
+value|\ 		msyslog msl_args;				\ } while (FALSE)
 end_define
 
 begin_endif

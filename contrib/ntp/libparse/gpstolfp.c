@@ -6,41 +6,26 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ntp_fp.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|GPSORIGIN
-value|ULONG_CONST(2524953600)
-end_define
+begin_include
+include|#
+directive|include
+file|"ntp_calendar.h"
+end_include
 
-begin_comment
-comment|/* NTP origin - GPS origin in seconds */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SECSPERWEEK
-value|(unsigned)(604800)
-end_define
-
-begin_comment
-comment|/* seconds per week - GPS tells us about weeks */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GPSWRAP
-value|990
-end_define
-
-begin_comment
-comment|/* assume week count less than this in the previous epoch */
-end_comment
+begin_include
+include|#
+directive|include
+file|"parse.h"
+end_include
 
 begin_function
 name|void
@@ -70,24 +55,29 @@ condition|)
 block|{
 name|weeks
 operator|+=
-literal|1024
+name|GPSWEEKS
 expr_stmt|;
 block|}
 name|lfp
 operator|->
 name|l_ui
 operator|=
+call|(
+name|uint32_t
+call|)
+argument_list|(
 name|weeks
 operator|*
 name|SECSPERWEEK
 operator|+
 name|days
 operator|*
-literal|86400
+name|SECSPERDAY
 operator|+
 name|seconds
 operator|+
 name|GPSORIGIN
+argument_list|)
 expr_stmt|;
 comment|/* convert to NTP time */
 name|lfp

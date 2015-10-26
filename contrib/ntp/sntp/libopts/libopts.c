@@ -3,12 +3,13 @@ begin_define
 define|#
 directive|define
 name|AUTOOPTS_INTERNAL
+value|1
 end_define
 
 begin_include
 include|#
 directive|include
-file|"compat/compat.h"
+file|"autoopts/project.h"
 end_include
 
 begin_define
@@ -17,6 +18,23 @@ directive|define
 name|LOCAL
 value|static
 end_define
+
+begin_include
+include|#
+directive|include
+file|"ao-strs.h"
+end_include
+
+begin_decl_stmt
+specifier|static
+name|char
+specifier|const
+name|ao_ver_string
+index|[]
+init|=
+literal|"41:0:16\n"
+decl_stmt|;
+end_decl_stmt
 
 begin_include
 include|#
@@ -39,6 +57,30 @@ end_include
 begin_include
 include|#
 directive|include
+file|"option-xat-attribute.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"option-value-type.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ao-strs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ag-char-map.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"autoopts.h"
 end_include
 
@@ -51,13 +93,49 @@ end_include
 begin_include
 include|#
 directive|include
+file|"parse-duration.c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ao-strs.c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"option-value-type.c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"option-xat-attribute.c"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"autoopts.c"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"alias.c"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"boolean.c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"check.c"
 end_include
 
 begin_include
@@ -75,13 +153,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"enumeration.c"
+file|"enum.c"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"environment.c"
+file|"env.c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"file.c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"find.c"
 end_include
 
 begin_include
@@ -129,6 +219,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"reset.c"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"restore.c"
 end_include
 
@@ -165,6 +261,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"time.c"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"tokenize.c"
 end_include
 
@@ -178,6 +280,12 @@ begin_include
 include|#
 directive|include
 file|"version.c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"init.c"
 end_include
 
 end_unit

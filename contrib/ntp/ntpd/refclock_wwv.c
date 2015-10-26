@@ -138,7 +138,7 @@ comment|/* ICOM */
 end_comment
 
 begin_comment
-comment|/*  * Audio WWV/H demodulator/decoder  *  * This driver synchronizes the computer time using data encoded in  * radio transmissions from NIST time/frequency stations WWV in Boulder,  * CO, and WWVH in Kauai, HI. Transmissions are made continuously on  * 2.5, 5, 10 and 15 MHz from WWV and WWVH, and 20 MHz from WWV. An  * ordinary AM shortwave receiver can be tuned manually to one of these  * frequencies or, in the case of ICOM receivers, the receiver can be  * tuned automatically using this program as propagation conditions  * change throughout the weasons, both day and night.  *  * The driver receives, demodulates and decodes the radio signals when  * connected to the audio codec of a workstation running Solaris, SunOS  * FreeBSD or Linux, and with a little help, other workstations with  * similar codecs or sound cards. In this implementation, only one audio  * driver and codec can be supported on a single machine.  *  * The demodulation and decoding algorithms used in this driver are  * based on those developed for the TAPR DSP93 development board and the  * TI 320C25 digital signal processor described in: Mills, D.L. A  * precision radio clock for WWV transmissions. Electrical Engineering  * Report 97-8-1, University of Delaware, August 1997, 25 pp., available  * from www.eecis.udel.edu/~mills/reports.html. The algorithms described  * in this report have been modified somewhat to improve performance  * under weak signal conditions and to provide an automatic station  * identification feature.  *  * The ICOM code is normally compiled in the driver. It isn't used,  * unless the mode keyword on the server configuration command specifies  * a nonzero ICOM ID select code. The C-IV trace is turned on if the  * debug level is greater than one.  *  * Fudge factors  *  * Fudge flag4 causes the dubugging output described above to be  * recorded in the clockstats file. Fudge flag2 selects the audio input  * port, where 0 is the mike port (default) and 1 is the line-in port.  * It does not seem useful to select the compact disc player port. Fudge  * flag3 enables audio monitoring of the input signal. For this purpose,  * the monitor gain is set to a default value.  */
+comment|/*  * Audio WWV/H demodulator/decoder  *  * This driver synchronizes the computer time using data encoded in  * radio transmissions from NIST time/frequency stations WWV in Boulder,  * CO, and WWVH in Kauai, HI. Transmissions are made continuously on  * 2.5, 5, 10 and 15 MHz from WWV and WWVH, and 20 MHz from WWV. An  * ordinary AM shortwave receiver can be tuned manually to one of these  * frequencies or, in the case of ICOM receivers, the receiver can be  * tuned automatically using this program as propagation conditions  * change throughout the weasons, both day and night.  *  * The driver requires an audio codec or sound card with sampling rate 8  * kHz and mu-law companding. This is the same standard as used by the  * telephone industry and is supported by most hardware and operating  * systems, including Solaris, SunOS, FreeBSD, NetBSD and Linux. In this  * implementation, only one audio driver and codec can be supported on a  * single machine.  *  * The demodulation and decoding algorithms used in this driver are  * based on those developed for the TAPR DSP93 development board and the  * TI 320C25 digital signal processor described in: Mills, D.L. A  * precision radio clock for WWV transmissions. Electrical Engineering  * Report 97-8-1, University of Delaware, August 1997, 25 pp., available  * from www.eecis.udel.edu/~mills/reports.html. The algorithms described  * in this report have been modified somewhat to improve performance  * under weak signal conditions and to provide an automatic station  * identification feature.  *  * The ICOM code is normally compiled in the driver. It isn't used,  * unless the mode keyword on the server configuration command specifies  * a nonzero ICOM ID select code. The C-IV trace is turned on if the  * debug level is greater than one.  *  * Fudge factors  *  * Fudge flag4 causes the debugging output described above to be  * recorded in the clockstats file. Fudge flag2 selects the audio input  * port, where 0 is the mike port (default) and 1 is the line-in port.  * It does not seem useful to select the compact disc player port. Fudge  * flag3 enables audio monitoring of the input signal. For this purpose,  * the monitor gain is set to a default value.  *  * CEVNT_BADTIME	invalid date or time  * CEVNT_PROP		propagation failure - no stations heard  * CEVNT_TIMEOUT	timeout (see newgame() below)  */
 end_comment
 
 begin_comment
@@ -192,7 +192,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SECOND
+name|WWV_SEC
 value|8000
 end_define
 
@@ -203,8 +203,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MINUTE
-value|(SECOND * 60)
+name|WWV_MIN
+value|(WWV_SEC * 60)
 end_define
 
 begin_comment
@@ -365,8 +365,19 @@ begin_comment
 comment|/* dispersion growth factor */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TBUF
+value|128
+end_define
+
 begin_comment
-comment|/*  * Tunable parameters. The DGAIN parameter can be changed to fit the  * audio response of the radio at 100 Hz. The WWV/WWVH data subcarrier  * is transmitted at about 20 percent percent modulation; the matched  * filter boosts it by a factor of 17 and the receiver response does  * what it does. The compromise value works for ICOM radios. If the  * radio is not tunable, the DCHAN parameter can be changed to fit the  * expected best propagation frequency: higher if further from the  * transmitter, lower if nearer. The compromise value works for the US  * right coast. The FREQ_OFFSET parameter can be used as a frequency  * vernier to correct codec requency if greater than MAXFREQ.  */
+comment|/* max monitor line length */
+end_comment
+
+begin_comment
+comment|/*  * Tunable parameters. The DGAIN parameter can be changed to fit the  * audio response of the radio at 100 Hz. The WWV/WWVH data subcarrier  * is transmitted at about 20 percent percent modulation; the matched  * filter boosts it by a factor of 17 and the receiver response does  * what it does. The compromise value works for ICOM radios. If the  * radio is not tunable, the DCHAN parameter can be changed to fit the  * expected best propagation frequency: higher if further from the  * transmitter, lower if nearer. The compromise value works for the US  * right coast.  */
 end_comment
 
 begin_define
@@ -389,17 +400,6 @@ end_define
 
 begin_comment
 comment|/* subcarrier gain */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FREQ_OFFSET
-value|0.
-end_define
-
-begin_comment
-comment|/* codec frequency correction (PPM) */
 end_comment
 
 begin_comment
@@ -486,6 +486,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|METRIC
+value|0x0080
+end_define
+
+begin_comment
+comment|/* one or more stations heard */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LEPSEC
 value|0x1000
 end_define
@@ -528,7 +539,7 @@ begin_define
 define|#
 directive|define
 name|CMPERR
-value|1
+value|0x1
 end_define
 
 begin_comment
@@ -539,7 +550,7 @@ begin_define
 define|#
 directive|define
 name|LOWERR
-value|2
+value|0x2
 end_define
 
 begin_comment
@@ -550,7 +561,7 @@ begin_define
 define|#
 directive|define
 name|NINERR
-value|4
+value|0x4
 end_define
 
 begin_comment
@@ -561,7 +572,7 @@ begin_define
 define|#
 directive|define
 name|SYNERR
-value|8
+value|0x8
 end_define
 
 begin_comment
@@ -826,7 +837,7 @@ begin_define
 define|#
 directive|define
 name|MS
-value|(SECOND / 1000)
+value|(WWV_SEC / 1000)
 end_define
 
 begin_comment
@@ -837,7 +848,7 @@ begin_define
 define|#
 directive|define
 name|IN100
-value|((100 * 80) / SECOND)
+value|((100 * 80) / WWV_SEC)
 end_define
 
 begin_comment
@@ -848,7 +859,7 @@ begin_define
 define|#
 directive|define
 name|IN1000
-value|((1000 * 80) / SECOND)
+value|((1000 * 80) / WWV_SEC)
 end_define
 
 begin_comment
@@ -859,7 +870,7 @@ begin_define
 define|#
 directive|define
 name|IN1200
-value|((1200 * 80) / SECOND)
+value|((1200 * 80) / WWV_SEC)
 end_define
 
 begin_comment
@@ -996,18 +1007,18 @@ comment|/* 3 leap second warning */
 end_comment
 
 begin_comment
-comment|/*  * The on-time synchronization point for the driver is the second epoch  * sync pulse produced by the FIR matched filters. As the 5-ms delay of  * these filters is compensated, the program delay is 1.1 ms due to the  * 600-Hz IIR bandpass filter. The measured receiver delay is 4.7 ms and  * the codec delay less than 0.2 ms. The additional propagation delay  * specific to each receiver location can be programmed in the fudge  * time1 and time2 values for WWV and WWVH, respectively.  */
+comment|/*  * The on-time synchronization point is the positive-going zero crossing  * of the first cycle of the 5-ms second pulse. The IIR baseband filter  * phase delay is 0.91 ms, while the receiver delay is approximately 4.7  * ms at 1000 Hz. The fudge value -0.45 ms due to the codec and other  * causes was determined by calibrating to a PPS signal from a GPS  * receiver. The additional propagation delay specific to each receiver  * location can be  programmed in the fudge time1 and time2 values for  * WWV and WWVH, respectively.  *  * The resulting offsets with a 2.4-GHz P4 running FreeBSD 6.1 are  * generally within .02 ms short-term with .02 ms jitter. The long-term  * offsets vary up to 0.3 ms due to ionosperhic layer height variations.  * The processor load due to the driver is 5.8 percent.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PDELAY
-value|(.0011 + .0047 + .0002)
+value|((.91 + 4.7 - 0.45) / 1000)
 end_define
 
 begin_comment
-comment|/* net system delay (s) */
+comment|/* system delay (s) */
 end_comment
 
 begin_comment
@@ -1932,7 +1943,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * BCD coefficients for maximum likelihood digit decode  */
+comment|/*  * BCD coefficients for maximum-likelihood digit decode  */
 end_comment
 
 begin_define
@@ -2443,7 +2454,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The decoding matrix consists of nine row vectors, one for each digit  * of the timecode. The digits are stored from least to most significant  * order. The maximum likelihood timecode is formed from the digits  * corresponding to the maximum likelihood values reading in the  * opposite order: yy ddd hh:mm.  */
+comment|/*  * The decoding matrix consists of nine row vectors, one for each digit  * of the timecode. The digits are stored from least to most significant  * order. The maximum-likelihood timecode is formed from the digits  * corresponding to the maximum-likelihood values reading in the  * opposite order: yy ddd hh:mm.  */
 end_comment
 
 begin_struct
@@ -2458,10 +2469,6 @@ name|int
 name|digit
 decl_stmt|;
 comment|/* current clock digit */
-name|int
-name|mldigit
-decl_stmt|;
-comment|/* maximum likelihood digit */
 name|int
 name|count
 decl_stmt|;
@@ -2612,6 +2619,10 @@ name|double
 name|monitor
 decl_stmt|;
 comment|/* audio monitor point */
+name|double
+name|pdelay
+decl_stmt|;
+comment|/* propagation delay (s) */
 ifdef|#
 directive|ifdef
 name|ICOM
@@ -2777,328 +2788,273 @@ begin_comment
 comment|/*  * Function prototypes  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|wwv_start
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|wwv_shutdown
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|wwv_receive
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|recvbuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|wwv_poll
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * More function prototypes  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|wwv_epoch
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|wwv_rf
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|double
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|wwv_endpoc
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|wwv_rsec
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|double
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|wwv_qrz
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|sync
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|wwv_corr4
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|decvec
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|double
 index|[]
-operator|,
+parameter_list|,
 name|double
 index|[]
 index|[
 literal|4
 index|]
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|wwv_gain
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|wwv_tsec
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|timecode
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|wwvunit
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|double
 name|wwv_snr
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|double
-operator|,
+parameter_list|,
 name|double
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|carry
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|decvec
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|wwv_newchan
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|wwv_newgame
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|double
 name|wwv_metric
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|sync
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|wwv_clock
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -3106,22 +3062,19 @@ directive|ifdef
 name|ICOM
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|wwv_qsy
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -3281,49 +3234,14 @@ endif|#
 directive|endif
 comment|/* DEBUG */
 comment|/* 	 * Allocate and initialize unit structure 	 */
-if|if
-condition|(
-operator|!
-operator|(
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
+name|emalloc_zero
+argument_list|(
+sizeof|sizeof
+argument_list|(
 operator|*
-operator|)
-name|emalloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|wwvunit
-argument_list|)
-argument_list|)
-operator|)
-condition|)
-block|{
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-name|memset
-argument_list|(
 name|up
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|wwvunit
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3332,15 +3250,6 @@ operator|=
 name|peer
 operator|->
 name|procptr
-expr_stmt|;
-name|pp
-operator|->
-name|unitptr
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|up
 expr_stmt|;
 name|pp
 operator|->
@@ -3356,9 +3265,6 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|peer
 expr_stmt|;
 name|pp
@@ -3405,6 +3311,12 @@ literal|0
 operator|)
 return|;
 block|}
+name|pp
+operator|->
+name|unitptr
+operator|=
+name|up
+expr_stmt|;
 comment|/* 	 * Initialize miscellaneous variables 	 */
 name|peer
 operator|->
@@ -3547,7 +3459,7 @@ name|DTOLFP
 argument_list|(
 literal|1.
 operator|/
-name|SECOND
+name|WWV_SEC
 argument_list|,
 operator|&
 name|up
@@ -3672,7 +3584,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ICOM
-comment|/* 	 * Initialize autotune if available. Note that the ICOM select 	 * code must be less than 128, so the high order bit can be used 	 * to select the line speed 0 (9600 bps) or 1 (1200 bps). 	 */
+comment|/* 	 * Initialize autotune if available. Note that the ICOM select 	 * code must be less than 128, so the high order bit can be used 	 * to select the line speed 0 (9600 bps) or 1 (1200 bps). Note 	 * we don't complain if the ICOM device is not there; but, if it 	 * is, the radio better be working. 	 */
 name|temp
 operator|=
 literal|0
@@ -3737,33 +3649,6 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|up
-operator|->
-name|fd_icom
-operator|<
-literal|0
-condition|)
-block|{
-name|NLOG
-argument_list|(
-argument|NLOG_SYNCEVENT | NLOG_SYSEVENT
-argument_list|)
-name|msyslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"icom: %m"
-argument_list|)
-expr_stmt|;
-name|up
-operator|->
-name|errflg
-operator|=
-name|CEVNT_FAULT
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -3786,22 +3671,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|NLOG
-argument_list|(
-argument|NLOG_SYNCEVENT | NLOG_SYSEVENT
-argument_list|)
 name|msyslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
 literal|"icom: radio not found"
 argument_list|)
-expr_stmt|;
-name|up
-operator|->
-name|errflg
-operator|=
-name|CEVNT_FAULT
 expr_stmt|;
 name|close
 argument_list|(
@@ -3819,10 +3694,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|NLOG
-argument_list|(
-argument|NLOG_SYNCEVENT | NLOG_SYSEVENT
-argument_list|)
 name|msyslog
 argument_list|(
 name|LOG_NOTICE
@@ -3887,11 +3758,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -3990,14 +3856,9 @@ name|ltemp
 decl_stmt|;
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -4007,11 +3868,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -4026,7 +3882,7 @@ name|rbufp
 operator|->
 name|recv_length
 operator|/
-name|SECOND
+name|WWV_SEC
 argument_list|,
 operator|&
 name|ltemp
@@ -4130,19 +3986,15 @@ name|up
 operator|->
 name|phase
 operator|+=
+operator|(
 name|up
 operator|->
 name|freq
+operator|+
+name|clock_codec
+operator|)
 operator|/
-name|SECOND
-expr_stmt|;
-name|up
-operator|->
-name|phase
-operator|+=
-name|FREQ_OFFSET
-operator|/
-literal|1e6
+name|WWV_SEC
 expr_stmt|;
 if|if
 condition|(
@@ -4300,30 +4152,9 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
-expr_stmt|;
-if|if
-condition|(
-name|pp
-operator|->
-name|coderecv
-operator|==
-name|pp
-operator|->
-name|codeproc
-condition|)
-name|up
-operator|->
-name|errflg
-operator|=
-name|CEVNT_TIMEOUT
 expr_stmt|;
 if|if
 condition|(
@@ -4577,7 +4408,7 @@ specifier|static
 name|double
 name|epobuf
 index|[
-name|SECOND
+name|WWV_SEC
 index|]
 decl_stmt|;
 comment|/* second sync comb filter */
@@ -4599,10 +4430,6 @@ name|iniflg
 decl_stmt|;
 comment|/* initialization flag */
 name|int
-name|pdelay
-decl_stmt|;
-comment|/* propagation delay (samples) */
-name|int
 name|epoch
 decl_stmt|;
 comment|/* comb filter index */
@@ -4620,11 +4447,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -4864,7 +4686,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Baseband data demodulation. The 100-Hz subcarrier is 	 * extracted using a 150-Hz IIR lowpass filter. This attenuates 	 * the 1000/1200-Hz sync signals, as well as the 440-Hz and 	 * 600-Hz tones and most of the noise and voice modulation 	 * components. 	 * 	 * The subcarrier is transmitted 10 dB down from the carrier. 	 * The DGAIN parameter can be adjusted for this and to 	 * compensate for the radio audio response at 100 Hz. 	 * 	 * Matlab IIR 4th-order IIR elliptic, 150 Hz lowpass, 0.2 dB 	 * passband ripple, -50 dB stopband ripple. 	 */
+comment|/* 	 * Baseband data demodulation. The 100-Hz subcarrier is 	 * extracted using a 150-Hz IIR lowpass filter. This attenuates 	 * the 1000/1200-Hz sync signals, as well as the 440-Hz and 	 * 600-Hz tones and most of the noise and voice modulation 	 * components. 	 * 	 * The subcarrier is transmitted 10 dB down from the carrier. 	 * The DGAIN parameter can be adjusted for this and to 	 * compensate for the radio audio response at 100 Hz. 	 * 	 * Matlab IIR 4th-order IIR elliptic, 150 Hz lowpass, 0.2 dB 	 * passband ripple, -50 dB stopband ripple, phase delay 0.97 ms. 	 */
 name|data
 operator|=
 operator|(
@@ -5100,7 +4922,7 @@ operator|)
 operator|%
 name|DATSIZ
 expr_stmt|;
-comment|/* 	 * Baseband sync demodulation. The 1000/1200 sync signals are 	 * extracted using a 600-Hz IIR bandpass filter. This removes 	 * the 100-Hz data subcarrier, as well as the 440-Hz and 600-Hz 	 * tones and most of the noise and voice modulation components. 	 * 	 * Matlab 4th-order IIR elliptic, 800-1400 Hz bandpass, 0.2 dB 	 * passband ripple, -50 dB stopband ripple. 	 */
+comment|/* 	 * Baseband sync demodulation. The 1000/1200 sync signals are 	 * extracted using a 600-Hz IIR bandpass filter. This removes 	 * the 100-Hz data subcarrier, as well as the 440-Hz and 600-Hz 	 * tones and most of the noise and voice modulation components. 	 * 	 * Matlab 4th-order IIR elliptic, 800-1400 Hz bandpass, 0.2 dB 	 * passband ripple, -50 dB stopband ripple, phase delay 0.91 ms. 	 */
 name|syncx
 operator|=
 operator|(
@@ -5324,7 +5146,7 @@ operator|+
 literal|1
 operator|)
 operator|%
-name|MINUTE
+name|WWV_MIN
 expr_stmt|;
 name|epoch
 operator|=
@@ -5332,7 +5154,7 @@ name|up
 operator|->
 name|mphase
 operator|%
-name|SECOND
+name|WWV_SEC
 expr_stmt|;
 comment|/* 	 * WWV 	 */
 name|i
@@ -5517,7 +5339,7 @@ name|pp
 operator|->
 name|fudgetime1
 operator|*
-name|SECOND
+name|WWV_SEC
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5704,7 +5526,7 @@ name|pp
 operator|->
 name|fudgetime2
 operator|*
-name|SECOND
+name|WWV_SEC
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5770,29 +5592,6 @@ name|watch
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ICOM
-if|if
-condition|(
-name|up
-operator|->
-name|fd_icom
-operator|>
-literal|0
-condition|)
-name|wwv_qsy
-argument_list|(
-name|peer
-argument_list|,
-name|up
-operator|->
-name|dchan
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ICOM */
 block|}
 else|else
 block|{
@@ -5810,7 +5609,7 @@ name|up
 operator|->
 name|mphase
 operator|-=
-name|SECOND
+name|WWV_SEC
 expr_stmt|;
 if|if
 condition|(
@@ -5824,7 +5623,7 @@ name|up
 operator|->
 name|mphase
 operator|+=
-name|MINUTE
+name|WWV_MIN
 expr_stmt|;
 block|}
 block|}
@@ -5875,7 +5674,7 @@ name|sp
 operator|->
 name|mepoch
 operator|%
-name|SECOND
+name|WWV_SEC
 condition|)
 block|{
 name|up
@@ -5889,7 +5688,7 @@ name|sp
 operator|->
 name|mepoch
 operator|/
-name|SECOND
+name|WWV_SEC
 operator|)
 operator|%
 literal|60
@@ -5953,20 +5752,6 @@ name|status
 operator|&
 name|SELV
 condition|)
-block|{
-name|pdelay
-operator|=
-call|(
-name|int
-call|)
-argument_list|(
-name|pp
-operator|->
-name|fudgetime1
-operator|*
-name|SECOND
-argument_list|)
-expr_stmt|;
 name|mfsync
 operator|=
 name|sqrt
@@ -5982,7 +5767,6 @@ argument_list|)
 operator|/
 name|TCKCYC
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -5992,20 +5776,6 @@ name|status
 operator|&
 name|SELH
 condition|)
-block|{
-name|pdelay
-operator|=
-call|(
-name|int
-call|)
-argument_list|(
-name|pp
-operator|->
-name|fudgetime2
-operator|*
-name|SECOND
-argument_list|)
-expr_stmt|;
 name|mfsync
 operator|=
 name|sqrt
@@ -6021,18 +5791,11 @@ argument_list|)
 operator|/
 name|TCKCYC
 expr_stmt|;
-block|}
 else|else
-block|{
-name|pdelay
-operator|=
-literal|0
-expr_stmt|;
 name|mfsync
 operator|=
 literal|0
 expr_stmt|;
-block|}
 comment|/* 	 * Enhance the seconds sync pulse using a 1-s (8000-sample) comb 	 * filter. Correct for the FIR matched filter delay, which is 5 	 * ms for both the WWV and WWVH filters, and also for the 	 * propagation delay. Once each second look for second sync. If 	 * not in minute sync, fiddle the codec gain. Note the SNR is 	 * computed from the maximum sample and the envelope of the 	 * sample 6 ms before it, so if we slip more than a cycle the 	 * SNR should plummet. The signal is scaled to produce unit 	 * energy at the maximum value. 	 */
 name|dtemp
 operator|=
@@ -6090,7 +5853,7 @@ literal|0
 condition|)
 name|j
 operator|+=
-name|SECOND
+name|WWV_SEC
 expr_stmt|;
 name|nxtmax
 operator|=
@@ -6129,8 +5892,6 @@ argument_list|)
 expr_stmt|;
 name|epopos
 operator|-=
-name|pdelay
-operator|+
 name|TCKCYC
 operator|*
 name|MS
@@ -6143,7 +5904,7 @@ literal|0
 condition|)
 name|epopos
 operator|+=
-name|SECOND
+name|WWV_SEC
 expr_stmt|;
 name|wwv_endpoc
 argument_list|(
@@ -6232,7 +5993,7 @@ decl_stmt|;
 name|char
 name|tbuf
 index|[
-literal|80
+name|TBUF
 index|]
 decl_stmt|;
 comment|/* monitor buffer */
@@ -6247,11 +6008,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -6275,7 +6031,7 @@ literal|0
 condition|)
 name|epoch
 operator|+=
-name|MINUTE
+name|WWV_MIN
 expr_stmt|;
 if|if
 condition|(
@@ -6349,7 +6105,7 @@ operator|->
 name|synmax
 operator|)
 operator|/
-name|MINUTE
+name|WWV_MIN
 argument_list|)
 expr_stmt|;
 if|if
@@ -6380,7 +6136,7 @@ operator|->
 name|lastpos
 operator|)
 operator|%
-name|MINUTE
+name|WWV_MIN
 expr_stmt|;
 name|sp
 operator|->
@@ -6422,7 +6178,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|abs
+name|labs
 argument_list|(
 name|epoch
 argument_list|)
@@ -6509,11 +6265,16 @@ operator|&
 name|CLK_FLAG4
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuf
 argument_list|,
-literal|"wwv8 %04x %3d %s %04x %.0f %.0f/%.1f %4ld %4ld"
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
+argument_list|,
+literal|"wwv8 %04x %3d %s %04x %.0f %.0f/%.1f %ld %ld"
 argument_list|,
 name|up
 operator|->
@@ -6549,7 +6310,7 @@ name|sp
 operator|->
 name|pos
 operator|%
-name|SECOND
+name|WWV_SEC
 argument_list|,
 name|epoch
 argument_list|)
@@ -6697,7 +6458,7 @@ comment|/* initialization flag */
 name|char
 name|tbuf
 index|[
-literal|80
+name|TBUF
 index|]
 decl_stmt|;
 comment|/* monitor buffer */
@@ -6715,11 +6476,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -6734,20 +6490,9 @@ name|iniflg
 operator|=
 literal|1
 expr_stmt|;
-name|memset
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|epoch_mf
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
+name|ZERO
 argument_list|(
 name|epoch_mf
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6961,7 +6706,7 @@ operator|-
 name|xepoch
 operator|)
 operator|%
-name|SECOND
+name|WWV_SEC
 expr_stmt|;
 if|if
 condition|(
@@ -7061,9 +6806,14 @@ name|MSYNC
 operator|)
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|,
 literal|"wwv1 %04x %3d %4d %5.0f %5.1f %5d %4d %4d %4d"
 argument_list|,
@@ -7190,7 +6940,7 @@ operator|-
 name|zepoch
 operator|)
 operator|%
-name|SECOND
+name|WWV_SEC
 expr_stmt|;
 if|if
 condition|(
@@ -7203,7 +6953,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|abs
+name|fabs
 argument_list|(
 name|dtemp
 argument_list|)
@@ -7266,7 +7016,7 @@ name|MAXFREQ
 expr_stmt|;
 if|if
 condition|(
-name|abs
+name|fabs
 argument_list|(
 name|dtemp
 argument_list|)
@@ -7362,9 +7112,14 @@ operator|&
 name|CLK_FLAG4
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|,
 literal|"wwv2 %04x %5.0f %5.1f %5d %4d %4d %4d %4.0f %7.2f"
 argument_list|,
@@ -7400,7 +7155,7 @@ name|freq
 operator|*
 literal|1e6
 operator|/
-name|SECOND
+name|WWV_SEC
 argument_list|)
 expr_stmt|;
 name|record_clock_stats
@@ -7508,11 +7263,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -7754,7 +7504,7 @@ name|up
 operator|->
 name|mphase
 operator|%
-name|SECOND
+name|WWV_SEC
 operator|==
 name|up
 operator|->
@@ -7998,7 +7748,7 @@ decl_stmt|;
 name|char
 name|tbuf
 index|[
-literal|80
+name|TBUF
 index|]
 decl_stmt|;
 comment|/* monitor buffer */
@@ -8017,11 +7767,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -8036,20 +7781,9 @@ name|iniflg
 operator|=
 literal|1
 expr_stmt|;
-name|memset
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|bitvec
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
+name|ZERO
 argument_list|(
 name|bitvec
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -8369,9 +8103,14 @@ operator|&
 name|CLK_FLAG4
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|,
 literal|"wwv5 %04x %3d %4d %.0f/%.1f %.0f/%.1f %s %04x %.0f %.0f/%.1f %s %04x %.0f %.0f/%.1f"
 argument_list|,
@@ -8490,7 +8229,7 @@ name|alarm
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * We now begin the minute scan. If not yet synchronized 		 * to a station, restart if the units digit has not been 		 * found within the DATA timeout (15 m) or if not 		 * synchronized within the SYNCH timeout (40 m). After 		 * synchronizing to a station, restart if no stations 		 * are found within the PANIC timeout (2 days). 		 */
+comment|/* 		 * If synchronized to a station, restart if no stations 		 * have been heard within the PANIC timeout (2 days). If 		 * not and the minute digit has been found, restart if 		 * not synchronized withing the SYNCH timeout (40 m). If 		 * not, restart if the unit digit has not been found 		 * within the DATA timeout (15 m). 		 */
 if|if
 condition|(
 name|up
@@ -8517,37 +8256,16 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
-operator|!
-operator|(
 name|up
 operator|->
 name|status
 operator|&
 name|DSYNC
-operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|up
-operator|->
-name|watch
-operator|>
-name|DATA
-condition|)
-block|{
-name|wwv_newgame
-argument_list|(
-name|peer
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
 if|if
 condition|(
 name|up
@@ -8565,34 +8283,28 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+name|up
+operator|->
+name|watch
+operator|>
+name|DATA
+condition|)
+block|{
+name|wwv_newgame
+argument_list|(
+name|peer
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|wwv_newchan
 argument_list|(
 name|peer
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ICOM
-if|if
-condition|(
-name|up
-operator|->
-name|fd_icom
-operator|>
-literal|0
-condition|)
-name|wwv_qsy
-argument_list|(
-name|peer
-argument_list|,
-name|up
-operator|->
-name|dchan
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ICOM */
 break|break;
 comment|/* 	 * Save the bit probability in the BCD data vector at the index 	 * given by the argument. Bits not used in the digit are forced 	 * to zero. 	 */
 case|case
@@ -8843,7 +8555,7 @@ name|BGATE
 expr_stmt|;
 block|}
 break|break;
-comment|/* 	 * Save the data channel gain, then QSY to the probe channel and 	 * dim the seconds comb filters. The newchan() routine will 	 * light them back up. 	 */
+comment|/* 	 * Save the data channel gain, then QSY to the probe channel and 	 * dim the seconds comb filters. The www_newchan() routine will 	 * light them back up. 	 */
 case|case
 name|MSC21
 case|:
@@ -9075,9 +8787,14 @@ name|DSYNC
 operator|)
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|,
 literal|"wwv3 %2d %04x %3d %4d %5.0f %5.1f %5.0f %5.1f %5.0f"
 argument_list|,
@@ -9189,11 +8906,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -9498,6 +9210,10 @@ operator|->
 name|timestamp
 argument_list|,
 name|PDELAY
+operator|+
+name|up
+operator|->
+name|pdelay
 argument_list|)
 expr_stmt|;
 name|refclock_receive
@@ -9518,6 +9234,13 @@ argument_list|,
 name|pp
 operator|->
 name|a_lastcode
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pp
+operator|->
+name|a_lastcode
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|record_clock_stats
@@ -9559,7 +9282,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wwv_corr4 - determine maximum likelihood digit  *  * This routine correlates the received digit vector with the BCD  * coefficient vectors corresponding to all valid digits at the given  * position in the decoding matrix. The maximum value corresponds to the  * maximum likelihood digit, while the ratio of this value to the next  * lower value determines the likelihood function. Note that, if the  * digit is invalid, the likelihood vector is averaged toward a miss.  */
+comment|/*  * wwv_corr4 - determine maximum-likelihood digit  *  * This routine correlates the received digit vector with the BCD  * coefficient vectors corresponding to all valid digits at the given  * position in the decoding matrix. The maximum value corresponds to the  * maximum-likelihood digit, while the ratio of this value to the next  * lower value determines the likelihood function. Note that, if the  * digit is invalid, the likelihood vector is averaged toward a miss.  */
 end_comment
 
 begin_function
@@ -9616,7 +9339,7 @@ comment|/* accumulator */
 name|char
 name|tbuf
 index|[
-literal|80
+name|TBUF
 index|]
 decl_stmt|;
 comment|/* monitor buffer */
@@ -9637,11 +9360,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -9785,13 +9503,7 @@ argument_list|,
 name|nxtmax
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The current maximum likelihood digit is compared to the last 	 * maximum likelihood digit. If different, the compare counter 	 * and maximum likelihood digit are reset.  When the compare 	 * counter reaches the BCMP threshold (3), the digit is assumed 	 * correct. When the compare counter of all nine digits have 	 * reached threshold, the clock is assumed correct. 	 * 	 * Note that the clock display digit is set before the compare 	 * counter has reached threshold; however, the clock display is 	 * not considered correct until all nine clock digits have 	 * reached threshold. This is intended as eye candy, but avoids 	 * mistakes when the signal is low and the SNR is very marginal. 	 * once correctly set, the maximum likelihood digit is ignored 	 * on the assumption the clock will always be correct unless for 	 * some reason it drifts to a different second. 	 */
-name|vp
-operator|->
-name|mldigit
-operator|=
-name|mldigit
-expr_stmt|;
+comment|/* 	 * The current maximum-likelihood digit is compared to the last 	 * maximum-likelihood digit. If different, the compare counter 	 * and maximum-likelihood digit are reset.  When the compare 	 * counter reaches the BCMP threshold (3), the digit is assumed 	 * correct. When the compare counter of all nine digits have 	 * reached threshold, the clock is assumed correct. 	 * 	 * Note that the clock display digit is set before the compare 	 * counter has reached threshold; however, the clock display is 	 * not considered correct until all nine clock digits have 	 * reached threshold. This is intended as eye candy, but avoids 	 * mistakes when the signal is low and the SNR is very marginal. 	 */
 if|if
 condition|(
 name|vp
@@ -9807,12 +9519,6 @@ operator|<
 name|BSNR
 condition|)
 block|{
-name|vp
-operator|->
-name|count
-operator|=
-literal|0
-expr_stmt|;
 name|up
 operator|->
 name|status
@@ -9822,12 +9528,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|up
-operator|->
-name|status
-operator||=
-name|DSYNC
-expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -9837,12 +9537,6 @@ operator|!=
 name|mldigit
 condition|)
 block|{
-name|vp
-operator|->
-name|count
-operator|=
-literal|0
-expr_stmt|;
 name|up
 operator|->
 name|alarm
@@ -9851,14 +9545,24 @@ name|CMPERR
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
-name|up
+name|vp
 operator|->
-name|status
-operator|&
-name|INSYNC
-operator|)
+name|count
+operator|>
+literal|0
+condition|)
+name|vp
+operator|->
+name|count
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|count
+operator|==
+literal|0
 condition|)
 name|vp
 operator|->
@@ -9882,12 +9586,27 @@ operator|->
 name|count
 operator|++
 expr_stmt|;
-else|else
+if|if
+condition|(
+name|vp
+operator|->
+name|count
+operator|==
+name|BCMP
+condition|)
+block|{
+name|up
+operator|->
+name|status
+operator||=
+name|DSYNC
+expr_stmt|;
 name|up
 operator|->
 name|digcnt
 operator|++
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if
@@ -9910,9 +9629,14 @@ name|INSYNC
 operator|)
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|,
 literal|"wwv4 %2d %04x %3d %4d %5.0f %2d %d %d %d %5.0f %5.1f"
 argument_list|,
@@ -9946,8 +9670,6 @@ name|vp
 operator|->
 name|digit
 argument_list|,
-name|vp
-operator|->
 name|mldigit
 argument_list|,
 name|vp
@@ -10038,11 +9760,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -10138,6 +9855,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+comment|// XXX: Does temp have an expected value here?
 comment|/* 	 * Decode the current minute and day. Set leap day if the 	 * timecode leap bit is set on 30 June or 31 December. Set leap 	 * minute if the last minute on leap day, but only if the clock 	 * is syncrhronized. This code fails in 2400 AD. 	 */
 name|minute
 operator|=
@@ -10296,10 +10014,7 @@ operator|!=
 literal|1440
 condition|)
 return|return;
-name|minute
-operator|=
-literal|0
-expr_stmt|;
+comment|// minute = 0;
 while|while
 condition|(
 name|carry
@@ -10394,6 +10109,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
+comment|// XXX: Is there an expected value of temp here?
 comment|/* 	 * Roll the year if this the first day and propagate carries 	 * through the century. 	 */
 if|if
 condition|(
@@ -10408,10 +10124,7 @@ literal|366
 operator|)
 condition|)
 return|return;
-name|day
-operator|=
-literal|1
-expr_stmt|;
+comment|// day = 1;
 while|while
 condition|(
 name|carry
@@ -10502,7 +10215,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * carry - process digit  *  * This routine rotates a likelihood vector one position and increments  * the clock digit modulo the radix. It returns the new clock digit or  * zero if a carry occurred. Once synchronized, the clock digit will  * match the maximum likelihood digit corresponding to that position.  */
+comment|/*  * carry - process digit  *  * This routine rotates a likelihood vector one position and increments  * the clock digit modulo the radix. It returns the new clock digit or  * zero if a carry occurred. Once synchronized, the clock digit will  * match the maximum-likelihood digit corresponding to that position.  */
 end_comment
 
 begin_function
@@ -10731,6 +10444,8 @@ name|int
 name|i
 decl_stmt|,
 name|j
+decl_stmt|,
+name|rval
 decl_stmt|;
 name|pp
 operator|=
@@ -10740,16 +10455,11 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
 expr_stmt|;
-comment|/* 	 * Search all five station pairs looking for the channel with 	 * maximum metric. If no station is found above thresholds, tune 	 * to WWV on 15 MHz, set the reference ID to NONE and wait for 	 * hotter ions. 	 */
+comment|/* 	 * Search all five station pairs looking for the channel with 	 * maximum metric. 	 */
 name|sp
 operator|=
 name|NULL
@@ -10853,7 +10563,18 @@ name|i
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * If the strongest signal is less than the MTHR threshold (13), 	 * we are beneath the waves, so squelch the second sync. If the 	 * strongest signal is greater than the threshold, tune to that 	 * frequency and transmitter QTH. 	 */
+comment|/* 	 * If the strongest signal is less than the MTHR threshold (13), 	 * we are beneath the waves, so squelch the second sync and 	 * advance to the next station. This makes sure all stations are 	 * scanned when the ions grow dim. If the strongest signal is 	 * greater than the threshold, tune to that frequency and 	 * transmitter QTH. 	 */
+name|up
+operator|->
+name|status
+operator|&=
+operator|~
+operator|(
+name|SELV
+operator||
+name|SELH
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|rank
@@ -10875,36 +10596,42 @@ operator|)
 operator|%
 name|NCHAN
 expr_stmt|;
+if|if
+condition|(
+name|up
+operator|->
+name|status
+operator|&
+name|METRIC
+condition|)
+block|{
 name|up
 operator|->
 name|status
 operator|&=
 operator|~
-operator|(
-name|SELV
-operator||
-name|SELH
-operator|)
+name|METRIC
 expr_stmt|;
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
+name|refclock_report
+argument_list|(
+name|peer
+argument_list|,
+name|CEVNT_PROP
+argument_list|)
+expr_stmt|;
 block|}
+name|rval
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+else|else
+block|{
 name|up
 operator|->
 name|dchan
 operator|=
 name|j
-expr_stmt|;
-name|up
-operator|->
-name|status
-operator||=
-name|SELV
-operator||
-name|SELH
 expr_stmt|;
 name|up
 operator|->
@@ -10934,16 +10661,108 @@ name|pp
 operator|->
 name|refid
 expr_stmt|;
+name|up
+operator|->
+name|status
+operator||=
+name|METRIC
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|select
+operator|&
+name|SELV
+condition|)
+block|{
+name|up
+operator|->
+name|status
+operator||=
+name|SELV
+expr_stmt|;
+name|up
+operator|->
+name|pdelay
+operator|=
+name|pp
+operator|->
+name|fudgetime1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|sp
+operator|->
+name|select
+operator|&
+name|SELH
+condition|)
+block|{
+name|up
+operator|->
+name|status
+operator||=
+name|SELH
+expr_stmt|;
+name|up
+operator|->
+name|pdelay
+operator|=
+name|pp
+operator|->
+name|fudgetime2
+expr_stmt|;
+block|}
+else|else
+block|{
+name|up
+operator|->
+name|pdelay
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|rval
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|ICOM
+if|if
+condition|(
+name|up
+operator|->
+name|fd_icom
+operator|>
+literal|0
+condition|)
+name|wwv_qsy
+argument_list|(
+name|peer
+argument_list|,
+name|up
+operator|->
+name|dchan
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ICOM */
 return|return
 operator|(
-name|TRUE
+name|rval
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * wwv_newgame - reset and start over  *  * There are four conditions resulting in a new game:  *  * 1	During initial acquisition (MSYNC dark) going 6 minutes (ACQSN)  *	without reliably finding the minute pulse (MSYNC lit).  *  * 2	After finding the minute pulse (MSYNC lit), going 15 minutes  *	(DATA) without finding the unit seconds digit.  *  * 3	After finding good data (DATA lit), going more than 40 minutes  *	(SYNCH) without finding station sync (INSYNC lit).  *  * 4	After finding station sync (INSYNC lit), going more than 2 days  *	(PANIC) without finding any station.   */
+comment|/*  * wwv_newgame - reset and start over  *  * There are three conditions resulting in a new game:  *  * 1	After finding the minute pulse (MSYNC lit), going 15 minutes  *	(DATA) without finding the unit seconds digit.  *  * 2	After finding good data (DSYNC lit), going more than 40 minutes  *	(SYNCH) without finding station sync (INSYNC lit).  *  * 3	After finding station sync (INSYNC lit), going more than 2 days  *	(PANIC) without finding any station.   */
 end_comment
 
 begin_function
@@ -10984,16 +10803,23 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
 expr_stmt|;
 comment|/* 	 * Initialize strategic values. Note we set the leap bits 	 * NOTINSYNC and the refid "NONE". 	 */
+if|if
+condition|(
+name|up
+operator|->
+name|status
+condition|)
+name|up
+operator|->
+name|errflg
+operator|=
+name|CEVNT_TIMEOUT
+expr_stmt|;
 name|peer
 operator|->
 name|leap
@@ -11034,7 +10860,7 @@ name|MAXGAIN
 operator|/
 literal|2
 expr_stmt|;
-comment|/* 	 * Initialize the station processes for audio gain, select bit, 	 * station/frequency identifier and reference identifier. Start 	 * probing at the next channel after the data channel. 	 */
+comment|/* 	 * Initialize the station processes for audio gain, select bit, 	 * station/frequency identifier and reference identifier. Start 	 * probing at the strongest channel or the default channel if 	 * nothing heard. 	 */
 name|memset
 argument_list|(
 name|up
@@ -11091,13 +10917,22 @@ name|select
 operator|=
 name|SELV
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|cp
 operator|->
 name|wwv
 operator|.
 name|refid
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cp
+operator|->
+name|wwv
+operator|.
+name|refid
+argument_list|)
 argument_list|,
 literal|"WV%.0f"
 argument_list|,
@@ -11118,13 +10953,22 @@ name|select
 operator|=
 name|SELH
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|cp
 operator|->
 name|wwvh
 operator|.
 name|refid
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cp
+operator|->
+name|wwvh
+operator|.
+name|refid
+argument_list|)
 argument_list|,
 literal|"WH%.0f"
 argument_list|,
@@ -11152,16 +10996,11 @@ operator|)
 operator|%
 name|NCHAN
 expr_stmt|;
-empty_stmt|;
 name|wwv_newchan
 argument_list|(
 name|peer
 argument_list|)
 expr_stmt|;
-name|up
-operator|->
-name|achan
-operator|=
 name|up
 operator|->
 name|schan
@@ -11170,29 +11009,6 @@ name|up
 operator|->
 name|dchan
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ICOM
-if|if
-condition|(
-name|up
-operator|->
-name|fd_icom
-operator|>
-literal|0
-condition|)
-name|wwv_qsy
-argument_list|(
-name|peer
-argument_list|,
-name|up
-operator|->
-name|dchan
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ICOM */
 block|}
 end_function
 
@@ -11312,11 +11128,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -11421,8 +11232,12 @@ parameter_list|,
 comment|/* driver structure pointer */
 name|char
 modifier|*
-name|ptr
+name|tc
+parameter_list|,
 comment|/* target string */
+name|size_t
+name|tcsiz
+comment|/* target max chars */
 parameter_list|)
 block|{
 name|struct
@@ -11639,9 +11454,11 @@ operator|=
 operator|-
 name|dut
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
-name|ptr
+name|tc
+argument_list|,
+name|tcsiz
 argument_list|,
 literal|"%c%1X"
 argument_list|,
@@ -11652,9 +11469,14 @@ operator|->
 name|alarm
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|cptr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cptr
+argument_list|)
 argument_list|,
 literal|" %4d %03d %02d:%02d:%02d %c%c %+d"
 argument_list|,
@@ -11675,11 +11497,13 @@ argument_list|,
 name|dut
 argument_list|)
 expr_stmt|;
-name|strcat
+name|strlcat
 argument_list|(
-name|ptr
+name|tc
 argument_list|,
 name|cptr
+argument_list|,
+name|tcsiz
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Specific variable-format fields 	 */
@@ -11689,9 +11513,14 @@ name|up
 operator|->
 name|sptr
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|cptr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cptr
+argument_list|)
 argument_list|,
 literal|" %d %d %s %.0f %d %.1f %d"
 argument_list|,
@@ -11726,7 +11555,7 @@ name|up
 operator|->
 name|freq
 operator|/
-name|SECOND
+name|WWV_SEC
 operator|*
 literal|1e6
 argument_list|,
@@ -11735,26 +11564,26 @@ operator|->
 name|avgint
 argument_list|)
 expr_stmt|;
-name|strcat
+name|strlcat
 argument_list|(
-name|ptr
+name|tc
 argument_list|,
 name|cptr
+argument_list|,
+name|tcsiz
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|strlen
 argument_list|(
-name|ptr
+name|tc
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * wwv_gain - adjust codec gain  *  * This routine is called at the end of each second. During the second  * the number of signal clips above the MAXAMP threshold (6000). If  * there are no clips, the gain is bumped up; if there are more than  * MAXCLP clips (100), it is bumped down. The decoder is relatively  * insensitive to amplitude, so this crudity works just peachy. The  * input port is set and the error flag is cleared, mostly to be ornery.  */
+comment|/*  * wwv_gain - adjust codec gain  *  * This routine is called at the end of each second. During the second  * the number of signal clips above the MAXAMP threshold (6000). If  * there are no clips, the gain is bumped up; if there are more than  * MAXCLP clips (100), it is bumped down. The decoder is relatively  * insensitive to amplitude, so this crudity works just peachy. The  * routine also jiggles the input port and selectively mutes the  * monitor.  */
 end_comment
 
 begin_function
@@ -11787,11 +11616,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|wwvunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr

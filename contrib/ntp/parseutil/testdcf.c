@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp4-dev/parseutil/testdcf.c,v 4.10 2005/08/06 14:18:43 kardel RELEASE_20050806_A  *  * testdcf.c,v 4.10 2005/08/06 14:18:43 kardel RELEASE_20050806_A  *    * simple DCF77 100/200ms pulse test program (via 50Baud serial line)  *  * Copyright (c) 1995-2005 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * /src/NTP/ntp4-dev/parseutil/testdcf.c,v 4.10 2005/08/06 14:18:43 kardel RELEASE_20050806_A  *  * testdcf.c,v 4.10 2005/08/06 14:18:43 kardel RELEASE_20050806_A  *  * simple DCF77 100/200ms pulse test program (via 50Baud serial line)  *  * Copyright (c) 1995-2015 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<config.h>
+end_include
 
 begin_include
 include|#
@@ -79,12 +85,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DCFB_ALTERNATE
+name|DCFB_CALLBIT
 value|0x0008
 end_define
 
 begin_comment
-comment|/* alternate antenna used */
+comment|/* "call bit" used to signalize irregularities in the control facilities */
 end_comment
 
 begin_struct
@@ -217,7 +223,7 @@ comment|/* general format error - (unparsable) */
 end_comment
 
 begin_comment
-comment|/*  * DCF77 raw time code  *  * From "Zur Zeit", Physikalisch-Technische Bundesanstalt (PTB), Braunschweig  * und Berlin, Maerz 1989  *  * Timecode transmission:  * AM:  *	time marks are send every second except for the second before the  *	next minute mark  *	time marks consist of a reduction of transmitter power to 25%  *	of the nominal level  *	the falling edge is the time indication (on time)  *	time marks of a 100ms duration constitute a logical 0  *	time marks of a 200ms duration constitute a logical 1  * FM:  *	see the spec. (basically a (non-)inverted psuedo random phase shift)  *  * Encoding:  * Second	Contents  * 0  - 10	AM: free, FM: 0  * 11 - 14	free  * 15		R     - alternate antenna  * 16		A1    - expect zone change (1 hour before)  * 17 - 18	Z1,Z2 - time zone  *		 0  0 illegal  *		 0  1 MEZ  (MET)  *		 1  0 MESZ (MED, MET DST)  *		 1  1 illegal  * 19		A2    - expect leap insertion/deletion (1 hour before)  * 20		S     - start of time code (1)  * 21 - 24	M1    - BCD (lsb first) Minutes  * 25 - 27	M10   - BCD (lsb first) 10 Minutes  * 28		P1    - Minute Parity (even)  * 29 - 32	H1    - BCD (lsb first) Hours  * 33 - 34      H10   - BCD (lsb first) 10 Hours  * 35		P2    - Hour Parity (even)  * 36 - 39	D1    - BCD (lsb first) Days  * 40 - 41	D10   - BCD (lsb first) 10 Days  * 42 - 44	DW    - BCD (lsb first) day of week (1: Monday -> 7: Sunday)  * 45 - 49	MO    - BCD (lsb first) Month  * 50           MO0   - 10 Months  * 51 - 53	Y1    - BCD (lsb first) Years  * 54 - 57	Y10   - BCD (lsb first) 10 Years  * 58 		P3    - Date Parity (even)  * 59		      - usually missing (minute indication), except for leap insertion  */
+comment|/*  * DCF77 raw time code  *  * From "Zur Zeit", Physikalisch-Technische Bundesanstalt (PTB), Braunschweig  * und Berlin, Maerz 1989  *  * Timecode transmission:  * AM:  *	time marks are send every second except for the second before the  *	next minute mark  *	time marks consist of a reduction of transmitter power to 25%  *	of the nominal level  *	the falling edge is the time indication (on time)  *	time marks of a 100ms duration constitute a logical 0  *	time marks of a 200ms duration constitute a logical 1  * FM:  *	see the spec. (basically a (non-)inverted psuedo random phase shift)  *  * Encoding:  * Second	Contents  * 0  - 10	AM: free, FM: 0  * 11 - 14	free  * 15		R     - "call bit" used to signalize irregularities in the control facilities  *		        (until 2003 indicated transmission via alternate antenna)  * 16		A1    - expect zone change (1 hour before)  * 17 - 18	Z1,Z2 - time zone  *		 0  0 illegal  *		 0  1 MEZ  (MET)  *		 1  0 MESZ (MED, MET DST)  *		 1  1 illegal  * 19		A2    - expect leap insertion/deletion (1 hour before)  * 20		S     - start of time code (1)  * 21 - 24	M1    - BCD (lsb first) Minutes  * 25 - 27	M10   - BCD (lsb first) 10 Minutes  * 28		P1    - Minute Parity (even)  * 29 - 32	H1    - BCD (lsb first) Hours  * 33 - 34      H10   - BCD (lsb first) 10 Hours  * 35		P2    - Hour Parity (even)  * 36 - 39	D1    - BCD (lsb first) Days  * 40 - 41	D10   - BCD (lsb first) 10 Days  * 42 - 44	DW    - BCD (lsb first) day of week (1: Monday -> 7: Sunday)  * 45 - 49	MO    - BCD (lsb first) Month  * 50           MO0   - 10 Months  * 51 - 53	Y1    - BCD (lsb first) Years  * 54 - 57	Y10   - BCD (lsb first) 10 Years  * 58 		P3    - Date Parity (even)  * 59		      - usually missing (minute indication), except for leap insertion  */
 end_comment
 
 begin_decl_stmt
@@ -1043,7 +1049,7 @@ name|clock_time
 operator|->
 name|flags
 operator||=
-name|DCFB_ALTERNATE
+name|DCFB_CALLBIT
 expr_stmt|;
 return|return
 name|CVT_OK
@@ -2103,7 +2109,7 @@ name|clock_time
 operator|.
 name|flags
 operator|&
-name|DCFB_ALTERNATE
+name|DCFB_CALLBIT
 operator|)
 condition|?
 literal|"R"

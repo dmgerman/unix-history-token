@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -163,12 +169,11 @@ operator|-=
 literal|100
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|bp
+argument_list|,
+name|LIB_BUFLENGTH
 argument_list|,
 literal|"%17s %02d:%03d:%02d:%02d:%02d.%03ld"
 argument_list|,

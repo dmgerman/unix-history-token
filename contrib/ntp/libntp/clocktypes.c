@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -404,6 +410,22 @@ block|,
 literal|"NeoClock4X DCF77 / TDF receiver (44)"
 block|,
 literal|"NEOCLK4X"
+block|}
+block|,
+block|{
+name|REFCLK_TSYNCPCI
+block|,
+literal|"Spectracom TSYNC PCI timing board (45)"
+block|,
+literal|"PCI_TSYNC"
+block|}
+block|,
+block|{
+name|REFCLK_GPSDJSON
+block|,
+literal|"GPSD JSON socket (46)"
+block|,
+literal|"GPSD_JSON"
 block|}
 block|,
 block|{

@@ -107,7 +107,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|XNTP_BIG_ENDIAN
+name|WORDS_BIGENDIAN
 end_ifdef
 
 begin_define
@@ -142,7 +142,7 @@ name|getshort
 parameter_list|(
 name|s
 parameter_list|)
-value|(s)
+value|((u_short)(s))
 end_define
 
 begin_define
@@ -152,33 +152,8 @@ name|putshort
 parameter_list|(
 name|s
 parameter_list|)
-value|(s)
+value|((u_short)(s))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sun
-end_ifdef
-
-begin_function_decl
-name|char
-modifier|*
-name|strerror
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#
@@ -423,186 +398,164 @@ begin_comment
 comment|/*  * Function prototypes  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|jupiter_canmsg
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|instance
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|u_short
 name|jupiter_cksum
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_short
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|jupiter_config
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|instance
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|jupiter_debug
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|peer
-operator|*
-operator|,
+modifier|*
+parameter_list|,
+specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
+specifier|const
 name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|__attribute__
-argument_list|(
-operator|(
-name|format
-argument_list|(
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(format
+parameter_list|(
 name|printf
-argument_list|,
-literal|3
-argument_list|,
-literal|4
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|,
+function_decl|3
+operator|,
+function_decl|4
+end_function_decl
 
-begin_decl_stmt
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|jupiter_parse_t
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|instance
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_short
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|jupiter_parse_gpos
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|instance
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_short
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|jupiter_platform
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|instance
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|jupiter_poll
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|jupiter_control
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+specifier|const
+name|struct
 name|refclockstat
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|refclockstat
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -610,35 +563,29 @@ directive|ifdef
 name|HAVE_PPSAPI
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|jupiter_ppsapi
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|instance
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|jupiter_pps
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|instance
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -649,126 +596,105 @@ begin_comment
 comment|/* HAVE_PPSAPI */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|jupiter_recv
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|instance
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|jupiter_receive
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|recvbuf
-operator|*
+modifier|*
 name|rbufp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|jupiter_reqmsg
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|instance
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int
-operator|,
+parameter_list|,
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|jupiter_reqonemsg
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|instance
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|jupiter_send
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|instance
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|jheader
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|jupiter_shutdown
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|jupiter_start
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Transfer vector  */
@@ -834,9 +760,6 @@ name|instance
 decl_stmt|;
 name|int
 name|fd
-init|=
-operator|-
-literal|1
 decl_stmt|;
 name|char
 name|gpsdev
@@ -845,12 +768,14 @@ literal|20
 index|]
 decl_stmt|;
 comment|/* 	 * Open serial port 	 */
-operator|(
-name|void
-operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|gpsdev
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|gpsdev
+argument_list|)
 argument_list|,
 name|DEVICE
 argument_list|,
@@ -871,7 +796,7 @@ expr_stmt|;
 if|if
 condition|(
 name|fd
-operator|==
+operator|<=
 literal|0
 condition|)
 block|{
@@ -881,14 +806,9 @@ name|peer
 argument_list|,
 literal|"jupiter_start"
 argument_list|,
-literal|"open %s: %s"
+literal|"open %s: %m"
 argument_list|,
 name|gpsdev
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -898,56 +818,13 @@ operator|)
 return|;
 block|}
 comment|/* Allocate unit structure */
-if|if
-condition|(
-operator|(
 name|instance
 operator|=
-operator|(
-expr|struct
-name|instance
-operator|*
-operator|)
-name|emalloc
+name|emalloc_zero
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|instance
-argument_list|)
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-name|memset
-argument_list|(
-operator|(
-name|char
 operator|*
-operator|)
-name|instance
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
 name|instance
 argument_list|)
 argument_list|)
@@ -978,9 +855,6 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|peer
 expr_stmt|;
 name|pp
@@ -1011,13 +885,19 @@ name|io
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fd
 argument_list|)
+expr_stmt|;
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|free
 argument_list|(
@@ -1034,9 +914,6 @@ name|pp
 operator|->
 name|unitptr
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|instance
 expr_stmt|;
 comment|/* 	 * Initialize miscellaneous variables 	 */
@@ -1204,11 +1081,6 @@ name|procptr
 expr_stmt|;
 name|instance
 operator|=
-operator|(
-expr|struct
-name|instance
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -1246,6 +1118,17 @@ block|}
 endif|#
 directive|endif
 comment|/* HAVE_PPSAPI */
+if|if
+condition|(
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+operator|!=
+operator|-
+literal|1
+condition|)
 name|io_closeclock
 argument_list|(
 operator|&
@@ -1283,7 +1166,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_config"
+name|__func__
 argument_list|,
 literal|"init receiver"
 argument_list|)
@@ -1327,7 +1210,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_config"
+name|__func__
 argument_list|,
 literal|"mobile platform"
 argument_list|)
@@ -1674,7 +1557,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|pps_enable
+name|hardpps_enable
 operator|=
 literal|1
 expr_stmt|;
@@ -1706,7 +1589,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"refclock_jupiter"
+name|__func__
 argument_list|,
 literal|"pps capability 0x%x version %d mode 0x%x kern %d"
 argument_list|,
@@ -1950,6 +1833,9 @@ name|tstmp
 operator|.
 name|l_ui
 operator|=
+operator|(
+name|u_int32
+operator|)
 name|ts
 operator|.
 name|tv_sec
@@ -2036,11 +1922,6 @@ name|procptr
 expr_stmt|;
 name|instance
 operator|=
-operator|(
-expr|struct
-name|instance
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -2114,6 +1995,7 @@ name|int
 name|unit
 parameter_list|,
 comment|/* unit (not used) */
+specifier|const
 name|struct
 name|refclockstat
 modifier|*
@@ -2154,11 +2036,6 @@ name|procptr
 expr_stmt|;
 name|instance
 operator|=
-operator|(
-expr|struct
-name|instance
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -2253,7 +2130,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_control"
+name|__func__
 argument_list|,
 literal|"mode switch: reset receiver"
 argument_list|)
@@ -2283,9 +2160,10 @@ modifier|*
 name|rbufp
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|bpcnt
-decl_stmt|,
+decl_stmt|;
+name|int
 name|cc
 decl_stmt|,
 name|size
@@ -2298,6 +2176,7 @@ decl_stmt|;
 name|u_int32
 name|laststime
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -2341,14 +2220,9 @@ decl_stmt|;
 comment|/* Initialize pointers and read the timecode and timestamp */
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -2358,11 +2232,6 @@ name|procptr
 expr_stmt|;
 name|instance
 operator|=
-operator|(
-expr|struct
-name|instance
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -2445,6 +2314,9 @@ name|instance
 operator|->
 name|ssize
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -2536,7 +2408,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_receive"
+name|__func__
 argument_list|,
 literal|"pulse: len %d != %u"
 argument_list|,
@@ -2605,7 +2477,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_receive"
+name|__func__
 argument_list|,
 literal|"avoided firmware bug (stime %.2f, laststime %.2f)"
 argument_list|,
@@ -2696,7 +2568,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_receive"
+name|__func__
 argument_list|,
 literal|"pulse: %s"
 argument_list|,
@@ -2726,6 +2598,9 @@ name|l_ui
 operator|=
 name|JAN_1970
 operator|+
+operator|(
+name|u_int32
+operator|)
 name|last_timecode
 expr_stmt|;
 name|tstamp
@@ -2812,7 +2687,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_receive"
+name|__func__
 argument_list|,
 literal|"gpos: len %d != %u"
 argument_list|,
@@ -2857,7 +2732,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_receive"
+name|__func__
 argument_list|,
 literal|"gpos: %s"
 argument_list|,
@@ -2885,7 +2760,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_receive"
+name|__func__
 argument_list|,
 literal|"id: len %d != %u"
 argument_list|,
@@ -2924,7 +2799,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_receive"
+name|__func__
 argument_list|,
 literal|"%s chan ver %s, %s (%s)"
 argument_list|,
@@ -2986,7 +2861,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_receive"
+name|__func__
 argument_list|,
 literal|"reset receiver"
 argument_list|)
@@ -3010,7 +2885,7 @@ name|jupiter_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"jupiter_receive"
+name|__func__
 argument_list|,
 literal|"unknown message id %d"
 argument_list|,
@@ -3086,6 +2961,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|jupiter_parse_t
@@ -3256,7 +3132,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_parse_t"
+name|__func__
 argument_list|,
 literal|"NEW gps week %u"
 argument_list|,
@@ -3281,7 +3157,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_parse_t"
+name|__func__
 argument_list|,
 literal|"gps sweek not incrementing (%d)"
 argument_list|,
@@ -3328,7 +3204,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_parse_t"
+name|__func__
 argument_list|,
 literal|"gps sweek jumped (was %d, now %d)"
 argument_list|,
@@ -3381,7 +3257,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_parse_t"
+name|__func__
 argument_list|,
 literal|"UTC<none> (gweek/sweek %u/%u)"
 argument_list|,
@@ -3416,7 +3292,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_parse_t"
+name|__func__
 argument_list|,
 literal|"UTC %.24s (gweek/sweek %u/%u)"
 argument_list|,
@@ -3568,6 +3444,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|jupiter_parse_gpos
@@ -3719,7 +3596,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_parse_g"
+name|__func__
 argument_list|,
 literal|"GPS %.24s (gweek/sweek %u/%u)"
 argument_list|,
@@ -3746,85 +3623,28 @@ begin_comment
 comment|/*  * jupiter_debug - print debug messages  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SYS_WINNT
-argument_list|)
-end_if
-
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
 name|jupiter_debug
-argument_list|(
-expr|struct
-name|peer
-operator|*
-name|peer
-argument_list|,
-name|char
-operator|*
-name|function
-argument_list|,
-name|char
-operator|*
-name|fmt
-argument_list|,
-operator|...
-argument_list|)
-else|#
-directive|else
-decl|static
-name|void
-name|jupiter_debug
-argument_list|(
-name|peer
-argument_list|,
-name|function
-argument_list|,
-name|fmt
-argument_list|,
-name|va_alist
-argument_list|)
-decl|struct
+parameter_list|(
+name|struct
 name|peer
 modifier|*
 name|peer
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|function
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __STDC__ */
-end_comment
-
-begin_block
+parameter_list|,
+modifier|...
+parameter_list|)
 block|{
 name|char
 name|buffer
@@ -3835,17 +3655,6 @@ decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SYS_WINNT
-argument_list|)
 name|va_start
 argument_list|(
 name|ap
@@ -3853,18 +3662,8 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* __STDC__ */
 comment|/* 	 * Print debug message to stdout 	 * In the future, we may want to get get more creative... 	 */
-name|vsnprintf
+name|mvsnprintf
 argument_list|(
 name|buffer
 argument_list|,
@@ -3881,11 +3680,9 @@ expr_stmt|;
 name|record_clock_stats
 argument_list|(
 operator|&
-operator|(
 name|peer
 operator|->
 name|srcadr
-operator|)
 argument_list|,
 name|buffer
 argument_list|)
@@ -3898,27 +3695,13 @@ condition|(
 name|debug
 condition|)
 block|{
-name|fprintf
+name|printf
 argument_list|(
-name|stdout
-argument_list|,
-literal|"%s: "
+literal|"%s: %s\n"
 argument_list|,
 name|function
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stdout
 argument_list|,
 name|buffer
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"\n"
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -3935,7 +3718,7 @@ name|ap
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Checksum and transmit a message to the Jupiter */
@@ -3963,7 +3746,7 @@ name|len
 decl_stmt|,
 name|size
 decl_stmt|;
-name|int
+name|ssize_t
 name|cc
 decl_stmt|;
 name|u_short
@@ -4099,19 +3882,16 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|sprintf
+name|msnprintf
 argument_list|(
 name|errstr
 argument_list|,
-literal|"write: %s"
-argument_list|,
-name|strerror
+sizeof|sizeof
 argument_list|(
-name|errno
+name|errstr
 argument_list|)
+argument_list|,
+literal|"write: %m"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4125,17 +3905,22 @@ if|if
 condition|(
 name|cc
 operator|!=
+operator|(
+name|int
+operator|)
 name|size
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|errstr
 argument_list|,
-literal|"short write (%d != %d)"
+sizeof|sizeof
+argument_list|(
+name|errstr
+argument_list|)
+argument_list|,
+literal|"short write (%zd != %u)"
 argument_list|,
 name|cc
 argument_list|,
@@ -4327,7 +4112,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_reqmsg"
+name|__func__
 argument_list|,
 literal|"%u: %s"
 argument_list|,
@@ -4430,7 +4215,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_canmsg"
+name|__func__
 argument_list|,
 literal|"%u: %s"
 argument_list|,
@@ -4533,7 +4318,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_reqonemsg"
+name|__func__
 argument_list|,
 literal|"%u: %s"
 argument_list|,
@@ -4686,7 +4471,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_platform"
+name|__func__
 argument_list|,
 literal|"%u: %s"
 argument_list|,
@@ -4855,7 +4640,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_recv"
+name|__func__
 argument_list|,
 literal|"syncing"
 argument_list|)
@@ -4893,7 +4678,7 @@ literal|0xff
 operator|)
 condition|)
 block|{
-comment|/* 				jupiter_debug(instance->peer, "{0x%x}", bp[0]); 				*/
+comment|/* 				jupiter_debug(instance->peer, __func__, 				    "{0x%x}", bp[0]); 				*/
 operator|++
 name|bp
 expr_stmt|;
@@ -4920,7 +4705,7 @@ literal|0xff
 operator|)
 condition|)
 break|break;
-comment|/* 			jupiter_debug(instance->peer, "{0x%x 0x%x}", bp[0], bp[1]); 			*/
+comment|/* 			jupiter_debug(instance->peer, __func__, 			    "{0x%x 0x%x}", bp[0], bp[1]); 			*/
 name|bp
 operator|+=
 literal|2
@@ -4930,7 +4715,7 @@ operator|-=
 literal|2
 expr_stmt|;
 block|}
-comment|/* 		jupiter_debug(instance->peer, "\n"); 		*/
+comment|/* 		jupiter_debug(instance->peer, __func__, "\n"); 		*/
 comment|/* Shuffle data to front of input buffer */
 if|if
 condition|(
@@ -5007,7 +4792,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_recv"
+name|__func__
 argument_list|,
 literal|"bad header checksum!"
 argument_list|)
@@ -5106,7 +4891,7 @@ name|instance
 operator|->
 name|peer
 argument_list|,
-literal|"jupiter_recv"
+name|__func__
 argument_list|,
 literal|"bad payload checksum!"
 argument_list|)
