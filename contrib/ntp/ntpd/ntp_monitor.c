@@ -489,7 +489,7 @@ argument_list|,
 name|mon_entry
 argument_list|)
 expr_stmt|;
-name|NTP_ENSURE
+name|ENSURE
 argument_list|(
 name|punlinked
 operator|==
@@ -986,6 +986,13 @@ name|int
 name|limit
 decl_stmt|;
 comment|/* average threshold */
+name|REQUIRE
+argument_list|(
+name|rbufp
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mon_enabled
@@ -1477,6 +1484,13 @@ name|oldest
 expr_stmt|;
 block|}
 block|}
+name|INSIST
+argument_list|(
+name|mon
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Got one, initialize it 	 */
 name|mru_entries
 operator|++

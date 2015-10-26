@@ -14,7 +14,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_calendar.h"
+file|"sockaddrtest.h"
 end_include
 
 begin_include
@@ -23,11 +23,73 @@ directive|include
 file|"unity.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"sockaddrtest.h"
-end_include
+begin_function_decl
+specifier|extern
+name|void
+name|test_IPv4AddressOnly
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|test_IPv4AddressWithPort
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|//#ifdef ISC_PLATFORM_HAVEIPV6
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|test_IPv6AddressOnly
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|test_IPv6AddressWithPort
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|//#endif /* ISC_PLATFORM_HAVEIPV6 */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|test_IllegalAddress
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|test_IllegalCharInPort
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
@@ -182,6 +244,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|//#ifdef ISC_PLATFORM_HAVEIPV6 //looks like HAVEIPV6 checks if system has IPV6 capabilies. WANTIPV6 can be changed with build --disable-ipv6
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_WANTIPV6
 specifier|const
 name|struct
 name|in6_addr
@@ -279,6 +345,16 @@ name|actual
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|TEST_IGNORE_MESSAGE
+argument_list|(
+literal|"IPV6 disabled in build, skipping."
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ISC_PLATFORM_HAVEIPV6 */
 block|}
 end_function
 
@@ -289,6 +365,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_WANTIPV6
 specifier|const
 name|struct
 name|in6_addr
@@ -386,6 +465,16 @@ name|actual
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|TEST_IGNORE_MESSAGE
+argument_list|(
+literal|"IPV6 disabled in build, skipping."
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ISC_PLATFORM_HAVEIPV6 */
 block|}
 end_function
 

@@ -546,6 +546,7 @@ end_comment
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -1448,10 +1449,12 @@ name|argc
 operator|-=
 name|optct
 expr_stmt|;
+comment|// Just in case we care later.
 name|argv
 operator|+=
 name|optct
 expr_stmt|;
+comment|// Just in case we care later.
 ifdef|#
 directive|ifdef
 name|OPENSSL

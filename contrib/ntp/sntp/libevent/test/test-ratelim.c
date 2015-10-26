@@ -1665,6 +1665,26 @@ name|client_state
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bevs
+operator|==
+name|NULL
+operator|||
+name|states
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Unable to allocate memory...\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 for|for
 control|(
 name|i

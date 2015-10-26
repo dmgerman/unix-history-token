@@ -416,10 +416,7 @@ decl_stmt|;
 name|l_fp
 name|resp_org
 decl_stmt|;
-name|key_id
-operator|=
-literal|0
-expr_stmt|;
+comment|// key_id = 0;
 name|pkt_key
 operator|=
 name|NULL

@@ -42,6 +42,36 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_types.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fileHandlingTest.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"kod_management.h"
+end_include
+
 begin_comment
 comment|//=======External Functions This Runner Calls=====
 end_comment
@@ -70,7 +100,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_ReadEmptyFile
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -78,7 +110,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_ReadCorrectFile
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -86,7 +120,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_ReadFileWithBlankLines
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -94,7 +130,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_WriteEmptyFile
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -102,7 +140,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_WriteFileWithSingleEntry
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -110,7 +150,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_WriteFileWithMultipleEntries
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -118,10 +160,21 @@ begin_comment
 comment|//=======Test Reset Option=====
 end_comment
 
+begin_function_decl
+name|void
+name|resetTest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|resetTest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tearDown
 argument_list|()
@@ -134,6 +187,7 @@ end_function
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -163,12 +217,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|Unity
-operator|.
-name|TestFile
-operator|=
-literal|"kodFile.c"
-expr_stmt|;
 name|UnityBegin
 argument_list|(
 literal|"kodFile.c"
@@ -178,42 +226,42 @@ name|RUN_TEST
 argument_list|(
 name|test_ReadEmptyFile
 argument_list|,
-literal|29
+literal|19
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_ReadCorrectFile
 argument_list|,
-literal|35
+literal|20
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_ReadFileWithBlankLines
 argument_list|,
-literal|53
+literal|21
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_WriteEmptyFile
 argument_list|,
-literal|76
+literal|22
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_WriteFileWithSingleEntry
 argument_list|,
-literal|92
+literal|23
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_WriteFileWithMultipleEntries
 argument_list|,
-literal|116
+literal|24
 argument_list|)
 expr_stmt|;
 return|return

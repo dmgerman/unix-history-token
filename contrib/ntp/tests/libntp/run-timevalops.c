@@ -42,6 +42,36 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_types.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_fp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"timevalops.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
+
 begin_comment
 comment|//=======External Functions This Runner Calls=====
 end_comment
@@ -70,7 +100,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_Helpers1
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -78,7 +110,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_Normalise
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -86,7 +120,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_SignNoFrac
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -94,7 +130,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_SignWithFrac
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -102,7 +140,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_CmpFracEQ
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -110,7 +150,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_CmpFracGT
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -118,7 +160,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_CmpFracLT
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -126,7 +170,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_AddFullNorm
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -134,7 +180,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_AddFullOflow1
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -142,7 +190,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_AddUsecNorm
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -150,7 +200,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_AddUsecOflow1
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -158,7 +210,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_SubFullNorm
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -166,7 +220,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_SubFullOflow
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -174,7 +230,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_SubUsecNorm
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -182,7 +240,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_SubUsecOflow
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -190,7 +250,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_Neg
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -198,7 +260,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_AbsNoFrac
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -206,7 +270,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_AbsWithFrac
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -214,7 +280,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_Helpers2
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -222,7 +290,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_ToLFPbittest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -230,7 +300,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_ToLFPrelPos
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -238,7 +310,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_ToLFPrelNeg
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -246,7 +320,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_ToLFPabs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -254,7 +330,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_FromLFPbittest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -262,7 +340,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_FromLFPrelPos
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -270,7 +350,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_FromLFPrelNeg
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -278,7 +360,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_LFProundtrip
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -286,7 +370,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_ToString
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -294,10 +380,21 @@ begin_comment
 comment|//=======Test Reset Option=====
 end_comment
 
+begin_function_decl
+name|void
+name|resetTest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|resetTest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tearDown
 argument_list|()
@@ -310,6 +407,7 @@ end_function
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -339,12 +437,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|Unity
-operator|.
-name|TestFile
-operator|=
-literal|"timevalops.c"
-expr_stmt|;
 name|UnityBegin
 argument_list|(
 literal|"timevalops.c"
@@ -354,196 +446,196 @@ name|RUN_TEST
 argument_list|(
 name|test_Helpers1
 argument_list|,
-literal|153
+literal|38
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_Normalise
 argument_list|,
-literal|173
+literal|39
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_SignNoFrac
 argument_list|,
-literal|187
+literal|40
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_SignWithFrac
 argument_list|,
-literal|199
+literal|41
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_CmpFracEQ
 argument_list|,
-literal|214
+literal|42
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_CmpFracGT
 argument_list|,
-literal|228
+literal|43
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_CmpFracLT
 argument_list|,
-literal|242
+literal|44
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_AddFullNorm
 argument_list|,
-literal|260
+literal|45
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_AddFullOflow1
 argument_list|,
-literal|274
+literal|46
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_AddUsecNorm
 argument_list|,
-literal|288
+literal|47
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_AddUsecOflow1
 argument_list|,
-literal|300
+literal|48
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_SubFullNorm
 argument_list|,
-literal|316
+literal|49
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_SubFullOflow
 argument_list|,
-literal|330
+literal|50
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_SubUsecNorm
 argument_list|,
-literal|344
+literal|51
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_SubUsecOflow
 argument_list|,
-literal|356
+literal|52
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_Neg
 argument_list|,
-literal|372
+literal|53
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_AbsNoFrac
 argument_list|,
-literal|389
+literal|54
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_AbsWithFrac
 argument_list|,
-literal|400
+literal|55
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_Helpers2
 argument_list|,
-literal|416
+literal|56
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_ToLFPbittest
 argument_list|,
-literal|449
+literal|57
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_ToLFPrelPos
 argument_list|,
-literal|464
+literal|58
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_ToLFPrelNeg
 argument_list|,
-literal|478
+literal|59
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_ToLFPabs
 argument_list|,
-literal|491
+literal|60
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_FromLFPbittest
 argument_list|,
-literal|509
+literal|61
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_FromLFPrelPos
 argument_list|,
-literal|527
+literal|62
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_FromLFPrelNeg
 argument_list|,
-literal|540
+literal|63
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_LFProundtrip
 argument_list|,
-literal|554
+literal|64
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_ToString
 argument_list|,
-literal|573
+literal|65
 argument_list|)
 expr_stmt|;
 return|return
