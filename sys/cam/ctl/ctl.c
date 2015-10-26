@@ -5824,6 +5824,23 @@ operator|==
 name|CTL_NUM_MODE_PAGES
 condition|)
 return|return;
+comment|/* Don't try to replicate pages not present on this device. */
+if|if
+condition|(
+name|lun
+operator|->
+name|mode_pages
+operator|.
+name|index
+index|[
+name|i
+index|]
+operator|.
+name|page_data
+operator|==
+name|NULL
+condition|)
+return|return;
 name|bzero
 argument_list|(
 operator|&
