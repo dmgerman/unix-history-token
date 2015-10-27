@@ -30,6 +30,61 @@ name|TREE_DELTA_MAX
 value|1
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_HU_FUNCTION
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_HU_FUNCTION
+parameter_list|(
+name|x
+parameter_list|)
+value|__attribute__((__unused__)) x
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_HU_FUNCTION
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -91,7 +146,7 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\ 													\
-value|struct node *TREE_BALANCE_##node##_##field(struct node *);						\ 													\   struct node *TREE_ROTL_##node##_##field(struct node *self)						\   {													\     struct node *r= self->field.avl_right;								\     self->field.avl_right= r->field.avl_left;								\     r->field.avl_left= TREE_BALANCE_##node##_##field(self);						\     return TREE_BALANCE_##node##_##field(r);								\   }													\ 													\   struct node *TREE_ROTR_##node##_##field(struct node *self)						\   {													\     struct node *l= self->field.avl_left;								\     self->field.avl_left= l->field.avl_right;								\     l->field.avl_right= TREE_BALANCE_##node##_##field(self);						\     return TREE_BALANCE_##node##_##field(l);								\   }													\ 													\   struct node *TREE_BALANCE_##node##_##field(struct node *self)						\   {													\     int delta= TREE_DELTA(self, field);									\ 													\     if (delta< -TREE_DELTA_MAX)									\       {													\ 	if (TREE_DELTA(self->field.avl_right, field)> 0)						\ 	  self->field.avl_right= TREE_ROTR_##node##_##field(self->field.avl_right);			\ 	return TREE_ROTL_##node##_##field(self);							\       }													\     else if (delta> TREE_DELTA_MAX)									\       {													\ 	if (TREE_DELTA(self->field.avl_left, field)< 0)						\ 	  self->field.avl_left= TREE_ROTL_##node##_##field(self->field.avl_left);			\ 	return TREE_ROTR_##node##_##field(self);							\       }													\     self->field.avl_height= 0;										\     if (self->field.avl_left&& (self->field.avl_left->field.avl_height> self->field.avl_height))	\       self->field.avl_height= self->field.avl_left->field.avl_height;					\     if (self->field.avl_right&& (self->field.avl_right->field.avl_height> self->field.avl_height))	\       self->field.avl_height= self->field.avl_right->field.avl_height;					\     self->field.avl_height += 1;									\     return self;											\   }													\ 													\   struct node *TREE_INSERT_##node##_##field								\     (struct node *self, struct node *elm, int (*compare)(struct node *lhs, struct node *rhs))		\   {													\     if (!self)												\       return elm;											\     if (compare(elm, self)< 0)										\       self->field.avl_left= TREE_INSERT_##node##_##field(self->field.avl_left, elm, compare);		\     else												\       self->field.avl_right= TREE_INSERT_##node##_##field(self->field.avl_right, elm, compare);		\     return TREE_BALANCE_##node##_##field(self);								\   }													\ 													\   struct node *TREE_FIND_##node##_##field								\     (struct node *self, struct node *elm, int (*compare)(struct node *lhs, struct node *rhs))		\   {													\     if (!self)												\       return 0;												\     if (compare(elm, self) == 0)									\       return self;											\     if (compare(elm, self)< 0)										\       return TREE_FIND_##node##_##field(self->field.avl_left, elm, compare);				\     else												\       return TREE_FIND_##node##_##field(self->field.avl_right, elm, compare);				\   }													\ 													\   struct node *TREE_MOVE_RIGHT(struct node *self, struct node *rhs)					\   {													\     if (!self)												\       return rhs;											\     self->field.avl_right= TREE_MOVE_RIGHT(self->field.avl_right, rhs);					\     return TREE_BALANCE_##node##_##field(self);								\   }													\ 													\   struct node *TREE_REMOVE_##node##_##field								\     (struct node *self, struct node *elm, int (*compare)(struct node *lhs, struct node *rhs))		\   {													\     if (!self) return 0;										\ 													\     if (compare(elm, self) == 0)									\       {													\ 	struct node *tmp= TREE_MOVE_RIGHT(self->field.avl_left, self->field.avl_right);			\ 	self->field.avl_left= 0;									\ 	self->field.avl_right= 0;									\ 	return tmp;											\       }													\     if (compare(elm, self)< 0)										\       self->field.avl_left= TREE_REMOVE_##node##_##field(self->field.avl_left, elm, compare);		\     else												\       self->field.avl_right= TREE_REMOVE_##node##_##field(self->field.avl_right, elm, compare);		\     return TREE_BALANCE_##node##_##field(self);								\   }													\ 													\   void TREE_FORWARD_APPLY_ALL_##node##_##field								\     (struct node *self, void (*function)(struct node *node, void *data), void *data)			\   {													\     if (self)												\       {													\ 	TREE_FORWARD_APPLY_ALL_##node##_##field(self->field.avl_left, function, data);			\ 	function(self, data);										\ 	TREE_FORWARD_APPLY_ALL_##node##_##field(self->field.avl_right, function, data);			\       }													\   }													\ 													\   void TREE_REVERSE_APPLY_ALL_##node##_##field								\     (struct node *self, void (*function)(struct node *node, void *data), void *data)			\   {													\     if (self)												\       {													\ 	TREE_REVERSE_APPLY_ALL_##node##_##field(self->field.avl_right, function, data);			\ 	function(self, data);										\ 	TREE_REVERSE_APPLY_ALL_##node##_##field(self->field.avl_left, function, data);			\       }													\   }
+value|static struct node *_HU_FUNCTION(TREE_BALANCE_##node##_##field)(struct node *);						\ 													\   static struct node *_HU_FUNCTION(TREE_ROTL_##node##_##field)(struct node *self)						\   {													\     struct node *r= self->field.avl_right;								\     self->field.avl_right= r->field.avl_left;								\     r->field.avl_left= TREE_BALANCE_##node##_##field(self);						\     return TREE_BALANCE_##node##_##field(r);								\   }													\ 													\   static struct node *_HU_FUNCTION(TREE_ROTR_##node##_##field)(struct node *self)						\   {													\     struct node *l= self->field.avl_left;								\     self->field.avl_left= l->field.avl_right;								\     l->field.avl_right= TREE_BALANCE_##node##_##field(self);						\     return TREE_BALANCE_##node##_##field(l);								\   }													\ 													\   static struct node *_HU_FUNCTION(TREE_BALANCE_##node##_##field)(struct node *self)						\   {													\     int delta= TREE_DELTA(self, field);									\ 													\     if (delta< -TREE_DELTA_MAX)									\       {													\ 	if (TREE_DELTA(self->field.avl_right, field)> 0)						\ 	  self->field.avl_right= TREE_ROTR_##node##_##field(self->field.avl_right);			\ 	return TREE_ROTL_##node##_##field(self);							\       }													\     else if (delta> TREE_DELTA_MAX)									\       {													\ 	if (TREE_DELTA(self->field.avl_left, field)< 0)						\ 	  self->field.avl_left= TREE_ROTL_##node##_##field(self->field.avl_left);			\ 	return TREE_ROTR_##node##_##field(self);							\       }													\     self->field.avl_height= 0;										\     if (self->field.avl_left&& (self->field.avl_left->field.avl_height> self->field.avl_height))	\       self->field.avl_height= self->field.avl_left->field.avl_height;					\     if (self->field.avl_right&& (self->field.avl_right->field.avl_height> self->field.avl_height))	\       self->field.avl_height= self->field.avl_right->field.avl_height;					\     self->field.avl_height += 1;									\     return self;											\   }													\ 													\   static struct node *_HU_FUNCTION(TREE_INSERT_##node##_##field)								\     (struct node *self, struct node *elm, int (*compare)(struct node *lhs, struct node *rhs))		\   {													\     if (!self)												\       return elm;											\     if (compare(elm, self)< 0)										\       self->field.avl_left= TREE_INSERT_##node##_##field(self->field.avl_left, elm, compare);		\     else												\       self->field.avl_right= TREE_INSERT_##node##_##field(self->field.avl_right, elm, compare);		\     return TREE_BALANCE_##node##_##field(self);								\   }													\ 													\   static struct node *_HU_FUNCTION(TREE_FIND_##node##_##field)								\     (struct node *self, struct node *elm, int (*compare)(struct node *lhs, struct node *rhs))		\   {													\     if (!self)												\       return 0;												\     if (compare(elm, self) == 0)									\       return self;											\     if (compare(elm, self)< 0)										\       return TREE_FIND_##node##_##field(self->field.avl_left, elm, compare);				\     else												\       return TREE_FIND_##node##_##field(self->field.avl_right, elm, compare);				\   }													\ 													\   static struct node *_HU_FUNCTION(TREE_MOVE_RIGHT)(struct node *self, struct node *rhs)					\   {													\     if (!self)												\       return rhs;											\     self->field.avl_right= TREE_MOVE_RIGHT(self->field.avl_right, rhs);					\     return TREE_BALANCE_##node##_##field(self);								\   }													\ 													\   static struct node *_HU_FUNCTION(TREE_REMOVE_##node##_##field)								\     (struct node *self, struct node *elm, int (*compare)(struct node *lhs, struct node *rhs))		\   {													\     if (!self) return 0;										\ 													\     if (compare(elm, self) == 0)									\       {													\ 	struct node *tmp= TREE_MOVE_RIGHT(self->field.avl_left, self->field.avl_right);			\ 	self->field.avl_left= 0;									\ 	self->field.avl_right= 0;									\ 	return tmp;											\       }													\     if (compare(elm, self)< 0)										\       self->field.avl_left= TREE_REMOVE_##node##_##field(self->field.avl_left, elm, compare);		\     else												\       self->field.avl_right= TREE_REMOVE_##node##_##field(self->field.avl_right, elm, compare);		\     return TREE_BALANCE_##node##_##field(self);								\   }													\ 													\   static void _HU_FUNCTION(TREE_FORWARD_APPLY_ALL_##node##_##field)								\     (struct node *self, void (*function)(struct node *node, void *data), void *data)			\   {													\     if (self)												\       {													\ 	TREE_FORWARD_APPLY_ALL_##node##_##field(self->field.avl_left, function, data);			\ 	function(self, data);										\ 	TREE_FORWARD_APPLY_ALL_##node##_##field(self->field.avl_right, function, data);			\       }													\   }													\ 													\   static void _HU_FUNCTION(TREE_REVERSE_APPLY_ALL_##node##_##field)								\     (struct node *self, void (*function)(struct node *node, void *data), void *data)			\   {													\     if (self)												\       {													\ 	TREE_REVERSE_APPLY_ALL_##node##_##field(self->field.avl_right, function, data);			\ 	function(self, data);										\ 	TREE_REVERSE_APPLY_ALL_##node##_##field(self->field.avl_left, function, data);			\       }													\   }
 end_define
 
 begin_define
