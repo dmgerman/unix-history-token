@@ -4975,7 +4975,7 @@ name|BUS_DMASYNC_PREWRITE
 case|:
 name|mips_dcache_wbinv_range
 argument_list|(
-name|buf_cl
+name|buf
 argument_list|,
 name|len
 argument_list|)
