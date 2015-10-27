@@ -134,7 +134,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"static const unsigned int %s[255] = {\n"
+literal|"static const unsigned int %s[256] = {\n"
 argument_list|,
 name|name
 argument_list|)
@@ -147,7 +147,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|255
+literal|256
 condition|;
 name|i
 operator|++
@@ -678,7 +678,7 @@ if|if
 condition|(
 name|i
 operator|!=
-literal|254
+literal|255
 condition|)
 block|{
 name|r

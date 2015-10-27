@@ -93,6 +93,8 @@ argument_list|,
 name|p
 argument_list|,
 name|remain
+operator|-
+literal|1
 argument_list|)
 operator|)
 operator|>
@@ -110,8 +112,8 @@ expr_stmt|;
 if|if
 condition|(
 name|remain
-operator|==
-literal|0
+operator|<=
+literal|1
 condition|)
 block|{
 operator|*
@@ -146,10 +148,14 @@ operator|*
 name|buf
 operator|+
 name|size
+operator|-
+literal|1
 expr_stmt|;
 name|remain
 operator|=
 name|size
+operator|+
+literal|1
 expr_stmt|;
 name|size
 operator|*=
@@ -157,6 +163,11 @@ literal|2
 expr_stmt|;
 block|}
 block|}
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
 return|return
 name|ret
 return|;
