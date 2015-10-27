@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: gzip.c,v 1.108 2015/04/15 02:29:12 christos Exp $	*/
+comment|/*	$NetBSD: gzip.c,v 1.109 2015/10/27 07:36:18 mrg Exp $	*/
 end_comment
 
 begin_comment
