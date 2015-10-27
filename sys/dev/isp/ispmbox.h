@@ -6626,7 +6626,7 @@ begin_define
 define|#
 directive|define
 name|PLOGX_IOCBERR_NOLOGIN
-value|0x08
+value|0x09
 end_define
 
 begin_comment
