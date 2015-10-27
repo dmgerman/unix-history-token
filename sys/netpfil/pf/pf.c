@@ -32878,22 +32878,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-default|default:
-name|rtalloc_ign
-argument_list|(
-operator|(
-expr|struct
-name|route
-operator|*
-operator|)
-operator|&
-name|ro
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* No/default FIB. */
-break|break;
 block|}
 if|if
 condition|(
