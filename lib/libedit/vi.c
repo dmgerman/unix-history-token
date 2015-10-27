@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: vi.c,v 1.45 2014/06/18 18:12:28 christos Exp $	*/
+comment|/*	$NetBSD: vi.c,v 1.47 2015/10/21 21:45:30 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: vi.c,v 1.45 2014/06/18 18:12:28 christos Exp $"
+literal|"$NetBSD: vi.c,v 1.47 2015/10/21 21:45:30 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4375,6 +4375,8 @@ argument_list|,
 name|cp
 argument_list|,
 name|TMP_BUFSIZ
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -4384,6 +4386,13 @@ operator|>
 literal|0
 condition|)
 block|{
+name|cp
+index|[
+name|st
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|len
 operator|=
 call|(
@@ -4394,7 +4403,7 @@ name|el
 operator|->
 name|el_line
 operator|.
-name|lastchar
+name|limit
 operator|-
 name|el
 operator|->
