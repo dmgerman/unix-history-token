@@ -679,43 +679,25 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_net_inet_tcp
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|experimental
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-literal|0
-argument_list|,
-literal|"Experimental TCP extensions"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
-name|tcp_do_initcwnd10
+name|tcp_initcwnd_segments
 argument_list|)
 operator|=
-literal|1
+literal|10
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_net_inet_tcp_experimental
+name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|initcwnd10
+name|initcwnd_segments
 argument_list|,
 name|CTLFLAG_VNET
 operator||
@@ -724,12 +706,12 @@ argument_list|,
 operator|&
 name|VNET_NAME
 argument_list|(
-name|tcp_do_initcwnd10
+name|tcp_initcwnd_segments
 argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Enable RFC 6928 (Increasing initial CWND to 10)"
+literal|"Slow-start flight size (initial congestion window) in number of segments"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1974,7 +1956,7 @@ name|tcps_usedssthresh
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Set the initial slow-start flight size. 	 * 	 * RFC5681 Section 3.1 specifies the default conservative values. 	 * RFC3390 specifies slightly more aggressive values. 	 * RFC6928 increases it to ten segments. 	 * 	 * If a SYN or SYN/ACK was lost and retransmitted, we have to 	 * reduce the initial CWND to one segment as congestion is likely 	 * requiring us to be cautious. 	 */
+comment|/* 	 * Set the initial slow-start flight size. 	 * 	 * RFC5681 Section 3.1 specifies the default conservative values. 	 * RFC3390 specifies slightly more aggressive values. 	 * RFC6928 increases it to ten segments. 	 * Support for user specified value for initial flight size. 	 * 	 * If a SYN or SYN/ACK was lost and retransmitted, we have to 	 * reduce the initial CWND to one segment as congestion is likely 	 * requiring us to be cautious. 	 */
 if|if
 condition|(
 name|tp
@@ -1995,7 +1977,7 @@ comment|/* SYN(-ACK) lost */
 elseif|else
 if|if
 condition|(
-name|V_tcp_do_initcwnd10
+name|V_tcp_initcwnd_segments
 condition|)
 name|tp
 operator|->
@@ -2003,7 +1985,7 @@ name|snd_cwnd
 operator|=
 name|min
 argument_list|(
-literal|10
+name|V_tcp_initcwnd_segments
 operator|*
 name|tp
 operator|->
@@ -2017,7 +1999,9 @@ name|tp
 operator|->
 name|t_maxseg
 argument_list|,
-literal|14600
+name|V_tcp_initcwnd_segments
+operator|*
+literal|1460
 argument_list|)
 argument_list|)
 expr_stmt|;

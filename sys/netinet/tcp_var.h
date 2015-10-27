@@ -2506,7 +2506,7 @@ name|VNET_DECLARE
 argument_list|(
 name|int
 argument_list|,
-name|tcp_do_initcwnd10
+name|tcp_initcwnd_segments
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2606,8 +2606,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|V_tcp_do_initcwnd10
-value|VNET(tcp_do_initcwnd10)
+name|V_tcp_initcwnd_segments
+value|VNET(tcp_initcwnd_segments)
 end_define
 
 begin_define
