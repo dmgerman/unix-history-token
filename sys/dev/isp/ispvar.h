@@ -1068,17 +1068,6 @@ value|0xfe
 end_define
 
 begin_comment
-comment|/* Use this handle for the base for multi-id firmware SNS logins */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NPH_SNS_HDLBASE
-value|0x400
-end_define
-
-begin_comment
 comment|/* These are for 2K Login Firmware cards */
 end_comment
 
