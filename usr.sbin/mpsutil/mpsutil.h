@@ -621,18 +621,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static __inline U32 mpt_vol_pageaddr(U8 VolumeBus, U8 VolumeID) {  	return (VolumeBus<< 8 | VolumeID); }  static __inline CONFIG_PAGE_RAID_VOL_0 * mpt_vol_info(int fd, U8 VolumeBus, U8 VolumeID, U16 *IOCStatus) {  	return (mpt_read_config_page(fd, MPI_CONFIG_PAGETYPE_RAID_VOLUME, 0, 	    mpt_vol_pageaddr(VolumeBus, VolumeID), IOCStatus)); }  static __inline CONFIG_PAGE_RAID_VOL_1 * mpt_vol_names(int fd, U8 VolumeBus, U8 VolumeID, U16 *IOCStatus) {  	return (mpt_read_config_page(fd, MPI_CONFIG_PAGETYPE_RAID_VOLUME, 1, 	    mpt_vol_pageaddr(VolumeBus, VolumeID), IOCStatus)); }  static __inline CONFIG_PAGE_RAID_PHYS_DISK_0 * mpt_pd_info(int fd, U8 PhysDiskNum, U16 *IOCStatus) {  	return (mpt_read_config_page(fd, MPI_CONFIG_PAGETYPE_RAID_PHYSDISK, 0, 	    PhysDiskNum, IOCStatus)); }
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif
