@@ -11128,8 +11128,6 @@ name|intr_stats
 operator|.
 name|count
 index|[
-literal|1
-operator|<<
 name|i
 index|]
 operator|++
