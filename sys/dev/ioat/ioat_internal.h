@@ -1343,6 +1343,9 @@ decl_stmt|;
 name|uint32_t
 name|max_xfer_size
 decl_stmt|;
+name|uint32_t
+name|capabilities
+decl_stmt|;
 name|struct
 name|resource
 modifier|*

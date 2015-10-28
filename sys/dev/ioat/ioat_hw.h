@@ -125,6 +125,84 @@ name|IOAT_DMACAPABILITY_OFFSET
 value|0x10
 end_define
 
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_PB
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_DCA
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_BFILL
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_XOR
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_PQ
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_DMA_DIF
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_DWBES
+value|(1<< 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_RAID16SS
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_DMAMC
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_CTOS
+value|(1<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_DMACAP_STR
+define|\
+value|"\20\24Completion_Timeout_Support\23DMA_with_Multicasting_Support" \     "\22RAID_Super_descriptors\16Descriptor_Write_Back_Error_Support" \     "\13DMA_with_DIF\12PQ\11XOR\07Block_Fill\05DCA\01Page_Break"
+end_define
+
 begin_comment
 comment|/* DMA Channel Registers */
 end_comment

@@ -150,7 +150,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Issue a blockfill operation.  The 64-bit pattern 'fillpattern' is written to  * 'len' physically contiguous bytes at 'dst'.  */
+comment|/*  * Issue a blockfill operation.  The 64-bit pattern 'fillpattern' is written to  * 'len' physically contiguous bytes at 'dst'.  *  * Only supported on devices with the BFILL capability.  */
 end_comment
 
 begin_function_decl
