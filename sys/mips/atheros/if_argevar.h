@@ -701,6 +701,17 @@ decl_stmt|;
 block|}
 name|stats
 struct|;
+struct|struct
+block|{
+name|uint32_t
+name|count
+index|[
+literal|32
+index|]
+decl_stmt|;
+block|}
+name|intr_stats
+struct|;
 block|}
 struct|;
 end_struct
