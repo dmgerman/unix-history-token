@@ -224,6 +224,11 @@ decl_stmt|;
 name|int
 name|global_ctrl_sock
 decl_stmt|;
+name|struct
+name|wpa_ctrl_dst
+modifier|*
+name|global_ctrl_dst
+decl_stmt|;
 name|char
 modifier|*
 name|global_iface_path
@@ -250,6 +255,17 @@ decl_stmt|;
 name|size_t
 name|terminate_on_error
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|CONFIG_NO_VLAN
+name|struct
+name|dynamic_iface
+modifier|*
+name|vlan_priv
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_NO_VLAN */
 block|}
 struct|;
 end_struct
@@ -1066,6 +1082,10 @@ name|struct
 name|os_reltime
 name|last_sae_token_key_update
 decl_stmt|;
+name|int
+name|dot11RSNASAERetransPeriod
+decl_stmt|;
+comment|/* msec */
 endif|#
 directive|endif
 comment|/* CONFIG_SAE */
@@ -1092,6 +1112,28 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_TESTING_OPTIONS */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|hostapd_sta_info
+block|{
+name|struct
+name|dl_list
+name|list
+decl_stmt|;
+name|u8
+name|addr
+index|[
+name|ETH_ALEN
+index|]
+decl_stmt|;
+name|struct
+name|os_reltime
+name|last_seen
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1180,6 +1222,23 @@ name|cac_started
 range|:
 literal|1
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_FST
+name|struct
+name|fst_iface
+modifier|*
+name|fst
+decl_stmt|;
+specifier|const
+name|struct
+name|wpabuf
+modifier|*
+name|fst_ies
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_FST */
 comment|/* 	 * When set, indicates that the driver will handle the AP 	 * teardown: delete global keys, station keys, and stations. 	 */
 name|unsigned
 name|int
@@ -1362,6 +1421,15 @@ parameter_list|)
 function_decl|;
 name|int
 name|num_ht40_scan_tries
+decl_stmt|;
+name|struct
+name|dl_list
+name|sta_seen
+decl_stmt|;
+comment|/* struct hostapd_sta_info */
+name|unsigned
+name|int
+name|num_sta_seen
 decl_stmt|;
 block|}
 struct|;
@@ -1727,6 +1795,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|hostapd_periodic_iface
+parameter_list|(
+name|struct
+name|hostapd_iface
+modifier|*
+name|iface
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* utils.c */
 end_comment
@@ -1980,6 +2060,57 @@ name|phase2
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|struct
+name|hostapd_data
+modifier|*
+name|hostapd_get_iface
+parameter_list|(
+name|struct
+name|hapd_interfaces
+modifier|*
+name|interfaces
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|ifname
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_FST
+end_ifdef
+
+begin_function_decl
+name|void
+name|fst_hostapd_fill_iface_obj
+parameter_list|(
+name|struct
+name|hostapd_data
+modifier|*
+name|hapd
+parameter_list|,
+name|struct
+name|fst_wpa_obj
+modifier|*
+name|iface_obj
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_FST */
+end_comment
 
 begin_endif
 endif|#

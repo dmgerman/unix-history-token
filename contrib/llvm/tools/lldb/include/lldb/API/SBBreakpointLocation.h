@@ -60,6 +60,7 @@ name|namespace
 name|lldb
 block|{
 name|class
+name|LLDB_API
 name|SBBreakpointLocation
 block|{
 name|public
@@ -269,17 +270,6 @@ name|friend
 name|class
 name|SBBreakpoint
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|LLDB_DISABLE_PYTHON
-name|friend
-name|class
-name|lldb_private
-operator|::
-name|ScriptInterpreterPython
-expr_stmt|;
-endif|#
-directive|endif
 name|void
 name|SetLocation
 argument_list|(

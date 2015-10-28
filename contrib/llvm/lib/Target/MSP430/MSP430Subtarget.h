@@ -86,13 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MSP430SelectionDAGInfo.h"
+file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DataLayout.h"
+file|"llvm/Target/TargetSelectionDAGInfo.h"
 end_include
 
 begin_include
@@ -140,11 +140,6 @@ block|;
 name|bool
 name|ExtendedInsts
 block|;
-specifier|const
-name|DataLayout
-name|DL
-block|;
-comment|// Calculates type size& alignment
 name|MSP430FrameLowering
 name|FrameLowering
 block|;
@@ -154,7 +149,7 @@ block|;
 name|MSP430TargetLowering
 name|TLInfo
 block|;
-name|MSP430SelectionDAGInfo
+name|TargetSelectionDAGInfo
 name|TSInfo
 block|;
 name|public
@@ -165,9 +160,7 @@ comment|///
 name|MSP430Subtarget
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|Triple
 operator|&
 name|TT
 argument_list|,
@@ -237,19 +230,6 @@ name|InstrInfo
 return|;
 block|}
 specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-operator|&
-name|DL
-return|;
-block|}
-specifier|const
 name|TargetRegisterInfo
 operator|*
 name|getRegisterInfo
@@ -279,7 +259,7 @@ name|TLInfo
 return|;
 block|}
 specifier|const
-name|MSP430SelectionDAGInfo
+name|TargetSelectionDAGInfo
 operator|*
 name|getSelectionDAGInfo
 argument_list|()

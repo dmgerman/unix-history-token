@@ -81,6 +81,7 @@ name|class
 name|SBEvent
 decl_stmt|;
 name|class
+name|LLDB_API
 name|SBProcess
 block|{
 name|public
@@ -88,49 +89,50 @@ label|:
 comment|//------------------------------------------------------------------
 comment|/// Broadcaster event bits definitions.
 comment|//------------------------------------------------------------------
-enum|enum
+name|FLAGS_ANONYMOUS_ENUM
+argument_list|()
 block|{
 name|eBroadcastBitStateChanged
-init|=
+operator|=
 operator|(
 literal|1
 operator|<<
 literal|0
 operator|)
-block|,
+operator|,
 name|eBroadcastBitInterrupt
-init|=
+operator|=
 operator|(
 literal|1
 operator|<<
 literal|1
 operator|)
-block|,
+operator|,
 name|eBroadcastBitSTDOUT
-init|=
+operator|=
 operator|(
 literal|1
 operator|<<
 literal|2
 operator|)
-block|,
+operator|,
 name|eBroadcastBitSTDERR
-init|=
+operator|=
 operator|(
 literal|1
 operator|<<
 literal|3
 operator|)
-block|,
+operator|,
 name|eBroadcastBitProfileData
-init|=
+operator|=
 operator|(
 literal|1
 operator|<<
 literal|4
 operator|)
 block|}
-enum|;
+empty_stmt|;
 name|SBProcess
 argument_list|()
 expr_stmt|;
@@ -588,6 +590,26 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Gets the stop event corresponding to stop ID.
+comment|//
+comment|/// Note that it wasn't fully implemented and tracks only the stop
+comment|/// event for the last natural stop ID.
+comment|///
+comment|/// @param [in] stop_id
+comment|///   The ID of the stop event to return.
+comment|///
+comment|/// @return
+comment|///   The stop event corresponding to stop ID.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|SBEvent
+name|GetStopEventForStopID
+argument_list|(
+argument|uint32_t stop_id
+argument_list|)
+expr_stmt|;
 name|size_t
 name|ReadMemory
 argument_list|(
@@ -745,6 +767,18 @@ operator|&
 name|event
 argument_list|)
 expr_stmt|;
+specifier|static
+name|bool
+name|GetInterruptedFromEvent
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|SBEvent
+operator|&
+name|event
+argument_list|)
+decl_stmt|;
 specifier|static
 name|bool
 name|EventIsProcessEvent

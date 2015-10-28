@@ -106,6 +106,9 @@ name|local_zone_nodefault
 block|,
 comment|/** log client address, but no block (transparent) */
 name|local_zone_inform
+block|,
+comment|/** log client address, and block (drop) */
+name|local_zone_inform_deny
 block|}
 enum|;
 end_enum

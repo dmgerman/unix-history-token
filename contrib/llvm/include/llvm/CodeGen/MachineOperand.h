@@ -100,6 +100,9 @@ name|class
 name|MDNode
 decl_stmt|;
 name|class
+name|ModuleSlotTracker
+decl_stmt|;
+name|class
 name|TargetMachine
 decl_stmt|;
 name|class
@@ -190,6 +193,8 @@ comment|/// OpKind - Specify what kind of operand this is.  This discriminates t
 comment|/// union.
 name|MachineOperandType
 name|OpKind
+range|:
+literal|8
 decl_stmt|;
 comment|/// Subregister number for MO_Register.  A value of 0 indicates the
 comment|/// MO_Register has no subReg.
@@ -576,9 +581,29 @@ operator|&
 name|os
 argument_list|,
 specifier|const
-name|TargetMachine
+name|TargetRegisterInfo
 operator|*
-name|TM
+name|TRI
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|os
+argument_list|,
+name|ModuleSlotTracker
+operator|&
+name|MST
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
 operator|=
 name|nullptr
 argument_list|)
@@ -1523,8 +1548,8 @@ operator|.
 name|CFIIndex
 return|;
 block|}
-comment|/// getOffset - Return the offset from the symbol in this operand. This always
-comment|/// returns 0 for ExternalSymbol operands.
+comment|/// Return the offset from the symbol in this operand. This always returns 0
+comment|/// for ExternalSymbol operands.
 name|int64_t
 name|getOffset
 argument_list|()
@@ -1537,6 +1562,9 @@ name|isGlobal
 argument_list|()
 operator|||
 name|isSymbol
+argument_list|()
+operator|||
+name|isMCSymbol
 argument_list|()
 operator|||
 name|isCPI
@@ -1798,6 +1826,9 @@ operator|||
 name|isSymbol
 argument_list|()
 operator|||
+name|isMCSymbol
+argument_list|()
+operator|||
 name|isCPI
 argument_list|()
 operator|||
@@ -1944,6 +1975,31 @@ specifier|const
 name|ConstantFP
 modifier|*
 name|FPImm
+parameter_list|)
+function_decl|;
+comment|/// ChangeToES - Replace this operand with a new external symbol operand.
+name|void
+name|ChangeToES
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|SymName
+parameter_list|,
+name|unsigned
+name|char
+name|TargetFlags
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// ChangeToMCSymbol - Replace this operand with a new MC symbol operand.
+name|void
+name|ChangeToMCSymbol
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Sym
 parameter_list|)
 function_decl|;
 comment|/// ChangeToRegister - Replace this operand with a new register operand of
@@ -2751,6 +2807,12 @@ parameter_list|(
 name|MCSymbol
 modifier|*
 name|Sym
+parameter_list|,
+name|unsigned
+name|char
+name|TargetFlags
+init|=
+literal|0
 parameter_list|)
 block|{
 name|MachineOperand
@@ -2768,6 +2830,20 @@ operator|.
 name|Sym
 operator|=
 name|Sym
+expr_stmt|;
+name|Op
+operator|.
+name|setOffset
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|Op
+operator|.
+name|setTargetFlags
+argument_list|(
+name|TargetFlags
+argument_list|)
 expr_stmt|;
 return|return
 name|Op

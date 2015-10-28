@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCSection.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCStreamer.h"
 end_include
 
@@ -70,9 +76,6 @@ name|MCAssembler
 decl_stmt|;
 name|class
 name|MCCodeEmitter
-decl_stmt|;
-name|class
-name|MCSectionData
 decl_stmt|;
 name|class
 name|MCSubtargetInfo
@@ -92,6 +95,9 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+name|class
+name|raw_pwrite_stream
+decl_stmt|;
 comment|/// \brief Streaming object file generation interface.
 comment|///
 comment|/// This class provides an implementation of the MCStreamer interface which is
@@ -109,11 +115,7 @@ name|MCAssembler
 operator|*
 name|Assembler
 block|;
-name|MCSectionData
-operator|*
-name|CurSectionData
-block|;
-name|MCSectionData
+name|MCSection
 operator|::
 name|iterator
 name|CurInsertionPoint
@@ -126,7 +128,7 @@ name|EmitDebugFrame
 block|;
 name|SmallVector
 operator|<
-name|MCSymbolData
+name|MCSymbol
 operator|*
 block|,
 literal|2
@@ -163,16 +165,6 @@ argument|MCDwarfFrameInfo&Frame
 argument_list|)
 name|override
 block|;
-comment|// If any labels have been emitted but not assigned fragments, ensure that
-comment|// they get assigned, either to F if possible or to a new data fragment.
-name|void
-name|flushPendingLabels
-argument_list|(
-name|MCFragment
-operator|*
-name|F
-argument_list|)
-block|;
 name|protected
 operator|:
 name|MCObjectStreamer
@@ -185,41 +177,19 @@ name|MCAsmBackend
 operator|&
 name|TAB
 argument_list|,
-name|raw_ostream
+name|raw_pwrite_stream
 operator|&
-name|_OS
+name|OS
 argument_list|,
 name|MCCodeEmitter
 operator|*
-name|_Emitter
-argument_list|)
-block|;
-name|MCObjectStreamer
-argument_list|(
-name|MCContext
-operator|&
-name|Context
-argument_list|,
-name|MCAsmBackend
-operator|&
-name|TAB
-argument_list|,
-name|raw_ostream
-operator|&
-name|_OS
-argument_list|,
-name|MCCodeEmitter
-operator|*
-name|_Emitter
-argument_list|,
-name|MCAssembler
-operator|*
-name|_Assembler
+name|Emitter
 argument_list|)
 block|;
 operator|~
 name|MCObjectStreamer
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -238,24 +208,6 @@ name|override
 block|{
 return|return
 name|true
-return|;
-block|}
-name|MCSymbolData
-operator|&
-name|getOrCreateSymbolData
-argument_list|(
-argument|const MCSymbol *Symbol
-argument_list|)
-block|{
-return|return
-name|getAssembler
-argument_list|()
-operator|.
-name|getOrCreateSymbolData
-argument_list|(
-operator|*
-name|Symbol
-argument_list|)
 return|;
 block|}
 name|void
@@ -277,16 +229,6 @@ name|override
 block|;
 name|protected
 operator|:
-name|MCSectionData
-operator|*
-name|getCurrentSectionData
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CurSectionData
-return|;
-block|}
 name|MCFragment
 operator|*
 name|getCurrentFragment
@@ -304,7 +246,14 @@ argument_list|(
 name|F
 argument_list|)
 block|;
-name|CurSectionData
+name|MCSection
+operator|*
+name|CurSection
+operator|=
+name|getCurrentSectionOnly
+argument_list|()
+block|;
+name|CurSection
 operator|->
 name|getFragmentList
 argument_list|()
@@ -320,7 +269,7 @@ name|F
 operator|->
 name|setParent
 argument_list|(
-name|CurSectionData
+name|CurSection
 argument_list|)
 block|;   }
 comment|/// Get a data fragment to write into, creating a new one if the current
@@ -329,6 +278,32 @@ name|MCDataFragment
 operator|*
 name|getOrCreateDataFragment
 argument_list|()
+block|;
+name|bool
+name|changeSectionImpl
+argument_list|(
+name|MCSection
+operator|*
+name|Section
+argument_list|,
+specifier|const
+name|MCExpr
+operator|*
+name|Subsection
+argument_list|)
+block|;
+comment|/// If any labels have been emitted but not assigned fragments, ensure that
+comment|/// they get assigned, either to F if possible or to a new data fragment.
+comment|/// Optionally, it is also possible to provide an offset \p FOffset, which
+comment|/// will be used as a symbol offset within the fragment.
+name|void
+name|flushPendingLabels
+argument_list|(
+argument|MCFragment *F
+argument_list|,
+argument|uint64_t FOffset =
+literal|0
+argument_list|)
 block|;
 name|public
 operator|:
@@ -349,7 +324,7 @@ operator|*
 name|Assembler
 return|;
 block|}
-comment|/// @name MCStreamer Interface
+comment|/// \name MCStreamer Interface
 comment|/// @{
 name|void
 name|EmitLabel
@@ -404,7 +379,7 @@ block|;
 name|void
 name|ChangeSection
 argument_list|(
-argument|const MCSection *Section
+argument|MCSection *Section
 argument_list|,
 argument|const MCExpr *Subsection
 argument_list|)
@@ -576,22 +551,34 @@ name|FinishImpl
 argument_list|()
 name|override
 block|;
+comment|/// Emit the absolute difference between two symbols if possible.
+comment|///
+comment|/// Emit the absolute difference between \c Hi and \c Lo, as long as we can
+comment|/// compute it.  Currently, that requires that both symbols are in the same
+comment|/// data fragment.  Otherwise, do nothing and return \c false.
+comment|///
+comment|/// \pre Offset of \c Hi is greater than the offset \c Lo.
+name|void
+name|emitAbsoluteSymbolDiff
+argument_list|(
+argument|const MCSymbol *Hi
+argument_list|,
+argument|const MCSymbol *Lo
+argument_list|,
+argument|unsigned Size
+argument_list|)
+name|override
+block|;
 name|bool
 name|mayHaveInstructions
-argument_list|()
+argument_list|(
+argument|MCSection&Sec
+argument_list|)
 specifier|const
 name|override
-block|{
-return|return
-name|getCurrentSectionData
-argument_list|()
-operator|->
-name|hasInstructions
-argument_list|()
-return|;
+block|; }
+decl_stmt|;
 block|}
-expr|}
-block|;  }
 end_decl_stmt
 
 begin_comment

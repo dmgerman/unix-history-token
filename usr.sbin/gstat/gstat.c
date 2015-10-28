@@ -461,7 +461,7 @@ argument_list|,
 literal|"Invalid filter - see re_format(7)"
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|f_s
 argument_list|,
@@ -1014,7 +1014,7 @@ name|maxx
 argument_list|)
 expr_stmt|;
 block|}
-name|strncpy
+name|strlcpy
 argument_list|(
 name|pf_s
 argument_list|,
@@ -2185,7 +2185,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|tmp_f_s
 argument_list|,
@@ -2262,7 +2262,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|f_s
 argument_list|,

@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/rrdef.h"
+file|"sldns/rrdef.h"
 end_include
 
 begin_include
@@ -1438,6 +1438,10 @@ name|i
 decl_stmt|;
 if|if
 condition|(
+name|count
+operator|>
+name|RR_COUNT_MAX
+operator|||
 operator|!
 operator|(
 name|h
@@ -1459,11 +1463,17 @@ name|count
 argument_list|)
 operator|)
 condition|)
+block|{
 name|log_warn
 argument_list|(
 literal|"rrset LRU: memory allocation failed"
 argument_list|)
 expr_stmt|;
+name|h
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 else|else
 comment|/* store hash values */
 for|for

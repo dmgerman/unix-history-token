@@ -1267,7 +1267,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* jumbo cluster 4096 bytes */
+comment|/* jumbo cluster page sized */
 end_comment
 
 begin_define
@@ -2284,6 +2284,22 @@ name|uma_zone_t
 name|zone_ext_refcnt
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|mb_dupcl
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -4033,6 +4049,7 @@ name|mbuf
 modifier|*
 name|m_copym
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -4173,6 +4190,7 @@ name|mbuf
 modifier|*
 name|m_dup
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -4190,6 +4208,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -4895,6 +4914,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|mbuf
 modifier|*

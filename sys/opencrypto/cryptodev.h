@@ -117,7 +117,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AES_HASH_LEN
+name|AES_GMAC_HASH_LEN
 value|16
 end_define
 
@@ -274,21 +274,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|AES_128_HMAC_KEY_LEN
+name|AES_128_GMAC_KEY_LEN
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|AES_192_HMAC_KEY_LEN
+name|AES_192_GMAC_KEY_LEN
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|AES_256_HMAC_KEY_LEN
+name|AES_256_GMAC_KEY_LEN
 value|32
 end_define
 
@@ -302,6 +302,10 @@ directive|define
 name|NULL_BLOCK_LEN
 value|4
 end_define
+
+begin_comment
+comment|/* IPsec to maintain alignment */
+end_comment
 
 begin_define
 define|#

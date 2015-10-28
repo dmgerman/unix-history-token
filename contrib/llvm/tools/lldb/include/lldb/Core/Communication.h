@@ -175,12 +175,13 @@ name|Broadcaster
 block|{
 name|public
 operator|:
-expr|enum
+name|FLAGS_ANONYMOUS_ENUM
+argument_list|()
 block|{
 name|eBroadcastBitDisconnected
 operator|=
 operator|(
-literal|1
+literal|1u
 operator|<<
 literal|0
 operator|)
@@ -189,7 +190,7 @@ comment|///< Sent when the communications connection is lost.
 name|eBroadcastBitReadThreadGotBytes
 operator|=
 operator|(
-literal|1
+literal|1u
 operator|<<
 literal|1
 operator|)
@@ -198,7 +199,7 @@ comment|///< Sent by the read thread when bytes become available.
 name|eBroadcastBitReadThreadDidExit
 operator|=
 operator|(
-literal|1
+literal|1u
 operator|<<
 literal|2
 operator|)
@@ -207,7 +208,7 @@ comment|///< Sent by the read thread when it exits to inform clients.
 name|eBroadcastBitReadThreadShouldExit
 operator|=
 operator|(
-literal|1
+literal|1u
 operator|<<
 literal|3
 operator|)
@@ -216,16 +217,25 @@ comment|///< Sent by clients that need to cancel the read thread.
 name|eBroadcastBitPacketAvailable
 operator|=
 operator|(
-literal|1
+literal|1u
 operator|<<
 literal|4
 operator|)
 block|,
 comment|///< Sent when data received makes a complete packet.
+name|eBroadcastBitNoMorePendingInput
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|5
+operator|)
+block|,
+comment|///< Sent by the read thread to indicate all pending input has been processed.
 name|kLoUserBroadcastBit
 operator|=
 operator|(
-literal|1
+literal|1u
 operator|<<
 literal|16
 operator|)
@@ -234,7 +244,7 @@ comment|///< Subclasses can used bits 31:16 for any needed events.
 name|kHiUserBroadcastBit
 operator|=
 operator|(
-literal|1
+literal|1u
 operator|<<
 literal|31
 operator|)
@@ -606,6 +616,17 @@ modifier|*
 name|callback_baton
 parameter_list|)
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Wait for the read thread to process all outstanding data.
+comment|///
+comment|/// After this function returns, the read thread has processed all data that
+comment|/// has been waiting in the Connection queue.
+comment|///
+comment|//------------------------------------------------------------------
+name|void
+name|SynchronizeWithReadThread
+parameter_list|()
+function_decl|;
 specifier|static
 specifier|const
 name|char
@@ -689,6 +710,14 @@ name|m_read_thread_enabled
 expr_stmt|;
 name|std
 operator|::
+name|atomic
+operator|<
+name|bool
+operator|>
+name|m_read_thread_did_exit
+expr_stmt|;
+name|std
+operator|::
 name|string
 name|m_bytes
 expr_stmt|;
@@ -701,6 +730,9 @@ name|Mutex
 name|m_write_mutex
 decl_stmt|;
 comment|///< Don't let multiple threads write at the same time...
+name|Mutex
+name|m_synchronize_mutex
+decl_stmt|;
 name|ReadThreadBytesReceived
 name|m_callback
 decl_stmt|;

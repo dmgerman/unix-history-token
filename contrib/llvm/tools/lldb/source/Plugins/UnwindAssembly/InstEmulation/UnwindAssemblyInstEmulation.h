@@ -479,14 +479,9 @@ argument_list|(
 name|false
 argument_list|)
 block|,
-name|m_curr_insn_is_branch_immediate
+name|m_forward_branch_offset
 argument_list|(
-name|false
-argument_list|)
-block|,
-name|m_curr_insn_restored_a_register
-argument_list|(
-argument|false
+literal|0
 argument_list|)
 block|{
 if|if
@@ -682,22 +677,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// The instruction we're examining is a branch immediate instruction
+comment|// The instruction is branching forward with the given offset. 0 value means no branching.
 end_comment
 
 begin_decl_stmt
-name|bool
-name|m_curr_insn_is_branch_immediate
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// The instruction we're processing restored a caller's reg value (e.g. in an epilogue)
-end_comment
-
-begin_decl_stmt
-name|bool
-name|m_curr_insn_restored_a_register
+name|uint32_t
+name|m_forward_branch_offset
 decl_stmt|;
 end_decl_stmt
 

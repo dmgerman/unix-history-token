@@ -4321,7 +4321,9 @@ argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
-literal|"Mapping(%d): Host Addr 0x%lx, flags "
+literal|"Mapping(%d): Host Addr 0x%"
+name|PRIx64
+literal|", flags "
 literal|"0x%x ref 0x%x, dom %d\n"
 argument_list|,
 name|seg_idx
@@ -6074,9 +6076,6 @@ decl_stmt|;
 name|u_int
 name|nseg
 decl_stmt|;
-name|off_t
-name|sectors_sent
-decl_stmt|;
 name|struct
 name|uio
 name|xuio
@@ -6116,10 +6115,6 @@ operator|->
 name|backend
 operator|.
 name|file
-expr_stmt|;
-name|sectors_sent
-operator|=
-literal|0
 expr_stmt|;
 name|error
 operator|=

@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/FaultMaps.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/StackMaps.h"
 end_include
 
@@ -108,13 +114,8 @@ block|;
 name|StackMaps
 name|SM
 block|;
-name|void
-name|GenerateExportDirective
-argument_list|(
-argument|const MCSymbol *Sym
-argument_list|,
-argument|bool IsData
-argument_list|)
+name|FaultMaps
+name|FM
 block|;
 comment|// This utility class tracks the length of a stackmap instruction's 'shadow'.
 comment|// It is used by the X86AsmPrinter to ensure that the stackmap shadow
@@ -201,6 +202,11 @@ name|TargetMachine
 operator|&
 name|TM
 block|;
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+block|;
 name|std
 operator|::
 name|unique_ptr
@@ -264,6 +270,36 @@ specifier|const
 name|MachineInstr
 operator|&
 name|MI
+argument_list|,
+name|X86MCInstLower
+operator|&
+name|MCIL
+argument_list|)
+block|;
+name|void
+name|LowerSTATEPOINT
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|X86MCInstLower
+operator|&
+name|MCIL
+argument_list|)
+block|;
+name|void
+name|LowerFAULTING_LOAD_OP
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|X86MCInstLower
+operator|&
+name|MCIL
 argument_list|)
 block|;
 name|void
@@ -288,8 +324,12 @@ name|TargetMachine
 operator|&
 name|TM
 argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MCStreamer
-operator|&
+operator|>
 name|Streamer
 argument_list|)
 operator|:
@@ -297,10 +337,21 @@ name|AsmPrinter
 argument_list|(
 name|TM
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|Streamer
+argument_list|)
 argument_list|)
 block|,
 name|SM
+argument_list|(
+operator|*
+name|this
+argument_list|)
+block|,
+name|FM
 argument_list|(
 operator|*
 name|this
@@ -310,19 +361,7 @@ name|SMShadowTracker
 argument_list|(
 argument|TM
 argument_list|)
-block|{
-name|Subtarget
-operator|=
-operator|&
-name|TM
-operator|.
-name|getSubtarget
-operator|<
-name|X86Subtarget
-operator|>
-operator|(
-operator|)
-block|;   }
+block|{}
 specifier|const
 name|char
 operator|*
@@ -379,6 +418,7 @@ name|SMShadowTracker
 operator|.
 name|emitShadowPadding
 argument_list|(
+operator|*
 name|OutStreamer
 argument_list|,
 name|getSubtargetInfo

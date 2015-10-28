@@ -182,7 +182,7 @@ name|class
 name|MachineMemOperand
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// MachineInstr - Representation of each machine instruction.
+comment|/// Representation of each machine instruction.
 comment|///
 comment|/// This class isn't a POD type, but it must have a trivial destructor. When a
 comment|/// MachineFunction is deleted, all the contained MachineInstrs are deallocated
@@ -311,9 +311,12 @@ decl_stmt|;
 comment|// Source line information.
 name|MachineInstr
 argument_list|(
-argument|const MachineInstr&
+specifier|const
+name|MachineInstr
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -323,13 +326,15 @@ specifier|const
 name|MachineInstr
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 comment|// Use MachineFunction::DeleteMachineInstr() instead.
 operator|~
 name|MachineInstr
 argument_list|()
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 comment|// Intrusive list support
 name|friend
@@ -359,7 +364,7 @@ operator|=
 name|P
 expr_stmt|;
 block|}
-comment|/// MachineInstr ctor - This constructor creates a copy of the given
+comment|/// This constructor creates a copy of the given
 comment|/// MachineInstr in the given MachineFunction.
 name|MachineInstr
 argument_list|(
@@ -371,8 +376,8 @@ name|MachineInstr
 operator|&
 argument_list|)
 expr_stmt|;
-comment|/// MachineInstr ctor - This constructor create a MachineInstr and add the
-comment|/// implicit operands.  It reserves space for number of operands specified by
+comment|/// This constructor create a MachineInstr and add the implicit operands.
+comment|/// It reserves space for number of operands specified by
 comment|/// MCInstrDesc.  An explicit DebugLoc is supplied.
 name|MachineInstr
 argument_list|(
@@ -380,7 +385,7 @@ argument|MachineFunction&
 argument_list|,
 argument|const MCInstrDesc&MCID
 argument_list|,
-argument|const DebugLoc dl
+argument|DebugLoc dl
 argument_list|,
 argument|bool NoImp = false
 argument_list|)
@@ -412,8 +417,7 @@ return|return
 name|Parent
 return|;
 block|}
-comment|/// getAsmPrinterFlags - Return the asm printer flags bitvector.
-comment|///
+comment|/// Return the asm printer flags bitvector.
 name|uint8_t
 name|getAsmPrinterFlags
 argument_list|()
@@ -423,8 +427,7 @@ return|return
 name|AsmPrinterFlags
 return|;
 block|}
-comment|/// clearAsmPrinterFlags - clear the AsmPrinter bitvector
-comment|///
+comment|/// Clear the AsmPrinter bitvector.
 name|void
 name|clearAsmPrinterFlags
 parameter_list|()
@@ -434,8 +437,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/// getAsmPrinterFlag - Return whether an AsmPrinter flag is set.
-comment|///
+comment|/// Return whether an AsmPrinter flag is set.
 name|bool
 name|getAsmPrinterFlag
 argument_list|(
@@ -450,8 +452,7 @@ operator|&
 name|Flag
 return|;
 block|}
-comment|/// setAsmPrinterFlag - Set a flag for the AsmPrinter.
-comment|///
+comment|/// Set a flag for the AsmPrinter.
 name|void
 name|setAsmPrinterFlag
 parameter_list|(
@@ -467,8 +468,7 @@ operator|)
 name|Flag
 expr_stmt|;
 block|}
-comment|/// clearAsmPrinterFlag - clear specific AsmPrinter flags
-comment|///
+comment|/// Clear specific AsmPrinter flags.
 name|void
 name|clearAsmPrinterFlag
 parameter_list|(
@@ -482,7 +482,7 @@ operator|~
 name|Flag
 expr_stmt|;
 block|}
-comment|/// getFlags - Return the MI flags bitvector.
+comment|/// Return the MI flags bitvector.
 name|uint8_t
 name|getFlags
 argument_list|()
@@ -492,7 +492,7 @@ return|return
 name|Flags
 return|;
 block|}
-comment|/// getFlag - Return whether an MI flag is set.
+comment|/// Return whether an MI flag is set.
 name|bool
 name|getFlag
 argument_list|(
@@ -507,7 +507,7 @@ operator|&
 name|Flag
 return|;
 block|}
-comment|/// setFlag - Set a MI flag.
+comment|/// Set a MI flag.
 name|void
 name|setFlag
 parameter_list|(
@@ -573,8 +573,7 @@ name|Flag
 operator|)
 expr_stmt|;
 block|}
-comment|/// isInsideBundle - Return true if MI is in a bundle (but not the first MI
-comment|/// in a bundle).
+comment|/// Return true if MI is in a bundle (but not the first MI in a bundle).
 comment|///
 comment|/// A bundle looks like this before it's finalized:
 comment|///   ----------------
@@ -621,7 +620,7 @@ name|BundledPred
 argument_list|)
 return|;
 block|}
-comment|/// isBundled - Return true if this instruction part of a bundle. This is true
+comment|/// Return true if this instruction part of a bundle. This is true
 comment|/// if either itself or its following instruction is marked "InsideBundle".
 name|bool
 name|isBundled
@@ -686,9 +685,10 @@ name|void
 name|unbundleFromSucc
 parameter_list|()
 function_decl|;
-comment|/// getDebugLoc - Returns the debug location id of this MachineInstr.
-comment|///
+comment|/// Returns the debug location id of this MachineInstr.
+specifier|const
 name|DebugLoc
+operator|&
 name|getDebugLoc
 argument_list|()
 specifier|const
@@ -697,9 +697,11 @@ return|return
 name|debugLoc
 return|;
 block|}
-comment|/// \brief Return the debug variable referenced by
+comment|/// Return the debug variable referenced by
 comment|/// this DBG_VALUE instruction.
-name|DIVariable
+specifier|const
+name|DILocalVariable
+operator|*
 name|getDebugVariable
 argument_list|()
 specifier|const
@@ -712,9 +714,12 @@ operator|&&
 literal|"not a DBG_VALUE"
 argument_list|)
 block|;
-name|DIVariable
-name|Var
-argument_list|(
+return|return
+name|cast
+operator|<
+name|DILocalVariable
+operator|>
+operator|(
 name|getOperand
 argument_list|(
 literal|2
@@ -722,25 +727,14 @@ argument_list|)
 operator|.
 name|getMetadata
 argument_list|()
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|Var
-operator|.
-name|Verify
-argument_list|()
-operator|&&
-literal|"not a DIVariable"
-argument_list|)
-block|;
-return|return
-name|Var
+operator|)
 return|;
 block|}
-comment|/// \brief Return the complex address expression referenced by
+comment|/// Return the complex address expression referenced by
 comment|/// this DBG_VALUE instruction.
+specifier|const
 name|DIExpression
+operator|*
 name|getDebugExpression
 argument_list|()
 specifier|const
@@ -753,9 +747,12 @@ operator|&&
 literal|"not a DBG_VALUE"
 argument_list|)
 block|;
+return|return
+name|cast
+operator|<
 name|DIExpression
-name|Expr
-argument_list|(
+operator|>
+operator|(
 name|getOperand
 argument_list|(
 literal|3
@@ -763,24 +760,11 @@ argument_list|)
 operator|.
 name|getMetadata
 argument_list|()
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|Expr
-operator|.
-name|Verify
-argument_list|()
-operator|&&
-literal|"not a DIExpression"
-argument_list|)
-block|;
-return|return
-name|Expr
+operator|)
 return|;
 block|}
-comment|/// emitError - Emit an error referring to the source location of this
-comment|/// instruction. This should only be used for inline assembly that is somehow
+comment|/// Emit an error referring to the source location of this instruction.
+comment|/// This should only be used for inline assembly that is somehow
 comment|/// impossible to compile. Other errors should have been handled much
 comment|/// earlier.
 comment|///
@@ -794,8 +778,7 @@ name|Msg
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getDesc - Returns the target instruction descriptor of this
-comment|/// MachineInstr.
+comment|/// Returns the target instruction descriptor of this MachineInstr.
 specifier|const
 name|MCInstrDesc
 operator|&
@@ -808,9 +791,8 @@ operator|*
 name|MCID
 return|;
 block|}
-comment|/// getOpcode - Returns the opcode of this MachineInstr.
-comment|///
-name|int
+comment|/// Returns the opcode of this MachineInstr.
+name|unsigned
 name|getOpcode
 argument_list|()
 specifier|const
@@ -884,8 +866,7 @@ name|i
 index|]
 return|;
 block|}
-comment|/// getNumExplicitOperands - Returns the number of non-implicit operands.
-comment|///
+comment|/// Returns the number of non-implicit operands.
 name|unsigned
 name|getNumExplicitOperands
 argument_list|()
@@ -1192,6 +1173,22 @@ argument_list|()
 operator|)
 return|;
 block|}
+comment|/// Returns the number of the operand iterator \p I points to.
+name|unsigned
+name|getOperandNo
+argument_list|(
+name|const_mop_iterator
+name|I
+argument_list|)
+decl|const
+block|{
+return|return
+name|I
+operator|-
+name|operands_begin
+argument_list|()
+return|;
+block|}
 comment|/// Access to memory operands of the instruction
 name|mmo_iterator
 name|memoperands_begin
@@ -1267,8 +1264,7 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|/// hasOneMemOperand - Return true if this instruction has exactly one
-comment|/// MachineMemOperand.
+comment|/// Return true if this instruction has exactly one MachineMemOperand.
 name|bool
 name|hasOneMemOperand
 argument_list|()
@@ -1295,7 +1291,7 @@ name|AllInBundle
 comment|// Return true if all instructions in bundle have property
 block|}
 enum|;
-comment|/// hasProperty - Return true if the instruction (or in the case of a bundle,
+comment|/// Return true if the instruction (or in the case of a bundle,
 comment|/// the instructions inside the bundle) has the specified property.
 comment|/// The first argument is the property being queried.
 comment|/// The second argument indicates whether the query should look inside
@@ -1352,8 +1348,8 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// isVariadic - Return true if this instruction can have a variable number of
-comment|/// operands.  In this case, the variable operands will be after the normal
+comment|/// Return true if this instruction can have a variable number of operands.
+comment|/// In this case, the variable operands will be after the normal
 comment|/// operands but before the implicit definitions and uses (if any are
 comment|/// present).
 name|bool
@@ -1377,7 +1373,7 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// hasOptionalDef - Set if this instruction has an optional definition, e.g.
+comment|/// Set if this instruction has an optional definition, e.g.
 comment|/// ARM instructions which can set condition code if 's' bit is set.
 name|bool
 name|hasOptionalDef
@@ -1400,9 +1396,8 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// isPseudo - Return true if this is a pseudo instruction that doesn't
+comment|/// Return true if this is a pseudo instruction that doesn't
 comment|/// correspond to a real machine instruction.
-comment|///
 name|bool
 name|isPseudo
 argument_list|(
@@ -1466,7 +1461,7 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// isBarrier - Returns true if the specified instruction stops control flow
+comment|/// Returns true if the specified instruction stops control flow
 comment|/// from executing the instruction immediately following it.  Examples include
 comment|/// unconditional branches and return instructions.
 name|bool
@@ -1490,9 +1485,8 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// isTerminator - Returns true if this instruction part of the terminator for
-comment|/// a basic block.  Typically this is things like return and branch
-comment|/// instructions.
+comment|/// Returns true if this instruction part of the terminator for a basic block.
+comment|/// Typically this is things like return and branch instructions.
 comment|///
 comment|/// Various passes use this to insert code into the bottom of a basic block,
 comment|/// but before control flow occurs.
@@ -1517,8 +1511,8 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// isBranch - Returns true if this is a conditional, unconditional, or
-comment|/// indirect branch.  Predicates below can be used to discriminate between
+comment|/// Returns true if this is a conditional, unconditional, or indirect branch.
+comment|/// Predicates below can be used to discriminate between
 comment|/// these cases, and the TargetInstrInfo::AnalyzeBranch method can be used to
 comment|/// get more information.
 name|bool
@@ -1542,7 +1536,7 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// isIndirectBranch - Return true if this is an indirect branch, such as a
+comment|/// Return true if this is an indirect branch, such as a
 comment|/// branch through a register.
 name|bool
 name|isIndirectBranch
@@ -1565,7 +1559,7 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// isConditionalBranch - Return true if this is a branch which may fall
+comment|/// Return true if this is a branch which may fall
 comment|/// through to the next instruction or may transfer control flow to some other
 comment|/// block.  The TargetInstrInfo::AnalyzeBranch method can be used to get more
 comment|/// information about this branch.
@@ -1598,7 +1592,7 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// isUnconditionalBranch - Return true if this is a branch which always
+comment|/// Return true if this is a branch which always
 comment|/// transfers control flow to some other block.  The
 comment|/// TargetInstrInfo::AnalyzeBranch method can be used to get more information
 comment|/// about this branch.
@@ -1657,7 +1651,7 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// isCompare - Return true if this instruction is a comparison.
+comment|/// Return true if this instruction is a comparison.
 name|bool
 name|isCompare
 argument_list|(
@@ -1679,7 +1673,7 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// isMoveImmediate - Return true if this instruction is a move immediate
+comment|/// Return true if this instruction is a move immediate
 comment|/// (including conditional moves) instruction.
 name|bool
 name|isMoveImmediate
@@ -1702,8 +1696,7 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// isBitcast - Return true if this instruction is a bitcast instruction.
-comment|///
+comment|/// Return true if this instruction is a bitcast instruction.
 name|bool
 name|isBitcast
 argument_list|(
@@ -1725,8 +1718,7 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// isSelect - Return true if this instruction is a select instruction.
-comment|///
+comment|/// Return true if this instruction is a select instruction.
 name|bool
 name|isSelect
 argument_list|(
@@ -1748,8 +1740,8 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// isNotDuplicable - Return true if this instruction cannot be safely
-comment|/// duplicated.  For example, if the instruction has a unique labels attached
+comment|/// Return true if this instruction cannot be safely duplicated.
+comment|/// For example, if the instruction has a unique labels attached
 comment|/// to it, duplicating it would cause multiple definition errors.
 name|bool
 name|isNotDuplicable
@@ -1772,7 +1764,31 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// hasDelaySlot - Returns true if the specified instruction has a delay slot
+comment|/// Return true if this instruction is convergent.
+comment|/// Convergent instructions can only be moved to locations that are
+comment|/// control-equivalent to their initial position.
+name|bool
+name|isConvergent
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AnyInBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|Convergent
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// Returns true if the specified instruction has a delay slot
 comment|/// which must be filled by the code generator.
 name|bool
 name|hasDelaySlot
@@ -1795,7 +1811,7 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// canFoldAsLoad - Return true for instructions that can be folded as
+comment|/// Return true for instructions that can be folded as
 comment|/// memory operands in other instructions. The most common use for this
 comment|/// is instructions that are simple loads from memory that don't modify
 comment|/// the loaded value in any way, but it can also be used for instructions
@@ -1921,7 +1937,7 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Side Effect Analysis
 comment|//===--------------------------------------------------------------------===//
-comment|/// mayLoad - Return true if this instruction could possibly read memory.
+comment|/// Return true if this instruction could possibly read memory.
 comment|/// Instructions with this flag set are not necessarily simple load
 comment|/// instructions, they may load a value and modify it, for example.
 name|bool
@@ -1976,7 +1992,7 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// mayStore - Return true if this instruction could possibly modify memory.
+comment|/// Return true if this instruction could possibly modify memory.
 comment|/// Instructions with this flag set are not necessarily simple store
 comment|/// instructions, they may store a modified value based on their operands, or
 comment|/// may not actually modify anything, for example.
@@ -2032,10 +2048,33 @@ name|Type
 argument_list|)
 return|;
 block|}
+comment|/// Return true if this instruction could possibly read or modify memory.
+name|bool
+name|mayLoadOrStore
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AnyInBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|mayLoad
+argument_list|(
+name|Type
+argument_list|)
+operator|||
+name|mayStore
+argument_list|(
+name|Type
+argument_list|)
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Flags that indicate whether an instruction can be modified by a method.
 comment|//===--------------------------------------------------------------------===//
-comment|/// isCommutable - Return true if this may be a 2- or 3-address
+comment|/// Return true if this may be a 2- or 3-address
 comment|/// instruction (of the form "X = op Y, Z, ..."), which produces the same
 comment|/// result if Y and Z are exchanged.  If this flag is set, then the
 comment|/// TargetInstrInfo::commuteInstruction method may be used to hack on the
@@ -2066,7 +2105,7 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// isConvertibleTo3Addr - Return true if this is a 2-address instruction
+comment|/// Return true if this is a 2-address instruction
 comment|/// which can be changed into a 3-address instruction if needed.  Doing this
 comment|/// transformation can be profitable in the register allocator, because it
 comment|/// means that the instruction can use a 2-address form if possible, but
@@ -2101,7 +2140,7 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// usesCustomInsertionHook - Return true if this instruction requires
+comment|/// Return true if this instruction requires
 comment|/// custom insertion support when the DAG scheduler is inserting it into a
 comment|/// machine basic block.  If this is true for the instruction, it basically
 comment|/// means that it is a pseudo instruction used at SelectionDAG time that is
@@ -2130,7 +2169,7 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// hasPostISelHook - Return true if this instruction requires *adjustment*
+comment|/// Return true if this instruction requires *adjustment*
 comment|/// after instruction selection by calling a target hook. For example, this
 comment|/// can be used to fill in ARM 's' optional operand depending on whether
 comment|/// the conditional flag register is used.
@@ -2155,8 +2194,8 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// isRematerializable - Returns true if this instruction is a candidate for
-comment|/// remat.  This flag is deprecated, please don't use it anymore.  If this
+comment|/// Returns true if this instruction is a candidate for remat.
+comment|/// This flag is deprecated, please don't use it anymore.  If this
 comment|/// flag is set, the isReallyTriviallyReMaterializable() method is called to
 comment|/// verify the instruction is really rematable.
 name|bool
@@ -2182,9 +2221,9 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// isAsCheapAsAMove - Returns true if this instruction has the same cost (or
-comment|/// less) than a move instruction. This is useful during certain types of
-comment|/// optimizations (e.g., remat during two-address conversion or machine licm)
+comment|/// Returns true if this instruction has the same cost (or less) than a move
+comment|/// instruction. This is useful during certain types of optimizations
+comment|/// (e.g., remat during two-address conversion or machine licm)
 comment|/// where we would like to remat or hoist the instruction, but not if it costs
 comment|/// more than moving the instruction into the appropriate register. Note, we
 comment|/// are not marking copies from and to the same register class with this flag.
@@ -2210,7 +2249,7 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// hasExtraSrcRegAllocReq - Returns true if this instruction source operands
+comment|/// Returns true if this instruction source operands
 comment|/// have special register allocation requirements that are not captured by the
 comment|/// operand register classes. e.g. ARM::STRD's two source registers must be an
 comment|/// even / odd pair, ARM::STM registers have to be in ascending order.
@@ -2237,7 +2276,7 @@ name|Type
 argument_list|)
 return|;
 block|}
-comment|/// hasExtraDefRegAllocReq - Returns true if this instruction def operands
+comment|/// Returns true if this instruction def operands
 comment|/// have special register allocation requirements that are not captured by the
 comment|/// operand register classes. e.g. ARM::LDRD's two def registers must be an
 comment|/// even / odd pair, ARM::LDM registers have to be in ascending order.
@@ -2280,7 +2319,7 @@ name|IgnoreVRegDefs
 comment|// Ignore virtual register definitions
 block|}
 enum|;
-comment|/// isIdenticalTo - Return true if this instruction is identical to (same
+comment|/// Return true if this instruction is identical to (same
 comment|/// opcode and same operands as) the specified instruction.
 name|bool
 name|isIdenticalTo
@@ -2370,8 +2409,7 @@ operator|::
 name|GC_LABEL
 return|;
 block|}
-comment|/// isLabel - Returns true if the MachineInstr represents a label.
-comment|///
+comment|/// Returns true if the MachineInstr represents a label.
 name|bool
 name|isLabel
 argument_list|()
@@ -2652,7 +2690,7 @@ operator|::
 name|EXTRACT_SUBREG
 return|;
 block|}
-comment|/// isCopyLike - Return true if the instruction behaves like a copy.
+comment|/// Return true if the instruction behaves like a copy.
 comment|/// This does not include native copy instructions.
 name|bool
 name|isCopyLike
@@ -2667,7 +2705,7 @@ name|isSubregToReg
 argument_list|()
 return|;
 block|}
-comment|/// isIdentityCopy - Return true is the instruction is an identity copy.
+comment|/// Return true is the instruction is an identity copy.
 name|bool
 name|isIdentityCopy
 argument_list|()
@@ -2710,7 +2748,7 @@ name|getSubReg
 argument_list|()
 return|;
 block|}
-comment|/// isTransient - Return true if this is a transient instruction that is
+comment|/// Return true if this is a transient instruction that is
 comment|/// either very likely to be eliminated during register allocation (such as
 comment|/// copy-like instructions), or if this instruction doesn't have an
 comment|/// execution-time cost.
@@ -2801,8 +2839,8 @@ name|getBundleSize
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// readsRegister - Return true if the MachineInstr reads the specified
-comment|/// register. If TargetRegisterInfo is passed, then it also checks if there
+comment|/// Return true if the MachineInstr reads the specified register.
+comment|/// If TargetRegisterInfo is passed, then it also checks if there
 comment|/// is a read of a super-register.
 comment|/// This does not count partial redefines of virtual registers as reads:
 comment|///   %reg1024:6 = OP.
@@ -2835,8 +2873,8 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/// readsVirtualRegister - Return true if the MachineInstr reads the specified
-comment|/// virtual register. Take into account that a partial define is a
+comment|/// Return true if the MachineInstr reads the specified virtual register.
+comment|/// Take into account that a partial define is a
 comment|/// read-modify-write operation.
 name|bool
 name|readsVirtualRegister
@@ -2855,9 +2893,8 @@ operator|.
 name|first
 return|;
 block|}
-comment|/// readsWritesVirtualRegister - Return a pair of bools (reads, writes)
-comment|/// indicating if this instruction reads or writes Reg. This also considers
-comment|/// partial defines.
+comment|/// Return a pair of bools (reads, writes) indicating if this instruction
+comment|/// reads or writes Reg. This also considers partial defines.
 comment|/// If Ops is not null, all operand indices for Reg are added.
 name|std
 operator|::
@@ -2875,8 +2912,8 @@ argument|SmallVectorImpl<unsigned> *Ops = nullptr
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// killsRegister - Return true if the MachineInstr kills the specified
-comment|/// register. If TargetRegisterInfo is passed, then it also checks if there is
+comment|/// Return true if the MachineInstr kills the specified register.
+comment|/// If TargetRegisterInfo is passed, then it also checks if there is
 comment|/// a kill of a super-register.
 name|bool
 name|killsRegister
@@ -2907,8 +2944,8 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/// definesRegister - Return true if the MachineInstr fully defines the
-comment|/// specified register. If TargetRegisterInfo is passed, then it also checks
+comment|/// Return true if the MachineInstr fully defines the specified register.
+comment|/// If TargetRegisterInfo is passed, then it also checks
 comment|/// if there is a def of a super-register.
 comment|/// NOTE: It's ignoring subreg indices on virtual registers.
 name|bool
@@ -2942,8 +2979,8 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/// modifiesRegister - Return true if the MachineInstr modifies (fully define
-comment|/// or partially define) the specified register.
+comment|/// Return true if the MachineInstr modifies (fully define or partially
+comment|/// define) the specified register.
 comment|/// NOTE: It's ignoring subreg indices on virtual registers.
 name|bool
 name|modifiesRegister
@@ -2974,8 +3011,8 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/// registerDefIsDead - Returns true if the register is dead in this machine
-comment|/// instruction. If TargetRegisterInfo is passed, then it also checks
+comment|/// Returns true if the register is dead in this machine instruction.
+comment|/// If TargetRegisterInfo is passed, then it also checks
 comment|/// if there is a dead def of a super-register.
 name|bool
 name|registerDefIsDead
@@ -3008,9 +3045,9 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/// findRegisterUseOperandIdx() - Returns the operand index that is a use of
-comment|/// the specific register or -1 if it is not found. It further tightens
-comment|/// the search criteria to a use that kills the register if isKill is true.
+comment|/// Returns the operand index that is a use of the specific register or -1
+comment|/// if it is not found. It further tightens the search criteria to a use
+comment|/// that kills the register if isKill is true.
 name|int
 name|findRegisterUseOperandIdx
 argument_list|(
@@ -3031,7 +3068,7 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// findRegisterUseOperand - Wrapper for findRegisterUseOperandIdx, it returns
+comment|/// Wrapper for findRegisterUseOperandIdx, it returns
 comment|/// a pointer to the MachineOperand rather than an index.
 name|MachineOperand
 modifier|*
@@ -3082,11 +3119,11 @@ name|Idx
 argument_list|)
 return|;
 block|}
-comment|/// findRegisterDefOperandIdx() - Returns the operand index that is a def of
-comment|/// the specified register or -1 if it is not found. If isDead is true, defs
-comment|/// that are not dead are skipped. If Overlap is true, then it also looks for
-comment|/// defs that merely overlap the specified register. If TargetRegisterInfo is
-comment|/// non-null, then it also checks if there is a def of a super-register.
+comment|/// Returns the operand index that is a def of the specified register or
+comment|/// -1 if it is not found. If isDead is true, defs that are not dead are
+comment|/// skipped. If Overlap is true, then it also looks for defs that merely
+comment|/// overlap the specified register. If TargetRegisterInfo is non-null,
+comment|/// then it also checks if there is a def of a super-register.
 comment|/// This may also return a register mask operand when Overlap is true.
 name|int
 name|findRegisterDefOperandIdx
@@ -3113,7 +3150,7 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// findRegisterDefOperand - Wrapper for findRegisterDefOperandIdx, it returns
+comment|/// Wrapper for findRegisterDefOperandIdx, it returns
 comment|/// a pointer to the MachineOperand rather than an index.
 name|MachineOperand
 modifier|*
@@ -3166,7 +3203,7 @@ name|Idx
 argument_list|)
 return|;
 block|}
-comment|/// findFirstPredOperandIdx() - Find the index of the first operand in the
+comment|/// Find the index of the first operand in the
 comment|/// operand list that is used to represent the predicate. It returns -1 if
 comment|/// none is found.
 name|int
@@ -3174,7 +3211,7 @@ name|findFirstPredOperandIdx
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// findInlineAsmFlagIdx() - Find the index of the flag word operand that
+comment|/// Find the index of the flag word operand that
 comment|/// corresponds to operand OpIdx on an inline asm instruction.  Returns -1 if
 comment|/// getOperand(OpIdx) does not belong to an inline asm operand group.
 comment|///
@@ -3198,11 +3235,11 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getRegClassConstraint - Compute the static register class constraint for
-comment|/// operand OpIdx.  For normal instructions, this is derived from the
-comment|/// MCInstrDesc.  For inline assembly it is derived from the flag words.
+comment|/// Compute the static register class constraint for operand OpIdx.
+comment|/// For normal instructions, this is derived from the MCInstrDesc.
+comment|/// For inline assembly it is derived from the flag words.
 comment|///
-comment|/// Returns NULL if the static register classs constraint cannot be
+comment|/// Returns NULL if the static register class constraint cannot be
 comment|/// determined.
 comment|///
 specifier|const
@@ -3229,10 +3266,10 @@ comment|/// \brief Applies the constraints (def/use) implied by this MI on \p Re
 comment|/// the given \p CurRC.
 comment|/// If \p ExploreBundle is set and MI is part of a bundle, all the
 comment|/// instructions inside the bundle will be taken into account. In other words,
-comment|/// this method accumulates all the constrains of the operand of this MI and
+comment|/// this method accumulates all the constraints of the operand of this MI and
 comment|/// the related bundle if MI is a bundle or inside a bundle.
 comment|///
-comment|/// Returns the register class that statisfies both \p CurRC and the
+comment|/// Returns the register class that satisfies both \p CurRC and the
 comment|/// constraints set by MI. Returns NULL if such a register class does not
 comment|/// exist.
 comment|///
@@ -3270,7 +3307,7 @@ decl_stmt|;
 comment|/// \brief Applies the constraints (def/use) implied by the \p OpIdx operand
 comment|/// to the given \p CurRC.
 comment|///
-comment|/// Returns the register class that statisfies both \p CurRC and the
+comment|/// Returns the register class that satisfies both \p CurRC and the
 comment|/// constraints set by \p OpIdx MI. Returns NULL if such a register class
 comment|/// does not exist.
 comment|///
@@ -3301,8 +3338,8 @@ name|TRI
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// tieOperands - Add a tie between the register operands at DefIdx and
-comment|/// UseIdx. The tie will cause the register allocator to ensure that the two
+comment|/// Add a tie between the register operands at DefIdx and UseIdx.
+comment|/// The tie will cause the register allocator to ensure that the two
 comment|/// operands are assigned the same physical register.
 comment|///
 comment|/// Tied operands are managed automatically for explicit operands in the
@@ -3317,7 +3354,7 @@ name|unsigned
 name|UseIdx
 parameter_list|)
 function_decl|;
-comment|/// findTiedOperandIdx - Given the index of a tied register operand, find the
+comment|/// Given the index of a tied register operand, find the
 comment|/// operand it is tied to. Defs are tied to uses and vice versa. Returns the
 comment|/// index of the tied operand which must exist.
 name|unsigned
@@ -3328,7 +3365,7 @@ name|OpIdx
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isRegTiedToUseOperand - Given the index of a register def operand,
+comment|/// Given the index of a register def operand,
 comment|/// check if the register def is tied to a source operand, due to either
 comment|/// two-address elimination or inline assembly constraints. Returns the
 comment|/// first tied use operand index by reference if UseOpIdx is not null.
@@ -3395,9 +3432,9 @@ return|return
 name|true
 return|;
 block|}
-comment|/// isRegTiedToDefOperand - Return true if the use operand of the specified
-comment|/// index is tied to a def operand. It also returns the def operand index by
-comment|/// reference if DefOpIdx is not null.
+comment|/// Return true if the use operand of the specified index is tied to a def
+comment|/// operand. It also returns the def operand index by reference if DefOpIdx
+comment|/// is not null.
 name|bool
 name|isRegTiedToDefOperand
 argument_list|(
@@ -3461,13 +3498,12 @@ return|return
 name|true
 return|;
 block|}
-comment|/// clearKillInfo - Clears kill flags on all operands.
-comment|///
+comment|/// Clears kill flags on all operands.
 name|void
 name|clearKillInfo
 parameter_list|()
 function_decl|;
-comment|/// substituteRegister - Replace all occurrences of FromReg with ToReg:SubIdx,
+comment|/// Replace all occurrences of FromReg with ToReg:SubIdx,
 comment|/// properly composing subreg indices where necessary.
 name|void
 name|substituteRegister
@@ -3487,7 +3523,7 @@ modifier|&
 name|RegInfo
 parameter_list|)
 function_decl|;
-comment|/// addRegisterKilled - We have determined MI kills a register. Look for the
+comment|/// We have determined MI kills a register. Look for the
 comment|/// operand that uses it and mark it as IsKill. If AddIfNotFound is true,
 comment|/// add a implicit operand if it's not found. Returns true if the operand
 comment|/// exists / is added.
@@ -3508,7 +3544,7 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// clearRegisterKills - Clear all kill flags affecting Reg.  If RegInfo is
+comment|/// Clear all kill flags affecting Reg.  If RegInfo is
 comment|/// provided, this includes super-register kills.
 name|void
 name|clearRegisterKills
@@ -3522,7 +3558,7 @@ modifier|*
 name|RegInfo
 parameter_list|)
 function_decl|;
-comment|/// addRegisterDead - We have determined MI defined a register without a use.
+comment|/// We have determined MI defined a register without a use.
 comment|/// Look for the operand that defines it and mark it as IsDead. If
 comment|/// AddIfNotFound is true, add a implicit operand if it's not found. Returns
 comment|/// true if the operand exists / is added.
@@ -3543,8 +3579,26 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// addRegisterDefined - We have determined MI defines a register. Make sure
-comment|/// there is an operand defining Reg.
+comment|/// Clear all dead flags on operands defining register @p Reg.
+name|void
+name|clearRegisterDeads
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+function_decl|;
+comment|/// Mark all subregister defs of register @p Reg with the undef flag.
+comment|/// This function is used when we determined to have a subregister def in an
+comment|/// otherwise undefined super register.
+name|void
+name|addRegisterDefReadUndef
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+function_decl|;
+comment|/// We have determined MI defines a register. Make sure there is an operand
+comment|/// defining Reg.
 name|void
 name|addRegisterDefined
 parameter_list|(
@@ -3559,7 +3613,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// setPhysRegsDeadExcept - Mark every physreg used by this instruction as
+comment|/// Mark every physreg used by this instruction as
 comment|/// dead except those in the UsedRegs list.
 comment|///
 comment|/// On instructions with register mask operands, also add implicit-def
@@ -3579,17 +3633,12 @@ operator|&
 name|TRI
 argument_list|)
 decl_stmt|;
-comment|/// isSafeToMove - Return true if it is safe to move this instruction. If
+comment|/// Return true if it is safe to move this instruction. If
 comment|/// SawStore is set to true, it means that there is a store (or call) between
 comment|/// the instruction's location and its intended destination.
 name|bool
 name|isSafeToMove
 argument_list|(
-specifier|const
-name|TargetInstrInfo
-operator|*
-name|TII
-argument_list|,
 name|AliasAnalysis
 operator|*
 name|AA
@@ -3600,7 +3649,7 @@ name|SawStore
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// hasOrderedMemoryRef - Return true if this instruction may have an ordered
+comment|/// Return true if this instruction may have an ordered
 comment|/// or volatile memory reference, or if the information describing the memory
 comment|/// reference is not available. Return false if it is known to have no
 comment|/// ordered or volatile memory references.
@@ -3609,7 +3658,7 @@ name|hasOrderedMemoryRef
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// isInvariantLoad - Return true if this instruction is loading from a
+comment|/// Return true if this instruction is loading from a
 comment|/// location whose value is invariant across the function.  For example,
 comment|/// loading a value from the constant pool or from the argument area of
 comment|/// a function if it does not change.  This should only return true of *all*
@@ -3623,16 +3672,15 @@ name|AA
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isConstantValuePHI - If the specified instruction is a PHI that always
-comment|/// merges together the same virtual register, return the register, otherwise
-comment|/// return 0.
+comment|/// If the specified instruction is a PHI that always merges together the
+comment|/// same virtual register, return the register, otherwise return 0.
 name|unsigned
 name|isConstantValuePHI
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// hasUnmodeledSideEffects - Return true if this instruction has side
-comment|/// effects that are not modeled by mayLoad / mayStore, etc.
+comment|/// Return true if this instruction has side effects that are not modeled
+comment|/// by mayLoad / mayStore, etc.
 comment|/// For all instructions, the property is encoded in MCInstrDesc::Flags
 comment|/// (see MCInstrDesc::hasUnmodeledSideEffects(). The only exception is
 comment|/// INLINEASM instruction, in which case the side effect property is encoded
@@ -3643,14 +3691,13 @@ name|hasUnmodeledSideEffects
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// allDefsAreDead - Return true if all the defs of this instruction are dead.
-comment|///
+comment|/// Return true if all the defs of this instruction are dead.
 name|bool
 name|allDefsAreDead
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// copyImplicitOps - Copy implicit register operands from specified
+comment|/// Copy implicit register operands from specified
 comment|/// instruction to this instruction.
 name|void
 name|copyImplicitOps
@@ -3675,12 +3722,23 @@ name|raw_ostream
 operator|&
 name|OS
 argument_list|,
-specifier|const
-name|TargetMachine
-operator|*
-name|TM
+name|bool
+name|SkipOpers
 operator|=
-name|nullptr
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+name|ModuleSlotTracker
+operator|&
+name|MST
 argument_list|,
 name|bool
 name|SkipOpers
@@ -3733,9 +3791,8 @@ modifier|&
 name|Op
 parameter_list|)
 function_decl|;
-comment|/// setDesc - Replace the instruction descriptor (thus opcode) of
+comment|/// Replace the instruction descriptor (thus opcode) of
 comment|/// the current instruction with a new one.
-comment|///
 name|void
 name|setDesc
 parameter_list|(
@@ -3751,20 +3808,23 @@ operator|&
 name|tid
 expr_stmt|;
 block|}
-comment|/// setDebugLoc - Replace current source information with new such.
+comment|/// Replace current source information with new such.
 comment|/// Avoid using this, the constructor argument is preferable.
-comment|///
 name|void
 name|setDebugLoc
 parameter_list|(
-specifier|const
 name|DebugLoc
 name|dl
 parameter_list|)
 block|{
 name|debugLoc
 operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|dl
+argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
@@ -3777,9 +3837,8 @@ literal|"Expected trivial destructor"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// RemoveOperand - Erase an operand  from an instruction, leaving it with one
+comment|/// Erase an operand  from an instruction, leaving it with one
 comment|/// fewer operand than it started with.
-comment|///
 name|void
 name|RemoveOperand
 parameter_list|(
@@ -3787,7 +3846,7 @@ name|unsigned
 name|i
 parameter_list|)
 function_decl|;
-comment|/// addMemOperand - Add a MachineMemOperand to the machine instruction.
+comment|/// Add a MachineMemOperand to the machine instruction.
 comment|/// This function should be used only occasionally. The setMemRefs function
 comment|/// is the primary method for setting up a MachineInstr's MemRefs list.
 name|void
@@ -3802,8 +3861,8 @@ modifier|*
 name|MO
 parameter_list|)
 function_decl|;
-comment|/// setMemRefs - Assign this MachineInstr's memory reference descriptor
-comment|/// list. This does not transfer ownership.
+comment|/// Assign this MachineInstr's memory reference descriptor list.
+comment|/// This does not transfer ownership.
 name|void
 name|setMemRefs
 parameter_list|(
@@ -3839,17 +3898,21 @@ literal|"Too many memrefs"
 argument_list|)
 expr_stmt|;
 block|}
-name|private
-label|:
-comment|/// getRegInfo - If this instruction is embedded into a MachineFunction,
-comment|/// return the MachineRegisterInfo object for the current function, otherwise
-comment|/// return null.
-name|MachineRegisterInfo
-modifier|*
-name|getRegInfo
+comment|/// Clear this MachineInstr's memory reference descriptor list.
+name|void
+name|clearMemRefs
 parameter_list|()
-function_decl|;
-comment|/// untieRegOperand - Break any tie involving OpIdx.
+block|{
+name|MemRefs
+operator|=
+name|nullptr
+expr_stmt|;
+name|NumMemRefs
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/// Break any tie involving OpIdx.
 name|void
 name|untieRegOperand
 parameter_list|(
@@ -3899,8 +3962,17 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/// addImplicitDefUseOperands - Add all implicit def and use operands to
-comment|/// this instruction.
+name|private
+label|:
+comment|/// If this instruction is embedded into a MachineFunction, return the
+comment|/// MachineRegisterInfo object for the current function, otherwise
+comment|/// return null.
+name|MachineRegisterInfo
+modifier|*
+name|getRegInfo
+parameter_list|()
+function_decl|;
+comment|/// Add all implicit def and use operands to this instruction.
 name|void
 name|addImplicitDefUseOperands
 parameter_list|(
@@ -3909,9 +3981,9 @@ modifier|&
 name|MF
 parameter_list|)
 function_decl|;
-comment|/// RemoveRegOperandsFromUseLists - Unlink all of the register operands in
-comment|/// this instruction from their respective use lists.  This requires that the
-comment|/// operands already be on their use lists.
+comment|/// Unlink all of the register operands in this instruction from their
+comment|/// respective use lists.  This requires that the operands already be on their
+comment|/// use lists.
 name|void
 name|RemoveRegOperandsFromUseLists
 parameter_list|(
@@ -3919,9 +3991,9 @@ name|MachineRegisterInfo
 modifier|&
 parameter_list|)
 function_decl|;
-comment|/// AddRegOperandsToUseLists - Add all of the register operands in
-comment|/// this instruction from their respective use lists.  This requires that the
-comment|/// operands not be on their use lists yet.
+comment|/// Add all of the register operands in this instruction from their
+comment|/// respective use lists.  This requires that the operands not be on their
+comment|/// use lists yet.
 name|void
 name|AddRegOperandsToUseLists
 parameter_list|(
@@ -3929,8 +4001,7 @@ name|MachineRegisterInfo
 modifier|&
 parameter_list|)
 function_decl|;
-comment|/// hasPropertyInBundle - Slow path for hasProperty when we're dealing with a
-comment|/// bundle.
+comment|/// Slow path for hasProperty when we're dealing with a bundle.
 name|bool
 name|hasPropertyInBundle
 argument_list|(
@@ -3981,11 +4052,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// MachineInstrExpressionTrait - Special DenseMapInfo traits to compare
+comment|/// Special DenseMapInfo traits to compare MachineInstr* by *value* of the
 end_comment
 
 begin_comment
-comment|/// MachineInstr* by *value* of the instruction rather than by pointer value.
+comment|/// instruction rather than by pointer value.
 end_comment
 
 begin_comment

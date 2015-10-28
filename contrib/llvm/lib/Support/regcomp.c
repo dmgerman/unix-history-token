@@ -7593,8 +7593,7 @@ return|return;
 if|if
 condition|(
 operator|(
-name|unsigned
-name|long
+name|uintptr_t
 operator|)
 name|size
 operator|>
@@ -7693,8 +7692,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|unsigned
-name|long
+name|uintptr_t
 operator|)
 name|p
 operator|->

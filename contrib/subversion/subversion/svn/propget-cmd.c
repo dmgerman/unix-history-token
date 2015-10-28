@@ -113,6 +113,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"private/svn_opt_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"private/svn_sorts_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"svn_private_config.h"
 end_include
 
@@ -282,7 +294,7 @@ name|svn_string_t
 modifier|*
 name|propval
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|apr_hash_first
 argument_list|(
@@ -345,7 +357,7 @@ literal|"path"
 argument_list|,
 name|name_local
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|svn_cmdline__print_xml_prop
@@ -479,7 +491,7 @@ literal|"path"
 argument_list|,
 name|filename
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|svn_cmdline__print_xml_prop
@@ -985,7 +997,7 @@ name|svn_string_t
 modifier|*
 name|propval
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|apr_hash_first
 argument_list|(
@@ -1199,6 +1211,11 @@ name|svn_stream_t
 modifier|*
 name|out
 decl_stmt|;
+name|svn_boolean_t
+name|warned
+init|=
+name|FALSE
+decl_stmt|;
 if|if
 condition|(
 name|opt_state
@@ -1212,7 +1229,7 @@ name|revprop
 operator|||
 name|opt_state
 operator|->
-name|strict
+name|no_newline
 operator|||
 name|opt_state
 operator|->
@@ -1229,7 +1246,7 @@ argument_list|,
 name|_
 argument_list|(
 literal|"--verbose cannot be used with --revprop or "
-literal|"--strict or --xml"
+literal|"--no-newline or --xml"
 argument_list|)
 argument_list|)
 return|;
@@ -1429,9 +1446,38 @@ expr_stmt|;
 if|if
 condition|(
 name|propval
-operator|!=
+operator|==
 name|NULL
 condition|)
+block|{
+return|return
+name|svn_error_createf
+argument_list|(
+name|SVN_ERR_PROPERTY_NOT_FOUND
+argument_list|,
+name|NULL
+argument_list|,
+name|_
+argument_list|(
+literal|"Property '%s' not found on "
+literal|"revision %s"
+argument_list|)
+argument_list|,
+name|pname_utf8
+argument_list|,
+name|svn_opt__revision_to_string
+argument_list|(
+operator|&
+name|opt_state
+operator|->
+name|start_revision
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+return|;
+block|}
+else|else
 block|{
 if|if
 condition|(
@@ -1484,7 +1530,7 @@ literal|"rev"
 argument_list|,
 name|revstr
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|svn_cmdline__print_xml_prop
@@ -1586,7 +1632,7 @@ condition|(
 operator|!
 name|opt_state
 operator|->
-name|strict
+name|no_newline
 condition|)
 name|SVN_ERR
 argument_list|(
@@ -1651,12 +1697,12 @@ name|depth
 operator|=
 name|svn_depth_empty
 expr_stmt|;
-comment|/* Strict mode only makes sense for a single target.  So make          sure we have only a single target, and that we're not being          asked to recurse on that target. */
+comment|/* No-newline mode only makes sense for a single target.  So make          sure we have only a single target, and that we're not being          asked to recurse on that target. */
 if|if
 condition|(
 name|opt_state
 operator|->
-name|strict
+name|no_newline
 operator|&&
 operator|(
 operator|(
@@ -1674,6 +1720,12 @@ name|depth
 operator|!=
 name|svn_depth_empty
 operator|)
+operator|||
+operator|(
+name|opt_state
+operator|->
+name|show_inherited_props
+operator|)
 operator|)
 condition|)
 return|return
@@ -1685,8 +1737,8 @@ name|NULL
 argument_list|,
 name|_
 argument_list|(
-literal|"Strict output of property values only available for single-"
-literal|"target, non-recursive propget operations"
+literal|"--no-newline is only available for single-target,"
+literal|" non-recursive propget operations"
 argument_list|)
 argument_list|)
 return|;
@@ -1848,7 +1900,7 @@ name|subpool
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Any time there is more than one thing to print, or where              the path associated with a printed thing is not obvious,              we'll print filenames.  That is, unless we've been told              not to do so with the --strict option. */
+comment|/* Any time there is more than one thing to print, or where              the path associated with a printed thing is not obvious,              we'll print filenames.  That is, unless we've been told              not to do so with the --no-newline option. */
 name|print_filenames
 operator|=
 operator|(
@@ -1885,7 +1937,7 @@ operator|(
 operator|!
 name|opt_state
 operator|->
-name|strict
+name|no_newline
 operator|)
 operator|)
 expr_stmt|;
@@ -1893,7 +1945,7 @@ name|omit_newline
 operator|=
 name|opt_state
 operator|->
-name|strict
+name|no_newline
 expr_stmt|;
 name|like_proplist
 operator|=
@@ -1904,8 +1956,71 @@ operator|&&
 operator|!
 name|opt_state
 operator|->
-name|strict
+name|no_newline
 expr_stmt|;
+comment|/* If there are no properties, and exactly one node was queried,              then warn. */
+if|if
+condition|(
+name|opt_state
+operator|->
+name|depth
+operator|==
+name|svn_depth_empty
+operator|&&
+operator|!
+name|opt_state
+operator|->
+name|show_inherited_props
+operator|&&
+name|apr_hash_count
+argument_list|(
+name|props
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|svn_error_t
+modifier|*
+name|err
+decl_stmt|;
+name|err
+operator|=
+name|svn_error_createf
+argument_list|(
+name|SVN_ERR_PROPERTY_NOT_FOUND
+argument_list|,
+name|NULL
+argument_list|,
+name|_
+argument_list|(
+literal|"Property '%s' not found on '%s'"
+argument_list|)
+argument_list|,
+name|pname_utf8
+argument_list|,
+name|target
+argument_list|)
+expr_stmt|;
+name|svn_handle_warning2
+argument_list|(
+name|stderr
+argument_list|,
+name|err
+argument_list|,
+literal|"svn: "
+argument_list|)
+expr_stmt|;
+name|svn_error_clear
+argument_list|(
+name|err
+argument_list|)
+expr_stmt|;
+name|warned
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|opt_state
@@ -1986,6 +2101,20 @@ name|subpool
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|warned
+condition|)
+return|return
+name|svn_error_create
+argument_list|(
+name|SVN_ERR_BASE
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+return|;
 return|return
 name|SVN_NO_ERROR
 return|;

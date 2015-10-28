@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/MemoryBuffer.h"
 end_include
 
@@ -1352,6 +1358,8 @@ block|{
 name|public
 label|:
 typedef|typedef
+name|pointee_iterator
+operator|<
 name|SmallVectorImpl
 operator|<
 name|std
@@ -1362,6 +1370,7 @@ name|GCOVBlock
 operator|>>
 operator|::
 name|const_iterator
+operator|>
 name|BlockIterator
 expr_stmt|;
 name|GCOVFunction
@@ -1469,6 +1478,25 @@ name|Blocks
 operator|.
 name|end
 argument_list|()
+return|;
+block|}
+name|iterator_range
+operator|<
+name|BlockIterator
+operator|>
+name|blocks
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|block_begin
+argument_list|()
+argument_list|,
+name|block_end
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|void
@@ -1851,6 +1879,25 @@ name|end
 argument_list|()
 return|;
 block|}
+name|iterator_range
+operator|<
+name|EdgeIterator
+operator|>
+name|srcs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|src_begin
+argument_list|()
+argument_list|,
+name|src_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|EdgeIterator
 name|dst_begin
 argument_list|()
@@ -1873,6 +1920,25 @@ name|DstEdges
 operator|.
 name|end
 argument_list|()
+return|;
+block|}
+name|iterator_range
+operator|<
+name|EdgeIterator
+operator|>
+name|dsts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|dst_begin
+argument_list|()
+argument_list|,
+name|dst_end
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|void
@@ -1940,8 +2006,10 @@ begin_decl_stmt
 name|class
 name|FileInfo
 block|{
-comment|// It is unlikely--but possible--for multiple functions to be on the same line.
-comment|// Therefore this typedef allows LineData.Functions to store multiple functions
+comment|// It is unlikely--but possible--for multiple functions to be on the same
+comment|// line.
+comment|// Therefore this typedef allows LineData.Functions to store multiple
+comment|// functions
 comment|// per instance. This is rare, however, so optimize for the common case.
 typedef|typedef
 name|SmallVector
@@ -2231,6 +2299,10 @@ begin_function_decl
 name|void
 name|print
 parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
 name|StringRef
 name|MainFilename
 parameter_list|,
@@ -2363,6 +2435,10 @@ begin_decl_stmt
 name|void
 name|printCoverage
 argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
 specifier|const
 name|GCOVCoverage
 operator|&
@@ -2372,21 +2448,29 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|void
 name|printFuncCoverage
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|void
 name|printFileCoverage
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -2465,7 +2549,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_endif
-unit|};  }
+unit|}; }
 endif|#
 directive|endif
 end_endif

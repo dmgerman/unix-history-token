@@ -65,7 +65,7 @@ endif|#
 directive|endif
 comment|/* __cplusplus */
 comment|/*** Filesystem schema versions ***/
-comment|/* The format number of this filesystem.  This is independent of the    repository format number, and independent of any other FS back    ends.  See the SVN_FS_BASE__MIN_*_FORMAT defines to get a sense of    what changes and features were added in which versions of this    back-end's format.  */
+comment|/* The format number of this filesystem.  This is independent of the    repository format number, and independent of any other FS back    ends.  See the SVN_FS_BASE__MIN_*_FORMAT defines to get a sense of    what changes and features were added in which versions of this    back-end's format.     Note: If you bump this, please update the switch statement in          base_create() as well.  */
 define|#
 directive|define
 name|SVN_FS_BASE__FORMAT_NUMBER
@@ -299,7 +299,7 @@ name|char
 modifier|*
 name|data_key
 decl_stmt|;
-comment|/* data representation instance identifier.  Sounds fancy, but is      really just a way to distinguish between "I use the same rep key      as another node because we share ancestry and haven't had our      text touched at all" and "I use the same rep key as another node      only because one or both of us decided to pick up a shared      representation after-the-fact."  May be NULL (if this node      revision isn't using a shared rep, or isn't the original      "assignee" of a shared rep). */
+comment|/* data representation instance identifier.  Sounds fancy, but is      really just a way to distinguish between "I use the same rep key      as another node because we share ancestry and haven't had our      text touched at all" and "I use the same rep key as another node      only because one or both of us decided to pick up a shared      representation after-the-fact."  May be NULL (if this node      revision isn't using a shared rep, or isn't the original      "assignee" of a shared rep).       This is no longer used by the 1.9 code but we have to keep      reading and writing it to remain compatible with 1.8, and      earlier, that require it. */
 specifier|const
 name|char
 modifier|*

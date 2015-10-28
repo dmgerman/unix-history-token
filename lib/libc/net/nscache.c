@@ -23,6 +23,12 @@ directive|include
 file|"namespace.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|_NS_PRIVATE
+end_define
+
 begin_include
 include|#
 directive|include

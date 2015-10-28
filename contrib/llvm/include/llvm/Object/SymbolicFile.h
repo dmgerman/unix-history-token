@@ -220,6 +220,18 @@ name|content_type
 operator|>
 name|class
 name|content_iterator
+operator|:
+name|public
+name|std
+operator|::
+name|iterator
+operator|<
+name|std
+operator|::
+name|forward_iterator_tag
+operator|,
+name|content_type
+operator|>
 block|{
 name|content_type
 name|Current
@@ -393,11 +405,18 @@ operator|<<
 literal|5
 block|,
 comment|// Symbol is an alias to another symbol
-name|SF_FormatSpecific
+name|SF_Exported
 init|=
 literal|1U
 operator|<<
 literal|6
+block|,
+comment|// Symbol is visible to other DSOs
+name|SF_FormatSpecific
+init|=
+literal|1U
+operator|<<
+literal|7
 block|,
 comment|// Specific to the object file format
 comment|// (e.g. section symbols)
@@ -405,8 +424,16 @@ name|SF_Thumb
 init|=
 literal|1U
 operator|<<
-literal|7
+literal|8
+block|,
 comment|// Thumb symbol in a 32-bit ARM binary
+name|SF_Hidden
+init|=
+literal|1U
+operator|<<
+literal|9
+block|,
+comment|// Symbol has hidden visibility
 block|}
 enum|;
 name|BasicSymbolRef
@@ -486,13 +513,6 @@ name|BasicSymbolRef
 operator|>
 name|basic_symbol_iterator
 expr_stmt|;
-specifier|const
-name|uint64_t
-name|UnknownAddressOrSize
-init|=
-operator|~
-literal|0ULL
-decl_stmt|;
 name|class
 name|SymbolicFile
 range|:
@@ -501,10 +521,10 @@ name|Binary
 block|{
 name|public
 operator|:
-name|virtual
 operator|~
 name|SymbolicFile
 argument_list|()
+name|override
 block|;
 name|SymbolicFile
 argument_list|(

@@ -43,7 +43,7 @@ end_include
 begin_function
 name|COMPILER_RT_ABI
 name|tu_int
-name|__fixunsdftti
+name|__fixunsdfti
 parameter_list|(
 name|fp_t
 name|a

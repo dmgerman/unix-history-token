@@ -254,7 +254,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,
@@ -273,6 +273,7 @@ name|vfork
 argument_list|()
 condition|)
 block|{
+comment|/* 	 * In the child, use unwrapped syscalls.  libthr is in 	 * undefined state after vfork(). 	 */
 case|case
 operator|-
 literal|1
@@ -281,7 +282,7 @@ comment|/* error */
 operator|(
 name|void
 operator|)
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -305,7 +306,7 @@ comment|/* 		 * Restore original signal dispositions and exec the command. 		 */
 operator|(
 name|void
 operator|)
-name|_sigprocmask
+name|__sys_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -372,7 +373,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -386,7 +387,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -438,7 +439,7 @@ do|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -451,7 +452,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -464,7 +465,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigprocmask
+name|__libc_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,

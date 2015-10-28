@@ -476,6 +476,12 @@ typedef|typedef
 name|uint32_t
 name|CXXBaseSpecifiersID
 typedef|;
+comment|/// \brief An ID number that refers to a list of CXXCtorInitializers in an
+comment|/// AST file.
+typedef|typedef
+name|uint32_t
+name|CXXCtorInitializersID
+typedef|;
 comment|/// \brief An ID number that refers to an entity in the detailed
 comment|/// preprocessing record.
 typedef|typedef
@@ -758,6 +764,12 @@ comment|/// \brief Record code for the module build directory.
 name|MODULE_DIRECTORY
 init|=
 literal|16
+block|,
+comment|/// \brief Record code for the list of other AST files made available by
+comment|/// this AST file but not actually used by it.
+name|KNOWN_MODULE_FILES
+init|=
+literal|17
 block|,     }
 enum|;
 comment|/// \brief Record types that occur within the input-files block
@@ -872,12 +884,7 @@ name|TENTATIVE_DEFINITIONS
 init|=
 literal|9
 block|,
-comment|/// \brief Record code for the array of locally-scoped extern "C"
-comment|/// declarations.
-name|LOCALLY_SCOPED_EXTERN_C_DECLS
-init|=
-literal|10
-block|,
+comment|// ID 10 used to be for a list of extern "C" declarations.
 comment|/// \brief Record code for the table of offsets into the
 comment|/// Objective-C method pool.
 name|SELECTOR_OFFSETS
@@ -932,11 +939,7 @@ name|VTABLE_USES
 init|=
 literal|19
 block|,
-comment|/// \brief Record code for the array of dynamic classes.
-name|DYNAMIC_CLASSES
-init|=
-literal|20
-block|,
+comment|// ID 20 used to be for a list of dynamic classes.
 comment|/// \brief Record code for referenced selector pool.
 name|REFERENCED_SELECTOR_POOL
 init|=
@@ -1071,11 +1074,7 @@ name|IMPORTED_MODULES
 init|=
 literal|43
 block|,
-comment|/// \brief Record code for the set of merged declarations in an AST file.
-name|MERGED_DECLARATIONS
-init|=
-literal|44
-block|,
+comment|// ID 40 used to be a table of merged canonical declarations.
 comment|/// \brief Record code for the array of redeclaration chains.
 comment|///
 comment|/// This array can only be interpreted properly using the local
@@ -1102,12 +1101,7 @@ name|MACRO_OFFSET
 init|=
 literal|47
 block|,
-comment|/// \brief Mapping table from the identifier ID to the offset of the
-comment|/// macro directive history for the identifier.
-name|MACRO_TABLE
-init|=
-literal|48
-block|,
+comment|// ID 48 used to be a table of macros.
 comment|/// \brief Record code for undefined but used functions and variables that
 comment|/// need a definition in this TU.
 name|UNDEFINED_BUT_USED
@@ -1128,7 +1122,18 @@ comment|/// \brief Record code for potentially unused local typedef names.
 name|UNUSED_LOCAL_TYPEDEF_NAME_CANDIDATES
 init|=
 literal|52
-block|,     }
+block|,
+comment|/// \brief Record code for the table of offsets to CXXCtorInitializers
+comment|/// lists.
+name|CXX_CTOR_INITIALIZERS_OFFSETS
+init|=
+literal|53
+block|,
+comment|/// \brief Delete expressions that will be analyzed later.
+name|DELETE_EXPRS_TO_ANALYZE
+init|=
+literal|54
+block|}
 enum|;
 comment|/// \brief Record types used within a source manager block.
 enum|enum
@@ -1190,7 +1195,13 @@ comment|/// \brief The macro directives history for a particular identifier.
 name|PP_MACRO_DIRECTIVE_HISTORY
 init|=
 literal|4
-block|}
+block|,
+comment|/// \brief A macro directive exported by a module.
+comment|/// [PP_MODULE_MACRO, SubmoduleID, MacroID, (Overridden SubmoduleID)*]
+name|PP_MODULE_MACRO
+init|=
+literal|5
+block|,     }
 enum|;
 comment|/// \brief Record types used within a preprocessor detail block.
 enum|enum
@@ -1901,7 +1912,12 @@ comment|/// \brief The internal '__builtin_va_list' typedef.
 name|PREDEF_DECL_BUILTIN_VA_LIST_ID
 init|=
 literal|9
-block|}
+block|,
+comment|/// \brief The extern "C" context.
+name|PREDEF_DECL_EXTERN_C_CONTEXT_ID
+init|=
+literal|10
+block|,     }
 enum|;
 comment|/// \brief The number of declaration IDs that are predefined.
 comment|///
@@ -1912,7 +1928,7 @@ name|unsigned
 name|int
 name|NUM_PREDEF_DECL_IDS
 init|=
-literal|10
+literal|11
 decl_stmt|;
 comment|/// \brief Record codes for each kind of declaration.
 comment|///
@@ -2109,6 +2125,9 @@ block|,
 comment|/// \brief A record containing CXXBaseSpecifiers.
 name|DECL_CXX_BASE_SPECIFIERS
 block|,
+comment|/// \brief A record containing CXXCtorInitializers.
+name|DECL_CXX_CTOR_INITIALIZERS
+block|,
 comment|/// \brief A IndirectFieldDecl record.
 name|DECL_INDIRECTFIELD
 block|,
@@ -2132,13 +2151,16 @@ name|DECL_OMP_THREADPRIVATE
 block|,
 comment|/// \brief An EmptyDecl record.
 name|DECL_EMPTY
-block|}
+block|,
+comment|/// \brief An ObjCTypeParamDecl record.
+name|DECL_OBJC_TYPE_PARAM
+block|,     }
 enum|;
 comment|/// \brief Record codes for each kind of statement or expression.
 comment|///
 comment|/// These constants describe the records that describe statements
 comment|/// or expressions. These records  occur within type and declarations
-comment|/// block, so they begin with record values of 100.  Each constant
+comment|/// block, so they begin with record values of 128.  Each constant
 comment|/// describes a record for a specific statement or expression class in the
 comment|/// AST.
 enum|enum
@@ -2148,7 +2170,7 @@ comment|/// \brief A marker record that indicates that we are at the end
 comment|/// of an expression.
 name|STMT_STOP
 init|=
-literal|100
+literal|128
 block|,
 comment|/// \brief A NULL expression.
 name|STMT_NULL_PTR
@@ -2288,8 +2310,14 @@ block|,
 comment|/// \brief A DesignatedInitExpr record.
 name|EXPR_DESIGNATED_INIT
 block|,
+comment|/// \brief A DesignatedInitUpdateExpr record.
+name|EXPR_DESIGNATED_INIT_UPDATE
+block|,
 comment|/// \brief An ImplicitValueInitExpr record.
 name|EXPR_IMPLICIT_VALUE_INIT
+block|,
+comment|/// \brief An NoInitExpr record.
+name|EXPR_NO_INIT
 block|,
 comment|/// \brief A VAArgExpr record.
 name|EXPR_VA_ARG
@@ -2599,6 +2627,12 @@ block|,
 name|STMT_OMP_TARGET_DIRECTIVE
 block|,
 name|STMT_OMP_TEAMS_DIRECTIVE
+block|,
+name|STMT_OMP_TASKGROUP_DIRECTIVE
+block|,
+name|STMT_OMP_CANCELLATION_POINT_DIRECTIVE
+block|,
+name|STMT_OMP_CANCEL_DIRECTIVE
 block|,
 comment|// ARC
 name|EXPR_OBJC_BRIDGED_CAST

@@ -203,6 +203,30 @@ name|Expr
 decl_stmt|;
 name|class
 name|ExprIterator
+range|:
+name|public
+name|std
+operator|::
+name|iterator
+operator|<
+name|std
+operator|::
+name|forward_iterator_tag
+decl_stmt|,
+name|Expr
+modifier|*
+modifier|&
+decl_stmt|,
+name|ptrdiff_t
+decl_stmt|,
+name|Expr
+modifier|*
+modifier|&
+decl_stmt|,
+name|Expr
+modifier|*
+modifier|&
+decl|>
 block|{
 name|Stmt
 modifier|*
@@ -406,6 +430,30 @@ end_empty_stmt
 begin_decl_stmt
 name|class
 name|ConstExprIterator
+range|:
+name|public
+name|std
+operator|::
+name|iterator
+operator|<
+name|std
+operator|::
+name|forward_iterator_tag
+decl_stmt|,                                                  const
+name|Expr
+modifier|*
+modifier|&
+decl_stmt|,
+name|ptrdiff_t
+decl_stmt|,                                                  const
+name|Expr
+modifier|*
+modifier|&
+decl_stmt|,                                                  const
+name|Expr
+modifier|*
+modifier|&
+decl|>
 block|{
 specifier|const
 name|Stmt
@@ -643,9 +691,13 @@ begin_comment
 comment|///
 end_comment
 
-begin_decl_stmt
+begin_function
 name|class
-name|Stmt
+name|LLVM_ALIGNAS
+parameter_list|(
+name|LLVM_PTR_SIZE
+parameter_list|)
+function|Stmt
 block|{
 name|public
 label|:
@@ -1244,11 +1296,6 @@ block|}
 empty_stmt|;
 union|union
 block|{
-comment|// FIXME: this is wasteful on 64-bit platforms.
-name|void
-modifier|*
-name|Aligner
-decl_stmt|;
 name|StmtBitfields
 name|StmtBits
 decl_stmt|;
@@ -1309,21 +1356,21 @@ name|void
 modifier|*
 name|operator
 name|new
-parameter_list|(
+argument_list|(
 name|size_t
 name|bytes
-parameter_list|,
+argument_list|,
 specifier|const
 name|ASTContext
-modifier|&
+operator|&
 name|C
-parameter_list|,
+argument_list|,
 name|unsigned
 name|alignment
-init|=
+operator|=
 literal|8
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 modifier|*
 name|operator
@@ -1453,31 +1500,17 @@ label|:
 comment|/// \brief Construct an empty statement.
 name|explicit
 name|Stmt
-parameter_list|(
-name|StmtClass
-name|SC
-parameter_list|,
-name|EmptyShell
-parameter_list|)
-block|{
-name|StmtBits
-operator|.
-name|sClass
-operator|=
-name|SC
-expr_stmt|;
-if|if
-condition|(
-name|StatisticsEnabled
-condition|)
-name|Stmt
-operator|::
-name|addStmtClass
 argument_list|(
-name|SC
+argument|StmtClass SC
+argument_list|,
+argument|EmptyShell
 argument_list|)
-expr_stmt|;
-block|}
+block|:
+name|Stmt
+argument_list|(
+argument|SC
+argument_list|)
+block|{}
 name|public
 label|:
 name|Stmt
@@ -1485,6 +1518,29 @@ argument_list|(
 argument|StmtClass SC
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|this
+argument_list|)
+operator|%
+name|llvm
+operator|::
+name|AlignOf
+operator|<
+name|void
+operator|*
+operator|>
+operator|::
+name|Alignment
+operator|==
+literal|0
+argument_list|,
+literal|"Insufficient alignment!"
+argument_list|)
+expr_stmt|;
 name|StmtBits
 operator|.
 name|sClass
@@ -1552,12 +1608,12 @@ comment|// global temp stats (until we have a per-module visitor)
 specifier|static
 name|void
 name|addStmtClass
-parameter_list|(
+argument_list|(
 specifier|const
 name|StmtClass
 name|s
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|static
 name|void
 name|EnableStatistics
@@ -1594,6 +1650,15 @@ argument_list|,
 name|SourceManager
 operator|&
 name|SM
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|dump
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1657,13 +1722,13 @@ comment|/// stmt at the top, if \a IgnoreCaptured is true.
 name|Stmt
 modifier|*
 name|IgnoreContainers
-parameter_list|(
+argument_list|(
 name|bool
 name|IgnoreCaptured
-init|=
+operator|=
 name|false
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|const
 name|Stmt
 operator|*
@@ -1818,7 +1883,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_empty_stmt
 empty_stmt|;
@@ -2614,6 +2679,27 @@ end_function
 begin_function
 name|Stmt
 modifier|*
+name|body_front
+parameter_list|()
+block|{
+return|return
+operator|!
+name|body_empty
+argument_list|()
+condition|?
+name|Body
+index|[
+literal|0
+index|]
+else|:
+name|nullptr
+return|;
+block|}
+end_function
+
+begin_function
+name|Stmt
+modifier|*
 name|body_back
 parameter_list|()
 block|{
@@ -2730,6 +2816,29 @@ name|Body
 operator|+
 name|size
 argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|Stmt
+operator|*
+name|body_front
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|body_empty
+argument_list|()
+operator|?
+name|Body
+index|[
+literal|0
+index|]
+operator|:
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -3177,7 +3286,10 @@ name|CaseStmt
 operator|:
 name|public
 name|SwitchCase
-block|{   enum
+block|{
+name|SourceLocation
+name|EllipsisLoc
+block|;   enum
 block|{
 name|LHS
 block|,
@@ -3197,9 +3309,6 @@ index|]
 block|;
 comment|// The expression for the RHS is Non-null for
 comment|// GNU "case 1 ... 4" extension
-name|SourceLocation
-name|EllipsisLoc
-block|;
 name|public
 operator|:
 name|CaseStmt
@@ -3818,6 +3927,9 @@ operator|:
 name|public
 name|Stmt
 block|{
+name|SourceLocation
+name|IdentLoc
+block|;
 name|LabelDecl
 operator|*
 name|TheDecl
@@ -3825,9 +3937,6 @@ block|;
 name|Stmt
 operator|*
 name|SubStmt
-block|;
-name|SourceLocation
-name|IdentLoc
 block|;
 name|public
 operator|:
@@ -3845,6 +3954,11 @@ argument_list|(
 name|LabelStmtClass
 argument_list|)
 block|,
+name|IdentLoc
+argument_list|(
+name|IL
+argument_list|)
+block|,
 name|TheDecl
 argument_list|(
 name|D
@@ -3852,14 +3966,34 @@ argument_list|)
 block|,
 name|SubStmt
 argument_list|(
-name|substmt
+argument|substmt
 argument_list|)
-block|,
-name|IdentLoc
+block|{
+name|static_assert
 argument_list|(
-argument|IL
+sizeof|sizeof
+argument_list|(
+name|LabelStmt
 argument_list|)
-block|{   }
+operator|==
+literal|2
+operator|*
+sizeof|sizeof
+argument_list|(
+name|SourceLocation
+argument_list|)
+operator|+
+literal|2
+operator|*
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+argument_list|,
+literal|"LabelStmt too big"
+argument_list|)
+block|;   }
 comment|// \brief Build an empty label statement.
 name|explicit
 name|LabelStmt
@@ -4684,7 +4818,10 @@ name|SwitchStmt
 operator|:
 name|public
 name|Stmt
-block|{   enum
+block|{
+name|SourceLocation
+name|SwitchLoc
+block|;   enum
 block|{
 name|VAR
 block|,
@@ -4702,21 +4839,22 @@ index|[
 name|END_EXPR
 index|]
 block|;
-comment|// This points to a linked list of case and default statements.
+comment|// This points to a linked list of case and default statements and, if the
+comment|// SwitchStmt is a switch on an enum value, records whether all the enum
+comment|// values were covered by CaseStmts.  The coverage information value is meant
+comment|// to be a hint for possible clients.
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
 name|SwitchCase
 operator|*
-name|FirstCase
-block|;
-name|SourceLocation
-name|SwitchLoc
-block|;
-comment|/// If the SwitchStmt is a switch on an enum value, this records whether
-comment|/// all the enum values were covered by CaseStmts.  This value is meant to
-comment|/// be a hint for possible clients.
-name|unsigned
-name|AllEnumCasesCovered
-operator|:
+block|,
 literal|1
+block|,
+name|bool
+operator|>
+name|FirstCase
 block|;
 name|public
 operator|:
@@ -4845,6 +4983,9 @@ specifier|const
 block|{
 return|return
 name|FirstCase
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
 name|Expr
@@ -4918,6 +5059,9 @@ argument_list|()
 block|{
 return|return
 name|FirstCase
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
 comment|/// \brief Set the case list for this switch statement.
@@ -4928,8 +5072,11 @@ argument|SwitchCase *SC
 argument_list|)
 block|{
 name|FirstCase
-operator|=
+operator|.
+name|setPointer
+argument_list|(
 name|SC
+argument_list|)
 block|; }
 name|SourceLocation
 name|getSwitchLoc
@@ -4991,11 +5138,17 @@ operator|->
 name|setNextSwitchCase
 argument_list|(
 name|FirstCase
+operator|.
+name|getPointer
+argument_list|()
 argument_list|)
 block|;
 name|FirstCase
-operator|=
+operator|.
+name|setPointer
+argument_list|(
 name|SC
+argument_list|)
 block|;   }
 comment|/// Set a flag in the SwitchStmt indicating that if the 'switch (X)' is a
 comment|/// switch over an enum value then all cases have been explicitly covered.
@@ -5003,10 +5156,13 @@ name|void
 name|setAllEnumCasesCovered
 argument_list|()
 block|{
-name|AllEnumCasesCovered
-operator|=
-literal|1
-block|;   }
+name|FirstCase
+operator|.
+name|setInt
+argument_list|(
+name|true
+argument_list|)
+block|; }
 comment|/// Returns true if the SwitchStmt is a switch of an enum value and all cases
 comment|/// have been explicitly covered.
 name|bool
@@ -5015,10 +5171,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|bool
-operator|)
-name|AllEnumCasesCovered
+name|FirstCase
+operator|.
+name|getInt
+argument_list|()
 return|;
 block|}
 name|SourceLocation
@@ -5109,7 +5265,10 @@ name|WhileStmt
 operator|:
 name|public
 name|Stmt
-block|{   enum
+block|{
+name|SourceLocation
+name|WhileLoc
+block|;   enum
 block|{
 name|VAR
 block|,
@@ -5126,9 +5285,6 @@ name|SubExprs
 index|[
 name|END_EXPR
 index|]
-block|;
-name|SourceLocation
-name|WhileLoc
 block|;
 name|public
 operator|:
@@ -5402,7 +5558,10 @@ name|DoStmt
 operator|:
 name|public
 name|Stmt
-block|{   enum
+block|{
+name|SourceLocation
+name|DoLoc
+block|;   enum
 block|{
 name|BODY
 block|,
@@ -5417,9 +5576,6 @@ name|SubExprs
 index|[
 name|END_EXPR
 index|]
-block|;
-name|SourceLocation
-name|DoLoc
 block|;
 name|SourceLocation
 name|WhileLoc
@@ -5725,7 +5881,10 @@ name|ForStmt
 operator|:
 name|public
 name|Stmt
-block|{   enum
+block|{
+name|SourceLocation
+name|ForLoc
+block|;   enum
 block|{
 name|INIT
 block|,
@@ -5748,9 +5907,6 @@ name|END_EXPR
 index|]
 block|;
 comment|// SubExprs[INIT] is an expression or declstmt.
-name|SourceLocation
-name|ForLoc
-block|;
 name|SourceLocation
 name|LParenLoc
 block|,
@@ -6711,7 +6867,24 @@ name|BreakLoc
 argument_list|(
 argument|BL
 argument_list|)
-block|{}
+block|{
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|BreakStmt
+argument_list|)
+operator|==
+literal|2
+operator|*
+sizeof|sizeof
+argument_list|(
+name|SourceLocation
+argument_list|)
+argument_list|,
+literal|"BreakStmt too large"
+argument_list|)
+block|;   }
 comment|/// \brief Build an empty break statement.
 name|explicit
 name|BreakStmt
@@ -6808,12 +6981,12 @@ operator|:
 name|public
 name|Stmt
 block|{
+name|SourceLocation
+name|RetLoc
+block|;
 name|Stmt
 operator|*
 name|RetExpr
-block|;
-name|SourceLocation
-name|RetLoc
 block|;
 specifier|const
 name|VarDecl
@@ -6822,28 +6995,18 @@ name|NRVOCandidate
 block|;
 name|public
 operator|:
+name|explicit
 name|ReturnStmt
 argument_list|(
 argument|SourceLocation RL
 argument_list|)
 operator|:
-name|Stmt
+name|ReturnStmt
 argument_list|(
-name|ReturnStmtClass
-argument_list|)
-block|,
-name|RetExpr
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|RetLoc
-argument_list|(
-name|RL
-argument_list|)
-block|,
-name|NRVOCandidate
-argument_list|(
+argument|RL
+argument_list|,
+argument|nullptr
+argument_list|,
 argument|nullptr
 argument_list|)
 block|{}
@@ -6861,6 +7024,11 @@ argument_list|(
 name|ReturnStmtClass
 argument_list|)
 block|,
+name|RetLoc
+argument_list|(
+name|RL
+argument_list|)
+block|,
 name|RetExpr
 argument_list|(
 operator|(
@@ -6868,11 +7036,6 @@ name|Stmt
 operator|*
 operator|)
 name|E
-argument_list|)
-block|,
-name|RetLoc
-argument_list|(
-name|RL
 argument_list|)
 block|,
 name|NRVOCandidate

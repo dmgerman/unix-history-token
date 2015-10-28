@@ -23,6 +23,18 @@ directive|include
 file|<sys/endian.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_BYTEORDER_FUNC_DEFINED
+end_define
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
 begin_function
 name|uint32_t
 name|htonl

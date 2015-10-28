@@ -352,7 +352,27 @@ name|false
 block|,
 name|true
 block|, 	}
-block|, }
+block|,
+index|[
+name|PUBKEY
+index|]
+operator|=
+block|{
+name|PKG_CONFIG_STRING
+block|,
+literal|"PUBKEY"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|false
+block|,
+name|false
+block|}
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -905,6 +925,25 @@ argument_list|(
 name|buf
 argument_list|,
 literal|"FINGERPRINTS"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|key
+argument_list|,
+literal|"pubkey"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|sbuf_cpy
+argument_list|(
+name|buf
+argument_list|,
+literal|"PUBKEY"
 argument_list|)
 expr_stmt|;
 elseif|else

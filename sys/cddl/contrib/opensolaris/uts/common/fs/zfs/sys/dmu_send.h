@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -49,6 +49,21 @@ name|avl_tree
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|dmu_replay_record
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|recv_clone_name
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|dmu_send
@@ -69,12 +84,18 @@ parameter_list|,
 name|boolean_t
 name|large_block_ok
 parameter_list|,
-ifdef|#
-directive|ifdef
-name|illumos
 name|int
 name|outfd
 parameter_list|,
+name|uint64_t
+name|resumeobj
+parameter_list|,
+name|uint64_t
+name|resumeoff
+parameter_list|,
+ifdef|#
+directive|ifdef
+name|illumos
 name|struct
 name|vnode
 modifier|*
@@ -93,9 +114,7 @@ directive|else
 end_else
 
 begin_decl_stmt
-name|int
-name|outfd
-decl_stmt|, struct
+name|struct
 name|file
 modifier|*
 name|fp
@@ -124,6 +143,25 @@ name|struct
 name|dsl_dataset
 modifier|*
 name|fromds
+parameter_list|,
+name|uint64_t
+modifier|*
+name|sizep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|dmu_send_estimate_from_txg
+parameter_list|(
+name|struct
+name|dsl_dataset
+modifier|*
+name|ds
+parameter_list|,
+name|uint64_t
+name|fromtxg
 parameter_list|,
 name|uint64_t
 modifier|*
@@ -206,6 +244,11 @@ modifier|*
 name|drc_ds
 decl_stmt|;
 name|struct
+name|dmu_replay_record
+modifier|*
+name|drc_drr_begin
+decl_stmt|;
+name|struct
 name|drr_begin
 modifier|*
 name|drc_drrb
@@ -228,6 +271,9 @@ name|drc_byteswap
 decl_stmt|;
 name|boolean_t
 name|drc_force
+decl_stmt|;
+name|boolean_t
+name|drc_resumable
 decl_stmt|;
 name|struct
 name|avl_tree
@@ -266,12 +312,15 @@ modifier|*
 name|tosnap
 parameter_list|,
 name|struct
-name|drr_begin
+name|dmu_replay_record
 modifier|*
-name|drrb
+name|drr_begin
 parameter_list|,
 name|boolean_t
 name|force
+parameter_list|,
+name|boolean_t
+name|resumable
 parameter_list|,
 name|char
 modifier|*

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_include
@@ -1664,11 +1664,14 @@ operator|->
 name|dp_dirty_dirs
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We can't set retry to TRUE since we're explicitly specifying 	 * a spa to flush. This is good enough; any missed buffers for 	 * this spa won't cause trouble, and they'll eventually fall 	 * out of the ARC just like any other unused buffer. 	 */
 name|arc_flush
 argument_list|(
 name|dp
 operator|->
 name|dp_spa
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|txg_fini
@@ -1680,6 +1683,9 @@ name|dsl_scan_fini
 argument_list|(
 name|dp
 argument_list|)
+expr_stmt|;
+name|dmu_buf_user_evict_wait
+argument_list|()
 expr_stmt|;
 name|rrw_destroy
 argument_list|(
@@ -3862,6 +3868,8 @@ argument_list|,
 name|tx
 argument_list|,
 name|DS_FIND_CHILDREN
+operator||
+name|DS_FIND_SERIALIZE
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4169,6 +4177,8 @@ argument_list|,
 name|tx
 argument_list|,
 name|DS_FIND_CHILDREN
+operator||
+name|DS_FIND_SERIALIZE
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5000,6 +5010,46 @@ end_function
 
 begin_function
 name|void
+name|dsl_pool_config_enter_prio
+parameter_list|(
+name|dsl_pool_t
+modifier|*
+name|dp
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|)
+block|{
+name|ASSERT
+argument_list|(
+operator|!
+name|rrw_held
+argument_list|(
+operator|&
+name|dp
+operator|->
+name|dp_config_rwlock
+argument_list|,
+name|RW_READER
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|rrw_enter_read_prio
+argument_list|(
+operator|&
+name|dp
+operator|->
+name|dp_config_rwlock
+argument_list|,
+name|tag
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|dsl_pool_config_exit
 parameter_list|(
 name|dsl_pool_t
@@ -5036,6 +5086,29 @@ block|{
 return|return
 operator|(
 name|RRW_LOCK_HELD
+argument_list|(
+operator|&
+name|dp
+operator|->
+name|dp_config_rwlock
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|boolean_t
+name|dsl_pool_config_held_writer
+parameter_list|(
+name|dsl_pool_t
+modifier|*
+name|dp
+parameter_list|)
+block|{
+return|return
+operator|(
+name|RRW_WRITE_HELD
 argument_list|(
 operator|&
 name|dp

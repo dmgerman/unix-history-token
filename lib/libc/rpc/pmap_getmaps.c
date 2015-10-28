@@ -179,13 +179,11 @@ name|pmaplist
 modifier|*
 name|pmap_getmaps
 parameter_list|(
-name|address
-parameter_list|)
 name|struct
 name|sockaddr_in
 modifier|*
 name|address
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|pmaplist

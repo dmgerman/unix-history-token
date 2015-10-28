@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/sbuffer.h"
+file|"sldns/sbuffer.h"
 end_include
 
 begin_function
@@ -2172,14 +2172,16 @@ operator|(
 name|uint8_t
 operator|*
 operator|)
-name|malloc
+name|reallocarray
 argument_list|(
-literal|2
-operator|*
+name|NULL
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|uint32_t
 argument_list|)
+argument_list|,
+literal|2
 argument_list|)
 decl_stmt|;
 if|if

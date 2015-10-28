@@ -217,21 +217,16 @@ name|FILE
 modifier|*
 name|popen
 parameter_list|(
-name|command
-parameter_list|,
-name|type
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|command
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|type
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|pid
@@ -810,7 +805,7 @@ name|iop
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * pclose --  *	Pclose returns -1 if stream is not associated with a `popened' command,  *	if already `pclosed', or waitpid returns an error.  */
@@ -820,12 +815,10 @@ begin_function
 name|int
 name|pclose
 parameter_list|(
-name|iop
-parameter_list|)
 name|FILE
 modifier|*
 name|iop
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|pid

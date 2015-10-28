@@ -1322,7 +1322,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(	\     (((struct sockaddr *)(a))->sa_len == ((struct sockaddr *)(b))->sa_len)&& \     (bcmp((a), (b), ((struct sockaddr *)(b))->sa_len) == 0))
+value|(	\     (((const struct sockaddr *)(a))->sa_len == ((const struct sockaddr *)(b))->sa_len)&& \     (bcmp((a), (b), ((const struct sockaddr *)(b))->sa_len) == 0))
 end_define
 
 begin_ifdef
@@ -1778,6 +1778,71 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_typedef
+typedef|typedef
+name|int
+name|rt_walktree_f_t
+parameter_list|(
+name|struct
+name|rtentry
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|rt_setwarg_t
+parameter_list|(
+name|struct
+name|radix_node_head
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_function_decl
+name|void
+name|rt_foreach_fib_walk
+parameter_list|(
+name|int
+name|af
+parameter_list|,
+name|rt_setwarg_t
+modifier|*
+parameter_list|,
+name|rt_walktree_f_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rt_flushifroutes
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* XXX MRT COMPAT VERSIONS THAT SET UNIVERSE to 0 */
 end_comment
@@ -1785,17 +1850,6 @@ end_comment
 begin_comment
 comment|/* Thes are used by old code not yet converted to use multiple FIBS */
 end_comment
-
-begin_function_decl
-name|int
-name|rt_getifa
-parameter_list|(
-name|struct
-name|rt_addrinfo
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void

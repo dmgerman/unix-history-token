@@ -2007,7 +2007,6 @@ expr_stmt|;
 comment|/* SDT probe list entry. */
 name|TAILQ_HEAD
 argument_list|(
-argument|argtype_list_head
 argument_list|,
 argument|sdt_argtype
 argument_list|)

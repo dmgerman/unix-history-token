@@ -378,6 +378,7 @@ block|{
 operator|~
 name|ListCompleterConcept
 argument_list|()
+name|override
 block|;
 name|CompletionAction
 name|complete

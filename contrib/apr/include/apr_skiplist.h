@@ -51,7 +51,7 @@ endif|#
 directive|endif
 comment|/* __cplusplus */
 comment|/**  * @defgroup apr_skiplist Skip list implementation  * Refer to http://en.wikipedia.org/wiki/Skip_list for information  * about the purpose of and ideas behind skip lists.  * @ingroup APR  * @{  */
-comment|/**  * apr_skiplist_compare is the function type that must be implemented   * per object type that is used in a skip list for comparisons to maintain  * order  * */
+comment|/**  * apr_skiplist_compare is the function type that must be implemented   * per object type that is used in a skip list for comparisons to maintain  * order. A value<0 indicates placement after this node; a value of 0  * indicates collision with this exact node; a value>0 indicates placement  * before this node.  * */
 typedef|typedef
 name|int
 function_decl|(
@@ -254,7 +254,7 @@ operator|*
 name|iter
 argument_list|)
 expr_stmt|;
-comment|/**  * Insert an element into the skip list using the specified comparison function.  * @param sl The skip list  * @param data The element to insert  * @param comp The comparison function to use for placement into the skip list  */
+comment|/**  * Insert an element into the skip list using the specified comparison function  * if it does not already exist.  * @param sl The skip list  * @param data The element to insert  * @param comp The comparison function to use for placement into the skip list  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_skiplistnode *
@@ -268,7 +268,7 @@ argument_list|,
 argument|apr_skiplist_compare comp
 argument_list|)
 empty_stmt|;
-comment|/**  * Insert an element into the skip list using the existing comparison function.  * @param sl The skip list  * @param data The element to insert  * @remark If no comparison function has been set for the skip list, the element  * will not be inserted and NULL will be returned.  */
+comment|/**  * Insert an element into the skip list using the existing comparison function  * if it does not already exist (as determined by the comparison function)  * @param sl The skip list  * @param data The element to insert  * @remark If no comparison function has been set for the skip list, the element  * will not be inserted and NULL will be returned.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_skiplistnode *
@@ -284,7 +284,7 @@ operator|*
 name|data
 argument_list|)
 expr_stmt|;
-comment|/**  * Remove an element from the skip list using the specified comparison function for  * locating the element.  * @param sl The skip list  * @param data The element to remove  * @param myfree A function to be called for each removed element  * @param comp The comparison function to use for placement into the skip list  * @remark If the element is not found, 0 will be returned.  Otherwise, the heightXXX  * will be returned.  */
+comment|/**  * Remove an element from the skip list using the specified comparison function for  * locating the element. In the case of duplicates, the 1st entry will be removed.  * @param sl The skip list  * @param data The element to remove  * @param myfree A function to be called for each removed element  * @param comp The comparison function to use for placement into the skip list  * @remark If the element is not found, 0 will be returned.  Otherwise, the heightXXX  * will be returned.  */
 name|APR_DECLARE
 argument_list|(
 argument|int
@@ -300,7 +300,7 @@ argument_list|,
 argument|apr_skiplist_compare comp
 argument_list|)
 empty_stmt|;
-comment|/**  * Remove an element from the skip list using the existing comparison function for  * locating the element.  * @param sl The skip list  * @param data The element to remove  * @param myfree A function to be called for each removed element  * @remark If the element is not found, 0 will be returned.  Otherwise, the heightXXX  * will be returned.  * @remark If no comparison function has been set for the skip list, the element  * will not be removed and 0 will be returned.  */
+comment|/**  * Remove an element from the skip list using the existing comparison function for  * locating the element. In the case of duplicates, the 1st entry will be removed.  * @param sl The skip list  * @param data The element to remove  * @param myfree A function to be called for each removed element  * @remark If the element is not found, 0 will be returned.  Otherwise, the heightXXX  * will be returned.  * @remark If no comparison function has been set for the skip list, the element  * will not be removed and 0 will be returned.  */
 name|APR_DECLARE
 argument_list|(
 argument|int
@@ -338,7 +338,7 @@ argument_list|,
 argument|apr_skiplist_freefunc myfree
 argument_list|)
 empty_stmt|;
-comment|/**  * Return the first element in the skip list, leaving the element in the skip list.  * @param sl The skip list  * @param myfree A function to be called for the removed element  * @remark NULL will be returned if there are no elements  */
+comment|/**  * Return the first element in the skip list, removing the element from the skip list.  * @param sl The skip list  * @param myfree A function to be called for the removed element  * @remark NULL will be returned if there are no elements  */
 name|APR_DECLARE
 argument_list|(
 argument|void *

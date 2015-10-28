@@ -59,6 +59,12 @@ directive|define
 name|LLVM_LIB_TARGET_NVPTX_MCTARGETDESC_NVPTXMCTARGETDESC_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm

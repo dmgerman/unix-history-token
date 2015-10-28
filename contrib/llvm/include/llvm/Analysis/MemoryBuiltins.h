@@ -340,30 +340,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/// isArrayMalloc - Returns the corresponding CallInst if the instruction
-comment|/// is a call to malloc whose array size can be determined and the array size
-comment|/// is not constant 1.  Otherwise, return NULL.
-specifier|const
-name|CallInst
-modifier|*
-name|isArrayMalloc
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|I
-parameter_list|,
-specifier|const
-name|DataLayout
-modifier|*
-name|DL
-parameter_list|,
-specifier|const
-name|TargetLibraryInfo
-modifier|*
-name|TLI
-parameter_list|)
-function_decl|;
 comment|/// getMallocType - Returns the PointerType resulting from the malloc call.
 comment|/// The PointerType depends on the number of bitcast uses of the malloc call:
 comment|///   0: PointerType is the malloc calls' return type.
@@ -419,7 +395,7 @@ name|CI
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|*
+modifier|&
 name|DL
 parameter_list|,
 specifier|const
@@ -571,7 +547,7 @@ name|Size
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|*
+modifier|&
 name|DL
 parameter_list|,
 specifier|const
@@ -611,7 +587,7 @@ decl|>
 block|{
 specifier|const
 name|DataLayout
-modifier|*
+modifier|&
 name|DL
 decl_stmt|;
 specifier|const
@@ -668,7 +644,7 @@ name|public
 label|:
 name|ObjectSizeOffsetVisitor
 argument_list|(
-argument|const DataLayout *DL
+argument|const DataLayout&DL
 argument_list|,
 argument|const TargetLibraryInfo *TLI
 argument_list|,
@@ -932,7 +908,7 @@ name|PtrSetTy
 expr_stmt|;
 specifier|const
 name|DataLayout
-modifier|*
+modifier|&
 name|DL
 decl_stmt|;
 specifier|const
@@ -991,7 +967,7 @@ name|public
 label|:
 name|ObjectSizeOffsetEvaluator
 argument_list|(
-argument|const DataLayout *DL
+argument|const DataLayout&DL
 argument_list|,
 argument|const TargetLibraryInfo *TLI
 argument_list|,

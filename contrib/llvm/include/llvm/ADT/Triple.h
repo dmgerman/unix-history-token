@@ -122,6 +122,12 @@ comment|// AArch64 (little endian): aarch64
 name|aarch64_be
 block|,
 comment|// AArch64 (big endian): aarch64_be
+name|bpfel
+block|,
+comment|// eBPF or extended BPF or 64-bit BPF (little endian)
+name|bpfeb
+block|,
+comment|// eBPF or extended BPF or 64-bit BPF (big endian)
 name|hexagon
 block|,
 comment|// Hexagon: hexagon
@@ -161,6 +167,9 @@ comment|// Sparc: sparc
 name|sparcv9
 block|,
 comment|// Sparcv9: Sparcv9
+name|sparcel
+block|,
+comment|// Sparc: (endianness = little). NB: 'Sparcle' is a CPU variant
 name|systemz
 block|,
 comment|// SystemZ: s390x
@@ -213,13 +222,28 @@ name|spir64
 block|,
 comment|// SPIR: standard portable IR for OpenCL 64-bit version
 name|kalimba
+block|,
 comment|// Kalimba: generic kalimba
+name|shave
+block|,
+comment|// SHAVE: Movidius vector VLIW processors
+name|wasm32
+block|,
+comment|// WebAssembly with 32-bit pointers
+name|wasm64
+block|,
+comment|// WebAssembly with 64-bit pointers
+name|LastArchType
+init|=
+name|wasm64
 block|}
 enum|;
 enum|enum
 name|SubArchType
 block|{
 name|NoSubArch
+block|,
+name|ARMSubArch_v8_1a
 block|,
 name|ARMSubArch_v8
 block|,
@@ -234,6 +258,8 @@ block|,
 name|ARMSubArch_v6
 block|,
 name|ARMSubArch_v6m
+block|,
+name|ARMSubArch_v6k
 block|,
 name|ARMSubArch_v6t2
 block|,
@@ -276,12 +302,18 @@ block|,
 name|NVIDIA
 block|,
 name|CSR
+block|,
+name|LastVendorType
+init|=
+name|CSR
 block|}
 enum|;
 enum|enum
 name|OSType
 block|{
 name|UnknownOS
+block|,
+name|CloudABI
 block|,
 name|Darwin
 block|,
@@ -331,7 +363,13 @@ name|NVCL
 block|,
 comment|// NVIDIA OpenCL
 name|AMDHSA
+block|,
 comment|// AMD HSA Runtime
+name|PS4
+block|,
+name|LastOSType
+init|=
+name|PS4
 block|}
 enum|;
 enum|enum
@@ -360,7 +398,11 @@ block|,
 name|Itanium
 block|,
 name|Cygnus
-block|,   }
+block|,
+name|LastEnvironmentType
+init|=
+name|Cygnus
+block|}
 enum|;
 enum|enum
 name|ObjectFormatType
@@ -482,6 +524,55 @@ operator|&
 name|EnvironmentStr
 argument_list|)
 expr_stmt|;
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|Triple
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+name|Arch
+operator|==
+name|Other
+operator|.
+name|Arch
+operator|&&
+name|SubArch
+operator|==
+name|Other
+operator|.
+name|SubArch
+operator|&&
+name|Vendor
+operator|==
+name|Other
+operator|.
+name|Vendor
+operator|&&
+name|OS
+operator|==
+name|Other
+operator|.
+name|OS
+operator|&&
+name|Environment
+operator|==
+name|Other
+operator|.
+name|Environment
+operator|&&
+name|ObjectFormat
+operator|==
+name|Other
+operator|.
+name|ObjectFormat
+return|;
+block|}
 comment|/// @}
 comment|/// @name Normalization
 comment|/// @{
@@ -498,6 +589,21 @@ argument_list|(
 argument|StringRef Str
 argument_list|)
 expr_stmt|;
+comment|/// \brief Return the normalized form of this triple's string.
+name|std
+operator|::
+name|string
+name|normalize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|normalize
+argument_list|(
+name|Data
+argument_list|)
+return|;
+block|}
 comment|/// @}
 comment|/// @name Typed Component Access
 comment|/// @{
@@ -565,6 +671,29 @@ return|return
 name|Environment
 return|;
 block|}
+comment|/// \brief Parse the version number from the OS name component of the
+comment|/// triple, if present.
+comment|///
+comment|/// For example, "fooos1.2.3" would return (1, 2, 3).
+comment|///
+comment|/// If an entry is not defined, it will be returned as 0.
+name|void
+name|getEnvironmentVersion
+argument_list|(
+name|unsigned
+operator|&
+name|Major
+argument_list|,
+name|unsigned
+operator|&
+name|Minor
+argument_list|,
+name|unsigned
+operator|&
+name|Micro
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getFormat - Get the object format for this triple.
 name|ObjectFormatType
 name|getObjectFormat
@@ -857,6 +986,62 @@ name|Micro
 return|;
 return|return
 name|false
+return|;
+block|}
+name|bool
+name|isOSVersionLT
+argument_list|(
+specifier|const
+name|Triple
+operator|&
+name|Other
+argument_list|)
+decl|const
+block|{
+name|unsigned
+name|RHS
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|Other
+operator|.
+name|getOSVersion
+argument_list|(
+name|RHS
+index|[
+literal|0
+index|]
+argument_list|,
+name|RHS
+index|[
+literal|1
+index|]
+argument_list|,
+name|RHS
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+return|return
+name|isOSVersionLT
+argument_list|(
+name|RHS
+index|[
+literal|0
+index|]
+argument_list|,
+name|RHS
+index|[
+literal|1
+index|]
+argument_list|,
+name|RHS
+index|[
+literal|2
+index|]
+argument_list|)
 return|;
 block|}
 comment|/// isMacOSXVersionLT - Comparison function for checking OS X version
@@ -1225,9 +1410,6 @@ operator|==
 name|Triple
 operator|::
 name|Win32
-operator|||
-name|isOSCygMing
-argument_list|()
 return|;
 block|}
 comment|/// \brief Tests whether the OS is NaCl (Native Client)
@@ -1303,6 +1485,57 @@ operator|==
 name|Triple
 operator|::
 name|MachO
+return|;
+block|}
+comment|/// \brief Tests whether the target is the PS4 CPU
+name|bool
+name|isPS4CPU
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getArch
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|x86_64
+operator|&&
+name|getVendor
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|SCEI
+operator|&&
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|PS4
+return|;
+block|}
+comment|/// \brief Tests whether the target is the PS4 platform
+name|bool
+name|isPS4
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getVendor
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|SCEI
+operator|&&
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|PS4
 return|;
 block|}
 comment|/// @}
@@ -1433,6 +1666,32 @@ name|llvm
 operator|::
 name|Triple
 name|get64BitArchVariant
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Form a triple with a big endian variant of the current architecture.
+comment|///
+comment|/// This can be used to move across "families" of architectures where useful.
+comment|///
+comment|/// \returns A new triple with a big endian architecture or an unknown
+comment|///          architecture if no such variant can be found.
+name|llvm
+operator|::
+name|Triple
+name|getBigEndianArchVariant
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Form a triple with a little endian variant of the current architecture.
+comment|///
+comment|/// This can be used to move across "families" of architectures where useful.
+comment|///
+comment|/// \returns A new triple with a little endian architecture or an unknown
+comment|///          architecture if no such variant can be found.
+name|llvm
+operator|::
+name|Triple
+name|getLittleEndianArchVariant
 argument_list|()
 specifier|const
 expr_stmt|;

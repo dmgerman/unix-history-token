@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2012 Hudson River Trading LLC  * Written by: John H. Baldwin<jhb@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2012 Hudson River Trading LLC  * Written by: John H. Baldwin<jhb@FreeBSD.org>  * Copyright (c) 2015 Allan Jude<allanjude@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -51,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -331,7 +337,7 @@ argument_list|)
 operator|-
 name|used
 argument_list|,
-literal|"%02u:%02u:%02u.%06u   "
+literal|"%02u:%02u:%02u.%06u"
 argument_list|,
 name|hours
 argument_list|,
@@ -448,9 +454,9 @@ modifier|*
 name|kipp
 parameter_list|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5d "
+literal|"{d:process_id/%5d/%d} "
 argument_list|,
 name|kipp
 operator|->
@@ -461,18 +467,18 @@ if|if
 condition|(
 name|Hflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%6d "
+literal|"{d:thread_id/%6d/%d} "
 argument_list|,
 name|kipp
 operator|->
 name|ki_tid
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-16s "
+literal|"{d:command/%-16s/%s} "
 argument_list|,
 name|kipp
 operator|->
@@ -501,14 +507,21 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+name|char
+modifier|*
+name|field
+decl_stmt|,
+modifier|*
+name|threadid
+decl_stmt|;
 name|print_prefix
 argument_list|(
 name|kipp
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-14s %32s\n"
+literal|"{d:resource/%-14s} {d:usage/%29s}{P:   }\n"
 argument_list|,
 literal|"user time"
 argument_list|,
@@ -528,11 +541,109 @@ argument_list|(
 name|kipp
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-14s %32s\n"
+literal|"{d:resource/%-14s} {d:usage/%29s}{P:   }\n"
 argument_list|,
 literal|"system time"
+argument_list|,
+name|format_time
+argument_list|(
+operator|&
+name|kipp
+operator|->
+name|ki_rusage
+operator|.
+name|ru_stime
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Hflag
+condition|)
+block|{
+name|asprintf
+argument_list|(
+operator|&
+name|threadid
+argument_list|,
+literal|"%d"
+argument_list|,
+name|kipp
+operator|->
+name|ki_tid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|threadid
+operator|==
+name|NULL
+condition|)
+name|xo_errc
+argument_list|(
+literal|1
+argument_list|,
+name|ENOMEM
+argument_list|,
+literal|"Failed to allocate memory in print_rusage()"
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+name|threadid
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{e:thread_id/%d}"
+argument_list|,
+name|kipp
+operator|->
+name|ki_tid
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|xo_emit
+argument_list|(
+literal|"{e:process_id/%d}"
+argument_list|,
+name|kipp
+operator|->
+name|ki_pid
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{e:command/%s}"
+argument_list|,
+name|kipp
+operator|->
+name|ki_comm
+argument_list|)
+expr_stmt|;
+block|}
+name|xo_emit
+argument_list|(
+literal|"{e:user time/%s}"
+argument_list|,
+name|format_time
+argument_list|(
+operator|&
+name|kipp
+operator|->
+name|ki_rusage
+operator|.
+name|ru_utime
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{e:system time/%s}"
 argument_list|,
 name|format_time
 argument_list|(
@@ -576,9 +687,52 @@ argument_list|(
 name|kipp
 argument_list|)
 expr_stmt|;
-name|printf
+name|asprintf
 argument_list|(
-literal|"%-32s %14s\n"
+operator|&
+name|field
+argument_list|,
+literal|"{e:%s/%%D}"
+argument_list|,
+name|rusage_info
+index|[
+name|i
+index|]
+operator|.
+name|ri_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|field
+operator|==
+name|NULL
+condition|)
+name|xo_errc
+argument_list|(
+literal|1
+argument_list|,
+name|ENOMEM
+argument_list|,
+literal|"Failed to allocate memory in print_rusage()"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+name|field
+argument_list|,
+operator|*
+name|lp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|field
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{d:resource/%-32s} {d:usage/%14s}\n"
 argument_list|,
 name|rusage_info
 index|[
@@ -610,6 +764,22 @@ argument_list|)
 expr_stmt|;
 name|lp
 operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Hflag
+condition|)
+block|{
+name|xo_close_container
+argument_list|(
+name|threadid
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|threadid
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -647,9 +817,9 @@ operator|!
 name|hflag
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5s "
+literal|"{d:ta/%5s} "
 argument_list|,
 literal|"PID"
 argument_list|)
@@ -658,16 +828,16 @@ if|if
 condition|(
 name|Hflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%6s "
+literal|"{d:tb/%6s} "
 argument_list|,
 literal|"TID"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-16s %-32s %14s\n"
+literal|"{d:tc/%-16s %-32s %14s}\n"
 argument_list|,
 literal|"COMM"
 argument_list|,
@@ -690,6 +860,29 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|xo_emit
+argument_list|(
+literal|"{e:process_id/%d}"
+argument_list|,
+name|kipp
+operator|->
+name|ki_pid
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{e:command/%s}"
+argument_list|,
+name|kipp
+operator|->
+name|ki_comm
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"threads"
+argument_list|)
+expr_stmt|;
 name|kip
 operator|=
 name|procstat_getprocs
@@ -735,6 +928,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|print_rusage
 argument_list|(
 operator|&
@@ -742,6 +936,12 @@ name|kip
 index|[
 name|i
 index|]
+argument_list|)
+expr_stmt|;
+block|}
+name|xo_close_container
+argument_list|(
+literal|"threads"
 argument_list|)
 expr_stmt|;
 name|procstat_freeprocs

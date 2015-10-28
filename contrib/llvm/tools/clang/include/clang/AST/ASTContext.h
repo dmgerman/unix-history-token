@@ -1039,6 +1039,20 @@ decl_stmt|;
 name|QualType
 name|ObjCSelRedefinitionType
 decl_stmt|;
+comment|/// The identifier 'NSObject'.
+name|IdentifierInfo
+modifier|*
+name|NSObjectName
+init|=
+name|nullptr
+decl_stmt|;
+comment|/// The identifier 'NSCopying'.
+name|IdentifierInfo
+modifier|*
+name|NSCopyingName
+init|=
+name|nullptr
+decl_stmt|;
 name|QualType
 name|ObjCConstantStringType
 decl_stmt|;
@@ -1133,6 +1147,25 @@ name|Decl
 operator|*
 operator|>
 name|MergedDecls
+expr_stmt|;
+comment|/// \brief A mapping from a defining declaration to a list of modules (other
+comment|/// than the owning module of the declaration) that contain merged
+comment|/// definitions of that entity.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|NamedDecl
+operator|*
+operator|,
+name|llvm
+operator|::
+name|TinyPtrVector
+operator|<
+name|Module
+operator|*
+operator|>>
+name|MergedDefModules
 expr_stmt|;
 name|public
 label|:
@@ -1353,6 +1386,11 @@ decl_stmt|;
 name|TranslationUnitDecl
 modifier|*
 name|TUDecl
+decl_stmt|;
+name|mutable
+name|ExternCContextDecl
+modifier|*
+name|ExternCContext
 decl_stmt|;
 comment|/// \brief The associated SourceManager object.a
 name|SourceManager
@@ -2825,8 +2863,106 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Note that the definition \p ND has been merged into module \p M,
+end_comment
+
+begin_comment
+comment|/// and should be visible whenever \p M is visible.
+end_comment
+
+begin_function_decl
+name|void
+name|mergeDefinitionIntoModule
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|ND
+parameter_list|,
+name|Module
+modifier|*
+name|M
+parameter_list|,
+name|bool
+name|NotifyListeners
+init|=
+name|true
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Clean up the merged definition list. Call this if you might have
+end_comment
+
+begin_comment
+comment|/// added duplicates into the list.
+end_comment
+
+begin_function_decl
+name|void
+name|deduplicateMergedDefinitonsFor
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|ND
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Get the additional modules in which the definition \p Def has
+end_comment
+
+begin_comment
+comment|/// been merged.
+end_comment
+
 begin_expr_stmt
-name|TranslationUnitDecl
+name|ArrayRef
+operator|<
+name|Module
+operator|*
+operator|>
+name|getModulesWithMergedDefinition
+argument_list|(
+argument|NamedDecl *Def
+argument_list|)
+block|{
+name|auto
+name|MergedIt
+operator|=
+name|MergedDefModules
+operator|.
+name|find
+argument_list|(
+name|Def
+argument_list|)
+block|;
+if|if
+condition|(
+name|MergedIt
+operator|==
+name|MergedDefModules
+operator|.
+name|end
+argument_list|()
+condition|)
+return|return
+name|None
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|MergedIt
+operator|->
+name|second
+return|;
+end_return
+
+begin_expr_stmt
+unit|}    TranslationUnitDecl
 operator|*
 name|getTranslationUnitDecl
 argument_list|()
@@ -2837,6 +2973,14 @@ name|TUDecl
 return|;
 block|}
 end_expr_stmt
+
+begin_function_decl
+name|ExternCContextDecl
+modifier|*
+name|getExternCContextDecl
+parameter_list|()
+function_decl|const;
+end_function_decl
 
 begin_comment
 comment|// Builtin Types.
@@ -4912,6 +5056,10 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// Legacy interface: cannot provide type arguments or __kindof.
+end_comment
+
 begin_decl_stmt
 name|QualType
 name|getObjCObjectType
@@ -4927,6 +5075,33 @@ name|Protocols
 argument_list|,
 name|unsigned
 name|NumProtocols
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|QualType
+name|getObjCObjectType
+argument_list|(
+name|QualType
+name|Base
+argument_list|,
+name|ArrayRef
+operator|<
+name|QualType
+operator|>
+name|typeArgs
+argument_list|,
+name|ArrayRef
+operator|<
+name|ObjCProtocolDecl
+operator|*
+operator|>
+name|protocols
+argument_list|,
+name|bool
+name|isKindOf
 argument_list|)
 decl|const
 decl_stmt|;
@@ -5648,6 +5823,72 @@ name|RedefType
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/// Retrieve the identifier 'NSObject'.
+end_comment
+
+begin_function
+name|IdentifierInfo
+modifier|*
+name|getNSObjectName
+parameter_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|NSObjectName
+condition|)
+block|{
+name|NSObjectName
+operator|=
+operator|&
+name|Idents
+operator|.
+name|get
+argument_list|(
+literal|"NSObject"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|NSObjectName
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// Retrieve the identifier 'NSCopying'.
+end_comment
+
+begin_function
+name|IdentifierInfo
+modifier|*
+name|getNSCopyingName
+parameter_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|NSCopyingName
+condition|)
+block|{
+name|NSCopyingName
+operator|=
+operator|&
+name|Idents
+operator|.
+name|get
+argument_list|(
+literal|"NSCopying"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|NSCopyingName
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/// \brief Retrieve the Objective-C "instancetype" type, if already known;
@@ -7196,6 +7437,21 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Get default simd alignment of the specified complete type in bits.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|getOpenMPDefaultSimdAlign
+argument_list|(
+name|QualType
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Return the size of the specified (complete) type \p T, in bits.
 end_comment
 
@@ -7529,6 +7785,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Return the default alignment for __attribute__((aligned)) on
+end_comment
+
+begin_comment
+comment|/// this target, to be used if no alignment value is specified.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|getTargetDefaultAlignForAttributeAligned
+argument_list|(
+name|void
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Return the alignment in bits that should be given to a
 end_comment
 
@@ -7839,6 +8113,55 @@ name|method
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// Loading virtual member pointers using the virtual inheritance model
+end_comment
+
+begin_comment
+comment|/// always results in an adjustment using the vbtable even if the index is
+end_comment
+
+begin_comment
+comment|/// zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is usually OK because the first slot in the vbtable points
+end_comment
+
+begin_comment
+comment|/// backwards to the top of the MDC.  However, the MDC might be reusing a
+end_comment
+
+begin_comment
+comment|/// vbptr from an nv-base.  In this case, the first slot in the vbtable
+end_comment
+
+begin_comment
+comment|/// points to the start of the nv-base which introduced the vbptr and *not*
+end_comment
+
+begin_comment
+comment|/// the MDC.  Modify the NonVirtualBaseAdjustment to account for this.
+end_comment
+
+begin_decl_stmt
+name|CharUnits
+name|getOffsetOfBaseWithVBPtr
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Get the offset of a FieldDecl or IndirectFieldDecl, in bits.
@@ -8233,6 +8556,145 @@ argument_list|)
 operator|.
 name|getTypePtr
 argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|hasSameNullabilityTypeQualifier
+argument_list|(
+name|QualType
+name|SubT
+argument_list|,
+name|QualType
+name|SuperT
+argument_list|,
+name|bool
+name|IsParam
+argument_list|)
+decl|const
+block|{
+name|auto
+name|SubTnullability
+init|=
+name|SubT
+operator|->
+name|getNullability
+argument_list|(
+operator|*
+name|this
+argument_list|)
+decl_stmt|;
+name|auto
+name|SuperTnullability
+init|=
+name|SuperT
+operator|->
+name|getNullability
+argument_list|(
+operator|*
+name|this
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|SubTnullability
+operator|.
+name|hasValue
+argument_list|()
+operator|==
+name|SuperTnullability
+operator|.
+name|hasValue
+argument_list|()
+condition|)
+block|{
+comment|// Neither has nullability; return true
+if|if
+condition|(
+operator|!
+name|SubTnullability
+condition|)
+return|return
+name|true
+return|;
+comment|// Both have nullability qualifier.
+if|if
+condition|(
+operator|*
+name|SubTnullability
+operator|==
+operator|*
+name|SuperTnullability
+operator|||
+operator|*
+name|SubTnullability
+operator|==
+name|NullabilityKind
+operator|::
+name|Unspecified
+operator|||
+operator|*
+name|SuperTnullability
+operator|==
+name|NullabilityKind
+operator|::
+name|Unspecified
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+name|IsParam
+condition|)
+block|{
+comment|// Ok for the superclass method parameter to be "nonnull" and the subclass
+comment|// method parameter to be "nullable"
+return|return
+operator|(
+operator|*
+name|SuperTnullability
+operator|==
+name|NullabilityKind
+operator|::
+name|NonNull
+operator|&&
+operator|*
+name|SubTnullability
+operator|==
+name|NullabilityKind
+operator|::
+name|Nullable
+operator|)
+return|;
+block|}
+else|else
+block|{
+comment|// For the return type, it's okay for the superclass method to specify
+comment|// "nullable" and the subclass method specify "nonnull"
+return|return
+operator|(
+operator|*
+name|SuperTnullability
+operator|==
+name|NullabilityKind
+operator|::
+name|Nullable
+operator|&&
+operator|*
+name|SubTnullability
+operator|==
+name|NullabilityKind
+operator|::
+name|NonNull
+operator|)
+return|;
+block|}
+block|}
+return|return
+name|true
 return|;
 block|}
 end_decl_stmt
@@ -8769,6 +9231,17 @@ end_comment
 begin_decl_stmt
 name|QualType
 name|getSignatureParameterType
+argument_list|(
+name|QualType
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|QualType
+name|getExceptionObjectType
 argument_list|(
 name|QualType
 name|T
@@ -10133,6 +10606,69 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|CXXConstructorDecl
+modifier|*
+name|getCopyConstructorForExceptionObject
+parameter_list|(
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|addCopyConstructorForExceptionObject
+parameter_list|(
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|,
+name|CXXConstructorDecl
+modifier|*
+name|CD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|addDefaultArgExprForConstructor
+parameter_list|(
+specifier|const
+name|CXXConstructorDecl
+modifier|*
+name|CD
+parameter_list|,
+name|unsigned
+name|ParmIdx
+parameter_list|,
+name|Expr
+modifier|*
+name|DAE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Expr
+modifier|*
+name|getDefaultArgExprForConstructor
+parameter_list|(
+specifier|const
+name|CXXConstructorDecl
+modifier|*
+name|CD
+parameter_list|,
+name|unsigned
+name|ParmIdx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|setManglingNumber
 parameter_list|(
@@ -10459,15 +10995,15 @@ name|private
 label|:
 end_label
 
-begin_macro
+begin_expr_stmt
 name|ASTContext
 argument_list|(
-argument|const ASTContext&
+specifier|const
+name|ASTContext
+operator|&
 argument_list|)
-end_macro
-
-begin_expr_stmt
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 
@@ -10480,7 +11016,8 @@ specifier|const
 name|ASTContext
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 end_decl_stmt
 

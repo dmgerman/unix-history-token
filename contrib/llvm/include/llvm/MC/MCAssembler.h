@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerIntPair.h"
+file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_include
@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCDirectives.h"
 end_include
 
@@ -101,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/MC/MCLinkerOptimizationHint.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCSection.h"
 end_include
 
 begin_include
@@ -169,16 +181,7 @@ name|class
 name|MCSection
 decl_stmt|;
 name|class
-name|MCSectionData
-decl_stmt|;
-name|class
 name|MCSubtargetInfo
-decl_stmt|;
-name|class
-name|MCSymbol
-decl_stmt|;
-name|class
-name|MCSymbolData
 decl_stmt|;
 name|class
 name|MCValue
@@ -201,9 +204,12 @@ name|MCAsmLayout
 block|;
 name|MCFragment
 argument_list|(
-argument|const MCFragment&
+specifier|const
+name|MCFragment
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -213,12 +219,15 @@ specifier|const
 name|MCFragment
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
 expr|enum
 name|FragmentType
+operator|:
+name|uint8_t
 block|{
 name|FT_Align
 block|,
@@ -237,6 +246,8 @@ block|,
 name|FT_DwarfFrame
 block|,
 name|FT_LEB
+block|,
+name|FT_SafeSEH
 block|}
 block|;
 name|private
@@ -244,18 +255,37 @@ operator|:
 name|FragmentType
 name|Kind
 block|;
-comment|/// Parent - The data for the section this fragment is in.
-name|MCSectionData
+name|protected
+operator|:
+name|bool
+name|HasInstructions
+block|;
+name|private
+operator|:
+comment|/// \brief Should this fragment be aligned to the end of a bundle?
+name|bool
+name|AlignToBundleEnd
+block|;
+name|uint8_t
+name|BundlePadding
+block|;
+comment|/// LayoutOrder - The layout order of this fragment.
+name|unsigned
+name|LayoutOrder
+block|;
+comment|/// The data for the section this fragment is in.
+name|MCSection
 operator|*
 name|Parent
 block|;
 comment|/// Atom - The atom this fragment is in, as represented by it's defining
 comment|/// symbol.
-name|MCSymbolData
+specifier|const
+name|MCSymbol
 operator|*
 name|Atom
 block|;
-comment|/// @name Assembler Backend Data
+comment|/// \name Assembler Backend Data
 comment|/// @{
 comment|//
 comment|// FIXME: This could all be kept private to the assembler implementation.
@@ -264,29 +294,45 @@ comment|/// initialized.
 name|uint64_t
 name|Offset
 block|;
-comment|/// LayoutOrder - The layout order of this fragment.
-name|unsigned
-name|LayoutOrder
-block|;
 comment|/// @}
 name|protected
 operator|:
 name|MCFragment
 argument_list|(
-argument|FragmentType _Kind
+argument|FragmentType Kind
 argument_list|,
-argument|MCSectionData *_Parent = nullptr
+argument|bool HasInstructions
+argument_list|,
+argument|uint8_t BundlePadding
+argument_list|,
+argument|MCSection *Parent = nullptr
 argument_list|)
 block|;
-name|public
-operator|:
-comment|// Only for sentinel.
+operator|~
 name|MCFragment
 argument_list|()
 block|;
-name|virtual
-operator|~
+name|private
+operator|:
+comment|// This is a friend so that the sentinal can be created.
+name|friend
+expr|struct
+name|ilist_sentinel_traits
+operator|<
 name|MCFragment
+operator|>
+block|;
+name|MCFragment
+argument_list|()
+block|;
+name|public
+operator|:
+comment|/// Destroys the current fragment.
+comment|///
+comment|/// This must be used instead of delete as MCFragment is non-virtual.
+comment|/// This method will dispatch to the appropriate subclass.
+name|void
+name|destroy
 argument_list|()
 block|;
 name|FragmentType
@@ -298,7 +344,7 @@ return|return
 name|Kind
 return|;
 block|}
-name|MCSectionData
+name|MCSection
 operator|*
 name|getParent
 argument_list|()
@@ -311,14 +357,15 @@ block|}
 name|void
 name|setParent
 argument_list|(
-argument|MCSectionData *Value
+argument|MCSection *Value
 argument_list|)
 block|{
 name|Parent
 operator|=
 name|Value
 block|; }
-name|MCSymbolData
+specifier|const
+name|MCSymbol
 operator|*
 name|getAtom
 argument_list|()
@@ -331,7 +378,7 @@ block|}
 name|void
 name|setAtom
 argument_list|(
-argument|MCSymbolData *Value
+argument|const MCSymbol *Value
 argument_list|)
 block|{
 name|Atom
@@ -359,58 +406,61 @@ name|Value
 block|; }
 comment|/// \brief Does this fragment have instructions emitted into it? By default
 comment|/// this is false, but specific fragment types may set it to true.
-name|virtual
 name|bool
 name|hasInstructions
 argument_list|()
 specifier|const
 block|{
 return|return
-name|false
+name|HasInstructions
 return|;
 block|}
 comment|/// \brief Should this fragment be placed at the end of an aligned bundle?
-name|virtual
 name|bool
 name|alignToBundleEnd
 argument_list|()
 specifier|const
 block|{
 return|return
-name|false
+name|AlignToBundleEnd
 return|;
 block|}
-name|virtual
 name|void
 name|setAlignToBundleEnd
 argument_list|(
 argument|bool V
 argument_list|)
-block|{ }
+block|{
+name|AlignToBundleEnd
+operator|=
+name|V
+block|; }
 comment|/// \brief Get the padding size that must be inserted before this fragment.
 comment|/// Used for bundling. By default, no padding is inserted.
 comment|/// Note that padding size is restricted to 8 bits. This is an optimization
 comment|/// to reduce the amount of space used for each fragment. In practice, larger
 comment|/// padding should never be required.
-name|virtual
 name|uint8_t
 name|getBundlePadding
 argument_list|()
 specifier|const
 block|{
 return|return
-literal|0
+name|BundlePadding
 return|;
 block|}
 comment|/// \brief Set the padding size for this fragment. By default it's a no-op,
 comment|/// and only some fragments have a meaningful implementation.
-name|virtual
 name|void
 name|setBundlePadding
 argument_list|(
 argument|uint8_t N
 argument_list|)
-block|{   }
+block|{
+name|BundlePadding
+operator|=
+name|N
+block|; }
 name|void
 name|dump
 argument_list|()
@@ -425,85 +475,30 @@ range|:
 name|public
 name|MCFragment
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
-name|uint8_t
-name|BundlePadding
-block|;
-name|public
+name|protected
 operator|:
 name|MCEncodedFragment
 argument_list|(
 argument|MCFragment::FragmentType FType
 argument_list|,
-argument|MCSectionData *SD = nullptr
+argument|bool HasInstructions
+argument_list|,
+argument|MCSection *Sec
 argument_list|)
 operator|:
 name|MCFragment
 argument_list|(
-name|FType
+argument|FType
 argument_list|,
-name|SD
-argument_list|)
-block|,
-name|BundlePadding
-argument_list|(
+argument|HasInstructions
+argument_list|,
 literal|0
+argument_list|,
+argument|Sec
 argument_list|)
-block|{   }
-name|virtual
-operator|~
-name|MCEncodedFragment
-argument_list|()
-block|;
-name|virtual
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|getContents
-argument_list|()
-operator|=
-literal|0
-block|;
-name|virtual
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|getContents
-argument_list|()
-specifier|const
-operator|=
-literal|0
-block|;
-name|uint8_t
-name|getBundlePadding
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|BundlePadding
-return|;
-block|}
-name|void
-name|setBundlePadding
-argument_list|(
-argument|uint8_t N
-argument_list|)
-name|override
-block|{
-name|BundlePadding
-operator|=
-name|N
-block|;   }
+block|{}
+name|public
+operator|:
 specifier|static
 name|bool
 name|classof
@@ -550,43 +545,134 @@ name|true
 return|;
 block|}
 block|}
-expr|}
-block|;
+block|}
+decl_stmt|;
 comment|/// Interface implemented by fragments that contain encoded instructions and/or
-comment|/// data and also have fixups registered.
+comment|/// data.
 comment|///
+name|template
+operator|<
+name|unsigned
+name|ContentsSize
+operator|>
 name|class
-name|MCEncodedFragmentWithFixups
+name|MCEncodedFragmentWithContents
 operator|:
 name|public
 name|MCEncodedFragment
 block|{
-name|void
-name|anchor
-argument_list|()
-name|override
+name|SmallVector
+operator|<
+name|char
+block|,
+name|ContentsSize
+operator|>
+name|Contents
 block|;
-name|public
+name|protected
 operator|:
-name|MCEncodedFragmentWithFixups
+name|MCEncodedFragmentWithContents
 argument_list|(
 argument|MCFragment::FragmentType FType
 argument_list|,
-argument|MCSectionData *SD = nullptr
+argument|bool HasInstructions
+argument_list|,
+argument|MCSection *Sec
 argument_list|)
 operator|:
 name|MCEncodedFragment
 argument_list|(
 argument|FType
 argument_list|,
-argument|SD
+argument|HasInstructions
+argument_list|,
+argument|Sec
 argument_list|)
-block|{   }
-name|virtual
-operator|~
-name|MCEncodedFragmentWithFixups
+block|{}
+name|public
+operator|:
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|getContents
 argument_list|()
+block|{
+return|return
+name|Contents
+return|;
+block|}
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|getContents
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Contents
+return|;
+block|}
+expr|}
 block|;
+comment|/// Interface implemented by fragments that contain encoded instructions and/or
+comment|/// data and also have fixups registered.
+comment|///
+name|template
+operator|<
+name|unsigned
+name|ContentsSize
+block|,
+name|unsigned
+name|FixupsSize
+operator|>
+name|class
+name|MCEncodedFragmentWithFixups
+operator|:
+name|public
+name|MCEncodedFragmentWithContents
+operator|<
+name|ContentsSize
+operator|>
+block|{
+comment|/// Fixups - The list of fixups in this fragment.
+name|SmallVector
+operator|<
+name|MCFixup
+block|,
+name|FixupsSize
+operator|>
+name|Fixups
+block|;
+name|protected
+operator|:
+name|MCEncodedFragmentWithFixups
+argument_list|(
+argument|MCFragment::FragmentType FType
+argument_list|,
+argument|bool HasInstructions
+argument_list|,
+argument|MCSection *Sec
+argument_list|)
+operator|:
+name|MCEncodedFragmentWithContents
+operator|<
+name|ContentsSize
+operator|>
+operator|(
+name|FType
+operator|,
+name|HasInstructions
+operator|,
+name|Sec
+operator|)
+block|{}
+name|public
+operator|:
 typedef|typedef
 name|SmallVectorImpl
 operator|<
@@ -605,7 +691,6 @@ operator|::
 name|iterator
 name|fixup_iterator
 expr_stmt|;
-name|virtual
 name|SmallVectorImpl
 operator|<
 name|MCFixup
@@ -613,10 +698,11 @@ operator|>
 operator|&
 name|getFixups
 argument_list|()
-operator|=
-literal|0
-decl_stmt|;
-name|virtual
+block|{
+return|return
+name|Fixups
+return|;
+block|}
 specifier|const
 name|SmallVectorImpl
 operator|<
@@ -626,48 +712,63 @@ operator|&
 name|getFixups
 argument_list|()
 specifier|const
-operator|=
-literal|0
-expr_stmt|;
-name|virtual
+block|{
+return|return
+name|Fixups
+return|;
+block|}
 name|fixup_iterator
 name|fixup_begin
-parameter_list|()
-init|=
-literal|0
-function_decl|;
-name|virtual
+argument_list|()
+block|{
+return|return
+name|Fixups
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
 name|const_fixup_iterator
 name|fixup_begin
 argument_list|()
 specifier|const
-operator|=
-literal|0
-expr_stmt|;
-name|virtual
+block|{
+return|return
+name|Fixups
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
 name|fixup_iterator
 name|fixup_end
-parameter_list|()
-init|=
-literal|0
-function_decl|;
-name|virtual
+argument_list|()
+block|{
+return|return
+name|Fixups
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
 name|const_fixup_iterator
 name|fixup_end
 argument_list|()
 specifier|const
-operator|=
-literal|0
-expr_stmt|;
+block|{
+return|return
+name|Fixups
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|MCFragment
-modifier|*
-name|F
-parameter_list|)
+argument_list|(
+argument|const MCFragment *F
+argument_list|)
 block|{
 name|MCFragment
 operator|::
@@ -678,7 +779,7 @@ name|F
 operator|->
 name|getKind
 argument_list|()
-expr_stmt|;
+block|;
 return|return
 name|Kind
 operator|==
@@ -694,152 +795,43 @@ name|FT_Data
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// Fragment for data and encoded instructions.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|MCDataFragment
 range|:
 name|public
 name|MCEncodedFragmentWithFixups
-block|{
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
-comment|/// \brief Does this fragment contain encoded instructions anywhere in it?
-name|bool
-name|HasInstructions
-block|;
-comment|/// \brief Should this fragment be aligned to the end of a bundle?
-name|bool
-name|AlignToBundleEnd
-block|;
-name|SmallVector
 operator|<
-name|char
-block|,
 literal|32
-operator|>
-name|Contents
-block|;
-comment|/// Fixups - The list of fixups in this fragment.
-name|SmallVector
-operator|<
-name|MCFixup
-block|,
-literal|4
-operator|>
-name|Fixups
-block|;
+decl_stmt|, 4>
+block|{
 name|public
-operator|:
+label|:
 name|MCDataFragment
 argument_list|(
-name|MCSectionData
+name|MCSection
 operator|*
-name|SD
+name|Sec
 operator|=
 name|nullptr
 argument_list|)
 operator|:
 name|MCEncodedFragmentWithFixups
-argument_list|(
+operator|<
+literal|32
+operator|,
+literal|4
+operator|>
+operator|(
 name|FT_Data
-argument_list|,
-name|SD
-argument_list|)
-block|,
-name|HasInstructions
-argument_list|(
+operator|,
 name|false
-argument_list|)
-block|,
-name|AlignToBundleEnd
-argument_list|(
-argument|false
-argument_list|)
-block|{   }
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|getContents
-argument_list|()
-name|override
-block|{
-return|return
-name|Contents
-return|;
-block|}
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|getContents
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|Contents
-return|;
-block|}
-name|SmallVectorImpl
-operator|<
-name|MCFixup
-operator|>
-operator|&
-name|getFixups
-argument_list|()
-name|override
-block|{
-return|return
-name|Fixups
-return|;
-block|}
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|MCFixup
-operator|>
-operator|&
-name|getFixups
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|Fixups
-return|;
-block|}
-name|bool
-name|hasInstructions
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|HasInstructions
-return|;
-block|}
-name|virtual
+operator|,
+name|Sec
+operator|)
+block|{}
 name|void
 name|setHasInstructions
 argument_list|(
@@ -850,77 +842,6 @@ name|HasInstructions
 operator|=
 name|V
 block|; }
-name|bool
-name|alignToBundleEnd
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|AlignToBundleEnd
-return|;
-block|}
-name|void
-name|setAlignToBundleEnd
-argument_list|(
-argument|bool V
-argument_list|)
-name|override
-block|{
-name|AlignToBundleEnd
-operator|=
-name|V
-block|; }
-name|fixup_iterator
-name|fixup_begin
-argument_list|()
-name|override
-block|{
-return|return
-name|Fixups
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|const_fixup_iterator
-name|fixup_begin
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|Fixups
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|fixup_iterator
-name|fixup_end
-argument_list|()
-name|override
-block|{
-return|return
-name|Fixups
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-name|const_fixup_iterator
-name|fixup_end
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|Fixups
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
 specifier|static
 name|bool
 name|classof
@@ -939,8 +860,8 @@ operator|::
 name|FT_Data
 return|;
 block|}
-expr|}
-block|;
+block|}
+empty_stmt|;
 comment|/// This is a compact (memory-size-wise) fragment for holding an encoded
 comment|/// instruction (non-relaxable) that has no fixups registered. When applicable,
 comment|/// it can be used instead of MCDataFragment and lead to lower memory
@@ -948,109 +869,33 @@ comment|/// consumption.
 comment|///
 name|class
 name|MCCompactEncodedInstFragment
-operator|:
+range|:
 name|public
-name|MCEncodedFragment
-block|{
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
-comment|/// \brief Should this fragment be aligned to the end of a bundle?
-name|bool
-name|AlignToBundleEnd
-block|;
-name|SmallVector
+name|MCEncodedFragmentWithContents
 operator|<
-name|char
-block|,
 literal|4
 operator|>
-name|Contents
-block|;
+block|{
 name|public
 operator|:
 name|MCCompactEncodedInstFragment
 argument_list|(
-name|MCSectionData
+name|MCSection
 operator|*
-name|SD
+name|Sec
 operator|=
 name|nullptr
 argument_list|)
 operator|:
-name|MCEncodedFragment
+name|MCEncodedFragmentWithContents
 argument_list|(
-name|FT_CompactEncodedInst
+argument|FT_CompactEncodedInst
 argument_list|,
-name|SD
-argument_list|)
-block|,
-name|AlignToBundleEnd
-argument_list|(
-argument|false
+argument|true
+argument_list|,
+argument|Sec
 argument_list|)
 block|{   }
-name|bool
-name|hasInstructions
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|true
-return|;
-block|}
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|getContents
-argument_list|()
-name|override
-block|{
-return|return
-name|Contents
-return|;
-block|}
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|getContents
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|Contents
-return|;
-block|}
-name|bool
-name|alignToBundleEnd
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|AlignToBundleEnd
-return|;
-block|}
-name|void
-name|setAlignToBundleEnd
-argument_list|(
-argument|bool V
-argument_list|)
-name|override
-block|{
-name|AlignToBundleEnd
-operator|=
-name|V
-block|; }
 specifier|static
 name|bool
 name|classof
@@ -1079,12 +924,12 @@ name|MCRelaxableFragment
 operator|:
 name|public
 name|MCEncodedFragmentWithFixups
+operator|<
+literal|8
+block|,
+literal|1
+operator|>
 block|{
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
 comment|/// Inst - The instruction this is a fragment for.
 name|MCInst
 name|Inst
@@ -1096,24 +941,6 @@ specifier|const
 name|MCSubtargetInfo
 name|STI
 block|;
-comment|/// Contents - Binary data for the currently encoded instruction.
-name|SmallVector
-operator|<
-name|char
-block|,
-literal|8
-operator|>
-name|Contents
-block|;
-comment|/// Fixups - The list of fixups in this fragment.
-name|SmallVector
-operator|<
-name|MCFixup
-block|,
-literal|1
-operator|>
-name|Fixups
-block|;
 name|public
 operator|:
 name|MCRelaxableFragment
@@ -1121,16 +948,16 @@ argument_list|(
 specifier|const
 name|MCInst
 operator|&
-name|_Inst
+name|Inst
 argument_list|,
 specifier|const
 name|MCSubtargetInfo
 operator|&
-name|_STI
+name|STI
 argument_list|,
-name|MCSectionData
+name|MCSection
 operator|*
-name|SD
+name|Sec
 operator|=
 name|nullptr
 argument_list|)
@@ -1139,47 +966,21 @@ name|MCEncodedFragmentWithFixups
 argument_list|(
 name|FT_Relaxable
 argument_list|,
-name|SD
+name|true
+argument_list|,
+name|Sec
 argument_list|)
 block|,
 name|Inst
 argument_list|(
-name|_Inst
+name|Inst
 argument_list|)
 block|,
 name|STI
 argument_list|(
-argument|_STI
+argument|STI
 argument_list|)
-block|{   }
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|getContents
-argument_list|()
-name|override
-block|{
-return|return
-name|Contents
-return|;
-block|}
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|getContents
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|Contents
-return|;
-block|}
+block|{}
 specifier|const
 name|MCInst
 operator|&
@@ -1194,7 +995,7 @@ block|}
 name|void
 name|setInst
 argument_list|(
-argument|const MCInst& Value
+argument|const MCInst&Value
 argument_list|)
 block|{
 name|Inst
@@ -1209,94 +1010,6 @@ argument_list|()
 block|{
 return|return
 name|STI
-return|;
-block|}
-name|SmallVectorImpl
-operator|<
-name|MCFixup
-operator|>
-operator|&
-name|getFixups
-argument_list|()
-name|override
-block|{
-return|return
-name|Fixups
-return|;
-block|}
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|MCFixup
-operator|>
-operator|&
-name|getFixups
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|Fixups
-return|;
-block|}
-name|bool
-name|hasInstructions
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|true
-return|;
-block|}
-name|fixup_iterator
-name|fixup_begin
-argument_list|()
-name|override
-block|{
-return|return
-name|Fixups
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|const_fixup_iterator
-name|fixup_begin
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|Fixups
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|fixup_iterator
-name|fixup_end
-argument_list|()
-name|override
-block|{
-return|return
-name|Fixups
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-name|const_fixup_iterator
-name|fixup_end
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|Fixups
-operator|.
-name|end
-argument_list|()
 return|;
 block|}
 specifier|static
@@ -1325,14 +1038,17 @@ operator|:
 name|public
 name|MCFragment
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 comment|/// Alignment - The alignment to ensure, in bytes.
 name|unsigned
 name|Alignment
+block|;
+comment|/// EmitNops - Flag to indicate that (optimal) NOPs should be emitted instead
+comment|/// of using the provided value. The exact interpretation of this flag is
+comment|/// target dependent.
+name|bool
+name|EmitNops
+operator|:
+literal|1
 block|;
 comment|/// Value - Value to use for filling padding bytes.
 name|int64_t
@@ -1347,62 +1063,58 @@ comment|/// cannot be satisfied in this width then this fragment is ignored.
 name|unsigned
 name|MaxBytesToEmit
 block|;
-comment|/// EmitNops - Flag to indicate that (optimal) NOPs should be emitted instead
-comment|/// of using the provided value. The exact interpretation of this flag is
-comment|/// target dependent.
-name|bool
-name|EmitNops
-operator|:
-literal|1
-block|;
 name|public
 operator|:
 name|MCAlignFragment
 argument_list|(
-argument|unsigned _Alignment
+argument|unsigned Alignment
 argument_list|,
-argument|int64_t _Value
+argument|int64_t Value
 argument_list|,
-argument|unsigned _ValueSize
+argument|unsigned ValueSize
 argument_list|,
-argument|unsigned _MaxBytesToEmit
+argument|unsigned MaxBytesToEmit
 argument_list|,
-argument|MCSectionData *SD = nullptr
+argument|MCSection *Sec = nullptr
 argument_list|)
 operator|:
 name|MCFragment
 argument_list|(
 name|FT_Align
 argument_list|,
-name|SD
+name|false
+argument_list|,
+literal|0
+argument_list|,
+name|Sec
 argument_list|)
 block|,
 name|Alignment
 argument_list|(
-name|_Alignment
-argument_list|)
-block|,
-name|Value
-argument_list|(
-name|_Value
-argument_list|)
-block|,
-name|ValueSize
-argument_list|(
-name|_ValueSize
-argument_list|)
-block|,
-name|MaxBytesToEmit
-argument_list|(
-name|_MaxBytesToEmit
+name|Alignment
 argument_list|)
 block|,
 name|EmitNops
 argument_list|(
-argument|false
+name|false
+argument_list|)
+block|,
+name|Value
+argument_list|(
+name|Value
+argument_list|)
+block|,
+name|ValueSize
+argument_list|(
+name|ValueSize
+argument_list|)
+block|,
+name|MaxBytesToEmit
+argument_list|(
+argument|MaxBytesToEmit
 argument_list|)
 block|{}
-comment|/// @name Accessors
+comment|/// \name Accessors
 comment|/// @{
 name|unsigned
 name|getAlignment
@@ -1486,11 +1198,6 @@ operator|:
 name|public
 name|MCFragment
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 comment|/// Value - Value to use for filling bytes.
 name|int64_t
 name|Value
@@ -1508,35 +1215,39 @@ name|public
 operator|:
 name|MCFillFragment
 argument_list|(
-argument|int64_t _Value
+argument|int64_t Value
 argument_list|,
-argument|unsigned _ValueSize
+argument|unsigned ValueSize
 argument_list|,
-argument|uint64_t _Size
+argument|uint64_t Size
 argument_list|,
-argument|MCSectionData *SD = nullptr
+argument|MCSection *Sec = nullptr
 argument_list|)
 operator|:
 name|MCFragment
 argument_list|(
 name|FT_Fill
 argument_list|,
-name|SD
+name|false
+argument_list|,
+literal|0
+argument_list|,
+name|Sec
 argument_list|)
 block|,
 name|Value
 argument_list|(
-name|_Value
+name|Value
 argument_list|)
 block|,
 name|ValueSize
 argument_list|(
-name|_ValueSize
+name|ValueSize
 argument_list|)
 block|,
 name|Size
 argument_list|(
-argument|_Size
+argument|Size
 argument_list|)
 block|{
 name|assert
@@ -1557,7 +1268,7 @@ operator|&&
 literal|"Fill size must be a multiple of the value size!"
 argument_list|)
 block|;   }
-comment|/// @name Accessors
+comment|/// \name Accessors
 comment|/// @{
 name|int64_t
 name|getValue
@@ -1613,11 +1324,6 @@ operator|:
 name|public
 name|MCFragment
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 comment|/// Offset - The offset this fragment should start at.
 specifier|const
 name|MCExpr
@@ -1632,32 +1338,36 @@ name|public
 operator|:
 name|MCOrgFragment
 argument_list|(
-argument|const MCExpr&_Offset
+argument|const MCExpr&Offset
 argument_list|,
-argument|int8_t _Value
+argument|int8_t Value
 argument_list|,
-argument|MCSectionData *SD = nullptr
+argument|MCSection *Sec = nullptr
 argument_list|)
 operator|:
 name|MCFragment
 argument_list|(
 name|FT_Org
 argument_list|,
-name|SD
+name|false
+argument_list|,
+literal|0
+argument_list|,
+name|Sec
 argument_list|)
 block|,
 name|Offset
 argument_list|(
 operator|&
-name|_Offset
+name|Offset
 argument_list|)
 block|,
 name|Value
 argument_list|(
-argument|_Value
+argument|Value
 argument_list|)
 block|{}
-comment|/// @name Accessors
+comment|/// \name Accessors
 comment|/// @{
 specifier|const
 name|MCExpr
@@ -1707,11 +1417,6 @@ operator|:
 name|public
 name|MCFragment
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 comment|/// Value - The value this fragment should contain.
 specifier|const
 name|MCExpr
@@ -1736,14 +1441,18 @@ argument|const MCExpr&Value_
 argument_list|,
 argument|bool IsSigned_
 argument_list|,
-argument|MCSectionData *SD = nullptr
+argument|MCSection *Sec = nullptr
 argument_list|)
 operator|:
 name|MCFragment
 argument_list|(
 name|FT_LEB
 argument_list|,
-name|SD
+name|false
+argument_list|,
+literal|0
+argument_list|,
+name|Sec
 argument_list|)
 block|,
 name|Value
@@ -1763,8 +1472,8 @@ name|push_back
 argument_list|(
 literal|0
 argument_list|)
-block|; }
-comment|/// @name Accessors
+block|;   }
+comment|/// \name Accessors
 comment|/// @{
 specifier|const
 name|MCExpr
@@ -1840,11 +1549,6 @@ operator|:
 name|public
 name|MCFragment
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 comment|/// LineDelta - the value of the difference between the two line numbers
 comment|/// between two .loc dwarf directives.
 name|int64_t
@@ -1867,28 +1571,32 @@ name|public
 operator|:
 name|MCDwarfLineAddrFragment
 argument_list|(
-argument|int64_t _LineDelta
+argument|int64_t LineDelta
 argument_list|,
-argument|const MCExpr&_AddrDelta
+argument|const MCExpr&AddrDelta
 argument_list|,
-argument|MCSectionData *SD = nullptr
+argument|MCSection *Sec = nullptr
 argument_list|)
 operator|:
 name|MCFragment
 argument_list|(
 name|FT_Dwarf
 argument_list|,
-name|SD
+name|false
+argument_list|,
+literal|0
+argument_list|,
+name|Sec
 argument_list|)
 block|,
 name|LineDelta
 argument_list|(
-name|_LineDelta
+name|LineDelta
 argument_list|)
 block|,
 name|AddrDelta
 argument_list|(
-argument|&_AddrDelta
+argument|&AddrDelta
 argument_list|)
 block|{
 name|Contents
@@ -1897,8 +1605,8 @@ name|push_back
 argument_list|(
 literal|0
 argument_list|)
-block|; }
-comment|/// @name Accessors
+block|;   }
+comment|/// \name Accessors
 comment|/// @{
 name|int64_t
 name|getLineDelta
@@ -1974,11 +1682,6 @@ operator|:
 name|public
 name|MCFragment
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 comment|/// AddrDelta - The expression for the difference of the two symbols that
 comment|/// make up the address delta between two .cfi_* dwarf directives.
 specifier|const
@@ -1999,11 +1702,11 @@ argument_list|(
 specifier|const
 name|MCExpr
 operator|&
-name|_AddrDelta
+name|AddrDelta
 argument_list|,
-name|MCSectionData
+name|MCSection
 operator|*
-name|SD
+name|Sec
 operator|=
 name|nullptr
 argument_list|)
@@ -2012,12 +1715,16 @@ name|MCFragment
 argument_list|(
 name|FT_DwarfFrame
 argument_list|,
-name|SD
+name|false
+argument_list|,
+literal|0
+argument_list|,
+name|Sec
 argument_list|)
 block|,
 name|AddrDelta
 argument_list|(
-argument|&_AddrDelta
+argument|&AddrDelta
 argument_list|)
 block|{
 name|Contents
@@ -2026,8 +1733,8 @@ name|push_back
 argument_list|(
 literal|0
 argument_list|)
-block|; }
-comment|/// @name Accessors
+block|;   }
+comment|/// \name Accessors
 comment|/// @{
 specifier|const
 name|MCExpr
@@ -2088,855 +1795,92 @@ return|;
 block|}
 expr|}
 block|;
-comment|// FIXME: Should this be a separate class, or just merged into MCSection? Since
-comment|// we anticipate the fast path being through an MCAssembler, the only reason to
-comment|// keep it out is for API abstraction.
 name|class
-name|MCSectionData
+name|MCSafeSEHFragment
 operator|:
 name|public
-name|ilist_node
-operator|<
-name|MCSectionData
-operator|>
-block|{
-name|friend
-name|class
-name|MCAsmLayout
-block|;
-name|MCSectionData
-argument_list|(
-argument|const MCSectionData&
-argument_list|)
-name|LLVM_DELETED_FUNCTION
-block|;
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|MCSectionData
-operator|&
-operator|)
-name|LLVM_DELETED_FUNCTION
-block|;
-name|public
-operator|:
-typedef|typedef
-name|iplist
-operator|<
 name|MCFragment
-operator|>
-name|FragmentListType
-expr_stmt|;
-typedef|typedef
-name|FragmentListType
-operator|::
-name|const_iterator
-name|const_iterator
-expr_stmt|;
-typedef|typedef
-name|FragmentListType
-operator|::
-name|iterator
-name|iterator
-expr_stmt|;
-typedef|typedef
-name|FragmentListType
-operator|::
-name|const_reverse_iterator
-name|const_reverse_iterator
-expr_stmt|;
-typedef|typedef
-name|FragmentListType
-operator|::
-name|reverse_iterator
-name|reverse_iterator
-expr_stmt|;
-comment|/// \brief Express the state of bundle locked groups while emitting code.
-block|enum
-name|BundleLockStateType
 block|{
-name|NotBundleLocked
-block|,
-name|BundleLocked
-block|,
-name|BundleLockedAlignToEnd
-block|}
-block|;
-name|private
-operator|:
-name|FragmentListType
-name|Fragments
-block|;
 specifier|const
-name|MCSection
+name|MCSymbol
 operator|*
-name|Section
+name|Sym
 block|;
-comment|/// Ordinal - The section index in the assemblers section list.
-name|unsigned
-name|Ordinal
-block|;
-comment|/// LayoutOrder - The index of this section in the layout order.
-name|unsigned
-name|LayoutOrder
-block|;
-comment|/// Alignment - The maximum alignment seen in this section.
-name|unsigned
-name|Alignment
-block|;
-comment|/// \brief Keeping track of bundle-locked state.
-name|BundleLockStateType
-name|BundleLockState
-block|;
-comment|/// \brief Current nesting depth of bundle_lock directives.
-name|unsigned
-name|BundleLockNestingDepth
-block|;
-comment|/// \brief We've seen a bundle_lock directive but not its first instruction
-comment|/// yet.
-name|bool
-name|BundleGroupBeforeFirstInst
-block|;
-comment|/// @name Assembler Backend Data
-comment|/// @{
-comment|//
-comment|// FIXME: This could all be kept private to the assembler implementation.
-comment|/// HasInstructions - Whether this section has had instructions emitted into
-comment|/// it.
-name|unsigned
-name|HasInstructions
-operator|:
-literal|1
-block|;
-comment|/// Mapping from subsection number to insertion point for subsection numbers
-comment|/// below that number.
-name|SmallVector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-block|,
-name|MCFragment
-operator|*
-operator|>
-block|,
-literal|1
-operator|>
-name|SubsectionFragmentMap
-block|;
-comment|/// @}
 name|public
 operator|:
-comment|// Only for use as sentinel.
-name|MCSectionData
-argument_list|()
-block|;
-name|MCSectionData
+name|MCSafeSEHFragment
 argument_list|(
 specifier|const
-name|MCSection
-operator|&
-name|Section
+name|MCSymbol
+operator|*
+name|Sym
 argument_list|,
-name|MCAssembler
+name|MCSection
 operator|*
-name|A
+name|Sec
 operator|=
 name|nullptr
 argument_list|)
-block|;
-specifier|const
-name|MCSection
-operator|&
-name|getSection
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|*
-name|Section
-return|;
-block|}
-name|unsigned
-name|getAlignment
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Alignment
-return|;
-block|}
-name|void
-name|setAlignment
-argument_list|(
-argument|unsigned Value
-argument_list|)
-block|{
-name|Alignment
-operator|=
-name|Value
-block|; }
-name|bool
-name|hasInstructions
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasInstructions
-return|;
-block|}
-name|void
-name|setHasInstructions
-argument_list|(
-argument|bool Value
-argument_list|)
-block|{
-name|HasInstructions
-operator|=
-name|Value
-block|; }
-name|unsigned
-name|getOrdinal
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Ordinal
-return|;
-block|}
-name|void
-name|setOrdinal
-argument_list|(
-argument|unsigned Value
-argument_list|)
-block|{
-name|Ordinal
-operator|=
-name|Value
-block|; }
-name|unsigned
-name|getLayoutOrder
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LayoutOrder
-return|;
-block|}
-name|void
-name|setLayoutOrder
-argument_list|(
-argument|unsigned Value
-argument_list|)
-block|{
-name|LayoutOrder
-operator|=
-name|Value
-block|; }
-comment|/// @name Fragment Access
-comment|/// @{
-specifier|const
-name|FragmentListType
-operator|&
-name|getFragmentList
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Fragments
-return|;
-block|}
-name|FragmentListType
-operator|&
-name|getFragmentList
-argument_list|()
-block|{
-return|return
-name|Fragments
-return|;
-block|}
-name|iterator
-name|begin
-argument_list|()
-block|{
-return|return
-name|Fragments
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|const_iterator
-name|begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Fragments
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|iterator
-name|end
-argument_list|()
-block|{
-return|return
-name|Fragments
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-name|const_iterator
-name|end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Fragments
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-name|reverse_iterator
-name|rbegin
-argument_list|()
-block|{
-return|return
-name|Fragments
-operator|.
-name|rbegin
-argument_list|()
-return|;
-block|}
-name|const_reverse_iterator
-name|rbegin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Fragments
-operator|.
-name|rbegin
-argument_list|()
-return|;
-block|}
-name|reverse_iterator
-name|rend
-argument_list|()
-block|{
-return|return
-name|Fragments
-operator|.
-name|rend
-argument_list|()
-return|;
-block|}
-name|const_reverse_iterator
-name|rend
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Fragments
-operator|.
-name|rend
-argument_list|()
-return|;
-block|}
-name|size_t
-name|size
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Fragments
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
-name|bool
-name|empty
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Fragments
-operator|.
-name|empty
-argument_list|()
-return|;
-block|}
-name|iterator
-name|getSubsectionInsertionPoint
-argument_list|(
-argument|unsigned Subsection
-argument_list|)
-block|;
-name|bool
-name|isBundleLocked
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BundleLockState
-operator|!=
-name|NotBundleLocked
-return|;
-block|}
-name|BundleLockStateType
-name|getBundleLockState
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BundleLockState
-return|;
-block|}
-name|void
-name|setBundleLockState
-argument_list|(
-argument|BundleLockStateType NewState
-argument_list|)
-block|;
-name|bool
-name|isBundleGroupBeforeFirstInst
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BundleGroupBeforeFirstInst
-return|;
-block|}
-name|void
-name|setBundleGroupBeforeFirstInst
-argument_list|(
-argument|bool IsFirst
-argument_list|)
-block|{
-name|BundleGroupBeforeFirstInst
-operator|=
-name|IsFirst
-block|;   }
-name|void
-name|dump
-argument_list|()
-block|;
-comment|/// @}
-block|}
-block|;
-comment|// FIXME: Same concerns as with SectionData.
-name|class
-name|MCSymbolData
 operator|:
-name|public
-name|ilist_node
-operator|<
-name|MCSymbolData
-operator|>
-block|{
-specifier|const
-name|MCSymbol
-operator|*
-name|Symbol
-block|;
-comment|/// Fragment - The fragment this symbol's value is relative to, if any. Also
-comment|/// stores if this symbol is visible outside this translation unit (bit 0) or
-comment|/// if it is private extern (bit 1).
-name|PointerIntPair
-operator|<
 name|MCFragment
-operator|*
-block|,
-literal|2
-operator|>
-name|Fragment
-block|;
-expr|union
-block|{
-comment|/// Offset - The offset to apply to the fragment address to form this
-comment|/// symbol's value.
-name|uint64_t
-name|Offset
-block|;
-comment|/// CommonSize - The size of the symbol, if it is 'common'.
-name|uint64_t
-name|CommonSize
-block|;   }
-block|;
-comment|/// SymbolSize - An expression describing how to calculate the size of
-comment|/// a symbol. If a symbol has no size this field will be NULL.
-specifier|const
-name|MCExpr
-operator|*
-name|SymbolSize
-block|;
-comment|/// CommonAlign - The alignment of the symbol, if it is 'common', or -1.
-comment|//
-comment|// FIXME: Pack this in with other fields?
-name|unsigned
-name|CommonAlign
-block|;
-comment|/// Flags - The Flags field is used by object file implementations to store
-comment|/// additional per symbol information which is not easily classified.
-name|uint32_t
-name|Flags
-block|;
-comment|/// Index - Index field, for use by the object file implementation.
-name|uint64_t
-name|Index
-block|;
-name|public
-operator|:
-comment|// Only for use as sentinel.
-name|MCSymbolData
-argument_list|()
-block|;
-name|MCSymbolData
 argument_list|(
-argument|const MCSymbol&_Symbol
+name|FT_SafeSEH
 argument_list|,
-argument|MCFragment *_Fragment
+name|false
 argument_list|,
-argument|uint64_t _Offset
+literal|0
 argument_list|,
-argument|MCAssembler *A = nullptr
+name|Sec
 argument_list|)
-block|;
-comment|/// @name Accessors
+block|,
+name|Sym
+argument_list|(
+argument|Sym
+argument_list|)
+block|{}
+comment|/// \name Accessors
 comment|/// @{
 specifier|const
 name|MCSymbol
-operator|&
+operator|*
+name|getSymbol
+argument_list|()
+block|{
+return|return
+name|Sym
+return|;
+block|}
+specifier|const
+name|MCSymbol
+operator|*
 name|getSymbol
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|*
-name|Symbol
+name|Sym
 return|;
 block|}
-name|MCFragment
-operator|*
-name|getFragment
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Fragment
-operator|.
-name|getPointer
-argument_list|()
-return|;
-block|}
-name|void
-name|setFragment
-argument_list|(
-argument|MCFragment *Value
-argument_list|)
-block|{
-name|Fragment
-operator|.
-name|setPointer
-argument_list|(
-name|Value
-argument_list|)
-block|; }
-name|uint64_t
-name|getOffset
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|!
-name|isCommon
-argument_list|()
-argument_list|)
-block|;
-return|return
-name|Offset
-return|;
-block|}
-name|void
-name|setOffset
-argument_list|(
-argument|uint64_t Value
-argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|!
-name|isCommon
-argument_list|()
-argument_list|)
-block|;
-name|Offset
-operator|=
-name|Value
-block|;   }
 comment|/// @}
-comment|/// @name Symbol Attributes
-comment|/// @{
+specifier|static
 name|bool
-name|isExternal
-argument_list|()
-specifier|const
+name|classof
+argument_list|(
+argument|const MCFragment *F
+argument_list|)
 block|{
 return|return
-name|Fragment
-operator|.
-name|getInt
-argument_list|()
-operator|&
-literal|1
-return|;
-block|}
-name|void
-name|setExternal
-argument_list|(
-argument|bool Value
-argument_list|)
-block|{
-name|Fragment
-operator|.
-name|setInt
-argument_list|(
-operator|(
-name|Fragment
-operator|.
-name|getInt
-argument_list|()
-operator|&
-operator|~
-literal|1
-operator|)
-operator||
-name|unsigned
-argument_list|(
-name|Value
-argument_list|)
-argument_list|)
-block|;   }
-name|bool
-name|isPrivateExtern
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Fragment
-operator|.
-name|getInt
-argument_list|()
-operator|&
-literal|2
-return|;
-block|}
-name|void
-name|setPrivateExtern
-argument_list|(
-argument|bool Value
-argument_list|)
-block|{
-name|Fragment
-operator|.
-name|setInt
-argument_list|(
-operator|(
-name|Fragment
-operator|.
-name|getInt
-argument_list|()
-operator|&
-operator|~
-literal|2
-operator|)
-operator||
-operator|(
-name|unsigned
-argument_list|(
-name|Value
-argument_list|)
-operator|<<
-literal|1
-operator|)
-argument_list|)
-block|;   }
-comment|/// isCommon - Is this a 'common' symbol.
-name|bool
-name|isCommon
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CommonAlign
-operator|!=
-operator|-
-literal|1U
-return|;
-block|}
-comment|/// setCommon - Mark this symbol as being 'common'.
-comment|///
-comment|/// \param Size - The size of the symbol.
-comment|/// \param Align - The alignment of the symbol.
-name|void
-name|setCommon
-argument_list|(
-argument|uint64_t Size
-argument_list|,
-argument|unsigned Align
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|getOffset
+name|F
+operator|->
+name|getKind
 argument_list|()
 operator|==
-literal|0
-argument_list|)
-block|;
-name|CommonSize
-operator|=
-name|Size
-block|;
-name|CommonAlign
-operator|=
-name|Align
-block|;   }
-comment|/// getCommonSize - Return the size of a 'common' symbol.
-name|uint64_t
-name|getCommonSize
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isCommon
-argument_list|()
-operator|&&
-literal|"Not a 'common' symbol!"
-argument_list|)
-block|;
-return|return
-name|CommonSize
+name|MCFragment
+operator|::
+name|FT_SafeSEH
 return|;
 block|}
-name|void
-name|setSize
-argument_list|(
-argument|const MCExpr *SS
-argument_list|)
-block|{
-name|SymbolSize
-operator|=
-name|SS
-block|;   }
-specifier|const
-name|MCExpr
-operator|*
-name|getSize
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SymbolSize
-return|;
-block|}
-comment|/// getCommonAlignment - Return the alignment of a 'common' symbol.
-name|unsigned
-name|getCommonAlignment
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isCommon
-argument_list|()
-operator|&&
-literal|"Not a 'common' symbol!"
-argument_list|)
-block|;
-return|return
-name|CommonAlign
-return|;
-block|}
-comment|/// getFlags - Get the (implementation defined) symbol flags.
-name|uint32_t
-name|getFlags
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Flags
-return|;
-block|}
-comment|/// setFlags - Set the (implementation defined) symbol flags.
-name|void
-name|setFlags
-argument_list|(
-argument|uint32_t Value
-argument_list|)
-block|{
-name|Flags
-operator|=
-name|Value
-block|; }
-comment|/// modifyFlags - Modify the flags via a mask
-name|void
-name|modifyFlags
-argument_list|(
-argument|uint32_t Value
-argument_list|,
-argument|uint32_t Mask
-argument_list|)
-block|{
-name|Flags
-operator|=
-operator|(
-name|Flags
-operator|&
-operator|~
-name|Mask
-operator|)
-operator||
-name|Value
-block|;   }
-comment|/// getIndex - Get the (implementation defined) index.
-name|uint64_t
-name|getIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Index
-return|;
-block|}
-comment|/// setIndex - Set the (implementation defined) index.
-name|void
-name|setIndex
-argument_list|(
-argument|uint64_t Value
-argument_list|)
-block|{
-name|Index
-operator|=
-name|Value
-block|; }
-comment|/// @}
-name|void
-name|dump
-argument_list|()
-specifier|const
-block|; }
+expr|}
 block|;
 comment|// FIXME: This really doesn't belong here. See comments below.
 block|struct
@@ -2946,9 +1890,9 @@ name|MCSymbol
 operator|*
 name|Symbol
 block|;
-name|MCSectionData
+name|MCSection
 operator|*
-name|SectionData
+name|Section
 block|; }
 block|;
 comment|// FIXME: Ditto this. Purely so the Streamer and the ObjectWriter can talk
@@ -2992,49 +1936,62 @@ block|;
 name|public
 operator|:
 typedef|typedef
-name|iplist
+name|std
+operator|::
+name|vector
 operator|<
-name|MCSectionData
+name|MCSection
+operator|*
 operator|>
-name|SectionDataListType
+name|SectionListType
 expr_stmt|;
 typedef|typedef
-name|iplist
+name|std
+operator|::
+name|vector
 operator|<
-name|MCSymbolData
+specifier|const
+name|MCSymbol
+operator|*
 operator|>
 name|SymbolDataListType
 expr_stmt|;
 typedef|typedef
-name|SectionDataListType
+name|pointee_iterator
+operator|<
+name|SectionListType
 operator|::
 name|const_iterator
+operator|>
 name|const_iterator
 expr_stmt|;
 typedef|typedef
-name|SectionDataListType
+name|pointee_iterator
+operator|<
+name|SectionListType
 operator|::
 name|iterator
+operator|>
 name|iterator
 expr_stmt|;
 typedef|typedef
+name|pointee_iterator
+operator|<
 name|SymbolDataListType
 operator|::
 name|const_iterator
+operator|>
 name|const_symbol_iterator
 expr_stmt|;
-end_decl_stmt
-
-begin_typedef
 typedef|typedef
+name|pointee_iterator
+operator|<
 name|SymbolDataListType
 operator|::
 name|iterator
+operator|>
 name|symbol_iterator
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|iterator_range
 operator|<
@@ -3042,9 +1999,6 @@ name|symbol_iterator
 operator|>
 name|symbol_range
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|iterator_range
 operator|<
@@ -3052,32 +2006,6 @@ name|const_symbol_iterator
 operator|>
 name|const_symbol_range
 expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-name|FileNameVectorType
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|FileNameVectorType
-operator|::
-name|const_iterator
-name|const_file_name_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -3089,9 +2017,6 @@ operator|::
 name|const_iterator
 name|const_indirect_symbol_iterator
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -3103,9 +2028,6 @@ operator|::
 name|iterator
 name|indirect_symbol_iterator
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -3117,9 +2039,6 @@ operator|::
 name|const_iterator
 name|const_data_region_iterator
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -3131,21 +2050,9 @@ operator|::
 name|iterator
 name|data_region_iterator
 expr_stmt|;
-end_typedef
-
-begin_comment
 comment|/// MachO specific deployment target version info.
-end_comment
-
-begin_comment
 comment|// A Major version of 0 indicates that no version information was supplied
-end_comment
-
-begin_comment
 comment|// and so the corresponding load command should not be emitted.
-end_comment
-
-begin_typedef
 typedef|typedef
 struct|struct
 block|{
@@ -3164,26 +2071,17 @@ decl_stmt|;
 block|}
 name|VersionMinInfoType
 typedef|;
-end_typedef
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_macro
 name|MCAssembler
 argument_list|(
-argument|const MCAssembler&
+specifier|const
+name|MCAssembler
+operator|&
 argument_list|)
-end_macro
-
-begin_expr_stmt
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|void
 name|operator
 init|=
@@ -3192,116 +2090,35 @@ specifier|const
 name|MCAssembler
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|MCContext
 modifier|&
 name|Context
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|MCAsmBackend
 modifier|&
 name|Backend
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|MCCodeEmitter
 modifier|&
 name|Emitter
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|MCObjectWriter
 modifier|&
 name|Writer
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|raw_ostream
 modifier|&
 name|OS
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|iplist
-operator|<
-name|MCSectionData
-operator|>
+name|SectionListType
 name|Sections
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|iplist
-operator|<
-name|MCSymbolData
-operator|>
+decl_stmt|;
+name|SymbolDataListType
 name|Symbols
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// The map of sections to their associated assembler backend data.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// FIXME: Avoid this indirection?
-end_comment
-
-begin_expr_stmt
-name|DenseMap
-operator|<
-specifier|const
-name|MCSection
-operator|*
-operator|,
-name|MCSectionData
-operator|*
-operator|>
-name|SectionMap
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// The map of symbols to their associated assembler backend data.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// FIXME: Avoid this indirection?
-end_comment
-
-begin_expr_stmt
-name|DenseMap
-operator|<
-specifier|const
-name|MCSymbol
-operator|*
-operator|,
-name|MCSymbolData
-operator|*
-operator|>
-name|SymbolMap
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+decl_stmt|;
 name|std
 operator|::
 name|vector
@@ -3310,9 +2127,6 @@ name|IndirectSymbolData
 operator|>
 name|IndirectSymbols
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -3321,13 +2135,7 @@ name|DataRegionData
 operator|>
 name|DataRegions
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// The list of linker options to propagate into the object file.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -3339,51 +2147,27 @@ operator|<
 name|std
 operator|::
 name|string
-operator|>
-expr|>
+operator|>>
 name|LinkerOptions
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// List of declared file names
-end_comment
-
-begin_decl_stmt
-name|FileNameVectorType
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
 name|FileNames
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+expr_stmt|;
 comment|/// The set of function symbols for which a .thumb_func directive has
-end_comment
-
-begin_comment
 comment|/// been seen.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// FIXME: We really would like this in target specific code rather than
-end_comment
-
-begin_comment
 comment|// here. Maybe when the relocation stuff moves to target specific,
-end_comment
-
-begin_comment
 comment|// this can go with it? The streamer would need some target specific
-end_comment
-
-begin_comment
 comment|// refactoring too.
-end_comment
-
-begin_expr_stmt
 name|mutable
 name|SmallPtrSet
 operator|<
@@ -3395,146 +2179,53 @@ literal|64
 operator|>
 name|ThumbFuncs
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief The bundle alignment size currently set in the assembler.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default it's 0, which means bundling is disabled.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|BundleAlignSize
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|RelaxAll
 range|:
 literal|1
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|SubsectionsViaSymbols
 range|:
 literal|1
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// ELF specific e_header flags
-end_comment
-
-begin_comment
 comment|// It would be good if there were an MCELFAssembler class to hold this.
-end_comment
-
-begin_comment
 comment|// ELF header flags are used both by the integrated and standalone assemblers.
-end_comment
-
-begin_comment
 comment|// Access to the flags is necessary in cases where assembler directives affect
-end_comment
-
-begin_comment
 comment|// which flags to be set.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|ELFHeaderEFlags
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Used to communicate Linker Optimization Hint information between
-end_comment
-
-begin_comment
 comment|/// the Streamer and the .o writer
-end_comment
-
-begin_decl_stmt
 name|MCLOHContainer
 name|LOHContainer
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|VersionMinInfoType
 name|VersionMinInfo
 decl_stmt|;
-end_decl_stmt
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_comment
 comment|/// Evaluate a fixup to a relocatable expression and the value which should be
-end_comment
-
-begin_comment
 comment|/// placed into the fixup.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Layout The layout to use for evaluation.
-end_comment
-
-begin_comment
 comment|/// \param Fixup The fixup to evaluate.
-end_comment
-
-begin_comment
 comment|/// \param DF The fragment the fixup is inside.
-end_comment
-
-begin_comment
 comment|/// \param Target [out] On return, the relocatable expression the fixup
-end_comment
-
-begin_comment
 comment|/// evaluates to.
-end_comment
-
-begin_comment
 comment|/// \param Value [out] On return, the value of the fixup as currently laid
-end_comment
-
-begin_comment
 comment|/// out.
-end_comment
-
-begin_comment
 comment|/// \return Whether the fixup value was fully resolved. This is true if the
-end_comment
-
-begin_comment
 comment|/// \p Value result is fixed, otherwise the value may change due to
-end_comment
-
-begin_comment
 comment|/// relocation.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|evaluateFixup
 argument_list|(
@@ -3563,17 +2254,8 @@ name|Value
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Check whether a fixup can be satisfied, or whether it needs to be relaxed
-end_comment
-
-begin_comment
 comment|/// (increased in size, in order to hold its value correctly).
-end_comment
-
-begin_decl_stmt
 name|bool
 name|fixupNeedsRelaxation
 argument_list|(
@@ -3594,13 +2276,7 @@ name|Layout
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Check whether the given fragment needs relaxation.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|fragmentNeedsRelaxation
 argument_list|(
@@ -3616,17 +2292,8 @@ name|Layout
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Perform one layout iteration and return true if any offsets
-end_comment
-
-begin_comment
 comment|/// were adjusted.
-end_comment
-
-begin_function_decl
 name|bool
 name|layoutOnce
 parameter_list|(
@@ -3635,17 +2302,8 @@ modifier|&
 name|Layout
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Perform one layout iteration of the given section and return true
-end_comment
-
-begin_comment
 comment|/// if any offsets were adjusted.
-end_comment
-
-begin_function_decl
 name|bool
 name|layoutSectionOnce
 parameter_list|(
@@ -3653,14 +2311,11 @@ name|MCAsmLayout
 modifier|&
 name|Layout
 parameter_list|,
-name|MCSectionData
+name|MCSection
 modifier|&
-name|SD
+name|Sec
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|relaxInstruction
 parameter_list|(
@@ -3673,9 +2328,6 @@ modifier|&
 name|IF
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|relaxLEB
 parameter_list|(
@@ -3688,9 +2340,6 @@ modifier|&
 name|IF
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|relaxDwarfLineAddr
 parameter_list|(
@@ -3703,9 +2352,6 @@ modifier|&
 name|DF
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|relaxDwarfCallFrameFragment
 parameter_list|(
@@ -3718,13 +2364,7 @@ modifier|&
 name|DF
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// finishLayout - Finalize a layout, including fragment lowering.
-end_comment
-
-begin_function_decl
 name|void
 name|finishLayout
 parameter_list|(
@@ -3733,9 +2373,6 @@ modifier|&
 name|Layout
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|std
 operator|::
 name|pair
@@ -3761,22 +2398,10 @@ operator|&
 name|Fixup
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_comment
 comment|/// Compute the effective fragment size assuming it is laid out at the given
-end_comment
-
-begin_comment
 comment|/// \p SectionAddress and \p FragmentOffset.
-end_comment
-
-begin_decl_stmt
 name|uint64_t
 name|computeFragmentSize
 argument_list|(
@@ -3792,48 +2417,24 @@ name|F
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Find the symbol which defines the atom containing the given symbol, or
-end_comment
-
-begin_comment
 comment|/// null if there is no such symbol.
-end_comment
-
-begin_decl_stmt
 specifier|const
-name|MCSymbolData
+name|MCSymbol
 modifier|*
 name|getAtom
 argument_list|(
 specifier|const
-name|MCSymbolData
-operator|*
-name|Symbol
+name|MCSymbol
+operator|&
+name|S
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Check whether a particular symbol is visible to the linker and is required
-end_comment
-
-begin_comment
 comment|/// in the symbol table, or whether it can be discarded by the assembler. This
-end_comment
-
-begin_comment
 comment|/// also effects whether the assembler treats the label as potentially
-end_comment
-
-begin_comment
 comment|/// defining a separate atom.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|isSymbolLinkerVisible
 argument_list|(
@@ -3844,18 +2445,12 @@ name|SD
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Emit the section contents using the given object writer.
-end_comment
-
-begin_decl_stmt
 name|void
 name|writeSectionData
 argument_list|(
 specifier|const
-name|MCSectionData
+name|MCSection
 operator|*
 name|Section
 argument_list|,
@@ -3866,13 +2461,7 @@ name|Layout
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Check whether a given symbol has been flagged with .thumb_func.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|isThumbFunc
 argument_list|(
@@ -3883,13 +2472,7 @@ name|Func
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Flag a function symbol as the target of a .thumb_func directive.
-end_comment
-
-begin_function
 name|void
 name|setIsThumbFunc
 parameter_list|(
@@ -3907,13 +2490,7 @@ name|Func
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// ELF e_header flags
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getELFHeaderEFlags
 argument_list|()
@@ -3923,9 +2500,6 @@ return|return
 name|ELFHeaderEFlags
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setELFHeaderEFlags
 parameter_list|(
@@ -3938,13 +2512,7 @@ operator|=
 name|Flags
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// MachO deployment target version information.
-end_comment
-
-begin_expr_stmt
 specifier|const
 name|VersionMinInfoType
 operator|&
@@ -3956,9 +2524,6 @@ return|return
 name|VersionMinInfo
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setVersionMinInfo
 parameter_list|(
@@ -4000,46 +2565,16 @@ operator|=
 name|Update
 expr_stmt|;
 block|}
-end_function
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_comment
 comment|/// Construct a new assembler instance.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param OS The stream to output to.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// FIXME: How are we going to parameterize this? Two obvious options are stay
-end_comment
-
-begin_comment
 comment|// concrete and require clients to pass in a target like object. The other
-end_comment
-
-begin_comment
 comment|// option is to make this abstract, and have targets provide concrete
-end_comment
-
-begin_comment
 comment|// implementations as we do with AsmParser.
-end_comment
-
-begin_expr_stmt
 name|MCAssembler
 argument_list|(
 name|MCContext
@@ -4063,31 +2598,16 @@ operator|&
 name|OS
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|~
 name|MCAssembler
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// Reuse an assembler instance
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_function_decl
 name|void
 name|reset
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|MCContext
 operator|&
 name|getContext
@@ -4098,9 +2618,6 @@ return|return
 name|Context
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|MCAsmBackend
 operator|&
 name|getBackend
@@ -4111,9 +2628,6 @@ return|return
 name|Backend
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|MCCodeEmitter
 operator|&
 name|getEmitter
@@ -4124,9 +2638,6 @@ return|return
 name|Emitter
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|MCObjectWriter
 operator|&
 name|getWriter
@@ -4137,32 +2648,14 @@ return|return
 name|Writer
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Finish - Do final processing and write the object to the output stream.
-end_comment
-
-begin_comment
 comment|/// \p Writer is used for custom object writer (as the MCJIT does),
-end_comment
-
-begin_comment
 comment|/// if not specified it is automatically created from backend.
-end_comment
-
-begin_function_decl
 name|void
 name|Finish
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|// FIXME: This does not belong here.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|getSubsectionsViaSymbols
 argument_list|()
@@ -4172,9 +2665,6 @@ return|return
 name|SubsectionsViaSymbols
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setSubsectionsViaSymbols
 parameter_list|(
@@ -4187,9 +2677,6 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|bool
 name|getRelaxAll
 argument_list|()
@@ -4199,9 +2686,6 @@ return|return
 name|RelaxAll
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setRelaxAll
 parameter_list|(
@@ -4214,9 +2698,6 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|bool
 name|isBundlingEnabled
 argument_list|()
@@ -4228,9 +2709,6 @@ operator|!=
 literal|0
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|unsigned
 name|getBundleAlignSize
 argument_list|()
@@ -4240,9 +2718,6 @@ return|return
 name|BundleAlignSize
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setBundleAlignSize
 parameter_list|(
@@ -4277,43 +2752,8 @@ operator|=
 name|Size
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
-comment|/// @name Section List Access
-end_comment
-
-begin_comment
+comment|/// \name Section List Access
 comment|/// @{
-end_comment
-
-begin_expr_stmt
-specifier|const
-name|SectionDataListType
-operator|&
-name|getSectionList
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Sections
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|SectionDataListType
-modifier|&
-name|getSectionList
-parameter_list|()
-block|{
-return|return
-name|Sections
-return|;
-block|}
-end_function
-
-begin_function
 name|iterator
 name|begin
 parameter_list|()
@@ -4325,9 +2765,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_iterator
 name|begin
 argument_list|()
@@ -4340,9 +2777,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|iterator
 name|end
 parameter_list|()
@@ -4354,9 +2788,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_iterator
 name|end
 argument_list|()
@@ -4369,9 +2800,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|size_t
 name|size
 argument_list|()
@@ -4384,47 +2812,9 @@ name|size
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// @}
-end_comment
-
-begin_comment
-comment|/// @name Symbol List Access
-end_comment
-
-begin_comment
+comment|/// \name Symbol List Access
 comment|/// @{
-end_comment
-
-begin_expr_stmt
-specifier|const
-name|SymbolDataListType
-operator|&
-name|getSymbolList
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Symbols
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|SymbolDataListType
-modifier|&
-name|getSymbolList
-parameter_list|()
-block|{
-return|return
-name|Symbols
-return|;
-block|}
-end_function
-
-begin_function
 name|symbol_iterator
 name|symbol_begin
 parameter_list|()
@@ -4436,9 +2826,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_symbol_iterator
 name|symbol_begin
 argument_list|()
@@ -4451,9 +2838,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|symbol_iterator
 name|symbol_end
 parameter_list|()
@@ -4465,9 +2849,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_symbol_iterator
 name|symbol_end
 argument_list|()
@@ -4480,9 +2861,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|symbol_range
 name|symbols
 parameter_list|()
@@ -4498,9 +2876,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_symbol_range
 name|symbols
 argument_list|()
@@ -4517,9 +2892,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|size_t
 name|symbol_size
 argument_list|()
@@ -4532,33 +2904,12 @@ name|size
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// @}
-end_comment
-
-begin_comment
-comment|/// @name Indirect Symbol List Access
-end_comment
-
-begin_comment
+comment|/// \name Indirect Symbol List Access
 comment|/// @{
-end_comment
-
-begin_comment
 comment|// FIXME: This is a total hack, this should not be here. Once things are
-end_comment
-
-begin_comment
 comment|// factored so that the streamer has direct access to the .o writer, it can
-end_comment
-
-begin_comment
 comment|// disappear.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -4573,9 +2924,6 @@ return|return
 name|IndirectSymbols
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|indirect_symbol_iterator
 name|indirect_symbol_begin
 parameter_list|()
@@ -4587,9 +2935,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_indirect_symbol_iterator
 name|indirect_symbol_begin
 argument_list|()
@@ -4602,9 +2947,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|indirect_symbol_iterator
 name|indirect_symbol_end
 parameter_list|()
@@ -4616,9 +2958,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_indirect_symbol_iterator
 name|indirect_symbol_end
 argument_list|()
@@ -4631,9 +2970,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|size_t
 name|indirect_symbol_size
 argument_list|()
@@ -4646,21 +2982,9 @@ name|size
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// @}
-end_comment
-
-begin_comment
-comment|/// @name Linker Option List Access
-end_comment
-
-begin_comment
+comment|/// \name Linker Option List Access
 comment|/// @{
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -4672,8 +2996,7 @@ operator|<
 name|std
 operator|::
 name|string
-operator|>
-expr|>
+operator|>>
 operator|&
 name|getLinkerOptions
 argument_list|()
@@ -4682,33 +3005,12 @@ return|return
 name|LinkerOptions
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// @}
-end_comment
-
-begin_comment
-comment|/// @name Data Region List Access
-end_comment
-
-begin_comment
+comment|/// \name Data Region List Access
 comment|/// @{
-end_comment
-
-begin_comment
 comment|// FIXME: This is a total hack, this should not be here. Once things are
-end_comment
-
-begin_comment
 comment|// factored so that the streamer has direct access to the .o writer, it can
-end_comment
-
-begin_comment
 comment|// disappear.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -4723,9 +3025,6 @@ return|return
 name|DataRegions
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|data_region_iterator
 name|data_region_begin
 parameter_list|()
@@ -4737,9 +3036,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_data_region_iterator
 name|data_region_begin
 argument_list|()
@@ -4752,9 +3048,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|data_region_iterator
 name|data_region_end
 parameter_list|()
@@ -4766,9 +3059,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_data_region_iterator
 name|data_region_end
 argument_list|()
@@ -4781,9 +3071,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|size_t
 name|data_region_size
 argument_list|()
@@ -4796,33 +3083,12 @@ name|size
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// @}
-end_comment
-
-begin_comment
-comment|/// @name Data Region List Access
-end_comment
-
-begin_comment
+comment|/// \name Data Region List Access
 comment|/// @{
-end_comment
-
-begin_comment
 comment|// FIXME: This is a total hack, this should not be here. Once things are
-end_comment
-
-begin_comment
 comment|// factored so that the streamer has direct access to the .o writer, it can
-end_comment
-
-begin_comment
 comment|// disappear.
-end_comment
-
-begin_function
 name|MCLOHContainer
 modifier|&
 name|getLOHContainer
@@ -4832,9 +3098,6 @@ return|return
 name|LOHContainer
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|const
 name|MCLOHContainer
 operator|&
@@ -4856,224 +3119,48 @@ name|getLOHContainer
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// @}
-end_comment
-
-begin_comment
-comment|/// @name Backend Data Access
-end_comment
-
-begin_comment
+comment|/// \name Backend Data Access
 comment|/// @{
-end_comment
-
-begin_decl_stmt
-name|MCSectionData
-modifier|&
-name|getSectionData
-argument_list|(
-specifier|const
-name|MCSection
-operator|&
-name|Section
-argument_list|)
-decl|const
-block|{
-name|MCSectionData
-modifier|*
-name|Entry
-init|=
-name|SectionMap
-operator|.
-name|lookup
-argument_list|(
-operator|&
-name|Section
-argument_list|)
-decl_stmt|;
-name|assert
-argument_list|(
-name|Entry
-operator|&&
-literal|"Missing section data!"
-argument_list|)
-expr_stmt|;
-return|return
-operator|*
-name|Entry
-return|;
-block|}
-end_decl_stmt
-
-begin_function
-name|MCSectionData
-modifier|&
-name|getOrCreateSectionData
+name|bool
+name|registerSection
 parameter_list|(
-specifier|const
 name|MCSection
 modifier|&
 name|Section
-parameter_list|,
-name|bool
-modifier|*
-name|Created
-init|=
-name|nullptr
 parameter_list|)
 block|{
-name|MCSectionData
-modifier|*
-modifier|&
-name|Entry
-init|=
-name|SectionMap
-index|[
-operator|&
-name|Section
-index|]
-decl_stmt|;
 if|if
 condition|(
-name|Created
-condition|)
-operator|*
-name|Created
-operator|=
-operator|!
-name|Entry
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Entry
-condition|)
-name|Entry
-operator|=
-name|new
-name|MCSectionData
-argument_list|(
 name|Section
-argument_list|,
-name|this
+operator|.
+name|isRegistered
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+name|Sections
+operator|.
+name|push_back
+argument_list|(
+operator|&
+name|Section
+argument_list|)
+expr_stmt|;
+name|Section
+operator|.
+name|setIsRegistered
+argument_list|(
+name|true
 argument_list|)
 expr_stmt|;
 return|return
-operator|*
-name|Entry
+name|true
 return|;
 block|}
-end_function
-
-begin_decl_stmt
-name|bool
-name|hasSymbolData
-argument_list|(
-specifier|const
-name|MCSymbol
-operator|&
-name|Symbol
-argument_list|)
-decl|const
-block|{
-return|return
-name|SymbolMap
-operator|.
-name|lookup
-argument_list|(
-operator|&
-name|Symbol
-argument_list|)
-operator|!=
-name|nullptr
-return|;
-block|}
-end_decl_stmt
-
-begin_function
-name|MCSymbolData
-modifier|&
-name|getSymbolData
-parameter_list|(
-specifier|const
-name|MCSymbol
-modifier|&
-name|Symbol
-parameter_list|)
-block|{
-return|return
-name|const_cast
-operator|<
-name|MCSymbolData
-operator|&
-operator|>
-operator|(
-name|static_cast
-operator|<
-specifier|const
-name|MCAssembler
-operator|&
-operator|>
-operator|(
-operator|*
-name|this
-operator|)
-operator|.
-name|getSymbolData
-argument_list|(
-name|Symbol
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_decl_stmt
-specifier|const
-name|MCSymbolData
-modifier|&
-name|getSymbolData
-argument_list|(
-specifier|const
-name|MCSymbol
-operator|&
-name|Symbol
-argument_list|)
-decl|const
-block|{
-name|MCSymbolData
-modifier|*
-name|Entry
-init|=
-name|SymbolMap
-operator|.
-name|lookup
-argument_list|(
-operator|&
-name|Symbol
-argument_list|)
-decl_stmt|;
-name|assert
-argument_list|(
-name|Entry
-operator|&&
-literal|"Missing symbol data!"
-argument_list|)
-expr_stmt|;
-return|return
-operator|*
-name|Entry
-return|;
-block|}
-end_decl_stmt
-
-begin_function
-name|MCSymbolData
-modifier|&
-name|getOrCreateSymbolData
+name|void
+name|registerSymbol
 parameter_list|(
 specifier|const
 name|MCSymbol
@@ -5086,85 +3173,20 @@ name|Created
 init|=
 name|nullptr
 parameter_list|)
-block|{
-name|MCSymbolData
-modifier|*
-modifier|&
-name|Entry
-init|=
-name|SymbolMap
-index|[
-operator|&
-name|Symbol
-index|]
-decl_stmt|;
-if|if
-condition|(
-name|Created
-condition|)
-operator|*
-name|Created
-operator|=
-operator|!
-name|Entry
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Entry
-condition|)
-name|Entry
-operator|=
-name|new
-name|MCSymbolData
-argument_list|(
-name|Symbol
-argument_list|,
-name|nullptr
-argument_list|,
-literal|0
-argument_list|,
-name|this
-argument_list|)
-expr_stmt|;
-return|return
-operator|*
-name|Entry
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-name|const_file_name_iterator
-name|file_names_begin
+function_decl|;
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|getFileNames
 argument_list|()
-specifier|const
 block|{
 return|return
 name|FileNames
-operator|.
-name|begin
-argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|const_file_name_iterator
-name|file_names_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|FileNames
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|addFileName
 parameter_list|(
@@ -5178,16 +3200,22 @@ name|std
 operator|::
 name|find
 argument_list|(
-name|file_names_begin
+name|FileNames
+operator|.
+name|begin
 argument_list|()
 argument_list|,
-name|file_names_end
+name|FileNames
+operator|.
+name|end
 argument_list|()
 argument_list|,
 name|FileName
 argument_list|)
 operator|==
-name|file_names_end
+name|FileNames
+operator|.
+name|end
 argument_list|()
 condition|)
 name|FileNames
@@ -5198,21 +3226,74 @@ name|FileName
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
+comment|/// \brief Write the necessary bundle padding to the given object writer.
+comment|/// Expects a fragment \p F containing instructions and its size \p FSize.
+name|void
+name|writeFragmentPadding
+argument_list|(
+specifier|const
+name|MCFragment
+operator|&
+name|F
+argument_list|,
+name|uint64_t
+name|FSize
+argument_list|,
+name|MCObjectWriter
+operator|*
+name|OW
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
-end_comment
-
-begin_function_decl
 name|void
 name|dump
 parameter_list|()
 function_decl|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// \brief Compute the amount of padding required before the fragment \p F to
+end_comment
+
+begin_comment
+comment|/// obey bundling restrictions, where \p FOffset is the fragment's offset in
+end_comment
+
+begin_comment
+comment|/// its section and \p FSize is the fragment's size.
+end_comment
+
+begin_function_decl
+name|uint64_t
+name|computeBundlePadding
+parameter_list|(
+specifier|const
+name|MCAssembler
+modifier|&
+name|Assembler
+parameter_list|,
+specifier|const
+name|MCFragment
+modifier|*
+name|F
+parameter_list|,
+name|uint64_t
+name|FOffset
+parameter_list|,
+name|uint64_t
+name|FSize
+parameter_list|)
+function_decl|;
 end_function_decl
 
 begin_comment
-unit|};  }
+unit|}
 comment|// end namespace llvm
 end_comment
 

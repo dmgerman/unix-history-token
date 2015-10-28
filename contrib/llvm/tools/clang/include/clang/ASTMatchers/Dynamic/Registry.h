@@ -361,7 +361,8 @@ name|private
 label|:
 name|Registry
 argument_list|()
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 block|}
 empty_stmt|;

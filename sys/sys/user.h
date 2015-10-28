@@ -2221,6 +2221,28 @@ name|KERN_PROC_MASK32
 value|0x2
 end_define
 
+begin_comment
+comment|/* Flags for kern_proc_filedesc_out. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_FILEDESC_PACK_KINFO
+value|0x00000001U
+end_define
+
+begin_comment
+comment|/* Flags for kern_proc_vmmap_out. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_VMMAP_PACK_KINFO
+value|0x00000001U
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|sbuf
@@ -2247,6 +2269,9 @@ name|sb
 parameter_list|,
 name|ssize_t
 name|maxlen
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2304,6 +2329,12 @@ name|struct
 name|sbuf
 modifier|*
 name|sb
+parameter_list|,
+name|ssize_t
+name|maxlen
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

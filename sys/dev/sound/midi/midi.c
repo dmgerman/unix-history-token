@@ -280,7 +280,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * The MPU interface current has init() uninit() inqsize(( outqsize()  * callback() : fiddle with the tx|rx status.  */
+comment|/*  * The MPU interface current has init() uninit() inqsize() outqsize()  * callback() : fiddle with the tx|rx status.  */
 end_comment
 
 begin_include
@@ -569,7 +569,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Module Exports& Interface  *  * struct midi_chan *midi_init(MPU_CLASS cls, int unit, int chan) int  * midi_uninit(struct snd_midi *) 0 == no error EBUSY or other error int  * Midi_in(struct midi_chan *, char *buf, int count) int Midi_out(struct  * midi_chan *, char *buf, int count)  *  * midi_{in,out} return actual size transfered  *  */
+comment|/*  * Module Exports& Interface  *  * struct midi_chan *midi_init(MPU_CLASS cls, int unit, int chan,  *     void *cookie)  * int midi_uninit(struct snd_midi *)  *  * 0 == no error  * EBUSY or other error  *  * int midi_in(struct snd_midi *, char *buf, int count)  * int midi_out(struct snd_midi *, char *buf, int count)  *  * midi_{in,out} return actual size transfered  *  */
 end_comment
 
 begin_comment
@@ -1229,6 +1229,17 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|synth
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err1
+goto|;
 name|kobj_init
 argument_list|(
 operator|(
@@ -1301,7 +1312,7 @@ operator|!
 name|outqsize
 condition|)
 goto|goto
-name|err1
+name|err2
 goto|;
 name|mtx_init
 argument_list|(
@@ -1454,7 +1465,7 @@ argument_list|)
 operator|)
 condition|)
 goto|goto
-name|err2
+name|err3
 goto|;
 name|m
 operator|->
@@ -1496,7 +1507,7 @@ name|cookie
 argument_list|)
 condition|)
 goto|goto
-name|err2
+name|err3
 goto|;
 name|mtx_unlock
 argument_list|(
@@ -1572,7 +1583,7 @@ expr_stmt|;
 return|return
 name|m
 return|;
-name|err2
+name|err3
 label|:
 name|mtx_destroy
 argument_list|(
@@ -1632,6 +1643,17 @@ argument_list|,
 name|M_MIDI
 argument_list|)
 expr_stmt|;
+name|err2
+label|:
+name|free
+argument_list|(
+name|m
+operator|->
+name|synth
+argument_list|,
+name|M_MIDI
+argument_list|)
+expr_stmt|;
 name|err1
 label|:
 name|free
@@ -1666,7 +1688,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * midi_uninit does not call MIDI_UNINIT, as since this is the implementors  * entry point. midi_unint if fact, does not send any methods. A call to  * midi_uninit is a defacto promise that you won't manipulate ch anymore  *  */
+comment|/*  * midi_uninit does not call MIDI_UNINIT, as since this is the implementors  * entry point. midi_uninit if fact, does not send any methods. A call to  * midi_uninit is a defacto promise that you won't manipulate ch anymore  *  */
 end_comment
 
 begin_function
@@ -1684,7 +1706,7 @@ name|err
 decl_stmt|;
 name|err
 operator|=
-name|ENXIO
+name|EBUSY
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -6137,6 +6159,15 @@ operator|&
 name|m
 operator|->
 name|lock
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|m
+operator|->
+name|synth
+argument_list|,
+name|M_MIDI
 argument_list|)
 expr_stmt|;
 name|free

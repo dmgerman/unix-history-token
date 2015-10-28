@@ -112,6 +112,7 @@ block|{
 comment|/// This class works in conjunction with the post-RA scheduler to rename
 comment|/// registers to break register anti-dependencies (WAR hazards).
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|AntiDepBreaker
 block|{
 name|public

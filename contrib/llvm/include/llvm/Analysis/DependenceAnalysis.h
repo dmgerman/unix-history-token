@@ -172,6 +172,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Instructions.h"
 end_include
 
@@ -717,11 +723,12 @@ block|;
 operator|~
 name|FullDependence
 argument_list|()
+name|override
 block|{
 name|delete
 index|[]
 name|DV
-block|;     }
+block|; }
 comment|/// isLoopIndependent - Returns true if this is a loop-independent
 comment|/// dependence.
 name|bool
@@ -872,13 +879,17 @@ specifier|const
 name|DependenceAnalysis
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|DependenceAnalysis
 argument_list|(
-argument|const DependenceAnalysis&
+specifier|const
+name|DependenceAnalysis
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -1439,16 +1450,19 @@ argument|const Loop *LoopNest
 argument_list|)
 specifier|const
 block|;
-comment|/// Makes sure both subscripts (i.e. Pair->Src and Pair->Dst) share the same
-comment|/// integer type by sign-extending one of them when necessary.
+comment|/// Makes sure all subscript pairs share the same integer type by
+comment|/// sign-extending as necessary.
 comment|/// Sign-extending a subscript is safe because getelementptr assumes the
 comment|/// array subscripts are signed.
 name|void
 name|unifySubscriptType
 argument_list|(
+name|ArrayRef
+operator|<
 name|Subscript
 operator|*
-name|Pair
+operator|>
+name|Pairs
 argument_list|)
 block|;
 comment|/// removeMatchingExtensions - Examines a subscript pair.

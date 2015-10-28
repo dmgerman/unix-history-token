@@ -378,12 +378,12 @@ name|v6T2
 init|=
 literal|8
 block|,
-comment|// e.g. ARM1156T2F_S
+comment|// e.g. ARM1156T2_S
 name|v6K
 init|=
 literal|9
 block|,
-comment|// e.g. ARM1136J_S
+comment|// e.g. ARM1176JZ_S
 name|v7
 init|=
 literal|10
@@ -407,7 +407,8 @@ comment|// v7_M with DSP extensions
 name|v8
 init|=
 literal|14
-comment|// v8, AArch32
+block|,
+comment|// v8,v8.1a AArch32
 block|}
 enum|;
 enum|enum
@@ -530,6 +531,11 @@ init|=
 literal|3
 block|,
 comment|// ARM v8-A SIMD was permitted
+name|AllowNeonARMv8_1a
+init|=
+literal|4
+block|,
+comment|// ARM v8.1-A SIMD was permitted (RDMA)
 comment|// Tag_ABI_PCS_R9_use, (=14), uleb128
 name|R9IsGPR
 init|=

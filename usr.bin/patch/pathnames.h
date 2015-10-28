@@ -12,8 +12,8 @@ end_include
 begin_define
 define|#
 directive|define
-name|_PATH_ED
-value|"/bin/ed"
+name|_PATH_RED
+value|"/bin/red"
 end_define
 
 end_unit

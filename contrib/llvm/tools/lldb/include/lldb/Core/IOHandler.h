@@ -203,26 +203,6 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|// Hide any characters that have been displayed so far so async
-comment|// output can be displayed. Refresh() will be called after the
-comment|// output has been displayed.
-name|virtual
-name|void
-name|Hide
-parameter_list|()
-init|=
-literal|0
-function_decl|;
-comment|// Called when the async output has been received in order to update
-comment|// the input reader (refresh the prompt and redisplay any current
-comment|// line(s) that are being edited
-name|virtual
-name|void
-name|Refresh
-parameter_list|()
-init|=
-literal|0
-function_decl|;
 comment|// Called when an input reader should relinquish its control so another
 comment|// can be pushed onto the IO handler stack, or so the current IO
 comment|// handler can pop itself off the stack
@@ -507,6 +487,38 @@ name|void
 name|WaitForPop
 parameter_list|()
 function_decl|;
+name|virtual
+name|void
+name|PrintAsync
+parameter_list|(
+name|Stream
+modifier|*
+name|stream
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+block|{
+name|stream
+operator|->
+name|Write
+argument_list|(
+name|s
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|stream
+operator|->
+name|Flush
+argument_list|()
+expr_stmt|;
+block|}
 name|protected
 label|:
 name|Debugger
@@ -648,7 +660,7 @@ name|NULL
 return|;
 block|}
 comment|//------------------------------------------------------------------
-comment|/// Called when a new line is created or one of an identifed set of
+comment|/// Called when a new line is created or one of an identified set of
 comment|/// indentation characters is typed.
 comment|///
 comment|/// This function determines how much indentation should be added
@@ -662,7 +674,7 @@ comment|///     The current input up to the line to be corrected.  Lines
 comment|///     following the line containing the cursor are not included.
 comment|///
 comment|/// @param[in] cursor_position
-comment|///     The number of characters preceeding the cursor on the final
+comment|///     The number of characters preceding the cursor on the final
 comment|///     line at the time.
 comment|///
 comment|/// @return
@@ -873,12 +885,12 @@ operator|~
 name|IOHandlerDelegateMultiline
 argument_list|()
 block|{         }
-name|virtual
 name|ConstString
 name|IOHandlerGetControlSequence
 argument_list|(
 argument|char ch
 argument_list|)
+name|override
 block|{
 if|if
 condition|(
@@ -899,7 +911,6 @@ name|ConstString
 argument_list|()
 return|;
 block|}
-name|virtual
 name|bool
 name|IOHandlerIsInputComplete
 parameter_list|(
@@ -911,6 +922,7 @@ name|StringList
 modifier|&
 name|lines
 parameter_list|)
+function|override
 block|{
 comment|// Determine whether the end of input signal has been entered
 specifier|const
@@ -1037,52 +1049,42 @@ operator|~
 name|IOHandlerEditline
 argument_list|()
 block|;
-name|virtual
 name|void
 name|Run
 argument_list|()
+name|override
 block|;
-name|virtual
-name|void
-name|Hide
-argument_list|()
-block|;
-name|virtual
-name|void
-name|Refresh
-argument_list|()
-block|;
-name|virtual
 name|void
 name|Cancel
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|Interrupt
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|GotEOF
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|Activate
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|Deactivate
 argument_list|()
+name|override
 block|;
-name|virtual
 name|ConstString
 name|GetControlSequence
 argument_list|(
 argument|char ch
 argument_list|)
+name|override
 block|{
 return|return
 name|m_delegate
@@ -1093,12 +1095,12 @@ name|ch
 argument_list|)
 return|;
 block|}
-name|virtual
 specifier|const
 name|char
 operator|*
 name|GetCommandPrefix
 argument_list|()
+name|override
 block|{
 return|return
 name|m_delegate
@@ -1107,12 +1109,12 @@ name|IOHandlerGetCommandPrefix
 argument_list|()
 return|;
 block|}
-name|virtual
 specifier|const
 name|char
 operator|*
 name|GetHelpPrologue
 argument_list|()
+name|override
 block|{
 return|return
 name|m_delegate
@@ -1121,22 +1123,19 @@ name|IOHandlerGetHelpPrologue
 argument_list|()
 return|;
 block|}
-name|virtual
 specifier|const
 name|char
 operator|*
 name|GetPrompt
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|SetPrompt
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|prompt
+argument|const char *prompt
 argument_list|)
+name|override
 block|;
 specifier|const
 name|char
@@ -1218,6 +1217,17 @@ name|uint32_t
 name|GetCurrentLineIndex
 argument_list|()
 specifier|const
+block|;
+name|void
+name|PrintAsync
+argument_list|(
+argument|Stream *stream
+argument_list|,
+argument|const char *s
+argument_list|,
+argument|size_t len
+argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -1323,7 +1333,12 @@ name|m_color_prompts
 block|;
 name|bool
 name|m_interrupt_exits
-block|;     }
+block|;
+name|bool
+name|m_editing
+block|;
+comment|// Set to true when fetching a line manually (not using libedit)
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1370,41 +1385,40 @@ return|return
 name|m_user_response
 return|;
 block|}
-name|virtual
 name|int
 name|IOHandlerComplete
-parameter_list|(
+argument_list|(
 name|IOHandler
-modifier|&
+operator|&
 name|io_handler
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|current_line
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|cursor
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|last_char
-parameter_list|,
+argument_list|,
 name|int
 name|skip_first_n_matches
-parameter_list|,
+argument_list|,
 name|int
 name|max_matches
-parameter_list|,
+argument_list|,
 name|StringList
-modifier|&
+operator|&
 name|matches
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|void
 name|IOHandlerInputComplete
 argument_list|(
@@ -1418,6 +1432,7 @@ name|string
 operator|&
 name|data
 argument_list|)
+name|override
 decl_stmt|;
 name|protected
 label|:
@@ -1451,50 +1466,40 @@ operator|&
 name|debugger
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|IOHandlerCursesGUI
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|Run
 argument_list|()
+name|override
 block|;
-name|virtual
-name|void
-name|Hide
-argument_list|()
-block|;
-name|virtual
-name|void
-name|Refresh
-argument_list|()
-block|;
-name|virtual
 name|void
 name|Cancel
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|Interrupt
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|GotEOF
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|Activate
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|Deactivate
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
@@ -1531,30 +1536,15 @@ operator|~
 name|IOHandlerCursesValueObjectList
 argument_list|()
 block|;
-name|virtual
 name|void
 name|Run
 argument_list|()
+name|override
 block|;
-name|virtual
-name|void
-name|Hide
-argument_list|()
-block|;
-name|virtual
-name|void
-name|Refresh
-argument_list|()
-block|;
-name|virtual
-name|bool
-name|HandleInterrupt
-argument_list|()
-block|;
-name|virtual
 name|void
 name|GotEOF
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
@@ -1953,6 +1943,22 @@ return|return
 name|NULL
 return|;
 block|}
+name|void
+name|PrintAsync
+parameter_list|(
+name|Stream
+modifier|*
+name|stream
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
 name|protected
 label|:
 typedef|typedef

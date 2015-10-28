@@ -1528,6 +1528,26 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|__MVS__
+comment|/* z/OS will not return IPv4 address under AF_UNSPEC if any IPv6 results       * are returned, w/o AI_ALL.       */
+if|if
+condition|(
+name|family
+operator|==
+name|APR_UNSPEC
+condition|)
+block|{
+name|hints
+operator|.
+name|ai_flags
+operator||=
+name|AI_ALL
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|hostname

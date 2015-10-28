@@ -298,6 +298,15 @@ name|Members
 argument_list|)
 decl|const
 decl_stmt|;
+name|virtual
+name|bool
+name|shouldSignExtUnsignedType
+argument_list|(
+name|QualType
+name|Ty
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|isHomogeneousAggregate
 argument_list|(

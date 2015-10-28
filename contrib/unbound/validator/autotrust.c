@@ -112,31 +112,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/sbuffer.h"
+file|"sldns/sbuffer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/wire2str.h"
+file|"sldns/wire2str.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/str2wire.h"
+file|"sldns/str2wire.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/keyraw.h"
+file|"sldns/keyraw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/rrdef.h"
+file|"sldns/rrdef.h"
 end_include
 
 begin_include
@@ -6481,7 +6481,7 @@ operator|!
 name|out
 condition|)
 block|{
-name|log_err
+name|fatal_exit
 argument_list|(
 literal|"could not open autotrust file for writing, %s: %s"
 argument_list|,
@@ -6519,7 +6519,7 @@ argument_list|(
 name|tempf
 argument_list|)
 expr_stmt|;
-name|log_err
+name|fatal_exit
 argument_list|(
 literal|"could not completely write: %s"
 argument_list|,
@@ -6538,7 +6538,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log_err
+name|fatal_exit
 argument_list|(
 literal|"could not complete write: %s: %s"
 argument_list|,
@@ -6593,7 +6593,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log_err
+name|fatal_exit
 argument_list|(
 literal|"rename(%s to %s): %s"
 argument_list|,
@@ -6658,7 +6658,11 @@ decl_stmt|;
 name|int
 name|downprot
 init|=
-literal|1
+name|env
+operator|->
+name|cfg
+operator|->
+name|harden_algo_downgrade
 decl_stmt|;
 name|enum
 name|sec_status
@@ -7920,6 +7924,12 @@ expr_stmt|;
 comment|/* MAX(1hr, x) */
 if|if
 condition|(
+operator|!
+name|autr_permit_small_holddown
+condition|)
+block|{
+if|if
+condition|(
 name|x
 operator|<
 literal|3600
@@ -7932,6 +7942,16 @@ name|query_interval
 operator|=
 literal|3600
 expr_stmt|;
+else|else
+name|tp
+operator|->
+name|autr
+operator|->
+name|query_interval
+operator|=
+name|x
+expr_stmt|;
+block|}
 else|else
 name|tp
 operator|->
@@ -7979,6 +7999,12 @@ expr_stmt|;
 comment|/* MAX(1hr, x) */
 if|if
 condition|(
+operator|!
+name|autr_permit_small_holddown
+condition|)
+block|{
+if|if
+condition|(
 name|x
 operator|<
 literal|3600
@@ -7991,6 +8017,16 @@ name|retry_time
 operator|=
 literal|3600
 expr_stmt|;
+else|else
+name|tp
+operator|->
+name|autr
+operator|->
+name|retry_time
+operator|=
+name|x
+expr_stmt|;
+block|}
 else|else
 name|tp
 operator|->
@@ -10742,6 +10778,12 @@ name|rest
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|autr_permit_small_holddown
+condition|)
+block|{
+if|if
+condition|(
 name|wait
 operator|<
 literal|3600
@@ -10750,6 +10792,20 @@ name|wait
 operator|=
 literal|3600
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|wait
+operator|==
+literal|0
+condition|)
+name|wait
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|rnd
 operator|=
 name|wait
@@ -13022,6 +13078,12 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+comment|/* signal that there are no anchors to probe */
+operator|*
+name|next
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -13201,6 +13263,14 @@ name|num
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|autr_permit_small_holddown
+condition|)
+name|next_probe
+operator|=
+literal|1
+expr_stmt|;
 name|verbose
 argument_list|(
 name|VERB_ALGO
@@ -13245,7 +13315,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|num
+name|next_probe
 operator|==
 literal|0
 condition|)

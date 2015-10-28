@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -64,6 +64,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ifaddrs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -76,12 +94,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
@@ -89,18 +101,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ifaddrs.h>
 end_include
 
 begin_include
@@ -3389,13 +3389,6 @@ name|int
 name|v
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 specifier|static
 specifier|const
 name|char
@@ -3547,7 +3540,7 @@ if|if
 condition|(
 name|v
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|reasons
 argument_list|)
@@ -3587,9 +3580,6 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -3608,13 +3598,6 @@ name|int
 name|v
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 specifier|static
 specifier|const
 name|char
@@ -3784,7 +3767,7 @@ if|if
 condition|(
 name|v
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|status
 argument_list|)
@@ -3824,9 +3807,6 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -6572,13 +6552,6 @@ modifier|*
 name|fmtstring
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
 name|struct
 name|wlanstatfoo_p
 modifier|*
@@ -6617,7 +6590,7 @@ literal|"wlanstats"
 argument_list|,
 name|wlanstats
 argument_list|,
-name|N
+name|nitems
 argument_list|(
 name|wlanstats
 argument_list|)
@@ -6781,9 +6754,6 @@ name|wf
 operator|->
 name|base
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

@@ -229,7 +229,9 @@ block|}
 name|void
 name|SetArchitecture
 parameter_list|(
+specifier|const
 name|ArchSpec
+modifier|&
 name|arch
 parameter_list|)
 block|{

@@ -182,6 +182,15 @@ literal|1u
 operator|<<
 literal|7
 operator|)
+block|,
+name|eOpenOptionCloseOnExec
+operator|=
+operator|(
+literal|1u
+operator|<<
+literal|8
+operator|)
+comment|// Close the file when executing a new process
 block|}
 block|;
 specifier|static
@@ -858,9 +867,9 @@ name|uint32_t
 name|GetPermissions
 argument_list|(
 specifier|const
-name|char
-operator|*
-name|path
+name|FileSpec
+operator|&
+name|file_spec
 argument_list|,
 name|Error
 operator|&

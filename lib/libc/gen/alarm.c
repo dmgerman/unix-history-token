@@ -72,12 +72,10 @@ name|unsigned
 name|int
 name|alarm
 parameter_list|(
-name|secs
-parameter_list|)
 name|unsigned
 name|int
 name|secs
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|itimerval

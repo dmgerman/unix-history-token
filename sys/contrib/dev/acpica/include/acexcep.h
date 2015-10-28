@@ -820,8 +820,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_AML_UNINITIALIZED_NODE
+value|EXCEP_AML (0x0022)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_AML_MAX
-value|0x0021
+value|0x0022
 end_define
 
 begin_comment
@@ -1539,6 +1546,13 @@ argument_list|(
 literal|"AE_AML_INFINITE_LOOP"
 argument_list|,
 literal|"An apparent infinite AML While loop, method was aborted"
+argument_list|)
+block|,
+name|EXCEP_TXT
+argument_list|(
+literal|"AE_AML_UNINITIALIZED_NODE"
+argument_list|,
+literal|"A namespace node is uninitialized or unresolved"
 argument_list|)
 block|}
 decl_stmt|;

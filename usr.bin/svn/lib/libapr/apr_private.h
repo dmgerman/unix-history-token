@@ -2733,9 +2733,12 @@ begin_comment
 comment|/* Define if mmap() via POSIX.1 shm_open() on temporary file will be used */
 end_comment
 
-begin_comment
-comment|/* #undef USE_SHMEM_MMAP_SHM */
-end_comment
+begin_define
+define|#
+directive|define
+name|USE_SHMEM_MMAP_SHM
+value|1
+end_define
 
 begin_comment
 comment|/* Define if Classical mmap() on temporary file will be used */
@@ -2773,12 +2776,9 @@ begin_comment
 comment|/* Define if SysV IPC shmget() will be used */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|USE_SHMEM_SHMGET
-value|1
-end_define
+begin_comment
+comment|/* #undef USE_SHMEM_SHMGET */
+end_comment
 
 begin_comment
 comment|/* Define if SysV IPC shmget() will be used */

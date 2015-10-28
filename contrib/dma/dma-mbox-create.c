@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2010 Simon Schubert<2@0x2c.org>  * Copyright (c) 2008 The DragonFly Project.  All rights reserved.  *  * This code is derived from software contributed to The DragonFly Project  * by Simon 'corecode' Schubert<corecode@fs.ei.tum.de>.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  * 3. Neither the name of The DragonFly Project nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific, prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE  * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2010-2014, Simon Schubert<2@0x2c.org>.  * Copyright (c) 2008 The DragonFly Project.  All rights reserved.  *  * This code is derived from software contributed to The DragonFly Project  * by Simon Schubert<2@0x2c.org>.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  * 3. Neither the name of The DragonFly Project nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific, prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE  * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -78,6 +78,9 @@ specifier|static
 name|void
 name|logfail
 parameter_list|(
+name|int
+name|exitcode
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -179,7 +182,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|exitcode
 argument_list|)
 expr_stmt|;
 block|}
@@ -264,6 +267,8 @@ name|gr
 condition|)
 name|logfail
 argument_list|(
+name|EX_CONFIG
+argument_list|,
 literal|"cannot find dma group `%s'"
 argument_list|,
 name|DMA_GROUP
@@ -286,6 +291,8 @@ literal|0
 condition|)
 name|logfail
 argument_list|(
+name|EX_NOPERM
+argument_list|,
 literal|"cannot set gid to %d (%s)"
 argument_list|,
 name|mail_gid
@@ -302,6 +309,8 @@ name|mail_gid
 condition|)
 name|logfail
 argument_list|(
+name|EX_NOPERM
+argument_list|,
 literal|"cannot set gid to %d (%s), still at %d"
 argument_list|,
 name|mail_gid
@@ -326,6 +335,8 @@ literal|0
 expr_stmt|;
 name|logfail
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"no arguments"
 argument_list|)
 expr_stmt|;
@@ -363,6 +374,8 @@ literal|0
 expr_stmt|;
 name|logfail
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"path separator in username `%s'"
 argument_list|,
 name|user
@@ -393,6 +406,8 @@ name|pw
 condition|)
 name|logfail
 argument_list|(
+name|EX_NOUSER
+argument_list|,
 literal|"cannot find user `%s'"
 argument_list|,
 name|user
@@ -452,12 +467,16 @@ literal|0
 expr_stmt|;
 name|logfail
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"mbox path too long"
 argument_list|)
 expr_stmt|;
 block|}
 name|logfail
 argument_list|(
+name|EX_CANTCREAT
+argument_list|,
 literal|"cannot build mbox path for `%s/%s'"
 argument_list|,
 name|_PATH_MAILDIR
@@ -487,7 +506,9 @@ literal|0
 condition|)
 name|logfail
 argument_list|(
-literal|"cannot open mbox `%s'"
+name|EX_NOINPUT
+argument_list|,
+literal|"cannt open mbox `%s'"
 argument_list|,
 name|fn
 argument_list|)
@@ -505,6 +526,8 @@ argument_list|)
 condition|)
 name|logfail
 argument_list|(
+name|EX_OSERR
+argument_list|,
 literal|"cannot change owner of mbox `%s'"
 argument_list|,
 name|fn
@@ -521,6 +544,8 @@ argument_list|)
 condition|)
 name|logfail
 argument_list|(
+name|EX_OSERR
+argument_list|,
 literal|"cannot change permissions of mbox `%s'"
 argument_list|,
 name|fn

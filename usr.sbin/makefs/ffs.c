@@ -2047,6 +2047,30 @@ operator|->
 name|bsize
 argument_list|)
 expr_stmt|;
+comment|/* round up to requested block size, if any */
+if|if
+condition|(
+name|fsopts
+operator|->
+name|roundup
+operator|>
+literal|0
+condition|)
+name|fsopts
+operator|->
+name|size
+operator|=
+name|roundup
+argument_list|(
+name|fsopts
+operator|->
+name|size
+argument_list|,
+name|fsopts
+operator|->
+name|roundup
+argument_list|)
+expr_stmt|;
 comment|/* calculate density if necessary */
 if|if
 condition|(

@@ -101,6 +101,31 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
+comment|/* Like svn_cl__get_human_readable_tree_conflict_description but    for other conflict types */
+name|svn_error_t
+modifier|*
+name|svn_cl__get_human_readable_action_description
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|desc
+parameter_list|,
+name|svn_wc_conflict_action_t
+name|action
+parameter_list|,
+name|svn_wc_operation_t
+name|operation
+parameter_list|,
+name|svn_node_kind_t
+name|kind
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
 comment|/**  * Append to @a str an XML representation of the conflict data  * for @a conflict, in a format suitable for 'svn info --xml'.  */
 name|svn_error_t
 modifier|*

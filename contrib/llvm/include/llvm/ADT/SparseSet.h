@@ -373,9 +373,12 @@ comment|// Disable copy construction and assignment.
 comment|// This data structure is not meant to be used that way.
 name|SparseSet
 argument_list|(
-argument|const SparseSet&
+specifier|const
+name|SparseSet
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|SparseSet
 operator|&
@@ -386,7 +389,8 @@ specifier|const
 name|SparseSet
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:

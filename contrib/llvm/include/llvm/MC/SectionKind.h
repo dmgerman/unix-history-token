@@ -108,8 +108,6 @@ block|,
 comment|/// MergeableConst - These are sections for merging fixed-length
 comment|/// constants together.  For example, this can be used to unique
 comment|/// constant pool entries etc.
-name|MergeableConst
-block|,
 comment|/// MergeableConst4 - This is a section used by 4-byte constants,
 comment|/// for example, floats.
 name|MergeableConst4
@@ -284,10 +282,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|K
-operator|==
-name|MergeableConst
-operator|||
 name|K
 operator|==
 name|MergeableConst4
@@ -620,18 +614,6 @@ return|return
 name|get
 argument_list|(
 name|Mergeable4ByteCString
-argument_list|)
-return|;
-block|}
-specifier|static
-name|SectionKind
-name|getMergeableConst
-parameter_list|()
-block|{
-return|return
-name|get
-argument_list|(
-name|MergeableConst
 argument_list|)
 return|;
 block|}

@@ -810,7 +810,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Reading ACPI table from file %10s - Length %.8u (0x%06X)\n"
+literal|"Reading ACPI table from file %12s - Length %.8u (0x%06X)\n"
 argument_list|,
 name|Filename
 argument_list|,

@@ -321,6 +321,14 @@ comment|/// false if there is an invocation of an initializer on 'self'.
 name|bool
 name|ObjCWarnForNoInitDelegation
 decl_stmt|;
+comment|/// First C++ 'try' statement in the current function.
+name|SourceLocation
+name|FirstCXXTryLoc
+decl_stmt|;
+comment|/// First SEH '__try' statement in the current function.
+name|SourceLocation
+name|FirstSEHTryLoc
+decl_stmt|;
 comment|/// \brief Used to determine if errors occurred in this function or block.
 name|DiagnosticErrorTrap
 name|ErrorTrap
@@ -908,6 +916,36 @@ block|{
 name|HasDroppedStmt
 operator|=
 name|true
+expr_stmt|;
+block|}
+name|void
+name|setHasCXXTry
+parameter_list|(
+name|SourceLocation
+name|TryLoc
+parameter_list|)
+block|{
+name|setHasBranchProtectedScope
+argument_list|()
+expr_stmt|;
+name|FirstCXXTryLoc
+operator|=
+name|TryLoc
+expr_stmt|;
+block|}
+name|void
+name|setHasSEHTry
+parameter_list|(
+name|SourceLocation
+name|TryLoc
+parameter_list|)
+block|{
+name|setHasBranchProtectedScope
+argument_list|()
+expr_stmt|;
+name|FirstSEHTryLoc
+operator|=
+name|TryLoc
 expr_stmt|;
 block|}
 name|bool
@@ -1793,10 +1831,10 @@ name|Kind
 operator|=
 name|SK_Block
 block|;   }
-name|virtual
 operator|~
 name|BlockScopeInfo
 argument_list|()
+name|override
 block|;
 specifier|static
 name|bool
@@ -1899,10 +1937,10 @@ name|Kind
 operator|=
 name|SK_CapturedRegion
 block|;   }
-name|virtual
 operator|~
 name|CapturedRegionScopeInfo
 argument_list|()
+name|override
 block|;
 comment|/// \brief A descriptive name for the kind of captured region this is.
 name|StringRef
@@ -1998,26 +2036,6 @@ block|;
 comment|/// \brief Whether the lambda contains an unexpanded parameter pack.
 name|bool
 name|ContainsUnexpandedParameterPack
-block|;
-comment|/// \brief Variables used to index into by-copy array captures.
-name|SmallVector
-operator|<
-name|VarDecl
-operator|*
-block|,
-literal|4
-operator|>
-name|ArrayIndexVars
-block|;
-comment|/// \brief Offsets into the ArrayIndexVars array at which each capture starts
-comment|/// its list of array index variables.
-name|SmallVector
-operator|<
-name|unsigned
-block|,
-literal|4
-operator|>
-name|ArrayIndexStarts
 block|;
 comment|/// \brief If this is a generic lambda, use this as the depth of
 comment|/// each 'auto' parameter, during initial AST construction.
@@ -2121,6 +2139,11 @@ argument_list|(
 name|false
 argument_list|)
 block|,
+name|ExplicitParams
+argument_list|(
+name|false
+argument_list|)
+block|,
 name|ExprNeedsCleanups
 argument_list|(
 name|false
@@ -2145,10 +2168,10 @@ name|Kind
 operator|=
 name|SK_Lambda
 block|;   }
-name|virtual
 operator|~
 name|LambdaScopeInfo
 argument_list|()
+name|override
 block|;
 comment|/// \brief Note when all explicit captures have been added.
 name|void
@@ -2576,36 +2599,7 @@ name|Captures
 operator|.
 name|size
 argument_list|()
-block|;
-if|if
-condition|(
-name|LambdaScopeInfo
-modifier|*
-name|LSI
-init|=
-name|dyn_cast
-operator|<
-name|LambdaScopeInfo
-operator|>
-operator|(
-name|this
-operator|)
-condition|)
-name|LSI
-operator|->
-name|ArrayIndexStarts
-operator|.
-name|push_back
-argument_list|(
-name|LSI
-operator|->
-name|ArrayIndexVars
-operator|.
-name|size
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
+block|; }
 expr|}
 comment|// end namespace sema
 expr|}

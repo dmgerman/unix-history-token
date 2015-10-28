@@ -3380,7 +3380,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
 block|}
@@ -4873,9 +4873,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|int
-name|empty
-decl_stmt|;
 name|retry
 label|:
 name|root_path_sbuf
@@ -4951,10 +4948,6 @@ operator|=
 name|local_xbt
 expr_stmt|;
 block|}
-name|empty
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 literal|1

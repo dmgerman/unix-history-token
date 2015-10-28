@@ -1042,6 +1042,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|device_delete_children
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1068,7 +1073,7 @@ block|{
 name|int
 name|error
 init|=
-name|IIC_EBUSBSY
+name|IIC_EBUSERR
 decl_stmt|;
 name|struct
 name|iicoc_softc

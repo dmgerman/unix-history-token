@@ -29,6 +29,12 @@ directive|include
 file|<machine/stack.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/vmparam.h>
+end_include
+
 begin_function
 name|int
 name|unwind_frame
@@ -50,9 +56,11 @@ name|fp
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|INKERNEL
+argument_list|(
 name|fp
-operator|==
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(

@@ -536,7 +536,9 @@ begin_function
 name|struct
 name|timespec
 name|evNowTime
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|timeval
@@ -623,7 +625,9 @@ begin_function
 name|struct
 name|timespec
 name|evUTCTime
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|timeval

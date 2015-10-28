@@ -2117,7 +2117,7 @@ operator|.
 name|Mask
 return|;
 block|}
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -2488,6 +2488,53 @@ block|}
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/// The kind of type we are substituting Objective-C type arguments into.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The kind of substitution affects the replacement of type parameters when
+end_comment
+
+begin_comment
+comment|/// no concrete type information is provided, e.g., when dealing with an
+end_comment
+
+begin_comment
+comment|/// unspecialized type.
+end_comment
+
+begin_decl_stmt
+name|enum
+name|class
+name|ObjCSubstitutionContext
+block|{
+comment|/// An ordinary type.
+name|Ordinary
+operator|,
+comment|/// The result type of a method or function.
+name|Result
+operator|,
+comment|/// The parameter type of a method or function.
+name|Parameter
+operator|,
+comment|/// The type of a property.
+name|Property
+operator|,
+comment|/// The superclass of a type.
+name|Superclass
+operator|,
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/// QualType - For efficiency, we don't store CV-qualified types as nodes on
@@ -4790,6 +4837,199 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// Substitute type arguments for the Objective-C type parameters used in the
+end_comment
+
+begin_comment
+comment|/// subject type.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ctx ASTContext in which the type exists.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param typeArgs The type arguments that will be substituted for the
+end_comment
+
+begin_comment
+comment|/// Objective-C type parameters in the subject type, which are generally
+end_comment
+
+begin_comment
+comment|/// computed via \c Type::getObjCSubstitutions. If empty, the type
+end_comment
+
+begin_comment
+comment|/// parameters will be replaced with their bounds or id/Class, as appropriate
+end_comment
+
+begin_comment
+comment|/// for the context.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param context The context in which the subject type was written.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns the resulting type.
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|substObjCTypeArgs
+argument_list|(
+name|ASTContext
+operator|&
+name|ctx
+argument_list|,
+name|ArrayRef
+operator|<
+name|QualType
+operator|>
+name|typeArgs
+argument_list|,
+name|ObjCSubstitutionContext
+name|context
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Substitute type arguments from an object type for the Objective-C type
+end_comment
+
+begin_comment
+comment|/// parameters used in the subject type.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This operation combines the computation of type arguments for
+end_comment
+
+begin_comment
+comment|/// substitution (\c Type::getObjCSubstitutions) with the actual process of
+end_comment
+
+begin_comment
+comment|/// substitution (\c QualType::substObjCTypeArgs) for the convenience of
+end_comment
+
+begin_comment
+comment|/// callers that need to perform a single substitution in isolation.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param objectType The type of the object whose member type we're
+end_comment
+
+begin_comment
+comment|/// substituting into. For example, this might be the receiver of a message
+end_comment
+
+begin_comment
+comment|/// or the base of a property access.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param dc The declaration context from which the subject type was
+end_comment
+
+begin_comment
+comment|/// retrieved, which indicates (for example) which type parameters should
+end_comment
+
+begin_comment
+comment|/// be substituted.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param context The context in which the subject type was written.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns the subject type after replacing all of the Objective-C type
+end_comment
+
+begin_comment
+comment|/// parameters with their corresponding arguments.
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|substObjCMemberType
+argument_list|(
+name|QualType
+name|objectType
+argument_list|,
+specifier|const
+name|DeclContext
+operator|*
+name|dc
+argument_list|,
+name|ObjCSubstitutionContext
+name|context
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Strip Objective-C "__kindof" types from the given type.
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|stripObjCKindOfType
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|ctx
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
 begin_label
 name|private
 label|:
@@ -5445,9 +5685,12 @@ name|private
 operator|:
 name|Type
 argument_list|(
-argument|const Type&
+specifier|const
+name|Type
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -5457,7 +5700,8 @@ specifier|const
 name|Type
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 comment|/// Bitfields required by the Type class.
 name|class
@@ -5696,15 +5940,40 @@ name|unsigned
 operator|:
 name|NumTypeBits
 block|;
+comment|/// The number of type arguments stored directly on this object type.
+name|unsigned
+name|NumTypeArgs
+operator|:
+literal|7
+block|;
 comment|/// NumProtocols - The number of protocols stored directly on this
 comment|/// object type.
 name|unsigned
 name|NumProtocols
 operator|:
-literal|32
-operator|-
-name|NumTypeBits
+literal|6
+block|;
+comment|/// Whether this is a "kindof" type.
+name|unsigned
+name|IsKindOf
+operator|:
+literal|1
 block|;   }
+block|;
+name|static_assert
+argument_list|(
+name|NumTypeBits
+operator|+
+literal|7
+operator|+
+literal|6
+operator|+
+literal|1
+operator|<=
+literal|32
+argument_list|,
+literal|"Does not fit in an unsigned"
+argument_list|)
 block|;
 name|class
 name|ReferenceTypeBitfields
@@ -6519,6 +6788,11 @@ argument_list|()
 specifier|const
 block|;
 name|bool
+name|isObjCBoxableRecordType
+argument_list|()
+specifier|const
+block|;
+name|bool
 name|isInterfaceType
 argument_list|()
 specifier|const
@@ -6581,6 +6855,12 @@ argument_list|()
 specifier|const
 block|;
 comment|// __attribute__((NSObject))
+name|bool
+name|isObjCIndependentClassType
+argument_list|()
+specifier|const
+block|;
+comment|// __attribute__((objc_independent_class))
 comment|// FIXME: change this to 'raw' interface type, so we can used 'interface' type
 comment|// for the common case.
 name|bool
@@ -6618,12 +6898,46 @@ argument_list|()
 specifier|const
 block|;
 comment|// id
+comment|/// Whether the type is Objective-C 'id' or a __kindof type of an
+comment|/// object type, e.g., __kindof NSView * or __kindof id
+comment|///<NSCopying>.
+comment|///
+comment|/// \param bound Will be set to the bound on non-id subtype types,
+comment|/// which will be (possibly specialized) Objective-C class type, or
+comment|/// null for 'id.
+name|bool
+name|isObjCIdOrObjectKindOfType
+argument_list|(
+argument|const ASTContext&ctx
+argument_list|,
+argument|const ObjCObjectType *&bound
+argument_list|)
+specifier|const
+block|;
 name|bool
 name|isObjCClassType
 argument_list|()
 specifier|const
 block|;
 comment|// Class
+comment|/// Whether the type is Objective-C 'Class' or a __kindof type of an
+comment|/// Class type, e.g., __kindof Class<NSCopying>.
+comment|///
+comment|/// Unlike \c isObjCIdOrObjectKindOfType, there is no relevant bound
+comment|/// here because Objective-C's type system cannot express "a class
+comment|/// object for a subclass of NSFoo".
+name|bool
+name|isObjCClassOrClassKindOfType
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|isBlockCompatibleObjCPointerType
+argument_list|(
+argument|ASTContext&ctx
+argument_list|)
+specifier|const
+block|;
 name|bool
 name|isObjCSelType
 argument_list|()
@@ -6914,6 +7228,13 @@ argument_list|()
 specifier|const
 block|;
 comment|// GCC complex int type.
+specifier|const
+name|ObjCObjectType
+operator|*
+name|getAsObjCInterfaceType
+argument_list|()
+specifier|const
+block|;
 comment|// The following is a convenience method that returns an ObjCObjectPointerType
 comment|// for object declared using an interface.
 specifier|const
@@ -7170,6 +7491,64 @@ comment|/// \brief True if the computed linkage is valid. Used for consistency
 comment|/// checking. Should always return true.
 name|bool
 name|isLinkageValid
+argument_list|()
+specifier|const
+block|;
+comment|/// Determine the nullability of the given type.
+comment|///
+comment|/// Note that nullability is only captured as sugar within the type
+comment|/// system, not as part of the canonical type, so nullability will
+comment|/// be lost by canonicalization and desugaring.
+name|Optional
+operator|<
+name|NullabilityKind
+operator|>
+name|getNullability
+argument_list|(
+argument|const ASTContext&context
+argument_list|)
+specifier|const
+block|;
+comment|/// Determine whether the given type can have a nullability
+comment|/// specifier applied to it, i.e., if it is any kind of pointer type
+comment|/// or a dependent type that could instantiate to any kind of
+comment|/// pointer type.
+name|bool
+name|canHaveNullability
+argument_list|()
+specifier|const
+block|;
+comment|/// Retrieve the set of substitutions required when accessing a member
+comment|/// of the Objective-C receiver type that is declared in the given context.
+comment|///
+comment|/// \c *this is the type of the object we're operating on, e.g., the
+comment|/// receiver for a message send or the base of a property access, and is
+comment|/// expected to be of some object or object pointer type.
+comment|///
+comment|/// \param dc The declaration context for which we are building up a
+comment|/// substitution mapping, which should be an Objective-C class, extension,
+comment|/// category, or method within.
+comment|///
+comment|/// \returns an array of type arguments that can be substituted for
+comment|/// the type parameters of the given declaration context in any type described
+comment|/// within that context, or an empty optional to indicate that no
+comment|/// substitution is required.
+name|Optional
+operator|<
+name|ArrayRef
+operator|<
+name|QualType
+operator|>>
+name|getObjCSubstitutions
+argument_list|(
+argument|const DeclContext *dc
+argument_list|)
+specifier|const
+block|;
+comment|/// Determines if this is an ObjC interface type that may accept type
+comment|/// parameters.
+name|bool
+name|acceptsObjCTypeParams
 argument_list|()
 specifier|const
 block|;
@@ -13914,8 +14293,6 @@ name|attr_pascal
 block|,
 name|attr_vectorcall
 block|,
-name|attr_pnaclcall
-block|,
 name|attr_inteloclbicc
 block|,
 name|attr_ms_abi
@@ -13929,7 +14306,15 @@ block|,
 name|attr_sptr
 block|,
 name|attr_uptr
-block|}
+block|,
+name|attr_nonnull
+block|,
+name|attr_nullable
+block|,
+name|attr_null_unspecified
+block|,
+name|attr_objc_kindof
+block|,   }
 block|;
 name|private
 operator|:
@@ -14063,6 +14448,82 @@ name|bool
 name|isCallingConv
 argument_list|()
 specifier|const
+block|;
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|NullabilityKind
+operator|>
+name|getImmediateNullability
+argument_list|()
+specifier|const
+block|;
+comment|/// Retrieve the attribute kind corresponding to the given
+comment|/// nullability kind.
+specifier|static
+name|Kind
+name|getNullabilityAttrKind
+argument_list|(
+argument|NullabilityKind kind
+argument_list|)
+block|{
+switch|switch
+condition|(
+name|kind
+condition|)
+block|{
+case|case
+name|NullabilityKind
+operator|::
+name|NonNull
+case|:
+return|return
+name|attr_nonnull
+return|;
+case|case
+name|NullabilityKind
+operator|::
+name|Nullable
+case|:
+return|return
+name|attr_nullable
+return|;
+case|case
+name|NullabilityKind
+operator|::
+name|Unspecified
+case|:
+return|return
+name|attr_null_unspecified
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Unknown nullability kind."
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Strip off the top-level nullability annotation on the given
+comment|/// type, if it's there.
+comment|///
+comment|/// \param T The type to strip. If the type is exactly an
+comment|/// AttributedType specifying nullability (without looking through
+comment|/// type sugar), the nullability is returned and this type changed
+comment|/// to the underlying modified type.
+comment|///
+comment|/// \returns the top-level nullability, if present.
+specifier|static
+name|Optional
+operator|<
+name|NullabilityKind
+operator|>
+name|stripOuterNullability
+argument_list|(
+name|QualType
+operator|&
+name|T
+argument_list|)
 block|;
 name|void
 name|Profile
@@ -16720,19 +17181,25 @@ block|}
 expr|}
 block|;
 comment|/// ObjCObjectType - Represents a class type in Objective C.
-comment|/// Every Objective C type is a combination of a base type and a
-comment|/// list of protocols.
+comment|///
+comment|/// Every Objective C type is a combination of a base type, a set of
+comment|/// type arguments (optional, for parameterized classes) and a list of
+comment|/// protocols.
 comment|///
 comment|/// Given the following declarations:
 comment|/// \code
-comment|///   \@class C;
+comment|///   \@class C<T>;
 comment|///   \@protocol P;
 comment|/// \endcode
 comment|///
 comment|/// 'C' is an ObjCInterfaceType C.  It is sugar for an ObjCObjectType
 comment|/// with base C and no protocols.
 comment|///
-comment|/// 'C<P>' is an ObjCObjectType with base C and protocol list [P].
+comment|/// 'C<P>' is an unspecialized ObjCObjectType with base C and protocol list [P].
+comment|/// 'C<C*>' is a specialized ObjCObjectType with type arguments 'C*' and no
+comment|/// protocol list.
+comment|/// 'C<C*><P>' is a specialized ObjCObjectType with base C, type arguments 'C*',
+comment|/// and protocol list [P].
 comment|///
 comment|/// 'id' is a TypedefType which is sugar for an ObjCObjectPointerType whose
 comment|/// pointee is an ObjCObjectType with base BuiltinType::ObjCIdType
@@ -16747,8 +17214,10 @@ operator|:
 name|public
 name|Type
 block|{
-comment|// ObjCObjectType.NumProtocols - the number of protocols stored
+comment|// ObjCObjectType.NumTypeArgs - the number of type arguments stored
 comment|// after the ObjCObjectPointerType node.
+comment|// ObjCObjectType.NumProtocols - the number of protocols stored
+comment|// after the type arguments of ObjCObjectPointerType node.
 comment|//
 comment|// These protocols are those written directly on the type.  If
 comment|// protocol qualifiers ever become additive, the iterators will need
@@ -16759,6 +17228,22 @@ comment|// and uniqued.
 comment|/// Either a BuiltinType or an InterfaceType or sugar for either.
 name|QualType
 name|BaseType
+block|;
+comment|/// Cached superclass type.
+name|mutable
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+specifier|const
+name|ObjCObjectType
+operator|*
+block|,
+literal|1
+block|,
+name|bool
+operator|>
+name|CachedSuperClassType
 block|;
 name|ObjCProtocolDecl
 operator|*
@@ -16782,6 +17267,32 @@ name|getProtocolStorage
 argument_list|()
 return|;
 block|}
+name|QualType
+operator|*
+name|getTypeArgStorage
+argument_list|()
+block|;
+specifier|const
+name|QualType
+operator|*
+name|getTypeArgStorage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|ObjCObjectType
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getTypeArgStorage
+argument_list|()
+return|;
+block|}
 name|ObjCProtocolDecl
 operator|*
 operator|*
@@ -16796,9 +17307,11 @@ argument|QualType Canonical
 argument_list|,
 argument|QualType Base
 argument_list|,
-argument|ObjCProtocolDecl * const *Protocols
+argument|ArrayRef<QualType> typeArgs
 argument_list|,
-argument|unsigned NumProtocols
+argument|ArrayRef<ObjCProtocolDecl *> protocols
+argument_list|,
+argument|bool isKindOf
 argument_list|)
 block|;    enum
 name|Nonce_ObjCInterface
@@ -16840,7 +17353,24 @@ operator|.
 name|NumProtocols
 operator|=
 literal|0
+block|;
+name|ObjCObjectTypeBits
+operator|.
+name|NumTypeArgs
+operator|=
+literal|0
+block|;
+name|ObjCObjectTypeBits
+operator|.
+name|IsKindOf
+operator|=
+literal|0
 block|;   }
+name|void
+name|computeSuperClassTypeSlow
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|/// getBaseType - Gets the base type of this object type.  This is
@@ -17008,6 +17538,87 @@ name|getInterface
 argument_list|()
 specifier|const
 block|;
+comment|/// Determine whether this object type is "specialized", meaning
+comment|/// that it has type arguments.
+name|bool
+name|isSpecialized
+argument_list|()
+specifier|const
+block|;
+comment|/// Determine whether this object type was written with type arguments.
+name|bool
+name|isSpecializedAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ObjCObjectTypeBits
+operator|.
+name|NumTypeArgs
+operator|>
+literal|0
+return|;
+block|}
+comment|/// Determine whether this object type is "unspecialized", meaning
+comment|/// that it has no type arguments.
+name|bool
+name|isUnspecialized
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isSpecialized
+argument_list|()
+return|;
+block|}
+comment|/// Determine whether this object type is "unspecialized" as
+comment|/// written, meaning that it has no type arguments.
+name|bool
+name|isUnspecializedAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isSpecializedAsWritten
+argument_list|()
+return|;
+block|}
+comment|/// Retrieve the type arguments of this object type (semantically).
+name|ArrayRef
+operator|<
+name|QualType
+operator|>
+name|getTypeArgs
+argument_list|()
+specifier|const
+block|;
+comment|/// Retrieve the type arguments of this object type as they were
+comment|/// written.
+name|ArrayRef
+operator|<
+name|QualType
+operator|>
+name|getTypeArgsAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|QualType
+operator|>
+operator|(
+name|getTypeArgStorage
+argument_list|()
+expr|,
+name|ObjCObjectTypeBits
+operator|.
+name|NumTypeArgs
+operator|)
+return|;
+block|}
 typedef|typedef
 name|ObjCProtocolDecl
 modifier|*
@@ -17115,6 +17726,102 @@ name|I
 index|]
 return|;
 block|}
+comment|/// Retrieve all of the protocol qualifiers.
+name|ArrayRef
+operator|<
+name|ObjCProtocolDecl
+operator|*
+operator|>
+name|getProtocols
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|ObjCProtocolDecl
+operator|*
+operator|>
+operator|(
+name|qual_begin
+argument_list|()
+expr|,
+name|getNumProtocols
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// Whether this is a "__kindof" type as written.
+name|bool
+name|isKindOfTypeAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ObjCObjectTypeBits
+operator|.
+name|IsKindOf
+return|;
+block|}
+comment|/// Whether this ia a "__kindof" type (semantically).
+name|bool
+name|isKindOfType
+argument_list|()
+specifier|const
+block|;
+comment|/// Retrieve the type of the superclass of this object type.
+comment|///
+comment|/// This operation substitutes any type arguments into the
+comment|/// superclass of the current class type, potentially producing a
+comment|/// specialization of the superclass type. Produces a null type if
+comment|/// there is no superclass.
+name|QualType
+name|getSuperClassType
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|CachedSuperClassType
+operator|.
+name|getInt
+argument_list|()
+condition|)
+name|computeSuperClassTypeSlow
+argument_list|()
+expr_stmt|;
+name|assert
+argument_list|(
+name|CachedSuperClassType
+operator|.
+name|getInt
+argument_list|()
+operator|&&
+literal|"Superclass not set?"
+argument_list|)
+block|;
+return|return
+name|QualType
+argument_list|(
+name|CachedSuperClassType
+operator|.
+name|getPointer
+argument_list|()
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+comment|/// Strip off the Objective-C "kindof" type and (with it) any
+comment|/// protocol qualifiers.
+name|QualType
+name|stripObjCKindOfTypeAndQuals
+argument_list|(
+argument|const ASTContext&ctx
+argument_list|)
+specifier|const
+block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -17190,9 +17897,11 @@ argument|QualType Canonical
 argument_list|,
 argument|QualType Base
 argument_list|,
-argument|ObjCProtocolDecl * const *Protocols
+argument|ArrayRef<QualType> typeArgs
 argument_list|,
-argument|unsigned NumProtocols
+argument|ArrayRef<ObjCProtocolDecl *> protocols
+argument_list|,
+argument|bool isKindOf
 argument_list|)
 operator|:
 name|ObjCObjectType
@@ -17201,9 +17910,11 @@ argument|Canonical
 argument_list|,
 argument|Base
 argument_list|,
-argument|Protocols
+argument|typeArgs
 argument_list|,
-argument|NumProtocols
+argument|protocols
+argument_list|,
+argument|isKindOf
 argument_list|)
 block|{}
 name|public
@@ -17226,12 +17937,42 @@ argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|QualType Base
 argument_list|,
-argument|ObjCProtocolDecl *const *protocols
+argument|ArrayRef<QualType> typeArgs
 argument_list|,
-argument|unsigned NumProtocols
+argument|ArrayRef<ObjCProtocolDecl *> protocols
+argument_list|,
+argument|bool isKindOf
 argument_list|)
 block|; }
 block|;
+specifier|inline
+name|QualType
+operator|*
+name|ObjCObjectType
+operator|::
+name|getTypeArgStorage
+argument_list|()
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|QualType
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|ObjCObjectTypeImpl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|+
+literal|1
+operator|)
+return|;
+block|}
 specifier|inline
 name|ObjCProtocolDecl
 operator|*
@@ -17249,16 +17990,12 @@ operator|*
 operator|*
 operator|>
 operator|(
-name|static_cast
-operator|<
-name|ObjCObjectTypeImpl
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
+name|getTypeArgStorage
+argument_list|()
 operator|+
-literal|1
+name|ObjCObjectTypeBits
+operator|.
+name|NumTypeArgs
 operator|)
 return|;
 block|}
@@ -17396,6 +18133,29 @@ name|getInterface
 argument_list|()
 specifier|const
 block|{
+name|QualType
+name|baseType
+operator|=
+name|getBaseType
+argument_list|()
+block|;
+while|while
+condition|(
+specifier|const
+name|ObjCObjectType
+modifier|*
+name|ObjT
+init|=
+name|baseType
+operator|->
+name|getAs
+operator|<
+name|ObjCObjectType
+operator|>
+operator|(
+operator|)
+condition|)
+block|{
 if|if
 condition|(
 specifier|const
@@ -17403,14 +18163,12 @@ name|ObjCInterfaceType
 modifier|*
 name|T
 init|=
-name|getBaseType
-argument_list|()
-operator|->
-name|getAs
+name|dyn_cast
 operator|<
 name|ObjCInterfaceType
 operator|>
 operator|(
+name|ObjT
 operator|)
 condition|)
 return|return
@@ -17419,6 +18177,14 @@ operator|->
 name|getDecl
 argument_list|()
 return|;
+name|baseType
+operator|=
+name|ObjT
+operator|->
+name|getBaseType
+argument_list|()
+expr_stmt|;
+block|}
 return|return
 name|nullptr
 return|;
@@ -17459,13 +18225,25 @@ name|ObjCObjectPointer
 argument_list|,
 name|Canonical
 argument_list|,
-name|false
+name|Pointee
+operator|->
+name|isDependentType
+argument_list|()
 argument_list|,
-name|false
+name|Pointee
+operator|->
+name|isInstantiationDependentType
+argument_list|()
 argument_list|,
-name|false
+name|Pointee
+operator|->
+name|isVariablyModifiedType
+argument_list|()
 argument_list|,
-name|false
+name|Pointee
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
 argument_list|)
 block|,
 name|PointeeType
@@ -17544,22 +18322,7 @@ operator|*
 name|getInterfaceType
 argument_list|()
 specifier|const
-block|{
-return|return
-name|getObjectType
-argument_list|()
-operator|->
-name|getBaseType
-argument_list|()
-operator|->
-name|getAs
-operator|<
-name|ObjCInterfaceType
-operator|>
-operator|(
-operator|)
-return|;
-block|}
+block|;
 comment|/// getInterfaceDecl - If this pointer points to an Objective \@interface
 comment|/// type, gets the declaration for that interface.
 comment|///
@@ -17608,6 +18371,21 @@ name|isObjCUnqualifiedClass
 argument_list|()
 return|;
 block|}
+comment|/// isObjCIdOrClassType - True if this is equivalent to the 'id' or
+comment|/// 'Class' type,
+name|bool
+name|isObjCIdOrClassType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getObjectType
+argument_list|()
+operator|->
+name|isObjCUnqualifiedIdOrClass
+argument_list|()
+return|;
+block|}
 comment|/// isObjCQualifiedIdType - True if this is equivalent to 'id<P>' for some
 comment|/// non-empty set of protocols.
 name|bool
@@ -17635,6 +18413,109 @@ name|getObjectType
 argument_list|()
 operator|->
 name|isObjCQualifiedClass
+argument_list|()
+return|;
+block|}
+comment|/// Whether this is a "__kindof" type.
+name|bool
+name|isKindOfType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getObjectType
+argument_list|()
+operator|->
+name|isKindOfType
+argument_list|()
+return|;
+block|}
+comment|/// Whether this type is specialized, meaning that it has type arguments.
+name|bool
+name|isSpecialized
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getObjectType
+argument_list|()
+operator|->
+name|isSpecialized
+argument_list|()
+return|;
+block|}
+comment|/// Whether this type is specialized, meaning that it has type arguments.
+name|bool
+name|isSpecializedAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getObjectType
+argument_list|()
+operator|->
+name|isSpecializedAsWritten
+argument_list|()
+return|;
+block|}
+comment|/// Whether this type is unspecialized, meaning that is has no type arguments.
+name|bool
+name|isUnspecialized
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getObjectType
+argument_list|()
+operator|->
+name|isUnspecialized
+argument_list|()
+return|;
+block|}
+comment|/// Determine whether this object type is "unspecialized" as
+comment|/// written, meaning that it has no type arguments.
+name|bool
+name|isUnspecializedAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isSpecializedAsWritten
+argument_list|()
+return|;
+block|}
+comment|/// Retrieve the type arguments for this type.
+name|ArrayRef
+operator|<
+name|QualType
+operator|>
+name|getTypeArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getObjectType
+argument_list|()
+operator|->
+name|getTypeArgs
+argument_list|()
+return|;
+block|}
+comment|/// Retrieve the type arguments for this type.
+name|ArrayRef
+operator|<
+name|QualType
+operator|>
+name|getTypeArgsAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getObjectType
+argument_list|()
+operator|->
+name|getTypeArgsAsWritten
 argument_list|()
 return|;
 block|}
@@ -17769,6 +18650,28 @@ literal|0
 argument_list|)
 return|;
 block|}
+comment|/// Retrieve the type of the superclass of this object pointer type.
+comment|///
+comment|/// This operation substitutes any type arguments into the
+comment|/// superclass of the current class type, potentially producing a
+comment|/// pointer to a specialization of the superclass type. Produces a
+comment|/// null type if there is no superclass.
+name|QualType
+name|getSuperClassType
+argument_list|()
+specifier|const
+block|;
+comment|/// Strip off the Objective-C "kindof" type and (with it) any
+comment|/// protocol qualifiers.
+specifier|const
+name|ObjCObjectPointerType
+operator|*
+name|stripObjCKindOfTypeAndQuals
+argument_list|(
+argument|const ASTContext&ctx
+argument_list|)
+specifier|const
+block|;
 name|void
 name|Profile
 argument_list|(

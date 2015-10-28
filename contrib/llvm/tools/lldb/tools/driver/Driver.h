@@ -264,9 +264,6 @@ argument_list|,
 name|bool
 name|is_file
 argument_list|,
-name|bool
-name|quietly
-argument_list|,
 name|lldb
 operator|::
 name|SBError

@@ -32,50 +32,6 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MIUtilThreadBaseStd.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMIUtilThread interface.
-end_comment
-
-begin_comment
-comment|//              CMIUtilThreadActiveObjBase interface.
-end_comment
-
-begin_comment
-comment|//              CMIUtilThreadMutex interface.
-end_comment
-
-begin_comment
-comment|//              CMIUtilThreadLock interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
 comment|//
 end_comment
 
@@ -317,6 +273,13 @@ name|void
 parameter_list|)
 function_decl|;
 comment|// Returns true if this thread is running
+name|void
+name|Finish
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|// Finish this thread
 comment|// Overrideable:
 name|public
 label|:
@@ -340,6 +303,9 @@ name|thread
 operator|*
 name|m_pThread
 expr_stmt|;
+name|bool
+name|m_bIsActive
+decl_stmt|;
 block|}
 end_decl_stmt
 

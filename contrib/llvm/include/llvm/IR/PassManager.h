@@ -206,6 +206,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/type_traits.h"
 end_include
 
@@ -945,15 +951,15 @@ name|PassConceptT
 expr_stmt|;
 end_typedef
 
-begin_macro
+begin_expr_stmt
 name|PassManager
 argument_list|(
-argument|const PassManager&
+specifier|const
+name|PassManager
+operator|&
 argument_list|)
-end_macro
-
-begin_expr_stmt
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 
@@ -967,7 +973,8 @@ specifier|const
 name|PassManager
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 end_decl_stmt
 
@@ -1094,9 +1101,12 @@ return|;
 block|}
 name|AnalysisManagerBase
 argument_list|(
-argument|const AnalysisManagerBase&
+specifier|const
+name|AnalysisManagerBase
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|AnalysisManagerBase
 operator|&
@@ -1107,7 +1117,8 @@ specifier|const
 name|AnalysisManagerBase
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|protected
 operator|:
@@ -2009,15 +2020,15 @@ name|private
 label|:
 end_label
 
-begin_macro
+begin_expr_stmt
 name|AnalysisManager
 argument_list|(
-argument|const AnalysisManager&
+specifier|const
+name|AnalysisManager
+operator|&
 argument_list|)
-end_macro
-
-begin_expr_stmt
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 
@@ -2031,7 +2042,8 @@ specifier|const
 name|AnalysisManager
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 end_decl_stmt
 
@@ -2143,6 +2155,37 @@ name|IR
 argument_list|,
 name|this
 argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// P.run may have inserted elements into AnalysisResults and invalidated
+comment|// RI.
+name|RI
+operator|=
+name|AnalysisResults
+operator|.
+name|find
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|PassID
+argument_list|,
+operator|&
+name|IR
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|RI
+operator|!=
+name|AnalysisResults
+operator|.
+name|end
+argument_list|()
+operator|&&
+literal|"we just inserted it!"
 argument_list|)
 expr_stmt|;
 name|RI
@@ -2349,12 +2392,7 @@ name|areAllPreserved
 argument_list|()
 condition|)
 return|return
-name|std
-operator|::
-name|move
-argument_list|(
 name|PA
-argument_list|)
 return|;
 if|if
 condition|(
@@ -2543,12 +2581,7 @@ name|IR
 argument_list|)
 expr_stmt|;
 return|return
-name|std
-operator|::
-name|move
-argument_list|(
 name|PA
-argument_list|)
 return|;
 block|}
 end_function
@@ -3587,31 +3620,21 @@ end_expr_stmt
 begin_for
 for|for
 control|(
-name|Module
-operator|::
-name|iterator
-name|I
-operator|=
+name|Function
+modifier|&
+name|F
+range|:
 name|M
-operator|.
-name|begin
-argument_list|()
-operator|,
-name|E
-operator|=
-name|M
-operator|.
-name|end
-argument_list|()
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
 control|)
 block|{
+if|if
+condition|(
+name|F
+operator|.
+name|isDeclaration
+argument_list|()
+condition|)
+continue|continue;
 name|PreservedAnalyses
 name|PassPA
 init|=
@@ -3619,8 +3642,7 @@ name|Pass
 operator|.
 name|run
 argument_list|(
-operator|*
-name|I
+name|F
 argument_list|,
 name|FAM
 argument_list|)
@@ -3640,8 +3662,7 @@ name|FAM
 operator|->
 name|invalidate
 argument_list|(
-operator|*
-name|I
+name|F
 argument_list|,
 name|std
 operator|::
@@ -3750,10 +3771,6 @@ argument|FunctionPassT Pass
 argument_list|)
 block|{
 return|return
-name|std
-operator|::
-name|move
-argument_list|(
 name|ModuleToFunctionPassAdaptor
 operator|<
 name|FunctionPassT
@@ -3766,7 +3783,6 @@ argument_list|(
 name|Pass
 argument_list|)
 operator|)
-argument_list|)
 return|;
 block|}
 end_expr_stmt

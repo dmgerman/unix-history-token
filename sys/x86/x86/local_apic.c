@@ -7543,21 +7543,23 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Set destination in ICR HI register if it is being used. */
-name|saveintr
-operator|=
-name|intr_disable
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
 name|x2apic_mode
 condition|)
+block|{
+name|saveintr
+operator|=
+name|intr_disable
+argument_list|()
+expr_stmt|;
 name|icr
 operator|=
 name|lapic_read_icr
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -7640,6 +7642,11 @@ argument_list|,
 name|vlo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|x2apic_mode
+condition|)
 name|intr_restore
 argument_list|(
 name|saveintr
@@ -7718,12 +7725,12 @@ name|APIC_TRIGMOD_EDGE
 operator||
 name|APIC_LEVEL_ASSERT
 expr_stmt|;
-comment|/* 	 * IPI_STOP_HARD is just a "fake" vector used to send a NMI. 	 * Use special rules regard NMI if passed, otherwise specify 	 * the vector. 	 */
+comment|/* 	 * NMI IPIs are just fake vectors used to send a NMI.  Use special rules 	 * regarding NMIs if passed, otherwise specify the vector. 	 */
 if|if
 condition|(
 name|vector
-operator|==
-name|IPI_STOP_HARD
+operator|>=
+name|IPI_NMI_FIRST
 condition|)
 name|icrlo
 operator||=

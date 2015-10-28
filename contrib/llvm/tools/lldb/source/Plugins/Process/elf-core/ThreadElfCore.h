@@ -352,6 +352,11 @@ operator|::
 name|DataExtractor
 name|fpregset
 expr_stmt|;
+name|lldb_private
+operator|::
+name|DataExtractor
+name|vregset
+expr_stmt|;
 name|int
 name|signo
 decl_stmt|;
@@ -545,6 +550,14 @@ name|lldb_private
 operator|::
 name|DataExtractor
 name|m_fpregset_data
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|lldb_private
+operator|::
+name|DataExtractor
+name|m_vregset_data
 expr_stmt|;
 end_expr_stmt
 

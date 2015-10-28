@@ -275,7 +275,7 @@ literal|"path"
 argument_list|,
 name|name_local
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|SVN_ERR
@@ -375,7 +375,7 @@ literal|"path"
 argument_list|,
 name|name_local
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|SVN_ERR
@@ -948,7 +948,7 @@ literal|"rev"
 argument_list|,
 name|revstr
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|SVN_ERR
@@ -1247,7 +1247,7 @@ name|SVN_ERR_UNVERSIONED_RESOURCE
 argument_list|,
 name|SVN_ERR_ENTRY_NOT_FOUND
 argument_list|,
-name|SVN_NO_ERROR
+literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;

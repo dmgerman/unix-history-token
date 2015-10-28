@@ -66,6 +66,7 @@ name|namespace
 name|lldb
 block|{
 name|class
+name|LLDB_API
 name|SBLineEntry
 block|{
 name|public

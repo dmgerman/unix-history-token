@@ -347,6 +347,23 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|TCPPCAP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_pcap.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|TCPDEBUG
 end_ifdef
 
@@ -1144,6 +1161,20 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|tcp_mtudisc
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|tcp_log_addr
@@ -1873,6 +1904,14 @@ argument_list|,
 name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCPPCAP
+name|tcp_pcap_init
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3380,6 +3419,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|TCP_PROBE3
+argument_list|(
+name|debug__input
+argument_list|,
+name|tp
+argument_list|,
+name|th
+argument_list|,
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -3926,6 +3983,17 @@ name|inp_ppcb
 operator|=
 name|tp
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCPPCAP
+comment|/* 	 * Init the TCP PCAP queues. 	 */
+name|tcp_pcap_tcpcb_init
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|tp
@@ -3983,7 +4051,7 @@ argument_list|(
 name|vnet_iter
 argument_list|)
 expr_stmt|;
-name|INP_INFO_RLOCK
+name|INP_INFO_WLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4080,7 +4148,7 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_RUNLOCK
+name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4131,7 +4199,7 @@ name|t_inpcb
 operator|->
 name|inp_socket
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_LOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4517,6 +4585,32 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCPPCAP
+comment|/* Free the TCP PCAP queues. */
+name|tcp_pcap_drain
+argument_list|(
+operator|&
+operator|(
+name|tp
+operator|->
+name|t_inpkts
+operator|)
+argument_list|)
+expr_stmt|;
+name|tcp_pcap_drain
+argument_list|(
+operator|&
+operator|(
+name|tp
+operator|->
+name|t_outpkts
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Allow the CC algorithm to clean up after itself. */
 if|if
 condition|(
@@ -4761,7 +4855,7 @@ operator|->
 name|t_vnet
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4881,7 +4975,7 @@ name|inp
 argument_list|)
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4898,7 +4992,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4940,7 +5034,7 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_LOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5113,7 +5207,7 @@ modifier|*
 name|tcpb
 decl_stmt|;
 comment|/* 	 * Walk the tcpbs, if existing, and flush the reassembly queue, 	 * if there is one... 	 * XXX: The "Net/3" implementation doesn't imply that the TCP 	 *      reassembly queue should be flushed, but in a situation 	 *	where we're really low on mbufs, this is potentially 	 *	useful. 	 */
-name|INP_INFO_RLOCK
+name|INP_INFO_WLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5173,7 +5267,7 @@ name|inpb
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_RUNLOCK
+name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5214,7 +5308,7 @@ name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_LOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5470,7 +5564,7 @@ name|EPERM
 operator|)
 return|;
 comment|/* 	 * OK, now we're committed to doing something. 	 */
-name|INP_INFO_RLOCK
+name|INP_LIST_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5488,7 +5582,7 @@ name|V_tcbinfo
 operator|.
 name|ipi_count
 expr_stmt|;
-name|INP_INFO_RUNLOCK
+name|INP_LIST_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5632,7 +5726,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|INP_INFO_RLOCK
+name|INP_INFO_WLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5771,7 +5865,7 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_RUNLOCK
+name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6051,7 +6145,7 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6097,7 +6191,7 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6110,7 +6204,7 @@ name|error
 condition|)
 block|{
 comment|/* 		 * Give the user an updated idea of our state. 		 * If the generation differs from what we told 		 * her before, she knows that something happened 		 * while we were processing this request, and it 		 * might be necessary to retry. 		 */
-name|INP_INFO_RLOCK
+name|INP_LIST_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6140,7 +6234,7 @@ name|ipi_count
 operator|+
 name|pcb_count
 expr_stmt|;
-name|INP_INFO_RUNLOCK
+name|INP_LIST_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -7058,10 +7152,27 @@ return|return;
 if|if
 condition|(
 name|ip
-operator|!=
+operator|==
 name|NULL
 condition|)
 block|{
+name|in_pcbnotifyall
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|,
+name|faddr
+argument_list|,
+name|inetctlerrmap
+index|[
+name|cmd
+index|]
+argument_list|,
+name|notify
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|icp
 operator|=
 operator|(
@@ -7106,7 +7217,7 @@ literal|2
 operator|)
 operator|)
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -7177,7 +7288,7 @@ condition|)
 block|{
 name|icmp_tcp_seq
 operator|=
-name|htonl
+name|ntohl
 argument_list|(
 name|th
 operator|->
@@ -7219,34 +7330,7 @@ operator|==
 name|PRC_MSGSIZE
 condition|)
 block|{
-comment|/* 					     * MTU discovery: 					     * If we got a needfrag set the MTU 					     * in the route to the suggested new 					     * value (if given) and then notify. 					     */
-name|bzero
-argument_list|(
-operator|&
-name|inc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|inc
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|inc
-operator|.
-name|inc_faddr
-operator|=
-name|faddr
-expr_stmt|;
-name|inc
-operator|.
-name|inc_fibnum
-operator|=
-name|inp
-operator|->
-name|inp_inc
-operator|.
-name|inc_fibnum
-expr_stmt|;
+comment|/* 					 * MTU discovery: 					 * If we got a needfrag set the MTU 					 * in the route to the suggested new 					 * value (if given) and then notify. 					 */
 name|mtu
 operator|=
 name|ntohs
@@ -7256,7 +7340,7 @@ operator|->
 name|icmp_nextmtu
 argument_list|)
 expr_stmt|;
-comment|/* 					     * If no alternative MTU was 					     * proposed, try the next smaller 					     * one. 					     */
+comment|/* 					 * If no alternative MTU was 					 * proposed, try the next smaller 					 * one. 					 */
 if|if
 condition|(
 operator|!
@@ -7298,19 +7382,49 @@ expr|struct
 name|tcpiphdr
 argument_list|)
 expr_stmt|;
-comment|/* 					     * Only cache the MTU if it 					     * is smaller than the interface 					     * or route MTU.  tcp_mtudisc() 					     * will do right thing by itself. 					     */
+comment|/* 					 * Only process the offered MTU if it 					 * is smaller than the current one. 					 */
 if|if
 condition|(
 name|mtu
-operator|<=
-name|tcp_maxmtu
+operator|<
+name|tp
+operator|->
+name|t_maxopd
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tcpiphdr
+argument_list|)
+condition|)
+block|{
+name|bzero
 argument_list|(
 operator|&
 name|inc
 argument_list|,
-name|NULL
+sizeof|sizeof
+argument_list|(
+name|inc
 argument_list|)
-condition|)
+argument_list|)
+expr_stmt|;
+name|inc
+operator|.
+name|inc_faddr
+operator|=
+name|faddr
+expr_stmt|;
+name|inc
+operator|.
+name|inc_fibnum
+operator|=
+name|inp
+operator|->
+name|inp_inc
+operator|.
+name|inc_fibnum
+expr_stmt|;
 name|tcp_hc_updatemtu
 argument_list|(
 operator|&
@@ -7326,6 +7440,7 @@ argument_list|,
 name|mtu
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 name|inp
@@ -7409,27 +7524,10 @@ name|th
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|in_pcbnotifyall
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|,
-name|faddr
-argument_list|,
-name|inetctlerrmap
-index|[
-name|cmd
-index|]
-argument_list|,
-name|notify
 argument_list|)
 expr_stmt|;
 block|}
@@ -7796,7 +7894,7 @@ name|inc_flags
 operator||=
 name|INC_ISIPV6
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -7811,7 +7909,7 @@ operator|&
 name|th
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -8366,7 +8464,7 @@ name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -8469,8 +8567,6 @@ name|int
 name|error
 parameter_list|)
 block|{
-return|return
-operator|(
 name|tcp_mtudisc
 argument_list|(
 name|inp
@@ -8478,15 +8574,18 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|inp
 operator|)
 return|;
 block|}
 end_function
 
 begin_function
-name|struct
-name|inpcb
-modifier|*
+specifier|static
+name|void
 name|tcp_mtudisc
 parameter_list|(
 name|struct
@@ -8531,11 +8630,7 @@ operator|&
 name|INP_DROPPED
 operator|)
 condition|)
-return|return
-operator|(
-name|inp
-operator|)
-return|;
+return|return;
 name|tp
 operator|=
 name|intotcpcb
@@ -8665,11 +8760,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|inp
-operator|)
-return|;
 block|}
 end_function
 
@@ -9250,6 +9340,14 @@ name|t_inpcb
 operator|)
 operator|==
 name|NULL
+operator|)
+operator|||
+operator|(
+operator|!
+name|key_havesp
+argument_list|(
+name|IPSEC_DIR_OUTBOUND
+argument_list|)
 operator|)
 condition|)
 return|return
@@ -11123,7 +11221,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -11324,7 +11422,7 @@ name|error
 operator|=
 name|ESRCH
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo

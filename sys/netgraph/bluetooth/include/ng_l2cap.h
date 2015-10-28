@@ -975,6 +975,9 @@ name|ng_l2cap_flow_t
 name|flow
 decl_stmt|;
 comment|/* NG_L2CAP_OPT_QOS */
+name|uint16_t
+name|encryption
+decl_stmt|;
 block|}
 name|ng_l2cap_cfg_opt_val_t
 typedef|;
@@ -1287,6 +1290,13 @@ name|NG_L2CAP_L2CA_IDTYPE_LE
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|NG_L2CAP_L2CA_IDTYPE_SMP
+value|3
+end_define
+
 begin_comment
 comment|/* L2CA_Connect */
 end_comment
@@ -1349,6 +1359,9 @@ name|u_int16_t
 name|status
 decl_stmt|;
 comment|/* if result != 0x00 */
+name|uint8_t
+name|encryption
+decl_stmt|;
 block|}
 name|ng_l2cap_l2ca_con_op
 typedef|;
@@ -2188,6 +2201,31 @@ unit|* } ng_l2cap_l2ca_enable_clt_op;
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|NGM_L2CAP_L2CA_ENC_CHANGE
+value|0x92
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint16_t
+name|lcid
+decl_stmt|;
+name|uint16_t
+name|result
+decl_stmt|;
+name|uint8_t
+name|idtype
+decl_stmt|;
+block|}
+name|ng_l2cap_l2ca_enc_chg_op
+typedef|;
+end_typedef
 
 begin_comment
 comment|/**************************************************************************  **************************************************************************  **                          L2CAP node messages  **************************************************************************  **************************************************************************/

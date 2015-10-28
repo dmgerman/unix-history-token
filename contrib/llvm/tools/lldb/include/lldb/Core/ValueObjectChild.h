@@ -182,6 +182,11 @@ name|UpdateValue
 argument_list|()
 block|;
 name|virtual
+name|bool
+name|CanUpdateWithInvalidExecutionContext
+argument_list|()
+block|;
+name|virtual
 name|ClangASTType
 name|GetClangTypeImpl
 argument_list|()

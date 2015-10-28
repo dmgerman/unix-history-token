@@ -65,12 +65,10 @@ range|:
 name|public
 name|TargetLoweringObjectFileELF
 block|{
-specifier|const
 name|MCSectionELF
 operator|*
 name|SmallDataSection
 block|;
-specifier|const
 name|MCSectionELF
 operator|*
 name|SmallBSSSection
@@ -113,7 +111,6 @@ name|IsSmallDataEnabled
 argument_list|()
 specifier|const
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|SelectSectionForGlobal

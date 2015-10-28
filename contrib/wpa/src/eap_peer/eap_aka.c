@@ -6593,7 +6593,7 @@ name|NULL
 operator|||
 name|len
 operator|<
-literal|1
+literal|3
 condition|)
 block|{
 name|ret

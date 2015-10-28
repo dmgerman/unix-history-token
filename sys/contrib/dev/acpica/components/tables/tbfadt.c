@@ -799,7 +799,8 @@ name|XDsdt
 argument_list|,
 name|ACPI_SIG_DSDT
 argument_list|,
-name|ACPI_TABLE_INDEX_DSDT
+operator|&
+name|AcpiGbl_DsdtIndex
 argument_list|)
 expr_stmt|;
 comment|/* If Hardware Reduced flag is set, there is no FACS */
@@ -827,7 +828,8 @@ name|Facs
 argument_list|,
 name|ACPI_SIG_FACS
 argument_list|,
-name|ACPI_TABLE_INDEX_FACS
+operator|&
+name|AcpiGbl_FacsIndex
 argument_list|)
 expr_stmt|;
 block|}
@@ -849,7 +851,8 @@ name|XFacs
 argument_list|,
 name|ACPI_SIG_FACS
 argument_list|,
-name|ACPI_TABLE_INDEX_X_FACS
+operator|&
+name|AcpiGbl_XFacsIndex
 argument_list|)
 expr_stmt|;
 block|}

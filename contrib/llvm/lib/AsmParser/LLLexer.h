@@ -177,10 +177,6 @@ modifier|&
 name|C
 parameter_list|)
 function_decl|;
-operator|~
-name|LLLexer
-argument_list|()
-block|{}
 name|lltok
 operator|::
 name|Kind

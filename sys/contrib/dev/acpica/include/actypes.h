@@ -2279,6 +2279,13 @@ name|ACPI_TYPE_EXTERNAL_MAX
 value|0x10
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_NUM_TYPES
+value|(ACPI_TYPE_EXTERNAL_MAX + 1)
+end_define
+
 begin_comment
 comment|/*  * These are object types that do not map directly to the ACPI  * ObjectType() operator. They are used for various internal purposes only.  * If new predefined ACPI_TYPEs are added (via the ACPI specification), these  * internal types must move upwards. (There is code that depends on these  * values being contiguous with the external types above.)  */
 end_comment
@@ -2378,6 +2385,13 @@ end_define
 begin_comment
 comment|/* Last typecode used within a NS Node */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_TOTAL_TYPES
+value|(ACPI_TYPE_NS_NODE_MAX + 1)
+end_define
 
 begin_comment
 comment|/*  * These are special object types that never appear in  * a Namespace node, only in an object of ACPI_OPERAND_OBJECT  */

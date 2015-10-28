@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -71,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<sys/refcount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<zfeature_common.h>
 end_include
 
 begin_ifdef
@@ -140,6 +146,35 @@ define|#
 directive|define
 name|DS_FIELD_LARGE_BLOCKS
 value|"org.open-zfs:large_blocks"
+comment|/*  * These fields are set on datasets that are in the middle of a resumable  * receive, and allow the sender to resume the send if it is interrupted.  */
+define|#
+directive|define
+name|DS_FIELD_RESUME_FROMGUID
+value|"com.delphix:resume_fromguid"
+define|#
+directive|define
+name|DS_FIELD_RESUME_TONAME
+value|"com.delphix:resume_toname"
+define|#
+directive|define
+name|DS_FIELD_RESUME_TOGUID
+value|"com.delphix:resume_toguid"
+define|#
+directive|define
+name|DS_FIELD_RESUME_OBJECT
+value|"com.delphix:resume_object"
+define|#
+directive|define
+name|DS_FIELD_RESUME_OFFSET
+value|"com.delphix:resume_offset"
+define|#
+directive|define
+name|DS_FIELD_RESUME_BYTES
+value|"com.delphix:resume_bytes"
+define|#
+directive|define
+name|DS_FIELD_RESUME_EMBEDOK
+value|"com.delphix:resume_embedok"
 comment|/*  * DS_FLAG_CI_DATASET is set if the dataset contains a file system whose  * name lookups should be performed case-insensitively.  */
 define|#
 directive|define
@@ -241,6 +276,9 @@ typedef|typedef
 struct|struct
 name|dsl_dataset
 block|{
+name|dmu_buf_user_t
+name|ds_dbu
+decl_stmt|;
 comment|/* Immutable: */
 name|struct
 name|dsl_dir
@@ -257,6 +295,9 @@ decl_stmt|;
 name|uint64_t
 name|ds_fsid_guid
 decl_stmt|;
+name|boolean_t
+name|ds_is_snapshot
+decl_stmt|;
 comment|/* only used in syncing context, only valid for non-snapshots: */
 name|struct
 name|dsl_dataset
@@ -267,12 +308,6 @@ name|uint64_t
 name|ds_bookmarks
 decl_stmt|;
 comment|/* DMU_OTN_ZAP_METADATA */
-name|boolean_t
-name|ds_large_blocks
-decl_stmt|;
-name|boolean_t
-name|ds_need_large_blocks
-decl_stmt|;
 comment|/* has internal locking: */
 name|dsl_deadlist_t
 name|ds_deadlist
@@ -328,6 +363,43 @@ decl_stmt|;
 name|list_t
 name|ds_sendstreams
 decl_stmt|;
+comment|/* 	 * When in the middle of a resumable receive, tracks how much 	 * progress we have made. 	 */
+name|uint64_t
+name|ds_resume_object
+index|[
+name|TXG_SIZE
+index|]
+decl_stmt|;
+name|uint64_t
+name|ds_resume_offset
+index|[
+name|TXG_SIZE
+index|]
+decl_stmt|;
+name|uint64_t
+name|ds_resume_bytes
+index|[
+name|TXG_SIZE
+index|]
+decl_stmt|;
+comment|/* Protected by our dsl_dir's dd_lock */
+name|list_t
+name|ds_prop_cbs
+decl_stmt|;
+comment|/* 	 * For ZFEATURE_FLAG_PER_DATASET features, set if this dataset 	 * uses this feature. 	 */
+name|uint8_t
+name|ds_feature_inuse
+index|[
+name|SPA_FEATURES
+index|]
+decl_stmt|;
+comment|/* 	 * Set if we need to activate the feature on this dataset this txg 	 * (used only in syncing context). 	 */
+name|uint8_t
+name|ds_feature_activation_needed
+index|[
+name|SPA_FEATURES
+index|]
+decl_stmt|;
 comment|/* Protected by ds_lock; keep at end of struct for better locality */
 name|char
 name|ds_snapname
@@ -363,28 +435,14 @@ define|#
 directive|define
 name|MAX_TAG_PREFIX_LEN
 value|17
-specifier|inline
-name|boolean_t
+define|#
+directive|define
 name|dsl_dataset_is_snapshot
 parameter_list|(
-name|dsl_dataset_t
-modifier|*
 name|ds
 parameter_list|)
-block|{
-return|return
-operator|(
-name|dsl_dataset_phys
-argument_list|(
-name|ds
-argument_list|)
-operator|->
-name|ds_num_children
-operator|!=
-literal|0
-operator|)
-return|;
-block|}
+define|\
+value|(dsl_dataset_phys(ds)->ds_num_children != 0)
 define|#
 directive|define
 name|DS_UNIQUE_IS_ACCURATE
@@ -414,6 +472,23 @@ name|dsl_dataset_t
 modifier|*
 modifier|*
 name|dsp
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|dsl_dataset_try_add_ref
+parameter_list|(
+name|struct
+name|dsl_pool
+modifier|*
+name|dp
+parameter_list|,
+name|dsl_dataset_t
+modifier|*
+name|ds
+parameter_list|,
+name|void
+modifier|*
+name|tag
 parameter_list|)
 function_decl|;
 name|int
@@ -526,6 +601,14 @@ parameter_list|,
 name|void
 modifier|*
 name|tag
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|dsl_dataset_has_owner
+parameter_list|(
+name|dsl_dataset_t
+modifier|*
+name|ds
 parameter_list|)
 function_decl|;
 name|uint64_t
@@ -909,26 +992,6 @@ name|ds
 parameter_list|)
 function_decl|;
 name|int
-name|dsl_dataset_activate_large_blocks
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|dsname
-parameter_list|)
-function_decl|;
-name|void
-name|dsl_dataset_activate_large_blocks_sync_impl
-parameter_list|(
-name|uint64_t
-name|dsobj
-parameter_list|,
-name|dmu_tx_t
-modifier|*
-name|tx
-parameter_list|)
-function_decl|;
-name|int
 name|dsl_dsobj_to_dsname
 parameter_list|(
 name|char
@@ -1226,6 +1289,22 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
+name|boolean_t
+name|dsl_dataset_is_zapified
+parameter_list|(
+name|dsl_dataset_t
+modifier|*
+name|ds
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|dsl_dataset_has_resume_receive_state
+parameter_list|(
+name|dsl_dataset_t
+modifier|*
+name|ds
+parameter_list|)
+function_decl|;
 name|int
 name|dsl_dataset_rollback
 parameter_list|(
@@ -1241,6 +1320,20 @@ parameter_list|,
 name|nvlist_t
 modifier|*
 name|result
+parameter_list|)
+function_decl|;
+name|void
+name|dsl_dataset_deactivate_feature
+parameter_list|(
+name|uint64_t
+name|dsobj
+parameter_list|,
+name|spa_feature_t
+name|f
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
 parameter_list|)
 function_decl|;
 ifdef|#

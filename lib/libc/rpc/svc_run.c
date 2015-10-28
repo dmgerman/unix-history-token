@@ -140,7 +140,9 @@ end_include
 begin_function
 name|void
 name|svc_run
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fd_set
 name|readfds
@@ -267,7 +269,9 @@ end_comment
 begin_function
 name|void
 name|svc_exit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|rwlock_wrlock
 argument_list|(

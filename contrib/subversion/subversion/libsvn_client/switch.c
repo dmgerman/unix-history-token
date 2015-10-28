@@ -788,7 +788,6 @@ expr_stmt|;
 comment|/* Not versioned */
 else|else
 block|{
-comment|/* ### It would be nice if this function could reuse the existing              ra session instead of opening two for its own use. */
 name|SVN_ERR
 argument_list|(
 name|svn_client__get_youngest_common_ancestor
@@ -1181,7 +1180,7 @@ name|timestamp_sleep
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* Drive the reporter structure, describing the revisions within      PATH.  When we call reporter->finish_report, the update_editor      will be driven by svn_repos_dir_delta2. */
+comment|/* Drive the reporter structure, describing the revisions within      LOCAL_ABSPATH.  When this calls reporter->finish_report, the      reporter will drive the switch_editor. */
 name|SVN_ERR
 argument_list|(
 name|svn_wc_crawl_revisions5
@@ -1296,6 +1295,8 @@ name|depth
 argument_list|,
 name|timestamp_sleep
 argument_list|,
+name|ra_session
+argument_list|,
 name|ctx
 argument_list|,
 name|pool
@@ -1352,12 +1353,9 @@ name|revision
 operator|=
 name|revnum
 expr_stmt|;
-call|(
-modifier|*
 name|ctx
 operator|->
 name|notify_func2
-call|)
 argument_list|(
 name|ctx
 operator|->

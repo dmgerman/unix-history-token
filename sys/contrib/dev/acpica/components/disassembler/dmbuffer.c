@@ -49,12 +49,6 @@ directive|include
 file|<contrib/dev/acpica/include/acinterp.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DISASSEMBLER
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -2012,23 +2006,9 @@ expr_stmt|;
 if|if
 condition|(
 name|ByteCount
-operator|<
-name|ACPI_PLD_REV1_BUFFER_SIZE
+operator|>=
+name|ACPI_PLD_REV2_BUFFER_SIZE
 condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-name|ACPI_PLD_OUTPUT08P
-argument_list|,
-literal|"PLD_Order"
-argument_list|,
-name|PldInfo
-operator|->
-name|Order
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
@@ -2041,15 +2021,7 @@ operator|->
 name|Order
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Fifth 32-bit dword */
-if|if
-condition|(
-name|ByteCount
-operator|>=
-name|ACPI_PLD_REV1_BUFFER_SIZE
-condition|)
-block|{
 name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT16
@@ -2070,6 +2042,21 @@ argument_list|,
 name|PldInfo
 operator|->
 name|HorizontalOffset
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+comment|/* Rev 1 buffer */
+block|{
+name|AcpiOsPrintf
+argument_list|(
+name|ACPI_PLD_OUTPUT08P
+argument_list|,
+literal|"PLD_Order"
+argument_list|,
+name|PldInfo
+operator|->
+name|Order
 argument_list|)
 expr_stmt|;
 block|}
@@ -2632,11 +2619,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

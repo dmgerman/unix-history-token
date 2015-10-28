@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"sanitizer_posix.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sanitizer_platform_limits_posix.h"
 end_include
 
@@ -367,24 +373,6 @@ name|char
 modifier|*
 name|base_name
 parameter_list|)
-function_decl|;
-comment|// Read the name of the current binary from /proc/self/exe.
-name|uptr
-name|ReadBinaryName
-parameter_list|(
-comment|/*out*/
-name|char
-modifier|*
-name|buf
-parameter_list|,
-name|uptr
-name|buf_len
-parameter_list|)
-function_decl|;
-comment|// Cache the value of /proc/self/exe.
-name|void
-name|CacheBinaryName
-parameter_list|()
 function_decl|;
 comment|// Call cb for each region mapped by map.
 name|void

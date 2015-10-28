@@ -90,6 +90,12 @@ decl_stmt|;
 name|class
 name|AsmPrinter
 decl_stmt|;
+name|class
+name|MCSymbol
+decl_stmt|;
+name|class
+name|MCSymbolRefExpr
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -100,6 +106,7 @@ name|SmallVectorImpl
 expr_stmt|;
 comment|/// Emits exception handling directives.
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|EHStreamer
 range|:
 name|public
@@ -180,18 +187,19 @@ name|MCSymbol
 modifier|*
 name|BeginLabel
 decl_stmt|;
-comment|// zero indicates the start of the function.
+comment|// Null indicates the start of the function.
 name|MCSymbol
 modifier|*
 name|EndLabel
 decl_stmt|;
-comment|// zero indicates the end of the function.
-comment|// The landing pad starts at PadLabel.
-name|MCSymbol
+comment|// Null indicates the end of the function.
+comment|// LPad contains the landing pad start labels.
+specifier|const
+name|LandingPadInfo
 modifier|*
-name|PadLabel
+name|LPad
 decl_stmt|;
-comment|// zero indicates that there is no landing pad.
+comment|// Null indicates that there is no landing pad.
 name|unsigned
 name|Action
 decl_stmt|;
@@ -238,6 +246,24 @@ modifier|*
 name|MI
 parameter_list|)
 function_decl|;
+name|void
+name|computePadMap
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|LandingPadInfo
+operator|*
+operator|>
+operator|&
+name|LandingPads
+argument_list|,
+name|RangeMapType
+operator|&
+name|PadMap
+argument_list|)
+decl_stmt|;
 comment|/// Compute the call-site table.  The entry for an invoke has a try-range
 comment|/// containing the call, a non-zero landing pad and an appropriate action.
 comment|/// The entry for an ordinary call has a try-range containing the call and
@@ -304,6 +330,51 @@ name|unsigned
 name|TTypeEncoding
 parameter_list|)
 function_decl|;
+comment|// Helpers for for identifying what kind of clause an EH typeid or selector
+comment|// corresponds to. Negative selectors are for filter clauses, the zero
+comment|// selector is for cleanups, and positive selectors are for catch clauses.
+specifier|static
+name|bool
+name|isFilterEHSelector
+parameter_list|(
+name|int
+name|Selector
+parameter_list|)
+block|{
+return|return
+name|Selector
+operator|<
+literal|0
+return|;
+block|}
+specifier|static
+name|bool
+name|isCleanupEHSelector
+parameter_list|(
+name|int
+name|Selector
+parameter_list|)
+block|{
+return|return
+name|Selector
+operator|==
+literal|0
+return|;
+block|}
+specifier|static
+name|bool
+name|isCatchEHSelector
+parameter_list|(
+name|int
+name|Selector
+parameter_list|)
+block|{
+return|return
+name|Selector
+operator|>
+literal|0
+return|;
+block|}
 name|public
 label|:
 name|EHStreamer
@@ -313,39 +384,11 @@ operator|*
 name|A
 argument_list|)
 expr_stmt|;
-name|virtual
 operator|~
 name|EHStreamer
 argument_list|()
-expr_stmt|;
-comment|/// Emit all exception information that should come after the content.
-name|void
-name|endModule
-argument_list|()
 name|override
 expr_stmt|;
-comment|/// Gather pre-function exception information.  Assumes being emitted
-comment|/// immediately after the function entry point.
-name|void
-name|beginFunction
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|*
-name|MF
-argument_list|)
-name|override
-decl_stmt|;
-comment|/// Gather and emit post-function exception information.
-name|void
-name|endFunction
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|*
-argument_list|)
-name|override
-decl_stmt|;
 comment|// Unused.
 name|void
 name|setSymbolSize

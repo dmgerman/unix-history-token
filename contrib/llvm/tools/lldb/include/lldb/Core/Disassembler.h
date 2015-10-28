@@ -294,48 +294,59 @@ comment|///     Pass NULL if unavailable, or if this is the first instruction of
 comment|///     the InstructionList.
 comment|///     Only needed if show_address is true.
 comment|///
-comment|/// @param[in] disassembly_addr_format_spec
+comment|/// @param[in] disassembly_addr_format
 comment|///     The format specification for how addresses are printed.
 comment|///     Only needed if show_address is true.
+comment|///
+comment|/// @param[in] max_address_text_size
+comment|///     The length of the longest address string at the start of the
+comment|///     disassembly line that will be printed (the Debugger::FormatDisassemblerAddress() string)
+comment|///     so this method can properly align the instruction opcodes.
+comment|///     May be 0 to indicate no indentation/alignment of the opcodes.
 comment|//------------------------------------------------------------------
 name|virtual
 name|void
 name|Dump
-parameter_list|(
+argument_list|(
 name|Stream
-modifier|*
+operator|*
 name|s
-parameter_list|,
+argument_list|,
 name|uint32_t
 name|max_opcode_byte_size
-parameter_list|,
+argument_list|,
 name|bool
 name|show_address
-parameter_list|,
+argument_list|,
 name|bool
 name|show_bytes
-parameter_list|,
+argument_list|,
 specifier|const
 name|ExecutionContext
-modifier|*
+operator|*
 name|exe_ctx
-parameter_list|,
+argument_list|,
 specifier|const
 name|SymbolContext
-modifier|*
+operator|*
 name|sym_ctx
-parameter_list|,
+argument_list|,
 specifier|const
 name|SymbolContext
-modifier|*
+operator|*
 name|prev_sym_ctx
-parameter_list|,
+argument_list|,
 specifier|const
-name|char
-modifier|*
-name|disassembly_addr_format_spec
-parameter_list|)
-function_decl|;
+name|FormatEntity
+operator|::
+name|Entry
+operator|*
+name|disassembly_addr_format
+argument_list|,
+name|size_t
+name|max_address_text_size
+argument_list|)
+decl_stmt|;
 name|virtual
 name|bool
 name|DoesBranch
@@ -587,6 +598,10 @@ name|GetIndexOfNextBranchInstruction
 argument_list|(
 name|uint32_t
 name|start
+argument_list|,
+name|Target
+operator|&
+name|target
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1344,7 +1359,6 @@ label|:
 comment|//------------------------------------------------------------------
 comment|// Classes that inherit from Disassembler can see and modify these
 comment|//------------------------------------------------------------------
-specifier|const
 name|ArchSpec
 name|m_arch
 decl_stmt|;

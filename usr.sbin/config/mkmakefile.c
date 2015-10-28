@@ -3214,6 +3214,11 @@ argument_list|,
 name|SUFF
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|SUFF
+argument_list|)
+expr_stmt|;
 name|lpos
 operator|=
 literal|8
@@ -3345,6 +3350,11 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|suff
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lpos

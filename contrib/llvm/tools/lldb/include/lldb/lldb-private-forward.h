@@ -139,17 +139,6 @@ name|NativeThreadProtocol
 operator|>
 name|NativeThreadProtocolSP
 expr_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|shared_ptr
-operator|<
-name|lldb_private
-operator|::
-name|UnixSignals
-operator|>
-name|UnixSignalsSP
-expr_stmt|;
 block|}
 end_decl_stmt
 

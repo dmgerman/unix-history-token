@@ -1569,7 +1569,7 @@ name|domain
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Page table page does not exists, allocate 			 * it and create pte in the up level. 			 */
+comment|/* 			 * Page table page does not exist, allocate 			 * it and create a pte in the preceeding page level 			 * to reference the allocated page table page. 			 */
 name|m
 operator|=
 name|dmar_pgalloc

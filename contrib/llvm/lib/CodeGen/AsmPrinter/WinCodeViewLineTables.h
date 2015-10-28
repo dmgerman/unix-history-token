@@ -137,6 +137,7 @@ name|llvm
 block|{
 comment|/// \brief Collects and handles line tables information in a CodeView format.
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|WinCodeViewLineTables
 range|:
 name|public
@@ -216,10 +217,18 @@ decl_stmt|;
 name|unsigned
 name|LineNumber
 decl_stmt|;
+name|unsigned
+name|ColumnNumber
+decl_stmt|;
 name|InstrInfoTy
 argument_list|()
 operator|:
 name|LineNumber
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|ColumnNumber
 argument_list|(
 literal|0
 argument_list|)
@@ -229,6 +238,8 @@ argument_list|(
 argument|StringRef Filename
 argument_list|,
 argument|unsigned LineNumber
+argument_list|,
+argument|unsigned ColumnNumber
 argument_list|)
 operator|:
 name|Filename
@@ -238,7 +249,12 @@ argument_list|)
 operator|,
 name|LineNumber
 argument_list|(
-argument|LineNumber
+name|LineNumber
+argument_list|)
+operator|,
+name|ColumnNumber
+argument_list|(
+argument|ColumnNumber
 argument_list|)
 block|{}
 block|}
@@ -463,6 +479,7 @@ expr_stmt|;
 operator|~
 name|WinCodeViewLineTables
 argument_list|()
+name|override
 block|{
 for|for
 control|(

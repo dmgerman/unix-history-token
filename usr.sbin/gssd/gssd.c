@@ -3686,12 +3686,12 @@ block|{
 name|int
 name|len
 init|=
-name|NGRPS
+name|NGROUPS
 decl_stmt|;
 name|int
 name|groups
 index|[
-name|NGRPS
+name|NGROUPS
 index|]
 decl_stmt|;
 name|result

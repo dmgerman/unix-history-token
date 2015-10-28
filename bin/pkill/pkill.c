@@ -171,6 +171,12 @@ directive|include
 file|<locale.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<jail.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -241,7 +247,7 @@ name|LT_TTY
 block|,
 name|LT_PGRP
 block|,
-name|LT_JID
+name|LT_JAIL
 block|,
 name|LT_SID
 block|,
@@ -1141,7 +1147,7 @@ argument_list|(
 operator|&
 name|jidlist
 argument_list|,
-name|LT_JID
+name|LT_JAIL
 argument_list|,
 name|optarg
 argument_list|)
@@ -2765,7 +2771,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: %s %s [-F pidfile] [-G gid] [-M core] [-N system]\n"
-literal|"             [-P ppid] [-U uid] [-c class] [-g pgrp] [-j jid]\n"
+literal|"             [-P ppid] [-U uid] [-c class] [-g pgrp] [-j jail]\n"
 literal|"             [-s sid] [-t tty] [-u euid] pattern ...\n"
 argument_list|,
 name|getprogname
@@ -3308,7 +3314,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|LT_JID
+name|LT_JAIL
 case|:
 if|if
 condition|(
@@ -3671,8 +3677,12 @@ name|st_rdev
 expr_stmt|;
 break|break;
 case|case
-name|LT_JID
+name|LT_JAIL
 case|:
+block|{
+name|int
+name|jid
+decl_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -3712,6 +3722,27 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
+name|jid
+operator|=
+name|jail_getid
+argument_list|(
+name|sp
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+name|li
+operator|->
+name|li_number
+operator|=
+name|jid
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|*
 name|ep
 operator|!=
@@ -3721,12 +3752,13 @@ name|errx
 argument_list|(
 name|STATUS_BADUSAGE
 argument_list|,
-literal|"Invalid jail ID `%s'"
+literal|"Invalid jail ID or name `%s'"
 argument_list|,
 name|sp
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 case|case
 name|LT_CLASS
 case|:

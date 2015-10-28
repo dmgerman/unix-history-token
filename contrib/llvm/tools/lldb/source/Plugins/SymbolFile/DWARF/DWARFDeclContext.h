@@ -328,6 +328,34 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|// Same as GetQaulifiedName, but the life time of the returned string will
+end_comment
+
+begin_comment
+comment|// be that of the LLDB session.
+end_comment
+
+begin_expr_stmt
+name|lldb_private
+operator|::
+name|ConstString
+name|GetQualifiedNameAsConstString
+argument_list|()
+specifier|const
+block|{
+return|return
+name|lldb_private
+operator|::
+name|ConstString
+argument_list|(
+name|GetQualifiedName
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_label
 name|protected
 label|:

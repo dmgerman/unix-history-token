@@ -823,7 +823,7 @@ name|tn_cast
 range|:
 literal|1
 decl_stmt|;
-comment|/* if tn_op == CVT its an explizit cast */
+comment|/* if tn_op == CVT its an explicit cast */
 name|u_int
 name|tn_parn
 range|:

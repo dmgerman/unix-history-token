@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this software and associated documentation files (the "Software"), to  * deal in the Software without restriction, including without limitation the  * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or  * sell copies of the Software, and to permit persons to whom the Software is  * furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  */
+comment|/*  * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this software and associated documentation files (the "Software"), to  * deal in the Software without restriction, including without limitation the  * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or  * sell copies of the Software, and to permit persons to whom the Software is  * furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Copyright (c) 2006, Keir Fraser  */
 end_comment
 
 begin_ifndef
@@ -448,7 +448,7 @@ comment|/* IN */
 name|int
 name|type
 decl_stmt|;
-comment|/* IN */
+comment|/* IN (ignored for ..._MULTI_MSI) */
 name|int
 name|index
 decl_stmt|;
@@ -456,7 +456,7 @@ comment|/* IN or OUT */
 name|int
 name|pirq
 decl_stmt|;
-comment|/* IN - high 16 bits hold segment for MAP_PIRQ_TYPE_MSI_SEG */
+comment|/* IN - high 16 bits hold segment for ..._MSI_SEG and ..._MULTI_MSI */
 name|int
 name|bus
 decl_stmt|;
@@ -464,7 +464,7 @@ comment|/* IN */
 name|int
 name|devfn
 decl_stmt|;
-comment|/* IN */
+comment|/* IN (also OUT for ..._MULTI_MSI) */
 name|int
 name|entry_nr
 decl_stmt|;
@@ -923,6 +923,7 @@ decl_stmt|;
 block|}
 name|physfn
 struct|;
+comment|/*      * Optional parameters array.      * First element ([0]) is PXM domain associated with the device (if      * XEN_PCI_DEV_PXM is set)      */
 if|#
 directive|if
 name|defined
@@ -985,6 +986,24 @@ name|PHYSDEVOP_restore_msi_ext
 value|27
 end_define
 
+begin_comment
+comment|/*  * Dom0 should use these two to announce MMIO resources assigned to  * MSI-X capable devices won't (prepare) or may (release) change.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHYSDEVOP_prepare_msix
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHYSDEVOP_release_msix
+value|31
+end_define
+
 begin_struct
 struct|struct
 name|physdev_pci_device
@@ -1019,6 +1038,81 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|PHYSDEVOP_DBGP_RESET_PREPARE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHYSDEVOP_DBGP_RESET_DONE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHYSDEVOP_DBGP_BUS_UNKNOWN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHYSDEVOP_DBGP_BUS_PCI
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHYSDEVOP_dbgp_op
+value|29
+end_define
+
+begin_struct
+struct|struct
+name|physdev_dbgp_op
+block|{
+comment|/* IN */
+name|uint8_t
+name|op
+decl_stmt|;
+name|uint8_t
+name|bus
+decl_stmt|;
+union|union
+block|{
+name|struct
+name|physdev_pci_device
+name|pci
+decl_stmt|;
+block|}
+name|u
+union|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|physdev_dbgp_op
+name|physdev_dbgp_op_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|physdev_dbgp_op_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Notify that some PIRQ-bound event channels have been unmasked.  * ** This command is obsolete since interface version 0x00030202 and is **  * ** unsupported by newer versions of Xen.                              **  */
 end_comment
@@ -1030,8 +1124,16 @@ name|PHYSDEVOP_IRQ_UNMASK_NOTIFY
 value|4
 end_define
 
+begin_if
+if|#
+directive|if
+name|__XEN_INTERFACE_VERSION__
+operator|<
+literal|0x00040600
+end_if
+
 begin_comment
-comment|/*  * These all-capitals physdev operation names are superceded by the new names  * (defined above) since interface version 0x00030202.  */
+comment|/*  * These all-capitals physdev operation names are superceded by the new names  * (defined above) since interface version 0x00030202. The guard above was  * added post-4.5 only though and hence shouldn't check for 0x00030202.  */
 end_comment
 
 begin_define
@@ -1097,6 +1199,11 @@ name|PHYSDEVOP_IRQ_SHARED
 value|XENIRQSTAT_shared
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -1139,7 +1246,7 @@ comment|/* __XEN_PUBLIC_PHYSDEV_H__ */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit

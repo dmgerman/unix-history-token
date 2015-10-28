@@ -62,19 +62,31 @@ end_define
 begin_include
 include|#
 directive|include
+file|"JITSymbolFlags.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/RTDyldMemoryManager.h"
+file|"llvm/Support/Memory.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Memory.h"
+file|"llvm/DebugInfo/DIContext.h"
 end_include
 
 begin_include
@@ -117,9 +129,12 @@ name|RuntimeDyldCheckerImpl
 decl_stmt|;
 name|RuntimeDyld
 argument_list|(
-argument|const RuntimeDyld&
+specifier|const
+name|RuntimeDyld
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -129,28 +144,8 @@ specifier|const
 name|RuntimeDyld
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
-decl_stmt|;
-comment|// RuntimeDyldImpl is the actual class. RuntimeDyld is just the public
-comment|// interface.
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|RuntimeDyldImpl
-operator|>
-name|Dyld
-expr_stmt|;
-name|RTDyldMemoryManager
-modifier|*
-name|MM
-decl_stmt|;
-name|bool
-name|ProcessAllSections
-decl_stmt|;
-name|RuntimeDyldCheckerImpl
-modifier|*
-name|Checker
+operator|=
+name|delete
 decl_stmt|;
 name|protected
 label|:
@@ -168,16 +163,93 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
+comment|/// \brief Information about a named symbol.
+name|class
+name|SymbolInfo
+range|:
+name|public
+name|JITSymbolBase
+block|{
+name|public
+operator|:
+name|SymbolInfo
+argument_list|(
+name|std
+operator|::
+name|nullptr_t
+argument_list|)
+operator|:
+name|JITSymbolBase
+argument_list|(
+name|JITSymbolFlags
+operator|::
+name|None
+argument_list|)
+block|,
+name|Address
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|SymbolInfo
+argument_list|(
+argument|uint64_t Address
+argument_list|,
+argument|JITSymbolFlags Flags
+argument_list|)
+operator|:
+name|JITSymbolBase
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+name|Address
+argument_list|(
+argument|Address
+argument_list|)
+block|{}
+name|explicit
+name|operator
+name|bool
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Address
+operator|!=
+literal|0
+return|;
+block|}
+name|uint64_t
+name|getAddress
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Address
+return|;
+block|}
+name|private
+operator|:
+name|uint64_t
+name|Address
+block|;   }
+decl_stmt|;
 comment|/// \brief Information about the loaded object.
 name|class
+name|LoadedObjectInfo
+range|:
+name|public
+name|llvm
+operator|::
 name|LoadedObjectInfo
 block|{
 name|friend
 name|class
 name|RuntimeDyldImpl
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|LoadedObjectInfo
 argument_list|(
 argument|RuntimeDyldImpl&RTDyld
@@ -186,27 +258,22 @@ argument|unsigned BeginIdx
 argument_list|,
 argument|unsigned EndIdx
 argument_list|)
-block|:
+operator|:
 name|RTDyld
 argument_list|(
 name|RTDyld
 argument_list|)
-operator|,
+block|,
 name|BeginIdx
 argument_list|(
 name|BeginIdx
 argument_list|)
-operator|,
+block|,
 name|EndIdx
 argument_list|(
 argument|EndIdx
 argument_list|)
 block|{ }
-name|virtual
-operator|~
-name|LoadedObjectInfo
-argument_list|()
-block|{}
 name|virtual
 name|object
 operator|::
@@ -223,43 +290,328 @@ argument_list|)
 specifier|const
 operator|=
 literal|0
-expr_stmt|;
+block|;
 name|uint64_t
 name|getSectionLoadAddress
 argument_list|(
-name|StringRef
-name|Name
+argument|StringRef Name
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|protected
-label|:
+operator|:
 name|virtual
 name|void
 name|anchor
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|RuntimeDyldImpl
-modifier|&
+operator|&
 name|RTDyld
-decl_stmt|;
+block|;
 name|unsigned
 name|BeginIdx
-decl_stmt|,
+block|,
 name|EndIdx
+block|;   }
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|Derived
+operator|>
+expr|struct
+name|LoadedObjectInfoHelper
+operator|:
+name|LoadedObjectInfo
+block|{
+name|LoadedObjectInfoHelper
+argument_list|(
+argument|RuntimeDyldImpl&RTDyld
+argument_list|,
+argument|unsigned BeginIdx
+argument_list|,
+argument|unsigned EndIdx
+argument_list|)
+operator|:
+name|LoadedObjectInfo
+argument_list|(
+argument|RTDyld
+argument_list|,
+argument|BeginIdx
+argument_list|,
+argument|EndIdx
+argument_list|)
+block|{}
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|LoadedObjectInfo
+operator|>
+name|clone
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|llvm
+operator|::
+name|make_unique
+operator|<
+name|Derived
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|Derived
+operator|&
+operator|>
+operator|(
+operator|*
+name|this
+operator|)
+operator|)
+return|;
 block|}
-empty_stmt|;
+expr|}
+block|;
+comment|/// \brief Memory Management.
+name|class
+name|MemoryManager
+block|{
+name|public
+operator|:
+name|virtual
+operator|~
+name|MemoryManager
+argument_list|()
+block|{}
+block|;
+comment|/// Allocate a memory block of (at least) the given size suitable for
+comment|/// executable code. The SectionID is a unique identifier assigned by the
+comment|/// RuntimeDyld instance, and optionally recorded by the memory manager to
+comment|/// access a loaded section.
+name|virtual
+name|uint8_t
+operator|*
+name|allocateCodeSection
+argument_list|(
+argument|uintptr_t Size
+argument_list|,
+argument|unsigned Alignment
+argument_list|,
+argument|unsigned SectionID
+argument_list|,
+argument|StringRef SectionName
+argument_list|)
+operator|=
+literal|0
+block|;
+comment|/// Allocate a memory block of (at least) the given size suitable for data.
+comment|/// The SectionID is a unique identifier assigned by the JIT engine, and
+comment|/// optionally recorded by the memory manager to access a loaded section.
+name|virtual
+name|uint8_t
+operator|*
+name|allocateDataSection
+argument_list|(
+argument|uintptr_t Size
+argument_list|,
+argument|unsigned Alignment
+argument_list|,
+argument|unsigned SectionID
+argument_list|,
+argument|StringRef SectionName
+argument_list|,
+argument|bool IsReadOnly
+argument_list|)
+operator|=
+literal|0
+block|;
+comment|/// Inform the memory manager about the total amount of memory required to
+comment|/// allocate all sections to be loaded:
+comment|/// \p CodeSize - the total size of all code sections
+comment|/// \p DataSizeRO - the total size of all read-only data sections
+comment|/// \p DataSizeRW - the total size of all read-write data sections
+comment|///
+comment|/// Note that by default the callback is disabled. To enable it
+comment|/// redefine the method needsToReserveAllocationSpace to return true.
+name|virtual
+name|void
+name|reserveAllocationSpace
+argument_list|(
+argument|uintptr_t CodeSize
+argument_list|,
+argument|uintptr_t DataSizeRO
+argument_list|,
+argument|uintptr_t DataSizeRW
+argument_list|)
+block|{}
+comment|/// Override to return true to enable the reserveAllocationSpace callback.
+name|virtual
+name|bool
+name|needsToReserveAllocationSpace
+argument_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Register the EH frames with the runtime so that c++ exceptions work.
+comment|///
+comment|/// \p Addr parameter provides the local address of the EH frame section
+comment|/// data, while \p LoadAddr provides the address of the data in the target
+comment|/// address space.  If the section has not been remapped (which will usually
+comment|/// be the case for local execution) these two values will be the same.
+name|virtual
+name|void
+name|registerEHFrames
+argument_list|(
+argument|uint8_t *Addr
+argument_list|,
+argument|uint64_t LoadAddr
+argument_list|,
+argument|size_t Size
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|deregisterEHFrames
+argument_list|(
+argument|uint8_t *addr
+argument_list|,
+argument|uint64_t LoadAddr
+argument_list|,
+argument|size_t Size
+argument_list|)
+operator|=
+literal|0
+block|;
+comment|/// This method is called when object loading is complete and section page
+comment|/// permissions can be applied.  It is up to the memory manager implementation
+comment|/// to decide whether or not to act on this method.  The memory manager will
+comment|/// typically allocate all sections as read-write and then apply specific
+comment|/// permissions when this method is called.  Code sections cannot be executed
+comment|/// until this function has been called.  In addition, any cache coherency
+comment|/// operations needed to reliably use the memory are also performed.
+comment|///
+comment|/// Returns true if an error occurred, false otherwise.
+name|virtual
+name|bool
+name|finalizeMemory
+argument_list|(
+name|std
+operator|::
+name|string
+operator|*
+name|ErrMsg
+operator|=
+name|nullptr
+argument_list|)
+operator|=
+literal|0
+block|;
+name|private
+operator|:
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;   }
+block|;
+comment|/// \brief Symbol resolution.
+name|class
+name|SymbolResolver
+block|{
+name|public
+operator|:
+name|virtual
+operator|~
+name|SymbolResolver
+argument_list|()
+block|{}
+block|;
+comment|/// This method returns the address of the specified function or variable.
+comment|/// It is used to resolve symbols during module linking.
+comment|///
+comment|/// If the returned symbol's address is equal to ~0ULL then RuntimeDyld will
+comment|/// skip all relocations for that symbol, and the client will be responsible
+comment|/// for handling them manually.
+name|virtual
+name|SymbolInfo
+name|findSymbol
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|)
+operator|=
+literal|0
+block|;
+comment|/// This method returns the address of the specified symbol if it exists
+comment|/// within the logical dynamic library represented by this
+comment|/// RTDyldMemoryManager. Unlike getSymbolAddress, queries through this
+comment|/// interface should return addresses for hidden symbols.
+comment|///
+comment|/// This is of particular importance for the Orc JIT APIs, which support lazy
+comment|/// compilation by breaking up modules: Each of those broken out modules
+comment|/// must be able to resolve hidden symbols provided by the others. Clients
+comment|/// writing memory managers for MCJIT can usually ignore this method.
+comment|///
+comment|/// This method will be queried by RuntimeDyld when checking for previous
+comment|/// definitions of common symbols. It will *not* be queried by default when
+comment|/// resolving external symbols (this minimises the link-time overhead for
+comment|/// MCJIT clients who don't care about Orc features). If you are writing a
+comment|/// RTDyldMemoryManager for Orc and want "external" symbol resolution to
+comment|/// search the logical dylib, you should override your getSymbolAddress
+comment|/// method call this method directly.
+name|virtual
+name|SymbolInfo
+name|findSymbolInLogicalDylib
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|)
+operator|=
+literal|0
+block|;
+name|private
+operator|:
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;   }
+block|;
+comment|/// \brief Construct a RuntimeDyld instance.
 name|RuntimeDyld
 argument_list|(
-name|RTDyldMemoryManager
-operator|*
+name|MemoryManager
+operator|&
+name|MemMgr
+argument_list|,
+name|SymbolResolver
+operator|&
+name|Resolver
 argument_list|)
-expr_stmt|;
+block|;
 operator|~
 name|RuntimeDyld
 argument_list|()
-expr_stmt|;
+block|;
 comment|/// Add the referenced object file to the list of objects to be loaded and
 comment|/// relocated.
 name|std
@@ -277,50 +629,44 @@ name|ObjectFile
 operator|&
 name|O
 argument_list|)
-expr_stmt|;
+block|;
 comment|/// Get the address of our local copy of the symbol. This may or may not
 comment|/// be the address used for relocation (clients can copy the data around
 comment|/// and resolve relocatons based on where they put it).
 name|void
-modifier|*
-name|getSymbolAddress
+operator|*
+name|getSymbolLocalAddress
 argument_list|(
-name|StringRef
-name|Name
+argument|StringRef Name
 argument_list|)
-decl|const
-decl_stmt|;
-comment|/// Get the address of the target copy of the symbol. This is the address
-comment|/// used for relocation.
-name|uint64_t
-name|getSymbolLoadAddress
+specifier|const
+block|;
+comment|/// Get the target address and flags for the named symbol.
+comment|/// This address is the one used for relocation.
+name|SymbolInfo
+name|getSymbol
 argument_list|(
-name|StringRef
-name|Name
+argument|StringRef Name
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// Resolve the relocations for all symbols we currently know about.
 name|void
 name|resolveRelocations
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// Map a section to its target address space value.
 comment|/// Map the address of a JIT section as returned from the memory manager
 comment|/// to the address in the target process as the running code will see it.
 comment|/// This is the address which will be used for relocation resolution.
 name|void
 name|mapSectionAddress
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|LocalAddress
-parameter_list|,
-name|uint64_t
-name|TargetAddress
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const void *LocalAddress
+argument_list|,
+argument|uint64_t TargetAddress
+argument_list|)
+block|;
 comment|/// Register any EH frame sections that have been loaded but not previously
 comment|/// registered with the memory manager.  Note, RuntimeDyld is responsible
 comment|/// for identifying the EH frame and calling the memory manager with the
@@ -328,20 +674,20 @@ comment|/// EH frame section data.  However, the memory manager itself will hand
 comment|/// the actual target-specific EH frame registration.
 name|void
 name|registerEHFrames
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|void
 name|deregisterEHFrames
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|bool
 name|hasError
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|StringRef
 name|getErrorString
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// By default, only sections that are "required for execution" are passed to
 comment|/// the RTDyldMemoryManager, and other sections are discarded. Passing 'true'
 comment|/// to this method will cause RuntimeDyld to pass all sections to its
@@ -352,10 +698,9 @@ comment|///
 comment|/// Must be called before the first object file is loaded.
 name|void
 name|setProcessAllSections
-parameter_list|(
-name|bool
-name|ProcessAllSections
-parameter_list|)
+argument_list|(
+argument|bool ProcessAllSections
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -364,16 +709,41 @@ name|Dyld
 operator|&&
 literal|"setProcessAllSections must be called before loadObject."
 argument_list|)
-expr_stmt|;
+block|;
 name|this
 operator|->
 name|ProcessAllSections
 operator|=
 name|ProcessAllSections
+block|;   }
+name|private
+operator|:
+comment|// RuntimeDyldImpl is the actual class. RuntimeDyld is just the public
+comment|// interface.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|RuntimeDyldImpl
+operator|>
+name|Dyld
+block|;
+name|MemoryManager
+operator|&
+name|MemMgr
+block|;
+name|SymbolResolver
+operator|&
+name|Resolver
+block|;
+name|bool
+name|ProcessAllSections
+block|;
+name|RuntimeDyldCheckerImpl
+operator|*
+name|Checker
+block|; }
 expr_stmt|;
-block|}
-block|}
-empty_stmt|;
 block|}
 end_decl_stmt
 

@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/SubtargetFeature.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -1903,6 +1909,89 @@ decl_stmt|;
 name|uint32_t
 name|Value
 decl_stmt|;
+comment|// Set of features this mapping is available for
+comment|// Zero value of FeatureBitSet means the mapping is always available
+name|FeatureBitset
+name|FeatureBitSet
+decl_stmt|;
+name|bool
+name|isNameEqual
+argument_list|(
+name|std
+operator|::
+name|string
+name|Other
+argument_list|,
+specifier|const
+name|FeatureBitset
+operator|&
+name|FeatureBits
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|FeatureBitSet
+operator|.
+name|any
+argument_list|()
+operator|&&
+operator|(
+name|FeatureBitSet
+operator|&
+name|FeatureBits
+operator|)
+operator|.
+name|none
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|Name
+operator|==
+name|Other
+return|;
+block|}
+name|bool
+name|isValueEqual
+argument_list|(
+name|uint32_t
+name|Other
+argument_list|,
+specifier|const
+name|FeatureBitset
+operator|&
+name|FeatureBits
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|FeatureBitSet
+operator|.
+name|any
+argument_list|()
+operator|&&
+operator|(
+name|FeatureBitSet
+operator|&
+name|FeatureBits
+operator|)
+operator|.
+name|none
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|Value
+operator|==
+name|Other
+return|;
+block|}
 block|}
 struct|;
 name|template
@@ -1912,21 +2001,21 @@ name|N
 operator|>
 name|AArch64NamedImmMapper
 argument_list|(
-argument|const Mapping (&Pairs)[N]
+argument|const Mapping (&Mappings)[N]
 argument_list|,
 argument|uint32_t TooBigImm
 argument_list|)
 operator|:
-name|Pairs
+name|Mappings
 argument_list|(
 operator|&
-name|Pairs
+name|Mappings
 index|[
 literal|0
 index|]
 argument_list|)
 operator|,
-name|NumPairs
+name|NumMappings
 argument_list|(
 name|N
 argument_list|)
@@ -1936,20 +2025,29 @@ argument_list|(
 argument|TooBigImm
 argument_list|)
 block|{}
+comment|// Maps value to string, depending on availability for FeatureBits given
 name|StringRef
 name|toString
 argument_list|(
 argument|uint32_t Value
 argument_list|,
+argument|const FeatureBitset& FeatureBits
+argument_list|,
 argument|bool&Valid
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|// Maps string to value, depending on availability for FeatureBits given
 name|uint32_t
 name|fromString
 argument_list|(
 name|StringRef
 name|Name
+argument_list|,
+specifier|const
+name|FeatureBitset
+operator|&
+name|FeatureBits
 argument_list|,
 name|bool
 operator|&
@@ -1973,10 +2071,10 @@ label|:
 specifier|const
 name|Mapping
 modifier|*
-name|Pairs
+name|Mappings
 decl_stmt|;
 name|size_t
-name|NumPairs
+name|NumMappings
 decl_stmt|;
 name|uint32_t
 name|TooBigImm
@@ -2064,7 +2162,7 @@ block|{
 specifier|const
 specifier|static
 name|Mapping
-name|ATPairs
+name|ATMappings
 index|[]
 block|;
 name|ATMapper
@@ -2140,7 +2238,7 @@ block|{
 specifier|const
 specifier|static
 name|Mapping
-name|DBarrierPairs
+name|DBarrierMappings
 index|[]
 block|;
 name|DBarrierMapper
@@ -2209,7 +2307,7 @@ block|{
 specifier|const
 specifier|static
 name|Mapping
-name|DCPairs
+name|DCMappings
 index|[]
 block|;
 name|DCMapper
@@ -2253,7 +2351,7 @@ block|{
 specifier|const
 specifier|static
 name|Mapping
-name|ICPairs
+name|ICMappings
 index|[]
 block|;
 name|ICMapper
@@ -2300,7 +2398,7 @@ block|{
 specifier|const
 specifier|static
 name|Mapping
-name|ISBPairs
+name|ISBMappings
 index|[]
 block|;
 name|ISBMapper
@@ -2400,7 +2498,7 @@ block|{
 specifier|const
 specifier|static
 name|Mapping
-name|PRFMPairs
+name|PRFMMappings
 index|[]
 block|;
 name|PRFMMapper
@@ -2430,7 +2528,12 @@ block|,
 name|DAIFClr
 init|=
 literal|0x1f
-block|}
+block|,
+comment|// v8.1a "Privileged Access Never" extension-specific PStates
+name|PAN
+init|=
+literal|0x04
+block|,   }
 enum|;
 name|struct
 name|PStateMapper
@@ -2440,7 +2543,7 @@ block|{
 specifier|const
 specifier|static
 name|Mapping
-name|PStatePairs
+name|PStateMappings
 index|[]
 block|;
 name|PStateMapper
@@ -3031,6 +3134,11 @@ init|=
 literal|0xdf02
 block|,
 comment|// 11  011  1110  0000  010
+name|ID_MMFR4_EL1
+init|=
+literal|0xc016
+block|,
+comment|// 11  000  0000  0010  110
 comment|// Trace registers
 name|TRCSTATR
 init|=
@@ -5686,16 +5794,179 @@ init|=
 literal|0xe66f
 block|,
 comment|// 11  100  1100  1101  111
-block|}
-enum|;
+comment|// v8.1a "Privileged Access Never" extension-specific system registers
+name|PAN
+init|=
+literal|0xc213
+block|,
+comment|// 11  000  0100  0010  011
+comment|// v8.1a "Limited Ordering Regions" extension-specific system registers
+name|LORSA_EL1
+init|=
+literal|0xc520
+block|,
+comment|// 11  000  1010  0100  000
+name|LOREA_EL1
+init|=
+literal|0xc521
+block|,
+comment|// 11  000  1010  0100  001
+name|LORN_EL1
+init|=
+literal|0xc522
+block|,
+comment|// 11  000  1010  0100  010
+name|LORC_EL1
+init|=
+literal|0xc523
+block|,
+comment|// 11  000  1010  0100  011
+name|LORID_EL1
+init|=
+literal|0xc527
+block|,
+comment|// 11  000  1010  0100  111
+comment|// v8.1a "Virtualization host extensions" system registers
+name|TTBR1_EL2
+init|=
+literal|0xe101
+block|,
+comment|// 11  100  0010  0000  001
+name|CONTEXTIDR_EL2
+init|=
+literal|0xe681
+block|,
+comment|// 11  100  1101  0000  001
+name|CNTHV_TVAL_EL2
+init|=
+literal|0xe718
+block|,
+comment|// 11  100  1110  0011  000
+name|CNTHV_CVAL_EL2
+init|=
+literal|0xe71a
+block|,
+comment|// 11  100  1110  0011  010
+name|CNTHV_CTL_EL2
+init|=
+literal|0xe719
+block|,
+comment|// 11  100  1110  0011  001
+name|SCTLR_EL12
+init|=
+literal|0xe880
+block|,
+comment|// 11  101  0001  0000  000
+name|CPACR_EL12
+init|=
+literal|0xe882
+block|,
+comment|// 11  101  0001  0000  010
+name|TTBR0_EL12
+init|=
+literal|0xe900
+block|,
+comment|// 11  101  0010  0000  000
+name|TTBR1_EL12
+init|=
+literal|0xe901
+block|,
+comment|// 11  101  0010  0000  001
+name|TCR_EL12
+init|=
+literal|0xe902
+block|,
+comment|// 11  101  0010  0000  010
+name|AFSR0_EL12
+init|=
+literal|0xea88
+block|,
+comment|// 11  101  0101  0001  000
+name|AFSR1_EL12
+init|=
+literal|0xea89
+block|,
+comment|// 11  101  0101  0001  001
+name|ESR_EL12
+init|=
+literal|0xea90
+block|,
+comment|// 11  101  0101  0010  000
+name|FAR_EL12
+init|=
+literal|0xeb00
+block|,
+comment|// 11  101  0110  0000  000
+name|MAIR_EL12
+init|=
+literal|0xed10
+block|,
+comment|// 11  101  1010  0010  000
+name|AMAIR_EL12
+init|=
+literal|0xed18
+block|,
+comment|// 11  101  1010  0011  000
+name|VBAR_EL12
+init|=
+literal|0xee00
+block|,
+comment|// 11  101  1100  0000  000
+name|CONTEXTIDR_EL12
+init|=
+literal|0xee81
+block|,
+comment|// 11  101  1101  0000  001
+name|CNTKCTL_EL12
+init|=
+literal|0xef08
+block|,
+comment|// 11  101  1110  0001  000
+name|CNTP_TVAL_EL02
+init|=
+literal|0xef10
+block|,
+comment|// 11  101  1110  0010  000
+name|CNTP_CTL_EL02
+init|=
+literal|0xef11
+block|,
+comment|// 11  101  1110  0010  001
+name|CNTP_CVAL_EL02
+init|=
+literal|0xef12
+block|,
+comment|// 11  101  1110  0010  010
+name|CNTV_TVAL_EL02
+init|=
+literal|0xef18
+block|,
+comment|// 11  101  1110  0011  000
+name|CNTV_CTL_EL02
+init|=
+literal|0xef19
+block|,
+comment|// 11  101  1110  0011  001
+name|CNTV_CVAL_EL02
+init|=
+literal|0xef1a
+block|,
+comment|// 11  101  1110  0011  010
+name|SPSR_EL12
+init|=
+literal|0xea00
+block|,
+comment|// 11  101  0100  0000  000
+name|ELR_EL12
+init|=
+literal|0xea01
+block|,
+comment|// 11  101  0100  0000  001
 comment|// Cyclone specific system registers
-enum|enum
-name|CycloneSysRegValues
-block|{
 name|CPM_IOACC_CTL_EL3
 init|=
 literal|0xff90
-block|}
+block|,   }
 enum|;
 comment|// Note that these do not inherit from AArch64NamedImmMapper. This class is
 comment|// sufficiently different in its behaviour that I don't believe it's worth
@@ -5709,15 +5980,7 @@ specifier|const
 name|AArch64NamedImmMapper
 operator|::
 name|Mapping
-name|SysRegPairs
-index|[]
-expr_stmt|;
-specifier|static
-specifier|const
-name|AArch64NamedImmMapper
-operator|::
-name|Mapping
-name|CycloneSysRegPairs
+name|SysRegMappings
 index|[]
 expr_stmt|;
 specifier|const
@@ -5725,29 +5988,24 @@ name|AArch64NamedImmMapper
 operator|::
 name|Mapping
 operator|*
-name|InstPairs
+name|InstMappings
 expr_stmt|;
 name|size_t
-name|NumInstPairs
-decl_stmt|;
-name|uint64_t
-name|FeatureBits
+name|NumInstMappings
 decl_stmt|;
 name|SysRegMapper
-argument_list|(
-argument|uint64_t FeatureBits
-argument_list|)
-block|:
-name|FeatureBits
-argument_list|(
-argument|FeatureBits
-argument_list|)
+argument_list|()
 block|{ }
 name|uint32_t
 name|fromString
 argument_list|(
 name|StringRef
 name|Name
+argument_list|,
+specifier|const
+name|FeatureBitset
+operator|&
+name|FeatureBits
 argument_list|,
 name|bool
 operator|&
@@ -5761,6 +6019,8 @@ name|string
 name|toString
 argument_list|(
 argument|uint32_t Bits
+argument_list|,
+argument|const FeatureBitset& FeatureBits
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -5776,13 +6036,11 @@ specifier|const
 name|AArch64NamedImmMapper
 operator|::
 name|Mapping
-name|MSRPairs
+name|MSRMappings
 index|[]
 block|;
 name|MSRMapper
-argument_list|(
-argument|uint64_t FeatureBits
-argument_list|)
+argument_list|()
 block|;   }
 decl_stmt|;
 name|struct
@@ -5795,13 +6053,11 @@ specifier|const
 name|AArch64NamedImmMapper
 operator|::
 name|Mapping
-name|MRSPairs
+name|MRSMappings
 index|[]
 block|;
 name|MRSMapper
-argument_list|(
-argument|uint64_t FeatureBits
-argument_list|)
+argument_list|()
 block|;   }
 decl_stmt|;
 name|uint32_t
@@ -5997,7 +6253,7 @@ block|{
 specifier|const
 specifier|static
 name|Mapping
-name|TLBIPairs
+name|TLBIMappings
 index|[]
 block|;
 name|TLBIMapper

@@ -508,13 +508,17 @@ specifier|const
 name|PassInfo
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|PassInfo
 argument_list|(
-argument|const PassInfo&
+specifier|const
+name|PassInfo
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 block|}
 empty_stmt|;

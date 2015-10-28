@@ -2337,7 +2337,7 @@ argument_list|(
 name|Gbl_TableSignature
 argument_list|)
 operator|!=
-literal|4
+name|ACPI_NAME_SIZE
 condition|)
 block|{
 name|AslError
@@ -2348,7 +2348,7 @@ name|ASL_MSG_TABLE_SIGNATURE
 argument_list|,
 name|Child
 argument_list|,
-literal|"Length not exactly 4"
+literal|"Length is not exactly 4"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2360,7 +2360,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|4
+name|ACPI_NAME_SIZE
 condition|;
 name|i
 operator|++

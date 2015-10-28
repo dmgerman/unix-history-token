@@ -104,7 +104,7 @@ name|SparcTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -130,7 +130,9 @@ specifier|const
 name|SparcSubtarget
 operator|*
 name|getSubtargetImpl
-argument_list|()
+argument_list|(
+argument|const Function&
+argument_list|)
 specifier|const
 name|override
 block|{
@@ -183,7 +185,7 @@ name|SparcV8TargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -218,7 +220,40 @@ name|SparcV9TargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
+argument_list|,
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
+argument_list|)
+block|; }
+block|;
+name|class
+name|SparcelTargetMachine
+operator|:
+name|public
+name|SparcTargetMachine
+block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|public
+operator|:
+name|SparcelTargetMachine
+argument_list|(
+argument|const Target&T
+argument_list|,
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,

@@ -251,8 +251,12 @@ block|;
 comment|/// ResourcesModel - Represents VLIW state.
 comment|/// Not limited to VLIW targets per say, but assumes
 comment|/// definition of DFA by a target.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|DFAPacketizer
-operator|*
+operator|>
 name|ResourcesModel
 block|;
 comment|/// Resource model - packet/bundle model. Purely
@@ -282,13 +286,6 @@ operator|*
 name|IS
 argument_list|)
 block|;
-operator|~
-name|ResourcePriorityQueue
-argument_list|()
-block|{
-name|delete
-name|ResourcesModel
-block|;     }
 name|bool
 name|isBottomUp
 argument_list|()
@@ -473,14 +470,6 @@ name|remove
 argument_list|(
 argument|SUnit *SU
 argument_list|)
-name|override
-block|;
-name|void
-name|dump
-argument_list|(
-argument|ScheduleDAG* DAG
-argument_list|)
-specifier|const
 name|override
 block|;
 comment|/// scheduledNode - Main resource tracking point.

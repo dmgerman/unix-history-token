@@ -222,6 +222,16 @@ name|event
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|inserted
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|set_random_timeout
 argument_list|(
 name|inserted

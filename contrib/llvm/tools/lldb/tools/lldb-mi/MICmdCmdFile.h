@@ -32,18 +32,6 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmdCmdFile.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// Overview:    CMICmdCmdFileExecAndSymbols     interface.
 end_comment
 
@@ -81,34 +69,6 @@ end_comment
 
 begin_comment
 comment|//              command class as an example.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
 end_comment
 
 begin_pragma
@@ -156,7 +116,11 @@ comment|//          This command does not follow the MI documentation exactly.
 end_comment
 
 begin_comment
-comment|// Gotchas: None.
+comment|// Gotchas: This command has additional flags that were not available in GDB MI.
+end_comment
+
+begin_comment
+comment|//          See MIextensions.txt for details.
 end_comment
 
 begin_comment
@@ -203,43 +167,43 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdFileExecAndSymbols
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|GetExitAppOnCommandFailure
 argument_list|(
 argument|void
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -253,6 +217,16 @@ name|CMIUtilString
 name|m_constStrArgThreadGrp
 block|;
 comment|// Not handled by *this command. Not specified in MI spec but Eclipse gives this option sometimes
+specifier|const
+name|CMIUtilString
+name|m_constStrArgNamedPlatformName
+block|;
+comment|// Added to support iOS platform selection
+specifier|const
+name|CMIUtilString
+name|m_constStrArgNamedRemotePath
+block|;
+comment|// Added to support iOS device remote file location
 block|}
 decl_stmt|;
 end_decl_stmt

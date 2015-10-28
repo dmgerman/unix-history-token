@@ -200,6 +200,9 @@ enum|;
 block|}
 comment|// end namespace PPCII
 name|class
+name|PPCSubtarget
+decl_stmt|;
+name|class
 name|PPCInstrInfo
 range|:
 name|public
@@ -307,6 +310,18 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|unsigned
+name|getInstrLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned *PredCost = nullptr
+argument_list|)
+specifier|const
+name|override
+block|;
 name|int
 name|getOperandLatency
 argument_list|(
@@ -359,7 +374,7 @@ block|}
 name|bool
 name|hasLowDefLatency
 argument_list|(
-argument|const InstrItineraryData *ItinData
+argument|const TargetSchedModel&SchedModel
 argument_list|,
 argument|const MachineInstr *DefMI
 argument_list|,
@@ -478,7 +493,7 @@ argument|MachineBasicBlock *TBB
 argument_list|,
 argument|MachineBasicBlock *FBB
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Cond
+argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|DebugLoc DL
 argument_list|)
@@ -491,7 +506,7 @@ name|canInsertSelect
 argument_list|(
 argument|const MachineBasicBlock&
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Cond
+argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|unsigned
 argument_list|,
@@ -517,7 +532,7 @@ argument|DebugLoc DL
 argument_list|,
 argument|unsigned DstReg
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Cond
+argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|unsigned TrueReg
 argument_list|,
@@ -697,7 +712,7 @@ name|PredicateInstruction
 argument_list|(
 argument|MachineInstr *MI
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Pred
+argument|ArrayRef<MachineOperand> Pred
 argument_list|)
 specifier|const
 name|override
@@ -705,9 +720,9 @@ block|;
 name|bool
 name|SubsumesPredicate
 argument_list|(
-argument|const SmallVectorImpl<MachineOperand>&Pred1
+argument|ArrayRef<MachineOperand> Pred1
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Pred2
+argument|ArrayRef<MachineOperand> Pred2
 argument_list|)
 specifier|const
 name|override

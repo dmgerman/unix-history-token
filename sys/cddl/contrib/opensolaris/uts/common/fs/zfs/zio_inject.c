@@ -1568,9 +1568,12 @@ name|flags
 operator|&
 name|ZINJECT_FLUSH_ARC
 condition|)
+comment|/* 		 * We must use FALSE to ensure arc_flush returns, since 		 * we're not preventing concurrent ARC insertions. 		 */
 name|arc_flush
 argument_list|(
 name|NULL
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 return|return

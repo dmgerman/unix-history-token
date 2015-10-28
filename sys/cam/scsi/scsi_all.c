@@ -685,7 +685,7 @@ index|[]
 init|=
 block|{
 comment|/* 	 * From: http://www.t10.org/lists/op-num.txt 	 * Modifications by Kenneth Merry (ken@FreeBSD.ORG) 	 *              and Jung-uk Kim (jkim@FreeBSD.org) 	 * 	 * Note:  order is important in this table, scsi_op_desc() currently 	 * depends on the opcodes in the table being in order to save 	 * search time. 	 * Note:  scanner and comm. devices are carried over from the previous 	 * version because they were removed in the latest spec. 	 */
-comment|/* File: OP-NUM.TXT 	 * 	 * SCSI Operation Codes 	 * Numeric Sorted Listing 	 * as of  3/11/08 	 * 	 *     D - DIRECT ACCESS DEVICE (SBC-2)                device column key 	 *     .T - SEQUENTIAL ACCESS DEVICE (SSC-2)           ----------------- 	 *     . L - PRINTER DEVICE (SSC)                      M = Mandatory 	 *     .  P - PROCESSOR DEVICE (SPC)                   O = Optional 	 *     .  .W - WRITE ONCE READ MULTIPLE DEVICE (SBC-2) V = Vendor spec. 	 *     .  . R - CD/DVE DEVICE (MMC-3)                  Z = Obsolete 	 *     .  .  O - OPTICAL MEMORY DEVICE (SBC-2) 	 *     .  .  .M - MEDIA CHANGER DEVICE (SMC-2) 	 *     .  .  . A - STORAGE ARRAY DEVICE (SCC-2) 	 *     .  .  . .E - ENCLOSURE SERVICES DEVICE (SES) 	 *     .  .  .  .B - SIMPLIFIED DIRECT-ACCESS DEVICE (RBC) 	 *     .  .  .  . K - OPTICAL CARD READER/WRITER DEVICE (OCRW) 	 *     .  .  .  .  V - AUTOMATION/DRIVE INTERFACE (ADC) 	 *     .  .  .  .  .F - OBJECT-BASED STORAGE (OSD) 	 * OP  DTLPWROMAEBKVF  Description 	 * --  --------------  ---------------------------------------------- */
+comment|/* File: OP-NUM.TXT 	 * 	 * SCSI Operation Codes 	 * Numeric Sorted Listing 	 * as of  5/26/15 	 * 	 *     D - DIRECT ACCESS DEVICE (SBC-2)                device column key 	 *     .T - SEQUENTIAL ACCESS DEVICE (SSC-2)           ----------------- 	 *     . L - PRINTER DEVICE (SSC)                      M = Mandatory 	 *     .  P - PROCESSOR DEVICE (SPC)                   O = Optional 	 *     .  .W - WRITE ONCE READ MULTIPLE DEVICE (SBC-2) V = Vendor spec. 	 *     .  . R - CD/DVE DEVICE (MMC-3)                  Z = Obsolete 	 *     .  .  O - OPTICAL MEMORY DEVICE (SBC-2) 	 *     .  .  .M - MEDIA CHANGER DEVICE (SMC-2) 	 *     .  .  . A - STORAGE ARRAY DEVICE (SCC-2) 	 *     .  .  . .E - ENCLOSURE SERVICES DEVICE (SES) 	 *     .  .  .  .B - SIMPLIFIED DIRECT-ACCESS DEVICE (RBC) 	 *     .  .  .  . K - OPTICAL CARD READER/WRITER DEVICE (OCRW) 	 *     .  .  .  .  V - AUTOMATION/DRIVE INTERFACE (ADC) 	 *     .  .  .  .  .F - OBJECT-BASED STORAGE (OSD) 	 * OP  DTLPWROMAEBKVF  Description 	 * --  --------------  ---------------------------------------------- */
 comment|/* 00  MMMMMMMMMMMMMM  TEST UNIT READY */
 block|{
 literal|0x00
@@ -2516,16 +2516,69 @@ block|,
 literal|"ERASE(16)"
 block|}
 block|,
-comment|/* 94 [usage proposed by SCSI Socket Services project] */
-comment|/* 95 [usage proposed by SCSI Socket Services project] */
-comment|/* 96 [usage proposed by SCSI Socket Services project] */
-comment|/* 97 [usage proposed by SCSI Socket Services project] */
+comment|/* 94  O               ZBC OUT */
+block|{
+literal|0x94
+block|,
+name|D
+block|,
+literal|"ZBC OUT"
+block|}
+block|,
+comment|/* 95  O               ZBC OUT */
+block|{
+literal|0x95
+block|,
+name|D
+block|,
+literal|"ZBC OUT"
+block|}
+block|,
+comment|/* 96 */
+comment|/* 97 */
 comment|/* 98 */
 comment|/* 99 */
-comment|/* 9A */
-comment|/* 9B */
-comment|/* 9C */
-comment|/* 9D */
+comment|/* 9A  O               WRITE STREAM(16) */
+block|{
+literal|0x9A
+block|,
+name|D
+block|,
+literal|"WRITE STREAM(16)"
+block|}
+block|,
+comment|/* 9B  OOOOOOOOOO OOO  READ BUFFER(16) */
+block|{
+literal|0x9B
+block|,
+name|ALL
+operator|&
+operator|~
+operator|(
+name|B
+operator|)
+block|,
+literal|"READ BUFFER(16)"
+block|}
+block|,
+comment|/* 9C  O              WRITE ATOMIC(16) */
+block|{
+literal|0x9C
+block|,
+name|D
+block|,
+literal|"WRITE ATOMIC(16)"
+block|}
+block|,
+comment|/* 9D                  SERVICE ACTION BIDIRECTIONAL */
+block|{
+literal|0x9D
+block|,
+name|ALL
+block|,
+literal|"SERVICE ACTION BIDIRECTIONAL"
+block|}
+block|,
 comment|/* XXX KDM ALL for this?  op-num.txt defines it for none.. */
 comment|/* 9E                  SERVICE ACTION IN(16) */
 block|{
@@ -5079,7 +5132,7 @@ index|[]
 init|=
 block|{
 comment|/* 	 * From: http://www.t10.org/lists/asc-num.txt 	 * Modifications by Jung-uk Kim (jkim@FreeBSD.org) 	 */
-comment|/* 	 * File: ASC-NUM.TXT 	 * 	 * SCSI ASC/ASCQ Assignments 	 * Numeric Sorted Listing 	 * as of  5/20/12 	 * 	 * D - DIRECT ACCESS DEVICE (SBC-2)                   device column key 	 * .T - SEQUENTIAL ACCESS DEVICE (SSC)               ------------------- 	 * . L - PRINTER DEVICE (SSC)                           blank = reserved 	 * .  P - PROCESSOR DEVICE (SPC)                     not blank = allowed 	 * .  .W - WRITE ONCE READ MULTIPLE DEVICE (SBC-2) 	 * .  . R - CD DEVICE (MMC) 	 * .  .  O - OPTICAL MEMORY DEVICE (SBC-2) 	 * .  .  .M - MEDIA CHANGER DEVICE (SMC) 	 * .  .  . A - STORAGE ARRAY DEVICE (SCC) 	 * .  .  .  E - ENCLOSURE SERVICES DEVICE (SES) 	 * .  .  .  .B - SIMPLIFIED DIRECT-ACCESS DEVICE (RBC) 	 * .  .  .  . K - OPTICAL CARD READER/WRITER DEVICE (OCRW) 	 * .  .  .  .  V - AUTOMATION/DRIVE INTERFACE (ADC) 	 * .  .  .  .  .F - OBJECT-BASED STORAGE (OSD) 	 * DTLPWROMAEBKVF 	 * ASC      ASCQ  Action 	 * Description 	 */
+comment|/* 	 * File: ASC-NUM.TXT 	 * 	 * SCSI ASC/ASCQ Assignments 	 * Numeric Sorted Listing 	 * as of  8/12/15 	 * 	 * D - DIRECT ACCESS DEVICE (SBC-2)                   device column key 	 * .T - SEQUENTIAL ACCESS DEVICE (SSC)               ------------------- 	 * . L - PRINTER DEVICE (SSC)                           blank = reserved 	 * .  P - PROCESSOR DEVICE (SPC)                     not blank = allowed 	 * .  .W - WRITE ONCE READ MULTIPLE DEVICE (SBC-2) 	 * .  . R - CD DEVICE (MMC) 	 * .  .  O - OPTICAL MEMORY DEVICE (SBC-2) 	 * .  .  .M - MEDIA CHANGER DEVICE (SMC) 	 * .  .  . A - STORAGE ARRAY DEVICE (SCC) 	 * .  .  .  E - ENCLOSURE SERVICES DEVICE (SES) 	 * .  .  .  .B - SIMPLIFIED DIRECT-ACCESS DEVICE (RBC) 	 * .  .  .  . K - OPTICAL CARD READER/WRITER DEVICE (OCRW) 	 * .  .  .  .  V - AUTOMATION/DRIVE INTERFACE (ADC) 	 * .  .  .  .  .F - OBJECT-BASED STORAGE (OSD) 	 * DTLPWROMAEBKVF 	 * ASC      ASCQ  Action 	 * Description 	 */
 comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
@@ -5426,6 +5479,21 @@ literal|"Extended copy information available"
 argument_list|)
 block|}
 block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x00
+argument_list|,
+literal|0x21
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Atomic command aborted due to ACA"
+argument_list|)
+block|}
+block|,
 comment|/* D   W O   BK   */
 block|{
 name|SST
@@ -5518,7 +5586,7 @@ literal|0x04
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_TUR | SSQ_MANY | SSQ_DECREMENT_COUNT | EBUSY
+argument|SS_WAIT | EBUSY
 argument_list|,
 literal|"Logical unit is in process of becoming ready"
 argument_list|)
@@ -5645,7 +5713,7 @@ literal|0x04
 argument_list|,
 literal|0x0A
 argument_list|,
-argument|SS_TUR | SSQ_MANY | SSQ_DECREMENT_COUNT | ENXIO
+argument|SS_WAIT | ENXIO
 argument_list|,
 literal|"Logical unit not accessible, asymmetric access state transition"
 argument_list|)
@@ -5694,6 +5762,21 @@ literal|"Logical unit not ready, structure check required"
 argument_list|)
 block|}
 block|,
+comment|/* DTL WR MAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x04
+argument_list|,
+literal|0x0E
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical unit not ready, security session in progress"
+argument_list|)
+block|}
+block|,
 comment|/* DT  WROM  B    */
 block|{
 name|SST
@@ -5717,7 +5800,7 @@ literal|0x04
 argument_list|,
 literal|0x11
 argument_list|,
-argument|SS_TUR | SSQ_MANY | SSQ_DECREMENT_COUNT | EBUSY
+argument|SS_WAIT | EBUSY
 argument_list|,
 literal|"Logical unit not ready, notify (enable spinup) required"
 argument_list|)
@@ -5885,6 +5968,94 @@ argument|SS_RDEF
 argument_list|,
 comment|/* XXX TBD */
 literal|"Logical unit not ready, additional power use not yet granted"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x04
+argument_list|,
+literal|0x1D
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical unit not ready, configuration in progress"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x04
+argument_list|,
+literal|0x1E
+argument_list|,
+argument|SS_FATAL | ENXIO
+argument_list|,
+literal|"Logical unit not ready, microcode activation required"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x04
+argument_list|,
+literal|0x1F
+argument_list|,
+argument|SS_FATAL | ENXIO
+argument_list|,
+literal|"Logical unit not ready, microcode download required"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x04
+argument_list|,
+literal|0x20
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical unit not ready, logical unit reset required"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x04
+argument_list|,
+literal|0x21
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical unit not ready, hard reset required"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x04
+argument_list|,
+literal|0x22
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Logical unit not ready, power cycle required"
 argument_list|)
 block|}
 block|,
@@ -6071,6 +6242,20 @@ literal|"Head select fault"
 argument_list|)
 block|}
 block|,
+comment|/* DT   RO   B    */
+block|{
+name|SST
+argument_list|(
+literal|0x09
+argument_list|,
+literal|0x05
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+literal|"Vibration induced tracking error"
+argument_list|)
+block|}
+block|,
 comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
@@ -6229,6 +6414,126 @@ argument|SS_RDEF
 argument_list|,
 comment|/* XXX TBD */
 literal|"Warning - device statistics notification available"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x0B
+argument_list|,
+literal|0x0A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Warning - High critical temperature limit exceeded"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x0B
+argument_list|,
+literal|0x0B
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Warning - Low critical temperature limit exceeded"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x0B
+argument_list|,
+literal|0x0C
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Warning - High operating temperature limit exceeded"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x0B
+argument_list|,
+literal|0x0D
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Warning - Low operating temperature limit exceeded"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x0B
+argument_list|,
+literal|0x0E
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Warning - High citical humidity limit exceeded"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x0B
+argument_list|,
+literal|0x0F
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Warning - Low citical humidity limit exceeded"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x0B
+argument_list|,
+literal|0x10
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Warning - High operating humidity limit exceeded"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x0B
+argument_list|,
+literal|0x11
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Warning - Low operating humidity limit exceeded"
 argument_list|)
 block|}
 block|,
@@ -6458,6 +6763,51 @@ argument|SS_RDEF
 argument_list|,
 comment|/* XXX TBD */
 literal|"Defects in error window"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x0C
+argument_list|,
+literal|0x10
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Incomplete multiple atomic write operations"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x0C
+argument_list|,
+literal|0x11
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Write error - recovery scan needed"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x0C
+argument_list|,
+literal|0x12
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Write error - insufficient zone resources"
 argument_list|)
 block|}
 block|,
@@ -6994,6 +7344,21 @@ argument|SS_RDEF
 argument_list|,
 comment|/* XXX TBD */
 literal|"Read error - LBA marked bad by application client"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x11
+argument_list|,
+literal|0x15
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Write after sanitize required"
 argument_list|)
 block|}
 block|,
@@ -7955,6 +8320,66 @@ comment|/* D              */
 block|{
 name|SST
 argument_list|(
+literal|0x21
+argument_list|,
+literal|0x04
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Unaligned write command"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x21
+argument_list|,
+literal|0x05
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Write boundary violation"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x21
+argument_list|,
+literal|0x06
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Attempt to read invalid data"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x21
+argument_list|,
+literal|0x07
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Read boundary violation"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
 literal|0x22
 argument_list|,
 literal|0x00
@@ -8539,6 +8964,21 @@ literal|"Vendor specific key reference not found"
 argument_list|)
 block|}
 block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x26
+argument_list|,
+literal|0x13
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Application tag mode page is invalid"
+argument_list|)
+block|}
+block|,
 comment|/* DT  WRO   BK   */
 block|{
 name|SST
@@ -8649,6 +9089,20 @@ argument_list|,
 argument|SS_FATAL | ENOSPC
 argument_list|,
 literal|"Space allocation failed write protect"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x27
+argument_list|,
+literal|0x08
+argument_list|,
+argument|SS_FATAL | EACCES
+argument_list|,
+literal|"Zone is read only"
 argument_list|)
 block|}
 block|,
@@ -9324,6 +9778,66 @@ literal|"ORWRITE generation does not match"
 argument_list|)
 block|}
 block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x2C
+argument_list|,
+literal|0x0D
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Reset write pointer not allowed"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x2C
+argument_list|,
+literal|0x0E
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Zone is offline"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x2C
+argument_list|,
+literal|0x0F
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Stream not open"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x2C
+argument_list|,
+literal|0x10
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Unwritten data in zone"
+argument_list|)
+block|}
+block|,
 comment|/*  T             */
 block|{
 name|SST
@@ -9350,6 +9864,51 @@ argument|SS_RDEF
 argument_list|,
 comment|/* XXX TBD */
 literal|"Insufficient time for operation"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x2E
+argument_list|,
+literal|0x01
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Command timeout before processing"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x2E
+argument_list|,
+literal|0x02
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Command timeout during processing"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x2E
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Command timeout during processing due to error recovery"
 argument_list|)
 block|}
 block|,
@@ -9394,6 +9953,21 @@ argument|SS_RDEF
 argument_list|,
 comment|/* XXX TBD */
 literal|"Commands cleared by device server"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x2F
+argument_list|,
+literal|0x03
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Some commands cleared by queuing layer event"
 argument_list|)
 block|}
 block|,
@@ -10815,6 +11389,51 @@ literal|"iSCSI IP address changed"
 argument_list|)
 block|}
 block|,
+comment|/* DTLPWR MAEBK   */
+block|{
+name|SST
+argument_list|(
+literal|0x3F
+argument_list|,
+literal|0x15
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Inspect referrals sense descriptors"
+argument_list|)
+block|}
+block|,
+comment|/* DTLPWROMAEBKVF */
+block|{
+name|SST
+argument_list|(
+literal|0x3F
+argument_list|,
+literal|0x16
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Microcode has been changed without reset"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x3F
+argument_list|,
+literal|0x17
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Zone transition to full"
+argument_list|)
+block|}
+block|,
 comment|/* D              */
 block|{
 name|SST
@@ -11345,6 +11964,126 @@ literal|"Data-out buffer error"
 argument_list|)
 block|}
 block|,
+comment|/* DT PWROMAEBK F */
+block|{
+name|SST
+argument_list|(
+literal|0x4B
+argument_list|,
+literal|0x0E
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"PCIe fabric error"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK F */
+block|{
+name|SST
+argument_list|(
+literal|0x4B
+argument_list|,
+literal|0x0F
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"PCIe completion timeout"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK F */
+block|{
+name|SST
+argument_list|(
+literal|0x4B
+argument_list|,
+literal|0x10
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"PCIe completer abort"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK F */
+block|{
+name|SST
+argument_list|(
+literal|0x4B
+argument_list|,
+literal|0x11
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"PCIe poisoned TLP received"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK F */
+block|{
+name|SST
+argument_list|(
+literal|0x4B
+argument_list|,
+literal|0x12
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"PCIe ECRC check failed"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK F */
+block|{
+name|SST
+argument_list|(
+literal|0x4B
+argument_list|,
+literal|0x13
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"PCIe unsupported request"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK F */
+block|{
+name|SST
+argument_list|(
+literal|0x4B
+argument_list|,
+literal|0x14
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"PCIe ACS violation"
+argument_list|)
+block|}
+block|,
+comment|/* DT PWROMAEBK F */
+block|{
+name|SST
+argument_list|(
+literal|0x4B
+argument_list|,
+literal|0x15
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"PCIe TLP prefix blocket"
+argument_list|)
+block|}
+block|,
 comment|/* DTLPWROMAEBKVF */
 block|{
 name|SST
@@ -11619,6 +12358,81 @@ literal|"Element status unknown"
 argument_list|)
 block|}
 block|,
+comment|/*        M       */
+block|{
+name|SST
+argument_list|(
+literal|0x53
+argument_list|,
+literal|0x09
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data transfer device error - load failed"
+argument_list|)
+block|}
+block|,
+comment|/*        M       */
+block|{
+name|SST
+argument_list|(
+literal|0x53
+argument_list|,
+literal|0x0A
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data transfer device error - unload failed"
+argument_list|)
+block|}
+block|,
+comment|/*        M       */
+block|{
+name|SST
+argument_list|(
+literal|0x53
+argument_list|,
+literal|0x0B
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data transfer device error - unload missing"
+argument_list|)
+block|}
+block|,
+comment|/*        M       */
+block|{
+name|SST
+argument_list|(
+literal|0x53
+argument_list|,
+literal|0x0C
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data transfer device error - eject failed"
+argument_list|)
+block|}
+block|,
+comment|/*        M       */
+block|{
+name|SST
+argument_list|(
+literal|0x53
+argument_list|,
+literal|0x0D
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Data transfer device error - library communication failed"
+argument_list|)
+block|}
+block|,
 comment|/*    P           */
 block|{
 name|SST
@@ -11838,6 +12652,51 @@ argument|SS_RDEF
 argument_list|,
 comment|/* XXX TBD */
 literal|"Insufficient resources to create ROD token"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x55
+argument_list|,
+literal|0x0E
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Insufficient zone resources"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x55
+argument_list|,
+literal|0x0F
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Insufficient zone resources to complete write"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x55
+argument_list|,
+literal|0x10
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+comment|/* XXX TBD */
+literal|"Maximum number of streams open"
 argument_list|)
 block|}
 block|,
@@ -13888,6 +14747,20 @@ argument_list|,
 argument|SS_RDEF
 argument_list|,
 literal|"Logical unit not configured"
+argument_list|)
+block|}
+block|,
+comment|/* D              */
+block|{
+name|SST
+argument_list|(
+literal|0x68
+argument_list|,
+literal|0x01
+argument_list|,
+argument|SS_RDEF
+argument_list|,
+literal|"Subsidiary logical unit not configured"
 argument_list|)
 block|}
 block|,
@@ -17922,19 +18795,6 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
-name|len_to_copy
-operator|=
-name|MIN
-argument_list|(
-name|sense_len
-argument_list|,
-name|SSD_EXTRA_MAX
-operator|-
-name|sense
-operator|->
-name|extra_len
-argument_list|)
-expr_stmt|;
 name|data
 operator|=
 operator|(
@@ -18004,6 +18864,7 @@ name|elem_type
 operator|==
 name|SSD_ELEM_COMMAND
 condition|)
+block|{
 name|data_dest
 operator|=
 operator|&
@@ -18014,6 +18875,21 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|len_to_copy
+operator|=
+name|MIN
+argument_list|(
+name|sense_len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sense
+operator|->
+name|cmd_spec_info
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|data_dest
@@ -18025,6 +18901,20 @@ name|info
 index|[
 literal|0
 index|]
+expr_stmt|;
+name|len_to_copy
+operator|=
+name|MIN
+argument_list|(
+name|sense_len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sense
+operator|->
+name|info
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* 					 * We're setting the info field, so 					 * set the valid bit. 					 */
 name|sense
@@ -37961,6 +38851,162 @@ name|cbfcnp
 argument_list|,
 comment|/*flags*/
 name|CAM_DIR_OUT
+argument_list|,
+name|tag_action
+argument_list|,
+name|data_ptr
+argument_list|,
+name|dxfer_len
+argument_list|,
+name|sense_len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|scsi_cmd
+argument_list|)
+argument_list|,
+name|timeout
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|scsi_report_supported_opcodes
+parameter_list|(
+name|struct
+name|ccb_scsiio
+modifier|*
+name|csio
+parameter_list|,
+name|uint32_t
+name|retries
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|cbfcnp
+function_decl|)
+parameter_list|(
+name|struct
+name|cam_periph
+modifier|*
+parameter_list|,
+name|union
+name|ccb
+modifier|*
+parameter_list|)
+parameter_list|,
+name|uint8_t
+name|tag_action
+parameter_list|,
+name|int
+name|options
+parameter_list|,
+name|int
+name|req_opcode
+parameter_list|,
+name|int
+name|req_service_action
+parameter_list|,
+name|uint8_t
+modifier|*
+name|data_ptr
+parameter_list|,
+name|uint32_t
+name|dxfer_len
+parameter_list|,
+name|int
+name|sense_len
+parameter_list|,
+name|int
+name|timeout
+parameter_list|)
+block|{
+name|struct
+name|scsi_report_supported_opcodes
+modifier|*
+name|scsi_cmd
+decl_stmt|;
+name|scsi_cmd
+operator|=
+operator|(
+expr|struct
+name|scsi_report_supported_opcodes
+operator|*
+operator|)
+operator|&
+name|csio
+operator|->
+name|cdb_io
+operator|.
+name|cdb_bytes
+expr_stmt|;
+name|bzero
+argument_list|(
+name|scsi_cmd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|scsi_cmd
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|scsi_cmd
+operator|->
+name|opcode
+operator|=
+name|MAINTENANCE_IN
+expr_stmt|;
+name|scsi_cmd
+operator|->
+name|service_action
+operator|=
+name|REPORT_SUPPORTED_OPERATION_CODES
+expr_stmt|;
+name|scsi_cmd
+operator|->
+name|options
+operator|=
+name|options
+expr_stmt|;
+name|scsi_cmd
+operator|->
+name|requested_opcode
+operator|=
+name|req_opcode
+expr_stmt|;
+name|scsi_ulto2b
+argument_list|(
+name|req_service_action
+argument_list|,
+name|scsi_cmd
+operator|->
+name|requested_service_action
+argument_list|)
+expr_stmt|;
+name|scsi_ulto4b
+argument_list|(
+name|dxfer_len
+argument_list|,
+name|scsi_cmd
+operator|->
+name|length
+argument_list|)
+expr_stmt|;
+name|cam_fill_csio
+argument_list|(
+name|csio
+argument_list|,
+name|retries
+argument_list|,
+name|cbfcnp
+argument_list|,
+comment|/*flags*/
+name|CAM_DIR_IN
 argument_list|,
 name|tag_action
 argument_list|,

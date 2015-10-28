@@ -10,19 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
@@ -34,19 +22,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/mman.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -58,13 +46,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mman.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -82,13 +82,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -107,16 +101,6 @@ end_define
 begin_comment
 comment|/* how much to display */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof (a) / sizeof (a[0]))
-end_define
 
 begin_define
 define|#
@@ -535,7 +519,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|algorithms
 argument_list|)
@@ -591,7 +575,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|algorithms
 argument_list|)
@@ -969,7 +953,7 @@ index|[
 name|random
 argument_list|()
 operator|%
-name|N
+name|nitems
 argument_list|(
 name|a
 argument_list|)
@@ -1406,7 +1390,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|iv
 argument_list|)
@@ -2991,7 +2975,7 @@ if|if
 condition|(
 name|nsizes
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|sizes
 argument_list|)
@@ -3105,7 +3089,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|algorithms
 argument_list|)

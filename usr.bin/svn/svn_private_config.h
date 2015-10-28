@@ -80,6 +80,17 @@ comment|/* #undef HAVE_DOPRNT */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `getpid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETPID
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<inttypes.h> header file. */
 end_comment
 
@@ -152,6 +163,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SERF_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<stdbool.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDBOOL_H
 value|1
 end_define
 
@@ -318,7 +340,7 @@ comment|/* #undef HAVE_ZLIB_H */
 end_comment
 
 begin_comment
-comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
+comment|/* Define to the sub-directory where libtool stores uninstalled libraries. */
 end_comment
 
 begin_define
@@ -358,7 +380,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"subversion 1.8.10"
+value|"subversion 1.9.2"
 end_define
 
 begin_comment
@@ -391,7 +413,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.8.10"
+value|"1.8.14"
 end_define
 
 begin_comment
@@ -406,6 +428,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Defined to build against httpd 2.4 with broken auth */
+end_comment
+
+begin_comment
+comment|/* #undef SVN_ALLOW_BROKEN_HTTPD_AUTH */
+end_comment
+
+begin_comment
 comment|/* Define to the Python/C API format character suitable for apr_int64_t */
 end_comment
 
@@ -415,14 +445,6 @@ directive|define
 name|SVN_APR_INT64_T_PYCFMT
 value|"l"
 end_define
-
-begin_comment
-comment|/* Define if circular linkage is not possible on this platform. */
-end_comment
-
-begin_comment
-comment|/* #undef SVN_AVOID_CIRCULAR_LINKAGE_AT_ALL_COSTS_HACK */
-end_comment
 
 begin_comment
 comment|/* Defined to be the path to the installed binaries */
@@ -443,7 +465,7 @@ begin_define
 define|#
 directive|define
 name|SVN_BUILD_HOST
-value|"bikeshed-malachite-topaz-amber-freebsd"
+value|"bikeshed-rgb-freebsd"
 end_define
 
 begin_comment
@@ -454,7 +476,7 @@ begin_define
 define|#
 directive|define
 name|SVN_BUILD_TARGET
-value|"bikeshed-malachite-topaz-amber-freebsd"
+value|"bikeshed-rgb-freebsd"
 end_define
 
 begin_comment
@@ -518,12 +540,9 @@ begin_comment
 comment|/* Define if compiler provides atomic builtins */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SVN_HAS_ATOMIC_BUILTINS
-value|0
-end_define
+begin_comment
+comment|/* #undef SVN_HAS_ATOMIC_BUILTINS */
+end_comment
 
 begin_comment
 comment|/* Is GNOME Keyring support enabled? */
@@ -678,6 +697,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Defined if libsvn_fs should link against libsvn_fs_x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SVN_LIBSVN_FS_LINKS_FS_X
+value|1
+end_define
+
+begin_comment
 comment|/* Defined to be the path to the installed locale dirs */
 end_comment
 
@@ -735,6 +765,14 @@ end_comment
 
 begin_comment
 comment|/* #undef SVN_USE_DSO */
+end_comment
+
+begin_comment
+comment|/* Defined to build with patched httpd 2.4 and working auth */
+end_comment
+
+begin_comment
+comment|/* #undef SVN_USE_FORCE_AUTHN */
 end_comment
 
 begin_comment
@@ -903,6 +941,156 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* compiler hints */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+operator|(
+name|__GNUC__
+operator|>=
+literal|3
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SVN__PREDICT_FALSE
+parameter_list|(
+name|x
+parameter_list|)
+value|(__builtin_expect(x, 0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVN__PREDICT_TRUE
+parameter_list|(
+name|x
+parameter_list|)
+value|(__builtin_expect(!!(x), 1))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SVN__PREDICT_FALSE
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVN__PREDICT_TRUE
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SVN_DEBUG
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SVN__FORCE_INLINE
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVN__PREVENT_INLINE
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SVN__FORCE_INLINE
+value|APR_INLINE __attribute__ ((always_inline))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVN__PREVENT_INLINE
+value|__attribute__ ((noinline))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SVN__FORCE_INLINE
+value|APR_INLINE
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVN__PREVENT_INLINE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Macro used to specify that a variable is intentionally left unused.    Supresses compiler warnings about the variable being unused.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SVN_UNUSED
+parameter_list|(
+name|v
+parameter_list|)
+value|( (void)(v) )
+end_define
 
 end_unit
 

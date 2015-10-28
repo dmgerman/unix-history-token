@@ -27,7 +27,6 @@ name|XenbusStateUnknown
 init|=
 literal|0
 block|,
-comment|/*      * Initializing: Back-end is initializing.      */
 name|XenbusStateInitialising
 init|=
 literal|1
@@ -42,7 +41,6 @@ name|XenbusStateInitialised
 init|=
 literal|3
 block|,
-comment|/*      * Connected: The normal state for a front to backend connection.      */
 name|XenbusStateConnected
 init|=
 literal|4
@@ -52,7 +50,6 @@ name|XenbusStateClosing
 init|=
 literal|5
 block|,
-comment|/*      * Closed: No connection exists between front and back end.      *      * For backend devices with the "online" attribute, the front can      * request a reconnect at any time.  To handle this transition      * gracefully, backend devices must reinitialize any XenStore data      * used to negotiate features with a peer before transitioning to      * the closed state.  When a reconnect request occurs, the      * XenBus backend support code will automatically transition the      * backend device from Closed to InitWait, kicking off the ring      * and feature negotiation process.      */
 name|XenbusStateClosed
 init|=
 literal|6
@@ -87,7 +84,7 @@ comment|/* _XEN_PUBLIC_IO_XENBUS_H */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit

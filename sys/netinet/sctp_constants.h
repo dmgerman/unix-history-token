@@ -74,6 +74,17 @@ value|(65535 - 2048)
 end_define
 
 begin_comment
+comment|/* Largest length of a chunk */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_MAX_CHUNK_LENGTH
+value|0xffff
+end_define
+
+begin_comment
 comment|/* Number of addresses where we just skip the counting */
 end_comment
 
@@ -1988,7 +1999,7 @@ value|0x0c
 end_define
 
 begin_comment
-comment|/*  * SCTP states for internal state machine XXX (should match "user" values)  */
+comment|/*  * SCTP states for internal state machine  */
 end_comment
 
 begin_define
@@ -2667,17 +2678,6 @@ define|#
 directive|define
 name|SCTP_HB_DEFAULT_MSEC
 value|30000
-end_define
-
-begin_comment
-comment|/* Max time I will wait for Shutdown to complete */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_DEF_MAX_SHUTDOWN_SEC
-value|180
 end_define
 
 begin_comment

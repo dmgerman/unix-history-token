@@ -152,11 +152,6 @@ operator|==
 name|addr
 condition|)
 block|{
-name|fbt
-operator|->
-name|fbtp_invop_cnt
-operator|++
-expr_stmt|;
 name|cpu
 operator|->
 name|cpu_dtrace_caller

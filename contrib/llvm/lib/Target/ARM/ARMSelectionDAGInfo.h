@@ -154,19 +154,6 @@ name|TargetSelectionDAGInfo
 block|{
 name|public
 operator|:
-name|explicit
-name|ARMSelectionDAGInfo
-argument_list|(
-specifier|const
-name|DataLayout
-operator|&
-name|DL
-argument_list|)
-block|;
-operator|~
-name|ARMSelectionDAGInfo
-argument_list|()
-block|;
 name|SDValue
 name|EmitTargetCodeForMemcpy
 argument_list|(
@@ -187,6 +174,32 @@ argument_list|,
 argument|bool isVolatile
 argument_list|,
 argument|bool AlwaysInline
+argument_list|,
+argument|MachinePointerInfo DstPtrInfo
+argument_list|,
+argument|MachinePointerInfo SrcPtrInfo
+argument_list|)
+specifier|const
+name|override
+block|;
+name|SDValue
+name|EmitTargetCodeForMemmove
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDLoc dl
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Dst
+argument_list|,
+argument|SDValue Src
+argument_list|,
+argument|SDValue Size
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|bool isVolatile
 argument_list|,
 argument|MachinePointerInfo DstPtrInfo
 argument_list|,
@@ -219,6 +232,27 @@ argument|MachinePointerInfo DstPtrInfo
 argument_list|)
 specifier|const
 name|override
+block|;
+name|SDValue
+name|EmitSpecializedLibcall
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDLoc dl
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Dst
+argument_list|,
+argument|SDValue Src
+argument_list|,
+argument|SDValue Size
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|RTLIB::Libcall LC
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

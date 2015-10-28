@@ -4776,7 +4776,7 @@ name|vm_page_unwire
 argument_list|(
 name|p
 argument_list|,
-name|PQ_INACTIVE
+name|PQ_NONE
 argument_list|)
 expr_stmt|;
 name|vm_page_free
@@ -8293,7 +8293,11 @@ operator|!
 operator|(
 name|flags
 operator|&
+operator|(
 name|UMA_ZONE_ZINIT
+operator||
+name|UMA_ZONE_NOFREE
+operator|)
 operator|)
 operator|)
 operator|&&
@@ -9123,8 +9127,8 @@ decl_stmt|;
 name|int
 name|cpu
 decl_stmt|;
-comment|/* XXX: FIX? The entropy here is desirable, but the harvesting may be expensive */
-name|random_harvest_fast
+comment|/* Enable entropy collection for RANDOM_ENABLE_UMA kernel option */
+name|random_harvest_fast_uma
 argument_list|(
 operator|&
 name|zone
@@ -9136,7 +9140,7 @@ argument_list|)
 argument_list|,
 literal|1
 argument_list|,
-name|RANDOM_FAST
+name|RANDOM_UMA
 argument_list|)
 expr_stmt|;
 comment|/* This is the fast path allocation */
@@ -11278,8 +11282,8 @@ decl_stmt|;
 name|int
 name|cpu
 decl_stmt|;
-comment|/* XXX: FIX? The entropy here is desirable, but the harvesting may be expensive */
-name|random_harvest_fast
+comment|/* Enable entropy collection for RANDOM_ENABLE_UMA kernel option */
+name|random_harvest_fast_uma
 argument_list|(
 operator|&
 name|zone
@@ -11291,7 +11295,7 @@ argument_list|)
 argument_list|,
 literal|1
 argument_list|,
-name|RANDOM_FAST
+name|RANDOM_UMA
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -13124,7 +13128,7 @@ decl_stmt|;
 name|vm_offset_t
 name|kva
 decl_stmt|;
-name|int
+name|u_int
 name|pages
 decl_stmt|;
 name|keg
@@ -13191,6 +13195,9 @@ name|kva
 operator|=
 name|kva_alloc
 argument_list|(
+operator|(
+name|vm_size_t
+operator|)
 name|pages
 operator|*
 name|UMA_SLAB_SIZE

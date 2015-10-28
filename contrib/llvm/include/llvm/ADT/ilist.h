@@ -1115,7 +1115,8 @@ operator|<
 name|T
 operator|>
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 
@@ -1136,7 +1137,8 @@ operator|>
 operator|,
 name|int
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 
@@ -1157,7 +1159,8 @@ operator|<
 name|T
 operator|>
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 
@@ -1178,7 +1181,8 @@ operator|>
 operator|,
 name|int
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 
@@ -1670,15 +1674,15 @@ begin_comment
 comment|// copy/copy-assign won't do.
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|iplist
 argument_list|(
-argument|const iplist&
+specifier|const
+name|iplist
+operator|&
 argument_list|)
-end_macro
-
-begin_expr_stmt
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 
@@ -1691,7 +1695,8 @@ specifier|const
 name|iplist
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 end_decl_stmt
 

@@ -51,6 +51,12 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -205,6 +211,13 @@ comment|/// @param[in] dst_len
 comment|///     The number of bytes to attempt to read, and also the max
 comment|///     number of bytes that can be placed into \a dst.
 comment|///
+comment|/// @param[in] timeout_usec
+comment|///     The number of microseconds to wait for the data.
+comment|///
+comment|/// @param[out] status
+comment|///     On return, indicates whether the call was sucessful or terminated
+comment|///     due to some error condition.
+comment|///
 comment|/// @param[out] error_ptr
 comment|///     A pointer to an error object that should be given an
 comment|///     approriate error value if this method returns zero. This
@@ -248,13 +261,13 @@ comment|/// communications protocol.
 comment|///
 comment|/// Subclasses must override this function.
 comment|///
-comment|/// @param[in] src
-comment|///     A source buffer that must be at least \a src_len bytes
+comment|/// @param[in] dst
+comment|///     A desination buffer that must be at least \a dst_len bytes
 comment|///     long.
 comment|///
-comment|/// @param[in] src_len
+comment|/// @param[in] dst_len
 comment|///     The number of bytes to attempt to write, and also the
-comment|///     number of bytes are currently available in \a src.
+comment|///     number of bytes are currently available in \a dst.
 comment|///
 comment|/// @param[out] error_ptr
 comment|///     A pointer to an error object that should be given an
@@ -271,10 +284,10 @@ argument_list|(
 specifier|const
 name|void
 operator|*
-name|buffer
+name|dst
 argument_list|,
 name|size_t
-name|length
+name|dst_len
 argument_list|,
 name|lldb
 operator|::
@@ -289,6 +302,68 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Returns a URI that describes this connection object
+comment|///
+comment|/// Subclasses may override this function.
+comment|///
+comment|/// @return
+comment|///     Returns URI or an empty string if disconnecteds
+comment|//------------------------------------------------------------------
+name|virtual
+name|std
+operator|::
+name|string
+name|GetURI
+argument_list|()
+operator|=
+literal|0
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Interrupts an ongoing Read() operation.
+comment|///
+comment|/// If there is an ongoing read operation in another thread, this operation
+comment|/// return with status == eConnectionStatusInterrupted. Note that if there
+comment|/// data waiting to be read and an interrupt request is issued, the Read()
+comment|/// function will return the data immediately without processing the
+comment|/// interrupt request (which will remain queued for the next Read()
+comment|/// operation).
+comment|///
+comment|/// @return
+comment|///     Returns true is the interrupt request was sucessful.
+comment|//------------------------------------------------------------------
+name|virtual
+name|bool
+name|InterruptRead
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Returns the underlying IOObject used by the Connection.
+comment|///
+comment|/// The IOObject can be used to wait for data to become available
+comment|/// on the connection. If the Connection does not use IOObjects (and
+comment|/// hence does not support waiting) this function should return a
+comment|/// null pointer.
+comment|///
+comment|/// @return
+comment|///     The underlying IOObject used for reading.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb
+operator|::
+name|IOObjectSP
+name|GetReadObject
+argument_list|()
+block|{
+return|return
+name|lldb
+operator|::
+name|IOObjectSP
+argument_list|()
+return|;
+block|}
 name|private
 label|:
 comment|//------------------------------------------------------------------

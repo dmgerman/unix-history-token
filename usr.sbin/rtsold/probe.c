@@ -280,38 +280,6 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* make the socket send-only */
-if|if
-condition|(
-name|shutdown
-argument_list|(
-name|probesock
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-block|{
-name|warnmsg
-argument_list|(
-name|LOG_ERR
-argument_list|,
-name|__func__
-argument_list|,
-literal|"shutdown: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
 comment|/* initialize msghdr for sending packets */
 name|sndmhdr
 operator|.

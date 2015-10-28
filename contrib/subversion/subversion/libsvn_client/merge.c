@@ -173,13 +173,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"private/svn_opt_private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"private/svn_wc_private.h"
+file|"private/svn_fspath.h"
 end_include
 
 begin_include
@@ -191,25 +185,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"private/svn_fspath.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"private/svn_ra_private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"private/svn_client_private.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"private/svn_sorts_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"private/svn_subr_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"private/svn_wc_private.h"
 end_include
 
 begin_include
@@ -1212,7 +1206,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Create *LEFT and *RIGHT conflict versions for conflict victim  * at VICTIM_ABSPATH, with kind NODE_KIND, using information obtained  * from MERGE_SOURCE and TARGET.  * Allocate returned conflict versions in RESULT_POOL. */
+comment|/* Create *LEFT and *RIGHT conflict versions for conflict victim  * at VICTIM_ABSPATH, with merge-left node kind MERGE_LEFT_NODE_KIND  * and merge-right node kind MERGE_RIGHT_NODE_KIND, using information  * obtained from MERGE_SOURCE and TARGET.  * Allocate returned conflict versions in RESULT_POOL. */
 end_comment
 
 begin_function
@@ -1239,7 +1233,10 @@ modifier|*
 name|victim_abspath
 parameter_list|,
 name|svn_node_kind_t
-name|node_kind
+name|merge_left_node_kind
+parameter_list|,
+name|svn_node_kind_t
+name|merge_right_node_kind
 parameter_list|,
 specifier|const
 name|merge_source_t
@@ -1343,7 +1340,7 @@ name|loc1
 operator|->
 name|rev
 argument_list|,
-name|node_kind
+name|merge_left_node_kind
 argument_list|,
 name|result_pool
 argument_list|)
@@ -1380,7 +1377,7 @@ name|loc2
 operator|->
 name|rev
 argument_list|,
-name|node_kind
+name|merge_right_node_kind
 argument_list|,
 name|result_pool
 argument_list|)
@@ -1465,7 +1462,7 @@ name|char
 modifier|*
 name|merge_source_path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -1474,7 +1471,7 @@ name|svn_rangelist_t
 modifier|*
 name|rangelist
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -1874,6 +1871,8 @@ name|repos_uuid
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|ctx
 operator|->
 name|wc_ctx
@@ -2183,7 +2182,7 @@ name|char
 modifier|*
 name|source_path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -2192,7 +2191,7 @@ name|svn_rangelist_t
 modifier|*
 name|rangelist
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -3089,6 +3088,15 @@ decl_stmt|;
 name|svn_wc_conflict_action_t
 name|tree_conflict_action
 decl_stmt|;
+name|svn_node_kind_t
+name|tree_conflict_local_node_kind
+decl_stmt|;
+name|svn_node_kind_t
+name|tree_conflict_merge_left_node_kind
+decl_stmt|;
+name|svn_node_kind_t
+name|tree_conflict_merge_right_node_kind
+decl_stmt|;
 comment|/* When TREE_CONFLICT_REASON is CONFLICT_REASON_SKIP, the skip state to      add to the notification */
 name|svn_wc_notify_state_t
 name|skip_reason
@@ -3153,6 +3161,15 @@ name|tree_conflict_reason
 decl_stmt|;
 name|svn_wc_conflict_action_t
 name|tree_conflict_action
+decl_stmt|;
+name|svn_node_kind_t
+name|tree_conflict_local_node_kind
+decl_stmt|;
+name|svn_node_kind_t
+name|tree_conflict_merge_left_node_kind
+decl_stmt|;
+name|svn_node_kind_t
+name|tree_conflict_merge_right_node_kind
 decl_stmt|;
 comment|/* When TREE_CONFLICT_REASON is CONFLICT_REASON_SKIP, the skip state to      add to the notification */
 name|svn_wc_notify_state_t
@@ -3227,6 +3244,11 @@ parameter_list|,
 name|svn_wc_notify_state_t
 name|state
 parameter_list|,
+name|struct
+name|merge_dir_baton_t
+modifier|*
+name|pdb
+parameter_list|,
 name|apr_pool_t
 modifier|*
 name|scratch_pool
@@ -3244,6 +3266,7 @@ return|;
 comment|/* ### Why? - Legacy compatibility */
 if|if
 condition|(
+operator|(
 name|merge_b
 operator|->
 name|merge_source
@@ -3253,6 +3276,16 @@ operator|||
 name|merge_b
 operator|->
 name|reintegrate_merge
+operator|)
+operator|&&
+operator|!
+operator|(
+name|pdb
+operator|&&
+name|pdb
+operator|->
+name|shadowed
+operator|)
 condition|)
 block|{
 name|store_path
@@ -3319,14 +3352,11 @@ name|prop_state
 operator|=
 name|state
 expr_stmt|;
-call|(
-modifier|*
 name|merge_b
 operator|->
 name|ctx
 operator|->
 name|notify_func2
-call|)
 argument_list|(
 name|merge_b
 operator|->
@@ -3347,7 +3377,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Record a tree conflict in the WC, unless this is a dry run or a record-  * only merge, or if a tree conflict is already flagged for the VICTIM_PATH.  * (The latter can happen if a merge-tracking-aware merge is doing multiple  * editor drives because of a gap in the range of eligible revisions.)  *  * The tree conflict, with its victim specified by VICTIM_PATH, is  * assumed to have happened during a merge using merge baton MERGE_B.  *  * NODE_KIND must be the node kind of "old" and "theirs" and "mine";  * this function cannot cope with node kind clashes.  * ACTION and REASON correspond to the fields  * of the same names in svn_wc_tree_conflict_description_t.  */
+comment|/* Record a tree conflict in the WC, unless this is a dry run or a record-  * only merge, or if a tree conflict is already flagged for the VICTIM_PATH.  * (The latter can happen if a merge-tracking-aware merge is doing multiple  * editor drives because of a gap in the range of eligible revisions.)  *  * The tree conflict, with its victim specified by VICTIM_PATH, is  * assumed to have happened during a merge using merge baton MERGE_B.  *  * ACTION and REASON correspond to the fields  * of the same names in svn_wc_tree_conflict_description_t.  */
 end_comment
 
 begin_function
@@ -3371,7 +3401,13 @@ modifier|*
 name|parent_baton
 parameter_list|,
 name|svn_node_kind_t
-name|node_kind
+name|local_node_kind
+parameter_list|,
+name|svn_node_kind_t
+name|merge_left_node_kind
+parameter_list|,
+name|svn_node_kind_t
+name|merge_right_node_kind
 parameter_list|,
 name|svn_wc_conflict_action_t
 name|action
@@ -3578,7 +3614,9 @@ name|right
 argument_list|,
 name|local_abspath
 argument_list|,
-name|node_kind
+name|merge_left_node_kind
+argument_list|,
+name|merge_right_node_kind
 argument_list|,
 operator|&
 name|merge_b
@@ -3618,7 +3656,7 @@ name|svn_wc_conflict_description_create_tree2
 argument_list|(
 name|local_abspath
 argument_list|,
-name|node_kind
+name|local_node_kind
 argument_list|,
 name|svn_wc_operation_merge
 argument_list|,
@@ -3759,16 +3797,13 @@ name|notify
 operator|->
 name|kind
 operator|=
-name|node_kind
+name|local_node_kind
 expr_stmt|;
-call|(
-modifier|*
 name|merge_b
 operator|->
 name|ctx
 operator|->
 name|notify_func2
-call|)
 argument_list|(
 name|merge_b
 operator|->
@@ -3898,14 +3933,11 @@ name|kind
 operator|=
 name|kind
 expr_stmt|;
-call|(
-modifier|*
 name|merge_b
 operator|->
 name|ctx
 operator|->
 name|notify_func2
-call|)
 argument_list|(
 name|merge_b
 operator|->
@@ -4037,14 +4069,11 @@ name|prop_state
 operator|=
 name|prop_state
 expr_stmt|;
-call|(
-modifier|*
 name|merge_b
 operator|->
 name|ctx
 operator|->
 name|notify_func2
-call|)
 argument_list|(
 name|merge_b
 operator|->
@@ -4273,7 +4302,7 @@ name|char
 modifier|*
 name|del_abspath
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -4299,20 +4328,17 @@ name|kind
 operator|=
 name|svn_node_kind_from_word
 argument_list|(
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
 argument_list|)
 expr_stmt|;
-call|(
-modifier|*
 name|merge_b
 operator|->
 name|ctx
 operator|->
 name|notify_func2
-call|)
 argument_list|(
 name|merge_b
 operator|->
@@ -4551,14 +4577,11 @@ name|db
 operator|->
 name|skip_reason
 expr_stmt|;
-call|(
-modifier|*
 name|merge_b
 operator|->
 name|ctx
 operator|->
 name|notify_func2
-call|)
 argument_list|(
 name|merge_b
 operator|->
@@ -4619,7 +4642,17 @@ name|db
 operator|->
 name|parent_baton
 argument_list|,
-name|svn_node_dir
+name|db
+operator|->
+name|tree_conflict_local_node_kind
+argument_list|,
+name|db
+operator|->
+name|tree_conflict_merge_left_node_kind
+argument_list|,
+name|db
+operator|->
+name|tree_conflict_merge_right_node_kind
 argument_list|,
 name|db
 operator|->
@@ -4846,14 +4879,11 @@ name|fb
 operator|->
 name|skip_reason
 expr_stmt|;
-call|(
-modifier|*
 name|merge_b
 operator|->
 name|ctx
 operator|->
 name|notify_func2
-call|)
 argument_list|(
 name|merge_b
 operator|->
@@ -4914,7 +4944,17 @@ name|fb
 operator|->
 name|parent_baton
 argument_list|,
-name|svn_node_file
+name|fb
+operator|->
+name|tree_conflict_local_node_kind
+argument_list|,
+name|fb
+operator|->
+name|tree_conflict_merge_left_node_kind
+argument_list|,
+name|fb
+operator|->
+name|tree_conflict_merge_right_node_kind
 argument_list|,
 name|fb
 operator|->
@@ -5066,6 +5106,40 @@ name|skip_reason
 operator|=
 name|svn_wc_notify_state_unknown
 expr_stmt|;
+if|if
+condition|(
+name|left_source
+condition|)
+name|fb
+operator|->
+name|tree_conflict_merge_left_node_kind
+operator|=
+name|svn_node_file
+expr_stmt|;
+else|else
+name|fb
+operator|->
+name|tree_conflict_merge_left_node_kind
+operator|=
+name|svn_node_none
+expr_stmt|;
+if|if
+condition|(
+name|right_source
+condition|)
+name|fb
+operator|->
+name|tree_conflict_merge_right_node_kind
+operator|=
+name|svn_node_file
+expr_stmt|;
+else|else
+name|fb
+operator|->
+name|tree_conflict_merge_right_node_kind
+operator|=
+name|svn_node_none
+expr_stmt|;
 operator|*
 name|new_file_baton
 operator|=
@@ -5117,9 +5191,6 @@ name|NULL
 condition|)
 block|{
 comment|/* Node is expected to be a file, which will be changed or deleted. */
-name|svn_node_kind_t
-name|kind
-decl_stmt|;
 name|svn_boolean_t
 name|is_deleted
 decl_stmt|;
@@ -5158,7 +5229,9 @@ operator|&
 name|excluded
 argument_list|,
 operator|&
-name|kind
+name|fb
+operator|->
+name|tree_conflict_local_node_kind
 argument_list|,
 operator|&
 name|parent_depth
@@ -5204,14 +5277,18 @@ if|if
 condition|(
 name|is_deleted
 condition|)
-name|kind
+name|fb
+operator|->
+name|tree_conflict_local_node_kind
 operator|=
 name|svn_node_none
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|kind
+name|fb
+operator|->
+name|tree_conflict_local_node_kind
 operator|==
 name|svn_node_none
 condition|)
@@ -5309,21 +5386,49 @@ block|}
 elseif|else
 if|if
 condition|(
-name|kind
+name|fb
+operator|->
+name|tree_conflict_local_node_kind
 operator|!=
 name|svn_node_file
 condition|)
 block|{
+name|svn_boolean_t
+name|added
+decl_stmt|;
 name|fb
 operator|->
 name|shadowed
 operator|=
 name|TRUE
 expr_stmt|;
+name|SVN_ERR
+argument_list|(
+name|svn_wc__node_is_added
+argument_list|(
+operator|&
+name|added
+argument_list|,
+name|merge_b
+operator|->
+name|ctx
+operator|->
+name|wc_ctx
+argument_list|,
+name|local_abspath
+argument_list|,
+name|scratch_pool
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|fb
 operator|->
 name|tree_conflict_reason
 operator|=
+name|added
+condition|?
+name|svn_wc_conflict_reason_added
+else|:
 name|svn_wc_conflict_reason_obstructed
 expr_stmt|;
 comment|/* ### Similar to directory */
@@ -5526,6 +5631,16 @@ name|local_abspath
 argument_list|,
 name|pdb
 argument_list|,
+name|old_tc
+operator|->
+name|node_kind
+argument_list|,
+name|old_tc
+operator|->
+name|src_left_version
+operator|->
+name|node_kind
+argument_list|,
 name|svn_node_file
 argument_list|,
 name|fb
@@ -5601,9 +5716,6 @@ block|{
 name|svn_wc_notify_state_t
 name|obstr_state
 decl_stmt|;
-name|svn_node_kind_t
-name|kind
-decl_stmt|;
 name|svn_boolean_t
 name|is_deleted
 decl_stmt|;
@@ -5620,7 +5732,9 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|kind
+name|fb
+operator|->
+name|tree_conflict_local_node_kind
 argument_list|,
 name|NULL
 argument_list|,
@@ -5662,7 +5776,9 @@ block|}
 elseif|else
 if|if
 condition|(
-name|kind
+name|fb
+operator|->
+name|tree_conflict_local_node_kind
 operator|!=
 name|svn_node_none
 operator|&&
@@ -5671,16 +5787,42 @@ name|is_deleted
 condition|)
 block|{
 comment|/* Set a tree conflict */
+name|svn_boolean_t
+name|added
+decl_stmt|;
 name|fb
 operator|->
 name|shadowed
 operator|=
 name|TRUE
 expr_stmt|;
+name|SVN_ERR
+argument_list|(
+name|svn_wc__node_is_added
+argument_list|(
+operator|&
+name|added
+argument_list|,
+name|merge_b
+operator|->
+name|ctx
+operator|->
+name|wc_ctx
+argument_list|,
+name|local_abspath
+argument_list|,
+name|scratch_pool
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|fb
 operator|->
 name|tree_conflict_reason
 operator|=
+name|added
+condition|?
+name|svn_wc_conflict_reason_added
+else|:
 name|svn_wc_conflict_reason_obstructed
 expr_stmt|;
 block|}
@@ -5911,6 +6053,10 @@ name|fb
 operator|->
 name|skip_reason
 argument_list|,
+name|fb
+operator|->
+name|parent_baton
+argument_list|,
 name|scratch_pool
 argument_list|)
 argument_list|)
@@ -5959,6 +6105,8 @@ operator|&
 name|right
 argument_list|,
 name|local_abspath
+argument_list|,
+name|svn_node_file
 argument_list|,
 name|svn_node_file
 argument_list|,
@@ -6591,6 +6739,10 @@ argument_list|,
 name|fb
 operator|->
 name|skip_reason
+argument_list|,
+name|fb
+operator|->
+name|parent_baton
 argument_list|,
 name|scratch_pool
 argument_list|)
@@ -7405,6 +7557,10 @@ name|fb
 operator|->
 name|skip_reason
 argument_list|,
+name|fb
+operator|->
+name|parent_baton
+argument_list|,
 name|scratch_pool
 argument_list|)
 argument_list|)
@@ -7617,6 +7773,10 @@ name|parent_baton
 argument_list|,
 name|svn_node_file
 argument_list|,
+name|svn_node_file
+argument_list|,
+name|svn_node_none
+argument_list|,
 name|svn_wc_conflict_action_delete
 argument_list|,
 name|svn_wc_conflict_reason_edited
@@ -7637,7 +7797,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* An svn_diff_tree_processor_t function.     Called before either merge_dir_changed(), merge_dir_added(),    merge_dir_deleted() or merge_dir_closed(), unless it sets *SKIP to TRUE.     After this call and before the close call, all descendants will receive    their changes, unless *SKIP_CHILDREN is set to TRUE.     When *SKIP is TRUE, the diff driver avoids work on getting the details    for the closing callbacks.     The SKIP and SKIP_DESCENDANTS work independantly.  */
+comment|/* An svn_diff_tree_processor_t function.     Called before either merge_dir_changed(), merge_dir_added(),    merge_dir_deleted() or merge_dir_closed(), unless it sets *SKIP to TRUE.     After this call and before the close call, all descendants will receive    their changes, unless *SKIP_CHILDREN is set to TRUE.     When *SKIP is TRUE, the diff driver avoids work on getting the details    for the closing callbacks.     The SKIP and SKIP_DESCENDANTS work independently.  */
 end_comment
 
 begin_function
@@ -7780,6 +7940,40 @@ name|db
 expr_stmt|;
 if|if
 condition|(
+name|left_source
+condition|)
+name|db
+operator|->
+name|tree_conflict_merge_left_node_kind
+operator|=
+name|svn_node_dir
+expr_stmt|;
+else|else
+name|db
+operator|->
+name|tree_conflict_merge_left_node_kind
+operator|=
+name|svn_node_none
+expr_stmt|;
+if|if
+condition|(
+name|right_source
+condition|)
+name|db
+operator|->
+name|tree_conflict_merge_right_node_kind
+operator|=
+name|svn_node_dir
+expr_stmt|;
+else|else
+name|db
+operator|->
+name|tree_conflict_merge_right_node_kind
+operator|=
+name|svn_node_none
+expr_stmt|;
+if|if
+condition|(
 name|pdb
 condition|)
 block|{
@@ -7835,9 +8029,6 @@ name|NULL
 condition|)
 block|{
 comment|/* Node is expected to be a directory. */
-name|svn_node_kind_t
-name|kind
-decl_stmt|;
 name|svn_boolean_t
 name|is_deleted
 decl_stmt|;
@@ -7877,7 +8068,9 @@ operator|&
 name|excluded
 argument_list|,
 operator|&
-name|kind
+name|db
+operator|->
+name|tree_conflict_local_node_kind
 argument_list|,
 operator|&
 name|parent_depth
@@ -8001,14 +8194,18 @@ if|if
 condition|(
 name|is_deleted
 condition|)
-name|kind
+name|db
+operator|->
+name|tree_conflict_local_node_kind
 operator|=
 name|svn_node_none
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|kind
+name|db
+operator|->
+name|tree_conflict_local_node_kind
 operator|==
 name|svn_node_none
 condition|)
@@ -8111,21 +8308,49 @@ block|}
 elseif|else
 if|if
 condition|(
-name|kind
+name|db
+operator|->
+name|tree_conflict_local_node_kind
 operator|!=
 name|svn_node_dir
 condition|)
 block|{
+name|svn_boolean_t
+name|added
+decl_stmt|;
 name|db
 operator|->
 name|shadowed
 operator|=
 name|TRUE
 expr_stmt|;
+name|SVN_ERR
+argument_list|(
+name|svn_wc__node_is_added
+argument_list|(
+operator|&
+name|added
+argument_list|,
+name|merge_b
+operator|->
+name|ctx
+operator|->
+name|wc_ctx
+argument_list|,
+name|local_abspath
+argument_list|,
+name|scratch_pool
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|db
 operator|->
 name|tree_conflict_reason
 operator|=
+name|added
+condition|?
+name|svn_wc_conflict_reason_added
+else|:
 name|svn_wc_conflict_reason_obstructed
 expr_stmt|;
 comment|/* ### To avoid breaking tests */
@@ -8452,6 +8677,16 @@ name|local_abspath
 argument_list|,
 name|pdb
 argument_list|,
+name|old_tc
+operator|->
+name|node_kind
+argument_list|,
+name|old_tc
+operator|->
+name|src_left_version
+operator|->
+name|node_kind
+argument_list|,
 name|svn_node_dir
 argument_list|,
 name|db
@@ -8502,9 +8737,6 @@ block|{
 name|svn_wc_notify_state_t
 name|obstr_state
 decl_stmt|;
-name|svn_node_kind_t
-name|kind
-decl_stmt|;
 name|svn_boolean_t
 name|is_deleted
 decl_stmt|;
@@ -8521,7 +8753,9 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|kind
+name|db
+operator|->
+name|tree_conflict_local_node_kind
 argument_list|,
 name|NULL
 argument_list|,
@@ -8543,7 +8777,9 @@ operator|&&
 operator|(
 name|is_deleted
 operator|||
-name|kind
+name|db
+operator|->
+name|tree_conflict_local_node_kind
 operator|==
 name|svn_node_none
 operator|)
@@ -8615,7 +8851,9 @@ block|}
 elseif|else
 if|if
 condition|(
-name|kind
+name|db
+operator|->
+name|tree_conflict_local_node_kind
 operator|!=
 name|svn_node_none
 operator|&&
@@ -8624,16 +8862,42 @@ name|is_deleted
 condition|)
 block|{
 comment|/* Set a tree conflict */
+name|svn_boolean_t
+name|added
+decl_stmt|;
 name|db
 operator|->
 name|shadowed
 operator|=
 name|TRUE
 expr_stmt|;
+name|SVN_ERR
+argument_list|(
+name|svn_wc__node_is_added
+argument_list|(
+operator|&
+name|added
+argument_list|,
+name|merge_b
+operator|->
+name|ctx
+operator|->
+name|wc_ctx
+argument_list|,
+name|local_abspath
+argument_list|,
+name|scratch_pool
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|db
 operator|->
 name|tree_conflict_reason
 operator|=
+name|added
+condition|?
+name|svn_wc_conflict_reason_added
+else|:
 name|svn_wc_conflict_reason_obstructed
 expr_stmt|;
 block|}
@@ -8716,7 +8980,7 @@ condition|(
 name|old_tc
 condition|)
 block|{
-comment|/* svn_wc_add4 and svn_wc_add_from_disk2 can't add a node                  over an existing tree conflict */
+comment|/* svn_wc_add4 and svn_wc_add_from_disk3 can't add a node                  over an existing tree conflict */
 comment|/* ### These functions should take some tree conflict argument                      and allow overwriting the tc when one is passed */
 name|SVN_ERR
 argument_list|(
@@ -8811,7 +9075,7 @@ else|else
 block|{
 name|SVN_ERR
 argument_list|(
-name|svn_wc_add_from_disk2
+name|svn_wc_add_from_disk3
 argument_list|(
 name|merge_b
 operator|->
@@ -8825,6 +9089,9 @@ name|apr_hash_make
 argument_list|(
 name|scratch_pool
 argument_list|)
+argument_list|,
+name|FALSE
+comment|/* skip checks */
 argument_list|,
 name|NULL
 argument_list|,
@@ -8853,6 +9120,12 @@ argument_list|,
 name|local_abspath
 argument_list|,
 name|pdb
+argument_list|,
+name|old_tc
+operator|->
+name|node_kind
+argument_list|,
+name|svn_node_none
 argument_list|,
 name|svn_node_dir
 argument_list|,
@@ -9063,6 +9336,10 @@ name|db
 operator|->
 name|skip_reason
 argument_list|,
+name|db
+operator|->
+name|parent_baton
+argument_list|,
 name|scratch_pool
 argument_list|)
 argument_list|)
@@ -9130,6 +9407,8 @@ operator|&
 name|right
 argument_list|,
 name|local_abspath
+argument_list|,
+name|svn_node_dir
 argument_list|,
 name|svn_node_dir
 argument_list|,
@@ -9394,6 +9673,10 @@ argument_list|,
 name|db
 operator|->
 name|skip_reason
+argument_list|,
+name|db
+operator|->
+name|parent_baton
 argument_list|,
 name|scratch_pool
 argument_list|)
@@ -9985,6 +10268,10 @@ name|db
 operator|->
 name|skip_reason
 argument_list|,
+name|db
+operator|->
+name|parent_baton
+argument_list|,
 name|scratch_pool
 argument_list|)
 argument_list|)
@@ -10336,6 +10623,10 @@ name|parent_baton
 argument_list|,
 name|svn_node_dir
 argument_list|,
+name|svn_node_dir
+argument_list|,
+name|svn_node_none
+argument_list|,
 name|svn_wc_conflict_action_delete
 argument_list|,
 name|svn_wc_conflict_reason_edited
@@ -10514,6 +10805,13 @@ name|processor
 operator|->
 name|baton
 decl_stmt|;
+name|struct
+name|merge_dir_baton_t
+modifier|*
+name|db
+init|=
+name|dir_baton
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -10545,6 +10843,8 @@ argument_list|,
 name|svn_wc_notify_skip
 argument_list|,
 name|svn_wc_notify_state_missing
+argument_list|,
+name|db
 argument_list|,
 name|scratch_pool
 argument_list|)
@@ -11634,14 +11934,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-call|(
-modifier|*
 name|merge_b
 operator|->
 name|ctx
 operator|->
 name|notify_func2
-call|)
 argument_list|(
 name|merge_b
 operator|->
@@ -11882,28 +12179,11 @@ argument_list|,
 name|scratch_pool
 argument_list|)
 expr_stmt|;
-comment|/* If PRIMARY_URL@peg_rev doesn't exist then       svn_client__repos_location_segments() typically returns an       SVN_ERR_FS_NOT_FOUND error, but if it doesn't exist for a       forward merge over ra_neon then we get SVN_ERR_RA_DAV_REQUEST_FAILED.       http://subversion.tigris.org/issues/show_bug.cgi?id=3137 fixed some of       the cases where different RA layers returned different error codes to       signal the "path not found"...but it looks like there is more to do.        ### Do we still need to special case for ra_neon (since it no longer           exists)? */
 if|if
 condition|(
 name|err
 condition|)
 block|{
-if|if
-condition|(
-name|err
-operator|->
-name|apr_err
-operator|==
-name|SVN_ERR_FS_NOT_FOUND
-operator|||
-name|err
-operator|->
-name|apr_err
-operator|==
-name|SVN_ERR_RA_DAV_REQUEST_FAILED
-condition|)
-block|{
-comment|/* PRIMARY_URL@peg_rev doesn't exist.  Check if PRIMARY_URL@older_rev              exists, if neither exist then the editor can simply ignore this              subtree. */
 specifier|const
 name|char
 modifier|*
@@ -11913,15 +12193,26 @@ comment|/* PRIMARY_URL relative to RA_SESSION */
 name|svn_node_kind_t
 name|kind
 decl_stmt|;
+if|if
+condition|(
+name|err
+operator|->
+name|apr_err
+operator|!=
+name|SVN_ERR_FS_NOT_FOUND
+condition|)
+return|return
+name|svn_error_trace
+argument_list|(
+name|err
+argument_list|)
+return|;
 name|svn_error_clear
 argument_list|(
 name|err
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
-name|NULL
-expr_stmt|;
+comment|/* PRIMARY_URL@peg_rev doesn't exist.  Check if PRIMARY_URL@older_rev          exists, if neither exist then the editor can simply ignore this          subtree. */
 name|SVN_ERR
 argument_list|(
 name|svn_ra_get_path_relative_to_session
@@ -11961,7 +12252,7 @@ operator|==
 name|svn_node_none
 condition|)
 block|{
-comment|/* Neither PRIMARY_URL@peg_rev nor PRIMARY_URL@older_rev exist,                  so there is nothing to merge.  Set CHILD->REMAINING_RANGES                  identical to PARENT's. */
+comment|/* Neither PRIMARY_URL@peg_rev nor PRIMARY_URL@older_rev exist,              so there is nothing to merge.  Set CHILD->REMAINING_RANGES              identical to PARENT's. */
 name|child
 operator|->
 name|remaining_ranges
@@ -11985,7 +12276,7 @@ decl_stmt|;
 name|svn_revnum_t
 name|rev_primary_url_deleted
 decl_stmt|;
-comment|/* PRIMARY_URL@older_rev exists, so it was deleted at some                  revision prior to peg_rev, find that revision. */
+comment|/* PRIMARY_URL@older_rev exists, so it was deleted at some              revision prior to peg_rev, find that revision. */
 name|SVN_ERR
 argument_list|(
 name|svn_ra_get_deleted_rev
@@ -12005,7 +12296,7 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* PRIMARY_URL@older_rev exists and PRIMARY_URL@peg_rev doesn't,                  so svn_ra_get_deleted_rev() should always find the revision                  PRIMARY_URL@older_rev was deleted. */
+comment|/* PRIMARY_URL@older_rev exists and PRIMARY_URL@peg_rev doesn't,              so svn_ra_get_deleted_rev() should always find the revision              PRIMARY_URL@older_rev was deleted. */
 name|SVN_ERR_ASSERT
 argument_list|(
 name|SVN_IS_VALID_REVNUM
@@ -12014,13 +12305,13 @@ name|rev_primary_url_deleted
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* If this is a reverse merge reorder CHILD->REMAINING_RANGES and                  PARENT->REMAINING_RANGES so both will work with the                  svn_rangelist_* APIs below. */
+comment|/* If this is a reverse merge reorder CHILD->REMAINING_RANGES and              PARENT->REMAINING_RANGES so both will work with the              svn_rangelist_* APIs below. */
 if|if
 condition|(
 name|is_rollback
 condition|)
 block|{
-comment|/* svn_rangelist_reverse operates in place so it's safe                      to use our scratch_pool. */
+comment|/* svn_rangelist_reverse operates in place so it's safe                  to use our scratch_pool. */
 name|SVN_ERR
 argument_list|(
 name|svn_rangelist_reverse
@@ -12046,7 +12337,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Find the intersection of CHILD->REMAINING_RANGES with the                  range over which PRIMARY_URL@older_rev exists (ending at                  the youngest revision at which it still exists). */
+comment|/* Find the intersection of CHILD->REMAINING_RANGES with the              range over which PRIMARY_URL@older_rev exists (ending at              the youngest revision at which it still exists). */
 name|SVN_ERR
 argument_list|(
 name|rangelist_intersect_range
@@ -12074,7 +12365,7 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Merge into CHILD->REMAINING_RANGES the intersection of                  PARENT->REMAINING_RANGES with the range beginning when                  PRIMARY_URL@older_rev was deleted until younger_rev. */
+comment|/* Merge into CHILD->REMAINING_RANGES the intersection of              PARENT->REMAINING_RANGES with the range beginning when              PRIMARY_URL@older_rev was deleted until younger_rev. */
 name|SVN_ERR
 argument_list|(
 name|rangelist_intersect_range
@@ -12116,7 +12407,7 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Return CHILD->REMAINING_RANGES and PARENT->REMAINING_RANGES                  to reverse order if necessary. */
+comment|/* Return CHILD->REMAINING_RANGES and PARENT->REMAINING_RANGES              to reverse order if necessary. */
 if|if
 condition|(
 name|is_rollback
@@ -12147,16 +12438,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-block|}
-else|else
-block|{
-return|return
-name|svn_error_trace
-argument_list|(
-name|err
-argument_list|)
-return|;
 block|}
 block|}
 else|else
@@ -13969,9 +14250,6 @@ argument_list|,
 name|TRUE
 comment|/* ignore_enoent */
 argument_list|,
-name|FALSE
-comment|/* show_hidden */
-argument_list|,
 name|scratch_pool
 argument_list|,
 name|scratch_pool
@@ -14272,7 +14550,7 @@ expr_stmt|;
 comment|/* Easy out: There can't be a gap between adjacent revisions. */
 if|if
 condition|(
-name|abs
+name|labs
 argument_list|(
 name|source
 operator|->
@@ -15576,7 +15854,7 @@ name|char
 modifier|*
 name|local_abspath
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -15585,7 +15863,7 @@ name|svn_rangelist_t
 modifier|*
 name|ranges
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -16096,7 +16374,7 @@ name|char
 modifier|*
 name|skipped_abspath
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -17920,12 +18198,12 @@ name|split_range1
 expr_stmt|;
 name|svn_sort__array_insert
 argument_list|(
-operator|&
-name|split_range2
-argument_list|,
 name|child
 operator|->
 name|remaining_ranges
+argument_list|,
+operator|&
+name|split_range2
 argument_list|,
 literal|1
 argument_list|)
@@ -18378,10 +18656,10 @@ name|insert_index
 operator|=
 name|svn_sort__bsearch_lower_bound
 argument_list|(
+name|children_with_mergeinfo
+argument_list|,
 operator|&
 name|insert_element
-argument_list|,
-name|children_with_mergeinfo
 argument_list|,
 name|compare_merge_path_t_as_paths
 argument_list|)
@@ -18397,10 +18675,10 @@ argument_list|)
 expr_stmt|;
 name|svn_sort__array_insert
 argument_list|(
+name|children_with_mergeinfo
+argument_list|,
 operator|&
 name|new_element
-argument_list|,
-name|children_with_mergeinfo
 argument_list|,
 name|insert_index
 argument_list|)
@@ -18591,7 +18869,7 @@ comment|/*(parent == NULL) */
 comment|/* Add all of PARENT's non-missing children that are not already present.*/
 name|SVN_ERR
 argument_list|(
-name|svn_wc__node_get_children
+name|svn_wc__node_get_children_of_working_node
 argument_list|(
 operator|&
 name|children
@@ -18601,8 +18879,6 @@ operator|->
 name|wc_ctx
 argument_list|,
 name|parent_abspath
-argument_list|,
-name|FALSE
 argument_list|,
 name|pool
 argument_list|,
@@ -18949,7 +19225,7 @@ name|char
 modifier|*
 name|missing_root_path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -19134,7 +19410,7 @@ name|char
 modifier|*
 name|wc_path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -19143,7 +19419,7 @@ name|svn_string_t
 modifier|*
 name|mergeinfo_string
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -19397,7 +19673,7 @@ name|char
 modifier|*
 name|wc_path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -19405,7 +19681,7 @@ decl_stmt|;
 name|svn_mergeinfo_t
 name|mergeinfo
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -19641,7 +19917,7 @@ name|missing_subtree_err_buf
 argument_list|,
 name|svn_dirent_local_style
 argument_list|(
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -19709,7 +19985,7 @@ name|char
 modifier|*
 name|wc_path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -19811,7 +20087,7 @@ name|char
 modifier|*
 name|wc_path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -19820,7 +20096,7 @@ name|svn_depth_t
 modifier|*
 name|child_depth
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -19994,7 +20270,7 @@ name|char
 modifier|*
 name|wc_path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -20124,8 +20400,6 @@ argument_list|,
 name|target
 operator|->
 name|abspath
-argument_list|,
-name|FALSE
 argument_list|,
 name|scratch_pool
 argument_list|,
@@ -20342,7 +20616,7 @@ name|j
 decl_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_wc__node_get_children
+name|svn_wc__node_get_children_of_working_node
 argument_list|(
 operator|&
 name|children
@@ -20354,8 +20628,6 @@ argument_list|,
 name|child
 operator|->
 name|abspath
-argument_list|,
-name|FALSE
 argument_list|,
 name|iterpool
 argument_list|,
@@ -22045,6 +22317,8 @@ argument_list|,
 operator|&
 name|range_start_rev
 argument_list|,
+name|ra_session
+argument_list|,
 name|ctx
 argument_list|,
 name|result_pool
@@ -22094,10 +22368,10 @@ name|original_revision
 expr_stmt|;
 name|svn_sort__array_insert
 argument_list|(
+name|segments
+argument_list|,
 operator|&
 name|new_segment
-argument_list|,
-name|segments
 argument_list|,
 literal|0
 argument_list|)
@@ -24351,7 +24625,7 @@ name|char
 modifier|*
 name|abspath_with_new_mergeinfo
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -24625,7 +24899,7 @@ name|char
 modifier|*
 name|path_touched_by_merge
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -24995,7 +25269,7 @@ name|char
 modifier|*
 name|path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -25004,7 +25278,7 @@ name|svn_log_changed_path2_t
 modifier|*
 name|change
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -26761,7 +27035,7 @@ break|break;
 block|}
 block|}
 block|}
-comment|/* Allow mergeinfo on switched subtrees to elide to the              repository. Otherwise limit elision to the merge target              for now.  do_directory_merge() will eventually try to              elide that when the merge is complete. */
+comment|/* Allow mergeinfo on switched subtrees to elide to the              repository. Otherwise limit elision to the merge target              for now.  do_merge() will eventually try to              elide that when the merge is complete. */
 name|SVN_ERR
 argument_list|(
 name|svn_client__elide_mergeinfo
@@ -26901,7 +27175,7 @@ name|char
 modifier|*
 name|added_abspath
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -27569,7 +27843,7 @@ name|char
 modifier|*
 name|fspath
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -28099,7 +28373,7 @@ argument_list|(
 name|iterpool
 argument_list|)
 expr_stmt|;
-comment|/* Issue #4269: Keep track of the longest common ancestor of all the          subtrees which require merges.  This may be a child of          TARGET->ABSPATH, which will allow us to narrow the log request          below. */
+comment|/* CHILD->REMAINING_RANGES will be NULL if child is absent. */
 if|if
 condition|(
 name|child
@@ -28113,6 +28387,7 @@ operator|->
 name|nelts
 condition|)
 block|{
+comment|/* Issue #4269: Keep track of the longest common ancestor of all the              subtrees which require merges.  This may be a child of              TARGET->ABSPATH, which will allow us to narrow the log request              below. */
 if|if
 condition|(
 name|longest_common_subtree_ancestor
@@ -28137,20 +28412,6 @@ name|child
 operator|->
 name|abspath
 expr_stmt|;
-block|}
-comment|/* CHILD->REMAINING_RANGES will be NULL if child is absent. */
-if|if
-condition|(
-name|child
-operator|->
-name|remaining_ranges
-operator|&&
-name|child
-operator|->
-name|remaining_ranges
-operator|->
-name|nelts
-condition|)
 name|SVN_ERR
 argument_list|(
 name|svn_rangelist_merge2
@@ -28167,6 +28428,7 @@ name|iterpool
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|svn_pool_destroy
 argument_list|(
@@ -29182,7 +29444,7 @@ operator|->
 name|record_only
 condition|)
 block|{
-comment|/* Reset cur_ancestor_abspath to null so that subsequent cherry              picked revision ranges will be notified upon subsequent              operative merge. */
+comment|/* Reset the last notification path so that subsequent cherry              picked revision ranges will be notified upon subsequent              operative merge. */
 name|merge_b
 operator|->
 name|notify_begin
@@ -31688,6 +31950,8 @@ name|wc_ctx
 argument_list|,
 name|target_abspath
 argument_list|,
+name|TRUE
+argument_list|,
 name|ctx
 operator|->
 name|cancel_func
@@ -33431,7 +33695,7 @@ name|char
 modifier|*
 name|path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -33795,7 +34059,7 @@ block|{
 name|svn_mergeinfo_t
 name|mergeinfo
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi_catalog
 argument_list|)
@@ -34363,7 +34627,7 @@ name|char
 modifier|*
 name|target_path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -34371,7 +34635,7 @@ decl_stmt|;
 name|svn_mergeinfo_t
 name|target_history_as_mergeinfo
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -34630,7 +34894,7 @@ name|char
 modifier|*
 name|source_path
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -34655,7 +34919,7 @@ decl_stmt|;
 name|svn_mergeinfo_t
 name|source_mergeinfo
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -35100,7 +35364,7 @@ name|char
 modifier|*
 name|local_abspath
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -35928,7 +36192,10 @@ name|final_unmerged_catalog
 argument_list|,
 literal|"  "
 argument_list|,
+name|_
+argument_list|(
 literal|"    Missing ranges: "
+argument_list|)
 argument_list|,
 name|scratch_pool
 argument_list|)
@@ -36101,30 +36368,6 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_ERR
-argument_list|(
-name|svn_client_open_ra_session2
-argument_list|(
-name|target_ra_session_p
-argument_list|,
-name|target
-operator|->
-name|loc
-operator|.
-name|url
-argument_list|,
-name|target
-operator|->
-name|abspath
-argument_list|,
-name|ctx
-argument_list|,
-name|result_pool
-argument_list|,
-name|scratch_pool
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -36158,6 +36401,30 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 return|;
+name|SVN_ERR
+argument_list|(
+name|svn_client_open_ra_session2
+argument_list|(
+name|target_ra_session_p
+argument_list|,
+name|target
+operator|->
+name|loc
+operator|.
+name|url
+argument_list|,
+name|target
+operator|->
+name|abspath
+argument_list|,
+name|ctx
+argument_list|,
+name|result_pool
+argument_list|,
+name|scratch_pool
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|SVN_ERR
 argument_list|(
 name|svn_client__ra_session_from_path2
@@ -36380,6 +36647,11 @@ operator|!
 name|source
 condition|)
 block|{
+operator|*
+name|conflict_report
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 name|SVN_NO_ERROR
 return|;
@@ -37490,7 +37762,7 @@ name|char
 modifier|*
 name|fspath
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -37499,7 +37771,7 @@ name|svn_rangelist_t
 modifier|*
 name|rangelist
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -38639,7 +38911,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The body of client_find_automatic_merge(), which see.  */
+comment|/* Find the last point at which the branch at S_T->source was completely  * merged to the branch at S_T->target or vice-versa.  *  * Fill in S_T->source_branch and S_T->target_branch and S_T->yca.  * Set *BASE_P to the merge base.  Set *IS_REINTEGRATE_LIKE to true if  * an automatic merge from source to target would be a reintegration  * merge: that is, if the last automatic merge was in the opposite  * direction; or to false otherwise.  *  * If there is no youngest common ancestor, throw an error.  */
 end_comment
 
 begin_function
@@ -38957,7 +39229,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** Find out what kind of automatic merge would be needed, when the target  * is only known as a repository location rather than a WC.  *  * Like find_automatic_merge() except that the target is  * specified by @a target_path_or_url at @a target_revision, which must  * refer to a repository location, instead of by a WC path argument.  */
+comment|/** Find out what kind of automatic merge would be needed, when the target  * is only known as a repository location rather than a WC.  *  * Like find_automatic_merge() except that the target is  * specified by @a target_path_or_url at @a target_revision, which must  * refer to a repository location, instead of by a WC path argument.  *  * Set *MERGE_P to a new structure with all fields filled in except the  * 'allow_*' flags.  */
 end_comment
 
 begin_function
@@ -39273,6 +39545,14 @@ name|merge
 argument_list|)
 argument_list|)
 decl_stmt|;
+name|SVN_ERR_ASSERT
+argument_list|(
+name|svn_dirent_is_absolute
+argument_list|(
+name|target_abspath
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* "Open" the target WC.  Check the target WC for mixed-rev, local mods and    * switched subtrees yet to faster exit and notify user before contacting    * with server.  After we find out what kind of merge is required, then if a    * reintegrate-like merge is required we'll do the stricter checks, in    * do_automatic_merge_locked(). */
 name|SVN_ERR
 argument_list|(
@@ -39299,6 +39579,39 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|s_t
+operator|->
+name|target
+operator|->
+name|loc
+operator|.
+name|url
+condition|)
+return|return
+name|svn_error_createf
+argument_list|(
+name|SVN_ERR_CLIENT_UNRELATED_RESOURCES
+argument_list|,
+name|NULL
+argument_list|,
+name|_
+argument_list|(
+literal|"Can't perform automatic merge into '%s' "
+literal|"because it is locally added and therefore "
+literal|"not related to the merge source"
+argument_list|)
+argument_list|,
+name|svn_dirent_local_style
+argument_list|(
+name|target_abspath
+argument_list|,
+name|scratch_pool
+argument_list|)
+argument_list|)
+return|;
 comment|/* Open RA sessions to the source and target trees. */
 name|SVN_ERR
 argument_list|(
@@ -39331,7 +39644,6 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* ### check for null URL (i.e. added path) here, like in reintegrate? */
 name|SVN_ERR
 argument_list|(
 name|svn_client__ra_session_from_path2
@@ -39426,6 +39738,17 @@ operator|=
 name|s_t
 operator|->
 name|source
+expr_stmt|;
+name|merge
+operator|->
+name|target
+operator|=
+operator|&
+name|s_t
+operator|->
+name|target
+operator|->
+name|loc
 expr_stmt|;
 name|merge
 operator|->
@@ -40103,12 +40426,37 @@ operator|->
 name|kind
 operator|==
 name|svn_opt_revision_working
+operator|||
+name|target_revision
+operator|->
+name|kind
+operator|==
+name|svn_opt_revision_base
 operator|)
 expr_stmt|;
 if|if
 condition|(
 name|target_is_wc
 condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|target_abspath
+decl_stmt|;
+name|SVN_ERR
+argument_list|(
+name|svn_dirent_get_absolute
+argument_list|(
+operator|&
+name|target_abspath
+argument_list|,
+name|target_path_or_url
+argument_list|,
+name|scratch_pool
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|SVN_ERR
 argument_list|(
 name|client_find_automatic_merge
@@ -40120,7 +40468,7 @@ name|source_path_or_url
 argument_list|,
 name|source_revision
 argument_list|,
-name|target_path_or_url
+name|target_abspath
 argument_list|,
 name|TRUE
 argument_list|,
@@ -40137,6 +40485,7 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|SVN_ERR
 argument_list|(

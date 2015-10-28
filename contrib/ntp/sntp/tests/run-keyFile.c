@@ -42,6 +42,36 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fileHandlingTest.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_types.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crypto.h"
+end_include
+
 begin_comment
 comment|//=======External Functions This Runner Calls=====
 end_comment
@@ -70,7 +100,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_ReadEmptyKeyFile
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -78,7 +110,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_ReadASCIIKeys
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -86,7 +120,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_ReadHexKeys
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -94,7 +130,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_ReadKeyFileWithComments
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -102,7 +140,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_ReadKeyFileWithInvalidHex
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -110,10 +150,21 @@ begin_comment
 comment|//=======Test Reset Option=====
 end_comment
 
+begin_function_decl
+name|void
+name|resetTest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|resetTest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tearDown
 argument_list|()
@@ -126,6 +177,7 @@ end_function
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -155,12 +207,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|Unity
-operator|.
-name|TestFile
-operator|=
-literal|"keyFile.c"
-expr_stmt|;
 name|UnityBegin
 argument_list|(
 literal|"keyFile.c"
@@ -170,35 +216,35 @@ name|RUN_TEST
 argument_list|(
 name|test_ReadEmptyKeyFile
 argument_list|,
-literal|53
+literal|12
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_ReadASCIIKeys
 argument_list|,
-literal|61
+literal|13
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_ReadHexKeys
 argument_list|,
-literal|79
+literal|14
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_ReadKeyFileWithComments
 argument_list|,
-literal|105
+literal|15
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_ReadKeyFileWithInvalidHex
 argument_list|,
-literal|124
+literal|16
 argument_list|)
 expr_stmt|;
 return|return

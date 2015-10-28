@@ -8,7 +8,7 @@ comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2015, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -4092,14 +4092,27 @@ operator|->
 name|ftp_pid
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Confirm that curproc is indeed forking the process in which 		 * we're trying to enable probes. 		 */
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|p
-operator|!=
+operator|==
 name|NULL
+condition|)
+block|{
+comment|/* 			 * So it's not that the target process is being born, 			 * it's that it isn't there at all (and we simply 			 * happen to be forking).  Anyway, we know that the 			 * target is definitely gone, so bail out. 			 */
+name|mutex_exit
+argument_list|(
+operator|&
+name|pidlock
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 		 * Confirm that curproc is indeed forking the process in which 		 * we're trying to enable probes. 		 */
 name|ASSERT
 argument_list|(
 name|p

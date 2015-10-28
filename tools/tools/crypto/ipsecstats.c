@@ -6,7 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -25,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<netipsec/esp_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -211,16 +223,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
-end_define
-
 begin_function
 specifier|static
 specifier|const
@@ -368,7 +370,7 @@ name|slen
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 operator|<
 literal|0
@@ -401,7 +403,7 @@ name|slen
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 operator|<
 literal|0
@@ -434,7 +436,7 @@ name|slen
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 operator|<
 literal|0
@@ -640,7 +642,7 @@ name|i
 argument_list|,
 name|aalgs
 argument_list|,
-name|N
+name|nitems
 argument_list|(
 name|aalgs
 argument_list|)
@@ -881,7 +883,7 @@ name|i
 argument_list|,
 name|espalgs
 argument_list|,
-name|N
+name|nitems
 argument_list|(
 name|espalgs
 argument_list|)

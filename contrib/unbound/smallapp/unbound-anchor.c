@@ -22,7 +22,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/rrdef.h"
+file|"sldns/rrdef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sldns/parseutil.h"
 end_include
 
 begin_include
@@ -4239,14 +4245,26 @@ decl_stmt|;
 name|char
 modifier|*
 name|data
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|len
+operator|>=
+literal|0xfffffff0
+condition|)
+return|return
+name|NULL
+return|;
+comment|/* to protect against integer overflow in malloc*/
+name|data
+operator|=
 name|malloc
 argument_list|(
 name|len
 operator|+
 literal|1
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -6293,7 +6311,7 @@ comment|/* but ignore, (lenient) */
 block|}
 name|t
 operator|=
-name|mktime
+name|sldns_mktime_from_utc
 argument_list|(
 operator|&
 name|tm

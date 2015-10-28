@@ -11663,14 +11663,18 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-comment|/* If a suspend request is already in progress, just return. */
+comment|/*      * If a reboot/shutdown/suspend request is already in progress or      * suspend is blocked due to an upcoming shutdown, just return.      */
 if|if
 condition|(
+name|rebooting
+operator|||
 name|sc
 operator|->
 name|acpi_next_sstate
 operator|!=
 literal|0
+operator|||
+name|suspend_blocked
 condition|)
 block|{
 return|return

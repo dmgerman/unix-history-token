@@ -103,9 +103,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|Deserializer
-decl_stmt|;
 comment|/// This class is used to read from an LLVM bitcode stream, maintaining
 comment|/// information that is global to decoding the entire file. While a file is
 comment|/// being read, multiple cursors can be independently advanced or skipped around
@@ -182,9 +179,12 @@ name|IgnoreBlockInfoNames
 decl_stmt|;
 name|BitstreamReader
 argument_list|(
-argument|const BitstreamReader&
+specifier|const
+name|BitstreamReader
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -194,7 +194,8 @@ specifier|const
 name|BitstreamReader
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:
@@ -523,11 +524,8 @@ return|;
 comment|// Otherwise, add a new record.
 name|BlockInfoRecords
 operator|.
-name|push_back
-argument_list|(
-name|BlockInfo
+name|emplace_back
 argument_list|()
-argument_list|)
 expr_stmt|;
 name|BlockInfoRecords
 operator|.
@@ -704,10 +702,6 @@ comment|/// be passed by value.
 name|class
 name|BitstreamCursor
 block|{
-name|friend
-name|class
-name|Deserializer
-decl_stmt|;
 name|BitstreamReader
 modifier|*
 name|BitStream
@@ -792,6 +786,18 @@ name|BlockScope
 expr_stmt|;
 name|public
 label|:
+specifier|static
+specifier|const
+name|size_t
+name|MaxChunkSize
+init|=
+sizeof|sizeof
+argument_list|(
+name|word_t
+argument_list|)
+operator|*
+literal|8
+decl_stmt|;
 name|BitstreamCursor
 argument_list|()
 block|{
@@ -1144,10 +1150,10 @@ name|uint64_t
 name|BitNo
 parameter_list|)
 block|{
-name|uintptr_t
+name|size_t
 name|ByteNo
 init|=
-name|uintptr_t
+name|size_t
 argument_list|(
 name|BitNo
 operator|/
@@ -1217,18 +1223,19 @@ name|void
 name|fillCurWord
 parameter_list|()
 block|{
-name|assert
-argument_list|(
+if|if
+condition|(
 name|Size
-operator|==
+operator|!=
 literal|0
-operator|||
+operator|&&
 name|NextChar
-operator|<
-operator|(
-name|unsigned
-operator|)
+operator|>=
 name|Size
+condition|)
+name|report_fatal_error
+argument_list|(
+literal|"Unexpected end of file"
 argument_list|)
 expr_stmt|;
 comment|// Read the next word from the stream.
@@ -1324,12 +1331,7 @@ specifier|const
 name|unsigned
 name|BitsInWord
 init|=
-sizeof|sizeof
-argument_list|(
-name|word_t
-argument_list|)
-operator|*
-literal|8
+name|MaxChunkSize
 decl_stmt|;
 name|assert
 argument_list|(
@@ -1936,16 +1938,18 @@ name|bitc
 operator|::
 name|FIRST_APPLICATION_ABBREV
 decl_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
 name|AbbrevNo
-operator|<
+operator|>=
 name|CurAbbrevs
 operator|.
 name|size
 argument_list|()
-operator|&&
-literal|"Invalid abbrev #!"
+condition|)
+name|report_fatal_error
+argument_list|(
+literal|"Invalid abbrev number"
 argument_list|)
 expr_stmt|;
 return|return

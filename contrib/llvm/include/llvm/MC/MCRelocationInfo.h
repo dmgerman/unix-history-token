@@ -96,9 +96,12 @@ name|MCRelocationInfo
 block|{
 name|MCRelocationInfo
 argument_list|(
-argument|const MCRelocationInfo&
+specifier|const
+name|MCRelocationInfo
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -108,7 +111,8 @@ specifier|const
 name|MCRelocationInfo
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|protected
 label|:

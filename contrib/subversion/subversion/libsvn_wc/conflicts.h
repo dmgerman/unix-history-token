@@ -655,6 +655,9 @@ name|char
 modifier|*
 name|local_abspath
 parameter_list|,
+name|svn_node_kind_t
+name|kind
+parameter_list|,
 specifier|const
 name|svn_skel_t
 modifier|*
@@ -697,6 +700,13 @@ specifier|const
 name|char
 modifier|*
 name|local_abspath
+parameter_list|,
+name|svn_cancel_func_t
+name|cancel_func
+parameter_list|,
+name|void
+modifier|*
+name|cancel_baton
 parameter_list|,
 name|apr_pool_t
 modifier|*

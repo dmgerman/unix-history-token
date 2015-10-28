@@ -439,9 +439,12 @@ name|KnownFeasibleEdges
 expr_stmt|;
 name|SparseSolver
 argument_list|(
-argument|const SparseSolver&
+specifier|const
+name|SparseSolver
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -451,7 +454,8 @@ specifier|const
 name|SparseSolver
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:

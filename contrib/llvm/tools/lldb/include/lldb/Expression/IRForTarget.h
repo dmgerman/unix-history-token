@@ -1110,6 +1110,12 @@ name|addr_t
 name|Allocate
 argument_list|()
 block|;
+name|lldb
+operator|::
+name|TargetSP
+name|GetTarget
+argument_list|()
+block|;
 name|private
 operator|:
 name|lldb_private

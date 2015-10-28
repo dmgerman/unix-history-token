@@ -165,11 +165,20 @@ block|}
 empty_stmt|;
 comment|/// \brief Get information about the dynamic type of an object.
 name|DynamicTypeInfo
-name|getDynamicTypeInfo
+name|getDynamicTypeInfoFromObject
 parameter_list|(
 name|void
 modifier|*
 name|Object
+parameter_list|)
+function_decl|;
+comment|/// \brief Get information about the dynamic type of an object from its vtable.
+name|DynamicTypeInfo
+name|getDynamicTypeInfoFromVtable
+parameter_list|(
+name|void
+modifier|*
+name|Vtable
 parameter_list|)
 function_decl|;
 comment|/// \brief Check whether the dynamic type of \p Object has a \p Type subobject

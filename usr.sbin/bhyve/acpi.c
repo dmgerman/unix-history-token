@@ -3520,7 +3520,7 @@ condition|(
 name|suffix
 condition|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|bf
 operator|->
@@ -3550,7 +3550,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|bf
 operator|->

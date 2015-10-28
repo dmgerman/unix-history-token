@@ -144,13 +144,19 @@ name|class
 name|CodeGenOptions
 decl_stmt|;
 name|class
+name|CoverageSourceInfo
+decl_stmt|;
+name|class
 name|DiagnosticsEngine
+decl_stmt|;
+name|class
+name|HeaderSearchOptions
 decl_stmt|;
 name|class
 name|ObjCMethodDecl
 decl_stmt|;
 name|class
-name|CoverageSourceInfo
+name|PreprocessorOptions
 decl_stmt|;
 name|namespace
 name|CodeGen
@@ -283,6 +289,14 @@ comment|/// not used in ABI type generation, so none of the options matter.
 name|CodeGenOptions
 modifier|*
 name|CGO
+decl_stmt|;
+name|HeaderSearchOptions
+modifier|*
+name|HSO
+decl_stmt|;
+name|PreprocessorOptions
+modifier|*
+name|PPO
 decl_stmt|;
 comment|/// The CodeGenModule we use get to the CodeGenTypes object.
 name|CodeGen

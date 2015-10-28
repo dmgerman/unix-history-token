@@ -383,7 +383,6 @@ block|{
 name|public
 label|:
 specifier|static
-specifier|const
 name|MCSection
 modifier|*
 name|getPDataSection
@@ -399,7 +398,6 @@ name|Context
 parameter_list|)
 function_decl|;
 specifier|static
-specifier|const
 name|MCSection
 modifier|*
 name|getXDataSection

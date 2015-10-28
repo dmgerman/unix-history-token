@@ -91,6 +91,13 @@ operator|::
 name|DataExtractor
 operator|&
 name|fpregset
+argument_list|,
+specifier|const
+name|lldb_private
+operator|::
+name|DataExtractor
+operator|&
+name|vregset
 argument_list|)
 block|;
 operator|~
@@ -172,11 +179,19 @@ name|ReadFPR
 argument_list|()
 block|;
 name|bool
+name|ReadVMX
+argument_list|()
+block|;
+name|bool
 name|WriteGPR
 argument_list|()
 block|;
 name|bool
 name|WriteFPR
+argument_list|()
+block|;
+name|bool
+name|WriteVMX
 argument_list|()
 block|;
 name|private
@@ -191,6 +206,11 @@ operator|::
 name|DataBufferSP
 name|m_fpr_buffer
 block|;
+name|lldb
+operator|::
+name|DataBufferSP
+name|m_vec_buffer
+block|;
 name|lldb_private
 operator|::
 name|DataExtractor
@@ -200,6 +220,11 @@ name|lldb_private
 operator|::
 name|DataExtractor
 name|m_fpr
+block|;
+name|lldb_private
+operator|::
+name|DataExtractor
+name|m_vec
 block|; }
 decl_stmt|;
 end_decl_stmt

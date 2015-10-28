@@ -511,7 +511,7 @@ name|Gbl_OutputFilenamePrefix
 argument_list|)
 expr_stmt|;
 comment|/* This is where the disassembly happens */
-name|AcpiGbl_DbOpt_Disasm
+name|AcpiGbl_DmOpt_Disasm
 operator|=
 name|TRUE
 expr_stmt|;

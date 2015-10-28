@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sanitizer_symbolizer.h"
+file|"sanitizer_symbolizer_internal.h"
 end_include
 
 begin_ifndef
@@ -123,65 +123,52 @@ name|__sanitizer
 block|{
 name|class
 name|LibbacktraceSymbolizer
+range|:
+name|public
+name|SymbolizerTool
 block|{
 name|public
-label|:
+operator|:
 specifier|static
 name|LibbacktraceSymbolizer
-modifier|*
+operator|*
 name|get
-parameter_list|(
+argument_list|(
 name|LowLevelAllocator
-modifier|*
+operator|*
 name|alloc
-parameter_list|)
-function_decl|;
-name|SymbolizedStack
-modifier|*
-name|SymbolizeCode
-parameter_list|(
-name|uptr
-name|addr
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|module_name
-parameter_list|,
-name|uptr
-name|module_offset
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
+name|bool
+name|SymbolizePC
+argument_list|(
+argument|uptr addr
+argument_list|,
+argument|SymbolizedStack *stack
+argument_list|)
+name|override
+block|;
 name|bool
 name|SymbolizeData
-parameter_list|(
-name|uptr
-name|addr
-parameter_list|,
-name|DataInfo
-modifier|*
-name|info
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|uptr addr
+argument_list|,
+argument|DataInfo *info
+argument_list|)
+name|override
+block|;
 comment|// May return NULL if demangling failed.
-specifier|static
-name|char
-modifier|*
-name|Demangle
-parameter_list|(
 specifier|const
 name|char
-modifier|*
-name|name
-parameter_list|,
-name|bool
-name|always_alloc
-init|=
-name|false
-parameter_list|)
-function_decl|;
+operator|*
+name|Demangle
+argument_list|(
+argument|const char *name
+argument_list|)
+name|override
+block|;
 name|private
-label|:
+operator|:
 name|explicit
 name|LibbacktraceSymbolizer
 argument_list|(
@@ -198,10 +185,10 @@ block|{}
 name|void
 operator|*
 name|state_
-expr_stmt|;
+block|;
 comment|// Leaked.
 block|}
-empty_stmt|;
+decl_stmt|;
 block|}
 end_decl_stmt
 

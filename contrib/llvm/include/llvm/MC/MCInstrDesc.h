@@ -66,31 +66,31 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCInst.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/MC/MCRegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/MC/MCSubtargetInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|MCInst
+decl_stmt|;
+name|class
+name|MCRegisterInfo
+decl_stmt|;
+name|class
+name|MCSubtargetInfo
+decl_stmt|;
+name|class
+name|FeatureBitset
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// Machine Operand Flags and Description
 comment|//===----------------------------------------------------------------------===//
@@ -110,7 +110,7 @@ name|EARLY_CLOBBER
 comment|// Operand is an early clobber register operand
 block|}
 enum|;
-comment|/// OperandFlags - These are flags set on operands, but should be considered
+comment|/// \brief These are flags set on operands, but should be considered
 comment|/// private, all access should go through the MCOperandInfo accessors.
 comment|/// See the accessors for a description of what these are.
 enum|enum
@@ -125,7 +125,7 @@ block|,
 name|OptionalDef
 block|}
 enum|;
-comment|/// Operand Type - Operands are tagged with one of the values of this enum.
+comment|/// \brief Operands are tagged with one of the values of this enum.
 enum|enum
 name|OperandType
 block|{
@@ -155,37 +155,36 @@ literal|5
 block|}
 enum|;
 block|}
-comment|/// MCOperandInfo - This holds information about one operand of a machine
-comment|/// instruction, indicating the register class for register operands, etc.
-comment|///
+comment|/// \brief This holds information about one operand of a machine instruction,
+comment|/// indicating the register class for register operands, etc.
 name|class
 name|MCOperandInfo
 block|{
 name|public
 label|:
-comment|/// RegClass - This specifies the register class enumeration of the operand
+comment|/// \brief This specifies the register class enumeration of the operand
 comment|/// if the operand is a register.  If isLookupPtrRegClass is set, then this is
 comment|/// an index that is passed to TargetRegisterInfo::getPointerRegClass(x) to
 comment|/// get a dynamic register class.
 name|int16_t
 name|RegClass
 decl_stmt|;
-comment|/// Flags - These are flags from the MCOI::OperandFlags enum.
+comment|/// \brief These are flags from the MCOI::OperandFlags enum.
 name|uint8_t
 name|Flags
 decl_stmt|;
-comment|/// OperandType - Information about the type of the operand.
+comment|/// \brief Information about the type of the operand.
 name|uint8_t
 name|OperandType
 decl_stmt|;
-comment|/// Lower 16 bits are used to specify which constraints are set. The higher 16
-comment|/// bits are used to specify the value of constraints (4 bits each).
+comment|/// \brief The lower 16 bits are used to specify which constraints are set.
+comment|/// The higher 16 bits are used to specify the value of constraints (4 bits
+comment|/// each).
 name|uint32_t
 name|Constraints
 decl_stmt|;
-comment|/// Currently no other information.
-comment|/// isLookupPtrRegClass - Set if this operand is a pointer value and it
-comment|/// requires a callback to look up its register class.
+comment|/// \brief Set if this operand is a pointer value and it requires a callback
+comment|/// to look up its register class.
 name|bool
 name|isLookupPtrRegClass
 argument_list|()
@@ -203,8 +202,8 @@ name|LookupPtrRegClass
 operator|)
 return|;
 block|}
-comment|/// isPredicate - Set if this is one of the operands that made up of
-comment|/// the predicate operand that controls an isPredicable() instruction.
+comment|/// \brief Set if this is one of the operands that made up of the predicate
+comment|/// operand that controls an isPredicable() instruction.
 name|bool
 name|isPredicate
 argument_list|()
@@ -222,8 +221,7 @@ name|Predicate
 operator|)
 return|;
 block|}
-comment|/// isOptionalDef - Set if this operand is a optional def.
-comment|///
+comment|/// \brief Set if this operand is a optional def.
 name|bool
 name|isOptionalDef
 argument_list|()
@@ -246,14 +244,15 @@ empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// Machine Instruction Flags and Description
 comment|//===----------------------------------------------------------------------===//
-comment|/// MCInstrDesc flags - These should be considered private to the
-comment|/// implementation of the MCInstrDesc class.  Clients should use the predicate
-comment|/// methods on MCInstrDesc, not use these directly.  These all correspond to
-comment|/// bitfields in the MCInstrDesc::Flags field.
 name|namespace
 name|MCID
 block|{
+comment|/// \brief These should be considered private to the implementation of the
+comment|/// MCInstrDesc class.  Clients should use the predicate methods on MCInstrDesc,
+comment|/// not use these directly.  These all correspond to bitfields in the
+comment|/// MCInstrDesc::Flags field.
 enum|enum
+name|Flag
 block|{
 name|Variadic
 init|=
@@ -318,14 +317,16 @@ block|,
 name|ExtractSubreg
 block|,
 name|InsertSubreg
+block|,
+name|Convergent
 block|}
 enum|;
 block|}
-comment|/// MCInstrDesc - Describe properties that are true of each instruction in the
-comment|/// target description file.  This captures information about side effects,
-comment|/// register use and many other things.  There is one instance of this struct
-comment|/// for each target instruction class, and the MachineInstr class points to
-comment|/// this struct directly to describe itself.
+comment|/// \brief Describe properties that are true of each instruction in the target
+comment|/// description file.  This captures information about side effects, register
+comment|/// use and many other things.  There is one instance of this struct for each
+comment|/// target instruction class, and the MachineInstr class points to this struct
+comment|/// directly to describe itself.
 name|class
 name|MCInstrDesc
 block|{
@@ -342,21 +343,21 @@ name|NumOperands
 decl_stmt|;
 comment|// Num of args (may be more if variable_ops)
 name|unsigned
-name|short
+name|char
 name|NumDefs
 decl_stmt|;
 comment|// Num of args that are definitions
+name|unsigned
+name|char
+name|Size
+decl_stmt|;
+comment|// Number of bytes in encoding.
 name|unsigned
 name|short
 name|SchedClass
 decl_stmt|;
 comment|// enum identifying instr sched class
-name|unsigned
-name|short
-name|Size
-decl_stmt|;
-comment|// Number of bytes in encoding.
-name|unsigned
+name|uint64_t
 name|Flags
 decl_stmt|;
 comment|// Flags identifying machine instr class
@@ -382,10 +383,12 @@ modifier|*
 name|OpInfo
 decl_stmt|;
 comment|// 'NumOperands' entries about operands
-name|uint64_t
-name|DeprecatedFeatureMask
+comment|// Subtarget feature that this is deprecated on, if any
+comment|// -1 implies this is not deprecated by any single feature. It may still be
+comment|// deprecated due to a "complex" reason, below.
+name|int64_t
+name|DeprecatedFeature
 decl_stmt|;
-comment|// Feature bits that this is deprecated on, if any
 comment|// A complex method to determine is a certain is deprecated or not, and return
 comment|// the reason for deprecation.
 name|bool
@@ -397,6 +400,7 @@ argument_list|(
 name|MCInst
 operator|&
 argument_list|,
+specifier|const
 name|MCSubtargetInfo
 operator|&
 argument_list|,
@@ -484,6 +488,7 @@ name|MCInst
 operator|&
 name|MI
 argument_list|,
+specifier|const
 name|MCSubtargetInfo
 operator|&
 name|STI
@@ -495,48 +500,7 @@ operator|&
 name|Info
 argument_list|)
 decl|const
-block|{
-if|if
-condition|(
-name|ComplexDeprecationInfo
-condition|)
-return|return
-name|ComplexDeprecationInfo
-argument_list|(
-name|MI
-argument_list|,
-name|STI
-argument_list|,
-name|Info
-argument_list|)
-return|;
-if|if
-condition|(
-operator|(
-name|DeprecatedFeatureMask
-operator|&
-name|STI
-operator|.
-name|getFeatureBits
-argument_list|()
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|// FIXME: it would be nice to include the subtarget feature here.
-name|Info
-operator|=
-literal|"deprecated"
-expr_stmt|;
-return|return
-name|true
-return|;
-block|}
-return|return
-name|false
-return|;
-block|}
+decl_stmt|;
 comment|/// \brief Return the opcode number for this descriptor.
 name|unsigned
 name|getOpcode
@@ -626,7 +590,6 @@ return|;
 block|}
 comment|/// \brief Return true if this is a pseudo instruction that doesn't
 comment|/// correspond to a real machine instruction.
-comment|///
 name|bool
 name|isPseudo
 argument_list|()
@@ -823,118 +786,7 @@ operator|&
 name|RI
 argument_list|)
 decl|const
-block|{
-if|if
-condition|(
-name|isBranch
-argument_list|()
-operator|||
-name|isCall
-argument_list|()
-operator|||
-name|isReturn
-argument_list|()
-operator|||
-name|isIndirectBranch
-argument_list|()
-condition|)
-return|return
-name|true
-return|;
-name|unsigned
-name|PC
-init|=
-name|RI
-operator|.
-name|getProgramCounter
-argument_list|()
 decl_stmt|;
-if|if
-condition|(
-name|PC
-operator|==
-literal|0
-condition|)
-return|return
-name|false
-return|;
-if|if
-condition|(
-name|hasDefOfPhysReg
-argument_list|(
-name|MI
-argument_list|,
-name|PC
-argument_list|,
-name|RI
-argument_list|)
-condition|)
-return|return
-name|true
-return|;
-comment|// A variadic instruction may define PC in the variable operand list.
-comment|// There's currently no indication of which entries in a variable
-comment|// list are defs and which are uses. While that's the case, this function
-comment|// needs to assume they're defs in order to be conservatively correct.
-for|for
-control|(
-name|int
-name|i
-init|=
-name|NumOperands
-init|,
-name|e
-init|=
-name|MI
-operator|.
-name|getNumOperands
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
-control|)
-block|{
-if|if
-condition|(
-name|MI
-operator|.
-name|getOperand
-argument_list|(
-name|i
-argument_list|)
-operator|.
-name|isReg
-argument_list|()
-operator|&&
-name|RI
-operator|.
-name|isSubRegisterEq
-argument_list|(
-name|PC
-argument_list|,
-name|MI
-operator|.
-name|getOperand
-argument_list|(
-name|i
-argument_list|)
-operator|.
-name|getReg
-argument_list|()
-argument_list|)
-condition|)
-return|return
-name|true
-return|;
-block|}
-return|return
-name|false
-return|;
-block|}
 comment|/// \brief Return true if this instruction has a predicate operand
 comment|/// that controls execution. It may be set to 'always', or may be set to other
 comment|/// values. There are various methods in TargetInstrInfo that can be used to
@@ -1049,8 +901,8 @@ name|NotDuplicable
 operator|)
 return|;
 block|}
-comment|/// hasDelaySlot - Returns true if the specified instruction has a delay slot
-comment|/// which must be filled by the code generator.
+comment|/// \brief Returns true if the specified instruction has a delay slot which
+comment|/// must be filled by the code generator.
 name|bool
 name|hasDelaySlot
 argument_list|()
@@ -1068,14 +920,13 @@ name|DelaySlot
 operator|)
 return|;
 block|}
-comment|/// canFoldAsLoad - Return true for instructions that can be folded as
-comment|/// memory operands in other instructions. The most common use for this
-comment|/// is instructions that are simple loads from memory that don't modify
-comment|/// the loaded value in any way, but it can also be used for instructions
-comment|/// that can be expressed as constant-pool loads, such as V_SETALLONES
-comment|/// on x86, to allow them to be folded when it is beneficial.
-comment|/// This should only be set on instructions that return a value in their
-comment|/// only virtual register definition.
+comment|/// \brief Return true for instructions that can be folded as memory operands
+comment|/// in other instructions. The most common use for this is instructions that
+comment|/// are simple loads from memory that don't modify the loaded value in any
+comment|/// way, but it can also be used for instructions that can be expressed as
+comment|/// constant-pool loads, such as V_SETALLONES on x86, to allow them to be
+comment|/// folded when it is beneficial.  This should only be set on instructions
+comment|/// that return a value in their only virtual register definition.
 name|bool
 name|canFoldAsLoad
 argument_list|()
@@ -1175,6 +1026,27 @@ name|InsertSubreg
 operator|)
 return|;
 block|}
+comment|/// \brief Return true if this instruction is convergent.
+comment|///
+comment|/// Convergent instructions may only be moved to locations that are
+comment|/// control-equivalent to their original positions.
+name|bool
+name|isConvergent
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+operator|(
+literal|1
+operator|<<
+name|MCID
+operator|::
+name|Convergent
+operator|)
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Side Effect Analysis
 comment|//===--------------------------------------------------------------------===//
@@ -1219,7 +1091,7 @@ name|MayStore
 operator|)
 return|;
 block|}
-comment|/// hasUnmodeledSideEffects - Return true if this instruction has side
+comment|/// \brief Return true if this instruction has side
 comment|/// effects that are not modeled by other flags.  This does not return true
 comment|/// for instructions whose effects are captured by:
 comment|///
@@ -1231,7 +1103,6 @@ comment|///
 comment|/// Examples of side effects would be modifying 'invisible' machine state like
 comment|/// a control register, flushing a cache, modifying a register invisible to
 comment|/// LLVM, etc.
-comment|///
 name|bool
 name|hasUnmodeledSideEffects
 argument_list|()
@@ -1252,9 +1123,9 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Flags that indicate whether an instruction can be modified by a method.
 comment|//===--------------------------------------------------------------------===//
-comment|/// isCommutable - Return true if this may be a 2- or 3-address
-comment|/// instruction (of the form "X = op Y, Z, ..."), which produces the same
-comment|/// result if Y and Z are exchanged.  If this flag is set, then the
+comment|/// \brief Return true if this may be a 2- or 3-address instruction (of the
+comment|/// form "X = op Y, Z, ..."), which produces the same result if Y and Z are
+comment|/// exchanged.  If this flag is set, then the
 comment|/// TargetInstrInfo::commuteInstruction method may be used to hack on the
 comment|/// instruction.
 comment|///
@@ -1279,14 +1150,14 @@ name|Commutable
 operator|)
 return|;
 block|}
-comment|/// isConvertibleTo3Addr - Return true if this is a 2-address instruction
-comment|/// which can be changed into a 3-address instruction if needed.  Doing this
-comment|/// transformation can be profitable in the register allocator, because it
-comment|/// means that the instruction can use a 2-address form if possible, but
-comment|/// degrade into a less efficient form if the source and dest register cannot
-comment|/// be assigned to the same register.  For example, this allows the x86
-comment|/// backend to turn a "shl reg, 3" instruction into an LEA instruction, which
-comment|/// is the same speed as the shift but has bigger code size.
+comment|/// \brief Return true if this is a 2-address instruction which can be changed
+comment|/// into a 3-address instruction if needed.  Doing this transformation can be
+comment|/// profitable in the register allocator, because it means that the
+comment|/// instruction can use a 2-address form if possible, but degrade into a less
+comment|/// efficient form if the source and dest register cannot be assigned to the
+comment|/// same register.  For example, this allows the x86 backend to turn a "shl
+comment|/// reg, 3" instruction into an LEA instruction, which is the same speed as
+comment|/// the shift but has bigger code size.
 comment|///
 comment|/// If this returns true, then the target must implement the
 comment|/// TargetInstrInfo::convertToThreeAddress method for this instruction, which
@@ -1310,11 +1181,11 @@ name|ConvertibleTo3Addr
 operator|)
 return|;
 block|}
-comment|/// usesCustomInsertionHook - Return true if this instruction requires
-comment|/// custom insertion support when the DAG scheduler is inserting it into a
-comment|/// machine basic block.  If this is true for the instruction, it basically
-comment|/// means that it is a pseudo instruction used at SelectionDAG time that is
-comment|/// expanded out into magic code by the target when MachineInstrs are formed.
+comment|/// \brief Return true if this instruction requires custom insertion support
+comment|/// when the DAG scheduler is inserting it into a machine basic block.  If
+comment|/// this is true for the instruction, it basically means that it is a pseudo
+comment|/// instruction used at SelectionDAG time that is expanded out into magic code
+comment|/// by the target when MachineInstrs are formed.
 comment|///
 comment|/// If this is true, the TargetLoweringInfo::InsertAtEndOfBasicBlock method
 comment|/// is used to insert this into the MachineBasicBlock.
@@ -1335,10 +1206,10 @@ name|UsesCustomInserter
 operator|)
 return|;
 block|}
-comment|/// hasPostISelHook - Return true if this instruction requires *adjustment*
-comment|/// after instruction selection by calling a target hook. For example, this
-comment|/// can be used to fill in ARM 's' optional operand depending on whether
-comment|/// the conditional flag register is used.
+comment|/// \brief Return true if this instruction requires *adjustment* after
+comment|/// instruction selection by calling a target hook. For example, this can be
+comment|/// used to fill in ARM 's' optional operand depending on whether the
+comment|/// conditional flag register is used.
 name|bool
 name|hasPostISelHook
 argument_list|()
@@ -1356,9 +1227,8 @@ name|HasPostISelHook
 operator|)
 return|;
 block|}
-comment|/// isRematerializable - Returns true if this instruction is a candidate for
-comment|/// remat. This flag is only used in TargetInstrInfo method
-comment|/// isTriviallyRematerializable.
+comment|/// \brief Returns true if this instruction is a candidate for remat. This
+comment|/// flag is only used in TargetInstrInfo method isTriviallyRematerializable.
 comment|///
 comment|/// If this flag is set, the isReallyTriviallyReMaterializable()
 comment|/// or isReallyTriviallyReMaterializableGeneric methods are called to verify
@@ -1380,12 +1250,12 @@ name|Rematerializable
 operator|)
 return|;
 block|}
-comment|/// isAsCheapAsAMove - Returns true if this instruction has the same cost (or
-comment|/// less) than a move instruction. This is useful during certain types of
-comment|/// optimizations (e.g., remat during two-address conversion or machine licm)
-comment|/// where we would like to remat or hoist the instruction, but not if it costs
-comment|/// more than moving the instruction into the appropriate register. Note, we
-comment|/// are not marking copies from and to the same register class with this flag.
+comment|/// \brief Returns true if this instruction has the same cost (or less) than a
+comment|/// move instruction. This is useful during certain types of optimizations
+comment|/// (e.g., remat during two-address conversion or machine licm) where we would
+comment|/// like to remat or hoist the instruction, but not if it costs more than
+comment|/// moving the instruction into the appropriate register. Note, we are not
+comment|/// marking copies from and to the same register class with this flag.
 comment|///
 comment|/// This method could be called by interface TargetInstrInfo::isAsCheapAsAMove
 comment|/// for different subtargets.
@@ -1406,12 +1276,12 @@ name|CheapAsAMove
 operator|)
 return|;
 block|}
-comment|/// hasExtraSrcRegAllocReq - Returns true if this instruction source operands
-comment|/// have special register allocation requirements that are not captured by the
-comment|/// operand register classes. e.g. ARM::STRD's two source registers must be an
-comment|/// even / odd pair, ARM::STM registers have to be in ascending order.
-comment|/// Post-register allocation passes should not attempt to change allocations
-comment|/// for sources of instructions with this flag.
+comment|/// \brief Returns true if this instruction source operands have special
+comment|/// register allocation requirements that are not captured by the operand
+comment|/// register classes. e.g. ARM::STRD's two source registers must be an even /
+comment|/// odd pair, ARM::STM registers have to be in ascending order.  Post-register
+comment|/// allocation passes should not attempt to change allocations for sources of
+comment|/// instructions with this flag.
 name|bool
 name|hasExtraSrcRegAllocReq
 argument_list|()
@@ -1429,12 +1299,12 @@ name|ExtraSrcRegAllocReq
 operator|)
 return|;
 block|}
-comment|/// hasExtraDefRegAllocReq - Returns true if this instruction def operands
-comment|/// have special register allocation requirements that are not captured by the
-comment|/// operand register classes. e.g. ARM::LDRD's two def registers must be an
-comment|/// even / odd pair, ARM::LDM registers have to be in ascending order.
-comment|/// Post-register allocation passes should not attempt to change allocations
-comment|/// for definitions of instructions with this flag.
+comment|/// \brief Returns true if this instruction def operands have special register
+comment|/// allocation requirements that are not captured by the operand register
+comment|/// classes. e.g. ARM::LDRD's two def registers must be an even / odd pair,
+comment|/// ARM::LDM registers have to be in ascending order.  Post-register
+comment|/// allocation passes should not attempt to change allocations for definitions
+comment|/// of instructions with this flag.
 name|bool
 name|hasExtraDefRegAllocReq
 argument_list|()
@@ -1452,13 +1322,12 @@ name|ExtraDefRegAllocReq
 operator|)
 return|;
 block|}
-comment|/// getImplicitUses - Return a list of registers that are potentially
-comment|/// read by any instance of this machine instruction.  For example, on X86,
-comment|/// the "adc" instruction adds two register operands and adds the carry bit in
-comment|/// from the flags register.  In this case, the instruction is marked as
-comment|/// implicitly reading the flags.  Likewise, the variable shift instruction on
-comment|/// X86 is marked as implicitly reading the 'CL' register, which it always
-comment|/// does.
+comment|/// \brief Return a list of registers that are potentially read by any
+comment|/// instance of this machine instruction.  For example, on X86, the "adc"
+comment|/// instruction adds two register operands and adds the carry bit in from the
+comment|/// flags register.  In this case, the instruction is marked as implicitly
+comment|/// reading the flags.  Likewise, the variable shift instruction on X86 is
+comment|/// marked as implicitly reading the 'CL' register, which it always does.
 comment|///
 comment|/// This method returns null if the instruction has no implicit uses.
 specifier|const
@@ -1508,11 +1377,11 @@ return|return
 name|i
 return|;
 block|}
-comment|/// getImplicitDefs - Return a list of registers that are potentially
-comment|/// written by any instance of this machine instruction.  For example, on X86,
-comment|/// many instructions implicitly set the flags register.  In this case, they
-comment|/// are marked as setting the FLAGS.  Likewise, many instructions always
-comment|/// deposit their result in a physical register.  For example, the X86 divide
+comment|/// \brief Return a list of registers that are potentially written by any
+comment|/// instance of this machine instruction.  For example, on X86, many
+comment|/// instructions implicitly set the flags register.  In this case, they are
+comment|/// marked as setting the FLAGS.  Likewise, many instructions always deposit
+comment|/// their result in a physical register.  For example, the X86 divide
 comment|/// instruction always deposits the quotient and remainder in the EAX/EDX
 comment|/// registers.  For that instruction, this will return a list containing the
 comment|/// EAX/EDX/EFLAGS registers.
@@ -1641,142 +1510,7 @@ operator|=
 name|nullptr
 argument_list|)
 decl|const
-block|{
-if|if
-condition|(
-specifier|const
-name|uint16_t
-modifier|*
-name|ImpDefs
-init|=
-name|ImplicitDefs
-condition|)
-for|for
-control|(
-init|;
-operator|*
-name|ImpDefs
-condition|;
-operator|++
-name|ImpDefs
-control|)
-if|if
-condition|(
-operator|*
-name|ImpDefs
-operator|==
-name|Reg
-operator|||
-operator|(
-name|MRI
-operator|&&
-name|MRI
-operator|->
-name|isSubRegister
-argument_list|(
-name|Reg
-argument_list|,
-operator|*
-name|ImpDefs
-argument_list|)
-operator|)
-condition|)
-return|return
-name|true
-return|;
-return|return
-name|false
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// \brief Return true if this instruction defines the specified physical
-end_comment
-
-begin_comment
-comment|/// register, either explicitly or implicitly.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|hasDefOfPhysReg
-argument_list|(
-specifier|const
-name|MCInst
-operator|&
-name|MI
-argument_list|,
-name|unsigned
-name|Reg
-argument_list|,
-specifier|const
-name|MCRegisterInfo
-operator|&
-name|RI
-argument_list|)
-decl|const
-block|{
-for|for
-control|(
-name|int
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
-name|NumDefs
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
-control|)
-if|if
-condition|(
-name|MI
-operator|.
-name|getOperand
-argument_list|(
-name|i
-argument_list|)
-operator|.
-name|isReg
-argument_list|()
-operator|&&
-name|RI
-operator|.
-name|isSubRegisterEq
-argument_list|(
-name|Reg
-argument_list|,
-name|MI
-operator|.
-name|getOperand
-argument_list|(
-name|i
-argument_list|)
-operator|.
-name|getReg
-argument_list|()
-argument_list|)
-condition|)
-return|return
-name|true
-return|;
-return|return
-name|hasImplicitDefOfPhysReg
-argument_list|(
-name|Reg
-argument_list|,
-operator|&
-name|RI
-argument_list|)
-return|;
-block|}
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
@@ -1893,13 +1627,38 @@ literal|1
 return|;
 end_return
 
-begin_empty_stmt
-unit|} }
-empty_stmt|;
-end_empty_stmt
+begin_comment
+unit|}  private:
+comment|/// \brief Return true if this instruction defines the specified physical
+end_comment
 
 begin_comment
-unit|}
+comment|/// register, either explicitly or implicitly.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|hasDefOfPhysReg
+argument_list|(
+specifier|const
+name|MCInst
+operator|&
+name|MI
+argument_list|,
+name|unsigned
+name|Reg
+argument_list|,
+specifier|const
+name|MCRegisterInfo
+operator|&
+name|RI
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+unit|};  }
 comment|// end namespace llvm
 end_comment
 

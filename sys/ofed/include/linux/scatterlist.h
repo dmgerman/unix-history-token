@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2010 Isilon Systems, Inc.  * Copyright (c) 2010 iX Systems, Inc.  * Copyright (c) 2010 Panasas, Inc.  * Copyright (c) 2013, 2014 Mellanox Technologies, Ltd.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2010 Isilon Systems, Inc.  * Copyright (c) 2010 iX Systems, Inc.  * Copyright (c) 2010 Panasas, Inc.  * Copyright (c) 2013-2015 Mellanox Technologies, Ltd.  * Copyright (c) 2015 Matthew Dillon<dillon@backplane.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -26,10 +26,6 @@ include|#
 directive|include
 file|<linux/slab.h>
 end_include
-
-begin_comment
-comment|/*  * SG table design.  *  * If flags bit 0 is set, then the sg field contains a pointer to the next sg  * table list. Otherwise the next entry is at sg + 1, can be determined using  * the sg_is_chain() function.  *  * If flags bit 1 is set, then this sg entry is the last element in a list,  * can be determined using the sg_is_last() function.  *  * See sg_next().  *  */
-end_comment
 
 begin_struct
 struct|struct
@@ -76,24 +72,38 @@ name|scatterlist
 modifier|*
 name|sgl
 decl_stmt|;
-comment|/* the list */
 name|unsigned
 name|int
 name|nents
 decl_stmt|;
-comment|/* number of mapped entries */
 name|unsigned
 name|int
 name|orig_nents
 decl_stmt|;
-comment|/* original size of list */
 block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Maximum number of entries that will be allocated in one piece, if  * a list larger than this is required then chaining will be utilized.  */
-end_comment
+begin_struct
+struct|struct
+name|sg_page_iter
+block|{
+name|struct
+name|scatterlist
+modifier|*
+name|sg
+decl_stmt|;
+name|unsigned
+name|int
+name|sg_pgoffset
+decl_stmt|;
+name|unsigned
+name|int
+name|maxents
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -256,8 +266,11 @@ operator|)
 name|buf
 operator|)
 operator|&
-operator|~
-name|PAGE_MASK
+operator|(
+name|PAGE_SIZE
+operator|-
+literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -386,10 +399,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/**  * sg_chain - Chain two sglists together  * @prv:        First scatterlist  * @prv_nents:  Number of entries in prv  * @sgl:        Second scatterlist  *  * Description:  *   Links @prv@ and @sgl@ together, to form a longer scatterlist.  *  **/
-end_comment
-
 begin_function
 specifier|static
 specifier|inline
@@ -411,7 +420,6 @@ modifier|*
 name|sgl
 parameter_list|)
 block|{
-comment|/*  * offset and length are unused for chain entry.  Clear them.  */
 name|struct
 name|scatterlist
 modifier|*
@@ -437,7 +445,6 @@ name|length
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Indicate a link pointer, and set the link to the second list. 	 */
 name|sg
 operator|->
 name|flags
@@ -454,10 +461,6 @@ name|sgl
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/**  * sg_mark_end - Mark the end of the scatterlist  * @sg:          SG entryScatterlist  *  * Description:  *   Marks the passed in sg entry as the termination point for the sg  *   table. A call to sg_next() on this entry will return NULL.  *  **/
-end_comment
 
 begin_function
 specifier|static
@@ -479,10 +482,6 @@ name|SG_END
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/**  * __sg_free_table - Free a previously mapped sg table  * @table:      The sg table header to use  * @max_ents:   The maximum number of entries per single scatterlist  *  *  Description:  *    Free an sg table previously allocated and setup with  *    __sg_alloc_table().  The @max_ents value must be identical to  *    that previously used with __sg_alloc_table().  *  **/
-end_comment
 
 begin_function
 specifier|static
@@ -544,7 +543,6 @@ name|unsigned
 name|int
 name|sg_size
 decl_stmt|;
-comment|/* 		 * If we have more than max_ents segments left, 		 * then assign 'next' to the sg table after the current one. 		 * sg_size is then one less than alloc size, since the last 		 * element is the chain pointer. 		 */
 if|if
 condition|(
 name|alloc_size
@@ -612,10 +610,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/**  * sg_free_table - Free a previously allocated sg table  * @table:      The mapped sg table header  *  **/
-end_comment
-
 begin_function
 specifier|static
 specifier|inline
@@ -637,10 +631,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/**  * __sg_alloc_table - Allocate and initialize an sg table with given allocator  * @table:      The sg table header to use  * @nents:      Number of entries in sg list  * @max_ents:   The maximum number of entries the allocator returns per call  * @gfp_mask:   GFP allocation mask  *  * Description:  *   This function returns a @table @nents long. The allocator is  *   defined to return scatterlist chunks of maximum size @max_ents.  *   Thus if @nents is bigger than @max_ents, the scatterlists will be  *   chained in units of @max_ents.  *  * Notes:  *   If this function returns non-0 (eg failure), the caller must call  *   __sg_free_table() to cleanup any leftover allocations.  *  **/
-end_comment
 
 begin_function
 specifier|static
@@ -713,7 +703,9 @@ block|{
 name|unsigned
 name|int
 name|sg_size
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|alloc_size
 init|=
 name|left
@@ -769,7 +761,6 @@ name|sg
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Adjust entry count to reflect that the last 		 * entry of the previous table won't be used for 		 * linkage.  Without this, sg_kfree() may get 		 * confused. 		 */
 if|if
 condition|(
 name|prv
@@ -805,7 +796,6 @@ name|orig_nents
 operator|+=
 name|sg_size
 expr_stmt|;
-comment|/* 		 * If this is the first mapping, assign the sg table header. 		 * If this is not the first mapping, chain previous part. 		 */
 if|if
 condition|(
 name|prv
@@ -826,7 +816,6 @@ name|sgl
 operator|=
 name|sg
 expr_stmt|;
-comment|/* 		* If no more entries after this one, mark the end 		*/
 if|if
 condition|(
 operator|!
@@ -858,10 +847,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/**  * sg_alloc_table - Allocate and initialize an sg table  * @table:      The sg table header to use  * @nents:      Number of entries in sg list  * @gfp_mask:   GFP allocation mask  *  *  Description:  *    Allocate and initialize an sg table. If @nents@ is larger than  *    SG_MAX_SINGLE_ALLOC a chained sg table will be setup.  *  **/
-end_comment
 
 begin_function
 specifier|static
@@ -917,6 +902,251 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|_sg_iter_next
+parameter_list|(
+name|struct
+name|sg_page_iter
+modifier|*
+name|iter
+parameter_list|)
+block|{
+name|struct
+name|scatterlist
+modifier|*
+name|sg
+decl_stmt|;
+name|unsigned
+name|int
+name|pgcount
+decl_stmt|;
+name|sg
+operator|=
+name|iter
+operator|->
+name|sg
+expr_stmt|;
+name|pgcount
+operator|=
+operator|(
+name|sg
+operator|->
+name|offset
+operator|+
+name|sg
+operator|->
+name|length
+operator|+
+name|PAGE_SIZE
+operator|-
+literal|1
+operator|)
+operator|>>
+name|PAGE_SHIFT
+expr_stmt|;
+operator|++
+name|iter
+operator|->
+name|sg_pgoffset
+expr_stmt|;
+while|while
+condition|(
+name|iter
+operator|->
+name|sg_pgoffset
+operator|>=
+name|pgcount
+condition|)
+block|{
+name|iter
+operator|->
+name|sg_pgoffset
+operator|-=
+name|pgcount
+expr_stmt|;
+name|sg
+operator|=
+name|sg_next
+argument_list|(
+name|sg
+argument_list|)
+expr_stmt|;
+operator|--
+name|iter
+operator|->
+name|maxents
+expr_stmt|;
+if|if
+condition|(
+name|sg
+operator|==
+name|NULL
+operator|||
+name|iter
+operator|->
+name|maxents
+operator|==
+literal|0
+condition|)
+break|break;
+name|pgcount
+operator|=
+operator|(
+name|sg
+operator|->
+name|offset
+operator|+
+name|sg
+operator|->
+name|length
+operator|+
+name|PAGE_SIZE
+operator|-
+literal|1
+operator|)
+operator|>>
+name|PAGE_SHIFT
+expr_stmt|;
+block|}
+name|iter
+operator|->
+name|sg
+operator|=
+name|sg
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|_sg_iter_init
+parameter_list|(
+name|struct
+name|scatterlist
+modifier|*
+name|sgl
+parameter_list|,
+name|struct
+name|sg_page_iter
+modifier|*
+name|iter
+parameter_list|,
+name|unsigned
+name|int
+name|nents
+parameter_list|,
+name|unsigned
+name|long
+name|pgoffset
+parameter_list|)
+block|{
+if|if
+condition|(
+name|nents
+condition|)
+block|{
+name|iter
+operator|->
+name|sg
+operator|=
+name|sgl
+expr_stmt|;
+name|iter
+operator|->
+name|sg_pgoffset
+operator|=
+name|pgoffset
+operator|-
+literal|1
+expr_stmt|;
+name|iter
+operator|->
+name|maxents
+operator|=
+name|nents
+expr_stmt|;
+name|_sg_iter_next
+argument_list|(
+name|iter
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|iter
+operator|->
+name|sg
+operator|=
+name|NULL
+expr_stmt|;
+name|iter
+operator|->
+name|sg_pgoffset
+operator|=
+literal|0
+expr_stmt|;
+name|iter
+operator|->
+name|maxents
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|dma_addr_t
+name|sg_page_iter_dma_address
+parameter_list|(
+name|struct
+name|sg_page_iter
+modifier|*
+name|spi
+parameter_list|)
+block|{
+return|return
+name|spi
+operator|->
+name|sg
+operator|->
+name|address
+operator|+
+operator|(
+name|spi
+operator|->
+name|sg_pgoffset
+operator|<<
+name|PAGE_SHIFT
+operator|)
+return|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|for_each_sg_page
+parameter_list|(
+name|sgl
+parameter_list|,
+name|iter
+parameter_list|,
+name|nents
+parameter_list|,
+name|pgoffset
+parameter_list|)
+define|\
+value|for (_sg_iter_init(sgl, iter, nents, pgoffset);			\ 	     (iter)->sg; _sg_iter_next(iter))
+end_define
 
 begin_define
 define|#

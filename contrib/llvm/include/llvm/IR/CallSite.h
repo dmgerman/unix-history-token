@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Attributes.h"
 end_include
 
@@ -148,6 +154,12 @@ name|FunTy
 operator|=
 specifier|const
 name|Function
+operator|,
+name|typename
+name|BBTy
+operator|=
+specifier|const
+name|BasicBlock
 operator|,
 name|typename
 name|ValTy
@@ -202,8 +214,6 @@ name|bool
 operator|>
 name|I
 block|;
-name|public
-operator|:
 name|CallSiteBase
 argument_list|()
 operator|:
@@ -252,6 +262,7 @@ argument_list|(
 name|II
 argument_list|)
 block|; }
+name|explicit
 name|CallSiteBase
 argument_list|(
 argument|ValTy *II
@@ -265,7 +276,7 @@ argument_list|(
 name|II
 argument_list|)
 block|; }
-name|protected
+name|private
 operator|:
 comment|/// CallSiteBase::get - This static method is sort of like a constructor.  It
 comment|/// will create an appropriate call site for a Call or Invoke instruction, but
@@ -412,7 +423,7 @@ name|getPointer
 argument_list|()
 return|;
 block|}
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -422,6 +433,21 @@ return|return
 name|I
 operator|.
 name|getPointer
+argument_list|()
+return|;
+block|}
+comment|/// Get the basic block containing the call site
+name|BBTy
+operator|*
+name|getParent
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getInstruction
+argument_list|()
+operator|->
+name|getParent
 argument_list|()
 return|;
 block|}
@@ -717,6 +743,28 @@ name|getArgumentEndOffset
 argument_list|()
 return|;
 block|}
+name|iterator_range
+operator|<
+name|IterTy
+operator|>
+name|args
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|IterTy
+operator|>
+operator|(
+name|arg_begin
+argument_list|()
+operator|,
+name|arg_end
+argument_list|()
+operator|)
+return|;
+block|}
 name|bool
 name|arg_empty
 argument_list|()
@@ -848,8 +896,71 @@ name|METHOD
 parameter_list|)
 define|\
 value|InstrTy *II = getInstruction();    \   if (isCall())                          \     cast<CallInst>(II)->METHOD;          \   else                                   \     cast<InvokeInst>(II)->METHOD
+name|unsigned
+name|getNumArgOperands
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getNumArgOperands
+argument_list|()
+argument_list|)
+block|;   }
+name|ValTy
+operator|*
+name|getArgOperand
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getArgOperand
+argument_list|(
+name|i
+argument_list|)
+argument_list|)
+block|;   }
+name|bool
+name|isInlineAsm
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|isCall
+argument_list|()
+condition|)
+return|return
+name|cast
+operator|<
+name|CallInst
+operator|>
+operator|(
+name|getInstruction
+argument_list|()
+operator|)
+operator|->
+name|isInlineAsm
+argument_list|()
+return|;
+return|return
+name|false
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// getCallingConv/setCallingConv - get or set the calling convention of the
+end_comment
+
+begin_comment
 comment|/// call.
+end_comment
+
+begin_expr_stmt
 name|CallingConv
 operator|::
 name|ID
@@ -874,6 +985,33 @@ argument_list|(
 name|setCallingConv
 argument_list|(
 name|CC
+argument_list|)
+argument_list|)
+block|;   }
+name|FunctionType
+operator|*
+name|getFunctionType
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getFunctionType
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|mutateFunctionType
+argument_list|(
+argument|FunctionType *Ty
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|mutateFunctionType
+argument_list|(
+name|Ty
 argument_list|)
 argument_list|)
 block|;   }
@@ -975,6 +1113,23 @@ name|i
 argument_list|)
 argument_list|)
 block|;   }
+comment|/// @brief Extract the number of dereferenceable_or_null bytes for a call or
+comment|/// parameter (0=unknown).
+name|uint64_t
+name|getDereferenceableOrNullBytes
+argument_list|(
+argument|uint16_t i
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getDereferenceableOrNullBytes
+argument_list|(
+name|i
+argument_list|)
+argument_list|)
+block|;   }
 comment|/// \brief Return true if the call should not be treated as a call to a
 comment|/// builtin.
 name|bool
@@ -1058,6 +1213,29 @@ name|setOnlyReadsMemory
 argument_list|()
 argument_list|)
 block|;   }
+comment|/// @brief Determine if the call can access memmory only using pointers based
+comment|/// on its arguments.
+name|bool
+name|onlyAccessesArgMemory
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|onlyAccessesArgMemory
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|setOnlyAccessesArgMemory
+argument_list|()
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|setOnlyAccessesArgMemory
+argument_list|()
+argument_list|)
+block|;   }
 comment|/// @brief Determine if the call cannot return.
 name|bool
 name|doesNotReturn
@@ -1129,7 +1307,13 @@ name|NoCapture
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// @brief Determine whether this argument is passed by value.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isByValArgument
 argument_list|(
@@ -1151,7 +1335,13 @@ name|ByVal
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// @brief Determine whether this argument is passed in an alloca.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isInAllocaArgument
 argument_list|(
@@ -1173,7 +1363,13 @@ name|InAlloca
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// @brief Determine whether this argument is passed by value or in an alloca.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isByValOrInAllocaArgument
 argument_list|(
@@ -1206,8 +1402,17 @@ name|InAlloca
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// @brief Determine if there are is an inalloca argument.  Only the last
+end_comment
+
+begin_comment
 comment|/// argument can have the inalloca attribute.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasInAllocaArgument
 argument_list|()
@@ -1225,6 +1430,9 @@ name|InAlloca
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|bool
 name|doesNotAccessMemory
 argument_list|(
@@ -1246,6 +1454,9 @@ name|ReadNone
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|onlyReadsMemory
 argument_list|(
@@ -1278,9 +1489,21 @@ name|ReadNone
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// @brief Return true if the return value is known to be not null.
+end_comment
+
+begin_comment
 comment|/// This may be because it has the nonnull attribute, or because at least
+end_comment
+
+begin_comment
 comment|/// one byte is dereferenceable and the pointer is in addrspace(0).
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isReturnNonNull
 argument_list|()
@@ -1321,13 +1544,16 @@ condition|)
 return|return
 name|true
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// hasArgument - Returns true if this CallSite passes the given Value* as an
 end_comment
 
@@ -1335,16 +1561,16 @@ begin_comment
 comment|/// argument to the called function.
 end_comment
 
-begin_decl_stmt
-name|bool
+begin_macro
+unit|bool
 name|hasArgument
 argument_list|(
-specifier|const
-name|Value
-operator|*
-name|Arg
+argument|const Value *Arg
 argument_list|)
-decl|const
+end_macro
+
+begin_expr_stmt
+specifier|const
 block|{
 for|for
 control|(
@@ -1382,18 +1608,16 @@ condition|)
 return|return
 name|true
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-end_decl_stmt
-
-begin_label
-name|private
-label|:
-end_label
+end_return
 
 begin_expr_stmt
+unit|}  private:
 name|unsigned
 name|getArgumentEndOffset
 argument_list|()
@@ -1473,6 +1697,8 @@ name|CallSiteBase
 operator|<
 name|Function
 decl_stmt|,
+name|BasicBlock
+decl_stmt|,
 name|Value
 decl_stmt|,
 name|User
@@ -1488,27 +1714,6 @@ decl|::
 name|op_iterator
 decl|>
 block|{
-typedef|typedef
-name|CallSiteBase
-operator|<
-name|Function
-operator|,
-name|Value
-operator|,
-name|User
-operator|,
-name|Instruction
-operator|,
-name|CallInst
-operator|,
-name|InvokeInst
-operator|,
-name|User
-operator|::
-name|op_iterator
-operator|>
-name|Base
-expr_stmt|;
 name|public
 label|:
 name|CallSite
@@ -1516,24 +1721,12 @@ argument_list|()
 block|{}
 name|CallSite
 argument_list|(
-argument|Base B
+argument|CallSiteBase B
 argument_list|)
 block|:
-name|Base
+name|CallSiteBase
 argument_list|(
 argument|B
-argument_list|)
-block|{}
-name|CallSite
-argument_list|(
-name|Value
-operator|*
-name|V
-argument_list|)
-operator|:
-name|Base
-argument_list|(
-argument|V
 argument_list|)
 block|{}
 name|CallSite
@@ -1543,7 +1736,7 @@ operator|*
 name|CI
 argument_list|)
 operator|:
-name|Base
+name|CallSiteBase
 argument_list|(
 argument|CI
 argument_list|)
@@ -1555,11 +1748,12 @@ operator|*
 name|II
 argument_list|)
 operator|:
-name|Base
+name|CallSiteBase
 argument_list|(
 argument|II
 argument_list|)
 block|{}
+name|explicit
 name|CallSite
 argument_list|(
 name|Instruction
@@ -1567,9 +1761,22 @@ operator|*
 name|II
 argument_list|)
 operator|:
-name|Base
+name|CallSiteBase
 argument_list|(
 argument|II
+argument_list|)
+block|{}
+name|explicit
+name|CallSite
+argument_list|(
+name|Value
+operator|*
+name|V
+argument_list|)
+operator|:
+name|CallSiteBase
+argument_list|(
+argument|V
 argument_list|)
 block|{}
 name|bool
@@ -1660,26 +1867,10 @@ name|CallSiteBase
 operator|<
 operator|>
 block|{
-typedef|typedef
-name|CallSiteBase
-operator|<
-operator|>
-name|Base
-expr_stmt|;
 name|public
 operator|:
 name|ImmutableCallSite
-argument_list|(
-specifier|const
-name|Value
-operator|*
-name|V
-argument_list|)
-operator|:
-name|Base
-argument_list|(
-argument|V
-argument_list|)
+argument_list|()
 block|{}
 name|ImmutableCallSite
 argument_list|(
@@ -1689,7 +1880,7 @@ operator|*
 name|CI
 argument_list|)
 operator|:
-name|Base
+name|CallSiteBase
 argument_list|(
 argument|CI
 argument_list|)
@@ -1702,11 +1893,12 @@ operator|*
 name|II
 argument_list|)
 operator|:
-name|Base
+name|CallSiteBase
 argument_list|(
 argument|II
 argument_list|)
 block|{}
+name|explicit
 name|ImmutableCallSite
 argument_list|(
 specifier|const
@@ -1715,9 +1907,23 @@ operator|*
 name|II
 argument_list|)
 operator|:
-name|Base
+name|CallSiteBase
 argument_list|(
 argument|II
+argument_list|)
+block|{}
+name|explicit
+name|ImmutableCallSite
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+operator|:
+name|CallSiteBase
+argument_list|(
+argument|V
 argument_list|)
 block|{}
 name|ImmutableCallSite
@@ -1725,15 +1931,17 @@ argument_list|(
 argument|CallSite CS
 argument_list|)
 operator|:
-name|Base
+name|CallSiteBase
 argument_list|(
 argument|CS.getInstruction()
 argument_list|)
 block|{}
+block|}
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
-unit|};  }
+unit|}
 comment|// End llvm namespace
 end_comment
 

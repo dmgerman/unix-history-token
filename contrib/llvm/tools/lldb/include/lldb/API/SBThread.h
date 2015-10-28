@@ -63,6 +63,7 @@ name|class
 name|SBFrame
 decl_stmt|;
 name|class
+name|LLDB_API
 name|SBThread
 block|{
 name|public

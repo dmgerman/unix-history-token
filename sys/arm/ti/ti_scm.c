@@ -245,13 +245,6 @@ condition|(
 name|ti_scm_sc
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: multiple SCM modules in device tree data, ignoring\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EEXIST

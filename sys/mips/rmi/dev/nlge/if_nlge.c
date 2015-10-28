@@ -5574,7 +5574,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/*          * rge may be called before SMP start in a BOOTP/NFSROOT          * setup. we will distribute packets to other cpus only when          * the SMP is started. 	 */
+comment|/*          * nlna may be called before SMP start in a BOOTP/NFSROOT          * setup. we will distribute packets to other cpus only when          * the SMP is started. 	 */
 if|if
 condition|(
 name|smp_started

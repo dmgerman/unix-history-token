@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003 Silicon Graphics International Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_error.h#1 $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003 Silicon Graphics International Corp.  * Copyright (c) 2014-2015 Alexander Motin<mav@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_error.h#1 $  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -178,6 +178,25 @@ end_function_decl
 
 begin_function_decl
 name|ctl_ua_type
+name|ctl_build_qae
+parameter_list|(
+name|struct
+name|ctl_lun
+modifier|*
+name|lun
+parameter_list|,
+name|uint32_t
+name|initidx
+parameter_list|,
+name|uint8_t
+modifier|*
+name|resp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ctl_ua_type
 name|ctl_build_ua
 parameter_list|(
 name|struct
@@ -303,7 +322,31 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ctl_set_lun_transit
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ctl_set_lun_standby
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ctl_set_lun_unavail
 parameter_list|(
 name|struct
 name|ctl_scsiio
@@ -339,6 +382,9 @@ name|struct
 name|ctl_scsiio
 modifier|*
 name|ctsio
+parameter_list|,
+name|int
+name|read
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -381,7 +427,31 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ctl_set_lun_not_ready
+name|ctl_set_lun_int_reqd
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ctl_set_lun_ejected
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ctl_set_lun_no_media
 parameter_list|(
 name|struct
 name|ctl_scsiio
@@ -478,6 +548,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|ctl_set_task_aborted
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ctl_set_hw_write_protected
 parameter_list|(
 name|struct
 name|ctl_scsiio

@@ -571,6 +571,8 @@ name|buffer_head
 decl_stmt|;
 name|int
 name|len
+decl_stmt|,
+name|ret
 decl_stmt|;
 name|path_table_entry
 name|temp_entry
@@ -829,7 +831,8 @@ operator|->
 name|ptnext
 expr_stmt|;
 block|}
-return|return
+name|ret
+operator|=
 name|cd9660_write_filedata
 argument_list|(
 name|fd
@@ -840,6 +843,14 @@ name|buffer_head
 argument_list|,
 name|path_table_sectors
 argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buffer_head
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
 return|;
 block|}
 end_function

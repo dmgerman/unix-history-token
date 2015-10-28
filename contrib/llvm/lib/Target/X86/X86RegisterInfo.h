@@ -82,13 +82,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Type
-decl_stmt|;
-name|class
-name|TargetInstrInfo
-decl_stmt|;
-name|class
-name|X86Subtarget
+name|Triple
 decl_stmt|;
 name|class
 name|X86RegisterInfo
@@ -97,13 +91,6 @@ range|:
 name|public
 name|X86GenRegisterInfo
 block|{
-name|public
-operator|:
-specifier|const
-name|X86Subtarget
-operator|&
-name|Subtarget
-block|;
 name|private
 operator|:
 comment|/// Is64Bit - Is the target 64-bits.
@@ -142,9 +129,9 @@ operator|:
 name|X86RegisterInfo
 argument_list|(
 specifier|const
-name|X86Subtarget
+name|Triple
 operator|&
-name|STI
+name|TT
 argument_list|)
 block|;
 comment|// FIXME: This should be tablegen'd like getDwarfRegNum is
@@ -200,6 +187,8 @@ operator|*
 name|getLargestLegalSuperClass
 argument_list|(
 argument|const TargetRegisterClass *RC
+argument_list|,
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 name|override
@@ -259,6 +248,8 @@ name|uint32_t
 operator|*
 name|getCallPreservedMask
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|CallingConv::ID
 argument_list|)
 specifier|const
@@ -279,6 +270,14 @@ name|BitVector
 name|getReservedRegs
 argument_list|(
 argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|adjustStackMapLiveOutMask
+argument_list|(
+argument|uint32_t *Mask
 argument_list|)
 specifier|const
 name|override
@@ -377,9 +376,9 @@ return|;
 block|}
 expr|}
 block|;
-comment|// getX86SubSuperRegister - X86 utility function. It returns the sub or super
-comment|// register of a specific X86 register.
-comment|// e.g. getX86SubSuperRegister(X86::EAX, MVT::i16) return X86:AX
+comment|/// Returns the sub or super register of a specific X86 register.
+comment|/// e.g. getX86SubSuperRegister(X86::EAX, MVT::i16) returns X86::AX.
+comment|/// Aborts on error.
 name|unsigned
 name|getX86SubSuperRegister
 argument_list|(
@@ -388,6 +387,18 @@ argument_list|,
 argument|MVT::SimpleValueType
 argument_list|,
 argument|bool High=false
+argument_list|)
+block|;
+comment|/// Returns the sub or super register of a specific X86 register.
+comment|/// Like getX86SubSuperRegister() but returns 0 on error.
+name|unsigned
+name|getX86SubSuperRegisterOrZero
+argument_list|(
+argument|unsigned
+argument_list|,
+argument|MVT::SimpleValueType
+argument_list|,
+argument|bool High = false
 argument_list|)
 block|;
 comment|//get512BitRegister - X86 utility - returns 512-bit super register

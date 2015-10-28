@@ -251,6 +251,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACPI_PLD_REV2_BUFFER_SIZE
+value|20
+end_define
+
+begin_comment
+comment|/* For Revision 2 of the buffer (From ACPI spec) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ACPI_PLD_BUFFER_SIZE
 value|20
 end_define

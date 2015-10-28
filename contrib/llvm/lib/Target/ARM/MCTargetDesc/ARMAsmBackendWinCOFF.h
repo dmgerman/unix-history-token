@@ -66,16 +66,22 @@ name|public
 operator|:
 name|ARMAsmBackendWinCOFF
 argument_list|(
-argument|const Target&T
+specifier|const
+name|Target
+operator|&
+name|T
 argument_list|,
-argument|StringRef Triple
+specifier|const
+name|Triple
+operator|&
+name|TheTriple
 argument_list|)
 operator|:
 name|ARMAsmBackend
 argument_list|(
 argument|T
 argument_list|,
-argument|Triple
+argument|TheTriple
 argument_list|,
 argument|true
 argument_list|)
@@ -84,7 +90,7 @@ name|MCObjectWriter
 operator|*
 name|createObjectWriter
 argument_list|(
-argument|raw_ostream&OS
+argument|raw_pwrite_stream&OS
 argument_list|)
 specifier|const
 name|override

@@ -412,11 +412,31 @@ block|{
 name|public
 operator|:
 name|RegisterPassParser
-argument_list|()
+argument_list|(
+name|cl
+operator|::
+name|Option
+operator|&
+name|O
+argument_list|)
+operator|:
+name|cl
+operator|::
+name|parser
+operator|<
+name|typename
+name|RegistryClass
+operator|::
+name|FunctionPassCtor
+operator|>
+operator|(
+name|O
+operator|)
 block|{}
 operator|~
 name|RegisterPassParser
 argument_list|()
+name|override
 block|{
 name|RegistryClass
 operator|::
@@ -427,9 +447,7 @@ argument_list|)
 block|; }
 name|void
 name|initialize
-argument_list|(
-argument|cl::Option&O
-argument_list|)
+argument_list|()
 block|{
 name|cl
 operator|::
@@ -442,9 +460,7 @@ name|FunctionPassCtor
 operator|>
 operator|::
 name|initialize
-argument_list|(
-name|O
-argument_list|)
+argument_list|()
 block|;
 comment|// Add existing passes to option.
 for|for

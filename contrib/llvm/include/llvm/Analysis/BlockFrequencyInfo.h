@@ -127,6 +127,7 @@ expr_stmt|;
 operator|~
 name|BlockFrequencyInfo
 argument_list|()
+name|override
 expr_stmt|;
 name|void
 name|getAnalysisUsage

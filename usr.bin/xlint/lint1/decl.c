@@ -629,7 +629,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns a shared type structure vor arithmetic types and void.  *  * It's important do duplicate this structure (using duptyp() or tdupdyp())  * if it is to be modified (adding qualifiers or anything else).  */
+comment|/*  * Returns a shared type structure vor arithmetic types and void.  *  * It's important to duplicate this structure (using duptyp() or tdupdyp())  * if it is to be modified (adding qualifiers or anything else).  */
 end_comment
 
 begin_function
@@ -3175,7 +3175,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the alignment of the given Type in bits.  */
+comment|/*  * Get the alignment of the given type in bits.  */
 end_comment
 
 begin_function
@@ -3979,7 +3979,7 @@ operator|->
 name|s_field
 condition|)
 block|{
-comment|/* 		 * bit field 		 * 		 * only unsigned und signed int are protable bit-field types 		 *(at least in ANSI C, in traditional C only unsigned int) 		 */
+comment|/* 		 * bit field 		 * 		 * only unsigned and signed int are portable bit-field types 		 * (at least in ANSI C, in traditional C only unsigned int) 		 */
 if|if
 condition|(
 name|t
@@ -4836,7 +4836,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Followint 3 functions extend the type of a declarator with  * pointer, function and array types.  *  * The current type is the Type built by deftyp() (dcs->d_type) and  * pointer, function and array types already added for this  * declarator. The new type extension is inserted between both.  */
+comment|/*  * Followint 3 functions extend the type of a declarator with  * pointer, function and array types.  *  * The current type is the type built by deftyp() (dcs->d_type) and  * pointer, function and array types already added for this  * declarator. The new type extension is inserted between both.  */
 end_comment
 
 begin_function
@@ -6507,7 +6507,7 @@ operator|=
 name|tag
 expr_stmt|;
 block|}
-comment|/* ist unvollstaendiger Typ */
+comment|/* is incomplete type */
 name|setcompl
 argument_list|(
 name|tp
@@ -7471,7 +7471,7 @@ operator|->
 name|t_proto
 condition|)
 block|{
-comment|/* 		 * With both LINTLIBRARY and PROTOLIB the prototyp is 		 * written as a function definition to the output file. 		 */
+comment|/* 		 * With both LINTLIBRARY and PROTOLIB the prototype is 		 * written as a function definition to the output file. 		 */
 name|rval
 operator|=
 name|dsym
@@ -7615,7 +7615,7 @@ name|rdsym
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * Overtake the rememberd params if the new symbol 			 * is not a prototype. 			 */
+comment|/* 			 * Overtake the remembered params if the new symbol 			 * is not a prototype. 			 */
 if|if
 condition|(
 name|rdsym
@@ -8140,7 +8140,7 @@ operator|==
 name|DEF
 condition|)
 block|{
-comment|/* 		 * All cases except "int a = 1; static int a;" are catched 		 * above with or without a warning 		 */
+comment|/* 		 * All cases except "int a = 1; static int a;" are caught 		 * above with or without a warning 		 */
 comment|/* redeclaration of %s */
 name|error
 argument_list|(
@@ -9060,7 +9060,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Complets a type by copying the dimension and prototype information  * from a second compatible type.  *  * Following lines are legal:  *  "typedef a[]; a b; a b[10]; a c; a c[20];"  *  "typedef ft(); ft f; f(int); ft g; g(long);"  * This means that, if a type is completed, the type structure must  * be duplicated.  */
+comment|/*  * Completes a type by copying the dimension and prototype information  * from a second compatible type.  *  * Following lines are legal:  *  "typedef a[]; a b; a b[10]; a c; a c[20];"  *  "typedef ft(); ft f; f(int); ft g; g(long);"  * This means that, if a type is completed, the type structure must  * be duplicated.  */
 end_comment
 
 begin_function
@@ -9174,7 +9174,7 @@ name|src
 operator|->
 name|t_dim
 expr_stmt|;
-comment|/* now a complete Typ */
+comment|/* now a complete type */
 name|setcompl
 argument_list|(
 name|dst
@@ -9511,7 +9511,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Does some checks for lint directives which apply to functions.  * Processes arguments in old style function definitions which default  * to int.  * Checks compatiblility of old style function definition with previous  * prototype.  */
+comment|/*  * Does some checks for lint directives which apply to functions.  * Processes arguments in old style function definitions which default  * to int.  * Checks compatibility of old style function definition with previous  * prototype.  */
 end_comment
 
 begin_function
@@ -9866,7 +9866,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * print a warning for each argument off an old style function 	 * definition which defaults to int 	 */
+comment|/* 	 * print a warning for each argument of an old style function 	 * definition which defaults to int 	 */
 for|for
 control|(
 name|arg
@@ -11238,7 +11238,7 @@ name|mblklev
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * remove all informations about pending lint directives without 	 * warnings. 	 */
+comment|/* 	 * remove all information about pending lint directives without 	 * warnings. 	 */
 name|glclup
 argument_list|(
 literal|1

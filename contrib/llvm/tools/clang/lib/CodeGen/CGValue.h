@@ -87,6 +87,12 @@ directive|include
 file|"llvm/IR/Value.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Type.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -1426,6 +1432,17 @@ operator|.
 name|LVType
 operator|=
 name|Simple
+expr_stmt|;
+name|assert
+argument_list|(
+name|address
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isPointerTy
+argument_list|()
+argument_list|)
 expr_stmt|;
 name|R
 operator|.

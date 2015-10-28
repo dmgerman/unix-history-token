@@ -438,15 +438,15 @@ name|private
 label|:
 end_label
 
-begin_macro
+begin_expr_stmt
 name|RegionNodeBase
 argument_list|(
-argument|const RegionNodeBase&
+specifier|const
+name|RegionNodeBase
+operator|&
 argument_list|)
-end_macro
-
-begin_expr_stmt
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 
@@ -461,7 +461,8 @@ specifier|const
 name|RegionNodeBase
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 end_decl_stmt
 
@@ -1136,15 +1137,15 @@ operator|>
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|RegionBase
 argument_list|(
-argument|const RegionBase&
+specifier|const
+name|RegionBase
+operator|&
 argument_list|)
-end_macro
-
-begin_expr_stmt
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 
@@ -1159,7 +1160,8 @@ specifier|const
 name|RegionBase
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 end_decl_stmt
 
@@ -3284,15 +3286,15 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|RegionInfoBase
 argument_list|(
-argument|const RegionInfoBase&
+specifier|const
+name|RegionInfoBase
+operator|&
 argument_list|)
-end_macro
-
-begin_expr_stmt
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 
@@ -3307,7 +3309,8 @@ specifier|const
 name|RegionInfoBase
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 end_decl_stmt
 
@@ -4090,10 +4093,6 @@ expr|,
 name|isSubRegion
 operator|)
 block|{}
-operator|~
-name|RegionNode
-argument_list|()
-block|{}
 name|bool
 name|operator
 operator|==
@@ -4209,10 +4208,10 @@ name|explicit
 name|RegionInfo
 argument_list|()
 block|;
-name|virtual
 operator|~
 name|RegionInfo
 argument_list|()
+name|override
 block|;
 comment|// updateStatistics - Update statistic about created regions.
 name|void
@@ -4265,6 +4264,7 @@ block|;
 operator|~
 name|RegionInfoPass
 argument_list|()
+name|override
 block|;
 name|RegionInfo
 operator|&
@@ -4511,38 +4511,17 @@ return|;
 block|}
 end_decl_stmt
 
-begin_macro
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class RegionBase<RegionTraits<Function>>
-argument_list|)
-end_macro
+begin_extern
+extern|extern template class RegionBase<RegionTraits<Function>>;
+end_extern
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_extern
+extern|extern template class RegionNodeBase<RegionTraits<Function>>;
+end_extern
 
-begin_macro
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class RegionNodeBase<RegionTraits<Function>>
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class RegionInfoBase<RegionTraits<Function>>
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_extern
+extern|extern template class RegionInfoBase<RegionTraits<Function>>;
+end_extern
 
 begin_comment
 unit|}

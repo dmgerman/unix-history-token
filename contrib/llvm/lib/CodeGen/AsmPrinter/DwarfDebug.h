@@ -74,13 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"DebugLocEntry.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"DebugLocList.h"
+file|"DebugLocStream.h"
 end_include
 
 begin_include
@@ -99,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_include
@@ -196,6 +196,9 @@ name|class
 name|ConstantFP
 decl_stmt|;
 name|class
+name|DebugLocEntry
+decl_stmt|;
+name|class
 name|DwarfCompileUnit
 decl_stmt|;
 name|class
@@ -211,7 +214,7 @@ name|class
 name|MachineModuleInfo
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// \brief This class is used to record source line correspondence.
+comment|/// This class is used to record source line correspondence.
 name|class
 name|SrcLineInfo
 block|{
@@ -306,110 +309,95 @@ block|}
 block|}
 empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// \brief This class is used to track local variable information.
+comment|/// This class is used to track local variable information.
+comment|///
+comment|/// Variables can be created from allocas, in which case they're generated from
+comment|/// the MMI table.  Such variables can have multiple expressions and frame
+comment|/// indices.  The \a Expr and \a FrameIndices array must match.
+comment|///
+comment|/// Variables can be created from \c DBG_VALUE instructions.  Those whose
+comment|/// location changes over time use \a DebugLocListIndex, while those with a
+comment|/// single instruction use \a MInsn and (optionally) a single entry of \a Expr.
+comment|///
+comment|/// Variables that have been optimized out use none of these fields.
 name|class
 name|DbgVariable
 block|{
-name|DIVariable
+specifier|const
+name|DILocalVariable
+modifier|*
 name|Var
 decl_stmt|;
-comment|// Variable Descriptor.
-name|DIExpression
-name|Expr
+comment|/// Variable Descriptor.
+specifier|const
+name|DILocation
+modifier|*
+name|IA
 decl_stmt|;
-comment|// Complex address location expression.
+comment|/// Inlined at location.
+name|SmallVector
+operator|<
+specifier|const
+name|DIExpression
+operator|*
+operator|,
+literal|1
+operator|>
+name|Expr
+expr_stmt|;
+comment|/// Complex address.
 name|DIE
 modifier|*
 name|TheDIE
+init|=
+name|nullptr
 decl_stmt|;
-comment|// Variable DIE.
+comment|/// Variable DIE.
 name|unsigned
-name|DotDebugLocOffset
+name|DebugLocListIndex
+init|=
+operator|~
+literal|0u
 decl_stmt|;
-comment|// Offset in DotDebugLocEntries.
+comment|/// Offset in DebugLocs.
 specifier|const
 name|MachineInstr
 modifier|*
 name|MInsn
+init|=
+name|nullptr
 decl_stmt|;
-comment|// DBG_VALUE instruction of the variable.
+comment|/// DBG_VALUE instruction.
+name|SmallVector
+operator|<
 name|int
+operator|,
+literal|1
+operator|>
 name|FrameIndex
-decl_stmt|;
+expr_stmt|;
+comment|/// Frame index.
 name|DwarfDebug
 modifier|*
 name|DD
 decl_stmt|;
 name|public
 label|:
-comment|/// Construct a DbgVariable from a DIVariable.
-name|DbgVariable
-argument_list|(
-argument|DIVariable V
-argument_list|,
-argument|DIExpression E
-argument_list|,
-argument|DwarfDebug *DD
-argument_list|)
-block|:
-name|Var
-argument_list|(
-name|V
-argument_list|)
-operator|,
-name|Expr
-argument_list|(
-name|E
-argument_list|)
-operator|,
-name|TheDIE
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|DotDebugLocOffset
-argument_list|(
-operator|~
-literal|0U
-argument_list|)
-operator|,
-name|MInsn
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|FrameIndex
-argument_list|(
-operator|~
-literal|0
-argument_list|)
-operator|,
-name|DD
-argument_list|(
-argument|DD
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|Var
-operator|.
-name|Verify
-argument_list|()
-operator|&&
-name|Expr
-operator|.
-name|Verify
-argument_list|()
-argument_list|)
-block|;   }
-comment|/// Construct a DbgVariable from a DEBUG_VALUE.
-comment|/// AbstractVar may be NULL.
+comment|/// Construct a DbgVariable.
+comment|///
+comment|/// Creates a variable without any DW_AT_location.  Call \a initializeMMI()
+comment|/// for MMI entries, or \a initializeDbgValue() for DBG_VALUE instructions.
 name|DbgVariable
 argument_list|(
 specifier|const
-name|MachineInstr
+name|DILocalVariable
 operator|*
-name|DbgValue
+name|V
+argument_list|,
+specifier|const
+name|DILocation
+operator|*
+name|IA
 argument_list|,
 name|DwarfDebug
 operator|*
@@ -418,40 +406,12 @@ argument_list|)
 operator|:
 name|Var
 argument_list|(
-name|DbgValue
-operator|->
-name|getDebugVariable
-argument_list|()
+name|V
 argument_list|)
 operator|,
-name|Expr
+name|IA
 argument_list|(
-name|DbgValue
-operator|->
-name|getDebugExpression
-argument_list|()
-argument_list|)
-operator|,
-name|TheDIE
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|DotDebugLocOffset
-argument_list|(
-operator|~
-literal|0U
-argument_list|)
-operator|,
-name|MInsn
-argument_list|(
-name|DbgValue
-argument_list|)
-operator|,
-name|FrameIndex
-argument_list|(
-operator|~
-literal|0
+name|IA
 argument_list|)
 operator|,
 name|DD
@@ -459,8 +419,176 @@ argument_list|(
 argument|DD
 argument_list|)
 block|{}
+comment|/// Initialize from the MMI table.
+name|void
+name|initializeMMI
+argument_list|(
+argument|const DIExpression *E
+argument_list|,
+argument|int FI
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Expr
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Already initialized?"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|FrameIndex
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Already initialized?"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|!
+name|MInsn
+operator|&&
+literal|"Already initialized?"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|E
+operator|||
+name|E
+operator|->
+name|isValid
+argument_list|()
+operator|)
+operator|&&
+literal|"Expected valid expression"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|~
+name|FI
+operator|&&
+literal|"Expected valid index"
+argument_list|)
+block|;
+name|Expr
+operator|.
+name|push_back
+argument_list|(
+name|E
+argument_list|)
+block|;
+name|FrameIndex
+operator|.
+name|push_back
+argument_list|(
+name|FI
+argument_list|)
+block|;   }
+comment|/// Initialize from a DBG_VALUE instruction.
+name|void
+name|initializeDbgValue
+argument_list|(
+argument|const MachineInstr *DbgValue
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Expr
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Already initialized?"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|FrameIndex
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Already initialized?"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|!
+name|MInsn
+operator|&&
+literal|"Already initialized?"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|Var
+operator|==
+name|DbgValue
+operator|->
+name|getDebugVariable
+argument_list|()
+operator|&&
+literal|"Wrong variable"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|IA
+operator|==
+name|DbgValue
+operator|->
+name|getDebugLoc
+argument_list|()
+operator|->
+name|getInlinedAt
+argument_list|()
+operator|&&
+literal|"Wrong inlined-at"
+argument_list|)
+block|;
+name|MInsn
+operator|=
+name|DbgValue
+block|;
+if|if
+condition|(
+name|auto
+operator|*
+name|E
+operator|=
+name|DbgValue
+operator|->
+name|getDebugExpression
+argument_list|()
+condition|)
+if|if
+condition|(
+name|E
+operator|->
+name|getNumElements
+argument_list|()
+condition|)
+name|Expr
+operator|.
+name|push_back
+argument_list|(
+name|E
+argument_list|)
+expr_stmt|;
+block|}
 comment|// Accessors.
-name|DIVariable
+specifier|const
+name|DILocalVariable
+operator|*
 name|getVariable
 argument_list|()
 specifier|const
@@ -469,7 +597,24 @@ return|return
 name|Var
 return|;
 block|}
+specifier|const
+name|DILocation
+operator|*
+name|getInlinedAt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IA
+return|;
+block|}
+specifier|const
+name|ArrayRef
+operator|<
+specifier|const
 name|DIExpression
+operator|*
+operator|>
 name|getExpression
 argument_list|()
 specifier|const
@@ -503,24 +648,24 @@ name|TheDIE
 return|;
 block|}
 name|void
-name|setDotDebugLocOffset
+name|setDebugLocListIndex
 parameter_list|(
 name|unsigned
 name|O
 parameter_list|)
 block|{
-name|DotDebugLocOffset
+name|DebugLocListIndex
 operator|=
 name|O
 expr_stmt|;
 block|}
 name|unsigned
-name|getDotDebugLocOffset
+name|getDebugLocListIndex
 argument_list|()
 specifier|const
 block|{
 return|return
-name|DotDebugLocOffset
+name|DebugLocListIndex
 return|;
 block|}
 name|StringRef
@@ -530,7 +675,7 @@ specifier|const
 block|{
 return|return
 name|Var
-operator|.
+operator|->
 name|getName
 argument_list|()
 return|;
@@ -546,7 +691,11 @@ return|return
 name|MInsn
 return|;
 block|}
+specifier|const
+name|ArrayRef
+operator|<
 name|int
+operator|>
 name|getFrameIndex
 argument_list|()
 specifier|const
@@ -556,18 +705,207 @@ name|FrameIndex
 return|;
 block|}
 name|void
-name|setFrameIndex
+name|addMMIEntry
 parameter_list|(
-name|int
-name|FI
+specifier|const
+name|DbgVariable
+modifier|&
+name|V
 parameter_list|)
 block|{
-name|FrameIndex
-operator|=
-name|FI
+name|assert
+argument_list|(
+name|DebugLocListIndex
+operator|==
+operator|~
+literal|0U
+operator|&&
+operator|!
+name|MInsn
+operator|&&
+literal|"not an MMI entry"
+argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|V
+operator|.
+name|DebugLocListIndex
+operator|==
+operator|~
+literal|0U
+operator|&&
+operator|!
+name|V
+operator|.
+name|MInsn
+operator|&&
+literal|"not an MMI entry"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|V
+operator|.
+name|Var
+operator|==
+name|Var
+operator|&&
+literal|"conflicting variable"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|V
+operator|.
+name|IA
+operator|==
+name|IA
+operator|&&
+literal|"conflicting inlined-at location"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|!
+name|FrameIndex
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Expected an MMI entry"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|!
+name|V
+operator|.
+name|FrameIndex
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Expected an MMI entry"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|Expr
+operator|.
+name|size
+argument_list|()
+operator|==
+name|FrameIndex
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Mismatched expressions"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|V
+operator|.
+name|Expr
+operator|.
+name|size
+argument_list|()
+operator|==
+name|V
+operator|.
+name|FrameIndex
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Mismatched expressions"
+argument_list|)
+expr_stmt|;
+name|Expr
+operator|.
+name|append
+argument_list|(
+name|V
+operator|.
+name|Expr
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|V
+operator|.
+name|Expr
+operator|.
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|FrameIndex
+operator|.
+name|append
+argument_list|(
+name|V
+operator|.
+name|FrameIndex
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|V
+operator|.
+name|FrameIndex
+operator|.
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|std
+operator|::
+name|all_of
+argument_list|(
+name|Expr
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Expr
+operator|.
+name|end
+argument_list|()
+argument_list|,
+index|[]
+operator|(
+specifier|const
+name|DIExpression
+operator|*
+name|E
+operator|)
+block|{
+return|return
+name|E
+operator|&&
+name|E
+operator|->
+name|isBitPiece
+argument_list|()
+return|;
 block|}
+block|)
+function|&& "conflicting locations for variable"
+block|)
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|// Translate tag to proper Dwarf tag.
+end_comment
+
+begin_expr_stmt
 name|dwarf
 operator|::
 name|Tag
@@ -578,7 +916,7 @@ block|{
 if|if
 condition|(
 name|Var
-operator|.
+operator|->
 name|getTag
 argument_list|()
 operator|==
@@ -591,55 +929,75 @@ name|dwarf
 operator|::
 name|DW_TAG_formal_parameter
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|dwarf
 operator|::
 name|DW_TAG_variable
 return|;
-block|}
-comment|/// \brief Return true if DbgVariable is artificial.
-name|bool
+end_return
+
+begin_comment
+unit|}
+comment|/// Return true if DbgVariable is artificial.
+end_comment
+
+begin_macro
+unit|bool
 name|isArtificial
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 if|if
 condition|(
 name|Var
-operator|.
+operator|->
 name|isArtificial
 argument_list|()
 condition|)
 return|return
 name|true
 return|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|getType
 argument_list|()
-operator|.
+operator|->
 name|isArtificial
 argument_list|()
 condition|)
 return|return
 name|true
 return|;
+end_if
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-end_decl_stmt
+end_return
 
-begin_expr_stmt
-name|bool
+begin_macro
+unit|}    bool
 name|isObjectPointer
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 if|if
 condition|(
 name|Var
-operator|.
+operator|->
 name|isObjectPointer
 argument_list|()
 condition|)
@@ -653,7 +1011,7 @@ if|if
 condition|(
 name|getType
 argument_list|()
-operator|.
+operator|->
 name|isObjectPointer
 argument_list|()
 condition|)
@@ -670,7 +1028,7 @@ end_return
 
 begin_macro
 unit|}    bool
-name|variableHasComplexAddress
+name|hasComplexAddress
 argument_list|()
 end_macro
 
@@ -679,21 +1037,56 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|Var
+name|MInsn
+operator|&&
+literal|"Expected DBG_VALUE, not MMI variable"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|FrameIndex
 operator|.
-name|isVariable
+name|empty
 argument_list|()
 operator|&&
-literal|"Invalid complex DbgVariable!"
+literal|"Expected DBG_VALUE, not MMI variable"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|(
+name|Expr
+operator|.
+name|empty
+argument_list|()
+operator|||
+operator|(
+name|Expr
+operator|.
+name|size
+argument_list|()
+operator|==
+literal|1
+operator|&&
+name|Expr
+operator|.
+name|back
+argument_list|()
+operator|->
+name|getNumElements
+argument_list|()
+operator|)
+operator|)
+operator|&&
+literal|"Invalid Expr for DBG_VALUE"
 argument_list|)
 block|;
 return|return
+operator|!
 name|Expr
 operator|.
-name|getNumElements
+name|empty
 argument_list|()
-operator|>
-literal|0
 return|;
 block|}
 end_expr_stmt
@@ -707,52 +1100,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|unsigned
-name|getNumAddrElements
-argument_list|()
 specifier|const
-block|{
-name|assert
-argument_list|(
-name|Var
-operator|.
-name|isVariable
-argument_list|()
-operator|&&
-literal|"Invalid complex DbgVariable!"
-argument_list|)
-block|;
-return|return
-name|Expr
-operator|.
-name|getNumElements
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_decl_stmt
-name|uint64_t
-name|getAddrElement
-argument_list|(
-name|unsigned
-name|i
-argument_list|)
-decl|const
-block|{
-return|return
-name|Expr
-operator|.
-name|getElement
-argument_list|(
-name|i
-argument_list|)
-return|;
-block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|DIType
+operator|*
 name|getType
 argument_list|()
 specifier|const
@@ -765,7 +1115,7 @@ label|:
 end_label
 
 begin_comment
-comment|/// resolve - Look in the DwarfDebug map for the MDNode that
+comment|/// Look in the DwarfDebug map for the MDNode that
 end_comment
 
 begin_comment
@@ -779,9 +1129,10 @@ name|typename
 name|T
 operator|>
 name|T
+operator|*
 name|resolve
 argument_list|(
-argument|DIRef<T> Ref
+argument|TypedDINodeRef<T> Ref
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -789,7 +1140,7 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|/// \brief Helper used to pair up a symbol and its DWARF compile unit.
+comment|/// Helper used to pair up a symbol and its DWARF compile unit.
 end_comment
 
 begin_struct
@@ -832,7 +1183,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/// \brief Collects and handles dwarf debug information.
+comment|/// Collects and handles dwarf debug information.
 end_comment
 
 begin_decl_stmt
@@ -842,21 +1193,21 @@ range|:
 name|public
 name|AsmPrinterHandler
 block|{
-comment|// Target of Dwarf emission.
+comment|/// Target of Dwarf emission.
 name|AsmPrinter
 operator|*
 name|Asm
 block|;
-comment|// Collected machine module information.
+comment|/// Collected machine module information.
 name|MachineModuleInfo
 operator|*
 name|MMI
 block|;
-comment|// All DIEValues are allocated through this allocator.
+comment|/// All DIEValues are allocated through this allocator.
 name|BumpPtrAllocator
 name|DIEValueAllocator
 block|;
-comment|// Maps MDNode with its corresponding DwarfCompileUnit.
+comment|/// Maps MDNode with its corresponding DwarfCompileUnit.
 name|MapVector
 operator|<
 specifier|const
@@ -868,7 +1219,7 @@ operator|*
 operator|>
 name|CUMap
 block|;
-comment|// Maps subprogram MDNode with its corresponding DwarfCompileUnit.
+comment|/// Maps subprogram MDNode with its corresponding DwarfCompileUnit.
 name|MapVector
 operator|<
 specifier|const
@@ -880,7 +1231,7 @@ operator|*
 operator|>
 name|SPMap
 block|;
-comment|// Maps a CU DIE with its corresponding DwarfCompileUnit.
+comment|/// Maps a CU DIE with its corresponding DwarfCompileUnit.
 name|DenseMap
 operator|<
 specifier|const
@@ -892,7 +1243,7 @@ operator|*
 operator|>
 name|CUDieMap
 block|;
-comment|// List of all labels used in aranges generation.
+comment|/// List of all labels used in aranges generation.
 name|std
 operator|::
 name|vector
@@ -901,7 +1252,7 @@ name|SymbolCU
 operator|>
 name|ArangeLabels
 block|;
-comment|// Size of each symbol emitted (for those symbols that have a specific size).
+comment|/// Size of each symbol emitted (for those symbols that have a specific size).
 name|DenseMap
 operator|<
 specifier|const
@@ -912,45 +1263,16 @@ name|uint64_t
 operator|>
 name|SymSize
 block|;
-comment|// Provides a unique id per text section.
-typedef|typedef
-name|DenseMap
-operator|<
-specifier|const
-name|MCSection
-operator|*
-operator|,
-name|SmallVector
-operator|<
-name|SymbolCU
-operator|,
-literal|8
-operator|>
-expr|>
-name|SectionMapType
-expr_stmt|;
-name|SectionMapType
-name|SectionMap
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|LexicalScopes
 name|LScopes
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Collection of abstract variables.
-end_comment
-
-begin_expr_stmt
+block|;
+comment|/// Collection of abstract variables.
 name|DenseMap
 operator|<
 specifier|const
 name|MDNode
 operator|*
-operator|,
+block|,
 name|std
 operator|::
 name|unique_ptr
@@ -958,10 +1280,7 @@ operator|<
 name|DbgVariable
 operator|>>
 name|AbstractVariables
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|SmallVector
 operator|<
 name|std
@@ -970,313 +1289,102 @@ name|unique_ptr
 operator|<
 name|DbgVariable
 operator|>
-operator|,
+block|,
 literal|64
 operator|>
 name|ConcreteVariables
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// Collection of DebugLocEntry. Stored in a linked list so that DIELocLists
-end_comment
-
-begin_comment
-comment|// can refer to them in spite of insertions into this list.
-end_comment
-
-begin_expr_stmt
-name|SmallVector
-operator|<
-name|DebugLocList
-operator|,
-literal|4
-operator|>
-name|DotDebugLocEntries
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// This is a collection of subprogram MDNodes that are processed to
-end_comment
-
-begin_comment
-comment|// create DIEs.
-end_comment
-
-begin_expr_stmt
+block|;
+comment|/// Collection of DebugLocEntry. Stored in a linked list so that DIELocLists
+comment|/// can refer to them in spite of insertions into this list.
+name|DebugLocStream
+name|DebugLocs
+block|;
+comment|/// This is a collection of subprogram MDNodes that are processed to
+comment|/// create DIEs.
 name|SmallPtrSet
 operator|<
 specifier|const
 name|MDNode
 operator|*
-operator|,
+block|,
 literal|16
 operator|>
 name|ProcessedSPNodes
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// Maps instruction with label emitted before instruction.
-end_comment
-
-begin_expr_stmt
+block|;
+comment|/// Maps instruction with label emitted before instruction.
 name|DenseMap
 operator|<
 specifier|const
 name|MachineInstr
 operator|*
-operator|,
+block|,
 name|MCSymbol
 operator|*
 operator|>
 name|LabelsBeforeInsn
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// Maps instruction with label emitted after instruction.
-end_comment
-
-begin_expr_stmt
+block|;
+comment|/// Maps instruction with label emitted after instruction.
 name|DenseMap
 operator|<
 specifier|const
 name|MachineInstr
 operator|*
-operator|,
+block|,
 name|MCSymbol
 operator|*
 operator|>
 name|LabelsAfterInsn
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// History of DBG_VALUE and clobber instructions for each user variable.
-end_comment
-
-begin_comment
-comment|// Variables are listed in order of appearance.
-end_comment
-
-begin_decl_stmt
+block|;
+comment|/// History of DBG_VALUE and clobber instructions for each user
+comment|/// variable.  Variables are listed in order of appearance.
 name|DbgValueHistoryMap
 name|DbgValues
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Previous instruction's location information. This is used to determine
-end_comment
-
-begin_comment
-comment|// label location to indicate scope boundries in dwarf debug info.
-end_comment
-
-begin_decl_stmt
+block|;
+comment|/// Previous instruction's location information. This is used to
+comment|/// determine label location to indicate scope boundries in dwarf
+comment|/// debug info.
 name|DebugLoc
 name|PrevInstLoc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|MCSymbol
-modifier|*
+operator|*
 name|PrevLabel
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// This location indicates end of function prologue and beginning of function
-end_comment
-
-begin_comment
-comment|// body.
-end_comment
-
-begin_decl_stmt
+block|;
+comment|/// This location indicates end of function prologue and beginning of
+comment|/// function body.
 name|DebugLoc
 name|PrologEndLoc
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// If nonnull, stores the current machine function we're processing.
-end_comment
-
-begin_decl_stmt
+block|;
+comment|/// If nonnull, stores the current machine function we're processing.
 specifier|const
 name|MachineFunction
-modifier|*
+operator|*
 name|CurFn
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// If nonnull, stores the current machine instruction we're processing.
-end_comment
-
-begin_decl_stmt
+block|;
+comment|/// If nonnull, stores the current machine instruction we're processing.
 specifier|const
 name|MachineInstr
-modifier|*
+operator|*
 name|CurMI
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// If nonnull, stores the CU in which the previous subprogram was contained.
-end_comment
-
-begin_decl_stmt
+block|;
+comment|/// If nonnull, stores the CU in which the previous subprogram was contained.
 specifier|const
 name|DwarfCompileUnit
-modifier|*
+operator|*
 name|PrevCU
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Section Symbols: these are assembler temporary labels that are emitted at
-end_comment
-
-begin_comment
-comment|// the beginning of each supported dwarf section.  These are used to form
-end_comment
-
-begin_comment
-comment|// section offsets and are created by EmitSectionLabels.
-end_comment
-
-begin_decl_stmt
-name|MCSymbol
-modifier|*
-name|DwarfInfoSectionSym
-decl_stmt|,
-modifier|*
-name|DwarfAbbrevSectionSym
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|MCSymbol
-modifier|*
-name|DwarfStrSectionSym
-decl_stmt|,
-modifier|*
-name|TextSectionSym
-decl_stmt|,
-modifier|*
-name|DwarfDebugRangeSectionSym
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|MCSymbol
-modifier|*
-name|DwarfDebugLocSectionSym
-decl_stmt|,
-modifier|*
-name|DwarfLineSectionSym
-decl_stmt|,
-modifier|*
-name|DwarfAddrSectionSym
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|MCSymbol
-modifier|*
-name|FunctionBeginSym
-decl_stmt|,
-modifier|*
-name|FunctionEndSym
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|MCSymbol
-modifier|*
-name|DwarfInfoDWOSectionSym
-decl_stmt|,
-modifier|*
-name|DwarfAbbrevDWOSectionSym
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|MCSymbol
-modifier|*
-name|DwarfTypesDWOSectionSym
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|MCSymbol
-modifier|*
-name|DwarfStrDWOSectionSym
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|MCSymbol
-modifier|*
-name|DwarfGnuPubNamesSectionSym
-decl_stmt|,
-modifier|*
-name|DwarfGnuPubTypesSectionSym
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// As an optimization, there is no need to emit an entry in the directory
-end_comment
-
-begin_comment
-comment|// table for the same directory as DW_AT_comp_dir.
-end_comment
-
-begin_decl_stmt
+block|;
+comment|/// As an optimization, there is no need to emit an entry in the directory
+comment|/// table for the same directory as DW_AT_comp_dir.
 name|StringRef
 name|CompilationDir
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Counter for assigning globally unique IDs for ranges.
-end_comment
-
-begin_decl_stmt
-name|unsigned
-name|GlobalRangeCount
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Holder for the file specific debug information.
-end_comment
-
-begin_decl_stmt
+block|;
+comment|/// Holder for the file specific debug information.
 name|DwarfFile
 name|InfoHolder
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Holders for the various debug information flags that we might need to
-end_comment
-
-begin_comment
-comment|// have exposed. See accessor functions below for description.
-end_comment
-
-begin_comment
-comment|// Holder for imported entities.
-end_comment
-
-begin_typedef
+block|;
+comment|/// Holders for the various debug information flags that we might need to
+comment|/// have exposed. See accessor functions below for description.
+comment|/// Holder for imported entities.
 typedef|typedef
 name|SmallVector
 operator|<
@@ -1297,20 +1405,17 @@ literal|32
 operator|>
 name|ImportedEntityMap
 expr_stmt|;
-end_typedef
-
-begin_decl_stmt
 name|ImportedEntityMap
 name|ScopesWithImportedEntities
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Map from MDNodes for user-defined types to the type units that describe
+comment|/// Map from MDNodes for user-defined types to the type units that
 end_comment
 
 begin_comment
-comment|// them.
+comment|/// describe them.
 end_comment
 
 begin_expr_stmt
@@ -1342,7 +1447,9 @@ operator|<
 name|DwarfTypeUnit
 operator|>
 operator|,
+specifier|const
 name|DICompositeType
+operator|*
 operator|>
 operator|,
 literal|1
@@ -1352,7 +1459,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// Whether to emit the pubnames/pubtypes sections.
+comment|/// Whether to emit the pubnames/pubtypes sections.
 end_comment
 
 begin_decl_stmt
@@ -1362,7 +1469,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Whether or not to use AT_ranges for compilation units.
+comment|/// Whether or not to use AT_ranges for compilation units.
 end_comment
 
 begin_decl_stmt
@@ -1372,11 +1479,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Whether we emitted a function into a section other than the default
+comment|/// Whether we emitted a function into a section other than the
 end_comment
 
 begin_comment
-comment|// text.
+comment|/// default text.
 end_comment
 
 begin_decl_stmt
@@ -1386,7 +1493,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Version of dwarf we're emitting.
+comment|/// Whether to use the GNU TLS opcode (instead of the standard opcode).
+end_comment
+
+begin_decl_stmt
+name|bool
+name|UseGNUTLSOpcode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Version of dwarf we're emitting.
 end_comment
 
 begin_decl_stmt
@@ -1396,7 +1513,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Maps from a type identifier to the actual MDNode.
+comment|/// Maps from a type identifier to the actual MDNode.
 end_comment
 
 begin_decl_stmt
@@ -1406,7 +1523,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// DWARF5 Experimental Options
+comment|/// DWARF5 Experimental Options
+end_comment
+
+begin_comment
+comment|/// @{
 end_comment
 
 begin_decl_stmt
@@ -1422,23 +1543,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Separated Dwarf Variables
+comment|/// Separated Dwarf Variables
 end_comment
 
 begin_comment
-comment|// In general these will all be for bits that are left in the
+comment|/// In general these will all be for bits that are left in the
 end_comment
 
 begin_comment
-comment|// original object file, rather than things that are meant
+comment|/// original object file, rather than things that are meant
 end_comment
 
 begin_comment
-comment|// to be in the .dwo sections.
+comment|/// to be in the .dwo sections.
 end_comment
 
 begin_comment
-comment|// Holder for the skeleton information.
+comment|/// Holder for the skeleton information.
 end_comment
 
 begin_decl_stmt
@@ -1448,23 +1569,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Store file names for type units under fission in a line table header that
+comment|/// Store file names for type units under fission in a line table
 end_comment
 
 begin_comment
-comment|/// will be emitted into debug_line.dwo.
+comment|/// header that will be emitted into debug_line.dwo.
 end_comment
 
 begin_comment
-comment|// FIXME: replace this with a map from comp_dir to table so that we can emit
+comment|// FIXME: replace this with a map from comp_dir to table so that we
 end_comment
 
 begin_comment
-comment|// multiple tables during LTO each of which uses directory 0, referencing the
+comment|// can emit multiple tables during LTO each of which uses directory
 end_comment
 
 begin_comment
-comment|// comp_dir of all the type units that use it.
+comment|// 0, referencing the comp_dir of all the type units that use it.
 end_comment
 
 begin_decl_stmt
@@ -1474,7 +1595,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// True iff there are multiple CUs in this module.
+comment|/// @}
+end_comment
+
+begin_comment
+comment|/// True iff there are multiple CUs in this module.
 end_comment
 
 begin_decl_stmt
@@ -1486,6 +1611,12 @@ end_decl_stmt
 begin_decl_stmt
 name|bool
 name|IsDarwin
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|IsPS4
 decl_stmt|;
 end_decl_stmt
 
@@ -1527,6 +1658,7 @@ name|Function
 operator|*
 operator|,
 name|DISubprogram
+operator|*
 operator|>
 name|FunctionDIs
 expr_stmt|;
@@ -1567,8 +1699,17 @@ return|;
 block|}
 end_expr_stmt
 
+begin_typedef
+typedef|typedef
+name|DbgValueHistoryMap
+operator|::
+name|InlinedVariable
+name|InlinedVariable
+expr_stmt|;
+end_typedef
+
 begin_comment
-comment|/// \brief Find abstract variable associated with Var.
+comment|/// Find abstract variable associated with Var.
 end_comment
 
 begin_function_decl
@@ -1576,12 +1717,12 @@ name|DbgVariable
 modifier|*
 name|getExistingAbstractVariable
 parameter_list|(
-specifier|const
-name|DIVariable
-modifier|&
-name|DV
+name|InlinedVariable
+name|IV
 parameter_list|,
-name|DIVariable
+specifier|const
+name|DILocalVariable
+modifier|*
 modifier|&
 name|Cleansed
 parameter_list|)
@@ -1593,10 +1734,8 @@ name|DbgVariable
 modifier|*
 name|getExistingAbstractVariable
 parameter_list|(
-specifier|const
-name|DIVariable
-modifier|&
-name|DV
+name|InlinedVariable
+name|IV
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1606,8 +1745,8 @@ name|void
 name|createAbstractVariable
 parameter_list|(
 specifier|const
-name|DIVariable
-modifier|&
+name|DILocalVariable
+modifier|*
 name|DV
 parameter_list|,
 name|LexicalScope
@@ -1621,9 +1760,7 @@ begin_function_decl
 name|void
 name|ensureAbstractVariableIsCreated
 parameter_list|(
-specifier|const
-name|DIVariable
-modifier|&
+name|InlinedVariable
 name|Var
 parameter_list|,
 specifier|const
@@ -1638,9 +1775,7 @@ begin_function_decl
 name|void
 name|ensureAbstractVariableIsCreatedIfScoped
 parameter_list|(
-specifier|const
-name|DIVariable
-modifier|&
+name|InlinedVariable
 name|Var
 parameter_list|,
 specifier|const
@@ -1651,8 +1786,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|DbgVariable
+modifier|*
+name|createConcreteVariable
+parameter_list|(
+name|LexicalScope
+modifier|&
+name|Scope
+parameter_list|,
+name|InlinedVariable
+name|IV
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/// \brief Construct a DIE for this abstract scope.
+comment|/// Construct a DIE for this abstract scope.
 end_comment
 
 begin_function_decl
@@ -1667,18 +1817,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit initial Dwarf sections with a label at the start of each one.
-end_comment
-
-begin_function_decl
-name|void
-name|emitSectionLabels
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// \brief Compute the size and offset of a DIE given an incoming Offset.
+comment|/// Compute the size and offset of a DIE given an incoming Offset.
 end_comment
 
 begin_function_decl
@@ -1696,7 +1835,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Compute the size and offset of all the DIEs.
+comment|/// Compute the size and offset of all the DIEs.
 end_comment
 
 begin_function_decl
@@ -1707,7 +1846,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Collect info for variables that were optimized out.
+comment|/// Collect info for variables that were optimized out.
 end_comment
 
 begin_function_decl
@@ -1732,7 +1871,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Finish off debug information after all functions have been
+comment|/// Finish off debug information after all functions have been
 end_comment
 
 begin_comment
@@ -1747,22 +1886,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit labels to close any remaining sections that have been left
-end_comment
-
-begin_comment
-comment|/// open.
-end_comment
-
-begin_function_decl
-name|void
-name|endSections
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// \brief Emit the debug info section.
+comment|/// Emit the debug info section.
 end_comment
 
 begin_function_decl
@@ -1773,7 +1897,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit the abbreviation section.
+comment|/// Emit the abbreviation section.
 end_comment
 
 begin_function_decl
@@ -1784,25 +1908,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit the last address of the section and the end of
-end_comment
-
-begin_comment
-comment|/// the line matrix.
-end_comment
-
-begin_function_decl
-name|void
-name|emitEndOfLineMatrix
-parameter_list|(
-name|unsigned
-name|SectionEnd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// \brief Emit a specified accelerator table.
+comment|/// Emit a specified accelerator table.
 end_comment
 
 begin_function_decl
@@ -1813,22 +1919,18 @@ name|DwarfAccelTable
 modifier|&
 name|Accel
 parameter_list|,
-specifier|const
 name|MCSection
 modifier|*
 name|Section
 parameter_list|,
 name|StringRef
 name|TableName
-parameter_list|,
-name|StringRef
-name|SymName
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit visible names into a hashed accelerator table section.
+comment|/// Emit visible names into a hashed accelerator table section.
 end_comment
 
 begin_function_decl
@@ -1839,7 +1941,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit objective C classes and categories into a hashed
+comment|/// Emit objective C classes and categories into a hashed
 end_comment
 
 begin_comment
@@ -1854,7 +1956,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit namespace dies into a hashed accelerator table.
+comment|/// Emit namespace dies into a hashed accelerator table.
 end_comment
 
 begin_function_decl
@@ -1865,7 +1967,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit type dies into a hashed accelerator table.
+comment|/// Emit type dies into a hashed accelerator table.
 end_comment
 
 begin_function_decl
@@ -1876,7 +1978,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit visible names into a debug pubnames section.
+comment|/// Emit visible names into a debug pubnames section.
 end_comment
 
 begin_comment
@@ -1904,7 +2006,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit visible types into a debug pubtypes section.
+comment|/// Emit visible types into a debug pubtypes section.
 end_comment
 
 begin_comment
@@ -1938,7 +2040,6 @@ argument_list|(
 name|bool
 name|GnuStyle
 argument_list|,
-specifier|const
 name|MCSection
 operator|*
 name|PSec
@@ -1968,7 +2069,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Emit visible names into a debug str section.
+comment|/// Emit visible names into a debug str section.
 end_comment
 
 begin_function_decl
@@ -1979,7 +2080,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit visible names into a debug loc section.
+comment|/// Emit visible names into a debug loc section.
 end_comment
 
 begin_function_decl
@@ -1990,7 +2091,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit visible names into a debug loc dwo section.
+comment|/// Emit visible names into a debug loc dwo section.
 end_comment
 
 begin_function_decl
@@ -2001,7 +2102,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit visible names into a debug aranges section.
+comment|/// Emit visible names into a debug aranges section.
 end_comment
 
 begin_function_decl
@@ -2012,7 +2113,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit visible names into a debug ranges section.
+comment|/// Emit visible names into a debug ranges section.
 end_comment
 
 begin_function_decl
@@ -2023,7 +2124,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit inline info using custom format.
+comment|/// Emit inline info using custom format.
 end_comment
 
 begin_function_decl
@@ -2038,7 +2139,7 @@ comment|/// DWARF 5 Experimental Split Dwarf Emitters
 end_comment
 
 begin_comment
-comment|/// \brief Initialize common features of skeleton units.
+comment|/// Initialize common features of skeleton units.
 end_comment
 
 begin_decl_stmt
@@ -2066,7 +2167,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Construct the split debug info compile unit for the debug info
+comment|/// Construct the split debug info compile unit for the debug info
 end_comment
 
 begin_comment
@@ -2087,7 +2188,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Construct the split debug info compile unit for the debug info
+comment|/// Construct the split debug info compile unit for the debug info
 end_comment
 
 begin_comment
@@ -2107,7 +2208,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit the debug info dwo section.
+comment|/// Emit the debug info dwo section.
 end_comment
 
 begin_function_decl
@@ -2118,7 +2219,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit the debug abbrev dwo section.
+comment|/// Emit the debug abbrev dwo section.
 end_comment
 
 begin_function_decl
@@ -2129,7 +2230,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit the debug line dwo section.
+comment|/// Emit the debug line dwo section.
 end_comment
 
 begin_function_decl
@@ -2140,7 +2241,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit the debug str dwo section.
+comment|/// Emit the debug str dwo section.
 end_comment
 
 begin_function_decl
@@ -2175,7 +2276,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Create new DwarfCompileUnit for the given metadata node with tag
+comment|/// Create new DwarfCompileUnit for the given metadata node with tag
 end_comment
 
 begin_comment
@@ -2187,14 +2288,16 @@ name|DwarfCompileUnit
 modifier|&
 name|constructDwarfCompileUnit
 parameter_list|(
+specifier|const
 name|DICompileUnit
+modifier|*
 name|DIUnit
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Construct imported_module or imported_declaration DIE.
+comment|/// Construct imported_module or imported_declaration DIE.
 end_comment
 
 begin_function_decl
@@ -2206,7 +2309,7 @@ modifier|&
 name|TheCU
 parameter_list|,
 specifier|const
-name|MDNode
+name|DIImportedEntity
 modifier|*
 name|N
 parameter_list|)
@@ -2214,7 +2317,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Register a source line with debug info. Returns the unique
+comment|/// Register a source line with debug info. Returns the unique
 end_comment
 
 begin_comment
@@ -2247,7 +2350,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Indentify instructions that are marking the beginning of or
+comment|/// Indentify instructions that are marking the beginning of or
 end_comment
 
 begin_comment
@@ -2262,7 +2365,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Populate LexicalScope entries with variables' info.
+comment|/// Populate LexicalScope entries with variables' info.
 end_comment
 
 begin_decl_stmt
@@ -2273,14 +2376,14 @@ name|DwarfCompileUnit
 operator|&
 name|TheCU
 argument_list|,
+specifier|const
 name|DISubprogram
+operator|*
 name|SP
 argument_list|,
-name|SmallPtrSetImpl
+name|DenseSet
 operator|<
-specifier|const
-name|MDNode
-operator|*
+name|InlinedVariable
 operator|>
 operator|&
 name|ProcessedVars
@@ -2289,7 +2392,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Build the location list for all DBG_VALUEs in the
+comment|/// Build the location list for all DBG_VALUEs in the
 end_comment
 
 begin_comment
@@ -2318,7 +2421,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Collect variable information from the side table maintained
+comment|/// Collect variable information from the side table maintained
 end_comment
 
 begin_comment
@@ -2329,11 +2432,9 @@ begin_decl_stmt
 name|void
 name|collectVariableInfoFromMMITable
 argument_list|(
-name|SmallPtrSetImpl
+name|DenseSet
 operator|<
-specifier|const
-name|MDNode
-operator|*
+name|InlinedVariable
 operator|>
 operator|&
 name|P
@@ -2342,7 +2443,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Ensure that a label will be emitted before MI.
+comment|/// Ensure that a label will be emitted before MI.
 end_comment
 
 begin_function
@@ -2373,7 +2474,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Ensure that a label will be emitted after MI.
+comment|/// Ensure that a label will be emitted after MI.
 end_comment
 
 begin_function
@@ -2443,7 +2544,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Emit all Dwarf sections that should come prior to the
+comment|/// Emit all Dwarf sections that should come prior to the
 end_comment
 
 begin_comment
@@ -2458,7 +2559,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Emit all Dwarf sections that should come after the content.
+comment|/// Emit all Dwarf sections that should come after the content.
 end_comment
 
 begin_expr_stmt
@@ -2470,7 +2571,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Gather pre-function debug information.
+comment|/// Gather pre-function debug information.
 end_comment
 
 begin_decl_stmt
@@ -2487,7 +2588,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Gather and emit post-function debug information.
+comment|/// Gather and emit post-function debug information.
 end_comment
 
 begin_decl_stmt
@@ -2504,7 +2605,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Process beginning of an instruction.
+comment|/// Process beginning of an instruction.
 end_comment
 
 begin_decl_stmt
@@ -2521,7 +2622,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Process end of an instruction.
+comment|/// Process end of an instruction.
 end_comment
 
 begin_expr_stmt
@@ -2533,7 +2634,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Add a DIE to the set of types that we're going to pull into
+comment|/// Add a DIE to the set of types that we're going to pull into
 end_comment
 
 begin_comment
@@ -2555,14 +2656,16 @@ name|DIE
 modifier|&
 name|Die
 parameter_list|,
+specifier|const
 name|DICompositeType
+modifier|*
 name|CTy
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Add a label so that arange data can be generated for it.
+comment|/// Add a label so that arange data can be generated for it.
 end_comment
 
 begin_function
@@ -2584,7 +2687,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief For symbols that have a size designated (e.g. common symbols),
+comment|/// For symbols that have a size designated (e.g. common symbols),
 end_comment
 
 begin_comment
@@ -2616,26 +2719,31 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Recursively Emits a debug information entry.
+comment|/// Returns whether to use DW_OP_GNU_push_tls_address, instead of the
 end_comment
 
-begin_function_decl
-name|void
-name|emitDIE
-parameter_list|(
-name|DIE
-modifier|&
-name|Die
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/// standard DW_OP_form_tls_address opcode
+end_comment
+
+begin_expr_stmt
+name|bool
+name|useGNUTLSOpcode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseGNUTLSOpcode
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|// Experimental DWARF5 features.
 end_comment
 
 begin_comment
-comment|/// \brief Returns whether or not to emit tables that dwarf consumers can
+comment|/// Returns whether or not to emit tables that dwarf consumers can
 end_comment
 
 begin_comment
@@ -2655,7 +2763,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Returns whether or not to change the current debug info for the
+comment|/// Returns whether or not to change the current debug info for the
 end_comment
 
 begin_comment
@@ -2686,57 +2794,6 @@ specifier|const
 block|{
 return|return
 name|DwarfVersion
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// Returns the section symbol for the .debug_loc section.
-end_comment
-
-begin_expr_stmt
-name|MCSymbol
-operator|*
-name|getDebugLocSym
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfDebugLocSectionSym
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// Returns the section symbol for the .debug_str section.
-end_comment
-
-begin_expr_stmt
-name|MCSymbol
-operator|*
-name|getDebugStrSym
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfStrSectionSym
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// Returns the section symbol for the .debug_ranges section.
-end_comment
-
-begin_expr_stmt
-name|MCSymbol
-operator|*
-name|getRangeSectionSym
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfDebugRangeSectionSym
 return|;
 block|}
 end_expr_stmt
@@ -2784,96 +2841,40 @@ end_comment
 
 begin_expr_stmt
 specifier|const
-name|SmallVectorImpl
-operator|<
-name|DebugLocList
-operator|>
+name|DebugLocStream
 operator|&
-name|getDebugLocEntries
+name|getDebugLocs
 argument_list|()
 specifier|const
 block|{
 return|return
-name|DotDebugLocEntries
+name|DebugLocs
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Emit an entry for the debug loc section. This can be used to
+comment|/// Emit an entry for the debug loc section. This can be used to
 end_comment
 
 begin_comment
 comment|/// handle an entry that's going to be emitted into the debug loc section.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|emitDebugLocEntry
-parameter_list|(
+argument_list|(
 name|ByteStreamer
-modifier|&
+operator|&
 name|Streamer
-parameter_list|,
+argument_list|,
 specifier|const
-name|DebugLocEntry
-modifier|&
+name|DebugLocStream
+operator|::
 name|Entry
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// \brief emit a single value for the debug loc section.
-end_comment
-
-begin_decl_stmt
-name|void
-name|emitDebugLocValue
-argument_list|(
-name|ByteStreamer
 operator|&
-name|Streamer
-argument_list|,
-specifier|const
-name|DebugLocEntry
-operator|::
-name|Value
-operator|&
-name|Value
-argument_list|,
-name|unsigned
-name|PieceOffsetInBits
-operator|=
-literal|0
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// Emits an optimal (=sorted) sequence of DW_OP_pieces.
-end_comment
-
-begin_decl_stmt
-name|void
-name|emitLocPieces
-argument_list|(
-name|ByteStreamer
-operator|&
-name|Streamer
-argument_list|,
-specifier|const
-name|DITypeIdentifierMap
-operator|&
-name|Map
-argument_list|,
-name|ArrayRef
-operator|<
-name|DebugLocEntry
-operator|::
-name|Value
-operator|>
-name|Values
+name|Entry
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2882,17 +2883,19 @@ begin_comment
 comment|/// Emit the location for a debug loc entry, including the size header.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|emitDebugLocEntryLocation
-parameter_list|(
+argument_list|(
 specifier|const
-name|DebugLocEntry
-modifier|&
+name|DebugLocStream
+operator|::
 name|Entry
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|&
+name|Entry
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Find the MDNode for the given reference.
@@ -2905,9 +2908,10 @@ name|typename
 name|T
 operator|>
 name|T
+operator|*
 name|resolve
 argument_list|(
-argument|DIRef<T> Ref
+argument|TypedDINodeRef<T> Ref
 argument_list|)
 specifier|const
 block|{
@@ -2923,7 +2927,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Return the TypeIdentifierMap.
+comment|/// Return the TypeIdentifierMap.
 end_comment
 
 begin_expr_stmt
@@ -2991,7 +2995,9 @@ begin_function_decl
 name|void
 name|addSubprogramNames
 parameter_list|(
+specifier|const
 name|DISubprogram
+modifier|*
 name|SP
 parameter_list|,
 name|DIE
@@ -3091,34 +3097,6 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-specifier|const
-name|MCSymbol
-operator|*
-name|getFunctionBeginSym
-argument_list|()
-specifier|const
-block|{
-return|return
-name|FunctionBeginSym
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-specifier|const
-name|MCSymbol
-operator|*
-name|getFunctionEndSym
-argument_list|()
-specifier|const
-block|{
-return|return
-name|FunctionEndSym
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|iterator_range
 operator|<
 name|ImportedEntityMap
@@ -3175,7 +3153,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief A helper function to check whether the DIE for a given Scope is
+comment|/// A helper function to check whether the DIE for a given Scope is
 end_comment
 
 begin_comment
@@ -3194,7 +3172,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Return Label preceding the instruction.
+comment|/// Return Label preceding the instruction.
 end_comment
 
 begin_function_decl
@@ -3211,7 +3189,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Return Label immediately following the instruction.
+comment|/// Return Label immediately following the instruction.
 end_comment
 
 begin_function_decl
@@ -3226,34 +3204,6 @@ name|MI
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|// FIXME: Consider rolling ranges up into DwarfDebug since we use a single
-end_comment
-
-begin_comment
-comment|// range_base anyway, so there's no need to keep them as separate per-CU range
-end_comment
-
-begin_comment
-comment|// lists. (though one day we might end up with a range.dwo section, in which
-end_comment
-
-begin_comment
-comment|// case it'd go to DwarfFile)
-end_comment
-
-begin_function
-name|unsigned
-name|getNextRangeNumber
-parameter_list|()
-block|{
-return|return
-name|GlobalRangeCount
-operator|++
-return|;
-block|}
-end_function
 
 begin_comment
 comment|// FIXME: Sink these functions down into DwarfFile/Dwarf*Unit.

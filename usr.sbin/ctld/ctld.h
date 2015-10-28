@@ -80,6 +80,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEFAULT_CD_BLOCKSIZE
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAX_LUNS
 value|1024
 end_define
@@ -398,6 +405,9 @@ decl_stmt|;
 name|int
 name|pg_discovery_filter
 decl_stmt|;
+name|int
+name|pg_foreign
+decl_stmt|;
 name|bool
 name|pg_unassigned
 decl_stmt|;
@@ -520,6 +530,9 @@ name|target
 modifier|*
 name|p_target
 decl_stmt|;
+name|int
+name|p_foreign
+decl_stmt|;
 name|uint32_t
 name|p_ctl_port
 decl_stmt|;
@@ -583,6 +596,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|l_backend
+decl_stmt|;
+name|uint8_t
+name|l_device_type
 decl_stmt|;
 name|int
 name|l_blocksize
@@ -2044,6 +2060,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|lun_set_device_type
+parameter_list|(
+name|struct
+name|lun
+modifier|*
+name|lun
+parameter_list|,
+name|uint8_t
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|lun_set_blocksize
 parameter_list|(
 name|struct
@@ -2251,7 +2282,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kernel_lun_resize
+name|kernel_lun_modify
 parameter_list|(
 name|struct
 name|lun
@@ -2321,6 +2352,11 @@ name|struct
 name|port
 modifier|*
 name|port
+parameter_list|,
+name|struct
+name|port
+modifier|*
+name|old
 parameter_list|)
 function_decl|;
 end_function_decl

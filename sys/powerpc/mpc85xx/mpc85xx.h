@@ -15,6 +15,12 @@ directive|define
 name|_MPC85XX_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/platformvar.h>
+end_include
+
 begin_comment
 comment|/*  * Configuration control and status registers  */
 end_comment
@@ -252,6 +258,23 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+name|DECLARE_CLASS
+argument_list|(
+name|mpc85xx_platform
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|int
+name|mpc85xx_attach
+parameter_list|(
+name|platform_t
 parameter_list|)
 function_decl|;
 end_function_decl

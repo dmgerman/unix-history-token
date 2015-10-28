@@ -378,9 +378,12 @@ name|LiveIns
 expr_stmt|;
 name|MachineRegisterInfo
 argument_list|(
-argument|const MachineRegisterInfo&
+specifier|const
+name|MachineRegisterInfo
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -390,7 +393,8 @@ specifier|const
 name|MachineRegisterInfo
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:
@@ -529,8 +533,60 @@ operator|=
 name|false
 expr_stmt|;
 block|}
+comment|/// Returns true if liveness for register class @p RC should be tracked at
+comment|/// the subregister level.
 name|bool
-name|tracksSubRegLiveness
+name|shouldTrackSubRegLiveness
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|&
+name|RC
+argument_list|)
+decl|const
+block|{
+return|return
+name|subRegLivenessEnabled
+argument_list|()
+operator|&&
+name|RC
+operator|.
+name|HasDisjunctSubRegs
+return|;
+block|}
+name|bool
+name|shouldTrackSubRegLiveness
+argument_list|(
+name|unsigned
+name|VReg
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|TargetRegisterInfo
+operator|::
+name|isVirtualRegister
+argument_list|(
+name|VReg
+argument_list|)
+operator|&&
+literal|"Must pass a VReg"
+argument_list|)
+expr_stmt|;
+return|return
+name|shouldTrackSubRegLiveness
+argument_list|(
+operator|*
+name|getRegClass
+argument_list|(
+name|VReg
+argument_list|)
+argument_list|)
+return|;
+block|}
+name|bool
+name|subRegLivenessEnabled
 argument_list|()
 specifier|const
 block|{
@@ -2192,10 +2248,6 @@ name|recomputeRegClass
 parameter_list|(
 name|unsigned
 name|Reg
-parameter_list|,
-specifier|const
-name|TargetMachine
-modifier|&
 parameter_list|)
 function_decl|;
 comment|/// createVirtualRegister - Create and return a new virtual register in the
@@ -2235,7 +2287,7 @@ name|void
 name|setRegAllocationHint
 parameter_list|(
 name|unsigned
-name|Reg
+name|VReg
 parameter_list|,
 name|unsigned
 name|Type
@@ -2244,9 +2296,19 @@ name|unsigned
 name|PrefReg
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|TargetRegisterInfo
+operator|::
+name|isVirtualRegister
+argument_list|(
+name|VReg
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|RegAllocHints
 index|[
-name|Reg
+name|VReg
 index|]
 operator|.
 name|first
@@ -2255,7 +2317,7 @@ name|Type
 expr_stmt|;
 name|RegAllocHints
 index|[
-name|Reg
+name|VReg
 index|]
 operator|.
 name|second
@@ -2275,14 +2337,24 @@ name|unsigned
 operator|>
 name|getRegAllocationHint
 argument_list|(
-argument|unsigned Reg
+argument|unsigned VReg
 argument_list|)
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|TargetRegisterInfo
+operator|::
+name|isVirtualRegister
+argument_list|(
+name|VReg
+argument_list|)
+argument_list|)
+block|;
 return|return
 name|RegAllocHints
 index|[
-name|Reg
+name|VReg
 index|]
 return|;
 block|}
@@ -2292,10 +2364,20 @@ name|unsigned
 name|getSimpleHint
 argument_list|(
 name|unsigned
-name|Reg
+name|VReg
 argument_list|)
 decl|const
 block|{
+name|assert
+argument_list|(
+name|TargetRegisterInfo
+operator|::
+name|isVirtualRegister
+argument_list|(
+name|VReg
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|std
 operator|::
 name|pair
@@ -2308,7 +2390,7 @@ name|Hint
 operator|=
 name|getRegAllocationHint
 argument_list|(
-name|Reg
+name|VReg
 argument_list|)
 expr_stmt|;
 return|return
@@ -2334,6 +2416,18 @@ name|Reg
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Return true if the specified register is modified in this function.
+comment|/// This checks that no defining machine operands exist for the register or
+comment|/// any of its aliases. Definitions found on functions marked noreturn are
+comment|/// ignored.
+name|bool
+name|isPhysRegModified
+argument_list|(
+name|unsigned
+name|PhysReg
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Physical Register Use Info
 comment|//===--------------------------------------------------------------------===//
@@ -2341,9 +2435,7 @@ comment|/// isPhysRegUsed - Return true if the specified register is used in thi
 comment|/// function. Also check for clobbered aliases and registers clobbered by
 comment|/// function calls with register mask operands.
 comment|///
-comment|/// This only works after register allocation. It is primarily used by
-comment|/// PrologEpilogInserter to determine which callee-saved registers need
-comment|/// spilling.
+comment|/// This only works after register allocation.
 name|bool
 name|isPhysRegUsed
 argument_list|(
@@ -3035,19 +3127,6 @@ name|pointer
 name|pointer
 expr_stmt|;
 name|defusechain_iterator
-argument_list|(
-specifier|const
-name|defusechain_iterator
-operator|&
-name|I
-argument_list|)
-operator|:
-name|Op
-argument_list|(
-argument|I.Op
-argument_list|)
-block|{}
-name|defusechain_iterator
 argument_list|()
 operator|:
 name|Op
@@ -3561,19 +3640,6 @@ expr_stmt|;
 end_typedef
 
 begin_expr_stmt
-name|defusechain_instr_iterator
-argument_list|(
-specifier|const
-name|defusechain_instr_iterator
-operator|&
-name|I
-argument_list|)
-operator|:
-name|Op
-argument_list|(
-argument|I.Op
-argument_list|)
-block|{}
 name|defusechain_instr_iterator
 argument_list|()
 operator|:

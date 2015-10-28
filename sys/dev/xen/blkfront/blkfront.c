@@ -170,12 +170,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xenvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<geom/geom_disk.h>
 end_include
 
@@ -679,7 +673,8 @@ name|grant_ref_t
 modifier|*
 name|sg_ref
 parameter_list|,
-name|blkif_request_segment_t
+name|struct
+name|blkif_request_segment
 modifier|*
 name|sg
 parameter_list|)
@@ -3222,7 +3217,7 @@ operator|->
 name|xbd_dev
 argument_list|,
 operator|(
-name|vtomach
+name|vtophys
 argument_list|(
 name|sring_page_addr
 argument_list|)
@@ -6026,7 +6021,7 @@ name|xbd_dev
 argument_list|)
 argument_list|,
 operator|(
-name|vtomach
+name|vtophys
 argument_list|(
 name|indirectpages
 argument_list|)
@@ -6278,6 +6273,20 @@ argument_list|)
 argument_list|,
 literal|"vbd"
 argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+if|if
+condition|(
+name|xen_hvm_domain
+argument_list|()
+operator|&&
+name|xen_disable_pv_disks
 operator|!=
 literal|0
 condition|)

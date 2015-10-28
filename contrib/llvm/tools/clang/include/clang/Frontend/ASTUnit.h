@@ -254,6 +254,12 @@ name|class
 name|Preprocessor
 decl_stmt|;
 name|class
+name|PCHContainerOperations
+decl_stmt|;
+name|class
+name|PCHContainerReader
+decl_stmt|;
+name|class
 name|SourceManager
 decl_stmt|;
 name|class
@@ -1493,15 +1499,15 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_expr_stmt
 name|ASTUnit
 argument_list|(
-argument|const ASTUnit&
+specifier|const
+name|ASTUnit
+operator|&
 argument_list|)
-end_macro
-
-begin_expr_stmt
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 
@@ -1514,7 +1520,8 @@ specifier|const
 name|ASTUnit
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 end_decl_stmt
 
@@ -1539,6 +1546,14 @@ begin_decl_stmt
 name|bool
 name|Parse
 argument_list|(
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+argument_list|,
 name|std
 operator|::
 name|unique_ptr
@@ -1681,6 +1696,8 @@ name|MemoryBuffer
 operator|>
 name|getMainBufferWithPrecompiledPreamble
 argument_list|(
+argument|std::shared_ptr<PCHContainerOperations> PCHContainerOps
+argument_list|,
 argument|const CompilerInvocation&PreambleInvocationIn
 argument_list|,
 argument|bool AllowRebuild = true
@@ -1848,6 +1865,7 @@ begin_expr_stmt
 operator|~
 name|ASTUnit
 argument_list|()
+name|override
 expr_stmt|;
 end_expr_stmt
 
@@ -2906,14 +2924,10 @@ comment|/// preprocessing entities of the primary module if this is an AST file.
 end_comment
 
 begin_expr_stmt
-name|std
+name|llvm
 operator|::
-name|pair
+name|iterator_range
 operator|<
-name|PreprocessingRecord
-operator|::
-name|iterator
-operator|,
 name|PreprocessingRecord
 operator|::
 name|iterator
@@ -3117,6 +3131,14 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param PCHContainerOps - The PCHContainerOperations to use for loading and
+end_comment
+
+begin_comment
+comment|/// creating modules.
+end_comment
+
+begin_comment
 comment|/// \param Diags - The diagnostics engine to use for reporting errors; its
 end_comment
 
@@ -3143,6 +3165,8 @@ operator|>
 name|LoadFromASTFile
 argument_list|(
 argument|const std::string&Filename
+argument_list|,
+argument|const PCHContainerReader&PCHContainerRdr
 argument_list|,
 argument|IntrusiveRefCntPtr<DiagnosticsEngine> Diags
 argument_list|,
@@ -3198,15 +3222,23 @@ begin_comment
 comment|/// \c ASTUnit itself is invalid), or \c false otherwise.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|bool
 name|LoadFromCompilerInvocation
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+argument_list|,
 name|bool
 name|PrecompilePreamble
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_label
 name|public
@@ -3231,6 +3263,18 @@ end_comment
 
 begin_comment
 comment|/// source file. The ASTUnit takes ownership of the CompilerInvocation object.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param PCHContainerOps - The PCHContainerOperations to use for loading and
+end_comment
+
+begin_comment
+comment|/// creating modules.
 end_comment
 
 begin_comment
@@ -3322,6 +3366,14 @@ argument_list|(
 name|CompilerInvocation
 operator|*
 name|CI
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
 argument_list|,
 name|IntrusiveRefCntPtr
 operator|<
@@ -3421,6 +3473,18 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param PCHContainerOps - The PCHContainerOperations to use for loading and
+end_comment
+
+begin_comment
+comment|/// creating modules.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// \param Diags - The diagnostics engine to use for reporting errors; its
 end_comment
 
@@ -3451,6 +3515,8 @@ operator|>
 name|LoadFromCompilerInvocation
 argument_list|(
 argument|CompilerInvocation *CI
+argument_list|,
+argument|std::shared_ptr<PCHContainerOperations> PCHContainerOps
 argument_list|,
 argument|IntrusiveRefCntPtr<DiagnosticsEngine> Diags
 argument_list|,
@@ -3493,6 +3559,18 @@ end_comment
 
 begin_comment
 comment|/// \param ArgEnd - The end of the argument vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param PCHContainerOps - The PCHContainerOperations to use for loading and
+end_comment
+
+begin_comment
+comment|/// creating modules.
 end_comment
 
 begin_comment
@@ -3560,6 +3638,14 @@ name|char
 operator|*
 operator|*
 name|ArgEnd
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
 argument_list|,
 name|IntrusiveRefCntPtr
 operator|<
@@ -3671,6 +3757,14 @@ begin_decl_stmt
 name|bool
 name|Reparse
 argument_list|(
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+argument_list|,
 name|ArrayRef
 operator|<
 name|RemappedFile
@@ -3793,6 +3887,14 @@ argument_list|,
 name|CodeCompleteConsumer
 operator|&
 name|Consumer
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
 argument_list|,
 name|DiagnosticsEngine
 operator|&
@@ -3923,9 +4025,6 @@ name|Visibility
 argument_list|,
 name|SourceLocation
 name|ImportLoc
-argument_list|,
-name|bool
-name|Complain
 argument_list|)
 name|override
 block|{}

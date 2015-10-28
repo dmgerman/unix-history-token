@@ -103,23 +103,10 @@ block|{
 name|private
 label|:
 name|friend
-name|raw_ostream
-operator|&
-name|llvm
-operator|::
-name|operator
-operator|<<
-operator|(
-name|raw_ostream
-operator|&
-name|OS
-operator|,
-specifier|const
+name|class
 name|MachineMemOperand
-operator|&
-name|MMO
-operator|)
-expr_stmt|;
+decl_stmt|;
+comment|// For printCustom().
 comment|/// printCustom - Implement printing for PseudoSourceValue. This is called
 comment|/// from Value::print or Value's operator<<.
 comment|///

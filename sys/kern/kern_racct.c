@@ -2370,7 +2370,7 @@ operator|!
 name|racct_enable
 condition|)
 return|return;
-name|SDT_PROBE
+name|SDT_PROBE1
 argument_list|(
 name|racct
 argument_list|,
@@ -2381,14 +2381,6 @@ argument_list|,
 name|create
 argument_list|,
 name|racctp
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -2441,7 +2433,7 @@ decl_stmt|;
 name|ASSERT_RACCT_ENABLED
 argument_list|()
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE1
 argument_list|(
 name|racct
 argument_list|,
@@ -2452,14 +2444,6 @@ argument_list|,
 name|destroy
 argument_list|,
 name|racctp
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_assert
@@ -2767,7 +2751,7 @@ directive|endif
 name|ASSERT_RACCT_ENABLED
 argument_list|()
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|racct
 argument_list|,
@@ -2782,10 +2766,6 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We need proc lock to dereference p->p_ucred. 	 */
@@ -2820,7 +2800,7 @@ name|resource
 argument_list|)
 condition|)
 block|{
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|racct
 argument_list|,
@@ -2835,10 +2815,6 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2968,7 +2944,7 @@ decl_stmt|;
 name|ASSERT_RACCT_ENABLED
 argument_list|()
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|racct
 argument_list|,
@@ -2983,10 +2959,6 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|racct_adjust_resource
@@ -3125,7 +3097,7 @@ operator|!
 name|racct_enable
 condition|)
 return|return;
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|racct
 argument_list|,
@@ -3140,10 +3112,6 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We need proc lock to dereference p->p_ucred. 	 */
@@ -3229,7 +3197,7 @@ directive|endif
 name|ASSERT_RACCT_ENABLED
 argument_list|()
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|racct
 argument_list|,
@@ -3244,10 +3212,6 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We need proc lock to dereference p->p_ucred. 	 */
@@ -3361,7 +3325,7 @@ name|resource
 argument_list|)
 condition|)
 block|{
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|racct
 argument_list|,
@@ -3376,10 +3340,6 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -3540,7 +3500,7 @@ decl_stmt|;
 name|ASSERT_RACCT_ENABLED
 argument_list|()
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|racct
 argument_list|,
@@ -3555,10 +3515,6 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We need proc lock to dereference p->p_ucred. 	 */
@@ -3883,7 +3839,7 @@ operator|!
 name|racct_enable
 condition|)
 return|return;
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|racct
 argument_list|,
@@ -3898,10 +3854,6 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We need proc lock to dereference p->p_ucred. 	 */
@@ -4036,7 +3988,7 @@ decl_stmt|;
 name|ASSERT_RACCT_ENABLED
 argument_list|()
 expr_stmt|;
-name|SDT_PROBE
+name|SDT_PROBE3
 argument_list|(
 name|racct
 argument_list|,
@@ -4051,10 +4003,6 @@ argument_list|,
 name|resource
 argument_list|,
 name|amount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 ifdef|#

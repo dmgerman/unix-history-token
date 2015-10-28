@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Object/Archive.h"
 end_include
 
@@ -353,6 +359,19 @@ operator|&
 name|Obj
 return|;
 block|}
+specifier|const
+name|ObjectForArch
+operator|&
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|Obj
+return|;
+block|}
 name|bool
 name|operator
 operator|==
@@ -464,6 +483,25 @@ literal|0
 argument_list|)
 return|;
 block|}
+name|iterator_range
+operator|<
+name|object_iterator
+operator|>
+name|objects
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|begin_objects
+argument_list|()
+argument_list|,
+name|end_objects
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|uint32_t
 name|getNumberOfObjects
 argument_list|()
@@ -499,7 +537,7 @@ name|MachOObjectFile
 operator|>>
 name|getObjectForArch
 argument_list|(
-argument|Triple::ArchType Arch
+argument|StringRef ArchName
 argument_list|)
 specifier|const
 block|; }

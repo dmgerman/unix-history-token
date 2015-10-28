@@ -40,6 +40,65 @@ value|__asm __volatile("msr	" __STRING(reg) ", %0" : : "r"((uint64_t)val))
 end_define
 
 begin_comment
+comment|/* CNTHCTL_EL2 - Counter-timer Hypervisor Control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CNTHCTL_EVNTI_MASK
+value|(0xf<< 4)
+end_define
+
+begin_comment
+comment|/* Bit to trigger event stream */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CNTHCTL_EVNTDIR
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* Control transition trigger bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CNTHCTL_EVNTEN
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* Enable event stream */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CNTHCTL_EL1PCEN
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* Allow EL0/1 physical timer access */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CNTHCTL_EL1PCTEN
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/*Allow EL0/1 physical counter access*/
+end_comment
+
+begin_comment
 comment|/* CPACR_EL1 */
 end_comment
 
@@ -1180,11 +1239,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|TCR_T1SZ
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< TCR_T1SZ_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCR_T0SZ
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< TCR_T0SZ_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TCR_TxSZ
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)<< TCR_T1SZ_SHIFT) | ((x)<< TCR_T0SZ_SHIFT))
+value|(TCR_T1SZ(x) | TCR_T0SZ(x))
 end_define
 
 begin_comment

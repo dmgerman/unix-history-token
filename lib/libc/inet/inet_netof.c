@@ -90,12 +90,10 @@ begin_function
 name|in_addr_t
 name|inet_netof
 parameter_list|(
-name|in
-parameter_list|)
 name|struct
 name|in_addr
 name|in
-decl_stmt|;
+parameter_list|)
 block|{
 name|in_addr_t
 name|i

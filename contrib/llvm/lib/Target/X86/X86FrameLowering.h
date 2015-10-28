@@ -70,13 +70,16 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCSymbol
+name|MachineInstrBuilder
 decl_stmt|;
 name|class
-name|X86TargetMachine
+name|MCCFIInstruction
 decl_stmt|;
 name|class
 name|X86Subtarget
+decl_stmt|;
+name|class
+name|X86RegisterInfo
 decl_stmt|;
 name|class
 name|X86FrameLowering
@@ -86,29 +89,51 @@ name|TargetFrameLowering
 block|{
 name|public
 operator|:
-name|explicit
 name|X86FrameLowering
 argument_list|(
-argument|StackDirection D
+argument|const X86Subtarget&STI
 argument_list|,
-argument|unsigned StackAl
-argument_list|,
-argument|int LAO
+argument|unsigned StackAlignOverride
 argument_list|)
-operator|:
-name|TargetFrameLowering
-argument_list|(
-argument|StackGrowsDown
-argument_list|,
-argument|StackAl
-argument_list|,
-argument|LAO
-argument_list|)
-block|{}
+block|;
+comment|// Cached subtarget predicates.
+specifier|const
+name|X86Subtarget
+operator|&
+name|STI
+block|;
+specifier|const
+name|TargetInstrInfo
+operator|&
+name|TII
+block|;
+specifier|const
+name|X86RegisterInfo
+operator|*
+name|TRI
+block|;
+name|unsigned
+name|SlotSize
+block|;
+comment|/// Is64Bit implies that x86_64 instructions are available.
+name|bool
+name|Is64Bit
+block|;
+name|bool
+name|IsLP64
+block|;
+comment|/// True if the 64-bit frame or stack pointer should be used. True for most
+comment|/// 64-bit targets with the exception of x32. If this is false, 32-bit
+comment|/// instruction operands should be used to manipulate StackPtr and FramePtr.
+name|bool
+name|Uses64BitFramePtr
+block|;
+name|unsigned
+name|StackPtr
+block|;
 comment|/// Emit a call to the target's stack probe function. This is required for all
 comment|/// large stack allocations on Windows. The caller is required to materialize
 comment|/// the number of bytes to probe in RAX/EAX.
-specifier|static
 name|void
 name|emitStackProbeCall
 argument_list|(
@@ -120,6 +145,7 @@ argument|MachineBasicBlock::iterator MBBI
 argument_list|,
 argument|DebugLoc DL
 argument_list|)
+specifier|const
 block|;
 name|void
 name|emitCalleeSavedFrameMoves
@@ -138,6 +164,8 @@ name|void
 name|emitPrologue
 argument_list|(
 argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 name|override
@@ -156,6 +184,8 @@ name|void
 name|adjustForSegmentedStacks
 argument_list|(
 argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&PrologueMBB
 argument_list|)
 specifier|const
 name|override
@@ -164,14 +194,18 @@ name|void
 name|adjustForHiPEPrologue
 argument_list|(
 argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&PrologueMBB
 argument_list|)
 specifier|const
 name|override
 block|;
 name|void
-name|processFunctionBeforeCalleeSavedScan
+name|determineCalleeSaves
 argument_list|(
 argument|MachineFunction&MF
+argument_list|,
+argument|BitVector&SavedRegs
 argument_list|,
 argument|RegScavenger *RS = nullptr
 argument_list|)
@@ -305,6 +339,57 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// Check the instruction before/after the passed instruction. If
+comment|/// it is an ADD/SUB/LEA instruction it is deleted argument and the
+comment|/// stack adjustment is returned as a positive value for ADD/LEA and
+comment|/// a negative for SUB.
+name|int
+name|mergeSPUpdates
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator&MBBI
+argument_list|,
+argument|bool doMergeWithPrevious
+argument_list|)
+specifier|const
+block|;
+comment|/// Emit a series of instructions to increment / decrement the stack
+comment|/// pointer by a constant value.
+name|void
+name|emitSPUpdate
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator&MBBI
+argument_list|,
+argument|int64_t NumBytes
+argument_list|,
+argument|bool InEpilogue
+argument_list|)
+specifier|const
+block|;
+comment|/// Check that LEA can be used on SP in an epilogue sequence for \p MF.
+name|bool
+name|canUseLEAForSPInEpilogue
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+comment|/// Check whether or not the given \p MBB can be used as a epilogue
+comment|/// for the target.
+comment|/// The epilogue will be inserted before the first terminator of that block.
+comment|/// This method is used by the shrink-wrapping pass to decide if
+comment|/// \p MBB will be correctly handled by the target.
+name|bool
+name|canUseAsEpilogue
+argument_list|(
+argument|const MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+name|override
+block|;
 name|private
 operator|:
 comment|/// convertArgMovsToPushes - This method tries to convert a call sequence
@@ -321,6 +406,57 @@ argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|,
 argument|uint64_t Amount
+argument_list|)
+specifier|const
+block|;
+name|uint64_t
+name|calculateMaxStackAlign
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+comment|/// Wraps up getting a CFI index and building a MachineInstr for it.
+name|void
+name|BuildCFI
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MBBI
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|MCCFIInstruction CFIInst
+argument_list|)
+specifier|const
+block|;
+comment|/// Aligns the stack pointer by ANDing it with -MaxAlign.
+name|void
+name|BuildStackAlignAND
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MBBI
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|uint64_t MaxAlign
+argument_list|)
+specifier|const
+block|;
+comment|/// Adjusts the stack pointer using LEA, SUB, or ADD.
+name|MachineInstrBuilder
+name|BuildStackAdjustment
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MBBI
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|int64_t Offset
+argument_list|,
+argument|bool InEpilogue
 argument_list|)
 specifier|const
 block|; }

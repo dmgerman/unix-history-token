@@ -952,7 +952,7 @@ begin_define
 define|#
 directive|define
 name|IPFW_RULE_CNTR_SIZE
-value|(2 * sizeof(counter_u64_t))
+value|(2 * sizeof(uint64_t))
 end_define
 
 begin_endif

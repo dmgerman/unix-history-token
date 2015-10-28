@@ -95,32 +95,8 @@ decl_stmt|;
 name|class
 name|Mangler
 block|{
-name|public
-label|:
-enum|enum
-name|ManglerPrefixTy
-block|{
-name|Default
-block|,
-comment|///< Emit default string before each symbol.
-name|Private
-block|,
-comment|///< Emit "private" prefix before each symbol.
-name|LinkerPrivate
-comment|///< Emit "linker private" prefix before each symbol.
-block|}
-enum|;
-name|private
-label|:
-specifier|const
-name|DataLayout
-modifier|*
-name|DL
-decl_stmt|;
-comment|/// AnonGlobalIDs - We need to give global values the same name every time
-comment|/// they are mangled.  This keeps track of the number we give to anonymous
-comment|/// ones.
-comment|///
+comment|/// We need to give global values the same name every time they are mangled.
+comment|/// This keeps track of the number we give to anonymous ones.
 name|mutable
 name|DenseMap
 operator|<
@@ -132,8 +108,7 @@ name|unsigned
 operator|>
 name|AnonGlobalIDs
 expr_stmt|;
-comment|/// NextAnonGlobalID - This simple counter is used to unique value names.
-comment|///
+comment|/// This simple counter is used to unique value names.
 name|mutable
 name|unsigned
 name|NextAnonGlobalID
@@ -141,18 +116,8 @@ decl_stmt|;
 name|public
 label|:
 name|Mangler
-argument_list|(
-specifier|const
-name|DataLayout
-operator|*
-name|DL
-argument_list|)
+argument_list|()
 operator|:
-name|DL
-argument_list|(
-name|DL
-argument_list|)
-operator|,
 name|NextAnonGlobalID
 argument_list|(
 literal|1
@@ -194,27 +159,26 @@ decl|const
 decl_stmt|;
 comment|/// Print the appropriate prefix and the specified name as the global variable
 comment|/// name. GVName must not be empty.
+specifier|static
 name|void
 name|getNameWithPrefix
-argument_list|(
+parameter_list|(
 name|raw_ostream
-operator|&
+modifier|&
 name|OS
-argument_list|,
+parameter_list|,
 specifier|const
 name|Twine
-operator|&
+modifier|&
 name|GVName
-argument_list|,
-name|ManglerPrefixTy
-name|PrefixTy
-operator|=
-name|Mangler
-operator|::
-name|Default
-argument_list|)
-decl|const
-decl_stmt|;
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|)
+function_decl|;
+specifier|static
 name|void
 name|getNameWithPrefix
 argument_list|(
@@ -230,14 +194,11 @@ name|Twine
 operator|&
 name|GVName
 argument_list|,
-name|ManglerPrefixTy
-name|PrefixTy
-operator|=
-name|Mangler
-operator|::
-name|Default
+specifier|const
+name|DataLayout
+operator|&
+name|DL
 argument_list|)
-decl|const
 decl_stmt|;
 block|}
 empty_stmt|;

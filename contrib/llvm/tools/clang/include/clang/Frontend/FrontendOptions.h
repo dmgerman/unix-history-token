@@ -215,6 +215,8 @@ name|IK_OpenCL
 block|,
 name|IK_CUDA
 block|,
+name|IK_PreprocessedCuda
+block|,
 name|IK_AST
 block|,
 name|IK_LLVM_IR

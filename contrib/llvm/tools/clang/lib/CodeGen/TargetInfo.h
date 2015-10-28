@@ -183,11 +183,11 @@ operator|*
 name|Info
 return|;
 block|}
-comment|/// SetTargetAttributes - Provides a convenient hook to handle extra
+comment|/// setTargetAttributes - Provides a convenient hook to handle extra
 comment|/// target-specific attributes for the given global.
 name|virtual
 name|void
-name|SetTargetAttributes
+name|setTargetAttributes
 argument_list|(
 specifier|const
 name|Decl
@@ -208,7 +208,7 @@ name|M
 argument_list|)
 decl|const
 block|{}
-comment|/// EmitTargetMD - Provides a convenient hook to handle extra
+comment|/// emitTargetMD - Provides a convenient hook to handle extra
 comment|/// target-specific metadata for the given global.
 name|virtual
 name|void
@@ -605,22 +605,6 @@ name|Opt
 argument_list|)
 decl|const
 block|{}
-comment|/// Gets the target-specific default alignment used when an 'aligned' clause
-comment|/// is used with a 'simd' OpenMP directive without specifying a specific
-comment|/// alignment.
-name|virtual
-name|unsigned
-name|getOpenMPSimdDefaultAlignment
-argument_list|(
-name|QualType
-name|Type
-argument_list|)
-decl|const
-block|{
-return|return
-literal|0
-return|;
-block|}
 block|}
 empty_stmt|;
 block|}

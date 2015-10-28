@@ -222,10 +222,6 @@ expr|,
 name|isSubRegion
 operator|)
 block|{    }
-operator|~
-name|MachineRegionNode
-argument_list|()
-block|{ }
 name|bool
 name|operator
 operator|==
@@ -341,10 +337,10 @@ name|explicit
 name|MachineRegionInfo
 argument_list|()
 block|;
-name|virtual
 operator|~
 name|MachineRegionInfo
 argument_list|()
+name|override
 block|;
 comment|// updateStatistics - Update statistic about created regions.
 name|void
@@ -397,6 +393,7 @@ block|;
 operator|~
 name|MachineRegionInfoPass
 argument_list|()
+name|override
 block|;
 name|MachineRegionInfo
 operator|&
@@ -830,21 +827,36 @@ return|;
 block|}
 expr|}
 block|;
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class RegionBase<RegionTraits<MachineFunction>>
-argument_list|)
+specifier|extern
+name|template
+name|class
+name|RegionBase
+operator|<
+name|RegionTraits
+operator|<
+name|MachineFunction
+operator|>>
 block|;
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class RegionNodeBase<RegionTraits<MachineFunction>>
-argument_list|)
+specifier|extern
+name|template
+name|class
+name|RegionNodeBase
+operator|<
+name|RegionTraits
+operator|<
+name|MachineFunction
+operator|>>
 block|;
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class RegionInfoBase<RegionTraits<MachineFunction>>
-argument_list|)
-block|;  }
+specifier|extern
+name|template
+name|class
+name|RegionInfoBase
+operator|<
+name|RegionTraits
+operator|<
+name|MachineFunction
+operator|>>
+block|; }
 end_decl_stmt
 
 begin_endif

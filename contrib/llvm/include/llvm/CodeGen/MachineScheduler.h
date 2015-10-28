@@ -1375,10 +1375,10 @@ argument_list|(
 argument|BotPressure
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|ScheduleDAGMILive
 argument_list|()
+name|override
 block|;
 comment|/// Return true if this DAG supports VReg liveness and RegPressure.
 name|bool
@@ -3312,10 +3312,10 @@ argument_list|,
 literal|"TopQ"
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|PostGenericScheduler
 argument_list|()
+name|override
 block|{}
 name|void
 name|initPolicy

@@ -17,5 +17,12 @@ name|_PATH_PCIVDB
 value|"/usr/share/misc/pci_vendors"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_LPCIVDB
+value|"/usr/local/share/pciids/pci.ids"
+end_define
+
 end_unit
 

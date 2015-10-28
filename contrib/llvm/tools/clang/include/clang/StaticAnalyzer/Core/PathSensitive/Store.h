@@ -801,7 +801,7 @@ argument|SVal val
 argument_list|)
 name|override
 block|;
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()

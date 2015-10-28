@@ -66,19 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Path.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cstdio>
+file|<string>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
 name|namespace
 name|sys
 block|{
@@ -120,14 +120,25 @@ comment|/// process, print a stack trace and then exit.
 comment|/// @brief Print a stack trace if a fatal signal occurs.
 name|void
 name|PrintStackTraceOnErrorSignal
+parameter_list|(
+name|bool
+name|DisableCrashReporting
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// Disable all system dialog boxes that appear when the process crashes.
+name|void
+name|DisableSystemDialogsOnCrash
 parameter_list|()
 function_decl|;
-comment|/// \brief Print the stack trace using the given \c FILE object.
+comment|/// \brief Print the stack trace using the given \c raw_ostream object.
 name|void
 name|PrintStackTrace
 parameter_list|(
-name|FILE
-modifier|*
+name|raw_ostream
+modifier|&
+name|OS
 parameter_list|)
 function_decl|;
 comment|/// AddSignalHandler - Add a function to be called when an abort/kill signal

@@ -292,6 +292,37 @@ argument_list|)
 expr_stmt|;
 end_typedef
 
+begin_function_decl
+name|int
+name|atexit_b
+parameter_list|(
+name|atexit_block
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|__cxa_atexit
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Register the function described by 'fptr' to be called at application  * exit or owning shared object unload time. This is a helper function  * for atexit and __cxa_atexit.  */
 end_comment

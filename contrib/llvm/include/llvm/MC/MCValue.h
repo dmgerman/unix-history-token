@@ -93,10 +93,11 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|/// MCValue - This represents an "assembler immediate".  In its most
-comment|/// general form, this can hold ":Kind:(SymbolA - SymbolB + imm64)".
-comment|/// Not all targets supports relocations of this general form, but we
-comment|/// need to represent this anyway.
+comment|/// \brief This represents an "assembler immediate".
+comment|///
+comment|///  In its most general form, this can hold ":Kind:(SymbolA - SymbolB +
+comment|///  imm64)".  Not all targets supports relocations of this general form, but we
+comment|///  need to represent this anyway.
 comment|///
 comment|/// In general both SymbolA and SymbolB will also have a modifier
 comment|/// analogous to the top-level Kind. Current targets are not expected
@@ -169,7 +170,7 @@ return|return
 name|RefKind
 return|;
 block|}
-comment|/// isAbsolute - Is this an absolute (as opposed to relocatable) value.
+comment|/// \brief Is this an absolute (as opposed to relocatable) value.
 name|bool
 name|isAbsolute
 argument_list|()
@@ -183,22 +184,17 @@ operator|!
 name|SymB
 return|;
 block|}
-comment|/// print - Print the value to the stream \p OS.
+comment|/// \brief Print the value to the stream \p OS.
 name|void
 name|print
 argument_list|(
 name|raw_ostream
 operator|&
 name|OS
-argument_list|,
-specifier|const
-name|MCAsmInfo
-operator|*
-name|MAI
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// dump - Print the value to stderr.
+comment|/// \brief Print the value to stderr.
 name|void
 name|dump
 argument_list|()

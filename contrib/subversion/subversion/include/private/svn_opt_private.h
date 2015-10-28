@@ -52,7 +52,7 @@ block|{
 endif|#
 directive|endif
 comment|/* __cplusplus */
-comment|/* Extract the peg revision, if any, from UTF8_TARGET.  *  * If PEG_REVISION is not NULL, return the peg revision in *PEG_REVISION.  * *PEG_REVISION will be an empty string if no peg revision is found.  * Return the true target portion in *TRUE_TARGET.  *  * UTF8_TARGET need not be canonical. *TRUE_TARGET will not be canonical  * unless UTF8_TARGET is.  *  * It is an error if *TRUE_TARGET results in the empty string after the  * split, which happens in case UTF8_TARGET has a leading '@' character  * with no additional '@' characters to escape the first '@'.  *  * Note that *PEG_REVISION will still contain the '@' symbol as the first  * character if a peg revision was found. If a trailing '@' symbol was  * used to escape other '@' characters in UTF8_TARGET, *PEG_REVISION will  * point to the string "@", containing only a single character.  *  * All allocations are done in POOL.  */
+comment|/* Extract the peg revision, if any, from UTF8_TARGET.  *  * If PEG_REVISION is not NULL, return the peg revision in *PEG_REVISION.  * *PEG_REVISION will be an empty string if no peg revision is found.  * Return the true target portion in *TRUE_TARGET.  *  * UTF8_TARGET need not be canonical. *TRUE_TARGET will not be canonical  * unless UTF8_TARGET is.  *  * Note that *PEG_REVISION will still contain the '@' symbol as the first  * character if a peg revision was found. If a trailing '@' symbol was  * used to escape other '@' characters in UTF8_TARGET, *PEG_REVISION will  * point to the string "@", containing only a single character.  *  * All allocations are done in POOL.  */
 name|svn_error_t
 modifier|*
 name|svn_opt__split_arg_at_peg_revision

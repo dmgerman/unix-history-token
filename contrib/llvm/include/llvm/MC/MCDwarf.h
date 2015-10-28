@@ -157,54 +157,49 @@ decl_stmt|;
 name|class
 name|SMLoc
 decl_stmt|;
-comment|/// MCDwarfFile - Instances of this class represent the name of the dwarf
+comment|/// \brief Instances of this class represent the name of the dwarf
 comment|/// .file directive and its associated dwarf file number in the MC file,
-comment|/// and MCDwarfFile's are created and unique'd by the MCContext class where
+comment|/// and MCDwarfFile's are created and uniqued by the MCContext class where
 comment|/// the file number for each is its index into the vector of DwarfFiles (note
 comment|/// index 0 is not used and not a valid dwarf file number).
 struct|struct
 name|MCDwarfFile
 block|{
-comment|// Name - the base name of the file without its directory path.
+comment|// \brief The base name of the file without its directory path.
 comment|// The StringRef references memory allocated in the MCContext.
 name|std
 operator|::
 name|string
 name|Name
 expr_stmt|;
-comment|// DirIndex - the index into the list of directory names for this file name.
+comment|// \brief The index into the list of directory names for this file name.
 name|unsigned
 name|DirIndex
 decl_stmt|;
 block|}
 struct|;
-comment|/// MCDwarfLoc - Instances of this class represent the information from a
+comment|/// \brief Instances of this class represent the information from a
 comment|/// dwarf .loc directive.
 name|class
 name|MCDwarfLoc
 block|{
-comment|// FileNum - the file number.
-name|unsigned
+name|uint32_t
 name|FileNum
 decl_stmt|;
-comment|// Line - the line number.
-name|unsigned
+name|uint32_t
 name|Line
 decl_stmt|;
-comment|// Column - the column position.
-name|unsigned
+name|uint16_t
 name|Column
 decl_stmt|;
 comment|// Flags (see #define's below)
-name|unsigned
+name|uint8_t
 name|Flags
 decl_stmt|;
-comment|// Isa
-name|unsigned
+name|uint8_t
 name|Isa
 decl_stmt|;
-comment|// Discriminator
-name|unsigned
+name|uint32_t
 name|Discriminator
 decl_stmt|;
 comment|// Flag that indicates the initial value of the is_stmt_start flag.
@@ -288,7 +283,7 @@ comment|// Allow the default copy constructor and assignment operator to be used
 comment|// for an MCDwarfLoc object.
 name|public
 operator|:
-comment|/// getFileNum - Get the FileNum of this MCDwarfLoc.
+comment|/// \brief Get the FileNum of this MCDwarfLoc.
 name|unsigned
 name|getFileNum
 argument_list|()
@@ -298,7 +293,7 @@ return|return
 name|FileNum
 return|;
 block|}
-comment|/// getLine - Get the Line of this MCDwarfLoc.
+comment|/// \brief Get the Line of this MCDwarfLoc.
 name|unsigned
 name|getLine
 argument_list|()
@@ -308,7 +303,7 @@ return|return
 name|Line
 return|;
 block|}
-comment|/// getColumn - Get the Column of this MCDwarfLoc.
+comment|/// \brief Get the Column of this MCDwarfLoc.
 name|unsigned
 name|getColumn
 argument_list|()
@@ -318,7 +313,7 @@ return|return
 name|Column
 return|;
 block|}
-comment|/// getFlags - Get the Flags of this MCDwarfLoc.
+comment|/// \brief Get the Flags of this MCDwarfLoc.
 name|unsigned
 name|getFlags
 argument_list|()
@@ -328,7 +323,7 @@ return|return
 name|Flags
 return|;
 block|}
-comment|/// getIsa - Get the Isa of this MCDwarfLoc.
+comment|/// \brief Get the Isa of this MCDwarfLoc.
 name|unsigned
 name|getIsa
 argument_list|()
@@ -338,7 +333,7 @@ return|return
 name|Isa
 return|;
 block|}
-comment|/// getDiscriminator - Get the Discriminator of this MCDwarfLoc.
+comment|/// \brief Get the Discriminator of this MCDwarfLoc.
 name|unsigned
 name|getDiscriminator
 argument_list|()
@@ -348,7 +343,7 @@ return|return
 name|Discriminator
 return|;
 block|}
-comment|/// setFileNum - Set the FileNum of this MCDwarfLoc.
+comment|/// \brief Set the FileNum of this MCDwarfLoc.
 name|void
 name|setFileNum
 parameter_list|(
@@ -361,7 +356,7 @@ operator|=
 name|fileNum
 expr_stmt|;
 block|}
-comment|/// setLine - Set the Line of this MCDwarfLoc.
+comment|/// \brief Set the Line of this MCDwarfLoc.
 name|void
 name|setLine
 parameter_list|(
@@ -374,7 +369,7 @@ operator|=
 name|line
 expr_stmt|;
 block|}
-comment|/// setColumn - Set the Column of this MCDwarfLoc.
+comment|/// \brief Set the Column of this MCDwarfLoc.
 name|void
 name|setColumn
 parameter_list|(
@@ -382,12 +377,19 @@ name|unsigned
 name|column
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|column
+operator|<=
+name|UINT16_MAX
+argument_list|)
+expr_stmt|;
 name|Column
 operator|=
 name|column
 expr_stmt|;
 block|}
-comment|/// setFlags - Set the Flags of this MCDwarfLoc.
+comment|/// \brief Set the Flags of this MCDwarfLoc.
 name|void
 name|setFlags
 parameter_list|(
@@ -395,12 +397,19 @@ name|unsigned
 name|flags
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|flags
+operator|<=
+name|UINT8_MAX
+argument_list|)
+expr_stmt|;
 name|Flags
 operator|=
 name|flags
 expr_stmt|;
 block|}
-comment|/// setIsa - Set the Isa of this MCDwarfLoc.
+comment|/// \brief Set the Isa of this MCDwarfLoc.
 name|void
 name|setIsa
 parameter_list|(
@@ -408,12 +417,19 @@ name|unsigned
 name|isa
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|isa
+operator|<=
+name|UINT8_MAX
+argument_list|)
+expr_stmt|;
 name|Isa
 operator|=
 name|isa
 expr_stmt|;
 block|}
-comment|/// setDiscriminator - Set the Discriminator of this MCDwarfLoc.
+comment|/// \brief Set the Discriminator of this MCDwarfLoc.
 name|void
 name|setDiscriminator
 parameter_list|(
@@ -428,7 +444,7 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
-comment|/// MCLineEntry - Instances of this class represent the line information for
+comment|/// \brief Instances of this class represent the line information for
 comment|/// the dwarf line table entries.  Which is created after a machine
 comment|/// instruction is assembled and uses an address from a temporary label
 comment|/// created at the current address in the current section and the info from
@@ -488,23 +504,22 @@ name|MCObjectStreamer
 operator|*
 name|MCOS
 argument_list|,
-specifier|const
 name|MCSection
 operator|*
 name|Section
 argument_list|)
 block|; }
 decl_stmt|;
-comment|/// MCLineSection - Instances of this class represent the line information
-comment|/// for a compile unit where machine instructions have been assembled after seeing
-comment|/// .loc directives.  This is the information used to build the dwarf line
+comment|/// \brief Instances of this class represent the line information for a compile
+comment|/// unit where machine instructions have been assembled after seeing .loc
+comment|/// directives.  This is the information used to build the dwarf line
 comment|/// table for a section.
 name|class
 name|MCLineSection
 block|{
 name|public
 label|:
-comment|// addLineEntry - adds an entry to this MCLineSection's line entries
+comment|// \brief Add an entry to this MCLineSection's line entries.
 name|void
 name|addLineEntry
 parameter_list|(
@@ -513,7 +528,6 @@ name|MCLineEntry
 modifier|&
 name|LineEntry
 parameter_list|,
-specifier|const
 name|MCSection
 modifier|*
 name|Sec
@@ -554,7 +568,6 @@ expr_stmt|;
 typedef|typedef
 name|MapVector
 operator|<
-specifier|const
 name|MCSection
 operator|*
 operator|,

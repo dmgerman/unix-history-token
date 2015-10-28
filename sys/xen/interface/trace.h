@@ -223,6 +223,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TRC_HVM_EMUL
+value|0x00084000
+end_define
+
+begin_comment
+comment|/* emulated devices */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TRC_SCHED_MIN
 value|0x00021000
 end_define
@@ -252,6 +263,91 @@ end_define
 begin_comment
 comment|/* More inclusive scheduling */
 end_comment
+
+begin_comment
+comment|/*  * The highest 3 bits of the last 12 bits of TRC_SCHED_CLASS above are  * reserved for encoding what scheduler produced the information. The  * actual event is encoded in the last 9 bits.  *  * This means we have 8 scheduling IDs available (which means at most 8  * schedulers generating events) and, in each scheduler, up to 512  * different events.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRC_SCHED_ID_BITS
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_SCHED_ID_SHIFT
+value|(TRC_SUBCLS_SHIFT - TRC_SCHED_ID_BITS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_SCHED_ID_MASK
+value|(((1UL<<TRC_SCHED_ID_BITS) - 1)<< TRC_SCHED_ID_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_SCHED_EVT_MASK
+value|(~(TRC_SCHED_ID_MASK))
+end_define
+
+begin_comment
+comment|/* Per-scheduler IDs, to identify scheduler specific events */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRC_SCHED_CSCHED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_SCHED_CSCHED2
+value|1
+end_define
+
+begin_comment
+comment|/* #define XEN_SCHEDULER_SEDF 2 (Removed) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRC_SCHED_ARINC653
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_SCHED_RTDS
+value|4
+end_define
+
+begin_comment
+comment|/* Per-scheduler tracing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRC_SCHED_CLASS_EVT
+parameter_list|(
+name|_c
+parameter_list|,
+name|_e
+parameter_list|)
+define|\
+value|( ( TRC_SCHED_CLASS | \       ((TRC_SCHED_##_c<< TRC_SCHED_ID_SHIFT)& TRC_SCHED_ID_MASK) ) + \     (_e& TRC_SCHED_EVT_MASK) )
+end_define
 
 begin_comment
 comment|/* Trace classes for Hardware */
@@ -489,89 +585,145 @@ end_define
 begin_define
 define|#
 directive|define
+name|TRC_PV_ENTRY
+value|0x00201000
+end_define
+
+begin_comment
+comment|/* Hypervisor entry points for PV guests. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRC_PV_SUBCALL
+value|0x00202000
+end_define
+
+begin_comment
+comment|/* Sub-call in a multicall hypercall */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TRC_PV_HYPERCALL
-value|(TRC_PV +  1)
+value|(TRC_PV_ENTRY +  1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TRC_PV_TRAP
-value|(TRC_PV +  3)
+value|(TRC_PV_ENTRY +  3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TRC_PV_PAGE_FAULT
-value|(TRC_PV +  4)
+value|(TRC_PV_ENTRY +  4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TRC_PV_FORCED_INVALID_OP
-value|(TRC_PV +  5)
+value|(TRC_PV_ENTRY +  5)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TRC_PV_EMULATE_PRIVOP
-value|(TRC_PV +  6)
+value|(TRC_PV_ENTRY +  6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TRC_PV_EMULATE_4GB
-value|(TRC_PV +  7)
+value|(TRC_PV_ENTRY +  7)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TRC_PV_MATH_STATE_RESTORE
-value|(TRC_PV +  8)
+value|(TRC_PV_ENTRY +  8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TRC_PV_PAGING_FIXUP
-value|(TRC_PV +  9)
+value|(TRC_PV_ENTRY +  9)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TRC_PV_GDT_LDT_MAPPING_FAULT
-value|(TRC_PV + 10)
+value|(TRC_PV_ENTRY + 10)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TRC_PV_PTWR_EMULATION
-value|(TRC_PV + 11)
+value|(TRC_PV_ENTRY + 11)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TRC_PV_PTWR_EMULATION_PAE
-value|(TRC_PV + 12)
+value|(TRC_PV_ENTRY + 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_PV_HYPERCALL_V2
+value|(TRC_PV_ENTRY + 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_PV_HYPERCALL_SUBCALL
+value|(TRC_PV_SUBCALL + 14)
 end_define
 
 begin_comment
-comment|/* Indicates that addresses in trace record are 64 bits */
+comment|/*  * TRC_PV_HYPERCALL_V2 format  *  * Only some of the hypercall argument are recorded. Bit fields A0 to  * A5 in the first extra word are set if the argument is present and  * the arguments themselves are packed sequentially in the following  * words.  *  * The TRC_64_FLAG bit is not set for these events (even if there are  * 64-bit arguments in the record).  *  * Word  * 0    bit 31 30|29 28|27 26|25 24|23 22|21 20|19 ... 0  *          A5   |A4   |A3   |A2   |A1   |A0   |Hypercall op  * 1    First 32 bit (or low word of first 64 bit) arg in record  * 2    Second 32 bit (or high word of first 64 bit) arg in record  * ...  *  * A0-A5 bitfield values:  *  *   00b  Argument not present  *   01b  32-bit argument present  *   10b  64-bit argument present  *   11b  Reserved  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TRC_64_FLAG
-value|(0x100)
+name|TRC_PV_HYPERCALL_V2_ARG_32
+parameter_list|(
+name|i
+parameter_list|)
+value|(0x1<< (20 + 2*(i)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_PV_HYPERCALL_V2_ARG_64
+parameter_list|(
+name|i
+parameter_list|)
+value|(0x2<< (20 + 2*(i)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_PV_HYPERCALL_V2_ARG_MASK
+value|(0xfff00000)
 end_define
 
 begin_define
@@ -992,6 +1144,129 @@ value|(TRC_HVM_HANDLER + 0x217)
 end_define
 
 begin_comment
+comment|/* Trace events for emulated devices */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_EMUL_HPET_START_TIMER
+value|(TRC_HVM_EMUL + 0x1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_EMUL_PIT_START_TIMER
+value|(TRC_HVM_EMUL + 0x2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_EMUL_RTC_START_TIMER
+value|(TRC_HVM_EMUL + 0x3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_EMUL_LAPIC_START_TIMER
+value|(TRC_HVM_EMUL + 0x4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_EMUL_HPET_STOP_TIMER
+value|(TRC_HVM_EMUL + 0x5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_EMUL_PIT_STOP_TIMER
+value|(TRC_HVM_EMUL + 0x6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_EMUL_RTC_STOP_TIMER
+value|(TRC_HVM_EMUL + 0x7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_EMUL_LAPIC_STOP_TIMER
+value|(TRC_HVM_EMUL + 0x8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_EMUL_PIT_TIMER_CB
+value|(TRC_HVM_EMUL + 0x9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_EMUL_LAPIC_TIMER_CB
+value|(TRC_HVM_EMUL + 0xA)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_EMUL_PIC_INT_OUTPUT
+value|(TRC_HVM_EMUL + 0xB)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_EMUL_PIC_KICK
+value|(TRC_HVM_EMUL + 0xC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_EMUL_PIC_INTACK
+value|(TRC_HVM_EMUL + 0xD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_EMUL_PIC_POSEDGE
+value|(TRC_HVM_EMUL + 0xE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_EMUL_PIC_NEGEDGE
+value|(TRC_HVM_EMUL + 0xF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_EMUL_PIC_PEND_IRQ_CALL
+value|(TRC_HVM_EMUL + 0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_EMUL_LAPIC_PIC_INTR
+value|(TRC_HVM_EMUL + 0x11)
+end_define
+
+begin_comment
 comment|/* trace events for per class */
 end_comment
 
@@ -1075,6 +1350,21 @@ directive|define
 name|TRC_HW_IRQ_HANDLED
 value|(TRC_HW_IRQ + 0x8)
 end_define
+
+begin_comment
+comment|/*  * Event Flags  *  * Some events (e.g, TRC_PV_TRAP and TRC_HVM_IOMEM_READ) have multiple  * record formats.  These event flags distinguish between the  * different formats.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRC_64_FLAG
+value|0x100
+end_define
+
+begin_comment
+comment|/* Addresses are 64 bits (instead of 32 bits) */
+end_comment
 
 begin_comment
 comment|/* This structure represents a single trace buffer record. */
@@ -1194,7 +1484,7 @@ comment|/* __XEN_PUBLIC_TRACE_H__ */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit

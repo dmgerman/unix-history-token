@@ -432,7 +432,7 @@ argument_list|)
 expr_stmt|;
 name|xo_open_container
 argument_list|(
-literal|"data"
+literal|"data2"
 argument_list|)
 expr_stmt|;
 name|xo_open_container
@@ -480,7 +480,7 @@ expr_stmt|;
 block|}
 name|xo_close_container
 argument_list|(
-literal|"data"
+literal|"data2"
 argument_list|)
 expr_stmt|;
 name|xo_emit
@@ -490,7 +490,7 @@ argument_list|)
 expr_stmt|;
 name|xo_open_container
 argument_list|(
-literal|"data"
+literal|"data3"
 argument_list|)
 expr_stmt|;
 name|xo_open_marker
@@ -543,7 +543,7 @@ expr_stmt|;
 block|}
 name|xo_close_container
 argument_list|(
-literal|"data"
+literal|"data3"
 argument_list|)
 expr_stmt|;
 comment|/* Should be a noop */
@@ -561,7 +561,7 @@ argument_list|)
 expr_stmt|;
 name|xo_close_container
 argument_list|(
-literal|"data"
+literal|"data3"
 argument_list|)
 expr_stmt|;
 comment|/* Should be a noop */
@@ -572,7 +572,7 @@ argument_list|)
 expr_stmt|;
 name|xo_open_container
 argument_list|(
-literal|"data"
+literal|"data4"
 argument_list|)
 expr_stmt|;
 name|xo_open_marker
@@ -659,7 +659,7 @@ argument_list|)
 expr_stmt|;
 name|xo_close_container
 argument_list|(
-literal|"data"
+literal|"data4"
 argument_list|)
 expr_stmt|;
 block|}
@@ -678,7 +678,7 @@ expr_stmt|;
 block|}
 name|xo_close_container
 argument_list|(
-literal|"data"
+literal|"data4"
 argument_list|)
 expr_stmt|;
 comment|/* Should be a noop */

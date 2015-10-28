@@ -205,6 +205,20 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|void
+name|clrex
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* 	 * Ensure compiler barrier, otherwise the monitor clear might 	 * occur too late for us ? 	 */
+asm|__asm __volatile("clrex" : : : "memory");
+block|}
+end_function
+
 begin_define
 define|#
 directive|define

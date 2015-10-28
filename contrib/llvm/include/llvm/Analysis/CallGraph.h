@@ -238,6 +238,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Intrinsics.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/ValueHandle.h"
 end_include
 
@@ -919,15 +925,25 @@ argument_list|()
 operator|->
 name|isIntrinsic
 argument_list|()
+operator|||
+operator|!
+name|Intrinsic
+operator|::
+name|isLeaf
+argument_list|(
+name|CS
+operator|.
+name|getCalledFunction
+argument_list|()
+operator|->
+name|getIntrinsicID
+argument_list|()
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|CalledFunctions
 operator|.
-name|push_back
-argument_list|(
-name|std
-operator|::
-name|make_pair
+name|emplace_back
 argument_list|(
 name|CS
 operator|.
@@ -935,7 +951,6 @@ name|getInstruction
 argument_list|()
 argument_list|,
 name|M
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|M
@@ -1050,9 +1065,12 @@ name|NumReferences
 decl_stmt|;
 name|CallGraphNode
 argument_list|(
-argument|const CallGraphNode&
+specifier|const
+name|CallGraphNode
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -1062,7 +1080,8 @@ specifier|const
 name|CallGraphNode
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|void
 name|DropRef
@@ -1180,10 +1199,10 @@ comment|// Class identification, replacement for typeinfo
 name|CallGraphWrapperPass
 argument_list|()
 block|;
-name|virtual
 operator|~
 name|CallGraphWrapperPass
 argument_list|()
+name|override
 block|;
 comment|/// \brief The internal \c CallGraph around which the rest of this interface
 comment|/// is wrapped.

@@ -266,11 +266,15 @@ argument_list|(
 name|sm
 argument_list|)
 argument_list|,
+literal|0
+argument_list|,
 name|bufsize
 argument_list|,
 name|end
 operator|-
 name|bufsize
+argument_list|,
+name|ZIO_PRIORITY_SYNC_READ
 argument_list|)
 expr_stmt|;
 block|}

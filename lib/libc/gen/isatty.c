@@ -67,11 +67,9 @@ begin_function
 name|int
 name|isatty
 parameter_list|(
-name|fd
-parameter_list|)
 name|int
 name|fd
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|retval

@@ -260,7 +260,8 @@ parameter_list|)
 function_decl|;
 comment|// Suspend all threads in the current process and run the callback on the list
 comment|// of suspended threads. This function will resume the threads before returning.
-comment|// The callback should not call any libc functions.
+comment|// The callback should not call any libc functions. The callback must not call
+comment|// exit() nor _exit() and instead return to the caller.
 comment|// This function should NOT be called from multiple threads simultaneously.
 name|void
 name|StopTheWorld

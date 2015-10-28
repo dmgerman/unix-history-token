@@ -7,16 +7,20 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2014 by Delphix. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_DFETCH_H
+name|_DMU_ZFETCH_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_DFETCH_H
+name|_DMU_ZFETCH_H
 end_define
 
 begin_include
@@ -46,62 +50,29 @@ name|dnode
 struct_decl|;
 comment|/* so we can reference dnode */
 typedef|typedef
-enum|enum
-name|zfetch_dirn
-block|{
-name|ZFETCH_FORWARD
-init|=
-literal|1
-block|,
-comment|/* prefetch increasing block numbers */
-name|ZFETCH_BACKWARD
-init|=
-operator|-
-literal|1
-comment|/* prefetch decreasing block numbers */
-block|}
-name|zfetch_dirn_t
-typedef|;
-typedef|typedef
 struct|struct
 name|zstream
 block|{
 name|uint64_t
-name|zst_offset
+name|zs_blkid
 decl_stmt|;
-comment|/* offset of starting block in range */
+comment|/* expect next access at this blkid */
 name|uint64_t
-name|zst_len
+name|zs_pf_blkid
 decl_stmt|;
-comment|/* length of range, in blocks */
-name|zfetch_dirn_t
-name|zst_direction
-decl_stmt|;
-comment|/* direction of prefetch */
-name|uint64_t
-name|zst_stride
-decl_stmt|;
-comment|/* length of stride, in blocks */
-name|uint64_t
-name|zst_ph_offset
-decl_stmt|;
-comment|/* prefetch offset, in blocks */
-name|uint64_t
-name|zst_cap
-decl_stmt|;
-comment|/* prefetch limit (cap), in blocks */
+comment|/* next block to prefetch */
 name|kmutex_t
-name|zst_lock
+name|zs_lock
 decl_stmt|;
 comment|/* protects stream */
-name|clock_t
-name|zst_last
+name|hrtime_t
+name|zs_atime
 decl_stmt|;
-comment|/* lbolt of last prefetch */
-name|avl_node_t
-name|zst_node
+comment|/* time last prefetch issued */
+name|list_node_t
+name|zs_node
 decl_stmt|;
-comment|/* embed avl node here */
+comment|/* link for zf_stream */
 block|}
 name|zstream_t
 typedef|;
@@ -116,21 +87,13 @@ comment|/* protects zfetch structure */
 name|list_t
 name|zf_stream
 decl_stmt|;
-comment|/* AVL tree of zstream_t's */
+comment|/* list of zstream_t's */
 name|struct
 name|dnode
 modifier|*
 name|zf_dnode
 decl_stmt|;
 comment|/* dnode that owns this zfetch */
-name|uint32_t
-name|zf_stream_cnt
-decl_stmt|;
-comment|/* # of active streams */
-name|uint64_t
-name|zf_alloc_fail
-decl_stmt|;
-comment|/* # of failed attempts to alloc strm */
 block|}
 name|zfetch_t
 typedef|;
@@ -158,7 +121,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|void
-name|dmu_zfetch_rele
+name|dmu_zfetch_fini
 parameter_list|(
 name|zfetch_t
 modifier|*
@@ -173,8 +136,6 @@ parameter_list|,
 name|uint64_t
 parameter_list|,
 name|uint64_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 ifdef|#
@@ -194,7 +155,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _DFETCH_H */
+comment|/* _DMU_ZFETCH_H */
 end_comment
 
 end_unit

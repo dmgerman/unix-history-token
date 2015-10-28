@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MIUtilMapIdToVariant.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMIUtilMapIdToVariant interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -128,7 +84,7 @@ comment|// Details: MI common code utility class. Map type container that hold g
 end_comment
 
 begin_comment
-comment|//          object types (by being wrappin an variant wrapper)
+comment|//          object types (by being a variant wrapper)
 end_comment
 
 begin_comment
@@ -236,14 +192,14 @@ name|public
 operator|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMIUtilMapIdToVariant
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-comment|// Typdefs:
+comment|// Typedefs:
 name|private
 operator|:
 typedef|typedef
@@ -339,11 +295,11 @@ comment|//          vData   - (R) The general data object to be stored of some t
 end_comment
 
 begin_comment
-comment|// Return:  MIstatus::success - Functional succeeded.
+comment|// Return:  MIstatus::success - Function succeeded.
 end_comment
 
 begin_comment
-comment|//          MIstatus::failure - Functional failed.
+comment|//          MIstatus::failure - Function failed.
 end_comment
 
 begin_comment
@@ -496,11 +452,11 @@ comment|//          vrwbFound   - (W) True = data found, false = data not found.
 end_comment
 
 begin_comment
-comment|// Return:  MIstatus::success - Functional succeeded.
+comment|// Return:  MIstatus::success - Function succeeded.
 end_comment
 
 begin_comment
-comment|//          MIstatus::failure - Functional failed.
+comment|//          MIstatus::failure - Function failed.
 end_comment
 
 begin_comment

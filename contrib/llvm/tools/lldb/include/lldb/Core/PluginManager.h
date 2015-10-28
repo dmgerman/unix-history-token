@@ -385,6 +385,11 @@ name|description
 parameter_list|,
 name|LanguageRuntimeCreateInstance
 name|create_callback
+parameter_list|,
+name|LanguageRuntimeGetCommandObject
+name|command_callback
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 specifier|static
@@ -398,6 +403,14 @@ function_decl|;
 specifier|static
 name|LanguageRuntimeCreateInstance
 name|GetLanguageRuntimeCreateCallbackAtIndex
+parameter_list|(
+name|uint32_t
+name|idx
+parameter_list|)
+function_decl|;
+specifier|static
+name|LanguageRuntimeGetCommandObject
+name|GetLanguageRuntimeGetCommandObjectAtIndex
 parameter_list|(
 name|uint32_t
 name|idx

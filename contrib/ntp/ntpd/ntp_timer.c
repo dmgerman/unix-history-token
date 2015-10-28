@@ -231,6 +231,16 @@ comment|/* init_io() sets def. 300s */
 end_comment
 
 begin_comment
+comment|/*  * Initializing flag.  All async routines watch this and only do their  * thing when it is clear.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|initializing
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Alarm flag. The mainline code imports this.  */
 end_comment
 

@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallString.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Constants.h"
 end_include
 
@@ -72,14 +78,17 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MDNode
+name|AsmPrinter
+decl_stmt|;
+name|class
+name|DebugLocStream
 decl_stmt|;
 comment|/// \brief This struct describes location entries emitted in the .debug_loc
 comment|/// section.
 name|class
 name|DebugLocEntry
 block|{
-comment|// Begin and end symbols for the address range that this location is valid.
+comment|/// Begin and end symbols for the address range that this location is valid.
 specifier|const
 name|MCSymbol
 modifier|*
@@ -92,24 +101,17 @@ name|End
 decl_stmt|;
 name|public
 label|:
-comment|/// A single location or constant.
+comment|/// \brief A single location or constant.
 struct|struct
 name|Value
 block|{
 name|Value
 argument_list|(
-argument|const MDNode *Var
-argument_list|,
-argument|const MDNode *Expr
+argument|const DIExpression *Expr
 argument_list|,
 argument|int64_t i
 argument_list|)
 block|:
-name|Variable
-argument_list|(
-name|Var
-argument_list|)
-operator|,
 name|Expression
 argument_list|(
 name|Expr
@@ -129,12 +131,7 @@ block|;     }
 name|Value
 argument_list|(
 specifier|const
-name|MDNode
-operator|*
-name|Var
-argument_list|,
-specifier|const
-name|MDNode
+name|DIExpression
 operator|*
 name|Expr
 argument_list|,
@@ -144,11 +141,6 @@ operator|*
 name|CFP
 argument_list|)
 operator|:
-name|Variable
-argument_list|(
-name|Var
-argument_list|)
-operator|,
 name|Expression
 argument_list|(
 name|Expr
@@ -168,12 +160,7 @@ block|;     }
 name|Value
 argument_list|(
 specifier|const
-name|MDNode
-operator|*
-name|Var
-argument_list|,
-specifier|const
-name|MDNode
+name|DIExpression
 operator|*
 name|Expr
 argument_list|,
@@ -183,11 +170,6 @@ operator|*
 name|CIP
 argument_list|)
 operator|:
-name|Variable
-argument_list|(
-name|Var
-argument_list|)
-operator|,
 name|Expression
 argument_list|(
 name|Expr
@@ -206,18 +188,11 @@ name|CIP
 block|;     }
 name|Value
 argument_list|(
-argument|const MDNode *Var
-argument_list|,
-argument|const MDNode *Expr
+argument|const DIExpression *Expr
 argument_list|,
 argument|MachineLocation Loc
 argument_list|)
 operator|:
-name|Variable
-argument_list|(
-name|Var
-argument_list|)
-operator|,
 name|Expression
 argument_list|(
 name|Expr
@@ -235,39 +210,25 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
-name|DIVariable
-argument_list|(
-name|Var
-argument_list|)
-operator|.
-name|Verify
-argument_list|()
-argument_list|)
-block|;
-name|assert
-argument_list|(
+name|cast
+operator|<
 name|DIExpression
-argument_list|(
+operator|>
+operator|(
 name|Expr
-argument_list|)
-operator|.
-name|Verify
+operator|)
+operator|->
+name|isValid
 argument_list|()
 argument_list|)
 block|;     }
-comment|// The variable to which this location entry corresponds.
+comment|/// Any complex address location expression for this Value.
 specifier|const
-name|MDNode
+name|DIExpression
 operator|*
-name|Variable
-expr_stmt|;
-comment|// Any complex address location expression for this Value.
-specifier|const
-name|MDNode
-modifier|*
 name|Expression
-decl_stmt|;
-comment|// Type of entry that this represents.
+expr_stmt|;
+comment|/// Type of entry that this represents.
 enum|enum
 name|EntryType
 block|{
@@ -284,7 +245,7 @@ name|enum
 name|EntryType
 name|EntryKind
 decl_stmt|;
-comment|// Either a constant,
+comment|/// Either a constant,
 union|union
 block|{
 name|int64_t
@@ -397,52 +358,28 @@ return|return
 name|Loc
 return|;
 block|}
-specifier|const
-name|MDNode
-operator|*
-name|getVariableNode
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Variable
-return|;
-block|}
-name|DIVariable
-name|getVariable
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DIVariable
-argument_list|(
-name|Variable
-argument_list|)
-return|;
-block|}
 name|bool
-name|isVariablePiece
+name|isBitPiece
 argument_list|()
 specifier|const
 block|{
 return|return
 name|getExpression
 argument_list|()
-operator|.
-name|isVariablePiece
+operator|->
+name|isBitPiece
 argument_list|()
 return|;
 block|}
+specifier|const
 name|DIExpression
+operator|*
 name|getExpression
 argument_list|()
 specifier|const
 block|{
 return|return
-name|DIExpression
-argument_list|(
 name|Expression
-argument_list|)
 return|;
 block|}
 name|friend
@@ -521,9 +458,9 @@ argument_list|)
 argument_list|)
 block|;   }
 comment|/// \brief If this and Next are describing different pieces of the same
-comment|// variable, merge them by appending Next's values to the current
-comment|// list of values.
-comment|// Return true if the merge was successful.
+comment|/// variable, merge them by appending Next's values to the current
+comment|/// list of values.
+comment|/// Return true if the merge was successful.
 name|bool
 name|MergeValues
 argument_list|(
@@ -539,31 +476,32 @@ operator|.
 name|Begin
 condition|)
 block|{
-name|DIExpression
+name|auto
+operator|*
 name|Expr
-argument_list|(
-name|Values
-index|[
-literal|0
-index|]
-operator|.
-name|Expression
-argument_list|)
-decl_stmt|;
-name|DIVariable
-name|Var
-argument_list|(
-name|Values
-index|[
-literal|0
-index|]
-operator|.
-name|Variable
-argument_list|)
-decl_stmt|;
+operator|=
+name|cast_or_null
+operator|<
 name|DIExpression
+operator|>
+operator|(
+name|Values
+index|[
+literal|0
+index|]
+operator|.
+name|Expression
+operator|)
+expr_stmt|;
+name|auto
+operator|*
 name|NextExpr
-argument_list|(
+operator|=
+name|cast_or_null
+operator|<
+name|DIExpression
+operator|>
+operator|(
 name|Next
 operator|.
 name|Values
@@ -572,35 +510,18 @@ literal|0
 index|]
 operator|.
 name|Expression
-argument_list|)
-decl_stmt|;
-name|DIVariable
-name|NextVar
-argument_list|(
-name|Next
-operator|.
-name|Values
-index|[
-literal|0
-index|]
-operator|.
-name|Variable
-argument_list|)
-decl_stmt|;
+operator|)
+expr_stmt|;
 if|if
 condition|(
-name|Var
-operator|==
-name|NextVar
-operator|&&
 name|Expr
-operator|.
-name|isVariablePiece
+operator|->
+name|isBitPiece
 argument_list|()
 operator|&&
 name|NextExpr
-operator|.
-name|isVariablePiece
+operator|->
+name|isBitPiece
 argument_list|()
 condition|)
 block|{
@@ -762,7 +683,7 @@ block|{
 return|return
 name|V
 operator|.
-name|isVariablePiece
+name|isBitPiece
 argument_list|()
 return|;
 block|}
@@ -770,7 +691,7 @@ block|)
 decl|&& "value must be a piece"
 decl_stmt|);
 block|}
-comment|// Sort the pieces by offset.
+comment|// \brief Sort the pieces by offset.
 comment|// Remove any duplicate entries by dropping all but the first.
 name|void
 name|sortUniqueValues
@@ -825,16 +746,6 @@ block|{
 return|return
 name|A
 operator|.
-name|getVariable
-argument_list|()
-operator|==
-name|B
-operator|.
-name|getVariable
-argument_list|()
-operator|&&
-name|A
-operator|.
 name|getExpression
 argument_list|()
 operator|==
@@ -852,13 +763,37 @@ block|)
 decl_stmt|;
 end_decl_stmt
 
-begin_empty_stmt
-unit|} }
-empty_stmt|;
-end_empty_stmt
+begin_comment
+unit|}
+comment|/// \brief Lower this entry into a DWARF expression.
+end_comment
+
+begin_expr_stmt
+unit|void
+name|finalize
+argument_list|(
+specifier|const
+name|AsmPrinter
+operator|&
+name|AP
+argument_list|,
+name|DebugLocStream
+operator|::
+name|ListBuilder
+operator|&
+name|List
+argument_list|,
+specifier|const
+name|DIBasicType
+operator|*
+name|BT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/// Compare two Values for equality.
+unit|};
+comment|/// \brief Compare two Values for equality.
 end_comment
 
 begin_expr_stmt
@@ -907,22 +842,6 @@ operator|!=
 name|B
 operator|.
 name|Expression
-condition|)
-return|return
-name|false
-return|;
-end_if
-
-begin_if
-if|if
-condition|(
-name|A
-operator|.
-name|Variable
-operator|!=
-name|B
-operator|.
-name|Variable
 condition|)
 return|return
 name|false
@@ -1026,7 +945,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|/// Compare two pieces based on their offset.
+comment|/// \brief Compare two pieces based on their offset.
 end_comment
 
 begin_expr_stmt
@@ -1055,16 +974,16 @@ name|A
 operator|.
 name|getExpression
 argument_list|()
-operator|.
-name|getPieceOffset
+operator|->
+name|getBitPieceOffset
 argument_list|()
 operator|<
 name|B
 operator|.
 name|getExpression
 argument_list|()
-operator|.
-name|getPieceOffset
+operator|->
+name|getBitPieceOffset
 argument_list|()
 return|;
 block|}

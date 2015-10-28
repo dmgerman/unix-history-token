@@ -5276,7 +5276,9 @@ begin_function
 specifier|static
 name|void
 name|res_buildservicelist
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|servent

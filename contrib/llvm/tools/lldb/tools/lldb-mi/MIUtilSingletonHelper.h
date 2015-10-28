@@ -32,50 +32,6 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MIUtilSingletonHelper.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    Contains template functions to aid the initialisation and
-end_comment
-
-begin_comment
-comment|//              shutdown of MI modules. MI modules (or components) can
-end_comment
-
-begin_comment
-comment|//              use other MI modules to help them achieve their one task
-end_comment
-
-begin_comment
-comment|//              (Modules only do one task).
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
 comment|//
 end_comment
 
@@ -109,7 +65,7 @@ comment|// Details: Short cut helper function to simplify repeated initialisatio
 comment|//          MI components (singletons) required by a client module.
 comment|// Type:    Template method.
 comment|// Args:    vErrorResrcId   - (R)  The string resource ID error message identifier to place in errMsg.
-comment|//          vwrbOk          - (RW) On input True = Try to initalise MI driver module.
+comment|//          vwrbOk          - (RW) On input True = Try to initialize MI driver module.
 comment|//                                 On output True = MI driver module initialise successfully.
 comment|//          vwrErrMsg       - (W)  MI driver module initialise error description on failure.
 comment|// Return:  MIstatus::success - Functional succeeded.
@@ -181,7 +137,7 @@ name|vwrbOk
 return|;
 block|}
 comment|//++ ============================================================================
-comment|// Details: Short cut helper function to simplify repeated shutodown of
+comment|// Details: Short cut helper function to simplify repeated shutdown of
 comment|//          MI components (singletons) required by a client module.
 comment|// Type:    Template method.
 comment|// Args:    vErrorResrcId   - (R)  The string resource ID error message identifier

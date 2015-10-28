@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmnLog.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMICmnLog interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -126,7 +82,7 @@ comment|//          activity logging. Medium objects derived from the Medium abs
 end_comment
 
 begin_comment
-comment|///          class are registered with this loggor. The function Write is called
+comment|///          class are registered with this logger. The function Write is called
 end_comment
 
 begin_comment
@@ -189,7 +145,7 @@ comment|// Enumeration:
 name|public
 operator|:
 comment|//++
-comment|// Description: Data given to the Logger can be of serveral types. The Logger can be
+comment|// Description: Data given to the Logger can be of several types. The Logger can be
 comment|//              set at levels of verbosity. Can determine how data is sent to one or
 comment|//              mediums.
 comment|//--
@@ -206,7 +162,7 @@ name|eLogVerbosity_DbgOp
 operator|=
 literal|0x00000008
 block|,
-comment|// Send a string to the debugguer for display (not implemented)
+comment|// Send a string to the debugger for display (not implemented)
 name|eLogVerbosity_ClientMsg
 operator|=
 literal|0x00000010
@@ -382,19 +338,19 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From MI::ISingleton
-name|virtual
 name|bool
 name|Initialize
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Shutdown
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Methods:
 name|private
@@ -427,12 +383,12 @@ name|private
 operator|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmnLog
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Typedef:
 name|private

@@ -319,13 +319,6 @@ parameter_list|)
 function_decl|;
 comment|// RelocationRef accessors
 name|uint64_t
-name|LLVMGetRelocationAddress
-parameter_list|(
-name|LLVMRelocationIteratorRef
-name|RI
-parameter_list|)
-function_decl|;
-name|uint64_t
 name|LLVMGetRelocationOffset
 parameter_list|(
 name|LLVMRelocationIteratorRef

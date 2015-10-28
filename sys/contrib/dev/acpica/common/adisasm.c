@@ -290,6 +290,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|AcpiGbl_ParseOpRoot
@@ -405,10 +406,6 @@ operator|.
 name|Tables
 operator|=
 name|LocalTables
-expr_stmt|;
-name|AcpiGbl_PreviousOp
-operator|=
-name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -730,7 +727,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|AcpiGbl_DbOpt_Disasm
+name|AcpiGbl_DmOpt_Disasm
 condition|)
 block|{
 return|return
@@ -1249,7 +1246,7 @@ expr_stmt|;
 comment|/* Optional displays */
 if|if
 condition|(
-name|AcpiGbl_DbOpt_Disasm
+name|AcpiGbl_DmOpt_Disasm
 condition|)
 block|{
 comment|/* This is the real disassembly */
@@ -1842,7 +1839,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|AcpiGbl_DbOpt_Verbose
+name|AcpiGbl_DmOpt_Listing
 condition|)
 block|{
 name|AdCreateTableHeader
@@ -1867,7 +1864,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|AcpiGbl_DbOpt_Verbose
+name|AcpiGbl_DmOpt_Listing
 condition|)
 block|{
 name|AcpiOsPrintf

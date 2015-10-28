@@ -230,7 +230,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Apply the instructions from @a window to a source view @a sbuf to  *  produce a target view @a tbuf.  *  * @a sbuf is assumed to have @a window->sview_len bytes of data and  * @a tbuf is assumed to have room for @a tlen bytes of output.  @a  * tlen may be more than @a window->tview_len, so return the actual  * number of bytes written.  @a sbuf is not touched and may be NULL if  * @a window contains no source-copy operations. This is purely a  * memory operation; nothing can go wrong as long as we have a valid  * window.  *  * @since New in 1.4  *  */
+comment|/**  * Apply the instructions from @a window to a source view @a sbuf to  *  produce a target view @a tbuf.  *  * @a sbuf is assumed to have @a window->sview_len bytes of data and  * @a tbuf is assumed to have room for @a tlen bytes of output.  @a  * tlen may be more than @a window->tview_len, so return the actual  * number of bytes written.  @a sbuf is not touched and may be NULL if  * @a window contains no source-copy operations. This is purely a  * memory operation; nothing can go wrong as long as we have a valid  * window.  *  * @since New in 1.4  *  * @since Since 1.9, @a tbuf may be NULL if @a *tlen is 0.  */
 name|void
 name|svn_txdelta_apply_instructions
 parameter_list|(
@@ -688,7 +688,7 @@ modifier|*
 name|handler_baton
 parameter_list|)
 function_decl|;
-comment|/** Return a writable generic stream which will parse svndiff-format  * data into a text delta, invoking @a handler with @a handler_baton  * whenever a new window is ready.  If @a error_on_early_close is @c  * TRUE, attempting to close this stream before it has handled the entire  * svndiff data set will result in #SVN_ERR_SVNDIFF_UNEXPECTED_END,  * else this error condition will be ignored.  */
+comment|/** Return a writable generic stream which will parse svndiff-format  * data into a text delta, invoking @a handler with @a handler_baton  * whenever a new window is ready.  *  * When the caller closes this stream, this will signal completion to  * the window handler by invoking @a handler once more, passing zero for  * the @c window argument.  *  * If @a error_on_early_close is @c TRUE, then attempt to avoid  * signaling completion to the window handler if the delta was  * incomplete. Specifically, attempting to close the stream will be  * successful only if the data written to the stream consisted of one or  * more complete windows of svndiff data and no extra bytes. Otherwise,  * closing the stream will not signal completion to the window handler,  * and will return a #SVN_ERR_SVNDIFF_UNEXPECTED_END error. Note that if  * no data at all was written, the delta is considered incomplete.  *  * If @a error_on_early_close is @c FALSE, closing the stream will  * signal completion to the window handler, regardless of how much data  * was written, and discard any pending incomplete data.  *  * Allocate the stream in @a pool.  */
 name|svn_stream_t
 modifier|*
 name|svn_txdelta_parse_svndiff

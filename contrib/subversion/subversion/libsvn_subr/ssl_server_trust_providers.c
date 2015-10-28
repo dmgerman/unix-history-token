@@ -55,24 +55,6 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/* The keys that will be stored on disk.  These serve the same role as    similar constants in other providers. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AUTHN_ASCII_CERT_KEY
-value|"ascii_cert"
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUTHN_FAILURES_KEY
-value|"failures"
-end_define
-
-begin_comment
 comment|/* retrieve ssl server CA failure overrides (if any) from servers    config */
 end_comment
 
@@ -220,7 +202,7 @@ name|svn_hash_gets
 argument_list|(
 name|creds_hash
 argument_list|,
-name|AUTHN_ASCII_CERT_KEY
+name|SVN_CONFIG_AUTHN_ASCII_CERT_KEY
 argument_list|)
 expr_stmt|;
 name|this_cert
@@ -240,49 +222,26 @@ name|svn_hash_gets
 argument_list|(
 name|creds_hash
 argument_list|,
-name|AUTHN_FAILURES_KEY
+name|SVN_CONFIG_AUTHN_FAILURES_KEY
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|failstr
 condition|)
-block|{
-name|char
-modifier|*
-name|endptr
-decl_stmt|;
-name|unsigned
-name|long
-name|tmp_ulong
-init|=
-name|strtoul
+name|SVN_ERR
 argument_list|(
+name|svn_cstring_atoui
+argument_list|(
+operator|&
+name|last_failures
+argument_list|,
 name|failstr
 operator|->
 name|data
-argument_list|,
-operator|&
-name|endptr
-argument_list|,
-literal|10
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-operator|*
-name|endptr
-operator|==
-literal|'\0'
-condition|)
-name|last_failures
-operator|=
-operator|(
-name|apr_uint32_t
-operator|)
-name|tmp_ulong
+argument_list|)
 expr_stmt|;
-block|}
 comment|/* If the cert is trusted and there are no new failures, we        * accept it by clearing all failures. */
 if|if
 condition|(
@@ -448,7 +407,7 @@ name|svn_hash_sets
 argument_list|(
 name|creds_hash
 argument_list|,
-name|AUTHN_ASCII_CERT_KEY
+name|SVN_CONFIG_AUTHN_ASCII_CERT_KEY
 argument_list|,
 name|svn_string_create
 argument_list|(
@@ -464,7 +423,7 @@ name|svn_hash_sets
 argument_list|(
 name|creds_hash
 argument_list|,
-name|AUTHN_FAILURES_KEY
+name|SVN_CONFIG_AUTHN_FAILURES_KEY
 argument_list|,
 name|svn_string_createf
 argument_list|(
@@ -518,12 +477,10 @@ init|=
 block|{
 name|SVN_AUTH_CRED_SSL_SERVER_TRUST
 block|,
-operator|&
 name|ssl_server_trust_file_first_credentials
 block|,
 name|NULL
 block|,
-operator|&
 name|ssl_server_trust_file_save_credentials
 block|, }
 decl_stmt|;

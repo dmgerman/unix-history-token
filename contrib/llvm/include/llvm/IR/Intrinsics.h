@@ -109,6 +109,8 @@ name|Intrinsic
 block|{
 enum|enum
 name|ID
+enum|:
+name|unsigned
 block|{
 name|not_intrinsic
 init|=
@@ -165,6 +167,16 @@ decl_stmt|;
 comment|/// Returns true if the intrinsic can be overloaded.
 name|bool
 name|isOverloaded
+parameter_list|(
+name|ID
+name|id
+parameter_list|)
+function_decl|;
+comment|/// Returns true if the intrinsic is a leaf, i.e. it does not make any calls
+comment|/// itself.  Most intrinsics are leafs, the exceptions being the patchpoint
+comment|/// and statepoint intrinsics. These call (or invoke) their "target" argument.
+name|bool
+name|isLeaf
 parameter_list|(
 name|ID
 name|id
@@ -281,6 +293,8 @@ block|,
 name|SameVecWidthArgument
 block|,
 name|PtrToArgument
+block|,
+name|VecOfPtrsToElt
 block|}
 name|Kind
 enum|;
@@ -309,6 +323,8 @@ union|;
 enum|enum
 name|ArgKind
 block|{
+name|AK_Any
+block|,
 name|AK_AnyInteger
 block|,
 name|AK_AnyFloat
@@ -348,12 +364,16 @@ operator|||
 name|Kind
 operator|==
 name|PtrToArgument
+operator|||
+name|Kind
+operator|==
+name|VecOfPtrsToElt
 argument_list|)
 block|;
 return|return
 name|Argument_Info
 operator|>>
-literal|2
+literal|3
 return|;
 block|}
 name|ArgKind
@@ -386,6 +406,10 @@ operator|||
 name|Kind
 operator|==
 name|PtrToArgument
+operator|||
+name|Kind
+operator|==
+name|VecOfPtrsToElt
 argument_list|)
 block|;
 return|return
@@ -395,7 +419,7 @@ call|)
 argument_list|(
 name|Argument_Info
 operator|&
-literal|3
+literal|7
 argument_list|)
 return|;
 block|}

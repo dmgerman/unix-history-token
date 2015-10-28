@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -117,9 +117,9 @@ name|unsigned
 enum_decl|;
 block|}
 block|}
-comment|/// raw_ostream - This class implements an extremely fast bulk output stream
-comment|/// that can *only* output to a stream.  It does not support seeking, reopening,
-comment|/// rewinding, line buffered disciplines etc. It is a simple buffer that outputs
+comment|/// This class implements an extremely fast bulk output stream that can *only*
+comment|/// output to a stream.  It does not support seeking, reopening, rewinding, line
+comment|/// buffered disciplines etc. It is a simple buffer that outputs
 comment|/// a chunk at a time.
 name|class
 name|raw_ostream
@@ -134,13 +134,17 @@ specifier|const
 name|raw_ostream
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|raw_ostream
 argument_list|(
-argument|const raw_ostream&
+specifier|const
+name|raw_ostream
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 comment|/// The buffer is handled in such a way that the buffer is
 comment|/// uninitialized, unbuffered, or out of space when OutBufCur>=
@@ -213,7 +217,7 @@ enum|;
 name|explicit
 name|raw_ostream
 argument_list|(
-argument|bool unbuffered=false
+argument|bool unbuffered = false
 argument_list|)
 block|:
 name|BufferMode
@@ -253,14 +257,13 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Configuration Interface
 comment|//===--------------------------------------------------------------------===//
-comment|/// SetBuffered - Set the stream to be buffered, with an automatically
-comment|/// determined buffer size.
+comment|/// Set the stream to be buffered, with an automatically determined buffer
+comment|/// size.
 name|void
 name|SetBuffered
 parameter_list|()
 function_decl|;
-comment|/// SetBufferSize - Set the stream to be buffered, using the
-comment|/// specified buffer size.
+comment|/// Set the stream to be buffered, using the specified buffer size.
 name|void
 name|SetBufferSize
 parameter_list|(
@@ -309,10 +312,9 @@ operator|-
 name|OutBufStart
 return|;
 block|}
-comment|/// SetUnbuffered - Set the stream to be unbuffered. When
-comment|/// unbuffered, the stream will flush after every write. This routine
-comment|/// will also flush the buffer immediately when the stream is being
-comment|/// set to unbuffered.
+comment|/// Set the stream to be unbuffered. When unbuffered, the stream will flush
+comment|/// after every write. This routine will also flush the buffer immediately
+comment|/// when the stream is being set to unbuffered.
 name|void
 name|SetUnbuffered
 parameter_list|()
@@ -512,6 +514,14 @@ argument_list|,
 name|Size
 argument_list|)
 return|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|Size
+condition|)
+block|{
 name|memcpy
 argument_list|(
 name|OutBufCur
@@ -524,14 +534,12 @@ argument_list|,
 name|Size
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|OutBufCur
 operator|+=
 name|Size
 expr_stmt|;
-end_expr_stmt
+block|}
+end_if
 
 begin_return
 return|return
@@ -595,6 +603,40 @@ argument_list|,
 name|Str
 operator|.
 name|length
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Str
+operator|)
+block|{
+return|return
+name|write
+argument_list|(
+name|Str
+operator|.
+name|data
+argument_list|()
+argument_list|,
+name|Str
+operator|.
+name|size
 argument_list|()
 argument_list|)
 return|;
@@ -738,7 +780,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// write_hex - Output \p N in hexadecimal, without any prefix or padding.
+comment|/// Output \p N in hexadecimal, without any prefix or padding.
 end_comment
 
 begin_function_decl
@@ -755,11 +797,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// write_escaped - Output \p Str, turning '\\', '\t', '\n', '"', and
+comment|/// Output \p Str, turning '\\', '\t', '\n', '"', and anything that doesn't
 end_comment
 
 begin_comment
-comment|/// anything that doesn't satisfy std::isprint into an escape sequence.
+comment|/// satisfy std::isprint into an escape sequence.
 end_comment
 
 begin_function_decl
@@ -1045,11 +1087,11 @@ label|:
 end_label
 
 begin_comment
-comment|/// write_impl - The is the piece of the class that is implemented
+comment|/// The is the piece of the class that is implemented by subclasses.  This
 end_comment
 
 begin_comment
-comment|/// by subclasses.  This writes the \p Size bytes starting at
+comment|/// writes the \p Size bytes starting at
 end_comment
 
 begin_comment
@@ -1127,11 +1169,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// current_pos - Return the current position within the stream, not
+comment|/// Return the current position within the stream, not counting the bytes
 end_comment
 
 begin_comment
-comment|/// counting the bytes currently in the buffer.
+comment|/// currently in the buffer.
 end_comment
 
 begin_expr_stmt
@@ -1151,19 +1193,15 @@ label|:
 end_label
 
 begin_comment
-comment|/// SetBuffer - Use the provided buffer as the raw_ostream buffer. This is
+comment|/// Use the provided buffer as the raw_ostream buffer. This is intended for
 end_comment
 
 begin_comment
-comment|/// intended for use only by subclasses which can arrange for the output to go
+comment|/// use only by subclasses which can arrange for the output to go directly
 end_comment
 
 begin_comment
-comment|/// directly into the desired output buffer, instead of being copied on each
-end_comment
-
-begin_comment
-comment|/// flush.
+comment|/// into the desired output buffer, instead of being copied on each flush.
 end_comment
 
 begin_function
@@ -1191,11 +1229,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// preferred_buffer_size - Return an efficient buffer size for the
-end_comment
-
-begin_comment
-comment|/// underlying output mechanism.
+comment|/// Return an efficient buffer size for the underlying output mechanism.
 end_comment
 
 begin_expr_stmt
@@ -1208,11 +1242,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getBufferStart - Return the beginning of the current stream buffer, or 0
+comment|/// Return the beginning of the current stream buffer, or 0 if the stream is
 end_comment
 
 begin_comment
-comment|/// if the stream is unbuffered.
+comment|/// unbuffered.
 end_comment
 
 begin_expr_stmt
@@ -1247,7 +1281,7 @@ label|:
 end_label
 
 begin_comment
-comment|/// SetBufferAndMode - Install the given buffer and mode.
+comment|/// Install the given buffer and mode.
 end_comment
 
 begin_function_decl
@@ -1268,15 +1302,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// flush_nonempty - Flush the current buffer, which is known to be
+comment|/// Flush the current buffer, which is known to be non-empty. This outputs the
 end_comment
 
 begin_comment
-comment|/// non-empty. This outputs the currently buffered data and resets
-end_comment
-
-begin_comment
-comment|/// the buffer to empty.
+comment|/// currently buffered data and resets the buffer to empty.
 end_comment
 
 begin_function_decl
@@ -1287,11 +1317,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// copy_to_buffer - Copy data into the buffer. Size must not be
+comment|/// Copy data into the buffer. Size must not be greater than the number of
 end_comment
 
 begin_comment
-comment|/// greater than the number of unused bytes in the buffer.
+comment|/// unused bytes in the buffer.
 end_comment
 
 begin_function_decl
@@ -1311,6 +1341,101 @@ end_function_decl
 
 begin_comment
 unit|};
+comment|/// An abstract base class for streams implementations that also support a
+end_comment
+
+begin_comment
+comment|/// pwrite operation. This is usefull for code that can mostly stream out data,
+end_comment
+
+begin_comment
+comment|/// but needs to patch in a header that needs to know the output size.
+end_comment
+
+begin_decl_stmt
+name|class
+name|raw_pwrite_stream
+range|:
+name|public
+name|raw_ostream
+block|{
+name|virtual
+name|void
+name|pwrite_impl
+argument_list|(
+argument|const char *Ptr
+argument_list|,
+argument|size_t Size
+argument_list|,
+argument|uint64_t Offset
+argument_list|)
+operator|=
+literal|0
+block|;
+name|public
+operator|:
+name|explicit
+name|raw_pwrite_stream
+argument_list|(
+argument|bool Unbuffered = false
+argument_list|)
+operator|:
+name|raw_ostream
+argument_list|(
+argument|Unbuffered
+argument_list|)
+block|{}
+name|void
+name|pwrite
+argument_list|(
+argument|const char *Ptr
+argument_list|,
+argument|size_t Size
+argument_list|,
+argument|uint64_t Offset
+argument_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|NDBEBUG
+name|uint64_t
+name|Pos
+operator|=
+name|tell
+argument_list|()
+block|;
+comment|// /dev/null always reports a pos of 0, so we cannot perform this check
+comment|// in that case.
+if|if
+condition|(
+name|Pos
+condition|)
+name|assert
+argument_list|(
+name|Size
+operator|+
+name|Offset
+operator|<=
+name|Pos
+operator|&&
+literal|"We don't support extending the stream"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|pwrite_impl
+argument_list|(
+name|Ptr
+argument_list|,
+name|Size
+argument_list|,
+name|Offset
+argument_list|)
+block|;   }
+end_decl_stmt
+
+begin_comment
+unit|};
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -1323,7 +1448,7 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// raw_fd_ostream - A raw_ostream that writes to a file descriptor.
+comment|/// A raw_ostream that writes to a file descriptor.
 end_comment
 
 begin_comment
@@ -1335,7 +1460,7 @@ name|class
 name|raw_fd_ostream
 range|:
 name|public
-name|raw_ostream
+name|raw_pwrite_stream
 block|{
 name|int
 name|FD
@@ -1356,7 +1481,10 @@ block|;
 name|uint64_t
 name|pos
 block|;
-comment|/// write_impl - See raw_ostream::write_impl.
+name|bool
+name|SupportsSeeking
+block|;
+comment|/// See raw_ostream::write_impl.
 name|void
 name|write_impl
 argument_list|(
@@ -1366,8 +1494,19 @@ argument|size_t Size
 argument_list|)
 name|override
 block|;
-comment|/// current_pos - Return the current position within the stream, not
-comment|/// counting the bytes currently in the buffer.
+name|void
+name|pwrite_impl
+argument_list|(
+argument|const char *Ptr
+argument_list|,
+argument|size_t Size
+argument_list|,
+argument|uint64_t Offset
+argument_list|)
+name|override
+block|;
+comment|/// Return the current position within the stream, not counting the bytes
+comment|/// currently in the buffer.
 name|uint64_t
 name|current_pos
 argument_list|()
@@ -1378,15 +1517,14 @@ return|return
 name|pos
 return|;
 block|}
-comment|/// preferred_buffer_size - Determine an efficient buffer size.
+comment|/// Determine an efficient buffer size.
 name|size_t
 name|preferred_buffer_size
 argument_list|()
 specifier|const
 name|override
 block|;
-comment|/// error_detected - Set the flag indicating that an output error has
-comment|/// been encountered.
+comment|/// Set the flag indicating that an output error has been encountered.
 name|void
 name|error_detected
 argument_list|()
@@ -1416,8 +1554,8 @@ argument_list|,
 argument|sys::fs::OpenFlags Flags
 argument_list|)
 block|;
-comment|/// raw_fd_ostream ctor - FD is the file descriptor that this writes to.  If
-comment|/// ShouldClose is true, this closes the file when the stream is destroyed.
+comment|/// FD is the file descriptor that this writes to.  If ShouldClose is true,
+comment|/// this closes the file when the stream is destroyed.
 name|raw_fd_ostream
 argument_list|(
 argument|int fd
@@ -1430,23 +1568,32 @@ block|;
 operator|~
 name|raw_fd_ostream
 argument_list|()
+name|override
 block|;
-comment|/// close - Manually flush the stream and close the file.
-comment|/// Note that this does not call fsync.
+comment|/// Manually flush the stream and close the file. Note that this does not call
+comment|/// fsync.
 name|void
 name|close
 argument_list|()
 block|;
-comment|/// seek - Flushes the stream and repositions the underlying file descriptor
-comment|/// position to the offset specified from the beginning of the file.
+name|bool
+name|supportsSeeking
+argument_list|()
+block|{
+return|return
+name|SupportsSeeking
+return|;
+block|}
+comment|/// Flushes the stream and repositions the underlying file descriptor position
+comment|/// to the offset specified from the beginning of the file.
 name|uint64_t
 name|seek
 argument_list|(
 argument|uint64_t off
 argument_list|)
 block|;
-comment|/// SetUseAtomicWrite - Set the stream to attempt to use atomic writes for
-comment|/// individual output routines where possible.
+comment|/// Set the stream to attempt to use atomic writes for individual output
+comment|/// routines where possible.
 comment|///
 comment|/// Note that because raw_ostream's are typically buffered, this flag is only
 comment|/// sensible when used on unbuffered streams which will flush their output
@@ -1497,8 +1644,8 @@ argument_list|()
 specifier|const
 name|override
 block|;
-comment|/// has_error - Return the value of the flag in this raw_fd_ostream indicating
-comment|/// whether an output error has been encountered.
+comment|/// Return the value of the flag in this raw_fd_ostream indicating whether an
+comment|/// output error has been encountered.
 comment|/// This doesn't implicitly flush any pending output.  Also, it doesn't
 comment|/// guarantee to detect all errors unless the stream has been closed.
 name|bool
@@ -1510,10 +1657,10 @@ return|return
 name|Error
 return|;
 block|}
-comment|/// clear_error - Set the flag read by has_error() to false. If the error
-comment|/// flag is set at the time when this raw_ostream's destructor is called,
-comment|/// report_fatal_error is called to report the error. Use clear_error()
-comment|/// after handling the error to avoid this behavior.
+comment|/// Set the flag read by has_error() to false. If the error flag is set at the
+comment|/// time when this raw_ostream's destructor is called, report_fatal_error is
+comment|/// called to report the error. Use clear_error() after handling the error to
+comment|/// avoid this behavior.
 comment|///
 comment|///   "Errors should never pass silently.
 comment|///    Unless explicitly silenced."
@@ -1529,22 +1676,21 @@ name|false
 block|;   }
 expr|}
 block|;
-comment|/// outs() - This returns a reference to a raw_ostream for standard output.
-comment|/// Use it like: outs()<< "foo"<< "bar";
+comment|/// This returns a reference to a raw_ostream for standard output. Use it like:
+comment|/// outs()<< "foo"<< "bar";
 name|raw_ostream
 operator|&
 name|outs
 argument_list|()
 block|;
-comment|/// errs() - This returns a reference to a raw_ostream for standard error.
-comment|/// Use it like: errs()<< "foo"<< "bar";
+comment|/// This returns a reference to a raw_ostream for standard error. Use it like:
+comment|/// errs()<< "foo"<< "bar";
 name|raw_ostream
 operator|&
 name|errs
 argument_list|()
 block|;
-comment|/// nulls() - This returns a reference to a raw_ostream which simply discards
-comment|/// output.
+comment|/// This returns a reference to a raw_ostream which simply discards output.
 name|raw_ostream
 operator|&
 name|nulls
@@ -1553,8 +1699,8 @@ block|;
 comment|//===----------------------------------------------------------------------===//
 comment|// Output Stream Adaptors
 comment|//===----------------------------------------------------------------------===//
-comment|/// raw_string_ostream - A raw_ostream that writes to an std::string.  This is a
-comment|/// simple adaptor class. This class does not encounter output errors.
+comment|/// A raw_ostream that writes to an std::string.  This is a simple adaptor
+comment|/// class. This class does not encounter output errors.
 name|class
 name|raw_string_ostream
 operator|:
@@ -1567,7 +1713,7 @@ name|string
 operator|&
 name|OS
 block|;
-comment|/// write_impl - See raw_ostream::write_impl.
+comment|/// See raw_ostream::write_impl.
 name|void
 name|write_impl
 argument_list|(
@@ -1577,8 +1723,8 @@ argument|size_t Size
 argument_list|)
 name|override
 block|;
-comment|/// current_pos - Return the current position within the stream, not
-comment|/// counting the bytes currently in the buffer.
+comment|/// Return the current position within the stream, not counting the bytes
+comment|/// currently in the buffer.
 name|uint64_t
 name|current_pos
 argument_list|()
@@ -1612,9 +1758,10 @@ block|{}
 operator|~
 name|raw_string_ostream
 argument_list|()
+name|override
 block|;
-comment|/// str - Flushes the stream contents to the target string and returns
-comment|///  the string's reference.
+comment|/// Flushes the stream contents to the target string and returns  the string's
+comment|/// reference.
 name|std
 operator|::
 name|string
@@ -1631,14 +1778,13 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// raw_svector_ostream - A raw_ostream that writes to an SmallVector or
-comment|/// SmallString.  This is a simple adaptor class. This class does not
-comment|/// encounter output errors.
+comment|/// A raw_ostream that writes to an SmallVector or SmallString.  This is a
+comment|/// simple adaptor class. This class does not encounter output errors.
 name|class
 name|raw_svector_ostream
 operator|:
 name|public
-name|raw_ostream
+name|raw_pwrite_stream
 block|{
 name|SmallVectorImpl
 operator|<
@@ -1647,7 +1793,7 @@ operator|>
 operator|&
 name|OS
 block|;
-comment|/// write_impl - See raw_ostream::write_impl.
+comment|/// See raw_ostream::write_impl.
 name|void
 name|write_impl
 argument_list|(
@@ -1657,13 +1803,44 @@ argument|size_t Size
 argument_list|)
 name|override
 block|;
-comment|/// current_pos - Return the current position within the stream, not
-comment|/// counting the bytes currently in the buffer.
+name|void
+name|pwrite_impl
+argument_list|(
+argument|const char *Ptr
+argument_list|,
+argument|size_t Size
+argument_list|,
+argument|uint64_t Offset
+argument_list|)
+name|override
+block|;
+comment|/// Return the current position within the stream, not counting the bytes
+comment|/// currently in the buffer.
 name|uint64_t
 name|current_pos
 argument_list|()
 specifier|const
 name|override
+block|;
+name|protected
+operator|:
+comment|// Like the regular constructor, but doesn't call init.
+name|explicit
+name|raw_svector_ostream
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|O
+argument_list|,
+name|unsigned
+argument_list|)
+block|;
+name|void
+name|init
+argument_list|()
 block|;
 name|public
 operator|:
@@ -1685,29 +1862,30 @@ block|;
 operator|~
 name|raw_svector_ostream
 argument_list|()
+name|override
 block|;
-comment|/// resync - This is called when the SmallVector we're appending to is changed
-comment|/// outside of the raw_svector_ostream's control.  It is only safe to do this
-comment|/// if the raw_svector_ostream has previously been flushed.
+comment|/// This is called when the SmallVector we're appending to is changed outside
+comment|/// of the raw_svector_ostream's control.  It is only safe to do this if the
+comment|/// raw_svector_ostream has previously been flushed.
 name|void
 name|resync
 argument_list|()
 block|;
-comment|/// str - Flushes the stream contents to the target vector and return a
-comment|/// StringRef for the vector contents.
+comment|/// Flushes the stream contents to the target vector and return a StringRef
+comment|/// for the vector contents.
 name|StringRef
 name|str
 argument_list|()
 block|; }
 block|;
-comment|/// raw_null_ostream - A raw_ostream that discards all output.
+comment|/// A raw_ostream that discards all output.
 name|class
 name|raw_null_ostream
 operator|:
 name|public
-name|raw_ostream
+name|raw_pwrite_stream
 block|{
-comment|/// write_impl - See raw_ostream::write_impl.
+comment|/// See raw_ostream::write_impl.
 name|void
 name|write_impl
 argument_list|(
@@ -1717,8 +1895,19 @@ argument|size_t size
 argument_list|)
 name|override
 block|;
-comment|/// current_pos - Return the current position within the stream, not
-comment|/// counting the bytes currently in the buffer.
+name|void
+name|pwrite_impl
+argument_list|(
+argument|const char *Ptr
+argument_list|,
+argument|size_t Size
+argument_list|,
+argument|uint64_t Offset
+argument_list|)
+name|override
+block|;
+comment|/// Return the current position within the stream, not counting the bytes
+comment|/// currently in the buffer.
 name|uint64_t
 name|current_pos
 argument_list|()
@@ -1734,7 +1923,61 @@ block|{}
 operator|~
 name|raw_null_ostream
 argument_list|()
+name|override
 block|; }
+block|;
+name|class
+name|buffer_ostream
+operator|:
+name|public
+name|raw_svector_ostream
+block|{
+name|raw_ostream
+operator|&
+name|OS
+block|;
+name|SmallVector
+operator|<
+name|char
+block|,
+literal|0
+operator|>
+name|Buffer
+block|;
+name|public
+operator|:
+name|buffer_ostream
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+operator|:
+name|raw_svector_ostream
+argument_list|(
+name|Buffer
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|OS
+argument_list|(
+argument|OS
+argument_list|)
+block|{
+name|init
+argument_list|()
+block|;   }
+operator|~
+name|buffer_ostream
+argument_list|()
+block|{
+name|OS
+operator|<<
+name|str
+argument_list|()
+block|; }
+block|}
 block|;  }
 end_decl_stmt
 

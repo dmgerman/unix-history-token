@@ -77,7 +77,7 @@ name|class
 name|Pass
 decl_stmt|;
 name|class
-name|TargetLibraryInfo
+name|TargetLibraryInfoImpl
 decl_stmt|;
 name|class
 name|TargetMachine
@@ -93,16 +93,6 @@ name|class
 name|PassManagerBase
 decl_stmt|;
 block|}
-name|using
-name|legacy
-operator|::
-name|FunctionPassManager
-expr_stmt|;
-name|using
-name|legacy
-operator|::
-name|PassManagerBase
-expr_stmt|;
 comment|/// PassManagerBuilder - This class is used to set up a standard optimization
 comment|/// sequence for languages like C and C++, allowing some APIs to customize the
 comment|/// pass sequence in various ways. A simple example of using it would be:
@@ -136,21 +126,23 @@ comment|/// Extensions are passed the builder itself (so they can see how it is
 comment|/// configured) as well as the pass manager to add stuff to.
 typedef|typedef
 name|void
-function_decl|(
-modifier|*
+argument_list|(
+operator|*
 name|ExtensionFn
-function_decl|)
-parameter_list|(
+argument_list|)
+argument_list|(
 specifier|const
 name|PassManagerBuilder
-modifier|&
+operator|&
 name|Builder
-parameter_list|,
+argument_list|,
+name|legacy
+operator|::
 name|PassManagerBase
-modifier|&
+operator|&
 name|PM
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 enum|enum
 name|ExtensionPointTy
 block|{
@@ -200,7 +192,7 @@ decl_stmt|;
 comment|/// LibraryInfo - Specifies information about the runtime library for the
 comment|/// optimizer.  If this is non-null, it is added to both the function and
 comment|/// per-module pass pipeline.
-name|TargetLibraryInfo
+name|TargetLibraryInfoImpl
 modifier|*
 name|LibraryInfo
 decl_stmt|;
@@ -244,10 +236,10 @@ name|bool
 name|VerifyOutput
 decl_stmt|;
 name|bool
-name|StripDebug
+name|MergeFunctions
 decl_stmt|;
 name|bool
-name|MergeFunctions
+name|PrepareForLTO
 decl_stmt|;
 name|private
 label|:
@@ -308,6 +300,8 @@ argument_list|(
 name|ExtensionPointTy
 name|ETy
 argument_list|,
+name|legacy
+operator|::
 name|PassManagerBase
 operator|&
 name|PM
@@ -317,6 +311,8 @@ decl_stmt|;
 name|void
 name|addInitialAliasAnalysisPasses
 argument_list|(
+name|legacy
+operator|::
 name|PassManagerBase
 operator|&
 name|PM
@@ -325,12 +321,24 @@ decl|const
 decl_stmt|;
 name|void
 name|addLTOOptimizationPasses
-parameter_list|(
+argument_list|(
+name|legacy
+operator|::
 name|PassManagerBase
-modifier|&
+operator|&
 name|PM
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
+name|void
+name|addLateLTOOptimizationPasses
+argument_list|(
+name|legacy
+operator|::
+name|PassManagerBase
+operator|&
+name|PM
+argument_list|)
+decl_stmt|;
 name|public
 label|:
 comment|/// populateFunctionPassManager - This fills in the function pass manager,
@@ -338,35 +346,35 @@ comment|/// which is expected to be run on each function immediately as it is
 comment|/// generated.  The idea is to reduce the size of the IR in memory.
 name|void
 name|populateFunctionPassManager
-parameter_list|(
+argument_list|(
+name|legacy
+operator|::
 name|FunctionPassManager
-modifier|&
+operator|&
 name|FPM
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// populateModulePassManager - This sets up the primary pass manager.
 name|void
 name|populateModulePassManager
-parameter_list|(
+argument_list|(
+name|legacy
+operator|::
 name|PassManagerBase
-modifier|&
+operator|&
 name|MPM
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|populateLTOPassManager
-parameter_list|(
+argument_list|(
+name|legacy
+operator|::
 name|PassManagerBase
-modifier|&
+operator|&
 name|PM
-parameter_list|,
-name|TargetMachine
-modifier|*
-name|TM
-init|=
-name|nullptr
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// Registers a function for adding a standard set of passes.  This should be

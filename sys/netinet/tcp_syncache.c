@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/hash.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -1000,56 +1006,6 @@ literal|"TCP syncache"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|SYNCACHE_HASH
-parameter_list|(
-name|inc
-parameter_list|,
-name|mask
-parameter_list|)
-define|\
-value|((V_tcp_syncache.hash_secret ^					\ 	  (inc)->inc_faddr.s_addr ^					\ 	  ((inc)->inc_faddr.s_addr>> 16) ^				\ 	  (inc)->inc_fport ^ (inc)->inc_lport)& mask)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYNCACHE_HASH6
-parameter_list|(
-name|inc
-parameter_list|,
-name|mask
-parameter_list|)
-define|\
-value|((V_tcp_syncache.hash_secret ^					\ 	  (inc)->inc6_faddr.s6_addr32[0] ^				\ 	  (inc)->inc6_faddr.s6_addr32[3] ^				\ 	  (inc)->inc_fport ^ (inc)->inc_lport)& mask)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENDPTS_EQ
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(						\ 	(a)->ie_fport == (b)->ie_fport&&				\ 	(a)->ie_lport == (b)->ie_lport&&				\ 	(a)->ie_faddr.s_addr == (b)->ie_faddr.s_addr&&			\ 	(a)->ie_laddr.s_addr == (b)->ie_laddr.s_addr			\ )
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENDPTS6_EQ
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(memcmp(a, b, sizeof(*a)) == 0)
-end_define
 
 begin_define
 define|#
@@ -2383,18 +2339,34 @@ name|syncache_head
 modifier|*
 name|sch
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
-if|if
-condition|(
+name|uint32_t
+name|hash
+decl_stmt|;
+comment|/* 	 * The hash is built on foreign port + local port + foreign address. 	 * We rely on the fact that struct in_conninfo starts with 16 bits 	 * of foreign port, then 16 bits of local port then followed by 128 	 * bits of foreign address.  In case of IPv4 address, the first 3 	 * 32-bit words of the address always are zeroes. 	 */
+name|hash
+operator|=
+name|jenkins_hash32
+argument_list|(
+operator|(
+name|uint32_t
+operator|*
+operator|)
+operator|&
 name|inc
 operator|->
-name|inc_flags
+name|inc_ie
+argument_list|,
+literal|5
+argument_list|,
+name|V_tcp_syncache
+operator|.
+name|hash_secret
+argument_list|)
 operator|&
-name|INC_ISIPV6
-condition|)
-block|{
+name|V_tcp_syncache
+operator|.
+name|hashmask
+expr_stmt|;
 name|sch
 operator|=
 operator|&
@@ -2402,14 +2374,7 @@ name|V_tcp_syncache
 operator|.
 name|hashbase
 index|[
-name|SYNCACHE_HASH6
-argument_list|(
-name|inc
-argument_list|,
-name|V_tcp_syncache
-operator|.
-name|hashmask
-argument_list|)
+name|hash
 index|]
 expr_stmt|;
 operator|*
@@ -2431,10 +2396,9 @@ argument|&sch->sch_bucket
 argument_list|,
 argument|sc_hash
 argument_list|)
-block|{
 if|if
 condition|(
-name|ENDPTS6_EQ
+name|bcmp
 argument_list|(
 operator|&
 name|inc
@@ -2447,108 +2411,23 @@ operator|->
 name|sc_inc
 operator|.
 name|inc_ie
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_endpoints
 argument_list|)
+argument_list|)
+operator|==
+literal|0
 condition|)
+break|break;
 return|return
 operator|(
 name|sc
 operator|)
 return|;
-block|}
-block|}
-else|else
-endif|#
-directive|endif
-block|{
-name|sch
-operator|=
-operator|&
-name|V_tcp_syncache
-operator|.
-name|hashbase
-index|[
-name|SYNCACHE_HASH
-argument_list|(
-name|inc
-argument_list|,
-name|V_tcp_syncache
-operator|.
-name|hashmask
-argument_list|)
-index|]
-expr_stmt|;
-operator|*
-name|schp
-operator|=
-name|sch
-expr_stmt|;
-name|SCH_LOCK
-argument_list|(
-name|sch
-argument_list|)
-expr_stmt|;
-comment|/* Circle through bucket row to find matching entry. */
-name|TAILQ_FOREACH
-argument_list|(
-argument|sc
-argument_list|,
-argument|&sch->sch_bucket
-argument_list|,
-argument|sc_hash
-argument_list|)
-block|{
-ifdef|#
-directive|ifdef
-name|INET6
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_inc
-operator|.
-name|inc_flags
-operator|&
-name|INC_ISIPV6
-condition|)
-continue|continue;
-endif|#
-directive|endif
-if|if
-condition|(
-name|ENDPTS_EQ
-argument_list|(
-operator|&
-name|inc
-operator|->
-name|inc_ie
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_inc
-operator|.
-name|inc_ie
-argument_list|)
-condition|)
-return|return
-operator|(
-name|sc
-operator|)
-return|;
-block|}
-block|}
-name|SCH_LOCK_ASSERT
-argument_list|(
-operator|*
-name|schp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-comment|/* always returns with locked sch */
+comment|/* Always returns with locked sch. */
 block|}
 end_function
 
@@ -3034,7 +2913,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Build a new TCP socket structure from a syncache entry.  */
+comment|/*  * Build a new TCP socket structure from a syncache entry.  *  * On success return the newly created socket with its underlying inp locked.  */
 end_comment
 
 begin_function
@@ -3084,7 +2963,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -3192,6 +3071,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Exclusive pcbinfo lock is not required in syncache socket case even 	 * if two inpcb locks can be acquired simultaneously: 	 *  - the inpcb in LISTEN state, 	 *  - the newly created inp. 	 * 	 * In this case, an inp cannot be at same time in LISTEN state and 	 * just created by an accept() call. 	 */
 name|INP_HASH_WLOCK
 argument_list|(
 operator|&
@@ -4303,11 +4183,6 @@ name|tp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|INP_WUNLOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 name|soisconnected
 argument_list|(
 name|so
@@ -4352,7 +4227,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function gets called when we receive an ACK for a  * socket in the LISTEN state.  We look up the connection  * in the syncache, and if its there, we pull it out of  * the cache and turn it into a full-blown connection in  * the SYN-RECEIVED state.  */
+comment|/*  * This function gets called when we receive an ACK for a  * socket in the LISTEN state.  We look up the connection  * in the syncache, and if its there, we pull it out of  * the cache and turn it into a full-blown connection in  * the SYN-RECEIVED state.  *  * On syncache_socket() success the newly created socket  * has its underlying inp locked.  */
 end_comment
 
 begin_function
@@ -4405,7 +4280,7 @@ modifier|*
 name|s
 decl_stmt|;
 comment|/* 	 * Global TCP locks are held because we manipulate the PCB lists 	 * and create a new socket. 	 */
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo

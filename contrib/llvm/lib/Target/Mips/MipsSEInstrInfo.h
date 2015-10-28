@@ -223,6 +223,7 @@ argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// Emit a series of instructions to load an immediate. If NewImm is a
 comment|/// non-NULL parameter, the last instruction is not emitted, but instead

@@ -110,15 +110,30 @@ name|EVTCHNOP_reset
 value|10
 end_define
 
+begin_define
+define|#
+directive|define
+name|EVTCHNOP_init_control
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVTCHNOP_expand_array
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVTCHNOP_set_priority
+value|13
+end_define
+
 begin_comment
 comment|/* ` } */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__XEN_EVTCHN_PORT_DEFINED__
-end_ifndef
 
 begin_typedef
 typedef|typedef
@@ -134,18 +149,6 @@ name|evtchn_port_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|__XEN_EVTCHN_PORT_DEFINED__
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * EVTCHNOP_alloc_unbound: Allocate a port in domain<dom> and mark as  * accepting interdomain bindings from domain<remote_dom>. A fresh port  * is allocated in<dom> and returned as<port>.  * NOTES:  *  1. If the caller is unprivileged then<dom> must be DOMID_SELF.  *  2.<rdom> may be DOMID_SELF, allowing loopback connections.  */
@@ -178,7 +181,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * EVTCHNOP_bind_interdomain: Construct an interdomain event channel between  * the calling domain and<remote_dom>.<remote_dom,remote_port> must identify  * a port that is unbound and marked as accepting bindings from the calling  * domain. A fresh port is allocated in the calling domain and returned as  *<local_port>.  * NOTES:  *  1.<remote_dom> may be DOMID_SELF, allowing loopback connections.  */
+comment|/*  * EVTCHNOP_bind_interdomain: Construct an interdomain event channel between  * the calling domain and<remote_dom>.<remote_dom,remote_port> must identify  * a port that is unbound and marked as accepting bindings from the calling  * domain. A fresh port is allocated in the calling domain and returned as  *<local_port>.  *  * In case the peer domain has already tried to set our event channel  * pending, before it was bound, EVTCHNOP_bind_interdomain always sets  * the local event channel pending.  *  * The usual pattern of use, in the guest's upcall (or subsequent  * handler) is as follows: (Re-enable the event channel for subsequent  * signalling and then) check for the existence of whatever condition  * is being waited for by other means, and take whatever action is  * needed (if any).  *  * NOTES:  *  1.<remote_dom> may be DOMID_SELF, allowing loopback connections.  */
 end_comment
 
 begin_struct
@@ -502,7 +505,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * EVTCHNOP_reset: Close all event channels associated with specified domain.  * NOTES:  *  1.<dom> may be specified as DOMID_SELF.  *  2. Only a sufficiently-privileged domain may specify other than DOMID_SELF.  */
+comment|/*  * EVTCHNOP_reset: Close all event channels associated with specified domain.  * NOTES:  *  1.<dom> may be specified as DOMID_SELF.  *  2. Only a sufficiently-privileged domain may specify other than DOMID_SELF.  *  3. Destroys all control blocks and event array, resets event channel  *     operations to 2-level ABI if called with<dom> == DOMID_SELF and FIFO  *     ABI was used. Guests should not bind events during EVTCHNOP_reset call  *     as these events are likely to be lost.  */
 end_comment
 
 begin_struct
@@ -522,6 +525,97 @@ typedef|typedef
 name|struct
 name|evtchn_reset
 name|evtchn_reset_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * EVTCHNOP_init_control: initialize the control block for the FIFO ABI.  *  * Note: any events that are currently pending will not be resent and  * will be lost.  Guests should call this before binding any event to  * avoid losing any events.  */
+end_comment
+
+begin_struct
+struct|struct
+name|evtchn_init_control
+block|{
+comment|/* IN parameters. */
+name|uint64_t
+name|control_gfn
+decl_stmt|;
+name|uint32_t
+name|offset
+decl_stmt|;
+name|uint32_t
+name|vcpu
+decl_stmt|;
+comment|/* OUT parameters. */
+name|uint8_t
+name|link_bits
+decl_stmt|;
+name|uint8_t
+name|_pad
+index|[
+literal|7
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|evtchn_init_control
+name|evtchn_init_control_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * EVTCHNOP_expand_array: add an additional page to the event array.  */
+end_comment
+
+begin_struct
+struct|struct
+name|evtchn_expand_array
+block|{
+comment|/* IN parameters. */
+name|uint64_t
+name|array_gfn
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|evtchn_expand_array
+name|evtchn_expand_array_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * EVTCHNOP_set_priority: set the priority for an event channel.  */
+end_comment
+
+begin_struct
+struct|struct
+name|evtchn_set_priority
+block|{
+comment|/* IN parameters. */
+name|uint32_t
+name|port
+decl_stmt|;
+name|uint32_t
+name|priority
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|evtchn_set_priority
+name|evtchn_set_priority_t
 typedef|;
 end_typedef
 
@@ -602,6 +696,137 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * 2-level ABI  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EVTCHN_2L_NR_CHANNELS
+value|(sizeof(xen_ulong_t) * sizeof(xen_ulong_t) * 64)
+end_define
+
+begin_comment
+comment|/*  * FIFO ABI  */
+end_comment
+
+begin_comment
+comment|/* Events may have priorities from 0 (highest) to 15 (lowest). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EVTCHN_FIFO_PRIORITY_MAX
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVTCHN_FIFO_PRIORITY_DEFAULT
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVTCHN_FIFO_PRIORITY_MIN
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVTCHN_FIFO_MAX_QUEUES
+value|(EVTCHN_FIFO_PRIORITY_MIN + 1)
+end_define
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|event_word_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|EVTCHN_FIFO_PENDING
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVTCHN_FIFO_MASKED
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVTCHN_FIFO_LINKED
+value|29
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVTCHN_FIFO_BUSY
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVTCHN_FIFO_LINK_BITS
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVTCHN_FIFO_LINK_MASK
+value|((1<< EVTCHN_FIFO_LINK_BITS) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVTCHN_FIFO_NR_CHANNELS
+value|(1<< EVTCHN_FIFO_LINK_BITS)
+end_define
+
+begin_struct
+struct|struct
+name|evtchn_fifo_control_block
+block|{
+name|uint32_t
+name|ready
+decl_stmt|;
+name|uint32_t
+name|_rsvd
+decl_stmt|;
+name|uint32_t
+name|head
+index|[
+name|EVTCHN_FIFO_MAX_QUEUES
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|evtchn_fifo_control_block
+name|evtchn_fifo_control_block_t
+typedef|;
+end_typedef
+
 begin_endif
 endif|#
 directive|endif
@@ -612,7 +837,7 @@ comment|/* __XEN_PUBLIC_EVENT_CHANNEL_H__ */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit

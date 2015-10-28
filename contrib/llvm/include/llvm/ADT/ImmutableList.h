@@ -154,13 +154,17 @@ specifier|const
 name|ImmutableListImpl
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|ImmutableListImpl
 argument_list|(
-argument|const ImmutableListImpl&
+specifier|const
+name|ImmutableListImpl
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:

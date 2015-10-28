@@ -2599,13 +2599,6 @@ return|return
 name|Value
 return|;
 block|}
-name|AMSubMode
-name|getLoadStoreMultipleSubMode
-parameter_list|(
-name|int
-name|Opcode
-parameter_list|)
-function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Floating-point Immediates
 comment|//

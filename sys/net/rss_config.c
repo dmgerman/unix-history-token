@@ -124,63 +124,6 @@ directive|include
 file|<net/toeplitz.h>
 end_include
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_pcb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_rss.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
-end_include
-
-begin_comment
-comment|/* for software rss hash support */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*-  * Operating system parts of receiver-side scaling (RSS), which allows  * network cards to direct flows to particular receive queues based on hashes  * of header tuples.  This implementation aligns RSS buckets with connection  * groups at the TCP/IP layer, so each bucket is associated with exactly one  * group.  As a result, the group lookup structures (and lock) should have an  * effective affinity with exactly one CPU.  *  * Network device drivers needing to configure RSS will query this framework  * for parameters, such as the current RSS key, hashing policies, number of  * bits, and indirection table mapping hashes to buckets and CPUs.  They may  * provide their own supplementary information, such as queue<->CPU bindings.  * It is the responsibility of the network device driver to inject packets  * into the stack on as close to the right CPU as possible, if playing by RSS  * rules.  *  * TODO:  *  * - Synchronization for rss_key and other future-configurable parameters.  * - Event handler drivers can register to pick up RSS configuration changes.  * - Should we allow rss_basecpu to be configured?  * - Randomize key on boot.  * - IPv6 support.  * - Statistics on how often there's a misalignment between hardware  *   placement and pcbgroup expectations.  */
 end_comment
@@ -490,6 +433,39 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Print verbose debugging messages.  * 0 - disable  * non-zero - enable  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rss_debug
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_rss
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debug
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|rss_debug
+argument_list|,
+literal|0
+argument_list|,
+literal|"RSS debug level"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * RSS secret key, intended to prevent attacks on load-balancing.  Its  * effectiveness may be limited by algorithm choice and available entropy  * during the boot.  *  * XXXRW: And that we don't randomize it yet!  *  * This is the default Microsoft RSS specification key which is also  * the Chelsio T5 firmware default key.  */
 end_comment
 
@@ -643,11 +619,9 @@ name|RSS_HASH_NAIVE
 case|:
 break|break;
 default|default:
-name|printf
+name|RSS_DEBUG
 argument_list|(
-literal|"%s: invalid RSS hashalgo %u, coercing to %u"
-argument_list|,
-name|__func__
+literal|"invalid RSS hashalgo %u, coercing to %u\n"
 argument_list|,
 name|rss_hashalgo
 argument_list|,
@@ -737,11 +711,9 @@ operator|>
 name|RSS_MAXBITS
 condition|)
 block|{
-name|printf
+name|RSS_DEBUG
 argument_list|(
-literal|"%s: RSS bits %u not valid, coercing to  %u"
-argument_list|,
-name|__func__
+literal|"RSS bits %u not valid, coercing to %u\n"
 argument_list|,
 name|rss_bits
 argument_list|,
@@ -768,12 +740,10 @@ name|rss_buckets
 operator|<
 name|rss_ncpus
 condition|)
-name|printf
+name|RSS_DEBUG
 argument_list|(
-literal|"%s: WARNING: rss_buckets (%u) less than "
+literal|"WARNING: rss_buckets (%u) less than "
 literal|"rss_ncpus (%u)\n"
-argument_list|,
-name|__func__
 argument_list|,
 name|rss_buckets
 argument_list|,

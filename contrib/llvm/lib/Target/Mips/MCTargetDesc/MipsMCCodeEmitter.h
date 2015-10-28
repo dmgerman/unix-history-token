@@ -118,9 +118,12 @@ name|MCCodeEmitter
 block|{
 name|MipsMCCodeEmitter
 argument_list|(
-argument|const MipsMCCodeEmitter&
+specifier|const
+name|MipsMCCodeEmitter
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -130,7 +133,8 @@ specifier|const
 name|MipsMCCodeEmitter
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 specifier|const
 name|MCInstrInfo
@@ -146,6 +150,13 @@ name|IsLittleEndian
 block|;
 name|bool
 name|isMicroMips
+argument_list|(
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isMips32r6
 argument_list|(
 argument|const MCSubtargetInfo&STI
 argument_list|)
@@ -180,6 +191,7 @@ block|{}
 operator|~
 name|MipsMCCodeEmitter
 argument_list|()
+name|override
 block|{}
 name|void
 name|EmitByte
@@ -204,7 +216,7 @@ argument_list|)
 specifier|const
 block|;
 name|void
-name|EncodeInstruction
+name|encodeInstruction
 argument_list|(
 argument|const MCInst&MI
 argument_list|,
@@ -339,6 +351,22 @@ comment|// target operand. If the machine operand requires relocation,
 comment|// record the relocation and return zero.
 name|unsigned
 name|getBranchTarget7OpValueMM
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+comment|// getBranchTargetOpValueMMPC10 - Return binary encoding of the microMIPS
+comment|// 10-bit branch target operand. If the machine operand requires relocation,
+comment|// record the relocation and return zero.
+name|unsigned
+name|getBranchTargetOpValueMMPC10
 argument_list|(
 argument|const MCInst&MI
 argument_list|,
@@ -508,6 +536,19 @@ argument_list|)
 specifier|const
 block|;
 name|unsigned
+name|getMemEncodingMMGPImm7Lsl2
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
 name|getMemEncodingMMImm12
 argument_list|(
 argument|const MCInst&MI
@@ -627,6 +668,32 @@ specifier|const
 block|;
 name|unsigned
 name|getRegisterPairOpValue
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getMovePRegPairOpValue
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getSimm23Lsl2Encoding
 argument_list|(
 argument|const MCInst&MI
 argument_list|,

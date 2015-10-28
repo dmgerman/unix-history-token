@@ -101,12 +101,6 @@ directive|include
 file|<xen/xenstore/xenstorevar.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/xen/xenvar.h>
-end_include
-
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -142,22 +136,20 @@ begin_comment
 comment|/* We increase/decrease in batches which fit in a page */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
-name|unsigned
-name|long
+name|xen_pfn_t
 name|frame_list
 index|[
 name|PAGE_SIZE
 operator|/
-expr|sizeof
-operator|(
-name|unsigned
-name|long
-operator|)
-expr|]
-expr_stmt|;
-end_expr_stmt
+sizeof|sizeof
+argument_list|(
+name|xen_pfn_t
+argument_list|)
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -635,8 +627,6 @@ parameter_list|)
 block|{
 name|unsigned
 name|long
-name|pfn
-decl_stmt|,
 name|i
 decl_stmt|;
 name|vm_page_t
@@ -896,17 +886,6 @@ operator|.
 name|balloon_low
 operator|--
 expr_stmt|;
-name|pfn
-operator|=
-operator|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
-name|page
-argument_list|)
-operator|>>
-name|PAGE_SHIFT
-operator|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|xen_feature
@@ -953,8 +932,6 @@ parameter_list|)
 block|{
 name|unsigned
 name|long
-name|pfn
-decl_stmt|,
 name|i
 decl_stmt|;
 name|vm_page_t
@@ -1079,7 +1056,10 @@ name|page
 argument_list|)
 expr_stmt|;
 block|}
-name|pfn
+name|frame_list
+index|[
+name|i
+index|]
 operator|=
 operator|(
 name|VM_PAGE_TO_PHYS
@@ -1089,13 +1069,6 @@ argument_list|)
 operator|>>
 name|PAGE_SHIFT
 operator|)
-expr_stmt|;
-name|frame_list
-index|[
-name|i
-index|]
-operator|=
-name|pfn
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(

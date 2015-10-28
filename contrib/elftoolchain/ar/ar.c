@@ -82,7 +82,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: ar.c 3183 2015-04-10 16:18:42Z emaste $"
+literal|"$Id: ar.c 3243 2015-08-31 19:28:45Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -373,7 +373,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"tDV"
+literal|"tDUV"
 argument_list|,
 name|longopts
 argument_list|,
@@ -402,6 +402,17 @@ name|bsdar
 operator|->
 name|options
 operator||=
+name|AR_D
+expr_stmt|;
+break|break;
+case|case
+literal|'U'
+case|:
+name|bsdar
+operator|->
+name|options
+operator|&=
+operator|~
 name|AR_D
 expr_stmt|;
 break|break;
@@ -448,9 +459,8 @@ name|options
 operator||=
 name|AR_S
 expr_stmt|;
-for|for
-control|(
-init|;
+while|while
+condition|(
 operator|(
 name|bsdar
 operator|->
@@ -462,8 +472,7 @@ operator|++
 operator|)
 operator|!=
 name|NULL
-condition|;
-control|)
+condition|)
 name|ar_write_archive
 argument_list|(
 name|bsdar
@@ -578,7 +587,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abCcdDfF:ijlMmopqrSsTtuVvxz"
+literal|"abCcdDfF:ijlMmopqrSsTtUuVvxz"
 argument_list|,
 name|longopts
 argument_list|,
@@ -826,6 +835,17 @@ name|bsdar
 argument_list|,
 name|opt
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'U'
+case|:
+name|bsdar
+operator|->
+name|options
+operator|&=
+operator|~
+name|AR_D
 expr_stmt|;
 break|break;
 case|case
@@ -1507,7 +1527,7 @@ begin_define
 define|#
 directive|define
 name|AR_USAGE_MESSAGE
-value|"\ Usage: %s<command> [options] archive file...\n\   Manage archives.\n\n\   Wher<command> is one of:\n\   -d            Delete members from the archive.\n\   -m            Move archive members within the archive.\n\   -p            Write the contents of members to standard output.\n\   -q            Append files to an archive.\n\   -r            Replace (add) files to an archive.\n\   -s            Add an archive symbol to an archive.\n\   -t            List files in an archive.\n\   -x            Extract members from an archive.\n\   -M            Execute MRI librarian commands.\n\   -V            Print a version identifier and exit.\n\n\   Options:\n\   -a MEMBER     Add members after the specified member.\n\   -b MEMBER | -i MEMBER\n\                 Add members before the specified member.\n\   -c            Do not print a message when creating a new archive.\n\   -f | -T       Only use the first fifteen characters of the member name.\n\   -j            (This option is accepted, but is ignored).\n\   -l            (This option is accepted, but is ignored).\n\   -o            Preserve modification times when extracting members.\n\   -u            Conditionally update or extract members.\n\   -v            Be verbose.\n\   -z            (This option is accepted, but is ignored).\n\   -C            Do not overwrite existing files in the file system.\n\   -D            Use fixed metadata, for consistent archive checksums.\n\   -F FORMAT | --flavor=FORMAT\n\                 Create archives with the specified format.\n\   -S            Do not generate an archive symbol table.\n"
+value|"\ Usage: %s<command> [options] archive file...\n\   Manage archives.\n\n\   Wher<command> is one of:\n\   -d            Delete members from the archive.\n\   -m            Move archive members within the archive.\n\   -p            Write the contents of members to standard output.\n\   -q            Append files to an archive.\n\   -r            Replace (add) files to an archive.\n\   -s            Add an archive symbol to an archive.\n\   -t            List files in an archive.\n\   -x            Extract members from an archive.\n\   -M            Execute MRI librarian commands.\n\   -V            Print a version identifier and exit.\n\n\   Options:\n\   -a MEMBER     Add members after the specified member.\n\   -b MEMBER | -i MEMBER\n\                 Add members before the specified member.\n\   -c            Do not print a message when creating a new archive.\n\   -f | -T       Only use the first fifteen characters of the member name.\n\   -j            (This option is accepted, but is ignored).\n\   -l            (This option is accepted, but is ignored).\n\   -o            Preserve modification times when extracting members.\n\   -u            Conditionally update or extract members.\n\   -v            Be verbose.\n\   -z            (This option is accepted, but is ignored).\n\   -C            Do not overwrite existing files in the file system.\n\   -D            Use fixed metadata, for consistent archive checksums.\n\   -F FORMAT | --flavor=FORMAT\n\                 Create archives with the specified format.\n\   -S            Do not generate an archive symbol table.\n\   -U            Use original metadata, for unique archive checksums.\n"
 end_define
 
 begin_function
@@ -1543,7 +1563,7 @@ begin_define
 define|#
 directive|define
 name|RANLIB_USAGE_MESSAGE
-value|"\ Usage: %s [options] archive...\n\   Update or create archive symbol tables.\n\n\   Options:\n\   -t              (This option is accepted, but ignored).\n\   -D              Use fixed metadata, for consistent archive checksums.\n\   -V              Print a version identifier and exit.\n"
+value|"\ Usage: %s [options] archive...\n\   Update or create archive symbol tables.\n\n\   Options:\n\   -t              (This option is accepted, but ignored).\n\   -D              Use fixed metadata, for consistent archive checksums.\n\   -U              Use original metadata, for unique archive checksums.\n\   -V              Print a version identifier and exit.\n"
 end_define
 
 begin_function

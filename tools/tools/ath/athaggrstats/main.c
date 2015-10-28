@@ -10,6 +10,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -22,25 +40,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -90,13 +96,6 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 name|int
 name|i
 decl_stmt|;
@@ -108,7 +107,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|tags
 argument_list|)
@@ -143,9 +142,6 @@ return|;
 return|return
 name|tag
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

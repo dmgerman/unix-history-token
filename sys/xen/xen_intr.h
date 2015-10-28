@@ -15,38 +15,11 @@ directive|define
 name|_XEN_INTR_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__XEN_EVTCHN_PORT_DEFINED__
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|uint32_t
-name|evtchn_port_t
-typedef|;
-end_typedef
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|evtchn_port_t
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|__XEN_EVTCHN_PORT_DEFINED__
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<xen/interface/event_channel.h>
+end_include
 
 begin_comment
 comment|/** Registered Xen interrupt callback handle. */
@@ -70,6 +43,18 @@ name|int
 name|xen_vector_callback_enabled
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|xen_intr_handle_upcall
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+name|trap_frame
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/**  * Associate an already allocated local event channel port an interrupt  * handler.  *  * \param dev         The device making this bind request.  * \param local_port  The event channel to bind.  * \param filter      An interrupt filter handler.  Specify NULL  *                    to always dispatch to the ithread handler.  * \param handler     An interrupt ithread handler.  Optional (can  *                    specify NULL) if all necessary event actions  *                    are performed by filter.  * \param arg         Argument to present to both filter and handler.  * \param irqflags    Interrupt handler flags.  See sys/bus.h.  * \param handlep     Pointer to an opaque handle used to manage this  *                    registration.  *  * \returns  0 on success, otherwise an errno.  */

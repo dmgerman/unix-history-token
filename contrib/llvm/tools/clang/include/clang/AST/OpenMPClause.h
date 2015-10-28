@@ -2048,10 +2048,23 @@ comment|/// \brief Location of ',' (if any).
 name|SourceLocation
 name|CommaLoc
 block|;
-comment|/// \brief Chunk size.
+comment|/// \brief Chunk size and a reference to pseudo variable for combined
+comment|/// directives.
+block|enum
+block|{
+name|CHUNK_SIZE
+block|,
+name|HELPER_CHUNK_SIZE
+block|,
+name|NUM_EXPRS
+block|}
+block|;
 name|Stmt
 operator|*
-name|ChunkSize
+name|ChunkSizes
+index|[
+name|NUM_EXPRS
+index|]
 block|;
 comment|/// \brief Set schedule kind.
 comment|///
@@ -2119,7 +2132,27 @@ argument_list|(
 argument|Expr *E
 argument_list|)
 block|{
-name|ChunkSize
+name|ChunkSizes
+index|[
+name|CHUNK_SIZE
+index|]
+operator|=
+name|E
+block|; }
+comment|/// \brief Set helper chunk size.
+comment|///
+comment|/// \param E Helper chunk size.
+comment|///
+name|void
+name|setHelperChunkSize
+argument_list|(
+argument|Expr *E
+argument_list|)
+block|{
+name|ChunkSizes
+index|[
+name|HELPER_CHUNK_SIZE
+index|]
 operator|=
 name|E
 block|; }
@@ -2135,6 +2168,7 @@ comment|/// \param CommaLoc Location of ','.
 comment|/// \param EndLoc Ending location of the clause.
 comment|/// \param Kind Schedule kind.
 comment|/// \param ChunkSize Chunk size.
+comment|/// \param HelperChunkSize Helper chunk size for combined directives.
 comment|///
 name|OMPScheduleClause
 argument_list|(
@@ -2151,6 +2185,8 @@ argument_list|,
 argument|OpenMPScheduleClauseKind Kind
 argument_list|,
 argument|Expr *ChunkSize
+argument_list|,
+argument|Expr *HelperChunkSize
 argument_list|)
 operator|:
 name|OMPClause
@@ -2179,14 +2215,23 @@ argument_list|)
 block|,
 name|CommaLoc
 argument_list|(
-name|CommaLoc
+argument|CommaLoc
 argument_list|)
-block|,
+block|{
+name|ChunkSizes
+index|[
+name|CHUNK_SIZE
+index|]
+operator|=
 name|ChunkSize
-argument_list|(
-argument|ChunkSize
-argument_list|)
-block|{}
+block|;
+name|ChunkSizes
+index|[
+name|HELPER_CHUNK_SIZE
+index|]
+operator|=
+name|HelperChunkSize
+block|;   }
 comment|/// \brief Build an empty clause.
 comment|///
 name|explicit
@@ -2206,14 +2251,23 @@ argument_list|)
 block|,
 name|Kind
 argument_list|(
-name|OMPC_SCHEDULE_unknown
+argument|OMPC_SCHEDULE_unknown
 argument_list|)
-block|,
-name|ChunkSize
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+block|{
+name|ChunkSizes
+index|[
+name|CHUNK_SIZE
+index|]
+operator|=
+name|nullptr
+block|;
+name|ChunkSizes
+index|[
+name|HELPER_CHUNK_SIZE
+index|]
+operator|=
+name|nullptr
+block|;   }
 comment|/// \brief Get kind of the clause.
 comment|///
 name|OpenMPScheduleClauseKind
@@ -2268,7 +2322,10 @@ operator|<
 name|Expr
 operator|>
 operator|(
-name|ChunkSize
+name|ChunkSizes
+index|[
+name|CHUNK_SIZE
+index|]
 operator|)
 return|;
 block|}
@@ -2286,7 +2343,51 @@ operator|<
 name|Expr
 operator|>
 operator|(
-name|ChunkSize
+name|ChunkSizes
+index|[
+name|CHUNK_SIZE
+index|]
+operator|)
+return|;
+block|}
+comment|/// \brief Get helper chunk size.
+comment|///
+name|Expr
+operator|*
+name|getHelperChunkSize
+argument_list|()
+block|{
+return|return
+name|dyn_cast_or_null
+operator|<
+name|Expr
+operator|>
+operator|(
+name|ChunkSizes
+index|[
+name|HELPER_CHUNK_SIZE
+index|]
+operator|)
+return|;
+block|}
+comment|/// \brief Get helper chunk size.
+comment|///
+name|Expr
+operator|*
+name|getHelperChunkSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|dyn_cast_or_null
+operator|<
+name|Expr
+operator|>
+operator|(
+name|ChunkSizes
+index|[
+name|HELPER_CHUNK_SIZE
+index|]
 operator|)
 return|;
 block|}
@@ -2314,10 +2415,16 @@ return|return
 name|StmtRange
 argument_list|(
 operator|&
-name|ChunkSize
+name|ChunkSizes
+index|[
+name|CHUNK_SIZE
+index|]
 argument_list|,
 operator|&
-name|ChunkSize
+name|ChunkSizes
+index|[
+name|CHUNK_SIZE
+index|]
 operator|+
 literal|1
 argument_list|)
@@ -3828,7 +3935,6 @@ comment|/// #pragma omp simd lastprivate(a,b)
 comment|/// \endcode
 comment|/// In this example directive '#pragma omp simd' has clause 'lastprivate'
 comment|/// with the variables 'a' and 'b'.
-comment|///
 name|class
 name|OMPLastprivateClause
 operator|:
@@ -3838,6 +3944,27 @@ operator|<
 name|OMPLastprivateClause
 operator|>
 block|{
+comment|// There are 4 additional tail-allocated arrays at the end of the class:
+comment|// 1. Contains list of pseudo variables with the default initialization for
+comment|// each non-firstprivate variables. Used in codegen for initialization of
+comment|// lastprivate copies.
+comment|// 2. List of helper expressions for proper generation of assignment operation
+comment|// required for lastprivate clause. This list represents private variables
+comment|// (for arrays, single array element).
+comment|// 3. List of helper expressions for proper generation of assignment operation
+comment|// required for lastprivate clause. This list represents original variables
+comment|// (for arrays, single array element).
+comment|// 4. List of helper expressions that represents assignment operation:
+comment|// \code
+comment|// DstExprs = SrcExprs;
+comment|// \endcode
+comment|// Required for proper codegen of final assignment performed by the
+comment|// lastprivate clause.
+comment|//
+name|friend
+name|class
+name|OMPClauseReader
+block|;
 comment|/// \brief Build clause with number of variables \a N.
 comment|///
 comment|/// \param StartLoc Starting location of the clause.
@@ -3901,6 +4028,257 @@ expr|,
 name|N
 operator|)
 block|{}
+comment|/// \brief Get the list of helper expressions for initialization of private
+comment|/// copies for lastprivate variables.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getPrivateCopies
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|varlist_end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getPrivateCopies
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|varlist_end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Set list of helper expressions, required for proper codegen of the
+comment|/// clause. These expressions represent private variables (for arrays, single
+comment|/// array element) in the final assignment statement performed by the
+comment|/// lastprivate clause.
+name|void
+name|setSourceExprs
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|SrcExprs
+argument_list|)
+block|;
+comment|/// \brief Get the list of helper source expressions.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getSourceExprs
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getSourceExprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Set list of helper expressions, required for proper codegen of the
+comment|/// clause. These expressions represent original variables (for arrays, single
+comment|/// array element) in the final assignment statement performed by the
+comment|/// lastprivate clause.
+name|void
+name|setDestinationExprs
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|DstExprs
+argument_list|)
+block|;
+comment|/// \brief Get the list of helper destination expressions.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getDestinationExprs
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getSourceExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getDestinationExprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getSourceExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Set list of helper assignment expressions, required for proper
+comment|/// codegen of the clause. These expressions are assignment expressions that
+comment|/// assign private copy of the variable to original variable.
+name|void
+name|setAssignmentOps
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|AssignmentOps
+argument_list|)
+block|;
+comment|/// \brief Get the list of helper assignment expressions.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getAssignmentOps
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getDestinationExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getAssignmentOps
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getDestinationExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|public
 operator|:
 comment|/// \brief Creates clause with a list of variables \a VL.
@@ -3910,6 +4288,20 @@ comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param LParenLoc Location of '('.
 comment|/// \param EndLoc Ending location of the clause.
 comment|/// \param VL List of references to the variables.
+comment|/// \param SrcExprs List of helper expressions for proper generation of
+comment|/// assignment operation required for lastprivate clause. This list represents
+comment|/// private variables (for arrays, single array element).
+comment|/// \param DstExprs List of helper expressions for proper generation of
+comment|/// assignment operation required for lastprivate clause. This list represents
+comment|/// original variables (for arrays, single array element).
+comment|/// \param AssignmentOps List of helper expressions that represents assignment
+comment|/// operation:
+comment|/// \code
+comment|/// DstExprs = SrcExprs;
+comment|/// \endcode
+comment|/// Required for proper codegen of final assignment performed by the
+comment|/// lastprivate clause.
+comment|///
 comment|///
 specifier|static
 name|OMPLastprivateClause
@@ -3925,6 +4317,12 @@ argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
 argument|ArrayRef<Expr *> VL
+argument_list|,
+argument|ArrayRef<Expr *> SrcExprs
+argument_list|,
+argument|ArrayRef<Expr *> DstExprs
+argument_list|,
+argument|ArrayRef<Expr *> AssignmentOps
 argument_list|)
 block|;
 comment|/// \brief Creates an empty clause with the place for \a N variables.
@@ -3942,6 +4340,230 @@ argument_list|,
 argument|unsigned N
 argument_list|)
 block|;
+typedef|typedef
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|helper_expr_iterator
+expr_stmt|;
+typedef|typedef
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|helper_expr_const_iterator
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|helper_expr_iterator
+operator|>
+name|helper_expr_range
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|helper_expr_const_iterator
+operator|>
+name|helper_expr_const_range
+expr_stmt|;
+comment|/// \brief Set list of helper expressions, required for generation of private
+comment|/// copies of original lastprivate variables.
+name|void
+name|setPrivateCopies
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|PrivateCopies
+argument_list|)
+block|;
+name|helper_expr_const_range
+name|private_copies
+argument_list|()
+specifier|const
+block|{
+return|return
+name|helper_expr_const_range
+argument_list|(
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|helper_expr_range
+name|private_copies
+argument_list|()
+block|{
+return|return
+name|helper_expr_range
+argument_list|(
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|helper_expr_const_range
+name|source_exprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|helper_expr_const_range
+argument_list|(
+name|getSourceExprs
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getSourceExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|helper_expr_range
+name|source_exprs
+argument_list|()
+block|{
+return|return
+name|helper_expr_range
+argument_list|(
+name|getSourceExprs
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getSourceExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|helper_expr_const_range
+name|destination_exprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|helper_expr_const_range
+argument_list|(
+name|getDestinationExprs
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getDestinationExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|helper_expr_range
+name|destination_exprs
+argument_list|()
+block|{
+return|return
+name|helper_expr_range
+argument_list|(
+name|getDestinationExprs
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getDestinationExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|helper_expr_const_range
+name|assignment_ops
+argument_list|()
+specifier|const
+block|{
+return|return
+name|helper_expr_const_range
+argument_list|(
+name|getAssignmentOps
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getAssignmentOps
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|helper_expr_range
+name|assignment_ops
+argument_list|()
+block|{
+return|return
+name|helper_expr_range
+argument_list|(
+name|getAssignmentOps
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getAssignmentOps
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|StmtRange
 name|children
 argument_list|()
@@ -4324,6 +4946,204 @@ name|QualifierLoc
 operator|=
 name|NSL
 block|; }
+comment|/// \brief Set list of helper expressions, required for proper codegen of the
+comment|/// clause. These expressions represent LHS expression in the final
+comment|/// reduction expression performed by the reduction clause.
+name|void
+name|setLHSExprs
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|LHSExprs
+argument_list|)
+block|;
+comment|/// \brief Get the list of helper LHS expressions.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getLHSExprs
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|varlist_end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getLHSExprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|varlist_end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Set list of helper expressions, required for proper codegen of the
+comment|/// clause. These expressions represent RHS expression in the final
+comment|/// reduction expression performed by the reduction clause.
+comment|/// Also, variables in these expressions are used for proper initialization of
+comment|/// reduction copies.
+name|void
+name|setRHSExprs
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|RHSExprs
+argument_list|)
+block|;
+comment|/// \brief Get the list of helper destination expressions.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getRHSExprs
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getLHSExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getRHSExprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getLHSExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Set list of helper reduction expressions, required for proper
+comment|/// codegen of the clause. These expressions are binary expressions or
+comment|/// operator/custom reduction call that calculates new value from source
+comment|/// helper expressions to destination helper expressions.
+name|void
+name|setReductionOps
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|ReductionOps
+argument_list|)
+block|;
+comment|/// \brief Get the list of helper reduction expressions.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getReductionOps
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getRHSExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getReductionOps
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getRHSExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|public
 operator|:
 comment|/// \brief Creates clause with a list of variables \a VL.
@@ -4335,6 +5155,23 @@ comment|/// \param EndLoc Ending location of the clause.
 comment|/// \param VL The variables in the clause.
 comment|/// \param QualifierLoc The nested-name qualifier with location information
 comment|/// \param NameInfo The full name info for reduction identifier.
+comment|/// \param LHSExprs List of helper expressions for proper generation of
+comment|/// assignment operation required for copyprivate clause. This list represents
+comment|/// LHSs of the reduction expressions.
+comment|/// \param RHSExprs List of helper expressions for proper generation of
+comment|/// assignment operation required for copyprivate clause. This list represents
+comment|/// RHSs of the reduction expressions.
+comment|/// Also, variables in these expressions are used for proper initialization of
+comment|/// reduction copies.
+comment|/// \param ReductionOps List of helper expressions that represents reduction
+comment|/// expressions:
+comment|/// \code
+comment|/// LHSExprs binop RHSExprs;
+comment|/// operator binop(LHSExpr, RHSExpr);
+comment|///<CutomReduction>(LHSExpr, RHSExpr);
+comment|/// \endcode
+comment|/// Required for proper codegen of final reduction operation performed by the
+comment|/// reduction clause.
 comment|///
 specifier|static
 name|OMPReductionClause
@@ -4356,6 +5193,12 @@ argument_list|,
 argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
 argument|const DeclarationNameInfo&NameInfo
+argument_list|,
+argument|ArrayRef<Expr *> LHSExprs
+argument_list|,
+argument|ArrayRef<Expr *> RHSExprs
+argument_list|,
+argument|ArrayRef<Expr *> ReductionOps
 argument_list|)
 block|;
 comment|/// \brief Creates an empty clause with the place for \a N variables.
@@ -4403,6 +5246,174 @@ specifier|const
 block|{
 return|return
 name|QualifierLoc
+return|;
+block|}
+typedef|typedef
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|helper_expr_iterator
+expr_stmt|;
+typedef|typedef
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|helper_expr_const_iterator
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|helper_expr_iterator
+operator|>
+name|helper_expr_range
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|helper_expr_const_iterator
+operator|>
+name|helper_expr_const_range
+expr_stmt|;
+name|helper_expr_const_range
+name|lhs_exprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|helper_expr_const_range
+argument_list|(
+name|getLHSExprs
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getLHSExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|helper_expr_range
+name|lhs_exprs
+argument_list|()
+block|{
+return|return
+name|helper_expr_range
+argument_list|(
+name|getLHSExprs
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getLHSExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|helper_expr_const_range
+name|rhs_exprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|helper_expr_const_range
+argument_list|(
+name|getRHSExprs
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getRHSExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|helper_expr_range
+name|rhs_exprs
+argument_list|()
+block|{
+return|return
+name|helper_expr_range
+argument_list|(
+name|getRHSExprs
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getRHSExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|helper_expr_const_range
+name|reduction_ops
+argument_list|()
+specifier|const
+block|{
+return|return
+name|helper_expr_const_range
+argument_list|(
+name|getReductionOps
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getReductionOps
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|helper_expr_range
+name|reduction_ops
+argument_list|()
+block|{
+return|return
+name|helper_expr_range
+argument_list|(
+name|getReductionOps
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getReductionOps
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|StmtRange
@@ -4488,10 +5499,35 @@ argument|Expr *Step
 argument_list|)
 block|{
 operator|*
-name|varlist_end
+operator|(
+name|getFinals
 argument_list|()
+operator|.
+name|end
+argument_list|()
+operator|)
 operator|=
 name|Step
+block|; }
+comment|/// \brief Sets the expression to calculate linear step for clause.
+name|void
+name|setCalcStep
+argument_list|(
+argument|Expr *CalcStep
+argument_list|)
+block|{
+operator|*
+operator|(
+name|getFinals
+argument_list|()
+operator|.
+name|end
+argument_list|()
+operator|+
+literal|1
+operator|)
+operator|=
+name|CalcStep
 block|; }
 comment|/// \brief Build 'linear' clause with given number of variables \a NumVars.
 comment|///
@@ -4569,6 +5605,184 @@ argument_list|(
 argument|SourceLocation()
 argument_list|)
 block|{}
+comment|/// \brief Gets the list of initial values for linear variables.
+comment|///
+comment|/// There are NumVars expressions with initial values allocated after the
+comment|/// varlist, they are followed by NumVars update expressions (used to update
+comment|/// the linear variable's value on current iteration) and they are followed by
+comment|/// NumVars final expressions (used to calculate the linear variable's
+comment|/// value after the loop body). After these lists, there are 2 helper
+comment|/// expressions - linear step and a helper to calculate it before the
+comment|/// loop body (used when the linear step is not constant):
+comment|///
+comment|/// { Vars[] /* in OMPVarListClause */; Inits[]; Updates[]; Finals[];
+comment|///   Step; CalcStep; }
+comment|///
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getInits
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|varlist_end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getInits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|varlist_end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Sets the list of update expressions for linear variables.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getUpdates
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getInits
+argument_list|()
+operator|.
+name|end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getUpdates
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getInits
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Sets the list of final update expressions for linear variables.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getFinals
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getUpdates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getFinals
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getUpdates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Sets the list of the initial values for linear variables.
+comment|/// \param IL List of expressions.
+name|void
+name|setInits
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|IL
+argument_list|)
+block|;
 name|public
 operator|:
 comment|/// \brief Creates clause with a list of variables \a VL and a linear step
@@ -4580,7 +5794,9 @@ comment|/// \param LParenLoc Location of '('.
 comment|/// \param ColonLoc Location of ':'.
 comment|/// \param EndLoc Ending location of the clause.
 comment|/// \param VL List of references to the variables.
+comment|/// \param IL List of initial values for the variables.
 comment|/// \param Step Linear step.
+comment|/// \param CalcStep Calculation of the linear step.
 specifier|static
 name|OMPLinearClause
 operator|*
@@ -4598,7 +5814,11 @@ argument|SourceLocation EndLoc
 argument_list|,
 argument|ArrayRef<Expr *> VL
 argument_list|,
+argument|ArrayRef<Expr *> IL
+argument_list|,
 argument|Expr *Step
+argument_list|,
+argument|Expr *CalcStep
 argument_list|)
 block|;
 comment|/// \brief Creates an empty clause with the place for \a NumVars variables.
@@ -4645,8 +5865,13 @@ argument_list|()
 block|{
 return|return
 operator|*
-name|varlist_end
+operator|(
+name|getFinals
 argument_list|()
+operator|.
+name|end
+argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Returns linear step.
@@ -4659,13 +5884,378 @@ specifier|const
 block|{
 return|return
 operator|*
-name|varlist_end
+operator|(
+name|getFinals
 argument_list|()
+operator|.
+name|end
+argument_list|()
+operator|)
 return|;
 block|}
+comment|/// \brief Returns expression to calculate linear step.
+name|Expr
+operator|*
+name|getCalcStep
+argument_list|()
+block|{
+return|return
+operator|*
+operator|(
+name|getFinals
+argument_list|()
+operator|.
+name|end
+argument_list|()
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+comment|/// \brief Returns expression to calculate linear step.
+specifier|const
+name|Expr
+operator|*
+name|getCalcStep
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+operator|(
+name|getFinals
+argument_list|()
+operator|.
+name|end
+argument_list|()
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+comment|/// \brief Sets the list of update expressions for linear variables.
+comment|/// \param UL List of expressions.
+name|void
+name|setUpdates
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|UL
+argument_list|)
+block|;
+comment|/// \brief Sets the list of final update expressions for linear variables.
+comment|/// \param FL List of expressions.
+name|void
+name|setFinals
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|FL
+argument_list|)
+block|;
+typedef|typedef
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|inits_iterator
+expr_stmt|;
+typedef|typedef
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|inits_const_iterator
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|inits_iterator
+operator|>
+name|inits_range
+expr_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|inits_const_iterator
+operator|>
+name|inits_const_range
+expr_stmt|;
+end_typedef
+
+begin_function
+name|inits_range
+name|inits
+parameter_list|()
+block|{
+return|return
+name|inits_range
+argument_list|(
+name|getInits
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getInits
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|inits_const_range
+name|inits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|inits_const_range
+argument_list|(
+name|getInits
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getInits
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|updates_iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|updates_const_iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|updates_iterator
+operator|>
+name|updates_range
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|updates_const_iterator
+operator|>
+name|updates_const_range
+expr_stmt|;
+end_typedef
+
+begin_function
+name|updates_range
+name|updates
+parameter_list|()
+block|{
+return|return
+name|updates_range
+argument_list|(
+name|getUpdates
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getUpdates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|updates_const_range
+name|updates
+argument_list|()
+specifier|const
+block|{
+return|return
+name|updates_const_range
+argument_list|(
+name|getUpdates
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getUpdates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|finals_iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|finals_const_iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|finals_iterator
+operator|>
+name|finals_range
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|finals_const_iterator
+operator|>
+name|finals_const_range
+expr_stmt|;
+end_typedef
+
+begin_function
+name|finals_range
+name|finals
+parameter_list|()
+block|{
+return|return
+name|finals_range
+argument_list|(
+name|getFinals
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getFinals
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|finals_const_range
+name|finals
+argument_list|()
+specifier|const
+block|{
+return|return
+name|finals_const_range
+argument_list|(
+name|getFinals
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getFinals
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
 name|StmtRange
 name|children
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|StmtRange
@@ -4690,18 +6280,22 @@ operator|>
 operator|(
 name|varlist_end
 argument_list|()
-operator|+
-literal|1
 operator|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const OMPClause *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|OMPClause
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -4712,20 +6306,49 @@ operator|==
 name|OMPC_linear
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_comment
+unit|};
 comment|/// \brief This represents clause 'aligned' in the '#pragma omp ...'
+end_comment
+
+begin_comment
 comment|/// directives.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \code
+end_comment
+
+begin_comment
 comment|/// #pragma omp simd aligned(a,b : 8)
+end_comment
+
+begin_comment
 comment|/// \endcode
+end_comment
+
+begin_comment
 comment|/// In this example directive '#pragma omp simd' has clause 'aligned'
+end_comment
+
+begin_comment
 comment|/// with variables 'a', 'b' and alignment '8'.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|OMPAlignedClause
-operator|:
+range|:
 name|public
 name|OMPVarListClause
 operator|<
@@ -4949,8 +6572,6 @@ operator|>
 operator|(
 name|varlist_end
 argument_list|()
-operator|+
-literal|1
 operator|)
 argument_list|)
 return|;
@@ -4990,6 +6611,22 @@ operator|<
 name|OMPCopyinClause
 operator|>
 block|{
+comment|// Class has 3 additional tail allocated arrays:
+comment|// 1. List of helper expressions for proper generation of assignment operation
+comment|// required for copyin clause. This list represents sources.
+comment|// 2. List of helper expressions for proper generation of assignment operation
+comment|// required for copyin clause. This list represents destinations.
+comment|// 3. List of helper expressions that represents assignment operation:
+comment|// \code
+comment|// DstExprs = SrcExprs;
+comment|// \endcode
+comment|// Required for proper codegen of propagation of master's thread values of
+comment|// threadprivate variables to local instances of that variables in other
+comment|// implicit threads.
+name|friend
+name|class
+name|OMPClauseReader
+block|;
 comment|/// \brief Build clause with number of variables \a N.
 comment|///
 comment|/// \param StartLoc Starting location of the clause.
@@ -5053,6 +6690,202 @@ expr|,
 name|N
 operator|)
 block|{}
+comment|/// \brief Set list of helper expressions, required for proper codegen of the
+comment|/// clause. These expressions represent source expression in the final
+comment|/// assignment statement performed by the copyin clause.
+name|void
+name|setSourceExprs
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|SrcExprs
+argument_list|)
+block|;
+comment|/// \brief Get the list of helper source expressions.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getSourceExprs
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|varlist_end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getSourceExprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|varlist_end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Set list of helper expressions, required for proper codegen of the
+comment|/// clause. These expressions represent destination expression in the final
+comment|/// assignment statement performed by the copyin clause.
+name|void
+name|setDestinationExprs
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|DstExprs
+argument_list|)
+block|;
+comment|/// \brief Get the list of helper destination expressions.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getDestinationExprs
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getSourceExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getDestinationExprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getSourceExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Set list of helper assignment expressions, required for proper
+comment|/// codegen of the clause. These expressions are assignment expressions that
+comment|/// assign source helper expressions to destination helper expressions
+comment|/// correspondingly.
+name|void
+name|setAssignmentOps
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|AssignmentOps
+argument_list|)
+block|;
+comment|/// \brief Get the list of helper assignment expressions.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getAssignmentOps
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getDestinationExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getAssignmentOps
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getDestinationExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|public
 operator|:
 comment|/// \brief Creates clause with a list of variables \a VL.
@@ -5062,6 +6895,20 @@ comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param LParenLoc Location of '('.
 comment|/// \param EndLoc Ending location of the clause.
 comment|/// \param VL List of references to the variables.
+comment|/// \param SrcExprs List of helper expressions for proper generation of
+comment|/// assignment operation required for copyin clause. This list represents
+comment|/// sources.
+comment|/// \param DstExprs List of helper expressions for proper generation of
+comment|/// assignment operation required for copyin clause. This list represents
+comment|/// destinations.
+comment|/// \param AssignmentOps List of helper expressions that represents assignment
+comment|/// operation:
+comment|/// \code
+comment|/// DstExprs = SrcExprs;
+comment|/// \endcode
+comment|/// Required for proper codegen of propagation of master's thread values of
+comment|/// threadprivate variables to local instances of that variables in other
+comment|/// implicit threads.
 comment|///
 specifier|static
 name|OMPCopyinClause
@@ -5077,6 +6924,12 @@ argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
 argument|ArrayRef<Expr *> VL
+argument_list|,
+argument|ArrayRef<Expr *> SrcExprs
+argument_list|,
+argument|ArrayRef<Expr *> DstExprs
+argument_list|,
+argument|ArrayRef<Expr *> AssignmentOps
 argument_list|)
 block|;
 comment|/// \brief Creates an empty clause with \a N variables.
@@ -5094,9 +6947,204 @@ argument_list|,
 argument|unsigned N
 argument_list|)
 block|;
+typedef|typedef
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|helper_expr_iterator
+expr_stmt|;
+typedef|typedef
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|helper_expr_const_iterator
+expr_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|helper_expr_iterator
+operator|>
+name|helper_expr_range
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|helper_expr_const_iterator
+operator|>
+name|helper_expr_const_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|helper_expr_const_range
+name|source_exprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|helper_expr_const_range
+argument_list|(
+name|getSourceExprs
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getSourceExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|helper_expr_range
+name|source_exprs
+parameter_list|()
+block|{
+return|return
+name|helper_expr_range
+argument_list|(
+name|getSourceExprs
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getSourceExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|helper_expr_const_range
+name|destination_exprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|helper_expr_const_range
+argument_list|(
+name|getDestinationExprs
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getDestinationExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|helper_expr_range
+name|destination_exprs
+parameter_list|()
+block|{
+return|return
+name|helper_expr_range
+argument_list|(
+name|getDestinationExprs
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getDestinationExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|helper_expr_const_range
+name|assignment_ops
+argument_list|()
+specifier|const
+block|{
+return|return
+name|helper_expr_const_range
+argument_list|(
+name|getAssignmentOps
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getAssignmentOps
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|helper_expr_range
+name|assignment_ops
+parameter_list|()
+block|{
+return|return
+name|helper_expr_range
+argument_list|(
+name|getAssignmentOps
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getAssignmentOps
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
 name|StmtRange
 name|children
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|StmtRange
@@ -5125,12 +7173,18 @@ operator|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const OMPClause *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|OMPClause
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -5141,26 +7195,59 @@ operator|==
 name|OMPC_copyin
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_comment
+unit|};
 comment|/// \brief This represents clause 'copyprivate' in the '#pragma omp ...'
+end_comment
+
+begin_comment
 comment|/// directives.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \code
+end_comment
+
+begin_comment
 comment|/// #pragma omp single copyprivate(a,b)
+end_comment
+
+begin_comment
 comment|/// \endcode
+end_comment
+
+begin_comment
 comment|/// In this example directive '#pragma omp single' has clause 'copyprivate'
+end_comment
+
+begin_comment
 comment|/// with the variables 'a' and 'b'.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|OMPCopyprivateClause
-operator|:
+range|:
 name|public
 name|OMPVarListClause
 operator|<
 name|OMPCopyprivateClause
 operator|>
 block|{
+name|friend
+name|class
+name|OMPClauseReader
+block|;
 comment|/// \brief Build clause with number of variables \a N.
 comment|///
 comment|/// \param StartLoc Starting location of the clause.
@@ -5224,6 +7311,641 @@ expr|,
 name|N
 operator|)
 block|{}
+comment|/// \brief Set list of helper expressions, required for proper codegen of the
+comment|/// clause. These expressions represent source expression in the final
+comment|/// assignment statement performed by the copyprivate clause.
+name|void
+name|setSourceExprs
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|SrcExprs
+argument_list|)
+block|;
+comment|/// \brief Get the list of helper source expressions.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getSourceExprs
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|varlist_end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getSourceExprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|varlist_end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Set list of helper expressions, required for proper codegen of the
+comment|/// clause. These expressions represent destination expression in the final
+comment|/// assignment statement performed by the copyprivate clause.
+name|void
+name|setDestinationExprs
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|DstExprs
+argument_list|)
+block|;
+comment|/// \brief Get the list of helper destination expressions.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getDestinationExprs
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getSourceExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getDestinationExprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getSourceExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Set list of helper assignment expressions, required for proper
+comment|/// codegen of the clause. These expressions are assignment expressions that
+comment|/// assign source helper expressions to destination helper expressions
+comment|/// correspondingly.
+name|void
+name|setAssignmentOps
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|AssignmentOps
+argument_list|)
+block|;
+comment|/// \brief Get the list of helper assignment expressions.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getAssignmentOps
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getDestinationExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getAssignmentOps
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getDestinationExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|public
+operator|:
+comment|/// \brief Creates clause with a list of variables \a VL.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param LParenLoc Location of '('.
+comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param VL List of references to the variables.
+comment|/// \param SrcExprs List of helper expressions for proper generation of
+comment|/// assignment operation required for copyprivate clause. This list represents
+comment|/// sources.
+comment|/// \param DstExprs List of helper expressions for proper generation of
+comment|/// assignment operation required for copyprivate clause. This list represents
+comment|/// destinations.
+comment|/// \param AssignmentOps List of helper expressions that represents assignment
+comment|/// operation:
+comment|/// \code
+comment|/// DstExprs = SrcExprs;
+comment|/// \endcode
+comment|/// Required for proper codegen of final assignment performed by the
+comment|/// copyprivate clause.
+comment|///
+specifier|static
+name|OMPCopyprivateClause
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|ArrayRef<Expr *> VL
+argument_list|,
+argument|ArrayRef<Expr *> SrcExprs
+argument_list|,
+argument|ArrayRef<Expr *> DstExprs
+argument_list|,
+argument|ArrayRef<Expr *> AssignmentOps
+argument_list|)
+block|;
+comment|/// \brief Creates an empty clause with \a N variables.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param N The number of variables.
+comment|///
+specifier|static
+name|OMPCopyprivateClause
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned N
+argument_list|)
+block|;
+typedef|typedef
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|helper_expr_iterator
+expr_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|helper_expr_const_iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|helper_expr_iterator
+operator|>
+name|helper_expr_range
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|helper_expr_const_iterator
+operator|>
+name|helper_expr_const_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|helper_expr_const_range
+name|source_exprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|helper_expr_const_range
+argument_list|(
+name|getSourceExprs
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getSourceExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|helper_expr_range
+name|source_exprs
+parameter_list|()
+block|{
+return|return
+name|helper_expr_range
+argument_list|(
+name|getSourceExprs
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getSourceExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|helper_expr_const_range
+name|destination_exprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|helper_expr_const_range
+argument_list|(
+name|getDestinationExprs
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getDestinationExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|helper_expr_range
+name|destination_exprs
+parameter_list|()
+block|{
+return|return
+name|helper_expr_range
+argument_list|(
+name|getDestinationExprs
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getDestinationExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|helper_expr_const_range
+name|assignment_ops
+argument_list|()
+specifier|const
+block|{
+return|return
+name|helper_expr_const_range
+argument_list|(
+name|getAssignmentOps
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getAssignmentOps
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|helper_expr_range
+name|assignment_ops
+parameter_list|()
+block|{
+return|return
+name|helper_expr_range
+argument_list|(
+name|getAssignmentOps
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getAssignmentOps
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|StmtRange
+name|children
+parameter_list|()
+block|{
+return|return
+name|StmtRange
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|varlist_begin
+argument_list|()
+operator|)
+argument_list|,
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|varlist_end
+argument_list|()
+operator|)
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|bool
+name|classof
+parameter_list|(
+specifier|const
+name|OMPClause
+modifier|*
+name|T
+parameter_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_copyprivate
+return|;
+block|}
+end_function
+
+begin_comment
+unit|};
+comment|/// \brief This represents implicit clause 'flush' for the '#pragma omp flush'
+end_comment
+
+begin_comment
+comment|/// directive.
+end_comment
+
+begin_comment
+comment|/// This clause does not exist by itself, it can be only as a part of 'omp
+end_comment
+
+begin_comment
+comment|/// flush' directive. This clause is introduced to keep the original structure
+end_comment
+
+begin_comment
+comment|/// of \a OMPExecutableDirective class and its derivatives and to use the
+end_comment
+
+begin_comment
+comment|/// existing infrastructure of clauses with the list of variables.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// #pragma omp flush(a,b)
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|/// In this example directive '#pragma omp flush' has implicit clause 'flush'
+end_comment
+
+begin_comment
+comment|/// with the variables 'a' and 'b'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_decl_stmt
+name|class
+name|OMPFlushClause
+range|:
+name|public
+name|OMPVarListClause
+operator|<
+name|OMPFlushClause
+operator|>
+block|{
+comment|/// \brief Build clause with number of variables \a N.
+comment|///
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param LParenLoc Location of '('.
+comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param N Number of the variables in the clause.
+comment|///
+name|OMPFlushClause
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned N
+argument_list|)
+operator|:
+name|OMPVarListClause
+operator|<
+name|OMPFlushClause
+operator|>
+operator|(
+name|OMPC_flush
+expr|,
+name|StartLoc
+expr|,
+name|LParenLoc
+expr|,
+name|EndLoc
+expr|,
+name|N
+operator|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+comment|/// \param N Number of variables.
+comment|///
+name|explicit
+name|OMPFlushClause
+argument_list|(
+argument|unsigned N
+argument_list|)
+operator|:
+name|OMPVarListClause
+operator|<
+name|OMPFlushClause
+operator|>
+operator|(
+name|OMPC_flush
+expr|,
+name|SourceLocation
+argument_list|()
+expr|,
+name|SourceLocation
+argument_list|()
+expr|,
+name|SourceLocation
+argument_list|()
+expr|,
+name|N
+operator|)
+block|{}
 name|public
 operator|:
 comment|/// \brief Creates clause with a list of variables \a VL.
@@ -5235,7 +7957,7 @@ comment|/// \param EndLoc Ending location of the clause.
 comment|/// \param VL List of references to the variables.
 comment|///
 specifier|static
-name|OMPCopyprivateClause
+name|OMPFlushClause
 operator|*
 name|Create
 argument_list|(
@@ -5256,7 +7978,7 @@ comment|/// \param C AST context.
 comment|/// \param N The number of variables.
 comment|///
 specifier|static
-name|OMPCopyprivateClause
+name|OMPFlushClause
 operator|*
 name|CreateEmpty
 argument_list|(
@@ -5309,33 +8031,45 @@ operator|->
 name|getClauseKind
 argument_list|()
 operator|==
-name|OMPC_copyprivate
+name|OMPC_flush
 return|;
 block|}
 expr|}
 block|;
-comment|/// \brief This represents implicit clause 'flush' for the '#pragma omp flush'
+comment|/// \brief This represents implicit clause 'depend' for the '#pragma omp task'
 comment|/// directive.
-comment|/// This clause does not exist by itself, it can be only as a part of 'omp
-comment|/// flush' directive. This clause is introduced to keep the original structure
-comment|/// of \a OMPExecutableDirective class and its derivatives and to use the
-comment|/// existing infrastructure of clauses with the list of variables.
 comment|///
 comment|/// \code
-comment|/// #pragma omp flush(a,b)
+comment|/// #pragma omp task depend(in:a,b)
 comment|/// \endcode
-comment|/// In this example directive '#pragma omp flush' has implicit clause 'flush'
-comment|/// with the variables 'a' and 'b'.
+comment|/// In this example directive '#pragma omp task' with clause 'depend' with the
+comment|/// variables 'a' and 'b' with dependency 'in'.
 comment|///
 name|class
-name|OMPFlushClause
+name|OMPDependClause
 operator|:
 name|public
 name|OMPVarListClause
 operator|<
-name|OMPFlushClause
+name|OMPDependClause
 operator|>
 block|{
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// \brief Dependency type (one of in, out, inout).
+name|OpenMPDependClauseKind
+name|DepKind
+block|;
+comment|/// \brief Dependency type location.
+name|SourceLocation
+name|DepLoc
+block|;
+comment|/// \brief Colon location.
+name|SourceLocation
+name|ColonLoc
+block|;
 comment|/// \brief Build clause with number of variables \a N.
 comment|///
 comment|/// \param StartLoc Starting location of the clause.
@@ -5343,7 +8077,7 @@ comment|/// \param LParenLoc Location of '('.
 comment|/// \param EndLoc Ending location of the clause.
 comment|/// \param N Number of the variables in the clause.
 comment|///
-name|OMPFlushClause
+name|OMPDependClause
 argument_list|(
 argument|SourceLocation StartLoc
 argument_list|,
@@ -5356,10 +8090,10 @@ argument_list|)
 operator|:
 name|OMPVarListClause
 operator|<
-name|OMPFlushClause
+name|OMPDependClause
 operator|>
 operator|(
-name|OMPC_flush
+name|OMPC_depend
 expr|,
 name|StartLoc
 expr|,
@@ -5369,23 +8103,28 @@ name|EndLoc
 expr|,
 name|N
 operator|)
+block|,
+name|DepKind
+argument_list|(
+argument|OMPC_DEPEND_unknown
+argument_list|)
 block|{}
 comment|/// \brief Build an empty clause.
 comment|///
 comment|/// \param N Number of variables.
 comment|///
 name|explicit
-name|OMPFlushClause
+name|OMPDependClause
 argument_list|(
 argument|unsigned N
 argument_list|)
 operator|:
 name|OMPVarListClause
 operator|<
-name|OMPFlushClause
+name|OMPDependClause
 operator|>
 operator|(
-name|OMPC_flush
+name|OMPC_depend
 expr|,
 name|SourceLocation
 argument_list|()
@@ -5398,7 +8137,45 @@ argument_list|()
 expr|,
 name|N
 operator|)
+block|,
+name|DepKind
+argument_list|(
+argument|OMPC_DEPEND_unknown
+argument_list|)
 block|{}
+comment|/// \brief Set dependency kind.
+name|void
+name|setDependencyKind
+argument_list|(
+argument|OpenMPDependClauseKind K
+argument_list|)
+block|{
+name|DepKind
+operator|=
+name|K
+block|; }
+comment|/// \brief Set dependency kind and its location.
+name|void
+name|setDependencyLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|DepLoc
+operator|=
+name|Loc
+block|; }
+comment|/// \brief Set colon location.
+name|void
+name|setColonLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|ColonLoc
+operator|=
+name|Loc
+block|; }
 name|public
 operator|:
 comment|/// \brief Creates clause with a list of variables \a VL.
@@ -5407,10 +8184,13 @@ comment|/// \param C AST context.
 comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param LParenLoc Location of '('.
 comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param DepKind Dependency type.
+comment|/// \param DepLoc Location of the dependency type.
+comment|/// \param ColonLoc Colon location.
 comment|/// \param VL List of references to the variables.
 comment|///
 specifier|static
-name|OMPFlushClause
+name|OMPDependClause
 operator|*
 name|Create
 argument_list|(
@@ -5422,6 +8202,12 @@ argument|SourceLocation LParenLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
+argument|OpenMPDependClauseKind DepKind
+argument_list|,
+argument|SourceLocation DepLoc
+argument_list|,
+argument|SourceLocation ColonLoc
+argument_list|,
 argument|ArrayRef<Expr *> VL
 argument_list|)
 block|;
@@ -5431,7 +8217,7 @@ comment|/// \param C AST context.
 comment|/// \param N The number of variables.
 comment|///
 specifier|static
-name|OMPFlushClause
+name|OMPDependClause
 operator|*
 name|CreateEmpty
 argument_list|(
@@ -5440,6 +8226,36 @@ argument_list|,
 argument|unsigned N
 argument_list|)
 block|;
+comment|/// \brief Get dependency type.
+name|OpenMPDependClauseKind
+name|getDependencyKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DepKind
+return|;
+block|}
+comment|/// \brief Get dependency type location.
+name|SourceLocation
+name|getDependencyLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DepLoc
+return|;
+block|}
+comment|/// \brief Get colon location.
+name|SourceLocation
+name|getColonLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ColonLoc
+return|;
+block|}
 name|StmtRange
 name|children
 argument_list|()
@@ -5484,7 +8300,7 @@ operator|->
 name|getClauseKind
 argument_list|()
 operator|==
-name|OMPC_flush
+name|OMPC_depend
 return|;
 block|}
 expr|}

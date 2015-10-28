@@ -436,6 +436,20 @@ modifier|*
 name|a
 parameter_list|)
 function_decl|;
+comment|// Test that this_id is a descendant of prev_id (or they are simply equal).
+comment|// "descendant" here means that are part of the same chain, created with
+comment|// __msan_chain_origin.
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|int
+name|__msan_origin_is_descendant_or_same
+parameter_list|(
+name|u32
+name|this_id
+parameter_list|,
+name|u32
+name|prev_id
+parameter_list|)
+function_decl|;
 name|SANITIZER_INTERFACE_ATTRIBUTE
 name|void
 name|__msan_clear_on_return

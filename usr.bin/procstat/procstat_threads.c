@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2007 Robert N. M. Watson  * Copyright (c) 2015 Allan Jude<allanjude@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -94,14 +94,18 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
+name|char
+modifier|*
+name|threadid
+decl_stmt|;
 if|if
 condition|(
 operator|!
 name|hflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5s %6s %-16s %-16s %2s %4s %-7s %-9s\n"
+literal|"{T:/%5s %6s %-16s %-16s %2s %4s %-7s %-9s}\n"
 argument_list|,
 literal|"PID"
 argument_list|,
@@ -118,6 +122,38 @@ argument_list|,
 literal|"STATE"
 argument_list|,
 literal|"WCHAN"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{ek:process_id/%d}"
+argument_list|,
+name|kipp
+operator|->
+name|ki_pid
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{e:command/%s}"
+argument_list|,
+name|strlen
+argument_list|(
+name|kipp
+operator|->
+name|ki_comm
+argument_list|)
+condition|?
+name|kipp
+operator|->
+name|ki_comm
+else|:
+literal|"-"
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"threads"
 argument_list|)
 expr_stmt|;
 name|kip
@@ -174,27 +210,60 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|printf
+name|asprintf
 argument_list|(
-literal|"%5d "
+operator|&
+name|threadid
 argument_list|,
-name|kipp
-operator|->
-name|ki_pid
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%6d "
+literal|"%d"
 argument_list|,
 name|kipp
 operator|->
 name|ki_tid
 argument_list|)
 expr_stmt|;
-name|printf
+if|if
+condition|(
+name|threadid
+operator|==
+name|NULL
+condition|)
+name|xo_errc
 argument_list|(
-literal|"%-16s "
+literal|1
+argument_list|,
+name|ENOMEM
+argument_list|,
+literal|"Failed to allocate memory in "
+literal|"procstat_threads()"
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+name|threadid
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{dk:process_id/%5d/%d} "
+argument_list|,
+name|kipp
+operator|->
+name|ki_pid
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:thread_id/%6d/%d} "
+argument_list|,
+name|kipp
+operator|->
+name|ki_tid
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{d:command/%-16s/%s} "
 argument_list|,
 name|strlen
 argument_list|(
@@ -210,9 +279,9 @@ else|:
 literal|"-"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-16s "
+literal|"{:thread_name/%-16s/%s} "
 argument_list|,
 operator|(
 name|strlen
@@ -253,9 +322,9 @@ name|ki_oncpu
 operator|!=
 literal|255
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%3d "
+literal|"{:cpu/%3d/%d} "
 argument_list|,
 name|kipp
 operator|->
@@ -271,9 +340,9 @@ name|ki_lastcpu
 operator|!=
 literal|255
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%3d "
+literal|"{:cpu/%3d/%d} "
 argument_list|,
 name|kipp
 operator|->
@@ -281,16 +350,16 @@ name|ki_lastcpu
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%3s "
+literal|"{:cpu/%3s/%s} "
 argument_list|,
 literal|"-"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%4d "
+literal|"{:priority/%4d/%d} "
 argument_list|,
 name|kipp
 operator|->
@@ -369,9 +438,9 @@ literal|"??"
 expr_stmt|;
 break|break;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-7s "
+literal|"{:run_state/%-7s/%s} "
 argument_list|,
 name|str
 argument_list|)
@@ -385,9 +454,9 @@ operator|&
 name|KI_LOCKBLOCK
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"*%-8s "
+literal|"{:lock_name/*%-8s/%s} "
 argument_list|,
 name|strlen
 argument_list|(
@@ -406,9 +475,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-9s "
+literal|"{:wait_channel/%-9s/%s} "
 argument_list|,
 name|strlen
 argument_list|(
@@ -425,12 +494,27 @@ literal|"-"
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|xo_close_container
+argument_list|(
+name|threadid
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|threadid
+argument_list|)
+expr_stmt|;
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|xo_close_container
+argument_list|(
+literal|"threads"
+argument_list|)
+expr_stmt|;
 name|procstat_freeprocs
 argument_list|(
 name|procstat

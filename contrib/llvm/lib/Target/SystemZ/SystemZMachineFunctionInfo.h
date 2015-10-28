@@ -85,6 +85,9 @@ block|;
 name|bool
 name|ManipulatesSP
 block|;
+name|unsigned
+name|NumLocalDynamics
+block|;
 name|public
 operator|:
 name|explicit
@@ -127,7 +130,12 @@ argument_list|)
 block|,
 name|ManipulatesSP
 argument_list|(
-argument|false
+name|false
+argument_list|)
+block|,
+name|NumLocalDynamics
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 comment|// Get and set the first call-saved GPR that should be saved and restored
@@ -274,6 +282,23 @@ block|{
 name|ManipulatesSP
 operator|=
 name|MSP
+block|; }
+comment|// Count number of local-dynamic TLS symbols used.
+name|unsigned
+name|getNumLocalDynamicTLSAccesses
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumLocalDynamics
+return|;
+block|}
+name|void
+name|incNumLocalDynamicTLSAccesses
+argument_list|()
+block|{
+operator|++
+name|NumLocalDynamics
 block|; }
 expr|}
 block|;  }

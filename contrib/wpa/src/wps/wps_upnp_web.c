@@ -3776,6 +3776,30 @@ goto|goto
 name|error
 goto|;
 block|}
+if|if
+condition|(
+name|len
+operator|>
+literal|0
+operator|&&
+name|callback_urls
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\r'
+condition|)
+name|callback_urls
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 continue|continue;
 block|}
 comment|/* SID is only for renewal */
@@ -4542,6 +4566,24 @@ condition|(
 name|got_uuid
 condition|)
 block|{
+name|char
+name|str
+index|[
+literal|80
+index|]
+decl_stmt|;
+name|uuid_bin2str
+argument_list|(
+name|uuid
+argument_list|,
+name|str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|str
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|subscription_find
@@ -4580,9 +4622,11 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"WPS UPnP: Unsubscribing %p %s"
+literal|"WPS UPnP: Unsubscribing %p (SID %s) %s"
 argument_list|,
 name|s
+argument_list|,
+name|str
 argument_list|,
 operator|(
 name|sa
@@ -4619,7 +4663,9 @@ name|wpa_printf
 argument_list|(
 name|MSG_INFO
 argument_list|,
-literal|"WPS UPnP: Could not find matching subscription to unsubscribe"
+literal|"WPS UPnP: Could not find matching subscription to unsubscribe (SID %s)"
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 name|ret

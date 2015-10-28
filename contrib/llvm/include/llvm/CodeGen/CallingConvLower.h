@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetCallingConv.h"
 end_include
 
@@ -1155,18 +1161,16 @@ name|CCAssignFn
 name|Fn
 parameter_list|)
 function_decl|;
-comment|/// getFirstUnallocated - Return the first unallocated register in the set, or
-comment|/// NumRegs if they are all allocated.
+comment|/// getFirstUnallocated - Return the index of the first unallocated register
+comment|/// in the set, or Regs.size() if they are all allocated.
 name|unsigned
 name|getFirstUnallocated
 argument_list|(
-specifier|const
+name|ArrayRef
+operator|<
 name|MCPhysReg
-operator|*
+operator|>
 name|Regs
-argument_list|,
-name|unsigned
-name|NumRegs
 argument_list|)
 decl|const
 block|{
@@ -1178,8 +1182,11 @@ init|=
 literal|0
 init|;
 name|i
-operator|!=
-name|NumRegs
+operator|<
+name|Regs
+operator|.
+name|size
+argument_list|()
 condition|;
 operator|++
 name|i
@@ -1199,7 +1206,10 @@ return|return
 name|i
 return|;
 return|return
-name|NumRegs
+name|Regs
+operator|.
+name|size
+argument_list|()
 return|;
 block|}
 comment|/// AllocateReg - Attempt to allocate one register.  If it is not available,
@@ -1271,15 +1281,13 @@ comment|/// are available, return zero.  Otherwise, return the first one availab
 comment|/// marking it and any aliases as allocated.
 name|unsigned
 name|AllocateReg
-parameter_list|(
-specifier|const
+argument_list|(
+name|ArrayRef
+operator|<
 name|MCPhysReg
-modifier|*
+operator|>
 name|Regs
-parameter_list|,
-name|unsigned
-name|NumRegs
-parameter_list|)
+argument_list|)
 block|{
 name|unsigned
 name|FirstUnalloc
@@ -1287,15 +1295,16 @@ init|=
 name|getFirstUnallocated
 argument_list|(
 name|Regs
-argument_list|,
-name|NumRegs
 argument_list|)
 decl_stmt|;
 if|if
 condition|(
 name|FirstUnalloc
 operator|==
-name|NumRegs
+name|Regs
+operator|.
+name|size
+argument_list|()
 condition|)
 return|return
 literal|0
@@ -1456,20 +1465,18 @@ block|}
 comment|/// Version of AllocateReg with list of registers to be shadowed.
 name|unsigned
 name|AllocateReg
-parameter_list|(
-specifier|const
+argument_list|(
+name|ArrayRef
+operator|<
 name|MCPhysReg
-modifier|*
+operator|>
 name|Regs
-parameter_list|,
+argument_list|,
 specifier|const
 name|MCPhysReg
-modifier|*
+operator|*
 name|ShadowRegs
-parameter_list|,
-name|unsigned
-name|NumRegs
-parameter_list|)
+argument_list|)
 block|{
 name|unsigned
 name|FirstUnalloc
@@ -1477,15 +1484,16 @@ init|=
 name|getFirstUnallocated
 argument_list|(
 name|Regs
-argument_list|,
-name|NumRegs
 argument_list|)
 decl_stmt|;
 if|if
 condition|(
 name|FirstUnalloc
 operator|==
-name|NumRegs
+name|Regs
+operator|.
+name|size
+argument_list|()
 condition|)
 return|return
 literal|0
@@ -1625,21 +1633,19 @@ comment|/// Version of AllocateStack with list of extra registers to be shadowed
 comment|/// Note that, unlike AllocateReg, this shadows ALL of the shadow registers.
 name|unsigned
 name|AllocateStack
-parameter_list|(
+argument_list|(
 name|unsigned
 name|Size
-parameter_list|,
+argument_list|,
 name|unsigned
 name|Align
-parameter_list|,
-specifier|const
+argument_list|,
+name|ArrayRef
+operator|<
 name|MCPhysReg
-modifier|*
+operator|>
 name|ShadowRegs
-parameter_list|,
-name|unsigned
-name|NumShadowRegs
-parameter_list|)
+argument_list|)
 block|{
 for|for
 control|(
@@ -1650,7 +1656,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|NumShadowRegs
+name|ShadowRegs
+operator|.
+name|size
+argument_list|()
 condition|;
 operator|++
 name|i

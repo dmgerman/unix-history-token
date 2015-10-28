@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|W_MAX
-value|16
+value|32
 end_define
 
 begin_struct

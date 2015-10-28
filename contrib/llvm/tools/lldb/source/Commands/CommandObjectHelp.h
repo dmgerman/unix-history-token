@@ -175,7 +175,7 @@ literal|'a'
 case|:
 name|m_show_aliases
 operator|=
-name|true
+name|false
 expr_stmt|;
 break|break;
 case|case
@@ -184,6 +184,14 @@ case|:
 name|m_show_user_defined
 operator|=
 name|false
+expr_stmt|;
+break|break;
+case|case
+literal|'h'
+case|:
+name|m_show_hidden
+operator|=
+name|true
 expr_stmt|;
 break|break;
 default|default:
@@ -208,11 +216,15 @@ argument_list|()
 block|{
 name|m_show_aliases
 operator|=
-name|false
+name|true
 block|;
 name|m_show_user_defined
 operator|=
 name|true
+block|;
+name|m_show_hidden
+operator|=
+name|false
 block|;         }
 specifier|const
 name|OptionDefinition
@@ -236,7 +248,10 @@ name|m_show_aliases
 block|;
 name|bool
 name|m_show_user_defined
-block|;             }
+block|;
+name|bool
+name|m_show_hidden
+block|;     }
 block|;
 name|virtual
 name|Options

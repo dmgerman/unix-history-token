@@ -2981,6 +2981,13 @@ name|error
 decl_stmt|,
 name|bound
 decl_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|so
@@ -2996,6 +3003,9 @@ argument_list|,
 operator|&
 name|sa
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3370,6 +3380,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|so
@@ -3385,6 +3402,9 @@ argument_list|,
 operator|&
 name|sa
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

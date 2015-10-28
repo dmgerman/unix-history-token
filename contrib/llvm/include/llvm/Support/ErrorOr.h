@@ -647,7 +647,7 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/// \brief Return false if there is an error.
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -1254,6 +1254,7 @@ name|type
 name|operator
 operator|==
 operator|(
+specifier|const
 name|ErrorOr
 operator|<
 name|T
@@ -1266,12 +1267,10 @@ name|Code
 operator|)
 block|{
 return|return
-name|std
-operator|::
-name|error_code
-argument_list|(
 name|Err
-argument_list|)
+operator|.
+name|getError
+argument_list|()
 operator|==
 name|Code
 return|;

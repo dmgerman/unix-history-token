@@ -103,6 +103,8 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+comment|// Returns the number of registers including the user registers and the
+comment|// lldb internal registers also
 name|virtual
 name|uint32_t
 name|GetRegisterCount
@@ -111,6 +113,20 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+comment|// Returns the number of the user registers (excluding the registers
+comment|// kept for lldb internal use only). Subclasses should override it if
+comment|// they belongs to an architecture with lldb internal registers.
+name|virtual
+name|uint32_t
+name|GetUserRegisterCount
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GetRegisterCount
+argument_list|()
+return|;
+block|}
 specifier|const
 name|lldb_private
 operator|::

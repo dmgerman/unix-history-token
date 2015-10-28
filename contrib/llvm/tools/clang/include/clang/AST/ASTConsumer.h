@@ -328,10 +328,6 @@ comment|/// notify the consumer that a vtable for the given C++ class is
 comment|/// required.
 comment|///
 comment|/// \param RD The class whose vtable was used.
-comment|///
-comment|/// \param DefinitionRequired Whether a definition of this vtable is
-comment|/// required in this translation unit; otherwise, it is only needed if
-comment|/// it was actually used.
 name|virtual
 name|void
 name|HandleVTable
@@ -339,9 +335,6 @@ parameter_list|(
 name|CXXRecordDecl
 modifier|*
 name|RD
-parameter_list|,
-name|bool
-name|DefinitionRequired
 parameter_list|)
 block|{}
 comment|/// \brief If the consumer is interested in entities getting modified after

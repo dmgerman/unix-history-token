@@ -1286,6 +1286,10 @@ name|sblock
 operator|.
 name|fs_size
 operator|=
+name|sblock
+operator|.
+name|fs_providersize
+operator|=
 name|fssize
 operator|=
 name|dbtofsb

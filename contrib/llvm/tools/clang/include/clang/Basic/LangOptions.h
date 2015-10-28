@@ -99,6 +99,12 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -251,18 +257,43 @@ block|,
 name|ASMM_Off
 block|}
 enum|;
+enum|enum
+name|MSVCMajorVersion
+block|{
+name|MSVC2010
+init|=
+literal|16
+block|,
+name|MSVC2012
+init|=
+literal|17
+block|,
+name|MSVC2013
+init|=
+literal|18
+block|,
+name|MSVC2015
+init|=
+literal|19
+block|}
+enum|;
 name|public
 label|:
 comment|/// \brief Set of enabled sanitizers.
 name|SanitizerSet
 name|Sanitize
 decl_stmt|;
-comment|/// \brief Path to blacklist file specifying which objects
+comment|/// \brief Paths to blacklist files specifying which objects
 comment|/// (files, functions, variables) should not be instrumented.
 name|std
 operator|::
+name|vector
+operator|<
+name|std
+operator|::
 name|string
-name|SanitizerBlacklistFile
+operator|>
+name|SanitizerBlacklistFiles
 expr_stmt|;
 name|clang
 operator|::
@@ -296,6 +327,20 @@ name|std
 operator|::
 name|string
 name|ImplementationOfModule
+expr_stmt|;
+comment|/// \brief The names of any features to enable in module 'requires' decls
+comment|/// in addition to the hard-coded list in Module.cpp and the target features.
+comment|///
+comment|/// This list is sorted.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ModuleFeatures
 expr_stmt|;
 comment|/// \brief Options for parsing comments.
 name|CommentOptions
@@ -361,6 +406,22 @@ argument_list|()
 operator|&&
 operator|!
 name|ObjCSubscriptingLegacyRuntime
+return|;
+block|}
+name|bool
+name|isCompatibleWithMSVC
+argument_list|(
+name|MSVCMajorVersion
+name|MajorVersion
+argument_list|)
+decl|const
+block|{
+return|return
+name|MSCompatibilityVersion
+operator|>=
+name|MajorVersion
+operator|*
+literal|10000000U
 return|;
 block|}
 comment|/// \brief Reset all of the options that are not considered when building a

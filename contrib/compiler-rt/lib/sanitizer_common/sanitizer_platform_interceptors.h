@@ -269,6 +269,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|SANITIZER_INTERCEPT_STRSTR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_STRCASESTR
+value|SI_NOT_WINDOWS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_STRSPN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_STRPBRK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|SANITIZER_INTERCEPT_TEXTDOMAIN
 value|SI_LINUX_NOT_ANDROID
 end_define
@@ -689,12 +717,8 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_PTRACE
-value|SI_LINUX_NOT_ANDROID&& \    (defined(__i386) || defined (__x86_64) || defined (__mips64))
+value|SI_LINUX_NOT_ANDROID&& \   (defined(__i386) || defined(__x86_64) || defined(__mips64) || \     defined(__powerpc64__))
 end_define
-
-begin_comment
-comment|// NOLINT
-end_comment
 
 begin_define
 define|#
@@ -821,7 +845,8 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_SCANDIR
-value|SI_LINUX_NOT_ANDROID
+define|\
+value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -907,7 +932,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_BACKTRACE
-value|SI_LINUX_NOT_ANDROID
+value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -1165,14 +1190,15 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_RAND_R
-value|SI_MAC || SI_LINUX_NOT_ANDROID
+define|\
+value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_ICONV
-value|SI_LINUX_NOT_ANDROID
+value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -1190,7 +1216,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETLINE
-value|SI_LINUX_NOT_ANDROID
+value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
 end_define
 
 begin_define
@@ -1248,14 +1274,16 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETIFADDRS
-value|SI_LINUX_NOT_ANDROID || SI_MAC
+define|\
+value|SI_FREEBSD || SI_LINUX_NOT_ANDROID || SI_MAC
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_IF_INDEXTONAME
-value|SI_LINUX_NOT_ANDROID || SI_MAC
+define|\
+value|SI_FREEBSD || SI_LINUX_NOT_ANDROID || SI_MAC
 end_define
 
 begin_define
@@ -1283,7 +1311,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_FTIME
-value|SI_NOT_WINDOWS
+value|!SI_FREEBSD&& SI_NOT_WINDOWS
 end_define
 
 begin_define
@@ -1376,6 +1404,13 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_MLOCKX
 value|SI_NOT_WINDOWS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_FOPENCOOKIE
+value|SI_LINUX_NOT_ANDROID
 end_define
 
 begin_endif

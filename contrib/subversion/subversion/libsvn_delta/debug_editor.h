@@ -37,7 +37,7 @@ block|{
 endif|#
 directive|endif
 comment|/* __cplusplus */
-comment|/* Return a debug editor that wraps @a wrapped_editor.  *  * The debug editor simply prints an indication of what callbacks are being  * called to @c stderr, and is only intended for use in debugging subversion  * editors.  */
+comment|/* Return a debug editor that wraps @a wrapped_editor.  *  * The debug editor simply prints an indication of what callbacks are being  * called to @c stdout, and is only intended for use in debugging subversion  * editors.  *  * @a prefix, if non-null, is printed between "DBG: " and each indication.  *  * Note: Our test suite generally ignores stdout lines starting with "DBG:".  */
 name|svn_error_t
 modifier|*
 name|svn_delta__get_debug_editor
@@ -61,6 +61,11 @@ parameter_list|,
 name|void
 modifier|*
 name|wrapped_baton
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|prefix
 parameter_list|,
 name|apr_pool_t
 modifier|*

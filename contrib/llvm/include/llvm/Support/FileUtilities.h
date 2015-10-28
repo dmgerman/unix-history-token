@@ -173,9 +173,6 @@ operator|::
 name|remove
 argument_list|(
 name|Filename
-operator|.
-name|str
-argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -204,9 +201,6 @@ operator|::
 name|remove
 argument_list|(
 name|Filename
-operator|.
-name|str
-argument_list|()
 argument_list|)
 expr_stmt|;
 block|}

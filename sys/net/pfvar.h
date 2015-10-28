@@ -752,7 +752,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|((c == AF_INET&& (a)->addr32[0] == (b)->addr32[0]) || \ 	(c == AF_INET6&& (a)->addr32[3] == (b)->addr32[3]&& \ 	(a)->addr32[2] == (b)->addr32[2]&& \ 	(a)->addr32[1] == (b)->addr32[1]&& \ 	(a)->addr32[0] == (b)->addr32[0])) \  #define PF_ANEQ(a, b, c) \ 	((a)->addr32[0] != (b)->addr32[0] || \ 	(a)->addr32[1] != (b)->addr32[1] || \ 	(a)->addr32[2] != (b)->addr32[2] || \ 	(a)->addr32[3] != (b)->addr32[3]) \  #define PF_AZERO(a, c) \ 	((c == AF_INET&& !(a)->addr32[0]) || \ 	(c == AF_INET6&& !(a)->addr32[0]&& !(a)->addr32[1]&& \ 	!(a)->addr32[2]&& !(a)->addr32[3] )) \  #define PF_MATCHA(n, a, m, b, f) \ 	pf_match_addr(n, a, m, b, f)
+value|((c == AF_INET&& (a)->addr32[0] == (b)->addr32[0]) || \ 	(c == AF_INET6&& (a)->addr32[3] == (b)->addr32[3]&& \ 	(a)->addr32[2] == (b)->addr32[2]&& \ 	(a)->addr32[1] == (b)->addr32[1]&& \ 	(a)->addr32[0] == (b)->addr32[0])) \  #define PF_ANEQ(a, b, c) \ 	((c == AF_INET&& (a)->addr32[0] != (b)->addr32[0]) || \ 	(c == AF_INET6&& ((a)->addr32[0] != (b)->addr32[0] || \ 	(a)->addr32[1] != (b)->addr32[1] || \ 	(a)->addr32[2] != (b)->addr32[2] || \ 	(a)->addr32[3] != (b)->addr32[3]))) \  #define PF_AZERO(a, c) \ 	((c == AF_INET&& !(a)->addr32[0]) || \ 	(c == AF_INET6&& !(a)->addr32[0]&& !(a)->addr32[1]&& \ 	!(a)->addr32[2]&& !(a)->addr32[3] )) \  #define PF_MATCHA(n, a, m, b, f) \ 	pf_match_addr(n, a, m, b, f)
 end_define
 
 begin_define
@@ -2118,28 +2118,6 @@ directive|define
 name|PFRULE_NODF
 value|0x0100
 end_define
-
-begin_define
-define|#
-directive|define
-name|PFRULE_FRAGCROP
-value|0x0200
-end_define
-
-begin_comment
-comment|/* non-buffering frag cache */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PFRULE_FRAGDROP
-value|0x0400
-end_define
-
-begin_comment
-comment|/* drop funny fragments */
-end_comment
 
 begin_define
 define|#
@@ -6446,6 +6424,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|u_int16_t
+name|pf_proto_cksum_fixup
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|u_int16_t
+parameter_list|,
+name|u_int16_t
+parameter_list|,
+name|u_int16_t
+parameter_list|,
+name|u_int8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
@@ -6745,6 +6743,46 @@ parameter_list|,
 name|u_int32_t
 parameter_list|,
 name|u_int8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pf_change_proto_a
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|u_int16_t
+modifier|*
+parameter_list|,
+name|u_int32_t
+parameter_list|,
+name|u_int8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pf_change_tcp_a
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|u_int16_t
+modifier|*
+parameter_list|,
+name|u_int32_t
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -82,9 +82,11 @@ block|{
 name|pthread_once_t
 modifier|*
 name|once_control
-init|=
-name|arg
 decl_stmt|;
+name|once_control
+operator|=
+name|arg
+expr_stmt|;
 if|if
 condition|(
 name|atomic_cmpset_rel_int
@@ -172,11 +174,16 @@ name|state
 operator|==
 name|ONCE_DONE
 condition|)
+block|{
+name|atomic_thread_fence_acq
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|state
@@ -186,7 +193,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|atomic_cmpset_acq_int
+name|atomic_cmpset_int
 argument_list|(
 operator|&
 name|once_control
@@ -210,7 +217,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|atomic_cmpset_acq_int
+name|atomic_cmpset_int
 argument_list|(
 operator|&
 name|once_control
@@ -343,7 +350,9 @@ end_function
 begin_function
 name|void
 name|_thr_once_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{ }
 end_function
 

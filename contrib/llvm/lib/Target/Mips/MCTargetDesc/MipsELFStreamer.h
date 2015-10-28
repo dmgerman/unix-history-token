@@ -147,18 +147,13 @@ name|MCAsmBackend
 operator|&
 name|MAB
 argument_list|,
-name|raw_ostream
+name|raw_pwrite_stream
 operator|&
 name|OS
 argument_list|,
 name|MCCodeEmitter
 operator|*
 name|Emitter
-argument_list|,
-specifier|const
-name|MCSubtargetInfo
-operator|&
-name|STI
 argument_list|)
 operator|:
 name|MCELFStreamer
@@ -180,8 +175,6 @@ argument_list|(
 name|this
 argument_list|,
 name|Context
-argument_list|,
-name|STI
 argument_list|)
 block|;
 name|MipsOptionRecords
@@ -227,7 +220,7 @@ comment|/// candidates for marking as microMIPS when .section directive is proce
 name|void
 name|SwitchSection
 argument_list|(
-argument|const MCSection *Section
+argument|MCSection *Section
 argument_list|,
 argument|const MCExpr *Subsection = nullptr
 argument_list|)
@@ -250,6 +243,11 @@ comment|/// Emits all the option records stored up until the point it's called.
 name|void
 name|EmitMipsOptionRecords
 argument_list|()
+block|;
+comment|/// Mark labels as microMIPS, if necessary for the subtarget.
+name|void
+name|createPendingLabelRelocs
+argument_list|()
 block|; }
 decl_stmt|;
 name|MCELFStreamer
@@ -264,18 +262,13 @@ name|MCAsmBackend
 modifier|&
 name|MAB
 parameter_list|,
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
 parameter_list|,
 name|MCCodeEmitter
 modifier|*
 name|Emitter
-parameter_list|,
-specifier|const
-name|MCSubtargetInfo
-modifier|&
-name|STI
 parameter_list|,
 name|bool
 name|RelaxAll

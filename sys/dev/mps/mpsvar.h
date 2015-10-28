@@ -926,16 +926,9 @@ decl_stmt|;
 name|int
 name|spinup_wait_time
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|900030
 name|uint64_t
 name|chain_alloc_fail
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|sysctl_ctx_list
 name|sysctl_ctx
@@ -1643,14 +1636,6 @@ expr_stmt|;
 block|}
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|900030
-end_if
-
 begin_else
 else|else
 name|sc
@@ -1659,11 +1644,6 @@ name|chain_alloc_fail
 operator|++
 expr_stmt|;
 end_else
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_return
 return|return
@@ -1690,12 +1670,6 @@ modifier|*
 name|chain
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|bzero(chain->chain, 128);
-endif|#
-directive|endif
 name|sc
 operator|->
 name|chain_free
@@ -3074,23 +3048,6 @@ name|timeout
 parameter_list|,
 name|int
 name|sleep_flag
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|mps_request_polled
-parameter_list|(
-name|struct
-name|mps_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|mps_command
-modifier|*
-name|cm
 parameter_list|)
 function_decl|;
 end_function_decl

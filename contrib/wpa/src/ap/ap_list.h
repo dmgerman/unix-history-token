@@ -138,6 +138,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ap_list_timer
+parameter_list|(
+name|struct
+name|hostapd_iface
+modifier|*
+name|iface
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
@@ -170,6 +182,20 @@ specifier|static
 specifier|inline
 name|void
 name|ap_list_deinit
+parameter_list|(
+name|struct
+name|hostapd_iface
+modifier|*
+name|iface
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|ap_list_timer
 parameter_list|(
 name|struct
 name|hostapd_iface

@@ -36,10 +36,6 @@ directive|include
 file|"private/svn_dep_compat.h"
 end_include
 
-begin_comment
-comment|/* Machine-word-sized masks used in svn_eol__find_eol_start.  */
-end_comment
-
 begin_function
 name|char
 modifier|*
@@ -57,7 +53,7 @@ if|#
 directive|if
 operator|!
 name|SVN_UNALIGNED_ACCESS_IS_OK
-comment|/* On some systems, we need to make sure that buf is properly aligned    * for chunky data access. This overhead is still justified because    * only lines tend to be tens of chars long.    */
+comment|/* On some systems, we need to make sure that BUF is properly aligned    * for chunky data access. This overhead is still justified because    * only lines tend to be tens of chars long.    */
 for|for
 control|(
 init|;
@@ -161,7 +157,7 @@ name|chunk
 operator|^
 name|SVN__N_MASK
 decl_stmt|;
-comment|/* A byte in SVN__R_TEST can by< 0x80, iff it has been \0 before      * (i.e. \r in *BUF). Dito for SVN__N_TEST. */
+comment|/* A byte in SVN__R_TEST can only be< 0x80, iff it has been \0 before      * (i.e. \r in *BUF). Ditto for SVN__N_TEST. */
 name|r_test
 operator||=
 operator|(

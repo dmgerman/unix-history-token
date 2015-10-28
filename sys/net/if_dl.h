@@ -79,6 +79,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|CLLADDR
+parameter_list|(
+name|s
+parameter_list|)
+value|((c_caddr_t)((s)->sdl_data + (s)->sdl_nlen))
+end_define
+
+begin_define
+define|#
+directive|define
 name|LLINDEX
 parameter_list|(
 name|s

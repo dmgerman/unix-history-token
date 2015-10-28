@@ -69,6 +69,15 @@ directive|include
 file|"libc_private.h"
 end_include
 
+begin_function_decl
+name|int
+name|__pause
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Backwards compatible pause.  */
 end_comment

@@ -23460,11 +23460,9 @@ return|;
 block|}
 if|if
 condition|(
-name|obj
-operator|->
-name|tlsindex
+name|tls_last_offset
 operator|==
-literal|1
+literal|0
 condition|)
 name|off
 operator|=

@@ -317,10 +317,6 @@ operator|&
 name|SrcMgr
 argument_list|)
 expr_stmt|;
-operator|~
-name|TGLexer
-argument_list|()
-block|{}
 name|tgtok
 operator|::
 name|TokKind

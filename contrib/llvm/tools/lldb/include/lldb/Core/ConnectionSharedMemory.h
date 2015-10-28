@@ -169,6 +169,13 @@ argument_list|,
 argument|Error *error_ptr
 argument_list|)
 block|;
+name|virtual
+name|std
+operator|::
+name|string
+name|GetURI
+argument_list|()
+block|;
 name|lldb
 operator|::
 name|ConnectionStatus

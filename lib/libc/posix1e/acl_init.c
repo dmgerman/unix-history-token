@@ -210,11 +210,17 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|errno
+operator|=
+name|error
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 name|bzero
 argument_list|(
 name|acl

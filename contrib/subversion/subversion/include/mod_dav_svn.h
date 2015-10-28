@@ -43,7 +43,61 @@ block|{
 endif|#
 directive|endif
 comment|/* __cplusplus */
-comment|/**    Given an apache request @a r, a @a uri, and a @a root_path to the svn    location block, process @a uri and return many things, allocated in    @a r->pool:     - @a cleaned_uri:    The uri with duplicate and trailing slashes removed.     - @a trailing_slash: Whether the uri had a trailing slash on it.     Three special substrings of the uri are returned for convenience:     - @a repos_basename: The single path component that is the directory                       which contains the repository.  (Don't confuse                       this with the "repository name" as optionally                       defined via the SVNReposName directive!)     - @a relative_path:  The remaining imaginary path components.     - @a repos_path:     The actual path within the repository filesystem, or                       NULL if no part of the uri refers to a path in                       the repository (e.g. "!svn/vcc/default" or                       "!svn/bln/25").      For example, consider the uri         /svn/repos/proj1/!svn/blah/13//A/B/alpha     In the SVNPath case, this function would receive a @a root_path of    '/svn/repos/proj1', and in the SVNParentPath case would receive a    @a root_path of '/svn/repos'.  But either way, we would get back:       - @a cleaned_uri:    /svn/repos/proj1/!svn/blah/13/A/B/alpha      - @a repos_basename: proj1      - @a relative_path:  /!svn/blah/13/A/B/alpha      - @a repos_path:     A/B/alpha      - @a trailing_slash: FALSE */
+comment|/**    Given an apache request @a r, a @a uri, and a @a root_path to the svn    location block, process @a uri and return many things, allocated in    @a pool:     - @a cleaned_uri:    The uri with duplicate and trailing slashes removed.     - @a trailing_slash: Whether the uri had a trailing slash on it.     Three special substrings of the uri are returned for convenience:     - @a repos_basename: The single path component that is the directory                       which contains the repository.  (Don't confuse                       this with the "repository name" as optionally                       defined via the SVNReposName directive!)     - @a relative_path:  The remaining imaginary path components.     - @a repos_path:     The actual path within the repository filesystem, or                       NULL if no part of the uri refers to a path in                       the repository (e.g. "!svn/vcc/default" or                       "!svn/bln/25").      For example, consider the uri         /svn/repos/proj1/!svn/blah/13//A/B/alpha     In the SVNPath case, this function would receive a @a root_path of    '/svn/repos/proj1', and in the SVNParentPath case would receive a    @a root_path of '/svn/repos'.  But either way, we would get back:       - @a cleaned_uri:    /svn/repos/proj1/!svn/blah/13/A/B/alpha      - @a repos_basename: proj1      - @a relative_path:  /!svn/blah/13/A/B/alpha      - @a repos_path:     A/B/alpha      - @a trailing_slash: FALSE     NOTE: The returned dav_error will be also allocated in @a pool, not          in @a r->pool.     @since New in 1.9 */
+name|AP_MODULE_DECLARE
+argument_list|(
+argument|dav_error *
+argument_list|)
+name|dav_svn_split_uri2
+argument_list|(
+name|request_rec
+operator|*
+name|r
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|uri_to_split
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|root_path
+argument_list|,
+specifier|const
+name|char
+operator|*
+operator|*
+name|cleaned_uri
+argument_list|,
+name|int
+operator|*
+name|trailing_slash
+argument_list|,
+specifier|const
+name|char
+operator|*
+operator|*
+name|repos_basename
+argument_list|,
+specifier|const
+name|char
+operator|*
+operator|*
+name|relative_path
+argument_list|,
+specifier|const
+name|char
+operator|*
+operator|*
+name|repos_path
+argument_list|,
+name|apr_pool_t
+operator|*
+name|pool
+argument_list|)
+expr_stmt|;
+comment|/**  * Same as dav_svn_split_uri2() but allocates the result in @a r->pool.  */
 name|AP_MODULE_DECLARE
 argument_list|(
 argument|dav_error *
@@ -93,7 +147,34 @@ operator|*
 name|repos_path
 argument_list|)
 expr_stmt|;
-comment|/**  * Given an apache request @a r and a @a root_path to the svn location  * block, set @a *repos_path to the path of the repository on disk.  */
+comment|/**  * Given an apache request @a r and a @a root_path to the svn location  * block, set @a *repos_path to the path of the repository on disk.  * Perform all allocations in @a pool.  *  * NOTE: The returned dav_error will be also allocated in @a pool, not  *       in @a r->pool.  *  * @since New in 1.9  */
+name|AP_MODULE_DECLARE
+argument_list|(
+argument|dav_error *
+argument_list|)
+name|dav_svn_get_repos_path2
+argument_list|(
+name|request_rec
+operator|*
+name|r
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|root_path
+argument_list|,
+specifier|const
+name|char
+operator|*
+operator|*
+name|repos_path
+argument_list|,
+name|apr_pool_t
+operator|*
+name|pool
+argument_list|)
+expr_stmt|;
+comment|/**  * Same as dav_svn_get_repos_path2() but allocates the result in@a r->pool.  */
 name|AP_MODULE_DECLARE
 argument_list|(
 argument|dav_error *

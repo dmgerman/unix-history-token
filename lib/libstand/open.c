@@ -282,7 +282,7 @@ goto|goto
 name|ok
 goto|;
 goto|goto
-name|fail
+name|err
 goto|;
 block|}
 name|error

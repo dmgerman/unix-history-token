@@ -42,6 +42,30 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_calendar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"test-libntp.h"
+end_include
+
 begin_comment
 comment|//=======External Functions This Runner Calls=====
 end_comment
@@ -70,7 +94,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_NoWrapInDateRange
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -78,7 +104,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_NoWrapInDateRangeLeapYear
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -86,7 +114,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|test_WrapInDateRange
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -94,10 +124,21 @@ begin_comment
 comment|//=======Test Reset Option=====
 end_comment
 
+begin_function_decl
+name|void
+name|resetTest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|resetTest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tearDown
 argument_list|()
@@ -110,6 +151,7 @@ end_function
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -139,12 +181,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|Unity
-operator|.
-name|TestFile
-operator|=
-literal|"calyearstart.c"
-expr_stmt|;
 name|UnityBegin
 argument_list|(
 literal|"calyearstart.c"
@@ -154,21 +190,21 @@ name|RUN_TEST
 argument_list|(
 name|test_NoWrapInDateRange
 argument_list|,
-literal|22
+literal|11
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_NoWrapInDateRangeLeapYear
 argument_list|,
-literal|30
+literal|12
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_WrapInDateRange
 argument_list|,
-literal|38
+literal|13
 argument_list|)
 expr_stmt|;
 return|return

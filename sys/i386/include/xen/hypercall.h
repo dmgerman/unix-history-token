@@ -969,6 +969,7 @@ parameter_list|,
 name|int
 name|count
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str

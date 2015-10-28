@@ -812,19 +812,10 @@ modifier|*
 name|NamedMDSymTab
 decl_stmt|;
 comment|///< NamedMDNode names.
-comment|// We need to keep the string because the C API expects us to own the string
-comment|// representation.
-comment|// Since we have it, we also use an empty string to represent a module without
-comment|// a DataLayout. If it has a DataLayout, these variables are in sync and the
-comment|// string is just a cache of getDataLayout()->getStringRepresentation().
-name|std
-operator|::
-name|string
-name|DataLayoutStr
-expr_stmt|;
 name|DataLayout
 name|DL
 decl_stmt|;
+comment|///< DataLayout associated with the module
 name|friend
 name|class
 name|Constant
@@ -895,13 +886,16 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|DataLayoutStr
+name|DL
+operator|.
+name|getStringRepresentation
+argument_list|()
 return|;
 block|}
 comment|/// Get the data layout for the module's target platform.
 specifier|const
 name|DataLayout
-operator|*
+operator|&
 name|getDataLayout
 argument_list|()
 specifier|const
@@ -997,7 +991,7 @@ name|setDataLayout
 parameter_list|(
 specifier|const
 name|DataLayout
-modifier|*
+modifier|&
 name|Other
 parameter_list|)
 function_decl|;
@@ -1015,6 +1009,7 @@ name|T
 expr_stmt|;
 block|}
 comment|/// Set the module-scope inline assembly blocks.
+comment|/// A trailing newline is added if the input doesn't have one.
 name|void
 name|setModuleInlineAsm
 parameter_list|(
@@ -1051,8 +1046,8 @@ operator|+=
 literal|'\n'
 expr_stmt|;
 block|}
-comment|/// Append to the module-scope inline assembly blocks, automatically inserting
-comment|/// a separating newline if necessary.
+comment|/// Append to the module-scope inline assembly blocks.
+comment|/// A trailing newline is added if the input doesn't have one.
 name|void
 name|appendModuleInlineAsm
 parameter_list|(
@@ -1591,7 +1586,7 @@ comment|/// If the GlobalValue is read in, and if the GVMaterializer supports it
 comment|/// release the memory for the function, and set it up to be materialized
 comment|/// lazily. If !isDematerializable(), this method is a no-op.
 name|void
-name|Dematerialize
+name|dematerialize
 parameter_list|(
 name|GlobalValue
 modifier|*
@@ -1612,6 +1607,12 @@ name|std
 operator|::
 name|error_code
 name|materializeAllPermanently
+argument_list|()
+expr_stmt|;
+name|std
+operator|::
+name|error_code
+name|materializeMetadata
 argument_list|()
 expr_stmt|;
 comment|/// @}
@@ -1640,10 +1641,7 @@ name|GlobalList
 return|;
 block|}
 specifier|static
-name|iplist
-operator|<
-name|GlobalVariable
-operator|>
+name|GlobalListType
 name|Module
 operator|::
 operator|*
@@ -1682,10 +1680,7 @@ name|FunctionList
 return|;
 block|}
 specifier|static
-name|iplist
-operator|<
-name|Function
-operator|>
+name|FunctionListType
 name|Module
 operator|::
 operator|*
@@ -1724,10 +1719,7 @@ name|AliasList
 return|;
 block|}
 specifier|static
-name|iplist
-operator|<
-name|GlobalAlias
-operator|>
+name|AliasListType
 name|Module
 operator|::
 operator|*
@@ -1766,10 +1758,7 @@ name|NamedMDList
 return|;
 block|}
 specifier|static
-name|ilist
-operator|<
-name|NamedMDNode
-operator|>
+name|NamedMDListType
 name|Module
 operator|::
 operator|*
@@ -2329,11 +2318,24 @@ argument_list|()
 operator|)
 return|;
 block|}
+comment|/// Destroy ConstantArrays in LLVMContext if they are not used.
+comment|/// ConstantArrays constructed during linking can cause quadratic memory
+comment|/// explosion. Releasing all unused constants can cause a 20% LTO compile-time
+comment|/// slowdown for a large application.
+comment|///
+comment|/// NOTE: Constants are currently owned by LLVMContext. This can then only
+comment|/// be called where all uses of the LLVMContext are understood.
+name|void
+name|dropTriviallyDeadConstantArrays
+parameter_list|()
+function_decl|;
 comment|/// @}
 comment|/// @name Utility functions for printing and dumping Module objects
 comment|/// @{
 comment|/// Print the module to an output stream with an optional
-comment|/// AssemblyAnnotationWriter.
+comment|/// AssemblyAnnotationWriter.  If \c ShouldPreserveUseListOrder, then include
+comment|/// uselistorder directives so that use-lists can be recreated when reading
+comment|/// the assembly.
 name|void
 name|print
 argument_list|(
@@ -2344,6 +2346,11 @@ argument_list|,
 name|AssemblyAnnotationWriter
 operator|*
 name|AAW
+argument_list|,
+name|bool
+name|ShouldPreserveUseListOrder
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;

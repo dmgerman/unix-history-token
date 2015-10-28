@@ -7639,9 +7639,11 @@ name|Z_NULL
 condition|)
 return|return
 operator|-
+operator|(
 literal|1L
 operator|<<
 literal|16
+operator|)
 return|;
 name|state
 operator|=

@@ -329,6 +329,23 @@ directive|include
 file|<netinet/tcpip.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCPPCAP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_pcap.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -662,43 +679,25 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_net_inet_tcp
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|experimental
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-literal|0
-argument_list|,
-literal|"Experimental TCP extensions"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
-name|tcp_do_initcwnd10
+name|tcp_initcwnd_segments
 argument_list|)
 operator|=
-literal|1
+literal|10
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_net_inet_tcp_experimental
+name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|initcwnd10
+name|initcwnd_segments
 argument_list|,
 name|CTLFLAG_VNET
 operator||
@@ -707,12 +706,12 @@ argument_list|,
 operator|&
 name|VNET_NAME
 argument_list|(
-name|tcp_do_initcwnd10
+name|tcp_initcwnd_segments
 argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Enable RFC 6928 (Increasing initial CWND to 10)"
+literal|"Slow-start flight size (initial congestion window) in number of segments"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1957,7 +1956,7 @@ name|tcps_usedssthresh
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Set the initial slow-start flight size. 	 * 	 * RFC5681 Section 3.1 specifies the default conservative values. 	 * RFC3390 specifies slightly more aggressive values. 	 * RFC6928 increases it to ten segments. 	 * 	 * If a SYN or SYN/ACK was lost and retransmitted, we have to 	 * reduce the initial CWND to one segment as congestion is likely 	 * requiring us to be cautious. 	 */
+comment|/* 	 * Set the initial slow-start flight size. 	 * 	 * RFC5681 Section 3.1 specifies the default conservative values. 	 * RFC3390 specifies slightly more aggressive values. 	 * RFC6928 increases it to ten segments. 	 * Support for user specified value for initial flight size. 	 * 	 * If a SYN or SYN/ACK was lost and retransmitted, we have to 	 * reduce the initial CWND to one segment as congestion is likely 	 * requiring us to be cautious. 	 */
 if|if
 condition|(
 name|tp
@@ -1978,7 +1977,7 @@ comment|/* SYN(-ACK) lost */
 elseif|else
 if|if
 condition|(
-name|V_tcp_do_initcwnd10
+name|V_tcp_initcwnd_segments
 condition|)
 name|tp
 operator|->
@@ -1986,7 +1985,7 @@ name|snd_cwnd
 operator|=
 name|min
 argument_list|(
-literal|10
+name|V_tcp_initcwnd_segments
 operator|*
 name|tp
 operator|->
@@ -2000,7 +1999,9 @@ name|tp
 operator|->
 name|t_maxseg
 argument_list|,
-literal|14600
+name|V_tcp_initcwnd_segments
+operator|*
+literal|1460
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2572,46 +2573,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Neighbor Discovery, Neighbor Unreachability Detection Upper layer hint. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ND6_HINT
-parameter_list|(
-name|tp
-parameter_list|)
-define|\
-value|do { \ 	if ((tp)&& (tp)->t_inpcb&& \ 	    ((tp)->t_inpcb->inp_vflag& INP_IPV6) != 0) \ 		nd6_nud_hint(NULL, NULL, 0); \ } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ND6_HINT
-parameter_list|(
-name|tp
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Indicate whether this ack should be delayed.  We can delay the ack if  * following conditions are met:  *	- There is no delayed ack timer in progress.  *	- Our last ack wasn't a 0-sized window. We never want to delay  *	  the ack that opens up a 0-sized window.  *	- LRO wasn't used for this segment. We make sure by checking that the  *	  segment size is not larger than the MSS.  *	- Delayed acks are enabled or this is a half-synchronized T/TCP  *	  connection.  */
 end_comment
 
@@ -3158,7 +3119,7 @@ name|TI_UNLOCKED
 value|1
 define|#
 directive|define
-name|TI_WLOCKED
+name|TI_RLOCKED
 value|2
 ifdef|#
 directive|ifdef
@@ -4050,7 +4011,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4058,7 +4019,7 @@ argument_list|)
 expr_stmt|;
 name|ti_locked
 operator|=
-name|TI_WLOCKED
+name|TI_RLOCKED
 expr_stmt|;
 block|}
 else|else
@@ -4145,10 +4106,10 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
 block|{
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4778,7 +4739,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|INP_INFO_TRY_WLOCK
+name|INP_INFO_TRY_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4797,7 +4758,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4805,7 +4766,7 @@ argument_list|)
 expr_stmt|;
 name|ti_locked
 operator|=
-name|TI_WLOCKED
+name|TI_RLOCKED
 expr_stmt|;
 name|INP_WLOCK
 argument_list|(
@@ -4832,10 +4793,10 @@ block|}
 else|else
 name|ti_locked
 operator|=
-name|TI_WLOCKED
+name|TI_RLOCKED
 expr_stmt|;
 block|}
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4879,7 +4840,7 @@ condition|)
 goto|goto
 name|findpcb
 goto|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -4968,7 +4929,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5021,7 +4982,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|INP_INFO_TRY_WLOCK
+name|INP_INFO_TRY_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5040,7 +5001,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5048,7 +5009,7 @@ argument_list|)
 expr_stmt|;
 name|ti_locked
 operator|=
-name|TI_WLOCKED
+name|TI_RLOCKED
 expr_stmt|;
 name|INP_WLOCK
 argument_list|(
@@ -5078,10 +5039,10 @@ block|}
 else|else
 name|ti_locked
 operator|=
-name|TI_WLOCKED
+name|TI_RLOCKED
 expr_stmt|;
 block|}
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5345,7 +5306,7 @@ operator|==
 name|TH_ACK
 condition|)
 block|{
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5471,12 +5432,12 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|INP_WLOCK
+comment|/* 			 * New connection inpcb is already locked by 			 * syncache_expand(). 			 */
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* new connection */
 name|tp
 operator|=
 name|intotcpcb
@@ -6315,6 +6276,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|TCP_PROBE3
+argument_list|(
+name|debug__input
+argument_list|,
+name|tp
+argument_list|,
+name|th
+argument_list|,
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|tcp_dooptions
 argument_list|(
 operator|&
@@ -6354,10 +6333,10 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6562,10 +6541,10 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6688,10 +6667,10 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6932,7 +6911,7 @@ name|KASSERT
 argument_list|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 argument_list|,
 operator|(
 literal|"%s ti_locked %d for "
@@ -6944,7 +6923,7 @@ name|ti_locked
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6960,9 +6939,9 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -7033,6 +7012,26 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCPPCAP
+comment|/* Save segment, if requested. */
+name|tcp_pcap_add
+argument_list|(
+name|th
+argument_list|,
+name|m
+argument_list|,
+operator|&
+operator|(
+name|tp
+operator|->
+name|t_inpkts
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Segment received on connection. 	 * Reset idle time and keep-alive timer. 	 * XXX: This should be done after segment 	 * validation to ignore broken/spoofed segs. 	 */
 name|tp
 operator|->
@@ -7710,9 +7709,9 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -8000,12 +7999,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|ND6_HINT
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-comment|/* Some progress has been made. */
 comment|/* 				 * If all outstanding data are acked, stop 				 * retransmit timer, otherwise restart timer 				 * using current (possibly backed-off) value. 				 * If process is waiting for space, 				 * wakeup/selwakeup/signal.  If data 				 * are ready to send, let tcp_output 				 * decide between more output or persist. 				 */
 ifdef|#
 directive|ifdef
@@ -8040,6 +8033,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|TCP_PROBE3
+argument_list|(
+name|debug__input
+argument_list|,
+name|tp
+argument_list|,
+name|th
+argument_list|,
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -8142,9 +8153,9 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -8215,12 +8226,6 @@ argument_list|,
 name|tlen
 argument_list|)
 expr_stmt|;
-name|ND6_HINT
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-comment|/* Some progress has been made */
 ifdef|#
 directive|ifdef
 name|TCPDEBUG
@@ -8254,6 +8259,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|TCP_PROBE3
+argument_list|(
+name|debug__input
+argument_list|,
+name|tp
+argument_list|,
+name|th
+argument_list|,
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Automatic sizing of receive socket buffer.  Often the send 		 * buffer size is not optimally adjusted to the actual network 		 * conditions at hand (delay bandwidth product).  Setting the 		 * buffer size too small limits throughput on links with high 		 * bandwidth and high delay (eg. trans-continental/oceanic links). 		 * 		 * On the receive side the socket buffer memory is only rarely 		 * used to any significant extent.  This allows us to be much 		 * more aggressive in scaling the receive socket buffer.  For 		 * the case that the buffer space is actually used to a large 		 * extent and we run out of kernel memory we can simply drop 		 * the new segments; TCP on the sender will just retransmit it 		 * later.  Setting the buffer size too big may only consume too 		 * much kernel memory if the application doesn't read() from 		 * the socket or packet loss or reordering makes use of the 		 * reassembly queue. 		 * 		 * The criteria to step up the receive buffer one notch are: 		 *  1. Application has not set receive buffer size with 		 *     SO_RCVBUF. Setting SO_RCVBUF clears SB_AUTOSIZE. 		 *  2. the number of bytes received during the time it takes 		 *     one timestamp to be reflected back to us (the RTT); 		 *  3. received bytes per RTT is within seven eighth of the 		 *     current socket buffer size; 		 *  4. receive buffer size has not hit maximal automatic size; 		 * 		 * This algorithm does one step per RTT at most and only if 		 * we receive a bulk stream w/o packet losses or reorderings. 		 * Shrinking the buffer during idle times is not necessary as 		 * it doesn't consume any memory when idle. 		 * 		 * TODO: Only step up if the application is actually serving 		 * the buffer to better manage the socket buffer resources. 		 */
 if|if
 condition|(
@@ -8989,7 +9012,7 @@ name|KASSERT
 argument_list|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 argument_list|,
 operator|(
 literal|"%s: trimthenstep6: "
@@ -9001,7 +9024,7 @@ name|ti_locked
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -9166,7 +9189,7 @@ name|th_seq
 operator|)
 condition|)
 block|{
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -9176,7 +9199,7 @@ name|KASSERT
 argument_list|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 argument_list|,
 operator|(
 literal|"%s: TH_RST ti_locked %d, th %p tp %p"
@@ -9359,7 +9382,7 @@ name|KASSERT
 argument_list|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 argument_list|,
 operator|(
 literal|"tcp_do_segment: TH_SYN ti_locked %d"
@@ -9368,7 +9391,7 @@ name|ti_locked
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -9773,7 +9796,7 @@ name|KASSERT
 argument_list|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 argument_list|,
 operator|(
 literal|"%s: SS_NOFDEREF&& "
@@ -9785,7 +9808,7 @@ name|ti_locked
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -10816,6 +10839,7 @@ condition|(
 name|V_tcp_do_rfc3042
 condition|)
 block|{
+comment|/* 					 * Process first and second duplicate 					 * ACKs. Each indicates a segment 					 * leaving the network, creating room 					 * for more. Make sure we can send a 					 * packet on reception of each duplicate 					 * ACK by increasing snd_cwnd by one 					 * segment. Restore the original 					 * snd_cwnd after packet transmission. 					 */
 name|cc_ack_received
 argument_list|(
 name|tp
@@ -11747,7 +11771,7 @@ condition|(
 name|ourfinisacked
 condition|)
 block|{
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -11758,7 +11782,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -11781,7 +11805,7 @@ condition|(
 name|ourfinisacked
 condition|)
 block|{
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -12299,11 +12323,6 @@ argument_list|,
 name|tlen
 argument_list|)
 expr_stmt|;
-name|ND6_HINT
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
@@ -12515,7 +12534,7 @@ comment|/* 		 * In FIN_WAIT_2 state enter the TIME_WAIT state, 		 * starting the
 case|case
 name|TCPS_FIN_WAIT_2
 case|:
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -12525,7 +12544,7 @@ name|KASSERT
 argument_list|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 argument_list|,
 operator|(
 literal|"%s: dodata "
@@ -12542,7 +12561,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -12555,9 +12574,9 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -12600,6 +12619,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|TCP_PROBE3
+argument_list|(
+name|debug__input
+argument_list|,
+name|tp
+argument_list|,
+name|th
+argument_list|,
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Return any desired output. 	 */
 if|if
 condition|(
@@ -12768,13 +12805,31 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|TCP_PROBE3
+argument_list|(
+name|debug__input
+argument_list|,
+name|tp
+argument_list|,
+name|th
+argument_list|,
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -12817,9 +12872,9 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -12878,10 +12933,10 @@ if|if
 condition|(
 name|ti_locked
 operator|==
-name|TI_WLOCKED
+name|TI_RLOCKED
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -12948,6 +13003,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|TCP_PROBE3
+argument_list|(
+name|debug__input
+argument_list|,
+name|tp
+argument_list|,
+name|th
+argument_list|,
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tp

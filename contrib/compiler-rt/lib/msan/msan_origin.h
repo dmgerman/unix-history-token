@@ -277,6 +277,10 @@ operator|&
 name|prev_id
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|stack
+condition|)
 operator|*
 name|stack
 operator|=

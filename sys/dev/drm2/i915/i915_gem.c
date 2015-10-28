@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright Â© 2008 Intel Corporation  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS  * IN THE SOFTWARE.  *  * Authors:  *    Eric Anholt<eric@anholt.net>  *  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by Konstantin Belousov under sponsorship from  * the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright Â© 2008 Intel Corporation  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS  * IN THE SOFTWARE.  *  * Authors:  *    Eric Anholt<eric@anholt.net>  *  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by Konstantin Belousov under sponsorship from  * the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -749,6 +749,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|inline
 name|bool
 name|i915_gem_object_is_inactive
 parameter_list|(
@@ -5083,25 +5084,30 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+comment|/* Only handle setting domains to types used by the CPU. */
 if|if
 condition|(
-operator|(
 name|write_domain
 operator|&
 name|I915_GEM_GPU_DOMAINS
-operator|)
-operator|!=
-literal|0
-operator|||
-operator|(
+condition|)
+return|return
+operator|-
+name|EINVAL
+return|;
+if|if
+condition|(
 name|read_domains
 operator|&
 name|I915_GEM_GPU_DOMAINS
-operator|)
-operator|!=
-literal|0
-operator|||
-operator|(
+condition|)
+return|return
+operator|-
+name|EINVAL
+return|;
+comment|/* Having something in the write domain implies it's in the read 	 * domain, and only that read domain.  Enforce that in the request. 	 */
+if|if
+condition|(
 name|write_domain
 operator|!=
 literal|0
@@ -5109,7 +5115,6 @@ operator|&&
 name|read_domains
 operator|!=
 name|write_domain
-operator|)
 condition|)
 return|return
 operator|-
@@ -6800,15 +6805,6 @@ name|int
 name|tiling_mode
 parameter_list|)
 block|{
-if|if
-condition|(
-name|tiling_mode
-operator|==
-name|I915_TILING_NONE
-condition|)
-return|return
-literal|4096
-return|;
 comment|/* 	 * Minimum alignment is 4k (GTT page size) for sane hw. 	 */
 if|if
 condition|(
@@ -6825,6 +6821,10 @@ name|IS_G33
 argument_list|(
 name|dev
 argument_list|)
+operator|||
+name|tiling_mode
+operator|==
+name|I915_TILING_NONE
 condition|)
 return|return
 literal|4096
@@ -10649,17 +10649,10 @@ name|obj
 operator|->
 name|pin_count
 condition|)
-block|{
-name|DRM_ERROR
-argument_list|(
-literal|"Attempting to unbind pinned buffer\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|-
 name|EINVAL
 return|;
-block|}
 name|ret
 operator|=
 name|i915_gem_object_finish_gpu
@@ -13429,9 +13422,7 @@ condition|(
 name|ret
 condition|)
 return|return
-operator|(
 name|ret
-operator|)
 return|;
 if|if
 condition|(
@@ -14194,6 +14185,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * Moves a single object to the CPU read, and possibly write domain.  *  * This function returns when the move is complete, including waiting on  * flushes to occur.  */
+end_comment
 
 begin_function
 name|int
@@ -17258,6 +17253,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Create a physically contiguous memory object for this object  * e.g. for cursor + overlay regs  */
+end_comment
 
 begin_function
 specifier|static

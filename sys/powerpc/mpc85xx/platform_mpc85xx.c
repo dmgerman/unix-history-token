@@ -255,16 +255,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|mpc85xx_attach
-parameter_list|(
-name|platform_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|mpc85xx_mem_regions
 parameter_list|(
@@ -451,20 +441,19 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|platform_def_t
+begin_expr_stmt
+name|DEFINE_CLASS_0
+argument_list|(
+name|mpc85xx
+argument_list|,
 name|mpc85xx_platform
-init|=
-block|{
-literal|"mpc85xx"
-block|,
+argument_list|,
 name|mpc85xx_methods
-block|,
+argument_list|,
 literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|PLATFORM_DEF
@@ -515,7 +504,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|mpc85xx_attach
 parameter_list|(

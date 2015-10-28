@@ -139,6 +139,16 @@ name|string
 operator|>
 name|Features
 expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|Reciprocals
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

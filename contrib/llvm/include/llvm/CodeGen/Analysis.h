@@ -215,6 +215,11 @@ name|TargetLowering
 operator|&
 name|TLI
 argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
 name|Type
 operator|*
 name|Ty

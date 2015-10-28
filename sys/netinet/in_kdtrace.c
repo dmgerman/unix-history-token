@@ -352,6 +352,91 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|SDT_PROBE_DEFINE3_XLATE
+argument_list|(
+name|tcp
+argument_list|, , ,
+name|debug__input
+argument_list|,
+literal|"struct tcpcb *"
+argument_list|,
+literal|"tcpsinfo_t *"
+argument_list|,
+literal|"struct tcphdr *"
+argument_list|,
+literal|"tcpinfo_t *"
+argument_list|,
+literal|"uint8_t *"
+argument_list|,
+literal|"ipinfo_t *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE3_XLATE
+argument_list|(
+name|tcp
+argument_list|, , ,
+name|debug__output
+argument_list|,
+literal|"struct tcpcb *"
+argument_list|,
+literal|"tcpsinfo_t *"
+argument_list|,
+literal|"struct tcphdr *"
+argument_list|,
+literal|"tcpinfo_t *"
+argument_list|,
+literal|"uint8_t *"
+argument_list|,
+literal|"ipinfo_t *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE2_XLATE
+argument_list|(
+name|tcp
+argument_list|, , ,
+name|debug__user
+argument_list|,
+literal|"struct tcpcb *"
+argument_list|,
+literal|"tcpsinfo_t *"
+argument_list|,
+literal|"int"
+argument_list|,
+literal|"int"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|SDT_PROBE_DEFINE3_XLATE
+argument_list|(
+argument|tcp
+argument_list|,
+argument_list|,
+argument_list|,
+argument|debug__drop
+argument_list|,
+literal|"struct tcpcb *"
+argument_list|,
+literal|"tcpsinfo_t *"
+argument_list|,
+literal|"struct tcphdr *"
+argument_list|,
+literal|"tcpinfo_t *"
+argument_list|,
+literal|"uint8_t *"
+argument_list|,
+literal|"ipinfo_t *"
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|SDT_PROBE_DEFINE6_XLATE
 argument_list|(
 name|tcp

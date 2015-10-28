@@ -48,12 +48,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DISASSEMBLER
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -638,11 +632,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

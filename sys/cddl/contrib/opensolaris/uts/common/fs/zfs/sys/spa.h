@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -366,6 +366,20 @@ index|]
 decl_stmt|;
 block|}
 name|zio_cksum_t
+typedef|;
+comment|/*  * Some checksums/hashes need a 256-bit initialization salt. This salt is kept  * secret and is suitable for use in MAC algorithms as the key.  */
+typedef|typedef
+struct|struct
+name|zio_cksum_salt
+block|{
+name|uint8_t
+name|zcs_bytes
+index|[
+literal|32
+index|]
+decl_stmt|;
+block|}
+name|zio_cksum_salt_t
 typedef|;
 comment|/*  * Each block is described by its DVAs, time of birth, checksum, etc.  * The word-by-word, bit-by-bit layout of the blkptr is as follows:  *  *	64	56	48	40	32	24	16	8	0  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 0	|		vdev1		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 1	|G|			 offset1				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 2	|		vdev2		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 3	|G|			 offset2				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 4	|		vdev3		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 5	|G|			 offset3				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 6	|BDX|lvl| type	| cksum |E| comp|    PSIZE	|     LSIZE	|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 7	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 8	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 9	|			physical birth txg			|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * a	|			logical birth txg			|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * b	|			fill count				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * c	|			checksum[0]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * d	|			checksum[1]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * e	|			checksum[2]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * f	|			checksum[3]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  *  * Legend:  *  * vdev		virtual device ID  * offset	offset into virtual device  * LSIZE	logical size  * PSIZE	physical size (after compression)  * ASIZE	allocated size (including RAID-Z parity and gang block headers)  * GRID		RAID-Z layout information (reserved for future use)  * cksum	checksum function  * comp		compression function  * G		gang block indicator  * B		byteorder (endianness)  * D		dedup  * X		encryption (on version 30, which is not supported)  * E		blkptr_t contains embedded data (see below)  * lvl		level of indirection  * type		DMU object type  * phys birth	txg of block allocation; zero if same as logical birth txg  * log. birth	transaction group in which the block was logically born  * fill count	number of non-zero blocks under this bp  * checksum[4]	256-bit checksum of the data this bp describes  */
 comment|/*  * "Embedded" blkptr_t's don't actually point to a block, instead they  * have a data payload embedded in the blkptr_t itself.  See the comment  * in blkptr.c for more details.  *  * The blkptr_t is laid out as follows:  *  *	64	56	48	40	32	24	16	8	0  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 0	|      payload                                                  |  * 1	|      payload                                                  |  * 2	|      payload                                                  |  * 3	|      payload                                                  |  * 4	|      payload                                                  |  * 5	|      payload                                                  |  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 6	|BDX|lvl| type	| etype |E| comp| PSIZE|              LSIZE	|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 7	|      payload                                                  |  * 8	|      payload                                                  |  * 9	|      payload                                                  |  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * a	|			logical birth txg			|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * b	|      payload                                                  |  * c	|      payload                                                  |  * d	|      payload                                                  |  * e	|      payload                                                  |  * f	|      payload                                                  |  *	+-------+-------+-------+-------+-------+-------+-------+-------+  *  * Legend:  *  * payload		contains the embedded data  * B (byteorder)	byteorder (endianness)  * D (dedup)		padding (set to zero)  * X			encryption (set to zero; see above)  * E (embedded)		set to one  * lvl			indirection level  * type			DMU object type  * etype		how to interpret embedded data (BP_EMBEDDED_TYPE_*)  * comp			compression function of payload  * PSIZE		size of payload after compression, in bytes  * LSIZE		logical size of payload, in bytes  *			note that 25 bits is enough to store the largest  *			"normal" BP's LSIZE (2^16 * 2^9) in bytes  * log. birth		transaction group in which the block was logically born  *  * Note that LSIZE and PSIZE are stored in bytes, whereas for non-embedded  * bp's they are stored in units of SPA_MINBLOCKSHIFT.  * Generally, the generic BP_GET_*() macros can be used on embedded BP's.  * The B, D, X, lvl, type, and comp fields are stored the same as with normal  * BP's so the BP_SET_* macros can be used with them.  etype, PSIZE, LSIZE must  * be set with the BPE_SET_* macros.  BP_SET_EMBEDDED() should be called before  * other macros, as they assert that they are only used on BP's of the correct  * "embedded-ness".  */
@@ -828,6 +842,22 @@ define|\
 value|(0 == (((zc1).zc_word[0] - (zc2).zc_word[0]) | \ 	((zc1).zc_word[1] - (zc2).zc_word[1]) | \ 	((zc1).zc_word[2] - (zc2).zc_word[2]) | \ 	((zc1).zc_word[3] - (zc2).zc_word[3])))
 define|#
 directive|define
+name|ZIO_CHECKSUM_IS_ZERO
+parameter_list|(
+name|zc
+parameter_list|)
+define|\
+value|(0 == ((zc)->zc_word[0] | (zc)->zc_word[1] | \ 	(zc)->zc_word[2] | (zc)->zc_word[3]))
+define|#
+directive|define
+name|ZIO_CHECKSUM_BSWAP
+parameter_list|(
+name|zcp
+parameter_list|)
+define|\
+value|{								\ 	(zcp)->zc_word[0] = BSWAP_64((zcp)->zc_word[0]);	\ 	(zcp)->zc_word[1] = BSWAP_64((zcp)->zc_word[1]);	\ 	(zcp)->zc_word[2] = BSWAP_64((zcp)->zc_word[2]);	\ 	(zcp)->zc_word[3] = BSWAP_64((zcp)->zc_word[3]);	\ }
+define|#
+directive|define
 name|DVA_IS_VALID
 parameter_list|(
 name|dva
@@ -945,7 +975,7 @@ parameter_list|,
 name|compress
 parameter_list|)
 define|\
-value|{									\ 	static const char *copyname[] =					\ 	    { "zero", "single", "double", "triple" };			\ 	int len = 0;							\ 	int copies = 0;							\ 									\ 	if (bp == NULL) {						\ 		len += func(buf + len, size - len, "<NULL>");		\ 	} else if (BP_IS_HOLE(bp)) {					\ 		len += func(buf + len, size - len, "<hole>");		\ 		if (bp->blk_birth> 0) {				\ 			len += func(buf + len, size - len,		\ 			    " birth=%lluL",				\ 			    (u_longlong_t)bp->blk_birth);		\ 		}							\ 	} else if (BP_IS_EMBEDDED(bp)) {				\ 		len = func(buf + len, size - len,			\ 		    "EMBEDDED [L%llu %s] et=%u %s "			\ 		    "size=%llxL/%llxP birth=%lluL",			\ 		    (u_longlong_t)BP_GET_LEVEL(bp),			\ 		    type,						\ 		    (int)BPE_GET_ETYPE(bp),				\ 		    compress,						\ 		    (u_longlong_t)BPE_GET_LSIZE(bp),			\ 		    (u_longlong_t)BPE_GET_PSIZE(bp),			\ 		    (u_longlong_t)bp->blk_birth);			\ 	} else {							\ 		for (int d = 0; d< BP_GET_NDVAS(bp); d++) {		\ 			const dva_t *dva =&bp->blk_dva[d];		\ 			if (DVA_IS_VALID(dva))				\ 				copies++;				\ 			len += func(buf + len, size - len,		\ 			    "DVA[%d]=<%llu:%llx:%llx>%c", d,		\ 			    (u_longlong_t)DVA_GET_VDEV(dva),		\ 			    (u_longlong_t)DVA_GET_OFFSET(dva),		\ 			    (u_longlong_t)DVA_GET_ASIZE(dva),		\ 			    ws);					\ 		}							\ 		if (BP_IS_GANG(bp)&&					\ 		    DVA_GET_ASIZE(&bp->blk_dva[2])<=			\ 		    DVA_GET_ASIZE(&bp->blk_dva[1]) / 2)			\ 			copies--;					\ 		len += func(buf + len, size - len,			\ 		    "[L%llu %s] %s %s %s %s %s %s%c"			\ 		    "size=%llxL/%llxP birth=%lluL/%lluP fill=%llu%c"	\ 		    "cksum=%llx:%llx:%llx:%llx",			\ 		    (u_longlong_t)BP_GET_LEVEL(bp),			\ 		    type,						\ 		    checksum,						\ 		    compress,						\ 		    BP_GET_BYTEORDER(bp) == 0 ? "BE" : "LE",		\ 		    BP_IS_GANG(bp) ? "gang" : "contiguous",		\ 		    BP_GET_DEDUP(bp) ? "dedup" : "unique",		\ 		    copyname[copies],					\ 		    ws,							\ 		    (u_longlong_t)BP_GET_LSIZE(bp),			\ 		    (u_longlong_t)BP_GET_PSIZE(bp),			\ 		    (u_longlong_t)bp->blk_birth,			\ 		    (u_longlong_t)BP_PHYSICAL_BIRTH(bp),		\ 		    (u_longlong_t)BP_GET_FILL(bp),			\ 		    ws,							\ 		    (u_longlong_t)bp->blk_cksum.zc_word[0],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[1],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[2],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[3]);		\ 	}								\ 	ASSERT(len< size);						\ }
+value|{									\ 	static const char *copyname[] =					\ 	    { "zero", "single", "double", "triple" };			\ 	int len = 0;							\ 	int copies = 0;							\ 									\ 	if (bp == NULL) {						\ 		len += func(buf + len, size - len, "<NULL>");		\ 	} else if (BP_IS_HOLE(bp)) {					\ 		len += func(buf + len, size - len,			\ 		    "HOLE [L%llu %s] "					\ 		    "size=%llxL birth=%lluL",				\ 		    (u_longlong_t)BP_GET_LEVEL(bp),			\ 		    type,						\ 		    (u_longlong_t)BP_GET_LSIZE(bp),			\ 		    (u_longlong_t)bp->blk_birth);			\ 	} else if (BP_IS_EMBEDDED(bp)) {				\ 		len = func(buf + len, size - len,			\ 		    "EMBEDDED [L%llu %s] et=%u %s "			\ 		    "size=%llxL/%llxP birth=%lluL",			\ 		    (u_longlong_t)BP_GET_LEVEL(bp),			\ 		    type,						\ 		    (int)BPE_GET_ETYPE(bp),				\ 		    compress,						\ 		    (u_longlong_t)BPE_GET_LSIZE(bp),			\ 		    (u_longlong_t)BPE_GET_PSIZE(bp),			\ 		    (u_longlong_t)bp->blk_birth);			\ 	} else {							\ 		for (int d = 0; d< BP_GET_NDVAS(bp); d++) {		\ 			const dva_t *dva =&bp->blk_dva[d];		\ 			if (DVA_IS_VALID(dva))				\ 				copies++;				\ 			len += func(buf + len, size - len,		\ 			    "DVA[%d]=<%llu:%llx:%llx>%c", d,		\ 			    (u_longlong_t)DVA_GET_VDEV(dva),		\ 			    (u_longlong_t)DVA_GET_OFFSET(dva),		\ 			    (u_longlong_t)DVA_GET_ASIZE(dva),		\ 			    ws);					\ 		}							\ 		if (BP_IS_GANG(bp)&&					\ 		    DVA_GET_ASIZE(&bp->blk_dva[2])<=			\ 		    DVA_GET_ASIZE(&bp->blk_dva[1]) / 2)			\ 			copies--;					\ 		len += func(buf + len, size - len,			\ 		    "[L%llu %s] %s %s %s %s %s %s%c"			\ 		    "size=%llxL/%llxP birth=%lluL/%lluP fill=%llu%c"	\ 		    "cksum=%llx:%llx:%llx:%llx",			\ 		    (u_longlong_t)BP_GET_LEVEL(bp),			\ 		    type,						\ 		    checksum,						\ 		    compress,						\ 		    BP_GET_BYTEORDER(bp) == 0 ? "BE" : "LE",		\ 		    BP_IS_GANG(bp) ? "gang" : "contiguous",		\ 		    BP_GET_DEDUP(bp) ? "dedup" : "unique",		\ 		    copyname[copies],					\ 		    ws,							\ 		    (u_longlong_t)BP_GET_LSIZE(bp),			\ 		    (u_longlong_t)BP_GET_PSIZE(bp),			\ 		    (u_longlong_t)bp->blk_birth,			\ 		    (u_longlong_t)BP_PHYSICAL_BIRTH(bp),		\ 		    (u_longlong_t)BP_GET_FILL(bp),			\ 		    ws,							\ 		    (u_longlong_t)bp->blk_cksum.zc_word[0],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[1],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[2],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[3]);		\ 	}								\ 	ASSERT(len< size);						\ }
 include|#
 directive|include
 file|<sys/dmu.h>
@@ -1716,6 +1746,19 @@ name|tag
 parameter_list|)
 function_decl|;
 specifier|extern
+name|void
+name|spa_async_close
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
+specifier|extern
 name|boolean_t
 name|spa_refcount_zero
 parameter_list|(
@@ -2229,6 +2272,39 @@ specifier|extern
 name|metaslab_class_t
 modifier|*
 name|spa_log_class
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|spa_evicting_os_register
+parameter_list|(
+name|spa_t
+modifier|*
+parameter_list|,
+name|objset_t
+modifier|*
+name|os
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|spa_evicting_os_deregister
+parameter_list|(
+name|spa_t
+modifier|*
+parameter_list|,
+name|objset_t
+modifier|*
+name|os
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|spa_evicting_os_wait
 parameter_list|(
 name|spa_t
 modifier|*

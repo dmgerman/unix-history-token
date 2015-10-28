@@ -97,6 +97,12 @@ directive|include
 file|<map>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unordered_map>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -124,7 +130,7 @@ comment|///
 typedef|typedef
 name|std
 operator|::
-name|map
+name|unordered_map
 operator|<
 name|int
 operator|,

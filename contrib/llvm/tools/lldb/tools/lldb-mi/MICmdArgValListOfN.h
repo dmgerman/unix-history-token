@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmdArgValListOfN.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMICmdArgValListOfN interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -229,6 +185,9 @@ name|bool
 name|GetExpectedOption
 argument_list|(
 argument|T2&vrwValue
+argument_list|,
+argument|const VecArgObjPtr_t::size_type vnAt =
+literal|0
 argument_list|)
 specifier|const
 block|;
@@ -237,22 +196,20 @@ name|public
 operator|:
 comment|// From CMICmdArgValBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdArgValListOfN
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmdArgSet::IArg
-name|virtual
 name|bool
 name|Validate
 argument_list|(
-name|CMICmdArgContext
-operator|&
-name|vArgContext
+argument|CMICmdArgContext&vArgContext
 argument_list|)
+name|override
 block|;
 comment|// Methods:
 name|private
@@ -297,6 +254,10 @@ comment|// Args:    vrwValue    - (W) Templated type return value.
 end_comment
 
 begin_comment
+comment|//          vnAt        - (R) Value at the specific position.
+end_comment
+
+begin_comment
 comment|//          T1          - The argument value's class type of the data hold in the list of options.
 end_comment
 
@@ -335,6 +296,8 @@ operator|::
 name|GetExpectedOption
 argument_list|(
 argument|T2&vrwValue
+argument_list|,
+argument|const VecArgObjPtr_t::size_type vnAt
 argument_list|)
 specifier|const
 block|{
@@ -347,6 +310,20 @@ name|GetExpectedOptions
 argument_list|()
 argument_list|)
 block|;
+if|if
+condition|(
+name|rVecOptions
+operator|.
+name|size
+argument_list|()
+operator|<=
+name|vnAt
+condition|)
+return|return
+name|MIstatus
+operator|::
+name|failure
+return|;
 name|VecArgObjPtr_t
 operator|::
 name|const_iterator
@@ -356,7 +333,12 @@ name|rVecOptions
 operator|.
 name|begin
 argument_list|()
-block|;
+operator|+
+name|vnAt
+expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|it2
@@ -395,7 +377,7 @@ operator|::
 name|success
 return|;
 block|}
-end_expr_stmt
+end_if
 
 begin_return
 return|return

@@ -105,25 +105,34 @@ argument|MachineModuleInfo *MMI
 argument_list|)
 specifier|const
 name|override
+block|;
+specifier|const
+name|MCExpr
+operator|*
+name|getIndirectSymViaGOTPCRel
+argument_list|(
+argument|const MCSymbol *Sym
+argument_list|,
+argument|const MCValue&MV
+argument_list|,
+argument|int64_t Offset
+argument_list|,
+argument|MachineModuleInfo *MMI
+argument_list|,
+argument|MCStreamer&Streamer
+argument_list|)
+specifier|const
+name|override
 block|;   }
 decl_stmt|;
-comment|/// X86LinuxTargetObjectFile - This implementation is used for linux x86
-comment|/// and x86-64.
+comment|/// \brief This implemenatation is used for X86 ELF targets that don't
+comment|/// have a further specialization.
 name|class
-name|X86LinuxTargetObjectFile
+name|X86ELFTargetObjectFile
 range|:
 name|public
 name|TargetLoweringObjectFileELF
 block|{
-name|void
-name|Initialize
-argument_list|(
-argument|MCContext&Ctx
-argument_list|,
-argument|const TargetMachine&TM
-argument_list|)
-name|override
-block|;
 comment|/// \brief Describe a TLS variable address within debug info.
 specifier|const
 name|MCExpr
@@ -133,6 +142,24 @@ argument_list|(
 argument|const MCSymbol *Sym
 argument_list|)
 specifier|const
+name|override
+block|;   }
+decl_stmt|;
+comment|/// X86LinuxNaClTargetObjectFile - This implementation is used for linux and
+comment|/// Native Client on x86 and x86-64.
+name|class
+name|X86LinuxNaClTargetObjectFile
+range|:
+name|public
+name|X86ELFTargetObjectFile
+block|{
+name|void
+name|Initialize
+argument_list|(
+argument|MCContext&Ctx
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
 name|override
 block|;   }
 decl_stmt|;
@@ -159,7 +186,6 @@ name|override
 block|;
 comment|/// \brief Given a mergeable constant with the specified size and relocation
 comment|/// information, return a section that it should be placed in.
-specifier|const
 name|MCSection
 operator|*
 name|getSectionForConstant

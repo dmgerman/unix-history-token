@@ -233,10 +233,20 @@ name|EnumScope
 init|=
 literal|0x40000
 block|,
-comment|/// This scope corresponds to a SEH try.
+comment|/// This scope corresponds to an SEH try.
 name|SEHTryScope
 init|=
 literal|0x80000
+block|,
+comment|/// This scope corresponds to an SEH except.
+name|SEHExceptScope
+init|=
+literal|0x100000
+block|,
+comment|/// We are currently in the filter expression of an SEH except block.
+name|SEHFilterScope
+init|=
+literal|0x200000
 block|,   }
 enum|;
 name|private
@@ -262,7 +272,11 @@ comment|/// \brief Declarations with static linkage are mangled with the number 
 comment|/// scopes seen as a component.
 name|unsigned
 name|short
-name|MSLocalManglingNumber
+name|MSLastManglingNumber
+decl_stmt|;
+name|unsigned
+name|short
+name|MSCurManglingNumber
 decl_stmt|;
 comment|/// PrototypeDepth - This is the number of function prototype scopes
 comment|/// enclosing this scope, including this scope.
@@ -284,7 +298,7 @@ name|FnParent
 decl_stmt|;
 name|Scope
 modifier|*
-name|MSLocalManglingParent
+name|MSLastManglingParent
 decl_stmt|;
 comment|/// BreakParent/ContinueParent - This is a direct link to the innermost
 comment|/// BreakScope/ContinueScope which contains the contents of this scope
@@ -477,21 +491,21 @@ block|}
 specifier|const
 name|Scope
 operator|*
-name|getMSLocalManglingParent
+name|getMSLastManglingParent
 argument_list|()
 specifier|const
 block|{
 return|return
-name|MSLocalManglingParent
+name|MSLastManglingParent
 return|;
 block|}
 name|Scope
 modifier|*
-name|getMSLocalManglingParent
+name|getMSLastManglingParent
 parameter_list|()
 block|{
 return|return
-name|MSLocalManglingParent
+name|MSLastManglingParent
 return|;
 block|}
 comment|/// getContinueParent - Return the closest scope that a continue statement
@@ -702,7 +716,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|void
-name|incrementMSLocalManglingNumber
+name|incrementMSManglingNumber
 parameter_list|()
 block|{
 if|if
@@ -711,18 +725,24 @@ name|Scope
 modifier|*
 name|MSLMP
 init|=
-name|getMSLocalManglingParent
+name|getMSLastManglingParent
 argument_list|()
 condition|)
+block|{
 name|MSLMP
 operator|->
-name|MSLocalManglingNumber
+name|MSLastManglingNumber
+operator|+=
+literal|1
+expr_stmt|;
+name|MSCurManglingNumber
 operator|+=
 literal|1
 expr_stmt|;
 block|}
+block|}
 name|void
-name|decrementMSLocalManglingNumber
+name|decrementMSManglingNumber
 parameter_list|()
 block|{
 if|if
@@ -731,18 +751,24 @@ name|Scope
 modifier|*
 name|MSLMP
 init|=
-name|getMSLocalManglingParent
+name|getMSLastManglingParent
 argument_list|()
 condition|)
+block|{
 name|MSLMP
 operator|->
-name|MSLocalManglingNumber
+name|MSLastManglingNumber
+operator|-=
+literal|1
+expr_stmt|;
+name|MSCurManglingNumber
 operator|-=
 literal|1
 expr_stmt|;
 block|}
+block|}
 name|unsigned
-name|getMSLocalManglingNumber
+name|getMSLastManglingNumber
 argument_list|()
 specifier|const
 block|{
@@ -753,16 +779,25 @@ name|Scope
 modifier|*
 name|MSLMP
 init|=
-name|getMSLocalManglingParent
+name|getMSLastManglingParent
 argument_list|()
 condition|)
 return|return
 name|MSLMP
 operator|->
-name|MSLocalManglingNumber
+name|MSLastManglingNumber
 return|;
 return|return
 literal|1
+return|;
+block|}
+name|unsigned
+name|getMSCurManglingNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MSCurManglingNumber
 return|;
 block|}
 comment|/// isDeclScope - Return true if this is the scope that the specified decl is
@@ -1238,6 +1273,43 @@ operator|&
 name|Scope
 operator|::
 name|SEHTryScope
+return|;
+block|}
+comment|/// \brief Determine whether this scope is a SEH '__except' block.
+name|bool
+name|isSEHExceptScope
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFlags
+argument_list|()
+operator|&
+name|Scope
+operator|::
+name|SEHExceptScope
+return|;
+block|}
+comment|/// \brief Returns if rhs has a higher scope depth than this.
+comment|///
+comment|/// The caller is responsible for calling this only if one of the two scopes
+comment|/// is an ancestor of the other.
+name|bool
+name|Contains
+argument_list|(
+specifier|const
+name|Scope
+operator|&
+name|rhs
+argument_list|)
+decl|const
+block|{
+return|return
+name|Depth
+operator|<
+name|rhs
+operator|.
+name|Depth
 return|;
 block|}
 comment|/// containedInPrototypeScope - Return true if this or a parent scope

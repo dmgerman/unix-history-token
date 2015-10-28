@@ -84,7 +84,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Debug.h"
 end_include
 
 begin_include
@@ -105,6 +117,12 @@ directive|include
 file|<system_error>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<tuple>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -116,7 +134,7 @@ name|namespace
 name|coverage
 block|{
 name|class
-name|ObjectFileCoverageMappingReader
+name|CoverageMappingReader
 decl_stmt|;
 name|class
 name|CoverageMapping
@@ -257,6 +275,7 @@ return|return
 name|ID
 return|;
 block|}
+name|friend
 name|bool
 name|operator
 operator|==
@@ -264,22 +283,55 @@ operator|(
 specifier|const
 name|Counter
 operator|&
-name|Other
-operator|)
+name|LHS
+operator|,
 specifier|const
+name|Counter
+operator|&
+name|RHS
+operator|)
 block|{
 return|return
+name|LHS
+operator|.
 name|Kind
 operator|==
-name|Other
+name|RHS
 operator|.
 name|Kind
 operator|&&
-name|ID
-operator|==
-name|Other
+name|LHS
 operator|.
 name|ID
+operator|==
+name|RHS
+operator|.
+name|ID
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|Counter
+operator|&
+name|LHS
+operator|,
+specifier|const
+name|Counter
+operator|&
+name|RHS
+operator|)
+block|{
+return|return
+operator|!
+operator|(
+name|LHS
+operator|==
+name|RHS
+operator|)
 return|;
 block|}
 name|friend
@@ -561,13 +613,6 @@ comment|/// was skipped by a preprocessor or similar means.
 name|SkippedRegion
 block|}
 enum|;
-specifier|static
-specifier|const
-name|unsigned
-name|EncodingHasCodeBeforeBits
-init|=
-literal|1
-decl_stmt|;
 name|Counter
 name|Count
 decl_stmt|;
@@ -588,17 +633,13 @@ decl_stmt|;
 name|RegionKind
 name|Kind
 decl_stmt|;
-comment|/// \brief A flag that is set to true when there is already code before
-comment|/// this region on the same line.
-comment|/// This is useful to accurately compute the execution counts for a line.
-name|bool
-name|HasCodeBefore
-decl_stmt|;
 name|CounterMappingRegion
 argument_list|(
 argument|Counter Count
 argument_list|,
 argument|unsigned FileID
+argument_list|,
+argument|unsigned ExpandedFileID
 argument_list|,
 argument|unsigned LineStart
 argument_list|,
@@ -608,9 +649,7 @@ argument|unsigned LineEnd
 argument_list|,
 argument|unsigned ColumnEnd
 argument_list|,
-argument|bool HasCodeBefore = false
-argument_list|,
-argument|RegionKind Kind = CodeRegion
+argument|RegionKind Kind
 argument_list|)
 block|:
 name|Count
@@ -625,7 +664,7 @@ argument_list|)
 operator|,
 name|ExpandedFileID
 argument_list|(
-literal|0
+name|ExpandedFileID
 argument_list|)
 operator|,
 name|LineStart
@@ -650,14 +689,134 @@ argument_list|)
 operator|,
 name|Kind
 argument_list|(
-name|Kind
-argument_list|)
-operator|,
-name|HasCodeBefore
-argument_list|(
-argument|HasCodeBefore
+argument|Kind
 argument_list|)
 block|{}
+specifier|static
+name|CounterMappingRegion
+name|makeRegion
+argument_list|(
+argument|Counter Count
+argument_list|,
+argument|unsigned FileID
+argument_list|,
+argument|unsigned LineStart
+argument_list|,
+argument|unsigned ColumnStart
+argument_list|,
+argument|unsigned LineEnd
+argument_list|,
+argument|unsigned ColumnEnd
+argument_list|)
+block|{
+return|return
+name|CounterMappingRegion
+argument_list|(
+name|Count
+argument_list|,
+name|FileID
+argument_list|,
+literal|0
+argument_list|,
+name|LineStart
+argument_list|,
+name|ColumnStart
+argument_list|,
+name|LineEnd
+argument_list|,
+name|ColumnEnd
+argument_list|,
+name|CodeRegion
+argument_list|)
+return|;
+block|}
+specifier|static
+name|CounterMappingRegion
+name|makeExpansion
+parameter_list|(
+name|unsigned
+name|FileID
+parameter_list|,
+name|unsigned
+name|ExpandedFileID
+parameter_list|,
+name|unsigned
+name|LineStart
+parameter_list|,
+name|unsigned
+name|ColumnStart
+parameter_list|,
+name|unsigned
+name|LineEnd
+parameter_list|,
+name|unsigned
+name|ColumnEnd
+parameter_list|)
+block|{
+return|return
+name|CounterMappingRegion
+argument_list|(
+name|Counter
+argument_list|()
+argument_list|,
+name|FileID
+argument_list|,
+name|ExpandedFileID
+argument_list|,
+name|LineStart
+argument_list|,
+name|ColumnStart
+argument_list|,
+name|LineEnd
+argument_list|,
+name|ColumnEnd
+argument_list|,
+name|ExpansionRegion
+argument_list|)
+return|;
+block|}
+specifier|static
+name|CounterMappingRegion
+name|makeSkipped
+parameter_list|(
+name|unsigned
+name|FileID
+parameter_list|,
+name|unsigned
+name|LineStart
+parameter_list|,
+name|unsigned
+name|ColumnStart
+parameter_list|,
+name|unsigned
+name|LineEnd
+parameter_list|,
+name|unsigned
+name|ColumnEnd
+parameter_list|)
+block|{
+return|return
+name|CounterMappingRegion
+argument_list|(
+name|Counter
+argument_list|()
+argument_list|,
+name|FileID
+argument_list|,
+literal|0
+argument_list|,
+name|LineStart
+argument_list|,
+name|ColumnStart
+argument_list|,
+name|LineEnd
+argument_list|,
+name|ColumnEnd
+argument_list|,
+name|SkippedRegion
+argument_list|)
+return|;
+block|}
 specifier|inline
 name|std
 operator|::
@@ -886,6 +1045,16 @@ argument|CounterValues
 argument_list|)
 block|{}
 name|void
+name|setCounts
+argument_list|(
+argument|ArrayRef<uint64_t> Counts
+argument_list|)
+block|{
+name|CounterValues
+operator|=
+name|Counts
+block|; }
+name|void
 name|dump
 argument_list|(
 argument|const Counter&C
@@ -908,9 +1077,7 @@ name|dump
 argument_list|(
 name|C
 argument_list|,
-name|llvm
-operator|::
-name|outs
+name|dbgs
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -968,8 +1135,6 @@ argument_list|(
 argument|StringRef Name
 argument_list|,
 argument|ArrayRef<StringRef> Filenames
-argument_list|,
-argument|uint64_t ExecutionCount
 argument_list|)
 block|:
 name|Name
@@ -979,25 +1144,52 @@ argument_list|)
 operator|,
 name|Filenames
 argument_list|(
-name|Filenames
-operator|.
-name|begin
-argument_list|()
+argument|Filenames.begin()
 argument_list|,
-name|Filenames
-operator|.
-name|end
-argument_list|()
-argument_list|)
-operator|,
-name|ExecutionCount
-argument_list|(
-argument|ExecutionCount
+argument|Filenames.end()
 argument_list|)
 block|{}
+name|void
+name|pushRegion
+argument_list|(
+argument|CounterMappingRegion Region
+argument_list|,
+argument|uint64_t Count
+argument_list|)
+block|{
+if|if
+condition|(
+name|CountedRegions
+operator|.
+name|empty
+argument_list|()
+condition|)
+name|ExecutionCount
+operator|=
+name|Count
+expr_stmt|;
+name|CountedRegions
+operator|.
+name|emplace_back
+argument_list|(
+name|Region
+argument_list|,
+name|Count
+argument_list|)
+expr_stmt|;
 block|}
-struct|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Iterator over Functions, optionally filtered to a single file.
+end_comment
+
+begin_decl_stmt
 name|class
 name|FunctionRecordIterator
 range|:
@@ -1144,12 +1336,33 @@ name|this
 return|;
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Coverage information for a macro expansion or #included file.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// When covered code has pieces that can be expanded for more detail, such as a
+end_comment
+
+begin_comment
 comment|/// preprocessor macro use and its definition, these are represented as
+end_comment
+
+begin_comment
 comment|/// expansions whose coverage can be looked up independently.
+end_comment
+
+begin_struct
 struct|struct
 name|ExpansionRecord
 block|{
@@ -1201,10 +1414,25 @@ argument_list|)
 block|{}
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|/// \brief The execution count information starting at a point in a file.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// A sequence of CoverageSegments gives execution counts for a file in format
+end_comment
+
+begin_comment
 comment|/// that's simple to iterate through for processing.
+end_comment
+
+begin_struct
 struct|struct
 name|CoverageSegment
 block|{
@@ -1262,25 +1490,132 @@ argument_list|(
 argument|IsRegionEntry
 argument_list|)
 block|{}
+name|CoverageSegment
+argument_list|(
+argument|unsigned Line
+argument_list|,
+argument|unsigned Col
+argument_list|,
+argument|uint64_t Count
+argument_list|,
+argument|bool IsRegionEntry
+argument_list|)
+operator|:
+name|Line
+argument_list|(
+name|Line
+argument_list|)
+operator|,
+name|Col
+argument_list|(
+name|Col
+argument_list|)
+operator|,
+name|Count
+argument_list|(
+name|Count
+argument_list|)
+operator|,
+name|HasCount
+argument_list|(
+name|true
+argument_list|)
+operator|,
+name|IsRegionEntry
+argument_list|(
+argument|IsRegionEntry
+argument_list|)
+block|{}
+name|friend
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|CoverageSegment
+operator|&
+name|L
+operator|,
+specifier|const
+name|CoverageSegment
+operator|&
+name|R
+operator|)
+block|{
+return|return
+name|std
+operator|::
+name|tie
+argument_list|(
+name|L
+operator|.
+name|Line
+argument_list|,
+name|L
+operator|.
+name|Col
+argument_list|,
+name|L
+operator|.
+name|Count
+argument_list|,
+name|L
+operator|.
+name|HasCount
+argument_list|,
+name|L
+operator|.
+name|IsRegionEntry
+argument_list|)
+operator|==
+name|std
+operator|::
+name|tie
+argument_list|(
+name|R
+operator|.
+name|Line
+argument_list|,
+name|R
+operator|.
+name|Col
+argument_list|,
+name|R
+operator|.
+name|Count
+argument_list|,
+name|R
+operator|.
+name|HasCount
+argument_list|,
+name|R
+operator|.
+name|IsRegionEntry
+argument_list|)
+return|;
+block|}
 name|void
 name|setCount
-argument_list|(
-argument|uint64_t NewCount
-argument_list|)
+parameter_list|(
+name|uint64_t
+name|NewCount
+parameter_list|)
 block|{
 name|Count
 operator|=
 name|NewCount
-block|;
+expr_stmt|;
 name|HasCount
 operator|=
 name|true
-block|;   }
+expr_stmt|;
+block|}
 name|void
 name|addCount
-argument_list|(
-argument|uint64_t NewCount
-argument_list|)
+parameter_list|(
+name|uint64_t
+name|NewCount
+parameter_list|)
 block|{
 name|setCount
 argument_list|(
@@ -1288,14 +1623,33 @@ name|Count
 operator|+
 name|NewCount
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|/// \brief Coverage information to be processed or displayed.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This represents the coverage of an entire file, expansion, or function. It
+end_comment
+
+begin_comment
 comment|/// provides a sequence of CoverageSegments to iterate through, as well as the
+end_comment
+
+begin_comment
 comment|/// list of expansions that can be further processed.
+end_comment
+
+begin_decl_stmt
 name|class
 name|CoverageData
 block|{
@@ -1446,11 +1800,29 @@ name|Expansions
 return|;
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief The mapping of profile information to coverage data.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This is the main interface to get coverage information, using a profile to
+end_comment
+
+begin_comment
 comment|/// fill out execution counts.
+end_comment
+
+begin_decl_stmt
 name|class
 name|CoverageMapping
 block|{
@@ -1487,7 +1859,7 @@ name|CoverageMapping
 operator|>>
 name|load
 argument_list|(
-name|ObjectFileCoverageMappingReader
+name|CoverageMappingReader
 operator|&
 name|CoverageReader
 argument_list|,
@@ -1511,6 +1883,8 @@ argument_list|(
 argument|StringRef ObjectFilename
 argument_list|,
 argument|StringRef ProfileFilename
+argument_list|,
+argument|StringRef Arch = StringRef()
 argument_list|)
 expr_stmt|;
 comment|/// \brief The number of functions that couldn't have their profiles mapped.
@@ -1634,11 +2008,14 @@ name|Expansion
 parameter_list|)
 function_decl|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end namespace coverage
 end_comment
 
@@ -1647,7 +2024,7 @@ comment|/// \brief Provide DenseMapInfo for CounterExpression
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 operator|>
 expr|struct
@@ -1844,10 +2221,103 @@ return|;
 block|}
 end_decl_stmt
 
+begin_expr_stmt
+unit|};
+specifier|const
+name|std
+operator|::
+name|error_category
+operator|&
+name|coveragemap_category
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|enum
+name|class
+name|coveragemap_error
+block|{
+name|success
+operator|=
+literal|0
+operator|,
+name|eof
+operator|,
+name|no_data_found
+operator|,
+name|unsupported_version
+operator|,
+name|truncated
+operator|,
+name|malformed
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+specifier|inline
+name|std
+operator|::
+name|error_code
+name|make_error_code
+argument_list|(
+argument|coveragemap_error E
+argument_list|)
+block|{
+return|return
+name|std
+operator|::
+name|error_code
+argument_list|(
+name|static_cast
+operator|<
+name|int
+operator|>
+operator|(
+name|E
+operator|)
+argument_list|,
+name|coveragemap_category
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
-unit|};   }
+unit|}
 comment|// end namespace llvm
 end_comment
+
+begin_macro
+unit|namespace
+name|std
+end_macro
+
+begin_block
+block|{
+name|template
+operator|<
+operator|>
+expr|struct
+name|is_error_code_enum
+operator|<
+name|llvm
+operator|::
+name|coveragemap_error
+operator|>
+operator|:
+name|std
+operator|::
+name|true_type
+block|{}
+expr_stmt|;
+block|}
+end_block
 
 begin_endif
 endif|#

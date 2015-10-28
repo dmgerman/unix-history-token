@@ -84,13 +84,11 @@ name|public
 operator|:
 name|BreakpointResolverFileRegex
 argument_list|(
-name|Breakpoint
-operator|*
-name|bkpt
+argument|Breakpoint *bkpt
 argument_list|,
-name|RegularExpression
-operator|&
-name|regex
+argument|RegularExpression&regex
+argument_list|,
+argument|bool exact_match
 argument_list|)
 block|;
 name|virtual
@@ -186,6 +184,9 @@ name|RegularExpression
 name|m_regex
 block|;
 comment|// This is the line expression that we are looking for.
+name|bool
+name|m_exact_match
+block|;
 name|private
 operator|:
 name|DISALLOW_COPY_AND_ASSIGN

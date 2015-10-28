@@ -406,7 +406,7 @@ comment|/// are \a item_byte_size bytes long starting at offset \a offset
 comment|/// bytes into the contained data, into the stream \a s. \a
 comment|/// num_per_line objects will be dumped on each line before a new
 comment|/// line will be output. If \a base_addr is a valid address, then
-comment|/// each new line of output will be prededed by the address value
+comment|/// each new line of output will be preceded by the address value
 comment|/// plus appropriate offset, and a colon and space. Bitfield values
 comment|/// can be dumped by calling this function multiple times with the
 comment|/// same start offset, format and size, yet differing \a
@@ -902,7 +902,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Get a the data start pointer.
+comment|/// Get the data start pointer.
 comment|///
 comment|/// @return
 comment|///     Returns a pointer to the first byte contained in this
@@ -1425,7 +1425,7 @@ comment|///     The number of uint8_t values to extract.
 comment|///
 comment|/// @return
 comment|///     \a dst if all values were properly extracted and copied,
-comment|///     NULL otherise.
+comment|///     NULL otherwise.
 comment|//------------------------------------------------------------------
 name|void
 modifier|*
@@ -1496,7 +1496,7 @@ comment|///     The number of uint16_t values to extract.
 comment|///
 comment|/// @return
 comment|///     \a dst if all values were properly extracted and copied,
-comment|///     NULL otherise.
+comment|///     NULL otherwise.
 comment|//------------------------------------------------------------------
 name|void
 modifier|*
@@ -1567,7 +1567,7 @@ comment|///     The number of uint32_t values to extract.
 comment|///
 comment|/// @return
 comment|///     \a dst if all values were properly extracted and copied,
-comment|///     NULL otherise.
+comment|///     NULL otherwise.
 comment|//------------------------------------------------------------------
 name|void
 modifier|*
@@ -1638,7 +1638,7 @@ comment|///     The number of uint64_t values to extract.
 comment|///
 comment|/// @return
 comment|///     \a dst if all values were properly extracted and copied,
-comment|///     NULL otherise.
+comment|///     NULL otherwise.
 comment|//------------------------------------------------------------------
 name|void
 modifier|*
@@ -2155,7 +2155,7 @@ operator|::
 name|DataBufferSP
 name|m_data_sp
 expr_stmt|;
-comment|///< The shared pointer to data that can be shared among multilple instances
+comment|///< The shared pointer to data that can be shared among multiple instances
 specifier|const
 name|uint32_t
 name|m_target_byte_size

@@ -631,6 +631,46 @@ name|uint32_t
 name|opcode
 parameter_list|)
 function_decl|;
+name|uint32_t
+name|GetFramePointerRegisterNumber
+argument_list|()
+decl|const
+empty_stmt|;
+name|bool
+name|BranchTo
+argument_list|(
+specifier|const
+name|Context
+operator|&
+name|context
+argument_list|,
+name|uint32_t
+name|N
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+name|target
+argument_list|)
+block|;
+name|bool
+name|ConditionHolds
+parameter_list|(
+specifier|const
+name|uint32_t
+name|cond
+parameter_list|,
+name|bool
+modifier|*
+name|is_conditional
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+name|bool
+name|UsingAArch32
+parameter_list|()
+function_decl|;
 name|bool
 name|Emulate_addsub_imm
 parameter_list|(
@@ -639,18 +679,6 @@ name|uint32_t
 name|opcode
 parameter_list|)
 function_decl|;
-comment|//    bool
-comment|//    Emulate_STP_Q_ldstpair_off (const uint32_t opcode);
-comment|//
-comment|//    bool
-comment|//    Emulate_STP_S_ldstpair_off (const uint32_t opcode);
-comment|//
-comment|//    bool
-comment|//    Emulate_STP_32_ldstpair_off (const uint32_t opcode);
-comment|//
-comment|//    bool
-comment|//    Emulate_STP_D_ldstpair_off (const uint32_t opcode);
-comment|//
 name|bool
 name|Emulate_ldstpair_off
 parameter_list|(
@@ -668,6 +696,14 @@ name|opcode
 parameter_list|)
 function_decl|;
 name|bool
+name|Emulate_ldstpair_post
+parameter_list|(
+specifier|const
+name|uint32_t
+name|opcode
+parameter_list|)
+function_decl|;
+name|bool
 name|Emulate_ldstpair
 parameter_list|(
 specifier|const
@@ -676,6 +712,38 @@ name|opcode
 parameter_list|,
 name|AddrMode
 name|a_mode
+parameter_list|)
+function_decl|;
+name|bool
+name|EmulateB
+parameter_list|(
+specifier|const
+name|uint32_t
+name|opcode
+parameter_list|)
+function_decl|;
+name|bool
+name|EmulateBcond
+parameter_list|(
+specifier|const
+name|uint32_t
+name|opcode
+parameter_list|)
+function_decl|;
+name|bool
+name|EmulateCBZ
+parameter_list|(
+specifier|const
+name|uint32_t
+name|opcode
+parameter_list|)
+function_decl|;
+name|bool
+name|EmulateTBZ
+parameter_list|(
+specifier|const
+name|uint32_t
+name|opcode
 parameter_list|)
 function_decl|;
 name|ProcState

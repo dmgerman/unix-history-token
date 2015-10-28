@@ -1197,11 +1197,6 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|int
-name|busno
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|rid
 init|=
 literal|0
@@ -1606,7 +1601,8 @@ name|dev
 argument_list|,
 literal|"pci"
 argument_list|,
-name|busno
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return

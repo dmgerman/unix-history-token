@@ -121,6 +121,10 @@ value|KHz(1000*x)
 end_define
 
 begin_comment
+comment|/*  * Display related stuff  */
+end_comment
+
+begin_comment
 comment|/* store information about an Ixxx DVO */
 end_comment
 
@@ -229,6 +233,13 @@ define|#
 directive|define
 name|INTEL_OUTPUT_EDP
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTEL_OUTPUT_UNKNOWN
+value|9
 end_define
 
 begin_comment

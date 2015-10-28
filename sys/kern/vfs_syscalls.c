@@ -6870,7 +6870,7 @@ label|:
 name|bwillwrite
 argument_list|()
 expr_stmt|;
-name|NDINIT_AT
+name|NDINIT_ATRIGHTS
 argument_list|(
 operator|&
 name|nd
@@ -6886,6 +6886,14 @@ argument_list|,
 name|path1
 argument_list|,
 name|fd1
+argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
+name|CAP_LINKAT_SOURCE
+argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -6970,7 +6978,7 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
-name|CAP_LINKAT
+name|CAP_LINKAT_TARGET
 argument_list|)
 argument_list|,
 name|td
@@ -10545,7 +10553,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|SDT_PROBE
+name|SDT_PROBE2
 argument_list|(
 name|vfs
 argument_list|, ,
@@ -10558,12 +10566,6 @@ argument_list|,
 name|sb
 operator|.
 name|st_mode
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -10575,7 +10577,7 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
-name|SDT_PROBE
+name|SDT_PROBE2
 argument_list|(
 name|vfs
 argument_list|, ,
@@ -10586,12 +10588,6 @@ argument_list|,
 name|path
 argument_list|,
 name|pathseg
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -17162,7 +17158,7 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
-name|CAP_RENAMEAT
+name|CAP_RENAMEAT_SOURCE
 argument_list|)
 argument_list|,
 name|td
@@ -17194,7 +17190,7 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
-name|CAP_RENAMEAT
+name|CAP_RENAMEAT_SOURCE
 argument_list|)
 argument_list|,
 name|td
@@ -17310,7 +17306,7 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
-name|CAP_LINKAT
+name|CAP_RENAMEAT_TARGET
 argument_list|)
 argument_list|,
 name|td
@@ -23082,18 +23078,6 @@ operator|->
 name|fa_end
 operator|=
 name|end
-expr_stmt|;
-name|new
-operator|->
-name|fa_prevstart
-operator|=
-literal|0
-expr_stmt|;
-name|new
-operator|->
-name|fa_prevend
-operator|=
-literal|0
 expr_stmt|;
 name|fp
 operator|->

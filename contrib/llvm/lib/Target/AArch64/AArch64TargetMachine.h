@@ -103,9 +103,6 @@ name|TargetLoweringObjectFile
 operator|>
 name|TLOF
 block|;
-name|AArch64Subtarget
-name|Subtarget
-block|;
 name|mutable
 name|StringMap
 operator|<
@@ -123,7 +120,7 @@ name|AArch64TargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -149,19 +146,6 @@ specifier|const
 name|AArch64Subtarget
 operator|*
 name|getSubtargetImpl
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-operator|&
-name|Subtarget
-return|;
-block|}
-specifier|const
-name|AArch64Subtarget
-operator|*
-name|getSubtargetImpl
 argument_list|(
 argument|const Function&F
 argument_list|)
@@ -177,12 +161,10 @@ argument|PassManagerBase&PM
 argument_list|)
 name|override
 block|;
-comment|/// \brief Register AArch64 analysis passes with a pass manager.
-name|void
-name|addAnalysisPasses
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|)
+comment|/// \brief Get the TargetIRAnalysis for this target.
+name|TargetIRAnalysis
+name|getTargetIRAnalysis
+argument_list|()
 name|override
 block|;
 name|TargetLoweringObjectFile
@@ -224,7 +206,7 @@ name|AArch64leTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -259,7 +241,7 @@ name|AArch64beTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,

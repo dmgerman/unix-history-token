@@ -76,11 +76,15 @@ parameter_list|(
 name|regname
 parameter_list|)
 define|\
-value|(LLVM_EXTENSION offsetof(FPR, xstate) + \      LLVM_EXTENSION offsetof(FXSAVE, regname))
+value|(LLVM_EXTENSION offsetof(UserArea, i387) + \      LLVM_EXTENSION offsetof(FPR_i386, regname))
 end_define
 
 begin_comment
 comment|// Computes the offset of the YMM register assembled from register halves.
+end_comment
+
+begin_comment
+comment|// Based on DNBArchImplI386.cpp from debugserver
 end_comment
 
 begin_define
@@ -88,10 +92,10 @@ define|#
 directive|define
 name|YMM_OFFSET
 parameter_list|(
-name|regname
+name|reg_index
 parameter_list|)
 define|\
-value|(LLVM_EXTENSION offsetof(YMM, regname))
+value|(LLVM_EXTENSION offsetof(UserArea, i387) + \      LLVM_EXTENSION offsetof(FPR, xstate) + \      LLVM_EXTENSION offsetof(FXSAVE, xmm[7]) + \      sizeof(XMMReg) + (32 * reg_index))
 end_define
 
 begin_comment
@@ -259,7 +263,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|{ #reg#i, NULL, YMM_SIZE, LLVM_EXTENSION YMM_OFFSET(reg[i]),   \       eEncodingVector, eFormatVectorOfUInt8,                       \       { LLDB_INVALID_REGNUM, dwarf_xmm##i##_i386, LLDB_INVALID_REGNUM, gdb_##reg##i##h_i386, lldb_##reg##i##_i386 }, \       NULL, NULL }
+value|{ #reg#i, NULL, YMM_SIZE, LLVM_EXTENSION YMM_OFFSET(i),        \       eEncodingVector, eFormatVectorOfUInt8,                       \       { LLDB_INVALID_REGNUM, dwarf_xmm##i##_i386, LLDB_INVALID_REGNUM, gdb_##reg##i##h_i386, lldb_##reg##i##_i386 }, \       NULL, NULL }
 end_define
 
 begin_define

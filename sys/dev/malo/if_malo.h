@@ -1773,15 +1773,17 @@ begin_struct
 struct|struct
 name|malo_softc
 block|{
+name|struct
+name|ieee80211com
+name|malo_ic
+decl_stmt|;
+name|struct
+name|mbufq
+name|malo_snd
+decl_stmt|;
 name|device_t
 name|malo_dev
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|malo_ifp
-decl_stmt|;
-comment|/* interface common */
 name|struct
 name|mtx
 name|malo_mtx
@@ -1826,8 +1828,12 @@ comment|/* recv setup */
 name|malo_fixedrate
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* use fixed tx rate */
+name|malo_running
+range|:
+literal|1
+decl_stmt|;
 name|struct
 name|malo_hal
 modifier|*

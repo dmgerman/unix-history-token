@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ObjectBuffer.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -82,6 +76,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ExecutionEngine/ObjectMemoryBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/RTDyldMemoryManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ExecutionEngine/RuntimeDyld.h"
 end_include
 
@@ -103,26 +109,30 @@ comment|// functions across modules that it owns.  It aggregates the memory mana
 comment|// that is passed in to the MCJIT constructor and defers most functionality
 comment|// to that object.
 name|class
-name|LinkingMemoryManager
+name|LinkingSymbolResolver
 range|:
 name|public
-name|RTDyldMemoryManager
+name|RuntimeDyld
+operator|::
+name|SymbolResolver
 block|{
 name|public
 operator|:
-name|LinkingMemoryManager
+name|LinkingSymbolResolver
 argument_list|(
 name|MCJIT
-operator|*
+operator|&
 name|Parent
 argument_list|,
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
-name|RTDyldMemoryManager
+name|RuntimeDyld
+operator|::
+name|SymbolResolver
 operator|>
-name|MM
+name|Resolver
 argument_list|)
 operator|:
 name|ParentEngine
@@ -130,208 +140,49 @@ argument_list|(
 name|Parent
 argument_list|)
 block|,
-name|ClientMM
+name|ClientResolver
 argument_list|(
-argument|std::move(MM)
+argument|std::move(Resolver)
 argument_list|)
 block|{}
-name|uint64_t
-name|getSymbolAddress
+name|RuntimeDyld
+operator|::
+name|SymbolInfo
+name|findSymbol
 argument_list|(
 argument|const std::string&Name
 argument_list|)
 name|override
 block|;
-comment|// Functions deferred to client memory manager
-name|uint8_t
-operator|*
-name|allocateCodeSection
+comment|// MCJIT doesn't support logical dylibs.
+name|RuntimeDyld
+operator|::
+name|SymbolInfo
+name|findSymbolInLogicalDylib
 argument_list|(
-argument|uintptr_t Size
-argument_list|,
-argument|unsigned Alignment
-argument_list|,
-argument|unsigned SectionID
-argument_list|,
-argument|StringRef SectionName
+argument|const std::string&Name
 argument_list|)
 name|override
 block|{
 return|return
-name|ClientMM
-operator|->
-name|allocateCodeSection
-argument_list|(
-name|Size
-argument_list|,
-name|Alignment
-argument_list|,
-name|SectionID
-argument_list|,
-name|SectionName
-argument_list|)
-return|;
-block|}
-name|uint8_t
-operator|*
-name|allocateDataSection
-argument_list|(
-argument|uintptr_t Size
-argument_list|,
-argument|unsigned Alignment
-argument_list|,
-argument|unsigned SectionID
-argument_list|,
-argument|StringRef SectionName
-argument_list|,
-argument|bool IsReadOnly
-argument_list|)
-name|override
-block|{
-return|return
-name|ClientMM
-operator|->
-name|allocateDataSection
-argument_list|(
-name|Size
-argument_list|,
-name|Alignment
-argument_list|,
-name|SectionID
-argument_list|,
-name|SectionName
-argument_list|,
-name|IsReadOnly
-argument_list|)
-return|;
-block|}
-name|void
-name|reserveAllocationSpace
-argument_list|(
-argument|uintptr_t CodeSize
-argument_list|,
-argument|uintptr_t DataSizeRO
-argument_list|,
-argument|uintptr_t DataSizeRW
-argument_list|)
-name|override
-block|{
-return|return
-name|ClientMM
-operator|->
-name|reserveAllocationSpace
-argument_list|(
-name|CodeSize
-argument_list|,
-name|DataSizeRO
-argument_list|,
-name|DataSizeRW
-argument_list|)
-return|;
-block|}
-name|bool
-name|needsToReserveAllocationSpace
-argument_list|()
-name|override
-block|{
-return|return
-name|ClientMM
-operator|->
-name|needsToReserveAllocationSpace
-argument_list|()
-return|;
-block|}
-name|void
-name|notifyObjectLoaded
-argument_list|(
-argument|ExecutionEngine *EE
-argument_list|,
-argument|const object::ObjectFile&Obj
-argument_list|)
-name|override
-block|{
-name|ClientMM
-operator|->
-name|notifyObjectLoaded
-argument_list|(
-name|EE
-argument_list|,
-name|Obj
-argument_list|)
-block|;   }
-name|void
-name|registerEHFrames
-argument_list|(
-argument|uint8_t *Addr
-argument_list|,
-argument|uint64_t LoadAddr
-argument_list|,
-argument|size_t Size
-argument_list|)
-name|override
-block|{
-name|ClientMM
-operator|->
-name|registerEHFrames
-argument_list|(
-name|Addr
-argument_list|,
-name|LoadAddr
-argument_list|,
-name|Size
-argument_list|)
-block|;   }
-name|void
-name|deregisterEHFrames
-argument_list|(
-argument|uint8_t *Addr
-argument_list|,
-argument|uint64_t LoadAddr
-argument_list|,
-argument|size_t Size
-argument_list|)
-name|override
-block|{
-name|ClientMM
-operator|->
-name|deregisterEHFrames
-argument_list|(
-name|Addr
-argument_list|,
-name|LoadAddr
-argument_list|,
-name|Size
-argument_list|)
-block|;   }
-name|bool
-name|finalizeMemory
-argument_list|(
-argument|std::string *ErrMsg = nullptr
-argument_list|)
-name|override
-block|{
-return|return
-name|ClientMM
-operator|->
-name|finalizeMemory
-argument_list|(
-name|ErrMsg
-argument_list|)
+name|nullptr
 return|;
 block|}
 name|private
 operator|:
 name|MCJIT
-operator|*
+operator|&
 name|ParentEngine
 block|;
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
-name|RTDyldMemoryManager
+name|RuntimeDyld
+operator|::
+name|SymbolResolver
 operator|>
-name|ClientMM
+name|ClientResolver
 block|; }
 decl_stmt|;
 comment|// About Module states: added->loaded->finalized.
@@ -379,11 +230,21 @@ name|tm
 argument_list|,
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
-name|RTDyldMemoryManager
+name|MCJITMemoryManager
 operator|>
 name|MemMgr
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|RuntimeDyld
+operator|::
+name|SymbolResolver
+operator|>
+name|Resolver
 argument_list|)
 block|;
 typedef|typedef
@@ -884,8 +745,16 @@ name|MCContext
 operator|*
 name|Ctx
 block|;
-name|LinkingMemoryManager
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|MCJITMemoryManager
+operator|>
 name|MemMgr
+block|;
+name|LinkingSymbolResolver
+name|Resolver
 block|;
 name|RuntimeDyld
 name|Dyld
@@ -962,6 +831,19 @@ argument_list|,
 argument|ModulePtrSet::iterator E
 argument_list|)
 block|;
+name|GlobalVariable
+operator|*
+name|FindGlobalVariableNamedInModulePtrSet
+argument_list|(
+argument|const char *Name
+argument_list|,
+argument|bool AllowInternal
+argument_list|,
+argument|ModulePtrSet::iterator I
+argument_list|,
+argument|ModulePtrSet::iterator E
+argument_list|)
+block|;
 name|void
 name|runStaticConstructorsDestructorsInModulePtrSet
 argument_list|(
@@ -977,6 +859,7 @@ operator|:
 operator|~
 name|MCJIT
 argument_list|()
+name|override
 block|;
 comment|/// @name ExecutionEngine interface implementation
 comment|/// @{
@@ -1015,14 +898,29 @@ argument|Module *M
 argument_list|)
 name|override
 block|;
-comment|/// FindFunctionNamed - Search all of the active modules to find the one that
+comment|/// FindFunctionNamed - Search all of the active modules to find the function that
 comment|/// defines FnName.  This is very slow operation and shouldn't be used for
 comment|/// general code.
+name|virtual
 name|Function
 operator|*
 name|FindFunctionNamed
 argument_list|(
 argument|const char *FnName
+argument_list|)
+name|override
+block|;
+comment|/// FindGlobalVariableNamed - Search all of the active modules to find the global variable
+comment|/// that defines Name.  This is very slow operation and shouldn't be used for
+comment|/// general code.
+name|virtual
+name|GlobalVariable
+operator|*
+name|FindGlobalVariableNamed
+argument_list|(
+argument|const char *Name
+argument_list|,
+argument|bool AllowInternal = false
 argument_list|)
 name|override
 block|;
@@ -1105,7 +1003,7 @@ name|runFunction
 argument_list|(
 argument|Function *F
 argument_list|,
-argument|const std::vector<GenericValue>&ArgValues
+argument|ArrayRef<GenericValue> ArgValues
 argument_list|)
 name|override
 block|;
@@ -1226,11 +1124,21 @@ name|ErrorStr
 argument_list|,
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
-name|RTDyldMemoryManager
+name|MCJITMemoryManager
 operator|>
 name|MemMgr
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|RuntimeDyld
+operator|::
+name|SymbolResolver
+operator|>
+name|Resolver
 argument_list|,
 name|std
 operator|::
@@ -1242,6 +1150,17 @@ name|TM
 argument_list|)
 block|;
 comment|// @}
+name|RuntimeDyld
+operator|::
+name|SymbolInfo
+name|findSymbol
+argument_list|(
+argument|const std::string&Name
+argument_list|,
+argument|bool CheckFunctionsOnly
+argument_list|)
+block|;
+comment|// DEPRECATED - Please use findSymbol instead.
 comment|// This is not directly exposed via the ExecutionEngine API, but it is
 comment|// used by the LinkingMemoryManager.
 name|uint64_t
@@ -1301,8 +1220,10 @@ operator|&
 name|Obj
 argument_list|)
 block|;
-name|uint64_t
-name|getExistingSymbolAddress
+name|RuntimeDyld
+operator|::
+name|SymbolInfo
+name|findExistingSymbol
 argument_list|(
 specifier|const
 name|std

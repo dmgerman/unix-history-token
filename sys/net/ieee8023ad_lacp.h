@@ -734,6 +734,10 @@ struct|;
 name|u_int32_t
 name|lsc_strict_mode
 decl_stmt|;
+name|boolean_t
+name|lsc_fast_timeout
+decl_stmt|;
+comment|/* if set, fast timeout */
 block|}
 struct|;
 end_struct

@@ -628,17 +628,26 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* Note about the type casts:  apr_hash_this() does not expect a const hash  * index pointer even though it does not modify the hash index.  In  * Subversion we're trying to be const-correct, so these functions all take  * a const hash index and we cast away the const when passing it down to  * APR.  (A compiler may warn about casting away 'const', but at least this  * cast is explicit and gathered in one place.) */
-end_comment
+begin_if
+if|#
+directive|if
+operator|!
+name|APR_VERSION_AT_LEAST
+argument_list|(
+literal|1
+operator|,
+literal|5
+operator|,
+literal|0
+argument_list|)
+end_if
 
 begin_function
 specifier|const
 name|void
 modifier|*
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 parameter_list|(
-specifier|const
 name|apr_hash_index_t
 modifier|*
 name|hi
@@ -673,9 +682,8 @@ end_function
 
 begin_function
 name|apr_ssize_t
-name|svn__apr_hash_index_klen
+name|apr_hash_this_key_len
 parameter_list|(
-specifier|const
 name|apr_hash_index_t
 modifier|*
 name|hi
@@ -709,9 +717,8 @@ end_function
 begin_function
 name|void
 modifier|*
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 parameter_list|(
-specifier|const
 name|apr_hash_index_t
 modifier|*
 name|hi
@@ -742,6 +749,11 @@ name|val
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

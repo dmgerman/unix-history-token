@@ -121,6 +121,9 @@ name|class
 name|CXXConstructorDecl
 decl_stmt|;
 name|class
+name|CXXDeleteExpr
+decl_stmt|;
+name|class
 name|CXXRecordDecl
 decl_stmt|;
 name|class
@@ -190,6 +193,7 @@ block|;   }
 operator|~
 name|ExternalSemaSource
 argument_list|()
+name|override
 block|;
 comment|/// \brief Initialize the semantic source with the Sema instance
 comment|/// being used to perform semantic analysis on the abstract syntax
@@ -248,6 +252,35 @@ name|SourceLocation
 operator|>
 operator|&
 name|Undefined
+argument_list|)
+block|;
+name|virtual
+name|void
+name|ReadMismatchingDeleteExpressions
+argument_list|(
+name|llvm
+operator|::
+name|MapVector
+operator|<
+name|FieldDecl
+operator|*
+argument_list|,
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|SourceLocation
+argument_list|,
+name|bool
+operator|>
+argument_list|,
+literal|4
+operator|>>
+operator|&
 argument_list|)
 block|;
 comment|/// \brief Do last resort, unqualified lookup on a LookupResult that
@@ -327,19 +360,6 @@ argument_list|(
 argument|SmallVectorImpl<TypedefNameDecl *>&Decls
 argument_list|)
 block|{}
-comment|/// \brief Read the set of dynamic classes known to the external Sema source.
-comment|///
-comment|/// The external source should append its own dynamic classes to
-comment|/// the given vector of declarations. Note that this routine may be
-comment|/// invoked multiple times; the external source should take care not to
-comment|/// introduce the same declarations repeatedly.
-name|virtual
-name|void
-name|ReadDynamicClasses
-argument_list|(
-argument|SmallVectorImpl<CXXRecordDecl *>&Decls
-argument_list|)
-block|{}
 comment|/// \brief Read the set of potentially unused typedefs known to the source.
 comment|///
 comment|/// The external source should append its own potentially unused local
@@ -357,20 +377,6 @@ argument|>&Decls
 argument_list|)
 block|{}
 block|;
-comment|/// \brief Read the set of locally-scoped external declarations known to the
-comment|/// external Sema source.
-comment|///
-comment|/// The external source should append its own locally-scoped external
-comment|/// declarations to the given vector of declarations. Note that this routine
-comment|/// may be invoked multiple times; the external source should take care not
-comment|/// to introduce the same declarations repeatedly.
-name|virtual
-name|void
-name|ReadLocallyScopedExternCDecls
-argument_list|(
-argument|SmallVectorImpl<NamedDecl *>&Decls
-argument_list|)
-block|{}
 comment|/// \brief Read the set of referenced selectors known to the
 comment|/// external Sema source.
 comment|///
@@ -441,7 +447,7 @@ name|virtual
 name|void
 name|ReadLateParsedTemplates
 argument_list|(
-argument|llvm::DenseMap<const FunctionDecl *
+argument|llvm::MapVector<const FunctionDecl *
 argument_list|,
 argument|LateParsedTemplate *>&LPTMap
 argument_list|)

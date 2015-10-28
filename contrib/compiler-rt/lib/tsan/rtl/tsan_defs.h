@@ -77,6 +77,12 @@ directive|include
 file|"tsan_stat.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ubsan/ubsan_platform.h"
+end_include
+
 begin_comment
 comment|// Setup defaults for compile definitions.
 end_comment
@@ -110,6 +116,24 @@ define|#
 directive|define
 name|TSAN_COLLECT_STATS
 value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TSAN_CONTAINS_UBSAN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TSAN_CONTAINS_UBSAN
+value|(CAN_SANITIZE_UB&& !defined(SANITIZER_GO))
 end_define
 
 begin_endif

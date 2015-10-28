@@ -942,7 +942,7 @@ name|unique_size
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

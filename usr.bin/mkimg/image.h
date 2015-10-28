@@ -77,6 +77,19 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|image_copyout_zeroes
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|size_t
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|image_data
 parameter_list|(
 name|lba_t

@@ -22,6 +22,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/zio_priority.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/zfs_context.h>
 end_include
 
@@ -155,6 +161,17 @@ name|ZIO_CHECKSUM_ZILOG2
 block|,
 name|ZIO_CHECKSUM_NOPARITY
 block|,
+ifdef|#
+directive|ifdef
+name|illumos
+name|ZIO_CHECKSUM_SHA512
+block|,
+name|ZIO_CHECKSUM_SKEIN
+block|,
+name|ZIO_CHECKSUM_EDONR
+block|,
+endif|#
+directive|endif
 name|ZIO_CHECKSUM_FUNCTIONS
 block|}
 enum|;
@@ -232,11 +249,15 @@ define|#
 directive|define
 name|ZIO_COMPRESS_LEGACY_FUNCTIONS
 value|ZIO_COMPRESS_LZ4
-comment|/* N.B. when altering this value, also change BOOTFS_COMPRESS_VALID below */
+comment|/*  * The meaning of "compress = on" selected by the compression features enabled  * on a given pool.  */
 define|#
 directive|define
-name|ZIO_COMPRESS_ON_VALUE
+name|ZIO_COMPRESS_LEGACY_ON_VALUE
 value|ZIO_COMPRESS_LZJB
+define|#
+directive|define
+name|ZIO_COMPRESS_LZ4_ON_VALUE
+value|ZIO_COMPRESS_LZ4
 define|#
 directive|define
 name|ZIO_COMPRESS_DEFAULT
@@ -248,7 +269,7 @@ parameter_list|(
 name|compress
 parameter_list|)
 define|\
-value|((compress) == ZIO_COMPRESS_LZJB ||		\ 	(compress) == ZIO_COMPRESS_LZ4 ||		\ 	((compress) == ZIO_COMPRESS_ON&&		\ 	ZIO_COMPRESS_ON_VALUE == ZIO_COMPRESS_LZJB) ||	\ 	(compress) == ZIO_COMPRESS_OFF)
+value|((compress) == ZIO_COMPRESS_LZJB ||		\ 	(compress) == ZIO_COMPRESS_LZ4 ||		\ 	(compress) == ZIO_COMPRESS_ON ||		\ 	(compress) == ZIO_COMPRESS_OFF)
 define|#
 directive|define
 name|ZIO_FAILURE_MODE_WAIT
@@ -261,34 +282,6 @@ define|#
 directive|define
 name|ZIO_FAILURE_MODE_PANIC
 value|2
-typedef|typedef
-enum|enum
-name|zio_priority
-block|{
-name|ZIO_PRIORITY_SYNC_READ
-block|,
-name|ZIO_PRIORITY_SYNC_WRITE
-block|,
-comment|/* ZIL */
-name|ZIO_PRIORITY_ASYNC_READ
-block|,
-comment|/* prefetch */
-name|ZIO_PRIORITY_ASYNC_WRITE
-block|,
-comment|/* spa_sync() */
-name|ZIO_PRIORITY_SCRUB
-block|,
-comment|/* asynchronous scrub/resilver reads */
-name|ZIO_PRIORITY_TRIM
-block|,
-comment|/* free requests used for TRIM */
-name|ZIO_PRIORITY_NUM_QUEUEABLE
-block|,
-name|ZIO_PRIORITY_NOW
-comment|/* non-queued I/Os (e.g. ioctl) */
-block|}
-name|zio_priority_t
-typedef|;
 enum|enum
 name|zio_flag
 block|{
@@ -573,7 +566,7 @@ index|[
 name|ZIO_TYPES
 index|]
 decl_stmt|;
-comment|/*  * A bookmark is a four-tuple<objset, object, level, blkid> that uniquely  * identifies any block in the pool.  By convention, the meta-objset (MOS)  * is objset 0, and the meta-dnode is object 0.  This covers all blocks  * except root blocks and ZIL blocks, which are defined as follows:  *  * Root blocks (objset_phys_t) are object 0, level -1:<objset, 0, -1, 0>.  * ZIL blocks are bookmarked<objset, 0, -2, blkid == ZIL sequence number>.  * dmu_sync()ed ZIL data blocks are bookmarked<objset, object, -2, blkid>.  *  * Note: this structure is called a bookmark because its original purpose  * was to remember where to resume a pool-wide traverse.  *  * Note: this structure is passed between userland and the kernel, and is  * stored on disk (by virtue of being incorporated into other on-disk  * structures, e.g. dsl_scan_phys_t).  */
+comment|/*  * A bookmark is a four-tuple<objset, object, level, blkid> that uniquely  * identifies any block in the pool.  By convention, the meta-objset (MOS)  * is objset 0, and the meta-dnode is object 0.  This covers all blocks  * except root blocks and ZIL blocks, which are defined as follows:  *  * Root blocks (objset_phys_t) are object 0, level -1:<objset, 0, -1, 0>.  * ZIL blocks are bookmarked<objset, 0, -2, blkid == ZIL sequence number>.  * dmu_sync()ed ZIL data blocks are bookmarked<objset, object, -2, blkid>.  * dnode visit bookmarks are<objset, object id of dnode, -3, 0>.  *  * Note: this structure is called a bookmark because its original purpose  * was to remember where to resume a pool-wide traverse.  *  * Note: this structure is passed between userland and the kernel, and is  * stored on disk (by virtue of being incorporated into other on-disk  * structures, e.g. dsl_scan_phys_t).  */
 typedef|typedef
 struct|struct
 name|zbookmark_phys
@@ -633,6 +626,14 @@ define|#
 directive|define
 name|ZB_ZIL_LEVEL
 value|(-2LL)
+define|#
+directive|define
+name|ZB_DNODE_LEVEL
+value|(-3LL)
+define|#
+directive|define
+name|ZB_DNODE_BLKID
+value|(0ULL)
 define|#
 directive|define
 name|ZB_IS_ZERO
@@ -1099,6 +1100,9 @@ name|io_timestamp
 decl_stmt|;
 name|avl_node_t
 name|io_queue_node
+decl_stmt|;
+name|avl_node_t
+name|io_offset_node
 decl_stmt|;
 comment|/* Internal pipeline state */
 name|enum
@@ -2023,6 +2027,10 @@ name|enum
 name|zio_compress
 name|zio_compress_select
 parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
 name|enum
 name|zio_compress
 name|child
@@ -2336,13 +2344,39 @@ parameter_list|)
 function_decl|;
 comment|/* zbookmark_phys functions */
 name|boolean_t
-name|zbookmark_is_before
+name|zbookmark_subtree_completed
 parameter_list|(
 specifier|const
 name|struct
 name|dnode_phys
 modifier|*
 name|dnp
+parameter_list|,
+specifier|const
+name|zbookmark_phys_t
+modifier|*
+name|subtree_root
+parameter_list|,
+specifier|const
+name|zbookmark_phys_t
+modifier|*
+name|last_block
+parameter_list|)
+function_decl|;
+name|int
+name|zbookmark_compare
+parameter_list|(
+name|uint16_t
+name|dbss1
+parameter_list|,
+name|uint8_t
+name|ibs1
+parameter_list|,
+name|uint16_t
+name|dbss2
+parameter_list|,
+name|uint8_t
+name|ibs2
 parameter_list|,
 specifier|const
 name|zbookmark_phys_t

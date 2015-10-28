@@ -4855,7 +4855,9 @@ name|struct
 name|rpcent
 modifier|*
 name|getrpcent
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|union
 name|key
@@ -4992,7 +4994,9 @@ end_function
 begin_function
 name|void
 name|endrpcent
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef

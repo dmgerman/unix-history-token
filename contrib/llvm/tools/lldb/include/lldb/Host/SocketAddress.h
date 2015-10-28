@@ -144,6 +144,12 @@ begin_comment
 comment|// Project includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -328,6 +334,16 @@ name|sa_family_t
 name|family
 parameter_list|)
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|// Get the address
+comment|//------------------------------------------------------------------
+name|std
+operator|::
+name|string
+name|GetIPAddress
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Get the port if the socket address for the family has a port
 comment|//------------------------------------------------------------------

@@ -27,6 +27,44 @@ directive|include
 file|<machine/pcb.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ARM_INTRNG
+end_ifdef
+
+begin_enum
+enum|enum
+block|{
+name|IPI_AST
+block|,
+name|IPI_PREEMPT
+block|,
+name|IPI_RENDEZVOUS
+block|,
+name|IPI_STOP
+block|,
+name|IPI_STOP_HARD
+init|=
+name|IPI_STOP
+block|,
+comment|/* These are synonyms on arm. */
+name|IPI_HARDCLOCK
+block|,
+name|IPI_TLB
+block|,
+name|IPI_CACHE
+block|,
+name|ARM_IPI_COUNT
+block|}
+enum|;
+end_enum
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -82,6 +120,15 @@ directive|define
 name|IPI_CACHE
 value|8
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INTRNG */
+end_comment
 
 begin_function_decl
 name|void
@@ -155,6 +202,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ARM_INTRNG
+end_ifndef
+
 begin_function_decl
 name|void
 name|pic_ipi_clear
@@ -174,6 +227,11 @@ name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Platform interface */

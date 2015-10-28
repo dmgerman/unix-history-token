@@ -15,6 +15,12 @@ directive|define
 name|__FLASK_OP_H__
 end_define
 
+begin_include
+include|#
+directive|include
+file|"../event_channel.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -304,6 +310,42 @@ end_struct
 
 begin_struct
 struct|struct
+name|xen_flask_relabel
+block|{
+comment|/* IN */
+name|uint32_t
+name|domid
+decl_stmt|;
+name|uint32_t
+name|sid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|xen_flask_devicetree_label
+block|{
+comment|/* IN */
+name|uint32_t
+name|sid
+decl_stmt|;
+name|uint32_t
+name|length
+decl_stmt|;
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|char
+argument_list|)
+name|path
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|xen_flask_op
 block|{
 name|uint32_t
@@ -401,6 +443,14 @@ define|#
 directive|define
 name|FLASK_GET_PEER_SID
 value|23
+define|#
+directive|define
+name|FLASK_RELABEL_DOMAIN
+value|24
+define|#
+directive|define
+name|FLASK_DEVICETREE_LABEL
+value|25
 name|uint32_t
 name|interface_version
 decl_stmt|;
@@ -458,6 +508,14 @@ decl_stmt|;
 name|struct
 name|xen_flask_peersid
 name|peersid
+decl_stmt|;
+name|struct
+name|xen_flask_relabel
+name|relabel
+decl_stmt|;
+name|struct
+name|xen_flask_devicetree_label
+name|devicetree_label
 decl_stmt|;
 block|}
 name|u

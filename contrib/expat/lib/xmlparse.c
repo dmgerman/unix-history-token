@@ -7422,6 +7422,23 @@ name|int
 name|len
 parameter_list|)
 block|{
+comment|/* BEGIN MOZILLA CHANGE (sanity check len) */
+if|if
+condition|(
+name|len
+operator|<
+literal|0
+condition|)
+block|{
+name|errorCode
+operator|=
+name|XML_ERROR_NO_MEMORY
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+comment|/* END MOZILLA CHANGE */
 switch|switch
 condition|(
 name|ps_parsing
@@ -7459,7 +7476,6 @@ operator|-
 name|bufferEnd
 condition|)
 block|{
-comment|/* FIXME avoid integer overflow */
 name|int
 name|neededSize
 init|=
@@ -7474,6 +7490,23 @@ operator|-
 name|bufferPtr
 argument_list|)
 decl_stmt|;
+comment|/* BEGIN MOZILLA CHANGE (sanity check neededSize) */
+if|if
+condition|(
+name|neededSize
+operator|<
+literal|0
+condition|)
+block|{
+name|errorCode
+operator|=
+name|XML_ERROR_NO_MEMORY
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+comment|/* END MOZILLA CHANGE */
 ifdef|#
 directive|ifdef
 name|XML_CONTEXT_BYTES
@@ -7632,14 +7665,37 @@ name|bufferSize
 operator|*=
 literal|2
 expr_stmt|;
+comment|/* BEGIN MOZILLA CHANGE (prevent infinite loop on overflow) */
 block|}
 do|while
 condition|(
 name|bufferSize
 operator|<
 name|neededSize
+operator|&&
+name|bufferSize
+operator|>
+literal|0
 condition|)
 do|;
+comment|/* END MOZILLA CHANGE */
+comment|/* BEGIN MOZILLA CHANGE (sanity check bufferSize) */
+if|if
+condition|(
+name|bufferSize
+operator|<=
+literal|0
+condition|)
+block|{
+name|errorCode
+operator|=
+name|XML_ERROR_NO_MEMORY
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+comment|/* END MOZILLA CHANGE */
 name|newBuf
 operator|=
 operator|(

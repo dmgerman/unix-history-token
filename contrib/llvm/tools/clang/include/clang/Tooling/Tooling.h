@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/PCHContainerOperations.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Diagnostic.h"
 end_include
 
@@ -162,6 +168,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Lex/ModuleLoader.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Tooling/ArgumentsAdjusters.h"
 end_include
 
@@ -181,6 +193,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Option/Option.h"
 end_include
 
 begin_include
@@ -254,6 +272,14 @@ name|FileManager
 operator|*
 name|Files
 argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+argument_list|,
 name|DiagnosticConsumer
 operator|*
 name|DiagConsumer
@@ -277,10 +303,10 @@ name|ToolAction
 block|{
 name|public
 operator|:
-name|virtual
 operator|~
 name|FrontendActionFactory
 argument_list|()
+name|override
 block|;
 comment|/// \brief Invokes the compiler with a FrontendAction created by create().
 name|bool
@@ -289,6 +315,8 @@ argument_list|(
 argument|clang::CompilerInvocation *Invocation
 argument_list|,
 argument|FileManager *Files
+argument_list|,
+argument|std::shared_ptr<PCHContainerOperations> PCHContainerOps
 argument_list|,
 argument|DiagnosticConsumer *DiagConsumer
 argument_list|)
@@ -407,6 +435,8 @@ comment|///
 comment|/// \param ToolAction The action to run over the code.
 comment|/// \param Code C++ code.
 comment|/// \param FileName The file name which 'Code' will be mapped as.
+comment|/// \param PCHContainerOps  The PCHContainerOperations for loading and creating
+comment|///                         clang modules.
 comment|///
 comment|/// \return - True if 'ToolAction' was successfully executed.
 name|bool
@@ -429,6 +459,23 @@ operator|&
 name|FileName
 operator|=
 literal|"input.cc"
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+operator|=
+name|std
+operator|::
+name|make_shared
+operator|<
+name|PCHContainerOperations
+operator|>
+operator|(
+operator|)
 argument_list|)
 decl_stmt|;
 comment|/// The first part of the pair is the filename, the second part the
@@ -459,6 +506,8 @@ comment|/// \param ToolAction The action to run over the code.
 comment|/// \param Code C++ code.
 comment|/// \param Args Additional flags to pass on.
 comment|/// \param FileName The file name which 'Code' will be mapped as.
+comment|/// \param PCHContainerOps   The PCHContainerOperations for loading and creating
+comment|///                          clang modules.
 comment|///
 comment|/// \return - True if 'ToolAction' was successfully executed.
 name|bool
@@ -494,6 +543,23 @@ name|FileName
 operator|=
 literal|"input.cc"
 argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+operator|=
+name|std
+operator|::
+name|make_shared
+operator|<
+name|PCHContainerOperations
+operator|>
+operator|(
+operator|)
+argument_list|,
 specifier|const
 name|FileContentMappings
 operator|&
@@ -507,6 +573,8 @@ comment|/// \brief Builds an AST for 'Code'.
 comment|///
 comment|/// \param Code C++ code.
 comment|/// \param FileName The file name which 'Code' will be mapped as.
+comment|/// \param PCHContainerOps The PCHContainerOperations for loading and creating
+comment|/// clang modules.
 comment|///
 comment|/// \return The resulting AST or null if an error occurred.
 name|std
@@ -528,6 +596,23 @@ operator|&
 name|FileName
 operator|=
 literal|"input.cc"
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+operator|=
+name|std
+operator|::
+name|make_shared
+operator|<
+name|PCHContainerOperations
+operator|>
+operator|(
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/// \brief Builds an AST for 'Code' with additional flags.
@@ -535,6 +620,8 @@ comment|///
 comment|/// \param Code C++ code.
 comment|/// \param Args Additional flags to pass on.
 comment|/// \param FileName The file name which 'Code' will be mapped as.
+comment|/// \param PCHContainerOps The PCHContainerOperations for loading and creating
+comment|/// clang modules.
 comment|///
 comment|/// \return The resulting AST or null if an error occurred.
 name|std
@@ -568,6 +655,23 @@ operator|&
 name|FileName
 operator|=
 literal|"input.cc"
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+operator|=
+name|std
+operator|::
+name|make_shared
+operator|<
+name|PCHContainerOperations
+operator|>
+operator|(
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/// \brief Utility to run a FrontendAction in a single clang invocation.
@@ -585,6 +689,8 @@ comment|/// (see clang driver implementation) or mapped in via mapVirtualFile.
 comment|/// \param FAction The action to be executed. Class takes ownership.
 comment|/// \param Files The FileManager used for the execution. Class does not take
 comment|/// ownership.
+comment|/// \param PCHContainerOps The PCHContainerOperations for loading and creating
+comment|/// clang modules.
 name|ToolInvocation
 argument_list|(
 name|std
@@ -604,6 +710,23 @@ argument_list|,
 name|FileManager
 operator|*
 name|Files
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+operator|=
+name|std
+operator|::
+name|make_shared
+operator|<
+name|PCHContainerOperations
+operator|>
+operator|(
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/// \brief Create a tool invocation.
@@ -611,6 +734,8 @@ comment|///
 comment|/// \param CommandLine The command line arguments to clang.
 comment|/// \param Action The action to be executed.
 comment|/// \param Files The FileManager used for the execution.
+comment|/// \param PCHContainerOps The PCHContainerOperations for loading and creating
+comment|/// clang modules.
 name|ToolInvocation
 argument_list|(
 name|std
@@ -630,6 +755,14 @@ argument_list|,
 name|FileManager
 operator|*
 name|Files
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
 argument_list|)
 expr_stmt|;
 operator|~
@@ -704,6 +837,14 @@ operator|::
 name|CompilerInvocation
 operator|*
 name|Invocation
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
 argument_list|)
 decl_stmt|;
 name|std
@@ -727,6 +868,14 @@ name|FileManager
 modifier|*
 name|Files
 decl_stmt|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+expr_stmt|;
 comment|// Maps<file name> -><file content>.
 name|llvm
 operator|::
@@ -760,6 +909,8 @@ comment|/// \param Compilations The CompilationDatabase which contains the compi
 comment|///        command lines for the given source paths.
 comment|/// \param SourcePaths The source files to run over. If a source files is
 comment|///        not found in Compilations, it is skipped.
+comment|/// \param PCHContainerOps The PCHContainerOperations for loading and creating
+comment|/// clang modules.
 name|ClangTool
 argument_list|(
 specifier|const
@@ -774,6 +925,23 @@ operator|::
 name|string
 operator|>
 name|SourcePaths
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
+operator|=
+name|std
+operator|::
+name|make_shared
+operator|<
+name|PCHContainerOperations
+operator|>
+operator|(
+operator|)
 argument_list|)
 expr_stmt|;
 operator|~
@@ -885,6 +1053,14 @@ operator|::
 name|string
 operator|>
 name|SourcePaths
+expr_stmt|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|PCHContainerOps
 expr_stmt|;
 name|llvm
 operator|::
@@ -1255,6 +1431,35 @@ name|string
 name|getAbsolutePath
 argument_list|(
 argument|StringRef File
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Creates a \c CompilerInvocation.
+end_comment
+
+begin_expr_stmt
+name|clang
+operator|::
+name|CompilerInvocation
+operator|*
+name|newInvocation
+argument_list|(
+name|clang
+operator|::
+name|DiagnosticsEngine
+operator|*
+name|Diagnostics
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgStringList
+operator|&
+name|CC1Args
 argument_list|)
 expr_stmt|;
 end_expr_stmt

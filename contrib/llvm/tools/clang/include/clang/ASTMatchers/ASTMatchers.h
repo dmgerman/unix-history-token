@@ -198,6 +198,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclObjC.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/DeclTemplate.h"
 end_include
 
@@ -403,7 +409,7 @@ name|T
 operator|>
 name|id
 argument_list|(
-argument|const std::string&ID
+argument|StringRef ID
 argument_list|,
 argument|const internal::BindableMatcher<T>&InnerMatcher
 argument_list|)
@@ -503,6 +509,28 @@ name|TrueMatcher
 argument_list|()
 return|;
 block|}
+comment|/// \brief Matches the top declaration context.
+comment|///
+comment|/// Given
+comment|/// \code
+comment|///   int X;
+comment|///   namespace NS {
+comment|///   int Y;
+comment|///   }  // namespace NS
+comment|/// \endcode
+comment|/// decl(hasDeclContext(translationUnitDecl()))
+comment|///   matches "int X", but not "int Y".
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Decl
+operator|,
+name|TranslationUnitDecl
+operator|>
+name|translationUnitDecl
+expr_stmt|;
 comment|/// \brief Matches typedef declarations.
 comment|///
 comment|/// Given
@@ -539,7 +567,7 @@ name|AST_POLYMORPHIC_MATCHER
 argument_list|(
 argument|isExpansionInMainFile
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_3(Decl, Stmt,                                                           TypeLoc)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(Decl, Stmt, TypeLoc)
 argument_list|)
 block|{
 name|auto
@@ -589,7 +617,7 @@ name|AST_POLYMORPHIC_MATCHER
 argument_list|(
 argument|isExpansionInSystemHeader
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_3(Decl, Stmt,                                                           TypeLoc)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(Decl, Stmt, TypeLoc)
 argument_list|)
 block|{
 name|auto
@@ -657,7 +685,7 @@ name|AST_POLYMORPHIC_MATCHER_P
 argument_list|(
 argument|isExpansionInFileMatching
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_3(Decl, Stmt,                                                             TypeLoc)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(Decl, Stmt, TypeLoc)
 argument_list|,
 argument|std::string
 argument_list|,
@@ -1099,7 +1127,7 @@ name|AST_POLYMORPHIC_MATCHER_P
 argument_list|(
 argument|hasAnyTemplateArgument
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_2(ClassTemplateSpecializationDecl,                                       TemplateSpecializationType)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(ClassTemplateSpecializationDecl,                                     TemplateSpecializationType)
 argument_list|,
 argument|internal::Matcher<TemplateArgument>
 argument_list|,
@@ -1303,7 +1331,7 @@ name|AST_POLYMORPHIC_MATCHER_P2
 argument_list|(
 argument|hasTemplateArgument
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_2(ClassTemplateSpecializationDecl,                                       TemplateSpecializationType)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(ClassTemplateSpecializationDecl,                                     TemplateSpecializationType)
 argument_list|,
 argument|unsigned
 argument_list|,
@@ -1368,7 +1396,7 @@ name|AST_POLYMORPHIC_MATCHER_P
 argument_list|(
 argument|templateArgumentCountIs
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_2(ClassTemplateSpecializationDecl,                                       TemplateSpecializationType)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(ClassTemplateSpecializationDecl,                                     TemplateSpecializationType)
 argument_list|,
 argument|unsigned
 argument_list|,
@@ -1798,6 +1826,23 @@ name|CXXMethodDecl
 operator|>
 name|methodDecl
 expr_stmt|;
+comment|/// \brief Matches conversion operator declarations.
+comment|///
+comment|/// Example matches the operator.
+comment|/// \code
+comment|///   class X { operator int() const; };
+comment|/// \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Decl
+operator|,
+name|CXXConversionDecl
+operator|>
+name|conversionDecl
+expr_stmt|;
 comment|/// \brief Matches variable declarations.
 comment|///
 comment|/// Note: this does not match declarations of member variables, which are
@@ -2001,6 +2046,26 @@ operator|,
 name|CXXMemberCallExpr
 operator|>
 name|memberCallExpr
+expr_stmt|;
+comment|/// \brief Matches ObjectiveC Message invocation expressions.
+comment|///
+comment|/// The innermost message send invokes the "alloc" class method on the
+comment|/// NSString class, while the outermost message send invokes the
+comment|/// "initWithString" instance method on the object returned from
+comment|/// NSString's "alloc". This matcher should match both message sends.
+comment|/// \code
+comment|///   [[NSString alloc] initWithString:@"Hello"]
+comment|/// \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Stmt
+operator|,
+name|ObjCMessageExpr
+operator|>
+name|objcMessageExpr
 expr_stmt|;
 comment|/// \brief Matches expressions that introduce cleanups to be run at the end
 comment|/// of the sub-expression's evaluation.
@@ -3072,6 +3137,18 @@ name|CXXNullPtrLiteralExpr
 operator|>
 name|nullPtrLiteralExpr
 expr_stmt|;
+comment|/// \brief Matches GNU __null expression.
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Stmt
+operator|,
+name|GNUNullExpr
+operator|>
+name|gnuNullExpr
+expr_stmt|;
 comment|/// \brief Matches binary operator expressions.
 comment|///
 comment|/// Example matches a || b
@@ -3122,6 +3199,30 @@ operator|,
 name|ConditionalOperator
 operator|>
 name|conditionalOperator
+expr_stmt|;
+comment|/// \brief Matches a C++ static_assert declaration.
+comment|///
+comment|/// Example:
+comment|///   staticAssertExpr()
+comment|/// matches
+comment|///   static_assert(sizeof(S) == sizeof(int))
+comment|/// in
+comment|/// \code
+comment|///   struct S {
+comment|///     int x;
+comment|///   };
+comment|///   static_assert(sizeof(S) == sizeof(int));
+comment|/// \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Decl
+operator|,
+name|StaticAssertDecl
+operator|>
+name|staticAssertDecl
 expr_stmt|;
 comment|/// \brief Matches a reinterpret_cast expression.
 comment|///
@@ -3739,7 +3840,7 @@ name|HasOverloadedOperatorNameMatcher
 operator|,
 name|StringRef
 operator|,
-name|AST_POLYMORPHIC_SUPPORTED_TYPES_2
+name|AST_POLYMORPHIC_SUPPORTED_TYPES
 argument_list|(
 name|CXXOperatorCallExpr
 argument_list|,
@@ -3762,7 +3863,7 @@ name|HasOverloadedOperatorNameMatcher
 operator|,
 name|StringRef
 operator|,
-name|AST_POLYMORPHIC_SUPPORTED_TYPES_2
+name|AST_POLYMORPHIC_SUPPORTED_TYPES
 argument_list|(
 name|CXXOperatorCallExpr
 argument_list|,
@@ -4396,6 +4497,257 @@ argument_list|)
 operator|)
 return|;
 block|}
+comment|/// \brief Matches on the receiver of an ObjectiveC Message expression.
+comment|///
+comment|/// Example
+comment|/// matcher = objCMessageExpr(hasRecieverType(asString("UIWebView *")));
+comment|/// matches the [webView ...] message invocation.
+comment|/// \code
+comment|///   NSString *webViewJavaScript = ...
+comment|///   UIWebView *webView = ...
+comment|///   [webView stringByEvaluatingJavaScriptFromString:webViewJavascript];
+comment|/// \endcode
+name|AST_MATCHER_P
+argument_list|(
+argument|ObjCMessageExpr
+argument_list|,
+argument|hasReceiverType
+argument_list|,
+argument|internal::Matcher<QualType>
+argument_list|,
+argument|InnerMatcher
+argument_list|)
+block|{
+specifier|const
+name|QualType
+name|TypeDecl
+init|=
+name|Node
+operator|.
+name|getReceiverType
+argument_list|()
+decl_stmt|;
+return|return
+name|InnerMatcher
+operator|.
+name|matches
+argument_list|(
+name|TypeDecl
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+return|;
+block|}
+comment|/// \brief Matches when BaseName == Selector.getAsString()
+comment|///
+comment|///  matcher = objCMessageExpr(hasSelector("loadHTMLString:baseURL:"));
+comment|///  matches the outer message expr in the code below, but NOT the message
+comment|///  invocation for self.bodyView.
+comment|/// \code
+comment|///     [self.bodyView loadHTMLString:html baseURL:NULL];
+comment|/// \endcode
+name|AST_MATCHER_P
+argument_list|(
+argument|ObjCMessageExpr
+argument_list|,
+argument|hasSelector
+argument_list|,
+argument|std::string
+argument_list|,
+argument|BaseName
+argument_list|)
+block|{
+name|Selector
+name|Sel
+init|=
+name|Node
+operator|.
+name|getSelector
+argument_list|()
+decl_stmt|;
+return|return
+name|BaseName
+operator|.
+name|compare
+argument_list|(
+name|Sel
+operator|.
+name|getAsString
+argument_list|()
+argument_list|)
+operator|==
+literal|0
+return|;
+block|}
+comment|/// \brief Matches ObjC selectors whose name contains
+comment|/// a substring matched by the given RegExp.
+comment|///  matcher = objCMessageExpr(matchesSelector("loadHTMLString\:baseURL?"));
+comment|///  matches the outer message expr in the code below, but NOT the message
+comment|///  invocation for self.bodyView.
+comment|/// \code
+comment|///     [self.bodyView loadHTMLString:html baseURL:NULL];
+comment|/// \endcode
+name|AST_MATCHER_P
+argument_list|(
+argument|ObjCMessageExpr
+argument_list|,
+argument|matchesSelector
+argument_list|,
+argument|std::string
+argument_list|,
+argument|RegExp
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|RegExp
+operator|.
+name|empty
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|SelectorString
+operator|=
+name|Node
+operator|.
+name|getSelector
+argument_list|()
+operator|.
+name|getAsString
+argument_list|()
+expr_stmt|;
+name|llvm
+operator|::
+name|Regex
+name|RE
+argument_list|(
+name|RegExp
+argument_list|)
+expr_stmt|;
+return|return
+name|RE
+operator|.
+name|match
+argument_list|(
+name|SelectorString
+argument_list|)
+return|;
+block|}
+comment|/// \brief Matches when the selector is the empty selector
+comment|///
+comment|/// Matches only when the selector of the objCMessageExpr is NULL. This may
+comment|/// represent an error condition in the tree!
+name|AST_MATCHER
+argument_list|(
+argument|ObjCMessageExpr
+argument_list|,
+argument|hasNullSelector
+argument_list|)
+block|{
+return|return
+name|Node
+operator|.
+name|getSelector
+argument_list|()
+operator|.
+name|isNull
+argument_list|()
+return|;
+block|}
+comment|/// \brief Matches when the selector is a Unary Selector
+comment|///
+comment|///  matcher = objCMessageExpr(matchesSelector(hasUnarySelector());
+comment|///  matches self.bodyView in the code below, but NOT the outer message
+comment|///  invocation of "loadHTMLString:baseURL:".
+comment|/// \code
+comment|///     [self.bodyView loadHTMLString:html baseURL:NULL];
+comment|/// \endcode
+name|AST_MATCHER
+argument_list|(
+argument|ObjCMessageExpr
+argument_list|,
+argument|hasUnarySelector
+argument_list|)
+block|{
+return|return
+name|Node
+operator|.
+name|getSelector
+argument_list|()
+operator|.
+name|isUnarySelector
+argument_list|()
+return|;
+block|}
+comment|/// \brief Matches when the selector is a keyword selector
+comment|///
+comment|/// objCMessageExpr(hasKeywordSelector()) matches the generated setFrame
+comment|/// message expression in
+comment|///
+comment|/// \code
+comment|///   UIWebView *webView = ...;
+comment|///   CGRect bodyFrame = webView.frame;
+comment|///   bodyFrame.size.height = self.bodyContentHeight;
+comment|///   webView.frame = bodyFrame;
+comment|///   //     ^---- matches here
+comment|/// \endcode
+name|AST_MATCHER
+argument_list|(
+argument|ObjCMessageExpr
+argument_list|,
+argument|hasKeywordSelector
+argument_list|)
+block|{
+return|return
+name|Node
+operator|.
+name|getSelector
+argument_list|()
+operator|.
+name|isKeywordSelector
+argument_list|()
+return|;
+block|}
+comment|/// \brief Matches when the selector has the specified number of arguments
+comment|///
+comment|///  matcher = objCMessageExpr(numSelectorArgs(1));
+comment|///  matches self.bodyView in the code below
+comment|///
+comment|///  matcher = objCMessageExpr(numSelectorArgs(2));
+comment|///  matches the invocation of "loadHTMLString:baseURL:" but not that
+comment|///  of self.bodyView
+comment|/// \code
+comment|///     [self.bodyView loadHTMLString:html baseURL:NULL];
+comment|/// \endcode
+name|AST_MATCHER_P
+argument_list|(
+argument|ObjCMessageExpr
+argument_list|,
+argument|numSelectorArgs
+argument_list|,
+argument|unsigned
+argument_list|,
+argument|N
+argument_list|)
+block|{
+return|return
+name|Node
+operator|.
+name|getSelector
+argument_list|()
+operator|.
+name|getNumArgs
+argument_list|()
+operator|==
+name|N
+return|;
+block|}
 comment|/// \brief Matches if the call expression's callee expression matches.
 comment|///
 comment|/// Given
@@ -4506,7 +4858,7 @@ name|AST_POLYMORPHIC_MATCHER_P_OVERLOAD
 argument_list|(
 argument|hasType
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_2(Expr, ValueDecl)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(Expr, ValueDecl)
 argument_list|,
 argument|internal::Matcher<QualType>
 argument_list|,
@@ -4552,7 +4904,7 @@ name|AST_POLYMORPHIC_MATCHER_P_OVERLOAD
 argument_list|(
 argument|hasType
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_2(Expr, ValueDecl)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(Expr,                                                                    ValueDecl)
 argument_list|,
 argument|internal::Matcher<Decl>
 argument_list|,
@@ -5301,7 +5653,7 @@ name|AST_POLYMORPHIC_MATCHER_P
 argument_list|(
 argument|argumentCountIs
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_2(                                                CallExpr, CXXConstructExpr)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(CallExpr,                                                           CXXConstructExpr,                                                           ObjCMessageExpr)
 argument_list|,
 argument|unsigned
 argument_list|,
@@ -5329,7 +5681,7 @@ name|AST_POLYMORPHIC_MATCHER_P2
 argument_list|(
 argument|hasArgument
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_2(CallExpr, CXXConstructExpr)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(CallExpr,                                                            CXXConstructExpr,                                                            ObjCMessageExpr)
 argument_list|,
 argument|unsigned
 argument_list|,
@@ -5509,6 +5861,35 @@ name|Finder
 argument_list|,
 name|Builder
 argument_list|)
+return|;
+block|}
+comment|/// \brief Matches a C++ catch statement that has a catch-all handler.
+comment|///
+comment|/// Given
+comment|/// \code
+comment|///   try {
+comment|///     // ...
+comment|///   } catch (int) {
+comment|///     // ...
+comment|///   } catch (...) {
+comment|///     // ...
+comment|///   }
+comment|/// /endcode
+comment|/// catchStmt(isCatchAll()) matches catch(...) but not catch(int).
+name|AST_MATCHER
+argument_list|(
+argument|CXXCatchStmt
+argument_list|,
+argument|isCatchAll
+argument_list|)
+block|{
+return|return
+name|Node
+operator|.
+name|getExceptionDecl
+argument_list|()
+operator|==
+name|nullptr
 return|;
 block|}
 comment|/// \brief Matches a constructor initializer.
@@ -5709,7 +6090,7 @@ name|AST_POLYMORPHIC_MATCHER_P
 argument_list|(
 argument|hasAnyArgument
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_2(                                               CallExpr, CXXConstructExpr)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(CallExpr,                                                           CXXConstructExpr)
 argument_list|,
 argument|internal::Matcher<Expr>
 argument_list|,
@@ -5997,6 +6378,31 @@ name|isDeleted
 argument_list|()
 return|;
 block|}
+comment|/// \brief Matches constexpr variable and function declarations.
+comment|///
+comment|/// Given:
+comment|/// \code
+comment|///   constexpr int foo = 42;
+comment|///   constexpr int bar();
+comment|/// \endcode
+comment|/// varDecl(isConstexpr())
+comment|///   matches the declaration of foo.
+comment|/// functionDecl(isConstexpr())
+comment|///   matches the declaration of bar.
+name|AST_POLYMORPHIC_MATCHER
+argument_list|(
+argument|isConstexpr
+argument_list|,
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(VarDecl,                                                         FunctionDecl)
+argument_list|)
+block|{
+return|return
+name|Node
+operator|.
+name|isConstexpr
+argument_list|()
+return|;
+block|}
 comment|/// \brief Matches the condition expression of an if statement, for loop,
 comment|/// or conditional operator.
 comment|///
@@ -6008,7 +6414,7 @@ name|AST_POLYMORPHIC_MATCHER_P
 argument_list|(
 argument|hasCondition
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_5(                       IfStmt, ForStmt, WhileStmt, DoStmt, ConditionalOperator)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(IfStmt, ForStmt,                                                           WhileStmt, DoStmt,                                                           ConditionalOperator)
 argument_list|,
 argument|internal::Matcher<Expr>
 argument_list|,
@@ -6169,7 +6575,7 @@ name|AST_POLYMORPHIC_MATCHER_P
 argument_list|(
 argument|equalsBoundNode
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_4(                                                Stmt, Decl, Type, QualType)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(Stmt, Decl, Type,                                                           QualType)
 argument_list|,
 argument|std::string
 argument_list|,
@@ -6377,7 +6783,7 @@ name|AST_POLYMORPHIC_MATCHER_P
 argument_list|(
 argument|hasBody
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_4(DoStmt, ForStmt,                                                             WhileStmt,                                                             CXXForRangeStmt)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(DoStmt, ForStmt,                                                           WhileStmt,                                                           CXXForRangeStmt)
 argument_list|,
 argument|internal::Matcher<Stmt>
 argument_list|,
@@ -6544,7 +6950,7 @@ name|AST_POLYMORPHIC_MATCHER_P
 argument_list|(
 argument|hasOperatorName
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_2(                                                BinaryOperator, UnaryOperator)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(BinaryOperator,                                                           UnaryOperator)
 argument_list|,
 argument|std::string
 argument_list|,
@@ -6960,7 +7366,7 @@ name|AST_POLYMORPHIC_MATCHER
 argument_list|(
 argument|isDefinition
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_3(                                           TagDecl, VarDecl, FunctionDecl)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(TagDecl, VarDecl,                                                         FunctionDecl)
 argument_list|)
 block|{
 return|return
@@ -7129,6 +7535,15 @@ name|size_overridden_methods
 argument_list|()
 operator|>
 literal|0
+operator|||
+name|Node
+operator|.
+name|hasAttr
+operator|<
+name|OverrideAttr
+operator|>
+operator|(
+operator|)
 return|;
 block|}
 comment|/// \brief Matches member expressions that are called with '->' as opposed
@@ -7428,7 +7843,7 @@ name|AST_POLYMORPHIC_MATCHER
 argument_list|(
 argument|isTemplateInstantiation
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_3(FunctionDecl, VarDecl, CXXRecordDecl)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(FunctionDecl, VarDecl,                                                         CXXRecordDecl)
 argument_list|)
 block|{
 return|return
@@ -7566,7 +7981,7 @@ name|AST_POLYMORPHIC_MATCHER
 argument_list|(
 argument|isExplicitTemplateSpecialization
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_3(FunctionDecl, VarDecl, CXXRecordDecl)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(FunctionDecl, VarDecl,                                                         CXXRecordDecl)
 argument_list|)
 block|{
 return|return
@@ -7705,7 +8120,7 @@ name|hasElementType
 argument_list|,
 name|getElement
 argument_list|,
-name|AST_POLYMORPHIC_SUPPORTED_TYPES_2
+name|AST_POLYMORPHIC_SUPPORTED_TYPES
 argument_list|(
 name|ArrayType
 argument_list|,
@@ -7889,7 +8304,7 @@ name|hasValueType
 argument_list|,
 name|getValue
 argument_list|,
-name|AST_POLYMORPHIC_SUPPORTED_TYPES_1
+name|AST_POLYMORPHIC_SUPPORTED_TYPES
 argument_list|(
 name|AtomicType
 argument_list|)
@@ -7932,7 +8347,7 @@ name|hasDeducedType
 argument_list|,
 name|getDeducedType
 argument_list|,
-name|AST_POLYMORPHIC_SUPPORTED_TYPES_1
+name|AST_POLYMORPHIC_SUPPORTED_TYPES
 argument_list|(
 name|AutoType
 argument_list|)
@@ -7989,7 +8404,7 @@ name|innerType
 argument_list|,
 name|getInnerType
 argument_list|,
-name|AST_POLYMORPHIC_SUPPORTED_TYPES_1
+name|AST_POLYMORPHIC_SUPPORTED_TYPES
 argument_list|(
 name|ParenType
 argument_list|)
@@ -8123,7 +8538,7 @@ name|pointee
 argument_list|,
 name|getPointee
 argument_list|,
-name|AST_POLYMORPHIC_SUPPORTED_TYPES_4
+name|AST_POLYMORPHIC_SUPPORTED_TYPES
 argument_list|(
 name|BlockPointerType
 argument_list|,

@@ -112,6 +112,40 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Field flags required for this function */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|apr_uint32_t
+name|print_dirent_fields
+init|=
+name|SVN_DIRENT_KIND
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|apr_uint32_t
+name|print_dirent_fields_verbose
+init|=
+operator|(
+name|SVN_DIRENT_KIND
+operator||
+name|SVN_DIRENT_SIZE
+operator||
+name|SVN_DIRENT_TIME
+operator||
+name|SVN_DIRENT_CREATED_REV
+operator||
+name|SVN_DIRENT_LAST_AUTHOR
+operator|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* This implements the svn_client_list_func2_t API, printing a single    directory entry in text format. */
 end_comment
 
@@ -642,6 +676,30 @@ block|}
 end_function
 
 begin_comment
+comment|/* Field flags required for this function */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|apr_uint32_t
+name|print_dirent_xml_fields
+init|=
+operator|(
+name|SVN_DIRENT_KIND
+operator||
+name|SVN_DIRENT_SIZE
+operator||
+name|SVN_DIRENT_TIME
+operator||
+name|SVN_DIRENT_CREATED_REV
+operator||
+name|SVN_DIRENT_LAST_AUTHOR
+operator|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* This implements the svn_client_list_func2_t API, printing a single dirent    in XML format. */
 end_comment
 
@@ -886,7 +944,7 @@ literal|"target"
 argument_list|,
 name|external_target
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|pb
@@ -929,7 +987,7 @@ operator|->
 name|kind
 argument_list|)
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|svn_cl__xml_tagged_cdata
@@ -1000,7 +1058,7 @@ operator|->
 name|created_rev
 argument_list|)
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|svn_cl__xml_tagged_cdata
@@ -1068,7 +1126,7 @@ name|svn_xml_normal
 argument_list|,
 literal|"lock"
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|svn_cl__xml_tagged_cdata
@@ -1387,22 +1445,28 @@ if|if
 condition|(
 name|opt_state
 operator|->
-name|verbose
-operator|||
-name|opt_state
-operator|->
 name|xml
 condition|)
 name|dirent_fields
 operator|=
-name|SVN_DIRENT_ALL
+name|print_dirent_xml_fields
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|opt_state
+operator|->
+name|verbose
+condition|)
+name|dirent_fields
+operator|=
+name|print_dirent_fields_verbose
 expr_stmt|;
 else|else
 name|dirent_fields
 operator|=
-name|SVN_DIRENT_KIND
+name|print_dirent_fields
 expr_stmt|;
-comment|/* the only thing we actually need... */
 name|pb
 operator|.
 name|ctx
@@ -1606,7 +1670,7 @@ literal|"."
 else|:
 name|truepath
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|SVN_ERR
@@ -1859,6 +1923,11 @@ argument_list|(
 literal|"Could not list all targets because some targets don't exist"
 argument_list|)
 argument_list|)
+expr_stmt|;
+else|else
+name|err
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 name|svn_error_compose_create

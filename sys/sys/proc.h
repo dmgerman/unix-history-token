@@ -426,6 +426,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|syscall_args
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|td_sched
 struct_decl|;
 end_struct_decl
@@ -637,14 +643,6 @@ modifier|*
 name|td_wmesg
 decl_stmt|;
 comment|/* (t) Reason for sleep. */
-name|int
-name|td_lastcpu
-decl_stmt|;
-comment|/* (t) Last cpu we were on. */
-name|int
-name|td_oncpu
-decl_stmt|;
-comment|/* (t) Which cpu we are on. */
 specifier|volatile
 name|u_char
 name|td_owepreempt
@@ -896,6 +894,14 @@ name|u_char
 name|td_base_user_pri
 decl_stmt|;
 comment|/* (t) Base user pri */
+name|u_int
+name|td_dbg_sc_code
+decl_stmt|;
+comment|/* (c) Syscall code to debugger. */
+name|u_int
+name|td_dbg_sc_narg
+decl_stmt|;
+comment|/* (c) Syscall arg count to debugger.*/
 define|#
 directive|define
 name|td_endcopy
@@ -1052,6 +1058,14 @@ modifier|*
 name|td_emuldata
 decl_stmt|;
 comment|/* Emulator state data */
+name|int
+name|td_lastcpu
+decl_stmt|;
+comment|/* (t) Last cpu we were on. */
+name|int
+name|td_oncpu
+decl_stmt|;
+comment|/* (t) Which cpu we are on. */
 block|}
 struct|;
 end_struct
@@ -1964,12 +1978,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_UNUSED29
+name|TDP_FORKING
 value|0x20000000
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* Thread is being created through fork() */
 end_comment
 
 begin_define
@@ -5605,12 +5619,6 @@ argument_list|)
 name|__dead2
 decl_stmt|;
 end_decl_stmt
-
-begin_struct_decl
-struct_decl|struct
-name|syscall_args
-struct_decl|;
-end_struct_decl
 
 begin_function_decl
 name|int

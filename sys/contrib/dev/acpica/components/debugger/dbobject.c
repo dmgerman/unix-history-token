@@ -31,29 +31,6 @@ directive|include
 file|<contrib/dev/acpica/include/acdebug.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DISASSEMBLER
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/include/acdisasm.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUGGER
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -1121,7 +1098,8 @@ return|return;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"Arguments for Method [%4.4s]:  (%X arguments defined, max concurrency = %X)\n"
+literal|"Arguments for Method [%4.4s]:  "
+literal|"(%X arguments defined, max concurrency = %X)\n"
 argument_list|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -1183,11 +1161,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

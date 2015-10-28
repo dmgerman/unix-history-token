@@ -741,11 +741,7 @@ argument_list|(
 literal|" ARG"
 argument_list|)
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3093,7 +3089,7 @@ name|path
 argument_list|)
 condition|)
 block|{
-comment|/* URLs are URI-encoded, so we look for dates with                  URI-encoded delimeters.  */
+comment|/* URLs are URI-encoded, so we look for dates with                  URI-encoded delimiters.  */
 name|size_t
 name|rev_len
 init|=
@@ -3683,11 +3679,7 @@ name|true_target
 argument_list|,
 name|peg_rev
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|APR_ARRAY_PUSH
@@ -3985,31 +3977,6 @@ condition|(
 name|peg_start
 condition|)
 block|{
-comment|/* Error out if target is the empty string. */
-if|if
-condition|(
-name|ptr
-operator|==
-name|utf8_target
-condition|)
-return|return
-name|svn_error_createf
-argument_list|(
-name|SVN_ERR_BAD_FILENAME
-argument_list|,
-name|NULL
-argument_list|,
-name|_
-argument_list|(
-literal|"'%s' is just a peg revision. "
-literal|"Maybe try '%s@' instead?"
-argument_list|)
-argument_list|,
-name|utf8_target
-argument_list|,
-name|utf8_target
-argument_list|)
-return|;
 operator|*
 name|true_target
 operator|=

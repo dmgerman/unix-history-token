@@ -15,6 +15,12 @@ directive|define
 name|_CLOUDABI_SYSCALLDEFS_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -47,6 +53,40 @@ directive|define
 name|static_assert
 value|_Static_assert
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdalign.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Import machine-independent CloudABI definitions. */

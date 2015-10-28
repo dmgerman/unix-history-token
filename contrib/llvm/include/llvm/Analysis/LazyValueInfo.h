@@ -105,11 +105,6 @@ name|AssumptionCache
 operator|*
 name|AC
 block|;
-specifier|const
-name|DataLayout
-operator|*
-name|DL
-block|;
 name|class
 name|TargetLibraryInfo
 operator|*
@@ -125,9 +120,12 @@ name|PImpl
 block|;
 name|LazyValueInfo
 argument_list|(
-argument|const LazyValueInfo&
+specifier|const
+name|LazyValueInfo
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -137,7 +135,8 @@ specifier|const
 name|LazyValueInfo
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -170,6 +169,7 @@ block|;   }
 operator|~
 name|LazyValueInfo
 argument_list|()
+name|override
 block|{
 name|assert
 argument_list|(

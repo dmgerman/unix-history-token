@@ -70,19 +70,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/sbuffer.h"
+file|"sldns/sbuffer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/rrdef.h"
+file|"sldns/rrdef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/str2wire.h"
+file|"sldns/str2wire.h"
 end_include
 
 begin_ifdef
@@ -4271,10 +4271,12 @@ operator|(
 name|size_t
 operator|*
 operator|)
-name|malloc
+name|reallocarray
 argument_list|(
+name|NULL
+argument_list|,
 name|num
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|size_t
@@ -4320,10 +4322,12 @@ operator|(
 name|time_t
 operator|*
 operator|)
-name|malloc
+name|reallocarray
 argument_list|(
+name|NULL
+argument_list|,
 name|num
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|time_t
@@ -4377,10 +4381,12 @@ name|uint8_t
 operator|*
 operator|*
 operator|)
-name|malloc
+name|reallocarray
 argument_list|(
+name|NULL
+argument_list|,
 name|num
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|uint8_t
@@ -4991,7 +4997,17 @@ name|log_warn
 argument_list|(
 literal|"trust anchor %s has no supported algorithms,"
 literal|" the anchor is ignored (check if you need to"
-literal|" upgrade unbound and openssl)"
+literal|" upgrade unbound and "
+ifdef|#
+directive|ifdef
+name|HAVE_LIBRESSL
+literal|"libressl"
+else|#
+directive|else
+literal|"openssl"
+endif|#
+directive|endif
+literal|")"
 argument_list|,
 name|b
 argument_list|)

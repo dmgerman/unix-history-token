@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Sanitizers.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Driver/Action.h"
 end_include
 
@@ -175,6 +181,18 @@ block|,
 name|RLT_Libgcc
 block|}
 enum|;
+enum|enum
+name|RTTIMode
+block|{
+name|RM_EnabledExplicitly
+block|,
+name|RM_EnabledImplicitly
+block|,
+name|RM_DisabledExplicitly
+block|,
+name|RM_DisabledImplicitly
+block|}
+enum|;
 name|private
 label|:
 specifier|const
@@ -197,6 +215,21 @@ name|ArgList
 operator|&
 name|Args
 expr_stmt|;
+comment|// We need to initialize CachedRTTIArg before CachedRTTIMode
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|Arg
+operator|*
+specifier|const
+name|CachedRTTIArg
+expr_stmt|;
+specifier|const
+name|RTTIMode
+name|CachedRTTIMode
+decl_stmt|;
 comment|/// The list of toolchain specific path prefixes to search for
 comment|/// files.
 name|path_list
@@ -593,6 +626,32 @@ name|getSanitizerArgs
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|// Returns the Arg * that explicitly turned on/off rtti, or nullptr.
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|Arg
+operator|*
+name|getRTTIArg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CachedRTTIArg
+return|;
+block|}
+comment|// Returns the RTTIMode for the toolchain with the current arguments.
+name|RTTIMode
+name|getRTTIMode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CachedRTTIMode
+return|;
+block|}
 comment|// Tool access.
 comment|/// TranslateArgs - Create a new derived argument list for any argument
 comment|/// translations this ToolChain may wish to perform, or 0 if no tool chain
@@ -619,6 +678,10 @@ name|nullptr
 return|;
 block|}
 comment|/// Choose a tool to use to handle the action \p JA.
+comment|///
+comment|/// This can be overridden when a particular ToolChain needs to use
+comment|/// a C compiler other than Clang.
+name|virtual
 name|Tool
 modifier|*
 name|SelectTool
@@ -1182,6 +1245,13 @@ name|CmdArgs
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Return sanitizers which are available in this toolchain.
+name|virtual
+name|SanitizerMask
+name|getSupportedSanitizers
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

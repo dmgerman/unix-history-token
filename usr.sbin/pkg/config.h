@@ -49,6 +49,8 @@ name|FINGERPRINTS
 block|,
 name|REPOS_DIR
 block|,
+name|PUBKEY
+block|,
 name|CONFIG_SIZE
 block|}
 name|pkg_config_key

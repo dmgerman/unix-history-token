@@ -318,7 +318,8 @@ name|ProgramState
 operator|&
 name|R
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|friend
 name|class

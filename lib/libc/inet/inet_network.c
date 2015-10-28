@@ -96,13 +96,11 @@ begin_function
 name|in_addr_t
 name|inet_network
 parameter_list|(
-name|cp
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|cp
-decl_stmt|;
+parameter_list|)
 block|{
 name|in_addr_t
 name|val

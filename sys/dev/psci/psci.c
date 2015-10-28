@@ -1223,33 +1223,34 @@ name|PSCI_VER_MAJOR
 argument_list|(
 name|version
 argument_list|)
-operator|!=
+operator|==
 literal|0
-operator|)
 operator|&&
-operator|(
 name|PSCI_VER_MINOR
 argument_list|(
 name|version
 argument_list|)
-operator|!=
+operator|==
 literal|2
+operator|)
+operator|||
+operator|(
+name|PSCI_VER_MAJOR
+argument_list|(
+name|version
+argument_list|)
+operator|==
+literal|1
+operator|&&
+name|PSCI_VER_MINOR
+argument_list|(
+name|version
+argument_list|)
+operator|==
+literal|0
 operator|)
 condition|)
 block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"PSCI version number mismatched with DT\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|bootverbose
@@ -1261,7 +1262,7 @@ argument_list|,
 literal|"PSCI version 0.2 available\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We only register this for v0.2 since v0.1 doesn't support 	 * system_reset. 	 */
+comment|/* 		 * We only register this for v0.2 since v0.1 doesn't support 		 * system_reset. 		 */
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|shutdown_final
@@ -1276,6 +1277,19 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"PSCI version number mismatched with DT\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
 operator|)
 return|;
 block|}

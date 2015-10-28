@@ -36,6 +36,14 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|struct
+name|malloc_huge_stats_s
+name|malloc_huge_stats_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
 name|arena_stats_s
 name|arena_stats_t
 typedef|;
@@ -84,10 +92,6 @@ begin_struct
 struct|struct
 name|malloc_bin_stats_s
 block|{
-comment|/* 	 * Current number of bytes allocated, including objects currently 	 * cached by tcache. 	 */
-name|size_t
-name|allocated
-decl_stmt|;
 comment|/* 	 * Total number of allocation/deallocation requests served directly by 	 * the bin.  Note that tcache may allocate an object, then recycle it 	 * many times, resulting many increments to nrequests, but only one 	 * each to nmalloc and ndalloc. 	 */
 name|uint64_t
 name|nmalloc
@@ -98,6 +102,10 @@ decl_stmt|;
 comment|/* 	 * Number of allocation requests that correspond to the size of this 	 * bin.  This includes requests served by tcache, though tcache only 	 * periodically merges into this counter. 	 */
 name|uint64_t
 name|nrequests
+decl_stmt|;
+comment|/* 	 * Current number of regions of this size class, including regions 	 * currently cached by tcache. 	 */
+name|size_t
+name|curregs
 decl_stmt|;
 comment|/* Number of tcache fills from this bin. */
 name|uint64_t
@@ -138,9 +146,28 @@ comment|/* 	 * Number of allocation requests that correspond to this size class.
 name|uint64_t
 name|nrequests
 decl_stmt|;
-comment|/* Current number of runs of this size class. */
+comment|/* 	 * Current number of runs of this size class, including runs currently 	 * cached by tcache. 	 */
 name|size_t
 name|curruns
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|malloc_huge_stats_s
+block|{
+comment|/* 	 * Total number of allocation/deallocation requests served directly by 	 * the arena. 	 */
+name|uint64_t
+name|nmalloc
+decl_stmt|;
+name|uint64_t
+name|ndalloc
+decl_stmt|;
+comment|/* Current number of (multi-)chunk allocations of this size class. */
+name|size_t
+name|curhchunks
 decl_stmt|;
 block|}
 struct|;
@@ -164,6 +191,14 @@ decl_stmt|;
 name|uint64_t
 name|purged
 decl_stmt|;
+comment|/* 	 * Number of bytes currently mapped purely for metadata purposes, and 	 * number of bytes currently allocated for internal metadata. 	 */
+name|size_t
+name|metadata_mapped
+decl_stmt|;
+name|size_t
+name|metadata_allocated
+decl_stmt|;
+comment|/* Protected via atomic_*_z(). */
 comment|/* Per-size-category statistics. */
 name|size_t
 name|allocated_large
@@ -177,30 +212,24 @@ decl_stmt|;
 name|uint64_t
 name|nrequests_large
 decl_stmt|;
-comment|/* 	 * One element for each possible size class, including sizes that 	 * overlap with bin size classes.  This is necessary because ipalloc() 	 * sometimes has to use such large objects in order to assure proper 	 * alignment. 	 */
+name|size_t
+name|allocated_huge
+decl_stmt|;
+name|uint64_t
+name|nmalloc_huge
+decl_stmt|;
+name|uint64_t
+name|ndalloc_huge
+decl_stmt|;
+comment|/* One element for each large size class. */
 name|malloc_large_stats_t
 modifier|*
 name|lstats
 decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|chunk_stats_s
-block|{
-comment|/* Number of chunks that were allocated. */
-name|uint64_t
-name|nchunks
-decl_stmt|;
-comment|/* High-water mark for number of chunks allocated. */
-name|size_t
-name|highchunks
-decl_stmt|;
-comment|/* 	 * Current number of chunks allocated.  This value isn't maintained for 	 * any other purpose, so keep track of it in order to be able to set 	 * highchunks. 	 */
-name|size_t
-name|curchunks
+comment|/* One element for each huge size class. */
+name|malloc_huge_stats_t
+modifier|*
+name|hstats
 decl_stmt|;
 block|}
 struct|;

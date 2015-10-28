@@ -170,30 +170,11 @@ comment|/// functionality. When the pass detects a verification error it is alwa
 comment|/// printed to stderr, and by default they are fatal. You can override that by
 comment|/// passing \c false to \p FatalErrors.
 comment|///
-comment|/// Note that this creates a pass suitable for the legacy pass manager. It has nothing to do with \c VerifierPass.
+comment|/// Note that this creates a pass suitable for the legacy pass manager. It has
+comment|/// nothing to do with \c VerifierPass.
 name|FunctionPass
 modifier|*
 name|createVerifierPass
-parameter_list|(
-name|bool
-name|FatalErrors
-init|=
-name|true
-parameter_list|)
-function_decl|;
-comment|/// \brief Create a debug-info verifier pass.
-comment|///
-comment|/// Check a module for validity of debug info. This is essentially a pass
-comment|/// wrapped around the debug-info parts of \a verifyModule().  When the pass
-comment|/// detects a verification error it is always printed to stderr, and by default
-comment|/// they are fatal. You can override that by passing \c false to \p
-comment|/// FatalErrors.
-comment|///
-comment|/// Note that this creates a pass suitable for the legacy pass manager. It has
-comment|/// nothing to do with \c VerifierPass.
-name|ModulePass
-modifier|*
-name|createDebugInfoVerifierPass
 parameter_list|(
 name|bool
 name|FatalErrors

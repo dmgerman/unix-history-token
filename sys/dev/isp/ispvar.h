@@ -162,7 +162,7 @@ parameter_list|(
 name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|uint32_t
+name|uint16_t
 modifier|*
 parameter_list|,
 name|uint16_t
@@ -354,10 +354,10 @@ name|isrp
 parameter_list|,
 name|semap
 parameter_list|,
-name|mbox0p
+name|info
 parameter_list|)
 define|\
-value|(*(isp)->isp_mdvec->dv_rd_isr)(isp, isrp, semap, mbox0p)
+value|(*(isp)->isp_mdvec->dv_rd_isr)(isp, isrp, semap, info)
 end_define
 
 begin_define
@@ -1068,17 +1068,6 @@ value|0xfe
 end_define
 
 begin_comment
-comment|/* Use this handle for the base for multi-id firmware SNS logins */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NPH_SNS_HDLBASE
-value|0x400
-end_define
-
-begin_comment
 comment|/* These are for 2K Login Firmware cards */
 end_comment
 
@@ -1141,7 +1130,7 @@ begin_define
 define|#
 directive|define
 name|NPH_IP_BCST
-value|0x7ff
+value|0x7FF
 end_define
 
 begin_comment
@@ -1583,49 +1572,45 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|uint32_t
-name|fctape_enabled
-range|:
-literal|1
-decl_stmt|,
-name|link_active
-range|:
-literal|1
-decl_stmt|,
-name|sendmarker
-range|:
-literal|1
-decl_stmt|,
-name|role
-range|:
-literal|2
-decl_stmt|,
+name|int
 name|isp_gbspeed
-range|:
-literal|4
-decl_stmt|,
-name|isp_loopstate
-range|:
-literal|4
-decl_stmt|,
-comment|/* Current Loop State */
-name|isp_fwstate
-range|:
-literal|4
-decl_stmt|,
-comment|/* ISP F/W state */
-name|isp_topo
-range|:
-literal|3
-decl_stmt|,
-comment|/* Connection Type */
-name|loop_seen_once
-range|:
-literal|1
 decl_stmt|;
+comment|/* Connection speed */
+name|int
+name|isp_linkstate
+decl_stmt|;
+comment|/* Link state */
+name|int
+name|isp_fwstate
+decl_stmt|;
+comment|/* ISP F/W state */
+name|int
+name|isp_loopstate
+decl_stmt|;
+comment|/* Loop State */
+name|int
+name|isp_topo
+decl_stmt|;
+comment|/* Connection Type */
 name|uint32_t
 label|:
-literal|8
+literal|3
+operator|,
+name|fctape_enabled
+operator|:
+literal|1
+operator|,
+name|sendmarker
+operator|:
+literal|1
+operator|,
+name|loop_seen_once
+operator|:
+literal|1
+operator|,
+name|role
+operator|:
+literal|2
 operator|,
 name|isp_portid
 operator|:
@@ -3226,7 +3211,7 @@ parameter_list|(
 name|ispsoftc_t
 modifier|*
 parameter_list|,
-name|uint32_t
+name|uint16_t
 parameter_list|,
 name|uint16_t
 parameter_list|,

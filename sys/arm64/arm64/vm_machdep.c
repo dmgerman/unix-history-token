@@ -217,6 +217,10 @@ condition|)
 name|vfp_save_state
 argument_list|(
 name|td1
+argument_list|,
+name|td1
+operator|->
+name|td_pcb
 argument_list|)
 expr_stmt|;
 endif|#

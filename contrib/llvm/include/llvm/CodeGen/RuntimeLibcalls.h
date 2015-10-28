@@ -880,6 +880,18 @@ name|EVT
 name|RetVT
 parameter_list|)
 function_decl|;
+comment|/// Return the SYNC_FETCH_AND_* value for the given opcode and type, or
+comment|/// UNKNOWN_LIBCALL if there is none.
+name|Libcall
+name|getATOMIC
+parameter_list|(
+name|unsigned
+name|Opc
+parameter_list|,
+name|MVT
+name|VT
+parameter_list|)
+function_decl|;
 block|}
 block|}
 end_decl_stmt

@@ -1062,6 +1062,13 @@ end_comment
 begin_if
 if|if
 condition|(
+name|Begin
+operator|!=
+name|End
+condition|)
+block|{
+if|if
+condition|(
 name|std
 operator|::
 name|is_class
@@ -1109,6 +1116,7 @@ name|T
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_if
 

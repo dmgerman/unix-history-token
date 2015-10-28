@@ -64,7 +64,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/ScriptInterpreter.h"
+file|"lldb/Core/StructuredData.h"
 end_include
 
 begin_include
@@ -77,6 +77,16 @@ begin_decl_stmt
 name|class
 name|DynamicRegisterInfo
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|ScriptInterpreter
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_decl_stmt
@@ -255,10 +265,8 @@ name|m_python_object_sp
 operator|&&
 name|m_python_object_sp
 operator|->
-name|GetObject
+name|IsValid
 argument_list|()
-operator|!=
-name|NULL
 return|;
 block|}
 name|lldb
@@ -268,7 +276,9 @@ name|CreateThreadFromThreadInfo
 argument_list|(
 name|lldb_private
 operator|::
-name|PythonDictionary
+name|StructuredData
+operator|::
+name|Dictionary
 operator|&
 name|thread_dict
 argument_list|,
@@ -322,11 +332,13 @@ name|ScriptInterpreter
 operator|*
 name|m_interpreter
 block|;
-name|lldb
+name|lldb_private
 operator|::
-name|ScriptInterpreterObjectSP
+name|StructuredData
+operator|::
+name|ObjectSP
 name|m_python_object_sp
-block|;      }
+block|; }
 decl_stmt|;
 end_decl_stmt
 

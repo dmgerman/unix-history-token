@@ -506,17 +506,45 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* DSDT is always the first AML table */
+if|if
+condition|(
+name|ACPI_COMPARE_NAME
+argument_list|(
+name|Table
+operator|->
+name|Signature
+argument_list|,
+name|ACPI_SIG_DSDT
+argument_list|)
+condition|)
+block|{
 name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
 operator|(
 name|ACPI_DB_INIT
 operator|,
-literal|"Table [%4.4s] (id %4.4X) - %4u Objects with %3u Devices, "
-literal|"%3u Regions, %3u Methods (%u/%u/%u Serial/Non/Cvt)\n"
+literal|"\nInitializing Namespace objects:\n"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Summary of objects initialized */
+name|ACPI_DEBUG_PRINT_RAW
+argument_list|(
+operator|(
+name|ACPI_DB_INIT
+operator|,
+literal|"Table [%4.4s:%8.8s] (id %.2X) - %4u Objects with %3u Devices, "
+literal|"%3u Regions, %4u Methods (%u/%u/%u Serial/Non/Cvt)\n"
 operator|,
 name|Table
 operator|->
 name|Signature
+operator|,
+name|Table
+operator|->
+name|OemTableId
 operator|,
 name|OwnerId
 operator|,

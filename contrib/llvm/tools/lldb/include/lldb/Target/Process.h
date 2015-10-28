@@ -128,18 +128,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/RangeMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/StringList.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ThreadSafeValue.h"
 end_include
 
@@ -147,6 +135,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/PluginInterface.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/StructuredData.h"
 end_include
 
 begin_include
@@ -164,30 +158,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Expression/ClangPersistentVariables.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Expression/IRDynamicChecks.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/FileSpec.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Host.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/HostThread.h"
 end_include
 
@@ -195,12 +165,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/ProcessRunLock.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Interpreter/Args.h"
 end_include
 
 begin_include
@@ -218,19 +182,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Target/JITLoaderList.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Target/Memory.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/MemoryRegionInfo.h"
 end_include
 
 begin_include
@@ -260,18 +212,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Target/UnixSignals.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Utility/PseudoTerminal.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Target/InstrumentationRuntime.h"
 end_include
 
@@ -279,6 +219,17 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
+name|template
+operator|<
+name|typename
+name|B
+operator|,
+name|typename
+name|S
+operator|>
+expr|struct
+name|Range
+expr_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// ProcessProperties
 comment|//----------------------------------------------------------------------
@@ -1957,12 +1908,25 @@ name|IsLastResumeForUserExpression
 argument_list|()
 specifier|const
 block|{
+comment|// If we haven't yet resumed the target, then it can't be for a user expression...
+if|if
+condition|(
+name|m_resume_id
+operator|==
+literal|0
+condition|)
+return|return
+name|false
+return|;
 return|return
 name|m_resume_id
 operator|==
 name|m_last_user_expression_resume
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 name|void
 name|SetRunningUserExpression
 parameter_list|(
@@ -1970,7 +1934,6 @@ name|bool
 name|on
 parameter_list|)
 block|{
-comment|// REMOVEME printf ("Setting running user expression %s at resume id %d - value: %d.\n", on ? "on" : "off", m_resume_id, m_running_user_expression);
 if|if
 condition|(
 name|on
@@ -1983,34 +1946,102 @@ name|m_running_user_expression
 operator|--
 expr_stmt|;
 block|}
-name|private
-label|:
-name|uint32_t
-name|m_stop_id
-decl_stmt|;
-name|uint32_t
-name|m_last_natural_stop_id
-decl_stmt|;
-name|uint32_t
-name|m_resume_id
-decl_stmt|;
-name|uint32_t
-name|m_memory_id
-decl_stmt|;
-name|uint32_t
-name|m_last_user_expression_resume
-decl_stmt|;
-name|uint32_t
-name|m_running_user_expression
-decl_stmt|;
+end_function
+
+begin_decl_stmt
+name|void
+name|SetStopEventForLastNaturalStopID
+argument_list|(
+name|lldb
+operator|::
+name|EventSP
+name|event_sp
+argument_list|)
+block|{
+name|m_last_natural_stop_event
+operator|=
+name|event_sp
+expr_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_expr_stmt
+name|lldb
+operator|::
+name|EventSP
+name|GetStopEventForStopID
+argument_list|(
+argument|uint32_t stop_id
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|stop_id
+operator|==
+name|m_last_natural_stop_id
+condition|)
+return|return
+name|m_last_natural_stop_event
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|lldb
+operator|::
+name|EventSP
+argument_list|()
+return|;
+end_return
+
+begin_decl_stmt
+unit|}  private:
+name|uint32_t
+name|m_stop_id
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint32_t
+name|m_last_natural_stop_id
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint32_t
+name|m_resume_id
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint32_t
+name|m_memory_id
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint32_t
+name|m_last_user_expression_resume
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint32_t
+name|m_running_user_expression
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
+name|lldb
+operator|::
+name|EventSP
+name|m_last_natural_stop_event
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
 specifier|inline
 name|bool
 name|operator
@@ -2383,17 +2414,18 @@ name|GetFlavor
 argument_list|()
 specifier|const
 block|;
-specifier|const
 name|lldb
 operator|::
 name|ProcessSP
-operator|&
 name|GetProcessSP
 argument_list|()
 specifier|const
 block|{
 return|return
-name|m_process_sp
+name|m_process_wp
+operator|.
+name|lock
+argument_list|()
 return|;
 block|}
 name|lldb
@@ -2648,8 +2680,8 @@ argument_list|)
 block|;             }
 name|lldb
 operator|::
-name|ProcessSP
-name|m_process_sp
+name|ProcessWP
+name|m_process_wp
 block|;
 name|lldb
 operator|::
@@ -2731,6 +2763,8 @@ operator|&
 name|listener
 argument_list|,
 specifier|const
+name|lldb
+operator|::
 name|UnixSignalsSP
 operator|&
 name|unix_signals_sp
@@ -3021,6 +3055,25 @@ name|DataBufferSP
 name|GetAuxvData
 argument_list|()
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Sometimes processes know how to retrieve and load shared libraries.
+comment|/// This is normally done by DynamicLoader plug-ins, but sometimes the
+comment|/// connection to the process allows retrieving this information. The
+comment|/// dynamic loader plug-ins can use this function if they can't
+comment|/// determine the current shared library load state.
+comment|///
+comment|/// @return
+comment|///    The number of shared libraries that were loaded
+comment|//------------------------------------------------------------------
+name|virtual
+name|size_t
+name|LoadModules
+parameter_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
 name|protected
 label|:
 name|virtual
@@ -3338,12 +3391,23 @@ comment|///
 comment|/// This function is not meant to be overridden by Process
 comment|/// subclasses.
 comment|///
+comment|/// @param[in] force_kill
+comment|///     Whether lldb should force a kill (instead of a detach) from
+comment|///     the inferior process.  Normally if lldb launched a binary and
+comment|///     Destory is called, lldb kills it.  If lldb attached to a
+comment|///     running process and Destory is called, lldb detaches.  If
+comment|///     this behavior needs to be over-ridden, this is the bool that
+comment|///     can be used.
+comment|///
 comment|/// @return
 comment|///     Returns an error object.
 comment|//------------------------------------------------------------------
 name|Error
 name|Destroy
-parameter_list|()
+parameter_list|(
+name|bool
+name|force_kill
+parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Sends a process a UNIX signal \a signal.
@@ -3363,42 +3427,23 @@ parameter_list|)
 function_decl|;
 name|void
 name|SetUnixSignals
-parameter_list|(
+argument_list|(
 specifier|const
+name|lldb
+operator|::
 name|UnixSignalsSP
-modifier|&
+operator|&
 name|signals_sp
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|signals_sp
-operator|&&
-literal|"null signals_sp"
 argument_list|)
-expr_stmt|;
-name|m_unix_signals_sp
-operator|=
-name|signals_sp
-expr_stmt|;
-block|}
-name|UnixSignals
-modifier|&
+decl_stmt|;
+specifier|const
+name|lldb
+operator|::
+name|UnixSignalsSP
+operator|&
 name|GetUnixSignals
-parameter_list|()
-block|{
-name|assert
-argument_list|(
-name|m_unix_signals_sp
-operator|&&
-literal|"null m_unix_signals_sp"
-argument_list|)
+argument_list|()
 expr_stmt|;
-return|return
-operator|*
-name|m_unix_signals_sp
-return|;
-block|}
 comment|//==================================================================
 comment|// Plug-in Process Control Overrides
 comment|//==================================================================
@@ -3501,53 +3546,14 @@ comment|///
 comment|/// @param[in] pid
 comment|///     The process ID that we should attempt to attach to.
 comment|///
-comment|/// @return
-comment|///     Returns \a pid if attaching was successful, or
-comment|///     LLDB_INVALID_PROCESS_ID if attaching fails.
-comment|//------------------------------------------------------------------
-name|virtual
-name|Error
-name|DoAttachToProcessWithID
-argument_list|(
-name|lldb
-operator|::
-name|pid_t
-name|pid
-argument_list|)
-block|{
-name|Error
-name|error
-decl_stmt|;
-name|error
-operator|.
-name|SetErrorStringWithFormat
-argument_list|(
-literal|"error: %s does not support attaching to a process by pid"
-argument_list|,
-name|GetPluginName
-argument_list|()
-operator|.
-name|GetCString
-argument_list|()
-argument_list|)
-expr_stmt|;
-return|return
-name|error
-return|;
-block|}
-comment|//------------------------------------------------------------------
-comment|/// Attach to an existing process using a process ID.
-comment|///
-comment|/// @param[in] pid
-comment|///     The process ID that we should attempt to attach to.
-comment|///
 comment|/// @param[in] attach_info
 comment|///     Information on how to do the attach. For example, GetUserID()
 comment|///     will return the uid to attach as.
 comment|///
 comment|/// @return
-comment|///     Returns \a pid if attaching was successful, or
-comment|///     LLDB_INVALID_PROCESS_ID if attaching fails.
+comment|///     Returns a successful Error attaching was successful, or
+comment|///     an appropriate (possibly platform-specific) error code if
+comment|///     attaching fails.
 comment|/// hanming : need flag
 comment|//------------------------------------------------------------------
 name|virtual
@@ -3596,7 +3602,9 @@ comment|///     Information on how to do the attach. For example, GetUserID()
 comment|///     will return the uid to attach as.
 comment|///
 comment|/// @return
-comment|///     Returns an error object.
+comment|///     Returns a successful Error attaching was successful, or
+comment|///     an appropriate (possibly platform-specific) error code if
+comment|///     attaching fails.
 comment|//------------------------------------------------------------------
 name|virtual
 name|Error
@@ -4231,6 +4239,13 @@ name|void
 name|SendAsyncInterrupt
 parameter_list|()
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|// Notify this process class that modules got loaded.
+comment|//
+comment|// If subclasses override this method, they must call this version
+comment|// before doing anything in the subclass version of the function.
+comment|//------------------------------------------------------------------
+name|virtual
 name|void
 name|ModulesDidLoad
 parameter_list|(
@@ -4239,6 +4254,50 @@ modifier|&
 name|module_list
 parameter_list|)
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Retrieve the list of shared libraries that are loaded for this process
+comment|///
+comment|/// For certain platforms, the time it takes for the DynamicLoader plugin to
+comment|/// read all of the shared libraries out of memory over a slow communication
+comment|/// channel may be too long.  In that instance, the gdb-remote stub may be
+comment|/// able to retrieve the necessary information about the solibs out of memory
+comment|/// and return a concise summary sufficient for the DynamicLoader plugin.
+comment|///
+comment|/// @param [in] image_list_address
+comment|///     The address where the table of shared libraries is stored in memory,
+comment|///     if that is appropriate for this platform.  Else this may be
+comment|///     passed as LLDB_INVALID_ADDRESS.
+comment|///
+comment|/// @param [in] image_count
+comment|///     The number of shared libraries that are present in this process, if
+comment|///     that is appropriate for this platofrm  Else this may be passed as
+comment|///     LLDB_INVALID_ADDRESS.
+comment|///
+comment|/// @return
+comment|///     A StructureDataSP object which, if non-empty, will contain the
+comment|///     information the DynamicLoader needs to get the initial scan of
+comment|///     solibs resolved.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb_private
+operator|::
+name|StructuredData
+operator|::
+name|ObjectSP
+name|GetLoadedDynamicLibrariesInfos
+argument_list|(
+argument|lldb::addr_t image_list_address
+argument_list|,
+argument|lldb::addr_t image_count
+argument_list|)
+block|{
+return|return
+name|StructuredData
+operator|::
+name|ObjectSP
+argument_list|()
+return|;
+block|}
 name|protected
 label|:
 name|void
@@ -4370,13 +4429,32 @@ return|;
 block|}
 name|uint32_t
 name|GetLastNaturalStopID
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|m_mod_id
 operator|.
 name|GetLastNaturalStopID
 argument_list|()
+return|;
+block|}
+name|lldb
+operator|::
+name|EventSP
+name|GetStopEventForStopID
+argument_list|(
+argument|uint32_t stop_id
+argument_list|)
+specifier|const
+block|{
+return|return
+name|m_mod_id
+operator|.
+name|GetStopEventForStopID
+argument_list|(
+name|stop_id
+argument_list|)
 return|;
 block|}
 comment|//------------------------------------------------------------------
@@ -5156,125 +5234,7 @@ name|uint32_t
 operator|&
 name|permissions
 argument_list|)
-block|{
-name|MemoryRegionInfo
-name|range_info
 decl_stmt|;
-name|permissions
-operator|=
-literal|0
-expr_stmt|;
-name|Error
-name|error
-argument_list|(
-name|GetMemoryRegionInfo
-argument_list|(
-name|load_addr
-argument_list|,
-name|range_info
-argument_list|)
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|error
-operator|.
-name|Success
-argument_list|()
-condition|)
-return|return
-name|false
-return|;
-if|if
-condition|(
-name|range_info
-operator|.
-name|GetReadable
-argument_list|()
-operator|==
-name|MemoryRegionInfo
-operator|::
-name|eDontKnow
-operator|||
-name|range_info
-operator|.
-name|GetWritable
-argument_list|()
-operator|==
-name|MemoryRegionInfo
-operator|::
-name|eDontKnow
-operator|||
-name|range_info
-operator|.
-name|GetExecutable
-argument_list|()
-operator|==
-name|MemoryRegionInfo
-operator|::
-name|eDontKnow
-condition|)
-block|{
-return|return
-name|false
-return|;
-block|}
-if|if
-condition|(
-name|range_info
-operator|.
-name|GetReadable
-argument_list|()
-operator|==
-name|MemoryRegionInfo
-operator|::
-name|eYes
-condition|)
-name|permissions
-operator||=
-name|lldb
-operator|::
-name|ePermissionsReadable
-expr_stmt|;
-if|if
-condition|(
-name|range_info
-operator|.
-name|GetWritable
-argument_list|()
-operator|==
-name|MemoryRegionInfo
-operator|::
-name|eYes
-condition|)
-name|permissions
-operator||=
-name|lldb
-operator|::
-name|ePermissionsWritable
-expr_stmt|;
-if|if
-condition|(
-name|range_info
-operator|.
-name|GetExecutable
-argument_list|()
-operator|==
-name|MemoryRegionInfo
-operator|::
-name|eYes
-condition|)
-name|permissions
-operator||=
-name|lldb
-operator|::
-name|ePermissionsExecutable
-expr_stmt|;
-return|return
-name|true
-return|;
-block|}
 comment|//------------------------------------------------------------------
 comment|/// Determines whether executing JIT-compiled code in this process
 comment|/// is possible.
@@ -5298,6 +5258,54 @@ name|SetCanJIT
 parameter_list|(
 name|bool
 name|can_jit
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Determines whether executing function calls using the interpreter
+comment|/// is possible for this process.
+comment|///
+comment|/// @return
+comment|///     True if possible; false otherwise.
+comment|//------------------------------------------------------------------
+name|bool
+name|CanInterpretFunctionCalls
+parameter_list|()
+block|{
+return|return
+name|m_can_interpret_function_calls
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Sets whether executing function calls using the interpreter
+comment|/// is possible for this process.
+comment|///
+comment|/// @param[in] can_interpret_function_calls
+comment|///     True if possible; false otherwise.
+comment|//------------------------------------------------------------------
+name|void
+name|SetCanInterpretFunctionCalls
+parameter_list|(
+name|bool
+name|can_interpret_function_calls
+parameter_list|)
+block|{
+name|m_can_interpret_function_calls
+operator|=
+name|can_interpret_function_calls
+expr_stmt|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Sets whether executing code in this process is possible.
+comment|/// This could be either through JIT or interpreting.
+comment|///
+comment|/// @param[in] can_run_code
+comment|///     True if execution of code is possible; false otherwise.
+comment|//------------------------------------------------------------------
+name|void
+name|SetCanRunCode
+parameter_list|(
+name|bool
+name|can_run_code
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -5899,6 +5907,18 @@ argument_list|,
 argument|Stream *stream = NULL
 argument_list|)
 expr_stmt|;
+name|uint32_t
+name|GetIOHandlerID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_iohandler_sync
+operator|.
+name|GetValue
+argument_list|()
+return|;
+block|}
 comment|//--------------------------------------------------------------------------------------
 comment|/// Waits for the process state to be running within a given msec timeout.
 comment|///
@@ -5908,14 +5928,13 @@ comment|///
 comment|/// @param[in] timeout_msec
 comment|///     The maximum time length to wait for the process to transition to the
 comment|///     eStateRunning state, specified in milliseconds.
-comment|///
-comment|/// @return
-comment|///     true if successfully signalled that process started and IOHandler pushes, false
-comment|///     if it timed out.
 comment|//--------------------------------------------------------------------------------------
-name|bool
+name|void
 name|SyncIOHandler
 parameter_list|(
+name|uint32_t
+name|iohandler_id
+parameter_list|,
 name|uint64_t
 name|timeout_msec
 parameter_list|)
@@ -6196,15 +6215,7 @@ name|DynamicCheckerFunctions
 modifier|*
 name|dynamic_checkers
 parameter_list|)
-block|{
-name|m_dynamic_checkers_ap
-operator|.
-name|reset
-argument_list|(
-name|dynamic_checkers
-argument_list|)
-expr_stmt|;
-block|}
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Call this to set the lldb in the mode where it breaks on new thread
 comment|/// creations, and then auto-restarts.  This is useful when you are trying
@@ -6384,29 +6395,7 @@ name|ProcessRunLock
 modifier|&
 name|GetRunLock
 parameter_list|()
-block|{
-if|if
-condition|(
-name|m_private_state_thread
-operator|.
-name|EqualsThread
-argument_list|(
-name|Host
-operator|::
-name|GetCurrentThread
-argument_list|()
-argument_list|)
-condition|)
-return|return
-name|m_private_run_lock
-return|;
-else|else
-return|return
-name|m_public_run_lock
-return|;
-block|}
-name|public
-label|:
+function_decl|;
 name|virtual
 name|Error
 name|SendEventData
@@ -6443,6 +6432,88 @@ argument_list|(
 argument|lldb::InstrumentationRuntimeType type
 argument_list|)
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Try to fetch the module specification for a module with the
+comment|/// given file name and architecture. Process sub-classes have to
+comment|/// override this method if they support platforms where the
+comment|/// Platform object can't get the module spec for all module.
+comment|///
+comment|/// @param[in] module_file_spec
+comment|///     The file name of the module to get specification for.
+comment|///
+comment|/// @param[in] arch
+comment|///     The architecture of the module to get specification for.
+comment|///
+comment|/// @param[out] module_spec
+comment|///     The fetched module specification if the return value is
+comment|///     \b true, unchanged otherwise.
+comment|///
+comment|/// @return
+comment|///     Returns \b true if the module spec fetched successfully,
+comment|///     \b false otherwise.
+comment|//------------------------------------------------------------------
+name|virtual
+name|bool
+name|GetModuleSpec
+parameter_list|(
+specifier|const
+name|FileSpec
+modifier|&
+name|module_file_spec
+parameter_list|,
+specifier|const
+name|ArchSpec
+modifier|&
+name|arch
+parameter_list|,
+name|ModuleSpec
+modifier|&
+name|module_spec
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Try to find the load address of a file.
+comment|/// The load address is defined as the address of the first memory
+comment|/// region what contains data mapped from the specified file.
+comment|///
+comment|/// @param[in] file
+comment|///     The name of the file whose load address we are looking for
+comment|///
+comment|/// @param[out] is_loaded
+comment|///     \b True if the file is loaded into the memory and false
+comment|///     otherwise.
+comment|///
+comment|/// @param[out] load_addr
+comment|///     The load address of the file if it is loaded into the
+comment|///     processes address space, LLDB_INVALID_ADDRESS otherwise.
+comment|//------------------------------------------------------------------
+name|virtual
+name|Error
+name|GetFileLoadAddress
+argument_list|(
+specifier|const
+name|FileSpec
+operator|&
+name|file
+argument_list|,
+name|bool
+operator|&
+name|is_loaded
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+operator|&
+name|load_addr
+argument_list|)
+block|{
+return|return
+name|Error
+argument_list|(
+literal|"Not supported"
+argument_list|)
+return|;
+block|}
 name|protected
 label|:
 comment|//------------------------------------------------------------------
@@ -6762,7 +6833,7 @@ comment|/// This Predicate is used to signal that a control operation is complet
 name|HostThread
 name|m_private_state_thread
 decl_stmt|;
-comment|// Thread ID for the thread that watches internal state events
+comment|///< Thread ID for the thread that watches internal state events
 name|ProcessModID
 name|m_mod_id
 decl_stmt|;
@@ -6854,50 +6925,37 @@ name|BreakpointSiteList
 name|m_breakpoint_site_list
 decl_stmt|;
 comment|///< This is the list of breakpoint locations we intend to insert in the target.
-name|std
+name|lldb
 operator|::
-name|unique_ptr
-operator|<
-name|DynamicLoader
-operator|>
+name|DynamicLoaderUP
 name|m_dyld_ap
 expr_stmt|;
-name|std
+name|lldb
 operator|::
-name|unique_ptr
-operator|<
-name|JITLoaderList
-operator|>
+name|JITLoaderListUP
 name|m_jit_loaders_ap
 expr_stmt|;
-name|std
+name|lldb
 operator|::
-name|unique_ptr
-operator|<
-name|DynamicCheckerFunctions
-operator|>
+name|DynamicCheckerFunctionsUP
 name|m_dynamic_checkers_ap
 expr_stmt|;
 comment|///< The functions used by the expression parser to validate data that expressions use.
-name|std
+name|lldb
 operator|::
-name|unique_ptr
-operator|<
-name|OperatingSystem
-operator|>
+name|OperatingSystemUP
 name|m_os_ap
 expr_stmt|;
-name|std
+name|lldb
 operator|::
-name|unique_ptr
-operator|<
-name|SystemRuntime
-operator|>
+name|SystemRuntimeUP
 name|m_system_runtime_ap
 expr_stmt|;
+name|lldb
+operator|::
 name|UnixSignalsSP
 name|m_unix_signals_sp
-decl_stmt|;
+expr_stmt|;
 comment|/// This is the current signal set for this process.
 name|lldb
 operator|::
@@ -6915,6 +6973,10 @@ decl_stmt|;
 name|Mutex
 name|m_stdio_communication_mutex
 decl_stmt|;
+name|bool
+name|m_stdin_forward
+decl_stmt|;
+comment|/// Remember if stdin must be forwarded to remote debug server
 name|std
 operator|::
 name|string
@@ -6940,7 +7002,7 @@ name|m_profile_data
 expr_stmt|;
 name|Predicate
 operator|<
-name|bool
+name|uint32_t
 operator|>
 name|m_iohandler_sync
 expr_stmt|;
@@ -7002,8 +7064,13 @@ name|m_resume_requested
 decl_stmt|;
 comment|// If m_currently_handling_event or m_currently_handling_do_on_removals are true, Resume will only request a resume, using this flag to check.
 name|bool
+name|m_finalizing
+decl_stmt|;
+comment|// This is set at the beginning of Process::Finalize() to stop functions from looking up or creating things during a finalize call
+name|bool
 name|m_finalize_called
 decl_stmt|;
+comment|// This is set at the end of Process::Finalize()
 name|bool
 name|m_clear_thread_plans_on_stop
 decl_stmt|;
@@ -7033,6 +7100,10 @@ expr_stmt|;
 name|bool
 name|m_destroy_in_process
 decl_stmt|;
+name|bool
+name|m_can_interpret_function_calls
+decl_stmt|;
+comment|// Some targets, e.g the OSX kernel, don't support the ability to modify the stack.
 enum|enum
 block|{
 name|eCanJITDontKnow
@@ -7096,7 +7167,7 @@ name|bool
 name|StartPrivateStateThread
 parameter_list|(
 name|bool
-name|force
+name|is_secondary_thread
 init|=
 name|false
 parameter_list|)
@@ -7113,6 +7184,18 @@ name|void
 name|ResumePrivateStateThread
 parameter_list|()
 function_decl|;
+struct|struct
+name|PrivateStateThreadArgs
+block|{
+name|Process
+modifier|*
+name|process
+decl_stmt|;
+name|bool
+name|is_secondary_thread
+decl_stmt|;
+block|}
+struct|;
 specifier|static
 name|lldb
 operator|::
@@ -7124,11 +7207,17 @@ operator|*
 name|arg
 argument_list|)
 expr_stmt|;
+comment|// The starts up the private state thread that will watch for events from the debugee.
+comment|// Pass true for is_secondary_thread in the case where you have to temporarily spin up a
+comment|// secondary state thread to handle events from a hand-called function on the primary
+comment|// private state thread.
 name|lldb
 operator|::
 name|thread_result_t
 name|RunPrivateStateThread
-argument_list|()
+argument_list|(
+argument|bool is_secondary_thread
+argument_list|)
 expr_stmt|;
 name|void
 name|HandlePrivateEvent
@@ -7291,6 +7380,21 @@ name|bool
 name|ProcessIOHandlerIsActive
 parameter_list|()
 function_decl|;
+name|bool
+name|ProcessIOHandlerExists
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|bool
+operator|>
+operator|(
+name|m_process_input_reader
+operator|)
+return|;
+block|}
 name|Error
 name|HaltForDestroyOrDetach
 argument_list|(

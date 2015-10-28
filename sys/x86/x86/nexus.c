@@ -3294,12 +3294,6 @@ argument_list|(
 name|ELF_KERN_STR
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|kmdp
-operator|!=
-name|NULL
-condition|)
 name|smapbase
 operator|=
 operator|(
@@ -3315,11 +3309,6 @@ name|MODINFO_METADATA
 operator||
 name|MODINFOMD_SMAP
 argument_list|)
-expr_stmt|;
-else|else
-name|smapbase
-operator|=
-name|NULL
 expr_stmt|;
 if|if
 condition|(

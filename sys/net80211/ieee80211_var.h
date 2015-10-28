@@ -462,12 +462,6 @@ begin_struct
 struct|struct
 name|ieee80211com
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ic_ifp
-decl_stmt|;
-comment|/* associated device */
 name|void
 modifier|*
 name|ic_softc
@@ -487,6 +481,13 @@ name|ieee80211_tx_lock_t
 name|ic_txlock
 decl_stmt|;
 comment|/* ic/vap TX lock */
+name|LIST_ENTRY
+argument_list|(
+argument|ieee80211com
+argument_list|)
+name|ic_next
+expr_stmt|;
+comment|/* on global list */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -509,11 +510,6 @@ name|ieee80211_opmode
 name|ic_opmode
 decl_stmt|;
 comment|/* operation mode */
-name|struct
-name|ifmedia
-name|ic_media
-decl_stmt|;
-comment|/* interface media config */
 name|struct
 name|callout
 name|ic_inact
@@ -555,6 +551,16 @@ name|task
 name|ic_chw_task
 decl_stmt|;
 comment|/* deferred HT CHW update */
+name|struct
+name|task
+name|ic_wme_task
+decl_stmt|;
+comment|/* deferred WME update */
+name|struct
+name|task
+name|ic_restart_task
+decl_stmt|;
+comment|/* deferred device restart */
 name|counter_u64_t
 name|ic_ierrors
 decl_stmt|;
@@ -618,6 +624,12 @@ name|uint8_t
 name|ic_curmode
 decl_stmt|;
 comment|/* current mode */
+name|uint8_t
+name|ic_macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
 name|uint16_t
 name|ic_bintval
 decl_stmt|;
@@ -911,6 +923,35 @@ name|ieee80211vap
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* device specific ioctls */
+name|int
+function_decl|(
+modifier|*
+name|ic_ioctl
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|u_long
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* start/stop device */
+name|void
+function_decl|(
+modifier|*
+name|ic_parent
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* operating mode attachment */
 name|ieee80211vap_attach
 name|ic_vattach
@@ -974,6 +1015,22 @@ parameter_list|,
 name|u_int8_t
 modifier|*
 name|quiet_elm
+parameter_list|)
+function_decl|;
+comment|/* regular transmit */
+name|int
+function_decl|(
+modifier|*
+name|ic_transmit
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
 parameter_list|)
 function_decl|;
 comment|/* send/recv 802.11 management frame */
@@ -1544,6 +1601,12 @@ modifier|*
 name|iv_ic
 decl_stmt|;
 comment|/* back ptr to common state */
+specifier|const
+name|uint8_t
+modifier|*
+name|iv_myaddr
+decl_stmt|;
+comment|/* MAC address: ifp or ic */
 name|uint32_t
 name|iv_debug
 decl_stmt|;
@@ -1553,12 +1616,6 @@ name|ieee80211_stats
 name|iv_stats
 decl_stmt|;
 comment|/* statistics */
-name|uint8_t
-name|iv_myaddr
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
-decl_stmt|;
 name|uint32_t
 name|iv_flags
 decl_stmt|;
@@ -1575,6 +1632,10 @@ name|uint32_t
 name|iv_flags_ven
 decl_stmt|;
 comment|/* vendor state flags */
+name|uint32_t
+name|iv_ifflags
+decl_stmt|;
+comment|/* ifnet flags */
 name|uint32_t
 name|iv_caps
 decl_stmt|;
@@ -1769,6 +1830,10 @@ name|iv_ampdu_mintraffic
 index|[
 name|WME_NUM_AC
 index|]
+decl_stmt|;
+name|struct
+name|ieee80211_beacon_offsets
+name|iv_bcn_off
 decl_stmt|;
 name|uint32_t
 modifier|*
@@ -1968,13 +2033,6 @@ specifier|const
 name|struct
 name|ieee80211_key
 modifier|*
-parameter_list|,
-specifier|const
-name|uint8_t
-name|mac
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
 parameter_list|)
 function_decl|;
 name|void
@@ -3614,13 +3672,6 @@ parameter_list|(
 name|struct
 name|ieee80211com
 modifier|*
-parameter_list|,
-specifier|const
-name|uint8_t
-name|macaddr
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3671,13 +3722,6 @@ name|bssid
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
-parameter_list|,
-specifier|const
-name|uint8_t
-name|macaddr
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3693,6 +3737,13 @@ parameter_list|,
 name|ifm_change_cb_t
 parameter_list|,
 name|ifm_stat_cb_t
+parameter_list|,
+specifier|const
+name|uint8_t
+name|macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3763,7 +3814,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ieee80211_media_init
+name|ieee80211_chan_init
 parameter_list|(
 name|struct
 name|ieee80211com
@@ -3784,6 +3835,20 @@ name|mac
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|ieee80211com
+modifier|*
+name|ieee80211_find_com
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl

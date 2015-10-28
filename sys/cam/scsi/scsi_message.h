@@ -635,5 +635,30 @@ name|MSG_EXT_PPR_IU_REQ
 value|0x01
 end_define
 
+begin_comment
+comment|/* Fake messages not defined for SPI, but needed for other transports */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSG_QUERY_TASK
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_QUERY_TASK_SET
+value|0x101
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_QUERY_ASYNC_EVENT
+value|0x102
+end_define
+
 end_unit
 

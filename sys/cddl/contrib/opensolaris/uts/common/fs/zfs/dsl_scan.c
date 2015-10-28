@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -590,6 +590,39 @@ name|int
 name|zfs_txg_timeout
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Enable/disable the processing of the free_bpobj object.  */
+end_comment
+
+begin_decl_stmt
+name|boolean_t
+name|zfs_free_bpobj_enabled
+init|=
+name|B_TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|free_bpobj_enabled
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|zfs_free_bpobj_enabled
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable free_bpobj processing"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* the order has to match pool_scan_type */
@@ -1992,10 +2025,9 @@ name|scn_max_txg
 decl_stmt|;
 if|if
 condition|(
-name|dsl_dataset_is_snapshot
-argument_list|(
 name|ds
-argument_list|)
+operator|->
+name|ds_is_snapshot
 condition|)
 return|return
 operator|(
@@ -2957,7 +2989,7 @@ block|{
 comment|/* 		 * If we already visited this bp& everything below (in 		 * a prior txg sync), don't bother doing it again. 		 */
 if|if
 condition|(
-name|zbookmark_is_before
+name|zbookmark_subtree_completed
 argument_list|(
 name|dnp
 argument_list|,
@@ -4246,10 +4278,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|dsl_dataset_is_snapshot
-argument_list|(
 name|ds
-argument_list|)
+operator|->
+name|ds_is_snapshot
 condition|)
 block|{
 comment|/* Note, scn_cur_{min,max}_txg stays the same. */
@@ -4403,10 +4434,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dsl_dataset_is_snapshot
-argument_list|(
 name|ds
-argument_list|)
+operator|->
+name|ds_is_snapshot
 condition|)
 block|{
 comment|/* 			 * We keep the same mintxg; it could be> 			 * ds_creation_txg if the previous snapshot was 			 * deleted too. 			 */
@@ -5470,10 +5500,9 @@ name|scn
 argument_list|)
 operator|&&
 operator|!
-name|dsl_dataset_is_snapshot
-argument_list|(
 name|ds
-argument_list|)
+operator|->
+name|ds_is_snapshot
 condition|)
 name|dsl_scan_zil
 argument_list|(
@@ -7417,6 +7446,8 @@ expr_stmt|;
 comment|/* 	 * First process the async destroys.  If we pause, don't do 	 * any scrubbing or resilvering.  This ensures that there are no 	 * async destroys while we are scanning, so the scan code doesn't 	 * have to worry about traversing it.  It is also faster to free the 	 * blocks than to scrub them. 	 */
 if|if
 condition|(
+name|zfs_free_bpobj_enabled
+operator|&&
 name|spa_version
 argument_list|(
 name|dp

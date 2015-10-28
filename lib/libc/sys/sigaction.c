@@ -45,6 +45,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|sigaction
+argument_list|,
+name|__libc_sigaction
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_pragma
 pragma|#
 directive|pragma

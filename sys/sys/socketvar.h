@@ -159,7 +159,7 @@ name|vnet
 modifier|*
 name|so_vnet
 decl_stmt|;
-comment|/* network stack instance */
+comment|/* (a) network stack instance */
 name|struct
 name|protosw
 modifier|*

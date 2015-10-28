@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -99,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|<memory>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<system_error>
 end_include
 
 begin_decl_stmt
@@ -141,9 +129,12 @@ decl_stmt|;
 comment|// End of the buffer.
 name|MemoryBuffer
 argument_list|(
-argument|const MemoryBuffer&
+specifier|const
+name|MemoryBuffer
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|MemoryBuffer
 modifier|&
@@ -154,7 +145,8 @@ specifier|const
 name|MemoryBuffer
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|protected
 label|:
@@ -445,7 +437,7 @@ argument|int64_t FileSize = -
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/// Map a subrange of the the specified file as a MemoryBuffer.
+comment|/// Map a subrange of the specified file as a MemoryBuffer.
 specifier|static
 name|ErrorOr
 operator|<

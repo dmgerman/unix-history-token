@@ -200,6 +200,9 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+name|class
+name|raw_pwrite_stream
+decl_stmt|;
 comment|// TODO: DenseMap, ...
 block|}
 end_decl_stmt
@@ -310,6 +313,11 @@ name|using
 name|llvm
 operator|::
 name|raw_ostream
+expr_stmt|;
+name|using
+name|llvm
+operator|::
+name|raw_pwrite_stream
 expr_stmt|;
 block|}
 end_decl_stmt

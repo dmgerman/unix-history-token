@@ -15,6 +15,21 @@ directive|define
 name|__IF_IWN_IOCTL_H__
 end_define
 
+begin_struct
+struct|struct
+name|iwn_ioctl_data
+block|{
+name|void
+modifier|*
+name|dst_addr
+decl_stmt|;
+name|int
+name|dst_len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* XXX how should I pick appropriate ioctl numbers? */
 end_comment
@@ -23,14 +38,14 @@ begin_define
 define|#
 directive|define
 name|SIOCGIWNSTATS
-value|_IOWR('i', 145, struct ifreq)
+value|_IOWR('f', 145, struct iwn_ioctl_data)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCZIWNSTATS
-value|_IOWR('i', 146, struct ifreq)
+value|_IOWR('f', 146, struct iwn_ioctl_data)
 end_define
 
 begin_endif

@@ -670,10 +670,6 @@ modifier|*
 name|lp
 decl_stmt|;
 name|struct
-name|partition
-name|oldpartition
-decl_stmt|;
-name|struct
 name|stat
 name|st
 decl_stmt|;
@@ -1950,11 +1946,6 @@ name|cp
 operator|-
 literal|'a'
 index|]
-expr_stmt|;
-name|oldpartition
-operator|=
-operator|*
-name|pp
 expr_stmt|;
 if|if
 condition|(

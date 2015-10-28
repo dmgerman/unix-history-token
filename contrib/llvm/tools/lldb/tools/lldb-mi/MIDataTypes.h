@@ -32,18 +32,6 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MIDataTypes.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// Overview:    Common global switches, macros, etc.
 end_comment
 
@@ -61,34 +49,6 @@ end_comment
 
 begin_comment
 comment|//              #include'd as part of the project's PCH (precompiled header).
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
 end_comment
 
 begin_pragma
@@ -265,14 +225,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|__int64
-name|PointerToInteger_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|__int64
 name|MIint
 typedef|;
@@ -307,14 +259,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
-name|PointerToInteger_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|int
 name|MIint
 typedef|;
@@ -332,18 +276,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|//       typedef     long unsigned int size_t; // size_t already defined
-end_comment
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|PointerToInteger_t
-typedef|;
-end_typedef
 
 begin_typedef
 typedef|typedef
@@ -395,55 +327,6 @@ end_comment
 
 begin_comment
 comment|// Fundamentals:
-end_comment
-
-begin_typedef
-typedef|typedef
-name|float
-name|MIflt
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|double
-name|MIdbl
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|char
-name|MIchar
-typedef|;
-end_typedef
-
-begin_comment
-comment|// Defaults to signed char, i.e. MIschar.
-end_comment
-
-begin_typedef
-typedef|typedef
-name|signed
-name|char
-name|MIschar
-typedef|;
-end_typedef
-
-begin_comment
-comment|// Range: -128 to 127. More explicit than using MIchar.
-end_comment
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|MIuchar
-typedef|;
-end_typedef
-
-begin_comment
-comment|// Range: 0 to 255.
 end_comment
 
 begin_typedef

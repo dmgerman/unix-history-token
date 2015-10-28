@@ -57,16 +57,6 @@ directive|include
 file|"test-utils.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|LEN
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
-end_define
-
 begin_pragma
 pragma|#
 directive|pragma

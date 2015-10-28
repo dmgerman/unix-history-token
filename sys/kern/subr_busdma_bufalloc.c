@@ -259,10 +259,13 @@ operator|->
 name|name
 argument_list|)
 argument_list|,
-literal|"dma %.10s %lu"
+literal|"dma %.10s %ju"
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|cursize
 argument_list|)
 expr_stmt|;

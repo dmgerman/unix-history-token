@@ -342,10 +342,10 @@ return|;
 block|}
 name|public
 operator|:
-name|virtual
 operator|~
 name|ARMConstantPoolValue
 argument_list|()
+name|override
 block|;
 name|ARMCP
 operator|::

@@ -442,7 +442,7 @@ name|SPLL_PLL_ENABLE
 operator||
 name|SPLL_PLL_FREQ_1350MHz
 operator||
-name|SPLL_PLL_SCC
+name|SPLL_PLL_SSC
 argument_list|)
 expr_stmt|;
 comment|/* Use SPLL to drive the output when in FDI mode */
@@ -634,12 +634,12 @@ operator||
 name|DP_TP_CTL_ENABLE
 argument_list|)
 expr_stmt|;
-comment|/* Enable PIPE_DDI_FUNC_CTL for the pipe to work in FDI mode */
+comment|/* Enable PIPE_TRANS_DDI_FUNC_CTL for the pipe to work in FDI mode */
 name|temp
 operator|=
 name|I915_READ
 argument_list|(
-name|DDI_FUNC_CTL
+name|TRANS_DDI_FUNC_CTL
 argument_list|(
 name|pipe
 argument_list|)
@@ -648,24 +648,24 @@ expr_stmt|;
 name|temp
 operator|&=
 operator|~
-name|PIPE_DDI_PORT_MASK
+name|TRANS_DDI_PORT_MASK
 expr_stmt|;
 name|temp
 operator||=
-name|PIPE_DDI_SELECT_PORT
+name|TRANS_DDI_SELECT_PORT
 argument_list|(
 name|PORT_E
 argument_list|)
 operator||
-name|PIPE_DDI_MODE_SELECT_FDI
+name|TRANS_DDI_MODE_SELECT_FDI
 operator||
-name|PIPE_DDI_FUNC_ENABLE
+name|TRANS_DDI_FUNC_ENABLE
 operator||
-name|PIPE_DDI_PORT_WIDTH_X2
+name|TRANS_DDI_PORT_WIDTH_X2
 expr_stmt|;
 name|I915_WRITE
 argument_list|(
-name|DDI_FUNC_CTL
+name|TRANS_DDI_FUNC_CTL
 argument_list|(
 name|pipe
 argument_list|)
@@ -4925,12 +4925,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Enable PIPE_DDI_FUNC_CTL for the pipe to work in HDMI mode */
+comment|/* Enable PIPE_TRANS_DDI_FUNC_CTL for the pipe to work in HDMI mode */
 name|temp
 operator|=
 name|I915_READ
 argument_list|(
-name|DDI_FUNC_CTL
+name|TRANS_DDI_FUNC_CTL
 argument_list|(
 name|pipe
 argument_list|)
@@ -4939,21 +4939,21 @@ expr_stmt|;
 name|temp
 operator|&=
 operator|~
-name|PIPE_DDI_PORT_MASK
+name|TRANS_DDI_PORT_MASK
 expr_stmt|;
 name|temp
 operator|&=
 operator|~
-name|PIPE_DDI_BPC_12
+name|TRANS_DDI_BPC_12
 expr_stmt|;
 name|temp
 operator||=
-name|PIPE_DDI_SELECT_PORT
+name|TRANS_DDI_SELECT_PORT
 argument_list|(
 name|port
 argument_list|)
 operator||
-name|PIPE_DDI_MODE_SELECT_HDMI
+name|TRANS_DDI_MODE_SELECT_HDMI
 operator||
 operator|(
 operator|(
@@ -4964,16 +4964,16 @@ operator|>
 literal|24
 operator|)
 condition|?
-name|PIPE_DDI_BPC_12
+name|TRANS_DDI_BPC_12
 else|:
-name|PIPE_DDI_BPC_8
+name|TRANS_DDI_BPC_8
 operator|)
 operator||
-name|PIPE_DDI_FUNC_ENABLE
+name|TRANS_DDI_FUNC_ENABLE
 expr_stmt|;
 name|I915_WRITE
 argument_list|(
-name|DDI_FUNC_CTL
+name|TRANS_DDI_FUNC_CTL
 argument_list|(
 name|pipe
 argument_list|)

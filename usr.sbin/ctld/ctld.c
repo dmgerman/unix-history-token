@@ -183,7 +183,7 @@ specifier|static
 name|uint16_t
 name|last_portal_group_tag
 init|=
-literal|0
+literal|0xff
 decl_stmt|;
 end_decl_stmt
 
@@ -5803,7 +5803,7 @@ block|{
 name|log_warnx
 argument_list|(
 literal|"invalid target name \"%s\"; should start with "
-literal|"either \".iqn\", \"eui.\", or \"naa.\""
+literal|"either \"iqn.\", \"eui.\", or \"naa.\""
 argument_list|,
 name|name
 argument_list|)
@@ -6263,6 +6263,14 @@ operator|->
 name|p_portal_group
 operator|=
 name|pg
+expr_stmt|;
+name|port
+operator|->
+name|p_foreign
+operator|=
+name|pg
+operator|->
+name|pg_foreign
 expr_stmt|;
 return|return
 operator|(
@@ -7164,6 +7172,13 @@ argument_list|,
 name|l_next
 argument_list|)
 expr_stmt|;
+name|lun
+operator|->
+name|l_ctl_lun
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|lun
@@ -7431,6 +7446,28 @@ block|{
 name|lun
 operator|->
 name|l_blocksize
+operator|=
+name|value
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|lun_set_device_type
+parameter_list|(
+name|struct
+name|lun
+modifier|*
+name|lun
+parameter_list|,
+name|uint8_t
+name|value
+parameter_list|)
+block|{
+name|lun
+operator|->
+name|l_device_type
 operator|=
 name|value
 expr_stmt|;
@@ -8163,6 +8200,22 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|lun
+operator|->
+name|l_device_type
+operator|==
+literal|5
+condition|)
+name|lun_set_blocksize
+argument_list|(
+name|lun
+argument_list|,
+name|DEFAULT_CD_BLOCKSIZE
+argument_list|)
+expr_stmt|;
+else|else
 name|lun_set_blocksize
 argument_list|(
 name|lun
@@ -8612,6 +8665,15 @@ name|PG_FILTER_NONE
 expr_stmt|;
 if|if
 condition|(
+name|pg
+operator|->
+name|pg_redirection
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|TAILQ_EMPTY
 argument_list|(
@@ -8620,15 +8682,6 @@ name|pg
 operator|->
 name|pg_ports
 argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|pg
-operator|->
-name|pg_redirection
-operator|!=
-name|NULL
 condition|)
 block|{
 name|log_debugx
@@ -8643,6 +8696,26 @@ name|pg_name
 argument_list|)
 expr_stmt|;
 block|}
+name|pg
+operator|->
+name|pg_unassigned
+operator|=
+name|false
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|pg
+operator|->
+name|pg_ports
+argument_list|)
+condition|)
+block|{
 name|pg
 operator|->
 name|pg_unassigned
@@ -9143,6 +9216,15 @@ argument_list|,
 argument|pg_next
 argument_list|)
 block|{
+if|if
+condition|(
+name|newpg
+operator|->
+name|pg_tag
+operator|!=
+literal|0
+condition|)
+continue|continue;
 name|oldpg
 operator|=
 name|portal_group_find
@@ -9238,6 +9320,13 @@ argument_list|,
 argument|tmpport
 argument_list|)
 block|{
+if|if
+condition|(
+name|oldport
+operator|->
+name|p_foreign
+condition|)
+continue|continue;
 name|newport
 operator|=
 name|port_find
@@ -9254,6 +9343,11 @@ condition|(
 name|newport
 operator|!=
 name|NULL
+operator|&&
+operator|!
+name|newport
+operator|->
+name|p_foreign
 condition|)
 continue|continue;
 name|log_debugx
@@ -9688,26 +9782,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|newlun
-operator|->
-name|l_size
-operator|!=
-name|oldlun
-operator|->
-name|l_size
-operator|||
-name|newlun
-operator|->
-name|l_size
-operator|==
-literal|0
-condition|)
-block|{
 name|log_debugx
 argument_list|(
-literal|"resizing lun \"%s\", CTL lun %d"
+literal|"modifying lun \"%s\", CTL lun %d"
 argument_list|,
 name|newlun
 operator|->
@@ -9720,7 +9797,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kernel_lun_resize
+name|kernel_lun_modify
 argument_list|(
 name|newlun
 argument_list|)
@@ -9735,7 +9812,7 @@ block|{
 name|log_warnx
 argument_list|(
 literal|"failed to "
-literal|"resize lun \"%s\", CTL lun %d"
+literal|"modify lun \"%s\", CTL lun %d"
 argument_list|,
 name|newlun
 operator|->
@@ -9749,7 +9826,6 @@ expr_stmt|;
 name|cumulated_error
 operator|++
 expr_stmt|;
-block|}
 block|}
 continue|continue;
 block|}
@@ -9805,6 +9881,13 @@ argument_list|,
 argument|p_next
 argument_list|)
 block|{
+if|if
+condition|(
+name|newport
+operator|->
+name|p_foreign
+condition|)
+continue|continue;
 name|oldport
 operator|=
 name|port_find
@@ -9821,6 +9904,10 @@ condition|(
 name|oldport
 operator|==
 name|NULL
+operator|||
+name|oldport
+operator|->
+name|p_foreign
 condition|)
 block|{
 name|log_debugx
@@ -9864,6 +9951,8 @@ operator|=
 name|kernel_port_update
 argument_list|(
 name|newport
+argument_list|,
+name|oldport
 argument_list|)
 expr_stmt|;
 block|}
@@ -9896,7 +9985,7 @@ expr_stmt|;
 comment|/* 			 * XXX: Uncomment after fixing the root cause. 			 * 			 * cumulated_error++; 			 */
 block|}
 block|}
-comment|/* 	 * Go through the new portals, opening the sockets as neccessary. 	 */
+comment|/* 	 * Go through the new portals, opening the sockets as necessary. 	 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|newpg
@@ -9906,6 +9995,13 @@ argument_list|,
 argument|pg_next
 argument_list|)
 block|{
+if|if
+condition|(
+name|newpg
+operator|->
+name|pg_foreign
+condition|)
+continue|continue;
 if|if
 condition|(
 name|newpg

@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/MapVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Twine.h"
 end_include
 
@@ -77,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/DwarfStringPoolEntry.h"
 end_include
 
 begin_include
@@ -118,6 +130,12 @@ name|Constant
 decl_stmt|;
 name|class
 name|ConstantArray
+decl_stmt|;
+name|class
+name|DIE
+decl_stmt|;
+name|class
+name|DIEAbbrev
 decl_stmt|;
 name|class
 name|GCMetadataPrinter
@@ -171,9 +189,6 @@ name|class
 name|MCInst
 decl_stmt|;
 name|class
-name|MCInstrInfo
-decl_stmt|;
-name|class
 name|MCSection
 decl_stmt|;
 name|class
@@ -184,6 +199,9 @@ name|MCSubtargetInfo
 decl_stmt|;
 name|class
 name|MCSymbol
+decl_stmt|;
+name|class
+name|MCTargetOptions
 decl_stmt|;
 name|class
 name|MDNode
@@ -225,11 +243,6 @@ name|MCAsmInfo
 operator|*
 name|MAI
 block|;
-specifier|const
-name|MCInstrInfo
-operator|*
-name|MII
-block|;
 comment|/// This is the context for the output file that we are streaming. This owns
 comment|/// all of the global MC-related objects for the generated translation unit.
 name|MCContext
@@ -239,8 +252,12 @@ block|;
 comment|/// This is the MCStreamer object for the file we are generating. This
 comment|/// contains the transient state for the current translation unit that we are
 comment|/// generating (such as the current section etc).
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MCStreamer
-operator|&
+operator|>
 name|OutStreamer
 block|;
 comment|/// The current machine function.
@@ -274,42 +291,80 @@ name|MCSymbol
 operator|*
 name|CurrentFnSymForSize
 block|;
+comment|/// Map global GOT equivalent MCSymbols to GlobalVariables and keep track of
+comment|/// its number of uses by other globals.
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|GlobalVariable
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|GOTEquivUsePair
+expr_stmt|;
+name|MapVector
+operator|<
+specifier|const
+name|MCSymbol
+operator|*
+block|,
+name|GOTEquivUsePair
+operator|>
+name|GlobalGOTEquivs
+decl_stmt|;
 name|private
-operator|:
+label|:
+name|MCSymbol
+modifier|*
+name|CurrentFnBegin
+decl_stmt|;
+name|MCSymbol
+modifier|*
+name|CurrentFnEnd
+decl_stmt|;
+name|MCSymbol
+modifier|*
+name|CurExceptionSym
+decl_stmt|;
 comment|// The garbage collection metadata printer table.
 name|void
-operator|*
+modifier|*
 name|GCMetadataPrinters
-block|;
+decl_stmt|;
 comment|// Really a DenseMap.
 comment|/// Emit comments in assembly output if this is true.
 comment|///
 name|bool
 name|VerboseAsm
-block|;
+decl_stmt|;
 specifier|static
 name|char
 name|ID
-block|;
+decl_stmt|;
 comment|/// If VerboseAsm is set, a pointer to the loop info for this function.
 name|MachineLoopInfo
-operator|*
+modifier|*
 name|LI
-block|;    struct
+decl_stmt|;
+struct|struct
 name|HandlerInfo
 block|{
 name|AsmPrinterHandler
-operator|*
+modifier|*
 name|Handler
-block|;
+decl_stmt|;
 specifier|const
 name|char
-operator|*
+modifier|*
 name|TimerName
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|TimerGroupName
-block|;
+decl_stmt|;
 name|HandlerInfo
 argument_list|(
 name|AsmPrinterHandler
@@ -331,36 +386,36 @@ name|Handler
 argument_list|(
 name|Handler
 argument_list|)
-block|,
+operator|,
 name|TimerName
 argument_list|(
 name|TimerName
 argument_list|)
-block|,
+operator|,
 name|TimerGroupName
 argument_list|(
 argument|TimerGroupName
 argument_list|)
 block|{}
 block|}
-block|;
+struct|;
 comment|/// A vector of all debug/EH info emitters we should use. This vector
 comment|/// maintains ownership of the emitters.
 name|SmallVector
 operator|<
 name|HandlerInfo
-block|,
+operator|,
 literal|1
 operator|>
 name|Handlers
-block|;
+expr_stmt|;
 comment|/// If the target supports dwarf debug info, this pointer is non-null.
 name|DwarfDebug
-operator|*
+modifier|*
 name|DD
-block|;
+decl_stmt|;
 name|protected
-operator|:
+label|:
 name|explicit
 name|AsmPrinter
 argument_list|(
@@ -368,22 +423,26 @@ name|TargetMachine
 operator|&
 name|TM
 argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MCStreamer
-operator|&
+operator|>
 name|Streamer
 argument_list|)
-block|;
+decl_stmt|;
 name|public
-operator|:
-name|virtual
+label|:
 operator|~
 name|AsmPrinter
 argument_list|()
-block|;
+name|override
+expr_stmt|;
 name|DwarfDebug
-operator|*
+modifier|*
 name|getDwarfDebug
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|DD
@@ -416,7 +475,32 @@ name|unsigned
 name|getFunctionNumber
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+name|MCSymbol
+operator|*
+name|getFunctionBegin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurrentFnBegin
+return|;
+block|}
+name|MCSymbol
+operator|*
+name|getFunctionEnd
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurrentFnEnd
+return|;
+block|}
+name|MCSymbol
+modifier|*
+name|getCurExceptionSym
+parameter_list|()
+function_decl|;
 comment|/// Return information about object file lowering.
 specifier|const
 name|TargetLoweringObjectFile
@@ -424,7 +508,7 @@ operator|&
 name|getObjFileLowering
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// Return information about data layout.
 specifier|const
 name|DataLayout
@@ -432,7 +516,7 @@ operator|&
 name|getDataLayout
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// Return information about subtarget.
 specifier|const
 name|MCSubtargetInfo
@@ -440,26 +524,26 @@ operator|&
 name|getSubtargetInfo
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 name|void
 name|EmitToStreamer
-argument_list|(
+parameter_list|(
 name|MCStreamer
-operator|&
+modifier|&
 name|S
-argument_list|,
+parameter_list|,
 specifier|const
 name|MCInst
-operator|&
+modifier|&
 name|Inst
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// Return the target triple string.
 name|StringRef
 name|getTargetTriple
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// Return the current section we are emitting to.
 specifier|const
 name|MCSection
@@ -467,24 +551,35 @@ operator|*
 name|getCurrentSection
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 name|void
 name|getNameWithPrefix
 argument_list|(
-argument|SmallVectorImpl<char>&Name
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Name
 argument_list|,
-argument|const GlobalValue *GV
-argument_list|)
 specifier|const
-block|;
-name|MCSymbol
+name|GlobalValue
 operator|*
+name|GV
+argument_list|)
+decl|const
+decl_stmt|;
+name|MCSymbol
+modifier|*
 name|getSymbol
 argument_list|(
-argument|const GlobalValue *GV
-argument_list|)
 specifier|const
-block|;
+name|GlobalValue
+operator|*
+name|GV
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//===------------------------------------------------------------------===//
 comment|// MachineFunctionPass Implementation.
 comment|//===------------------------------------------------------------------===//
@@ -493,48 +588,53 @@ comment|///
 name|void
 name|getAnalysisUsage
 argument_list|(
-argument|AnalysisUsage&AU
+name|AnalysisUsage
+operator|&
+name|AU
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|/// Set up the AsmPrinter when we are working on a new module. If your pass
 comment|/// overrides this, it must make sure to explicitly call this implementation.
 name|bool
 name|doInitialization
 argument_list|(
-argument|Module&M
+name|Module
+operator|&
+name|M
 argument_list|)
 name|override
-block|;
+decl_stmt|;
 comment|/// Shut down the asmprinter. If you override this in your pass, you must make
 comment|/// sure to call it explicitly.
 name|bool
 name|doFinalization
 argument_list|(
-argument|Module&M
+name|Module
+operator|&
+name|M
 argument_list|)
 name|override
-block|;
+decl_stmt|;
 comment|/// Emit the specified function out to the OutStreamer.
 name|bool
 name|runOnMachineFunction
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-name|override
+parameter_list|(
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|)
+function|override
 block|{
 name|SetupMachineFunction
 argument_list|(
 name|MF
 argument_list|)
-block|;
-name|EmitFunctionHeader
-argument_list|()
-block|;
+expr_stmt|;
 name|EmitFunctionBody
 argument_list|()
-block|;
+expr_stmt|;
 return|return
 name|false
 return|;
@@ -546,40 +646,36 @@ comment|/// This should be called when a new MachineFunction is being processed 
 comment|/// runOnMachineFunction.
 name|void
 name|SetupMachineFunction
-argument_list|(
+parameter_list|(
 name|MachineFunction
-operator|&
+modifier|&
 name|MF
-argument_list|)
-block|;
-comment|/// This method emits the header for the current function.
-name|void
-name|EmitFunctionHeader
-argument_list|()
-block|;
+parameter_list|)
+function_decl|;
 comment|/// This method emits the body and trailer for a function.
 name|void
 name|EmitFunctionBody
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|void
 name|emitCFIInstruction
-argument_list|(
+parameter_list|(
 specifier|const
 name|MachineInstr
-operator|&
+modifier|&
 name|MI
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|emitFrameAlloc
-argument_list|(
+parameter_list|(
 specifier|const
 name|MachineInstr
-operator|&
+modifier|&
 name|MI
-argument_list|)
-block|;    enum
+parameter_list|)
+function_decl|;
+enum|enum
 name|CFIMoveType
 block|{
 name|CFI_M_None
@@ -588,15 +684,15 @@ name|CFI_M_EH
 block|,
 name|CFI_M_Debug
 block|}
-block|;
+enum|;
 name|CFIMoveType
 name|needsCFIMoves
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|bool
 name|needsSEHMoves
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// Print to the current output stream assembly representations of the
 comment|/// constants in the constant pool MCP. This is used to print out constants
 comment|/// which have been "spilled to memory" by the code generator.
@@ -604,37 +700,37 @@ comment|///
 name|virtual
 name|void
 name|EmitConstantPool
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// Print assembly representations of the jump tables used by the current
 comment|/// function to the current output stream.
 comment|///
 name|void
 name|EmitJumpTableInfo
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// Emit the specified global variable to the .s file.
 name|virtual
 name|void
 name|EmitGlobalVariable
-argument_list|(
+parameter_list|(
 specifier|const
 name|GlobalVariable
-operator|*
+modifier|*
 name|GV
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// Check to see if the specified global is a special global used by LLVM. If
 comment|/// so, emit it and return true, otherwise do nothing and return false.
 name|bool
 name|EmitSpecialLLVMGlobal
-argument_list|(
+parameter_list|(
 specifier|const
 name|GlobalVariable
-operator|*
+modifier|*
 name|GV
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// Emit an alignment directive to the specified power of two boundary. For
 comment|/// example, if you pass in 3 here, you will get an 8 byte alignment. If a
 comment|/// global value is specified, and if that global has an explicit alignment
@@ -644,43 +740,63 @@ comment|///
 name|void
 name|EmitAlignment
 argument_list|(
-argument|unsigned NumBits
+name|unsigned
+name|NumBits
 argument_list|,
-argument|const GlobalObject *GO = nullptr
-argument_list|)
 specifier|const
-block|;
-comment|/// This method prints the label for the specified MachineBasicBlock, an
-comment|/// alignment (if present) and a comment describing it if appropriate.
-name|void
-name|EmitBasicBlockStart
-argument_list|(
-argument|const MachineBasicBlock&MBB
+name|GlobalObject
+operator|*
+name|GO
+operator|=
+name|nullptr
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// Lower the specified LLVM Constant to an MCExpr.
 specifier|const
 name|MCExpr
-operator|*
+modifier|*
 name|lowerConstant
-argument_list|(
+parameter_list|(
 specifier|const
 name|Constant
-operator|*
+modifier|*
 name|CV
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Print a general LLVM constant to the .s file.
 name|void
 name|EmitGlobalConstant
-argument_list|(
+parameter_list|(
 specifier|const
 name|Constant
-operator|*
+modifier|*
 name|CV
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+comment|/// \brief Unnamed constant global variables solely contaning a pointer to
+comment|/// another globals variable act like a global variable "proxy", or GOT
+comment|/// equivalents, i.e., it's only used to hold the address of the latter. One
+comment|/// optimization is to replace accesses to these proxies by using the GOT
+comment|/// entry for the final global instead. Hence, we select GOT equivalent
+comment|/// candidates among all the module global variables, avoid emitting them
+comment|/// unnecessarily and finally replace references to them by pc relative
+comment|/// accesses to GOT entries.
+name|void
+name|computeGlobalGOTEquivs
+parameter_list|(
+name|Module
+modifier|&
+name|M
+parameter_list|)
+function_decl|;
+comment|/// \brief Constant expressions using GOT equivalent globals may not be
+comment|/// eligible for PC relative GOT entry conversion, in such cases we need to
+comment|/// emit the proxies we previously omitted in EmitGlobalVariable.
+name|void
+name|emitGlobalGOTEquivs
+parameter_list|()
+function_decl|;
 comment|//===------------------------------------------------------------------===//
 comment|// Overridable Hooks
 comment|//===------------------------------------------------------------------===//
@@ -691,92 +807,120 @@ comment|/// something at the start of their file.
 name|virtual
 name|void
 name|EmitStartOfAsmFile
-argument_list|(
-argument|Module&
-argument_list|)
+parameter_list|(
+name|Module
+modifier|&
+parameter_list|)
 block|{}
 comment|/// This virtual method can be overridden by targets that want to emit
 comment|/// something at the end of their file.
 name|virtual
 name|void
 name|EmitEndOfAsmFile
-argument_list|(
-argument|Module&
-argument_list|)
+parameter_list|(
+name|Module
+modifier|&
+parameter_list|)
 block|{}
 comment|/// Targets can override this to emit stuff before the first basic block in
 comment|/// the function.
 name|virtual
 name|void
 name|EmitFunctionBodyStart
-argument_list|()
+parameter_list|()
 block|{}
 comment|/// Targets can override this to emit stuff after the last basic block in the
 comment|/// function.
 name|virtual
 name|void
 name|EmitFunctionBodyEnd
-argument_list|()
+parameter_list|()
 block|{}
+comment|/// Targets can override this to emit stuff at the start of a basic block.
+comment|/// By default, this method prints the label for the specified
+comment|/// MachineBasicBlock, an alignment (if present) and a comment describing it
+comment|/// if appropriate.
+name|virtual
+name|void
+name|EmitBasicBlockStart
+argument_list|(
+specifier|const
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Targets can override this to emit stuff at the end of a basic block.
 name|virtual
 name|void
 name|EmitBasicBlockEnd
-argument_list|(
-argument|const MachineBasicBlock&MBB
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineBasicBlock
+modifier|&
+name|MBB
+parameter_list|)
 block|{}
 comment|/// Targets should implement this to emit instructions.
 name|virtual
 name|void
 name|EmitInstruction
-argument_list|(
-argument|const MachineInstr *
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+parameter_list|)
 block|{
 name|llvm_unreachable
 argument_list|(
 literal|"EmitInstruction not implemented"
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|/// Return the symbol for the specified constant pool entry.
 name|virtual
 name|MCSymbol
-operator|*
+modifier|*
 name|GetCPISymbol
 argument_list|(
-argument|unsigned CPID
+name|unsigned
+name|CPID
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|virtual
 name|void
 name|EmitFunctionEntryLabel
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|virtual
 name|void
 name|EmitMachineConstantPoolValue
-argument_list|(
+parameter_list|(
 name|MachineConstantPoolValue
-operator|*
+modifier|*
 name|MCPV
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// Targets can override this to change how global constants that are part of
 comment|/// a C++ static/global constructor list are emitted.
 name|virtual
 name|void
 name|EmitXXStructor
-argument_list|(
-argument|const Constant *CV
-argument_list|)
+parameter_list|(
+specifier|const
+name|Constant
+modifier|*
+name|CV
+parameter_list|)
 block|{
 name|EmitGlobalConstant
 argument_list|(
 name|CV
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
 comment|/// Return true if the basic block has exactly one predecessor and the control
 comment|/// transfer mechanism between the predecessor and this block is a
 comment|/// fall-through.
@@ -784,192 +928,233 @@ name|virtual
 name|bool
 name|isBlockOnlyReachableByFallthrough
 argument_list|(
-argument|const MachineBasicBlock *MBB
-argument_list|)
 specifier|const
-block|;
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Targets can override this to customize the output of IMPLICIT_DEF
 comment|/// instructions in verbose mode.
 name|virtual
 name|void
 name|emitImplicitDef
 argument_list|(
-argument|const MachineInstr *MI
-argument_list|)
 specifier|const
-block|;
+name|MachineInstr
+operator|*
+name|MI
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//===------------------------------------------------------------------===//
 comment|// Symbol Lowering Routines.
 comment|//===------------------------------------------------------------------===//
 name|public
-operator|:
-comment|/// Return the MCSymbol corresponding to the assembler temporary label with
-comment|/// the specified stem and unique ID.
+label|:
 name|MCSymbol
-operator|*
-name|GetTempSymbol
+modifier|*
+name|createTempSymbol
 argument_list|(
-argument|Twine Name
-argument_list|,
-argument|unsigned ID
-argument_list|)
 specifier|const
-block|;
-comment|/// Return an assembler temporary label with the specified stem.
-name|MCSymbol
-operator|*
-name|GetTempSymbol
-argument_list|(
-argument|Twine Name
+name|Twine
+operator|&
+name|Name
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// Return the MCSymbol for a private symbol with global value name as its
 comment|/// base, with the specified suffix.
 name|MCSymbol
-operator|*
+modifier|*
 name|getSymbolWithGlobalValueBase
 argument_list|(
-argument|const GlobalValue *GV
-argument_list|,
-argument|StringRef Suffix
-argument_list|)
 specifier|const
-block|;
+name|GlobalValue
+operator|*
+name|GV
+argument_list|,
+name|StringRef
+name|Suffix
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Return the MCSymbol for the specified ExternalSymbol.
 name|MCSymbol
-operator|*
+modifier|*
 name|GetExternalSymbolSymbol
 argument_list|(
-argument|StringRef Sym
+name|StringRef
+name|Sym
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// Return the symbol for the specified jump table entry.
 name|MCSymbol
-operator|*
+modifier|*
 name|GetJTISymbol
 argument_list|(
-argument|unsigned JTID
+name|unsigned
+name|JTID
 argument_list|,
-argument|bool isLinkerPrivate = false
+name|bool
+name|isLinkerPrivate
+operator|=
+name|false
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// Return the symbol for the specified jump table .set
 comment|/// FIXME: privatize to AsmPrinter.
 name|MCSymbol
-operator|*
+modifier|*
 name|GetJTSetSymbol
 argument_list|(
-argument|unsigned UID
+name|unsigned
+name|UID
 argument_list|,
-argument|unsigned MBBID
+name|unsigned
+name|MBBID
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// Return the MCSymbol used to satisfy BlockAddress uses of the specified
 comment|/// basic block.
 name|MCSymbol
-operator|*
+modifier|*
 name|GetBlockAddressSymbol
 argument_list|(
-argument|const BlockAddress *BA
-argument_list|)
 specifier|const
-block|;
+name|BlockAddress
+operator|*
+name|BA
+argument_list|)
+decl|const
+decl_stmt|;
 name|MCSymbol
-operator|*
+modifier|*
 name|GetBlockAddressSymbol
 argument_list|(
-argument|const BasicBlock *BB
-argument_list|)
 specifier|const
-block|;
+name|BasicBlock
+operator|*
+name|BB
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//===------------------------------------------------------------------===//
 comment|// Emission Helper Routines.
 comment|//===------------------------------------------------------------------===//
 name|public
-operator|:
+label|:
 comment|/// This is just convenient handler for printing offsets.
 name|void
 name|printOffset
 argument_list|(
-argument|int64_t Offset
+name|int64_t
+name|Offset
 argument_list|,
-argument|raw_ostream&OS
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// Emit a byte directive and value.
 comment|///
 name|void
 name|EmitInt8
 argument_list|(
-argument|int Value
+name|int
+name|Value
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// Emit a short directive and value.
 comment|///
 name|void
 name|EmitInt16
 argument_list|(
-argument|int Value
+name|int
+name|Value
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// Emit a long directive and value.
 comment|///
 name|void
 name|EmitInt32
 argument_list|(
-argument|int Value
+name|int
+name|Value
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// Emit something like ".long Hi-Lo" where the size in bytes of the directive
 comment|/// is specified by Size and Hi/Lo specify the labels.  This implicitly uses
 comment|/// .set if it is available.
 name|void
 name|EmitLabelDifference
 argument_list|(
-argument|const MCSymbol *Hi
-argument_list|,
-argument|const MCSymbol *Lo
-argument_list|,
-argument|unsigned Size
-argument_list|)
 specifier|const
-block|;
+name|MCSymbol
+operator|*
+name|Hi
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+name|Lo
+argument_list|,
+name|unsigned
+name|Size
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Emit something like ".long Label+Offset" where the size in bytes of the
 comment|/// directive is specified by Size and Label specifies the label.  This
 comment|/// implicitly uses .set if it is available.
 name|void
 name|EmitLabelPlusOffset
 argument_list|(
-argument|const MCSymbol *Label
-argument_list|,
-argument|uint64_t Offset
-argument_list|,
-argument|unsigned Size
-argument_list|,
-argument|bool IsSectionRelative = false
-argument_list|)
 specifier|const
-block|;
+name|MCSymbol
+operator|*
+name|Label
+argument_list|,
+name|uint64_t
+name|Offset
+argument_list|,
+name|unsigned
+name|Size
+argument_list|,
+name|bool
+name|IsSectionRelative
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Emit something like ".long Label" where the size in bytes of the directive
 comment|/// is specified by Size and Label specifies the label.
 name|void
 name|EmitLabelReference
 argument_list|(
-argument|const MCSymbol *Label
-argument_list|,
-argument|unsigned Size
-argument_list|,
-argument|bool IsSectionRelative = false
-argument_list|)
 specifier|const
+name|MCSymbol
+operator|*
+name|Label
+argument_list|,
+name|unsigned
+name|Size
+argument_list|,
+name|bool
+name|IsSectionRelative
+operator|=
+name|false
+argument_list|)
+decl|const
 block|{
 name|EmitLabelPlusOffset
 argument_list|(
@@ -981,7 +1166,8 @@ name|Size
 argument_list|,
 name|IsSectionRelative
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|//===------------------------------------------------------------------===//
 comment|// Dwarf Emission Helper Routines
 comment|//===------------------------------------------------------------------===//
@@ -989,144 +1175,146 @@ comment|/// Emit the specified signed leb128 value.
 name|void
 name|EmitSLEB128
 argument_list|(
-argument|int64_t Value
+name|int64_t
+name|Value
 argument_list|,
-argument|const char *Desc = nullptr
-argument_list|)
 specifier|const
-block|;
+name|char
+operator|*
+name|Desc
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Emit the specified unsigned leb128 value.
 name|void
 name|EmitULEB128
 argument_list|(
-argument|uint64_t Value
+name|uint64_t
+name|Value
 argument_list|,
-argument|const char *Desc = nullptr
+specifier|const
+name|char
+operator|*
+name|Desc
+operator|=
+name|nullptr
 argument_list|,
-argument|unsigned PadTo =
+name|unsigned
+name|PadTo
+operator|=
 literal|0
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// Emit a .byte 42 directive for a DW_CFA_xxx value.
 name|void
 name|EmitCFAByte
 argument_list|(
-argument|unsigned Val
+name|unsigned
+name|Val
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// Emit a .byte 42 directive that corresponds to an encoding.  If verbose
 comment|/// assembly output is enabled, we output comments describing the encoding.
 comment|/// Desc is a string saying what the encoding is specifying (e.g. "LSDA").
 name|void
 name|EmitEncodingByte
 argument_list|(
-argument|unsigned Val
+name|unsigned
+name|Val
 argument_list|,
-argument|const char *Desc = nullptr
-argument_list|)
 specifier|const
-block|;
+name|char
+operator|*
+name|Desc
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Return the size of the encoding in bytes.
 name|unsigned
 name|GetSizeOfEncodedValue
 argument_list|(
-argument|unsigned Encoding
+name|unsigned
+name|Encoding
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// Emit reference to a ttype global with a specified encoding.
 name|void
 name|EmitTTypeReference
 argument_list|(
-argument|const GlobalValue *GV
-argument_list|,
-argument|unsigned Encoding
-argument_list|)
 specifier|const
-block|;
-comment|/// Emit the 4-byte offset of Label from the start of its section.  This can
-comment|/// be done with a special directive if the target supports it (e.g. cygwin)
-comment|/// or by emitting it as an offset from a label at the start of the section.
-comment|///
-comment|/// SectionLabel is a temporary label emitted at the start of the section
-comment|/// that Label lives in.
+name|GlobalValue
+operator|*
+name|GV
+argument_list|,
+name|unsigned
+name|Encoding
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Emit a reference to a symbol for use in dwarf. Different object formats
+comment|/// represent this in different ways. Some use a relocation others encode
+comment|/// the label offset in its section.
 name|void
-name|EmitSectionOffset
+name|emitDwarfSymbolReference
 argument_list|(
-argument|const MCSymbol *Label
-argument_list|,
-argument|const MCSymbol *SectionLabel
-argument_list|)
 specifier|const
-block|;
+name|MCSymbol
+operator|*
+name|Label
+argument_list|,
+name|bool
+name|ForceOffset
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Emit the 4-byte offset of a string from the start of its section.
+comment|///
+comment|/// When possible, emit a DwarfStringPool section offset without any
+comment|/// relocations, and without using the symbol.  Otherwise, defers to \a
+comment|/// emitDwarfSymbolReference().
+name|void
+name|emitDwarfStringOffset
+argument_list|(
+name|DwarfStringPoolEntryRef
+name|S
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Get the value for DW_AT_APPLE_isa. Zero if no isa encoding specified.
 name|virtual
 name|unsigned
 name|getISAEncoding
-argument_list|()
+parameter_list|()
 block|{
 return|return
 literal|0
 return|;
 block|}
-comment|/// Emit a dwarf register operation for describing
-comment|/// - a small value occupying only part of a register or
-comment|/// - a register representing only part of a value.
-name|void
-name|EmitDwarfOpPiece
-argument_list|(
-argument|ByteStreamer&Streamer
-argument_list|,
-argument|unsigned SizeInBits
-argument_list|,
-argument|unsigned OffsetInBits =
-literal|0
-argument_list|)
-specifier|const
-block|;
-comment|/// \brief Emit a partial DWARF register operation.
-comment|/// \param MLoc             the register
-comment|/// \param PieceSize        size and
-comment|/// \param PieceOffset      offset of the piece in bits, if this is one
-comment|///                         piece of an aggregate value.
-comment|///
-comment|/// If size and offset is zero an operation for the entire
-comment|/// register is emitted: Some targets do not provide a DWARF
-comment|/// register number for every register.  If this is the case, this
-comment|/// function will attempt to emit a DWARF register by emitting a
-comment|/// piece of a super-register or by piecing together multiple
-comment|/// subregisters that alias the register.
-name|void
-name|EmitDwarfRegOpPiece
-argument_list|(
-argument|ByteStreamer&BS
-argument_list|,
-argument|const MachineLocation&MLoc
-argument_list|,
-argument|unsigned PieceSize =
-literal|0
-argument_list|,
-argument|unsigned PieceOffset =
-literal|0
-argument_list|)
-specifier|const
-block|;
 comment|/// EmitDwarfRegOp - Emit a dwarf register operation.
-comment|/// \param Indirect   whether this is a register-indirect address
 name|virtual
 name|void
 name|EmitDwarfRegOp
 argument_list|(
-argument|ByteStreamer&BS
+name|ByteStreamer
+operator|&
+name|BS
 argument_list|,
-argument|const MachineLocation&MLoc
-argument_list|,
-argument|bool Indirect
-argument_list|)
 specifier|const
-block|;
+name|MachineLocation
+operator|&
+name|MLoc
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//===------------------------------------------------------------------===//
 comment|// Dwarf Lowering Routines
 comment|//===------------------------------------------------------------------===//
@@ -1134,15 +1322,46 @@ comment|/// \brief Emit frame instruction to describe the layout of the frame.
 name|void
 name|emitCFIInstruction
 argument_list|(
-argument|const MCCFIInstruction&Inst
-argument_list|)
 specifier|const
-block|;
+name|MCCFIInstruction
+operator|&
+name|Inst
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Emit Dwarf abbreviation table.
+name|void
+name|emitDwarfAbbrevs
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|DIEAbbrev
+operator|*
+operator|>
+operator|&
+name|Abbrevs
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Recursively emit Dwarf DIE tree.
+name|void
+name|emitDwarfDIE
+argument_list|(
+specifier|const
+name|DIE
+operator|&
+name|Die
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//===------------------------------------------------------------------===//
 comment|// Inline Asm Support
 comment|//===------------------------------------------------------------------===//
 name|public
-operator|:
+label|:
 comment|// These are hooks that targets can override to implement inline asm
 comment|// support.  These should probably be moved out of AsmPrinter someday.
 comment|/// Print information related to the specified machine instr that is
@@ -1155,32 +1374,50 @@ name|virtual
 name|void
 name|PrintSpecial
 argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|raw_ostream&OS
-argument_list|,
-argument|const char *Code
-argument_list|)
 specifier|const
-block|;
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Code
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Print the specified operand of MI, an INLINEASM instruction, using the
 comment|/// specified assembler variant.  Targets should override this to format as
 comment|/// appropriate.  This method can return true if the operand is erroneous.
 name|virtual
 name|bool
 name|PrintAsmOperand
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|,
-argument|unsigned AsmVariant
-argument_list|,
-argument|const char *ExtraCode
-argument_list|,
-argument|raw_ostream&OS
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|,
+name|unsigned
+name|OpNo
+parameter_list|,
+name|unsigned
+name|AsmVariant
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|ExtraCode
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+function_decl|;
 comment|/// Print the specified operand of MI, an INLINEASM instruction, using the
 comment|/// specified assembler variant as an address. Targets should override this to
 comment|/// format as appropriate.  This method can return true if the operand is
@@ -1188,28 +1425,36 @@ comment|/// erroneous.
 name|virtual
 name|bool
 name|PrintAsmMemoryOperand
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|,
-argument|unsigned AsmVariant
-argument_list|,
-argument|const char *ExtraCode
-argument_list|,
-argument|raw_ostream&OS
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|,
+name|unsigned
+name|OpNo
+parameter_list|,
+name|unsigned
+name|AsmVariant
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|ExtraCode
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+function_decl|;
 comment|/// Let the target do anything it needs to do before emitting inlineasm.
 comment|/// \p StartInfo - the subtarget info before parsing inline asm
 name|virtual
 name|void
 name|emitInlineAsmStart
-argument_list|(
-argument|const MCSubtargetInfo&StartInfo
-argument_list|)
+argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// Let the target do anything it needs to do after emitting inlineasm.
 comment|/// This callback can be used restore the original mode in case the
 comment|/// inlineasm contains directives to switch modes.
@@ -1220,55 +1465,89 @@ name|virtual
 name|void
 name|emitInlineAsmEnd
 argument_list|(
-argument|const MCSubtargetInfo&StartInfo
-argument_list|,
-argument|const MCSubtargetInfo *EndInfo
-argument_list|)
 specifier|const
-block|;
+name|MCSubtargetInfo
+operator|&
+name|StartInfo
+argument_list|,
+specifier|const
+name|MCSubtargetInfo
+operator|*
+name|EndInfo
+argument_list|)
+decl|const
+decl_stmt|;
 name|private
-operator|:
+label|:
 comment|/// Private state for PrintSpecial()
 comment|// Assign a unique ID to this machine instruction.
 name|mutable
 specifier|const
 name|MachineInstr
-operator|*
+modifier|*
 name|LastMI
-block|;
+decl_stmt|;
 name|mutable
 name|unsigned
 name|LastFn
-block|;
+decl_stmt|;
 name|mutable
 name|unsigned
 name|Counter
-block|;
-name|mutable
-name|unsigned
-name|SetCounter
-block|;
+decl_stmt|;
+comment|/// This method emits the header for the current function.
+name|virtual
+name|void
+name|EmitFunctionHeader
+parameter_list|()
+function_decl|;
 comment|/// Emit a blob of inline asm to the output streamer.
 name|void
 name|EmitInlineAsm
 argument_list|(
-argument|StringRef Str
+name|StringRef
+name|Str
 argument_list|,
-argument|const MDNode *LocMDNode = nullptr
-argument_list|,
-argument|InlineAsm::AsmDialect AsmDialect = InlineAsm::AD_ATT
-argument_list|)
 specifier|const
-block|;
+name|MCSubtargetInfo
+operator|&
+name|STI
+argument_list|,
+specifier|const
+name|MCTargetOptions
+operator|&
+name|MCOptions
+argument_list|,
+specifier|const
+name|MDNode
+operator|*
+name|LocMDNode
+operator|=
+name|nullptr
+argument_list|,
+name|InlineAsm
+operator|::
+name|AsmDialect
+name|AsmDialect
+operator|=
+name|InlineAsm
+operator|::
+name|AD_ATT
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// This method formats and emits the specified machine instruction that is an
 comment|/// inline asm.
 name|void
 name|EmitInlineAsm
 argument_list|(
-argument|const MachineInstr *MI
-argument_list|)
 specifier|const
-block|;
+name|MachineInstr
+operator|*
+name|MI
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//===------------------------------------------------------------------===//
 comment|// Internal Implementation Details
 comment|//===------------------------------------------------------------------===//
@@ -1277,74 +1556,100 @@ comment|/// target.
 name|void
 name|EmitVisibility
 argument_list|(
-argument|MCSymbol *Sym
+name|MCSymbol
+operator|*
+name|Sym
 argument_list|,
-argument|unsigned Visibility
+name|unsigned
+name|Visibility
 argument_list|,
-argument|bool IsDefinition = true
+name|bool
+name|IsDefinition
+operator|=
+name|true
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|void
 name|EmitLinkage
 argument_list|(
-argument|const GlobalValue *GV
-argument_list|,
-argument|MCSymbol *GVSym
-argument_list|)
 specifier|const
-block|;
+name|GlobalValue
+operator|*
+name|GV
+argument_list|,
+name|MCSymbol
+operator|*
+name|GVSym
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|EmitJumpTableEntry
 argument_list|(
-argument|const MachineJumpTableInfo *MJTI
-argument_list|,
-argument|const MachineBasicBlock *MBB
-argument_list|,
-argument|unsigned uid
-argument_list|)
 specifier|const
-block|;
+name|MachineJumpTableInfo
+operator|*
+name|MJTI
+argument_list|,
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|,
+name|unsigned
+name|uid
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|EmitLLVMUsedList
-argument_list|(
+parameter_list|(
 specifier|const
 name|ConstantArray
-operator|*
+modifier|*
 name|InitList
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// Emit llvm.ident metadata in an '.ident' directive.
 name|void
 name|EmitModuleIdents
-argument_list|(
+parameter_list|(
 name|Module
-operator|&
+modifier|&
 name|M
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|EmitXXStructorList
-argument_list|(
-argument|const Constant *List
-argument_list|,
-argument|bool isCtor
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|Constant
+modifier|*
+name|List
+parameter_list|,
+name|bool
+name|isCtor
+parameter_list|)
+function_decl|;
 name|GCMetadataPrinter
-operator|*
+modifier|*
 name|GetOrCreateGCPrinter
-argument_list|(
+parameter_list|(
 name|GCStrategy
-operator|&
+modifier|&
 name|C
-argument_list|)
-block|; }
-decl_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

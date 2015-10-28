@@ -2818,6 +2818,15 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ibss_rsn
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 comment|/* if the peer already exists, exit immediately */
 name|peer
 operator|=
@@ -3329,6 +3338,12 @@ name|prev
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ibss_rsn
+operator|->
+name|auth_group
+condition|)
 name|wpa_deinit
 argument_list|(
 name|ibss_rsn

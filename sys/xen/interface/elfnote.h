@@ -16,7 +16,7 @@ name|__XEN_PUBLIC_ELFNOTE_H__
 end_define
 
 begin_comment
-comment|/*  * The notes should live in a PT_NOTE segment and have "Xen" in the  * name field.  *  * Numeric types are either 4 or 8 bytes depending on the content of  * the desc field.  *  * LEGACY indicated the fields in the legacy __xen_guest string which  * this a note type replaces.  */
+comment|/*  * `incontents 200 elfnotes ELF notes  *  * The notes should live in a PT_NOTE segment and have "Xen" in the  * name field.  *  * Numeric types are either 4 or 8 bytes depending on the content of  * the desc field.  *  * LEGACY indicated the fields in the legacy __xen_guest string which  * this a note type replaces.  *  * String values (for non-legacy) are NULL terminated ASCII, also known  * as ASCIZ type.  */
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ value|3
 end_define
 
 begin_comment
-comment|/*  * The offset of the ELF paddr field from the acutal required  * psuedo-physical address (numeric).  *  * This is used to maintain backwards compatibility with older kernels  * which wrote __PAGE_OFFSET into that field. This field defaults to 0  * if not present.  *  * LEGACY: ELF_PADDR_OFFSET. (n.b. legacy default is VIRT_BASE)  */
+comment|/*  * The offset of the ELF paddr field from the actual required  * pseudo-physical address (numeric).  *  * This is used to maintain backwards compatibility with older kernels  * which wrote __PAGE_OFFSET into that field. This field defaults to 0  * if not present.  *  * LEGACY: ELF_PADDR_OFFSET. (n.b. legacy default is VIRT_BASE)  */
 end_comment
 
 begin_define
@@ -174,7 +174,7 @@ value|13
 end_define
 
 begin_comment
-comment|/*  * Whether or not the guest supports cooperative suspend cancellation.  */
+comment|/*  * Whether or not the guest supports cooperative suspend cancellation.  * This is a numeric value.  *  * Default is 0  */
 end_comment
 
 begin_define
@@ -304,7 +304,7 @@ comment|/* __XEN_PUBLIC_ELFNOTE_H__ */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit

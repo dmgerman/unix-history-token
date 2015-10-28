@@ -68,7 +68,7 @@ define|#
 directive|define
 name|PCPU_MD_FIELDS
 define|\
-value|unsigned int pc_vfpsid;						\ 	unsigned int pc_vfpmvfr0;					\ 	unsigned int pc_vfpmvfr1;					\ 	struct pmap *pc_curpmap;					\ 	char __pad[141]
+value|unsigned int pc_vfpsid;						\ 	unsigned int pc_vfpmvfr0;					\ 	unsigned int pc_vfpmvfr1;					\ 	struct pmap *pc_curpmap;					\ 	vm_offset_t pc_qmap_addr;					\ 	void *pc_qmap_pte;						\ 	char __pad[133]
 end_define
 
 begin_else
@@ -81,7 +81,7 @@ define|#
 directive|define
 name|PCPU_MD_FIELDS
 define|\
-value|char __pad[157]
+value|vm_offset_t qmap_addr;						\ 	void *pc_qmap_pte;						\ 	char __pad[149]
 end_define
 
 begin_endif

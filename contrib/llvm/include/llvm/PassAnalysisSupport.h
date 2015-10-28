@@ -108,13 +108,13 @@ name|namespace
 name|llvm
 block|{
 comment|//===----------------------------------------------------------------------===//
-comment|// AnalysisUsage - Represent the analysis usage information of a pass.  This
-comment|// tracks analyses that the pass REQUIRES (must be available when the pass
-comment|// runs), REQUIRES TRANSITIVE (must be available throughout the lifetime of the
-comment|// pass), and analyses that the pass PRESERVES (the pass does not invalidate the
-comment|// results of these analyses).  This information is provided by a pass to the
-comment|// Pass infrastructure through the getAnalysisUsage virtual function.
-comment|//
+comment|/// Represent the analysis usage information of a pass.  This tracks analyses
+comment|/// that the pass REQUIRES (must be available when the pass runs), REQUIRES
+comment|/// TRANSITIVE (must be available throughout the lifetime of the pass), and
+comment|/// analyses that the pass PRESERVES (the pass does not invalidate the results
+comment|/// of these analyses).  This information is provided by a pass to the Pass
+comment|/// infrastructure through the getAnalysisUsage virtual function.
+comment|///
 name|class
 name|AnalysisUsage
 block|{
@@ -131,7 +131,7 @@ name|VectorType
 expr_stmt|;
 name|private
 label|:
-comment|// Sets of analyses required and preserved by a pass
+comment|/// Sets of analyses required and preserved by a pass
 name|VectorType
 name|Required
 decl_stmt|,
@@ -152,9 +152,8 @@ argument_list|(
 argument|false
 argument_list|)
 block|{}
-comment|// addRequired - Add the specified ID to the required set of the usage info
-comment|// for a pass.
-comment|//
+comment|///@{
+comment|/// Add the specified ID to the required set of the usage info for a pass.
 name|AnalysisUsage
 operator|&
 name|addRequiredID
@@ -221,9 +220,9 @@ name|ID
 argument_list|)
 return|;
 block|}
-comment|// addPreserved - Add the specified ID to the set of analyses preserved by
-comment|// this pass
-comment|//
+comment|///@}
+comment|///@{
+comment|/// Add the specified ID to the set of analyses preserved by this pass.
 name|AnalysisUsage
 modifier|&
 name|addPreservedID
@@ -268,9 +267,8 @@ operator|*
 name|this
 return|;
 block|}
-comment|// addPreserved - Add the specified Pass class to the set of analyses
-comment|// preserved by this pass.
-comment|//
+comment|///@}
+comment|/// Add the specified Pass class to the set of analyses preserved by this pass.
 name|template
 operator|<
 name|class
@@ -296,11 +294,10 @@ operator|*
 name|this
 return|;
 block|}
-comment|// addPreserved - Add the Pass with the specified argument string to the set
-comment|// of analyses preserved by this pass. If no such Pass exists, do nothing.
-comment|// This can be useful when a pass is trivially preserved, but may not be
-comment|// linked in. Be careful about spelling!
-comment|//
+comment|/// Add the Pass with the specified argument string to the set of analyses
+comment|/// preserved by this pass. If no such Pass exists, do nothing. This can be
+comment|/// useful when a pass is trivially preserved, but may not be linked in. Be
+comment|/// careful about spelling!
 name|AnalysisUsage
 modifier|&
 name|addPreserved
@@ -309,7 +306,7 @@ name|StringRef
 name|Arg
 parameter_list|)
 function_decl|;
-comment|// setPreservesAll - Set by analyses that do not transform their input at all
+comment|/// Set by analyses that do not transform their input at all
 name|void
 name|setPreservesAll
 parameter_list|()
@@ -319,6 +316,7 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+comment|/// Determine whether a pass said it does not transform its input at all
 name|bool
 name|getPreservesAll
 argument_list|()
@@ -328,8 +326,7 @@ return|return
 name|PreservesAll
 return|;
 block|}
-comment|/// setPreservesCFG - This function should be called by the pass, iff they do
-comment|/// not:
+comment|/// This function should be called by the pass, iff they do not:
 comment|///
 comment|///  1. Add or remove basic blocks from the function
 comment|///  2. Modify terminator instructions in any way.
@@ -377,10 +374,10 @@ block|}
 block|}
 empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
-comment|// AnalysisResolver - Simple interface used by Pass objects to pull all
-comment|// analysis information out of pass manager that is responsible to manage
-comment|// the pass.
-comment|//
+comment|/// AnalysisResolver - Simple interface used by Pass objects to pull all
+comment|/// analysis information out of pass manager that is responsible to manage
+comment|/// the pass.
+comment|///
 name|class
 name|PMDataManager
 decl_stmt|;
@@ -391,7 +388,8 @@ name|private
 label|:
 name|AnalysisResolver
 argument_list|()
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|public
 label|:
@@ -418,7 +416,7 @@ return|return
 name|PM
 return|;
 block|}
-comment|// Find pass that is implementing PI.
+comment|/// Find pass that is implementing PI.
 name|Pass
 modifier|*
 name|findImplPass
@@ -479,7 +477,7 @@ return|return
 name|ResultPass
 return|;
 block|}
-comment|// Find pass that is implementing PI. Initialize pass for Function F.
+comment|/// Find pass that is implementing PI. Initialize pass for Function F.
 name|Pass
 modifier|*
 name|findImplPass
@@ -545,8 +543,7 @@ name|pir
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// clearAnalysisImpls - Clear cache that is used to connect a pass to the
-comment|/// the analysis (PassInfo).
+comment|/// Clear cache that is used to connect a pass to the the analysis (PassInfo).
 name|void
 name|clearAnalysisImpls
 parameter_list|()
@@ -557,7 +554,7 @@ name|clear
 argument_list|()
 expr_stmt|;
 block|}
-comment|// getAnalysisIfAvailable - Return analysis result or null if it doesn't exist
+comment|/// Return analysis result or null if it doesn't exist.
 name|Pass
 modifier|*
 name|getAnalysisIfAvailable
@@ -572,8 +569,8 @@ decl|const
 decl_stmt|;
 name|private
 label|:
-comment|// AnalysisImpls - This keeps track of which passes implements the interfaces
-comment|// that are required by the current pass (to implement getAnalysis()).
+comment|/// This keeps track of which passes implements the interfaces that are
+comment|/// required by the current pass (to implement getAnalysis()).
 name|std
 operator|::
 name|vector
@@ -590,7 +587,7 @@ operator|>
 expr|>
 name|AnalysisImpls
 expr_stmt|;
-comment|// PassManager that is used to resolve analysis info
+comment|/// PassManager that is used to resolve analysis info
 name|PMDataManager
 modifier|&
 name|PM

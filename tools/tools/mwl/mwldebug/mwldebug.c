@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -46,19 +40,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -70,24 +58,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<stdlib.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
-end_define
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_decl_stmt
 specifier|const
@@ -340,7 +324,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|flags
 argument_list|)
@@ -387,7 +371,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static const char * getflagname(u_int flag) { 	int i;  	for (i = 0; i< N(flags); i++) 		if (flags[i].bit == flag) 			return flags[i].name; 	return "???"; }
+unit|static const char * getflagname(u_int flag) { 	int i;  	for (i = 0; i< nitems(flags); i++) 		if (flags[i].bit == flag) 			return flags[i].name; 	return "???"; }
 endif|#
 directive|endif
 end_endif
@@ -427,7 +411,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|flags
 argument_list|)
@@ -936,7 +920,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|flags
 argument_list|)

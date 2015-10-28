@@ -359,7 +359,7 @@ begin_define
 define|#
 directive|define
 name|USPACE
-value|(KSTACK_PAGES * PAGE_SIZE)
+value|(kstack_pages * PAGE_SIZE)
 end_define
 
 begin_comment

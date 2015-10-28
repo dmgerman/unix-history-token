@@ -63,7 +63,7 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class PipePosix PipePosix	.h "lldb/Host/posix/PipePosix.h"
+comment|/// @class PipePosix PipePosix.h "lldb/Host/posix/PipePosix.h"
 comment|/// @brief A posix-based implementation of Pipe, a class that abtracts
 comment|///        unix style pipes.
 comment|///
@@ -84,6 +84,51 @@ block|;
 name|PipePosix
 argument_list|()
 block|;
+name|PipePosix
+argument_list|(
+argument|int read_fd
+argument_list|,
+argument|int write_fd
+argument_list|)
+block|;
+name|PipePosix
+argument_list|(
+specifier|const
+name|PipePosix
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|PipePosix
+argument_list|(
+name|PipePosix
+operator|&&
+name|pipe_posix
+argument_list|)
+block|;
+name|PipePosix
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|PipePosix
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
+name|PipePosix
+operator|&
+name|operator
+operator|=
+operator|(
+name|PipePosix
+operator|&&
+name|pipe_posix
+operator|)
+block|;
 operator|~
 name|PipePosix
 argument_list|()
@@ -102,6 +147,17 @@ argument_list|(
 argument|llvm::StringRef name
 argument_list|,
 argument|bool child_process_inherit
+argument_list|)
+name|override
+block|;
+name|Error
+name|CreateWithUniqueName
+argument_list|(
+argument|llvm::StringRef prefix
+argument_list|,
+argument|bool child_process_inherit
+argument_list|,
+argument|llvm::SmallVectorImpl<char>& name
 argument_list|)
 name|override
 block|;
@@ -159,6 +215,16 @@ name|ReleaseWriteFileDescriptor
 argument_list|()
 name|override
 block|;
+name|void
+name|CloseReadFileDescriptor
+argument_list|()
+name|override
+block|;
+name|void
+name|CloseWriteFileDescriptor
+argument_list|()
+name|override
+block|;
 comment|// Close both descriptors
 name|void
 name|Close
@@ -198,14 +264,6 @@ name|override
 block|;
 name|private
 operator|:
-name|void
-name|CloseReadFileDescriptor
-argument_list|()
-block|;
-name|void
-name|CloseWriteFileDescriptor
-argument_list|()
-block|;
 name|int
 name|m_fds
 index|[

@@ -96,7 +96,7 @@ end_endif
 
 begin_function
 name|int
-name|flash_fill_slices
+name|fdt_flash_fill_slices
 parameter_list|(
 name|device_t
 name|dev

@@ -148,6 +148,7 @@ block|;
 operator|~
 name|PassManager
 argument_list|()
+name|override
 block|;
 name|void
 name|add
@@ -197,6 +198,7 @@ block|;
 operator|~
 name|FunctionPassManager
 argument_list|()
+name|override
 block|;
 name|void
 name|add

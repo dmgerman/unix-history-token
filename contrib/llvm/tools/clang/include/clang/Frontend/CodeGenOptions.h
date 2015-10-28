@@ -179,6 +179,15 @@ name|OnlyAlwaysInlining
 comment|// Only run the always inlining pass.
 block|}
 block|;    enum
+name|VectorLibrary
+block|{
+name|NoLibrary
+block|,
+comment|// Don't use any vector library.
+name|Accelerate
+comment|// Use the Accelerate framework.
+block|}
+block|;    enum
 name|ObjCDispatchMethodKind
 block|{
 name|Legacy
@@ -372,6 +381,13 @@ name|string
 operator|>
 name|DependentLibraries
 block|;
+comment|/// Name of the profile file to use as output for -fprofile-instr-generate
+comment|/// and -fprofile-generate.
+name|std
+operator|::
+name|string
+name|InstrProfileOutput
+block|;
 comment|/// Name of the profile file to use with -fprofile-sample-use.
 name|std
 operator|::
@@ -383,6 +399,19 @@ name|std
 operator|::
 name|string
 name|InstrProfileInput
+block|;
+comment|/// A list of file names passed with -fcuda-include-gpubinary options to
+comment|/// forward to CUDA runtime back-end for incorporating them into host-side
+comment|/// object file.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|CudaGpuBinaryFileNames
 block|;
 comment|/// Regular expression to select optimizations for which we should enable
 comment|/// optimization remarks. Transformation passes whose name matches this
@@ -445,6 +474,10 @@ comment|/// Set of sanitizer checks that are non-fatal (i.e. execution should be
 comment|/// continued when possible).
 name|SanitizerSet
 name|SanitizeRecover
+block|;
+comment|/// Set of sanitizer checks that trap rather than diagnose.
+name|SanitizerSet
+name|SanitizeTrap
 block|;
 name|public
 operator|:

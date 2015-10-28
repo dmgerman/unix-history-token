@@ -142,6 +142,9 @@ decl_stmt|;
 name|class
 name|IdentifierIterator
 decl_stmt|;
+name|class
+name|PCHContainerOperations
+decl_stmt|;
 name|namespace
 name|serialization
 block|{
@@ -325,9 +328,12 @@ argument_list|)
 decl_stmt|;
 name|GlobalModuleIndex
 argument_list|(
-argument|const GlobalModuleIndex&
+specifier|const
+name|GlobalModuleIndex
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|GlobalModuleIndex
 modifier|&
@@ -338,7 +344,8 @@ specifier|const
 name|GlobalModuleIndex
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:
@@ -487,7 +494,8 @@ function_decl|;
 comment|/// \brief Write a global index into the given
 comment|///
 comment|/// \param FileMgr The file manager to use to load module files.
-comment|///
+comment|/// \param PCHContainerOps - The PCHContainerOperations to use for loading and
+comment|/// creating modules.
 comment|/// \param Path The path to the directory containing module files, into
 comment|/// which the global index will be written.
 specifier|static
@@ -497,6 +505,11 @@ parameter_list|(
 name|FileManager
 modifier|&
 name|FileMgr
+parameter_list|,
+specifier|const
+name|PCHContainerReader
+modifier|&
+name|PCHContainerRdr
 parameter_list|,
 name|StringRef
 name|Path

@@ -179,7 +179,20 @@ return|;
 block|}
 block|}
 block|}
-comment|/* 	 * If the U-boot environment contains a variable giving the name of a 	 * file, use it if we can load and validate it. 	 */
+comment|/* 	 * Try to get FDT filename first from loader env and then from u-boot env 	 */
+name|s
+operator|=
+name|getenv
+argument_list|(
+literal|"fdt_file"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
 name|s
 operator|=
 name|ub_env_get

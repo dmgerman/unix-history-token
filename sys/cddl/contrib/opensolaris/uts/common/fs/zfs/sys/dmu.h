@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright 2013 DEY Storage Systems, Inc.  * Copyright 2014 HybridCluster. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright 2013 DEY Storage Systems, Inc.  * Copyright 2014 HybridCluster. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -30,13 +30,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
+file|<sys/zfs_context.h>
 end_include
 
 begin_include
@@ -48,13 +42,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sys/fs/zfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/fs/zfs.h>
+file|<sys/zio_priority.h>
 end_include
 
 begin_ifdef
@@ -609,6 +603,10 @@ define|#
 directive|define
 name|DS_FIND_CHILDREN
 value|(1<<1)
+define|#
+directive|define
+name|DS_FIND_SERIALIZE
+value|(1<<2)
 comment|/*  * The maximum number of bytes that can be accessed as part of one  * operation, including metadata.  */
 define|#
 directive|define
@@ -928,20 +926,6 @@ comment|/* data in buffer */
 block|}
 name|dmu_buf_t
 typedef|;
-typedef|typedef
-name|void
-name|dmu_buf_evict_func_t
-parameter_list|(
-name|struct
-name|dmu_buf
-modifier|*
-name|db
-parameter_list|,
-name|void
-modifier|*
-name|user_ptr
-parameter_list|)
-function_decl|;
 comment|/*  * The names of zap entries in the DIRECTORY_OBJECT of the MOS.  */
 define|#
 directive|define
@@ -1035,6 +1019,10 @@ define|#
 directive|define
 name|DMU_POOL_EMPTY_BPOBJ
 value|"empty_bpobj"
+define|#
+directive|define
+name|DMU_POOL_CHECKSUM_SALT
+value|"org.illumos:checksum_salt"
 comment|/*  * Allocate an object from this objset.  The range of object numbers  * available is (0, DN_MAX_OBJECT).  Object 0 is the meta-dnode.  *  * The transaction must be assigned to a txg.  The newly allocated  * object will be "held" in the transaction (ie. you can modify the  * newly allocated object in this transaction).  *  * dmu_object_alloc() chooses an object and returns it in *objectp.  *  * dmu_object_claim() allocates a specific object number.  If that  * number is already allocated, it fails and returns EEXIST.  *  * Return 0 on success, or ENOSPC or EEXIST as specified above.  */
 name|uint64_t
 name|dmu_object_alloc
@@ -1434,12 +1422,35 @@ name|int
 name|flags
 parameter_list|)
 function_decl|;
+comment|/*  * Add a reference to a dmu buffer that has already been held via  * dmu_buf_hold() in the current context.  */
 name|void
 name|dmu_buf_add_ref
 parameter_list|(
 name|dmu_buf_t
 modifier|*
 name|db
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
+comment|/*  * Attempt to add a reference to a dmu buffer that is in an unknown state,  * using a pointer that may have been invalidated by eviction processing.  * The request will succeed if the passed in dbuf still represents the  * same os/object/blkid, is ineligible for eviction, and has at least  * one hold by a user other than the syncer.  */
+name|boolean_t
+name|dmu_buf_try_add_ref
+parameter_list|(
+name|dmu_buf_t
+modifier|*
+parameter_list|,
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|uint64_t
+name|object
+parameter_list|,
+name|uint64_t
+name|blkid
 parameter_list|,
 name|void
 modifier|*
@@ -1480,7 +1491,7 @@ parameter_list|,
 name|uint64_t
 name|length
 parameter_list|,
-name|int
+name|boolean_t
 name|read
 parameter_list|,
 name|void
@@ -1513,7 +1524,125 @@ modifier|*
 name|tag
 parameter_list|)
 function_decl|;
-comment|/*  * Returns NULL on success, or the existing user ptr if it's already  * been set.  *  * user_ptr is for use by the user and can be obtained via dmu_buf_get_user().  *  * If non-NULL, pageout func will be called when this buffer is being  * excised from the cache, so that you can clean up the data structure  * pointed to by user_ptr.  *  * dmu_evict_user() will call the pageout func for all buffers in a  * objset with a given pageout func.  */
+typedef|typedef
+name|void
+name|dmu_buf_evict_func_t
+parameter_list|(
+name|void
+modifier|*
+name|user_ptr
+parameter_list|)
+function_decl|;
+comment|/*  * A DMU buffer user object may be associated with a dbuf for the  * duration of its lifetime.  This allows the user of a dbuf (client)  * to attach private data to a dbuf (e.g. in-core only data such as a  * dnode_children_t, zap_t, or zap_leaf_t) and be optionally notified  * when that dbuf has been evicted.  Clients typically respond to the  * eviction notification by freeing their private data, thus ensuring  * the same lifetime for both dbuf and private data.  *  * The mapping from a dmu_buf_user_t to any client private data is the  * client's responsibility.  All current consumers of the API with private  * data embed a dmu_buf_user_t as the first member of the structure for  * their private data.  This allows conversions between the two types  * with a simple cast.  Since the DMU buf user API never needs access  * to the private data, other strategies can be employed if necessary  * or convenient for the client (e.g. using container_of() to do the  * conversion for private data that cannot have the dmu_buf_user_t as  * its first member).  *  * Eviction callbacks are executed without the dbuf mutex held or any  * other type of mechanism to guarantee that the dbuf is still available.  * For this reason, users must assume the dbuf has already been freed  * and not reference the dbuf from the callback context.  *  * Users requesting "immediate eviction" are notified as soon as the dbuf  * is only referenced by dirty records (dirties == holds).  Otherwise the  * notification occurs after eviction processing for the dbuf begins.  */
+typedef|typedef
+struct|struct
+name|dmu_buf_user
+block|{
+comment|/* 	 * Asynchronous user eviction callback state. 	 */
+name|taskq_ent_t
+name|dbu_tqent
+decl_stmt|;
+comment|/* This instance's eviction function pointer. */
+name|dmu_buf_evict_func_t
+modifier|*
+name|dbu_evict_func
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ZFS_DEBUG
+comment|/* 	 * Pointer to user's dbuf pointer.  NULL for clients that do 	 * not associate a dbuf with their user data. 	 * 	 * The dbuf pointer is cleared upon eviction so as to catch 	 * use-after-evict bugs in clients. 	 */
+name|dmu_buf_t
+modifier|*
+modifier|*
+name|dbu_clear_on_evict_dbufp
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+name|dmu_buf_user_t
+typedef|;
+comment|/*  * Initialize the given dmu_buf_user_t instance with the eviction function  * evict_func, to be called when the user is evicted.  *  * NOTE: This function should only be called once on a given dmu_buf_user_t.  *       To allow enforcement of this, dbu must already be zeroed on entry.  */
+ifdef|#
+directive|ifdef
+name|__lint
+comment|/* Very ugly, but it beats issuing suppression directives in many Makefiles. */
+specifier|extern
+name|void
+name|dmu_buf_init_user
+parameter_list|(
+name|dmu_buf_user_t
+modifier|*
+name|dbu
+parameter_list|,
+name|dmu_buf_evict_func_t
+modifier|*
+name|evict_func
+parameter_list|,
+name|dmu_buf_t
+modifier|*
+modifier|*
+name|clear_on_evict_dbufp
+parameter_list|)
+function_decl|;
+else|#
+directive|else
+comment|/* __lint */
+specifier|inline
+name|void
+name|dmu_buf_init_user
+parameter_list|(
+name|dmu_buf_user_t
+modifier|*
+name|dbu
+parameter_list|,
+name|dmu_buf_evict_func_t
+modifier|*
+name|evict_func
+parameter_list|,
+name|dmu_buf_t
+modifier|*
+modifier|*
+name|clear_on_evict_dbufp
+parameter_list|)
+block|{
+name|ASSERT
+argument_list|(
+name|dbu
+operator|->
+name|dbu_evict_func
+operator|==
+name|NULL
+argument_list|)
+expr_stmt|;
+name|ASSERT
+argument_list|(
+name|evict_func
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|dbu
+operator|->
+name|dbu_evict_func
+operator|=
+name|evict_func
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ZFS_DEBUG
+name|dbu
+operator|->
+name|dbu_clear_on_evict_dbufp
+operator|=
+name|clear_on_evict_dbufp
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+endif|#
+directive|endif
+comment|/* __lint */
+comment|/*  * Attach user data to a dbuf and mark it for normal (when the dbuf's  * data is cleared or its reference count goes to zero) eviction processing.  *  * Returns NULL on success, or the existing user if another user currently  * owns the buffer.  */
 name|void
 modifier|*
 name|dmu_buf_set_user
@@ -1522,16 +1651,12 @@ name|dmu_buf_t
 modifier|*
 name|db
 parameter_list|,
-name|void
+name|dmu_buf_user_t
 modifier|*
-name|user_ptr
-parameter_list|,
-name|dmu_buf_evict_func_t
-modifier|*
-name|pageout_func
+name|user
 parameter_list|)
 function_decl|;
-comment|/*  * set_user_ie is the same as set_user, but request immediate eviction  * when hold count goes to zero.  */
+comment|/*  * Attach user data to a dbuf and mark it for immediate (its dirty and  * reference counts are equal) eviction processing.  *  * Returns NULL on success, or the existing user if another user currently  * owns the buffer.  */
 name|void
 modifier|*
 name|dmu_buf_set_user_ie
@@ -1540,49 +1665,44 @@ name|dmu_buf_t
 modifier|*
 name|db
 parameter_list|,
-name|void
+name|dmu_buf_user_t
 modifier|*
-name|user_ptr
-parameter_list|,
-name|dmu_buf_evict_func_t
-modifier|*
-name|pageout_func
+name|user
 parameter_list|)
 function_decl|;
+comment|/*  * Replace the current user of a dbuf.  *  * If given the current user of a dbuf, replaces the dbuf's user with  * "new_user" and returns the user data pointer that was replaced.  * Otherwise returns the current, and unmodified, dbuf user pointer.  */
 name|void
 modifier|*
-name|dmu_buf_update_user
+name|dmu_buf_replace_user
 parameter_list|(
 name|dmu_buf_t
 modifier|*
-name|db_fake
+name|db
 parameter_list|,
-name|void
+name|dmu_buf_user_t
 modifier|*
-name|old_user_ptr
+name|old_user
 parameter_list|,
-name|void
+name|dmu_buf_user_t
 modifier|*
-name|user_ptr
-parameter_list|,
-name|dmu_buf_evict_func_t
-modifier|*
-name|pageout_func
+name|new_user
 parameter_list|)
 function_decl|;
+comment|/*  * Remove the specified user data for a DMU buffer.  *  * Returns the user that was removed on success, or the current user if  * another user currently owns the buffer.  */
 name|void
-name|dmu_evict_user
+modifier|*
+name|dmu_buf_remove_user
 parameter_list|(
-name|objset_t
+name|dmu_buf_t
 modifier|*
-name|os
+name|db
 parameter_list|,
-name|dmu_buf_evict_func_t
+name|dmu_buf_user_t
 modifier|*
-name|func
+name|user
 parameter_list|)
 function_decl|;
-comment|/*  * Returns the user_ptr set with dmu_buf_set_user(), or NULL if not set.  */
+comment|/*  * Returns the user data (dmu_buf_user_t *) associated with this dbuf.  */
 name|void
 modifier|*
 name|dmu_buf_get_user
@@ -1590,6 +1710,13 @@ parameter_list|(
 name|dmu_buf_t
 modifier|*
 name|db
+parameter_list|)
+function_decl|;
+comment|/* Block until any in-progress dmu buf user evictions complete. */
+name|void
+name|dmu_buf_user_evict_wait
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 comment|/*  * Returns the blkptr associated with this dbuf, or NULL if not set.  */
@@ -2219,7 +2346,7 @@ name|xuio_stat_wbuf_nocopy
 parameter_list|()
 function_decl|;
 specifier|extern
-name|int
+name|boolean_t
 name|zfs_prefetch_disable
 decl_stmt|;
 specifier|extern
@@ -2237,11 +2364,18 @@ parameter_list|,
 name|uint64_t
 name|object
 parameter_list|,
+name|int64_t
+name|level
+parameter_list|,
 name|uint64_t
 name|offset
 parameter_list|,
 name|uint64_t
 name|len
+parameter_list|,
+name|enum
+name|zio_priority
+name|pri
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -2841,6 +2975,18 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|off
+parameter_list|)
+function_decl|;
+comment|/*  * Check if a DMU object has any dirty blocks. If so, sync out  * all pending transaction groups. Otherwise, this function  * does not alter DMU state. This could be improved to only sync  * out the necessary transaction groups for this particular  * object.  */
+name|int
+name|dmu_object_wait_synced
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|uint64_t
+name|object
 parameter_list|)
 function_decl|;
 comment|/*  * Initial setup and final teardown.  */

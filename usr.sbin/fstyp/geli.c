@@ -203,15 +203,13 @@ name|gelierr
 goto|;
 if|if
 condition|(
-name|strncmp
+name|strcmp
 argument_list|(
 name|md
 operator|.
 name|md_magic
 argument_list|,
-literal|"GEOM::ELI"
-argument_list|,
-literal|9
+name|G_ELI_MAGIC
 argument_list|)
 operator|==
 literal|0

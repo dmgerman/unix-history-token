@@ -87,19 +87,19 @@ block|;
 name|explicit
 name|ARMMCExpr
 argument_list|(
-argument|VariantKind _Kind
+argument|VariantKind Kind
 argument_list|,
-argument|const MCExpr *_Expr
+argument|const MCExpr *Expr
 argument_list|)
 operator|:
 name|Kind
 argument_list|(
-name|_Kind
+name|Kind
 argument_list|)
 block|,
 name|Expr
 argument_list|(
-argument|_Expr
+argument|Expr
 argument_list|)
 block|{}
 name|public
@@ -110,7 +110,7 @@ specifier|static
 specifier|const
 name|ARMMCExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 argument|VariantKind Kind
 argument_list|,
@@ -123,7 +123,7 @@ specifier|static
 specifier|const
 name|ARMMCExpr
 operator|*
-name|CreateUpper16
+name|createUpper16
 argument_list|(
 argument|const MCExpr *Expr
 argument_list|,
@@ -131,7 +131,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|VK_ARM_HI16
 argument_list|,
@@ -145,7 +145,7 @@ specifier|static
 specifier|const
 name|ARMMCExpr
 operator|*
-name|CreateLower16
+name|createLower16
 argument_list|(
 argument|const MCExpr *Expr
 argument_list|,
@@ -153,7 +153,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|VK_ARM_LO16
 argument_list|,
@@ -190,15 +190,17 @@ return|;
 block|}
 comment|/// @}
 name|void
-name|PrintImpl
+name|printImpl
 argument_list|(
 argument|raw_ostream&OS
+argument_list|,
+argument|const MCAsmInfo *MAI
 argument_list|)
 specifier|const
 name|override
 block|;
 name|bool
-name|EvaluateAsRelocatableImpl
+name|evaluateAsRelocatableImpl
 argument_list|(
 argument|MCValue&Res
 argument_list|,
@@ -221,10 +223,9 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|const
 name|MCSection
 operator|*
-name|FindAssociatedSection
+name|findAssociatedSection
 argument_list|()
 specifier|const
 name|override
@@ -233,7 +234,7 @@ return|return
 name|getSubExpr
 argument_list|()
 operator|->
-name|FindAssociatedSection
+name|findAssociatedSection
 argument_list|()
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this software and associated documentation files (the "Software"), to  * deal in the Software without restriction, including without limitation the  * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or  * sell copies of the Software, and to permit persons to whom the Software is  * furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  */
+comment|/*  * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this software and associated documentation files (the "Software"), to  * deal in the Software without restriction, including without limitation the  * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or  * sell copies of the Software, and to permit persons to whom the Software is  * furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Copyright (c) 2007, Keir Fraser  */
 end_comment
 
 begin_ifndef
@@ -82,36 +82,9 @@ name|HVM_PARAM_BUFIOREQ_EVTCHN
 value|26
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ia64__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|HVM_PARAM_NVRAM_FD
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVM_PARAM_VHPT_SIZE
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVM_PARAM_BUFPIOREQ_PFN
-value|9
-end_define
-
-begin_elif
-elif|#
-directive|elif
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__i386__
@@ -121,10 +94,10 @@ name|defined
 argument_list|(
 name|__x86_64__
 argument_list|)
-end_elif
+end_if
 
 begin_comment
-comment|/* Expose Viridian interfaces to this HVM guest? */
+comment|/*  * Viridian enlightenments  *  * (See http://download.microsoft.com/download/A/B/4/AB43A34E-BDD0-4FA6-BDEF-79EEF16E880B/Hypervisor%20Top%20Level%20Functional%20Specification%20v4.0.docx)  *  * To expose viridian enlightenments to the guest set this parameter  * to the desired feature mask. The base feature set must be present  * in any valid feature mask.  */
 end_comment
 
 begin_define
@@ -132,6 +105,90 @@ define|#
 directive|define
 name|HVM_PARAM_VIRIDIAN
 value|9
+end_define
+
+begin_comment
+comment|/* Base+Freq viridian feature sets:  *  * - Hypercall MSRs (HV_X64_MSR_GUEST_OS_ID and HV_X64_MSR_HYPERCALL)  * - APIC access MSRs (HV_X64_MSR_EOI, HV_X64_MSR_ICR and HV_X64_MSR_TPR)  * - Virtual Processor index MSR (HV_X64_MSR_VP_INDEX)  * - Timer frequency MSRs (HV_X64_MSR_TSC_FREQUENCY and  *   HV_X64_MSR_APIC_FREQUENCY)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_HVMPV_base_freq
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HVMPV_base_freq
+value|(1<< _HVMPV_base_freq)
+end_define
+
+begin_comment
+comment|/* Feature set modifications */
+end_comment
+
+begin_comment
+comment|/* Disable timer frequency MSRs (HV_X64_MSR_TSC_FREQUENCY and  * HV_X64_MSR_APIC_FREQUENCY).  * This modification restores the viridian feature set to the  * original 'base' set exposed in releases prior to Xen 4.4.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_HVMPV_no_freq
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HVMPV_no_freq
+value|(1<< _HVMPV_no_freq)
+end_define
+
+begin_comment
+comment|/* Enable Partition Time Reference Counter (HV_X64_MSR_TIME_REF_COUNT) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_HVMPV_time_ref_count
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|HVMPV_time_ref_count
+value|(1<< _HVMPV_time_ref_count)
+end_define
+
+begin_comment
+comment|/* Enable Reference TSC Page (HV_X64_MSR_REFERENCE_TSC) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_HVMPV_reference_tsc
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|HVMPV_reference_tsc
+value|(1<< _HVMPV_reference_tsc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HVMPV_feature_mask
+define|\
+value|(HVMPV_base_freq | \ 	 HVMPV_no_freq | \ 	 HVMPV_time_ref_count | \ 	 HVMPV_reference_tsc)
 end_define
 
 begin_endif
@@ -274,7 +331,7 @@ value|19
 end_define
 
 begin_comment
-comment|/* Enable blocking memory events, async or sync (pause vcpu until response)   * onchangeonly indicates messages only on a change of value */
+comment|/* Deprecated */
 end_comment
 
 begin_define
@@ -315,36 +372,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|HVMPME_MODE_MASK
-value|(3<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVMPME_mode_disabled
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVMPME_mode_async
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVMPME_mode_sync
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|HVMPME_onchangeonly
-value|(1<< 2)
+name|HVM_PARAM_MEMORY_EVENT_MSR
+value|30
 end_define
 
 begin_comment
@@ -372,7 +401,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|HVM_PARAM_ACCESS_RING_PFN
+name|HVM_PARAM_MONITOR_RING_PFN
 value|28
 end_define
 
@@ -383,11 +412,58 @@ name|HVM_PARAM_SHARING_RING_PFN
 value|29
 end_define
 
+begin_comment
+comment|/* SHUTDOWN_* action in case of a triple fault */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HVM_PARAM_TRIPLE_FAULT_REASON
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
+name|HVM_PARAM_IOREQ_SERVER_PFN
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|HVM_PARAM_NR_IOREQ_SERVER_PAGES
+value|33
+end_define
+
+begin_comment
+comment|/* Location of the VM Generation ID in guest physical address space. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HVM_PARAM_VM_GENERATION_ID_ADDR
+value|34
+end_define
+
+begin_comment
+comment|/* Boolean: Enable altp2m */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HVM_PARAM_ALTP2M
+value|35
+end_define
+
 begin_define
 define|#
 directive|define
 name|HVM_NR_PARAMS
-value|30
+value|36
 end_define
 
 begin_endif

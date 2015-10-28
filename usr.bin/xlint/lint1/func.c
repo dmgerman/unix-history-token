@@ -2160,7 +2160,7 @@ operator|->
 name|c_break
 condition|)
 block|{
-comment|/* 		 * end of switch alway reached (c_break is only set if the 		 * break statement can be reached). 		 */
+comment|/* 		 * end of switch always reached (c_break is only set if the 		 * break statement can be reached). 		 */
 name|reached
 operator|=
 literal|1

@@ -104,69 +104,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/PluginInterface.h"
+file|"lldb/Core/Logging.h"
 end_include
 
-begin_comment
-comment|//----------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|// Logging types
-end_comment
-
-begin_comment
-comment|//----------------------------------------------------------------------
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLDB_LOG_FLAG_STDOUT
-value|(1u<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LLDB_LOG_FLAG_STDERR
-value|(1u<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LLDB_LOG_FLAG_FATAL
-value|(1u<< 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LLDB_LOG_FLAG_ERROR
-value|(1u<< 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LLDB_LOG_FLAG_WARNING
-value|(1u<< 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LLDB_LOG_FLAG_DEBUG
-value|(1u<< 5)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LLDB_LOG_FLAG_VERBOSE
-value|(1u<< 6)
-end_define
+begin_include
+include|#
+directive|include
+file|"lldb/Core/PluginInterface.h"
+end_include
 
 begin_comment
 comment|//----------------------------------------------------------------------
@@ -234,6 +179,13 @@ define|#
 directive|define
 name|LLDB_LOG_OPTION_BACKTRACE
 value|(1U<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLDB_LOG_OPTION_APPEND
+value|(1U<< 8)
 end_define
 
 begin_comment
@@ -379,6 +331,35 @@ name|log_callbacks
 argument_list|)
 decl_stmt|;
 specifier|static
+name|bool
+name|EnableLogChannel
+argument_list|(
+name|lldb
+operator|::
+name|StreamSP
+operator|&
+name|log_stream_sp
+argument_list|,
+name|uint32_t
+name|log_options
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|channel
+argument_list|,
+specifier|const
+name|char
+operator|*
+operator|*
+name|categories
+argument_list|,
+name|Stream
+operator|&
+name|error_stream
+argument_list|)
+decl_stmt|;
+specifier|static
 name|void
 name|EnableAllLogChannels
 argument_list|(
@@ -463,10 +444,12 @@ operator|&
 name|stream_sp
 argument_list|)
 expr_stmt|;
+name|virtual
 operator|~
 name|Log
 argument_list|()
 expr_stmt|;
+name|virtual
 name|void
 name|PutCString
 parameter_list|(
@@ -476,6 +459,7 @@ modifier|*
 name|cstr
 parameter_list|)
 function_decl|;
+name|virtual
 name|void
 name|Printf
 parameter_list|(
@@ -502,6 +486,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+name|virtual
 name|void
 name|VAPrintf
 parameter_list|(
@@ -517,36 +502,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|PrintfWithFlags
-parameter_list|(
-name|uint32_t
-name|flags
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|format
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(format
-parameter_list|(
-name|printf
-parameter_list|,
-function_decl|3
-operator|,
-function_decl|4
-end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+name|virtual
 name|void
 name|LogIf
 parameter_list|(
@@ -577,6 +533,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+name|virtual
 name|void
 name|Debug
 parameter_list|(
@@ -604,6 +561,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+name|virtual
 name|void
 name|DebugVerbose
 parameter_list|(
@@ -631,6 +589,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+name|virtual
 name|void
 name|Error
 parameter_list|(
@@ -658,6 +617,23 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+name|virtual
+name|void
+name|VAError
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|format
+parameter_list|,
+name|va_list
+name|args
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
 name|void
 name|FatalError
 parameter_list|(
@@ -688,6 +664,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+name|virtual
 name|void
 name|Verbose
 parameter_list|(
@@ -715,6 +692,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+name|virtual
 name|void
 name|Warning
 parameter_list|(
@@ -742,6 +720,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+name|virtual
 name|void
 name|WarningVerbose
 parameter_list|(
@@ -875,24 +854,6 @@ name|Flags
 name|m_mask_bits
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|void
-name|PrintfWithFlagsVarArg
-parameter_list|(
-name|uint32_t
-name|flags
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|format
-parameter_list|,
-name|va_list
-name|args
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_label
 name|private

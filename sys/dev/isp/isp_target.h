@@ -64,6 +64,10 @@ block|,
 name|NT_CHANGED
 block|,
 name|NT_HBA_RESET
+block|,
+name|NT_QUERY_TASK_SET
+block|,
+name|NT_QUERY_ASYNC_EVENT
 block|}
 name|isp_ncode_t
 typedef|;

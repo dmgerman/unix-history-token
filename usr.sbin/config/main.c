@@ -3431,6 +3431,9 @@ argument_list|(
 name|cmd
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fread
 argument_list|(
 name|o

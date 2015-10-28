@@ -121,7 +121,7 @@ name|class
 name|DiagnosticsEngine
 decl_stmt|;
 name|class
-name|ExternalIdentifierLookup
+name|ExternalPreprocessorSource
 decl_stmt|;
 name|class
 name|FileEntry
@@ -134,6 +134,9 @@ name|HeaderSearchOptions
 decl_stmt|;
 name|class
 name|IdentifierInfo
+decl_stmt|;
+name|class
+name|Preprocessor
 decl_stmt|;
 comment|/// \brief The preprocessor keeps track of this information for each
 comment|/// file that is \#included.
@@ -321,7 +324,7 @@ name|IdentifierInfo
 operator|*
 name|getControllingMacro
 argument_list|(
-name|ExternalIdentifierLookup
+name|ExternalPreprocessorSource
 operator|*
 name|External
 argument_list|)
@@ -691,8 +694,9 @@ operator|>
 name|FrameworkNames
 expr_stmt|;
 comment|/// \brief Entity used to resolve the identifier IDs of controlling
-comment|/// macros into IdentifierInfo pointers, as needed.
-name|ExternalIdentifierLookup
+comment|/// macros into IdentifierInfo pointers, and keep the identifire up to date,
+comment|/// as needed.
+name|ExternalPreprocessorSource
 modifier|*
 name|ExternalLookup
 decl_stmt|;
@@ -721,9 +725,12 @@ decl_stmt|;
 comment|// HeaderSearch doesn't support default or copy construction.
 name|HeaderSearch
 argument_list|(
-argument|const HeaderSearch&
+specifier|const
+name|HeaderSearch
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -733,7 +740,8 @@ specifier|const
 name|HeaderSearch
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|friend
 name|class
@@ -1092,17 +1100,17 @@ block|}
 name|void
 name|SetExternalLookup
 parameter_list|(
-name|ExternalIdentifierLookup
+name|ExternalPreprocessorSource
 modifier|*
-name|EIL
+name|EPS
 parameter_list|)
 block|{
 name|ExternalLookup
 operator|=
-name|EIL
+name|EPS
 expr_stmt|;
 block|}
-name|ExternalIdentifierLookup
+name|ExternalPreprocessorSource
 operator|*
 name|getExternalLookup
 argument_list|()
@@ -1296,6 +1304,10 @@ comment|/// if we should include it.
 name|bool
 name|ShouldEnterIncludeFile
 parameter_list|(
+name|Preprocessor
+modifier|&
+name|PP
+parameter_list|,
 specifier|const
 name|FileEntry
 modifier|*
@@ -1303,6 +1315,10 @@ name|File
 parameter_list|,
 name|bool
 name|isImport
+parameter_list|,
+name|Module
+modifier|*
+name|CorrespondingModule
 parameter_list|)
 function_decl|;
 comment|/// \brief Return whether the specified file is a normal header,
@@ -1499,18 +1515,6 @@ modifier|*
 name|FE
 parameter_list|)
 function_decl|;
-comment|/// Returns true if modules are enabled.
-name|bool
-name|enabledModules
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LangOpts
-operator|.
-name|Modules
-return|;
-block|}
 comment|/// \brief Retrieve the name of the module file that should be used to
 comment|/// load the given module.
 comment|///

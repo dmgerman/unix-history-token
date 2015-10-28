@@ -99,6 +99,7 @@ operator|::
 name|value_type
 name|value_type
 expr_stmt|;
+typedef|typedef
 name|llvm
 operator|::
 name|PointerUnion
@@ -108,8 +109,15 @@ operator|,
 name|VecTy
 operator|*
 operator|>
-name|Val
+name|PtrUnion
 expr_stmt|;
+name|private
+label|:
+name|PtrUnion
+name|Val
+decl_stmt|;
+name|public
+label|:
 name|TinyPtrVector
 argument_list|()
 block|{}
@@ -517,35 +525,23 @@ end_return
 
 begin_comment
 unit|}
-comment|/// Constructor from a single element.
-end_comment
-
-begin_macro
-unit|explicit
-name|TinyPtrVector
-argument_list|(
-argument|EltTy Elt
-argument_list|)
-end_macro
-
-begin_macro
-unit|:
-name|Val
-argument_list|(
-argument|Elt
-argument_list|)
-end_macro
-
-begin_block
-block|{}
-end_block
-
-begin_comment
 comment|/// Constructor from an ArrayRef.
 end_comment
 
-begin_decl_stmt
-name|explicit
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This also is a constructor for individual array elements due to the single
+end_comment
+
+begin_comment
+comment|/// element constructor for ArrayRef.
+end_comment
+
+begin_expr_stmt
+unit|explicit
 name|TinyPtrVector
 argument_list|(
 name|ArrayRef
@@ -554,10 +550,14 @@ name|EltTy
 operator|>
 name|Elts
 argument_list|)
-range|:
+operator|:
 name|Val
 argument_list|(
-argument|new VecTy(Elts.begin(), Elts.end())
+argument|Elts.size() ==
+literal|1
+argument|? PtrUnion(Elts[
+literal|0
+argument|])                              : PtrUnion(new VecTy(Elts.begin(), Elts.end()))
 argument_list|)
 block|{}
 comment|// implicit conversion operator to ArrayRef.
@@ -580,7 +580,71 @@ condition|)
 return|return
 name|None
 return|;
-end_decl_stmt
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|Val
+operator|.
+name|template
+name|is
+operator|<
+name|EltTy
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+operator|*
+name|Val
+operator|.
+name|getAddrOfPtr1
+argument_list|()
+return|;
+end_if
+
+begin_return
+return|return
+operator|*
+name|Val
+operator|.
+name|template
+name|get
+operator|<
+name|VecTy
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|// implicit conversion operator to MutableArrayRef.
+end_comment
+
+begin_expr_stmt
+unit|operator
+name|MutableArrayRef
+operator|<
+name|EltTy
+operator|>
+operator|(
+operator|)
+block|{
+if|if
+condition|(
+name|Val
+operator|.
+name|isNull
+argument_list|()
+condition|)
+return|return
+name|None
+return|;
+end_expr_stmt
 
 begin_if
 if|if

@@ -42,6 +42,30 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_control.h"
+end_include
+
 begin_comment
 comment|//=======External Functions This Runner Calls=====
 end_comment
@@ -110,10 +134,21 @@ begin_comment
 comment|//=======Test Reset Option=====
 end_comment
 
+begin_function_decl
+name|void
+name|resetTest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|resetTest
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tearDown
 argument_list|()
@@ -126,6 +161,7 @@ end_function
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -155,12 +191,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|Unity
-operator|.
-name|TestFile
-operator|=
-literal|"statestr.c"
-expr_stmt|;
 name|UnityBegin
 argument_list|(
 literal|"statestr.c"
@@ -170,28 +200,28 @@ name|RUN_TEST
 argument_list|(
 name|test_PeerRestart
 argument_list|,
-literal|20
+literal|9
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_SysUnspecified
 argument_list|,
-literal|24
+literal|10
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_ClockCodeExists
 argument_list|,
-literal|29
+literal|11
 argument_list|)
 expr_stmt|;
 name|RUN_TEST
 argument_list|(
 name|test_ClockCodeUnknown
 argument_list|,
-literal|33
+literal|12
 argument_list|)
 expr_stmt|;
 return|return

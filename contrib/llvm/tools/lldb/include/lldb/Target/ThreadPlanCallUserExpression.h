@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Expression/ClangUserExpression.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Target/Thread.h"
 end_include
 
@@ -132,7 +126,7 @@ name|EvaluateExpressionOptions
 operator|&
 name|options
 argument_list|,
-name|ClangUserExpression
+name|lldb
 operator|::
 name|ClangUserExpressionSP
 operator|&
@@ -193,7 +187,7 @@ name|protected
 operator|:
 name|private
 operator|:
-name|ClangUserExpression
+name|lldb
 operator|::
 name|ClangUserExpressionSP
 name|m_user_expression_sp

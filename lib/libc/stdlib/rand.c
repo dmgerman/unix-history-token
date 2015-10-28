@@ -327,7 +327,9 @@ end_endif
 begin_function
 name|int
 name|rand
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -345,11 +347,9 @@ begin_function
 name|void
 name|srand
 parameter_list|(
-name|seed
-parameter_list|)
 name|u_int
 name|seed
-decl_stmt|;
+parameter_list|)
 block|{
 name|next
 operator|=
@@ -381,7 +381,9 @@ end_comment
 begin_function
 name|void
 name|sranddev
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|mib

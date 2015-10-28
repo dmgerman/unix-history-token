@@ -445,7 +445,7 @@ begin_define
 define|#
 directive|define
 name|USPACE_SVC_STACK_TOP
-value|(KSTACK_PAGES * PAGE_SIZE)
+value|(kstack_pages * PAGE_SIZE)
 end_define
 
 begin_comment
@@ -541,24 +541,6 @@ name|x
 parameter_list|)
 value|((x) * (PAGE_SIZE / 1024))
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NO_FUEWORD
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

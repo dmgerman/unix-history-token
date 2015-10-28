@@ -116,8 +116,8 @@ modifier|*
 name|b
 parameter_list|)
 function_decl|;
-comment|/* Return 0 if A and B are equal, 1 if they are related, -1 otherwise. */
-name|int
+comment|/* Return the noderev relationship between A and B. */
+name|svn_fs_node_relation_t
 name|svn_fs_base__id_compare
 parameter_list|(
 specifier|const

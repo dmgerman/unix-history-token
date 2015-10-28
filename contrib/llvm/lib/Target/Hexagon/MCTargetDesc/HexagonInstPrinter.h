@@ -76,8 +76,59 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|HexagonMCInst
+name|HexagonAsmInstPrinter
+range|:
+name|public
+name|MCInstPrinter
+block|{
+name|public
+operator|:
+name|HexagonAsmInstPrinter
+argument_list|(
+name|MCInstPrinter
+operator|*
+name|RawPrinter
+argument_list|)
+block|;
+name|void
+name|printInst
+argument_list|(
+argument|MCInst const *MI
+argument_list|,
+argument|raw_ostream&O
+argument_list|,
+argument|StringRef Annot
+argument_list|,
+argument|MCSubtargetInfo const&STI
+argument_list|)
+name|override
+block|;
+name|void
+name|printRegName
+argument_list|(
+argument|raw_ostream&O
+argument_list|,
+argument|unsigned RegNo
+argument_list|)
+specifier|const
+name|override
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MCInstPrinter
+operator|>
+name|RawPrinter
+block|; }
 decl_stmt|;
+comment|/// Prints bundles as a newline separated list of individual instructions
+comment|/// Duplexes are separated by a vertical tab \v character
+comment|/// A trailing line includes bundle properties such as endloop0/1
+comment|///
+comment|/// r0 = add(r1, r2)
+comment|/// r0 = #0 \v jump 0x0
+comment|/// :endloop0 :endloop1
 name|class
 name|HexagonInstPrinter
 range|:
@@ -89,18 +140,18 @@ operator|:
 name|explicit
 name|HexagonInstPrinter
 argument_list|(
-specifier|const
 name|MCAsmInfo
+specifier|const
 operator|&
 name|MAI
 argument_list|,
-specifier|const
 name|MCInstrInfo
+specifier|const
 operator|&
 name|MII
 argument_list|,
-specifier|const
 name|MCRegisterInfo
+specifier|const
 operator|&
 name|MRI
 argument_list|)
@@ -122,23 +173,15 @@ block|{}
 name|void
 name|printInst
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|raw_ostream&O
 argument_list|,
 argument|StringRef Annot
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|)
 name|override
-block|;
-name|void
-name|printInst
-argument_list|(
-argument|const HexagonMCInst *MI
-argument_list|,
-argument|raw_ostream&O
-argument_list|,
-argument|StringRef Annot
-argument_list|)
 block|;
 name|virtual
 name|StringRef
@@ -161,12 +204,15 @@ operator|&
 name|O
 argument_list|)
 block|;
-name|StringRef
-name|getRegName
+name|void
+name|printRegName
 argument_list|(
+argument|raw_ostream&OS
+argument_list|,
 argument|unsigned RegNo
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 specifier|const
@@ -332,6 +378,17 @@ argument_list|)
 specifier|const
 block|;
 name|void
+name|printExtBrtarget
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+specifier|const
+block|;
+name|void
 name|printConstantPool
 argument_list|(
 argument|const MCInst *MI
@@ -412,18 +469,25 @@ argument|bool hi
 argument_list|)
 specifier|const
 block|;
-specifier|static
-specifier|const
-name|char
-name|PacketPadding
-block|;
 name|private
 operator|:
 specifier|const
 name|MCInstrInfo
 operator|&
 name|MII
-block|;    }
+block|;
+name|bool
+name|HasExtender
+block|;
+name|void
+name|setExtender
+argument_list|(
+name|MCInst
+specifier|const
+operator|&
+name|MCI
+argument_list|)
+block|;   }
 decl_stmt|;
 block|}
 end_decl_stmt

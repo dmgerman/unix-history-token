@@ -145,6 +145,7 @@ comment|/* Sequential extent check */
 end_comment
 
 begin_decl_stmt
+specifier|const
 specifier|static
 name|ctl_serialize_action
 name|ctl_serialize_table
@@ -156,9 +157,11 @@ name|CTL_SERIDX_COUNT
 index|]
 init|=
 block|{
-comment|/**>IDX_ :: 2nd:TUR RD  WRT UNM MDSN MDSL RQSN INQ RDCP RES LSNS FMT STR*/
+comment|/**>IDX_ :: 2nd:TUR RD  WRT UNM SYN MDSN MDSL RQSN INQ RDCP RES LSNS FMT STR*/
 comment|/*TUR     */
 block|{
+name|pS
+block|,
 name|pS
 block|,
 name|pS
@@ -196,6 +199,8 @@ name|xT
 block|,
 name|bO
 block|,
+name|pS
+block|,
 name|bK
 block|,
 name|bK
@@ -222,6 +227,8 @@ block|,
 name|xT
 block|,
 name|xT
+block|,
+name|bO
 block|,
 name|bO
 block|,
@@ -254,6 +261,39 @@ name|xO
 block|,
 name|pS
 block|,
+name|pS
+block|,
+name|bK
+block|,
+name|bK
+block|,
+name|bK
+block|,
+name|pS
+block|,
+name|pS
+block|,
+name|bK
+block|,
+name|pS
+block|,
+name|bK
+block|,
+name|bK
+block|}
+block|,
+comment|/*SYNC    */
+block|{
+name|pS
+block|,
+name|pS
+block|,
+name|pS
+block|,
+name|pS
+block|,
+name|pS
+block|,
 name|bK
 block|,
 name|bK
@@ -275,6 +315,8 @@ block|}
 block|,
 comment|/*MD_SNS  */
 block|{
+name|bK
+block|,
 name|bK
 block|,
 name|bK
@@ -318,6 +360,8 @@ name|bK
 block|,
 name|bK
 block|,
+name|bK
+block|,
 name|pS
 block|,
 name|pS
@@ -333,6 +377,8 @@ block|}
 block|,
 comment|/*RQ_SNS  */
 block|{
+name|pS
+block|,
 name|pS
 block|,
 name|pS
@@ -374,6 +420,8 @@ name|pS
 block|,
 name|pS
 block|,
+name|pS
+block|,
 name|bK
 block|,
 name|pS
@@ -391,6 +439,8 @@ block|}
 block|,
 comment|/*RD_CAP  */
 block|{
+name|pS
+block|,
 name|pS
 block|,
 name|pS
@@ -434,6 +484,8 @@ name|bK
 block|,
 name|bK
 block|,
+name|bK
+block|,
 name|pS
 block|,
 name|bK
@@ -449,6 +501,8 @@ block|}
 block|,
 comment|/*LOG_SNS */
 block|{
+name|pS
+block|,
 name|pS
 block|,
 name|pS
@@ -490,6 +544,8 @@ name|bK
 block|,
 name|bK
 block|,
+name|bK
+block|,
 name|pS
 block|,
 name|pS
@@ -507,6 +563,8 @@ block|}
 block|,
 comment|/*START   */
 block|{
+name|bK
+block|,
 name|bK
 block|,
 name|bK

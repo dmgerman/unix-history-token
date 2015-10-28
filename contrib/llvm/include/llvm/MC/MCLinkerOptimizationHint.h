@@ -389,11 +389,11 @@ literal|3
 operator|>
 name|Args
 expr_stmt|;
-comment|/// Emit this directive in @p OutStream using the information available
-comment|/// in the given @p ObjWriter and @p Layout to get the address of the
+comment|/// Emit this directive in \p OutStream using the information available
+comment|/// in the given \p ObjWriter and \p Layout to get the address of the
 comment|/// arguments within the object file.
 name|void
-name|Emit_impl
+name|emit_impl
 argument_list|(
 name|raw_ostream
 operator|&
@@ -473,7 +473,7 @@ block|}
 comment|/// Emit this directive as:
 comment|///<kind, numArgs, addr1, ..., addrN>
 name|void
-name|Emit
+name|emit
 argument_list|(
 name|MachObjectWriter
 operator|&
@@ -495,7 +495,7 @@ operator|.
 name|getStream
 argument_list|()
 decl_stmt|;
-name|Emit_impl
+name|emit_impl
 argument_list|(
 name|OutStream
 argument_list|,
@@ -505,8 +505,8 @@ name|Layout
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// Get the size in bytes of this directive if emitted in @p ObjWriter with
-comment|/// the given @p Layout.
+comment|/// Get the size in bytes of this directive if emitted in \p ObjWriter with
+comment|/// the given \p Layout.
 name|uint64_t
 name|getEmitSize
 argument_list|(
@@ -567,6 +567,7 @@ block|{}
 operator|~
 name|raw_counting_ostream
 argument_list|()
+name|override
 block|{
 name|flush
 argument_list|()
@@ -576,7 +577,7 @@ block|;
 name|raw_counting_ostream
 name|OutStream
 block|;
-name|Emit_impl
+name|emit_impl
 argument_list|(
 name|OutStream
 argument_list|,
@@ -641,8 +642,8 @@ return|return
 name|Directives
 return|;
 block|}
-comment|/// Add the directive of the given kind @p Kind with the given arguments
-comment|/// @p Args to the container.
+comment|/// Add the directive of the given kind \p Kind with the given arguments
+comment|/// \p Args to the container.
 name|void
 name|addDirective
 argument_list|(
@@ -718,9 +719,9 @@ name|EmitSize
 return|;
 block|}
 comment|/// Emit all Linker Optimization Hint in one big table.
-comment|/// Each line of the table is emitted by LOHDirective::Emit.
+comment|/// Each line of the table is emitted by LOHDirective::emit.
 name|void
-name|Emit
+name|emit
 argument_list|(
 name|MachObjectWriter
 operator|&
@@ -744,7 +745,7 @@ name|Directives
 control|)
 name|D
 operator|.
-name|Emit
+name|emit
 argument_list|(
 name|ObjWriter
 argument_list|,

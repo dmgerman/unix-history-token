@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian 
 end_comment
 
 begin_comment
-comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.168 2015/04/09 20:01:41 christos Exp $  */
+comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.172 2015/09/11 17:24:09 christos Exp $  */
 end_comment
 
 begin_ifndef
@@ -79,6 +79,13 @@ name|INT64_T_FORMAT
 value|"I64"
 end_define
 
+begin_define
+define|#
+directive|define
+name|INTMAX_T_FORMAT
+value|"I64"
+end_define
+
 begin_else
 else|#
 directive|else
@@ -96,6 +103,13 @@ define|#
 directive|define
 name|INT64_T_FORMAT
 value|"ll"
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTMAX_T_FORMAT
+value|"j"
 end_define
 
 begin_endif
@@ -1177,13 +1191,13 @@ define|#
 directive|define
 name|str_flags
 value|_u._s._flags
-comment|/* Words 9-16 */
+comment|/* Words 9-24 */
 name|union
 name|VALUETYPE
 name|value
 decl_stmt|;
 comment|/* either number or string */
-comment|/* Words 17-32 */
+comment|/* Words 25-40 */
 name|char
 name|desc
 index|[
@@ -1191,7 +1205,7 @@ name|MAXDESC
 index|]
 decl_stmt|;
 comment|/* description */
-comment|/* Words 33-52 */
+comment|/* Words 41-60 */
 name|char
 name|mimetype
 index|[
@@ -1199,7 +1213,7 @@ name|MAXMIME
 index|]
 decl_stmt|;
 comment|/* MIME type */
-comment|/* Words 53-54 */
+comment|/* Words 61-62 */
 name|char
 name|apple
 index|[
@@ -1207,7 +1221,7 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* APPLE CREATOR/TYPE */
-comment|/* Words 55-63 */
+comment|/* Words 63-78 */
 name|char
 name|ext
 index|[
@@ -1729,6 +1743,9 @@ decl_stmt|;
 name|uint16_t
 name|elf_notes_max
 decl_stmt|;
+name|uint16_t
+name|regex_max
+decl_stmt|;
 define|#
 directive|define
 name|FILE_INDIR_MAX
@@ -1744,11 +1761,15 @@ value|32768
 define|#
 directive|define
 name|FILE_ELF_PHNUM_MAX
-value|128
+value|2048
 define|#
 directive|define
 name|FILE_ELF_NOTES_MAX
 value|256
+define|#
+directive|define
+name|FILE_REGEX_MAX
+value|8192
 block|}
 struct|;
 end_struct

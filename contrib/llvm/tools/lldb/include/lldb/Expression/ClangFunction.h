@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Symbol/ClangASTType.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Target/Process.h"
 end_include
 
@@ -682,7 +688,7 @@ comment|//------------------------------------------------------------------
 comment|// For ClangFunction only
 comment|//------------------------------------------------------------------
 comment|// Note: the parser needs to be destructed before the execution unit, so
-comment|// declare the the execution unit first.
+comment|// declare the execution unit first.
 name|std
 operator|::
 name|shared_ptr

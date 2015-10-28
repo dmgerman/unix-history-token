@@ -87,15 +87,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|ARMSubtarget
-decl_stmt|;
-name|class
-name|ARMBaseInstrInfo
-decl_stmt|;
-name|class
-name|Type
-decl_stmt|;
 comment|/// Register allocation hints.
 name|namespace
 name|ARMRI
@@ -350,15 +341,6 @@ name|ARMGenRegisterInfo
 block|{
 name|protected
 operator|:
-specifier|const
-name|ARMSubtarget
-operator|&
-name|STI
-block|;
-comment|/// FramePtr - ARM physical register used as frame ptr.
-name|unsigned
-name|FramePtr
-block|;
 comment|/// BasePtr - ARM physical register used as a base ptr in complex stack
 comment|/// frames. I.e., when we need a 3rd base, not just SP and FP, due to
 comment|/// variable size stack objects.
@@ -368,12 +350,7 @@ block|;
 comment|// Can be only subclassed.
 name|explicit
 name|ARMBaseRegisterInfo
-argument_list|(
-specifier|const
-name|ARMSubtarget
-operator|&
-name|STI
-argument_list|)
+argument_list|()
 block|;
 comment|// Return the opcode that implements 'Op', or 0 if no opcode
 name|unsigned
@@ -391,7 +368,7 @@ name|MCPhysReg
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction *MF = nullptr
+argument|const MachineFunction *MF
 argument_list|)
 specifier|const
 name|override
@@ -401,6 +378,8 @@ name|uint32_t
 operator|*
 name|getCallPreservedMask
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|CallingConv::ID
 argument_list|)
 specifier|const
@@ -426,6 +405,8 @@ name|uint32_t
 operator|*
 name|getThisReturnPreservedMask
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|CallingConv::ID
 argument_list|)
 specifier|const
@@ -467,6 +448,8 @@ operator|*
 name|getLargestLegalSuperClass
 argument_list|(
 argument|const TargetRegisterClass *RC
+argument_list|,
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 name|override
@@ -498,21 +481,13 @@ specifier|const
 name|override
 block|;
 name|void
-name|UpdateRegAllocHint
+name|updateRegAllocHint
 argument_list|(
 argument|unsigned Reg
 argument_list|,
 argument|unsigned NewReg
 argument_list|,
 argument|MachineFunction&MF
-argument_list|)
-specifier|const
-name|override
-block|;
-name|bool
-name|avoidWriteAfterWrite
-argument_list|(
-argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
 name|override
@@ -589,6 +564,8 @@ name|bool
 name|isFrameOffsetLegal
 argument_list|(
 argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned BaseReg
 argument_list|,
 argument|int64_t Offset
 argument_list|)

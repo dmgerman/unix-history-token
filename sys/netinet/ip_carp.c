@@ -5036,6 +5036,8 @@ name|ifatoia6
 argument_list|(
 name|ifa
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;

@@ -253,6 +253,23 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|TCPPCAP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_pcap.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|TCPDEBUG
 end_ifdef
 
@@ -2990,6 +3007,8 @@ operator|(
 name|if_hw_tsomax
 operator|-
 name|hdrlen
+operator|-
+name|max_linkhdr
 operator|)
 expr_stmt|;
 if|if
@@ -3034,6 +3053,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* 				 * Subtract one segment for the LINK 				 * and TCP/IP headers mbuf that will 				 * be prepended to this mbuf chain 				 * after the code in this section 				 * limits the number of mbufs in the 				 * chain to if_hw_tsomaxsegcount. 				 */
+name|if_hw_tsomaxsegcount
+operator|-=
+literal|1
+expr_stmt|;
 name|max_len
 operator|=
 literal|0
@@ -4892,6 +4916,24 @@ block|}
 endif|#
 directive|endif
 comment|/* TCPDEBUG */
+name|TCP_PROBE3
+argument_list|(
+name|debug__input
+argument_list|,
+name|tp
+argument_list|,
+name|th
+argument_list|,
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Fill in IP length and desired time to live and 	 * send to IP level.  There should be a better way 	 * to handle ttl and tos; we could keep them in 	 * the template, but need a way to checksum without them. 	 */
 comment|/* 	 * m->m_pkthdr.len should have been set before checksum calculation, 	 * because in6_cksum() need it. 	 */
 ifdef|#
@@ -5013,6 +5055,26 @@ argument_list|,
 name|th
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCPPCAP
+comment|/* Save packet, if requested. */
+name|tcp_pcap_add
+argument_list|(
+name|th
+argument_list|,
+name|m
+argument_list|,
+operator|&
+operator|(
+name|tp
+operator|->
+name|t_outpkts
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* TODO: IPv6 IP6TOS_ECT bit on */
 name|error
 operator|=
@@ -5233,6 +5295,26 @@ argument_list|,
 name|th
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCPPCAP
+comment|/* Save packet, if requested. */
+name|tcp_pcap_add
+argument_list|(
+name|th
+argument_list|,
+name|m
+argument_list|,
+operator|&
+operator|(
+name|tp
+operator|->
+name|t_outpkts
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|ip_output

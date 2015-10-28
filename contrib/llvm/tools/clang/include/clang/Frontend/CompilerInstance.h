@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/PCHContainerOperations.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Diagnostic.h"
 end_include
 
@@ -142,6 +148,9 @@ name|raw_fd_ostream
 decl_stmt|;
 name|class
 name|Timer
+decl_stmt|;
+name|class
+name|TimerGroup
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -304,7 +313,18 @@ name|Sema
 operator|>
 name|TheSema
 block|;
-comment|/// \brief The frontend timer
+comment|/// \brief The frontend timer group.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|TimerGroup
+operator|>
+name|FrontendTimerGroup
+block|;
+comment|/// \brief The frontend timer.
 name|std
 operator|::
 name|unique_ptr
@@ -330,6 +350,15 @@ operator|<
 name|ModuleDependencyCollector
 operator|>
 name|ModuleDepCollector
+block|;
+comment|/// \brief The module provider.
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|ThePCHContainerOperations
 block|;
 comment|/// \brief The dependency file generator.
 name|std
@@ -378,6 +407,15 @@ name|string
 operator|>
 name|ModuleFileOverrides
 block|;
+comment|/// \brief Module files that we've explicitly loaded via \ref loadModuleFile,
+comment|/// and their dependencies.
+name|llvm
+operator|::
+name|StringSet
+operator|<
+operator|>
+name|ExplicitlyLoadedModuleFiles
+block|;
 comment|/// \brief The location of the module-import keyword for the last module
 comment|/// import.
 name|SourceLocation
@@ -419,47 +457,98 @@ operator|::
 name|string
 name|TempFilename
 block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|raw_ostream
-operator|*
+operator|>
 name|OS
 block|;
 name|OutputFile
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|filename
+argument|std::string filename
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|tempFilename
+argument|std::string tempFilename
 argument_list|,
-name|raw_ostream
-operator|*
-name|os
+argument|std::unique_ptr<raw_ostream> OS
 argument_list|)
 operator|:
 name|Filename
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|filename
+argument_list|)
 argument_list|)
 block|,
 name|TempFilename
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|tempFilename
+argument_list|)
 argument_list|)
 block|,
 name|OS
 argument_list|(
-argument|os
+argument|std::move(OS)
 argument_list|)
-block|{ }
+block|{}
+name|OutputFile
+argument_list|(
+name|OutputFile
+operator|&&
+name|O
+argument_list|)
+operator|:
+name|Filename
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|O
+operator|.
+name|Filename
+argument_list|)
+argument_list|)
+block|,
+name|TempFilename
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|O
+operator|.
+name|TempFilename
+argument_list|)
+argument_list|)
+block|,
+name|OS
+argument_list|(
+argument|std::move(O.OS)
+argument_list|)
+block|{}
 block|}
+block|;
+comment|/// If the output doesn't support seeking (terminal, pipe). we switch
+comment|/// the stream to a buffer_ostream. These are the buffer and the original
+comment|/// stream.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|raw_fd_ostream
+operator|>
+name|NonSeekStream
 block|;
 comment|/// The list of active output files.
 name|std
@@ -472,9 +561,12 @@ name|OutputFiles
 block|;
 name|CompilerInstance
 argument_list|(
-argument|const CompilerInstance&
+specifier|const
+name|CompilerInstance
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -484,19 +576,23 @@ specifier|const
 name|CompilerInstance
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
 name|explicit
 name|CompilerInstance
 argument_list|(
+argument|std::shared_ptr<PCHContainerOperations> PCHContainerOps =           std::make_shared<PCHContainerOperations>()
+argument_list|,
 argument|bool BuildingModule = false
 argument_list|)
 block|;
 operator|~
 name|CompilerInstance
 argument_list|()
+name|override
 block|;
 comment|/// @name High-Level Operations
 comment|/// {
@@ -1431,6 +1527,158 @@ operator|>
 name|Collector
 argument_list|)
 block|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PCHContainerOperations
+operator|>
+name|getPCHContainerOperations
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ThePCHContainerOperations
+return|;
+block|}
+comment|/// Return the appropriate PCHContainerWriter depending on the
+comment|/// current CodeGenOptions.
+specifier|const
+name|PCHContainerWriter
+operator|&
+name|getPCHContainerWriter
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Invocation
+operator|&&
+literal|"cannot determine module format without invocation"
+argument_list|)
+block|;
+name|StringRef
+name|Format
+operator|=
+name|getHeaderSearchOpts
+argument_list|()
+operator|.
+name|ModuleFormat
+block|;
+name|auto
+operator|*
+name|Writer
+operator|=
+name|ThePCHContainerOperations
+operator|->
+name|getWriterOrNull
+argument_list|(
+name|Format
+argument_list|)
+block|;
+if|if
+condition|(
+operator|!
+name|Writer
+condition|)
+block|{
+if|if
+condition|(
+name|Diagnostics
+condition|)
+name|Diagnostics
+operator|->
+name|Report
+argument_list|(
+name|diag
+operator|::
+name|err_module_format_unhandled
+argument_list|)
+operator|<<
+name|Format
+expr_stmt|;
+name|llvm
+operator|::
+name|report_fatal_error
+argument_list|(
+literal|"unknown module format"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|*
+name|Writer
+return|;
+block|}
+comment|/// Return the appropriate PCHContainerReader depending on the
+comment|/// current CodeGenOptions.
+specifier|const
+name|PCHContainerReader
+operator|&
+name|getPCHContainerReader
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Invocation
+operator|&&
+literal|"cannot determine module format without invocation"
+argument_list|)
+block|;
+name|StringRef
+name|Format
+operator|=
+name|getHeaderSearchOpts
+argument_list|()
+operator|.
+name|ModuleFormat
+block|;
+name|auto
+operator|*
+name|Reader
+operator|=
+name|ThePCHContainerOperations
+operator|->
+name|getReaderOrNull
+argument_list|(
+name|Format
+argument_list|)
+block|;
+if|if
+condition|(
+operator|!
+name|Reader
+condition|)
+block|{
+if|if
+condition|(
+name|Diagnostics
+condition|)
+name|Diagnostics
+operator|->
+name|Report
+argument_list|(
+name|diag
+operator|::
+name|err_module_format_unhandled
+argument_list|)
+operator|<<
+name|Format
+expr_stmt|;
+name|llvm
+operator|::
+name|report_fatal_error
+argument_list|(
+literal|"unknown module format"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|*
+name|Reader
+return|;
+block|}
 comment|/// }
 comment|/// @name Code Completion
 comment|/// {
@@ -1518,9 +1766,8 @@ comment|/// \param OutFile - The output file info.
 name|void
 name|addOutputFile
 argument_list|(
-specifier|const
 name|OutputFile
-operator|&
+operator|&&
 name|OutFile
 argument_list|)
 block|;
@@ -1613,6 +1860,12 @@ argument_list|(
 argument|TranslationUnitKind TUKind
 argument_list|)
 block|;
+name|std
+operator|::
+name|string
+name|getSpecificModuleCachePath
+argument_list|()
+block|;
 comment|/// Create the AST context.
 name|void
 name|createASTContext
@@ -1638,13 +1891,15 @@ comment|/// Create an external AST source to read a PCH file.
 comment|///
 comment|/// \return - The new object on success, or null on failure.
 specifier|static
-name|ExternalASTSource
-operator|*
+name|IntrusiveRefCntPtr
+operator|<
+name|ASTReader
+operator|>
 name|createPCHExternalASTSource
 argument_list|(
 argument|StringRef Path
 argument_list|,
-argument|const std::string&Sysroot
+argument|StringRef Sysroot
 argument_list|,
 argument|bool DisablePCHValidation
 argument_list|,
@@ -1653,6 +1908,8 @@ argument_list|,
 argument|Preprocessor&PP
 argument_list|,
 argument|ASTContext&Context
+argument_list|,
+argument|const PCHContainerReader&PCHContainerRdr
 argument_list|,
 argument|void *DeserializationListener
 argument_list|,
@@ -1679,7 +1936,7 @@ name|createCodeCompletionConsumer
 argument_list|(
 argument|Preprocessor&PP
 argument_list|,
-argument|const std::string&Filename
+argument|StringRef Filename
 argument_list|,
 argument|unsigned Line
 argument_list|,
@@ -1712,9 +1969,7 @@ comment|/// their result (that is, the data is written to a temporary file which
 comment|/// atomically replace the target output on success).
 comment|///
 comment|/// \return - Null on error.
-name|llvm
-operator|::
-name|raw_fd_ostream
+name|raw_pwrite_stream
 operator|*
 name|createDefaultOutputFile
 argument_list|(
@@ -1731,9 +1986,7 @@ comment|/// Create a new output file and add it to the list of tracked output fi
 comment|/// optionally deriving the output path name.
 comment|///
 comment|/// \return - Null on error.
-name|llvm
-operator|::
-name|raw_fd_ostream
+name|raw_pwrite_stream
 operator|*
 name|createOutputFile
 argument_list|(
@@ -1777,11 +2030,12 @@ comment|/// \param ResultPathName [out] - If given, the result path name will be
 comment|/// stored here on success.
 comment|/// \param TempPathName [out] - If given, the temporary file path name
 comment|/// will be stored here on success.
-specifier|static
-name|llvm
+name|std
 operator|::
-name|raw_fd_ostream
-operator|*
+name|unique_ptr
+operator|<
+name|raw_pwrite_stream
+operator|>
 name|createOutputFile
 argument_list|(
 argument|StringRef OutputPath
@@ -1892,8 +2146,6 @@ argument_list|,
 argument|Module::NameVisibilityKind Visibility
 argument_list|,
 argument|SourceLocation ImportLoc
-argument_list|,
-argument|bool Complain
 argument_list|)
 name|override
 block|;

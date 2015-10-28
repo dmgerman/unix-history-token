@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/ArchSpec.h"
 end_include
 
@@ -71,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/TimeValue.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Symbol/ClangASTContext.h"
 end_include
 
 begin_include
@@ -1564,25 +1564,8 @@ parameter_list|)
 function_decl|;
 name|bool
 name|GetIsDynamicLinkEditor
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_is_dynamic_loader_module
-return|;
-block|}
-name|void
-name|SetIsDynamicLinkEditor
-parameter_list|(
-name|bool
-name|b
-parameter_list|)
-block|{
-name|m_is_dynamic_loader_module
-operator|=
-name|b
-expr_stmt|;
-block|}
+parameter_list|()
+function_decl|;
 name|ClangASTContext
 modifier|&
 name|GetClangASTContext
@@ -2259,13 +2242,11 @@ begin_comment
 comment|///< The architecture for this module.
 end_comment
 
-begin_expr_stmt
-name|lldb_private
-operator|::
+begin_decl_stmt
 name|UUID
 name|m_uuid
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|///< Each module is assumed to have a unique identifier to help match it up to debug symbols.
@@ -2346,12 +2327,9 @@ comment|///< A shared pointer to the object file parser for this module as it ma
 end_comment
 
 begin_expr_stmt
-name|std
+name|lldb
 operator|::
-name|unique_ptr
-operator|<
-name|SymbolVendor
-operator|>
+name|SymbolVendorUP
 name|m_symfile_ap
 expr_stmt|;
 end_expr_stmt
@@ -2360,11 +2338,34 @@ begin_comment
 comment|///< A pointer to the symbol vendor for this module.
 end_comment
 
-begin_decl_stmt
-name|ClangASTContext
+begin_expr_stmt
+name|std
+operator|::
+name|vector
+operator|<
+name|lldb
+operator|::
+name|SymbolVendorUP
+operator|>
+name|m_old_symfiles
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|///< If anyone calls Module::SetSymbolFileFileSpec() and changes the symbol file,
+end_comment
+
+begin_comment
+comment|///< we need to keep all old symbol files around in case anyone has type references to them
+end_comment
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|ClangASTContextUP
 name|m_ast
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|///< The AST context for this module.
@@ -2381,14 +2382,9 @@ comment|///< Module specific source remappings for when you have debug info for 
 end_comment
 
 begin_expr_stmt
-name|std
+name|lldb
 operator|::
-name|unique_ptr
-operator|<
-name|lldb_private
-operator|::
-name|SectionList
-operator|>
+name|SectionListUP
 name|m_sections_ap
 expr_stmt|;
 end_expr_stmt
@@ -2412,10 +2408,6 @@ range|:
 literal|1
 decl_stmt|,
 name|m_did_init_ast
-range|:
-literal|1
-decl_stmt|,
-name|m_is_dynamic_loader_module
 range|:
 literal|1
 decl_stmt|;

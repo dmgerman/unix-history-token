@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/*	$FreeBSD$ */
 end_comment
 
 begin_comment
@@ -5618,7 +5618,7 @@ comment|/* This function can fail if the filter rule has had a population policy
 end_comment
 
 begin_comment
-comment|/* IP addresses used with stateful filteirng assigned to it.                */
+comment|/* IP addresses used with stateful filtering assigned to it.                */
 end_comment
 
 begin_comment
@@ -5728,7 +5728,7 @@ name|is_v
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If we could trust is_hv, then the modulous would not be needed, 	 * but when running with IPFILTER_SYNC, this stops bad values. 	 */
+comment|/* 	 * If we could trust is_hv, then the modulus would not be needed, 	 * but when running with IPFILTER_SYNC, this stops bad values. 	 */
 name|hv
 operator|=
 name|is
@@ -8307,6 +8307,7 @@ return|return
 literal|4
 return|;
 block|}
+comment|/* 	 * No existing state; create new 	 */
 name|KMALLOC
 argument_list|(
 name|is
@@ -8377,7 +8378,7 @@ name|is_rule
 operator|=
 name|fr
 expr_stmt|;
-comment|/* 	 * Do not do the modulous here, it is done in ipf_state_insert(). 	 */
+comment|/* 	 * Do not do the modulus here, it is done in ipf_state_insert(). 	 */
 if|if
 condition|(
 name|fr
@@ -8515,7 +8516,7 @@ operator|->
 name|fr_logtag
 expr_stmt|;
 block|}
-comment|/* 	 * It may seem strange to set is_ref to 2, but if stsave is not NULL 	 * then a copy of the pointer is being stored somewhere else and in 	 * the end, it will expect to be able to do osmething with it. 	 */
+comment|/* 	 * It may seem strange to set is_ref to 2, but if stsave is not NULL 	 * then a copy of the pointer is being stored somewhere else and in 	 * the end, it will expect to be able to do something with it. 	 */
 name|is
 operator|->
 name|is_me
@@ -18491,23 +18492,23 @@ name|is_ref
 operator|--
 expr_stmt|;
 block|}
+name|is
+operator|->
+name|is_ref
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|is
 operator|->
 name|is_ref
 operator|>
-literal|1
+literal|0
 condition|)
 block|{
 name|int
 name|refs
 decl_stmt|;
-name|is
-operator|->
-name|is_ref
-operator|--
-expr_stmt|;
 name|refs
 operator|=
 name|is
@@ -18538,14 +18539,6 @@ return|return
 name|refs
 return|;
 block|}
-name|MUTEX_EXIT
-argument_list|(
-operator|&
-name|is
-operator|->
-name|is_lock
-argument_list|)
-expr_stmt|;
 name|fr
 operator|=
 name|is
@@ -18598,11 +18591,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|ASSERT
+argument_list|(
 name|is
 operator|->
 name|is_ref
-operator|=
+operator|==
 literal|0
+argument_list|)
+expr_stmt|;
+name|MUTEX_EXIT
+argument_list|(
+operator|&
+name|is
+operator|->
+name|is_lock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

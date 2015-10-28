@@ -10930,11 +10930,12 @@ name|iscsi_session
 modifier|*
 name|is
 decl_stmt|;
-name|ISCSI_DEBUG
-argument_list|(
-literal|"removing all sessions due to shutdown"
-argument_list|)
+comment|/* 	 * Trying to reconnect during system shutdown would lead to hang. 	 */
+name|fail_on_disconnection
+operator|=
+literal|1
 expr_stmt|;
+comment|/* 	 * If we have any sessions waiting for reconnection, request 	 * maintenance thread to fail them immediately instead of waiting 	 * for reconnect timeout. 	 */
 name|sx_slock
 argument_list|(
 operator|&
@@ -10951,11 +10952,29 @@ argument|&sc->sc_sessions
 argument_list|,
 argument|is_next
 argument_list|)
-name|iscsi_session_terminate
+block|{
+name|ISCSI_SESSION_LOCK
 argument_list|(
 name|is
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|is
+operator|->
+name|is_waiting_for_iscsid
+condition|)
+name|iscsi_session_reconnect
+argument_list|(
+name|is
+argument_list|)
+expr_stmt|;
+name|ISCSI_SESSION_UNLOCK
+argument_list|(
+name|is
+argument_list|)
+expr_stmt|;
+block|}
 name|sx_sunlock
 argument_list|(
 operator|&
@@ -11101,14 +11120,13 @@ name|si_drv1
 operator|=
 name|sc
 expr_stmt|;
-comment|/* 	 * Note that this needs to get run before dashutdown().  Otherwise, 	 * when rebooting with iSCSI session with outstanding requests, 	 * but disconnected, dashutdown() will hang on cam_periph_runccb(). 	 */
 name|sc
 operator|->
 name|sc_shutdown_eh
 operator|=
 name|EVENTHANDLER_REGISTER
 argument_list|(
-name|shutdown_post_sync
+name|shutdown_pre_sync
 argument_list|,
 name|iscsi_shutdown
 argument_list|,
@@ -11178,7 +11196,7 @@ name|NULL
 condition|)
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
-name|shutdown_post_sync
+name|shutdown_pre_sync
 argument_list|,
 name|sc
 operator|->

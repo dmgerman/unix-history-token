@@ -1290,6 +1290,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_SA600
+value|0x49
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_DMA_MAX
 value|0x4f
 end_define
@@ -1905,6 +1912,17 @@ end_define
 
 begin_comment
 comment|/* read portmultiplier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_CHECK_POWER_MODE
+value|0xe5
+end_define
+
+begin_comment
+comment|/* device power mode */
 end_comment
 
 begin_define

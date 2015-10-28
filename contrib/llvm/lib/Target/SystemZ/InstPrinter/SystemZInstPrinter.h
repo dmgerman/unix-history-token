@@ -160,6 +160,11 @@ name|MCOperand
 operator|&
 name|MO
 argument_list|,
+specifier|const
+name|MCAsmInfo
+operator|*
+name|MAI
+argument_list|,
 name|raw_ostream
 operator|&
 name|O
@@ -184,6 +189,8 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|,
 argument|StringRef Annot
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|)
 name|override
 block|;
@@ -231,6 +238,46 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printBDVAddrOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printU1ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printU2ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printU3ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printU4ImmOperand
 argument_list|(
 argument|const MCInst *MI
@@ -262,6 +309,16 @@ argument_list|)
 block|;
 name|void
 name|printU8ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printU12ImmOperand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
@@ -312,6 +369,16 @@ argument_list|)
 block|;
 name|void
 name|printPCRelOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printPCRelTLSOperand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

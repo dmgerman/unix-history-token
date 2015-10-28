@@ -387,7 +387,7 @@ name|errno
 operator|)
 return|;
 block|}
-comment|/* Set signal masks/defaults */
+comment|/* 	 * Set signal masks/defaults. 	 * Use unwrapped syscall, libthr is in undefined state after vfork(). 	 */
 if|if
 condition|(
 name|sa
@@ -397,7 +397,7 @@ operator|&
 name|POSIX_SPAWN_SETSIGMASK
 condition|)
 block|{
-name|_sigprocmask
+name|__sys_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -447,7 +447,7 @@ argument_list|)
 condition|)
 if|if
 condition|(
-name|_sigaction
+name|__sys_sigaction
 argument_list|(
 name|i
 argument_list|,

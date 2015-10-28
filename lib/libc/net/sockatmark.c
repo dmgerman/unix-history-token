@@ -6,7 +6,25 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_function
@@ -22,7 +40,7 @@ name|atmark
 decl_stmt|;
 if|if
 condition|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|s
 argument_list|,

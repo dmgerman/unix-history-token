@@ -99,6 +99,7 @@ name|class
 name|SDDbgValue
 decl_stmt|;
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|InstrEmitter
 block|{
 name|MachineFunction

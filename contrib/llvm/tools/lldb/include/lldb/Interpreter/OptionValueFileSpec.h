@@ -84,27 +84,24 @@ block|{
 name|public
 operator|:
 name|OptionValueFileSpec
-argument_list|()
-block|;
-name|OptionValueFileSpec
 argument_list|(
-specifier|const
-name|FileSpec
-operator|&
-name|value
+argument|bool resolve = true
 argument_list|)
 block|;
 name|OptionValueFileSpec
 argument_list|(
-specifier|const
-name|FileSpec
-operator|&
-name|current_value
+argument|const FileSpec&value
 argument_list|,
-specifier|const
-name|FileSpec
-operator|&
-name|default_value
+argument|bool resolve = true
+argument_list|)
+block|;
+name|OptionValueFileSpec
+argument_list|(
+argument|const FileSpec&current_value
+argument_list|,
+argument|const FileSpec&default_value
+argument_list|,
+argument|bool resolve = true
 argument_list|)
 block|;
 name|virtual
@@ -140,9 +137,9 @@ argument_list|)
 block|;
 name|virtual
 name|Error
-name|SetValueFromCString
+name|SetValueFromString
 argument_list|(
-argument|const char *value
+argument|llvm::StringRef value
 argument_list|,
 argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
@@ -163,6 +160,11 @@ block|;
 name|m_data_sp
 operator|.
 name|reset
+argument_list|()
+block|;
+name|m_data_mod_time
+operator|.
+name|Clear
 argument_list|()
 block|;
 return|return
@@ -298,8 +300,14 @@ operator|::
 name|DataBufferSP
 name|m_data_sp
 expr_stmt|;
+name|TimeValue
+name|m_data_mod_time
+decl_stmt|;
 name|uint32_t
 name|m_completion_mask
+decl_stmt|;
+name|bool
+name|m_resolve
 decl_stmt|;
 block|}
 end_decl_stmt

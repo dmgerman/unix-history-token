@@ -6397,7 +6397,9 @@ end_function
 begin_function
 name|void
 name|endservent
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -7053,7 +7055,9 @@ name|struct
 name|servent
 modifier|*
 name|getservent
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|key

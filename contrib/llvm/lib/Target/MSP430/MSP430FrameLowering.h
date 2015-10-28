@@ -107,6 +107,8 @@ name|void
 name|emitPrologue
 argument_list|(
 argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 name|override

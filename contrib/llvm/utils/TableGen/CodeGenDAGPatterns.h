@@ -521,10 +521,41 @@ operator|&
 name|TP
 argument_list|)
 decl_stmt|;
+comment|/// EnforceVectorEltTypeIs - 'this' is now constrainted to be a vector type
+comment|/// whose element is VT.
+name|bool
+name|EnforceVectorEltTypeIs
+argument_list|(
+name|MVT
+operator|::
+name|SimpleValueType
+name|VT
+argument_list|,
+name|TreePattern
+operator|&
+name|TP
+argument_list|)
+decl_stmt|;
 comment|/// EnforceVectorSubVectorTypeIs - 'this' is now constrainted to
 comment|/// be a vector type VT.
 name|bool
 name|EnforceVectorSubVectorTypeIs
+argument_list|(
+name|EEVT
+operator|::
+name|TypeSet
+operator|&
+name|VT
+argument_list|,
+name|TreePattern
+operator|&
+name|TP
+argument_list|)
+decl_stmt|;
+comment|/// EnforceVectorSameNumElts - 'this' is now constrainted to
+comment|/// be a vector with same num elements as VT.
+name|bool
+name|EnforceVectorSameNumElts
 argument_list|(
 name|EEVT
 operator|::
@@ -675,6 +706,10 @@ block|,
 name|SDTCisEltOfVec
 block|,
 name|SDTCisSubVecOfVec
+block|,
+name|SDTCVecEltisVT
+block|,
+name|SDTCisSameNumEltsAs
 block|}
 name|ConstraintType
 enum|;
@@ -730,6 +765,24 @@ name|OtherOperandNum
 decl_stmt|;
 block|}
 name|SDTCisSubVecOfVec_Info
+struct|;
+struct|struct
+block|{
+name|MVT
+operator|::
+name|SimpleValueType
+name|VT
+expr_stmt|;
+block|}
+name|SDTCVecEltisVT_Info
+struct|;
+struct|struct
+block|{
+name|unsigned
+name|OtherOperandNum
+decl_stmt|;
+block|}
+name|SDTCisSameNumEltsAs_Info
 struct|;
 block|}
 name|x

@@ -253,6 +253,9 @@ decl_stmt|;
 name|targ_state
 name|state
 decl_stmt|;
+name|u_int
+name|maxio
+decl_stmt|;
 name|struct
 name|selinfo
 name|read_select
@@ -1930,6 +1933,47 @@ goto|goto
 name|enable_fail
 goto|;
 block|}
+if|if
+condition|(
+name|cpi
+operator|.
+name|maxio
+operator|==
+literal|0
+condition|)
+name|softc
+operator|->
+name|maxio
+operator|=
+name|DFLTPHYS
+expr_stmt|;
+comment|/* traditional default */
+elseif|else
+if|if
+condition|(
+name|cpi
+operator|.
+name|maxio
+operator|>
+name|MAXPHYS
+condition|)
+name|softc
+operator|->
+name|maxio
+operator|=
+name|MAXPHYS
+expr_stmt|;
+comment|/* for safety */
+else|else
+name|softc
+operator|->
+name|maxio
+operator|=
+name|cpi
+operator|.
+name|maxio
+expr_stmt|;
+comment|/* real value */
 comment|/* Destroy any periph on our path if it is disabled */
 name|periph
 operator|=
@@ -3539,6 +3583,10 @@ argument_list|(
 name|ccb
 argument_list|,
 name|mapinfo
+argument_list|,
+name|softc
+operator|->
+name|maxio
 argument_list|)
 expr_stmt|;
 comment|/* 		 * cam_periph_mapmem returned an error, we can't continue. 		 * Return the error to the user. 		 */

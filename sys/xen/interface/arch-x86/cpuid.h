@@ -16,7 +16,7 @@ name|__XEN_PUBLIC_ARCH_X86_CPUID_H__
 end_define
 
 begin_comment
-comment|/* Xen identification leaves start at 0x40000000. */
+comment|/*  * For compatibility with other hypervisor interfaces, the Xen cpuid leaves  * can be found at the first otherwise unused 0x100 aligned boundary starting  * from 0x40000000.  *  * e.g If viridian extensions are enabled for an HVM domain, the Xen cpuid  * leaves will start at 0x40000100  */
 end_comment
 
 begin_define
@@ -37,7 +37,7 @@ value|(XEN_CPUID_FIRST_LEAF + (i))
 end_define
 
 begin_comment
-comment|/*  * Leaf 1 (0x40000000)  * EAX: Largest Xen-information leaf. All leaves up to an including @EAX  *      are supported by the Xen host.  * EBX-EDX: "XenVMMXenVMM" signature, allowing positive identification  *      of a Xen host.  */
+comment|/*  * Leaf 1 (0x40000x00)  * EAX: Largest Xen-information leaf. All leaves up to an including @EAX  *      are supported by the Xen host.  * EBX-EDX: "XenVMMXenVMM" signature, allowing positive identification  *      of a Xen host.  */
 end_comment
 
 begin_define
@@ -74,11 +74,11 @@ comment|/* "nVMM" */
 end_comment
 
 begin_comment
-comment|/*  * Leaf 2 (0x40000001)  * EAX[31:16]: Xen major version.  * EAX[15: 0]: Xen minor version.  * EBX-EDX: Reserved (currently all zeroes).  */
+comment|/*  * Leaf 2 (0x40000x01)  * EAX[31:16]: Xen major version.  * EAX[15: 0]: Xen minor version.  * EBX-EDX: Reserved (currently all zeroes).  */
 end_comment
 
 begin_comment
-comment|/*  * Leaf 3 (0x40000002)  * EAX: Number of hypercall transfer pages. This register is always guaranteed  *      to specify one hypercall page.  * EBX: Base address of Xen-specific MSRs.  * ECX: Features 1. Unused bits are set to zero.  * EDX: Features 2. Unused bits are set to zero.  */
+comment|/*  * Leaf 3 (0x40000x02)  * EAX: Number of hypercall transfer pages. This register is always guaranteed  *      to specify one hypercall page.  * EBX: Base address of Xen-specific MSRs.  * ECX: Features 1. Unused bits are set to zero.  * EDX: Features 2. Unused bits are set to zero.  */
 end_comment
 
 begin_comment
@@ -97,6 +97,61 @@ define|#
 directive|define
 name|XEN_CPUID_FEAT1_MMU_PT_UPDATE_PRESERVE_AD
 value|(1u<<0)
+end_define
+
+begin_comment
+comment|/*  * Leaf 5 (0x40000x04)  * HVM-specific features  * EAX: Features  * EBX: vcpu id (iff EAX has XEN_HVM_CPUID_VCPU_ID_PRESENT flag)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_HVM_CPUID_APIC_ACCESS_VIRT
+value|(1u<< 0)
+end_define
+
+begin_comment
+comment|/* Virtualized APIC registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_HVM_CPUID_X2APIC_VIRT
+value|(1u<< 1)
+end_define
+
+begin_comment
+comment|/* Virtualized x2APIC accesses */
+end_comment
+
+begin_comment
+comment|/* Memory mapped from other domains has valid IOMMU entries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_HVM_CPUID_IOMMU_MAPPINGS
+value|(1u<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_HVM_CPUID_VCPU_ID_PRESENT
+value|(1u<< 3)
+end_define
+
+begin_comment
+comment|/* vcpu id is present in EBX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_CPUID_MAX_NUM_LEAVES
+value|4
 end_define
 
 begin_endif

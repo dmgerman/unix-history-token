@@ -68,14 +68,21 @@ block|{
 enum|enum
 name|SystemZCPModifier
 block|{
+name|TLSGD
+block|,
+name|TLSLDM
+block|,
+name|DTPOFF
+block|,
 name|NTPOFF
 block|}
 enum|;
 block|}
 comment|// end namespace SystemZCP
 comment|/// A SystemZ-specific constant pool value.  At present, the only
-comment|/// defined constant pool values are offsets of thread-local variables
-comment|/// (written x@NTPOFF).
+comment|/// defined constant pool values are module IDs or offsets of
+comment|/// thread-local variables (written x@TLSGD, x@TLSLDM, x@DTPOFF,
+comment|/// or x@NTPOFF).
 name|class
 name|SystemZConstantPoolValue
 range|:

@@ -60,6 +60,7 @@ name|namespace
 name|lldb
 block|{
 name|class
+name|LLDB_API
 name|SBFrame
 block|{
 name|public
@@ -116,6 +117,13 @@ specifier|const
 expr_stmt|;
 name|uint32_t
 name|GetFrameID
+argument_list|()
+specifier|const
+expr_stmt|;
+name|lldb
+operator|::
+name|addr_t
+name|GetCFA
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -222,6 +230,20 @@ modifier|*
 name|GetFunctionName
 parameter_list|()
 function_decl|;
+comment|// Get an appropriate function name for this frame that is suitable for display to a user
+specifier|const
+name|char
+modifier|*
+name|GetDisplayFunctionName
+parameter_list|()
+function_decl|;
+specifier|const
+name|char
+operator|*
+name|GetFunctionName
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Return true if this frame represents an inlined function.
 comment|///
 comment|/// See also GetFunctionName().
@@ -229,6 +251,11 @@ name|bool
 name|IsInlined
 parameter_list|()
 function_decl|;
+name|bool
+name|IsInlined
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// The version that doesn't supply a 'use_dynamic' value will use the
 comment|/// target's default.
 name|lldb
@@ -385,6 +412,19 @@ expr_stmt|;
 name|lldb
 operator|::
 name|SBValueList
+name|GetVariables
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|SBVariablesOptions
+operator|&
+name|options
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|SBValueList
 name|GetRegisters
 argument_list|()
 expr_stmt|;
@@ -522,17 +562,6 @@ name|friend
 name|class
 name|SBValue
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|LLDB_DISABLE_PYTHON
-name|friend
-name|class
-name|lldb_private
-operator|::
-name|ScriptInterpreterPython
-expr_stmt|;
-endif|#
-directive|endif
 name|lldb
 operator|::
 name|StackFrameSP

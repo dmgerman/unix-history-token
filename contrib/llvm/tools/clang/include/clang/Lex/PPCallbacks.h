@@ -119,6 +119,9 @@ name|class
 name|IdentifierInfo
 decl_stmt|;
 name|class
+name|MacroDefinition
+decl_stmt|;
+name|class
 name|MacroDirective
 decl_stmt|;
 name|class
@@ -179,10 +182,11 @@ block|{   }
 comment|/// \brief Callback invoked whenever a source file is skipped as the result
 comment|/// of header guard optimization.
 comment|///
-comment|/// \param ParentFile The file that \#included the skipped file.
+comment|/// \param SkippedFile The file that is skipped instead of entering \#include
 comment|///
-comment|/// \param FilenameTok The token in ParentFile that indicates the
-comment|/// skipped file.
+comment|/// \param FilenameTok The file name token in \#include "FileName" directive
+comment|/// or macro expanded file name token from \#include MACRO(PARAMS) directive.
+comment|/// Note that FilenameTok contains corresponding quotes/angles symbols.
 name|virtual
 name|void
 name|FileSkipped
@@ -190,7 +194,7 @@ argument_list|(
 specifier|const
 name|FileEntry
 operator|&
-name|ParentFile
+name|SkippedFile
 argument_list|,
 specifier|const
 name|Token
@@ -350,17 +354,13 @@ comment|///
 name|virtual
 name|void
 name|Ident
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|Loc
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|,
+name|StringRef
 name|str
-argument_list|)
+parameter_list|)
 block|{   }
 comment|/// \brief Callback invoked when start reading any pragma directive.
 name|virtual
@@ -378,46 +378,34 @@ comment|/// \brief Callback invoked when a \#pragma comment directive is read.
 name|virtual
 name|void
 name|PragmaComment
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|Loc
-argument_list|,
+parameter_list|,
 specifier|const
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Kind
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|,
+name|StringRef
 name|Str
-argument_list|)
+parameter_list|)
 block|{   }
 comment|/// \brief Callback invoked when a \#pragma detect_mismatch directive is
 comment|/// read.
 name|virtual
 name|void
 name|PragmaDetectMismatch
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|Loc
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|,
+name|StringRef
 name|Name
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|,
+name|StringRef
 name|Value
-argument_list|)
+parameter_list|)
 block|{   }
 comment|/// \brief Callback invoked when a \#pragma clang __debug directive is read.
 comment|/// \param Loc The location of the debug directive.
@@ -587,8 +575,8 @@ modifier|&
 name|MacroNameTok
 parameter_list|,
 specifier|const
-name|MacroDirective
-modifier|*
+name|MacroDefinition
+modifier|&
 name|MD
 parameter_list|,
 name|SourceRange
@@ -599,7 +587,7 @@ name|MacroArgs
 modifier|*
 name|Args
 parameter_list|)
-block|{   }
+block|{}
 comment|/// \brief Hook called whenever a macro definition is seen.
 name|virtual
 name|void
@@ -629,8 +617,8 @@ modifier|&
 name|MacroNameTok
 parameter_list|,
 specifier|const
-name|MacroDirective
-modifier|*
+name|MacroDefinition
+modifier|&
 name|MD
 parameter_list|)
 block|{   }
@@ -646,8 +634,8 @@ modifier|&
 name|MacroNameTok
 parameter_list|,
 specifier|const
-name|MacroDirective
-modifier|*
+name|MacroDefinition
+modifier|&
 name|MD
 parameter_list|,
 name|SourceRange
@@ -721,7 +709,7 @@ block|{   }
 comment|/// \brief Hook called whenever an \#ifdef is seen.
 comment|/// \param Loc the source location of the directive.
 comment|/// \param MacroNameTok Information on the token being tested.
-comment|/// \param MD The MacroDirective if the name was a macro, null otherwise.
+comment|/// \param MD The MacroDefinition if the name was a macro, null otherwise.
 name|virtual
 name|void
 name|Ifdef
@@ -735,15 +723,15 @@ modifier|&
 name|MacroNameTok
 parameter_list|,
 specifier|const
-name|MacroDirective
-modifier|*
+name|MacroDefinition
+modifier|&
 name|MD
 parameter_list|)
 block|{   }
 comment|/// \brief Hook called whenever an \#ifndef is seen.
 comment|/// \param Loc the source location of the directive.
 comment|/// \param MacroNameTok Information on the token being tested.
-comment|/// \param MD The MacroDirective if the name was a macro, null otherwise.
+comment|/// \param MD The MacroDefiniton if the name was a macro, null otherwise.
 name|virtual
 name|void
 name|Ifndef
@@ -757,8 +745,8 @@ modifier|&
 name|MacroNameTok
 parameter_list|,
 specifier|const
-name|MacroDirective
-modifier|*
+name|MacroDefinition
+modifier|&
 name|MD
 parameter_list|)
 block|{   }
@@ -892,7 +880,7 @@ block|;   }
 name|void
 name|FileSkipped
 argument_list|(
-argument|const FileEntry&ParentFile
+argument|const FileEntry&SkippedFile
 argument_list|,
 argument|const Token&FilenameTok
 argument_list|,
@@ -904,7 +892,7 @@ name|First
 operator|->
 name|FileSkipped
 argument_list|(
-name|ParentFile
+name|SkippedFile
 argument_list|,
 name|FilenameTok
 argument_list|,
@@ -915,7 +903,7 @@ name|Second
 operator|->
 name|FileSkipped
 argument_list|(
-name|ParentFile
+name|SkippedFile
 argument_list|,
 name|FilenameTok
 argument_list|,
@@ -1073,7 +1061,7 @@ name|Ident
 argument_list|(
 argument|SourceLocation Loc
 argument_list|,
-argument|const std::string&str
+argument|StringRef str
 argument_list|)
 name|override
 block|{
@@ -1102,7 +1090,7 @@ argument|SourceLocation Loc
 argument_list|,
 argument|const IdentifierInfo *Kind
 argument_list|,
-argument|const std::string&Str
+argument|StringRef Str
 argument_list|)
 name|override
 block|{
@@ -1133,9 +1121,9 @@ name|PragmaDetectMismatch
 argument_list|(
 argument|SourceLocation Loc
 argument_list|,
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|,
-argument|const std::string&Value
+argument|StringRef Value
 argument_list|)
 name|override
 block|{
@@ -1418,7 +1406,7 @@ name|MacroExpands
 argument_list|(
 argument|const Token&MacroNameTok
 argument_list|,
-argument|const MacroDirective *MD
+argument|const MacroDefinition&MD
 argument_list|,
 argument|SourceRange Range
 argument_list|,
@@ -1484,7 +1472,7 @@ name|MacroUndefined
 argument_list|(
 argument|const Token&MacroNameTok
 argument_list|,
-argument|const MacroDirective *MD
+argument|const MacroDefinition&MD
 argument_list|)
 name|override
 block|{
@@ -1511,7 +1499,7 @@ name|Defined
 argument_list|(
 argument|const Token&MacroNameTok
 argument_list|,
-argument|const MacroDirective *MD
+argument|const MacroDefinition&MD
 argument_list|,
 argument|SourceRange Range
 argument_list|)
@@ -1642,7 +1630,7 @@ argument|SourceLocation Loc
 argument_list|,
 argument|const Token&MacroNameTok
 argument_list|,
-argument|const MacroDirective *MD
+argument|const MacroDefinition&MD
 argument_list|)
 name|override
 block|{
@@ -1676,7 +1664,7 @@ argument|SourceLocation Loc
 argument_list|,
 argument|const Token&MacroNameTok
 argument_list|,
-argument|const MacroDirective *MD
+argument|const MacroDefinition&MD
 argument_list|)
 name|override
 block|{

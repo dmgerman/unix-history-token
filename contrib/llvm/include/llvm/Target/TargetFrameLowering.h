@@ -82,6 +82,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|BitVector
+decl_stmt|;
+name|class
 name|CalleeSavedInfo
 decl_stmt|;
 name|class
@@ -348,6 +351,10 @@ argument_list|(
 name|MachineFunction
 operator|&
 name|MF
+argument_list|,
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|)
 decl|const
 init|=
@@ -378,9 +385,13 @@ argument_list|(
 name|MachineFunction
 operator|&
 name|MF
+argument_list|,
+name|MachineBasicBlock
+operator|&
+name|PrologueMBB
 argument_list|)
 decl|const
-block|{ }
+block|{}
 comment|/// Adjust the prologue to add Erlang Run-Time System (ERTS) specific code in
 comment|/// the assembly prologue to explicitly handle the stack.
 name|virtual
@@ -390,9 +401,13 @@ argument_list|(
 name|MachineFunction
 operator|&
 name|MF
+argument_list|,
+name|MachineBasicBlock
+operator|&
+name|PrologueMBB
 argument_list|)
 decl|const
-block|{ }
+block|{}
 comment|/// Adjust the prologue to add an allocation at a fixed offset from the frame
 comment|/// pointer.
 name|virtual
@@ -402,9 +417,13 @@ argument_list|(
 name|MachineFunction
 operator|&
 name|MF
+argument_list|,
+name|MachineBasicBlock
+operator|&
+name|PrologueMBB
 argument_list|)
 decl|const
-block|{ }
+block|{}
 comment|/// spillCalleeSavedRegisters - Issues instruction(s) to spill all callee
 comment|/// saved registers and returns true if it isn't possible / profitable to do
 comment|/// so by issuing a series of store instructions via
@@ -481,6 +500,18 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Return true if the target needs to disable frame pointer elimination.
+name|virtual
+name|bool
+name|noFramePointerElim
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// hasFP - Return true if the specified function should have a dedicated
 comment|/// frame pointer register. For most targets this is true only if the function
 comment|/// has variable sized allocas or if frame pointer elimination is disabled.
@@ -633,16 +664,24 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// processFunctionBeforeCalleeSavedScan - This method is called immediately
-comment|/// before PrologEpilogInserter scans the physical registers used to determine
-comment|/// what callee saved registers should be spilled. This method is optional.
+comment|/// This method determines which of the registers reported by
+comment|/// TargetRegisterInfo::getCalleeSavedRegs() should actually get saved.
+comment|/// The default implementation checks populates the \p SavedRegs bitset with
+comment|/// all registers which are modified in the function, targets may override
+comment|/// this function to save additional registers.
+comment|/// This method also sets up the register scavenger ensuring there is a free
+comment|/// register or a frameindex available.
 name|virtual
 name|void
-name|processFunctionBeforeCalleeSavedScan
+name|determineCalleeSaves
 argument_list|(
 name|MachineFunction
 operator|&
 name|MF
+argument_list|,
+name|BitVector
+operator|&
+name|SavedRegs
 argument_list|,
 name|RegScavenger
 operator|*
@@ -651,7 +690,7 @@ operator|=
 name|nullptr
 argument_list|)
 decl|const
-block|{    }
+decl_stmt|;
 comment|/// processFunctionBeforeFrameFinalized - This method is called immediately
 comment|/// before the specified function's frame layout (MF.getFrameInfo()) is
 comment|/// finalized.  Once the frame is finalized, MO_FrameIndex operands are
@@ -705,6 +744,52 @@ literal|"Call Frame Pseudo Instructions do not exist on this "
 literal|"target!"
 argument_list|)
 expr_stmt|;
+block|}
+comment|/// Check whether or not the given \p MBB can be used as a prologue
+comment|/// for the target.
+comment|/// The prologue will be inserted first in this basic block.
+comment|/// This method is used by the shrink-wrapping pass to decide if
+comment|/// \p MBB will be correctly handled by the target.
+comment|/// As soon as the target enable shrink-wrapping without overriding
+comment|/// this method, we assume that each basic block is a valid
+comment|/// prologue.
+name|virtual
+name|bool
+name|canUseAsPrologue
+argument_list|(
+specifier|const
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// Check whether or not the given \p MBB can be used as a epilogue
+comment|/// for the target.
+comment|/// The epilogue will be inserted before the first terminator of that block.
+comment|/// This method is used by the shrink-wrapping pass to decide if
+comment|/// \p MBB will be correctly handled by the target.
+comment|/// As soon as the target enable shrink-wrapping without overriding
+comment|/// this method, we assume that each basic block is a valid
+comment|/// epilogue.
+name|virtual
+name|bool
+name|canUseAsEpilogue
+argument_list|(
+specifier|const
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
 block|}
 block|}
 empty_stmt|;

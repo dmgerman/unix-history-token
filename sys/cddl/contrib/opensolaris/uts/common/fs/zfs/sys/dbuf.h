@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -320,20 +320,22 @@ name|avl_node_t
 name|db_link
 decl_stmt|;
 comment|/* Data which is unique to data (leaf) blocks: */
-comment|/* stuff we store for the user (see dmu_buf_set_user) */
-name|void
+comment|/* User callback information. */
+name|dmu_buf_user_t
 modifier|*
-name|db_user_ptr
+name|db_user
 decl_stmt|;
-name|dmu_buf_evict_func_t
-modifier|*
-name|db_evict_func
-decl_stmt|;
+comment|/* 	 * Evict user data as soon as the dirty and reference 	 * counts are equal. 	 */
 name|uint8_t
-name|db_immediate_evict
+name|db_user_immediate_evict
 decl_stmt|;
+comment|/* 	 * This block was freed while a read or write was 	 * active. 	 */
 name|uint8_t
 name|db_freed_in_flight
+decl_stmt|;
+comment|/* 	 * dnode_evict_dbufs() or dnode_evict_bonus() tried to 	 * evict this dbuf, but couldn't due to outstanding 	 * references.  Evict once the refcount drops to 0. 	 */
+name|uint8_t
+name|db_pending_evict
 decl_stmt|;
 name|uint8_t
 name|db_dirtycnt
@@ -383,6 +385,9 @@ name|struct
 name|dnode
 modifier|*
 name|di
+parameter_list|,
+name|int64_t
+name|level
 parameter_list|,
 name|uint64_t
 name|offset
@@ -508,8 +513,11 @@ parameter_list|,
 name|uint64_t
 name|blkid
 parameter_list|,
-name|int
-name|create
+name|boolean_t
+name|fail_sparse
+parameter_list|,
+name|boolean_t
+name|fail_uncached
 parameter_list|,
 name|void
 modifier|*
@@ -529,11 +537,17 @@ name|dnode
 modifier|*
 name|dn
 parameter_list|,
+name|int64_t
+name|level
+parameter_list|,
 name|uint64_t
 name|blkid
 parameter_list|,
 name|zio_priority_t
 name|prio
+parameter_list|,
+name|arc_flags_t
+name|aflags
 parameter_list|)
 function_decl|;
 name|void
@@ -542,6 +556,28 @@ parameter_list|(
 name|dmu_buf_impl_t
 modifier|*
 name|db
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|dbuf_try_add_ref
+parameter_list|(
+name|dmu_buf_t
+modifier|*
+name|db
+parameter_list|,
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|uint64_t
+name|obj
+parameter_list|,
+name|uint64_t
+name|blkid
 parameter_list|,
 name|void
 modifier|*
@@ -585,9 +621,12 @@ modifier|*
 name|dbuf_find
 parameter_list|(
 name|struct
-name|dnode
+name|objset
 modifier|*
-name|dn
+name|os
+parameter_list|,
+name|uint64_t
+name|object
 parameter_list|,
 name|uint8_t
 name|level

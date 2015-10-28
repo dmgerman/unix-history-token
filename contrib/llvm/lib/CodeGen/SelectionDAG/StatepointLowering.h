@@ -111,7 +111,7 @@ name|NextSlotToAllocate
 argument_list|(
 literal|0
 argument_list|)
-block|{   }
+block|{}
 comment|/// Reset all state tracking for a newly encountered safepoint.  Also
 comment|/// performs some consistency checking.
 name|void
@@ -185,73 +185,6 @@ literal|"Trying to allocate already allocated location"
 argument_list|)
 expr_stmt|;
 name|Locations
-index|[
-name|val
-index|]
-operator|=
-name|Location
-expr_stmt|;
-block|}
-comment|/// Returns the relocated value for a given input pointer. Will
-comment|/// return SDValue() if this value hasn't yet been reloaded from
-comment|/// it's stack slot after the statepoint.  Otherwise, the value
-comment|/// has already been reloaded and the SDValue of that reload will
-comment|/// be returned. Note that VMState values are spilled but not
-comment|/// reloaded (since they don't change at the safepoint unless
-comment|/// also listed in the GC pointer section) and will thus never
-comment|/// be in this map
-name|SDValue
-name|getRelocLocation
-parameter_list|(
-name|SDValue
-name|val
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|RelocLocations
-operator|.
-name|count
-argument_list|(
-name|val
-argument_list|)
-condition|)
-return|return
-name|SDValue
-argument_list|()
-return|;
-return|return
-name|RelocLocations
-index|[
-name|val
-index|]
-return|;
-block|}
-name|void
-name|setRelocLocation
-parameter_list|(
-name|SDValue
-name|val
-parameter_list|,
-name|SDValue
-name|Location
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-operator|!
-name|RelocLocations
-operator|.
-name|count
-argument_list|(
-name|val
-argument_list|)
-operator|&&
-literal|"Trying to allocate already allocated location"
-argument_list|)
-expr_stmt|;
-name|RelocLocations
 index|[
 name|val
 index|]
@@ -456,15 +389,6 @@ operator|,
 name|SDValue
 operator|>
 name|Locations
-expr_stmt|;
-comment|/// Map pre-relocated value into it's new relocated location
-name|DenseMap
-operator|<
-name|SDValue
-operator|,
-name|SDValue
-operator|>
-name|RelocLocations
 expr_stmt|;
 comment|/// A boolean indicator for each slot listed in the FunctionInfo as to
 comment|/// whether it has been used in the current statepoint.  Since we try to

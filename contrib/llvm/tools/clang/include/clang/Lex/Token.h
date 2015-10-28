@@ -114,8 +114,8 @@ comment|/// information about the SourceRange of the tokens and the type object.
 name|class
 name|Token
 block|{
-comment|/// The location of the token.
-name|SourceLocation
+comment|/// The location of the token. This is actually a SourceLocation.
+name|unsigned
 name|Loc
 decl_stmt|;
 comment|// Conceptually these next two fields could be in a union.  However, this
@@ -272,6 +272,65 @@ operator|!=
 name|K
 return|;
 block|}
+name|bool
+name|isOneOf
+argument_list|(
+name|tok
+operator|::
+name|TokenKind
+name|K1
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|K2
+argument_list|)
+decl|const
+block|{
+return|return
+name|is
+argument_list|(
+name|K1
+argument_list|)
+operator|||
+name|is
+argument_list|(
+name|K2
+argument_list|)
+return|;
+block|}
+name|template
+operator|<
+name|typename
+operator|...
+name|Ts
+operator|>
+name|bool
+name|isOneOf
+argument_list|(
+argument|tok::TokenKind K1
+argument_list|,
+argument|tok::TokenKind K2
+argument_list|,
+argument|Ts... Ks
+argument_list|)
+specifier|const
+block|{
+return|return
+name|is
+argument_list|(
+name|K1
+argument_list|)
+operator|||
+name|isOneOf
+argument_list|(
+name|K2
+argument_list|,
+name|Ks
+operator|...
+argument_list|)
+return|;
+block|}
 comment|/// \brief Return true if this is a raw identifier (when lexing
 comment|/// in raw mode) or a non-keyword identifier (when lexing in non-raw mode).
 name|bool
@@ -330,7 +389,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
 name|Loc
+argument_list|)
 return|;
 block|}
 name|unsigned
@@ -361,6 +425,9 @@ block|{
 name|Loc
 operator|=
 name|L
+operator|.
+name|getRawEncoding
+argument_list|()
 expr_stmt|;
 block|}
 name|void
@@ -403,6 +470,10 @@ operator|::
 name|getFromRawEncoding
 argument_list|(
 name|UintData
+condition|?
+name|UintData
+else|:
+name|Loc
 argument_list|)
 return|;
 block|}
@@ -443,6 +514,28 @@ argument_list|()
 operator|:
 name|getLocation
 argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getEndLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isAnnotation
+argument_list|()
+operator|?
+name|getAnnotationEndLoc
+argument_list|()
+operator|:
+name|getLocation
+argument_list|()
+operator|.
+name|getLocWithOffset
+argument_list|(
+name|getLength
+argument_list|()
+argument_list|)
 return|;
 block|}
 comment|/// \brief SourceRange of the group of tokens that this annotation token
@@ -529,6 +622,9 @@ expr_stmt|;
 name|Loc
 operator|=
 name|SourceLocation
+argument_list|()
+operator|.
+name|getRawEncoding
 argument_list|()
 expr_stmt|;
 block|}

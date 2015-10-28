@@ -146,6 +146,13 @@ name|XEN_PCI_OP_aer_slotreset
 value|(9)
 end_define
 
+begin_define
+define|#
+directive|define
+name|XEN_PCI_OP_enable_multi_msi
+value|(10)
+end_define
+
 begin_comment
 comment|/* xen_pci_op error numbers */
 end_comment
@@ -332,7 +339,7 @@ comment|/* __XEN_PCI_COMMON_H__ */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit

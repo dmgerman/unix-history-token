@@ -482,6 +482,10 @@ name|svn_depth_infinity
 expr_stmt|;
 name|cfg
 operator|=
+name|ctx
+operator|->
+name|config
+condition|?
 name|svn_hash_gets
 argument_list|(
 name|ctx
@@ -490,6 +494,8 @@ name|config
 argument_list|,
 name|SVN_CONFIG_CATEGORY_CONFIG
 argument_list|)
+else|:
+name|NULL
 expr_stmt|;
 if|if
 condition|(

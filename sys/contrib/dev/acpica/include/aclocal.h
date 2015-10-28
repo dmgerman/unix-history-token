@@ -632,28 +632,14 @@ value|(2)
 end_define
 
 begin_comment
-comment|/* Predefined (fixed) table indexes */
+comment|/* Predefined table indexes */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_TABLE_INDEX_DSDT
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_INDEX_FACS
-value|(1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_INDEX_X_FACS
-value|(2)
+name|ACPI_INVALID_TABLE_INDEX
+value|(0xFFFFFFFF)
 end_define
 
 begin_typedef
@@ -1332,6 +1318,26 @@ end_define
 begin_comment
 comment|/* Number of actual object types */
 end_comment
+
+begin_comment
+comment|/* Info for running the _REG methods */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_reg_walk_info
+block|{
+name|ACPI_ADR_SPACE_TYPE
+name|SpaceId
+decl_stmt|;
+name|UINT32
+name|RegRunCount
+decl_stmt|;
+block|}
+name|ACPI_REG_WALK_INFO
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*****************************************************************************  *  * Event typedefs and structs  *  ****************************************************************************/
@@ -4002,6 +4008,22 @@ directive|define
 name|ACPI_DB_DUPLICATE_OUTPUT
 value|0x03
 end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_object_info
+block|{
+name|UINT32
+name|Types
+index|[
+name|ACPI_TOTAL_TYPES
+index|]
+decl_stmt|;
+block|}
+name|ACPI_OBJECT_INFO
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*****************************************************************************  *  * Debug  *  ****************************************************************************/

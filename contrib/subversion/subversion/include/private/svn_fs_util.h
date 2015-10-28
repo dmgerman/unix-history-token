@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"svn_version.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"svn_fs.h"
 end_include
 
@@ -52,6 +58,15 @@ block|{
 endif|#
 directive|endif
 comment|/* __cplusplus */
+comment|/* Get libsvn_fs_util version information. */
+specifier|const
+name|svn_version_t
+modifier|*
+name|svn_fs_util__version
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 comment|/* Returns whether PATH is in canonical form as defined by    svn_fs__canonicalize_abspath().  */
 name|svn_boolean_t
 name|svn_fs__is_canonical_abspath
@@ -274,6 +289,42 @@ specifier|const
 name|char
 modifier|*
 name|rel_path
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/* Given the FS creation options in CONFIG, return the oldest version that    we shall be compatible with in *COMPATIBLE_VERSION.  The patch level    is always set to 0 and the tag to "".   Allocate the result in POOL.     Note that the result will always be compatible to the current tool    version, i.e. will be a version number not more recent than this tool. */
+name|svn_error_t
+modifier|*
+name|svn_fs__compatible_version
+parameter_list|(
+name|svn_version_t
+modifier|*
+modifier|*
+name|compatible_version
+parameter_list|,
+name|apr_hash_t
+modifier|*
+name|config
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/* Compare the property lists A and B using POOL for temporary allocations.    Return true iff both lists contain the same properties with the same    values.  A and B may be NULL in which case they will be equal to and    empty list. */
+name|svn_boolean_t
+name|svn_fs__prop_lists_equal
+parameter_list|(
+name|apr_hash_t
+modifier|*
+name|a
+parameter_list|,
+name|apr_hash_t
+modifier|*
+name|b
 parameter_list|,
 name|apr_pool_t
 modifier|*

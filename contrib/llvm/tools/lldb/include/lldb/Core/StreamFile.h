@@ -121,6 +121,15 @@ argument_list|)
 block|;
 name|StreamFile
 argument_list|(
+argument|const char *path
+argument_list|,
+argument|uint32_t options
+argument_list|,
+argument|uint32_t permissions = lldb::eFilePermissionsFileDefault
+argument_list|)
+block|;
+name|StreamFile
+argument_list|(
 argument|FILE *fh
 argument_list|,
 argument|bool transfer_ownership

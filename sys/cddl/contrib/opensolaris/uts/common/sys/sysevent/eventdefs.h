@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -530,8 +530,24 @@ name|ESC_ZFS_VDEV_REMOVE
 value|"ESC_ZFS_vdev_remove"
 define|#
 directive|define
+name|ESC_ZFS_POOL_CREATE
+value|"ESC_ZFS_pool_create"
+define|#
+directive|define
 name|ESC_ZFS_POOL_DESTROY
 value|"ESC_ZFS_pool_destroy"
+define|#
+directive|define
+name|ESC_ZFS_POOL_IMPORT
+value|"ESC_ZFS_pool_import"
+define|#
+directive|define
+name|ESC_ZFS_VDEV_ADD
+value|"ESC_ZFS_vdev_add"
+define|#
+directive|define
+name|ESC_ZFS_VDEV_ATTACH
+value|"ESC_ZFS_vdev_attach"
 define|#
 directive|define
 name|ESC_ZFS_VDEV_CLEAR
@@ -540,6 +556,10 @@ define|#
 directive|define
 name|ESC_ZFS_VDEV_CHECK
 value|"ESC_ZFS_vdev_check"
+define|#
+directive|define
+name|ESC_ZFS_VDEV_ONLINE
+value|"ESC_ZFS_vdev_online"
 define|#
 directive|define
 name|ESC_ZFS_CONFIG_SYNC

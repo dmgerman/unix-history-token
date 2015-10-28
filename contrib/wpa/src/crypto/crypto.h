@@ -1292,6 +1292,29 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * crypto_bignum_legendre - Compute the Legendre symbol (a/p)  * @a: Bignum  * @p: Bignum  * Returns: Legendre symbol -1,0,1 on success; -2 on calculation failure  */
+end_comment
+
+begin_function_decl
+name|int
+name|crypto_bignum_legendre
+parameter_list|(
+specifier|const
+name|struct
+name|crypto_bignum
+modifier|*
+name|a
+parameter_list|,
+specifier|const
+name|struct
+name|crypto_bignum
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * struct crypto_ec - Elliptic curve context  *  * Internal data structure for EC implementation. The contents is specific  * to the used crypto library.  */
 end_comment
 
@@ -1621,6 +1644,30 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * crypto_ec_point_compute_y_sqr - Compute y^2 = x^3 + ax + b  * @e: EC context from crypto_ec_init()  * @x: x coordinate  * Returns: y^2 on success, %NULL failure  */
+end_comment
+
+begin_function_decl
+name|struct
+name|crypto_bignum
+modifier|*
+name|crypto_ec_point_compute_y_sqr
+parameter_list|(
+name|struct
+name|crypto_ec
+modifier|*
+name|e
+parameter_list|,
+specifier|const
+name|struct
+name|crypto_bignum
+modifier|*
+name|x
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * crypto_ec_point_is_at_infinity - Check whether EC point is neutral element  * @e: EC context from crypto_ec_init()  * @p: EC point  * Returns: 1 if the specified EC point is the neutral element of the group or  *	0 if not  */
 end_comment
 
@@ -1660,6 +1707,35 @@ name|struct
 name|crypto_ec_point
 modifier|*
 name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * crypto_ec_point_cmp - Compare two EC points  * @e: EC context from crypto_ec_init()  * @a: EC point  * @b: EC point  * Returns: 0 on equal, non-zero otherwise  */
+end_comment
+
+begin_function_decl
+name|int
+name|crypto_ec_point_cmp
+parameter_list|(
+specifier|const
+name|struct
+name|crypto_ec
+modifier|*
+name|e
+parameter_list|,
+specifier|const
+name|struct
+name|crypto_ec_point
+modifier|*
+name|a
+parameter_list|,
+specifier|const
+name|struct
+name|crypto_ec_point
+modifier|*
+name|b
 parameter_list|)
 function_decl|;
 end_function_decl

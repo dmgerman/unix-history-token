@@ -52,6 +52,23 @@ end_struct
 
 begin_struct
 struct|struct
+name|codel_opts
+block|{
+name|u_int
+name|target
+decl_stmt|;
+name|u_int
+name|interval
+decl_stmt|;
+name|int
+name|ecn
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|priq_opts
 block|{
 name|int
@@ -218,6 +235,10 @@ block|{
 name|struct
 name|cbq_opts
 name|cbq_opts
+decl_stmt|;
+name|struct
+name|codel_opts
+name|codel_opts
 decl_stmt|;
 name|struct
 name|priq_opts

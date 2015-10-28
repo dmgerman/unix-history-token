@@ -137,11 +137,6 @@ name|void
 name|anchor
 argument_list|()
 block|;
-specifier|const
-name|DataLayout
-name|DL
-block|;
-comment|// Calculates type size& alignment
 name|XCoreInstrInfo
 name|InstrInfo
 block|;
@@ -162,9 +157,7 @@ comment|///
 name|XCoreSubtarget
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|Triple
 operator|&
 name|TT
 argument_list|,
@@ -264,19 +257,6 @@ name|InstrInfo
 operator|.
 name|getRegisterInfo
 argument_list|()
-return|;
-block|}
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-operator|&
-name|DL
 return|;
 block|}
 expr|}

@@ -699,6 +699,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_ID_CORTEXA9R4
+value|0x414fc090
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_CORTEXA12R0
 value|0x410fc0d0
 end_define

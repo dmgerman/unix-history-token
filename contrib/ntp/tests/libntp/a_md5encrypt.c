@@ -60,24 +60,6 @@ literal|4
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-name|void
-name|setUp
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|void
-name|tearDown
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
 begin_comment
 comment|/*  * Example packet with MD5 hash calculated manually.  */
 end_comment
@@ -127,10 +109,6 @@ name|packetLength
 value|16
 end_define
 
-begin_comment
-comment|//const int packetLength = 16;
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -138,20 +116,12 @@ name|keyIdLength
 value|4
 end_define
 
-begin_comment
-comment|//const int keyIdLength = 4;
-end_comment
-
 begin_define
 define|#
 directive|define
 name|digestLength
 value|16
 end_define
-
-begin_comment
-comment|//const int digestLength = 16;
-end_comment
 
 begin_decl_stmt
 specifier|const
@@ -176,16 +146,68 @@ literal|"ijklmnopqrstuvwx\0\0\0\0\x0c\x0e\x84\xcf\x0b\xb7\xa8\x68\x8e\x52\x38\xd
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|test_Encrypt
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_DecryptValid
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_DecryptInvalid
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_IPv4AddressToRefId
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_IPv6AddressToRefId
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|test_Encrypt
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
 name|packetPtr
-init|=
-name|malloc
+decl_stmt|;
+name|int
+name|length
+decl_stmt|;
+name|packetPtr
+operator|=
+name|emalloc
 argument_list|(
 name|totalLength
 operator|*
@@ -195,8 +217,7 @@ operator|*
 name|packetPtr
 argument_list|)
 argument_list|)
-decl_stmt|;
-comment|//new char[totalLength];
+expr_stmt|;
 name|memset
 argument_list|(
 name|packetPtr
@@ -221,9 +242,8 @@ name|cache_secretsize
 operator|=
 name|keyLength
 expr_stmt|;
-name|int
 name|length
-init|=
+operator|=
 name|MD5authencrypt
 argument_list|(
 name|keytype
@@ -242,7 +262,7 @@ name|packetPtr
 argument_list|,
 name|packetLength
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|TEST_ASSERT_TRUE
 argument_list|(
 name|MD5authdecrypt
@@ -274,9 +294,7 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
-name|TEST_ASSERT_TRUE
-argument_list|(
-name|memcmp
+name|TEST_ASSERT_EQUAL_MEMORY
 argument_list|(
 name|expectedPacket
 argument_list|,
@@ -284,23 +302,21 @@ name|packetPtr
 argument_list|,
 name|totalLength
 argument_list|)
-operator|==
-literal|0
-argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|packetPtr
 argument_list|)
 expr_stmt|;
-comment|//delete[] packetPtr;
 block|}
 end_function
 
 begin_function
 name|void
 name|test_DecryptValid
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|cache_secretsize
 operator|=
@@ -336,7 +352,9 @@ end_function
 begin_function
 name|void
 name|test_DecryptInvalid
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|cache_secretsize
 operator|=
@@ -379,7 +397,9 @@ end_function
 begin_function
 name|void
 name|test_IPv4AddressToRefId
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|sockaddr_u
 name|addr
@@ -392,6 +412,9 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
+name|u_int32
+name|address
+decl_stmt|;
 name|addr
 operator|.
 name|sa4
@@ -403,14 +426,13 @@ argument_list|(
 literal|80
 argument_list|)
 expr_stmt|;
-name|u_int32
 name|address
-init|=
+operator|=
 name|inet_addr
 argument_list|(
 literal|"192.0.2.1"
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|addr
 operator|.
 name|sa4
@@ -438,7 +460,9 @@ end_function
 begin_function
 name|void
 name|test_IPv6AddressToRefId
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|struct

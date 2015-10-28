@@ -271,12 +271,15 @@ block|;   }
 operator|~
 name|Type
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|void
 name|setTypeID
-argument_list|(
-argument|TypeID ID
-argument_list|)
+parameter_list|(
+name|TypeID
+name|ID
+parameter_list|)
 block|{
 name|IDAndSubclassData
 operator|=
@@ -291,7 +294,7 @@ name|IDAndSubclassData
 operator|&
 literal|0xFFFFFF00
 operator|)
-block|;
+expr_stmt|;
 name|assert
 argument_list|(
 name|getTypeID
@@ -301,7 +304,8 @@ name|ID
 operator|&&
 literal|"TypeID data too large for field"
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 name|unsigned
 name|getSubclassData
 argument_list|()
@@ -1410,6 +1414,16 @@ specifier|static
 name|IntegerType
 modifier|*
 name|getInt64Ty
+parameter_list|(
+name|LLVMContext
+modifier|&
+name|C
+parameter_list|)
+function_decl|;
+specifier|static
+name|IntegerType
+modifier|*
+name|getInt128Ty
 parameter_list|(
 name|LLVMContext
 modifier|&

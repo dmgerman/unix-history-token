@@ -2318,7 +2318,7 @@ name|cortex_a8
 argument_list|,
 name|ARMV7
 argument_list|,
-name|cortex_a9
+name|cortex_a8
 argument_list|,
 name|armv7
 argument_list|)

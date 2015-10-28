@@ -205,6 +205,12 @@ name|ACL_ENTRY_INHERIT_ONLY
 block|}
 block|,
 block|{
+name|ACE_INHERITED_ACE
+block|,
+name|ACL_ENTRY_INHERITED
+block|}
+block|,
+block|{
 name|ACE_SUCCESSFUL_ACCESS_ACE_FLAG
 block|,
 name|ACL_ENTRY_SUCCESSFUL_ACCESS

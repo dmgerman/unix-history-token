@@ -669,6 +669,10 @@ operator|)
 return|;
 if|if
 condition|(
+name|bp
+operator|==
+name|NULL
+operator|||
 name|zb
 operator|->
 name|zb_object

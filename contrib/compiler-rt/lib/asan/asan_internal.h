@@ -199,77 +199,6 @@ name|using
 name|__sanitizer
 operator|::
 name|StackTrace
-block|;  struct
-name|SignalContext
-block|{
-name|void
-operator|*
-name|context
-block|;
-name|uptr
-name|addr
-block|;
-name|uptr
-name|pc
-block|;
-name|uptr
-name|sp
-block|;
-name|uptr
-name|bp
-block|;
-name|SignalContext
-argument_list|(
-argument|void *context
-argument_list|,
-argument|uptr addr
-argument_list|,
-argument|uptr pc
-argument_list|,
-argument|uptr sp
-argument_list|,
-argument|uptr bp
-argument_list|)
-operator|:
-name|context
-argument_list|(
-name|context
-argument_list|)
-block|,
-name|addr
-argument_list|(
-name|addr
-argument_list|)
-block|,
-name|pc
-argument_list|(
-name|pc
-argument_list|)
-block|,
-name|sp
-argument_list|(
-name|sp
-argument_list|)
-block|,
-name|bp
-argument_list|(
-argument|bp
-argument_list|)
-block|{   }
-comment|// Creates signal context in a platform-specific manner.
-specifier|static
-name|SignalContext
-name|Create
-argument_list|(
-name|void
-operator|*
-name|siginfo
-argument_list|,
-name|void
-operator|*
-name|context
-argument_list|)
-block|; }
 block|;
 name|void
 name|AsanInitFromRtl
@@ -299,26 +228,6 @@ block|;
 name|void
 name|AsanCheckIncompatibleRT
 argument_list|()
-block|;
-name|void
-name|GetPcSpBp
-argument_list|(
-name|void
-operator|*
-name|context
-argument_list|,
-name|uptr
-operator|*
-name|pc
-argument_list|,
-name|uptr
-operator|*
-name|sp
-argument_list|,
-name|uptr
-operator|*
-name|bp
-argument_list|)
 block|;
 name|void
 name|AsanOnSIGSEGV
@@ -428,6 +337,8 @@ argument_list|(
 argument|uptr beg
 argument_list|,
 argument|uptr end
+argument_list|,
+argument|const char *name
 argument_list|)
 block|;
 comment|// Platform-specific options.

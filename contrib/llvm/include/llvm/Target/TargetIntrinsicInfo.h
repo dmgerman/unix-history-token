@@ -93,9 +93,12 @@ name|TargetIntrinsicInfo
 block|{
 name|TargetIntrinsicInfo
 argument_list|(
-argument|const TargetIntrinsicInfo&
+specifier|const
+name|TargetIntrinsicInfo
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -105,7 +108,8 @@ specifier|const
 name|TargetIntrinsicInfo
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:

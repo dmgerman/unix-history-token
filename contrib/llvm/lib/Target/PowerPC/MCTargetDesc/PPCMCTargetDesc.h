@@ -75,6 +75,12 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MathExtras.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -104,7 +110,13 @@ name|class
 name|Target
 decl_stmt|;
 name|class
+name|Triple
+decl_stmt|;
+name|class
 name|StringRef
+decl_stmt|;
+name|class
+name|raw_pwrite_stream
 decl_stmt|;
 name|class
 name|raw_ostream
@@ -135,11 +147,6 @@ name|MCRegisterInfo
 modifier|&
 name|MRI
 parameter_list|,
-specifier|const
-name|MCSubtargetInfo
-modifier|&
-name|STI
-parameter_list|,
 name|MCContext
 modifier|&
 name|Ctx
@@ -159,19 +166,21 @@ name|MCRegisterInfo
 modifier|&
 name|MRI
 parameter_list|,
-name|StringRef
+specifier|const
+name|Triple
+modifier|&
 name|TT
 parameter_list|,
 name|StringRef
 name|CPU
 parameter_list|)
 function_decl|;
-comment|/// createPPCELFObjectWriter - Construct an PPC ELF object writer.
+comment|/// Construct an PPC ELF object writer.
 name|MCObjectWriter
 modifier|*
 name|createPPCELFObjectWriter
 parameter_list|(
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
 parameter_list|,
@@ -185,12 +194,12 @@ name|uint8_t
 name|OSABI
 parameter_list|)
 function_decl|;
-comment|/// createPPCELFObjectWriter - Construct a PPC Mach-O object writer.
+comment|/// Construct a PPC Mach-O object writer.
 name|MCObjectWriter
 modifier|*
 name|createPPCMachObjectWriter
 parameter_list|(
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
 parameter_list|,
@@ -204,6 +213,121 @@ name|uint32_t
 name|CPUSubtype
 parameter_list|)
 function_decl|;
+comment|/// Returns true iff Val consists of one contiguous run of 1s with any number of
+comment|/// 0s on either side.  The 1s are allowed to wrap from LSB to MSB, so
+comment|/// 0x000FFF0, 0x0000FFFF, and 0xFF0000FF are all runs.  0x0F0F0000 is not,
+comment|/// since all 1s are not contiguous.
+specifier|static
+specifier|inline
+name|bool
+name|isRunOfOnes
+parameter_list|(
+name|unsigned
+name|Val
+parameter_list|,
+name|unsigned
+modifier|&
+name|MB
+parameter_list|,
+name|unsigned
+modifier|&
+name|ME
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|Val
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|isShiftedMask_32
+argument_list|(
+name|Val
+argument_list|)
+condition|)
+block|{
+comment|// look for the first non-zero bit
+name|MB
+operator|=
+name|countLeadingZeros
+argument_list|(
+name|Val
+argument_list|)
+expr_stmt|;
+comment|// look for the first zero bit after the run of ones
+name|ME
+operator|=
+name|countLeadingZeros
+argument_list|(
+operator|(
+name|Val
+operator|-
+literal|1
+operator|)
+operator|^
+name|Val
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+else|else
+block|{
+name|Val
+operator|=
+operator|~
+name|Val
+expr_stmt|;
+comment|// invert mask
+if|if
+condition|(
+name|isShiftedMask_32
+argument_list|(
+name|Val
+argument_list|)
+condition|)
+block|{
+comment|// effectively look for the first zero bit
+name|ME
+operator|=
+name|countLeadingZeros
+argument_list|(
+name|Val
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+comment|// effectively look for the first one bit after the run of zeros
+name|MB
+operator|=
+name|countLeadingZeros
+argument_list|(
+operator|(
+name|Val
+operator|-
+literal|1
+operator|)
+operator|^
+name|Val
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+block|}
+comment|// no run present
+return|return
+name|false
+return|;
+block|}
 block|}
 end_decl_stmt
 

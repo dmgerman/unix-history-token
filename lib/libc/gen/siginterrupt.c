@@ -83,15 +83,12 @@ begin_function
 name|int
 name|siginterrupt
 parameter_list|(
-name|sig
-parameter_list|,
-name|flag
-parameter_list|)
 name|int
 name|sig
-decl_stmt|,
+parameter_list|,
+name|int
 name|flag
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|extern
 name|sigset_t
@@ -110,7 +107,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|sig
 argument_list|,
@@ -173,7 +170,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|sig
 argument_list|,

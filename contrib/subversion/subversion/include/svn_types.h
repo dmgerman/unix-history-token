@@ -48,6 +48,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<apr_version.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<apr_errno.h>
 end_include
 
@@ -197,6 +203,167 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+comment|/** Macro used to mark experimental functions.  *  * @since New in 1.9.  */
+ifndef|#
+directive|ifndef
+name|SVN_EXPERIMENTAL
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SWIGPERL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SWIGPYTHON
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SWIGRUBY
+argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__has_attribute
+argument_list|)
+if|#
+directive|if
+name|__has_attribute
+argument_list|(
+name|__warning__
+argument_list|)
+define|#
+directive|define
+name|SVN_EXPERIMENTAL
+value|__attribute__((warning("experimental function used")))
+else|#
+directive|else
+define|#
+directive|define
+name|SVN_EXPERIMENTAL
+endif|#
+directive|endif
+elif|#
+directive|elif
+operator|!
+name|defined
+argument_list|(
+name|__llvm__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+expr|\
+operator|&&
+operator|(
+name|__GNUC__
+operator|>=
+literal|4
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|3
+operator|&&
+name|__GNUC_MINOR__
+operator|>=
+literal|1
+operator|)
+operator|)
+define|#
+directive|define
+name|SVN_EXPERIMENTAL
+value|__attribute__((warning("experimental function used")))
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+name|_MSC_VER
+operator|>=
+literal|1300
+define|#
+directive|define
+name|SVN_EXPERIMENTAL
+value|__declspec(deprecated("experimental function used"))
+else|#
+directive|else
+define|#
+directive|define
+name|SVN_EXPERIMENTAL
+endif|#
+directive|endif
+else|#
+directive|else
+define|#
+directive|define
+name|SVN_EXPERIMENTAL
+endif|#
+directive|endif
+endif|#
+directive|endif
+comment|/** Macro used to mark functions that require a final null sentinel argument.  *  * @since New in 1.9.  */
+ifndef|#
+directive|ifndef
+name|SVN_NEEDS_SENTINEL_NULL
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__has_attribute
+argument_list|)
+if|#
+directive|if
+name|__has_attribute
+argument_list|(
+name|__sentinel__
+argument_list|)
+define|#
+directive|define
+name|SVN_NEEDS_SENTINEL_NULL
+value|__attribute__((sentinel))
+else|#
+directive|else
+define|#
+directive|define
+name|SVN_NEEDS_SENTINEL_NULL
+endif|#
+directive|endif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+operator|(
+name|__GNUC__
+operator|>=
+literal|4
+operator|)
+define|#
+directive|define
+name|SVN_NEEDS_SENTINEL_NULL
+value|__attribute__((sentinel))
+else|#
+directive|else
+define|#
+directive|define
+name|SVN_NEEDS_SENTINEL_NULL
+endif|#
+directive|endif
+endif|#
+directive|endif
 comment|/** Indicate whether the current platform supports unaligned data access.  *  * On the majority of machines running SVN (x86 / x64), unaligned access  * is much cheaper than repeated aligned access. Define this macro to 1  * on those machines.  * Unaligned access on other machines (e.g. IA64) will trigger memory  * access faults or simply misbehave.  *  * Note: Some platforms may only support unaligned access for integers  * (PowerPC).  As a result this macro should only be used to determine  * if unaligned access is supported for integers.  *  * @since New in 1.7.  */
 ifndef|#
 directive|ifndef
@@ -275,6 +442,16 @@ value|0
 endif|#
 directive|endif
 comment|/* FALSE */
+comment|/* Declaration of a unique type, never defined, for the SVN_VA_NULL macro.  *  * NOTE: Private. Not for direct use by third-party code.  */
+struct_decl|struct
+name|svn__null_pointer_constant_stdarg_sentinel_t
+struct_decl|;
+comment|/** Null pointer constant used as a sentinel in variable argument lists.  *  * Use of this macro ensures that the argument is of the correct size when a  * pointer is expected. (The macro @c NULL is not defined as a pointer on  * all systems, and the arguments to variadic functions are not converted  * automatically to the expected type.)  *  * @since New in 1.9.  */
+define|#
+directive|define
+name|SVN_VA_NULL
+value|((struct svn__null_pointer_constant_stdarg_sentinel_t*)0)
+comment|/* See? (char*)NULL -- They have the same length, but the cast looks ugly. */
 comment|/** Subversion error object.  *  * Defined here, rather than in svn_error.h, to avoid a recursive @#include  * situation.  */
 typedef|typedef
 struct|struct
@@ -354,14 +531,24 @@ value|(*((type *)apr_array_push(ary)))
 endif|#
 directive|endif
 comment|/** @} */
-comment|/** @defgroup apr_hash_utilities APR Hash Table Helpers  * These functions enable the caller to dereference an APR hash table index  * without type casts or temporary variables.  *  * ### These are private, and may go away when APR implements them natively.  * @{  */
+comment|/** @defgroup apr_hash_utilities APR Hash Table Helpers  * These functions enable the caller to dereference an APR hash table index  * without type casts or temporary variables.  *  * These functions are provided by APR itself from version 1.5.  * Definitions are provided here for when using older versions of APR.  * @{  */
+if|#
+directive|if
+operator|!
+name|APR_VERSION_AT_LEAST
+argument_list|(
+literal|1
+operator|,
+literal|5
+operator|,
+literal|0
+argument_list|)
 comment|/** Return the key of the hash table entry indexed by @a hi. */
 specifier|const
 name|void
 modifier|*
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 parameter_list|(
-specifier|const
 name|apr_hash_index_t
 modifier|*
 name|hi
@@ -369,9 +556,8 @@ parameter_list|)
 function_decl|;
 comment|/** Return the key length of the hash table entry indexed by @a hi. */
 name|apr_ssize_t
-name|svn__apr_hash_index_klen
+name|apr_hash_this_key_len
 parameter_list|(
-specifier|const
 name|apr_hash_index_t
 modifier|*
 name|hi
@@ -380,14 +566,15 @@ function_decl|;
 comment|/** Return the value of the hash table entry indexed by @a hi. */
 name|void
 modifier|*
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 parameter_list|(
-specifier|const
 name|apr_hash_index_t
 modifier|*
 name|hi
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 comment|/** @} */
 comment|/** On Windows, APR_STATUS_IS_ENOTDIR includes several kinds of  * invalid-pathname error but not ERROR_INVALID_NAME, so we include it.  * We also include ERROR_DIRECTORY as that was not included in apr versions  * before 1.4.0 and this fix is not backported */
 comment|/* ### These fixes should go into APR. */

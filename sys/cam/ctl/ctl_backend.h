@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003 Silicon Graphics International Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_backend.h#2 $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003 Silicon Graphics International Corp.  * Copyright (c) 2014-2015 Alexander Motin<mav@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_backend.h#2 $  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ value|32
 end_define
 
 begin_comment
-comment|/*  * The ID_REQ flag is used to say that the caller has requested a  * particular LUN ID in the req_lun_id field.  If we cannot allocate that  * LUN ID, the ctl_add_lun() call will fail.  *  * The POWERED_OFF flag tells us that the LUN should default to the powered  * off state.  It will return 0x04,0x02 until it is powered up.  ("Logical  * unit not ready, initializing command required.")  *  * The INOPERABLE flag tells us that this LUN is not operable for whatever  * reason.  This means that user data may have been (or has been?) lost.  * We will return 0x31,0x00 ("Medium format corrupted") until the host  * issues a FORMAT UNIT command to clear the error.  *  * The PRIMARY flag tells us that this LUN is registered as a Primary LUN  * which is accessible via the Master shelf controller in an HA. This flag  * being set indicates a Primary LUN. This flag being reset represents a  * Secondary LUN controlled by the Secondary controller in an HA  * configuration. Flag is applicable at this time to T_DIRECT types.   *  * The SERIAL_NUM flag tells us that the serial_num field is filled in and  * valid for use in SCSI INQUIRY VPD page 0x80.  *  * The DEVID flag tells us that the device_id field is filled in and  * valid for use in SCSI INQUIRY VPD page 0x83.  *  * The DEV_TYPE flag tells us that the device_type field is filled in.  *  * The UNMAP flag tells us that this LUN supports UNMAP.  *  * The OFFLINE flag tells us that this LUN can not access backing store.  */
+comment|/*  * The ID_REQ flag is used to say that the caller has requested a  * particular LUN ID in the req_lun_id field.  If we cannot allocate that  * LUN ID, the ctl_add_lun() call will fail.  *  * The STOPPED flag tells us that the LUN should default to the powered  * off state.  It will return 0x04,0x02 until it is powered up.  ("Logical  * unit not ready, initializing command required.")  *  * The NO_MEDIA flag tells us that the LUN has no media inserted.  *  * The PRIMARY flag tells us that this LUN is registered as a Primary LUN  * which is accessible via the Master shelf controller in an HA. This flag  * being set indicates a Primary LUN. This flag being reset represents a  * Secondary LUN controlled by the Secondary controller in an HA  * configuration. Flag is applicable at this time to T_DIRECT types.   *  * The SERIAL_NUM flag tells us that the serial_num field is filled in and  * valid for use in SCSI INQUIRY VPD page 0x80.  *  * The DEVID flag tells us that the device_id field is filled in and  * valid for use in SCSI INQUIRY VPD page 0x83.  *  * The DEV_TYPE flag tells us that the device_type field is filled in.  *  * The EJECTED flag tells us that the removable LUN has tray open.  *  * The UNMAP flag tells us that this LUN supports UNMAP.  *  * The OFFLINE flag tells us that this LUN can not access backing store.  */
 end_comment
 
 begin_typedef
@@ -42,11 +42,11 @@ name|CTL_LUN_FLAG_ID_REQ
 init|=
 literal|0x01
 block|,
-name|CTL_LUN_FLAG_POWERED_OFF
+name|CTL_LUN_FLAG_STOPPED
 init|=
 literal|0x02
 block|,
-name|CTL_LUN_FLAG_INOPERABLE
+name|CTL_LUN_FLAG_NO_MEDIA
 init|=
 literal|0x04
 block|,
@@ -70,15 +70,29 @@ name|CTL_LUN_FLAG_UNMAP
 init|=
 literal|0x80
 block|,
-name|CTL_LUN_FLAG_OFFLINE
+name|CTL_LUN_FLAG_EJECTED
 init|=
 literal|0x100
 block|,
-name|CTL_LUN_FLAG_SERSEQ_READ
+name|CTL_LUN_FLAG_READONLY
 init|=
 literal|0x200
 block|}
 name|ctl_backend_lun_flags
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CTL_LUN_SERSEQ_OFF
+block|,
+name|CTL_LUN_SERSEQ_READ
+block|,
+name|CTL_LUN_SERSEQ_ON
+block|}
+name|ctl_lun_serseq
 typedef|;
 end_typedef
 
@@ -160,6 +174,10 @@ decl_stmt|;
 comment|/* passed to CTL */
 name|ctl_backend_lun_flags
 name|flags
+decl_stmt|;
+comment|/* passed to CTL */
+name|ctl_lun_serseq
+name|serseq
 decl_stmt|;
 comment|/* passed to CTL */
 name|void
@@ -593,12 +611,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * If a LUN is inoperable, call ctl_lun_inoperable().  Generally the LUN  * will become operable once again when the user issues the SCSI FORMAT UNIT  * command.  (CTL will automatically clear the inoperable flag.)  If we  * need to re-enable the LUN, we can call ctl_lun_operable() to enable it  * without a SCSI command.  */
+comment|/*  * Methods to notify about media and tray status changes.  */
 end_comment
 
 begin_function_decl
 name|int
-name|ctl_lun_inoperable
+name|ctl_lun_no_media
 parameter_list|(
 name|struct
 name|ctl_be_lun
@@ -610,7 +628,19 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ctl_lun_operable
+name|ctl_lun_has_media
+parameter_list|(
+name|struct
+name|ctl_be_lun
+modifier|*
+name|be_lun
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ctl_lun_ejected
 parameter_list|(
 name|struct
 name|ctl_be_lun
@@ -621,12 +651,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * To take a LUN offline, call ctl_lun_offline().  Generally the LUN will  * be online again once the user sends a SCSI START STOP UNIT command with  * the start and on/offline bits set.  The backend can bring the LUN back  * online via the ctl_lun_online() function, if necessary.  */
+comment|/*  * Called on LUN HA role change.  */
 end_comment
 
 begin_function_decl
 name|int
-name|ctl_lun_offline
+name|ctl_lun_primary
 parameter_list|(
 name|struct
 name|ctl_be_lun
@@ -638,7 +668,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ctl_lun_online
+name|ctl_lun_secondary
 parameter_list|(
 name|struct
 name|ctl_be_lun
@@ -649,7 +679,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Let the backend notify the initiator about changed capacity.  */
+comment|/*  * Let the backend notify the initiators about changes.  */
 end_comment
 
 begin_function_decl

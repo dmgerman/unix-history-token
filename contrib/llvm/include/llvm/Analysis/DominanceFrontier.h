@@ -1097,28 +1097,14 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_extern
 unit|};
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class DominanceFrontierBase<BasicBlock>
-argument_list|)
-end_macro
+extern|extern template class DominanceFrontierBase<BasicBlock>;
+end_extern
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
-name|EXTERN_TEMPLATE_INSTANTIATION
-argument_list|(
-argument|class ForwardDominanceFrontierBase<BasicBlock>
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_extern
+extern|extern template class ForwardDominanceFrontierBase<BasicBlock>;
+end_extern
 
 begin_comment
 unit|}

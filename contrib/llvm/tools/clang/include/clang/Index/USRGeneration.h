@@ -63,7 +63,7 @@ name|class
 name|Decl
 decl_stmt|;
 name|class
-name|MacroDefinition
+name|MacroDefinitionRecord
 decl_stmt|;
 name|class
 name|SourceManager
@@ -186,7 +186,7 @@ name|bool
 name|generateUSRForMacro
 argument_list|(
 specifier|const
-name|MacroDefinition
+name|MacroDefinitionRecord
 operator|*
 name|MD
 argument_list|,

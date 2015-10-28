@@ -333,9 +333,16 @@ struct|struct
 name|rt2860_softc
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
+name|ieee80211com
+name|sc_ic
+decl_stmt|;
+name|struct
+name|mbufq
+name|sc_snd
+decl_stmt|;
+name|struct
+name|mtx
+name|sc_mtx
 decl_stmt|;
 name|device_t
 name|sc_dev
@@ -345,10 +352,6 @@ name|sc_st
 decl_stmt|;
 name|bus_space_handle_t
 name|sc_sh
-decl_stmt|;
-name|struct
-name|mtx
-name|sc_mtx
 decl_stmt|;
 name|struct
 name|callout
@@ -400,6 +403,10 @@ define|#
 directive|define
 name|RT2860_PCIE
 value|(1<< 2)
+define|#
+directive|define
+name|RT2860_RUNNNING
+value|(1<< 3)
 name|struct
 name|ieee80211_node
 modifier|*
@@ -603,15 +610,9 @@ name|struct
 name|rt2860_rx_radiotap_header
 name|sc_rxtap
 decl_stmt|;
-name|int
-name|sc_rxtap_len
-decl_stmt|;
 name|struct
 name|rt2860_tx_radiotap_header
 name|sc_txtap
-decl_stmt|;
-name|int
-name|sc_txtap_len
 decl_stmt|;
 block|}
 struct|;

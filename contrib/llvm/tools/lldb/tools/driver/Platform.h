@@ -43,12 +43,6 @@ directive|define
 name|lldb_Platform_h_
 end_define
 
-begin_include
-include|#
-directive|include
-file|"lldb/Host/HostGetOpt.h"
-end_include
-
 begin_if
 if|#
 directive|if
@@ -67,6 +61,12 @@ define|#
 directive|define
 name|_INC_SIGNAL
 end_define
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/HostGetOpt.h"
+end_include
 
 begin_include
 include|#
@@ -446,6 +446,12 @@ end_else
 begin_include
 include|#
 directive|include
+file|"lldb/Host/HostGetOpt.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<inttypes.h>
 end_include
 
@@ -484,27 +490,6 @@ include|#
 directive|include
 file|<sys/time.h>
 end_include
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__ANDROID_NDK__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<histedit.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

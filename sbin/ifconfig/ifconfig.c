@@ -82,18 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -107,6 +95,18 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -2890,13 +2890,6 @@ name|int
 name|iscreate
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 specifier|const
 name|struct
 name|cmd
@@ -2965,9 +2958,6 @@ block|}
 return|return
 name|NULL
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -5060,9 +5050,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|warn
+name|err
 argument_list|(
-literal|"ioctl (set metric)"
+literal|1
+argument_list|,
+literal|"ioctl SIOCSIFMETRIC (set metric)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5134,9 +5126,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|warn
+name|err
 argument_list|(
-literal|"ioctl (set mtu)"
+literal|1
+argument_list|,
+literal|"ioctl SIOCSIFMTU (set mtu)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5183,14 +5177,13 @@ name|newname
 operator|==
 name|NULL
 condition|)
-block|{
-name|warn
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"no memory to set ifname"
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|ifr
 operator|.
 name|ifr_data
@@ -5215,17 +5208,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
-argument_list|(
-literal|"ioctl (set name)"
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|newname
 argument_list|)
 expr_stmt|;
-return|return;
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"ioctl SIOCSIFNAME (set name)"
+argument_list|)
+expr_stmt|;
 block|}
 name|strlcpy
 argument_list|(
@@ -5371,9 +5365,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|warn
+name|err
 argument_list|(
-literal|"ioctl (set descr)"
+literal|1
+argument_list|,
+literal|"ioctl SIOCSIFDESCR (set descr)"
 argument_list|)
 expr_stmt|;
 name|free
@@ -7273,13 +7269,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
 name|size_t
 name|i
 decl_stmt|;
@@ -7291,7 +7280,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|basic_cmds
 argument_list|)
@@ -7308,9 +7297,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

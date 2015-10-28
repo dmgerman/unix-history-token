@@ -331,6 +331,48 @@ name|HYPERVISOR_start_info
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*------------------------------ Sysctl tunables -----------------------------*/
+end_comment
+
+begin_decl_stmt
+name|int
+name|xen_disable_pv_disks
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|xen_disable_pv_nics
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.xen.disable_pv_disks"
+argument_list|,
+operator|&
+name|xen_disable_pv_disks
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.xen.disable_pv_nics"
+argument_list|,
+operator|&
+name|xen_disable_pv_nics
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -338,7 +380,7 @@ name|SMP
 end_ifdef
 
 begin_comment
-comment|/* XEN diverged cpu operations */
+comment|/*---------------------- XEN diverged cpu operations -------------------------*/
 end_comment
 
 begin_function
@@ -923,6 +965,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|u_short
+name|disable_devs
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|xen_pv_domain
@@ -930,6 +977,21 @@ argument_list|()
 condition|)
 block|{
 comment|/* 		 * No emulated devices in the PV case, so no need to unplug 		 * anything. 		 */
+if|if
+condition|(
+name|xen_disable_pv_disks
+operator|!=
+literal|0
+operator|||
+name|xen_disable_pv_nics
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"PV devices cannot be disabled in PV guests\n"
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -944,20 +1006,57 @@ condition|)
 return|return;
 if|if
 condition|(
+name|xen_disable_pv_disks
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"XEN: Disabling emulated block and network devices\n"
+literal|"XEN: disabling emulated disks\n"
 argument_list|)
 expr_stmt|;
+name|disable_devs
+operator||=
+name|XMI_UNPLUG_IDE_DISKS
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|xen_disable_pv_nics
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"XEN: disabling emulated nics\n"
+argument_list|)
+expr_stmt|;
+name|disable_devs
+operator||=
+name|XMI_UNPLUG_NICS
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|disable_devs
+operator|!=
+literal|0
+condition|)
 name|outw
 argument_list|(
 name|XEN_MAGIC_IOPORT
 argument_list|,
-name|XMI_UNPLUG_IDE_DISKS
-operator||
-name|XMI_UNPLUG_NICS
+name|disable_devs
 argument_list|)
 expr_stmt|;
 block|}

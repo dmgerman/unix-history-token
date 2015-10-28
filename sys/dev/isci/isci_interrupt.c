@@ -524,6 +524,8 @@ name|num_interrupts
 operator|=
 name|max_msix_messages
 expr_stmt|;
+if|if
+condition|(
 name|pci_alloc_msix
 argument_list|(
 name|isci
@@ -535,9 +537,9 @@ name|isci
 operator|->
 name|num_interrupts
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|==
+literal|0
+operator|&&
 name|isci
 operator|->
 name|num_interrupts

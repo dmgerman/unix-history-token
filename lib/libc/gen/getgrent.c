@@ -240,6 +240,27 @@ end_decl_stmt
 
 begin_function_decl
 name|int
+name|__getgroupmembership
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|gid_t
+parameter_list|,
+name|gid_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|__gr_match_entry
 parameter_list|(
 specifier|const
@@ -6466,7 +6487,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|do {	 				\ 	int i;							\ 								\ 	for (i = 0; i< (sizeof(x)/sizeof(x[0])) - 1; i++)	\ 		x[i].mdata = (void *)y;				\ } while (0)
+value|do {	 				\ 	int i;							\ 	for (i = 0; i< (int)(nitems(x) - 1); i++)		\ 		x[i].mdata = (void *)y;				\ } while (0)
 name|rv
 operator|=
 name|compat_getstate
@@ -6791,7 +6812,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|do { 				\ 	int i;							\ 								\ 	for (i = 0; i< (sizeof(x)/sizeof(x[0])) - 1; i++)	\ 		x[i].mdata = (void *)y;				\ } while (0)
+value|do { 				\ 	int i;							\ 	for (i = 0; i< (int)(nitems(x) - 1); i++)		\ 		x[i].mdata = (void *)y;				\ } while (0)
 name|name
 operator|=
 name|NULL

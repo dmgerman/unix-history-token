@@ -652,6 +652,8 @@ parameter_list|)
 block|{
 name|int
 name|old
+init|=
+literal|0
 decl_stmt|;
 switch|switch
 condition|(

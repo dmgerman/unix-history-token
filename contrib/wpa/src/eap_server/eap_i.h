@@ -472,6 +472,7 @@ decl_stmt|,
 modifier|*
 name|msg_ctx
 decl_stmt|;
+specifier|const
 name|struct
 name|eapol_callbacks
 modifier|*
@@ -635,6 +636,10 @@ name|try_initiate_reauth
 decl_stmt|;
 name|int
 name|erp
+decl_stmt|;
+name|unsigned
+name|int
+name|tls_session_lifetime
 decl_stmt|;
 ifdef|#
 directive|ifdef

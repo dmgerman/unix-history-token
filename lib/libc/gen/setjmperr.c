@@ -82,7 +82,9 @@ end_include
 begin_function
 name|void
 name|longjmperror
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 define|#
 directive|define

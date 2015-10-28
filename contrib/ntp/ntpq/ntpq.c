@@ -2635,6 +2635,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+specifier|const
 modifier|*
 name|progname
 decl_stmt|;
@@ -2962,7 +2963,7 @@ endif|#
 directive|endif
 name|msg
 operator|=
-name|malloc
+name|emalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -14235,10 +14236,6 @@ name|sep
 operator|=
 literal|""
 expr_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
 name|s
 operator|=
 name|cp
@@ -14971,6 +14968,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* TALOS-CAN-0063: avoid buffer overrun */
 name|atoascii
 argument_list|(
 name|name
@@ -14985,6 +14983,13 @@ name|bn
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|output_raw
+operator|!=
+literal|'*'
+condition|)
+block|{
 name|atoascii
 argument_list|(
 name|value
@@ -14997,15 +15002,10 @@ sizeof|sizeof
 argument_list|(
 name|bv
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|output_raw
-operator|!=
-literal|'*'
-condition|)
-block|{
 name|len
 operator|=
 name|strlen
@@ -15028,6 +15028,23 @@ literal|1
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+block|}
+else|else
+block|{
+name|atoascii
+argument_list|(
+name|value
+argument_list|,
+name|MAXVALLEN
+argument_list|,
+name|bv
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bv
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 name|output
@@ -15512,7 +15529,7 @@ name|hstate
 operator|->
 name|seen
 operator|=
-name|realloc
+name|erealloc
 argument_list|(
 name|hstate
 operator|->
@@ -15640,7 +15657,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 name|len
 argument_list|)
@@ -15664,7 +15681,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|realloc
+name|erealloc
 argument_list|(
 name|hstate
 operator|->
@@ -15783,10 +15800,10 @@ name|char
 operator|*
 operator|*
 operator|)
-name|calloc
+name|emalloc_zero
 argument_list|(
 literal|1
-argument_list|,
+operator|*
 sizeof|sizeof
 argument_list|(
 specifier|const
@@ -15795,6 +15812,7 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|// replaces -> calloc(1, sizeof( const char * ));
 name|INIT_SSL
 argument_list|()
 expr_stmt|;
@@ -15827,7 +15845,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -15852,7 +15870,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(

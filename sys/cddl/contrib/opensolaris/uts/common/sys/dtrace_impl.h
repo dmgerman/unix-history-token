@@ -2190,10 +2190,20 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/*  * DTrace Assertions  *  * DTrace calls ASSERT from probe context.  To assure that a failed ASSERT  * does not induce a markedly more catastrophic failure (e.g., one from which  * a dump cannot be gleaned), DTrace must define its own ASSERT to be one that  * may safely be called from probe context.  This header file must thus be  * included by any DTrace component that calls ASSERT from probe context, and  * _only_ by those components.  (The only exception to this is kernel  * debugging infrastructure at user-level that doesn't depend on calling  * ASSERT.)  */
+comment|/*  * DTrace Assertions  *  * DTrace calls ASSERT and VERIFY from probe context.  To assure that a failed  * ASSERT or VERIFY does not induce a markedly more catastrophic failure (e.g.,  * one from which a dump cannot be gleaned), DTrace must define its own ASSERT  * and VERIFY macros to be ones that may safely be called from probe context.  * This header file must thus be included by any DTrace component that calls  * ASSERT and/or VERIFY from probe context, and _only_ by those components.  * (The only exception to this is kernel debugging infrastructure at user-level  * that doesn't depend on calling ASSERT.)  */
 undef|#
 directive|undef
 name|ASSERT
+undef|#
+directive|undef
+name|VERIFY
+define|#
+directive|define
+name|VERIFY
+parameter_list|(
+name|EX
+parameter_list|)
+value|((void)((EX) || \ 			dtrace_assfail(#EX, __FILE__, __LINE__)))
 ifdef|#
 directive|ifdef
 name|DEBUG

@@ -208,9 +208,12 @@ name|CurrentConflictMarkerState
 block|;
 name|Lexer
 argument_list|(
-argument|const Lexer&
+specifier|const
+name|Lexer
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -220,7 +223,8 @@ specifier|const
 name|Lexer
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|friend
 name|class
@@ -592,7 +596,7 @@ operator|::
 name|string
 name|Stringify
 argument_list|(
-argument|const std::string&Str
+argument|StringRef Str
 argument_list|,
 argument|bool Charify = false
 argument_list|)
@@ -799,6 +803,98 @@ argument_list|,
 argument|const LangOptions&LangOpts
 argument_list|)
 block|;
+comment|/// \brief Given a token range, produce a corresponding CharSourceRange that
+comment|/// is not a token range. This allows the source range to be used by
+comment|/// components that don't have access to the lexer and thus can't find the
+comment|/// end of the range for themselves.
+specifier|static
+name|CharSourceRange
+name|getAsCharRange
+argument_list|(
+argument|SourceRange Range
+argument_list|,
+argument|const SourceManager&SM
+argument_list|,
+argument|const LangOptions&LangOpts
+argument_list|)
+block|{
+name|SourceLocation
+name|End
+operator|=
+name|getLocForEndOfToken
+argument_list|(
+name|Range
+operator|.
+name|getEnd
+argument_list|()
+argument_list|,
+literal|0
+argument_list|,
+name|SM
+argument_list|,
+name|LangOpts
+argument_list|)
+block|;
+return|return
+name|End
+operator|.
+name|isInvalid
+argument_list|()
+condition|?
+name|CharSourceRange
+argument_list|()
+else|:
+name|CharSourceRange
+operator|::
+name|getCharRange
+argument_list|(
+name|Range
+operator|.
+name|getBegin
+argument_list|()
+argument_list|,
+name|End
+operator|.
+name|getLocWithOffset
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+argument_list|)
+return|;
+block|}
+specifier|static
+name|CharSourceRange
+name|getAsCharRange
+argument_list|(
+argument|CharSourceRange Range
+argument_list|,
+argument|const SourceManager&SM
+argument_list|,
+argument|const LangOptions&LangOpts
+argument_list|)
+block|{
+return|return
+name|Range
+operator|.
+name|isTokenRange
+argument_list|()
+condition|?
+name|getAsCharRange
+argument_list|(
+name|Range
+operator|.
+name|getAsRange
+argument_list|()
+argument_list|,
+name|SM
+argument_list|,
+name|LangOpts
+argument_list|)
+else|:
+name|Range
+return|;
+block|}
 comment|/// \brief Returns true if the given MacroID location points at the first
 comment|/// token of the macro expansion.
 comment|///

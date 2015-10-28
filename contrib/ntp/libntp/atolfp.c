@@ -121,7 +121,7 @@ name|digits
 init|=
 literal|"0123456789"
 decl_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|str
 operator|!=

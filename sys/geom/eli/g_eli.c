@@ -1419,7 +1419,19 @@ break|break;
 case|case
 name|BIO_DELETE
 case|:
-comment|/* 		 * We could eventually support BIO_DELETE request. 		 * It could be done by overwritting requested sector with 		 * random data g_eli_overwrites number of times. 		 */
+comment|/* 		 * If the user hasn't set the NODELETE flag, we just pass 		 * it down the stack and let the layers beneath us do (or 		 * not) whatever they do with it.  If they have, we 		 * reject it.  A possible extension would be an 		 * additional flag to take it as a hint to shred the data 		 * with [multiple?] overwrites. 		 */
+if|if
+condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|G_ELI_FLAG_NODELETE
+operator|)
+condition|)
+break|break;
 default|default:
 name|g_io_deliver
 argument_list|(
@@ -1539,6 +1551,9 @@ name|BIO_GETATTR
 case|:
 case|case
 name|BIO_FLUSH
+case|:
+case|case
+name|BIO_DELETE
 case|:
 name|cbp
 operator|->
@@ -6189,6 +6204,13 @@ argument_list|(
 name|G_ELI_FLAG_RO
 argument_list|,
 literal|"READ-ONLY"
+argument_list|)
+expr_stmt|;
+name|ADD_FLAG
+argument_list|(
+name|G_ELI_FLAG_NODELETE
+argument_list|,
+literal|"NODELETE"
 argument_list|)
 expr_stmt|;
 undef|#

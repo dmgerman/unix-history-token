@@ -458,18 +458,13 @@ argument_list|)
 block|{
 name|Macros
 operator|.
-name|push_back
-argument_list|(
-name|std
-operator|::
-name|make_pair
+name|emplace_back
 argument_list|(
 name|Name
 argument_list|,
 name|false
 argument_list|)
-argument_list|)
-block|;   }
+block|; }
 name|void
 name|addMacroUndef
 argument_list|(
@@ -478,18 +473,13 @@ argument_list|)
 block|{
 name|Macros
 operator|.
-name|push_back
-argument_list|(
-name|std
-operator|::
-name|make_pair
+name|emplace_back
 argument_list|(
 name|Name
 argument_list|,
 name|true
 argument_list|)
-argument_list|)
-block|;   }
+block|; }
 name|void
 name|addRemappedFile
 argument_list|(
@@ -500,16 +490,11 @@ argument_list|)
 block|{
 name|RemappedFiles
 operator|.
-name|push_back
-argument_list|(
-name|std
-operator|::
-name|make_pair
+name|emplace_back
 argument_list|(
 name|From
 argument_list|,
 name|To
-argument_list|)
 argument_list|)
 block|;   }
 name|void
@@ -522,16 +507,11 @@ argument_list|)
 block|{
 name|RemappedFileBuffers
 operator|.
-name|push_back
-argument_list|(
-name|std
-operator|::
-name|make_pair
+name|emplace_back
 argument_list|(
 name|From
 argument_list|,
 name|To
-argument_list|)
 argument_list|)
 block|;   }
 name|void

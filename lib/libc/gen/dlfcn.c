@@ -79,6 +79,36 @@ literal|"Service unavailable"
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|_rtld_thread_init
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_rtld_atfork_pre
+parameter_list|(
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_rtld_atfork_post
+parameter_list|(
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * For ELF, the dynamic linker directly resolves references to its  * services to functions inside the dynamic linker itself.  These  * weak-symbol stubs are necessary so that "ld" won't complain about  * undefined symbols.  The stubs are executed only when the program is  * linked statically, or when a given service isn't implemented in the  * dynamic linker.  They must return an error if called, and they must  * be weak symbols so that the dynamic linker can override them.  */
 end_comment

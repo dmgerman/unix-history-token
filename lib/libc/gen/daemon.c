@@ -99,19 +99,22 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
 begin_function
 name|int
 name|daemon
 parameter_list|(
-name|nochdir
-parameter_list|,
-name|noclose
-parameter_list|)
 name|int
 name|nochdir
-decl_stmt|,
+parameter_list|,
+name|int
 name|noclose
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sigaction
@@ -154,7 +157,7 @@ literal|0
 expr_stmt|;
 name|osa_ok
 operator|=
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGHUP
 argument_list|,
@@ -209,7 +212,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGHUP
 argument_list|,

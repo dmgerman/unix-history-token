@@ -59,24 +59,24 @@ directive|define
 name|LLVM_CLANG_AST_ASTMUTATIONLISTENER_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"clang/Basic/SourceLocation.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
 name|class
-name|CXXRecordDecl
+name|Attr
 decl_stmt|;
 name|class
 name|ClassTemplateDecl
 decl_stmt|;
 name|class
 name|ClassTemplateSpecializationDecl
+decl_stmt|;
+name|class
+name|CXXDestructorDecl
+decl_stmt|;
+name|class
+name|CXXRecordDecl
 decl_stmt|;
 name|class
 name|Decl
@@ -89,6 +89,12 @@ name|FunctionDecl
 decl_stmt|;
 name|class
 name|FunctionTemplateDecl
+decl_stmt|;
+name|class
+name|Module
+decl_stmt|;
+name|class
+name|NamedDecl
 decl_stmt|;
 name|class
 name|ObjCCategoryDecl
@@ -104,6 +110,9 @@ name|ObjCPropertyDecl
 decl_stmt|;
 name|class
 name|QualType
+decl_stmt|;
+name|class
+name|RecordDecl
 decl_stmt|;
 name|class
 name|TagDecl
@@ -250,6 +259,22 @@ name|QualType
 name|ReturnType
 parameter_list|)
 function_decl|;
+comment|/// \brief A virtual destructor's operator delete has been resolved.
+name|virtual
+name|void
+name|ResolvedOperatorDelete
+parameter_list|(
+specifier|const
+name|CXXDestructorDecl
+modifier|*
+name|DD
+parameter_list|,
+specifier|const
+name|FunctionDecl
+modifier|*
+name|Delete
+parameter_list|)
+block|{}
 comment|/// \brief An implicit member got a definition.
 name|virtual
 name|void
@@ -352,6 +377,45 @@ specifier|const
 name|Decl
 modifier|*
 name|D
+parameter_list|)
+block|{}
+comment|/// \brief A definition has been made visible by being redefined locally.
+comment|///
+comment|/// \param D The definition that was previously not visible.
+comment|/// \param M The containing module in which the definition was made visible,
+comment|///        if any.
+name|virtual
+name|void
+name|RedefinedHiddenDefinition
+parameter_list|(
+specifier|const
+name|NamedDecl
+modifier|*
+name|D
+parameter_list|,
+name|Module
+modifier|*
+name|M
+parameter_list|)
+block|{}
+comment|/// \brief An attribute was added to a RecordDecl
+comment|///
+comment|/// \param Attr The attribute that was added to the Record
+comment|///
+comment|/// \param Record The RecordDecl that got a new attribute
+name|virtual
+name|void
+name|AddedAttributeToRecord
+parameter_list|(
+specifier|const
+name|Attr
+modifier|*
+name|Attr
+parameter_list|,
+specifier|const
+name|RecordDecl
+modifier|*
+name|Record
 parameter_list|)
 block|{}
 comment|// NOTE: If new methods are added they should also be added to

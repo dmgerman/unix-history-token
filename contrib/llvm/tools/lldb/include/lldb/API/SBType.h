@@ -57,6 +57,7 @@ name|class
 name|SBTypeList
 decl_stmt|;
 name|class
+name|LLDB_API
 name|SBTypeMember
 block|{
 name|public
@@ -367,6 +368,10 @@ name|IsArrayType
 parameter_list|()
 function_decl|;
 name|bool
+name|IsVectorType
+parameter_list|()
+function_decl|;
+name|bool
 name|IsTypedefType
 parameter_list|()
 function_decl|;
@@ -410,6 +415,12 @@ name|lldb
 operator|::
 name|SBType
 name|GetArrayElementType
+argument_list|()
+expr_stmt|;
+name|lldb
+operator|::
+name|SBType
+name|GetVectorElementType
 argument_list|()
 expr_stmt|;
 name|lldb

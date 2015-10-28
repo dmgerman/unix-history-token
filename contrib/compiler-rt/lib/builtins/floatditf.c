@@ -153,7 +153,7 @@ operator|-
 literal|1
 operator|)
 operator|-
-name|__builtin_clz
+name|__builtin_clzll
 argument_list|(
 name|a
 argument_list|)

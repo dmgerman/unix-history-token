@@ -88,6 +88,7 @@ name|uint64_t
 name|tc_frequency
 decl_stmt|;
 comment|/* Frequency of the counter in Hz. */
+specifier|const
 name|char
 modifier|*
 name|tc_name

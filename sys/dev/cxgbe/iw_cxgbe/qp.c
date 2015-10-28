@@ -8322,9 +8322,11 @@ block|{
 case|case
 name|C4IW_QP_STATE_CLOSING
 case|:
-comment|//Fixme: Use atomic_read as same as Linux
 name|BUG_ON
 argument_list|(
+name|atomic_read
+argument_list|(
+operator|&
 name|qhp
 operator|->
 name|ep
@@ -8333,7 +8335,8 @@ name|com
 operator|.
 name|kref
 operator|.
-name|count
+name|refcount
+argument_list|)
 operator|<
 literal|2
 argument_list|)

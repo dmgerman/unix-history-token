@@ -919,6 +919,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|tc_chosen
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Non-zero if a specific tc was chosen via sysctl. */
+end_comment
+
 begin_function_decl
 specifier|static
 name|void
@@ -5395,7 +5406,12 @@ argument_list|,
 literal|"goodness of time counter"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Never automatically use a timecounter with negative quality. 	 * Even though we run on the dummy counter, switching here may be 	 * worse since this timecounter may not be monotonous. 	 */
+comment|/* 	 * Do not automatically switch if the current tc was specifically 	 * chosen.  Never automatically use a timecounter with negative quality. 	 * Even though we run on the dummy counter, switching here may be 	 * worse since this timecounter may not be monotonic. 	 */
+if|if
+condition|(
+name|tc_chosen
+condition|)
+return|return;
 if|if
 condition|(
 name|tc
@@ -6287,7 +6303,19 @@ operator|->
 name|newptr
 operator|==
 name|NULL
-operator|||
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* Record that the tc in use now was specifically chosen. */
+name|tc_chosen
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|newname
@@ -6301,7 +6329,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 for|for
@@ -6402,7 +6430,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Report or change the active timecounter hardware. */
+comment|/* Report the available timecounter hardware. */
 end_comment
 
 begin_function
@@ -6805,7 +6833,10 @@ condition|(
 name|err
 operator|==
 name|EWOULDBLOCK
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|fapi
 operator|->
 name|timeout
@@ -6817,6 +6848,15 @@ literal|1
 condition|)
 block|{
 continue|continue;
+block|}
+else|else
+block|{
+return|return
+operator|(
+name|ETIMEDOUT
+operator|)
+return|;
+block|}
 block|}
 elseif|else
 if|if
@@ -7577,6 +7617,22 @@ literal|"NULL pps pointer in pps_event"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Nothing to do if not currently set to capture this event type. */
+if|if
+condition|(
+operator|(
+name|event
+operator|&
+name|pps
+operator|->
+name|ppsparam
+operator|.
+name|mode
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
 comment|/* If the timecounter was wound up underneath us, bail out. */
 if|if
 condition|(
@@ -8593,6 +8649,28 @@ name|cpu_tick_frequency
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+specifier|static
+name|DPCPU_DEFINE
+argument_list|(
+name|uint64_t
+argument_list|,
+name|tc_cpu_ticks_base
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|DPCPU_DEFINE
+argument_list|(
+name|unsigned
+argument_list|,
+name|tc_cpu_ticks_last
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|uint64_t
@@ -8601,22 +8679,40 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|static
-name|uint64_t
-name|base
-decl_stmt|;
-specifier|static
-name|unsigned
-name|last
-decl_stmt|;
-name|unsigned
-name|u
-decl_stmt|;
 name|struct
 name|timecounter
 modifier|*
 name|tc
 decl_stmt|;
+name|uint64_t
+name|res
+decl_stmt|,
+modifier|*
+name|base
+decl_stmt|;
+name|unsigned
+name|u
+decl_stmt|,
+modifier|*
+name|last
+decl_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
+name|base
+operator|=
+name|DPCPU_PTR
+argument_list|(
+name|tc_cpu_ticks_base
+argument_list|)
+expr_stmt|;
+name|last
+operator|=
+name|DPCPU_PTR
+argument_list|(
+name|tc_cpu_ticks_last
+argument_list|)
+expr_stmt|;
 name|tc
 operator|=
 name|timehands
@@ -8640,8 +8736,10 @@ if|if
 condition|(
 name|u
 operator|<
+operator|*
 name|last
 condition|)
+operator|*
 name|base
 operator|+=
 operator|(
@@ -8653,15 +8751,24 @@ name|tc_counter_mask
 operator|+
 literal|1
 expr_stmt|;
+operator|*
 name|last
 operator|=
 name|u
 expr_stmt|;
-return|return
-operator|(
+name|res
+operator|=
 name|u
 operator|+
+operator|*
 name|base
+expr_stmt|;
+name|critical_exit
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|res
 operator|)
 return|;
 block|}

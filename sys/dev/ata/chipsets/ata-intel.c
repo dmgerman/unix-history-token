@@ -1289,7 +1289,7 @@ name|INTEL_6CH
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Cougar Point"
 block|}
@@ -1303,7 +1303,7 @@ name|INTEL_6CH
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Cougar Point"
 block|}
@@ -1345,7 +1345,7 @@ name|INTEL_6CH
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Patsburg"
 block|}
@@ -1373,7 +1373,7 @@ name|INTEL_6CH
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Panther Point"
 block|}
@@ -1387,7 +1387,7 @@ name|INTEL_6CH
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Panther Point"
 block|}
@@ -1429,7 +1429,7 @@ name|INTEL_6CH
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Avoton"
 block|}
@@ -1443,7 +1443,7 @@ name|INTEL_6CH
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Avoton"
 block|}
@@ -1485,7 +1485,7 @@ name|INTEL_6CH
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Lynx Point"
 block|}
@@ -1499,7 +1499,7 @@ name|INTEL_6CH
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Lynx Point"
 block|}
@@ -1513,7 +1513,7 @@ name|INTEL_6CH2
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Lynx Point"
 block|}
@@ -1527,7 +1527,7 @@ name|INTEL_6CH2
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Lynx Point"
 block|}
@@ -1541,7 +1541,7 @@ name|INTEL_6CH
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Wildcat Point"
 block|}
@@ -1555,7 +1555,7 @@ name|INTEL_6CH
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Wildcat Point"
 block|}
@@ -1569,7 +1569,7 @@ name|INTEL_6CH2
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Wildcat Point"
 block|}
@@ -1583,7 +1583,7 @@ name|INTEL_6CH2
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Wildcat Point"
 block|}
@@ -1597,7 +1597,7 @@ name|INTEL_6CH
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Wellsburg"
 block|}
@@ -1611,7 +1611,7 @@ name|INTEL_6CH2
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Wellsburg"
 block|}
@@ -1625,7 +1625,7 @@ name|INTEL_6CH
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Wellsburg"
 block|}
@@ -1639,7 +1639,7 @@ name|INTEL_6CH2
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Wellsburg"
 block|}
@@ -1653,7 +1653,7 @@ name|INTEL_6CH
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Lynx Point-LP"
 block|}
@@ -1667,7 +1667,7 @@ name|INTEL_6CH
 block|,
 literal|0
 block|,
-name|ATA_SA300
+name|ATA_SA600
 block|,
 literal|"Lynx Point-LP"
 block|}
@@ -3080,6 +3080,22 @@ operator|->
 name|setmode
 operator|=
 name|ata_intel_new_setmode
+expr_stmt|;
+if|if
+condition|(
+name|ctlr
+operator|->
+name|chip
+operator|->
+name|max_dma
+operator|>=
+name|ATA_SA600
+condition|)
+name|ch
+operator|->
+name|flags
+operator||=
+name|ATA_USE_16BIT
 expr_stmt|;
 block|}
 elseif|else

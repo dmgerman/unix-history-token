@@ -131,6 +131,36 @@ parameter_list|)
 value|while ((*(p) == ' ') || (*(p) == '\t')) p++
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * libnvpair is the lowest commen denominator for ZFS related libraries,  * defining aok here makes it usable by all ZFS related libraries  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|aok
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * nvpair.c - Provides kernel& userland interfaces for manipulating  *	name-value pairs.  *  * Overview Diagram  *  *  +--------------+  *  |  nvlist_t    |  *  |--------------|  *  | nvl_version  |  *  | nvl_nvflag   |  *  | nvl_priv    -+-+  *  | nvl_flag     | |  *  | nvl_pad      | |  *  +--------------+ |  *                   V  *      +--------------+      last i_nvp in list  *      | nvpriv_t     |  +--------------------->  *      |--------------|  |  *   +--+- nvp_list    |  |   +------------+  *   |  |  nvp_last   -+--+   + nv_alloc_t |  *   |  |  nvp_curr    |      |------------|  *   |  |  nvp_nva    -+----> | nva_ops    |  *   |  |  nvp_stat    |      | nva_arg    |  *   |  +--------------+      +------------+  *   |  *   +-------+  *           V  *   +---------------------+      +-------------------+  *   |  i_nvp_t            |  +-->|  i_nvp_t          |  +-->  *   |---------------------|  |   |-------------------|  |  *   | nvi_next           -+--+   | nvi_next         -+--+  *   | nvi_prev (NULL)     |<----+ nvi_prev          |  *   | . . . . . . . . . . |      | . . . . . . . . . |  *   | nvp (nvpair_t)      |      | nvp (nvpair_t)    |  *   |  - nvp_size         |      |  - nvp_size       |  *   |  - nvp_name_sz      |      |  - nvp_name_sz    |  *   |  - nvp_value_elem   |      |  - nvp_value_elem |  *   |  - nvp_type         |      |  - nvp_type       |  *   |  - data ...         |      |  - data ...       |  *   +---------------------+      +-------------------+  *  *  *  *   +---------------------+              +---------------------+  *   |  i_nvp_t            |  +-->    +-->|  i_nvp_t (last)     |  *   |---------------------|  |       |   |---------------------|  *   |  nvi_next          -+--+ ... --+   | nvi_next (NULL)     |  *<-+- nvi_prev           |<-- ...<----+ nvi_prev            |  *   | . . . . . . . . .   |              | . . . . . . . . .   |  *   | nvp (nvpair_t)      |              | nvp (nvpair_t)      |  *   |  - nvp_size         |              |  - nvp_size         |  *   |  - nvp_name_sz      |              |  - nvp_name_sz      |  *   |  - nvp_value_elem   |              |  - nvp_value_elem   |  *   |  - DATA_TYPE_NVLIST |              |  - nvp_type         |  *   |  - data (embedded)  |              |  - data ...         |  *   |    nvlist name      |              +---------------------+  *   |  +--------------+   |  *   |  |  nvlist_t    |   |  *   |  |--------------|   |  *   |  | nvl_version  |   |  *   |  | nvl_nvflag   |   |  *   |  | nvl_priv   --+---+---->  *   |  | nvl_flag     |   |  *   |  | nvl_pad      |   |  *   |  +--------------+   |  *   +---------------------+  *  *  * N.B. nvpair_t may be aligned on 4 byte boundary, so +4 will  * allow value to be aligned on 8 byte boundary  *  * name_len is the length of the name string including the null terminator  * so it must be>= 1  */
 end_comment

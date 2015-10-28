@@ -117,6 +117,8 @@ argument|lldb::addr_t size
 argument_list|,
 argument|bool size_is_valid
 argument_list|,
+argument|bool contains_linker_annotations
+argument_list|,
 argument|uint32_t flags
 argument_list|)
 block|;
@@ -124,9 +126,7 @@ name|Symbol
 argument_list|(
 argument|uint32_t symID
 argument_list|,
-argument|const char *name
-argument_list|,
-argument|bool name_is_mangled
+argument|const Mangled&mangled
 argument_list|,
 argument|lldb::SymbolType type
 argument_list|,
@@ -141,6 +141,8 @@ argument_list|,
 argument|const AddressRange&range
 argument_list|,
 argument|bool size_is_valid
+argument_list|,
+argument|bool contains_linker_annotations
 argument_list|,
 argument|uint32_t flags
 argument_list|)
@@ -195,13 +197,16 @@ argument_list|()
 specifier|const
 block|;
 comment|//------------------------------------------------------------------
-comment|// Access the address value. Do NOT hand out the AddressRange as an
-comment|// object as the byte size of the address range may not be filled in
-comment|// and it should be accessed via GetByteSize().
+comment|// The GetAddressRef() accessor functions should only be called if
+comment|// you previously call ValueIsAddress() otherwise you might get an
+comment|// reference to an Address object that contains an constant integer
+comment|// value in m_addr_range.m_base_addr.m_offset which could be
+comment|// incorrectly used to represent an absolute address since it has
+comment|// no section.
 comment|//------------------------------------------------------------------
 name|Address
 operator|&
-name|GetAddress
+name|GetAddressRef
 argument_list|()
 block|{
 return|return
@@ -211,15 +216,10 @@ name|GetBaseAddress
 argument_list|()
 return|;
 block|}
-comment|//------------------------------------------------------------------
-comment|// Access the address value. Do NOT hand out the AddressRange as an
-comment|// object as the byte size of the address range may not be filled in
-comment|// and it should be accessed via GetByteSize().
-comment|//------------------------------------------------------------------
 specifier|const
 name|Address
 operator|&
-name|GetAddress
+name|GetAddressRef
 argument_list|()
 specifier|const
 block|{
@@ -229,6 +229,105 @@ operator|.
 name|GetBaseAddress
 argument_list|()
 return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|// Makes sure the symbol's value is an address and returns the file
+comment|// address. Returns LLDB_INVALID_ADDRESS if the symbol's value isn't
+comment|// an address.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|addr_t
+name|GetFileAddress
+argument_list|()
+specifier|const
+block|;
+comment|//------------------------------------------------------------------
+comment|// Makes sure the symbol's value is an address and gets the load
+comment|// address using \a target if it is. Returns LLDB_INVALID_ADDRESS
+comment|// if the symbol's value isn't an address or if the section isn't
+comment|// loaded in \a target.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|addr_t
+name|GetLoadAddress
+argument_list|(
+argument|Target *target
+argument_list|)
+specifier|const
+block|;
+comment|//------------------------------------------------------------------
+comment|// Access the address value. Do NOT hand out the AddressRange as an
+comment|// object as the byte size of the address range may not be filled in
+comment|// and it should be accessed via GetByteSize().
+comment|//------------------------------------------------------------------
+name|Address
+name|GetAddress
+argument_list|()
+specifier|const
+block|{
+comment|// Make sure the our value is an address before we hand a copy out.
+comment|// We use the Address inside m_addr_range to contain the value for
+comment|// symbols that are not address based symbols so we are using it
+comment|// for more than just addresses. For example undefined symbols on
+comment|// MacOSX have a nlist.n_value of 0 (zero) and this will get placed
+comment|// into m_addr_range.m_base_addr.m_offset and it will have no section.
+comment|// So in the GetAddress() accessor, we need to hand out an invalid
+comment|// address if the symbol's value isn't an address.
+if|if
+condition|(
+name|ValueIsAddress
+argument_list|()
+condition|)
+return|return
+name|m_addr_range
+operator|.
+name|GetBaseAddress
+argument_list|()
+return|;
+else|else
+return|return
+name|Address
+argument_list|()
+return|;
+block|}
+comment|// When a symbol's value isn't an address, we need to access the raw
+comment|// value. This function will ensure this symbol's value isn't an address
+comment|// and return the integer value if this checks out, otherwise it will
+comment|// return "fail_value" if the symbol is an address value.
+name|uint64_t
+name|GetIntegerValue
+argument_list|(
+argument|uint64_t fail_value =
+literal|0
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|ValueIsAddress
+argument_list|()
+condition|)
+block|{
+comment|// This symbol's value is an address. Use Symbol::GetAddress() to get the address.
+return|return
+name|fail_value
+return|;
+block|}
+else|else
+block|{
+comment|// The value is stored in the base address' offset
+return|return
+name|m_addr_range
+operator|.
+name|GetBaseAddress
+argument_list|()
+operator|.
+name|GetOffset
+argument_list|()
+return|;
+block|}
 block|}
 name|lldb
 operator|::
@@ -239,20 +338,21 @@ argument|Target&target
 argument_list|)
 specifier|const
 block|;
-specifier|const
 name|ConstString
-operator|&
 name|GetName
 argument_list|()
 specifier|const
-block|{
-return|return
-name|m_mangled
-operator|.
-name|GetName
+block|;
+name|ConstString
+name|GetNameNoArguments
 argument_list|()
-return|;
-block|}
+specifier|const
+block|;
+name|ConstString
+name|GetDisplayName
+argument_list|()
+specifier|const
+block|;
 name|uint32_t
 name|GetID
 argument_list|()
@@ -260,6 +360,21 @@ specifier|const
 block|{
 return|return
 name|m_uid
+return|;
+block|}
+name|lldb
+operator|::
+name|LanguageType
+name|GetLanguage
+argument_list|()
+specifier|const
+block|{
+comment|// TODO: See if there is a way to determine the language for a symbol somehow, for now just return our best guess
+return|return
+name|m_mangled
+operator|.
+name|GuessLanguage
+argument_list|()
 return|;
 block|}
 name|void
@@ -302,7 +417,7 @@ name|GetReExportedSymbolSharedLibrary
 argument_list|()
 specifier|const
 block|;
-name|bool
+name|void
 name|SetReExportedSymbolName
 argument_list|(
 specifier|const
@@ -566,6 +681,25 @@ name|m_demangled_is_synthesized
 operator|=
 name|b
 block|;     }
+name|bool
+name|ContainsLinkerAnnotations
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_contains_linker_annotations
+return|;
+block|}
+name|void
+name|SetContainsLinkerAnnotations
+argument_list|(
+argument|bool b
+argument_list|)
+block|{
+name|m_contains_linker_annotations
+operator|=
+name|b
+block|;     }
 comment|//------------------------------------------------------------------
 comment|/// @copydoc SymbolContextScope::CalculateSymbolContext(SymbolContext*)
 comment|///
@@ -697,9 +831,14 @@ operator|:
 literal|1
 block|,
 comment|// The demangled name was created should not be used for expressions or other lookups
+name|m_contains_linker_annotations
+operator|:
+literal|1
+block|,
+comment|// The symbol name contains linker annotations, which are optional when doing name lookups
 name|m_type
 operator|:
-literal|8
+literal|7
 block|;
 name|Mangled
 name|m_mangled

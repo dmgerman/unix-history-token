@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MICmdCmdGdbSet.h -------------      ---------------------*- C++ -*-===//
+comment|//===-- MICmdCmdGdbSet.h ----------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -32,18 +32,6 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmdCmdGdbSet.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// Overview:    CMICmdCmdGdbSet interface.
 end_comment
 
@@ -52,7 +40,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//              To implement new MI commands derive a new command class from the command base
+comment|//              To implement new MI commands, derive a new command class from the command base
 end_comment
 
 begin_comment
@@ -81,34 +69,6 @@ end_comment
 
 begin_comment
 comment|//              command class as an example.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
 end_comment
 
 begin_pragma
@@ -231,35 +191,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdGdbSet
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Typedefs:
 name|private
@@ -325,7 +285,49 @@ end_decl_stmt
 
 begin_decl_stmt
 name|bool
+name|OptionFnTargetAsync
+argument_list|(
+specifier|const
+name|CMIUtilString
+operator|::
+name|VecString_t
+operator|&
+name|vrWords
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|OptionFnPrint
+argument_list|(
+specifier|const
+name|CMIUtilString
+operator|::
+name|VecString_t
+operator|&
+name|vrWords
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
 name|OptionFnSolibSearchPath
+argument_list|(
+specifier|const
+name|CMIUtilString
+operator|::
+name|VecString_t
+operator|&
+name|vrWords
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|OptionFnOutputRadix
 argument_list|(
 specifier|const
 name|CMIUtilString

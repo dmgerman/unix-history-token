@@ -70,7 +70,7 @@ block|{
 endif|#
 directive|endif
 comment|/* __cplusplus */
-comment|/* A function to diff locally added and locally copied files.       Reports the file LOCAL_ABSPATH as ADDED file with relpath RELPATH to    PROCESSOR with as parent baton PROCESSOR_PARENT_BATON.     The node is expected to have status svn_wc__db_status_normal, or    svn_wc__db_status_added. When DIFF_PRISTINE is TRUE, report the pristine    version of LOCAL_ABSPATH as ADDED. In this case an    svn_wc__db_status_deleted may shadow an added or deleted node.     If CHANGELIST_HASH is not NULL and LOCAL_ABSPATH's changelist is not    in the changelist, don't report the node.  */
+comment|/* A function to diff locally added and locally copied files.     Reports the file LOCAL_ABSPATH as ADDED file with relpath RELPATH to    PROCESSOR with as parent baton PROCESSOR_PARENT_BATON.     The node is expected to have status svn_wc__db_status_normal, or    svn_wc__db_status_added. When DIFF_PRISTINE is TRUE, report the pristine    version of LOCAL_ABSPATH as ADDED. In this case an    svn_wc__db_status_deleted may shadow an added or deleted node.  */
 name|svn_error_t
 modifier|*
 name|svn_wc__diff_local_only_file
@@ -98,10 +98,6 @@ name|void
 modifier|*
 name|processor_parent_baton
 parameter_list|,
-name|apr_hash_t
-modifier|*
-name|changelist_hash
-parameter_list|,
 name|svn_boolean_t
 name|diff_pristine
 parameter_list|,
@@ -117,7 +113,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* A function to diff locally added and locally copied directories.       Reports the directory LOCAL_ABSPATH and everything below it (limited by    DEPTH) as added with relpath RELPATH to PROCESSOR with as parent baton    PROCESSOR_PARENT_BATON.     The node is expected to have status svn_wc__db_status_normal, or    svn_wc__db_status_added. When DIFF_PRISTINE is TRUE, report the pristine    version of LOCAL_ABSPATH as ADDED. In this case an    svn_wc__db_status_deleted may shadow an added or deleted node.     If CHANGELIST_HASH is not NULL and LOCAL_ABSPATH's changelist is not    in the changelist, don't report the node.  */
+comment|/* A function to diff locally added and locally copied directories.     Reports the directory LOCAL_ABSPATH and everything below it (limited by    DEPTH) as added with relpath RELPATH to PROCESSOR with as parent baton    PROCESSOR_PARENT_BATON.     The node is expected to have status svn_wc__db_status_normal, or    svn_wc__db_status_added. When DIFF_PRISTINE is TRUE, report the pristine    version of LOCAL_ABSPATH as ADDED. In this case an    svn_wc__db_status_deleted may shadow an added or deleted node.  */
 name|svn_error_t
 modifier|*
 name|svn_wc__diff_local_only_dir
@@ -147,10 +143,6 @@ parameter_list|,
 name|void
 modifier|*
 name|processor_parent_baton
-parameter_list|,
-name|apr_hash_t
-modifier|*
-name|changelist_hash
 parameter_list|,
 name|svn_boolean_t
 name|diff_pristine
@@ -271,10 +263,6 @@ parameter_list|,
 name|svn_revnum_t
 name|revision
 parameter_list|,
-name|apr_hash_t
-modifier|*
-name|changelist_hash
-parameter_list|,
 specifier|const
 name|svn_diff_tree_processor_t
 modifier|*
@@ -297,6 +285,35 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/* Return a tree processor filter that filters by changelist membership.  *  * This filter only passes on the changes for a file if the file's path  * (in the WC) is assigned to one of the changelists in @a changelist_hash.  * It also passes on the opening and closing of each directory that contains  * such a change, and possibly also of other directories, but not addition  * or deletion or changes to a directory.  *  * If @a changelist_hash is null then no filtering is performed and the  * returned diff processor is driven exactly like the input @a processor.  *  * @a wc_ctx is the WC context and @a root_local_abspath is the WC path of  * the root of the diff (for which relpath = "" in the diff processor).  *  * Allocate the returned diff processor in @a result_pool, or if no  * filtering is required then the input pointer @a processor itself may be  * returned.  */
+specifier|const
+name|svn_diff_tree_processor_t
+modifier|*
+name|svn_wc__changelist_filter_tree_processor_create
+parameter_list|(
+specifier|const
+name|svn_diff_tree_processor_t
+modifier|*
+name|processor
+parameter_list|,
+name|svn_wc_context_t
+modifier|*
+name|wc_ctx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|root_local_abspath
+parameter_list|,
+name|apr_hash_t
+modifier|*
+name|changelist_hash
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
 parameter_list|)
 function_decl|;
 ifdef|#

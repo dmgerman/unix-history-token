@@ -831,6 +831,8 @@ name|res
 decl_stmt|,
 modifier|*
 name|var
+init|=
+name|NULL
 decl_stmt|;
 specifier|const
 name|char
@@ -1376,7 +1378,16 @@ argument_list|(
 name|var
 argument_list|)
 expr_stmt|;
+name|var
+operator|=
+name|NULL
+expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|var
+argument_list|)
+expr_stmt|;
 name|sbuf_finish
 argument_list|(
 name|sb

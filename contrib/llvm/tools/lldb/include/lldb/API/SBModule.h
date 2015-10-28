@@ -78,6 +78,7 @@ name|namespace
 name|lldb
 block|{
 name|class
+name|LLDB_API
 name|SBModule
 block|{
 name|public
@@ -216,7 +217,7 @@ comment|/// (no directory specified, or the path is partial like "usr/lib"
 comment|/// or "./usr/lib", then the install path will be resolved using
 comment|/// the platform's current working directory as the base path.
 comment|///
-comment|/// @param[in]
+comment|/// @param[in] file
 comment|///     A file specification object.
 comment|//------------------------------------------------------------------
 name|bool
@@ -592,6 +593,31 @@ name|uint32_t
 name|num_versions
 parameter_list|)
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Get accessor for the symbol file specification.
+comment|///
+comment|/// When debugging an object file an additional debug information can
+comment|/// be provided in separate file. Therefore if you debugging something
+comment|/// like '/usr/lib/liba.dylib' then debug information can be located
+comment|/// in folder like '/usr/lib/liba.dylib.dSYM/'.
+comment|///
+comment|/// @return
+comment|///     A const reference to the file specification object.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|SBFileSpec
+name|GetSymbolFileSpec
+argument_list|()
+specifier|const
+expr_stmt|;
+name|lldb
+operator|::
+name|SBAddress
+name|GetObjectFileHeaderAddress
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
 name|friend

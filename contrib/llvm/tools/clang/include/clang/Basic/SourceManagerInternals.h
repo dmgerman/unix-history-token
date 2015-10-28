@@ -311,9 +311,6 @@ name|LineEntries
 expr_stmt|;
 name|public
 label|:
-name|LineTableInfo
-argument_list|()
-block|{   }
 name|void
 name|clear
 parameter_list|()
@@ -334,16 +331,13 @@ name|clear
 argument_list|()
 expr_stmt|;
 block|}
-operator|~
-name|LineTableInfo
-argument_list|()
-block|{}
 name|unsigned
 name|getLineTableFilenameID
-argument_list|(
-argument|StringRef Str
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|StringRef
+name|Str
+parameter_list|)
+function_decl|;
 specifier|const
 name|char
 modifier|*

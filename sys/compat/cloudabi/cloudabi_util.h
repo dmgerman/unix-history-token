@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/cloudabi/cloudabi_syscalldefs.h>
 end_include
 
@@ -73,6 +79,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Converts FreeBSD's struct sockaddr to CloudABI's cloudabi_sockaddr_t. */
+end_comment
+
+begin_function_decl
+name|void
+name|cloudabi_convert_sockaddr
+parameter_list|(
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|socklen_t
+parameter_list|,
+name|cloudabi_sockaddr_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Converts a file descriptor to a CloudABI file descriptor type. */
 end_comment
 
@@ -83,6 +110,41 @@ parameter_list|(
 specifier|const
 name|struct
 name|file
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Converts CloudABI rights to a set of Capsicum capabilities. */
+end_comment
+
+begin_function_decl
+name|int
+name|cloudabi_convert_rights
+parameter_list|(
+name|cloudabi_rights_t
+parameter_list|,
+name|cap_rights_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Removes rights that conflict with the file descriptor type. */
+end_comment
+
+begin_function_decl
+name|void
+name|cloudabi_remove_conflicting_rights
+parameter_list|(
+name|cloudabi_filetype_t
+parameter_list|,
+name|cloudabi_rights_t
+modifier|*
+parameter_list|,
+name|cloudabi_rights_t
 modifier|*
 parameter_list|)
 function_decl|;

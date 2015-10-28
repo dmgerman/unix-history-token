@@ -44,6 +44,36 @@ value|(1UL<< _XEN_NMIREASON_io_error)
 end_define
 
 begin_comment
+comment|/* PCI SERR reported via ISA port 0x61, bit 7. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_XEN_NMIREASON_pci_serr
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_NMIREASON_pci_serr
+value|(1UL<< _XEN_NMIREASON_pci_serr)
+end_define
+
+begin_if
+if|#
+directive|if
+name|__XEN_INTERFACE_VERSION__
+operator|<
+literal|0x00040300
+end_if
+
+begin_comment
+comment|/* legacy alias of the above */
+end_comment
+
+begin_comment
 comment|/* Parity error reported via ISA port 0x61, bit 7. */
 end_comment
 
@@ -60,6 +90,11 @@ directive|define
 name|XEN_NMIREASON_parity_error
 value|(1UL<< _XEN_NMIREASON_parity_error)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Unknown hardware-generated NMI. */
@@ -147,7 +182,7 @@ comment|/* __XEN_PUBLIC_NMI_H__ */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit

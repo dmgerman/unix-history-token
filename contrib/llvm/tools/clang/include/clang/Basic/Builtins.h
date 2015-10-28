@@ -609,6 +609,32 @@ operator|!=
 name|nullptr
 return|;
 block|}
+comment|/// \brief Determines whether this builtin has a result or any arguments which
+comment|/// are pointer types.
+name|bool
+name|hasPtrArgsOrResult
+argument_list|(
+name|unsigned
+name|ID
+argument_list|)
+decl|const
+block|{
+return|return
+name|strchr
+argument_list|(
+name|GetRecord
+argument_list|(
+name|ID
+argument_list|)
+operator|.
+name|Type
+argument_list|,
+literal|'*'
+argument_list|)
+operator|!=
+name|nullptr
+return|;
+block|}
 comment|/// \brief Completely forget that the given ID was ever considered a builtin,
 comment|/// e.g., because the user provided a conflicting signature.
 name|void

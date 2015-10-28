@@ -300,6 +300,10 @@ comment|/// \brief One instance of this struct is kept for every file loaded or 
 comment|///
 comment|/// This object owns the MemoryBuffer object.
 name|class
+name|LLVM_ALIGNAS
+argument_list|(
+literal|8
+argument_list|)
 name|ContentCache
 block|{
 enum|enum
@@ -316,23 +320,6 @@ init|=
 literal|0x02
 block|}
 enum|;
-comment|// Note that the first member of this class is an aligned character buffer
-comment|// to ensure that this class has an alignment of 8 bytes. This wastes
-comment|// 8 bytes for every ContentCache object, but each of these corresponds to
-comment|// a file loaded into memory, so the 8 bytes doesn't seem terribly
-comment|// important. It is quite awkward to fit this aligner into any other part
-comment|// of the class due to the lack of portable ways to combine it with other
-comment|// members.
-name|llvm
-operator|::
-name|AlignedCharArray
-operator|<
-literal|8
-operator|,
-literal|1
-operator|>
-name|NonceAligner
-expr_stmt|;
 comment|/// \brief The actual buffer containing the characters from the input
 comment|/// file.
 comment|///
@@ -417,50 +404,13 @@ operator|=
 name|nullptr
 argument_list|)
 operator|:
-name|Buffer
+name|ContentCache
 argument_list|(
-name|nullptr
+argument|Ent
 argument_list|,
-name|false
+argument|Ent
 argument_list|)
-operator|,
-name|OrigEntry
-argument_list|(
-name|Ent
-argument_list|)
-operator|,
-name|ContentsEntry
-argument_list|(
-name|Ent
-argument_list|)
-operator|,
-name|SourceLineCache
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|NumLines
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|BufferOverridden
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|IsSystemFile
-argument_list|(
-argument|false
-argument_list|)
-block|{
-operator|(
-name|void
-operator|)
-name|NonceAligner
-block|;
-comment|// Silence warnings about unused member.
-block|}
+block|{}
 name|ContentCache
 argument_list|(
 specifier|const
@@ -766,7 +716,8 @@ name|ContentCache
 operator|&
 name|RHS
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -2123,13 +2074,14 @@ expr_stmt|;
 comment|// SourceManager doesn't support copy construction.
 name|explicit
 name|SourceManager
-argument_list|(
+parameter_list|(
 specifier|const
 name|SourceManager
-operator|&
-argument_list|)
-name|LLVM_DELETED_FUNCTION
-decl_stmt|;
+modifier|&
+parameter_list|)
+init|=
+name|delete
+function_decl|;
 name|void
 name|operator
 init|=
@@ -2138,7 +2090,8 @@ specifier|const
 name|SourceManager
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:
@@ -3560,7 +3513,7 @@ comment|/// \brief Given a SourceLocation object, return the range of
 end_comment
 
 begin_comment
-comment|/// tokens covered by the expansion the ultimate file.
+comment|/// tokens covered by the expansion in the ultimate file.
 end_comment
 
 begin_expr_stmt
@@ -3579,6 +3532,50 @@ argument_list|)
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Given a SourceRange object, return the range of
+end_comment
+
+begin_comment
+comment|/// tokens covered by the expansion in the ultimate file.
+end_comment
+
+begin_decl_stmt
+name|SourceRange
+name|getExpansionRange
+argument_list|(
+name|SourceRange
+name|Range
+argument_list|)
+decl|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|getExpansionRange
+argument_list|(
+name|Range
+operator|.
+name|getBegin
+argument_list|()
+argument_list|)
+operator|.
+name|first
+argument_list|,
+name|getExpansionRange
+argument_list|(
+name|Range
+operator|.
+name|getEnd
+argument_list|()
+argument_list|)
+operator|.
+name|second
+argument_list|)
+return|;
+block|}
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Given a SourceLocation object, return the spelling

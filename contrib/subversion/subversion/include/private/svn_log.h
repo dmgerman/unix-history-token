@@ -463,10 +463,9 @@ name|char
 modifier|*
 name|svn_log__lock
 parameter_list|(
-specifier|const
-name|apr_array_header_t
+name|apr_hash_t
 modifier|*
-name|paths
+name|targets
 parameter_list|,
 name|svn_boolean_t
 name|steal
@@ -482,10 +481,9 @@ name|char
 modifier|*
 name|svn_log__unlock
 parameter_list|(
-specifier|const
-name|apr_array_header_t
+name|apr_hash_t
 modifier|*
-name|paths
+name|targets
 parameter_list|,
 name|svn_boolean_t
 name|break_lock

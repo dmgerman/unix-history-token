@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcireg.h>
 end_include
 
@@ -154,6 +160,13 @@ include|#
 directive|include
 file|"gic_v3_var.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|GIC_V3_ITS_QUIRK_THUNDERX_PEM_BUS_OFFSET
+value|144
+end_define
 
 begin_include
 include|#
@@ -285,18 +298,6 @@ begin_function_decl
 specifier|static
 name|void
 name|its_init_commandq
-parameter_list|(
-name|struct
-name|gic_v3_its_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|its_init_cpu
 parameter_list|(
 name|struct
 name|gic_v3_its_softc
@@ -469,8 +470,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|lpi_init_cpu
+name|int
+name|lpi_config_cpu
 parameter_list|(
 name|struct
 name|gic_v3_its_softc
@@ -481,8 +482,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|lpi_config_cpu
+name|void
+name|lpi_alloc_cpu_pendtables
 parameter_list|(
 name|struct
 name|gic_v3_its_softc
@@ -792,6 +793,36 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX ARM64TODO: Avoid configuration of more than one ITS 	 * device. To be removed when multi-PIC support is added 	 * to FreeBSD (or at least multi-ITS is implemented). Limit 	 * supported ITS sockets to '0' only. 	 */
+if|if
+condition|(
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Only single instance of ITS is supported, exitting...\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+name|sc
+operator|->
+name|its_socket
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Initialize sleep& spin mutex for ITS 	 */
 comment|/* Protects ITS device list and assigned LPIs bitmaps. */
 name|mtx_init
@@ -973,9 +1004,38 @@ operator|)
 return|;
 block|}
 comment|/* 3. Allocate collections. One per-CPU */
+for|for
+control|(
+name|int
+name|cpu
+init|=
+literal|0
+init|;
+name|cpu
+operator|<
+name|mp_ncpus
+condition|;
+name|cpu
+operator|++
+control|)
+if|if
+condition|(
+name|CPU_ISSET
+argument_list|(
+name|cpu
+argument_list|,
+operator|&
+name|all_cpus
+argument_list|)
+operator|!=
+literal|0
+condition|)
 name|sc
 operator|->
 name|its_cols
+index|[
+name|cpu
+index|]
 operator|=
 name|malloc
 argument_list|(
@@ -985,9 +1045,10 @@ operator|*
 name|sc
 operator|->
 name|its_cols
+index|[
+literal|0
+index|]
 argument_list|)
-operator|*
-name|MAXCPU
 argument_list|,
 name|M_GIC_V3_ITS
 argument_list|,
@@ -997,6 +1058,16 @@ operator||
 name|M_ZERO
 operator|)
 argument_list|)
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|its_cols
+index|[
+name|cpu
+index|]
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* 4. Enable ITS in GITS_CTLR */
 name|gits_tmp
@@ -1035,7 +1106,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 7. CPU init */
+comment|/* 7. Allocate pending tables for all CPUs */
+name|lpi_alloc_cpu_pendtables
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* 8. CPU init */
 operator|(
 name|void
 operator|)
@@ -1044,7 +1121,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 8. Init ITS devices list */
+comment|/* 9. Init ITS devices list */
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -1167,11 +1244,27 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Collections */
+for|for
+control|(
+name|cpuid
+operator|=
+literal|0
+init|;
+name|cpuid
+operator|<
+name|mp_ncpus
+condition|;
+name|cpuid
+operator|++
+control|)
 name|free
 argument_list|(
 name|sc
 operator|->
 name|its_cols
+index|[
+name|cpuid
+index|]
 argument_list|,
 name|M_GIC_V3_ITS
 argument_list|)
@@ -1230,6 +1323,19 @@ name|M_GIC_V3_ITS
 argument_list|)
 expr_stmt|;
 block|}
+for|for
+control|(
+name|cpuid
+operator|=
+literal|0
+init|;
+name|cpuid
+operator|<
+name|mp_ncpus
+condition|;
+name|cpuid
+operator|++
+control|)
 if|if
 condition|(
 operator|(
@@ -2252,7 +2358,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|its_init_cpu
 parameter_list|(
@@ -2270,6 +2375,51 @@ name|gic_v3_softc
 modifier|*
 name|gic_sc
 decl_stmt|;
+comment|/* 	 * NULL in place of the softc pointer means that 	 * this function was called during GICv3 secondary initialization. 	 */
+if|if
+condition|(
+name|sc
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|device_is_attached
+argument_list|(
+name|its_sc
+operator|->
+name|dev
+argument_list|)
+condition|)
+block|{
+comment|/* 			 * XXX ARM64TODO: This is part of the workaround that 			 * saves ITS software context for further use in 			 * mask/unmask and here. This should be removed as soon 			 * as the upper layer is capable of passing the ITS 			 * context to this function. 			 */
+name|sc
+operator|=
+name|its_sc
+expr_stmt|;
+block|}
+else|else
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* Skip if running secondary init on a wrong socket */
+if|if
+condition|(
+name|sc
+operator|->
+name|its_socket
+operator|!=
+name|CPU_CURRENT_SOCKET
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 comment|/* 	 * Check for LPIs support on this Re-Distributor. 	 */
 name|parent
 operator|=
@@ -2331,8 +2481,8 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* Initialize LPIs for this CPU */
-name|lpi_init_cpu
+comment|/* Configure LPIs for this CPU */
+name|lpi_config_cpu
 argument_list|(
 name|sc
 argument_list|)
@@ -2478,7 +2628,7 @@ name|its_cols
 index|[
 name|cpuid
 index|]
-operator|.
+operator|->
 name|col_target
 operator|=
 name|target
@@ -2489,7 +2639,7 @@ name|its_cols
 index|[
 name|cpuid
 index|]
-operator|.
+operator|->
 name|col_id
 operator|=
 name|cpuid
@@ -2498,7 +2648,6 @@ name|its_cmd_mapc
 argument_list|(
 name|sc
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|its_cols
@@ -2513,7 +2662,6 @@ name|its_cmd_invall
 argument_list|(
 name|sc
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|its_cols
@@ -2670,7 +2818,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|lpi_init_cpu
+name|lpi_alloc_cpu_pendtables
 parameter_list|(
 name|struct
 name|gic_v3_its_softc
@@ -2709,13 +2857,34 @@ name|parent
 argument_list|)
 expr_stmt|;
 comment|/* 	 * LPI Pending Table settings. 	 * This has to be done for each Re-Distributor, hence for each CPU. 	 */
+for|for
+control|(
 name|cpuid
 operator|=
-name|PCPU_GET
+literal|0
+init|;
+name|cpuid
+operator|<
+name|mp_ncpus
+condition|;
+name|cpuid
+operator|++
+control|)
+block|{
+comment|/* Limit allocation to active CPUs only */
+if|if
+condition|(
+name|CPU_ISSET
 argument_list|(
 name|cpuid
+argument_list|,
+operator|&
+name|all_cpus
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|pend_base
 operator|=
 operator|(
@@ -2799,10 +2968,10 @@ index|]
 operator|=
 name|pend_base
 expr_stmt|;
-name|lpi_config_cpu
-argument_list|(
-name|sc
-argument_list|)
+block|}
+comment|/* Ensure visibility of pend_base addresses on other CPUs */
+name|wmb
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -2871,6 +3040,10 @@ name|PCPU_GET
 argument_list|(
 name|cpuid
 argument_list|)
+expr_stmt|;
+comment|/* Ensure data observability on a current CPU */
+name|rmb
+argument_list|()
 expr_stmt|;
 name|conf_base
 operator|=
@@ -5535,6 +5708,9 @@ name|cmd
 decl_stmt|,
 modifier|*
 name|cmd_sync
+decl_stmt|,
+modifier|*
+name|cmd_write
 decl_stmt|;
 name|struct
 name|its_col
@@ -5564,14 +5740,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|its_spin_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|cmd
@@ -5586,6 +5754,14 @@ operator|->
 name|dev
 argument_list|,
 literal|"could not allocate ITS command\n"
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|its_spin_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -5617,27 +5793,11 @@ operator|!=
 name|ITS_TARGET_NONE
 condition|)
 block|{
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|its_spin_mtx
-argument_list|)
-expr_stmt|;
 name|cmd_sync
 operator|=
 name|its_cmd_alloc_locked
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|its_spin_mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -5689,14 +5849,6 @@ block|}
 name|end
 label|:
 comment|/* Update GITS_CWRITER */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|its_spin_mtx
-argument_list|)
-expr_stmt|;
 name|cwriter
 operator|=
 name|its_cmd_cwriter_offset
@@ -5719,6 +5871,12 @@ argument_list|,
 name|cwriter
 argument_list|)
 expr_stmt|;
+name|cmd_write
+operator|=
+name|sc
+operator|->
+name|its_cmdq_write
+expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -5733,9 +5891,7 @@ name|sc
 argument_list|,
 name|cmd
 argument_list|,
-name|sc
-operator|->
-name|its_cmdq_write
+name|cmd_write
 argument_list|)
 expr_stmt|;
 return|return
@@ -6061,7 +6217,6 @@ name|newdev
 operator|->
 name|col
 operator|=
-operator|&
 name|sc
 operator|->
 name|its_cols
@@ -6242,12 +6397,12 @@ name|pci_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* ECAM is on bus=0 */
+comment|/* Check if accessing internal PCIe (low bus numbers) */
 if|if
 condition|(
 name|bus
-operator|==
-literal|0
+operator|<
+name|GIC_V3_ITS_QUIRK_THUNDERX_PEM_BUS_OFFSET
 condition|)
 block|{
 return|return

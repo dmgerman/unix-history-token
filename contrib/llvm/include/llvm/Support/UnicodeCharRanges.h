@@ -176,6 +176,22 @@ comment|/// Array pointed by \p Ranges should have the lifetime at least as long
 comment|/// the UnicodeCharSet instance, and should not change. Array is validated by
 comment|/// the constructor, so it makes sense to create as few UnicodeCharSet
 comment|/// instances per each array of ranges, as possible.
+ifdef|#
+directive|ifdef
+name|NDEBUG
+name|LLVM_CONSTEXPR
+name|UnicodeCharSet
+argument_list|(
+argument|CharRanges Ranges
+argument_list|)
+block|:
+name|Ranges
+argument_list|(
+argument|Ranges
+argument_list|)
+block|{}
+else|#
+directive|else
 name|UnicodeCharSet
 argument_list|(
 argument|CharRanges Ranges
@@ -193,6 +209,8 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/// \brief Returns true if the character set contains the Unicode code point
 comment|/// \p C.
 name|bool

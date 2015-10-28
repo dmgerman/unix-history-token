@@ -829,7 +829,7 @@ name|clang
 operator|::
 name|DeclContext
 operator|::
-name|lookup_const_result
+name|lookup_result
 name|result
 operator|=
 name|ast

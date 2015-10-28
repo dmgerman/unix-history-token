@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SVN_OPTS_H
+name|SVN_OPT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SVN_OPTS_H
+name|SVN_OPT_H
 end_define
 
 begin_include
@@ -821,7 +821,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Parse a working-copy path or URL in @a path, extracting any trailing  * revision specifier of the form "@rev" from the last component of  * the path.  *  * Some examples would be:  *  *   - "foo/bar"                      -> "foo/bar",       (unspecified)  *   - "foo/bar@13"                   -> "foo/bar",       (number, 13)  *   - "foo/bar@HEAD"                 -> "foo/bar",       (head)  *   - "foo/bar@{1999-12-31}"         -> "foo/bar",       (date, 1999-12-31)  *   - "http://a/b@27"                -> "http://a/b",    (number, 27)  *   - "http://a/b@COMMITTED"         -> "http://a/b",    (committed) [*]  *   - "http://a/b@{1999-12-31}"      -> "http://a/b",    (date, 1999-12-31)  *   - "http://a/b@%7B1999-12-31%7D"  -> "http://a/b",    (date, 1999-12-31)  *   - "foo/bar@1:2"                  -> error  *   - "foo/bar@baz"                  -> error  *   - "foo/bar@"                     -> "foo/bar",       (unspecified)  *   - "foo/@bar@"                    -> "foo/@bar",      (unspecified)  *   - "foo/bar/@13"                  -> "foo/bar/",      (number, 13)  *   - "foo/bar@@13"                  -> "foo/bar@",      (number, 13)  *   - "foo/@bar@HEAD"                -> "foo/@bar",      (head)  *   - "foo@/bar"                     -> "foo@/bar",      (unspecified)  *   - "foo@HEAD/bar"                 -> "foo@HEAD/bar",  (unspecified)  *   - "@foo/bar"                     -> "@foo/bar",      (unspecified)  *   - "@foo/bar@"                    -> "@foo/bar",      (unspecified)  *  *   [*] Syntactically valid but probably not semantically useful.  *  * If a trailing revision specifier is found, parse it into @a *rev and  * put the rest of the path into @a *truepath, allocating from @a pool;  * or return an @c SVN_ERR_CL_ARG_PARSING_ERROR (with the effect on  * @a *truepath undefined) if the revision specifier is invalid.  * If no trailing revision specifier is found, set @a *truepath to  * @a path and @a rev->kind to @c svn_opt_revision_unspecified.  *  * This function does not require that @a path be in canonical form.  * No canonicalization is done and @a *truepath will only be in  * canonical form if @a path is in canonical form.  *  * @since New in 1.1.  */
+comment|/**  * Parse a working-copy path or URL in @a path, extracting any trailing  * revision specifier of the form "@rev" from the last component of  * the path.  *  * Some examples would be:  *  *   - "foo/bar"                      -> "foo/bar",       (unspecified)  *   - "foo/bar@13"                   -> "foo/bar",       (number, 13)  *   - "foo/bar@HEAD"                 -> "foo/bar",       (head)  *   - "foo/bar@{1999-12-31}"         -> "foo/bar",       (date, 1999-12-31)  *   - "http://a/b@27"                -> "http://a/b",    (number, 27)  *   - "http://a/b@COMMITTED"         -> "http://a/b",    (committed) [*]  *   - "http://a/b@{1999-12-31}"      -> "http://a/b",    (date, 1999-12-31)  *   - "http://a/b@%7B1999-12-31%7D"  -> "http://a/b",    (date, 1999-12-31)  *   - "foo/bar@1:2"                  -> error  *   - "foo/bar@baz"                  -> error  *   - "foo/bar@"                     -> "foo/bar",       (unspecified)  *   - "foo/@bar@"                    -> "foo/@bar",      (unspecified)  *   - "foo/bar/@13"                  -> "foo/bar/",      (number, 13)  *   - "foo/bar@@13"                  -> "foo/bar@",      (number, 13)  *   - "foo/@bar@HEAD"                -> "foo/@bar",      (head)  *   - "foo@/bar"                     -> "foo@/bar",      (unspecified)  *   - "foo@HEAD/bar"                 -> "foo@HEAD/bar",  (unspecified)  *   - "@foo/bar"                     -> "@foo/bar",      (unspecified)  *   - "@foo/bar@"                    -> "@foo/bar",      (unspecified)  *  *   [*] Syntactically valid but probably not semantically useful.  *  * If a trailing revision specifier is found, parse it into @a *rev and  * put the rest of the path into @a *truepath, allocating from @a pool;  * or return an @c SVN_ERR_CL_ARG_PARSING_ERROR (with the effect on  * @a *truepath undefined) if the revision specifier is invalid.  * If no trailing revision specifier is found, set @a *truepath to  * @a path and @a rev->kind to @c svn_opt_revision_unspecified.  *  * This function does not require that @a path be in canonical form.  * No canonicalization is done and @a *truepath will only be in  * canonical form if @a path is in canonical form.  *  * @since New in 1.1.  * @since Since 1.6.5, this returns an error if @a path contains a peg  * specifier with no path before it, such as "@abc".  * @since Since 1.9.0, this no longer returns an error if @a path contains a peg  * specifier with no path before it, such as "@abc".  */
 name|svn_error_t
 modifier|*
 name|svn_opt_parse_path
@@ -1083,7 +1083,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SVN_OPTS_H */
+comment|/* SVN_OPT_H */
 end_comment
 
 end_unit

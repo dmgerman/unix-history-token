@@ -249,6 +249,10 @@ comment|/** unwanted traffic received on client-facing ports */
 name|size_t
 name|unwanted_queries
 decl_stmt|;
+comment|/** usage of tcp accept list */
+name|size_t
+name|tcp_accept_usage
+decl_stmt|;
 comment|/** histogram data exported to array  	 * if the array is the same size, no data is lost, and 	 * if all histograms are same size (is so by default) then 	 * adding up works well. */
 name|size_t
 name|hist

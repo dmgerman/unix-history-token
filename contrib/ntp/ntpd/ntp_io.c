@@ -1005,7 +1005,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|isc_boolean_t
-name|is_not_bindable
+name|is_anycast
 parameter_list|(
 name|sockaddr_u
 modifier|*
@@ -1999,7 +1999,7 @@ name|i
 expr_stmt|;
 break|break;
 block|}
-name|NTP_INSIST
+name|INSIST
 argument_list|(
 name|fd
 operator|!=
@@ -3111,7 +3111,7 @@ decl_stmt|;
 name|size_t
 name|loops
 decl_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|AF
 argument_list|(
@@ -3124,7 +3124,7 @@ name|a_mask
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|AF
 argument_list|(
@@ -3370,14 +3370,14 @@ name|char
 modifier|*
 name|pch
 decl_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|host
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|addr
 operator|!=
@@ -5622,7 +5622,7 @@ operator|==
 name|match_type
 condition|)
 block|{
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|NULL
 operator|!=
@@ -5647,7 +5647,7 @@ operator|==
 name|match_type
 condition|)
 block|{
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|NULL
 operator|!=
@@ -5669,14 +5669,14 @@ operator|->
 name|addr
 argument_list|)
 expr_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|is_ip
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|NULL
 operator|==
@@ -5739,7 +5739,7 @@ name|action
 operator|)
 argument_list|)
 expr_stmt|;
-name|NTP_ENSURE
+name|ENSURE
 argument_list|(
 literal|0
 argument_list|)
@@ -7248,30 +7248,12 @@ name|defined
 argument_list|(
 name|SIOCGIFAFLAG_IN6
 argument_list|)
-operator|&&
-expr|\
-operator|(
-name|defined
-argument_list|(
-name|IN6_IFF_ANYCAST
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|IN6_IFF_NOTREADY
-argument_list|)
-operator|)
 name|struct
 name|in6_ifreq
 name|ifr6
 decl_stmt|;
 name|int
 name|fd
-decl_stmt|;
-name|u_int32
-name|exclude
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -7376,46 +7358,16 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|flags6
-operator|=
+if|if
+condition|(
+operator|(
 name|ifr6
 operator|.
 name|ifr_ifru
 operator|.
 name|ifru_flags6
-expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IN6_IFF_ANYCAST
-argument_list|)
-name|exclude
-operator||=
-name|IN6_IFF_ANYCAST
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* !IN6_IFF_ANYCAST */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IN6_IFF_NOTREADY
-argument_list|)
-name|exclude
-operator||=
-name|IN6_IFF_NOTREADY
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* !IN6_IFF_NOTREADY */
-if|if
-condition|(
-operator|(
-name|flags6
 operator|&
-name|exclude
+name|flags6
 operator|)
 operator|!=
 literal|0
@@ -7425,7 +7377,7 @@ name|ISC_TRUE
 return|;
 endif|#
 directive|endif
-comment|/* INCLUDE_IPV6_SUPPORT&& SIOCGIFAFLAG_IN6&& (IN6_IFF_ANYCAST&& IN6_IFF_NOTREADY) */
+comment|/* INCLUDE_IPV6_SUPPORT&& SIOCGIFAFLAG_IN6 */
 return|return
 name|ISC_FALSE
 return|;
@@ -7435,7 +7387,7 @@ end_function
 begin_function
 specifier|static
 name|isc_boolean_t
-name|is_not_bindable
+name|is_anycast
 parameter_list|(
 name|sockaddr_u
 modifier|*
@@ -7910,7 +7862,7 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|is_not_bindable
+name|is_anycast
 argument_list|(
 operator|&
 name|enumep
@@ -8366,6 +8318,9 @@ condition|)
 name|io_setbclient
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MCAST
 comment|/* 	 * Check multicast interfaces and try to join multicast groups if          * not joined yet.          */
 for|for
 control|(
@@ -8476,6 +8431,9 @@ break|break;
 block|}
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* MCAST */
 return|return
 name|new_interface_found
 return|;
@@ -9665,7 +9623,7 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|AF
 argument_list|(
@@ -10544,7 +10502,7 @@ operator|)
 condition|)
 continue|continue;
 comment|/* Only IPv4 addresses are valid for broadcast */
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|IS_IPV4
 argument_list|(
@@ -12820,8 +12778,8 @@ name|l_fp
 name|ts
 parameter_list|)
 block|{
-name|int
-name|i
+name|u_int
+name|read_count
 decl_stmt|;
 name|int
 name|buflen
@@ -12877,40 +12835,41 @@ name|buflen
 operator|)
 return|;
 block|}
-name|i
-operator|=
-operator|(
+comment|/* TALOS-CAN-0064: avoid signed/unsigned clashes that can lead 	 * to buffer overrun and memory corruption 	 */
+if|if
+condition|(
 name|rp
 operator|->
 name|datalen
-operator|==
+operator|<=
 literal|0
 operator|||
 name|rp
 operator|->
 name|datalen
 operator|>
-operator|(
-name|int
-operator|)
 sizeof|sizeof
 argument_list|(
 name|rb
 operator|->
 name|recv_space
 argument_list|)
-operator|)
-condition|?
-operator|(
-name|int
-operator|)
+condition|)
+name|read_count
+operator|=
 sizeof|sizeof
 argument_list|(
 name|rb
 operator|->
 name|recv_space
 argument_list|)
-else|:
+expr_stmt|;
+else|else
+name|read_count
+operator|=
+operator|(
+name|u_int
+operator|)
 name|rp
 operator|->
 name|datalen
@@ -12932,10 +12891,7 @@ name|rb
 operator|->
 name|recv_space
 argument_list|,
-operator|(
-name|u_int
-operator|)
-name|i
+name|read_count
 argument_list|)
 expr_stmt|;
 block|}
@@ -15945,7 +15901,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|AF
 argument_list|(
@@ -16194,7 +16150,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|NTP_REQUIRE
+name|REQUIRE
 argument_list|(
 name|AF
 argument_list|(
@@ -17697,11 +17653,28 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOBUFS
+condition|)
+block|{
 name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"i/o error on routing socket %m - disabling"
+literal|"routing socket reports: %m"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"routing socket reports: %m - disabling"
 argument_list|)
 expr_stmt|;
 name|remove_asyncio_reader
@@ -17714,6 +17687,7 @@ argument_list|(
 name|reader
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 comment|/* 	 * process routing message 	 */

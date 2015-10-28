@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmnResources.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMICmnResources interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -200,12 +156,6 @@ name|IDE_MEDIUMSTDERR_NAME
 block|,
 name|IDE_MEDIUMSTDOUT_NAME
 block|,
-name|IDE_MI_APP_EXIT_OK
-block|,
-name|IDE_MI_APP_EXIT_WITH_PROBLEM
-block|,
-name|IDE_MI_APP_EXIT_WITH_PROBLEM_NO_LOG
-block|,
 name|IDE_MI_APP_DESCRIPTION
 block|,
 name|IDE_MI_APP_INFORMATION
@@ -222,7 +172,11 @@ name|IDE_MI_APP_ARG_INTERPRETER
 block|,
 name|IDE_MI_APP_ARG_EXECUTEABLE
 block|,
-name|IDE_MI_APP_ARG_NO_APP_LOG
+name|IDE_MI_APP_ARG_SOURCE
+block|,
+name|IDE_MI_APP_ARG_APP_LOG
+block|,
+name|IDE_MI_APP_ARG_APP_LOG_DIR
 block|,
 name|IDE_MI_APP_ARG_EXAMPLE
 block|,
@@ -261,8 +215,6 @@ block|,
 name|IDS_CMDMGR_ERR_CMD_FAILED_CREATE
 block|,
 name|IDS_CMDMGR_ERR_CMD_INVOKER
-block|,
-name|IDS_PROCESS_SIGNAL_RECEIVED
 block|,
 name|IDS_MI_INIT_ERR_LOG
 block|,
@@ -332,11 +284,11 @@ name|IDS_LLDBDEBUGGER_ERR_INVALIDBROADCASTER
 block|,
 name|IDS_LLDBDEBUGGER_ERR_INVALIDCLIENTNAME
 block|,
-name|IDS_LLDBDEBUGGER_ERR_CLIENTNOTREGISTERD
+name|IDS_LLDBDEBUGGER_ERR_CLIENTNOTREGISTERED
 block|,
 name|IDS_LLDBDEBUGGER_ERR_STOPLISTENER
 block|,
-name|IDS_LLDBDEBUGGER_ERR_BROARDCASTER_NAME
+name|IDS_LLDBDEBUGGER_ERR_BROADCASTER_NAME
 block|,
 name|IDS_LLDBDEBUGGER_WRN_UNKNOWN_EVENT
 block|,
@@ -428,11 +380,7 @@ name|IDS_DRIVER_ERR_LOCAL_DEBUG_INIT
 block|,
 name|IDS_DRIVER_WAITING_STDIN_DATA
 block|,
-name|IDS_STDOUT_ERR_NOT_ALL_DATA_WRITTEN
-block|,
 name|IDS_STDERR_ERR_NOT_ALL_DATA_WRITTEN
-block|,
-name|IDS_CMD_ARGS_ERR_N_OPTIONS_REQUIRED
 block|,
 name|IDS_CMD_ARGS_ERR_OPTION_NOT_FOUND
 block|,
@@ -486,6 +434,8 @@ name|IDS_CMD_ERR_SHARED_DATA_NOT_FOUND
 block|,
 name|IDS_CMD_ERR_LLDBPROCESS_DETACH
 block|,
+name|IDS_CMD_ERR_LLDBPROCESS_DESTROY
+block|,
 name|IDS_CMD_ERR_SETWKDIR
 block|,
 name|IDS_CMD_ERR_INVALID_TARGET
@@ -508,6 +458,8 @@ name|IDS_CMD_ERR_CREATE_TARGET
 block|,
 name|IDS_CMD_ERR_BRKPT_LOCATION_FORMAT
 block|,
+name|IDS_CMD_ERR_BRKPT_LOCATION_NOT_FOUND
+block|,
 name|IDS_CMD_ERR_BRKPT_INVALID
 block|,
 name|IDS_CMD_ERR_BRKPT_CNT_EXCEEDED
@@ -528,6 +480,8 @@ name|IDS_CMD_ERR_VARIABLE_EXPRESSIONPATH
 block|,
 name|IDS_CMD_ERR_VARIABLE_CREATION_FAILED
 block|,
+name|IDS_CMD_ERR_VARIABLE_CHILD_RANGE_INVALID
+block|,
 name|IDS_CMD_ERR_CMD_RUN_BUT_NO_ACTION
 block|,
 name|IDS_CMD_ERR_EVENT_HANDLED_BUT_NO_ACTION
@@ -544,6 +498,10 @@ name|IDS_CMD_ERR_LLDB_ERR_READ_MEM_BYTES
 block|,
 name|IDS_CMD_ERR_INVALID_PROCESS
 block|,
+name|IDS_CMD_ERR_INVALID_PRINT_VALUES
+block|,
+name|IDS_CMD_ERR_INVALID_LOCATION_FORMAT
+block|,
 name|IDS_CMD_ERR_INVALID_FORMAT_TYPE
 block|,
 name|IDS_CMD_ERR_BRKPT_INFO_OBJ_NOT_FOUND
@@ -558,7 +516,23 @@ name|IDS_CMD_ERR_INFO_PRINTFN_NOT_FOUND
 block|,
 name|IDS_CMD_ERR_INFO_PRINTFN_FAILED
 block|,
+name|IDS_CMD_ERR_GDBSET_OPT_TARGETASYNC
+block|,
 name|IDS_CMD_ERR_GDBSET_OPT_SOLIBSEARCHPATH
+block|,
+name|IDS_CMD_ERR_GDBSET_OPT_PRINT_BAD_ARGS
+block|,
+name|IDS_CMD_ERR_GDBSET_OPT_PRINT_UNKNOWN_OPTION
+block|,
+name|IDS_CMD_ERR_GDBSHOW_OPT_PRINT_BAD_ARGS
+block|,
+name|IDS_CMD_ERR_GDBSHOW_OPT_PRINT_UNKNOWN_OPTION
+block|,
+name|IDS_CMD_ERR_EXPR_INVALID
+block|,
+name|IDS_CMD_ERR_ATTACH_FAILED
+block|,
+name|IDS_CMD_ERR_ATTACH_BAD_ARGS
 block|}
 enum|;
 end_enum
@@ -624,16 +598,18 @@ name|public
 label|:
 name|bool
 name|Initialize
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|Shutdown
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|CMIUtilString
 name|GetString
 argument_list|(
@@ -663,7 +639,7 @@ operator|<
 name|MIuint
 operator|,
 specifier|const
-name|MIchar
+name|char
 operator|*
 operator|>
 name|MapRscrIdToTextData_t
@@ -676,7 +652,7 @@ operator|<
 name|MIuint
 operator|,
 specifier|const
-name|MIchar
+name|char
 operator|*
 operator|>
 name|MapPairRscrIdToTextData_t
@@ -702,7 +678,7 @@ name|MIuint
 name|id
 decl_stmt|;
 specifier|const
-name|MIchar
+name|char
 modifier|*
 name|pTextData
 decl_stmt|;
@@ -758,12 +734,12 @@ name|private
 label|:
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmnResources
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 expr_stmt|;
 comment|// Attributes:
 name|private

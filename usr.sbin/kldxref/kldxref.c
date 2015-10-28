@@ -1715,7 +1715,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* skip non-files or .symbols entries */
+comment|/* skip non-files and separate debug files */
 if|if
 condition|(
 name|p
@@ -1723,6 +1723,32 @@ operator|->
 name|fts_info
 operator|!=
 name|FTS_F
+condition|)
+continue|continue;
+if|if
+condition|(
+name|p
+operator|->
+name|fts_namelen
+operator|>=
+literal|6
+operator|&&
+name|strcmp
+argument_list|(
+name|p
+operator|->
+name|fts_name
+operator|+
+name|p
+operator|->
+name|fts_namelen
+operator|-
+literal|6
+argument_list|,
+literal|".debug"
+argument_list|)
+operator|==
+literal|0
 condition|)
 continue|continue;
 if|if

@@ -425,7 +425,7 @@ return|return
 name|false
 return|;
 block|}
-name|llvm_unreachable
+name|report_fatal_error
 argument_list|(
 literal|"Invalid encoding"
 argument_list|)
@@ -709,11 +709,13 @@ literal|32
 operator|>
 name|OperandList
 block|;
+comment|// Only RefCountedBase is allowed to delete.
 operator|~
 name|BitCodeAbbrev
 argument_list|()
-block|{}
-comment|// Only RefCountedBase is allowed to delete.
+operator|=
+expr|default
+block|;
 name|friend
 name|class
 name|RefCountedBase

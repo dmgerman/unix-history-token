@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmnMIOutOfBandRecord.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMICmnMIOutOfBandRecord interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -105,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"MIUtilString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MICmnMIValueConst.h"
 end_include
 
 begin_include
@@ -247,6 +209,12 @@ name|eOutOfBand_ThreadExited
 block|,
 name|eOutOfBand_ThreadSelected
 block|,
+name|eOutOfBand_TargetModuleLoaded
+block|,
+name|eOutOfBand_TargetModuleUnloaded
+block|,
+name|eOutOfBand_TargetStreamOutput
+block|,
 name|eOutOfBand_count
 comment|// Always the last one
 block|}
@@ -326,7 +294,24 @@ name|CMICmnMIOutOfBandRecord
 argument_list|(
 argument|const OutOfBand_e veType
 argument_list|,
-argument|const CMICmnMIValueResult&vValue
+argument|const CMICmnMIValueConst&vConst
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* ctor */
+end_comment
+
+begin_macro
+name|CMICmnMIOutOfBandRecord
+argument_list|(
+argument|const OutOfBand_e veType
+argument_list|,
+argument|const CMICmnMIValueResult&vResult
 argument_list|)
 end_macro
 
@@ -355,9 +340,9 @@ name|bool
 name|Add
 parameter_list|(
 specifier|const
-name|CMICmnMIValue
+name|CMICmnMIValueResult
 modifier|&
-name|vMIValue
+name|vResult
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -380,12 +365,12 @@ comment|/* dtor */
 end_comment
 
 begin_expr_stmt
-name|virtual
 operator|~
 name|CMICmnMIOutOfBandRecord
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 expr_stmt|;
 end_expr_stmt
 

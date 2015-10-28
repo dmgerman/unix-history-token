@@ -93,6 +93,7 @@ name|class
 name|TargetRegisterInfo
 decl_stmt|;
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|BranchFolder
 block|{
 name|public

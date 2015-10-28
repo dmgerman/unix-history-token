@@ -140,7 +140,7 @@ name|ARMBaseTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -168,7 +168,6 @@ operator|*
 name|getSubtargetImpl
 argument_list|()
 specifier|const
-name|override
 block|{
 return|return
 operator|&
@@ -185,12 +184,19 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// \brief Register ARM analysis passes with a pass manager.
-name|void
-name|addAnalysisPasses
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|)
+name|bool
+name|isLittleEndian
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isLittle
+return|;
+block|}
+comment|/// \brief Get the TargetIRAnalysis for this target.
+name|TargetIRAnalysis
+name|getTargetIRAnalysis
+argument_list|()
 name|override
 block|;
 comment|// Pass Pipeline Configuration
@@ -237,7 +243,7 @@ name|ARMTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -274,7 +280,7 @@ name|ARMLETargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -309,7 +315,7 @@ name|ARMBETargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -346,7 +352,7 @@ name|ThumbTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -383,7 +389,7 @@ name|ThumbLETargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -418,7 +424,7 @@ name|ThumbBETargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,

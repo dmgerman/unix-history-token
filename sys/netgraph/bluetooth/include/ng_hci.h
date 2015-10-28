@@ -2168,6 +2168,39 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*Encryption Change event*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_HCI_LP_ENC_CHG
+value|10
+end_define
+
+begin_comment
+comment|/* HCI->Upper*/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint16_t
+name|con_handle
+decl_stmt|;
+name|uint8_t
+name|status
+decl_stmt|;
+name|uint8_t
+name|link_type
+decl_stmt|;
+block|}
+name|ng_hci_lp_enc_change_ep
+typedef|;
+end_typedef
+
+begin_comment
 comment|/**************************************************************************  **************************************************************************  **                    HCI node command/event parameters  **************************************************************************  **************************************************************************/
 end_comment
 

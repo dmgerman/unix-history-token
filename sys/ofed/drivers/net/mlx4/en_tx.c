@@ -4138,6 +4138,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+comment|/* 	 * It is assumed that the random subsystem has been 	 * initialized when this function is called: 	 */
 name|hashrandom
 operator|=
 name|m_ether_tcpip_hash_init
@@ -4151,9 +4152,9 @@ name|SYSINIT
 argument_list|(
 name|hashrandom_init
 argument_list|,
-name|SI_SUB_KLD
+name|SI_SUB_RANDOM
 argument_list|,
-name|SI_ORDER_SECOND
+name|SI_ORDER_ANY
 argument_list|,
 operator|&
 name|hashrandom_init

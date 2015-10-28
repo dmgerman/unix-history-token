@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/OpenMPKinds.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/TargetInfo.h"
 end_include
 
@@ -338,9 +344,12 @@ name|CodeGenTypeCache
 block|{
 name|CodeGenFunction
 argument_list|(
-argument|const CodeGenFunction&
+specifier|const
+name|CodeGenFunction
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -350,7 +359,8 @@ specifier|const
 name|CodeGenFunction
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|friend
 name|class
@@ -742,6 +752,7 @@ return|return
 name|Kind
 return|;
 block|}
+name|virtual
 name|void
 name|setContextValue
 argument_list|(
@@ -758,6 +769,7 @@ name|V
 expr_stmt|;
 block|}
 comment|// \brief Retrieve the value of the context parameter.
+name|virtual
 name|llvm
 operator|::
 name|Value
@@ -771,6 +783,7 @@ name|ThisValue
 return|;
 block|}
 comment|/// \brief Lookup the captured field decl for a variable.
+name|virtual
 specifier|const
 name|FieldDecl
 modifier|*
@@ -798,11 +811,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|CXXThisFieldDecl
+name|getThisFieldDecl
+argument_list|()
 operator|!=
 name|nullptr
 return|;
 block|}
+name|virtual
 name|FieldDecl
 operator|*
 name|getThisFieldDecl
@@ -835,28 +850,17 @@ name|CodeGenFunction
 modifier|&
 name|CGF
 parameter_list|,
+specifier|const
 name|Stmt
 modifier|*
 name|S
 parameter_list|)
 block|{
-name|RegionCounter
-name|Cnt
-init|=
 name|CGF
 operator|.
-name|getPGORegionCounter
+name|incrementProfileCounter
 argument_list|(
 name|S
-argument_list|)
-decl_stmt|;
-name|Cnt
-operator|.
-name|beginRegion
-argument_list|(
-name|CGF
-operator|.
-name|Builder
 argument_list|)
 expr_stmt|;
 name|CGF
@@ -917,6 +921,61 @@ name|CGCapturedStmtInfo
 modifier|*
 name|CapturedStmtInfo
 decl_stmt|;
+comment|/// \brief RAII for correct setting/restoring of CapturedStmtInfo.
+name|class
+name|CGCapturedStmtRAII
+block|{
+name|private
+label|:
+name|CodeGenFunction
+modifier|&
+name|CGF
+decl_stmt|;
+name|CGCapturedStmtInfo
+modifier|*
+name|PrevCapturedStmtInfo
+decl_stmt|;
+name|public
+label|:
+name|CGCapturedStmtRAII
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|CGCapturedStmtInfo
+operator|*
+name|NewCapturedStmtInfo
+argument_list|)
+operator|:
+name|CGF
+argument_list|(
+name|CGF
+argument_list|)
+operator|,
+name|PrevCapturedStmtInfo
+argument_list|(
+argument|CGF.CapturedStmtInfo
+argument_list|)
+block|{
+name|CGF
+operator|.
+name|CapturedStmtInfo
+operator|=
+name|NewCapturedStmtInfo
+block|;     }
+operator|~
+name|CGCapturedStmtRAII
+argument_list|()
+block|{
+name|CGF
+operator|.
+name|CapturedStmtInfo
+operator|=
+name|PrevCapturedStmtInfo
+block|; }
+block|}
+empty_stmt|;
 comment|/// BoundsChecking - Emit run-time bounds checks. Higher values mean
 comment|/// potentially higher performance penalties.
 name|unsigned
@@ -967,6 +1026,11 @@ comment|/// Whether we processed a Microsoft-style asm block during CodeGen. The
 comment|/// potentially set the return value.
 name|bool
 name|SawAsmBlock
+decl_stmt|;
+comment|/// True if the current function is an outlined SEH helper. This can be a
+comment|/// finally block or filter expression.
+name|bool
+name|IsOutlinedSEHHelper
 decl_stmt|;
 specifier|const
 name|CodeGen
@@ -1028,6 +1092,18 @@ literal|256
 operator|>
 name|LifetimeExtendedCleanupStack
 expr_stmt|;
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+specifier|const
+name|JumpDest
+operator|*
+operator|,
+literal|2
+operator|>
+name|SEHTryEpilogueStack
+expr_stmt|;
 comment|/// Header for data within LifetimeExtendedCleanupStack.
 struct|struct
 name|LifetimeExtendedCleanupHeader
@@ -1035,14 +1111,10 @@ block|{
 comment|/// The size of the following cleanup object.
 name|unsigned
 name|Size
-range|:
-literal|29
 decl_stmt|;
 comment|/// The kind of cleanup to push: a value from the CleanupKind enumeration.
-name|unsigned
+name|CleanupKind
 name|Kind
-range|:
-literal|3
 decl_stmt|;
 name|size_t
 name|getSize
@@ -1050,10 +1122,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|size_t
-argument_list|(
 name|Size
-argument_list|)
 return|;
 block|}
 name|CleanupKind
@@ -1062,13 +1131,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|static_cast
-operator|<
-name|CleanupKind
-operator|>
-operator|(
 name|Kind
-operator|)
 return|;
 block|}
 block|}
@@ -1110,6 +1173,29 @@ operator|::
 name|AllocaInst
 operator|*
 name|EHSelectorSlot
+expr_stmt|;
+comment|/// A stack of exception code slots. Entering an __except block pushes a slot
+comment|/// on the stack and leaving pops one. The __exception_code() intrinsic loads
+comment|/// a value from the top of the stack.
+name|SmallVector
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|,
+literal|1
+operator|>
+name|SEHCodeSlotStack
+expr_stmt|;
+comment|/// Value returned by __exception_info intrinsic.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|SEHInfo
+operator|=
+name|nullptr
 expr_stmt|;
 comment|/// Emits a landing pad for the current EH stack.
 name|llvm
@@ -1247,86 +1333,19 @@ parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
-comment|/// pushFullExprCleanup - Push a cleanup to be run at the end of the
-comment|/// current full-expression.  Safe against the possibility that
-comment|/// we're currently inside a conditionally-evaluated expression.
-name|template
-operator|<
-name|class
-name|T
-operator|,
-name|class
-name|A0
-operator|>
-name|void
-name|pushFullExprCleanup
-argument_list|(
-argument|CleanupKind kind
-argument_list|,
-argument|A0 a0
-argument_list|)
+comment|/// Returns true inside SEH __try blocks.
+name|bool
+name|isSEHTryScope
+argument_list|()
+specifier|const
 block|{
-comment|// If we're not in a conditional branch, or if none of the
-comment|// arguments requires saving, then use the unconditional cleanup.
-if|if
-condition|(
-operator|!
-name|isInConditionalBranch
-argument_list|()
-condition|)
 return|return
-name|EHStack
+operator|!
+name|SEHTryEpilogueStack
 operator|.
-name|pushCleanup
-operator|<
-name|T
-operator|>
-operator|(
-name|kind
-operator|,
-name|a0
-operator|)
-return|;
-name|typename
-name|DominatingValue
-operator|<
-name|A0
-operator|>
-operator|::
-name|saved_type
-name|a0_saved
-operator|=
-name|saveValueInCond
-argument_list|(
-name|a0
-argument_list|)
-expr_stmt|;
-typedef|typedef
-name|EHScopeStack
-operator|::
-name|ConditionalCleanup1
-operator|<
-name|T
-operator|,
-name|A0
-operator|>
-name|CleanupType
-expr_stmt|;
-name|EHStack
-operator|.
-name|pushCleanup
-operator|<
-name|CleanupType
-operator|>
-operator|(
-name|kind
-operator|,
-name|a0_saved
-operator|)
-expr_stmt|;
-name|initFullExprCleanup
+name|empty
 argument_list|()
-expr_stmt|;
+return|;
 block|}
 comment|/// pushFullExprCleanup - Push a cleanup to be run at the end of the
 comment|/// current full-expression.  Safe against the possibility that
@@ -1337,19 +1356,15 @@ name|class
 name|T
 operator|,
 name|class
-name|A0
-operator|,
-name|class
-name|A1
+operator|...
+name|As
 operator|>
 name|void
 name|pushFullExprCleanup
 argument_list|(
 argument|CleanupKind kind
 argument_list|,
-argument|A0 a0
-argument_list|,
-argument|A1 a1
+argument|As... A
 argument_list|)
 block|{
 comment|// If we're not in a conditional branch, or if none of the
@@ -1370,458 +1385,82 @@ operator|>
 operator|(
 name|kind
 operator|,
-name|a0
-operator|,
-name|a1
+name|A
+operator|...
 operator|)
 return|;
+comment|// Stash values in a tuple so we can guarantee the order of saves.
+typedef|typedef
+name|std
+operator|::
+name|tuple
+operator|<
 name|typename
 name|DominatingValue
 operator|<
-name|A0
+name|As
 operator|>
 operator|::
 name|saved_type
-name|a0_saved
-operator|=
-name|saveValueInCond
-argument_list|(
-name|a0
-argument_list|)
-expr_stmt|;
-name|typename
-name|DominatingValue
-operator|<
-name|A1
+operator|...
 operator|>
-operator|::
-name|saved_type
-name|a1_saved
-operator|=
+name|SavedTuple
+expr_stmt|;
+name|SavedTuple
+name|Saved
+block|{
 name|saveValueInCond
 argument_list|(
-name|a1
+name|A
 argument_list|)
-expr_stmt|;
+operator|...
+block|}
+empty_stmt|;
 typedef|typedef
 name|EHScopeStack
 operator|::
-name|ConditionalCleanup2
+name|ConditionalCleanup
 operator|<
 name|T
 operator|,
-name|A0
-operator|,
-name|A1
+name|As
+operator|...
 operator|>
 name|CleanupType
 expr_stmt|;
 name|EHStack
 operator|.
-name|pushCleanup
+name|pushCleanupTuple
 operator|<
 name|CleanupType
 operator|>
 operator|(
 name|kind
 operator|,
-name|a0_saved
-operator|,
-name|a1_saved
+name|Saved
 operator|)
 expr_stmt|;
 name|initFullExprCleanup
 argument_list|()
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
-comment|/// pushFullExprCleanup - Push a cleanup to be run at the end of the
-end_comment
-
-begin_comment
-comment|/// current full-expression.  Safe against the possibility that
-end_comment
-
-begin_comment
-comment|/// we're currently inside a conditionally-evaluated expression.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|T
-operator|,
-name|class
-name|A0
-operator|,
-name|class
-name|A1
-operator|,
-name|class
-name|A2
-operator|>
-name|void
-name|pushFullExprCleanup
-argument_list|(
-argument|CleanupKind kind
-argument_list|,
-argument|A0 a0
-argument_list|,
-argument|A1 a1
-argument_list|,
-argument|A2 a2
-argument_list|)
-block|{
-comment|// If we're not in a conditional branch, or if none of the
-comment|// arguments requires saving, then use the unconditional cleanup.
-if|if
-condition|(
-operator|!
-name|isInConditionalBranch
-argument_list|()
-condition|)
-block|{
-return|return
-name|EHStack
-operator|.
-name|pushCleanup
-operator|<
-name|T
-operator|>
-operator|(
-name|kind
-operator|,
-name|a0
-operator|,
-name|a1
-operator|,
-name|a2
-operator|)
-return|;
-block|}
-name|typename
-name|DominatingValue
-operator|<
-name|A0
-operator|>
-operator|::
-name|saved_type
-name|a0_saved
-operator|=
-name|saveValueInCond
-argument_list|(
-name|a0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|typename
-name|DominatingValue
-operator|<
-name|A1
-operator|>
-operator|::
-name|saved_type
-name|a1_saved
-operator|=
-name|saveValueInCond
-argument_list|(
-name|a1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|typename
-name|DominatingValue
-operator|<
-name|A2
-operator|>
-operator|::
-name|saved_type
-name|a2_saved
-operator|=
-name|saveValueInCond
-argument_list|(
-name|a2
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-name|EHScopeStack
-operator|::
-name|ConditionalCleanup3
-operator|<
-name|T
-operator|,
-name|A0
-operator|,
-name|A1
-operator|,
-name|A2
-operator|>
-name|CleanupType
-expr_stmt|;
-end_typedef
-
-begin_expr_stmt
-name|EHStack
-operator|.
-name|pushCleanup
-operator|<
-name|CleanupType
-operator|>
-operator|(
-name|kind
-operator|,
-name|a0_saved
-operator|,
-name|a1_saved
-operator|,
-name|a2_saved
-operator|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|initFullExprCleanup
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|}
-comment|/// pushFullExprCleanup - Push a cleanup to be run at the end of the
-end_comment
-
-begin_comment
-comment|/// current full-expression.  Safe against the possibility that
-end_comment
-
-begin_comment
-comment|/// we're currently inside a conditionally-evaluated expression.
-end_comment
-
-begin_expr_stmt
-unit|template
-operator|<
-name|class
-name|T
-operator|,
-name|class
-name|A0
-operator|,
-name|class
-name|A1
-operator|,
-name|class
-name|A2
-operator|,
-name|class
-name|A3
-operator|>
-name|void
-name|pushFullExprCleanup
-argument_list|(
-argument|CleanupKind kind
-argument_list|,
-argument|A0 a0
-argument_list|,
-argument|A1 a1
-argument_list|,
-argument|A2 a2
-argument_list|,
-argument|A3 a3
-argument_list|)
-block|{
-comment|// If we're not in a conditional branch, or if none of the
-comment|// arguments requires saving, then use the unconditional cleanup.
-if|if
-condition|(
-operator|!
-name|isInConditionalBranch
-argument_list|()
-condition|)
-block|{
-return|return
-name|EHStack
-operator|.
-name|pushCleanup
-operator|<
-name|T
-operator|>
-operator|(
-name|kind
-operator|,
-name|a0
-operator|,
-name|a1
-operator|,
-name|a2
-operator|,
-name|a3
-operator|)
-return|;
-block|}
-name|typename
-name|DominatingValue
-operator|<
-name|A0
-operator|>
-operator|::
-name|saved_type
-name|a0_saved
-operator|=
-name|saveValueInCond
-argument_list|(
-name|a0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|typename
-name|DominatingValue
-operator|<
-name|A1
-operator|>
-operator|::
-name|saved_type
-name|a1_saved
-operator|=
-name|saveValueInCond
-argument_list|(
-name|a1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|typename
-name|DominatingValue
-operator|<
-name|A2
-operator|>
-operator|::
-name|saved_type
-name|a2_saved
-operator|=
-name|saveValueInCond
-argument_list|(
-name|a2
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|typename
-name|DominatingValue
-operator|<
-name|A3
-operator|>
-operator|::
-name|saved_type
-name|a3_saved
-operator|=
-name|saveValueInCond
-argument_list|(
-name|a3
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-name|EHScopeStack
-operator|::
-name|ConditionalCleanup4
-operator|<
-name|T
-operator|,
-name|A0
-operator|,
-name|A1
-operator|,
-name|A2
-operator|,
-name|A3
-operator|>
-name|CleanupType
-expr_stmt|;
-end_typedef
-
-begin_expr_stmt
-name|EHStack
-operator|.
-name|pushCleanup
-operator|<
-name|CleanupType
-operator|>
-operator|(
-name|kind
-operator|,
-name|a0_saved
-operator|,
-name|a1_saved
-operator|,
-name|a2_saved
-operator|,
-name|a3_saved
-operator|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|initFullExprCleanup
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|}
 comment|/// \brief Queue a cleanup to be pushed after finishing the current
-end_comment
-
-begin_comment
 comment|/// full-expression.
-end_comment
-
-begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|class
 name|T
 operator|,
 name|class
-name|A0
-operator|,
-name|class
-name|A1
-operator|,
-name|class
-name|A2
-operator|,
-name|class
-name|A3
+operator|...
+name|As
 operator|>
 name|void
 name|pushCleanupAfterFullExpr
 argument_list|(
 argument|CleanupKind Kind
 argument_list|,
-argument|A0 a0
-argument_list|,
-argument|A1 a1
-argument_list|,
-argument|A2 a2
-argument_list|,
-argument|A3 a3
+argument|As... A
 argument_list|)
 block|{
 name|assert
@@ -1872,6 +1511,27 @@ operator|.
 name|Size
 argument_list|)
 block|;
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|Header
+argument_list|)
+operator|%
+name|llvm
+operator|::
+name|AlignOf
+operator|<
+name|T
+operator|>
+operator|::
+name|Alignment
+operator|==
+literal|0
+argument_list|,
+literal|"Cleanup will be allocated on misaligned address"
+argument_list|)
+block|;
 name|char
 operator|*
 name|Buffer
@@ -1897,13 +1557,8 @@ argument|Buffer + sizeof(Header)
 argument_list|)
 name|T
 argument_list|(
-name|a0
-argument_list|,
-name|a1
-argument_list|,
-name|a2
-argument_list|,
-name|a3
+name|A
+operator|...
 argument_list|)
 block|;   }
 comment|/// Set up the last cleaup that was pushed as a conditional
@@ -1912,25 +1567,10 @@ name|void
 name|initFullExprCleanup
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// PushDestructorCleanup - Push a cleanup to call the
-end_comment
-
-begin_comment
 comment|/// complete-object destructor of an object of the given type at the
-end_comment
-
-begin_comment
 comment|/// given address.  Does nothing if T is not a C++ class type with a
-end_comment
-
-begin_comment
 comment|/// non-trivial destructor.
-end_comment
-
-begin_decl_stmt
 name|void
 name|PushDestructorCleanup
 argument_list|(
@@ -1944,21 +1584,9 @@ operator|*
 name|Addr
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// PushDestructorCleanup - Push a cleanup to call the
-end_comment
-
-begin_comment
 comment|/// complete-object variant of the given destructor on the object at
-end_comment
-
-begin_comment
 comment|/// the given address.
-end_comment
-
-begin_decl_stmt
 name|void
 name|PushDestructorCleanup
 argument_list|(
@@ -1974,17 +1602,8 @@ operator|*
 name|Addr
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// PopCleanupBlock - Will pop the cleanup entry on the stack and
-end_comment
-
-begin_comment
 comment|/// process all branch fixups.
-end_comment
-
-begin_function_decl
 name|void
 name|PopCleanupBlock
 parameter_list|(
@@ -1994,41 +1613,14 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// DeactivateCleanupBlock - Deactivates the given cleanup block.
-end_comment
-
-begin_comment
 comment|/// The block cannot be reactivated.  Pops it if it's the top of the
-end_comment
-
-begin_comment
 comment|/// stack.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param DominatingIP - An instruction which is known to
-end_comment
-
-begin_comment
 comment|///   dominate the current IP (if set) and which lies along
-end_comment
-
-begin_comment
 comment|///   all paths of execution between the current IP and the
-end_comment
-
-begin_comment
 comment|///   the point at which the cleanup comes into scope.
-end_comment
-
-begin_decl_stmt
 name|void
 name|DeactivateCleanupBlock
 argument_list|(
@@ -2044,37 +1636,13 @@ operator|*
 name|DominatingIP
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// ActivateCleanupBlock - Activates an initially-inactive cleanup.
-end_comment
-
-begin_comment
 comment|/// Cannot be used to resurrect a deactivated cleanup.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param DominatingIP - An instruction which is known to
-end_comment
-
-begin_comment
 comment|///   dominate the current IP (if set) and which lies along
-end_comment
-
-begin_comment
 comment|///   all paths of execution between the current IP and the
-end_comment
-
-begin_comment
 comment|///   the point at which the cleanup comes into scope.
-end_comment
-
-begin_decl_stmt
 name|void
 name|ActivateCleanupBlock
 argument_list|(
@@ -2090,17 +1658,8 @@ operator|*
 name|DominatingIP
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Enters a new scope for capturing cleanups, all of which
-end_comment
-
-begin_comment
 comment|/// will be executed once the scope is exited.
-end_comment
-
-begin_decl_stmt
 name|class
 name|RunCleanupsScope
 block|{
@@ -2124,9 +1683,12 @@ name|private
 label|:
 name|RunCleanupsScope
 argument_list|(
-argument|const RunCleanupsScope&
+specifier|const
+name|RunCleanupsScope
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -2136,7 +1698,8 @@ specifier|const
 name|RunCleanupsScope
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|protected
 label|:
@@ -2274,13 +1837,7 @@ name|false
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
 name|class
 name|LexicalScope
 range|:
@@ -2306,9 +1863,12 @@ name|ParentScope
 block|;
 name|LexicalScope
 argument_list|(
-argument|const LexicalScope&
+specifier|const
+name|LexicalScope
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -2318,7 +1878,8 @@ specifier|const
 name|LexicalScope
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -2435,36 +1996,40 @@ if|if
 condition|(
 name|PerformCleanup
 condition|)
+block|{
+name|ApplyDebugLocation
+name|DL
+argument_list|(
+name|CGF
+argument_list|,
+name|Range
+operator|.
+name|getEnd
+argument_list|()
+argument_list|)
+decl_stmt|;
 name|ForceCleanup
 argument_list|()
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
+block|}
 comment|/// \brief Force the emission of cleanups now, instead of waiting
-end_comment
-
-begin_comment
 comment|/// until this object is destroyed.
-end_comment
-
-begin_function
 name|void
 name|ForceCleanup
-parameter_list|()
+argument_list|()
 block|{
 name|CGF
 operator|.
 name|CurLexicalScope
 operator|=
 name|ParentScope
-expr_stmt|;
+block|;
 name|RunCleanupsScope
 operator|::
 name|ForceCleanup
 argument_list|()
-expr_stmt|;
+block|;
 if|if
 condition|(
 operator|!
@@ -2477,17 +2042,18 @@ name|rescopeLabels
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_function_decl
 name|void
 name|rescopeLabels
 parameter_list|()
 function_decl|;
-end_function_decl
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|/// \brief The scope used to remap some variables as private in the OpenMP
 end_comment
 
@@ -2538,15 +2104,15 @@ name|private
 label|:
 end_label
 
-begin_macro
+begin_expr_stmt
 name|OMPPrivateScope
 argument_list|(
-argument|const OMPPrivateScope&
+specifier|const
+name|OMPPrivateScope
+operator|&
 argument_list|)
-end_macro
-
-begin_expr_stmt
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 
@@ -2559,7 +2125,8 @@ specifier|const
 name|OMPPrivateScope
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 end_decl_stmt
 
@@ -2811,9 +2378,14 @@ operator|~
 name|OMPPrivateScope
 argument_list|()
 block|{
+if|if
+condition|(
+name|PerformCleanup
+condition|)
 name|ForceCleanup
 argument_list|()
-block|; }
+expr_stmt|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -3890,18 +3462,25 @@ begin_comment
 comment|/// number that holds the value.
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|std
+operator|::
+name|pair
+operator|<
+name|llvm
+operator|::
+name|Type
+operator|*
+operator|,
 name|unsigned
+operator|>
 name|getByRefValueLLVMField
 argument_list|(
-specifier|const
-name|ValueDecl
-operator|*
-name|VD
+argument|const ValueDecl *VD
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// BuildBlockByrefAddress - Computes address location of the
@@ -4023,6 +3602,30 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Track escaped local variables with auto storage. Used during SEH
+end_comment
+
+begin_comment
+comment|/// outlining to produce a call to llvm.localescape.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|llvm
+operator|::
+name|AllocaInst
+operator|*
+operator|,
+name|int
+operator|>
+name|EscapedLocals
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// LabelMap - This keeps track of the LLVM basic block for each C label.
 end_comment
 
@@ -4097,22 +3700,66 @@ name|PGO
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// Calculate branch weights appropriate for PGO data
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|createProfileWeights
+argument_list|(
+argument|uint64_t TrueCount
+argument_list|,
+argument|uint64_t FalseCount
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|createProfileWeights
+argument_list|(
+name|ArrayRef
+operator|<
+name|uint64_t
+operator|>
+name|Weights
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|createProfileWeightsForLoop
+argument_list|(
+argument|const Stmt *Cond
+argument_list|,
+argument|uint64_t LoopCount
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_label
 name|public
 label|:
 end_label
 
 begin_comment
-comment|/// Get a counter for instrumentation of the region associated with the given
-end_comment
-
-begin_comment
-comment|/// statement.
+comment|/// Increment the profiler's counter for the given statement.
 end_comment
 
 begin_function
-name|RegionCounter
-name|getPGORegionCounter
+name|void
+name|incrementProfileCounter
 parameter_list|(
 specifier|const
 name|Stmt
@@ -4120,13 +3767,119 @@ modifier|*
 name|S
 parameter_list|)
 block|{
-return|return
-name|RegionCounter
-argument_list|(
+if|if
+condition|(
+name|CGM
+operator|.
+name|getCodeGenOpts
+argument_list|()
+operator|.
+name|ProfileInstrGenerate
+condition|)
 name|PGO
+operator|.
+name|emitCounterIncrement
+argument_list|(
+name|Builder
 argument_list|,
 name|S
 argument_list|)
+expr_stmt|;
+name|PGO
+operator|.
+name|setCurrentStmt
+argument_list|(
+name|S
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// Get the profiler's count for the given statement.
+end_comment
+
+begin_function
+name|uint64_t
+name|getProfileCount
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|S
+parameter_list|)
+block|{
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|Count
+operator|=
+name|PGO
+operator|.
+name|getStmtCount
+argument_list|(
+name|S
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Count
+operator|.
+name|hasValue
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+return|return
+operator|*
+name|Count
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// Set the profiler's current count.
+end_comment
+
+begin_function
+name|void
+name|setCurrentProfileCount
+parameter_list|(
+name|uint64_t
+name|Count
+parameter_list|)
+block|{
+name|PGO
+operator|.
+name|setCurrentRegionCount
+argument_list|(
+name|Count
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// Get the profiler's current count. This is generally the count for the most
+end_comment
+
+begin_comment
+comment|/// recently incremented counter.
+end_comment
+
+begin_function
+name|uint64_t
+name|getCurrentProfileCount
+parameter_list|()
+block|{
+return|return
+name|PGO
+operator|.
+name|getCurrentRegionCount
+argument_list|()
 return|;
 block|}
 end_function
@@ -4973,8 +4726,41 @@ argument_list|()
 return|;
 end_return
 
+begin_macro
+unit|}    bool
+name|currentFunctionUsesSEHTry
+argument_list|()
+end_macro
+
 begin_expr_stmt
-unit|}    const
+specifier|const
+block|{
+specifier|const
+name|auto
+operator|*
+name|FD
+operator|=
+name|dyn_cast_or_null
+operator|<
+name|FunctionDecl
+operator|>
+operator|(
+name|CurCodeDecl
+operator|)
+block|;
+return|return
+name|FD
+operator|&&
+name|FD
+operator|->
+name|usesSEHTry
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
 name|TargetInfo
 operator|&
 name|getTarget
@@ -6011,9 +5797,10 @@ name|BasicBlock
 operator|*
 name|BB
 argument_list|,
-name|RegionCounter
-operator|&
-name|Cnt
+specifier|const
+name|Stmt
+operator|*
+name|S
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -6087,11 +5874,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitReturnBlock - Emit the unified return block, trying to avoid its
+comment|/// \brief Emit the unified return block, trying to avoid its emission when
 end_comment
 
 begin_comment
-comment|/// emission when possible.
+comment|/// possible.
+end_comment
+
+begin_comment
+comment|/// \return The debug location of the user written return statement if the
+end_comment
+
+begin_comment
+comment|/// return block is is avoided.
 end_comment
 
 begin_expr_stmt
@@ -6192,12 +5987,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// GenerateThunk - Generate a thunk for the given method.
+comment|/// Generate a thunk for the given method.
 end_comment
 
 begin_decl_stmt
 name|void
-name|GenerateThunk
+name|generateThunk
 argument_list|(
 name|llvm
 operator|::
@@ -6221,31 +6016,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|void
-name|GenerateVarArgsThunk
-argument_list|(
+begin_expr_stmt
 name|llvm
 operator|::
 name|Function
 operator|*
-name|Fn
+name|GenerateVarArgsThunk
+argument_list|(
+argument|llvm::Function *Fn
 argument_list|,
-specifier|const
-name|CGFunctionInfo
-operator|&
-name|FnInfo
+argument|const CGFunctionInfo&FnInfo
 argument_list|,
-name|GlobalDecl
-name|GD
+argument|GlobalDecl GD
 argument_list|,
-specifier|const
-name|ThunkInfo
-operator|&
-name|Thunk
+argument|const ThunkInfo&Thunk
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|void
@@ -6413,6 +6200,122 @@ name|Ty
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_enum
+enum|enum
+name|CFITypeCheckKind
+block|{
+name|CFITCK_VCall
+block|,
+name|CFITCK_NVCall
+block|,
+name|CFITCK_DerivedCast
+block|,
+name|CFITCK_UnrelatedCast
+block|,   }
+enum|;
+end_enum
+
+begin_comment
+comment|/// \brief Derived is the presumed address of an object of type T after a
+end_comment
+
+begin_comment
+comment|/// cast. If T is a polymorphic class type, emit a check that the virtual
+end_comment
+
+begin_comment
+comment|/// table for Derived belongs to a class derived from T.
+end_comment
+
+begin_decl_stmt
+name|void
+name|EmitVTablePtrCheckForCast
+argument_list|(
+name|QualType
+name|T
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Derived
+argument_list|,
+name|bool
+name|MayBeNull
+argument_list|,
+name|CFITypeCheckKind
+name|TCK
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// EmitVTablePtrCheckForCall - Virtual method MD is being called via VTable.
+end_comment
+
+begin_comment
+comment|/// If vptr CFI is enabled, emit a check that VTable is valid.
+end_comment
+
+begin_decl_stmt
+name|void
+name|EmitVTablePtrCheckForCall
+argument_list|(
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|MD
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|VTable
+argument_list|,
+name|CFITypeCheckKind
+name|TCK
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// EmitVTablePtrCheck - Emit a check that VTable is a valid virtual table for
+end_comment
+
+begin_comment
+comment|/// RD using llvm.bitset.test.
+end_comment
+
+begin_decl_stmt
+name|void
+name|EmitVTablePtrCheck
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|VTable
+argument_list|,
+name|CFITypeCheckKind
+name|TCK
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// CanDevirtualizeMemberFunctionCalls - Checks whether virtual calls on given
@@ -7571,6 +7474,24 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|EmitAnyExprToExn
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|E
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Addr
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/// EmitExprAsInit - Emits the code necessary to initialize a
 end_comment
@@ -7724,6 +7645,78 @@ name|Zero
 argument_list|()
 argument_list|,
 name|true
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|EmitAggregateCopyCtor
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|DestPtr
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|SrcPtr
+argument_list|,
+name|QualType
+name|DestTy
+argument_list|,
+name|QualType
+name|SrcTy
+argument_list|)
+block|{
+name|CharUnits
+name|DestTypeAlign
+init|=
+name|getContext
+argument_list|()
+operator|.
+name|getTypeAlignInChars
+argument_list|(
+name|DestTy
+argument_list|)
+decl_stmt|;
+name|CharUnits
+name|SrcTypeAlign
+init|=
+name|getContext
+argument_list|()
+operator|.
+name|getTypeAlignInChars
+argument_list|(
+name|SrcTy
+argument_list|)
+decl_stmt|;
+name|EmitAggregateCopy
+argument_list|(
+name|DestPtr
+argument_list|,
+name|SrcPtr
+argument_list|,
+name|SrcTy
+argument_list|,
+comment|/*IsVolatile=*/
+name|false
+argument_list|,
+name|std
+operator|::
+name|min
+argument_list|(
+name|DestTypeAlign
+argument_list|,
+name|SrcTypeAlign
+argument_list|)
+argument_list|,
+comment|/*IsAssignment=*/
+name|false
 argument_list|)
 expr_stmt|;
 block|}
@@ -8655,6 +8648,12 @@ name|elementType
 argument_list|,
 name|llvm
 operator|::
+name|Type
+operator|*
+name|ElementTy
+argument_list|,
+name|llvm
+operator|::
 name|Value
 operator|*
 name|NewPtr
@@ -8691,6 +8690,39 @@ operator|::
 name|Value
 operator|*
 name|Ptr
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitLifetimeStart
+argument_list|(
+argument|uint64_t Size
+argument_list|,
+argument|llvm::Value *Addr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|EmitLifetimeEnd
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Size
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Addr
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -9403,6 +9435,16 @@ condition|)
 return|return
 name|Address
 return|;
+name|auto
+name|F
+operator|=
+name|CGF
+operator|.
+name|getByRefValueLLVMField
+argument_list|(
+name|Variable
+argument_list|)
+expr_stmt|;
 return|return
 name|CGF
 operator|.
@@ -9410,14 +9452,15 @@ name|Builder
 operator|.
 name|CreateStructGEP
 argument_list|(
+name|F
+operator|.
+name|first
+argument_list|,
 name|Address
 argument_list|,
-name|CGF
+name|F
 operator|.
-name|getByRefValueLLVMField
-argument_list|(
-name|Variable
-argument_list|)
+name|second
 argument_list|,
 name|Variable
 operator|->
@@ -10132,6 +10175,217 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|EnterSEHTryStmt
+parameter_list|(
+specifier|const
+name|SEHTryStmt
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ExitSEHTryStmt
+parameter_list|(
+specifier|const
+name|SEHTryStmt
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|startOutlinedSEHHelper
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|ParentCGF
+parameter_list|,
+name|bool
+name|IsFilter
+parameter_list|,
+specifier|const
+name|Stmt
+modifier|*
+name|OutlinedStmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Function
+operator|*
+name|GenerateSEHFilterFunction
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|ParentCGF
+argument_list|,
+specifier|const
+name|SEHExceptStmt
+operator|&
+name|Except
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Function
+operator|*
+name|GenerateSEHFinallyFunction
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|ParentCGF
+argument_list|,
+specifier|const
+name|SEHFinallyStmt
+operator|&
+name|Finally
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|EmitSEHExceptionCodeSave
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|ParentCGF
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|ParentFP
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EntryEBP
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitSEHExceptionCode
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitSEHExceptionInfo
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitSEHAbnormalTermination
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Scan the outlined statement for captures from the parent function. For
+end_comment
+
+begin_comment
+comment|/// each capture, mark the capture as escaped and emit a call to
+end_comment
+
+begin_comment
+comment|/// llvm.localrecover. Insert the localrecover result into the LocalDeclMap.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitCapturedLocals
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|ParentCGF
+parameter_list|,
+specifier|const
+name|Stmt
+modifier|*
+name|OutlinedStmt
+parameter_list|,
+name|bool
+name|IsFilter
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Recovers the address of a local in a parent function. ParentVar is the
+end_comment
+
+begin_comment
+comment|/// address of the variable used in the immediate parent function. It can
+end_comment
+
+begin_comment
+comment|/// either be an alloca or a call to llvm.localrecover if there are nested
+end_comment
+
+begin_comment
+comment|/// outlined functions. ParentFP is the frame pointer of the outermost parent
+end_comment
+
+begin_comment
+comment|/// frame.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|recoverAddrOfEscapedLocal
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|ParentCGF
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|ParentVar
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|ParentFP
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|void
 name|EmitCXXForRangeStmt
@@ -10237,37 +10491,252 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// \brief Perform element by element copying of arrays with type \a
+end_comment
+
+begin_comment
+comment|/// OriginalType from \a SrcAddr to \a DestAddr using copying procedure
+end_comment
+
+begin_comment
+comment|/// generated by \a CopyGen.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param DestAddr Address of the destination array.
+end_comment
+
+begin_comment
+comment|/// \param SrcAddr Address of the source array.
+end_comment
+
+begin_comment
+comment|/// \param OriginalType Type of destination and source arrays.
+end_comment
+
+begin_comment
+comment|/// \param CopyGen Copying procedure that copies value of single array element
+end_comment
+
+begin_comment
+comment|/// to another single array element.
+end_comment
+
 begin_decl_stmt
 name|void
 name|EmitOMPAggregateAssign
 argument_list|(
-name|LValue
-name|OriginalAddr
+name|llvm
+operator|::
+name|Value
+operator|*
+name|DestAddr
 argument_list|,
 name|llvm
 operator|::
 name|Value
 operator|*
-name|PrivateAddr
-argument_list|,
-specifier|const
-name|Expr
-operator|*
-name|AssignExpr
+name|SrcAddr
 argument_list|,
 name|QualType
-name|Type
+name|OriginalType
 argument_list|,
 specifier|const
-name|VarDecl
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|void
+argument_list|(
+name|llvm
+operator|::
+name|Value
 operator|*
-name|VDInit
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+argument_list|)
+operator|>
+operator|&
+name|CopyGen
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_comment
+comment|/// \brief Emit proper copying of data from one variable to another.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param OriginalType Original type of the copied variables.
+end_comment
+
+begin_comment
+comment|/// \param DestAddr Destination address.
+end_comment
+
+begin_comment
+comment|/// \param SrcAddr Source address.
+end_comment
+
+begin_comment
+comment|/// \param DestVD Destination variable used in \a CopyExpr (for arrays, has
+end_comment
+
+begin_comment
+comment|/// type of the base array element).
+end_comment
+
+begin_comment
+comment|/// \param SrcVD Source variable used in \a CopyExpr (for arrays, has type of
+end_comment
+
+begin_comment
+comment|/// the base array element).
+end_comment
+
+begin_comment
+comment|/// \param Copy Actual copygin expression for copying data from \a SrcVD to \a
+end_comment
+
+begin_comment
+comment|/// DestVD.
+end_comment
+
+begin_decl_stmt
 name|void
+name|EmitOMPCopy
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|QualType
+name|OriginalType
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|DestAddr
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|SrcAddr
+argument_list|,
+specifier|const
+name|VarDecl
+operator|*
+name|DestVD
+argument_list|,
+specifier|const
+name|VarDecl
+operator|*
+name|SrcVD
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|Copy
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Emit atomic update code for constructs: \a X = \a X \a BO \a E or
+end_comment
+
+begin_comment
+comment|/// \a X = \a E \a BO \a E.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param X Value to be updated.
+end_comment
+
+begin_comment
+comment|/// \param E Update value.
+end_comment
+
+begin_comment
+comment|/// \param BO Binary operation for update operation.
+end_comment
+
+begin_comment
+comment|/// \param IsXLHSInRHSPart true if \a X is LHS in RHS part of the update
+end_comment
+
+begin_comment
+comment|/// expression, false otherwise.
+end_comment
+
+begin_comment
+comment|/// \param AO Atomic ordering of the generated atomic instructions.
+end_comment
+
+begin_comment
+comment|/// \param CommonGen Code generator for complex expressions that cannot be
+end_comment
+
+begin_comment
+comment|/// expressed through atomicrmw instruction.
+end_comment
+
+begin_comment
+comment|/// \returns<true, OldAtomicValue> if simple 'atomicrmw' instruction was
+end_comment
+
+begin_comment
+comment|/// generated,<false, RValue::get(nullptr)> otherwise.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|pair
+operator|<
+name|bool
+operator|,
+name|RValue
+operator|>
+name|EmitOMPAtomicSimpleUpdateExpr
+argument_list|(
+argument|LValue X
+argument_list|,
+argument|RValue E
+argument_list|,
+argument|BinaryOperatorKind BO
+argument_list|,
+argument|bool IsXLHSInRHSPart
+argument_list|,
+argument|llvm::AtomicOrdering AO
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|const llvm::function_ref<RValue(RValue)>&CommonGen
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|bool
 name|EmitOMPFirstprivateClause
 parameter_list|(
 specifier|const
@@ -10294,6 +10763,270 @@ parameter_list|,
 name|OMPPrivateScope
 modifier|&
 name|PrivateScope
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit code for copyin clause in \a D directive. The next code is
+end_comment
+
+begin_comment
+comment|/// generated at the start of outlined functions for directives:
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// threadprivate_var1 = master_threadprivate_var1;
+end_comment
+
+begin_comment
+comment|/// operator=(threadprivate_var2, master_threadprivate_var2);
+end_comment
+
+begin_comment
+comment|/// ...
+end_comment
+
+begin_comment
+comment|/// __kmpc_barrier(&loc, global_tid);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param D OpenMP directive possibly with 'copyin' clause(s).
+end_comment
+
+begin_comment
+comment|/// \returns true if at least one copyin variable is found, false otherwise.
+end_comment
+
+begin_function_decl
+name|bool
+name|EmitOMPCopyinClause
+parameter_list|(
+specifier|const
+name|OMPExecutableDirective
+modifier|&
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit initial code for lastprivate variables. If some variable is
+end_comment
+
+begin_comment
+comment|/// not also firstprivate, then the default initialization is used. Otherwise
+end_comment
+
+begin_comment
+comment|/// initialization of this variable is performed by EmitOMPFirstprivateClause
+end_comment
+
+begin_comment
+comment|/// method.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param D Directive that may have 'lastprivate' directives.
+end_comment
+
+begin_comment
+comment|/// \param PrivateScope Private scope for capturing lastprivate variables for
+end_comment
+
+begin_comment
+comment|/// proper codegen in internal captured statement.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if there is at least one lastprivate variable, false
+end_comment
+
+begin_comment
+comment|/// otherwise.
+end_comment
+
+begin_function_decl
+name|bool
+name|EmitOMPLastprivateClauseInit
+parameter_list|(
+specifier|const
+name|OMPExecutableDirective
+modifier|&
+name|D
+parameter_list|,
+name|OMPPrivateScope
+modifier|&
+name|PrivateScope
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit final copying of lastprivate values to original variables at
+end_comment
+
+begin_comment
+comment|/// the end of the worksharing or simd directive.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param D Directive that has at least one 'lastprivate' directives.
+end_comment
+
+begin_comment
+comment|/// \param IsLastIterCond Boolean condition that must be set to 'i1 true' if
+end_comment
+
+begin_comment
+comment|/// it is the last iteration of the loop code in associated directive, or to
+end_comment
+
+begin_comment
+comment|/// 'i1 false' otherwise. If this item is nullptr, no final check is required.
+end_comment
+
+begin_decl_stmt
+name|void
+name|EmitOMPLastprivateClauseFinal
+argument_list|(
+specifier|const
+name|OMPExecutableDirective
+operator|&
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|IsLastIterCond
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Emit initial code for reduction variables. Creates reduction copies
+end_comment
+
+begin_comment
+comment|/// and initializes them with the values according to OpenMP standard.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param D Directive (possibly) with the 'reduction' clause.
+end_comment
+
+begin_comment
+comment|/// \param PrivateScope Private scope for capturing reduction variables for
+end_comment
+
+begin_comment
+comment|/// proper codegen in internal captured statement.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_function_decl
+name|void
+name|EmitOMPReductionClauseInit
+parameter_list|(
+specifier|const
+name|OMPExecutableDirective
+modifier|&
+name|D
+parameter_list|,
+name|OMPPrivateScope
+modifier|&
+name|PrivateScope
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit final update of reduction values to original variables at
+end_comment
+
+begin_comment
+comment|/// the end of the directive.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param D Directive that has at least one 'reduction' directives.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitOMPReductionClauseFinal
+parameter_list|(
+specifier|const
+name|OMPExecutableDirective
+modifier|&
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit initial code for linear variables. Creates private copies
+end_comment
+
+begin_comment
+comment|/// and initializes them with the values according to OpenMP standard.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param D Directive (possibly) with the 'linear' clause.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitOMPLinearClauseInit
+parameter_list|(
+specifier|const
+name|OMPLoopDirective
+modifier|&
+name|D
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10492,6 +11225,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|EmitOMPTaskgroupDirective
+parameter_list|(
+specifier|const
+name|OMPTaskgroupDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|EmitOMPFlushDirective
 parameter_list|(
 specifier|const
@@ -10550,6 +11295,133 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|EmitOMPCancellationPointDirective
+parameter_list|(
+specifier|const
+name|OMPCancellationPointDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitOMPCancelDirective
+parameter_list|(
+specifier|const
+name|OMPCancelDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit inner loop of the worksharing/simd construct.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S Directive, for which the inner loop must be emitted.
+end_comment
+
+begin_comment
+comment|/// \param RequiresCleanup true, if directive has some associated private
+end_comment
+
+begin_comment
+comment|/// variables.
+end_comment
+
+begin_comment
+comment|/// \param LoopCond Bollean condition for loop continuation.
+end_comment
+
+begin_comment
+comment|/// \param IncExpr Increment expression for loop control variable.
+end_comment
+
+begin_comment
+comment|/// \param BodyGen Generator for the inner body of the inner loop.
+end_comment
+
+begin_comment
+comment|/// \param PostIncGen Genrator for post-increment code (required for ordered
+end_comment
+
+begin_comment
+comment|/// loop directvies).
+end_comment
+
+begin_decl_stmt
+name|void
+name|EmitOMPInnerLoop
+argument_list|(
+specifier|const
+name|Stmt
+operator|&
+name|S
+argument_list|,
+name|bool
+name|RequiresCleanup
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|LoopCond
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|IncExpr
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|void
+argument_list|(
+name|CodeGenFunction
+operator|&
+argument_list|)
+operator|>
+operator|&
+name|BodyGen
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|void
+argument_list|(
+name|CodeGenFunction
+operator|&
+argument_list|)
+operator|>
+operator|&
+name|PostIncGen
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|JumpDest
+name|getOMPCancelDestination
+parameter_list|(
+name|OpenMPDirectiveKind
+name|Kind
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_label
 name|private
 label|:
@@ -10566,33 +11438,22 @@ parameter_list|(
 specifier|const
 name|OMPLoopDirective
 modifier|&
-name|Directive
+name|D
 parameter_list|,
-name|bool
-name|SeparateIter
-init|=
-name|false
+name|JumpDest
+name|LoopExit
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|EmitOMPInnerLoop
+name|EmitOMPSimdInit
 parameter_list|(
 specifier|const
 name|OMPLoopDirective
 modifier|&
-name|S
-parameter_list|,
-name|OMPPrivateScope
-modifier|&
-name|LoopScope
-parameter_list|,
-name|bool
-name|SeparateIter
-init|=
-name|false
+name|D
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10604,17 +11465,97 @@ parameter_list|(
 specifier|const
 name|OMPLoopDirective
 modifier|&
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit code for the worksharing loop-based directive.
+end_comment
+
+begin_comment
+comment|/// \return true, if this construct has any lastprivate clause, false -
+end_comment
+
+begin_comment
+comment|/// otherwise.
+end_comment
+
+begin_function_decl
+name|bool
+name|EmitOMPWorksharingLoop
+parameter_list|(
+specifier|const
+name|OMPLoopDirective
+modifier|&
 name|S
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|void
-name|EmitOMPWorksharingLoop
-parameter_list|(
+name|EmitOMPForOuterLoop
+argument_list|(
+name|OpenMPScheduleClauseKind
+name|ScheduleKind
+argument_list|,
 specifier|const
 name|OMPLoopDirective
+operator|&
+name|S
+argument_list|,
+name|OMPPrivateScope
+operator|&
+name|LoopScope
+argument_list|,
+name|bool
+name|Ordered
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|LB
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|UB
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|ST
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|IL
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Chunk
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Emit code for sections directive.
+end_comment
+
+begin_function_decl
+name|OpenMPDirectiveKind
+name|EmitSections
+parameter_list|(
+specifier|const
+name|OMPExecutableDirective
 modifier|&
 name|S
 parameter_list|)
@@ -10843,17 +11784,41 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|bool
+name|LValueIsSuitableForInlineAtomic
+parameter_list|(
+name|LValue
+name|Src
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|bool
+name|typeIsSuitableForInlineAtomic
+argument_list|(
+name|QualType
+name|Ty
+argument_list|,
+name|bool
+name|IsVolatile
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|RValue
 name|EmitAtomicLoad
 parameter_list|(
 name|LValue
-name|lvalue
+name|LV
 parameter_list|,
 name|SourceLocation
-name|loc
+name|SL
 parameter_list|,
 name|AggValueSlot
-name|slot
+name|Slot
 init|=
 name|AggValueSlot
 operator|::
@@ -10862,6 +11827,37 @@ argument_list|()
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|RValue
+name|EmitAtomicLoad
+argument_list|(
+name|LValue
+name|lvalue
+argument_list|,
+name|SourceLocation
+name|loc
+argument_list|,
+name|llvm
+operator|::
+name|AtomicOrdering
+name|AO
+argument_list|,
+name|bool
+name|IsVolatile
+operator|=
+name|false
+argument_list|,
+name|AggValueSlot
+name|slot
+operator|=
+name|AggValueSlot
+operator|::
+name|ignored
+argument_list|()
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -10879,6 +11875,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|void
+name|EmitAtomicStore
+argument_list|(
+name|RValue
+name|rvalue
+argument_list|,
+name|LValue
+name|lvalue
+argument_list|,
+name|llvm
+operator|::
+name|AtomicOrdering
+name|AO
+argument_list|,
+name|bool
+name|IsVolatile
+argument_list|,
+name|bool
+name|isInit
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|std
 operator|::
@@ -10886,7 +11906,10 @@ name|pair
 operator|<
 name|RValue
 operator|,
-name|RValue
+name|llvm
+operator|::
+name|Value
+operator|*
 operator|>
 name|EmitAtomicCompareExchange
 argument_list|(
@@ -10908,6 +11931,37 @@ argument|AggValueSlot Slot = AggValueSlot::ignored()
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|EmitAtomicUpdate
+argument_list|(
+name|LValue
+name|LVal
+argument_list|,
+name|llvm
+operator|::
+name|AtomicOrdering
+name|AO
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|RValue
+argument_list|(
+name|RValue
+argument_list|)
+operator|>
+operator|&
+name|UpdateOp
+argument_list|,
+name|bool
+name|IsVolatile
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// EmitToMemory - Change a scalar value from its value
@@ -11314,7 +12368,7 @@ end_function_decl
 
 begin_decl_stmt
 name|LValue
-name|EmitScalarCompooundAssignWithComplex
+name|EmitScalarCompoundAssignWithComplex
 argument_list|(
 specifier|const
 name|CompoundAssignOperator
@@ -11696,7 +12750,7 @@ name|false
 argument_list|)
 return|;
 block|}
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -12929,76 +13983,11 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|emitVectorWrappedScalar8Intrinsic
-argument_list|(
-argument|unsigned Int
-argument_list|,
-argument|SmallVectorImpl<llvm::Value *>&Ops
-argument_list|,
-argument|const char *Name
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
-name|emitVectorWrappedScalar16Intrinsic
-argument_list|(
-argument|unsigned Int
-argument_list|,
-argument|SmallVectorImpl<llvm::Value *>&Ops
-argument_list|,
-argument|const char *Name
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
 name|EmitAArch64BuiltinExpr
 argument_list|(
 argument|unsigned BuiltinID
 argument_list|,
 argument|const CallExpr *E
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
-name|EmitNeon64Call
-argument_list|(
-name|llvm
-operator|::
-name|Function
-operator|*
-name|F
-argument_list|,
-name|llvm
-operator|::
-name|SmallVectorImpl
-operator|<
-name|llvm
-operator|::
-name|Value
-operator|*
-operator|>
-operator|&
-name|O
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|name
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -13055,7 +14044,35 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|EmitR600BuiltinExpr
+name|EmitAMDGPUBuiltinExpr
+argument_list|(
+argument|unsigned BuiltinID
+argument_list|,
+argument|const CallExpr *E
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitSystemZBuiltinExpr
+argument_list|(
+argument|unsigned BuiltinID
+argument_list|,
+argument|const CallExpr *E
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitNVPTXBuiltinExpr
 argument_list|(
 argument|unsigned BuiltinID
 argument_list|,
@@ -14834,7 +15851,7 @@ operator|::
 name|Value
 operator|*
 argument_list|,
-name|SanitizerKind
+name|SanitizerMask
 operator|>>
 name|Checked
 argument_list|,
@@ -14882,6 +15899,58 @@ name|Checked
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Emit a call to trap or debugtrap and attach function attribute
+end_comment
+
+begin_comment
+comment|/// "trap-func-name" if specified.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|CallInst
+operator|*
+name|EmitTrapCall
+argument_list|(
+argument|llvm::Intrinsic::ID IntrID
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Create a check for a function parameter that may potentially be
+end_comment
+
+begin_comment
+comment|/// declared as non-null.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitNonNullArgCheck
+parameter_list|(
+name|RValue
+name|RV
+parameter_list|,
+name|QualType
+name|ArgType
+parameter_list|,
+name|SourceLocation
+name|ArgLoc
+parameter_list|,
+specifier|const
+name|FunctionDecl
+modifier|*
+name|FD
+parameter_list|,
+name|unsigned
+name|ParmNum
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// EmitCallArg - Emit a single call argument.
@@ -15175,6 +16244,117 @@ name|public
 label|:
 end_label
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NDEBUG
+end_ifndef
+
+begin_comment
+comment|// Determine whether the given argument is an Objective-C method
+end_comment
+
+begin_comment
+comment|// that may have type parameters in its signature.
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|isObjCMethodWithTypeParams
+parameter_list|(
+specifier|const
+name|ObjCMethodDecl
+modifier|*
+name|method
+parameter_list|)
+block|{
+specifier|const
+name|DeclContext
+modifier|*
+name|dc
+init|=
+name|method
+operator|->
+name|getDeclContext
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+specifier|const
+name|ObjCInterfaceDecl
+modifier|*
+name|classDecl
+init|=
+name|dyn_cast
+operator|<
+name|ObjCInterfaceDecl
+operator|>
+operator|(
+name|dc
+operator|)
+condition|)
+block|{
+return|return
+name|classDecl
+operator|->
+name|getTypeParamListAsWritten
+argument_list|()
+return|;
+block|}
+if|if
+condition|(
+specifier|const
+name|ObjCCategoryDecl
+modifier|*
+name|catDecl
+init|=
+name|dyn_cast
+operator|<
+name|ObjCCategoryDecl
+operator|>
+operator|(
+name|dc
+operator|)
+condition|)
+block|{
+return|return
+name|catDecl
+operator|->
+name|getTypeParamList
+argument_list|()
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|static
+name|bool
+name|isObjCMethodWithTypeParams
+argument_list|(
+argument|const T *
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/// EmitCallArgs - Emit call arguments for a function.
 end_comment
@@ -15200,8 +16380,6 @@ argument|const FunctionDecl *CalleeDecl = nullptr
 argument_list|,
 argument|unsigned ParamsToSkip =
 literal|0
-argument_list|,
-argument|bool ForceColumnInfo = false
 argument_list|)
 block|{
 name|SmallVector
@@ -15237,6 +16415,19 @@ condition|(
 name|CallArgTypeInfo
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|bool
+name|isGenericMethod
+init|=
+name|isObjCMethodWithTypeParams
+argument_list|(
+name|CallArgTypeInfo
+argument_list|)
+decl_stmt|;
+endif|#
+directive|endif
 comment|// First, use the argument types that the type info knows about
 for|for
 control|(
@@ -15280,12 +16471,26 @@ expr_stmt|;
 name|assert
 argument_list|(
 operator|(
+name|isGenericMethod
+operator|||
+operator|(
 operator|(
 operator|*
 name|I
 operator|)
 operator|->
 name|isVariablyModifiedType
+argument_list|()
+operator|||
+operator|(
+operator|*
+name|I
+operator|)
+operator|.
+name|getNonReferenceType
+argument_list|()
+operator|->
+name|isObjCRetainableType
 argument_list|()
 operator|||
 name|getContext
@@ -15318,6 +16523,7 @@ argument_list|)
 operator|.
 name|getTypePtr
 argument_list|()
+operator|)
 operator|)
 operator|&&
 literal|"type mismatch in call argument!"
@@ -15407,8 +16613,6 @@ argument_list|,
 name|CalleeDecl
 argument_list|,
 name|ParamsToSkip
-argument_list|,
-name|ForceColumnInfo
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -15429,8 +16633,6 @@ argument|const FunctionDecl *CalleeDecl = nullptr
 argument_list|,
 argument|unsigned ParamsToSkip =
 literal|0
-argument_list|,
-argument|bool ForceColumnInfo = false
 argument_list|)
 end_macro
 

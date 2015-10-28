@@ -66,9 +66,7 @@ name|FirstTargetFixupKind
 block|,
 name|FK_390_PC32DBL
 block|,
-name|FK_390_PLT16DBL
-block|,
-name|FK_390_PLT32DBL
+name|FK_390_TLS_CALL
 block|,
 comment|// Marker
 name|LastTargetFixupKind

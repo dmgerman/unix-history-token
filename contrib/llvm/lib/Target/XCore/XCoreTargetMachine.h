@@ -98,7 +98,7 @@ name|XCoreTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|StringRef CPU
 argument_list|,
@@ -124,6 +124,20 @@ operator|*
 name|getSubtargetImpl
 argument_list|()
 specifier|const
+block|{
+return|return
+operator|&
+name|Subtarget
+return|;
+block|}
+specifier|const
+name|XCoreSubtarget
+operator|*
+name|getSubtargetImpl
+argument_list|(
+argument|const Function&
+argument_list|)
+specifier|const
 name|override
 block|{
 return|return
@@ -140,11 +154,9 @@ argument|PassManagerBase&PM
 argument_list|)
 name|override
 block|;
-name|void
-name|addAnalysisPasses
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|)
+name|TargetIRAnalysis
+name|getTargetIRAnalysis
+argument_list|()
 name|override
 block|;
 name|TargetLoweringObjectFile

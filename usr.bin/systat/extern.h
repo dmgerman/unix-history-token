@@ -1236,5 +1236,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|SYSTAT_CMD
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|void	 close ## name(WINDOW *); \ 	void	 fetch ## name(void); \ 	int	 init ## name(void); \ 	void	 label ## name(void); \ 	WINDOW	*open ## name(void); \ 	void	 reset ## name(void); \ 	void	 show ## name(void)
+end_define
+
+begin_expr_stmt
+name|SYSTAT_CMD
+argument_list|(
+name|zarc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSTAT_CMD
+argument_list|(
+name|sctp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 

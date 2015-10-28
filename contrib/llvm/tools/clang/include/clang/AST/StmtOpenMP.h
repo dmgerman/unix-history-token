@@ -319,6 +319,8 @@ operator|>
 name|class
 name|filtered_clause_iterator
 block|{
+name|protected
+operator|:
 name|ArrayRef
 operator|<
 name|OMPClause
@@ -403,7 +405,7 @@ argument_list|)
 block|,
 name|Pred
 argument_list|(
-argument|Pred
+argument|std::move(Pred)
 argument_list|)
 block|{
 name|SkipToNextClause
@@ -487,6 +489,7 @@ operator|==
 name|End
 return|;
 block|}
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -497,8 +500,100 @@ operator|!=
 name|End
 return|;
 block|}
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Current
+operator|==
+name|End
+return|;
+block|}
 block|}
 empty_stmt|;
+name|template
+operator|<
+name|typename
+name|Fn
+operator|>
+name|filtered_clause_iterator
+operator|<
+name|Fn
+operator|>
+name|getFilteredClauses
+argument_list|(
+argument|Fn&&fn
+argument_list|)
+specifier|const
+block|{
+return|return
+name|filtered_clause_iterator
+operator|<
+name|Fn
+operator|>
+operator|(
+name|clauses
+argument_list|()
+operator|,
+name|std
+operator|::
+name|move
+argument_list|(
+name|fn
+argument_list|)
+operator|)
+return|;
+block|}
+struct|struct
+name|ClauseKindFilter
+block|{
+name|OpenMPClauseKind
+name|Kind
+decl_stmt|;
+name|bool
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|OMPClause
+operator|*
+name|clause
+operator|)
+specifier|const
+block|{
+return|return
+name|clause
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|Kind
+return|;
+block|}
+block|}
+struct|;
+name|filtered_clause_iterator
+operator|<
+name|ClauseKindFilter
+operator|>
+name|getClausesOfKind
+argument_list|(
+argument|OpenMPClauseKind Kind
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getFilteredClauses
+argument_list|(
+name|ClauseKindFilter
+block|{
+name|Kind
+block|}
+argument_list|)
+return|;
+block|}
 comment|/// \brief Gets a single clause of the specified kind \a K associated with the
 comment|/// current directive iff there is only one clause of this kind (and assertion
 comment|/// is fired if there is more than one clause is associated with the
@@ -972,59 +1067,55 @@ name|CondOffset
 operator|=
 literal|5
 block|,
-name|SeparatedCondOffset
+name|InitOffset
 operator|=
 literal|6
 block|,
-name|InitOffset
-operator|=
-literal|7
-block|,
 name|IncOffset
 operator|=
-literal|8
+literal|7
 block|,
 comment|// The '...End' enumerators do not correspond to child expressions - they
 comment|// specify the offset to the end (and start of the following counters/
 comment|// updates/finals arrays).
 name|DefaultEnd
 operator|=
-literal|9
+literal|8
 block|,
 comment|// The following 7 exprs are used by worksharing loops only.
 name|IsLastIterVariableOffset
 operator|=
-literal|9
+literal|8
 block|,
 name|LowerBoundVariableOffset
 operator|=
-literal|10
+literal|9
 block|,
 name|UpperBoundVariableOffset
 operator|=
-literal|11
+literal|10
 block|,
 name|StrideVariableOffset
 operator|=
-literal|12
+literal|11
 block|,
 name|EnsureUpperBoundOffset
 operator|=
-literal|13
+literal|12
 block|,
 name|NextLowerBoundOffset
 operator|=
-literal|14
+literal|13
 block|,
 name|NextUpperBoundOffset
 operator|=
-literal|15
+literal|14
 block|,
 comment|// Offset to the end (and start of the following counters/updates/finals
 comment|// arrays) for worksharing loop directives.
 name|WorksharingEnd
 operator|=
-literal|16
+literal|15
 block|,   }
 block|;
 comment|/// \brief Get the counters storage.
@@ -1088,6 +1179,59 @@ operator|<
 name|Expr
 operator|*
 operator|>
+name|getInits
+argument_list|()
+block|{
+name|Expr
+operator|*
+operator|*
+name|Storage
+operator|=
+name|reinterpret_cast
+operator|<
+name|Expr
+operator|*
+operator|*
+operator|>
+operator|(
+operator|&
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|getArraysOffset
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|+
+name|CollapsedNum
+argument_list|)
+operator|)
+block|;
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|Storage
+expr|,
+name|CollapsedNum
+operator|)
+return|;
+block|}
+comment|/// \brief Get the updates storage.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
 name|getUpdates
 argument_list|()
 block|{
@@ -1118,6 +1262,8 @@ name|getDirectiveKind
 argument_list|()
 argument_list|)
 operator|+
+literal|2
+operator|*
 name|CollapsedNum
 argument_list|)
 operator|)
@@ -1171,7 +1317,7 @@ name|getDirectiveKind
 argument_list|()
 argument_list|)
 operator|+
-literal|2
+literal|3
 operator|*
 name|CollapsedNum
 argument_list|)
@@ -1291,11 +1437,11 @@ argument_list|(
 name|Kind
 argument_list|)
 operator|+
-literal|3
+literal|4
 operator|*
 name|CollapsedNum
 return|;
-comment|// Counters, Updates and Finals
+comment|// Counters, Inits, Updates and Finals
 block|}
 name|void
 name|setIterationVariable
@@ -1377,8 +1523,6 @@ name|void
 name|setCond
 argument_list|(
 argument|Expr *Cond
-argument_list|,
-argument|Expr *SeparatedCond
 argument_list|)
 block|{
 operator|*
@@ -1393,19 +1537,6 @@ name|CondOffset
 argument_list|)
 operator|=
 name|Cond
-block|;
-operator|*
-name|std
-operator|::
-name|next
-argument_list|(
-name|child_begin
-argument_list|()
-argument_list|,
-name|SeparatedCondOffset
-argument_list|)
-operator|=
-name|SeparatedCond
 block|;   }
 name|void
 name|setInit
@@ -1667,6 +1798,17 @@ name|A
 argument_list|)
 block|;
 name|void
+name|setInits
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|A
+argument_list|)
+block|;
+name|void
 name|setUpdates
 argument_list|(
 name|ArrayRef
@@ -1705,6 +1847,11 @@ name|Expr
 operator|*
 name|LastIteration
 block|;
+comment|/// \brief Loop number of iterations.
+name|Expr
+operator|*
+name|NumIterations
+block|;
 comment|/// \brief Calculation of last iteration.
 name|Expr
 operator|*
@@ -1719,11 +1866,6 @@ comment|/// \brief Loop condition.
 name|Expr
 operator|*
 name|Cond
-block|;
-comment|/// \brief A condition with 1 iteration separated.
-name|Expr
-operator|*
-name|SeparatedCond
 block|;
 comment|/// \brief Loop iteration variable init.
 name|Expr
@@ -1780,6 +1922,16 @@ literal|4
 operator|>
 name|Counters
 block|;
+comment|/// \brief Expressions for loop counters inits for CodeGen.
+name|SmallVector
+operator|<
+name|Expr
+operator|*
+block|,
+literal|4
+operator|>
+name|Inits
+block|;
 comment|/// \brief Expressions for loop counters update for CodeGen.
 name|SmallVector
 operator|<
@@ -1815,15 +1967,15 @@ name|LastIteration
 operator|!=
 name|nullptr
 operator|&&
+name|NumIterations
+operator|!=
+name|nullptr
+operator|&&
 name|PreCond
 operator|!=
 name|nullptr
 operator|&&
 name|Cond
-operator|!=
-name|nullptr
-operator|&&
-name|SeparatedCond
 operator|!=
 name|nullptr
 operator|&&
@@ -1861,10 +2013,6 @@ operator|=
 name|nullptr
 block|;
 name|Cond
-operator|=
-name|nullptr
-block|;
-name|SeparatedCond
 operator|=
 name|nullptr
 block|;
@@ -1911,6 +2059,13 @@ argument_list|(
 name|Size
 argument_list|)
 block|;
+name|Inits
+operator|.
+name|resize
+argument_list|(
+name|Size
+argument_list|)
+block|;
 name|Updates
 operator|.
 name|resize
@@ -1941,6 +2096,13 @@ name|i
 control|)
 block|{
 name|Counters
+index|[
+name|i
+index|]
+operator|=
+name|nullptr
+expr_stmt|;
+name|Inits
 index|[
 name|i
 index|]
@@ -2114,9 +2276,7 @@ block|}
 name|Expr
 operator|*
 name|getCond
-argument_list|(
-argument|bool SeparateIter
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -2141,13 +2301,7 @@ argument_list|(
 name|child_begin
 argument_list|()
 argument_list|,
-operator|(
-name|SeparateIter
-operator|?
-name|SeparatedCondOffset
-operator|:
 name|CondOffset
-operator|)
 argument_list|)
 operator|)
 operator|)
@@ -2642,6 +2796,42 @@ name|this
 operator|)
 operator|->
 name|getCounters
+argument_list|()
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|inits
+argument_list|()
+block|{
+return|return
+name|getInits
+argument_list|()
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|inits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|OMPLoopDirective
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getInits
 argument_list|()
 return|;
 block|}
@@ -4889,6 +5079,132 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief This represents '#pragma omp taskgroup' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp taskgroup
+comment|/// \endcode
+comment|///
+name|class
+name|OMPTaskgroupDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|///
+name|OMPTaskgroupDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTaskgroupDirectiveClass
+argument_list|,
+argument|OMPD_taskgroup
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+name|explicit
+name|OMPTaskgroupDirective
+argument_list|()
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+argument|this
+argument_list|,
+argument|OMPTaskgroupDirectiveClass
+argument_list|,
+argument|OMPD_taskgroup
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates directive.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param AssociatedStmt Statement, associated with the directive.
+comment|///
+specifier|static
+name|OMPTaskgroupDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|Stmt *AssociatedStmt
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive.
+comment|///
+comment|/// \param C AST context.
+comment|///
+specifier|static
+name|OMPTaskgroupDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|EmptyShell
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPTaskgroupDirectiveClass
+return|;
+block|}
+expr|}
+block|;
 comment|/// \brief This represents '#pragma omp flush' directive.
 comment|///
 comment|/// \code
@@ -5171,6 +5487,29 @@ name|friend
 name|class
 name|ASTStmtReader
 block|;
+comment|/// \brief Used for 'atomic update' or 'atomic capture' constructs. They may
+comment|/// have atomic expressions of forms
+comment|/// \code
+comment|/// x = x binop expr;
+comment|/// x = expr binop x;
+comment|/// \endcode
+comment|/// This field is true for the first form of the expression and false for the
+comment|/// second. Required for correct codegen of non-associative operations (like
+comment|///<< or>>).
+name|bool
+name|IsXLHSInRHSPart
+block|;
+comment|/// \brief Used for 'atomic update' or 'atomic capture' constructs. They may
+comment|/// have atomic expressions of forms
+comment|/// \code
+comment|/// v = x;<update x>;
+comment|///<update x>; v = x;
+comment|/// \endcode
+comment|/// This field is true for the first(postfix) form of the expression and false
+comment|/// otherwise.
+name|bool
+name|IsPostfixUpdate
+block|;
 comment|/// \brief Build directive with the given start and end location.
 comment|///
 comment|/// \param StartLoc Starting location of the directive kind.
@@ -5188,19 +5527,29 @@ argument_list|)
 operator|:
 name|OMPExecutableDirective
 argument_list|(
-argument|this
+name|this
 argument_list|,
-argument|OMPAtomicDirectiveClass
+name|OMPAtomicDirectiveClass
 argument_list|,
-argument|OMPD_atomic
+name|OMPD_atomic
 argument_list|,
-argument|StartLoc
+name|StartLoc
 argument_list|,
-argument|EndLoc
+name|EndLoc
 argument_list|,
-argument|NumClauses
+name|NumClauses
 argument_list|,
-literal|4
+literal|5
+argument_list|)
+block|,
+name|IsXLHSInRHSPart
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|IsPostfixUpdate
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// \brief Build an empty directive.
@@ -5215,19 +5564,31 @@ argument_list|)
 operator|:
 name|OMPExecutableDirective
 argument_list|(
-argument|this
+name|this
 argument_list|,
-argument|OMPAtomicDirectiveClass
+name|OMPAtomicDirectiveClass
 argument_list|,
-argument|OMPD_atomic
+name|OMPD_atomic
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
-argument|NumClauses
+name|NumClauses
 argument_list|,
-literal|4
+literal|5
+argument_list|)
+block|,
+name|IsXLHSInRHSPart
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|IsPostfixUpdate
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// \brief Set 'x' part of the associated expression/statement.
@@ -5248,6 +5609,28 @@ argument_list|)
 operator|=
 name|X
 block|; }
+comment|/// \brief Set helper expression of the form
+comment|/// 'OpaqueValueExpr(x) binop OpaqueValueExpr(expr)' or
+comment|/// 'OpaqueValueExpr(expr) binop OpaqueValueExpr(x)'.
+name|void
+name|setUpdateExpr
+argument_list|(
+argument|Expr *UE
+argument_list|)
+block|{
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+literal|2
+argument_list|)
+operator|=
+name|UE
+block|; }
 comment|/// \brief Set 'v' part of the associated expression/statement.
 name|void
 name|setV
@@ -5263,7 +5646,7 @@ argument_list|(
 name|child_begin
 argument_list|()
 argument_list|,
-literal|2
+literal|3
 argument_list|)
 operator|=
 name|V
@@ -5283,7 +5666,7 @@ argument_list|(
 name|child_begin
 argument_list|()
 argument_list|,
-literal|3
+literal|4
 argument_list|)
 operator|=
 name|E
@@ -5302,7 +5685,13 @@ comment|/// \param AssociatedStmt Statement, associated with the directive.
 comment|/// \param X 'x' part of the associated expression/statement.
 comment|/// \param V 'v' part of the associated expression/statement.
 comment|/// \param E 'expr' part of the associated expression/statement.
-comment|///
+comment|/// \param UE Helper expression of the form
+comment|/// 'OpaqueValueExpr(x) binop OpaqueValueExpr(expr)' or
+comment|/// 'OpaqueValueExpr(expr) binop OpaqueValueExpr(x)'.
+comment|/// \param IsXLHSInRHSPart true if \a UE has the first form and false if the
+comment|/// second.
+comment|/// \param IsPostfixUpdate true if original value of 'x' must be stored in
+comment|/// 'v', not an updated one.
 specifier|static
 name|OMPAtomicDirective
 operator|*
@@ -5323,6 +5712,12 @@ argument_list|,
 argument|Expr *V
 argument_list|,
 argument|Expr *E
+argument_list|,
+argument|Expr *UE
+argument_list|,
+argument|bool IsXLHSInRHSPart
+argument_list|,
+argument|bool IsPostfixUpdate
 argument_list|)
 block|;
 comment|/// \brief Creates an empty directive with the place for \a NumClauses
@@ -5390,6 +5785,82 @@ argument_list|)
 operator|)
 return|;
 block|}
+comment|/// \brief Get helper expression of the form
+comment|/// 'OpaqueValueExpr(x) binop OpaqueValueExpr(expr)' or
+comment|/// 'OpaqueValueExpr(expr) binop OpaqueValueExpr(x)'.
+name|Expr
+operator|*
+name|getUpdateExpr
+argument_list|()
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|Expr
+operator|>
+operator|(
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+literal|2
+argument_list|)
+operator|)
+return|;
+block|}
+specifier|const
+name|Expr
+operator|*
+name|getUpdateExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|Expr
+operator|>
+operator|(
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+literal|2
+argument_list|)
+operator|)
+return|;
+block|}
+comment|/// \brief Return true if helper update expression has form
+comment|/// 'OpaqueValueExpr(x) binop OpaqueValueExpr(expr)' and false if it has form
+comment|/// 'OpaqueValueExpr(expr) binop OpaqueValueExpr(x)'.
+name|bool
+name|isXLHSInRHSPart
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsXLHSInRHSPart
+return|;
+block|}
+comment|/// \brief Return true if 'v' expression must be updated to original value of
+comment|/// 'x', false if 'v' must be updated to the new value of 'x'.
+name|bool
+name|isPostfixUpdate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsPostfixUpdate
+return|;
+block|}
 comment|/// \brief Get 'v' part of the associated expression/statement.
 name|Expr
 operator|*
@@ -5410,7 +5881,7 @@ argument_list|(
 name|child_begin
 argument_list|()
 argument_list|,
-literal|2
+literal|3
 argument_list|)
 operator|)
 return|;
@@ -5436,7 +5907,7 @@ argument_list|(
 name|child_begin
 argument_list|()
 argument_list|,
-literal|2
+literal|3
 argument_list|)
 operator|)
 return|;
@@ -5461,7 +5932,7 @@ argument_list|(
 name|child_begin
 argument_list|()
 argument_list|,
-literal|3
+literal|4
 argument_list|)
 operator|)
 return|;
@@ -5487,7 +5958,7 @@ argument_list|(
 name|child_begin
 argument_list|()
 argument_list|,
-literal|3
+literal|4
 argument_list|)
 operator|)
 return|;
@@ -5784,6 +6255,332 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|OMPTeamsDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp cancellation point' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp cancellation point for
+comment|/// \endcode
+comment|///
+comment|/// In this example a cancellation point is created for innermost 'for' region.
+name|class
+name|OMPCancellationPointDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|OpenMPDirectiveKind
+name|CancelRegion
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|///
+name|OMPCancellationPointDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+name|this
+argument_list|,
+name|OMPCancellationPointDirectiveClass
+argument_list|,
+name|OMPD_cancellation_point
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|CancelRegion
+argument_list|(
+argument|OMPD_unknown
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+name|explicit
+name|OMPCancellationPointDirective
+argument_list|()
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+name|this
+argument_list|,
+name|OMPCancellationPointDirectiveClass
+argument_list|,
+name|OMPD_cancellation_point
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|CancelRegion
+argument_list|(
+argument|OMPD_unknown
+argument_list|)
+block|{}
+comment|/// \brief Set cancel region for current cancellation point.
+comment|/// \param CR Cancellation region.
+name|void
+name|setCancelRegion
+argument_list|(
+argument|OpenMPDirectiveKind CR
+argument_list|)
+block|{
+name|CancelRegion
+operator|=
+name|CR
+block|; }
+name|public
+operator|:
+comment|/// \brief Creates directive.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|///
+specifier|static
+name|OMPCancellationPointDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|OpenMPDirectiveKind CancelRegion
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive.
+comment|///
+comment|/// \param C AST context.
+comment|///
+specifier|static
+name|OMPCancellationPointDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|EmptyShell
+argument_list|)
+block|;
+comment|/// \brief Get cancellation region for the current cancellation point.
+name|OpenMPDirectiveKind
+name|getCancelRegion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CancelRegion
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPCancellationPointDirectiveClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents '#pragma omp cancel' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp cancel for
+comment|/// \endcode
+comment|///
+comment|/// In this example a cancel is created for innermost 'for' region.
+name|class
+name|OMPCancelDirective
+operator|:
+name|public
+name|OMPExecutableDirective
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|OpenMPDirectiveKind
+name|CancelRegion
+block|;
+comment|/// \brief Build directive with the given start and end location.
+comment|///
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending location of the directive.
+comment|///
+name|OMPCancelDirective
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+name|this
+argument_list|,
+name|OMPCancelDirectiveClass
+argument_list|,
+name|OMPD_cancel
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|CancelRegion
+argument_list|(
+argument|OMPD_unknown
+argument_list|)
+block|{}
+comment|/// \brief Build an empty directive.
+comment|///
+name|explicit
+name|OMPCancelDirective
+argument_list|()
+operator|:
+name|OMPExecutableDirective
+argument_list|(
+name|this
+argument_list|,
+name|OMPCancelDirectiveClass
+argument_list|,
+name|OMPD_cancel
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|CancelRegion
+argument_list|(
+argument|OMPD_unknown
+argument_list|)
+block|{}
+comment|/// \brief Set cancel region for current cancellation point.
+comment|/// \param CR Cancellation region.
+name|void
+name|setCancelRegion
+argument_list|(
+argument|OpenMPDirectiveKind CR
+argument_list|)
+block|{
+name|CancelRegion
+operator|=
+name|CR
+block|; }
+name|public
+operator|:
+comment|/// \brief Creates directive.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the directive kind.
+comment|/// \param EndLoc Ending Location of the directive.
+comment|///
+specifier|static
+name|OMPCancelDirective
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|OpenMPDirectiveKind CancelRegion
+argument_list|)
+block|;
+comment|/// \brief Creates an empty directive.
+comment|///
+comment|/// \param C AST context.
+comment|///
+specifier|static
+name|OMPCancelDirective
+operator|*
+name|CreateEmpty
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|EmptyShell
+argument_list|)
+block|;
+comment|/// \brief Get cancellation region for the current cancellation point.
+name|OpenMPDirectiveKind
+name|getCancelRegion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CancelRegion
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OMPCancelDirectiveClass
 return|;
 block|}
 expr|}

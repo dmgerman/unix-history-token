@@ -168,6 +168,10 @@ operator|::
 name|Error
 operator|&
 name|error
+argument_list|,
+specifier|const
+name|bool
+name|support_function_calls
 argument_list|)
 decl_stmt|;
 specifier|static
@@ -217,6 +221,12 @@ name|lldb
 operator|::
 name|addr_t
 name|stack_frame_top
+argument_list|,
+name|lldb_private
+operator|::
+name|ExecutionContext
+operator|&
+name|exe_ctx
 argument_list|)
 decl_stmt|;
 name|private

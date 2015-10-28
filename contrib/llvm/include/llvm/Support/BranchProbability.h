@@ -115,7 +115,7 @@ name|d
 operator|>
 literal|0
 operator|&&
-literal|"Denomiator cannot be 0!"
+literal|"Denominator cannot be 0!"
 argument_list|)
 block|;
 name|assert

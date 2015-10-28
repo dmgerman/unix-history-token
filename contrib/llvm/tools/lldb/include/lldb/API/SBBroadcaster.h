@@ -54,6 +54,7 @@ name|namespace
 name|lldb
 block|{
 name|class
+name|LLDB_API
 name|SBBroadcaster
 block|{
 name|public

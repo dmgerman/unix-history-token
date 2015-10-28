@@ -155,6 +155,14 @@ comment|/// The argument acts as if has been passed to CFMakeCollectable, which
 comment|/// transfers the object to the Garbage Collector under GC.
 name|MakeCollectable
 block|,
+comment|/// The argument is a pointer to a retain-counted object; on exit, the new
+comment|/// value of the pointer is a +0 value or NULL.
+name|UnretainedOutParameter
+block|,
+comment|/// The argument is a pointer to a retain-counted object; on exit, the new
+comment|/// value of the pointer is a +1 value or NULL.
+name|RetainedOutParameter
+block|,
 comment|/// The argument is treated as potentially escaping, meaning that
 comment|/// even when its reference count hits 0 it should be treated as still
 comment|/// possibly being alive as someone else *may* be holding onto the object.

@@ -904,13 +904,6 @@ modifier|*
 name|bss
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 specifier|static
 specifier|const
 name|u_int8_t
@@ -1014,7 +1007,7 @@ name|cip
 operator|->
 name|ic_cipher
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|ciphermap
 argument_list|)
@@ -1239,9 +1232,6 @@ operator|(
 name|ret
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -1268,13 +1258,6 @@ modifier|*
 name|rxkeyix
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 name|u_int
 name|i
 decl_stmt|,
@@ -1300,7 +1283,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|sc
 operator|->
@@ -1517,9 +1500,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -1546,13 +1526,6 @@ modifier|*
 name|rxkeyix
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 name|u_int
 name|i
 decl_stmt|,
@@ -1579,7 +1552,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|sc
 operator|->
@@ -1733,9 +1706,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -1762,13 +1732,6 @@ modifier|*
 name|rxkeyix
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 name|u_int
 name|i
 decl_stmt|,
@@ -1807,7 +1770,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|sc
 operator|->
@@ -1904,9 +1867,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -1946,9 +1906,7 @@ name|vap
 operator|->
 name|iv_ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 comment|/* 	 * Group key allocation must be handled specially for 	 * parts that do not support multicast key cache search 	 * functionality.  For those parts the key id must match 	 * the h/w key index so lookups find the right key.  On 	 * parts w/ the key search facility we install the sender's 	 * mac address (with the high bit set) and let the hardware 	 * find the key w/o using the key id.  This is preferred as 	 * it permits us to support multiple users for adhoc and/or 	 * multi-station operation. 	 */
 if|if
@@ -2167,9 +2125,7 @@ name|vap
 operator|->
 name|iv_ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|struct
 name|ath_hal
@@ -2379,13 +2335,6 @@ name|struct
 name|ieee80211_key
 modifier|*
 name|k
-parameter_list|,
-specifier|const
-name|u_int8_t
-name|mac
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
 parameter_list|)
 block|{
 name|struct
@@ -2397,9 +2346,7 @@ name|vap
 operator|->
 name|iv_ic
 operator|->
-name|ic_ifp
-operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 return|return
 name|ath_keyset

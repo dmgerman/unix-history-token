@@ -153,10 +153,6 @@ block|;
 name|DwarfRangesSection
 operator|=
 name|nullptr
-block|;
-name|DwarfMacroInfoSection
-operator|=
-name|nullptr
 block|;   }
 name|virtual
 operator|~
@@ -450,23 +446,7 @@ operator|::
 name|getMetadata
 argument_list|()
 argument_list|)
-block|;
-name|DwarfMacroInfoSection
-operator|=
-name|new
-name|NVPTXSection
-argument_list|(
-name|MCSection
-operator|::
-name|SV_ELF
-argument_list|,
-name|SectionKind
-operator|::
-name|getMetadata
-argument_list|()
-argument_list|)
 block|;   }
-specifier|const
 name|MCSection
 operator|*
 name|getSectionForConstant
@@ -482,7 +462,6 @@ return|return
 name|ReadOnlySection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|getExplicitSectionGlobal
@@ -502,7 +481,6 @@ return|return
 name|DataSection
 return|;
 block|}
-specifier|const
 name|MCSection
 operator|*
 name|SelectSectionForGlobal

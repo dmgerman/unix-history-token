@@ -109,23 +109,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VM_V_CACHE_MIN
+name|VM_OBSOLETE_7
 value|7
 end_define
 
 begin_comment
-comment|/* vm_cnt.v_cache_min */
+comment|/* unused, formerly v_cache_min */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VM_V_CACHE_MAX
+name|VM_OBSOLETE_8
 value|8
 end_define
 
 begin_comment
-comment|/* vm_cnt.v_cache_max */
+comment|/* unused, formerly v_cache_max */
 end_comment
 
 begin_define

@@ -93,6 +93,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 specifier|volatile
@@ -449,7 +455,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGALRM
 argument_list|,
@@ -463,7 +469,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGHUP
 argument_list|,
@@ -477,7 +483,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -491,7 +497,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGPIPE
 argument_list|,
@@ -505,7 +511,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -519,7 +525,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGTERM
 argument_list|,
@@ -533,7 +539,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -547,7 +553,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGTTIN
 argument_list|,
@@ -561,7 +567,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGTTOU
 argument_list|,
@@ -803,7 +809,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGALRM
 argument_list|,
@@ -816,7 +822,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGHUP
 argument_list|,
@@ -829,7 +835,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -842,7 +848,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -855,7 +861,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGPIPE
 argument_list|,
@@ -868,7 +874,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGTERM
 argument_list|,
@@ -881,7 +887,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -894,7 +900,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGTTIN
 argument_list|,
@@ -907,7 +913,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigaction
+name|__libc_sigaction
 argument_list|(
 name|SIGTTOU
 argument_list|,

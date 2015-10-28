@@ -336,6 +336,32 @@ comment|///     The stream to which to dump the object description.
 comment|///
 comment|/// @param[in] so_addr
 comment|///     The resolved section offset address.
+comment|///
+comment|/// @param[in] show_fullpaths
+comment|///     When printing file paths (with the Module), whether the
+comment|///     base name of the Module should be printed or the full path.
+comment|///
+comment|/// @param[in] show_module
+comment|///     Whether the module name should be printed followed by a
+comment|///     grave accent "`" character.
+comment|///
+comment|/// @param[in] show_inlined_frames
+comment|///     If a given pc is in inlined function(s), whether the inlined
+comment|///     functions should be printed on separate lines in addition to
+comment|///     the concrete function containing the pc.
+comment|///
+comment|/// @param[in] show_function_arguments
+comment|///     If false, this method will try to elide the function argument
+comment|///     types when printing the function name.  This may be ambiguous
+comment|///     for languages that have function overloading - but it may
+comment|///     make the "function name" too long to include all the argument
+comment|///     types.
+comment|///
+comment|/// @param[in] show_function_name
+comment|///     Normally this should be true - the function/symbol name should
+comment|///     be printed.  In disassembly formatting, where we want a format
+comment|///     like "<*+36>", this should be false and "*" will be printed
+comment|///     instead.
 comment|//------------------------------------------------------------------
 name|bool
 name|DumpStopContext
@@ -364,6 +390,9 @@ name|show_inlined_frames
 argument_list|,
 name|bool
 name|show_function_arguments
+argument_list|,
+name|bool
+name|show_function_name
 argument_list|)
 decl|const
 decl_stmt|;
@@ -636,6 +665,11 @@ modifier|*
 name|symbol
 decl_stmt|;
 comment|///< The Symbol for a given query
+name|Variable
+modifier|*
+name|variable
+decl_stmt|;
+comment|///< The global variable matching the given query
 block|}
 empty_stmt|;
 name|class

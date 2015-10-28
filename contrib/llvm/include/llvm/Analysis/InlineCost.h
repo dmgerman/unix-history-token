@@ -94,7 +94,7 @@ name|class
 name|Function
 decl_stmt|;
 name|class
-name|TargetTransformInfo
+name|TargetTransformInfoWrapperPass
 decl_stmt|;
 name|namespace
 name|InlineConstants
@@ -266,7 +266,7 @@ argument_list|)
 return|;
 block|}
 comment|/// \brief Test whether the inline cost is low enough for inlining.
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -358,10 +358,9 @@ range|:
 name|public
 name|CallGraphSCCPass
 block|{
-specifier|const
-name|TargetTransformInfo
+name|TargetTransformInfoWrapperPass
 operator|*
-name|TTI
+name|TTIWP
 block|;
 name|AssumptionCacheTracker
 operator|*
@@ -379,6 +378,7 @@ block|;
 operator|~
 name|InlineCostAnalysis
 argument_list|()
+name|override
 block|;
 comment|// Pass interface implementation.
 name|void

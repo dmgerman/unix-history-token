@@ -237,6 +237,16 @@ operator|*
 name|materializer
 argument_list|)
 block|;
+name|void
+name|InstallCodeGenerator
+argument_list|(
+name|clang
+operator|::
+name|ASTConsumer
+operator|*
+name|code_gen
+argument_list|)
+block|;
 comment|//------------------------------------------------------------------
 comment|/// [Used by ClangExpressionParser] For each variable that had an unknown
 comment|///     type at the beginning of parsing, determine its final type now.
@@ -665,27 +675,6 @@ operator|&
 name|decl_map
 argument_list|)
 operator|:
-name|m_exe_ctx
-argument_list|()
-block|,
-name|m_sym_ctx
-argument_list|()
-block|,
-name|m_persistent_vars
-argument_list|(
-name|NULL
-argument_list|)
-block|,
-name|m_enable_lookups
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|m_materializer
-argument_list|(
-name|NULL
-argument_list|)
-block|,
 name|m_decl_map
 argument_list|(
 argument|decl_map
@@ -738,10 +727,14 @@ comment|///< The symbol context to use in finding variables and types.
 name|ClangPersistentVariables
 operator|*
 name|m_persistent_vars
+operator|=
+name|nullptr
 block|;
 comment|///< The persistent variables for the process.
 name|bool
 name|m_enable_lookups
+operator|=
+name|false
 block|;
 comment|///< Set to true during parsing if we have found the first "$__lldb" name.
 name|TargetInfo
@@ -751,8 +744,19 @@ comment|///< Basic information about the target.
 name|Materializer
 operator|*
 name|m_materializer
+operator|=
+name|nullptr
 block|;
 comment|///< If non-NULL, the materializer to use when reporting used variables.
+name|clang
+operator|::
+name|ASTConsumer
+operator|*
+name|m_code_gen
+operator|=
+name|nullptr
+block|;
+comment|///< If non-NULL, a code generator that receives new top-level functions.
 name|private
 operator|:
 name|ClangExpressionDeclMap

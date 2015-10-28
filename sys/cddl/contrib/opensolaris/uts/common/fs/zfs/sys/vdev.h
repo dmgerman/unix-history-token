@@ -212,6 +212,15 @@ name|guid
 parameter_list|)
 function_decl|;
 specifier|extern
+name|int
+name|vdev_count_leaves
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
 name|void
 name|vdev_dtl_dirty
 parameter_list|(

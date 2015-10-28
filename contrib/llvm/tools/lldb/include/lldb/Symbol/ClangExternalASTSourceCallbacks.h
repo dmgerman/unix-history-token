@@ -305,7 +305,6 @@ block|{     }
 comment|//------------------------------------------------------------------
 comment|// clang::ExternalASTSource
 comment|//------------------------------------------------------------------
-name|virtual
 name|clang
 operator|::
 name|Decl
@@ -314,6 +313,7 @@ name|GetExternalDecl
 argument_list|(
 argument|uint32_t ID
 argument_list|)
+name|override
 block|{
 comment|// This method only needs to be implemented if the AST source ever
 comment|// passes back decl sets as VisibleDeclaration objects.
@@ -321,7 +321,6 @@ return|return
 literal|0
 return|;
 block|}
-name|virtual
 name|clang
 operator|::
 name|Stmt
@@ -330,6 +329,7 @@ name|GetExternalDeclStmt
 argument_list|(
 argument|uint64_t Offset
 argument_list|)
+name|override
 block|{
 comment|// This operation is meant to be used via a LazyOffsetPtr.  It only
 comment|// needs to be implemented if the AST source uses methods like
@@ -338,7 +338,6 @@ return|return
 literal|0
 return|;
 block|}
-name|virtual
 name|clang
 operator|::
 name|Selector
@@ -346,6 +345,7 @@ name|GetExternalSelector
 argument_list|(
 argument|uint32_t ID
 argument_list|)
+name|override
 block|{
 comment|// This operation only needs to be implemented if the AST source
 comment|// returns non-zero for GetNumKnownSelectors().
@@ -356,16 +356,15 @@ name|Selector
 argument_list|()
 return|;
 block|}
-name|virtual
 name|uint32_t
 name|GetNumExternalSelectors
 parameter_list|()
+function|override
 block|{
 return|return
 literal|0
 return|;
 block|}
-name|virtual
 name|clang
 operator|::
 name|CXXBaseSpecifier
@@ -374,6 +373,7 @@ name|GetExternalCXXBaseSpecifiers
 argument_list|(
 argument|uint64_t Offset
 argument_list|)
+name|override
 block|{
 return|return
 name|NULL
@@ -393,7 +393,6 @@ argument_list|)
 block|{
 return|return;
 block|}
-name|virtual
 name|clang
 operator|::
 name|ExternalLoadResult
@@ -403,8 +402,9 @@ argument|const clang::DeclContext *decl_ctx
 argument_list|,
 argument|bool (*isKindWeWant)(clang::Decl::Kind)
 argument_list|,
-argument|llvm::SmallVectorImpl<clang::Decl*>&decls
+argument|llvm::SmallVectorImpl<clang::Decl *>&decls
 argument_list|)
+name|override
 block|{
 comment|// This is used to support iterating through an entire lexical context,
 comment|// which isn't something the debugger should ever need to do.
@@ -414,7 +414,6 @@ operator|::
 name|ELR_Failure
 return|;
 block|}
-name|virtual
 name|bool
 name|FindExternalVisibleDeclsByName
 argument_list|(
@@ -430,8 +429,8 @@ operator|::
 name|DeclarationName
 name|decl_name
 argument_list|)
+name|override
 decl_stmt|;
-name|virtual
 name|void
 name|CompleteType
 argument_list|(
@@ -441,8 +440,8 @@ name|TagDecl
 operator|*
 name|tag_decl
 argument_list|)
+name|override
 decl_stmt|;
-name|virtual
 name|void
 name|CompleteType
 argument_list|(
@@ -452,6 +451,7 @@ name|ObjCInterfaceDecl
 operator|*
 name|objc_decl
 argument_list|)
+name|override
 decl_stmt|;
 name|bool
 name|layoutRecordType
@@ -520,6 +520,7 @@ operator|>
 operator|&
 name|VirtualBaseOffsets
 argument_list|)
+name|override
 decl_stmt|;
 name|void
 name|SetExternalSourceCallbacks

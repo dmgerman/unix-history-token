@@ -223,6 +223,15 @@ name|comm_timer
 modifier|*
 name|stat_timer
 decl_stmt|;
+comment|/** ratelimit for errors, time value */
+name|time_t
+name|err_limit_time
+decl_stmt|;
+comment|/** ratelimit for errors, packet count */
+name|unsigned
+name|int
+name|err_limit_count
+decl_stmt|;
 comment|/** random() table for this worker. */
 name|struct
 name|ub_randstate

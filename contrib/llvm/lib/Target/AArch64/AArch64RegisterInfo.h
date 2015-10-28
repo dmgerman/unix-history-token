@@ -76,12 +76,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|AArch64InstrInfo
-decl_stmt|;
-name|class
-name|AArch64Subtarget
-decl_stmt|;
-name|class
 name|MachineFunction
 decl_stmt|;
 name|class
@@ -89,6 +83,9 @@ name|RegScavenger
 decl_stmt|;
 name|class
 name|TargetRegisterClass
+decl_stmt|;
+name|class
+name|Triple
 decl_stmt|;
 name|struct
 name|AArch64RegisterInfo
@@ -99,28 +96,18 @@ block|{
 name|private
 operator|:
 specifier|const
-name|AArch64InstrInfo
-operator|*
-name|TII
-block|;
-specifier|const
-name|AArch64Subtarget
-operator|*
-name|STI
+name|Triple
+operator|&
+name|TT
 block|;
 name|public
 operator|:
 name|AArch64RegisterInfo
 argument_list|(
 specifier|const
-name|AArch64InstrInfo
-operator|*
-name|tii
-argument_list|,
-specifier|const
-name|AArch64Subtarget
-operator|*
-name|sti
+name|Triple
+operator|&
+name|TT
 argument_list|)
 block|;
 name|bool
@@ -138,7 +125,7 @@ name|MCPhysReg
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction *MF = nullptr
+argument|const MachineFunction *MF
 argument_list|)
 specifier|const
 name|override
@@ -148,6 +135,8 @@ name|uint32_t
 operator|*
 name|getCallPreservedMask
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|CallingConv::ID
 argument_list|)
 specifier|const
@@ -188,6 +177,8 @@ name|uint32_t
 operator|*
 name|getThisReturnPreservedMask
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|CallingConv::ID
 argument_list|)
 specifier|const
@@ -261,6 +252,8 @@ name|bool
 name|isFrameOffsetLegal
 argument_list|(
 argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned BaseReg
 argument_list|,
 argument|int64_t Offset
 argument_list|)
@@ -349,6 +342,22 @@ argument_list|(
 argument|const TargetRegisterClass *RC
 argument_list|,
 argument|MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|// Base pointer (stack realignment) support.
+name|bool
+name|canRealignStack
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|needsStackRealignment
+argument_list|(
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 name|override

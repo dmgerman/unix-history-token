@@ -32,50 +32,6 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MIUtilVariant.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMIUtilVariant interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Gotchas:     See CMIUtilVariant class description.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// Copyright:   None.
 end_comment
 
@@ -441,28 +397,28 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CDataObjectBase
-name|virtual
 operator|~
 name|CDataObject
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|CDataObjectBase
 operator|*
 name|CreateCopyOfSelf
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|GetIsDerivedClass
 argument_list|(
 argument|void
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Overrideable:
 name|private
@@ -481,12 +437,12 @@ comment|// Overridden:
 name|private
 operator|:
 comment|// From CDataObjectBase
-name|virtual
 name|void
 name|Destroy
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private

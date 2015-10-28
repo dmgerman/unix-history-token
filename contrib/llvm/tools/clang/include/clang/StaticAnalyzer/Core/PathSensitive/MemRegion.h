@@ -2226,7 +2226,6 @@ return|return
 name|AC
 return|;
 block|}
-name|virtual
 name|void
 name|dumpToStream
 argument_list|(
@@ -2688,7 +2687,7 @@ argument_list|)
 block|; }
 block|;
 comment|/// SymbolicRegion - A special, "non-concrete" region. Unlike other region
-comment|///  clases, SymbolicRegion represents a region that serves as an alias for
+comment|///  classes, SymbolicRegion represents a region that serves as an alias for
 comment|///  either a real region, a NULL pointer, etc.  It essentially is used to
 comment|///  map the concept of symbolic values into the domain of regions.  Symbolic
 comment|///  regions do not need to be typed.

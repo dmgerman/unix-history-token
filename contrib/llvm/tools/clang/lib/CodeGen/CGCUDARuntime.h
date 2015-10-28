@@ -69,6 +69,16 @@ end_define
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|class
+name|Function
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|clang
 block|{
 name|class
@@ -137,9 +147,10 @@ name|ReturnValueSlot
 name|ReturnValue
 parameter_list|)
 function_decl|;
+comment|/// Emits a kernel launch stub.
 name|virtual
 name|void
-name|EmitDeviceStubBody
+name|emitDeviceStub
 parameter_list|(
 name|CodeGenFunction
 modifier|&
@@ -152,6 +163,30 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// Constructs and returns a module initialization function or nullptr if it's
+comment|/// not needed. Must be called after all kernels have been emitted.
+name|virtual
+name|llvm
+operator|::
+name|Function
+operator|*
+name|makeModuleCtorFunction
+argument_list|()
+operator|=
+literal|0
+expr_stmt|;
+comment|/// Returns a module cleanup function or nullptr if it's not needed.
+comment|/// Must be called after ModuleCtorFunction
+name|virtual
+name|llvm
+operator|::
+name|Function
+operator|*
+name|makeModuleDtorFunction
+argument_list|()
+operator|=
+literal|0
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// Creates an instance of a CUDA runtime class.

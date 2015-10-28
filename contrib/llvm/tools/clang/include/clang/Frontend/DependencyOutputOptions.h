@@ -59,6 +59,16 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+comment|/// DependencyOutputFormat - Format for the compiler dependency file.
+name|enum
+name|class
+name|DependencyOutputFormat
+block|{
+name|Make
+operator|,
+name|NMake
+block|}
+empty_stmt|;
 comment|/// DependencyOutputOptions - Options for controlling the compiler dependency
 comment|/// file generation.
 name|class
@@ -104,6 +114,10 @@ range|:
 literal|1
 decl_stmt|;
 comment|///< Include module file dependencies.
+comment|/// The format for the dependency file.
+name|DependencyOutputFormat
+name|OutputFormat
+decl_stmt|;
 comment|/// The file to write dependency output to.
 name|std
 operator|::
@@ -171,6 +185,12 @@ expr_stmt|;
 name|IncludeModuleFiles
 operator|=
 literal|0
+expr_stmt|;
+name|OutputFormat
+operator|=
+name|DependencyOutputFormat
+operator|::
+name|Make
 expr_stmt|;
 block|}
 block|}

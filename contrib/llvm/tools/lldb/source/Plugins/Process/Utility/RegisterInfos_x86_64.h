@@ -70,11 +70,15 @@ parameter_list|(
 name|regname
 parameter_list|)
 define|\
-value|(LLVM_EXTENSION offsetof(FPR, xstate) + \      LLVM_EXTENSION offsetof(FXSAVE, regname))
+value|(LLVM_EXTENSION offsetof(UserArea, fpr) + \      LLVM_EXTENSION offsetof(FPR, xstate) + \      LLVM_EXTENSION offsetof(FXSAVE, regname))
 end_define
 
 begin_comment
 comment|// Computes the offset of the YMM register assembled from register halves.
+end_comment
+
+begin_comment
+comment|// Based on DNBArchImplX86_64.cpp from debugserver
 end_comment
 
 begin_define
@@ -82,10 +86,10 @@ define|#
 directive|define
 name|YMM_OFFSET
 parameter_list|(
-name|regname
+name|reg_index
 parameter_list|)
 define|\
-value|(LLVM_EXTENSION offsetof(YMM, regname))
+value|(LLVM_EXTENSION offsetof(UserArea, fpr) + \      LLVM_EXTENSION offsetof(FPR, xstate) + \      LLVM_EXTENSION offsetof(XSAVE, ymmh[0]) + \      (32 * reg_index))
 end_define
 
 begin_ifdef
@@ -139,6 +143,13 @@ define|#
 directive|define
 name|YMM_SIZE
 value|sizeof(YMMReg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DR_SIZE
+value|sizeof(((DBG*)NULL)->dr[0])
 end_define
 
 begin_comment
@@ -240,7 +251,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|{ #reg#i, NULL, YMM_SIZE, LLVM_EXTENSION YMM_OFFSET(reg[i]),                    \       eEncodingVector, eFormatVectorOfUInt8,                                        \       { gcc_dwarf_##reg##i##h_x86_64, gcc_dwarf_##reg##i##h_x86_64, LLDB_INVALID_REGNUM, gdb_##reg##i##h_x86_64, lldb_##reg##i##_x86_64 }, \       NULL, NULL }
+value|{ #reg#i, NULL, YMM_SIZE, LLVM_EXTENSION YMM_OFFSET(i),                         \       eEncodingVector, eFormatVectorOfUInt8,                                        \       { gcc_dwarf_##reg##i##h_x86_64, gcc_dwarf_##reg##i##h_x86_64, LLDB_INVALID_REGNUM, gdb_##reg##i##h_x86_64, lldb_##reg##i##_x86_64 }, \       NULL, NULL }
 end_define
 
 begin_define
@@ -1805,7 +1816,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|do {                                                                            \     g_register_infos[lldb_##reg##i##_i386].byte_offset = YMM_OFFSET(reg[i]);     \ } while(false);
+value|do {                                                                            \     g_register_infos[lldb_##reg##i##_i386].byte_offset = YMM_OFFSET(i);         \ } while(false);
 end_define
 
 begin_define

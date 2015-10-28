@@ -92,6 +92,18 @@ name|UnixSignals
 block|{
 name|public
 label|:
+specifier|static
+name|lldb
+operator|::
+name|UnixSignalsSP
+name|Create
+argument_list|(
+specifier|const
+name|ArchSpec
+operator|&
+name|arch
+argument_list|)
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------
@@ -259,6 +271,19 @@ name|current_signal
 argument_list|)
 decl|const
 decl_stmt|;
+name|int32_t
+name|GetNumSignals
+argument_list|()
+specifier|const
+expr_stmt|;
+name|int32_t
+name|GetSignalAtIndex
+argument_list|(
+name|int32_t
+name|index
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// We assume that the elements of this object are constant once it is constructed,
 comment|// since a process should never need to add or remove symbols as it runs.  So don't
 comment|// call these functions anywhere but the constructor of your subclass of UnixSignals or in
@@ -354,6 +379,7 @@ argument_list|()
 block|{}
 block|}
 struct|;
+name|virtual
 name|void
 name|Reset
 parameter_list|()
@@ -372,11 +398,29 @@ expr_stmt|;
 name|collection
 name|m_signals
 decl_stmt|;
-name|DISALLOW_COPY_AND_ASSIGN
-argument_list|(
+comment|// GDBRemote signals need to be copyable.
 name|UnixSignals
+argument_list|(
+specifier|const
+name|UnixSignals
+operator|&
+name|rhs
 argument_list|)
 expr_stmt|;
+specifier|const
+name|UnixSignals
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|UnixSignals
+operator|&
+name|rhs
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

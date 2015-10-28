@@ -318,7 +318,7 @@ name|bc_url
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|scratch_pool
 parameter_list|)
 block|{
 if|if
@@ -469,7 +469,7 @@ name|revnum
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|pool
+name|result_pool
 parameter_list|)
 block|{
 specifier|const
@@ -499,7 +499,7 @@ name|value
 condition|?
 name|apr_pstrdup
 argument_list|(
-name|pool
+name|result_pool
 argument_list|,
 name|value
 argument_list|)

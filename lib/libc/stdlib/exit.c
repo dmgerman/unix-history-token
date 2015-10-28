@@ -119,11 +119,9 @@ begin_function
 name|void
 name|exit
 parameter_list|(
-name|status
-parameter_list|)
 name|int
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Ensure that the auto-initialization routine is linked in: */
 specifier|extern

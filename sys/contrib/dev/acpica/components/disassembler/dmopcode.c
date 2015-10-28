@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/include/acdisasm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<contrib/dev/acpica/include/acinterp.h>
 end_include
 
@@ -54,12 +48,6 @@ include|#
 directive|include
 file|<contrib/dev/acpica/include/acdebug.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DISASSEMBLER
-end_ifdef
 
 begin_define
 define|#
@@ -2515,15 +2503,6 @@ break|break;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_DISASSEMBLER */
-end_comment
 
 end_unit
 

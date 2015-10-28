@@ -864,7 +864,7 @@ value|(((pmap) == kernel_pmap) ? PTBL_HOLD : PTBL_UNHOLD)
 end_define
 
 begin_comment
-comment|/*  * Page Table Entry definitions and macros.  */
+comment|/*  * Page Table Entry definitions and macros.  *  * RPN need only be 32-bit because Book-E has 36-bit addresses, and the smallest  * page size is 4k (12-bit mask), so RPN can really fit into 24 bits.  */
 end_comment
 
 begin_ifndef
@@ -877,7 +877,7 @@ begin_struct
 struct|struct
 name|pte
 block|{
-name|vm_paddr_t
+name|vm_offset_t
 name|rpn
 decl_stmt|;
 name|uint32_t
@@ -1186,11 +1186,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PTE_PA_SHIFT
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_RPN_FROM_PA
+parameter_list|(
+name|pa
+parameter_list|)
+value|((pa)>> PTE_PA_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PTE_PA
 parameter_list|(
 name|pte
 parameter_list|)
-value|((pte)->rpn& ~PTE_PA_MASK)
+value|((vm_paddr_t)((pte)->rpn)<< PTE_PA_SHIFT)
 end_define
 
 begin_define

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: dwarf_sections.c 3036 2014-05-05 19:19:31Z kaiwang27 $"
+literal|"$Id: dwarf_sections.c 3226 2015-06-23 13:00:16Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

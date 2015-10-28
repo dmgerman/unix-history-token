@@ -44,6 +44,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NGM_PPPOE_SETMAXP_COOKIE
+value|1441624322
+end_define
+
+begin_define
+define|#
+directive|define
 name|PPPOE_SERVICE_NAME_SIZE
 value|64
 end_define
@@ -179,6 +186,10 @@ init|=
 literal|14
 block|,
 comment|/* set Ethernet address */
+name|NGM_PPPOE_SETMAXP
+init|=
+literal|15
+comment|/* Set PPP-Max-Payload value */
 block|}
 enum|;
 end_enum
@@ -286,6 +297,28 @@ directive|define
 name|NG_PPPOE_STS_TYPE_INFO
 value|{		\ 	  { "hook",&ng_parse_hookbuf_type	},	\ 	  { NULL }					\ }
 end_define
+
+begin_comment
+comment|/*  * This structure is used to send PPP-Max-Payload value from server to client.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ngpppoe_maxp
+block|{
+name|char
+name|hook
+index|[
+name|NG_HOOKSIZ
+index|]
+decl_stmt|;
+comment|/* hook associated with event session */
+name|uint16_t
+name|data
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/********************************************************************  * Constants and definitions specific to pppoe  ********************************************************************/
@@ -714,6 +747,21 @@ name|data
 index|[
 name|PPPOE_SERVICE_NAME_SIZE
 index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|maxptag
+block|{
+name|struct
+name|pppoe_tag
+name|hdr
+decl_stmt|;
+name|uint16_t
+name|data
 decl_stmt|;
 block|}
 struct|;

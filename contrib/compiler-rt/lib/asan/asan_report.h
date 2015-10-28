@@ -115,53 +115,24 @@ name|region_kind
 decl_stmt|;
 block|}
 struct|;
-comment|// The following functions prints address description depending
-comment|// on the memory type (shadow/heap/stack/global).
-name|void
-name|DescribeHeapAddress
+comment|// Returns the number of globals close to the provided address and copies
+comment|// them to "globals" array.
+name|int
+name|GetGlobalsForAddress
 parameter_list|(
 name|uptr
 name|addr
 parameter_list|,
-name|uptr
-name|access_size
-parameter_list|)
-function_decl|;
-name|bool
-name|DescribeAddressIfGlobal
-parameter_list|(
-name|uptr
-name|addr
-parameter_list|,
-name|uptr
-name|access_size
-parameter_list|)
-function_decl|;
-name|bool
-name|DescribeAddressRelativeToGlobal
-parameter_list|(
-name|uptr
-name|addr
-parameter_list|,
-name|uptr
-name|access_size
-parameter_list|,
-specifier|const
 name|__asan_global
-modifier|&
-name|g
-parameter_list|)
-function_decl|;
-name|bool
-name|IsAddressNearGlobal
-parameter_list|(
-name|uptr
-name|addr
+modifier|*
+name|globals
 parameter_list|,
-specifier|const
-name|__asan_global
-modifier|&
-name|g
+name|u32
+modifier|*
+name|reg_sites
+parameter_list|,
+name|int
+name|max_globals
 parameter_list|)
 function_decl|;
 name|bool
@@ -173,6 +144,18 @@ parameter_list|,
 name|AddressDescription
 modifier|*
 name|descr
+parameter_list|)
+function_decl|;
+comment|// The following functions prints address description depending
+comment|// on the memory type (shadow/heap/stack/global).
+name|void
+name|DescribeHeapAddress
+parameter_list|(
+name|uptr
+name|addr
+parameter_list|,
+name|uptr
+name|access_size
 parameter_list|)
 function_decl|;
 name|bool
@@ -211,17 +194,6 @@ argument_list|)
 decl_stmt|;
 name|bool
 name|DescribeAddressIfStack
-parameter_list|(
-name|uptr
-name|addr
-parameter_list|,
-name|uptr
-name|access_size
-parameter_list|)
-function_decl|;
-comment|// Determines memory type on its own.
-name|void
-name|DescribeAddress
 parameter_list|(
 name|uptr
 name|addr

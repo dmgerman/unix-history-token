@@ -112,11 +112,7 @@ name|public
 operator|:
 name|explicit
 name|NVPTXInstrInfo
-argument_list|(
-name|NVPTXSubtarget
-operator|&
-name|STI
-argument_list|)
+argument_list|()
 block|;
 specifier|const
 name|NVPTXRegisterInfo
@@ -227,7 +223,7 @@ argument|MachineBasicBlock *TBB
 argument_list|,
 argument|MachineBasicBlock *FBB
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Cond
+argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|DebugLoc DL
 argument_list|)

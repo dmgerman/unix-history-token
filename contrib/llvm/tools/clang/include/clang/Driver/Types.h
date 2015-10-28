@@ -192,6 +192,14 @@ name|ID
 name|Id
 parameter_list|)
 function_decl|;
+comment|/// isCuda - Is this a CUDA input.
+name|bool
+name|isCuda
+parameter_list|(
+name|ID
+name|Id
+parameter_list|)
+function_decl|;
 comment|/// isObjC - Is this an "ObjC" input (Obj-C and Obj-C++ sources and headers).
 name|bool
 name|isObjC

@@ -251,9 +251,12 @@ name|private
 operator|:
 name|SCEV
 argument_list|(
-argument|const SCEV&
+specifier|const
+name|SCEV
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -263,7 +266,8 @@ specifier|const
 name|SCEV
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -274,12 +278,13 @@ comment|/// no-signed-wrap<NSW> properties, which are derived from the IR
 comment|/// operator. NSW is a misnomer that we use to mean no signed overflow or
 comment|/// underflow.
 comment|///
-comment|/// AddRec expression may have a no-self-wraparound<NW> property if the
-comment|/// result can never reach the start value. This property is independent of
-comment|/// the actual start value and step direction. Self-wraparound is defined
-comment|/// purely in terms of the recurrence's loop, step size, and
-comment|/// bitwidth. Formally, a recurrence with no self-wraparound satisfies:
-comment|/// abs(step) * max-iteration(loop)<= unsigned-max(bitwidth).
+comment|/// AddRec expressions may have a no-self-wraparound<NW> property if, in
+comment|/// the integer domain, abs(step) * max-iteration(loop)<=
+comment|/// unsigned-max(bitwidth).  This means that the recurrence will never reach
+comment|/// its start value if the step is non-zero.  Computing the same value on
+comment|/// each iteration is not considered wrapping, and recurrences with step = 0
+comment|/// are trivially<NW>.<NW> is independent of the sign of step and the
+comment|/// value the add recurrence starts with.
 comment|///
 comment|/// Note that NUW and NSW are also valid properties of a recurrence, and
 comment|/// either implies NW. For convenience, NW will be set for a recurrence
@@ -748,13 +753,6 @@ name|LoopInfo
 operator|*
 name|LI
 block|;
-comment|/// The DataLayout information for the target we are targeting.
-comment|///
-specifier|const
-name|DataLayout
-operator|*
-name|DL
-block|;
 comment|/// TLI - The target library information for the target we are targeting.
 comment|///
 name|TargetLibraryInfo
@@ -803,6 +801,11 @@ name|Value
 operator|*
 operator|>
 name|PendingLoopPredicates
+block|;
+comment|/// Set to true by isLoopBackedgeGuardedByCond when we're walking the set of
+comment|/// conditions dominating the backedge of a loop.
+name|bool
+name|WalkingBEDominatingConds
 block|;
 comment|/// ExitLimit - Information about the number of loop iterations for which a
 comment|/// loop exit's branch condition evaluates to the not-taken path.  This is a
@@ -1168,20 +1171,19 @@ operator|*
 block|,
 name|SmallVector
 operator|<
-name|std
-operator|::
-name|pair
+name|PointerIntPair
 operator|<
 specifier|const
 name|Loop
 operator|*
 block|,
+literal|2
+block|,
 name|LoopDisposition
 operator|>
 block|,
 literal|2
-operator|>
-expr|>
+operator|>>
 name|LoopDispositions
 block|;
 comment|/// computeLoopDisposition - Compute a LoopDisposition value.
@@ -1208,20 +1210,19 @@ operator|*
 block|,
 name|SmallVector
 operator|<
-name|std
-operator|::
-name|pair
+name|PointerIntPair
 operator|<
 specifier|const
 name|BasicBlock
 operator|*
 block|,
+literal|2
+block|,
 name|BlockDisposition
 operator|>
 block|,
 literal|2
-operator|>
-expr|>
+operator|>>
 name|BlockDispositions
 block|;
 comment|/// computeBlockDisposition - Compute a BlockDisposition value.
@@ -1239,7 +1240,7 @@ operator|*
 name|BB
 argument_list|)
 block|;
-comment|/// UnsignedRanges - Memoized results from getUnsignedRange
+comment|/// UnsignedRanges - Memoized results from getRange
 name|DenseMap
 operator|<
 specifier|const
@@ -1250,7 +1251,7 @@ name|ConstantRange
 operator|>
 name|UnsignedRanges
 block|;
-comment|/// SignedRanges - Memoized results from getSignedRange
+comment|/// SignedRanges - Memoized results from getRange
 name|DenseMap
 operator|<
 specifier|const
@@ -1261,17 +1262,47 @@ name|ConstantRange
 operator|>
 name|SignedRanges
 block|;
-comment|/// setUnsignedRange - Set the memoized unsigned range for the given SCEV.
+comment|/// RangeSignHint - Used to parameterize getRange
+block|enum
+name|RangeSignHint
+block|{
+name|HINT_RANGE_UNSIGNED
+block|,
+name|HINT_RANGE_SIGNED
+block|}
+block|;
+comment|/// setRange - Set the memoized range for the given SCEV.
 specifier|const
 name|ConstantRange
 operator|&
-name|setUnsignedRange
+name|setRange
 argument_list|(
 argument|const SCEV *S
+argument_list|,
+argument|RangeSignHint Hint
 argument_list|,
 argument|const ConstantRange&CR
 argument_list|)
 block|{
+name|DenseMap
+operator|<
+specifier|const
+name|SCEV
+operator|*
+block|,
+name|ConstantRange
+operator|>
+operator|&
+name|Cache
+operator|=
+name|Hint
+operator|==
+name|HINT_RANGE_UNSIGNED
+operator|?
+name|UnsignedRanges
+operator|:
+name|SignedRanges
+block|;
 name|std
 operator|::
 name|pair
@@ -1291,7 +1322,7 @@ name|bool
 operator|>
 name|Pair
 operator|=
-name|UnsignedRanges
+name|Cache
 operator|.
 name|insert
 argument_list|(
@@ -1328,73 +1359,15 @@ operator|->
 name|second
 return|;
 block|}
-comment|/// setUnsignedRange - Set the memoized signed range for the given SCEV.
-specifier|const
+comment|/// getRange - Determine the range for a particular SCEV.
 name|ConstantRange
-operator|&
-name|setSignedRange
+name|getRange
 argument_list|(
 argument|const SCEV *S
 argument_list|,
-argument|const ConstantRange&CR
-argument_list|)
-block|{
-name|std
-operator|::
-name|pair
-operator|<
-name|DenseMap
-operator|<
-specifier|const
-name|SCEV
-operator|*
-block|,
-name|ConstantRange
-operator|>
-operator|::
-name|iterator
-block|,
-name|bool
-operator|>
-name|Pair
-operator|=
-name|SignedRanges
-operator|.
-name|insert
-argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|S
-argument_list|,
-name|CR
-argument_list|)
+argument|RangeSignHint Hint
 argument_list|)
 block|;
-if|if
-condition|(
-operator|!
-name|Pair
-operator|.
-name|second
-condition|)
-name|Pair
-operator|.
-name|first
-operator|->
-name|second
-operator|=
-name|CR
-expr_stmt|;
-return|return
-name|Pair
-operator|.
-name|first
-operator|->
-name|second
-return|;
-block|}
 comment|/// createSCEV - We know that there is no SCEV for the specified value.
 comment|/// Analyze the expression.
 specifier|const
@@ -1721,6 +1694,24 @@ argument_list|,
 argument|const SCEV *FoundRHS
 argument_list|)
 block|;
+comment|/// isImpliedCondOperandsViaRanges - Test whether the condition described by
+comment|/// Pred, LHS, and RHS is true whenever the condition described by Pred,
+comment|/// FoundLHS, and FoundRHS is true.  Utility function used by
+comment|/// isImpliedCondOperands.
+name|bool
+name|isImpliedCondOperandsViaRanges
+argument_list|(
+argument|ICmpInst::Predicate Pred
+argument_list|,
+argument|const SCEV *LHS
+argument_list|,
+argument|const SCEV *RHS
+argument_list|,
+argument|const SCEV *FoundLHS
+argument_list|,
+argument|const SCEV *FoundRHS
+argument_list|)
+block|;
 comment|/// getConstantEvolutionLoopExitValue - If we know that the specified Phi is
 comment|/// in the header of its containing loop, we know the loop executes a
 comment|/// constant number of times, and the PHI node is just a recurrence
@@ -1776,6 +1767,35 @@ argument_list|(
 argument|const SCEV *S
 argument_list|)
 specifier|const
+block|;
+comment|// Return true if `ExtendOpTy`({`Start`,+,`Step`}) can be proved to be equal
+comment|// to {`ExtendOpTy`(`Start`),+,`ExtendOpTy`(`Step`)}.  This is equivalent to
+comment|// proving no signed (resp. unsigned) wrap in {`Start`,+,`Step`} if
+comment|// `ExtendOpTy` is `SCEVSignExtendExpr` (resp. `SCEVZeroExtendExpr`).
+comment|//
+name|template
+operator|<
+name|typename
+name|ExtendOpTy
+operator|>
+name|bool
+name|proveNoWrapByVaryingStart
+argument_list|(
+specifier|const
+name|SCEV
+operator|*
+name|Start
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|Step
+argument_list|,
+specifier|const
+name|Loop
+operator|*
+name|L
+argument_list|)
 block|;
 name|public
 operator|:
@@ -2257,6 +2277,26 @@ name|Flags
 argument_list|)
 return|;
 block|}
+comment|/// \brief Returns an expression for a GEP
+comment|///
+comment|/// \p PointeeType The type used as the basis for the pointer arithmetics
+comment|/// \p BaseExpr The expression for the pointer operand.
+comment|/// \p IndexExprs The expressions for the indices.
+comment|/// \p InBounds Whether the GEP is in bounds.
+specifier|const
+name|SCEV
+operator|*
+name|getGEPExpr
+argument_list|(
+argument|Type *PointeeType
+argument_list|,
+argument|const SCEV *BaseExpr
+argument_list|,
+argument|const SmallVectorImpl<const SCEV *>&IndexExprs
+argument_list|,
+argument|bool InBounds = false
+argument_list|)
+block|;
 specifier|const
 name|SCEV
 operator|*
@@ -2860,23 +2900,35 @@ comment|///
 name|ConstantRange
 name|getUnsignedRange
 argument_list|(
-specifier|const
-name|SCEV
-operator|*
-name|S
+argument|const SCEV *S
 argument_list|)
-block|;
+block|{
+return|return
+name|getRange
+argument_list|(
+name|S
+argument_list|,
+name|HINT_RANGE_UNSIGNED
+argument_list|)
+return|;
+block|}
 comment|/// getSignedRange - Determine the signed range for a particular SCEV.
 comment|///
 name|ConstantRange
 name|getSignedRange
 argument_list|(
-specifier|const
-name|SCEV
-operator|*
-name|S
+argument|const SCEV *S
 argument_list|)
-block|;
+block|{
+return|return
+name|getRange
+argument_list|(
+name|S
+argument_list|,
+name|HINT_RANGE_SIGNED
+argument_list|)
+return|;
+block|}
 comment|/// isKnownNegative - Test if the given expression is known to be negative.
 comment|///
 name|bool
@@ -3135,6 +3187,149 @@ argument_list|()
 specifier|const
 name|override
 block|;
+comment|/// Collect parametric terms occurring in step expressions.
+name|void
+name|collectParametricTerms
+argument_list|(
+specifier|const
+name|SCEV
+operator|*
+name|Expr
+argument_list|,
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|>
+operator|&
+name|Terms
+argument_list|)
+block|;
+comment|/// Return in Subscripts the access functions for each dimension in Sizes.
+name|void
+name|computeAccessFunctions
+argument_list|(
+specifier|const
+name|SCEV
+operator|*
+name|Expr
+argument_list|,
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|>
+operator|&
+name|Subscripts
+argument_list|,
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|>
+operator|&
+name|Sizes
+argument_list|)
+block|;
+comment|/// Split this SCEVAddRecExpr into two vectors of SCEVs representing the
+comment|/// subscripts and sizes of an array access.
+comment|///
+comment|/// The delinearization is a 3 step process: the first two steps compute the
+comment|/// sizes of each subscript and the third step computes the access functions
+comment|/// for the delinearized array:
+comment|///
+comment|/// 1. Find the terms in the step functions
+comment|/// 2. Compute the array size
+comment|/// 3. Compute the access function: divide the SCEV by the array size
+comment|///    starting with the innermost dimensions found in step 2. The Quotient
+comment|///    is the SCEV to be divided in the next step of the recursion. The
+comment|///    Remainder is the subscript of the innermost dimension. Loop over all
+comment|///    array dimensions computed in step 2.
+comment|///
+comment|/// To compute a uniform array size for several memory accesses to the same
+comment|/// object, one can collect in step 1 all the step terms for all the memory
+comment|/// accesses, and compute in step 2 a unique array shape. This guarantees
+comment|/// that the array shape will be the same across all memory accesses.
+comment|///
+comment|/// FIXME: We could derive the result of steps 1 and 2 from a description of
+comment|/// the array shape given in metadata.
+comment|///
+comment|/// Example:
+comment|///
+comment|/// A[][n][m]
+comment|///
+comment|/// for i
+comment|///   for j
+comment|///     for k
+comment|///       A[j+k][2i][5i] =
+comment|///
+comment|/// The initial SCEV:
+comment|///
+comment|/// A[{{{0,+,2*m+5}_i, +, n*m}_j, +, n*m}_k]
+comment|///
+comment|/// 1. Find the different terms in the step functions:
+comment|/// -> [2*m, 5, n*m, n*m]
+comment|///
+comment|/// 2. Compute the array size: sort and unique them
+comment|/// -> [n*m, 2*m, 5]
+comment|/// find the GCD of all the terms = 1
+comment|/// divide by the GCD and erase constant terms
+comment|/// -> [n*m, 2*m]
+comment|/// GCD = m
+comment|/// divide by GCD -> [n, 2]
+comment|/// remove constant terms
+comment|/// -> [n]
+comment|/// size of the array is A[unknown][n][m]
+comment|///
+comment|/// 3. Compute the access function
+comment|/// a. Divide {{{0,+,2*m+5}_i, +, n*m}_j, +, n*m}_k by the innermost size m
+comment|/// Quotient: {{{0,+,2}_i, +, n}_j, +, n}_k
+comment|/// Remainder: {{{0,+,5}_i, +, 0}_j, +, 0}_k
+comment|/// The remainder is the subscript of the innermost array dimension: [5i].
+comment|///
+comment|/// b. Divide Quotient: {{{0,+,2}_i, +, n}_j, +, n}_k by next outer size n
+comment|/// Quotient: {{{0,+,0}_i, +, 1}_j, +, 1}_k
+comment|/// Remainder: {{{0,+,2}_i, +, 0}_j, +, 0}_k
+comment|/// The Remainder is the subscript of the next array dimension: [2i].
+comment|///
+comment|/// The subscript of the outermost dimension is the Quotient: [j+k].
+comment|///
+comment|/// Overall, we have: A[][n][m], and the access function: A[j+k][2i][5i].
+name|void
+name|delinearize
+argument_list|(
+specifier|const
+name|SCEV
+operator|*
+name|Expr
+argument_list|,
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|>
+operator|&
+name|Subscripts
+argument_list|,
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|>
+operator|&
+name|Sizes
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|ElementSize
+argument_list|)
+block|;
 name|private
 operator|:
 comment|/// Compute the backedge taken count knowing the interval difference, the
@@ -3199,8 +3394,7 @@ name|SCEVUnknown
 operator|*
 name|FirstUnknown
 block|;   }
-expr_stmt|;
-block|}
+block|; }
 end_decl_stmt
 
 begin_endif

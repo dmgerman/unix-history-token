@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldns/rrdef.h"
+file|"sldns/rrdef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldns/str2wire.h"
+file|"sldns/str2wire.h"
 end_include
 
 begin_function

@@ -44,7 +44,7 @@ comment|// information such as unused register at any point in a machine basic b
 end_comment
 
 begin_comment
-comment|// It also provides a mechanism to make registers availbale by evicting them
+comment|// It also provides a mechanism to make registers available by evicting them
 end_comment
 
 begin_comment
@@ -134,8 +134,7 @@ expr_stmt|;
 name|unsigned
 name|NumRegUnits
 decl_stmt|;
-comment|/// Tracking - True if RegScavenger is currently tracking the liveness of
-comment|/// registers.
+comment|/// True if RegScavenger is currently tracking the liveness of registers.
 name|bool
 name|Tracking
 decl_stmt|;
@@ -190,8 +189,8 @@ literal|2
 operator|>
 name|Scavenged
 expr_stmt|;
-comment|/// RegUnitsAvailable - The current state of each reg unit immediatelly
-comment|/// before MBBI. One bit per register unit. If bit is not set it means any
+comment|/// The current state of each reg unit immediately before MBBI.
+comment|/// One bit per register unit. If bit is not set it means any
 comment|/// register containing that register unit is currently being used.
 name|BitVector
 name|RegUnitsAvailable
@@ -226,8 +225,7 @@ argument_list|(
 argument|false
 argument_list|)
 block|{}
-comment|/// enterBasicBlock - Start tracking liveness from the begin of the specific
-comment|/// basic block.
+comment|/// Start tracking liveness from the begin of the specific basic block.
 name|void
 name|enterBasicBlock
 argument_list|(
@@ -236,18 +234,18 @@ operator|*
 name|mbb
 argument_list|)
 expr_stmt|;
-comment|/// initRegState - allow resetting register state info for multiple
+comment|/// Allow resetting register state info for multiple
 comment|/// passes over/within the same function.
 name|void
 name|initRegState
 parameter_list|()
 function_decl|;
-comment|/// forward - Move the internal MBB iterator and update register states.
+comment|/// Move the internal MBB iterator and update register states.
 name|void
 name|forward
 parameter_list|()
 function_decl|;
-comment|/// forward - Move the internal MBB iterator and update register states until
+comment|/// Move the internal MBB iterator and update register states until
 comment|/// it has processed the specific iterator.
 name|void
 name|forward
@@ -309,7 +307,7 @@ name|unprocess
 argument_list|()
 expr_stmt|;
 block|}
-comment|/// skipTo - Move the internal MBB iterator but do not update register states.
+comment|/// Move the internal MBB iterator but do not update register states.
 name|void
 name|skipTo
 argument_list|(
@@ -350,7 +348,7 @@ return|return
 name|MBBI
 return|;
 block|}
-comment|/// isRegUsed - return if a specific register is currently used.
+comment|/// Return if a specific register is currently used.
 name|bool
 name|isRegUsed
 argument_list|(
@@ -364,8 +362,7 @@ name|true
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getRegsAvailable - Return all available registers in the register class
-comment|/// in Mask.
+comment|/// Return all available registers in the register class in Mask.
 name|BitVector
 name|getRegsAvailable
 parameter_list|(
@@ -375,7 +372,7 @@ modifier|*
 name|RC
 parameter_list|)
 function_decl|;
-comment|/// FindUnusedReg - Find a unused register of the specified register class.
+comment|/// Find an unused register of the specified register class.
 comment|/// Return 0 if none is found.
 name|unsigned
 name|FindUnusedReg
@@ -519,7 +516,7 @@ name|FrameIndex
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// scavengeRegister - Make a register of the specific register class
+comment|/// Make a register of the specific register class
 comment|/// available and do the appropriate bookkeeping. SPAdj is the stack
 comment|/// adjustment due to call frame, it's passed along to eliminateFrameIndex().
 comment|/// Returns the scavenged register.
@@ -563,8 +560,7 @@ name|SPAdj
 argument_list|)
 return|;
 block|}
-comment|/// setRegUsed - Tell the scavenger a register is used.
-comment|///
+comment|/// Tell the scavenger a register is used.
 name|void
 name|setRegUsed
 parameter_list|(
@@ -574,7 +570,7 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
-comment|/// isReserved - Returns true if a register is reserved. It is never "unused".
+comment|/// Returns true if a register is reserved. It is never "unused".
 name|bool
 name|isReserved
 argument_list|(
@@ -641,9 +637,8 @@ name|unsigned
 name|Reg
 parameter_list|)
 function_decl|;
-comment|/// findSurvivorReg - Return the candidate register that is unused for the
-comment|/// longest after StartMI. UseMI is set to the instruction where the search
-comment|/// stopped.
+comment|/// Return the candidate register that is unused for the longest after
+comment|/// StartMI. UseMI is set to the instruction where the search stopped.
 comment|///
 comment|/// No more than InstrLimit instructions are inspected.
 name|unsigned

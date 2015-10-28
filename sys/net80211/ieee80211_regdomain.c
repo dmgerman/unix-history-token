@@ -2405,7 +2405,7 @@ name|ieee80211_channel
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ieee80211_media_init
+name|ieee80211_chan_init
 argument_list|(
 name|ic
 argument_list|)

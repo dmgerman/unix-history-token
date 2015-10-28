@@ -80,7 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Target/Target.h"
+file|"lldb/Breakpoint/WatchpointOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Breakpoint/StoppointLocation.h"
 end_include
 
 begin_include
@@ -92,13 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Breakpoint/WatchpointOptions.h"
+file|"lldb/Symbol/ClangASTType.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Breakpoint/StoppointLocation.h"
+file|"lldb/Target/Target.h"
 end_include
 
 begin_decl_stmt
@@ -604,6 +610,25 @@ block|{
 name|m_hit_count
 operator|=
 literal|0
+expr_stmt|;
+block|}
+name|void
+name|ResetHistoricValues
+parameter_list|()
+block|{
+name|m_old_value_sp
+operator|.
+name|reset
+argument_list|(
+name|nullptr
+argument_list|)
+expr_stmt|;
+name|m_new_value_sp
+operator|.
+name|reset
+argument_list|(
+name|nullptr
+argument_list|)
 expr_stmt|;
 block|}
 name|Target

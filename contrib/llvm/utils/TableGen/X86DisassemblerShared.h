@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<cstring>
 end_include
 
 begin_include

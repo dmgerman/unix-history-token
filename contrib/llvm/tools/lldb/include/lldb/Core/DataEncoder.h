@@ -543,7 +543,6 @@ comment|//------------------------------------------------------------------
 name|uint32_t
 name|SetData
 argument_list|(
-specifier|const
 name|void
 operator|*
 name|bytes
@@ -736,7 +735,7 @@ operator|::
 name|DataBufferSP
 name|m_data_sp
 expr_stmt|;
-comment|///< The shared pointer to data that can be shared among multilple instances
+comment|///< The shared pointer to data that can be shared among multiple instances
 name|private
 label|:
 name|DISALLOW_COPY_AND_ASSIGN

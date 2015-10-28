@@ -31,12 +31,6 @@ directive|include
 file|<contrib/dev/acpica/include/acnamesp.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUGGER
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -276,7 +270,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"    Cache: [Depth    MaxD Avail  Size]                %8.2X %8.2X %8.2X %8.2X\n"
+literal|"    Cache: [Depth    MaxD Avail  Size]                "
+literal|"%8.2X %8.2X %8.2X %8.2X\n"
 argument_list|,
 name|List
 operator|->
@@ -320,7 +315,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"    Cache: [Requests Hits Misses ObjSize]             %8.2X %8.2X %8.2X %8.2X\n"
+literal|"    Cache: [Requests Hits Misses ObjSize]             "
+literal|"%8.2X %8.2X %8.2X %8.2X\n"
 argument_list|,
 name|List
 operator|->
@@ -360,7 +356,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"    Mem:   [Alloc    Free Max    CurSize Outstanding] %8.2X %8.2X %8.2X %8.2X %8.2X\n"
+literal|"    Mem:   [Alloc    Free Max    CurSize Outstanding] "
+literal|"%8.2X %8.2X %8.2X %8.2X %8.2X\n"
 argument_list|,
 name|List
 operator|->
@@ -388,7 +385,8 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"    Mem:   [Alloc Free Max CurSize Outstanding Total] %8.2X %8.2X %8.2X %8.2X %8.2X %8.2X\n"
+literal|"    Mem:   [Alloc Free Max CurSize Outstanding Total] "
+literal|"%8.2X %8.2X %8.2X %8.2X %8.2X %8.2X\n"
 argument_list|,
 name|List
 operator|->
@@ -1729,15 +1727,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_DEBUGGER  */
-end_comment
 
 end_unit
 

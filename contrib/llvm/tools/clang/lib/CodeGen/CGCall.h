@@ -603,12 +603,26 @@ operator|::
 name|Value
 operator|*
 operator|,
-literal|1
+literal|2
 operator|,
-name|bool
+name|unsigned
+name|int
 operator|>
 name|Value
 expr_stmt|;
+comment|// Return value slot flags
+enum|enum
+name|Flags
+block|{
+name|IS_VOLATILE
+init|=
+literal|0x1
+block|,
+name|IS_UNUSED
+init|=
+literal|0x2
+block|,     }
+enum|;
 name|public
 label|:
 name|ReturnValueSlot
@@ -619,13 +633,19 @@ argument_list|(
 argument|llvm::Value *Value
 argument_list|,
 argument|bool IsVolatile
+argument_list|,
+argument|bool IsUnused = false
 argument_list|)
 block|:
 name|Value
 argument_list|(
 argument|Value
 argument_list|,
-argument|IsVolatile
+argument|(IsVolatile ? IS_VOLATILE :
+literal|0
+argument|) | (IsUnused ? IS_UNUSED :
+literal|0
+argument|)
 argument_list|)
 block|{}
 name|bool
@@ -649,6 +669,8 @@ name|Value
 operator|.
 name|getInt
 argument_list|()
+operator|&
+name|IS_VOLATILE
 return|;
 block|}
 name|llvm
@@ -664,6 +686,20 @@ name|Value
 operator|.
 name|getPointer
 argument_list|()
+return|;
+block|}
+name|bool
+name|isUnused
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Value
+operator|.
+name|getInt
+argument_list|()
+operator|&
+name|IS_UNUSED
 return|;
 block|}
 block|}

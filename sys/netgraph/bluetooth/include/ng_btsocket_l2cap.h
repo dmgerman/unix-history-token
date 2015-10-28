@@ -462,6 +462,9 @@ name|u_int16_t
 name|cid
 decl_stmt|;
 comment|/* Local channel ID */
+name|uint8_t
+name|idtype
+decl_stmt|;
 name|u_int16_t
 name|flags
 decl_stmt|;
@@ -505,6 +508,10 @@ directive|define
 name|NG_BTSOCKET_L2CAP_DISCONNECTING
 value|4
 comment|/* wait for disconnect */
+define|#
+directive|define
+name|NG_BTSOCKET_L2CAP_W4_ENC_CHANGE
+value|5
 name|u_int8_t
 name|cfg_state
 decl_stmt|;
@@ -534,6 +541,9 @@ directive|define
 name|NG_BTSOCKET_L2CAP_CFG_OUT_SENT
 value|(1<< 3)
 comment|/* ---/--- */
+name|uint8_t
+name|encryption
+decl_stmt|;
 name|u_int16_t
 name|imtu
 decl_stmt|;
@@ -576,6 +586,10 @@ name|mtx
 name|pcb_mtx
 decl_stmt|;
 comment|/* pcb mutex */
+name|uint16_t
+name|need_encrypt
+decl_stmt|;
+comment|/*encryption needed*/
 name|LIST_ENTRY
 argument_list|(
 argument|ng_btsocket_l2cap_pcb

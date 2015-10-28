@@ -110,7 +110,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Metadata.h"
+file|"llvm/IR/DebugInfoMetadata.h"
 end_include
 
 begin_include
@@ -175,9 +175,9 @@ name|LexicalScope
 argument_list|(
 argument|LexicalScope *P
 argument_list|,
-argument|const MDNode *D
+argument|const DILocalScope *D
 argument_list|,
-argument|const MDNode *I
+argument|const DILocation *I
 argument_list|,
 argument|bool A
 argument_list|)
@@ -287,7 +287,7 @@ name|Desc
 return|;
 block|}
 specifier|const
-name|MDNode
+name|DILocation
 operator|*
 name|getInlinedAt
 argument_list|()
@@ -298,7 +298,7 @@ name|InlinedAtLocation
 return|;
 block|}
 specifier|const
-name|MDNode
+name|DILocalScope
 operator|*
 name|getScopeNode
 argument_list|()
@@ -596,13 +596,13 @@ name|Parent
 decl_stmt|;
 comment|// Parent to this scope.
 specifier|const
-name|MDNode
+name|DILocalScope
 modifier|*
 name|Desc
 decl_stmt|;
 comment|// Debug info descriptor.
 specifier|const
-name|MDNode
+name|DILocation
 modifier|*
 name|InlinedAtLocation
 decl_stmt|;
@@ -717,7 +717,9 @@ comment|/// DebugLoc.
 name|void
 name|getMachineBasicBlocks
 argument_list|(
-name|DebugLoc
+specifier|const
+name|DILocation
+operator|*
 name|DL
 argument_list|,
 name|SmallPtrSetImpl
@@ -735,7 +737,9 @@ comment|/// machine instruction's lexical scope in a given machine basic block.
 name|bool
 name|dominates
 parameter_list|(
-name|DebugLoc
+specifier|const
+name|DILocation
+modifier|*
 name|DL
 parameter_list|,
 name|MachineBasicBlock
@@ -749,7 +753,9 @@ name|LexicalScope
 modifier|*
 name|findLexicalScope
 parameter_list|(
-name|DebugLoc
+specifier|const
+name|DILocation
+modifier|*
 name|DL
 parameter_list|)
 function_decl|;
@@ -773,7 +779,7 @@ modifier|*
 name|findAbstractScope
 parameter_list|(
 specifier|const
-name|MDNode
+name|DILocalScope
 modifier|*
 name|N
 parameter_list|)
@@ -804,23 +810,62 @@ else|:
 name|nullptr
 return|;
 block|}
-comment|/// findInlinedScope - Find an inlined scope for the given DebugLoc or return
-comment|/// NULL.
+comment|/// findInlinedScope - Find an inlined scope for the given scope/inlined-at.
 name|LexicalScope
 modifier|*
 name|findInlinedScope
 parameter_list|(
-name|DebugLoc
-name|DL
+specifier|const
+name|DILocalScope
+modifier|*
+name|N
+parameter_list|,
+specifier|const
+name|DILocation
+modifier|*
+name|IA
 parameter_list|)
-function_decl|;
+block|{
+name|auto
+name|I
+init|=
+name|InlinedLexicalScopeMap
+operator|.
+name|find
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|N
+argument_list|,
+name|IA
+argument_list|)
+argument_list|)
+decl_stmt|;
+return|return
+name|I
+operator|!=
+name|InlinedLexicalScopeMap
+operator|.
+name|end
+argument_list|()
+condition|?
+operator|&
+name|I
+operator|->
+name|second
+else|:
+name|nullptr
+return|;
+block|}
 comment|/// findLexicalScope - Find regular lexical scope or return null.
 name|LexicalScope
 modifier|*
 name|findLexicalScope
 parameter_list|(
 specifier|const
-name|MDNode
+name|DILocalScope
 modifier|*
 name|N
 parameter_list|)
@@ -862,29 +907,68 @@ modifier|*
 name|getOrCreateAbstractScope
 parameter_list|(
 specifier|const
-name|MDNode
+name|DILocalScope
 modifier|*
-name|N
+name|Scope
 parameter_list|)
 function_decl|;
 name|private
 label|:
-comment|/// getOrCreateLexicalScope - Find lexical scope for the given DebugLoc. If
+comment|/// getOrCreateLexicalScope - Find lexical scope for the given Scope/IA. If
 comment|/// not available then create new lexical scope.
 name|LexicalScope
 modifier|*
 name|getOrCreateLexicalScope
 parameter_list|(
-name|DebugLoc
-name|DL
+specifier|const
+name|DILocalScope
+modifier|*
+name|Scope
+parameter_list|,
+specifier|const
+name|DILocation
+modifier|*
+name|IA
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
+name|LexicalScope
+modifier|*
+name|getOrCreateLexicalScope
+parameter_list|(
+specifier|const
+name|DILocation
+modifier|*
+name|DL
+parameter_list|)
+block|{
+return|return
+name|DL
+condition|?
+name|getOrCreateLexicalScope
+argument_list|(
+name|DL
+operator|->
+name|getScope
+argument_list|()
+argument_list|,
+name|DL
+operator|->
+name|getInlinedAt
+argument_list|()
+argument_list|)
+else|:
+name|nullptr
+return|;
+block|}
 comment|/// getOrCreateRegularScope - Find or create a regular lexical scope.
 name|LexicalScope
 modifier|*
 name|getOrCreateRegularScope
 parameter_list|(
-name|MDNode
+specifier|const
+name|DILocalScope
 modifier|*
 name|Scope
 parameter_list|)
@@ -894,11 +978,13 @@ name|LexicalScope
 modifier|*
 name|getOrCreateInlinedScope
 parameter_list|(
-name|MDNode
+specifier|const
+name|DILocalScope
 modifier|*
 name|Scope
 parameter_list|,
-name|MDNode
+specifier|const
+name|DILocation
 modifier|*
 name|InlinedAt
 parameter_list|)
@@ -973,7 +1059,7 @@ operator|::
 name|unordered_map
 operator|<
 specifier|const
-name|MDNode
+name|DILocalScope
 operator|*
 operator|,
 name|LexicalScope
@@ -991,11 +1077,11 @@ operator|::
 name|pair
 operator|<
 specifier|const
-name|MDNode
+name|DILocalScope
 operator|*
 operator|,
 specifier|const
-name|MDNode
+name|DILocation
 operator|*
 operator|>
 operator|,
@@ -1004,11 +1090,11 @@ operator|,
 name|pair_hash
 operator|<
 specifier|const
-name|MDNode
+name|DILocalScope
 operator|*
 operator|,
 specifier|const
-name|MDNode
+name|DILocation
 operator|*
 operator|>>
 name|InlinedLexicalScopeMap
@@ -1020,7 +1106,7 @@ operator|::
 name|unordered_map
 operator|<
 specifier|const
-name|MDNode
+name|DILocalScope
 operator|*
 operator|,
 name|LexicalScope

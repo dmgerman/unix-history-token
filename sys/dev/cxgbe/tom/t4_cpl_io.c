@@ -6046,7 +6046,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6255,7 +6255,7 @@ name|inp
 argument_list|)
 expr_stmt|;
 comment|/* safe, we have a ref on the inp */
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6300,7 +6300,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6473,7 +6473,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6572,7 +6572,7 @@ name|inp
 argument_list|)
 expr_stmt|;
 comment|/* safe, we have a ref on the  inp */
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -6664,7 +6664,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -7414,7 +7414,7 @@ name|toep
 operator|->
 name|inp
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -7565,7 +7565,7 @@ argument_list|)
 expr_stmt|;
 name|done
 label|:
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -8225,7 +8225,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -8254,7 +8254,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo

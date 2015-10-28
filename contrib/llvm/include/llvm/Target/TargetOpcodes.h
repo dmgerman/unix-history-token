@@ -215,12 +215,20 @@ name|STATEPOINT
 init|=
 literal|20
 block|,
-comment|/// Instruction that records the offset of a function's frame allocation in a
-comment|/// label. Created by the llvm.frameallocate intrinsic. It has two arguments:
-comment|/// the symbol for the label and the frame index of the stack allocation.
-name|FRAME_ALLOC
+comment|/// Instruction that records the offset of a local stack allocation passed to
+comment|/// llvm.localescape. It has two arguments: the symbol for the label and the
+comment|/// frame index of the local stack allocation.
+name|LOCAL_ESCAPE
 init|=
 literal|21
+block|,
+comment|/// Loading instruction that may page fault, bundled with associated
+comment|/// information on how to handle such a page fault.  It is intended to support
+comment|/// "zero cost" null checks in managed languages by allowing LLVM to fold
+comment|/// comparisions into existing memory operations.
+name|FAULTING_LOAD_OP
+init|=
+literal|22
 block|, }
 enum|;
 block|}

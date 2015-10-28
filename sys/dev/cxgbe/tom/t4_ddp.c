@@ -2011,6 +2011,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * For RX_DDP_COMPLETE, len will be zero and rcv_nxt is the 	 * sequence number of the next byte to receive.  The length of 	 * the data received for this message must be computed by 	 * comparing the new and old values of rcv_nxt. 	 *  	 * For RX_DATA_DDP, len might be non-zero, but it is only the 	 * length of the most recent DMA.  It does not include the 	 * total length of the data received since the previous update 	 * for this DDP buffer.  rcv_nxt is the sequence number of the 	 * first received byte from the most recent DMA. 	 */
 name|len
 operator|+=
 name|be32toh

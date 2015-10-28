@@ -117,10 +117,10 @@ operator|*
 name|DiagOpts
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|TextDiagnostic
 argument_list|()
+name|override
 block|;
 comment|/// \brief Print the diagonstic level to a raw_ostream.
 comment|///

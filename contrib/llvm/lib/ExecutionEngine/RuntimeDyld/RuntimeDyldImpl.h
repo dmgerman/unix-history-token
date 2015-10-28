@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ExecutionEngine/RTDyldMemoryManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ExecutionEngine/RuntimeDyld.h"
 end_include
 
@@ -175,6 +181,34 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+comment|// Helper for extensive error checking in debug builds.
+specifier|inline
+name|std
+operator|::
+name|error_code
+name|Check
+argument_list|(
+argument|std::error_code Err
+argument_list|)
+block|{
+if|if
+condition|(
+name|Err
+condition|)
+block|{
+name|report_fatal_error
+argument_list|(
+name|Err
+operator|.
+name|message
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|Err
+return|;
+block|}
 name|class
 name|Twine
 decl_stmt|;
@@ -186,9 +220,11 @@ block|{
 name|public
 label|:
 comment|/// Name - section name.
-name|StringRef
+name|std
+operator|::
+name|string
 name|Name
-decl_stmt|;
+expr_stmt|;
 comment|/// Address - address in the linker's memory where the section resides.
 name|uint8_t
 modifier|*
@@ -686,6 +722,102 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|/// @brief Symbol info for RuntimeDyld.
+end_comment
+
+begin_decl_stmt
+name|class
+name|SymbolTableEntry
+range|:
+name|public
+name|JITSymbolBase
+block|{
+name|public
+operator|:
+name|SymbolTableEntry
+argument_list|()
+operator|:
+name|JITSymbolBase
+argument_list|(
+name|JITSymbolFlags
+operator|::
+name|None
+argument_list|)
+block|,
+name|Offset
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|SectionID
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|SymbolTableEntry
+argument_list|(
+argument|unsigned SectionID
+argument_list|,
+argument|uint64_t Offset
+argument_list|,
+argument|JITSymbolFlags Flags
+argument_list|)
+operator|:
+name|JITSymbolBase
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+name|Offset
+argument_list|(
+name|Offset
+argument_list|)
+block|,
+name|SectionID
+argument_list|(
+argument|SectionID
+argument_list|)
+block|{}
+name|unsigned
+name|getSectionID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SectionID
+return|;
+block|}
+name|uint64_t
+name|getOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Offset
+return|;
+block|}
+name|private
+operator|:
+name|uint64_t
+name|Offset
+block|;
+name|unsigned
+name|SectionID
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|StringMap
+operator|<
+name|SymbolTableEntry
+operator|>
+name|RTDyldSymbolTable
+expr_stmt|;
+end_typedef
+
 begin_decl_stmt
 name|class
 name|RuntimeDyldImpl
@@ -703,10 +835,19 @@ decl_stmt|;
 name|protected
 label|:
 comment|// The MemoryManager to load objects into.
-name|RTDyldMemoryManager
-modifier|*
+name|RuntimeDyld
+operator|::
+name|MemoryManager
+operator|&
 name|MemMgr
-decl_stmt|;
+expr_stmt|;
+comment|// The symbol resolver to use for external symbols.
+name|RuntimeDyld
+operator|::
+name|SymbolResolver
+operator|&
+name|Resolver
+expr_stmt|;
 comment|// Attached RuntimeDyldChecker instance. Null if no instance attached.
 name|RuntimeDyldCheckerImpl
 modifier|*
@@ -734,7 +875,7 @@ comment|// Type for SectionIDs
 define|#
 directive|define
 name|RTDYLD_INVALID_SECTION_ID
-value|((SID)(-1))
+value|((RuntimeDyldImpl::SID)(-1))
 comment|// Keep a map of sections from object file to the SectionID which
 comment|// references it.
 typedef|typedef
@@ -748,52 +889,19 @@ name|unsigned
 operator|>
 name|ObjSectionToIDMap
 expr_stmt|;
-comment|// A global symbol table for symbols from all loaded modules.  Maps the
-comment|// symbol name to a (SectionID, offset in section) pair.
-typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-operator|,
-name|uintptr_t
-operator|>
-name|SymbolLoc
-expr_stmt|;
-typedef|typedef
-name|StringMap
-operator|<
-name|SymbolLoc
-operator|>
-name|SymbolTableMap
-expr_stmt|;
-name|SymbolTableMap
+comment|// A global symbol table for symbols from all loaded modules.
+name|RTDyldSymbolTable
 name|GlobalSymbolTable
 decl_stmt|;
-comment|// Pair representing the size and alignment requirement for a common symbol.
-typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-operator|,
-name|unsigned
-operator|>
-name|CommonSymbolInfo
-expr_stmt|;
 comment|// Keep a map of common symbols to their info pairs
 typedef|typedef
 name|std
 operator|::
-name|map
+name|vector
 operator|<
 name|SymbolRef
-operator|,
-name|CommonSymbolInfo
 operator|>
-name|CommonSymbolMap
+name|CommonSymbolList
 expr_stmt|;
 comment|// For each symbol, keep a list of relocations based on it. Anytime
 comment|// its address is reassigned (the JIT re-compiled the function, e.g.),
@@ -847,6 +955,12 @@ name|Arch
 expr_stmt|;
 name|bool
 name|IsTargetLittleEndian
+decl_stmt|;
+name|bool
+name|IsMipsO32ABI
+decl_stmt|;
+name|bool
+name|IsMipsN64ABI
 decl_stmt|;
 comment|// True if all sections should be passed to the memory manager, false if only
 comment|// sections containing relocations should be. Defaults to 'false'.
@@ -1209,6 +1323,25 @@ operator|&
 literal|0xFF
 expr_stmt|;
 block|}
+name|virtual
+name|void
+name|setMipsABI
+parameter_list|(
+specifier|const
+name|ObjectFile
+modifier|&
+name|Obj
+parameter_list|)
+block|{
+name|IsMipsO32ABI
+operator|=
+name|false
+expr_stmt|;
+name|IsMipsN64ABI
+operator|=
+name|false
+expr_stmt|;
+block|}
 comment|/// Endian-aware read Read the least significant Size bytes from Src.
 name|uint64_t
 name|readBytesUnaligned
@@ -1250,17 +1383,9 @@ name|ObjectFile
 modifier|&
 name|Obj
 parameter_list|,
-specifier|const
-name|CommonSymbolMap
+name|CommonSymbolList
 modifier|&
 name|CommonSymbols
-parameter_list|,
-name|uint64_t
-name|TotalSize
-parameter_list|,
-name|SymbolTableMap
-modifier|&
-name|SymbolTable
 parameter_list|)
 function_decl|;
 comment|/// \brief Emits section data from the object file to the MemoryManager.
@@ -1419,19 +1544,6 @@ name|void
 name|resolveExternalSymbols
 parameter_list|()
 function_decl|;
-comment|/// \brief Update GOT entries for external symbols.
-comment|// The base class does nothing.  ELF overrides this.
-name|virtual
-name|void
-name|updateGOTEntries
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|,
-name|uint64_t
-name|Addr
-parameter_list|)
-block|{}
 comment|// \brief Compute an upper bound of the memory that is required to load all
 comment|// sections
 name|void
@@ -1493,14 +1605,27 @@ name|public
 label|:
 name|RuntimeDyldImpl
 argument_list|(
-name|RTDyldMemoryManager
-operator|*
-name|mm
+name|RuntimeDyld
+operator|::
+name|MemoryManager
+operator|&
+name|MemMgr
+argument_list|,
+name|RuntimeDyld
+operator|::
+name|SymbolResolver
+operator|&
+name|Resolver
 argument_list|)
 operator|:
 name|MemMgr
 argument_list|(
-name|mm
+name|MemMgr
+argument_list|)
+operator|,
+name|Resolver
+argument_list|(
+name|Resolver
 argument_list|)
 operator|,
 name|Checker
@@ -1575,7 +1700,7 @@ literal|0
 expr_stmt|;
 name|uint8_t
 modifier|*
-name|getSymbolAddress
+name|getSymbolLocalAddress
 argument_list|(
 name|StringRef
 name|Name
@@ -1584,7 +1709,7 @@ decl|const
 block|{
 comment|// FIXME: Just look up as a function for now. Overly simple of course.
 comment|// Work in progress.
-name|SymbolTableMap
+name|RTDyldSymbolTable
 operator|::
 name|const_iterator
 name|pos
@@ -1608,8 +1733,10 @@ condition|)
 return|return
 name|nullptr
 return|;
-name|SymbolLoc
-name|Loc
+specifier|const
+specifier|auto
+modifier|&
+name|SymInfo
 init|=
 name|pos
 operator|->
@@ -1618,27 +1745,30 @@ decl_stmt|;
 return|return
 name|getSectionAddress
 argument_list|(
-name|Loc
+name|SymInfo
 operator|.
-name|first
+name|getSectionID
+argument_list|()
 argument_list|)
 operator|+
-name|Loc
+name|SymInfo
 operator|.
-name|second
+name|getOffset
+argument_list|()
 return|;
 block|}
-name|uint64_t
-name|getSymbolLoadAddress
+name|RuntimeDyld
+operator|::
+name|SymbolInfo
+name|getSymbol
 argument_list|(
-name|StringRef
-name|Name
+argument|StringRef Name
 argument_list|)
-decl|const
+specifier|const
 block|{
 comment|// FIXME: Just look up as a function for now. Overly simple of course.
 comment|// Work in progress.
-name|SymbolTableMap
+name|RTDyldSymbolTable
 operator|::
 name|const_iterator
 name|pos
@@ -1649,7 +1779,7 @@ name|find
 argument_list|(
 name|Name
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|pos
@@ -1660,32 +1790,57 @@ name|end
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
-name|SymbolLoc
-name|Loc
-init|=
+specifier|const
+name|auto
+operator|&
+name|SymEntry
+operator|=
 name|pos
 operator|->
 name|second
-decl_stmt|;
-return|return
+expr_stmt|;
+name|uint64_t
+name|TargetAddr
+init|=
 name|getSectionLoadAddress
 argument_list|(
-name|Loc
+name|SymEntry
 operator|.
-name|first
+name|getSectionID
+argument_list|()
 argument_list|)
 operator|+
-name|Loc
+name|SymEntry
 operator|.
-name|second
+name|getOffset
+argument_list|()
+decl_stmt|;
+return|return
+name|RuntimeDyld
+operator|::
+name|SymbolInfo
+argument_list|(
+name|TargetAddr
+argument_list|,
+name|SymEntry
+operator|.
+name|getFlags
+argument_list|()
+argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_function_decl
 name|void
 name|resolveRelocations
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|reassignSectionAddress
 parameter_list|(
@@ -1696,6 +1851,9 @@ name|uint64_t
 name|Addr
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|mapSectionAddress
 parameter_list|(
@@ -1708,7 +1866,13 @@ name|uint64_t
 name|TargetAddress
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Is the linker in an error state?
+end_comment
+
+begin_function
 name|bool
 name|hasError
 parameter_list|()
@@ -1717,7 +1881,13 @@ return|return
 name|HasError
 return|;
 block|}
+end_function
+
+begin_comment
 comment|// Mark the error condition as handled and continue.
+end_comment
+
+begin_function
 name|void
 name|clearError
 parameter_list|()
@@ -1727,7 +1897,13 @@ operator|=
 name|false
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|// Get the error message.
+end_comment
+
+begin_function
 name|StringRef
 name|getErrorString
 parameter_list|()
@@ -1736,6 +1912,9 @@ return|return
 name|ErrorStr
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 name|virtual
 name|bool
 name|isCompatibleFile
@@ -1749,16 +1928,25 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|virtual
 name|void
 name|registerEHFrames
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|virtual
 name|void
 name|deregisterEHFrames
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_function
 name|virtual
 name|void
 name|finalizeLoad
@@ -1773,15 +1961,10 @@ modifier|&
 name|SectionMap
 parameter_list|)
 block|{}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_comment
-unit|}
+unit|};  }
 comment|// end namespace llvm
 end_comment
 

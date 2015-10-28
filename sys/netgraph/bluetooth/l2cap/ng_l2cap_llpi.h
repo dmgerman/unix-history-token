@@ -112,6 +112,19 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ng_l2cap_lp_enc_change
+parameter_list|(
+name|ng_l2cap_p
+parameter_list|,
+name|struct
+name|ng_mesg
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ng_l2cap_lp_send
 parameter_list|(
 name|ng_l2cap_con_p

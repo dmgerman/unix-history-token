@@ -98,37 +98,32 @@ name|DwarfExpression
 block|{
 name|protected
 label|:
-specifier|const
-name|AsmPrinter
-modifier|&
-name|AP
-decl_stmt|;
 comment|// Various convenience accessors that extract things out of AsmPrinter.
 specifier|const
 name|TargetRegisterInfo
-operator|*
-name|getTRI
-argument_list|()
-specifier|const
-expr_stmt|;
+modifier|&
+name|TRI
+decl_stmt|;
 name|unsigned
-name|getDwarfVersion
-argument_list|()
-specifier|const
-expr_stmt|;
+name|DwarfVersion
+decl_stmt|;
 name|public
 label|:
 name|DwarfExpression
 argument_list|(
-specifier|const
-name|AsmPrinter
-operator|&
-name|AP
+argument|const TargetRegisterInfo&TRI
+argument_list|,
+argument|unsigned DwarfVersion
 argument_list|)
-operator|:
-name|AP
+block|:
+name|TRI
 argument_list|(
-argument|AP
+name|TRI
+argument_list|)
+operator|,
+name|DwarfVersion
+argument_list|(
+argument|DwarfVersion
 argument_list|)
 block|{}
 name|virtual
@@ -153,7 +148,7 @@ name|virtual
 name|void
 name|EmitSigned
 parameter_list|(
-name|int
+name|int64_t
 name|Value
 parameter_list|)
 init|=
@@ -164,7 +159,7 @@ name|virtual
 name|void
 name|EmitUnsigned
 parameter_list|(
-name|unsigned
+name|uint64_t
 name|Value
 parameter_list|)
 init|=
@@ -297,14 +292,17 @@ name|unsigned
 name|Value
 parameter_list|)
 function_decl|;
-comment|/// Emit an entire DIExpression on top of a machine register location.
+comment|/// \brief Emit an entire expression on top of a machine register location.
+comment|///
 comment|/// \param PieceOffsetInBits If this is one piece out of a fragmented
 comment|/// location, this is the offset of the piece inside the entire variable.
 comment|/// \return false if no DWARF register exists for MachineReg.
 name|bool
 name|AddMachineRegExpression
 parameter_list|(
+specifier|const
 name|DIExpression
+modifier|*
 name|Expr
 parameter_list|,
 name|unsigned
@@ -316,26 +314,28 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// Emit a the operations in a DIExpression, starting from element I.
+comment|/// Emit a the operations remaining the DIExpressionIterator I.
 comment|/// \param PieceOffsetInBits If this is one piece out of a fragmented
 comment|/// location, this is the offset of the piece inside the entire variable.
 name|void
 name|AddExpression
-parameter_list|(
+argument_list|(
 name|DIExpression
-name|Expr
-parameter_list|,
+operator|::
+name|expr_op_iterator
+name|I
+argument_list|,
+name|DIExpression
+operator|::
+name|expr_op_iterator
+name|E
+argument_list|,
 name|unsigned
 name|PieceOffsetInBits
-init|=
+operator|=
 literal|0
-parameter_list|,
-name|unsigned
-name|I
-init|=
-literal|0
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// DwarfExpression implementation for .debug_loc entries.
@@ -353,19 +353,18 @@ name|public
 operator|:
 name|DebugLocDwarfExpression
 argument_list|(
-specifier|const
-name|AsmPrinter
-operator|&
-name|AP
+argument|const TargetRegisterInfo&TRI
 argument_list|,
-name|ByteStreamer
-operator|&
-name|BS
+argument|unsigned DwarfVersion
+argument_list|,
+argument|ByteStreamer&BS
 argument_list|)
 operator|:
 name|DwarfExpression
 argument_list|(
-name|AP
+name|TRI
+argument_list|,
+name|DwarfVersion
 argument_list|)
 block|,
 name|BS
@@ -385,14 +384,14 @@ block|;
 name|void
 name|EmitSigned
 argument_list|(
-argument|int Value
+argument|int64_t Value
 argument_list|)
 name|override
 block|;
 name|void
 name|EmitUnsigned
 argument_list|(
-argument|unsigned Value
+argument|uint64_t Value
 argument_list|)
 name|override
 block|;
@@ -411,6 +410,11 @@ range|:
 name|public
 name|DwarfExpression
 block|{
+specifier|const
+name|AsmPrinter
+operator|&
+name|AP
+block|;
 name|DwarfUnit
 operator|&
 name|DU
@@ -436,22 +440,7 @@ name|DIELoc
 operator|&
 name|DIE
 argument_list|)
-operator|:
-name|DwarfExpression
-argument_list|(
-name|AP
-argument_list|)
-block|,
-name|DU
-argument_list|(
-name|DU
-argument_list|)
-block|,
-name|DIE
-argument_list|(
-argument|DIE
-argument_list|)
-block|{}
+block|;
 name|void
 name|EmitOp
 argument_list|(
@@ -464,14 +453,14 @@ block|;
 name|void
 name|EmitSigned
 argument_list|(
-argument|int Value
+argument|int64_t Value
 argument_list|)
 name|override
 block|;
 name|void
 name|EmitUnsigned
 argument_list|(
-argument|unsigned Value
+argument|uint64_t Value
 argument_list|)
 name|override
 block|;

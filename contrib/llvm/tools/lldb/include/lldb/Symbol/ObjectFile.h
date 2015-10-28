@@ -1374,6 +1374,25 @@ literal|0
 return|;
 block|}
 comment|//------------------------------------------------------------------
+comment|/// Return true if this file is a dynamic link editor (dyld)
+comment|///
+comment|/// Often times dyld has symbols that mirror symbols in libc and
+comment|/// other shared libraries (like "malloc" and "free") and the user
+comment|/// does _not_ want to stop in these shared libraries by default.
+comment|/// We can ask the ObjectFile if it is such a file and should be
+comment|/// avoided for things like settings breakpoints and doing function
+comment|/// lookups for expressions.
+comment|//------------------------------------------------------------------
+name|virtual
+name|bool
+name|GetIsDynamicLinkEditor
+parameter_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|//------------------------------------------------------------------
 comment|// Member Functions
 comment|//------------------------------------------------------------------
 name|Type
@@ -1526,6 +1545,24 @@ return|return
 name|m_memory_addr
 operator|!=
 name|LLDB_INVALID_ADDRESS
+return|;
+block|}
+comment|// Strip linker annotations (such as @@VERSION) from symbol names.
+name|virtual
+name|std
+operator|::
+name|string
+name|StripLinkerSymbolAnnotations
+argument_list|(
+argument|llvm::StringRef symbol_name
+argument_list|)
+specifier|const
+block|{
+return|return
+name|symbol_name
+operator|.
+name|str
+argument_list|()
 return|;
 block|}
 name|protected

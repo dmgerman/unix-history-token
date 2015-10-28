@@ -268,7 +268,7 @@ name|LLVMTargetMachineRef
 name|T
 parameter_list|)
 function_decl|;
-comment|/** Returns the llvm::DataLayout used for this llvm:TargetMachine. */
+comment|/** Deprecated: use LLVMGetDataLayout(LLVMModuleRef M) instead. */
 name|LLVMTargetDataRef
 name|LLVMGetTargetMachineData
 parameter_list|(

@@ -313,7 +313,7 @@ name|OID_AUTO
 argument_list|,
 name|cursegments
 argument_list|,
-name|CTLFLAG_VNET
+literal|0
 argument_list|,
 operator|&
 name|tcp_reass_zone
@@ -1369,11 +1369,6 @@ operator|->
 name|rcv_nxt
 condition|)
 do|;
-name|ND6_HINT
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 name|sorwakeup_locked
 argument_list|(
 name|so

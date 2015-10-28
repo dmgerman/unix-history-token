@@ -3671,6 +3671,8 @@ block|{
 name|int
 name|pending
 decl_stmt|;
+if|if
+condition|(
 name|taskqueue_cancel_timeout
 argument_list|(
 name|taskqueue_thread
@@ -3683,10 +3685,6 @@ argument_list|,
 operator|&
 name|pending
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pending
 condition|)
 name|taskqueue_drain_timeout
 argument_list|(

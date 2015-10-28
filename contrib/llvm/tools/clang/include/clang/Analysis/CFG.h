@@ -1337,7 +1337,7 @@ name|getStmt
 argument_list|()
 return|;
 block|}
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -1944,10 +1944,6 @@ name|Parent
 argument_list|(
 argument|parent
 argument_list|)
-block|{}
-operator|~
-name|CFGBlock
-argument_list|()
 block|{}
 comment|// Statement iterators
 typedef|typedef
@@ -3678,6 +3674,9 @@ name|bool
 name|AddCXXNewAllocator
 decl_stmt|;
 name|bool
+name|AddCXXDefaultInitExprInCtors
+decl_stmt|;
+name|bool
 name|alwaysAdd
 argument_list|(
 specifier|const
@@ -3783,6 +3782,11 @@ name|false
 argument_list|)
 operator|,
 name|AddCXXNewAllocator
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|AddCXXDefaultInitExprInCtors
 argument_list|(
 argument|false
 argument_list|)

@@ -63,10 +63,21 @@ begin_decl_stmt
 name|namespace
 name|__ubsan
 block|{
-comment|// NOTE: This function might take a lock (if .preinit_array initialization is
-comment|// not used). It's generally a bad idea to call it on a fast path.
+comment|// Initialize UBSan as a standalone tool. Typically should be called early
+comment|// during initialization.
 name|void
-name|InitIfNecessary
+name|InitAsStandalone
+parameter_list|()
+function_decl|;
+comment|// Initialize UBSan as a standalone tool, if it hasn't been initialized before.
+name|void
+name|InitAsStandaloneIfNecessary
+parameter_list|()
+function_decl|;
+comment|// Initializes UBSan as a plugin tool. This function should be called once
+comment|// from "parent tool" (e.g. ASan) initialization.
+name|void
+name|InitAsPlugin
 parameter_list|()
 function_decl|;
 block|}

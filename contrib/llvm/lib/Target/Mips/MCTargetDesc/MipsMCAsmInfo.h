@@ -70,7 +70,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|StringRef
+name|Triple
 decl_stmt|;
 name|class
 name|MipsMCAsmInfo
@@ -88,7 +88,10 @@ operator|:
 name|explicit
 name|MipsMCAsmInfo
 argument_list|(
-argument|StringRef TT
+specifier|const
+name|Triple
+operator|&
+name|TheTriple
 argument_list|)
 block|;   }
 decl_stmt|;

@@ -158,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"fwctl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ioapic.h"
 end_include
 
@@ -1000,11 +1006,19 @@ argument_list|,
 name|newcpu
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
 name|error
-operator|==
+operator|!=
 literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"could not activate CPU %d"
+argument_list|,
+name|newcpu
 argument_list|)
 expr_stmt|;
 name|CPU_SET_ATOMIC
@@ -4153,6 +4167,14 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|lpc_bootrom
+argument_list|()
+condition|)
+name|fwctl_init
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Change the proc title to include the VM name. 	 */
 name|setproctitle
 argument_list|(

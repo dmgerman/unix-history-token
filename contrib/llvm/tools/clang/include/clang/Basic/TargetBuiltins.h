@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Builtins.h"
 end_include
 
@@ -268,9 +274,9 @@ name|LastTSBuiltin
 block|}
 enum|;
 block|}
-comment|/// \brief R600 builtins
+comment|/// \brief AMDGPU builtins
 name|namespace
-name|R600
+name|AMDGPU
 block|{
 enum|enum
 block|{
@@ -297,7 +303,7 @@ parameter_list|)
 value|BI##ID,
 include|#
 directive|include
-file|"clang/Basic/BuiltinsR600.def"
+file|"clang/Basic/BuiltinsAMDGPU.def"
 name|LastTSBuiltin
 block|}
 enum|;
@@ -630,6 +636,40 @@ value|BI##ID,
 include|#
 directive|include
 file|"clang/Basic/BuiltinsLe64.def"
+name|LastTSBuiltin
+block|}
+enum|;
+block|}
+comment|/// \brief SystemZ builtins
+name|namespace
+name|SystemZ
+block|{
+enum|enum
+block|{
+name|LastTIBuiltin
+init|=
+name|clang
+operator|::
+name|Builtin
+operator|::
+name|FirstTSBuiltin
+operator|-
+literal|1
+block|,
+define|#
+directive|define
+name|BUILTIN
+parameter_list|(
+name|ID
+parameter_list|,
+name|TYPE
+parameter_list|,
+name|ATTRS
+parameter_list|)
+value|BI##ID,
+include|#
+directive|include
+file|"clang/Basic/BuiltinsSystemZ.def"
 name|LastTSBuiltin
 block|}
 enum|;

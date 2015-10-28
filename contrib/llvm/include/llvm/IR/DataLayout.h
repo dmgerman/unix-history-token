@@ -197,6 +197,10 @@ init|=
 literal|'a'
 block|}
 enum|;
+comment|// FIXME: Currently the DataLayout string carries a "preferred alignment"
+comment|// for types. As the DataLayout is module/global, this should likely be
+comment|// sunk down to an FTTI element that is queried rather than a global
+comment|// preference.
 comment|/// \brief Layout alignment element.
 comment|///
 comment|/// Stores the alignment data associated with a given alignment type (integer,
@@ -337,7 +341,9 @@ name|MM_ELF
 block|,
 name|MM_MachO
 block|,
-name|MM_WINCOFF
+name|MM_WinCOFF
+block|,
+name|MM_WinCOFFX86
 block|,
 name|MM_Mips
 block|}
@@ -362,6 +368,12 @@ operator|,
 literal|16
 operator|>
 name|Alignments
+expr_stmt|;
+comment|/// \brief The string representation used to create this DataLayout
+name|std
+operator|::
+name|string
+name|StringRepresentation
 expr_stmt|;
 typedef|typedef
 name|SmallVector
@@ -620,6 +632,12 @@ block|{
 name|clear
 argument_list|()
 block|;
+name|StringRepresentation
+operator|=
+name|DL
+operator|.
+name|StringRepresentation
+block|;
 name|BigEndian
 operator|=
 name|DL
@@ -730,14 +748,34 @@ block|}
 comment|/// \brief Returns the string representation of the DataLayout.
 comment|///
 comment|/// This representation is in the same format accepted by the string
-comment|/// constructor above.
+comment|/// constructor above. This should not be used to compare two DataLayout as
+comment|/// different string can represent the same layout.
+specifier|const
 name|std
 operator|::
 name|string
+operator|&
 name|getStringRepresentation
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|StringRepresentation
+return|;
+block|}
+comment|/// \brief Test if the DataLayout was constructed from an empty string.
+name|bool
+name|isDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StringRepresentation
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
 comment|/// \brief Returns true if the specified type is known to be a native integer
 comment|/// type supported by the CPU.
 comment|///
@@ -829,7 +867,7 @@ block|{
 return|return
 name|ManglingMode
 operator|==
-name|MM_WINCOFF
+name|MM_WinCOFFX86
 return|;
 block|}
 name|bool
@@ -860,8 +898,7 @@ return|return
 literal|"l"
 return|;
 return|return
-name|getPrivateGlobalPrefix
-argument_list|()
+literal|""
 return|;
 block|}
 name|char
@@ -883,6 +920,9 @@ case|:
 case|case
 name|MM_Mips
 case|:
+case|case
+name|MM_WinCOFF
+case|:
 return|return
 literal|'\0'
 return|;
@@ -890,7 +930,7 @@ case|case
 name|MM_MachO
 case|:
 case|case
-name|MM_WINCOFF
+name|MM_WinCOFFX86
 case|:
 return|return
 literal|'_'
@@ -936,7 +976,10 @@ case|case
 name|MM_MachO
 case|:
 case|case
-name|MM_WINCOFF
+name|MM_WinCOFF
+case|:
+case|case
+name|MM_WinCOFFX86
 case|:
 return|return
 literal|"L"
@@ -1468,59 +1511,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_decl_stmt
-name|class
-name|DataLayoutPass
-range|:
-name|public
-name|ImmutablePass
-block|{
-name|DataLayout
-name|DL
-block|;
-name|public
-operator|:
-comment|/// This has to exist, because this is a pass, but it should never be used.
-name|DataLayoutPass
-argument_list|()
-block|;
-operator|~
-name|DataLayoutPass
-argument_list|()
-block|;
-specifier|const
-name|DataLayout
-operator|&
-name|getDataLayout
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DL
-return|;
-block|}
-specifier|static
-name|char
-name|ID
-block|;
-comment|// Pass identification, replacement for typeid
-name|bool
-name|doFinalization
-argument_list|(
-argument|Module&M
-argument_list|)
-name|override
-block|;
-name|bool
-name|doInitialization
-argument_list|(
-argument|Module&M
-argument_list|)
-name|override
-block|; }
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/// Used to lazily calculate structure layout information for a target machine,

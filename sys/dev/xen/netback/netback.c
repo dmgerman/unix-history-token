@@ -244,12 +244,6 @@ directive|include
 file|<xen/xenbus/xenbusvar.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/xen/xenvar.h>
-end_include
-
 begin_comment
 comment|/*--------------------------- Compile-time Tunables --------------------------*/
 end_comment
@@ -437,7 +431,7 @@ name|virt_to_mfn
 parameter_list|(
 name|x
 parameter_list|)
-value|(vtomach(x)>> PAGE_SHIFT)
+value|(vtophys(x)>> PAGE_SHIFT)
 end_define
 
 begin_define
@@ -1650,7 +1644,9 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"gnttab dest gmfn=\t%lu\n"
+literal|"gnttab dest gmfn=\t%"
+name|PRI_xen_pfn
+literal|"\n"
 argument_list|,
 name|entry
 operator|->
@@ -1707,7 +1703,9 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"gnttab source gmfn=\t%lu\n"
+literal|"gnttab source gmfn=\t%"
+name|PRI_xen_pfn
+literal|"\n"
 argument_list|,
 name|entry
 operator|->

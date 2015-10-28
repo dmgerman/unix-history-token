@@ -278,6 +278,12 @@ name|class
 name|CodeGenOptions
 decl_stmt|;
 name|class
+name|HeaderSearchOptions
+decl_stmt|;
+name|class
+name|PreprocessorOptions
+decl_stmt|;
+name|class
 name|DiagnosticsEngine
 decl_stmt|;
 name|class
@@ -906,9 +912,12 @@ name|CodeGenTypeCache
 block|{
 name|CodeGenModule
 argument_list|(
-argument|const CodeGenModule&
+specifier|const
+name|CodeGenModule
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -918,7 +927,8 @@ specifier|const
 name|CodeGenModule
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -1003,6 +1013,18 @@ name|LangOptions
 modifier|&
 name|LangOpts
 decl_stmt|;
+specifier|const
+name|HeaderSearchOptions
+modifier|&
+name|HeaderSearchOpts
+decl_stmt|;
+comment|// Only used for debug info.
+specifier|const
+name|PreprocessorOptions
+modifier|&
+name|PreprocessorOpts
+decl_stmt|;
+comment|// Only used for debug info.
 specifier|const
 name|CodeGenOptions
 modifier|&
@@ -1201,14 +1223,11 @@ argument_list|)
 block|{
 name|DeferredDeclsToEmit
 operator|.
-name|push_back
-argument_list|(
-name|DeferredGlobal
+name|emplace_back
 argument_list|(
 name|GV
 argument_list|,
 name|GD
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1338,7 +1357,7 @@ name|StringMap
 operator|<
 name|llvm
 operator|::
-name|Constant
+name|GlobalVariable
 operator|*
 operator|>
 name|CFConstantStringMap
@@ -1524,7 +1543,8 @@ expr_stmt|;
 comment|/// When a C++ decl with an initializer is deferred, null is
 comment|/// appended to CXXGlobalInits, and the index of that null is placed
 comment|/// here so that the initializer will be performed in the correct
-comment|/// order.
+comment|/// order. Once the decl is emitted, the index is replaced with ~0U to ensure
+comment|/// that we don't re-emit the initializer.
 name|llvm
 operator|::
 name|DenseMap
@@ -1802,6 +1822,16 @@ argument_list|(
 name|ASTContext
 operator|&
 name|C
+argument_list|,
+specifier|const
+name|HeaderSearchOptions
+operator|&
+name|headersearchopts
+argument_list|,
+specifier|const
+name|PreprocessorOptions
+operator|&
+name|ppopts
 argument_list|,
 specifier|const
 name|CodeGenOptions
@@ -2289,6 +2319,34 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|const
+name|HeaderSearchOptions
+operator|&
+name|getHeaderSearchOpts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HeaderSearchOpts
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|PreprocessorOptions
+operator|&
+name|getPreprocessorOpts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PreprocessorOpts
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
 name|CodeGenOptions
 operator|&
 name|getCodeGenOpts
@@ -2378,6 +2436,24 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|maybeSetTrivialComdat
+argument_list|(
+specifier|const
+name|Decl
+operator|&
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|GlobalObject
+operator|&
+name|GO
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|CGCXXABI
@@ -3061,6 +3137,20 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getAddrOfCXXCatchHandlerType
+argument_list|(
+argument|QualType Ty
+argument_list|,
+argument|QualType CatchHandlerType
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/// Get the address of a uuid descriptor .
 end_comment
@@ -3116,6 +3206,28 @@ name|VD
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|CharUnits
+name|computeNonVirtualBaseClassOffset
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|DerivedClass
+argument_list|,
+name|CastExpr
+operator|::
+name|path_const_iterator
+name|Start
+argument_list|,
+name|CastExpr
+operator|::
+name|path_const_iterator
+name|End
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Returns the offset from a derived class to  a class. Returns null if the
@@ -3398,7 +3510,7 @@ end_comment
 begin_expr_stmt
 name|llvm
 operator|::
-name|Constant
+name|GlobalVariable
 operator|*
 name|GetAddrOfConstantString
 argument_list|(
@@ -3831,16 +3943,11 @@ argument_list|)
 block|{
 name|CXXGlobalDtors
 operator|.
-name|push_back
-argument_list|(
-name|std
-operator|::
-name|make_pair
+name|emplace_back
 argument_list|(
 name|DtorFn
 argument_list|,
 name|Object
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4474,9 +4581,6 @@ parameter_list|(
 name|CXXRecordDecl
 modifier|*
 name|Class
-parameter_list|,
-name|bool
-name|DefinitionRequired
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4575,6 +4679,26 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Set the DLL storage class on F.
+end_comment
+
+begin_decl_stmt
+name|void
+name|setFunctionDLLStorageClass
+argument_list|(
+name|GlobalDecl
+name|GD
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|F
+argument_list|)
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
@@ -5049,6 +5173,86 @@ name|D
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// Returns whether the given record is blacklisted from control flow
+end_comment
+
+begin_comment
+comment|/// integrity checks.
+end_comment
+
+begin_function_decl
+name|bool
+name|IsCFIBlacklistedRecord
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Emit bit set entries for the given vtable using the given layout if
+end_comment
+
+begin_comment
+comment|/// vptr CFI is enabled.
+end_comment
+
+begin_decl_stmt
+name|void
+name|EmitVTableBitSetEntries
+argument_list|(
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|VTable
+argument_list|,
+specifier|const
+name|VTableLayout
+operator|&
+name|VTLayout
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Create a bitset entry for the given vtable.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|MDTuple
+operator|*
+name|CreateVTableBitSetEntry
+argument_list|(
+argument|llvm::GlobalVariable *VTable
+argument_list|,
+argument|CharUnits Offset
+argument_list|,
+argument|const CXXRecordDecl *RD
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \breif Get the declaration of std::terminate for the platform.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getTerminateFn
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_label
 name|private

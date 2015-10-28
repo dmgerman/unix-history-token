@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCAssembler.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/MC/MCDirectives.h"
 end_include
 
@@ -105,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/SMLoc.h"
 end_include
 
 begin_include
@@ -145,6 +145,9 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
+name|MCSymbolELF
+decl_stmt|;
+name|class
 name|MCSymbolRefExpr
 decl_stmt|;
 name|class
@@ -170,7 +173,6 @@ name|std
 operator|::
 name|pair
 operator|<
-specifier|const
 name|MCSection
 operator|*
 operator|,
@@ -228,7 +230,6 @@ operator|~
 name|MCTargetStreamer
 argument_list|()
 expr_stmt|;
-specifier|const
 name|MCStreamer
 modifier|&
 name|getStreamer
@@ -265,73 +266,34 @@ parameter_list|)
 function_decl|;
 name|virtual
 name|void
+name|prettyPrintAsm
+parameter_list|(
+name|MCInstPrinter
+modifier|&
+name|InstPrinter
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+specifier|const
+name|MCInst
+modifier|&
+name|Inst
+parameter_list|,
+specifier|const
+name|MCSubtargetInfo
+modifier|&
+name|STI
+parameter_list|)
+function_decl|;
+name|virtual
+name|void
 name|finish
 parameter_list|()
 function_decl|;
 block|}
 empty_stmt|;
-name|class
-name|AArch64TargetStreamer
-range|:
-name|public
-name|MCTargetStreamer
-block|{
-name|public
-operator|:
-name|AArch64TargetStreamer
-argument_list|(
-name|MCStreamer
-operator|&
-name|S
-argument_list|)
-block|;
-operator|~
-name|AArch64TargetStreamer
-argument_list|()
-block|;
-name|void
-name|finish
-argument_list|()
-name|override
-block|;
-comment|/// Callback used to implement the ldr= pseudo.
-comment|/// Add a new entry to the constant pool for the current section and return an
-comment|/// MCExpr that can be used to refer to the constant pool location.
-specifier|const
-name|MCExpr
-operator|*
-name|addConstantPoolEntry
-argument_list|(
-argument|const MCExpr *
-argument_list|,
-argument|unsigned Size
-argument_list|)
-block|;
-comment|/// Callback used to implemnt the .ltorg directive.
-comment|/// Emit contents of constant pool for the current section.
-name|void
-name|emitCurrentConstantPool
-argument_list|()
-block|;
-comment|/// Callback used to implement the .inst directive.
-name|virtual
-name|void
-name|emitInst
-argument_list|(
-argument|uint32_t Inst
-argument_list|)
-block|;
-name|private
-operator|:
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|AssemblerConstantPools
-operator|>
-name|ConstantPools
-block|; }
-decl_stmt|;
 comment|// FIXME: declared here because it is used from
 comment|// lib/CodeGen/AsmPrinter/ARMException.cpp.
 name|class
@@ -352,6 +314,7 @@ block|;
 operator|~
 name|ARMTargetStreamer
 argument_list|()
+name|override
 block|;
 name|virtual
 name|void
@@ -490,6 +453,13 @@ argument_list|)
 block|;
 name|virtual
 name|void
+name|emitArchExtension
+argument_list|(
+argument|unsigned ArchExt
+argument_list|)
+block|;
+name|virtual
+name|void
 name|emitObjectArch
 argument_list|(
 argument|unsigned Arch
@@ -569,11 +539,12 @@ operator|>
 name|ConstantPools
 block|; }
 decl_stmt|;
-comment|/// MCStreamer - Streaming machine code generation interface.  This interface
-comment|/// is intended to provide a programatic interface that is very similar to the
-comment|/// level that an assembler .s file provides.  It has callbacks to emit bytes,
-comment|/// handle directives, etc.  The implementation of this interface retains
-comment|/// state to know what the current section is etc.
+comment|/// \brief Streaming machine code generation interface.
+comment|///
+comment|/// This interface is intended to provide a programatic interface that is very
+comment|/// similar to the level that an assembler .s file provides.  It has callbacks
+comment|/// to emit bytes, handle directives, etc.  The implementation of this interface
+comment|/// retains state to know what the current section is etc.
 comment|///
 comment|/// There are multiple implementations of this interface: one for writing out
 comment|/// a .s file, and implementations that write out .o files of various formats.
@@ -595,9 +566,12 @@ name|TargetStreamer
 expr_stmt|;
 name|MCStreamer
 argument_list|(
-argument|const MCStreamer&
+specifier|const
+name|MCStreamer
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|MCStreamer
 modifier|&
@@ -608,7 +582,8 @@ specifier|const
 name|MCStreamer
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|std
 operator|::
@@ -653,8 +628,8 @@ name|void
 name|EnsureValidWinFrameInfo
 parameter_list|()
 function_decl|;
-comment|// SymbolOrdering - Tracks an index to represent the order
-comment|// a symbol was emitted in. Zero means we did not emit that symbol.
+comment|/// \brief Tracks an index to represent the order a symbol was emitted in.
+comment|/// Zero means we did not emit that symbol.
 name|DenseMap
 operator|<
 specifier|const
@@ -665,8 +640,8 @@ name|unsigned
 operator|>
 name|SymbolOrdering
 expr_stmt|;
-comment|/// SectionStack - This is stack of current and previous section
-comment|/// values saved by PushSection.
+comment|/// \brief This is stack of current and previous section values saved by
+comment|/// PushSection.
 name|SmallVector
 operator|<
 name|std
@@ -861,10 +836,10 @@ modifier|*
 name|MAB
 parameter_list|)
 function_decl|;
-comment|/// @name Assembly File Formatting.
+comment|/// \name Assembly File Formatting.
 comment|/// @{
-comment|/// isVerboseAsm - Return true if this streamer supports verbose assembly
-comment|/// and if it is enabled.
+comment|/// \brief Return true if this streamer supports verbose assembly and if it is
+comment|/// enabled.
 name|virtual
 name|bool
 name|isVerboseAsm
@@ -875,8 +850,8 @@ return|return
 name|false
 return|;
 block|}
-comment|/// hasRawTextSupport - Return true if this asm streamer supports emitting
-comment|/// unformatted text to the .s file with EmitRawText.
+comment|/// \brief Return true if this asm streamer supports emitting unformatted text
+comment|/// to the .s file with EmitRawText.
 name|virtual
 name|bool
 name|hasRawTextSupport
@@ -887,7 +862,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// Is the integrated assembler required for this streamer to function
+comment|/// \brief Is the integrated assembler required for this streamer to function
 comment|/// correctly?
 name|virtual
 name|bool
@@ -899,7 +874,9 @@ return|return
 name|false
 return|;
 block|}
-comment|/// AddComment - Add a comment that can be emitted to the generated .s
+comment|/// \brief Add a textual command.
+comment|///
+comment|/// Typically for comments that can be emitted to the generated .s
 comment|/// file if applicable as a QoI issue to make the output of the compiler
 comment|/// more readable.  This only affects the MCAsmStreamer, and only when
 comment|/// verbose assembly output is enabled.
@@ -916,18 +893,18 @@ modifier|&
 name|T
 parameter_list|)
 block|{}
-comment|/// GetCommentOS - Return a raw_ostream that comments can be written to.
-comment|/// Unlike AddComment, you are required to terminate comments with \n if you
-comment|/// use this method.
+comment|/// \brief Return a raw_ostream that comments can be written to. Unlike
+comment|/// AddComment, you are required to terminate comments with \n if you use this
+comment|/// method.
 name|virtual
 name|raw_ostream
 modifier|&
 name|GetCommentOS
 parameter_list|()
 function_decl|;
-comment|/// Print T and prefix it with the comment string (normally #) and optionally
-comment|/// a tab. This prints the comment immediately, not at the end of the
-comment|/// current line. It is basically a safe version of EmitRawText: since it
+comment|/// \brief Print T and prefix it with the comment string (normally #) and
+comment|/// optionally a tab. This prints the comment immediately, not at the end of
+comment|/// the current line. It is basically a safe version of EmitRawText: since it
 comment|/// only prints comments, the object streamer ignores it instead of asserting.
 name|virtual
 name|void
@@ -951,10 +928,9 @@ name|AddBlankLine
 parameter_list|()
 block|{}
 comment|/// @}
-comment|/// @name Symbol& Section Management
+comment|/// \name Symbol& Section Management
 comment|/// @{
-comment|/// getCurrentSection - Return the current section that the streamer is
-comment|/// emitting code to.
+comment|/// \brief Return the current section that the streamer is emitting code to.
 name|MCSectionSubPair
 name|getCurrentSection
 argument_list|()
@@ -981,8 +957,20 @@ name|MCSectionSubPair
 argument_list|()
 return|;
 block|}
-comment|/// getPreviousSection - Return the previous section that the streamer is
-comment|/// emitting code to.
+name|MCSection
+operator|*
+name|getCurrentSectionOnly
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCurrentSection
+argument_list|()
+operator|.
+name|first
+return|;
+block|}
+comment|/// \brief Return the previous section that the streamer is emitting code to.
 name|MCSectionSubPair
 name|getPreviousSection
 argument_list|()
@@ -1012,11 +1000,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// GetSymbolOrder - Returns an index to represent the order
+comment|/// \brief Returns an index to represent the order a symbol was emitted in.
 end_comment
 
 begin_comment
-comment|/// a symbol was emitted in. (zero if we did not emit that symbol)
+comment|/// (zero if we did not emit that symbol)
 end_comment
 
 begin_decl_stmt
@@ -1042,7 +1030,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// ChangeSection - Update streamer for a new active section.
+comment|/// \brief Update streamer for a new active section.
 end_comment
 
 begin_comment
@@ -1062,7 +1050,6 @@ name|virtual
 name|void
 name|ChangeSection
 parameter_list|(
-specifier|const
 name|MCSection
 modifier|*
 parameter_list|,
@@ -1074,11 +1061,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// pushSection - Save the current and previous section on the
-end_comment
-
-begin_comment
-comment|/// section stack.
+comment|/// \brief Save the current and previous section on the section stack.
 end_comment
 
 begin_function
@@ -1106,11 +1089,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// popSection - Restore the current and previous section from
+comment|/// \brief Restore the current and previous section from the section stack.
 end_comment
 
 begin_comment
-comment|/// the section stack.  Calls ChangeSection as needed.
+comment|/// Calls ChangeSection as needed.
 end_comment
 
 begin_comment
@@ -1138,42 +1121,55 @@ condition|)
 return|return
 name|false
 return|;
-name|MCSectionSubPair
-name|oldSection
+name|auto
+name|I
 init|=
 name|SectionStack
 operator|.
-name|pop_back_val
+name|end
 argument_list|()
-operator|.
+decl_stmt|;
+operator|--
+name|I
+expr_stmt|;
+name|MCSectionSubPair
+name|OldSection
+init|=
+name|I
+operator|->
 name|first
 decl_stmt|;
+operator|--
+name|I
+expr_stmt|;
 name|MCSectionSubPair
-name|curSection
+name|NewSection
 init|=
-name|SectionStack
-operator|.
-name|back
-argument_list|()
-operator|.
+name|I
+operator|->
 name|first
 decl_stmt|;
 if|if
 condition|(
-name|oldSection
+name|OldSection
 operator|!=
-name|curSection
+name|NewSection
 condition|)
 name|ChangeSection
 argument_list|(
-name|curSection
+name|NewSection
 operator|.
 name|first
 argument_list|,
-name|curSection
+name|NewSection
 operator|.
 name|second
 argument_list|)
+expr_stmt|;
+name|SectionStack
+operator|.
+name|pop_back
+argument_list|()
 expr_stmt|;
 return|return
 name|true
@@ -1222,11 +1218,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// SwitchSection - Set the current section where code is being emitted to
+comment|/// Set the current section where code is being emitted to \p Section.  This
 end_comment
 
 begin_comment
-comment|/// @p Section.  This is required to update CurSection.
+comment|/// is required to update CurSection.
 end_comment
 
 begin_comment
@@ -1237,12 +1233,11 @@ begin_comment
 comment|/// This corresponds to assembler directives like .section, .text, etc.
 end_comment
 
-begin_function
+begin_function_decl
 name|virtual
 name|void
 name|SwitchSection
 parameter_list|(
-specifier|const
 name|MCSection
 modifier|*
 name|Section
@@ -1254,87 +1249,25 @@ name|Subsection
 init|=
 name|nullptr
 parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|Section
-operator|&&
-literal|"Cannot switch to a null section!"
-argument_list|)
-expr_stmt|;
-name|MCSectionSubPair
-name|curSection
-init|=
-name|SectionStack
-operator|.
-name|back
-argument_list|()
-operator|.
-name|first
-decl_stmt|;
-name|SectionStack
-operator|.
-name|back
-argument_list|()
-operator|.
-name|second
-operator|=
-name|curSection
-expr_stmt|;
-if|if
-condition|(
-name|MCSectionSubPair
-argument_list|(
-name|Section
-argument_list|,
-name|Subsection
-argument_list|)
-operator|!=
-name|curSection
-condition|)
-block|{
-name|SectionStack
-operator|.
-name|back
-argument_list|()
-operator|.
-name|first
-operator|=
-name|MCSectionSubPair
-argument_list|(
-name|Section
-argument_list|,
-name|Subsection
-argument_list|)
-expr_stmt|;
-name|ChangeSection
-argument_list|(
-name|Section
-argument_list|,
-name|Subsection
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/// SwitchSectionNoChange - Set the current section where code is being
+comment|/// \brief Set the current section where code is being emitted to \p Section.
 end_comment
 
 begin_comment
-comment|/// emitted to @p Section.  This is required to update CurSection. This
+comment|/// This is required to update CurSection. This version does not call
 end_comment
 
 begin_comment
-comment|/// version does not call ChangeSection.
+comment|/// ChangeSection.
 end_comment
 
 begin_function
 name|void
 name|SwitchSectionNoChange
 parameter_list|(
-specifier|const
 name|MCSection
 modifier|*
 name|Section
@@ -1402,7 +1335,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// Create the default sections and set the initial one.
+comment|/// \brief Create the default sections and set the initial one.
 end_comment
 
 begin_function_decl
@@ -1416,8 +1349,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|MCSymbol
+modifier|*
+name|endSection
+parameter_list|(
+name|MCSection
+modifier|*
+name|Section
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/// AssignSection - Sets the symbol's section.
+comment|/// \brief Sets the symbol's section.
 end_comment
 
 begin_comment
@@ -1440,7 +1385,6 @@ name|MCSymbol
 modifier|*
 name|Symbol
 parameter_list|,
-specifier|const
 name|MCSection
 modifier|*
 name|Section
@@ -1449,7 +1393,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitLabel - Emit a label for @p Symbol into the current section.
+comment|/// \brief Emit a label for \p Symbol into the current section.
 end_comment
 
 begin_comment
@@ -1469,7 +1413,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param Symbol - The symbol to emit. A given symbol should only be
+comment|/// \param Symbol - The symbol to emit. A given symbol should only be
 end_comment
 
 begin_comment
@@ -1518,7 +1462,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitAssemblerFlag - Note in the output the specified @p Flag.
+comment|/// \brief Note in the output the specified \p Flag.
 end_comment
 
 begin_function_decl
@@ -1533,7 +1477,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitLinkerOptions - Emit the given list @p Options of strings as linker
+comment|/// \brief Emit the given list \p Options of strings as linker
 end_comment
 
 begin_comment
@@ -1557,7 +1501,7 @@ block|{}
 end_decl_stmt
 
 begin_comment
-comment|/// EmitDataRegion - Note in the output the specified region @p Kind.
+comment|/// \brief Note in the output the specified region \p Kind.
 end_comment
 
 begin_function
@@ -1572,7 +1516,7 @@ block|{}
 end_function
 
 begin_comment
-comment|/// EmitVersionMin - Specify the MachO minimum deployment target version.
+comment|/// \brief Specify the MachO minimum deployment target version.
 end_comment
 
 begin_function
@@ -1595,11 +1539,11 @@ block|{}
 end_function
 
 begin_comment
-comment|/// EmitThumbFunc - Note in the output that the specified @p Func is
+comment|/// \brief Note in the output that the specified \p Func is a Thumb mode
 end_comment
 
 begin_comment
-comment|/// a Thumb mode function (ARM target only).
+comment|/// function (ARM target only).
 end_comment
 
 begin_function_decl
@@ -1615,7 +1559,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitAssignment - Emit an assignment of @p Value to @p Symbol.
+comment|/// \brief Emit an assignment of \p Value to \p Symbol.
 end_comment
 
 begin_comment
@@ -1651,11 +1595,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param Symbol - The symbol being assigned to.
+comment|/// \param Symbol - The symbol being assigned to.
 end_comment
 
 begin_comment
-comment|/// @param Value - The value for the symbol.
+comment|/// \param Value - The value for the symbol.
 end_comment
 
 begin_function_decl
@@ -1676,7 +1620,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitWeakReference - Emit an weak reference from @p Alias to @p Symbol.
+comment|/// \brief Emit an weak reference from \p Alias to \p Symbol.
 end_comment
 
 begin_comment
@@ -1696,11 +1640,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param Alias - The alias that is being created.
+comment|/// \param Alias - The alias that is being created.
 end_comment
 
 begin_comment
-comment|/// @param Symbol - The symbol being aliased.
+comment|/// \param Symbol - The symbol being aliased.
 end_comment
 
 begin_function_decl
@@ -1721,7 +1665,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitSymbolAttribute - Add the given @p Attribute to @p Symbol.
+comment|/// \brief Add the given \p Attribute to \p Symbol.
 end_comment
 
 begin_function_decl
@@ -1742,7 +1686,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitSymbolDesc - Set the @p DescValue for the @p Symbol.
+comment|/// \brief Set the \p DescValue for the \p Symbol.
 end_comment
 
 begin_comment
@@ -1750,11 +1694,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param Symbol - The symbol to have its n_desc field set.
+comment|/// \param Symbol - The symbol to have its n_desc field set.
 end_comment
 
 begin_comment
-comment|/// @param DescValue - The value to set into the n_desc field.
+comment|/// \param DescValue - The value to set into the n_desc field.
 end_comment
 
 begin_function_decl
@@ -1773,7 +1717,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// BeginCOFFSymbolDef - Start emitting COFF symbol definition
+comment|/// \brief Start emitting COFF symbol definition
 end_comment
 
 begin_comment
@@ -1781,7 +1725,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param Symbol - The symbol to have its External& Type fields set.
+comment|/// \param Symbol - The symbol to have its External& Type fields set.
 end_comment
 
 begin_function_decl
@@ -1798,7 +1742,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitCOFFSymbolStorageClass - Emit the storage class of the symbol.
+comment|/// \brief Emit the storage class of the symbol.
 end_comment
 
 begin_comment
@@ -1806,7 +1750,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param StorageClass - The storage class the symbol should have.
+comment|/// \param StorageClass - The storage class the symbol should have.
 end_comment
 
 begin_function_decl
@@ -1821,7 +1765,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitCOFFSymbolType - Emit the type of the symbol.
+comment|/// \brief Emit the type of the symbol.
 end_comment
 
 begin_comment
@@ -1829,7 +1773,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param Type - A COFF type identifier (see COFF::SymbolType in X86COFF.h)
+comment|/// \param Type - A COFF type identifier (see COFF::SymbolType in X86COFF.h)
 end_comment
 
 begin_function_decl
@@ -1844,7 +1788,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EndCOFFSymbolDef - Marks the end of the symbol definition.
+comment|/// \brief Marks the end of the symbol definition.
 end_comment
 
 begin_function_decl
@@ -1855,8 +1799,21 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|virtual
+name|void
+name|EmitCOFFSafeSEH
+parameter_list|(
+name|MCSymbol
+specifier|const
+modifier|*
+name|Symbol
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/// EmitCOFFSectionIndex - Emits a COFF section index.
+comment|/// \brief Emits a COFF section index.
 end_comment
 
 begin_comment
@@ -1864,7 +1821,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param Symbol - Symbol the section number relocation should point to.
+comment|/// \param Symbol - Symbol the section number relocation should point to.
 end_comment
 
 begin_function_decl
@@ -1881,7 +1838,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitCOFFSecRel32 - Emits a COFF section relative relocation.
+comment|/// \brief Emits a COFF section relative relocation.
 end_comment
 
 begin_comment
@@ -1889,7 +1846,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param Symbol - Symbol the section relative relocation should point to.
+comment|/// \param Symbol - Symbol the section relative relocation should point to.
 end_comment
 
 begin_function_decl
@@ -1906,7 +1863,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitELFSize - Emit an ELF .size directive.
+comment|/// \brief Emit an ELF .size directive.
 end_comment
 
 begin_comment
@@ -1921,16 +1878,12 @@ begin_comment
 comment|///  .size symbol, expression
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
 begin_function_decl
 name|virtual
 name|void
-name|EmitELFSize
+name|emitELFSize
 parameter_list|(
-name|MCSymbol
+name|MCSymbolELF
 modifier|*
 name|Symbol
 parameter_list|,
@@ -1967,7 +1920,7 @@ block|{}
 end_function
 
 begin_comment
-comment|/// EmitCommonSymbol - Emit a common symbol.
+comment|/// \brief Emit a common symbol.
 end_comment
 
 begin_comment
@@ -1975,15 +1928,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param Symbol - The common symbol to emit.
+comment|/// \param Symbol - The common symbol to emit.
 end_comment
 
 begin_comment
-comment|/// @param Size - The size of the common symbol.
+comment|/// \param Size - The size of the common symbol.
 end_comment
 
 begin_comment
-comment|/// @param ByteAlignment - The alignment of the symbol if
+comment|/// \param ByteAlignment - The alignment of the symbol if
 end_comment
 
 begin_comment
@@ -2011,7 +1964,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitLocalCommonSymbol - Emit a local common (.lcomm) symbol.
+comment|/// \brief Emit a local common (.lcomm) symbol.
 end_comment
 
 begin_comment
@@ -2019,15 +1972,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param Symbol - The common symbol to emit.
+comment|/// \param Symbol - The common symbol to emit.
 end_comment
 
 begin_comment
-comment|/// @param Size - The size of the common symbol.
+comment|/// \param Size - The size of the common symbol.
 end_comment
 
 begin_comment
-comment|/// @param ByteAlignment - The alignment of the common symbol in bytes.
+comment|/// \param ByteAlignment - The alignment of the common symbol in bytes.
 end_comment
 
 begin_function_decl
@@ -2049,7 +2002,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitZerofill - Emit the zerofill section and an optional symbol.
+comment|/// \brief Emit the zerofill section and an optional symbol.
 end_comment
 
 begin_comment
@@ -2057,19 +2010,19 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param Section - The zerofill section to create and or to put the symbol
+comment|/// \param Section - The zerofill section to create and or to put the symbol
 end_comment
 
 begin_comment
-comment|/// @param Symbol - The zerofill symbol to emit, if non-NULL.
+comment|/// \param Symbol - The zerofill symbol to emit, if non-NULL.
 end_comment
 
 begin_comment
-comment|/// @param Size - The size of the zerofill symbol.
+comment|/// \param Size - The size of the zerofill symbol.
 end_comment
 
 begin_comment
-comment|/// @param ByteAlignment - The alignment of the zerofill symbol if
+comment|/// \param ByteAlignment - The alignment of the zerofill symbol if
 end_comment
 
 begin_comment
@@ -2081,7 +2034,6 @@ name|virtual
 name|void
 name|EmitZerofill
 parameter_list|(
-specifier|const
 name|MCSection
 modifier|*
 name|Section
@@ -2108,7 +2060,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitTBSSSymbol - Emit a thread local bss (.tbss) symbol.
+comment|/// \brief Emit a thread local bss (.tbss) symbol.
 end_comment
 
 begin_comment
@@ -2116,19 +2068,19 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param Section - The thread local common section.
+comment|/// \param Section - The thread local common section.
 end_comment
 
 begin_comment
-comment|/// @param Symbol - The thread local common symbol to emit.
+comment|/// \param Symbol - The thread local common symbol to emit.
 end_comment
 
 begin_comment
-comment|/// @param Size - The size of the symbol.
+comment|/// \param Size - The size of the symbol.
 end_comment
 
 begin_comment
-comment|/// @param ByteAlignment - The alignment of the thread local common symbol
+comment|/// \param ByteAlignment - The alignment of the thread local common symbol
 end_comment
 
 begin_comment
@@ -2140,7 +2092,6 @@ name|virtual
 name|void
 name|EmitTBSSSymbol
 parameter_list|(
-specifier|const
 name|MCSection
 modifier|*
 name|Section
@@ -2165,7 +2116,7 @@ comment|/// @}
 end_comment
 
 begin_comment
-comment|/// @name Generating Data
+comment|/// \name Generating Data
 end_comment
 
 begin_comment
@@ -2173,7 +2124,7 @@ comment|/// @{
 end_comment
 
 begin_comment
-comment|/// EmitBytes - Emit the bytes in \p Data into the output.
+comment|/// \brief Emit the bytes in \p Data into the output.
 end_comment
 
 begin_comment
@@ -2200,11 +2151,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitValue - Emit the expression @p Value into the output as a native
+comment|/// \brief Emit the expression \p Value into the output as a native
 end_comment
 
 begin_comment
-comment|/// integer of the given @p Size bytes.
+comment|/// integer of the given \p Size bytes.
 end_comment
 
 begin_comment
@@ -2224,11 +2175,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param Value - The value to emit.
+comment|/// \param Value - The value to emit.
 end_comment
 
 begin_comment
-comment|/// @param Size - The size of the integer (in bytes) to emit. This must
+comment|/// \param Size - The size of the integer (in bytes) to emit. This must
 end_comment
 
 begin_comment
@@ -2236,7 +2187,7 @@ comment|/// match a native machine width.
 end_comment
 
 begin_comment
-comment|/// @param Loc - The location of the expression for error reporting.
+comment|/// \param Loc - The location of the expression for error reporting.
 end_comment
 
 begin_function_decl
@@ -2287,7 +2238,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitIntValue - Special case of EmitValue that avoids the client having
+comment|/// \brief Special case of EmitValue that avoids the client having
 end_comment
 
 begin_comment
@@ -2335,11 +2286,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitULEB128Value - Special case of EmitULEB128Value that avoids the
+comment|/// \brief Special case of EmitULEB128Value that avoids the client having to
 end_comment
 
 begin_comment
-comment|/// client having to pass in a MCExpr for constant integers.
+comment|/// pass in a MCExpr for constant integers.
 end_comment
 
 begin_function_decl
@@ -2358,11 +2309,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitSLEB128Value - Special case of EmitSLEB128Value that avoids the
+comment|/// \brief Special case of EmitSLEB128Value that avoids the client having to
 end_comment
 
 begin_comment
-comment|/// client having to pass in a MCExpr for constant integers.
+comment|/// pass in a MCExpr for constant integers.
 end_comment
 
 begin_function_decl
@@ -2376,11 +2327,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitSymbolValue - Special case of EmitValue that avoids the client
+comment|/// \brief Special case of EmitValue that avoids the client having to pass in
 end_comment
 
 begin_comment
-comment|/// having to pass in a MCExpr for MCSymbols.
+comment|/// a MCExpr for MCSymbols.
 end_comment
 
 begin_function_decl
@@ -2404,11 +2355,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitGPRel64Value - Emit the expression @p Value into the output as a
+comment|/// \brief Emit the expression \p Value into the output as a gprel64 (64-bit
 end_comment
 
 begin_comment
-comment|/// gprel64 (64-bit GP relative) value.
+comment|/// GP relative) value.
 end_comment
 
 begin_comment
@@ -2437,11 +2388,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitGPRel32Value - Emit the expression @p Value into the output as a
+comment|/// \brief Emit the expression \p Value into the output as a gprel32 (32-bit
 end_comment
 
 begin_comment
-comment|/// gprel32 (32-bit GP relative) value.
+comment|/// GP relative) value.
 end_comment
 
 begin_comment
@@ -2470,11 +2421,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitFill - Emit NumBytes bytes worth of the value specified by
+comment|/// \brief Emit NumBytes bytes worth of the value specified by FillValue.
 end_comment
 
 begin_comment
-comment|/// FillValue.  This implements directives such as '.space'.
+comment|/// This implements directives such as '.space'.
 end_comment
 
 begin_function_decl
@@ -2511,11 +2462,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitValueToAlignment - Emit some number of copies of @p Value until
+comment|/// \brief Emit some number of copies of \p Value until the byte alignment \p
 end_comment
 
 begin_comment
-comment|/// the byte alignment @p ByteAlignment is reached.
+comment|/// ByteAlignment is reached.
 end_comment
 
 begin_comment
@@ -2527,7 +2478,7 @@ comment|/// If the number of bytes need to emit for the alignment is not a multi
 end_comment
 
 begin_comment
-comment|/// of @p ValueSize, then the contents of the emitted fill bytes is
+comment|/// of \p ValueSize, then the contents of the emitted fill bytes is
 end_comment
 
 begin_comment
@@ -2547,7 +2498,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param ByteAlignment - The alignment to reach. This must be a power of
+comment|/// \param ByteAlignment - The alignment to reach. This must be a power of
 end_comment
 
 begin_comment
@@ -2555,19 +2506,19 @@ comment|/// two on some targets.
 end_comment
 
 begin_comment
-comment|/// @param Value - The value to use when filling bytes.
+comment|/// \param Value - The value to use when filling bytes.
 end_comment
 
 begin_comment
-comment|/// @param ValueSize - The size of the integer (in bytes) to emit for
+comment|/// \param ValueSize - The size of the integer (in bytes) to emit for
 end_comment
 
 begin_comment
-comment|/// @p Value. This must match a native machine width.
+comment|/// \p Value. This must match a native machine width.
 end_comment
 
 begin_comment
-comment|/// @param MaxBytesToEmit - The maximum numbers of bytes to emit, or 0. If
+comment|/// \param MaxBytesToEmit - The maximum numbers of bytes to emit, or 0. If
 end_comment
 
 begin_comment
@@ -2605,11 +2556,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitCodeAlignment - Emit nops until the byte alignment @p ByteAlignment
-end_comment
-
-begin_comment
-comment|/// is reached.
+comment|/// \brief Emit nops until the byte alignment \p ByteAlignment is reached.
 end_comment
 
 begin_comment
@@ -2629,7 +2576,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param ByteAlignment - The alignment to reach. This must be a power of
+comment|/// \param ByteAlignment - The alignment to reach. This must be a power of
 end_comment
 
 begin_comment
@@ -2637,7 +2584,7 @@ comment|/// two on some targets.
 end_comment
 
 begin_comment
-comment|/// @param MaxBytesToEmit - The maximum numbers of bytes to emit, or 0. If
+comment|/// \param MaxBytesToEmit - The maximum numbers of bytes to emit, or 0. If
 end_comment
 
 begin_comment
@@ -2665,11 +2612,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitValueToOffset - Emit some number of copies of @p Value until the
+comment|/// \brief Emit some number of copies of \p Value until the byte offset \p
 end_comment
 
 begin_comment
-comment|/// byte offset @p Offset is reached.
+comment|/// Offset is reached.
 end_comment
 
 begin_comment
@@ -2685,7 +2632,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param Offset - The offset to reach. This may be an expression, but the
+comment|/// \param Offset - The offset to reach. This may be an expression, but the
 end_comment
 
 begin_comment
@@ -2693,11 +2640,11 @@ comment|/// expression must be associated with the current section.
 end_comment
 
 begin_comment
-comment|/// @param Value - The value to use when filling bytes.
+comment|/// \param Value - The value to use when filling bytes.
 end_comment
 
 begin_comment
-comment|/// @return false on success, true if the offset was invalid.
+comment|/// \return false on success, true if the offset was invalid.
 end_comment
 
 begin_function_decl
@@ -2724,11 +2671,11 @@ comment|/// @}
 end_comment
 
 begin_comment
-comment|/// EmitFileDirective - Switch to a new logical file.  This is used to
+comment|/// \brief Switch to a new logical file.  This is used to implement the '.file
 end_comment
 
 begin_comment
-comment|/// implement the '.file "foo.c"' assembler directive.
+comment|/// "foo.c"' assembler directive.
 end_comment
 
 begin_function_decl
@@ -2743,7 +2690,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Emit the "identifiers" directive.  This implements the
+comment|/// \brief Emit the "identifiers" directive.  This implements the
 end_comment
 
 begin_comment
@@ -2762,15 +2709,11 @@ block|{}
 end_function
 
 begin_comment
-comment|/// EmitDwarfFileDirective - Associate a filename with a specified logical
+comment|/// \brief Associate a filename with a specified logical file number.  This
 end_comment
 
 begin_comment
-comment|/// file number.  This implements the DWARF2 '.file 4 "foo.c"' assembler
-end_comment
-
-begin_comment
-comment|/// directive.
+comment|/// implements the DWARF2 '.file 4 "foo.c"' assembler directive.
 end_comment
 
 begin_function_decl
@@ -2796,11 +2739,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitDwarfLocDirective - This implements the DWARF2
+comment|/// \brief This implements the DWARF2 '.loc fileno lineno ...' assembler
 end_comment
 
 begin_comment
-comment|// '.loc fileno lineno ...' assembler directive.
+comment|/// directive.
 end_comment
 
 begin_function_decl
@@ -2828,6 +2771,39 @@ name|Discriminator
 parameter_list|,
 name|StringRef
 name|FileName
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Emit the absolute difference between two symbols.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \pre Offset of \c Hi is greater than the offset \c Lo.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|emitAbsoluteSymbolDiff
+parameter_list|(
+specifier|const
+name|MCSymbol
+modifier|*
+name|Hi
+parameter_list|,
+specifier|const
+name|MCSymbol
+modifier|*
+name|Lo
+parameter_list|,
+name|unsigned
+name|Size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3220,11 +3196,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitInstruction - Emit the given @p Instruction into the current
-end_comment
-
-begin_comment
-comment|/// section.
+comment|/// \brief Emit the given \p Instruction into the current section.
 end_comment
 
 begin_function_decl
@@ -3308,15 +3280,15 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitRawText - If this file is backed by a assembly streamer, this dumps
+comment|/// \brief If this file is backed by a assembly streamer, this dumps the
 end_comment
 
 begin_comment
-comment|/// the specified string in the output .s file.  This capability is
+comment|/// specified string in the output .s file.  This capability is indicated by
 end_comment
 
 begin_comment
-comment|/// indicated by the hasRawTextSupport() predicate.  By default this aborts.
+comment|/// the hasRawTextSupport() predicate.  By default this aborts.
 end_comment
 
 begin_function_decl
@@ -3332,7 +3304,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Flush - Causes any cached state to be written out.
+comment|/// \brief Causes any cached state to be written out.
 end_comment
 
 begin_function
@@ -3344,7 +3316,7 @@ block|{}
 end_function
 
 begin_comment
-comment|/// FinishImpl - Streamer specific finalization.
+comment|/// \brief Streamer specific finalization.
 end_comment
 
 begin_function_decl
@@ -3356,7 +3328,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Finish - Finish emission of machine code.
+comment|/// \brief Finish emission of machine code.
 end_comment
 
 begin_function_decl
@@ -3366,26 +3338,30 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
+begin_decl_stmt
 name|virtual
 name|bool
 name|mayHaveInstructions
-argument_list|()
-specifier|const
+argument_list|(
+name|MCSection
+operator|&
+name|Sec
+argument_list|)
+decl|const
 block|{
 return|return
 name|true
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_comment
 unit|};
-comment|/// createNullStreamer - Create a dummy machine code streamer, which does
+comment|/// Create a dummy machine code streamer, which does nothing. This is useful for
 end_comment
 
 begin_comment
-comment|/// nothing. This is useful for timing the assembler front end.
+comment|/// timing the assembler front end.
 end_comment
 
 begin_function_decl
@@ -3401,15 +3377,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// createAsmStreamer - Create a machine code streamer which will print out
+comment|/// Create a machine code streamer which will print out assembly for the native
 end_comment
 
 begin_comment
-comment|/// assembly for the native target, suitable for compiling with a native
-end_comment
-
-begin_comment
-comment|/// assembler.
+comment|/// target, suitable for compiling with a native assembler.
 end_comment
 
 begin_comment
@@ -3468,127 +3440,46 @@ begin_comment
 comment|/// the assembly.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|MCStreamer
 modifier|*
 name|createAsmStreamer
-parameter_list|(
+argument_list|(
 name|MCContext
-modifier|&
+operator|&
 name|Ctx
-parameter_list|,
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|formatted_raw_ostream
-modifier|&
+operator|>
 name|OS
-parameter_list|,
+argument_list|,
 name|bool
 name|isVerboseAsm
-parameter_list|,
+argument_list|,
 name|bool
 name|useDwarfDirectory
-parameter_list|,
+argument_list|,
 name|MCInstPrinter
-modifier|*
+operator|*
 name|InstPrint
-parameter_list|,
+argument_list|,
 name|MCCodeEmitter
-modifier|*
+operator|*
 name|CE
-parameter_list|,
+argument_list|,
 name|MCAsmBackend
-modifier|*
+operator|*
 name|TAB
-parameter_list|,
+argument_list|,
 name|bool
 name|ShowInst
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// createMachOStreamer - Create a machine code streamer which will generate
-end_comment
-
-begin_comment
-comment|/// Mach-O format object files.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Takes ownership of \p TAB and \p CE.
-end_comment
-
-begin_function_decl
-name|MCStreamer
-modifier|*
-name|createMachOStreamer
-parameter_list|(
-name|MCContext
-modifier|&
-name|Ctx
-parameter_list|,
-name|MCAsmBackend
-modifier|&
-name|TAB
-parameter_list|,
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|,
-name|MCCodeEmitter
-modifier|*
-name|CE
-parameter_list|,
-name|bool
-name|RelaxAll
-init|=
-name|false
-parameter_list|,
-name|bool
-name|LabelSections
-init|=
-name|false
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// createELFStreamer - Create a machine code streamer which will generate
-end_comment
-
-begin_comment
-comment|/// ELF format object files.
-end_comment
-
-begin_function_decl
-name|MCStreamer
-modifier|*
-name|createELFStreamer
-parameter_list|(
-name|MCContext
-modifier|&
-name|Ctx
-parameter_list|,
-name|MCAsmBackend
-modifier|&
-name|TAB
-parameter_list|,
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|,
-name|MCCodeEmitter
-modifier|*
-name|CE
-parameter_list|,
-name|bool
-name|RelaxAll
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|}

@@ -203,6 +203,17 @@ name|thr
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|old
+operator|.
+name|IsRWWeakerOrEqual
+argument_list|(
+name|kAccessIsWrite
+argument_list|,
+name|kIsAtomic
+argument_list|)
+condition|)
 name|StoreIfNotYetStored
 argument_list|(
 name|sp

@@ -119,6 +119,14 @@ name|void
 modifier|*
 name|chunk_alloc_dss
 parameter_list|(
+name|arena_t
+modifier|*
+name|arena
+parameter_list|,
+name|void
+modifier|*
+name|new_addr
+parameter_list|,
 name|size_t
 name|size
 parameter_list|,
@@ -128,6 +136,10 @@ parameter_list|,
 name|bool
 modifier|*
 name|zero
+parameter_list|,
+name|bool
+modifier|*
+name|commit
 parameter_list|)
 function_decl|;
 end_function_decl

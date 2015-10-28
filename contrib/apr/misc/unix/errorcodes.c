@@ -115,6 +115,12 @@ name|statcode
 condition|)
 block|{
 case|case
+name|APR_ENOSTAT
+case|:
+return|return
+literal|"Could not perform a stat on the file."
+return|;
+case|case
 name|APR_ENOPOOL
 case|:
 return|return
@@ -220,6 +226,18 @@ name|APR_EBADMASK
 case|:
 return|return
 literal|"The specified network mask is invalid."
+return|;
+case|case
+name|APR_ESYMNOTFOUND
+case|:
+return|return
+literal|"Could not find the requested symbol."
+return|;
+case|case
+name|APR_ENOTENOUGHENTROPY
+case|:
+return|return
+literal|"Not enough entropy to continue."
 return|;
 case|case
 name|APR_INCHILD
@@ -369,6 +387,12 @@ return|return
 literal|"The given path contained wildcard characters"
 return|;
 case|case
+name|APR_EBUSY
+case|:
+return|return
+literal|"The given lock was busy."
+return|;
+case|case
 name|APR_EPROC_UNKNOWN
 case|:
 return|return
@@ -378,7 +402,7 @@ case|case
 name|APR_EGENERAL
 case|:
 return|return
-literal|"Internal error"
+literal|"Internal error (specific information not available)"
 return|;
 default|default:
 return|return

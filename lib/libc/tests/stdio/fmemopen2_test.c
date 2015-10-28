@@ -315,6 +315,13 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+name|ATF_REQUIRE
+argument_list|(
+name|rc
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Check that the string was not modified after the first 4 bytes. */
 name|ATF_REQUIRE
 argument_list|(

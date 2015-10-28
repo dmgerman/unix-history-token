@@ -134,6 +134,15 @@ argument_list|,
 argument|lldb::LanguageType language
 argument_list|)
 block|;
+specifier|static
+name|void
+name|InitializeCommands
+argument_list|(
+name|CommandObject
+operator|*
+name|parent
+argument_list|)
+block|;
 name|virtual
 name|lldb
 operator|::
@@ -255,6 +264,19 @@ argument|bool is_internal = false
 argument_list|)
 block|;
 specifier|static
+name|Breakpoint
+operator|::
+name|BreakpointPreconditionSP
+name|CreateExceptionPrecondition
+argument_list|(
+argument|lldb::LanguageType language
+argument_list|,
+argument|bool catch_bp
+argument_list|,
+argument|bool throw_bp
+argument_list|)
+block|;
+specifier|static
 name|lldb
 operator|::
 name|LanguageType
@@ -271,6 +293,32 @@ specifier|const
 name|char
 operator|*
 name|GetNameForLanguageType
+argument_list|(
+argument|lldb::LanguageType language
+argument_list|)
+block|;
+specifier|static
+name|void
+name|PrintAllLanguages
+argument_list|(
+name|Stream
+operator|&
+name|s
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|prefix
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|suffix
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|LanguageIsCPlusPlus
 argument_list|(
 argument|lldb::LanguageType language
 argument_list|)
@@ -306,6 +354,39 @@ name|SearchFilterSP
 name|CreateExceptionSearchFilter
 argument_list|()
 block|;
+name|virtual
+name|bool
+name|GetTypeBitSize
+argument_list|(
+argument|const ClangASTType& clang_type
+argument_list|,
+argument|uint64_t&size
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
+name|IsRuntimeSupportValue
+argument_list|(
+argument|ValueObject& valobj
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|void
+name|ModulesDidLoad
+argument_list|(
+argument|const ModuleList&module_list
+argument_list|)
+block|{
+return|return;
+block|}
 name|protected
 operator|:
 comment|//------------------------------------------------------------------

@@ -2068,9 +2068,6 @@ name|fset
 decl_stmt|,
 name|fclear
 decl_stmt|;
-name|size_t
-name|sz
-decl_stmt|;
 name|char
 modifier|*
 name|e
@@ -2084,13 +2081,6 @@ index|[
 literal|128
 index|]
 decl_stmt|;
-name|sz
-operator|=
-sizeof|sizeof
-argument_list|(
-name|tbuf
-argument_list|)
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -2436,7 +2426,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* Set some defaults to preserve compability */
+comment|/* Set some defaults to preserve compatibility. */
 if|if
 condition|(
 name|xi
@@ -2628,22 +2618,6 @@ decl_stmt|;
 name|int
 name|tcmd
 decl_stmt|;
-name|size_t
-name|sz
-decl_stmt|;
-name|char
-name|tbuf
-index|[
-literal|128
-index|]
-decl_stmt|;
-name|sz
-operator|=
-sizeof|sizeof
-argument_list|(
-name|tbuf
-argument_list|)
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -4821,7 +4795,7 @@ operator|&
 name|xi
 argument_list|)
 expr_stmt|;
-comment|/* 		 * compability layer: auto-create table if not exists 		 */
+comment|/* 		 * Compatibility layer: auto-create table if not exists. 		 */
 if|if
 condition|(
 name|xi
@@ -4870,7 +4844,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"DEPRECATED: inserting data info "
+literal|"DEPRECATED: inserting data into "
 literal|"non-existent table %s. (auto-created)\n"
 argument_list|,
 name|xi
@@ -7063,7 +7037,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * we're running `ipfw -n` 			 * Compability layer: try to guess key type 			 * before failing. 			 */
+comment|/* 			 * We're running `ipfw -n` 			 * Compatibility layer: try to guess key type 			 * before failing. 			 */
 if|if
 condition|(
 name|guess_key_type
@@ -7135,7 +7109,7 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Table does not exist 		 * Compability layer: try to guess key type before failing. 		 */
+comment|/* 		 * Table does not exist 		 * Compatibility layer: try to guess key type before failing. 		 */
 if|if
 condition|(
 name|guess_key_type
@@ -7312,8 +7286,6 @@ decl_stmt|,
 name|flag
 decl_stmt|,
 name|val
-decl_stmt|,
-name|vm
 decl_stmt|;
 name|ipfw_table_value
 modifier|*
@@ -7349,10 +7321,6 @@ operator|->
 name|v
 operator|.
 name|value
-expr_stmt|;
-name|vm
-operator|=
-name|vmask
 expr_stmt|;
 comment|/* Compat layer: keep old behavior for legacy value types */
 if|if

@@ -179,31 +179,47 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInstallTableWithOverride  *  * PARAMETERS:  TableIndex              - Index into root table array  *              NewTableDesc            - New table descriptor to install  *              Override                - Whether override should be performed  *  * RETURN:      None  *  * DESCRIPTION: Install an ACPI table into the global data structure. The  *              table override mechanism is called to allow the host  *              OS to replace any table before it is installed in the root  *              table array.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInstallTableWithOverride  *  * PARAMETERS:  NewTableDesc            - New table descriptor to install  *              Override                - Whether override should be performed  *              TableIndex              - Where the table index is returned  *  * RETURN:      None  *  * DESCRIPTION: Install an ACPI table into the global data structure. The  *              table override mechanism is called to allow the host  *              OS to replace any table before it is installed in the root  *              table array.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiTbInstallTableWithOverride
 parameter_list|(
-name|UINT32
-name|TableIndex
-parameter_list|,
 name|ACPI_TABLE_DESC
 modifier|*
 name|NewTableDesc
 parameter_list|,
 name|BOOLEAN
 name|Override
+parameter_list|,
+name|UINT32
+modifier|*
+name|TableIndex
 parameter_list|)
 block|{
+name|UINT32
+name|i
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|Status
+operator|=
+name|AcpiTbGetNextTableDescriptor
+argument_list|(
+operator|&
+name|i
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|TableIndex
-operator|>=
-name|AcpiGbl_RootTableList
-operator|.
-name|CurrentTableCount
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
 condition|)
 block|{
 return|return;
@@ -227,7 +243,7 @@ name|AcpiGbl_RootTableList
 operator|.
 name|Tables
 index|[
-name|TableIndex
+name|i
 index|]
 argument_list|,
 name|NewTableDesc
@@ -254,12 +270,18 @@ operator|->
 name|Pointer
 argument_list|)
 expr_stmt|;
+comment|/* This synchronizes AcpiGbl_DsdtIndex */
+operator|*
+name|TableIndex
+operator|=
+name|i
+expr_stmt|;
 comment|/* Set the global integer width (based upon revision of the DSDT) */
 if|if
 condition|(
-name|TableIndex
+name|i
 operator|==
-name|ACPI_TABLE_INDEX_DSDT
+name|AcpiGbl_DsdtIndex
 condition|)
 block|{
 name|AcpiUtSetIntegerWidth
@@ -276,7 +298,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInstallFixedTable  *  * PARAMETERS:  Address                 - Physical address of DSDT or FACS  *              Signature               - Table signature, NULL if no need to  *                                        match  *              TableIndex              - Index into root table array  *  * RETURN:      Status  *  * DESCRIPTION: Install a fixed ACPI table (DSDT/FACS) into the global data  *              structure.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInstallFixedTable  *  * PARAMETERS:  Address                 - Physical address of DSDT or FACS  *              Signature               - Table signature, NULL if no need to  *                                        match  *              TableIndex              - Where the table index is returned  *  * RETURN:      Status  *  * DESCRIPTION: Install a fixed ACPI table (DSDT/FACS) into the global data  *              structure.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -291,6 +313,7 @@ modifier|*
 name|Signature
 parameter_list|,
 name|UINT32
+modifier|*
 name|TableIndex
 parameter_list|)
 block|{
@@ -392,14 +415,15 @@ goto|goto
 name|ReleaseAndExit
 goto|;
 block|}
+comment|/* Add the table to the global root table list */
 name|AcpiTbInstallTableWithOverride
 argument_list|(
-name|TableIndex
-argument_list|,
 operator|&
 name|NewTableDesc
 argument_list|,
 name|TRUE
+argument_list|,
+name|TableIndex
 argument_list|)
 expr_stmt|;
 name|ReleaseAndExit
@@ -737,41 +761,14 @@ block|}
 block|}
 block|}
 comment|/* Add the table to the global root table list */
-name|Status
-operator|=
-name|AcpiTbGetNextTableDescriptor
-argument_list|(
-operator|&
-name|i
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|ReleaseAndExit
-goto|;
-block|}
-operator|*
-name|TableIndex
-operator|=
-name|i
-expr_stmt|;
 name|AcpiTbInstallTableWithOverride
 argument_list|(
-name|i
-argument_list|,
 operator|&
 name|NewTableDesc
 argument_list|,
 name|Override
+argument_list|,
+name|TableIndex
 argument_list|)
 expr_stmt|;
 name|ReleaseAndExit

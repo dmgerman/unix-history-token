@@ -82,6 +82,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IOREQ_TYPE_PCI_CONFIG
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
 name|IOREQ_TYPE_TIMEOFFSET
 value|7
 end_define
@@ -98,7 +105,7 @@ comment|/* mapcache */
 end_comment
 
 begin_comment
-comment|/*  * VMExit dispatcher should cooperate with instruction decoder to  * prepare this structure and notify service OS and DM by sending  * virq  */
+comment|/*  * VMExit dispatcher should cooperate with instruction decoder to  * prepare this structure and notify service OS and DM by sending  * virq.  *  * For I/O type IOREQ_TYPE_PCI_CONFIG, the physical address is formatted  * as follows:  *   * 63....48|47..40|39..35|34..32|31........0  * SEGMENT |BUS   |DEV   |FN    |OFFSET  */
 end_comment
 
 begin_struct
@@ -256,14 +263,35 @@ begin_struct
 struct|struct
 name|buffered_iopage
 block|{
-name|unsigned
-name|int
+ifdef|#
+directive|ifdef
+name|__XEN__
+union|union
+name|bufioreq_pointers
+block|{
+struct|struct
+block|{
+endif|#
+directive|endif
+name|uint32_t
 name|read_pointer
 decl_stmt|;
-name|unsigned
-name|int
+name|uint32_t
 name|write_pointer
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__XEN__
+block|}
+struct|;
+name|uint64_t
+name|full
+decl_stmt|;
+block|}
+name|ptrs
+union|;
+endif|#
+directive|endif
 name|buf_ioreq_t
 name|buf_ioreq
 index|[
@@ -285,98 +313,6 @@ name|buffered_iopage
 name|buffered_iopage_t
 typedef|;
 end_typedef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-end_if
-
-begin_struct
-struct|struct
-name|pio_buffer
-block|{
-name|uint32_t
-name|page_offset
-decl_stmt|;
-name|uint32_t
-name|pointer
-decl_stmt|;
-name|uint32_t
-name|data_end
-decl_stmt|;
-name|uint32_t
-name|buf_size
-decl_stmt|;
-name|void
-modifier|*
-name|opaque
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|PIO_BUFFER_IDE_PRIMARY
-value|0
-end_define
-
-begin_comment
-comment|/* I/O port = 0x1F0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PIO_BUFFER_IDE_SECONDARY
-value|1
-end_define
-
-begin_comment
-comment|/* I/O port = 0x170 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PIO_BUFFER_ENTRY_NUM
-value|2
-end_define
-
-begin_struct
-struct|struct
-name|buffered_piopage
-block|{
-name|struct
-name|pio_buffer
-name|pio
-index|[
-name|PIO_BUFFER_ENTRY_NUM
-index|]
-decl_stmt|;
-name|uint8_t
-name|buffer
-index|[
-literal|1
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(__ia64__) */
-end_comment
 
 begin_comment
 comment|/*  * ACPI Control/Event register locations. Location is controlled by a   * version number in HVM_PARAM_ACPI_IOPORTS_LOCATION.  */
@@ -509,7 +445,7 @@ comment|/* _IOREQ_H_ */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit

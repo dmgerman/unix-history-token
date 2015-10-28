@@ -530,7 +530,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int
+name|uintptr_t
 name|booke_init
 parameter_list|(
 name|uint32_t

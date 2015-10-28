@@ -60,7 +60,7 @@ comment|// Although most of the current fixup types reflect a unique relocation
 comment|// one can have multiple fixup types for a given relocation and thus need
 comment|// to be uniquely named.
 comment|//
-comment|// This table *must* be in the save order of
+comment|// This table *must* be in the same order of
 comment|// MCFixupKindInfo Infos[Mips::NumTargetFixupKinds]
 comment|// in MipsAsmBackend.cpp.
 comment|//
@@ -206,6 +206,9 @@ name|fixup_MICROMIPS_GOT16
 block|,
 comment|// resulting in - R_MICROMIPS_PC7_S1
 name|fixup_MICROMIPS_PC7_S1
+block|,
+comment|// resulting in - R_MICROMIPS_PC10_S1
+name|fixup_MICROMIPS_PC10_S1
 block|,
 comment|// resulting in - R_MICROMIPS_PC16_S1
 name|fixup_MICROMIPS_PC16_S1

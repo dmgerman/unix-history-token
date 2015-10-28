@@ -218,7 +218,6 @@ block|;
 comment|//------------------------------------------------------------------
 comment|// Check if a given Process
 comment|//------------------------------------------------------------------
-name|virtual
 name|bool
 name|CanDebug
 argument_list|(
@@ -231,7 +230,6 @@ block|;
 comment|//------------------------------------------------------------------
 comment|// Creating a new process, or attaching to an existing one
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb_private
 operator|::
 name|Error
@@ -239,7 +237,6 @@ name|DoLoadCore
 argument_list|()
 name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|DynamicLoader
@@ -251,7 +248,6 @@ block|;
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
@@ -259,7 +255,6 @@ name|GetPluginName
 argument_list|()
 name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
@@ -268,7 +263,6 @@ block|;
 comment|//------------------------------------------------------------------
 comment|// Process Control
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb_private
 operator|::
 name|Error
@@ -276,7 +270,6 @@ name|DoDestroy
 argument_list|()
 name|override
 block|;
-name|virtual
 name|void
 name|RefreshStateAfterStop
 argument_list|()
@@ -285,7 +278,6 @@ block|;
 comment|//------------------------------------------------------------------
 comment|// Process Queries
 comment|//------------------------------------------------------------------
-name|virtual
 name|bool
 name|IsAlive
 argument_list|()
@@ -294,7 +286,6 @@ block|;
 comment|//------------------------------------------------------------------
 comment|// Process Memory
 comment|//------------------------------------------------------------------
-name|virtual
 name|size_t
 name|ReadMemory
 argument_list|(
@@ -308,7 +299,6 @@ argument|lldb_private::Error&error
 argument_list|)
 name|override
 block|;
-name|virtual
 name|size_t
 name|DoReadMemory
 argument_list|(
@@ -322,7 +312,6 @@ argument|lldb_private::Error&error
 argument_list|)
 name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|addr_t
@@ -351,7 +340,6 @@ name|void
 name|Clear
 argument_list|( )
 block|;
-name|virtual
 name|bool
 name|UpdateThreadList
 argument_list|(

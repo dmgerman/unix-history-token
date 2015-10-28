@@ -995,6 +995,12 @@ name|m_appkit_category_name
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|ConstString
+name|m_coremedia_category_name
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|HardcodedFormatterFinders
 operator|<
@@ -1147,6 +1153,13 @@ end_function_decl
 begin_function_decl
 name|void
 name|LoadObjCFormatters
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|LoadCoreMediaFormatters
 parameter_list|()
 function_decl|;
 end_function_decl

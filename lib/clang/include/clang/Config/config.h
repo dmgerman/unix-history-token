@@ -46,6 +46,17 @@ value|"https://bugs.freebsd.org/submit/"
 end_define
 
 begin_comment
+comment|/* Default OpenMP runtime used by -fopenmp. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLANG_DEFAULT_OPENMP_RUNTIME
+value|"libomp"
+end_define
+
+begin_comment
 comment|/* Multilib suffix for libdir. */
 end_comment
 
@@ -109,7 +120,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.6.1"
+value|"LLVM 3.7.0"
 end_define
 
 begin_comment

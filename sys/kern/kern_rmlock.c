@@ -1781,6 +1781,10 @@ name|lo_flags
 operator|&
 name|LO_SLEEPABLE
 condition|)
+block|{
+name|THREAD_SLEEPING_OK
+argument_list|()
+expr_stmt|;
 name|sx_xlock
 argument_list|(
 operator|&
@@ -1789,6 +1793,10 @@ operator|->
 name|rm_lock_sx
 argument_list|)
 expr_stmt|;
+name|THREAD_NO_SLEEPING
+argument_list|()
+expr_stmt|;
+block|}
 else|else
 name|mtx_lock
 argument_list|(

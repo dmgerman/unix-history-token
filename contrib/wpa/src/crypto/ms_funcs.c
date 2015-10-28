@@ -294,7 +294,6 @@ comment|/**  * challenge_hash - ChallengeHash() - RFC 2759, Sect. 8.2  * @peer_c
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|challenge_hash
 parameter_list|(
@@ -712,13 +711,7 @@ name|username_len
 argument_list|,
 name|challenge
 argument_list|)
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-if|if
-condition|(
+operator|||
 name|nt_password_hash
 argument_list|(
 name|password
@@ -1159,13 +1152,7 @@ name|password_hash
 argument_list|,
 name|password_hash_hash
 argument_list|)
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-if|if
-condition|(
+operator|||
 name|sha1_vector
 argument_list|(
 literal|3
@@ -1176,13 +1163,7 @@ name|len1
 argument_list|,
 name|response
 argument_list|)
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-if|if
-condition|(
+operator|||
 name|challenge_hash
 argument_list|(
 name|peer_challenge
@@ -2225,6 +2206,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CONFIG_NO_RC4
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -2293,13 +2280,7 @@ name|ucs2_len
 argument_list|)
 operator|<
 literal|0
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-if|if
-condition|(
+operator|||
 name|ucs2_len
 operator|>
 literal|256
@@ -2465,6 +2446,15 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_NO_RC4 */
+end_comment
 
 begin_comment
 comment|/**  * nt_password_hash_encrypted_with_block - NtPasswordHashEncryptedWithBlock() - RFC 2759, Sect 8.13  * @password_hash: 16-octer PasswordHash (IN)  * @block: 16-octet Block (IN)  * @cypher: 16-octer Cypher (OUT)  */

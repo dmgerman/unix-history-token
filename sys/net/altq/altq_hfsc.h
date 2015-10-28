@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/altq/altq_codel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/altq/altq_red.h>
 end_include
 
@@ -93,6 +99,11 @@ directive|define
 name|HFCF_RIO
 value|0x0004
 comment|/* use RIO */
+define|#
+directive|define
+name|HFCF_CODEL
+value|0x0008
+comment|/* use CoDel */
 define|#
 directive|define
 name|HFCF_CLEARDSCP
@@ -234,7 +245,7 @@ name|int
 name|nactive
 decl_stmt|;
 comment|/* number of active children */
-comment|/* red and rio related info */
+comment|/* codel, red and rio related info */
 name|int
 name|qtype
 decl_stmt|;
@@ -244,6 +255,10 @@ name|red
 index|[
 literal|3
 index|]
+decl_stmt|;
+name|struct
+name|codel_stats
+name|codel
 decl_stmt|;
 block|}
 struct|;
@@ -566,12 +581,31 @@ modifier|*
 name|cl_q
 decl_stmt|;
 comment|/* class queue structure */
+union|union
+block|{
 name|struct
 name|red
 modifier|*
 name|cl_red
 decl_stmt|;
 comment|/* RED state */
+name|struct
+name|codel
+modifier|*
+name|cl_codel
+decl_stmt|;
+comment|/* CoDel state */
+block|}
+name|cl_aqm
+union|;
+define|#
+directive|define
+name|cl_red
+value|cl_aqm.cl_red
+define|#
+directive|define
+name|cl_codel
+value|cl_aqm.cl_codel
 name|struct
 name|altq_pktattr
 modifier|*

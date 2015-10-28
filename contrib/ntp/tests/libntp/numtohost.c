@@ -14,12 +14,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_calendar.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntp_fp.h"
 end_include
 
@@ -29,6 +23,15 @@ directive|include
 file|"unity.h"
 end_include
 
+begin_function_decl
+name|void
+name|test_LoopbackNetNonResolve
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|test_LoopbackNetNonResolve
@@ -37,6 +40,7 @@ name|void
 parameter_list|)
 block|{
 comment|/* A loopback address in 127.0.0.0/8 is chosen, and 	 * numtohost() should not try to resolve it unless 	 * it is 127.0.0.1 	 */
+specifier|const
 name|u_int32
 name|input
 init|=

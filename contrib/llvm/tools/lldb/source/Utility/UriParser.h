@@ -71,6 +71,14 @@ name|UriParser
 block|{
 name|public
 label|:
+comment|// Parses
+comment|// RETURN VALUE
+comment|//   if url is valid, function returns true and
+comment|//   scheme/hostname/port/path are set to the parsed values
+comment|//   port it set to -1 if it is not included in the URL
+comment|//
+comment|//   if the url is invalid, function returns false and
+comment|//   output parameters remain unchanged
 specifier|static
 name|bool
 name|Parse

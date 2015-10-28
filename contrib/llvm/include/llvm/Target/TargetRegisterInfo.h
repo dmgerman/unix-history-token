@@ -193,6 +193,17 @@ specifier|const
 name|unsigned
 name|LaneMask
 decl_stmt|;
+comment|/// Classes with a higher priority value are assigned first by register
+comment|/// allocators using a greedy heuristic. The value is in the range [0,63].
+specifier|const
+name|uint8_t
+name|AllocationPriority
+decl_stmt|;
+comment|/// Whether the class supports two (or more) disjunct subregister indices.
+specifier|const
+name|bool
+name|HasDisjunctSubRegs
+decl_stmt|;
 specifier|const
 name|sc_iterator
 name|SuperClasses
@@ -1442,7 +1453,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|///   getSubRegIndexLaneMask(A)& getSubRegIndexLaneMask(B) != 0
+comment|///   (getSubRegIndexLaneMask(A)& getSubRegIndexLaneMask(B)) != 0
 end_comment
 
 begin_comment
@@ -1461,6 +1472,10 @@ begin_comment
 comment|/// assumed that they usually will.
 end_comment
 
+begin_comment
+comment|/// SubIdx == 0 is allowed, it has the lane mask ~0u.
+end_comment
+
 begin_decl_stmt
 name|unsigned
 name|getSubRegIndexLaneMask
@@ -1470,7 +1485,6 @@ name|SubIdx
 argument_list|)
 decl|const
 block|{
-comment|// SubIdx == 0 is allowed, it has the lane mask ~0u.
 name|assert
 argument_list|(
 name|SubIdx
@@ -1489,6 +1503,59 @@ index|]
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// Returns true if the given lane mask is imprecise.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// LaneMasks as given by getSubRegIndexLaneMask() have a limited number of
+end_comment
+
+begin_comment
+comment|/// bits, so for targets with more than 31 disjunct subregister indices there
+end_comment
+
+begin_comment
+comment|/// may be cases where:
+end_comment
+
+begin_comment
+comment|///    getSubReg(Reg,A) does not overlap getSubReg(Reg,B)
+end_comment
+
+begin_comment
+comment|/// but we still have
+end_comment
+
+begin_comment
+comment|///    (getSubRegIndexLaneMask(A)& getSubRegIndexLaneMask(B)) != 0.
+end_comment
+
+begin_comment
+comment|/// This function returns true in those cases.
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|isImpreciseLaneMask
+parameter_list|(
+name|unsigned
+name|LaneMask
+parameter_list|)
+block|{
+return|return
+name|LaneMask
+operator|&
+literal|0x80000000u
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/// The lane masks returned by getSubRegIndexLaneMask() above can only be
@@ -1784,8 +1851,6 @@ specifier|const
 name|MachineFunction
 operator|*
 name|MF
-operator|=
-name|nullptr
 argument_list|)
 decl|const
 init|=
@@ -1798,7 +1863,7 @@ comment|/// getCallPreservedMask - Return a mask of call-preserved registers for
 end_comment
 
 begin_comment
-comment|/// given calling convention on the current sub-target.  The mask should
+comment|/// given calling convention on the current function.  The mask should
 end_comment
 
 begin_comment
@@ -1872,6 +1937,11 @@ name|uint32_t
 modifier|*
 name|getCallPreservedMask
 argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|,
 name|CallingConv
 operator|::
 name|ID
@@ -1884,6 +1954,42 @@ name|nullptr
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// Return all the call-preserved register masks defined for this target.
+end_comment
+
+begin_expr_stmt
+name|virtual
+name|ArrayRef
+operator|<
+specifier|const
+name|uint32_t
+operator|*
+operator|>
+name|getRegMasks
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|virtual
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|getRegMaskNames
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// getReservedRegs - Returns a bitset indexed by physical register number
@@ -2722,6 +2828,10 @@ specifier|const
 name|TargetRegisterClass
 operator|*
 name|RC
+argument_list|,
+specifier|const
+name|MachineFunction
+operator|&
 argument_list|)
 decl|const
 block|{
@@ -2867,6 +2977,11 @@ name|virtual
 name|unsigned
 name|getRegPressureSetLimit
 argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|,
 name|unsigned
 name|Idx
 argument_list|)
@@ -3020,41 +3135,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// avoidWriteAfterWrite - Return true if the register allocator should avoid
-end_comment
-
-begin_comment
-comment|/// writing a register from RC in two consecutive instructions.
-end_comment
-
-begin_comment
-comment|/// This can avoid pipeline stalls on certain architectures.
-end_comment
-
-begin_comment
-comment|/// It does cause increased register pressure, though.
-end_comment
-
-begin_decl_stmt
-name|virtual
-name|bool
-name|avoidWriteAfterWrite
-argument_list|(
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
-argument_list|)
-decl|const
-block|{
-return|return
-name|false
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// UpdateRegAllocHint - A callback to allow target a chance to update
+comment|/// updateRegAllocHint - A callback to allow target a chance to update
 end_comment
 
 begin_comment
@@ -3080,7 +3161,7 @@ end_comment
 begin_decl_stmt
 name|virtual
 name|void
-name|UpdateRegAllocHint
+name|updateRegAllocHint
 argument_list|(
 name|unsigned
 name|Reg
@@ -3525,11 +3606,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// isFrameOffsetLegal - Determine whether a given offset immediate is
+comment|/// isFrameOffsetLegal - Determine whether a given base register plus offset
 end_comment
 
 begin_comment
-comment|/// encodable to resolve a frame index.
+comment|/// immediate is encodable to resolve a frame index.
 end_comment
 
 begin_decl_stmt
@@ -3541,6 +3622,9 @@ specifier|const
 name|MachineInstr
 operator|*
 name|MI
+argument_list|,
+name|unsigned
+name|BaseReg
 argument_list|,
 name|int64_t
 name|Offset

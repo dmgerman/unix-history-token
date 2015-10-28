@@ -21,6 +21,12 @@ directive|include
 file|"svn_fs.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"private/svn_fs_fs_private.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -34,10 +40,86 @@ block|{
 endif|#
 directive|endif
 comment|/* __cplusplus */
+comment|/*** Operations on ID parts. ***/
+comment|/* Return TRUE, if both elements of the PART is 0, i.e. this is the default  * value if e.g. no copies were made of this node. */
+name|svn_boolean_t
+name|svn_fs_fs__id_part_is_root
+parameter_list|(
+specifier|const
+name|svn_fs_fs__id_part_t
+modifier|*
+name|part
+parameter_list|)
+function_decl|;
+comment|/* Return TRUE, if all element values of *LHS and *RHS match. */
+name|svn_boolean_t
+name|svn_fs_fs__id_part_eq
+parameter_list|(
+specifier|const
+name|svn_fs_fs__id_part_t
+modifier|*
+name|lhs
+parameter_list|,
+specifier|const
+name|svn_fs_fs__id_part_t
+modifier|*
+name|rhs
+parameter_list|)
+function_decl|;
+comment|/* Return TRUE, if TXN_ID is used, i.e. doesn't contain just the defaults. */
+name|svn_boolean_t
+name|svn_fs_fs__id_txn_used
+parameter_list|(
+specifier|const
+name|svn_fs_fs__id_part_t
+modifier|*
+name|txn_id
+parameter_list|)
+function_decl|;
+comment|/* Reset TXN_ID to the defaults. */
+name|void
+name|svn_fs_fs__id_txn_reset
+parameter_list|(
+name|svn_fs_fs__id_part_t
+modifier|*
+name|txn_id
+parameter_list|)
+function_decl|;
+comment|/* Parse the transaction id in DATA and store the result in *TXN_ID */
+name|svn_error_t
+modifier|*
+name|svn_fs_fs__id_txn_parse
+parameter_list|(
+name|svn_fs_fs__id_part_t
+modifier|*
+name|txn_id
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+comment|/* Convert the transaction id in *TXN_ID into a textual representation  * allocated in POOL. */
+specifier|const
+name|char
+modifier|*
+name|svn_fs_fs__id_txn_unparse
+parameter_list|(
+specifier|const
+name|svn_fs_fs__id_part_t
+modifier|*
+name|txn_id
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
 comment|/*** ID accessor functions. ***/
 comment|/* Get the "node id" portion of ID. */
 specifier|const
-name|char
+name|svn_fs_fs__id_part_t
 modifier|*
 name|svn_fs_fs__id_node_id
 parameter_list|(
@@ -49,7 +131,7 @@ parameter_list|)
 function_decl|;
 comment|/* Get the "copy id" portion of ID. */
 specifier|const
-name|char
+name|svn_fs_fs__id_part_t
 modifier|*
 name|svn_fs_fs__id_copy_id
 parameter_list|(
@@ -61,9 +143,21 @@ parameter_list|)
 function_decl|;
 comment|/* Get the "txn id" portion of ID, or NULL if it is a permanent ID. */
 specifier|const
-name|char
+name|svn_fs_fs__id_part_t
 modifier|*
 name|svn_fs_fs__id_txn_id
+parameter_list|(
+specifier|const
+name|svn_fs_id_t
+modifier|*
+name|id
+parameter_list|)
+function_decl|;
+comment|/* Get the "rev,item" portion of ID. */
+specifier|const
+name|svn_fs_fs__id_part_t
+modifier|*
+name|svn_fs_fs__id_rev_item
 parameter_list|(
 specifier|const
 name|svn_fs_id_t
@@ -81,9 +175,19 @@ modifier|*
 name|id
 parameter_list|)
 function_decl|;
-comment|/* Access the "offset" portion of the ID, or -1 if it is a transaction    ID. */
-name|apr_off_t
-name|svn_fs_fs__id_offset
+comment|/* Access the "item" portion of the ID, or 0 if it is a transaction    ID. */
+name|apr_uint64_t
+name|svn_fs_fs__id_item
+parameter_list|(
+specifier|const
+name|svn_fs_id_t
+modifier|*
+name|id
+parameter_list|)
+function_decl|;
+comment|/* Return TRUE, if this is a transaction ID. */
+name|svn_boolean_t
+name|svn_fs_fs__id_is_txn
 parameter_list|(
 specifier|const
 name|svn_fs_id_t
@@ -136,8 +240,8 @@ modifier|*
 name|b
 parameter_list|)
 function_decl|;
-comment|/* Return 0 if A and B are equal, 1 if they are related, -1 otherwise. */
-name|int
+comment|/* Return the noderev relationship between A and B. */
+name|svn_fs_node_relation_t
 name|svn_fs_fs__id_compare
 parameter_list|(
 specifier|const
@@ -151,23 +255,28 @@ modifier|*
 name|b
 parameter_list|)
 function_decl|;
-comment|/* Create an ID within a transaction based on NODE_ID, COPY_ID, and    TXN_ID, allocated in POOL. */
-name|svn_fs_id_t
-modifier|*
-name|svn_fs_fs__id_txn_create
+comment|/* Return 0 if A and B are equal, 1 if A is "greater than" B, -1 otherwise. */
+name|int
+name|svn_fs_fs__id_part_compare
 parameter_list|(
 specifier|const
-name|char
+name|svn_fs_fs__id_part_t
 modifier|*
-name|node_id
+name|a
 parameter_list|,
 specifier|const
-name|char
+name|svn_fs_fs__id_part_t
 modifier|*
-name|copy_id
-parameter_list|,
+name|b
+parameter_list|)
+function_decl|;
+comment|/* Create the txn root ID for transaction TXN_ID.  Allocate it in POOL. */
+name|svn_fs_id_t
+modifier|*
+name|svn_fs_fs__id_txn_create_root
+parameter_list|(
 specifier|const
-name|char
+name|svn_fs_fs__id_part_t
 modifier|*
 name|txn_id
 parameter_list|,
@@ -176,26 +285,64 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/* Create a permanent ID based on NODE_ID, COPY_ID, REV, and OFFSET,    allocated in POOL. */
+comment|/* Create the root ID for REVISION (logical addressing node only).    Allocate it in POOL. */
+name|svn_fs_id_t
+modifier|*
+name|svn_fs_fs__id_create_root
+parameter_list|(
+specifier|const
+name|svn_revnum_t
+name|revision
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/* Create an ID within a transaction based on NODE_ID, COPY_ID, and    TXN_ID, allocated in POOL. */
+name|svn_fs_id_t
+modifier|*
+name|svn_fs_fs__id_txn_create
+parameter_list|(
+specifier|const
+name|svn_fs_fs__id_part_t
+modifier|*
+name|node_id
+parameter_list|,
+specifier|const
+name|svn_fs_fs__id_part_t
+modifier|*
+name|copy_id
+parameter_list|,
+specifier|const
+name|svn_fs_fs__id_part_t
+modifier|*
+name|txn_id
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/* Create a permanent ID based on NODE_ID, COPY_ID and REV_ITEM,    allocated in POOL. */
 name|svn_fs_id_t
 modifier|*
 name|svn_fs_fs__id_rev_create
 parameter_list|(
 specifier|const
-name|char
+name|svn_fs_fs__id_part_t
 modifier|*
 name|node_id
 parameter_list|,
 specifier|const
-name|char
+name|svn_fs_fs__id_part_t
 modifier|*
 name|copy_id
 parameter_list|,
-name|svn_revnum_t
-name|rev
-parameter_list|,
-name|apr_off_t
-name|offset
+specifier|const
+name|svn_fs_fs__id_part_t
+modifier|*
+name|rev_item
 parameter_list|,
 name|apr_pool_t
 modifier|*
@@ -217,18 +364,20 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/* Return an ID resulting from parsing the string DATA (with length    LEN), or NULL if DATA is an invalid ID string. */
-name|svn_fs_id_t
+comment|/* Return an ID in *ID_P resulting from parsing the string DATA, or an error    if DATA is an invalid ID string. *DATA will be modified / invalidated by    this call. */
+name|svn_error_t
 modifier|*
 name|svn_fs_fs__id_parse
 parameter_list|(
 specifier|const
+name|svn_fs_id_t
+modifier|*
+modifier|*
+name|id_p
+parameter_list|,
 name|char
 modifier|*
 name|data
-parameter_list|,
-name|apr_size_t
-name|len
 parameter_list|,
 name|apr_pool_t
 modifier|*

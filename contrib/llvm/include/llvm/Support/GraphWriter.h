@@ -104,25 +104,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DOTGraphTraits.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Path.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/raw_ostream.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cassert>
 end_include
 
 begin_include
@@ -1930,7 +1924,7 @@ name|DisplayGraph
 argument_list|(
 name|Filename
 argument_list|,
-name|true
+name|false
 argument_list|,
 name|Program
 argument_list|)

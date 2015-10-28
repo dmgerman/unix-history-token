@@ -305,19 +305,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|dmar_ctx_dtr
-parameter_list|(
-name|struct
-name|dmar_ctx
-modifier|*
-name|ctx
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|void

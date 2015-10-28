@@ -3682,8 +3682,8 @@ condition|(
 name|con
 operator|->
 name|link_type
-operator|!=
-name|NG_HCI_LINK_ACL
+operator|==
+name|NG_HCI_LINK_SCO
 condition|)
 block|{
 name|NG_HCI_ALERT
@@ -3729,6 +3729,15 @@ operator|->
 name|encryption_mode
 operator|=
 name|NG_HCI_ENCRYPTION_MODE_NONE
+expr_stmt|;
+name|ng_hci_lp_enc_change
+argument_list|(
+name|con
+argument_list|,
+name|ep
+operator|->
+name|encryption_enable
+argument_list|)
 expr_stmt|;
 block|}
 else|else

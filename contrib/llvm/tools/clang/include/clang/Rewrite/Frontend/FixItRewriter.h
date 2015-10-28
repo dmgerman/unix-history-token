@@ -109,6 +109,11 @@ label|:
 name|FixItOptions
 argument_list|()
 operator|:
+name|InPlace
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|FixWhatYouCan
 argument_list|(
 name|false
@@ -156,6 +161,11 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+comment|/// True if files should be updated in place. RewriteFilename is only called
+comment|/// if this is false.
+name|bool
+name|InPlace
+decl_stmt|;
 comment|/// \brief Whether to abort fixing a file when not all errors could be fixed.
 name|bool
 name|FixWhatYouCan
@@ -254,6 +264,7 @@ comment|/// \brief Destroy the fix-it rewriter.
 operator|~
 name|FixItRewriter
 argument_list|()
+name|override
 expr_stmt|;
 comment|/// \brief Check whether there are modifications for a given file.
 name|bool

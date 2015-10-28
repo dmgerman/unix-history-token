@@ -719,11 +719,15 @@ block|}
 comment|/// \brief Emit the diagnostics report.
 name|void
 name|emitReport
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|BugReport
-modifier|*
+operator|>
 name|R
-parameter_list|)
+argument_list|)
 block|{
 name|Changed
 operator|=
@@ -736,7 +740,12 @@ argument_list|()
 operator|.
 name|emitReport
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|R
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

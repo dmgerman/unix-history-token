@@ -9800,12 +9800,19 @@ argument_list|(
 name|ifp
 argument_list|)
 decl_stmt|;
+name|int
+name|skip
+decl_stmt|;
 if|if
 condition|(
 operator|!
 name|na
 condition|)
 return|return;
+name|skip
+operator|=
+literal|0
+expr_stmt|;
 name|NMG_LOCK
 argument_list|()
 expr_stmt|;
@@ -9837,6 +9844,8 @@ operator|&
 name|NAF_NATIVE
 condition|)
 block|{
+name|skip
+operator|=
 name|netmap_adapter_put
 argument_list|(
 name|na
@@ -9844,6 +9853,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* give them a chance to notice */
+if|if
+condition|(
+name|skip
+operator|==
+literal|0
+condition|)
 name|netmap_enable_all_rings
 argument_list|(
 name|ifp

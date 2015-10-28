@@ -131,6 +131,11 @@ function_decl|;
 comment|// Only implemented for ELF at this time.
 name|virtual
 name|void
+name|printDynamicRelocations
+parameter_list|()
+block|{ }
+name|virtual
+name|void
 name|printDynamicTable
 parameter_list|()
 block|{ }
@@ -144,6 +149,11 @@ name|void
 name|printProgramHeaders
 parameter_list|()
 block|{ }
+name|virtual
+name|void
+name|printHashTable
+parameter_list|()
+block|{ }
 comment|// Only implemented for ARM ELF at this time.
 name|virtual
 name|void
@@ -154,6 +164,16 @@ comment|// Only implemented for MIPS ELF at this time.
 name|virtual
 name|void
 name|printMipsPLTGOT
+parameter_list|()
+block|{ }
+name|virtual
+name|void
+name|printMipsABIFlags
+parameter_list|()
+block|{ }
+name|virtual
+name|void
+name|printMipsReginfo
 parameter_list|()
 block|{ }
 comment|// Only implemented for PE/COFF.
@@ -177,6 +197,14 @@ name|void
 name|printCOFFBaseReloc
 parameter_list|()
 block|{ }
+name|virtual
+name|void
+name|printStackMap
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 name|protected
 label|:
 name|StreamWriter

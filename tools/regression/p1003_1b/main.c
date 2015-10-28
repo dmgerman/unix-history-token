@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -162,16 +168,6 @@ block|}
 block|, }
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|N
-parameter_list|(
-name|T
-parameter_list|)
-value|(sizeof (T)/ sizeof(T[0]))
-end_define
 
 begin_function
 specifier|static
@@ -338,7 +334,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|tab
 argument_list|)
@@ -387,7 +383,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|tab
 argument_list|)
@@ -474,7 +470,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|tab
 argument_list|)

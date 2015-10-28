@@ -470,7 +470,7 @@ name|driver_t
 name|fsl_sdhc_driver
 init|=
 block|{
-literal|"sdhci"
+literal|"sdhci_fsl"
 block|,
 name|fsl_sdhc_methods
 block|,
@@ -493,7 +493,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|sdhci
+name|sdhci_fsl
 argument_list|,
 name|simplebus
 argument_list|,
@@ -1990,7 +1990,7 @@ parameter_list|)
 block|{
 name|DPRINTF
 argument_list|(
-literal|"finishing request %x\n"
+literal|"finishing request %p\n"
 argument_list|,
 name|sc
 operator|->
@@ -4159,16 +4159,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PMUXCR = 0x%08x\n"
-argument_list|,
-name|ccsr_read4
-argument_list|(
-name|OCP85XX_PMUXCR
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"HOSTCAPBLT = 0x%08x\n"
 argument_list|,
 name|read4
@@ -4248,16 +4238,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|SDHC_XFERTYP
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ECMCR = 0x%08x\n"
-argument_list|,
-name|ccsr_read4
-argument_list|(
-name|OCP85XX_ECMCR
 argument_list|)
 argument_list|)
 expr_stmt|;

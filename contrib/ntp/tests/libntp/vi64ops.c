@@ -14,21 +14,59 @@ end_include
 begin_include
 include|#
 directive|include
-file|"unity.h"
+file|"vint64ops.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vint64ops.h"
+file|"unity.h"
 end_include
 
-begin_comment
-comment|//technically bool
-end_comment
+begin_function_decl
+name|int
+name|IsEqual
+parameter_list|(
+specifier|const
+name|vint64
+name|expected
+parameter_list|,
+specifier|const
+name|vint64
+name|actual
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_ParseVUI64_pos
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_ParseVUI64_neg
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_ParseVUI64_case
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|//int IsEqual(const vint64&expected, const vint64&actual) {
+comment|// technically bool
 end_comment
 
 begin_function
@@ -74,7 +112,6 @@ operator|.
 name|hi
 argument_list|)
 expr_stmt|;
-comment|//<< std::hex<< expected.D_s.hi<< '.'
 name|printf
 argument_list|(
 literal|"%x"
@@ -86,7 +123,6 @@ operator|.
 name|lo
 argument_list|)
 expr_stmt|;
-comment|//<< std::hex<< expected.D_s.lo
 name|printf
 argument_list|(
 literal|" but was "
@@ -103,7 +139,6 @@ operator|.
 name|hi
 argument_list|)
 expr_stmt|;
-comment|//<< std::hex<< actual.D_s.hi<< '.'
 name|printf
 argument_list|(
 literal|"%x\n"
@@ -115,7 +150,6 @@ operator|.
 name|lo
 argument_list|)
 expr_stmt|;
-comment|//<< std::hex<< actual.D_s.lo;
 return|return
 name|TRUE
 return|;
@@ -138,7 +172,6 @@ operator|.
 name|hi
 argument_list|)
 expr_stmt|;
-comment|//<< std::hex<< expected.D_s.hi<< '.'
 name|printf
 argument_list|(
 literal|"%d"
@@ -150,7 +183,6 @@ operator|.
 name|lo
 argument_list|)
 expr_stmt|;
-comment|//<< std::hex<< expected.D_s.lo
 name|printf
 argument_list|(
 literal|" but was "
@@ -167,7 +199,6 @@ operator|.
 name|lo
 argument_list|)
 expr_stmt|;
-comment|//<< std::hex<< actual.D_s.hi<< '.'
 name|printf
 argument_list|(
 literal|"%d"
@@ -179,7 +210,6 @@ operator|.
 name|lo
 argument_list|)
 expr_stmt|;
-comment|//<< std::hex<< actual.D_s.lo;
 return|return
 name|FALSE
 return|;
@@ -198,7 +228,9 @@ end_comment
 begin_function
 name|void
 name|test_ParseVUI64_pos
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|vint64
 name|act
@@ -270,7 +302,9 @@ end_function
 begin_function
 name|void
 name|test_ParseVUI64_neg
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|vint64
 name|act
@@ -344,7 +378,9 @@ end_function
 begin_function
 name|void
 name|test_ParseVUI64_case
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|vint64
 name|act

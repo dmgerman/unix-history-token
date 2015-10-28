@@ -260,6 +260,13 @@ name|m_sdk_build
 operator|=
 name|sdk_build
 block|;     }
+name|bool
+name|PlatformMatches
+argument_list|(
+argument|const lldb::PlatformSP&platform_sp
+argument_list|)
+specifier|const
+block|;
 name|protected
 operator|:
 name|std

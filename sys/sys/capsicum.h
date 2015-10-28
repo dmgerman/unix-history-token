@@ -480,13 +480,13 @@ value|(CAP_FUTIMES | CAP_LOOKUP)
 end_define
 
 begin_comment
-comment|/* Allows for linkat(2) and renameat(2) (destination directory descriptor). */
+comment|/* Allows for linkat(2) (target directory descriptor). */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CAP_LINKAT
+name|CAP_LINKAT_TARGET
 value|(CAP_LOOKUP | 0x0000000000400000ULL)
 end_define
 
@@ -524,13 +524,13 @@ value|(CAP_LOOKUP | 0x0000000002000000ULL)
 end_define
 
 begin_comment
-comment|/* Allows for renameat(2). */
+comment|/* Allows for renameat(2) (source directory descriptor). */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CAP_RENAMEAT
+name|CAP_RENAMEAT_SOURCE
 value|(CAP_LOOKUP | 0x0000000004000000ULL)
 end_define
 
@@ -706,6 +706,28 @@ name|CAP_CONNECTAT
 value|(CAP_LOOKUP | 0x0000010000000000ULL)
 end_define
 
+begin_comment
+comment|/* Allows for linkat(2) (source directory descriptor). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_LINKAT_SOURCE
+value|(CAP_LOOKUP | 0x0000020000000000ULL)
+end_define
+
+begin_comment
+comment|/* Allows for renameat(2) (target directory descriptor). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_RENAMEAT_TARGET
+value|(CAP_LOOKUP | 0x0000040000000000ULL)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -730,7 +752,7 @@ begin_define
 define|#
 directive|define
 name|CAP_ALL0
-value|CAPRIGHT(0, 0x000001FFFFFFFFFFULL)
+value|CAPRIGHT(0, 0x000007FFFFFFFFFFULL)
 end_define
 
 begin_comment
@@ -740,8 +762,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CAP_UNUSED0_42
-value|CAPRIGHT(0, 0x0000020000000000ULL)
+name|CAP_UNUSED0_44
+value|CAPRIGHT(0, 0x0000080000000000ULL)
 end_define
 
 begin_comment

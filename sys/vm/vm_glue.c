@@ -1208,7 +1208,7 @@ literal|1
 condition|)
 name|pages
 operator|=
-name|KSTACK_PAGES
+name|kstack_pages
 expr_stmt|;
 elseif|else
 if|if
@@ -1225,7 +1225,7 @@ if|if
 condition|(
 name|pages
 operator|==
-name|KSTACK_PAGES
+name|kstack_pages
 condition|)
 block|{
 name|mtx_lock
@@ -1278,7 +1278,7 @@ name|td
 operator|->
 name|td_kstack_pages
 operator|=
-name|KSTACK_PAGES
+name|kstack_pages
 expr_stmt|;
 return|return
 operator|(
@@ -1596,7 +1596,7 @@ name|vm_page_unwire
 argument_list|(
 name|m
 argument_list|,
-name|PQ_INACTIVE
+name|PQ_NONE
 argument_list|)
 expr_stmt|;
 name|vm_page_free
@@ -1704,7 +1704,7 @@ if|if
 condition|(
 name|pages
 operator|==
-name|KSTACK_PAGES
+name|kstack_pages
 operator|&&
 name|kstacks
 operator|<=
@@ -1828,7 +1828,7 @@ name|vm_offset_t
 operator|)
 name|ks_ce1
 argument_list|,
-name|KSTACK_PAGES
+name|kstack_pages
 argument_list|)
 expr_stmt|;
 block|}

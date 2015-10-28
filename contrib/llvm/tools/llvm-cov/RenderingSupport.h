@@ -66,9 +66,13 @@ name|ColoredRawOstream
 block|{
 name|ColoredRawOstream
 argument_list|(
-argument|const ColoredRawOstream&OS
+specifier|const
+name|ColoredRawOstream
+operator|&
+name|OS
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|public
 label|:

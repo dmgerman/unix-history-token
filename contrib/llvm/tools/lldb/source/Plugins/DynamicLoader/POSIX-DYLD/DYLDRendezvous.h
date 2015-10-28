@@ -79,6 +79,12 @@ directive|include
 file|"lldb/lldb-types.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Host/FileSpec.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -428,12 +434,12 @@ name|addr_t
 name|prev
 expr_stmt|;
 comment|///< Address of previous so_entry.
-name|std
+name|lldb_private
 operator|::
-name|string
-name|path
+name|FileSpec
+name|file_spec
 expr_stmt|;
-comment|///< File name of shared object.
+comment|///< File spec of shared object.
 name|SOEntry
 argument_list|()
 block|{
@@ -452,13 +458,11 @@ name|entry
 operator|)
 block|{
 return|return
-name|this
-operator|->
-name|path
+name|file_spec
 operator|==
 name|entry
 operator|.
-name|path
+name|file_spec
 return|;
 block|}
 name|void
@@ -489,9 +493,9 @@ name|prev
 operator|=
 literal|0
 expr_stmt|;
-name|path
+name|file_spec
 operator|.
-name|clear
+name|Clear
 argument_list|()
 expr_stmt|;
 block|}
@@ -601,13 +605,12 @@ name|Process
 operator|*
 name|m_process
 expr_stmt|;
-comment|// Cached copy of executable pathname
-name|char
-name|m_exe_path
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
+comment|// Cached copy of executable file spec
+name|lldb_private
+operator|::
+name|FileSpec
+name|m_exe_file_spec
+expr_stmt|;
 comment|/// Location of the r_debug structure in the inferiors address space.
 name|lldb
 operator|::
@@ -705,6 +708,15 @@ function_decl|;
 name|bool
 name|UpdateSOEntriesForDeletion
 parameter_list|()
+function_decl|;
+name|bool
+name|SOEntryIsMainExecutable
+parameter_list|(
+specifier|const
+name|SOEntry
+modifier|&
+name|entry
+parameter_list|)
 function_decl|;
 comment|/// Reads the current list of shared objects according to the link map
 comment|/// supplied by the runtime linker.

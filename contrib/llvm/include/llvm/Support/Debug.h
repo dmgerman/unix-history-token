@@ -115,16 +115,13 @@ directive|define
 name|LLVM_SUPPORT_DEBUG_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/raw_ostream.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|raw_ostream
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG

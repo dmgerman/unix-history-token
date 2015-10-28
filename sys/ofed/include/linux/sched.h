@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2010 Isilon Systems, Inc.  * Copyright (c) 2010 iX Systems, Inc.  * Copyright (c) 2010 Panasas, Inc.  * Copyright (c) 2013, 2014 Mellanox Technologies, Ltd.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2010 Isilon Systems, Inc.  * Copyright (c) 2010 iX Systems, Inc.  * Copyright (c) 2010 Panasas, Inc.  * Copyright (c) 2013, 2014 Mellanox Technologies, Ltd.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -153,7 +153,7 @@ begin_define
 define|#
 directive|define
 name|current
-value|((struct task_struct *)curthread->td_retval[1])
+value|task_struct_get(curthread)
 end_define
 
 begin_define
@@ -163,7 +163,7 @@ name|task_struct_get
 parameter_list|(
 name|x
 parameter_list|)
-value|(struct task_struct *)(x)->td_retval[1]
+value|((struct task_struct *)(uintptr_t)(x)->td_retval[1])
 end_define
 
 begin_define
@@ -175,8 +175,40 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(x)->td_retval[1] = (register_t)(y)
+value|(x)->td_retval[1] = (uintptr_t)(y)
 end_define
+
+begin_comment
+comment|/* ensure the task_struct pointer fits into the td_retval[1] field */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|(
+operator|(
+expr|struct
+name|thread
+operator|*
+operator|)
+literal|0
+operator|)
+operator|->
+name|td_retval
+index|[
+literal|1
+index|]
+argument_list|)
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|uintptr_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -234,6 +266,39 @@ name|sched_yield
 parameter_list|()
 value|sched_relinquish(curthread)
 end_define
+
+begin_function
+specifier|static
+specifier|inline
+name|long
+name|schedule_timeout
+parameter_list|(
+name|signed
+name|long
+name|timeout
+parameter_list|)
+block|{
+if|if
+condition|(
+name|timeout
+operator|<
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+name|pause
+argument_list|(
+literal|"lstim"
+argument_list|,
+name|timeout
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#

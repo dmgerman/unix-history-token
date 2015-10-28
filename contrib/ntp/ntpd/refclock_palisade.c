@@ -731,7 +731,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 literal|100
 argument_list|)
@@ -832,7 +832,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 literal|100
 argument_list|)

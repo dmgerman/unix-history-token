@@ -37,12 +37,6 @@ directive|include
 file|<contrib/dev/acpica/include/acdisasm.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DISASSEMBLER
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -911,6 +905,10 @@ modifier|*
 name|Op
 parameter_list|)
 block|{
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|TargetOp
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -946,10 +944,6 @@ literal|" /**** Name not found or not accessible from this scope ****/ "
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|TargetOp
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -997,11 +991,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

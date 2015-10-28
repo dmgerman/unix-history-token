@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Debug.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
 end_include
 
@@ -305,11 +311,15 @@ comment|/// Statepoint operands take the form:
 end_comment
 
 begin_comment
-comment|///<num call arguments>,<call target>, [call arguments],
+comment|///<id>,<num patch bytes>,<num call arguments>,<call target>,
 end_comment
 
 begin_comment
-comment|///<StackMaps::ConstantOp>,<flags>,
+comment|///   [call arguments],<StackMaps::ConstantOp>,<calling convention>,
+end_comment
+
+begin_comment
+comment|///<StackMaps::ConstantOp>,<statepoint flags>,
 end_comment
 
 begin_comment
@@ -326,15 +336,36 @@ name|StatepointOpers
 block|{
 name|private
 label|:
+comment|// These values are aboolute offsets into the operands of the statepoint
+comment|// instruction.
 enum|enum
 block|{
+name|IDPos
+block|,
+name|NBytesPos
+block|,
 name|NCallArgsPos
-init|=
-literal|0
 block|,
 name|CallTargetPos
+block|,
+name|MetaEnd
+block|}
+enum|;
+comment|// These values are relative offests from the start of the statepoint meta
+comment|// arguments (i.e. the end of the call arguments).
+enum|enum
+block|{
+name|CCOffset
 init|=
 literal|1
+block|,
+name|FlagsOffset
+init|=
+literal|3
+block|,
+name|NumVMSArgsOffset
+init|=
+literal|5
 block|}
 enum|;
 name|public
@@ -352,9 +383,9 @@ name|MI
 argument_list|(
 argument|MI
 argument_list|)
-block|{ }
+block|{}
 comment|/// Get starting index of non call related arguments
-comment|/// (statepoint flags, vm state and gc state).
+comment|/// (calling convention, statepoint flags, vm state and gc state).
 name|unsigned
 name|getVarIdx
 argument_list|()
@@ -371,28 +402,12 @@ operator|.
 name|getImm
 argument_list|()
 operator|+
-literal|2
+name|MetaEnd
 return|;
 block|}
-comment|/// Returns the index of the operand containing the number of non-gc non-call
-comment|/// arguments.
-name|unsigned
-name|getNumVMSArgsIdx
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getVarIdx
-argument_list|()
-operator|+
-literal|3
-return|;
-block|}
-comment|/// Returns the number of non-gc non-call arguments attached to the
-comment|/// statepoint.  Note that this is the number of arguments, not the number of
-comment|/// operands required to represent those arguments.
-name|unsigned
-name|getNumVMSArgs
+comment|/// Return the ID for the given statepoint.
+name|uint64_t
+name|getID
 argument_list|()
 specifier|const
 block|{
@@ -401,8 +416,25 @@ name|MI
 operator|->
 name|getOperand
 argument_list|(
-name|getNumVMSArgsIdx
+name|IDPos
+argument_list|)
+operator|.
+name|getImm
 argument_list|()
+return|;
+block|}
+comment|/// Return the number of patchable bytes the given statepoint should emit.
+name|uint32_t
+name|getNumPatchBytes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MI
+operator|->
+name|getOperand
+argument_list|(
+name|NBytesPos
 argument_list|)
 operator|.
 name|getImm
@@ -466,7 +498,7 @@ name|ConstantIndex
 block|}
 enum|;
 name|LocationType
-name|LocType
+name|Type
 decl_stmt|;
 name|unsigned
 name|Size
@@ -480,7 +512,7 @@ decl_stmt|;
 name|Location
 argument_list|()
 operator|:
-name|LocType
+name|Type
 argument_list|(
 name|Unprocessed
 argument_list|)
@@ -502,7 +534,7 @@ argument_list|)
 block|{}
 name|Location
 argument_list|(
-argument|LocationType LocType
+argument|LocationType Type
 argument_list|,
 argument|unsigned Size
 argument_list|,
@@ -511,9 +543,9 @@ argument_list|,
 argument|int64_t Offset
 argument_list|)
 operator|:
-name|LocType
+name|Type
 argument_list|(
-name|LocType
+name|Type
 argument_list|)
 operator|,
 name|Size
@@ -542,7 +574,7 @@ name|Reg
 decl_stmt|;
 name|unsigned
 name|short
-name|RegNo
+name|DwarfRegNum
 decl_stmt|;
 name|unsigned
 name|short
@@ -556,7 +588,7 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|RegNo
+name|DwarfRegNum
 argument_list|(
 literal|0
 argument_list|)
@@ -570,7 +602,7 @@ name|LiveOutReg
 argument_list|(
 argument|unsigned short Reg
 argument_list|,
-argument|unsigned short RegNo
+argument|unsigned short DwarfRegNum
 argument_list|,
 argument|unsigned short Size
 argument_list|)
@@ -580,9 +612,9 @@ argument_list|(
 name|Reg
 argument_list|)
 operator|,
-name|RegNo
+name|DwarfRegNum
 argument_list|(
-name|RegNo
+name|DwarfRegNum
 argument_list|)
 operator|,
 name|Size
@@ -590,52 +622,6 @@ argument_list|(
 argument|Size
 argument_list|)
 block|{}
-name|void
-name|MarkInvalid
-argument_list|()
-block|{
-name|Reg
-operator|=
-literal|0
-block|; }
-comment|// Only sort by the dwarf register number.
-name|bool
-name|operator
-operator|<
-operator|(
-specifier|const
-name|LiveOutReg
-operator|&
-name|LO
-operator|)
-specifier|const
-block|{
-return|return
-name|RegNo
-operator|<
-name|LO
-operator|.
-name|RegNo
-return|;
-block|}
-specifier|static
-name|bool
-name|IsInvalid
-parameter_list|(
-specifier|const
-name|LiveOutReg
-modifier|&
-name|LO
-parameter_list|)
-block|{
-return|return
-name|LO
-operator|.
-name|Reg
-operator|==
-literal|0
-return|;
-block|}
 block|}
 struct|;
 comment|// OpTypes are used to encode information about the following logical
@@ -961,13 +947,27 @@ parameter_list|(
 name|MCStreamer
 modifier|&
 name|OS
-parameter_list|,
-specifier|const
-name|TargetRegisterInfo
-modifier|*
-name|TRI
 parameter_list|)
 function_decl|;
+name|void
+name|print
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+function_decl|;
+name|void
+name|debug
+parameter_list|()
+block|{
+name|print
+argument_list|(
+name|dbgs
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_decl_stmt
 

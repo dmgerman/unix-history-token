@@ -353,6 +353,59 @@ name|BreakpointEventData
 argument_list|)
 block|;     }
 decl_stmt|;
+name|class
+name|BreakpointPrecondition
+block|{
+name|public
+label|:
+name|virtual
+operator|~
+name|BreakpointPrecondition
+argument_list|()
+block|{}
+name|virtual
+name|bool
+name|EvaluatePrecondition
+argument_list|(
+name|StoppointCallbackContext
+operator|&
+name|context
+argument_list|)
+expr_stmt|;
+name|virtual
+name|Error
+name|ConfigurePrecondition
+parameter_list|(
+name|Args
+modifier|&
+name|options
+parameter_list|)
+function_decl|;
+name|virtual
+name|void
+name|DescribePrecondition
+argument_list|(
+name|Stream
+operator|&
+name|stream
+argument_list|,
+name|lldb
+operator|::
+name|DescriptionLevel
+name|level
+argument_list|)
+decl_stmt|;
+block|}
+empty_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|BreakpointPrecondition
+operator|>
+name|BreakpointPreconditionSP
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Destructor.
 comment|///
@@ -1208,6 +1261,44 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|//------------------------------------------------------------------
+comment|/// Set a pre-condition filter that overrides all user provided filters/callbacks etc.
+comment|///
+comment|/// Used to define fancy breakpoints that can do dynamic hit detection without taking up the condition slot -
+comment|/// which really belongs to the user anyway...
+comment|///
+comment|/// The Precondition should not continue the target, it should return true if the condition says to stop and
+comment|/// false otherwise.
+comment|///
+comment|//------------------------------------------------------------------
+name|void
+name|SetPrecondition
+parameter_list|(
+name|BreakpointPreconditionSP
+name|precondition_sp
+parameter_list|)
+block|{
+name|m_precondition_sp
+operator|=
+name|precondition_sp
+expr_stmt|;
+block|}
+name|bool
+name|EvaluatePrecondition
+parameter_list|(
+name|StoppointCallbackContext
+modifier|&
+name|context
+parameter_list|)
+function_decl|;
+name|BreakpointPreconditionSP
+name|GetPrecondition
+parameter_list|()
+block|{
+return|return
+name|m_precondition_sp
+return|;
+block|}
 name|protected
 label|:
 name|friend
@@ -1270,6 +1361,29 @@ name|bool
 name|IgnoreCountShouldStop
 parameter_list|()
 function_decl|;
+name|void
+name|IncrementHitCount
+parameter_list|()
+block|{
+name|m_hit_count
+operator|++
+expr_stmt|;
+block|}
+name|void
+name|DecrementHitCount
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|m_hit_count
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+name|m_hit_count
+operator|--
+expr_stmt|;
+block|}
 name|private
 label|:
 comment|// This one should only be used by Target to copy breakpoints from target to target - primarily from the dummy
@@ -1323,6 +1437,13 @@ name|BreakpointResolverSP
 name|m_resolver_sp
 expr_stmt|;
 comment|// The resolver that defines this breakpoint.
+name|BreakpointPreconditionSP
+name|m_precondition_sp
+decl_stmt|;
+comment|// The precondition is a breakpoint-level hit filter that can be used
+comment|// to skip certain breakpoint hits.  For instance, exception breakpoints
+comment|// use this to limit the stop to certain exception classes, while leaving
+comment|// the condition& callback free for user specification.
 name|BreakpointOptions
 name|m_options
 decl_stmt|;
@@ -1339,6 +1460,12 @@ expr_stmt|;
 name|bool
 name|m_resolve_indirect_symbols
 decl_stmt|;
+name|uint32_t
+name|m_hit_count
+decl_stmt|;
+comment|// Number of times this breakpoint/watchpoint has been hit.  This is kept
+comment|// separately from the locations hit counts, since locations can go away when
+comment|// their backing library gets unloaded, and we would lose hit counts.
 name|void
 name|SendBreakpointChangedEvent
 argument_list|(

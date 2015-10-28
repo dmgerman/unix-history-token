@@ -111,13 +111,17 @@ specifier|const
 name|Constant
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|Constant
 argument_list|(
-argument|const Constant&
+specifier|const
+name|Constant
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|anchor
@@ -148,18 +152,6 @@ argument_list|,
 argument|NumOps
 argument_list|)
 block|{}
-name|void
-name|destroyConstantImpl
-argument_list|()
-block|;
-name|void
-name|replaceUsesOfWithOnConstantImpl
-argument_list|(
-name|Constant
-operator|*
-name|Replacement
-argument_list|)
-block|;
 name|public
 operator|:
 comment|/// isNullValue - Return true if this is the value that would be returned by
@@ -304,23 +296,17 @@ name|getUniqueInteger
 argument_list|()
 specifier|const
 block|;
-comment|/// destroyConstant - Called if some element of this constant is no longer
-comment|/// valid.  At this point only other constants may be on the use_list for this
+comment|/// Called if some element of this constant is no longer valid.
+comment|/// At this point only other constants may be on the use_list for this
 comment|/// constant.  Any constants on our Use list must also be destroy'd.  The
 comment|/// implementation must be sure to remove the constant from the list of
-comment|/// available cached constants.  Implementations should call
-comment|/// destroyConstantImpl as the last thing they do, to destroy all users and
-comment|/// delete this.
-name|virtual
+comment|/// available cached constants.  Implementations should implement
+comment|/// destroyConstantImpl to remove constants from any pools/maps they are
+comment|/// contained it.
 name|void
 name|destroyConstant
 argument_list|()
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Not reached!"
-argument_list|)
-block|; }
+block|;
 comment|//// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -346,8 +332,8 @@ operator|<=
 name|ConstantLastVal
 return|;
 block|}
-comment|/// replaceUsesOfWithOnConstant - This method is a special form of
-comment|/// User::replaceUsesOfWith (which does not work on constants) that does work
+comment|/// This method is a special form of User::replaceUsesOfWith
+comment|/// (which does not work on constants) that does work
 comment|/// on constants.  Basically this method goes through the trouble of building
 comment|/// a new constant that is equivalent to the current one, with all uses of
 comment|/// From replaced with uses of To.  After this construction is completed, all
@@ -356,37 +342,19 @@ comment|/// 'this' is deleted.  In general, you should not call this method, ins
 comment|/// use Value::replaceAllUsesWith, which automatically dispatches to this
 comment|/// method as needed.
 comment|///
-name|virtual
 name|void
-name|replaceUsesOfWithOnConstant
+name|handleOperandChange
 argument_list|(
-argument|Value *
+name|Value
+operator|*
 argument_list|,
-argument|Value *
+name|Value
+operator|*
 argument_list|,
-argument|Use *
-argument_list|)
-block|{
-comment|// Provide a default implementation for constants (like integers) that
-comment|// cannot use any other values.  This cannot be called at runtime, but needs
-comment|// to be here to avoid link errors.
-name|assert
-argument_list|(
-name|getNumOperands
-argument_list|()
-operator|==
-literal|0
-operator|&&
-literal|"replaceUsesOfWithOnConstant must be "
-literal|"implemented for all constants that have operands!"
+name|Use
+operator|*
 argument_list|)
 block|;
-name|llvm_unreachable
-argument_list|(
-literal|"Constants that do not have operands cannot be using "
-literal|"'From'!"
-argument_list|)
-block|;   }
 specifier|static
 name|Constant
 operator|*

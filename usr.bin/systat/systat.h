@@ -151,6 +151,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CF_ZFSARC
+value|0x4
+end_define
+
+begin_comment
+comment|/* display w/ ZFS cache usage */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TCP
 value|0x1
 end_define

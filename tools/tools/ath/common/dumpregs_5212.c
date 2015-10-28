@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"diag.h"
 end_include
 
@@ -38,16 +44,6 @@ include|#
 directive|include
 file|"dumpregs.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
-end_define
 
 begin_define
 define|#
@@ -2409,7 +2405,7 @@ name|register_regs
 argument_list|(
 name|ar5212regs
 argument_list|,
-name|N
+name|nitems
 argument_list|(
 name|ar5212regs
 argument_list|)

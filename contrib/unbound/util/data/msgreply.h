@@ -669,13 +669,18 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Check if cname chain in cached reply is still valid.  * @param rep: reply to check.  * @return: true if valid, false if invalid.  */
+comment|/**  * Check if cname chain in cached reply is still valid.  * @param qinfo: query info with query name.  * @param rep: reply to check.  * @return: true if valid, false if invalid.  */
 end_comment
 
 begin_function_decl
 name|int
 name|reply_check_cname_chain
 parameter_list|(
+name|struct
+name|query_info
+modifier|*
+name|qinfo
+parameter_list|,
 name|struct
 name|reply_info
 modifier|*

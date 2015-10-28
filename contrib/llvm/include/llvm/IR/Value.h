@@ -145,6 +145,9 @@ name|class
 name|Module
 decl_stmt|;
 name|class
+name|ModuleSlotTracker
+decl_stmt|;
+name|class
 name|StringRef
 decl_stmt|;
 name|class
@@ -209,20 +212,11 @@ name|friend
 name|class
 name|ValueAsMetadata
 decl_stmt|;
-comment|// Allow access to NameAndIsUsedByMD.
+comment|// Allow access to IsUsedByMD.
 name|friend
 name|class
 name|ValueHandleBase
 decl_stmt|;
-name|PointerIntPair
-operator|<
-name|ValueName
-operator|*
-operator|,
-literal|1
-operator|>
-name|NameAndIsUsedByMD
-expr_stmt|;
 specifier|const
 name|unsigned
 name|char
@@ -271,8 +265,36 @@ comment|///
 comment|/// This is stored here to save space in User on 64-bit hosts.  Since most
 comment|/// instances of Value have operands, 32-bit hosts aren't significantly
 comment|/// affected.
+comment|///
+comment|/// Note, this should *NOT* be used directly by any class other than User.
+comment|/// User uses this value to find the Use list.
+enum_decl|enum :
 name|unsigned
-name|NumOperands
+block|{
+name|NumUserOperandsBits
+init|=
+literal|29
+block|}
+enum_decl|;
+name|unsigned
+name|NumUserOperands
+range|:
+name|NumUserOperandsBits
+decl_stmt|;
+name|bool
+name|IsUsedByMD
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|HasName
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|HasHungOffUses
+range|:
+literal|1
 decl_stmt|;
 name|private
 label|:
@@ -296,30 +318,12 @@ name|forward_iterator_tag
 operator|,
 name|UseT
 operator|*
-operator|,
-name|ptrdiff_t
 operator|>
 block|{
-typedef|typedef
-name|std
-operator|::
-name|iterator
-operator|<
-name|std
-operator|::
-name|forward_iterator_tag
-operator|,
-name|UseT
-operator|*
-operator|,
-name|ptrdiff_t
-operator|>
-name|super
-expr_stmt|;
 name|UseT
 operator|*
 name|U
-expr_stmt|;
+block|;
 name|explicit
 name|use_iterator_impl
 argument_list|(
@@ -336,23 +340,9 @@ block|{}
 name|friend
 name|class
 name|Value
-expr_stmt|;
+block|;
 name|public
-label|:
-typedef|typedef
-name|typename
-name|super
-operator|::
-name|reference
-name|reference
-expr_stmt|;
-typedef|typedef
-name|typename
-name|super
-operator|::
-name|pointer
-name|pointer
-expr_stmt|;
+operator|:
 name|use_iterator_impl
 argument_list|()
 operator|:
@@ -473,7 +463,7 @@ name|operator
 operator|->
 expr|(
 block|)
-decl|const
+specifier|const
 block|{
 return|return
 operator|&
@@ -505,13 +495,7 @@ operator|)
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -532,39 +516,15 @@ name|forward_iterator_tag
 operator|,
 name|UserTy
 operator|*
-operator|,
-name|ptrdiff_t
 operator|>
 block|{
-typedef|typedef
-name|std
-operator|::
-name|iterator
-operator|<
-name|std
-operator|::
-name|forward_iterator_tag
-operator|,
-name|UserTy
-operator|*
-operator|,
-name|ptrdiff_t
-operator|>
-name|super
-expr_stmt|;
 name|use_iterator_impl
 operator|<
 name|Use
 operator|>
 name|UI
-expr_stmt|;
-end_expr_stmt
-
-begin_macro
+block|;
 name|explicit
-end_macro
-
-begin_expr_stmt
 name|user_iterator_impl
 argument_list|(
 name|Use
@@ -580,44 +540,12 @@ block|{}
 name|friend
 name|class
 name|Value
-expr_stmt|;
-end_expr_stmt
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_typedef
-typedef|typedef
-name|typename
-name|super
-operator|::
-name|reference
-name|reference
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|typename
-name|super
-operator|::
-name|pointer
-name|pointer
-expr_stmt|;
-end_typedef
-
-begin_macro
+operator|:
 name|user_iterator_impl
 argument_list|()
-end_macro
-
-begin_block
 block|{}
-end_block
-
-begin_expr_stmt
 name|bool
 name|operator
 operator|==
@@ -637,9 +565,6 @@ operator|.
 name|UI
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|operator
 operator|!=
@@ -660,13 +585,7 @@ name|x
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Returns true if this iterator is equal to user_end() on the value.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|atEnd
 argument_list|()
@@ -680,9 +599,6 @@ name|user_iterator_impl
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|user_iterator_impl
 operator|&
 name|operator
@@ -699,9 +615,6 @@ operator|*
 name|this
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|user_iterator_impl
 name|operator
 operator|++
@@ -724,13 +637,7 @@ return|return
 name|tmp
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Retrieve a pointer to the current User.
-end_comment
-
-begin_expr_stmt
 name|UserTy
 operator|*
 name|operator
@@ -746,18 +653,12 @@ name|getUser
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|UserTy
 operator|*
 name|operator
 operator|->
 expr|(
-end_expr_stmt
-
-begin_expr_stmt
-unit|)
+block|)
 specifier|const
 block|{
 return|return
@@ -767,9 +668,6 @@ operator|(
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|operator
 name|user_iterator_impl
 operator|<
@@ -792,9 +690,6 @@ name|UI
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|Use
 operator|&
 name|getUse
@@ -806,37 +701,8 @@ operator|*
 name|UI
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Return the operand # of this use in its User.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// FIXME: Replace all callers with a direct call to Use::getOperandNo.
-end_comment
-
-begin_expr_stmt
-name|unsigned
-name|getOperandNo
-argument_list|()
-specifier|const
-block|{
-return|return
-name|UI
-operator|->
-name|getOperandNo
-argument_list|()
-return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
-unit|};
+empty_stmt|;
 name|void
 name|operator
 init|=
@@ -845,70 +711,42 @@ specifier|const
 name|Value
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
-end_decl_stmt
-
-begin_macro
 name|Value
 argument_list|(
-argument|const Value&
+specifier|const
+name|Value
+operator|&
 argument_list|)
-end_macro
-
-begin_expr_stmt
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
-end_expr_stmt
-
-begin_label
 name|protected
 label|:
-end_label
-
-begin_macro
 name|Value
 argument_list|(
 argument|Type *Ty
 argument_list|,
 argument|unsigned scid
 argument_list|)
-end_macro
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_expr_stmt
 name|virtual
 operator|~
 name|Value
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Support for debugging, callable in GDB: V->dump()
-end_comment
-
-begin_expr_stmt
 name|void
 name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Implement operator<< on Value.
-end_comment
-
-begin_decl_stmt
+comment|/// @{
 name|void
 name|print
 argument_list|(
@@ -918,33 +756,27 @@ name|O
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|O
+argument_list|,
+name|ModuleSlotTracker
+operator|&
+name|MST
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// @}
 comment|/// \brief Print the name of this Value out to the specified raw_ostream.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is useful when you just want to print 'int %reg126', not the
-end_comment
-
-begin_comment
 comment|/// instruction that generated it. If you specify a Module for context, then
-end_comment
-
-begin_comment
 comment|/// even constanst get pretty-printed; for example, the type of a null
-end_comment
-
-begin_comment
 comment|/// pointer is printed symbolically.
-end_comment
-
-begin_decl_stmt
+comment|/// @{
 name|void
 name|printAsOperand
 argument_list|(
@@ -966,13 +798,24 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
+name|void
+name|printAsOperand
+argument_list|(
+name|raw_ostream
+operator|&
+name|O
+argument_list|,
+name|bool
+name|PrintType
+argument_list|,
+name|ModuleSlotTracker
+operator|&
+name|MST
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// @}
 comment|/// \brief All values are typed, get the type of this value.
-end_comment
-
-begin_expr_stmt
 name|Type
 operator|*
 name|getType
@@ -983,57 +826,29 @@ return|return
 name|VTy
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief All values hold a context through their type.
-end_comment
-
-begin_expr_stmt
 name|LLVMContext
 operator|&
 name|getContext
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// \brief All values can potentially be named.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasName
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getValueName
-argument_list|()
-operator|!=
-name|nullptr
+name|HasName
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|ValueName
 operator|*
 name|getValueName
 argument_list|()
 specifier|const
-block|{
-return|return
-name|NameAndIsUsedByMD
-operator|.
-name|getPointer
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_function
+expr_stmt|;
 name|void
 name|setValueName
 parameter_list|(
@@ -1041,79 +856,38 @@ name|ValueName
 modifier|*
 name|VN
 parameter_list|)
-block|{
-name|NameAndIsUsedByMD
-operator|.
-name|setPointer
-argument_list|(
-name|VN
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_label
+function_decl|;
 name|private
 label|:
-end_label
-
-begin_function_decl
 name|void
 name|destroyValueName
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_label
+name|void
+name|setNameImpl
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Name
+parameter_list|)
+function_decl|;
 name|public
 label|:
-end_label
-
-begin_comment
 comment|/// \brief Return a constant reference to the value's name.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is cheap and guaranteed to return the same reference as long as the
-end_comment
-
-begin_comment
 comment|/// value is not modified.
-end_comment
-
-begin_expr_stmt
 name|StringRef
 name|getName
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Change the name of the value.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Choose a new unique name if the provided name is taken.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Name The new name; or "" if the value's name should be removed.
-end_comment
-
-begin_function_decl
 name|void
 name|setName
 parameter_list|(
@@ -1123,29 +897,11 @@ modifier|&
 name|Name
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Transfer the name from V to this value.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// After taking V's name, sets V's name to empty.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \note It is an error to call V->takeName(V).
-end_comment
-
-begin_function_decl
 name|void
 name|takeName
 parameter_list|(
@@ -1154,29 +910,11 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Change all uses of this to point to a new Value.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Go through the uses list for this definition and make each use point to
-end_comment
-
-begin_comment
 comment|/// "V" instead of "this".  After this completes, 'this's use list is
-end_comment
-
-begin_comment
 comment|/// guaranteed to be empty.
-end_comment
-
-begin_function_decl
 name|void
 name|replaceAllUsesWith
 parameter_list|(
@@ -1185,29 +923,11 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// replaceUsesOutsideBlock - Go through the uses list for this definition and
-end_comment
-
-begin_comment
 comment|/// make each use point to "V" instead of "this" when the use is outside the
-end_comment
-
-begin_comment
 comment|/// block. 'This's use list is expected to have at least one element.
-end_comment
-
-begin_comment
 comment|/// Unlike replaceAllUsesWith this function does not support basic block
-end_comment
-
-begin_comment
 comment|/// values or constant users.
-end_comment
-
-begin_function_decl
 name|void
 name|replaceUsesOutsideBlock
 parameter_list|(
@@ -1220,21 +940,9 @@ modifier|*
 name|BB
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|//----------------------------------------------------------------------
-end_comment
-
-begin_comment
 comment|// Methods for handling the chain of uses of this Value.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_expr_stmt
 name|bool
 name|use_empty
 argument_list|()
@@ -1246,9 +954,6 @@ operator|==
 name|nullptr
 return|;
 block|}
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|use_iterator_impl
 operator|<
@@ -1256,9 +961,6 @@ name|Use
 operator|>
 name|use_iterator
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|use_iterator_impl
 operator|<
@@ -1267,9 +969,6 @@ name|Use
 operator|>
 name|const_use_iterator
 expr_stmt|;
-end_typedef
-
-begin_function
 name|use_iterator
 name|use_begin
 parameter_list|()
@@ -1281,9 +980,6 @@ name|UseList
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_use_iterator
 name|use_begin
 argument_list|()
@@ -1296,9 +992,6 @@ name|UseList
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|use_iterator
 name|use_end
 parameter_list|()
@@ -1308,9 +1001,6 @@ name|use_iterator
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_use_iterator
 name|use_end
 argument_list|()
@@ -1321,9 +1011,6 @@ name|const_use_iterator
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|iterator_range
 operator|<
 name|use_iterator
@@ -1345,9 +1032,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|iterator_range
 operator|<
 name|const_use_iterator
@@ -1370,9 +1054,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|user_empty
 argument_list|()
@@ -1384,9 +1065,6 @@ operator|==
 name|nullptr
 return|;
 block|}
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|user_iterator_impl
 operator|<
@@ -1394,9 +1072,6 @@ name|User
 operator|>
 name|user_iterator
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|user_iterator_impl
 operator|<
@@ -1405,9 +1080,6 @@ name|User
 operator|>
 name|const_user_iterator
 expr_stmt|;
-end_typedef
-
-begin_function
 name|user_iterator
 name|user_begin
 parameter_list|()
@@ -1419,9 +1091,6 @@ name|UseList
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_user_iterator
 name|user_begin
 argument_list|()
@@ -1434,9 +1103,6 @@ name|UseList
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|user_iterator
 name|user_end
 parameter_list|()
@@ -1446,9 +1112,6 @@ name|user_iterator
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_user_iterator
 name|user_end
 argument_list|()
@@ -1459,9 +1122,6 @@ name|const_user_iterator
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|User
 modifier|*
 name|user_back
@@ -1473,9 +1133,6 @@ name|user_begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|const
 name|User
 operator|*
@@ -1489,9 +1146,6 @@ name|user_begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|iterator_range
 operator|<
 name|user_iterator
@@ -1513,9 +1167,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|iterator_range
 operator|<
 name|const_user_iterator
@@ -1538,25 +1189,10 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Return true if there is exactly one user of this value.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is specialized because it is a common request and does not require
-end_comment
-
-begin_comment
 comment|/// traversing the whole use list.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasOneUse
 argument_list|()
@@ -1582,48 +1218,25 @@ condition|)
 return|return
 name|false
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|++
 name|I
 operator|==
 name|E
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// \brief Return true if this Value has exactly N users.
-end_comment
-
-begin_macro
-unit|bool
+name|bool
 name|hasNUses
 argument_list|(
-argument|unsigned N
+name|unsigned
+name|N
 argument_list|)
-end_macro
-
-begin_decl_stmt
-specifier|const
+decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Return true if this value has N users or more.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is logically equivalent to getNumUses()>= N.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|hasNUsesOrMore
 argument_list|(
@@ -1632,13 +1245,7 @@ name|N
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Check if this value is used in the specified basic block.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|isUsedInBasicBlock
 argument_list|(
@@ -1649,37 +1256,16 @@ name|BB
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief This method computes the number of uses of this Value.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is a linear time operation.  Use hasOneUse, hasNUses, or
-end_comment
-
-begin_comment
 comment|/// hasNUsesOrMore to check for specific values.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getNumUses
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief This method should only be used by the Use class.
-end_comment
-
-begin_function
 name|void
 name|addUse
 parameter_list|(
@@ -1697,151 +1283,50 @@ name|UseList
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Concrete subclass of this.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// An enumeration for keeping track of the concrete subclass of Value that
-end_comment
-
-begin_comment
 comment|/// is actually instantiated. Values of this enumeration are kept in the
-end_comment
-
-begin_comment
 comment|/// Value classes SubclassID field. They are used for concrete type
-end_comment
-
-begin_comment
 comment|/// identification.
-end_comment
-
-begin_enum
 enum|enum
 name|ValueTy
 block|{
-name|ArgumentVal
-block|,
-comment|// This is an instance of Argument
-name|BasicBlockVal
-block|,
-comment|// This is an instance of BasicBlock
-name|FunctionVal
-block|,
-comment|// This is an instance of Function
-name|GlobalAliasVal
-block|,
-comment|// This is an instance of GlobalAlias
-name|GlobalVariableVal
-block|,
-comment|// This is an instance of GlobalVariable
-name|UndefValueVal
-block|,
-comment|// This is an instance of UndefValue
-name|BlockAddressVal
-block|,
-comment|// This is an instance of BlockAddress
-name|ConstantExprVal
-block|,
-comment|// This is an instance of ConstantExpr
-name|ConstantAggregateZeroVal
-block|,
-comment|// This is an instance of ConstantAggregateZero
-name|ConstantDataArrayVal
-block|,
-comment|// This is an instance of ConstantDataArray
-name|ConstantDataVectorVal
-block|,
-comment|// This is an instance of ConstantDataVector
-name|ConstantIntVal
-block|,
-comment|// This is an instance of ConstantInt
-name|ConstantFPVal
-block|,
-comment|// This is an instance of ConstantFP
-name|ConstantArrayVal
-block|,
-comment|// This is an instance of ConstantArray
-name|ConstantStructVal
-block|,
-comment|// This is an instance of ConstantStruct
-name|ConstantVectorVal
-block|,
-comment|// This is an instance of ConstantVector
-name|ConstantPointerNullVal
-block|,
-comment|// This is an instance of ConstantPointerNull
-name|MetadataAsValueVal
-block|,
-comment|// This is an instance of MetadataAsValue
-name|InlineAsmVal
-block|,
-comment|// This is an instance of InlineAsm
-name|InstructionVal
-block|,
-comment|// This is an instance of Instruction
-comment|// Enum values starting at InstructionVal are used for Instructions;
-comment|// don't add new values here!
+define|#
+directive|define
+name|HANDLE_VALUE
+parameter_list|(
+name|Name
+parameter_list|)
+value|Name##Val,
+include|#
+directive|include
+file|"llvm/IR/Value.def"
 comment|// Markers:
-name|ConstantFirstVal
-init|=
-name|FunctionVal
-block|,
-name|ConstantLastVal
-init|=
-name|ConstantPointerNullVal
+define|#
+directive|define
+name|HANDLE_CONSTANT_MARKER
+parameter_list|(
+name|Marker
+parameter_list|,
+name|Constant
+parameter_list|)
+value|Marker = Constant##Val,
+include|#
+directive|include
+file|"llvm/IR/Value.def"
 block|}
 enum|;
-end_enum
-
-begin_comment
 comment|/// \brief Return an ID for the concrete type of this object.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is used to implement the classof checks.  This should not be used
-end_comment
-
-begin_comment
 comment|/// for any other purpose, as the values may change as LLVM evolves.  Also,
-end_comment
-
-begin_comment
 comment|/// note that for instructions, the Instruction's opcode is added to
-end_comment
-
-begin_comment
 comment|/// InstructionVal. So this means three things:
-end_comment
-
-begin_comment
 comment|/// # there is no value with code InstructionVal (no opcode==0).
-end_comment
-
-begin_comment
 comment|/// # there are more possible values for the value type than in ValueTy enum.
-end_comment
-
-begin_comment
 comment|/// # the InstructionVal enumerator must be the highest valued enumerator in
-end_comment
-
-begin_comment
 comment|///   the ValueTy enum.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getValueID
 argument_list|()
@@ -1851,21 +1336,9 @@ return|return
 name|SubclassID
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Return the raw optional flags value contained in this value.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This should only be used when testing two Values for equivalence.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getRawSubclassOptionalData
 argument_list|()
@@ -1875,13 +1348,7 @@ return|return
 name|SubclassOptionalData
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Clear the optional flags contained in this value.
-end_comment
-
-begin_function
 name|void
 name|clearSubclassOptionalData
 parameter_list|()
@@ -1891,13 +1358,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Check the optional flags for equality.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|hasSameSubclassOptionalData
 argument_list|(
@@ -1916,13 +1377,7 @@ operator|->
 name|SubclassOptionalData
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Clear any optional flags not set in the given Value.
-end_comment
-
-begin_function
 name|void
 name|intersectOptionalDataWith
 parameter_list|(
@@ -1939,13 +1394,7 @@ operator|->
 name|SubclassOptionalData
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Return true if there is a value handle associated with this value.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasValueHandle
 argument_list|()
@@ -1955,52 +1404,25 @@ return|return
 name|HasValueHandle
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Return true if there is metadata referencing this value.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isUsedByMetadata
 argument_list|()
 specifier|const
 block|{
 return|return
-name|NameAndIsUsedByMD
-operator|.
-name|getInt
-argument_list|()
+name|IsUsedByMD
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Strip off pointer casts, all-zero GEPs, and aliases.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Returns the original uncasted value.  If this is called on a non-pointer
-end_comment
-
-begin_comment
 comment|/// value, it returns 'this'.
-end_comment
-
-begin_function_decl
 name|Value
 modifier|*
 name|stripPointerCasts
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 specifier|const
 name|Value
 operator|*
@@ -2022,33 +1444,15 @@ name|stripPointerCasts
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Strip off pointer casts and all-zero GEPs.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Returns the original uncasted value.  If this is called on a non-pointer
-end_comment
-
-begin_comment
 comment|/// value, it returns 'this'.
-end_comment
-
-begin_function_decl
 name|Value
 modifier|*
 name|stripPointerCastsNoFollowAliases
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 specifier|const
 name|Value
 operator|*
@@ -2070,33 +1474,15 @@ name|stripPointerCastsNoFollowAliases
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Strip off pointer casts and all-constant inbounds GEPs.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Returns the original pointer value.  If this is called on a non-pointer
-end_comment
-
-begin_comment
 comment|/// value, it returns 'this'.
-end_comment
-
-begin_function_decl
 name|Value
 modifier|*
 name|stripInBoundsConstantOffsets
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 specifier|const
 name|Value
 operator|*
@@ -2118,37 +1504,13 @@ name|stripInBoundsConstantOffsets
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Accumulate offsets from \a stripInBoundsConstantOffsets().
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Stores the resulting constant offset stripped into the APInt provided.
-end_comment
-
-begin_comment
 comment|/// The provided APInt will be extended or truncated as needed to be the
-end_comment
-
-begin_comment
 comment|/// correct bitwidth for an offset of this pointer type.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If this is called on a non-pointer value, it returns 'this'.
-end_comment
-
-begin_function_decl
 name|Value
 modifier|*
 name|stripAndAccumulateInBoundsConstantOffsets
@@ -2163,9 +1525,6 @@ modifier|&
 name|Offset
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_decl_stmt
 specifier|const
 name|Value
 modifier|*
@@ -2200,33 +1559,15 @@ name|Offset
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Strip off pointer casts and inbounds GEPs.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Returns the original pointer value.  If this is called on a non-pointer
-end_comment
-
-begin_comment
 comment|/// value, it returns 'this'.
-end_comment
-
-begin_function_decl
 name|Value
 modifier|*
 name|stripInBoundsOffsets
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 specifier|const
 name|Value
 operator|*
@@ -2248,64 +1589,12 @@ name|stripInBoundsOffsets
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Check if this is always a dereferenceable pointer.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Test if this value is always a pointer to allocated and suitably aligned
-end_comment
-
-begin_comment
-comment|/// memory for a simple load or store.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|isDereferenceablePointer
-argument_list|(
-specifier|const
-name|DataLayout
-operator|*
-name|DL
-operator|=
-name|nullptr
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Translate PHI node to its predecessor from the given basic block.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If this value is a PHI node with CurBB as its parent, return the value in
-end_comment
-
-begin_comment
 comment|/// the PHI node corresponding to PredBB.  If not, return ourself.  This is
-end_comment
-
-begin_comment
 comment|/// useful if you want to know the value something has in a predecessor
-end_comment
-
-begin_comment
 comment|/// block.
-end_comment
-
-begin_function_decl
 name|Value
 modifier|*
 name|DoPHITranslation
@@ -2321,9 +1610,6 @@ modifier|*
 name|PredBB
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_decl_stmt
 specifier|const
 name|Value
 modifier|*
@@ -2359,25 +1645,17 @@ name|PredBB
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief The maximum alignment for instructions.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is the greatest alignment value supported by load, store, and alloca
-end_comment
-
-begin_comment
 comment|/// instructions, and global values.
-end_comment
-
-begin_decl_stmt
+specifier|static
+specifier|const
+name|unsigned
+name|MaxAlignmentExponent
+init|=
+literal|29
+decl_stmt|;
 specifier|static
 specifier|const
 name|unsigned
@@ -2385,35 +1663,14 @@ name|MaximumAlignment
 init|=
 literal|1u
 operator|<<
-literal|29
+name|MaxAlignmentExponent
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Mutate the type of this Value to be of the specified type.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Note that this is an extremely dangerous operation which can create
-end_comment
-
-begin_comment
 comment|/// completely invalid IR very easily.  It is strongly recommended that you
-end_comment
-
-begin_comment
 comment|/// recreate IR objects with the right types instead of mutating them in
-end_comment
-
-begin_comment
 comment|/// place.
-end_comment
-
-begin_function
 name|void
 name|mutateType
 parameter_list|(
@@ -2427,25 +1684,10 @@ operator|=
 name|Ty
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Sort the use-list.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Sorts the Value's use-list by Cmp using a stable mergesort.  Cmp is
-end_comment
-
-begin_comment
 comment|/// expected to compare two \a Use references.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -2457,57 +1699,21 @@ argument_list|(
 argument|Compare Cmp
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Reverse the use-list.
-end_comment
-
-begin_function_decl
 name|void
 name|reverseUseList
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_comment
 comment|/// \brief Merge two lists together.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Merges \c L and \c R using \c Cmp.  To enable stable sorts, always pushes
-end_comment
-
-begin_comment
 comment|/// "equal" items from L before items from R.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \return the first element in the list.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \note Completely ignores \a Use::Prev (doesn't read, doesn't update).
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -2545,21 +1751,9 @@ return|return
 name|Merged
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Tail-recursive helper for \a mergeUseLists().
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param[out] Next the first element in the list.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -2578,14 +1772,8 @@ argument_list|,
 argument|Compare Cmp
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_label
 name|protected
 label|:
-end_label
-
-begin_expr_stmt
 name|unsigned
 name|short
 name|getSubclassDataFromValue
@@ -2596,9 +1784,6 @@ return|return
 name|SubclassData
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setValueSubclassData
 parameter_list|(
@@ -2612,10 +1797,14 @@ operator|=
 name|D
 expr_stmt|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_expr_stmt
-unit|};
 specifier|inline
 name|raw_ostream
 operator|&

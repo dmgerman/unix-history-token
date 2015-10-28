@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -1683,6 +1683,9 @@ parameter_list|,
 name|zfs_handle_t
 modifier|*
 parameter_list|,
+name|zpool_handle_t
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1710,6 +1713,17 @@ modifier|*
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zfs_prop_set_list
+parameter_list|(
+name|zfs_handle_t
+modifier|*
+parameter_list|,
+name|nvlist_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2705,6 +2719,39 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
+name|zfs_send_resume
+parameter_list|(
+name|libzfs_handle_t
+modifier|*
+parameter_list|,
+name|sendflags_t
+modifier|*
+parameter_list|,
+name|int
+name|outfd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|nvlist_t
+modifier|*
+name|zfs_send_resume_token_to_nvlist
+parameter_list|(
+name|libzfs_handle_t
+modifier|*
+name|hdl
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|token
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
 name|zfs_promote
 parameter_list|(
 name|zfs_handle_t
@@ -2875,6 +2922,10 @@ comment|/* set "canmount=off" on all modified filesystems */
 name|boolean_t
 name|canmountoff
 decl_stmt|;
+comment|/* 	 * Mark the file systems as "resumable" and do not destroy them if the 	 * receive is interrupted 	 */
+name|boolean_t
+name|resumable
+decl_stmt|;
 comment|/* byteswap flag is used internally; callers need not specify */
 name|boolean_t
 name|byteswap
@@ -2895,6 +2946,9 @@ modifier|*
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+parameter_list|,
+name|nvlist_t
 modifier|*
 parameter_list|,
 name|recvflags_t

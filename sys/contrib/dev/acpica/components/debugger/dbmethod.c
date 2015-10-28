@@ -37,23 +37,6 @@ directive|include
 file|<contrib/dev/acpica/include/acdebug.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DISASSEMBLER
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/include/acdisasm.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -65,12 +48,6 @@ include|#
 directive|include
 file|<contrib/dev/acpica/include/acpredef.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUGGER
-end_ifdef
 
 begin_define
 define|#
@@ -921,7 +898,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ACPI_DISASSEMBER
+name|ACPI_DISASSEMBLER
 operator|(
 name|void
 operator|)
@@ -931,7 +908,7 @@ name|Op
 argument_list|)
 expr_stmt|;
 comment|/* Now we can disassemble the method */
-name|AcpiGbl_DbOpt_Verbose
+name|AcpiGbl_DmOpt_Verbose
 operator|=
 name|FALSE
 expr_stmt|;
@@ -944,7 +921,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|AcpiGbl_DbOpt_Verbose
+name|AcpiGbl_DmOpt_Verbose
 operator|=
 name|TRUE
 expr_stmt|;
@@ -987,15 +964,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_DEBUGGER */
-end_comment
 
 end_unit
 

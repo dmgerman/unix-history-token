@@ -31,50 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmnLLDBDebugSessionInfoVarObj.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Overview:    CMICmnLLDBDebugSessionInfoVarObj interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
@@ -94,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<lldb/API/SBValue.h>
+file|"lldb/API/SBValue.h"
 end_include
 
 begin_comment
@@ -205,10 +161,8 @@ specifier|static
 name|varFormat_e
 name|GetVarFormatForChar
 parameter_list|(
-specifier|const
-name|MIchar
-modifier|&
-name|vrcFormat
+name|char
+name|vcFormat
 parameter_list|)
 function_decl|;
 specifier|static
@@ -297,6 +251,14 @@ name|void
 name|VarObjClear
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+specifier|static
+name|void
+name|VarObjSetFormat
+parameter_list|(
+name|varFormat_e
+name|eDefaultFormat
 parameter_list|)
 function_decl|;
 comment|// Methods:
@@ -430,6 +392,15 @@ name|void
 argument_list|)
 decl|const
 decl_stmt|;
+name|lldb
+operator|::
+name|SBValue
+operator|&
+name|GetValue
+argument_list|(
+name|void
+argument_list|)
+expr_stmt|;
 specifier|const
 name|lldb
 operator|::
@@ -520,7 +491,7 @@ name|MIuint64
 name|vnValue
 parameter_list|,
 specifier|const
-name|MIchar
+name|char
 modifier|*
 name|vpStrValueNatural
 parameter_list|,
@@ -553,14 +524,14 @@ name|private
 label|:
 specifier|static
 specifier|const
-name|MIchar
+name|char
 modifier|*
 name|ms_aVarFormatStrings
 index|[]
 decl_stmt|;
 specifier|static
 specifier|const
-name|MIchar
+name|char
 modifier|*
 name|ms_aVarFormatChars
 index|[]
@@ -573,8 +544,13 @@ specifier|static
 name|MIuint
 name|ms_nVarUniqueId
 decl_stmt|;
+specifier|static
+name|varFormat_e
+name|ms_eDefaultFormat
+decl_stmt|;
+comment|// overrides "natural" format
 comment|//
-comment|// *** Upate the copy move constructors and assignment operator ***
+comment|// *** Update the copy move constructors and assignment operator ***
 name|varFormat_e
 name|m_eVarFormat
 decl_stmt|;
@@ -598,7 +574,7 @@ decl_stmt|;
 name|CMIUtilString
 name|m_strVarObjParentName
 decl_stmt|;
-comment|// *** Upate the copy move constructors and assignment operator ***
+comment|// *** Update the copy move constructors and assignment operator ***
 block|}
 end_decl_stmt
 

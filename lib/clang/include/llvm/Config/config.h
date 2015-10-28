@@ -34,6 +34,16 @@ file|<osreldate.h>
 end_include
 
 begin_comment
+comment|/* Exported configuration */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/Config/llvm-config.h"
+end_include
+
+begin_comment
 comment|/* Bug report URL. */
 end_comment
 
@@ -42,6 +52,17 @@ define|#
 directive|define
 name|BUG_REPORT_URL
 value|"https://bugs.freebsd.org/submit/"
+end_define
+
+begin_comment
+comment|/* Default OpenMP runtime used by -fopenmp. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLANG_DEFAULT_OPENMP_RUNTIME
+value|"libomp"
 end_define
 
 begin_comment
@@ -56,9 +77,12 @@ begin_comment
 comment|/* Multilib suffix for libdir. */
 end_comment
 
-begin_comment
-comment|/* #undef CLANG_LIBDIR_SUFFIX */
-end_comment
+begin_define
+define|#
+directive|define
+name|CLANG_LIBDIR_SUFFIX
+value|""
+end_define
 
 begin_comment
 comment|/* Relative directory for resource files */
@@ -152,17 +176,6 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_BACKTRACE */
 end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `ceilf' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_CEILF
-value|1
-end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<CrashReporterClient.h> header file. */
@@ -315,28 +328,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Define to 1 if you have the `exp' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_EXP
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `exp2' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_EXP2
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the<fcntl.h> header file. */
 end_comment
 
@@ -381,36 +372,6 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_FFI_H */
 end_comment
-
-begin_comment
-comment|/* Set to 1 if the finite function is found in<ieeefp.h> */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_FINITE_IN_IEEEFP_H */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `floorf' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_FLOORF
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `fmodf' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_FMODF
-value|1
-end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `futimens' function. */
@@ -536,50 +497,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Set to 1 if the isinf function is found in<cmath> */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ISINF_IN_CMATH
-value|1
-end_define
-
-begin_comment
-comment|/* Set to 1 if the isinf function is found in<math.h> */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ISINF_IN_MATH_H
-value|1
-end_define
-
-begin_comment
-comment|/* Set to 1 if the isnan function is found in<cmath> */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ISNAN_IN_CMATH
-value|1
-end_define
-
-begin_comment
-comment|/* Set to 1 if the isnan function is found in<math.h> */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ISNAN_IN_MATH_H
-value|1
-end_define
-
-begin_comment
 comment|/* Define if libedit is available on this platform. */
 end_comment
 
@@ -589,14 +506,6 @@ directive|define
 name|HAVE_LIBEDIT
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `imagehlp' library (-limagehlp). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBIMAGEHLP */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `m' library (-lm). */
@@ -610,6 +519,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `ole32' library (-lole32). */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBOLE32 */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `psapi' library (-lpsapi). */
 end_comment
 
@@ -621,9 +538,12 @@ begin_comment
 comment|/* Define to 1 if you have the `pthread' library (-lpthread). */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_LIBPTHREAD */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_LIBPTHREAD
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `shell32' library (-lshell32). */
@@ -676,62 +596,6 @@ directive|define
 name|HAVE_LINK_R
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `log' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_LOG
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `log10' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_LOG10
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `log2' function. */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|900027
-operator|||
-operator|(
-name|__FreeBSD_version
-operator|<
-literal|900000
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|802502
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_LOG2
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the `longjmp' function. */
@@ -866,34 +730,12 @@ comment|/* #undef HAVE_NDIR_H */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `nearbyintf' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_NEARBYINTF
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the `posix_spawn' function. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_POSIX_SPAWN */
 end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `powf' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_POWF
-value|1
-end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `pread' function. */
@@ -921,33 +763,45 @@ begin_comment
 comment|/* Have pthread_getspecific */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PTHREAD_GETSPECIFIC */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PTHREAD_GETSPECIFIC
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<pthread.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PTHREAD_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PTHREAD_H
+value|1
+end_define
 
 begin_comment
 comment|/* Have pthread_mutex_lock */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PTHREAD_MUTEX_LOCK */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PTHREAD_MUTEX_LOCK
+value|1
+end_define
 
 begin_comment
 comment|/* Have pthread_rwlock_init */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PTHREAD_RWLOCK_INIT */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PTHREAD_RWLOCK_INIT
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if srand48/lrand48/drand48 exist in<stdlib.h> */
@@ -968,39 +822,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_REALPATH
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `rintf' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_RINTF
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `round' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ROUND
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `roundf' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ROUNDF
 value|1
 end_define
 
@@ -1115,28 +936,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Set to 1 if the std::isinf function is found in<cmath> */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STD_ISINF_IN_CMATH
-value|1
-end_define
-
-begin_comment
-comment|/* Set to 1 if the std::isnan function is found in<cmath> */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STD_ISNAN_IN_CMATH
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the `strerror' function. */
 end_comment
 
@@ -1177,17 +976,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRING_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `strtof' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRTOF
 value|1
 end_define
 
@@ -1580,6 +1368,14 @@ comment|/* #undef HAVE____CHKSTK */
 end_comment
 
 begin_comment
+comment|/* Have host's ___chkstk_ms */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE____CHKSTK_MS */
+end_comment
+
+begin_comment
 comment|/* Linker version detected at compile time. */
 end_comment
 
@@ -1628,6 +1424,17 @@ comment|/* #undef LLVM_DOCSDIR */
 end_comment
 
 begin_comment
+comment|/* Define to enable checks that alter the LLVM C++ ABI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_ENABLE_ABI_BREAKING_CHECKS
+value|1
+end_define
+
+begin_comment
 comment|/* Define if threads enabled */
 end_comment
 
@@ -1635,7 +1442,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_ENABLE_THREADS
-value|0
+value|1
 end_define
 
 begin_comment
@@ -1665,7 +1472,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_HAS_ATOMICS
-value|0
+value|1
 end_define
 
 begin_comment
@@ -1856,7 +1663,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MINOR
-value|6
+value|7
 end_define
 
 begin_comment
@@ -1867,7 +1674,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_PATCH
-value|1
+value|0
 end_define
 
 begin_comment
@@ -1878,7 +1685,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_STRING
-value|"3.6.1"
+value|"3.7.0"
 end_define
 
 begin_comment
@@ -1930,7 +1737,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.6.1"
+value|"LLVM 3.7.0"
 end_define
 
 begin_comment
@@ -1952,7 +1759,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.6.1"
+value|"3.7.0"
 end_define
 
 begin_comment

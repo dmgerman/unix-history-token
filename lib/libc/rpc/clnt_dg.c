@@ -484,7 +484,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Connection less client creation returns with client handle parameters.  * Default options are set, which the user can change using clnt_control().  * fd should be open and bound.  * NB: The rpch->cl_auth is initialized to null authentication.  * 	Caller may wish to set this something more useful.  *  * sendsz and recvsz are the maximum allowable packet sizes that can be  * sent and received. Normally they are the same, but they can be  * changed to improve the program efficiency and buffer allocation.  * If they are 0, use the transport default.  *  * If svcaddr is NULL, returns NULL.  */
+comment|/*  * Connection less client creation returns with client handle parameters.  * Default options are set, which the user can change using clnt_control().  * fd should be open and bound.  * NB: The rpch->cl_auth is initialized to null authentication.  * 	Caller may wish to set this something more useful.  *  * sendsz and recvsz are the maximum allowable packet sizes that can be  * sent and received. Normally they are the same, but they can be  * changed to improve the program efficiency and buffer allocation.  * If they are 0, use the transport default.  *  * If svcaddr is NULL, returns NULL.  *  * fd      - open file descriptor  * svcaddr - servers address  * program - program number  * version - version number  * sendsz  - buffer recv size  * recvsz  - buffer send size  */
 end_comment
 
 begin_function
@@ -492,45 +492,27 @@ name|CLIENT
 modifier|*
 name|clnt_dg_create
 parameter_list|(
-name|fd
-parameter_list|,
-name|svcaddr
-parameter_list|,
-name|program
-parameter_list|,
-name|version
-parameter_list|,
-name|sendsz
-parameter_list|,
-name|recvsz
-parameter_list|)
 name|int
 name|fd
-decl_stmt|;
-comment|/* open file descriptor */
+parameter_list|,
 specifier|const
 name|struct
 name|netbuf
 modifier|*
 name|svcaddr
-decl_stmt|;
-comment|/* servers address */
+parameter_list|,
 name|rpcprog_t
 name|program
-decl_stmt|;
-comment|/* program number */
+parameter_list|,
 name|rpcvers_t
 name|version
-decl_stmt|;
-comment|/* version number */
+parameter_list|,
 name|u_int
 name|sendsz
-decl_stmt|;
-comment|/* buffer recv size */
+parameter_list|,
 name|u_int
 name|recvsz
-decl_stmt|;
-comment|/* buffer send size */
+parameter_list|)
 block|{
 name|CLIENT
 modifier|*
@@ -1410,58 +1392,41 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * cl       - client handle  * proc     - procedure number  * xargs    - xdr routine for args  * argsp    - pointer to args  * xresults - xdr routine for results  * resultsp - pointer to results  * utimeout - seconds to wait before giving up  */
+end_comment
+
 begin_function
 specifier|static
 name|enum
 name|clnt_stat
 name|clnt_dg_call
 parameter_list|(
-name|cl
-parameter_list|,
-name|proc
-parameter_list|,
-name|xargs
-parameter_list|,
-name|argsp
-parameter_list|,
-name|xresults
-parameter_list|,
-name|resultsp
-parameter_list|,
-name|utimeout
-parameter_list|)
 name|CLIENT
 modifier|*
 name|cl
-decl_stmt|;
-comment|/* client handle */
+parameter_list|,
 name|rpcproc_t
 name|proc
-decl_stmt|;
-comment|/* procedure number */
+parameter_list|,
 name|xdrproc_t
 name|xargs
-decl_stmt|;
-comment|/* xdr routine for args */
+parameter_list|,
 name|void
 modifier|*
 name|argsp
-decl_stmt|;
-comment|/* pointer to args */
+parameter_list|,
 name|xdrproc_t
 name|xresults
-decl_stmt|;
-comment|/* xdr routine for results */
+parameter_list|,
 name|void
 modifier|*
 name|resultsp
-decl_stmt|;
-comment|/* pointer to results */
+parameter_list|,
 name|struct
 name|timeval
 name|utimeout
-decl_stmt|;
-comment|/* seconds to wait before giving up */
+parameter_list|)
 block|{
 name|struct
 name|cu_data
@@ -2986,19 +2951,15 @@ specifier|static
 name|void
 name|clnt_dg_geterr
 parameter_list|(
-name|cl
-parameter_list|,
-name|errp
-parameter_list|)
 name|CLIENT
 modifier|*
 name|cl
-decl_stmt|;
+parameter_list|,
 name|struct
 name|rpc_err
 modifier|*
 name|errp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|cu_data
@@ -3029,23 +2990,17 @@ specifier|static
 name|bool_t
 name|clnt_dg_freeres
 parameter_list|(
-name|cl
-parameter_list|,
-name|xdr_res
-parameter_list|,
-name|res_ptr
-parameter_list|)
 name|CLIENT
 modifier|*
 name|cl
-decl_stmt|;
+parameter_list|,
 name|xdrproc_t
 name|xdr_res
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|res_ptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|cu_data
@@ -3189,12 +3144,10 @@ specifier|static
 name|void
 name|clnt_dg_abort
 parameter_list|(
-name|h
-parameter_list|)
 name|CLIENT
 modifier|*
 name|h
-decl_stmt|;
+parameter_list|)
 block|{ }
 end_function
 
@@ -3203,23 +3156,17 @@ specifier|static
 name|bool_t
 name|clnt_dg_control
 parameter_list|(
-name|cl
-parameter_list|,
-name|request
-parameter_list|,
-name|info
-parameter_list|)
 name|CLIENT
 modifier|*
 name|cl
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|request
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|cu_data
@@ -3932,12 +3879,10 @@ specifier|static
 name|void
 name|clnt_dg_destroy
 parameter_list|(
-name|cl
-parameter_list|)
 name|CLIENT
 modifier|*
 name|cl
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|cu_data
@@ -4170,7 +4115,9 @@ name|struct
 name|clnt_ops
 modifier|*
 name|clnt_dg_ops
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|struct
@@ -4287,13 +4234,11 @@ specifier|static
 name|bool_t
 name|time_not_ok
 parameter_list|(
-name|t
-parameter_list|)
 name|struct
 name|timeval
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(

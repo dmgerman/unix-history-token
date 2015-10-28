@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2010 Isilon Systems, Inc.  * Copyright (c) 2010 iX Systems, Inc.  * Copyright (c) 2010 Panasas, Inc.  * Copyright (c) 2013, 2014 Mellanox Technologies, Ltd.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2010 Isilon Systems, Inc.  * Copyright (c) 2010 iX Systems, Inc.  * Copyright (c) 2010 Panasas, Inc.  * Copyright (c) 2013-2015 Mellanox Technologies, Ltd.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -13,6 +13,28 @@ begin_define
 define|#
 directive|define
 name|_LINUX_BITOPS_H_
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|BIT
+parameter_list|(
+name|nr
+parameter_list|)
+value|(1UL<< (nr))
 end_define
 
 begin_ifdef
@@ -48,7 +70,17 @@ end_endif
 begin_define
 define|#
 directive|define
-name|BIT_MASK
+name|BITMAP_FIRST_WORD_MASK
+parameter_list|(
+name|start
+parameter_list|)
+value|(~0UL<< ((start) % BITS_PER_LONG))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BITMAP_LAST_WORD_MASK
 parameter_list|(
 name|n
 parameter_list|)
@@ -68,11 +100,33 @@ end_define
 begin_define
 define|#
 directive|define
+name|BIT_MASK
+parameter_list|(
+name|nr
+parameter_list|)
+value|(1UL<< ((nr)& (BITS_PER_LONG - 1)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|BIT_WORD
 parameter_list|(
 name|nr
 parameter_list|)
 value|((nr) / BITS_PER_LONG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GENMASK
+parameter_list|(
+name|lo
+parameter_list|,
+name|hi
+parameter_list|)
+value|(((2UL<< ((hi) - (lo))) - 1UL)<< (lo))
 end_define
 
 begin_define
@@ -303,7 +357,7 @@ operator|*
 name|addr
 operator|)
 operator|&
-name|BIT_MASK
+name|BITMAP_LAST_WORD_MASK
 argument_list|(
 name|size
 argument_list|)
@@ -417,7 +471,7 @@ operator|*
 name|addr
 operator|)
 operator|&
-name|BIT_MASK
+name|BITMAP_LAST_WORD_MASK
 argument_list|(
 name|size
 argument_list|)
@@ -510,7 +564,7 @@ operator|*
 name|addr
 operator|)
 operator|&
-name|BIT_MASK
+name|BITMAP_LAST_WORD_MASK
 argument_list|(
 name|offs
 argument_list|)
@@ -646,7 +700,7 @@ name|addr
 operator|)
 operator|&
 operator|~
-name|BIT_MASK
+name|BITMAP_LAST_WORD_MASK
 argument_list|(
 name|offs
 argument_list|)
@@ -740,7 +794,7 @@ operator|*
 name|addr
 operator|)
 operator|&
-name|BIT_MASK
+name|BITMAP_LAST_WORD_MASK
 argument_list|(
 name|size
 argument_list|)
@@ -850,7 +904,7 @@ name|addr
 operator|)
 operator|&
 operator|~
-name|BIT_MASK
+name|BITMAP_LAST_WORD_MASK
 argument_list|(
 name|offs
 argument_list|)
@@ -951,7 +1005,7 @@ operator|*
 name|addr
 operator|)
 operator|&
-name|BIT_MASK
+name|BITMAP_LAST_WORD_MASK
 argument_list|(
 name|size
 argument_list|)
@@ -1087,7 +1141,7 @@ operator|/
 name|BITS_PER_LONG
 index|]
 operator|=
-name|BIT_MASK
+name|BITMAP_LAST_WORD_MASK
 argument_list|(
 name|tail
 argument_list|)
@@ -1110,6 +1164,7 @@ name|int
 name|size
 parameter_list|)
 block|{
+name|unsigned
 name|long
 name|mask
 decl_stmt|;
@@ -1173,7 +1228,7 @@ condition|)
 block|{
 name|mask
 operator|=
-name|BIT_MASK
+name|BITMAP_LAST_WORD_MASK
 argument_list|(
 name|tail
 argument_list|)
@@ -1220,6 +1275,7 @@ name|int
 name|size
 parameter_list|)
 block|{
+name|unsigned
 name|long
 name|mask
 decl_stmt|;
@@ -1282,7 +1338,7 @@ condition|)
 block|{
 name|mask
 operator|=
-name|BIT_MASK
+name|BITMAP_LAST_WORD_MASK
 argument_list|(
 name|tail
 argument_list|)
@@ -1317,13 +1373,6 @@ end_function
 begin_define
 define|#
 directive|define
-name|NBLONG
-value|(NBBY * sizeof(long))
-end_define
-
-begin_define
-define|#
-directive|define
 name|__set_bit
 parameter_list|(
 name|i
@@ -1331,7 +1380,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|atomic_set_long(&((volatile long *)(a))[(i)/NBLONG], 1UL<< ((i) % NBLONG))
+value|atomic_set_long(&((volatile long *)(a))[BIT_WORD(i)], BIT_MASK(i))
 end_define
 
 begin_define
@@ -1344,7 +1393,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|atomic_set_long(&((volatile long *)(a))[(i)/NBLONG], 1UL<< ((i) % NBLONG))
+value|atomic_set_long(&((volatile long *)(a))[BIT_WORD(i)], BIT_MASK(i))
 end_define
 
 begin_define
@@ -1357,7 +1406,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|atomic_clear_long(&((volatile long *)(a))[(i)/NBLONG], 1UL<< ((i) % NBLONG))
+value|atomic_clear_long(&((volatile long *)(a))[BIT_WORD(i)], BIT_MASK(i))
 end_define
 
 begin_define
@@ -1370,7 +1419,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|atomic_clear_long(&((volatile long *)(a))[(i)/NBLONG], 1UL<< ((i) % NBLONG))
+value|atomic_clear_long(&((volatile long *)(a))[BIT_WORD(i)], BIT_MASK(i))
 end_define
 
 begin_define
@@ -1383,7 +1432,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|!!(atomic_load_acq_long(&((volatile long *)(a))[(i)/NBLONG])&	\     (1UL<< ((i) % NBLONG)))
+value|!!(atomic_load_acq_long(&((volatile long *)(a))[BIT_WORD(i)])&	\     BIT_MASK(i))
 end_define
 
 begin_function
@@ -1405,25 +1454,14 @@ name|val
 decl_stmt|;
 name|var
 operator|+=
-name|bit
-operator|/
-operator|(
-sizeof|sizeof
+name|BIT_WORD
 argument_list|(
-name|long
+name|bit
 argument_list|)
-operator|*
-name|NBBY
-operator|)
 expr_stmt|;
 name|bit
 operator|%=
-sizeof|sizeof
-argument_list|(
-name|long
-argument_list|)
-operator|*
-name|NBBY
+name|BITS_PER_LONG
 expr_stmt|;
 name|bit
 operator|=
@@ -1494,25 +1532,14 @@ name|val
 decl_stmt|;
 name|var
 operator|+=
-name|bit
-operator|/
-operator|(
-sizeof|sizeof
+name|BIT_WORD
 argument_list|(
-name|long
+name|bit
 argument_list|)
-operator|*
-name|NBBY
-operator|)
 expr_stmt|;
 name|bit
 operator|%=
-sizeof|sizeof
-argument_list|(
-name|long
-argument_list|)
-operator|*
-name|NBBY
+name|BITS_PER_LONG
 expr_stmt|;
 name|bit
 operator|=
@@ -1562,27 +1589,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|BITMAP_FIRST_WORD_MASK
-parameter_list|(
-name|start
-parameter_list|)
-value|(~0UL<< ((start) % BITS_PER_LONG))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BITMAP_LAST_WORD_MASK
-parameter_list|(
-name|nbits
-parameter_list|)
-define|\
-value|(                                                                       \         ((nbits) % BITS_PER_LONG) ?                                     \                 (1UL<<((nbits) % BITS_PER_LONG))-1 : ~0UL               \ )
-end_define
 
 begin_function
 specifier|static
@@ -1811,14 +1817,10 @@ enum|enum
 block|{
 name|REG_OP_ISFREE
 block|,
-comment|/* true if region is all zero bits */
 name|REG_OP_ALLOC
 block|,
-comment|/* set all bits in region */
 name|REG_OP_RELEASE
-block|,
-comment|/* clear all bits in region */
-block|}
+block|, }
 enum|;
 end_enum
 
@@ -1845,39 +1847,30 @@ block|{
 name|int
 name|nbits_reg
 decl_stmt|;
-comment|/* number of bits in region */
 name|int
 name|index
 decl_stmt|;
-comment|/* index first long of region in bitmap */
 name|int
 name|offset
 decl_stmt|;
-comment|/* bit offset region in bitmap[index] */
 name|int
 name|nlongs_reg
 decl_stmt|;
-comment|/* num longs spanned by region in bitmap */
 name|int
 name|nbitsinlong
 decl_stmt|;
-comment|/* num bits of region in each spanned long */
 name|unsigned
 name|long
 name|mask
 decl_stmt|;
-comment|/* bitmask for one long of region */
 name|int
 name|i
 decl_stmt|;
-comment|/* scans bitmap by longs */
 name|int
 name|ret
 init|=
 literal|0
 decl_stmt|;
-comment|/* return value */
-comment|/*          * Either nlongs_reg == 1 (for small orders that fit in one long)          * or (offset == 0&& mask == ~0UL) (for larger multiword orders.)          */
 name|nbits_reg
 operator|=
 literal|1
@@ -1916,7 +1909,6 @@ argument_list|,
 name|BITS_PER_LONG
 argument_list|)
 expr_stmt|;
-comment|/*          * Can't do "mask = (1UL<< nbitsinlong) - 1", as that          * overflows if nbitsinlong == BITS_PER_LONG.          */
 name|mask
 operator|=
 operator|(
@@ -1980,7 +1972,6 @@ name|ret
 operator|=
 literal|1
 expr_stmt|;
-comment|/* all bits in region free (zero) */
 break|break;
 case|case
 name|REG_OP_ALLOC
@@ -2044,10 +2035,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/**  * bitmap_find_free_region - find a contiguous aligned mem region  *      @bitmap: array of unsigned longs corresponding to the bitmap  *      @bits: number of bits in the bitmap  *      @order: region size (log base 2 of number of bits) to find  *  * Find a region of free (zero) bits in a @bitmap of @bits bits and  * allocate them (set them to one).  Only consider regions of length  * a power (@order) of two, aligned to that power of two, which  * makes the search algorithm much faster.  *  * Return the bit offset in bitmap of the allocated region,  * or -errno on failure.  */
-end_comment
-
 begin_function
 specifier|static
 specifier|inline
@@ -2068,10 +2055,10 @@ parameter_list|)
 block|{
 name|int
 name|pos
-decl_stmt|,
+decl_stmt|;
+name|int
 name|end
 decl_stmt|;
-comment|/* scans bitmap by regions of size order */
 for|for
 control|(
 name|pos
@@ -2134,10 +2121,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/**  * bitmap_allocate_region - allocate bitmap region  *      @bitmap: array of unsigned longs corresponding to the bitmap  *      @pos: beginning of bit region to allocate  *      @order: region size (log base 2 of number of bits) to allocate  *  * Allocate (set bits in) a specified region of a bitmap.  *  * Return 0 on success, or %-EBUSY if specified region wasn't  * free (not all bits were zero).  */
-end_comment
-
 begin_function
 specifier|static
 specifier|inline
@@ -2190,10 +2173,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/**  * bitmap_release_region - release allocated bitmap region  *      @bitmap: array of unsigned longs corresponding to the bitmap  *      @pos: beginning of bit region to release  *      @order: region size (log base 2 of number of bits) to release  *  * This is the complement to __bitmap_find_free_region() and releases  * the found region (by clearing it in the bitmap).  *  * No return value.  */
-end_comment
 
 begin_function
 specifier|static

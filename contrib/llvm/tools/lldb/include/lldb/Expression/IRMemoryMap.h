@@ -281,6 +281,19 @@ operator|&
 name|error
 argument_list|)
 decl_stmt|;
+name|bool
+name|GetAllocSize
+argument_list|(
+name|lldb
+operator|::
+name|addr_t
+name|address
+argument_list|,
+name|size_t
+operator|&
+name|size
+argument_list|)
+decl_stmt|;
 name|void
 name|GetMemoryData
 argument_list|(
@@ -318,6 +331,19 @@ name|GetBestExecutionContextScope
 argument_list|()
 specifier|const
 expr_stmt|;
+name|lldb
+operator|::
+name|TargetSP
+name|GetTarget
+argument_list|()
+block|{
+return|return
+name|m_target_wp
+operator|.
+name|lock
+argument_list|()
+return|;
+block|}
 name|protected
 label|:
 comment|// This function should only be used if you know you are using the JIT.
@@ -325,6 +351,7 @@ comment|// Any other cases should use GetBestExecutionContextScope().
 name|lldb
 operator|::
 name|ProcessWP
+operator|&
 name|GetProcessWP
 argument_list|()
 block|{

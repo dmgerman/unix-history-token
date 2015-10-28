@@ -88,33 +88,15 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MipsSubtarget
-decl_stmt|;
-name|class
-name|Type
-decl_stmt|;
-name|class
 name|MipsRegisterInfo
 range|:
 name|public
 name|MipsGenRegisterInfo
 block|{
-name|protected
-operator|:
-specifier|const
-name|MipsSubtarget
-operator|&
-name|Subtarget
-block|;
 name|public
 operator|:
 name|MipsRegisterInfo
-argument_list|(
-specifier|const
-name|MipsSubtarget
-operator|&
-name|Subtarget
-argument_list|)
+argument_list|()
 block|;
 comment|/// getRegisterNumbering - Given the enum value for some register, e.g.
 comment|/// Mips::RA, return the number that it corresponds to (e.g. 31).
@@ -167,7 +149,7 @@ name|MCPhysReg
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction *MF = nullptr
+argument|const MachineFunction *MF
 argument_list|)
 specifier|const
 name|override
@@ -177,6 +159,8 @@ name|uint32_t
 operator|*
 name|getCallPreservedMask
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|CallingConv::ID
 argument_list|)
 specifier|const
@@ -236,6 +220,22 @@ argument_list|,
 argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
+block|;
+comment|// Stack realignment queries.
+name|bool
+name|canRealignStack
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|needsStackRealignment
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
 block|;
 comment|/// Debug information queries.
 name|unsigned

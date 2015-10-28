@@ -157,9 +157,9 @@ comment|/// bitfield.
 name|unsigned
 name|StorageSize
 decl_stmt|;
-comment|/// The alignment which should be used when accessing the bitfield.
-name|unsigned
-name|StorageAlignment
+comment|/// The offset of the bitfield storage from the start of the struct.
+name|CharUnits
+name|StorageOffset
 decl_stmt|;
 name|CGBitFieldInfo
 argument_list|()
@@ -176,7 +176,7 @@ operator|,
 name|StorageSize
 argument_list|()
 operator|,
-name|StorageAlignment
+name|StorageOffset
 argument_list|()
 block|{}
 name|CGBitFieldInfo
@@ -189,7 +189,7 @@ argument|bool IsSigned
 argument_list|,
 argument|unsigned StorageSize
 argument_list|,
-argument|unsigned StorageAlignment
+argument|CharUnits StorageOffset
 argument_list|)
 operator|:
 name|Offset
@@ -212,9 +212,9 @@ argument_list|(
 name|StorageSize
 argument_list|)
 operator|,
-name|StorageAlignment
+name|StorageOffset
 argument_list|(
-argument|StorageAlignment
+argument|StorageOffset
 argument_list|)
 block|{}
 name|void
@@ -255,8 +255,8 @@ parameter_list|,
 name|uint64_t
 name|StorageSize
 parameter_list|,
-name|uint64_t
-name|StorageAlignment
+name|CharUnits
+name|StorageOffset
 parameter_list|)
 function_decl|;
 block|}
@@ -274,9 +274,12 @@ name|CodeGenTypes
 decl_stmt|;
 name|CGRecordLayout
 argument_list|(
-argument|const CGRecordLayout&
+specifier|const
+name|CGRecordLayout
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -286,7 +289,8 @@ specifier|const
 name|CGRecordLayout
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|private
 label|:

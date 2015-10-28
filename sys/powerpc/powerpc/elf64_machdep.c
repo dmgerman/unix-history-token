@@ -666,6 +666,9 @@ name|Elf_Rela
 modifier|*
 name|rela
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -753,7 +756,7 @@ case|case
 name|R_PPC64_ADDR64
 case|:
 comment|/* doubleword64 S + A */
-name|addr
+name|error
 operator|=
 name|lookup
 argument_list|(
@@ -762,12 +765,15 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|==
+name|error
+operator|!=
 literal|0
 condition|)
 return|return
@@ -805,8 +811,6 @@ case|case
 name|R_PPC_JMP_SLOT
 case|:
 comment|/* function descriptor copy */
-name|addr
-operator|=
 name|lookup
 argument_list|(
 name|lf
@@ -814,6 +818,9 @@ argument_list|,
 name|symidx
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|addr
 argument_list|)
 expr_stmt|;
 name|memcpy

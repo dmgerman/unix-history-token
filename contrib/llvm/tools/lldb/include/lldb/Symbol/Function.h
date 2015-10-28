@@ -245,9 +245,7 @@ comment|///
 comment|/// @return
 comment|///     A const reference to the method name object.
 comment|//------------------------------------------------------------------
-specifier|const
 name|ConstString
-operator|&
 name|GetName
 argument_list|()
 specifier|const
@@ -444,14 +442,23 @@ name|void
 name|DumpStopContext
 argument_list|(
 argument|Stream *s
+argument_list|,
+argument|lldb::LanguageType language
 argument_list|)
 specifier|const
 block|;
-specifier|const
 name|ConstString
-operator|&
 name|GetName
-argument_list|()
+argument_list|(
+argument|lldb::LanguageType language
+argument_list|)
+specifier|const
+block|;
+name|ConstString
+name|GetDisplayName
+argument_list|(
+argument|lldb::LanguageType language
+argument_list|)
 specifier|const
 block|;
 comment|//------------------------------------------------------------------
@@ -708,6 +715,13 @@ return|return
 name|m_range
 return|;
 block|}
+name|lldb
+operator|::
+name|LanguageType
+name|GetLanguage
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Find the file and line number of the source location of the start
 comment|/// of the function.  This will use the declaration if present and fall
@@ -846,20 +860,21 @@ return|return
 name|m_frame_base
 return|;
 block|}
-specifier|const
 name|ConstString
-operator|&
 name|GetName
 argument_list|()
 specifier|const
-block|{
-return|return
-name|m_mangled
-operator|.
-name|GetName
+expr_stmt|;
+name|ConstString
+name|GetNameNoArguments
 argument_list|()
-return|;
-block|}
+specifier|const
+expr_stmt|;
+name|ConstString
+name|GetDisplayName
+argument_list|()
+specifier|const
+expr_stmt|;
 specifier|const
 name|Mangled
 operator|&

@@ -119,15 +119,6 @@ comment|/* Free the mutex objects */
 name|AcpiUtMutexTerminate
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUGGER
-comment|/* Shut down the debugger */
-name|AcpiDbTerminate
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Now we can shutdown the OS-dependent layer */
 name|Status
 operator|=
@@ -1069,7 +1060,7 @@ operator|||
 operator|(
 name|Length
 operator|<
-literal|16
+name|ACPI_PLD_REV1_BUFFER_SIZE
 operator|)
 condition|)
 block|{
@@ -1407,7 +1398,7 @@ if|if
 condition|(
 name|Length
 operator|>=
-name|ACPI_PLD_BUFFER_SIZE
+name|ACPI_PLD_REV2_BUFFER_SIZE
 condition|)
 block|{
 comment|/* Fifth 32-bit DWord (Revision 2 of _PLD) */

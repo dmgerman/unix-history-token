@@ -462,6 +462,17 @@ begin_comment
 comment|/* low water mark */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NOTE_FILE_POLL
+value|0x0002
+end_define
+
+begin_comment
+comment|/* behave like poll() */
+end_comment
+
 begin_comment
 comment|/*  * data/hint flags for EVFILT_VNODE, shared with userspace  */
 end_comment

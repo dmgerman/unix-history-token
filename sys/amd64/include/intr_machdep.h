@@ -51,6 +51,12 @@ directive|include
 file|<xen/xen-os.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<xen/interface/event_channel.h>
+end_include
+
 begin_define
 define|#
 directive|define

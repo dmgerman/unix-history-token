@@ -407,7 +407,113 @@ comment|// NAMED_NODE:    [n x mdnodes]
 name|METADATA_ATTACHMENT
 init|=
 literal|11
+block|,
 comment|// [m x [value, [n x [id, mdnode]]]
+name|METADATA_GENERIC_DEBUG
+init|=
+literal|12
+block|,
+comment|// [distinct, tag, vers, header, n x md num]
+name|METADATA_SUBRANGE
+init|=
+literal|13
+block|,
+comment|// [distinct, count, lo]
+name|METADATA_ENUMERATOR
+init|=
+literal|14
+block|,
+comment|// [distinct, value, name]
+name|METADATA_BASIC_TYPE
+init|=
+literal|15
+block|,
+comment|// [distinct, tag, name, size, align, enc]
+name|METADATA_FILE
+init|=
+literal|16
+block|,
+comment|// [distinct, filename, directory]
+name|METADATA_DERIVED_TYPE
+init|=
+literal|17
+block|,
+comment|// [distinct, ...]
+name|METADATA_COMPOSITE_TYPE
+init|=
+literal|18
+block|,
+comment|// [distinct, ...]
+name|METADATA_SUBROUTINE_TYPE
+init|=
+literal|19
+block|,
+comment|// [distinct, flags, types]
+name|METADATA_COMPILE_UNIT
+init|=
+literal|20
+block|,
+comment|// [distinct, ...]
+name|METADATA_SUBPROGRAM
+init|=
+literal|21
+block|,
+comment|// [distinct, ...]
+name|METADATA_LEXICAL_BLOCK
+init|=
+literal|22
+block|,
+comment|// [distinct, scope, file, line, column]
+name|METADATA_LEXICAL_BLOCK_FILE
+init|=
+literal|23
+block|,
+comment|//[distinct, scope, file, discriminator]
+name|METADATA_NAMESPACE
+init|=
+literal|24
+block|,
+comment|// [distinct, scope, file, name, line]
+name|METADATA_TEMPLATE_TYPE
+init|=
+literal|25
+block|,
+comment|// [distinct, scope, name, type, ...]
+name|METADATA_TEMPLATE_VALUE
+init|=
+literal|26
+block|,
+comment|// [distinct, scope, name, type, value, ...]
+name|METADATA_GLOBAL_VAR
+init|=
+literal|27
+block|,
+comment|// [distinct, ...]
+name|METADATA_LOCAL_VAR
+init|=
+literal|28
+block|,
+comment|// [distinct, ...]
+name|METADATA_EXPRESSION
+init|=
+literal|29
+block|,
+comment|// [distinct, n x element]
+name|METADATA_OBJC_PROPERTY
+init|=
+literal|30
+block|,
+comment|// [distinct, name, file, line, ...]
+name|METADATA_IMPORTED_ENTITY
+init|=
+literal|31
+block|,
+comment|// [distinct, tag, scope, entity, line, name]
+name|METADATA_MODULE
+init|=
+literal|32
+block|,
+comment|// [distinct, scope, name, ...]
 block|}
 enum|;
 comment|// The constants block (CONSTANTS_BLOCK_ID) describes emission for each
@@ -796,7 +902,7 @@ init|=
 literal|3
 block|,
 comment|// CAST:       [opcode, ty, opty, opval]
-name|FUNC_CODE_INST_GEP
+name|FUNC_CODE_INST_GEP_OLD
 init|=
 literal|4
 block|,
@@ -879,7 +985,7 @@ comment|// VAARG:      [valistty, valist, instty]
 comment|// This store code encodes the pointer type, rather than the value type
 comment|// this is so information only available in the pointer type (e.g. address
 comment|// spaces) is retained.
-name|FUNC_CODE_INST_STORE
+name|FUNC_CODE_INST_STORE_OLD
 init|=
 literal|24
 block|,
@@ -908,7 +1014,7 @@ init|=
 literal|29
 block|,
 comment|// VSELECT:    [ty,opval,opval,predty,pred]
-name|FUNC_CODE_INST_INBOUNDS_GEP
+name|FUNC_CODE_INST_INBOUNDS_GEP_OLD
 init|=
 literal|30
 block|,
@@ -939,7 +1045,7 @@ init|=
 literal|36
 block|,
 comment|// FENCE: [ordering, synchscope]
-name|FUNC_CODE_INST_CMPXCHG
+name|FUNC_CODE_INST_CMPXCHG_OLD
 init|=
 literal|37
 block|,
@@ -957,7 +1063,7 @@ init|=
 literal|39
 block|,
 comment|// RESUME:     [opval]
-name|FUNC_CODE_INST_LANDINGPAD
+name|FUNC_CODE_INST_LANDINGPAD_OLD
 init|=
 literal|40
 block|,
@@ -968,11 +1074,38 @@ literal|41
 block|,
 comment|// LOAD: [opty, op, align, vol,
 comment|//        ordering, synchscope]
-name|FUNC_CODE_INST_STOREATOMIC
+name|FUNC_CODE_INST_STOREATOMIC_OLD
 init|=
 literal|42
+block|,
 comment|// STORE: [ptrty,ptr,val, align, vol
 comment|//         ordering, synchscope]
+name|FUNC_CODE_INST_GEP
+init|=
+literal|43
+block|,
+comment|// GEP:  [inbounds, n x operands]
+name|FUNC_CODE_INST_STORE
+init|=
+literal|44
+block|,
+comment|// STORE: [ptrty,ptr,valty,val, align, vol]
+name|FUNC_CODE_INST_STOREATOMIC
+init|=
+literal|45
+block|,
+comment|// STORE: [ptrty,ptr,val, align, vol
+name|FUNC_CODE_INST_CMPXCHG
+init|=
+literal|46
+block|,
+comment|// CMPXCHG: [ptrty,ptr,valty,cmp,new, align,
+comment|//           vol,ordering,synchscope]
+name|FUNC_CODE_INST_LANDINGPAD
+init|=
+literal|47
+block|,
+comment|// LANDINGPAD: [ty,val,num,id0,val0...]
 block|}
 enum|;
 enum|enum
@@ -1156,6 +1289,22 @@ block|,
 name|ATTR_KIND_DEREFERENCEABLE
 init|=
 literal|41
+block|,
+name|ATTR_KIND_DEREFERENCEABLE_OR_NULL
+init|=
+literal|42
+block|,
+name|ATTR_KIND_CONVERGENT
+init|=
+literal|43
+block|,
+name|ATTR_KIND_SAFESTACK
+init|=
+literal|44
+block|,
+name|ATTR_KIND_ARGMEMONLY
+init|=
+literal|45
 block|}
 enum|;
 enum|enum

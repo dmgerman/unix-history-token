@@ -14486,7 +14486,7 @@ operator|<<
 literal|16
 operator|)
 operator||
-name|_3D_CHICKEN_SF_DISABLE_FASTCLIP_CULL
+name|_3D_CHICKEN3_SF_DISABLE_FASTCLIP_CULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * According to the spec the following bits should be 	 * set in order to enable memory self-refresh and fbc: 	 * The bit21 and bit22 of 0x42000 	 * The bit21 and bit22 of 0x42004 	 * The bit5 and bit7 of 0x42020 	 * The bit14 of 0x70180 	 * The bit14 of 0x71180 	 */

@@ -89,41 +89,12 @@ range|:
 name|public
 name|raw_ostream
 block|{
-name|public
-operator|:
-comment|/// DELETE_STREAM - Tell the destructor to delete the held stream.
-comment|///
-specifier|static
-specifier|const
-name|bool
-name|DELETE_STREAM
-operator|=
-name|true
-block|;
-comment|/// PRESERVE_STREAM - Tell the destructor to not delete the held
-comment|/// stream.
-comment|///
-specifier|static
-specifier|const
-name|bool
-name|PRESERVE_STREAM
-operator|=
-name|false
-block|;
-name|private
-operator|:
 comment|/// TheStream - The real stream we output to. We set it to be
 comment|/// unbuffered, since we're already doing our own buffering.
 comment|///
 name|raw_ostream
 operator|*
 name|TheStream
-block|;
-comment|/// DeleteStream - Do we need to delete TheStream in the
-comment|/// destructor?
-comment|///
-name|bool
-name|DeleteStream
 block|;
 comment|/// Position - The current output column and line of the data that's
 comment|/// been flushed and the portion of the buffer that's been
@@ -185,96 +156,10 @@ argument_list|,
 argument|size_t size
 argument_list|)
 block|;
-name|public
-operator|:
-comment|/// formatted_raw_ostream - Open the specified file for
-comment|/// writing. If an error occurs, information about the error is
-comment|/// put into ErrorInfo, and the stream should be immediately
-comment|/// destroyed; the string will be empty if no error occurred.
-comment|///
-comment|/// As a side effect, the given Stream is set to be Unbuffered.
-comment|/// This is because formatted_raw_ostream does its own buffering,
-comment|/// so it doesn't want another layer of buffering to be happening
-comment|/// underneath it.
-comment|///
-name|formatted_raw_ostream
-argument_list|(
-argument|raw_ostream&Stream
-argument_list|,
-argument|bool Delete = false
-argument_list|)
-operator|:
-name|raw_ostream
-argument_list|()
-block|,
-name|TheStream
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|DeleteStream
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|Position
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-block|{
-name|setStream
-argument_list|(
-name|Stream
-argument_list|,
-name|Delete
-argument_list|)
-block|;   }
-name|explicit
-name|formatted_raw_ostream
-argument_list|()
-operator|:
-name|raw_ostream
-argument_list|()
-block|,
-name|TheStream
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|DeleteStream
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|Position
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-block|{
-name|Scanned
-operator|=
-name|nullptr
-block|;   }
-operator|~
-name|formatted_raw_ostream
-argument_list|()
-block|{
-name|flush
-argument_list|()
-block|;
-name|releaseStream
-argument_list|()
-block|;   }
 name|void
 name|setStream
 argument_list|(
 argument|raw_ostream&Stream
-argument_list|,
-argument|bool Delete = false
 argument_list|)
 block|{
 name|releaseStream
@@ -284,10 +169,6 @@ name|TheStream
 operator|=
 operator|&
 name|Stream
-block|;
-name|DeleteStream
-operator|=
-name|Delete
 block|;
 comment|// This formatted_raw_ostream inherits from raw_ostream, so it'll do its
 comment|// own buffering, and it doesn't need or want TheStream to do another
@@ -321,6 +202,74 @@ name|Scanned
 operator|=
 name|nullptr
 block|;   }
+name|public
+operator|:
+comment|/// formatted_raw_ostream - Open the specified file for
+comment|/// writing. If an error occurs, information about the error is
+comment|/// put into ErrorInfo, and the stream should be immediately
+comment|/// destroyed; the string will be empty if no error occurred.
+comment|///
+comment|/// As a side effect, the given Stream is set to be Unbuffered.
+comment|/// This is because formatted_raw_ostream does its own buffering,
+comment|/// so it doesn't want another layer of buffering to be happening
+comment|/// underneath it.
+comment|///
+name|formatted_raw_ostream
+argument_list|(
+name|raw_ostream
+operator|&
+name|Stream
+argument_list|)
+operator|:
+name|TheStream
+argument_list|(
+name|nullptr
+argument_list|)
+decl_stmt|,
+name|Position
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|{
+name|setStream
+argument_list|(
+name|Stream
+argument_list|)
+expr_stmt|;
+block|}
+name|explicit
+name|formatted_raw_ostream
+argument_list|()
+operator|:
+name|TheStream
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|Position
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|{
+name|Scanned
+operator|=
+name|nullptr
+block|;   }
+operator|~
+name|formatted_raw_ostream
+argument_list|()
+name|override
+block|{
+name|flush
+argument_list|()
+block|;
+name|releaseStream
+argument_list|()
+block|;   }
 comment|/// PadToColumn - Align the output to some column number.  If the current
 comment|/// column is already equal to or more than NewCol, PadToColumn inserts one
 comment|/// space.
@@ -332,7 +281,7 @@ name|PadToColumn
 argument_list|(
 argument|unsigned NewCol
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// getColumn - Return the column number
 name|unsigned
 name|getColumn
@@ -438,22 +387,14 @@ name|void
 name|releaseStream
 parameter_list|()
 block|{
-comment|// Delete the stream if needed. Otherwise, transfer the buffer
-comment|// settings from this raw_ostream back to the underlying stream.
+comment|// Transfer the buffer settings from this raw_ostream back to the underlying
+comment|// stream.
 if|if
 condition|(
 operator|!
 name|TheStream
 condition|)
 return|return;
-if|if
-condition|(
-name|DeleteStream
-condition|)
-name|delete
-name|TheStream
-decl_stmt|;
-elseif|else
 if|if
 condition|(
 name|size_t

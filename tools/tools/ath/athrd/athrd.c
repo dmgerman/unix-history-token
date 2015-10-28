@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net80211/_ieee80211.h>
 end_include
 
@@ -46,6 +52,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -58,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdarg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
@@ -71,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_decl_stmt
@@ -2525,13 +2531,6 @@ modifier|*
 name|rd
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 name|int
 name|i
 decl_stmt|;
@@ -2543,7 +2542,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|domains
 argument_list|)
@@ -2585,9 +2584,6 @@ block|}
 return|return
 name|AH_FALSE
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -2602,13 +2598,6 @@ name|HAL_REG_DOMAIN
 name|rd
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 name|int
 name|i
 decl_stmt|;
@@ -2620,7 +2609,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|domains
 argument_list|)
@@ -2650,9 +2639,6 @@ return|;
 return|return
 name|NULL
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -2662,13 +2648,6 @@ name|void
 name|rdlist
 parameter_list|()
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 name|int
 name|i
 decl_stmt|;
@@ -2685,7 +2664,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|domains
 argument_list|)
@@ -2726,9 +2705,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -4100,13 +4076,6 @@ modifier|*
 name|cc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 name|int
 name|i
 decl_stmt|;
@@ -4118,7 +4087,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|allCountries
 argument_list|)
@@ -4184,9 +4153,6 @@ block|}
 return|return
 name|AH_FALSE
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -4201,13 +4167,6 @@ name|HAL_CTRY_CODE
 name|cc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 name|int
 name|i
 decl_stmt|;
@@ -4219,7 +4178,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|allCountries
 argument_list|)
@@ -4249,9 +4208,6 @@ return|;
 return|return
 name|NULL
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -4266,13 +4222,6 @@ name|HAL_CTRY_CODE
 name|cc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 name|int
 name|i
 decl_stmt|;
@@ -4284,7 +4233,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|allCountries
 argument_list|)
@@ -4314,9 +4263,6 @@ return|;
 return|return
 name|NULL
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -4326,13 +4272,6 @@ name|void
 name|cclist
 parameter_list|()
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 name|int
 name|i
 decl_stmt|;
@@ -4349,7 +4288,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|allCountries
 argument_list|)
@@ -4397,9 +4336,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

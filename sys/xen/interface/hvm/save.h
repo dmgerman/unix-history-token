@@ -299,22 +299,12 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__ia64__
+name|__arm__
 argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|"../arch-ia64/hvm/save.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
+operator|||
 name|defined
 argument_list|(
-name|__arm__
+name|__aarch64__
 argument_list|)
 end_elif
 

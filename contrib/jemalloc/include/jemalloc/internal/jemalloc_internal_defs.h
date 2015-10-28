@@ -50,6 +50,14 @@ value|__asm__ volatile("pause")
 end_define
 
 begin_comment
+comment|/* Defined if C11 atomics are available. */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_C11ATOMICS */
+end_comment
+
+begin_comment
 comment|/* Defined if the equivalent of FreeBSD's atomic(9) functions are available. */
 end_comment
 
@@ -69,7 +77,7 @@ comment|/* #undef JEMALLOC_OSATOMIC */
 end_comment
 
 begin_comment
-comment|/*  * Defined if __sync_add_and_fetch(uint32_t *, uint32_t) and  * __sync_sub_and_fetch(uint32_t *, uint32_t) are available, despite  * __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4 not being defined (which means the  * functions are defined in libgcc instead of being inlines)  */
+comment|/*  * Defined if __sync_add_and_fetch(uint32_t *, uint32_t) and  * __sync_sub_and_fetch(uint32_t *, uint32_t) are available, despite  * __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4 not being defined (which means the  * functions are defined in libgcc instead of being inlines).  */
 end_comment
 
 begin_comment
@@ -77,12 +85,32 @@ comment|/* #undef JE_FORCE_SYNC_COMPARE_AND_SWAP_4 */
 end_comment
 
 begin_comment
-comment|/*  * Defined if __sync_add_and_fetch(uint64_t *, uint64_t) and  * __sync_sub_and_fetch(uint64_t *, uint64_t) are available, despite  * __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8 not being defined (which means the  * functions are defined in libgcc instead of being inlines)  */
+comment|/*  * Defined if __sync_add_and_fetch(uint64_t *, uint64_t) and  * __sync_sub_and_fetch(uint64_t *, uint64_t) are available, despite  * __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8 not being defined (which means the  * functions are defined in libgcc instead of being inlines).  */
 end_comment
 
 begin_comment
 comment|/* #undef JE_FORCE_SYNC_COMPARE_AND_SWAP_8 */
 end_comment
+
+begin_comment
+comment|/*  * Defined if __builtin_clz() and __builtin_clzl() are available.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_HAVE_BUILTIN_CLZ
+end_define
+
+begin_comment
+comment|/*  * Defined if madvise(2) is available.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_HAVE_MADVISE
+end_define
 
 begin_comment
 comment|/*  * Defined if OSSpin*() functions are available, as provided by Darwin, and  * documented in the spinlock(3) manual page.  */
@@ -91,6 +119,24 @@ end_comment
 begin_comment
 comment|/* #undef JEMALLOC_OSSPIN */
 end_comment
+
+begin_comment
+comment|/*  * Defined if secure_getenv(3) is available.  */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_HAVE_SECURE_GETENV */
+end_comment
+
+begin_comment
+comment|/*  * Defined if issetugid(2) is available.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_HAVE_ISSETUGID
+end_define
 
 begin_comment
 comment|/*  * Defined if _malloc_thread_cleanup() exists.  At least in the case of  * FreeBSD, pthread_key_create() allocates, which if used during malloc  * bootstrapping will cause recursion into the pthreads library.  Therefore, if  * _malloc_thread_cleanup() exists, use it as the basis for thread cleanup in  * malloc_tsd.  */
@@ -119,16 +165,6 @@ define|#
 directive|define
 name|JEMALLOC_MUTEX_INIT_CB
 value|1
-end_define
-
-begin_comment
-comment|/* Defined if sbrk() is supported. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JEMALLOC_HAVE_SBRK
 end_define
 
 begin_comment
@@ -279,14 +315,43 @@ name|JEMALLOC_LAZY_LOCK
 end_define
 
 begin_comment
-comment|/* One page is 2^STATIC_PAGE_SHIFT bytes. */
+comment|/* Minimum size class to support is 2^LG_TINY_MIN bytes. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|STATIC_PAGE_SHIFT
+name|LG_TINY_MIN
+value|3
+end_define
+
+begin_comment
+comment|/*  * Minimum allocation alignment is 2^LG_QUANTUM bytes (ignoring tiny size  * classes).  */
+end_comment
+
+begin_comment
+comment|/* #undef LG_QUANTUM */
+end_comment
+
+begin_comment
+comment|/* One page is 2^LG_PAGE bytes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LG_PAGE
 value|12
+end_define
+
+begin_comment
+comment|/*  * If defined, adjacent virtual memory mappings with identical attributes  * automatically coalesce, and they fragment when changes are made to subranges.  * This is the normal order of things for mmap()/munmap(), but on Windows  * VirtualAlloc()/VirtualFree() operations must be precisely matched, i.e.  * mappings do *not* coalesce/fragment.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_MAPS_COALESCE
 end_define
 
 begin_comment
@@ -300,14 +365,6 @@ name|JEMALLOC_MUNMAP
 end_define
 
 begin_comment
-comment|/*  * If defined, use mremap(...MREMAP_FIXED...) for huge realloc().  This is  * disabled by default because it is Linux-specific and it will cause virtual  * memory map holes, much like munmap(2) does.  */
-end_comment
-
-begin_comment
-comment|/* #undef JEMALLOC_MREMAP */
-end_comment
-
-begin_comment
 comment|/* TLS is used to map arenas and magazine caches to threads. */
 end_comment
 
@@ -318,12 +375,40 @@ name|JEMALLOC_TLS
 end_define
 
 begin_comment
+comment|/*  * ffs()/ffsl() functions to use for bitmapping.  Don't use these directly;  * instead, use jemalloc_ffs() or jemalloc_ffsl() from util.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_INTERNAL_FFSL
+value|__builtin_ffsl
+end_define
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_INTERNAL_FFS
+value|__builtin_ffs
+end_define
+
+begin_comment
 comment|/*  * JEMALLOC_IVSALLOC enables ivsalloc(), which verifies that pointers reside  * within jemalloc-owned chunks before dereferencing them.  */
 end_comment
 
 begin_comment
 comment|/* #undef JEMALLOC_IVSALLOC */
 end_comment
+
+begin_comment
+comment|/*  * If defined, explicitly attempt to more uniformly distribute large allocation  * pointer alignments across all cache indices.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_CACHE_OBLIVIOUS
+end_define
 
 begin_comment
 comment|/*  * Darwin (OS X) uses zones to work around Mach-O symbol override shortcomings.  */
@@ -352,7 +437,7 @@ name|JEMALLOC_PURGE_MADVISE_FREE
 end_define
 
 begin_comment
-comment|/*  * Define if operating system has alloca.h header.  */
+comment|/* Define if operating system has alloca.h header. */
 end_comment
 
 begin_comment
@@ -410,6 +495,40 @@ directive|define
 name|LG_SIZEOF_INTMAX_T
 value|3
 end_define
+
+begin_comment
+comment|/* glibc malloc hooks (__malloc_hook, __realloc_hook, __free_hook). */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_GLIBC_MALLOC_HOOK */
+end_comment
+
+begin_comment
+comment|/* glibc memalign hook. */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_GLIBC_MEMALIGN_HOOK */
+end_comment
+
+begin_comment
+comment|/* Adaptive mutex support in pthreads. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_HAVE_PTHREAD_MUTEX_ADAPTIVE_NP
+end_define
+
+begin_comment
+comment|/*  * If defined, jemalloc symbols are not exported (doesn't work when  * JEMALLOC_PREFIX is not defined).  */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_EXPORT */
+end_comment
 
 begin_endif
 endif|#

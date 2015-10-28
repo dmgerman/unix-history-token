@@ -334,72 +334,77 @@ init|=
 literal|41
 block|,
 comment|// 16 x i64
+name|v1i128
+init|=
+literal|42
+block|,
+comment|//  1 x i128
 name|FIRST_INTEGER_VECTOR_VALUETYPE
 init|=
 name|v2i1
 block|,
 name|LAST_INTEGER_VECTOR_VALUETYPE
 init|=
-name|v16i64
+name|v1i128
 block|,
 name|v2f16
 init|=
-literal|42
+literal|43
 block|,
 comment|//  2 x f16
 name|v4f16
 init|=
-literal|43
+literal|44
 block|,
 comment|//  4 x f16
 name|v8f16
 init|=
-literal|44
+literal|45
 block|,
 comment|//  8 x f16
 name|v1f32
 init|=
-literal|45
+literal|46
 block|,
 comment|//  1 x f32
 name|v2f32
 init|=
-literal|46
+literal|47
 block|,
 comment|//  2 x f32
 name|v4f32
 init|=
-literal|47
+literal|48
 block|,
 comment|//  4 x f32
 name|v8f32
 init|=
-literal|48
+literal|49
 block|,
 comment|//  8 x f32
 name|v16f32
 init|=
-literal|49
+literal|50
 block|,
 comment|// 16 x f32
 name|v1f64
 init|=
-literal|50
+literal|51
 block|,
 comment|//  1 x f64
 name|v2f64
 init|=
-literal|51
+literal|52
 block|,
 comment|//  2 x f64
 name|v4f64
 init|=
-literal|52
+literal|53
 block|,
 comment|//  4 x f64
 name|v8f64
 init|=
-literal|53
+literal|54
 block|,
 comment|//  8 x f64
 name|FIRST_FP_VECTOR_VALUETYPE
@@ -420,22 +425,22 @@ name|v8f64
 block|,
 name|x86mmx
 init|=
-literal|54
+literal|55
 block|,
 comment|// This is an X86 MMX value
 name|Glue
 init|=
-literal|55
+literal|56
 block|,
 comment|// This glues nodes together during pre-RA sched
 name|isVoid
 init|=
-literal|56
+literal|57
 block|,
 comment|// This has no value
 name|Untyped
 init|=
-literal|57
+literal|58
 block|,
 comment|// This value takes a register, but has
 comment|// unspecified type.  The register class
@@ -447,7 +452,7 @@ block|,
 comment|// This is always the beginning of the list.
 name|LAST_VALUETYPE
 init|=
-literal|58
+literal|59
 block|,
 comment|// This always remains at the end of the list.
 comment|// This is the current maximum for LAST_VALUETYPE.
@@ -495,19 +500,27 @@ comment|// target.  This should only be used internal to tblgen!
 name|iPTR
 init|=
 literal|255
+block|,
+comment|// Any - Any type. This is used for intrinsics that have overloadings.
+comment|// This is only for tblgen's consumption!
+name|Any
+init|=
+literal|256
 block|}
 enum|;
 name|SimpleValueType
 name|SimpleTy
 decl_stmt|;
+name|LLVM_CONSTEXPR
 name|MVT
 argument_list|()
 operator|:
 name|SimpleTy
 argument_list|(
-argument|(SimpleValueType)(INVALID_SIMPLE_VALUE_TYPE)
+argument|INVALID_SIMPLE_VALUE_TYPE
 argument_list|)
 block|{}
+name|LLVM_CONSTEXPR
 name|MVT
 argument_list|(
 argument|SimpleValueType SVT
@@ -908,6 +921,12 @@ name|SimpleTy
 operator|==
 name|MVT
 operator|::
+name|v1i128
+operator|||
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
 name|v8f16
 operator|||
 name|SimpleTy
@@ -1040,6 +1059,12 @@ specifier|const
 block|{
 return|return
 operator|(
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|Any
+operator|||
 name|SimpleTy
 operator|==
 name|MVT
@@ -1272,6 +1297,12 @@ return|return
 name|i64
 return|;
 case|case
+name|v1i128
+case|:
+return|return
+name|i128
+return|;
+case|case
 name|v2f16
 case|:
 case|case
@@ -1470,6 +1501,9 @@ case|case
 name|v1i64
 case|:
 case|case
+name|v1i128
+case|:
+case|case
 name|v1f32
 case|:
 case|case
@@ -1523,6 +1557,9 @@ name|fAny
 case|:
 case|case
 name|vAny
+case|:
+case|case
+name|Any
 case|:
 name|llvm_unreachable
 argument_list|(
@@ -1674,6 +1711,9 @@ name|v4i32
 case|:
 case|case
 name|v2i64
+case|:
+case|case
+name|v1i128
 case|:
 case|case
 name|v8f16
@@ -2362,6 +2402,23 @@ return|return
 name|MVT
 operator|::
 name|v16i64
+return|;
+break|break;
+case|case
+name|MVT
+operator|::
+name|i128
+case|:
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|1
+condition|)
+return|return
+name|MVT
+operator|::
+name|v1i128
 return|;
 break|break;
 case|case

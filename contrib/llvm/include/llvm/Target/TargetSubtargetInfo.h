@@ -142,9 +142,12 @@ name|MCSubtargetInfo
 block|{
 name|TargetSubtargetInfo
 argument_list|(
-argument|const TargetSubtargetInfo&
+specifier|const
+name|TargetSubtargetInfo
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -154,13 +157,43 @@ specifier|const
 name|TargetSubtargetInfo
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
+block|;
+name|TargetSubtargetInfo
+argument_list|()
+operator|=
+name|delete
 block|;
 name|protected
 operator|:
 comment|// Can only create subclasses...
 name|TargetSubtargetInfo
-argument_list|()
+argument_list|(
+argument|const Triple&TT
+argument_list|,
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|,
+argument|ArrayRef<SubtargetFeatureKV> PF
+argument_list|,
+argument|ArrayRef<SubtargetFeatureKV> PD
+argument_list|,
+argument|const SubtargetInfoKV *ProcSched
+argument_list|,
+argument|const MCWriteProcResEntry *WPR
+argument_list|,
+argument|const MCWriteLatencyEntry *WL
+argument_list|,
+argument|const MCReadAdvanceEntry *RA
+argument_list|,
+argument|const InstrStage *IS
+argument_list|,
+argument|const unsigned *OC
+argument_list|,
+argument|const unsigned *FP
+argument_list|)
 block|;
 name|public
 operator|:
@@ -248,18 +281,6 @@ return|return
 name|nullptr
 return|;
 block|}
-name|virtual
-decl|const
-name|DataLayout
-modifier|*
-name|getDataLayout
-argument_list|()
-decl|const
-block|{
-return|return
-name|nullptr
-return|;
-block|}
 comment|/// getRegisterInfo - If register information is available, return it.  If
 comment|/// not, return null.  This is kept separate from RegInfo until RegInfo has
 comment|/// details of graph coloring register allocation removed from it.
@@ -318,31 +339,47 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// \brief Temporary API to test migration to MI scheduler.
-name|bool
-name|useMachineScheduler
-argument_list|()
-decl|const
-empty_stmt|;
 comment|/// \brief True if the subtarget should run MachineScheduler after aggressive
 comment|/// coalescing.
 comment|///
 comment|/// This currently replaces the SelectionDAG scheduler with the "source" order
-comment|/// scheduler. It does not yet disable the postRA scheduler.
+comment|/// scheduler (though see below for an option to turn this off and use the
+comment|/// TargetLowering preference). It does not yet disable the postRA scheduler.
 name|virtual
 name|bool
 name|enableMachineScheduler
 argument_list|()
 decl|const
 empty_stmt|;
-comment|/// \brief True if the subtarget should run PostMachineScheduler.
-comment|///
-comment|/// This only takes effect if the target has configured the
-comment|/// PostMachineScheduler pass to run, or if the global cl::opt flag,
-comment|/// MISchedPostRA, is set.
+comment|/// \brief True if the machine scheduler should disable the TLI preference
+comment|/// for preRA scheduling with the source level scheduler.
 name|virtual
 name|bool
-name|enablePostMachineScheduler
+name|enableMachineSchedDefaultSched
+argument_list|()
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// \brief True if the subtarget should enable joining global copies.
+comment|///
+comment|/// By default this is enabled if the machine scheduler is enabled, but
+comment|/// can be overridden.
+name|virtual
+name|bool
+name|enableJoinGlobalCopies
+argument_list|()
+decl|const
+empty_stmt|;
+comment|/// True if the subtarget should run a scheduler after register allocation.
+comment|///
+comment|/// By default this queries the PostRAScheduling bit in the scheduling model
+comment|/// which is the preferred way to influence this.
+name|virtual
+name|bool
+name|enablePostRAScheduler
 argument_list|()
 decl|const
 empty_stmt|;
@@ -389,10 +426,10 @@ argument|SUnit *def
 argument_list|,
 argument|SUnit *use
 argument_list|,
-argument|SDep& dep
+argument|SDep&dep
 argument_list|)
 specifier|const
-block|{ }
+block|{}
 comment|// For use with PostRAScheduling: get the anti-dependence breaking that should
 comment|// be performed before post-RA scheduling.
 name|virtual

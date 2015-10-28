@@ -473,23 +473,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|virtual
 name|Error
-name|SetValueFromCString
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|SetValueFromString
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|value
-parameter_list|,
+argument_list|,
 name|VarSetOperationType
 name|op
-init|=
+operator|=
 name|eVarSetOperationAssign
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|virtual

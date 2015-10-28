@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/PCHContainerOperations.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/TemplateBase.h"
 end_include
 
@@ -189,6 +195,9 @@ name|class
 name|ASTContext
 decl_stmt|;
 name|class
+name|Attr
+decl_stmt|;
+name|class
 name|NestedNameSpecifier
 decl_stmt|;
 name|class
@@ -213,7 +222,7 @@ name|class
 name|IdentifierResolver
 decl_stmt|;
 name|class
-name|MacroDefinition
+name|MacroDefinitionRecord
 decl_stmt|;
 name|class
 name|MacroDirective
@@ -243,11 +252,17 @@ name|class
 name|Preprocessor
 decl_stmt|;
 name|class
+name|RecordDecl
+decl_stmt|;
+name|class
 name|Sema
 decl_stmt|;
 name|class
 name|SourceManager
 decl_stmt|;
+struct_decl|struct
+name|StoredDeclsList
+struct_decl|;
 name|class
 name|SwitchCase
 decl_stmt|;
@@ -687,7 +702,7 @@ comment|/// discovery), starting at 1. An ID of zero refers to a NULL
 comment|/// IdentifierInfo.
 name|llvm
 operator|::
-name|DenseMap
+name|MapVector
 operator|<
 specifier|const
 name|IdentifierInfo
@@ -828,7 +843,7 @@ expr_stmt|;
 comment|/// \brief Map that provides the ID numbers of each Selector.
 name|llvm
 operator|::
-name|DenseMap
+name|MapVector
 operator|<
 name|Selector
 operator|,
@@ -855,7 +870,7 @@ operator|::
 name|DenseMap
 operator|<
 specifier|const
-name|MacroDefinition
+name|MacroDefinitionRecord
 operator|*
 operator|,
 name|serialization
@@ -902,6 +917,15 @@ name|Loc
 decl_stmt|;
 name|unsigned
 name|Val
+decl_stmt|;
+name|Module
+modifier|*
+name|Mod
+decl_stmt|;
+specifier|const
+name|Attr
+modifier|*
+name|Attribute
 decl_stmt|;
 block|}
 union|;
@@ -990,6 +1014,40 @@ argument_list|(
 argument|Val
 argument_list|)
 block|{}
+name|DeclUpdate
+argument_list|(
+argument|unsigned Kind
+argument_list|,
+argument|Module *M
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+name|Kind
+argument_list|)
+operator|,
+name|Mod
+argument_list|(
+argument|M
+argument_list|)
+block|{}
+name|DeclUpdate
+argument_list|(
+argument|unsigned Kind
+argument_list|,
+argument|const Attr *Attribute
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+name|Kind
+argument_list|)
+operator|,
+name|Attribute
+argument_list|(
+argument|Attribute
+argument_list|)
+block|{}
 name|unsigned
 name|getKind
 argument_list|()
@@ -1047,6 +1105,27 @@ return|return
 name|Val
 return|;
 block|}
+name|Module
+operator|*
+name|getModule
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Mod
+return|;
+block|}
+specifier|const
+name|Attr
+operator|*
+name|getAttr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Attribute
+return|;
+block|}
 block|}
 empty_stmt|;
 typedef|typedef
@@ -1061,7 +1140,7 @@ expr_stmt|;
 typedef|typedef
 name|llvm
 operator|::
-name|DenseMap
+name|MapVector
 operator|<
 specifier|const
 name|Decl
@@ -1122,7 +1201,7 @@ comment|/// primary to this set, so that we can write out lexical content update
 comment|/// it.
 name|llvm
 operator|::
-name|SmallPtrSet
+name|SmallSetVector
 operator|<
 specifier|const
 name|DeclContext
@@ -1147,7 +1226,7 @@ expr_stmt|;
 typedef|typedef
 name|llvm
 operator|::
-name|SmallPtrSet
+name|SmallSetVector
 operator|<
 specifier|const
 name|Decl
@@ -1248,29 +1327,14 @@ comment|/// \brief The set of declarations that may have redeclaration chains th
 comment|/// need to be serialized.
 name|llvm
 operator|::
-name|SetVector
-operator|<
-name|Decl
-operator|*
-operator|,
 name|SmallVector
 operator|<
+specifier|const
 name|Decl
 operator|*
 operator|,
-literal|4
+literal|16
 operator|>
-operator|,
-name|llvm
-operator|::
-name|SmallPtrSet
-operator|<
-name|Decl
-operator|*
-operator|,
-literal|4
-operator|>
-expr|>
 name|Redeclarations
 expr_stmt|;
 comment|/// \brief Statements that we've encountered while serializing a
@@ -1331,7 +1395,7 @@ name|SmallVector
 operator|<
 name|uint32_t
 operator|,
-literal|4
+literal|16
 operator|>
 name|CXXBaseSpecifiersOffsets
 expr_stmt|;
@@ -1415,6 +1479,80 @@ operator|,
 literal|2
 operator|>
 name|CXXBaseSpecifiersToWrite
+expr_stmt|;
+comment|/// \brief The offset of each CXXCtorInitializer list within the AST.
+name|SmallVector
+operator|<
+name|uint32_t
+operator|,
+literal|16
+operator|>
+name|CXXCtorInitializersOffsets
+expr_stmt|;
+comment|/// \brief The first ID number we can use for our own ctor initializers.
+name|serialization
+operator|::
+name|CXXCtorInitializersID
+name|FirstCXXCtorInitializersID
+expr_stmt|;
+comment|/// \brief The ctor initializers ID that will be assigned to the next new
+comment|/// list of C++ ctor initializers.
+name|serialization
+operator|::
+name|CXXCtorInitializersID
+name|NextCXXCtorInitializersID
+expr_stmt|;
+comment|/// \brief A set of C++ ctor initializers that is queued to be written
+comment|/// into the AST file.
+struct|struct
+name|QueuedCXXCtorInitializers
+block|{
+name|QueuedCXXCtorInitializers
+argument_list|()
+operator|:
+name|ID
+argument_list|()
+block|{}
+name|QueuedCXXCtorInitializers
+argument_list|(
+argument|serialization::CXXCtorInitializersID ID
+argument_list|,
+argument|ArrayRef<CXXCtorInitializer*> Inits
+argument_list|)
+operator|:
+name|ID
+argument_list|(
+name|ID
+argument_list|)
+operator|,
+name|Inits
+argument_list|(
+argument|Inits
+argument_list|)
+block|{}
+name|serialization
+operator|::
+name|CXXCtorInitializersID
+name|ID
+expr_stmt|;
+name|ArrayRef
+operator|<
+name|CXXCtorInitializer
+operator|*
+operator|>
+name|Inits
+expr_stmt|;
+block|}
+struct|;
+comment|/// \brief Queue of C++ ctor initializers to be written to the AST file,
+comment|/// in the order they should be written.
+name|SmallVector
+operator|<
+name|QueuedCXXCtorInitializers
+operator|,
+literal|2
+operator|>
+name|CXXCtorInitializersToWrite
 expr_stmt|;
 comment|/// \brief A mapping from each known submodule to its ID number, which will
 comment|/// be a positive integer.
@@ -1576,6 +1714,10 @@ name|void
 name|WriteCXXBaseSpecifiersOffsets
 parameter_list|()
 function_decl|;
+name|void
+name|WriteCXXCtorInitializersOffsets
+parameter_list|()
+function_decl|;
 name|unsigned
 name|TypeExtQualAbbrev
 decl_stmt|;
@@ -1591,6 +1733,30 @@ name|WriteType
 parameter_list|(
 name|QualType
 name|T
+parameter_list|)
+function_decl|;
+name|bool
+name|isLookupResultExternal
+parameter_list|(
+name|StoredDeclsList
+modifier|&
+name|Result
+parameter_list|,
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|)
+function_decl|;
+name|bool
+name|isLookupResultEntirelyExternal
+parameter_list|(
+name|StoredDeclsList
+modifier|&
+name|Result
+parameter_list|,
+name|DeclContext
+modifier|*
+name|DC
 parameter_list|)
 function_decl|;
 name|uint32_t
@@ -1741,10 +1907,6 @@ name|WriteRedeclarations
 parameter_list|()
 function_decl|;
 name|void
-name|WriteMergedDecls
-parameter_list|()
-function_decl|;
-name|void
 name|WriteLateParsedTemplates
 parameter_list|(
 name|Sema
@@ -1872,6 +2034,14 @@ expr_stmt|;
 operator|~
 name|ASTWriter
 argument_list|()
+name|override
+expr_stmt|;
+specifier|const
+name|LangOptions
+operator|&
+name|getLangOpts
+argument_list|()
+specifier|const
 expr_stmt|;
 comment|/// \brief Write a precompiled header for the given semantic analysis.
 comment|///
@@ -2138,25 +2308,6 @@ name|serialization
 operator|::
 name|TypeID
 name|getTypeID
-argument_list|(
-argument|QualType T
-argument_list|)
-specifier|const
-expr_stmt|;
-comment|/// \brief Force a type to be emitted and get its index.
-name|serialization
-operator|::
-name|TypeIdx
-name|GetOrCreateTypeIdx
-argument_list|(
-argument|QualType T
-argument_list|)
-expr_stmt|;
-comment|/// \brief Determine the type index of an already-emitted type.
-name|serialization
-operator|::
-name|TypeIdx
-name|getTypeIdx
 argument_list|(
 argument|QualType T
 argument_list|)
@@ -2443,6 +2594,23 @@ modifier|&
 name|Record
 parameter_list|)
 function_decl|;
+comment|/// \brief Emit the ID for a CXXCtorInitializer array and register the array
+comment|/// for later serialization.
+name|void
+name|AddCXXCtorInitializersRef
+argument_list|(
+name|ArrayRef
+operator|<
+name|CXXCtorInitializer
+operator|*
+operator|>
+name|Inits
+argument_list|,
+name|RecordDataImpl
+operator|&
+name|Record
+argument_list|)
+decl_stmt|;
 comment|/// \brief Emit a CXXCtorInitializer array.
 name|void
 name|AddCXXCtorInitializers
@@ -2539,16 +2707,6 @@ parameter_list|,
 name|RecordDataImpl
 modifier|&
 name|Record
-parameter_list|)
-function_decl|;
-comment|/// \brief Mark a declaration context as needing an update.
-name|void
-name|AddUpdatedDeclContext
-parameter_list|(
-specifier|const
-name|DeclContext
-modifier|*
-name|DC
 parameter_list|)
 function_decl|;
 name|void
@@ -2670,6 +2828,28 @@ name|void
 name|FlushCXXBaseSpecifiers
 parameter_list|()
 function_decl|;
+comment|/// \brief Flush all of the C++ constructor initializer lists that have been
+comment|/// added via \c AddCXXCtorInitializersRef().
+name|void
+name|FlushCXXCtorInitializers
+parameter_list|()
+function_decl|;
+comment|/// \brief Flush all pending records that are tacked onto the end of
+comment|/// decl and decl update records.
+name|void
+name|FlushPendingAfterDecl
+parameter_list|()
+block|{
+name|FlushStmts
+argument_list|()
+expr_stmt|;
+name|FlushCXXBaseSpecifiers
+argument_list|()
+expr_stmt|;
+name|FlushCXXCtorInitializers
+argument_list|()
+expr_stmt|;
+block|}
 comment|/// \brief Record an ID for the given switch-case statement.
 name|unsigned
 name|RecordSwitchCaseID
@@ -2899,7 +3079,7 @@ operator|::
 name|PreprocessedEntityID
 name|ID
 argument_list|,
-name|MacroDefinition
+name|MacroDefinitionRecord
 operator|*
 name|MD
 argument_list|)
@@ -3029,6 +3209,21 @@ argument_list|)
 name|override
 decl_stmt|;
 name|void
+name|ResolvedOperatorDelete
+argument_list|(
+specifier|const
+name|CXXDestructorDecl
+operator|*
+name|DD
+argument_list|,
+specifier|const
+name|FunctionDecl
+operator|*
+name|Delete
+argument_list|)
+name|override
+decl_stmt|;
+name|void
 name|CompletedImplicitDefinition
 argument_list|(
 specifier|const
@@ -3113,6 +3308,35 @@ name|D
 argument_list|)
 name|override
 decl_stmt|;
+name|void
+name|RedefinedHiddenDefinition
+argument_list|(
+specifier|const
+name|NamedDecl
+operator|*
+name|D
+argument_list|,
+name|Module
+operator|*
+name|M
+argument_list|)
+name|override
+decl_stmt|;
+name|void
+name|AddedAttributeToRecord
+argument_list|(
+specifier|const
+name|Attr
+operator|*
+name|Attr
+argument_list|,
+specifier|const
+name|RecordDecl
+operator|*
+name|Record
+argument_list|)
+name|override
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief AST and semantic-analysis consumer that generates a
@@ -3144,19 +3368,15 @@ operator|::
 name|string
 name|isysroot
 block|;
-name|raw_ostream
-operator|*
-name|Out
-block|;
 name|Sema
 operator|*
 name|SemaPtr
 block|;
-name|SmallVector
+name|std
+operator|::
+name|shared_ptr
 operator|<
-name|char
-block|,
-literal|128
+name|PCHBuffer
 operator|>
 name|Buffer
 block|;
@@ -3170,9 +3390,6 @@ name|Writer
 block|;
 name|bool
 name|AllowASTWithErrors
-block|;
-name|bool
-name|HasEmittedPCH
 block|;
 name|protected
 operator|:
@@ -3196,6 +3413,21 @@ return|return
 name|Writer
 return|;
 block|}
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|getPCH
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Buffer
+operator|->
+name|Data
+return|;
+block|}
 name|public
 operator|:
 name|PCHGenerator
@@ -3208,7 +3440,7 @@ argument|clang::Module *Module
 argument_list|,
 argument|StringRef isysroot
 argument_list|,
-argument|raw_ostream *Out
+argument|std::shared_ptr<PCHBuffer> Buffer
 argument_list|,
 argument|bool AllowASTWithErrors = false
 argument_list|)
@@ -3216,6 +3448,7 @@ block|;
 operator|~
 name|PCHGenerator
 argument_list|()
+name|override
 block|;
 name|void
 name|InitializeSema
@@ -3254,7 +3487,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|HasEmittedPCH
+name|Buffer
+operator|->
+name|IsComplete
 return|;
 block|}
 expr|}

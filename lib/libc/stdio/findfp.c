@@ -461,7 +461,9 @@ begin_function
 name|FILE
 modifier|*
 name|__sfp
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -731,6 +733,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function_decl
+name|void
+name|f_prealloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|f_prealloc
@@ -838,7 +849,9 @@ end_comment
 begin_function
 name|void
 name|_cleanup
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* (void) _fwalk(fclose); */
 operator|(
@@ -860,7 +873,9 @@ end_comment
 begin_function
 name|void
 name|__sinit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Make sure we clean up on exit. */
 name|__cleanup

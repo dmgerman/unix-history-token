@@ -4980,7 +4980,11 @@ break|break;
 block|}
 endif|#
 directive|endif
-comment|/*      * The i82380FB mobile docking controller is a PCI-PCI bridge,      * and it is a subtractive bridge.  However, the ProgIf is wrong      * so the normal setting of PCIB_SUBTRACTIVE bit doesn't      * happen.  There's also a Toshiba bridge that behaves this      * way.      */
+comment|/*      * The i82380FB mobile docking controller is a PCI-PCI bridge,      * and it is a subtractive bridge.  However, the ProgIf is wrong      * so the normal setting of PCIB_SUBTRACTIVE bit doesn't      * happen.  There are also Toshiba and Cavium ThunderX bridges      * that behave this way.      */
+case|case
+literal|0xa002177d
+case|:
+comment|/* Cavium ThunderX */
 case|case
 literal|0x124b8086
 case|:
@@ -5614,11 +5618,8 @@ name|dev
 argument_list|,
 literal|"pci"
 argument_list|,
-name|sc
-operator|->
-name|bus
-operator|.
-name|sec
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -9557,7 +9558,7 @@ decl_stmt|;
 name|int
 name|intnum
 decl_stmt|;
-comment|/*	      *      * The PCI standard defines a swizzle of the child-side device/intpin to      * the parent-side intpin as follows.      *      * device = device on child bus      * child_intpin = intpin on child bus slot (0-3)      * parent_intpin = intpin on parent bus slot (0-3)      *      * parent_intpin = (device + child_intpin) % 4      */
+comment|/*      *      * The PCI standard defines a swizzle of the child-side device/intpin to      * the parent-side intpin as follows.      *      * device = device on child bus      * child_intpin = intpin on child bus slot (0-3)      * parent_intpin = intpin on parent bus slot (0-3)      *      * parent_intpin = (device + child_intpin) % 4      */
 name|parent_intpin
 operator|=
 operator|(

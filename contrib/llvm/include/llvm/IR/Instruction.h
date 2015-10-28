@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/SymbolTableListTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/User.h"
 end_include
 
@@ -100,19 +106,88 @@ decl_stmt|;
 name|class
 name|MDNode
 decl_stmt|;
+name|class
+name|BasicBlock
+decl_stmt|;
 struct_decl|struct
 name|AAMDNodes
 struct_decl|;
 name|template
 operator|<
-name|typename
-name|ValueSubClass
-operator|,
-name|typename
-name|ItemParentClass
 operator|>
-name|class
+expr|struct
+name|ilist_traits
+operator|<
+name|Instruction
+operator|>
+operator|:
+name|public
 name|SymbolTableListTraits
+operator|<
+name|Instruction
+operator|,
+name|BasicBlock
+operator|>
+block|{
+comment|/// \brief Return a node that marks the end of a list.
+comment|///
+comment|/// The sentinel is relative to this instance, so we use a non-static
+comment|/// method.
+name|Instruction
+operator|*
+name|createSentinel
+argument_list|()
+specifier|const
+block|;
+specifier|static
+name|void
+name|destroySentinel
+argument_list|(
+argument|Instruction *
+argument_list|)
+block|{}
+name|Instruction
+operator|*
+name|provideInitialHead
+argument_list|()
+specifier|const
+block|{
+return|return
+name|createSentinel
+argument_list|()
+return|;
+block|}
+name|Instruction
+operator|*
+name|ensureHead
+argument_list|(
+argument|Instruction *
+argument_list|)
+specifier|const
+block|{
+return|return
+name|createSentinel
+argument_list|()
+return|;
+block|}
+specifier|static
+name|void
+name|noteHead
+argument_list|(
+argument|Instruction *
+argument_list|,
+argument|Instruction *
+argument_list|)
+block|{}
+name|private
+operator|:
+name|mutable
+name|ilist_half_node
+operator|<
+name|Instruction
+operator|>
+name|Sentinel
+block|; }
 expr_stmt|;
 name|class
 name|Instruction
@@ -134,13 +209,17 @@ specifier|const
 name|Instruction
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|Instruction
 argument_list|(
-argument|const Instruction&
+specifier|const
+name|Instruction
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|BasicBlock
 modifier|*
@@ -167,6 +246,7 @@ comment|// Out of line virtual method, so the vtable, etc has a home.
 operator|~
 name|Instruction
 argument_list|()
+name|override
 expr_stmt|;
 comment|/// user_back - Specialize the methods defined in Value, as we know that an
 comment|/// instruction can only be used by other instructions.
@@ -228,13 +308,23 @@ return|return
 name|Parent
 return|;
 block|}
+comment|/// \brief Return the module owning the function this instruction belongs to
+comment|/// or nullptr it the function does not have a module.
+comment|///
+comment|/// Note: this is undefined behavior if the instruction does not have a
+comment|/// parent, or the parent basic block does not have a parent function.
 specifier|const
-name|DataLayout
+name|Module
 operator|*
-name|getDataLayout
+name|getModule
 argument_list|()
 specifier|const
 expr_stmt|;
+name|Module
+modifier|*
+name|getModule
+parameter_list|()
+function_decl|;
 comment|/// removeFromParent - This method unlinks 'this' from the containing basic
 comment|/// block, but does not delete it.
 comment|///
@@ -245,12 +335,18 @@ function_decl|;
 comment|/// eraseFromParent - This method unlinks 'this' from the containing basic
 comment|/// block and deletes it.
 comment|///
-name|void
+comment|/// \returns an iterator pointing to the element after the erased one
+name|iplist
+operator|<
+name|Instruction
+operator|>
+operator|::
+name|iterator
 name|eraseFromParent
-parameter_list|()
-function_decl|;
-comment|/// insertBefore - Insert an unlinked instructions into a basic block
-comment|/// immediately before the specified instruction.
+argument_list|()
+expr_stmt|;
+comment|/// Insert an unlinked instruction into a basic block immediately before
+comment|/// the specified instruction.
 name|void
 name|insertBefore
 parameter_list|(
@@ -259,8 +355,8 @@ modifier|*
 name|InsertPos
 parameter_list|)
 function_decl|;
-comment|/// insertAfter - Insert an unlinked instructions into a basic block
-comment|/// immediately after the specified instruction.
+comment|/// Insert an unlinked instruction into a basic block immediately after the
+comment|/// specified instruction.
 name|void
 name|insertAfter
 parameter_list|(
@@ -495,11 +591,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
 name|DbgLoc
-operator|.
-name|isUnknown
-argument_list|()
 operator|||
 name|hasMetadataHashEntry
 argument_list|()
@@ -761,15 +853,18 @@ comment|/// setDebugLoc - Set the debug location information for this instructio
 name|void
 name|setDebugLoc
 parameter_list|(
-specifier|const
 name|DebugLoc
-modifier|&
 name|Loc
 parameter_list|)
 block|{
 name|DbgLoc
 operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|Loc
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// getDebugLoc - Return the debug location for this node as a DebugLoc.
@@ -1148,7 +1243,7 @@ comment|/// mayHaveSideEffects - Return true if the instruction may have side ef
 comment|///
 comment|/// Note that this does not consider malloc and alloca to have side
 comment|/// effects because the newly allocated memory is completely invisible to
-comment|/// instructions which don't used the returned value.  For cases where this
+comment|/// instructions which don't use the returned value.  For cases where this
 comment|/// matters, isSafeToSpeculativelyExecute may be more appropriate.
 name|bool
 name|mayHaveSideEffects
@@ -1609,17 +1704,48 @@ argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
 empty_stmt|;
-name|virtual
+name|private
+label|:
+comment|/// Create a copy of this instruction.
 name|Instruction
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-operator|=
-literal|0
 expr_stmt|;
 block|}
 empty_stmt|;
+specifier|inline
+name|Instruction
+operator|*
+name|ilist_traits
+operator|<
+name|Instruction
+operator|>
+operator|::
+name|createSentinel
+argument_list|()
+specifier|const
+block|{
+comment|// Since i(p)lists always publicly derive from their corresponding traits,
+comment|// placing a data member in this class will augment the i(p)list.  But since
+comment|// the NodeTy is expected to be publicly derive from ilist_node<NodeTy>,
+comment|// there is a legal viable downcast from it to NodeTy. We use this trick to
+comment|// superimpose an i(p)list with a "ghostly" NodeTy, which becomes the
+comment|// sentinel. Dereferencing the sentinel is forbidden (save the
+comment|// ilist_node<NodeTy>), so no one will ever notice the superposition.
+return|return
+name|static_cast
+operator|<
+name|Instruction
+operator|*
+operator|>
+operator|(
+operator|&
+name|Sentinel
+operator|)
+return|;
+block|}
 comment|// Instruction* is only 4-byte aligned.
 name|template
 operator|<

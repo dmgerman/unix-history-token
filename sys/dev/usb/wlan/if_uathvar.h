@@ -298,13 +298,6 @@ decl_stmt|;
 name|uint16_t
 name|txop
 decl_stmt|;
-define|#
-directive|define
-name|UATH_TXOP_TO_US
-parameter_list|(
-name|txop
-parameter_list|)
-value|((txop)<< 5)
 name|uint8_t
 name|acm
 decl_stmt|;
@@ -581,9 +574,12 @@ struct|struct
 name|uath_softc
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
+name|ieee80211com
+name|sc_ic
+decl_stmt|;
+name|struct
+name|mbufq
+name|sc_snd
 decl_stmt|;
 name|device_t
 name|sc_dev
@@ -748,15 +744,9 @@ name|struct
 name|uath_rx_radiotap_header
 name|sc_rxtap
 decl_stmt|;
-name|int
-name|sc_rxtap_len
-decl_stmt|;
 name|struct
 name|uath_tx_radiotap_header
 name|sc_txtap
-decl_stmt|;
-name|int
-name|sc_txtap_len
 decl_stmt|;
 block|}
 struct|;

@@ -18,7 +18,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"wps/wps_defs.h"
+file|"common/ieee802_11_defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"wps/wps.h"
 end_include
 
 begin_comment
@@ -72,6 +78,24 @@ define|#
 directive|define
 name|P2P_MAX_QUERY_HASH
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|P2PS_FEATURE_CAPAB_CPT_MAX
+value|2
+end_define
+
+begin_comment
+comment|/**  * P2P_MAX_PREF_CHANNELS - Maximum number of preferred channels  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P2P_MAX_PREF_CHANNELS
+value|100
 end_define
 
 begin_comment
@@ -186,7 +210,7 @@ comment|/** 	 * ssid - SSID of the group 	 */
 name|u8
 name|ssid
 index|[
-literal|32
+name|SSID_MAX_LEN
 index|]
 decl_stmt|;
 comment|/** 	 * ssid_len - Length of SSID in octets 	 */
@@ -258,6 +282,13 @@ begin_struct
 struct|struct
 name|p2ps_provision
 block|{
+comment|/** 	 * pd_seeker - P2PS provision discovery seeker role 	 */
+name|unsigned
+name|int
+name|pd_seeker
+range|:
+literal|1
+decl_stmt|;
 comment|/** 	 * status - Remote returned provisioning status code 	 */
 name|int
 name|status
@@ -294,6 +325,19 @@ name|u8
 name|adv_mac
 index|[
 name|ETH_ALEN
+index|]
+decl_stmt|;
+comment|/** 	 * cpt_mask - Supported Coordination Protocol Transport mask 	 * 	 * A bitwise mask of supported ASP Coordination Protocol Transports. 	 * This property is set together and corresponds with cpt_priority. 	 */
+name|u8
+name|cpt_mask
+decl_stmt|;
+comment|/** 	 * cpt_priority - Coordination Protocol Transport priority list 	 * 	 * Priorities of supported ASP Coordination Protocol Transports. 	 * This property is set together and corresponds with cpt_mask. 	 * The CPT priority list is 0 terminated. 	 */
+name|u8
+name|cpt_priority
+index|[
+name|P2PS_FEATURE_CAPAB_CPT_MAX
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/** 	 * info - Vendor defined extra Provisioning information 	 */
@@ -342,6 +386,19 @@ name|u8
 name|hash
 index|[
 name|P2PS_HASH_LEN
+index|]
+decl_stmt|;
+comment|/** 	 * cpt_mask - supported Coordination Protocol Transport mask 	 * 	 * A bitwise mask of supported ASP Coordination Protocol Transports. 	 * This property is set together and corresponds with cpt_priority. 	 */
+name|u8
+name|cpt_mask
+decl_stmt|;
+comment|/** 	 * cpt_priority - Coordination Protocol Transport priority list 	 * 	 * Priorities of supported ASP Coordinatin Protocol Transports. 	 * This property is set together and corresponds with cpt_mask. 	 * The CPT priority list is 0 terminated. 	 */
+name|u8
+name|cpt_priority
+index|[
+name|P2PS_FEATURE_CAPAB_CPT_MAX
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/** 	 * svc_name - NULL Terminated UTF-8 Service Name, and svc_info storage 	 */
@@ -409,35 +466,45 @@ comment|/** 	 * device_name - Device Name (0..32 octets encoded in UTF-8) 	 */
 name|char
 name|device_name
 index|[
-literal|33
+name|WPS_DEV_NAME_MAX_LEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/** 	 * manufacturer - Manufacturer (0..64 octets encoded in UTF-8) 	 */
 name|char
 name|manufacturer
 index|[
-literal|65
+name|WPS_MANUFACTURER_MAX_LEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/** 	 * model_name - Model Name (0..32 octets encoded in UTF-8) 	 */
 name|char
 name|model_name
 index|[
-literal|33
+name|WPS_MODEL_NAME_MAX_LEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/** 	 * model_number - Model Number (0..32 octets encoded in UTF-8) 	 */
 name|char
 name|model_number
 index|[
-literal|33
+name|WPS_MODEL_NUMBER_MAX_LEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/** 	 * serial_number - Serial Number (0..32 octets encoded in UTF-8) 	 */
 name|char
 name|serial_number
 index|[
-literal|33
+name|WPS_SERIAL_NUMBER_MAX_LEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/** 	 * level - Signal level 	 */
@@ -460,7 +527,7 @@ comment|/** 	 * wps_sec_dev_type_list - WPS secondary device type list 	 * 	 * T
 name|u8
 name|wps_sec_dev_type_list
 index|[
-literal|128
+name|WPS_SEC_DEV_TYPE_MAX_LEN
 index|]
 decl_stmt|;
 comment|/** 	 * wps_sec_dev_type_list_len - Length of secondary device type list 	 */
@@ -667,7 +734,7 @@ comment|/** 	 * ssid_postfix - Postfix data to add to the SSID 	 * 	 * This data
 name|u8
 name|ssid_postfix
 index|[
-literal|32
+name|SSID_MAX_LEN
 operator|-
 literal|9
 index|]
@@ -748,7 +815,7 @@ name|u16
 name|pw_id
 parameter_list|)
 function_decl|;
-comment|/** 	 * send_probe_resp - Transmit a Probe Response frame 	 * @ctx: Callback context from cb_ctx 	 * @buf: Probe Response frame (including the header and body) 	 * Returns: 0 on success, -1 on failure 	 * 	 * This function is used to reply to Probe Request frames that were 	 * indicated with a call to p2p_probe_req_rx(). The response is to be 	 * sent on the same channel or to be dropped if the driver is not 	 * anymore listening to Probe Request frames. 	 * 	 * Alternatively, the responsibility for building the Probe Response 	 * frames in Listen state may be in another system component in which 	 * case this function need to be implemented (i.e., the function 	 * pointer can be %NULL). The WPS and P2P IEs to be added for Probe 	 * Response frames in such a case are available from the 	 * start_listen() callback. It should be noted that the received Probe 	 * Request frames must be indicated by calling p2p_probe_req_rx() even 	 * if this send_probe_resp() is not used. 	 */
+comment|/** 	 * send_probe_resp - Transmit a Probe Response frame 	 * @ctx: Callback context from cb_ctx 	 * @buf: Probe Response frame (including the header and body) 	 * @freq: Forced frequency (in MHz) to use or 0. 	 * Returns: 0 on success, -1 on failure 	 * 	 * This function is used to reply to Probe Request frames that were 	 * indicated with a call to p2p_probe_req_rx(). The response is to be 	 * sent on the same channel, unless otherwise specified, or to be 	 * dropped if the driver is not listening to Probe Request frames 	 * anymore. 	 * 	 * Alternatively, the responsibility for building the Probe Response 	 * frames in Listen state may be in another system component in which 	 * case this function need to be implemented (i.e., the function 	 * pointer can be %NULL). The WPS and P2P IEs to be added for Probe 	 * Response frames in such a case are available from the 	 * start_listen() callback. It should be noted that the received Probe 	 * Request frames must be indicated by calling p2p_probe_req_rx() even 	 * if this send_probe_resp() is not used. 	 */
 name|int
 function_decl|(
 modifier|*
@@ -764,6 +831,10 @@ name|struct
 name|wpabuf
 modifier|*
 name|buf
+parameter_list|,
+name|unsigned
+name|int
+name|freq
 parameter_list|)
 function_decl|;
 comment|/** 	 * send_action - Transmit an Action frame 	 * @ctx: Callback context from cb_ctx 	 * @freq: Frequency in MHz for the channel on which to transmit 	 * @dst: Destination MAC address (Address 1) 	 * @src: Source MAC address (Address 2) 	 * @bssid: BSSID (Address 3) 	 * @buf: Frame body (starting from Category field) 	 * @len: Length of buf in octets 	 * @wait_time: How many msec to wait for a response frame 	 * Returns: 0 on success, -1 on failure 	 * 	 * The Action frame may not be transmitted immediately and the status 	 * of the transmission must be reported by calling 	 * p2p_send_action_cb() once the frame has either been transmitted or 	 * it has been dropped due to excessive retries or other failure to 	 * transmit. 	 */
@@ -939,7 +1010,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/** 	 * go_neg_req_rx - Notification of a receive GO Negotiation Request 	 * @ctx: Callback context from cb_ctx 	 * @src: Source address of the message triggering this notification 	 * @dev_passwd_id: WPS Device Password ID 	 * 	 * This callback is used to notify that a P2P Device is requesting 	 * group owner negotiation with us, but we do not have all the 	 * necessary information to start GO Negotiation. This indicates that 	 * the local user has not authorized the connection yet by providing a 	 * PIN or PBC button press. This information can be provided with a 	 * call to p2p_connect(). 	 */
+comment|/** 	 * go_neg_req_rx - Notification of a receive GO Negotiation Request 	 * @ctx: Callback context from cb_ctx 	 * @src: Source address of the message triggering this notification 	 * @dev_passwd_id: WPS Device Password ID 	 * @go_intent: Peer's GO Intent 	 * 	 * This callback is used to notify that a P2P Device is requesting 	 * group owner negotiation with us, but we do not have all the 	 * necessary information to start GO Negotiation. This indicates that 	 * the local user has not authorized the connection yet by providing a 	 * PIN or PBC button press. This information can be provided with a 	 * call to p2p_connect(). 	 */
 name|void
 function_decl|(
 modifier|*
@@ -957,6 +1028,9 @@ name|src
 parameter_list|,
 name|u16
 name|dev_passwd_id
+parameter_list|,
+name|u8
+name|go_intent
 parameter_list|)
 function_decl|;
 comment|/** 	 * go_neg_completed - Notification of GO Negotiation results 	 * @ctx: Callback context from cb_ctx 	 * @res: GO Negotiation results 	 * 	 * This callback is used to notify that Group Owner Negotiation has 	 * been completed. Non-zero struct p2p_go_neg_results::status indicates 	 * failed negotiation. In case of success, this function is responsible 	 * for creating a new group interface (or using the existing interface 	 * depending on driver features), setting up the group interface in 	 * proper mode based on struct p2p_go_neg_results::role_go and 	 * initializing WPS provisioning either as a Registrar (if GO) or as an 	 * Enrollee. Successful WPS provisioning must be indicated by calling 	 * p2p_wps_success_cb(). The callee is responsible for timing out group 	 * formation if WPS provisioning cannot be completed successfully 	 * within 15 seconds. 	 */
@@ -1350,7 +1424,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/** 	 * Determine if we have a persistent group we share with remote peer 	 * @ctx: Callback context from cb_ctx 	 * @addr: Peer device address to search for 	 * @ssid: Persistent group SSID or %NULL if any 	 * @ssid_len: Length of @ssid 	 * @go_dev_addr: Buffer for returning intended GO P2P Device Address 	 * @ret_ssid: Buffer for returning group SSID 	 * @ret_ssid_len: Buffer for returning length of @ssid 	 * Returns: 1 if a matching persistent group was found, 0 otherwise 	 */
+comment|/** 	 * Determine if we have a persistent group we share with remote peer 	 * and allocate interface for this group if needed 	 * @ctx: Callback context from cb_ctx 	 * @addr: Peer device address to search for 	 * @ssid: Persistent group SSID or %NULL if any 	 * @ssid_len: Length of @ssid 	 * @go_dev_addr: Buffer for returning GO P2P Device Address 	 * @ret_ssid: Buffer for returning group SSID 	 * @ret_ssid_len: Buffer for returning length of @ssid 	 * @intended_iface_addr: Buffer for returning intended iface address 	 * Returns: 1 if a matching persistent group was found, 0 otherwise 	 */
 name|int
 function_decl|(
 modifier|*
@@ -1385,6 +1459,10 @@ parameter_list|,
 name|size_t
 modifier|*
 name|ret_ssid_len
+parameter_list|,
+name|u8
+modifier|*
+name|intended_iface_addr
 parameter_list|)
 function_decl|;
 comment|/** 	 * Get information about a possible local GO role 	 * @ctx: Callback context from cb_ctx 	 * @intended_addr: Buffer for returning intended GO interface address 	 * @ssid: Buffer for returning group SSID 	 * @ssid_len: Buffer for returning length of @ssid 	 * @group_iface: Buffer for returning whether a separate group interface 	 *	would be used 	 * Returns: 1 if GO info found, 0 otherwise 	 * 	 * This is used to compose New Group settings (SSID, and intended 	 * address) during P2PS provisioning if results of provisioning *might* 	 * result in our being an autonomous GO. 	 */
@@ -1509,6 +1587,14 @@ specifier|const
 name|char
 modifier|*
 name|session_info
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|feat_cap
+parameter_list|,
+name|size_t
+name|feat_cap_len
 parameter_list|)
 function_decl|;
 comment|/** 	 * prov_disc_resp_cb - Callback for indicating completion of PD Response 	 * @ctx: Callback context from cb_ctx 	 * Returns: 1 if operation was started, 0 otherwise 	 * 	 * This callback can be used to perform any pending actions after 	 * provisioning. It is mainly used for P2PS pending group creation. 	 */
@@ -1539,6 +1625,31 @@ name|incoming
 parameter_list|,
 name|u8
 name|role
+parameter_list|)
+function_decl|;
+comment|/** 	 * get_pref_freq_list - Get preferred frequency list for an interface 	 * @ctx: Callback context from cb_ctx 	 * @go: Whether the use if for GO role 	 * @len: Length of freq_list in entries (both IN and OUT) 	 * @freq_list: Buffer for returning the preferred frequencies (MHz) 	 * Returns: 0 on success, -1 on failure 	 * 	 * This function can be used to query the preferred frequency list from 	 * the driver specific to a particular interface type. 	 */
+name|int
+function_decl|(
+modifier|*
+name|get_pref_freq_list
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|ctx
+parameter_list|,
+name|int
+name|go
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|len
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|freq_list
 parameter_list|)
 function_decl|;
 block|}
@@ -2521,7 +2632,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/**  * p2p_probe_req_rx - Report reception of a Probe Request frame  * @p2p: P2P module context from p2p_init()  * @addr: Source MAC address  * @dst: Destination MAC address if available or %NULL  * @bssid: BSSID if available or %NULL  * @ie: Information elements from the Probe Request frame body  * @ie_len: Length of ie buffer in octets  * Returns: value indicating the type and status of the probe request  */
+comment|/**  * p2p_probe_req_rx - Report reception of a Probe Request frame  * @p2p: P2P module context from p2p_init()  * @addr: Source MAC address  * @dst: Destination MAC address if available or %NULL  * @bssid: BSSID if available or %NULL  * @ie: Information elements from the Probe Request frame body  * @ie_len: Length of ie buffer in octets  * @rx_freq: Probe Request frame RX frequency  * Returns: value indicating the type and status of the probe request  */
 end_comment
 
 begin_function_decl
@@ -2556,6 +2667,10 @@ name|ie
 parameter_list|,
 name|size_t
 name|ie_len
+parameter_list|,
+name|unsigned
+name|int
+name|rx_freq
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2854,7 +2969,7 @@ comment|/** 	 * ssid - Group SSID 	 */
 name|u8
 name|ssid
 index|[
-literal|32
+name|SSID_MAX_LEN
 index|]
 decl_stmt|;
 comment|/** 	 * ssid_len - Length of SSID 	 */
@@ -4608,7 +4723,7 @@ decl_stmt|;
 name|u8
 name|go_ssid
 index|[
-literal|32
+name|SSID_MAX_LEN
 index|]
 decl_stmt|;
 name|size_t
@@ -4788,6 +4903,11 @@ specifier|const
 name|char
 modifier|*
 name|svc_info
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|cpt_priority
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4808,6 +4928,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|p2p_service_flush_asp
+parameter_list|(
+name|struct
+name|p2p_data
+modifier|*
+name|p2p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|p2ps_advertisement
 modifier|*
@@ -4817,6 +4949,69 @@ name|struct
 name|p2p_data
 modifier|*
 name|p2p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * p2p_expire_peers - Periodic cleanup function to expire peers  * @p2p: P2P module context from p2p_init()  *  * This is a cleanup function that the entity calling p2p_init() is  * expected to call periodically to clean up expired peer entries.  */
+end_comment
+
+begin_function_decl
+name|void
+name|p2p_expire_peers
+parameter_list|(
+name|struct
+name|p2p_data
+modifier|*
+name|p2p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|p2p_set_own_pref_freq_list
+parameter_list|(
+name|struct
+name|p2p_data
+modifier|*
+name|p2p
+parameter_list|,
+specifier|const
+name|unsigned
+name|int
+modifier|*
+name|pref_freq_list
+parameter_list|,
+name|unsigned
+name|int
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * p2p_group_get_common_freqs - Get the group common frequencies  * @group: P2P group context from p2p_group_init()  * @common_freqs: On return will hold the group common frequencies  * @num: On return will hold the number of group common frequencies  * Returns: 0 on success, -1 otherwise  */
+end_comment
+
+begin_function_decl
+name|int
+name|p2p_group_get_common_freqs
+parameter_list|(
+name|struct
+name|p2p_group
+modifier|*
+name|group
+parameter_list|,
+name|int
+modifier|*
+name|common_freqs
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|num
 parameter_list|)
 function_decl|;
 end_function_decl

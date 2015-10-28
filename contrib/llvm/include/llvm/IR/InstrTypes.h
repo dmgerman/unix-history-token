@@ -168,6 +168,7 @@ comment|// Out of line virtual method, so the vtable, etc has a home.
 operator|~
 name|TerminatorInst
 argument_list|()
+name|override
 block|;
 comment|/// Virtual methods - Terminators should overload these and provide inline
 comment|/// overrides of non-V methods.
@@ -307,11 +308,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|protected
 operator|:
@@ -412,6 +414,7 @@ comment|// Out of line virtual method, so the vtable, etc has a home.
 operator|~
 name|UnaryInstruction
 argument_list|()
+name|override
 block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
@@ -551,11 +554,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|protected
 operator|:
@@ -595,12 +599,16 @@ argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|;
+comment|// Note: Instruction needs to be a friend here to call cloneImpl.
+name|friend
+name|class
+name|Instruction
+block|;
 name|BinaryOperator
 operator|*
-name|clone_impl
+name|cloneImpl
 argument_list|()
 specifier|const
-name|override
 block|;
 name|public
 operator|:
@@ -2341,11 +2349,8 @@ argument_list|,
 comment|///< The Type to which the value should be cast.
 specifier|const
 name|DataLayout
-operator|*
-name|Layout
-operator|=
-literal|0
-comment|///< Optional DataLayout.
+operator|&
+name|DL
 argument_list|)
 block|;
 comment|/// Returns the opcode necessary to cast Val into Ty using usual casting
@@ -2426,11 +2431,12 @@ argument_list|)
 specifier|const
 block|;
 comment|/// @brief Determine if this cast is a no-op cast.
+comment|///
+comment|/// \param DL is the DataLayout to get the Int Ptr type from.
 name|bool
 name|isNoopCast
 argument_list|(
-argument|const DataLayout *DL
-comment|///< DataLayout to get the Int Ptr type from.
+argument|const DataLayout&DL
 argument_list|)
 specifier|const
 block|;
@@ -2596,15 +2602,17 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|CmpInst
 argument_list|()
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|protected
 operator|:

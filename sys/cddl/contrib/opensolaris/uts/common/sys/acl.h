@@ -471,7 +471,7 @@ comment|/*  * The following flags are supported by both NFSv4 ACLs and ace_t.  *
 define|#
 directive|define
 name|ACE_NFSV4_SUP_FLAGS
-value|(ACE_FILE_INHERIT_ACE | \     ACE_DIRECTORY_INHERIT_ACE | \     ACE_NO_PROPAGATE_INHERIT_ACE | \     ACE_INHERIT_ONLY_ACE | \     ACE_IDENTIFIER_GROUP)
+value|(ACE_FILE_INHERIT_ACE | \     ACE_DIRECTORY_INHERIT_ACE | \     ACE_NO_PROPAGATE_INHERIT_ACE | \     ACE_INHERIT_ONLY_ACE | \     ACE_INHERITED_ACE | \     ACE_IDENTIFIER_GROUP)
 define|#
 directive|define
 name|ACE_TYPE_FLAGS
@@ -479,7 +479,7 @@ value|(ACE_OWNER|ACE_GROUP|ACE_EVERYONE| \     ACE_IDENTIFIER_GROUP)
 define|#
 directive|define
 name|ACE_INHERIT_FLAGS
-value|(ACE_FILE_INHERIT_ACE| \     ACE_DIRECTORY_INHERIT_ACE|ACE_NO_PROPAGATE_INHERIT_ACE|ACE_INHERIT_ONLY_ACE)
+value|(ACE_FILE_INHERIT_ACE| ACL_INHERITED_ACE| \     ACE_DIRECTORY_INHERIT_ACE|ACE_NO_PROPAGATE_INHERIT_ACE|ACE_INHERIT_ONLY_ACE)
 comment|/* cmd args to acl(2) for aclent_t  */
 define|#
 directive|define

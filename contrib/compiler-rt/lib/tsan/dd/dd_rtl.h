@@ -127,10 +127,10 @@ operator|*
 name|thr
 argument_list|)
 block|;
-name|virtual
 name|u32
 name|Unwind
 argument_list|()
+name|override
 block|; }
 decl_stmt|;
 typedef|typedef

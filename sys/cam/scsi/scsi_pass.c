@@ -227,6 +227,9 @@ decl_stmt|;
 name|int
 name|open_count
 decl_stmt|;
+name|u_int
+name|maxio
+decl_stmt|;
 name|struct
 name|devstat
 modifier|*
@@ -1352,6 +1355,47 @@ operator|&
 name|cpi
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cpi
+operator|.
+name|maxio
+operator|==
+literal|0
+condition|)
+name|softc
+operator|->
+name|maxio
+operator|=
+name|DFLTPHYS
+expr_stmt|;
+comment|/* traditional default */
+elseif|else
+if|if
+condition|(
+name|cpi
+operator|.
+name|maxio
+operator|>
+name|MAXPHYS
+condition|)
+name|softc
+operator|->
+name|maxio
+operator|=
+name|MAXPHYS
+expr_stmt|;
+comment|/* for safety */
+else|else
+name|softc
+operator|->
+name|maxio
+operator|=
+name|cpi
+operator|.
+name|maxio
+expr_stmt|;
+comment|/* real value */
 comment|/* 	 * We pass in 0 for a blocksize, since we don't  	 * know what the blocksize of this device is, if  	 * it even has a blocksize. 	 */
 name|cam_periph_unlock
 argument_list|(
@@ -2399,6 +2443,10 @@ name|ccb
 argument_list|,
 operator|&
 name|mapinfo
+argument_list|,
+name|softc
+operator|->
+name|maxio
 argument_list|)
 expr_stmt|;
 name|cam_periph_lock

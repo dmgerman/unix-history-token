@@ -1057,7 +1057,8 @@ name|defined
 argument_list|(
 name|DOXYGEN
 argument_list|)
-comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_simple_t that gets/sets information from the user's  * ~/.subversion configuration directory.  Allocate @a *provider in  * @a pool.  *  * This is like svn_auth_get_simple_provider(), except that, when  * running on Window 2000 or newer (or any other Windows version that  * includes the CryptoAPI), the provider encrypts the password before  * storing it to disk. On earlier versions of Windows, the provider  * does nothing.  *  * @since New in 1.4.  * @note This function is only available on Windows.  *  * @note An administrative password reset may invalidate the account's  * secret key. This function will detect that situation and behave as  * if the password were not cached at all.  */
+comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_simple_t that gets/sets information from the user's  * ~/.subversion configuration directory.  Allocate @a *provider in  * @a pool.  *  * This is like svn_auth_get_simple_provider(), except that, when  * running on Window 2000 or newer (or any other Windows version that  * includes the CryptoAPI), the provider encrypts the password before  * storing it to disk. On earlier versions of Windows, the provider  * does nothing.  *  * @since New in 1.4.  * @note This function is only available on Windows.  *  * @note An administrative password reset may invalidate the account's  * secret key. This function will detect that situation and behave as  * if the password were not cached at all.  * @deprecated Provided for backwards compatibility with the 1.8 API.  Use  * svn_auth_get_platform_specific_provider with provider_name of "windows"  * and provider_type of "simple".  */
+name|SVN_DEPRECATED
 name|void
 name|svn_auth_get_windows_simple_provider
 parameter_list|(
@@ -1071,7 +1072,8 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_ssl_client_cert_pw_t that gets/sets information from the  * user's ~/.subversion configuration directory.  Allocate @a *provider in  * @a pool.  *  * This is like svn_auth_get_ssl_client_cert_pw_file_provider(), except that  * when running on Window 2000 or newer, the provider encrypts the password  * before storing it to disk. On earlier versions of Windows, the provider  * does nothing.  *  * @since New in 1.6  * @note This function is only available on Windows.  *  * @note An administrative password reset may invalidate the account's  * secret key. This function will detect that situation and behave as  * if the password were not cached at all.  */
+comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_ssl_client_cert_pw_t that gets/sets information from the  * user's ~/.subversion configuration directory.  Allocate @a *provider in  * @a pool.  *  * This is like svn_auth_get_ssl_client_cert_pw_file_provider(), except that  * when running on Window 2000 or newer, the provider encrypts the password  * before storing it to disk. On earlier versions of Windows, the provider  * does nothing.  *  * @since New in 1.6  * @note This function is only available on Windows.  *  * @note An administrative password reset may invalidate the account's  * secret key. This function will detect that situation and behave as  * if the password were not cached at all.  * @deprecated Provided for backwards compatibility with the 1.8 API.  * Use svn_auth_get_platform_specific_provider with provider_name  * of "windows" and provider_type of "ssl_client_cert_pw".  */
+name|SVN_DEPRECATED
 name|void
 name|svn_auth_get_windows_ssl_client_cert_pw_provider
 parameter_list|(
@@ -1085,7 +1087,8 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_ssl_server_trust_t, allocated in @a pool.  *  * This provider automatically validates ssl server certificates with  * the CryptoApi, like Internet Explorer and the Windows network API do.  * This allows the rollout of root certificates via Windows Domain  * policies, instead of Subversion specific configuration.  *  * @since New in 1.5.  * @note This function is only available on Windows.  */
+comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_ssl_server_trust_t, allocated in @a pool.  *  * This provider automatically validates ssl server certificates with  * the CryptoApi, like Internet Explorer and the Windows network API do.  * This allows the rollout of root certificates via Windows Domain  * policies, instead of Subversion specific configuration.  *  * @since New in 1.5.  * @note This function is only available on Windows.  * @deprecated Provided for backwards compatibility with the 1.8 API.  * Use svn_auth_get_platform_specific_provider with provider_name  * of "windows" and provider_type of "ssl_server_trust".  */
+name|SVN_DEPRECATED
 name|void
 name|svn_auth_get_windows_ssl_server_trust_provider
 parameter_list|(
@@ -1113,7 +1116,8 @@ name|defined
 argument_list|(
 name|DOXYGEN
 argument_list|)
-comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_simple_t that gets/sets information from the user's  * ~/.subversion configuration directory.  Allocate @a *provider in  * @a pool.  *  * This is like svn_auth_get_simple_provider(), except that the  * password is stored in the Mac OS KeyChain.  *  * @since New in 1.4  * @note This function is only available on Mac OS 10.2 and higher.  */
+comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_simple_t that gets/sets information from the user's  * ~/.subversion configuration directory.  Allocate @a *provider in  * @a pool.  *  * This is like svn_auth_get_simple_provider(), except that the  * password is stored in the Mac OS KeyChain.  *  * @since New in 1.4  * @note This function is only available on Mac OS 10.2 and higher.  * @deprecated Provided for backwards compatibility with the 1.8 API.  * Use svn_auth_get_platform_specific_provider with provider_name  * of "keychain" and provider_type of "simple".  */
+name|SVN_DEPRECATED
 name|void
 name|svn_auth_get_keychain_simple_provider
 parameter_list|(
@@ -1127,7 +1131,8 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_ssl_client_cert_pw_t that gets/sets information from the  * user's ~/.subversion configuration directory.  Allocate @a *provider in  * @a pool.  *  * This is like svn_auth_get_ssl_client_cert_pw_file_provider(), except  * that the password is stored in the Mac OS KeyChain.  *  * @since New in 1.6  * @note This function is only available on Mac OS 10.2 and higher.  */
+comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_ssl_client_cert_pw_t that gets/sets information from the  * user's ~/.subversion configuration directory.  Allocate @a *provider in  * @a pool.  *  * This is like svn_auth_get_ssl_client_cert_pw_file_provider(), except  * that the password is stored in the Mac OS KeyChain.  *  * @since New in 1.6  * @note This function is only available on Mac OS 10.2 and higher.  * @deprecated Provided for backwards compatibility with the 1.8 API.  * Use svn_auth_get_platform_specific_provider with provider_name  * of "keychain" and provider_type of "ssl_client_cert_pw".  */
+name|SVN_DEPRECATED
 name|void
 name|svn_auth_get_keychain_ssl_client_cert_pw_provider
 parameter_list|(
@@ -1213,7 +1218,8 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_simple_t that gets/sets information from the user's  * ~/.subversion configuration directory.  *  * This is like svn_client_get_simple_provider(), except that the  * password is stored in GNOME Keyring.  *  * If the GNOME Keyring is locked the provider calls  * @c *SVN_AUTH_PARAM_GNOME_KEYRING_UNLOCK_PROMPT_FUNC in order to unlock  * the keyring.  *  * @c SVN_AUTH_PARAM_GNOME_KEYRING_UNLOCK_PROMPT_BATON is passed to  * @c *SVN_AUTH_PARAM_GNOME_KEYRING_UNLOCK_PROMPT_FUNC.  *  * Allocate @a *provider in @a pool.  *  * @since New in 1.6  * @note This function actually works only on systems with  * libsvn_auth_gnome_keyring and GNOME Keyring installed.  */
+comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_simple_t that gets/sets information from the user's  * ~/.subversion configuration directory.  *  * This is like svn_client_get_simple_provider(), except that the  * password is stored in GNOME Keyring.  *  * If the GNOME Keyring is locked the provider calls  * @c *SVN_AUTH_PARAM_GNOME_KEYRING_UNLOCK_PROMPT_FUNC in order to unlock  * the keyring.  *  * @c SVN_AUTH_PARAM_GNOME_KEYRING_UNLOCK_PROMPT_BATON is passed to  * @c *SVN_AUTH_PARAM_GNOME_KEYRING_UNLOCK_PROMPT_FUNC.  *  * Allocate @a *provider in @a pool.  *  * @since New in 1.6  * @note This function actually works only on systems with  * libsvn_auth_gnome_keyring and GNOME Keyring installed.  * @deprecated Provided for backwards compatibility with the 1.8 API.  * Use svn_auth_get_platform_specific_provider with provider_name  * of "gnome_keyring" and provider_type of "simple".  */
+name|SVN_DEPRECATED
 name|void
 name|svn_auth_get_gnome_keyring_simple_provider
 parameter_list|(
@@ -1227,7 +1233,8 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_ssl_client_cert_pw_t that gets/sets information from the  * user's ~/.subversion configuration directory.  *  * This is like svn_client_get_ssl_client_cert_pw_file_provider(), except  * that the password is stored in GNOME Keyring.  *  * If the GNOME Keyring is locked the provider calls  * @c *SVN_AUTH_PARAM_GNOME_KEYRING_UNLOCK_PROMPT_FUNC in order to unlock  * the keyring.  *  * @c SVN_AUTH_PARAM_GNOME_KEYRING_UNLOCK_PROMPT_BATON is passed to  * @c *SVN_AUTH_PARAM_GNOME_KEYRING_UNLOCK_PROMPT_FUNC.  *  * Allocate @a *provider in @a pool.  *  * @since New in 1.6  * @note This function actually works only on systems with  * libsvn_auth_gnome_keyring and GNOME Keyring installed.  */
+comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_ssl_client_cert_pw_t that gets/sets information from the  * user's ~/.subversion configuration directory.  *  * This is like svn_client_get_ssl_client_cert_pw_file_provider(), except  * that the password is stored in GNOME Keyring.  *  * If the GNOME Keyring is locked the provider calls  * @c *SVN_AUTH_PARAM_GNOME_KEYRING_UNLOCK_PROMPT_FUNC in order to unlock  * the keyring.  *  * @c SVN_AUTH_PARAM_GNOME_KEYRING_UNLOCK_PROMPT_BATON is passed to  * @c *SVN_AUTH_PARAM_GNOME_KEYRING_UNLOCK_PROMPT_FUNC.  *  * Allocate @a *provider in @a pool.  *  * @since New in 1.6  * @note This function actually works only on systems with  * libsvn_auth_gnome_keyring and GNOME Keyring installed.  * @deprecated Provided for backwards compatibility with the 1.8 API.  * Use svn_auth_get_platform_specific_provider with provider_name  * of "gnome_keyring" and provider_type of "ssl_client_cert_pw".  */
+name|SVN_DEPRECATED
 name|void
 name|svn_auth_get_gnome_keyring_ssl_client_cert_pw_provider
 parameter_list|(
@@ -1250,7 +1257,8 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_simple_t that gets/sets information from the user's  * ~/.subversion configuration directory.  Allocate @a *provider in  * @a pool.  *  * This is like svn_client_get_simple_provider(), except that the  * password is stored in KWallet.  *  * @since New in 1.6  * @note This function actually works only on systems with libsvn_auth_kwallet  * and KWallet installed.  */
+comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_simple_t that gets/sets information from the user's  * ~/.subversion configuration directory.  Allocate @a *provider in  * @a pool.  *  * This is like svn_client_get_simple_provider(), except that the  * password is stored in KWallet.  *  * @since New in 1.6  * @note This function actually works only on systems with libsvn_auth_kwallet  * and KWallet installed.  * @deprecated Provided for backwards compatibility with the 1.8 API.  * Use svn_auth_get_platform_specific_provider with provider_name  * of "kwallet" and provider_type of "simple".  */
+name|SVN_DEPRECATED
 name|void
 name|svn_auth_get_kwallet_simple_provider
 parameter_list|(
@@ -1264,7 +1272,8 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_ssl_client_cert_pw_t that gets/sets information from the  * user's ~/.subversion configuration directory.  Allocate @a *provider in  * @a pool.  *  * This is like svn_client_get_ssl_client_cert_pw_file_provider(), except  * that the password is stored in KWallet.  *  * @since New in 1.6  * @note This function actually works only on systems with libsvn_auth_kwallet  * and KWallet installed.  */
+comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_ssl_client_cert_pw_t that gets/sets information from the  * user's ~/.subversion configuration directory.  Allocate @a *provider in  * @a pool.  *  * This is like svn_client_get_ssl_client_cert_pw_file_provider(), except  * that the password is stored in KWallet.  *  * @since New in 1.6  * @note This function actually works only on systems with libsvn_auth_kwallet  * and KWallet installed.  * @deprecated Provided for backwards compatibility with the 1.8 API.  * Use svn_auth_get_platform_specific_provider with provider_name  * of "kwallet" and provider_type of "ssl_client_cert_pw".  */
+name|SVN_DEPRECATED
 name|void
 name|svn_auth_get_kwallet_ssl_client_cert_pw_provider
 parameter_list|(
@@ -1293,7 +1302,8 @@ name|defined
 argument_list|(
 name|DOXYGEN
 argument_list|)
-comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_simple_t that gets/sets information from the user's  * ~/.subversion configuration directory.  *  * This is like svn_client_get_simple_provider(), except that the  * password is obtained from gpg_agent, which will keep it in  * a memory cache.  *  * Allocate @a *provider in @a pool.  *  * @since New in 1.8  * @note This function actually works only on systems with  * GNU Privacy Guard installed.  */
+comment|/**  * Set @a *provider to an authentication provider of type @c  * svn_auth_cred_simple_t that gets/sets information from the user's  * ~/.subversion configuration directory.  *  * This is like svn_client_get_simple_provider(), except that the  * password is obtained from gpg_agent, which will keep it in  * a memory cache.  *  * Allocate @a *provider in @a pool.  *  * @since New in 1.8  * @note This function actually works only on systems with  * GNU Privacy Guard installed.  * @deprecated Provided for backwards compatibility with the 1.8 API.  * Use svn_auth_get_platform_specific_provider with provider_name  * of "gpg_agent" and provider_type of "simple".  */
+name|SVN_DEPRECATED
 name|void
 name|svn_auth_get_gpg_agent_simple_provider
 parameter_list|(

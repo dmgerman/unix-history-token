@@ -278,6 +278,38 @@ argument_list|()
 return|;
 block|}
 name|SourceLocation
+name|getExprLoc
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+operator|(
+name|Operator
+operator|<
+name|OO_Plus
+operator|||
+name|Operator
+operator|>=
+name|OO_Arrow
+operator|||
+name|Operator
+operator|==
+name|OO_PlusPlus
+operator|||
+name|Operator
+operator|==
+name|OO_MinusMinus
+operator|)
+operator|?
+name|getLocStart
+argument_list|()
+operator|:
+name|getOperatorLoc
+argument_list|()
+return|;
+block|}
+name|SourceLocation
 name|getLocStart
 argument_list|()
 specifier|const
@@ -5852,6 +5884,14 @@ return|return
 name|CaptureDefaultLoc
 return|;
 block|}
+comment|/// \brief Determine whether one of this lambda's captures is an init-capture.
+name|bool
+name|isInitCapture
+argument_list|(
+argument|const LambdaCapture *Capture
+argument_list|)
+specifier|const
+block|;
 comment|/// \brief An iterator that walks over the captures of the lambda,
 comment|/// both implicit and explicit.
 typedef|typedef
@@ -6525,6 +6565,10 @@ comment|/// C++11 [expr.new]p13:
 comment|///   If the allocation function returns null, initialization shall
 comment|///   not be done, the deallocation function shall not be called,
 comment|///   and the value of the new-expression shall be null.
+comment|///
+comment|/// C++ DR1748:
+comment|///   If the allocation function is a reserved placement allocation
+comment|///   function that returns null, the behavior is undefined.
 comment|///
 comment|/// An allocation function is not allowed to return null unless it
 comment|/// has a non-throwing exception-specification.  The '03 rule is

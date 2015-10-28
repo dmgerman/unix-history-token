@@ -6043,13 +6043,6 @@ parameter_list|(
 name|p
 parameter_list|)
 value|((p) != 0&& (p) != -1)
-define|#
-directive|define
-name|N
-parameter_list|(
-name|arr
-parameter_list|)
-value|(int)(sizeof(arr) / sizeof(arr[0]))
 comment|/* 	 * Extract PA parameters 	 */
 if|if
 condition|(
@@ -6076,7 +6069,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|pa_params
 argument_list|)
@@ -6113,7 +6106,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|pa_params
 argument_list|)
@@ -6240,9 +6233,6 @@ name|back
 goto|;
 block|}
 block|}
-undef|#
-directive|undef
-name|N
 comment|/* 	 * All of the PA parameters from SPROM are valid. 	 */
 comment|/* 	 * Extract idle TSSI from SPROM. 	 */
 name|val
@@ -6496,15 +6486,6 @@ init|=
 name|mac
 operator|->
 name|mac_sc
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|sc_ifp
 decl_stmt|;
 name|struct
 name|bwi_rf
@@ -6969,11 +6950,11 @@ block|}
 if|if
 condition|(
 operator|(
-name|ifp
+name|sc
 operator|->
-name|if_drv_flags
+name|sc_flags
 operator|&
-name|IFF_DRV_RUNNING
+name|BWI_F_RUNNING
 operator|)
 operator|==
 literal|0
@@ -7100,11 +7081,11 @@ block|}
 if|if
 condition|(
 operator|(
-name|ifp
+name|sc
 operator|->
-name|if_drv_flags
+name|sc_flags
 operator|&
-name|IFF_DRV_RUNNING
+name|BWI_F_RUNNING
 operator|)
 operator|==
 literal|0
@@ -7799,15 +7780,13 @@ literal|13
 block|}
 decl_stmt|;
 name|struct
-name|ifnet
+name|bwi_softc
 modifier|*
-name|ifp
+name|sc
 init|=
 name|mac
 operator|->
 name|mac_sc
-operator|->
-name|sc_ifp
 decl_stmt|;
 name|struct
 name|bwi_rf_lo
@@ -7894,11 +7873,11 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|ifp
+name|sc
 operator|->
-name|if_drv_flags
+name|sc_flags
 operator|&
-name|IFF_DRV_RUNNING
+name|BWI_F_RUNNING
 operator|)
 operator|==
 literal|0

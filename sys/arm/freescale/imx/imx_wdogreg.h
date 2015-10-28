@@ -243,33 +243,5 @@ name|WDOG_MCR_PDE
 value|(1<< 0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|READ
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_r
-parameter_list|)
-define|\
-value|bus_space_read_2((_sc)->sc_bst, (_sc)->sc_bsh, (_r))
-end_define
-
-begin_define
-define|#
-directive|define
-name|WRITE
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_r
-parameter_list|,
-name|_v
-parameter_list|)
-define|\
-value|bus_space_write_2((_sc)->sc_bst, (_sc)->sc_bsh, (_r), (_v))
-end_define
-
 end_unit
 

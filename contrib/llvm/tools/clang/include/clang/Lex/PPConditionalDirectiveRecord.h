@@ -386,7 +386,7 @@ argument|SourceLocation Loc
 argument_list|,
 argument|const Token&MacroNameTok
 argument_list|,
-argument|const MacroDirective *MD
+argument|const MacroDefinition&MD
 argument_list|)
 name|override
 block|;
@@ -397,7 +397,7 @@ argument|SourceLocation Loc
 argument_list|,
 argument|const Token&MacroNameTok
 argument_list|,
-argument|const MacroDirective *MD
+argument|const MacroDefinition&MD
 argument_list|)
 name|override
 block|;

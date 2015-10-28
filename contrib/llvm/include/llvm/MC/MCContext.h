@@ -76,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCDwarf.h"
+file|"llvm/ADT/Twine.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCStreamer.h"
+file|"llvm/MC/MCDwarf.h"
 end_include
 
 begin_include
@@ -148,6 +148,9 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
+name|MCSymbolELF
+decl_stmt|;
+name|class
 name|MCLabel
 decl_stmt|;
 struct_decl|struct
@@ -169,12 +172,6 @@ name|class
 name|SMLoc
 decl_stmt|;
 name|class
-name|StringRef
-decl_stmt|;
-name|class
-name|Twine
-decl_stmt|;
-name|class
 name|MCSectionMachO
 decl_stmt|;
 name|class
@@ -183,17 +180,20 @@ decl_stmt|;
 name|class
 name|MCSectionCOFF
 decl_stmt|;
-comment|/// MCContext - Context object for machine code objects.  This class owns all
-comment|/// of the sections that it creates.
+comment|/// Context object for machine code objects.  This class owns all of the
+comment|/// sections that it creates.
 comment|///
 name|class
 name|MCContext
 block|{
 name|MCContext
 argument_list|(
-argument|const MCContext&
+specifier|const
+name|MCContext
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|MCContext
 modifier|&
@@ -204,7 +204,8 @@ specifier|const
 name|MCContext
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:
@@ -245,14 +246,14 @@ name|MCObjectFileInfo
 modifier|*
 name|MOFI
 decl_stmt|;
-comment|/// Allocator - Allocator object used for creating machine code objects.
+comment|/// Allocator object used for creating machine code objects.
 comment|///
 comment|/// We use a bump pointer allocator to avoid the need to track all allocated
 comment|/// objects.
 name|BumpPtrAllocator
 name|Allocator
 decl_stmt|;
-comment|/// Symbols - Bindings of names to symbols.
+comment|/// Bindings of names to symbols.
 name|SymbolTable
 name|Symbols
 decl_stmt|;
@@ -264,12 +265,12 @@ specifier|const
 name|MCSectionELF
 operator|*
 operator|,
-name|MCSymbol
+name|MCSymbolELF
 operator|*
 operator|>
 name|SectionSymbols
 expr_stmt|;
-comment|/// A maping from a local label number and an instance count to a symbol.
+comment|/// A mapping from a local label number and an instance count to a symbol.
 comment|/// For example, in the assembly
 comment|///     1:
 comment|///     2:
@@ -291,8 +292,8 @@ operator|*
 operator|>
 name|LocalSymbols
 expr_stmt|;
-comment|/// UsedNames - Keeps tracks of names that were used both for used declared
-comment|/// and artificial symbols.
+comment|/// Keeps tracks of names that were used both for used declared and
+comment|/// artificial symbols.
 name|StringMap
 operator|<
 name|bool
@@ -302,11 +303,14 @@ operator|&
 operator|>
 name|UsedNames
 expr_stmt|;
-comment|/// NextUniqueID - The next ID to dole out to an unnamed assembler temporary
-comment|/// symbol.
+comment|/// The next ID to dole out to an unnamed assembler temporary symbol with
+comment|/// a given prefix.
+name|StringMap
+operator|<
 name|unsigned
-name|NextUniqueID
-decl_stmt|;
+operator|>
+name|NextID
+expr_stmt|;
 comment|/// Instances of directional local labels.
 name|DenseMap
 operator|<
@@ -396,26 +400,13 @@ comment|/// assembly source files.
 name|unsigned
 name|GenDwarfFileNumber
 decl_stmt|;
-comment|/// Symbols created for the start and end of each section, used for
-comment|/// generating the .debug_ranges and .debug_aranges sections.
-name|MapVector
+comment|/// Sections for generating the .debug_ranges and .debug_aranges sections.
+name|SetVector
 operator|<
-specifier|const
 name|MCSection
 operator|*
-operator|,
-name|std
-operator|::
-name|pair
-operator|<
-name|MCSymbol
-operator|*
-operator|,
-name|MCSymbol
-operator|*
 operator|>
-expr|>
-name|SectionStartEndSyms
+name|SectionsForRanges
 expr_stmt|;
 comment|/// The information gathered from labels that will have dwarf label
 comment|/// entries when generating dwarf assembly source files.
@@ -447,86 +438,292 @@ comment|/// Darwin).
 name|bool
 name|AllowTemporaryLabels
 decl_stmt|;
+name|bool
+name|UseNamesOnTempLabels
+init|=
+name|true
+decl_stmt|;
 comment|/// The Compile Unit ID that we are currently processing.
 name|unsigned
 name|DwarfCompileUnitID
 decl_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-name|std
-operator|::
-name|string
-operator|,
+struct|struct
+name|ELFSectionKey
+block|{
 name|std
 operator|::
 name|string
-operator|>
-name|SectionGroupPair
+name|SectionName
 expr_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|tuple
+name|StringRef
+name|GroupName
+decl_stmt|;
+name|unsigned
+name|UniqueID
+decl_stmt|;
+name|ELFSectionKey
+argument_list|(
+argument|StringRef SectionName
+argument_list|,
+argument|StringRef GroupName
+argument_list|,
+argument|unsigned UniqueID
+argument_list|)
+block|:
+name|SectionName
+argument_list|(
+name|SectionName
+argument_list|)
+operator|,
+name|GroupName
+argument_list|(
+name|GroupName
+argument_list|)
+operator|,
+name|UniqueID
+argument_list|(
+argument|UniqueID
+argument_list|)
+block|{       }
+name|bool
+name|operator
 operator|<
+operator|(
+specifier|const
+name|ELFSectionKey
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+if|if
+condition|(
+name|SectionName
+operator|!=
+name|Other
+operator|.
+name|SectionName
+condition|)
+return|return
+name|SectionName
+operator|<
+name|Other
+operator|.
+name|SectionName
+return|;
+if|if
+condition|(
+name|GroupName
+operator|!=
+name|Other
+operator|.
+name|GroupName
+condition|)
+return|return
+name|GroupName
+operator|<
+name|Other
+operator|.
+name|GroupName
+return|;
+return|return
+name|UniqueID
+operator|<
+name|Other
+operator|.
+name|UniqueID
+return|;
+block|}
+block|}
+empty_stmt|;
+struct|struct
+name|COFFSectionKey
+block|{
 name|std
 operator|::
 name|string
-operator|,
-name|std
-operator|::
-name|string
-operator|,
+name|SectionName
+expr_stmt|;
+name|StringRef
+name|GroupName
+decl_stmt|;
 name|int
-operator|>
-name|SectionGroupTriple
-expr_stmt|;
+name|SelectionKey
+decl_stmt|;
+name|COFFSectionKey
+argument_list|(
+argument|StringRef SectionName
+argument_list|,
+argument|StringRef GroupName
+argument_list|,
+argument|int SelectionKey
+argument_list|)
+block|:
+name|SectionName
+argument_list|(
+name|SectionName
+argument_list|)
+operator|,
+name|GroupName
+argument_list|(
+name|GroupName
+argument_list|)
+operator|,
+name|SelectionKey
+argument_list|(
+argument|SelectionKey
+argument_list|)
+block|{}
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|COFFSectionKey
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+if|if
+condition|(
+name|SectionName
+operator|!=
+name|Other
+operator|.
+name|SectionName
+condition|)
+return|return
+name|SectionName
+operator|<
+name|Other
+operator|.
+name|SectionName
+return|;
+if|if
+condition|(
+name|GroupName
+operator|!=
+name|Other
+operator|.
+name|GroupName
+condition|)
+return|return
+name|GroupName
+operator|<
+name|Other
+operator|.
+name|GroupName
+return|;
+return|return
+name|SelectionKey
+operator|<
+name|Other
+operator|.
+name|SelectionKey
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|StringMap
 operator|<
-specifier|const
 name|MCSectionMachO
 operator|*
 operator|>
 name|MachOUniquingMap
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|std
 operator|::
 name|map
 operator|<
-name|SectionGroupPair
+name|ELFSectionKey
 operator|,
-specifier|const
 name|MCSectionELF
 operator|*
 operator|>
 name|ELFUniquingMap
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|std
 operator|::
 name|map
 operator|<
-name|SectionGroupTriple
+name|COFFSectionKey
 operator|,
-specifier|const
 name|MCSectionCOFF
 operator|*
 operator|>
 name|COFFUniquingMap
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|StringMap
+operator|<
+name|bool
+operator|>
+name|ELFRelSecNames
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Do automatic reset in destructor
+end_comment
+
+begin_decl_stmt
 name|bool
 name|AutoReset
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|MCSymbol
 modifier|*
-name|CreateSymbol
+name|createSymbolImpl
+argument_list|(
+specifier|const
+name|StringMapEntry
+operator|<
+name|bool
+operator|>
+operator|*
+name|Name
+argument_list|,
+name|bool
+name|CanBeUnnamed
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|MCSymbol
+modifier|*
+name|createSymbol
 parameter_list|(
 name|StringRef
 name|Name
+parameter_list|,
+name|bool
+name|AlwaysAddSuffix
+parameter_list|,
+name|bool
+name|IsTemporary
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|MCSymbol
 modifier|*
 name|getOrCreateDirectionalLocalSymbol
@@ -538,8 +735,14 @@ name|unsigned
 name|Instance
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_function_decl
 name|explicit
 name|MCContext
 parameter_list|(
@@ -571,10 +774,16 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_expr_stmt
 operator|~
 name|MCContext
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|SourceMgr
 operator|*
@@ -586,6 +795,9 @@ return|return
 name|SrcMgr
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|MCAsmInfo
 operator|*
@@ -597,6 +809,9 @@ return|return
 name|MAI
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|MCRegisterInfo
 operator|*
@@ -608,6 +823,9 @@ return|return
 name|MRI
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|MCObjectFileInfo
 operator|*
@@ -619,6 +837,9 @@ return|return
 name|MOFI
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setAllowTemporaryLabels
 parameter_list|(
@@ -631,57 +852,147 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
-comment|/// @name Module Lifetime Management
+end_function
+
+begin_function
+name|void
+name|setUseNamesOnTempLabels
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|UseNamesOnTempLabels
+operator|=
+name|Value
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \name Module Lifetime Management
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_comment
 comment|/// reset - return object to right after construction state to prepare
+end_comment
+
+begin_comment
 comment|/// to process a new module
+end_comment
+
+begin_function_decl
 name|void
 name|reset
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// @}
-comment|/// @name Symbol Management
+end_comment
+
+begin_comment
+comment|/// \name Symbol Management
+end_comment
+
+begin_comment
 comment|/// @{
-comment|/// CreateLinkerPrivateTempSymbol - Create and return a new linker temporary
-comment|/// symbol with a unique but unspecified name.
+end_comment
+
+begin_comment
+comment|/// Create and return a new linker temporary symbol with a unique but
+end_comment
+
+begin_comment
+comment|/// unspecified name.
+end_comment
+
+begin_function_decl
 name|MCSymbol
 modifier|*
-name|CreateLinkerPrivateTempSymbol
+name|createLinkerPrivateTempSymbol
 parameter_list|()
 function_decl|;
-comment|/// CreateTempSymbol - Create and return a new assembler temporary symbol
-comment|/// with a unique but unspecified name.
+end_function_decl
+
+begin_comment
+comment|/// Create and return a new assembler temporary symbol with a unique but
+end_comment
+
+begin_comment
+comment|/// unspecified name.
+end_comment
+
+begin_function_decl
 name|MCSymbol
 modifier|*
-name|CreateTempSymbol
-parameter_list|()
+name|createTempSymbol
+parameter_list|(
+name|bool
+name|CanBeUnnamed
+init|=
+name|true
+parameter_list|)
 function_decl|;
-comment|/// getUniqueSymbolID() - Return a unique identifier for use in constructing
-comment|/// symbol names.
-name|unsigned
-name|getUniqueSymbolID
-parameter_list|()
-block|{
-return|return
-name|NextUniqueID
-operator|++
-return|;
-block|}
+end_function_decl
+
+begin_function_decl
+name|MCSymbol
+modifier|*
+name|createTempSymbol
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Name
+parameter_list|,
+name|bool
+name|AlwaysAddSuffix
+parameter_list|,
+name|bool
+name|CanBeUnnamed
+init|=
+name|true
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Create the definition of a directional local symbol for numbered label
+end_comment
+
+begin_comment
 comment|/// (used for "1:" definitions).
+end_comment
+
+begin_function_decl
 name|MCSymbol
 modifier|*
-name|CreateDirectionalLocalSymbol
+name|createDirectionalLocalSymbol
 parameter_list|(
 name|unsigned
 name|LocalLabelVal
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Create and return a directional local symbol for numbered label (used
+end_comment
+
+begin_comment
 comment|/// for "1b" or 1f" references).
+end_comment
+
+begin_function_decl
 name|MCSymbol
 modifier|*
-name|GetDirectionalLocalSymbol
+name|getDirectionalLocalSymbol
 parameter_list|(
 name|unsigned
 name|LocalLabelVal
@@ -690,22 +1001,28 @@ name|bool
 name|Before
 parameter_list|)
 function_decl|;
-comment|/// GetOrCreateSymbol - Lookup the symbol inside with the specified
-comment|/// @p Name.  If it exists, return it.  If not, create a forward
-comment|/// reference and return it.
+end_function_decl
+
+begin_comment
+comment|/// Lookup the symbol inside with the specified \p Name.  If it exists,
+end_comment
+
+begin_comment
+comment|/// return it.  If not, create a forward reference and return it.
+end_comment
+
+begin_comment
 comment|///
-comment|/// @param Name - The symbol name, which must be unique across all symbols.
+end_comment
+
+begin_comment
+comment|/// \param Name - The symbol name, which must be unique across all symbols.
+end_comment
+
+begin_function_decl
 name|MCSymbol
 modifier|*
-name|GetOrCreateSymbol
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|)
-function_decl|;
-name|MCSymbol
-modifier|*
-name|GetOrCreateSymbol
+name|getOrCreateSymbol
 parameter_list|(
 specifier|const
 name|Twine
@@ -713,7 +1030,10 @@ modifier|&
 name|Name
 parameter_list|)
 function_decl|;
-name|MCSymbol
+end_function_decl
+
+begin_function_decl
+name|MCSymbolELF
 modifier|*
 name|getOrCreateSectionSymbol
 parameter_list|(
@@ -723,27 +1043,68 @@ modifier|&
 name|Section
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Gets a symbol that will be defined to the final stack offset of a local
+end_comment
+
+begin_comment
+comment|/// variable after codegen.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Idx - The index of a local variable passed to @llvm.localescape.
+end_comment
+
+begin_function_decl
 name|MCSymbol
 modifier|*
 name|getOrCreateFrameAllocSymbol
 parameter_list|(
 name|StringRef
 name|FuncName
+parameter_list|,
+name|unsigned
+name|Idx
 parameter_list|)
 function_decl|;
-comment|/// LookupSymbol - Get the symbol for \p Name, or null.
+end_function_decl
+
+begin_function_decl
 name|MCSymbol
 modifier|*
-name|LookupSymbol
-argument_list|(
+name|getOrCreateParentFrameOffsetSymbol
+parameter_list|(
 name|StringRef
-name|Name
-argument_list|)
-decl|const
-decl_stmt|;
+name|FuncName
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|MCSymbol
 modifier|*
-name|LookupSymbol
+name|getOrCreateLSDASymbol
+parameter_list|(
+name|StringRef
+name|FuncName
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Get the symbol for \p Name, or null.
+end_comment
+
+begin_decl_stmt
+name|MCSymbol
+modifier|*
+name|lookupSymbol
 argument_list|(
 specifier|const
 name|Twine
@@ -752,10 +1113,25 @@ name|Name
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getSymbols - Get a reference for the symbol table for clients that
+end_comment
+
+begin_comment
 comment|/// want to, for example, iterate over all symbols. 'const' because we
+end_comment
+
+begin_comment
 comment|/// still want any modifications to the table itself to use the MCContext
+end_comment
+
+begin_comment
 comment|/// APIs.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|SymbolTable
 operator|&
@@ -767,12 +1143,29 @@ return|return
 name|Symbols
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// @}
-comment|/// @name Section Management
+end_comment
+
+begin_comment
+comment|/// \name Section Management
+end_comment
+
+begin_comment
 comment|/// @{
-comment|/// getMachOSection - Return the MCSection for the specified mach-o section.
-comment|/// This requires the operands to be valid.
-specifier|const
+end_comment
+
+begin_comment
+comment|/// Return the MCSection for the specified mach-o section.  This requires
+end_comment
+
+begin_comment
+comment|/// the operands to be valid.
+end_comment
+
+begin_function_decl
 name|MCSectionMachO
 modifier|*
 name|getMachOSection
@@ -791,9 +1184,18 @@ name|Reserved2
 parameter_list|,
 name|SectionKind
 name|K
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|BeginSymName
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
-specifier|const
+end_function_decl
+
+begin_function
 name|MCSectionMachO
 modifier|*
 name|getMachOSection
@@ -809,6 +1211,13 @@ name|TypeAndAttributes
 parameter_list|,
 name|SectionKind
 name|K
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|BeginSymName
+init|=
+name|nullptr
 parameter_list|)
 block|{
 return|return
@@ -823,10 +1232,14 @@ argument_list|,
 literal|0
 argument_list|,
 name|K
+argument_list|,
+name|BeginSymName
 argument_list|)
 return|;
 block|}
-specifier|const
+end_function
+
+begin_function
 name|MCSectionELF
 modifier|*
 name|getELFSection
@@ -839,12 +1252,24 @@ name|Type
 parameter_list|,
 name|unsigned
 name|Flags
-parameter_list|,
-name|SectionKind
-name|Kind
 parameter_list|)
-function_decl|;
-specifier|const
+block|{
+return|return
+name|getELFSection
+argument_list|(
+name|Section
+argument_list|,
+name|Type
+argument_list|,
+name|Flags
+argument_list|,
+name|nullptr
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
 name|MCSectionELF
 modifier|*
 name|getELFSection
@@ -858,8 +1283,44 @@ parameter_list|,
 name|unsigned
 name|Flags
 parameter_list|,
-name|SectionKind
-name|Kind
+specifier|const
+name|char
+modifier|*
+name|BeginSymName
+parameter_list|)
+block|{
+return|return
+name|getELFSection
+argument_list|(
+name|Section
+argument_list|,
+name|Type
+argument_list|,
+name|Flags
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|,
+name|BeginSymName
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|MCSectionELF
+modifier|*
+name|getELFSection
+parameter_list|(
+name|StringRef
+name|Section
+parameter_list|,
+name|unsigned
+name|Type
+parameter_list|,
+name|unsigned
+name|Flags
 parameter_list|,
 name|unsigned
 name|EntrySize
@@ -867,11 +1328,222 @@ parameter_list|,
 name|StringRef
 name|Group
 parameter_list|)
+block|{
+return|return
+name|getELFSection
+argument_list|(
+name|Section
+argument_list|,
+name|Type
+argument_list|,
+name|Flags
+argument_list|,
+name|EntrySize
+argument_list|,
+name|Group
+argument_list|,
+name|nullptr
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|MCSectionELF
+modifier|*
+name|getELFSection
+parameter_list|(
+name|StringRef
+name|Section
+parameter_list|,
+name|unsigned
+name|Type
+parameter_list|,
+name|unsigned
+name|Flags
+parameter_list|,
+name|unsigned
+name|EntrySize
+parameter_list|,
+name|StringRef
+name|Group
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|BeginSymName
+parameter_list|)
+block|{
+return|return
+name|getELFSection
+argument_list|(
+name|Section
+argument_list|,
+name|Type
+argument_list|,
+name|Flags
+argument_list|,
+name|EntrySize
+argument_list|,
+name|Group
+argument_list|,
+operator|~
+literal|0
+argument_list|,
+name|BeginSymName
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|MCSectionELF
+modifier|*
+name|getELFSection
+parameter_list|(
+name|StringRef
+name|Section
+parameter_list|,
+name|unsigned
+name|Type
+parameter_list|,
+name|unsigned
+name|Flags
+parameter_list|,
+name|unsigned
+name|EntrySize
+parameter_list|,
+name|StringRef
+name|Group
+parameter_list|,
+name|unsigned
+name|UniqueID
+parameter_list|)
+block|{
+return|return
+name|getELFSection
+argument_list|(
+name|Section
+argument_list|,
+name|Type
+argument_list|,
+name|Flags
+argument_list|,
+name|EntrySize
+argument_list|,
+name|Group
+argument_list|,
+name|UniqueID
+argument_list|,
+name|nullptr
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function_decl
+name|MCSectionELF
+modifier|*
+name|getELFSection
+parameter_list|(
+name|StringRef
+name|Section
+parameter_list|,
+name|unsigned
+name|Type
+parameter_list|,
+name|unsigned
+name|Flags
+parameter_list|,
+name|unsigned
+name|EntrySize
+parameter_list|,
+name|StringRef
+name|Group
+parameter_list|,
+name|unsigned
+name|UniqueID
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|BeginSymName
+parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
+name|MCSectionELF
+modifier|*
+name|getELFSection
+parameter_list|(
+name|StringRef
+name|Section
+parameter_list|,
+name|unsigned
+name|Type
+parameter_list|,
+name|unsigned
+name|Flags
+parameter_list|,
+name|unsigned
+name|EntrySize
+parameter_list|,
+specifier|const
+name|MCSymbolELF
+modifier|*
+name|Group
+parameter_list|,
+name|unsigned
+name|UniqueID
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|BeginSymName
+parameter_list|,
+specifier|const
+name|MCSectionELF
+modifier|*
+name|Associated
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|MCSectionELF
+modifier|*
+name|createELFRelSection
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|unsigned
+name|Type
+parameter_list|,
+name|unsigned
+name|Flags
+parameter_list|,
+name|unsigned
+name|EntrySize
+parameter_list|,
+specifier|const
+name|MCSymbolELF
+modifier|*
+name|Group
+parameter_list|,
+specifier|const
+name|MCSectionELF
+modifier|*
+name|Associated
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|renameELFSection
 parameter_list|(
-specifier|const
 name|MCSectionELF
 modifier|*
 name|Section
@@ -880,13 +1552,22 @@ name|StringRef
 name|Name
 parameter_list|)
 function_decl|;
-specifier|const
+end_function_decl
+
+begin_function_decl
 name|MCSectionELF
 modifier|*
-name|CreateELFGroupSection
-parameter_list|()
-function_decl|;
+name|createELFGroupSection
+parameter_list|(
 specifier|const
+name|MCSymbolELF
+modifier|*
+name|Group
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|MCSectionCOFF
 modifier|*
 name|getCOFFSection
@@ -905,9 +1586,18 @@ name|COMDATSymName
 parameter_list|,
 name|int
 name|Selection
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|BeginSymName
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
-specifier|const
+end_function_decl
+
+begin_function_decl
 name|MCSectionCOFF
 modifier|*
 name|getCOFFSection
@@ -920,9 +1610,18 @@ name|Characteristics
 parameter_list|,
 name|SectionKind
 name|Kind
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|BeginSymName
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
-specifier|const
+end_function_decl
+
+begin_function_decl
 name|MCSectionCOFF
 modifier|*
 name|getCOFFSection
@@ -931,16 +1630,29 @@ name|StringRef
 name|Section
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Gets or creates a section equivalent to Sec that is associated with the
+end_comment
+
+begin_comment
 comment|/// section containing KeySym. For example, to create a debug info section
+end_comment
+
+begin_comment
 comment|/// associated with an inline function, pass the normal debug info section
+end_comment
+
+begin_comment
 comment|/// as Sec and the function symbol as KeySym.
-specifier|const
+end_comment
+
+begin_function_decl
 name|MCSectionCOFF
 modifier|*
 name|getAssociativeCOFFSection
 parameter_list|(
-specifier|const
 name|MCSectionCOFF
 modifier|*
 name|Sec
@@ -951,14 +1663,41 @@ modifier|*
 name|KeySym
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// @}
-comment|/// @name Dwarf Management
+end_comment
+
+begin_comment
+comment|/// \name Dwarf Management
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_comment
 comment|/// \brief Get the compilation directory for DW_AT_comp_dir
+end_comment
+
+begin_comment
 comment|/// This can be overridden by clients which want to control the reported
+end_comment
+
+begin_comment
 comment|/// compilation directory and have it be something other than the current
+end_comment
+
+begin_comment
 comment|/// working directory.
+end_comment
+
+begin_comment
 comment|/// Returns an empty string if the current directory cannot be determined.
+end_comment
+
+begin_expr_stmt
 name|StringRef
 name|getCompilationDir
 argument_list|()
@@ -968,8 +1707,17 @@ return|return
 name|CompilationDir
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Set the compilation directory for DW_AT_comp_dir
+end_comment
+
+begin_comment
 comment|/// Override the default (CWD) compilation directory.
+end_comment
+
+begin_function
 name|void
 name|setCompilationDir
 parameter_list|(
@@ -985,9 +1733,21 @@ name|str
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Get the main file name for use in error messages and debug
+end_comment
+
+begin_comment
 comment|/// info. This can be set to ensure we've got the correct file name
+end_comment
+
+begin_comment
 comment|/// after preprocessing or for -save-temps.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|std
 operator|::
@@ -1001,7 +1761,13 @@ return|return
 name|MainFileName
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Set the main file name and override the default.
+end_comment
+
+begin_function
 name|void
 name|setMainFileName
 parameter_list|(
@@ -1014,9 +1780,15 @@ operator|=
 name|S
 expr_stmt|;
 block|}
-comment|/// GetDwarfFile - creates an entry in the dwarf file and directory tables.
+end_function
+
+begin_comment
+comment|/// Creates an entry in the dwarf file and directory tables.
+end_comment
+
+begin_function_decl
 name|unsigned
-name|GetDwarfFile
+name|getDwarfFile
 parameter_list|(
 name|StringRef
 name|Directory
@@ -1031,6 +1803,9 @@ name|unsigned
 name|CUID
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool
 name|isValidDwarfFileNumber
 parameter_list|(
@@ -1043,6 +1818,9 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_expr_stmt
 specifier|const
 name|std
 operator|::
@@ -1061,6 +1839,9 @@ return|return
 name|MCDwarfLineTablesCUMap
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|MCDwarfLineTable
 modifier|&
 name|getMCDwarfLineTable
@@ -1076,6 +1857,9 @@ name|CUID
 index|]
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 specifier|const
 name|MCDwarfLineTable
 modifier|&
@@ -1112,6 +1896,9 @@ operator|->
 name|second
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 specifier|const
 name|SmallVectorImpl
 operator|<
@@ -1134,6 +1921,9 @@ name|getMCDwarfFiles
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|SmallVectorImpl
 operator|<
@@ -1158,6 +1948,9 @@ name|getMCDwarfDirs
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasMCLineSections
 argument_list|()
@@ -1195,18 +1988,29 @@ condition|)
 return|return
 name|true
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-name|unsigned
+end_return
+
+begin_macro
+unit|}     unsigned
 name|getDwarfCompileUnitID
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 return|return
 name|DwarfCompileUnitID
 return|;
 block|}
+end_block
+
+begin_function
 name|void
 name|setDwarfCompileUnitID
 parameter_list|(
@@ -1219,6 +2023,9 @@ operator|=
 name|CUIndex
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|setMCLineTableCompilationDir
 parameter_list|(
@@ -1240,10 +2047,25 @@ name|CompilationDir
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// setCurrentDwarfLoc - saves the information from the currently parsed
-comment|/// dwarf .loc directive and sets DwarfLocSeen.  When the next instruction
-comment|/// is assembled an entry in the line number table with this information and
-comment|/// the address of the instruction will be created.
+end_function
+
+begin_comment
+comment|/// Saves the information from the currently parsed dwarf .loc directive
+end_comment
+
+begin_comment
+comment|/// and sets DwarfLocSeen.  When the next instruction is assembled an entry
+end_comment
+
+begin_comment
+comment|/// in the line number table with this information and the address of the
+end_comment
+
+begin_comment
+comment|/// instruction will be created.
+end_comment
+
+begin_function
 name|void
 name|setCurrentDwarfLoc
 parameter_list|(
@@ -1313,8 +2135,11 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
-name|ClearDwarfLocSeen
+name|clearDwarfLocSeen
 parameter_list|()
 block|{
 name|DwarfLocSeen
@@ -1322,6 +2147,9 @@ operator|=
 name|false
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|bool
 name|getDwarfLocSeen
 parameter_list|()
@@ -1330,6 +2158,9 @@ return|return
 name|DwarfLocSeen
 return|;
 block|}
+end_function
+
+begin_function
 specifier|const
 name|MCDwarfLoc
 modifier|&
@@ -1340,6 +2171,9 @@ return|return
 name|CurrentDwarfLoc
 return|;
 block|}
+end_function
+
+begin_function
 name|bool
 name|getGenDwarfForAssembly
 parameter_list|()
@@ -1348,6 +2182,9 @@ return|return
 name|GenDwarfForAssembly
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|setGenDwarfForAssembly
 parameter_list|(
@@ -1360,6 +2197,9 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|unsigned
 name|getGenDwarfFileNumber
 parameter_list|()
@@ -1368,6 +2208,9 @@ return|return
 name|GenDwarfFileNumber
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|setGenDwarfFileNumber
 parameter_list|(
@@ -1380,85 +2223,46 @@ operator|=
 name|FileNumber
 expr_stmt|;
 block|}
-name|MapVector
-operator|<
+end_function
+
+begin_expr_stmt
 specifier|const
+name|SetVector
+operator|<
 name|MCSection
 operator|*
-operator|,
-name|std
-operator|::
-name|pair
-operator|<
-name|MCSymbol
-operator|*
-operator|,
-name|MCSymbol
-operator|*
 operator|>
-expr|>
 operator|&
 name|getGenDwarfSectionSyms
 argument_list|()
 block|{
 return|return
-name|SectionStartEndSyms
+name|SectionsForRanges
 return|;
 block|}
-name|std
-operator|::
-name|pair
-operator|<
-name|MapVector
-operator|<
-specifier|const
-name|MCSection
-operator|*
-operator|,
-name|std
-operator|::
-name|pair
-operator|<
-name|MCSymbol
-operator|*
-operator|,
-name|MCSymbol
-operator|*
-operator|>
-expr|>
-operator|::
-name|iterator
-operator|,
+end_expr_stmt
+
+begin_function
 name|bool
-operator|>
 name|addGenDwarfSection
-argument_list|(
-argument|const MCSection *Sec
-argument_list|)
+parameter_list|(
+name|MCSection
+modifier|*
+name|Sec
+parameter_list|)
 block|{
 return|return
-name|SectionStartEndSyms
+name|SectionsForRanges
 operator|.
 name|insert
 argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
 name|Sec
-argument_list|,
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|nullptr
-argument_list|,
-name|nullptr
-argument_list|)
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function_decl
 name|void
 name|finalizeDwarfSections
 parameter_list|(
@@ -1467,6 +2271,9 @@ modifier|&
 name|MCOS
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_expr_stmt
 specifier|const
 name|std
 operator|::
@@ -1483,6 +2290,9 @@ return|return
 name|MCGenDwarfLabelEntries
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|addMCGenDwarfLabelEntry
 parameter_list|(
@@ -1500,6 +2310,9 @@ name|E
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|setDwarfDebugFlags
 parameter_list|(
@@ -1512,6 +2325,9 @@ operator|=
 name|S
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|StringRef
 name|getDwarfDebugFlags
 parameter_list|()
@@ -1520,6 +2336,9 @@ return|return
 name|DwarfDebugFlags
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|setDwarfDebugProducer
 parameter_list|(
@@ -1532,6 +2351,9 @@ operator|=
 name|S
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|StringRef
 name|getDwarfDebugProducer
 parameter_list|()
@@ -1540,6 +2362,9 @@ return|return
 name|DwarfDebugProducer
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|setDwarfVersion
 parameter_list|(
@@ -1552,6 +2377,9 @@ operator|=
 name|v
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|uint16_t
 name|getDwarfVersion
 argument_list|()
@@ -1561,7 +2389,13 @@ return|return
 name|DwarfVersion
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// @}
+end_comment
+
+begin_function
 name|char
 modifier|*
 name|getSecureLogFile
@@ -1571,6 +2405,9 @@ return|return
 name|SecureLogFile
 return|;
 block|}
+end_function
+
+begin_function
 name|raw_ostream
 modifier|*
 name|getSecureLog
@@ -1580,6 +2417,9 @@ return|return
 name|SecureLog
 return|;
 block|}
+end_function
+
+begin_function
 name|bool
 name|getSecureLogUsed
 parameter_list|()
@@ -1588,6 +2428,9 @@ return|return
 name|SecureLogUsed
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|setSecureLog
 parameter_list|(
@@ -1601,6 +2444,9 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|setSecureLogUsed
 parameter_list|(
@@ -1613,9 +2459,12 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 modifier|*
-name|Allocate
+name|allocate
 parameter_list|(
 name|unsigned
 name|Size
@@ -1637,20 +2486,35 @@ name|Align
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
-name|Deallocate
+name|deallocate
 parameter_list|(
 name|void
 modifier|*
 name|Ptr
 parameter_list|)
-block|{     }
+block|{}
+end_function
+
+begin_comment
 comment|// Unrecoverable error has occurred. Display the best diagnostic we can
+end_comment
+
+begin_comment
 comment|// and bail via exit(1). For now, most MC backend errors are unrecoverable.
+end_comment
+
+begin_comment
 comment|// FIXME: We should really do something about that.
+end_comment
+
+begin_decl_stmt
 name|LLVM_ATTRIBUTE_NORETURN
 name|void
-name|FatalError
+name|reportFatalError
 argument_list|(
 name|SMLoc
 name|L
@@ -1662,15 +2526,10 @@ name|Msg
 argument_list|)
 decl|const
 decl_stmt|;
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
+unit|};  }
 comment|// end namespace llvm
 end_comment
 
@@ -1683,7 +2542,7 @@ comment|// The throw specifications are mandated by the standard.
 end_comment
 
 begin_comment
-comment|/// @brief Placement new for using the MCContext's allocator.
+comment|/// \brief Placement new for using the MCContext's allocator.
 end_comment
 
 begin_comment
@@ -1711,11 +2570,11 @@ comment|/// Usage looks like this (assuming there's an MCContext 'Context' in sc
 end_comment
 
 begin_comment
-comment|/// @code
+comment|/// \code
 end_comment
 
 begin_comment
-comment|/// // Default alignment (16)
+comment|/// // Default alignment (8)
 end_comment
 
 begin_comment
@@ -1727,11 +2586,11 @@ comment|/// // Specific alignment
 end_comment
 
 begin_comment
-comment|/// IntegerLiteral *Ex2 = new (Context, 8) IntegerLiteral(arguments);
+comment|/// IntegerLiteral *Ex2 = new (Context, 4) IntegerLiteral(arguments);
 end_comment
 
 begin_comment
-comment|/// @endcode
+comment|/// \endcode
 end_comment
 
 begin_comment
@@ -1743,7 +2602,7 @@ comment|/// deallocated using an explicit destructor call followed by
 end_comment
 
 begin_comment
-comment|/// @c Context.Deallocate(Ptr).
+comment|/// \c Context.Deallocate(Ptr).
 end_comment
 
 begin_comment
@@ -1751,15 +2610,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param Bytes The number of bytes to allocate. Calculated by the compiler.
+comment|/// \param Bytes The number of bytes to allocate. Calculated by the compiler.
 end_comment
 
 begin_comment
-comment|/// @param C The MCContext that provides the allocator.
+comment|/// \param C The MCContext that provides the allocator.
 end_comment
 
 begin_comment
-comment|/// @param Alignment The alignment of the allocated memory (if the underlying
+comment|/// \param Alignment The alignment of the allocated memory (if the underlying
 end_comment
 
 begin_comment
@@ -1767,7 +2626,7 @@ comment|///                  allocator supports it).
 end_comment
 
 begin_comment
-comment|/// @return The allocated memory. Could be NULL.
+comment|/// \return The allocated memory. Could be NULL.
 end_comment
 
 begin_decl_stmt
@@ -1789,7 +2648,7 @@ argument_list|,
 name|size_t
 name|Alignment
 operator|=
-literal|16
+literal|8
 argument_list|)
 name|throw
 argument_list|()
@@ -1797,7 +2656,7 @@ block|{
 return|return
 name|C
 operator|.
-name|Allocate
+name|allocate
 argument_list|(
 name|Bytes
 argument_list|,
@@ -1808,7 +2667,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// @brief Placement delete companion to the new above.
+comment|/// \brief Placement delete companion to the new above.
 end_comment
 
 begin_comment
@@ -1854,7 +2713,7 @@ argument_list|()
 block|{
 name|C
 operator|.
-name|Deallocate
+name|deallocate
 argument_list|(
 name|Ptr
 argument_list|)
@@ -1879,11 +2738,11 @@ comment|/// Usage looks like this (assuming there's an MCContext 'Context' in sc
 end_comment
 
 begin_comment
-comment|/// @code
+comment|/// \code
 end_comment
 
 begin_comment
-comment|/// // Default alignment (16)
+comment|/// // Default alignment (8)
 end_comment
 
 begin_comment
@@ -1895,11 +2754,11 @@ comment|/// // Specific alignment
 end_comment
 
 begin_comment
-comment|/// char *data = new (Context, 8) char[10];
+comment|/// char *data = new (Context, 4) char[10];
 end_comment
 
 begin_comment
-comment|/// @endcode
+comment|/// \endcode
 end_comment
 
 begin_comment
@@ -1911,7 +2770,7 @@ comment|/// deallocated using an explicit destructor call followed by
 end_comment
 
 begin_comment
-comment|/// @c Context.Deallocate(Ptr).
+comment|/// \c Context.Deallocate(Ptr).
 end_comment
 
 begin_comment
@@ -1919,15 +2778,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param Bytes The number of bytes to allocate. Calculated by the compiler.
+comment|/// \param Bytes The number of bytes to allocate. Calculated by the compiler.
 end_comment
 
 begin_comment
-comment|/// @param C The MCContext that provides the allocator.
+comment|/// \param C The MCContext that provides the allocator.
 end_comment
 
 begin_comment
-comment|/// @param Alignment The alignment of the allocated memory (if the underlying
+comment|/// \param Alignment The alignment of the allocated memory (if the underlying
 end_comment
 
 begin_comment
@@ -1935,7 +2794,7 @@ comment|///                  allocator supports it).
 end_comment
 
 begin_comment
-comment|/// @return The allocated memory. Could be NULL.
+comment|/// \return The allocated memory. Could be NULL.
 end_comment
 
 begin_decl_stmt
@@ -1958,7 +2817,7 @@ argument_list|,
 name|size_t
 name|Alignment
 operator|=
-literal|16
+literal|8
 argument_list|)
 name|throw
 argument_list|()
@@ -1966,7 +2825,7 @@ block|{
 return|return
 name|C
 operator|.
-name|Allocate
+name|allocate
 argument_list|(
 name|Bytes
 argument_list|,
@@ -1977,7 +2836,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// @brief Placement delete[] companion to the new[] above.
+comment|/// \brief Placement delete[] companion to the new[] above.
 end_comment
 
 begin_comment
@@ -2022,7 +2881,7 @@ argument_list|()
 block|{
 name|C
 operator|.
-name|Deallocate
+name|deallocate
 argument_list|(
 name|Ptr
 argument_list|)

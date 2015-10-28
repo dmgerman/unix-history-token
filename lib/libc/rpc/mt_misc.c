@@ -432,7 +432,9 @@ name|struct
 name|rpc_createerr
 modifier|*
 name|__rpc_createerr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|rpc_createerr

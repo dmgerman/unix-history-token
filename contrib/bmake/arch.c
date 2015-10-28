@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: arch.c,v 1.63 2012/06/12 19:21:50 joerg Exp $	*/
+comment|/*	$NetBSD: arch.c,v 1.64 2015/10/11 04:51:24 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: arch.c,v 1.63 2012/06/12 19:21:50 joerg Exp $"
+literal|"$NetBSD: arch.c,v 1.64 2015/10/11 04:51:24 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: arch.c,v 1.63 2012/06/12 19:21:50 joerg Exp $"
+literal|"$NetBSD: arch.c,v 1.64 2015/10/11 04:51:24 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -914,6 +914,8 @@ name|ctxt
 argument_list|,
 name|TRUE
 argument_list|,
+name|TRUE
+argument_list|,
 operator|&
 name|length
 argument_list|,
@@ -978,6 +980,8 @@ argument_list|,
 name|libName
 argument_list|,
 name|ctxt
+argument_list|,
+name|TRUE
 argument_list|,
 name|TRUE
 argument_list|)
@@ -1078,6 +1082,8 @@ argument_list|(
 name|cp
 argument_list|,
 name|ctxt
+argument_list|,
+name|TRUE
 argument_list|,
 name|TRUE
 argument_list|,
@@ -1202,6 +1208,8 @@ argument_list|,
 name|memName
 argument_list|,
 name|ctxt
+argument_list|,
+name|TRUE
 argument_list|,
 name|TRUE
 argument_list|)

@@ -78,7 +78,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: size.c 3183 2015-04-10 16:18:42Z emaste $"
+literal|"$Id: size.c 3242 2015-08-07 12:47:11Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2074,12 +2074,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|size
-operator|=
-name|addr
-operator|=
-literal|0
-expr_stmt|;
 name|split
 operator|=
 operator|(

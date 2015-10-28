@@ -213,6 +213,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
+operator|(
 name|x
 operator|<<
 name|r
@@ -225,6 +226,7 @@ operator|(
 literal|32
 operator|-
 name|r
+operator|)
 operator|)
 operator|)
 return|;
@@ -245,6 +247,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
+operator|(
 name|x
 operator|<<
 name|r
@@ -257,6 +260,7 @@ operator|(
 literal|64
 operator|-
 name|r
+operator|)
 operator|)
 operator|)
 return|;
@@ -373,9 +377,9 @@ literal|33
 expr_stmt|;
 name|k
 operator|*=
-name|QU
+name|KQU
 argument_list|(
-literal|0xff51afd7ed558ccdLLU
+literal|0xff51afd7ed558ccd
 argument_list|)
 expr_stmt|;
 name|k
@@ -386,9 +390,9 @@ literal|33
 expr_stmt|;
 name|k
 operator|*=
-name|QU
+name|KQU
 argument_list|(
-literal|0xc4ceb9fe1a85ec53LLU
+literal|0xc4ceb9fe1a85ec53
 argument_list|)
 expr_stmt|;
 name|k
@@ -1510,18 +1514,18 @@ specifier|const
 name|uint64_t
 name|c1
 init|=
-name|QU
+name|KQU
 argument_list|(
-literal|0x87c37b91114253d5LLU
+literal|0x87c37b91114253d5
 argument_list|)
 decl_stmt|;
 specifier|const
 name|uint64_t
 name|c2
 init|=
-name|QU
+name|KQU
 argument_list|(
-literal|0x4cf5ad432745937fLLU
+literal|0x4cf5ad432745937f
 argument_list|)
 decl_stmt|;
 comment|/* body */

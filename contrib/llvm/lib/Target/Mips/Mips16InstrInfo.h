@@ -76,6 +76,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MipsSubtarget
+decl_stmt|;
+name|class
 name|Mips16InstrInfo
 range|:
 name|public
@@ -251,6 +254,7 @@ argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// Emit a series of instructions to load an immediate.
 comment|// This is to adjust some FrameReg. We return the new register to be used

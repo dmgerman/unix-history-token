@@ -33,6 +33,12 @@ directive|include
 file|<net/vnet.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/mbuf.h>
+end_include
+
 begin_comment
 comment|/*  * Kernel variables for tcp.  */
 end_comment
@@ -210,46 +216,6 @@ end_define
 begin_comment
 comment|/* for KAME src sync over BSD*'s */
 end_comment
-
-begin_comment
-comment|/* Neighbor Discovery, Neighbor Unreachability Detection Upper layer hint. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ND6_HINT
-parameter_list|(
-name|tp
-parameter_list|)
-define|\
-value|do {								\ 	if ((tp)&& (tp)->t_inpcb&&				\ 	    ((tp)->t_inpcb->inp_vflag& INP_IPV6) != 0)		\ 		nd6_nud_hint(NULL, NULL, 0);			\ } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ND6_HINT
-parameter_list|(
-name|tp
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Tcp control block, one per tcp; fields:  * Organized for 16 byte cacheline efficiency.  */
@@ -650,13 +616,60 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* 1 TCP_SIGNATURE, 3 TBD */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|TCPPCAP
+argument_list|)
+name|struct
+name|mbufq
+name|t_inpkts
+decl_stmt|;
+comment|/* List of saved input packets. */
+name|struct
+name|mbufq
+name|t_outpkts
+decl_stmt|;
+comment|/* List of saved output packets. */
+ifdef|#
+directive|ifdef
+name|_LP64
+name|uint64_t
+name|_pad
+index|[
+literal|0
+index|]
+decl_stmt|;
+comment|/* all used! */
+else|#
+directive|else
+name|uint64_t
+name|_pad
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* 2 are available */
+endif|#
+directive|endif
+comment|/* _LP64 */
+else|#
+directive|else
 name|uint64_t
 name|_pad
 index|[
 literal|6
 index|]
 decl_stmt|;
-comment|/* 6 TBD (1-2 CC/RTT?) */
+endif|#
+directive|endif
+comment|/* defined(_KERNEL)&& defined(TCPPCAP) */
 block|}
 struct|;
 end_struct
@@ -2493,7 +2506,7 @@ name|VNET_DECLARE
 argument_list|(
 name|int
 argument_list|,
-name|tcp_do_initcwnd10
+name|tcp_initcwnd_segments
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2593,8 +2606,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|V_tcp_do_initcwnd10
-value|VNET(tcp_do_initcwnd10)
+name|V_tcp_initcwnd_segments
+value|VNET(tcp_initcwnd_segments)
 end_define
 
 begin_define
@@ -3091,21 +3104,6 @@ name|struct
 name|inpcb
 modifier|*
 name|tcp_drop_syn_sent
-parameter_list|(
-name|struct
-name|inpcb
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|inpcb
-modifier|*
-name|tcp_mtudisc
 parameter_list|(
 name|struct
 name|inpcb

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -107,11 +107,22 @@ begin_comment
 comment|/*  * Emulation of kernel services in userland.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
+
 begin_decl_stmt
 name|int
 name|aok
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|uint64_t

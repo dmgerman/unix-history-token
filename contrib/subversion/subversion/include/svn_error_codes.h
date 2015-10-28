@@ -213,6 +213,10 @@ define|#
 directive|define
 name|SVN_ERR_MALFUNC_CATEGORY_START
 value|(APR_OS_START_USERERR \                                          + (23 * SVN_ERR_CATEGORY_SIZE))
+define|#
+directive|define
+name|SVN_ERR_X509_CATEGORY_START
+value|(APR_OS_START_USERERR \                                          + (24 * SVN_ERR_CATEGORY_SIZE))
 endif|#
 directive|endif
 comment|/* DOXYGEN_SHOULD_SKIP_THIS */
@@ -384,6 +388,17 @@ literal|15
 argument_list|,
 literal|"Invalid atomic"
 argument_list|)
+comment|/** @since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_BAD_COMPRESSION_METHOD
+argument_list|,
+name|SVN_ERR_BAD_CATEGORY_START
+operator|+
+literal|16
+argument_list|,
+literal|"Invalid compression method"
+argument_list|)
 comment|/* xml errors */
 name|SVN_ERRDEF
 argument_list|(
@@ -434,6 +449,17 @@ operator|+
 literal|4
 argument_list|,
 literal|"Data cannot be safely XML-escaped"
+argument_list|)
+comment|/** @since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_XML_UNEXPECTED_ELEMENT
+argument_list|,
+name|SVN_ERR_XML_CATEGORY_START
+operator|+
+literal|5
+argument_list|,
+literal|"Unexpected XML element found"
 argument_list|)
 comment|/* io errors */
 name|SVN_ERRDEF
@@ -561,6 +587,17 @@ operator|+
 literal|3
 argument_list|,
 literal|"Stream doesn't support seeking"
+argument_list|)
+comment|/** Since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_STREAM_NOT_SUPPORTED
+argument_list|,
+name|SVN_ERR_STREAM_CATEGORY_START
+operator|+
+literal|4
+argument_list|,
+literal|"Stream doesn't support this capability"
 argument_list|)
 comment|/* node errors */
 name|SVN_ERRDEF
@@ -1651,6 +1688,127 @@ literal|52
 argument_list|,
 literal|"Could not initialize the revprop caching infrastructure."
 argument_list|)
+comment|/** @since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_FS_MALFORMED_TXN_ID
+argument_list|,
+name|SVN_ERR_FS_CATEGORY_START
+operator|+
+literal|53
+argument_list|,
+literal|"Malformed transaction ID string."
+argument_list|)
+comment|/** @since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_FS_INDEX_CORRUPTION
+argument_list|,
+name|SVN_ERR_FS_CATEGORY_START
+operator|+
+literal|54
+argument_list|,
+literal|"Corrupt index file."
+argument_list|)
+comment|/** @since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_FS_INDEX_REVISION
+argument_list|,
+name|SVN_ERR_FS_CATEGORY_START
+operator|+
+literal|55
+argument_list|,
+literal|"Revision not covered by index."
+argument_list|)
+comment|/** @since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_FS_INDEX_OVERFLOW
+argument_list|,
+name|SVN_ERR_FS_CATEGORY_START
+operator|+
+literal|56
+argument_list|,
+literal|"Item index too large for this revision."
+argument_list|)
+comment|/** @since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_FS_CONTAINER_INDEX
+argument_list|,
+name|SVN_ERR_FS_CATEGORY_START
+operator|+
+literal|57
+argument_list|,
+literal|"Container index out of range."
+argument_list|)
+comment|/** @since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_FS_INDEX_INCONSISTENT
+argument_list|,
+name|SVN_ERR_FS_CATEGORY_START
+operator|+
+literal|58
+argument_list|,
+literal|"Index files are inconsistent."
+argument_list|)
+comment|/** @since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_FS_LOCK_OPERATION_FAILED
+argument_list|,
+name|SVN_ERR_FS_CATEGORY_START
+operator|+
+literal|59
+argument_list|,
+literal|"Lock operation failed"
+argument_list|)
+comment|/** @since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_FS_UNSUPPORTED_TYPE
+argument_list|,
+name|SVN_ERR_FS_CATEGORY_START
+operator|+
+literal|60
+argument_list|,
+literal|"Unsupported FS type"
+argument_list|)
+comment|/** @since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_FS_CONTAINER_SIZE
+argument_list|,
+name|SVN_ERR_FS_CATEGORY_START
+operator|+
+literal|61
+argument_list|,
+literal|"Container capacity exceeded."
+argument_list|)
+comment|/** @since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_FS_MALFORMED_NODEREV_ID
+argument_list|,
+name|SVN_ERR_FS_CATEGORY_START
+operator|+
+literal|62
+argument_list|,
+literal|"Malformed node revision ID string."
+argument_list|)
+comment|/** @since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_FS_INVALID_GENERATION
+argument_list|,
+name|SVN_ERR_FS_CATEGORY_START
+operator|+
+literal|63
+argument_list|,
+literal|"Invalid generation number data."
+argument_list|)
 comment|/* repos errors */
 name|SVN_ERRDEF
 argument_list|(
@@ -1903,6 +2061,17 @@ literal|12
 argument_list|,
 literal|"Can't create tunnel"
 argument_list|)
+comment|/** @since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_RA_CANNOT_CREATE_SESSION
+argument_list|,
+name|SVN_ERR_RA_CATEGORY_START
+operator|+
+literal|13
+argument_list|,
+literal|"Can't create session"
+argument_list|)
 comment|/* ra_dav errors */
 name|SVN_ERRDEF
 argument_list|(
@@ -2050,6 +2219,28 @@ operator|+
 literal|13
 argument_list|,
 literal|"URL access forbidden for unknown reason"
+argument_list|)
+comment|/** @since New in 1.9 */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_RA_DAV_PRECONDITION_FAILED
+argument_list|,
+name|SVN_ERR_RA_DAV_CATEGORY_START
+operator|+
+literal|14
+argument_list|,
+literal|"The server state conflicts with the requested preconditions"
+argument_list|)
+comment|/** @since New in 1.9 */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_RA_DAV_METHOD_NOT_ALLOWED
+argument_list|,
+name|SVN_ERR_RA_DAV_CATEGORY_START
+operator|+
+literal|15
+argument_list|,
+literal|"The URL doesn't allow the requested method"
 argument_list|)
 comment|/* ra_local errors */
 name|SVN_ERRDEF
@@ -2850,6 +3041,61 @@ literal|38
 argument_list|,
 literal|"Atomic data storage is corrupt"
 argument_list|)
+comment|/** @since New in 1.8. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_UTF8PROC_ERROR
+argument_list|,
+name|SVN_ERR_MISC_CATEGORY_START
+operator|+
+literal|39
+argument_list|,
+literal|"utf8proc library error"
+argument_list|)
+comment|/** @since New in 1.8. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_UTF8_GLOB
+argument_list|,
+name|SVN_ERR_MISC_CATEGORY_START
+operator|+
+literal|40
+argument_list|,
+literal|"Bad arguments to SQL operators GLOB or LIKE"
+argument_list|)
+comment|/** @since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_CORRUPT_PACKED_DATA
+argument_list|,
+name|SVN_ERR_MISC_CATEGORY_START
+operator|+
+literal|41
+argument_list|,
+literal|"Packed data stream is corrupt"
+argument_list|)
+comment|/** @since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_COMPOSED_ERROR
+argument_list|,
+name|SVN_ERR_MISC_CATEGORY_START
+operator|+
+literal|42
+argument_list|,
+literal|"Additional errors:"
+argument_list|)
+comment|/** @since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_INVALID_INPUT
+argument_list|,
+name|SVN_ERR_MISC_CATEGORY_START
+operator|+
+literal|43
+argument_list|,
+literal|"Parser error: invalid input"
+argument_list|)
 comment|/* command-line client errors */
 name|SVN_ERRDEF
 argument_list|(
@@ -2970,6 +3216,17 @@ operator|+
 literal|11
 argument_list|,
 literal|"Failed processing one or more externals definitions"
+argument_list|)
+comment|/** @since New in 1.9. */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_CL_REPOS_VERIFY_FAILED
+argument_list|,
+name|SVN_ERR_CL_CATEGORY_START
+operator|+
+literal|12
+argument_list|,
+literal|"Repository verification failed"
 argument_list|)
 comment|/* ra_svn errors */
 name|SVN_ERRDEF
@@ -3183,7 +3440,7 @@ argument_list|,
 literal|"Diff data source modified unexpectedly"
 argument_list|)
 comment|/* libsvn_ra_serf errors */
-comment|/** @since New in 1.5. */
+comment|/** @since New in 1.5.       @deprecated SSPI now handled by serf rather than libsvn_ra_serf. */
 name|SVN_ERRDEF
 argument_list|(
 name|SVN_ERR_RA_SERF_SSPI_INITIALISATION_FAILED
@@ -3194,7 +3451,7 @@ literal|0
 argument_list|,
 literal|"Initialization of SSPI library failed"
 argument_list|)
-comment|/** @since New in 1.5. */
+comment|/** @since New in 1.5.       @deprecated Certificate verification now handled by serf rather                   than libsvn_ra_serf. */
 name|SVN_ERRDEF
 argument_list|(
 name|SVN_ERR_RA_SERF_SSL_CERT_UNTRUSTED
@@ -3247,6 +3504,207 @@ operator|+
 literal|1
 argument_list|,
 literal|"No non-tracing links found in the error chain"
+argument_list|)
+comment|/* X509 parser errors.    * Names of these error codes are based on tropicssl error codes.    * @since New in 1.9 */
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_ASN1_OUT_OF_DATA
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|0
+argument_list|,
+literal|"Unexpected end of ASN1 data"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_ASN1_UNEXPECTED_TAG
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|1
+argument_list|,
+literal|"Unexpected ASN1 tag"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_ASN1_INVALID_LENGTH
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|2
+argument_list|,
+literal|"Invalid ASN1 length"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_ASN1_LENGTH_MISMATCH
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|3
+argument_list|,
+literal|"ASN1 length mismatch"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_ASN1_INVALID_DATA
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|4
+argument_list|,
+literal|"Invalid ASN1 data"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_X509_FEATURE_UNAVAILABLE
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|5
+argument_list|,
+literal|"Unavailable X509 feature"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_X509_CERT_INVALID_PEM
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|6
+argument_list|,
+literal|"Invalid PEM certificate"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_X509_CERT_INVALID_FORMAT
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|7
+argument_list|,
+literal|"Invalid certificate format"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_X509_CERT_INVALID_VERSION
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|8
+argument_list|,
+literal|"Invalid certificate version"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_X509_CERT_INVALID_SERIAL
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|9
+argument_list|,
+literal|"Invalid certificate serial number"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_X509_CERT_INVALID_ALG
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|10
+argument_list|,
+literal|"Found invalid algorithm in certificate"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_X509_CERT_INVALID_NAME
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|11
+argument_list|,
+literal|"Found invalid name in certificate"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_X509_CERT_INVALID_DATE
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|12
+argument_list|,
+literal|"Found invalid date in certificate"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_X509_CERT_INVALID_PUBKEY
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|13
+argument_list|,
+literal|"Found invalid public key in certificate"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_X509_CERT_INVALID_SIGNATURE
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|14
+argument_list|,
+literal|"Found invalid signature in certificate"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_X509_CERT_INVALID_EXTENSIONS
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|15
+argument_list|,
+literal|"Found invalid extensions in certificate"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_X509_CERT_UNKNOWN_VERSION
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|16
+argument_list|,
+literal|"Unknown certificate version"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_X509_CERT_UNKNOWN_PK_ALG
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|17
+argument_list|,
+literal|"Certificate uses unknown public key algorithm"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_X509_CERT_SIG_MISMATCH
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|18
+argument_list|,
+literal|"Certificate signature mismatch"
+argument_list|)
+name|SVN_ERRDEF
+argument_list|(
+name|SVN_ERR_X509_CERT_VERIFY_FAILED
+argument_list|,
+name|SVN_ERR_X509_CATEGORY_START
+operator|+
+literal|19
+argument_list|,
+literal|"Certficate verification failed"
 argument_list|)
 name|SVN_ERROR_END
 undef|#

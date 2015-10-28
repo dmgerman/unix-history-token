@@ -156,7 +156,7 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
-comment|/// Generic Sema callback for assembly parser.
+comment|/// \brief Generic Sema callback for assembly parser.
 name|class
 name|MCAsmParserSemaCallback
 block|{
@@ -225,8 +225,8 @@ literal|0
 function_decl|;
 block|}
 empty_stmt|;
-comment|/// Generic assembler parser interface, for use by target specific assembly
-comment|/// parsers.
+comment|/// \brief Generic assembler parser interface, for use by target specific
+comment|/// assembly parsers.
 name|class
 name|MCAsmParser
 block|{
@@ -263,9 +263,12 @@ name|private
 label|:
 name|MCAsmParser
 argument_list|(
-argument|const MCAsmParser&
+specifier|const
+name|MCAsmParser
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -275,7 +278,8 @@ specifier|const
 name|MCAsmParser
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|MCTargetAsmParser
 modifier|*
@@ -308,6 +312,19 @@ name|Directive
 parameter_list|,
 name|ExtensionDirectiveHandler
 name|Handler
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|void
+name|addAliasForDirective
+parameter_list|(
+name|StringRef
+name|Directive
+parameter_list|,
+name|StringRef
+name|Alias
 parameter_list|)
 init|=
 literal|0
@@ -357,7 +374,7 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// Return the output streamer for the assembler.
+comment|/// \brief Return the output streamer for the assembler.
 name|virtual
 name|MCStreamer
 modifier|&
@@ -423,7 +440,7 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
-comment|/// Run the parser on the input source buffer.
+comment|/// \brief Run the parser on the input source buffer.
 name|virtual
 name|bool
 name|Run
@@ -456,7 +473,7 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// Parse ms-style inline assembly.
+comment|/// \brief Parse MS-style inline assembly.
 name|virtual
 name|bool
 name|parseMSInlineAsm
@@ -528,7 +545,7 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
-comment|/// Emit a note at the location \p L, with the message \p Msg.
+comment|/// \brief Emit a note at the location \p L, with the message \p Msg.
 name|virtual
 name|void
 name|Note
@@ -552,7 +569,7 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
-comment|/// Emit a warning at the location \p L, with the message \p Msg.
+comment|/// \brief Emit a warning at the location \p L, with the message \p Msg.
 comment|///
 comment|/// \return The return value is true, if warnings are fatal.
 name|virtual
@@ -578,7 +595,7 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
-comment|/// Emit an error at the location \p L, with the message \p Msg.
+comment|/// \brief Emit an error at the location \p L, with the message \p Msg.
 comment|///
 comment|/// \return The return value is always true, as an idiomatic convenience to
 comment|/// clients.
@@ -605,8 +622,8 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
-comment|/// Get the next AsmToken in the stream, possibly handling file inclusion
-comment|/// first.
+comment|/// \brief Get the next AsmToken in the stream, possibly handling file
+comment|/// inclusion first.
 name|virtual
 specifier|const
 name|AsmToken
@@ -616,7 +633,7 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// Get the current AsmToken from the stream.
+comment|/// \brief Get the current AsmToken from the stream.
 specifier|const
 name|AsmToken
 operator|&
@@ -642,8 +659,8 @@ operator|=
 name|None
 argument_list|)
 decl_stmt|;
-comment|/// Parse an identifier or string (as a quoted identifier) and set \p Res to
-comment|/// the identifier contents.
+comment|/// \brief Parse an identifier or string (as a quoted identifier) and set \p
+comment|/// Res to the identifier contents.
 name|virtual
 name|bool
 name|parseIdentifier
@@ -665,8 +682,8 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// Parse the current token as a string which may include escaped characters
-comment|/// and return the string contents.
+comment|/// \brief Parse the current token as a string which may include escaped
+comment|/// characters and return the string contents.
 name|virtual
 name|bool
 name|parseEscapedString
@@ -680,7 +697,7 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
-comment|/// Skip to the end of the current statement, for error recovery.
+comment|/// \brief Skip to the end of the current statement, for error recovery.
 name|virtual
 name|void
 name|eatToEndOfStatement
@@ -688,11 +705,11 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// Parse an arbitrary expression.
+comment|/// \brief Parse an arbitrary expression.
 comment|///
-comment|/// @param Res - The value of the expression. The result is undefined
+comment|/// \param Res - The value of the expression. The result is undefined
 comment|/// on error.
-comment|/// @result - False on success.
+comment|/// \return - False on success.
 name|virtual
 name|bool
 name|parseExpression
@@ -720,11 +737,11 @@ modifier|&
 name|Res
 parameter_list|)
 function_decl|;
-comment|/// Parse a primary expression.
+comment|/// \brief Parse a primary expression.
 comment|///
-comment|/// @param Res - The value of the expression. The result is undefined
+comment|/// \param Res - The value of the expression. The result is undefined
 comment|/// on error.
-comment|/// @result - False on success.
+comment|/// \return - False on success.
 name|virtual
 name|bool
 name|parsePrimaryExpr
@@ -742,12 +759,12 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// Parse an arbitrary expression, assuming that an initial '(' has already
-comment|/// been consumed.
+comment|/// \brief Parse an arbitrary expression, assuming that an initial '(' has
+comment|/// already been consumed.
 comment|///
-comment|/// @param Res - The value of the expression. The result is undefined
+comment|/// \param Res - The value of the expression. The result is undefined
 comment|/// on error.
-comment|/// @result - False on success.
+comment|/// \return - False on success.
 name|virtual
 name|bool
 name|parseParenExpression
@@ -765,11 +782,11 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// Parse an expression which must evaluate to an absolute value.
+comment|/// \brief Parse an expression which must evaluate to an absolute value.
 comment|///
-comment|/// @param Res - The value of the absolute expression. The result is undefined
+comment|/// \param Res - The value of the absolute expression. The result is undefined
 comment|/// on error.
-comment|/// @result - False on success.
+comment|/// \return - False on success.
 name|virtual
 name|bool
 name|parseAbsoluteExpression
@@ -781,12 +798,40 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// Ensure that we have a valid section set in the streamer. Otherwise, report
-comment|/// an error and switch to .text.
+comment|/// \brief Ensure that we have a valid section set in the streamer. Otherwise,
+comment|/// report an error and switch to .text.
 name|virtual
 name|void
 name|checkForValidSection
 parameter_list|()
+init|=
+literal|0
+function_decl|;
+comment|/// \brief Parse an arbitrary expression of a specified parenthesis depth,
+comment|/// assuming that the initial '(' characters have already been consumed.
+comment|///
+comment|/// \param ParenDepth - Specifies how many trailing expressions outside the
+comment|/// current parentheses we have to parse.
+comment|/// \param Res - The value of the expression. The result is undefined
+comment|/// on error.
+comment|/// \return - False on success.
+name|virtual
+name|bool
+name|parseParenExprOfDepth
+parameter_list|(
+name|unsigned
+name|ParenDepth
+parameter_list|,
+specifier|const
+name|MCExpr
+modifier|*
+modifier|&
+name|Res
+parameter_list|,
+name|SMLoc
+modifier|&
+name|EndLoc
+parameter_list|)
 init|=
 literal|0
 function_decl|;

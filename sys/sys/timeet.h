@@ -143,6 +143,7 @@ argument_list|)
 name|et_all
 expr_stmt|;
 comment|/* Pointer to the next event timer. */
+specifier|const
 name|char
 modifier|*
 name|et_name

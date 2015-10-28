@@ -163,7 +163,7 @@ name|MCPhysReg
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction *MF = nullptr
+argument|const MachineFunction *MF
 argument_list|)
 specifier|const
 name|override
@@ -173,6 +173,8 @@ name|uint32_t
 operator|*
 name|getCallPreservedMask
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|CallingConv::ID CC
 argument_list|)
 specifier|const

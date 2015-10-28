@@ -82,6 +82,17 @@ value|0x4
 end_define
 
 begin_comment
+comment|/** number of rrs and rrsets for integer overflow protection.  More than  * this is not really possible (64K packet has much less RRs and RRsets) in  * a message.  And this is small enough that also multiplied there is no  * integer overflow. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RR_COUNT_MAX
+value|0xffffff
+end_define
+
+begin_comment
 comment|/**  * The identifying information for an RRset.  */
 end_comment
 

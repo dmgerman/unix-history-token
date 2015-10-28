@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -106,8 +112,12 @@ argument_list|()
 expr_stmt|;
 block|}
 empty_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|DataStreamer
-modifier|*
+operator|>
 name|getDataFileStreamer
 argument_list|(
 specifier|const
@@ -123,7 +133,7 @@ name|string
 operator|*
 name|Err
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 block|}
 end_decl_stmt
 

@@ -15,6 +15,12 @@ directive|define
 name|IEEE802_11_DEFS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<utils/common.h>
+end_include
+
 begin_comment
 comment|/* IEEE 802.11 defines */
 end_comment
@@ -975,8 +981,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|WLAN_STATUS_REJECTED_WITH_SUGGESTED_BSS_TRANSITION
+value|82
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_STATUS_PENDING_ADMITTING_FST_SESSION
+value|86
+end_define
+
+begin_define
+define|#
+directive|define
 name|WLAN_STATUS_QUERY_RESP_OUTSTANDING
 value|95
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_STATUS_DENIED_WITH_SUGGESTED_BAND_AND_CHANNEL
+value|99
 end_define
 
 begin_define
@@ -1672,6 +1699,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|WLAN_EID_MULTI_BAND
+value|158
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_EID_SESSION_TRANSITION
+value|164
+end_define
+
+begin_define
+define|#
+directive|define
 name|WLAN_EID_VHT_CAP
 value|191
 end_define
@@ -1851,6 +1892,13 @@ end_define
 begin_comment
 comment|/* WMM Specification 1.1 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|WLAN_ACTION_FST
+value|18
+end_define
 
 begin_define
 define|#
@@ -2652,9 +2700,7 @@ decl_stmt|;
 comment|/* possibly followed by Challenge text */
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
@@ -2667,9 +2713,7 @@ name|reason_code
 decl_stmt|;
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
@@ -2686,9 +2730,7 @@ decl_stmt|;
 comment|/* followed by SSID and Supported rates */
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
@@ -2708,9 +2750,7 @@ decl_stmt|;
 comment|/* followed by Supported rates */
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
@@ -2735,9 +2775,7 @@ decl_stmt|;
 comment|/* followed by SSID and Supported rates */
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
@@ -2750,9 +2788,7 @@ name|reason_code
 decl_stmt|;
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
@@ -2775,9 +2811,7 @@ decl_stmt|;
 comment|/* followed by some of SSID, Supported rates, 			 * FH Params, DS Params, CF Params, IBSS Params, TIM */
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
@@ -2813,9 +2847,7 @@ decl_stmt|;
 comment|/* followed by some of SSID, Supported rates, 			 * FH Params, DS Params, CF Params, IBSS Params */
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
@@ -2841,9 +2873,7 @@ name|status_code
 decl_stmt|;
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
@@ -2892,9 +2922,7 @@ index|]
 decl_stmt|;
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 comment|/* FT Request */
 block|}
@@ -2923,9 +2951,7 @@ name|status_code
 decl_stmt|;
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 comment|/* FT Request */
 block|}
@@ -2973,9 +2999,7 @@ name|dialogtoken
 decl_stmt|;
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
@@ -2994,9 +3018,7 @@ name|keydata_len
 decl_stmt|;
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
@@ -3009,9 +3031,7 @@ name|action
 decl_stmt|;
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
@@ -3032,9 +3052,7 @@ decl_stmt|;
 comment|/* Vendor-specific content */
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
@@ -3061,9 +3079,7 @@ decl_stmt|;
 comment|/* BSS Termination Duration (optional), 					 * Session Information URL (optional), 					 * BSS Transition Candidate List 					 * Entries */
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
@@ -3087,9 +3103,7 @@ decl_stmt|;
 comment|/* Target BSSID (optional), 					 * BSS Transition Candidate List 					 * Entries (optional) */
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
@@ -3110,9 +3124,7 @@ decl_stmt|;
 comment|/* BSS Transition Candidate List 					 * Entries (optional) */
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
@@ -3126,13 +3138,24 @@ decl_stmt|;
 comment|/* 15 */
 name|u8
 name|variable
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
 name|slf_prot_action
+struct|;
+struct|struct
+block|{
+name|u8
+name|action
+decl_stmt|;
+name|u8
+name|variable
+index|[]
+decl_stmt|;
+block|}
+name|STRUCT_PACKED
+name|fst_action
 struct|;
 block|}
 name|u
@@ -5284,6 +5307,39 @@ value|BIT(7)
 end_define
 
 begin_comment
+comment|/* P2PS Coordination Protocol Transport Bitmap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P2PS_FEATURE_CAPAB_UDP_TRANSPORT
+value|BIT(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|P2PS_FEATURE_CAPAB_MAC_TRANSPORT
+value|BIT(1)
+end_define
+
+begin_struct
+struct|struct
+name|p2ps_feature_capab
+block|{
+name|u8
+name|cpt
+decl_stmt|;
+name|u8
+name|reserved
+decl_stmt|;
+block|}
+name|STRUCT_PACKED
+struct|;
+end_struct
+
+begin_comment
 comment|/* Invitation Flags */
 end_comment
 
@@ -6482,6 +6538,224 @@ block|}
 name|STRUCT_PACKED
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SSID_MAX_LEN
+value|32
+end_define
+
+begin_comment
+comment|/* IEEE Std 802.11ad-2012 - Multi-band element */
+end_comment
+
+begin_struct
+struct|struct
+name|multi_band_ie
+block|{
+name|u8
+name|eid
+decl_stmt|;
+comment|/* WLAN_EID_MULTI_BAND */
+name|u8
+name|len
+decl_stmt|;
+name|u8
+name|mb_ctrl
+decl_stmt|;
+name|u8
+name|band_id
+decl_stmt|;
+name|u8
+name|op_class
+decl_stmt|;
+name|u8
+name|chan
+decl_stmt|;
+name|u8
+name|bssid
+index|[
+name|ETH_ALEN
+index|]
+decl_stmt|;
+name|le16
+name|beacon_int
+decl_stmt|;
+name|u8
+name|tsf_offs
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|u8
+name|mb_connection_capability
+decl_stmt|;
+name|u8
+name|fst_session_tmout
+decl_stmt|;
+comment|/* Optional: 	 *   STA MAC Address 	 *   Pairwise Cipher Suite Count 	 *   Pairwise Cipher Suite List 	 */
+name|u8
+name|variable
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+name|STRUCT_PACKED
+struct|;
+end_struct
+
+begin_enum
+enum|enum
+name|mb_ctrl_sta_role
+block|{
+name|MB_STA_ROLE_AP
+init|=
+literal|0
+block|,
+name|MB_STA_ROLE_TDLS_STA
+init|=
+literal|1
+block|,
+name|MB_STA_ROLE_IBSS_STA
+init|=
+literal|2
+block|,
+name|MB_STA_ROLE_PCP
+init|=
+literal|3
+block|,
+name|MB_STA_ROLE_NON_PCP_NON_AP
+init|=
+literal|4
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|MB_CTRL_ROLE_MASK
+value|(BIT(0) | BIT(1) | BIT(2))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MB_CTRL_ROLE
+parameter_list|(
+name|ctrl
+parameter_list|)
+value|((u8) ((ctrl)& MB_CTRL_ROLE_MASK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MB_CTRL_STA_MAC_PRESENT
+value|((u8) (BIT(3)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MB_CTRL_PAIRWISE_CIPHER_SUITE_PRESENT
+value|((u8) (BIT(4)))
+end_define
+
+begin_enum
+enum|enum
+name|mb_band_id
+block|{
+name|MB_BAND_ID_WIFI_2_4GHZ
+init|=
+literal|2
+block|,
+comment|/* 2.4 GHz */
+name|MB_BAND_ID_WIFI_5GHZ
+init|=
+literal|4
+block|,
+comment|/* 4.9 and 5 GHz */
+name|MB_BAND_ID_WIFI_60GHZ
+init|=
+literal|5
+block|,
+comment|/* 60 GHz */
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|MB_CONNECTION_CAPABILITY_AP
+value|((u8) (BIT(0)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MB_CONNECTION_CAPABILITY_PCP
+value|((u8) (BIT(1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MB_CONNECTION_CAPABILITY_DLS
+value|((u8) (BIT(2)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MB_CONNECTION_CAPABILITY_TDLS
+value|((u8) (BIT(3)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MB_CONNECTION_CAPABILITY_IBSS
+value|((u8) (BIT(4)))
+end_define
+
+begin_comment
+comment|/* IEEE Std 802.11ad-2014 - FST Action field */
+end_comment
+
+begin_enum
+enum|enum
+name|fst_action
+block|{
+name|FST_ACTION_SETUP_REQUEST
+init|=
+literal|0
+block|,
+name|FST_ACTION_SETUP_RESPONSE
+init|=
+literal|1
+block|,
+name|FST_ACTION_TEAR_DOWN
+init|=
+literal|2
+block|,
+name|FST_ACTION_ACK_REQUEST
+init|=
+literal|3
+block|,
+name|FST_ACTION_ACK_RESPONSE
+init|=
+literal|4
+block|,
+name|FST_ACTION_ON_CHANNEL_TUNNEL
+init|=
+literal|5
+block|, }
+enum|;
+end_enum
 
 begin_endif
 endif|#

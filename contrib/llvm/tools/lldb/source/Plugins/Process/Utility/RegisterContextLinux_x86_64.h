@@ -92,6 +92,12 @@ argument_list|()
 specifier|const
 name|override
 block|;
+name|uint32_t
+name|GetUserRegisterCount
+argument_list|()
+specifier|const
+name|override
+block|;
 name|private
 operator|:
 specifier|const
@@ -103,6 +109,9 @@ name|m_register_info_p
 block|;
 name|uint32_t
 name|m_register_info_count
+block|;
+name|uint32_t
+name|m_user_register_count
 block|; }
 decl_stmt|;
 end_decl_stmt

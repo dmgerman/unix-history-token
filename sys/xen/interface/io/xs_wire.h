@@ -62,6 +62,11 @@ block|,
 name|XS_RESTRICT
 block|,
 name|XS_RESET_WATCHES
+block|,
+name|XS_INVALID
+init|=
+literal|0xffff
+comment|/* Guaranteed to remain an invalid type */
 block|}
 enum|;
 end_enum
@@ -216,7 +221,12 @@ argument_list|)
 block|,
 name|XSD_ERROR
 argument_list|(
-argument|EISCONN
+name|EISCONN
+argument_list|)
+block|,
+name|XSD_ERROR
+argument_list|(
+argument|E2BIG
 argument_list|)
 block|}
 decl_stmt|;
@@ -266,7 +276,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* Inter-domain shared memory communications. */
+comment|/*  * `incontents 150 xenstore_struct XenStore wire protocol.  *  * Inter-domain shared memory communications. */
 end_comment
 
 begin_define
@@ -321,6 +331,13 @@ name|rsp_cons
 decl_stmt|,
 name|rsp_prod
 decl_stmt|;
+name|uint32_t
+name|server_features
+decl_stmt|;
+comment|/* Bitmap of features supported by the server */
+name|uint32_t
+name|connection
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -354,6 +371,43 @@ name|XENSTORE_REL_PATH_MAX
 value|2048
 end_define
 
+begin_comment
+comment|/* The ability to reconnect a ring */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENSTORE_SERVER_FEATURE_RECONNECTION
+value|1
+end_define
+
+begin_comment
+comment|/* Valid values for the connection field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENSTORE_CONNECTED
+value|0
+end_define
+
+begin_comment
+comment|/* the steady-state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENSTORE_RECONNECT
+value|1
+end_define
+
+begin_comment
+comment|/* guest has initiated a reconnect */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -364,7 +418,7 @@ comment|/* _XS_WIRE_H */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit

@@ -541,6 +541,10 @@ name|AcpiGbl_RegMethodsExecuted
 operator|=
 name|FALSE
 expr_stmt|;
+name|AcpiGbl_MaxLoopIterations
+operator|=
+literal|0xFFFF
+expr_stmt|;
 comment|/* Hardware oriented */
 name|AcpiGbl_EventsInitialized
 operator|=

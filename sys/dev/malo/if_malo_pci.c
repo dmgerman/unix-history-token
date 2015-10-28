@@ -464,13 +464,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
 name|struct
 name|malo_product
 modifier|*
@@ -510,7 +503,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|malo_products
 argument_list|)
@@ -558,9 +551,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

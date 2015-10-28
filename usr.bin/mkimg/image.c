@@ -2498,7 +2498,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|image_copyout_zeroes
 parameter_list|(
@@ -2506,7 +2505,7 @@ name|int
 name|fd
 parameter_list|,
 name|size_t
-name|size
+name|count
 parameter_list|)
 block|{
 specifier|static
@@ -2531,7 +2530,7 @@ argument_list|,
 operator|(
 name|off_t
 operator|)
-name|size
+name|count
 argument_list|,
 name|SEEK_CUR
 argument_list|)
@@ -2575,7 +2574,7 @@ return|;
 block|}
 while|while
 condition|(
-name|size
+name|count
 operator|>
 literal|0
 condition|)
@@ -2583,14 +2582,14 @@ block|{
 name|sz
 operator|=
 operator|(
-name|size
+name|count
 operator|>
 name|secsz
 operator|)
 condition|?
 name|secsz
 else|:
-name|size
+name|count
 expr_stmt|;
 name|error
 operator|=
@@ -2612,7 +2611,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|size
+name|count
 operator|-=
 name|sz
 expr_stmt|;

@@ -69,6 +69,9 @@ name|class
 name|ASTContext
 decl_stmt|;
 name|class
+name|ObjCInterfaceDecl
+decl_stmt|;
+name|class
 name|QualType
 decl_stmt|;
 name|class
@@ -114,6 +117,12 @@ block|,
 name|ClassId_NSMutableDictionary
 block|,
 name|ClassId_NSNumber
+block|,
+name|ClassId_NSMutableSet
+block|,
+name|ClassId_NSMutableOrderedSet
+block|,
+name|ClassId_NSValue
 block|}
 enum|;
 specifier|static
@@ -121,7 +130,7 @@ specifier|const
 name|unsigned
 name|NumClassIds
 init|=
-literal|7
+literal|10
 decl_stmt|;
 enum|enum
 name|NSStringMethodKind
@@ -221,7 +230,8 @@ name|NSASCIIStringEncodingId
 argument_list|)
 return|;
 block|}
-comment|/// \brief Enumerates the NSArray methods used to generate literals.
+comment|/// \brief Enumerates the NSArray/NSMutableArray methods used to generate
+comment|/// literals and to apply some checks.
 enum|enum
 name|NSArrayMethodKind
 block|{
@@ -242,6 +252,12 @@ block|,
 name|NSArr_objectAtIndex
 block|,
 name|NSMutableArr_replaceObjectAtIndex
+block|,
+name|NSMutableArr_addObject
+block|,
+name|NSMutableArr_insertObjectAtIndex
+block|,
+name|NSMutableArr_setObjectAtIndexedSubscript
 block|}
 enum|;
 specifier|static
@@ -249,7 +265,7 @@ specifier|const
 name|unsigned
 name|NumNSArrayMethods
 init|=
-literal|9
+literal|12
 decl_stmt|;
 comment|/// \brief The Objective-C NSArray selectors.
 name|Selector
@@ -270,7 +286,8 @@ argument_list|(
 argument|Selector Sel
 argument_list|)
 expr_stmt|;
-comment|/// \brief Enumerates the NSDictionary methods used to generate literals.
+comment|/// \brief Enumerates the NSDictionary/NSMutableDictionary methods used
+comment|/// to generate literals and to apply some checks.
 enum|enum
 name|NSDictionaryMethodKind
 block|{
@@ -295,6 +312,10 @@ block|,
 name|NSDict_objectForKey
 block|,
 name|NSMutableDict_setObjectForKey
+block|,
+name|NSMutableDict_setObjectForKeyedSubscript
+block|,
+name|NSMutableDict_setValueForKey
 block|}
 enum|;
 specifier|static
@@ -302,7 +323,7 @@ specifier|const
 name|unsigned
 name|NumNSDictionaryMethods
 init|=
-literal|12
+literal|14
 decl_stmt|;
 comment|/// \brief The Objective-C NSDictionary selectors.
 name|Selector
@@ -319,6 +340,48 @@ operator|<
 name|NSDictionaryMethodKind
 operator|>
 name|getNSDictionaryMethodKind
+argument_list|(
+argument|Selector Sel
+argument_list|)
+expr_stmt|;
+comment|/// \brief Enumerates the NSMutableSet/NSOrderedSet methods used
+comment|/// to apply some checks.
+enum|enum
+name|NSSetMethodKind
+block|{
+name|NSMutableSet_addObject
+block|,
+name|NSOrderedSet_insertObjectAtIndex
+block|,
+name|NSOrderedSet_setObjectAtIndex
+block|,
+name|NSOrderedSet_setObjectAtIndexedSubscript
+block|,
+name|NSOrderedSet_replaceObjectAtIndexWithObject
+block|}
+enum|;
+specifier|static
+specifier|const
+name|unsigned
+name|NumNSSetMethods
+init|=
+literal|5
+decl_stmt|;
+comment|/// \brief The Objective-C NSSet selectors.
+name|Selector
+name|getNSSetSelector
+argument_list|(
+name|NSSetMethodKind
+name|MK
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Return NSSetMethodKind if \p Sel is such a selector.
+name|Optional
+operator|<
+name|NSSetMethodKind
+operator|>
+name|getNSSetMethodKind
 argument_list|(
 argument|Selector Sel
 argument_list|)
@@ -574,6 +637,28 @@ name|T
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Returns \c true if \p Id is currently defined as a macro.
+name|bool
+name|isMacroDefined
+argument_list|(
+name|StringRef
+name|Id
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Returns \c true if \p InterfaceDecl is subclass of \p NSClassKind
+name|bool
+name|isSubclassOfNSClass
+argument_list|(
+name|ObjCInterfaceDecl
+operator|*
+name|InterfaceDecl
+argument_list|,
+name|NSClassIdKindKind
+name|NSClassKind
+argument_list|)
+decl|const
+decl_stmt|;
 name|private
 label|:
 name|bool
@@ -658,6 +743,14 @@ name|Selector
 name|NSDictionarySelectors
 index|[
 name|NumNSDictionaryMethods
+index|]
+decl_stmt|;
+comment|/// \brief The selectors for Objective-C NSSet methods.
+name|mutable
+name|Selector
+name|NSSetSelectors
+index|[
+name|NumNSSetMethods
 index|]
 decl_stmt|;
 comment|/// \brief The Objective-C NSNumber selectors used to create NSNumber literals.

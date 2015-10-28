@@ -30,19 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xoconfig.h"
+file|"xo_config.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"xo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xoversion.h"
 end_include
 
 begin_include
@@ -328,9 +322,12 @@ parameter_list|)
 block|{
 name|int
 name|lflag
+name|UNUSED
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+comment|/* Parse long flag, though currently ignored */
+name|int
 name|hflag
 init|=
 literal|0
@@ -992,6 +989,7 @@ literal|"    --json OR -J          Generate JSON output\n"
 literal|"    --leading-xpath<path> OR -l<path> "
 literal|"Add a prefix to generated XPaths (HTML)\n"
 literal|"    --open<path>         Open tags for the given path\n"
+literal|"    --option<opts> -or -O<opts>  Give formatting options\n"
 literal|"    --pretty OR -p        Make 'pretty' output (add indent, newlines)\n"
 literal|"    --style<style> OR -s<style>  "
 literal|"Generate given style (xml, json, text, html)\n"
@@ -1350,7 +1348,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:HJl:ps:TXW"
+literal|"c:HJl:O:o:ps:TXW"
 argument_list|,
 name|long_opts
 argument_list|,

@@ -418,9 +418,7 @@ operator|==
 name|I915_TILING_NONE
 condition|)
 return|return
-operator|(
 name|true
-operator|)
 return|;
 if|if
 condition|(
@@ -472,9 +470,7 @@ operator|>
 name|I965_FENCE_MAX_PITCH_VAL
 condition|)
 return|return
-operator|(
 name|false
-operator|)
 return|;
 block|}
 else|else
@@ -486,9 +482,7 @@ operator|>
 literal|8192
 condition|)
 return|return
-operator|(
 name|false
-operator|)
 return|;
 if|if
 condition|(
@@ -507,9 +501,7 @@ operator|<<
 literal|20
 condition|)
 return|return
-operator|(
 name|false
-operator|)
 return|;
 block|}
 else|else
@@ -523,9 +515,7 @@ operator|<<
 literal|19
 condition|)
 return|return
-operator|(
 name|false
-operator|)
 return|;
 block|}
 block|}
@@ -553,14 +543,10 @@ literal|1
 operator|)
 condition|)
 return|return
-operator|(
 name|false
-operator|)
 return|;
 return|return
-operator|(
 name|true
-operator|)
 return|;
 block|}
 comment|/* Pre-965 needs power of two tile widths */
@@ -571,9 +557,7 @@ operator|<
 name|tile_width
 condition|)
 return|return
-operator|(
 name|false
-operator|)
 return|;
 if|if
 condition|(
@@ -586,14 +570,10 @@ literal|1
 operator|)
 condition|)
 return|return
-operator|(
 name|false
-operator|)
 return|;
 return|return
-operator|(
 name|true
-operator|)
 return|;
 block|}
 end_function
@@ -626,9 +606,7 @@ operator|==
 name|I915_TILING_NONE
 condition|)
 return|return
-operator|(
 name|true
-operator|)
 return|;
 if|if
 condition|(
@@ -646,9 +624,7 @@ operator|>=
 literal|4
 condition|)
 return|return
-operator|(
 name|true
-operator|)
 return|;
 if|if
 condition|(
@@ -676,9 +652,7 @@ operator|~
 name|I915_FENCE_START_MASK
 condition|)
 return|return
-operator|(
 name|false
-operator|)
 return|;
 block|}
 else|else
@@ -693,9 +667,7 @@ operator|~
 name|I830_FENCE_START_MASK
 condition|)
 return|return
-operator|(
 name|false
-operator|)
 return|;
 block|}
 comment|/* 	 * Previous chips need to be aligned to the size of the smallest 	 * fence register that can contain the object. 	 */
@@ -752,9 +724,7 @@ operator|!=
 name|size
 condition|)
 return|return
-operator|(
 name|false
-operator|)
 return|;
 if|if
 condition|(
@@ -769,14 +739,10 @@ literal|1
 operator|)
 condition|)
 return|return
-operator|(
 name|false
-operator|)
 return|;
 return|return
-operator|(
 name|true
-operator|)
 return|;
 block|}
 end_function
@@ -826,11 +792,9 @@ name|obj
 decl_stmt|;
 name|int
 name|ret
-decl_stmt|;
-name|ret
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 name|obj
 operator|=
 name|to_intel_bo
@@ -1099,7 +1063,7 @@ operator|->
 name|map_and_fenceable
 condition|)
 block|{
-name|uint32_t
+name|u32
 name|unfenced_alignment
 init|=
 name|i915_gem_get_unfenced_gtt_alignment
@@ -1213,9 +1177,7 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|ret
-operator|)
 return|;
 block|}
 end_function

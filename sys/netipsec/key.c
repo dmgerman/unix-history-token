@@ -13484,19 +13484,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|KASSERT
-argument_list|(
-name|sav
-operator|->
-name|iv
-operator|==
-name|NULL
-argument_list|,
-operator|(
-literal|"iv but no xform"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sav
@@ -14264,12 +14251,6 @@ operator|->
 name|schedlen
 operator|=
 literal|0
-expr_stmt|;
-name|sav
-operator|->
-name|iv
-operator|=
-name|NULL
 expr_stmt|;
 name|sav
 operator|->

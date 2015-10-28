@@ -22,7 +22,7 @@ file|"xen.h"
 end_include
 
 begin_comment
-comment|/*  * Prototype for this hypercall is:  *  int vcpu_op(int cmd, int vcpuid, void *extra_args)  * @cmd        == VCPUOP_??? (VCPU operation).  * @vcpuid     == VCPU to operate on.  * @extra_args == Operation-specific extra arguments (NULL if none).  */
+comment|/*  * Prototype for this hypercall is:  *  long vcpu_op(int cmd, unsigned int vcpuid, void *extra_args)  * @cmd        == VCPUOP_??? (VCPU operation).  * @vcpuid     == VCPU to operate on.  * @extra_args == Operation-specific extra arguments (NULL if none).  */
 end_comment
 
 begin_comment
@@ -546,7 +546,7 @@ comment|/* __XEN_PUBLIC_VCPU_H__ */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit

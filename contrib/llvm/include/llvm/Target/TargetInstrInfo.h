@@ -151,6 +151,9 @@ name|class
 name|TargetSubtargetInfo
 decl_stmt|;
 name|class
+name|TargetSchedModel
+decl_stmt|;
+name|class
 name|DFAPacketizer
 decl_stmt|;
 name|template
@@ -173,9 +176,12 @@ name|MCInstrInfo
 block|{
 name|TargetInstrInfo
 argument_list|(
-argument|const TargetInstrInfo&
+specifier|const
+name|TargetInstrInfo
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -185,17 +191,18 @@ specifier|const
 name|TargetInstrInfo
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
 name|TargetInstrInfo
 argument_list|(
-argument|int CFSetupOpcode = -
-literal|1
+argument|unsigned CFSetupOpcode = ~
+literal|0u
 argument_list|,
-argument|int CFDestroyOpcode = -
-literal|1
+argument|unsigned CFDestroyOpcode = ~
+literal|0u
 argument_list|)
 operator|:
 name|CallFrameSetupOpcode
@@ -213,7 +220,7 @@ operator|~
 name|TargetInstrInfo
 argument_list|()
 block|;
-comment|/// getRegClass - Givem a machine instruction descriptor, returns the register
+comment|/// Given a machine instruction descriptor, returns the register
 comment|/// class constraint for OpNum, or NULL.
 specifier|const
 name|TargetRegisterClass
@@ -230,9 +237,11 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-comment|/// isTriviallyReMaterializable - Return true if the instruction is trivially
-comment|/// rematerializable, meaning it has no side effects and requires no operands
-comment|/// that aren't always available.
+comment|/// Return true if the instruction is trivially rematerializable, meaning it
+comment|/// has no side effects and requires no operands that aren't always available.
+comment|/// This means the only allowed uses are constants and unallocatable physical
+comment|/// registers so that the instructions result is independent of the place
+comment|/// in the function.
 name|bool
 name|isTriviallyReMaterializable
 argument_list|(
@@ -281,12 +290,13 @@ return|;
 block|}
 name|protected
 operator|:
-comment|/// isReallyTriviallyReMaterializable - For instructions with opcodes for
-comment|/// which the M_REMATERIALIZABLE flag is set, this hook lets the target
-comment|/// specify whether the instruction is actually trivially rematerializable,
-comment|/// taking into consideration its operands. This predicate must return false
-comment|/// if the instruction has any side effects other than producing a value, or
-comment|/// if it requres any address registers that are not always available.
+comment|/// For instructions with opcodes for which the M_REMATERIALIZABLE flag is
+comment|/// set, this hook lets the target specify whether the instruction is actually
+comment|/// trivially rematerializable, taking into consideration its operands. This
+comment|/// predicate must return false if the instruction has any side effects other
+comment|/// than producing a value, or if it requres any address registers that are
+comment|/// not always available.
+comment|/// Requirements must be check as stated in isTriviallyReMaterializable() .
 name|virtual
 name|bool
 name|isReallyTriviallyReMaterializable
@@ -303,11 +313,10 @@ return|;
 block|}
 name|private
 operator|:
-comment|/// isReallyTriviallyReMaterializableGeneric - For instructions with opcodes
-comment|/// for which the M_REMATERIALIZABLE flag is set and the target hook
-comment|/// isReallyTriviallyReMaterializable returns false, this function does
-comment|/// target-independent tests to determine if the instruction is really
-comment|/// trivially rematerializable.
+comment|/// For instructions with opcodes for which the M_REMATERIALIZABLE flag is
+comment|/// set and the target hook isReallyTriviallyReMaterializable returns false,
+comment|/// this function does target-independent tests to determine if the
+comment|/// instruction is really trivially rematerializable.
 name|bool
 name|isReallyTriviallyReMaterializableGeneric
 argument_list|(
@@ -319,13 +328,12 @@ specifier|const
 block|;
 name|public
 operator|:
-comment|/// getCallFrameSetup/DestroyOpcode - These methods return the opcode of the
-comment|/// frame setup/destroy instructions if they exist (-1 otherwise).  Some
-comment|/// targets use pseudo instructions in order to abstract away the difference
-comment|/// between operating with a frame pointer and operating without, through the
-comment|/// use of these two instructions.
+comment|/// These methods return the opcode of the frame setup/destroy instructions
+comment|/// if they exist (-1 otherwise).  Some targets use pseudo instructions in
+comment|/// order to abstract away the difference between operating with a frame
+comment|/// pointer and operating without, through the use of these two instructions.
 comment|///
-name|int
+name|unsigned
 name|getCallFrameSetupOpcode
 argument_list|()
 specifier|const
@@ -334,7 +342,7 @@ return|return
 name|CallFrameSetupOpcode
 return|;
 block|}
-name|int
+name|unsigned
 name|getCallFrameDestroyOpcode
 argument_list|()
 specifier|const
@@ -355,12 +363,11 @@ argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;
-comment|/// isCoalescableExtInstr - Return true if the instruction is a "coalescable"
-comment|/// extension instruction. That is, it's like a copy where it's legal for the
-comment|/// source to overlap the destination. e.g. X86::MOVSX64rr32. If this returns
-comment|/// true, then it's expected the pre-extension value is available as a subreg
-comment|/// of the result register. This also returns the sub-register index in
-comment|/// SubIdx.
+comment|/// Return true if the instruction is a "coalescable" extension instruction.
+comment|/// That is, it's like a copy where it's legal for the source to overlap the
+comment|/// destination. e.g. X86::MOVSX64rr32. If this returns true, then it's
+comment|/// expected the pre-extension value is available as a subreg of the result
+comment|/// register. This also returns the sub-register index in SubIdx.
 name|virtual
 name|bool
 name|isCoalescableExtInstr
@@ -379,7 +386,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// isLoadFromStackSlot - If the specified machine instruction is a direct
+comment|/// If the specified machine instruction is a direct
 comment|/// load from a stack slot, return the virtual or physical register number of
 comment|/// the destination along with the FrameIndex of the loaded stack slot.  If
 comment|/// not, return 0.  This predicate must return 0 if the instruction has
@@ -398,9 +405,8 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// isLoadFromStackSlotPostFE - Check for post-frame ptr elimination
-comment|/// stack locations as well.  This uses a heuristic so it isn't
-comment|/// reliable for correctness.
+comment|/// Check for post-frame ptr elimination stack locations as well.
+comment|/// This uses a heuristic so it isn't reliable for correctness.
 name|virtual
 name|unsigned
 name|isLoadFromStackSlotPostFE
@@ -415,13 +421,12 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// hasLoadFromStackSlot - If the specified machine instruction has
-comment|/// a load from a stack slot, return true along with the FrameIndex
-comment|/// of the loaded stack slot and the machine mem operand containing
-comment|/// the reference.  If not, return false.  Unlike
-comment|/// isLoadFromStackSlot, this returns true for any instructions that
-comment|/// loads from the stack.  This is just a hint, as some cases may be
-comment|/// missed.
+comment|/// If the specified machine instruction has a load from a stack slot,
+comment|/// return true along with the FrameIndex of the loaded stack slot and the
+comment|/// machine mem operand containing the reference.
+comment|/// If not, return false.  Unlike isLoadFromStackSlot, this returns true for
+comment|/// any instructions that loads from the stack.  This is just a hint, as some
+comment|/// cases may be missed.
 name|virtual
 name|bool
 name|hasLoadFromStackSlot
@@ -434,7 +439,7 @@ argument|int&FrameIndex
 argument_list|)
 specifier|const
 block|;
-comment|/// isStoreToStackSlot - If the specified machine instruction is a direct
+comment|/// If the specified machine instruction is a direct
 comment|/// store to a stack slot, return the virtual or physical register number of
 comment|/// the source reg along with the FrameIndex of the loaded stack slot.  If
 comment|/// not, return 0.  This predicate must return 0 if the instruction has
@@ -453,9 +458,8 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// isStoreToStackSlotPostFE - Check for post-frame ptr elimination
-comment|/// stack locations as well.  This uses a heuristic so it isn't
-comment|/// reliable for correctness.
+comment|/// Check for post-frame ptr elimination stack locations as well.
+comment|/// This uses a heuristic, so it isn't reliable for correctness.
 name|virtual
 name|unsigned
 name|isStoreToStackSlotPostFE
@@ -470,10 +474,10 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// hasStoreToStackSlot - If the specified machine instruction has a
-comment|/// store to a stack slot, return true along with the FrameIndex of
-comment|/// the loaded stack slot and the machine mem operand containing the
-comment|/// reference.  If not, return false.  Unlike isStoreToStackSlot,
+comment|/// If the specified machine instruction has a store to a stack slot,
+comment|/// return true along with the FrameIndex of the loaded stack slot and the
+comment|/// machine mem operand containing the reference.
+comment|/// If not, return false.  Unlike isStoreToStackSlot,
 comment|/// this returns true for any instructions that stores to the
 comment|/// stack.  This is just a hint, as some cases may be missed.
 name|virtual
@@ -488,7 +492,7 @@ argument|int&FrameIndex
 argument_list|)
 specifier|const
 block|;
-comment|/// isStackSlotCopy - Return true if the specified machine instruction
+comment|/// Return true if the specified machine instruction
 comment|/// is a copy of one stack slot to another and has no other effect.
 comment|/// Provide the identity of the two frame indices.
 name|virtual
@@ -532,12 +536,11 @@ argument|unsigned&Size
 argument_list|,
 argument|unsigned&Offset
 argument_list|,
-argument|const TargetMachine *TM
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-comment|/// isAsCheapAsAMove - Return true if the instruction is as cheap as a move
-comment|/// instruction.
+comment|/// Return true if the instruction is as cheap as a move instruction.
 comment|///
 comment|/// Targets for different archs need to override this, and different
 comment|/// micro-architectures can also be finely tuned inside.
@@ -556,7 +559,7 @@ name|isAsCheapAsAMove
 argument_list|()
 return|;
 block|}
-comment|/// reMaterialize - Re-issue the specified 'original' instruction at the
+comment|/// Re-issue the specified 'original' instruction at the
 comment|/// specific location targeting a new destination register.
 comment|/// The register in Orig->getOperand(0).getReg() will be substituted by
 comment|/// DestReg:SubIdx. Any existing subreg index is preserved or composed with
@@ -579,7 +582,7 @@ argument|const TargetRegisterInfo&TRI
 argument_list|)
 specifier|const
 block|;
-comment|/// duplicate - Create a duplicate of the Orig instruction in MF. This is like
+comment|/// Create a duplicate of the Orig instruction in MF. This is like
 comment|/// MachineFunction::CloneMachineInstr(), but the target may update operands
 comment|/// that are required to be unique.
 comment|///
@@ -595,7 +598,7 @@ argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-comment|/// convertToThreeAddress - This method must be implemented by targets that
+comment|/// This method must be implemented by targets that
 comment|/// set the M_CONVERTIBLE_TO_3_ADDR flag.  When this flag is set, the target
 comment|/// may be able to convert a two-address instruction into one or more true
 comment|/// three-address instructions on demand.  This allows the X86 target (for
@@ -622,10 +625,10 @@ return|return
 name|nullptr
 return|;
 block|}
-comment|/// commuteInstruction - If a target has any instructions that are
-comment|/// commutable but require converting to different instructions or making
-comment|/// non-trivial changes to commute them, this method can overloaded to do
-comment|/// that.  The default implementation simply swaps the commutable operands.
+comment|/// If a target has any instructions that are commutable but require
+comment|/// converting to different instructions or making non-trivial changes to
+comment|/// commute them, this method can overloaded to do that.
+comment|/// The default implementation simply swaps the commutable operands.
 comment|/// If NewMI is false, MI is modified in place and returned; otherwise, a
 comment|/// new machine instruction is created and returned.  Do not call this
 comment|/// method for a non-commutable instruction, but there may be some cases
@@ -641,8 +644,8 @@ argument|bool NewMI = false
 argument_list|)
 specifier|const
 block|;
-comment|/// findCommutedOpIndices - If specified MI is commutable, return the two
-comment|/// operand indices that would swap value. Return false if the instruction
+comment|/// If specified MI is commutable, return the two operand indices that would
+comment|/// swap value. Return false if the instruction
 comment|/// is not in a form which this routine understands.
 name|virtual
 name|bool
@@ -807,8 +810,8 @@ argument|RegSubRegPairAndIdx&InsertedReg
 argument_list|)
 specifier|const
 block|;
-comment|/// produceSameValue - Return true if two machine instructions would produce
-comment|/// identical values. By default, this is only true when the two instructions
+comment|/// Return true if two machine instructions would produce identical values.
+comment|/// By default, this is only true when the two instructions
 comment|/// are deemed identical except for defs. If this function is called when the
 comment|/// IR is still in SSA form, the caller can pass the MachineRegisterInfo for
 comment|/// aggressive checks.
@@ -824,7 +827,7 @@ argument|const MachineRegisterInfo *MRI = nullptr
 argument_list|)
 specifier|const
 block|;
-comment|/// AnalyzeBranch - Analyze the branching code at the end of MBB, returning
+comment|/// Analyze the branching code at the end of MBB, returning
 comment|/// true if it cannot be understood (e.g. it's a switch dispatch or isn't
 comment|/// implemented for a target).  Upon success, this returns false and returns
 comment|/// with the following information in various cases:
@@ -869,7 +872,129 @@ return|return
 name|true
 return|;
 block|}
-comment|/// RemoveBranch - Remove the branching code at the end of the specific MBB.
+comment|/// Represents a predicate at the MachineFunction level.  The control flow a
+comment|/// MachineBranchPredicate represents is:
+comment|///
+comment|///  Reg<def>= LHS `Predicate` RHS         == ConditionDef
+comment|///  if Reg then goto TrueDest else goto FalseDest
+comment|///
+expr|struct
+name|MachineBranchPredicate
+block|{     enum
+name|ComparePredicate
+block|{
+name|PRED_EQ
+block|,
+comment|// True if two values are equal
+name|PRED_NE
+block|,
+comment|// True if two values are not equal
+name|PRED_INVALID
+comment|// Sentinel value
+block|}
+block|;
+name|ComparePredicate
+name|Predicate
+block|;
+name|MachineOperand
+name|LHS
+block|;
+name|MachineOperand
+name|RHS
+block|;
+name|MachineBasicBlock
+operator|*
+name|TrueDest
+block|;
+name|MachineBasicBlock
+operator|*
+name|FalseDest
+block|;
+name|MachineInstr
+operator|*
+name|ConditionDef
+block|;
+comment|/// SingleUseCondition is true if ConditionDef is dead except for the
+comment|/// branch(es) at the end of the basic block.
+comment|///
+name|bool
+name|SingleUseCondition
+block|;
+name|explicit
+name|MachineBranchPredicate
+argument_list|()
+operator|:
+name|Predicate
+argument_list|(
+name|PRED_INVALID
+argument_list|)
+block|,
+name|LHS
+argument_list|(
+name|MachineOperand
+operator|::
+name|CreateImm
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+block|,
+name|RHS
+argument_list|(
+name|MachineOperand
+operator|::
+name|CreateImm
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+block|,
+name|TrueDest
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|FalseDest
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|ConditionDef
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|SingleUseCondition
+argument_list|(
+argument|false
+argument_list|)
+block|{     }
+block|}
+block|;
+comment|/// Analyze the branching code at the end of MBB and parse it into the
+comment|/// MachineBranchPredicate structure if possible.  Returns false on success
+comment|/// and true on failure.
+comment|///
+comment|/// If AllowModify is true, then this routine is allowed to modify the basic
+comment|/// block (e.g. delete instructions after the unconditional branch).
+comment|///
+name|virtual
+name|bool
+name|AnalyzeBranchPredicate
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBranchPredicate&MBP
+argument_list|,
+argument|bool AllowModify = false
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// Remove the branching code at the end of the specific MBB.
 comment|/// This is only invoked in cases where AnalyzeBranch returns success. It
 comment|/// returns the number of instructions that were removed.
 name|virtual
@@ -885,8 +1010,8 @@ argument_list|(
 literal|"Target didn't implement TargetInstrInfo::RemoveBranch!"
 argument_list|)
 block|;   }
-comment|/// InsertBranch - Insert branch code into the end of the specified
-comment|/// MachineBasicBlock.  The operands to this method are the same as those
+comment|/// Insert branch code into the end of the specified MachineBasicBlock.
+comment|/// The operands to this method are the same as those
 comment|/// returned by AnalyzeBranch.  This is only invoked in cases where
 comment|/// AnalyzeBranch returns success. It returns the number of instructions
 comment|/// inserted.
@@ -905,7 +1030,7 @@ argument|MachineBasicBlock *TBB
 argument_list|,
 argument|MachineBasicBlock *FBB
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Cond
+argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|DebugLoc DL
 argument_list|)
@@ -916,9 +1041,8 @@ argument_list|(
 literal|"Target didn't implement TargetInstrInfo::InsertBranch!"
 argument_list|)
 block|;   }
-comment|/// ReplaceTailWithBranchTo - Delete the instruction OldInst and everything
-comment|/// after it, replacing it with an unconditional branch to NewDest. This is
-comment|/// used by the tail merging pass.
+comment|/// Delete the instruction OldInst and everything after it, replacing it with
+comment|/// an unconditional branch to NewDest. This is used by the tail merging pass.
 name|virtual
 name|void
 name|ReplaceTailWithBranchTo
@@ -929,8 +1053,8 @@ argument|MachineBasicBlock *NewDest
 argument_list|)
 specifier|const
 block|;
-comment|/// getUnconditionalBranch - Get an instruction that performs an unconditional
-comment|/// branch to the given symbol.
+comment|/// Get an instruction that performs an unconditional branch to the given
+comment|/// symbol.
 name|virtual
 name|void
 name|getUnconditionalBranch
@@ -947,7 +1071,7 @@ literal|"Target didn't implement "
 literal|"TargetInstrInfo::getUnconditionalBranch!"
 argument_list|)
 block|;   }
-comment|/// getTrap - Get a machine trap instruction
+comment|/// Get a machine trap instruction.
 name|virtual
 name|void
 name|getTrap
@@ -961,7 +1085,7 @@ argument_list|(
 literal|"Target didn't implement TargetInstrInfo::getTrap!"
 argument_list|)
 block|;   }
-comment|/// getJumpInstrTableEntryBound - Get a number of bytes that suffices to hold
+comment|/// Get a number of bytes that suffices to hold
 comment|/// either the instruction returned by getUnconditionalBranch or the
 comment|/// instruction returned by getTrap. This only makes sense because
 comment|/// getUnconditionalBranch returns a single, specific instruction. This
@@ -987,7 +1111,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// isLegalToSplitMBBAt - Return true if it's legal to split the given basic
+comment|/// Return true if it's legal to split the given basic
 comment|/// block at the specified instruction (i.e. instruction would be the start
 comment|/// of a new basic block).
 name|virtual
@@ -1004,7 +1128,7 @@ return|return
 name|true
 return|;
 block|}
-comment|/// isProfitableToIfCvt - Return true if it's profitable to predicate
+comment|/// Return true if it's profitable to predicate
 comment|/// instructions with accumulated instruction latency of "NumCycles"
 comment|/// of the specified basic block, where the probability of the instructions
 comment|/// being executed is given by Probability, and Confidence is a measure
@@ -1027,7 +1151,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// isProfitableToIfCvt - Second variant of isProfitableToIfCvt, this one
+comment|/// Second variant of isProfitableToIfCvt. This one
 comment|/// checks for the case where two basic blocks from true and false path
 comment|/// of a if-then-else (diamond) are predicated on mutally exclusive
 comment|/// predicates, where the probability of the true path being taken is given
@@ -1057,9 +1181,9 @@ return|return
 name|false
 return|;
 block|}
-comment|/// isProfitableToDupForIfCvt - Return true if it's profitable for
-comment|/// if-converter to duplicate instructions of specified accumulated
-comment|/// instruction latencies in the specified MBB to enable if-conversion.
+comment|/// Return true if it's profitable for if-converter to duplicate instructions
+comment|/// of specified accumulated instruction latencies in the specified MBB to
+comment|/// enable if-conversion.
 comment|/// The probability of the instructions being executed is given by
 comment|/// Probability, and Confidence is a measure of our confidence that it
 comment|/// will be properly predicted.
@@ -1079,7 +1203,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// isProfitableToUnpredicate - Return true if it's profitable to unpredicate
+comment|/// Return true if it's profitable to unpredicate
 comment|/// one side of a 'diamond', i.e. two sides of if-else predicated on mutually
 comment|/// exclusive predicates.
 comment|/// e.g.
@@ -1104,7 +1228,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// canInsertSelect - Return true if it is possible to insert a select
+comment|/// Return true if it is possible to insert a select
 comment|/// instruction that chooses between TrueReg and FalseReg based on the
 comment|/// condition code in Cond.
 comment|///
@@ -1127,7 +1251,7 @@ name|canInsertSelect
 argument_list|(
 argument|const MachineBasicBlock&MBB
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Cond
+argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|unsigned TrueReg
 argument_list|,
@@ -1145,9 +1269,8 @@ return|return
 name|false
 return|;
 block|}
-comment|/// insertSelect - Insert a select instruction into MBB before I that will
-comment|/// copy TrueReg to DstReg when Cond is true, and FalseReg to DstReg when
-comment|/// Cond is false.
+comment|/// Insert a select instruction into MBB before I that will copy TrueReg to
+comment|/// DstReg when Cond is true, and FalseReg to DstReg when Cond is false.
 comment|///
 comment|/// This function can only be called after canInsertSelect() returned true.
 comment|/// The condition in Cond comes from AnalyzeBranch, and it can be assumed
@@ -1173,7 +1296,7 @@ argument|DebugLoc DL
 argument_list|,
 argument|unsigned DstReg
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Cond
+argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|unsigned TrueReg
 argument_list|,
@@ -1186,7 +1309,7 @@ argument_list|(
 literal|"Target didn't implement TargetInstrInfo::insertSelect!"
 argument_list|)
 block|;   }
-comment|/// analyzeSelect - Analyze the given select instruction, returning true if
+comment|/// Analyze the given select instruction, returning true if
 comment|/// it cannot be understood. It is assumed that MI->isSelect() is true.
 comment|///
 comment|/// When successful, return the controlling condition and the operands that
@@ -1239,7 +1362,7 @@ return|return
 name|true
 return|;
 block|}
-comment|/// optimizeSelect - Given a select instruction that was understood by
+comment|/// Given a select instruction that was understood by
 comment|/// analyzeSelect and returned Optimizable = true, attempt to optimize MI by
 comment|/// merging it with one of its operands. Returns NULL on failure.
 comment|///
@@ -1273,7 +1396,7 @@ argument_list|(
 literal|"Target must implement TargetInstrInfo::optimizeSelect!"
 argument_list|)
 block|;   }
-comment|/// copyPhysReg - Emit instructions to copy a pair of physical registers.
+comment|/// Emit instructions to copy a pair of physical registers.
 comment|///
 comment|/// This function should support copies within any legal register class as
 comment|/// well as any cross-class copies created during instruction selection.
@@ -1304,11 +1427,10 @@ argument_list|(
 literal|"Target didn't implement TargetInstrInfo::copyPhysReg!"
 argument_list|)
 block|;   }
-comment|/// storeRegToStackSlot - Store the specified register of the given register
-comment|/// class to the specified stack frame index. The store instruction is to be
-comment|/// added to the given machine basic block before the specified machine
-comment|/// instruction. If isKill is true, the register operand is the last use and
-comment|/// must be marked kill.
+comment|/// Store the specified register of the given register class to the specified
+comment|/// stack frame index. The store instruction is to be added to the given
+comment|/// machine basic block before the specified machine instruction. If isKill
+comment|/// is true, the register operand is the last use and must be marked kill.
 name|virtual
 name|void
 name|storeRegToStackSlot
@@ -1335,10 +1457,9 @@ literal|"Target didn't implement "
 literal|"TargetInstrInfo::storeRegToStackSlot!"
 argument_list|)
 block|;   }
-comment|/// loadRegFromStackSlot - Load the specified register of the given register
-comment|/// class from the specified stack frame index. The load instruction is to be
-comment|/// added to the given machine basic block before the specified machine
-comment|/// instruction.
+comment|/// Load the specified register of the given register class from the specified
+comment|/// stack frame index. The load instruction is to be added to the given
+comment|/// machine basic block before the specified machine instruction.
 name|virtual
 name|void
 name|loadRegFromStackSlot
@@ -1363,7 +1484,7 @@ literal|"Target didn't implement "
 literal|"TargetInstrInfo::loadRegFromStackSlot!"
 argument_list|)
 block|;   }
-comment|/// expandPostRAPseudo - This function is called for all pseudo instructions
+comment|/// This function is called for all pseudo instructions
 comment|/// that remain after register allocation. Many pseudo instructions are
 comment|/// created to help register allocation. This is the place to convert them
 comment|/// into real instructions. The target can edit MI in place, or it can insert
@@ -1381,7 +1502,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// foldMemoryOperand - Attempt to fold a load or store of the specified stack
+comment|/// Attempt to fold a load or store of the specified stack
 comment|/// slot into the specified machine instruction for the specified operand(s).
 comment|/// If this is possible, a new instruction is returned with the specified
 comment|/// operand folded, otherwise NULL is returned.
@@ -1393,37 +1514,36 @@ name|foldMemoryOperand
 argument_list|(
 argument|MachineBasicBlock::iterator MI
 argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
+argument|ArrayRef<unsigned> Ops
 argument_list|,
 argument|int FrameIndex
 argument_list|)
 specifier|const
 block|;
-comment|/// foldMemoryOperand - Same as the previous version except it allows folding
-comment|/// of any load and store from / to any address, not just from a specific
-comment|/// stack slot.
+comment|/// Same as the previous version except it allows folding of any load and
+comment|/// store from / to any address, not just from a specific stack slot.
 name|MachineInstr
 operator|*
 name|foldMemoryOperand
 argument_list|(
 argument|MachineBasicBlock::iterator MI
 argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
+argument|ArrayRef<unsigned> Ops
 argument_list|,
-argument|MachineInstr* LoadMI
+argument|MachineInstr *LoadMI
 argument_list|)
 specifier|const
 block|;
-comment|/// hasPattern - return true when there is potentially a faster code sequence
-comment|/// for an instruction chain ending in \p Root. All potential pattern are
+comment|/// Return true when there is potentially a faster code sequence
+comment|/// for an instruction chain ending in \p Root. All potential patterns are
 comment|/// returned in the \p Pattern vector. Pattern should be sorted in priority
 comment|/// order since the pattern evaluator stops checking as soon as it finds a
 comment|/// faster sequence.
 comment|/// \param Root - Instruction that could be combined with one of its operands
-comment|/// \param Pattern - Vector of possible combination pattern
+comment|/// \param Pattern - Vector of possible combination patterns
 name|virtual
 name|bool
-name|hasPattern
+name|getMachineCombinerPatterns
 argument_list|(
 argument|MachineInstr&Root
 argument_list|,
@@ -1435,15 +1555,14 @@ return|return
 name|false
 return|;
 block|}
-comment|/// genAlternativeCodeSequence - when hasPattern() finds a pattern this
-comment|/// function generates the instructions that could replace the original code
-comment|/// sequence. The client has to decide whether the actual replacementment is
-comment|/// beneficial or not.
+comment|/// When getMachineCombinerPatterns() finds patterns, this function generates
+comment|/// the instructions that could replace the original code sequence. The client
+comment|/// has to decide whether the actual replacement is beneficial or not.
 comment|/// \param Root - Instruction that could be combined with one of its operands
-comment|/// \param P - Combination pattern for Root
+comment|/// \param Pattern - Combination pattern for Root
 comment|/// \param InsInstrs - Vector of new instructions that implement P
-comment|/// \param DelInstrs - Old instructions, including Root, that could be replaced
-comment|/// by InsInstr
+comment|/// \param DelInstrs - Old instructions, including Root, that could be
+comment|/// replaced by InsInstr
 comment|/// \param InstrIdxForVirtReg - map of virtual register to instruction in
 comment|/// InsInstr that defines it
 name|virtual
@@ -1452,7 +1571,7 @@ name|genAlternativeCodeSequence
 argument_list|(
 argument|MachineInstr&Root
 argument_list|,
-argument|MachineCombinerPattern::MC_PATTERN P
+argument|MachineCombinerPattern::MC_PATTERN Pattern
 argument_list|,
 argument|SmallVectorImpl<MachineInstr *>&InsInstrs
 argument_list|,
@@ -1466,7 +1585,7 @@ specifier|const
 block|{
 return|return;
 block|}
-comment|/// useMachineCombiner - return true when a target supports MachineCombiner
+comment|/// Return true when a target supports MachineCombiner.
 name|virtual
 name|bool
 name|useMachineCombiner
@@ -1479,9 +1598,11 @@ return|;
 block|}
 name|protected
 operator|:
-comment|/// foldMemoryOperandImpl - Target-dependent implementation for
-comment|/// foldMemoryOperand. Target-independent code in foldMemoryOperand will
+comment|/// Target-dependent implementation for foldMemoryOperand.
+comment|/// Target-independent code in foldMemoryOperand will
 comment|/// take care of adding a MachineMemOperand to the newly created instruction.
+comment|/// The instruction and any auxiliary instructions necessary will be inserted
+comment|/// at InsertPt.
 name|virtual
 name|MachineInstr
 operator|*
@@ -1489,9 +1610,11 @@ name|foldMemoryOperandImpl
 argument_list|(
 argument|MachineFunction&MF
 argument_list|,
-argument|MachineInstr* MI
+argument|MachineInstr *MI
 argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
+argument|ArrayRef<unsigned> Ops
+argument_list|,
+argument|MachineBasicBlock::iterator InsertPt
 argument_list|,
 argument|int FrameIndex
 argument_list|)
@@ -1501,9 +1624,11 @@ return|return
 name|nullptr
 return|;
 block|}
-comment|/// foldMemoryOperandImpl - Target-dependent implementation for
-comment|/// foldMemoryOperand. Target-independent code in foldMemoryOperand will
+comment|/// Target-dependent implementation for foldMemoryOperand.
+comment|/// Target-independent code in foldMemoryOperand will
 comment|/// take care of adding a MachineMemOperand to the newly created instruction.
+comment|/// The instruction and any auxiliary instructions necessary will be inserted
+comment|/// at InsertPt.
 name|virtual
 name|MachineInstr
 operator|*
@@ -1511,11 +1636,13 @@ name|foldMemoryOperandImpl
 argument_list|(
 argument|MachineFunction&MF
 argument_list|,
-argument|MachineInstr* MI
+argument|MachineInstr *MI
 argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
+argument|ArrayRef<unsigned> Ops
 argument_list|,
-argument|MachineInstr* LoadMI
+argument|MachineBasicBlock::iterator InsertPt
+argument_list|,
+argument|MachineInstr *LoadMI
 argument_list|)
 specifier|const
 block|{
@@ -1599,15 +1726,14 @@ return|;
 block|}
 name|public
 operator|:
-comment|/// canFoldMemoryOperand - Returns true for the specified load / store if
-comment|/// folding is possible.
+comment|/// Returns true for the specified load / store if folding is possible.
 name|virtual
 name|bool
 name|canFoldMemoryOperand
 argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
+argument|ArrayRef<unsigned> Ops
 argument_list|)
 specifier|const
 block|;
@@ -1652,7 +1778,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// getOpcodeAfterMemoryUnfold - Returns the opcode of the would be new
+comment|/// Returns the opcode of the would be new
 comment|/// instruction after load / store are unfolded from an instruction of the
 comment|/// specified opcode. It returns zero if the specified unfolding is not
 comment|/// possible. If LoadRegIndex is non-null, it is filled in with the operand
@@ -1676,11 +1802,10 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// areLoadsFromSameBasePtr - This is used by the pre-regalloc scheduler
-comment|/// to determine if two loads are loading from the same base address. It
-comment|/// should only return true if the base pointers are the same and the
-comment|/// only differences between the two addresses are the offset. It also returns
-comment|/// the offsets by reference.
+comment|/// This is used by the pre-regalloc scheduler to determine if two loads are
+comment|/// loading from the same base address. It should only return true if the base
+comment|/// pointers are the same and the only differences between the two addresses
+comment|/// are the offset. It also returns the offsets by reference.
 name|virtual
 name|bool
 name|areLoadsFromSameBasePtr
@@ -1699,9 +1824,9 @@ return|return
 name|false
 return|;
 block|}
-comment|/// shouldScheduleLoadsNear - This is a used by the pre-regalloc scheduler to
-comment|/// determine (in conjunction with areLoadsFromSameBasePtr) if two loads should
-comment|/// be scheduled togther. On some targets if two loads are loading from
+comment|/// This is a used by the pre-regalloc scheduler to determine (in conjunction
+comment|/// with areLoadsFromSameBasePtr) if two loads should be scheduled together.
+comment|/// On some targets if two loads are loading from
 comment|/// addresses in the same cache line, it's better if they are scheduled
 comment|/// together. This function takes two integers that represent the load offsets
 comment|/// from the common base address. It returns true if it decides it's desirable
@@ -1727,12 +1852,13 @@ return|return
 name|false
 return|;
 block|}
-comment|/// \brief Get the base register and byte offset of a load/store instr.
+comment|/// Get the base register and byte offset of an instruction that reads/writes
+comment|/// memory.
 name|virtual
 name|bool
-name|getLdStBaseRegImmOfs
+name|getMemOpBaseRegImmOfs
 argument_list|(
-argument|MachineInstr *LdSt
+argument|MachineInstr *MemOp
 argument_list|,
 argument|unsigned&BaseReg
 argument_list|,
@@ -1772,7 +1898,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// \brief Can this target fuse the given instructions if they are scheduled
+comment|/// Can this target fuse the given instructions if they are scheduled
 comment|/// adjacent.
 name|virtual
 name|bool
@@ -1788,9 +1914,8 @@ return|return
 name|false
 return|;
 block|}
-comment|/// ReverseBranchCondition - Reverses the branch condition of the specified
-comment|/// condition list, returning false on success and true if it cannot be
-comment|/// reversed.
+comment|/// Reverses the branch condition of the specified condition list,
+comment|/// returning false on success and true if it cannot be reversed.
 name|virtual
 name|bool
 name|ReverseBranchCondition
@@ -1803,8 +1928,7 @@ return|return
 name|true
 return|;
 block|}
-comment|/// insertNoop - Insert a noop into the instruction stream at the specified
-comment|/// point.
+comment|/// Insert a noop into the instruction stream at the specified point.
 name|virtual
 name|void
 name|insertNoop
@@ -1824,8 +1948,7 @@ argument|MCInst&NopInst
 argument_list|)
 specifier|const
 block|;
-comment|/// isPredicated - Returns true if the instruction is already predicated.
-comment|///
+comment|/// Returns true if the instruction is already predicated.
 name|virtual
 name|bool
 name|isPredicated
@@ -1838,7 +1961,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// isUnpredicatedTerminator - Returns true if the instruction is a
+comment|/// Returns true if the instruction is a
 comment|/// terminator instruction that has not been predicated.
 name|virtual
 name|bool
@@ -1848,27 +1971,27 @@ argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;
-comment|/// PredicateInstruction - Convert the instruction into a predicated
-comment|/// instruction. It returns true if the operation was successful.
+comment|/// Convert the instruction into a predicated instruction.
+comment|/// It returns true if the operation was successful.
 name|virtual
 name|bool
 name|PredicateInstruction
 argument_list|(
 argument|MachineInstr *MI
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Pred
+argument|ArrayRef<MachineOperand> Pred
 argument_list|)
 specifier|const
 block|;
-comment|/// SubsumesPredicate - Returns true if the first specified predicate
+comment|/// Returns true if the first specified predicate
 comment|/// subsumes the second, e.g. GE subsumes GT.
 name|virtual
 name|bool
 name|SubsumesPredicate
 argument_list|(
-argument|const SmallVectorImpl<MachineOperand>&Pred1
+argument|ArrayRef<MachineOperand> Pred1
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Pred2
+argument|ArrayRef<MachineOperand> Pred2
 argument_list|)
 specifier|const
 block|{
@@ -1876,7 +1999,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// DefinesPredicate - If the specified instruction defines any predicate
+comment|/// If the specified instruction defines any predicate
 comment|/// or condition code register(s) used for predication, returns true as well
 comment|/// as the definition predicate(s) by reference.
 name|virtual
@@ -1893,7 +2016,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// isPredicable - Return true if the specified instruction can be predicated.
+comment|/// Return true if the specified instruction can be predicated.
 comment|/// By default, this returns true for every instruction with a
 comment|/// PredicateOperand.
 name|virtual
@@ -1914,7 +2037,7 @@ name|isPredicable
 argument_list|()
 return|;
 block|}
-comment|/// isSafeToMoveRegClassDefs - Return true if it's safe to move a machine
+comment|/// Return true if it's safe to move a machine
 comment|/// instruction that defines the specified register class.
 name|virtual
 name|bool
@@ -1928,9 +2051,8 @@ return|return
 name|true
 return|;
 block|}
-comment|/// isSchedulingBoundary - Test if the given instruction should be
-comment|/// considered a scheduling boundary. This primarily includes labels and
-comment|/// terminators.
+comment|/// Test if the given instruction should be considered a scheduling boundary.
+comment|/// This primarily includes labels and terminators.
 name|virtual
 name|bool
 name|isSchedulingBoundary
@@ -1955,9 +2077,8 @@ argument|const MCAsmInfo&MAI
 argument_list|)
 specifier|const
 block|;
-comment|/// CreateTargetHazardRecognizer - Allocate and return a hazard recognizer to
-comment|/// use for this target when scheduling the machine instructions before
-comment|/// register allocation.
+comment|/// Allocate and return a hazard recognizer to use for this target when
+comment|/// scheduling the machine instructions before register allocation.
 name|virtual
 name|ScheduleHazardRecognizer
 operator|*
@@ -1969,9 +2090,8 @@ argument|const ScheduleDAG *DAG
 argument_list|)
 specifier|const
 block|;
-comment|/// CreateTargetMIHazardRecognizer - Allocate and return a hazard recognizer
-comment|/// to use for this target when scheduling the machine instructions before
-comment|/// register allocation.
+comment|/// Allocate and return a hazard recognizer to use for this target when
+comment|/// scheduling the machine instructions before register allocation.
 name|virtual
 name|ScheduleHazardRecognizer
 operator|*
@@ -1983,9 +2103,8 @@ argument|const ScheduleDAG *DAG
 argument_list|)
 specifier|const
 block|;
-comment|/// CreateTargetPostRAHazardRecognizer - Allocate and return a hazard
-comment|/// recognizer to use for this target when scheduling the machine instructions
-comment|/// after register allocation.
+comment|/// Allocate and return a hazard recognizer to use for this target when
+comment|/// scheduling the machine instructions after register allocation.
 name|virtual
 name|ScheduleHazardRecognizer
 operator|*
@@ -2004,7 +2123,7 @@ name|usePreRAHazardRecognizer
 argument_list|()
 specifier|const
 block|;
-comment|/// analyzeCompare - For a comparison instruction, return the source registers
+comment|/// For a comparison instruction, return the source registers
 comment|/// in SrcReg and SrcReg2 if having two register operands, and the value it
 comment|/// compares against in CmpValue. Return true if the comparison instruction
 comment|/// can be analyzed.
@@ -2028,7 +2147,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// optimizeCompareInstr - See if the comparison instruction can be converted
+comment|/// See if the comparison instruction can be converted
 comment|/// into something more efficient. E.g., on ARM most instructions can set the
 comment|/// flags register, obviating the need for a separate CMP.
 name|virtual
@@ -2065,8 +2184,8 @@ return|return
 name|false
 return|;
 block|}
-comment|/// optimizeLoadInstr - Try to remove the load by folding it to a register
-comment|/// operand at the use. We fold the load instructions if and only if the
+comment|/// Try to remove the load by folding it to a register operand at the use.
+comment|/// We fold the load instructions if and only if the
 comment|/// def and use are in the same BB. We only look at one load and see
 comment|/// whether it can be folded into MI. FoldAsLoadDefReg is the virtual register
 comment|/// defined by the load we are trying to fold. DefMI returns the machine
@@ -2091,8 +2210,8 @@ return|return
 name|nullptr
 return|;
 block|}
-comment|/// FoldImmediate - 'Reg' is known to be defined by a move immediate
-comment|/// instruction, try to fold the immediate into the use instruction.
+comment|/// 'Reg' is known to be defined by a move immediate instruction,
+comment|/// try to fold the immediate into the use instruction.
 comment|/// If MRI->hasOneNonDBGUse(Reg) is true, and this function returns true,
 comment|/// then the caller may assume that DefMI has been erased from its parent
 comment|/// block. The caller may assume that it will not be erased by this
@@ -2115,7 +2234,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// getNumMicroOps - Return the number of u-operations the given machine
+comment|/// Return the number of u-operations the given machine
 comment|/// instruction will be decoded to on the target cpu. The itinerary's
 comment|/// IssueWidth is the number of microops that can be dispatched each
 comment|/// cycle. An instruction with zero microops takes no dispatch resources.
@@ -2129,7 +2248,7 @@ argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;
-comment|/// isZeroCost - Return true for pseudo instructions that don't consume any
+comment|/// Return true for pseudo instructions that don't consume any
 comment|/// machine resources in their current form. These are common cases that the
 comment|/// scheduler should consider free, rather than conservatively handling them
 comment|/// as instructions with no itinerary.
@@ -2164,14 +2283,14 @@ argument|unsigned UseIdx
 argument_list|)
 specifier|const
 block|;
-comment|/// getOperandLatency - Compute and return the use operand latency of a given
-comment|/// pair of def and use.
+comment|/// Compute and return the use operand latency of a given pair of def and use.
 comment|/// In most cases, the static scheduling itinerary was enough to determine the
 comment|/// operand latency. But it may not be possible for instructions with variable
 comment|/// number of defs / uses.
 comment|///
-comment|/// This is a raw interface to the itinerary that may be directly overriden by
-comment|/// a target. Use computeOperandLatency to get the best estimate of latency.
+comment|/// This is a raw interface to the itinerary that may be directly overridden
+comment|/// by a target. Use computeOperandLatency to get the best estimate of
+comment|/// latency.
 name|virtual
 name|int
 name|getOperandLatency
@@ -2188,7 +2307,7 @@ argument|unsigned UseIdx
 argument_list|)
 specifier|const
 block|;
-comment|/// computeOperandLatency - Compute and return the latency of the given data
+comment|/// Compute and return the latency of the given data
 comment|/// dependent def and use when the operand indices are already known.
 name|unsigned
 name|computeOperandLatency
@@ -2205,7 +2324,7 @@ argument|unsigned UseIdx
 argument_list|)
 specifier|const
 block|;
-comment|/// getInstrLatency - Compute the instruction latency of a given instruction.
+comment|/// Compute the instruction latency of a given instruction.
 comment|/// If the instruction has higher cost when predicated, it's returned via
 comment|/// PredCost.
 name|virtual
@@ -2257,8 +2376,7 @@ argument|const MachineInstr *DefMI
 argument_list|)
 specifier|const
 block|;
-comment|/// isHighLatencyDef - Return true if this opcode has high latency to its
-comment|/// result.
+comment|/// Return true if this opcode has high latency to its result.
 name|virtual
 name|bool
 name|isHighLatencyDef
@@ -2271,16 +2389,16 @@ return|return
 name|false
 return|;
 block|}
-comment|/// hasHighOperandLatency - Compute operand latency between a def of 'Reg'
-comment|/// and an use in the current loop, return true if the target considered
+comment|/// Compute operand latency between a def of 'Reg'
+comment|/// and a use in the current loop. Return true if the target considered
 comment|/// it 'high'. This is used by optimization passes such as machine LICM to
-comment|/// determine whether it makes sense to hoist an instruction out even in
+comment|/// determine whether it makes sense to hoist an instruction out even in a
 comment|/// high register pressure situation.
 name|virtual
 name|bool
 name|hasHighOperandLatency
 argument_list|(
-argument|const InstrItineraryData *ItinData
+argument|const TargetSchedModel&SchedModel
 argument_list|,
 argument|const MachineRegisterInfo *MRI
 argument_list|,
@@ -2298,13 +2416,13 @@ return|return
 name|false
 return|;
 block|}
-comment|/// hasLowDefLatency - Compute operand latency of a def of 'Reg', return true
+comment|/// Compute operand latency of a def of 'Reg'. Return true
 comment|/// if the target considered it 'low'.
 name|virtual
 name|bool
 name|hasLowDefLatency
 argument_list|(
-argument|const InstrItineraryData *ItinData
+argument|const TargetSchedModel&SchedModel
 argument_list|,
 argument|const MachineInstr *DefMI
 argument_list|,
@@ -2312,7 +2430,7 @@ argument|unsigned DefIdx
 argument_list|)
 specifier|const
 block|;
-comment|/// verifyInstruction - Perform target specific instruction verification.
+comment|/// Perform target-specific instruction verification.
 name|virtual
 name|bool
 name|verifyInstruction
@@ -2327,7 +2445,7 @@ return|return
 name|true
 return|;
 block|}
-comment|/// getExecutionDomain - Return the current execution domain and bit mask of
+comment|/// Return the current execution domain and bit mask of
 comment|/// possible domains for instruction.
 comment|///
 comment|/// Some micro-architectures have multiple execution domains, and multiple
@@ -2372,11 +2490,10 @@ literal|0
 argument_list|)
 return|;
 block|}
-comment|/// setExecutionDomain - Change the opcode of MI to execute in Domain.
+comment|/// Change the opcode of MI to execute in Domain.
 comment|///
 comment|/// The bit (1<< Domain) must be set in the mask returned from
 comment|/// getExecutionDomain(MI).
-comment|///
 name|virtual
 name|void
 name|setExecutionDomain
@@ -2387,7 +2504,7 @@ argument|unsigned Domain
 argument_list|)
 specifier|const
 block|{}
-comment|/// getPartialRegUpdateClearance - Returns the preferred minimum clearance
+comment|/// Returns the preferred minimum clearance
 comment|/// before an instruction with an unwanted partial register update.
 comment|///
 comment|/// Some instructions only write part of a register, and implicitly need to
@@ -2446,7 +2563,7 @@ block|}
 comment|/// \brief Return the minimum clearance before an instruction that reads an
 comment|/// unused register.
 comment|///
-comment|/// For example, AVX instructions may copy part of an register operand into
+comment|/// For example, AVX instructions may copy part of a register operand into
 comment|/// the unused high bits of the destination register.
 comment|///
 comment|/// vcvtsi2sdq %rax, %xmm0<undef>, %xmm14
@@ -2474,7 +2591,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// breakPartialRegDependency - Insert a dependency-breaking instruction
+comment|/// Insert a dependency-breaking instruction
 comment|/// before MI to eliminate an unwanted dependency on OpNum.
 comment|///
 comment|/// If it wasn't possible to avoid a def in the last N instructions before MI
@@ -2517,10 +2634,10 @@ return|return
 name|nullptr
 return|;
 block|}
-comment|// areMemAccessesTriviallyDisjoint - Sometimes, it is possible for the target
+comment|// Sometimes, it is possible for the target
 comment|// to tell, even without aliasing information, that two MIs access different
 comment|// memory addresses. This function returns true if two MIs access different
-comment|// memory addresses, and false otherwise.
+comment|// memory addresses and false otherwise.
 name|virtual
 name|bool
 name|areMemAccessesTriviallyDisjoint
@@ -2575,9 +2692,23 @@ return|return
 name|false
 return|;
 block|}
+comment|/// \brief Return the value to use for the MachineCSE's LookAheadLimit,
+comment|/// which is a heuristic used for CSE'ing phys reg defs.
+name|virtual
+name|unsigned
+name|getMachineCSELookAheadLimit
+argument_list|()
+specifier|const
+block|{
+comment|// The default lookahead is small to prevent unprofitable quadratic
+comment|// behavior.
+return|return
+literal|5
+return|;
+block|}
 name|private
 operator|:
-name|int
+name|unsigned
 name|CallFrameSetupOpcode
 block|,
 name|CallFrameDestroyOpcode

@@ -109,12 +109,10 @@ begin_function
 name|void
 name|rewinddir
 parameter_list|(
-name|dirp
-parameter_list|)
 name|DIR
 modifier|*
 name|dirp
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(

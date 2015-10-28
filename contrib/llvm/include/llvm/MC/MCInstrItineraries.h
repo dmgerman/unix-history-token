@@ -148,7 +148,7 @@ name|ReservationKinds
 name|Kind_
 decl_stmt|;
 comment|///< Kind of the FU reservation
-comment|/// Returns the number of cycles the stage is occupied.
+comment|/// \brief Returns the number of cycles the stage is occupied.
 name|unsigned
 name|getCycles
 argument_list|()
@@ -158,7 +158,7 @@ return|return
 name|Cycles_
 return|;
 block|}
-comment|/// Returns the choice of FUs.
+comment|/// \brief Returns the choice of FUs.
 name|unsigned
 name|getUnits
 argument_list|()
@@ -177,8 +177,8 @@ return|return
 name|Kind_
 return|;
 block|}
-comment|/// Returns the number of cycles from the start of
-comment|/// this stage to the start of the next stage in the itinerary
+comment|/// \brief Returns the number of cycles from the start of this stage to the
+comment|/// start of the next stage in the itinerary
 name|unsigned
 name|getNextCycles
 argument_list|()
@@ -268,7 +268,6 @@ name|Itineraries
 decl_stmt|;
 comment|///< Array of itineraries selected
 comment|/// Ctors.
-comment|///
 name|InstrItineraryData
 argument_list|()
 operator|:
@@ -348,7 +347,7 @@ argument_list|(
 argument|SchedModel.InstrItineraries
 argument_list|)
 block|{}
-comment|/// Returns true if there are no itineraries.
+comment|/// \brief Returns true if there are no itineraries.
 name|bool
 name|isEmpty
 argument_list|()
@@ -360,7 +359,7 @@ operator|==
 name|nullptr
 return|;
 block|}
-comment|/// Returns true if the index is for the end marker itinerary.
+comment|/// \brief Returns true if the index is for the end marker itinerary.
 name|bool
 name|isEndMarker
 argument_list|(
@@ -397,7 +396,7 @@ operator|)
 operator|)
 return|;
 block|}
-comment|/// Return the first stage of the itinerary.
+comment|/// \brief Return the first stage of the itinerary.
 specifier|const
 name|InstrStage
 modifier|*
@@ -424,7 +423,7 @@ operator|+
 name|StageIdx
 return|;
 block|}
-comment|/// Return the last+1 stage of the itinerary.
+comment|/// \brief Return the last+1 stage of the itinerary.
 specifier|const
 name|InstrStage
 modifier|*
@@ -451,9 +450,9 @@ operator|+
 name|StageIdx
 return|;
 block|}
-comment|/// Return the total stage latency of the given class.
-comment|/// The latency is the maximum completion time for any stage in the itinerary.
-comment|/// If no stages exist, it defaults to one cycle.
+comment|/// \brief Return the total stage latency of the given class.  The latency is
+comment|/// the maximum completion time for any stage in the itinerary.  If no stages
+comment|/// exist, it defaults to one cycle.
 name|unsigned
 name|getStageLatency
 argument_list|(
@@ -538,8 +537,8 @@ return|return
 name|Latency
 return|;
 block|}
-comment|/// Return the cycle for the given class and operand.
-comment|/// Return -1 if no cycle is specified for the operand.
+comment|/// \brief Return the cycle for the given class and operand.  Return -1 if no
+comment|/// cycle is specified for the operand.
 name|int
 name|getOperandCycle
 argument_list|(
@@ -606,11 +605,11 @@ name|OperandIdx
 index|]
 return|;
 block|}
-comment|/// Return true if there is a pipeline forwarding
-comment|/// between instructions of itinerary classes DefClass and UseClasses so that
-comment|/// value produced by an instruction of itinerary class DefClass, operand
-comment|/// index DefIdx can be bypassed when it's read by an instruction of
-comment|/// itinerary class UseClass, operand index UseIdx.
+comment|/// \brief Return true if there is a pipeline forwarding between instructions
+comment|/// of itinerary classes DefClass and UseClasses so that value produced by an
+comment|/// instruction of itinerary class DefClass, operand index DefIdx can be
+comment|/// bypassed when it's read by an instruction of itinerary class UseClass,
+comment|/// operand index UseIdx.
 name|bool
 name|hasPipelineForwarding
 argument_list|(
@@ -724,9 +723,9 @@ name|UseIdx
 index|]
 return|;
 block|}
-comment|/// Compute and return the use operand latency of a given
-comment|/// itinerary class and operand index if the value is produced by an
-comment|/// instruction of the specified itinerary class and def operand index.
+comment|/// \brief Compute and return the use operand latency of a given itinerary
+comment|/// class and operand index if the value is produced by an instruction of the
+comment|/// specified itinerary class and def operand index.
 name|int
 name|getOperandLatency
 argument_list|(
@@ -828,7 +827,7 @@ return|return
 name|UseCycle
 return|;
 block|}
-comment|/// Return the number of micro-ops that the given class decodes to.
+comment|/// \brief Return the number of micro-ops that the given class decodes to.
 comment|/// Return -1 for classes that require dynamic lookup via TargetInstrInfo.
 name|int
 name|getNumMicroOps

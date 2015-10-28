@@ -160,6 +160,11 @@ argument_list|()
 expr_stmt|;
 name|llvm
 operator|::
+name|linkCoreCLRGC
+argument_list|()
+expr_stmt|;
+name|llvm
+operator|::
 name|linkOcamlGC
 argument_list|()
 expr_stmt|;

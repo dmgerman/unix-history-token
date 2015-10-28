@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2011 Mikolaj Golub  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2011 Mikolaj Golub  * Copyright (c) 2015 Allan Jude<allanjude@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -367,9 +367,9 @@ operator|!
 name|hflag
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5s %-16s %-16s %16s %16s\n"
+literal|"{T:/%5s %-16s %-16s %16s %16s}\n"
 argument_list|,
 literal|"PID"
 argument_list|,
@@ -383,6 +383,19 @@ literal|"HARD     "
 argument_list|)
 expr_stmt|;
 block|}
+name|xo_emit
+argument_list|(
+literal|"{ek:process_id/%5d}{e:command/%-16s/%s}"
+argument_list|,
+name|kipp
+operator|->
+name|ki_pid
+argument_list|,
+name|kipp
+operator|->
+name|ki_comm
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -415,9 +428,10 @@ operator|-
 literal|1
 condition|)
 return|return;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5d %-16s %-16s "
+literal|"{dk:process_id/%5d} {d:command/%-16s} "
+literal|"{d:rlimit_param/%-16s} "
 argument_list|,
 name|kipp
 operator|->
@@ -435,9 +449,75 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_open_container
 argument_list|(
-literal|"%16s "
+name|rlimit_param
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rlimit
+operator|.
+name|rlim_cur
+operator|==
+name|RLIM_INFINITY
+condition|)
+name|xo_emit
+argument_list|(
+literal|"{e:soft_limit/infinity}"
+argument_list|)
+expr_stmt|;
+else|else
+name|xo_emit
+argument_list|(
+literal|"{e:soft_limit/%U}"
+argument_list|,
+name|rlimit
+operator|.
+name|rlim_cur
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rlimit
+operator|.
+name|rlim_max
+operator|==
+name|RLIM_INFINITY
+condition|)
+name|xo_emit
+argument_list|(
+literal|"{e:hard_limit/infinity}"
+argument_list|)
+expr_stmt|;
+else|else
+name|xo_emit
+argument_list|(
+literal|"{e:hard_limit/%U}"
+argument_list|,
+name|rlimit
+operator|.
+name|rlim_max
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+name|rlimit_param
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{d:rlim_cur/%16s} "
 argument_list|,
 name|humanize_rlimit
 argument_list|(
@@ -449,9 +529,9 @@ name|rlim_cur
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%16s\n"
+literal|"{d:rlim_max/%16s}\n"
 argument_list|,
 name|humanize_rlimit
 argument_list|(

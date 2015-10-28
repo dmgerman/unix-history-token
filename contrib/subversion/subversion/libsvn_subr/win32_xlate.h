@@ -28,8 +28,8 @@ end_comment
 begin_typedef
 typedef|typedef
 name|struct
-name|win32_xlate_t
-name|win32_xlate_t
+name|svn_subr__win32_xlate_t
+name|svn_subr__win32_xlate_t
 typedef|;
 end_typedef
 
@@ -41,7 +41,7 @@ begin_function_decl
 name|apr_status_t
 name|svn_subr__win32_xlate_open
 parameter_list|(
-name|win32_xlate_t
+name|svn_subr__win32_xlate_t
 modifier|*
 modifier|*
 name|xlate_p
@@ -71,7 +71,7 @@ begin_function_decl
 name|apr_status_t
 name|svn_subr__win32_xlate_to_stringbuf
 parameter_list|(
-name|win32_xlate_t
+name|svn_subr__win32_xlate_t
 modifier|*
 name|handle
 parameter_list|,

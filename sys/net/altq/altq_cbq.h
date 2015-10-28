@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/altq/altq_codel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/altq/altq_red.h>
 end_include
 
@@ -86,6 +92,11 @@ directive|define
 name|CBQCLF_BORROW
 value|0x0020
 comment|/* borrow from parent */
+define|#
+directive|define
+name|CBQCLF_CODEL
+value|0x0040
+comment|/* use CoDel */
 comment|/* class flags only for root class */
 define|#
 directive|define
@@ -196,7 +207,7 @@ comment|/* # packets in queue */
 name|int
 name|avgidle
 decl_stmt|;
-comment|/* red and rio related info */
+comment|/* codel, red and rio related info */
 name|int
 name|qtype
 decl_stmt|;
@@ -206,6 +217,10 @@ name|red
 index|[
 literal|3
 index|]
+decl_stmt|;
+name|struct
+name|codel_stats
+name|codel
 decl_stmt|;
 block|}
 name|class_stats_t

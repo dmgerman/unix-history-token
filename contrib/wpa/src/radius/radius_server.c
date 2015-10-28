@@ -113,6 +113,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|eapol_callbacks
 name|radius_server_eapol_cb
@@ -455,6 +456,10 @@ name|dl_list
 name|erp_keys
 decl_stmt|;
 comment|/* struct eap_server_erp_key */
+name|unsigned
+name|int
+name|tls_session_lifetime
+decl_stmt|;
 comment|/** 	 * wps - Wi-Fi Protected Setup context 	 * 	 * If WPS is used with an external RADIUS server (which is quite 	 * unlikely configuration), this is used to provide a pointer to WPS 	 * context data. Normally, this can be set to %NULL. 	 */
 name|struct
 name|wps_context
@@ -2256,6 +2261,14 @@ operator|=
 name|data
 operator|->
 name|erp
+expr_stmt|;
+name|eap_conf
+operator|.
+name|tls_session_lifetime
+operator|=
+name|data
+operator|->
+name|tls_session_lifetime
 expr_stmt|;
 name|radius_server_testing_options
 argument_list|(
@@ -7523,6 +7536,13 @@ argument_list|(
 literal|16
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|data
+operator|->
+name|pac_opaque_encr_key
+condition|)
+block|{
 name|os_memcpy
 argument_list|(
 name|data
@@ -7536,6 +7556,7 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -7741,6 +7762,14 @@ operator|=
 name|conf
 operator|->
 name|erp_domain
+expr_stmt|;
+name|data
+operator|->
+name|tls_session_lifetime
+operator|=
+name|conf
+operator|->
+name|tls_session_lifetime
 expr_stmt|;
 if|if
 condition|(
@@ -9016,6 +9045,19 @@ operator|->
 name|macacl
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ret
+condition|)
+block|{
+name|RADIUS_DEBUG
+argument_list|(
+literal|"%s: User-Name not found from user database"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|ret
 return|;
@@ -9278,6 +9320,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|eapol_callbacks
 name|radius_server_eapol_cb

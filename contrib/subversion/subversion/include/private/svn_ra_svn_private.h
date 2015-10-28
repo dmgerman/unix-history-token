@@ -54,6 +54,16 @@ modifier|*
 name|shim_callbacks
 parameter_list|)
 function_decl|;
+comment|/**  * Return the memory pool used to allocate @a conn.  */
+name|apr_pool_t
+modifier|*
+name|svn_ra_svn__get_pool
+parameter_list|(
+name|svn_ra_svn_conn_t
+modifier|*
+name|conn
+parameter_list|)
+function_decl|;
 comment|/**  * @defgroup ra_svn_deprecated ra_svn low-level functions  * @{  */
 comment|/** Write a number over the net.  *  * Writes will be buffered until the next read or flush.  */
 name|svn_error_t
@@ -127,6 +137,23 @@ specifier|const
 name|char
 modifier|*
 name|word
+parameter_list|)
+function_decl|;
+comment|/** Write a boolean over the net.  *  * Writes will be buffered until the next read or flush.  */
+name|svn_error_t
+modifier|*
+name|svn_ra_svn__write_boolean
+parameter_list|(
+name|svn_ra_svn_conn_t
+modifier|*
+name|conn
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|,
+name|svn_boolean_t
+name|value
 parameter_list|)
 function_decl|;
 comment|/** Write a list of properties over the net.  @a props is allowed to be NULL,  * in which case an empty list will be written out.  *  * @since New in 1.5.  */
@@ -243,7 +270,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/** Parse an array of @c svn_sort__item_t structures as a tuple, using a  * printf-like interface.  The format string @a fmt may contain:  *  *@verbatim      Spec  Argument type          Item type      ----  --------------------   ---------      n     apr_uint64_t *         Number      r     svn_revnum_t *         Number      s     svn_string_t **        String      c     const char **          String      w     const char **          Word      b     svn_boolean_t *        Word ("true" or "false")      B     apr_uint64_t *         Word ("true" or "false")      l     apr_array_header_t **  List      (                            Begin tuple      )                            End tuple      ?                            Tuple is allowed to end here   @endverbatim  *  * Note that a tuple is only allowed to end precisely at a '?', or at  * the end of the specification.  So if @a fmt is "c?cc" and @a list  * contains two elements, an error will result.  *  * 'B' is similar to 'b', but may be used in the optional tuple specification.  * It returns TRUE, FALSE, or SVN_RA_SVN_UNSPECIFIED_NUMBER.  *  * If an optional part of a tuple contains no data, 'r' values will be  * set to @c SVN_INVALID_REVNUM, 'n' and 'B' values will be set to  * SVN_RA_SVN_UNSPECIFIED_NUMBER, and 's', 'c', 'w', and 'l' values  * will be set to @c NULL.  'b' may not appear inside an optional  * tuple specification; use 'B' instead.  */
+comment|/** Parse an array of @c svn_sort__item_t structures as a tuple, using a  * printf-like interface.  The format string @a fmt may contain:  *  *@verbatim      Spec  Argument type          Item type      ----  --------------------   ---------      n     apr_uint64_t *         Number      r     svn_revnum_t *         Number      s     svn_string_t **        String      c     const char **          String      w     const char **          Word      b     svn_boolean_t *        Word ("true" or "false")      B     apr_uint64_t *         Word ("true" or "false")      3     svn_tristate_t *       Word ("true" or "false")      l     apr_array_header_t **  List      (                            Begin tuple      )                            End tuple      ?                            Tuple is allowed to end here   @endverbatim  *  * Note that a tuple is only allowed to end precisely at a '?', or at  * the end of the specification.  So if @a fmt is "c?cc" and @a list  * contains two elements, an error will result.  *  * '3' is similar to 'b', but may be used in the optional tuple specification.  * It returns #svn_tristate_true, #svn_tristate_false or #svn_tristate_unknown.  *  * 'B' is similar to '3', but it returns @c TRUE, @c FALSE, or  * #SVN_RA_SVN_UNSPECIFIED_NUMBER.  'B' is deprecated; new code should  * use '3' instead.  *  * If an optional part of a tuple contains no data, 'r' values will be  * set to @c SVN_INVALID_REVNUM; 'n' and 'B' values will be set to  * #SVN_RA_SVN_UNSPECIFIED_NUMBER; 's', 'c', 'w', and 'l' values  * will be set to @c NULL; and '3' values will be set to #svn_tristate_unknown  * 'b' may not appear inside an optional tuple specification; use '3' instead.  */
 name|svn_error_t
 modifier|*
 name|svn_ra_svn__parse_tuple
@@ -327,6 +354,57 @@ parameter_list|,
 modifier|...
 parameter_list|)
 function_decl|;
+comment|/** Check the receive buffer and socket of @a conn whether there is some  * unprocessed incoming data without waiting for new data to come in.  * If data is found, set @a *has_command to TRUE.  If the connection does  * not contain any more data and has been closed, set @a *terminated to  * TRUE.  */
+name|svn_error_t
+modifier|*
+name|svn_ra_svn__has_command
+parameter_list|(
+name|svn_boolean_t
+modifier|*
+name|has_command
+parameter_list|,
+name|svn_boolean_t
+modifier|*
+name|terminated
+parameter_list|,
+name|svn_ra_svn_conn_t
+modifier|*
+name|conn
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/** Accept a single command from @a conn and handle them according  * to @a cmd_hash.  Command handlers will be passed @a conn, @a pool,  * the parameters of the command, and @a baton.  @a *terminate will be  * set if either @a error_on_disconnect is FALSE and the connection got  * closed, or if the command being handled has the "terminate" flag set  * in the command table.  */
+name|svn_error_t
+modifier|*
+name|svn_ra_svn__handle_command
+parameter_list|(
+name|svn_boolean_t
+modifier|*
+name|terminate
+parameter_list|,
+name|apr_hash_t
+modifier|*
+name|cmd_hash
+parameter_list|,
+name|void
+modifier|*
+name|baton
+parameter_list|,
+name|svn_ra_svn_conn_t
+modifier|*
+name|conn
+parameter_list|,
+name|svn_boolean_t
+name|error_on_disconnect
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
 comment|/** Accept commands over the network and handle them according to @a  * commands.  Command handlers will be passed @a conn, a subpool of @a  * pool (cleared after each command is handled), the parameters of the  * command, and @a baton.  Commands will be accepted until a  * terminating command is received (a command with "terminate" set in  * the command table).  If a command handler returns an error wrapped  * in SVN_RA_SVN_CMD_ERR (see the @c SVN_CMD_ERR macro), the error  * will be reported to the other side of the connection and the  * command loop will continue; any other kind of error (typically a  * network or protocol error) is passed through to the caller.  *  * @since New in 1.6.  *  */
 name|svn_error_t
 modifier|*
@@ -374,7 +452,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 function_decl|;
-comment|/** Write an unsuccessful command response over the network. */
+comment|/** Write an unsuccessful command response over the network.  *  * @note This does not clear @a err. */
 name|svn_error_t
 modifier|*
 name|svn_ra_svn__write_cmd_failure
@@ -387,6 +465,7 @@ name|apr_pool_t
 modifier|*
 name|pool
 parameter_list|,
+specifier|const
 name|svn_error_t
 modifier|*
 name|err
@@ -1010,7 +1089,7 @@ name|apr_time_t
 name|tm
 parameter_list|)
 function_decl|;
-comment|/** Send a "change-rev-prop2" command over connection @a conn.  * Use @a pool for allocations.  *  * @see #svn_ra_change_rev_prop2 for a description.  */
+comment|/** Send a "change-rev-prop2" command over connection @a conn.  * Use @a pool for allocations.  *  * If @a dont_care is false then check that the old value matches  * @a old_value. If @a dont_care is true then do not check the old  * value; in this case @a old_value must be NULL.  *  * @see #svn_ra_change_rev_prop2 for the rest of the description.  */
 name|svn_error_t
 modifier|*
 name|svn_ra_svn__write_cmd_change_rev_prop2
@@ -1557,6 +1636,136 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|pool
+parameter_list|)
+function_decl|;
+comment|/**  * @}  */
+comment|/**  * @defgroup svn_send_data sending data structures over ra_svn  * @{  */
+comment|/** Send a changed path (as part of transmitting a log entry) over connection  * @a conn.  Use @a pool for allocations.  *  * @see svn_log_changed_path2_t for a description of the other parameters.  */
+name|svn_error_t
+modifier|*
+name|svn_ra_svn__write_data_log_changed_path
+parameter_list|(
+name|svn_ra_svn_conn_t
+modifier|*
+name|conn
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|char
+name|action
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|copyfrom_path
+parameter_list|,
+name|svn_revnum_t
+name|copyfrom_rev
+parameter_list|,
+name|svn_node_kind_t
+name|node_kind
+parameter_list|,
+name|svn_boolean_t
+name|text_modified
+parameter_list|,
+name|svn_boolean_t
+name|props_modified
+parameter_list|)
+function_decl|;
+comment|/** Send a the details of a log entry (as part of transmitting a log entry  * and without revprops and changed paths) over connection @a conn.  * Use @a pool for allocations.  *  * @a author, @a date and @a message have been extracted and removed from  * the revprops to follow.  @a has_children is taken directly from the  * #svn_log_entry_t struct.  @a revision is too, except when it equals  * #SVN_INVALID_REVNUM.  In that case, @a revision must be 0 and  * @a invalid_revnum be set to TRUE.  @a revprop_count is the number of  * revprops that will follow in the revprops list.  */
+name|svn_error_t
+modifier|*
+name|svn_ra_svn__write_data_log_entry
+parameter_list|(
+name|svn_ra_svn_conn_t
+modifier|*
+name|conn
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|,
+name|svn_revnum_t
+name|revision
+parameter_list|,
+specifier|const
+name|svn_string_t
+modifier|*
+name|author
+parameter_list|,
+specifier|const
+name|svn_string_t
+modifier|*
+name|date
+parameter_list|,
+specifier|const
+name|svn_string_t
+modifier|*
+name|message
+parameter_list|,
+name|svn_boolean_t
+name|has_children
+parameter_list|,
+name|svn_boolean_t
+name|invalid_revnum
+parameter_list|,
+name|unsigned
+name|revprop_count
+parameter_list|)
+function_decl|;
+comment|/**  * @}  */
+comment|/**  * @defgroup svn_read_data reading data structures from ra_svn  * @{  */
+comment|/** Take the data tuple ITEMS received over ra_svn and convert it to the  * a changed path (as part of receiving a log entry).  *  * @see svn_log_changed_path2_t for a description of the output parameters.  */
+name|svn_error_t
+modifier|*
+name|svn_ra_svn__read_data_log_changed_entry
+parameter_list|(
+specifier|const
+name|apr_array_header_t
+modifier|*
+name|items
+parameter_list|,
+name|svn_string_t
+modifier|*
+modifier|*
+name|cpath
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|action
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|copy_path
+parameter_list|,
+name|svn_revnum_t
+modifier|*
+name|copy_rev
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|kind_str
+parameter_list|,
+name|apr_uint64_t
+modifier|*
+name|text_mods
+parameter_list|,
+name|apr_uint64_t
+modifier|*
+name|prop_mods
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */

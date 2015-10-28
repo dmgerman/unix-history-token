@@ -1627,8 +1627,6 @@ operator|+
 name|defobj
 operator|->
 name|tlsoffset
-operator|-
-name|TLS_TCB_SIZE
 expr_stmt|;
 break|break;
 case|case

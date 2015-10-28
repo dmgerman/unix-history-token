@@ -91,6 +91,13 @@ literal|"race"
 decl_stmt|;
 specifier|const
 name|char
+name|kSuppressionRaceTop
+index|[]
+init|=
+literal|"race_top"
+decl_stmt|;
+specifier|const
+name|char
 name|kSuppressionMutex
 index|[]
 init|=

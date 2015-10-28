@@ -678,6 +678,10 @@ expr_stmt|;
 if|if
 condition|(
 name|wpa_s
+operator|&&
+name|wpa_s
+operator|->
+name|dbus_path
 condition|)
 block|{
 specifier|const
@@ -986,6 +990,11 @@ condition|(
 name|wpa_s
 operator|==
 name|NULL
+operator|||
+operator|!
+name|wpa_s
+operator|->
+name|dbus_path
 condition|)
 block|{
 name|reply
@@ -1224,6 +1233,23 @@ name|wpa_bss
 modifier|*
 name|bss
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|wpa_s
+operator|->
+name|dbus_path
+condition|)
+return|return
+name|dbus_message_new_error
+argument_list|(
+name|message
+argument_list|,
+name|WPAS_ERROR_INTERNAL_ERROR
+argument_list|,
+literal|"no D-Bus interface available"
+argument_list|)
+return|;
 comment|/* Create and initialize the return message */
 name|reply
 operator|=
@@ -1867,8 +1893,6 @@ condition|)
 block|{
 name|dbus_bool_t
 name|success
-init|=
-name|FALSE
 decl_stmt|;
 name|size_t
 name|i
@@ -2800,6 +2824,8 @@ name|struct
 name|wpa_ssid
 modifier|*
 name|ssid
+init|=
+name|NULL
 decl_stmt|;
 name|char
 name|path_buf
@@ -2812,6 +2838,12 @@ name|path
 init|=
 name|path_buf
 decl_stmt|;
+if|if
+condition|(
+name|wpa_s
+operator|->
+name|dbus_path
+condition|)
 name|ssid
 operator|=
 name|wpa_config_add_network
@@ -3026,6 +3058,11 @@ block|}
 comment|/* Ensure the network is actually a child of this interface */
 if|if
 condition|(
+operator|!
+name|wpa_s
+operator|->
+name|dbus_path
+operator|||
 name|os_strcmp
 argument_list|(
 name|iface
@@ -3169,8 +3206,8 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-specifier|const
 modifier|*
+specifier|const
 name|dont_quote
 index|[]
 init|=
@@ -3194,6 +3231,10 @@ block|,
 literal|"pkcs11_module_path"
 block|,
 literal|"bssid"
+block|,
+literal|"scan_freq"
+block|,
+literal|"freq_list"
 block|,
 name|NULL
 block|}
@@ -3501,7 +3542,7 @@ comment|/* Zero-length option check */
 if|if
 condition|(
 name|size
-operator|<=
+operator|==
 literal|0
 condition|)
 goto|goto
@@ -4056,6 +4097,11 @@ condition|(
 name|network
 operator|==
 name|NULL
+operator|||
+operator|!
+name|wpa_s
+operator|->
+name|dbus_path
 operator|||
 name|os_strcmp
 argument_list|(

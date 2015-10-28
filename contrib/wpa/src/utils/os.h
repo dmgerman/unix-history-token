@@ -739,6 +739,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * os_fdatasync - Sync a file's (for a given stream) state with storage device  * @stream: the stream to be flushed  * Returns: 0 if the operation succeeded or -1 on failure  */
+end_comment
+
+begin_function_decl
+name|int
+name|os_fdatasync
+parameter_list|(
+name|FILE
+modifier|*
+name|stream
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * os_zalloc - Allocate and zero memory  * @size: Number of bytes to allocate  * Returns: Pointer to allocated and zeroed memory or %NULL on failure  *  * Caller is responsible for freeing the returned buffer with os_free().  */
 end_comment
 
@@ -2164,6 +2179,55 @@ end_endif
 begin_comment
 comment|/* OS_REJECT_C_LIB_FUNCTIONS */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|WPA_TRACE_BFD
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CONFIG_TESTING_OPTIONS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TEST_FAIL
+parameter_list|()
+value|testing_test_fail()
+end_define
+
+begin_function_decl
+name|int
+name|testing_test_fail
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TEST_FAIL
+parameter_list|()
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

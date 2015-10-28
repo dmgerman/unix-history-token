@@ -67,6 +67,12 @@ directive|define
 name|LLVM_TRANSFORMS_UTILS_UNROLLLOOP_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -82,6 +88,9 @@ name|LoopInfo
 decl_stmt|;
 name|class
 name|LPPassManager
+decl_stmt|;
+name|class
+name|MDNode
 decl_stmt|;
 name|class
 name|Pass
@@ -101,6 +110,9 @@ name|TripCount
 parameter_list|,
 name|bool
 name|AllowRuntime
+parameter_list|,
+name|bool
+name|AllowExpensiveTripCount
 parameter_list|,
 name|unsigned
 name|TripMultiple
@@ -132,6 +144,9 @@ parameter_list|,
 name|unsigned
 name|Count
 parameter_list|,
+name|bool
+name|AllowExpensiveTripCount
+parameter_list|,
 name|LoopInfo
 modifier|*
 name|LI
@@ -139,6 +154,18 @@ parameter_list|,
 name|LPPassManager
 modifier|*
 name|LPM
+parameter_list|)
+function_decl|;
+name|MDNode
+modifier|*
+name|GetUnrollMetadata
+parameter_list|(
+name|MDNode
+modifier|*
+name|LoopID
+parameter_list|,
+name|StringRef
+name|Name
 parameter_list|)
 function_decl|;
 block|}

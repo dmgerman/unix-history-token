@@ -987,9 +987,12 @@ name|private
 label|:
 name|Lexer
 argument_list|(
-argument|const Lexer&
+specifier|const
+name|Lexer
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -999,7 +1002,8 @@ specifier|const
 name|Lexer
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 comment|/// Allocator for strings that are semantic values of tokens and have to be
 comment|/// computed (for example, resolved decimal character references).

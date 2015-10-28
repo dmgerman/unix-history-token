@@ -5011,7 +5011,7 @@ name|thread0
 operator|.
 name|td_kstack
 operator|+
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|PAGE_SIZE
 operator|)
@@ -5044,8 +5044,6 @@ operator|.
 name|fpscr
 operator|=
 name|VFPSCR_DN
-operator||
-name|VFPSCR_FZ
 expr_stmt|;
 name|thread0
 operator|.
@@ -6360,7 +6358,7 @@ name|valloc_pages
 argument_list|(
 name|kernelstack
 argument_list|,
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|MAXCPU
 argument_list|)
@@ -6959,12 +6957,6 @@ argument_list|(
 literal|"elf kernel"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|kmdp
-operator|!=
-name|NULL
-condition|)
 name|dtbp
 operator|=
 name|MD_FETCH
@@ -6975,14 +6967,6 @@ name|MODINFOMD_DTBP
 argument_list|,
 name|vm_offset_t
 argument_list|)
-expr_stmt|;
-else|else
-name|dtbp
-operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|NULL
 expr_stmt|;
 if|#
 directive|if
@@ -7248,7 +7232,7 @@ name|kernelstack
 operator|=
 name|pmap_preboot_get_vpages
 argument_list|(
-name|KSTACK_PAGES
+name|kstack_pages
 operator|*
 name|MAXCPU
 argument_list|)

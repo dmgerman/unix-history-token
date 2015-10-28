@@ -97,6 +97,26 @@ name|PPCSubtarget
 operator|&
 name|Subtarget
 block|;
+specifier|const
+name|unsigned
+name|ReturnSaveOffset
+block|;
+specifier|const
+name|unsigned
+name|TOCSaveOffset
+block|;
+specifier|const
+name|unsigned
+name|FramePointerSaveOffset
+block|;
+specifier|const
+name|unsigned
+name|LinkageSize
+block|;
+specifier|const
+name|unsigned
+name|BasePointerSaveOffset
+block|;
 name|public
 operator|:
 name|PPCFrameLowering
@@ -124,6 +144,8 @@ name|void
 name|emitPrologue
 argument_list|(
 argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 name|override
@@ -161,9 +183,11 @@ argument_list|)
 specifier|const
 block|;
 name|void
-name|processFunctionBeforeCalleeSavedScan
+name|determineCalleeSaves
 argument_list|(
 argument|MachineFunction&MF
+argument_list|,
+argument|BitVector&SavedRegs
 argument_list|,
 argument|RegScavenger *RS = nullptr
 argument_list|)
@@ -244,205 +268,74 @@ return|;
 block|}
 comment|/// getReturnSaveOffset - Return the previous frame offset to save the
 comment|/// return address.
-specifier|static
 name|unsigned
 name|getReturnSaveOffset
-argument_list|(
-argument|bool isPPC64
-argument_list|,
-argument|bool isDarwinABI
-argument_list|)
+argument_list|()
+specifier|const
 block|{
-if|if
-condition|(
-name|isDarwinABI
-condition|)
 return|return
-name|isPPC64
-operator|?
-literal|16
-operator|:
-literal|8
-return|;
-comment|// SVR4 ABI:
-return|return
-name|isPPC64
-condition|?
-literal|16
-else|:
-literal|4
+name|ReturnSaveOffset
 return|;
 block|}
 comment|/// getTOCSaveOffset - Return the previous frame offset to save the
 comment|/// TOC register -- 64-bit SVR4 ABI only.
-specifier|static
 name|unsigned
 name|getTOCSaveOffset
-parameter_list|(
-name|bool
-name|isELFv2ABI
-parameter_list|)
+argument_list|()
+specifier|const
 block|{
 return|return
-name|isELFv2ABI
-condition|?
-literal|24
-else|:
-literal|40
+name|TOCSaveOffset
 return|;
 block|}
 comment|/// getFramePointerSaveOffset - Return the previous frame offset to save the
 comment|/// frame pointer.
-specifier|static
 name|unsigned
 name|getFramePointerSaveOffset
-parameter_list|(
-name|bool
-name|isPPC64
-parameter_list|,
-name|bool
-name|isDarwinABI
-parameter_list|)
+argument_list|()
+specifier|const
 block|{
-comment|// For the Darwin ABI:
-comment|// We cannot use the TOC save slot (offset +20) in the PowerPC linkage area
-comment|// for saving the frame pointer (if needed.)  While the published ABI has
-comment|// not used this slot since at least MacOSX 10.2, there is older code
-comment|// around that does use it, and that needs to continue to work.
-if|if
-condition|(
-name|isDarwinABI
-condition|)
 return|return
-name|isPPC64
-condition|?
-operator|-
-literal|8U
-else|:
-operator|-
-literal|4U
-return|;
-comment|// SVR4 ABI: First slot in the general register save area.
-return|return
-name|isPPC64
-condition|?
-operator|-
-literal|8U
-else|:
-operator|-
-literal|4U
+name|FramePointerSaveOffset
 return|;
 block|}
 comment|/// getBasePointerSaveOffset - Return the previous frame offset to save the
 comment|/// base pointer.
-specifier|static
 name|unsigned
 name|getBasePointerSaveOffset
-parameter_list|(
-name|bool
-name|isPPC64
-parameter_list|,
-name|bool
-name|isDarwinABI
-parameter_list|,
-name|bool
-name|isPIC
-parameter_list|)
+argument_list|()
+specifier|const
 block|{
-if|if
-condition|(
-name|isDarwinABI
-condition|)
 return|return
-name|isPPC64
-condition|?
-operator|-
-literal|16U
-else|:
-operator|-
-literal|8U
-return|;
-comment|// SVR4 ABI: First slot in the general register save area.
-return|return
-name|isPPC64
-condition|?
-operator|-
-literal|16U
-else|:
-name|isPIC
-condition|?
-operator|-
-literal|12U
-else|:
-operator|-
-literal|8U
+name|BasePointerSaveOffset
 return|;
 block|}
 comment|/// getLinkageSize - Return the size of the PowerPC ABI linkage area.
 comment|///
-specifier|static
 name|unsigned
 name|getLinkageSize
-parameter_list|(
-name|bool
-name|isPPC64
-parameter_list|,
-name|bool
-name|isDarwinABI
-parameter_list|,
-name|bool
-name|isELFv2ABI
-parameter_list|)
+argument_list|()
+specifier|const
 block|{
-if|if
-condition|(
-name|isDarwinABI
-operator|||
-name|isPPC64
-condition|)
 return|return
-operator|(
-name|isELFv2ABI
-condition|?
-literal|4
-else|:
-literal|6
-operator|)
-operator|*
-operator|(
-name|isPPC64
-condition|?
-literal|8
-else|:
-literal|4
-operator|)
-return|;
-comment|// SVR4 ABI:
-return|return
-literal|8
+name|LinkageSize
 return|;
 block|}
 specifier|const
 name|SpillSlot
-modifier|*
+operator|*
 name|getCalleeSavedSpillSlots
 argument_list|(
-name|unsigned
-operator|&
-name|NumEntries
+argument|unsigned&NumEntries
 argument_list|)
-decl|const
+specifier|const
 name|override
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// End llvm namespace
 end_comment
 

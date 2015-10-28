@@ -137,7 +137,7 @@ begin_define
 define|#
 directive|define
 name|GIFBITS
-value|"\020\1ACCEPT_REV_ETHIP_VER\2IGNORE_SOURCE\5SEND_REV_ETHIP_VER"
+value|"\020\2IGNORE_SOURCE"
 end_define
 
 begin_function_decl
@@ -326,25 +326,6 @@ init|=
 block|{
 name|DEF_CMD
 argument_list|(
-literal|"accept_rev_ethip_ver"
-argument_list|,
-name|GIF_ACCEPT_REVETHIP
-argument_list|,
-name|setgifopts
-argument_list|)
-block|,
-name|DEF_CMD
-argument_list|(
-literal|"-accept_rev_ethip_ver"
-argument_list|,
-operator|-
-name|GIF_ACCEPT_REVETHIP
-argument_list|,
-name|setgifopts
-argument_list|)
-block|,
-name|DEF_CMD
-argument_list|(
 literal|"ignore_source"
 argument_list|,
 name|GIF_IGNORE_SOURCE
@@ -358,25 +339,6 @@ literal|"-ignore_source"
 argument_list|,
 operator|-
 name|GIF_IGNORE_SOURCE
-argument_list|,
-name|setgifopts
-argument_list|)
-block|,
-name|DEF_CMD
-argument_list|(
-literal|"send_rev_ethip_ver"
-argument_list|,
-name|GIF_SEND_REVETHIP
-argument_list|,
-name|setgifopts
-argument_list|)
-block|,
-name|DEF_CMD
-argument_list|(
-literal|"-send_rev_ethip_ver"
-argument_list|,
-operator|-
-name|GIF_SEND_REVETHIP
 argument_list|,
 name|setgifopts
 argument_list|)
@@ -418,13 +380,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
 name|size_t
 name|i
 decl_stmt|;
@@ -436,7 +391,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|gif_cmds
 argument_list|)
@@ -459,9 +414,6 @@ operator|&
 name|af_gif
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

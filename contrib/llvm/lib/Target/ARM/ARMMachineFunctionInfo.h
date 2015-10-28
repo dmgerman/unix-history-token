@@ -204,11 +204,6 @@ comment|/// registers also aren't included in DPRCSSize above.
 name|unsigned
 name|NumAlignedDPRCS2Regs
 block|;
-comment|/// JumpTableUId - Unique id for jumptables.
-comment|///
-name|unsigned
-name|JumpTableUId
-block|;
 name|unsigned
 name|PICLabelUId
 block|;
@@ -338,11 +333,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-name|JumpTableUId
-argument_list|(
-literal|0
-argument_list|)
-block|,
 name|PICLabelUId
 argument_list|(
 literal|0
@@ -424,49 +414,23 @@ name|p
 block|; }
 name|unsigned
 name|getArgRegsSaveSize
-argument_list|(
-argument|unsigned Align =
-literal|0
-argument_list|)
+argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-operator|!
-name|Align
-condition|)
 return|return
 name|ArgRegsSaveSize
-return|;
-return|return
-operator|(
-name|ArgRegsSaveSize
-operator|+
-name|Align
-operator|-
-literal|1
-operator|)
-operator|&
-operator|~
-operator|(
-name|Align
-operator|-
-literal|1
-operator|)
 return|;
 block|}
 name|void
 name|setArgRegsSaveSize
-parameter_list|(
-name|unsigned
-name|s
-parameter_list|)
+argument_list|(
+argument|unsigned s
+argument_list|)
 block|{
 name|ArgRegsSaveSize
 operator|=
 name|s
-expr_stmt|;
-block|}
+block|; }
 name|unsigned
 name|getReturnRegsCount
 argument_list|()
@@ -478,16 +442,14 @@ return|;
 block|}
 name|void
 name|setReturnRegsCount
-parameter_list|(
-name|unsigned
-name|s
-parameter_list|)
+argument_list|(
+argument|unsigned s
+argument_list|)
 block|{
 name|ReturnRegsCount
 operator|=
 name|s
-expr_stmt|;
-block|}
+block|; }
 name|bool
 name|hasStackFrame
 argument_list|()
@@ -499,16 +461,14 @@ return|;
 block|}
 name|void
 name|setHasStackFrame
-parameter_list|(
-name|bool
-name|s
-parameter_list|)
+argument_list|(
+argument|bool s
+argument_list|)
 block|{
 name|HasStackFrame
 operator|=
 name|s
-expr_stmt|;
-block|}
+block|; }
 name|bool
 name|shouldRestoreSPFromFP
 argument_list|()
@@ -520,16 +480,14 @@ return|;
 block|}
 name|void
 name|setShouldRestoreSPFromFP
-parameter_list|(
-name|bool
-name|s
-parameter_list|)
+argument_list|(
+argument|bool s
+argument_list|)
 block|{
 name|RestoreSPFromFP
 operator|=
 name|s
-expr_stmt|;
-block|}
+block|; }
 name|bool
 name|isLRSpilledForFarJump
 argument_list|()
@@ -541,16 +499,14 @@ return|;
 block|}
 name|void
 name|setLRIsSpilledForFarJump
-parameter_list|(
-name|bool
-name|s
-parameter_list|)
+argument_list|(
+argument|bool s
+argument_list|)
 block|{
 name|LRSpilledForFarJump
 operator|=
 name|s
-expr_stmt|;
-block|}
+block|; }
 name|unsigned
 name|getFramePtrSpillOffset
 argument_list|()
@@ -562,16 +518,14 @@ return|;
 block|}
 name|void
 name|setFramePtrSpillOffset
-parameter_list|(
-name|unsigned
-name|o
-parameter_list|)
+argument_list|(
+argument|unsigned o
+argument_list|)
 block|{
 name|FramePtrSpillOffset
 operator|=
 name|o
-expr_stmt|;
-block|}
+block|; }
 name|unsigned
 name|getNumAlignedDPRCS2Regs
 argument_list|()
@@ -583,16 +537,14 @@ return|;
 block|}
 name|void
 name|setNumAlignedDPRCS2Regs
-parameter_list|(
-name|unsigned
-name|n
-parameter_list|)
+argument_list|(
+argument|unsigned n
+argument_list|)
 block|{
 name|NumAlignedDPRCS2Regs
 operator|=
 name|n
-expr_stmt|;
-block|}
+block|; }
 name|unsigned
 name|getGPRCalleeSavedArea1Offset
 argument_list|()
@@ -622,40 +574,34 @@ return|;
 block|}
 name|void
 name|setGPRCalleeSavedArea1Offset
-parameter_list|(
-name|unsigned
-name|o
-parameter_list|)
+argument_list|(
+argument|unsigned o
+argument_list|)
 block|{
 name|GPRCS1Offset
 operator|=
 name|o
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|setGPRCalleeSavedArea2Offset
-parameter_list|(
-name|unsigned
-name|o
-parameter_list|)
+argument_list|(
+argument|unsigned o
+argument_list|)
 block|{
 name|GPRCS2Offset
 operator|=
 name|o
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|setDPRCalleeSavedAreaOffset
-parameter_list|(
-name|unsigned
-name|o
-parameter_list|)
+argument_list|(
+argument|unsigned o
+argument_list|)
 block|{
 name|DPRCSOffset
 operator|=
 name|o
-expr_stmt|;
-block|}
+block|; }
 name|unsigned
 name|getGPRCalleeSavedArea1Size
 argument_list|()
@@ -694,52 +640,44 @@ return|;
 block|}
 name|void
 name|setGPRCalleeSavedArea1Size
-parameter_list|(
-name|unsigned
-name|s
-parameter_list|)
+argument_list|(
+argument|unsigned s
+argument_list|)
 block|{
 name|GPRCS1Size
 operator|=
 name|s
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|setGPRCalleeSavedArea2Size
-parameter_list|(
-name|unsigned
-name|s
-parameter_list|)
+argument_list|(
+argument|unsigned s
+argument_list|)
 block|{
 name|GPRCS2Size
 operator|=
 name|s
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|setDPRCalleeSavedGapSize
-parameter_list|(
-name|unsigned
-name|s
-parameter_list|)
+argument_list|(
+argument|unsigned s
+argument_list|)
 block|{
 name|DPRCSAlignGapSize
 operator|=
 name|s
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|setDPRCalleeSavedAreaSize
-parameter_list|(
-name|unsigned
-name|s
-parameter_list|)
+argument_list|(
+argument|unsigned s
+argument_list|)
 block|{
 name|DPRCSSize
 operator|=
 name|s
-expr_stmt|;
-block|}
+block|; }
 name|unsigned
 name|getArgumentStackSize
 argument_list|()
@@ -751,46 +689,24 @@ return|;
 block|}
 name|void
 name|setArgumentStackSize
-parameter_list|(
-name|unsigned
-name|size
-parameter_list|)
+argument_list|(
+argument|unsigned size
+argument_list|)
 block|{
 name|ArgumentStackSize
 operator|=
 name|size
-expr_stmt|;
-block|}
-name|unsigned
-name|createJumpTableUId
-parameter_list|()
-block|{
-return|return
-name|JumpTableUId
-operator|++
-return|;
-block|}
-name|unsigned
-name|getNumJumpTables
-argument_list|()
-specifier|const
-block|{
-return|return
-name|JumpTableUId
-return|;
-block|}
+block|; }
 name|void
 name|initPICLabelUId
-parameter_list|(
-name|unsigned
-name|UId
-parameter_list|)
+argument_list|(
+argument|unsigned UId
+argument_list|)
 block|{
 name|PICLabelUId
 operator|=
 name|UId
-expr_stmt|;
-block|}
+block|;   }
 name|unsigned
 name|getNumPICLabels
 argument_list|()
@@ -802,7 +718,7 @@ return|;
 block|}
 name|unsigned
 name|createPICLabelUId
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|PICLabelUId
@@ -820,16 +736,14 @@ return|;
 block|}
 name|void
 name|setVarArgsFrameIndex
-parameter_list|(
-name|int
-name|Index
-parameter_list|)
+argument_list|(
+argument|int Index
+argument_list|)
 block|{
 name|VarArgsFrameIndex
 operator|=
 name|Index
-expr_stmt|;
-block|}
+block|; }
 name|bool
 name|hasITBlocks
 argument_list|()
@@ -841,16 +755,14 @@ return|;
 block|}
 name|void
 name|setHasITBlocks
-parameter_list|(
-name|bool
-name|h
-parameter_list|)
+argument_list|(
+argument|bool h
+argument_list|)
 block|{
 name|HasITBlocks
 operator|=
 name|h
-expr_stmt|;
-block|}
+block|; }
 name|unsigned
 name|getGlobalBaseReg
 argument_list|()
@@ -862,25 +774,21 @@ return|;
 block|}
 name|void
 name|setGlobalBaseReg
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
+argument_list|(
+argument|unsigned Reg
+argument_list|)
 block|{
 name|GlobalBaseReg
 operator|=
 name|Reg
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|recordCPEClone
-parameter_list|(
-name|unsigned
-name|CPIdx
-parameter_list|,
-name|unsigned
-name|CPCloneIdx
-parameter_list|)
+argument_list|(
+argument|unsigned CPIdx
+argument_list|,
+argument|unsigned CPCloneIdx
+argument_list|)
 block|{
 if|if
 condition|(
@@ -910,15 +818,14 @@ block|}
 name|unsigned
 name|getOriginalCPIdx
 argument_list|(
-name|unsigned
-name|CloneIdx
+argument|unsigned CloneIdx
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|DenseMap
 operator|<
 name|unsigned
-operator|,
+block|,
 name|unsigned
 operator|>
 operator|::
@@ -931,7 +838,7 @@ name|find
 argument_list|(
 name|CloneIdx
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|I
@@ -957,7 +864,7 @@ operator|<
 specifier|const
 name|MachineBasicBlock
 operator|*
-operator|,
+block|,
 name|unsigned
 operator|>
 operator|::
@@ -1010,15 +917,11 @@ return|return
 name|It
 return|;
 block|}
-block|}
+expr|}
+block|; }
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// End llvm namespace
 end_comment
 

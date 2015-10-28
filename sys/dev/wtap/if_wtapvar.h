@@ -444,11 +444,6 @@ name|bf_node
 decl_stmt|;
 comment|/* pointer to the node */
 name|struct
-name|ieee80211_beacon_offsets
-name|av_boff
-decl_stmt|;
-comment|/* dynamic update state */
-name|struct
 name|callout
 name|av_swba
 decl_stmt|;
@@ -472,6 +467,11 @@ name|mbuf
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
 parameter_list|,
 name|int
 parameter_list|,
@@ -529,6 +529,10 @@ begin_struct
 struct|struct
 name|wtap_softc
 block|{
+name|struct
+name|ieee80211com
+name|sc_ic
+decl_stmt|;
 name|char
 name|name
 index|[
@@ -542,12 +546,6 @@ decl_stmt|;
 name|int32_t
 name|up
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
-decl_stmt|;
-comment|/* interface common */
 name|struct
 name|wtap_medium
 modifier|*
@@ -584,62 +582,6 @@ name|ieee80211_node
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|if_output
-function_decl|)
-comment|/* output routine (enqueue) */
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|,
-name|struct
-name|route
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|if_input
-function_decl|)
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* from h/w driver */
-name|int
-function_decl|(
-modifier|*
-name|if_transmit
-function_decl|)
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* output routine */
 name|struct
 name|mtx
 name|sc_mtx

@@ -1145,6 +1145,10 @@ parameter_list|)
 value|((entry)->phys_addr)
 end_define
 
+begin_comment
+comment|/*  * PHYS_TO_VM_PAGE() returns the vm_page_t object that represents a memory  * page to which the given physical address belongs. The correct vm_page_t  * object is returned for addresses that are not page-aligned.  */
+end_comment
+
 begin_function_decl
 name|vm_page_t
 name|PHYS_TO_VM_PAGE
@@ -1643,6 +1647,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vm_page_deactivate_noreuse
+parameter_list|(
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vm_page_dequeue
 parameter_list|(
 name|vm_page_t
@@ -1968,7 +1981,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|boolean_t
 name|vm_page_unwire
 parameter_list|(
 name|vm_page_t

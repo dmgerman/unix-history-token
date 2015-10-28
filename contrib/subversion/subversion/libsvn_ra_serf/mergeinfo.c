@@ -89,7 +89,7 @@ name|mergeinfo_state_e
 block|{
 name|INITIAL
 init|=
-literal|0
+name|XML_STATE_INITIAL
 block|,
 name|MERGEINFO_REPORT
 block|,
@@ -414,6 +414,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Implements svn_ra_serf__request_body_delegate_t */
+end_comment
+
 begin_function
 specifier|static
 name|svn_error_t
@@ -436,6 +440,11 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|pool
+comment|/* request pool */
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 block|{
 name|mergeinfo_context_t
@@ -468,7 +477,7 @@ literal|"xmlns:S"
 argument_list|,
 name|SVN_XML_NAMESPACE
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|svn_ra_serf__add_tag_buckets
@@ -640,10 +649,6 @@ modifier|*
 name|pool
 parameter_list|)
 block|{
-name|svn_error_t
-modifier|*
-name|err
-decl_stmt|;
 name|mergeinfo_context_t
 modifier|*
 name|mergeinfo_ctx
@@ -685,9 +690,6 @@ name|NULL
 comment|/* latest_revnum */
 argument_list|,
 name|session
-argument_list|,
-name|NULL
-comment|/* conn */
 argument_list|,
 name|NULL
 comment|/* url */
@@ -773,7 +775,11 @@ name|handler
 operator|=
 name|svn_ra_serf__create_expat_handler
 argument_list|(
+name|session
+argument_list|,
 name|xmlctx
+argument_list|,
+name|NULL
 argument_list|,
 name|pool
 argument_list|)
@@ -789,23 +795,6 @@ operator|->
 name|path
 operator|=
 name|path
-expr_stmt|;
-name|handler
-operator|->
-name|conn
-operator|=
-name|session
-operator|->
-name|conns
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|handler
-operator|->
-name|session
-operator|=
-name|session
 expr_stmt|;
 name|handler
 operator|->
@@ -825,18 +814,17 @@ name|body_type
 operator|=
 literal|"text/xml"
 expr_stmt|;
-name|err
-operator|=
+name|SVN_ERR
+argument_list|(
 name|svn_ra_serf__context_run_one
 argument_list|(
 name|handler
 argument_list|,
 name|pool
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|SVN_ERR
-argument_list|(
-name|svn_error_compose_create
 argument_list|(
 name|svn_ra_serf__error_on_status
 argument_list|(
@@ -852,17 +840,10 @@ name|handler
 operator|->
 name|location
 argument_list|)
-argument_list|,
-name|err
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|handler
-operator|->
-name|done
-operator|&&
 name|apr_hash_count
 argument_list|(
 name|mergeinfo_ctx

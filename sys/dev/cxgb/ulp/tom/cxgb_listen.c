@@ -2606,7 +2606,7 @@ argument_list|()
 expr_stmt|;
 comment|/* no l2te, or ifp mismatch */
 block|}
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -2629,7 +2629,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -2669,7 +2669,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -3405,6 +3405,9 @@ init|=
 name|lctx
 operator|->
 name|inp
+decl_stmt|,
+modifier|*
+name|new_inp
 decl_stmt|;
 name|struct
 name|tcpopt
@@ -3480,7 +3483,7 @@ name|qset
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_RLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -3527,7 +3530,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -3605,7 +3608,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -3702,6 +3705,19 @@ goto|goto
 name|reset
 goto|;
 block|}
+comment|/* New connection inpcb is already locked by syncache_expand(). */
+name|new_inp
+operator|=
+name|sotoinpcb
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+name|INP_WLOCK_ASSERT
+argument_list|(
+name|new_inp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|__predict_false
@@ -3717,21 +3733,6 @@ operator|)
 argument_list|)
 condition|)
 block|{
-name|struct
-name|inpcb
-modifier|*
-name|new_inp
-init|=
-name|sotoinpcb
-argument_list|(
-name|so
-argument_list|)
-decl_stmt|;
-name|INP_WLOCK
-argument_list|(
-name|new_inp
-argument_list|)
-expr_stmt|;
 name|tcp_timer_activate
 argument_list|(
 name|intotcpcb
@@ -3753,12 +3754,12 @@ argument_list|,
 name|so
 argument_list|)
 expr_stmt|;
+block|}
 name|INP_WUNLOCK
 argument_list|(
 name|new_inp
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Remove the synq entry and release its reference on the lctx */
 name|TAILQ_REMOVE
 argument_list|(
@@ -3790,7 +3791,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
+name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -5717,7 +5718,7 @@ name|synqe
 operator|->
 name|toep
 decl_stmt|;
-name|INP_INFO_LOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo

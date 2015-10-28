@@ -3263,6 +3263,8 @@ argument_list|(
 operator|&
 name|cpumask
 argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 else|else
 name|ev

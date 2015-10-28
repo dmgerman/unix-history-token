@@ -133,10 +133,10 @@ operator|&
 name|mf
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ScheduleDAGSDNodes
 argument_list|()
+name|override
 block|{}
 comment|/// Run - perform scheduling.
 comment|///
@@ -296,6 +296,19 @@ condition|(
 name|isa
 operator|<
 name|ExternalSymbolSDNode
+operator|>
+operator|(
+name|Node
+operator|)
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+name|isa
+operator|<
+name|MCSymbolSDNode
 operator|>
 operator|(
 name|Node

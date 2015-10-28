@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/STLExtras.h"
 end_include
 
@@ -204,7 +210,8 @@ name|RegistryTraits
 block|{
 name|RegistryTraits
 argument_list|()
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -296,7 +303,8 @@ name|private
 label|:
 name|Registry
 argument_list|()
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 specifier|static
 name|void
@@ -580,6 +588,31 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+specifier|static
+name|iterator_range
+operator|<
+name|iterator
+operator|>
+name|entries
+argument_list|()
+block|{
+return|return
+name|iterator_range
+operator|<
+name|iterator
+operator|>
+operator|(
+name|begin
+argument_list|()
+operator|,
+name|end
+argument_list|()
+operator|)
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|/// Abstract base class for registry listeners, which are informed when new

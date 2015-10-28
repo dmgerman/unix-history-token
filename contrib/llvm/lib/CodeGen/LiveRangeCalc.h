@@ -282,14 +282,14 @@ literal|16
 operator|>
 name|LiveIn
 expr_stmt|;
-comment|/// Assuming that LI is live-in to KillMBB and killed at Kill, find the set
-comment|/// of defs that can reach it.
+comment|/// Assuming that @p LR is live-in to @p UseMBB, find the set of defs that can
+comment|/// reach it.
 comment|///
-comment|/// If only one def can reach Kill, all paths from the def to kill are added
-comment|/// to LI, and the function returns true.
+comment|/// If only one def can reach @p UseMBB, all paths from the def to @p UseMBB
+comment|/// are added to @p LR, and the function returns true.
 comment|///
-comment|/// If multiple values can reach Kill, the blocks that need LI to be live in
-comment|/// are added to the LiveIn array, and the function returns false.
+comment|/// If multiple values can reach @p UseMBB, the blocks that need @p LR to be
+comment|/// live in are added to the LiveIn array, and the function returns false.
 comment|///
 comment|/// PhysReg, when set, is used to verify live-in lists on basic blocks.
 name|bool
@@ -301,7 +301,7 @@ name|LR
 parameter_list|,
 name|MachineBasicBlock
 modifier|&
-name|KillMBB
+name|UseMBB
 parameter_list|,
 name|SlotIndex
 name|Kill
@@ -415,12 +415,11 @@ comment|//===-------------------------------------------------------------------
 comment|//
 comment|// Modify existing live ranges.
 comment|//
-comment|/// extend - Extend the live range of LI to reach Kill.
+comment|/// Extend the live range of @p LR to reach @p Use.
 comment|///
-comment|/// The existing values in LI must be live so they jointly dominate Kill.  If
-comment|/// Kill is not dominated by a single existing value, PHI-defs are inserted
-comment|/// as required to preserve SSA form.  If Kill is known to be dominated by a
-comment|/// single existing value, Alloc may be null.
+comment|/// The existing values in @p LR must be live so they jointly dominate @p Use.
+comment|/// If @p Use is not dominated by a single existing value, PHI-defs are
+comment|/// inserted as required to preserve SSA form.
 comment|///
 comment|/// PhysReg, when set, is used to verify live-in lists on basic blocks.
 name|void
@@ -431,7 +430,7 @@ modifier|&
 name|LR
 parameter_list|,
 name|SlotIndex
-name|Kill
+name|Use
 parameter_list|,
 name|unsigned
 name|PhysReg
@@ -488,6 +487,9 @@ parameter_list|(
 name|LiveInterval
 modifier|&
 name|LI
+parameter_list|,
+name|bool
+name|TrackSubRegs
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//

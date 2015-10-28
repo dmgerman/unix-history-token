@@ -101,7 +101,7 @@ block|{
 comment|/* Don't translate this string! It requires memory allocation to do so!      And we don't have any of it... */
 name|printf
 argument_list|(
-literal|"Out of memory - terminating application.\n"
+literal|"libsvn: Out of memory - terminating application.\n"
 argument_list|)
 expr_stmt|;
 name|abort

@@ -756,6 +756,15 @@ index|[
 name|WME_NUM_TID
 index|]
 decl_stmt|;
+comment|/* fast-frames state */
+name|struct
+name|mbuf
+modifier|*
+name|ni_tx_superg
+index|[
+name|WME_NUM_TID
+index|]
+decl_stmt|;
 comment|/* others */
 name|short
 name|ni_inact

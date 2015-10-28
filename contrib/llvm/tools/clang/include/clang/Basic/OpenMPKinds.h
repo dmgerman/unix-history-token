@@ -177,6 +177,24 @@ file|"clang/Basic/OpenMPKinds.def"
 name|OMPC_SCHEDULE_unknown
 block|}
 enum|;
+comment|/// \brief OpenMP attributes for 'depend' clause.
+enum|enum
+name|OpenMPDependClauseKind
+block|{
+define|#
+directive|define
+name|OPENMP_DEPEND_KIND
+parameter_list|(
+name|Name
+parameter_list|)
+define|\
+value|OMPC_DEPEND_##Name,
+include|#
+directive|include
+file|"clang/Basic/OpenMPKinds.def"
+name|OMPC_DEPEND_unknown
+block|}
+enum|;
 name|OpenMPDirectiveKind
 name|getOpenMPDirectiveKind
 argument_list|(

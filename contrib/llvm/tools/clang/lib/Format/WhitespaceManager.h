@@ -418,6 +418,27 @@ name|void
 name|calculateLineBreakInformation
 parameter_list|()
 function_decl|;
+comment|/// \brief Align consecutive assignments over all \c Changes.
+name|void
+name|alignConsecutiveAssignments
+parameter_list|()
+function_decl|;
+comment|/// \brief Align consecutive assignments from change \p Start to change \p End
+comment|/// at
+comment|/// the specified \p Column.
+name|void
+name|alignConsecutiveAssignments
+parameter_list|(
+name|unsigned
+name|Start
+parameter_list|,
+name|unsigned
+name|End
+parameter_list|,
+name|unsigned
+name|Column
+parameter_list|)
+function_decl|;
 comment|/// \brief Align trailing comments over all \c Changes.
 name|void
 name|alignTrailingComments

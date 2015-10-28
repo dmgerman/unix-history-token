@@ -79,6 +79,17 @@ name|__vector_size__
 typedef|(32)));
 end_typedef
 
+begin_comment
+comment|/* Define the default attributes for the functions in this file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__DEFAULT_FN_ATTRS
+value|__attribute__((__always_inline__, __nodebug__))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -103,23 +114,16 @@ parameter_list|)
 value|__extension__ ({ \   __m256 __a = (a); \  (__m128i)__builtin_ia32_vcvtps2ph256((__v8sf)__a, (imm)); })
 end_define
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|__inline
 name|__m128
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
+name|__DEFAULT_FN_ATTRS
 name|_mm_cvtph_ps
-argument_list|(
+parameter_list|(
 name|__m128i
 name|__a
-argument_list|)
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -134,25 +138,18 @@ name|__a
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|__inline
 name|__m256
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|,
-name|__nodebug__
-operator|)
-argument_list|)
+name|__DEFAULT_FN_ATTRS
 name|_mm256_cvtph_ps
-argument_list|(
+parameter_list|(
 name|__m128i
 name|__a
-argument_list|)
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -167,7 +164,13 @@ name|__a
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
+
+begin_undef
+undef|#
+directive|undef
+name|__DEFAULT_FN_ATTRS
+end_undef
 
 begin_endif
 endif|#

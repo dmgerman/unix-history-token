@@ -169,6 +169,10 @@ name|DumpStyleResolvedDescriptionNoModule
 block|,
 name|DumpStyleResolvedDescriptionNoFunctionArguments
 block|,
+name|DumpStyleNoFunctionName
+block|,
+comment|///< Elide the function name; display an offset into the current function.
+comment|///< Used primarily in disassembly symbolication
 name|DumpStyleDetailedSymbolContext
 block|,
 comment|///< Detailed symbol context information for an address for all symbol

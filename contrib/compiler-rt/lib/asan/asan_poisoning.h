@@ -324,6 +324,8 @@ argument_list|,
 name|page_end
 operator|-
 literal|1
+argument_list|,
+name|nullptr
 argument_list|)
 expr_stmt|;
 block|}

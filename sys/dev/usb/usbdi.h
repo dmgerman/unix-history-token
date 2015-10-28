@@ -563,6 +563,16 @@ name|recurse_2
 range|:
 literal|1
 decl_stmt|;
+name|uint8_t
+name|recurse_3
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|reserved
+range|:
+literal|5
+decl_stmt|;
 block|}
 struct|;
 end_struct

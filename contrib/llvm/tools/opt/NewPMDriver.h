@@ -104,6 +104,9 @@ name|class
 name|Module
 decl_stmt|;
 name|class
+name|TargetMachine
+decl_stmt|;
+name|class
 name|tool_output_file
 decl_stmt|;
 name|namespace
@@ -150,6 +153,10 @@ name|Module
 operator|&
 name|M
 argument_list|,
+name|TargetMachine
+operator|*
+name|TM
+argument_list|,
 name|tool_output_file
 operator|*
 name|Out
@@ -166,6 +173,12 @@ name|opt_tool
 operator|::
 name|VerifierKind
 name|VK
+argument_list|,
+name|bool
+name|ShouldPreserveAssemblyUseListOrder
+argument_list|,
+name|bool
+name|ShouldPreserveBitcodeUseListOrder
 argument_list|)
 decl_stmt|;
 block|}

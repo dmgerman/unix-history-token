@@ -303,7 +303,8 @@ block|{
 return|return
 name|U
 operator|->
-name|OperandList
+name|getOperandList
+argument_list|()
 return|;
 block|}
 specifier|static
@@ -317,7 +318,8 @@ block|{
 return|return
 name|U
 operator|->
-name|OperandList
+name|getOperandList
+argument_list|()
 operator|+
 name|U
 operator|->

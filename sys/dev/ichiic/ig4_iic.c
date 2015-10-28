@@ -202,8 +202,6 @@ name|OID_AUTO
 argument_list|,
 name|ig4_dump
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -211,7 +209,7 @@ name|ig4_dump
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Dump controller registers"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

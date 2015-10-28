@@ -1481,22 +1481,8 @@ begin_comment
 comment|/*  * MIMO antenna/radio state.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_MAX_CHAINS
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MAX_EVM_PILOTS
-value|6
-end_define
-
 begin_comment
-comment|/*  * XXX This doesn't yet export both ctl/ext chain details  */
+comment|/*  * XXX This doesn't yet export both ctl/ext chain details  * XXX TODO: IEEE80211_MAX_CHAINS is defined in _freebsd.h, not here;  * figure out how to pull it in!  */
 end_comment
 
 begin_struct
@@ -1506,14 +1492,14 @@ block|{
 name|int8_t
 name|rssi
 index|[
-name|IEEE80211_MAX_CHAINS
+literal|3
 index|]
 decl_stmt|;
 comment|/* per-antenna rssi */
 name|int8_t
 name|noise
 index|[
-name|IEEE80211_MAX_CHAINS
+literal|3
 index|]
 decl_stmt|;
 comment|/* per-antenna noise floor */

@@ -129,7 +129,7 @@ begin_function_decl
 name|struct
 name|mbuf
 modifier|*
-name|rss_soft_m2cpuid
+name|rss_soft_m2cpuid_v4
 parameter_list|(
 name|struct
 name|mbuf

@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Symbol/ClangASTType.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Target/Target.h"
 end_include
 
@@ -145,6 +151,9 @@ argument_list|(
 name|NULL
 argument_list|)
 operator|,
+name|m_active_lexical_decls
+argument_list|()
+operator|,
 name|m_active_lookups
 argument_list|()
 block|{
@@ -173,6 +182,7 @@ name|GetExternalDecl
 argument_list|(
 argument|uint32_t
 argument_list|)
+name|override
 block|{
 return|return
 name|NULL
@@ -186,6 +196,7 @@ name|GetExternalDeclStmt
 argument_list|(
 argument|uint64_t
 argument_list|)
+name|override
 block|{
 return|return
 name|NULL
@@ -198,6 +209,7 @@ name|GetExternalSelector
 argument_list|(
 argument|uint32_t
 argument_list|)
+name|override
 block|{
 return|return
 name|clang
@@ -209,6 +221,7 @@ block|}
 name|uint32_t
 name|GetNumExternalSelectors
 parameter_list|()
+function|override
 block|{
 return|return
 literal|0
@@ -222,6 +235,7 @@ name|GetExternalCXXBaseSpecifiers
 argument_list|(
 argument|uint64_t Offset
 argument_list|)
+name|override
 block|{
 return|return
 name|NULL
@@ -301,6 +315,7 @@ operator|::
 name|DeclarationName
 name|Name
 argument_list|)
+name|override
 decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Enumerate all Decls in a given lexical context.
@@ -320,38 +335,13 @@ operator|::
 name|ExternalLoadResult
 name|FindExternalLexicalDecls
 argument_list|(
-specifier|const
-name|clang
-operator|::
-name|DeclContext
-operator|*
-name|DC
+argument|const clang::DeclContext *DC
 argument_list|,
-name|bool
-argument_list|(
-operator|*
-name|isKindWeWant
-argument_list|)
-argument_list|(
-name|clang
-operator|::
-name|Decl
-operator|::
-name|Kind
-argument_list|)
+argument|bool (*isKindWeWant)(clang::Decl::Kind)
 argument_list|,
-name|llvm
-operator|::
-name|SmallVectorImpl
-operator|<
-name|clang
-operator|::
-name|Decl
-operator|*
-operator|>
-operator|&
-name|Decls
+argument|llvm::SmallVectorImpl<clang::Decl *>&Decls
 argument_list|)
+name|override
 expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Specify the layout of the contents of a RecordDecl.
@@ -453,6 +443,7 @@ operator|>
 operator|&
 name|VirtualBaseOffsets
 argument_list|)
+name|override
 decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Complete a TagDecl.
@@ -460,7 +451,6 @@ comment|///
 comment|/// @param[in] Tag
 comment|///     The Decl to be completed in place.
 comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|CompleteType
 argument_list|(
@@ -470,6 +460,7 @@ name|TagDecl
 operator|*
 name|Tag
 argument_list|)
+name|override
 decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Complete an ObjCInterfaceDecl.
@@ -477,7 +468,6 @@ comment|///
 comment|/// @param[in] Class
 comment|///     The Decl to be completed in place.
 comment|//------------------------------------------------------------------
-name|virtual
 name|void
 name|CompleteType
 argument_list|(
@@ -487,6 +477,7 @@ name|ObjCInterfaceDecl
 operator|*
 name|Class
 argument_list|)
+name|override
 decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Called on entering a translation unit.  Tells Clang by calling
@@ -505,6 +496,7 @@ name|ASTConsumer
 operator|*
 name|Consumer
 argument_list|)
+name|override
 decl_stmt|;
 comment|//
 comment|// APIs for NamespaceMapCompleter
@@ -544,6 +536,7 @@ operator|&
 name|parent_map
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|//
 comment|// Helper APIs
@@ -654,6 +647,7 @@ argument|const clang::DeclContext *DC
 argument_list|,
 argument|clang::DeclarationName Name
 argument_list|)
+name|override
 block|{
 return|return
 name|m_original
@@ -675,8 +669,9 @@ argument|const clang::DeclContext *DC
 argument_list|,
 argument|bool (*isKindWeWant)(clang::Decl::Kind)
 argument_list|,
-argument|llvm::SmallVectorImpl<clang::Decl*>&Decls
+argument|llvm::SmallVectorImpl<clang::Decl *>&Decls
 argument_list|)
+name|override
 block|{
 return|return
 name|m_original
@@ -696,6 +691,7 @@ name|CompleteType
 argument_list|(
 argument|clang::TagDecl *Tag
 argument_list|)
+name|override
 block|{
 return|return
 name|m_original
@@ -711,6 +707,7 @@ name|CompleteType
 argument_list|(
 argument|clang::ObjCInterfaceDecl *Class
 argument_list|)
+name|override
 block|{
 return|return
 name|m_original
@@ -742,6 +739,7 @@ argument|llvm::DenseMap<const clang::CXXRecordDecl *
 argument_list|,
 argument|clang::CharUnits>&VirtualBaseOffsets
 argument_list|)
+name|override
 block|{
 return|return
 name|m_original
@@ -767,6 +765,7 @@ name|StartTranslationUnit
 argument_list|(
 argument|clang::ASTConsumer *Consumer
 argument_list|)
+name|override
 block|{
 return|return
 name|m_original
@@ -1009,6 +1008,18 @@ operator|::
 name|set
 operator|<
 specifier|const
+name|clang
+operator|::
+name|Decl
+operator|*
+operator|>
+name|m_active_lexical_decls
+expr_stmt|;
+name|std
+operator|::
+name|set
+operator|<
+specifier|const
 name|char
 operator|*
 operator|>
@@ -1206,6 +1217,9 @@ comment|/// type and register it in the right places.
 comment|///
 comment|/// @param[in] type
 comment|///     The opaque QualType for the FunDecl being registered.
+comment|///
+comment|/// @param[in] extern_c
+comment|///     If true, build an extern "C" linkage specification for this.
 comment|//------------------------------------------------------------------
 name|clang
 operator|::
@@ -1213,10 +1227,9 @@ name|NamedDecl
 operator|*
 name|AddFunDecl
 argument_list|(
-specifier|const
-name|ClangASTType
-operator|&
-name|type
+argument|const ClangASTType&type
+argument_list|,
+argument|bool extern_c = false
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -1263,7 +1276,7 @@ name|AddLookupResult
 argument_list|(
 name|clang
 operator|::
-name|DeclContextLookupConstResult
+name|DeclContextLookupResult
 name|result
 argument_list|)
 decl_stmt|;

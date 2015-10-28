@@ -409,15 +409,15 @@ name|addr_t
 name|GetEntryPoint
 argument_list|()
 block|;
-comment|/// Loads ModuleSpec data from inferior process.
-name|bool
-name|GetProcessModuleSpec
+comment|/// Loads Module from inferior process.
+name|void
+name|ResolveExecutableModule
 argument_list|(
-name|lldb_private
+name|lldb
 operator|::
-name|ModuleSpec
+name|ModuleSP
 operator|&
-name|module_spec
+name|module_sp
 argument_list|)
 block|;
 name|private

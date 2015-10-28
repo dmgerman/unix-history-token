@@ -379,7 +379,7 @@ literal|"path"
 argument_list|,
 name|target
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -461,7 +461,7 @@ literal|"revision"
 argument_list|,
 name|repos_rev_str
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -658,7 +658,7 @@ name|status
 operator|->
 name|local_abspath
 decl_stmt|;
-comment|/* ### The revision information with associates are based on what    * ### _read_info() returns. The svn_wc_status_func4_t callback is    * ### suppposed to handle the gathering of additional information from the    * ### WORKING nodes on its own. Until we've agreed on how the CLI should    * ### handle the revision information, we use this appproach to stay compat    * ### with our testsuite. */
+comment|/* ### The revision information with associates are based on what    * ### _read_info() returns. The svn_wc_status_func4_t callback is    * ### suppposed to handle the gathering of additional information from the    * ### WORKING nodes on its own. Until we've agreed on how the CLI should    * ### handle the revision information, we use this approach to stay compat    * ### with our testsuite. */
 if|if
 condition|(
 name|status
@@ -1099,12 +1099,51 @@ name|targets
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* We want our -u statuses to be against HEAD. */
+comment|/* We want our -u statuses to be against HEAD by default. */
+if|if
+condition|(
+name|opt_state
+operator|->
+name|start_revision
+operator|.
+name|kind
+operator|==
+name|svn_opt_revision_unspecified
+condition|)
 name|rev
 operator|.
 name|kind
 operator|=
 name|svn_opt_revision_head
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|opt_state
+operator|->
+name|update
+condition|)
+return|return
+name|svn_error_create
+argument_list|(
+name|SVN_ERR_CL_ARG_PARSING_ERROR
+argument_list|,
+name|NULL
+argument_list|,
+name|_
+argument_list|(
+literal|"--revision (-r) option valid only with "
+literal|"--show-updates (-u) option"
+argument_list|)
+argument_list|)
+return|;
+else|else
+name|rev
+operator|=
+name|opt_state
+operator|->
+name|start_revision
 expr_stmt|;
 name|sb
 operator|.
@@ -1381,7 +1420,7 @@ name|SVN_ERR
 argument_list|(
 name|svn_cl__try
 argument_list|(
-name|svn_client_status5
+name|svn_client_status6
 argument_list|(
 operator|&
 name|repos_rev
@@ -1404,6 +1443,9 @@ argument_list|,
 name|opt_state
 operator|->
 name|update
+argument_list|,
+name|TRUE
+comment|/* check_working_copy */
 argument_list|,
 name|opt_state
 operator|->
@@ -1439,7 +1481,7 @@ name|SVN_ERR_WC_NOT_WORKING_COPY
 argument_list|,
 name|SVN_ERR_WC_PATH_NOT_FOUND
 argument_list|,
-name|SVN_NO_ERROR
+literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1460,7 +1502,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If any paths were cached because they were associatied with      changelists, we can now display them as grouped changelists. */
+comment|/* If any paths were cached because they were associated with      changelists, we can now display them as grouped changelists. */
 if|if
 condition|(
 name|apr_hash_count
@@ -1518,7 +1560,7 @@ name|char
 modifier|*
 name|changelist_name
 init|=
-name|svn__apr_hash_index_key
+name|apr_hash_this_key
 argument_list|(
 name|hi
 argument_list|)
@@ -1527,7 +1569,7 @@ name|apr_array_header_t
 modifier|*
 name|path_array
 init|=
-name|svn__apr_hash_index_val
+name|apr_hash_this_val
 argument_list|(
 name|hi
 argument_list|)
@@ -1563,7 +1605,7 @@ literal|"name"
 argument_list|,
 name|changelist_name
 argument_list|,
-name|NULL
+name|SVN_VA_NULL
 argument_list|)
 expr_stmt|;
 name|SVN_ERR

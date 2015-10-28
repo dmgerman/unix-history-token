@@ -317,7 +317,6 @@ name|VLIWPacketizerList
 block|{
 name|protected
 label|:
-specifier|const
 name|MachineFunction
 modifier|&
 name|MF

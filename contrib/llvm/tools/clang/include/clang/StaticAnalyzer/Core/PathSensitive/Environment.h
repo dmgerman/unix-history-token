@@ -449,10 +449,6 @@ argument_list|(
 argument|Allocator
 argument_list|)
 block|{}
-operator|~
-name|EnvironmentManager
-argument_list|()
-block|{}
 name|Environment
 name|getInitialEnvironment
 argument_list|()

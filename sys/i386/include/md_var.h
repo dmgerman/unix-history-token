@@ -638,6 +638,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|bool
+name|intel_fix_cpuid
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|i686_pagezero
 parameter_list|(

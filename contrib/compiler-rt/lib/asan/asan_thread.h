@@ -158,7 +158,8 @@ argument_list|)
 block|,
 name|destructor_iterations
 argument_list|(
-name|kPthreadDestructorIterations
+name|GetPthreadDestructorIterations
+argument_list|()
 argument_list|)
 block|,
 name|stack_id
@@ -170,7 +171,7 @@ name|thread
 argument_list|(
 literal|0
 argument_list|)
-block|{   }
+block|{}
 name|bool
 name|announced
 block|;
@@ -187,14 +188,14 @@ block|;
 name|void
 name|OnCreated
 argument_list|(
-name|void
-operator|*
-name|arg
+argument|void *arg
 argument_list|)
+name|override
 block|;
 name|void
 name|OnFinished
 argument_list|()
+name|override
 block|; }
 decl_stmt|;
 comment|// AsanThreadContext objects are never freed, so we need many of them.

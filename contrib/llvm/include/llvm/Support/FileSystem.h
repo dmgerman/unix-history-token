@@ -537,7 +537,9 @@ name|public
 label|:
 name|UniqueID
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|UniqueID
 argument_list|(
 argument|uint64_t Device
@@ -1259,6 +1261,9 @@ comment|///< Mach-O Shared lib stub
 name|macho_dsym_companion
 block|,
 comment|///< Mach-O dSYM companion file
+name|macho_kext_bundle
+block|,
+comment|///< Mach-O kext bundle file
 name|macho_universal_binary
 block|,
 comment|///< Mach-O universal binary
@@ -2261,13 +2266,16 @@ name|mapped_file_region
 block|{
 name|mapped_file_region
 argument_list|()
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|mapped_file_region
 argument_list|(
-argument|mapped_file_region&
+name|mapped_file_region
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|mapped_file_region
 modifier|&
@@ -2277,7 +2285,8 @@ operator|(
 name|mapped_file_region
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:

@@ -71,7 +71,7 @@ name|ARMAsmBackendELF
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|,
 argument|uint8_t OSABI
 argument_list|,
@@ -96,7 +96,7 @@ name|MCObjectWriter
 operator|*
 name|createObjectWriter
 argument_list|(
-argument|raw_ostream&OS
+argument|raw_pwrite_stream&OS
 argument_list|)
 specifier|const
 name|override

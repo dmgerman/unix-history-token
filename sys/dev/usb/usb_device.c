@@ -8267,7 +8267,7 @@ argument_list|)
 expr_stmt|;
 name|usb_proc_mwait
 argument_list|(
-name|USB_BUS_NON_GIANT_PROC
+name|USB_BUS_CS_PROC
 argument_list|(
 name|udev
 operator|->

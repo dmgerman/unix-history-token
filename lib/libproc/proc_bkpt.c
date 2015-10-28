@@ -153,6 +153,13 @@ name|BREAKPOINT_INSTR_SZ
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|BREAKPOINT_ADJUST_SZ
+value|BREAKPOINT_INSTR_SZ
+end_define
+
 begin_elif
 elif|#
 directive|elif
@@ -859,7 +866,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Decrement pc so that we delete the breakpoint at the correct  * address, i.e. at the BREAKPOINT_INSTR address.  */
+comment|/*  * Decrement pc so that we delete the breakpoint at the correct  * address, i.e. at the BREAKPOINT_INSTR address.  *  * This is only needed on some architectures where the pc value  * when reading registers points at the instruction after the  * breakpoint, e.g. x86.  */
 end_comment
 
 begin_function
@@ -872,14 +879,24 @@ modifier|*
 name|pc
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|pc
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BREAKPOINT_ADJUST_SZ
 operator|*
 name|pc
 operator|=
 operator|*
 name|pc
 operator|-
-name|BREAKPOINT_INSTR_SZ
+name|BREAKPOINT_ADJUST_SZ
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

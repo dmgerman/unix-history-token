@@ -46,6 +46,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|_TRANSCODER
+parameter_list|(
+name|tran
+parameter_list|,
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a) + (tran)*((b)-(a)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PORT
 parameter_list|(
 name|port
@@ -93,6 +107,63 @@ define|#
 directive|define
 name|INTEL_GMCH_VGA_DISABLE
 value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNB_GMCH_CTRL
+value|0x50
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNB_GMCH_GGMS_SHIFT
+value|8
+end_define
+
+begin_comment
+comment|/* GTT Graphics Memory Size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNB_GMCH_GGMS_MASK
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNB_GMCH_GMS_SHIFT
+value|3
+end_define
+
+begin_comment
+comment|/* Graphics Mode Select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNB_GMCH_GMS_MASK
+value|0x1f
+end_define
+
+begin_define
+define|#
+directive|define
+name|IVB_GMCH_GMS_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IVB_GMCH_GMS_MASK
+value|0xf
 end_define
 
 begin_comment
@@ -518,10 +589,6 @@ directive|define
 name|GEN6_GRDOM_BLT
 value|(1<< 3)
 end_define
-
-begin_comment
-comment|/* PPGTT stuff */
-end_comment
 
 begin_define
 define|#
@@ -1152,6 +1219,52 @@ parameter_list|)
 value|((n)<< 20)
 end_define
 
+begin_comment
+comment|/* IVB has funny definitions for which plane to flip. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MI_DISPLAY_FLIP_IVB_PLANE_A
+value|(0<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MI_DISPLAY_FLIP_IVB_PLANE_B
+value|(1<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MI_DISPLAY_FLIP_IVB_SPRITE_A
+value|(2<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MI_DISPLAY_FLIP_IVB_SPRITE_B
+value|(3<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MI_DISPLAY_FLIP_IVB_PLANE_C
+value|(4<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MI_DISPLAY_FLIP_IVB_SPRITE_C
+value|(5<< 19)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1282,6 +1395,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MI_FLUSH_DW_STORE_INDEX
+value|(1<<21)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MI_INVALIDATE_TLB
 value|(1<<18)
 end_define
@@ -1289,8 +1409,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|MI_FLUSH_DW_OP_STOREDW
+value|(1<<14)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MI_INVALIDATE_BSD
 value|(1<<7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MI_FLUSH_DW_USE_GTT
+value|(1<<2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MI_FLUSH_DW_USE_PPGTT
+value|(0<<2)
 end_define
 
 begin_define
@@ -1307,11 +1448,29 @@ name|MI_BATCH_NON_SECURE
 value|(1)
 end_define
 
+begin_comment
+comment|/* for snb/ivb/vlv this also means "batch in ppgtt" when ppgtt is enabled. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MI_BATCH_NON_SECURE_I965
 value|(1<<8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MI_BATCH_PPGTT_HSW
+value|(1<<8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MI_BATCH_NON_SECURE_HSW
+value|(1<<13)
 end_define
 
 begin_define
@@ -1711,6 +1870,13 @@ define|#
 directive|define
 name|PIPE_CONTROL_CS_STALL
 value|(1<<20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIPE_CONTROL_TLB_INVALIDATE
+value|(1<<18)
 end_define
 
 begin_define
@@ -2127,6 +2293,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DPIO_PLL_REFCLK_SEL_MASK
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|DPIO_DRIVER_CTL_SHIFT
 value|12
 end_define
@@ -2216,6 +2389,20 @@ define|#
 directive|define
 name|DPIO_FASTCLK_DISABLE
 value|0x8100
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPIO_DATA_CHANNEL1
+value|0x8220
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPIO_DATA_CHANNEL2
+value|0x8420
 end_define
 
 begin_comment
@@ -2656,6 +2843,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|RING_TIMESTAMP
+parameter_list|(
+name|base
+parameter_list|)
+value|((base)+0x358)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TAIL_ADDR
 value|0x001FFFF8
 end_define
@@ -2877,6 +3074,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|GEN7_INSTDONE_1
+value|0x0206c
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_SC_INSTDONE
+value|0x07100
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_SAMPLER_INSTDONE
+value|0x0e160
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_ROW_INSTDONE
+value|0x0e164
+end_define
+
+begin_define
+define|#
+directive|define
+name|I915_NUM_INSTDONE_REG
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|RING_IPEIR
 parameter_list|(
 name|base
@@ -3051,6 +3283,27 @@ name|ERROR_GEN6
 value|0x040a0
 end_define
 
+begin_define
+define|#
+directive|define
+name|GEN7_ERR_INT
+value|0x44040
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERR_INT_MMIO_UNCLAIMED
+value|(1<<13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DERRMR
+value|0x44050
+end_define
+
 begin_comment
 comment|/* GM45+ chicken bits -- debug workaround bits that may be required  * for various sorts of correct behavior.  The top 16 bits of each are  * the enables for writing to the corresponding low bit.  */
 end_comment
@@ -3060,6 +3313,13 @@ define|#
 directive|define
 name|_3D_CHICKEN
 value|0x02084
+end_define
+
+begin_define
+define|#
+directive|define
+name|_3D_CHICKEN_HIZ_PLANE_DISABLE_MSAA_4X_SNB
+value|(1<< 10)
 end_define
 
 begin_define
@@ -3090,7 +3350,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|_3D_CHICKEN_SF_DISABLE_FASTCLIP_CULL
+name|_3D_CHICKEN_SF_DISABLE_OBJEND_CULL
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_3D_CHICKEN3_SF_DISABLE_FASTCLIP_CULL
 value|(1<< 5)
 end_define
 
@@ -3113,6 +3380,34 @@ define|#
 directive|define
 name|MI_FLUSH_ENABLE
 value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASYNC_FLIP_PERF_DISABLE
+value|(1<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_GT_MODE
+value|0x20d0
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_GT_MODE_HI
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_TD_FOUR_ROW_DISPATCH_DISABLE
+value|(1<< 5)
 end_define
 
 begin_define
@@ -3184,6 +3479,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VLV_DISPLAY_BASE
+value|0x180000
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCPD0
 value|0x0209c
 end_define
@@ -3218,6 +3520,20 @@ define|#
 directive|define
 name|ISR
 value|0x020ac
+end_define
+
+begin_define
+define|#
+directive|define
+name|VLV_GUNIT_CLOCK_GATE
+value|0x182060
+end_define
+
+begin_define
+define|#
+directive|define
+name|GCFG_DIS
+value|(1<<8)
 end_define
 
 begin_define
@@ -3849,6 +4165,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CM0_PIPELINED_RENDER_FLUSH_DISABLE
+value|(1<<8)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CM0_IZ_OPT_DISABLE
 value|(1<<6)
 end_define
@@ -3916,6 +4239,20 @@ end_define
 begin_comment
 comment|/* 915+ only */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|GFX_FLSH_CNTL_GEN6
+value|0x101008
+end_define
+
+begin_define
+define|#
+directive|define
+name|GFX_FLSH_CNTL_EN
+value|(1<<0)
+end_define
 
 begin_define
 define|#
@@ -4105,6 +4442,34 @@ define|#
 directive|define
 name|GEN6_BSD_SLEEP_PSMI_CONTROL
 value|0x12050
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_BSD_SLEEP_MSG_DISABLE
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_BSD_SLEEP_FLUSH_DISABLE
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_BSD_SLEEP_INDICATOR
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_BSD_GO_INDICATOR
+value|(1<< 4)
 end_define
 
 begin_define
@@ -5572,6 +5937,13 @@ end_define
 begin_comment
 comment|/* Pineview */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DPLL_LOCK_VLV
+value|(1<<15)
+end_define
 
 begin_define
 define|#
@@ -9155,6 +9527,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|GEN6_GT_THREAD_STATUS_REG
+value|0x13805c
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_GT_THREAD_STATUS_CORE_MASK
+value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_GT_THREAD_STATUS_CORE_MASK_HSW
+value|(0x7 | (0x07<< 16))
+end_define
+
+begin_define
+define|#
+directive|define
 name|GEN6_GT_PERF_STATUS
 value|0x145948
 end_define
@@ -9333,6 +9726,46 @@ parameter_list|(
 name|ctx_reg
 parameter_list|)
 value|(GEN7_CXT_POWER_SIZE(ctx_reg) + \ 					 GEN7_CXT_RING_SIZE(ctx_reg) + \ 					 GEN7_CXT_RENDER_SIZE(ctx_reg) + \ 					 GEN7_CXT_EXTENDED_SIZE(ctx_reg) + \ 					 GEN7_CXT_GT1_SIZE(ctx_reg) + \ 					 GEN7_CXT_VFSTATE_SIZE(ctx_reg))
+end_define
+
+begin_define
+define|#
+directive|define
+name|HSW_CXT_POWER_SIZE
+parameter_list|(
+name|ctx_reg
+parameter_list|)
+value|((ctx_reg>> 26)& 0x3f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HSW_CXT_RING_SIZE
+parameter_list|(
+name|ctx_reg
+parameter_list|)
+value|((ctx_reg>> 23)& 0x7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HSW_CXT_RENDER_SIZE
+parameter_list|(
+name|ctx_reg
+parameter_list|)
+value|((ctx_reg>> 15)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HSW_CXT_TOTAL_SIZE
+parameter_list|(
+name|ctx_reg
+parameter_list|)
+value|(HSW_CXT_POWER_SIZE(ctx_reg) + \ 					 HSW_CXT_RING_SIZE(ctx_reg) + \ 					 HSW_CXT_RENDER_SIZE(ctx_reg) + \ 					 GEN7_CXT_VFSTATE_SIZE(ctx_reg))
 end_define
 
 begin_comment
@@ -9545,9 +9978,9 @@ define|#
 directive|define
 name|HTOTAL
 parameter_list|(
-name|pipe
+name|trans
 parameter_list|)
-value|_PIPE(pipe, _HTOTAL_A, _HTOTAL_B)
+value|_TRANSCODER(trans, _HTOTAL_A, _HTOTAL_B)
 end_define
 
 begin_define
@@ -9555,9 +9988,9 @@ define|#
 directive|define
 name|HBLANK
 parameter_list|(
-name|pipe
+name|trans
 parameter_list|)
-value|_PIPE(pipe, _HBLANK_A, _HBLANK_B)
+value|_TRANSCODER(trans, _HBLANK_A, _HBLANK_B)
 end_define
 
 begin_define
@@ -9565,9 +9998,9 @@ define|#
 directive|define
 name|HSYNC
 parameter_list|(
-name|pipe
+name|trans
 parameter_list|)
-value|_PIPE(pipe, _HSYNC_A, _HSYNC_B)
+value|_TRANSCODER(trans, _HSYNC_A, _HSYNC_B)
 end_define
 
 begin_define
@@ -9575,9 +10008,9 @@ define|#
 directive|define
 name|VTOTAL
 parameter_list|(
-name|pipe
+name|trans
 parameter_list|)
-value|_PIPE(pipe, _VTOTAL_A, _VTOTAL_B)
+value|_TRANSCODER(trans, _VTOTAL_A, _VTOTAL_B)
 end_define
 
 begin_define
@@ -9585,9 +10018,9 @@ define|#
 directive|define
 name|VBLANK
 parameter_list|(
-name|pipe
+name|trans
 parameter_list|)
-value|_PIPE(pipe, _VBLANK_A, _VBLANK_B)
+value|_TRANSCODER(trans, _VBLANK_A, _VBLANK_B)
 end_define
 
 begin_define
@@ -9595,9 +10028,9 @@ define|#
 directive|define
 name|VSYNC
 parameter_list|(
-name|pipe
+name|trans
 parameter_list|)
-value|_PIPE(pipe, _VSYNC_A, _VSYNC_B)
+value|_TRANSCODER(trans, _VSYNC_A, _VSYNC_B)
 end_define
 
 begin_define
@@ -9615,9 +10048,9 @@ define|#
 directive|define
 name|VSYNCSHIFT
 parameter_list|(
-name|pipe
+name|trans
 parameter_list|)
-value|_PIPE(pipe, _VSYNCSHIFT_A, _VSYNCSHIFT_B)
+value|_TRANSCODER(trans, _VSYNCSHIFT_A, _VSYNCSHIFT_B)
 end_define
 
 begin_comment
@@ -9629,6 +10062,20 @@ define|#
 directive|define
 name|ADPA
 value|0x61100
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCH_ADPA
+value|0xe1100
+end_define
+
+begin_define
+define|#
+directive|define
+name|VLV_ADPA
+value|(VLV_DISPLAY_BASE + ADPA)
 end_define
 
 begin_define
@@ -9674,6 +10121,147 @@ parameter_list|(
 name|pipe
 parameter_list|)
 value|((pipe)<< 30)
+end_define
+
+begin_comment
+comment|/* CPT uses bits 29:30 for pch transcoder select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_MASK
+value|0x03ff0000
+end_define
+
+begin_comment
+comment|/* bit 25-16 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_MONITOR_NONE
+value|(0<<24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_MONITOR_MASK
+value|(3<<24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_MONITOR_COLOR
+value|(3<<24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_MONITOR_MONO
+value|(2<<24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_ENABLE
+value|(1<<23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_PERIOD_64
+value|(0<<22)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_PERIOD_128
+value|(1<<22)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_WARMUP_5MS
+value|(0<<21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_WARMUP_10MS
+value|(1<<21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_SAMPLE_2S
+value|(0<<20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_SAMPLE_4S
+value|(1<<20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_VOLTAGE_40
+value|(0<<18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_VOLTAGE_50
+value|(1<<18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_VOLTAGE_60
+value|(2<<18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_VOLTAGE_70
+value|(3<<18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_VOLREF_325MV
+value|(0<<17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_VOLREF_475MV
+value|(1<<17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADPA_CRT_HOTPLUG_FORCE_TRIGGER
+value|(1<<16)
 end_define
 
 begin_define
@@ -9971,6 +10559,10 @@ name|PORT_HOTPLUG_STAT
 value|0x61114
 end_define
 
+begin_comment
+comment|/* HDMI/DP bits are gen4+ */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10012,6 +10604,18 @@ directive|define
 name|DPD_HOTPLUG_INT_STATUS
 value|(1<< 27)
 end_define
+
+begin_comment
+comment|/* HDMI bits are shared with the DP bits */
+end_comment
+
+begin_comment
+comment|/* #define   HDMIB_HOTPLUG_LIVE_STATUS             (1<< 29) #define   HDMIC_HOTPLUG_LIVE_STATUS             (1<< 28) #define   HDMID_HOTPLUG_LIVE_STATUS             (1<< 27) #define   HDMID_HOTPLUG_INT_STATUS		(3<< 21) #define   HDMIC_HOTPLUG_INT_STATUS		(3<< 19) #define   HDMIB_HOTPLUG_INT_STATUS		(3<< 17) */
+end_comment
+
+begin_comment
+comment|/* CRT/TV common between gen3+ */
+end_comment
 
 begin_define
 define|#
@@ -10066,6 +10670,52 @@ begin_define
 define|#
 directive|define
 name|SDVOB_HOTPLUG_INT_STATUS
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* SDVO is different across gen3/4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDVOC_HOTPLUG_INT_STATUS_G4X
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDVOB_HOTPLUG_INT_STATUS_G4X
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDVOC_HOTPLUG_INT_STATUS_I965
+value|(3<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDVOB_HOTPLUG_INT_STATUS_I965
+value|(3<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDVOC_HOTPLUG_INT_STATUS_I915
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDVOB_HOTPLUG_INT_STATUS_I915
 value|(1<< 6)
 end_define
 
@@ -10698,6 +11348,17 @@ name|VIDEO_DIP_DATA
 value|0x61178
 end_define
 
+begin_comment
+comment|/* Read the description of VIDEO_DIP_DATA (before Haswel) or VIDEO_DIP_ECC  * (Haswell and newer) to see which VIDEO_DIP_DATA byte corresponds to each byte  * of the infoframe structure specified by CEA-861. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIDEO_DIP_DATA_SIZE
+value|32
+end_define
+
 begin_define
 define|#
 directive|define
@@ -10747,6 +11408,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VIDEO_DIP_ENABLE_GCP
+value|(1<< 25)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VIDEO_DIP_ENABLE_AVI
 value|(1<< 21)
 end_define
@@ -10761,15 +11429,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|VIDEO_DIP_ENABLE_SPD
-value|(8<< 21)
+name|VIDEO_DIP_ENABLE_GAMUT
+value|(4<< 21)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VIDEO_DIP_SELECT_MASK
-value|(3<< 19)
+name|VIDEO_DIP_ENABLE_SPD
+value|(8<< 21)
 end_define
 
 begin_define
@@ -10790,6 +11458,13 @@ begin_define
 define|#
 directive|define
 name|VIDEO_DIP_SELECT_SPD
+value|(3<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VIDEO_DIP_SELECT_MASK
 value|(3<< 19)
 end_define
 
@@ -10828,8 +11503,36 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VIDEO_DIP_ENABLE_VSC_HSW
+value|(1<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VIDEO_DIP_ENABLE_GCP_HSW
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VIDEO_DIP_ENABLE_AVI_HSW
 value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VIDEO_DIP_ENABLE_VS_HSW
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VIDEO_DIP_ENABLE_GMP_HSW
+value|(1<< 4)
 end_define
 
 begin_define
@@ -11244,20 +11947,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BLC_PWM_CTL
-value|0x61254
-end_define
-
-begin_define
-define|#
-directive|define
-name|BACKLIGHT_MODULATION_FREQ_SHIFT
-value|(17)
-end_define
-
-begin_define
-define|#
-directive|define
 name|BLC_PWM_CTL2
 value|0x61250
 end_define
@@ -11269,13 +11958,161 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BLM_PWM_ENABLE
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BLM_COMBINATION_MODE
 value|(1<< 30)
 end_define
 
 begin_comment
+comment|/* gen4 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLM_PIPE_SELECT
+value|(1<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLM_PIPE_SELECT_IVB
+value|(3<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLM_PIPE_A
+value|(0<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLM_PIPE_B
+value|(1<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLM_PIPE_C
+value|(2<< 29)
+end_define
+
+begin_comment
+comment|/* ivb + */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLM_PIPE
+parameter_list|(
+name|pipe
+parameter_list|)
+value|((pipe)<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLM_POLARITY_I965
+value|(1<< 28)
+end_define
+
+begin_comment
+comment|/* gen4 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLM_PHASE_IN_INTERUPT_STATUS
+value|(1<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLM_PHASE_IN_ENABLE
+value|(1<< 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLM_PHASE_IN_INTERUPT_ENABL
+value|(1<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLM_PHASE_IN_TIME_BASE_SHIFT
+value|(16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLM_PHASE_IN_TIME_BASE_MASK
+value|(0xff<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLM_PHASE_IN_COUNT_SHIFT
+value|(8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLM_PHASE_IN_COUNT_MASK
+value|(0xff<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLM_PHASE_IN_INCR_SHIFT
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLM_PHASE_IN_INCR_MASK
+value|(0xff<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLC_PWM_CTL
+value|0x61254
+end_define
+
+begin_comment
 comment|/*  * This is the most significant 15 bits of the number of backlight cycles in a  * complete cycle of the modulated backlight control.  *  * The actual value is this field multiplied by two.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|BACKLIGHT_MODULATION_FREQ_SHIFT
+value|(17)
+end_define
 
 begin_define
 define|#
@@ -11290,6 +12127,10 @@ directive|define
 name|BLM_LEGACY_MODE
 value|(1<< 16)
 end_define
+
+begin_comment
+comment|/* gen2 only */
+end_comment
 
 begin_comment
 comment|/*  * This is the number of cycles out of the backlight modulation cycle for which  * the backlight is on.  *  * This field must be no greater than the number of cycles in the complete  * backlight modulation cycle.  */
@@ -11312,8 +12153,83 @@ end_define
 begin_define
 define|#
 directive|define
+name|BACKLIGHT_DUTY_CYCLE_MASK_PNV
+value|(0xfffe)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLM_POLARITY_PNV
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* pnv only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BLC_HIST_CTL
 value|0x61260
+end_define
+
+begin_comment
+comment|/* New registers for PCH-split platforms. Safe where new bits show up, the  * register layout machtes with gen4 BLC_PWM_CTL[12]. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLC_PWM_CPU_CTL2
+value|0x48250
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLC_PWM_CPU_CTL
+value|0x48254
+end_define
+
+begin_comment
+comment|/* PCH CTL1 is totally different, all but the below bits are reserved. CTL2 is  * like the normal CTL from gen4 and earlier. Hooray for confusing naming. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLC_PWM_PCH_CTL1
+value|0xc8250
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLM_PCH_PWM_ENABLE
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLM_PCH_OVERRIDE_ENABLE
+value|(1<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLM_PCH_POLARITY
+value|(1<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLC_PWM_PCH_CTL2
+value|0xc8254
 end_define
 
 begin_comment
@@ -14360,6 +15276,13 @@ name|PIPECONF_INTERLACE_MASK
 value|(7<< 21)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PIPECONF_INTERLACE_MASK_HSW
+value|(3<< 21)
+end_define
+
 begin_comment
 comment|/* Note that pre-gen3 does not support interlaced display directly. Panel  * fitting must be disabled on pre-ilk for interlaced. */
 end_comment
@@ -14864,9 +15787,9 @@ define|#
 directive|define
 name|PIPECONF
 parameter_list|(
-name|pipe
+name|tran
 parameter_list|)
-value|_PIPE(pipe, _PIPEACONF, _PIPEBCONF)
+value|_TRANSCODER(tran, _PIPEACONF, _PIPEBCONF)
 end_define
 
 begin_define
@@ -14919,7 +15842,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PIPEB_LINE_COMPARE_STATUS
+name|PIPEB_LINE_COMPARE_INT_EN
 value|(1<<29)
 end_define
 
@@ -14961,7 +15884,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PIPEA_LINE_COMPARE_STATUS
+name|PIPEA_LINE_COMPARE_INT_EN
 value|(1<<21)
 end_define
 
@@ -16612,6 +17535,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DISPPLANE_YUV422
+value|(0x0<<26)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DISPPLANE_8BPP
 value|(0x2<<26)
 end_define
@@ -16619,36 +17549,78 @@ end_define
 begin_define
 define|#
 directive|define
-name|DISPPLANE_15_16BPP
+name|DISPPLANE_BGRA555
+value|(0x3<<26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISPPLANE_BGRX555
 value|(0x4<<26)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DISPPLANE_16BPP
+name|DISPPLANE_BGRX565
 value|(0x5<<26)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DISPPLANE_32BPP_NO_ALPHA
+name|DISPPLANE_BGRX888
 value|(0x6<<26)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DISPPLANE_32BPP
+name|DISPPLANE_BGRA888
 value|(0x7<<26)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DISPPLANE_32BPP_30BIT_NO_ALPHA
+name|DISPPLANE_RGBX101010
+value|(0x8<<26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISPPLANE_RGBA101010
+value|(0x9<<26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISPPLANE_BGRX101010
 value|(0xa<<26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISPPLANE_RGBX161616
+value|(0xc<<26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISPPLANE_RGBX888
+value|(0xe<<26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISPPLANE_RGBA888
+value|(0xf<<26)
 end_define
 
 begin_define
@@ -16810,6 +17782,24 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_DSPAOFFSET
+value|0x701A4
+end_define
+
+begin_comment
+comment|/* HSW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_DSPASURFLIVE
+value|0x701AC
+end_define
+
+begin_define
+define|#
+directive|define
 name|DSPCNTR
 parameter_list|(
 name|plane
@@ -16877,6 +17867,36 @@ parameter_list|)
 value|_PIPE(plane, _DSPATILEOFF, _DSPBTILEOFF)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DSPLINOFF
+parameter_list|(
+name|plane
+parameter_list|)
+value|DSPADDR(plane)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSPOFFSET
+parameter_list|(
+name|plane
+parameter_list|)
+value|_PIPE(plane, _DSPAOFFSET, _DSPBOFFSET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSPSURFLIVE
+parameter_list|(
+name|plane
+parameter_list|)
+value|_PIPE(plane, _DSPASURFLIVE, _DSPBSURFLIVE)
+end_define
+
 begin_comment
 comment|/* Display/Sprite base address macros */
 end_comment
@@ -16918,7 +17938,7 @@ parameter_list|,
 name|gfx_addr
 parameter_list|)
 define|\
-value|(I915_WRITE(reg, gfx_addr | I915_LO_DISPBASE(I915_READ(reg))))
+value|(I915_WRITE((reg), (gfx_addr) | I915_LO_DISPBASE(I915_READ(reg))))
 end_define
 
 begin_comment
@@ -17148,6 +18168,20 @@ define|#
 directive|define
 name|_DSPBTILEOFF
 value|0x711A4
+end_define
+
+begin_define
+define|#
+directive|define
+name|_DSPBOFFSET
+value|0x711A4
+end_define
+
+begin_define
+define|#
+directive|define
+name|_DSPBSURFLIVE
+value|0x711AC
 end_define
 
 begin_comment
@@ -17621,6 +18655,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|DVSSURFLIVE
+parameter_list|(
+name|pipe
+parameter_list|)
+value|_PIPE(pipe, _DVSASURFLIVE, _DVSBSURFLIVE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_SPRA_CTL
 value|0x70280
 end_define
@@ -17864,6 +18908,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|_SPRA_OFFSET
+value|0x702a4
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SPRA_SURFLIVE
+value|0x702ac
+end_define
+
+begin_define
+define|#
+directive|define
 name|_SPRA_SCALE
 value|0x70304
 end_define
@@ -18001,6 +19059,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|_SPRB_OFFSET
+value|0x712a4
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SPRB_SURFLIVE
+value|0x712ac
+end_define
+
+begin_define
+define|#
+directive|define
 name|_SPRB_SCALE
 value|0x71304
 end_define
@@ -18115,6 +19187,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|SPROFFSET
+parameter_list|(
+name|pipe
+parameter_list|)
+value|_PIPE(pipe, _SPRA_OFFSET, _SPRB_OFFSET)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SPRSCALE
 parameter_list|(
 name|pipe
@@ -18130,6 +19212,16 @@ parameter_list|(
 name|pipe
 parameter_list|)
 value|_PIPE(pipe, _SPRA_GAMC, _SPRB_GAMC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPRSURFLIVE
+parameter_list|(
+name|pipe
+parameter_list|)
+value|_PIPE(pipe, _SPRA_SURFLIVE, _SPRB_SURFLIVE)
 end_define
 
 begin_comment
@@ -18608,9 +19700,9 @@ define|#
 directive|define
 name|PIPE_DATA_M1
 parameter_list|(
-name|pipe
+name|tran
 parameter_list|)
-value|_PIPE(pipe, _PIPEA_DATA_M1, _PIPEB_DATA_M1)
+value|_TRANSCODER(tran, _PIPEA_DATA_M1, _PIPEB_DATA_M1)
 end_define
 
 begin_define
@@ -18618,9 +19710,9 @@ define|#
 directive|define
 name|PIPE_DATA_N1
 parameter_list|(
-name|pipe
+name|tran
 parameter_list|)
-value|_PIPE(pipe, _PIPEA_DATA_N1, _PIPEB_DATA_N1)
+value|_TRANSCODER(tran, _PIPEA_DATA_N1, _PIPEB_DATA_N1)
 end_define
 
 begin_define
@@ -18628,9 +19720,9 @@ define|#
 directive|define
 name|PIPE_DATA_M2
 parameter_list|(
-name|pipe
+name|tran
 parameter_list|)
-value|_PIPE(pipe, _PIPEA_DATA_M2, _PIPEB_DATA_M2)
+value|_TRANSCODER(tran, _PIPEA_DATA_M2, _PIPEB_DATA_M2)
 end_define
 
 begin_define
@@ -18638,9 +19730,9 @@ define|#
 directive|define
 name|PIPE_DATA_N2
 parameter_list|(
-name|pipe
+name|tran
 parameter_list|)
-value|_PIPE(pipe, _PIPEA_DATA_N2, _PIPEB_DATA_N2)
+value|_TRANSCODER(tran, _PIPEA_DATA_N2, _PIPEB_DATA_N2)
 end_define
 
 begin_define
@@ -18648,9 +19740,9 @@ define|#
 directive|define
 name|PIPE_LINK_M1
 parameter_list|(
-name|pipe
+name|tran
 parameter_list|)
-value|_PIPE(pipe, _PIPEA_LINK_M1, _PIPEB_LINK_M1)
+value|_TRANSCODER(tran, _PIPEA_LINK_M1, _PIPEB_LINK_M1)
 end_define
 
 begin_define
@@ -18658,9 +19750,9 @@ define|#
 directive|define
 name|PIPE_LINK_N1
 parameter_list|(
-name|pipe
+name|tran
 parameter_list|)
-value|_PIPE(pipe, _PIPEA_LINK_N1, _PIPEB_LINK_N1)
+value|_TRANSCODER(tran, _PIPEA_LINK_N1, _PIPEB_LINK_N1)
 end_define
 
 begin_define
@@ -18668,9 +19760,9 @@ define|#
 directive|define
 name|PIPE_LINK_M2
 parameter_list|(
-name|pipe
+name|tran
 parameter_list|)
-value|_PIPE(pipe, _PIPEA_LINK_M2, _PIPEB_LINK_M2)
+value|_TRANSCODER(tran, _PIPEA_LINK_M2, _PIPEB_LINK_M2)
 end_define
 
 begin_define
@@ -18678,9 +19770,9 @@ define|#
 directive|define
 name|PIPE_LINK_N2
 parameter_list|(
-name|pipe
+name|tran
 parameter_list|)
-value|_PIPE(pipe, _PIPEA_LINK_N2, _PIPEB_LINK_N2)
+value|_TRANSCODER(tran, _PIPEA_LINK_N2, _PIPEB_LINK_N2)
 end_define
 
 begin_comment
@@ -18710,6 +19802,23 @@ define|#
 directive|define
 name|PF_ENABLE
 value|(1<<31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_PIPE_SEL_MASK_IVB
+value|(3<<29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_PIPE_SEL_IVB
+parameter_list|(
+name|pipe
+parameter_list|)
+value|((pipe)<<29)
 end_define
 
 begin_define
@@ -19458,6 +20567,48 @@ end_define
 begin_define
 define|#
 directive|define
+name|ILK_DSPCLK_GATE_D
+value|0x42020
+end_define
+
+begin_define
+define|#
+directive|define
+name|ILK_VRHUNIT_CLOCK_GATE_DISABLE
+value|(1<< 28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ILK_DPFCUNIT_CLOCK_GATE_DISABLE
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ILK_DPFCRUNIT_CLOCK_GATE_DISABLE
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ILK_DPFDUNIT_CLOCK_GATE_ENABLE
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ILK_DPARBUNIT_CLOCK_GATE_ENABLE
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IVB_CHICKEN3
 value|0x4200c
 end_define
@@ -19532,6 +20683,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|GEN7_L3AGDIS
+value|(1<<19)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GEN7_L3_CHICKEN_MODE_REGISTER
 value|0xB030
 end_define
@@ -19541,6 +20699,20 @@ define|#
 directive|define
 name|GEN7_WA_L3_CHICKEN_MODE
 value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_L3SQCREG4
+value|0xb034
+end_define
+
+begin_define
+define|#
+directive|define
+name|L3SQ_URB_READ_CAM_MATCH_DISABLE
+value|(1<<27)
 end_define
 
 begin_comment
@@ -19561,12 +20733,26 @@ name|GEN7_SQ_CHICKEN_MBCUNIT_SQINTMOB
 value|(1<<11)
 end_define
 
+begin_define
+define|#
+directive|define
+name|HSW_FUSE_STRAP
+value|0x42014
+end_define
+
+begin_define
+define|#
+directive|define
+name|HSW_CDCLK_LIMIT
+value|(1<< 24)
+end_define
+
 begin_comment
 comment|/* PCH */
 end_comment
 
 begin_comment
-comment|/* south display engine interrupt */
+comment|/* south display engine interrupt: IBX */
 end_comment
 
 begin_define
@@ -19809,14 +20995,70 @@ value|(0x3f)
 end_define
 
 begin_comment
-comment|/* CPT */
+comment|/* south display engine interrupt: CPT/PPT */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SDE_CRT_HOTPLUG_CPT
-value|(1<< 19)
+name|SDE_AUDIO_POWER_D_CPT
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_AUDIO_POWER_C_CPT
+value|(1<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_AUDIO_POWER_B_CPT
+value|(1<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_AUDIO_POWER_SHIFT_CPT
+value|29
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_AUDIO_POWER_MASK_CPT
+value|(7<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_AUXD_CPT
+value|(1<< 27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_AUXC_CPT
+value|(1<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_AUXB_CPT
+value|(1<< 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_AUX_MASK_CPT
+value|(7<< 25)
 end_define
 
 begin_define
@@ -19843,8 +21085,106 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDE_CRT_HOTPLUG_CPT
+value|(1<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDE_HOTPLUG_MASK_CPT
 value|(SDE_CRT_HOTPLUG_CPT |		\ 				 SDE_PORTD_HOTPLUG_CPT |	\ 				 SDE_PORTC_HOTPLUG_CPT |	\ 				 SDE_PORTB_HOTPLUG_CPT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_GMBUS_CPT
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_AUDIO_CP_REQ_C_CPT
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_AUDIO_CP_CHG_C_CPT
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_FDI_RXC_CPT
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_AUDIO_CP_REQ_B_CPT
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_AUDIO_CP_CHG_B_CPT
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_FDI_RXB_CPT
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_AUDIO_CP_REQ_A_CPT
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_AUDIO_CP_CHG_A_CPT
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_FDI_RXA_CPT
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_AUDIO_CP_REQ_CPT
+value|(SDE_AUDIO_CP_REQ_C_CPT | \ 				 SDE_AUDIO_CP_REQ_B_CPT | \ 				 SDE_AUDIO_CP_REQ_A_CPT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_AUDIO_CP_CHG_CPT
+value|(SDE_AUDIO_CP_CHG_C_CPT | \ 				 SDE_AUDIO_CP_CHG_B_CPT | \ 				 SDE_AUDIO_CP_CHG_A_CPT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDE_FDI_MASK_CPT
+value|(SDE_FDI_RXC_CPT | \ 				 SDE_FDI_RXB_CPT | \ 				 SDE_FDI_RXA_CPT)
 end_define
 
 begin_define
@@ -21511,6 +22851,37 @@ end_define
 begin_define
 define|#
 directive|define
+name|_TRANSA_CHICKEN1
+value|0xf0060
+end_define
+
+begin_define
+define|#
+directive|define
+name|_TRANSB_CHICKEN1
+value|0xf1060
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_CHICKEN1
+parameter_list|(
+name|pipe
+parameter_list|)
+value|_PIPE(pipe, _TRANSA_CHICKEN1, _TRANSB_CHICKEN1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_CHICKEN1_DP0UNIT_GC_DISABLE
+value|(1<<4)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_TRANSA_CHICKEN2
 value|0xf0064
 end_define
@@ -21537,6 +22908,20 @@ define|#
 directive|define
 name|TRANS_AUTOTRAIN_GEN_STALL_DIS
 value|(1<<31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_CHICKEN2_TIMING_OVERRIDE
+value|(1<<31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_CHICKEN2_FDI_POLARITY_REVERSED
+value|(1<<29)
 end_define
 
 begin_define
@@ -21583,8 +22968,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|FDI_BC_BIFURCATION_SELECT
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOUTH_CHICKEN2
 value|0xc2004
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDI_MPHY_IOSFSB_RESET_STATUS
+value|(1<<13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDI_MPHY_IOSFSB_RESET_CTL
+value|(1<<12)
 end_define
 
 begin_define
@@ -21644,6 +23050,13 @@ define|#
 directive|define
 name|PCH_DPLSUNIT_CLOCK_GATE_DISABLE
 value|(1<<29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCH_LP_PARTITION_LEVEL_DISABLE
+value|(1<<12)
 end_define
 
 begin_comment
@@ -22020,6 +23433,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FDI_RX_POLARITY_REVERSED_LPT
+value|(1<<16)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FDI_8BPC
 value|(0<<16)
 end_define
@@ -22048,7 +23468,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FDI_LINK_REVERSE_OVERWRITE
+name|FDI_RX_LINK_REVERSAL_OVERRIDE
 value|(1<<15)
 end_define
 
@@ -22189,6 +23609,71 @@ end_define
 begin_define
 define|#
 directive|define
+name|FDI_RX_PWRDN_LANE1_MASK
+value|(3<<26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDI_RX_PWRDN_LANE1_VAL
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<<26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDI_RX_PWRDN_LANE0_MASK
+value|(3<<24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDI_RX_PWRDN_LANE0_VAL
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<<24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDI_RX_TP1_TO_TP2_48
+value|(2<<20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDI_RX_TP1_TO_TP2_64
+value|(3<<20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDI_RX_FDI_DELAY_90
+value|(0x90<<0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDI_RX_MISC
+parameter_list|(
+name|pipe
+parameter_list|)
+value|_PIPE(pipe, _FDI_RXA_MISC, _FDI_RXB_MISC)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_FDI_RXA_TUSIZE1
 value|0xf0030
 end_define
@@ -22212,16 +23697,6 @@ define|#
 directive|define
 name|_FDI_RXB_TUSIZE2
 value|0xf1038
-end_define
-
-begin_define
-define|#
-directive|define
-name|FDI_RX_MISC
-parameter_list|(
-name|pipe
-parameter_list|)
-value|_PIPE(pipe, _FDI_RXA_MISC, _FDI_RXB_MISC)
 end_define
 
 begin_define
@@ -22757,6 +24232,80 @@ name|LVDS_DETECTED
 value|(1<< 1)
 end_define
 
+begin_comment
+comment|/* vlv has 2 sets of panel control regs. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PIPEA_PP_STATUS
+value|0x61200
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIPEA_PP_CONTROL
+value|0x61204
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIPEA_PP_ON_DELAYS
+value|0x61208
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIPEA_PP_OFF_DELAYS
+value|0x6120c
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIPEA_PP_DIVISOR
+value|0x61210
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIPEB_PP_STATUS
+value|0x61300
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIPEB_PP_CONTROL
+value|0x61304
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIPEB_PP_ON_DELAYS
+value|0x61308
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIPEB_PP_OFF_DELAYS
+value|0x6130c
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIPEB_PP_DIVISOR
+value|0x61310
+end_define
+
 begin_define
 define|#
 directive|define
@@ -22986,6 +24535,41 @@ define|#
 directive|define
 name|PCH_PP_OFF_DELAYS
 value|0xc720c
+end_define
+
+begin_define
+define|#
+directive|define
+name|PANEL_POWER_PORT_SELECT_MASK
+value|(0x3<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PANEL_POWER_PORT_LVDS
+value|(0<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PANEL_POWER_PORT_DP_A
+value|(1<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PANEL_POWER_PORT_DP_C
+value|(2<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PANEL_POWER_PORT_DP_D
+value|(3<< 30)
 end_define
 
 begin_define
@@ -23243,6 +24827,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|PORT_TO_PIPE
+parameter_list|(
+name|val
+parameter_list|)
+value|(((val)& (1<<30))>> 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PORT_TO_PIPE_CPT
+parameter_list|(
+name|val
+parameter_list|)
+value|(((val)& PORT_TRANS_SEL_MASK)>> 29)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TRANS_DP_CTL_A
 value|0xe0300
 end_define
@@ -23268,7 +24872,7 @@ name|TRANS_DP_CTL
 parameter_list|(
 name|pipe
 parameter_list|)
-value|(TRANS_DP_CTL_A + (pipe) * 0x01000)
+value|_PIPE(pipe, TRANS_DP_CTL_A, TRANS_DP_CTL_B)
 end_define
 
 begin_define
@@ -23602,6 +25206,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FORCEWAKE_ACK_HSW
+value|0x130044
+end_define
+
+begin_define
+define|#
+directive|define
 name|FORCEWAKE_ACK
 value|0x130090
 end_define
@@ -23616,6 +25227,20 @@ end_define
 begin_comment
 comment|/* multi-threaded */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|FORCEWAKE_KERNEL
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FORCEWAKE_USER
+value|0x2
+end_define
 
 begin_define
 define|#
@@ -23718,6 +25343,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|GEN7_VDSUNIT_CLOCK_GATE_DISABLE
+value|(1<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_TDLUNIT_CLOCK_GATE_DISABLE
+value|(1<< 22)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GEN6_RCZUNIT_CLOCK_GATE_DISABLE
 value|(1<< 13)
 end_define
@@ -23734,6 +25373,20 @@ define|#
 directive|define
 name|GEN6_RCCUNIT_CLOCK_GATE_DISABLE
 value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_UCGCTL4
+value|0x940c
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_L3BANK2X_CLOCK_GATE_DISABLE
+value|(1<<25)
 end_define
 
 begin_define
@@ -23874,8 +25527,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|HSW_CAGF_SHIFT
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
 name|GEN6_CAGF_MASK
 value|(0x7f<< GEN6_CAGF_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HSW_CAGF_MASK
+value|(0x7f<< HSW_CAGF_SHIFT)
 end_define
 
 begin_define
@@ -23960,6 +25627,13 @@ define|#
 directive|define
 name|GEN6_RP_UP_BUSY_CONT
 value|(0x4<<3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_RP_DOWN_IDLE_AVG
+value|(0x2<<0)
 end_define
 
 begin_define
@@ -24305,6 +25979,40 @@ end_define
 begin_define
 define|#
 directive|define
+name|GEN6_PCODE_WRITE_RC6VIDS
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_PCODE_READ_RC6VIDS
+value|0x5
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_ENCODE_RC6_VID
+parameter_list|(
+name|mv
+parameter_list|)
+value|(((mv) - 245) / 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_DECODE_RC6_VID
+parameter_list|(
+name|vids
+parameter_list|)
+value|(((vids) * 5) + 245)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GEN6_PCODE_DATA
 value|0x138128
 end_define
@@ -24363,6 +26071,170 @@ define|#
 directive|define
 name|GEN6_RC7
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_MISCCPCTL
+value|(0x9424)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_DOP_CLOCK_GATE_ENABLE
+value|(1<<0)
+end_define
+
+begin_comment
+comment|/* IVYBRIDGE DPF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEN7_L3CDERRST1
+value|0xB008
+end_define
+
+begin_comment
+comment|/* L3CD Error Status 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEN7_L3CDERRST1_ROW_MASK
+value|(0x7ff<<14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_PARITY_ERROR_VALID
+value|(1<<13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_L3CDERRST1_BANK_MASK
+value|(3<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_L3CDERRST1_SUBBANK_MASK
+value|(7<<8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_PARITY_ERROR_ROW
+parameter_list|(
+name|reg
+parameter_list|)
+define|\
+value|((reg& GEN7_L3CDERRST1_ROW_MASK)>> 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_PARITY_ERROR_BANK
+parameter_list|(
+name|reg
+parameter_list|)
+define|\
+value|((reg& GEN7_L3CDERRST1_BANK_MASK)>> 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_PARITY_ERROR_SUBBANK
+parameter_list|(
+name|reg
+parameter_list|)
+define|\
+value|((reg& GEN7_L3CDERRST1_SUBBANK_MASK)>> 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_L3CDERRST1_ENABLE
+value|(1<<7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_L3LOG_BASE
+value|0xB070
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_L3LOG_SIZE
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_HALF_SLICE_CHICKEN1
+value|0xe100
+end_define
+
+begin_comment
+comment|/* IVB GT1 + VLV */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEN7_HALF_SLICE_CHICKEN1_GT2
+value|0xf100
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_MAX_PS_THREAD_DEP
+value|(8<<12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_PSD_SINGLE_PORT_DISPATCH_ENABLE
+value|(1<<3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_ROW_CHICKEN2
+value|0xe4f4
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_ROW_CHICKEN2_GT2
+value|0xf4f4
+end_define
+
+begin_define
+define|#
+directive|define
+name|DOP_CLOCK_GATING_DISABLE
+value|(1<<0)
 end_define
 
 begin_define
@@ -24445,8 +26317,42 @@ end_define
 begin_define
 define|#
 directive|define
+name|IBX_HDMIW_HDMIEDID_B
+value|0xE2150
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBX_HDMIW_HDMIEDID
+parameter_list|(
+name|pipe
+parameter_list|)
+value|_PIPE(pipe, \ 					IBX_HDMIW_HDMIEDID_A, \ 					IBX_HDMIW_HDMIEDID_B)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IBX_AUD_CNTL_ST_A
 value|0xE20B4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBX_AUD_CNTL_ST_B
+value|0xE21B4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBX_AUD_CNTL_ST
+parameter_list|(
+name|pipe
+parameter_list|)
+value|_PIPE(pipe, \ 					IBX_AUD_CNTL_ST_A, \ 					IBX_AUD_CNTL_ST_B)
 end_define
 
 begin_define
@@ -24501,8 +26407,42 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPT_HDMIW_HDMIEDID_B
+value|0xE5150
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPT_HDMIW_HDMIEDID
+parameter_list|(
+name|pipe
+parameter_list|)
+value|_PIPE(pipe, \ 					CPT_HDMIW_HDMIEDID_A, \ 					CPT_HDMIW_HDMIEDID_B)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPT_AUD_CNTL_ST_A
 value|0xE50B4
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPT_AUD_CNTL_ST_B
+value|0xE51B4
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPT_AUD_CNTL_ST
+parameter_list|(
+name|pipe
+parameter_list|)
+value|_PIPE(pipe, \ 					CPT_AUD_CNTL_ST_A, \ 					CPT_AUD_CNTL_ST_B)
 end_define
 
 begin_define
@@ -24536,8 +26476,42 @@ end_define
 begin_define
 define|#
 directive|define
+name|IBX_AUD_CONFIG_B
+value|0xe2100
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBX_AUD_CFG
+parameter_list|(
+name|pipe
+parameter_list|)
+value|_PIPE(pipe, \ 					IBX_AUD_CONFIG_A, \ 					IBX_AUD_CONFIG_B)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPT_AUD_CONFIG_A
 value|0xe5000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPT_AUD_CONFIG_B
+value|0xe5100
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPT_AUD_CFG
+parameter_list|(
+name|pipe
+parameter_list|)
+value|_PIPE(pipe, \ 					CPT_AUD_CONFIG_A, \ 					CPT_AUD_CONFIG_B)
 end_define
 
 begin_define
@@ -24601,6 +26575,279 @@ define|#
 directive|define
 name|AUD_CONFIG_DISABLE_NCTS
 value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* HSW Audio */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HSW_AUD_CONFIG_A
+value|0x65000
+end_define
+
+begin_comment
+comment|/* Audio Configuration Transcoder A */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HSW_AUD_CONFIG_B
+value|0x65100
+end_define
+
+begin_comment
+comment|/* Audio Configuration Transcoder B */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HSW_AUD_CFG
+parameter_list|(
+name|pipe
+parameter_list|)
+value|_PIPE(pipe, \ 					HSW_AUD_CONFIG_A, \ 					HSW_AUD_CONFIG_B)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HSW_AUD_MISC_CTRL_A
+value|0x65010
+end_define
+
+begin_comment
+comment|/* Audio Misc Control Convert 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HSW_AUD_MISC_CTRL_B
+value|0x65110
+end_define
+
+begin_comment
+comment|/* Audio Misc Control Convert 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HSW_AUD_MISC_CTRL
+parameter_list|(
+name|pipe
+parameter_list|)
+value|_PIPE(pipe, \ 					HSW_AUD_MISC_CTRL_A, \ 					HSW_AUD_MISC_CTRL_B)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HSW_AUD_DIP_ELD_CTRL_ST_A
+value|0x650b4
+end_define
+
+begin_comment
+comment|/* Audio DIP and ELD Control State Transcoder A */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HSW_AUD_DIP_ELD_CTRL_ST_B
+value|0x651b4
+end_define
+
+begin_comment
+comment|/* Audio DIP and ELD Control State Transcoder B */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HSW_AUD_DIP_ELD_CTRL
+parameter_list|(
+name|pipe
+parameter_list|)
+value|_PIPE(pipe, \ 					HSW_AUD_DIP_ELD_CTRL_ST_A, \ 					HSW_AUD_DIP_ELD_CTRL_ST_B)
+end_define
+
+begin_comment
+comment|/* Audio Digital Converter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HSW_AUD_DIG_CNVT_1
+value|0x65080
+end_define
+
+begin_comment
+comment|/* Audio Converter 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HSW_AUD_DIG_CNVT_2
+value|0x65180
+end_define
+
+begin_comment
+comment|/* Audio Converter 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUD_DIG_CNVT
+parameter_list|(
+name|pipe
+parameter_list|)
+value|_PIPE(pipe, \ 					HSW_AUD_DIG_CNVT_1, \ 					HSW_AUD_DIG_CNVT_2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIP_PORT_SEL_MASK
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|HSW_AUD_EDID_DATA_A
+value|0x65050
+end_define
+
+begin_define
+define|#
+directive|define
+name|HSW_AUD_EDID_DATA_B
+value|0x65150
+end_define
+
+begin_define
+define|#
+directive|define
+name|HSW_AUD_EDID_DATA
+parameter_list|(
+name|pipe
+parameter_list|)
+value|_PIPE(pipe, \ 					HSW_AUD_EDID_DATA_A, \ 					HSW_AUD_EDID_DATA_B)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HSW_AUD_PIPE_CONV_CFG
+value|0x6507c
+end_define
+
+begin_comment
+comment|/* Audio pipe and converter configs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HSW_AUD_PIN_ELD_CP_VLD
+value|0x650c0
+end_define
+
+begin_comment
+comment|/* Audio ELD and CP Ready Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUDIO_INACTIVE_C
+value|(1<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIO_INACTIVE_B
+value|(1<<7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIO_INACTIVE_A
+value|(1<<3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIO_OUTPUT_ENABLE_A
+value|(1<<2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIO_OUTPUT_ENABLE_B
+value|(1<<6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIO_OUTPUT_ENABLE_C
+value|(1<<10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIO_ELD_VALID_A
+value|(1<<0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIO_ELD_VALID_B
+value|(1<<4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIO_ELD_VALID_C
+value|(1<<8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIO_CP_READY_A
+value|(1<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIO_CP_READY_B
+value|(1<<5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIO_CP_READY_C
+value|(1<<9)
 end_define
 
 begin_comment
@@ -24707,45 +26954,45 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_FUNC_CTL_A
+name|TRANS_DDI_FUNC_CTL_A
 value|0x60400
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_FUNC_CTL_B
+name|TRANS_DDI_FUNC_CTL_B
 value|0x61400
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_FUNC_CTL_C
+name|TRANS_DDI_FUNC_CTL_C
 value|0x62400
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_FUNC_CTL_EDP
+name|TRANS_DDI_FUNC_CTL_EDP
 value|0x6F400
 end_define
 
 begin_define
 define|#
 directive|define
-name|DDI_FUNC_CTL
+name|TRANS_DDI_FUNC_CTL
 parameter_list|(
-name|pipe
+name|tran
 parameter_list|)
-value|_PIPE(pipe, \ 					PIPE_DDI_FUNC_CTL_A, \ 					PIPE_DDI_FUNC_CTL_B)
+value|_TRANSCODER(tran, TRANS_DDI_FUNC_CTL_A, \ 						   TRANS_DDI_FUNC_CTL_B)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_FUNC_ENABLE
+name|TRANS_DDI_FUNC_ENABLE
 value|(1<<31)
 end_define
 
@@ -24756,14 +27003,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_PORT_MASK
-value|(0xf<<28)
+name|TRANS_DDI_PORT_MASK
+value|(7<<28)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_SELECT_PORT
+name|TRANS_DDI_SELECT_PORT
 parameter_list|(
 name|x
 parameter_list|)
@@ -24773,91 +27020,161 @@ end_define
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_MODE_SELECT_HDMI
+name|TRANS_DDI_PORT_NONE
+value|(0<<28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_DDI_MODE_SELECT_MASK
+value|(7<<24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_DDI_MODE_SELECT_HDMI
 value|(0<<24)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_MODE_SELECT_DVI
+name|TRANS_DDI_MODE_SELECT_DVI
 value|(1<<24)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_MODE_SELECT_DP_SST
+name|TRANS_DDI_MODE_SELECT_DP_SST
 value|(2<<24)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_MODE_SELECT_DP_MST
+name|TRANS_DDI_MODE_SELECT_DP_MST
 value|(3<<24)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_MODE_SELECT_FDI
+name|TRANS_DDI_MODE_SELECT_FDI
 value|(4<<24)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_BPC_8
+name|TRANS_DDI_BPC_MASK
+value|(7<<20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_DDI_BPC_8
 value|(0<<20)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_BPC_10
+name|TRANS_DDI_BPC_10
 value|(1<<20)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_BPC_6
+name|TRANS_DDI_BPC_6
 value|(2<<20)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_BPC_12
+name|TRANS_DDI_BPC_12
 value|(3<<20)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_BFI_ENABLE
+name|TRANS_DDI_PVSYNC
+value|(1<<17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_DDI_PHSYNC
+value|(1<<16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_DDI_EDP_INPUT_MASK
+value|(7<<12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_DDI_EDP_INPUT_A_ON
+value|(0<<12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_DDI_EDP_INPUT_A_ONOFF
+value|(4<<12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_DDI_EDP_INPUT_B_ONOFF
+value|(5<<12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_DDI_EDP_INPUT_C_ONOFF
+value|(6<<12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_DDI_BFI_ENABLE
 value|(1<<4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_PORT_WIDTH_X1
+name|TRANS_DDI_PORT_WIDTH_X1
 value|(0<<1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_PORT_WIDTH_X2
+name|TRANS_DDI_PORT_WIDTH_X2
 value|(1<<1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIPE_DDI_PORT_WIDTH_X4
+name|TRANS_DDI_PORT_WIDTH_X4
 value|(3<<1)
 end_define
 
@@ -24886,7 +27203,7 @@ name|DP_TP_CTL
 parameter_list|(
 name|port
 parameter_list|)
-value|_PORT(port, \ 					DP_TP_CTL_A, \ 					DP_TP_CTL_B)
+value|_PORT(port, DP_TP_CTL_A, DP_TP_CTL_B)
 end_define
 
 begin_define
@@ -24948,8 +27265,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|DP_TP_CTL_LINK_TRAIN_PAT3
+value|(4<<8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_TP_CTL_LINK_TRAIN_IDLE
+value|(2<<8)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DP_TP_CTL_LINK_TRAIN_NORMAL
 value|(3<<8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_TP_CTL_SCRAMBLE_DISABLE
+value|(1<<7)
 end_define
 
 begin_comment
@@ -24977,7 +27315,14 @@ name|DP_TP_STATUS
 parameter_list|(
 name|port
 parameter_list|)
-value|_PORT(port, \ 					DP_TP_STATUS_A, \ 					DP_TP_STATUS_B)
+value|_PORT(port, DP_TP_STATUS_A, DP_TP_STATUS_B)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DP_TP_STATUS_IDLE_DONE
+value|(1<<25)
 end_define
 
 begin_define
@@ -25012,7 +27357,7 @@ name|DDI_BUF_CTL
 parameter_list|(
 name|port
 parameter_list|)
-value|_PORT(port, \ 					DDI_BUF_CTL_A, \ 					DDI_BUF_CTL_B)
+value|_PORT(port, DDI_BUF_CTL_A, DDI_BUF_CTL_B)
 end_define
 
 begin_define
@@ -25131,8 +27476,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|DDI_BUF_PORT_REVERSAL
+value|(1<<16)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DDI_BUF_IS_IDLE
 value|(1<<7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DDI_A_4_LANES
+value|(1<<4)
 end_define
 
 begin_define
@@ -25188,7 +27547,7 @@ name|DDI_BUF_TRANS
 parameter_list|(
 name|port
 parameter_list|)
-value|_PORT(port, \ 					DDI_BUF_TRANS_A, \ 					DDI_BUF_TRANS_B)
+value|_PORT(port, DDI_BUF_TRANS_A, DDI_BUF_TRANS_B)
 end_define
 
 begin_comment
@@ -25214,6 +27573,34 @@ define|#
 directive|define
 name|SBI_CTL_STAT
 value|0xC6008
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBI_CTL_DEST_ICLK
+value|(0x0<<16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBI_CTL_DEST_MPHY
+value|(0x1<<16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBI_CTL_OP_IORD
+value|(0x2<<8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBI_CTL_OP_IOWR
+value|(0x3<<8)
 end_define
 
 begin_define
@@ -25337,6 +27724,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SBI_SSCCTL_PATHALT
+value|(1<<3)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SBI_SSCCTL_DISABLE
 value|(1<<0)
 end_define
@@ -25365,6 +27759,13 @@ name|SBI_DBUFF0
 value|0x2a00
 end_define
 
+begin_define
+define|#
+directive|define
+name|SBI_DBUFF0_ENABLE
+value|(1<<0)
+end_define
+
 begin_comment
 comment|/* LPT PIXCLK_GATE */
 end_comment
@@ -25380,14 +27781,14 @@ begin_define
 define|#
 directive|define
 name|PIXCLK_GATE_UNGATE
-value|1<<0
+value|(1<<0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PIXCLK_GATE_GATE
-value|0<<0
+value|(0<<0)
 end_define
 
 begin_comment
@@ -25411,14 +27812,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|SPLL_PLL_SCC
+name|SPLL_PLL_SSC
 value|(1<<28)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SPLL_PLL_NON_SCC
+name|SPLL_PLL_NON_SSC
 value|(2<<28)
 end_define
 
@@ -25471,7 +27872,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|WRPLL_PLL_SELECT_NON_SCC
+name|WRPLL_PLL_SELECT_NON_SSC
 value|(0x02<<28)
 end_define
 
@@ -25541,7 +27942,7 @@ name|PORT_CLK_SEL
 parameter_list|(
 name|port
 parameter_list|)
-value|_PORT(port, \ 					PORT_CLK_SEL_A, \ 					PORT_CLK_SEL_B)
+value|_PORT(port, PORT_CLK_SEL_A, PORT_CLK_SEL_B)
 end_define
 
 begin_define
@@ -25584,6 +27985,62 @@ define|#
 directive|define
 name|PORT_CLK_SEL_WRPLL2
 value|(5<<29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PORT_CLK_SEL_NONE
+value|(7<<29)
+end_define
+
+begin_comment
+comment|/* Transcoder clock selection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRANS_CLK_SEL_A
+value|0x46140
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_CLK_SEL_B
+value|0x46144
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_CLK_SEL
+parameter_list|(
+name|tran
+parameter_list|)
+value|_TRANSCODER(tran, TRANS_CLK_SEL_A, TRANS_CLK_SEL_B)
+end_define
+
+begin_comment
+comment|/* For each transcoder, we need to select the corresponding port clock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRANS_CLK_SEL_DISABLED
+value|(0x0<<29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_CLK_SEL_PORT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x+1)<<29)
 end_define
 
 begin_comment
@@ -25635,6 +28092,72 @@ parameter_list|)
 value|((x+1)<<29)
 end_define
 
+begin_define
+define|#
+directive|define
+name|_TRANSA_MSA_MISC
+value|0x60410
+end_define
+
+begin_define
+define|#
+directive|define
+name|_TRANSB_MSA_MISC
+value|0x61410
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_MSA_MISC
+parameter_list|(
+name|tran
+parameter_list|)
+value|_TRANSCODER(tran, _TRANSA_MSA_MISC, \ 					       _TRANSB_MSA_MISC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_MSA_SYNC_CLK
+value|(1<<0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_MSA_6_BPC
+value|(0<<5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_MSA_8_BPC
+value|(1<<5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_MSA_10_BPC
+value|(2<<5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_MSA_12_BPC
+value|(3<<5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRANS_MSA_16_BPC
+value|(4<<5)
+end_define
+
 begin_comment
 comment|/* LCPLL Control */
 end_comment
@@ -25663,6 +28186,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|LCPLL_CLK_FREQ_MASK
+value|(3<<26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCPLL_CLK_FREQ_450
+value|(0<<26)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LCPLL_CD_CLOCK_DISABLE
 value|(1<<25)
 end_define
@@ -25672,6 +28209,13 @@ define|#
 directive|define
 name|LCPLL_CD2X_CLOCK_DISABLE
 value|(1<<23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCPLL_CD_SOURCE_FCLK
+value|(1<<21)
 end_define
 
 begin_comment
@@ -25699,7 +28243,7 @@ name|PIPE_WM_LINETIME
 parameter_list|(
 name|pipe
 parameter_list|)
-value|_PIPE(pipe, \ 					PIPE_WM_LINETIME_A, \ 					PIPE_WM_LINETIME_A)
+value|_PIPE(pipe, PIPE_WM_LINETIME_A, \ 					   PIPE_WM_LINETIME_B)
 end_define
 
 begin_define
@@ -25766,6 +28310,34 @@ define|#
 directive|define
 name|SFUSE_STRAP_DDID_DETECTED
 value|(1<<0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WM_DBG
+value|0x45280
+end_define
+
+begin_define
+define|#
+directive|define
+name|WM_DBG_DISALLOW_MULTIPLE_LP
+value|(1<<0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WM_DBG_DISALLOW_MAXFIFO
+value|(1<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WM_DBG_DISALLOW_SPRITE
+value|(1<<2)
 end_define
 
 begin_endif

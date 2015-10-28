@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -407,6 +407,18 @@ modifier|*
 name|spa_meta_objset
 decl_stmt|;
 comment|/* copy of dp->dp_meta_objset */
+name|kmutex_t
+name|spa_evicting_os_lock
+decl_stmt|;
+comment|/* Evicting objset list lock */
+name|list_t
+name|spa_evicting_os_list
+decl_stmt|;
+comment|/* Objsets being evicted. */
+name|kcondvar_t
+name|spa_evicting_os_cv
+decl_stmt|;
+comment|/* Objset Eviction Completion */
 name|txg_list_t
 name|spa_vdev_txg_list
 decl_stmt|;
@@ -480,6 +492,21 @@ name|TXG_SIZE
 index|]
 decl_stmt|;
 comment|/* bplist of stuff to free */
+name|zio_cksum_salt_t
+name|spa_cksum_salt
+decl_stmt|;
+comment|/* secret salt for cksum */
+comment|/* checksum context templates */
+name|kmutex_t
+name|spa_cksum_tmpls_lock
+decl_stmt|;
+name|void
+modifier|*
+name|spa_cksum_tmpls
+index|[
+name|ZIO_CHECKSUM_FUNCTIONS
+index|]
+decl_stmt|;
 name|uberblock_t
 name|spa_ubsync
 decl_stmt|;

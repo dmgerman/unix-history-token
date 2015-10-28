@@ -116,15 +116,18 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|/// MCAsmBackend - Generic interface to target specific assembler backends.
+comment|/// Generic interface to target specific assembler backends.
 name|class
 name|MCAsmBackend
 block|{
 name|MCAsmBackend
 argument_list|(
-argument|const MCAsmBackend&
+specifier|const
+name|MCAsmBackend
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -134,7 +137,8 @@ specifier|const
 name|MCAsmBackend
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|protected
 label|:
@@ -160,14 +164,14 @@ name|void
 name|reset
 parameter_list|()
 block|{}
-comment|/// createObjectWriter - Create a new MCObjectWriter instance for use by the
-comment|/// assembler backend to emit the final object file.
+comment|/// Create a new MCObjectWriter instance for use by the assembler backend to
+comment|/// emit the final object file.
 name|virtual
 name|MCObjectWriter
 modifier|*
 name|createObjectWriter
 argument_list|(
-name|raw_ostream
+name|raw_pwrite_stream
 operator|&
 name|OS
 argument_list|)
@@ -175,8 +179,8 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// createELFObjectTargetWriter - Create a new ELFObjectTargetWriter to enable
-comment|/// non-standard ELFObjectWriters.
+comment|/// Create a new ELFObjectTargetWriter to enable non-standard
+comment|/// ELFObjectWriters.
 name|virtual
 name|MCELFObjectTargetWriter
 operator|*
@@ -190,8 +194,8 @@ literal|"createELFObjectTargetWriter is not supported by asm "
 literal|"backend"
 argument_list|)
 block|;   }
-comment|/// hasDataInCodeSupport - Check whether this target implements data-in-code
-comment|/// markers. If not, data region directives will be ignored.
+comment|/// Check whether this target implements data-in-code markers. If not, data
+comment|/// region directives will be ignored.
 name|bool
 name|hasDataInCodeSupport
 argument_list|()
@@ -201,26 +205,9 @@ return|return
 name|HasDataInCodeSupport
 return|;
 block|}
-comment|/// doesSectionRequireSymbols - Check whether the given section requires that
-comment|/// all symbols (even temporaries) have symbol table entries.
-name|virtual
-name|bool
-name|doesSectionRequireSymbols
-argument_list|(
-specifier|const
-name|MCSection
-operator|&
-name|Section
-argument_list|)
-decl|const
-block|{
-return|return
-name|false
-return|;
-block|}
-comment|/// @name Target Fixup Interfaces
+comment|/// \name Target Fixup Interfaces
 comment|/// @{
-comment|/// getNumFixupKinds - Get the number of target specific fixup kinds.
+comment|/// Get the number of target specific fixup kinds.
 name|virtual
 name|unsigned
 name|getNumFixupKinds
@@ -229,7 +216,7 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|/// getFixupKindInfo - Get information on a fixup kind.
+comment|/// Get information on a fixup kind.
 name|virtual
 specifier|const
 name|MCFixupKindInfo
@@ -241,9 +228,9 @@ name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// processFixupValue - Target hook to adjust the literal value of a fixup
-comment|/// if necessary. IsResolved signals whether the caller believes a relocation
-comment|/// is needed; the target can modify the value. The default does nothing.
+comment|/// Target hook to adjust the literal value of a fixup if necessary.
+comment|/// IsResolved signals whether the caller believes a relocation is needed; the
+comment|/// target can modify the value. The default does nothing.
 name|virtual
 name|void
 name|processFixupValue
@@ -282,9 +269,9 @@ modifier|&
 name|IsResolved
 parameter_list|)
 block|{}
-comment|/// applyFixup - Apply the \p Value for given \p Fixup into the provided
-comment|/// data fragment, at the offset specified by the fixup and following the
-comment|/// fixup kind as appropriate.
+comment|/// Apply the \p Value for given \p Fixup into the provided data fragment, at
+comment|/// the offset specified by the fixup and following the fixup kind as
+comment|/// appropriate.
 name|virtual
 name|void
 name|applyFixup
@@ -312,10 +299,9 @@ init|=
 literal|0
 decl_stmt|;
 comment|/// @}
-comment|/// @name Target Relaxation Interfaces
+comment|/// \name Target Relaxation Interfaces
 comment|/// @{
-comment|/// mayNeedRelaxation - Check whether the given instruction may need
-comment|/// relaxation.
+comment|/// Check whether the given instruction may need relaxation.
 comment|///
 comment|/// \param Inst - The instruction to test.
 name|virtual
@@ -331,8 +317,36 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// fixupNeedsRelaxation - Target specific predicate for whether a given
-comment|/// fixup requires the associated instruction to be relaxed.
+comment|/// Target specific predicate for whether a given fixup requires the
+comment|/// associated instruction to be relaxed.
+name|virtual
+name|bool
+name|fixupNeedsRelaxationAdvanced
+argument_list|(
+specifier|const
+name|MCFixup
+operator|&
+name|Fixup
+argument_list|,
+name|bool
+name|Resolved
+argument_list|,
+name|uint64_t
+name|Value
+argument_list|,
+specifier|const
+name|MCRelaxableFragment
+operator|*
+name|DF
+argument_list|,
+specifier|const
+name|MCAsmLayout
+operator|&
+name|Layout
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Simple predicate for targets where !Resolved implies requiring relaxation
 name|virtual
 name|bool
 name|fixupNeedsRelaxation
@@ -359,8 +373,7 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// RelaxInstruction - Relax the instruction in the given fragment to the next
-comment|/// wider instruction.
+comment|/// Relax the instruction in the given fragment to the next wider instruction.
 comment|///
 comment|/// \param Inst The instruction to relax, which may be the same as the
 comment|/// output.
@@ -383,10 +396,9 @@ init|=
 literal|0
 decl_stmt|;
 comment|/// @}
-comment|/// getMinimumNopSize - Returns the minimum size of a nop in bytes on this
-comment|/// target. The assembler will use this to emit excess padding in situations
-comment|/// where the padding required for simple alignment would be less than the
-comment|/// minimum nop size.
+comment|/// Returns the minimum size of a nop in bytes on this target. The assembler
+comment|/// will use this to emit excess padding in situations where the padding
+comment|/// required for simple alignment would be less than the minimum nop size.
 comment|///
 name|virtual
 name|unsigned
@@ -398,9 +410,8 @@ return|return
 literal|1
 return|;
 block|}
-comment|/// writeNopData - Write an (optimal) nop sequence of Count bytes to the given
-comment|/// output. If the target cannot generate such a sequence, it should return an
-comment|/// error.
+comment|/// Write an (optimal) nop sequence of Count bytes to the given output. If the
+comment|/// target cannot generate such a sequence, it should return an error.
 comment|///
 comment|/// \return - True on success.
 name|virtual
@@ -418,8 +429,7 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// handleAssemblerFlag - Handle any target-specific assembler flags.
-comment|/// By default, do nothing.
+comment|/// Handle any target-specific assembler flags. By default, do nothing.
 name|virtual
 name|void
 name|handleAssemblerFlag

@@ -189,14 +189,24 @@ name|UnregisteredEHFrameSections
 block|;
 name|RuntimeDyldMachO
 argument_list|(
-name|RTDyldMemoryManager
-operator|*
-name|mm
+name|RuntimeDyld
+operator|::
+name|MemoryManager
+operator|&
+name|MemMgr
+argument_list|,
+name|RuntimeDyld
+operator|::
+name|SymbolResolver
+operator|&
+name|Resolver
 argument_list|)
 operator|:
 name|RuntimeDyldImpl
 argument_list|(
-argument|mm
+argument|MemMgr
+argument_list|,
+argument|Resolver
 argument_list|)
 block|{}
 comment|/// This convenience method uses memcpy to extract a contiguous addend (the
@@ -276,13 +286,11 @@ argument_list|)
 block|;
 name|uint64_t
 name|Offset
-block|;
+operator|=
 name|RI
 operator|->
 name|getOffset
-argument_list|(
-name|Offset
-argument_list|)
+argument_list|()
 block|;
 name|MachO
 operator|::
@@ -359,8 +367,6 @@ name|makeValueAddendPCRel
 argument_list|(
 argument|RelocationValueRef&Value
 argument_list|,
-argument|const ObjectFile&BaseTObj
-argument_list|,
 argument|const relocation_iterator&RI
 argument_list|,
 argument|unsigned OffsetToNextPC
@@ -411,7 +417,9 @@ name|create
 argument_list|(
 argument|Triple::ArchType Arch
 argument_list|,
-argument|RTDyldMemoryManager *mm
+argument|RuntimeDyld::MemoryManager&MemMgr
+argument_list|,
+argument|RuntimeDyld::SymbolResolver&Resolver
 argument_list|)
 block|;
 name|std
@@ -524,14 +532,24 @@ name|public
 operator|:
 name|RuntimeDyldMachOCRTPBase
 argument_list|(
-name|RTDyldMemoryManager
-operator|*
-name|mm
+name|RuntimeDyld
+operator|::
+name|MemoryManager
+operator|&
+name|MemMgr
+argument_list|,
+name|RuntimeDyld
+operator|::
+name|SymbolResolver
+operator|&
+name|Resolver
 argument_list|)
 operator|:
 name|RuntimeDyldMachO
 argument_list|(
-argument|mm
+argument|MemMgr
+argument_list|,
+argument|Resolver
 argument_list|)
 block|{}
 name|void

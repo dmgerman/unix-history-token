@@ -219,7 +219,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"dbus: WPS.Start - Uknown role %s"
+literal|"dbus: WPS.Start - Unknown role %s"
 argument_list|,
 name|val
 argument_list|)
@@ -508,7 +508,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"dbus: WPS.Stsrt - Wrong Bssid length %d"
+literal|"dbus: WPS.Start - Wrong Bssid length %d"
 argument_list|,
 name|len
 argument_list|)
@@ -1509,6 +1509,46 @@ block|}
 end_function
 
 begin_comment
+comment|/**  * wpas_dbus_handler_wps_cancel - Cancel ongoing WPS configuration  * @message: Pointer to incoming dbus message  * @wpa_s: %wpa_supplicant data structure  * Returns: NULL on success or DBus error on failure  *  * Handler for "Cancel" method call. Returns NULL if WPS cancel successfull  * or DBus error on WPS cancel failure  */
+end_comment
+
+begin_function
+name|DBusMessage
+modifier|*
+name|wpas_dbus_handler_wps_cancel
+parameter_list|(
+name|DBusMessage
+modifier|*
+name|message
+parameter_list|,
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|)
+block|{
+if|if
+condition|(
+name|wpas_wps_cancel
+argument_list|(
+name|wpa_s
+argument_list|)
+condition|)
+return|return
+name|wpas_dbus_error_unknown_error
+argument_list|(
+name|message
+argument_list|,
+literal|"WPS cancel failed"
+argument_list|)
+return|;
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * wpas_dbus_getter_process_credentials - Check if credentials are processed  * @message: Pointer to incoming dbus message  * @wpa_s: %wpa_supplicant data structure  * Returns: TRUE on success, FALSE on failure  *  * Getter for "ProcessCredentials" property. Returns returned boolean will be  * true if wps_cred_processing configuration field is not equal to 1 or false  * if otherwise.  */
 end_comment
 
@@ -1596,6 +1636,16 @@ name|process_credentials
 decl_stmt|,
 name|old_pc
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|wpa_s
+operator|->
+name|dbus_new_path
+condition|)
+return|return
+name|FALSE
+return|;
 if|if
 condition|(
 operator|!

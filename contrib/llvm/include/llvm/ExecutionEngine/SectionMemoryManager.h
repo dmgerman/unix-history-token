@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/RuntimeDyld.h"
+file|"llvm/ExecutionEngine/RTDyldMemoryManager.h"
 end_include
 
 begin_include
@@ -112,9 +112,12 @@ name|RTDyldMemoryManager
 block|{
 name|SectionMemoryManager
 argument_list|(
-argument|const SectionMemoryManager&
+specifier|const
+name|SectionMemoryManager
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -124,17 +127,18 @@ specifier|const
 name|SectionMemoryManager
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
 name|SectionMemoryManager
 argument_list|()
 block|{ }
-name|virtual
 operator|~
 name|SectionMemoryManager
 argument_list|()
+name|override
 block|;
 comment|/// \brief Allocates a memory block of (at least) the given size suitable for
 comment|/// executable code.

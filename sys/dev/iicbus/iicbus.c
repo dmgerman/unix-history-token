@@ -466,6 +466,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|device_delete_children
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|mtx_destroy
 argument_list|(
 operator|&

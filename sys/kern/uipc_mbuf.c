@@ -1847,7 +1847,6 @@ comment|/*  * Attach the cluster from *m to *n, set up m_ext in *n  * and bump t
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|mb_dupcl
 parameter_list|(
@@ -1856,6 +1855,7 @@ name|mbuf
 modifier|*
 name|n
 parameter_list|,
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -2632,6 +2632,7 @@ name|mbuf
 modifier|*
 name|to
 parameter_list|,
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -2889,6 +2890,7 @@ name|mbuf
 modifier|*
 name|m_copym
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -3709,6 +3711,7 @@ name|mbuf
 modifier|*
 name|m_dup
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -4835,12 +4838,6 @@ begin_comment
 comment|/*  * Like m_pullup(), except a new mbuf is always allocated, and we allow  * the amount of empty space before the data in the new mbuf to be specified  * (in the event that the caller expects to prepend later).  */
 end_comment
 
-begin_decl_stmt
-name|int
-name|MSFail
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|struct
 name|mbuf
@@ -5078,9 +5075,6 @@ name|m_freem
 argument_list|(
 name|n
 argument_list|)
-expr_stmt|;
-name|MSFail
-operator|++
 expr_stmt|;
 return|return
 operator|(
@@ -8790,6 +8784,40 @@ operator|(
 name|NULL
 operator|)
 return|;
+block|}
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_PKTHDR
+condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|mprev
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: m0 %p, m %p has M_PKTHDR"
+operator|,
+name|__func__
+operator|,
+name|m0
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
+name|m_move_pkthdr
+argument_list|(
+name|n
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 block|}
 name|len
 operator|=

@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<assert.h>
 end_include
 
@@ -56,16 +62,6 @@ include|#
 directive|include
 file|"test-utils.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|LEN
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
-end_define
 
 begin_pragma
 pragma|#
@@ -474,7 +470,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|LEN
+name|nitems
 argument_list|(
 name|f_pi_odd
 argument_list|)
@@ -692,7 +688,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|LEN
+name|nitems
 argument_list|(
 name|d_pi_odd
 argument_list|)
@@ -931,7 +927,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|LEN
+name|nitems
 argument_list|(
 name|ld_pi_odd
 argument_list|)

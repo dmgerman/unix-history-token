@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- llvm/Analysis/TargetTransformInfo.h ----------------------*- C++ -*-===//
+comment|//===- TargetTransformInfo.h ------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -32,47 +32,47 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// This pass exposes codegen information to IR-level passes. Every
+comment|/// This pass exposes codegen information to IR-level passes. Every
 end_comment
 
 begin_comment
-comment|// transformation that uses codegen information is broken into three parts:
+comment|/// transformation that uses codegen information is broken into three parts:
 end_comment
 
 begin_comment
-comment|// 1. The IR-level analysis pass.
+comment|/// 1. The IR-level analysis pass.
 end_comment
 
 begin_comment
-comment|// 2. The IR-level transformation interface which provides the needed
+comment|/// 2. The IR-level transformation interface which provides the needed
 end_comment
 
 begin_comment
-comment|//    information.
+comment|///    information.
 end_comment
 
 begin_comment
-comment|// 3. Codegen-level implementation which uses target-specific hooks.
+comment|/// 3. Codegen-level implementation which uses target-specific hooks.
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This file defines #2, which is the interface that IR-level transformations
+comment|/// This file defines #2, which is the interface that IR-level transformations
 end_comment
 
 begin_comment
-comment|// use for querying the codegen.
+comment|/// use for querying the codegen.
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
@@ -94,6 +94,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/IntrinsicInst.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Intrinsics.h"
 end_include
 
@@ -107,6 +119,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
 end_include
 
 begin_decl_stmt
@@ -123,6 +141,9 @@ name|class
 name|Loop
 decl_stmt|;
 name|class
+name|PreservedAnalyses
+decl_stmt|;
+name|class
 name|Type
 decl_stmt|;
 name|class
@@ -131,65 +152,148 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
-comment|/// TargetTransformInfo - This pass provides access to the codegen
-comment|/// interfaces that are needed for IR-level transformations.
+comment|/// \brief Information about a load/store intrinsic defined by the target.
+struct|struct
+name|MemIntrinsicInfo
+block|{
+name|MemIntrinsicInfo
+argument_list|()
+operator|:
+name|ReadMem
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|WriteMem
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|Vol
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|MatchingId
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|NumMemRefs
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|PtrVal
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+name|bool
+name|ReadMem
+expr_stmt|;
+name|bool
+name|WriteMem
+decl_stmt|;
+name|bool
+name|Vol
+decl_stmt|;
+comment|// Same Id is set by the target for corresponding load/store intrinsics.
+name|unsigned
+name|short
+name|MatchingId
+decl_stmt|;
+name|int
+name|NumMemRefs
+decl_stmt|;
+name|Value
+modifier|*
+name|PtrVal
+decl_stmt|;
+block|}
+struct|;
+comment|/// \brief This pass provides access to the codegen interfaces that are needed
+comment|/// for IR-level transformations.
 name|class
 name|TargetTransformInfo
 block|{
-name|protected
-label|:
-comment|/// \brief The TTI instance one level down the stack.
-comment|///
-comment|/// This is used to implement the default behavior all of the methods which
-comment|/// is to delegate up through the stack of TTIs until one can answer the
-comment|/// query.
-name|TargetTransformInfo
-modifier|*
-name|PrevTTI
-decl_stmt|;
-comment|/// \brief The top of the stack of TTI analyses available.
-comment|///
-comment|/// This is a convenience routine maintained as TTI analyses become available
-comment|/// that complements the PrevTTI delegation chain. When one part of an
-comment|/// analysis pass wants to query another part of the analysis pass it can use
-comment|/// this to start back at the top of the stack.
-name|TargetTransformInfo
-modifier|*
-name|TopTTI
-decl_stmt|;
-comment|/// All pass subclasses must in their initializePass routine call
-comment|/// pushTTIStack with themselves to update the pointers tracking the previous
-comment|/// TTI instance in the analysis group's stack, and the top of the analysis
-comment|/// group's stack.
-name|void
-name|pushTTIStack
-parameter_list|(
-name|Pass
-modifier|*
-name|P
-parameter_list|)
-function_decl|;
-comment|/// All pass subclasses must call TargetTransformInfo::getAnalysisUsage.
-name|virtual
-name|void
-name|getAnalysisUsage
-argument_list|(
-name|AnalysisUsage
-operator|&
-name|AU
-argument_list|)
-decl|const
-decl_stmt|;
 name|public
 label|:
-comment|/// This class is intended to be subclassed by real implementations.
-name|virtual
+comment|/// \brief Construct a TTI object using a type implementing the \c Concept
+comment|/// API below.
+comment|///
+comment|/// This is used by targets to construct a TTI wrapping their target-specific
+comment|/// implementaion that encodes appropriate costs for their target.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|TargetTransformInfo
+argument_list|(
+argument|T Impl
+argument_list|)
+expr_stmt|;
+comment|/// \brief Construct a baseline TTI object using a minimal implementation of
+comment|/// the \c Concept API below.
+comment|///
+comment|/// The TTI implementation will reflect the information in the DataLayout
+comment|/// provided if non-null.
+name|explicit
+name|TargetTransformInfo
+parameter_list|(
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|)
+function_decl|;
+comment|// Provide move semantics.
+name|TargetTransformInfo
+argument_list|(
+name|TargetTransformInfo
+operator|&&
+name|Arg
+argument_list|)
+expr_stmt|;
+name|TargetTransformInfo
+modifier|&
+name|operator
+init|=
+operator|(
+name|TargetTransformInfo
+operator|&&
+name|RHS
+operator|)
+decl_stmt|;
+comment|// We need to define the destructor out-of-line to define our sub-classes
+comment|// out-of-line.
 operator|~
 name|TargetTransformInfo
 argument_list|()
-operator|=
-literal|0
 expr_stmt|;
+comment|/// \brief Handle the invalidation of this information.
+comment|///
+comment|/// When used as a result of \c TargetIRAnalysis this method will be called
+comment|/// when the function this was computed for changes. When it returns false,
+comment|/// the information is preserved across those changes.
+name|bool
+name|invalidate
+parameter_list|(
+name|Function
+modifier|&
+parameter_list|,
+specifier|const
+name|PreservedAnalyses
+modifier|&
+parameter_list|)
+block|{
+comment|// FIXME: We should probably in some way ensure that the subtarget
+comment|// information for a function hasn't changed.
+return|return
+name|false
+return|;
+block|}
 comment|/// \name Generic Target Information
 comment|/// @{
 comment|/// \brief Underlying constants for 'cost' values in this interface.
@@ -240,7 +344,6 @@ comment|/// operand type is required.
 comment|///
 comment|/// The returned cost is defined in terms of \c TargetCostConstants, see its
 comment|/// comments for a detailed explanation of the cost values.
-name|virtual
 name|unsigned
 name|getOperationCost
 argument_list|(
@@ -264,7 +367,6 @@ comment|///
 comment|/// The contract for this function is the same as \c getOperationCost except
 comment|/// that it supports an interface that provides extra information specific to
 comment|/// the GEP operation.
-name|virtual
 name|unsigned
 name|getGEPCost
 argument_list|(
@@ -292,7 +394,6 @@ comment|///
 comment|/// This is the most basic query for estimating call cost: it only knows the
 comment|/// function type and (potentially) the number of arguments at the call site.
 comment|/// The latter is only interesting for varargs function types.
-name|virtual
 name|unsigned
 name|getCallCost
 argument_list|(
@@ -312,7 +413,6 @@ comment|/// \brief Estimate the cost of calling a specific function when lowered
 comment|///
 comment|/// This overload adds the ability to reason about the particular function
 comment|/// being called in the event it is a library call with special lowering.
-name|virtual
 name|unsigned
 name|getCallCost
 argument_list|(
@@ -332,7 +432,6 @@ decl_stmt|;
 comment|/// \brief Estimate the cost of calling a specific function when lowered.
 comment|///
 comment|/// This overload allows specifying a set of candidate argument values.
-name|virtual
 name|unsigned
 name|getCallCost
 argument_list|(
@@ -354,7 +453,6 @@ decl_stmt|;
 comment|/// \brief Estimate the cost of an intrinsic when lowered.
 comment|///
 comment|/// Mirrors the \c getCallCost method but uses an intrinsic identifier.
-name|virtual
 name|unsigned
 name|getIntrinsicCost
 argument_list|(
@@ -379,7 +477,6 @@ decl_stmt|;
 comment|/// \brief Estimate the cost of an intrinsic when lowered.
 comment|///
 comment|/// Mirrors the \c getCallCost method but uses an intrinsic identifier.
-name|virtual
 name|unsigned
 name|getIntrinsicCost
 argument_list|(
@@ -417,7 +514,6 @@ comment|/// cases.
 comment|///
 comment|/// The returned cost is defined in terms of \c TargetCostConstants, see its
 comment|/// comments for a detailed explanation of the cost values.
-name|virtual
 name|unsigned
 name|getUserCost
 argument_list|(
@@ -428,16 +524,32 @@ name|U
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief hasBranchDivergence - Return true if branch divergence exists.
+comment|/// \brief Return true if branch divergence exists.
+comment|///
 comment|/// Branch divergence has a significantly negative impact on GPU performance
 comment|/// when threads in the same wavefront take different paths due to conditional
 comment|/// branches.
-name|virtual
 name|bool
 name|hasBranchDivergence
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Returns whether V is a source of divergence.
+comment|///
+comment|/// This function provides the target-dependent information for
+comment|/// the target-independent DivergenceAnalysis. DivergenceAnalysis first
+comment|/// builds the dependency graph, and then runs the reachability algorithm
+comment|/// starting with the sources of divergence.
+name|bool
+name|isSourceOfDivergence
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Test whether calls to a function lower to actual program function
 comment|/// calls.
 comment|///
@@ -450,7 +562,6 @@ comment|/// Alternatively, we could split the cost interface into distinct code-
 comment|/// and execution-speed costs. This would allow modelling the core of this
 comment|/// query more accurately as a call is a single small instruction, but
 comment|/// incurs significant execution cost.
-name|virtual
 name|bool
 name|isLoweredToCall
 argument_list|(
@@ -465,13 +576,26 @@ comment|/// Parameters that control the generic loop unrolling transformation.
 struct|struct
 name|UnrollingPreferences
 block|{
-comment|/// The cost threshold for the unrolled loop, compared to
-comment|/// CodeMetrics.NumInsts aggregated over all basic blocks in the loop body.
-comment|/// The unrolling factor is set such that the unrolled loop body does not
-comment|/// exceed this cost. Set this to UINT_MAX to disable the loop body cost
+comment|/// The cost threshold for the unrolled loop. Should be relative to the
+comment|/// getUserCost values returned by this API, and the expectation is that
+comment|/// the unrolled loop's instructions when run through that interface should
+comment|/// not exceed this cost. However, this is only an estimate. Also, specific
+comment|/// loops may be unrolled even with a cost above this threshold if deemed
+comment|/// profitable. Set this to UINT_MAX to disable the loop body cost
 comment|/// restriction.
 name|unsigned
 name|Threshold
+decl_stmt|;
+comment|/// If complete unrolling will reduce the cost of the loop below its
+comment|/// expected dynamic cost while rolled by this percentage, apply a discount
+comment|/// (below) to its unrolled cost.
+name|unsigned
+name|PercentDynamicCostSavedThreshold
+decl_stmt|;
+comment|/// The discount applied to the unrolled cost when the *dynamic* cost
+comment|/// savings of unrolling exceed the \c PercentDynamicCostSavedThreshold.
+name|unsigned
+name|DynamicCostSavingsDiscount
 decl_stmt|;
 comment|/// The cost threshold for the unrolled loop when optimizing for size (set
 comment|/// to UINT_MAX to disable).
@@ -484,8 +608,8 @@ name|unsigned
 name|PartialThreshold
 decl_stmt|;
 comment|/// The cost threshold for the unrolled loop when optimizing for size, like
-comment|/// OptSizeThreshold, but used for partial/runtime unrolling (set to UINT_MAX
-comment|/// to disable).
+comment|/// OptSizeThreshold, but used for partial/runtime unrolling (set to
+comment|/// UINT_MAX to disable).
 name|unsigned
 name|PartialOptSizeThreshold
 decl_stmt|;
@@ -509,25 +633,24 @@ name|bool
 name|Partial
 decl_stmt|;
 comment|/// Allow runtime unrolling (unrolling of loops to expand the size of the
-comment|/// loop body even when the number of loop iterations is not known at compile
-comment|/// time).
+comment|/// loop body even when the number of loop iterations is not known at
+comment|/// compile time).
 name|bool
 name|Runtime
+decl_stmt|;
+comment|/// Allow emitting expensive instructions (such as divisions) when computing
+comment|/// the trip count of a loop for runtime unrolling.
+name|bool
+name|AllowExpensiveTripCount
 decl_stmt|;
 block|}
 struct|;
 comment|/// \brief Get target-customized preferences for the generic loop unrolling
 comment|/// transformation. The caller will initialize UP with the current
 comment|/// target-independent defaults.
-name|virtual
 name|void
 name|getUnrollingPreferences
 argument_list|(
-specifier|const
-name|Function
-operator|*
-name|F
-argument_list|,
 name|Loop
 operator|*
 name|L
@@ -562,7 +685,6 @@ enum|;
 comment|/// \brief Return true if the specified immediate is legal add immediate, that
 comment|/// is the target has add instructions which can add a register with the
 comment|/// immediate without having to materialize the immediate into a register.
-name|virtual
 name|bool
 name|isLegalAddImmediate
 argument_list|(
@@ -575,7 +697,6 @@ comment|/// \brief Return true if the specified immediate is legal icmp immediat
 comment|/// that is the target has icmp instructions which can compare a register
 comment|/// against the immediate without having to materialize the immediate into a
 comment|/// register.
-name|virtual
 name|bool
 name|isLegalICmpImmediate
 argument_list|(
@@ -589,7 +710,6 @@ comment|/// this target, for a load/store of the specified type.
 comment|/// The type may be VoidTy, in which case only return true if the addressing
 comment|/// mode is legal for a load/store of any legal type.
 comment|/// TODO: Handle pre/postinc as well.
-name|virtual
 name|bool
 name|isLegalAddressingMode
 argument_list|(
@@ -609,6 +729,11 @@ name|HasBaseReg
 argument_list|,
 name|int64_t
 name|Scale
+argument_list|,
+name|unsigned
+name|AddrSpace
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -616,7 +741,6 @@ comment|/// \brief Return true if the target works with masked instruction
 comment|/// AVX2 allows masks for consecutive load and store for i32 and i64 elements.
 comment|/// AVX-512 architecture will also allow masks for non-consecutive memory
 comment|/// accesses.
-name|virtual
 name|bool
 name|isLegalMaskedStore
 argument_list|(
@@ -629,7 +753,6 @@ name|Consecutive
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|bool
 name|isLegalMaskedLoad
 argument_list|(
@@ -648,7 +771,6 @@ comment|/// of the specified type.
 comment|/// If the AM is supported, the return value must be>= 0.
 comment|/// If the AM is not supported, it returns a negative value.
 comment|/// TODO: Handle pre/postinc as well.
-name|virtual
 name|int
 name|getScalingFactorCost
 argument_list|(
@@ -668,13 +790,17 @@ name|HasBaseReg
 argument_list|,
 name|int64_t
 name|Scale
+argument_list|,
+name|unsigned
+name|AddrSpace
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \brief Return true if it's free to truncate a value of type Ty1 to type
 comment|/// Ty2. e.g. On x86 it's free to truncate a i32 value in register EAX to i16
 comment|/// by referencing its sub-register AX.
-name|virtual
 name|bool
 name|isTruncateFree
 argument_list|(
@@ -688,8 +814,18 @@ name|Ty2
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Return true if it is profitable to hoist instruction in the
+comment|/// then/else to before if.
+name|bool
+name|isProfitableToHoist
+argument_list|(
+name|Instruction
+operator|*
+name|I
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Return true if this type is legal.
-name|virtual
 name|bool
 name|isTypeLegal
 argument_list|(
@@ -700,14 +836,12 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \brief Returns the target's jmp_buf alignment in bytes.
-name|virtual
 name|unsigned
 name|getJumpBufAlignment
 argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// \brief Returns the target's jmp_buf size in bytes.
-name|virtual
 name|unsigned
 name|getJumpBufSize
 argument_list|()
@@ -715,14 +849,21 @@ specifier|const
 expr_stmt|;
 comment|/// \brief Return true if switches should be turned into lookup tables for the
 comment|/// target.
-name|virtual
 name|bool
 name|shouldBuildLookupTables
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Don't restrict interleaved unrolling to small loops.
+name|bool
+name|enableAggressiveInterleaving
+argument_list|(
+name|bool
+name|LoopHasReductions
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Return hardware support for population count.
-name|virtual
 name|PopcntSupportKind
 name|getPopcntSupport
 argument_list|(
@@ -732,7 +873,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \brief Return true if the hardware has a fast square-root instruction.
-name|virtual
 name|bool
 name|haveFastSqrt
 argument_list|(
@@ -742,9 +882,19 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Return the expected cost of supporting the floating point operation
+comment|/// of the specified type.
+name|unsigned
+name|getFPOpCost
+argument_list|(
+name|Type
+operator|*
+name|Ty
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Return the expected cost of materializing for the given integer
 comment|/// immediate of the specified type.
-name|virtual
 name|unsigned
 name|getIntImmCost
 argument_list|(
@@ -762,7 +912,6 @@ decl_stmt|;
 comment|/// \brief Return the expected cost of materialization for the given integer
 comment|/// immediate of the specified type for a given instruction. The cost can be
 comment|/// zero if the immediate can be folded into the specified instruction.
-name|virtual
 name|unsigned
 name|getIntImmCost
 argument_list|(
@@ -783,7 +932,6 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|unsigned
 name|getIntImmCost
 argument_list|(
@@ -862,7 +1010,6 @@ enum|;
 comment|/// \return The number of scalar or vector registers that the target has.
 comment|/// If 'Vectors' is true, it returns the number of vector registers. If it is
 comment|/// set to false, it returns the number of scalar registers.
-name|virtual
 name|unsigned
 name|getNumberOfRegisters
 argument_list|(
@@ -872,7 +1019,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \return The width of the largest scalar or vector register type.
-name|virtual
 name|unsigned
 name|getRegisterBitWidth
 argument_list|(
@@ -884,14 +1030,15 @@ decl_stmt|;
 comment|/// \return The maximum interleave factor that any transform should try to
 comment|/// perform for this target. This number depends on the level of parallelism
 comment|/// and the number of execution units in the CPU.
-name|virtual
 name|unsigned
 name|getMaxInterleaveFactor
-argument_list|()
-specifier|const
-expr_stmt|;
+argument_list|(
+name|unsigned
+name|VF
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \return The expected cost of arithmetic ops, such as mul, xor, fsub, etc.
-name|virtual
 name|unsigned
 name|getArithmeticInstrCost
 argument_list|(
@@ -927,7 +1074,6 @@ decl_stmt|;
 comment|/// \return The cost of a shuffle instruction of kind Kind and of type Tp.
 comment|/// The index and subtype parameters are used by the subvector insertion and
 comment|/// extraction shuffle kinds.
-name|virtual
 name|unsigned
 name|getShuffleCost
 argument_list|(
@@ -953,7 +1099,6 @@ decl|const
 decl_stmt|;
 comment|/// \return The expected cost of cast instructions, such as bitcast, trunc,
 comment|/// zext, etc.
-name|virtual
 name|unsigned
 name|getCastInstrCost
 argument_list|(
@@ -972,7 +1117,6 @@ decl|const
 decl_stmt|;
 comment|/// \return The expected cost of control-flow related instructions such as
 comment|/// Phi, Ret, Br.
-name|virtual
 name|unsigned
 name|getCFInstrCost
 argument_list|(
@@ -982,7 +1126,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \returns The expected cost of compare and select instructions.
-name|virtual
 name|unsigned
 name|getCmpSelInstrCost
 argument_list|(
@@ -1003,7 +1146,6 @@ decl|const
 decl_stmt|;
 comment|/// \return The expected cost of vector Insert and Extract.
 comment|/// Use -1 to indicate that there is no information on the index value.
-name|virtual
 name|unsigned
 name|getVectorInstrCost
 argument_list|(
@@ -1023,7 +1165,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \return The cost of Load and Store instructions.
-name|virtual
 name|unsigned
 name|getMemoryOpCost
 argument_list|(
@@ -1033,6 +1174,60 @@ argument_list|,
 name|Type
 operator|*
 name|Src
+argument_list|,
+name|unsigned
+name|Alignment
+argument_list|,
+name|unsigned
+name|AddressSpace
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \return The cost of masked Load and Store instructions.
+name|unsigned
+name|getMaskedMemoryOpCost
+argument_list|(
+name|unsigned
+name|Opcode
+argument_list|,
+name|Type
+operator|*
+name|Src
+argument_list|,
+name|unsigned
+name|Alignment
+argument_list|,
+name|unsigned
+name|AddressSpace
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \return The cost of the interleaved memory operation.
+comment|/// \p Opcode is the memory operation code
+comment|/// \p VecTy is the vector type of the interleaved access.
+comment|/// \p Factor is the interleave factor
+comment|/// \p Indices is the indices for interleaved load members (as interleaved
+comment|///    load allows gaps)
+comment|/// \p Alignment is the alignment of the memory operation
+comment|/// \p AddressSpace is address space of the pointer.
+name|unsigned
+name|getInterleavedMemoryOpCost
+argument_list|(
+name|unsigned
+name|Opcode
+argument_list|,
+name|Type
+operator|*
+name|VecTy
+argument_list|,
+name|unsigned
+name|Factor
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Indices
 argument_list|,
 name|unsigned
 name|Alignment
@@ -1055,7 +1250,6 @@ comment|///  ((v0+v1), (v2, v3), undef, undef)
 comment|/// Split:
 comment|///  (v0, v1, v2, v3)
 comment|///  ((v0+v2), (v1+v3), undef, undef)
-name|virtual
 name|unsigned
 name|getReductionCost
 argument_list|(
@@ -1072,7 +1266,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \returns The cost of Intrinsic instructions.
-name|virtual
 name|unsigned
 name|getIntrinsicInstrCost
 argument_list|(
@@ -1094,9 +1287,29 @@ name|Tys
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \returns The cost of Call instructions.
+name|unsigned
+name|getCallInstrCost
+argument_list|(
+name|Function
+operator|*
+name|F
+argument_list|,
+name|Type
+operator|*
+name|RetTy
+argument_list|,
+name|ArrayRef
+operator|<
+name|Type
+operator|*
+operator|>
+name|Tys
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \returns The number of pieces into which the provided type must be
 comment|/// split during legalization. Zero is returned when the answer is unknown.
-name|virtual
 name|unsigned
 name|getNumberOfParts
 argument_list|(
@@ -1113,7 +1326,6 @@ comment|/// types and scalar types. Such targets should override this function.
 comment|/// The 'IsComplex' parameter is a hint that the address computation is likely
 comment|/// to involve multiple instructions and as such unlikely to be merged into
 comment|/// the address indexing mode.
-name|virtual
 name|unsigned
 name|getAddressComputationCost
 argument_list|(
@@ -1133,7 +1345,6 @@ comment|/// over a callsite.
 comment|///
 comment|/// Some types may require the use of register classes that do not have
 comment|/// any callee-saved registers, so would require a spill and fill.
-name|virtual
 name|unsigned
 name|getCostOfKeepingLiveOverCall
 argument_list|(
@@ -1146,23 +1357,2186 @@ name|Tys
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \returns True if the intrinsic is a supported memory intrinsic.  Info
+comment|/// will contain additional information - whether the intrinsic may write
+comment|/// or read to memory, volatility and the pointer.  Info is undefined
+comment|/// if false is returned.
+name|bool
+name|getTgtMemIntrinsic
+argument_list|(
+name|IntrinsicInst
+operator|*
+name|Inst
+argument_list|,
+name|MemIntrinsicInfo
+operator|&
+name|Info
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \returns A value which is the result of the given memory intrinsic.  New
+comment|/// instructions may be created to extract the result from the given intrinsic
+comment|/// memory operation.  Returns nullptr if the target cannot create a result
+comment|/// from the given intrinsic.
+name|Value
+modifier|*
+name|getOrCreateResultFromMemIntrinsic
+argument_list|(
+name|IntrinsicInst
+operator|*
+name|Inst
+argument_list|,
+name|Type
+operator|*
+name|ExpectedType
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \returns True if the two functions have compatible attributes for inlining
+comment|/// purposes.
+name|bool
+name|hasCompatibleFunctionAttributes
+argument_list|(
+specifier|const
+name|Function
+operator|*
+name|Caller
+argument_list|,
+specifier|const
+name|Function
+operator|*
+name|Callee
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
-comment|/// Analysis group identification.
+name|private
+label|:
+comment|/// \brief The abstract base class used to type erase specific TTI
+comment|/// implementations.
+name|class
+name|Concept
+decl_stmt|;
+comment|/// \brief The template model for the base class which wraps a concrete
+comment|/// implementation in a type erased interface.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|Model
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Concept
+operator|>
+name|TTIImpl
+expr_stmt|;
+block|}
+empty_stmt|;
+name|class
+name|TargetTransformInfo
+operator|::
+name|Concept
+block|{
+name|public
+operator|:
+name|virtual
+operator|~
+name|Concept
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
+specifier|const
+name|DataLayout
+operator|&
+name|getDataLayout
+argument_list|()
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getOperationCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Ty
+argument_list|,
+argument|Type *OpTy
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getGEPCost
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|Ptr
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+name|Operands
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getCallCost
+argument_list|(
+argument|FunctionType *FTy
+argument_list|,
+argument|int NumArgs
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getCallCost
+argument_list|(
+argument|const Function *F
+argument_list|,
+argument|int NumArgs
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getCallCost
+argument_list|(
+specifier|const
+name|Function
+operator|*
+name|F
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+name|Arguments
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getIntrinsicCost
+argument_list|(
+argument|Intrinsic::ID IID
+argument_list|,
+argument|Type *RetTy
+argument_list|,
+argument|ArrayRef<Type *> ParamTys
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getIntrinsicCost
+argument_list|(
+argument|Intrinsic::ID IID
+argument_list|,
+argument|Type *RetTy
+argument_list|,
+argument|ArrayRef<const Value *> Arguments
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getUserCost
+argument_list|(
+specifier|const
+name|User
+operator|*
+name|U
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|hasBranchDivergence
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|isSourceOfDivergence
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|isLoweredToCall
+argument_list|(
+specifier|const
+name|Function
+operator|*
+name|F
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|getUnrollingPreferences
+argument_list|(
+name|Loop
+operator|*
+name|L
+argument_list|,
+name|UnrollingPreferences
+operator|&
+name|UP
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|isLegalAddImmediate
+argument_list|(
+argument|int64_t Imm
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|isLegalICmpImmediate
+argument_list|(
+argument|int64_t Imm
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|isLegalAddressingMode
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|GlobalValue *BaseGV
+argument_list|,
+argument|int64_t BaseOffset
+argument_list|,
+argument|bool HasBaseReg
+argument_list|,
+argument|int64_t Scale
+argument_list|,
+argument|unsigned AddrSpace
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|isLegalMaskedStore
+argument_list|(
+argument|Type *DataType
+argument_list|,
+argument|int Consecutive
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|isLegalMaskedLoad
+argument_list|(
+argument|Type *DataType
+argument_list|,
+argument|int Consecutive
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|int
+name|getScalingFactorCost
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|GlobalValue *BaseGV
+argument_list|,
+argument|int64_t BaseOffset
+argument_list|,
+argument|bool HasBaseReg
+argument_list|,
+argument|int64_t Scale
+argument_list|,
+argument|unsigned AddrSpace
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|isTruncateFree
+argument_list|(
+name|Type
+operator|*
+name|Ty1
+argument_list|,
+name|Type
+operator|*
+name|Ty2
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|isProfitableToHoist
+argument_list|(
+name|Instruction
+operator|*
+name|I
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|isTypeLegal
+argument_list|(
+name|Type
+operator|*
+name|Ty
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getJumpBufAlignment
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getJumpBufSize
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|shouldBuildLookupTables
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|enableAggressiveInterleaving
+argument_list|(
+argument|bool LoopHasReductions
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|PopcntSupportKind
+name|getPopcntSupport
+argument_list|(
+argument|unsigned IntTyWidthInBit
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|haveFastSqrt
+argument_list|(
+name|Type
+operator|*
+name|Ty
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getFPOpCost
+argument_list|(
+name|Type
+operator|*
+name|Ty
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getIntImmCost
+argument_list|(
+specifier|const
+name|APInt
+operator|&
+name|Imm
+argument_list|,
+name|Type
+operator|*
+name|Ty
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getIntImmCost
+argument_list|(
+argument|unsigned Opc
+argument_list|,
+argument|unsigned Idx
+argument_list|,
+argument|const APInt&Imm
+argument_list|,
+argument|Type *Ty
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getIntImmCost
+argument_list|(
+argument|Intrinsic::ID IID
+argument_list|,
+argument|unsigned Idx
+argument_list|,
+argument|const APInt&Imm
+argument_list|,
+argument|Type *Ty
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getNumberOfRegisters
+argument_list|(
+argument|bool Vector
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getRegisterBitWidth
+argument_list|(
+argument|bool Vector
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getMaxInterleaveFactor
+argument_list|(
+argument|unsigned VF
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getArithmeticInstrCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Ty
+argument_list|,
+argument|OperandValueKind Opd1Info
+argument_list|,
+argument|OperandValueKind Opd2Info
+argument_list|,
+argument|OperandValueProperties Opd1PropInfo
+argument_list|,
+argument|OperandValueProperties Opd2PropInfo
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getShuffleCost
+argument_list|(
+argument|ShuffleKind Kind
+argument_list|,
+argument|Type *Tp
+argument_list|,
+argument|int Index
+argument_list|,
+argument|Type *SubTp
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getCastInstrCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Dst
+argument_list|,
+argument|Type *Src
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getCFInstrCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getCmpSelInstrCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *ValTy
+argument_list|,
+argument|Type *CondTy
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getVectorInstrCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Val
+argument_list|,
+argument|unsigned Index
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getMemoryOpCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Src
+argument_list|,
+argument|unsigned Alignment
+argument_list|,
+argument|unsigned AddressSpace
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getMaskedMemoryOpCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Src
+argument_list|,
+argument|unsigned Alignment
+argument_list|,
+argument|unsigned AddressSpace
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getInterleavedMemoryOpCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *VecTy
+argument_list|,
+argument|unsigned Factor
+argument_list|,
+argument|ArrayRef<unsigned> Indices
+argument_list|,
+argument|unsigned Alignment
+argument_list|,
+argument|unsigned AddressSpace
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getReductionCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Ty
+argument_list|,
+argument|bool IsPairwiseForm
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getIntrinsicInstrCost
+argument_list|(
+argument|Intrinsic::ID ID
+argument_list|,
+argument|Type *RetTy
+argument_list|,
+argument|ArrayRef<Type *> Tys
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getCallInstrCost
+argument_list|(
+name|Function
+operator|*
+name|F
+argument_list|,
+name|Type
+operator|*
+name|RetTy
+argument_list|,
+name|ArrayRef
+operator|<
+name|Type
+operator|*
+operator|>
+name|Tys
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getNumberOfParts
+argument_list|(
+name|Type
+operator|*
+name|Tp
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getAddressComputationCost
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|bool IsComplex
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getCostOfKeepingLiveOverCall
+argument_list|(
+name|ArrayRef
+operator|<
+name|Type
+operator|*
+operator|>
+name|Tys
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|getTgtMemIntrinsic
+argument_list|(
+name|IntrinsicInst
+operator|*
+name|Inst
+argument_list|,
+name|MemIntrinsicInfo
+operator|&
+name|Info
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|Value
+operator|*
+name|getOrCreateResultFromMemIntrinsic
+argument_list|(
+name|IntrinsicInst
+operator|*
+name|Inst
+argument_list|,
+name|Type
+operator|*
+name|ExpectedType
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|hasCompatibleFunctionAttributes
+argument_list|(
+argument|const Function *Caller
+argument_list|,
+argument|const Function *Callee
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|; }
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|TargetTransformInfo
+operator|::
+name|Model
+name|final
+operator|:
+name|public
+name|TargetTransformInfo
+operator|::
+name|Concept
+block|{
+name|T
+name|Impl
+block|;
+name|public
+operator|:
+name|Model
+argument_list|(
+argument|T Impl
+argument_list|)
+operator|:
+name|Impl
+argument_list|(
+argument|std::move(Impl)
+argument_list|)
+block|{}
+operator|~
+name|Model
+argument_list|()
+name|override
+block|{}
+specifier|const
+name|DataLayout
+operator|&
+name|getDataLayout
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getDataLayout
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|getOperationCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Ty
+argument_list|,
+argument|Type *OpTy
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getOperationCost
+argument_list|(
+name|Opcode
+argument_list|,
+name|Ty
+argument_list|,
+name|OpTy
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getGEPCost
+argument_list|(
+argument|const Value *Ptr
+argument_list|,
+argument|ArrayRef<const Value *> Operands
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getGEPCost
+argument_list|(
+name|Ptr
+argument_list|,
+name|Operands
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getCallCost
+argument_list|(
+argument|FunctionType *FTy
+argument_list|,
+argument|int NumArgs
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getCallCost
+argument_list|(
+name|FTy
+argument_list|,
+name|NumArgs
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getCallCost
+argument_list|(
+argument|const Function *F
+argument_list|,
+argument|int NumArgs
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getCallCost
+argument_list|(
+name|F
+argument_list|,
+name|NumArgs
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getCallCost
+argument_list|(
+argument|const Function *F
+argument_list|,
+argument|ArrayRef<const Value *> Arguments
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getCallCost
+argument_list|(
+name|F
+argument_list|,
+name|Arguments
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getIntrinsicCost
+argument_list|(
+argument|Intrinsic::ID IID
+argument_list|,
+argument|Type *RetTy
+argument_list|,
+argument|ArrayRef<Type *> ParamTys
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getIntrinsicCost
+argument_list|(
+name|IID
+argument_list|,
+name|RetTy
+argument_list|,
+name|ParamTys
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getIntrinsicCost
+argument_list|(
+argument|Intrinsic::ID IID
+argument_list|,
+argument|Type *RetTy
+argument_list|,
+argument|ArrayRef<const Value *> Arguments
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getIntrinsicCost
+argument_list|(
+name|IID
+argument_list|,
+name|RetTy
+argument_list|,
+name|Arguments
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getUserCost
+argument_list|(
+argument|const User *U
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getUserCost
+argument_list|(
+name|U
+argument_list|)
+return|;
+block|}
+name|bool
+name|hasBranchDivergence
+argument_list|()
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|hasBranchDivergence
+argument_list|()
+return|;
+block|}
+name|bool
+name|isSourceOfDivergence
+argument_list|(
+argument|const Value *V
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isSourceOfDivergence
+argument_list|(
+name|V
+argument_list|)
+return|;
+block|}
+name|bool
+name|isLoweredToCall
+argument_list|(
+argument|const Function *F
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isLoweredToCall
+argument_list|(
+name|F
+argument_list|)
+return|;
+block|}
+name|void
+name|getUnrollingPreferences
+argument_list|(
+argument|Loop *L
+argument_list|,
+argument|UnrollingPreferences&UP
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getUnrollingPreferences
+argument_list|(
+name|L
+argument_list|,
+name|UP
+argument_list|)
+return|;
+block|}
+name|bool
+name|isLegalAddImmediate
+argument_list|(
+argument|int64_t Imm
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isLegalAddImmediate
+argument_list|(
+name|Imm
+argument_list|)
+return|;
+block|}
+name|bool
+name|isLegalICmpImmediate
+argument_list|(
+argument|int64_t Imm
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isLegalICmpImmediate
+argument_list|(
+name|Imm
+argument_list|)
+return|;
+block|}
+name|bool
+name|isLegalAddressingMode
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|GlobalValue *BaseGV
+argument_list|,
+argument|int64_t BaseOffset
+argument_list|,
+argument|bool HasBaseReg
+argument_list|,
+argument|int64_t Scale
+argument_list|,
+argument|unsigned AddrSpace
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isLegalAddressingMode
+argument_list|(
+name|Ty
+argument_list|,
+name|BaseGV
+argument_list|,
+name|BaseOffset
+argument_list|,
+name|HasBaseReg
+argument_list|,
+name|Scale
+argument_list|,
+name|AddrSpace
+argument_list|)
+return|;
+block|}
+name|bool
+name|isLegalMaskedStore
+argument_list|(
+argument|Type *DataType
+argument_list|,
+argument|int Consecutive
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isLegalMaskedStore
+argument_list|(
+name|DataType
+argument_list|,
+name|Consecutive
+argument_list|)
+return|;
+block|}
+name|bool
+name|isLegalMaskedLoad
+argument_list|(
+argument|Type *DataType
+argument_list|,
+argument|int Consecutive
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isLegalMaskedLoad
+argument_list|(
+name|DataType
+argument_list|,
+name|Consecutive
+argument_list|)
+return|;
+block|}
+name|int
+name|getScalingFactorCost
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|GlobalValue *BaseGV
+argument_list|,
+argument|int64_t BaseOffset
+argument_list|,
+argument|bool HasBaseReg
+argument_list|,
+argument|int64_t Scale
+argument_list|,
+argument|unsigned AddrSpace
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getScalingFactorCost
+argument_list|(
+name|Ty
+argument_list|,
+name|BaseGV
+argument_list|,
+name|BaseOffset
+argument_list|,
+name|HasBaseReg
+argument_list|,
+name|Scale
+argument_list|,
+name|AddrSpace
+argument_list|)
+return|;
+block|}
+name|bool
+name|isTruncateFree
+argument_list|(
+argument|Type *Ty1
+argument_list|,
+argument|Type *Ty2
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isTruncateFree
+argument_list|(
+name|Ty1
+argument_list|,
+name|Ty2
+argument_list|)
+return|;
+block|}
+name|bool
+name|isProfitableToHoist
+argument_list|(
+argument|Instruction *I
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isProfitableToHoist
+argument_list|(
+name|I
+argument_list|)
+return|;
+block|}
+name|bool
+name|isTypeLegal
+argument_list|(
+argument|Type *Ty
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isTypeLegal
+argument_list|(
+name|Ty
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getJumpBufAlignment
+argument_list|()
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getJumpBufAlignment
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|getJumpBufSize
+argument_list|()
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getJumpBufSize
+argument_list|()
+return|;
+block|}
+name|bool
+name|shouldBuildLookupTables
+argument_list|()
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|shouldBuildLookupTables
+argument_list|()
+return|;
+block|}
+name|bool
+name|enableAggressiveInterleaving
+argument_list|(
+argument|bool LoopHasReductions
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|enableAggressiveInterleaving
+argument_list|(
+name|LoopHasReductions
+argument_list|)
+return|;
+block|}
+name|PopcntSupportKind
+name|getPopcntSupport
+argument_list|(
+argument|unsigned IntTyWidthInBit
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getPopcntSupport
+argument_list|(
+name|IntTyWidthInBit
+argument_list|)
+return|;
+block|}
+name|bool
+name|haveFastSqrt
+argument_list|(
+argument|Type *Ty
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|haveFastSqrt
+argument_list|(
+name|Ty
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getFPOpCost
+argument_list|(
+argument|Type *Ty
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getFPOpCost
+argument_list|(
+name|Ty
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getIntImmCost
+argument_list|(
+argument|const APInt&Imm
+argument_list|,
+argument|Type *Ty
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getIntImmCost
+argument_list|(
+name|Imm
+argument_list|,
+name|Ty
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getIntImmCost
+argument_list|(
+argument|unsigned Opc
+argument_list|,
+argument|unsigned Idx
+argument_list|,
+argument|const APInt&Imm
+argument_list|,
+argument|Type *Ty
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getIntImmCost
+argument_list|(
+name|Opc
+argument_list|,
+name|Idx
+argument_list|,
+name|Imm
+argument_list|,
+name|Ty
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getIntImmCost
+argument_list|(
+argument|Intrinsic::ID IID
+argument_list|,
+argument|unsigned Idx
+argument_list|,
+argument|const APInt&Imm
+argument_list|,
+argument|Type *Ty
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getIntImmCost
+argument_list|(
+name|IID
+argument_list|,
+name|Idx
+argument_list|,
+name|Imm
+argument_list|,
+name|Ty
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getNumberOfRegisters
+argument_list|(
+argument|bool Vector
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getNumberOfRegisters
+argument_list|(
+name|Vector
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getRegisterBitWidth
+argument_list|(
+argument|bool Vector
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getRegisterBitWidth
+argument_list|(
+name|Vector
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getMaxInterleaveFactor
+argument_list|(
+argument|unsigned VF
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getMaxInterleaveFactor
+argument_list|(
+name|VF
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getArithmeticInstrCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Ty
+argument_list|,
+argument|OperandValueKind Opd1Info
+argument_list|,
+argument|OperandValueKind Opd2Info
+argument_list|,
+argument|OperandValueProperties Opd1PropInfo
+argument_list|,
+argument|OperandValueProperties Opd2PropInfo
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getArithmeticInstrCost
+argument_list|(
+name|Opcode
+argument_list|,
+name|Ty
+argument_list|,
+name|Opd1Info
+argument_list|,
+name|Opd2Info
+argument_list|,
+name|Opd1PropInfo
+argument_list|,
+name|Opd2PropInfo
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getShuffleCost
+argument_list|(
+argument|ShuffleKind Kind
+argument_list|,
+argument|Type *Tp
+argument_list|,
+argument|int Index
+argument_list|,
+argument|Type *SubTp
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getShuffleCost
+argument_list|(
+name|Kind
+argument_list|,
+name|Tp
+argument_list|,
+name|Index
+argument_list|,
+name|SubTp
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getCastInstrCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Dst
+argument_list|,
+argument|Type *Src
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getCastInstrCost
+argument_list|(
+name|Opcode
+argument_list|,
+name|Dst
+argument_list|,
+name|Src
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getCFInstrCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getCFInstrCost
+argument_list|(
+name|Opcode
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getCmpSelInstrCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *ValTy
+argument_list|,
+argument|Type *CondTy
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getCmpSelInstrCost
+argument_list|(
+name|Opcode
+argument_list|,
+name|ValTy
+argument_list|,
+name|CondTy
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getVectorInstrCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Val
+argument_list|,
+argument|unsigned Index
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getVectorInstrCost
+argument_list|(
+name|Opcode
+argument_list|,
+name|Val
+argument_list|,
+name|Index
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getMemoryOpCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Src
+argument_list|,
+argument|unsigned Alignment
+argument_list|,
+argument|unsigned AddressSpace
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getMemoryOpCost
+argument_list|(
+name|Opcode
+argument_list|,
+name|Src
+argument_list|,
+name|Alignment
+argument_list|,
+name|AddressSpace
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getMaskedMemoryOpCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Src
+argument_list|,
+argument|unsigned Alignment
+argument_list|,
+argument|unsigned AddressSpace
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getMaskedMemoryOpCost
+argument_list|(
+name|Opcode
+argument_list|,
+name|Src
+argument_list|,
+name|Alignment
+argument_list|,
+name|AddressSpace
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getInterleavedMemoryOpCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *VecTy
+argument_list|,
+argument|unsigned Factor
+argument_list|,
+argument|ArrayRef<unsigned> Indices
+argument_list|,
+argument|unsigned Alignment
+argument_list|,
+argument|unsigned AddressSpace
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getInterleavedMemoryOpCost
+argument_list|(
+name|Opcode
+argument_list|,
+name|VecTy
+argument_list|,
+name|Factor
+argument_list|,
+name|Indices
+argument_list|,
+name|Alignment
+argument_list|,
+name|AddressSpace
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getReductionCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Ty
+argument_list|,
+argument|bool IsPairwiseForm
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getReductionCost
+argument_list|(
+name|Opcode
+argument_list|,
+name|Ty
+argument_list|,
+name|IsPairwiseForm
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getIntrinsicInstrCost
+argument_list|(
+argument|Intrinsic::ID ID
+argument_list|,
+argument|Type *RetTy
+argument_list|,
+argument|ArrayRef<Type *> Tys
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getIntrinsicInstrCost
+argument_list|(
+name|ID
+argument_list|,
+name|RetTy
+argument_list|,
+name|Tys
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getCallInstrCost
+argument_list|(
+argument|Function *F
+argument_list|,
+argument|Type *RetTy
+argument_list|,
+argument|ArrayRef<Type *> Tys
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getCallInstrCost
+argument_list|(
+name|F
+argument_list|,
+name|RetTy
+argument_list|,
+name|Tys
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getNumberOfParts
+argument_list|(
+argument|Type *Tp
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getNumberOfParts
+argument_list|(
+name|Tp
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getAddressComputationCost
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|bool IsComplex
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getAddressComputationCost
+argument_list|(
+name|Ty
+argument_list|,
+name|IsComplex
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getCostOfKeepingLiveOverCall
+argument_list|(
+argument|ArrayRef<Type *> Tys
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getCostOfKeepingLiveOverCall
+argument_list|(
+name|Tys
+argument_list|)
+return|;
+block|}
+name|bool
+name|getTgtMemIntrinsic
+argument_list|(
+argument|IntrinsicInst *Inst
+argument_list|,
+argument|MemIntrinsicInfo&Info
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getTgtMemIntrinsic
+argument_list|(
+name|Inst
+argument_list|,
+name|Info
+argument_list|)
+return|;
+block|}
+name|Value
+operator|*
+name|getOrCreateResultFromMemIntrinsic
+argument_list|(
+argument|IntrinsicInst *Inst
+argument_list|,
+argument|Type *ExpectedType
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getOrCreateResultFromMemIntrinsic
+argument_list|(
+name|Inst
+argument_list|,
+name|ExpectedType
+argument_list|)
+return|;
+block|}
+name|bool
+name|hasCompatibleFunctionAttributes
+argument_list|(
+argument|const Function *Caller
+argument_list|,
+argument|const Function *Callee
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|hasCompatibleFunctionAttributes
+argument_list|(
+name|Caller
+argument_list|,
+name|Callee
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|TargetTransformInfo
+operator|::
+name|TargetTransformInfo
+argument_list|(
+argument|T Impl
+argument_list|)
+operator|:
+name|TTIImpl
+argument_list|(
+argument|new Model<T>(Impl)
+argument_list|)
+block|{}
+comment|/// \brief Analysis pass providing the \c TargetTransformInfo.
+comment|///
+comment|/// The core idea of the TargetIRAnalysis is to expose an interface through
+comment|/// which LLVM targets can analyze and provide information about the middle
+comment|/// end's target-independent IR. This supports use cases such as target-aware
+comment|/// cost modeling of IR constructs.
+comment|///
+comment|/// This is a function analysis because much of the cost modeling for targets
+comment|/// is done in a subtarget specific way and LLVM supports compiling different
+comment|/// functions targeting different subtargets in order to support runtime
+comment|/// dispatch according to the observed subtarget.
+name|class
+name|TargetIRAnalysis
+block|{
+name|public
+operator|:
+typedef|typedef
+name|TargetTransformInfo
+name|Result
+typedef|;
+comment|/// \brief Opaque, unique identifier for this analysis pass.
+specifier|static
+name|void
+operator|*
+name|ID
+argument_list|()
+block|{
+return|return
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|PassID
+return|;
+block|}
+comment|/// \brief Provide access to a name for this pass for debugging purposes.
+specifier|static
+name|StringRef
+name|name
+argument_list|()
+block|{
+return|return
+literal|"TargetIRAnalysis"
+return|;
+block|}
+comment|/// \brief Default construct a target IR analysis.
+comment|///
+comment|/// This will use the module's datalayout to construct a baseline
+comment|/// conservative TTI result.
+name|TargetIRAnalysis
+argument_list|()
+block|;
+comment|/// \brief Construct an IR analysis pass around a target-provide callback.
+comment|///
+comment|/// The callback will be called with a particular function for which the TTI
+comment|/// is needed and must return a TTI object for that function.
+name|TargetIRAnalysis
+argument_list|(
+name|std
+operator|::
+name|function
+operator|<
+name|Result
+argument_list|(
+name|Function
+operator|&
+argument_list|)
+operator|>
+name|TTICallback
+argument_list|)
+block|;
+comment|// Value semantics. We spell out the constructors for MSVC.
+name|TargetIRAnalysis
+argument_list|(
+specifier|const
+name|TargetIRAnalysis
+operator|&
+name|Arg
+argument_list|)
+operator|:
+name|TTICallback
+argument_list|(
+argument|Arg.TTICallback
+argument_list|)
+block|{}
+name|TargetIRAnalysis
+argument_list|(
+name|TargetIRAnalysis
+operator|&&
+name|Arg
+argument_list|)
+operator|:
+name|TTICallback
+argument_list|(
+argument|std::move(Arg.TTICallback)
+argument_list|)
+block|{}
+name|TargetIRAnalysis
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|TargetIRAnalysis
+operator|&
+name|RHS
+operator|)
+block|{
+name|TTICallback
+operator|=
+name|RHS
+operator|.
+name|TTICallback
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|TargetIRAnalysis
+operator|&
+name|operator
+operator|=
+operator|(
+name|TargetIRAnalysis
+operator|&&
+name|RHS
+operator|)
+block|{
+name|TTICallback
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|RHS
+operator|.
+name|TTICallback
+argument_list|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|Result
+name|run
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|)
+block|;
+name|private
+operator|:
+specifier|static
+name|char
+name|PassID
+block|;
+comment|/// \brief The callback used to produce a result.
+comment|///
+comment|/// We use a completely opaque callback so that targets can provide whatever
+comment|/// mechanism they desire for constructing the TTI for a given function.
+comment|///
+comment|/// FIXME: Should we really use std::function? It's relatively inefficient.
+comment|/// It might be possible to arrange for even stateful callbacks to outlive
+comment|/// the analysis and thus use a function_ref which would be lighter weight.
+comment|/// This may also be less error prone as the callback is likely to reference
+comment|/// the external TargetMachine, and that reference needs to never dangle.
+name|std
+operator|::
+name|function
+operator|<
+name|Result
+argument_list|(
+name|Function
+operator|&
+argument_list|)
+operator|>
+name|TTICallback
+block|;
+comment|/// \brief Helper function used as the callback in the default constructor.
+specifier|static
+name|Result
+name|getDefaultTTI
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|)
+block|; }
+expr_stmt|;
+comment|/// \brief Wrapper pass for TargetTransformInfo.
+comment|///
+comment|/// This pass can be constructed from a TTI object which it stores internally
+comment|/// and is queried by passes.
+name|class
+name|TargetTransformInfoWrapperPass
+range|:
+name|public
+name|ImmutablePass
+block|{
+name|TargetIRAnalysis
+name|TIRA
+block|;
+name|Optional
+operator|<
+name|TargetTransformInfo
+operator|>
+name|TTI
+block|;
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|public
+operator|:
 specifier|static
 name|char
 name|ID
-decl_stmt|;
-block|}
-empty_stmt|;
-comment|/// \brief Create the base case instance of a pass in the TTI analysis group.
+block|;
+comment|/// \brief We must provide a default constructor for the pass but it should
+comment|/// never be used.
 comment|///
-comment|/// This class provides the base case for the stack of TTI analyzes. It doesn't
-comment|/// delegate to anything and uses the STTI and VTTI objects passed in to
-comment|/// satisfy the queries.
+comment|/// Use the constructor below or call one of the creation routines.
+name|TargetTransformInfoWrapperPass
+argument_list|()
+block|;
+name|explicit
+name|TargetTransformInfoWrapperPass
+argument_list|(
+argument|TargetIRAnalysis TIRA
+argument_list|)
+block|;
+name|TargetTransformInfo
+operator|&
+name|getTTI
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|)
+block|; }
+decl_stmt|;
+comment|/// \brief Create an analysis pass wrapper around a TTI object.
+comment|///
+comment|/// This analysis pass just holds the TTI instance and makes it available to
+comment|/// clients.
 name|ImmutablePass
 modifier|*
-name|createNoTargetTransformInfoPass
-parameter_list|()
+name|createTargetTransformInfoWrapperPass
+parameter_list|(
+name|TargetIRAnalysis
+name|TIRA
+parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt

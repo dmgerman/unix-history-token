@@ -125,6 +125,7 @@ block|;
 operator|~
 name|MultiplexConsumer
 argument_list|()
+name|override
 block|;
 comment|// ASTConsumer
 name|void
@@ -238,8 +239,6 @@ name|void
 name|HandleVTable
 argument_list|(
 argument|CXXRecordDecl *RD
-argument_list|,
-argument|bool DefinitionRequired
 argument_list|)
 name|override
 block|;

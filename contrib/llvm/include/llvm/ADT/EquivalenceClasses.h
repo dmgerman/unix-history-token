@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<set>
 end_include
 
@@ -1292,7 +1298,7 @@ name|getData
 argument_list|()
 return|;
 block|}
-name|reference
+name|pointer
 name|operator
 operator|->
 expr|(
@@ -1300,6 +1306,7 @@ block|)
 decl|const
 block|{
 return|return
+operator|&
 name|operator
 operator|*
 operator|(

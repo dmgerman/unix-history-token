@@ -298,8 +298,8 @@ name|isTerminator
 argument_list|()
 return|;
 block|}
-comment|/// evaluateBranch - Given a branch instruction try to get the address the
-comment|/// branch targets. Return true on success, and the address in Target.
+comment|/// \brief Given a branch instruction try to get the address the branch
+comment|/// targets. Return true on success, and the address in Target.
 name|virtual
 name|bool
 name|evaluateBranch

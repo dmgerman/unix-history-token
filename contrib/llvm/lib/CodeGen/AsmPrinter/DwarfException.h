@@ -82,23 +82,47 @@ name|class
 name|ARMTargetStreamer
 decl_stmt|;
 name|class
-name|DwarfCFIException
+name|LLVM_LIBRARY_VISIBILITY
+name|DwarfCFIExceptionBase
 range|:
 name|public
 name|EHStreamer
 block|{
-comment|/// shouldEmitPersonality - Per-function flag to indicate if .cfi_personality
-comment|/// should be emitted.
+name|protected
+operator|:
+name|DwarfCFIExceptionBase
+argument_list|(
+name|AsmPrinter
+operator|*
+name|A
+argument_list|)
+block|;
+comment|/// Per-function flag to indicate if frame CFI info should be emitted.
+name|bool
+name|shouldEmitCFI
+block|;
+name|void
+name|markFunctionEnd
+argument_list|()
+name|override
+block|; }
+decl_stmt|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|DwarfCFIException
+range|:
+name|public
+name|DwarfCFIExceptionBase
+block|{
+comment|/// Per-function flag to indicate if .cfi_personality should be emitted.
 name|bool
 name|shouldEmitPersonality
 block|;
-comment|/// shouldEmitLSDA - Per-function flag to indicate if .cfi_lsda
-comment|/// should be emitted.
+comment|/// Per-function flag to indicate if .cfi_lsda should be emitted.
 name|bool
 name|shouldEmitLSDA
 block|;
-comment|/// shouldEmitMoves - Per-function flag to indicate if frame moves info
-comment|/// should be emitted.
+comment|/// Per-function flag to indicate if frame moves info should be emitted.
 name|bool
 name|shouldEmitMoves
 block|;
@@ -119,20 +143,19 @@ operator|*
 name|A
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|DwarfCFIException
 argument_list|()
+name|override
 block|;
-comment|/// endModule - Emit all exception information that should come after the
-comment|/// content.
+comment|/// Emit all exception information that should come after the content.
 name|void
 name|endModule
 argument_list|()
 name|override
 block|;
-comment|/// beginFunction - Gather pre-function exception information.  Assumes being
-comment|/// emitted immediately after the function entry point.
+comment|/// Gather pre-function exception information.  Assumes being emitted
+comment|/// immediately after the function entry point.
 name|void
 name|beginFunction
 argument_list|(
@@ -140,7 +163,7 @@ argument|const MachineFunction *MF
 argument_list|)
 name|override
 block|;
-comment|/// endFunction - Gather and emit post-function exception information.
+comment|/// Gather and emit post-function exception information.
 name|void
 name|endFunction
 argument_list|(
@@ -150,10 +173,11 @@ name|override
 block|; }
 decl_stmt|;
 name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|ARMException
 range|:
 name|public
-name|EHStreamer
+name|DwarfCFIExceptionBase
 block|{
 name|void
 name|emitTypeInfos
@@ -167,11 +191,6 @@ operator|&
 name|getTargetStreamer
 argument_list|()
 block|;
-comment|/// shouldEmitCFI - Per-function flag to indicate if frame CFI info
-comment|/// should be emitted.
-name|bool
-name|shouldEmitCFI
-block|;
 name|public
 operator|:
 comment|//===--------------------------------------------------------------------===//
@@ -184,20 +203,19 @@ operator|*
 name|A
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ARMException
 argument_list|()
+name|override
 block|;
-comment|/// endModule - Emit all exception information that should come after the
-comment|/// content.
+comment|/// Emit all exception information that should come after the content.
 name|void
 name|endModule
 argument_list|()
 name|override
 block|;
-comment|/// beginFunction - Gather pre-function exception information.  Assumes being
-comment|/// emitted immediately after the function entry point.
+comment|/// Gather pre-function exception information.  Assumes being emitted
+comment|/// immediately after the function entry point.
 name|void
 name|beginFunction
 argument_list|(
@@ -205,7 +223,7 @@ argument|const MachineFunction *MF
 argument_list|)
 name|override
 block|;
-comment|/// endFunction - Gather and emit post-function exception information.
+comment|/// Gather and emit post-function exception information.
 name|void
 name|endFunction
 argument_list|(

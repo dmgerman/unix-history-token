@@ -1550,13 +1550,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|RT2860_USB_PHY_MAN_RST
-value|(1<< 15)
-end_define
-
-begin_define
-define|#
-directive|define
 name|RT2860_USB_RX_AGG_LMT
 parameter_list|(
 name|x

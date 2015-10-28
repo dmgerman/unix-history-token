@@ -87,13 +87,6 @@ range|:
 name|public
 name|AsmPrinter
 block|{
-name|private
-operator|:
-specifier|const
-name|SystemZSubtarget
-operator|*
-name|Subtarget
-block|;
 name|public
 operator|:
 name|SystemZAsmPrinter
@@ -102,8 +95,12 @@ name|TargetMachine
 operator|&
 name|TM
 argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MCStreamer
-operator|&
+operator|>
 name|Streamer
 argument_list|)
 operator|:
@@ -111,21 +108,9 @@ name|AsmPrinter
 argument_list|(
 argument|TM
 argument_list|,
-argument|Streamer
+argument|std::move(Streamer)
 argument_list|)
-block|{
-name|Subtarget
-operator|=
-operator|&
-name|TM
-operator|.
-name|getSubtarget
-operator|<
-name|SystemZSubtarget
-operator|>
-operator|(
-operator|)
-block|;   }
+block|{}
 comment|// Override AsmPrinter.
 specifier|const
 name|char
@@ -180,13 +165,6 @@ argument_list|,
 argument|const char *ExtraCode
 argument_list|,
 argument|raw_ostream&OS
-argument_list|)
-name|override
-block|;
-name|void
-name|EmitEndOfAsmFile
-argument_list|(
-argument|Module&M
 argument_list|)
 name|override
 block|; }

@@ -84,14 +84,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/DominanceFrontier.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Debug.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/GenericDomTree.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
-block|{
-name|namespace
 block|{
 name|template
 operator|<
@@ -170,9 +180,11 @@ modifier|*
 name|parentNode
 decl_stmt|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_expr_stmt
 name|template

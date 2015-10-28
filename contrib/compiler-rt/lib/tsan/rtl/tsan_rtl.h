@@ -1716,7 +1716,7 @@ end_function
 begin_struct_decl
 unit|};
 struct_decl|struct
-name|SignalContext
+name|ThreadSignalContext
 struct_decl|;
 end_struct_decl
 
@@ -1869,6 +1869,9 @@ name|bool
 name|in_ignored_lib
 decl_stmt|;
 name|bool
+name|is_inited
+decl_stmt|;
+name|bool
 name|is_dead
 decl_stmt|;
 name|bool
@@ -1919,7 +1922,7 @@ decl_stmt|;
 name|atomic_uintptr_t
 name|in_signal_handler
 decl_stmt|;
-name|SignalContext
+name|ThreadSignalContext
 modifier|*
 name|signal_ctx
 decl_stmt|;
@@ -2076,46 +2079,45 @@ comment|// Override superclass callbacks.
 name|void
 name|OnDead
 argument_list|()
+name|override
 block|;
 name|void
 name|OnJoined
 argument_list|(
-name|void
-operator|*
-name|arg
+argument|void *arg
 argument_list|)
+name|override
 block|;
 name|void
 name|OnFinished
 argument_list|()
+name|override
 block|;
 name|void
 name|OnStarted
 argument_list|(
-name|void
-operator|*
-name|arg
+argument|void *arg
 argument_list|)
+name|override
 block|;
 name|void
 name|OnCreated
 argument_list|(
-name|void
-operator|*
-name|arg
+argument|void *arg
 argument_list|)
+name|override
 block|;
 name|void
 name|OnReset
 argument_list|()
+name|override
 block|;
 name|void
 name|OnDetached
 argument_list|(
-name|void
-operator|*
-name|arg
+argument|void *arg
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -2778,6 +2780,11 @@ name|addr
 parameter_list|,
 name|uptr
 name|size
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl

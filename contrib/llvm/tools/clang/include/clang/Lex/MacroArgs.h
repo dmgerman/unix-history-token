@@ -170,25 +170,37 @@ block|{}
 operator|~
 name|MacroArgs
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|public
-operator|:
+label|:
 comment|/// MacroArgs ctor function - Create a new MacroArgs object with the specified
 comment|/// macro and argument info.
 specifier|static
 name|MacroArgs
-operator|*
+modifier|*
 name|create
 argument_list|(
-argument|const MacroInfo *MI
+specifier|const
+name|MacroInfo
+operator|*
+name|MI
 argument_list|,
-argument|ArrayRef<Token> UnexpArgTokens
+name|ArrayRef
+operator|<
+name|Token
+operator|>
+name|UnexpArgTokens
 argument_list|,
-argument|bool VarargsElided
+name|bool
+name|VarargsElided
 argument_list|,
-argument|Preprocessor&PP
+name|Preprocessor
+operator|&
+name|PP
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/// destroy - Destroy and deallocate the memory for this object.
 comment|///
 name|void

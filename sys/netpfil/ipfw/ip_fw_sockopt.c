@@ -6650,16 +6650,13 @@ case|:
 comment|/* only odd command lengths */
 if|if
 condition|(
-operator|!
 operator|(
 name|cmdlen
 operator|&
 literal|1
 operator|)
-operator|||
-name|cmdlen
-operator|>
-literal|31
+operator|==
+literal|0
 condition|)
 goto|goto
 name|bad_size

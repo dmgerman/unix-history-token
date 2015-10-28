@@ -32,18 +32,6 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//++
-end_comment
-
-begin_comment
-comment|// File:        MICmdCmdData.h
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// Overview:    CMICmdCmdDataEvaluateExpression     interface.
 end_comment
 
@@ -77,6 +65,10 @@ end_comment
 
 begin_comment
 comment|//              CMICmdCmdDataWriteMemory            interface.
+end_comment
+
+begin_comment
+comment|//              CMICmdCmdDataInfoLine               interface.
 end_comment
 
 begin_comment
@@ -119,35 +111,21 @@ begin_comment
 comment|//
 end_comment
 
-begin_comment
-comment|// Environment: Compilers:  Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//              Libraries:  See MIReadmetxt.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Copyright:   None.
-end_comment
-
-begin_comment
-comment|//--
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma
 name|once
 end_pragma
+
+begin_comment
+comment|// Third party headers:
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/API/SBCommandReturnObject.h"
+end_include
 
 begin_comment
 comment|// In-house headers:
@@ -169,6 +147,12 @@ begin_include
 include|#
 directive|include
 file|"MICmnMIValueList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MICmnLLDBDebugSessionInfoVarObj.h"
 end_include
 
 begin_comment
@@ -231,35 +215,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataEvaluateExpression
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Methods:
 name|private
@@ -272,7 +256,7 @@ name|CMIUtilString
 operator|&
 name|vrExpr
 argument_list|,
-name|MIchar
+name|char
 operator|&
 name|vrwInvalidChar
 argument_list|)
@@ -302,7 +286,7 @@ name|bool
 name|m_bFoundInvalidChar
 block|;
 comment|// True = yes found unexpected character in the expression, false = all ok
-name|MIchar
+name|char
 name|m_cExpressionInvalidChar
 block|;
 specifier|const
@@ -382,35 +366,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataDisassemble
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -504,35 +488,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataReadMemoryBytes
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -541,20 +525,26 @@ specifier|const
 name|CMIUtilString
 name|m_constStrArgThread
 block|;
-comment|// Not specified in MI spec but Eclipse gives this option. Not handled by command.
+comment|// Not in the MI spec but implemented by GDB.
+specifier|const
+name|CMIUtilString
+name|m_constStrArgFrame
+block|;
+comment|// Not in the MI spec but implemented by GDB.
 specifier|const
 name|CMIUtilString
 name|m_constStrArgByteOffset
 block|;
 specifier|const
 name|CMIUtilString
-name|m_constStrArgAddrStart
+name|m_constStrArgAddrExpr
 block|;
 specifier|const
 name|CMIUtilString
 name|m_constStrArgNumBytes
 block|;
-name|MIuchar
+name|unsigned
+name|char
 operator|*
 name|m_pBufferMemory
 block|;
@@ -563,9 +553,6 @@ name|m_nAddrStart
 block|;
 name|MIuint64
 name|m_nAddrNumBytesToRead
-block|;
-name|MIuint64
-name|m_nAddrOffset
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -630,28 +617,28 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataReadMemory
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -716,35 +703,47 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataListRegisterNames
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
+block|;
+comment|// Methods:
+name|private
+operator|:
+name|lldb
+operator|::
+name|SBValue
+name|GetRegister
+argument_list|(
+argument|const MIuint vRegisterIndex
+argument_list|)
+specifier|const
 block|;
 comment|// Attributes:
 name|private
@@ -825,35 +824,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataListRegisterValues
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Methods:
 name|private
@@ -866,6 +865,16 @@ argument_list|(
 argument|const MIuint vRegisterIndex
 argument_list|)
 specifier|const
+block|;
+name|bool
+name|AddToOutput
+argument_list|(
+argument|const MIuint vnIndex
+argument_list|,
+argument|const lldb::SBValue&vrValue
+argument_list|,
+argument|CMICmnLLDBDebugSessionInfoVarObj::varFormat_e veVarFormat
+argument_list|)
 block|;
 comment|// Attributes:
 name|private
@@ -890,12 +899,6 @@ name|m_constStrArgRegNo
 block|;
 name|CMICmnMIValueList
 name|m_miValueList
-block|;
-name|lldb
-operator|::
-name|SBProcess
-operator|*
-name|m_pProcess
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -960,28 +963,28 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataListRegisterChanged
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -1046,35 +1049,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataWriteMemoryBytes
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -1166,35 +1169,35 @@ comment|// Overridden:
 name|public
 operator|:
 comment|// From CMICmdInvoker::ICmd
-name|virtual
 name|bool
 name|Execute
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|Acknowledge
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// From CMICmnBase
 comment|/* dtor */
-name|virtual
 operator|~
 name|CMICmdCmdDataWriteMemory
 argument_list|(
-name|void
+argument|void
 argument_list|)
+name|override
 block|;
 comment|// Attributes:
 name|private
@@ -1238,9 +1241,107 @@ block|;
 name|MIuint64
 name|m_nCount
 block|;
-name|MIuchar
+name|unsigned
+name|char
 operator|*
 name|m_pBufferMemory
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|//++ ============================================================================
+end_comment
+
+begin_comment
+comment|// Details: MI command class. MI commands derived from the command base class.
+end_comment
+
+begin_comment
+comment|//          *this class implements MI command "data-info-line".
+end_comment
+
+begin_comment
+comment|//          See MIExtensions.txt for details.
+end_comment
+
+begin_comment
+comment|//--
+end_comment
+
+begin_decl_stmt
+name|class
+name|CMICmdCmdDataInfoLine
+range|:
+name|public
+name|CMICmdBase
+block|{
+comment|// Statics:
+name|public
+operator|:
+comment|// Required by the CMICmdFactory when registering *this command
+specifier|static
+name|CMICmdBase
+operator|*
+name|CreateSelf
+argument_list|(
+name|void
+argument_list|)
+block|;
+comment|// Methods:
+name|public
+operator|:
+comment|/* ctor */
+name|CMICmdCmdDataInfoLine
+argument_list|(
+name|void
+argument_list|)
+block|;
+comment|// Overridden:
+name|public
+operator|:
+comment|// From CMICmdInvoker::ICmd
+name|bool
+name|Execute
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+name|bool
+name|Acknowledge
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+name|bool
+name|ParseArgs
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+comment|// From CMICmnBase
+comment|/* dtor */
+operator|~
+name|CMICmdCmdDataInfoLine
+argument_list|(
+argument|void
+argument_list|)
+name|override
+block|;
+comment|// Attributes:
+name|private
+operator|:
+name|lldb
+operator|::
+name|SBCommandReturnObject
+name|m_lldbResult
+block|;
+specifier|const
+name|CMIUtilString
+name|m_constStrArgLocation
 block|; }
 decl_stmt|;
 end_decl_stmt

@@ -6419,8 +6419,8 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|c
+init|=
+literal|0
 decl_stmt|;
 name|uint32_t
 modifier|*
@@ -6442,14 +6442,6 @@ name|bp
 argument_list|,
 literal|" dscp"
 argument_list|)
-expr_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
-name|c
-operator|=
-literal|0
 expr_stmt|;
 name|v
 operator|=
@@ -15030,7 +15022,7 @@ index|]
 operator|=
 name|htonl
 argument_list|(
-literal|0
+literal|0U
 argument_list|)
 expr_stmt|;
 comment|/* mask */
@@ -15059,7 +15051,7 @@ operator|=
 name|htonl
 argument_list|(
 operator|~
-literal|0
+literal|0U
 operator|<<
 operator|(
 literal|32
@@ -15081,7 +15073,7 @@ operator|=
 name|htonl
 argument_list|(
 operator|~
-literal|0
+literal|0U
 operator|<<
 operator|(
 literal|32
@@ -15125,7 +15117,7 @@ operator|=
 name|htonl
 argument_list|(
 operator|~
-literal|0
+literal|0U
 argument_list|)
 expr_stmt|;
 comment|/* force /32 */
@@ -15942,6 +15934,8 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 name|int
 name|exitval
@@ -15952,6 +15946,10 @@ name|int
 name|do_set
 init|=
 literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|sep
 decl_stmt|;
 name|ipfw_range_tlv
 name|rt
@@ -16032,10 +16030,39 @@ condition|)
 block|{
 name|i
 operator|=
-name|atoi
+name|strtol
 argument_list|(
 operator|*
 name|av
+argument_list|,
+operator|&
+name|sep
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+name|j
+operator|=
+name|i
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|sep
+operator|==
+literal|'-'
+condition|)
+name|j
+operator|=
+name|strtol
+argument_list|(
+name|sep
+operator|+
+literal|1
+argument_list|,
+name|NULL
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 name|av
@@ -16137,7 +16164,7 @@ name|rt
 operator|.
 name|end_rule
 operator|=
-name|i
+name|j
 operator|&
 literal|0xffff
 expr_stmt|;
@@ -19346,6 +19373,11 @@ name|CHECK_ACTLEN
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|av
+operator|!=
+name|NULL
+operator|&&
 name|_substrcmp
 argument_list|(
 operator|*

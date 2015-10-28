@@ -379,9 +379,12 @@ name|private
 label|:
 name|CoreEngine
 argument_list|(
-argument|const CoreEngine&
+specifier|const
+name|CoreEngine
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -391,7 +394,8 @@ specifier|const
 name|CoreEngine
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|ExplodedNode
 modifier|*
@@ -1591,10 +1595,10 @@ name|I
 argument_list|)
 expr_stmt|;
 block|}
-name|virtual
 operator|~
 name|StmtNodeBuilder
 argument_list|()
+name|override
 block|;
 name|using
 name|NodeBuilder

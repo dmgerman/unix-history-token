@@ -216,10 +216,6 @@ operator|*
 name|Owner
 argument_list|)
 expr_stmt|;
-operator|~
-name|Option
-argument_list|()
-expr_stmt|;
 name|bool
 name|isValid
 argument_list|()

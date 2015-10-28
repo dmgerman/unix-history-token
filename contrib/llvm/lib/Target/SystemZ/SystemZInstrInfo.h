@@ -270,7 +270,7 @@ comment|// Masks out the bits for the access model.
 name|MO_SYMBOL_MODIFIER
 init|=
 operator|(
-literal|1
+literal|3
 operator|<<
 literal|0
 operator|)
@@ -280,6 +280,15 @@ name|MO_GOT
 init|=
 operator|(
 literal|1
+operator|<<
+literal|0
+operator|)
+block|,
+comment|// @INDNTPOFF
+name|MO_INDNTPOFF
+init|=
+operator|(
+literal|2
 operator|<<
 literal|0
 operator|)
@@ -557,7 +566,7 @@ argument|MachineBasicBlock *TBB
 argument_list|,
 argument|MachineBasicBlock *FBB
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Cond
+argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|DebugLoc DL
 argument_list|)
@@ -645,7 +654,7 @@ name|PredicateInstruction
 argument_list|(
 argument|MachineInstr *MI
 argument_list|,
-argument|const SmallVectorImpl<MachineOperand>&Pred
+argument|ArrayRef<MachineOperand> Pred
 argument_list|)
 specifier|const
 name|override
@@ -727,7 +736,9 @@ argument|MachineFunction&MF
 argument_list|,
 argument|MachineInstr *MI
 argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
+argument|ArrayRef<unsigned> Ops
+argument_list|,
+argument|MachineBasicBlock::iterator InsertPt
 argument_list|,
 argument|int FrameIndex
 argument_list|)
@@ -740,11 +751,13 @@ name|foldMemoryOperandImpl
 argument_list|(
 argument|MachineFunction&MF
 argument_list|,
-argument|MachineInstr* MI
+argument|MachineInstr *MI
 argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
+argument|ArrayRef<unsigned> Ops
 argument_list|,
-argument|MachineInstr* LoadMI
+argument|MachineBasicBlock::iterator InsertPt
+argument_list|,
+argument|MachineInstr *LoadMI
 argument_list|)
 specifier|const
 name|override

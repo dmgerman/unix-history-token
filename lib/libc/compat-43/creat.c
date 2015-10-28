@@ -95,6 +95,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function_decl
+name|int
+name|__creat
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|mode_t
+name|mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_pragma
 pragma|#
 directive|pragma

@@ -15,11 +15,47 @@ directive|define
 name|__CLANG_MAX_ALIGN_T_DEFINED
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_MSC_VER
-end_ifndef
+argument_list|)
+end_if
+
+begin_typedef
+typedef|typedef
+name|double
+name|max_align_t
+typedef|;
+end_typedef
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+end_elif
+
+begin_typedef
+typedef|typedef
+name|long
+name|double
+name|max_align_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// Define 'max_align_t' to match the GCC definition.
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -64,18 +100,6 @@ begin_empty_stmt
 unit|} max_align_t
 empty_stmt|;
 end_empty_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|double
-name|max_align_t
-typedef|;
-end_typedef
 
 begin_endif
 endif|#

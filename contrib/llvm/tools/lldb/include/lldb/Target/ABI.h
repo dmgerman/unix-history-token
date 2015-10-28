@@ -132,21 +132,23 @@ name|size_t
 name|size
 block|;
 comment|/* size in bytes of this argument */
-expr|union
-block|{
 name|lldb
 operator|::
 name|addr_t
 name|value
 block|;
 comment|/* literal value */
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|uint8_t
-operator|*
-name|data
+index|[]
+operator|>
+name|data_ap
 block|;
 comment|/* host data pointer */
 block|}
-block|;     }
 block|;
 name|virtual
 operator|~
@@ -179,7 +181,7 @@ specifier|const
 operator|=
 literal|0
 block|;
-comment|// Prepare trivial call used from ThreadPlanFunctionCallGDB
+comment|// Prepare trivial call used from ThreadPlanFunctionCallUsingABI
 comment|// AD:
 comment|//  . Because i don't want to change other ABI's this is not declared pure virtual.
 comment|//    The dummy implementation will simply fail.  Only HexagonABI will currently

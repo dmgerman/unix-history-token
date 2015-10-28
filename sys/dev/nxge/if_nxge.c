@@ -6014,7 +6014,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|version
+name|info
 operator|!=
 name|NULL
 condition|)

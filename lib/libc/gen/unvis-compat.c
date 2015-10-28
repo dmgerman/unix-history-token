@@ -16,6 +16,23 @@ name|_UNVIS_END
 value|1
 end_define
 
+begin_function_decl
+name|int
+name|__unvis_44bsd
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|__unvis_44bsd

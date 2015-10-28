@@ -194,6 +194,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SetVector.h"
 end_include
 
@@ -206,7 +212,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/SourceMgr.h"
+file|"llvm/Support/SMLoc.h"
 end_include
 
 begin_include
@@ -233,9 +239,6 @@ name|Init
 decl_stmt|;
 name|class
 name|Record
-decl_stmt|;
-name|class
-name|RecordKeeper
 decl_stmt|;
 name|class
 name|SetTheory
@@ -365,17 +368,23 @@ decl_stmt|;
 comment|// Known DAG operators by name.
 name|StringMap
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Operator
-operator|*
-operator|>
+operator|>>
 name|Operators
 expr_stmt|;
 comment|// Typed expanders by class name.
 name|StringMap
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Expander
-operator|*
-operator|>
+operator|>>
 name|Expanders
 expr_stmt|;
 name|public
@@ -387,14 +396,18 @@ expr_stmt|;
 comment|/// addExpander - Add an expander for Records with the named super class.
 name|void
 name|addExpander
-parameter_list|(
+argument_list|(
 name|StringRef
 name|ClassName
-parameter_list|,
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Expander
-modifier|*
-parameter_list|)
-function_decl|;
+operator|>
+argument_list|)
+decl_stmt|;
 comment|/// addFieldExpander - Add an expander for ClassName that simply evaluates
 comment|/// FieldName in the Record to get the set elements.  That is all that is
 comment|/// needed for a class like:
@@ -416,14 +429,18 @@ function_decl|;
 comment|/// addOperator - Add a DAG operator.
 name|void
 name|addOperator
-parameter_list|(
+argument_list|(
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Operator
-modifier|*
-parameter_list|)
-function_decl|;
+operator|>
+argument_list|)
+decl_stmt|;
 comment|/// evaluate - Evaluate Expr and append the resulting set to Elts.
 name|void
 name|evaluate

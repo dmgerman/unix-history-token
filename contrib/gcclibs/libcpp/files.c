@@ -2210,10 +2210,7 @@ name|st
 operator|.
 name|st_size
 operator|>
-name|INTTYPE_MAXIMUM
-argument_list|(
-name|ssize_t
-argument_list|)
+name|SSIZE_MAX
 condition|)
 block|{
 name|cpp_error
@@ -2283,10 +2280,7 @@ if|if
 condition|(
 name|offset
 operator|>
-name|INTTYPE_MAXIMUM
-argument_list|(
-name|ssize_t
-argument_list|)
+name|SSIZE_MAX
 operator|||
 operator|(
 name|ssize_t

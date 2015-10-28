@@ -75,6 +75,15 @@ directive|include
 file|"osu_client.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|spp_xsd_fname
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -277,7 +286,7 @@ name|xctx
 argument_list|,
 name|node
 argument_list|,
-literal|"spp.xsd"
+name|spp_xsd_fname
 argument_list|,
 operator|&
 name|err
@@ -362,6 +371,10 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|fnode
 operator|=
 name|node_from_file
@@ -376,7 +389,23 @@ condition|(
 operator|!
 name|fnode
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_ERROR
+argument_list|,
+literal|"Failed to create XML node from file: %s, possible error: %s"
+argument_list|,
+name|fname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|tnds
 operator|=
 name|mo_to_tnds
@@ -4956,7 +4985,19 @@ name|wpa_printf
 argument_list|(
 name|MSG_INFO
 argument_list|,
-literal|"Credential provisioning requested"
+literal|"Credential provisioning requested - URL: %s ca_fname: %s"
+argument_list|,
+name|url
+argument_list|,
+name|ctx
+operator|->
+name|ca_fname
+condition|?
+name|ctx
+operator|->
+name|ca_fname
+else|:
+literal|"N/A"
 argument_list|)
 expr_stmt|;
 name|os_free

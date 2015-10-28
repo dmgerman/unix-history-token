@@ -57,7 +57,7 @@ begin_define
 define|#
 directive|define
 name|EFI_STAGING_SIZE
-value|32
+value|48
 end_define
 
 begin_endif
@@ -69,7 +69,7 @@ begin_define
 define|#
 directive|define
 name|STAGE_PAGES
-value|((EFI_STAGING_SIZE) * 1024 * 1024 / 4096)
+value|EFI_SIZE_TO_PAGES((EFI_STAGING_SIZE) * 1024 * 1024)
 end_define
 
 begin_decl_stmt
@@ -155,7 +155,7 @@ name|staging
 operator|+
 name|STAGE_PAGES
 operator|*
-literal|4096
+name|EFI_PAGE_SIZE
 expr_stmt|;
 if|#
 directive|if
@@ -471,13 +471,7 @@ operator|(
 name|uint64_t
 operator|*
 operator|)
-operator|(
-name|staging
-operator|+
-name|STAGE_PAGES
-operator|*
-name|EFI_PAGE_SIZE
-operator|)
+name|staging_end
 expr_stmt|;
 while|while
 condition|(

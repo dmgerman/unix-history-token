@@ -581,7 +581,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|connect_request_upcall
 parameter_list|(
 name|struct
@@ -4235,12 +4235,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IW_CM_MPAV2
-end_ifdef
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -4257,41 +4251,10 @@ name|mpa_rev
 argument_list|,
 literal|0
 argument_list|,
-literal|"MPA Revision, 0 supports amso1100, 1 is RFC0544 spec compliant, 2 is IETF MPA Peer Connect Draft compliant (default = 1)"
+literal|"MPA Revision, 0 supports amso1100, 1 is RFC5044 spec compliant, 2 is IETF MPA Peer Connect Draft compliant (default = 1)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_hw_iw_cxgbe
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|mpa_rev
-argument_list|,
-name|CTLFLAG_RWTUN
-argument_list|,
-operator|&
-name|mpa_rev
-argument_list|,
-literal|0
-argument_list|,
-literal|"MPA Revision, 0 supports amso1100, 1 is RFC0544 spec compliant (default = 1)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -6713,14 +6676,6 @@ argument_list|,
 name|ep
 argument_list|)
 expr_stmt|;
-name|close_complete_upcall
-argument_list|(
-name|ep
-argument_list|,
-operator|-
-name|ECONNRESET
-argument_list|)
-expr_stmt|;
 name|state_set
 argument_list|(
 operator|&
@@ -7372,7 +7327,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|connect_request_upcall
 parameter_list|(
 name|struct
@@ -7384,6 +7339,9 @@ block|{
 name|struct
 name|iw_cm_event
 name|event
+decl_stmt|;
+name|int
+name|ret
 decl_stmt|;
 name|CTR3
 argument_list|(
@@ -7464,9 +7422,6 @@ name|tried_with_mpa_v1
 condition|)
 block|{
 comment|/* this means MPA_v2 is used */
-ifdef|#
-directive|ifdef
-name|IW_CM_MPAV2
 name|event
 operator|.
 name|ord
@@ -7483,8 +7438,6 @@ name|ep
 operator|->
 name|ird
 expr_stmt|;
-endif|#
-directive|endif
 name|event
 operator|.
 name|private_data_len
@@ -7523,9 +7476,6 @@ block|}
 else|else
 block|{
 comment|/* this means MPA_v1 is used. Send max supported */
-ifdef|#
-directive|ifdef
-name|IW_CM_MPAV2
 name|event
 operator|.
 name|ord
@@ -7538,8 +7488,6 @@ name|ird
 operator|=
 name|c4iw_max_read_depth
 expr_stmt|;
-endif|#
-directive|endif
 name|event
 operator|.
 name|private_data_len
@@ -7571,6 +7519,8 @@ operator|->
 name|com
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|ep
 operator|->
 name|parent_ep
@@ -7591,6 +7541,18 @@ name|cm_id
 argument_list|,
 operator|&
 name|event
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+name|c4iw_put_ep
+argument_list|(
+operator|&
+name|ep
+operator|->
+name|com
 argument_list|)
 expr_stmt|;
 name|set_bit
@@ -7615,6 +7577,9 @@ operator|->
 name|com
 argument_list|)
 expr_stmt|;
+return|return
+name|ret
+return|;
 block|}
 end_function
 
@@ -7663,9 +7628,6 @@ name|event
 operator|=
 name|IW_CM_EVENT_ESTABLISHED
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IW_CM_MPAV2
 name|event
 operator|.
 name|ird
@@ -7682,8 +7644,6 @@ name|ep
 operator|->
 name|ord
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ep
@@ -9868,11 +9828,22 @@ name|state
 operator|!=
 name|DEAD
 condition|)
+block|{
+if|if
+condition|(
 name|connect_request_upcall
 argument_list|(
 name|ep
 argument_list|)
+condition|)
+block|{
+name|abort_connection
+argument_list|(
+name|ep
+argument_list|)
 expr_stmt|;
+block|}
+block|}
 else|else
 name|abort_connection
 argument_list|(
@@ -11872,7 +11843,7 @@ argument_list|(
 name|ep
 argument_list|,
 operator|-
-name|EIO
+name|ECONNRESET
 argument_list|)
 expr_stmt|;
 name|ep

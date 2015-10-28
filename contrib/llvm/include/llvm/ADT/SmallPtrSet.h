@@ -517,7 +517,8 @@ name|SmallPtrSetImplBase
 operator|&
 name|RHS
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|protected
 label|:
@@ -1007,9 +1008,12 @@ name|PtrTraits
 expr_stmt|;
 name|SmallPtrSetImpl
 argument_list|(
-argument|const SmallPtrSetImpl&
+specifier|const
+name|SmallPtrSetImpl
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 

@@ -121,22 +121,7 @@ value|(((_x)& 0xffff0000) ? __RD16((_x)>>16)<<16 : __RD16(_x))
 end_define
 
 begin_comment
-comment|/*  * The amount of space reserved in the shared ring for accounting information.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__RING_HEADER_SIZE
-parameter_list|(
-name|_s
-parameter_list|)
-define|\
-value|((intptr_t)(_s)->ring - (intptr_t)(_s))
-end_define
-
-begin_comment
-comment|/*  * Calculate size of a shared ring, given the total available space for the  * ring and indexes (_sz), and the name tag of the request/response structure.  * A ring contains as many entries as will fit, rounded down to the nearest  * power of two (so we can mask with (size-1) to loop around).  */
+comment|/*  * Calculate size of a shared ring, given the total available space for the  * ring and indexes (_sz), and the name tag of the request/response structure.  * A ring contains as many entries as will fit, rounded down to the nearest   * power of two (so we can mask with (size-1) to loop around).  */
 end_comment
 
 begin_define
@@ -166,24 +151,7 @@ parameter_list|,
 name|_sz
 parameter_list|)
 define|\
-value|(__RD32(((_sz) - __RING_HEADER_SIZE(_s)) / sizeof((_s)->ring[0])))
-end_define
-
-begin_comment
-comment|/*  * The number of pages needed to support a given number of request/reponse  * entries.  The entry count is rounded down to the nearest power of two  * as required by the ring macros.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__RING_PAGES
-parameter_list|(
-name|_s
-parameter_list|,
-name|_entries
-parameter_list|)
-define|\
-value|((__RING_HEADER_SIZE(_s)                    \    + (__RD32(_entries) * sizeof((_s)->ring[0])) \    + PAGE_SIZE - 1) / PAGE_SIZE)
+value|(__RD32(((_sz) - (long)(_s)->ring + (long)(_s)) / sizeof((_s)->ring[0])))
 end_define
 
 begin_comment
@@ -206,7 +174,7 @@ comment|/* Shared ring entry */
 define|\
 value|union __name##_sring_entry {                                            \     __req_t req;                                                        \     __rsp_t rsp;                                                        \ };                                                                      \                                                                         \
 comment|/* Shared ring page */
-value|\ struct __name##_sring {                                                 \     RING_IDX req_prod, req_event;                                       \     RING_IDX rsp_prod, rsp_event;                                       \     union {                                                             \         struct {                                                        \             uint8_t smartpoll_active;                                   \         } netif;                                                        \         struct {                                                        \             uint8_t msg;                                                \         } tapif_user;                                                   \         uint8_t pvt_pad[4];                                             \     } private;                                                          \     uint8_t __pad[44];                                                  \     union __name##_sring_entry ring[1];
+value|\ struct __name##_sring {                                                 \     RING_IDX req_prod, req_event;                                       \     RING_IDX rsp_prod, rsp_event;                                       \     union {                                                             \         struct {                                                        \             uint8_t smartpoll_active;                                   \         } netif;                                                        \         struct {                                                        \             uint8_t msg;                                                \         } tapif_user;                                                   \         uint8_t pvt_pad[4];                                             \     } pvt;                                                              \     uint8_t __pad[44];                                                  \     union __name##_sring_entry ring[1];
 comment|/* variable-length */
 value|\ };                                                                      \                                                                         \
 comment|/* "Front" end's private variables */
@@ -232,7 +200,7 @@ name|SHARED_RING_INIT
 parameter_list|(
 name|_s
 parameter_list|)
-value|do {                                       \     (_s)->req_prod  = (_s)->rsp_prod  = 0;                              \     (_s)->req_event = (_s)->rsp_event = 1;                              \     (void)memset((_s)->private.pvt_pad, 0, sizeof((_s)->private.pvt_pad)); \     (void)memset((_s)->__pad, 0, sizeof((_s)->__pad));                  \ } while(0)
+value|do {                                       \     (_s)->req_prod  = (_s)->rsp_prod  = 0;                              \     (_s)->req_event = (_s)->rsp_event = 1;                              \     (void)memset((_s)->pvt.pvt_pad, 0, sizeof((_s)->pvt.pvt_pad));      \     (void)memset((_s)->__pad, 0, sizeof((_s)->__pad));                  \ } while(0)
 end_define
 
 begin_define
@@ -261,38 +229,6 @@ parameter_list|,
 name|__size
 parameter_list|)
 value|do {                             \     (_r)->rsp_prod_pvt = 0;                                             \     (_r)->req_cons = 0;                                                 \     (_r)->nr_ents = __RING_SIZE(_s, __size);                            \     (_r)->sring = (_s);                                                 \ } while (0)
-end_define
-
-begin_comment
-comment|/* Initialize to existing shared indexes -- for recovery */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FRONT_RING_ATTACH
-parameter_list|(
-name|_r
-parameter_list|,
-name|_s
-parameter_list|,
-name|__size
-parameter_list|)
-value|do {                          \     (_r)->sring = (_s);                                                 \     (_r)->req_prod_pvt = (_s)->req_prod;                                \     (_r)->rsp_cons = (_s)->rsp_prod;                                    \     (_r)->nr_ents = __RING_SIZE(_s, __size);                            \ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BACK_RING_ATTACH
-parameter_list|(
-name|_r
-parameter_list|,
-name|_s
-parameter_list|,
-name|__size
-parameter_list|)
-value|do {                           \     (_r)->sring = (_s);                                                 \     (_r)->rsp_prod_pvt = (_s)->rsp_prod;                                \     (_r)->req_cons = (_s)->req_prod;                                    \     (_r)->nr_ents = __RING_SIZE(_s, __size);                            \ } while (0)
 end_define
 
 begin_comment
@@ -443,6 +379,23 @@ define|\
 value|(((_cons) - (_r)->rsp_prod_pvt)>= RING_SIZE(_r))
 end_define
 
+begin_comment
+comment|/* Ill-behaved frontend determination: Can there be this many requests? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RING_REQUEST_PROD_OVERFLOW
+parameter_list|(
+name|_r
+parameter_list|,
+name|_prod
+parameter_list|)
+define|\
+value|(((_prod) - (_r)->rsp_prod_pvt)> RING_SIZE(_r))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -537,7 +490,7 @@ comment|/* __XEN_PUBLIC_IO_RING_H__ */
 end_comment
 
 begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
+comment|/*  * Local variables:  * mode: C  * c-file-style: "BSD"  * c-basic-offset: 4  * tab-width: 4  * indent-tabs-mode: nil  * End:  */
 end_comment
 
 end_unit
