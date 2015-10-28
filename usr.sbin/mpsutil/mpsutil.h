@@ -627,7 +627,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !__MPTUTIL_H__ */
+comment|/* !__MPSUTIL_H__ */
 end_comment
 
 end_unit
