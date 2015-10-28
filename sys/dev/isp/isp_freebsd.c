@@ -8434,6 +8434,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|IS_23XX
+argument_list|(
+name|isp
+argument_list|)
+operator|||
 name|IS_24XX
 argument_list|(
 name|isp
@@ -8777,6 +8782,11 @@ block|}
 comment|/* 	 * If we're a 24XX card, we're done. 	 */
 if|if
 condition|(
+name|IS_23XX
+argument_list|(
+name|isp
+argument_list|)
+operator|||
 name|IS_24XX
 argument_list|(
 name|isp
@@ -8848,7 +8858,8 @@ else|else
 block|{
 name|mtx_sleep
 argument_list|(
-name|ccb
+operator|&
+name|status
 argument_list|,
 operator|&
 name|isp
