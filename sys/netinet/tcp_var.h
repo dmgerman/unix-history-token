@@ -176,13 +176,17 @@ name|int
 name|ispare
 decl_stmt|;
 comment|/* explicit pad for 64bit alignment */
+name|int
+name|sacked_bytes
+decl_stmt|;
+comment|/* 					 * Total sacked bytes reported by the 					 * receiver via sack option 					 */
 name|uint64_t
 name|_pad
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
-comment|/* 1 sacked_bytes, 1 TBD */
+comment|/* TBD */
 block|}
 struct|;
 end_struct
@@ -2749,6 +2753,23 @@ name|V_tcp_hhh
 value|VNET(tcp_hhh)
 end_define
 
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|tcp_do_rfc6675_pipe
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_tcp_do_rfc6675_pipe
+value|VNET(tcp_do_rfc6675_pipe)
+end_define
+
 begin_function_decl
 name|int
 name|tcp_addoptions
@@ -3726,6 +3747,17 @@ parameter_list|(
 name|u_long
 parameter_list|,
 name|u_long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tcp_compute_pipe
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
