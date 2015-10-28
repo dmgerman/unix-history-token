@@ -288,7 +288,6 @@ operator|=
 name|flags
 expr_stmt|;
 comment|/* 	 * If opened for appending, but underlying descriptor does not have 	 * O_APPEND bit set, assert __SAPP so that __swrite() caller 	 * will _sseek() to the end before write. 	 */
-comment|/* XXX: Reuse __SALC for O_APPEND. */
 if|if
 condition|(
 name|fdflags
@@ -297,9 +296,9 @@ name|O_APPEND
 condition|)
 name|fp
 operator|->
-name|_flags
+name|_flags2
 operator||=
-name|__SALC
+name|__S2OAP
 expr_stmt|;
 elseif|else
 if|if

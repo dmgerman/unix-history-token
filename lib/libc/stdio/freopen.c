@@ -796,6 +796,12 @@ name|mbstate_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|fp
+operator|->
+name|_flags2
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|f
@@ -986,12 +992,11 @@ operator|&
 name|O_APPEND
 condition|)
 block|{
-comment|/* XXX: Reuse __SALC for O_APPEND. */
 name|fp
 operator|->
-name|_flags
+name|_flags2
 operator||=
-name|__SALC
+name|__S2OAP
 expr_stmt|;
 operator|(
 name|void
