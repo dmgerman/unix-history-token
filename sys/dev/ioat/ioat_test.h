@@ -54,6 +54,8 @@ literal|0
 block|,
 name|IOAT_TEST_DMA
 block|,
+name|IOAT_TEST_RAW_DMA
+block|,
 name|IOAT_NUM_TESTKINDS
 block|}
 enum|;
@@ -100,6 +102,20 @@ decl_stmt|;
 comment|/* If true, check for miscompares after a copy. */
 name|bool
 name|verify
+decl_stmt|;
+comment|/* DMA directly to/from some memory address */
+name|uint64_t
+name|raw_target
+decl_stmt|;
+name|void
+modifier|*
+name|raw_vtarget
+decl_stmt|;
+name|bool
+name|raw_write
+decl_stmt|;
+name|bool
+name|raw_is_virtual
 decl_stmt|;
 comment|/* Internal usage -- not test inputs */
 name|TAILQ_HEAD
