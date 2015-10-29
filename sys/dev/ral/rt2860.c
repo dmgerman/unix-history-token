@@ -696,17 +696,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|rt2860_intr
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|rt2860_tx
 parameter_list|(
@@ -7682,7 +7671,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|rt2860_intr
 parameter_list|(
