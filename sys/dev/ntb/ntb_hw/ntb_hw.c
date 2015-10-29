@@ -3729,20 +3729,25 @@ name|bar
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* XXX: amd64 pmap_change_attr() assumes region lies in DMAP. */
 comment|/* Mark bar region as write combining to improve performance. */
-block|rc = pmap_change_attr((vm_offset_t)bar->vbase, bar->size, 	    VM_MEMATTR_WRITE_COMBINING);
-else|#
-directive|else
 name|rc
 operator|=
-name|EINVAL
+name|pmap_change_attr
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|bar
+operator|->
+name|vbase
+argument_list|,
+name|bar
+operator|->
+name|size
+argument_list|,
+name|VM_MEMATTR_WRITE_COMBINING
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|print_map_success
 argument_list|(
 name|ntb
