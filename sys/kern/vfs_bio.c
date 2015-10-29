@@ -11561,6 +11561,10 @@ name|metadata
 decl_stmt|,
 name|reserved
 decl_stmt|;
+name|bp
+operator|=
+name|NULL
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
