@@ -1319,6 +1319,9 @@ value|({									\ 	bus_dmaengine_t *_p = (_dmaeng);				\ 	(struct ioat_softc *)
 name|int
 name|version
 decl_stmt|;
+name|int
+name|chan_idx
+decl_stmt|;
 name|struct
 name|mtx
 name|submit_lock
@@ -1380,6 +1383,9 @@ decl_stmt|;
 name|struct
 name|callout
 name|timer
+decl_stmt|;
+name|boolean_t
+name|quiescing
 decl_stmt|;
 name|boolean_t
 name|is_resize_pending
