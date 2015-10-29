@@ -2587,19 +2587,14 @@ name|obitm
 decl_stmt|;
 comment|/* bits to mask for register copyout */
 name|uint32_t
-name|lineno
-range|:
-literal|16
-decl_stmt|,
-range|:
-literal|12
-decl_stmt|,
 name|logval
-range|:
-literal|4
 decl_stmt|;
+comment|/* Bitmask of status codes to log */
 name|uint32_t
 name|timeout
+decl_stmt|;
+name|uint32_t
+name|lineno
 decl_stmt|;
 specifier|const
 name|char
