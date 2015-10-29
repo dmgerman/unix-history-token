@@ -405,7 +405,7 @@ name|RT2860_PCIE
 value|(1<< 2)
 define|#
 directive|define
-name|RT2860_RUNNNING
+name|RT2860_RUNNING
 value|(1<< 3)
 name|struct
 name|ieee80211_node

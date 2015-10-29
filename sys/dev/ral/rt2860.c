@@ -696,6 +696,17 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|rt2860_intr
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|rt2860_tx
 parameter_list|(
@@ -3047,7 +3058,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"could not create desc DMA map\n"
+literal|"could not create desc DMA tag\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -7671,6 +7682,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|rt2860_intr
 parameter_list|(
@@ -9342,7 +9354,7 @@ name|sc
 operator|->
 name|sc_flags
 operator|&
-name|RT2860_RUNNNING
+name|RT2860_RUNNING
 operator|)
 condition|)
 block|{
@@ -10630,7 +10642,7 @@ name|sc
 operator|->
 name|sc_flags
 operator|&
-name|RT2860_RUNNNING
+name|RT2860_RUNNING
 operator|)
 operator|==
 literal|0
@@ -10726,7 +10738,7 @@ name|sc
 operator|->
 name|sc_flags
 operator|&
-name|RT2860_RUNNNING
+name|RT2860_RUNNING
 operator|)
 operator|==
 literal|0
@@ -10849,7 +10861,7 @@ name|sc
 operator|->
 name|sc_flags
 operator|&
-name|RT2860_RUNNNING
+name|RT2860_RUNNING
 argument_list|,
 operator|(
 literal|"not running"
@@ -10976,7 +10988,7 @@ name|sc
 operator|->
 name|sc_flags
 operator|&
-name|RT2860_RUNNNING
+name|RT2860_RUNNING
 operator|)
 condition|)
 block|{
@@ -11004,7 +11016,7 @@ name|sc
 operator|->
 name|sc_flags
 operator|&
-name|RT2860_RUNNNING
+name|RT2860_RUNNING
 condition|)
 name|rt2860_stop_locked
 argument_list|(
@@ -21842,7 +21854,7 @@ name|sc
 operator|->
 name|sc_flags
 operator|&
-name|RT2860_RUNNNING
+name|RT2860_RUNNING
 condition|)
 name|ieee80211_start_all
 argument_list|(
@@ -23355,7 +23367,7 @@ name|sc
 operator|->
 name|sc_flags
 operator||=
-name|RT2860_RUNNNING
+name|RT2860_RUNNING
 expr_stmt|;
 name|callout_reset
 argument_list|(
@@ -23432,7 +23444,7 @@ name|sc
 operator|->
 name|sc_flags
 operator|&
-name|RT2860_RUNNNING
+name|RT2860_RUNNING
 condition|)
 name|rt2860_set_leds
 argument_list|(
@@ -23461,7 +23473,7 @@ operator|->
 name|sc_flags
 operator|&=
 operator|~
-name|RT2860_RUNNNING
+name|RT2860_RUNNING
 expr_stmt|;
 comment|/* disable interrupts */
 name|RAL_WRITE
