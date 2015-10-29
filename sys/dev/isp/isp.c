@@ -5327,57 +5327,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* 	 * Give it a chance to finish starting up. 	 * Give the 24XX more time. 	 */
-if|if
-condition|(
-name|IS_24XX
-argument_list|(
-name|isp
-argument_list|)
-condition|)
-block|{
-name|ISP_DELAY
-argument_list|(
-literal|500000
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Check to see if the 24XX firmware really started. 		 */
-if|if
-condition|(
-name|mbs
-operator|.
-name|param
-index|[
-literal|1
-index|]
-operator|==
-literal|0xdead
-condition|)
-block|{
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGERR
-argument_list|,
-literal|"f/w didn't *really* start"
-argument_list|)
-expr_stmt|;
-name|ISP_RESET0
-argument_list|(
-name|isp
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
-else|else
-block|{
-name|ISP_DELAY
-argument_list|(
-literal|250000
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|IS_SCSI
@@ -5386,7 +5335,7 @@ name|isp
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * Set CLOCK RATE, but only if asked to. 			 */
+comment|/* 		 * Set CLOCK RATE, but only if asked to. 		 */
 if|if
 condition|(
 name|isp
@@ -5394,14 +5343,17 @@ operator|->
 name|isp_clock
 condition|)
 block|{
+name|MBSINIT
+argument_list|(
+operator|&
 name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-operator|=
+argument_list|,
 name|MBOX_SET_CLOCK_RATE
+argument_list|,
+name|MBLOGALL
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|mbs
 operator|.
@@ -5413,12 +5365,6 @@ operator|=
 name|isp
 operator|->
 name|isp_clock
-expr_stmt|;
-name|mbs
-operator|.
-name|logval
-operator|=
-name|MBLOGNONE
 expr_stmt|;
 name|isp_mboxcmd
 argument_list|(
@@ -5429,7 +5375,6 @@ name|mbs
 argument_list|)
 expr_stmt|;
 comment|/* we will try not to care if this fails */
-block|}
 block|}
 block|}
 comment|/* 	 * Ask the chip for the current firmware version. 	 * This should prove that the new firmware is working. 	 */
