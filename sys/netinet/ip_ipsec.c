@@ -478,7 +478,7 @@ condition|(
 operator|!
 name|key_havesp
 argument_list|(
-name|IPSEC_DIR_INBOUND
+name|IPSEC_DIR_OUTBOUND
 argument_list|)
 condition|)
 return|return
