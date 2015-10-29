@@ -201,6 +201,24 @@ name|usb_temp_setup_by_index_w
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_COMPAT_LINUX
+end_if
+
+begin_decl_stmt
+specifier|static
+name|usb_linux_free_device_t
+name|usb_linux_free_device_w
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|usb_temp_unsetup_t
@@ -245,6 +263,27 @@ operator|&
 name|usb_temp_setup_by_index_w
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_COMPAT_LINUX
+end_if
+
+begin_decl_stmt
+name|usb_linux_free_device_t
+modifier|*
+name|usb_linux_free_device_p
+init|=
+operator|&
+name|usb_linux_free_device_w
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|usb_temp_unsetup_t
@@ -421,6 +460,32 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_COMPAT_LINUX
+end_if
+
+begin_function
+specifier|static
+name|void
+name|usb_linux_free_device_w
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+name|udev
+parameter_list|)
+block|{
+comment|/* NOP */
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 name|usb_quirk_unload
@@ -515,6 +580,44 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|USB_HAVE_COMPAT_LINUX
+end_if
+
+begin_function
+name|void
+name|usb_linux_unload
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+comment|/* reset function pointers */
+name|usb_linux_free_device_p
+operator|=
+operator|&
+name|usb_linux_free_device_w
+expr_stmt|;
+comment|/* wait for CPU to exit the loaded functions, if any */
+comment|/* XXX this is a tradeoff */
+name|pause
+argument_list|(
+literal|"WAIT"
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
