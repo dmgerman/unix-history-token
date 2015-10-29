@@ -3138,6 +3138,7 @@ name|isipv6
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* 		 * Idea here is that at each stage of mtu probe (usually, 1448 		 * -> 1188 -> 524) should be given 2 chances to recover before 		 *  further clamping down. 'tp->t_rxtshift % 2 == 0' should 		 *  take care of that. 		 */
 if|if
 condition|(
 operator|(
@@ -3164,8 +3165,16 @@ operator|(
 name|tp
 operator|->
 name|t_rxtshift
-operator|<=
+operator|>=
 literal|2
+operator|&&
+name|tp
+operator|->
+name|t_rxtshift
+operator|%
+literal|2
+operator|==
+literal|0
 operator|)
 condition|)
 block|{
@@ -3362,7 +3371,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * If further retransmissions are still unsuccessful 			 * with a lowered MTU, maybe this isn't a blackhole and 			 * we restore the previous MSS and blackhole detection 			 * flags. 			 */
+comment|/* 			 * If further retransmissions are still unsuccessful 			 * with a lowered MTU, maybe this isn't a blackhole and 			 * we restore the previous MSS and blackhole detection 			 * flags. 			 * The limit '6' is determined by giving each probe 			 * stage (1448, 1188, 524) 2 chances to recover. 			 */
 if|if
 condition|(
 operator|(
@@ -3378,7 +3387,7 @@ name|tp
 operator|->
 name|t_rxtshift
 operator|>
-literal|4
+literal|6
 operator|)
 condition|)
 block|{
