@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: file.c,v 1.164 2015/06/03 18:21:24 christos Exp $"
+literal|"@(#)$File: file.c,v 1.167 2015/09/11 17:24:09 christos Exp $"
 argument_list|)
 end_macro
 
@@ -553,6 +553,14 @@ name|MAGIC_PARAM_ELF_NOTES_MAX
 block|,
 literal|0
 block|}
+block|,
+block|{
+literal|"regex"
+block|,
+name|MAGIC_PARAM_REGEX_MAX
+block|,
+literal|0
+block|}
 block|, }
 struct|;
 end_struct
@@ -1056,6 +1064,11 @@ condition|)
 return|return
 literal|1
 return|;
+name|applyparam
+argument_list|(
+name|magic
+argument_list|)
+expr_stmt|;
 name|e
 operator||=
 name|unwrap

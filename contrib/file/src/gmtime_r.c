@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$File: gmtime_r.c,v 1.1 2015/01/09 19:28:32 christos Exp $	*/
+comment|/*	$File: gmtime_r.c,v 1.2 2015/07/11 14:41:37 christos Exp $	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: gmtime_r.c,v 1.1 2015/01/09 19:28:32 christos Exp $"
+literal|"@(#)$File: gmtime_r.c,v 1.2 2015/07/11 14:41:37 christos Exp $"
 argument_list|)
 end_macro
 
@@ -55,6 +55,7 @@ name|gmtime_r
 parameter_list|(
 specifier|const
 name|time_t
+modifier|*
 name|t
 parameter_list|,
 name|struct

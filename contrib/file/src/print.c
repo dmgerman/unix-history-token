@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: print.c,v 1.79 2015/01/09 19:28:32 christos Exp $"
+literal|"@(#)$File: print.c,v 1.80 2015/07/16 14:28:57 christos Exp $"
 argument_list|)
 end_macro
 
@@ -844,7 +844,7 @@ name|value
 operator|.
 name|l
 argument_list|,
-name|FILE_T_LOCAL
+literal|0
 argument_list|,
 name|tbuf
 argument_list|)
@@ -880,7 +880,7 @@ name|value
 operator|.
 name|l
 argument_list|,
-literal|0
+name|FILE_T_LOCAL
 argument_list|,
 name|tbuf
 argument_list|)
@@ -913,7 +913,7 @@ name|value
 operator|.
 name|q
 argument_list|,
-name|FILE_T_LOCAL
+literal|0
 argument_list|,
 name|tbuf
 argument_list|)
@@ -946,7 +946,7 @@ name|value
 operator|.
 name|q
 argument_list|,
-literal|0
+name|FILE_T_LOCAL
 argument_list|,
 name|tbuf
 argument_list|)
