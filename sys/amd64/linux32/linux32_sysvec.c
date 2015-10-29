@@ -361,14 +361,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LINUX_SYS_linux_rt_sendsig
+name|LINUX32_SYS_linux_rt_sendsig
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_SYS_linux_sendsig
+name|LINUX32_SYS_linux_sendsig
 value|0
 end_define
 
