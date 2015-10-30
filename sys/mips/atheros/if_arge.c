@@ -6817,6 +6817,12 @@ operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
+comment|/* Flush writes */
+name|ARGE_BARRIER_WRITE
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Start transmitting */
 name|ARGEDEBUG
 argument_list|(
