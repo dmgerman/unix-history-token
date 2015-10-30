@@ -248,7 +248,7 @@ name|SVCPOOL
 modifier|*
 name|pool
 parameter_list|,
-name|int
+name|long
 name|delta
 parameter_list|)
 function_decl|;
@@ -496,46 +496,33 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 	 * Don't use more than a quarter of mbuf clusters or more than 	 * 45Mb buffering requests. 	 */
+comment|/* 	 * Don't use more than a quarter of mbuf clusters.  Nota bene: 	 * nmbclusters is an int, but nmbclusters*MCLBYTES may overflow 	 * on LP64 architectures, so cast to u_long to avoid undefined 	 * behavior.  (ILP32 architectures cannot have nmbclusters 	 * large enough to overflow for other reasons.) 	 */
 name|pool
 operator|->
 name|sp_space_high
 operator|=
+operator|(
+name|u_long
+operator|)
 name|nmbclusters
 operator|*
 name|MCLBYTES
 operator|/
 literal|4
 expr_stmt|;
-if|if
-condition|(
-name|pool
-operator|->
-name|sp_space_high
-operator|>
-literal|45
-operator|<<
-literal|20
-condition|)
-name|pool
-operator|->
-name|sp_space_high
-operator|=
-literal|45
-operator|<<
-literal|20
-expr_stmt|;
 name|pool
 operator|->
 name|sp_space_low
 operator|=
-literal|2
-operator|*
+operator|(
 name|pool
 operator|->
 name|sp_space_high
 operator|/
 literal|3
+operator|)
+operator|*
+literal|2
 expr_stmt|;
 name|sysctl_ctx_init
 argument_list|(
@@ -659,7 +646,7 @@ argument_list|,
 literal|"Number of thread groups"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 operator|&
 name|pool
@@ -679,12 +666,10 @@ name|pool
 operator|->
 name|sp_space_used
 argument_list|,
-literal|0
-argument_list|,
 literal|"Space in parsed but not handled requests."
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 operator|&
 name|pool
@@ -704,12 +689,10 @@ name|pool
 operator|->
 name|sp_space_used_highest
 argument_list|,
-literal|0
-argument_list|,
 literal|"Highest space used since reboot."
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 operator|&
 name|pool
@@ -729,12 +712,10 @@ name|pool
 operator|->
 name|sp_space_high
 argument_list|,
-literal|0
-argument_list|,
 literal|"Maximum space in parsed but not handled requests."
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 operator|&
 name|pool
@@ -753,8 +734,6 @@ operator|&
 name|pool
 operator|->
 name|sp_space_low
-argument_list|,
-literal|0
 argument_list|,
 literal|"Low water mark for request space."
 argument_list|)
@@ -5128,17 +5107,17 @@ name|SVCPOOL
 modifier|*
 name|pool
 parameter_list|,
-name|int
+name|long
 name|delta
 parameter_list|)
 block|{
 name|unsigned
-name|int
+name|long
 name|value
 decl_stmt|;
 name|value
 operator|=
-name|atomic_fetchadd_int
+name|atomic_fetchadd_long
 argument_list|(
 operator|&
 name|pool
@@ -5304,7 +5283,7 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|size_t
+name|long
 name|sz
 decl_stmt|;
 name|int
@@ -5974,10 +5953,6 @@ name|xprt
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Execute what we have queued. 		 */
-name|sz
-operator|=
-literal|0
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -6022,7 +5997,10 @@ name|st_lock
 argument_list|)
 expr_stmt|;
 name|sz
-operator|+=
+operator|=
+operator|(
+name|long
+operator|)
 name|rqstp
 operator|->
 name|rq_size
@@ -6030,6 +6008,14 @@ expr_stmt|;
 name|svc_executereq
 argument_list|(
 name|rqstp
+argument_list|)
+expr_stmt|;
+name|svc_change_space_used
+argument_list|(
+name|pool
+argument_list|,
+operator|-
+name|sz
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -6047,14 +6033,6 @@ operator|&
 name|st
 operator|->
 name|st_lock
-argument_list|)
-expr_stmt|;
-name|svc_change_space_used
-argument_list|(
-name|pool
-argument_list|,
-operator|-
-name|sz
 argument_list|)
 expr_stmt|;
 name|mtx_lock
