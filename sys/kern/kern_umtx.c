@@ -18672,6 +18672,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|_umtx_op_func
 name|op_table_compat32
 index|[]
