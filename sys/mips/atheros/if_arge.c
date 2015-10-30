@@ -11141,7 +11141,7 @@ condition|(
 name|status
 operator|&
 operator|(
-literal|1
+literal|1U
 operator|<<
 name|i
 operator|)
