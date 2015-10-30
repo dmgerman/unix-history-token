@@ -6970,7 +6970,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* FALLTHROUGH */
+break|break;
 case|case
 name|SIOCSIFMEDIA
 case|:
