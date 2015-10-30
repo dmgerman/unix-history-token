@@ -741,9 +741,17 @@ name|j
 decl_stmt|,
 name|i
 decl_stmt|;
-name|int
-name|size
+union|union
+block|{
+name|size_t
+name|s
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+block|}
+name|size
+union|;
 if|#
 directive|if
 name|defined
@@ -755,11 +763,20 @@ literal|0
 return|;
 endif|#
 directive|endif
+comment|/* heuristic way to adapt for platforms that expect 64-bit optlen */
 name|size
+operator|.
+name|s
+operator|=
+literal|0
+operator|,
+name|size
+operator|.
+name|i
 operator|=
 sizeof|sizeof
 argument_list|(
-name|int
+name|j
 argument_list|)
 expr_stmt|;
 comment|/*      * Note: under Windows the third parameter is of type (char *) whereas      * under other systems it is (void *) if you don't have a cast it will      * choke the compiler: if you do have a cast then you can either go for      * (char *) or (void *).      */

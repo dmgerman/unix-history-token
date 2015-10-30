@@ -1860,6 +1860,7 @@ name|BIO
 modifier|*
 name|BIO_new_accept
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str

@@ -4,7 +4,7 @@ comment|/* crypto/ec/ec_err.c */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2011 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2015 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
@@ -123,6 +123,24 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|EC_F_ECDH_CMS_DECRYPT
+argument_list|)
+block|,
+literal|"ECDH_CMS_DECRYPT"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|EC_F_ECDH_CMS_SET_SHARED_INFO
+argument_list|)
+block|,
+literal|"ECDH_CMS_SET_SHARED_INFO"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|EC_F_ECKEY_PARAM2TYPE
 argument_list|)
 block|,
@@ -217,6 +235,60 @@ name|EC_F_ECPKPARAMETERS_PRINT_FP
 argument_list|)
 block|,
 literal|"ECPKParameters_print_fp"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|EC_F_ECP_NISTZ256_GET_AFFINE
+argument_list|)
+block|,
+literal|"ecp_nistz256_get_affine"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|EC_F_ECP_NISTZ256_MULT_PRECOMPUTE
+argument_list|)
+block|,
+literal|"ecp_nistz256_mult_precompute"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|EC_F_ECP_NISTZ256_POINTS_MUL
+argument_list|)
+block|,
+literal|"ecp_nistz256_points_mul"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|EC_F_ECP_NISTZ256_PRE_COMP_NEW
+argument_list|)
+block|,
+literal|"ecp_nistz256_pre_comp_new"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|EC_F_ECP_NISTZ256_SET_WORDS
+argument_list|)
+block|,
+literal|"ecp_nistz256_set_words"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|EC_F_ECP_NISTZ256_WINDOWED_MUL
+argument_list|)
+block|,
+literal|"ecp_nistz256_windowed_mul"
 block|}
 block|,
 block|{
@@ -1471,6 +1543,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|EC_R_INVALID_DIGEST
+argument_list|)
+block|,
+literal|"invalid digest"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|EC_R_INVALID_DIGEST_TYPE
 argument_list|)
 block|,
@@ -1538,6 +1619,15 @@ name|EC_R_INVALID_TRINOMIAL_BASIS
 argument_list|)
 block|,
 literal|"invalid trinomial basis"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|EC_R_KDF_PARAMETER_ERROR
+argument_list|)
+block|,
+literal|"kdf parameter error"
 block|}
 block|,
 block|{
@@ -1633,6 +1723,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|EC_R_PEER_KEY_ERROR
+argument_list|)
+block|,
+literal|"peer key error"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|EC_R_PKPARAMETERS2GROUP_FAILURE
 argument_list|)
 block|,
@@ -1655,6 +1754,15 @@ name|EC_R_POINT_IS_NOT_ON_CURVE
 argument_list|)
 block|,
 literal|"point is not on curve"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|EC_R_SHARED_INFO_ERROR
+argument_list|)
+block|,
+literal|"shared info error"
 block|}
 block|,
 block|{

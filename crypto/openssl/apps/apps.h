@@ -448,11 +448,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|OPENSSL_SYSNAME_WIN32
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|OPENSSL_SYSNAME_WINCE
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -854,6 +862,48 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|X509_CRL
+modifier|*
+name|load_crl
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|infile
+parameter_list|,
+name|int
+name|format
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|load_cert_crl_http
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|url
+parameter_list|,
+name|BIO
+modifier|*
+name|err
+parameter_list|,
+name|X509
+modifier|*
+modifier|*
+name|pcert
+parameter_list|,
+name|X509_CRL
+modifier|*
+modifier|*
+name|pcrl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|EVP_PKEY
 modifier|*
 name|load_key
@@ -1043,14 +1093,17 @@ name|OCSP_REQUEST
 operator|*
 name|req
 argument_list|,
+specifier|const
 name|char
 operator|*
 name|host
 argument_list|,
+specifier|const
 name|char
 operator|*
 name|path
 argument_list|,
+specifier|const
 name|char
 operator|*
 name|port
@@ -1058,6 +1111,7 @@ argument_list|,
 name|int
 name|use_ssl
 argument_list|,
+specifier|const
 name|STACK_OF
 argument_list|(
 name|CONF_VALUE
@@ -1737,21 +1791,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|OPENSSL_NO_TLSEXT
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|OPENSSL_NO_NEXTPROTONEG
-argument_list|)
-end_if
+end_ifndef
 
 begin_function_decl
 name|unsigned
@@ -1778,8 +1822,49 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !OPENSSL_NO_TLSEXT&&                                  * !OPENSSL_NO_NEXTPROTONEG */
+comment|/* ndef OPENSSL_NO_TLSEXT */
 end_comment
+
+begin_function_decl
+name|void
+name|print_cert_checks
+parameter_list|(
+name|BIO
+modifier|*
+name|bio
+parameter_list|,
+name|X509
+modifier|*
+name|x
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|checkhost
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|checkemail
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|checkip
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|store_setup_crl_download
+parameter_list|(
+name|X509_STORE
+modifier|*
+name|st
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -1890,6 +1975,17 @@ end_define
 
 begin_comment
 comment|/* MS PVK file format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FORMAT_HTTP
+value|13
+end_define
+
+begin_comment
+comment|/* Download using HTTP */
 end_comment
 
 begin_define

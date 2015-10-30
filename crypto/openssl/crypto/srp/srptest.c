@@ -757,6 +757,11 @@ argument_list|(
 name|bio_err
 argument_list|)
 expr_stmt|;
+name|BIO_free
+argument_list|(
+name|bio_err
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;

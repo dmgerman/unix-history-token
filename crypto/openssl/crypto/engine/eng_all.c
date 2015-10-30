@@ -72,14 +72,6 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|OPENSSL_NO_RSAX
-name|ENGINE_load_rsax
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
 name|OPENSSL_NO_RDRAND
 name|ENGINE_load_rdrand
 argument_list|()
