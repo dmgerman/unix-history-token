@@ -3194,6 +3194,8 @@ name|fb
 operator|->
 name|base
 operator|=
+name|VCBUS_TO_PHYS
+argument_list|(
 name|msg
 operator|->
 name|buffer
@@ -3203,6 +3205,7 @@ operator|.
 name|resp
 operator|.
 name|fb_address
+argument_list|)
 expr_stmt|;
 name|fb
 operator|->
