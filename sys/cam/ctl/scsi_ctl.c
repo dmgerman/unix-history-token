@@ -8262,7 +8262,9 @@ argument_list|(
 name|path
 argument_list|)
 operator|==
-literal|0
+name|softc
+operator|->
+name|target_id
 operator|)
 operator|&&
 operator|(
