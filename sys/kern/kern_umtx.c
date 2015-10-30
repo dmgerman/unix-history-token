@@ -4153,7 +4153,9 @@ name|KERN_SUCCESS
 condition|)
 block|{
 return|return
+operator|(
 name|EFAULT
+operator|)
 return|;
 block|}
 if|if
@@ -16870,6 +16872,7 @@ name|uap
 parameter_list|)
 block|{
 return|return
+operator|(
 name|do_sem_wake
 argument_list|(
 name|td
@@ -16878,6 +16881,7 @@ name|uap
 operator|->
 name|obj
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -16904,6 +16908,7 @@ name|uap
 parameter_list|)
 block|{
 return|return
+operator|(
 name|do_wake2_umutex
 argument_list|(
 name|td
@@ -16916,6 +16921,7 @@ name|uap
 operator|->
 name|val
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -17031,6 +17037,7 @@ name|uap
 parameter_list|)
 block|{
 return|return
+operator|(
 name|do_sem2_wake
 argument_list|(
 name|td
@@ -17039,6 +17046,7 @@ name|uap
 operator|->
 name|obj
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
