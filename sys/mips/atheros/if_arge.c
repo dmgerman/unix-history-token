@@ -6669,7 +6669,7 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Make a list of descriptors for this packet. DMA controller will 	 * walk through it while arge_link is not zero. 	 */
+comment|/* 	 * Make a list of descriptors for this packet. DMA controller will 	 * walk through it while arge_link is not zero. 	 * 	 * Since we're in a endless circular buffer, ensure that 	 * the first descriptor in a multi-descriptor ring is always 	 * set to EMPTY, then un-do it when we're done populating. 	 */
 name|prev_prod
 operator|=
 name|prod
@@ -6694,6 +6694,9 @@ name|i
 operator|++
 control|)
 block|{
+name|uint32_t
+name|tmp
+decl_stmt|;
 name|desc
 operator|=
 operator|&
@@ -6706,9 +6709,8 @@ index|[
 name|prod
 index|]
 expr_stmt|;
-name|desc
-operator|->
-name|packet_ctrl
+comment|/* 		 * Set DESC_EMPTY so the hardware (hopefully) stops at this 		 * point.  We don't want it to start transmitting descriptors 		 * before we've finished fleshing this out. 		 */
+name|tmp
 operator|=
 name|ARGE_DMASIZE
 argument_list|(
@@ -6719,6 +6721,22 @@ index|]
 operator|.
 name|ds_len
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+name|tmp
+operator||=
+name|ARGE_DESC_EMPTY
+expr_stmt|;
+name|desc
+operator|->
+name|packet_ctrl
+operator|=
+name|tmp
 expr_stmt|;
 comment|/* XXX Note: only relevant for older MACs; but check length! */
 if|if
@@ -6796,6 +6814,26 @@ operator|.
 name|arge_tx_prod
 operator|=
 name|prod
+expr_stmt|;
+comment|/* 	 * The descriptors are updated, so enable the first one. 	 */
+name|desc
+operator|=
+operator|&
+name|sc
+operator|->
+name|arge_rdata
+operator|.
+name|arge_tx_ring
+index|[
+name|prev_prod
+index|]
+expr_stmt|;
+name|desc
+operator|->
+name|packet_ctrl
+operator|&=
+operator|~
+name|ARGE_DESC_EMPTY
 expr_stmt|;
 comment|/* Sync descriptors. */
 name|bus_dmamap_sync
