@@ -203,7 +203,7 @@ name|u_long
 name|addr
 parameter_list|)
 block|{
-asm|__asm __volatile(".byte 66;clflush %0" : : "m" (*(char *)addr));
+asm|__asm __volatile(".byte 0x66;clflush %0" : : "m" (*(char *)addr));
 block|}
 end_function
 
