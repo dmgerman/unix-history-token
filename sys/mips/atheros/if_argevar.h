@@ -219,7 +219,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|do {	\ 		bus_write_4(sc->arge_res, (reg), (val)); \ 		ARGE_BARRIER_WRITE((sc)); \ 	} while (0)
+value|do {	\ 		bus_write_4(sc->arge_res, (reg), (val)); \ 		ARGE_BARRIER_WRITE((sc)); \ 		ARGE_READ((sc), (reg)); \ 	} while (0)
 end_define
 
 begin_define
@@ -280,7 +280,7 @@ parameter_list|,
 name|_val
 parameter_list|)
 define|\
-value|do { \ 		ARGE_WRITE((_sc), (_reg), (_val)); \ 		ARGE_READ((_sc), (_reg)); \ 	} while (0)
+value|ARGE_WRITE((_sc), (_reg), (_val))
 end_define
 
 begin_define
