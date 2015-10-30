@@ -7051,6 +7051,42 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|0x6a
+case|:
+name|printf
+argument_list|(
+literal|"uTLB: 4KByte pages, 8-way set associative, 64 entries\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x6b
+case|:
+name|printf
+argument_list|(
+literal|"DTLB: 4KByte pages, 8-way set associative, 256 entries\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x6c
+case|:
+name|printf
+argument_list|(
+literal|"DTLB: 2M/4M pages, 8-way set associative, 126 entries\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x6d
+case|:
+name|printf
+argument_list|(
+literal|"DTLB: 1 GByte pages, fully associative, 16 entries\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|0x70
 case|:
 name|printf
