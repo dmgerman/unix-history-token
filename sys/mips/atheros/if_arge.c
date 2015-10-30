@@ -6598,7 +6598,7 @@ operator|>=
 operator|(
 name|ARGE_TX_RING_COUNT
 operator|-
-literal|1
+literal|2
 operator|)
 condition|)
 block|{
