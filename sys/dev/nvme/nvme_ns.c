@@ -868,6 +868,26 @@ block|}
 end_function
 
 begin_function
+name|uint32_t
+name|nvme_ns_get_stripesize
+parameter_list|(
+name|struct
+name|nvme_namespace
+modifier|*
+name|ns
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ns
+operator|->
+name|stripesize
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|nvme_ns_bio_done
