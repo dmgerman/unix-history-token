@@ -323,7 +323,7 @@ name|ARGE_MDIO_BARRIER_RW
 parameter_list|(
 name|_sc
 parameter_list|)
-value|ARGE_BARRIER_READ_RW(_sc)
+value|ARGE_BARRIER_RW(_sc)
 end_define
 
 begin_define
