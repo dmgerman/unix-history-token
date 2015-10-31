@@ -391,7 +391,7 @@ argument_list|)
 expr_stmt|;
 name|lmc_parse_file
 argument_list|(
-name|_PATH_LIBMAP_CONF
+name|ld_path_libmap_conf
 argument_list|)
 expr_stmt|;
 if|if
