@@ -1267,14 +1267,6 @@ union|;
 name|uint32_t
 name|id
 decl_stmt|;
-name|uint32_t
-name|length
-decl_stmt|;
-name|enum
-name|validate_flags
-modifier|*
-name|validate_result
-decl_stmt|;
 name|bus_addr_t
 name|hw_desc_bus_addr
 decl_stmt|;

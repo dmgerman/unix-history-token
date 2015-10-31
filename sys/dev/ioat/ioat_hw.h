@@ -274,7 +274,7 @@ begin_define
 define|#
 directive|define
 name|IOAT_CHANCTRL_RUN
-value|(IOAT_CHANCTRL_INT_REARM |\ 						 IOAT_CHANCTRL_ANY_ERR_ABORT_EN)
+value|(IOAT_CHANCTRL_INT_REARM |\ 						 IOAT_CHANCTRL_ERR_COMPLETION_EN |\ 						 IOAT_CHANCTRL_ANY_ERR_ABORT_EN |\ 						 IOAT_CHANCTRL_ERR_INT_EN)
 end_define
 
 begin_define
@@ -359,6 +359,13 @@ define|#
 directive|define
 name|IOAT_CHANSTS_HALTED
 value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAT_CHANSTS_ARMED
+value|0x4
 end_define
 
 begin_define

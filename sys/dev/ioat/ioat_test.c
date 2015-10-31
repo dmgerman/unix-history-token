@@ -831,6 +831,9 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|error
 parameter_list|)
 block|{
 name|struct
@@ -843,6 +846,23 @@ name|ioat_test
 modifier|*
 name|test
 decl_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|ioat_test_log
+argument_list|(
+literal|0
+argument_list|,
+literal|"%s: Got error: %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 name|tx
 operator|=
 name|arg

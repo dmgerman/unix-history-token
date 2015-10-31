@@ -93,6 +93,9 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|error
 parameter_list|)
 function_decl|;
 end_typedef
