@@ -633,7 +633,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"real memory  = %ld (%ld MB)\n"
+literal|"real memory  = %lu (%lu MB)\n"
 argument_list|,
 name|ptoa
 argument_list|(
@@ -658,7 +658,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"available KVA = %zd (%zd MB)\n"
+literal|"available KVA = %zu (%zu MB)\n"
 argument_list|,
 name|virtual_end
 operator|-
@@ -732,7 +732,7 @@ argument_list|,
 else|#
 directive|else
 argument|printf(
-literal|"0x%08x - 0x%08x, %d bytes (%ld pages)\n"
+literal|"0x%08x - 0x%08x, %u bytes (%lu pages)\n"
 argument|,
 endif|#
 directive|endif
@@ -741,7 +741,7 @@ literal|1
 argument|] -
 literal|1
 argument|, size1, 			    size1 / PAGE_SIZE); 		} 	}  	vm_ksubmap_init(&kmi);  	printf(
-literal|"avail memory = %ld (%ld MB)\n"
+literal|"avail memory = %lu (%lu MB)\n"
 argument|, ptoa(vm_cnt.v_free_count), 	    ptoa(vm_cnt.v_free_count) /
 literal|1048576
 argument|);
