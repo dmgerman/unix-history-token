@@ -6144,35 +6144,6 @@ break|break;
 case|case
 literal|'c'
 case|:
-comment|/* 				 * XXX - 	Ick! Ugly! Remove ASAP! 				 * We want `c' and `C' for "create".  But we 				 * will temporarily treat `c' as `g', because 				 * FreeBSD releases<= 4.8 have a typo of 				 * checking  ('G' || 'c')  for CE_GLOB. 				 */
-if|if
-condition|(
-operator|*
-name|q
-operator|==
-literal|'c'
-condition|)
-block|{
-name|warnx
-argument_list|(
-literal|"Assuming 'g' for 'c' in flags for line:\n%s"
-argument_list|,
-name|errline
-argument_list|)
-expr_stmt|;
-name|warnx
-argument_list|(
-literal|"The 'c' flag will eventually mean 'CREATE'"
-argument_list|)
-expr_stmt|;
-name|working
-operator|->
-name|flags
-operator||=
-name|CE_GLOB
-expr_stmt|;
-break|break;
-block|}
 name|working
 operator|->
 name|flags
