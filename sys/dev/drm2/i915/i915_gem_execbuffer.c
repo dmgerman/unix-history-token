@@ -398,9 +398,7 @@ name|hashmask
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|eb
-operator|)
 return|;
 block|}
 end_function
@@ -528,15 +526,11 @@ operator|==
 name|handle
 condition|)
 return|return
-operator|(
 name|obj
-operator|)
 return|;
 block|}
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 end_function
@@ -1067,10 +1061,8 @@ operator|!=
 literal|0
 condition|)
 return|return
-operator|(
 operator|-
 name|EFAULT
-operator|)
 return|;
 name|reloc
 operator|->
@@ -1146,10 +1138,8 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 operator|-
 name|ENOMEM
-operator|)
 return|;
 name|vaddr
 operator|=
@@ -1688,12 +1678,12 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
+comment|/* This is the fast path and we cannot handle a pagefault whilst 	 * holding the device lock lest the user pass in the relocations 	 * contained within a mmaped bo. For in such a case we, the page 	 * fault handler would call i915_gem_fault() and we would try to 	 * acquire the device lock again. Obviously this is bad. 	 */
 name|pflags
 operator|=
 name|vm_fault_disable_pagefaults
 argument_list|()
 expr_stmt|;
-comment|/* This is the fast path and we cannot handle a pagefault whilst 	 * holding the device lock lest the user pass in the relocations 	 * contained within a mmaped bo. For in such a case we, the page 	 * fault handler would call i915_gem_fault() and we would try to 	 * acquire the device lock again. Obviously this is bad. 	 */
 name|list_for_each_entry
 argument_list|(
 argument|obj
@@ -1984,9 +1974,10 @@ operator|<
 literal|4
 decl_stmt|;
 name|int
-name|ret
-decl_stmt|,
 name|retry
+decl_stmt|;
+name|int
+name|ret
 decl_stmt|;
 name|dev_priv
 operator|=
@@ -3677,10 +3668,8 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
-operator|(
 operator|-
 name|EFAULT
-operator|)
 return|;
 block|}
 block|}
@@ -4364,15 +4353,6 @@ name|intel_ring_buffer
 modifier|*
 name|ring
 decl_stmt|;
-name|vm_page_t
-modifier|*
-modifier|*
-name|relocs_ma
-decl_stmt|;
-name|int
-modifier|*
-name|relocs_len
-decl_stmt|;
 name|u32
 name|ctx_id
 init|=
@@ -4399,6 +4379,15 @@ decl_stmt|,
 name|mode
 decl_stmt|,
 name|i
+decl_stmt|;
+name|vm_page_t
+modifier|*
+modifier|*
+name|relocs_ma
+decl_stmt|;
+name|int
+modifier|*
+name|relocs_len
 decl_stmt|;
 if|if
 condition|(
@@ -4452,11 +4441,9 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|!=
-literal|0
 condition|)
 goto|goto
-name|pre_struct_lock_err
+name|pre_mutex_err
 goto|;
 switch|switch
 condition|(
@@ -4519,7 +4506,7 @@ operator|-
 name|EPERM
 expr_stmt|;
 goto|goto
-name|pre_struct_lock_err
+name|pre_mutex_err
 goto|;
 block|}
 break|break;
@@ -4558,7 +4545,7 @@ operator|-
 name|EPERM
 expr_stmt|;
 goto|goto
-name|pre_struct_lock_err
+name|pre_mutex_err
 goto|;
 block|}
 break|break;
@@ -4585,7 +4572,7 @@ operator|-
 name|EINVAL
 expr_stmt|;
 goto|goto
-name|pre_struct_lock_err
+name|pre_mutex_err
 goto|;
 block|}
 if|if
@@ -4619,7 +4606,7 @@ operator|-
 name|EINVAL
 expr_stmt|;
 goto|goto
-name|pre_struct_lock_err
+name|pre_mutex_err
 goto|;
 block|}
 name|mode
@@ -4685,7 +4672,7 @@ operator|-
 name|EINVAL
 expr_stmt|;
 goto|goto
-name|pre_struct_lock_err
+name|pre_mutex_err
 goto|;
 block|}
 if|if
@@ -4710,7 +4697,7 @@ operator|-
 name|EINVAL
 expr_stmt|;
 goto|goto
-name|pre_struct_lock_err
+name|pre_mutex_err
 goto|;
 block|}
 comment|/* The HW changed the meaning on this bit on gen6 */
@@ -4746,7 +4733,7 @@ operator|-
 name|EINVAL
 expr_stmt|;
 goto|goto
-name|pre_struct_lock_err
+name|pre_mutex_err
 goto|;
 block|}
 if|if
@@ -4773,7 +4760,7 @@ operator|-
 name|EINVAL
 expr_stmt|;
 goto|goto
-name|pre_struct_lock_err
+name|pre_mutex_err
 goto|;
 block|}
 if|if
@@ -4809,7 +4796,7 @@ operator|-
 name|EINVAL
 expr_stmt|;
 goto|goto
-name|pre_struct_lock_err
+name|pre_mutex_err
 goto|;
 block|}
 if|if
@@ -4835,7 +4822,7 @@ operator|-
 name|EINVAL
 expr_stmt|;
 goto|goto
-name|pre_struct_lock_err
+name|pre_mutex_err
 goto|;
 block|}
 if|if
@@ -4868,22 +4855,22 @@ operator|-
 name|EINVAL
 expr_stmt|;
 goto|goto
-name|pre_struct_lock_err
+name|pre_mutex_err
 goto|;
 block|}
 name|cliprects
 operator|=
 name|malloc
 argument_list|(
+name|args
+operator|->
+name|num_cliprects
+operator|*
 sizeof|sizeof
 argument_list|(
 operator|*
 name|cliprects
 argument_list|)
-operator|*
-name|args
-operator|->
-name|num_cliprects
 argument_list|,
 name|DRM_I915_GEM
 argument_list|,
@@ -4928,7 +4915,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|pre_struct_lock_err
+name|pre_mutex_err
 goto|;
 block|}
 name|ret
@@ -4943,7 +4930,7 @@ condition|(
 name|ret
 condition|)
 goto|goto
-name|pre_struct_lock_err
+name|pre_mutex_err
 goto|;
 if|if
 condition|(
@@ -4965,7 +4952,7 @@ operator|-
 name|EBUSY
 expr_stmt|;
 goto|goto
-name|pre_struct_lock_err
+name|pre_mutex_err
 goto|;
 block|}
 name|eb
@@ -4995,7 +4982,7 @@ operator|-
 name|ENOMEM
 expr_stmt|;
 goto|goto
-name|pre_struct_lock_err
+name|pre_mutex_err
 goto|;
 block|}
 comment|/* Look up object handles */
@@ -5536,23 +5523,6 @@ name|batch_len
 argument_list|)
 expr_stmt|;
 block|}
-name|CTR4
-argument_list|(
-name|KTR_DRM
-argument_list|,
-literal|"ring_dispatch %s %d exec %x %x"
-argument_list|,
-name|ring
-operator|->
-name|name
-argument_list|,
-name|seqno
-argument_list|,
-name|exec_start
-argument_list|,
-name|exec_len
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|cliprects
@@ -5647,6 +5617,23 @@ goto|goto
 name|err
 goto|;
 block|}
+name|CTR4
+argument_list|(
+name|KTR_DRM
+argument_list|,
+literal|"ring_dispatch %s %d exec %x %x"
+argument_list|,
+name|ring
+operator|->
+name|name
+argument_list|,
+name|seqno
+argument_list|,
+name|exec_start
+argument_list|,
+name|exec_len
+argument_list|)
+expr_stmt|;
 name|i915_gem_execbuffer_move_to_active
 argument_list|(
 operator|&
@@ -5723,7 +5710,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|pre_struct_lock_err
+name|pre_mutex_err
 label|:
 for|for
 control|(
@@ -6001,9 +5988,7 @@ name|DRM_I915_GEM
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|ret
-operator|)
 return|;
 block|}
 for|for
