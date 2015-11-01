@@ -153,6 +153,12 @@ directive|include
 file|"vchiq_connected.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"vchiq_killable.h"
+end_include
+
 begin_define
 define|#
 directive|define
