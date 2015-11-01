@@ -14610,10 +14610,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the link layer address on an interface.  *  * At this time we only support certain types of interfaces,  * and we don't allow the length of the address to change.  */
+comment|/*  * Set the link layer address on an interface.  *  * At this time we only support certain types of interfaces,  * and we don't allow the length of the address to change.  *  * Set noinline to be dtrace-friendly  */
 end_comment
 
 begin_function
+name|__noinline
 name|int
 name|if_setlladdr
 parameter_list|(

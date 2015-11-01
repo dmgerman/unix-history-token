@@ -724,6 +724,23 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|LAGG_LLQTYPE_PHYS
+init|=
+literal|0
+block|,
+comment|/* Task related to physical (underlying) port */
+name|LAGG_LLQTYPE_VIRT
+block|,
+comment|/* Task related to lagg interface itself */
+block|}
+name|lagg_llqtype
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* List of interfaces to have the MAC address modified */
 end_comment
@@ -743,8 +760,8 @@ index|[
 name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
-name|uint8_t
-name|llq_primary
+name|lagg_llqtype
+name|llq_type
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
@@ -1075,6 +1092,16 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|rm_assert(&(_sc)->sc_mtx, RA_WLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAGG_UNLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|rm_assert(&(_sc)->sc_mtx, RA_UNLOCKED)
 end_define
 
 begin_function_decl
