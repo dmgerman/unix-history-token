@@ -447,13 +447,15 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|strcmp
+name|strncmp
 argument_list|(
 name|rl
 operator|->
 name|__encoding
 argument_list|,
 literal|"NONE"
+argument_list|,
+literal|4
 argument_list|)
 operator|==
 literal|0
