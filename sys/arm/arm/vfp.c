@@ -548,6 +548,8 @@ operator|~
 operator|(
 name|VFPEXC_EX
 operator||
+name|VFPEXC_DEX
+operator||
 name|VFPEXC_FP2V
 operator|)
 argument_list|)
@@ -560,7 +562,11 @@ if|if
 condition|(
 name|fpexc
 operator|&
+operator|(
 name|VFPEXC_EX
+operator||
+name|VFPEXC_DEX
+operator|)
 condition|)
 block|{
 comment|/* We have an exception, signal a SIGFPE */

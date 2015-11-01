@@ -541,6 +541,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VFPEXC_DEX
+value|(0x20000000)
+end_define
+
+begin_comment
+comment|/* Synchronous exception */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VFPEXC_FP2V
 value|(0x10000000)
 end_define
